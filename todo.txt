@@ -1,0 +1,50 @@
+X-Spelunker 2 (e-ke-se pe-lu-ne-ke-le):
+  - La Mulana-style
+  - story:
+    - Scene 1: Maya legend of the twins playing ball that gave rise to the moon and the sun.
+    - Scene 2: Xavier comes back to Elaine to explain the thing, she says he has to go public, but he believes there is much more to it than what he found and it's not yet the time. So, he has to go back one more time. Something like: "I think we have been interpretting the legend of Hunajpu and Xbalanqué incorrectly all along, which might be the key to unravel all this mystery!"
+    - points to remember:
+      - the first attempt to create humans was from mud, but those were destroyed in the great flood 
+      - the second attempt was from wood, but they could not worship and were destroyed (survivors are monkeys)
+      - six creator deities: the Framer and the Shaper, Tepew and Quetzal Serpent, along with Xpiyacóc and Xmucané. These deities, helped Heart of Sky, also known as Hurakán, create the Earth.
+      - Hunajpu and Xbalanqué were two twins who deteated the gods of the underworld in a ball game, and then became the sun and moon
+      - After that, humans were created from white and yellow maize (Maize is sacred to Maya because of this)
+      - 6 levels of maya underworld
+      - 13 levels of maya upperworld
+  - types of puzzles/challenges:
+    - press a button once
+    - keep a button pressed to open a door
+    - use an object somewhere (e.g. a key, or a relic)
+    - break a wall
+    - box pushing
+    - walkable wall
+    - requiring an item (e.g. double jump)
+    - "do something that should not have any effect" (e.g. stand still somewhere, use an item in a certain place (e.g. kill the invisible enemy))
+      - this can be arbitrarily complex, as the clue can be one, or a set of multiple clues that have to be pieced together
+    - "walk the correct path" (e.g. climb some ladders in the correct order)
+    - find a combination/order (e.g. press a certain combination of buttons, destroy boxes in a certain order (which might contain words/symbols))
+    - maze
+    - challenging section (e.g. an area with lots of enemies, or spikes, etc.)
+    - timed chellenges (e.g. completing something before a door closes, or the "destroying all the vases before the time lamp expires")
+    - any of the above but where the clue requires decyphering a language
+    - bosses
+  - procedural generation:
+    - but with parts designed and parts procedurally generated (you might even have to do multiple runs to beat the game, or achieve some secret)
+    - procedural generation depending on a name. By default, you play in "xspelunker2" level, with difficulty "x".
+    - the first letter determines the difficulty level. So, one would choose "a walk in the park" for easy games, or "zebras all the way" for the heardest)
+        - passwords ties to the name (with a 16 bit hash for example)
+    - evens/puzzles/story hardcoded, and the generation will only place them in the map (although maybe a subset can be selected)
+  - maya text:
+    https://www.mayaarchaeologist.co.uk/public-resources/maya-world/maya-writing-system/
+  - main quest not too hard, so most people can complete it, but secret very hard mission full of secrets
+  - eagle is sky, snake is earth, and jaguar the underworld. Jaguar and Egle are the warriors
+  - ball game: two gods from the sky played ball near the underworld, went down and played with the underworld gods (who wanted to kill humans, since they were only worshipping the sky gods). The two won, and one knel and cut his head, which went up the sky and formed the sun, the other did the same and formed the moon. they protect humans from the underworld gods.
+    - in my game, I could make it so that the story is wrong, and they are mars and moon instead of sun and moon, and those are the palces you visit.
+  - cenote under chichen itza could be a level (perhaps some sacrifices there)
+  - list of important deities for clues/story: https://www.villapalmarcancun.com/discover-cancun/heritage/most-important-mayan-gods
+
+PCG:
+  ***- ensure I can have all the types of puzzles I listed above from La Mulana
+  ***- ensure I can have things like "double jump" as the key and a whole area/path that requires it (or more than one)
+  ***- simplify as much as possible to translate to assembler later
+
