@@ -111,6 +111,7 @@ public class PCGArea {
         fg_chunks.get(0xb).add(new RoomChunk("data/patterns/room1011-3.tmx", 0xb));
         fg_chunks.get(0xb).add(new RoomChunk("data/patterns/room1011-4.tmx", 0xb));
         fg_chunks.get(0xb).add(new RoomChunk("data/patterns/room1011-5.tmx", 0xb));
+        fg_chunks.get(0xb).add(new RoomChunk("data/patterns/room1011-6.tmx", 0xb));
         
         fg_chunks.get(0xc).add(new RoomChunk("data/patterns/room1100-1.tmx", 0xc));
         fg_chunks.get(0xc).add(new RoomChunk("data/patterns/room1100-2.tmx", 0xc));
