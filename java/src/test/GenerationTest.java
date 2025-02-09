@@ -11,6 +11,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -72,9 +73,11 @@ public class GenerationTest {
             }
         }
         System.out.println("n_times_defaulting_to_safe_seed: " + pcg1.n_times_defaulting_to_safe_seed);
+        System.out.println("Generation stage stats: " + Arrays.toString(pcg1.n_times_reached_generation_stage));
+//        System.out.println("Leaves in area 1: " + (pcg1.area_1_n_leaves_accum / (double)pcg1.area_1_n_leaves_count));
         System.out.println("nPCGAreaErrors: " + nPCGAreaErrors);
 
-//        r.setSeed(17841);
+//        r.setSeed(0);
 //        World w = pcg1.generate(r);
 //        if (w != null) {
 //            visualizeWorld(w);

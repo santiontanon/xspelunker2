@@ -36,7 +36,8 @@ public class PCGWorld {
     public static final int DIRECTION_IN = 16;  // connection that goes through a "gate"/"door", and not the edge of a room.
 
     public int n_areas = 10;
-    public int n_divisions = 60;
+    public int n_divisions = 70;
+    public int min_divisions_per_area[] = {3, 7, 7, 4, 7, 1, 7, 7, 7, 7};
     public String areaNames[] = {
         "Jungle",
         "Temple of Inscriptions",
@@ -81,6 +82,14 @@ public class PCGWorld {
          "xxxxxxxxx",
          "....x...."},
         null,
+//        {".xxxxxxxx.",
+//         ".xxxxxxxx.",
+//         "..xxxxxx..",
+//         "..xxxxxx..",
+//         "...xxxx...",
+//         "...xxxx...",
+//         "....xx....",
+//         "....xx...."},
         {".x.",
          "xxx",
          ".x."},
@@ -94,19 +103,37 @@ public class PCGWorld {
     public HashMap<String, String[]> availableLockKeys = new HashMap<>();
 
     /*
-    - to do:        
-    ***- Finish generator v1:    
-        ***- constrain rooms to division borders
-        ***- put on GitHub in case I want to look at something while in London
-   
-    - Refactor/simplify:
-        - draw a diagram of the steps the code goes through, and reorganize/simplify
-        - I don't like those endless switch statements. How can I make it easier to add things, and
+    to do:
+    
+    ***- Refactor/simplify:
+        ***- draw a diagram of the steps the code goes through, and reorganize/simplify:
+            ***- I think I can remove ALL pathfinding routines: since divisions are all reachable,
+                 there is no need to ensure paths, as there are paths for sure!
+        ***- I don't like those endless switch statements. How can I make it easier to add things, and
           easier to translate to assembler? 
-        - once I have this, reduce n_times_defaulting_to_safe_seed: 72 (for 0 - 999 seeds)
+        
+    ***- game engine (assembler):
+        ***- design data structure that will store the map: (7.2kb)
+            ***- global object list (4 * 64 -> 256 bytes)
+            ***- list of areas: w, j, division map, tag map, seed for area generator (10 * 256 -> 2.5kb)
+            ***- list of divisions: ID, parent, n_descendants, root point, tags (this is stored twice for convenience) (64 * 10 -> 640 bytes)
+            ***- current area structure: (128 * 2 + 32 -> 288 bytes)
+                ***- room IDs map
+                ***- chunk IDs map
+                ***- room seeds
+            ***- current room structure: (32*24*4 + 24 * 16 = 3.5kb)
+                ***- tile map
+                ***- local obect list (including enemies and things that reset upon exiting this room)
+        ***- hardcode a "current room structure" in ROM, and display it:
+            ***- setup tiles
+            ***- background rendering routine (figure out if I can have arbitrary shape rooms, or I need them rectangular)
+            ***- prepare player sprites
+            ***- player data structure and rendering
+            ***- control player (walk, fall, jump crouch, climb orpes/ladders)
+        ***- plan for rest of the engine (inventory, weapons, enemies, items, etc.)
     
     - to do (optional treasure):
-        - sample random rooms that have no tags (ideally in divisions with no tags), and add optional treasure/story trivia labels
+        - sample random rooms that have no tags (ideally in leaf divisions with no tags), and add optional treasure/story trivia labels
              (might or might not be reachable)
             - add "small keys" and some of the objects above are chest_locked with small keys
         - dictionary with puzzles/riddles/hints/story
@@ -118,7 +145,7 @@ public class PCGWorld {
           stone tool (e.g. axe head), jade mask, scepter/staff, codices (maya books), human skulls
         - fragments of a calendar stone (maybe this is what you get from the bosses)
     
-    - remove decorations like vines, skeletons and flowers, and add them randomly procedurally
+    - remove decorations like vines, skeletons and flowers, and add them randomly procedurally: can I do this automatically?
     - randomize wall tiles
 
     - to do (renderer):
@@ -132,12 +159,24 @@ public class PCGWorld {
           and also ensure path to it
         - mars/moon are generated separately, with their own quests (they are independent)
         - once solved, the same ending room can be used to reach the true ending    
+        
+    - ensure I can have all the types of puzzles I listed above from La Mulana
+    - ensure I can have things like "double jump" as the key and a whole area/path that requires it (or more than one)
+        
+    - switch to the same exact RNG I would use in assembler
+    - reimplement in assembler
     
     */
 
     public Random r;
     public int next_divisionID = 1;
+    
+    // Debugging stats:
     public int n_times_defaulting_to_safe_seed = 0;
+    public int n_times_reached_generation_stage[] = {0, 0, 0, 0,
+                                                     0, 0, 0, 0};
+//    public int area_1_n_leaves_accum = 0;
+//    public int area_1_n_leaves_count = 0;
 
 
     public PCGWorld()
@@ -218,11 +257,17 @@ public class PCGWorld {
             System.out.println("PCG.generate: ---- attempt " + i + " ----");
             w = new World();
             if (!generateAreaLayouts(w)) continue;
+            n_times_reached_generation_stage[0]++;
             if (!generateDivisions(w)) continue;
+            if (!generateRooms(w)) continue;
+            n_times_reached_generation_stage[1]++;
             if (!generateAreaConnections(w)) continue;  // hardcoded connections
+            n_times_reached_generation_stage[2]++;
             w.spanningTree = generateSpanningTree(w);
             if (w.spanningTree == null) continue;
+            n_times_reached_generation_stage[3]++;
             if (!generateMission(w, w.spanningTree, usedKeysAndLocks)) continue;
+            n_times_reached_generation_stage[7]++;
 //            if (!createLoopConnections(w, w.spanningTree)) continue;
             return w;
         }
@@ -262,16 +307,24 @@ public class PCGWorld {
         w.areas.get(3).divisionIDs[4][1] = confluenceId2;
         w.areas.get(3).divisionIDs[5][1] = confluenceId2;
         w.areas.get(3).nDivisions += 2;
-        
+
+        int n_divisions_left = n_divisions - 2;
         List<AreaPoint> divisionSeeds = new ArrayList<>();
-        for(int i = 0;i<n_divisions - 2;i++) {
-            AreaPoint seed;
-            if (i<w.areas.size()) {
-                // ensure each area has at least one point:
-                seed = randomAreaPoint(w.areas.get(i), true);
-            } else {
-                seed = randomAreaPoint(w, true);
+        // Generate the minimum # of divisions requested in each area:
+        for(int i = 0;i<n_areas;i++) {
+            while(w.areas.get(i).nDivisions < min_divisions_per_area[i]) {
+                AreaPoint seed = randomAreaPoint(w.areas.get(i), true);
+                divisionSeeds.add(seed);
+                addTag(seed, "seed");  // we mark them, so that we do not repeat any
+                seed.a.divisionIDs[seed.x][seed.y] = getNextDivisionID();
+                seed.a.nDivisions++;
+                n_divisions_left--;
             }
+        }
+        
+        for(int i = 0;i<n_divisions_left;i++) {
+            AreaPoint seed;
+            seed = randomAreaPoint(w, true);
             
             divisionSeeds.add(seed);
             addTag(seed, "seed");  // we mark them, so that we do not repeat any
@@ -430,7 +483,8 @@ public class PCGWorld {
         List<AreaDivision> open = new ArrayList<>();
         open.add(div);
         while(!open.isEmpty()) {
-            div = open.remove(0);
+            div = open.get(r.nextInt(open.size()));
+            open.remove(div);
             List<AreaPoint> neighborPoints = getDivisionNeighborPoints(w, div);
             while(!neighborPoints.isEmpty()) {
                 AreaPoint p = neighborPoints.remove(r.nextInt(neighborPoints.size()));
@@ -444,6 +498,27 @@ public class PCGWorld {
                 }
             }
         }
+        
+        // Count leaves per area:
+//        {
+//            HashMap<Integer, Integer> leavesPerArea = new HashMap<>();
+//            for(AreaDivision d:tree) {
+//                if (d.nDescendants == 0) {
+//                    if (!leavesPerArea.containsKey(d.root.a.ID)) {
+//                        leavesPerArea.put(d.root.a.ID, 1);
+//                    } else {
+//                        leavesPerArea.put(d.root.a.ID, leavesPerArea.get(d.root.a.ID) + 1);
+//                    }
+//                }
+//            }
+//            System.out.println("leavesPerArea: " + leavesPerArea);
+//            if (!leavesPerArea.containsKey(1)) {
+//                System.out.println("    Area 1 has no leaves!");
+//            } else {
+//                area_1_n_leaves_accum += leavesPerArea.get(1);
+//            }
+//            area_1_n_leaves_count ++;
+//        }
 
         // debug visualization of the tree:
 //        {
@@ -451,6 +526,7 @@ public class PCGWorld {
 //            for(AreaDivision div2:tree) {
 //                if (div2.parent == null) continue;
 //                w.connections.add(new AreaConnection(div2.parent.root, div2.root, AreaConnection.BIDIRECTIONAL));
+////                System.out.println("    ST: " + div2.divisionID + " -> " + div2.parent.divisionID);
 //            }
 //        }
         
@@ -472,22 +548,43 @@ public class PCGWorld {
     {
         // Pick important divisions:
         AreaDivision start = tree.get(0);
-        AreaDivision boss1 = randomAreaDivisionOnlyLeaves(w.areas.get(1), tree);
-        if (boss1 == null) return false;
-        AreaDivision boss2 = randomAreaDivisionOnlyLeaves(w.areas.get(2), tree);
-        if (boss2 == null) return false;
-        AreaDivision boss3 = randomAreaDivisionOnlyLeaves(w.areas.get(4), tree);
-        if (boss3 == null) return false;
-        AreaDivision boss4 = randomAreaDivisionOnlyLeaves(w.areas.get(8), tree);
-        if (boss4 == null) return false;
-        AreaDivision boss5 = randomAreaDivisionOnlyLeaves(w.areas.get(9), tree);
-        if (boss5 == null) return false;
-        AreaDivision midpoint = randomAreaDivisionFavoringLeaves(w.areas.get(5), tree);
+        AreaDivision boss1 = randomAreaDivisionOnlyLeaves(w.areas.get(1), tree, true);
+        if (boss1 == null) {
+            return false;
+        }
+        AreaDivision boss2 = randomAreaDivisionOnlyLeaves(w.areas.get(2), tree, true);
+        if (boss2 == null) {
+            return false;
+        }
+        AreaDivision boss3 = randomAreaDivisionOnlyLeaves(w.areas.get(4), tree, true);
+        if (boss3 == null) {
+            return false;
+        }
+        AreaDivision boss4 = randomAreaDivisionOnlyLeaves(w.areas.get(8), tree, true);
+        if (boss4 == null) {
+            return false;
+        }
+        AreaDivision boss5 = randomAreaDivisionOnlyLeaves(w.areas.get(9), tree, true);
+        if (boss5 == null) {
+            return false;
+        }
+        AreaDivision midpoint = randomAreaDivisionFavoringLeaves(w.areas.get(5), tree, true);
         AreaDivision ending = getDivisionByID(w.areas.get(3).divisionIDs[3][0], tree);
 
+//        System.out.println("Key division depths: " +
+//                           divisionTreeDepth(boss1) + ", " + 
+//                           divisionTreeDepth(boss2) + ", " + 
+//                           divisionTreeDepth(boss3) + ", " + 
+//                           divisionTreeDepth(boss4) + ", " + 
+//                           divisionTreeDepth(boss5) + ", " + 
+//                           divisionTreeDepth(midpoint) + ", " + 
+//                           divisionTreeDepth(ending));
+        
         List<Quest> quests = new ArrayList<>();
         List<AreaConnection> usedConnections = new ArrayList<>();
                 
+        n_times_reached_generation_stage[4]++;
+        
         // for the first 3 bosses, create "current reachable area" up to midpoint, and start process of sub-puzzles:
 //        int n_subquests_per_boss = 3;
 //        int n_subquests_for_midpoint = 2;
@@ -498,7 +595,7 @@ public class PCGWorld {
         QuestSpec q1 = new QuestSpec(start, boss1, n_subquests_per_boss, null, null, null, "boss1");
         QuestSpec q2 = new QuestSpec(start, boss2, n_subquests_per_boss, null, null, null, "boss2");
         QuestSpec q3 = new QuestSpec(start, boss3, n_subquests_per_boss, null, null, null, "boss3");
-         QuestSpec q_m = new QuestSpec(start, midpoint, n_subquests_for_midpoint, null, null, "start", "midpoint");
+        QuestSpec q_m = new QuestSpec(start, midpoint, n_subquests_for_midpoint, null, null, "start", "midpoint");
         QuestSpec q_e = new QuestSpec(start, ending, n_subquests_for_ending, null, null, null, "ending");
         List<AreaDivision> blocks1 = new ArrayList<>();
         blocks1.add(midpoint);
@@ -516,6 +613,8 @@ public class PCGWorld {
             return false;
         }
         quests.addAll(quests1);
+        
+        n_times_reached_generation_stage[5]++;
         
         // path to midpoint:
         QuestSpec q1b = new QuestSpec(boss1, midpoint, 0, null, null, null, null);
@@ -540,6 +639,8 @@ public class PCGWorld {
         if (quests3 == null) return false;
         quests.addAll(quests3);
         
+        n_times_reached_generation_stage[6]++;
+        
         
         for(Quest q:quests) {
             if (q.lockPoint != null) {
@@ -563,157 +664,11 @@ public class PCGWorld {
     }
     
     
-    /*
-    public boolean createLoopConnections(World w, List<AreaDivision> tree)
+    public int divisionTreeDepth(AreaDivision d)
     {
-        List<Pair<AreaDivision, AreaDivision>> oneWayConnections = new ArrayList<>();
-        for(Area a:w.areas) {
-            for(int i = 0;i<a.height;i++) {
-                for(int j = 0;j<a.width;j++) {
-                    if (a.tags[j][i] != null) {
-                        for(String tag:a.tags[j][i]) {
-                            if (isLock(tag, w)) {
-                                AreaDivision d = getDivisionByID(a.divisionIDs[j][i], tree);
-                                AreaDivision d2 = getDestinationDivisionOfLock(tag, new AreaPoint(a, j, i), w, tree);
-                                
-                                if (d2 == null) {
-                                    // probably the lock goes through an inter-area connection
-                                    continue;
-                                }
-                                
-                                // See if d2 touches with any division with one of its keys:
-                                System.out.println("createLoopConnections (2): lock " + tag + " in " + d2);
-                                List<AreaDivision> neighbors = getDivisionNeighborDivisions(w, d2, tree);
-                                // See if any of these neighbors has one of the necessary keys:
-                                for(AreaDivision d3:neighbors) {
-                                    if (d3 == d2) continue;
-                                    if (d3.parent == d2) continue;
-                                    if (d2.parent == d3) continue;
-                                    
-                                    boolean connect = false;
-                                    List<String> keys = getKeysInDivision(w, d3);
-                                    System.out.println("    " + d2 + " - " + d3 + "  " + keys);
-                                    for(String key:w.lockKeys.get(tag)) {
-                                        if (keys.contains(key)) {
-                                            connect = true;
-                                        }
-                                    }
-                                    if (connect) {
-                                        oneWayConnections.add(new Pair<>(d3, d2));
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        
-        System.out.println("createLoopConnections: " + oneWayConnections);
-        
-        return true;
+        if (d.parent == null) return 0;
+        return 1 + divisionTreeDepth(d.parent);
     }
-    
-    
-    public List<String> getKeysInDivision(World w, AreaDivision d)
-    {
-        List<String> keys = new ArrayList<>();
-        Area a = d.root.a;
-        for(int i = 0;i<a.height;i++) {
-            for(int j = 0;j<a.width;j++) {
-                if (a.divisionIDs[j][i] == d.divisionID &&
-                    a.tags[j][i] != null) {
-                    for(String tag:a.tags[j][i]) {
-                        if (isKey(tag, w)) {
-                            keys.add(tag);
-                        }
-                    }
-                }
-            }
-        }
-        return keys;
-    }
-    
-    
-    public List<String> getLocksInDivision(World w, AreaDivision d)
-    {
-        List<String> locks = new ArrayList<>();
-        Area a = d.root.a;
-        for(int i = 0;i<a.height;i++) {
-            for(int j = 0;j<a.width;j++) {
-                if (a.divisionIDs[j][i] == d.divisionID &&
-                    a.tags[j][i] != null) {
-                    for(String tag:a.tags[j][i]) {
-                        if (isLock(tag, w)) {
-                            locks.add(tag);
-                        }
-                    }
-                }
-            }
-        }
-        return locks;
-    }    
-    
-    
-    public static boolean isLock(String tag, World w)
-    {
-        for(String lockTag:w.lockKeys.keySet()) {
-            if (tag.equals(lockTag)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-    public static boolean isKey(String tag, World w)
-    {
-        for(String lockTag:w.lockKeys.keySet()) {
-            if (w.lockKeys.get(lockTag).contains(tag)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    
-    public AreaDivision getDestinationDivisionOfLock(String lock, AreaPoint lock_p, World w, List<AreaDivision> tree)
-    {
-        if (!w.lockDirections.containsKey(lock)) return null;
-        int direction = w.lockDirections.get(lock);
-        AreaPoint destination = null;
-        switch(direction) {
-            case DIRECTION_RIGHT:
-                if (lock_p.x < lock_p.a.width - 1) {
-                    destination = new AreaPoint(lock_p.a, lock_p.x + 1, lock_p.y);
-                }
-                break;
-            case DIRECTION_LEFT:
-                if (lock_p.x > 0) {
-                    destination = new AreaPoint(lock_p.a, lock_p.x - 1, lock_p.y);
-                }
-                break;
-            case DIRECTION_DOWN:
-                if (lock_p.y < lock_p.a.height - 1) {
-                    destination = new AreaPoint(lock_p.a, lock_p.x, lock_p.y + 1);
-                }
-                break;
-            case DIRECTION_UP:
-                if (lock_p.y > 0) {
-                    destination = new AreaPoint(lock_p.a, lock_p.x, lock_p.y - 1);
-                }
-                break;
-
-            default:
-                return null;
-        }
-        if (destination == null) return null;
-        if (lock_p.a.rooms[destination.x][destination.y] >= 0) {
-            return getDivisionByID(lock_p.a.divisionIDs[destination.x][destination.y], tree);
-        }
-        return null;
-    }
-    */
 
     
     /*
@@ -771,7 +726,9 @@ public class PCGWorld {
                     case 0:
                         if (lock_tag == null) {
                             lock_tag = random_lock(availableLockKeysObstacles);
-                            if (lock_tag == null) return null;
+                            if (lock_tag == null) {
+                                return null;
+                            }
                             key_tags = availableLockKeysObstacles.get(lock_tag);
                             availableLockKeysObstacles.remove(lock_tag);
                         }
@@ -784,7 +741,9 @@ public class PCGWorld {
                     case 1:
                         if (lock_tag == null) {
                             lock_tag = random_lock(availableLockKeysChests);
-                            if (lock_tag == null) return null;
+                            if (lock_tag == null) {
+                                return null;
+                            }
                             key_tags = availableLockKeysChests.get(lock_tag);
                             availableLockKeysChests.remove(lock_tag);
                         }
@@ -860,6 +819,7 @@ public class PCGWorld {
     
     public String random_lock(HashMap<String, String[]> locks)
     {
+        if (locks.isEmpty()) return null;
         int n = r.nextInt(locks.keySet().size());
         for(String lock:locks.keySet()) {
             if (n == 0) return lock;
@@ -923,12 +883,21 @@ public class PCGWorld {
     }
     
     
-    public AreaDivision randomAreaDivisionOnlyLeaves(Area a, List<AreaDivision> tree)
+    public AreaDivision randomAreaDivisionOnlyLeaves(Area a, List<AreaDivision> tree, boolean preferDeeper)
     {
         List<AreaDivision> leafCandidates = new ArrayList<>();
+        
+        int currentDepth = -1;
         for(AreaDivision d:tree) {
             if (a == null || d.root.a.ID == a.ID) {
                 if (d.nDescendants == 0) {
+                    if (preferDeeper) {
+                        int depth = divisionTreeDepth(d);
+                        if (depth > currentDepth) {
+                            currentDepth = depth;
+                            leafCandidates.clear();
+                        }
+                    } 
                     leafCandidates.add(d);                    
                 }
             }
@@ -937,16 +906,17 @@ public class PCGWorld {
         if (!leafCandidates.isEmpty()) {
             return leafCandidates.get(r.nextInt(leafCandidates.size()));
         }
-//        System.err.println("randomAreaDivisionOnlyLeaves: no leaf divisions left in area " + a.ID);
+        // System.err.println("randomAreaDivisionOnlyLeaves: no leaf divisions left in area " + a.ID);
         return null;
     }
     
     
-    public AreaDivision randomAreaDivisionFavoringLeaves(Area a, List<AreaDivision> tree)
+    public AreaDivision randomAreaDivisionFavoringLeaves(Area a, List<AreaDivision> tree, boolean excludeRoot)
     {
         List<AreaDivision> leafCandidates = new ArrayList<>();
         List<AreaDivision> otherCandidates = new ArrayList<>();
         for(AreaDivision d:tree) {
+            if (excludeRoot && d.parent == null) continue;
             if (a == null || d.root.a.ID == a.ID) {
                 if (d.nDescendants == 0) {
                     leafCandidates.add(d);                    
@@ -1034,6 +1004,7 @@ public class PCGWorld {
                 if (!neighborIDs.contains(id2)) {
                     neighborIDs.add(id2);
                     neighbors.add(c.p2);
+//                    System.out.println("connection 1: " + c.p1.a.divisionIDs[c.p1.x][c.p1.y] + " -> " + c.p2.a.divisionIDs[c.p2.x][c.p2.y]);
                 }
             }
             if (c.p2.a.divisionIDs[c.p2.x][c.p2.y] == div.divisionID &&
@@ -1042,6 +1013,7 @@ public class PCGWorld {
                 if (!neighborIDs.contains(id2)) {
                     neighborIDs.add(id2);
                     neighbors.add(c.p1);
+//                    System.out.println("connection 2: " + c.p1.a.divisionIDs[c.p1.x][c.p1.y] + " -> " + c.p2.a.divisionIDs[c.p2.x][c.p2.y]);
                 }
             }
         }
@@ -1102,6 +1074,21 @@ public class PCGWorld {
             }
         }
         
+        return a;
+    }
+    
+    
+    public boolean generateRooms(World w)
+    {
+        for(Area a:w.areas) {
+            if (!generateAreaRooms(a, a.width, a.height)) return false;
+        }
+        return true;
+    }
+    
+    
+    public boolean generateAreaRooms(Area a, int w, int h)
+    {
         // Merge rooms to make rooms larger:
         for(int i = 0;i<h;i++) {
             for(int j = 0;j<w;j++) {
@@ -1109,25 +1096,25 @@ public class PCGWorld {
                     int oldRoom = a.rooms[j][i];
                     
                     // try to merge room:
-                    if (j > 0 && a.rooms[j - 1][i] >= 0 && a.rooms[j - 1][i] != a.rooms[j][i] && r.nextDouble() < 0.25) {
+                    if (j > 0 && a.rooms[j - 1][i] >= 0 && a.rooms[j - 1][i] != a.rooms[j][i] && a.divisionIDs[j][i] == a.divisionIDs[j - 1][i] && r.nextDouble() < 0.25) {
                         a.rooms[j][i] = a.rooms[j - 1][i];
                         int area = getRoomArea(a, j, i);
                         if (area <= MAX_ROOM_AREA) continue;
                         a.rooms[j][i] = oldRoom;  // undo
                     }
-                    if (j < w - 1 && a.rooms[j + 1][i] >= 0 && a.rooms[j + 1][i] != a.rooms[j][i] && r.nextDouble() < 0.25) {
+                    if (j < w - 1 && a.rooms[j + 1][i] >= 0 && a.rooms[j + 1][i] != a.rooms[j][i] && a.divisionIDs[j][i] == a.divisionIDs[j + 1][i] && r.nextDouble() < 0.25) {
                         a.rooms[j][i] = a.rooms[j + 1][i];
                         int area = getRoomArea(a, j, i);
                         if (area <= MAX_ROOM_AREA) continue;
                         a.rooms[j][i] = oldRoom;  // undo
                     }
-                    if (i > 0 && a.rooms[j][i - 1] >= 0 && a.rooms[j][i - 1] != a.rooms[j][i] && r.nextDouble() < 0.25) {
+                    if (i > 0 && a.rooms[j][i - 1] >= 0 && a.rooms[j][i - 1] != a.rooms[j][i] && a.divisionIDs[j][i] == a.divisionIDs[j][i - 1] && r.nextDouble() < 0.25) {
                         a.rooms[j][i] = a.rooms[j][i - 1];
                         int area = getRoomArea(a, j, i);
                         if (area <= MAX_ROOM_AREA) continue;
                         a.rooms[j][i] = oldRoom;  // undo
                     }
-                    if (i < h - 1 && a.rooms[j][i + 1] >= 0 && a.rooms[j][i + 1] != a.rooms[j][i] && r.nextDouble() < 0.25) {
+                    if (i < h - 1 && a.rooms[j][i + 1] >= 0 && a.rooms[j][i + 1] != a.rooms[j][i] && a.divisionIDs[j][i] == a.divisionIDs[j][i + 1] && r.nextDouble() < 0.25) {
                         a.rooms[j][i] = a.rooms[j][i + 1];
                         int area = getRoomArea(a, j, i);
                         if (area <= MAX_ROOM_AREA) continue;
@@ -1136,8 +1123,7 @@ public class PCGWorld {
                 }
             }
         }
-
-        return a;
+        return true;
     }
     
     
@@ -1217,21 +1203,21 @@ public class PCGWorld {
 
     public AreaPoint randomAreaBottomMostPoint(Area a, boolean tagLess) throws Exception
     {
-        int attempts = 100;
-        while(attempts > 0) {
-            int x = r.nextInt(a.width);
-            for(int y = a.height - 1;y>0;y--) {
-                if (a.rooms[x][y] >= 0) {
-                    if (!tagLess || (a.tags[x][y] == null || a.tags[x][y].isEmpty())) {
-                        return new AreaPoint(a, x, y);
-                    } else {
-                        break;
+        List<AreaPoint> candidates = new ArrayList<>();
+        for(int i = 0;i<a.height;i++) {
+            for(int j = 0;j<a.width;j++) {
+                if (a.rooms[j][i] >= 0 && (i == a.height -1 || a.rooms[j][i+1] < 0)) {
+                    if (a.tags[j][i] == null || a.tags[j][i].isEmpty() || !tagLess) {
+                        candidates.add(new AreaPoint(a, j, i));
                     }
                 }
             }
-            attempts--;
         }
-        return null;
+       
+        if (candidates.isEmpty()) {
+            return null;
+        }
+        return candidates.get(r.nextInt(candidates.size()));
     }
     
     
@@ -1309,6 +1295,33 @@ public class PCGWorld {
     }
     
     
+    // If they "collide", we cannot have them in the same location:
+    public boolean tagsCollide(String tag, String tag2)
+    {
+        if (tag.contains("-lock") || tag.contains("-door") || tag.contains("breakable-wall") || tag.contains("block-puzzle") || tag.contains("combination")) {
+            if (tag2.contains("-lock") || tag2.contains("-door") || tag2.contains("breakable-wall") || tag2.contains("block-puzzle") || tag2.contains("combination")) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    
+    public boolean canPlaceTag(AreaPoint p, String tag)
+    {
+        List<String> l = p.a.tags[p.x][p.y];
+        if (l == null) return true;        
+        if (!l.contains(tag)) {
+            for(String tag2:l) {
+                if (tagsCollide(tag, tag2)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    
     public boolean addTag(AreaPoint p, String tag)
     {
         if (tag == null) {
@@ -1321,12 +1334,10 @@ public class PCGWorld {
         }
         
         if (!l.contains(tag)) {
-            if (tag.contains("-lock") || tag.contains("-door") || tag.contains("breakable-wall") || tag.contains("block-puzzle") || tag.contains("combination")) {
-                for(String tag2:l) {
-                    if (tag2.contains("-lock") || tag2.contains("-door") || tag2.contains("breakable-wall") || tag2.contains("block-puzzle") || tag2.contains("combination")) {
-                        System.out.println("addTag: two locks/doors in one point!!! " + tag + ", " + tag2);
-                        return false;
-                    }
+            for(String tag2:l) {
+                if (tagsCollide(tag, tag2)) {
+                    System.out.println("addTag: two locks/doors in one point!!! " + tag + ", " + tag2);
+                    return false;
                 }
             }
             l.add(tag);

@@ -45,6 +45,11 @@ public class PCGPatternNKeysAndChestLock extends PCGPattern {
         q.lockTag = locktag;
         q.lockToGoalPathType = Quest.PATH_NONE;
         
+        if (!pcg.canPlaceTag(q.lockPoint, q.lockTag)) {
+            System.out.println("!!!");
+        }
+        
+        
         // update "reachable" (remove "goal" and all its descendants):
         {
             List<AreaDivision> toRemove = new ArrayList<>();
@@ -80,9 +85,9 @@ public class PCGPatternNKeysAndChestLock extends PCGPattern {
             List<AreaDivision> candidates = new ArrayList<>();
             candidates.addAll(useable);
             while(n_retries > 0) {
-                keyDivision = pcg.randomAreaDivisionFavoringLeaves(null, candidates);
+                keyDivision = pcg.randomAreaDivisionFavoringLeaves(null, candidates, true);
                 if (keyDivision == null) return null;
-//                System.out.println("    keyDivision: " + keyDivision);
+//                System.out.println("    chest keyDivision "+keytags[i]+": " + keyDivision);
                 keyPoint = pcg.randomDivisionPoint(keyDivision, true);
                 if (keyPoint != null) break;
                 n_retries--;

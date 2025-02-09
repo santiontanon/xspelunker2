@@ -898,13 +898,22 @@ public class PCGArea {
                             upTag = "stairs";  // up/down connections from outside the map always via stairs
                         }
                     } else {
-                        if (above.tags.containsKey("down")) {
-                            upTag = above.tags.get("down");
+                        if ((pieceTypes[j][i] & PCGWorld.DIRECTION_UP) != 0) {
+                            if (above.tags.containsKey("down")) {
+                                upTag = above.tags.get("down");
+                            }
+                        } else {
+                            // ignore the above tag, as we have a breakable wall/door above here
                         }
                     }
-                    if ((pieceTypes[j][i] & PCGWorld.DIRECTION_DOWN) != 0 &&
-                        (i == a.height * ROOM_HEIGHT - 1 || pieceTypes[j][i+1] < 0)) {
-                        downTag = "stairs";  // up/down connections from outside the map always via stairs
+                    if ((pieceTypes[j][i] & PCGWorld.DIRECTION_DOWN) != 0) {
+                        if (i == a.height * ROOM_HEIGHT - 1 || pieceTypes[j][i+1] < 0) {
+                            downTag = "stairs";  // up/down connections from outside the map always via stairs
+                        } else {
+                            if ((pieceTypes[j][i] & PCGWorld.DIRECTION_UP) == 0) {
+                                downTag = "hole";  // prevent stairs when there is a door/breakable wall below
+                            }
+                        }
                     }
 
                     

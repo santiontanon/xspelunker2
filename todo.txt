@@ -43,8 +43,64 @@ X-Spelunker 2 (e-ke-se pe-lu-ne-ke-le):
   - cenote under chichen itza could be a level (perhaps some sacrifices there)
   - list of important deities for clues/story: https://www.villapalmarcancun.com/discover-cancun/heritage/most-important-mayan-gods
 
-PCG:
-  ***- ensure I can have all the types of puzzles I listed above from La Mulana
-  ***- ensure I can have things like "double jump" as the key and a whole area/path that requires it (or more than one)
-  ***- simplify as much as possible to translate to assembler later
+- altar(s) where you can sacrifice bodies to some Mayan gods: carrying corpses of enemies? sacrificing them with some sacrificial dagger pleases the gods and you get random things (refill life, supplies, and maybe a special weapon that can only be gotten this way). Think a bit more on this, to see if I can get a nice mechanics that has some depth (e.g., sacrificing bigger corpses gives you more, but you become slow when carrying a corpse, and hence it's harder, etc.).
+
+- secret puzzle: add strings in the ROM that can be read via a hex reader of the ROM (encode them as decimal numbers in the .asm file, so that they are not visible from the source easily), that form a puzzle, giving you a clue (e.g. a code) for something to do in the game to get a special ending. So, there will be 3 endings:
+  - normal ending
+  - special mission ending (needs the Maya language puzzles)
+  - real final ending (needs both Maya language puzzles and the special ROM puzzle)
+
+
+-----------
+
+PCG structure:
+
+
+PCGWorld: 
+1.- generateAreaLayouts:
+  - for each area: generateArea
+    - if layout is not prespecified: start from the center, and randomly grow out until 0.5 of the area is used
+2.- generateDivisions
+  - set predefined divisions (in "confluence")
+  - add minimum number of division seeds to each area (without repeating any)
+  - randomly distribute the other division seeds
+  - for each area: floodFillDivisionIDs
+    - "open" list with all the seeds: start filling neighboring (picking random points from this open list as the next)
+3.- generateRooms
+  - for each area: generateAreaRooms
+    - for each position in the map, random change to merge with up/down/left/right as long as it's within division, and as long as room area is <= 4 (how do I track this in assembler? maybe a room list?)
+4.- generateAreaConnections:
+  - using "randomAreaBottomMostPoint"-like functions, pick connection points, and add to the list of "connections"
+5.- generateSpanningTree
+  - randomAreaLeftMostPoint to get the starting point/division
+  - open list with that initial division
+  - then iterate until open is empty, removing one at random and adding all the neighbors with "getDivisionNeighborPoints"
+  - Result is a spanning tree, which could be encoded in assembler as just an array of "AreaDivision" structs
+6.- generateMission
+  - boss1, ..., boss5, midpoint, ending: sampling divisions (favoring or requiring leaves)
+  - generate quest specs for boss1, 2, 3, midpoint and ending
+  - generateSubquests:
+    - while there are quest specs:
+      - get the first quest spec from open
+      - choose a type (a-to-b, obstacle, key-chestlock, key-lock): if 0 subquests just a-to-b, if a boss quest, force chest-lock. Also if there are no locks/keys left for one type, ignore it
+      - if the lock_tag is not specified in the quest spec, pick one at random of the appropriate type, not used before
+        - ...
+      - addTags: if there is a tag there that is incompatible, FAIL!
+      - addPaths:
+        - addPath from lock -> goal if necessary
+        - addPath from keys to lock/goal
+          - path p1 -> p2: find the common ancestor in the spanning tree of p1 and p2, and come up with a list of divisions to visit: d1, ...., dn
+          - find paths from p1 to root of d1, then from root d1, to root d2, ... and finally from root dn to p2.
+          - mark which connections we use
+          - finally markOpenPath (mark which points must have paths to which others)
+  - generate quest specs for boss4, 5
+  - generateSubquests (same as before, but with different reachable/useable area)
+  - set "lockKeys" to all the user locks and keys
+  - delete all the unused connections
+
+
+PCGArea:
+...
+
+
 

@@ -5,7 +5,6 @@
 package pcg.questpatterns;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import pcg.AreaDivision;
 import pcg.AreaPoint;
@@ -39,44 +38,55 @@ public class PCGPatternNKeysAndLock extends PCGPattern {
         
         // Generate key and lock locations:
         // lock is the point that connects to the goal (in the parent area)
-        q.lockDivision = q.goalDivision.parent;
-                
-        if (q.goalDivision.parent != null && q.goalDivision.root.a == q.goalDivision.parent.root.a) {
-            switch(q.goalDivision.root.direction) {
-                case PCGWorld.DIRECTION_RIGHT:
-                    q.lockPoint = new AreaPoint(q.lockDivision.root.a, q.goalDivision.root.x + 1, q.goalDivision.root.y);
-                    w.lockDirections.put(locktag, PCGWorld.DIRECTION_LEFT);
-                    break;
-                case PCGWorld.DIRECTION_DOWN:
-                    q.lockPoint = new AreaPoint(q.lockDivision.root.a, q.goalDivision.root.x, q.goalDivision.root.y + 1);
-                    w.lockDirections.put(locktag, PCGWorld.DIRECTION_UP);
-                    break;
-                case PCGWorld.DIRECTION_LEFT:
-                    q.lockPoint = new AreaPoint(q.lockDivision.root.a, q.goalDivision.root.x - 1, q.goalDivision.root.y);
-                    w.lockDirections.put(locktag, PCGWorld.DIRECTION_RIGHT);
-                    break;
-                case PCGWorld.DIRECTION_UP:
-                    q.lockPoint = new AreaPoint(q.lockDivision.root.a, q.goalDivision.root.x, q.goalDivision.root.y - 1);
-                    w.lockDirections.put(locktag, PCGWorld.DIRECTION_DOWN);
-                    break;
-                default:
-                    System.err.println("root node of division " + q.goalDivision.divisionID + " has no direction!");
+        q.lockDivision = q.goalDivision;
+        while(true) {
+            AreaDivision lockTargetDiv = q.lockDivision;
+            q.lockDivision = q.lockDivision.parent;
+            if (q.lockDivision == null) {
+                return null;
             }
-        } else {
-            AreaPoint destination = getConnectionDestination(w, q.goalDivision.root);
-            if (destination == null) {
-                System.out.println("Cannot find connection destination starting at " + q.goalDivision.root);
+            if (q.lockDivision != null && q.lockDivision.root.a == lockTargetDiv.root.a) {
+                switch(lockTargetDiv.root.direction) {
+                    case PCGWorld.DIRECTION_RIGHT:
+                        q.lockPoint = new AreaPoint(q.lockDivision.root.a, lockTargetDiv.root.x + 1, lockTargetDiv.root.y);
+                        w.lockDirections.put(locktag, PCGWorld.DIRECTION_LEFT);
+                        break;
+                    case PCGWorld.DIRECTION_DOWN:
+                        q.lockPoint = new AreaPoint(q.lockDivision.root.a, lockTargetDiv.root.x, lockTargetDiv.root.y + 1);
+                        w.lockDirections.put(locktag, PCGWorld.DIRECTION_UP);
+                        break;
+                    case PCGWorld.DIRECTION_LEFT:
+                        q.lockPoint = new AreaPoint(q.lockDivision.root.a, lockTargetDiv.root.x - 1, lockTargetDiv.root.y);
+                        w.lockDirections.put(locktag, PCGWorld.DIRECTION_RIGHT);
+                        break;
+                    case PCGWorld.DIRECTION_UP:
+                        q.lockPoint = new AreaPoint(q.lockDivision.root.a, lockTargetDiv.root.x, lockTargetDiv.root.y - 1);
+                        w.lockDirections.put(locktag, PCGWorld.DIRECTION_DOWN);
+                        break;
+                    default:
+                        System.err.println("root node of division " + lockTargetDiv.divisionID + " has no direction!");
+                }
             } else {
-                q.lockPoint = destination;
+                AreaPoint destination = getConnectionDestination(w, lockTargetDiv.root);
+                if (destination == null) {
+                    System.out.println("Cannot find connection destination starting at " + lockTargetDiv.root);
+                } else {
+                    q.lockPoint = destination;
+                }
+                w.lockDirections.put(locktag, getConnectionDirection(w, lockTargetDiv.root));
             }
-            w.lockDirections.put(locktag, getConnectionDirection(w, q.goalDivision.root));
-        }
-        if (q.lockPoint == null) {
-            System.out.println("PCGPatternNKeysAndLock: could not place the lock!");
-            return null;
-        }        
+            if (q.lockPoint == null) {
+                System.out.println("PCGPatternNKeysAndLock: could not place the lock!");
+                return null;
+            }      
+            q.lockTag = locktag;
 
-        q.lockTag = locktag;
+            if (pcg.canPlaceTag(q.lockPoint, q.lockTag)) {
+                break;
+            }
+        }
+        
+
         if (q.lockDivision == null) {
             return null;
         }
@@ -128,9 +138,9 @@ public class PCGPatternNKeysAndLock extends PCGPattern {
             List<AreaDivision> candidates = new ArrayList<>();
             candidates.addAll(useable);
             while(n_retries > 0) {
-                keyDivision = pcg.randomAreaDivisionFavoringLeaves(null, candidates);
+                keyDivision = pcg.randomAreaDivisionFavoringLeaves(null, candidates, true);
                 if (keyDivision == null) return null;
-//                System.out.println("    keyDivision: " + keyDivision);
+//                System.out.println("    keyDivision "+keytags[i]+": " + keyDivision);
                 keyPoint = pcg.randomDivisionPoint(keyDivision, true);
                 if (keyPoint != null) {
                     break;

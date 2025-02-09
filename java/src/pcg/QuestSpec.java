@@ -13,14 +13,6 @@ public class QuestSpec {
     public AreaPoint startPoint, goalPoint;
     public String startTag, goalTag;
     public int nSubQuests;
-    
-    
-    public QuestSpec(AreaDivision a_start, AreaDivision a_goal, int a_n)
-    {
-        start = a_start;
-        goal = a_goal;
-        nSubQuests = a_n;
-    }
 
 
     public QuestSpec(AreaDivision a_start, AreaDivision a_goal, int a_n, AreaPoint a_startPoint, AreaPoint a_goalPoint, String a_startTag, String a_goalTag)
