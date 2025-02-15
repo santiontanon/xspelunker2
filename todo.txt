@@ -6,16 +6,24 @@ to do:
              and easier to translate to assembler? 
 
 ***- game engine (assembler):
-    ***- Java: prepare player sprite data (uncompressed)
-    ***- assembler: player data structure and rendering
-    ***- assembler: control player (walk, fall, jump crouch, climb ropes/ladders)
-      ***- collision: sort tiles by collision type? collision type array?
-      ***- player standing/walk/fall states
-      ***- jump
+    ***- assembler: control player:
+      ***- player walk states
+        ***- stop player upon collision
+          ***- for each "biome" I need a tile-type map that determines collision type of each tile
+          ***- collision detection (dot to map, and player collides at 8,15 and 8,3):
+      ***- fall state:
+        ***- check collision below player and if no collision, go to fall state
+        ***- fall state falls until collision, and moves to idle state
+        ***- you can control the player when falling
+      ***- jump:
+        ***- jump arc
+        ***- you can control player in the air
       ***- scroll based on player position (maybe similar to the old XSpelunker?)
       ***- crouch
       ***- move while crouched
       ***- climb ropes/ladders (draw sprites)
+      ***- inventory screen: down + jump (for now just go to a black screen, space goes back)
+    ***- assembler: background tile animations (how did I do it in xspelunker?)
 
     ***- design data structure that will store the map: (7.2kb)
         ***- global object list (4 * 64 -> 256 bytes)

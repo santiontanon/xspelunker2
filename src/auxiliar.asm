@@ -87,19 +87,19 @@ CheckIf60Hz_vdpLoop:
 ;     ret
 
 
-;-----------------------------------------------
+; -----------------------------------------------
 ; hl: memory to clear
 ; bc: bytes to clear - 1
-; clear_memory:
-;     xor a
-; clear_memory_a:
-;     ld d, h
-;     ld e, l
-;     inc de
-;     ld (hl), a
-; clear_memory_a_entry_point:
-;     ldir
-;     ret
+clear_memory:
+    xor a
+clear_memory_a:
+    ld d, h
+    ld e, l
+    inc de
+    ld (hl), a
+clear_memory_a_entry_point:
+    ldir
+    ret
 
 
 ; ;-----------------------------------------------

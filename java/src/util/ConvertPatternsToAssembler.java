@@ -30,15 +30,15 @@ public class ConvertPatternsToAssembler {
                                 {36,36,255},          // Dark Blue 4
                                 {73,109,255},         // Light Blue 5
                                 {182,36,36},          // Dark Red 6
-                                {73,219,255},         // Cyan
-                                {255,36,36},          // Medium Red
-                                {255,109,109},        // Light Red
-                                {219,219,36},         // Dark Yellow
-                                {219,219,146},        // Light Yellow
-                                {36,146,36},          // Dark Green
-                                {219,73,182},         // Magenta
-                                {182,182,182},        // Grey
-                                {255,255,255}};       // White      
+                                {73,219,255},         // Cyan 7
+                                {255,36,36},          // Medium Red 8
+                                {255,109,109},        // Light Red 9
+                                {219,219,36},         // Dark Yellow 10
+                                {219,219,146},        // Light Yellow 11
+                                {36,146,36},          // Dark Green 12
+                                {219,73,182},         // Magenta 13
+                                {182,182,182},        // Grey 14
+                                {255,255,255}};       // White 15    
 
     public static void main(String args[]) throws Exception {
         String inputFile = args[0];

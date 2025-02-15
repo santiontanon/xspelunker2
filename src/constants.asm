@@ -2,12 +2,18 @@
 ;     include "sound-constants.asm"
 
 
+MAX_SPRITES: equ 32
+
 MAX_ROOM_OBJECTS: equ 16
 
 ROOM_OBJECT_STRUCT_SIZE: equ 4
 ROOM_OBJECT_STRUCT_TYPE: equ 0
 ROOM_OBJECT_STRUCT_X: equ 1
 ROOM_OBJECT_STRUCT_Y: equ 2
+
+
+PLAYER_STATE_IDLE: equ 0
+PLAYER_STATE_WALKING: equ 2
 
 
 ;-----------------------------------------------

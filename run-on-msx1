@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -e
+
+./build 0 0
+/Applications/Games/MSX/openMSX.app/Contents/MacOS/openmsx xspelunker2.rom -machine Philips_VG_8020 -romtype ASCII16
