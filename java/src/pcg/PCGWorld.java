@@ -102,71 +102,6 @@ public class PCGWorld {
     public HashMap<String, String[]> availableLockKeysChests = new HashMap<>();
     public HashMap<String, String[]> availableLockKeys = new HashMap<>();
 
-    /*
-    to do:
-    
-    ***- Refactor/simplify:
-        ***- draw a diagram of the steps the code goes through, and reorganize/simplify:
-            ***- I think I can remove ALL pathfinding routines: since divisions are all reachable,
-                 there is no need to ensure paths, as there are paths for sure!
-        ***- I don't like those endless switch statements. How can I make it easier to add things, and
-          easier to translate to assembler? 
-        
-    ***- game engine (assembler):
-        ***- design data structure that will store the map: (7.2kb)
-            ***- global object list (4 * 64 -> 256 bytes)
-            ***- list of areas: w, j, division map, tag map, seed for area generator (10 * 256 -> 2.5kb)
-            ***- list of divisions: ID, parent, n_descendants, root point, tags (this is stored twice for convenience) (64 * 10 -> 640 bytes)
-            ***- current area structure: (128 * 2 + 32 -> 288 bytes)
-                ***- room IDs map
-                ***- chunk IDs map
-                ***- room seeds
-            ***- current room structure: (32*24*4 + 24 * 16 = 3.5kb)
-                ***- tile map
-                ***- local obect list (including enemies and things that reset upon exiting this room)
-        ***- hardcode a "current room structure" in ROM, and display it:
-            ***- setup tiles
-            ***- background rendering routine (figure out if I can have arbitrary shape rooms, or I need them rectangular)
-            ***- prepare player sprites
-            ***- player data structure and rendering
-            ***- control player (walk, fall, jump crouch, climb orpes/ladders)
-        ***- plan for rest of the engine (inventory, weapons, enemies, items, etc.)
-    
-    - to do (optional treasure):
-        - sample random rooms that have no tags (ideally in leaf divisions with no tags), and add optional treasure/story trivia labels
-             (might or might not be reachable)
-            - add "small keys" and some of the objects above are chest_locked with small keys
-        - dictionary with puzzles/riddles/hints/story
-        - draw them (weapons, supplies, extra HP)
-        - add them to the map
-
-    - other ideas for items:
-        - pottery, obsidian blade, corn kernels, jade beads, feathers,
-          stone tool (e.g. axe head), jade mask, scepter/staff, codices (maya books), human skulls
-        - fragments of a calendar stone (maybe this is what you get from the bosses)
-    
-    - remove decorations like vines, skeletons and flowers, and add them randomly procedurally: can I do this automatically?
-    - randomize wall tiles
-
-    - to do (renderer):
-        - add enemies (xspelunker enemies for now) (like in xspelunker, each enemy
-          has a custom function of where can it be spawned)
-    
-    - to do (secret quest):
-        - distribute a series of k clues needed to unlock something in atlantis
-        - ensure there is path to those clues (how? ideally from the nearest path)
-        - place the secret goal location (teleporter to mars/moon, clues for each of them are separate), 
-          and also ensure path to it
-        - mars/moon are generated separately, with their own quests (they are independent)
-        - once solved, the same ending room can be used to reach the true ending    
-        
-    - ensure I can have all the types of puzzles I listed above from La Mulana
-    - ensure I can have things like "double jump" as the key and a whole area/path that requires it (or more than one)
-        
-    - switch to the same exact RNG I would use in assembler
-    - reimplement in assembler
-    
-    */
 
     public Random r;
     public int next_divisionID = 1;
@@ -499,6 +434,35 @@ public class PCGWorld {
             }
         }
         
+        // Connect each root with its parent:
+        for(AreaDivision d:tree) {
+            if (d.parent == null) continue;
+            Area a = d.root.a;
+            a.connections[d.root.x][d.root.y] |= d.root.direction;
+            if (d.root.connection != null) {
+                if (d.root.connection.p1 == d.root) {
+                    d.root.connection.p2.a.connections[d.root.connection.p2.x][d.root.connection.p2.y] |= d.root.connection.p2.direction;
+                } else {
+                    d.root.connection.p1.a.connections[d.root.connection.p1.x][d.root.connection.p1.y] |= d.root.connection.p1.direction;
+                }
+            } else {
+                switch(d.root.direction) {
+                    case DIRECTION_LEFT:
+                        a.connections[d.root.x - 1][d.root.y] |= DIRECTION_RIGHT;
+                        break;
+                    case DIRECTION_UP:
+                        a.connections[d.root.x][d.root.y - 1] |= DIRECTION_DOWN;
+                        break;
+                    case DIRECTION_RIGHT:
+                        a.connections[d.root.x + 1][d.root.y] |= DIRECTION_LEFT;
+                        break;
+                    case DIRECTION_DOWN:
+                        a.connections[d.root.x][d.root.y + 1] |= DIRECTION_UP;
+                        break;
+                }
+            }
+        }
+        
         // Count leaves per area:
 //        {
 //            HashMap<Integer, Integer> leavesPerArea = new HashMap<>();
@@ -650,15 +614,16 @@ public class PCGWorld {
             }
         }
         
-        {
-            List<AreaConnection> roDelete = new ArrayList<>();
-            for (AreaConnection c:w.connections) {
-                if (!usedConnections.contains(c)) {
-                    roDelete.add(c);
-                }
-            }
-            w.connections.removeAll(roDelete);
-        }
+        // Delete unused connections:
+//        {
+//            List<AreaConnection> roDelete = new ArrayList<>();
+//            for (AreaConnection c:w.connections) {
+//                if (!usedConnections.contains(c)) {
+//                    roDelete.add(c);
+//                }
+//            }
+//            w.connections.removeAll(roDelete);
+//        }
 
         return true;
     }
@@ -808,9 +773,9 @@ public class PCGWorld {
             if (!q.addTags(w, this)) {
                 return null;
             }
-            if (!q.addPaths(w, this, usedConnections)) {
-                return null;
-            }
+//            if (!q.addPaths(w, this, usedConnections)) {
+//                return null;
+//            }
         }
         
         return quests;
@@ -1406,177 +1371,177 @@ public class PCGWorld {
     }
 
     
-    public List<AreaPoint> withinAreaPathfinding(Area a, int x1, int y1, int x2, int y2, AreaDivision d1, AreaDivision d2, boolean optimal)
-    {
-        // Path must stay in divisions d1 and d2 (start in d1, and end in d2)
-        int pathDivisionID1 = d1.divisionID;
-        int pathDivisionID2 = d2.divisionID;
-        List<Integer> open = new ArrayList<>();
-        HashMap<Integer, Integer> parent = new HashMap<>();
-        
-        if (a.rooms[x1][y1] < 0) return null;
-        if (a.rooms[x2][y2] < 0) return null;
-//        if (pathareaID != a.areaIDs[x2][y2] && a.areaIDs[x2][y2] != 0) {
-//            System.err.println("Attempting path between areas " + pathareaID + " and " + a.areaIDs[x2][y2]);
-//            return null;
+//    public List<AreaPoint> withinAreaPathfinding(Area a, int x1, int y1, int x2, int y2, AreaDivision d1, AreaDivision d2, boolean optimal)
+//    {
+//        // Path must stay in divisions d1 and d2 (start in d1, and end in d2)
+//        int pathDivisionID1 = d1.divisionID;
+//        int pathDivisionID2 = d2.divisionID;
+//        List<Integer> open = new ArrayList<>();
+//        HashMap<Integer, Integer> parent = new HashMap<>();
+//        
+//        if (a.rooms[x1][y1] < 0) return null;
+//        if (a.rooms[x2][y2] < 0) return null;
+////        if (pathareaID != a.areaIDs[x2][y2] && a.areaIDs[x2][y2] != 0) {
+////            System.err.println("Attempting path between areas " + pathareaID + " and " + a.areaIDs[x2][y2]);
+////            return null;
+////        }
+//        
+//        if (x1 == x2 && y1 == y2) {
+//            List<AreaPoint> path = new ArrayList<>();
+//            path.add(new AreaPoint(a, x1, y1));
+//            return path;
 //        }
-        
-        if (x1 == x2 && y1 == y2) {
-            List<AreaPoint> path = new ArrayList<>();
-            path.add(new AreaPoint(a, x1, y1));
-            return path;
-        }
-
-        int start = x1 + y1*a.width;
-        open.add(start);
-        while(!open.isEmpty()) {
-            int tmp;
-            if (optimal) {
-                tmp = open.remove(0);  // shortest path
-            } else {
-                tmp = open.remove(r.nextInt(open.size()));  // not necessarily the shortest path
-            }
-            int x = tmp % a.width;
-            int y = tmp / a.width;
-            
-            if (x == x2 && y == y2) {
-                // We reached the goal:
-                break;
-            }
-            if (x > 0 && a.rooms[x-1][y] >= 0 && (a.divisionIDs[x-1][y] == pathDivisionID1 || a.divisionIDs[x-1][y] == pathDivisionID2)) {
-                boolean canPass = true;
-                if (a.divisionIDs[x-1][y] != a.divisionIDs[x][y]) {
-                    // only allow passing to/from a root in the predefined direction
-                    canPass = false;
-                    if (d2.root.x == x-1 && d2.root.y == y &&
-                        d2.root.direction == DIRECTION_RIGHT) {
-                        canPass = true;
-                    }
-                    if (d1.root.x == x && d1.root.y == y &&
-                        d1.root.direction == DIRECTION_LEFT) {
-                        canPass = true;
-                    }                    
-                }
-                if (canPass) {
-                    int next = tmp - 1;
-                    if (!parent.containsKey(next)) {
-                        open.add(next);
-                        parent.put(next, tmp);
-                    }
-                }
-            }
-            if (x < a.width - 1 && a.rooms[x+1][y] >= 0 && (a.divisionIDs[x+1][y] == pathDivisionID1 || a.divisionIDs[x+1][y] == pathDivisionID2)) {
-                boolean canPass = true;
-                if (a.divisionIDs[x+1][y] != a.divisionIDs[x][y]) {
-                    // only allow passing to/from a root in the predefined direction
-                    canPass = false;
-                    if (d2.root.x == x+1 && d2.root.y == y &&
-                        d2.root.direction == DIRECTION_LEFT) {
-                        canPass = true;
-                    }
-                    if (d1.root.x == x && d1.root.y == y &&
-                        d1.root.direction == DIRECTION_RIGHT) {
-                        canPass = true;
-                    }                    
-                }
-                if (canPass) {
-                    int next = tmp + 1;
-                    if (!parent.containsKey(next)) {
-                        open.add(next);
-                        parent.put(next, tmp);
-                    }
-                }
-            }
-            if (y > 0 && a.rooms[x][y-1] >= 0 && (a.divisionIDs[x][y-1] == pathDivisionID1 || a.divisionIDs[x][y-1] == pathDivisionID2)) {
-                boolean canPass = true;
-                if (a.divisionIDs[x][y-1] != a.divisionIDs[x][y]) {
-                    // only allow passing to/from a root in the predefined direction
-                    canPass = false;
-                    if (d2.root.x == x && d2.root.y == y-1 &&
-                        d2.root.direction == DIRECTION_DOWN) {
-                        canPass = true;
-                    }
-                    if (d1.root.x == x && d1.root.y == y &&
-                        d1.root.direction == DIRECTION_UP) {
-                        canPass = true;
-                    }                    
-                }
-                if (canPass) {
-                    int next = tmp - a.width;
-                    if (!parent.containsKey(next)) {
-                        open.add(next);
-                        parent.put(next, tmp);
-                    }
-                }
-            }
-            if (y < a.height - 1 && a.rooms[x][y+1] >= 0 && (a.divisionIDs[x][y+1] == pathDivisionID1 || a.divisionIDs[x][y+1] == pathDivisionID2)) {
-                boolean canPass = true;
-                if (a.divisionIDs[x][y+1] != a.divisionIDs[x][y]) {
-                    // only allow passing to/from a root in the predefined direction
-                    canPass = false;
-                    if (d2.root.x == x && d2.root.y == y+1 &&
-                        d2.root.direction == DIRECTION_UP) {
-                        canPass = true;
-                    }
-                    if (d1.root.x == x && d1.root.y == y &&
-                        d1.root.direction == DIRECTION_DOWN) {
-                        canPass = true;
-                    }                    
-                }
-                if (canPass) {
-                    int next = tmp + a.width;
-                    if (!parent.containsKey(next)) {
-                        open.add(next);
-                        parent.put(next, tmp);
-                    }
-                }
-            }
-        }
-        
-        if (parent.containsKey(x2 + y2*a.width)) {
-            List<AreaPoint> path = new ArrayList<>();
-            int tmp = x2 + y2*a.width;
-            while(tmp != start) {
-                int x = tmp % a.width;
-                int y = tmp / a.width;
-                path.add(0, new AreaPoint(a, x, y));
-                tmp = parent.get(tmp);
-            }
-            path.add(0, new AreaPoint(a, x1, y1));
-            return path;
-        }
-
-//        System.err.println("withinAreaPathfinding: cannot find path from " + x1 + ", " + y1 + " -> " + x2 + ", " + y2 + " (in area " + a.ID + ")");
-        return null;
-    }    
-    
-    
-    public void markOpenPath(List<AreaPoint> path, World w, boolean createInterAreaConnections)
-    {
-        for(int i = 0;i<path.size()-1;i++) {
-            AreaPoint p1 = path.get(i);
-            AreaPoint p2 = path.get(i + 1);
-            Area a1 = p1.a;
-            Area a2 = p2.a;
-            if (a1 == a2) {
-                if (p2.x == p1.x + 1 && p2.y == p1.y) {
-                    a1.connections[p1.x][p1.y] |= DIRECTION_RIGHT;
-                    a1.connections[p2.x][p2.y] |= DIRECTION_LEFT;
-                } else if (p2.x == p1.x - 1 && p2.y == p1.y) {
-                    a1.connections[p1.x][p1.y] |= DIRECTION_LEFT;
-                    a1.connections[p2.x][p2.y] |= DIRECTION_RIGHT;
-                } else if (p2.x == p1.x && p2.y == p1.y - 1) {
-                    a1.connections[p1.x][p1.y] |= DIRECTION_UP;
-                    a1.connections[p2.x][p2.y] |= DIRECTION_DOWN;
-                } else if (p2.x == p1.x && p2.y == p1.y + 1) {
-                    a1.connections[p1.x][p1.y] |= DIRECTION_DOWN;
-                    a1.connections[p2.x][p2.y] |= DIRECTION_UP;
-                }
-            } else if (createInterAreaConnections) {
-                // inter-area connection:
-                w.connections.add(new AreaConnection(p1, p2, AreaConnection.BIDIRECTIONAL));
-            }
-        }
-    }
+//
+//        int start = x1 + y1*a.width;
+//        open.add(start);
+//        while(!open.isEmpty()) {
+//            int tmp;
+//            if (optimal) {
+//                tmp = open.remove(0);  // shortest path
+//            } else {
+//                tmp = open.remove(r.nextInt(open.size()));  // not necessarily the shortest path
+//            }
+//            int x = tmp % a.width;
+//            int y = tmp / a.width;
+//            
+//            if (x == x2 && y == y2) {
+//                // We reached the goal:
+//                break;
+//            }
+//            if (x > 0 && a.rooms[x-1][y] >= 0 && (a.divisionIDs[x-1][y] == pathDivisionID1 || a.divisionIDs[x-1][y] == pathDivisionID2)) {
+//                boolean canPass = true;
+//                if (a.divisionIDs[x-1][y] != a.divisionIDs[x][y]) {
+//                    // only allow passing to/from a root in the predefined direction
+//                    canPass = false;
+//                    if (d2.root.x == x-1 && d2.root.y == y &&
+//                        d2.root.direction == DIRECTION_RIGHT) {
+//                        canPass = true;
+//                    }
+//                    if (d1.root.x == x && d1.root.y == y &&
+//                        d1.root.direction == DIRECTION_LEFT) {
+//                        canPass = true;
+//                    }                    
+//                }
+//                if (canPass) {
+//                    int next = tmp - 1;
+//                    if (!parent.containsKey(next)) {
+//                        open.add(next);
+//                        parent.put(next, tmp);
+//                    }
+//                }
+//            }
+//            if (x < a.width - 1 && a.rooms[x+1][y] >= 0 && (a.divisionIDs[x+1][y] == pathDivisionID1 || a.divisionIDs[x+1][y] == pathDivisionID2)) {
+//                boolean canPass = true;
+//                if (a.divisionIDs[x+1][y] != a.divisionIDs[x][y]) {
+//                    // only allow passing to/from a root in the predefined direction
+//                    canPass = false;
+//                    if (d2.root.x == x+1 && d2.root.y == y &&
+//                        d2.root.direction == DIRECTION_LEFT) {
+//                        canPass = true;
+//                    }
+//                    if (d1.root.x == x && d1.root.y == y &&
+//                        d1.root.direction == DIRECTION_RIGHT) {
+//                        canPass = true;
+//                    }                    
+//                }
+//                if (canPass) {
+//                    int next = tmp + 1;
+//                    if (!parent.containsKey(next)) {
+//                        open.add(next);
+//                        parent.put(next, tmp);
+//                    }
+//                }
+//            }
+//            if (y > 0 && a.rooms[x][y-1] >= 0 && (a.divisionIDs[x][y-1] == pathDivisionID1 || a.divisionIDs[x][y-1] == pathDivisionID2)) {
+//                boolean canPass = true;
+//                if (a.divisionIDs[x][y-1] != a.divisionIDs[x][y]) {
+//                    // only allow passing to/from a root in the predefined direction
+//                    canPass = false;
+//                    if (d2.root.x == x && d2.root.y == y-1 &&
+//                        d2.root.direction == DIRECTION_DOWN) {
+//                        canPass = true;
+//                    }
+//                    if (d1.root.x == x && d1.root.y == y &&
+//                        d1.root.direction == DIRECTION_UP) {
+//                        canPass = true;
+//                    }                    
+//                }
+//                if (canPass) {
+//                    int next = tmp - a.width;
+//                    if (!parent.containsKey(next)) {
+//                        open.add(next);
+//                        parent.put(next, tmp);
+//                    }
+//                }
+//            }
+//            if (y < a.height - 1 && a.rooms[x][y+1] >= 0 && (a.divisionIDs[x][y+1] == pathDivisionID1 || a.divisionIDs[x][y+1] == pathDivisionID2)) {
+//                boolean canPass = true;
+//                if (a.divisionIDs[x][y+1] != a.divisionIDs[x][y]) {
+//                    // only allow passing to/from a root in the predefined direction
+//                    canPass = false;
+//                    if (d2.root.x == x && d2.root.y == y+1 &&
+//                        d2.root.direction == DIRECTION_UP) {
+//                        canPass = true;
+//                    }
+//                    if (d1.root.x == x && d1.root.y == y &&
+//                        d1.root.direction == DIRECTION_DOWN) {
+//                        canPass = true;
+//                    }                    
+//                }
+//                if (canPass) {
+//                    int next = tmp + a.width;
+//                    if (!parent.containsKey(next)) {
+//                        open.add(next);
+//                        parent.put(next, tmp);
+//                    }
+//                }
+//            }
+//        }
+//        
+//        if (parent.containsKey(x2 + y2*a.width)) {
+//            List<AreaPoint> path = new ArrayList<>();
+//            int tmp = x2 + y2*a.width;
+//            while(tmp != start) {
+//                int x = tmp % a.width;
+//                int y = tmp / a.width;
+//                path.add(0, new AreaPoint(a, x, y));
+//                tmp = parent.get(tmp);
+//            }
+//            path.add(0, new AreaPoint(a, x1, y1));
+//            return path;
+//        }
+//
+////        System.err.println("withinAreaPathfinding: cannot find path from " + x1 + ", " + y1 + " -> " + x2 + ", " + y2 + " (in area " + a.ID + ")");
+//        return null;
+//    }    
+//    
+//    
+//    public void markOpenPath(List<AreaPoint> path, World w, boolean createInterAreaConnections)
+//    {
+//        for(int i = 0;i<path.size()-1;i++) {
+//            AreaPoint p1 = path.get(i);
+//            AreaPoint p2 = path.get(i + 1);
+//            Area a1 = p1.a;
+//            Area a2 = p2.a;
+//            if (a1 == a2) {
+//                if (p2.x == p1.x + 1 && p2.y == p1.y) {
+//                    a1.connections[p1.x][p1.y] |= DIRECTION_RIGHT;
+//                    a1.connections[p2.x][p2.y] |= DIRECTION_LEFT;
+//                } else if (p2.x == p1.x - 1 && p2.y == p1.y) {
+//                    a1.connections[p1.x][p1.y] |= DIRECTION_LEFT;
+//                    a1.connections[p2.x][p2.y] |= DIRECTION_RIGHT;
+//                } else if (p2.x == p1.x && p2.y == p1.y - 1) {
+//                    a1.connections[p1.x][p1.y] |= DIRECTION_UP;
+//                    a1.connections[p2.x][p2.y] |= DIRECTION_DOWN;
+//                } else if (p2.x == p1.x && p2.y == p1.y + 1) {
+//                    a1.connections[p1.x][p1.y] |= DIRECTION_DOWN;
+//                    a1.connections[p2.x][p2.y] |= DIRECTION_UP;
+//                }
+//            } else if (createInterAreaConnections) {
+//                // inter-area connection:
+//                w.connections.add(new AreaConnection(p1, p2, AreaConnection.BIDIRECTIONAL));
+//            }
+//        }
+//    }
         
 }

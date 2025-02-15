@@ -58,7 +58,7 @@ public class Quest {
         return true;
     }
     
-    
+    /*
     public boolean addPaths(World w, PCGWorld pcg, List<AreaConnection> usedConnections)
     {
         AreaPoint pathToPoint = null;
@@ -113,7 +113,7 @@ public class Quest {
         return true;
     }
     
-    
+
     public boolean addPath(AreaPoint p1, AreaPoint p2,
                            AreaDivision d1, AreaDivision d2,
                            World w,
@@ -256,4 +256,5 @@ public class Quest {
         
         return true;
     }
+    */
 }

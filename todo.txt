@@ -1,3 +1,68 @@
+to do:
+
+***- Refactor/simplify:
+    ***- Look into PCGArea next
+        ***- I don't like those endless switch statements. How can I make it easier to add things,
+             and easier to translate to assembler? 
+
+***- game engine (assembler):
+    ***- Java: prepare player sprite data (uncompressed)
+    ***- assembler: player data structure and rendering
+    ***- assembler: control player (walk, fall, jump crouch, climb ropes/ladders)
+      ***- collision: sort tiles by collision type? collision type array?
+      ***- player standing/walk/fall states
+      ***- jump
+      ***- scroll based on player position (maybe similar to the old XSpelunker?)
+      ***- crouch
+      ***- move while crouched
+      ***- climb ropes/ladders (draw sprites)
+
+    ***- design data structure that will store the map: (7.2kb)
+        ***- global object list (4 * 64 -> 256 bytes)
+        ***- list of areas: w, j, division map, tag map, seed for area generator (10 * 256 -> 2.5kb)
+        ***- list of divisions: ID, parent, n_descendants, root point, tags (this is stored twice for convenience) (64 * 10 -> 640 bytes)
+        ***- current area structure: (128 * 2 + 32 -> 288 bytes)
+            ***- room IDs map
+            ***- chunk IDs map
+            ***- room seeds
+    ***- plan for rest of the engine (inventory, weapons, enemies, items, etc.)
+
+- to do (optional treasure):
+    - sample random rooms that have no tags (ideally in leaf divisions with no tags), and add optional treasure/story trivia labels
+         (might or might not be reachable)
+        - add "small keys" and some of the objects above are chest_locked with small keys
+    - dictionary with puzzles/riddles/hints/story
+    - draw them (weapons, supplies, extra HP)
+    - add them to the map
+
+- other ideas for items:
+    - pottery, obsidian blade, corn kernels, jade beads, feathers,
+      stone tool (e.g. axe head), jade mask, scepter/staff, codices (maya books), human skulls
+    - fragments of a calendar stone (maybe this is what you get from the bosses)
+
+- remove decorations like vines, skeletons and flowers, and add them randomly procedurally: can I do this automatically?
+- randomize wall tiles
+
+- to do (renderer):
+    - add enemies (xspelunker enemies for now) (like in xspelunker, each enemy
+      has a custom function of where can it be spawned)
+
+- to do (secret quest):
+    - distribute a series of k clues needed to unlock something in atlantis
+    - ensure there is path to those clues (how? ideally from the nearest path)
+    - place the secret goal location (teleporter to mars/moon, clues for each of them are separate), 
+      and also ensure path to it
+    - mars/moon are generated separately, with their own quests (they are independent)
+    - once solved, the same ending room can be used to reach the true ending    
+    
+- ensure I can have all the types of puzzles I listed above from La Mulana
+- ensure I can have things like "double jump" as the key and a whole area/path that requires it (or more than one)
+    
+- switch to the same exact RNG I would use in assembler
+- reimplement in assembler
+
+
+
 X-Spelunker 2 (e-ke-se pe-lu-ne-ke-le):
   - La Mulana-style
   - story:
@@ -86,17 +151,9 @@ PCGWorld:
       - if the lock_tag is not specified in the quest spec, pick one at random of the appropriate type, not used before
         - ...
       - addTags: if there is a tag there that is incompatible, FAIL!
-      - addPaths:
-        - addPath from lock -> goal if necessary
-        - addPath from keys to lock/goal
-          - path p1 -> p2: find the common ancestor in the spanning tree of p1 and p2, and come up with a list of divisions to visit: d1, ...., dn
-          - find paths from p1 to root of d1, then from root d1, to root d2, ... and finally from root dn to p2.
-          - mark which connections we use
-          - finally markOpenPath (mark which points must have paths to which others)
   - generate quest specs for boss4, 5
   - generateSubquests (same as before, but with different reachable/useable area)
   - set "lockKeys" to all the user locks and keys
-  - delete all the unused connections
 
 
 PCGArea:

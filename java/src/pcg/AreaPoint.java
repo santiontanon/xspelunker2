@@ -13,6 +13,7 @@ public class AreaPoint {
     public int x, y;
 
     public int direction;  // not considered for equality check
+    public AreaConnection connection = null;  // if the direction is through an area connection
 
     
     public AreaPoint(Area a_a, int a_x, int a_y)

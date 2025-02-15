@@ -21,5 +21,7 @@ public class AreaConnection {
         p1 = a_p1;
         p2 = a_p2;
         direction = a_d;
+        p1.connection = this;
+        p2.connection = this;
     }
 }
