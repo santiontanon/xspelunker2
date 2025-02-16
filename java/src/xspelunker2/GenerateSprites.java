@@ -37,8 +37,9 @@ public class GenerateSprites {
         addPlayerFrame(sourceImage, 0, 16, data, dataLeft);
         // Walk:
         addPlayerFrame(sourceImage, 16, 0, data, dataLeft);
-        Z80Assembler.dataToBinary(data, outputPath + ".bin");
+        addPlayerFrame(sourceImage, 32, 0, data, dataLeft);
         
+        Z80Assembler.dataToBinary(data, outputPath + ".bin");        
         Z80Assembler.dataToBinary(dataLeft, outputPath + "-left.bin");
     }
     

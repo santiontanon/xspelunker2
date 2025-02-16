@@ -7,22 +7,17 @@ to do:
 
 ***- game engine (assembler):
     ***- assembler: control player:
-      ***- player walk states
-        ***- stop player upon collision
-          ***- for each "biome" I need a tile-type map that determines collision type of each tile
-          ***- collision detection (dot to map, and player collides at 8,15 and 8,3):
-      ***- fall state:
-        ***- check collision below player and if no collision, go to fall state
-        ***- fall state falls until collision, and moves to idle state
-        ***- you can control the player when falling
-      ***- jump:
-        ***- jump arc
-        ***- you can control player in the air
+      ***- collision up should have a leeway of 4 more pixels
+      ***- collision left/right seems to be done not at the feet, but a bit higher?
       ***- scroll based on player position (maybe similar to the old XSpelunker?)
+      ***- finetune the jump/fall: it feels very floaty. So, maybe I need to make the player move a bit faster in the jump (e.g. 25% faster), and then make the jump 25% shorter in time to compensate.
       ***- crouch
       ***- move while crouched
+        ***- have an area where you need to crouch to pass (to test)
+        ***- edit patterns to have these areas
       ***- climb ropes/ladders (draw sprites)
       ***- inventory screen: down + jump (for now just go to a black screen, space goes back)
+    ***- assembler: SFX (jumping for now)
     ***- assembler: background tile animations (how did I do it in xspelunker?)
 
     ***- design data structure that will store the map: (7.2kb)
@@ -33,7 +28,7 @@ to do:
             ***- room IDs map
             ***- chunk IDs map
             ***- room seeds
-    ***- plan for rest of the engine (inventory, weapons, enemies, items, etc.)
+    ***- plan for rest of the engine (get damaged, swimm in water, inventory, weapons, enemies, items, etc.)
 
 - to do (optional treasure):
     - sample random rooms that have no tags (ideally in leaf divisions with no tags), and add optional treasure/story trivia labels

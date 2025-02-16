@@ -5,33 +5,9 @@ draw_room:
 	ld hl, NAMTBL2
 	call SETWRT
 
-	; e, d = layout coordinates: c/32, (b/24)
-	ld a, c
-	rlca
-	rlca
-	rlca
-	and #07
-	ld e, a
-	ld d, 0
-	ld a, b
-	sub 24
-	jr c, draw_room_layout_coordinates_computed
-	ld b, a
-	inc d
-	sub 24
-	jr c, draw_room_layout_coordinates_computed
-	ld b, a
-	inc d
-	sub 24
-	jr c, draw_room_layout_coordinates_computed
-	ld b, a
-	inc d
-draw_room_layout_coordinates_computed:
-
-	; here c, b are coordinates within the room:
-	ld a, c
-	and #1f
-	ld c, a
+	; - e, d: layout coordinates
+	; - c, b: coordinates within the room:
+	call global_position_to_layout_and_room_coordinates
 
 	; render 32 - c from the first room, and c from the second room:
 	ld a, 32
@@ -121,3 +97,41 @@ draw_room_column_loop2_done:
 	pop bc
 	djnz draw_room_row_loop
 	ret
+
+
+;-----------------------------------------------
+; input:
+; - c, b: x, y in tile coordinates
+; output:
+; - e, d = layout coordinates: c/32, (b/24)
+; - c, b: room coordinates (coordinates within the room)
+global_position_to_layout_and_room_coordinates:
+	; e, d = layout coordinates: c/32, (b/24)
+	ld a, c
+	rlca
+	rlca
+	rlca
+	and #07
+	ld e, a
+	ld d, 0
+	ld a, b
+	sub 24
+	jr c, draw_room_layout_coordinates_computed
+	ld b, a
+	inc d
+	sub 24
+	jr c, draw_room_layout_coordinates_computed
+	ld b, a
+	inc d
+	sub 24
+	jr c, draw_room_layout_coordinates_computed
+	ld b, a
+	inc d
+draw_room_layout_coordinates_computed:
+
+	; here c, b are coordinates within the room:
+	ld a, c
+	and #1f
+	ld c, a
+	ret
+

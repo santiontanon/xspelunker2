@@ -14,6 +14,8 @@ ROOM_OBJECT_STRUCT_Y: equ 2
 
 PLAYER_STATE_IDLE: equ 0
 PLAYER_STATE_WALKING: equ 2
+PLAYER_STATE_FALLING: equ 4
+PLAYER_STATE_JUMPING: equ 6
 
 
 ;-----------------------------------------------
