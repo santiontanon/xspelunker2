@@ -20,6 +20,11 @@ player_check_collision_left_continue:
 	pop bc
 	cp 2
 	ret z
+	; if we are crawling, do not check head:
+	ld a, (player_state)
+	and #fe
+	cp PLAYER_STATE_CRAWLING
+	jr z, player_check_collision_left_no_collision	
 	; collision with the head:
 	ld a, (player_y + 1)
 	ld b, a
@@ -30,6 +35,9 @@ player_check_collision_left_continue:
 player_check_collision_left_continue2:
 	call get_room_tile_type
 	cp 2
+	ret
+player_check_collision_left_no_collision:
+	or 1
 	ret
 
 
@@ -57,6 +65,11 @@ player_check_collision_right_continue:
 	pop bc
 	cp 2
 	ret z
+	; if we are crawling, do not check head:
+	ld a, (player_state)
+	and #fe
+	cp PLAYER_STATE_CRAWLING
+	jr z, player_check_collision_right_no_collision
 	; collision with the head:
 	ld a, (player_y + 1)
 	ld b, a
@@ -67,6 +80,9 @@ player_check_collision_right_continue:
 player_check_collision_right_continue2:
 	call get_room_tile_type
 	cp 2
+	ret
+player_check_collision_right_no_collision:
+	or 1
 	ret
 
 

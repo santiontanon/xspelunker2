@@ -19,6 +19,8 @@ PLAYER_STATE_IDLE: equ 0
 PLAYER_STATE_WALKING: equ 2
 PLAYER_STATE_FALLING: equ 4
 PLAYER_STATE_JUMPING: equ 6
+PLAYER_STATE_CROUCH: equ 8
+PLAYER_STATE_CRAWLING: equ 10
 
 
 ;-----------------------------------------------

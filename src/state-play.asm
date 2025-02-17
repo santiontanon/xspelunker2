@@ -83,66 +83,34 @@ maybe_recenter_scroll_vertical:
 	ret
 
 maybe_recenter_scroll_recenter_x:
-; 	ld a, (current_room__scroll_type)
-; 	or a
-; 	jr nz, maybe_recenter_scroll_recenter_x_axis_method
-maybe_recenter_scroll_recenter_x_rectangle_method:
 	ld a, (current_room__max_scroll_x)
 	ld e, a
 	ld a, (player_x + 1)
 	sub 15
-	jr nc, maybe_recenter_scroll_recenter_x_rectangle_method_continue
+	jr nc, maybe_recenter_scroll_recenter_x_continue
 	xor a
-maybe_recenter_scroll_recenter_x_rectangle_method_continue:
+maybe_recenter_scroll_recenter_x_continue:
 	cp e
-	jr c, maybe_recenter_scroll_recenter_x_rectangle_method_continue2
+	jr c, maybe_recenter_scroll_recenter_x_continue2
 	ld a, e
-maybe_recenter_scroll_recenter_x_rectangle_method_continue2:
+maybe_recenter_scroll_recenter_x_continue2:
 	ld (room_desired_scroll_x), a
 	jp maybe_recenter_scroll_vertical
 
-; maybe_recenter_scroll_recenter_x_axis_method:
-; 	; if y == current_room__scroll_horizontal_rail -> we can just scroll with the rectangle method
-; 	ld a, (current_room__scroll_horizontal_rail)
-; 	ld e, a
-; 	ld a, (room_desired_scroll_y)
-; 	cp e
-; 	jr z, maybe_recenter_scroll_recenter_x_rectangle_method
-
-; 	; ...
-
-; 	jp maybe_recenter_scroll_vertical
-
 maybe_recenter_scroll_recenter_y:
-; 	ld a, (current_room__scroll_type)
-; 	or a
-; 	jr nz, maybe_recenter_scroll_recenter_y_axis_method
-maybe_recenter_scroll_recenter_y_rectangle_method:
 	ld a, (current_room__max_scroll_y)
 	ld e, a
 	ld a, (player_y + 1)
 	sub 11
-	jr nc, maybe_recenter_scroll_recenter_y_rectangle_method_continue
+	jr nc, maybe_recenter_scroll_recenter_y_continue
 	xor a
-maybe_recenter_scroll_recenter_y_rectangle_method_continue:
+maybe_recenter_scroll_recenter_y_continue:
 	cp e
-	jr c, maybe_recenter_scroll_recenter_y_rectangle_method_continue2
+	jr c, maybe_recenter_scroll_recenter_y_continue2
 	ld a, e
-maybe_recenter_scroll_recenter_y_rectangle_method_continue2:
+maybe_recenter_scroll_recenter_y_continue2:
 	ld (room_desired_scroll_y), a
 	ret
-
-; maybe_recenter_scroll_recenter_y_axis_method:
-; 	; if x == current_room__scroll_vertical_rail -> we can just scroll with the rectangle method
-; 	ld a, (current_room__scroll_vertical_rail)
-; 	ld e, a
-; 	ld a, (room_desired_scroll_x)
-; 	cp e
-; 	jr z, maybe_recenter_scroll_recenter_y_rectangle_method
-
-; 	; ...
-
-; 	ret
 
 
 ;-----------------------------------------------

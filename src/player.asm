@@ -80,6 +80,8 @@ player_update_state_fn_table:
 	dw player_update_state_walking
 	dw player_update_state_falling
 	dw player_update_state_jumping
+	dw player_update_state_crouch
+	dw player_update_state_crawling
 
 
 ;-----------------------------------------------
@@ -89,12 +91,15 @@ player_update_switch_to_idle:
 	ld (player_state), a
 
 player_update_state_idle:
-	; check for walk:
+	; check for walk/crouch:
 	ld a, (keyboard_line_state)
 	bit 7, a
 	jr z, player_update_switch_to_walking_right
 	bit 4, a
 	jr z, player_update_switch_to_walking_left
+	bit 6, a
+	jp z, player_update_switch_to_crouch
+	
 	; check for jump
 	ld a, (keyboard_line_clicks + 2)
 	bit 2, a
@@ -102,7 +107,7 @@ player_update_state_idle:
 
 	; check for falling:
 	call player_check_collision_down_inc
-	jp nz, player_update_switch_to_falling_skip_collision_check
+	jp nz, player_update_switch_to_falling
 
 	ld a, (interrupt_cycle)
 	rrca
@@ -139,6 +144,11 @@ player_update_state_walking:
 	jp player_update_switch_to_idle
 
 player_update_state_walking_right:
+	; check for crawling:
+	ld a, (keyboard_line_state)
+	bit 6, a
+	jp z, player_update_switch_to_crawling_right
+
 	; check for falling:
 	call player_check_collision_down_inc
 	jr nz, player_update_switch_to_falling
@@ -147,6 +157,11 @@ player_update_state_walking_right:
 	jr player_update_state_walking_continue
 
 player_update_state_walking_left:
+	; check for crawling:
+	ld a, (keyboard_line_state)
+	bit 6, a
+	jp z, player_update_switch_to_crawling_left
+
 	; check for falling:
 	call player_check_collision_down_inc
 	jr nz, player_update_switch_to_falling
@@ -165,15 +180,6 @@ player_update_state_walking_continue:
 
 
 ;-----------------------------------------------
-player_update_switch_to_falling_skip_collision_check:
-	xor a
-	ld (player_state_timer), a
-	ld a, (player_state)
-	and #01
-	add a, PLAYER_STATE_FALLING
-	ld (player_state), a
-	jr player_update_state_falling_post_collision_check
-
 player_update_switch_to_falling:
 	xor a
 	ld (player_state_timer), a
@@ -183,11 +189,6 @@ player_update_switch_to_falling:
 	ld (player_state), a
 
 player_update_state_falling:
-	; check if we need to switch to idle:
-	call player_check_collision_down_inc
-	jp z, player_update_switch_to_idle
-
-player_update_state_falling_post_collision_check:
 	; movement left/right:
 	ld a, (keyboard_line_state)
 	bit 7, a
@@ -196,6 +197,10 @@ player_update_state_falling_post_collision_check:
 	pop af
 	bit 4, a
 	call z, player_update_move_one_pixel_left_considering_collisions
+
+	; check if we need to switch to idle:
+	call player_check_collision_down_inc
+	jp z, player_update_switch_to_idle
 
 	; move down:
 	ld a, (player_state_timer)
@@ -287,7 +292,103 @@ player_update_stop_jumping:
 	ld (player_state_timer), a
 	ret
 
+
+;-----------------------------------------------
+player_update_switch_to_crouch:
+	; recenter scroll:
+	call maybe_recenter_scroll_recenter_x
+	call maybe_recenter_scroll_recenter_y
+
+	ld a, (player_state)
+	and #01
+	add a, PLAYER_STATE_CROUCH
+	ld (player_state), a
+
+player_update_state_crouch:
+	; check for crawl:
+	ld a, (keyboard_line_state)
+	bit 7, a
+	jr z, player_update_switch_to_crawling_right
+	bit 4, a
+	jr z, player_update_switch_to_crawling_left
+
+	; check for falling:
+	call player_check_collision_down_inc
+	jp nz, player_update_switch_to_falling
+
+	; check for idle:
+	ld a, (keyboard_line_state)
+	bit 6, a
+	jp nz, player_update_switch_to_idle
+
+	ld a, 4
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+
+
+;-----------------------------------------------
+player_update_switch_to_crawling_left:
+	ld a, PLAYER_STATE_CRAWLING + 1
+	ld (player_state), a
+	jp player_update_state_crawling
+
+player_update_switch_to_crawling_right:
+	ld a, PLAYER_STATE_CRAWLING
+	ld (player_state), a
+
+player_update_state_crawling:
+	; check for crouch:
+	ld a, (keyboard_line_state)
+	bit 7, a
+	jr z, player_update_state_crawling_right
+	bit 4, a
+	jr z, player_update_state_crawling_left
+	jp player_update_switch_to_crouch
+
+player_update_state_crawling_right:
+	; check for back to walking:
+	ld a, (keyboard_line_state)
+	bit 6, a
+	jp nz, player_update_switch_to_walking_right
+
+	; check for falling:
+	call player_check_collision_down_inc
+	jp nz, player_update_switch_to_falling
+
+	; move at half speed:
+	ld a, (interrupt_cycle)
+	and #01
+	call z, player_update_move_one_pixel_right_considering_collisions
+	jr player_update_state_crawling_continue
+
+player_update_state_crawling_left:
+	; check for back to walking:
+	ld a, (keyboard_line_state)
+	bit 6, a
+	jp nz, player_update_switch_to_walking_left
+
+	; check for falling:
+	call player_check_collision_down_inc
+	jp nz, player_update_switch_to_falling
+
+	; move at half speed:
+	ld a, (interrupt_cycle)
+	and #01
+	call z, player_update_move_one_pixel_left_considering_collisions
+
+player_update_state_crawling_continue:
+	ld a, (interrupt_cycle)
+	rrca
+	rrca
+	rrca
+	and #01
+	add a, 4
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+
+
 ENDIF
+
 
 ;-----------------------------------------------
 player_update_move_one_pixel_right_considering_collisions:
