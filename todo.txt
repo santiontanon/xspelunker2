@@ -6,29 +6,33 @@ to do:
              and easier to translate to assembler? 
 
 ***- game engine (assembler):
-    ***- assembler: control player:
-      ***- collision up should have a leeway of 4 more pixels
-      ***- collision left/right seems to be done not at the feet, but a bit higher?
-      ***- scroll based on player position (maybe similar to the old XSpelunker?)
-      ***- finetune the jump/fall: it feels very floaty. So, maybe I need to make the player move a bit faster in the jump (e.g. 25% faster), and then make the jump 25% shorter in time to compensate.
-      ***- crouch
-      ***- move while crouched
-        ***- have an area where you need to crouch to pass (to test)
-        ***- edit patterns to have these areas
-      ***- climb ropes/ladders (draw sprites)
-      ***- inventory screen: down + jump (for now just go to a black screen, space goes back)
-    ***- assembler: SFX (jumping for now)
-    ***- assembler: background tile animations (how did I do it in xspelunker?)
+    ***- crouch (add sprite)
+      ***- if player crouches (on transition): recenter scroll
+    ***- move while crouched (add sprites)
+    ***- edit patterns to have areas where you can only pass crouching
+    ***- edit patterns so that needed jumps are only height 5 and not 6
+    ***- edit patterns knowing that player can only jump a gap of 4/5, not of 6
+    - climb ropes (add sprites)
+    - climb ladders (add sprites)
+    - inventory screen: down + jump (for now just go to a black screen, space goes back)
+    - assembler: background tile animations (how did I do it in xspelunker?)
 
     ***- design data structure that will store the map: (7.2kb)
-        ***- global object list (4 * 64 -> 256 bytes)
-        ***- list of areas: w, j, division map, tag map, seed for area generator (10 * 256 -> 2.5kb)
-        ***- list of divisions: ID, parent, n_descendants, root point, tags (this is stored twice for convenience) (64 * 10 -> 640 bytes)
-        ***- current area structure: (128 * 2 + 32 -> 288 bytes)
-            ***- room IDs map
-            ***- chunk IDs map
-            ***- room seeds
-    ***- plan for rest of the engine (get damaged, swimm in water, inventory, weapons, enemies, items, etc.)
+        ***- next step is to hardcode the rendered-current-area structure, and generate the current room in assembler automatically. This involves:
+          ***- defining the data structure
+            - current area structure: (128 * 2 + 32 -> 288 bytes)
+                - room IDs map
+                - chunk IDs map
+                - room seeds
+          ***- generating some hard-coded data from Java
+          ***- encoding the chunks in assembler
+          ***- generating the room structure automatically in assembler (instantiate the chunks)
+          ***- take this chance to randomize the chunk tiles
+          ***- I should then be able to test room transitions to navigate a whole map
+        - global object list (4 * 64 -> 256 bytes)
+        - list of areas: w, j, division map, tag map, seed for area generator (10 * 256 -> 2.5kb)
+        - list of divisions: ID, parent, n_descendants, root point, tags (this is stored twice for convenience) (64 * 10 -> 640 bytes)
+    - plan for rest of the engine (get damaged, swim in water, inventory, weapons, enemies, items, etc.)
 
 - to do (optional treasure):
     - sample random rooms that have no tags (ideally in leaf divisions with no tags), and add optional treasure/story trivia labels

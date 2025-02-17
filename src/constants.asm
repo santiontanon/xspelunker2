@@ -1,5 +1,5 @@
     include "msx-constants.asm"
-;     include "sound-constants.asm"
+    include "sound-constants.asm"
 
 
 MAX_SPRITES: equ 32
@@ -11,6 +11,9 @@ ROOM_OBJECT_STRUCT_TYPE: equ 0
 ROOM_OBJECT_STRUCT_X: equ 1
 ROOM_OBJECT_STRUCT_Y: equ 2
 
+
+PLAYER_COLLISION_UP_LEEWAY: equ 3  ; collision box height will be 16 - PLAYER_COLLISION_UP_LEEWAY
+PLAYER_COLLISION_BOX_WIDTH: equ 2  ; collision box width will be 2 * PLAYER_COLLISION_BOX_WIDTH
 
 PLAYER_STATE_IDLE: equ 0
 PLAYER_STATE_WALKING: equ 2

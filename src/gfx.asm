@@ -1,25 +1,25 @@
-;-----------------------------------------------
-; disable_VDP_output:
-;     ld a,(VDP_REGISTER_1)
-;     and #bf ; reset the BL bit
-;     di
-;     out (#99),a
-;     ld  a,1+128 ; write to register 1
-;     ei
-;     out (#99),a
-;     ret
+; -----------------------------------------------
+disable_VDP_output:
+    ld a,(VDP_REGISTER_1)
+    and #bf ; reset the BL bit
+    di
+    out (#99),a
+    ld  a,1+128 ; write to register 1
+    ei
+    out (#99),a
+    ret
 
 
-;-----------------------------------------------
-; enable_VDP_output:
-;     ld a,(VDP_REGISTER_1)
-;     or #40  ; set the BL bit
-;     di
-;     out (#99),a
-;     ld  a,1+128 ; write to register 1
-;     ei
-;     out (#99),a
-;     ret
+; -----------------------------------------------
+enable_VDP_output:
+    ld a,(VDP_REGISTER_1)
+    or #40  ; set the BL bit
+    di
+    out (#99),a
+    ld  a,1+128 ; write to register 1
+    ei
+    out (#99),a
+    ret
 
 
 ;-----------------------------------------------

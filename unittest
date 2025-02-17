@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+set -e
+
+# We expect HL == 0 if all tests pass, or contain the number of the test that failed otherwise.
+read_from_symbol_file () {
+	echo "Executing tests in $1..."	
+	print_lines=true
+	while IFS= read -r line; do
+		if [[ $print_lines == true ]] ;
+		then
+			echo $line
+		fi
+		if [[ $line == "INFO: all tests passed" ]] ;
+		then
+			print_lines=false
+		fi
+		# Print execution stats about the function we are evaluating:
+		if [[ $line == *"$2"* ]] ;
+		then
+			echo $line
+		fi
+		if [[ $line == *"unittest-debug:"* ]] ;
+		then
+			echo $line
+		fi
+	done < <( java -jar java/mdl.jar "$1" -e:u test_start test_end -e:watch "mdl-watch:" -e:track-all-functions )
+	# done < <( java -jar java/mdl.jar "$1" -e:u test_start test_end -e:watch "mdl-watch:" -e:track-all-functions -asm+:html unittest.html )
+}
+
+
+read_from_symbol_file "src/unittests/collision-test.asm" "a_times_de_signed_fast"

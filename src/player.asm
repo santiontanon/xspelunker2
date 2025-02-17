@@ -1,17 +1,31 @@
 ;-----------------------------------------------
+; player_fall_speed_table:
+;     db 1, 0, 1, 0
+;     db 1, 1, 1, 1
+;     db 2, 1, 2, 1
+;     db 2, 2, 3, 3, 4, #ff  ; a bit floaty for 50Hz
+
+
+; player_jump_speed_table:
+; 	db 4, 4, 4, 4, 3, 3, 2, 2  ; 26 / 8
+; 	db 2, 2, 2, 1, 2, 1, 2, 1  ; 13 / 8
+; 	db 1, 1, 1  ; 3 / 3
+; 	db 1, 0, 1, 0  ; 2 / 4
+; 	db 0, #ff  ; 44 total jump height in 23 frames / a bit floaty for 50Hz
+
+
+; When unit testing, we only want to import some parts of this file:
+IF COLLISION_UNIT_TESTING == 0
+
 player_fall_speed_table:
-    db 1, 0, 1, 0
-    db 1, 1, 1, 1
-    db 2, 1, 2, 1
-    db 2, 2, 3, 3, 4, #ff  ; 50Hz
+    db 1, 0, 1, 1, 2, 1
+    db 2, 2, 3, 3, 4, #ff  ; good for 50Hz
 
-
+PLAYER_JUMP_STOP_INDEX: equ 12  ; when we release the jump key, we will move to this index in the
+								; jump speed table, if we are not already past that
 player_jump_speed_table:
-	db 4, 4, 4, 4, 3, 3, 2, 2  ; 26
-	db 2, 2, 2, 1, 2, 1, 2, 1  ; 13 -> 39
-	db 1, 1, 1  ; 3 -> 42
-	db 1, 0, 1, 0  ; 2 -> 44
-	db 0, #ff  ; 44 total jump height / 50Hz
+	db 6, 6, 6, 4, 4, 3, 3, 2
+	db 2, 1, 2, 1, 1, 0, 1, 0, 0, 0, #ff  ; 1 / 3  ; 42 total jump height in 18 frames / good for 50Hz
 
 
 ;-----------------------------------------------
@@ -82,13 +96,13 @@ player_update_state_idle:
 	bit 4, a
 	jr z, player_update_switch_to_walking_left
 	; check for jump
-	ld a, (keyboard_line_state + 2)
+	ld a, (keyboard_line_clicks + 2)
 	bit 2, a
-	jp z, player_update_switch_to_jumping
+	jp nz, player_update_switch_to_jumping
 
 	; check for falling:
 	call player_check_collision_down_inc
-	jp nz, player_update_switch_to_falling
+	jp nz, player_update_switch_to_falling_skip_collision_check
 
 	ld a, (interrupt_cycle)
 	rrca
@@ -112,9 +126,9 @@ player_update_switch_to_walking_right:
 
 player_update_state_walking:
 	; check for jump
-	ld a, (keyboard_line_state + 2)
+	ld a, (keyboard_line_clicks + 2)
 	bit 2, a
-	jp z, player_update_switch_to_jumping
+	jp nz, player_update_switch_to_jumping
 
 	; check for idle:
 	ld a, (keyboard_line_state)
@@ -151,7 +165,7 @@ player_update_state_walking_continue:
 
 
 ;-----------------------------------------------
-player_update_switch_to_falling:
+player_update_switch_to_falling_skip_collision_check:
 	xor a
 	ld (player_state_timer), a
 	ld a, (player_state)
@@ -160,6 +174,13 @@ player_update_switch_to_falling:
 	ld (player_state), a
 	jr player_update_state_falling_post_collision_check
 
+player_update_switch_to_falling:
+	xor a
+	ld (player_state_timer), a
+	ld a, (player_state)
+	and #01
+	add a, PLAYER_STATE_FALLING
+	ld (player_state), a
 
 player_update_state_falling:
 	; check if we need to switch to idle:
@@ -209,6 +230,8 @@ player_update_state_falling_speed_loop_done:
 
 ;-----------------------------------------------
 player_update_switch_to_jumping:
+	ld hl, SFX_jump
+	call play_SFX_with_high_priority
 	xor a
 	ld (player_state_timer), a
 	ld a, (player_state)
@@ -226,10 +249,17 @@ player_update_state_jumping:
 	bit 4, a
 	call z, player_update_move_one_pixel_left_considering_collisions
 
+	; did the player release the jump key?
+	; check for jump
+	ld a, (keyboard_line_state + 2)
+	bit 2, a
+	call nz, player_update_stop_jumping
+
 	; move up:
 	ld a, (player_state_timer)
 	inc a
 	ld (player_state_timer), a
+player_update_stop_jumping_continue:
 	ld hl, player_jump_speed_table - 1
 	ADD_HL_A
 	ld a, (hl)
@@ -249,6 +279,15 @@ player_update_state_jumping_speed_loop_done:
 	ld (player_requested_frame), a
 	jp player_update_update_sprite_position
 
+player_update_stop_jumping:
+	ld a, (player_state_timer)
+	cp PLAYER_JUMP_STOP_INDEX
+	ret nc
+	ld a, PLAYER_JUMP_STOP_INDEX
+	ld (player_state_timer), a
+	ret
+
+ENDIF
 
 ;-----------------------------------------------
 player_update_move_one_pixel_right_considering_collisions:
@@ -260,18 +299,19 @@ player_update_move_one_pixel_right_considering_collisions:
 	inc a
 	ld (hl), a
 	cp 8
-	ret c
+	jr c, player_update_move_one_pixel_right_considering_collisions_continue
 	and #07
 	ld (hl), a
 	inc hl
 	inc (hl)
-	call player_check_collision_horizontal
+player_update_move_one_pixel_right_considering_collisions_continue:
+	cp 8 - PLAYER_COLLISION_BOX_WIDTH
+	ret nz
+	call player_check_collision_right
 	ret nz
 	; collision, cannot move:
 	ld hl, player_x
-	ld (hl), 7
-	inc hl
-	dec (hl)
+	ld (hl), (8 - PLAYER_COLLISION_BOX_WIDTH) - 1
 	ret
 
 
@@ -285,17 +325,18 @@ player_update_move_one_pixel_left_considering_collisions:
 	dec a
 	ld (hl), a
 	inc a
-	ret nz
+	jr nz, player_update_move_one_pixel_left_considering_collisions_continue
 	ld (hl), 7
 	inc hl
 	dec (hl)
-	call player_check_collision_horizontal
+player_update_move_one_pixel_left_considering_collisions_continue:
+	cp PLAYER_COLLISION_BOX_WIDTH + 1
+	ret nz
+	call player_check_collision_left
 	ret nz
 	; collision, cannot move:
 	ld hl, player_x
-	ld (hl), 0
-	inc hl
-	inc (hl)
+	ld (hl), PLAYER_COLLISION_BOX_WIDTH + 1
 	ret
 
 
@@ -316,20 +357,25 @@ player_update_move_one_pixel_down:
 
 ;-----------------------------------------------
 player_update_move_one_pixel_up_considering_collisions:
+	; collision "up" has a "PLAYER_COLLISION_UP_LEEWAY" pixel leeway,
+	; so we check collisions when going from "8 - PLAYER_COLLISION_UP_LEEWAY"
+	; to "8 - PLAYER_COLLISION_UP_LEEWAY - 1" in "player_y":
 	ld hl, player_y
 	ld a, (hl)
 	dec a
 	ld (hl), a
 	inc a
-	ret nz
+	jr nz, player_update_move_one_pixel_up_considering_collisions_continue
 	ld (hl), 7
 	inc hl
 	dec (hl)
+	ret
+player_update_move_one_pixel_up_considering_collisions_continue:
+	cp 8 - PLAYER_COLLISION_UP_LEEWAY
+	ret nz
 	call player_check_collision_up
 	ret nz
 	; collision, cannot move:
 	ld hl, player_y
-	ld (hl), 0
-	inc hl
-	inc (hl)
+	ld (hl), 8 - PLAYER_COLLISION_UP_LEEWAY
 	ret

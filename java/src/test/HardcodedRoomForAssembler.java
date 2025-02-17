@@ -4,7 +4,6 @@
  */
 package test;
 
-import java.util.Arrays;
 import java.util.Random;
 import pcg.Area;
 import pcg.PCGArea;
@@ -29,91 +28,94 @@ public class HardcodedRoomForAssembler {
         World w = pcg1.generate(r);
         pcg2.generate(w.areas.get(0), w, r);
         RenderedArea ra = pcg2.generate(w.areas.get(1), w, r);
-        
-        generateAssemblerRoomData(5, w.areas.get(1), ra);
+//        generateAssemblerRoomData(3, w.areas.get(1), ra);  // size 2
+        generateAssemblerRoomData(6, w.areas.get(1), ra);  // size 4, square
     }
 
     
     public static void generateAssemblerRoomData(int roomID, Area a, RenderedArea ra) throws Exception
     {
-        int layout[] = new int[4*4];
-        int tile_map[] = new int[32*24*4];
         int n_room_objects = 0;
         
-        int room_x0 = -1, room_y0 = -1;
+        int room_x1 = -1, room_y1 = -1;
+        int room_x2 = -1, room_y2 = -1;
         for(int i = 0;i<a.height;i++) {
             for(int j = 0;j<a.width;j++) {
                 if (a.rooms[j][i] == roomID) {
-                    if (room_x0 == -1 || j < room_x0) {
-                        room_x0 = j;
+                    if (room_x1 == -1 || j < room_x1) {
+                        room_x1 = j;
                     }
-                    if (room_y0 == -1 || i < room_y0) {
-                        room_y0 = i;
+                    if (room_y1 == -1 || i < room_y1) {
+                        room_y1 = i;
+                    }
+                    if (room_x2 == -1 || j > room_x2) {
+                        room_x2 = j;
+                    }
+                    if (room_y2 == -1 || i > room_y2) {
+                        room_y2 = i;
                     }
                 }
             }
         }
+        int width = (1 + room_x2 - room_x1) * 32;
+        int height = (1 + room_y2 - room_y1) * 24;
         
-        int screen_ID = 0;
-        for(int j = 0;j<a.width;j++) {
-            for(int i = 0;i<a.height;i++) {
+        int tile_map[] = new int[width * height];
+        
+        for(int i = room_y1;i<=room_y2;i++) {
+            for(int j = room_x1;j<=room_x2;j++) {
                 if (a.rooms[j][i] == roomID) {
-                    addChunkToTileMap(ra, j, i, tile_map, 0, 0, screen_ID);
-                    addChunkToTileMap(ra, j, i, tile_map, 1, 0, screen_ID);
-                    addChunkToTileMap(ra, j, i, tile_map, 0, 1, screen_ID);
-                    addChunkToTileMap(ra, j, i, tile_map, 1, 1, screen_ID);
-                    screen_ID++;
-                    layout[(j - room_x0) + (i - room_y0) * 4] = screen_ID;
+                    addChunkToTileMap(ra, j*2,   i*2,   tile_map, (j - room_x1)*2,     (i - room_y1)*2, width);
+                    addChunkToTileMap(ra, j*2+1, i*2,   tile_map, (j - room_x1)*2 + 1, (i - room_y1)*2, width);
+                    addChunkToTileMap(ra, j*2,   i*2+1, tile_map, (j - room_x1)*2,     (i - room_y1)*2 + 1, width);
+                    addChunkToTileMap(ra, j*2+1, i*2+1, tile_map, (j - room_x1)*2 + 1, (i - room_y1)*2 + 1, width);
                 }
             }
         }
         
-        System.out.println("hardcoded_room_data__layout:");
-        for(int i = 0;i<4;i++) {
+        System.out.println("hardcoded_room_data__width:");
+        System.out.println("  db " + width);
+        System.out.println("hardcoded_room_data__height:");
+        System.out.println("  db " + height);
+        
+        System.out.println("hardcoded_room_data__tile_map:");
+        for(int i = 0;i<height;i++) {
             String line = "  db ";
-            for(int j = 0;j<4;j++) {
+            for(int j = 0;j<width;j++) {
                 if (j == 0) {
-                    line += "" + layout[j + i*4];
+                    line += "" + tile_map[j + i*width];
                 } else {
-                    line += ", " + layout[j + i*4];
+                    line += ", " + tile_map[j + i*width];
                 }
             }
             System.out.println(line);
         }
-        System.out.println("");
-
-        System.out.println("hardcoded_room_data__tile_map:");
-        for(int i = 0;i<4;i++) {
-            for(int j = 0;j<24;j++) {
-                String line = "  db ";
-                for(int k = 0;k<32;k++) {
-                    if (k == 0) {
-                        line += "" + tile_map[k + j*32 + i*32*24];
-                    } else {
-                        line += ", " + tile_map[k + j*32 + i*32*24];
-                    }
-                }
-                System.out.println(line);
-            }
-            System.out.println("");
+        
+        if (width*height < 64*48) {
+            System.out.println("hardcoded_room_data__filler:");
+            System.out.println("  ds " + (64*48 - width*height) + ", 0\n");
         }
+
+        System.out.println("hardcoded_room_data__max_scroll_x:");
+        System.out.println("  db " + (width - 32));
+        System.out.println("hardcoded_room_data__max_scroll_y:");
+        System.out.println("  db " + (height - 24));
+        
         System.out.println("hardcoded_room_data__n_objects:");
         System.out.println("  db " + n_room_objects);
     }
     
     
-    public static void addChunkToTileMap(RenderedArea ra, int chunkx, int chunky, int []tile_map, int roomx, int roomy, int roomID)
+    public static void addChunkToTileMap(RenderedArea ra, int chunkx, int chunky, int []tile_map, int targetx, int targety, int width)
     {
         for(int i = 0; i<RoomChunk.CHUNK_HEIGHT;i++) {            
             for(int j = 0; j<RoomChunk.CHUNK_WIDTH;j++) {
-                int tile = ra.fg_chunks[chunkx*2 + roomx][chunky*2 + roomy].tiles[j][i];
+                int tile = ra.fg_chunks[chunkx][chunky].tiles[j][i];
                 if (tile == 0) {
-                    tile = ra.bg_chunks[chunkx*2 + roomx][chunky*2 + roomy].tiles[j][i];
+                    tile = ra.bg_chunks[chunkx][chunky].tiles[j][i];
                 }
-                int offset = roomx * RoomChunk.CHUNK_WIDTH + j + 
-                         (roomy * RoomChunk.CHUNK_HEIGHT + i) * 32 +
-                         roomID * 32 * 24;
-//                System.out.println("offset: " + offset + ", chunkx: " + chunkx + ", chunky: " + chunky + ", roomx: " + roomx + ", roomy: " + roomy + ", roomID: " + roomID);
+                int offset = targetx * RoomChunk.CHUNK_WIDTH + j +
+                             (targety * RoomChunk.CHUNK_HEIGHT + i) * width;
                 tile_map[offset] = tile;
             }
         }
