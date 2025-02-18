@@ -24,39 +24,39 @@ enable_VDP_output:
 
 ;-----------------------------------------------
 ; clear sprites:
-; clear_all_the_sprites:
-;     ld hl,SPRATR2
-;     ld a,224
-;     ld bc,32*4
-;     jp fast_FILVRM
+clear_all_the_sprites:
+    ld hl,SPRATR2
+    ld a,224
+    ld bc,32*4
+    jp fast_FILVRM
 
 
 ;-----------------------------------------------
 ; a: byte
 ; bc: amount to write
 ; hl: target address in the VDP
-; fast_FILVRM:
-;     push af
-;         push bc
-;             call SETWRT
-;             ld a, (VDP.DW)
-;             ld c, a
-;         pop de
-;         ld a, e
-;         or a
-;         jr z, fast_FILVRM_no_inc
-;         inc d
-; fast_FILVRM_no_inc:
-;     pop af
-; fast_FILVRM_loop2:
-; fast_FILVRM_loop:
-;     out (c), a
-;     dec e
-;     jp nz, fast_FILVRM_loop
-;     ; ld e, 256  ; unnecessary, as e == 0 here already
-;     dec d
-;     jp nz, fast_FILVRM_loop2
-;     ret
+fast_FILVRM:
+    push af
+        push bc
+            call SETWRT
+            ld a, (VDP.DW)
+            ld c, a
+        pop de
+        ld a, e
+        or a
+        jr z, fast_FILVRM_no_inc
+        inc d
+fast_FILVRM_no_inc:
+    pop af
+fast_FILVRM_loop2:
+fast_FILVRM_loop:
+    out (c), a
+    dec e
+    jp nz, fast_FILVRM_loop
+    ; ld e, 256  ; unnecessary, as e == 0 here already
+    dec d
+    jp nz, fast_FILVRM_loop2
+    ret
 
 
 ;-----------------------------------------------

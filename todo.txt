@@ -6,18 +6,13 @@ to do:
              and easier to translate to assembler? 
 
 ***- game engine (assembler):
-    ***- climb ropes:
-      ***- draw sprites
-      ***- add sprites
-      ***- when crouching/crawling check if there is a rope below, and switch to climb state
-      ***- climb up down
-      ***- change left/right direction
-      ***- switch to fall when reaching down
-      ***_ switch to idle when reaching up
-      ***- jump out of ropes
-    - climb ladders (add sprites)
-    - inventory screen: down + jump (for now just go to a black screen, space goes back)
-    - assembler: background tile animations (how did I do it in xspelunker?)
+    ***- assembler: background tile animations:
+      ***- list of room animations: x, y, width, type
+        ***- generate from the Java side
+        ***- check on Java that we have no more animations than the max (do it for 5000 seeds)
+      ***- copy it over to assembler
+      ***- they update every 4 frames (in frame 0: 0, 4, 8, etc., in frame 1: 1, 5, 9, etc.)
+      ***- if we are not redrawing the whole room this frame, also copy to VDP after updating the part that overlaps with the visible screen
 
     ***- design data structure that will store the map: (7.2kb)
         ***- next step is to hardcode the rendered-current-area structure, and generate the current room in assembler automatically. This involves:
@@ -28,16 +23,16 @@ to do:
                 - room seeds
           ***- generating some hard-coded data from Java
           ***- encoding the chunks in assembler
-          ***- generating the room structure automatically in assembler (instantiate the chunks)
+          ***- generating the room structure automatically in assembler (instantiate the chunks) (pcg code in a different page?)
           ***- take this chance to simplify + randomize the chunk tiles
           ***- I should then be able to test room transitions to navigate a whole map now
             ***- collision for now when trying to navigate through an inter-area connection
         - global object list (4 * 64 -> 256 bytes)
         - list of areas: w, j, division map, tag map, seed for area generator (10 * 256 -> 2.5kb)
         - list of divisions: ID, parent, n_descendants, root point, tags (this is stored twice for convenience) (64 * 10 -> 640 bytes)
-    - plan for rest of the engine (get hurt, hud, swim in water, inventory, weapons, enemies, items, etc.)
+    - plan for rest of the engine (swim in water, get hurt, hud, inventory, weapons, enemies, items, etc.)
 
-- to do (optional treasure):
+- PCG to do: optional treasure:
     - sample random rooms that have no tags (ideally in leaf divisions with no tags), and add optional treasure/story trivia labels
          (might or might not be reachable)
         - add "small keys" and some of the objects above are chest_locked with small keys
@@ -164,10 +159,4 @@ PCGWorld:
   - generate quest specs for boss4, 5
   - generateSubquests (same as before, but with different reachable/useable area)
   - set "lockKeys" to all the user locks and keys
-
-
-PCGArea:
-...
-
-
 

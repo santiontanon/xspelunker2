@@ -44,37 +44,37 @@
 ;   db 10,#00  ; silence
 ;   db SFX_CMD_END 
 
-; SFX_ui_select:
-;   db  7,#b8  ; SFX all channels to tone
-;   db 10,#0b  ; volume
-;   db 4,#80, 5+MUSIC_CMD_TIME_STEP_FLAG,#01 ; frequency
-;   db 10+MUSIC_CMD_TIME_STEP_FLAG,#09  ; volume
+SFX_ui_select:
+  db  7,#b8  ; SFX all channels to tone
+  db 10,#0b  ; volume
+  db 4,#80, 5+MUSIC_CMD_TIME_STEP_FLAG,#01 ; frequency
+  db 10+MUSIC_CMD_TIME_STEP_FLAG,#09  ; volume
 
-;   db 10,#0b  ; volume
-;   db 4,#40, 5+MUSIC_CMD_TIME_STEP_FLAG,#01 ; frequency
-;   db 10+MUSIC_CMD_TIME_STEP_FLAG,#09  ; volume
+  db 10,#0b  ; volume
+  db 4,#40, 5+MUSIC_CMD_TIME_STEP_FLAG,#01 ; frequency
+  db 10+MUSIC_CMD_TIME_STEP_FLAG,#09  ; volume
 
-;   db 10,#0b  ; volume
-;   db 4,#00, 5+MUSIC_CMD_TIME_STEP_FLAG,#01 ; frequency
-;   db 10+MUSIC_CMD_TIME_STEP_FLAG,#09  ; volume
+  db 10,#0b  ; volume
+  db 4,#00, 5+MUSIC_CMD_TIME_STEP_FLAG,#01 ; frequency
+  db 10+MUSIC_CMD_TIME_STEP_FLAG,#09  ; volume
 
-;   db 10,#0b  ; volume
-;   db 4,#80, 5+MUSIC_CMD_TIME_STEP_FLAG,#00 ; frequency
-;   db MUSIC_CMD_SKIP
-;   db 10+MUSIC_CMD_TIME_STEP_FLAG,#09  ; volume
-;   db MUSIC_CMD_SKIP
-;   db 10+MUSIC_CMD_TIME_STEP_FLAG,#08  ; volume
-;   db MUSIC_CMD_SKIP
-;   db 10+MUSIC_CMD_TIME_STEP_FLAG,#06  ; volume
-;   db MUSIC_CMD_SKIP
-;   db 10+MUSIC_CMD_TIME_STEP_FLAG,#05  ; volume
-;   db MUSIC_CMD_SKIP
-;   db 10+MUSIC_CMD_TIME_STEP_FLAG,#03  ; volume
-;   db MUSIC_CMD_SKIP
-;   db 10+MUSIC_CMD_TIME_STEP_FLAG,#02  ; volume
-;   db MUSIC_CMD_SKIP
-;   db 10,#00  ; silence
-;   db SFX_CMD_END    
+  db 10,#0b  ; volume
+  db 4,#80, 5+MUSIC_CMD_TIME_STEP_FLAG,#00 ; frequency
+  db MUSIC_CMD_SKIP
+  db 10+MUSIC_CMD_TIME_STEP_FLAG,#09  ; volume
+  db MUSIC_CMD_SKIP
+  db 10+MUSIC_CMD_TIME_STEP_FLAG,#08  ; volume
+  db MUSIC_CMD_SKIP
+  db 10+MUSIC_CMD_TIME_STEP_FLAG,#06  ; volume
+  db MUSIC_CMD_SKIP
+  db 10+MUSIC_CMD_TIME_STEP_FLAG,#05  ; volume
+  db MUSIC_CMD_SKIP
+  db 10+MUSIC_CMD_TIME_STEP_FLAG,#03  ; volume
+  db MUSIC_CMD_SKIP
+  db 10+MUSIC_CMD_TIME_STEP_FLAG,#02  ; volume
+  db MUSIC_CMD_SKIP
+  db 10,#00  ; silence
+  db SFX_CMD_END    
 
 ; SFX_ui_wrong:
 ;   db  7,#b8  ; SFX all channels to tone

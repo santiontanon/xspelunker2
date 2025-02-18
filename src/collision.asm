@@ -87,7 +87,7 @@ player_check_collision_right_no_collision:
 
 
 ;-----------------------------------------------
-; Check if tile type is 2 or 1 (if pixel coordinate is 0 only) (incrementing y by 1 pixel)
+; Check if tile type is 1/2/6/8 (if pixel coordinate is 0 only) (incrementing y by 1 pixel)
 ; output:
 ; - z: collision
 ; - nz: no collision
@@ -107,10 +107,15 @@ player_check_collision_down_inc_continue:
 	push bc
 		call get_room_tile_type
 	pop bc
-	cp 2
+	cp 2  ; wall
 	ret z
-	dec a
+	cp 6  ; rope-platform
+	jr z, player_check_collision_down_inc_platform
+	cp 6  ; ladder-platform
+	jr z, player_check_collision_down_inc_platform
+	dec a  ; platform
 	jr nz, player_check_collision_down_inc_right
+player_check_collision_down_inc_platform:
 	; tile type is 1 (platform), check if pixel coordinate is 0, and in that case, it's a collision:
 	ld a, (player_y)
 	or a
@@ -130,8 +135,13 @@ player_check_collision_down_inc_continue3:
 	call get_room_tile_type
 	cp 2
 	ret z
-	dec a
+	cp 6  ; rope-platform
+	jr z, player_check_collision_down_inc_platform2
+	cp 8  ; ladder-platform
+	jr z, player_check_collision_down_inc_platform2
+	dec a  ; platform
 	ret nz
+player_check_collision_down_inc_platform2:
 	; tile type is 1 (platform), check if pixel coordinate is 0, and in that case, it's a collision:
 	ld a, (player_y)
 	or a
@@ -169,6 +179,66 @@ player_check_collision_up_continue2:
 player_check_collision_up_continue3:
 	call get_room_tile_type
 	cp 2
+	ret
+
+
+;-----------------------------------------------
+; Check if tile type is 5/6/7/8 (if pixel coordinate is 0 only) (incrementing y by 1 pixel)
+; output:
+; - z: rope
+; - nz: no rope
+; - a: 0, if (player_x + 1) tile below is rope
+;      1, if (player_x + 1) + 1 tile below is rope
+;	   2, if (player_X + 1) tile below is a ladder && (player_X + 1) + 1 as well
+check_player_on_rope_or_ladder:  ; this checks for y + 1
+	ld a, (player_x + 1)
+	ld c, a
+	ld a, (player_y + 1)
+	ld b, a
+	jp check_player_on_top_of_rope_continue
+check_player_on_top_of_rope_or_ladder:  ; this checks for y + 2
+	ld a, (player_x + 1)
+	ld c, a
+	ld a, (player_y + 1)
+	ld b, a
+	; collision with the feet-left:
+	inc b
+check_player_on_top_of_rope_continue:
+	inc b
+	push bc
+		call get_room_tile_type
+	pop bc
+	cp 5
+	jr z, check_player_on_top_of_rope_0
+	cp 6
+	jr z, check_player_on_top_of_rope_0
+	cp 7
+	jr z, check_player_maybe_on_top_of_ladder
+	cp 8
+	jr z, check_player_maybe_on_top_of_ladder	
+check_player_on_top_of_rope_right:
+	inc c
+	call get_room_tile_type
+	cp 5
+	jr z, check_player_on_top_of_rope_1
+	cp 6
+	jr z, check_player_on_top_of_rope_1
+	ret
+check_player_on_top_of_rope_0:
+	xor a  ; z, a = 0
+	ret
+check_player_on_top_of_rope_1:
+	ld a, 1
+	ret
+check_player_maybe_on_top_of_ladder:
+	inc c
+	call get_room_tile_type
+	cp 7
+	jr z, check_player_on_top_of_ladder
+	cp 8
+	ret nz
+check_player_on_top_of_ladder:
+	ld a, 2
 	ret
 
 
@@ -262,19 +332,23 @@ get_room_tile_type_continue:
 ; 2: wall
 ; 3: hazard
 ; 4: water
+; 5: rope
+; 6: rope-platform-top
+; 7: ladder
+; 8: ladder-platform-top
 tile_collision_types_pyramid:
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 8, 0, 0, 0, 0, 0
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3
-    db 4, 4, 4, 4, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2
+    db 4, 4, 4, 4, 5, 5, 5, 6, 1, 1, 1, 1, 2, 2, 2, 2
     db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
-    db 2, 2, 2, 2, 2, 2, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2
-    db 2, 2, 2, 2, 2, 2, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2
+    db 2, 2, 2, 2, 2, 2, 7, 7, 8, 2, 2, 2, 2, 2, 2, 2
+    db 2, 2, 2, 2, 2, 2, 0, 0, 8, 2, 2, 2, 2, 2, 2, 2
     db 2, 2, 2, 2, 2, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2
     db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
     db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2

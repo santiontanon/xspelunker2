@@ -82,6 +82,8 @@ player_update_state_fn_table:
 	dw player_update_state_jumping
 	dw player_update_state_crouch
 	dw player_update_state_crawling
+	dw player_update_state_rope
+	dw player_update_state_ladder
 
 
 ;-----------------------------------------------
@@ -100,6 +102,13 @@ player_update_state_idle:
 	bit 6, a
 	jp z, player_update_switch_to_crouch
 	
+	; check for rope/ladder climb:
+	bit 5, a
+	jp nz, player_update_state_idle_no_rope
+	call check_player_on_rope_or_ladder
+	jp z, player_update_switch_to_rope_or_ladder
+player_update_state_idle_no_rope:
+
 	; check for jump
 	ld a, (keyboard_line_clicks + 2)
 	bit 2, a
@@ -130,6 +139,14 @@ player_update_switch_to_walking_right:
 	ld (player_state), a
 
 player_update_state_walking:
+	; check for rope climb:
+	ld a, (keyboard_line_state)
+	bit 5, a
+	jp nz, player_update_state_walking_no_rope
+	call check_player_on_rope_or_ladder
+	jp z, player_update_switch_to_rope_or_ladder
+player_update_state_walking_no_rope:
+
 	; check for jump
 	ld a, (keyboard_line_clicks + 2)
 	bit 2, a
@@ -198,6 +215,14 @@ player_update_state_falling:
 	bit 4, a
 	call z, player_update_move_one_pixel_left_considering_collisions
 
+	; check for rope climb:
+	ld a, (keyboard_line_state)
+	bit 5, a  ; up
+	jp nz, player_update_state_falling_no_rope
+	call check_player_on_rope_or_ladder
+	jp z, player_update_switch_to_rope_or_ladder
+player_update_state_falling_no_rope:
+
 	; check if we need to switch to idle:
 	call player_check_collision_down_inc
 	jp z, player_update_switch_to_idle
@@ -234,6 +259,17 @@ player_update_state_falling_speed_loop_done:
 
 
 ;-----------------------------------------------
+player_update_switch_to_jumping_from_rope:
+	ld hl, SFX_jump
+	call play_SFX_with_high_priority
+	ld a, 4 ; skip the first jump states, to make the jump shorter
+	ld (player_state_timer), a
+	ld a, (player_state)
+	and #01
+	add a, PLAYER_STATE_JUMPING
+	ld (player_state), a
+	jp player_update_state_jumping_no_rope  ; skip the rope check, to avoid an infinite loop
+
 player_update_switch_to_jumping:
 	ld hl, SFX_jump
 	call play_SFX_with_high_priority
@@ -245,6 +281,14 @@ player_update_switch_to_jumping:
 	ld (player_state), a
 
 player_update_state_jumping:
+	; check for rope climb:
+	ld a, (keyboard_line_state)
+	bit 5, a  ; up
+	jp nz, player_update_state_jumping_no_rope
+	call check_player_on_rope_or_ladder
+	jp z, player_update_switch_to_rope_or_ladder
+player_update_state_jumping_no_rope:
+
 	; movement left/right:
 	ld a, (keyboard_line_state)
 	bit 7, a
@@ -253,6 +297,7 @@ player_update_state_jumping:
 	pop af
 	bit 4, a
 	call z, player_update_move_one_pixel_left_considering_collisions
+
 
 	; did the player release the jump key?
 	; check for jump
@@ -305,6 +350,11 @@ player_update_switch_to_crouch:
 	ld (player_state), a
 
 player_update_state_crouch:
+	; check for inventory:
+	ld a, (keyboard_line_clicks + 2)
+	bit 2, a
+	jp nz, state_inventory
+
 	; check for crawl:
 	ld a, (keyboard_line_state)
 	bit 7, a
@@ -320,6 +370,10 @@ player_update_state_crouch:
 	ld a, (keyboard_line_state)
 	bit 6, a
 	jp nz, player_update_switch_to_idle
+
+	; if we are still here, player is still crouching, see if we are on top of a rope/ladder:
+	call check_player_on_top_of_rope_or_ladder
+	jp z, player_update_switch_to_rope_or_ladder_from_platform
 
 	ld a, 4
 	ld (player_requested_frame), a
@@ -337,6 +391,11 @@ player_update_switch_to_crawling_right:
 	ld (player_state), a
 
 player_update_state_crawling:
+	; check for inventory:
+	ld a, (keyboard_line_clicks + 2)
+	bit 2, a
+	jp nz, state_inventory
+	
 	; check for crouch:
 	ld a, (keyboard_line_state)
 	bit 7, a
@@ -377,12 +436,129 @@ player_update_state_crawling_left:
 	call z, player_update_move_one_pixel_left_considering_collisions
 
 player_update_state_crawling_continue:
+
+	; if we are still here, player is still crouching, see if we are on top of a rope/ladder:
+	call check_player_on_top_of_rope_or_ladder
+	jp z, player_update_switch_to_rope_or_ladder_from_platform
+
 	ld a, (interrupt_cycle)
 	rrca
 	rrca
 	rrca
 	and #01
 	add a, 4
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+
+
+;-----------------------------------------------
+player_update_switch_to_rope_or_ladder_from_platform:
+	push af
+		ld a, (player_y + 1)
+		inc a
+		ld (player_y + 1), a
+	pop af
+player_update_switch_to_rope_or_ladder:
+	cp 2
+	jr z, player_update_switch_to_ladder
+	; a - 1: amount we need to add to the tile coordinate to find the rope
+	ld c, a
+	dec c
+	ld a, (player_x + 1)
+	add a, c
+	ld (player_x + 1), a
+	ld a, 4
+	ld (player_x), a
+	ld a, (player_state)
+	and #01
+	add a, PLAYER_STATE_ROPE
+	ld (player_state), a
+
+player_update_state_rope:
+	; move up and down:
+	ld a, (interrupt_cycle)
+	and #01
+	ld a, (keyboard_line_state)
+	jr z, player_update_state_rope_skip_movement
+	bit 6, a  ; down
+	push af
+		call z, player_update_move_one_pixel_down
+	pop af
+	bit 5, a  ; up
+	push af
+		call z, player_update_move_one_pixel_up_considering_collisions
+	pop af
+player_update_state_rope_skip_movement:
+	bit 4, a  ; left
+	jr nz, player_update_state_rope_continue
+	push af
+		ld a, (player_state)
+		or #01
+		ld (player_state), a
+	pop af
+player_update_state_rope_continue:
+	bit 7, a  ; right
+	jr nz, player_update_state_rope_continue2
+	ld a, (player_state)
+	and #fe
+	ld (player_state), a
+player_update_state_rope_continue2:
+
+	; check for jump
+	ld a, (keyboard_line_clicks + 2)
+	bit 2, a
+	jp nz, player_update_switch_to_jumping_from_rope
+
+	call check_player_on_top_of_rope_or_ladder
+	jp nz, player_update_switch_to_idle
+
+	ld a, (player_y)
+	rrca
+	rrca
+	and #01
+	add a, 6
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+
+
+;-----------------------------------------------
+player_update_switch_to_ladder:
+	xor a
+	ld (player_x), a  ; center the player on the ladder
+	ld a, (player_state)
+	and #01
+	add a, PLAYER_STATE_LADDER
+	ld (player_state), a
+
+player_update_state_ladder:
+	; move up and down:
+	ld a, (interrupt_cycle)
+	and #01
+	ld a, (keyboard_line_state)
+	jr z, player_update_state_ladder_skip_movement
+	bit 6, a  ; down
+	push af
+		call z, player_update_move_one_pixel_down
+	pop af
+	bit 5, a  ; up
+	push af
+		call z, player_update_move_one_pixel_up_considering_collisions
+	pop af
+player_update_state_ladder_skip_movement:
+
+	; check for jump
+	ld a, (keyboard_line_clicks + 2)
+	bit 2, a
+	jp nz, player_update_switch_to_jumping_from_rope
+
+	call check_player_on_top_of_rope_or_ladder
+	jp nz, player_update_switch_to_idle
+
+	ld a, (player_y)
+	rrca
+	rrca
+	and #01
+	add a, 8
 	ld (player_requested_frame), a
 	jp player_update_update_sprite_position
 

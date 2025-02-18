@@ -41,6 +41,12 @@ public class GenerateSprites {
         // Crawl:
         addPlayerFrame(sourceImage, 16, 16, data, dataLeft);
         addPlayerFrame(sourceImage, 32, 16, data, dataLeft);
+        // Climb ropes:
+        addPlayerFrame(sourceImage, 0, 32, data, dataLeft);
+        addPlayerFrame(sourceImage, 0, 48, data, dataLeft);
+        // Climb stairs:
+        addPlayerFrame(sourceImage, 16, 32, data, dataLeft);
+        addPlayerFrame(sourceImage, 16, 48, data, dataLeft);
         
         System.out.println("data: " + data.size());
         System.out.println("dataLeft: " + dataLeft.size());

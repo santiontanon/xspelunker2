@@ -7,10 +7,11 @@ state_play:
 		ld bc, RAM_to_zero_on_game_start_end - RAM_to_zero_on_game_start
 		call clear_memory
 
-		; setup tiles:
-		ld a, TILES_PAGE
-		ld hl, tiles_pyramid_zx0
-		call setup_game_tiles
+		; initial player position:
+		ld hl, #0e00
+		ld (player_x), hl
+		ld hl, #0800
+		ld (player_y), hl
 
 		; get room data:
 		SETMEGAROMPAGE_8000 MAP_DATA_PAGE
@@ -18,6 +19,12 @@ state_play:
 		ld de, current_room__width
 		ld bc, hardcoded_room_data_end - hardcoded_room_data
 		ldir
+
+state_play_from_inventory:
+		; setup tiles:
+		ld a, TILES_PAGE
+		ld hl, tiles_pyramid_zx0
+		call setup_game_tiles
 
 		; init sprite attribute table:
 		ld hl, sprite_attribute_table + 2
@@ -28,12 +35,6 @@ state_play:
 		ld (hl), 4
 		inc hl
 		ld (hl), COLOR_DARK_RED
-
-		; initial player position:
-		ld hl, #0e00
-		ld (player_x), hl
-		ld hl, #0800
-		ld (player_y), hl
 
 		ld hl, upload_sprites_to_vdp
 		ld c, SPRITES_PAGE

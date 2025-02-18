@@ -159,6 +159,7 @@ call_hl_in_page_c_8000_return:
 ;     include "state-braingames.asm"
 ;     include "state-gamestart.asm"
     include "state-play.asm"
+    include "state-inventory.asm"
 
 end_of_code:
 
