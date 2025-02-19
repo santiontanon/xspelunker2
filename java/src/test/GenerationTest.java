@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Random;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import pcg.Area;
 import pcg.PCGArea;
 import pcg.PCGWorld;
 import pcg.RenderedArea;
@@ -31,6 +32,8 @@ import pcg.World;
  * @author santi
  */
 public class GenerationTest {
+    public static int max_n_animations = 0;
+    
     public static void main(String args[]) throws Exception
     {
         Random r = new Random();
@@ -45,54 +48,56 @@ public class GenerationTest {
             typeStats[i] = 0;
         }
         
-//        for(int i = 0;i<1000;i++) {
-////        for(int i = 0;i<65536;i++) {
-////        for(int i = 0;i<5000;i++) {
-//            r.setSeed(i);
-//            World w = pcg1.generate(r);
-//            if (w == null) {
-//                System.out.println("Cannot generate with seed " + i);
-//                break;
-//            } else {
-//                System.out.println("PCG success with seed " + i);
-//                if (!Solver.solveGame(w)) {
-//                    System.out.println("Solver error with seed " + i);
-//                } else {
-//                    System.out.println("Solver success with seed " + i);
-//                }
-//                
-//                for(int j = 0;j<w.areas.size();j++) {
-//                    RenderedArea ra = pcg2.generate(w.areas.get(j), w, r);
-//                    if (ra == null) {
-//                        System.out.println("PCGArea error with seed " + i + ", area " + j);
-//                        nPCGAreaErrors++;
-//                    } else {
-//                        ra.stats(chunkStats, typeStats);
-//                    }
-//                }
-//            }
-//        }
-//        System.out.println("n_times_defaulting_to_safe_seed: " + pcg1.n_times_defaulting_to_safe_seed);
-//        System.out.println("Generation stage stats: " + Arrays.toString(pcg1.n_times_reached_generation_stage));
-////        System.out.println("Leaves in area 1: " + (pcg1.area_1_n_leaves_accum / (double)pcg1.area_1_n_leaves_count));
-//        System.out.println("nPCGAreaErrors: " + nPCGAreaErrors);
-
-        r.setSeed(0);
-        World w = pcg1.generate(r);
-        if (w != null) {
-            visualizeWorld(w);
-            if (!Solver.solveGame(w)) {
-                System.err.println("Error: game cannot be solved!");
-            }
-            for(int j = 0;j<w.areas.size();j++) {
-                RenderedArea ra = pcg2.generate(w.areas.get(j), w, r);
-                if (ra != null) {
-                    visualizeArea(ra, "tmp/area"+j+".png");
-                    ra.stats(chunkStats, typeStats);
+        for(int i = 0;i<1000;i++) {
+//        for(int i = 0;i<65536;i++) {
+//        for(int i = 0;i<5000;i++) {
+            r.setSeed(i);
+            World w = pcg1.generate(r);
+            if (w == null) {
+                System.out.println("Cannot generate with seed " + i);
+                break;
+            } else {
+                System.out.println("PCG success with seed " + i);
+                if (!Solver.solveGame(w)) {
+                    System.out.println("Solver error with seed " + i);
+                } else {
+                    System.out.println("Solver success with seed " + i);
+                }
+                
+                for(int j = 0;j<w.areas.size();j++) {
+                    RenderedArea ra = pcg2.generate(w.areas.get(j), w, r);
+                    if (ra == null) {
+                        System.out.println("PCGArea error with seed " + i + ", area " + j);
+                        nPCGAreaErrors++;
+                    } else {
+                        ra.stats(chunkStats, typeStats);
+                        checkNumAnimations(ra, w.areas.get(j));
+                    }
                 }
             }
         }
-        
+        System.out.println("n_times_defaulting_to_safe_seed: " + pcg1.n_times_defaulting_to_safe_seed);
+        System.out.println("Generation stage stats: " + Arrays.toString(pcg1.n_times_reached_generation_stage));
+//        System.out.println("Leaves in area 1: " + (pcg1.area_1_n_leaves_accum / (double)pcg1.area_1_n_leaves_count));
+        System.out.println("nPCGAreaErrors: " + nPCGAreaErrors);
+
+//        r.setSeed(4);
+//        World w = pcg1.generate(r);
+//        if (w != null) {
+//            visualizeWorld(w);
+//            if (!Solver.solveGame(w)) {
+//                System.err.println("Error: game cannot be solved!");
+//            }
+//            for(int j = 0;j<w.areas.size();j++) {
+//                RenderedArea ra = pcg2.generate(w.areas.get(j), w, r);
+//                if (ra != null) {
+//                    visualizeArea(ra, "tmp/area"+j+".png");
+//                    ra.stats(chunkStats, typeStats);
+//                    checkNumAnimations(ra, w.areas.get(j));
+//                }
+//            }
+//        }
+
         
         System.out.println("Tile type stats:");
         for(int i = 0;i<16;i++) {
@@ -109,7 +114,9 @@ public class GenerationTest {
         });
         for(String path:chunkNames) {
             System.out.println("  " + path + ": " + chunkStats.get(path));
-        }        
+        }
+        
+        System.out.println("Max tile animations: " + max_n_animations);
     }
 
     
@@ -148,5 +155,27 @@ public class GenerationTest {
 //        w.setVisible(true);
 //        w.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }    
+    
+    
+    public static void checkNumAnimations(RenderedArea ra, Area a) throws Exception
+    {
+        List<Integer> roomIDs = new ArrayList<>();
+        for(int i = 0;i<a.height;i++) {
+            for(int j = 0;j<a.width;j++) {
+                if (a.rooms[j][i] > 0 && !roomIDs.contains(a.rooms[j][i])) {
+                    roomIDs.add(a.rooms[j][i]);
+                }
+            }
+        }
+        
+        // System.out.println("RoomIDs for area " + a.ID + ": " + roomIDs);
+        for(int roomID:roomIDs) {
+            int n_animations = ra.getRoomAnimations(roomID, a).size();
+            max_n_animations = Math.max(max_n_animations, n_animations);
+            if (n_animations > RenderedArea.MAX_ANIMATIONS) {
+                throw new Exception("Room has more than " + RenderedArea.MAX_ANIMATIONS + " animations! -> " + n_animations);
+            }
+        }
+    }
     
 }

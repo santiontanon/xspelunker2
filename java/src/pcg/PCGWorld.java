@@ -249,6 +249,9 @@ public class PCGWorld {
         for(int i = 0;i<n_areas;i++) {
             while(w.areas.get(i).nDivisions < min_divisions_per_area[i]) {
                 AreaPoint seed = randomAreaPoint(w.areas.get(i), true);
+                while (seed.a.divisionIDs[seed.x][seed.y] != 0) {
+                    seed = randomAreaPoint(w.areas.get(i), true);
+                }
                 divisionSeeds.add(seed);
                 addTag(seed, "seed");  // we mark them, so that we do not repeat any
                 seed.a.divisionIDs[seed.x][seed.y] = getNextDivisionID();
@@ -260,7 +263,9 @@ public class PCGWorld {
         for(int i = 0;i<n_divisions_left;i++) {
             AreaPoint seed;
             seed = randomAreaPoint(w, true);
-            
+            while (seed.a.divisionIDs[seed.x][seed.y] != 0) {
+                seed = randomAreaPoint(w, true);
+            }            
             divisionSeeds.add(seed);
             addTag(seed, "seed");  // we mark them, so that we do not repeat any
             seed.a.divisionIDs[seed.x][seed.y] = getNextDivisionID();

@@ -153,6 +153,7 @@ call_hl_in_page_c_8000_return:
     include "sfx.asm"
     include "collision.asm"
     include "rooms.asm"
+    include "scroll.asm"
     include "player.asm"
 ;     include "text.asm"
 
@@ -267,6 +268,7 @@ current_room__height: ds virtual 1
 current_room__tile_map: ds virtual 64*48  ; maximum room size
 current_room__max_scroll_x: ds virtual 1
 current_room__max_scroll_y: ds virtual 1
+current_room__tile_animations: ds virtual 4 * MAX_ROOM_ANIMATIONS + 1
 current_toom__n_objects: ds virtual 1
 current_room__objects: ds virtual MAX_ROOM_OBJECTS * ROOM_OBJECT_STRUCT_SIZE
 

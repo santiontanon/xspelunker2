@@ -6,14 +6,6 @@ to do:
              and easier to translate to assembler? 
 
 ***- game engine (assembler):
-    ***- assembler: background tile animations:
-      ***- list of room animations: x, y, width, type
-        ***- generate from the Java side
-        ***- check on Java that we have no more animations than the max (do it for 5000 seeds)
-      ***- copy it over to assembler
-      ***- they update every 4 frames (in frame 0: 0, 4, 8, etc., in frame 1: 1, 5, 9, etc.)
-      ***- if we are not redrawing the whole room this frame, also copy to VDP after updating the part that overlaps with the visible screen
-
     ***- design data structure that will store the map: (7.2kb)
         ***- next step is to hardcode the rendered-current-area structure, and generate the current room in assembler automatically. This involves:
           ***- defining the data structure

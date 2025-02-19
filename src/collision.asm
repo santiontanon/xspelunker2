@@ -278,47 +278,6 @@ get_room_tile_type_continue:
 	add hl, bc
 	ld a, (hl)
 
-	; get room ID and within room coordinates:
-; 	call global_position_to_layout_and_room_coordinates
-
-; 	; e = layout coordinates: e + d * 4:
-; 	ld a, d
-; 	add a, a
-; 	add a, a
-; 	add a, e
-; 	ld e, a
-; 	ld d, 0
-; 	ld hl, current_room__layout
-; 	add hl, de
-; 	ld a, (hl)  ; a = room ID (must be > 0)
-; 	dec a
-
-; 	; get tile from the proper room:
-; 	ld l, 0
-; 	ld h, a
-; 	add hl, hl
-; 	ld d, a
-; 	ld e, 0
-; 	add hl, de
-; 	ld de, current_room__tile_map
-; 	add hl, de  ; hl = current_room__tile_map + a * 32 * 24
-; 	ex de, hl
-
-; 	; add room coordinates:
-; 	; hl += b * 32 + c
-; 	ld a, b
-; 	add a, a
-; 	add a, a
-; 	add a, a
-; 	ld l, a
-; 	ld h, 0
-; 	add hl, hl
-; 	add hl, hl
-; 	ld b, 0
-; 	add hl, bc
-; 	add hl, de
-; 	ld a, (hl)
-
 	; get collision type:
 	ld hl, tile_collision_types_pyramid
 	ADD_HL_A
@@ -349,7 +308,7 @@ tile_collision_types_pyramid:
     db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
     db 2, 2, 2, 2, 2, 2, 7, 7, 8, 2, 2, 2, 2, 2, 2, 2
     db 2, 2, 2, 2, 2, 2, 0, 0, 8, 2, 2, 2, 2, 2, 2, 2
-    db 2, 2, 2, 2, 2, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2
+    db 2, 2, 2, 2, 2, 0, 0, 0, 5, 2, 2, 2, 2, 2, 2, 2
     db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
     db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
     db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2

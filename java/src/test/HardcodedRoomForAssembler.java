@@ -4,12 +4,14 @@
  */
 package test;
 
+import java.util.List;
 import java.util.Random;
 import pcg.Area;
 import pcg.PCGArea;
 import pcg.PCGWorld;
 import pcg.RenderedArea;
 import pcg.RoomChunk;
+import pcg.TileAnimation;
 import pcg.World;
 
 /**
@@ -17,6 +19,7 @@ import pcg.World;
  * @author santi
  */
 public class HardcodedRoomForAssembler {
+    
     public static void main(String args[]) throws Exception
     {
         Random r = new Random();
@@ -29,7 +32,8 @@ public class HardcodedRoomForAssembler {
         pcg2.generate(w.areas.get(0), w, r);
         RenderedArea ra = pcg2.generate(w.areas.get(1), w, r);
 //        generateAssemblerRoomData(3, w.areas.get(1), ra);  // size 2
-        generateAssemblerRoomData(6, w.areas.get(1), ra);  // size 4, square
+//        generateAssemblerRoomData(6, w.areas.get(1), ra);  // size 2x2, square
+        generateAssemblerRoomData(16, w.areas.get(1), ra);  // size 2x2, many animations
     }
 
     
@@ -100,6 +104,17 @@ public class HardcodedRoomForAssembler {
         System.out.println("  db " + (width - 32));
         System.out.println("hardcoded_room_data__max_scroll_y:");
         System.out.println("  db " + (height - 24));
+        
+        List<TileAnimation> animations = ra.getRoomAnimations(roomID, a);
+        System.out.println("hardcoded_room_data__tile_animations:");
+        for(int i = 0;i<RenderedArea.MAX_ANIMATIONS;i++) {
+            if (animations.size() > i) {
+                System.out.println(animations.get(i).assemblerString());
+            } else {
+                System.out.println("  db 0, 0, 0, 0");
+            }
+        }
+        System.out.println("  db 0  ; sentinel");
         
         System.out.println("hardcoded_room_data__n_objects:");
         System.out.println("  db " + n_room_objects);

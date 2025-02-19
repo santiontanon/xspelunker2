@@ -1212,7 +1212,6 @@ public class PCGArea {
             }
         }
         
-
         return ra;
     }
 }
