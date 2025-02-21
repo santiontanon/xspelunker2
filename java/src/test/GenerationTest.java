@@ -16,10 +16,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import pcg.Area;
+import pcg.MSXRandom;
 import pcg.PCGArea;
 import pcg.PCGWorld;
 import pcg.RenderedArea;
@@ -36,7 +36,7 @@ public class GenerationTest {
     
     public static void main(String args[]) throws Exception
     {
-        Random r = new Random();
+        MSXRandom r = new MSXRandom(0, 0xaaaa);
 
         PCGWorld pcg1 = new PCGWorld();
         PCGArea pcg2 = new PCGArea();
@@ -51,7 +51,7 @@ public class GenerationTest {
         for(int i = 0;i<1000;i++) {
 //        for(int i = 0;i<65536;i++) {
 //        for(int i = 0;i<5000;i++) {
-            r.setSeed(i);
+            r.setSeed1(i);
             World w = pcg1.generate(r);
             if (w == null) {
                 System.out.println("Cannot generate with seed " + i);
@@ -81,7 +81,7 @@ public class GenerationTest {
 //        System.out.println("Leaves in area 1: " + (pcg1.area_1_n_leaves_accum / (double)pcg1.area_1_n_leaves_count));
         System.out.println("nPCGAreaErrors: " + nPCGAreaErrors);
 
-//        r.setSeed(4);
+//        r.setSeed1(4);
 //        World w = pcg1.generate(r);
 //        if (w != null) {
 //            visualizeWorld(w);

@@ -7,7 +7,6 @@ package pcg;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 import pcg.questpatterns.PCGPatternAtoB;
 import pcg.questpatterns.PCGPatternNKeysAndChestLock;
 import pcg.questpatterns.PCGPatternNKeysAndLock;
@@ -103,7 +102,7 @@ public class PCGWorld {
     public HashMap<String, String[]> availableLockKeys = new HashMap<>();
 
 
-    public Random r;
+    public MSXRandom r;
     public int next_divisionID = 1;
     
     // Debugging stats:
@@ -174,7 +173,7 @@ public class PCGWorld {
     }
 
 
-    public World generate(Random a_r) throws Exception
+    public World generate(MSXRandom a_r) throws Exception
     {
         r = a_r;
         World w;
@@ -186,7 +185,7 @@ public class PCGWorld {
             List<String> usedKeysAndLocks = new ArrayList<>();
 
             if (i == n_retries - 1) {
-                r.setSeed(0);  // we know this seed works
+                r.setSeed1(0);  // we know this seed works
                 n_times_defaulting_to_safe_seed++;
             }
             System.out.println("PCG.generate: ---- attempt " + i + " ----");
@@ -1008,7 +1007,7 @@ public class PCGWorld {
     
     public Area generateArea(int ID, int w, int h, String layout[])
     {
-        Area a = new Area(ID, w, h);
+        Area a = new Area(ID, w, h, r.rng_seed1, r.rng_seed2);
 
         if (layout == null) {
             // Grow the area from the center:
@@ -1122,7 +1121,7 @@ public class PCGWorld {
                     }
                     for(int k = 4;k>=2;k--) {
                         // Try horizontal merge of length k + 1:
-                        if (!processed[j][i] && r.nextDouble() > 0.5 && j + k - 1 < w) {
+                        if (!processed[j][i] && r.nextBoolean() && j + k - 1 < w) {
                             boolean canMerge = true;
                             for(int l = 1;l<k;l++) {
                                 if (a.divisionIDs[j + l][i] != a.divisionIDs[j][i] ||
@@ -1139,7 +1138,7 @@ public class PCGWorld {
                             }
                         }
                         // Try vertical merge of length k + 1:
-                        if (!processed[j][i] && r.nextDouble() > 0.5 && i + k - 1 < h) {
+                        if (!processed[j][i] && r.nextBoolean() && i + k - 1 < h) {
                             boolean canMerge = true;
                             for(int l = 1;l<k;l++) {
                                 if (a.divisionIDs[j][i + l] != a.divisionIDs[j][i] ||

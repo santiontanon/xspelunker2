@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Random;
 import util.TMXObject;
 
 /**
@@ -26,10 +26,11 @@ public class PCGArea {
     };
     
     public List<RoomChunk> bg_chunks = new ArrayList<>();
-    public HashMap<Integer, List<RoomChunk>> fg_chunks = new HashMap<>();
-    public HashMap<Integer, List<RoomChunk>> boss_chunks = new HashMap<>();
-    public HashMap<Integer, List<RoomChunk>> block_chunks = new HashMap<>();
-    public HashMap<Integer, List<RoomChunk>> combination_chunks = new HashMap<>();
+    public List<RoomChunk> all_fg_chunks = new ArrayList<>();
+    public HashMap<Integer, List<RoomChunk>> fg_chunks = new LinkedHashMap<>();
+    public HashMap<Integer, List<RoomChunk>> boss_chunks = new LinkedHashMap<>();
+    public HashMap<Integer, List<RoomChunk>> block_chunks = new LinkedHashMap<>();
+    public HashMap<Integer, List<RoomChunk>> combination_chunks = new LinkedHashMap<>();
     
     public PCGArea() throws Exception
     {
@@ -349,10 +350,32 @@ public class PCGArea {
                 combination_chunks.get(type).add(chunk2);
             }
         }
+        
+        // List all the fg chunks in a single list:
+        for(int i = 0;i<16;i++) {
+            if (fg_chunks.containsKey(i)) {
+                all_fg_chunks.addAll(fg_chunks.get(i));
+            }
+        }
+        for(int i = 0;i<16;i++) {
+            if (boss_chunks.containsKey(i)) {
+                all_fg_chunks.addAll(boss_chunks.get(i));
+            }
+        }
+        for(int i = 0;i<16;i++) {
+            if (block_chunks.containsKey(i)) {
+                all_fg_chunks.addAll(block_chunks.get(i));
+            }
+        }
+        for(int i = 0;i<16;i++) {
+            if (combination_chunks.containsKey(i)) {
+                all_fg_chunks.addAll(combination_chunks.get(i));
+            }
+        }
     }
     
     
-    public RenderedArea generate(Area a, World w, Random r) throws Exception
+    public RenderedArea generate(Area a, World w, MSXRandom r) throws Exception
     {
         int dx[] = { 1, 0,-1, 0};
         int dy[] = { 0, 1, 0,-1};
@@ -361,8 +384,8 @@ public class PCGArea {
         int direction_inverse[] = {PCGWorld.DIRECTION_LEFT, PCGWorld.DIRECTION_UP,
                                    PCGWorld.DIRECTION_RIGHT, PCGWorld.DIRECTION_DOWN};
         
-        double p_of_non_first_bg = 0.25;
-        double p_of_path = 0.1;
+        int p_of_non_first_bg = 4;  // probability is 1 / 4
+        int p_of_path = 8;  // probability is 1 / 8
 
         int pieceTypes[][] = new int[a.width * ROOM_WIDTH][a.height * ROOM_HEIGHT];
         for(int i = 0;i<a.height * ROOM_HEIGHT;i++) {
@@ -431,13 +454,13 @@ public class PCGArea {
             for(int j = 1;j<a.width * ROOM_WIDTH;j++) {
                 if (pieceTypes[j][i] >= 0) {
                     if (a.divisionIDs[j / ROOM_WIDTH][i / ROOM_HEIGHT] == a.divisionIDs[(j - 1) / ROOM_WIDTH][i / ROOM_HEIGHT]) {
-                        if (r.nextDouble() < p_of_path) {
+                        if (r.nextInt(p_of_path) == 0) {
                             pieceTypes[j][i] |= PCGWorld.DIRECTION_LEFT;
                             pieceTypes[j - 1][i] |= PCGWorld.DIRECTION_RIGHT;
                         }
                     }
                     if (a.divisionIDs[j / ROOM_WIDTH][i / ROOM_HEIGHT] == a.divisionIDs[j / ROOM_WIDTH][(i - 1) / ROOM_HEIGHT]) {
-                        if (r.nextDouble() < p_of_path) {
+                        if (r.nextInt(p_of_path) == 0) {
                             pieceTypes[j][i] |= PCGWorld.DIRECTION_UP;
                             pieceTypes[j][i - 1] |= PCGWorld.DIRECTION_DOWN;
                         }
@@ -885,7 +908,7 @@ public class PCGArea {
                     }
                      
                     if (placeBackground) {
-                        if (r.nextDouble() < p_of_non_first_bg) {
+                        if (r.nextInt(p_of_non_first_bg) == 0) {
                             ra.bg_chunks[j][i] = bg_chunks.get(1 + r.nextInt(bg_chunks.size() - 1));
                         } else {
                             ra.bg_chunks[j][i] = bg_chunks.get(0);

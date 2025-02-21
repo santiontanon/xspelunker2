@@ -5,8 +5,8 @@
 package test;
 
 import java.util.List;
-import java.util.Random;
 import pcg.Area;
+import pcg.MSXRandom;
 import pcg.PCGArea;
 import pcg.PCGWorld;
 import pcg.RenderedArea;
@@ -22,12 +22,11 @@ public class HardcodedRoomForAssembler {
     
     public static void main(String args[]) throws Exception
     {
-        Random r = new Random();
+        MSXRandom r = new MSXRandom(0, 0xaaaa);
 
         PCGWorld pcg1 = new PCGWorld();
         PCGArea pcg2 = new PCGArea();
         
-        r.setSeed(0);
         World w = pcg1.generate(r);
         pcg2.generate(w.areas.get(0), w, r);
         RenderedArea ra = pcg2.generate(w.areas.get(1), w, r);
@@ -39,8 +38,6 @@ public class HardcodedRoomForAssembler {
     
     public static void generateAssemblerRoomData(int roomID, Area a, RenderedArea ra) throws Exception
     {
-        int n_room_objects = 0;
-        
         int room_x1 = -1, room_y1 = -1;
         int room_x2 = -1, room_y2 = -1;
         for(int i = 0;i<a.height;i++) {
@@ -114,10 +111,7 @@ public class HardcodedRoomForAssembler {
                 System.out.println("  db 0, 0, 0, 0");
             }
         }
-        System.out.println("  db 0  ; sentinel");
-        
-        System.out.println("hardcoded_room_data__n_objects:");
-        System.out.println("  db " + n_room_objects);
+        System.out.println("  db 0  ; sentinel");        
     }
     
     

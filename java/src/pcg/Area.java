@@ -16,6 +16,7 @@ import util.Pair;
  */
 public class Area {    
     public int ID;
+    public int rng_seed1 = 0, rng_seed2 = 0xaaaa;
     public int width, height;
     public int rooms[][];  // different numbers correspond to different rooms
     public int connections[][];
@@ -32,11 +33,13 @@ public class Area {
     public boolean[][] divisionRoot;  // only used for debugging
     
     
-    public Area(int a_ID, int a_w, int a_h)
+    public Area(int a_ID, int a_w, int a_h, int a_seed1, int a_seed2)
     {
         ID = a_ID;
         width = a_w;
         height = a_h;
+        rng_seed1 = a_seed1;
+        rng_seed2 = a_seed2;
         
         rooms = new int[width][height];
         connections = new int[width][height];

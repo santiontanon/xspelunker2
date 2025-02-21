@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 import javax.imageio.ImageIO;
 import util.TMXObject;
 import util.Tiled;
@@ -21,6 +20,8 @@ import util.Tiled;
  * @author santi
  */
 public class RoomChunk {
+    public static int MAX_LOCATIONS = 12;
+    
     public static int start_x = 20;
     public static int start_y = 40;
     
@@ -66,14 +67,151 @@ public class RoomChunk {
         c.tags = new HashMap<>();
         c.tags.putAll(tags);
         c.locations = new ArrayList<>();
-        c.locations.addAll(locations);
+        if (locations != null) {
+            c.locations.addAll(locations);
+        }
         c.gfx = gfx;
         c.path = path;
         return c;
     }
     
     
-    public TMXObject randomObject(String type, Random r)
+    public RoomChunk simplifyTiles(String biome)
+    {
+        RoomChunk chunk = this.clone();
+        
+        for(int i = 0;i<CHUNK_HEIGHT;i++) {
+            for(int j = 0;j<CHUNK_WIDTH;j++) {
+                if (biome.equals("pyramid")) {
+                    int tile = tiles[j][i];
+                    switch(tile) {
+                        // torch:
+                        case 6*16 + 2:
+                        case 6*16 + 3:
+                        case 6*16 + 4:
+                            tile = 6*16 + 2;
+                            break;
+                        // spikes:
+                        case 7*16 + 12:
+                        case 7*16 + 13:
+                            tile = 7*16 + 12;
+                            break;
+                        case 7*16 + 14:
+                        case 7*16 + 15:
+                            tile = 7*16 + 14;
+                            break;
+                        // water:
+                        case 8*16 + 1:
+                        case 8*16 + 2:
+                        case 8*16 + 3:
+                        case 12*16 + 8:
+                            tile = 8*16 + 1;
+                            break;
+                        // ropes:
+                        case 8*16 + 4:
+                        case 8*16 + 6:
+//                            tile = 8*16 + 4;
+                            tile = 0;  // remove ropes, they will be reconstructed
+                            break;
+                        // platforms:
+                        case 8*16 + 8:
+                        case 8*16 + 9:
+                            tile = 8*16 + 8;
+                            break;
+                        // bricks top:
+                        case 9*16 + 5:
+                        case 9*16 + 6:
+                        case 9*16 + 11:
+                            tile = 9*16 + 5;
+                            break;
+                        // bricks bottom:
+                        case 9*16 + 7:
+                        case 9*16 + 8:
+                            tile = 9*16 + 7;
+                            break;
+                        // thin bricks:
+                        case 9*16 + 13:
+                        case 9*16 + 14:
+                        case 9*16 + 15:
+                            tile = 9*16 + 13;
+                            break;
+                        // rubble:
+                        case 10*16 + 0:
+                        case 10*16 + 1:
+                        case 10*16 + 2:
+                        case 10*16 + 3:
+                            tile = 10*16 + 0;
+                            break;
+                        // stairs (leave only the bottom piece):
+                        case 10*16 + 6:
+                            if (i<CHUNK_HEIGHT-1 && tiles[j][i+1] == 10*16+6) {
+                                tile = 0;
+                            }
+                            break;
+                        case 10*16 + 7:
+                            if (i<CHUNK_HEIGHT-1 && tiles[j][i+1] == 10*16+7) {
+                                tile = 0;
+                            }
+                            break;
+                        // face 1 pattern:
+                        case 12*16 + 1:
+                        case 12*16 + 2:
+                        case 13*16 + 0:
+                        case 13*16 + 1:
+                        case 13*16 + 2:
+                        case 14*16 + 0:
+                        case 14*16 + 1:
+                        case 14*16 + 2:
+                        case 15*16 + 0:
+                        case 15*16 + 1:
+                        case 15*16 + 2:
+                            tile = 0;
+                            break;                            
+                        // face 2 pattern:
+                        case 13*16 + 9:
+                        case 13*16 + 10:
+                        case 13*16 + 11:
+                        case 14*16 + 8:
+                        case 14*16 + 9:
+                        case 14*16 + 10:
+                        case 14*16 + 11:
+                        case 15*16 + 8:
+                        case 15*16 + 9:
+                        case 15*16 + 10:
+                        case 15*16 + 11:
+                            tile = 0;
+                            break;
+                        // dragon pattern:
+                        case 12*16 + 13:
+                        case 12*16 + 14:
+                        case 12*16 + 15:
+                        case 13*16 + 12:
+                        case 13*16 + 13:
+                        case 13*16 + 14:
+                        case 13*16 + 15:
+                        case 14*16 + 12:
+                        case 14*16 + 13:
+                        case 14*16 + 14:
+                        case 14*16 + 15:
+//                        case 15*16 + 12:
+//                        case 15*16 + 13:
+//                        case 15*16 + 14:
+//                        case 15*16 + 15:
+                            tile = 0;
+                            break;
+                            
+                        default:
+                    }
+                    chunk.tiles[j][i] = tile;
+                }
+            }
+        }
+        
+        return chunk;
+    }
+    
+    
+    public TMXObject randomObject(String type, MSXRandom r)
     {
         List<TMXObject> candidates = new ArrayList<>();
         for(TMXObject o:locations) {

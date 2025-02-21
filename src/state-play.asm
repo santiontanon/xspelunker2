@@ -8,17 +8,30 @@ state_play:
 		call clear_memory
 
 		; initial player position:
-		ld hl, #0e00
+		ld hl, #0400
 		ld (player_x), hl
-		ld hl, #0800
+		ld hl, #0400
 		ld (player_y), hl
 
-		; get room data:
+		; get area data:
 		SETMEGAROMPAGE_8000 MAP_DATA_PAGE
-		ld hl, hardcoded_room_data
-		ld de, current_room__width
-		ld bc, hardcoded_room_data_end - hardcoded_room_data
+		ld hl, hardcoded_area_data
+		ld de, current_area__seed
+		ld bc, hardcoded_area_data_end - hardcoded_area_data
 		ldir
+
+		; call PCG to generate the current room from the current area:
+		ld e, 16  ; room ID
+		ld hl, pcg_generate_room
+		ld c, PCG_PAGE
+		call call_hl_in_page_c_8000
+
+		; get room data:
+; 		SETMEGAROMPAGE_8000 MAP_DATA_PAGE
+; 		ld hl, hardcoded_room_data
+; 		ld de, current_room__width
+; 		ld bc, hardcoded_room_data_end - hardcoded_room_data
+; 		ldir
 
 state_play_from_inventory:
 		; setup tiles:

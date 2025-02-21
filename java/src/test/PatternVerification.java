@@ -4,7 +4,7 @@
  */
 package test;
 
-import java.util.Random;
+import pcg.MSXRandom;
 import pcg.PCGArea;
 import pcg.RoomChunk;
 import util.TMXObject;
@@ -16,7 +16,7 @@ import util.TMXObject;
 public class PatternVerification {
     public static void main(String args[]) throws Exception
     {
-        Random r = new Random();
+        MSXRandom r = new MSXRandom(0, 0xaaaa);
         PCGArea pcg2 = new PCGArea();
         
         for(int i = 0;i<16;i++) {

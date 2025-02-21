@@ -125,37 +125,31 @@ clear_memory_a_entry_point:
 
 
 ;-----------------------------------------------
-; Source: http://wikiti.brandonw.net/index.php?title=Z80_Routines:Math:Random
-; Generate a random number
-; ouput:
-; - a: 8bit random number
+; Source: https://wikiti.brandonw.net/index.php?title=Z80_Routines:Math:Random
+; Generates a 16 bit random number
+; - rng_seed1: 16-bit seed value
+; - rng_seed2: NON-ZERO 16-bit seed value
+;Outputs:
+; - hl: 16bit random number
 random:
-    push hl
-    push de
-        ld hl, (randData)
-        ld a, r
-        ld d, a
-        ld e, (hl)
-        add hl, de
-        add a, l
-        xor h
-        ld (randData), hl
-    pop de
-    pop hl
+    push af
+    push bc
+        ld hl, (rng_seed1)
+        ld b, h
+        ld c, l
+        add hl, hl
+        add hl, hl
+        inc l
+        add hl, bc
+        ld (rng_seed1), hl
+        ld hl,(rng_seed2)
+        add hl, hl
+        sbc a, a
+        and #2d
+        xor l
+        ld l, a
+        ld (rng_seed2), hl
+        add hl, bc
+    pop bc
+    pop af
     ret
-
-
-; randomSeedUpdate:
-;     ld a, (randSeedIndex)
-;     inc a
-;     ld (randSeedIndex), a
-;     and #01
-;     jp z, randomSeedUpdate2
-;     ld a, r
-;     ld (randData), a
-;     ret
-; randomSeedUpdate2:
-;     ld a, r
-;     ld (randData + 1), a
-;     ret
-
