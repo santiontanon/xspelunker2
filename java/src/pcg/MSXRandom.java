@@ -24,6 +24,13 @@ public class MSXRandom {
         rng_seed2 = 0xaaaa;
     }
     
+
+    public void setSeed(int seed1, int seed2)
+    {
+        rng_seed1 = seed1;
+        rng_seed2 = seed2;
+    }
+
     
     public int random()
     {

@@ -8,9 +8,9 @@ state_play:
 		call clear_memory
 
 		; initial player position:
-		ld hl, #0400
+		ld hl, #0800
 		ld (player_x), hl
-		ld hl, #0400
+		ld hl, #0500
 		ld (player_y), hl
 
 		; get area data:
@@ -21,7 +21,8 @@ state_play:
 		ldir
 
 		; call PCG to generate the current room from the current area:
-		ld e, 16  ; room ID
+		ld e, 7  ; room ID
+; 		ld e, 26  ; room ID (boss)
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000

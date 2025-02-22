@@ -30,7 +30,7 @@ public class HardcodedAreaForAssembler {
         RenderedArea ra = pcg2.generate(w.areas.get(1), w, r);
         
         generateAssemblerAreaData(ra, w.areas.get(1), pcg2);
-        GenerationTest.visualizeArea(ra, "tmp/area"+1+".png");
+        GenerationTest.visualizeArea(ra, "tmp/area"+1+".png", pcg2);
     }
     
     

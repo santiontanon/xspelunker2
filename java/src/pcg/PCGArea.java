@@ -354,22 +354,43 @@ public class PCGArea {
         // List all the fg chunks in a single list:
         for(int i = 0;i<16;i++) {
             if (fg_chunks.containsKey(i)) {
-                all_fg_chunks.addAll(fg_chunks.get(i));
+                List<RoomChunk> simplified = new ArrayList<>();
+                for(RoomChunk c:fg_chunks.get(i)) {
+                    simplified.add(c.simplifyTiles("pyramid"));
+                }
+                fg_chunks.put(i, simplified);
+                all_fg_chunks.addAll(simplified);
             }
         }
         for(int i = 0;i<16;i++) {
             if (boss_chunks.containsKey(i)) {
-                all_fg_chunks.addAll(boss_chunks.get(i));
+                List<RoomChunk> simplified = new ArrayList<>();
+                for(RoomChunk c:boss_chunks.get(i)) {
+                    c.tags.put("boss", "true");
+                    simplified.add(c.simplifyTiles("pyramid"));
+                }
+                boss_chunks.put(i, simplified);
+                all_fg_chunks.addAll(simplified);
             }
         }
         for(int i = 0;i<16;i++) {
             if (block_chunks.containsKey(i)) {
-                all_fg_chunks.addAll(block_chunks.get(i));
+                List<RoomChunk> simplified = new ArrayList<>();
+                for(RoomChunk c:block_chunks.get(i)) {
+                    simplified.add(c.simplifyTiles("pyramid"));
+                }
+                block_chunks.put(i, simplified);
+                all_fg_chunks.addAll(simplified);
             }
         }
         for(int i = 0;i<16;i++) {
             if (combination_chunks.containsKey(i)) {
-                all_fg_chunks.addAll(combination_chunks.get(i));
+                List<RoomChunk> simplified = new ArrayList<>();
+                for(RoomChunk c:combination_chunks.get(i)) {
+                    simplified.add(c.simplifyTiles("pyramid"));
+                }
+                combination_chunks.put(i, simplified);
+                all_fg_chunks.addAll(simplified);
             }
         }
     }
@@ -384,13 +405,12 @@ public class PCGArea {
         int direction_inverse[] = {PCGWorld.DIRECTION_LEFT, PCGWorld.DIRECTION_UP,
                                    PCGWorld.DIRECTION_RIGHT, PCGWorld.DIRECTION_DOWN};
         
-        int p_of_non_first_bg = 4;  // probability is 1 / 4
         int p_of_path = 8;  // probability is 1 / 8
 
-        int pieceTypes[][] = new int[a.width * ROOM_WIDTH][a.height * ROOM_HEIGHT];
+        RenderedArea ra = new RenderedArea(a, a.width * ROOM_WIDTH, a.height * ROOM_HEIGHT);
         for(int i = 0;i<a.height * ROOM_HEIGHT;i++) {
             for(int j = 0;j<a.width * ROOM_WIDTH;j++) {
-                pieceTypes[j][i] = -1;
+                ra.pieceTypes[j][i] = -1;
             }
         }
 
@@ -400,25 +420,25 @@ public class PCGArea {
             if (d.root.a != a) continue;
             List<Integer> closed = new ArrayList<>();
             List<Integer> open = new ArrayList<>();
-            open.add(d.root.x * ROOM_WIDTH + d.root.y * ROOM_HEIGHT * pieceTypes.length);
+            open.add(d.root.x * ROOM_WIDTH + d.root.y * ROOM_HEIGHT * ra.pieceTypes.length);
             while(!open.isEmpty()) {
                 int point = open.remove(r.nextInt(open.size()));
                 closed.add(point);
-                int x = point % pieceTypes.length;
-                int y = point / pieceTypes.length;
-                if (pieceTypes[x][y] == -1) pieceTypes[x][y] = 0;
+                int x = point % ra.pieceTypes.length;
+                int y = point / ra.pieceTypes.length;
+                if (ra.pieceTypes[x][y] == -1) ra.pieceTypes[x][y] = 0;
                 for(int i = 0;i<4;i++) {
                     int x2 = x + dx[i];
                     int y2 = y + dy[i];
                     if (x2 >= 0 && x2 < a.width * ROOM_WIDTH &&
                         y2 >= 0 && y2 < a.height * ROOM_HEIGHT &&
                         a.divisionIDs[x2/ROOM_WIDTH][y2/ROOM_HEIGHT] == d.divisionID) {
-                        int point2 = x2 + y2 * pieceTypes.length;
+                        int point2 = x2 + y2 * ra.pieceTypes.length;
                         if (!open.contains(point2) && !closed.contains(point2)) {
                             open.add(point2);
-                            if (pieceTypes[x2][y2] == -1) pieceTypes[x2][y2] = 0;
-                            pieceTypes[x][y] |= direction[i];
-                            pieceTypes[x2][y2] |= direction_inverse[i];
+                            if (ra.pieceTypes[x2][y2] == -1) ra.pieceTypes[x2][y2] = 0;
+                            ra.pieceTypes[x][y] |= direction[i];
+                            ra.pieceTypes[x2][y2] |= direction_inverse[i];
                         }
                     }
                 }
@@ -432,17 +452,17 @@ public class PCGArea {
                     if ((a.connections[j][i] & PCGWorld.DIRECTION_LEFT) != 0) {
                         int x = j * ROOM_WIDTH;
                         int y = i * ROOM_HEIGHT + r.nextInt(ROOM_HEIGHT);
-                        pieceTypes[x][y] |= PCGWorld.DIRECTION_LEFT;
+                        ra.pieceTypes[x][y] |= PCGWorld.DIRECTION_LEFT;
                         if (x > 0) {
-                            pieceTypes[x - 1][y] |= PCGWorld.DIRECTION_RIGHT;
+                            ra.pieceTypes[x - 1][y] |= PCGWorld.DIRECTION_RIGHT;
                         }
                     }
                     if ((a.connections[j][i] & PCGWorld.DIRECTION_UP) != 0) {
                         int x = j * ROOM_WIDTH + r.nextInt(ROOM_WIDTH);
                         int y = i * ROOM_HEIGHT;
-                        pieceTypes[x][y] |= PCGWorld.DIRECTION_UP;
+                        ra.pieceTypes[x][y] |= PCGWorld.DIRECTION_UP;
                         if (y > 0) {
-                            pieceTypes[x][y - 1] |= PCGWorld.DIRECTION_DOWN;
+                            ra.pieceTypes[x][y - 1] |= PCGWorld.DIRECTION_DOWN;
                         }
                     }                
                 }
@@ -452,17 +472,17 @@ public class PCGArea {
         // Add random paths:
         for(int i = 1;i<a.height * ROOM_HEIGHT;i++) {
             for(int j = 1;j<a.width * ROOM_WIDTH;j++) {
-                if (pieceTypes[j][i] >= 0) {
+                if (ra.pieceTypes[j][i] >= 0) {
                     if (a.divisionIDs[j / ROOM_WIDTH][i / ROOM_HEIGHT] == a.divisionIDs[(j - 1) / ROOM_WIDTH][i / ROOM_HEIGHT]) {
                         if (r.nextInt(p_of_path) == 0) {
-                            pieceTypes[j][i] |= PCGWorld.DIRECTION_LEFT;
-                            pieceTypes[j - 1][i] |= PCGWorld.DIRECTION_RIGHT;
+                            ra.pieceTypes[j][i] |= PCGWorld.DIRECTION_LEFT;
+                            ra.pieceTypes[j - 1][i] |= PCGWorld.DIRECTION_RIGHT;
                         }
                     }
                     if (a.divisionIDs[j / ROOM_WIDTH][i / ROOM_HEIGHT] == a.divisionIDs[j / ROOM_WIDTH][(i - 1) / ROOM_HEIGHT]) {
                         if (r.nextInt(p_of_path) == 0) {
-                            pieceTypes[j][i] |= PCGWorld.DIRECTION_UP;
-                            pieceTypes[j][i - 1] |= PCGWorld.DIRECTION_DOWN;
+                            ra.pieceTypes[j][i] |= PCGWorld.DIRECTION_UP;
+                            ra.pieceTypes[j][i - 1] |= PCGWorld.DIRECTION_DOWN;
                         }
                     }
                 }
@@ -473,29 +493,28 @@ public class PCGArea {
         for(AreaConnection c:w.connections) {
             if (c.p1.a == a) {
                 if (c.p1.direction == PCGWorld.DIRECTION_LEFT) {
-                    pieceTypes[c.p1.x * ROOM_WIDTH][c.p1.y * ROOM_WIDTH + r.nextInt(ROOM_HEIGHT)] |= c.p1.direction;
+                    ra.pieceTypes[c.p1.x * ROOM_WIDTH][c.p1.y * ROOM_WIDTH + r.nextInt(ROOM_HEIGHT)] |= c.p1.direction;
                 } else if (c.p1.direction == PCGWorld.DIRECTION_UP) {
-                    pieceTypes[c.p1.x * ROOM_WIDTH + r.nextInt(ROOM_WIDTH)][c.p1.y * ROOM_HEIGHT] |= c.p1.direction;
+                    ra.pieceTypes[c.p1.x * ROOM_WIDTH + r.nextInt(ROOM_WIDTH)][c.p1.y * ROOM_HEIGHT] |= c.p1.direction;
                 } else if (c.p1.direction == PCGWorld.DIRECTION_RIGHT) {
-                    pieceTypes[c.p1.x * ROOM_WIDTH + ROOM_WIDTH - 1][c.p1.y * ROOM_HEIGHT + r.nextInt(ROOM_HEIGHT)] |= c.p1.direction;
+                    ra.pieceTypes[c.p1.x * ROOM_WIDTH + ROOM_WIDTH - 1][c.p1.y * ROOM_HEIGHT + r.nextInt(ROOM_HEIGHT)] |= c.p1.direction;
                 } else if (c.p1.direction == PCGWorld.DIRECTION_DOWN) {
-                    pieceTypes[c.p1.x * ROOM_WIDTH + r.nextInt(ROOM_WIDTH)][c.p1.y * ROOM_HEIGHT + ROOM_HEIGHT - 1] |= c.p1.direction;
+                    ra.pieceTypes[c.p1.x * ROOM_WIDTH + r.nextInt(ROOM_WIDTH)][c.p1.y * ROOM_HEIGHT + ROOM_HEIGHT - 1] |= c.p1.direction;
                 }
             }
             if (c.p2.a == a) {
                 if (c.p2.direction == PCGWorld.DIRECTION_LEFT) {
-                    pieceTypes[c.p2.x * ROOM_WIDTH][c.p2.y * ROOM_WIDTH + r.nextInt(ROOM_HEIGHT)] |= c.p2.direction;
+                    ra.pieceTypes[c.p2.x * ROOM_WIDTH][c.p2.y * ROOM_WIDTH + r.nextInt(ROOM_HEIGHT)] |= c.p2.direction;
                 } else if (c.p2.direction == PCGWorld.DIRECTION_UP) {
-                    pieceTypes[c.p2.x * ROOM_WIDTH + r.nextInt(ROOM_WIDTH)][c.p2.y * ROOM_HEIGHT] |= c.p2.direction;
+                    ra.pieceTypes[c.p2.x * ROOM_WIDTH + r.nextInt(ROOM_WIDTH)][c.p2.y * ROOM_HEIGHT] |= c.p2.direction;
                 } else if (c.p2.direction == PCGWorld.DIRECTION_RIGHT) {
-                    pieceTypes[c.p2.x * ROOM_WIDTH + ROOM_WIDTH - 1][c.p2.y * ROOM_HEIGHT + r.nextInt(ROOM_HEIGHT)] |= c.p2.direction;
+                    ra.pieceTypes[c.p2.x * ROOM_WIDTH + ROOM_WIDTH - 1][c.p2.y * ROOM_HEIGHT + r.nextInt(ROOM_HEIGHT)] |= c.p2.direction;
                 } else if (c.p2.direction == PCGWorld.DIRECTION_DOWN) {
-                    pieceTypes[c.p2.x * ROOM_WIDTH + r.nextInt(ROOM_WIDTH)][c.p2.y * ROOM_HEIGHT + ROOM_HEIGHT - 1] |= c.p2.direction;
+                    ra.pieceTypes[c.p2.x * ROOM_WIDTH + r.nextInt(ROOM_WIDTH)][c.p2.y * ROOM_HEIGHT + ROOM_HEIGHT - 1] |= c.p2.direction;
                 }
             }
         }
 
-        RenderedArea ra = new RenderedArea(pieceTypes.length, pieceTypes[0].length);
         String placedTags[][] = new String[a.width * ROOM_WIDTH][a.height * ROOM_HEIGHT];
         for(int i = 0;i<a.height * ROOM_HEIGHT;i++) {
             for(int j = 0;j<a.width * ROOM_WIDTH;j++) {
@@ -504,7 +523,7 @@ public class PCGArea {
         }
         for(int i = 0;i<a.height * ROOM_HEIGHT;i++) {
             for(int j = 0;j<a.width * ROOM_WIDTH;j++) {                
-                if (pieceTypes[j][i] >= 0) {
+                if (ra.pieceTypes[j][i] >= 0) {
                     
                     if ((j % ROOM_WIDTH) == 0 && (i % ROOM_HEIGHT) == 0) {                        
                         // handle tags:
@@ -685,39 +704,39 @@ public class PCGArea {
                                         int y = i + position/ROOM_WIDTH;
                                         if (requireAtLeast2Exits) {
                                             if (
-                                                pieceTypes[x][y] == 0x0 ||
-                                                pieceTypes[x][y] == 0x1 ||
-                                                pieceTypes[x][y] == 0x2 ||
-                                                pieceTypes[x][y] == 0x4 ||
-//                                                pieceTypes[x][y] == 0x7 ||
-                                                pieceTypes[x][y] == 0x8
-//                                                || pieceTypes[x][y] == 0xb ||
-//                                                pieceTypes[x][y] == 0xd ||
-//                                                pieceTypes[x][y] == 0xe ||
-//                                                pieceTypes[x][y] == 0xf
+                                                ra.pieceTypes[x][y] == 0x0 ||
+                                                ra.pieceTypes[x][y] == 0x1 ||
+                                                ra.pieceTypes[x][y] == 0x2 ||
+                                                ra.pieceTypes[x][y] == 0x4 ||
+//                                                ra.pieceTypes[x][y] == 0x7 ||
+                                                ra.pieceTypes[x][y] == 0x8
+//                                                || ra.pieceTypes[x][y] == 0xb ||
+//                                                ra.pieceTypes[x][y] == 0xd ||
+//                                                ra.pieceTypes[x][y] == 0xe ||
+//                                                ra.pieceTypes[x][y] == 0xf
                                                 ) {
                                                 continue;
                                             }
                                         }
                                         if (connectionToClose == PCGWorld.DIRECTION_LEFT) {
                                             if ((x % ROOM_WIDTH) != 0) continue;
-                                            if ((pieceTypes[x][y] & connectionToClose) == 0) continue;
+                                            if ((ra.pieceTypes[x][y] & connectionToClose) == 0) continue;
                                         }
                                         if (connectionToClose == PCGWorld.DIRECTION_UP) {
                                             if ((y % ROOM_HEIGHT) != 0) continue;
-                                            if ((pieceTypes[x][y] & connectionToClose) == 0) continue;
+                                            if ((ra.pieceTypes[x][y] & connectionToClose) == 0) continue;
                                         }
                                         if (connectionToClose == PCGWorld.DIRECTION_RIGHT) {
                                             if ((x % ROOM_WIDTH) != ROOM_WIDTH - 1) continue;
-                                            if ((pieceTypes[x][y] & connectionToClose) == 0) continue;
+                                            if ((ra.pieceTypes[x][y] & connectionToClose) == 0) continue;
                                         }
                                         if (connectionToClose == PCGWorld.DIRECTION_DOWN) {
                                             if ((y % ROOM_HEIGHT) != ROOM_HEIGHT - 1) continue;
-                                            if ((pieceTypes[x][y] & connectionToClose) == 0) continue;
+                                            if ((ra.pieceTypes[x][y] & connectionToClose) == 0) continue;
                                         }
                                         
                                         if (placedTags[x][y] == null) {
-                                            int n_connections = n_connections_per_type[pieceTypes[x][y]];
+                                            int n_connections = n_connections_per_type[ra.pieceTypes[x][y]];
                                             if (n_connections < best_n_connections) {
                                                 best_x = x;
                                                 best_y = y;
@@ -730,7 +749,7 @@ public class PCGArea {
                                         if (connectionToClose != 0) {
                                             // Close the connection for breakable walls:
                                             // pieceTypes[x][y] |= connectionToClose;
-                                            pieceTypes[best_x][best_y] ^= connectionToClose;
+                                            ra.pieceTypes[best_x][best_y] ^= connectionToClose;
                                         }
                                         tagToPlace = null;
                                     }
@@ -743,7 +762,7 @@ public class PCGArea {
                                                        ", limitTo2ExitTypes = " + requireAtLeast2Exits +
                                                        ", connectionToClose = " + connectionToClose + 
                                                        ", placedTags[x][y] = " + placedTags[j][i] + ", " + placedTags[j+1][i] + ", " + placedTags[j][i + 1] + ", " + placedTags[j + 1][i + 1] +
-                                                       ", pieceTypes[x][y] = " + pieceTypes[j][i] + ", " + pieceTypes[j+1][i] + ", " + pieceTypes[j][i + 1] + ", " + pieceTypes[j + 1][i + 1]);
+                                                       ", pieceTypes[x][y] = " + ra.pieceTypes[j][i] + ", " + ra.pieceTypes[j+1][i] + ", " + ra.pieceTypes[j][i + 1] + ", " + ra.pieceTypes[j + 1][i + 1]);
                                     return null;
                                 }
                             }
@@ -755,13 +774,13 @@ public class PCGArea {
                     String upTag = null, downTag = null;
                     String chunkPoolName = "standard";
                     HashMap<Integer, List<RoomChunk>> chunkPool = fg_chunks;
-                    boolean placeBackground = true;
+//                    boolean placeBackground = true;
                     if (placedTags[j][i] != null) {
                         switch(placedTags[j][i]) {
                             case "boss":
                                 chunkPoolName = "boss";
                                 chunkPool = boss_chunks;
-                                placeBackground = false;
+//                                placeBackground = false;
                                 break;
                                 
                             case "block-puzzle1":
@@ -907,22 +926,22 @@ public class PCGArea {
                         }
                     }
                      
-                    if (placeBackground) {
-                        if (r.nextInt(p_of_non_first_bg) == 0) {
-                            ra.bg_chunks[j][i] = bg_chunks.get(1 + r.nextInt(bg_chunks.size() - 1));
-                        } else {
-                            ra.bg_chunks[j][i] = bg_chunks.get(0);
-                        }
-                    }
+//                    if (placeBackground) {
+//                        if (r.nextInt(p_of_non_first_bg) == 0) {
+//                            ra.bg_chunks[j][i] = bg_chunks.get(1 + r.nextInt(bg_chunks.size() - 1));
+//                        } else {
+//                            ra.bg_chunks[j][i] = bg_chunks.get(0);
+//                        }
+//                    }
                     
                     if (i > 0) above = ra.fg_chunks[j][i-1];
                     if (above == null) {
                         // top of the map:
-                        if ((pieceTypes[j][i] & PCGWorld.DIRECTION_UP) != 0) {
+                        if ((ra.pieceTypes[j][i] & PCGWorld.DIRECTION_UP) != 0) {
                             upTag = "stairs";  // up/down connections from outside the map always via stairs
                         }
                     } else {
-                        if ((pieceTypes[j][i] & PCGWorld.DIRECTION_UP) != 0) {
+                        if ((ra.pieceTypes[j][i] & PCGWorld.DIRECTION_UP) != 0) {
                             if (above.tags.containsKey("down")) {
                                 upTag = above.tags.get("down");
                             }
@@ -930,11 +949,11 @@ public class PCGArea {
                             // ignore the above tag, as we have a breakable wall/door above here
                         }
                     }
-                    if ((pieceTypes[j][i] & PCGWorld.DIRECTION_DOWN) != 0) {
-                        if (i == a.height * ROOM_HEIGHT - 1 || pieceTypes[j][i+1] < 0) {
+                    if ((ra.pieceTypes[j][i] & PCGWorld.DIRECTION_DOWN) != 0) {
+                        if (i == a.height * ROOM_HEIGHT - 1 || ra.pieceTypes[j][i+1] < 0) {
                             downTag = "stairs";  // up/down connections from outside the map always via stairs
                         } else {
-                            if ((pieceTypes[j][i] & PCGWorld.DIRECTION_UP) == 0) {
+                            if ((ra.pieceTypes[j][i] & PCGWorld.DIRECTION_UP) == 0) {
                                 downTag = "hole";  // prevent stairs when there is a door/breakable wall below
                             }
                         }
@@ -945,7 +964,7 @@ public class PCGArea {
                         necessaryObjectTypes.contains("door-up")) {
                         upTag = null;
                     }
-                    List<RoomChunk> choices = chunkPool.get(pieceTypes[j][i]);
+                    List<RoomChunk> choices = chunkPool.get(ra.pieceTypes[j][i]);
                     if (upTag != null || downTag != null || !necessaryObjectTypes.isEmpty()) {
                         List<RoomChunk> choicesWithTag = new ArrayList<>();
                         for(RoomChunk c:choices) {
@@ -969,12 +988,12 @@ public class PCGArea {
                         if (!choicesWithTag.isEmpty()) {
                             choices = choicesWithTag;
                         } else {
-                            System.err.println("No " +chunkPoolName+ " patterns with up/down tags: " + upTag + "/" + downTag + ", objects " + necessaryObjectTypes + ", and type: " + pieceTypes[j][i] + " (at " + j + ", " + i + ", placed tags: "+placedTags[j][i]+")");
+                            System.err.println("No " +chunkPoolName+ " patterns with up/down tags: " + upTag + "/" + downTag + ", objects " + necessaryObjectTypes + ", and type: " + ra.pieceTypes[j][i] + " (at " + j + ", " + i + ", placed tags: "+placedTags[j][i]+")");
                             return null;
                         }
                     }
                     if (choices.isEmpty()) {
-                        System.err.println("No " +chunkPoolName+ " chunks for type " + pieceTypes[j][i]);
+                        System.err.println("No " +chunkPoolName+ " chunks for type " + ra.pieceTypes[j][i]);
                         return null;
                     }
                     ra.fg_chunks[j][i] = choices.get(r.nextInt(choices.size()));
@@ -1237,4 +1256,46 @@ public class PCGArea {
         
         return ra;
     }
+    
+    
+    public RoomChunk[][] getBGChunksLikeInMSX(RenderedArea ra)
+    {
+        Area a = ra.a;
+        RoomChunk ra_bg_chunks[][] = new RoomChunk[ra.fg_chunks.length][ra.fg_chunks[0].length];
+        
+        // background (follow the same random procedure as used in assembler):
+        List<Integer> roomIDs = new ArrayList<>();
+        for(int i = 0;i<a.height;i++) {
+            for(int j = 0;j<a.width;j++) {                
+                if (a.rooms[j][i] >= 0 && !roomIDs.contains(a.rooms[j][i])) {
+                    roomIDs.add(a.rooms[j][i]);
+                }
+            }
+        }
+
+        int p_of_non_first_bg = 4;  // probability is 1 / 4
+        for(int roomID:roomIDs) {
+            // set the random number generator in the same state as it will be 
+            // on the MSX side:
+            MSXRandom r = new MSXRandom(a.rng_seed1, a.rng_seed2);
+            for(int i = 0;i<roomID;i++) {
+                r.nextBoolean();
+            }
+            for(int i = 0;i<a.height * ROOM_HEIGHT;i++) {
+                for(int j = 0;j<a.width * ROOM_WIDTH;j++) {                
+                    if (a.rooms[j/2][i/2] == roomID &&
+                        ra.pieceTypes[j][i] >= 0 &&
+                        !ra.fg_chunks[j][i].tags.containsKey("boss")) {
+                        if (r.nextInt(p_of_non_first_bg) == 0) {
+                            ra_bg_chunks[j][i] = bg_chunks.get(1 + r.nextInt(bg_chunks.size() - 1));
+                        } else {
+                            ra_bg_chunks[j][i] = bg_chunks.get(0);
+                        }
+                    }
+                }
+            }
+        }
+        return ra_bg_chunks;
+    }
+        
 }

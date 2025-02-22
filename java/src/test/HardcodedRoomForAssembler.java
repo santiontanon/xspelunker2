@@ -30,14 +30,13 @@ public class HardcodedRoomForAssembler {
         World w = pcg1.generate(r);
         pcg2.generate(w.areas.get(0), w, r);
         RenderedArea ra = pcg2.generate(w.areas.get(1), w, r);
-//        generateAssemblerRoomData(3, w.areas.get(1), ra);  // size 2
-//        generateAssemblerRoomData(6, w.areas.get(1), ra);  // size 2x2, square
-        generateAssemblerRoomData(16, w.areas.get(1), ra);  // size 2x2, many animations
+        generateAssemblerRoomData(7, ra, pcg2);  // size 1x4, many animations
     }
 
     
-    public static void generateAssemblerRoomData(int roomID, Area a, RenderedArea ra) throws Exception
+    public static void generateAssemblerRoomData(int roomID, RenderedArea ra, PCGArea pcg) throws Exception
     {
+        Area a = ra.a;
         int room_x1 = -1, room_y1 = -1;
         int room_x2 = -1, room_y2 = -1;
         for(int i = 0;i<a.height;i++) {
@@ -66,10 +65,10 @@ public class HardcodedRoomForAssembler {
         for(int i = room_y1;i<=room_y2;i++) {
             for(int j = room_x1;j<=room_x2;j++) {
                 if (a.rooms[j][i] == roomID) {
-                    addChunkToTileMap(ra, j*2,   i*2,   tile_map, (j - room_x1)*2,     (i - room_y1)*2, width);
-                    addChunkToTileMap(ra, j*2+1, i*2,   tile_map, (j - room_x1)*2 + 1, (i - room_y1)*2, width);
-                    addChunkToTileMap(ra, j*2,   i*2+1, tile_map, (j - room_x1)*2,     (i - room_y1)*2 + 1, width);
-                    addChunkToTileMap(ra, j*2+1, i*2+1, tile_map, (j - room_x1)*2 + 1, (i - room_y1)*2 + 1, width);
+                    addChunkToTileMap(ra, j*2,   i*2,   tile_map, (j - room_x1)*2,     (i - room_y1)*2, width, pcg);
+                    addChunkToTileMap(ra, j*2+1, i*2,   tile_map, (j - room_x1)*2 + 1, (i - room_y1)*2, width, pcg);
+                    addChunkToTileMap(ra, j*2,   i*2+1, tile_map, (j - room_x1)*2,     (i - room_y1)*2 + 1, width, pcg);
+                    addChunkToTileMap(ra, j*2+1, i*2+1, tile_map, (j - room_x1)*2 + 1, (i - room_y1)*2 + 1, width, pcg);
                 }
             }
         }
@@ -102,7 +101,7 @@ public class HardcodedRoomForAssembler {
         System.out.println("hardcoded_room_data__max_scroll_y:");
         System.out.println("  db " + (height - 24));
         
-        List<TileAnimation> animations = ra.getRoomAnimations(roomID, a);
+        List<TileAnimation> animations = ra.getRoomAnimations(roomID, pcg);
         System.out.println("hardcoded_room_data__tile_animations:");
         for(int i = 0;i<RenderedArea.MAX_ANIMATIONS;i++) {
             if (animations.size() > i) {
@@ -115,13 +114,14 @@ public class HardcodedRoomForAssembler {
     }
     
     
-    public static void addChunkToTileMap(RenderedArea ra, int chunkx, int chunky, int []tile_map, int targetx, int targety, int width)
+    public static void addChunkToTileMap(RenderedArea ra, int chunkx, int chunky, int []tile_map, int targetx, int targety, int width, PCGArea pcg)
     {
+        RoomChunk bg_chunks[][] = pcg.getBGChunksLikeInMSX(ra);
         for(int i = 0; i<RoomChunk.CHUNK_HEIGHT;i++) {            
             for(int j = 0; j<RoomChunk.CHUNK_WIDTH;j++) {
                 int tile = ra.fg_chunks[chunkx][chunky].tiles[j][i];
                 if (tile == 0) {
-                    tile = ra.bg_chunks[chunkx][chunky].tiles[j][i];
+                    tile = bg_chunks[chunkx][chunky].tiles[j][i];
                 }
                 int offset = targetx * RoomChunk.CHUNK_WIDTH + j +
                              (targety * RoomChunk.CHUNK_HEIGHT + i) * width;

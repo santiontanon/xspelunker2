@@ -153,3 +153,10 @@ random:
     pop bc
     pop af
     ret
+
+random_a:
+    push hl
+        call random
+        ld a, l
+    pop hl
+    ret

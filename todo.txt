@@ -1,24 +1,15 @@
 to do:
 
 ***- game engine (assembler):
-  ***- generate the current room in assembler automatically:
-    ***- Java:
-      ***- calculate the room random seed as in MSX
-      ***- now background should look identical to that on MSX
-      ***- simplify the patterns (now the generated images should look bad)
-      ***- reconstruct ropes/ladders/faces as I did in assembler
-      ***- tile randomization:
-        ***- spikes
-        ***- ropes
-        ***- platforms
-        ***- bricks-top / bricks-bottom
-        ***- thin bricks
-        ***- rubble
-    ***- assembler: implement the same thing
-      ***- make sure I get exactly the same room in Java and in assembler
-
-  - I should then be able to test room transitions to navigate a whole map now
-    - collision for now when trying to navigate through an inter-area connection
+  ***- Room transitions to navigate a whole map now:
+    ***- early clock bit for when player sprite gets close to the left
+    ***- detect when player collides against an edge (up/down/right/left)
+    ***- determine which room are we going to transition to
+      ***- collision for now when trying to navigate through an inter-area connection
+    ***- load that new room
+    ***- compute the player coordinates in the new room, and keep playing
+    ***- verify that ladder transitions work
+    ***- verify that jump transitions work
 
   - Refactor/simplify PCGArea
       - I don't like those endless switch statements. How can I make it easier to add things, and easier to translate to assembler? 
@@ -30,42 +21,76 @@ to do:
       - list of areas: w, j, division map, tag map, seed for area generator (10 * 256 -> 2.5kb)
       - list of divisions: ID, parent, n_descendants, root point, tags (this is stored twice for convenience) (64 * 10 -> 640 bytes)
       - there will by a table of bit flags that stores which type of "locations" are in each chunk, and one with the up/down flags (which are not stored in the chunks)
-  - plan for rest of the engine (swim in water, get hurt, hud, inventory, weapons, enemies, items, etc.)
 
-- PCG to do: optional treasure:
-    - sample random rooms that have no tags (ideally in leaf divisions with no tags), and add optional treasure/story trivia labels
-         (might or might not be reachable)
-        - add "small keys" and some of the objects above are chest_locked with small keys
-    - dictionary with puzzles/riddles/hints/story
-    - draw them (weapons, supplies, extra HP)
-    - add them to the map
-
-- other ideas for items:
-    - pottery, obsidian blade, corn kernels, jade beads, feathers,
-      stone tool (e.g. axe head), jade mask, scepter/staff, codices (maya books), human skulls
-    - fragments of a calendar stone (maybe this is what you get from the bosses)
-
-- remove decorations like vines, skeletons and flowers, and add them randomly procedurally: can I do this automatically?
-- randomize wall tiles
-
-- to do (renderer):
-    - add enemies (xspelunker enemies for now) (like in xspelunker, each enemy
-      has a custom function of where can it be spawned)
-
-- to do (secret quest):
-    - distribute a series of k clues needed to unlock something in atlantis
-    - ensure there is path to those clues (how? ideally from the nearest path)
-    - place the secret goal location (teleporter to mars/moon, clues for each of them are separate), 
-      and also ensure path to it
-    - mars/moon are generated separately, with their own quests (they are independent)
-    - once solved, the same ending room can be used to reach the true ending    
-    
-- ensure I can have all the types of puzzles I listed above from La Mulana
-- ensure I can have things like "double jump" as the key and a whole area/path that requires it (or more than one)
-    
-- switch to the same exact RNG I would use in assembler
-- reimplement in assembler
-
+  - remove decorations like vines, skeletons and flowers, and add them randomly procedurally
+  - inter-area transitions (hardcode whatever is necessary from the whole map, and generate areas in assembler)
+  - generate everything in assembler
+  - swim in water
+  - write the whole story line of the game, so that everything makes sense. This will help me finalize what you get from bosses, what the ending screen is, the intro, etc.
+  - being able to complete the game in assembler:
+    - pick up keys
+      - design inventory screen, and implement the bare minimum
+    - use them in locks
+    - push blocks to solve block puzzles
+    - combination clues
+    - interact with combination levers
+    - press buttons to open doors
+    - open the boss doors
+    - enter a boss door (for now just an empty room with the item you are supposed to get)
+    - whatever els is necessary to play game from beginning to end
+    - design ending screen (maya calendar stone where you place what you get from the bosses, etc.)
+  - get hurt
+  - hitpoints (design hud: HP + current item)
+  - game over screen
+  - come up with a list of weapons
+  - implement the first one or two weapons
+  - come up with a list of enemies for pyramid
+  - implement at least one enemy
+  - enemy spawn
+  - kill enemies and get hurt by them
+  - PCG to do: optional treasure:
+      - sample random rooms that have no tags (ideally in leaf divisions with no tags), and add optional treasure/story trivia labels
+           (might or might not be reachable)
+          - add "small keys" and some of the objects above are chest_locked with small keys
+      - dictionary with puzzles/riddles/hints/story
+      - draw them (weapons, supplies, extra HP)
+      - add them to the map
+      - other ideas for items:
+          - pottery, obsidian blade, corn kernels, jade beads, feathers,
+            stone tool (e.g. axe head), jade mask, scepter/staff, codices (maya books), human skulls
+          - fragments of a calendar stone (maybe this is what you get from the bosses)
+      - ensure I can have all the types of puzzles I listed above from La Mulana
+      - ensure I can have things like "double jump" as the key and a whole area/path that requires it (or more than one)
+  - jungle biome
+  - music
+  - brain games screen
+  - title screen
+  - options menu
+  - game intro sequence
+  - first boss
+  - second boss
+  - third boss
+  - caves biome
+  - temple of fire biome
+  - fourth boss
+  - atlantis biome
+  - fifth boss
+  - first ending sequence
+  - secret quest:
+      - distribute a series of k clues needed to unlock something in atlantis
+      - ensure there is path to those clues (how? ideally from the nearest path)
+      - place the secret goal location (teleporter to mars/moon, clues for each of them are separate), 
+        and also ensure path to it
+      - mars/moon are generated separately, with their own quests (they are independent)
+      - once solved, the same ending room can be used to reach the true ending
+  - mars biome
+  - moon biome
+  - 6th boss
+  - 7th boss
+  - second ending
+  - hide a riddle in the ROM (hidden in the sourcecode somehow, and onlu visible via ASCII)
+  - use the riddle to find the very last item for the calendar
+  - third secret ending
 
 
 X-Spelunker 2 (e-ke-se pe-lu-ne-ke-le):

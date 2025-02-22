@@ -71,7 +71,7 @@ public class GenerationTest {
                         nPCGAreaErrors++;
                     } else {
                         ra.stats(chunkStats, typeStats);
-                        checkNumAnimations(ra, w.areas.get(j));
+                        checkNumAnimations(ra, pcg2);
                     }
                 }
             }
@@ -136,12 +136,12 @@ public class GenerationTest {
     }    
     
     
-    public static void visualizeArea(RenderedArea ra, String path) throws Exception
+    public static void visualizeArea(RenderedArea ra, String path, PCGArea pcg) throws Exception
     {                
         BufferedImage img = new BufferedImage(ra.fg_chunks.length * 8 * RoomChunk.CHUNK_WIDTH + 80,
                                               ra.fg_chunks[0].length * 8 * RoomChunk.CHUNK_HEIGHT + 80,
                                               BufferedImage.TYPE_3BYTE_BGR);
-        ra.draw((Graphics2D)img.getGraphics());
+        ra.draw((Graphics2D)img.getGraphics(), pcg, true);
         ImageIO.write(img, "png", new File(path));
 //        JFrame w = new JFrame() {
 //            @Override
@@ -157,8 +157,9 @@ public class GenerationTest {
     }    
     
     
-    public static void checkNumAnimations(RenderedArea ra, Area a) throws Exception
+    public static void checkNumAnimations(RenderedArea ra, PCGArea pcg) throws Exception
     {
+        Area a = ra.a;
         List<Integer> roomIDs = new ArrayList<>();
         for(int i = 0;i<a.height;i++) {
             for(int j = 0;j<a.width;j++) {
@@ -170,7 +171,7 @@ public class GenerationTest {
         
         // System.out.println("RoomIDs for area " + a.ID + ": " + roomIDs);
         for(int roomID:roomIDs) {
-            int n_animations = ra.getRoomAnimations(roomID, a).size();
+            int n_animations = ra.getRoomAnimations(roomID, pcg).size();
             max_n_animations = Math.max(max_n_animations, n_animations);
             if (n_animations > RenderedArea.MAX_ANIMATIONS) {
                 throw new Exception("Room has more than " + RenderedArea.MAX_ANIMATIONS + " animations! -> " + n_animations);

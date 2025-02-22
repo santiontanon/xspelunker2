@@ -76,7 +76,7 @@ public class RoomChunk {
     }
     
     
-    public RoomChunk simplifyTiles(String biome)
+    public RoomChunk simplifyTiles(String biome) throws Exception
     {
         RoomChunk chunk = this.clone();
         
@@ -99,6 +99,7 @@ public class RoomChunk {
                         case 7*16 + 14:
                         case 7*16 + 15:
                             tile = 7*16 + 14;
+//                            tile = 0;
                             break;
                         // water:
                         case 8*16 + 1:
@@ -123,11 +124,16 @@ public class RoomChunk {
                         case 9*16 + 6:
                         case 9*16 + 11:
                             tile = 9*16 + 5;
+//                            if (tiles[j][i + 1] != 9*16 + 7 &&
+//                                tiles[j][i + 1] != 9*16 + 8) {
+//                                throw new Exception("Malformed chunk! brick top is not on top of a brick bottom tile!");
+//                            }
                             break;
                         // bricks bottom:
                         case 9*16 + 7:
                         case 9*16 + 8:
-                            tile = 9*16 + 7;
+//                            tile = 9*16 + 7;
+                            tile = 0;
                             break;
                         // thin bricks:
                         case 9*16 + 13:
@@ -199,7 +205,24 @@ public class RoomChunk {
 //                        case 15*16 + 15:
                             tile = 0;
                             break;
-                            
+                        // figure pattern:
+//                        case 12*16 + 6:
+//                        case 12*16 + 7:
+//                        case 13*16 + 5:
+//                        case 13*16 + 6:
+//                        case 13*16 + 7:
+//                        case 14*16 + 5:
+//                        case 14*16 + 6:
+//                        case 14*16 + 7:
+//                            tile = 0;
+//                            break;  
+//                        // columns:
+//                        case 12*16 + 4:
+//                        case 13*16 + 4:
+//                        case 14*16 + 4:
+//                        case 15*16 + 4:
+//                            tile = 0;
+//                            break;
                         default:
                     }
                     chunk.tiles[j][i] = tile;
