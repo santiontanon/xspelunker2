@@ -69,9 +69,10 @@ player_update_update_sprite_position:
 	add a, a
 	ld hl, player_x
 	add a, (hl)
+	sub 8 - PLAYER_COLLISION_WIDTH/2
 
 	; set "early clock bit"?
-	cp 256 - (8 - PLAYER_COLLISION_BOX_WIDTH)
+	cp 256 - (8 - PLAYER_COLLISION_WIDTH/2)
 	jr c, player_update_update_sprite_position_no_early_clok_bit
 	add a, 32
 	ld (de), a
@@ -492,12 +493,14 @@ player_update_switch_to_rope_or_ladder:
 	cp 2
 	jr z, player_update_switch_to_ladder
 	; a - 1: amount we need to add to the tile coordinate to find the rope
-	ld c, a
-	dec c
-	ld a, (player_x + 1)
-	add a, c
-	ld (player_x + 1), a
-	ld a, 4
+; 	ld c, a
+; 	dec c
+; 	ld a, (player_x + 1)
+; 	add a, c
+; 	ld (player_x + 1), a
+; 	ld a, 4
+; 	ld (player_x), a
+	ld a, 2
 	ld (player_x), a
 	ld a, (player_state)
 	and #01
@@ -562,7 +565,8 @@ player_update_state_rope_switch_to_idle_pop:
 
 ;-----------------------------------------------
 player_update_switch_to_ladder:
-	xor a
+; 	xor a
+	ld a, 6
 	ld (player_x), a  ; center the player on the ladder
 	ld a, (player_state)
 	and #01
@@ -624,19 +628,19 @@ player_update_move_one_pixel_right_considering_collisions:
 	inc a
 	ld (hl), a
 	cp 8
-	jr c, player_update_move_one_pixel_right_considering_collisions_continue
-	and #07
-	ld (hl), a
+	jr nz, player_update_move_one_pixel_right_considering_collisions_continue
+	ld (hl), 0
 	inc hl
 	inc (hl)
+	ret
 player_update_move_one_pixel_right_considering_collisions_continue:
-	cp 8 - PLAYER_COLLISION_BOX_WIDTH
+	cp (8 - PLAYER_COLLISION_WIDTH) + 1
 	ret nz
 	call player_check_collision_right
 	ret nz
 	; collision, cannot move:
 	ld hl, player_x
-	ld (hl), (8 - PLAYER_COLLISION_BOX_WIDTH) - 1
+	ld (hl), 8 - PLAYER_COLLISION_WIDTH
 	ret
 
 
@@ -650,18 +654,17 @@ player_update_move_one_pixel_left_considering_collisions:
 	dec a
 	ld (hl), a
 	inc a
-	jr nz, player_update_move_one_pixel_left_considering_collisions_continue
+	ret nz
 	ld (hl), 7
 	inc hl
 	dec (hl)
-player_update_move_one_pixel_left_considering_collisions_continue:
-	cp PLAYER_COLLISION_BOX_WIDTH + 1
-	ret nz
 	call player_check_collision_left
 	ret nz
 	; collision, cannot move:
 	ld hl, player_x
-	ld (hl), PLAYER_COLLISION_BOX_WIDTH + 1
+	ld (hl), 0
+	inc hl
+	inc (hl)
 	ret
 
 
@@ -699,11 +702,11 @@ player_update_move_one_pixel_up_considering_collisions:
 	dec (hl)
 	ret
 player_update_move_one_pixel_up_considering_collisions_continue:
-	cp 8 - PLAYER_COLLISION_UP_LEEWAY
+	cp PLAYER_COLLISION_UP_LEEWAY
 	ret nz
 	call player_check_collision_up
 	ret nz
 	; collision, cannot move:
 	ld hl, player_y
-	ld (hl), 8 - PLAYER_COLLISION_UP_LEEWAY
+	ld (hl), PLAYER_COLLISION_UP_LEEWAY
 	ret

@@ -1,49 +1,49 @@
 to do:
 
-***- dark blue fallen column is not used, add it to some chunks
 ***- optimize room PCG generation: once a chunk bank has been decompressed, copy ALL the chunks that use that type (and mark them somehow)
-
-- Refactor/simplify PCGArea
-    - BUG: in room 7 of the example area I am using, there are 2 ladders going up, should there not just be only one?
-    - I don't like those endless switch statements. How can I make it easier to add things, and easier to translate to assembler? 
-    - Once it's simplified, generate hardcoded "Area" data in in Java for assembler, and reconstruct it in assembler
-    - it has to exactly match what is generated in Java
 
 - swim in water
 - remove decorations like vines, skeletons and flowers, and add them randomly procedurally
 
+- Java: Refactor/simplify PCGArea
+    - BUG: in room 7 of the example area I am using, there are 2 ladders going up, should there not just be only one?
+    - I don't like those endless switch statements. How can I make it easier to add things, and easier to translate to assembler? 
+    - Once it's simplified, generate hardcoded "Area" data in in Java for assembler, and reconstruct the "rendered area" it in assembler
+    - it has to exactly match what is generated in Java
+
 - inter-area transitions (hardcode whatever is necessary from the whole map, and generate areas in assembler)
-  - data structure that will store the map: (7.2kb)
+  - World data structure:
       - global object list (4 * 64 -> 256 bytes)
       - list of areas: w, j, division map, tag map, seed for area generator (10 * 256 -> 2.5kb)
       - list of divisions: ID, parent, n_descendants, root point, tags (this is stored twice for convenience) (64 * 10 -> 640 bytes)
       - there will by a table of bit flags that stores which type of "locations" are in each chunk, and one with the up/down flags (which are not stored in the chunks)
-- generate everything in assembler
+- generate world in assembler
 - for some areas (pyramids, etc.) have some predefined shapes (e.g. pyramid shape), that can be chosen with some probability. And maybe also different shapes for the confluence, etc.
 - write the whole story line of the game, so that everything makes sense. This will help me finalize what you get from bosses, what the ending screen is, the intro, etc.
 - being able to complete the game in assembler:
+  - push blocks
+  - render doors (and be blocked by them)
   - spawn and draw items in the game
   - pick up keys
     - design inventory screen, and implement the bare minimum
-  - use them in locks
+  - use them in locks to open doors
   - breakable blocks:
     - make this work with the inter-room transitions (broken wall, overwrides the collision)
-  - push blocks to solve block puzzles
   - combination clues
   - interact with combination levers
   - press buttons to open doors
   - open the boss doors (door open animation with some SFX/music, so, it's clear it's important)
   - enter a boss door (for now just an empty room with the item you are supposed to get)
-  - whatever els is necessary to play game from beginning to end
-  - design ending screen (maya calendar stone where you place what you get from the bosses, etc.)
-- get hurt
+  - whatever else is necessary to play game from beginning to end
+  - design ending room (maya calendar stone where you place what you get from the bosses, etc.)
 - hitpoints (design hud: HP + current item)
-- game over screen
+- get hurt by spikes
+- game over screen when you run out of health
 - come up with a list of weapons
 - implement the first one or two weapons
 - come up with a list of enemies for pyramid
 - implement at least one enemy
-- enemy spawn
+- enemy spawn (remember never to have them in room edges, so that you cannot spawn on top of one)
 - kill enemies and get hurt by them
 - PCG to do: optional treasure:
     - sample random rooms that have no tags (ideally in leaf divisions with no tags), and add optional treasure/story trivia labels
@@ -64,6 +64,9 @@ to do:
 - title screen
 - options menu
 - game start screen where you choose game name, difficulty, seed, etc.
+    - procedural generation depending on a name. By default, you play in "xspelunker2" level, with difficulty "x".
+    - the first letter determines the difficulty level. So, one would choose "a walk in the park" for easy games, or "zebras all the way" for the heardest)
+        - passwords ties to the name (with a 16 bit hash for example)
 - for each difficulty, determine how to simplify the game (map sizes? enemy rates? number of puzzles? enemy aggressivity?)
 - game intro sequence
 - first boss
@@ -87,9 +90,7 @@ to do:
 - 6th boss
 - 7th boss
 - second ending
-- hide a riddle in the ROM (hidden in the sourcecode somehow, and onlu visible via ASCII)
-- use the riddle to find the very last item for the calendar
-- third secret ending
+- secret puzzle: add strings in the ROM that can be read via a hex reader of the ROM (encode them as decimal numbers in the .asm file, so that they are not visible from the source easily), that form a puzzle, giving you a clue (e.g. a code) for something to do in the game to get a special ending. this will enable the 3rd ending (last piece to fit in the calendar)
 
 
 X-Spelunker 2 (e-ke-se pe-lu-ne-ke-le):
@@ -122,12 +123,6 @@ X-Spelunker 2 (e-ke-se pe-lu-ne-ke-le):
     - timed chellenges (e.g. completing something before a door closes, or the "destroying all the vases before the time lamp expires")
     - any of the above but where the clue requires decyphering a language
     - bosses
-  - procedural generation:
-    - but with parts designed and parts procedurally generated (you might even have to do multiple runs to beat the game, or achieve some secret)
-    - procedural generation depending on a name. By default, you play in "xspelunker2" level, with difficulty "x".
-    - the first letter determines the difficulty level. So, one would choose "a walk in the park" for easy games, or "zebras all the way" for the heardest)
-        - passwords ties to the name (with a 16 bit hash for example)
-    - evens/puzzles/story hardcoded, and the generation will only place them in the map (although maybe a subset can be selected)
   - maya text:
     https://www.mayaarchaeologist.co.uk/public-resources/maya-world/maya-writing-system/
   - main quest not too hard, so most people can complete it, but secret very hard mission full of secrets
@@ -138,11 +133,6 @@ X-Spelunker 2 (e-ke-se pe-lu-ne-ke-le):
   - list of important deities for clues/story: https://www.villapalmarcancun.com/discover-cancun/heritage/most-important-mayan-gods
 
 - altar(s) where you can sacrifice bodies to some Mayan gods: carrying corpses of enemies? sacrificing them with some sacrificial dagger pleases the gods and you get random things (refill life, supplies, and maybe a special weapon that can only be gotten this way). Think a bit more on this, to see if I can get a nice mechanics that has some depth (e.g., sacrificing bigger corpses gives you more, but you become slow when carrying a corpse, and hence it's harder, etc.).
-
-- secret puzzle: add strings in the ROM that can be read via a hex reader of the ROM (encode them as decimal numbers in the .asm file, so that they are not visible from the source easily), that form a puzzle, giving you a clue (e.g. a code) for something to do in the game to get a special ending. So, there will be 3 endings:
-  - normal ending
-  - special mission ending (needs the Maya language puzzles)
-  - real final ending (needs both Maya language puzzles and the special ROM puzzle)
 
 
 -----------

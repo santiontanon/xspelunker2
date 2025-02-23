@@ -15,13 +15,15 @@ player_check_collision_left:
 	jr z, player_check_collision_left_continue
 	inc b
 player_check_collision_left_continue:
+IF COLLISION_UNIT_TESTING == 0	
 	ld a, c
 	cp #ff
 	jp z, player_exit_room_left
+ENDIF
 	push bc
 		call get_room_tile_type
 	pop bc
-	cp 2
+	cp 2  ; wall
 	ret z
 	; if we are crawling, do not check head:
 	ld a, (player_state)
@@ -32,7 +34,7 @@ player_check_collision_left_continue:
 	ld a, (player_y + 1)
 	ld b, a
 	ld a, (player_y)
-	cp 8 - PLAYER_COLLISION_UP_LEEWAY  ; 5
+	cp PLAYER_COLLISION_UP_LEEWAY
 	jr c, player_check_collision_left_continue2
 	inc b
 player_check_collision_left_continue2:
@@ -56,16 +58,17 @@ player_check_collision_right:
 	ld b, a
 	; collision with the feet:
 	inc c
-	inc c
 	inc b
 	ld a, (player_y)
 	or a
 	jr z, player_check_collision_right_continue
 	inc b
 player_check_collision_right_continue:
+IF COLLISION_UNIT_TESTING == 0	
 	ld a, (current_room__width)
 	cp c
 	jp z, player_exit_room_right	
+ENDIF
 	push bc
 		call get_room_tile_type
 	pop bc
@@ -80,7 +83,7 @@ player_check_collision_right_continue:
 	ld a, (player_y + 1)
 	ld b, a
 	ld a, (player_y)
-	cp 8 - PLAYER_COLLISION_UP_LEEWAY  ; 5
+	cp PLAYER_COLLISION_UP_LEEWAY
 	jr c, player_check_collision_right_continue2
 	inc b
 player_check_collision_right_continue2:
@@ -105,14 +108,11 @@ player_check_collision_down_inc:
 	; collision with the feet-left:
 	inc b
 	inc b
-	ld a, (player_x)
-	cp PLAYER_COLLISION_BOX_WIDTH + 1
-	jr c, player_check_collision_down_inc_continue
-	inc c  ; if >= PLAYER_COLLISION_BOX_WIDTH, c+=1
-player_check_collision_down_inc_continue:
+IF COLLISION_UNIT_TESTING == 0	
 	ld a, (current_room__height)
 	cp b
 	jp z, player_exit_room_down
+ENDIF
 	push bc
 		call get_room_tile_type
 	pop bc
@@ -132,15 +132,10 @@ player_check_collision_down_inc_platform:
 player_check_collision_down_inc_right:
 	; collision with the feet-right:
 	ld a, (player_x)
-	cp PLAYER_COLLISION_BOX_WIDTH + 1
-	jr nc, player_check_collision_down_inc_continue2
+	cp (8 - PLAYER_COLLISION_WIDTH) + 1
+	jr c, player_check_collision_down_inc_continue2
 	inc c  ; if < PLAYER_COLLISION_BOX_WIDTH, c+=1
-	jp player_check_collision_down_inc_continue3
 player_check_collision_down_inc_continue2:
-	cp (8 - PLAYER_COLLISION_BOX_WIDTH)
-	jr c, player_check_collision_down_inc_continue3
-	inc c  ; if >= (8 - PLAYER_COLLISION_BOX_WIDTH), c+=1
-player_check_collision_down_inc_continue3:
 	call get_room_tile_type
 	cp 2
 	ret z
@@ -164,14 +159,10 @@ player_check_collision_up:
 	ld a, (player_y + 1)
 	ld b, a
 	; collision with the head-left:
-	ld a, (player_x)
-	cp PLAYER_COLLISION_BOX_WIDTH + 1
-	jr c, player_check_collision_up_continue
-	inc c  ; if >= PLAYER_COLLISION_BOX_WIDTH, c+=1
-player_check_collision_up_continue:
-	ld a, b
+IF COLLISION_UNIT_TESTING == 0	
 	cp #ff
 	jp z, player_exit_room_up
+ENDIF
 	push bc
 		call get_room_tile_type
 	pop bc
@@ -179,15 +170,10 @@ player_check_collision_up_continue:
 	ret z
 	; collision with the head-right:
 	ld a, (player_x)
-	cp PLAYER_COLLISION_BOX_WIDTH + 1
-	jr nc, player_check_collision_up_continue2
+	cp (8 - PLAYER_COLLISION_WIDTH) + 1
+	jr c, player_check_collision_up_continue2
 	inc c  ; if < PLAYER_COLLISION_BOX_WIDTH, c+=1
-	jp player_check_collision_up_continue3
 player_check_collision_up_continue2:
-	cp (8 - PLAYER_COLLISION_BOX_WIDTH)
-	jr c, player_check_collision_down_inc_continue3
-	inc c  ; if >= (8 - PLAYER_COLLISION_BOX_WIDTH), c+=1
-player_check_collision_up_continue3:
 	call get_room_tile_type
 	cp 2
 	ret
@@ -228,19 +214,19 @@ check_player_on_top_of_rope_continue:
 	cp 8
 	jr z, check_player_maybe_on_top_of_ladder	
 check_player_on_top_of_rope_right:
-	inc c
-	call get_room_tile_type
-	cp 5
-	jr z, check_player_on_top_of_rope_1
-	cp 6
-	jr z, check_player_on_top_of_rope_1
+; 	inc c
+; 	call get_room_tile_type
+; 	cp 5
+; 	jr z, check_player_on_top_of_rope_1
+; 	cp 6
+; 	jr z, check_player_on_top_of_rope_1
 	ret
 check_player_on_top_of_rope_0:
 	xor a  ; z, a = 0
 	ret
-check_player_on_top_of_rope_1:
-	ld a, 1
-	ret
+; check_player_on_top_of_rope_1:
+; 	ld a, 1
+; 	ret
 check_player_maybe_on_top_of_ladder:
 	inc c
 	call get_room_tile_type
@@ -295,6 +281,8 @@ get_room_tile_type_continue:
 	ld a, (hl)
 	ret
 
+
+IF COLLISION_UNIT_TESTING == 0	
 
 ;-----------------------------------------------
 ; input:
@@ -461,7 +449,7 @@ player_exit_room_left:
 	ld (player_y + 1), a
 
 	ld a, (current_room__width)
-	add a, -2
+	dec a
 	ld (player_x + 1), a
 	xor a
 	ld (player_x), a
@@ -735,6 +723,7 @@ check_collision_with_next_chunk_down_bit_found:
 	xor #01  ; reverse the bit to get the flag we want
 	ret
 
+ENDIF
 
 ;-----------------------------------------------
 ; 0: no collision
