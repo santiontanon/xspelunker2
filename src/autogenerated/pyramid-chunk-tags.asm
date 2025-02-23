@@ -161,38 +161,38 @@
   db 0, 17  ; data/patterns/block1100-1.tmx + right + down
   db 0, 33  ; data/patterns/block1100-2.tmx + right + down
   db 0, 0  ; data/patterns/combination0000-1.tmx
-  db 0, 1  ; data/patterns/combination0000-1.tmx
+  db 0, 1  ; data/patterns/combination0000-1.tmx + down
   db 0, 2  ; data/patterns/combination0001-1.tmx
-  db 0, 0  ; data/patterns/combination0000-1.tmx
-  db 0, 1  ; data/patterns/combination0000-1.tmx
-  db 0, 2  ; data/patterns/combination0001-1.tmx
-  db 0, 16  ; data/patterns/combination0000-1.tmx
+  db 0, 0  ; data/patterns/combination0000-1.tmx + right
+  db 0, 1  ; data/patterns/combination0000-1.tmx + right + down
+  db 0, 2  ; data/patterns/combination0001-1.tmx + right
+  db 0, 16  ; data/patterns/combination0000-1.tmx + up
   db 0, 32  ; data/patterns/combination0100-1.tmx
-  db 0, 17  ; data/patterns/combination0000-1.tmx
-  db 0, 18  ; data/patterns/combination0001-1.tmx
-  db 0, 33  ; data/patterns/combination0100-1.tmx
+  db 0, 17  ; data/patterns/combination0000-1.tmx + up + down
+  db 0, 18  ; data/patterns/combination0001-1.tmx + up
+  db 0, 33  ; data/patterns/combination0100-1.tmx + down
   db 0, 34  ; data/patterns/combination0101-1.tmx
-  db 0, 16  ; data/patterns/combination0000-1.tmx
-  db 0, 32  ; data/patterns/combination0100-1.tmx
-  db 0, 17  ; data/patterns/combination0000-1.tmx
-  db 0, 18  ; data/patterns/combination0001-1.tmx
-  db 0, 33  ; data/patterns/combination0100-1.tmx
-  db 0, 34  ; data/patterns/combination0101-1.tmx
-  db 0, 0  ; data/patterns/combination0000-1.tmx
-  db 0, 1  ; data/patterns/combination0000-1.tmx
-  db 0, 2  ; data/patterns/combination0001-1.tmx
-  db 0, 0  ; data/patterns/combination0000-1.tmx
-  db 0, 1  ; data/patterns/combination0000-1.tmx
-  db 0, 2  ; data/patterns/combination0001-1.tmx
-  db 0, 16  ; data/patterns/combination0000-1.tmx
-  db 0, 32  ; data/patterns/combination0100-1.tmx
-  db 0, 17  ; data/patterns/combination0000-1.tmx
-  db 0, 18  ; data/patterns/combination0001-1.tmx
-  db 0, 33  ; data/patterns/combination0100-1.tmx
-  db 0, 34  ; data/patterns/combination0101-1.tmx
-  db 0, 16  ; data/patterns/combination0000-1.tmx
-  db 0, 32  ; data/patterns/combination0100-1.tmx
-  db 0, 17  ; data/patterns/combination0000-1.tmx
-  db 0, 18  ; data/patterns/combination0001-1.tmx
-  db 0, 33  ; data/patterns/combination0100-1.tmx
-  db 0, 34  ; data/patterns/combination0101-1.tmx
+  db 0, 16  ; data/patterns/combination0000-1.tmx + up + right
+  db 0, 32  ; data/patterns/combination0100-1.tmx + right
+  db 0, 17  ; data/patterns/combination0000-1.tmx + up + right + down
+  db 0, 18  ; data/patterns/combination0001-1.tmx + up + right
+  db 0, 33  ; data/patterns/combination0100-1.tmx + right + down
+  db 0, 34  ; data/patterns/combination0101-1.tmx + right
+  db 0, 0  ; data/patterns/combination0000-1.tmx + left
+  db 0, 1  ; data/patterns/combination0000-1.tmx + left + down
+  db 0, 2  ; data/patterns/combination0001-1.tmx + left
+  db 0, 0  ; data/patterns/combination0000-1.tmx + left + right
+  db 0, 1  ; data/patterns/combination0000-1.tmx + left + right + down
+  db 0, 2  ; data/patterns/combination0001-1.tmx + left + right
+  db 0, 16  ; data/patterns/combination0000-1.tmx + left + up
+  db 0, 32  ; data/patterns/combination0100-1.tmx + left
+  db 0, 17  ; data/patterns/combination0000-1.tmx + left + up + down
+  db 0, 18  ; data/patterns/combination0001-1.tmx + left + up
+  db 0, 33  ; data/patterns/combination0100-1.tmx + left + down
+  db 0, 34  ; data/patterns/combination0101-1.tmx + left
+  db 0, 16  ; data/patterns/combination0000-1.tmx + left + up + right
+  db 0, 32  ; data/patterns/combination0100-1.tmx + left + right
+  db 0, 17  ; data/patterns/combination0000-1.tmx + left + up + right + down
+  db 0, 18  ; data/patterns/combination0001-1.tmx + left + up + right
+  db 0, 33  ; data/patterns/combination0100-1.tmx + left + right + down
+  db 0, 34  ; data/patterns/combination0101-1.tmx + left + right

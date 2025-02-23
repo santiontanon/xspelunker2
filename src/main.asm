@@ -332,6 +332,9 @@ current_area__height: ds virtual 1
 current_area__room_ids: ds virtual MAX_AREA_WIDTH * MAX_AREA_HEIGHT
 current_area__chunks_ids: ds virtual MAX_AREA_WIDTH * 2 * MAX_AREA_HEIGHT * 2
 
+current_room__id: ds virtual 1
+current_room__x: ds virtual 1  ; coordinates within the area of the top-left room corner
+current_room__y: ds virtual 1
 current_room__width: ds virtual 1
 current_room__height: ds virtual 1
 current_room__tile_map: ds virtual MAX_ROOM_SIZE

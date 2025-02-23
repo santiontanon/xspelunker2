@@ -23,7 +23,7 @@ public class HardcodedAreaForAssembler {
 
 
         PCGWorld pcg1 = new PCGWorld();
-        PCGArea pcg2 = new PCGArea();
+        PCGArea pcg2 = new PCGArea(true);
         
         World w = pcg1.generate(r);
         pcg2.generate(w.areas.get(0), w, r);

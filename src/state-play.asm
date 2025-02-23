@@ -1,7 +1,5 @@
 ;-----------------------------------------------
 state_play:
-	ld sp, stack  ; reset the stack, so we can jump here from wherever we want
-
 	call disable_VDP_output
 		ld hl, RAM_to_zero_on_game_start
 		ld bc, RAM_to_zero_on_game_start_end - RAM_to_zero_on_game_start
@@ -21,8 +19,11 @@ state_play:
 		ldir
 
 		; call PCG to generate the current room from the current area:
-		ld e, 7  ; room ID
+		ld e, 0
+; 		ld e, 7  ; room ID
+; 		ld e, 24
 ; 		ld e, 26  ; room ID (boss)
+; 		ld e, 28  ; room ID
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
@@ -35,6 +36,9 @@ state_play:
 ; 		ldir
 
 state_play_from_inventory:
+state_play_from_loaded_room:
+		ld sp, stack  ; reset the stack, so we can jump here from wherever we want
+
 		; setup tiles:
 		ld a, TILES_PAGE
 		ld hl, tiles_pyramid_zx0
@@ -53,7 +57,7 @@ state_play_from_inventory:
 		ld hl, upload_sprites_to_vdp
 		ld c, SPRITES_PAGE
 		call call_hl_in_page_c_8000
-		call maybe_recenter_scroll
+		call maybe_recenter_scroll_and_set_actual
 		call draw_room
 
 	call enable_VDP_output

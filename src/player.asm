@@ -70,7 +70,36 @@ player_update_update_sprite_position:
 	ld hl, player_x
 	add a, (hl)
 
+	; set "early clock bit"?
+	cp 256 - (8 - PLAYER_COLLISION_BOX_WIDTH)
+	jr c, player_update_update_sprite_position_no_early_clok_bit
+	add a, 32
 	ld (de), a
+	ld (bc), a
+
+	inc de
+	inc bc
+	inc de
+	inc bc
+
+	ld a, COLOR_DARK_YELLOW | #80
+	ld (de), a
+	ld a, COLOR_DARK_RED | #80
+	ld (bc), a
+	ret
+
+player_update_update_sprite_position_no_early_clok_bit:
+	ld (de), a
+	ld (bc), a
+
+	inc de
+	inc bc
+	inc de
+	inc bc
+
+	ld a, COLOR_DARK_YELLOW
+	ld (de), a
+	ld a, COLOR_DARK_RED
 	ld (bc), a
 	ret
 
@@ -99,12 +128,14 @@ player_update_state_idle:
 	jr z, player_update_switch_to_walking_right
 	bit 4, a
 	jr z, player_update_switch_to_walking_left
+
+	ld a, (keyboard_line_clicks)
 	bit 6, a
-	jp z, player_update_switch_to_crouch
+	jp nz, player_update_switch_to_crouch
 	
 	; check for rope/ladder climb:
 	bit 5, a
-	jp nz, player_update_state_idle_no_rope
+	jp z, player_update_state_idle_no_rope
 	call check_player_on_rope_or_ladder
 	jp z, player_update_switch_to_rope_or_ladder
 player_update_state_idle_no_rope:
@@ -247,8 +278,7 @@ player_update_state_falling_speed_determined:
 	jr z, player_update_state_falling_speed_loop_done
 player_update_state_falling_speed_loop:
 	push bc
-		call player_update_move_one_pixel_down
-		call player_check_collision_down_inc
+		call player_update_move_one_pixel_down_considering_collisions
 	pop bc
 	jr z, player_update_state_falling_speed_loop_done
 	djnz player_update_state_falling_speed_loop
@@ -482,7 +512,10 @@ player_update_state_rope:
 	jr z, player_update_state_rope_skip_movement
 	bit 6, a  ; down
 	push af
-		call z, player_update_move_one_pixel_down
+		jr nz, player_update_state_rope_continue
+		call player_update_move_one_pixel_down_considering_collisions
+		jr z, player_update_state_rope_switch_to_idle_pop
+player_update_state_rope_continue:
 	pop af
 	bit 5, a  ; up
 	push af
@@ -490,19 +523,19 @@ player_update_state_rope:
 	pop af
 player_update_state_rope_skip_movement:
 	bit 4, a  ; left
-	jr nz, player_update_state_rope_continue
+	jr nz, player_update_state_rope_continue2
 	push af
 		ld a, (player_state)
 		or #01
 		ld (player_state), a
 	pop af
-player_update_state_rope_continue:
+player_update_state_rope_continue2:
 	bit 7, a  ; right
-	jr nz, player_update_state_rope_continue2
+	jr nz, player_update_state_rope_continue3
 	ld a, (player_state)
 	and #fe
 	ld (player_state), a
-player_update_state_rope_continue2:
+player_update_state_rope_continue3:
 
 	; check for jump
 	ld a, (keyboard_line_clicks + 2)
@@ -510,7 +543,10 @@ player_update_state_rope_continue2:
 	jp nz, player_update_switch_to_jumping_from_rope
 
 	call check_player_on_top_of_rope_or_ladder
+	jr z, player_update_state_rope_continue4
+	call check_player_on_rope_or_ladder
 	jp nz, player_update_switch_to_idle
+player_update_state_rope_continue4:
 
 	ld a, (player_y)
 	rrca
@@ -519,6 +555,9 @@ player_update_state_rope_continue2:
 	add a, 6
 	ld (player_requested_frame), a
 	jp player_update_update_sprite_position
+player_update_state_rope_switch_to_idle_pop:
+	pop af
+	jp player_update_switch_to_idle
 
 
 ;-----------------------------------------------
@@ -538,7 +577,10 @@ player_update_state_ladder:
 	jr z, player_update_state_ladder_skip_movement
 	bit 6, a  ; down
 	push af
-		call z, player_update_move_one_pixel_down
+		jr nz, player_update_state_ladder_continue
+		call player_update_move_one_pixel_down_considering_collisions
+		jr z, player_update_state_ladder_switch_to_idle_pop
+player_update_state_ladder_continue:
 	pop af
 	bit 5, a  ; up
 	push af
@@ -552,7 +594,10 @@ player_update_state_ladder_skip_movement:
 	jp nz, player_update_switch_to_jumping_from_rope
 
 	call check_player_on_top_of_rope_or_ladder
+	jr z, player_update_state_ladder_continue2
+	call check_player_on_rope_or_ladder
 	jp nz, player_update_switch_to_idle
+player_update_state_ladder_continue2:
 
 	ld a, (player_y)
 	rrca
@@ -562,6 +607,9 @@ player_update_state_ladder_skip_movement:
 	ld (player_requested_frame), a
 	jp player_update_update_sprite_position
 
+player_update_state_ladder_switch_to_idle_pop:
+	pop af
+	jp player_update_switch_to_idle
 
 ENDIF
 
@@ -618,7 +666,9 @@ player_update_move_one_pixel_left_considering_collisions_continue:
 
 
 ;-----------------------------------------------
-player_update_move_one_pixel_down:
+player_update_move_one_pixel_down_considering_collisions:
+	call player_check_collision_down_inc
+	ret z
 	ld hl, player_y
 	ld a, (hl)
 	inc a
@@ -629,6 +679,7 @@ player_update_move_one_pixel_down:
 	ld (hl), a
 	inc hl
 	inc (hl)
+	or 1  ; there was no collision
 	ret
 
 

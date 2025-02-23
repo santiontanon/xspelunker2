@@ -39,7 +39,7 @@ public class GenerationTest {
         MSXRandom r = new MSXRandom(0, 0xaaaa);
 
         PCGWorld pcg1 = new PCGWorld();
-        PCGArea pcg2 = new PCGArea();
+        PCGArea pcg2 = new PCGArea(true);
         
         int nPCGAreaErrors = 0;
         HashMap<String, Integer> chunkStats = new HashMap<>();

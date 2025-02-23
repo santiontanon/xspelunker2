@@ -4,11 +4,8 @@
 ; input:
 ; - e: room ID
 pcg_generate_room:
-	; current_area__seed: ds virtual 1
-	; current_area__width: ds virtual 1
-	; current_area__height: ds virtual 1
-	; current_area__room_ids: ds virtual MAX_AREA_WIDTH * MAX_AREA_HEIGHT
-	; current_area__chunks_ids: ds virtual MAX_AREA_WIDTH * 2 * MAX_AREA_HEIGHT * 2
+	ld a, e
+	ld (current_room__id), a
 
 	; Find x1, y1, x2, y2 of the room in the room IDs map:
 	ld ix, #0000  ; x1, y1  (we will store "width - x" and "height - y" since it's easier)
@@ -51,6 +48,14 @@ pcg_generate_room__xy_loop_x_skip:
 		jr nz, pcg_generate_room__xy_loop_x
 	pop bc
 	djnz pcg_generate_room__xy_loop_y
+
+	; room coordinates:
+	ld a, (current_area__width)
+	sub ixl
+	ld (current_room__x), a
+	ld a, (current_area__height)
+	sub ixh
+	ld (current_room__y), a
 
 	; Compute the room width/height, and scroll limits:
 	; width = ((ixl - iyl) + 1) * 32
@@ -272,6 +277,8 @@ pcg_generate_room__prettyfy_pyramid_rope_loop:
 		ld a, (hl)
 		or a
 		jr z, pcg_generate_room__prettyfy_pyramid_rope_keep_going
+		cp 5*16 + 8  ; torch
+		jr z, pcg_generate_room__prettyfy_pyramid_ladder_keep_going
 		and #f0
 		cp #60  ; row 6 contains tiles only present on background tiles
 		jr nz, pcg_generate_room__prettyfy_pyramid_rope_done
@@ -297,6 +304,8 @@ pcg_generate_room__prettyfy_pyramid_ladder_loop:
 		add hl, bc
 		ld a, (hl)
 		or a
+		jr z, pcg_generate_room__prettyfy_pyramid_ladder_keep_going
+		cp 5*16 + 8  ; torch
 		jr z, pcg_generate_room__prettyfy_pyramid_ladder_keep_going
 		and #f0
 		cp #60  ; row 6 contains tiles only present on background tiles

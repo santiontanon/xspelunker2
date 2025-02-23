@@ -32,7 +32,7 @@ public class PCGArea {
     public HashMap<Integer, List<RoomChunk>> block_chunks = new LinkedHashMap<>();
     public HashMap<Integer, List<RoomChunk>> combination_chunks = new LinkedHashMap<>();
     
-    public PCGArea() throws Exception
+    public PCGArea(boolean simplifyChunks) throws Exception
     {
         // background:
         bg_chunks.add(new RoomChunk("data/patterns/bg-1.tmx", 0));
@@ -314,6 +314,7 @@ public class PCGArea {
                     }
                     chunk2.removeObjectTypes("door-left");
                     chunk2.removeObjectTypes("breakable-left");
+                    chunk2.path += " + left";
                 }
                 if ((type & PCGWorld.DIRECTION_UP) != 0 && (chunk.type & PCGWorld.DIRECTION_UP) == 0) {
                     // open a path up:
@@ -325,6 +326,7 @@ public class PCGArea {
                     chunk2.removeObjectTypes("door-up");
                     chunk2.removeObjectTypes("breakable-up");
                     chunk2.tags.put("up", "hole");
+                    chunk2.path += " + up";
                 }
                 if ((type & PCGWorld.DIRECTION_RIGHT) != 0 && (chunk.type & PCGWorld.DIRECTION_RIGHT) == 0) {
                     // open a path right:
@@ -335,6 +337,7 @@ public class PCGArea {
                     }
                     chunk2.removeObjectTypes("door-right");
                     chunk2.removeObjectTypes("breakable-right");
+                    chunk2.path += " + right";
                 }
                 if ((type & PCGWorld.DIRECTION_DOWN) != 0 && (chunk.type & PCGWorld.DIRECTION_DOWN) == 0) {
                     // open a path down:
@@ -346,6 +349,7 @@ public class PCGArea {
                     chunk2.removeObjectTypes("door-down");
                     chunk2.removeObjectTypes("breakable-down");
                     chunk2.tags.put("down", "hole");
+                    chunk2.path += " + down";
                 }
                 combination_chunks.get(type).add(chunk2);
             }
@@ -354,43 +358,59 @@ public class PCGArea {
         // List all the fg chunks in a single list:
         for(int i = 0;i<16;i++) {
             if (fg_chunks.containsKey(i)) {
-                List<RoomChunk> simplified = new ArrayList<>();
-                for(RoomChunk c:fg_chunks.get(i)) {
-                    simplified.add(c.simplifyTiles("pyramid"));
+                if (simplifyChunks) {
+                    List<RoomChunk> simplified = new ArrayList<>();
+                    for(RoomChunk c:fg_chunks.get(i)) {
+                        simplified.add(c.simplifyTiles("pyramid"));
+                    }
+                    fg_chunks.put(i, simplified);
+                    all_fg_chunks.addAll(simplified);
+                } else {
+                    all_fg_chunks.addAll(fg_chunks.get(i));
                 }
-                fg_chunks.put(i, simplified);
-                all_fg_chunks.addAll(simplified);
             }
         }
         for(int i = 0;i<16;i++) {
             if (boss_chunks.containsKey(i)) {
-                List<RoomChunk> simplified = new ArrayList<>();
-                for(RoomChunk c:boss_chunks.get(i)) {
-                    c.tags.put("boss", "true");
-                    simplified.add(c.simplifyTiles("pyramid"));
+                if (simplifyChunks) {
+                    List<RoomChunk> simplified = new ArrayList<>();
+                    for(RoomChunk c:boss_chunks.get(i)) {
+                        c.tags.put("boss", "true");
+                        simplified.add(c.simplifyTiles("pyramid"));
+                    }
+                    boss_chunks.put(i, simplified);
+                    all_fg_chunks.addAll(simplified);
+                } else {
+                    all_fg_chunks.addAll(boss_chunks.get(i));                    
                 }
-                boss_chunks.put(i, simplified);
-                all_fg_chunks.addAll(simplified);
             }
         }
         for(int i = 0;i<16;i++) {
             if (block_chunks.containsKey(i)) {
-                List<RoomChunk> simplified = new ArrayList<>();
-                for(RoomChunk c:block_chunks.get(i)) {
-                    simplified.add(c.simplifyTiles("pyramid"));
+                if (simplifyChunks) {
+                    List<RoomChunk> simplified = new ArrayList<>();
+                    for(RoomChunk c:block_chunks.get(i)) {
+                        simplified.add(c.simplifyTiles("pyramid"));
+                    }
+                    block_chunks.put(i, simplified);
+                    all_fg_chunks.addAll(simplified);
+                } else {
+                    all_fg_chunks.addAll(block_chunks.get(i));
                 }
-                block_chunks.put(i, simplified);
-                all_fg_chunks.addAll(simplified);
             }
         }
         for(int i = 0;i<16;i++) {
             if (combination_chunks.containsKey(i)) {
-                List<RoomChunk> simplified = new ArrayList<>();
-                for(RoomChunk c:combination_chunks.get(i)) {
-                    simplified.add(c.simplifyTiles("pyramid"));
+                if (simplifyChunks) {
+                    List<RoomChunk> simplified = new ArrayList<>();
+                    for(RoomChunk c:combination_chunks.get(i)) {
+                        simplified.add(c.simplifyTiles("pyramid"));
+                    }
+                    combination_chunks.put(i, simplified);
+                    all_fg_chunks.addAll(simplified);
+                } else {
+                    all_fg_chunks.addAll(combination_chunks.get(i));
                 }
-                combination_chunks.put(i, simplified);
-                all_fg_chunks.addAll(simplified);
             }
         }
     }

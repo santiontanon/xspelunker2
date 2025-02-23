@@ -17,7 +17,7 @@ public class PatternVerification {
     public static void main(String args[]) throws Exception
     {
         MSXRandom r = new MSXRandom(0, 0xaaaa);
-        PCGArea pcg2 = new PCGArea();
+        PCGArea pcg2 = new PCGArea(true);
         
         for(int i = 0;i<16;i++) {
             for(RoomChunk c:pcg2.fg_chunks.get(i)) {
