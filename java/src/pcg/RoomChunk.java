@@ -86,11 +86,11 @@ public class RoomChunk {
                     int tile = tiles[j][i];
                     switch(tile) {
                         // torch:
-                        case 6*16 + 2:
-                        case 6*16 + 3:
-                        case 6*16 + 4:
-                            tile = 6*16 + 2;
-                            break;
+//                        case 6*16 + 2:
+//                        case 6*16 + 3:
+//                        case 6*16 + 4:
+//                            tile = 6*16 + 2;
+//                            break;
                         // spikes:
                         case 7*16 + 12:
                         case 7*16 + 13:
@@ -98,16 +98,16 @@ public class RoomChunk {
                             break;
                         case 7*16 + 14:
                         case 7*16 + 15:
-                            tile = 7*16 + 14;
-//                            tile = 0;
+//                            tile = 7*16 + 14;
+                            tile = 0;
                             break;
                         // water:
-                        case 8*16 + 1:
-                        case 8*16 + 2:
-                        case 8*16 + 3:
-                        case 12*16 + 8:
-                            tile = 8*16 + 1;
-                            break;
+//                        case 8*16 + 1:
+//                        case 8*16 + 2:
+//                        case 8*16 + 3:
+//                        case 12*16 + 8:
+//                            tile = 8*16 + 1;
+//                            break;
                         // ropes:
                         case 8*16 + 4:
                         case 8*16 + 6:

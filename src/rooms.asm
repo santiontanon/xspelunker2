@@ -97,167 +97,58 @@ get_room_tile_ptr_continue:
 
 
 ;-----------------------------------------------
-update_animations:
-	ld a, (interrupt_cycle)
-	and #07
-	ret nz
-	ld hl, current_room__tile_animations
-update_animations_loop:
-	; Each animation is 4 bytes long: type, x, y, width
-	ld a, (hl)
-	or a
-	ret z  ; no more animations
-	dec a
-	jr z, update_animations_torch
-update_animations_water:  ; cycles between: 129, 130, 131, 200
-	ld a, (interrupt_cycle)
-	rrca
-	rrca
-	rrca
-	and #03
-	cp 3
-	jr nz, update_animations_water_continue
-	ld a, 71  ; so that we get 200
-update_animations_water_continue:
-	add a, 129
-	jp update_animations_torch_continue2
-
-update_animations_torch:  ; cycles between: 98, 99, 100, 99
-	ld a, (interrupt_cycle)
-	rrca
-	rrca
-	rrca
-	and #03
-	cp 3
-	jr nz, update_animations_torch_continue
-	ld a, 1
-update_animations_torch_continue:
-	add a, 98
-update_animations_torch_continue2:
-	ld d, a
-	inc hl
-	ld c, (hl)
-	inc hl
-	ld b, (hl)
-	inc hl
-	ld e, (hl)
-	inc hl
-	push hl
-		call get_room_tile_ptr
-update_animations_row_loop:
-		ld (hl), d
-		inc hl
-		dec e
-		jr nz, update_animations_row_loop
-	pop hl
-	jp update_animations_loop
-
-
-;-----------------------------------------------
 update_animations_in_vdp:
-	; - on cycle 0 we will just update the animations
-	; - on cycle 4 we will upload to VDP
 	ld a, (interrupt_cycle)
 	and #07
-	or a
-	jp z, update_animations
-	cp 4
 	ret nz
-	; upload animations to VDP:
-	ld hl, current_room__tile_animations
-update_animations_in_vdp_loop:
-	; Each animation is 4 bytes long: type, x, y, width
-	ld a, (hl)
-	or a
-	ret z  ; no more animations
-	inc hl
-	ld c, (hl)  ; x
-	inc hl
-	ld b, (hl)  ; y
-	inc hl
-	ld e, (hl)  ; width
-	inc hl
+	SETMEGAROMPAGE_8000 TILES_PAGE
+	ld a, (interrupt_cycle)
+	rrca
+	rrca
+	rrca
+	and #03
+	jr z, update_animations_in_vdp_frame0
+	dec a
+	jr z, update_animations_in_vdp_frame1
+	dec a
+	jr z, update_animations_in_vdp_frame2
+update_animations_in_vdp_frame3:
+	ld hl, animations_pyramid_bin + 16*3
+	jr update_animations_in_vdp_frame_continue
+update_animations_in_vdp_frame0:
+	ld hl, animations_pyramid_bin
+update_animations_in_vdp_frame_continue:
+	ld b, 3
+	ld de, CHRTBL2 + (6*16 + 2)*8
+update_animations_in_vdp_frame_loop:
+	push bc
 	push hl
-		; check if we are within screen bounds:
-		ld hl, room_scroll_y
-		ld a, b
-		sub (hl)
-		jp m, update_animations_in_vdp_loop_skip
-		cp 24
-		jp p, update_animations_in_vdp_loop_skip
-		; there overlap in y:
-
-		; copy:
-		; - from ixl: max(c, room_scroll_x)
-		; - to ixh: min(c + e, room_scroll_x + 32)		
-		dec hl  ; room_scroll_x
-		ld a, c
-		sub (hl)
-		jr c, update_animations_in_vdp_loop_max_is_room_scroll_x
-		ld a, c
-		jp update_animations_in_vdp_loop_max_computed
-update_animations_in_vdp_loop_max_is_room_scroll_x:
-		ld a, (hl)
-update_animations_in_vdp_loop_max_computed:
-		ld ixl, a  ; from
-
-		ld a, (hl)
-		add a, 32
-		ld d, a  ; d = (room_scroll_x) + 32
-		ld a, c
-		add a, e
-		sub d
-		jr nc, update_animations_in_vdp_loop_min_is_room_scroll_x
-		add a, d
-		jp update_animations_in_vdp_loop_min_computed
-update_animations_in_vdp_loop_min_is_room_scroll_x:
-		ld a, (hl)
-		add a, 32
-update_animations_in_vdp_loop_min_computed:
-		ld ixh, a  ; to
-
-		; we should have that ixl < ixh
-		sub ixl
-		jr z, update_animations_in_vdp_loop_skip
-		jr c, update_animations_in_vdp_loop_skip
-
-	    ; in case the start coordinate was left of the left-edge:
-	    push af
-
-			; copy "a" (in stack) bytes from "ixl" to "ixh":
-			; - c, b: room tile coordinates
-			; - ixl, ixh: room x coordinates of the area to copy
-			ld c, ixl
-			push bc
-				call get_room_tile_ptr  ; hl: ptr to copy from
-			pop bc
+		push de
 			push hl
-				; ptr to copy to: (b - (room_scroll_y)) * 32 + NAMTBL2 + (ixl - room_scroll_x)
-				ld hl, room_scroll_x
-				ld c, (hl)
-				inc hl
-				ld a, b
-				sub (hl)
-				ld l, a
-				ld h, 0
-				add hl, hl
-				add hl, hl
-				add hl, hl
-				add hl, hl
-				add hl, hl
-				ld a, ixl
-				sub c
-				ld b, 0
-				ld c, a
-				add hl, bc
-				ld bc, NAMTBL2
-				add hl, bc
+				push de
+					ld b, 16
+					call fast_small_LDIRVM
+				pop hl
+				ld de, CLRTBL2 - CHRTBL2
+				add hl, de
 				ex de, hl
 			pop hl
-		pop af
-		ld b, 0
-		ld c, a
-		call fast_LDIRVM
-update_animations_in_vdp_loop_skip:
+			ld bc, 64
+			add hl, bc
+			ld b, 16
+			call fast_small_LDIRVM
+		pop hl
+		ld bc, 256*8
+		add hl, bc
+		ex de, hl
 	pop hl
-	jp update_animations_in_vdp_loop
+	pop bc
+	djnz update_animations_in_vdp_frame_loop
+	ret
+update_animations_in_vdp_frame1:
+	ld hl, animations_pyramid_bin + 16*1
+	jr update_animations_in_vdp_frame_continue
+update_animations_in_vdp_frame2:
+	ld hl, animations_pyramid_bin + 16*2
+	jr update_animations_in_vdp_frame_continue
+

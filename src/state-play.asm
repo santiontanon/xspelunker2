@@ -19,14 +19,16 @@ state_play:
 		ldir
 
 		; call PCG to generate the current room from the current area:
-		ld e, 0
-; 		ld e, 7  ; room ID
+; 		ld e, 0
+		ld e, 7  ; room ID
 ; 		ld e, 24
 ; 		ld e, 26  ; room ID (boss)
 ; 		ld e, 28  ; room ID
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
+; 		out (#2c), a
 		call call_hl_in_page_c_8000
+; 		out (#2d), a
 
 		; get room data:
 ; 		SETMEGAROMPAGE_8000 MAP_DATA_PAGE
@@ -59,6 +61,10 @@ state_play_from_loaded_room:
 		call call_hl_in_page_c_8000
 		call maybe_recenter_scroll_and_set_actual
 		call draw_room
+		call player_update_update_sprite_position
+		ld hl, upload_sprites_to_vdp
+		ld c, SPRITES_PAGE
+		call call_hl_in_page_c_8000
 
 	call enable_VDP_output
 
@@ -81,7 +87,7 @@ state_play_loop:
 	call update_animations_in_vdp
 	jr state_play_loop
 state_play_loop_room_redraw:
-	call update_animations  ; this does not upload anything to the vdp
 	call draw_room
+	call update_animations_in_vdp
 	jr state_play_loop
 

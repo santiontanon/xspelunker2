@@ -98,7 +98,7 @@ pcg_generate_room__xy_loop_x_skip:
 	or a
 	jr z, pcg_generate_room__seed_generated
 pcg_generate_room__seed_loop:
-	call random
+	call random_a
 	djnz pcg_generate_room__seed_loop
 pcg_generate_room__seed_generated:
 
@@ -144,51 +144,69 @@ pcg_generate_room__fb_chunk_ptr_loop:
 	; here:
 	; - iyl/iyh have the width/height of the room in "screens"
 	; - ixl/ixh have the x1, y1 coordinates of the room
-
-
-	ld b, iyh
-	rl b
-	ld c, iyl
-	rl c
-pcg_generate_room__fg_loop_y:
+	ld a, #ff
+	ld (tmp__pcg_current_decompressed_chunk_bank_id), a
+	ld b, (pyramid_chunk_fg_bank_ptrs_end - pyramid_chunk_fg_bank_ptrs) / 2  ; number of banks
+pcg_generate_room__fg_loop_bank_id:
 	push bc
 	push hl
-pcg_generate_room__fg_loop_x:
-		ld a, (hl)
+		ld a, b
+		dec a
+		add a, a
+		add a, a
+		add a, a
+		add a, a
+		ld (tmp__pcg_current_target_chunk_bank_id), a  ; we will only consider chunks in this bank in this iteration
+
+		ld b, iyh
+		rl b
+		ld c, iyl
+		rl c
+pcg_generate_room__fg_loop_y:
+		push bc
 		push hl
-			ld hl, pyramid_chunk_fg_bank_ptrs
-			push bc
-			push iy
-				call pcg_get_chunk_ptr
-			pop iy
-			pop bc
-			push bc
-				; - hl: ptr to chunk
-				; - iyl/iyh: room width/height in screens.
-				; - c/b: x, y coordinates where to add this chunk in the current room.			
-				call pcg_generate_room_copy_chunk_to_room
-			pop bc
+			ld a, (tmp__pcg_current_target_chunk_bank_id)
+			ld e, a
+pcg_generate_room__fg_loop_x:
+			ld a, (hl)
+			and #f0
+			cp e
+			jp nz, pcg_generate_room__fg_loop_x_skip
+			ld a, (hl)
+			push hl
+				push bc
+					ld hl, pyramid_chunk_fg_bank_ptrs
+					call pcg_get_chunk_ptr
+				pop bc
+				push bc
+					; - hl: ptr to chunk
+					; - iyl/iyh: room width/height in screens.
+					; - c/b: x, y coordinates where to add this chunk in the current room.			
+					call pcg_generate_room_copy_chunk_to_room
+				pop bc
+			pop hl
+			ld a, (tmp__pcg_current_target_chunk_bank_id)
+			ld e, a			
+pcg_generate_room__fg_loop_x_skip:
+			inc hl
+			dec c
+			jr nz, pcg_generate_room__fg_loop_x
 		pop hl
-		inc hl
-		dec c
-		jr nz, pcg_generate_room__fg_loop_x
+		ld a, (current_area__width)
+		add a, a  ; next row
+		ADD_HL_A
+		pop bc
+		djnz pcg_generate_room__fg_loop_y
 	pop hl
-	ld a, (current_area__width)
-	add a, a  ; next row
-	ADD_HL_A
 	pop bc
-	djnz pcg_generate_room__fg_loop_y
+	djnz pcg_generate_room__fg_loop_bank_id
 
 	; Auto-fill ladders/ropes/etc. and randomize tiles:
 	call pcg_generate_room__prettyfy_pyramid
 
-	; Identify animations and create the list of animations automatically:
-	ld hl, current_room__tile_animations
-	ld bc, 4 * MAX_ROOM_ANIMATIONS  ; we do not "-1" here, to clear the sentinel "0" afterwards too
-	call clear_memory
+	; ...
 
-	jp pcg_generate_room__find_animations_pyramid
-; 	ret
+	ret
 
 
 ;-----------------------------------------------
@@ -201,68 +219,110 @@ pcg_generate_room__prettyfy_pyramid:
 	ld bc, (current_room__width)
 pcg_generate_room__prettyfy_pyramid_loop_y:
 	push bc
+		ld b, c
+		ld c, 7*16 + 12
 pcg_generate_room__prettyfy_pyramid_loop_x:
-		push bc
-			ld a, (hl)
-			; ropes:
-			cp 8*16 + 5
-			jp z, pcg_generate_room__prettyfy_pyramid_rope
-			; ladders:
-			cp 10*16 + 6
-			jp z, pcg_generate_room__prettyfy_pyramid_ladder
-			; face 1:
-			cp 12*16 + 0
-			jp z, pcg_generate_room__prettyfy_pyramid_face1
-			; face 2:
-			cp 13*16 + 8
-			jp z, pcg_generate_room__prettyfy_pyramid_face2
-			; dragon head:
-			cp 12*16 + 12
-			jp z, pcg_generate_room__prettyfy_pyramid_dragon_head
+		ld a, (hl)
+		cp c
+		jr c, pcg_generate_room__prettyfy_pyramid_loop_x_continue
+		jr z, pcg_generate_room__prettyfy_pyramid_spike_tip_randomize
+		cp 8*16 + 5
+		jp z, pcg_generate_room__prettyfy_pyramid_rope
+		cp 8*16 + 8
+		jr z, pcg_generate_room__prettyfy_pyramid_platform_randomize
+		cp 9*16 + 5
+		jr z, pcg_generate_room__prettyfy_pyramid_bricks_randomize
+		cp 9*16 + 13
+		jr z, pcg_generate_room__prettyfy_pyramid_thin_bricks_randomize
+		cp 10*16 + 0
+		jr z, pcg_generate_room__prettyfy_pyramid_rubble_randomize
+		cp 10*16 + 6
+		jp z, pcg_generate_room__prettyfy_pyramid_ladder
+		cp 12*16 + 0
+		jp z, pcg_generate_room__prettyfy_pyramid_face1
+		cp 12*16 + 12
+		jp z, pcg_generate_room__prettyfy_pyramid_dragon_head
+		cp 13*16 + 8
+		jp z, pcg_generate_room__prettyfy_pyramid_face2
 pcg_generate_room__prettyfy_pyramid_loop_x_continue:
-			inc hl
-		pop bc
-		dec c
-		jp nz, pcg_generate_room__prettyfy_pyramid_loop_x
+		inc hl
+		djnz pcg_generate_room__prettyfy_pyramid_loop_x
 	pop bc
 	djnz pcg_generate_room__prettyfy_pyramid_loop_y
-
-	; Part 2: randomize tiles:
-	ld hl, current_room__tile_map
-	ld bc, (current_room__width)
-pcg_generate_room__prettyfy_pyramid_loop2_y:
-	push bc
-pcg_generate_room__prettyfy_pyramid_loop2_x:
-		push bc
-			ld a, (hl)
-			; ropes:
-			cp 8*16 + 6
-			jp z, pcg_generate_room__prettyfy_pyramid_rope_randomize
-			; spikes:
-			cp 7*16 + 12
-			jp z, pcg_generate_room__prettyfy_pyramid_spike_tip_randomize
-			cp 7*16 + 14
-			jp z, pcg_generate_room__prettyfy_pyramid_spike_bottom_randomize
-			cp 8*16 + 8
-			jp z, pcg_generate_room__prettyfy_pyramid_platform_randomize
-			cp 9*16 + 13
-			jp z, pcg_generate_room__prettyfy_pyramid_thin_bricks_randomize
-			cp 10*16 + 0
-			jp z, pcg_generate_room__prettyfy_pyramid_rubble_randomize
-			cp 9*16 + 5
-			jp z, pcg_generate_room__prettyfy_pyramid_bricks_randomize
-
-pcg_generate_room__prettyfy_pyramid_loop2_x_continue:
-			inc hl
-		pop bc
-		dec c
-		jp nz, pcg_generate_room__prettyfy_pyramid_loop2_x
-	pop bc
-	djnz pcg_generate_room__prettyfy_pyramid_loop2_y	
 	ret
+
+pcg_generate_room__prettyfy_pyramid_spike_tip_randomize:
+	call random_a
+	and #01
+	add a, 7*16 + 12
+	ld (hl), a
+	ld a, (current_room__width)
+	ld e, a
+	ld d, 0
+	call random_a
+	and #01
+	add a, 7*16 + 14
+	add hl, de
+	ld (hl), a
+	sbc hl, de
+	jp pcg_generate_room__prettyfy_pyramid_loop_x_continue
+
+pcg_generate_room__prettyfy_pyramid_platform_randomize:
+	call random_a
+	and #01
+	add a, 8*16 + 8
+	ld (hl), a
+	jp pcg_generate_room__prettyfy_pyramid_loop_x_continue
+
+pcg_generate_room__prettyfy_pyramid_thin_bricks_randomize:
+	call random_a
+	and #03
+	cp 3
+	jr nz, pcg_generate_room__prettyfy_pyramid_thin_bricks_randomize_continue
+	ld a, 2
+pcg_generate_room__prettyfy_pyramid_thin_bricks_randomize_continue:
+	add a, 9*16 + 13
+	ld (hl), a
+	jp pcg_generate_room__prettyfy_pyramid_loop_x_continue
+
+pcg_generate_room__prettyfy_pyramid_rubble_randomize:
+	call random_a
+	and #03
+	add a, 10*16 + 0
+	ld (hl), a
+	jp pcg_generate_room__prettyfy_pyramid_loop_x_continue
+
+pcg_generate_room__prettyfy_pyramid_bricks_randomize:
+	ld a, (current_room__width)
+	ld e, a
+	ld d, 0
+	call random_a
+	cp 96
+	jr nc, pcg_generate_room__prettyfy_pyramid_bricks_randomize_continue
+	; ld (hl), 9*16 + 5
+	add hl, de
+	ld (hl), 9*16 + 8
+	sbc hl, de
+	jp pcg_generate_room__prettyfy_pyramid_loop_x_continue
+pcg_generate_room__prettyfy_pyramid_bricks_randomize_continue:
+	cp 160
+	jr nc, pcg_generate_room__prettyfy_pyramid_bricks_randomize_continue2
+	ld (hl), 9*16 + 6
+	add hl, de
+	ld (hl), 9*16 + 8
+	sbc hl, de
+	jp pcg_generate_room__prettyfy_pyramid_loop_x_continue
+pcg_generate_room__prettyfy_pyramid_bricks_randomize_continue2:
+	ld (hl), 9*16 + 11
+	add hl, de
+	ld (hl), 9*16 + 7
+	sbc hl, de
+	jp pcg_generate_room__prettyfy_pyramid_loop_x_continue
+
 
 pcg_generate_room__prettyfy_pyramid_rope:
 	push hl
+	push bc
 		ld a, (current_room__width)
 		ld e, a
 		ld d, 0
@@ -270,7 +330,7 @@ pcg_generate_room__prettyfy_pyramid_rope:
 pcg_generate_room__prettyfy_pyramid_rope_loop:
 		or a
 		sbc hl, de  ; go one row up
-		or a
+; 		or a
 		sbc hl, bc  ; check if we are out of the map
 		jr c, pcg_generate_room__prettyfy_pyramid_rope_done
 		add hl, bc
@@ -283,14 +343,22 @@ pcg_generate_room__prettyfy_pyramid_rope_loop:
 		cp #60  ; row 6 contains tiles only present on background tiles
 		jr nz, pcg_generate_room__prettyfy_pyramid_rope_done
 pcg_generate_room__prettyfy_pyramid_rope_keep_going:
+		call random_a
+		and #03
+		jp nz, pcg_generate_room__prettyfy_pyramid_rope_keep_going2
+		ld (hl), 8*16 + 4  ; rope knot
+		jr pcg_generate_room__prettyfy_pyramid_rope_loop
+pcg_generate_room__prettyfy_pyramid_rope_keep_going2:
 		ld (hl), 8*16 + 6  ; rope
 		jr pcg_generate_room__prettyfy_pyramid_rope_loop
 pcg_generate_room__prettyfy_pyramid_rope_done:
+	pop bc
 	pop hl
 	jp pcg_generate_room__prettyfy_pyramid_loop_x_continue
 
 pcg_generate_room__prettyfy_pyramid_ladder:
 	push hl
+	push bc
 		ld a, (current_room__width)
 		ld e, a
 		ld d, 0
@@ -317,6 +385,7 @@ pcg_generate_room__prettyfy_pyramid_ladder_keep_going:
 		dec hl
 		jr pcg_generate_room__prettyfy_pyramid_ladder_loop
 pcg_generate_room__prettyfy_pyramid_ladder_done:
+	pop bc
 	pop hl
 	jp pcg_generate_room__prettyfy_pyramid_loop_x_continue
 
@@ -413,179 +482,15 @@ pcg_generate_room__prettyfy_pyramid_dragon_head:
 	pop hl
 	jp pcg_generate_room__prettyfy_pyramid_loop_x_continue
 
-pcg_generate_room__prettyfy_pyramid_rope_randomize:
-	call random_a
-	and #03
-	jp nz, pcg_generate_room__prettyfy_pyramid_loop2_x_continue
-	ld (hl), 8*16 + 4
-	jp pcg_generate_room__prettyfy_pyramid_loop2_x_continue
-
-pcg_generate_room__prettyfy_pyramid_spike_tip_randomize:
-	call random_a
-	and #01
-	add a, 7*16 + 12
-	ld (hl), a
-	jp pcg_generate_room__prettyfy_pyramid_loop2_x_continue
-
-pcg_generate_room__prettyfy_pyramid_spike_bottom_randomize:
-	call random_a
-	and #01
-	add a, 7*16 + 14
-	ld (hl), a
-	jp pcg_generate_room__prettyfy_pyramid_loop2_x_continue
-
-pcg_generate_room__prettyfy_pyramid_platform_randomize:
-	call random_a
-	and #01
-	add a, 8*16 + 8
-	ld (hl), a
-	jp pcg_generate_room__prettyfy_pyramid_loop2_x_continue
-
-pcg_generate_room__prettyfy_pyramid_thin_bricks_randomize:
-	call random_a
-	and #03
-	cp 3
-	jr nz, pcg_generate_room__prettyfy_pyramid_thin_bricks_randomize_continue
-	ld a, 2
-pcg_generate_room__prettyfy_pyramid_thin_bricks_randomize_continue:
-	add a, 9*16 + 13
-	ld (hl), a
-	jp pcg_generate_room__prettyfy_pyramid_loop2_x_continue
-
-pcg_generate_room__prettyfy_pyramid_rubble_randomize:
-	call random_a
-	and #03
-	add a, 10*16 + 0
-	ld (hl), a
-	jp pcg_generate_room__prettyfy_pyramid_loop2_x_continue
-
-
-pcg_generate_room__prettyfy_pyramid_bricks_randomize:
-	ld a, (current_room__width)
-	ld e, a
-	ld d, 0
-	call random_a
-	and #07
-	cp 3
-	jr nc, pcg_generate_room__prettyfy_pyramid_bricks_randomize_continue
-	; ld (hl), 9*16 + 5
-	add hl, de
-	ld (hl), 9*16 + 8
-	or a
-	sbc hl, de
-	jp pcg_generate_room__prettyfy_pyramid_loop2_x_continue
-pcg_generate_room__prettyfy_pyramid_bricks_randomize_continue:
-	cp 5
-	jr nc, pcg_generate_room__prettyfy_pyramid_bricks_randomize_continue2
-	ld (hl), 9*16 + 6
-	add hl, de
-	ld (hl), 9*16 + 8
-	or a
-	sbc hl, de
-	jp pcg_generate_room__prettyfy_pyramid_loop2_x_continue
-pcg_generate_room__prettyfy_pyramid_bricks_randomize_continue2:
-	ld (hl), 9*16 + 11
-	add hl, de
-	ld (hl), 9*16 + 7
-	or a
-	sbc hl, de
-	jp pcg_generate_room__prettyfy_pyramid_loop2_x_continue
-
-
-;-----------------------------------------------
-pcg_generate_room__find_animations_pyramid:
-	ld iyl, 0  ; number of animations found so far
-	ld hl, current_room__tile_map
-	ld ix, current_room__tile_animations
-	ld bc, (current_room__width)
-pcg_generate_room__find_animations_pyramid_loop_y:
-	push bc
-pcg_generate_room__find_animations_pyramid_loop_x:
-		ld a, (hl)
-		inc hl
-		cp 6*16 + 2
-		jp z, pcg_generate_room__find_animations_pyramid_torch
-		cp 6*16 + 3
-		jp z, pcg_generate_room__find_animations_pyramid_torch
-		cp 6*16 + 4
-		jp z, pcg_generate_room__find_animations_pyramid_torch
-		cp 6*16 + 4
-		jp z, pcg_generate_room__find_animations_pyramid_torch
-
-		cp 8*16 + 1
-		jp z, pcg_generate_room__find_animations_pyramid_water
-		cp 8*16 + 2
-		jp z, pcg_generate_room__find_animations_pyramid_water
-		cp 8*16 + 3
-		jp z, pcg_generate_room__find_animations_pyramid_water
-		cp 200
-		jp z, pcg_generate_room__find_animations_pyramid_water
-pcg_generate_room__find_animations_pyramid_loop_x_continue:
-		; check if we have reached the maximum number of animations:
-		ld a, iyl
-		cp MAX_ROOM_ANIMATIONS
-		ret z
-		dec c
-		jr nz, pcg_generate_room__find_animations_pyramid_loop_x
-	pop bc
-	djnz pcg_generate_room__find_animations_pyramid_loop_y
-	ret
-
-pcg_generate_room__find_animations_pyramid_torch:
-	ld (ix), 1  ; animation_type = 1
-	ld a, (current_room__width)
-	sub c
-	ld (ix + 1), a
-	ld a, (current_room__height)
-	sub b
-	ld (ix + 2), a
-	ld (ix + 3), 1  ; torches always have width 1
-	inc ix
-	inc ix
-	inc ix
-	inc ix
-	inc iyl
-	jp pcg_generate_room__find_animations_pyramid_loop_x_continue
-
-pcg_generate_room__find_animations_pyramid_water:
-	ld (ix), 2  ; animation_type = 2
-	ld a, (current_room__width)
-	sub c
-	ld (ix + 1), a
-	ld a, (current_room__height)
-	sub b
-	ld (ix + 2), a
-	ld (ix + 3), 1
-
-	; see if we want to merge this animation with the previous water one:
-	ld a, iyl
-	or a
-	jr z, pcg_generate_room__find_animations_pyramid_water_skip_merge
-	ld a, (ix - 4)
-	cp 2  ; was the previous animation also water?
-	jr nz, pcg_generate_room__find_animations_pyramid_water_skip_merge
-	ld a, (ix + 2)
-	cp (ix - 2)
-	jr nz, pcg_generate_room__find_animations_pyramid_water_skip_merge
-	ld a, (ix - 3)
-	add a, (ix - 1)
-	cp (ix + 1)
-	jr nz, pcg_generate_room__find_animations_pyramid_water_skip_merge
-	; contiguous animation, merge them:
-	inc (ix - 1)
-	jp pcg_generate_room__find_animations_pyramid_loop_x_continue
-pcg_generate_room__find_animations_pyramid_water_skip_merge:
-	inc ix
-	inc ix
-	inc ix
-	inc ix
-	jp pcg_generate_room__find_animations_pyramid_loop_x_continue
-
 
 ;-----------------------------------------------
 ; input:
 ; - hl: ptr to the fg chunk types
 pcg_generate_room_background_pyramid:
+	xor a
+	ld (tmp__pcg_current_target_chunk_bank_id), a	
+	ld a, #ff
+	ld (tmp__pcg_current_decompressed_chunk_bank_id), a	
 	ld b, iyh
 	sla b  ; width in "chunks"
 	ld c, iyl
@@ -610,7 +515,7 @@ pcg_generate_room__bg_loop_x:
 			call pcg_get_chunk_ptr  ; hl = ptr of the chunk to copy
 		pop bc
 		push bc
-			call pcg_generate_room_copy_chunk_to_room
+			call pcg_generate_room_copy_chunk_to_room_overwrite
 		pop bc
 pcg_generate_room__bg_loop_empty_chunk:
 		inc hl
@@ -644,12 +549,7 @@ pcg_generate_room_get_fg_chunk_flags:
 
 
 ;-----------------------------------------------
-; This method only copies those tiles that are != 0.
-; input:
-; - hl: ptr to chunk
-; - iyl/iyh: room width/height in screens.
-; - c/b: x, y coordinates where to add this chunk in the current room.
-pcg_generate_room_copy_chunk_to_room:
+pcg_generate_room_copy_chunk_to_room_set_ptrs:
 	; - Coordinates will be: (iyl*2 - c), (iyh*2 - b)
 	; - Address to start the copy is thus:
 	;     current_room__tile_map + (iyh*2 - b) * iyl * 32 * 12 + (iyl*2 - c) * 16
@@ -697,30 +597,69 @@ pcg_generate_room_copy_chunk_to_room_continue:
 		add hl, de
 		ex de, hl  ; de = current_room__tile_map + (iyh*2 - b) * iyl * 32 + (iyl*2 - c) * 16
 	pop hl
+	ret
+
+
+;-----------------------------------------------
+; This method only copies those tiles that are != 0.
+; input:
+; - hl: ptr to chunk
+; - iyl/iyh: room width/height in screens.
+; - c/b: x, y coordinates where to add this chunk in the current room.
+pcg_generate_room_copy_chunk_to_room:
+	call pcg_generate_room_copy_chunk_to_room_set_ptrs
 	ld b, CHUNK_HEIGHT
 	ld c, CHUNK_WIDTH
 pcg_generate_room_copy_chunk_to_room_loop_y:
 	push bc
-		push de
+		xor a
+		ld b, a
 pcg_generate_room_copy_chunk_to_room_loop_x:
-			ld a, (hl)
-			or a
-			jr z, pcg_generate_room_copy_chunk_to_room_loop_x_skip
-			ld (de), a
+		cp (hl)
+		jp z, pcg_generate_room_copy_chunk_to_room_loop_x_skip
+		ldi
+		jp pe, pcg_generate_room_copy_chunk_to_room_loop_x
+		jp pcg_generate_room_copy_chunk_to_room_loop_x_continue
 pcg_generate_room_copy_chunk_to_room_loop_x_skip:
-			inc hl
-			inc de
-			dec c
-			jr nz, pcg_generate_room_copy_chunk_to_room_loop_x
-		pop de
+		inc hl
+		inc de
+		dec c
+		jp nz, pcg_generate_room_copy_chunk_to_room_loop_x
+pcg_generate_room_copy_chunk_to_room_loop_x_continue:
 		ld a, (current_room__width)
+		sub CHUNK_WIDTH
+		ld c, a  ; b is already 0 here
+		ex de, hl
+			add hl, bc
+		ex de, hl
+	pop bc
+	djnz pcg_generate_room_copy_chunk_to_room_loop_y
+	ret
+
+
+;-----------------------------------------------
+; This method only copies all tiles (unlike the above)
+; input:
+; - hl: ptr to chunk
+; - iyl/iyh: room width/height in screens.
+; - c/b: x, y coordinates where to add this chunk in the current room.
+pcg_generate_room_copy_chunk_to_room_overwrite:
+	call pcg_generate_room_copy_chunk_to_room_set_ptrs
+	ld b, CHUNK_HEIGHT
+pcg_generate_room_copy_chunk_to_room_overwrite_loop_y:
+	push bc
+REPT CHUNK_WIDTH
+		ldi
+ENDR
+		ld a, (current_room__width)
+		sub CHUNK_WIDTH
 		ld b, 0
 		ld c, a
 		ex de, hl
 			add hl, bc
 		ex de, hl
 	pop bc
-	djnz pcg_generate_room_copy_chunk_to_room_loop_y
+	djnz pcg_generate_room_copy_chunk_to_room_overwrite_loop_y
 	ret
 
 
@@ -737,6 +676,10 @@ pcg_get_chunk_ptr:
 		rrca
 		rrca
 		and #1e
+		ld de, (tmp__pcg_current_decompressed_chunk_bank_id)  ; e = tmp__pcg_current_decompressed_chunk_bank_id
+		cp e
+		jr z, pcg_get_chunk_ptr_already_loaded
+		ld (tmp__pcg_current_decompressed_chunk_bank_id), a  ; store the current chunk bank (*2)
 		ADD_HL_A
 		ld e, (hl)
 		inc hl
@@ -745,16 +688,17 @@ pcg_get_chunk_ptr:
 		ld c, CHUNKS_PYRAMID_PAGE
 		ld de, buffer_4096
 		call dzx0_from_page_c
+pcg_get_chunk_ptr_already_loaded:
 	pop af
 	; hl = buffer_4096 + a * CHUNK_SIZE
 	ld hl, buffer_4096
 	and #0f
 	ret z
-	ld bc, CHUNK_SIZE
+	ld b, a
+	ld de, CHUNK_SIZE
 pcg_get_chunk_ptr_loop:
-	add hl, bc
-	dec a
-	jr nz, pcg_get_chunk_ptr_loop
+	add hl, de
+	djnz pcg_get_chunk_ptr_loop
 	ret
 
 

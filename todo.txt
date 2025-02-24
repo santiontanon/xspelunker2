@@ -1,9 +1,11 @@
 to do:
 
-***- optimize room PCG generation: once a chunk bank has been decompressed, copy ALL the chunks that use that type (and mark them somehow)
-
-- swim in water
-- remove decorations like vines, skeletons and flowers, and add them randomly procedurally
+***- swim in water:
+  ***- draw the sprites
+  ***- add them to assembler
+  ***- swimming player state (look at how did I implement it in the original xspelunker)
+  ***- move around (how does this work? just slow? paddeling with the jump key?)
+  ***- jump out of water (make sure I can jump at least 2 tiles)
 
 - Java: Refactor/simplify PCGArea
     - BUG: in room 7 of the example area I am using, there are 2 ladders going up, should there not just be only one?
@@ -36,9 +38,10 @@ to do:
   - enter a boss door (for now just an empty room with the item you are supposed to get)
   - whatever else is necessary to play game from beginning to end
   - design ending room (maya calendar stone where you place what you get from the bosses, etc.)
-- hitpoints (design hud: HP + current item)
+- hitpoints (design hud: HP, oxygen in water, current item)
 - get hurt by spikes
 - game over screen when you run out of health
+- get hurt by running out of oxygen in water
 - come up with a list of weapons
 - implement the first one or two weapons
 - come up with a list of enemies for pyramid
@@ -174,3 +177,5 @@ PCGWorld:
   - generateSubquests (same as before, but with different reachable/useable area)
   - set "lockKeys" to all the user locks and keys
 
+Timing:
+- pcg_generate_room (for a room with 4 screens): 1592166

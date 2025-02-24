@@ -101,16 +101,16 @@ public class HardcodedRoomForAssembler {
         System.out.println("hardcoded_room_data__max_scroll_y:");
         System.out.println("  db " + (height - 24));
         
-        List<TileAnimation> animations = ra.getRoomAnimations(roomID, pcg);
-        System.out.println("hardcoded_room_data__tile_animations:");
-        for(int i = 0;i<RenderedArea.MAX_ANIMATIONS;i++) {
-            if (animations.size() > i) {
-                System.out.println(animations.get(i).assemblerString());
-            } else {
-                System.out.println("  db 0, 0, 0, 0");
-            }
-        }
-        System.out.println("  db 0  ; sentinel");        
+//        List<TileAnimation> animations = ra.getRoomAnimations(roomID, pcg);
+//        System.out.println("hardcoded_room_data__tile_animations:");
+//        for(int i = 0;i<RenderedArea.MAX_ANIMATIONS;i++) {
+//            if (animations.size() > i) {
+//                System.out.println(animations.get(i).assemblerString());
+//            } else {
+//                System.out.println("  db 0, 0, 0, 0");
+//            }
+//        }
+//        System.out.println("  db 0  ; sentinel");        
     }
     
     

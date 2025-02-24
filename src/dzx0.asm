@@ -76,7 +76,7 @@
 ; -----------------------------------------------------------------------------
 
 dzx0:
-; dzx0_turbo:
+dzx0_turbo:
         ld      bc, $ffff               ; preserve default offset 1
         ld      (dzx0t_last_offset_tmp), bc
         inc     bc

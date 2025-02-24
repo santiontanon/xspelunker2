@@ -82,7 +82,7 @@ public class RenderedArea {
         }        
     }
     
-    
+    /*
     public List<TileAnimation> getRoomAnimations(int roomID, PCGArea pcg)
     {
         RoomChunk bg_chunks[][] = pcg.getBGChunksLikeInMSX(this);
@@ -178,6 +178,7 @@ public class RenderedArea {
         
         return animations;
     }
+    */
     
     
     public void prettifyRoomsPyramid(RoomChunk fg_chunks[][])
@@ -301,10 +302,10 @@ public class RenderedArea {
                         case 7*16 + 12:
                             // skipe tip:
                             c.tiles[j%RoomChunk.CHUNK_WIDTH][i%RoomChunk.CHUNK_HEIGHT] = 7*16 + 12 + r.nextInt(2);
-                            break;
-                        case 7*16 + 14:
+//                            break;
+//                        case 7*16 + 14:
                             // skipe bottom:
-                            c.tiles[j%RoomChunk.CHUNK_WIDTH][i%RoomChunk.CHUNK_HEIGHT] = 7*16 + 14 + r.nextInt(2);
+                            c.tiles[j%RoomChunk.CHUNK_WIDTH][(i%RoomChunk.CHUNK_HEIGHT) + 1] = 7*16 + 14 + r.nextInt(2);
                             break;
                         case 8*16 + 8:
                             // platforms:

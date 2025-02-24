@@ -130,9 +130,10 @@ clear_memory_a_entry_point:
 ; - rng_seed1: 16-bit seed value
 ; - rng_seed2: NON-ZERO 16-bit seed value
 ;Outputs:
-; - hl: 16bit random number
-random:
-    push af
+; - a: 8bit random number  (this method is capable of generating 16bit random numbers in hl, but I don't need them).
+; random:
+random_a:
+    push hl
     push bc
         ld hl, (rng_seed1)
         ld b, h
@@ -142,7 +143,7 @@ random:
         inc l
         add hl, bc
         ld (rng_seed1), hl
-        ld hl,(rng_seed2)
+        ld hl, (rng_seed2)
         add hl, hl
         sbc a, a
         and #2d
@@ -150,13 +151,8 @@ random:
         ld l, a
         ld (rng_seed2), hl
         add hl, bc
-    pop bc
-    pop af
-    ret
-
-random_a:
-    push hl
-        call random
         ld a, l
+    pop bc
     pop hl
     ret
+

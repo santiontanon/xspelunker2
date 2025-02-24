@@ -118,20 +118,20 @@ copy_to_VDP_loop:
 ; hl: source data
 ; de: target address in the VDP
 ; b: amount to copy
-; fast_small_LDIRVM:
-;     ex de,hl    ; this is wasteful, but it's to maintain the order of parameters of the original LDIRVM...
-;                 ; For things that require real speed, this function should not be used anyway,
-;                 ; but use specialized loops.
-;     push de
-;         call SETWRT
-;     pop hl
-;     ; get the VDP write register:
-;     ld a, (VDP.DW)
-;     ld c, a
-; fast_small_LDIRVM_loop:
-;     outi
-;     jp nz, fast_small_LDIRVM_loop
-;     ret
+fast_small_LDIRVM:
+    ex de,hl    ; this is wasteful, but it's to maintain the order of parameters of the original LDIRVM...
+                ; For things that require real speed, this function should not be used anyway,
+                ; but use specialized loops.
+    push de
+        call SETWRT
+    pop hl
+    ; get the VDP write register:
+    ld a, (VDP.DW)
+    ld c, a
+fast_small_LDIRVM_loop:
+    outi
+    jp nz, fast_small_LDIRVM_loop
+    ret
 
 
 ;-----------------------------------------------
