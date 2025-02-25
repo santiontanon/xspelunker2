@@ -85,45 +85,32 @@ public class RoomChunk {
                 if (biome.equals("pyramid")) {
                     int tile = tiles[j][i];
                     switch(tile) {
-                        // torch:
-//                        case 6*16 + 2:
-//                        case 6*16 + 3:
-//                        case 6*16 + 4:
-//                            tile = 6*16 + 2;
-//                            break;
                         // spikes:
-                        case 7*16 + 12:
-                        case 7*16 + 13:
-                            tile = 7*16 + 12;
+                        case 15*16 + 12:
+                        case 8*16 + 13:
+                            tile = 15*16 + 12;
                             break;
-                        case 7*16 + 14:
-                        case 7*16 + 15:
+                        case 8*16 + 4:
+                        case 8*16 + 5:
 //                            tile = 7*16 + 14;
                             tile = 0;
                             break;
-                        // water:
-//                        case 8*16 + 1:
-//                        case 8*16 + 2:
-//                        case 8*16 + 3:
-//                        case 12*16 + 8:
-//                            tile = 8*16 + 1;
-//                            break;
                         // ropes:
-                        case 8*16 + 4:
+                        case 8*16 + 3:
                         case 8*16 + 6:
 //                            tile = 8*16 + 4;
                             tile = 0;  // remove ropes, they will be reconstructed
                             break;
                         // platforms:
-                        case 8*16 + 8:
+                        case 15*16 + 14:
                         case 8*16 + 9:
-                            tile = 8*16 + 8;
+                            tile = 15*16 + 14;
                             break;
                         // bricks top:
-                        case 9*16 + 5:
+                        case 15*16 + 6:
                         case 9*16 + 6:
                         case 9*16 + 11:
-                            tile = 9*16 + 5;
+                            tile = 15*16 + 6;
 //                            if (tiles[j][i + 1] != 9*16 + 7 &&
 //                                tiles[j][i + 1] != 9*16 + 8) {
 //                                throw new Exception("Malformed chunk! brick top is not on top of a brick bottom tile!");
@@ -136,21 +123,21 @@ public class RoomChunk {
                             tile = 0;
                             break;
                         // thin bricks:
-                        case 9*16 + 13:
-                        case 9*16 + 14:
-                        case 9*16 + 15:
-                            tile = 9*16 + 13;
+                        case 15*16 + 13:
+                        case 8*16 + 14:
+                        case 8*16 + 15:
+                            tile = 15*16 + 13;
                             break;
                         // rubble:
-                        case 10*16 + 0:
+                        case 15*16 + 7:
                         case 10*16 + 1:
                         case 10*16 + 2:
                         case 10*16 + 3:
-                            tile = 10*16 + 0;
+                            tile = 15*16 + 7;
                             break;
                         // stairs (leave only the bottom piece):
-                        case 10*16 + 6:
-                            if (i<CHUNK_HEIGHT-1 && tiles[j][i+1] == 10*16+6) {
+                        case 15*16 + 8:
+                            if (i<CHUNK_HEIGHT-1 && tiles[j][i+1] == 15*16 + 8) {
                                 tile = 0;
                             }
                             break;
@@ -174,6 +161,10 @@ public class RoomChunk {
                             tile = 0;
                             break;                            
                         // face 2 pattern:
+                        case 12*16 + 9:
+                        case 12*16 + 10:
+                        case 12*16 + 11:
+                        case 13*16 + 8:
                         case 13*16 + 9:
                         case 13*16 + 10:
                         case 13*16 + 11:
@@ -181,13 +172,13 @@ public class RoomChunk {
                         case 14*16 + 9:
                         case 14*16 + 10:
                         case 14*16 + 11:
-                        case 15*16 + 8:
-                        case 15*16 + 9:
-                        case 15*16 + 10:
-                        case 15*16 + 11:
                             tile = 0;
                             break;
                         // dragon pattern:
+                        case 11*16 + 13:
+                        case 11*16 + 14:
+                        case 11*16 + 15:
+                        case 12*16 + 12:
                         case 12*16 + 13:
                         case 12*16 + 14:
                         case 12*16 + 15:
@@ -195,10 +186,6 @@ public class RoomChunk {
                         case 13*16 + 13:
                         case 13*16 + 14:
                         case 13*16 + 15:
-                        case 14*16 + 12:
-                        case 14*16 + 13:
-                        case 14*16 + 14:
-                        case 14*16 + 15:
 //                        case 15*16 + 12:
 //                        case 15*16 + 13:
 //                        case 15*16 + 14:

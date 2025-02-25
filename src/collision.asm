@@ -214,13 +214,17 @@ check_player_on_top_of_rope_continue:
 	cp 8
 	jr z, check_player_maybe_on_top_of_ladder	
 check_player_on_top_of_rope_right:
-; 	inc c
-; 	call get_room_tile_type
-; 	cp 5
-; 	jr z, check_player_on_top_of_rope_1
-; 	cp 6
-; 	jr z, check_player_on_top_of_rope_1
 	ret
+; 	ld a, (player_x)
+; 	cp 4
+; 	jp nc, check_player_on_rope_or_ladder_negative
+; 	dec c
+; 	call get_room_tile_type
+; 	cp 7
+; 	jr z, check_player_maybe_on_top_of_ladder
+; 	cp 8
+; 	jr z, check_player_maybe_on_top_of_ladder	
+; 	ret
 check_player_on_top_of_rope_0:
 	xor a  ; z, a = 0
 	ret
@@ -228,6 +232,9 @@ check_player_on_top_of_rope_0:
 ; 	ld a, 1
 ; 	ret
 check_player_maybe_on_top_of_ladder:
+; 	ld a, (player_x)
+; 	cp 4
+; 	jr nc, check_player_on_top_of_ladder
 	inc c
 	call get_room_tile_type
 	cp 7
@@ -236,6 +243,9 @@ check_player_maybe_on_top_of_ladder:
 	ret nz
 check_player_on_top_of_ladder:
 	ld a, 2
+	ret
+check_player_on_rope_or_ladder_negative:
+	or 1
 	ret
 
 
@@ -743,15 +753,15 @@ tile_collision_types_pyramid:
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 8, 0, 0, 0, 0, 0
     db 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3
-    db 4, 0, 0, 0, 5, 5, 5, 6, 1, 1, 1, 1, 2, 2, 2, 2
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2
+    db 4, 0, 0, 5, 3, 3, 5, 6, 8, 1, 1, 1, 2, 3, 2, 2
     db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
-    db 2, 2, 2, 2, 2, 2, 7, 7, 8, 2, 2, 2, 2, 2, 2, 2
-    db 2, 2, 2, 2, 2, 2, 0, 0, 8, 2, 2, 2, 2, 2, 2, 2
-    db 2, 2, 2, 2, 2, 0, 0, 0, 5, 2, 2, 2, 2, 2, 2, 2
+    db 0, 2, 2, 2, 2, 2, 0, 7, 8, 2, 2, 2, 2, 2, 2, 2
+    db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2
+    db 0, 2, 2, 2, 2, 2, 2, 0, 0, 2, 2, 2, 2, 2, 2, 2
     db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
     db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
-    db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+    db 2, 2, 2, 2, 2, 0, 2, 2, 7, 2, 2, 2, 3, 2, 1, 5
 
 
 ;-----------------------------------------------

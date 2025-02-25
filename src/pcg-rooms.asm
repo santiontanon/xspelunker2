@@ -217,33 +217,35 @@ pcg_generate_room__prettyfy_pyramid:
 	; Part 1: reconstruct ropes/ladders/faces/dragon:
 	ld hl, current_room__tile_map
 	ld bc, (current_room__width)
+	ld a, (current_room__width)
+	ld e, a
+	ld d, 0	
 pcg_generate_room__prettyfy_pyramid_loop_y:
 	push bc
 		ld b, c
-		ld c, 7*16 + 12
+		ld c, 15*16 + 6
 pcg_generate_room__prettyfy_pyramid_loop_x:
 		ld a, (hl)
-		cp c
+		sub c
 		jr c, pcg_generate_room__prettyfy_pyramid_loop_x_continue
-		jr z, pcg_generate_room__prettyfy_pyramid_spike_tip_randomize
-		cp 8*16 + 5
-		jp z, pcg_generate_room__prettyfy_pyramid_rope
-		cp 8*16 + 8
-		jr z, pcg_generate_room__prettyfy_pyramid_platform_randomize
-		cp 9*16 + 5
 		jr z, pcg_generate_room__prettyfy_pyramid_bricks_randomize
-		cp 9*16 + 13
-		jr z, pcg_generate_room__prettyfy_pyramid_thin_bricks_randomize
-		cp 10*16 + 0
+		dec a
 		jr z, pcg_generate_room__prettyfy_pyramid_rubble_randomize
-		cp 10*16 + 6
+		dec a
 		jp z, pcg_generate_room__prettyfy_pyramid_ladder
-		cp 12*16 + 0
+		dec a
 		jp z, pcg_generate_room__prettyfy_pyramid_face1
-		cp 12*16 + 12
-		jp z, pcg_generate_room__prettyfy_pyramid_dragon_head
-		cp 13*16 + 8
+		dec a
 		jp z, pcg_generate_room__prettyfy_pyramid_face2
+		dec a
+		jp z, pcg_generate_room__prettyfy_pyramid_dragon_head
+		dec a
+		jr z, pcg_generate_room__prettyfy_pyramid_spike_tip_randomize
+		dec a
+		jr z, pcg_generate_room__prettyfy_pyramid_thin_bricks_randomize
+		dec a
+		jr z, pcg_generate_room__prettyfy_pyramid_platform_randomize
+		jp pcg_generate_room__prettyfy_pyramid_rope
 pcg_generate_room__prettyfy_pyramid_loop_x_continue:
 		inc hl
 		djnz pcg_generate_room__prettyfy_pyramid_loop_x
@@ -254,14 +256,12 @@ pcg_generate_room__prettyfy_pyramid_loop_x_continue:
 pcg_generate_room__prettyfy_pyramid_spike_tip_randomize:
 	call random_a
 	and #01
-	add a, 7*16 + 12
-	ld (hl), a
-	ld a, (current_room__width)
-	ld e, a
-	ld d, 0
+	jr z, pcg_generate_room__prettyfy_pyramid_spike_tip_randomize_continue
+	ld (hl), 8*16 + 13
+pcg_generate_room__prettyfy_pyramid_spike_tip_randomize_continue:
 	call random_a
 	and #01
-	add a, 7*16 + 14
+	add a, 8*16 + 4
 	add hl, de
 	ld (hl), a
 	sbc hl, de
@@ -270,32 +270,28 @@ pcg_generate_room__prettyfy_pyramid_spike_tip_randomize:
 pcg_generate_room__prettyfy_pyramid_platform_randomize:
 	call random_a
 	and #01
-	add a, 8*16 + 8
-	ld (hl), a
+	jp z, pcg_generate_room__prettyfy_pyramid_loop_x_continue
+	ld (hl), 8*16 + 9
 	jp pcg_generate_room__prettyfy_pyramid_loop_x_continue
 
 pcg_generate_room__prettyfy_pyramid_thin_bricks_randomize:
 	call random_a
 	and #03
-	cp 3
-	jr nz, pcg_generate_room__prettyfy_pyramid_thin_bricks_randomize_continue
-	ld a, 2
-pcg_generate_room__prettyfy_pyramid_thin_bricks_randomize_continue:
-	add a, 9*16 + 13
+	sub 2
+	jp c, pcg_generate_room__prettyfy_pyramid_loop_x_continue
+	add a, 8*16 + 14
 	ld (hl), a
 	jp pcg_generate_room__prettyfy_pyramid_loop_x_continue
 
 pcg_generate_room__prettyfy_pyramid_rubble_randomize:
 	call random_a
 	and #03
+	jp z, pcg_generate_room__prettyfy_pyramid_loop_x_continue
 	add a, 10*16 + 0
 	ld (hl), a
 	jp pcg_generate_room__prettyfy_pyramid_loop_x_continue
 
 pcg_generate_room__prettyfy_pyramid_bricks_randomize:
-	ld a, (current_room__width)
-	ld e, a
-	ld d, 0
 	call random_a
 	cp 96
 	jr nc, pcg_generate_room__prettyfy_pyramid_bricks_randomize_continue
@@ -323,9 +319,6 @@ pcg_generate_room__prettyfy_pyramid_bricks_randomize_continue2:
 pcg_generate_room__prettyfy_pyramid_rope:
 	push hl
 	push bc
-		ld a, (current_room__width)
-		ld e, a
-		ld d, 0
 		ld bc, current_room__tile_map
 pcg_generate_room__prettyfy_pyramid_rope_loop:
 		or a
@@ -338,7 +331,7 @@ pcg_generate_room__prettyfy_pyramid_rope_loop:
 		or a
 		jr z, pcg_generate_room__prettyfy_pyramid_rope_keep_going
 		cp 5*16 + 8  ; torch
-		jr z, pcg_generate_room__prettyfy_pyramid_ladder_keep_going
+		jr z, pcg_generate_room__prettyfy_pyramid_rope_keep_going
 		and #f0
 		cp #60  ; row 6 contains tiles only present on background tiles
 		jr nz, pcg_generate_room__prettyfy_pyramid_rope_done
@@ -346,7 +339,7 @@ pcg_generate_room__prettyfy_pyramid_rope_keep_going:
 		call random_a
 		and #03
 		jp nz, pcg_generate_room__prettyfy_pyramid_rope_keep_going2
-		ld (hl), 8*16 + 4  ; rope knot
+		ld (hl), 8*16 + 3  ; rope knot
 		jr pcg_generate_room__prettyfy_pyramid_rope_loop
 pcg_generate_room__prettyfy_pyramid_rope_keep_going2:
 		ld (hl), 8*16 + 6  ; rope
@@ -359,9 +352,6 @@ pcg_generate_room__prettyfy_pyramid_rope_done:
 pcg_generate_room__prettyfy_pyramid_ladder:
 	push hl
 	push bc
-		ld a, (current_room__width)
-		ld e, a
-		ld d, 0
 		ld bc, current_room__tile_map
 pcg_generate_room__prettyfy_pyramid_ladder_loop:
 		or a
@@ -379,7 +369,7 @@ pcg_generate_room__prettyfy_pyramid_ladder_loop:
 		cp #60  ; row 6 contains tiles only present on background tiles
 		jr nz, pcg_generate_room__prettyfy_pyramid_ladder_done
 pcg_generate_room__prettyfy_pyramid_ladder_keep_going:
-		ld (hl), 10*16 + 6  ; ladder-left
+		ld (hl), 15*16 + 8  ; ladder-left
 		inc hl
 		ld (hl), 10*16 + 7  ; ladder-right
 		dec hl
@@ -395,16 +385,12 @@ pcg_generate_room__prettyfy_pyramid_face1:
 		ld (hl), 12*16 + 1
 		inc hl
 		ld (hl), 12*16 + 2
-		ld a, (current_room__width)
-		add a, -2
-		ld e, a
-		ld d, 0
 		add hl, de
-		ld (hl), 13*16 + 0
-		inc hl
-		ld (hl), 13*16 + 1
-		inc hl
 		ld (hl), 13*16 + 2
+		dec hl
+		ld (hl), 13*16 + 1
+		dec hl
+		ld (hl), 13*16 + 0
 		add hl, de
 		ld (hl), 14*16 + 0
 		inc hl
@@ -412,26 +398,30 @@ pcg_generate_room__prettyfy_pyramid_face1:
 		inc hl
 		ld (hl), 14*16 + 2
 		add hl, de
-		ld (hl), 15*16 + 0
-		inc hl
-		ld (hl), 15*16 + 1
-		inc hl
 		ld (hl), 15*16 + 2
+		dec hl
+		ld (hl), 15*16 + 1
+		dec hl
+		ld (hl), 15*16 + 0
 	pop hl
 	jp pcg_generate_room__prettyfy_pyramid_loop_x_continue
 
 pcg_generate_room__prettyfy_pyramid_face2:
 	push hl
 		inc hl
-		ld (hl), 13*16 + 9
+		ld (hl), 12*16 + 9
 		inc hl
-		ld (hl), 13*16 + 10
+		ld (hl), 12*16 + 10
 		inc hl
+		ld (hl), 12*16 + 11
+		add hl, de
 		ld (hl), 13*16 + 11
-		ld a, (current_room__width)
-		add a, -3
-		ld e, a
-		ld d, 0
+		dec hl
+		ld (hl), 13*16 + 10
+		dec hl
+		ld (hl), 13*16 + 9
+		dec hl
+		ld (hl), 13*16 + 8
 		add hl, de
 		ld (hl), 14*16 + 8
 		inc hl
@@ -440,29 +430,25 @@ pcg_generate_room__prettyfy_pyramid_face2:
 		ld (hl), 14*16 + 10
 		inc hl
 		ld (hl), 14*16 + 11
-		add hl, de
-		ld (hl), 15*16 + 8
-		inc hl
-		ld (hl), 15*16 + 9
-		inc hl
-		ld (hl), 15*16 + 10
-		inc hl
-		ld (hl), 15*16 + 11
 	pop hl
 	jp pcg_generate_room__prettyfy_pyramid_loop_x_continue
 
 pcg_generate_room__prettyfy_pyramid_dragon_head:
 	push hl
 		inc hl
-		ld (hl), 12*16 + 13
+		ld (hl), 11*16 + 13
 		inc hl
-		ld (hl), 12*16 + 14
+		ld (hl), 11*16 + 14
 		inc hl
+		ld (hl), 11*16 + 15
+		add hl, de
 		ld (hl), 12*16 + 15
-		ld a, (current_room__width)
-		add a, -3
-		ld e, a
-		ld d, 0
+		dec hl
+		ld (hl), 12*16 + 14
+		dec hl
+		ld (hl), 12*16 + 13
+		dec hl
+		ld (hl), 12*16 + 12
 		add hl, de
 		ld (hl), 13*16 + 12
 		inc hl
@@ -471,14 +457,6 @@ pcg_generate_room__prettyfy_pyramid_dragon_head:
 		ld (hl), 13*16 + 14
 		inc hl
 		ld (hl), 13*16 + 15
-		add hl, de
-		ld (hl), 14*16 + 12
-		inc hl
-		ld (hl), 14*16 + 13
-		inc hl
-		ld (hl), 14*16 + 14
-		inc hl
-		ld (hl), 14*16 + 15
 	pop hl
 	jp pcg_generate_room__prettyfy_pyramid_loop_x_continue
 
@@ -566,21 +544,17 @@ pcg_generate_room_copy_chunk_to_room_loop1:
 		dec a
 		jr z, pcg_generate_room_copy_chunk_to_room_continue
 		add hl, de
-		jr pcg_generate_room_copy_chunk_to_room_loop1
+		jp pcg_generate_room_copy_chunk_to_room_loop1
 pcg_generate_room_copy_chunk_to_room_continue:
 		; hl = ((iyh*2 - b) * iyl
-		add hl, hl
-		add hl, hl
-		add hl, hl
-		add hl, hl
-		add hl, hl  ; hl = ((iyh*2 - b) * iyl * 32
 
-		add hl, hl
-		add hl, hl
-		push hl
-			add hl, hl
-		pop de
-		add hl, de  ; * 12
+		ld d, l
+		ld e, 0
+		ld h, l
+		ld l, e
+		srl d
+		rr e
+		add hl, de  ; hl *= 32 * 12
 
 		ld a, iyl
 		add a, a

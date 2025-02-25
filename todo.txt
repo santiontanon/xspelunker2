@@ -6,6 +6,8 @@ to do:
   ***- swimming player state (look at how did I implement it in the original xspelunker)
   ***- move around (how does this work? just slow? paddeling with the jump key?)
   ***- jump out of water (make sure I can jump at least 2 tiles)
+  ***- splash sfx when entering/exiting the water
+  ***- splash sprite when entering/exiting the water (how do I handle extra sprites? I might need to setup the data structures)
 
 - Java: Refactor/simplify PCGArea
     - BUG: in room 7 of the example area I am using, there are 2 ladders going up, should there not just be only one?
@@ -22,6 +24,7 @@ to do:
 - generate world in assembler
 - for some areas (pyramids, etc.) have some predefined shapes (e.g. pyramid shape), that can be chosen with some probability. And maybe also different shapes for the confluence, etc.
 - write the whole story line of the game, so that everything makes sense. This will help me finalize what you get from bosses, what the ending screen is, the intro, etc.
+  - how about those gods that I drew? where do I use them?
 - being able to complete the game in assembler:
   - push blocks
   - render doors (and be blocked by them)
@@ -177,5 +180,6 @@ PCGWorld:
   - generateSubquests (same as before, but with different reachable/useable area)
   - set "lockKeys" to all the user locks and keys
 
+
 Timing:
-- pcg_generate_room (for a room with 4 screens): 1592166
+- pcg_generate_room (for a room with 4 screens): 1477082

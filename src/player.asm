@@ -291,6 +291,9 @@ player_update_state_falling_speed_loop_done:
 
 ;-----------------------------------------------
 player_update_switch_to_jumping_from_rope:
+	ld a, (keyboard_line_state)
+	bit 6, a  ; down
+	jp z, player_update_switch_to_falling
 	ld hl, SFX_jump
 	call play_SFX_with_high_priority
 	ld a, 4 ; skip the first jump states, to make the jump shorter

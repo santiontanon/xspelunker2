@@ -26,9 +26,9 @@ state_play:
 ; 		ld e, 28  ; room ID
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
-; 		out (#2c), a
+		out (#2c), a
 		call call_hl_in_page_c_8000
-; 		out (#2d), a
+		out (#2d), a
 
 		; get room data:
 ; 		SETMEGAROMPAGE_8000 MAP_DATA_PAGE

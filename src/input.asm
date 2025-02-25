@@ -1,21 +1,6 @@
 ;-----------------------------------------------
 ; updates the 'keyboard_line_state' and 'keyboard_line_state_prev' buffers
 update_keyboard_buffers:
-    ld de, keyboard_line_state
-    ld hl, keyboard_line_state_prev
-    ld bc, #0201
-update_keyboard_buffers_loop:
-        ld a, (de)
-        xor (hl)
-        and (hl)  ; a now has the value to save in "keyboard_line_clicks" (which is "keyboard_line_state", offset by 1)
-        ex de, hl
-            ldi
-            inc c
-        ex de, hl
-        ld (de), a  ; save the click in "keyboard_line_clicks"
-        inc de
-    djnz update_keyboard_buffers_loop
-
     ld a, #08
     call SNSMAT
     ld (keyboard_line_state), a  ; RIGHT, DOWN, UP, LEFT, DEL, INS, HOME, SPACE
@@ -23,6 +8,23 @@ update_keyboard_buffers_loop:
     ld a, #04
     call SNSMAT
     ld (keyboard_line_state + 2), a  ; R, Q, P, O, N, M, L, K
+
+    call read_joystick
+
+    ld de, keyboard_line_state
+    ld hl, keyboard_line_state_prev
+    ld bc, #0204  ; c just > b so that "ldi" will not interferer with b.
+update_keyboard_buffers_loop:
+        ld a, (de)
+        xor (hl)
+        and (hl)  ; a now has the value to save in "keyboard_line_clicks" (which is "keyboard_line_state", offset by 1)
+        ex de, hl
+            ldi
+        ex de, hl
+        ld (de), a  ; save the click in "keyboard_line_clicks"
+        inc de
+    djnz update_keyboard_buffers_loop
+    ret
 
 
 ;-----------------------------------------------
