@@ -111,6 +111,69 @@ SFX_jump:
   db SFX_CMD_END   
 
 
+; SFX_watersplash:
+;   db  7,#9c    ;; noise in channel C, and tone in channels B and A
+;   db 10,#0d    ;; volume
+;   db  6,#08    ;; noise frequency
+;   db MUSIC_CMD_SKIP
+;   db MUSIC_CMD_SKIP
+;   db  6,#04    ;; noise frequency
+;   db 10,#0d    ;; volume
+;   db MUSIC_CMD_SKIP
+;   db MUSIC_CMD_SKIP
+;   db 10,#0b    ;; volume
+;   db MUSIC_CMD_SKIP
+;   db MUSIC_CMD_SKIP
+;   db 10,#0d    ;; volume
+;   db MUSIC_CMD_SKIP
+;   db MUSIC_CMD_SKIP
+SFX_watersplash_soft:
+  db  7,#9c    ;; noise in channel C, and tone in channels B and A
+  db  6,#04    ;; noise frequency
+  db 10,#0b    ;; volume
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 10,#09    ;; volume
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 10,#0b    ;; volume
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 10,#09    ;; volume
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 10,#06    ;; volume
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 10,#09    ;; volume
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 10,#06    ;; volume
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 10,#04    ;; volume
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 10,#06    ;; volume
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 10,#04    ;; volume
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 10,#02    ;; volume
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 10,#04    ;; volume
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 10,#02    ;; volume
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 7,#b8    ;; SFX all channels to tone
+  db 10,#00    ;; silence
+  db SFX_CMD_END
+
+
 ; SFX_collide:
 ;   db 7,#b8  ; SFX all channels to tone
 ;   db 10,#0c  ; volume

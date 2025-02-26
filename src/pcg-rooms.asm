@@ -204,7 +204,13 @@ pcg_generate_room__fg_loop_x_skip:
 	; Auto-fill ladders/ropes/etc. and randomize tiles:
 	call pcg_generate_room__prettyfy_pyramid
 
+	; objects:
 	; ...
+	ld hl, current_room__objects
+	ld bc, MAX_ROOM_OBJECTS * ROOM_OBJECT_STRUCT_SIZE - 1
+	call clear_memory
+	ld a, #ff
+	ld (current_room__objects_sentinel), a
 
 	ret
 

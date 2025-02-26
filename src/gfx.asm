@@ -63,17 +63,17 @@ fast_FILVRM_loop:
 ; a: byte
 ; b: amount to write
 ; hl: target address in the VDP
-; fast_FILVRM_small:
-;     push af
-;         call SETWRT
-;         ld a, (VDP.DW)
-;         ld c, a
-;     pop af
-; fast_FILVRM_small_loop:
-;     out (c), a
-;     dec b
-;     jp nz, fast_FILVRM_small_loop
-;     ret
+fast_FILVRM_small:
+    push af
+        call SETWRT
+        ld a, (VDP.DW)
+        ld c, a
+    pop af
+fast_FILVRM_small_loop:
+    out (c), a
+    dec b
+    jp nz, fast_FILVRM_small_loop
+    ret
 
 
 ;-----------------------------------------------

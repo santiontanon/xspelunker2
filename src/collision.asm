@@ -215,26 +215,10 @@ check_player_on_top_of_rope_continue:
 	jr z, check_player_maybe_on_top_of_ladder	
 check_player_on_top_of_rope_right:
 	ret
-; 	ld a, (player_x)
-; 	cp 4
-; 	jp nc, check_player_on_rope_or_ladder_negative
-; 	dec c
-; 	call get_room_tile_type
-; 	cp 7
-; 	jr z, check_player_maybe_on_top_of_ladder
-; 	cp 8
-; 	jr z, check_player_maybe_on_top_of_ladder	
-; 	ret
 check_player_on_top_of_rope_0:
 	xor a  ; z, a = 0
 	ret
-; check_player_on_top_of_rope_1:
-; 	ld a, 1
-; 	ret
 check_player_maybe_on_top_of_ladder:
-; 	ld a, (player_x)
-; 	cp 4
-; 	jr nc, check_player_on_top_of_ladder
 	inc c
 	call get_room_tile_type
 	cp 7
@@ -246,6 +230,22 @@ check_player_on_top_of_ladder:
 	ret
 check_player_on_rope_or_ladder_negative:
 	or 1
+	ret
+
+
+;-----------------------------------------------
+; Check if tile type is 1/2/6/8 (if pixel coordinate is 0 only) (incrementing y by 1 pixel)
+; output:
+; - z: in water
+; - nz: not in water
+player_in_water:
+	ld a, (player_x + 1)
+	ld c, a
+	ld a, (player_y + 1)
+	ld b, a
+	inc b
+	call get_room_tile_type
+	cp 4  ; water
 	ret
 
 

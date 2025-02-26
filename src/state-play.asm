@@ -5,6 +5,12 @@ state_play:
 		ld bc, RAM_to_zero_on_game_start_end - RAM_to_zero_on_game_start
 		call clear_memory
 
+		SETMEGAROMPAGE_8000 SPRITES_PAGE
+		ld hl, pyramid_object_sprites_bin
+		ld de, SPRTBL2 + 32 * 2  ; first two reserved for player
+		ld bc, pyramid_object_sprites_bin_end - pyramid_object_sprites_bin
+		call fast_LDIRVM
+
 		; initial player position:
 		ld hl, #0800
 		ld (player_x), hl
@@ -19,8 +25,8 @@ state_play:
 		ldir
 
 		; call PCG to generate the current room from the current area:
-; 		ld e, 0
-		ld e, 7  ; room ID
+		ld e, 0
+; 		ld e, 7  ; room ID
 ; 		ld e, 24
 ; 		ld e, 26  ; room ID (boss)
 ; 		ld e, 28  ; room ID
@@ -62,17 +68,22 @@ state_play_from_loaded_room:
 		call maybe_recenter_scroll_and_set_actual
 		call draw_room
 		call player_update_update_sprite_position
+		xor a
+		ld (n_displayed_object_sprites_last_frame), a
+		ld (n_displayed_object_sprites), a
 		ld hl, upload_sprites_to_vdp
 		ld c, SPRITES_PAGE
 		call call_hl_in_page_c_8000
 
 	call enable_VDP_output
 
-	xor a
 state_play_loop:
 	; game update:
+	xor a
+	ld (n_displayed_object_sprites), a
 	call update_keyboard_buffers
 	call player_update
+	call update_sprite_objects
 	call maybe_recenter_scroll
 	call update_scroll
 

@@ -1,13 +1,7 @@
 to do:
 
-***- swim in water:
-  ***- draw the sprites
-  ***- add them to assembler
-  ***- swimming player state (look at how did I implement it in the original xspelunker)
-  ***- move around (how does this work? just slow? paddeling with the jump key?)
-  ***- jump out of water (make sure I can jump at least 2 tiles)
-  ***- splash sfx when entering/exiting the water
-  ***- splash sprite when entering/exiting the water (how do I handle extra sprites? I might need to setup the data structures)
+***- another attempt at entering ladders/ropes similarly from left/right
+  ***- one side-effect of not having this is that I can jump from right-to-left on the ropes at the bottom of room 0, but not left-to-right!
 
 - Java: Refactor/simplify PCGArea
     - BUG: in room 7 of the example area I am using, there are 2 ladders going up, should there not just be only one?
@@ -23,8 +17,10 @@ to do:
       - there will by a table of bit flags that stores which type of "locations" are in each chunk, and one with the up/down flags (which are not stored in the chunks)
 - generate world in assembler
 - for some areas (pyramids, etc.) have some predefined shapes (e.g. pyramid shape), that can be chosen with some probability. And maybe also different shapes for the confluence, etc.
+
 - write the whole story line of the game, so that everything makes sense. This will help me finalize what you get from bosses, what the ending screen is, the intro, etc.
   - how about those gods that I drew? where do I use them?
+
 - being able to complete the game in assembler:
   - push blocks
   - render doors (and be blocked by them)
@@ -45,12 +41,16 @@ to do:
 - get hurt by spikes
 - game over screen when you run out of health
 - get hurt by running out of oxygen in water
+- decide whether you get hurt by falling from a height
+
 - come up with a list of weapons
 - implement the first one or two weapons
 - come up with a list of enemies for pyramid
 - implement at least one enemy
 - enemy spawn (remember never to have them in room edges, so that you cannot spawn on top of one)
 - kill enemies and get hurt by them
+- design all the enemies on the pyramid biome and spawn them
+
 - PCG to do: optional treasure:
     - sample random rooms that have no tags (ideally in leaf divisions with no tags), and add optional treasure/story trivia labels
          (might or might not be reachable)
@@ -64,7 +64,9 @@ to do:
         - fragments of a calendar stone (maybe this is what you get from the bosses)
     - ensure I can have all the types of puzzles I listed above from La Mulana
     - ensure I can have things like "double jump" as the key and a whole area/path that requires it (or more than one)
+
 - jungle biome
+
 - music
 - brain games screen
 - title screen
@@ -75,15 +77,19 @@ to do:
         - passwords ties to the name (with a 16 bit hash for example)
 - for each difficulty, determine how to simplify the game (map sizes? enemy rates? number of puzzles? enemy aggressivity?)
 - game intro sequence
+
 - first boss
 - second boss
 - third boss
+
 - caves biome
 - temple of fire biome
 - fourth boss
 - atlantis biome
 - fifth boss
+
 - first ending sequence
+
 - secret quest:
     - distribute a series of k clues needed to unlock something in atlantis
     - ensure there is path to those clues (how? ideally from the nearest path)
@@ -91,13 +97,17 @@ to do:
       and also ensure path to it
     - mars/moon are generated separately, with their own quests (they are independent)
     - once solved, the same ending room can be used to reach the true ending
+
 - mars biome
 - moon biome
 - 6th boss
 - 7th boss
+
 - second ending
+
 - secret puzzle: add strings in the ROM that can be read via a hex reader of the ROM (encode them as decimal numbers in the .asm file, so that they are not visible from the source easily), that form a puzzle, giving you a clue (e.g. a code) for something to do in the game to get a special ending. this will enable the 3rd ending (last piece to fit in the calendar)
 
+--------------------
 
 X-Spelunker 2 (e-ke-se pe-lu-ne-ke-le):
   - La Mulana-style

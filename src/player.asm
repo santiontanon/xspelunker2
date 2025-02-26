@@ -114,6 +114,7 @@ player_update_state_fn_table:
 	dw player_update_state_crawling
 	dw player_update_state_rope
 	dw player_update_state_ladder
+	dw player_update_state_swimming
 
 
 ;-----------------------------------------------
@@ -256,8 +257,12 @@ player_update_state_falling:
 player_update_state_falling_no_rope:
 
 	; check if we need to switch to idle:
-	call player_check_collision_down_inc
+	call player_check_collision_down_inc  ; a = tile type
 	jp z, player_update_switch_to_idle
+
+	; check if we need to swicth to swimming:
+	call player_in_water
+	jp z, player_update_switch_to_swimming_from_falling
 
 	; move down:
 	ld a, (player_state_timer)
@@ -290,7 +295,25 @@ player_update_state_falling_speed_loop_done:
 
 
 ;-----------------------------------------------
+player_update_state_switch_to_jumping_from_swimming:
+	xor a
+	ld (player_jump_is_cancelable), a
+	ld a, (player_x + 1)
+	ld c, a
+	ld a, (player_y + 1)
+	ld b, a
+	call spawn_water_splash
+	ld a, 4 ; skip the first jump states, to make the jump shorter
+	ld (player_state_timer), a
+	ld a, (player_state)
+	and #01
+	add a, PLAYER_STATE_JUMPING
+	ld (player_state), a
+	jp player_update_state_jumping  ; skip the rope check, to avoid an infinite loop
+
 player_update_switch_to_jumping_from_rope:
+	ld a, 1
+	ld (player_jump_is_cancelable), a
 	ld a, (keyboard_line_state)
 	bit 6, a  ; down
 	jp z, player_update_switch_to_falling
@@ -305,6 +328,8 @@ player_update_switch_to_jumping_from_rope:
 	jp player_update_state_jumping_no_rope  ; skip the rope check, to avoid an infinite loop
 
 player_update_switch_to_jumping:
+	ld a, 1
+	ld (player_jump_is_cancelable), a
 	ld hl, SFX_jump
 	call play_SFX_with_high_priority
 	xor a
@@ -332,12 +357,15 @@ player_update_state_jumping_no_rope:
 	bit 4, a
 	call z, player_update_move_one_pixel_left_considering_collisions
 
-
+	ld a, (player_jump_is_cancelable)
+	or a
+	jr z, player_update_state_jumping_cannot_cancel
 	; did the player release the jump key?
 	; check for jump
 	ld a, (keyboard_line_state + 2)
 	bit 2, a
 	call nz, player_update_stop_jumping
+player_update_state_jumping_cannot_cancel:
 
 	; move up:
 	ld a, (player_state_timer)
@@ -617,6 +645,217 @@ player_update_state_ladder_continue2:
 player_update_state_ladder_switch_to_idle_pop:
 	pop af
 	jp player_update_switch_to_idle
+
+
+;-----------------------------------------------
+player_update_switch_to_swimming_from_falling:
+	ld a, (player_x + 1)
+	ld c, a
+	ld a, (player_y + 1)
+	ld b, a
+	call spawn_water_splash
+	ld a, (player_state)
+	and #01
+	add a, PLAYER_STATE_SWIMMING
+	ld (player_state), a
+
+	xor a
+	ld (player_water_inertia_x), a
+	ld (player_water_inertia_x_timer), a
+	ld (player_water_inertia_y_timer), a
+	ld a, 1  ; max inertia down
+	ld (player_water_inertia_y), a
+
+player_update_state_swimming:
+
+	ld a, (interrupt_cycle)
+	and #01
+	jp z, player_update_state_swimming_no_player_control
+	; player control:
+	ld a, (keyboard_line_state)  ; RIGHT, DOWN, UP, LEFT, DEL, INS, HOME, SPACE
+	ld hl, player_water_inertia_x
+	bit 4, a
+	jr nz, player_update_state_swimming_no_left
+	; left:
+	ld a, (player_water_inertia_x)
+	or a
+	jr z, player_update_state_swimming_left_reset_inertia
+	cp -1
+	jr z, player_update_state_swimming_left_done
+	cp PLAYER_MAX_SWIMMING_INERTIA_TIME
+	jr z, player_update_state_swimming_left_reset_inertia
+	inc a
+	ld (player_water_inertia_x), a
+	jp player_update_state_swimming_left_done
+player_update_state_swimming_left_reset_inertia:
+	ld a, -PLAYER_MAX_SWIMMING_INERTIA_TIME
+	ld (player_water_inertia_x), a
+player_update_state_swimming_left_done:
+	ld a, (keyboard_line_state)
+player_update_state_swimming_no_left:
+
+	bit 7, a
+	jr nz, player_update_state_swimming_no_right
+	; right:
+	ld a, (player_water_inertia_x)
+	or a
+	jr z, player_update_state_swimming_right_reset_inertia
+	cp 1
+	jr z, player_update_state_swimming_right_done
+	cp -PLAYER_MAX_SWIMMING_INERTIA_TIME
+	jr z, player_update_state_swimming_right_reset_inertia
+	dec a
+	ld (player_water_inertia_x), a
+	jp player_update_state_swimming_right_done
+player_update_state_swimming_right_reset_inertia:
+	ld a, PLAYER_MAX_SWIMMING_INERTIA_TIME
+	ld (player_water_inertia_x), a
+player_update_state_swimming_right_done:
+	ld a, (keyboard_line_state)
+player_update_state_swimming_no_right:
+
+	bit 5, a
+	jr nz, player_update_state_swimming_no_up
+	; up:
+	ld a, (player_water_inertia_y)
+	or a
+	jr z, player_update_state_swimming_up_reset_inertia
+	cp -1
+	jr z, player_update_state_swimming_up_done
+	cp PLAYER_MAX_SWIMMING_INERTIA_TIME
+	jr z, player_update_state_swimming_up_reset_inertia
+	inc a
+	ld (player_water_inertia_y), a
+	jp player_update_state_swimming_up_done
+player_update_state_swimming_up_reset_inertia:
+	ld a, -PLAYER_MAX_SWIMMING_INERTIA_TIME
+	ld (player_water_inertia_y), a
+player_update_state_swimming_up_done:
+	ld a, (keyboard_line_state)
+player_update_state_swimming_no_up:
+
+	bit 6, a
+	jr nz, player_update_state_swimming_no_down
+	; down:
+	ld a, (player_water_inertia_y)
+	or a
+	jr z, player_update_state_swimming_down_reset_inertia
+	cp 1
+	jr z, player_update_state_swimming_down_done
+	cp -PLAYER_MAX_SWIMMING_INERTIA_TIME
+	jr z, player_update_state_swimming_down_reset_inertia
+	dec a
+	ld (player_water_inertia_y), a
+	jp player_update_state_swimming_down_done
+player_update_state_swimming_down_reset_inertia:
+	ld a, PLAYER_MAX_SWIMMING_INERTIA_TIME
+	ld (player_water_inertia_y), a
+player_update_state_swimming_down_done:
+player_update_state_swimming_no_down:
+
+player_update_state_swimming_no_player_control:
+
+	; update inertia x:
+	ld a, (player_water_inertia_x)
+	or a
+	jr z, player_update_state_swimming_inertia_x_done
+	jp m, player_update_state_swimming_inertia_x_negative
+	ld c, a
+	ld hl, player_water_inertia_x_timer
+	ld a, (hl)
+	cp c
+	inc (hl)
+	jr c, player_update_state_swimming_inertia_x_done
+	push hl
+		call player_update_move_one_pixel_right_considering_collisions
+	pop hl
+	ld (hl), 0  ; reset timer
+	ld hl, player_water_inertia_x
+	ld a, (hl)
+	cp PLAYER_MAX_SWIMMING_INERTIA_TIME  ; max inertia slowness
+	jr z, player_update_state_swimming_clear_inertia_x
+	inc (hl)  ; make inertia slower
+	jp player_update_state_swimming_inertia_x_done
+player_update_state_swimming_clear_inertia_x:
+	ld (hl), 0
+	jp player_update_state_swimming_inertia_x_done
+player_update_state_swimming_inertia_x_negative:
+	neg
+	ld c, a
+	ld hl, player_water_inertia_x_timer
+	ld a, (hl)
+	inc (hl)
+	cp c
+	jr c, player_update_state_swimming_inertia_x_done
+	push hl
+		call player_update_move_one_pixel_left_considering_collisions
+	pop hl
+	ld (hl), 0  ; reset timer
+	ld hl, player_water_inertia_x
+	ld a, (hl)
+	cp -PLAYER_MAX_SWIMMING_INERTIA_TIME  ; max inertia slowness
+	jr z, player_update_state_swimming_clear_inertia_x
+	dec (hl)  ; make inertia slower
+player_update_state_swimming_inertia_x_done:
+
+	; update inertia y:
+	ld a, (player_water_inertia_y)
+	or a
+	jr z, player_update_state_swimming_inertia_y_done
+	jp m, player_update_state_swimming_inertia_y_negative
+	ld c, a
+	ld hl, player_water_inertia_y_timer
+	ld a, (hl)
+	inc (hl)
+	cp c
+	jr c, player_update_state_swimming_inertia_y_done
+	push hl
+		call player_update_move_one_pixel_down_considering_collisions
+	pop hl
+	ld (hl), 0  ; reset timer
+	ld hl, player_water_inertia_y
+	ld a, (hl)
+	cp PLAYER_MAX_SWIMMING_INERTIA_TIME  ; max inertia slowness
+	jr z, player_update_state_swimming_clear_inertia_y
+	inc (hl)  ; make inertia slower
+	jp player_update_state_swimming_inertia_y_done
+player_update_state_swimming_clear_inertia_y:
+	ld (hl), 0
+	jp player_update_state_swimming_inertia_y_done
+player_update_state_swimming_inertia_y_negative:
+	neg
+	ld c, a
+	ld hl, player_water_inertia_y_timer
+	ld a, (hl)
+	inc (hl)
+	cp c
+	jr c, player_update_state_swimming_inertia_y_done
+	push hl
+		call player_update_move_one_pixel_up_considering_collisions
+	pop hl
+	ld (hl), 0  ; reset timer
+	ld hl, player_water_inertia_y
+	ld a, (hl)
+	cp -PLAYER_MAX_SWIMMING_INERTIA_TIME  ; max inertia slowness
+	jr z, player_update_state_swimming_clear_inertia_y
+	dec (hl)  ; make inertia slower
+player_update_state_swimming_inertia_y_done:
+
+	; check if we are exiting the water:
+	call player_in_water
+	jp nz, player_update_state_switch_to_jumping_from_swimming
+
+	ld a, (interrupt_cycle)
+	rrca
+	rrca
+	rrca
+	rrca
+	and #01
+	add a, 10
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+
+
 
 ENDIF
 
