@@ -416,6 +416,87 @@ public class PCGArea {
     }
     
     
+    public boolean mergeAreaRooms(Area a, MSXRandom r)
+    {
+        int w = a.width;
+        int h = a.height;
+        
+        // reset room IDs:
+        int newID = 1;
+        boolean processed[][] = new boolean[a.rooms.length][a.rooms[0].length];
+        for(int i = 0;i<h;i++) {
+            for(int j = 0;j<w;j++) {
+                if (a.divisionIDs[j][i] != 0) {
+                    a.rooms[j][i] = newID;
+                    newID++;
+                } else {
+                    a.rooms[j][i] = -1;
+                }
+                processed[j][i] = false;
+            }
+        }
+        for(int i = 0;i<h;i++) {
+            for(int j = 0;j<w;j++) {
+                if (a.rooms[j][i] >= 0 && !processed[j][i]) {
+                    // See if we can make a 2x2 room:
+                    if (j < w - 1 && i < h - 1 &&
+                       a.divisionIDs[j + 1][i] == a.divisionIDs[j][i] &&
+                       a.divisionIDs[j][i + 1] == a.divisionIDs[j][i] &&
+                       a.divisionIDs[j + 1][i + 1] == a.divisionIDs[j][i] &&
+                       !processed[j + 1][i] &&
+                       !processed[j][i + 1] &&
+                       !processed[j + 1][i + 1]) {
+                         a.rooms[j + 1][i] =  a.rooms[j][i];
+                         a.rooms[j][i + 1] =  a.rooms[j][i];
+                         a.rooms[j + 1][i + 1] =  a.rooms[j][i];
+                         processed[j][i] = true;
+                         processed[j + 1][i] = true;
+                         processed[j][i + 1] = true;
+                         processed[j + 1][i + 1] = true;
+                    }
+                    for(int k = 4;k>=2;k--) {
+                        // Try horizontal merge of length k + 1:
+                        if (!processed[j][i] && r.nextBoolean() && j + k - 1 < w) {
+                            boolean canMerge = true;
+                            for(int l = 1;l<k;l++) {
+                                if (a.divisionIDs[j + l][i] != a.divisionIDs[j][i] ||
+                                    processed[j + l][i]) {
+                                    canMerge = false;
+                                    break;
+                                }
+                            }
+                            if (canMerge) {
+                                for(int l = 0;l<k;l++) {    
+                                    a.rooms[j + l][i] = a.rooms[j][i];
+                                    processed[j + l][i] = true;
+                                }
+                            }
+                        }
+                        // Try vertical merge of length k + 1:
+                        if (!processed[j][i] && r.nextBoolean() && i + k - 1 < h) {
+                            boolean canMerge = true;
+                            for(int l = 1;l<k;l++) {
+                                if (a.divisionIDs[j][i + l] != a.divisionIDs[j][i] ||
+                                    processed[j][i + l]) {
+                                    canMerge = false;
+                                    break;
+                                }
+                            }
+                            if (canMerge) {
+                                for(int l = 0;l<k;l++) {    
+                                    a.rooms[j][i + l] = a.rooms[j][i];
+                                    processed[j][i + l] = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }        
+        return true;
+    }
+        
+    
     public RenderedArea generate(Area a, World w, MSXRandom r) throws Exception
     {
         int dx[] = { 1, 0,-1, 0};
@@ -426,7 +507,9 @@ public class PCGArea {
                                    PCGWorld.DIRECTION_RIGHT, PCGWorld.DIRECTION_DOWN};
         
         int p_of_path = 8;  // probability is 1 / 8
-
+        
+        if (!mergeAreaRooms(a, r)) return null;
+        
         RenderedArea ra = new RenderedArea(a, a.width * ROOM_WIDTH, a.height * ROOM_HEIGHT);
         for(int i = 0;i<a.height * ROOM_HEIGHT;i++) {
             for(int j = 0;j<a.width * ROOM_WIDTH;j++) {
@@ -509,32 +592,33 @@ public class PCGArea {
             }
         }       
         
-        // Add connection directions:
-        for(AreaConnection c:w.connections) {
-            if (c.p1.a == a) {
-                if (c.p1.direction == PCGWorld.DIRECTION_LEFT) {
-                    ra.pieceTypes[c.p1.x * ROOM_WIDTH][c.p1.y * ROOM_WIDTH + r.nextInt(ROOM_HEIGHT)] |= c.p1.direction;
-                } else if (c.p1.direction == PCGWorld.DIRECTION_UP) {
-                    ra.pieceTypes[c.p1.x * ROOM_WIDTH + r.nextInt(ROOM_WIDTH)][c.p1.y * ROOM_HEIGHT] |= c.p1.direction;
-                } else if (c.p1.direction == PCGWorld.DIRECTION_RIGHT) {
-                    ra.pieceTypes[c.p1.x * ROOM_WIDTH + ROOM_WIDTH - 1][c.p1.y * ROOM_HEIGHT + r.nextInt(ROOM_HEIGHT)] |= c.p1.direction;
-                } else if (c.p1.direction == PCGWorld.DIRECTION_DOWN) {
-                    ra.pieceTypes[c.p1.x * ROOM_WIDTH + r.nextInt(ROOM_WIDTH)][c.p1.y * ROOM_HEIGHT + ROOM_HEIGHT - 1] |= c.p1.direction;
-                }
-            }
-            if (c.p2.a == a) {
-                if (c.p2.direction == PCGWorld.DIRECTION_LEFT) {
-                    ra.pieceTypes[c.p2.x * ROOM_WIDTH][c.p2.y * ROOM_WIDTH + r.nextInt(ROOM_HEIGHT)] |= c.p2.direction;
-                } else if (c.p2.direction == PCGWorld.DIRECTION_UP) {
-                    ra.pieceTypes[c.p2.x * ROOM_WIDTH + r.nextInt(ROOM_WIDTH)][c.p2.y * ROOM_HEIGHT] |= c.p2.direction;
-                } else if (c.p2.direction == PCGWorld.DIRECTION_RIGHT) {
-                    ra.pieceTypes[c.p2.x * ROOM_WIDTH + ROOM_WIDTH - 1][c.p2.y * ROOM_HEIGHT + r.nextInt(ROOM_HEIGHT)] |= c.p2.direction;
-                } else if (c.p2.direction == PCGWorld.DIRECTION_DOWN) {
-                    ra.pieceTypes[c.p2.x * ROOM_WIDTH + r.nextInt(ROOM_WIDTH)][c.p2.y * ROOM_HEIGHT + ROOM_HEIGHT - 1] |= c.p2.direction;
-                }
-            }
-        }
+        // Add connection directions: (not needed as this is already done in the a.connectinos above)
+//        for(AreaConnection c:w.connections) {
+//            if (c.p1.a == a) {
+//                if (c.p1.direction == PCGWorld.DIRECTION_LEFT) {
+//                    ra.pieceTypes[c.p1.x * ROOM_WIDTH][c.p1.y * ROOM_WIDTH + r.nextInt(ROOM_HEIGHT)] |= c.p1.direction;
+//                } else if (c.p1.direction == PCGWorld.DIRECTION_UP) {
+//                    ra.pieceTypes[c.p1.x * ROOM_WIDTH + r.nextInt(ROOM_WIDTH)][c.p1.y * ROOM_HEIGHT] |= c.p1.direction;
+//                } else if (c.p1.direction == PCGWorld.DIRECTION_RIGHT) {
+//                    ra.pieceTypes[c.p1.x * ROOM_WIDTH + ROOM_WIDTH - 1][c.p1.y * ROOM_HEIGHT + r.nextInt(ROOM_HEIGHT)] |= c.p1.direction;
+//                } else if (c.p1.direction == PCGWorld.DIRECTION_DOWN) {
+//                    ra.pieceTypes[c.p1.x * ROOM_WIDTH + r.nextInt(ROOM_WIDTH)][c.p1.y * ROOM_HEIGHT + ROOM_HEIGHT - 1] |= c.p1.direction;
+//                }
+//            }
+//            if (c.p2.a == a) {
+//                if (c.p2.direction == PCGWorld.DIRECTION_LEFT) {
+//                    ra.pieceTypes[c.p2.x * ROOM_WIDTH][c.p2.y * ROOM_WIDTH + r.nextInt(ROOM_HEIGHT)] |= c.p2.direction;
+//                } else if (c.p2.direction == PCGWorld.DIRECTION_UP) {
+//                    ra.pieceTypes[c.p2.x * ROOM_WIDTH + r.nextInt(ROOM_WIDTH)][c.p2.y * ROOM_HEIGHT] |= c.p2.direction;
+//                } else if (c.p2.direction == PCGWorld.DIRECTION_RIGHT) {
+//                    ra.pieceTypes[c.p2.x * ROOM_WIDTH + ROOM_WIDTH - 1][c.p2.y * ROOM_HEIGHT + r.nextInt(ROOM_HEIGHT)] |= c.p2.direction;
+//                } else if (c.p2.direction == PCGWorld.DIRECTION_DOWN) {
+//                    ra.pieceTypes[c.p2.x * ROOM_WIDTH + r.nextInt(ROOM_WIDTH)][c.p2.y * ROOM_HEIGHT + ROOM_HEIGHT - 1] |= c.p2.direction;
+//                }
+//            }
+//        }
 
+        // Place tags into chunks:
         String placedTags[][] = new String[a.width * ROOM_WIDTH][a.height * ROOM_HEIGHT];
         for(int i = 0;i<a.height * ROOM_HEIGHT;i++) {
             for(int j = 0;j<a.width * ROOM_WIDTH;j++) {
@@ -788,7 +872,14 @@ public class PCGArea {
                             }
                         }
                     }
+                }
+            }
+        }
                     
+        // Choose chunks:
+        for(int i = 0;i<a.height * ROOM_HEIGHT;i++) {
+            for(int j = 0;j<a.width * ROOM_WIDTH;j++) {                
+                if (ra.pieceTypes[j][i] >= 0) {
                     List<String> necessaryObjectTypes = new ArrayList<>();
                     RoomChunk above = null;
                     String upTag = null, downTag = null;

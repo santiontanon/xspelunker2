@@ -514,6 +514,9 @@ player_update_state_crawling_continue:
 
 
 ;-----------------------------------------------
+; input:
+; - a: 0 for rope, 2 for ladder
+; - c: coordinate where the rope/ladder was found
 player_update_switch_to_rope_or_ladder_from_platform:
 	push af
 		ld a, (player_y + 1)
@@ -523,14 +526,8 @@ player_update_switch_to_rope_or_ladder_from_platform:
 player_update_switch_to_rope_or_ladder:
 	cp 2
 	jr z, player_update_switch_to_ladder
-	; a - 1: amount we need to add to the tile coordinate to find the rope
-; 	ld c, a
-; 	dec c
-; 	ld a, (player_x + 1)
-; 	add a, c
-; 	ld (player_x + 1), a
-; 	ld a, 4
-; 	ld (player_x), a
+	ld a, c
+	ld (player_x + 1), a
 	ld a, 2
 	ld (player_x), a
 	ld a, (player_state)
@@ -595,8 +592,11 @@ player_update_state_rope_switch_to_idle_pop:
 
 
 ;-----------------------------------------------
+; input:
+; - c: tile coordinate of the ladder 
 player_update_switch_to_ladder:
-; 	xor a
+	ld a, c
+	ld (player_x + 1), a
 	ld a, 6
 	ld (player_x), a  ; center the player on the ladder
 	ld a, (player_state)

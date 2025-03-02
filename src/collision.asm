@@ -184,9 +184,9 @@ player_check_collision_up_continue2:
 ; output:
 ; - z: rope
 ; - nz: no rope
-; - a: 0, if (player_x + 1) tile below is rope
-;      1, if (player_x + 1) + 1 tile below is rope
-;	   2, if (player_X + 1) tile below is a ladder && (player_X + 1) + 1 as well
+; - a: 0, if rope
+;	   2, if ladder
+; - c: tile coordinate where the rope/ladder was found
 check_player_on_rope_or_ladder:  ; this checks for y + 1
 	ld a, (player_x + 1)
 	ld c, a
@@ -201,36 +201,46 @@ check_player_on_top_of_rope_or_ladder:  ; this checks for y + 2
 	; collision with the feet-left:
 	inc b
 check_player_on_top_of_rope_continue:
+	ld a, (player_x)
+	cp 7
+	jr nz, check_player_on_top_of_rope_continue2
+	inc c
+check_player_on_top_of_rope_continue2:
 	inc b
 	push bc
 		call get_room_tile_type
 	pop bc
 	cp 5
-	jr z, check_player_on_top_of_rope_0
+	jr z, check_player_on_top_of_rope
 	cp 6
-	jr z, check_player_on_top_of_rope_0
+	jr z, check_player_on_top_of_rope
 	cp 7
 	jr z, check_player_maybe_on_top_of_ladder
 	cp 8
 	jr z, check_player_maybe_on_top_of_ladder	
-check_player_on_top_of_rope_right:
 	ret
-check_player_on_top_of_rope_0:
+check_player_on_top_of_rope:
 	xor a  ; z, a = 0
 	ret
 check_player_maybe_on_top_of_ladder:
 	inc c
-	call get_room_tile_type
+	push bc
+		call get_room_tile_type
+	pop bc
+	dec c
 	cp 7
 	jr z, check_player_on_top_of_ladder
 	cp 8
-	ret nz
+	jr nz, check_player_on_top_of_ladder_right
 check_player_on_top_of_ladder:
 	ld a, 2
 	ret
-check_player_on_rope_or_ladder_negative:
-	or 1
+check_player_on_top_of_ladder_right:
+	dec c
+	xor a  ; set z
+	ld a, 2
 	ret
+
 
 
 ;-----------------------------------------------

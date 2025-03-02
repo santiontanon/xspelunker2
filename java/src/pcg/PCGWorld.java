@@ -193,7 +193,7 @@ public class PCGWorld {
             if (!generateAreaLayouts(w)) continue;
             n_times_reached_generation_stage[0]++;
             if (!generateDivisions(w)) continue;
-            if (!generateRooms(w)) continue;
+//            if (!mergeRooms(w)) continue;
             n_times_reached_generation_stage[1]++;
             if (!generateAreaConnections(w)) continue;  // hardcoded connections
             n_times_reached_generation_stage[2]++;
@@ -1044,121 +1044,6 @@ public class PCGWorld {
         }
         
         return a;
-    }
-    
-    
-    public boolean generateRooms(World w)
-    {
-        for(Area a:w.areas) {
-            if (!generateAreaRooms(a, a.width, a.height)) return false;
-        }
-        return true;
-    }
-    
-    
-    public boolean generateAreaRooms(Area a, int w, int h)
-    {
-        // Merge rooms to make rooms larger, constrained to maintain rectangular
-        // shapes, since that's what the assembler engine can handle
-//        for(int i = 0;i<h;i++) {
-//            for(int j = 0;j<w;j++) {
-//                if (a.rooms[j][i] >= 0) {
-//                    int oldRoom = a.rooms[j][i];
-//                    
-//                    // try to merge room:
-//                    if (j > 0 && a.rooms[j - 1][i] >= 0 && a.rooms[j - 1][i] != a.rooms[j][i] && a.divisionIDs[j][i] == a.divisionIDs[j - 1][i] && r.nextDouble() < 0.25) {
-//                        a.rooms[j][i] = a.rooms[j - 1][i];
-//                        int area = getRoomArea(a, j, i);
-//                        if (area <= MAX_ROOM_AREA) continue;
-//                        a.rooms[j][i] = oldRoom;  // undo
-//                    }
-//                    if (j < w - 1 && a.rooms[j + 1][i] >= 0 && a.rooms[j + 1][i] != a.rooms[j][i] && a.divisionIDs[j][i] == a.divisionIDs[j + 1][i] && r.nextDouble() < 0.25) {
-//                        a.rooms[j][i] = a.rooms[j + 1][i];
-//                        int area = getRoomArea(a, j, i);
-//                        if (area <= MAX_ROOM_AREA) continue;
-//                        a.rooms[j][i] = oldRoom;  // undo
-//                    }
-//                    if (i > 0 && a.rooms[j][i - 1] >= 0 && a.rooms[j][i - 1] != a.rooms[j][i] && a.divisionIDs[j][i] == a.divisionIDs[j][i - 1] && r.nextDouble() < 0.25) {
-//                        a.rooms[j][i] = a.rooms[j][i - 1];
-//                        int area = getRoomArea(a, j, i);
-//                        if (area <= MAX_ROOM_AREA) continue;
-//                        a.rooms[j][i] = oldRoom;  // undo
-//                    }
-//                    if (i < h - 1 && a.rooms[j][i + 1] >= 0 && a.rooms[j][i + 1] != a.rooms[j][i] && a.divisionIDs[j][i] == a.divisionIDs[j][i + 1] && r.nextDouble() < 0.25) {
-//                        a.rooms[j][i] = a.rooms[j][i + 1];
-//                        int area = getRoomArea(a, j, i);
-//                        if (area <= MAX_ROOM_AREA) continue;
-//                        a.rooms[j][i] = oldRoom;  // undo
-//                    }
-//                }
-//            }
-//        }
-        
-        boolean processed[][] = new boolean[a.rooms.length][a.rooms[0].length];
-        for(int i = 0;i<h;i++) {
-            for(int j = 0;j<w;j++) {
-                processed[j][i] = false;
-            }
-        }
-        for(int i = 0;i<h;i++) {
-            for(int j = 0;j<w;j++) {
-                if (a.rooms[j][i] >= 0 && !processed[j][i]) {
-                    // See if we can make a 2x2 room:
-                    if (j < w - 1 && i < h - 1 &&
-                       a.divisionIDs[j + 1][i] == a.divisionIDs[j][i] &&
-                       a.divisionIDs[j][i + 1] == a.divisionIDs[j][i] &&
-                       a.divisionIDs[j + 1][i + 1] == a.divisionIDs[j][i] &&
-                       !processed[j + 1][i] &&
-                       !processed[j][i + 1] &&
-                       !processed[j + 1][i + 1]) {
-                         a.rooms[j + 1][i] =  a.rooms[j][i];
-                         a.rooms[j][i + 1] =  a.rooms[j][i];
-                         a.rooms[j + 1][i + 1] =  a.rooms[j][i];
-                         processed[j][i] = true;
-                         processed[j + 1][i] = true;
-                         processed[j][i + 1] = true;
-                         processed[j + 1][i + 1] = true;
-                    }
-                    for(int k = 4;k>=2;k--) {
-                        // Try horizontal merge of length k + 1:
-                        if (!processed[j][i] && r.nextBoolean() && j + k - 1 < w) {
-                            boolean canMerge = true;
-                            for(int l = 1;l<k;l++) {
-                                if (a.divisionIDs[j + l][i] != a.divisionIDs[j][i] ||
-                                    processed[j + l][i]) {
-                                    canMerge = false;
-                                    break;
-                                }
-                            }
-                            if (canMerge) {
-                                for(int l = 0;l<k;l++) {    
-                                    a.rooms[j + l][i] = a.rooms[j][i];
-                                    processed[j + l][i] = true;
-                                }
-                            }
-                        }
-                        // Try vertical merge of length k + 1:
-                        if (!processed[j][i] && r.nextBoolean() && i + k - 1 < h) {
-                            boolean canMerge = true;
-                            for(int l = 1;l<k;l++) {
-                                if (a.divisionIDs[j][i + l] != a.divisionIDs[j][i] ||
-                                    processed[j][i + l]) {
-                                    canMerge = false;
-                                    break;
-                                }
-                            }
-                            if (canMerge) {
-                                for(int l = 0;l<k;l++) {    
-                                    a.rooms[j][i + l] = a.rooms[j][i];
-                                    processed[j][i + l] = true;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }        
-        return true;
     }
     
     

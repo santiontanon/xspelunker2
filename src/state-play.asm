@@ -17,12 +17,22 @@ state_play:
 		ld hl, #0500
 		ld (player_y), hl
 
-		; get area data:
-		SETMEGAROMPAGE_8000 MAP_DATA_PAGE
-		ld hl, hardcoded_area_data
-		ld de, current_area__seed
-		ld bc, hardcoded_area_data_end - hardcoded_area_data
-		ldir
+		; set random seed:
+		ld hl, #aaaa
+		ld (current_world__seed), hl
+		ld hl, #aaaa
+		ld (current_world__seed + 2), hl
+
+		; generate world:
+		ld hl, pcg_generate_world
+		ld c, PCG_PAGE
+		call call_hl_in_page_c_8000
+
+		; generate world:
+		ld hl, pcg_generate_area
+		ld e, 1  ; area to generate
+		ld c, PCG_PAGE
+		call call_hl_in_page_c_8000
 
 		; call PCG to generate the current room from the current area:
 		ld e, 0
@@ -32,9 +42,9 @@ state_play:
 ; 		ld e, 28  ; room ID
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
-		out (#2c), a
+; 		out (#2c), a
 		call call_hl_in_page_c_8000
-		out (#2d), a
+; 		out (#2d), a
 
 		; get room data:
 ; 		SETMEGAROMPAGE_8000 MAP_DATA_PAGE
