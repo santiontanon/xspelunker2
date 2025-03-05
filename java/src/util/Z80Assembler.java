@@ -17,6 +17,7 @@ public class Z80Assembler {
     
     public static String toHex8bit(int value) throws Exception {
         char table[] = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
+        if (value == -1) value = 255;
         if (value > 255) throw new Exception("trying to convert value " + value + " to a 8bit Hex!");
         return "#" + table[value/16] + table[value%16];
     }

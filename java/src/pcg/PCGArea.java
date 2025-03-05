@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import util.TMXObject;
+import util.Z80Assembler;
 
 /**
  *
@@ -143,6 +144,7 @@ public class PCGArea {
             boss_chunks.put(i, new ArrayList<>());
         }
         boss_chunks.get(0x1).add(new RoomChunk("data/patterns/boss0001-1.tmx", 0x1));
+        boss_chunks.get(0x1).add(new RoomChunk("data/patterns/boss0001-2.tmx", 0x1));
         boss_chunks.get(0x2).add(new RoomChunk("data/patterns/boss0010-1.tmx", 0x2));
         boss_chunks.get(0x3).add(new RoomChunk("data/patterns/boss0011-1.tmx", 0x3));
         boss_chunks.get(0x4).add(new RoomChunk("data/patterns/boss0100-1.tmx", 0x4));
@@ -421,9 +423,11 @@ public class PCGArea {
         int w = a.width;
         int h = a.height;
         
+        r.setSeed(a.rng_seed1, a.rng_seed2);
+        
         // reset room IDs:
-        int newID = 1;
-        boolean processed[][] = new boolean[a.rooms.length][a.rooms[0].length];
+        int newID = 0;
+        boolean processed[][] = new boolean[w][h];
         for(int i = 0;i<h;i++) {
             for(int j = 0;j<w;j++) {
                 if (a.divisionIDs[j][i] != 0) {
@@ -438,54 +442,75 @@ public class PCGArea {
         for(int i = 0;i<h;i++) {
             for(int j = 0;j<w;j++) {
                 if (a.rooms[j][i] >= 0 && !processed[j][i]) {
-                    // See if we can make a 2x2 room:
-                    if (j < w - 1 && i < h - 1 &&
-                       a.divisionIDs[j + 1][i] == a.divisionIDs[j][i] &&
-                       a.divisionIDs[j][i + 1] == a.divisionIDs[j][i] &&
-                       a.divisionIDs[j + 1][i + 1] == a.divisionIDs[j][i] &&
-                       !processed[j + 1][i] &&
-                       !processed[j][i + 1] &&
-                       !processed[j + 1][i + 1]) {
-                         a.rooms[j + 1][i] =  a.rooms[j][i];
-                         a.rooms[j][i + 1] =  a.rooms[j][i];
-                         a.rooms[j + 1][i + 1] =  a.rooms[j][i];
-                         processed[j][i] = true;
-                         processed[j + 1][i] = true;
-                         processed[j][i + 1] = true;
-                         processed[j + 1][i + 1] = true;
-                    }
-                    for(int k = 4;k>=2;k--) {
-                        // Try horizontal merge of length k + 1:
-                        if (!processed[j][i] && r.nextBoolean() && j + k - 1 < w) {
-                            boolean canMerge = true;
-                            for(int l = 1;l<k;l++) {
-                                if (a.divisionIDs[j + l][i] != a.divisionIDs[j][i] ||
-                                    processed[j + l][i]) {
-                                    canMerge = false;
-                                    break;
+                    processed[j][i] = true;
+                    // Try merging to the right:
+                    if (j + 1 < w) {
+                        if (a.divisionIDs[j][i] == a.divisionIDs[j + 1][i] &&
+                            !processed[j + 1][i]) {
+                            // we can make a 2x1:
+                            a.rooms[j + 1][i] =  a.rooms[j][i];
+                            processed[j + 1][i] = true;
+                            
+                            // Try doing a 2x2 room:
+                            if (i + 1 < h) {
+                                if (a.divisionIDs[j][i] == a.divisionIDs[j][i + 1] &&
+                                    a.divisionIDs[j][i] == a.divisionIDs[j + 1][i + 1] &&
+                                    !processed[j][i + 1] &&
+                                    !processed[j + 1][i + 1]) {
+                                    // We can make a 2x2 room!
+                                    a.rooms[j][i + 1] =  a.rooms[j][i];
+                                    a.rooms[j + 1][i + 1] =  a.rooms[j][i];
+                                    processed[j][i + 1] = true;
+                                    processed[j + 1][i + 1] = true;
+                                    continue;
+                                }                                
+                            }
+                            
+                            // Try doing a 3x1 room:
+                            if (j + 2 < w) {
+                                if (a.divisionIDs[j][i] == a.divisionIDs[j + 2][i] &&
+                                    !processed[j + 2][i]) {
+                                    // we can make a 3x1:
+                                    a.rooms[j + 2][i] =  a.rooms[j][i];
+                                    processed[j + 2][i] = true;
+                                    if (j + 3 < w) {
+                                        if (a.divisionIDs[j][i] == a.divisionIDs[j + 3][i] &&
+                                            !processed[j + 3][i]) {
+                                            // we can make a 4x1:
+                                            a.rooms[j + 3][i] =  a.rooms[j][i];
+                                            processed[j + 3][i] = true;
+
+                                        }
+                                    }
                                 }
                             }
-                            if (canMerge) {
-                                for(int l = 0;l<k;l++) {    
-                                    a.rooms[j + l][i] = a.rooms[j][i];
-                                    processed[j + l][i] = true;
-                                }
-                            }
+                            continue;
                         }
-                        // Try vertical merge of length k + 1:
-                        if (!processed[j][i] && r.nextBoolean() && i + k - 1 < h) {
-                            boolean canMerge = true;
-                            for(int l = 1;l<k;l++) {
-                                if (a.divisionIDs[j][i + l] != a.divisionIDs[j][i] ||
-                                    processed[j][i + l]) {
-                                    canMerge = false;
-                                    break;
-                                }
-                            }
-                            if (canMerge) {
-                                for(int l = 0;l<k;l++) {    
-                                    a.rooms[j][i + l] = a.rooms[j][i];
-                                    processed[j][i + l] = true;
+                    }
+                    // Try to merge down:
+                    if (i + 1 < h) {
+                        if (a.divisionIDs[j][i] == a.divisionIDs[j][i + 1] &&
+                            !processed[j][i + 1]) {
+                            // we can make a 1x2:
+                            a.rooms[j][i + 1] =  a.rooms[j][i];
+                            processed[j][i + 1] = true;
+                            
+                            // Try doing a 1x3 room:
+                            if (i + 2 < h) {
+                                if (a.divisionIDs[j][i] == a.divisionIDs[j][i + 2] &&
+                                    !processed[j][i + 2]) {
+                                    // we can make a 1x3:
+                                    a.rooms[j][i + 2] =  a.rooms[j][i];
+                                    processed[j][i + 2] = true;
+                                    if (i + 3 < h) {
+                                        if (a.divisionIDs[j][i] == a.divisionIDs[j][i + 3] &&
+                                            !processed[j][i + 3]) {
+                                            // we can make a 4x1:
+                                            a.rooms[j][i + 3] =  a.rooms[j][i];
+                                            processed[j][i + 3] = true;
+
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -499,12 +524,12 @@ public class PCGArea {
     
     public RenderedArea generate(Area a, World w, MSXRandom r) throws Exception
     {
-        int dx[] = { 1, 0,-1, 0};
-        int dy[] = { 0, 1, 0,-1};
-        int direction[] = {PCGWorld.DIRECTION_RIGHT, PCGWorld.DIRECTION_DOWN,
-                           PCGWorld.DIRECTION_LEFT, PCGWorld.DIRECTION_UP};
-        int direction_inverse[] = {PCGWorld.DIRECTION_LEFT, PCGWorld.DIRECTION_UP,
-                                   PCGWorld.DIRECTION_RIGHT, PCGWorld.DIRECTION_DOWN};
+        int dx[] = {-1, 0, 1, 0};
+        int dy[] = { 0,-1, 0, 1};
+        int direction[] = {PCGWorld.DIRECTION_LEFT, PCGWorld.DIRECTION_UP,
+                           PCGWorld.DIRECTION_RIGHT, PCGWorld.DIRECTION_DOWN};
+        int direction_inverse[] = {PCGWorld.DIRECTION_RIGHT, PCGWorld.DIRECTION_DOWN,
+                                   PCGWorld.DIRECTION_LEFT, PCGWorld.DIRECTION_UP};
         
         int p_of_path = 8;  // probability is 1 / 8
         
@@ -519,34 +544,56 @@ public class PCGArea {
 
         // - Generate spanning trees for each division, so each position in a
         //   division is reachable from any other.
-        for(AreaDivision d:w.spanningTree) {
-            if (d.root.a != a) continue;
-            List<Integer> closed = new ArrayList<>();
-            List<Integer> open = new ArrayList<>();
-            open.add(d.root.x * ROOM_WIDTH + d.root.y * ROOM_HEIGHT * ra.pieceTypes.length);
-            while(!open.isEmpty()) {
-                int point = open.remove(r.nextInt(open.size()));
-                closed.add(point);
-                int x = point % ra.pieceTypes.length;
-                int y = point / ra.pieceTypes.length;
-                if (ra.pieceTypes[x][y] == -1) ra.pieceTypes[x][y] = 0;
-                for(int i = 0;i<4;i++) {
-                    int x2 = x + dx[i];
-                    int y2 = y + dy[i];
-                    if (x2 >= 0 && x2 < a.width * ROOM_WIDTH &&
-                        y2 >= 0 && y2 < a.height * ROOM_HEIGHT &&
-                        a.divisionIDs[x2/ROOM_WIDTH][y2/ROOM_HEIGHT] == d.divisionID) {
-                        int point2 = x2 + y2 * ra.pieceTypes.length;
-                        if (!open.contains(point2) && !closed.contains(point2)) {
-                            open.add(point2);
-                            if (ra.pieceTypes[x2][y2] == -1) ra.pieceTypes[x2][y2] = 0;
-                            ra.pieceTypes[x][y] |= direction[i];
-                            ra.pieceTypes[x2][y2] |= direction_inverse[i];
+//        System.out.println("seed before: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+        List<Integer> closed = new ArrayList<>();
+        for(int i = 0;i<a.height*2;i++) {
+            for(int j = 0;j<a.width*2;j++) {
+                if (a.divisionIDs[j/ROOM_WIDTH][i/ROOM_HEIGHT] != 0 &&
+                    !closed.contains(j + i * ra.pieceTypes.length)) {
+                    int divisionID = a.divisionIDs[j/ROOM_WIDTH][i/ROOM_HEIGHT];
+                    List<Integer> open = new ArrayList<>();
+                    open.add(j + i * ra.pieceTypes.length);
+//                    System.out.println("Starting to fill " +divisionID+ " at " + open.get(0) + ":");
+                    while(!open.isEmpty()) {
+//                        System.out.println(open);
+                        int idx = r.nextInt(64) % open.size();
+                        int point = open.remove(idx);
+//                        System.out.println("point: " + point + " (open: " + open.size() + ")");
+                        closed.add(point);
+                        int x = point % ra.pieceTypes.length;
+                        int y = point / ra.pieceTypes.length;
+                        if (ra.pieceTypes[x][y] == -1) ra.pieceTypes[x][y] = 0;
+                        for(int k = 0;k<4;k++) {
+                            int x2 = x + dx[k];
+                            int y2 = y + dy[k];
+                            if (x2 >= 0 && x2 < a.width * ROOM_WIDTH &&
+                                y2 >= 0 && y2 < a.height * ROOM_HEIGHT &&
+                                a.divisionIDs[x2/ROOM_WIDTH][y2/ROOM_HEIGHT] == divisionID) {
+                                int point2 = x2 + y2 * ra.pieceTypes.length;
+                                if (!open.contains(point2) && !closed.contains(point2)) {
+                                    open.add(point2);
+                                    if (ra.pieceTypes[x2][y2] == -1) ra.pieceTypes[x2][y2] = 0;
+                                    ra.pieceTypes[x][y] |= direction[k];
+                                    ra.pieceTypes[x2][y2] |= direction_inverse[k];
+                                }
+                            }
                         }
                     }
                 }
             }
         }
+                
+        // Print the spanning trees to make sure it matches the MSX side:
+//        System.out.println("pieceTypes: area " + a.ID);
+//        for(int i = 0;i<a.height*2;i++) {
+//            String line = "";
+//            for(int j = 0;j<a.width*2;j++) {
+//                line +=  Z80Assembler.toHex8bit(ra.pieceTypes[j][i]) + "\t";
+//            }
+//            System.out.println(line);
+//        }
+//        System.out.println("seed afterwards: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+        
 
         // Ensure the marked paths exist:
         for(int i = 0;i<a.height;i++) {
@@ -572,18 +619,35 @@ public class PCGArea {
             }
         }
 
+        // Print the spanning trees to make sure it matches the MSX side:
+//        System.out.println("pieceTypes: area " + a.ID + " (after connections)");
+//        for(int i = 0;i<a.height*2;i++) {
+//            String line = "";
+//            for(int j = 0;j<a.width*2;j++) {
+//                line +=  Z80Assembler.toHex8bit(ra.pieceTypes[j][i]) + "\t";
+//            }
+//            System.out.println(line);
+//        }
+//        System.out.println("seed afterwards: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+        
         // Add random paths:
-        for(int i = 1;i<a.height * ROOM_HEIGHT;i++) {
-            for(int j = 1;j<a.width * ROOM_WIDTH;j++) {
+//        System.out.println("pieceTypes: area " + a.ID + " (random)");
+//        System.out.println("seed before: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+        for(int i = 0;i<a.height * ROOM_HEIGHT;i++) {
+            for(int j = 0;j<a.width * ROOM_WIDTH;j++) {
                 if (ra.pieceTypes[j][i] >= 0) {
-                    if (a.divisionIDs[j / ROOM_WIDTH][i / ROOM_HEIGHT] == a.divisionIDs[(j - 1) / ROOM_WIDTH][i / ROOM_HEIGHT]) {
+                    if (j > 0 && 
+                        a.divisionIDs[j / ROOM_WIDTH][i / ROOM_HEIGHT] == a.divisionIDs[(j - 1) / ROOM_WIDTH][i / ROOM_HEIGHT]) {
                         if (r.nextInt(p_of_path) == 0) {
+//                            System.out.println("    horizontal at " + Z80Assembler.toHex16bit(0xc102 + j + i*a.height * ROOM_HEIGHT, true));
                             ra.pieceTypes[j][i] |= PCGWorld.DIRECTION_LEFT;
                             ra.pieceTypes[j - 1][i] |= PCGWorld.DIRECTION_RIGHT;
                         }
                     }
-                    if (a.divisionIDs[j / ROOM_WIDTH][i / ROOM_HEIGHT] == a.divisionIDs[j / ROOM_WIDTH][(i - 1) / ROOM_HEIGHT]) {
+                    if (i>0 &&
+                        a.divisionIDs[j / ROOM_WIDTH][i / ROOM_HEIGHT] == a.divisionIDs[j / ROOM_WIDTH][(i - 1) / ROOM_HEIGHT]) {
                         if (r.nextInt(p_of_path) == 0) {
+//                            System.out.println("    vertical at " + Z80Assembler.toHex16bit(0xc102 + j + i*a.height * ROOM_HEIGHT, true));
                             ra.pieceTypes[j][i] |= PCGWorld.DIRECTION_UP;
                             ra.pieceTypes[j][i - 1] |= PCGWorld.DIRECTION_DOWN;
                         }
@@ -591,32 +655,33 @@ public class PCGArea {
                 }
             }
         }       
+//        System.out.println("seed afterwards: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
         
         // Add connection directions: (not needed as this is already done in the a.connectinos above)
-//        for(AreaConnection c:w.connections) {
-//            if (c.p1.a == a) {
-//                if (c.p1.direction == PCGWorld.DIRECTION_LEFT) {
-//                    ra.pieceTypes[c.p1.x * ROOM_WIDTH][c.p1.y * ROOM_WIDTH + r.nextInt(ROOM_HEIGHT)] |= c.p1.direction;
-//                } else if (c.p1.direction == PCGWorld.DIRECTION_UP) {
-//                    ra.pieceTypes[c.p1.x * ROOM_WIDTH + r.nextInt(ROOM_WIDTH)][c.p1.y * ROOM_HEIGHT] |= c.p1.direction;
-//                } else if (c.p1.direction == PCGWorld.DIRECTION_RIGHT) {
-//                    ra.pieceTypes[c.p1.x * ROOM_WIDTH + ROOM_WIDTH - 1][c.p1.y * ROOM_HEIGHT + r.nextInt(ROOM_HEIGHT)] |= c.p1.direction;
-//                } else if (c.p1.direction == PCGWorld.DIRECTION_DOWN) {
-//                    ra.pieceTypes[c.p1.x * ROOM_WIDTH + r.nextInt(ROOM_WIDTH)][c.p1.y * ROOM_HEIGHT + ROOM_HEIGHT - 1] |= c.p1.direction;
-//                }
-//            }
-//            if (c.p2.a == a) {
-//                if (c.p2.direction == PCGWorld.DIRECTION_LEFT) {
-//                    ra.pieceTypes[c.p2.x * ROOM_WIDTH][c.p2.y * ROOM_WIDTH + r.nextInt(ROOM_HEIGHT)] |= c.p2.direction;
-//                } else if (c.p2.direction == PCGWorld.DIRECTION_UP) {
-//                    ra.pieceTypes[c.p2.x * ROOM_WIDTH + r.nextInt(ROOM_WIDTH)][c.p2.y * ROOM_HEIGHT] |= c.p2.direction;
-//                } else if (c.p2.direction == PCGWorld.DIRECTION_RIGHT) {
-//                    ra.pieceTypes[c.p2.x * ROOM_WIDTH + ROOM_WIDTH - 1][c.p2.y * ROOM_HEIGHT + r.nextInt(ROOM_HEIGHT)] |= c.p2.direction;
-//                } else if (c.p2.direction == PCGWorld.DIRECTION_DOWN) {
-//                    ra.pieceTypes[c.p2.x * ROOM_WIDTH + r.nextInt(ROOM_WIDTH)][c.p2.y * ROOM_HEIGHT + ROOM_HEIGHT - 1] |= c.p2.direction;
-//                }
-//            }
-//        }
+        for(AreaConnection c:w.connections) {
+            if (c.p1.a == a) {
+                if (c.p1.direction == PCGWorld.DIRECTION_LEFT) {
+                    ra.pieceTypes[c.p1.x * ROOM_WIDTH][c.p1.y * ROOM_WIDTH + r.nextInt(ROOM_HEIGHT)] |= c.p1.direction;
+                } else if (c.p1.direction == PCGWorld.DIRECTION_UP) {
+                    ra.pieceTypes[c.p1.x * ROOM_WIDTH + r.nextInt(ROOM_WIDTH)][c.p1.y * ROOM_HEIGHT] |= c.p1.direction;
+                } else if (c.p1.direction == PCGWorld.DIRECTION_RIGHT) {
+                    ra.pieceTypes[c.p1.x * ROOM_WIDTH + ROOM_WIDTH - 1][c.p1.y * ROOM_HEIGHT + r.nextInt(ROOM_HEIGHT)] |= c.p1.direction;
+                } else if (c.p1.direction == PCGWorld.DIRECTION_DOWN) {
+                    ra.pieceTypes[c.p1.x * ROOM_WIDTH + r.nextInt(ROOM_WIDTH)][c.p1.y * ROOM_HEIGHT + ROOM_HEIGHT - 1] |= c.p1.direction;
+                }
+            }
+            if (c.p2.a == a) {
+                if (c.p2.direction == PCGWorld.DIRECTION_LEFT) {
+                    ra.pieceTypes[c.p2.x * ROOM_WIDTH][c.p2.y * ROOM_WIDTH + r.nextInt(ROOM_HEIGHT)] |= c.p2.direction;
+                } else if (c.p2.direction == PCGWorld.DIRECTION_UP) {
+                    ra.pieceTypes[c.p2.x * ROOM_WIDTH + r.nextInt(ROOM_WIDTH)][c.p2.y * ROOM_HEIGHT] |= c.p2.direction;
+                } else if (c.p2.direction == PCGWorld.DIRECTION_RIGHT) {
+                    ra.pieceTypes[c.p2.x * ROOM_WIDTH + ROOM_WIDTH - 1][c.p2.y * ROOM_HEIGHT + r.nextInt(ROOM_HEIGHT)] |= c.p2.direction;
+                } else if (c.p2.direction == PCGWorld.DIRECTION_DOWN) {
+                    ra.pieceTypes[c.p2.x * ROOM_WIDTH + r.nextInt(ROOM_WIDTH)][c.p2.y * ROOM_HEIGHT + ROOM_HEIGHT - 1] |= c.p2.direction;
+                }
+            }
+        }
 
         // Place tags into chunks:
         String placedTags[][] = new String[a.width * ROOM_WIDTH][a.height * ROOM_HEIGHT];
@@ -862,7 +927,7 @@ public class PCGArea {
                                     if (w.lockDirections.containsKey(tagToPlace)) {
                                         System.err.println("lock direction " + tagToPlace + ": " + w.lockDirections.get(tagToPlace));
                                     }
-                                    System.err.println("Could not place tag " + tag +
+                                    System.err.println("Could not place tag " + tag + " at " + j + ", " + i + "(area " + a.ID + ") " + 
                                                        ", limitTo2ExitTypes = " + requireAtLeast2Exits +
                                                        ", connectionToClose = " + connectionToClose + 
                                                        ", placedTags[x][y] = " + placedTags[j][i] + ", " + placedTags[j+1][i] + ", " + placedTags[j][i + 1] + ", " + placedTags[j + 1][i + 1] +
@@ -1099,7 +1164,7 @@ public class PCGArea {
                         if (!choicesWithTag.isEmpty()) {
                             choices = choicesWithTag;
                         } else {
-                            System.err.println("No " +chunkPoolName+ " patterns with up/down tags: " + upTag + "/" + downTag + ", objects " + necessaryObjectTypes + ", and type: " + ra.pieceTypes[j][i] + " (at " + j + ", " + i + ", placed tags: "+placedTags[j][i]+")");
+                            System.err.println("No " +chunkPoolName+ " patterns with up/down tags: " + upTag + "/" + downTag + ", objects " + necessaryObjectTypes + ", and type: " + ra.pieceTypes[j][i] + " (at " + j + ", " + i + " area " + a.ID + ", placed tags: "+placedTags[j][i]+")");
                             return null;
                         }
                     }

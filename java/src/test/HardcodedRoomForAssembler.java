@@ -30,7 +30,7 @@ public class HardcodedRoomForAssembler {
         World w = pcg1.generate(r);
         pcg2.generate(w.areas.get(0), w, r);
         RenderedArea ra = pcg2.generate(w.areas.get(1), w, r);
-        generateAssemblerRoomData(7, ra, pcg2);  // size 1x4, many animations
+        generateAssemblerRoomData(1, ra, pcg2);  // size 1x4, many animations
     }
 
     

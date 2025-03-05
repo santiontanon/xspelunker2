@@ -78,6 +78,7 @@
   db #20, #00, #20, #c3  ; data/patterns/room1111-4.tmx
   db #20, #00, #20, #c3  ; data/patterns/room1111-5.tmx
   db #3f, #ff, #3f, #c3  ; data/patterns/boss0001-1.tmx
+  db #3f, #ff, #3f, #c3  ; data/patterns/boss0001-2.tmx
   db #3f, #ff, #21, #ff  ; data/patterns/boss0010-1.tmx
   db #3f, #ff, #21, #c3  ; data/patterns/boss0011-1.tmx
   db #3f, #81, #3f, #ff  ; data/patterns/boss0100-1.tmx

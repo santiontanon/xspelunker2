@@ -35,7 +35,7 @@ public class PCGWorld {
     public static final int DIRECTION_IN = 16;  // connection that goes through a "gate"/"door", and not the edge of a room.
 
     public int n_areas = 10;
-    public int n_divisions = 70;
+    public int n_divisions = 65;
     public int min_divisions_per_area[] = {3, 7, 7, 4, 7, 1, 7, 7, 7, 7};
     public String areaNames[] = {
         "Jungle",
@@ -66,12 +66,12 @@ public class PCGWorld {
         {8, 8},
         {8, 8},
         {9, 3},
-        {10, 8},
+        {8, 8},
         {3, 3},
         {6, 8},
         {6, 8},
-        {8, 10},
-        {10, 10},
+        {8, 8},
+        {8, 8},
     };
     public String predefinedAreaLayouts[][] = {
         null,

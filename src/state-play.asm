@@ -32,7 +32,9 @@ state_play:
 		ld hl, pcg_generate_area
 		ld e, 1  ; area to generate
 		ld c, PCG_PAGE
+		out (#2c), a
 		call call_hl_in_page_c_8000
+		out (#2d), a
 
 		; call PCG to generate the current room from the current area:
 		ld e, 0

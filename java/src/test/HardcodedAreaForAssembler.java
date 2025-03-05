@@ -17,8 +17,8 @@ import util.Z80Assembler;
  * @author santi
  */
 public class HardcodedAreaForAssembler {
-    public static final int MAX_AREA_WIDTH = 10;
-    public static final int MAX_AREA_HEIGHT = 10;
+    public static final int MAX_AREA_WIDTH = 8;
+    public static final int MAX_AREA_HEIGHT = 8;
     public static final int MAX_N_TAGS = 32;
     
     public static void main(String args[]) throws Exception
