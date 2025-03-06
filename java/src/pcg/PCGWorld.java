@@ -369,21 +369,21 @@ public class PCGWorld {
             a7p2.direction = DIRECTION_DOWN;
         }
         
-        w.connections.add(new AreaConnection(a0p1, a1p1, AreaConnection.BIDIRECTIONAL));
-        w.connections.add(new AreaConnection(a0p2, a2p1, AreaConnection.BIDIRECTIONAL));
-        w.connections.add(new AreaConnection(a1p2, new AreaPoint(w.areas.get(3), 0, 0, DIRECTION_UP), AreaConnection.BIDIRECTIONAL));
-        w.connections.add(new AreaConnection(a2p2, new AreaPoint(w.areas.get(3), 8, 0, DIRECTION_UP), AreaConnection.BIDIRECTIONAL));
-        w.connections.add(new AreaConnection(new AreaPoint(w.areas.get(3), 4, 2, DIRECTION_DOWN), a4p1, AreaConnection.BIDIRECTIONAL));
-        w.connections.add(new AreaConnection(a4p2, new AreaPoint(w.areas.get(5), 1, 0, DIRECTION_UP), AreaConnection.BIDIRECTIONAL));
-        w.connections.add(new AreaConnection(new AreaPoint(w.areas.get(5), 0, 1, DIRECTION_LEFT), a6p1, AreaConnection.BIDIRECTIONAL));
-        w.connections.add(new AreaConnection(new AreaPoint(w.areas.get(5), 2, 1, DIRECTION_RIGHT), a7p1, AreaConnection.BIDIRECTIONAL));
-        w.connections.add(new AreaConnection(new AreaPoint(w.areas.get(5), 1, 2, DIRECTION_DOWN), a8p1, AreaConnection.BIDIRECTIONAL));
-        w.connections.add(new AreaConnection(a7p3, a9p1, AreaConnection.BIDIRECTIONAL));
+        w.connections.add(new AreaConnection(a0p1, a1p1, AreaConnection.BIDIRECTIONAL, r));
+        w.connections.add(new AreaConnection(a0p2, a2p1, AreaConnection.BIDIRECTIONAL, r));
+        w.connections.add(new AreaConnection(a1p2, new AreaPoint(w.areas.get(3), 0, 0, DIRECTION_UP), AreaConnection.BIDIRECTIONAL, r));
+        w.connections.add(new AreaConnection(a2p2, new AreaPoint(w.areas.get(3), 8, 0, DIRECTION_UP), AreaConnection.BIDIRECTIONAL, r));
+        w.connections.add(new AreaConnection(new AreaPoint(w.areas.get(3), 4, 2, DIRECTION_DOWN), a4p1, AreaConnection.BIDIRECTIONAL, r));
+        w.connections.add(new AreaConnection(a4p2, new AreaPoint(w.areas.get(5), 1, 0, DIRECTION_UP), AreaConnection.BIDIRECTIONAL, r));
+        w.connections.add(new AreaConnection(new AreaPoint(w.areas.get(5), 0, 1, DIRECTION_LEFT), a6p1, AreaConnection.BIDIRECTIONAL, r));
+        w.connections.add(new AreaConnection(new AreaPoint(w.areas.get(5), 2, 1, DIRECTION_RIGHT), a7p1, AreaConnection.BIDIRECTIONAL, r));
+        w.connections.add(new AreaConnection(new AreaPoint(w.areas.get(5), 1, 2, DIRECTION_DOWN), a8p1, AreaConnection.BIDIRECTIONAL, r));
+        w.connections.add(new AreaConnection(a7p3, a9p1, AreaConnection.BIDIRECTIONAL, r));
         if (a6p2 != null) {
-            w.connections.add(new AreaConnection(a6p2, a8p2, AreaConnection.BIDIRECTIONAL));
+            w.connections.add(new AreaConnection(a6p2, a8p2, AreaConnection.BIDIRECTIONAL, r));
         }
         if (a7p2 != null) {
-            w.connections.add(new AreaConnection(a7p2, a8p2, AreaConnection.BIDIRECTIONAL));
+            w.connections.add(new AreaConnection(a7p2, a8p2, AreaConnection.BIDIRECTIONAL, r));
         }
         
         removeTag(a0p1, "connection");

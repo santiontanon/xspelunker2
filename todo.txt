@@ -1,11 +1,13 @@
 to do:
 
 ***- PCGArea:
-    ***- pcg_generate_area__additional_connections: 
-      ***- Java: generate the inter-area connections data in Java and bring it to assembler
-      ***- assembler: add them to piece_types
-      ***- verify I get the same thing I get in Java
     ***- pcg_generate_area__place_tags: assign room tags to a single chunk position, only one tag per chunk
+      ***- loop that iterates over tags
+      ***- determine tag to place or not, direction to close, requireAtLeast2Exits:
+        ***- have arrays with lists of tags of different types (those tha are "boss", those that requireAtLeast2Exits, those that are directional, and those that place themselves, the rest of tags are ignored)
+        ***- write a method that just searches if the tag is in each array
+      ***- choose one of the 4 chunks, and place the tag
+      ***- see that it matches Java
     ***- pcg_generate_area__choose_chunks: For each position in the map (chunk-level):
       ***- Determine the constraints on the chunks (pool, tags, locations it must have)
       ***- Choose a chunk
@@ -33,29 +35,31 @@ to do:
   - render them
   - make them collidable
   - make them pushable (sfx)
-  - make them not go throuh walls
+  - make them not go through walls
   - make them fall if pushed over an edge
+
+- write the whole story line of the game, so that everything makes sense. This will help me finalize what you get from bosses, what the ending screen is, the intro, etc.
+  - how about those gods that I drew? where do I use them?
 
 - Implement PCGWorld in assembler:
   - data structure
-      - global object list (4 * 64 -> 256 bytes)
-      - list of divisions: ID, parent, n_descendants, root point, tags (this is stored twice for convenience) (64 * 10 -> 640 bytes)
+      - withinChestTag: do I need this? maybe I can just remove tags that are "withinChestTag" from the tag list
+      - chestContent
+      - spanningTree: ID, parent, n_descendants, root point, tags (this is stored twice for convenience) (64 * 10 -> 640 bytes)
+      - global object list (4 * 64 -> 256 bytes) (how does this work? do I need it globally? per area? how do I mark that an item is taken or a door open, globally?)
   - implement it and generate the whole thing in assembler
   - verify it matches exactly what I get in Java
   - for some areas (pyramids, etc.) have some predefined shapes (e.g. pyramid shape), that can be chosen with some probability. And maybe also different shapes for the confluence, etc.
   - keep Java/assembler versions in sync 
 
-- write the whole story line of the game, so that everything makes sense. This will help me finalize what you get from bosses, what the ending screen is, the intro, etc.
-  - how about those gods that I drew? where do I use them?
-
 - being able to complete the game in assembler:
+  - breakable blocks:
+    - make this work with the inter-room transitions (broken wall, overwrides the collision)
   - render doors (and be blocked by them)
   - spawn and draw items in the game
   - pick up keys
     - design inventory screen, and implement the bare minimum
-  - use them in locks to open doors
-  - breakable blocks:
-    - make this work with the inter-room transitions (broken wall, overwrides the collision)
+  - use keys in locks to open doors
   - combination clues
   - interact with combination levers
   - press buttons to open doors
@@ -225,7 +229,7 @@ PCGWorld:
       - addTags: if there is a tag there that is incompatible, FAIL!
   - generate quest specs for boss4, 5
   - generateSubquests (same as before, but with different reachable/useable area)
-  - set "lockKeys" to all the used locks and keys
+  - set "lockKeys" to all the used locks and keys (not needed in assembler, only used for debugging)
 
 
 PCGArea:

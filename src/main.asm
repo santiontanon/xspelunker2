@@ -347,6 +347,7 @@ tmp__pcg_current_decompressed_chunk_bank_id: equ buffer_4096 + 4095
 
 current_world__seed: ds virtual 4
 current_world__area_data: ds virtual WORLD_AREA__SIZE * MAX_WORLD_AREAS
+current_world__interarea_connections: ds virtual MAX_INTERAREA_CONNECTIONS * INTERAREA_CONNECTION_SIZE + 1
 
 current_area__seed: ds virtual 4
 current_area__id: ds virtual 1

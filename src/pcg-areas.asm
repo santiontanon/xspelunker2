@@ -881,16 +881,80 @@ pcg_generate_area__random_connections_loop_x_skip:
 ;-----------------------------------------------
 ; Add inter-area connections:
 pcg_generate_area__inter_area_connections:
+	ld hl, current_world__interarea_connections
+	ld a, (current_area__id)
+	ld ixl, a
 
-	; ...
+pcg_generate_area__inter_area_connections_loop:
+	ld a, (hl)
+	cp #ff
+	ret z
+	ld a, (hl)  ; area 1 ID
+	cp ixl
+	jr nz, pcg_generate_area__inter_area_connections_loop_check_area2
+	push hl
+		; each connection is: id1, id2, x1, y1, direction1, x2, y2, direction2
+		; area 1:
+		inc hl
+		inc hl
+		jr pcg_generate_area__inter_area_connections_loop_check_area2_entry_point
 
-	ret
+pcg_generate_area__inter_area_connections_loop_check_area2:
+	inc hl
+	ld a, (hl)  ; area 2 ID
+	dec hl
+	cp ixl
+	jr nz, pcg_generate_area__inter_area_connections_loop_next
+	push hl
+		; each connection is: id1, id2, x1, y1, direction1, x2, y2, direction2
+		; area 2:
+		inc hl
+		inc hl
+		inc hl
+		inc hl
+		inc hl
+pcg_generate_area__inter_area_connections_loop_check_area2_entry_point:
+		; ptr: tmp_pcg_area__piece_types + x + (y * width * 2)
+		ld c, (hl)  ; x
+		inc hl
+		ld b, (hl)  ; y
+		inc hl
+		push hl
+			ld hl, 0
+			ld a, (current_area__width)
+			ld e, a
+			ld d, 0
+			; we do not need to check if 'b' is 0, since no map can have height 0!
+pcg_generate_area__inter_area_connections_loop_check_area2_ptr_loop:
+			add hl, de
+			djnz  pcg_generate_area__inter_area_connections_loop_check_area2_ptr_loop
+			add hl, hl  ; hl = (y * 2) * width
+			ld b, 0
+			add hl, bc  ; hl = x + (y * 2) * width
+			ld bc, tmp_pcg_area__piece_types
+			add hl, bc  ; hl = tmp_pcg_area__piece_types + x * 2 + (y * width * 2)
+		pop de
+		ld a, (de)  ; direction
+		or a, (hl)
+		ld (hl), a  ; add the direction to the piece type
+	pop hl
+pcg_generate_area__inter_area_connections_loop_next:
+	ld bc, 8
+	add hl, bc
+	jp pcg_generate_area__inter_area_connections_loop
 
 
 ;-----------------------------------------------
 pcg_generate_area__place_tags:
-
+	; initialize: tmp_pcg_area__placed_tags (overlap with "tmp_pcg_area__division_ids_tmp"?)
 	; ...
+
+	; iterate over tag list:
+	; - for each tag:
+	;   - determine what to do (tag to place or not, direction to close, requireAtLeast2Exits)
+	;     - I need "lockDirections" to be saved to world structure
+	;   - choose which chunk out of the 4 satisfies the constraints, and assign it
+	;   - place it in tmp_pcg_area__placed_tags
 
 	ret
 

@@ -29,19 +29,11 @@ public class HardcodedAreaForAssembler {
         PCGWorld pcg1 = new PCGWorld();
         PCGArea pcg2 = new PCGArea(true);
         
-        World w = pcg1.generate(r);
-        for(int i = 0;i<10;i++) {
-            generateAssemblerAreaData(w, i);
-        }
-        
-        
-//        pcg1.mergeAreaRooms(w.areas.get(0));
-//        pcg2.generate(w.areas.get(0), w, r);
-//        pcg1.mergeAreaRooms(w.areas.get(1));
-//        RenderedArea ra = pcg2.generate(w.areas.get(1), w, r);
-//        
-//        generateAssemblerRenderedAreaData(ra, w.areas.get(1), pcg2);
-//        GenerationTest.visualizeArea(ra, "tmp/area"+1+".png", pcg2);
+        World w = pcg1.generate(r);        
+        pcg2.generate(w.areas.get(0), w, r);
+        RenderedArea ra = pcg2.generate(w.areas.get(1), w, r);
+        generateAssemblerRenderedAreaData(ra, w.areas.get(1), pcg2);
+        GenerationTest.visualizeArea(ra, "tmp/area"+1+".png", pcg2);
     }
     
     

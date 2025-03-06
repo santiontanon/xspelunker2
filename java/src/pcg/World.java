@@ -24,10 +24,10 @@ public class World {
     public HashMap<String, Integer> lockDirections = new HashMap<>();
     public HashMap<String, String> chestContent = new HashMap<>();
     public List<String> withinChestTag = new ArrayList<>();
+    public List<AreaDivision> spanningTree;
     
     // Used for verifying if game is solveable:
     public HashMap<String, List<String>> lockKeys = new HashMap<>();  
-    public List<AreaDivision> spanningTree;
     
     // debug:
     public static int roomSizeX = 18;

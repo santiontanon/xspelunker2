@@ -5,6 +5,8 @@
 package test;
 
 import pcg.Area;
+import pcg.AreaConnection;
+import pcg.AssemblerTags;
 import pcg.MSXRandom;
 import pcg.PCGArea;
 import pcg.PCGWorld;
@@ -16,10 +18,11 @@ import util.Z80Assembler;
  *
  * @author santi
  */
-public class HardcodedRenderedAreaForAssembler {
+public class HardcodedWorldForAssembler {
     public static final int MAX_AREA_WIDTH = 8;
     public static final int MAX_AREA_HEIGHT = 8;
     public static final int MAX_N_TAGS = 32;
+    public static final int MAX_CONNECTIONS = 12;
     
     public static void main(String args[]) throws Exception
     {
@@ -27,13 +30,38 @@ public class HardcodedRenderedAreaForAssembler {
 
 
         PCGWorld pcg1 = new PCGWorld();
-        PCGArea pcg2 = new PCGArea(true);
+//        PCGArea pcg2 = new PCGArea(true);
         
-        World w = pcg1.generate(r);        
-        pcg2.generate(w.areas.get(0), w, r);
-        RenderedArea ra = pcg2.generate(w.areas.get(1), w, r);
-        generateAssemblerRenderedAreaData(ra, w.areas.get(1), pcg2);
-        GenerationTest.visualizeArea(ra, "tmp/area"+1+".png", pcg2);
+        World w = pcg1.generate(r);
+        for(int i = 0;i<10;i++) {
+            generateAssemblerAreaData(w, i);
+        }
+        generateAssemblerWorldData(w);
+        
+        
+//        pcg1.mergeAreaRooms(w.areas.get(0));
+//        pcg2.generate(w.areas.get(0), w, r);
+//        pcg1.mergeAreaRooms(w.areas.get(1));
+//        RenderedArea ra = pcg2.generate(w.areas.get(1), w, r);
+//        
+//        generateAssemblerRenderedAreaData(ra, w.areas.get(1), pcg2);
+//        GenerationTest.visualizeArea(ra, "tmp/area"+1+".png", pcg2);
+    }
+    
+    
+    public static void generateAssemblerWorldData(World w) throws Exception
+    {
+        // Connections:
+        System.out.println("hardcoded_world_data__connections:");
+        for(AreaConnection c:w.connections) {
+            System.out.println("  db " + c.p1.a.ID + ", " + c.p2.a.ID + ", " +
+                               (c.p1.x * 2 + c.p1_x_chunk_offs) + ", " + (c.p1.y * 2 + c.p1_y_chunk_offs) + ", " + c.p1.direction + ", " +
+                               (c.p2.x * 2 + c.p2_x_chunk_offs) + ", " + (c.p2.y * 2 + c.p2_y_chunk_offs) + ", " + c.p2.direction);
+        }
+        if (w.connections.size() < MAX_CONNECTIONS) {
+            System.out.println("  ds " + (MAX_CONNECTIONS - w.connections.size()) * 8 + ", #ff");
+        }
+        System.out.println("  db #ff  ; sentinel");
     }
     
     
@@ -90,7 +118,11 @@ public class HardcodedRenderedAreaForAssembler {
             for(int j = 0;j<a.width;j++) {
                 if (a.tags[j][i] != null) {
                     for(String tag:a.tags[j][i]) {
-                        System.out.println("  db " + (j+i*a.width) + ", " + tagToAssembler(tag));
+                        int lockDirection = 0;
+                        if (w.lockDirections.containsKey(tag)) {
+                            lockDirection = w.lockDirections.get(tag);
+                        }
+                        System.out.println("  db " + (j+i*a.width) + ", " + AssemblerTags.tagToAssembler(tag) + ", " + lockDirection);
                         n_tags++;
                     }
                 }
@@ -101,23 +133,8 @@ public class HardcodedRenderedAreaForAssembler {
         }
         if (n_tags < MAX_N_TAGS) {
             System.out.println("  ; filler");
-            System.out.println("  ds " + (MAX_N_TAGS - n_tags)*2 + ", #ff");            
+            System.out.println("  ds " + (MAX_N_TAGS - n_tags)*3 + ", #ff");            
         }    
-    }
-    
-    
-    public static String tagToAssembler(String tag)
-    {
-        String tag2 = "TAG_" + tag;
-        tag2 = tag2.replace("-", "_");
-        tag2 = tag2.toUpperCase();
-        if (tag2.startsWith("TAG_WALL")) {
-            tag2 = tag2.replace("TAG_WALL", "TAG_BREAKABLE_WALL");
-        }
-        if (tag2.startsWith("TAG_BLOCK") && !tag2.startsWith("TAG_BLOCK_PUZZLE")) {
-            tag2 = tag2.replace("TAG_BLOCK", "TAG_BLOCK_PUZZLE");
-        }
-        return tag2;
     }
     
     

@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import util.Pair;
 import util.TMXObject;
 import util.Z80Assembler;
 
@@ -660,29 +661,42 @@ public class PCGArea {
         // Add connection directions: (not needed as this is already done in the a.connectinos above)
         for(AreaConnection c:w.connections) {
             if (c.p1.a == a) {
-                if (c.p1.direction == PCGWorld.DIRECTION_LEFT) {
-                    ra.pieceTypes[c.p1.x * ROOM_WIDTH][c.p1.y * ROOM_WIDTH + r.nextInt(ROOM_HEIGHT)] |= c.p1.direction;
-                } else if (c.p1.direction == PCGWorld.DIRECTION_UP) {
-                    ra.pieceTypes[c.p1.x * ROOM_WIDTH + r.nextInt(ROOM_WIDTH)][c.p1.y * ROOM_HEIGHT] |= c.p1.direction;
-                } else if (c.p1.direction == PCGWorld.DIRECTION_RIGHT) {
-                    ra.pieceTypes[c.p1.x * ROOM_WIDTH + ROOM_WIDTH - 1][c.p1.y * ROOM_HEIGHT + r.nextInt(ROOM_HEIGHT)] |= c.p1.direction;
-                } else if (c.p1.direction == PCGWorld.DIRECTION_DOWN) {
-                    ra.pieceTypes[c.p1.x * ROOM_WIDTH + r.nextInt(ROOM_WIDTH)][c.p1.y * ROOM_HEIGHT + ROOM_HEIGHT - 1] |= c.p1.direction;
-                }
+                ra.pieceTypes[c.p1.x * ROOM_WIDTH + c.p1_x_chunk_offs][c.p1.y * ROOM_WIDTH +  + c.p1_y_chunk_offs] |= c.p1.direction;
+//                if (c.p1.direction == PCGWorld.DIRECTION_LEFT) {
+//                    ra.pieceTypes[c.p1.x * ROOM_WIDTH][c.p1.y * ROOM_WIDTH + r.nextInt(ROOM_HEIGHT)] |= c.p1.direction;
+//                } else if (c.p1.direction == PCGWorld.DIRECTION_UP) {
+//                    ra.pieceTypes[c.p1.x * ROOM_WIDTH + r.nextInt(ROOM_WIDTH)][c.p1.y * ROOM_HEIGHT] |= c.p1.direction;
+//                } else if (c.p1.direction == PCGWorld.DIRECTION_RIGHT) {
+//                    ra.pieceTypes[c.p1.x * ROOM_WIDTH + ROOM_WIDTH - 1][c.p1.y * ROOM_HEIGHT + r.nextInt(ROOM_HEIGHT)] |= c.p1.direction;
+//                } else if (c.p1.direction == PCGWorld.DIRECTION_DOWN) {
+//                    ra.pieceTypes[c.p1.x * ROOM_WIDTH + r.nextInt(ROOM_WIDTH)][c.p1.y * ROOM_HEIGHT + ROOM_HEIGHT - 1] |= c.p1.direction;
+//                }
             }
             if (c.p2.a == a) {
-                if (c.p2.direction == PCGWorld.DIRECTION_LEFT) {
-                    ra.pieceTypes[c.p2.x * ROOM_WIDTH][c.p2.y * ROOM_WIDTH + r.nextInt(ROOM_HEIGHT)] |= c.p2.direction;
-                } else if (c.p2.direction == PCGWorld.DIRECTION_UP) {
-                    ra.pieceTypes[c.p2.x * ROOM_WIDTH + r.nextInt(ROOM_WIDTH)][c.p2.y * ROOM_HEIGHT] |= c.p2.direction;
-                } else if (c.p2.direction == PCGWorld.DIRECTION_RIGHT) {
-                    ra.pieceTypes[c.p2.x * ROOM_WIDTH + ROOM_WIDTH - 1][c.p2.y * ROOM_HEIGHT + r.nextInt(ROOM_HEIGHT)] |= c.p2.direction;
-                } else if (c.p2.direction == PCGWorld.DIRECTION_DOWN) {
-                    ra.pieceTypes[c.p2.x * ROOM_WIDTH + r.nextInt(ROOM_WIDTH)][c.p2.y * ROOM_HEIGHT + ROOM_HEIGHT - 1] |= c.p2.direction;
-                }
+                ra.pieceTypes[c.p2.x * ROOM_WIDTH + c.p2_x_chunk_offs][c.p2.y * ROOM_WIDTH +  + c.p2_y_chunk_offs] |= c.p1.direction;
+//                if (c.p2.direction == PCGWorld.DIRECTION_LEFT) {
+//                    ra.pieceTypes[c.p2.x * ROOM_WIDTH][c.p2.y * ROOM_WIDTH + r.nextInt(ROOM_HEIGHT)] |= c.p2.direction;
+//                } else if (c.p2.direction == PCGWorld.DIRECTION_UP) {
+//                    ra.pieceTypes[c.p2.x * ROOM_WIDTH + r.nextInt(ROOM_WIDTH)][c.p2.y * ROOM_HEIGHT] |= c.p2.direction;
+//                } else if (c.p2.direction == PCGWorld.DIRECTION_RIGHT) {
+//                    ra.pieceTypes[c.p2.x * ROOM_WIDTH + ROOM_WIDTH - 1][c.p2.y * ROOM_HEIGHT + r.nextInt(ROOM_HEIGHT)] |= c.p2.direction;
+//                } else if (c.p2.direction == PCGWorld.DIRECTION_DOWN) {
+//                    ra.pieceTypes[c.p2.x * ROOM_WIDTH + r.nextInt(ROOM_WIDTH)][c.p2.y * ROOM_HEIGHT + ROOM_HEIGHT - 1] |= c.p2.direction;
+//                }
             }
         }
 
+        // Print the spanning trees to make sure it matches the MSX side:
+//        System.out.println("pieceTypes: area " + a.ID + " (after interarea connections)");
+//        for(int i = 0;i<a.height*2;i++) {
+//            String line = "";
+//            for(int j = 0;j<a.width*2;j++) {
+//                line +=  Z80Assembler.toHex8bit(ra.pieceTypes[j][i]) + "\t";
+//            }
+//            System.out.println(line);
+//        }
+//        System.out.println("seed afterwards: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+        
         // Place tags into chunks:
         String placedTags[][] = new String[a.width * ROOM_WIDTH][a.height * ROOM_HEIGHT];
         for(int i = 0;i<a.height * ROOM_HEIGHT;i++) {
@@ -690,254 +704,240 @@ public class PCGArea {
                 placedTags[j][i] = null;
             }
         }
-        for(int i = 0;i<a.height * ROOM_HEIGHT;i++) {
-            for(int j = 0;j<a.width * ROOM_WIDTH;j++) {                
-                if (ra.pieceTypes[j][i] >= 0) {
-                    
-                    if ((j % ROOM_WIDTH) == 0 && (i % ROOM_HEIGHT) == 0) {                        
-                        // handle tags:
-                        List<String> tags = a.tags[j/ROOM_WIDTH][i/ROOM_HEIGHT];                        
-                        if (tags != null) {
-                            // Make sure that block puzzles are placed first, as they
-                            // are the most constrained:
-                            Collections.sort(tags, new Comparator<String>(){
-                                @Override
-                                public int compare(String o1, String o2) {
-                                    int priority1 = 2;
-                                    int priority2 = 2;
-                                    if (o1.contains("door") ||
-                                        o1.contains("-lock") ||
-                                        o1.contains("breakable")) {
-                                        priority1 = 1;
-                                    }
-                                    if (o2.contains("door") ||
-                                        o2.contains("-lock") ||
-                                        o2.contains("breakable")) {
-                                        priority2 = 1;
-                                    }
-                                    if (o1.equals("block-puzzle1") ||
-                                        o1.equals("block-puzzle2") ||
-                                        o1.equals("block-puzzle3") ||
-                                        o1.equals("block-puzzle4")) {
-                                        priority1 = 0;
-                                    }
-                                    if (o2.equals("block-puzzle1") ||
-                                        o2.equals("block-puzzle2") ||
-                                        o2.equals("block-puzzle3") ||
-                                        o2.equals("block-puzzle4")) {
-                                        priority2 = 0;
-                                    }
-                                    return Integer.compare(priority1, priority2);
-                                }
-                            });
-                            for(String tag:tags) {
-                                if (w.withinChestTag.contains(tag)) continue;
-                                String tagToPlace = null;
-                                boolean requireAtLeast2Exits = false;
-                                int connectionToClose = 0;  // for breakable walls
-                                switch(tag) {
-                                    case "start":
-                                    case "midpoint":
-                                        // ignore
-                                        break;
 
-                                    case "boss1-chestlock":
-                                    case "boss2-chestlock":
-                                    case "boss3-chestlock":
-                                    case "boss4-chestlock":
-                                    case "boss5-chestlock":
-                                        tagToPlace = "boss";
-                                        break;
+        // Get all tags:
+        List<Pair<Integer, String>> tagList = new ArrayList<>();        
+        for(int i = 0;i<a.height;i++) {
+            for(int j = 0;j<a.width;j++) {
+                if (a.tags[j][i] != null) {
+                    for(String tag:a.tags[j][i]) {
+                        tagList.add(new Pair<>(j+i*a.width, tag));
+                    }
+                }
+            }
+        }
+        Collections.sort(tagList, new Comparator<Pair<Integer, String>>(){
+            @Override
+            public int compare(Pair<Integer, String> o1, Pair<Integer, String> o2) {
+                try {
+                    int tag1 = AssemblerTags.assemblerID(o1.right);
+                    int tag2 = AssemblerTags.assemblerID(o2.right);
+                    return Integer.compare(tag1, tag2);
+                } catch(Exception e) {
+                    e.printStackTrace();
+                    System.exit(0);
+                    return 0;
+                }
+            }
+        });
+        
+        for(Pair<Integer, String> tag_location:tagList) {
+            int j = (tag_location.left % a.width) * ROOM_WIDTH;
+            int i = (tag_location.left / a.width) * ROOM_HEIGHT;
+            String tag = tag_location.right;
 
-                                    case "wall1-key":
-                                    case "wall2-key":
-                                    case "wall3-key":
-                                    case "wall4-key":
-                                    case "block-key1":
-                                    case "block-key2":
-                                    case "block-key3":
-                                    case "block-key4":
-                                        // ignore
-                                        break;
-                                        
-                                    case "boss1-key":
-                                    case "boss2-key":
-                                    case "boss3-key":
-                                    case "boss4-key":
-                                    case "boss5-key":
-                                    case "red-key":
-                                    case "green-key":
-                                    case "blue-key":
-                                    case "yellow-key":
-                                    case "purple-key":
-                                    case "white-key":
-                                    case "red-chest":
-                                    case "green-chest":
-                                    case "blue-chest":
-                                    case "yellow-chest":
-                                    case "purple-chest":
-                                    case "white-chest":
-                                    case "gear-key":
-                                    case "ball-key":
-                                    case "idol-key":
-                                    case "astronaut-key":
-                                    case "trial1-clue":
-                                    case "trial2-clue":
-                                    case "trial3-clue":
-                                    case "trial4-clue":
-                                    case "combination1-clue":
-                                    case "combination2-clue":
-                                    case "combination3-clue":
-                                    case "combination4-clue":
-                                    case "button1":
-                                    case "button2":
-                                    case "button3":
-                                    case "button4":
-                                        tagToPlace = tag;
-                                        break;
+            if (w.withinChestTag.contains(tag)) continue;
+            String tagToPlace = null;
+            boolean requireAtLeast2Exits = false;
+            int connectionToClose = 0;  // for breakable walls
+            switch(tag) {
+                case "start":
+                case "midpoint":
+                    // ignore
+                    break;
 
-                                    case "block-puzzle1":
-                                    case "block-puzzle2":
-                                    case "block-puzzle3":
-                                    case "block-puzzle4":
-                                        requireAtLeast2Exits = true;
-                                        tagToPlace = tag;
-                                        break;
-                                                                                
-                                    case "breakable-wall1":
-                                    case "breakable-wall2":
-                                    case "breakable-wall3":
-                                    case "breakable-wall4":
-                                    case "red-lock":
-                                    case "green-lock":
-                                    case "blue-lock":
-                                    case "yellow-lock":
-                                    case "purple-lock":
-                                    case "white-lock":
-                                    case "gear-lock":
-                                    case "ball-lock":
-                                    case "idol-lock":
-                                    case "astronaut-lock":
-                                    case "button-door1":
-                                    case "button-door2":
-                                    case "button-door3":
-                                    case "button-door4":
-                                    case "trial1-lock":
-                                    case "trial2-lock":
-                                    case "trial3-lock":
-                                    case "trial4-lock":
-                                    case "combination1-lock":
-                                    case "combination2-lock":
-                                    case "combination3-lock":
-                                    case "combination4-lock":
-                                    {
-                                        if (!w.lockDirections.containsKey(tag)) {
-                                            System.err.println("lockDirections does not contain " + tag + "!!!");
-                                            return null;
-                                        }
-                                        int lockDirection = w.lockDirections.get(tag);
-                                        switch(lockDirection) {
-                                            case PCGWorld.DIRECTION_LEFT: 
-                                                connectionToClose = PCGWorld.DIRECTION_LEFT;
-                                                tagToPlace = tag;
-                                                break;
-                                            case PCGWorld.DIRECTION_UP:
-                                                connectionToClose = PCGWorld.DIRECTION_UP;
-                                                tagToPlace = tag;
-                                                break;
-                                            case PCGWorld.DIRECTION_RIGHT:
-                                                connectionToClose = PCGWorld.DIRECTION_RIGHT;
-                                                tagToPlace = tag;
-                                                break;
-                                            case PCGWorld.DIRECTION_DOWN:
-                                                connectionToClose = PCGWorld.DIRECTION_DOWN;
-                                                tagToPlace = tag;
-                                                break;
-                                        }
-                                        break;                                        
-                                    }
-                                    
-                                    default:
-                                        System.err.println("Unsupported tag: " + tag);
-                                }
+                case "boss1-chestlock":
+                case "boss2-chestlock":
+                case "boss3-chestlock":
+                case "boss4-chestlock":
+                case "boss5-chestlock":
+                    tagToPlace = "boss";
+                    break;
 
-                                if (tagToPlace != null) {
-                                    int position = r.nextInt(ROOM_WIDTH * ROOM_HEIGHT);
-                                    // Find the position with the least outgoing connections that can fit the tag:
-                                    // This is so that we favor cul-de-sacs for items.
-                                    int best_n_connections = 5;
-                                    int best_x = -1, best_y = -1;
-                                    for(int k = 0;k<ROOM_WIDTH * ROOM_HEIGHT;k++) {
-                                        position = (position + 1) % (ROOM_WIDTH * ROOM_HEIGHT);
-                                        int x = j + position%ROOM_WIDTH;
-                                        int y = i + position/ROOM_WIDTH;
-                                        if (requireAtLeast2Exits) {
-                                            if (
-                                                ra.pieceTypes[x][y] == 0x0 ||
-                                                ra.pieceTypes[x][y] == 0x1 ||
-                                                ra.pieceTypes[x][y] == 0x2 ||
-                                                ra.pieceTypes[x][y] == 0x4 ||
+                case "wall1-key":
+                case "wall2-key":
+                case "wall3-key":
+                case "wall4-key":
+                case "block-key1":
+                case "block-key2":
+                case "block-key3":
+                case "block-key4":
+                    // ignore
+                    break;
+
+                case "boss1-key":
+                case "boss2-key":
+                case "boss3-key":
+                case "boss4-key":
+                case "boss5-key":
+                case "red-key":
+                case "green-key":
+                case "blue-key":
+                case "yellow-key":
+                case "purple-key":
+                case "white-key":
+                case "red-chest":
+                case "green-chest":
+                case "blue-chest":
+                case "yellow-chest":
+                case "purple-chest":
+                case "white-chest":
+                case "gear-key":
+                case "ball-key":
+                case "idol-key":
+                case "astronaut-key":
+                case "trial1-clue":
+                case "trial2-clue":
+                case "trial3-clue":
+                case "trial4-clue":
+                case "combination1-clue":
+                case "combination2-clue":
+                case "combination3-clue":
+                case "combination4-clue":
+                case "button1":
+                case "button2":
+                case "button3":
+                case "button4":
+                    tagToPlace = tag;
+                    break;
+
+                case "block-puzzle1":
+                case "block-puzzle2":
+                case "block-puzzle3":
+                case "block-puzzle4":
+                    requireAtLeast2Exits = true;
+                    tagToPlace = tag;
+                    break;
+
+                case "breakable-wall1":
+                case "breakable-wall2":
+                case "breakable-wall3":
+                case "breakable-wall4":
+                case "red-lock":
+                case "green-lock":
+                case "blue-lock":
+                case "yellow-lock":
+                case "purple-lock":
+                case "white-lock":
+                case "gear-lock":
+                case "ball-lock":
+                case "idol-lock":
+                case "astronaut-lock":
+                case "button-door1":
+                case "button-door2":
+                case "button-door3":
+                case "button-door4":
+                case "trial1-lock":
+                case "trial2-lock":
+                case "trial3-lock":
+                case "trial4-lock":
+                case "combination1-lock":
+                case "combination2-lock":
+                case "combination3-lock":
+                case "combination4-lock":
+                {
+                    if (!w.lockDirections.containsKey(tag)) {
+                        System.err.println("lockDirections does not contain " + tag + "!!!");
+                        return null;
+                    }
+                    int lockDirection = w.lockDirections.get(tag);
+                    switch(lockDirection) {
+                        case PCGWorld.DIRECTION_LEFT: 
+                            connectionToClose = PCGWorld.DIRECTION_LEFT;
+                            tagToPlace = tag;
+                            break;
+                        case PCGWorld.DIRECTION_UP:
+                            connectionToClose = PCGWorld.DIRECTION_UP;
+                            tagToPlace = tag;
+                            break;
+                        case PCGWorld.DIRECTION_RIGHT:
+                            connectionToClose = PCGWorld.DIRECTION_RIGHT;
+                            tagToPlace = tag;
+                            break;
+                        case PCGWorld.DIRECTION_DOWN:
+                            connectionToClose = PCGWorld.DIRECTION_DOWN;
+                            tagToPlace = tag;
+                            break;
+                    }
+                    break;                                        
+                }
+
+                default:
+                    System.err.println("Unsupported tag: " + tag);
+            }
+
+            if (tagToPlace != null) {
+                int position = r.nextInt(ROOM_WIDTH * ROOM_HEIGHT);
+                // Find the position with the least outgoing connections that can fit the tag:
+                // This is so that we favor cul-de-sacs for items.
+                int best_n_connections = 5;
+                int best_x = -1, best_y = -1;
+                for(int k = 0;k<ROOM_WIDTH * ROOM_HEIGHT;k++) {
+                    position = (position + 1) % (ROOM_WIDTH * ROOM_HEIGHT);
+                    int x = j + position%ROOM_WIDTH;
+                    int y = i + position/ROOM_WIDTH;
+                    if (requireAtLeast2Exits) {
+                        if (
+                            ra.pieceTypes[x][y] == 0x0 ||
+                            ra.pieceTypes[x][y] == 0x1 ||
+                            ra.pieceTypes[x][y] == 0x2 ||
+                            ra.pieceTypes[x][y] == 0x4 ||
 //                                                ra.pieceTypes[x][y] == 0x7 ||
-                                                ra.pieceTypes[x][y] == 0x8
+                            ra.pieceTypes[x][y] == 0x8
 //                                                || ra.pieceTypes[x][y] == 0xb ||
 //                                                ra.pieceTypes[x][y] == 0xd ||
 //                                                ra.pieceTypes[x][y] == 0xe ||
 //                                                ra.pieceTypes[x][y] == 0xf
-                                                ) {
-                                                continue;
-                                            }
-                                        }
-                                        if (connectionToClose == PCGWorld.DIRECTION_LEFT) {
-                                            if ((x % ROOM_WIDTH) != 0) continue;
-                                            if ((ra.pieceTypes[x][y] & connectionToClose) == 0) continue;
-                                        }
-                                        if (connectionToClose == PCGWorld.DIRECTION_UP) {
-                                            if ((y % ROOM_HEIGHT) != 0) continue;
-                                            if ((ra.pieceTypes[x][y] & connectionToClose) == 0) continue;
-                                        }
-                                        if (connectionToClose == PCGWorld.DIRECTION_RIGHT) {
-                                            if ((x % ROOM_WIDTH) != ROOM_WIDTH - 1) continue;
-                                            if ((ra.pieceTypes[x][y] & connectionToClose) == 0) continue;
-                                        }
-                                        if (connectionToClose == PCGWorld.DIRECTION_DOWN) {
-                                            if ((y % ROOM_HEIGHT) != ROOM_HEIGHT - 1) continue;
-                                            if ((ra.pieceTypes[x][y] & connectionToClose) == 0) continue;
-                                        }
-                                        
-                                        if (placedTags[x][y] == null) {
-                                            int n_connections = n_connections_per_type[ra.pieceTypes[x][y]];
-                                            if (n_connections < best_n_connections) {
-                                                best_x = x;
-                                                best_y = y;
-                                                best_n_connections = n_connections;
-                                            }
-                                        }
-                                    }
-                                    if (best_n_connections < 5) {
-                                        placedTags[best_x][best_y] = tagToPlace;
-                                        if (connectionToClose != 0) {
-                                            // Close the connection for breakable walls:
-                                            // pieceTypes[x][y] |= connectionToClose;
-                                            ra.pieceTypes[best_x][best_y] ^= connectionToClose;
-                                        }
-                                        tagToPlace = null;
-                                    }
-                                }
-                                if (tagToPlace != null) {
-                                    if (w.lockDirections.containsKey(tagToPlace)) {
-                                        System.err.println("lock direction " + tagToPlace + ": " + w.lockDirections.get(tagToPlace));
-                                    }
-                                    System.err.println("Could not place tag " + tag + " at " + j + ", " + i + "(area " + a.ID + ") " + 
-                                                       ", limitTo2ExitTypes = " + requireAtLeast2Exits +
-                                                       ", connectionToClose = " + connectionToClose + 
-                                                       ", placedTags[x][y] = " + placedTags[j][i] + ", " + placedTags[j+1][i] + ", " + placedTags[j][i + 1] + ", " + placedTags[j + 1][i + 1] +
-                                                       ", pieceTypes[x][y] = " + ra.pieceTypes[j][i] + ", " + ra.pieceTypes[j+1][i] + ", " + ra.pieceTypes[j][i + 1] + ", " + ra.pieceTypes[j + 1][i + 1]);
-                                    return null;
-                                }
-                            }
+                            ) {
+                            continue;
+                        }
+                    }
+                    if (connectionToClose == PCGWorld.DIRECTION_LEFT) {
+                        if ((x % ROOM_WIDTH) != 0) continue;
+                        if ((ra.pieceTypes[x][y] & connectionToClose) == 0) continue;
+                    }
+                    if (connectionToClose == PCGWorld.DIRECTION_UP) {
+                        if ((y % ROOM_HEIGHT) != 0) continue;
+                        if ((ra.pieceTypes[x][y] & connectionToClose) == 0) continue;
+                    }
+                    if (connectionToClose == PCGWorld.DIRECTION_RIGHT) {
+                        if ((x % ROOM_WIDTH) != ROOM_WIDTH - 1) continue;
+                        if ((ra.pieceTypes[x][y] & connectionToClose) == 0) continue;
+                    }
+                    if (connectionToClose == PCGWorld.DIRECTION_DOWN) {
+                        if ((y % ROOM_HEIGHT) != ROOM_HEIGHT - 1) continue;
+                        if ((ra.pieceTypes[x][y] & connectionToClose) == 0) continue;
+                    }
+
+                    if (placedTags[x][y] == null) {
+                        int n_connections = n_connections_per_type[ra.pieceTypes[x][y]];
+                        if (n_connections < best_n_connections) {
+                            best_x = x;
+                            best_y = y;
+                            best_n_connections = n_connections;
                         }
                     }
                 }
+                if (best_n_connections < 5) {
+                    placedTags[best_x][best_y] = tagToPlace;
+                    if (connectionToClose != 0) {
+                        // Close the connection for breakable walls:
+                        // pieceTypes[x][y] |= connectionToClose;
+                        ra.pieceTypes[best_x][best_y] ^= connectionToClose;
+                    }
+                    tagToPlace = null;
+                }
+            }
+            if (tagToPlace != null) {
+                if (w.lockDirections.containsKey(tagToPlace)) {
+                    System.err.println("lock direction " + tagToPlace + ": " + w.lockDirections.get(tagToPlace));
+                }
+                System.err.println("Could not place tag " + tag + " at " + j + ", " + i + "(area " + a.ID + ") " + 
+                                   ", limitTo2ExitTypes = " + requireAtLeast2Exits +
+                                   ", connectionToClose = " + connectionToClose + 
+                                   ", placedTags[x][y] = " + placedTags[j][i] + ", " + placedTags[j+1][i] + ", " + placedTags[j][i + 1] + ", " + placedTags[j + 1][i + 1] +
+                                   ", pieceTypes[x][y] = " + ra.pieceTypes[j][i] + ", " + ra.pieceTypes[j+1][i] + ", " + ra.pieceTypes[j][i + 1] + ", " + ra.pieceTypes[j + 1][i + 1]);
+                return null;
             }
         }
                     
