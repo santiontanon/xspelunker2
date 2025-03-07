@@ -39,6 +39,7 @@ public class AssemblerTags {
         "TAG_COMBINATION1_LOCK",
         "TAG_COMBINATION2_LOCK",
         "TAG_COMBINATION3_LOCK",
+        "TAG_COMBINATION4_LOCK",
         "TAG_BALL_LOCK",
         "TAG_IDOL_LOCK",
         "TAG_GEAR_LOCK",
@@ -60,7 +61,6 @@ public class AssemblerTags {
         "TAG_BLOCK_PUZZLE_KEY3",
         "TAG_BLOCK_PUZZLE_KEY4",
         // Chest locks:
-        "FIRST_CHEST_LOCK_TAG",
         "TAG_RED_KEY",
         "TAG_GREEN_KEY",
         "TAG_BLUE_KEY",
@@ -81,12 +81,12 @@ public class AssemblerTags {
         "TAG_COMBINATION1_CLUE",
         "TAG_COMBINATION2_CLUE",
         "TAG_COMBINATION3_CLUE",
+        "TAG_COMBINATION4_CLUE",
         "TAG_BALL_KEY",
         "TAG_IDOL_KEY",
         "TAG_GEAR_KEY",
         "TAG_ASTRONAUT_KEY",
         // bosses
-        "FIRST_BOSS_TAG",
         "TAG_BOSS1",
         "TAG_BOSS1_KEY",
         "TAG_BOSS1_CHESTLOCK",
@@ -102,6 +102,12 @@ public class AssemblerTags {
         "TAG_BOSS5",
         "TAG_BOSS5_KEY",
         "TAG_BOSS5_CHESTLOCK",
+        "TAG_BOSS6",
+        "TAG_BOSS6_KEY",
+        "TAG_BOSS6_CHESTLOCK",
+        "TAG_BOSS7",
+        "TAG_BOSS7_KEY",
+        "TAG_BOSS7_CHESTLOCK",
     };
     
     

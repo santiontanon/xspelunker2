@@ -706,35 +706,15 @@ public class PCGArea {
         }
 
         // Get all tags:
-        List<Pair<Integer, String>> tagList = new ArrayList<>();        
-        for(int i = 0;i<a.height;i++) {
-            for(int j = 0;j<a.width;j++) {
-                if (a.tags[j][i] != null) {
-                    for(String tag:a.tags[j][i]) {
-                        tagList.add(new Pair<>(j+i*a.width, tag));
-                    }
-                }
-            }
-        }
-        Collections.sort(tagList, new Comparator<Pair<Integer, String>>(){
-            @Override
-            public int compare(Pair<Integer, String> o1, Pair<Integer, String> o2) {
-                try {
-                    int tag1 = AssemblerTags.assemblerID(o1.right);
-                    int tag2 = AssemblerTags.assemblerID(o2.right);
-                    return Integer.compare(tag1, tag2);
-                } catch(Exception e) {
-                    e.printStackTrace();
-                    System.exit(0);
-                    return 0;
-                }
-            }
-        });
-        
+        List<Pair<Integer, String>> tagList = getSortedTagList(a);
+     
+//        System.out.println("---- placing tags for area " + a.ID + " ----");
+//        System.out.println("seed before: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
         for(Pair<Integer, String> tag_location:tagList) {
             int j = (tag_location.left % a.width) * ROOM_WIDTH;
             int i = (tag_location.left / a.width) * ROOM_HEIGHT;
             String tag = tag_location.right;
+//            System.out.println("Placing tag:" + tag + ", " + j + ", " + i);
 
             if (w.withinChestTag.contains(tag)) continue;
             String tagToPlace = null;
@@ -744,14 +724,6 @@ public class PCGArea {
                 case "start":
                 case "midpoint":
                     // ignore
-                    break;
-
-                case "boss1-chestlock":
-                case "boss2-chestlock":
-                case "boss3-chestlock":
-                case "boss4-chestlock":
-                case "boss5-chestlock":
-                    tagToPlace = "boss";
                     break;
 
                 case "wall1-key":
@@ -765,11 +737,22 @@ public class PCGArea {
                     // ignore
                     break;
 
+                case "boss1-chestlock":
+                case "boss2-chestlock":
+                case "boss3-chestlock":
+                case "boss4-chestlock":
+                case "boss5-chestlock":
+                case "boss6-chestlock":
+                case "boss7-chestlock":
+//                    tagToPlace = "boss";
+//                    break;                    
                 case "boss1-key":
                 case "boss2-key":
                 case "boss3-key":
                 case "boss4-key":
                 case "boss5-key":
+                case "boss6-key":
+                case "boss7-key":
                 case "red-key":
                 case "green-key":
                 case "blue-key":
@@ -867,15 +850,19 @@ public class PCGArea {
             }
 
             if (tagToPlace != null) {
+//                System.out.println("  tag: " + tag + ", requireAtLeast2Exits: " + requireAtLeast2Exits + ", connectionToClose: " + connectionToClose);
+                
                 int position = r.nextInt(ROOM_WIDTH * ROOM_HEIGHT);
+//                System.out.println("  random start: " + position);
                 // Find the position with the least outgoing connections that can fit the tag:
                 // This is so that we favor cul-de-sacs for items.
                 int best_n_connections = 5;
                 int best_x = -1, best_y = -1;
                 for(int k = 0;k<ROOM_WIDTH * ROOM_HEIGHT;k++) {
-                    position = (position + 1) % (ROOM_WIDTH * ROOM_HEIGHT);
+//                    System.out.println("  ----");
                     int x = j + position%ROOM_WIDTH;
                     int y = i + position/ROOM_WIDTH;
+                    position = (position + 1) % (ROOM_WIDTH * ROOM_HEIGHT);
                     if (requireAtLeast2Exits) {
                         if (
                             ra.pieceTypes[x][y] == 0x0 ||
@@ -915,10 +902,12 @@ public class PCGArea {
                             best_x = x;
                             best_y = y;
                             best_n_connections = n_connections;
+//                            System.out.println("  new best: " + (x % ROOM_WIDTH) + ", " + (y % ROOM_HEIGHT));
                         }
                     }
                 }
                 if (best_n_connections < 5) {
+//                    System.out.println("  tag placed at: " + best_x + ", " + best_y);
                     placedTags[best_x][best_y] = tagToPlace;
                     if (connectionToClose != 0) {
                         // Close the connection for breakable walls:
@@ -945,15 +934,22 @@ public class PCGArea {
         for(int i = 0;i<a.height * ROOM_HEIGHT;i++) {
             for(int j = 0;j<a.width * ROOM_WIDTH;j++) {                
                 if (ra.pieceTypes[j][i] >= 0) {
-                    List<String> necessaryObjectTypes = new ArrayList<>();
                     RoomChunk above = null;
+                    List<String> necessaryObjectTypes = new ArrayList<>();
                     String upTag = null, downTag = null;
                     String chunkPoolName = "standard";
                     HashMap<Integer, List<RoomChunk>> chunkPool = fg_chunks;
 //                    boolean placeBackground = true;
                     if (placedTags[j][i] != null) {
                         switch(placedTags[j][i]) {
-                            case "boss":
+                            case "boss1-chestlock":
+                            case "boss2-chestlock":
+                            case "boss3-chestlock":
+                            case "boss4-chestlock":
+                            case "boss5-chestlock":
+                            case "boss6-chestlock":
+                            case "boss7-chestlock":
+//                            case "boss":
                                 chunkPoolName = "boss";
                                 chunkPool = boss_chunks;
 //                                placeBackground = false;
@@ -1433,6 +1429,36 @@ public class PCGArea {
         return ra;
     }
     
+
+    public List<Pair<Integer, String>> getSortedTagList(Area a)
+    {
+        List<Pair<Integer, String>> tagList = new ArrayList<>();        
+        for(int i = 0;i<a.height;i++) {
+            for(int j = 0;j<a.width;j++) {
+                if (a.tags[j][i] != null) {
+                    for(String tag:a.tags[j][i]) {
+                        tagList.add(new Pair<>(j+i*a.width, tag));
+                    }
+                }
+            }
+        }
+        Collections.sort(tagList, new Comparator<Pair<Integer, String>>(){
+            @Override
+            public int compare(Pair<Integer, String> o1, Pair<Integer, String> o2) {
+                try {
+                    int tag1 = AssemblerTags.assemblerID(o1.right);
+                    int tag2 = AssemblerTags.assemblerID(o2.right);
+                    return Integer.compare(tag1, tag2);
+                } catch(Exception e) {
+                    e.printStackTrace();
+                    System.exit(0);
+                    return 0;
+                }
+            }
+        });
+        return tagList;
+    }
+
     
     public RoomChunk[][] getBGChunksLikeInMSX(RenderedArea ra)
     {

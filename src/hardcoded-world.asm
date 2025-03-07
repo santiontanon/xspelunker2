@@ -17,11 +17,11 @@ hardcoded_area_data_0__divisionIDs:
   ; filler
   ds 48, 0
 hardcoded_area_data_0__tags:
-  db 3, TAG_START, 0
-  db 11, TAG_TRIAL1_LOCK, 1
-  db 15, TAG_TRIAL1_CLUE, 0
+  db TAG_TRIAL3_LOCK, 11, 1
+  db TAG_START, 3, 0
+  db TAG_TRIAL3_CLUE, 15, 0
   ; filler
-  ds 87, #ff
+  ds 87, 0
 hardcoded_area_data_1__seed:
   dw #6f5a, #bb1c
 hardcoded_area_data_1__id:
@@ -49,19 +49,19 @@ hardcoded_area_data_1__divisionIDs:
   db 0, 0, 0, 0, 7, 7, 7, 7
   db 0, 0, 0, 0, 7, 7, 7, 0
 hardcoded_area_data_1__tags:
-  db 16, TAG_BOSS1, 0
-  db 16, TAG_BOSS1_CHESTLOCK, 0
-  db 26, TAG_COMBINATION2_CLUE, 0
-  db 27, TAG_BREAKABLE_WALL3, 8
-  db 27, TAG_BREAKABLE_WALL3_KEY, 0
-  db 29, TAG_BREAKABLE_WALL2, 1
-  db 29, TAG_BREAKABLE_WALL2_KEY, 0
-  db 34, TAG_WHITE_KEY, 0
-  db 44, TAG_BUTTON_DOOR2, 1
-  db 44, TAG_BUTTON2, 0
-  db 62, TAG_BOSS2_KEY, 0
+  db TAG_BUTTON_DOOR2, 44, 1
+  db TAG_BREAKABLE_WALL2, 29, 1
+  db TAG_BREAKABLE_WALL3, 27, 8
+  db TAG_BUTTON2, 44, 0
+  db TAG_BREAKABLE_WALL2_KEY, 29, 0
+  db TAG_BREAKABLE_WALL3_KEY, 27, 0
+  db TAG_YELLOW_KEY, 34, 0
+  db TAG_WHITE_KEY, 26, 0
+  db TAG_BOSS1, 16, 0
+  db TAG_BOSS1_CHESTLOCK, 16, 0
+  db TAG_BOSS2_KEY, 62, 0
   ; filler
-  ds 63, #ff
+  ds 63, 0
 hardcoded_area_data_2__seed:
   dw #a194, #3c5f
 hardcoded_area_data_2__id:
@@ -89,13 +89,13 @@ hardcoded_area_data_2__divisionIDs:
   db 0, 19, 13, 13, 13, 0, 0, 0
   db 0, 0, 0, 13, 0, 0, 0, 0
 hardcoded_area_data_2__tags:
-  db 19, TAG_BOSS1_KEY, 0
-  db 21, TAG_BREAKABLE_WALL1, 8
-  db 21, TAG_BREAKABLE_WALL1_KEY, 0
-  db 51, TAG_BOSS2, 0
-  db 51, TAG_BOSS2_CHESTLOCK, 0
+  db TAG_BREAKABLE_WALL1, 21, 8
+  db TAG_BREAKABLE_WALL1_KEY, 21, 0
+  db TAG_BOSS1_KEY, 19, 0
+  db TAG_BOSS2, 51, 0
+  db TAG_BOSS2_CHESTLOCK, 51, 0
   ; filler
-  ds 81, #ff
+  ds 81, 0
 hardcoded_area_data_3__seed:
   dw #e3c4, #fb22
 hardcoded_area_data_3__id:
@@ -117,10 +117,10 @@ hardcoded_area_data_3__divisionIDs:
   ; filler
   ds 37, 0
 hardcoded_area_data_3__tags:
-  db 5, TAG_ENDING, 0
-  db 14, TAG_TRIAL3_LOCK, 4
+  db TAG_TRIAL4_LOCK, 14, 4
+  db TAG_ENDING, 5, 0
   ; filler
-  ds 90, #ff
+  ds 90, 0
 hardcoded_area_data_4__seed:
   dw #e3c4, #fb22
 hardcoded_area_data_4__id:
@@ -148,18 +148,18 @@ hardcoded_area_data_4__divisionIDs:
   db 0, 0, 28, 28, 23, 0, 64, 0
   db 0, 0, 28, 0, 0, 0, 64, 64
 hardcoded_area_data_4__tags:
-  db 25, TAG_BOSS3, 0
-  db 25, TAG_BOSS3_CHESTLOCK, 0
-  db 28, TAG_BLOCK_PUZZLE3, 1
-  db 28, TAG_BLOCK_PUZZLE_KEY3, 0
-  db 37, TAG_TRIAL3_CLUE, 0
-  db 44, TAG_COMBINATION2_LOCK, 1
-  db 52, TAG_BOSS3_KEY, 0
-  db 62, TAG_BLOCK_PUZZLE1, 1
-  db 62, TAG_BLOCK_PUZZLE_KEY1, 0
-  db 62, TAG_WHITE_CHEST, 0
+  db TAG_BLOCK_PUZZLE1, 62, 1
+  db TAG_BLOCK_PUZZLE3, 28, 1
+  db TAG_WHITE_LOCK, 44, 1
+  db TAG_BLOCK_PUZZLE_KEY1, 62, 0
+  db TAG_BLOCK_PUZZLE_KEY3, 28, 0
+  db TAG_YELLOW_CHEST, 62, 0
+  db TAG_TRIAL4_CLUE, 37, 0
+  db TAG_BOSS3, 25, 0
+  db TAG_BOSS3_KEY, 52, 0
+  db TAG_BOSS3_CHESTLOCK, 25, 0
   ; filler
-  ds 66, #ff
+  ds 66, 0
 hardcoded_area_data_5__seed:
   dw #8d9c, #ac38
 hardcoded_area_data_5__id:
@@ -181,9 +181,9 @@ hardcoded_area_data_5__divisionIDs:
   ; filler
   ds 55, 0
 hardcoded_area_data_5__tags:
-  db 1, TAG_MIDPOINT, 0
+  db TAG_MIDPOINT, 1, 0
   ; filler
-  ds 93, #ff
+  ds 93, 0
 hardcoded_area_data_6__seed:
   dw #8d9c, #ac38
 hardcoded_area_data_6__id:
@@ -215,11 +215,11 @@ hardcoded_area_data_6__divisionIDs:
   ; filler
   ds 16, 0
 hardcoded_area_data_6__tags:
-  db 2, TAG_BOSS4_KEY, 0
-  db 16, TAG_YELLOW_LOCK, 8
-  db 27, TAG_PURPLE_KEY, 0
+  db TAG_IDOL_LOCK, 16, 8
+  db TAG_BLUE_KEY, 27, 0
+  db TAG_BOSS4_KEY, 2, 0
   ; filler
-  ds 87, #ff
+  ds 87, 0
 hardcoded_area_data_7__seed:
   dw #c030, #4225
 hardcoded_area_data_7__id:
@@ -252,7 +252,7 @@ hardcoded_area_data_7__divisionIDs:
   ds 16, 0
 hardcoded_area_data_7__tags:
   ; filler
-  ds 96, #ff
+  ds 96, 0
 hardcoded_area_data_8__seed:
   dw #c7fa, #4a5e
 hardcoded_area_data_8__id:
@@ -280,11 +280,11 @@ hardcoded_area_data_8__divisionIDs:
   db 0, 50, 50, 50, 50, 0, 0, 0
   db 0, 0, 0, 0, 50, 49, 0, 0
 hardcoded_area_data_8__tags:
-  db 22, TAG_BOSS4, 0
-  db 22, TAG_BOSS4_CHESTLOCK, 0
-  db 61, TAG_COMBINATION3_CLUE, 0
+  db TAG_PURPLE_KEY, 61, 0
+  db TAG_BOSS4, 22, 0
+  db TAG_BOSS4_CHESTLOCK, 22, 0
   ; filler
-  ds 87, #ff
+  ds 87, 0
 hardcoded_area_data_9__seed:
   dw #27b8, #5013
 hardcoded_area_data_9__id:
@@ -312,16 +312,16 @@ hardcoded_area_data_9__divisionIDs:
   db 0, 65, 65, 65, 63, 56, 0, 0
   db 0, 0, 0, 63, 63, 0, 0, 0
 hardcoded_area_data_9__tags:
-  db 10, TAG_YELLOW_KEY, 0
-  db 11, TAG_COMBINATION3_LOCK, 8
-  db 13, TAG_BOSS5_KEY, 0
-  db 18, TAG_BOSS5, 0
-  db 18, TAG_BOSS5_CHESTLOCK, 0
-  db 30, TAG_BUTTON_DOOR4, 4
-  db 30, TAG_BUTTON4, 0
-  db 30, TAG_PURPLE_CHEST, 0
+  db TAG_BUTTON_DOOR4, 30, 4
+  db TAG_PURPLE_LOCK, 11, 8
+  db TAG_BUTTON4, 30, 0
+  db TAG_BLUE_CHEST, 30, 0
+  db TAG_IDOL_KEY, 10, 0
+  db TAG_BOSS5, 18, 0
+  db TAG_BOSS5_KEY, 13, 0
+  db TAG_BOSS5_CHESTLOCK, 18, 0
   ; filler
-  ds 72, #ff
+  ds 72, 0
 hardcoded_world_data__connections:
   db 0, 1, 5, 3, 1, 11, 6, 4
   db 0, 2, 7, 3, 1, 12, 4, 4

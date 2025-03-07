@@ -947,15 +947,383 @@ pcg_generate_area__inter_area_connections_loop_next:
 ;-----------------------------------------------
 pcg_generate_area__place_tags:
 	; initialize: tmp_pcg_area__placed_tags (overlap with "tmp_pcg_area__division_ids_tmp"?)
-	; ...
+	ld hl, tmp_pcg_area__placed_tags
+	ld bc, MAX_AREA_SIZE * 2 * 2 - 1
+	call clear_memory
 
-	; iterate over tag list:
-	; - for each tag:
-	;   - determine what to do (tag to place or not, direction to close, requireAtLeast2Exits)
-	;     - I need "lockDirections" to be saved to world structure
-	;   - choose which chunk out of the 4 satisfies the constraints, and assign it
-	;   - place it in tmp_pcg_area__placed_tags
+	ld hl, (tmp_pcg_area__ptr_to_world_area)
+	ld bc, WORLD_AREA__TAGS_OFFSET
+	add hl, bc  ; hl = tags ptr
 
+pcg_generate_area__place_tags_loop:
+	ld a, (hl)
+	or a
+	ret z
+	ld ixl, a  ; tag we are placing
+
+	; set:
+	; - tag to place: ixl
+	; - connectionToClose: ixh
+	; - requireAtLeast2Exits: iyl
+	ld ixh, 0
+	ld iyl, 0
+
+	call pcg_generate_area__place_tags_is_block_puzzle_p
+	jp z, pcg_generate_area__place_tags_loop_block_puzzle
+	call pcg_generate_area__place_tags_is_directional_p
+	jp z, pcg_generate_area__place_tags_loop_directional
+	call pcg_generate_area__place_tags_is_normal_tag_p
+	jp z, pcg_generate_area__place_tags_loop_normal
+	jp pcg_generate_area__place_tags_loop_next  ; ignore this tag
+
+pcg_generate_area__place_tags_loop_block_puzzle:
+	ld iyl, 1  ; requireAtLeast2Exits
+	jp pcg_generate_area__place_tags_loop_continue
+
+pcg_generate_area__place_tags_loop_directional:
+	inc hl
+	inc hl
+	ld a, (hl)  ; lock direction
+	ld ixh, a  ; connectionToClose
+	dec hl
+	dec hl
+; 	jp pcg_generate_area__place_tags_loop_continue
+
+pcg_generate_area__place_tags_loop_normal:
+	; nothing to do here
+
+pcg_generate_area__place_tags_loop_continue:
+	; piece_types ptr: tmp_pcg_area__piece_types + x*2 + y*2*width
+	push hl
+		inc hl
+		ld a, (hl)  ; a = x+y*width
+		call pcg_generate_area__room_offset_to_x_y  ; c = x, b = y
+
+		ld hl, 0
+		ld a, (current_area__width)
+		add a, a
+		ld e, a
+		ld d, 0
+		; we do not need to check if 'b' is 0, since no map can have height 0!
+pcg_generate_area__place_tags_loop_ptr_loop:
+		add hl, de
+		djnz  pcg_generate_area__place_tags_loop_ptr_loop
+		add hl, hl  ; hl = (y * 2) * width * 2
+		ld b, 0
+		add hl, bc  ; hl = x + (y * 2) * width * 2
+		add hl, bc  ; hl = x * 2 + (y * 2) * width * 2
+		ld bc, tmp_pcg_area__piece_types
+		add hl, bc  ; hl = tmp_pcg_area__piece_types + x * 2 + (y * 2) * width * 2
+
+		ld iyh, 5
+		ld d, h
+		ld e, l
+		; here:
+		; - hl: ptr to tmp_pcg_area__piece_types
+		; - ixl: tag to place
+		; - ixh: connectionToClose
+		; - iyl: requireAtLeast2Exits
+		; - iyh: best_n_connections
+		; - de: ptr to the best chunk so far
+		call random_a
+		and #03
+		ld c, a
+		ld b, 4
+pcg_generate_area__place_tags_loop_best_chunk_loop:
+		ld a, c
+		push bc
+			or a
+			jp z, pcg_generate_area__place_tags_loop_best_chunk_loop_top_left
+			dec a
+			jp z, pcg_generate_area__place_tags_loop_best_chunk_loop_top_right
+			dec a
+			jp z, pcg_generate_area__place_tags_loop_best_chunk_loop_bottom_left
+			jp pcg_generate_area__place_tags_loop_best_chunk_loop_bottom_right
+pcg_generate_area__place_tags_loop_best_chunk_loop_continue:
+		pop bc
+		ld a, c
+		inc a
+		and #03
+		ld c, a
+		djnz pcg_generate_area__place_tags_loop_best_chunk_loop
+
+		ex de, hl
+		; place tag:
+		; - hl: ptr to the best chunk
+		ld a, ixh  ; connection to close:
+		cpl 
+		and (hl)
+		ld (hl), a  ; close the connection on that piece type
+		ld bc, tmp_pcg_area__placed_tags - tmp_pcg_area__piece_types
+		add hl, bc
+		ld a, ixl
+		ld (hl), a  ; place tag
+pcg_generate_area__place_tags_loop_next_pop:
+	pop hl
+pcg_generate_area__place_tags_loop_next:
+	inc hl
+	inc hl
+	inc hl
+	jp pcg_generate_area__place_tags_loop
+
+
+pcg_generate_area__place_tags_loop_best_chunk_loop_top_left:
+	push hl
+		ld c, 0  ; indicates we are trying top-left
+pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_entry_point
+		; check if there is a tag already placed here:
+		push bc
+			ld bc, tmp_pcg_area__placed_tags - tmp_pcg_area__piece_types
+			add hl, bc
+			ld a, (hl)
+			or a
+			sbc hl, bc  ; recover the ptr to tmp_pcg_area__piece_types
+		pop bc
+		or a
+		jp nz, pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_entry_point_done
+
+		; requireAtLeast2Exits check:
+		ld a, iyl  ; requireAtLeast2Exits
+		or a
+		jr z, pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_continue
+		ld a, (hl)  ; hl: ptr to tmp_pcg_area__piece_types for the chunk we are considering 
+		or a
+		jp z, pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_entry_point_done
+		cp 1
+		jp z, pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_entry_point_done
+		cp 2
+		jp z, pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_entry_point_done
+		cp 4
+		jp z, pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_entry_point_done
+		cp 8
+		jp z, pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_entry_point_done
+pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_continue:
+
+		; connectionToClose check:
+		ld a, ixh  ; connectionToClose
+		cp PCG_DIRECTION_LEFT
+		jr nz, pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_dont_close_left
+		bit 0, c  ; if we are not on the left-edge of a room, this is not the correct chunk
+		jr nz, pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_entry_point_done
+		and (hl)  ; connectionToClose & piece type
+		jp z, pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_entry_point_done
+		jp pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_connection_to_close_ok
+pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_dont_close_left:
+		cp PCG_DIRECTION_UP
+		jr nz, pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_dont_close_up
+		bit 1, c  ; if we are not on the top-edge of a room, this is not the correct chunk
+		jr nz, pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_entry_point_done
+		and (hl)  ; connectionToClose & piece type
+		jp z, pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_entry_point_done
+		jp pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_connection_to_close_ok
+pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_dont_close_up:
+		cp PCG_DIRECTION_RIGHT
+		jr nz, pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_dont_close_right
+		bit 0, c  ; if we are not on the right-edge of a room, this is not the correct chunk
+		jr z, pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_entry_point_done
+		and (hl)  ; connectionToClose & piece type
+		jp z, pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_entry_point_done
+		jp pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_connection_to_close_ok
+pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_dont_close_right:
+		cp PCG_DIRECTION_DOWN
+		jr nz, pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_dont_close_down
+		bit 1, c  ; if we are not on the bottom-edge of a room, this is not the correct chunk
+		jr z, pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_entry_point_done
+		and (hl)  ; connectionToClose & piece type
+		jp z, pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_entry_point_done
+pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_dont_close_down:
+pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_connection_to_close_ok:
+
+		ld c, (hl)  ; get piece type again
+		xor a  ; number of connections in this piece type
+		; count the number of bits set to 1:
+		rr c
+		jr nc, pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_first0
+		inc a
+pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_first0:
+		rr c
+		jr nc, pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_second0
+		inc a
+pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_second0:
+		rr c
+		jr nc, pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_third0
+		inc a
+pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_third0:
+		rr c
+		jr nc, pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_fourth0
+		inc a
+pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_fourth0:
+		cp iyh  ; best_n_connections
+		jr nc, pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_entry_point_done
+		; we found a better chunk! save it in "de"
+		ex de, hl  ; new best
+		ld iyh, a  ; bew best_n_connections
+pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_entry_point_done:
+	pop hl
+	jp pcg_generate_area__place_tags_loop_best_chunk_loop_continue
+
+pcg_generate_area__place_tags_loop_best_chunk_loop_top_right:
+	push hl
+		ld c, 1  ; indicates we are trying top-right
+		inc hl  ; chunk to the right
+		jp pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_entry_point
+
+pcg_generate_area__place_tags_loop_best_chunk_loop_bottom_left:
+	push hl
+		ld a, (current_area__width)
+		add a, a
+		ld b, 0
+		ld c, a
+		add hl, bc  ; chunk below
+		ld c, 2  ; indicates we are trying bottom-left
+		jp pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_entry_point
+
+pcg_generate_area__place_tags_loop_best_chunk_loop_bottom_right:
+	push hl
+		ld a, (current_area__width)
+		add a, a
+		ld b, 0
+		ld c, a
+		add hl, bc
+		inc hl  ; chunk below-to-the-right
+		ld c, 3  ; indicates we are trying bottom-right
+		jp pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_entry_point
+
+pcg_generate_area__place_tags_is_block_puzzle_p:
+	push hl
+		ld hl, pcg_generate_area__block_puzzle_tags
+		call pcg_generate_area__place_tags_tag_in_list
+	pop hl
+	ret
+
+pcg_generate_area__place_tags_is_directional_p:
+	push hl
+		ld hl, pcg_generate_area__directional_tags
+		call pcg_generate_area__place_tags_tag_in_list
+	pop hl
+	ret
+
+pcg_generate_area__place_tags_is_normal_tag_p:
+	push hl
+		ld hl, pcg_generate_area__normal_tags
+		call pcg_generate_area__place_tags_tag_in_list
+	pop hl
+	ret
+
+pcg_generate_area__place_tags_tag_in_list:
+	ld a, (hl)
+	or a
+	jr z, pcg_generate_area__place_tags_tag_in_list_negative
+	cp ixl
+	ret z
+	inc hl
+	jp pcg_generate_area__place_tags_tag_in_list
+pcg_generate_area__place_tags_tag_in_list_negative:
+	or 1
+	ret
+
+pcg_generate_area__block_puzzle_tags:
+    db TAG_BLOCK_PUZZLE1
+    db TAG_BLOCK_PUZZLE2
+    db TAG_BLOCK_PUZZLE3
+    db TAG_BLOCK_PUZZLE4
+	db 0
+
+pcg_generate_area__directional_tags:
+    db TAG_BREAKABLE_WALL1
+    db TAG_BREAKABLE_WALL2
+    db TAG_BREAKABLE_WALL3
+    db TAG_BREAKABLE_WALL4
+    db TAG_RED_LOCK
+    db TAG_GREEN_LOCK
+    db TAG_BLUE_LOCK
+    db TAG_YELLOW_LOCK
+    db TAG_WHITE_LOCK 
+    db TAG_PURPLE_LOCK
+    db TAG_BALL_LOCK
+    db TAG_IDOL_LOCK
+    db TAG_GEAR_LOCK
+    db TAG_ASTRONAUT_LOCK
+    db TAG_BUTTON_DOOR1
+    db TAG_BUTTON_DOOR2
+    db TAG_BUTTON_DOOR3
+    db TAG_BUTTON_DOOR4
+    db TAG_TRIAL1_LOCK 
+    db TAG_TRIAL2_LOCK 
+    db TAG_TRIAL3_LOCK 
+    db TAG_TRIAL4_LOCK 
+    db TAG_COMBINATION1_LOCK
+    db TAG_COMBINATION2_LOCK
+    db TAG_COMBINATION3_LOCK
+    db TAG_COMBINATION4_LOCK
+    db 0
+
+pcg_generate_area__normal_tags:
+	db TAG_BOSS1_CHESTLOCK
+	db TAG_BOSS2_CHESTLOCK
+	db TAG_BOSS3_CHESTLOCK
+	db TAG_BOSS4_CHESTLOCK
+	db TAG_BOSS5_CHESTLOCK
+	db TAG_BOSS6_CHESTLOCK
+	db TAG_BOSS7_CHESTLOCK
+    db TAG_BOSS1_KEY
+    db TAG_BOSS2_KEY
+    db TAG_BOSS3_KEY
+    db TAG_BOSS4_KEY
+    db TAG_BOSS5_KEY
+    db TAG_BOSS6_KEY
+    db TAG_BOSS7_KEY
+    db TAG_RED_KEY
+    db TAG_GREEN_KEY
+    db TAG_BLUE_KEY
+    db TAG_YELLOW_KEY
+    db TAG_WHITE_KEY
+    db TAG_PURPLE_KEY
+    db TAG_RED_CHEST
+    db TAG_GREEN_CHEST
+    db TAG_BLUE_CHEST
+    db TAG_YELLOW_CHEST
+    db TAG_WHITE_CHEST
+    db TAG_PURPLE_CHEST
+    db TAG_BALL_KEY
+    db TAG_IDOL_KEY
+    db TAG_GEAR_KEY
+    db TAG_ASTRONAUT_KEY
+    db TAG_TRIAL1_CLUE
+    db TAG_TRIAL2_CLUE
+    db TAG_TRIAL3_CLUE
+    db TAG_TRIAL4_CLUE
+    db TAG_COMBINATION1_CLUE
+    db TAG_COMBINATION2_CLUE
+    db TAG_COMBINATION3_CLUE
+    db TAG_COMBINATION4_CLUE
+    db TAG_BUTTON1
+    db TAG_BUTTON2
+    db TAG_BUTTON3
+    db TAG_BUTTON4
+    db 0
+
+
+;-----------------------------------------------
+; input:
+; - a: room offset (x + y*width)
+; output:
+; - c: x
+; - b: y
+pcg_generate_area__room_offset_to_x_y:
+	ld c, a
+	ld b, 0
+	ld a, (current_area__width)
+	ld e, a
+	ld a, c
+pcg_generate_area__room_offset_to_x_y_loop:
+	cp e
+	jr c, pcg_generate_area__room_offset_to_x_y_loop_done
+	inc b
+	sub e
+	jp pcg_generate_area__room_offset_to_x_y_loop
+pcg_generate_area__room_offset_to_x_y_loop_done:
+	ld c, a
 	ret
 
 

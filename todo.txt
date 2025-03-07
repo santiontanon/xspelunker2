@@ -1,19 +1,26 @@
 to do:
 
-***- PCGArea:
-    ***- pcg_generate_area__place_tags: assign room tags to a single chunk position, only one tag per chunk
-      ***- loop that iterates over tags
-      ***- determine tag to place or not, direction to close, requireAtLeast2Exits:
-        ***- have arrays with lists of tags of different types (those tha are "boss", those that requireAtLeast2Exits, those that are directional, and those that place themselves, the rest of tags are ignored)
-        ***- write a method that just searches if the tag is in each array
-      ***- choose one of the 4 chunks, and place the tag
-      ***- see that it matches Java
-    ***- pcg_generate_area__choose_chunks: For each position in the map (chunk-level):
-      ***- Determine the constraints on the chunks (pool, tags, locations it must have)
-      ***- Choose a chunk
-      ***- Add necessary objects according to the tag (if any)
-    ***- Assembler/Java: it has to exactly match what is generated in Java (adjust whichever of the two is easier)
-    ***- Java: make the room generation tile randomization in Java match the MSX version too
+***- pcg_generate_area__choose_chunks: For each position in the map (chunk-level):
+  ***- loop that iterates over every position
+    ***- initialize "necessaryObjectTypes" to 0 (this is a bitmask): come up with list of object types
+    ***- chunkPool to "standard" (create the concept of a chunkpool that has a chunk #, and list of chunks with ID, tags, and objectTypes they have as a bitmask)
+    ***- upTag/downTag to 0 (there are only 4 possible tags, as this will be a 2 bit thing)
+    ***- chunk above (only to get the "downTag", so, maybe we can just save down/right tags in a separate array while generating)
+    ***- see if there is a tag in this position, and update:
+      ***- necessaryObjectTypes
+      ***- upTag
+      ***- downTag
+      ***- chunkPool
+  ***- Choose a chunk
+  ***- Add necessary objects according to the tag (if any):
+    ***- For this, I need to change chunk structure. I will have to remove object lists from chunk data, and store that separately. Possibilities (leaning towards (2)):
+      (1) remove objects from chunks (update pcg-rooms.asm code), and have it as a parallel set of compressed banks
+      (2) Do not select objects here, but just create a list with object IDs, chunk where they are, and the objectType to use for spawning it (so, they'll be spawned during room PCG)
+  ***- comment out "hardcoded-room.asm"
+  ***- Assembler/Java: it has to exactly match what is generated in Java (adjust whichever of the two is easier)
+***- Java: make the room generation tile randomization in Java match the MSX version too
+
+- when jumping from a rope/ladder have a few frames (4? 8?) where you cannot grab to another ladder/rope again (to prevent the awkward thing of pressing jump while pressing up on ladders/ropes)
 
 - inter-area transitions:
   - detect area transitions
@@ -50,7 +57,7 @@ to do:
   - implement it and generate the whole thing in assembler
   - verify it matches exactly what I get in Java
   - for some areas (pyramids, etc.) have some predefined shapes (e.g. pyramid shape), that can be chosen with some probability. And maybe also different shapes for the confluence, etc.
-  - keep Java/assembler versions in sync 
+  - keep Java/assembler versions in sync (try different random seeds)
 
 - being able to complete the game in assembler:
   - breakable blocks:
@@ -143,7 +150,8 @@ to do:
     - once solved, the same ending room can be used to reach the true ending
 
 - mars biome
-- moon biome
+  - can you jump higher in the moon/mars? fall slower?
+- moon biome (similar to mars, but different color scheme, it could even be the same with palette changed)
 - 6th boss
 - 7th boss
 

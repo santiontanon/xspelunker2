@@ -165,6 +165,7 @@ public class PCGWorld {
         availableLockKeys.put("combination1-lock", new String[]{"combination1-clue"});
         availableLockKeys.put("combination2-lock", new String[]{"combination2-clue"});
         availableLockKeys.put("combination3-lock", new String[]{"combination3-clue"});
+        availableLockKeys.put("combination4-lock", new String[]{"combination4-clue"});
 
         availableLockKeys.put("ball-lock", new String[]{"ball-key"});
         availableLockKeys.put("idol-lock", new String[]{"idol-key"});

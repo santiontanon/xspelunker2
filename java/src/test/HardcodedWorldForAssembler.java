@@ -4,6 +4,7 @@
  */
 package test;
 
+import java.util.List;
 import pcg.Area;
 import pcg.AreaConnection;
 import pcg.AssemblerTags;
@@ -12,6 +13,7 @@ import pcg.PCGArea;
 import pcg.PCGWorld;
 import pcg.RenderedArea;
 import pcg.World;
+import util.Pair;
 import util.Z80Assembler;
 
 /**
@@ -30,11 +32,11 @@ public class HardcodedWorldForAssembler {
 
 
         PCGWorld pcg1 = new PCGWorld();
-//        PCGArea pcg2 = new PCGArea(true);
+        PCGArea pcg2 = new PCGArea(true);
         
         World w = pcg1.generate(r);
         for(int i = 0;i<10;i++) {
-            generateAssemblerAreaData(w, i);
+            generateAssemblerAreaData(w, i, pcg2);
         }
         generateAssemblerWorldData(w);
         
@@ -65,7 +67,7 @@ public class HardcodedWorldForAssembler {
     }
     
     
-    public static void generateAssemblerAreaData(World w, int areaIndex) throws Exception
+    public static void generateAssemblerAreaData(World w, int areaIndex, PCGArea pcg2) throws Exception
     {
         Area a = w.areas.get(areaIndex);
             
@@ -113,27 +115,22 @@ public class HardcodedWorldForAssembler {
         }
         
         System.out.println("hardcoded_area_data_"+areaIndex+"__tags:");
-        int n_tags = 0;
-        for(int i = 0;i<a.height;i++) {
-            for(int j = 0;j<a.width;j++) {
-                if (a.tags[j][i] != null) {
-                    for(String tag:a.tags[j][i]) {
-                        int lockDirection = 0;
-                        if (w.lockDirections.containsKey(tag)) {
-                            lockDirection = w.lockDirections.get(tag);
-                        }
-                        System.out.println("  db " + (j+i*a.width) + ", " + AssemblerTags.tagToAssembler(tag) + ", " + lockDirection);
-                        n_tags++;
-                    }
-                }
+        List<Pair<Integer, String>> tagList = pcg2.getSortedTagList(a);
+        for(Pair<Integer, String> tag_position:tagList) {
+            int offset = tag_position.left;
+            String tag = tag_position.right;
+            int lockDirection = 0;
+            if (w.lockDirections.containsKey(tag)) {
+                lockDirection = w.lockDirections.get(tag);
             }
+            System.out.println("  db " + AssemblerTags.tagToAssembler(tag) + ", " + offset + ", " + lockDirection);
         }
-        if (n_tags > MAX_N_TAGS) {
+        if (tagList.size() > MAX_N_TAGS) {
             throw new Exception("Too many tags!");
         }
-        if (n_tags < MAX_N_TAGS) {
+        if (tagList.size() < MAX_N_TAGS) {
             System.out.println("  ; filler");
-            System.out.println("  ds " + (MAX_N_TAGS - n_tags)*3 + ", #ff");            
+            System.out.println("  ds " + (MAX_N_TAGS - tagList.size())*3 + ", 0");            
         }    
     }
     
