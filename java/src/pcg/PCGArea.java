@@ -29,6 +29,10 @@ public class PCGArea {
     
     public List<RoomChunk> bg_chunks = new ArrayList<>();
     public List<RoomChunk> all_fg_chunks = new ArrayList<>();
+    public int first_boss_chunk = 0;
+    public int first_block_chunk = 0;
+    public int first_combination_chunk = 0;
+    
     public HashMap<Integer, List<RoomChunk>> fg_chunks = new LinkedHashMap<>();
     public HashMap<Integer, List<RoomChunk>> boss_chunks = new LinkedHashMap<>();
     public HashMap<Integer, List<RoomChunk>> block_chunks = new LinkedHashMap<>();
@@ -373,6 +377,7 @@ public class PCGArea {
                 }
             }
         }
+        first_boss_chunk = all_fg_chunks.size();
         for(int i = 0;i<16;i++) {
             if (boss_chunks.containsKey(i)) {
                 if (simplifyChunks) {
@@ -388,6 +393,7 @@ public class PCGArea {
                 }
             }
         }
+        first_block_chunk = all_fg_chunks.size();
         for(int i = 0;i<16;i++) {
             if (block_chunks.containsKey(i)) {
                 if (simplifyChunks) {
@@ -402,6 +408,7 @@ public class PCGArea {
                 }
             }
         }
+        first_combination_chunk = all_fg_chunks.size();
         for(int i = 0;i<16;i++) {
             if (combination_chunks.containsKey(i)) {
                 if (simplifyChunks) {
@@ -545,6 +552,7 @@ public class PCGArea {
 
         // - Generate spanning trees for each division, so each position in a
         //   division is reachable from any other.
+        System.out.println("PCGArea.generate -----------------------------------");
 //        System.out.println("seed before: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
         List<Integer> closed = new ArrayList<>();
         for(int i = 0;i<a.height*2;i++) {
@@ -585,15 +593,15 @@ public class PCGArea {
         }
                 
         // Print the spanning trees to make sure it matches the MSX side:
-//        System.out.println("pieceTypes: area " + a.ID);
-//        for(int i = 0;i<a.height*2;i++) {
-//            String line = "";
-//            for(int j = 0;j<a.width*2;j++) {
-//                line +=  Z80Assembler.toHex8bit(ra.pieceTypes[j][i]) + "\t";
-//            }
-//            System.out.println(line);
-//        }
-//        System.out.println("seed afterwards: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+        System.out.println("pieceTypes: area " + a.ID);
+        for(int i = 0;i<a.height*2;i++) {
+            String line = "";
+            for(int j = 0;j<a.width*2;j++) {
+                line +=  Z80Assembler.toHex8bit(ra.pieceTypes[j][i]) + "\t";
+            }
+            System.out.println(line);
+        }
+        System.out.println("seed afterwards: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
         
 
         // Ensure the marked paths exist:
@@ -673,7 +681,7 @@ public class PCGArea {
 //                }
             }
             if (c.p2.a == a) {
-                ra.pieceTypes[c.p2.x * ROOM_WIDTH + c.p2_x_chunk_offs][c.p2.y * ROOM_WIDTH +  + c.p2_y_chunk_offs] |= c.p1.direction;
+                ra.pieceTypes[c.p2.x * ROOM_WIDTH + c.p2_x_chunk_offs][c.p2.y * ROOM_WIDTH +  + c.p2_y_chunk_offs] |= c.p2.direction;
 //                if (c.p2.direction == PCGWorld.DIRECTION_LEFT) {
 //                    ra.pieceTypes[c.p2.x * ROOM_WIDTH][c.p2.y * ROOM_WIDTH + r.nextInt(ROOM_HEIGHT)] |= c.p2.direction;
 //                } else if (c.p2.direction == PCGWorld.DIRECTION_UP) {
@@ -687,15 +695,15 @@ public class PCGArea {
         }
 
         // Print the spanning trees to make sure it matches the MSX side:
-//        System.out.println("pieceTypes: area " + a.ID + " (after interarea connections)");
-//        for(int i = 0;i<a.height*2;i++) {
-//            String line = "";
-//            for(int j = 0;j<a.width*2;j++) {
-//                line +=  Z80Assembler.toHex8bit(ra.pieceTypes[j][i]) + "\t";
-//            }
-//            System.out.println(line);
-//        }
-//        System.out.println("seed afterwards: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+        System.out.println("pieceTypes: area " + a.ID + " (after interarea connections)");
+        for(int i = 0;i<a.height*2;i++) {
+            String line = "";
+            for(int j = 0;j<a.width*2;j++) {
+                line +=  Z80Assembler.toHex8bit(ra.pieceTypes[j][i]) + "\t";
+            }
+            System.out.println(line);
+        }
+        System.out.println("seed afterwards: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
         
         // Place tags into chunks:
         String placedTags[][] = new String[a.width * ROOM_WIDTH][a.height * ROOM_HEIGHT];
@@ -1032,6 +1040,8 @@ public class PCGArea {
                             case "boss3-key":
                             case "boss4-key":
                             case "boss5-key":
+                            case "boss6-key":
+                            case "boss7-key":
                             case "red-key":
                             case "green-key":
                             case "blue-key":
@@ -1125,7 +1135,7 @@ public class PCGArea {
                         if (i == a.height * ROOM_HEIGHT - 1 || ra.pieceTypes[j][i+1] < 0) {
                             downTag = "stairs";  // up/down connections from outside the map always via stairs
                         } else {
-                            if ((ra.pieceTypes[j][i] & PCGWorld.DIRECTION_UP) == 0) {
+                            if ((ra.pieceTypes[j][i+1] & PCGWorld.DIRECTION_UP) == 0) {
                                 downTag = "hole";  // prevent stairs when there is a door/breakable wall below
                             }
                         }
@@ -1134,7 +1144,7 @@ public class PCGArea {
                     
                     if (necessaryObjectTypes.contains("breakable-up") ||
                         necessaryObjectTypes.contains("door-up")) {
-                        upTag = null;
+                        upTag = null;  // should never happen though
                     }
                     List<RoomChunk> choices = chunkPool.get(ra.pieceTypes[j][i]);
                     if (upTag != null || downTag != null || !necessaryObjectTypes.isEmpty()) {
@@ -1168,8 +1178,20 @@ public class PCGArea {
                         System.err.println("No " +chunkPoolName+ " chunks for type " + ra.pieceTypes[j][i]);
                         return null;
                     }
-                    ra.fg_chunks[j][i] = choices.get(r.nextInt(choices.size()));
                     
+                    {
+                        List<Integer> choiceIds = new ArrayList<>();
+                        for(RoomChunk c:choices) {
+                            choiceIds.add(all_fg_chunks.indexOf(c));
+                        }
+                        System.out.println("constraints: type: " + ra.pieceTypes[j][i] + ", upTag: " + upTag + ", downTag: " + downTag + ", necessaryObjectTypes: " + necessaryObjectTypes);
+                        System.out.println("    seed before: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+                        System.out.println("    chunk choices: " + j + ", " + i + ": " + choiceIds);
+                        int idx = r.nextInt(8) % choices.size();
+                        ra.fg_chunks[j][i] = choices.get(idx);
+                        System.out.println("    chosen: " + all_fg_chunks.indexOf(ra.fg_chunks[j][i]) + ", " + ra.fg_chunks[j][i].tags);
+                    }
+                    /*
                     if (placedTags[j][i] != null) {
                         switch(placedTags[j][i]) {
                             case "boss1-key":
@@ -1419,6 +1441,7 @@ public class PCGArea {
                             }                            
                         }
                     }
+                    */
                     
                 } else {
                     ra.fg_chunks[j][i] = null;

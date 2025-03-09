@@ -267,27 +267,51 @@ player_in_water:
 ; - a: tile collision type
 get_room_tile_type:
 	ld a, (current_room__width)
-	cp 64
+	cp 32*2
 	jr z, get_room_tile_type_width64
+	cp 32*3
+	jr z, get_room_tile_type_width96
+	cp 32*4
+	jr z, get_room_tile_type_width128
 get_room_tile_type_width32:
 	; in this case, we know room_scroll_x == 0
 	ld l, b
 	ld h, 0
+	jp get_room_tile_type_width32_entry_point
+get_room_tile_type_width96:
+	; in this case, we know room_scroll_x == 0
+	ld l, b
+	ld h, 0
+
 	add hl, hl
 	add hl, hl
 	add hl, hl
 	add hl, hl
 	add hl, hl  ; hl = y * 32
+	push de
+		ld e, l
+		ld d, h
+		add hl, hl
+		add hl, de  ; hl = y (96)
+	pop de
 	jp get_room_tile_type_continue
 get_room_tile_type_width64:
+	; in this case, we know room_scroll_x == 0
+	ld l, b
+	ld h, 0
+	jp get_room_tile_type_width64_entry_point
+get_room_tile_type_width128:
 	ld l, b
 	ld h, 0
 	add hl, hl
+get_room_tile_type_width64_entry_point:
+	add hl, hl
+get_room_tile_type_width32_entry_point:
 	add hl, hl
 	add hl, hl
 	add hl, hl
 	add hl, hl
-	add hl, hl  ; hl = y * 64
+	add hl, hl  ; hl = y * 128
 get_room_tile_type_continue:
 	ld b, 0
 	add hl, bc

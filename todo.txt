@@ -1,26 +1,9 @@
 to do:
 
-***- pcg_generate_area__choose_chunks: For each position in the map (chunk-level):
-  ***- loop that iterates over every position
-    ***- initialize "necessaryObjectTypes" to 0 (this is a bitmask): come up with list of object types
-    ***- chunkPool to "standard" (create the concept of a chunkpool that has a chunk #, and list of chunks with ID, tags, and objectTypes they have as a bitmask)
-    ***- upTag/downTag to 0 (there are only 4 possible tags, as this will be a 2 bit thing)
-    ***- chunk above (only to get the "downTag", so, maybe we can just save down/right tags in a separate array while generating)
-    ***- see if there is a tag in this position, and update:
-      ***- necessaryObjectTypes
-      ***- upTag
-      ***- downTag
-      ***- chunkPool
-  ***- Choose a chunk
-  ***- Add necessary objects according to the tag (if any):
-    ***- For this, I need to change chunk structure. I will have to remove object lists from chunk data, and store that separately. Possibilities (leaning towards (2)):
-      (1) remove objects from chunks (update pcg-rooms.asm code), and have it as a parallel set of compressed banks
-      (2) Do not select objects here, but just create a list with object IDs, chunk where they are, and the objectType to use for spawning it (so, they'll be spawned during room PCG)
-  ***- comment out "hardcoded-room.asm"
-  ***- Assembler/Java: it has to exactly match what is generated in Java (adjust whichever of the two is easier)
+***- PCGArea bug (both in assembler and Java): stairs leading up to a floor!
+  ***- the problem is we are closing the connection above (11, 7), and this is not properly handled
 ***- Java: make the room generation tile randomization in Java match the MSX version too
-
-- when jumping from a rope/ladder have a few frames (4? 8?) where you cannot grab to another ladder/rope again (to prevent the awkward thing of pressing jump while pressing up on ladders/ropes)
+***- when jumping from a rope/ladder have a few frames (4? 8?) where you cannot grab to another ladder/rope again (to prevent the awkward thing of pressing jump while pressing up on ladders/ropes)
 
 - inter-area transitions:
   - detect area transitions
@@ -36,14 +19,20 @@ to do:
       - can I do it so that the keypresses get recorded if player presses space during PCG, so that it skips automatically?
 
 - push blocks (so that we can navigate the map properly):
-  - detect blocks in the chunks (or specify them in some way?)
-  - create the concept of tile objects (items, chests, boulders, doors, breakable doors, switches, etc.)
-  - replace boulder by this object (this should be done early, so that I have "background" behind them)
+  - in Tiled: remove ALL boulders, and replace with objects
+  - create the concept of tile objects (items, chests, boulders, doors, breakable doors, switches, etc.):
+    - in "pcg_generate_area__choose_chunks":
+      - Add necessary objects according to the tag (if any): (see "create objects:" comment)
+        - objectType taken directly from "tmp_pcg_area__necessary_object_types", to make things simpler than in Java
+        - Do not select locations here, but just create a list with object IDs, chunk where they are, and the objectType to use for spawning it (they'll be spawned during room PCG)
+      - Assembler/Java: it has to exactly match what is generated in Java (adjust whichever of the two is easier)
+  - when instantiating a chunk, add an object for each boulder location found in that chunk
   - render them
   - make them collidable
   - make them pushable (sfx)
   - make them not go through walls
-  - make them fall if pushed over an edge
+  - make them fall if pushed over an edge (they go through water)
+  - they fall out of the screen if reaching the bottom edge, and can push them out through the left/right
 
 - write the whole story line of the game, so that everything makes sense. This will help me finalize what you get from bosses, what the ending screen is, the intro, etc.
   - how about those gods that I drew? where do I use them?

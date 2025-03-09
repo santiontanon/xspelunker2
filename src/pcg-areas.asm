@@ -5,6 +5,12 @@ tmp_pcg_area__division_ids_tmp: equ buffer_4096 + 2  ; MAX_AREA_SIZE*2*2 bytes
 tmp_pcg_area__piece_types: equ tmp_pcg_area__division_ids_tmp + MAX_AREA_SIZE*2*2  ; MAX_AREA_SIZE*2*2 bytes
 tmp_pcg_area__placed_tags: equ tmp_pcg_area__piece_types + MAX_AREA_SIZE*2*2  ; MAX_AREA_SIZE*2*2 bytes
 tmp_pcg_area__spanning_tree_open: equ tmp_pcg_area__placed_tags + MAX_AREA_SIZE*2*2  ; 64 bytes  ; assuming no division has area >= 64
+tmp_pcg_area__size_in_chunks: equ tmp_pcg_area__spanning_tree_open + 64  ; 2 bytes (width, height)
+tmp_pcg_area__down_tags: equ tmp_pcg_area__size_in_chunks + 2  ; MAX_AREA_WIDTH*2 bytes
+tmp_pcg_area__left_tag: equ tmp_pcg_area__down_tags + MAX_AREA_WIDTH*2  ; 1 byte
+tmp_pcg_area__necessary_object_types: equ tmp_pcg_area__left_tag + 1  ; 2 bytes
+tmp_pcg_area__lock_direction: equ tmp_pcg_area__necessary_object_types + 2  ; MAX_AREA_SIZE*2*2 bytes
+tmp_pcg_area__chunk_candidates: equ tmp_pcg_area__lock_direction + MAX_AREA_SIZE*2*2
 
 
 ;-----------------------------------------------
@@ -66,10 +72,10 @@ pcg_generate_area__world_area_ptr_set:
 ; 	ldir
 
 	; for now just copy over the hardcoded data:
-	ld hl, hardcoded_area_data__chunk_ids
-	ld de, current_area__chunks_ids
-	ld bc, MAX_AREA_SIZE * 2 * 2
-	ldir
+; 	ld hl, hardcoded_area_data__chunk_ids
+; 	ld de, current_area__chunks_ids
+; 	ld bc, MAX_AREA_SIZE * 2 * 2
+; 	ldir
 	ret
 
 
@@ -951,6 +957,10 @@ pcg_generate_area__place_tags:
 	ld bc, MAX_AREA_SIZE * 2 * 2 - 1
 	call clear_memory
 
+	ld hl, tmp_pcg_area__lock_direction
+	ld bc, MAX_AREA_SIZE * 2 * 2 - 1
+	call clear_memory
+
 	ld hl, (tmp_pcg_area__ptr_to_world_area)
 	ld bc, WORLD_AREA__TAGS_OFFSET
 	add hl, bc  ; hl = tags ptr
@@ -1058,6 +1068,12 @@ pcg_generate_area__place_tags_loop_best_chunk_loop_continue:
 		add hl, bc
 		ld a, ixl
 		ld (hl), a  ; place tag
+
+		ld bc, tmp_pcg_area__lock_direction - tmp_pcg_area__placed_tags
+		add hl, bc
+		ld a, ixh
+		ld (hl), a  ; lock direction (it's the same as connection to close)
+
 pcg_generate_area__place_tags_loop_next_pop:
 	pop hl
 pcg_generate_area__place_tags_loop_next:
@@ -1190,35 +1206,521 @@ pcg_generate_area__place_tags_loop_best_chunk_loop_bottom_right:
 		jp pcg_generate_area__place_tags_loop_best_chunk_loop_top_left_entry_point
 
 pcg_generate_area__place_tags_is_block_puzzle_p:
+pcg_generate_area__choose_chunks_is_block_puzzle_tag_p:
 	push hl
 		ld hl, pcg_generate_area__block_puzzle_tags
-		call pcg_generate_area__place_tags_tag_in_list
+		call pcg_generate_area__tag_in_list
 	pop hl
 	ret
 
 pcg_generate_area__place_tags_is_directional_p:
 	push hl
 		ld hl, pcg_generate_area__directional_tags
-		call pcg_generate_area__place_tags_tag_in_list
+		call pcg_generate_area__tag_in_list
 	pop hl
 	ret
 
 pcg_generate_area__place_tags_is_normal_tag_p:
 	push hl
 		ld hl, pcg_generate_area__normal_tags
-		call pcg_generate_area__place_tags_tag_in_list
+		call pcg_generate_area__tag_in_list
 	pop hl
 	ret
 
-pcg_generate_area__place_tags_tag_in_list:
+
+;-----------------------------------------------
+; input:
+; - a: room offset (x + y*width)
+; output:
+; - c: x
+; - b: y
+pcg_generate_area__room_offset_to_x_y:
+	ld c, a
+	ld b, 0
+	ld a, (current_area__width)
+	ld e, a
+	ld a, c
+pcg_generate_area__room_offset_to_x_y_loop:
+	cp e
+	jr c, pcg_generate_area__room_offset_to_x_y_loop_done
+	inc b
+	sub e
+	jp pcg_generate_area__room_offset_to_x_y_loop
+pcg_generate_area__room_offset_to_x_y_loop_done:
+	ld c, a
+	ret
+
+
+;-----------------------------------------------
+PCG_GENERATE_AREA_NECESSARY_ITEM: macro item
+	ld a, (tmp_pcg_area__necessary_object_types)
+	or a, item % 256
+	ld (tmp_pcg_area__necessary_object_types), a
+	ld a, (tmp_pcg_area__necessary_object_types + 1)
+	or a, item / 256
+	ld (tmp_pcg_area__necessary_object_types + 1), a
+ENDM
+
+
+;-----------------------------------------------
+pcg_generate_area__choose_chunks:
+	ld hl, current_area__chunks_ids
+	ld bc, MAX_AREA_SIZE * 2 * 2 - 1
+	ld a, #ff
+	call clear_memory_a
+
+	ld hl, tmp_pcg_area__down_tags
+	ld bc, MAX_AREA_WIDTH*2 - 1
+	ld a, #00
+	call clear_memory_a
+
+	ld bc, (current_area__width)
+	sla c
+	sla b
+	ld (tmp_pcg_area__size_in_chunks), bc  ; saving this for comparisons later
+	ld hl, tmp_pcg_area__piece_types
+pcg_generate_area__choose_chunks_loop_y:
+	push bc
+pcg_generate_area__choose_chunks_loop_x:
+		ld a, (hl)
+		cp #ff
+		jp z, pcg_generate_area__choose_chunks_loop_x_next_set_previous_flags
+		ld de, 0
+		ld (tmp_pcg_area__necessary_object_types), de  ; necessaryObjectTypes
+		ld de, pyramid_standard_chunk_pool
+		ld ixh, PYRAMID_STANDARD_CHUNK_POOL_SIZE  ; chunk pool size
+		ld iyl, 0  ; ID if first chunk in pool
+		ld iyh, #00  ; upTag/downTag  ; ll-uu-rr-dd
+
+		and PCG_DIRECTION_UP
+		jp z, pcg_generate_area__choose_chunks_loop_x_no_connection_up
+		ld iyh, #20  ; upTag to "stairs" by default (in case there is nothing above)
+		ld a, (tmp_pcg_area__size_in_chunks + 1)  ; height
+		cp b
+		jr z, pcg_generate_area__choose_chunks_loop_x_no_chunk_above
+		push hl
+			push bc
+				ld a, (tmp_pcg_area__size_in_chunks)  ; width
+				ld b, 0
+				ld c, a
+				or a
+				sbc hl, bc
+				ld a, (hl)  ; piece type above
+				cp #ff
+			pop bc
+			jp z, pcg_generate_area__choose_chunks_loop_x_no_chunk_above_pop
+			; get the "downTag" of the chunk above, and overwrite "upTag":
+			; - ptr: tmp_pcg_area__down_tags + (width - c)
+			ld a, (tmp_pcg_area__size_in_chunks)  ; width
+			sub c
+			ld hl, tmp_pcg_area__down_tags
+			ADD_HL_A
+			ld l, (hl)  ; down tag in the previous iteration
+			ld a, iyh
+			and #cf  ; remove the previous upTag
+			or l  ; add the current upTag
+			ld iyh, a
+pcg_generate_area__choose_chunks_loop_x_no_chunk_above_pop:
+		pop hl
+pcg_generate_area__choose_chunks_loop_x_no_chunk_above:
+pcg_generate_area__choose_chunks_loop_x_no_connection_up:
+
+		ld a, (hl)  ; piece type
+		and PCG_DIRECTION_DOWN
+		jp z, pcg_generate_area__choose_chunks_loop_x_no_connection_down
+		ld a, b  ; check if we are at the bottom edge of the map:
+		cp 1
+		jr z, pcg_generate_area__choose_chunks_loop_x_no_chunk_below
+		push bc
+		push hl
+			ld a, (tmp_pcg_area__size_in_chunks)  ; width
+			ld b, 0
+			ld c, a
+			add hl, bc
+			ld a, (hl)  ; piece type below
+			cp #ff
+			jp z, pcg_generate_area__choose_chunks_loop_x_no_chunk_below_pop
+			and PCG_DIRECTION_UP
+			jr nz, pcg_generate_area__choose_chunks_loop_x_no_connection_down_pop
+			; set down tag as "hole":
+			ld a, iyh
+			and #fc
+			or #01
+			ld iyh, a
+pcg_generate_area__choose_chunks_loop_x_no_connection_down_pop:
+		pop hl
+		pop bc
+		jp pcg_generate_area__choose_chunks_loop_x_no_connection_down
+pcg_generate_area__choose_chunks_loop_x_no_chunk_below_pop:
+		pop hl
+		pop bc
+pcg_generate_area__choose_chunks_loop_x_no_chunk_below:
+		; set down tag as "stairs":
+		ld a, iyh
+		and #fc
+		or #02
+		ld iyh, a
+pcg_generate_area__choose_chunks_loop_x_no_connection_down:
+
+		push hl
+		push bc
+			ld bc, tmp_pcg_area__placed_tags - tmp_pcg_area__piece_types
+			add hl, bc
+			ld a, (hl)  ; tag in this location
+		pop bc
+		pop hl
+		or a
+		jp z, pcg_generate_area__choose_chunks_loop_x_no_placed_tag
+		; here:
+		; - a: placed tag
+		ld ixl, a
+		call pcg_generate_area__choose_chunks_is_boss_tag_p
+		jp z, pcg_generate_area__choose_chunks_loop_x_boss_tag
+		call pcg_generate_area__choose_chunks_is_block_puzzle_tag_p
+		jp z, pcg_generate_area__choose_chunks_loop_x_block_puzzle_tag
+		call pcg_generate_area__choose_chunks_is_breakable_wall_tag_p
+		jp z, pcg_generate_area__choose_chunks_loop_x_breakable_wall_tag
+		call pcg_generate_area__choose_chunks_is_big_lock_tag_p
+		jp z, pcg_generate_area__choose_chunks_loop_x_big_lock_tag
+		call pcg_generate_area__choose_chunks_is_button_door_tag_p
+		jp z, pcg_generate_area__choose_chunks_loop_x_button_door_tag
+		call pcg_generate_area__choose_chunks_is_small_lock_tag_p
+		jp z, pcg_generate_area__choose_chunks_loop_x_small_lock_tag
+		call pcg_generate_area__choose_chunks_is_item_tag_p
+		jp z, pcg_generate_area__choose_chunks_loop_x_item_tag
+		call pcg_generate_area__choose_chunks_is_4x4_item_tag_p
+		jp z, pcg_generate_area__choose_chunks_loop_x_4x4_item_tag
+		call pcg_generate_area__choose_chunks_is_combination_lock_tag_p
+		jp z, pcg_generate_area__choose_chunks_loop_x_combination_lock_tag
+		jp pcg_generate_area__choose_chunks_loop_x_continue
+
+pcg_generate_area__choose_chunks_loop_x_boss_tag:
+		ld de, pyramid_boss_chunk_pool
+		ld ixh, PYRAMID_BOSS_CHUNK_POOL_SIZE  ; chunk pool size
+		ld iyl, PYRAMID_BOSS_CHUNK_POOL_FIRST_ID  ; ID if first chunk in pool
+		jp pcg_generate_area__choose_chunks_loop_x_continue
+
+pcg_generate_area__choose_chunks_loop_x_block_puzzle_tag:
+		ld de, pyramid_block_chunk_pool
+		ld ixh, PYRAMID_BLOCK_CHUNK_POOL_SIZE  ; chunk pool size
+		ld iyl, PYRAMID_BLOCK_CHUNK_POOL_FIRST_ID  ; ID if first chunk in pool
+		jp pcg_generate_area__choose_chunks_loop_x_continue
+
+pcg_generate_area__choose_chunks_loop_x_breakable_wall_tag:
+		push hl
+		push bc
+			ld bc, tmp_pcg_area__lock_direction - tmp_pcg_area__piece_types
+			add hl, bc
+			ld a, (hl)  ; lock direction
+		pop bc
+		pop hl
+		cp PCG_DIRECTION_LEFT
+		jr nz, pcg_generate_area__choose_chunks_loop_x_breakable_wall_tag_no_left
+		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_BREAKABLE_LEFT
+		jp pcg_generate_area__choose_chunks_loop_x_continue
+pcg_generate_area__choose_chunks_loop_x_breakable_wall_tag_no_left:
+		cp PCG_DIRECTION_UP
+		jr nz, pcg_generate_area__choose_chunks_loop_x_breakable_wall_tag_no_up
+		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_BREAKABLE_UP
+		jp pcg_generate_area__choose_chunks_loop_x_continue
+pcg_generate_area__choose_chunks_loop_x_breakable_wall_tag_no_up:
+		cp PCG_DIRECTION_RIGHT
+		jr nz, pcg_generate_area__choose_chunks_loop_x_breakable_wall_tag_no_right
+		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_BREAKABLE_RIGHT
+		jp pcg_generate_area__choose_chunks_loop_x_continue
+pcg_generate_area__choose_chunks_loop_x_breakable_wall_tag_no_right:
+		cp PCG_DIRECTION_DOWN
+		jr nz, pcg_generate_area__choose_chunks_loop_x_breakable_wall_tag_no_down
+		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_BREAKABLE_DOWN
+		jp pcg_generate_area__choose_chunks_loop_x_continue
+pcg_generate_area__choose_chunks_loop_x_breakable_wall_tag_no_down:
+		; should never happen
+		jp pcg_generate_area__choose_chunks_loop_x_continue
+
+pcg_generate_area__choose_chunks_loop_x_big_lock_tag:
+		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_BIG_ITEM
+		; jp pcg_generate_area__choose_chunks_loop_x_button_door_tag
+
+pcg_generate_area__choose_chunks_loop_x_button_door_tag:
+		push hl
+		push bc
+			ld bc, tmp_pcg_area__lock_direction - tmp_pcg_area__piece_types
+			add hl, bc
+			ld a, (hl)  ; lock direction
+		pop bc
+		pop hl
+		cp PCG_DIRECTION_LEFT
+		jr nz, pcg_generate_area__choose_chunks_loop_x_button_door_tag_no_left
+		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_DOOR_LEFT
+		jp pcg_generate_area__choose_chunks_loop_x_continue
+pcg_generate_area__choose_chunks_loop_x_button_door_tag_no_left:
+		cp PCG_DIRECTION_UP
+		jr nz, pcg_generate_area__choose_chunks_loop_x_button_door_tag_no_up
+		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_DOOR_UP
+		jp pcg_generate_area__choose_chunks_loop_x_continue
+pcg_generate_area__choose_chunks_loop_x_button_door_tag_no_up:
+		cp PCG_DIRECTION_RIGHT
+		jr nz, pcg_generate_area__choose_chunks_loop_x_button_door_tag_no_right
+		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_DOOR_RIGHT
+		jp pcg_generate_area__choose_chunks_loop_x_continue
+pcg_generate_area__choose_chunks_loop_x_button_door_tag_no_right:
+		cp PCG_DIRECTION_DOWN
+		jr nz, pcg_generate_area__choose_chunks_loop_x_button_door_tag_no_down
+		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_DOOR_DOWN
+		jp pcg_generate_area__choose_chunks_loop_x_continue
+pcg_generate_area__choose_chunks_loop_x_button_door_tag_no_down:
+		; should never happen
+		jp pcg_generate_area__choose_chunks_loop_x_continue
+
+pcg_generate_area__choose_chunks_loop_x_small_lock_tag:
+		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_ITEM
+		jp pcg_generate_area__choose_chunks_loop_x_button_door_tag
+
+pcg_generate_area__choose_chunks_loop_x_item_tag:
+		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_ITEM
+		jp pcg_generate_area__choose_chunks_loop_x_continue
+
+pcg_generate_area__choose_chunks_loop_x_4x4_item_tag:
+		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_4X4_ITEM
+		jp pcg_generate_area__choose_chunks_loop_x_button_door_tag
+
+pcg_generate_area__choose_chunks_loop_x_combination_lock_tag:
+		ld de, pyramid_combination_chunk_pool
+		ld ixh, PYRAMID_COMBINATION_CHUNK_POOL_SIZE  ; chunk pool size
+		ld iyl, PYRAMID_COMBINATION_CHUNK_POOL_FIRST_ID  ; ID if first chunk in pool
+		jp pcg_generate_area__choose_chunks_loop_x_button_door_tag
+
+pcg_generate_area__choose_chunks_loop_x_continue:
+pcg_generate_area__choose_chunks_loop_x_no_placed_tag:
+		; here:
+		; - hl: ptr to piece type
+		; - de: ptr to chunk pool
+		; - ixh: number of chunks in the pool
+		; - iyl: first chunk ID in the pool
+		; - (tmp_pcg_area__necessary_object_types): necessaryObjectTypes
+		; - iyh: left/up/right/down tags
+
+		; find the set of chunks from the pool that satisfy the requirements:
+		push bc
+			push hl
+				ld c, (hl)  ; target piece type
+				ld hl, tmp_pcg_area__chunk_candidates
+pcg_generate_area__choose_chunks_loop_x_chunk_loop:
+				ld a, (de)
+				cp c
+				jp nz, pcg_generate_area__choose_chunks_loop_x_chunk_loop_next_inc5
+				; correct piece type:
+				inc de  ; skip piece type
+				inc de  ; skip chunk flags
+				ld a, (de)  ; left/up/right/down tags
+				and iyh
+				cp iyh
+				jp nz, pcg_generate_area__choose_chunks_loop_x_chunk_loop_next_inc3
+				inc de
+				push hl
+					ld a, (de)
+					ld l, a
+					inc de
+					ld a, (de)
+					ld h, a  ; hl = locationTypeFlags
+					; check that every bit set to "1" in (tmp_pcg_area__necessary_object_types) is also set to "1" in hl:
+					push de
+						ld de, (tmp_pcg_area__necessary_object_types)
+						ld a, d
+						or h
+						cp h
+						jp nz, pcg_generate_area__choose_chunks_loop_x_chunk_loop_next_inc1_pop  ; fail
+						ld a, e
+						or l
+						cp l
+						jp nz, pcg_generate_area__choose_chunks_loop_x_chunk_loop_next_inc1_pop  ; fail
+					pop de
+				pop hl
+
+				; chunk is a candidate!
+				ld a, iyl
+				ld (hl), a
+				inc hl
+				jp pcg_generate_area__choose_chunks_loop_x_chunk_loop_next_inc1
+
+pcg_generate_area__choose_chunks_loop_x_chunk_loop_next_inc1_pop:
+					pop de
+				pop hl
+				jp pcg_generate_area__choose_chunks_loop_x_chunk_loop_next_inc1
+
+pcg_generate_area__choose_chunks_loop_x_chunk_loop_next_inc5:
+				inc de
+				inc de
+pcg_generate_area__choose_chunks_loop_x_chunk_loop_next_inc3:
+				inc de
+				inc de
+pcg_generate_area__choose_chunks_loop_x_chunk_loop_next_inc1:
+				inc de
+				inc iyl
+				dec ixh
+				jp nz, pcg_generate_area__choose_chunks_loop_x_chunk_loop
+
+				ld bc, tmp_pcg_area__chunk_candidates
+				or a
+				sbc hl, bc
+				; l = number of candidates
+				ld a, l
+				or a
+				jr nz, pcg_generate_area__all_ok
+pcg_generate_area__error_should_never_happen:
+; 				di
+; 				halt
+				ld l, 1
+pcg_generate_area__all_ok:
+
+				; sample one chunk at random and place it:
+pcg_generate_area__choose_chunks_loop_x_sample_chunk:
+				call random_a
+				and #07  ; at most we will have 8 candidates
+				cp l
+				jp c, pcg_generate_area__choose_chunks_loop_x_sample_chunk_loop_done
+pcg_generate_area__choose_chunks_loop_x_sample_chunk_loop:
+				sub l
+				jp nc, pcg_generate_area__choose_chunks_loop_x_sample_chunk_loop
+				add a, l
+pcg_generate_area__choose_chunks_loop_x_sample_chunk_loop_done:
+				ld hl, tmp_pcg_area__chunk_candidates
+				ADD_HL_A
+				ld a, (hl)  ; desired chunk type
+			pop hl
+
+			; place the chunk:
+			ld bc, current_area__chunks_ids - tmp_pcg_area__piece_types
+			add hl, bc
+			ld (hl), a
+			or a
+			sbc hl, bc  ; restore hl
+
+			; get the "tags" (to save them below):
+			push hl
+				ld l, a
+				ld h, 0
+				add hl, hl
+				add hl, hl
+				ADD_HL_A  ; hl = a * 5
+				ld de, pyramid_chunk_flags
+				add hl, de  ; hl = pyramid_chunk_flags + a * 5
+				inc hl
+				inc hl
+				ld e, (hl)  ; left/up/right/down tags
+			pop hl
+		pop bc
+
+pcg_generate_area__choose_chunks_loop_x_next_set_previous_flags_continue:
+		; update tmp_pcg_area__down_tags:
+		; - ptr: tmp_pcg_area__down_tags + (width - c)
+		push hl
+			ld a, (tmp_pcg_area__size_in_chunks)  ; width
+			sub c
+			ld hl, tmp_pcg_area__down_tags
+			ADD_HL_A
+			ld a, e
+			rrca
+			rrca
+			rrca
+			rrca
+			ld e, a
+			and #30  ; keep the previous "down" in "up"
+			ld (hl), a  ; store up
+			ld a, e
+			and #c0  ; keep the previous "right" in "left"
+			ld (tmp_pcg_area__left_tag), a
+		pop hl
+
+		; create objects:
+		; ...
+
+pcg_generate_area__choose_chunks_loop_x_next:
+		inc hl
+		dec c
+		jp nz, pcg_generate_area__choose_chunks_loop_x
+	pop bc
+	dec b
+	jp nz, pcg_generate_area__choose_chunks_loop_y
+	ret
+
+pcg_generate_area__choose_chunks_loop_x_next_set_previous_flags:
+		ld e, 0  ; reset left/up flags
+		jp pcg_generate_area__choose_chunks_loop_x_next_set_previous_flags_continue
+
+pcg_generate_area__choose_chunks_is_boss_tag_p:
+	push hl
+		ld hl, pcg_generate_area__boss_tags
+		call pcg_generate_area__tag_in_list
+	pop hl
+	ret
+
+pcg_generate_area__choose_chunks_is_breakable_wall_tag_p:
+	push hl
+		ld hl, pcg_generate_area__breakable_wall_tags
+		call pcg_generate_area__tag_in_list
+	pop hl
+	ret
+
+pcg_generate_area__choose_chunks_is_big_lock_tag_p:
+	push hl
+		ld hl, pcg_generate_area__big_lock_tags
+		call pcg_generate_area__tag_in_list
+	pop hl
+	ret
+
+pcg_generate_area__choose_chunks_is_button_door_tag_p:
+	push hl
+		ld hl, pcg_generate_area__button_door_tags
+		call pcg_generate_area__tag_in_list
+	pop hl
+	ret
+
+pcg_generate_area__choose_chunks_is_small_lock_tag_p:
+	push hl
+		ld hl, pcg_generate_area__small_lock_tags
+		call pcg_generate_area__tag_in_list
+	pop hl
+	ret
+
+pcg_generate_area__choose_chunks_is_item_tag_p:
+	push hl
+		ld hl, pcg_generate_area__item_tags
+		call pcg_generate_area__tag_in_list
+	pop hl
+	ret
+
+pcg_generate_area__choose_chunks_is_4x4_item_tag_p:
+	push hl
+		ld hl, pcg_generate_area__4x4_item_tags
+		call pcg_generate_area__tag_in_list
+	pop hl
+	ret
+
+pcg_generate_area__choose_chunks_is_combination_lock_tag_p:
+	push hl
+		ld hl, pcg_generate_area__combination_lock_tags
+		call pcg_generate_area__tag_in_list
+	pop hl
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - hl: tag list ptr
+; - ixl: tag
+; output:
+; - z: if the tag is in the list
+; - nz: if it is not
+pcg_generate_area__tag_in_list:
 	ld a, (hl)
 	or a
-	jr z, pcg_generate_area__place_tags_tag_in_list_negative
+	jr z, pcg_generate_area__tag_in_list_negative
 	cp ixl
 	ret z
 	inc hl
-	jp pcg_generate_area__place_tags_tag_in_list
-pcg_generate_area__place_tags_tag_in_list_negative:
+	jp pcg_generate_area__tag_in_list
+pcg_generate_area__tag_in_list_negative:
 	or 1
 	ret
 
@@ -1266,6 +1768,7 @@ pcg_generate_area__normal_tags:
 	db TAG_BOSS5_CHESTLOCK
 	db TAG_BOSS6_CHESTLOCK
 	db TAG_BOSS7_CHESTLOCK
+pcg_generate_area__item_tags:	
     db TAG_BOSS1_KEY
     db TAG_BOSS2_KEY
     db TAG_BOSS3_KEY
@@ -1303,34 +1806,57 @@ pcg_generate_area__normal_tags:
     db TAG_BUTTON4
     db 0
 
+pcg_generate_area__boss_tags:
+	db TAG_BOSS1_CHESTLOCK
+	db TAG_BOSS2_CHESTLOCK
+	db TAG_BOSS3_CHESTLOCK
+	db TAG_BOSS4_CHESTLOCK
+	db TAG_BOSS5_CHESTLOCK
+	db TAG_BOSS6_CHESTLOCK
+	db TAG_BOSS7_CHESTLOCK
+	db 0
 
-;-----------------------------------------------
-; input:
-; - a: room offset (x + y*width)
-; output:
-; - c: x
-; - b: y
-pcg_generate_area__room_offset_to_x_y:
-	ld c, a
-	ld b, 0
-	ld a, (current_area__width)
-	ld e, a
-	ld a, c
-pcg_generate_area__room_offset_to_x_y_loop:
-	cp e
-	jr c, pcg_generate_area__room_offset_to_x_y_loop_done
-	inc b
-	sub e
-	jp pcg_generate_area__room_offset_to_x_y_loop
-pcg_generate_area__room_offset_to_x_y_loop_done:
-	ld c, a
-	ret
+pcg_generate_area__breakable_wall_tags:
+    db TAG_BREAKABLE_WALL1
+    db TAG_BREAKABLE_WALL2
+    db TAG_BREAKABLE_WALL3
+    db TAG_BREAKABLE_WALL4
+    db 0
 
+pcg_generate_area__small_lock_tags:
+    db TAG_RED_LOCK
+    db TAG_GREEN_LOCK
+    db TAG_BLUE_LOCK
+    db TAG_YELLOW_LOCK
+    db TAG_WHITE_LOCK 
+    db TAG_PURPLE_LOCK
+    db TAG_BALL_LOCK
+    db 0
 
-;-----------------------------------------------
-pcg_generate_area__choose_chunks:
+pcg_generate_area__big_lock_tags:
+    db TAG_IDOL_LOCK
+    db TAG_GEAR_LOCK
+    db TAG_ASTRONAUT_LOCK
+    db 0
 
-	; ...
+pcg_generate_area__4x4_item_tags:
+    db TAG_TRIAL1_LOCK 
+    db TAG_TRIAL2_LOCK 
+    db TAG_TRIAL3_LOCK 
+    db TAG_TRIAL4_LOCK 
+    db 0
 
-	ret
+pcg_generate_area__combination_lock_tags:
+    db TAG_COMBINATION1_LOCK
+    db TAG_COMBINATION2_LOCK
+    db TAG_COMBINATION3_LOCK
+    db TAG_COMBINATION4_LOCK
+    db 0
+
+pcg_generate_area__button_door_tags:
+    db TAG_BUTTON_DOOR1
+    db TAG_BUTTON_DOOR2
+    db TAG_BUTTON_DOOR3
+    db TAG_BUTTON_DOOR4
+    db 0
 

@@ -72,9 +72,9 @@ public class HardcodedAreaForAssembler {
             for(int j = 0;j<a.width * 2;j++) {
                 int idx = pcg.all_fg_chunks.indexOf(ra.fg_chunks[j][i]);
                 if (j == 0) {
-                    line += idx;
+                    line += Z80Assembler.toHex8bit(idx);
                 } else {
-                    line += ", " + idx;
+                    line += ", " + Z80Assembler.toHex8bit(idx);
                 }
             }
             System.out.println(line);

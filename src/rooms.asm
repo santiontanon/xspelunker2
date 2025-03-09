@@ -17,6 +17,10 @@ draw_room:
 	ex de, hl  ; de = offset we need to add to copy the next row
 	cp 64
 	jr z, draw_room_width64
+	cp 96
+	jr z, draw_room_width96
+	cp 128
+	jr z, draw_room_width128
 draw_room_width32:
 	; in this case, we know room_scroll_x == 0
 	ld a, (room_scroll_y)
@@ -28,8 +32,8 @@ draw_room_width32:
 	add hl, hl
 	add hl, hl  ; hl = y * 32
 	jp draw_room_continue
-draw_room_width64:
-	ld bc, (room_scroll_x)
+draw_room_width96:
+	ld bc, (room_scroll_x)  ; b: room_scroll_y, c: room_scroll_x
 	ld l, b
 	ld h, 0
 	add hl, hl
@@ -37,7 +41,33 @@ draw_room_width64:
 	add hl, hl
 	add hl, hl
 	add hl, hl
-	add hl, hl  ; hl = y * 64
+	push de
+		ld e, l
+		ld d, h
+		add hl, hl
+		add hl, de  ; hl = y * 96
+	pop de
+	ld b, 0
+	add hl, bc  ; add room_scroll_x
+	jp draw_room_continue
+draw_room_width64:
+	ld bc, (room_scroll_x)
+	ld l, b
+	ld h, 0
+	jp draw_room_width64_entrypoint
+draw_room_width128:
+	ld bc, (room_scroll_x)  ; b: room_scroll_y, c: room_scroll_x
+	ld l, b
+	ld h, 0
+	add hl, hl
+draw_room_width64_entrypoint:
+	add hl, hl
+draw_room_width32_entrypoint:
+	add hl, hl
+	add hl, hl
+	add hl, hl
+	add hl, hl
+	add hl, hl  ; hl = y * 128
 	ld b, 0
 	add hl, bc
 draw_room_continue:
