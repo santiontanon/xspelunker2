@@ -207,14 +207,6 @@ pyramid_chunk_fg_bank_ptrs:
     dw pyramid_chunk_fg_bank_12_zx0
 pyramid_chunk_fg_bank_ptrs_end:
 
-; hardcoded_room_data:
-;     include "hardcoded-room.asm"
-; hardcoded_room_data_end:
-
-; hardcoded_area_data:
-;     include "hardcoded-room.asm"
-; hardcoded_area_data_end:
-
 hardcoded_world_data:
     include "hardcoded-world.asm"
 hardcoded_world_data_end:

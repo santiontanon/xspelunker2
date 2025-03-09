@@ -48,13 +48,6 @@ state_play:
 		call call_hl_in_page_c_8000
 ; 		out (#2d), a
 
-		; get room data:
-; 		SETMEGAROMPAGE_8000 MAP_DATA_PAGE
-; 		ld hl, hardcoded_room_data
-; 		ld de, current_room__width
-; 		ld bc, hardcoded_room_data_end - hardcoded_room_data
-; 		ldir
-
 state_play_from_inventory:
 state_play_from_loaded_room:
 		ld sp, stack  ; reset the stack, so we can jump here from wherever we want

@@ -65,17 +65,6 @@ pcg_generate_area__world_area_ptr_set:
 	call pcg_generate_area__inter_area_connections  ; updates 'tmp_pcg_area__piece_types'
 	call pcg_generate_area__place_tags  ; fills 'tmp_pcg_area__placed_tags'
 	call pcg_generate_area__choose_chunks  ; fills 'current_area__chunks_ids'
-
-; 	ld hl, hardcoded_area_data
-; 	ld de, current_area__seed
-; 	ld bc, hardcoded_area_data_end - hardcoded_area_data
-; 	ldir
-
-	; for now just copy over the hardcoded data:
-; 	ld hl, hardcoded_area_data__chunk_ids
-; 	ld de, current_area__chunks_ids
-; 	ld bc, MAX_AREA_SIZE * 2 * 2
-; 	ldir
 	ret
 
 
