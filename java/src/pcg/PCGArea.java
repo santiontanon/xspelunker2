@@ -552,7 +552,7 @@ public class PCGArea {
 
         // - Generate spanning trees for each division, so each position in a
         //   division is reachable from any other.
-        System.out.println("PCGArea.generate -----------------------------------");
+//        System.out.println("PCGArea.generate -----------------------------------");
 //        System.out.println("seed before: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
         List<Integer> closed = new ArrayList<>();
         for(int i = 0;i<a.height*2;i++) {
@@ -593,15 +593,15 @@ public class PCGArea {
         }
                 
         // Print the spanning trees to make sure it matches the MSX side:
-        System.out.println("pieceTypes: area " + a.ID);
-        for(int i = 0;i<a.height*2;i++) {
-            String line = "";
-            for(int j = 0;j<a.width*2;j++) {
-                line +=  Z80Assembler.toHex8bit(ra.pieceTypes[j][i]) + "\t";
-            }
-            System.out.println(line);
-        }
-        System.out.println("seed afterwards: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+//        System.out.println("pieceTypes: area " + a.ID);
+//        for(int i = 0;i<a.height*2;i++) {
+//            String line = "";
+//            for(int j = 0;j<a.width*2;j++) {
+//                line +=  Z80Assembler.toHex8bit(ra.pieceTypes[j][i]) + "\t";
+//            }
+//            System.out.println(line);
+//        }
+//        System.out.println("seed afterwards: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
         
 
         // Ensure the marked paths exist:
@@ -695,15 +695,15 @@ public class PCGArea {
         }
 
         // Print the spanning trees to make sure it matches the MSX side:
-        System.out.println("pieceTypes: area " + a.ID + " (after interarea connections)");
-        for(int i = 0;i<a.height*2;i++) {
-            String line = "";
-            for(int j = 0;j<a.width*2;j++) {
-                line +=  Z80Assembler.toHex8bit(ra.pieceTypes[j][i]) + "\t";
-            }
-            System.out.println(line);
-        }
-        System.out.println("seed afterwards: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+//        System.out.println("pieceTypes: area " + a.ID + " (after interarea connections)");
+//        for(int i = 0;i<a.height*2;i++) {
+//            String line = "";
+//            for(int j = 0;j<a.width*2;j++) {
+//                line +=  Z80Assembler.toHex8bit(ra.pieceTypes[j][i]) + "\t";
+//            }
+//            System.out.println(line);
+//        }
+//        System.out.println("seed afterwards: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
         
         // Place tags into chunks:
         String placedTags[][] = new String[a.width * ROOM_WIDTH][a.height * ROOM_HEIGHT];
@@ -917,7 +917,7 @@ public class PCGArea {
                 if (best_n_connections < 5) {
 //                    System.out.println("  tag placed at: " + best_x + ", " + best_y);
                     placedTags[best_x][best_y] = tagToPlace;
-                    if (connectionToClose != 0) {
+                    if (connectionToClose != 0) {                        
                         // Close the connection for breakable walls:
                         // pieceTypes[x][y] |= connectionToClose;
                         ra.pieceTypes[best_x][best_y] ^= connectionToClose;
@@ -1124,8 +1124,12 @@ public class PCGArea {
                         }
                     } else {
                         if ((ra.pieceTypes[j][i] & PCGWorld.DIRECTION_UP) != 0) {
-                            if (above.tags.containsKey("down")) {
-                                upTag = above.tags.get("down");
+                            if ((ra.pieceTypes[j][i - 1] & PCGWorld.DIRECTION_DOWN) != 0) {
+                                if (above.tags.containsKey("down")) {
+                                    upTag = above.tags.get("down");
+                                }
+                            } else {
+                                upTag = "hole";
                             }
                         } else {
                             // ignore the above tag, as we have a breakable wall/door above here
@@ -1184,12 +1188,12 @@ public class PCGArea {
                         for(RoomChunk c:choices) {
                             choiceIds.add(all_fg_chunks.indexOf(c));
                         }
-                        System.out.println("constraints: type: " + ra.pieceTypes[j][i] + ", upTag: " + upTag + ", downTag: " + downTag + ", necessaryObjectTypes: " + necessaryObjectTypes);
-                        System.out.println("    seed before: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
-                        System.out.println("    chunk choices: " + j + ", " + i + ": " + choiceIds);
+//                        System.out.println("constraints: type: " + ra.pieceTypes[j][i] + ", upTag: " + upTag + ", downTag: " + downTag + ", necessaryObjectTypes: " + necessaryObjectTypes);
+//                        System.out.println("    seed before: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+//                        System.out.println("    chunk choices: " + j + ", " + i + ": " + choiceIds);
                         int idx = r.nextInt(8) % choices.size();
                         ra.fg_chunks[j][i] = choices.get(idx);
-                        System.out.println("    chosen: " + all_fg_chunks.indexOf(ra.fg_chunks[j][i]) + ", " + ra.fg_chunks[j][i].tags);
+//                        System.out.println("    chosen: " + all_fg_chunks.indexOf(ra.fg_chunks[j][i]) + ", " + ra.fg_chunks[j][i].tags);
                     }
                     /*
                     if (placedTags[j][i] != null) {

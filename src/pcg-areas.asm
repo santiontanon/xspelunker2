@@ -1298,6 +1298,12 @@ pcg_generate_area__choose_chunks_loop_x:
 				cp #ff
 			pop bc
 			jp z, pcg_generate_area__choose_chunks_loop_x_no_chunk_above_pop
+			and PCG_DIRECTION_DOWN
+			jp nz, pcg_generate_area__choose_chunks_loop_x_chunk_above_has_down_connection
+			; The chunk above does not have a connection down, it means it's a door / breakable wall down:
+			ld iyh, #10  ; upTag to "hole"
+			jp pcg_generate_area__choose_chunks_loop_x_no_chunk_above_pop
+pcg_generate_area__choose_chunks_loop_x_chunk_above_has_down_connection:
 			; get the "downTag" of the chunk above, and overwrite "upTag":
 			; - ptr: tmp_pcg_area__down_tags + (width - c)
 			ld a, (tmp_pcg_area__size_in_chunks)  ; width
