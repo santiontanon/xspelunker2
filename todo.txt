@@ -1,11 +1,9 @@
 to do:
 
 ***- nice inter-area screen:
-  ***- draw a font
   ***- bring the text logic into the game
-  ***- one page dedicated to text / font (for now, ignore compression, all is decompressed)
   ***- inter-area screen is just a black screen with "Entering XXX"
-  ***- while PCG is running a "load area..." message is shown (goes away when PCG is done)
+  ***- while PCG is running a "loading area..." message is shown (goes away when PCG is done)
   ***- after it's done. There is a skippable pause of 5 seconds
   ***- erase the previous room nicely (sprites out, delete left to right)
   ***- draw the first room nicely (draw left to right, and then sprites)
@@ -33,6 +31,14 @@ to do:
   - make them fall if pushed over an edge (they go through water)
   - they fall out of the screen if reaching the bottom edge, and can push them out through the left/right
 
+- weapons:
+  - come up with a list of weapons
+  - implement the first one or two weapons (make sure I can hit left/up/right/down with the default weapon, for breakable walls)
+
+- breakable walls:
+  - make this work with the inter-room transitions (broken wall, overwrites the collision)
+  - make sure they work down/left/right/up (when breaing a path down/up that needs a ladder, replace by proper ladder piece)
+
 - Implement PCGWorld in assembler:
   - data structure
       - withinChestTag: do I need this? maybe I can just remove tags that are "withinChestTag" from the tag list
@@ -44,14 +50,7 @@ to do:
   - for some areas (pyramids, etc.) have some predefined shapes (e.g. pyramid shape), that can be chosen with some probability. And maybe also different shapes for the confluence, etc.
   - keep Java/assembler versions in sync (try different random seeds)
 
-- weapons:
-  - come up with a list of weapons
-  - implement the first one or two weapons (make sure I can hit left/up/right/down with the default weapon, for breakable walls)
-
 - being able to complete the game in assembler:
-  - breakable walls:
-    - make this work with the inter-room transitions (broken wall, overwrites the collision)
-    - make sure they work down/left/right/up
   - render doors (and be blocked by them)
   - spawn and draw items in the game
   - pick up keys
