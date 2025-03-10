@@ -196,7 +196,7 @@ public class PCGWorld {
             if (!generateDivisions(w)) continue;
 //            if (!mergeRooms(w)) continue;
             n_times_reached_generation_stage[1]++;
-            if (!generateAreaConnections(w)) continue;  // hardcoded connections
+            if (!generateInterAreaConnections(w)) continue;  // hardcoded connections
             n_times_reached_generation_stage[2]++;
             w.spanningTree = generateSpanningTree(w);
             if (w.spanningTree == null) continue;
@@ -284,7 +284,7 @@ public class PCGWorld {
     }
     
     
-    public boolean generateAreaConnections(World w) throws Exception
+    public boolean generateInterAreaConnections(World w) throws Exception
     {
         // Hardcoded area connections:
         AreaPoint a0p1 = randomAreaBottomMostPoint(w.areas.get(0), true);
@@ -370,21 +370,21 @@ public class PCGWorld {
             a7p2.direction = DIRECTION_DOWN;
         }
         
-        w.connections.add(new AreaConnection(a0p1, a1p1, AreaConnection.BIDIRECTIONAL, r));
-        w.connections.add(new AreaConnection(a0p2, a2p1, AreaConnection.BIDIRECTIONAL, r));
-        w.connections.add(new AreaConnection(a1p2, new AreaPoint(w.areas.get(3), 0, 0, DIRECTION_UP), AreaConnection.BIDIRECTIONAL, r));
-        w.connections.add(new AreaConnection(a2p2, new AreaPoint(w.areas.get(3), 8, 0, DIRECTION_UP), AreaConnection.BIDIRECTIONAL, r));
-        w.connections.add(new AreaConnection(new AreaPoint(w.areas.get(3), 4, 2, DIRECTION_DOWN), a4p1, AreaConnection.BIDIRECTIONAL, r));
-        w.connections.add(new AreaConnection(a4p2, new AreaPoint(w.areas.get(5), 1, 0, DIRECTION_UP), AreaConnection.BIDIRECTIONAL, r));
-        w.connections.add(new AreaConnection(new AreaPoint(w.areas.get(5), 0, 1, DIRECTION_LEFT), a6p1, AreaConnection.BIDIRECTIONAL, r));
-        w.connections.add(new AreaConnection(new AreaPoint(w.areas.get(5), 2, 1, DIRECTION_RIGHT), a7p1, AreaConnection.BIDIRECTIONAL, r));
-        w.connections.add(new AreaConnection(new AreaPoint(w.areas.get(5), 1, 2, DIRECTION_DOWN), a8p1, AreaConnection.BIDIRECTIONAL, r));
-        w.connections.add(new AreaConnection(a7p3, a9p1, AreaConnection.BIDIRECTIONAL, r));
+        w.interAreaconnections.add(new InterAreaConnection(a0p1, a1p1, InterAreaConnection.BIDIRECTIONAL, r));
+        w.interAreaconnections.add(new InterAreaConnection(a0p2, a2p1, InterAreaConnection.BIDIRECTIONAL, r));
+        w.interAreaconnections.add(new InterAreaConnection(a1p2, new AreaPoint(w.areas.get(3), 0, 0, DIRECTION_UP), InterAreaConnection.BIDIRECTIONAL, r));
+        w.interAreaconnections.add(new InterAreaConnection(a2p2, new AreaPoint(w.areas.get(3), 8, 0, DIRECTION_UP), InterAreaConnection.BIDIRECTIONAL, r));
+        w.interAreaconnections.add(new InterAreaConnection(new AreaPoint(w.areas.get(3), 4, 2, DIRECTION_DOWN), a4p1, InterAreaConnection.BIDIRECTIONAL, r));
+        w.interAreaconnections.add(new InterAreaConnection(a4p2, new AreaPoint(w.areas.get(5), 1, 0, DIRECTION_UP), InterAreaConnection.BIDIRECTIONAL, r));
+        w.interAreaconnections.add(new InterAreaConnection(new AreaPoint(w.areas.get(5), 0, 1, DIRECTION_LEFT), a6p1, InterAreaConnection.BIDIRECTIONAL, r));
+        w.interAreaconnections.add(new InterAreaConnection(new AreaPoint(w.areas.get(5), 2, 1, DIRECTION_RIGHT), a7p1, InterAreaConnection.BIDIRECTIONAL, r));
+        w.interAreaconnections.add(new InterAreaConnection(new AreaPoint(w.areas.get(5), 1, 2, DIRECTION_DOWN), a8p1, InterAreaConnection.BIDIRECTIONAL, r));
+        w.interAreaconnections.add(new InterAreaConnection(a7p3, a9p1, InterAreaConnection.BIDIRECTIONAL, r));
         if (a6p2 != null) {
-            w.connections.add(new AreaConnection(a6p2, a8p2, AreaConnection.BIDIRECTIONAL, r));
+            w.interAreaconnections.add(new InterAreaConnection(a6p2, a8p2, InterAreaConnection.BIDIRECTIONAL, r));
         }
         if (a7p2 != null) {
-            w.connections.add(new AreaConnection(a7p2, a8p2, AreaConnection.BIDIRECTIONAL, r));
+            w.interAreaconnections.add(new InterAreaConnection(a7p2, a8p2, InterAreaConnection.BIDIRECTIONAL, r));
         }
         
         removeTag(a0p1, "connection");
@@ -443,14 +443,15 @@ public class PCGWorld {
         for(AreaDivision d:tree) {
             if (d.parent == null) continue;
             Area a = d.root.a;
-            a.connections[d.root.x][d.root.y] |= d.root.direction;
-            if (d.root.connection != null) {
-                if (d.root.connection.p1 == d.root) {
-                    d.root.connection.p2.a.connections[d.root.connection.p2.x][d.root.connection.p2.y] |= d.root.connection.p2.direction;
-                } else {
-                    d.root.connection.p1.a.connections[d.root.connection.p1.x][d.root.connection.p1.y] |= d.root.connection.p1.direction;
-                }
+            if (d.root.interAreaConnection != null) {
+//                a.connections[d.root.x][d.root.y] |= d.root.direction;
+//                if (d.root.interAreaConnection.p1 == d.root) {
+//                    d.root.interAreaConnection.p2.a.connections[d.root.interAreaConnection.p2.x][d.root.interAreaConnection.p2.y] |= d.root.interAreaConnection.p2.direction;
+//                } else {
+//                    d.root.interAreaConnection.p1.a.connections[d.root.interAreaConnection.p1.x][d.root.interAreaConnection.p1.y] |= d.root.interAreaConnection.p1.direction;
+//                }
             } else {
+                a.connections[d.root.x][d.root.y] |= d.root.direction;
                 switch(d.root.direction) {
                     case DIRECTION_LEFT:
                         a.connections[d.root.x - 1][d.root.y] |= DIRECTION_RIGHT;
@@ -550,7 +551,7 @@ public class PCGWorld {
 //                           divisionTreeDepth(ending));
         
         List<Quest> quests = new ArrayList<>();
-        List<AreaConnection> usedConnections = new ArrayList<>();
+        List<InterAreaConnection> usedConnections = new ArrayList<>();
                 
         n_times_reached_generation_stage[4]++;
         
@@ -647,7 +648,7 @@ public class PCGWorld {
     */
     public List<Quest> generateSubquests(World w, List<AreaDivision> tree, List<QuestSpec> open,
                                          List<AreaDivision> useable, List<AreaDivision> reachable,
-                                         List<AreaConnection> usedConnections)
+                                         List<InterAreaConnection> usedConnections)
     {
         PCGPatternAtoB pat_a2b = new PCGPatternAtoB();
         PCGPatternObstacle pat_o = new PCGPatternObstacle();
@@ -967,9 +968,9 @@ public class PCGWorld {
         }
         
         // Only use bidirectional connections:
-        for(AreaConnection c:w.connections) {
+        for(InterAreaConnection c:w.interAreaconnections) {
             if (c.p1.a.divisionIDs[c.p1.x][c.p1.y] == div.divisionID &&
-                c.direction == AreaConnection.BIDIRECTIONAL) {
+                c.direction == InterAreaConnection.BIDIRECTIONAL) {
                 int id2 = c.p2.a.divisionIDs[c.p2.x][c.p2.y];
                 if (!neighborIDs.contains(id2)) {
                     neighborIDs.add(id2);
@@ -978,7 +979,7 @@ public class PCGWorld {
                 }
             }
             if (c.p2.a.divisionIDs[c.p2.x][c.p2.y] == div.divisionID &&
-                c.direction == AreaConnection.BIDIRECTIONAL) {
+                c.direction == InterAreaConnection.BIDIRECTIONAL) {
                 int id2 = c.p1.a.divisionIDs[c.p1.x][c.p1.y];
                 if (!neighborIDs.contains(id2)) {
                     neighborIDs.add(id2);

@@ -12,8 +12,8 @@
   db #3f, #ff, #21, #c3  ; data/patterns/room0011-3.tmx
   db #3f, #ff, #21, #c3  ; data/patterns/room0011-4.tmx
   db #3f, #81, #3f, #ff  ; data/patterns/room0100-1.tmx
-  db #3f, #81, #3f, #99  ; data/patterns/room0100-2.tmx
-  db #3f, #81, #3f, #81  ; data/patterns/room0100-3.tmx
+  db #3f, #81, #3f, #ff  ; data/patterns/room0100-2.tmx
+  db #3f, #81, #3f, #ff  ; data/patterns/room0100-3.tmx
   db #3f, #81, #3f, #81  ; data/patterns/room0100-4.tmx
   db #3f, #81, #3f, #ff  ; data/patterns/room0100-5.tmx
   db #3f, #81, #3f, #ff  ; data/patterns/room0100-6.tmx
@@ -46,17 +46,17 @@
   db #21, #ff, #3f, #c7  ; data/patterns/room1001-3.tmx
   db #21, #ff, #3f, #c7  ; data/patterns/room1001-4.tmx
   db #21, #ff, #21, #ff  ; data/patterns/room1010-1.tmx
-  db #21, #ff, #21, #e7  ; data/patterns/room1010-2.tmx
+  db #21, #ff, #21, #ff  ; data/patterns/room1010-2.tmx
   db #21, #ff, #21, #c3  ; data/patterns/room1010-3.tmx
-  db #21, #ff, #21, #99  ; data/patterns/room1010-4.tmx
-  db #21, #ff, #21, #f7  ; data/patterns/room1010-5.tmx
+  db #21, #ff, #21, #ff  ; data/patterns/room1010-4.tmx
+  db #21, #ff, #21, #ff  ; data/patterns/room1010-5.tmx
   db #21, #ff, #21, #ff  ; data/patterns/room1010-6.tmx
   db #21, #ff, #21, #c3  ; data/patterns/room1011-1.tmx
   db #21, #ff, #21, #c3  ; data/patterns/room1011-2.tmx
   db #21, #ff, #21, #c3  ; data/patterns/room1011-3.tmx
   db #23, #ff, #23, #ff  ; data/patterns/room1011-4.tmx
-  db #21, #ff, #21, #db  ; data/patterns/room1011-5.tmx
-  db #21, #ff, #21, #db  ; data/patterns/room1011-6.tmx
+  db #21, #ff, #21, #c3  ; data/patterns/room1011-5.tmx
+  db #21, #ff, #21, #c3  ; data/patterns/room1011-6.tmx
   db #21, #81, #3f, #ff  ; data/patterns/room1100-1.tmx
   db #21, #81, #3f, #ff  ; data/patterns/room1100-2.tmx
   db #21, #81, #3f, #ff  ; data/patterns/room1100-3.tmx

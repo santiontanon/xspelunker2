@@ -920,14 +920,18 @@ pcg_generate_area__inter_area_connections_loop_check_area2_entry_point:
 			ld e, a
 			ld d, 0
 			; we do not need to check if 'b' is 0, since no map can have height 0!
+			ld a, b
+			or a
+			jr z, pcg_generate_area__inter_area_connections_loop_check_area2_ptr_loop_done
 pcg_generate_area__inter_area_connections_loop_check_area2_ptr_loop:
 			add hl, de
 			djnz  pcg_generate_area__inter_area_connections_loop_check_area2_ptr_loop
-			add hl, hl  ; hl = (y * 2) * width
+pcg_generate_area__inter_area_connections_loop_check_area2_ptr_loop_done:
+			add hl, hl  ; hl = (y * width * 2)
 			ld b, 0
-			add hl, bc  ; hl = x + (y * 2) * width
+			add hl, bc  ; hl = x + (y * width * 2)
 			ld bc, tmp_pcg_area__piece_types
-			add hl, bc  ; hl = tmp_pcg_area__piece_types + x * 2 + (y * width * 2)
+			add hl, bc  ; hl = tmp_pcg_area__piece_types + x + (y * width * 2)
 		pop de
 		ld a, (de)  ; direction
 		or a, (hl)

@@ -7,7 +7,7 @@ package pcg.questpatterns;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import pcg.AreaConnection;
+import pcg.InterAreaConnection;
 import pcg.AreaDivision;
 import pcg.AreaPoint;
 import pcg.Quest;

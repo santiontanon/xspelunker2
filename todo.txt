@@ -1,30 +1,24 @@
 to do:
 
-***- when jumping from a rope/ladder have a few frames (4? 8?) where you cannot grab to another ladder/rope again (to prevent the awkward thing of pressing jump while pressing up on ladders/ropes)
-***- Java: make the room generation tile randomization in Java match the MSX version too
-
-***- inter-area transitions:
-  ***- detect area transitions
-  ***- generate the new area / room after the transition
-  ***- set player coordinates after the transition and continue playing
-  ***- how do I set the player start coordinates at the very beginning of the game? special chunk?
-  *** inter-area screen (black for now)
-
-- nice inter-area screen:
-  - draw a font
-  - bring the text logic into the game
-  - one page dedicated to text / font (for now, ignore compression, all is decompressed)
-  - inter-area screen is just a black screen with "Entering XXX"
-  - it is displayed while area PCG is running, and then goes away to start playing:
-    - can I do it so that the keypresses get recorded if player presses space during PCG, so that it skips automatically?
-  - erase the previous room nicely (sprites out, delete left to right)
-  - draw the first room nicely (draw left to right, and then sprites)
+***- nice inter-area screen:
+  ***- draw a font
+  ***- bring the text logic into the game
+  ***- one page dedicated to text / font (for now, ignore compression, all is decompressed)
+  ***- inter-area screen is just a black screen with "Entering XXX"
+  ***- while PCG is running a "load area..." message is shown (goes away when PCG is done)
+  ***- after it's done. There is a skippable pause of 5 seconds
+  ***- erase the previous room nicely (sprites out, delete left to right)
+  ***- draw the first room nicely (draw left to right, and then sprites)
 
 - write the whole story line of the game, so that everything makes sense. This will help me finalize what you get from bosses, what the ending screen is, the intro, etc.
   - how about those gods that I drew? where do I use them?
 
+- iteration on the pyramid chunks:
+  - left/right paths: the "contract" is that the path must be at the bottom part of the screen. So, all doors/breakable walls must be in that position
+  - up/down doors/breakable must be in the middle, since when we block a connection with a ladder, we need to replace the door/wall with a ladder piece
+
 - push blocks (so that we can navigate the map properly):
-  - in Tiled: remove ALL boulders, and replace with objects
+  - in Tiled: remove ALL boulders, and replace with objects (this might increase the number of objects per chunk?)
   - create the concept of tile objects (items, chests, boulders, doors, breakable doors, switches, etc.):
     - in "pcg_generate_area__choose_chunks":
       - Add necessary objects according to the tag (if any): (see "create objects:" comment)
@@ -39,13 +33,6 @@ to do:
   - make them fall if pushed over an edge (they go through water)
   - they fall out of the screen if reaching the bottom edge, and can push them out through the left/right
 
-- breakable blocks:
-  - make this work with the inter-room transitions (broken wall, overwrides the collision)
-  - make sure they work "down"
-  - make sure they work "left"
-  - make sure they work "right"
-  - make sure they work "up"
-
 - Implement PCGWorld in assembler:
   - data structure
       - withinChestTag: do I need this? maybe I can just remove tags that are "withinChestTag" from the tag list
@@ -57,7 +44,14 @@ to do:
   - for some areas (pyramids, etc.) have some predefined shapes (e.g. pyramid shape), that can be chosen with some probability. And maybe also different shapes for the confluence, etc.
   - keep Java/assembler versions in sync (try different random seeds)
 
+- weapons:
+  - come up with a list of weapons
+  - implement the first one or two weapons (make sure I can hit left/up/right/down with the default weapon, for breakable walls)
+
 - being able to complete the game in assembler:
+  - breakable walls:
+    - make this work with the inter-room transitions (broken wall, overwrites the collision)
+    - make sure they work down/left/right/up
   - render doors (and be blocked by them)
   - spawn and draw items in the game
   - pick up keys
@@ -78,10 +72,6 @@ to do:
   - get hurt by running out of oxygen in water
   - decide whether you get hurt by falling from a height
   - if a boulder falls on top of you, take damage (and where are you spawned? on top of the boulder?)
-
-- weapons:
-  - come up with a list of weapons
-  - implement the first one or two weapons
 
 - enemies:
   - come up with a list of enemies for pyramid (consider both sprite enemies and larger tile-based enemies)
@@ -109,6 +99,7 @@ to do:
 
 - jungle biome
   - implement it
+  - special chunk for start position (start tag) and set start position there (on the left-edge of map)
   - add jungle events (village, npcs, maybe shop, etc.)
 
 - adjust PCG patterns/algorithms so that maps look as good as possible. If I need to draw more tiles, redo patterns. Do it!

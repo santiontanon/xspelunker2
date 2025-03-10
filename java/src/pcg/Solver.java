@@ -101,12 +101,12 @@ public class Solver {
                     open.add(p2);
                 }                
             }
-            for(AreaConnection c:w.connections) {
+            for(InterAreaConnection c:w.interAreaconnections) {
                 AreaPoint p2 = null;
-                if (c.p1.equals(p) && (c.direction == AreaConnection.BIDIRECTIONAL || c.direction == AreaConnection.P1TOP2)) {
+                if (c.p1.equals(p) && (c.direction == InterAreaConnection.BIDIRECTIONAL || c.direction == InterAreaConnection.P1TOP2)) {
                     p2 = c.p2;
                 }
-                if (c.p2.equals(p) && (c.direction == AreaConnection.BIDIRECTIONAL || c.direction == AreaConnection.P2TOP1)) {
+                if (c.p2.equals(p) && (c.direction == InterAreaConnection.BIDIRECTIONAL || c.direction == InterAreaConnection.P2TOP1)) {
                     p2 = c.p1;
                 }
                 if (p2 != null && !closed.contains(p2) && !open.contains(p2)) {

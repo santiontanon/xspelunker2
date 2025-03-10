@@ -367,7 +367,7 @@ get_chunk_ids_current_room_ptr:
 	push bc
 		call crop_player_tile_coordinates_top_room_limits
 
-		; convert c, b to coordinstes in "chunks" (c/=16, b/=12)
+		; convert c, b to coordinates in "chunks" (c/=16, b/=12)
 		sra c
 		sra c
 		sra c
@@ -419,22 +419,7 @@ get_chunk_ids_current_room_ptr_continue:
 get_room_ids_current_room_ptr:
 	push bc
 		call crop_player_tile_coordinates_top_room_limits
-
-		; convert c, b to coordinstes in "screens" (c/=32, b/=24)
-		sra c
-		sra c
-		sra c
-		sra c
-		sra c
-
-		ld a, b
-		ld b, 0
-get_room_ids_current_room_ptr_div24_loop:
-		sub 24
-		jr c, get_room_ids_current_room_ptr_continue5
-		inc b
-		jr get_room_ids_current_room_ptr_div24_loop
-get_room_ids_current_room_ptr_continue5:
+		call get_player_room_coordinates
 
 		ld a, (current_area__width)
 		ld hl, 0
@@ -462,11 +447,15 @@ get_room_ids_current_room_ptr_continue:
 
 ;-----------------------------------------------
 player_exit_room_left:
+	call check_for_interarea_exit_left
 	call check_collision_with_next_chunk_left
 	ret z  ; collision	
 	call get_room_ids_current_room_ptr
 	dec hl
 	ld e, (hl)  ; next roomID
+	ld a, e
+	cp #ff
+	ret z
 	push de
 		call disable_VDP_output
 	pop de
@@ -502,11 +491,15 @@ player_exit_room_left:
 
 ;-----------------------------------------------
 player_exit_room_right:
+	call check_for_interarea_exit_right
 	call check_collision_with_next_chunk_right
 	ret z  ; collision
 	call get_room_ids_current_room_ptr
 	inc hl
 	ld e, (hl)  ; next roomID
+	ld a, e
+	cp #ff
+	ret z
 	push de
 		call disable_VDP_output
 	pop de
@@ -540,6 +533,7 @@ player_exit_room_right:
 
 ;-----------------------------------------------
 player_exit_room_up:
+	call check_for_interarea_exit_up
 	call check_collision_with_next_chunk_up
 	ret z  ; collision		
 	call get_room_ids_current_room_ptr
@@ -549,6 +543,9 @@ player_exit_room_up:
 	or a
 	sbc hl, de
 	ld e, (hl)  ; next roomID
+	ld a, e
+	cp #ff
+	ret z
 	push de
 		call disable_VDP_output
 	pop de
@@ -582,7 +579,10 @@ player_exit_room_up:
 
 
 ;-----------------------------------------------
+; input:
+; - c, b: player coordinates
 player_exit_room_down:
+	call check_for_interarea_exit_down
 	call check_collision_with_next_chunk_down
 	ret z  ; collision		
 	call get_room_ids_current_room_ptr
@@ -591,6 +591,9 @@ player_exit_room_down:
 	ld e, a
 	add hl, de
 	ld e, (hl)  ; next roomID
+	ld a, e
+	cp #ff
+	ret z
 	push de
 		call disable_VDP_output
 	pop de
@@ -767,6 +770,174 @@ check_collision_with_next_chunk_down_bit_found:
 	xor #01  ; reverse the bit to get the flag we want
 	ret
 
+
+;-----------------------------------------------
+; input:
+; - c, b: player tile coordinates
+get_player_room_coordinates:
+	; convert c, b to coordinates in "screens" (c/=32, b/=24)
+	sra c
+	sra c
+	sra c
+	sra c
+	sra c
+	ld a, b
+	ld b, 0
+get_player_room_coordinates_div24_loop:
+	sub 24
+	ret c
+	inc b
+	jr get_player_room_coordinates_div24_loop
+
+
+;-----------------------------------------------
+; input:
+; - c, b: player tile coordinates
+get_player_chunk_coordinates:
+	; convert c, b to coordinates in "screens" (c/=16, b/=12)
+	sra c
+	sra c
+	sra c
+	sra c
+	ld a, b
+	ld b, 0
+get_player_chunk_coordinates_div12_loop:
+	sub 12
+	ret c
+	inc b
+	jr get_player_chunk_coordinates_div12_loop
+
+
+;-----------------------------------------------
+; input:
+; - c, b: player tile coordinates
+check_for_interarea_exit_left:
+	ld d, PCG_DIRECTION_LEFT
+	jp check_for_interarea_exit_d
+check_for_interarea_exit_up:
+	ld d, PCG_DIRECTION_UP
+	jp check_for_interarea_exit_d
+check_for_interarea_exit_right:
+	ld d, PCG_DIRECTION_RIGHT
+	jp check_for_interarea_exit_d
+check_for_interarea_exit_down:
+	ld d, PCG_DIRECTION_DOWN
+check_for_interarea_exit_d:
+	push bc
+		call crop_player_tile_coordinates_top_room_limits
+		call get_player_chunk_coordinates
+		ld a, (current_room__x)
+		add a, a
+		add a, c
+		ld c, a
+		ld a, (current_room__y)
+		add a, a
+		add a, b
+		ld b, a  ; c, b: room coordinate in the area
+
+		ld a, (current_area__id)
+		ld e, a
+		; check if coordinates match any inter-area exit:
+		ld hl, current_world__interarea_connections  ; id1, id2, x1, y1, direction1, x2, y2, direction2
+check_for_interarea_exit_loop:
+		ld a, (hl)  ; id1
+		inc hl
+		cp #ff  ; sentinel
+		jr z, check_for_interarea_exit_done
+		cp e
+		jr nz, check_for_interarea_exit_no_area1
+		inc hl
+		ld a, (hl)  ; x1
+		cp c
+		jr nz, check_for_interarea_exit_no_x1
+		inc hl
+		ld a, (hl)  ; y1
+		cp b
+		jr nz, check_for_interarea_exit_no_y1
+		inc hl
+		ld a, (hl)  ; direction1
+		cp d  ; compare with direction the player is exiting through
+		jr nz, check_for_interarea_exit_no_direction1
+		; match 1, we need to teleport to area 2!
+; 	    ; only going up to another area up/down via ladders
+; 		ld a, d
+; 		cp PCG_DIRECTION_LEFT
+; 		jr z, check_for_interarea_exit_exit1_ok
+; 		cp PCG_DIRECTION_RIGHT
+; 		jr z, check_for_interarea_exit_exit1_ok
+; 		ld a, (player_state)
+; 		and #fe
+; 		cp PLAYER_STATE_LADDER
+; 		jp nz, check_for_interarea_exit_done
+; check_for_interarea_exit_exit1_ok:
+		dec hl
+		dec hl
+		dec hl
+		ld a, (hl)  ; id2
+		inc hl
+		inc hl
+		inc hl
+		inc hl
+		jp interarea_exit  ; no need for "pop bc", since interarea_exit will reset the stack
+
+check_for_interarea_exit_no_direction1:
+		dec hl
+check_for_interarea_exit_no_y1:
+		dec hl
+check_for_interarea_exit_no_x1:
+		dec hl
+check_for_interarea_exit_no_area1:
+		ld a, (hl)  ; id2
+		inc hl
+		inc hl
+		inc hl
+		inc hl
+		cp e
+		jr nz, check_for_interarea_exit_no_area2
+		ld a, (hl)  ; x2
+		cp c
+		jr nz, check_for_interarea_exit_no_x2
+		inc hl
+		ld a, (hl)  ; y2
+		cp b
+		jr nz, check_for_interarea_exit_no_y2
+		inc hl
+		ld a, (hl)  ; direction2
+		cp d  ; compare with direction the player is exiting through
+		jr nz, check_for_interarea_exit_no_direction2
+		; match 2, we need to teleport to area 1!
+	    ; only going up to another area up/down via ladders
+; 		ld a, d
+; 		cp PCG_DIRECTION_LEFT
+; 		jr z, check_for_interarea_exit_exit2_ok
+; 		cp PCG_DIRECTION_RIGHT
+; 		jr z, check_for_interarea_exit_exit2_ok
+; 		ld a, (player_state)
+; 		and #fe
+; 		cp PLAYER_STATE_LADDER
+; 		jp nz, check_for_interarea_exit_done
+; check_for_interarea_exit_exit2_ok:		
+		ld bc, -7
+		add hl, bc
+		ld a, (hl)  ; id1
+		inc hl
+		inc hl
+		jp interarea_exit  ; no need for "pop bc", since interarea_exit will reset the stack
+
+check_for_interarea_exit_no_area2:
+check_for_interarea_exit_no_x2:
+		inc hl
+check_for_interarea_exit_no_y2:		
+		inc hl
+check_for_interarea_exit_no_direction2:		
+		inc hl
+		jp check_for_interarea_exit_loop
+
+check_for_interarea_exit_done:
+	pop bc
+	ret
+
+
 ENDIF
 
 ;-----------------------------------------------
@@ -788,7 +959,7 @@ tile_collision_types_pyramid:
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 8, 0, 0, 0, 0, 0
     db 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2
-    db 4, 0, 0, 5, 3, 3, 5, 6, 8, 1, 1, 1, 2, 3, 2, 2
+    db 4, 0, 0, 5, 2, 2, 5, 6, 8, 1, 1, 1, 2, 3, 2, 2
     db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
     db 0, 2, 2, 2, 2, 2, 0, 7, 8, 2, 2, 2, 2, 2, 2, 2
     db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2

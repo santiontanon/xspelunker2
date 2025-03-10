@@ -20,7 +20,7 @@ import util.Pair;
 public class World {
 
     public List<Area> areas = new ArrayList<>();
-    public List<AreaConnection> connections = new ArrayList<>();
+    public List<InterAreaConnection> interAreaconnections = new ArrayList<>();
     public HashMap<String, Integer> lockDirections = new HashMap<>();
     public HashMap<String, String> chestContent = new HashMap<>();
     public List<String> withinChestTag = new ArrayList<>();
@@ -53,7 +53,7 @@ public class World {
             drawArea(a, g, a.areaX, a.areaY, tagList);
         }
         
-        for(AreaConnection c:connections) {
+        for(InterAreaConnection c:interAreaconnections) {
             int x1 = c.p1.a.areaX + c.p1.x * roomSizeX + roomSizeX/2;
             int y1 = c.p1.a.areaY + c.p1.y * roomSizeY + roomSizeY/2;
             int x2 = c.p2.a.areaX + c.p2.x * roomSizeX + roomSizeX/2;

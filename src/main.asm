@@ -166,6 +166,7 @@ call_hl_in_page_c_8000_return:
 
 ;     include "state-braingames.asm"
 ;     include "state-gamestart.asm"
+    include "state-interarea.asm"
     include "state-play.asm"
     include "state-inventory.asm"
 
@@ -335,23 +336,20 @@ end_of_page_7:
 RAM:
 buffer_4096: ds virtual 4096
 
-; Temporary variables (overlapping with the buffer):
-tmp__pcg_current_target_chunk_bank_id: equ buffer_4096 + 4094
-tmp__pcg_current_decompressed_chunk_bank_id: equ buffer_4096 + 4095
-
 current_world__seed: ds virtual 4
 current_world__area_data: ds virtual WORLD_AREA__SIZE * MAX_WORLD_AREAS
-current_world__interarea_connections: ds virtual MAX_INTERAREA_CONNECTIONS * INTERAREA_CONNECTION_SIZE + 1
+; each connection is 8 bytes: ; id1, id2, x1, y1, direction1, x2, y2, direction2
+current_world__interarea_connections: ds virtual MAX_INTERAREA_CONNECTIONS * INTERAREA_CONNECTION_SIZE + 1  ; +1 byte for the sentinel
 
 current_area__seed: ds virtual 4
 current_area__id: ds virtual 1
-current_area__width: ds virtual 1
-current_area__height: ds virtual 1
+current_area__width: ds virtual 1  ; in rooms
+current_area__height: ds virtual 1  ; in rooms
 current_area__room_ids: ds virtual MAX_AREA_SIZE
 current_area__chunks_ids: ds virtual MAX_AREA_SIZE * 2 * 2
 
 current_room__id: ds virtual 1
-current_room__x: ds virtual 1  ; coordinates within the area of the top-left room corner
+current_room__x: ds virtual 1  ; coordinates within the area of the top-left room corner (in "rooms")
 current_room__y: ds virtual 1
 current_room__width: ds virtual 1
 current_room__height: ds virtual 1
@@ -390,6 +388,9 @@ player_water_inertia_x_timer: ds virtual 1
 player_water_inertia_y_timer: ds virtual 1
 player_jump_is_cancelable: ds virtual 1  ; 1: if we can stop the jump by lifting the jump key.
                                          ; 0: the jump will proceed to maximum height without allowing player to stop it early (used for when coming out of the water).
+player_jump_no_grab_timer: ds virtual 1  ; player can grab to ropes/ladders only if this is 0.
+                                         ; This is used for when jumping off a ladder/rope, so that the player does not grab again immediately on the next frame.
+
 
 redraw_whole_room_flag: ds virtual 1
 

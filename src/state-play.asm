@@ -28,25 +28,19 @@ state_play:
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
 
-		; generate world:
+		; generate area:
 		ld hl, pcg_generate_area
-		ld e, 1  ; area to generate
+		ld e, 0  ; area to generate
+; 		ld e, 5  ; area to generate
 		ld c, PCG_PAGE
-		out (#2c), a
 		call call_hl_in_page_c_8000
-		out (#2d), a
 
-		; call PCG to generate the current room from the current area:
+		; generate room:
 		ld e, 0
-; 		ld e, 7  ; room ID
-; 		ld e, 24
-; 		ld e, 26  ; room ID (boss)
-; 		ld e, 28  ; room ID
+; 		ld e, 1
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
-; 		out (#2c), a
 		call call_hl_in_page_c_8000
-; 		out (#2d), a
 
 state_play_from_inventory:
 state_play_from_loaded_room:

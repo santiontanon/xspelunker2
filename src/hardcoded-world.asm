@@ -8,7 +8,7 @@ hardcoded_area_data_0__height:
   db 2
 hardcoded_area_data_0__connections:
   db 0, 0, 0, 0, 0, 0, 0, 0
-  db 0, 0, 1, 1, 0, 2, 10, 8
+  db 0, 0, 0, 0, 0, 2, 10, 8
   ; filler
   ds 48, 0
 hardcoded_area_data_0__divisionIDs:
@@ -34,7 +34,7 @@ hardcoded_area_data_1__connections:
   db 0, 0, 0, 0, 0, 0, 0, 0
   db 0, 0, 0, 0, 0, 0, 0, 0
   db 2, 8, 0, 0, 0, 0, 0, 0
-  db 1, 0, 2, 8, 0, 5, 0, 0
+  db 1, 0, 2, 8, 0, 1, 0, 0
   db 4, 0, 2, 8, 0, 4, 0, 0
   db 0, 0, 2, 8, 1, 0, 0, 0
   db 0, 0, 0, 0, 4, 0, 0, 0
@@ -73,10 +73,10 @@ hardcoded_area_data_2__height:
 hardcoded_area_data_2__connections:
   db 0, 0, 0, 0, 0, 0, 0, 0
   db 0, 0, 0, 0, 0, 0, 0, 0
-  db 0, 1, 0, 0, 2, 9, 4, 0
+  db 0, 1, 0, 0, 2, 9, 0, 0
   db 0, 4, 0, 0, 0, 4, 0, 0
   db 0, 0, 0, 2, 9, 0, 0, 0
-  db 1, 0, 0, 1, 4, 0, 0, 0
+  db 0, 0, 0, 1, 4, 0, 0, 0
   db 0, 0, 0, 4, 0, 0, 0, 0
   db 0, 0, 0, 0, 0, 0, 0, 0
 hardcoded_area_data_2__divisionIDs:
@@ -105,9 +105,9 @@ hardcoded_area_data_3__width:
 hardcoded_area_data_3__height:
   db 3
 hardcoded_area_data_3__connections:
-  db 0, 0, 0, 0, 0, 1, 0, 0, 4
+  db 0, 0, 0, 0, 0, 1, 0, 0, 0
   db 0, 0, 2, 8, 1, 4, 0, 0, 0
-  db 0, 0, 0, 0, 5, 0, 0, 0, 0
+  db 0, 0, 0, 0, 4, 0, 0, 0, 0
   ; filler
   ds 37, 0
 hardcoded_area_data_3__divisionIDs:
@@ -132,12 +132,12 @@ hardcoded_area_data_4__height:
 hardcoded_area_data_4__connections:
   db 0, 0, 0, 0, 0, 0, 0, 0
   db 0, 0, 0, 0, 0, 0, 0, 0
-  db 0, 3, 13, 2, 8, 0, 0, 0
+  db 0, 3, 9, 2, 8, 0, 0, 0
   db 0, 4, 4, 1, 1, 2, 9, 0
   db 0, 0, 0, 4, 4, 0, 4, 0
   db 0, 0, 0, 0, 1, 0, 0, 0
   db 0, 0, 0, 0, 4, 0, 0, 0
-  db 0, 0, 0, 0, 0, 0, 1, 0
+  db 0, 0, 0, 0, 0, 0, 0, 0
 hardcoded_area_data_4__divisionIDs:
   db 0, 0, 0, 0, 0, 0, 0, 0
   db 0, 0, 0, 0, 22, 22, 0, 0
@@ -169,9 +169,9 @@ hardcoded_area_data_5__width:
 hardcoded_area_data_5__height:
   db 3
 hardcoded_area_data_5__connections:
-  db 0, 4, 0
-  db 10, 8, 2
-  db 0, 1, 0
+  db 0, 0, 0
+  db 2, 8, 0
+  db 0, 0, 0
   ; filler
   ds 55, 0
 hardcoded_area_data_5__divisionIDs:
@@ -193,12 +193,12 @@ hardcoded_area_data_6__width:
 hardcoded_area_data_6__height:
   db 8
 hardcoded_area_data_6__connections:
-  db 0, 0, 0, 0, 2, 0
+  db 0, 0, 0, 0, 0, 0
   db 0, 0, 0, 0, 0, 0
   db 0, 0, 0, 2, 8, 0
   db 0, 1, 0, 0, 0, 0
   db 0, 5, 0, 1, 0, 0
-  db 0, 5, 2, 12, 0, 0
+  db 0, 4, 2, 12, 0, 0
   db 0, 0, 0, 0, 0, 0
   db 0, 0, 0, 0, 0, 0
   ; filler
@@ -232,8 +232,8 @@ hardcoded_area_data_7__connections:
   db 0, 0, 0, 0, 0, 0
   db 0, 0, 0, 0, 1, 0
   db 0, 0, 0, 2, 12, 0
-  db 0, 8, 2, 8, 2, 8
-  db 0, 0, 2, 9, 2, 0
+  db 0, 0, 2, 8, 2, 8
+  db 0, 0, 2, 9, 0, 0
   db 0, 0, 0, 4, 0, 0
   db 0, 0, 0, 0, 0, 0
   db 0, 0, 2, 8, 0, 0
@@ -265,7 +265,7 @@ hardcoded_area_data_8__connections:
   db 0, 0, 0, 0, 0, 0, 0, 0
   db 0, 0, 0, 0, 0, 2, 8, 0
   db 0, 0, 0, 0, 0, 2, 8, 0
-  db 0, 4, 5, 0, 0, 0, 0, 0
+  db 0, 0, 1, 0, 0, 0, 0, 0
   db 0, 0, 4, 2, 8, 2, 8, 0
   db 0, 0, 0, 0, 0, 0, 0, 0
   db 0, 0, 0, 0, 0, 0, 0, 0
@@ -300,7 +300,7 @@ hardcoded_area_data_9__connections:
   db 0, 0, 0, 1, 0, 0, 4, 0
   db 0, 0, 2, 12, 0, 0, 0, 0
   db 0, 0, 1, 0, 0, 0, 0, 0
-  db 0, 8, 4, 2, 10, 8, 0, 0
+  db 0, 0, 4, 2, 10, 8, 0, 0
   db 0, 0, 0, 0, 0, 0, 0, 0
 hardcoded_area_data_9__divisionIDs:
   db 0, 0, 55, 55, 55, 0, 0, 0
@@ -322,7 +322,8 @@ hardcoded_area_data_9__tags:
   db TAG_BOSS5_CHESTLOCK, 18, 0
   ; filler
   ds 72, 0
-hardcoded_world_data__connections:
+hardcoded_world_data__interarea_connections:
+  ; each connection is 8 bytes: areaID1, areaID2, x1, y1, direction1, x2, y2, direction2
   db 0, 1, 5, 3, 1, 11, 6, 4
   db 0, 2, 7, 3, 1, 12, 4, 4
   db 1, 3, 1, 9, 1, 1, 0, 4

@@ -1,22 +1,9 @@
-;-----------------------------------------------
-; player_fall_speed_table:
-;     db 1, 0, 1, 0
-;     db 1, 1, 1, 1
-;     db 2, 1, 2, 1
-;     db 2, 2, 3, 3, 4, #ff  ; a bit floaty for 50Hz
-
-
-; player_jump_speed_table:
-; 	db 4, 4, 4, 4, 3, 3, 2, 2  ; 26 / 8
-; 	db 2, 2, 2, 1, 2, 1, 2, 1  ; 13 / 8
-; 	db 1, 1, 1  ; 3 / 3
-; 	db 1, 0, 1, 0  ; 2 / 4
-; 	db 0, #ff  ; 44 total jump height in 23 frames / a bit floaty for 50Hz
-
-
 ; When unit testing, we only want to import some parts of this file:
 IF COLLISION_UNIT_TESTING == 0
 
+
+;-----------------------------------------------
+; Jump tables
 player_fall_speed_table:
     db 1, 0, 1, 1, 2, 1
     db 2, 2, 3, 3, 4, #ff  ; good for 50Hz
@@ -248,6 +235,13 @@ player_update_state_falling:
 	bit 4, a
 	call z, player_update_move_one_pixel_left_considering_collisions
 
+	ld a, (player_jump_no_grab_timer)
+	or a
+	jr z, player_update_state_falling_check_rope_or_ladder
+	dec a
+	ld (player_jump_no_grab_timer), a
+	jp player_update_state_falling_no_rope
+player_update_state_falling_check_rope_or_ladder:
 	; check for rope climb:
 	ld a, (keyboard_line_state)
 	bit 5, a  ; up
@@ -297,13 +291,14 @@ player_update_state_falling_speed_loop_done:
 ;-----------------------------------------------
 player_update_state_switch_to_jumping_from_swimming:
 	xor a
+	ld (player_jump_no_grab_timer), a
 	ld (player_jump_is_cancelable), a
 	ld a, (player_x + 1)
 	ld c, a
 	ld a, (player_y + 1)
 	ld b, a
 	call spawn_water_splash
-	ld a, 4 ; skip the first jump states, to make the jump shorter
+	ld a, 3 ; skip the first jump states, to make the jump shorter
 	ld (player_state_timer), a
 	ld a, (player_state)
 	and #01
@@ -311,7 +306,9 @@ player_update_state_switch_to_jumping_from_swimming:
 	ld (player_state), a
 	jp player_update_state_jumping  ; skip the rope check, to avoid an infinite loop
 
-player_update_switch_to_jumping_from_rope:
+player_update_switch_to_jumping_from_rope_or_ladder:
+	ld a, 10  ; do not graph to another ladder/rope for a few frames
+	ld (player_jump_no_grab_timer), a
 	ld a, 1
 	ld (player_jump_is_cancelable), a
 	ld a, (keyboard_line_state)
@@ -333,6 +330,7 @@ player_update_switch_to_jumping:
 	ld hl, SFX_jump
 	call play_SFX_with_high_priority
 	xor a
+	ld (player_jump_no_grab_timer), a
 	ld (player_state_timer), a
 	ld a, (player_state)
 	and #01
@@ -341,6 +339,13 @@ player_update_switch_to_jumping:
 
 player_update_state_jumping:
 	; check for rope climb:
+	ld a, (player_jump_no_grab_timer)
+	or a
+	jr z, player_update_state_jumping_check_rope_or_ladder
+	dec a
+	ld (player_jump_no_grab_timer), a
+	jp player_update_state_jumping_no_rope
+player_update_state_jumping_check_rope_or_ladder:
 	ld a, (keyboard_line_state)
 	bit 5, a  ; up
 	jp nz, player_update_state_jumping_no_rope
@@ -571,7 +576,7 @@ player_update_state_rope_continue3:
 	; check for jump
 	ld a, (keyboard_line_clicks + 2)
 	bit 2, a
-	jp nz, player_update_switch_to_jumping_from_rope
+	jp nz, player_update_switch_to_jumping_from_rope_or_ladder
 
 	call check_player_on_top_of_rope_or_ladder
 	jr z, player_update_state_rope_continue4
@@ -597,7 +602,7 @@ player_update_state_rope_switch_to_idle_pop:
 player_update_switch_to_ladder:
 	ld a, c
 	ld (player_x + 1), a
-	ld a, 6
+	ld a, PLAYER_PIXEL_X_ON_LADDER
 	ld (player_x), a  ; center the player on the ladder
 	ld a, (player_state)
 	and #01
@@ -626,7 +631,7 @@ player_update_state_ladder_skip_movement:
 	; check for jump
 	ld a, (keyboard_line_clicks + 2)
 	bit 2, a
-	jp nz, player_update_switch_to_jumping_from_rope
+	jp nz, player_update_switch_to_jumping_from_rope_or_ladder
 
 	call check_player_on_top_of_rope_or_ladder
 	jr z, player_update_state_ladder_continue2

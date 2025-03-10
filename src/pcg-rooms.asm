@@ -1,3 +1,8 @@
+; Temporary variables (overlapping with the buffer):
+tmp_pcg_room__current_target_chunk_bank_id: equ buffer_4096 + 4094
+tmp_pcg_room__current_decompressed_chunk_bank_id: equ buffer_4096 + 4095
+
+
 ;-----------------------------------------------
 ; This method fills in the "current_room" data structure by generating a room
 ; using the information in "current_area". 
@@ -145,7 +150,7 @@ pcg_generate_room__fb_chunk_ptr_loop:
 	; - iyl/iyh have the width/height of the room in "screens"
 	; - ixl/ixh have the x1, y1 coordinates of the room
 	ld a, #ff
-	ld (tmp__pcg_current_decompressed_chunk_bank_id), a
+	ld (tmp_pcg_room__current_decompressed_chunk_bank_id), a
 	ld b, (pyramid_chunk_fg_bank_ptrs_end - pyramid_chunk_fg_bank_ptrs) / 2  ; number of banks
 pcg_generate_room__fg_loop_bank_id:
 	push bc
@@ -156,7 +161,7 @@ pcg_generate_room__fg_loop_bank_id:
 		add a, a
 		add a, a
 		add a, a
-		ld (tmp__pcg_current_target_chunk_bank_id), a  ; we will only consider chunks in this bank in this iteration
+		ld (tmp_pcg_room__current_target_chunk_bank_id), a  ; we will only consider chunks in this bank in this iteration
 
 		ld b, iyh
 		rl b
@@ -165,7 +170,7 @@ pcg_generate_room__fg_loop_bank_id:
 pcg_generate_room__fg_loop_y:
 		push bc
 		push hl
-			ld a, (tmp__pcg_current_target_chunk_bank_id)
+			ld a, (tmp_pcg_room__current_target_chunk_bank_id)
 			ld e, a
 pcg_generate_room__fg_loop_x:
 			ld a, (hl)
@@ -185,7 +190,7 @@ pcg_generate_room__fg_loop_x:
 					call pcg_generate_room_copy_chunk_to_room
 				pop bc
 			pop hl
-			ld a, (tmp__pcg_current_target_chunk_bank_id)
+			ld a, (tmp_pcg_room__current_target_chunk_bank_id)
 			ld e, a			
 pcg_generate_room__fg_loop_x_skip:
 			inc hl
@@ -472,9 +477,9 @@ pcg_generate_room__prettyfy_pyramid_dragon_head:
 ; - hl: ptr to the fg chunk types
 pcg_generate_room_background_pyramid:
 	xor a
-	ld (tmp__pcg_current_target_chunk_bank_id), a	
+	ld (tmp_pcg_room__current_target_chunk_bank_id), a	
 	ld a, #ff
-	ld (tmp__pcg_current_decompressed_chunk_bank_id), a	
+	ld (tmp_pcg_room__current_decompressed_chunk_bank_id), a	
 	ld b, iyh
 	sla b  ; width in "chunks"
 	ld c, iyl
@@ -664,10 +669,10 @@ pcg_get_chunk_ptr:
 		rrca
 		rrca
 		and #1e
-		ld de, (tmp__pcg_current_decompressed_chunk_bank_id)  ; e = tmp__pcg_current_decompressed_chunk_bank_id
+		ld de, (tmp_pcg_room__current_decompressed_chunk_bank_id)  ; e = tmp_pcg_room__current_decompressed_chunk_bank_id
 		cp e
 		jr z, pcg_get_chunk_ptr_already_loaded
-		ld (tmp__pcg_current_decompressed_chunk_bank_id), a  ; store the current chunk bank (*2)
+		ld (tmp_pcg_room__current_decompressed_chunk_bank_id), a  ; store the current chunk bank (*2)
 		ADD_HL_A
 		ld e, (hl)
 		inc hl

@@ -667,7 +667,7 @@ public class PCGArea {
 //        System.out.println("seed afterwards: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
         
         // Add connection directions: (not needed as this is already done in the a.connectinos above)
-        for(AreaConnection c:w.connections) {
+        for(InterAreaConnection c:w.interAreaconnections) {
             if (c.p1.a == a) {
                 ra.pieceTypes[c.p1.x * ROOM_WIDTH + c.p1_x_chunk_offs][c.p1.y * ROOM_WIDTH +  + c.p1_y_chunk_offs] |= c.p1.direction;
 //                if (c.p1.direction == PCGWorld.DIRECTION_LEFT) {

@@ -30,10 +30,21 @@ public class HardcodedAreaForAssembler {
         PCGArea pcg2 = new PCGArea(true);
         
         World w = pcg1.generate(r);        
-        pcg2.generate(w.areas.get(0), w, r);
-        RenderedArea ra = pcg2.generate(w.areas.get(1), w, r);
-        generateAssemblerRenderedAreaData(ra, w.areas.get(1), pcg2);
-        GenerationTest.visualizeArea(ra, "tmp/area"+1+".png", pcg2);
+        RenderedArea ra0 = pcg2.generate(w.areas.get(0), w, r);
+        RenderedArea ra1 = pcg2.generate(w.areas.get(1), w, r);
+        RenderedArea ra2 = pcg2.generate(w.areas.get(2), w, r);
+//        RenderedArea ra3 = pcg2.generate(w.areas.get(3), w, r);
+//        RenderedArea ra4 = pcg2.generate(w.areas.get(4), w, r);
+//        RenderedArea ra5 = pcg2.generate(w.areas.get(5), w, r);
+//        RenderedArea ra6 = pcg2.generate(w.areas.get(6), w, r);
+        generateAssemblerRenderedAreaData(ra1, w.areas.get(1), pcg2);
+        GenerationTest.visualizeArea(ra0, "tmp/area"+0+".png", pcg2);
+        GenerationTest.visualizeArea(ra1, "tmp/area"+1+".png", pcg2);
+        GenerationTest.visualizeArea(ra2, "tmp/area"+2+".png", pcg2);
+//        GenerationTest.visualizeArea(ra3, "tmp/area"+3+".png", pcg2);
+//        GenerationTest.visualizeArea(ra4, "tmp/area"+4+".png", pcg2);
+//        GenerationTest.visualizeArea(ra5, "tmp/area"+5+".png", pcg2);
+//        GenerationTest.visualizeArea(ra6, "tmp/area"+6+".png", pcg2);
     }
     
     

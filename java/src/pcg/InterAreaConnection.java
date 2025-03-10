@@ -8,7 +8,7 @@ package pcg;
  *
  * @author santi
  */
-public class AreaConnection {
+public class InterAreaConnection {
     public static final int BIDIRECTIONAL = 0;
     public static final int P1TOP2 = 1;
     public static final int P2TOP1 = 2;
@@ -18,7 +18,7 @@ public class AreaConnection {
     public int direction;
     
     
-    public AreaConnection(AreaPoint a_p1, AreaPoint a_p2, int a_d, MSXRandom r)
+    public InterAreaConnection(AreaPoint a_p1, AreaPoint a_p2, int a_d, MSXRandom r)
     {
         p1 = a_p1;
         p2 = a_p2;
@@ -39,7 +39,7 @@ public class AreaConnection {
             case PCGWorld.DIRECTION_DOWN: p2_x_chunk_offs = r.nextInt(2); p2_y_chunk_offs = 1; break;                
         }
         direction = a_d;
-        p1.connection = this;
-        p2.connection = this;
+        p1.interAreaConnection = this;
+        p2.interAreaConnection = this;
     }
 }

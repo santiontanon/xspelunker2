@@ -1,1 +1,35 @@
-<?xml version="1.0" encoding="UTF-8"?><map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="4"> <properties>  <property name="down" value="stairs"/> </properties> <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="256" columns="16">  <image source="tiles.png" width="128" height="128"/>  <tile id="0">   <properties>    <property name="down" value="stairs"/>   </properties>  </tile> </tileset> <layer name="Tile Layer 1" width="16" height="12">  <data encoding="csv">151,156,151,156,247,151,156,156,247,156,156,156,151,156,151,156,153,152,153,152,153,153,152,152,153,152,152,152,153,152,153,152,1,1,1,1,1,135,251,202,203,204,135,1,1,1,1,1,1,1,1,1,1,135,217,218,219,220,135,1,1,1,1,1,1,1,1,1,1,135,233,234,235,236,135,1,1,1,1,1,1,1,1,1,1,135,1,1,1,1,135,1,1,1,1,1,1,1,196,197,1,135,1,1,1,1,135,1,196,197,1,1,1,1,212,213,1,135,1,1,1,1,135,1,212,213,1,1,1,1,228,229,1,256,1,1,1,1,256,1,228,229,1,1,1,1,244,245,1,1,1,1,1,1,1,1,244,245,1,1,151,156,247,156,1,1,1,1,1,1,1,1,247,156,247,156,153,152,153,152,1,1,254,254,143,144,1,1,153,152,153,152</data> </layer> <objectgroup name="objects">  <object id="1" type="item" x="56" y="72" width="16" height="16"/>  <object id="2" type="big-item" x="48" y="64" width="32" height="24"/>  <object id="3" type="4x4-item" x="48" y="56" width="32" height="32"/> </objectgroup></map>
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="4">
+ <properties>
+  <property name="down" value="stairs"/>
+ </properties>
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="256" columns="16">
+  <image source="tiles.png" width="128" height="128"/>
+  <tile id="0">
+   <properties>
+    <property name="down" value="stairs"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="Tile Layer 1" width="16" height="12">
+  <data encoding="csv">
+151,156,151,156,247,151,156,156,247,156,156,156,151,156,151,156,
+153,152,153,152,153,153,152,152,153,152,152,152,153,152,153,152,
+1,1,1,1,1,135,251,202,203,204,135,1,1,1,1,1,
+1,1,1,1,1,135,217,218,219,220,135,1,1,1,1,1,
+1,1,1,1,1,135,233,234,235,236,135,1,1,1,1,1,
+1,1,1,1,1,135,1,1,1,1,135,1,1,1,1,1,
+1,1,196,197,1,135,1,1,1,1,135,1,196,197,1,1,
+1,1,212,213,1,135,1,1,1,1,135,1,212,213,1,1,
+1,1,228,229,1,256,1,1,1,1,256,1,228,229,1,1,
+1,1,244,245,1,1,1,1,1,1,1,1,244,245,1,1,
+151,156,247,156,1,1,254,254,254,254,1,1,247,156,247,156,
+153,152,153,152,1,1,1,1,1,1,1,1,153,152,153,152
+</data>
+ </layer>
+ <objectgroup name="objects">
+  <object id="1" type="item" x="56" y="64" width="16" height="16"/>
+  <object id="2" type="big-item" x="48" y="56" width="32" height="24"/>
+  <object id="3" type="4x4-item" x="48" y="48" width="32" height="32"/>
+ </objectgroup>
+</map>

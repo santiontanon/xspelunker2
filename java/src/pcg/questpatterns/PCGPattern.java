@@ -4,7 +4,7 @@
  */
 package pcg.questpatterns;
 
-import pcg.AreaConnection;
+import pcg.InterAreaConnection;
 import pcg.AreaPoint;
 import pcg.PCGWorld;
 import pcg.World;
@@ -18,7 +18,7 @@ public class PCGPattern {
     
     public AreaPoint getConnectionDestination(World w, AreaPoint p)
     {
-        for(AreaConnection c:w.connections) {
+        for(InterAreaConnection c:w.interAreaconnections) {
             if (c.p1.equals(p)) {
                 return c.p2;
             }
@@ -32,7 +32,7 @@ public class PCGPattern {
 
     public int getConnectionDirection(World w, AreaPoint p)
     {
-        for(AreaConnection c:w.connections) {
+        for(InterAreaConnection c:w.interAreaconnections) {
             if (c.p1.equals(p)) {
                 return c.p2.direction;
             }

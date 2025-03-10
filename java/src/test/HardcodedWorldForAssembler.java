@@ -6,7 +6,7 @@ package test;
 
 import java.util.List;
 import pcg.Area;
-import pcg.AreaConnection;
+import pcg.InterAreaConnection;
 import pcg.AssemblerTags;
 import pcg.MSXRandom;
 import pcg.PCGArea;
@@ -54,14 +54,15 @@ public class HardcodedWorldForAssembler {
     public static void generateAssemblerWorldData(World w) throws Exception
     {
         // Connections:
-        System.out.println("hardcoded_world_data__connections:");
-        for(AreaConnection c:w.connections) {
+        System.out.println("hardcoded_world_data__interarea_connections:");
+        System.out.println("  ; each connection is 8 bytes: areaID1, areaID2, x1, y1, direction1, x2, y2, direction2");
+        for(InterAreaConnection c:w.interAreaconnections) {
             System.out.println("  db " + c.p1.a.ID + ", " + c.p2.a.ID + ", " +
                                (c.p1.x * 2 + c.p1_x_chunk_offs) + ", " + (c.p1.y * 2 + c.p1_y_chunk_offs) + ", " + c.p1.direction + ", " +
                                (c.p2.x * 2 + c.p2_x_chunk_offs) + ", " + (c.p2.y * 2 + c.p2_y_chunk_offs) + ", " + c.p2.direction);
         }
-        if (w.connections.size() < MAX_CONNECTIONS) {
-            System.out.println("  ds " + (MAX_CONNECTIONS - w.connections.size()) * 8 + ", #ff");
+        if (w.interAreaconnections.size() < MAX_CONNECTIONS) {
+            System.out.println("  ds " + (MAX_CONNECTIONS - w.interAreaconnections.size()) * 8 + ", #ff");
         }
         System.out.println("  db #ff  ; sentinel");
     }
