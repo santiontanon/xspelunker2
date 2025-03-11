@@ -47,11 +47,11 @@ public class Text {
         
         // Title:
 //        addLineSafe(lines_with_constant, "Xelden Ring (demo)", "CREDITS0", 14);
-        addLineSafe(lines_with_constant, "Brain Games (2025)", "CREDITS1", 14);
-        addLineSafe(lines_with_constant, "Santiago Ontañón", "CREDITS2", 14);
+        addLineSafe(lines_with_constant, "Brain Games (2025)", "CREDITS1", 16);
+        addLineSafe(lines_with_constant, "Santiago Ontañón", "CREDITS2", 16);
 
         addLineSafe(lines_with_constant, "Entering", "ENTERING", 16);
-        addLineSafe(lines_with_constant, "Loading area...", "LOADING AREA", 16);
+        addLineSafe(lines_with_constant, "Loading area...", "LOADING_AREA", 16);
         addLineSafe(lines_with_constant, "the jungle", "AREA0_NAME", 16);
         addLineSafe(lines_with_constant, "the Temple of Inscriptions", "AREA1_NAME", 16);
         addLineSafe(lines_with_constant, "the Hidden Temple", "AREA2_NAME", 16);

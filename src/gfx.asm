@@ -32,6 +32,35 @@ clear_all_the_sprites:
 
 
 ;-----------------------------------------------
+clear_screen_left_to_right:
+    call clear_all_the_sprites
+    ld b, 32
+    ld hl, NAMTBL2
+clear_screen_left_to_right_loop:
+    push hl
+    push bc
+        ld b, 24
+clear_screen_left_to_right_loop2:
+        push bc
+            push hl
+                call SETWRT
+                ld a, (VDP.DW)
+                ld c, a
+                xor a
+                out (c), a
+            pop hl
+            ld bc, 32
+            add hl, bc
+        pop bc
+        djnz clear_screen_left_to_right_loop2
+    pop bc
+    pop hl
+    inc hl
+    halt
+    djnz clear_screen_left_to_right_loop
+    ret
+
+;-----------------------------------------------
 ; a: byte
 ; bc: amount to write
 ; hl: target address in the VDP
@@ -175,3 +204,4 @@ setup_game_tiles:
     ld de, CLRTBL2 + 256*8*2
     ld bc, 256*8
     jp fast_LDIRVM
+

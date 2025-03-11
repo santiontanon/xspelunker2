@@ -71,20 +71,26 @@ CheckIf60Hz_vdpLoop:
 
 ;-----------------------------------------------
 ; waits a given number of "halts"
-; b - number of halts
+; input:
+; - b: number of halts
 ; wait_b_halts:
 ;     halt
 ;     djnz wait_b_halts
 ;     ret
 
 
-;-----------------------------------------------
-; wait_b_halts_skippable:
-;     halt
-;     CHECK_KEY_CLICK_WITH_ALTERNATE KEY_BUTTON_1, KEY_JUMP
-;     ret nz
-;     djnz wait_b_halts_skippable
-;     ret
+; -----------------------------------------------
+; waits a given number of "halts" (can be skipped pressing space)
+; input:
+; - b: number of halts
+wait_b_halts_skippable:
+    halt
+    call update_keyboard_buffers
+    ld a, (keyboard_line_clicks)
+    bit 0, a
+    ret nz
+    djnz wait_b_halts_skippable
+    ret
 
 
 ; -----------------------------------------------

@@ -1,19 +1,10 @@
 to do:
 
-***- nice inter-area screen:
-  ***- bring the text logic into the game
-  ***- inter-area screen is just a black screen with "Entering XXX"
-  ***- while PCG is running a "loading area..." message is shown (goes away when PCG is done)
-  ***- after it's done. There is a skippable pause of 5 seconds
-  ***- erase the previous room nicely (sprites out, delete left to right)
-  ***- draw the first room nicely (draw left to right, and then sprites)
+***- write the whole story line of the game, so that everything makes sense. This will help me finalize what you get from bosses, what the ending screen is, the intro, etc.
 
-- write the whole story line of the game, so that everything makes sense. This will help me finalize what you get from bosses, what the ending screen is, the intro, etc.
-  - how about those gods that I drew? where do I use them?
-
-- iteration on the pyramid chunks:
-  - left/right paths: the "contract" is that the path must be at the bottom part of the screen. So, all doors/breakable walls must be in that position
-  - up/down doors/breakable must be in the middle, since when we block a connection with a ladder, we need to replace the door/wall with a ladder piece
+***- iteration on the pyramid chunks:
+  ***- left/right paths: the "contract" is that the path must be at the bottom part of the screen. So, all doors/breakable walls must be in that position
+  ***- up/down doors/breakable must be in the middle, since when we block a connection with a ladder, we need to replace the door/wall with a ladder piece
 
 - push blocks (so that we can navigate the map properly):
   - in Tiled: remove ALL boulders, and replace with objects (this might increase the number of objects per chunk?)
@@ -61,6 +52,7 @@ to do:
   - press buttons to open doors
   - open the boss doors (door open animation with some SFX/music, so, it's clear it's important)
   - enter a boss door (for now just an empty room with the item you are supposed to get)
+  - trials (those are solved in front of te gods I drew)
   - whatever else is necessary to play game from beginning to end
   - design ending room (maya calendar stone where you place what you get from the bosses, etc.)
 
@@ -101,7 +93,7 @@ to do:
   - special chunk for start position (start tag) and set start position there (on the left-edge of map)
   - add jungle events (village, npcs, maybe shop, etc.)
 
-- adjust PCG patterns/algorithms so that maps look as good as possible. If I need to draw more tiles, redo patterns. Do it!
+- adjust PCG patterns/algorithms so that maps look as good as possible. If I need to draw more tiles or redo patterns, do it!
 
 - menus:
   - brain games screen
@@ -122,7 +114,7 @@ to do:
 - caves biome
 - temple of fire biome
 - fourth boss
-- atlantis biome
+- atlantis biome (do I need to move the possible set of up/down/left/right tags to 4 instead of just 2?)
 - fifth boss
 
 - first ending sequence
@@ -144,6 +136,7 @@ to do:
 - second ending
 
 - secret puzzle: add strings in the ROM that can be read via a hex reader of the ROM (encode them as decimal numbers in the .asm file, so that they are not visible from the source easily), that form a puzzle, giving you a clue (e.g. a code) for something to do in the game to get a special ending. this will enable the 3rd ending (last piece to fit in the calendar)
+- think of more secrets to add to the game (maybe secret rooms that depend on the RNG spawning certain things)
 
 --------------------
 
