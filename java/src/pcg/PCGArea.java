@@ -314,8 +314,8 @@ public class PCGArea {
 
                 if ((type & PCGWorld.DIRECTION_LEFT) != 0 && (chunk.type & PCGWorld.DIRECTION_LEFT) == 0) {
                     // open a path to the left:
-                    for(int i = 2;i<6;i++) {
-                        for(int j = 0;j<2;j++) {
+                    for(int i = 7;i<10;i++) {
+                        for(int j = 0;j<3;j++) {
                             chunk2.tiles[j][i] = 0;
                         }
                     }
@@ -337,8 +337,8 @@ public class PCGArea {
                 }
                 if ((type & PCGWorld.DIRECTION_RIGHT) != 0 && (chunk.type & PCGWorld.DIRECTION_RIGHT) == 0) {
                     // open a path right:
-                    for(int i = 2;i<6;i++) {
-                        for(int j = 14;j<16;j++) {
+                    for(int i = 7;i<10;i++) {
+                        for(int j = 13;j<16;j++) {
                             chunk2.tiles[j][i] = 0;
                         }
                     }

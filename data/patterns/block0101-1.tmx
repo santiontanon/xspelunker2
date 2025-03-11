@@ -1,1 +1,31 @@
-<?xml version="1.0" encoding="UTF-8"?><map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="4"> <properties>  <property name="down" value="hole"/>  <property name="up" value="hole"/> </properties> <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="256" columns="16">  <image source="tiles.png" width="128" height="128"/> </tileset> <layer name="Tile Layer 1" width="16" height="12">  <data encoding="csv">156,156,1,1,1,186,188,1,1,186,188,1,1,1,247,247,152,152,1,1,1,183,185,1,1,183,185,1,1,1,153,153,248,1,1,1,144,254,144,144,143,254,144,143,1,1,1,248,248,1,1,1,186,188,1,1,1,1,186,188,1,1,1,248,248,1,1,1,183,185,1,1,1,1,183,185,1,1,1,248,248,1,1,1,186,187,188,1,1,1,196,197,1,1,1,245,196,197,1,1,183,184,185,1,1,1,212,213,1,1,196,197,212,213,1,1,186,187,187,188,1,1,228,229,1,1,212,213,228,229,1,1,183,184,184,185,1,1,244,245,1,1,228,229,244,245,251,202,203,204,1,1,1,144,251,202,203,204,244,245,151,156,217,218,219,220,1,1,1,144,217,218,219,220,247,156,153,152,233,234,235,236,1,1,254,144,233,234,235,236,153,152</data> </layer> <objectgroup name="objects">  <object id="1" type="item" x="56" y="0" width="16" height="16"/>  <object id="2" type="breakable-right" x="120" y="16" width="8" height="32"/>  <object id="3" type="breakable-left" x="0" y="16" width="8" height="32"/> </objectgroup></map>
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="4">
+ <properties>
+  <property name="down" value="hole"/>
+  <property name="up" value="hole"/>
+ </properties>
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="256" columns="16">
+  <image source="tiles.png" width="128" height="128"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="16" height="12">
+  <data encoding="csv">
+156,156,1,1,1,186,188,1,1,186,188,1,1,1,247,247,
+152,152,1,1,1,183,185,1,1,183,185,1,1,1,153,153,
+248,1,1,1,144,254,144,144,143,254,144,143,1,1,1,248,
+248,1,1,1,186,188,1,1,1,1,186,188,1,1,1,248,
+248,1,1,1,183,185,1,1,1,1,183,185,1,1,1,248,
+244,245,1,1,186,187,188,1,1,1,196,197,1,1,244,245,
+196,197,1,1,183,184,185,1,1,1,212,213,1,1,196,197,
+212,213,1,1,186,187,187,188,1,1,228,229,1,1,212,213,
+228,229,1,1,183,184,184,185,1,1,244,245,1,1,228,229,
+244,245,251,202,203,204,1,1,1,144,251,202,203,204,244,245,
+151,156,217,218,219,220,1,1,1,144,217,218,219,220,247,156,
+153,152,233,234,235,236,1,1,254,144,233,234,235,236,153,152
+</data>
+ </layer>
+ <objectgroup name="objects">
+  <object id="1" type="item" x="56" y="0" width="16" height="16"/>
+  <object id="2" type="breakable-right" x="112" y="48" width="16" height="32"/>
+  <object id="3" type="breakable-left" x="0" y="48" width="16" height="32"/>
+ </objectgroup>
+</map>

@@ -2,10 +2,6 @@ to do:
 
 ***- write the whole story line of the game, so that everything makes sense. This will help me finalize what you get from bosses, what the ending screen is, the intro, etc.
 
-***- iteration on the pyramid chunks:
-  ***- left/right paths: the "contract" is that the path must be at the bottom part of the screen. So, all doors/breakable walls must be in that position
-  ***- up/down doors/breakable must be in the middle, since when we block a connection with a ladder, we need to replace the door/wall with a ladder piece
-
 - push blocks (so that we can navigate the map properly):
   - in Tiled: remove ALL boulders, and replace with objects (this might increase the number of objects per chunk?)
   - create the concept of tile objects (items, chests, boulders, doors, breakable doors, switches, etc.):

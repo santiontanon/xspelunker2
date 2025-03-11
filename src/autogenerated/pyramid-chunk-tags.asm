@@ -8,7 +8,7 @@ pyramid_standard_chunk_pool:
   db 1, #00, #01  ; data/patterns/room0001-1.tmx (2)
   dw #03bf
   db 1, #00, #01  ; data/patterns/room0001-2.tmx (3)
-  dw #03ab
+  dw #02ab
   db 1, #00, #02  ; data/patterns/room0001-3.tmx (4)
   dw #03bf
   db 2, #00, #00  ; data/patterns/room0010-1.tmx (5)
@@ -80,11 +80,11 @@ pyramid_standard_chunk_pool:
   db 8, #00, #00  ; data/patterns/room1000-1.tmx (38)
   dw #0667
   db 8, #00, #00  ; data/patterns/room1000-2.tmx (39)
-  dw #0647
+  dw #0207
   db 8, #00, #00  ; data/patterns/room1000-3.tmx (40)
   dw #0207
   db 8, #00, #00  ; data/patterns/room1000-4.tmx (41)
-  dw #0467
+  dw #0027
   db 8, #00, #00  ; data/patterns/room1000-5.tmx (42)
   dw #0577
   db 9, #00, #01  ; data/patterns/room1001-1.tmx (43)
@@ -110,7 +110,7 @@ pyramid_standard_chunk_pool:
   db 11, #00, #01  ; data/patterns/room1011-1.tmx (53)
   dw #0007
   db 11, #00, #01  ; data/patterns/room1011-2.tmx (54)
-  dw #0117
+  dw #0017
   db 11, #00, #02  ; data/patterns/room1011-3.tmx (55)
   dw #0117
   db 11, #00, #02  ; data/patterns/room1011-4.tmx (56)
@@ -331,15 +331,15 @@ pyramid_block_chunk_pool:
   dw #0000
 pyramid_combination_chunk_pool:
   db 0, #00, #00  ; data/patterns/combination0000-1.tmx (163)
-  dw #07e9
+  dw #07f9
   db 1, #00, #01  ; data/patterns/combination0000-1.tmx + down (164)
-  dw #03a9
+  dw #03b9
   db 1, #00, #02  ; data/patterns/combination0001-1.tmx (165)
   dw #03b9
   db 2, #00, #00  ; data/patterns/combination0000-1.tmx + right (166)
-  dw #05c9
+  dw #05d9
   db 3, #00, #01  ; data/patterns/combination0000-1.tmx + right + down (167)
-  dw #0189
+  dw #0199
   db 3, #00, #02  ; data/patterns/combination0001-1.tmx + right (168)
   dw #0199
   db 4, #00, #10  ; data/patterns/combination0000-1.tmx + up (169)
@@ -367,15 +367,15 @@ pyramid_combination_chunk_pool:
   db 7, #00, #22  ; data/patterns/combination0101-1.tmx + right (180)
   dw #0089
   db 8, #00, #00  ; data/patterns/combination0000-1.tmx + left (181)
-  dw #0761
+  dw #0771
   db 9, #00, #01  ; data/patterns/combination0000-1.tmx + left + down (182)
-  dw #0321
+  dw #0331
   db 9, #00, #02  ; data/patterns/combination0001-1.tmx + left (183)
   dw #0331
   db 10, #00, #00  ; data/patterns/combination0000-1.tmx + left + right (184)
-  dw #0541
+  dw #0551
   db 11, #00, #01  ; data/patterns/combination0000-1.tmx + left + right + down (185)
-  dw #0101
+  dw #0111
   db 11, #00, #02  ; data/patterns/combination0001-1.tmx + left + right (186)
   dw #0111
   db 12, #00, #10  ; data/patterns/combination0000-1.tmx + left + up (187)
