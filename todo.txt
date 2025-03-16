@@ -1,23 +1,25 @@
 to do:
 
-***- tile objects: pushable blocks (so that we can navigate the map properly):
-  ***- when colliding against a wall walking left/right, detect if it's a block. If it is, accumulate a push time counter (rests if not pushing)
-  ***- when going over a threshold (e.g. 16 cycles), block is pushed:
-    ***- write "room_render_tile_objects_render_saving_background"
-    ***- write "room_remove_tile_objects"
-    ***- then move block
-    ***- then redraw all tile objects in the correct order
-    ***- play sfx
-  ***- make them not go through walls: checked when they are about to be moved
-  ***- make them fall if pushed over an edge (they go through water): check every few ticks (have an agenda of what to do in each cycle, and this one is checked every, e.g. 8 cycles)
-  ***- they fall out of the screen if reaching the bottom edge, and can push them out through the left/right:
-    ***- make sure I check for room limits when drawing or removing them form the map for drawing
-    ***- remove them from the room, when they go out of bounds
-  ***- special sprite animation for pushing? (count how many sprites will I need in total for the game, and decide)
-
-- weapons:
-  - come up with a list of weapons: machete (versatile, damage 1), war hammer (slow, arc, damage 4), sword (forward, damage 2), rock sling, bow, bombs, ray gun (all ranged need bullets/energy which depletes) and then upgrades: fire machete, osidian hammer, water sword?
-  - implement them all (make sure I can hit left/up/right/down with the default weapon, for breakable walls)
+***- weapons:
+  ***- draw animation frames:
+    ***- player swinging machete forward
+    ***- player swinging machete up
+    ***- player swinging machete down (falling/jumping)
+    ***- player swinging machete forward, crouching
+    ***- player swinging war hammer forward
+    ***- player swinging sword forward
+  ***- inventory screen mockup (with all possible items and stats, map, text area, button to go back to game, options menu, etc.)
+  ***- draw outline of inventory screen in-game (this will require tile bank swap in the VDP)
+  ***- draw all weapon item GFX (including upgrades: fire machete, obsidian hammer, water sword)
+  ***- draw weapons in inventory depending on which ones does the player own (inventory list)
+  ***- mark currently selected weapon (with a sprite? tiles?)
+  ***- select which weapon we want
+  ***- implement machete swing forward (idle/walking/falling/jumping)
+  ***- implement machete swing up (idle/walking/falling/jumping)
+  ***- implement machete swing crouching
+  ***- implement machete swing down (falling/jumping)
+  ***- implement axe swing (idle/walking/falling/jumping)
+  ***- implement sword swing (idle/walking/falling/jumping)
 
 - breakable walls:
   - instantiate them at room creation
@@ -38,8 +40,7 @@ to do:
 - being able to complete the game in assembler:
   - render doors (and be blocked by them)
   - spawn and draw items in the game
-  - pick up keys
-    - design inventory screen, and implement the bare minimum
+  - pick up keys (inventory)
   - use keys in locks to open doors
   - combination clues
   - interact with combination levers
@@ -67,6 +68,8 @@ to do:
   - enemy spawn (remember never to have them in room edges, so that you cannot spawn on top of one)
   - kill enemies and get hurt by them
   - design all the enemies on the pyramid biome and spawn them
+
+- throwable weapons: rock sling, bow, bombs, ray gun (all ranged need bullets/energy which depletes), others?
 
 - PCG to do: optional treasure:
     - sample random rooms that have no tags (ideally in leaf divisions with no tags), and add optional treasure/story trivia labels

@@ -404,6 +404,8 @@ player_jump_is_cancelable: ds virtual 1  ; 1: if we can stop the jump by lifting
                                          ; 0: the jump will proceed to maximum height without allowing player to stop it early (used for when coming out of the water).
 player_jump_no_grab_timer: ds virtual 1  ; player can grab to ropes/ladders only if this is 0.
                                          ; This is used for when jumping off a ladder/rope, so that the player does not grab again immediately on the next frame.
+player_push_block_timer: ds virtual 1
+player_no_rope_or_ladder_this_frame: ds virtual 1  ; to prevent infinite loops in the player routine when holding to a ladder fails
 
 
 redraw_whole_room_flag: ds virtual 1
@@ -436,6 +438,7 @@ rng_seed1: ds virtual 2  ; state of the random number generator
 rng_seed2: ds virtual 2
 
 interrupt_cycle: ds virtual 1  ; incremented at each interrupt
+game_cycle: ds virtual 1  ; incremented at each game loop cycle
 
 dzx0t_last_offset_tmp:              ds virtual 2
 

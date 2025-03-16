@@ -261,8 +261,11 @@ pcg_generate_room__fg_chunk_object_loop:
 						ld a, (tmp_pcg_room__chunk_y)
 						add a, (hl)  ; y relative to this chunk
 						ld (de), a  ; y
+						inc de
+						xor a
+						ld (de), a  ; state
 						ex de, hl
-							ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE - 3  ; "- 3", since we already did 3 "inc de"
+							ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE - 4  ; "- 4", since we already did 4 "inc de"
 							add hl, bc
 						ex de, hl
 						ld (tmp_pcg_room__next_tile_object_ptr), de

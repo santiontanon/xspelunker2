@@ -51,6 +51,9 @@ public class GenerateSprites {
         // Swim:
         addPlayerFrame(sourceImage, 32, 32, data, dataLeft);
         addPlayerFrame(sourceImage, 48, 32, data, dataLeft);
+        // Push:
+        addPlayerFrame(sourceImage, 32, 48, data, dataLeft);
+        addPlayerFrame(sourceImage, 48, 48, data, dataLeft);
         
         System.out.println("data: " + data.size());
         System.out.println("dataLeft: " + dataLeft.size());
@@ -64,7 +67,9 @@ public class GenerateSprites {
         BufferedImage sourceImage = ImageIO.read(new File("data/objects.png"));
         List<Integer> data = new ArrayList<>();
         
-        data.addAll(extractSprite(sourceImage, 0, 136, 15));  // white
+        data.addAll(extractSprite(sourceImage, 0, 136, 15));  // water splash
+        data.addAll(extractSprite(sourceImage, 16, 136, 15));  // dust left
+        data.addAll(extractSprite(sourceImage, 32, 136, 15));  // dust right
         
         System.out.println("data: " + data.size());
         Z80Assembler.dataToBinary(data, outputPath + ".bin");        

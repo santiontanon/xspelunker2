@@ -17,6 +17,9 @@ player_jump_speed_table:
 
 ;-----------------------------------------------
 player_update:
+	xor a
+	ld (player_no_rope_or_ladder_this_frame), a
+player_update_from_ladder_fail:
 	ld a, (player_state)
 	ld hl, player_update_state_fn_table
 	and #fe  ; lowest bit is direction (0: right, 1: left)
@@ -121,10 +124,13 @@ player_update_state_idle:
 	ld a, (keyboard_line_clicks)
 	bit 6, a
 	jp nz, player_update_switch_to_crouch
-	
+
 	; check for rope/ladder climb:
 	bit 5, a
 	jp z, player_update_state_idle_no_rope
+	ld a, (player_no_rope_or_ladder_this_frame)
+	or a
+	jr nz, player_update_state_idle_no_rope
 	call check_player_on_rope_or_ladder
 	jp z, player_update_switch_to_rope_or_ladder
 player_update_state_idle_no_rope:
@@ -150,11 +156,15 @@ player_update_state_idle_no_rope:
 
 ;-----------------------------------------------
 player_update_switch_to_walking_left:
+	xor a
+	ld (player_push_block_timer), a
 	ld a, PLAYER_STATE_WALKING + 1
 	ld (player_state), a
 	jp player_update_state_walking
 
 player_update_switch_to_walking_right:
+	xor a
+	ld (player_push_block_timer), a
 	ld a, PLAYER_STATE_WALKING
 	ld (player_state), a
 
@@ -163,6 +173,9 @@ player_update_state_walking:
 	ld a, (keyboard_line_state)
 	bit 5, a
 	jp nz, player_update_state_walking_no_rope
+	ld a, (player_no_rope_or_ladder_this_frame)
+	or a
+	jr nz, player_update_state_walking_no_rope	
 	call check_player_on_rope_or_ladder
 	jp z, player_update_switch_to_rope_or_ladder
 player_update_state_walking_no_rope:
@@ -191,7 +204,11 @@ player_update_state_walking_right:
 	jr nz, player_update_switch_to_falling
 
 	call player_update_move_one_pixel_right_considering_collisions
+	jr nz, player_update_state_walking_continue
+	; collision: check if player is pushing a block:
+	call player_pushing_right
 	jr player_update_state_walking_continue
+
 
 player_update_state_walking_left:
 	; check for crawling:
@@ -204,14 +221,30 @@ player_update_state_walking_left:
 	jr nz, player_update_switch_to_falling
 
 	call player_update_move_one_pixel_left_considering_collisions
+	jr nz, player_update_state_walking_continue
+	; collision: check if player is pushing a block:
+	call player_pushing_left
 
 player_update_state_walking_continue:
+	ld a, (player_push_block_timer)
+	or a
+	jr nz, player_update_state_walking_continue_pushing
 	ld a, (interrupt_cycle)
 	rrca
 	rrca
 	rrca
 	and #01
 	add a, 2
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+player_update_state_walking_continue_pushing:
+	ld a, (interrupt_cycle)
+	rrca
+	rrca
+	rrca
+	rrca
+	and #01
+	add a, 12
 	ld (player_requested_frame), a
 	jp player_update_update_sprite_position
 
@@ -235,6 +268,9 @@ player_update_state_falling:
 	bit 4, a
 	call z, player_update_move_one_pixel_left_considering_collisions
 
+	ld a, (player_no_rope_or_ladder_this_frame)
+	or a
+	jr nz, player_update_state_falling_no_rope
 	ld a, (player_jump_no_grab_timer)
 	or a
 	jr z, player_update_state_falling_check_rope_or_ladder
@@ -339,6 +375,9 @@ player_update_switch_to_jumping:
 
 player_update_state_jumping:
 	; check for rope climb:
+	ld a, (player_no_rope_or_ladder_this_frame)
+	or a
+	jr nz, player_update_state_jumping_no_rope
 	ld a, (player_jump_no_grab_timer)
 	or a
 	jr z, player_update_state_jumping_check_rope_or_ladder
@@ -600,6 +639,29 @@ player_update_state_rope_switch_to_idle_pop:
 ; input:
 ; - c: tile coordinate of the ladder 
 player_update_switch_to_ladder:
+	; check that player will not collide with anything when moving to the ladder (pushable block is the only option):
+	push bc
+		ld a, (player_y + 1)
+		ld b, a
+		inc b
+		ld a, (player_y)
+		or a
+		jr z, player_update_switch_to_ladder_collision_check_continue
+		inc b
+player_update_switch_to_ladder_collision_check_continue:
+		push bc
+			call get_room_tile_type
+		pop bc
+		cp 2
+		jr z, player_update_switch_to_ladder_failed
+		cp 7
+		jr nz, player_update_switch_to_ladder_failed
+		inc c
+		call get_room_tile_type
+		cp 2
+		jr z, player_update_switch_to_ladder_failed
+	pop bc
+
 	ld a, c
 	ld (player_x + 1), a
 	ld a, PLAYER_PIXEL_X_ON_LADDER
@@ -650,6 +712,12 @@ player_update_state_ladder_continue2:
 player_update_state_ladder_switch_to_idle_pop:
 	pop af
 	jp player_update_switch_to_idle
+
+player_update_switch_to_ladder_failed:
+	pop bc
+	ld a, 1
+	ld (player_no_rope_or_ladder_this_frame), a
+	jp player_update_from_ladder_fail
 
 
 ;-----------------------------------------------
@@ -862,10 +930,205 @@ player_update_state_swimming_inertia_y_done:
 
 
 
+;-----------------------------------------------
+player_pushing_right:
+	; check if there is a pushable block to the right
+	ld a, (player_x + 1)
+	inc a  ; the block should be to the right of the player
+	ld e, a
+	ld a, (player_y + 1)
+	ld d, a
+	ld hl, current_room__tile_objects
+player_pushing_right_loop:
+	ld a, (hl)  ; ID
+	cp #ff
+	jr z, player_pushing_right_no_block
+	push hl
+		inc hl
+		ld a, (hl)  ; type
+		cp TAG_PUSHABLE_BLOCK
+		jp nz, player_pushing_right_loop_continue_pop
+		; pushable block, see if it's the thing blocking the player's way:
+		inc hl
+		ld a, (hl)  ; x
+		cp e
+		jr nz, player_pushing_right_loop_continue_pop
+		inc hl
+		ld a, (hl)  ; y
+		cp d
+		jr nz, player_pushing_right_loop_continue_pop
+	pop ix
+	ld c, 1  ; pushing to the right
+	jp player_pushing_block_found
+
+player_pushing_right_loop_continue_pop:
+	pop hl
+
+	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
+	add hl, bc
+	jp player_pushing_right_loop
+
+player_pushing_right_no_block:
+	xor a
+	ld (player_push_block_timer), a
+	ret
+
+
+;-----------------------------------------------
+player_pushing_left:
+	; check if there is a pushable block to the left
+	ld a, (player_x + 1)
+	dec a
+	dec a  ; the block should be to the left of the player
+	ld e, a
+	ld a, (player_y + 1)
+	ld d, a
+	ld hl, current_room__tile_objects
+player_pushing_left_loop:
+	ld a, (hl)  ; ID
+	cp #ff
+	jr z, player_pushing_left_no_block
+	push hl
+		inc hl
+		ld a, (hl)  ; type
+		cp TAG_PUSHABLE_BLOCK
+		jp nz, player_pushing_left_loop_continue_pop
+		; pushable block, see if it's the thing blocking the player's way:
+		inc hl
+		ld a, (hl)  ; x
+		cp e
+		jr nz, player_pushing_left_loop_continue_pop
+		inc hl
+		ld a, (hl)  ; y
+		cp d
+		jr nz, player_pushing_left_loop_continue_pop
+		; we are pushing this block!
+	pop ix
+	ld c, -1  ; pushing left
+	jp player_pushing_block_found
+
+player_pushing_left_loop_continue_pop:
+	pop hl
+
+	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
+	add hl, bc
+	jp player_pushing_left_loop
+
+player_pushing_left_no_block:
+	xor a
+	ld (player_push_block_timer), a
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - ix: ptr to object
+; - c: direction to push (-1 left, 1 right)
+player_pushing_block_found:
+	ld a, (player_push_block_timer)
+	inc a
+	ld (player_push_block_timer), a
+	cp PLAYER_PUSHING_TIME
+	ret nz
+
+	; check if the block would collide with something in the new position:
+	push bc
+		ld a, c  ; direction to push		
+		ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+		ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+		or a
+		jp p, player_pushing_block_found_right
+		dec c  ; left
+		jr player_pushing_block_found_continue
+player_pushing_block_found_right:
+		inc c  ; right
+		inc c
+player_pushing_block_found_continue:
+		ld a, c
+		or a
+		jp m, player_pushing_block_found_no_collision
+		ld a, (current_room__width)
+		cp c
+		jp z, player_pushing_block_found_no_collision
+		jp c, player_pushing_block_found_no_collision
+
+		; blocks collide with:
+		;   1: platform (you can jump through)
+		;   2: wall
+		;   6: rope-platform-top
+		;   8: ladder-platform-top
+		push bc
+			call get_room_tile_type
+		pop bc
+		dec a  ; 1
+		jr z, player_pushing_block_found_collision
+		dec a  ; 2
+		jr z, player_pushing_block_found_collision
+		cp 6 - 2  ; 6
+		jr z, player_pushing_block_found_collision
+		cp 8 - 2  ; 8
+		jr z, player_pushing_block_found_collision
+
+		inc b  ; check the tile below (blocks are 2 tiles tall)
+		call get_room_tile_type
+		dec a  ; 1
+		jr z, player_pushing_block_found_collision
+		dec a  ; 2
+		jr z, player_pushing_block_found_collision
+		cp 6 - 2  ; 6
+		jr z, player_pushing_block_found_collision
+		cp 8 - 2  ; 8
+		jr z, player_pushing_block_found_collision
+
+player_pushing_block_found_no_collision:
+		; push block:
+		push ix
+			call room_remove_tile_objects
+		pop ix
+	pop bc
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_X)  ; block x
+	add a, c
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_X), a
+
+	; check if the object was pushed out of the room:
+	cp -2
+	jr z, player_pushing_block_found_out_of_screen
+	ld c, a
+	ld a, (current_room__width)
+	cp c
+	jr z, player_pushing_block_found_out_of_screen
+player_pushing_block_found_continue2:
+	call room_render_tile_objects
+	; force redraw:
+	xor a
+	ld (player_push_block_timer), a
+	inc a
+	ld (redraw_whole_room_flag), a
+
+	ld hl, SFX_push_object
+	jp play_SFX_with_high_priority
+
+player_pushing_block_found_collision:
+	ld a, 1  ; 1 and not 0, so that the animation is not interrupted
+	ld (player_push_block_timer), a
+	pop bc
+	ret
+
+player_pushing_block_found_out_of_screen:
+	push ix
+	pop hl
+	call delete_tile_object_in_hl
+	jr player_pushing_block_found_continue2
+
+
+; Anothing above this line is not imported when doing collision unit testing
 ENDIF
 
 
 ;-----------------------------------------------
+; output:
+; - z: collision
+; - nz: no collision
 player_update_move_one_pixel_right_considering_collisions:
 	ld a, (player_state)
 	and #fe
@@ -879,19 +1142,22 @@ player_update_move_one_pixel_right_considering_collisions:
 	ld (hl), 0
 	inc hl
 	inc (hl)
-	ret
+	ret  ; we must have "nz" here, since "inc (hl)" can never make that value 0
 player_update_move_one_pixel_right_considering_collisions_continue:
 	cp (8 - PLAYER_COLLISION_WIDTH) + 1
-	ret nz
+	ret nz  ; we do not need to check for collision
 	call player_check_collision_right
-	ret nz
+	ret nz  ; no collision
 	; collision, cannot move:
 	ld hl, player_x
 	ld (hl), 8 - PLAYER_COLLISION_WIDTH
-	ret
+	ret  ; we must have "z" here, as a result of 'player_check_collision_right'
 
 
 ;-----------------------------------------------
+; output:
+; - z: collision
+; - nz: no collision
 player_update_move_one_pixel_left_considering_collisions:
 	ld a, (player_state)
 	or #01
@@ -901,17 +1167,18 @@ player_update_move_one_pixel_left_considering_collisions:
 	dec a
 	ld (hl), a
 	inc a
-	ret nz
+	ret nz  ; we do not need to check for collision
 	ld (hl), 7
 	inc hl
 	dec (hl)
 	call player_check_collision_left
-	ret nz
+	ret nz  ; no collision
 	; collision, cannot move:
 	ld hl, player_x
 	ld (hl), 0
 	inc hl
 	inc (hl)
+	xor a  ; to indicate collision
 	ret
 
 

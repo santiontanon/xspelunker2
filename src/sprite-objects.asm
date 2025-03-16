@@ -35,13 +35,36 @@ spawn_water_splash:
 	inc hl
 	ld (hl), 0
 	inc hl
-	ld (hl), 16  ; state (frames left)
+	ld (hl), 8  ; state (frames left)
 	ld hl, SFX_watersplash_soft
 	jp play_SFX_with_high_priority
 
 
 ;-----------------------------------------------
+; input:
+; - c, b: tile coordinates of the block
+spawn_pushing_block_dust:	
+	call ptr_to_new_sprite_object
+	ret nz
+	ld (hl), SPRITE_OBJECT_TYPE_BLOCK_DUST
+	inc hl
+	ld (hl), c  ; tile x
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), b  ; tile y
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), 8  ; state (frames left)
+	ld hl, SFX_explosion
+	jp play_SFX_with_high_priority
+
+
+;-----------------------------------------------
 update_sprite_objects:
+	xor a
+	ld (n_displayed_object_sprites), a
 	ld de, ROOM_OBJECT_STRUCT_SIZE
 	ld ix, current_room__objects
 update_sprite_objects_loop:
@@ -52,6 +75,8 @@ update_sprite_objects_loop:
 	ret z
 	dec a
 	jr z, update_sprite_objects_water_splash
+	dec a
+	jr z, update_sprite_objects_pushing_block_dust
 update_sprite_objects_loop_next:
 	add ix, de
 	jp update_sprite_objects_loop
@@ -64,7 +89,7 @@ update_sprite_objects_water_splash:
 	call get_sprite_object_sprite_coordinates
 	call add_sprite_to_this_frame
 
-
+update_sprite_objects_pushing_block_dust_entry_point:
 	dec (ix + ROOM_OBJECT_STRUCT_STATE)
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
 	or a
@@ -75,6 +100,27 @@ update_sprite_objects_water_splash:
 	add ix, de
 	ld de, ROOM_OBJECT_STRUCT_SIZE
 	jp update_sprite_objects_loop_next
+
+
+;-----------------------------------------------
+update_sprite_objects_pushing_block_dust:
+	ld d, COLOR_WHITE
+	ld e, 12
+	call get_sprite_object_sprite_coordinates
+	ld a, c
+	add a, -16
+	ld c, a
+	push bc
+		call add_sprite_to_this_frame
+	pop bc
+
+	ld d, COLOR_WHITE
+	ld e, 16
+	ld a, c
+	add a, 32
+	ld c, a
+	call add_sprite_to_this_frame
+	jp update_sprite_objects_pushing_block_dust_entry_point
 
 
 ;-----------------------------------------------

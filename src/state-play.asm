@@ -79,16 +79,24 @@ state_play_from_inventory:
 
 	call enable_VDP_output
 
-state_play_loop:
-	; game update:
+	ld a, #ff  ; so that we start with 0
+	ld (game_cycle), a
 	xor a
 	ld (n_displayed_object_sprites), a
-	call update_keyboard_buffers
-	call player_update
-	call update_sprite_objects
-	call maybe_recenter_scroll
-	call update_scroll
 
+state_play_loop:
+	; get the appropriate update function for this frame:
+	ld a, (game_cycle)
+	inc a
+	and #07
+	ld (game_cycle), a
+	add a, a
+	add a, a
+	ld hl, state_play_update_agenda
+	ADD_HL_A
+	jp (hl)
+
+state_play_loop_continue:
 	halt
 	; game redraw:
 	ld hl, upload_sprites_to_vdp
@@ -103,4 +111,49 @@ state_play_loop_room_redraw:
 	call draw_room
 	call update_animations_in_vdp
 	jr state_play_loop
+
+
+;-----------------------------------------------
+; Agenda:
+; - We divide the cycles into blocks 8 cycles, and in each of those 8, we only update certain things
+state_play_update_agenda:
+	jp state_play_update_agenda_cycle_even_0
+	db 0
+	jp state_play_update_agenda_cycle_odd
+	db 0
+	jp state_play_update_agenda_cycle_even
+	db 0
+	jp state_play_update_agenda_cycle_odd
+	db 0
+	jp state_play_update_agenda_cycle_even
+	db 0
+	jp state_play_update_agenda_cycle_odd
+	db 0
+	jp state_play_update_agenda_cycle_even
+	db 0
+	jp state_play_update_agenda_cycle_odd
+
+
+state_play_update_agenda_cycle_even:  ; only player
+	call update_keyboard_buffers
+	call player_update
+	call maybe_recenter_scroll
+	call update_scroll
+	jp state_play_loop_continue
+
+state_play_update_agenda_cycle_even_0:  ; player + tile objects
+	call update_keyboard_buffers
+	call player_update
+	call update_tile_objects
+	call maybe_recenter_scroll
+	call update_scroll
+	jp state_play_loop_continue
+
+state_play_update_agenda_cycle_odd:  ; player + sprite objects
+	call update_keyboard_buffers
+	call player_update
+	call update_sprite_objects
+	call maybe_recenter_scroll
+	call update_scroll
+	jp state_play_loop_continue
 
