@@ -1,28 +1,26 @@
 to do:
 
-***- write the whole story line of the game, so that everything makes sense. This will help me finalize what you get from bosses, what the ending screen is, the intro, etc.
-
-- push blocks (so that we can navigate the map properly):
-  - in Tiled: remove ALL boulders, and replace with objects (this might increase the number of objects per chunk?)
-  - create the concept of tile objects (items, chests, boulders, doors, breakable doors, switches, etc.):
-    - in "pcg_generate_area__choose_chunks":
-      - Add necessary objects according to the tag (if any): (see "create objects:" comment)
-        - objectType taken directly from "tmp_pcg_area__necessary_object_types", to make things simpler than in Java
-        - Do not select locations here, but just create a list with object IDs, chunk where they are, and the objectType to use for spawning it (they'll be spawned during room PCG)
-      - Assembler/Java: it has to exactly match what is generated in Java (adjust whichever of the two is easier)
-  - when instantiating a chunk, add an object for each boulder location found in that chunk
-  - render them
-  - make them collidable
-  - make them pushable (sfx)
-  - make them not go through walls
-  - make them fall if pushed over an edge (they go through water)
-  - they fall out of the screen if reaching the bottom edge, and can push them out through the left/right
+***- tile objects: pushable blocks (so that we can navigate the map properly):
+  ***- when colliding against a wall walking left/right, detect if it's a block. If it is, accumulate a push time counter (rests if not pushing)
+  ***- when going over a threshold (e.g. 16 cycles), block is pushed:
+    ***- write "room_render_tile_objects_render_saving_background"
+    ***- write "room_remove_tile_objects"
+    ***- then move block
+    ***- then redraw all tile objects in the correct order
+    ***- play sfx
+  ***- make them not go through walls: checked when they are about to be moved
+  ***- make them fall if pushed over an edge (they go through water): check every few ticks (have an agenda of what to do in each cycle, and this one is checked every, e.g. 8 cycles)
+  ***- they fall out of the screen if reaching the bottom edge, and can push them out through the left/right:
+    ***- make sure I check for room limits when drawing or removing them form the map for drawing
+    ***- remove them from the room, when they go out of bounds
+  ***- special sprite animation for pushing? (count how many sprites will I need in total for the game, and decide)
 
 - weapons:
-  - come up with a list of weapons
-  - implement the first one or two weapons (make sure I can hit left/up/right/down with the default weapon, for breakable walls)
+  - come up with a list of weapons: machete (versatile, damage 1), war hammer (slow, arc, damage 4), sword (forward, damage 2), rock sling, bow, bombs, ray gun (all ranged need bullets/energy which depletes) and then upgrades: fire machete, osidian hammer, water sword?
+  - implement them all (make sure I can hit left/up/right/down with the default weapon, for breakable walls)
 
 - breakable walls:
+  - instantiate them at room creation
   - make this work with the inter-room transitions (broken wall, overwrites the collision)
   - make sure they work down/left/right/up (when breaing a path down/up that needs a ladder, replace by proper ladder piece)
 
@@ -48,9 +46,12 @@ to do:
   - press buttons to open doors
   - open the boss doors (door open animation with some SFX/music, so, it's clear it's important)
   - enter a boss door (for now just an empty room with the item you are supposed to get)
+    - obtain the "idols": each idol represents one of the six creator deities (the last one is split in half)
   - trials (those are solved in front of te gods I drew)
-  - whatever else is necessary to play game from beginning to end
   - design ending room (maya calendar stone where you place what you get from the bosses, etc.)
+    - 1st idol on calendar stone, opens door to 3rd pyramid
+    - 3rd idol on calendar stone, opens door to temple of fire
+  - ensure that ALL object types are instantiated now during room creation
 
 - Damage:
   - hitpoints (design hud: HP, oxygen in water, current item)
@@ -66,9 +67,6 @@ to do:
   - enemy spawn (remember never to have them in room edges, so that you cannot spawn on top of one)
   - kill enemies and get hurt by them
   - design all the enemies on the pyramid biome and spawn them
-
-- weapons 2:
-  - implement the rest of weapons in the game
 
 - PCG to do: optional treasure:
     - sample random rooms that have no tags (ideally in leaf divisions with no tags), and add optional treasure/story trivia labels
@@ -94,7 +92,7 @@ to do:
 - menus:
   - brain games screen
   - title screen
-  - options menu
+  - options menu (redefine keys/controls)
   - game start screen where you choose game name, difficulty, seed, etc.
       - procedural generation depending on a name. By default, you play in "xspelunker2" level, with difficulty "x".
       - the first letter determines the difficulty level. So, one would choose "a walk in the park" for easy games, or "zebras all the way" for the heardest)
@@ -104,14 +102,21 @@ to do:
 
 - music
 
-- first boss
-- second boss
-- third boss
+- using idols in stone calendar, has effects on the map:
+  - 2nd, activates messages (letters glow agains the stone tables now)
+  - 4th, activates teleporters to move faster across maps
+  - 5th, lets you turn on the calendar stone (activate defenses)
+  - 6th (two halves from Mars/Moon), (activate offensive capabilities, and destroy alien hardware)
+  - with final secret stone (prism?): opens dimensional portal for YOU to travel throughout the universe
+
+- first boss: Huracán, the Storm Bringer (A large, imposing figure wreathed in swirling winds and lightning. Could have feathered serpent elements): wind, lightning, tornadoes
+- second boss: Camazotz, the Bat God: A giant bat-like creature with glowing red eyes and sharp claws.
+- third boss: Xibalba Lords (Multiple Bosses or Phases): Skeletal figures with ornate Mayan headdresses, representing the rulers of the underworld (summins skeletons or shadows)
 - caves biome
 - temple of fire biome
-- fourth boss
+- fourth boss: The Obsidian Golem: A hulking golem made of obsidian, with glowing cracks filled with molten lava..
 - atlantis biome (do I need to move the possible set of up/down/left/right tags to 4 instead of just 2?)
-- fifth boss
+- fifth boss: Atlantean Guardian (Underwater Boss): A colossal robotic creature with bioluminescent features, resembling a deep-sea creature (laser beams from tentacles, summons robotic fish)
 
 - first ending sequence
 
@@ -126,8 +131,8 @@ to do:
 - mars biome
   - can you jump higher in the moon/mars? fall slower?
 - moon biome (similar to mars, but different color scheme, it could even be the same with palette changed)
-- 6th boss
-- 7th boss
+- 6th boss: (ideas: "The Solar Stone Jaguar", "The Martian Terracotta Warrior", "The Dust Stone Golem")
+- 7th boss (ideas: "The Lunar Obsidian Sentinel" (tall, slender, smooth black, reflective surfaces), "The Lunar Crystal Serpent", "The Moon Stone Monolith")
 
 - second ending
 
@@ -137,11 +142,99 @@ to do:
 --------------------
 
 X-Spelunker 2 (e-ke-se pe-lu-ne-ke-le):
-  - La Mulana-style
-  - story:
-    - Scene 1: Maya legend of the twins playing ball that gave rise to the moon and the sun.
-    - Scene 2: Xavier comes back to Elaine to explain the thing, she says he has to go public, but he believes there is much more to it than what he found and it's not yet the time. So, he has to go back one more time. Something like: "I think we have been interpretting the legend of Hunajpu and Xbalanqué incorrectly all along, which might be the key to unravel all this mystery!"
-    - points to remember:
+- Initial story scene:
+    (Xavier arrives to Elaine's house)
+    Elaine: If it isn't Michael S. Xavier in person!
+    Xavier: Elaine!!! Elaine!!! Did you receive my letters?!
+            I made a huge discovery!
+    Elaine: Sigh... what is it this time? Aliens?
+    Xavier: ...
+            Look! Proof!
+
+    [zoom in of an alien artifact]
+    Elaine: Wait, are you serious? What is this?
+    Xavier: An artifact I recovered from the ruins. I took it from the corpse of an Alien.
+    Elaine: Let me see it!
+    Xavier: Careful! Don't touch it!
+    [Elaine touches it, and a compartment opens, dropping a piece of parchment]
+    Xavier: What is this?!
+    [Zoom in of the parchment: it is a map showing underground pyramids in the jungle, an inscription in Maya, and
+     a map of the world with several capitals marked as targets]
+    Xavier: Wait! This... this is a world domination plan!
+    Elaine: We need to go public! We have to warn the world!
+    Xavier: No! You have not seen their technology. If they find out we know, we are done for. I have to go back!
+            I have to stop them before they find out we know!
+    Elaine: I'll go with you! Like in the old days!
+    Xavier: It's better if I go alone. I need your help with something else. See this inscription? I think it's
+            ancient Maya. Seek someone who can decipher it. I will set base camp in the jungle near Palenque, you
+            know where I usually stay. Mail the translation there, and I'll get it.
+    Elaine: Xavier! This is insane! You can't go alone!
+    Xavier: I've been there before. I will be ready!
+
+[game starts, and the player controls Xavier, starting in the jungle, playing until finding the entrance to one of the two underground pyramids that can be accessed through the jungle]
+
+- As soon as we enter the pyramid (either of them) for the first time, the character says:
+    "Ok, I made it to the ruins! I need to find a way to sabotage the Alien operation!"
+    "I need to find where are they coming from, and how to stop them!"
+
+[The player explores the pyramid, solving puzzles until they find their way to the first boss, and defeat it, obtaining the first idol]
+
+- When the first "idol" is found:
+    "What is this? it looks like an idol, but it seems fully charged with static electricity! Why was that beast guarding this so tightly?"
+
+[The player might find the second boss and second idol here, or find first the calendar stone, in any case, as soon as the player finds the calendar stone, the following event happens]
+
+- When finding the calendar stone for the first time:
+    "Look at that! That is a gigantic Mayan calendar stone! And it's in perfect condition!"
+    "And not only that, look at all of those alien artifacts connected to it. What are they trying to do here?"
+    "It is full of inscriptions, but I do not know what do they say!"
+
+[at this point, the player can try ti use the idol in the calendar stone, but they will not know how to use it, so, the only way forward is to go back to the jungle entrance, where they will find that Elaine has written them a letter]
+
+- If you go back to the jungle, you will find Elaine's letters waiting:
+    Michael,
+
+    I have deciphered the inscription. The glyphs surrounding the drawing translate to "Star Alignment Nexus" and "Seven Celestial Keys." So, it seems to refer to seven keys required to activate this "Nexus". I have consulted with some experts in the ancient Maya, and they believe this could be referring to a calendar stone. Have you come across one of them?
+
+    Ancient texts reveal that the Mayans were not alone. They received knowledge from beings beyond the stars, but this knowledge came with a price. The built these calendar stones to predict when the Star People will come back, but it seems that one of these calendar stones is special, and is the key to receiving the Star People. If it can be destroyed, we might be able to stop them!
+
+    Michael, please be careful. This is more dangerous than we imagined. I will keep investigating and send you anything I can find. I believe in you. 
+
+    Elaine
+
+    [ps: I attach a translated version of the diagram, which might be of use]
+
+    Then:
+    Xavier: "The calendar stone! So, that's what it is!"
+
+[Xavier at this point decides to send Elaine a letter back, with more writings that were found on the calendar stone, to see if she can translate them]
+
+    "Elaine, I found more glyphs around the base of the stone, they seem to show star charts, and strange symbols that I don't recognize. I'm sending you a copy, can you take a look?"
+
+[from this point on the player believes that their goal is to destroy the stone, so asking some NPCs in the jungle they find out that the one person in town that has access to explosives had disappeared in the pyramid. After visiting the stone again with the translation, the player should now know how to use the idol.]
+
+- When using the first idol in the calendar stone:
+    "It fits! And the whole thing is activating! What did I just do?!"
+    [you hear a noise in the distance, a door just opened]
+
+- When entering the door that just opened (access to inverted pyramid):
+    "Wait, this pyramid was not accessible before. Did it open when I placed the idol in teh calendar stone?"
+    "In any case, it seems this will lead me to the aliens, so, I need to explore further!"
+
+- Somewhere in the inverted pyramid, they find the person they were looking for (with access to dynamite and rescue him). He says that you should come back later and he can sell you explosives, but he will need some time to gather them. So, you decide to keep exploring.
+
+- After beating the third pyramid and the third boss (obtaining the third idol), the player is squeamish of using it on the calendar stone, since the goal is to destroy it, and powering it up too much, might help the aliens. At this point, if you go back to get explosives, you can get them, but you will also get a letter from Elaine, explaining more details. She hopes you have not yet destroyed it, since it seems this calendar stone was not designed to receive the star people, but to prevent them from coming, by blocking the dimensional portals they had open. The ancient Maya built it, but with the Maya gone, and no one to take care of it, somehow the stones that powered it were taken away and it allowed aliens to come. So, you should not destroy it, but power it up! The aliens have bene able to come, precisely because the stone is not powered up! She hopes you have not yet destroyed it.
+
+- You mist find all the idols and power up the stone before the aliens themselves find it and destroy it!
+
+- After that, you put the third idol in the stone, and that opens access to the next areas where you can find the fourth and fifth bosses, to get the final two idols and put them in the stone.
+
+- Each time you put one more idol in the stone, the ruins power up a bit more, opening certain doors, and activating certain devices that were before off, letting you access new areas, or get fater from place to place. 
+
+- After placing the fifth stone, the center of the calendar stone lights up, indicating that you can activate the celandar stone protection any time. As soon as you attempt to press it, the aliens show up, and the final confrontation with them begins. If you win, you can activate the stone and beat the game.
+
+
+  - points to remember (for lore/clues):
       - the first attempt to create humans was from mud, but those were destroyed in the great flood 
       - the second attempt was from wood, but they could not worship and were destroyed (survivors are monkeys)
       - six creator deities: the Framer and the Shaper, Tepew and Quetzal Serpent, along with Xpiyacóc and Xmucané. These deities, helped Heart of Sky, also known as Hurakán, create the Earth.
@@ -149,6 +242,7 @@ X-Spelunker 2 (e-ke-se pe-lu-ne-ke-le):
       - After that, humans were created from white and yellow maize (Maize is sacred to Maya because of this)
       - 6 levels of maya underworld
       - 13 levels of maya upperworld
+
   - types of puzzles/challenges:
     - press a button once
     - keep a button pressed to open a door

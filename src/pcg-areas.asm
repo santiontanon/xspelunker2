@@ -10,8 +10,11 @@ tmp_pcg_area__down_tags: equ tmp_pcg_area__size_in_chunks + 2  ; MAX_AREA_WIDTH*
 tmp_pcg_area__left_tag: equ tmp_pcg_area__down_tags + MAX_AREA_WIDTH*2  ; 1 byte
 tmp_pcg_area__necessary_object_types: equ tmp_pcg_area__left_tag + 1  ; 2 bytes
 tmp_pcg_area__lock_direction: equ tmp_pcg_area__necessary_object_types + 2  ; MAX_AREA_SIZE*2*2 bytes
-tmp_pcg_area__chunk_candidates: equ tmp_pcg_area__lock_direction + MAX_AREA_SIZE*2*2
-
+tmp_pcg_area__chunk_candidates: equ tmp_pcg_area__lock_direction + MAX_AREA_SIZE*2*2  ; 8 bytes, but we reserve 16 just in case
+tmp_pcg_area__next_area_object_ptr: equ tmp_pcg_area__chunk_candidates + 16
+tmp_pcg_area__next_area_object_id: equ tmp_pcg_area__next_area_object_ptr + 2
+tmp_pcg_area__tag_to_place: equ tmp_pcg_area__next_area_object_id + 1
+tmp_pcg_area__tag_extra: equ tmp_pcg_area__tag_to_place + 1  ; lock direction, chest content
 
 ;-----------------------------------------------
 ; Pseudocode for this method:
@@ -64,7 +67,7 @@ pcg_generate_area__world_area_ptr_set:
 	call pcg_generate_area__random_connections  ; updates 'tmp_pcg_area__piece_types'
 	call pcg_generate_area__inter_area_connections  ; updates 'tmp_pcg_area__piece_types'
 	call pcg_generate_area__place_tags  ; fills 'tmp_pcg_area__placed_tags'
-	call pcg_generate_area__choose_chunks  ; fills 'current_area__chunks_ids'
+	call pcg_generate_area__choose_chunks  ; fills 'current_area__chunks_ids' and 'current_area__objects'
 	ret
 
 
@@ -1067,7 +1070,6 @@ pcg_generate_area__place_tags_loop_best_chunk_loop_continue:
 		ld a, ixh
 		ld (hl), a  ; lock direction (it's the same as connection to close)
 
-pcg_generate_area__place_tags_loop_next_pop:
 	pop hl
 pcg_generate_area__place_tags_loop_next:
 	inc hl
@@ -1257,15 +1259,26 @@ ENDM
 
 ;-----------------------------------------------
 pcg_generate_area__choose_chunks:
+	; clear chunk ids:
 	ld hl, current_area__chunks_ids
 	ld bc, MAX_AREA_SIZE * 2 * 2 - 1
 	ld a, #ff
 	call clear_memory_a
 
+	; clear the down tags:
 	ld hl, tmp_pcg_area__down_tags
 	ld bc, MAX_AREA_WIDTH*2 - 1
 	ld a, #00
 	call clear_memory_a
+
+	; initialize the area objects array:
+	ld hl, current_area__objects
+	ld (tmp_pcg_area__next_area_object_ptr), hl
+	ld bc, MAX_AREA_N_OBJECTS * AREA_OBJECT_STRUCT_SIZE - 1
+	ld a, #ff
+	call clear_memory_a
+	ld a, 1
+	ld (tmp_pcg_area__next_area_object_id), a
 
 	ld bc, (current_area__width)
 	sla c
@@ -1275,6 +1288,8 @@ pcg_generate_area__choose_chunks:
 pcg_generate_area__choose_chunks_loop_y:
 	push bc
 pcg_generate_area__choose_chunks_loop_x:
+		xor a
+		ld (tmp_pcg_area__tag_to_place), a
 		ld a, (hl)
 		cp #ff
 		jp z, pcg_generate_area__choose_chunks_loop_x_next_set_previous_flags
@@ -1373,6 +1388,10 @@ pcg_generate_area__choose_chunks_loop_x_no_connection_down:
 		; here:
 		; - a: placed tag
 		ld ixl, a
+		ld (tmp_pcg_area__tag_to_place), a
+		xor a
+		ld (tmp_pcg_area__tag_extra), a
+		ld a, ixl
 		call pcg_generate_area__choose_chunks_is_boss_tag_p
 		jp z, pcg_generate_area__choose_chunks_loop_x_boss_tag
 		call pcg_generate_area__choose_chunks_is_block_puzzle_tag_p
@@ -1411,33 +1430,34 @@ pcg_generate_area__choose_chunks_loop_x_breakable_wall_tag:
 			ld bc, tmp_pcg_area__lock_direction - tmp_pcg_area__piece_types
 			add hl, bc
 			ld a, (hl)  ; lock direction
+			ld (tmp_pcg_area__tag_extra), a
 		pop bc
 		pop hl
 		cp PCG_DIRECTION_LEFT
 		jr nz, pcg_generate_area__choose_chunks_loop_x_breakable_wall_tag_no_left
-		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_BREAKABLE_LEFT
+		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_BREAKABLE_LEFT_MASK
 		jp pcg_generate_area__choose_chunks_loop_x_continue
 pcg_generate_area__choose_chunks_loop_x_breakable_wall_tag_no_left:
 		cp PCG_DIRECTION_UP
 		jr nz, pcg_generate_area__choose_chunks_loop_x_breakable_wall_tag_no_up
-		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_BREAKABLE_UP
+		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_BREAKABLE_UP_MASK
 		jp pcg_generate_area__choose_chunks_loop_x_continue
 pcg_generate_area__choose_chunks_loop_x_breakable_wall_tag_no_up:
 		cp PCG_DIRECTION_RIGHT
 		jr nz, pcg_generate_area__choose_chunks_loop_x_breakable_wall_tag_no_right
-		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_BREAKABLE_RIGHT
+		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_BREAKABLE_RIGHT_MASK
 		jp pcg_generate_area__choose_chunks_loop_x_continue
 pcg_generate_area__choose_chunks_loop_x_breakable_wall_tag_no_right:
 		cp PCG_DIRECTION_DOWN
 		jr nz, pcg_generate_area__choose_chunks_loop_x_breakable_wall_tag_no_down
-		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_BREAKABLE_DOWN
+		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_BREAKABLE_DOWN_MASK
 		jp pcg_generate_area__choose_chunks_loop_x_continue
 pcg_generate_area__choose_chunks_loop_x_breakable_wall_tag_no_down:
 		; should never happen
 		jp pcg_generate_area__choose_chunks_loop_x_continue
 
 pcg_generate_area__choose_chunks_loop_x_big_lock_tag:
-		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_BIG_ITEM
+		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_BIG_ITEM_MASK
 		; jp pcg_generate_area__choose_chunks_loop_x_button_door_tag
 
 pcg_generate_area__choose_chunks_loop_x_button_door_tag:
@@ -1446,41 +1466,42 @@ pcg_generate_area__choose_chunks_loop_x_button_door_tag:
 			ld bc, tmp_pcg_area__lock_direction - tmp_pcg_area__piece_types
 			add hl, bc
 			ld a, (hl)  ; lock direction
+			ld (tmp_pcg_area__tag_extra), a
 		pop bc
 		pop hl
 		cp PCG_DIRECTION_LEFT
 		jr nz, pcg_generate_area__choose_chunks_loop_x_button_door_tag_no_left
-		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_DOOR_LEFT
+		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_DOOR_LEFT_MASK
 		jp pcg_generate_area__choose_chunks_loop_x_continue
 pcg_generate_area__choose_chunks_loop_x_button_door_tag_no_left:
 		cp PCG_DIRECTION_UP
 		jr nz, pcg_generate_area__choose_chunks_loop_x_button_door_tag_no_up
-		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_DOOR_UP
+		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_DOOR_UP_MASK
 		jp pcg_generate_area__choose_chunks_loop_x_continue
 pcg_generate_area__choose_chunks_loop_x_button_door_tag_no_up:
 		cp PCG_DIRECTION_RIGHT
 		jr nz, pcg_generate_area__choose_chunks_loop_x_button_door_tag_no_right
-		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_DOOR_RIGHT
+		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_DOOR_RIGHT_MASK
 		jp pcg_generate_area__choose_chunks_loop_x_continue
 pcg_generate_area__choose_chunks_loop_x_button_door_tag_no_right:
 		cp PCG_DIRECTION_DOWN
 		jr nz, pcg_generate_area__choose_chunks_loop_x_button_door_tag_no_down
-		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_DOOR_DOWN
+		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_DOOR_DOWN_MASK
 		jp pcg_generate_area__choose_chunks_loop_x_continue
 pcg_generate_area__choose_chunks_loop_x_button_door_tag_no_down:
 		; should never happen
 		jp pcg_generate_area__choose_chunks_loop_x_continue
 
 pcg_generate_area__choose_chunks_loop_x_small_lock_tag:
-		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_ITEM
+		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_ITEM_MASK
 		jp pcg_generate_area__choose_chunks_loop_x_button_door_tag
 
 pcg_generate_area__choose_chunks_loop_x_item_tag:
-		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_ITEM
+		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_ITEM_MASK
 		jp pcg_generate_area__choose_chunks_loop_x_continue
 
 pcg_generate_area__choose_chunks_loop_x_4x4_item_tag:
-		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_4X4_ITEM
+		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_4X4_ITEM_MASK
 		jp pcg_generate_area__choose_chunks_loop_x_button_door_tag
 
 pcg_generate_area__choose_chunks_loop_x_combination_lock_tag:
@@ -1632,7 +1653,34 @@ pcg_generate_area__choose_chunks_loop_x_next_set_previous_flags_continue:
 		pop hl
 
 		; create objects:
-		; ...
+		; - using the current tag, create entries in 'current_area__objects'.
+		ld a, (tmp_pcg_area__tag_to_place)
+		or a
+		jr z, pcg_generate_area__no_objects
+		ld de, (tmp_pcg_area__next_area_object_ptr)
+		ld (de), a
+		inc de
+		; here hl points to 'tmp_pcg_area__piece_types'
+		push hl
+		push bc
+			ld bc, -tmp_pcg_area__piece_types
+			add hl, bc
+			ld a, l
+			ld (de), a  ; offset
+			inc de
+		pop bc
+		pop hl
+		ld a, (tmp_pcg_area__next_area_object_id)
+		ld (de), a
+		inc de
+		inc a
+		ld (tmp_pcg_area__next_area_object_id), a
+		ld a, (tmp_pcg_area__tag_extra)
+		ld (de), a
+		inc de
+		ld (tmp_pcg_area__next_area_object_ptr), de
+
+pcg_generate_area__no_objects
 
 pcg_generate_area__choose_chunks_loop_x_next:
 		inc hl

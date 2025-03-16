@@ -120,7 +120,7 @@ public class HardcodedRoomForAssembler {
         for(int i = 0; i<RoomChunk.CHUNK_HEIGHT;i++) {            
             for(int j = 0; j<RoomChunk.CHUNK_WIDTH;j++) {
                 int tile = ra.fg_chunks[chunkx][chunky].tiles[j][i];
-                if (tile == 0) {
+                if (tile == 0 && bg_chunks[chunkx][chunky] != null) {
                     tile = bg_chunks[chunkx][chunky].tiles[j][i];
                 }
                 int offset = targetx * RoomChunk.CHUNK_WIDTH + j +

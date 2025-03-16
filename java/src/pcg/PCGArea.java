@@ -532,6 +532,7 @@ public class PCGArea {
     
     public RenderedArea generate(Area a, World w, MSXRandom r) throws Exception
     {
+        int nextObjectID = 1;
         int dx[] = {-1, 0, 1, 0};
         int dy[] = { 0,-1, 0, 1};
         int direction[] = {PCGWorld.DIRECTION_LEFT, PCGWorld.DIRECTION_UP,
@@ -1194,6 +1195,14 @@ public class PCGArea {
                         int idx = r.nextInt(8) % choices.size();
                         ra.fg_chunks[j][i] = choices.get(idx);
 //                        System.out.println("    chosen: " + all_fg_chunks.indexOf(ra.fg_chunks[j][i]) + ", " + ra.fg_chunks[j][i].tags);
+                    }
+                    if (placedTags[j][i] != null) {
+                        int extra = 0;
+                        if (w.lockDirections.containsKey(placedTags[j][i])) {
+                            extra = w.lockDirections.get(placedTags[j][i]);
+                        }
+                        ra.objectPlaceholders.add(new GameObjectPlaceholder(placedTags[j][i], j, i, nextObjectID, extra));
+                        nextObjectID++;
                     }
                     /*
                     if (placedTags[j][i] != null) {

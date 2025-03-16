@@ -29,7 +29,7 @@ public class GenerateChunkData {
     // 6: rope-platform-top
     // 7: ladder
     // 8: ladder-platform-top
-    public static int pyramid_tile_collision_types[] = {
+    public static int pyramid_tile_collision_types[] = {            
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -42,10 +42,10 @@ public class GenerateChunkData {
         2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
         0, 2, 2, 2, 2, 2, 0, 7, 8, 2, 2, 2, 2, 2, 2, 2,
         2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2,
-        0, 2, 2, 2, 2, 2, 2, 0, 0, 2, 2, 2, 2, 2, 2, 2,
+        0, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 2,
         2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
         2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-        2, 2, 2, 2, 2, 0, 2, 2, 7, 2, 2, 2, 3, 2, 1, 5
+        2, 2, 2, 2, 2, 0, 2, 2, 7, 2, 2, 2, 3, 2, 1, 5            
     };
     
 //    public static int totalObjects = 0;
@@ -63,7 +63,8 @@ public class GenerateChunkData {
         System.out.println("bg_chunks: " + bg_chunks.size());
         System.out.println("fg_chunks: " + pcg.all_fg_chunks.size());
         
-        for(RoomChunk c: pcg.all_fg_chunks) {
+        // Verify the non-simplified chunks:
+        for(RoomChunk c: pcg2.all_fg_chunks) {
             verifyChunk(c);
         }
         
@@ -163,10 +164,10 @@ public class GenerateChunkData {
         for(int i = 0;i<RoomChunk.MAX_LOCATIONS;i++) {
             if (chunk.locations != null && chunk.locations.size() > i) {
                 data.add(locationTypeToInt(chunk.locations.get(i).type));
-                data.add(chunk.locations.get(i).x);
-                data.add(chunk.locations.get(i).y);
-                data.add(chunk.locations.get(i).dx);
-                data.add(chunk.locations.get(i).dy);
+                data.add(chunk.locations.get(i).x/8);
+                data.add(chunk.locations.get(i).y/8);
+                data.add(chunk.locations.get(i).dx/8);
+                data.add(chunk.locations.get(i).dy/8);
 //                totalObjects++;
             } else {
                 data.add(0);
@@ -204,6 +205,8 @@ public class GenerateChunkData {
                 return 10;
             case "door-down":
                 return 11;
+            case "pushable-block":
+                return 12;
             default:
                 throw new Exception("unsuported chunk location type: " + type);
         }
@@ -326,22 +329,49 @@ public class GenerateChunkData {
     
     
     public static void verifyChunk(RoomChunk c) throws Exception {
-        // Check that breakable wall or doors going up/down are centered:
-        for(TMXObject o:c.locations) {
-            if (o.type.equals("breakable-down") || o.type.equals("door-down")) {
-                if (o.y + o.dy != 12*8) {
-                    throw new Exception(o.type + " has y coordinates: " + o.y + ", " + (o.y+o.dy) + " in " + c.path);
+        if (c.locations == null) {
+            throw new Exception("null locations in " + c.path);
+        } else {
+            // Check that breakable wall or doors going up/down are centered:
+            for(TMXObject o:c.locations) {
+                if (o.type.equals("breakable-down") || o.type.equals("door-down")) {
+                    if (o.y + o.dy != 12*8) {
+                        throw new Exception(o.type + " has y coordinates: " + o.y + ", " + (o.y+o.dy) + " in " + c.path);
+                    }
+                    if (o.x > 7*8 || (o.x + o.dx) < 9*8) {
+                        throw new Exception(o.type + " has x coordinates: " + o.x + ", " + (o.x+o.dx) + " in " + c.path);
+                    }
                 }
-                if (o.x > 7*8 || (o.x + o.dx) < 9*8) {
-                    throw new Exception(o.type + " has x coordinates: " + o.x + ", " + (o.x+o.dx) + " in " + c.path);
+                if (o.type.equals("breakable-up") || o.type.equals("door-up")) {
+                    if (o.y != 0) {
+                        throw new Exception(o.type + " has y coordinates: " + o.y + ", " + (o.y+o.dy) + " in " + c.path);
+                    }
+                    if (o.x > 7*8 || (o.x + o.dx) < 9*8) {
+                        throw new Exception(o.type + " has x coordinates: " + o.x + ", " + (o.x+o.dx) + " in " + c.path);
+                    }
                 }
-            }
-            if (o.type.equals("breakable-up") || o.type.equals("door-up")) {
-                if (o.y != 0) {
-                    throw new Exception(o.type + " has y coordinates: " + o.y + ", " + (o.y+o.dy) + " in " + c.path);
+
+                if (o.type.equals("breakable-left") || o.type.equals("breakable-up") ||
+                    o.type.equals("breakable-right") || o.type.equals("breakable-down")) {
+                    for(int i = o.y/8;i<(o.y+o.dy)/8;i++) {
+                        for(int j = o.x/8;j<(o.x+o.dx)/8;j++) {
+                            int tile = c.tiles[j][i];
+                            if (pyramid_tile_collision_types[tile] != 2) {
+                                throw new Exception("breakable located on non wall ("+j+", "+i+") in " + c.path);
+                            }
+                        }
+                    }
                 }
-                if (o.x > 7*8 || (o.x + o.dx) < 9*8) {
-                    throw new Exception(o.type + " has x coordinates: " + o.x + ", " + (o.x+o.dx) + " in " + c.path);
+
+                if (o.type.equals("pushable-block")) {
+                    for(int i = o.y/8;i<(o.y+o.dy)/8;i++) {
+                        for(int j = o.x/8;j<(o.x+o.dx)/8;j++) {
+                            int tile = c.tiles[j][i];
+                            if (pyramid_tile_collision_types[tile] != 0) {
+                                throw new Exception("pushable block located on non walkable in " + c.path);
+                            }
+                        }
+                    }
                 }
             }
         }

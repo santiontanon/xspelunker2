@@ -108,6 +108,8 @@ public class AssemblerTags {
         "TAG_BOSS7",
         "TAG_BOSS7_KEY",
         "TAG_BOSS7_CHESTLOCK",
+        // misc (not tags that will be placed, but used for tile-object types):
+        "TAG_PUSHABLE_BLOCK",
     };
     
     

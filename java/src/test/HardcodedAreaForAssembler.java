@@ -5,6 +5,8 @@
 package test;
 
 import pcg.Area;
+import pcg.AssemblerTags;
+import pcg.GameObjectPlaceholder;
 import pcg.MSXRandom;
 import pcg.PCGArea;
 import pcg.PCGWorld;
@@ -37,6 +39,7 @@ public class HardcodedAreaForAssembler {
 //        RenderedArea ra4 = pcg2.generate(w.areas.get(4), w, r);
 //        RenderedArea ra5 = pcg2.generate(w.areas.get(5), w, r);
 //        RenderedArea ra6 = pcg2.generate(w.areas.get(6), w, r);
+//        generateAssemblerRenderedAreaData(ra0, w.areas.get(0), pcg2);
         generateAssemblerRenderedAreaData(ra1, w.areas.get(1), pcg2);
         GenerationTest.visualizeArea(ra0, "tmp/area"+0+".png", pcg2);
         GenerationTest.visualizeArea(ra1, "tmp/area"+1+".png", pcg2);
@@ -89,6 +92,12 @@ public class HardcodedAreaForAssembler {
                 }
             }
             System.out.println(line);
+        }
+        
+        System.out.println("current_area__objects:");
+        for(GameObjectPlaceholder go:ra.objectPlaceholders) {
+            int offset = go.x + go.y * a.width*2;
+            System.out.println("  db " + AssemblerTags.tagToAssembler(go.type) + ", " + offset + ", " + go.ID + ", " + go.extra);
         }
     }
 }

@@ -18,15 +18,15 @@ pyramid_standard_chunk_pool:
   db 2, #00, #00  ; data/patterns/room0010-3.tmx (7)
   dw #05db
   db 2, #00, #00  ; data/patterns/room0010-4.tmx (8)
-  dw #05df
+  dw #0ddf
   db 3, #00, #01  ; data/patterns/room0011-1.tmx (9)
   dw #008f
   db 3, #00, #01  ; data/patterns/room0011-2.tmx (10)
   dw #019f
   db 3, #00, #02  ; data/patterns/room0011-3.tmx (11)
-  dw #011f
+  dw #091e
   db 3, #00, #02  ; data/patterns/room0011-4.tmx (12)
-  dw #019f
+  dw #099e
   db 4, #00, #10  ; data/patterns/room0100-1.tmx (13)
   dw #06ef
   db 4, #00, #10  ; data/patterns/room0100-2.tmx (14)
@@ -50,11 +50,11 @@ pyramid_standard_chunk_pool:
   db 5, #00, #11  ; data/patterns/room0101-4.tmx (23)
   dw #02ab
   db 5, #00, #11  ; data/patterns/room0101-5.tmx (24)
-  dw #02af
+  dw #0aaf
   db 5, #00, #21  ; data/patterns/room0101-6.tmx (25)
   dw #02a7
   db 5, #00, #12  ; data/patterns/room0101-7.tmx (26)
-  dw #02af
+  dw #0aaf
   db 5, #00, #22  ; data/patterns/room0101-8.tmx (27)
   dw #02af
   db 6, #00, #10  ; data/patterns/room0110-1.tmx (28)
@@ -94,7 +94,7 @@ pyramid_standard_chunk_pool:
   db 9, #00, #02  ; data/patterns/room1001-3.tmx (45)
   dw #0137
   db 9, #00, #02  ; data/patterns/room1001-4.tmx (46)
-  dw #0333
+  dw #0b33
   db 10, #00, #00  ; data/patterns/room1010-1.tmx (47)
   dw #0447
   db 10, #00, #00  ; data/patterns/room1010-2.tmx (48)
@@ -104,7 +104,7 @@ pyramid_standard_chunk_pool:
   db 10, #00, #00  ; data/patterns/room1010-4.tmx (50)
   dw #0001
   db 10, #00, #00  ; data/patterns/room1010-5.tmx (51)
-  dw #0557
+  dw #0d57
   db 10, #00, #00  ; data/patterns/room1010-6.tmx (52)
   dw #0443
   db 11, #00, #01  ; data/patterns/room1011-1.tmx (53)
@@ -112,7 +112,7 @@ pyramid_standard_chunk_pool:
   db 11, #00, #01  ; data/patterns/room1011-2.tmx (54)
   dw #0017
   db 11, #00, #02  ; data/patterns/room1011-3.tmx (55)
-  dw #0117
+  dw #0917
   db 11, #00, #02  ; data/patterns/room1011-4.tmx (56)
   dw #0007
   db 11, #00, #02  ; data/patterns/room1011-5.tmx (57)
@@ -122,7 +122,7 @@ pyramid_standard_chunk_pool:
   db 12, #00, #10  ; data/patterns/room1100-1.tmx (59)
   dw #0667
   db 12, #00, #10  ; data/patterns/room1100-2.tmx (60)
-  dw #0007
+  dw #0807
   db 12, #00, #20  ; data/patterns/room1100-3.tmx (61)
   dw #0201
   db 12, #00, #10  ; data/patterns/room1100-4.tmx (62)
@@ -134,11 +134,11 @@ pyramid_standard_chunk_pool:
   db 13, #00, #11  ; data/patterns/room1101-1.tmx (65)
   dw #0227
   db 13, #00, #11  ; data/patterns/room1101-2.tmx (66)
-  dw #0227
+  dw #0a27
   db 13, #00, #21  ; data/patterns/room1101-3.tmx (67)
   dw #0227
   db 13, #00, #12  ; data/patterns/room1101-4.tmx (68)
-  dw #0227
+  dw #0a27
   db 13, #00, #22  ; data/patterns/room1101-5.tmx (69)
   dw #0227
   db 14, #00, #10  ; data/patterns/room1110-1.tmx (70)
@@ -152,7 +152,7 @@ pyramid_standard_chunk_pool:
   db 15, #00, #11  ; data/patterns/room1111-1.tmx (74)
   dw #0007
   db 15, #00, #11  ; data/patterns/room1111-2.tmx (75)
-  dw #0007
+  dw #0807
   db 15, #00, #21  ; data/patterns/room1111-3.tmx (76)
   dw #0007
   db 15, #00, #12  ; data/patterns/room1111-4.tmx (77)
@@ -222,113 +222,113 @@ pyramid_boss_chunk_pool:
   dw #0000
 pyramid_block_chunk_pool:
   db 3, #00, #01  ; data/patterns/block0011-1.tmx (109)
-  dw #019f
+  dw #099f
   db 3, #00, #02  ; data/patterns/block0011-2.tmx (110)
-  dw #019f
+  dw #099f
   db 5, #00, #11  ; data/patterns/block0101-1.tmx (111)
-  dw #0029
+  dw #0829
   db 5, #00, #21  ; data/patterns/block0101-2.tmx (112)
-  dw #0029
+  dw #0829
   db 5, #00, #12  ; data/patterns/block0101-3.tmx (113)
-  dw #0029
+  dw #0829
   db 5, #00, #22  ; data/patterns/block0101-4.tmx (114)
-  dw #0029
+  dw #0829
   db 6, #00, #10  ; data/patterns/block0110-1.tmx (115)
-  dw #0049
+  dw #0849
   db 6, #00, #20  ; data/patterns/block0110-2.tmx (116)
-  dw #0049
+  dw #0849
   db 7, #00, #11  ; data/patterns/block0011-1.tmx + up (117)
-  dw #008f
+  dw #088f
   db 7, #00, #12  ; data/patterns/block0011-2.tmx + up (118)
-  dw #008f
+  dw #088f
   db 7, #00, #11  ; data/patterns/block0101-1.tmx + right (119)
-  dw #0009
+  dw #0809
   db 7, #00, #21  ; data/patterns/block0101-2.tmx + right (120)
-  dw #0009
+  dw #0809
   db 7, #00, #12  ; data/patterns/block0101-3.tmx + right (121)
-  dw #0009
+  dw #0809
   db 7, #00, #22  ; data/patterns/block0101-4.tmx + right (122)
-  dw #0009
+  dw #0809
   db 7, #00, #11  ; data/patterns/block0110-1.tmx + down (123)
-  dw #0009
+  dw #0809
   db 7, #00, #21  ; data/patterns/block0110-2.tmx + down (124)
-  dw #0009
+  dw #0809
   db 7, #00, #12  ; data/patterns/block0111-1.tmx (125)
-  dw #0009
+  dw #0809
   db 9, #00, #01  ; data/patterns/block1001-1.tmx (126)
-  dw #0231
+  dw #0a31
   db 9, #00, #02  ; data/patterns/block1001-2.tmx (127)
-  dw #0231
+  dw #0a31
   db 10, #00, #00  ; data/patterns/block1010-1.tmx (128)
-  dw #0551
+  dw #0d51
   db 11, #00, #01  ; data/patterns/block0011-1.tmx + left (129)
-  dw #0117
+  dw #0917
   db 11, #00, #02  ; data/patterns/block0011-2.tmx + left (130)
-  dw #0117
+  dw #0917
   db 11, #00, #01  ; data/patterns/block1001-1.tmx + right (131)
-  dw #0011
+  dw #0811
   db 11, #00, #02  ; data/patterns/block1001-2.tmx + right (132)
-  dw #0011
+  dw #0811
   db 11, #00, #01  ; data/patterns/block1010-1.tmx + down (133)
-  dw #0111
+  dw #0911
   db 12, #00, #10  ; data/patterns/block1100-1.tmx (134)
-  dw #0260
+  dw #0a60
   db 12, #00, #20  ; data/patterns/block1100-2.tmx (135)
-  dw #0260
+  dw #0a60
   db 13, #00, #11  ; data/patterns/block0101-1.tmx + left (136)
-  dw #0021
+  dw #0821
   db 13, #00, #21  ; data/patterns/block0101-2.tmx + left (137)
-  dw #0021
+  dw #0821
   db 13, #00, #12  ; data/patterns/block0101-3.tmx + left (138)
-  dw #0021
+  dw #0821
   db 13, #00, #22  ; data/patterns/block0101-4.tmx + left (139)
-  dw #0021
+  dw #0821
   db 13, #00, #11  ; data/patterns/block1001-1.tmx + up (140)
-  dw #0221
+  dw #0a21
   db 13, #00, #12  ; data/patterns/block1001-2.tmx + up (141)
-  dw #0221
+  dw #0a21
   db 13, #00, #11  ; data/patterns/block1100-1.tmx + down (142)
-  dw #0220
+  dw #0a20
   db 13, #00, #21  ; data/patterns/block1100-2.tmx + down (143)
-  dw #0220
+  dw #0a20
   db 14, #00, #10  ; data/patterns/block0110-1.tmx + left (144)
-  dw #0041
+  dw #0841
   db 14, #00, #20  ; data/patterns/block0110-2.tmx + left (145)
-  dw #0041
+  dw #0841
   db 14, #00, #10  ; data/patterns/block1010-1.tmx + up (146)
-  dw #0441
+  dw #0c41
   db 14, #00, #10  ; data/patterns/block1100-1.tmx + right (147)
-  dw #0040
+  dw #0840
   db 14, #00, #20  ; data/patterns/block1100-2.tmx + right (148)
-  dw #0040
+  dw #0840
   db 15, #00, #11  ; data/patterns/block0011-1.tmx + left + up (149)
-  dw #0007
+  dw #0807
   db 15, #00, #12  ; data/patterns/block0011-2.tmx + left + up (150)
-  dw #0007
+  dw #0807
   db 15, #00, #11  ; data/patterns/block0101-1.tmx + left + right (151)
-  dw #0001
+  dw #0801
   db 15, #00, #21  ; data/patterns/block0101-2.tmx + left + right (152)
-  dw #0001
+  dw #0801
   db 15, #00, #12  ; data/patterns/block0101-3.tmx + left + right (153)
-  dw #0001
+  dw #0801
   db 15, #00, #22  ; data/patterns/block0101-4.tmx + left + right (154)
-  dw #0001
+  dw #0801
   db 15, #00, #11  ; data/patterns/block0110-1.tmx + left + down (155)
-  dw #0001
+  dw #0801
   db 15, #00, #21  ; data/patterns/block0110-2.tmx + left + down (156)
-  dw #0001
+  dw #0801
   db 15, #00, #12  ; data/patterns/block0111-1.tmx + left (157)
-  dw #0001
+  dw #0801
   db 15, #00, #11  ; data/patterns/block1001-1.tmx + up + right (158)
-  dw #0001
+  dw #0801
   db 15, #00, #12  ; data/patterns/block1001-2.tmx + up + right (159)
-  dw #0001
+  dw #0801
   db 15, #00, #11  ; data/patterns/block1010-1.tmx + up + down (160)
-  dw #0001
+  dw #0801
   db 15, #00, #11  ; data/patterns/block1100-1.tmx + right + down (161)
-  dw #0000
+  dw #0800
   db 15, #00, #21  ; data/patterns/block1100-2.tmx + right + down (162)
-  dw #0000
+  dw #0800
 pyramid_combination_chunk_pool:
   db 0, #00, #00  ; data/patterns/combination0000-1.tmx (163)
   dw #07f9

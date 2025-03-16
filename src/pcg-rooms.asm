@@ -1,7 +1,10 @@
 ; Temporary variables (overlapping with the buffer):
 tmp_pcg_room__current_target_chunk_bank_id: equ buffer_4096 + 4094
-tmp_pcg_room__current_decompressed_chunk_bank_id: equ buffer_4096 + 4095
-
+tmp_pcg_room__current_decompressed_chunk_bank_id: equ tmp_pcg_room__current_target_chunk_bank_id - 1
+tmp_pcg_room__next_object_ptr: equ tmp_pcg_room__current_decompressed_chunk_bank_id - 2
+tmp_pcg_room__next_tile_object_ptr: equ tmp_pcg_room__next_object_ptr - 2
+tmp_pcg_room__chunk_x: equ tmp_pcg_room__next_tile_object_ptr - 1
+tmp_pcg_room__chunk_y: equ tmp_pcg_room__chunk_x - 1
 
 ;-----------------------------------------------
 ; This method fills in the "current_room" data structure by generating a room
@@ -11,6 +14,22 @@ tmp_pcg_room__current_decompressed_chunk_bank_id: equ buffer_4096 + 4095
 pcg_generate_room:
 	ld a, e
 	ld (current_room__id), a
+
+	push de
+		ld hl, current_room__objects
+		ld (tmp_pcg_room__next_object_ptr), hl
+		ld bc, MAX_ROOM_OBJECTS * ROOM_OBJECT_STRUCT_SIZE - 1
+		xor a
+		ld (current_room__objects_sentinel), a
+		call clear_memory_a
+
+		ld hl, current_room__tile_objects
+		ld (tmp_pcg_room__next_tile_object_ptr), hl
+		ld bc, MAX_ROOM_TILE_OBJECTS * ROOM_TILE_OBJECT_STRUCT_SIZE - 1
+		ld a, #ff
+		ld (current_room__tile_objects_sentinel), a
+		call clear_memory_a
+	pop de	
 
 	; Find x1, y1, x2, y2 of the room in the room IDs map:
 	ld ix, #0000  ; x1, y1  (we will store "width - x" and "height - y" since it's easier)
@@ -184,10 +203,76 @@ pcg_generate_room__fg_loop_x:
 					call pcg_get_chunk_ptr
 				pop bc
 				push bc
-					; - hl: ptr to chunk
-					; - iyl/iyh: room width/height in screens.
-					; - c/b: x, y coordinates where to add this chunk in the current room.			
-					call pcg_generate_room_copy_chunk_to_room
+					push hl
+						; - hl: ptr to chunk
+						; - iyl/iyh: room width/height in screens.
+						; - c/b: x, y coordinates where to add this chunk in the current room.			
+						call pcg_generate_room_copy_chunk_to_room
+					pop hl
+					; Instantiate pushable-blocks:
+					ld bc, CHUNK_WIDTH * CHUNK_HEIGHT
+					add hl, bc
+				pop bc  ; we recover the x, y coordinates of the chunk
+				push bc
+					; Coordinates of the top-left of this chunk are: (iyl*2 - c)*16 + location.x, (iyh*2 - b)*12 + location.y
+					ld a, iyl
+					add a, a
+					sub c
+					add a, a
+					add a, a
+					add a, a
+					add a, a  ; * 16
+					ld (tmp_pcg_room__chunk_x), a
+					ld a, iyh
+					add a, a
+					sub b
+					add a, a
+					add a, a
+					ld c, a
+					add a, a
+					add a, c  ; * 12
+					ld (tmp_pcg_room__chunk_y), a
+
+					; Here hl = ptr to the "locations" marked in the chunk
+					; We iterate over all of them looking for instances of "pushable-block":
+					; each location is: type, x, y, dx, dy
+pcg_generate_room__fg_chunk_object_loop:
+					ld a, (hl)
+					or a
+					jr z, pcg_generate_room__fg_chunk_object_loop_done
+					cp CHUNK_LOCATION_PUSHABLE_BLOCK
+					jr nz, pcg_generate_room__fg_chunk_object_loop_next
+					; it's a pushable block, spawn it:
+					push hl
+					push de
+						ld de, (tmp_pcg_room__next_tile_object_ptr)
+						xor a  ; pushable blocks have ID 0
+						ld (de), a  ; ID
+						inc de
+						ld a, TAG_PUSHABLE_BLOCK
+						ld (de), a  ; type
+						inc de
+						inc hl
+						ld a, (tmp_pcg_room__chunk_x)
+						add a, (hl)  ; x relative to this chunk
+						ld (de), a  ; x
+						inc de
+						inc hl
+						ld a, (tmp_pcg_room__chunk_y)
+						add a, (hl)  ; y relative to this chunk
+						ld (de), a  ; y
+						ex de, hl
+							ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE - 3  ; "- 3", since we already did 3 "inc de"
+							add hl, bc
+						ex de, hl
+						ld (tmp_pcg_room__next_tile_object_ptr), de
+					pop de
+					pop hl
+pcg_generate_room__fg_chunk_object_loop_next:
+					ld bc, 5
+					add hl, bc
+					jr pcg_generate_room__fg_chunk_object_loop
+pcg_generate_room__fg_chunk_object_loop_done:
 				pop bc
 			pop hl
 			ld a, (tmp_pcg_room__current_target_chunk_bank_id)
@@ -201,21 +286,18 @@ pcg_generate_room__fg_loop_x_skip:
 		add a, a  ; next row
 		ADD_HL_A
 		pop bc
-		djnz pcg_generate_room__fg_loop_y
+		dec b
+		jp nz, pcg_generate_room__fg_loop_y
 	pop hl
 	pop bc
-	djnz pcg_generate_room__fg_loop_bank_id
+	dec b
+	jp nz, pcg_generate_room__fg_loop_bank_id
 
 	; Auto-fill ladders/ropes/etc. and randomize tiles:
 	call pcg_generate_room__prettyfy_pyramid
 
-	; objects:
+	; Instantiate 'current_area__objects':
 	; ...
-	ld hl, current_room__objects
-	ld bc, MAX_ROOM_OBJECTS * ROOM_OBJECT_STRUCT_SIZE - 1
-	call clear_memory
-	ld a, #ff
-	ld (current_room__objects_sentinel), a
 
 	ret
 
