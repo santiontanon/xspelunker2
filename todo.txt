@@ -1,25 +1,62 @@
 to do:
 
 ***- weapons:
+  ***- draw outline of inventory screen in-game
+    ***- prepare tileset for all 3 banks
+        - items:
+          - gloves (push rocks easily)
+          - Hurakán blessing (walk faster)
+          - cotton armor (take less damage)
+          - Chaac blessing (breath underwater)
+          - seashell (warns if there is a breakable wall in the room)
+          - antigrav-belt (low falling speed)
+          - heat-shield (lava does not damage you)
+          - map (incomplete initially)
+          - Letter from Elaine
+          - Letter from Elaine 2
+          - Letter from Elaine 3 (?)
+        - Weapons:
+          - machete (default) -> obsidian knive
+          - stone hammer -> fire hammer
+          - macuahuitl (big sword) -> water macuahuitl
+          - shield
+        - ranged weapons:
+          - sling (throws rocks)
+          - blowgun (throws darts)
+          - atlatl (throws spears, high damage)
+          - ray gun (needs battery pack, best weapon, but very hard to find batteries, so, reserve for bosses)
+        - other (do not use slots in inventory):
+          - coins
+          - bullets (rocks/darts/spears/battery packs)
+          - maize (increases max life)
+          - map pieces
+    ***- draw outline
+    ***- go back to in-game tiles when going back to the game
+    ***- inventory array
+    ***- draw items depending on whether they are present in the inventory
+  ***- mark currently selected weapon (with a sprite? tiles?)
+  ***- select which weapon we want
+  ***- description of the item currently selected at the bottom right
+  ***- in the map place, just print "No map"
   ***- draw animation frames:
     ***- player swinging machete forward
     ***- player swinging machete up
     ***- player swinging machete down (falling/jumping)
     ***- player swinging machete forward, crouching
-    ***- player swinging war hammer forward
-    ***- player swinging sword forward
-  ***- inventory screen mockup (with all possible items and stats, map, text area, button to go back to game, options menu, etc.)
-  ***- draw outline of inventory screen in-game (this will require tile bank swap in the VDP)
-  ***- draw all weapon item GFX (including upgrades: fire machete, obsidian hammer, water sword)
-  ***- draw weapons in inventory depending on which ones does the player own (inventory list)
-  ***- mark currently selected weapon (with a sprite? tiles?)
-  ***- select which weapon we want
+    ***- player swinging stone hammer forward
+    ***- player swinging macuahuitl forward
+    ***- player using shield in all directions
   ***- implement machete swing forward (idle/walking/falling/jumping)
   ***- implement machete swing up (idle/walking/falling/jumping)
   ***- implement machete swing crouching
   ***- implement machete swing down (falling/jumping)
-  ***- implement axe swing (idle/walking/falling/jumping)
-  ***- implement sword swing (idle/walking/falling/jumping)
+  ***- implement stone hammer swing (idle/walking/falling/jumping) [stands up if crouching]
+  ***- implement macuahuitl swing (idle/walking/falling/jumping) [stands up if crouching]
+  ***- implement shield (idle/walking/crouching/falling/jumping)
+  ***- implement directional sling (idle/walking/crouching/falling/jumping)
+  ***- implement directional blowgun (idle/walking/crouching/falling/jumping)
+  ***- implement directional atlatl (idle/walking/crouching/falling/jumping)
+  ***- implement directional ray gun (idle/walking/crouching/falling/jumping)
 
 - breakable walls:
   - instantiate them at room creation

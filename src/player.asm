@@ -655,7 +655,10 @@ player_update_switch_to_ladder_collision_check_continue:
 		cp 2
 		jr z, player_update_switch_to_ladder_failed
 		cp 7
+		jr z, player_update_switch_to_ladder_collision_check_continue2
+		cp 8
 		jr nz, player_update_switch_to_ladder_failed
+player_update_switch_to_ladder_collision_check_continue2:
 		inc c
 		call get_room_tile_type
 		cp 2

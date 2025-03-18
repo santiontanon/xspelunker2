@@ -86,6 +86,7 @@ update_sprite_objects_loop_next:
 update_sprite_objects_water_splash:
 	ld d, COLOR_WHITE
 	ld e, 8
+	ld c, 0
 	call get_sprite_object_sprite_coordinates
 	call add_sprite_to_this_frame
 
@@ -106,19 +107,14 @@ update_sprite_objects_pushing_block_dust_entry_point:
 update_sprite_objects_pushing_block_dust:
 	ld d, COLOR_WHITE
 	ld e, 12
+	ld c, -5
 	call get_sprite_object_sprite_coordinates
-	ld a, c
-	add a, -16
-	ld c, a
-	push bc
-		call add_sprite_to_this_frame
-	pop bc
+	call add_sprite_to_this_frame
 
+	ld c, 4
+	call get_sprite_object_sprite_coordinates
 	ld d, COLOR_WHITE
 	ld e, 16
-	ld a, c
-	add a, 32
-	ld c, a
 	call add_sprite_to_this_frame
 	jp update_sprite_objects_pushing_block_dust_entry_point
 
@@ -127,6 +123,7 @@ update_sprite_objects_pushing_block_dust:
 ; input:
 ; - ix: object ptr
 ; - d: expected sprite color
+; - c: x offset
 ; output:
 ; - c, b: sprite x, y
 ; - d: updated sprite color with early clock bit
@@ -148,10 +145,11 @@ get_sprite_object_sprite_coordinates:
 	add a, a
 	add a, a
 	add a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	add a, c
 	ld c, a
 
 	; set "early clock bit"?
-	cp 256 - (8 - PLAYER_COLLISION_WIDTH/2)
+	cp 256 - 8
 	ret c
 	set 7, d
 	ret
