@@ -121,9 +121,11 @@ player_update_state_idle:
 	bit 4, a
 	jr z, player_update_switch_to_walking_left
 
-	ld a, (keyboard_line_clicks)
+; 	ld a, (keyboard_line_clicks)
+; 	bit 6, a
+; 	jp nz, player_update_switch_to_crouch
 	bit 6, a
-	jp nz, player_update_switch_to_crouch
+	jp z, player_update_switch_to_crouch
 
 	; check for rope/ladder climb:
 	bit 5, a

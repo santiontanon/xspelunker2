@@ -5,12 +5,6 @@ state_play:
 		ld bc, RAM_to_zero_on_game_start_end - RAM_to_zero_on_game_start
 		call clear_memory
 
-		SETMEGAROMPAGE_8000 SPRITES_PAGE
-		ld hl, pyramid_object_sprites_bin
-		ld de, SPRTBL2 + 32 * 2  ; first two reserved for player
-		ld bc, pyramid_object_sprites_bin_end - pyramid_object_sprites_bin
-		call fast_LDIRVM
-
 		; initial player position:
 		ld hl, #0800
 		ld (player_x), hl
@@ -43,11 +37,35 @@ state_play:
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
 
+		; debug:
+; 		ld a, 1
+; 		ld (player_inventory_items), a
+; 		ld (player_inventory_items+35), a
+		ld a, 1
+; 		ld (player_inventory_weapons), a
+; 		ld (player_inventory_weapons+1), a
+; 		ld (player_inventory_weapons+2), a
+		ld (player_inventory_weapons+3), a
+		ld (player_inventory_weapons+4), a
+		ld (player_inventory_weapons+5), a
+		ld (player_inventory_weapons+6), a
+		ld (player_inventory_weapons+7), a
+		ld (player_inventory_weapons+8), a
+		ld (player_inventory_weapons+9), a
+		ld (player_inventory_weapons+10), a
+
 
 state_play_from_loaded_room:
 		call room_render_tile_objects
 state_play_from_inventory:
 		ld sp, stack  ; reset the stack, so we can jump here from wherever we want
+
+		; setup sprites:
+		SETMEGAROMPAGE_8000 SPRITES_PAGE
+		ld hl, pyramid_object_sprites_bin
+		ld de, SPRTBL2 + 32 * 2  ; first two reserved for player
+		ld bc, pyramid_object_sprites_bin_end - pyramid_object_sprites_bin
+		call fast_LDIRVM
 
 		; setup tiles:
 		ld a, TILES_PAGE

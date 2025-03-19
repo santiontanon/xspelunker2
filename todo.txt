@@ -1,44 +1,33 @@
 to do:
 
 ***- weapons:
-  ***- draw outline of inventory screen in-game
-    ***- prepare tileset for all 3 banks
-        - items:
-          - gloves (push rocks easily)
-          - Hurakán blessing (walk faster)
-          - cotton armor (take less damage)
-          - Chaac blessing (breath underwater)
-          - seashell (warns if there is a breakable wall in the room)
-          - antigrav-belt (low falling speed)
-          - heat-shield (lava does not damage you)
-          - map (incomplete initially)
-          - Letter from Elaine
-          - Letter from Elaine 2
-          - Letter from Elaine 3 (?)
-        - Weapons:
-          - machete (default) -> obsidian knive
-          - stone hammer -> fire hammer
-          - macuahuitl (big sword) -> water macuahuitl
-          - shield
-        - ranged weapons:
-          - sling (throws rocks)
-          - blowgun (throws darts)
-          - atlatl (throws spears, high damage)
-          - ray gun (needs battery pack, best weapon, but very hard to find batteries, so, reserve for bosses)
-        - other (do not use slots in inventory):
-          - coins
-          - bullets (rocks/darts/spears/battery packs)
-          - maize (increases max life)
-          - map pieces
-    ***- draw outline
-    ***- go back to in-game tiles when going back to the game
-    ***- inventory array
-    ***- draw items depending on whether they are present in the inventory
-  ***- mark currently selected weapon (with a sprite? tiles?)
-  ***- select which weapon we want
-  ***- description of the item currently selected at the bottom right
+  ***- prepare inventory tileset for all 3 banks
+    ***- draw items:
+      - Hurakán blessing (walk faster)
+      - cotton armor (take less damage)
+      - Chaac blessing (breath underwater)
+      - seashell (warns if there is a breakable wall in the room)
+      - antigrav-belt (low falling speed)
+      - heat-shield (lava does not damage you)
+      - map (incomplete initially)
+      - Letter from Elaine
+      - Letter from Elaine 2
+      - Letter from Elaine 3 (?)
+    ***- other (do not use slots in inventory):
+      - coins
+      - bullets (rocks/darts/spears/battery packs)
+      - maize (increases max life)
+      - map pieces
+  ***- number of bullets for each weapon and print their values
   ***- in the map place, just print "No map"
-  ***- draw animation frames:
+  ***- draw amount of gold
+  ***- draw main character idle animation
+  ***- draw health remaining (I also need blue hearts for distinguishing health from max health)
+  ***- mark currently selected weapon (changing the background color of the tiles?)
+  ***- select which weapon we want (navigate the inventory)
+  ***- description of the item currently selected at the bottom right
+  ***- some items can be turned on/off (antigrav-belt, sandals, hurakán blessing) (same method as for current selected weapon to highlight if they are active or not)
+  ***- draw weapon animation frames:
     ***- player swinging machete forward
     ***- player swinging machete up
     ***- player swinging machete down (falling/jumping)
@@ -106,8 +95,6 @@ to do:
   - kill enemies and get hurt by them
   - design all the enemies on the pyramid biome and spawn them
 
-- throwable weapons: rock sling, bow, bombs, ray gun (all ranged need bullets/energy which depletes), others?
-
 - PCG to do: optional treasure:
     - sample random rooms that have no tags (ideally in leaf divisions with no tags), and add optional treasure/story trivia labels
          (might or might not be reachable)
@@ -121,6 +108,10 @@ to do:
         - fragments of a calendar stone (maybe this is what you get from the bosses)
     - ensure I can have all the types of puzzles I listed above from La Mulana
     - ensure I can have things like "double jump" as the key and a whole area/path that requires it (or more than one)
+
+- when using the "map" item in the inventory, display an overall map, with all the pieces you have currently collected (and some clues in the form of maya writing that appear in the pieces)
+
+- item effects
 
 - jungle biome
   - implement it
@@ -144,7 +135,7 @@ to do:
 
 - using idols in stone calendar, has effects on the map:
   - 2nd, activates messages (letters glow agains the stone tables now)
-  - 4th, activates teleporters to move faster across maps
+  - 4th, activates teleporters to move faster across maps (or maybe this also with the 3rd?, 4th feels too late!)
   - 5th, lets you turn on the calendar stone (activate defenses)
   - 6th (two halves from Mars/Moon), (activate offensive capabilities, and destroy alien hardware)
   - with final secret stone (prism?): opens dimensional portal for YOU to travel throughout the universe
