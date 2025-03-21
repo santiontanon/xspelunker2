@@ -1,32 +1,14 @@
 to do:
 
+***- inventory item/weapon texts:
+  ***- write texts for all items
+  ***- array with list of texts
+  ***- determine if we are on weapons or items, and compute the current "position" (x + y*width)
+  ***- go through "inventory_item_positions" or "inventory_weapon_positions" and if the position matches, check if we have the item in the inventory
+  ***- if we do, write the message, otherwise, clear the text area
+    ***- method to split text into multiple lines (and write them in the appripriate tiles)
+
 ***- weapons:
-  ***- prepare inventory tileset for all 3 banks
-    ***- draw items:
-      - Hurakán blessing (walk faster)
-      - cotton armor (take less damage)
-      - Chaac blessing (breath underwater)
-      - seashell (warns if there is a breakable wall in the room)
-      - antigrav-belt (low falling speed)
-      - heat-shield (lava does not damage you)
-      - map (incomplete initially)
-      - Letter from Elaine
-      - Letter from Elaine 2
-      - Letter from Elaine 3 (?)
-    ***- other (do not use slots in inventory):
-      - coins
-      - bullets (rocks/darts/spears/battery packs)
-      - maize (increases max life)
-      - map pieces
-  ***- number of bullets for each weapon and print their values
-  ***- in the map place, just print "No map"
-  ***- draw amount of gold
-  ***- draw main character idle animation
-  ***- draw health remaining (I also need blue hearts for distinguishing health from max health)
-  ***- mark currently selected weapon (changing the background color of the tiles?)
-  ***- select which weapon we want (navigate the inventory)
-  ***- description of the item currently selected at the bottom right
-  ***- some items can be turned on/off (antigrav-belt, sandals, hurakán blessing) (same method as for current selected weapon to highlight if they are active or not)
   ***- draw weapon animation frames:
     ***- player swinging machete forward
     ***- player swinging machete up
@@ -46,6 +28,14 @@ to do:
   ***- implement directional blowgun (idle/walking/crouching/falling/jumping)
   ***- implement directional atlatl (idle/walking/crouching/falling/jumping)
   ***- implement directional ray gun (idle/walking/crouching/falling/jumping)
+
+- Damage:
+  - hitpoints (design hud: HP, oxygen in water, current item)
+  - get hurt by spikes
+  - game over screen when you run out of health
+  - get hurt by running out of oxygen in water
+  - decide whether you get hurt by falling from a height
+  - if a boulder falls on top of you, take damage (and where are you spawned? on top of the boulder?)
 
 - breakable walls:
   - instantiate them at room creation
@@ -80,14 +70,6 @@ to do:
     - 3rd idol on calendar stone, opens door to temple of fire
   - ensure that ALL object types are instantiated now during room creation
 
-- Damage:
-  - hitpoints (design hud: HP, oxygen in water, current item)
-  - get hurt by spikes
-  - game over screen when you run out of health
-  - get hurt by running out of oxygen in water
-  - decide whether you get hurt by falling from a height
-  - if a boulder falls on top of you, take damage (and where are you spawned? on top of the boulder?)
-
 - enemies:
   - come up with a list of enemies for pyramid (consider both sprite enemies and larger tile-based enemies)
   - implement at least one enemy
@@ -96,6 +78,11 @@ to do:
   - design all the enemies on the pyramid biome and spawn them
 
 - PCG to do: optional treasure:
+    - draw items:
+      - coins
+      - bullets (rocks/darts/spears/battery packs)
+      - maize (increases max life)
+      - map pieces
     - sample random rooms that have no tags (ideally in leaf divisions with no tags), and add optional treasure/story trivia labels
          (might or might not be reachable)
         - add "small keys" and some of the objects above are chest_locked with small keys
@@ -111,7 +98,8 @@ to do:
 
 - when using the "map" item in the inventory, display an overall map, with all the pieces you have currently collected (and some clues in the form of maya writing that appear in the pieces)
 
-- item effects
+- item effects (and if I need more items, think of maya masks, collars, etc.):
+  - for anti-grav belt, you can overwrite it by pressing "down" (to fall quick)
 
 - jungle biome
   - implement it

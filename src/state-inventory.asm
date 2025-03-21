@@ -8,44 +8,384 @@ state_inventory:
 		call setup_inventory_gfx
 		call draw_inventory_items
 		call draw_inventory_weapons
+		call draw_inventory_player_health
+		ld a, (player_inventory_coins)
+		ld de, CHRTBL2 + (2*32+19)*8
+		ld iy, #8000 + COLOR_WHITE*16
+		ld b, 3
+		call draw_inventory_number
+		call draw_inventory_map
+		call draw_inventory_player
 		call draw_inventory_cursor
 	call enable_VDP_output
 
 	xor a
-	ld (inventory_cursor_position), a
+	ld (inventory_cursor_position_x), a
+	ld (inventory_cursor_position_y), a
 
 state_inventory_loop:
 	halt
+	call draw_inventory_player
 	call draw_inventory_cursor
+	call draw_inventory_selected_weapon_highlight
 	call update_keyboard_buffers
-	ld a, (keyboard_line_clicks + 2)
-	bit 2, a
-	jr nz, state_inventory_exit
+	call state_inventory_update_cursor
 	jr state_inventory_loop
 
-state_inventory_exit:
+
+;-----------------------------------------------
+state_inventory_update_cursor:
+	ld hl, (inventory_cursor_position_x)
+	push hl
+		ld a, (keyboard_line_clicks)  ; RIGHT, DOWN, UP, LEFT, DEL, INS, HOME, SPACE
+		bit 7, a  ; right
+		push af
+			call nz, state_inventory_update_cursor_right
+		pop af
+		bit 6, a  ; down
+		push af
+			call nz, state_inventory_update_cursor_down
+		pop af
+		bit 5, a  ; up
+		push af
+			call nz, state_inventory_update_cursor_up
+		pop af
+		bit 4, a  ; left
+		push af
+			call nz, state_inventory_update_cursor_left
+		pop af
+	pop hl
+	; see if cursor has moved:
+	ld bc, (inventory_cursor_position_x)
+	or a
+	sbc hl, bc
+	ld a, h
+	or l
+	jr z, state_inventory_update_cursor_continue
+	ld hl, SFX_ui_move
+	call play_SFX_with_high_priority
+state_inventory_update_cursor_continue:
+
+	ld a, (keyboard_line_clicks)
+	bit 0, a  ; space
+	jp nz, state_inventory_update_cursor_button
+	ld a, (keyboard_line_clicks + 2)
+	bit 2, a
+	jp nz, state_inventory_update_cursor_button
+	ret
+
+state_inventory_update_cursor_button:
+	ld a, (inventory_cursor_position_y)
+	or a
+	jr z, state_inventory_update_cursor_button_row0
+	; pressed over an item/weapon:
+	ld b, a
+	ld a, (inventory_cursor_position_x)
+	ld c, a
+	ld hl, inventory_weapon_item_fns
+state_inventory_update_cursor_button_loop:
+	ld a, (hl)
+	cp #ff  ; sentinel
+	ret z
+	cp c
+	jr nz, state_inventory_update_cursor_button_loop_next
+	inc hl
+	ld a, (hl)
+	cp b
+	jr nz, state_inventory_update_cursor_button_loop_next1
+	; found!
+	inc hl
+	ld e, (hl)
+	inc hl
+	ld h, (hl)
+	ld l, e
+	push hl
+		ld hl, SFX_ui_select
+		call play_SFX_with_high_priority
+	pop hl
+	jp (hl)
+state_inventory_update_cursor_button_loop_next:
+	inc hl
+state_inventory_update_cursor_button_loop_next1:
+	inc hl
+	inc hl
+	inc hl
+	jr state_inventory_update_cursor_button_loop
+	ret
+
+state_inventory_update_cursor_button_row0:
+	ld a, (inventory_cursor_position_x)
+	or a
+	jr z, state_inventory_update_cursor_button_back
+	cp 4
+	jr z, state_inventory_update_cursor_button_options
+
+state_inventory_update_cursor_button_quit:
+	; ...
+	ret
+
+state_inventory_update_cursor_button_back:
 	call disable_VDP_output
 	call clear_all_the_sprites
 	jp state_play_from_inventory
+
+state_inventory_update_cursor_button_options:
+	; ...
+	ret
+
+
+state_inventory_update_cursor_right:
+	ld a, (inventory_cursor_position_y)
+	or a
+	jr z, state_inventory_update_cursor_right_row0
+	ld a, (inventory_cursor_position_x)
+	cp 9
+	ret z
+	inc a
+	ld (inventory_cursor_position_x), a
+	ret
+
+state_inventory_update_cursor_right_row0:
+	ld a, (inventory_cursor_position_x)
+	or a
+	jr z, state_inventory_update_cursor_right_row0_0
+	cp 4
+	jr z, state_inventory_update_cursor_right_row0_4
+	; right-most button:
+	ret
+state_inventory_update_cursor_right_row0_4:
+	ld a, 7
+	ld (inventory_cursor_position_x), a
+	ret
+
+state_inventory_update_cursor_right_row0_0:
+	ld a, 4
+	ld (inventory_cursor_position_x), a
+	ret
+
+
+state_inventory_update_cursor_left:
+	ld a, (inventory_cursor_position_y)
+	or a
+	jr z, state_inventory_update_cursor_left_row0
+	cp 2
+	jr z, state_inventory_update_cursor_left_wide
+	cp 3
+	jr z, state_inventory_update_cursor_left_wide
+	ld a, (inventory_cursor_position_x)
+	cp 4
+	ret z
+	dec a
+	ld (inventory_cursor_position_x), a
+	ret
+state_inventory_update_cursor_left_wide:
+	ld a, (inventory_cursor_position_x)
+	or a
+	ret z
+	dec a
+	ld (inventory_cursor_position_x), a
+	ret
+
+
+state_inventory_update_cursor_left_row0:
+	ld a, (inventory_cursor_position_x)
+	or a
+	ret z
+	cp 4
+	jr z, state_inventory_update_cursor_left_row0_4
+	; right-most button:
+	ld a, 4
+	ld (inventory_cursor_position_x), a
+	ret
+state_inventory_update_cursor_left_row0_4:
+	xor a
+	ld (inventory_cursor_position_x), a
+	ret
+
+
+state_inventory_update_cursor_down:
+	ld a, (inventory_cursor_position_y)
+	cp 5
+	ret z  ; bottom of the screen
+	or a
+	jr z, state_inventory_update_cursor_down_row0
+	cp 3
+	jr z, state_inventory_update_cursor_down_row3
+	inc a
+	ld (inventory_cursor_position_y), a
+	ret
+state_inventory_update_cursor_down_row0:
+	ld a, (inventory_cursor_position_x)
+	cp 4
+	jr c, state_inventory_update_cursor_down_row0_left
+	ld a, 1
+	ld (inventory_cursor_position_y), a
+	ret
+state_inventory_update_cursor_down_row0_left:
+	xor a
+	ld (inventory_cursor_position_x), a
+	ld a, 2
+	ld (inventory_cursor_position_y), a
+	ret
+state_inventory_update_cursor_down_row3:
+	ld a, (inventory_cursor_position_x)
+	cp 4
+	ret c
+	ld a, 4
+	ld (inventory_cursor_position_y), a
+	ret
+
+
+state_inventory_update_cursor_up:
+	ld a, (inventory_cursor_position_y)
+	or a
+	ret z
+	cp 1
+	jr z, state_inventory_update_cursor_up_row1
+	cp 2
+	jr z, state_inventory_update_cursor_up_row2
+	dec a
+	ld (inventory_cursor_position_y), a
+	ret
+state_inventory_update_cursor_up_row1:
+	ld a, (inventory_cursor_position_x)
+	cp 7
+	jr c, state_inventory_update_cursor_up_row1_middle
+	ld a, 7
+	ld (inventory_cursor_position_x), a
+	xor a
+	ld (inventory_cursor_position_y), a
+	ret
+state_inventory_update_cursor_up_row1_middle:
+	ld a, 4
+	ld (inventory_cursor_position_x), a
+	xor a
+	ld (inventory_cursor_position_y), a
+	ret
+state_inventory_update_cursor_up_row2:
+	ld a, (inventory_cursor_position_x)
+	cp 4
+	jr c, state_inventory_update_cursor_up_row2_left
+	ld a, (inventory_cursor_position_y)
+	dec a
+	ld (inventory_cursor_position_y), a
+	ret
+state_inventory_update_cursor_up_row2_left:
+	xor a
+	ld (inventory_cursor_position_x), a
+	ld (inventory_cursor_position_y), a
+	ret
+
+;-----------------------------------------------
+draw_inventory_player:
+	SETMEGAROMPAGE_8000 SPRITES_PAGE
+
+	ld a, (interrupt_cycle)
+	bit 4, a
+	jr z, draw_inventory_player_frame2
+	ld hl, player_sprites_bin + 64
+	jr draw_inventory_player_frame_set
+draw_inventory_player_frame2:
+	ld hl, player_sprites_bin
+draw_inventory_player_frame_set:
+	ld de, SPRTBL2
+	ld bc, 64
+	call fast_LDIRVM
+
+	; upload sprite attributes:
+	ld hl, buffer_4096
+	ld (hl), 23
+	inc hl
+	ld (hl), 8
+	inc hl
+	ld (hl), 0  ; sprite number
+	inc hl
+	ld (hl), COLOR_DARK_YELLOW
+	inc hl
+	ld (hl), 23
+	inc hl
+	ld (hl), 8
+	inc hl
+	ld (hl), 4  ; sprite number
+	inc hl
+	ld (hl), COLOR_DARK_RED
+	inc hl
+	ld hl, buffer_4096
+	ld de, SPRATR2
+	ld b, 8
+	jp fast_small_LDIRVM
 
 
 ;-----------------------------------------------
 draw_inventory_cursor_offsets:
 	db 0, 0, 0, 1, 2, 2, 2, 1
 draw_inventory_cursor:
+	; base position: x: c, e, y: b
+	ld a, (inventory_cursor_position_y)
+	or a
+	jr z, draw_inventory_cursor_row0
+	; other rows:
+	; x = 4 + (inventory_cursor_position_x) * 24
+	; y = 7 + (inventory_cursor_position_y) * 24
+	add a, a
+	add a, a
+	add a, a
+	ld b, a
+	add a, a
+	add a, b
+	add a, 7
+	ld b, a  ; y
+	ld a, (inventory_cursor_position_x)
+	add a, a
+	add a, a
+	add a, a
+	ld c, a
+	add a, a
+	add a, c
+	add a, 4
+	ld c, a
+	ld a, (inventory_cursor_position_x)
+	cp 4
+	jr c, draw_inventory_cursor_continue
+	ld a, c
+	add a, 8
+	ld c, a
+draw_inventory_cursor_continue:
+	ld a, c
+	add a, 20
+	ld e, a
+	jp draw_inventory_cursor_coordinates_set
+draw_inventory_cursor_row0:
+	ld b, 3
+	ld a, (inventory_cursor_position_x)
+	or a
+	jr z, draw_inventory_cursor_row0_0
+	cp 4
+	jr z, draw_inventory_cursor_row0_4
+	; right most:
+	ld c, 171
+	ld e, 209
+	jr draw_inventory_cursor_coordinates_set
+draw_inventory_cursor_row0_0:
+	ld c, 43
+	ld e, 81
+	jr draw_inventory_cursor_coordinates_set
+draw_inventory_cursor_row0_4:
+	ld c, 107
+	ld e, 145
+
+draw_inventory_cursor_coordinates_set:
 	ld a, (interrupt_cycle)
-	rrca
 	rrca
 	and #07
 	ld hl, draw_inventory_cursor_offsets
 	ADD_HL_A
-	ld a, 30
+	ld a, c
 	sub (hl)
 	ld c, a  ; x1
-	ld a, 82
+	ld a, e
 	add a, (hl)
 	ld e, a  ; x2
-	ld b, 3  ; y
 
 	ld hl, buffer_4096
 	ld (hl), b
@@ -68,6 +408,40 @@ draw_inventory_cursor:
 	ld de, SPRATR2 + 2*4
 	ld b, 8
 	jp fast_small_LDIRVM
+
+
+;-----------------------------------------------
+draw_inventory_player_health:
+	ld a, (player_max_health)
+	rrca
+	rrca
+	and #3f
+	ld b, a  ; number of hearts to display
+	ld a, (player_health)
+	ld c, a  ; remaining health to display
+	ld hl, NAMTBL2 + 3*32+3
+draw_inventory_player_health_loop:
+	ld e, 4
+	ld a, c
+	cp 4
+	jr nc, draw_inventory_player_health_loop_continue
+	ld e, a
+draw_inventory_player_health_loop_continue:
+	ld a, c
+	sub e
+	ld c, a
+	push bc
+	push de
+	push hl
+		ld a, e
+		add a, 19  ; first heart tile
+		call WRTVRM
+	pop hl		
+	pop de
+	pop bc
+	inc hl
+	djnz draw_inventory_player_health_loop
+	ret
 
 
 ;-----------------------------------------------
@@ -130,6 +504,26 @@ draw_inventory_items_loop_next:
 	pop bc
 	djnz draw_inventory_items_loop
 	ret
+
+
+;-----------------------------------------------
+draw_inventory_selected_weapon_highlight:
+	ld a, (interrupt_cycle)
+	bit 4, a
+	jr z, draw_inventory_selected_weapon_highlight_erase
+	ld a, (player_current_weapon)
+	ld hl, inventory_selected_weapon_sprites
+	add a, a
+	add a, a
+	ADD_HL_A
+	ld de, SPRATR2 + 7*4
+	ld b, 4
+	jp fast_small_LDIRVM
+draw_inventory_selected_weapon_highlight_erase:
+	ld hl, SPRATR2 + 7*4
+	xor a
+	ld bc, 4
+	jp fast_FILVRM
 
 
 ;-----------------------------------------------
@@ -208,7 +602,31 @@ draw_inventory_weapons_loop_next:
 	ld a, (player_inventory_weapons + 10)  ; ice macuahuitl
 	or a
 	call nz, draw_inventory_weapons_ice_macuahuitl_sprite
-	ret
+
+	; weapon bullets:
+	ld a, (player_inventory_weapon_ammo)
+	ld de, CHRTBL2 + (256 + 16)*8
+	ld iy, #0800 + COLOR_BLUE*16
+	ld b, 2
+	call draw_inventory_number
+
+	ld a, (player_inventory_weapon_ammo + 1)
+	ld de, CHRTBL2 + (256 + 18)*8
+	ld iy, #0800 + COLOR_BLUE*16
+	ld b, 2
+	call draw_inventory_number
+
+	ld a, (player_inventory_weapon_ammo + 2)
+	ld de, CHRTBL2 + (256 + 20)*8
+	ld iy, #0800 + COLOR_BLUE*16
+	ld b, 2
+	call draw_inventory_number
+
+	ld a, (player_inventory_weapon_ammo + 3)
+	ld de, CHRTBL2 + (256 + 22)*8
+	ld iy, #0800 + COLOR_BLUE*16
+	ld b, 2
+	jp draw_inventory_number
 
 
 draw_inventory_weapons_hammer_sprite:
@@ -270,6 +688,92 @@ draw_inventory_weapons_fire_hammer_sprite:
 
 
 ;-----------------------------------------------
+; input:
+; - a: number
+; - b: width in tiles to use
+; - de: VRAM address to draw to (CHRTBL2)
+; - iyl: color (attribute byte)
+; - iyh: pixel to start from (128 to start in pixel 0)
+draw_inventory_number:
+	push de
+	push bc
+		push af
+			SETMEGAROMPAGE_8000 TEXT_PAGE
+			call clear_text_rendering_buffer
+		pop af
+		ld de, buffer_4096 + 1
+		ld c, 0  ; number of characters
+
+		ld b, 0  ; hundreds digit
+draw_inventory_number_hundreds_loop:
+		cp 100
+		jr c, draw_inventory_number_hundreds_loop_done
+		sub 100
+		inc b
+		jp draw_inventory_number_hundreds_loop
+draw_inventory_number_hundreds_loop_done:	
+		push af
+			ld a, b
+			or a
+			jr z, draw_inventory_number_hundreds_done
+			ld hl, text_numbers
+			ADD_HL_A
+			ld a, (hl)
+			ld (de), a
+			inc de
+			inc c  ; number of digits
+draw_inventory_number_hundreds_done:
+		pop af
+
+		ld b, 0  ; tens digit
+draw_inventory_number_tens_loop:
+		cp 10
+		jr c, draw_inventory_number_tens_loop_done
+		sub 10
+		inc b
+		jp draw_inventory_number_tens_loop
+draw_inventory_number_tens_loop_done:	
+		push af
+			ld a, b
+			or a
+			jr z, draw_inventory_number_tens_done
+			ld hl, text_numbers
+			ADD_HL_A
+			ld a, (hl)
+			ld (de), a
+			inc de
+			inc c  ; number of digits
+draw_inventory_number_tens_done:
+		pop af
+
+		ld hl, text_numbers
+		ADD_HL_A
+		ld a, (hl)
+		ld (de), a
+		inc de
+		xor a
+		ld (de), a
+		inc c  ; number of digits
+
+		ld hl, buffer_4096
+		ld (hl), c
+	pop bc
+	pop de
+	jp draw_sentence_to_vdp
+
+
+;-----------------------------------------------
+draw_inventory_map:
+	SETMEGAROMPAGE_8000 TEXT_PAGE
+	call clear_text_rendering_buffer
+	ld hl, TEXT_NO_MAP
+	ld de, CHRTBL2 + (256*2+32*2+3)*8
+	ld iy, #2000 + COLOR_DARK_YELLOW
+	ld b, 5
+	jp draw_sentence_to_vdp
+
+
+;-----------------------------------------------
 setup_inventory_gfx:
 	; sprites:
 	ld hl, inventory_sprites
@@ -327,6 +831,80 @@ setup_inventory_gfx:
 	ld de, NAMTBL2
 	ld bc, 768
 	jp fast_LDIRVM
+
+
+;-----------------------------------------------
+WEAPON_ITEM_FN: macro x, y, fn
+	db x, y
+	dw fn
+	endm
+inventory_weapon_item_fns:
+	WEAPON_ITEM_FN 0, 2, select_weapon0
+	WEAPON_ITEM_FN 1, 2, select_weapon1
+	WEAPON_ITEM_FN 2, 2, select_weapon2
+	WEAPON_ITEM_FN 3, 2, select_weapon3
+	WEAPON_ITEM_FN 0, 3, select_weapon4
+	WEAPON_ITEM_FN 1, 3, select_weapon5
+	WEAPON_ITEM_FN 2, 3, select_weapon6
+	WEAPON_ITEM_FN 3, 3, select_weapon7
+	db #ff
+
+select_weapon0:
+	ld a, (player_inventory_weapons + 8)
+	or a
+	jr z, select_weapon0_upgraded
+	xor a
+	ld (player_current_weapon), a
+	ret
+select_weapon0_upgraded:
+	ld a, 8
+	ld (player_current_weapon), a
+	ret
+
+select_weapon1:
+	ld a, (player_inventory_weapons + 9)
+	or a
+	jr z, select_weapon1_upgraded
+	ld a, 1
+	ld (player_current_weapon), a
+	ret
+select_weapon1_upgraded:
+	ld a, 9
+	ld (player_current_weapon), a
+	ret
+
+select_weapon2:
+	ld a, (player_inventory_weapons + 10)
+	or a
+	jr z, select_weapon2_upgraded
+	ld a, 2
+	ld (player_current_weapon), a
+	ret
+select_weapon2_upgraded:
+	ld a, 10
+	ld (player_current_weapon), a
+	ret
+
+select_weapon3:
+	ld a, 3
+	ld (player_current_weapon), a
+	ret
+select_weapon4:
+	ld a, 4
+	ld (player_current_weapon), a
+	ret
+select_weapon5:
+	ld a, 5
+	ld (player_current_weapon), a
+	ret
+select_weapon6:
+	ld a, 6
+	ld (player_current_weapon), a
+	ret
+select_weapon7:
+	ld a, 7
+	ld (player_current_weapon), a
+	ret
 
 
 ;-----------------------------------------------
@@ -403,6 +981,20 @@ inventory_weapon_gfx:
 inventory_sprites:
 	incbin "autogenerated/inventory-sprites.bin"
 inventory_sprites_end:
+
+
+inventory_selected_weapon_sprites:
+	db 71, 8, 28, COLOR_WHITE
+	db 71, 32, 28, COLOR_WHITE
+	db 71, 56, 28, COLOR_WHITE
+	db 71, 80, 28, COLOR_WHITE
+	db 72, 8, 32, COLOR_WHITE
+	db 72, 32, 32, COLOR_WHITE
+	db 72, 56, 32, COLOR_WHITE
+	db 72, 80, 32, COLOR_WHITE
+	db 71, 8, 28, COLOR_WHITE
+	db 71, 32, 28, COLOR_WHITE
+	db 71, 56, 28, COLOR_WHITE
 
 
 IF (inventory_item_positions_end - inventory_item_positions) != N_INVENTORY_ITEM_TYPES

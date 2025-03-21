@@ -95,7 +95,7 @@ draw_sentence20_simple_loop:
 ; - de: target VRAM address (ptr to CHRTBL2)
 ; - iyl: color (attribute byte)
 ; - iyh: pixel to start from (128 to start in pixel 0)
-; - b: expected length in characters
+; - b: expected width in tiles
 draw_sentence_to_vdp:
 	push de
 	push bc

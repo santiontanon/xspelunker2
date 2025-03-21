@@ -38,22 +38,68 @@ state_play:
 		call call_hl_in_page_c_8000
 
 		; debug:
-; 		ld a, 1
-; 		ld (player_inventory_items), a
-; 		ld (player_inventory_items+35), a
 		ld a, 1
-; 		ld (player_inventory_weapons), a
-; 		ld (player_inventory_weapons+1), a
-; 		ld (player_inventory_weapons+2), a
+		ld (player_inventory_items), a
+		ld (player_inventory_items+1), a
+		ld (player_inventory_items+2), a
+		ld (player_inventory_items+3), a
+		ld (player_inventory_items+4), a
+		ld (player_inventory_items+5), a
+		ld (player_inventory_items+6), a
+		ld (player_inventory_items+7), a
+		ld (player_inventory_items+8), a
+		ld (player_inventory_items+9), a
+		ld (player_inventory_items+10), a
+		ld (player_inventory_items+11), a
+		ld (player_inventory_items+12), a
+		ld (player_inventory_items+13), a
+		ld (player_inventory_items+14), a
+		ld (player_inventory_items+15), a
+		ld (player_inventory_items+16), a
+		ld (player_inventory_items+17), a
+		ld (player_inventory_items+18), a
+		ld (player_inventory_items+19), a
+		ld (player_inventory_items+20), a
+		ld (player_inventory_items+21), a
+		ld (player_inventory_items+22), a
+		ld (player_inventory_items+23), a
+		ld (player_inventory_items+24), a
+		ld (player_inventory_items+25), a
+		ld (player_inventory_items+26), a
+		ld (player_inventory_items+27), a
+		ld (player_inventory_items+28), a
+		ld (player_inventory_items+29), a
+		ld (player_inventory_items+30), a
+		ld (player_inventory_items+31), a
+		ld (player_inventory_items+32), a
+		ld (player_inventory_items+33), a
+		ld (player_inventory_items+34), a
+		ld (player_inventory_items+35), a
+		ld (player_inventory_weapons), a
+		ld (player_inventory_weapons+1), a
+		ld (player_inventory_weapons+2), a
 		ld (player_inventory_weapons+3), a
 		ld (player_inventory_weapons+4), a
 		ld (player_inventory_weapons+5), a
 		ld (player_inventory_weapons+6), a
 		ld (player_inventory_weapons+7), a
-		ld (player_inventory_weapons+8), a
-		ld (player_inventory_weapons+9), a
-		ld (player_inventory_weapons+10), a
+; 		ld (player_inventory_weapons+8), a
+; 		ld (player_inventory_weapons+9), a
+; 		ld (player_inventory_weapons+10), a
+		ld a, 123
+		ld (player_inventory_coins), a
+		ld a, 13
+		ld (player_inventory_weapon_ammo), a
+		ld a, 7
+		ld (player_inventory_weapon_ammo + 1), a
+		ld a, 99
+		ld (player_inventory_weapon_ammo + 2), a
 
+		ld a, PLAYER_INITIAL_MAX_HEALTH
+		ld hl, player_health
+		ld (hl), a
+		inc hl
+		ld (hl), a  ; player_max_health
 
 state_play_from_loaded_room:
 		call room_render_tile_objects

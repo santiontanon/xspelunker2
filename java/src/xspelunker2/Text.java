@@ -65,6 +65,8 @@ public class Text {
         addLineSafe(lines_with_constant, "Mars", "AREA10_NAME", 16);
         addLineSafe(lines_with_constant, "the Moon", "AREA11_NAME", 16);
 
+        addLineSafe(lines_with_constant, "No map", "NO_MAP", 8);
+
         
         List<Integer> numbers = font.convertStringToAssembler("0123456789 ");
         System.out.println("Numbers: " + numbers);

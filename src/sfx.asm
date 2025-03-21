@@ -35,14 +35,14 @@
 ;   db 10, 0
 ;   db SFX_CMD_END
 
-; SFX_ui_move:
-;   db  7,#b8  ; SFX all channels to tone
-;   db 10,#0b  ; volume
-;   db 4,0, 5+MUSIC_CMD_TIME_STEP_FLAG,#02 ; frequency
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
-;   db 10,#00  ; silence
-;   db SFX_CMD_END 
+SFX_ui_move:
+  db  7,#b8  ; SFX all channels to tone
+  db 10,#0b  ; volume
+  db 4,0, 5+MUSIC_CMD_TIME_STEP_FLAG,#02 ; frequency
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 10,#00  ; silence
+  db SFX_CMD_END 
 
 SFX_ui_select:
   db  7,#b8  ; SFX all channels to tone
