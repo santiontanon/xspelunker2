@@ -1,7 +1,6 @@
 to do:
 
 ***- weapons:
-  ***- implement machete swing crouching
   ***- implement machete swing up (idle/walking/falling/jumping)
   ***- implement machete swing down (falling/jumping)
   ***- implement stone hammer swing (idle/walking/falling/jumping) [stands up if crouching, if no collision, otherwise, no swing]
@@ -38,21 +37,21 @@ to do:
   - keep Java/assembler versions in sync (try different random seeds)
 
 - being able to complete the game in assembler:
-  - render doors (and be blocked by them)
   - spawn and draw items in the game
-  - pick up keys (inventory) (to pick up an item, crouch in front of it)
+  - pick up items (inventory) (to pick up an item, crouch in front of it)
+  - render doors (and be blocked by them)
   - use keys in locks to open doors
+  - press buttons to open doors
   - combination clues
   - interact with combination levers
-  - press buttons to open doors
   - open the boss doors (door open animation with some SFX/music, so, it's clear it's important)
   - enter a boss door (for now just an empty room with the item you are supposed to get)
-    - obtain the "idols": each idol represents one of the six creator deities (the last one is split in half)
+    - obtain the "idols": each idol represents one of the six creator deities (the last one requires two of them). Maybe to see them you have to inspect them in the inventory (too small otherwise)
   - trials (those are solved in front of te gods I drew)
   - design ending room (maya calendar stone where you place what you get from the bosses, etc.)
     - 1st idol on calendar stone, opens door to 3rd pyramid
     - 3rd idol on calendar stone, opens door to temple of fire
-  - ensure that ALL object types are instantiated now during room creation
+  - ensure that ALL tags are instantiated now during room creation
 
 - enemies:
   - come up with a list of enemies for pyramid (consider both sprite enemies and larger tile-based enemies)
@@ -89,8 +88,6 @@ to do:
   - implement it
   - special chunk for start position (start tag) and set start position there (on the left-edge of map)
   - add jungle events (village, npcs, maybe shop, etc.)
-
-- adjust PCG patterns/algorithms so that maps look as good as possible. If I need to draw more tiles or redo patterns, do it!
 
 - menus:
   - brain games screen
@@ -266,13 +263,13 @@ X-Spelunker 2 (e-ke-se pe-lu-ne-ke-le):
   - maya text:
     https://www.mayaarchaeologist.co.uk/public-resources/maya-world/maya-writing-system/
   - main quest not too hard, so most people can complete it, but secret very hard mission full of secrets
-  - eagle is sky, snake is earth, and jaguar the underworld. Jaguar and Egle are the warriors
+  - eagle is sky, snake is earth, and jaguar the underworld. Jaguar and Eagle are the warriors
   - ball game: two gods from the sky played ball near the underworld, went down and played with the underworld gods (who wanted to kill humans, since they were only worshipping the sky gods). The two won, and one knel and cut his head, which went up the sky and formed the sun, the other did the same and formed the moon. they protect humans from the underworld gods.
     - in my game, I could make it so that the story is wrong, and they are mars and moon instead of sun and moon, and those are the palces you visit.
   - cenote under chichen itza could be a level (perhaps some sacrifices there)
   - list of important deities for clues/story: https://www.villapalmarcancun.com/discover-cancun/heritage/most-important-mayan-gods
 
-- altar(s) where you can sacrifice bodies to some Mayan gods: carrying corpses of enemies? sacrificing them with some sacrificial dagger pleases the gods and you get random things (refill life, supplies, and maybe a special weapon that can only be gotten this way). Think a bit more on this, to see if I can get a nice mechanics that has some depth (e.g., sacrificing bigger corpses gives you more, but you become slow when carrying a corpse, and hence it's harder, etc.).
+- altar(s) where you can sacrifice bodies to some Mayan gods: carrying corpses/heads/hearts of enemies? sacrificing them with some sacrificial dagger pleases the gods and you get random things (refill life, supplies, and maybe a special weapon that can only be gotten this way). Think a bit more on this, to see if I can get a nice mechanics that has some depth (e.g., sacrificing bigger corpses gives you more, but you become slow when carrying a corpse, and hence it's harder, etc.).
 
 
 -----------

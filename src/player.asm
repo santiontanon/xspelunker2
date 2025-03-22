@@ -132,7 +132,7 @@ player_update_state_fn_table:
 	dw player_update_state_walking
 	dw player_update_state_falling
 	dw player_update_state_jumping
-	dw player_update_state_crouch
+	dw player_update_state_crouching
 	dw player_update_state_crawling
 	dw player_update_state_rope
 	dw player_update_state_ladder
@@ -161,9 +161,9 @@ player_update_state_idle:
 
 ; 	ld a, (keyboard_line_clicks)
 ; 	bit 6, a
-; 	jp nz, player_update_switch_to_crouch
+; 	jp nz, player_update_switch_to_crouching
 	bit 6, a
-	jp z, player_update_switch_to_crouch
+	jp z, player_update_switch_to_crouching
 
 	; check for rope/ladder climb:
 	bit 5, a
@@ -503,17 +503,25 @@ player_update_stop_jumping:
 
 
 ;-----------------------------------------------
-player_update_switch_to_crouch:
+player_update_switch_to_crouching:
 	; recenter scroll:
 	call maybe_recenter_scroll_recenter_x
 	call maybe_recenter_scroll_recenter_y
+player_update_switch_to_crouching_from_weapon:
+	ld a, #ff
+	ld (player_requested_weapon_sprite), a
 
 	ld a, (player_state)
 	and #01
-	add a, PLAYER_STATE_CROUCH
+	add a, PLAYER_STATE_CROUCHING
 	ld (player_state), a
 
-player_update_state_crouch:
+player_update_state_crouching:
+	; check for weapon swing:
+	ld a, (keyboard_line_clicks + 0)
+	bit 0, a
+	jp nz, player_update_switch_to_weapon_swing_crouching
+
 	; check for inventory:
 	ld a, (keyboard_line_clicks + 2)
 	bit 2, a
@@ -555,6 +563,11 @@ player_update_switch_to_crawling_right:
 	ld (player_state), a
 
 player_update_state_crawling:
+	; check for weapon swing:
+	ld a, (keyboard_line_clicks)
+	bit 0, a
+	jp nz, player_update_switch_to_weapon_swing_crouching
+
 	; check for inventory:
 	ld a, (keyboard_line_clicks + 2)
 	bit 2, a
@@ -566,7 +579,7 @@ player_update_state_crawling:
 	jr z, player_update_state_crawling_right
 	bit 4, a
 	jr z, player_update_state_crawling_left
-	jp player_update_switch_to_crouch
+	jp player_update_switch_to_crouching
 
 player_update_state_crawling_right:
 	; check for back to walking:
@@ -1230,8 +1243,38 @@ player_update_state_weapon_swing_falling_swing_done:
 
 
 ;-----------------------------------------------
+player_update_switch_to_weapon_swing_crouching:
+	ld hl, SFX_weapon_swing
+	call play_SFX_with_high_priority
+	xor a
+	ld (player_weapon_state_timer), a
+	ld a, (player_state)
+	and #01
+	add a, PLAYER_STATE_WEAPON_SWING_CROUCHING
+	ld (player_state), a
+
 player_update_state_weapon_swing_crouching:
-	; ...
+	ld hl, player_weapon_state_timer
+	ld a, (hl)
+	cp 8
+	jp z,player_update_switch_to_crouching_from_weapon
+	inc (hl)
+
+	; weapon sprite setup:
+	ld hl, player_requested_weapon_sprite
+	ld (hl), 0  ; weapon sprite
+	inc hl
+	ld a, (player_state)
+	and #01
+	jr z, player_update_state_weapon_swing_crouching_right
+	ld (hl), -16  ; x offset
+	jr player_update_state_weapon_swing_crouching_x_set
+player_update_state_weapon_swing_crouching_right:
+	ld (hl), 16  ; x offset
+player_update_state_weapon_swing_crouching_x_set:
+	inc hl
+	ld (hl), 5  ; y offset
+
 	ld a, 17
 	ld (player_requested_frame), a
 	jp player_update_update_sprite_position
