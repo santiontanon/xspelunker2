@@ -74,7 +74,7 @@ state_inventory_update_cursor_continue:
 	jp nz, state_inventory_update_cursor_button
 	ld a, (keyboard_line_clicks + 2)
 	bit 2, a
-	jp nz, state_inventory_update_cursor_button
+	jp nz, state_inventory_update_cursor_button_back
 	ret
 
 state_inventory_update_cursor_button:

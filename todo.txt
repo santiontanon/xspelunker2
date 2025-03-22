@@ -1,10 +1,6 @@
 to do:
 
 ***- weapons:
-  ***- implement machete swing up (idle/walking/falling/jumping)
-  ***- implement machete swing down (falling/jumping)
-  ***- implement stone hammer swing (idle/walking/falling/jumping) [stands up if crouching, if no collision, otherwise, no swing]
-  ***- implement macuahuitl swing (idle/walking/falling/jumping) [stands up if crouching]
   ***- implement shield (idle/walking/crouching/falling/jumping)
   ***- implement directional sling (idle/walking/crouching/falling/jumping)
   ***- implement directional blowgun (idle/walking/crouching/falling/jumping)

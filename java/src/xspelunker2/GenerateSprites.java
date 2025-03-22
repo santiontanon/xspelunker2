@@ -55,11 +55,14 @@ public class GenerateSprites {
         // Push:
         addPlayerFrame(sourceImage, 32, 48, data, dataLeft);
         addPlayerFrame(sourceImage, 48, 48, data, dataLeft);
-        // machete swing:
+        // weapon swings:
         addPlayerFrame(sourceImage, 0, 64, data, dataLeft);
         addPlayerFrame(sourceImage, 16, 64, data, dataLeft);
         addPlayerFrame(sourceImage, 32, 64, data, dataLeft);
         addPlayerFrame(sourceImage, 48, 64, data, dataLeft);
+        addPlayerFrame(sourceImage, 0, 80, data, dataLeft);
+        addPlayerFrame(sourceImage, 16, 80, data, dataLeft);
+        addPlayerFrame(sourceImage, 32, 80, data, dataLeft);
         
         System.out.println("player data: " + data.size());
         System.out.println("player dataLeft: " + dataLeft.size());
@@ -81,9 +84,8 @@ public class GenerateSprites {
         addWeaponSprite(sourceImage, 64, 16, data, dataLeft);  // hammer
         addWeaponSprite(sourceImage, 80, 16, data, dataLeft);
         addWeaponSprite(sourceImage, 96, 16, data, dataLeft);
-        addWeaponSprite(sourceImage, 112, 16, data, dataLeft);
 
-        addWeaponSprite(sourceImage, 64, 32, data, dataLeft);  // hammer
+        addWeaponSprite(sourceImage, 64, 32, data, dataLeft);  // macuahuitl
                 
         System.out.println("weapon data: " + data.size());
         Z80Assembler.dataToBinary(data, outputPath + ".bin");        

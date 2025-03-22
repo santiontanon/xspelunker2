@@ -411,6 +411,7 @@ player_state_timer: ds virtual 1
 player_weapon_state_timer: ds virtual 1
 player_requested_frame: ds virtual 1  ; the player frame we want to render
 player_requested_weapon_sprite: ds virtual 3  ; sprite, x offs, y offs
+player_weapon_swing_type: ds virtual 1
 player_water_inertia_x: ds virtual 1
 player_water_inertia_y: ds virtual 1
 player_water_inertia_x_timer: ds virtual 1

@@ -115,8 +115,26 @@ player_update_update_sprite_weapon:
 	ld (bc), a  ; x
 	inc bc
 	inc bc
+	ld a, (player_current_weapon)
+	cp 8  ; obsidian knive
+	jr z, player_update_update_sprite_weapon_obsidian_knive
+	cp 9  ; fire hammer
+	jr z, player_update_update_sprite_weapon_fire_hammer
+	cp 10  ; ice macuahuitl
+	jr z, player_update_update_sprite_weapon_ice_macuahuitl
 	ld a, iyl
 	or COLOR_WHITE
+	ld (bc), a  ; color / early clock bit
+	ret
+player_update_update_sprite_weapon_obsidian_knive:
+player_update_update_sprite_weapon_ice_macuahuitl:
+	ld a, iyl
+	or COLOR_BLUE
+	ld (bc), a  ; color / early clock bit
+	ret
+player_update_update_sprite_weapon_fire_hammer:
+	ld a, iyl
+	or COLOR_RED
 	ld (bc), a  ; color / early clock bit
 	ret
 
@@ -1006,10 +1024,7 @@ player_update_state_swimming_inertia_y_done:
 
 ;-----------------------------------------------
 player_update_switch_to_weapon_swing:
-	ld hl, SFX_weapon_swing
-	call play_SFX_with_high_priority
-	xor a
-	ld (player_weapon_state_timer), a
+	call player_update_determine_weapon_swing_type
 player_update_switch_to_idle_keep_weapon:
 	ld a, (player_state)
 	and #01
@@ -1019,36 +1034,16 @@ player_update_switch_to_idle_keep_weapon:
 player_update_state_weapon_swing:
 	ld hl, player_weapon_state_timer
 	ld a, (hl)
-	cp 8
+	or a
 	jp z,player_update_switch_to_idle
-	inc (hl)
+	dec (hl)
 
-	; weapon sprite setup:
-	ld hl, player_requested_weapon_sprite
-	ld (hl), 0  ; weapon sprite
-	inc hl
-	ld a, (player_state)
-	and #01
-	jr z, player_update_state_weapon_swing_right
-	ld (hl), -16  ; x offset
-	jr player_update_state_weapon_swing_x_set
-player_update_state_weapon_swing_right:
-	ld (hl), 16  ; x offset
-player_update_state_weapon_swing_x_set:
-	inc hl
-	ld (hl), 0  ; y offset
-
-	ld a, 14
-	ld (player_requested_frame), a
-	jp player_update_update_sprite_position
+	jp player_update_weapon_sprite_request
 
 
 ;-----------------------------------------------
 player_update_switch_to_weapon_swing_jumping:
-	ld hl, SFX_weapon_swing
-	call play_SFX_with_high_priority
-	xor a
-	ld (player_weapon_state_timer), a
+	call player_update_determine_weapon_swing_type_jumping
 	ld a, (player_state)
 	and #01
 	add a, PLAYER_STATE_WEAPON_SWING_JUMPING
@@ -1101,28 +1096,11 @@ player_update_state_weapon_swing_jumping_speed_loop_done:
 
 	ld hl, player_weapon_state_timer
 	ld a, (hl)
-	cp 8
+	or a
 	jr z, player_update_state_weapon_swing_jumping_swing_done
-	inc (hl)
+	dec (hl)
 
-	; weapon sprite setup:
-	ld hl, player_requested_weapon_sprite
-	ld (hl), 0  ; weapon sprite
-	inc hl
-	ld a, (player_state)
-	and #01
-	jr z, player_update_state_weapon_swing_jumping_right
-	ld (hl), -16  ; x offset
-	jr player_update_state_weapon_swing_jumping_x_set
-player_update_state_weapon_swing_jumping_right:
-	ld (hl), 16  ; x offset
-player_update_state_weapon_swing_jumping_x_set:
-	inc hl
-	ld (hl), 0  ; y offset
-
-	ld a, 14
-	ld (player_requested_frame), a
-	jp player_update_update_sprite_position
+	jp player_update_weapon_sprite_request
 
 player_update_state_weapon_swing_jumping_swing_done:
 	ld a, #ff
@@ -1143,10 +1121,7 @@ player_update_switch_to_weapon_swing_falling_from_jumping:
 	jr player_update_switch_to_weapon_swing_falling_continue
 
 player_update_switch_to_weapon_swing_falling:
-	ld hl, SFX_weapon_swing
-	call play_SFX_with_high_priority
-	xor a
-	ld (player_weapon_state_timer), a
+	call player_update_determine_weapon_swing_type_jumping
 player_update_switch_to_weapon_swing_falling_continue:
 	ld a, (player_state)
 	and #01
@@ -1206,28 +1181,11 @@ player_update_state_weapon_swing_falling_speed_loop_done:
 
 	ld hl, player_weapon_state_timer
 	ld a, (hl)
-	cp 8
+	or a
 	jr z, player_update_state_weapon_swing_falling_swing_done
-	inc (hl)
+	dec (hl)
 
-	; weapon sprite setup:
-	ld hl, player_requested_weapon_sprite
-	ld (hl), 0  ; weapon sprite
-	inc hl
-	ld a, (player_state)
-	and #01
-	jr z, player_update_state_weapon_swing_falling_right
-	ld (hl), -16  ; x offset
-	jr player_update_state_weapon_swing_falling_x_set
-player_update_state_weapon_swing_falling_right:
-	ld (hl), 16  ; x offset
-player_update_state_weapon_swing_falling_x_set:
-	inc hl
-	ld (hl), 0  ; y offset
-
-	ld a, 14
-	ld (player_requested_frame), a
-	jp player_update_update_sprite_position
+	jp player_update_weapon_sprite_request
 
 player_update_state_weapon_swing_falling_swing_done:
 	ld a, #ff
@@ -1244,10 +1202,7 @@ player_update_state_weapon_swing_falling_swing_done:
 
 ;-----------------------------------------------
 player_update_switch_to_weapon_swing_crouching:
-	ld hl, SFX_weapon_swing
-	call play_SFX_with_high_priority
-	xor a
-	ld (player_weapon_state_timer), a
+	call player_update_determine_weapon_swing_type_crouching
 	ld a, (player_state)
 	and #01
 	add a, PLAYER_STATE_WEAPON_SWING_CROUCHING
@@ -1256,28 +1211,225 @@ player_update_switch_to_weapon_swing_crouching:
 player_update_state_weapon_swing_crouching:
 	ld hl, player_weapon_state_timer
 	ld a, (hl)
-	cp 8
+	or a
 	jp z,player_update_switch_to_crouching_from_weapon
-	inc (hl)
+	dec (hl)
 
+	jp player_update_weapon_sprite_request
+
+
+;-----------------------------------------------
+; player is idle or walking
+player_update_determine_weapon_swing_type:
+	; Determine the type of swing:
+	ld a, (player_current_weapon)
+	or a
+	jr z, player_update_determine_weapon_swing_type_machete
+	cp 8
+	jr z, player_update_determine_weapon_swing_type_machete
+	cp 1
+	jr z, player_update_determine_weapon_swing_type_hammer
+	cp 9
+	jr z, player_update_determine_weapon_swing_type_hammer
+	cp 2
+	jr z, player_update_determine_weapon_swing_type_macuahuitl
+	cp 10
+	jr z, player_update_determine_weapon_swing_type_macuahuitl
+	; other weapons:
+	; ...
+player_update_determine_weapon_swing_type_macuahuitl:
+	ld a, 18
+	ld (player_weapon_state_timer), a
+	ld a, PLAYER_WEAPON_SWING_MACUAHUITL1
+	jr player_update_determine_weapon_swing_type_determined
+player_update_determine_weapon_swing_type_hammer:
+	ld a, 32
+	ld (player_weapon_state_timer), a
+	ld a, PLAYER_WEAPON_SWING_HAMMER1
+	jr player_update_determine_weapon_swing_type_determined
+player_update_determine_weapon_swing_type_machete:
+	ld hl, SFX_weapon_swing
+	call play_SFX_with_high_priority
+	ld a, 8
+	ld (player_weapon_state_timer), a
+	ld a, (keyboard_line_state)
+	bit 5, a  ; up
+	jr z, player_update_determine_weapon_swing_type_machete_up
+	; swing machete forward:
+	ld a, PLAYER_WEAPON_SWING_MACHETE_FORWARD
+	jr player_update_determine_weapon_swing_type_determined
+player_update_determine_weapon_swing_type_machete_up:
+	ld a, PLAYER_WEAPON_SWING_MACHETE_UP
+player_update_determine_weapon_swing_type_determined:
+	ld (player_weapon_swing_type), a
+	ret
+
+
+;-----------------------------------------------
+; player is jumping or falling
+player_update_determine_weapon_swing_type_jumping:
+	; Determine the type of swing:
+	ld a, (player_current_weapon)
+	or a
+	jr z, player_update_determine_weapon_swing_type_jumping_machete
+	cp 8
+	jr z, player_update_determine_weapon_swing_type_jumping_machete
+	cp 1
+	jr z, player_update_determine_weapon_swing_type_jumping_hammer
+	cp 9
+	jr z, player_update_determine_weapon_swing_type_jumping_hammer
+	cp 2
+	jr z, player_update_determine_weapon_swing_type_jumping_macuahuitl
+	cp 10
+	jr z, player_update_determine_weapon_swing_type_jumping_macuahuitl
+	; other weapons:
+	; ...
+player_update_determine_weapon_swing_type_jumping_macuahuitl:
+	ld a, 18
+	ld (player_weapon_state_timer), a
+	ld a, PLAYER_WEAPON_SWING_MACUAHUITL1
+	jr player_update_determine_weapon_swing_type_jumping_determined
+player_update_determine_weapon_swing_type_jumping_hammer:
+	ld a, 32
+	ld (player_weapon_state_timer), a
+	ld a, PLAYER_WEAPON_SWING_HAMMER1
+	jr player_update_determine_weapon_swing_type_jumping_determined
+player_update_determine_weapon_swing_type_jumping_machete:
+	ld hl, SFX_weapon_swing
+	call play_SFX_with_high_priority
+	ld a, 8
+	ld (player_weapon_state_timer), a
+	ld a, (keyboard_line_state)
+	bit 5, a  ; up
+	jr z, player_update_determine_weapon_swing_type_jumping_machete_up
+	bit 6, a  ; down
+	jr z, player_update_determine_weapon_swing_type_jumping_machete_down
+	; swing machete forward:
+	ld a, PLAYER_WEAPON_SWING_MACHETE_FORWARD
+	jr player_update_determine_weapon_swing_type_jumping_determined
+player_update_determine_weapon_swing_type_jumping_machete_down:
+	ld a, PLAYER_WEAPON_SWING_MACHETE_DOWN
+	jr player_update_determine_weapon_swing_type_jumping_determined
+player_update_determine_weapon_swing_type_jumping_machete_up:
+	ld a, PLAYER_WEAPON_SWING_MACHETE_UP
+player_update_determine_weapon_swing_type_jumping_determined:
+	ld (player_weapon_swing_type), a
+	ret
+
+
+;-----------------------------------------------
+player_update_determine_weapon_swing_type_crouching:
+	; Determine the type of swing:
+	ld a, (player_current_weapon)
+	or a
+	jr z, player_update_determine_weapon_swing_type_crouching_machete
+	cp 8
+	jr z, player_update_determine_weapon_swing_type_crouching_machete
+	cp 1
+	jr z, player_update_determine_weapon_swing_type_crouhcing_hammer
+	cp 9
+	jr z, player_update_determine_weapon_swing_type_crouhcing_hammer
+	cp 2
+	jr z, player_update_determine_weapon_swing_type_crouhcing_macuahuitl
+	cp 10
+	jr z, player_update_determine_weapon_swing_type_crouhcing_macuahuitl
+	; other weapons:
+	; ...
+player_update_determine_weapon_swing_type_crouhcing_macuahuitl:
+	ld a, 18
+	ld (player_weapon_state_timer), a
+	ld a, PLAYER_WEAPON_SWING_MACUAHUITL1
+	jr player_update_determine_weapon_swing_type_crouching_determined
+player_update_determine_weapon_swing_type_crouhcing_hammer:
+	ld a, 32
+	ld (player_weapon_state_timer), a
+	ld a, PLAYER_WEAPON_SWING_HAMMER1
+	jr player_update_determine_weapon_swing_type_crouching_determined
+player_update_determine_weapon_swing_type_crouching_machete:
+	ld hl, SFX_weapon_swing
+	call play_SFX_with_high_priority
+	ld a, 8
+	ld (player_weapon_state_timer), a
+	ld a, PLAYER_WEAPON_SWING_MACHETE_CROUCHING
+player_update_determine_weapon_swing_type_crouching_determined:
+	ld (player_weapon_swing_type), a
+	ret
+
+
+;-----------------------------------------------
+player_update_weapon_sprite_request:
+	; animation frames:
+	ld a, (player_weapon_swing_type)
+	cp PLAYER_WEAPON_SWING_HAMMER1
+	jr z, player_update_weapon_sprite_request_hammer1
+	cp PLAYER_WEAPON_SWING_HAMMER2
+	jr z, player_update_weapon_sprite_request_hammer2
+	cp PLAYER_WEAPON_SWING_MACUAHUITL1
+	jr z, player_update_weapon_sprite_request_macuahuitl1
+player_update_weapon_sprite_request_continue:
 	; weapon sprite setup:
-	ld hl, player_requested_weapon_sprite
-	ld (hl), 0  ; weapon sprite
-	inc hl
+	ld a, (player_weapon_swing_type)
+	ld c, a
+	add a, a
+	add a, a
+	add a, c  ; a *= 5
+	ld hl, weapon_sprite_swing_table
+	ADD_HL_A
+	ld de, player_requested_weapon_sprite
+	ldi  ; weapon sprite
 	ld a, (player_state)
 	and #01
-	jr z, player_update_state_weapon_swing_crouching_right
-	ld (hl), -16  ; x offset
-	jr player_update_state_weapon_swing_crouching_x_set
-player_update_state_weapon_swing_crouching_right:
-	ld (hl), 16  ; x offset
-player_update_state_weapon_swing_crouching_x_set:
+	jr z, player_update_weapon_sprite_request_right
 	inc hl
-	ld (hl), 5  ; y offset
-
-	ld a, 17
+	ldi
+	jr player_update_weapon_sprite_request_x_set
+player_update_weapon_sprite_request_right:
+	ldi
+	inc hl
+player_update_weapon_sprite_request_x_set:
+	ldi
+	ld a, (hl)
 	ld (player_requested_frame), a
 	jp player_update_update_sprite_position
+
+player_update_weapon_sprite_request_hammer1:
+	ld a, (player_weapon_state_timer)
+	cp 18
+	jr nz, player_update_weapon_sprite_request_continue
+	ld hl, SFX_weapon_swing_slow
+	call play_SFX_with_high_priority
+	ld a, PLAYER_WEAPON_SWING_HAMMER2
+	ld (player_weapon_swing_type), a
+	jr player_update_weapon_sprite_request_continue
+player_update_weapon_sprite_request_hammer2:
+	ld a, (player_weapon_state_timer)
+	cp 10
+	jr nz, player_update_weapon_sprite_request_continue
+	ld a, PLAYER_WEAPON_SWING_HAMMER3
+	ld (player_weapon_swing_type), a
+	jr player_update_weapon_sprite_request_continue
+player_update_weapon_sprite_request_macuahuitl1:
+	ld a, (player_weapon_state_timer)
+	cp 10
+	jr nz, player_update_weapon_sprite_request_continue
+	ld hl, SFX_weapon_swing
+	call play_SFX_with_high_priority
+	ld a, PLAYER_WEAPON_SWING_MACUAHUITL2
+	ld (player_weapon_swing_type), a
+	jr player_update_weapon_sprite_request_continue
+
+
+weapon_sprite_swing_table:
+	; weapon sprite, x offset right, x offset left, y offset
+	db 0, 16, -16, 0, 14  ; machete forward
+	db 1, 0, 0, -10, 15  ; machete up
+	db 0, 16, -16, 5, 17  ; machete crouching
+	db 2, 0, 0, 8, 16  ; machete down
+	db 3, -7, 7, -2, 15  ; hammer1
+	db 4, 0, 0, -8, 18  ; hammer2
+	db 5, 16, -16, 0, 19  ; hammer3
+	db #ff, 0, 0, 0, 20  ; macuahuitl1
+	db 6, 15, -15, 0, 14  ; macuahuitl2
 
 
 ;-----------------------------------------------

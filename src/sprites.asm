@@ -35,7 +35,9 @@ upload_sprites_to_vdp_player_direction_set:
 	rr l
 	rrca
 	rr l
-	and #3f  ; hl = a * 64
+	rrca
+	rr l
+	and #1f  ; hl = a * 32
 	ld h, a
 	add hl, bc	
 	ld de, SPRTBL2 + 32*2
