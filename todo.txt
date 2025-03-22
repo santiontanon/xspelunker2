@@ -1,19 +1,10 @@
 to do:
 
 ***- weapons:
-  ***- draw weapon animation frames:
-    OK - player swinging machete forward
-    ***- player swinging machete up
-    ***- player swinging machete down (falling/jumping)
-    ***- player swinging machete forward, crouching
-    ***- player swinging stone hammer forward (swing animation)
-    ***- player swinging macuahuitl forward (short swing animation)
-    ***- player using shield in all directions
-  ***- implement machete swing forward (idle/walking/falling/jumping)
-  ***- implement machete swing up (idle/walking/falling/jumping)
   ***- implement machete swing crouching
+  ***- implement machete swing up (idle/walking/falling/jumping)
   ***- implement machete swing down (falling/jumping)
-  ***- implement stone hammer swing (idle/walking/falling/jumping) [stands up if crouching]
+  ***- implement stone hammer swing (idle/walking/falling/jumping) [stands up if crouching, if no collision, otherwise, no swing]
   ***- implement macuahuitl swing (idle/walking/falling/jumping) [stands up if crouching]
   ***- implement shield (idle/walking/crouching/falling/jumping)
   ***- implement directional sling (idle/walking/crouching/falling/jumping)
@@ -104,7 +95,7 @@ to do:
 - menus:
   - brain games screen
   - title screen
-  - options menu (redefine keys/controls)
+  - options menu (redefine keys/controls): add this to title screen, as well as in-game
   - game start screen where you choose game name, difficulty, seed, etc.
       - procedural generation depending on a name. By default, you play in "xspelunker2" level, with difficulty "x".
       - the first letter determines the difficulty level. So, one would choose "a walk in the park" for easy games, or "zebras all the way" for the heardest)

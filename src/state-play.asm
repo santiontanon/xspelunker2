@@ -10,6 +10,8 @@ state_play:
 		ld (player_x), hl
 		ld hl, #0500
 		ld (player_y), hl
+		ld a, #ff
+		ld (player_requested_weapon_sprite), a
 
 		; set random seed:
 		ld hl, #aaaa
@@ -109,7 +111,7 @@ state_play_from_inventory:
 		; setup sprites:
 		SETMEGAROMPAGE_8000 SPRITES_PAGE
 		ld hl, pyramid_object_sprites_bin
-		ld de, SPRTBL2 + 32 * 2  ; first two reserved for player
+		ld de, SPRTBL2 + 32 * FIRST_OBJECT_SPRITE  ; first three reserved for player / weapon
 		ld bc, pyramid_object_sprites_bin_end - pyramid_object_sprites_bin
 		call fast_LDIRVM
 
@@ -127,6 +129,8 @@ state_play_from_inventory:
 		ld (hl), 4
 		inc hl
 		ld (hl), COLOR_DARK_RED
+		ld hl, sprite_attribute_table + 2 + 8
+		ld (hl), 8
 
 		ld hl, upload_sprites_to_vdp
 		ld c, SPRITES_PAGE

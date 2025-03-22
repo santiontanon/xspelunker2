@@ -290,38 +290,38 @@ SFX_push_object:
   db SFX_CMD_END  
 
 
-; SFX_weapon_swing:
-;   db  7,#9c  ; noise in channel C, and tone in channels B and A
-;   db 10,#0a  ; volume
-;   db  6,#16  ; noise frequency
-;   db MUSIC_CMD_SKIP
-;   db 10,#0c  ; volume
-;   db  6,#14  ; noise frequency
-;   db MUSIC_CMD_SKIP
-;   db 10,#0f  ; volume
-;   db  6,#12  ; noise frequency
-;   db MUSIC_CMD_SKIP
-;   db  6,#10  ; noise frequency
-;   db MUSIC_CMD_SKIP
-;   db 10,#0c  ; volume
-;   db  6,#08  ; noise frequency
-;   db MUSIC_CMD_SKIP
-;   db 10,#0a  ; volume
-;   db  6,#06  ; noise frequency
-;   db MUSIC_CMD_SKIP
-;   db 10,#08  ; volume
-;   db  6,#04  ; noise frequency
-;   db MUSIC_CMD_SKIP
-;   db 10,#06  ; volume
-;   db  6,#02  ; noise frequency
-;   db MUSIC_CMD_SKIP
-;   db 10,#04  ; volume
-;   db  6,#01  ; noise frequency
-;   db MUSIC_CMD_SKIP
-;   db 10,#02  ; volume
-;   db MUSIC_CMD_SKIP
-;   db 10,#00  ; silence
-;   db SFX_CMD_END
+SFX_weapon_swing:
+  db  7,#9c  ; noise in channel C, and tone in channels B and A
+  db 10,#0a  ; volume
+  db  6,#16  ; noise frequency
+  db MUSIC_CMD_SKIP
+  db 10,#0c  ; volume
+  db  6,#14  ; noise frequency
+  db MUSIC_CMD_SKIP
+  db 10,#0f  ; volume
+  db  6,#12  ; noise frequency
+  db MUSIC_CMD_SKIP
+  db  6,#10  ; noise frequency
+  db MUSIC_CMD_SKIP
+  db 10,#0c  ; volume
+  db  6,#08  ; noise frequency
+  db MUSIC_CMD_SKIP
+  db 10,#0a  ; volume
+  db  6,#06  ; noise frequency
+  db MUSIC_CMD_SKIP
+  db 10,#08  ; volume
+  db  6,#04  ; noise frequency
+  db MUSIC_CMD_SKIP
+  db 10,#06  ; volume
+  db  6,#02  ; noise frequency
+  db MUSIC_CMD_SKIP
+  db 10,#04  ; volume
+  db  6,#01  ; noise frequency
+  db MUSIC_CMD_SKIP
+  db 10,#02  ; volume
+  db MUSIC_CMD_SKIP
+  db 10,#00  ; silence
+  db SFX_CMD_END
 
 
 SFX_explosion:   

@@ -85,7 +85,7 @@ update_sprite_objects_loop_next:
 ; -----------------------------------------------
 update_sprite_objects_water_splash:
 	ld d, COLOR_WHITE
-	ld e, 8
+	ld e, 12
 	ld c, 0
 	call get_sprite_object_sprite_coordinates
 	call add_sprite_to_this_frame
@@ -106,7 +106,7 @@ update_sprite_objects_pushing_block_dust_entry_point:
 ;-----------------------------------------------
 update_sprite_objects_pushing_block_dust:
 	ld d, COLOR_WHITE
-	ld e, 12
+	ld e, 16
 	ld c, -5
 	call get_sprite_object_sprite_coordinates
 	call add_sprite_to_this_frame
@@ -114,7 +114,7 @@ update_sprite_objects_pushing_block_dust:
 	ld c, 4
 	call get_sprite_object_sprite_coordinates
 	ld d, COLOR_WHITE
-	ld e, 16
+	ld e, 20
 	call add_sprite_to_this_frame
 	jp update_sprite_objects_pushing_block_dust_entry_point
 

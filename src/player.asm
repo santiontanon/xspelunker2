@@ -45,6 +45,7 @@ player_update_update_sprite_position:
 	ld hl, player_y
 	add a, (hl)
 	dec a  ; sprites y in the VDP is off by 1 pixel
+	ld ixh, a
 
 	ld (de), a
 	ld (bc), a
@@ -62,11 +63,15 @@ player_update_update_sprite_position:
 	sub 8 - PLAYER_COLLISION_WIDTH/2
 
 	; set "early clock bit"?
+	cp 16  ; also set early clock bit when we are close to the edge, for the weapon
+	jr c, player_update_update_sprite_position_early_clock_bit
 	cp 256 - (8 - PLAYER_COLLISION_WIDTH/2)
-	jr c, player_update_update_sprite_position_no_early_clok_bit
+	jr c, player_update_update_sprite_position_no_early_clock_bit
+player_update_update_sprite_position_early_clock_bit:
 	add a, 32
 	ld (de), a
 	ld (bc), a
+	ld ixl, a  ; we save 'x' for the weapon sprite
 
 	inc de
 	inc bc
@@ -77,11 +82,13 @@ player_update_update_sprite_position:
 	ld (de), a
 	ld a, COLOR_DARK_RED | #80
 	ld (bc), a
-	ret
+	ld iyl, #80
+	jr player_update_update_sprite_weapon
 
-player_update_update_sprite_position_no_early_clok_bit:
+player_update_update_sprite_position_no_early_clock_bit:
 	ld (de), a
 	ld (bc), a
+	ld ixl, a  ; we save 'x' for the weapon sprite
 
 	inc de
 	inc bc
@@ -91,6 +98,31 @@ player_update_update_sprite_position_no_early_clok_bit:
 	ld a, COLOR_DARK_YELLOW
 	ld (de), a
 	ld a, COLOR_DARK_RED
+	ld (bc), a
+	ld iyl, 0
+
+player_update_update_sprite_weapon:
+	inc bc  ; bc now points to the weapon sprite attributes
+	ld a, (player_requested_weapon_sprite)
+	cp #ff
+	jr z, player_update_update_sprite_weapon_no_weapon
+	ld a, (player_requested_weapon_sprite + 2)
+	add a, ixh  ; y of the player sprite
+	ld (bc), a  ; y
+	inc bc
+	ld a, (player_requested_weapon_sprite + 1)
+	add a, ixl
+	ld (bc), a  ; x
+	inc bc
+	inc bc
+	ld a, iyl
+	or COLOR_WHITE
+	ld (bc), a  ; color / early clock bit
+	ret
+
+
+player_update_update_sprite_weapon_no_weapon:
+	ld a, 200  ; outside of the screen
 	ld (bc), a
 	ret
 
@@ -104,11 +136,17 @@ player_update_state_fn_table:
 	dw player_update_state_crawling
 	dw player_update_state_rope
 	dw player_update_state_ladder
-	dw player_update_state_swimming
+	dw player_update_state_swimming	
+	dw player_update_state_weapon_swing
+	dw player_update_state_weapon_swing_jumping
+	dw player_update_state_weapon_swing_falling
+	dw player_update_state_weapon_swing_crouching
 
 
 ;-----------------------------------------------
 player_update_switch_to_idle:
+	ld hl, player_requested_weapon_sprite
+	ld (hl), #ff  ; no weapon sprite
 	ld a, (player_state)
 	and #01
 	ld (player_state), a
@@ -129,13 +167,17 @@ player_update_state_idle:
 
 	; check for rope/ladder climb:
 	bit 5, a
-	jp z, player_update_state_idle_no_rope
+	jp nz, player_update_state_idle_no_rope
 	ld a, (player_no_rope_or_ladder_this_frame)
 	or a
 	jr nz, player_update_state_idle_no_rope
 	call check_player_on_rope_or_ladder
 	jp z, player_update_switch_to_rope_or_ladder
 player_update_state_idle_no_rope:
+	; check for weapon:
+	ld a, (keyboard_line_clicks)
+	bit 0, a
+	jp nz, player_update_switch_to_weapon_swing
 
 	; check for jump
 	ld a, (keyboard_line_clicks + 2)
@@ -181,6 +223,11 @@ player_update_state_walking:
 	call check_player_on_rope_or_ladder
 	jp z, player_update_switch_to_rope_or_ladder
 player_update_state_walking_no_rope:
+
+	; check for weapon:
+	ld a, (keyboard_line_clicks)
+	bit 0, a
+	jp nz, player_update_switch_to_weapon_swing
 
 	; check for jump
 	ld a, (keyboard_line_clicks + 2)
@@ -261,6 +308,11 @@ player_update_switch_to_falling:
 	ld (player_state), a
 
 player_update_state_falling:
+	; check for weapon:
+	ld a, (keyboard_line_clicks)
+	bit 0, a
+	jp nz, player_update_switch_to_weapon_swing_falling
+
 	; movement left/right:
 	ld a, (keyboard_line_state)
 	bit 7, a
@@ -327,7 +379,7 @@ player_update_state_falling_speed_loop_done:
 
 
 ;-----------------------------------------------
-player_update_state_switch_to_jumping_from_swimming:
+player_update_switch_to_jumping_from_swimming:
 	xor a
 	ld (player_jump_no_grab_timer), a
 	ld (player_jump_is_cancelable), a
@@ -394,6 +446,11 @@ player_update_state_jumping_check_rope_or_ladder:
 	jp z, player_update_switch_to_rope_or_ladder
 player_update_state_jumping_no_rope:
 
+	; check for weapon:
+	ld a, (keyboard_line_clicks)
+	bit 0, a
+	jp nz, player_update_switch_to_weapon_swing_jumping
+
 	; movement left/right:
 	ld a, (keyboard_line_state)
 	bit 7, a
@@ -417,7 +474,6 @@ player_update_state_jumping_cannot_cancel:
 	ld a, (player_state_timer)
 	inc a
 	ld (player_state_timer), a
-player_update_stop_jumping_continue:
 	ld hl, player_jump_speed_table - 1
 	ADD_HL_A
 	ld a, (hl)
@@ -727,6 +783,8 @@ player_update_switch_to_ladder_failed:
 
 ;-----------------------------------------------
 player_update_switch_to_swimming_from_falling:
+	ld a, #ff
+	ld (player_requested_weapon_sprite), a
 	ld a, (player_x + 1)
 	ld c, a
 	ld a, (player_y + 1)
@@ -745,7 +803,6 @@ player_update_switch_to_swimming_from_falling:
 	ld (player_water_inertia_y), a
 
 player_update_state_swimming:
-
 	ld a, (interrupt_cycle)
 	and #01
 	jp z, player_update_state_swimming_no_player_control
@@ -921,7 +978,7 @@ player_update_state_swimming_inertia_y_done:
 
 	; check if we are exiting the water:
 	call player_in_water
-	jp nz, player_update_state_switch_to_jumping_from_swimming
+	jp nz, player_update_switch_to_jumping_from_swimming
 
 	ld a, (interrupt_cycle)
 	rrca
@@ -933,6 +990,251 @@ player_update_state_swimming_inertia_y_done:
 	ld (player_requested_frame), a
 	jp player_update_update_sprite_position
 
+
+;-----------------------------------------------
+player_update_switch_to_weapon_swing:
+	ld hl, SFX_weapon_swing
+	call play_SFX_with_high_priority
+	xor a
+	ld (player_weapon_state_timer), a
+player_update_switch_to_idle_keep_weapon:
+	ld a, (player_state)
+	and #01
+	add a, PLAYER_STATE_WEAPON_SWING
+	ld (player_state), a
+
+player_update_state_weapon_swing:
+	ld hl, player_weapon_state_timer
+	ld a, (hl)
+	cp 8
+	jp z,player_update_switch_to_idle
+	inc (hl)
+
+	; weapon sprite setup:
+	ld hl, player_requested_weapon_sprite
+	ld (hl), 0  ; weapon sprite
+	inc hl
+	ld a, (player_state)
+	and #01
+	jr z, player_update_state_weapon_swing_right
+	ld (hl), -16  ; x offset
+	jr player_update_state_weapon_swing_x_set
+player_update_state_weapon_swing_right:
+	ld (hl), 16  ; x offset
+player_update_state_weapon_swing_x_set:
+	inc hl
+	ld (hl), 0  ; y offset
+
+	ld a, 14
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+
+
+;-----------------------------------------------
+player_update_switch_to_weapon_swing_jumping:
+	ld hl, SFX_weapon_swing
+	call play_SFX_with_high_priority
+	xor a
+	ld (player_weapon_state_timer), a
+	ld a, (player_state)
+	and #01
+	add a, PLAYER_STATE_WEAPON_SWING_JUMPING
+	ld (player_state), a
+
+player_update_state_weapon_swing_jumping:
+	ld a, (player_jump_no_grab_timer)
+	or a
+	jr z, player_update_state_weapon_swing_jumping_continue
+	dec a
+	ld (player_jump_no_grab_timer), a
+player_update_state_weapon_swing_jumping_continue:
+	; movement left/right:
+	ld a, (keyboard_line_state)
+	bit 7, a
+	push af
+		call z, player_update_move_one_pixel_right_considering_collisions
+	pop af
+	bit 4, a
+	call z, player_update_move_one_pixel_left_considering_collisions
+
+	ld a, (player_jump_is_cancelable)
+	or a
+	jr z, player_update_state_weapon_swing_jumping_cannot_cancel
+	; did the player release the jump key?
+	; check for jump
+	ld a, (keyboard_line_state + 2)
+	bit 2, a
+	call nz, player_update_stop_jumping
+player_update_state_weapon_swing_jumping_cannot_cancel:
+
+	; move up:
+	ld a, (player_state_timer)
+	inc a
+	ld (player_state_timer), a
+	ld hl, player_jump_speed_table - 1
+	ADD_HL_A
+	ld a, (hl)
+	cp #ff
+	jp z, player_update_switch_to_weapon_swing_falling_from_jumping
+	ld b, a
+	or a
+	jr z, player_update_state_weapon_swing_jumping_speed_loop_done
+player_update_state_weapon_swing_jumping_speed_loop:
+	push bc
+		call player_update_move_one_pixel_up_considering_collisions
+	pop bc
+	djnz player_update_state_weapon_swing_jumping_speed_loop
+player_update_state_weapon_swing_jumping_speed_loop_done:
+
+	ld hl, player_weapon_state_timer
+	ld a, (hl)
+	cp 8
+	jr z, player_update_state_weapon_swing_jumping_swing_done
+	inc (hl)
+
+	; weapon sprite setup:
+	ld hl, player_requested_weapon_sprite
+	ld (hl), 0  ; weapon sprite
+	inc hl
+	ld a, (player_state)
+	and #01
+	jr z, player_update_state_weapon_swing_jumping_right
+	ld (hl), -16  ; x offset
+	jr player_update_state_weapon_swing_jumping_x_set
+player_update_state_weapon_swing_jumping_right:
+	ld (hl), 16  ; x offset
+player_update_state_weapon_swing_jumping_x_set:
+	inc hl
+	ld (hl), 0  ; y offset
+
+	ld a, 14
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+
+player_update_state_weapon_swing_jumping_swing_done:
+	ld a, #ff
+	ld (player_requested_weapon_sprite), a
+	ld a, (player_state)
+	and #01
+	add a, PLAYER_STATE_JUMPING
+	ld (player_state), a
+	ld a, 2
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+
+
+;-----------------------------------------------
+player_update_switch_to_weapon_swing_falling_from_jumping:
+	xor a
+	ld (player_state_timer), a
+	jr player_update_switch_to_weapon_swing_falling_continue
+
+player_update_switch_to_weapon_swing_falling:
+	ld hl, SFX_weapon_swing
+	call play_SFX_with_high_priority
+	xor a
+	ld (player_weapon_state_timer), a
+player_update_switch_to_weapon_swing_falling_continue:
+	ld a, (player_state)
+	and #01
+	add a, PLAYER_STATE_WEAPON_SWING_FALLING
+	ld (player_state), a
+
+player_update_state_weapon_swing_falling:
+	; movement left/right:
+	ld a, (keyboard_line_state)
+	bit 7, a
+	push af
+		call z, player_update_move_one_pixel_right_considering_collisions
+	pop af
+	bit 4, a
+	call z, player_update_move_one_pixel_left_considering_collisions
+
+	ld a, (player_jump_no_grab_timer)
+	or a
+	jr z, player_update_state_weapon_swing_falling_continue
+	dec a
+	ld (player_jump_no_grab_timer), a
+player_update_state_weapon_swing_falling_continue:
+
+	; check if we need to switch to idle:
+	call player_check_collision_down_inc  ; a = tile type
+	jp z, player_update_switch_to_idle_keep_weapon
+
+	; check if we need to swicth to swimming:
+	call player_in_water
+	jp z, player_update_switch_to_swimming_from_falling
+
+	; move down:
+	ld a, (player_state_timer)
+	ld e, a
+	inc e
+	ld hl, player_fall_speed_table
+	ADD_HL_A
+	ld a, (hl)
+	cp #ff
+	jr nz, player_update_state_weapon_swing_falling_speed_determined
+	dec e
+	dec hl
+	ld a, (hl)
+player_update_state_weapon_swing_falling_speed_determined:
+	ld b, a
+	or a
+	ld a, e
+	ld (player_state_timer), a
+	jr z, player_update_state_weapon_swing_falling_speed_loop_done
+player_update_state_weapon_swing_falling_speed_loop:
+	push bc
+		call player_update_move_one_pixel_down_considering_collisions
+	pop bc
+	jr z, player_update_state_weapon_swing_falling_speed_loop_done
+	djnz player_update_state_weapon_swing_falling_speed_loop
+player_update_state_weapon_swing_falling_speed_loop_done:
+
+	ld hl, player_weapon_state_timer
+	ld a, (hl)
+	cp 8
+	jr z, player_update_state_weapon_swing_falling_swing_done
+	inc (hl)
+
+	; weapon sprite setup:
+	ld hl, player_requested_weapon_sprite
+	ld (hl), 0  ; weapon sprite
+	inc hl
+	ld a, (player_state)
+	and #01
+	jr z, player_update_state_weapon_swing_falling_right
+	ld (hl), -16  ; x offset
+	jr player_update_state_weapon_swing_falling_x_set
+player_update_state_weapon_swing_falling_right:
+	ld (hl), 16  ; x offset
+player_update_state_weapon_swing_falling_x_set:
+	inc hl
+	ld (hl), 0  ; y offset
+
+	ld a, 14
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+
+player_update_state_weapon_swing_falling_swing_done:
+	ld a, #ff
+	ld (player_requested_weapon_sprite), a
+	ld a, (player_state)
+	and #01
+	add a, PLAYER_STATE_FALLING
+	ld (player_state), a
+	ld a, 2
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+
+
+
+;-----------------------------------------------
+player_update_state_weapon_swing_crouching:
+	; ...
+	ld a, 17
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
 
 
 ;-----------------------------------------------
