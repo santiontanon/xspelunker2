@@ -164,7 +164,6 @@ call_hl_in_page_c_8000_return:
     include "player.asm"
     include "sprite-objects.asm"
     include "tile-objects.asm"
-;     include "text.asm"
 
 ;     include "state-braingames.asm"
 ;     include "state-gamestart.asm"
@@ -418,7 +417,7 @@ player_no_rope_or_ladder_this_frame: ds virtual 1  ; to prevent infinite loops i
 
 player_health: ds virtual 1
 player_max_health: ds virtual 1
-player_inventory_weapons: ds virtual 4 + 4 + 3  ; 4 base, 4 ranged, 3 upgrades
+player_inventory_weapons: ds virtual N_INVENTORY_WEAPON_TYPES
 player_inventory_weapon_ammo: ds virtual 4
 player_inventory_items: ds virtual N_INVENTORY_ITEM_TYPES
 player_inventory_coins: ds virtual 1

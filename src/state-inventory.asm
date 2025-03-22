@@ -62,8 +62,11 @@ state_inventory_update_cursor:
 	ld a, h
 	or l
 	jr z, state_inventory_update_cursor_continue
+	; cursor moved to a new position:
 	ld hl, SFX_ui_move
 	call play_SFX_with_high_priority
+	; see if we need to draw text:
+	call state_inventory_update_item_text
 state_inventory_update_cursor_continue:
 
 	ld a, (keyboard_line_clicks)
@@ -99,10 +102,6 @@ state_inventory_update_cursor_button_loop:
 	inc hl
 	ld h, (hl)
 	ld l, e
-	push hl
-		ld hl, SFX_ui_select
-		call play_SFX_with_high_priority
-	pop hl
 	jp (hl)
 state_inventory_update_cursor_button_loop_next:
 	inc hl
@@ -275,6 +274,214 @@ state_inventory_update_cursor_up_row2_left:
 	ld (inventory_cursor_position_x), a
 	ld (inventory_cursor_position_y), a
 	ret
+
+
+;-----------------------------------------------
+state_inventory_update_item_text:
+	call state_inventory_update_item_text_clear_text
+	ld a, (inventory_cursor_position_y)
+	or a
+	ret z
+
+	ld a, (inventory_cursor_position_x)
+	cp 4
+	jr c, state_inventory_update_item_text_weapon
+state_inventory_update_item_text_item:
+	sub 4
+	ld c, a
+	ld a, (inventory_cursor_position_y)
+	dec a
+	add a, a
+	ld b, a
+	add a, a
+	add a, b
+	add a, c
+	ld c, a  ; c = position the cursor is over now
+	ld hl, inventory_item_positions
+	ld de, player_inventory_items
+	ld b, 0  ; index in the item inventory
+state_inventory_update_item_text_item_loop:
+	ld a, (hl)
+	cp c
+	jr nz, state_inventory_update_item_text_item_loop_next
+	; position matches, does the player have this weapon?
+	ld a, (de)
+	or a
+	jr z, state_inventory_update_item_text_item_loop_next
+	; found it! We need to print the text for this weapon:
+	ld hl, inventory_item_texts
+	ld a, b
+	add a, a
+	ADD_HL_A
+	ld e, (hl)
+	inc hl
+	ld d, (hl)
+	ex de, hl
+	jr state_inventory_update_item_text_print
+state_inventory_update_item_text_item_loop_next:
+	inc b
+	inc hl
+	inc de
+	ld a, b
+	cp N_INVENTORY_ITEM_TYPES
+	ret z
+	jp state_inventory_update_item_text_item_loop
+
+state_inventory_update_item_text_weapon:
+	ld c, a
+	ld a, (inventory_cursor_position_y)
+	sub 2
+	add a, a
+	add a, a
+	add a, c
+	ld c, a  ; c = position the cursor is over now
+	ld hl, inventory_weapon_positions
+	ld de, player_inventory_weapons
+	ld b, 0  ; index in the weapon inventory
+state_inventory_update_item_text_weapon_loop:
+	ld a, (hl)
+	cp c
+	jr nz, state_inventory_update_item_text_weapon_loop_next
+	; position matches, does the player have this weapon?
+	ld a, (de)
+	or a
+	jr z, state_inventory_update_item_text_weapon_loop_next
+	; found it! We need to print the text for this weapon:
+	ld hl, inventory_weapon_texts
+	ld a, b
+	add a, a
+	ADD_HL_A
+	ld e, (hl)
+	inc hl
+	ld d, (hl)
+	ex de, hl
+	jr state_inventory_update_item_text_print
+state_inventory_update_item_text_weapon_loop_next:
+	inc b
+	inc hl
+	inc de
+	ld a, b
+	cp N_INVENTORY_WEAPON_TYPES
+	ret z
+	jp state_inventory_update_item_text_weapon_loop
+
+state_inventory_update_item_text_print:
+	SETMEGAROMPAGE_8000 TEXT_PAGE
+	; hl = text to print, copy it to buffer_4096
+	ld de, buffer_4096
+	ld a, (hl)
+	add a, 2
+	ld c, a
+	ld b, 0
+	ldir
+    ld de, CHRTBL2 + 2*8*256 + (3*32+15)*8
+state_inventory_update_item_text_print_loop:
+    ld hl, buffer_4096
+    push de
+    push hl
+	    call max_length_of_sentence_in_one_line
+    pop hl
+	pop de    
+    ; limit the sentence to that width and rraw it:
+    ld c, (hl)   ; we save the old length
+    ld (hl), a
+    push bc
+    push hl
+    	push hl
+    	push de
+	    	call clear_text_rendering_buffer
+	    pop de
+	    pop hl
+        ; draw the first part of the sentence:
+        ld iy, #80f0
+        ld b, 17
+        push de
+			call draw_sentence_to_vdp
+		pop de
+    pop hl
+    pop bc
+    ld a, c
+    sub (hl)  ; length left
+    ret z  ; if we have drawn the whole sentence, we are done
+    push de
+	    ld c, (hl)  ; c: length of the segment we just drew, 
+	    ld e, a  ; e: remaining length
+	    ld (hl), e
+	    push bc
+	        ld b, 0
+	        add hl, bc  ; we advance hl to the remainder of the sentence
+	        inc hl  ; skip the space we were splitting on
+	        ld c, e  ; move the sentence to the left
+	        ld de, buffer_4096 + 1
+	        ldir
+	    pop bc
+	pop hl
+	; next line:
+	ld de, 32*8
+	add hl, de
+	ex de, hl
+    jr state_inventory_update_item_text_print_loop
+
+state_inventory_update_item_text_clear_text:
+	ld b, 5  ; 5 lines
+	ld hl, CHRTBL2 + 2*8*256 + (3*32+15)*8
+state_inventory_update_item_text_clear_text_loop:
+	push bc
+	push hl
+		ld bc, 17*8
+		xor a
+		call fast_FILVRM
+	pop hl
+	pop bc
+	ld de, 8*32
+	add hl, de
+	djnz state_inventory_update_item_text_clear_text_loop
+	ret
+
+
+; ------------------------------------------------
+; Calculates the maximum length that can be rendered without overflowing a single line of text
+; in the inventory (17 tiles wide). Only "spaces" are considered as possible splits
+; input:
+; - hl: sentence
+; output:
+; - a: number of characters that can be drawn
+max_length_of_sentence_in_one_line:
+    ld ixl, 0  ; best found so far
+    ld ixh, 0  ; current character
+    ld b, (hl)  ; get the sentence length
+    inc hl
+    xor a  ; pixels drawn
+max_length_of_sentence_in_one_line_loop:
+    ld d, 0
+    ld e, (hl)
+    ex af, af'
+        ld a, e
+        or a  ; is it a space?
+        jr nz, max_length_of_sentence_in_one_line_no_space
+        ld a, ixh
+        inc a  ; we increase it in one to skip the space
+        ld ixl, a
+max_length_of_sentence_in_one_line_no_space:
+    ex af, af'
+    inc ixh
+    push hl
+        ld hl, font_bin
+        add hl, de
+        add hl, de
+        add hl, de   ; index of the letter is a*3
+        add a, (hl)   ; letter width in pixels
+    pop hl
+    inc hl  ; does not modify the flags
+    cp 17*8  ; 17 = inventory space for text
+    jr nc, max_length_of_sentence_in_one_line_limit_reached
+    djnz max_length_of_sentence_in_one_line_loop
+    ld a, ixh
+    ret
+max_length_of_sentence_in_one_line_limit_reached:
+    ld a, ixl
+    ret
+
 
 ;-----------------------------------------------
 draw_inventory_player:
@@ -852,59 +1059,58 @@ inventory_weapon_item_fns:
 select_weapon0:
 	ld a, (player_inventory_weapons + 8)
 	or a
-	jr z, select_weapon0_upgraded
-	xor a
+	jr nz, select_weapon0_upgraded
+	ld c, 0
+select_weapon_generic:  ; c = weapon to select
+	ld a, c
+	ld hl, player_inventory_weapons
+	ADD_HL_A
+	ld a, (hl)
+	or a
+	ret z
+	ld a, c
 	ld (player_current_weapon), a
-	ret
+	ld hl, SFX_ui_select
+	jp play_SFX_with_high_priority	
 select_weapon0_upgraded:
-	ld a, 8
-	ld (player_current_weapon), a
-	ret
+	ld c, 8
+	jr select_weapon_generic
 
 select_weapon1:
 	ld a, (player_inventory_weapons + 9)
 	or a
-	jr z, select_weapon1_upgraded
-	ld a, 1
-	ld (player_current_weapon), a
-	ret
+	jr nz, select_weapon1_upgraded
+	ld c, 1
+	jr select_weapon_generic
 select_weapon1_upgraded:
-	ld a, 9
-	ld (player_current_weapon), a
-	ret
+	ld c, 9
+	jr select_weapon_generic
 
 select_weapon2:
 	ld a, (player_inventory_weapons + 10)
 	or a
-	jr z, select_weapon2_upgraded
-	ld a, 2
-	ld (player_current_weapon), a
-	ret
+	jr nz, select_weapon2_upgraded
+	ld c, 2
+	jr select_weapon_generic
 select_weapon2_upgraded:
-	ld a, 10
-	ld (player_current_weapon), a
-	ret
+	ld c, 10
+	jr select_weapon_generic
 
 select_weapon3:
-	ld a, 3
-	ld (player_current_weapon), a
-	ret
+	ld c, 3
+	jr select_weapon_generic
 select_weapon4:
-	ld a, 4
-	ld (player_current_weapon), a
-	ret
+	ld c, 4
+	jr select_weapon_generic
 select_weapon5:
-	ld a, 5
-	ld (player_current_weapon), a
-	ret
+	ld c, 5
+	jr select_weapon_generic
 select_weapon6:
-	ld a, 6
-	ld (player_current_weapon), a
-	ret
+	ld c, 6
+	jr select_weapon_generic
 select_weapon7:
-	ld a, 7
-	ld (player_current_weapon), a
-	ret
+	ld c, 7
+	jr select_weapon_generic
 
 
 ;-----------------------------------------------
@@ -953,7 +1159,7 @@ inventory_item_gfx:
 	db 60, 61, 92, 93  ; chaac blessing
 	db 62, 63, 94, 95  ; seashell
 	db 20, 21, 52, 53  ; antigrav-belt
-	db 22, 23, 54, 55  ; heat-shield
+	db 22, 23, 54, 55  ; ice cape
 	db 24, 25, 56, 57  ; letter 1
 	db 26, 27, 58, 59  ; letter 2
 	db 28, 29, 60, 61  ; letter 3
@@ -995,6 +1201,23 @@ inventory_selected_weapon_sprites:
 	db 71, 8, 28, COLOR_WHITE
 	db 71, 32, 28, COLOR_WHITE
 	db 71, 56, 28, COLOR_WHITE
+
+inventory_weapon_texts:
+	dw TEXT_WEAPON_MACHETE, TEXT_WEAPON_HAMMER, TEXT_WEAPON_MACUAHUITL, TEXT_WEAPON_SHIELD
+	dw TEXT_WEAPON_SLING, TEXT_WEAPON_BLOWGUN, TEXT_WEAPON_ATLATL, TEXT_WEAPON_RAYGUN
+	dw TEXT_WEAPON_OBSIDIAN_KNIVE, TEXT_WEAPON_FIRE_HAMMER, TEXT_WEAPON_ICE_MACUAHUITL
+
+inventory_item_texts:
+	dw TEXT_ITEM_BOSS_KEY, TEXT_ITEM_BOSS_KEY, TEXT_ITEM_BOSS_KEY, TEXT_ITEM_BOSS_KEY
+	dw TEXT_ITEM_BOSS_KEY, TEXT_ITEM_BOSS_KEY, TEXT_ITEM_BOSS_KEY
+	dw TEXT_ITEM_BOSS_IDOL, TEXT_ITEM_BOSS_IDOL, TEXT_ITEM_BOSS_IDOL, TEXT_ITEM_BOSS_IDOL
+	dw TEXT_ITEM_BOSS_IDOL, TEXT_ITEM_BOSS_IDOL, TEXT_ITEM_BOSS_IDOL
+	dw TEXT_ITEM_RED_KEY, TEXT_ITEM_GREEN_KEY, TEXT_ITEM_BLUE_KEY, TEXT_ITEM_YELLOW_KEY
+	dw TEXT_ITEM_PURPLE_KEY, TEXT_ITEM_WHITE_KEY
+	dw TEXT_ITEM_CLAY_SUIT, TEXT_ITEM_GEAR, TEXT_ITEM_BALL, TEXT_ITEM_IDOL
+	dw TEXT_ITEM_SANDALS, TEXT_ITEM_GLOVES, TEXT_ITEM_HURAKAN_BLESSING, TEXT_ITEM_COTTON_ARMOR
+	dw TEXT_ITEM_CHAAC_BLESSING, TEXT_ITEM_SEASHELL, TEXT_ITEM_BELT, TEXT_ITEM_ICE_CAPE
+	dw TEXT_ITEM_LETTER1, TEXT_ITEM_LETTER2, TEXT_ITEM_LETTER3, TEXT_ITEM_MAP
 
 
 IF (inventory_item_positions_end - inventory_item_positions) != N_INVENTORY_ITEM_TYPES
