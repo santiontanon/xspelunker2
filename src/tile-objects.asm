@@ -77,6 +77,7 @@ update_tile_objects_pushable_block:
 	ld a, 1
 	ld (redraw_whole_room_flag), a
 	jp update_tile_objects_loop_continue
+
 update_tile_objects_pushable_block_collision:
 	pop hl
 	dec hl
@@ -106,6 +107,7 @@ update_tile_objects_pushable_block_remove:
 		ld a, 1
 		ld (redraw_whole_room_flag), a
 	pop hl
+	pop af  ; we do an extra pop, since we are skipping the one at update_tile_objects_loop_continue
 	jp update_tile_objects_loop
 
 

@@ -1,5 +1,46 @@
 ;-----------------------------------------------
-; Check if tile type is 2
+; output:
+; - z: collision
+; - nz: no collision
+player_check_collision_idle:
+	ld a, (player_y + 1)
+	ld b, a
+	ld a, (player_x + 1)
+	ld c, a
+	; collision with the feet:
+	inc b
+	ld a, (player_y)
+	or a
+	jr z, player_check_collision_idle_continue
+	inc b
+player_check_collision_idle_continue:
+IF COLLISION_UNIT_TESTING == 0	
+	ld a, c
+	cp #ff
+	jp z, player_exit_room_left
+ENDIF
+	push bc
+		call get_room_tile_type
+	pop bc
+	cp 2  ; wall
+	ret z
+	; collision with the head:
+	ld a, (player_y + 1)
+	ld b, a
+	ld a, (player_y)
+	cp PLAYER_COLLISION_UP_LEEWAY
+	jr c, player_check_collision_idle_continue2
+	inc b
+player_check_collision_idle_continue2:
+	call get_room_tile_type
+	cp 2
+	ret
+player_check_collision_idle_no_collision:
+	or 1
+	ret
+
+
+;-----------------------------------------------
 ; output:
 ; - z: collision
 ; - nz: no collision

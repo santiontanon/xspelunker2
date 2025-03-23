@@ -81,8 +81,8 @@ state_play:
 		ld (player_inventory_weapons+1), a
 		ld (player_inventory_weapons+2), a
 		ld (player_inventory_weapons+3), a
-; 		ld (player_inventory_weapons+4), a
-; 		ld (player_inventory_weapons+5), a
+		ld (player_inventory_weapons+4), a
+		ld (player_inventory_weapons+5), a
 ; 		ld (player_inventory_weapons+6), a
 ; 		ld (player_inventory_weapons+7), a
 ; 		ld (player_inventory_weapons+8), a

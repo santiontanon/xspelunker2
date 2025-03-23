@@ -34,28 +34,28 @@ public class GenerateSprites {
         List<Integer> data = new ArrayList<>();
         List<Integer> dataLeft = new ArrayList<>();
         
-        // Standing right:
+        // Standing right: 0, 1
         addPlayerFrame(sourceImage, 0, 0, data, dataLeft);
         addPlayerFrame(sourceImage, 0, 16, data, dataLeft);
-        // Walk:
+        // Walk: 2, 3
         addPlayerFrame(sourceImage, 16, 0, data, dataLeft);
         addPlayerFrame(sourceImage, 32, 0, data, dataLeft);
-        // Crawl:
+        // Crawl: 4, 5
         addPlayerFrame(sourceImage, 16, 16, data, dataLeft);
         addPlayerFrame(sourceImage, 32, 16, data, dataLeft);
-        // Climb ropes:
+        // Climb ropes: 6, 7
         addPlayerFrame(sourceImage, 0, 32, data, dataLeft);
         addPlayerFrame(sourceImage, 0, 48, data, dataLeft);
-        // Climb stairs:
+        // Climb stairs: 8, 9
         addPlayerFrame(sourceImage, 16, 32, data, dataLeft);
         addPlayerFrame(sourceImage, 16, 48, data, dataLeft);
-        // Swim:
+        // Swim: 10, 11
         addPlayerFrame(sourceImage, 32, 32, data, dataLeft);
         addPlayerFrame(sourceImage, 48, 32, data, dataLeft);
-        // Push:
+        // Push: 12, 13
         addPlayerFrame(sourceImage, 32, 48, data, dataLeft);
         addPlayerFrame(sourceImage, 48, 48, data, dataLeft);
-        // weapon swings:
+        // weapon swings: 14, ..., 20
         addPlayerFrame(sourceImage, 0, 64, data, dataLeft);
         addPlayerFrame(sourceImage, 16, 64, data, dataLeft);
         addPlayerFrame(sourceImage, 32, 64, data, dataLeft);
@@ -63,13 +63,19 @@ public class GenerateSprites {
         addPlayerFrame(sourceImage, 0, 80, data, dataLeft);
         addPlayerFrame(sourceImage, 16, 80, data, dataLeft);
         addPlayerFrame(sourceImage, 32, 80, data, dataLeft);
-        // shield:
+        // shield: 21, ..., 26
         addPlayerFrame(sourceImage, 0, 96, data, dataLeft);
         addPlayerFrame(sourceImage, 16, 96, data, dataLeft);
         addPlayerFrame(sourceImage, 32, 96, data, dataLeft);
         addPlayerFrame(sourceImage, 48, 96, data, dataLeft);
         addPlayerFrame(sourceImage, 0, 112, data, dataLeft);
         addPlayerFrame(sourceImage, 16, 112, data, dataLeft);
+        // directional: 27, ..., 32
+        addPlayerFrame(sourceImage, 0, 128, data, dataLeft);
+        addPlayerFrame(sourceImage, 16, 128, data, dataLeft);
+        addPlayerFrame(sourceImage, 32, 128, data, dataLeft);
+        addPlayerFrame(sourceImage, 32, 112, data, dataLeft);
+        addPlayerFrame(sourceImage, 48, 112, data, dataLeft);
         
         System.out.println("player data: " + data.size());
         System.out.println("player dataLeft: " + dataLeft.size());

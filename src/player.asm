@@ -123,7 +123,7 @@ player_update_update_sprite_weapon:
 	cp 10  ; ice macuahuitl
 	jr z, player_update_update_sprite_weapon_ice_macuahuitl
 	ld a, iyl
-	or COLOR_WHITE
+	or COLOR_GREY
 	ld (bc), a  ; color / early clock bit
 	ret
 player_update_update_sprite_weapon_obsidian_knive:
@@ -563,11 +563,18 @@ player_update_state_crouching:
 	; check for idle:
 	ld a, (keyboard_line_state)
 	bit 6, a
+	jr z, player_update_state_crouching_still_crouching
+	; check if there would be collision if we get up:
+	call player_check_collision_idle
 	jp nz, player_update_switch_to_idle
-
-	; if we are still here, player is still crouching, see if we are on top of a rope/ladder:
+player_update_state_crouching_still_crouching:
+	; See if we are on top of a rope/ladder:
+	ld a, (keyboard_line_state)
+	bit 6, a
+	jr nz, player_update_state_crouching_no_down  ; this could happen if player is not pressing down but with a collision on top preventing getting up
 	call check_player_on_top_of_rope_or_ladder
 	jp z, player_update_switch_to_rope_or_ladder_from_platform
+player_update_state_crouching_no_down:
 
 	ld a, 4
 	ld (player_requested_frame), a
@@ -607,7 +614,10 @@ player_update_state_crawling_right:
 	; check for back to walking:
 	ld a, (keyboard_line_state)
 	bit 6, a
+	jr z, player_update_state_crawling_right_still_crawling
+	call player_check_collision_idle
 	jp nz, player_update_switch_to_walking_right
+player_update_state_crawling_right_still_crawling:
 
 	; check for falling:
 	call player_check_collision_down_inc
@@ -623,7 +633,10 @@ player_update_state_crawling_left:
 	; check for back to walking:
 	ld a, (keyboard_line_state)
 	bit 6, a
+	jr z, player_update_state_crawling_left_still_crawling
+	call player_check_collision_idle
 	jp nz, player_update_switch_to_walking_left
+player_update_state_crawling_left_still_crawling:
 
 	; check for falling:
 	call player_check_collision_down_inc
@@ -636,9 +649,13 @@ player_update_state_crawling_left:
 
 player_update_state_crawling_continue:
 
+	ld a, (keyboard_line_state)
+	bit 6, a
+	jr nz, player_update_state_crawling_no_down  ; this could happen if player is not pressing down but with a collision on top preventing getting up
 	; if we are still here, player is still crouching, see if we are on top of a rope/ladder:
 	call check_player_on_top_of_rope_or_ladder
 	jp z, player_update_switch_to_rope_or_ladder_from_platform
+player_update_state_crawling_no_down:
 
 	ld a, (interrupt_cycle)
 	rrca
@@ -1234,7 +1251,10 @@ player_update_state_directional_weapon:
 	; check for weapon:
 	ld a, (keyboard_line_state)
 	bit 0, a
-	jp nz, player_update_switch_to_idle
+	jp z, player_update_state_directional_weapon_still_holding_fire
+	call player_update_fire_directional_bullet
+	jp player_update_switch_to_idle
+player_update_state_directional_weapon_still_holding_fire:
 	bit 6, a
 	jp z, player_update_switch_to_directional_weapon_crouching
 
@@ -1263,15 +1283,51 @@ player_update_state_directional_weapon_no_right:
 	call player_check_collision_down_inc
 	jp nz, player_update_switch_to_falling_with_directional
 
+	ld a, (player_current_weapon)
+	cp 3  ; shield
+	jr z, player_update_state_directional_weapon_shield
+
+	; regular directional weapons:
 	ld a, (keyboard_line_state)
 	bit 5, a
 	jr nz, player_update_state_directional_weapon_no_up
-
+	bit 4, a
+	jr z, player_update_state_directional_weapon_diagonal_up
+	bit 7, a
+	jr z, player_update_state_directional_weapon_diagonal_up
 	; pointing the weapon up:
-	ld a, 22
+	ld a, (PLAYER_WEAPON_DIRECTIONAL_UP)
+	ld (player_weapon_swing_type), a
+	ld a, 29
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+player_update_state_directional_weapon_diagonal_up:
+	; pointing the weapon diagonal-up:
+	ld a, (PLAYER_WEAPON_DIRECTIONAL_FW_UP)
+	ld (player_weapon_swing_type), a
+	ld a, 28
 	ld (player_requested_frame), a
 	jp player_update_update_sprite_position
 player_update_state_directional_weapon_no_up:
+	ld a, (PLAYER_WEAPON_DIRECTIONAL_FW)
+	ld (player_weapon_swing_type), a
+	ld a, 27
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+
+player_update_state_directional_weapon_shield:
+	ld a, (keyboard_line_state)
+	bit 5, a
+	jr nz, player_update_state_directional_weapon_shield_no_up
+	; pointing the shield up:
+	ld a, (PLAYER_WEAPON_SHIELD_UP)
+	ld (player_weapon_swing_type), a
+	ld a, 22
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+player_update_state_directional_weapon_shield_no_up:
+	ld a, (PLAYER_WEAPON_SHIELD_FORWARD)
+	ld (player_weapon_swing_type), a
 	ld a, 21
 	ld (player_requested_frame), a
 	jp player_update_update_sprite_position
@@ -1348,23 +1404,57 @@ player_update_state_directional_weapon_jumping_loop_done:
 	bit 0, a
 	jp nz, player_update_state_directional_weapon_jumping_done
 
+	ld a, (player_current_weapon)
+	cp 3  ; shield
+	jr z, player_update_state_directional_weapon_jumping_shield
+
+	; regular directional weapons:
 	ld a, (keyboard_line_state)
 	bit 5, a
 	jr nz, player_update_state_directional_weapon_jumping_no_up
-
+	bit 4, a
+	jr z, player_update_state_directional_weapon_jumping_diagonal_up
+	bit 7, a
+	jr z, player_update_state_directional_weapon_jumping_diagonal_up
 	; pointing the weapon up:
-	ld a, 24
+	ld a, (PLAYER_WEAPON_DIRECTIONAL_UP)
+	ld (player_weapon_swing_type), a
+	ld a, 29
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+player_update_state_directional_weapon_jumping_diagonal_up:
+	ld a, (PLAYER_WEAPON_DIRECTIONAL_FW_UP)
+	ld (player_weapon_swing_type), a
+	ld a, 28
 	ld (player_requested_frame), a
 	jp player_update_update_sprite_position
 player_update_state_directional_weapon_jumping_no_up:
+	ld a, (PLAYER_WEAPON_DIRECTIONAL_FW)
+	ld (player_weapon_swing_type), a
+	ld a, 27
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+
+player_update_state_directional_weapon_jumping_shield:
+	ld a, (keyboard_line_state)
+	bit 5, a
+	jr nz, player_update_state_directional_weapon_jumping_shield_no_up
+	; pointing the shield up:
+	ld a, (PLAYER_WEAPON_SHIELD_UP)
+	ld (player_weapon_swing_type), a
+	ld a, 24
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+player_update_state_directional_weapon_jumping_shield_no_up:
+	ld a, (PLAYER_WEAPON_SHIELD_FORWARD)
+	ld (player_weapon_swing_type), a
 	ld a, 23
 	ld (player_requested_frame), a
 	jp player_update_update_sprite_position
 
 player_update_state_directional_weapon_jumping_done:
 	; fire a bullet (depending on the weapon):
-	; ...
-
+	call player_update_fire_directional_bullet
 	ld a, (player_state)
 	and #01
 	add a, PLAYER_STATE_JUMPING
@@ -1447,23 +1537,57 @@ player_update_state_directional_weapon_falling_speed_loop_done:
 	bit 0, a
 	jp nz, player_update_state_directional_weapon_falling_done
 
+	ld a, (player_current_weapon)
+	cp 3  ; shield
+	jr z, player_update_state_directional_weapon_falling_shield
+
+	; regular directional weapons:
 	ld a, (keyboard_line_state)
 	bit 5, a
 	jr nz, player_update_state_directional_weapon_falling_no_up
-
+	bit 4, a
+	jr z, player_update_state_directional_weapon_falling_diagonal_up
+	bit 7, a
+	jr z, player_update_state_directional_weapon_falling_diagonal_up
 	; pointing the weapon up:
-	ld a, 24
+	ld a, (PLAYER_WEAPON_DIRECTIONAL_UP)
+	ld (player_weapon_swing_type), a
+	ld a, 29
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+player_update_state_directional_weapon_falling_diagonal_up:
+	ld a, (PLAYER_WEAPON_DIRECTIONAL_FW_UP)
+	ld (player_weapon_swing_type), a
+	ld a, 28
 	ld (player_requested_frame), a
 	jp player_update_update_sprite_position
 player_update_state_directional_weapon_falling_no_up:
+	ld a, (PLAYER_WEAPON_DIRECTIONAL_FW)
+	ld (player_weapon_swing_type), a
+	ld a, 27
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+
+player_update_state_directional_weapon_falling_shield:
+	ld a, (keyboard_line_state)
+	bit 5, a
+	jr nz, player_update_state_directional_weapon_falling_shield_no_up	
+	; pointing the shield up:
+	ld a, (PLAYER_WEAPON_SHIELD_UP)
+	ld (player_weapon_swing_type), a
+	ld a, 24
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+player_update_state_directional_weapon_falling_shield_no_up:
+	ld a, (PLAYER_WEAPON_SHIELD_FORWARD)
+	ld (player_weapon_swing_type), a
 	ld a, 23
 	ld (player_requested_frame), a
 	jp player_update_update_sprite_position
 
 player_update_state_directional_weapon_falling_done:
 	; fire a bullet (depending on the weapon):
-	; ...
-
+	call player_update_fire_directional_bullet
 	ld a, (player_state)
 	and #01
 	add a, PLAYER_STATE_FALLING
@@ -1482,7 +1606,10 @@ player_update_switch_to_directional_weapon_crouching:
 player_update_state_directional_weapon_crouching:
 	ld a, (keyboard_line_state)
 	bit 0, a
-	jp nz, player_update_switch_to_crouching
+	jp z, player_update_state_directional_weapon_crouching_still_holding_fire
+	call player_update_fire_directional_bullet
+	jp player_update_switch_to_crouching
+player_update_state_directional_weapon_crouching_still_holding_fire:
 
 	; check for inventory:
 	ld a, (keyboard_line_clicks + 2)
@@ -1512,20 +1639,67 @@ player_update_state_directional_weapon_crouching_no_right:
 	; check for idle:
 	ld a, (keyboard_line_state)
 	bit 6, a
+	jr z, player_update_state_directional_weapon_crouching_still_crouching
+	call player_check_collision_idle
 	jp nz, player_update_switch_to_directional_weapon
+player_update_state_directional_weapon_crouching_still_crouching:
 
+	ld a, (player_current_weapon)
+	cp 3  ; shield
+	jr z, player_update_state_directional_weapon_crouching_shield
+
+	; regular directional weapons:
 	ld a, (keyboard_line_state)
 	bit 5, a
 	jr nz, player_update_state_directional_weapon_crouching_no_up
-
-	; pointing the weapon up:
-	ld a, 26
+; 	bit 4, a
+; 	jr z, player_update_state_directional_weapon_crouching_diagonal_up
+; 	bit 7, a
+; 	jr z, player_update_state_directional_weapon_crouching_diagonal_up
+; 	; pointing the weapon up:
+; 	ld a, (PLAYER_WEAPON_DIRECTIONAL_UP)
+; 	ld (player_weapon_swing_type), a
+; 	ld a, 29
+; 	ld (player_requested_frame), a
+; 	jp player_update_update_sprite_position
+; player_update_state_directional_weapon_crouching_diagonal_up:
+	ld a, (PLAYER_WEAPON_DIRECTIONAL_FW_UP)
+	ld (player_weapon_swing_type), a
+	ld a, 31
 	ld (player_requested_frame), a
 	jp player_update_update_sprite_position
 player_update_state_directional_weapon_crouching_no_up:
+	ld a, (PLAYER_WEAPON_DIRECTIONAL_FW)
+	ld (player_weapon_swing_type), a
+	ld a, 30
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+
+player_update_state_directional_weapon_crouching_shield:
+	ld a, (keyboard_line_state)
+	bit 5, a
+	jr nz, player_update_state_directional_weapon_crouching_shield_no_up
+	; pointing the shield up:
+	ld a, 26
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+player_update_state_directional_weapon_crouching_shield_no_up:
 	ld a, 25
 	ld (player_requested_frame), a
 	jp player_update_update_sprite_position
+
+
+;-----------------------------------------------
+player_update_fire_directional_bullet:
+	ld a, (player_current_weapon)
+	cp 3  ; shield
+	ret z
+
+	; ...
+	ld hl, SFX_ui_wrong
+	call play_SFX_with_high_priority
+	; ...
+	ret
 
 
 ;-----------------------------------------------

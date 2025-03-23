@@ -1,33 +1,29 @@
 to do:
 
-***- BUG: it crashed once when a boulder fell down the screen
-***- weapons:
-  ***- implement directional sling (idle/walking/crouching/falling/jumping)
-    ***- this is like shield, but has an intermediate diagonal position (should be same code)
-    ***- when releasing space, fire bullet (for now, just an empty routine that plays an SFX)
-    ***- draw bullets (for sling/blowgun/atlatl/ray gun)
+***- directional weapons:
+  ***- fire directional sling (idle/walking/crouching/falling/jumping)
+    ***- draw bullet sprites (for sling/blowgun/atlatl/ray gun)
     ***- fire stones with the sling (small parabola)
     ***- decrease the number of bullets
     ***- if no bullets, nothing happens when releasing space (maybe "wrong" SFX)
-  ***- implement directional blowgun (idle/walking/crouching/falling/jumping)
-    ***- short range straight line
-  ***- implement directional atlatl (idle/walking/crouching/falling/jumping)
-    ***- long parabola
-  ***- implement directional ray gun (idle/walking/crouching/falling/jumping)
-    ***- long range straight line
+  ***- fire directional blowgun (short range straight line)
+  ***- fire directional atlatl (long parabola)
+  ***- fire directional ray gun (long range straight line)
 
 - Damage:
-  - hitpoints (design hud: HP, oxygen in water, current item)
+  - hitpoints (design hud: HP, oxygen in water, current item, bullets left if applicable)
   - get hurt by spikes
   - game over screen when you run out of health
-  - get hurt by running out of oxygen in water
+  - get hurt by running out of oxygen in water (swimming animation goes faster when out of oxygen, and maybe player changes color to purple/blue?)
   - decide whether you get hurt by falling from a height
   - if a boulder falls on top of you, take damage (and where are you spawned? on top of the boulder?)
+  - now I can implement the "quit" button in the inventory screen (have a "are you sure? y/n" small dialog)
 
 - breakable walls:
   - instantiate them at room creation
-  - being able to hit them (make sure hammer hits down when hitting on top of them)
+  - being able to hit them with all weapons and projectiles (make sure hammer hits down when hitting on top of them)
   - make this work with the inter-room transitions (broken wall, overwrites the collision)
+  - once broken they should remain broken for the rest of the game (global state)
   - make sure they work down/left/right/up (when breaing a path down/up that needs a ladder, replace by proper ladder piece)
 
 - Implement PCGWorld in assembler:
@@ -47,11 +43,11 @@ to do:
   - render doors (and be blocked by them)
   - use keys in locks to open doors
   - press buttons to open doors
-  - combination clues
-  - interact with combination levers
+  - combination clues (how to interact with clues? crouch? up?)
+  - interact with combination levers (hit them to change their state)
   - open the boss doors (door open animation with some SFX/music, so, it's clear it's important)
   - enter a boss door (for now just an empty room with the item you are supposed to get)
-    - obtain the "idols": each idol represents one of the six creator deities (the last one requires two of them). Maybe to see them you have to inspect them in the inventory (too small otherwise)
+    - obtain the "power stones": each stone represents one of the six creator deities (the last one requires two of them). Maybe to see them you have to inspect them in the inventory (too small otherwise)
   - trials (those are solved in front of te gods I drew)
   - design ending room (maya calendar stone where you place what you get from the bosses, etc.)
     - 1st idol on calendar stone, opens door to 3rd pyramid
@@ -108,7 +104,7 @@ to do:
 - music
 
 - using idols in stone calendar, has effects on the map:
-  - 2nd, activates messages (letters glow agains the stone tables now)
+  - 2nd, activates messages (letters glow against the stone tables now)
   - 4th, activates teleporters to move faster across maps (or maybe this also with the 3rd?, 4th feels too late!)
   - 5th, lets you turn on the calendar stone (activate defenses)
   - 6th (two halves from Mars/Moon), (activate offensive capabilities, and destroy alien hardware)
