@@ -159,6 +159,10 @@ player_update_state_fn_table:
 	dw player_update_state_weapon_swing_jumping
 	dw player_update_state_weapon_swing_falling
 	dw player_update_state_weapon_swing_crouching
+	dw player_update_state_directional_weapon
+	dw player_update_state_directional_weapon_jumping
+	dw player_update_state_directional_weapon_falling
+	dw player_update_state_directional_weapon_crouching
 
 
 ;-----------------------------------------------
@@ -1025,6 +1029,7 @@ player_update_state_swimming_inertia_y_done:
 ;-----------------------------------------------
 player_update_switch_to_weapon_swing:
 	call player_update_determine_weapon_swing_type
+	jp nz, player_update_switch_to_directional_weapon
 player_update_switch_to_idle_keep_weapon:
 	ld a, (player_state)
 	and #01
@@ -1037,13 +1042,13 @@ player_update_state_weapon_swing:
 	or a
 	jp z,player_update_switch_to_idle
 	dec (hl)
-
 	jp player_update_weapon_sprite_request
 
 
 ;-----------------------------------------------
 player_update_switch_to_weapon_swing_jumping:
 	call player_update_determine_weapon_swing_type_jumping
+	jp nz, player_update_switch_to_directional_weapon_jumping
 	ld a, (player_state)
 	and #01
 	add a, PLAYER_STATE_WEAPON_SWING_JUMPING
@@ -1122,6 +1127,7 @@ player_update_switch_to_weapon_swing_falling_from_jumping:
 
 player_update_switch_to_weapon_swing_falling:
 	call player_update_determine_weapon_swing_type_jumping
+	jp nz, player_update_switch_to_directional_weapon_falling
 player_update_switch_to_weapon_swing_falling_continue:
 	ld a, (player_state)
 	and #01
@@ -1199,10 +1205,10 @@ player_update_state_weapon_swing_falling_swing_done:
 	jp player_update_update_sprite_position
 
 
-
 ;-----------------------------------------------
 player_update_switch_to_weapon_swing_crouching:
 	call player_update_determine_weapon_swing_type_crouching
+	jp nz, player_update_switch_to_directional_weapon_crouching
 	ld a, (player_state)
 	and #01
 	add a, PLAYER_STATE_WEAPON_SWING_CROUCHING
@@ -1219,24 +1225,332 @@ player_update_state_weapon_swing_crouching:
 
 
 ;-----------------------------------------------
-; player is idle or walking
+player_update_switch_to_directional_weapon:
+	ld a, (player_state)
+	and #01
+	add a, PLAYER_STATE_DIRECTIONAL_WEAPON
+	ld (player_state), a
+player_update_state_directional_weapon:
+	; check for weapon:
+	ld a, (keyboard_line_state)
+	bit 0, a
+	jp nz, player_update_switch_to_idle
+	bit 6, a
+	jp z, player_update_switch_to_directional_weapon_crouching
+
+	; check for change of direction:
+	ld a, (keyboard_line_clicks)
+	bit 4, a  ; left
+	jp z, player_update_state_directional_weapon_no_left
+	ld a, (player_state)
+	or 1
+	ld (player_state), a
+player_update_state_directional_weapon_no_left:
+	ld a, (keyboard_line_clicks)
+	bit 7, a  ; right
+	jp z, player_update_state_directional_weapon_no_right
+	ld a, (player_state)
+	and #fe
+	ld (player_state), a
+player_update_state_directional_weapon_no_right:
+
+	; check for jump
+	ld a, (keyboard_line_clicks + 2)
+	bit 2, a
+	jp nz, player_update_switch_to_directional_weapon_jumping_from_idle
+
+	; check for falling:
+	call player_check_collision_down_inc
+	jp nz, player_update_switch_to_falling_with_directional
+
+	ld a, (keyboard_line_state)
+	bit 5, a
+	jr nz, player_update_state_directional_weapon_no_up
+
+	; pointing the weapon up:
+	ld a, 22
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+player_update_state_directional_weapon_no_up:
+	ld a, 21
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+
+
+;-----------------------------------------------
+player_update_switch_to_directional_weapon_jumping_from_idle:
+	ld a, 1
+	ld (player_jump_is_cancelable), a
+	ld hl, SFX_jump
+	call play_SFX_with_high_priority
+	xor a
+	ld (player_state_timer), a
+player_update_switch_to_directional_weapon_jumping:
+	ld a, (player_state)
+	and #01
+	add a, PLAYER_STATE_DIRECTIONAL_WEAPON_JUMPING
+	ld (player_state), a
+player_update_state_directional_weapon_jumping:
+	ld a, (player_jump_no_grab_timer)
+	or a
+	jr z, player_update_state_directional_weapon_jumping_continue
+	dec a
+	ld (player_jump_no_grab_timer), a
+player_update_state_directional_weapon_jumping_continue:
+
+	; check for change of direction:
+	ld a, (keyboard_line_clicks)
+	bit 4, a  ; left
+	jp z, player_update_state_directional_weapon_jumping_no_left
+	ld a, (player_state)
+	or 1
+	ld (player_state), a
+player_update_state_directional_weapon_jumping_no_left:
+	ld a, (keyboard_line_clicks)
+	bit 7, a  ; right
+	jp z, player_update_state_directional_weapon_jumping_no_right
+	ld a, (player_state)
+	and #fe
+	ld (player_state), a
+player_update_state_directional_weapon_jumping_no_right:
+
+	ld a, (player_jump_is_cancelable)
+	or a
+	jr z, player_update_state_directional_weapon_jumping_cannot_cancel
+	; did the player release the jump key?
+	; check for jump
+	ld a, (keyboard_line_state + 2)
+	bit 2, a
+	call nz, player_update_stop_jumping
+player_update_state_directional_weapon_jumping_cannot_cancel:
+
+	; move up:
+	ld a, (player_state_timer)
+	inc a
+	ld (player_state_timer), a
+	ld hl, player_jump_speed_table - 1
+	ADD_HL_A
+	ld a, (hl)
+	cp #ff
+	jp z, player_update_switch_to_falling_with_directional
+	ld b, a
+	or a
+	jr z, player_update_state_directional_weapon_jumping_loop_done
+player_update_state_directional_weapon_jumping_speed_loop:
+	push bc
+		call player_update_move_one_pixel_up_considering_collisions
+	pop bc
+	djnz player_update_state_directional_weapon_jumping_speed_loop
+player_update_state_directional_weapon_jumping_loop_done:
+
+	; weapon release?
+	ld a, (keyboard_line_state)
+	bit 0, a
+	jp nz, player_update_state_directional_weapon_jumping_done
+
+	ld a, (keyboard_line_state)
+	bit 5, a
+	jr nz, player_update_state_directional_weapon_jumping_no_up
+
+	; pointing the weapon up:
+	ld a, 24
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+player_update_state_directional_weapon_jumping_no_up:
+	ld a, 23
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+
+player_update_state_directional_weapon_jumping_done:
+	; fire a bullet (depending on the weapon):
+	; ...
+
+	ld a, (player_state)
+	and #01
+	add a, PLAYER_STATE_JUMPING
+	ld (player_state), a
+	ld a, 2
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+
+
+;-----------------------------------------------
+player_update_switch_to_falling_with_directional:
+	xor a
+	ld (player_state_timer), a
+player_update_switch_to_directional_weapon_falling:
+	ld a, (player_state)
+	and #01
+	add a, PLAYER_STATE_DIRECTIONAL_WEAPON_FALLING
+	ld (player_state), a
+player_update_state_directional_weapon_falling:
+
+	ld a, (player_jump_no_grab_timer)
+	or a
+	jr z, player_update_state_directional_weapon_falling_continue
+	dec a
+	ld (player_jump_no_grab_timer), a
+player_update_state_directional_weapon_falling_continue:
+
+	; check for change of direction:
+	ld a, (keyboard_line_clicks)
+	bit 4, a  ; left
+	jp z, player_update_state_directional_weapon_falling_no_left
+	ld a, (player_state)
+	or 1
+	ld (player_state), a
+player_update_state_directional_weapon_falling_no_left:
+	ld a, (keyboard_line_clicks)
+	bit 7, a  ; right
+	jp z, player_update_state_directional_weapon_falling_no_right
+	ld a, (player_state)
+	and #fe
+	ld (player_state), a
+player_update_state_directional_weapon_falling_no_right:
+
+	; check if we need to switch to idle:
+	call player_check_collision_down_inc  ; a = tile type
+	jp z, player_update_switch_to_directional_weapon
+
+	; check if we need to swicth to swimming:
+	call player_in_water
+	jp z, player_update_switch_to_swimming_from_falling
+
+	; move down:
+	ld a, (player_state_timer)
+	ld e, a
+	inc e
+	ld hl, player_fall_speed_table
+	ADD_HL_A
+	ld a, (hl)
+	cp #ff
+	jr nz, player_update_state_directional_weapon_falling_speed_determined
+	dec e
+	dec hl
+	ld a, (hl)
+player_update_state_directional_weapon_falling_speed_determined:
+	ld b, a
+	or a
+	ld a, e
+	ld (player_state_timer), a
+	jr z, player_update_state_directional_weapon_falling_speed_loop_done
+player_update_state_directional_weapon_falling_speed_loop:
+	push bc
+		call player_update_move_one_pixel_down_considering_collisions
+	pop bc
+	jr z, player_update_state_directional_weapon_falling_speed_loop_done
+	djnz player_update_state_directional_weapon_falling_speed_loop
+player_update_state_directional_weapon_falling_speed_loop_done:
+
+	; weapon release?
+	ld a, (keyboard_line_state)
+	bit 0, a
+	jp nz, player_update_state_directional_weapon_falling_done
+
+	ld a, (keyboard_line_state)
+	bit 5, a
+	jr nz, player_update_state_directional_weapon_falling_no_up
+
+	; pointing the weapon up:
+	ld a, 24
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+player_update_state_directional_weapon_falling_no_up:
+	ld a, 23
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+
+player_update_state_directional_weapon_falling_done:
+	; fire a bullet (depending on the weapon):
+	; ...
+
+	ld a, (player_state)
+	and #01
+	add a, PLAYER_STATE_FALLING
+	ld (player_state), a
+	ld a, 2
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+
+
+;-----------------------------------------------
+player_update_switch_to_directional_weapon_crouching:
+	ld a, (player_state)
+	and #01
+	add a, PLAYER_STATE_DIRECTIONAL_WEAPON_CROUCHING
+	ld (player_state), a
+player_update_state_directional_weapon_crouching:
+	ld a, (keyboard_line_state)
+	bit 0, a
+	jp nz, player_update_switch_to_crouching
+
+	; check for inventory:
+	ld a, (keyboard_line_clicks + 2)
+	bit 2, a
+	jp nz, state_inventory
+
+	; check for change of direction:
+	ld a, (keyboard_line_clicks)
+	bit 4, a  ; left
+	jp z, player_update_state_directional_weapon_crouching_no_left
+	ld a, (player_state)
+	or 1
+	ld (player_state), a
+player_update_state_directional_weapon_crouching_no_left:
+	ld a, (keyboard_line_clicks)
+	bit 7, a  ; right
+	jp z, player_update_state_directional_weapon_crouching_no_right
+	ld a, (player_state)
+	and #fe
+	ld (player_state), a
+player_update_state_directional_weapon_crouching_no_right:	
+
+	; check for falling:
+	call player_check_collision_down_inc
+	jp nz, player_update_switch_to_falling_with_directional
+
+	; check for idle:
+	ld a, (keyboard_line_state)
+	bit 6, a
+	jp nz, player_update_switch_to_directional_weapon
+
+	ld a, (keyboard_line_state)
+	bit 5, a
+	jr nz, player_update_state_directional_weapon_crouching_no_up
+
+	; pointing the weapon up:
+	ld a, 26
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+player_update_state_directional_weapon_crouching_no_up:
+	ld a, 25
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+
+
+;-----------------------------------------------
+; called if player is idle or walking
+; output:
+; - z: melee weapon
+; - nz: directional weapon
 player_update_determine_weapon_swing_type:
 	; Determine the type of swing:
 	ld a, (player_current_weapon)
 	or a
 	jr z, player_update_determine_weapon_swing_type_machete
-	cp 8
-	jr z, player_update_determine_weapon_swing_type_machete
 	cp 1
-	jr z, player_update_determine_weapon_swing_type_hammer
-	cp 9
 	jr z, player_update_determine_weapon_swing_type_hammer
 	cp 2
 	jr z, player_update_determine_weapon_swing_type_macuahuitl
+	cp 8
+	jr z, player_update_determine_weapon_swing_type_machete
+	cp 9
+	jr z, player_update_determine_weapon_swing_type_hammer
 	cp 10
 	jr z, player_update_determine_weapon_swing_type_macuahuitl
-	; other weapons:
-	; ...
+	; directional weapons
+	or 1  ; nz
+	ret
 player_update_determine_weapon_swing_type_macuahuitl:
 	ld a, 18
 	ld (player_weapon_state_timer), a
@@ -1262,11 +1576,15 @@ player_update_determine_weapon_swing_type_machete_up:
 	ld a, PLAYER_WEAPON_SWING_MACHETE_UP
 player_update_determine_weapon_swing_type_determined:
 	ld (player_weapon_swing_type), a
+	xor a  ; z
 	ret
 
 
 ;-----------------------------------------------
 ; player is jumping or falling
+; output:
+; - z: melee weapon
+; - nz: directional weapon
 player_update_determine_weapon_swing_type_jumping:
 	; Determine the type of swing:
 	ld a, (player_current_weapon)
@@ -1282,8 +1600,9 @@ player_update_determine_weapon_swing_type_jumping:
 	jr z, player_update_determine_weapon_swing_type_jumping_macuahuitl
 	cp 10
 	jr z, player_update_determine_weapon_swing_type_jumping_macuahuitl
-	; other weapons:
-	; ...
+	; directional weapons
+	or 1  ; nz
+	ret
 player_update_determine_weapon_swing_type_jumping_macuahuitl:
 	ld a, 18
 	ld (player_weapon_state_timer), a
@@ -1314,10 +1633,14 @@ player_update_determine_weapon_swing_type_jumping_machete_up:
 	ld a, PLAYER_WEAPON_SWING_MACHETE_UP
 player_update_determine_weapon_swing_type_jumping_determined:
 	ld (player_weapon_swing_type), a
+	xor a  ; z
 	ret
 
 
 ;-----------------------------------------------
+; output:
+; - z: melee weapon
+; - nz: directional weapon
 player_update_determine_weapon_swing_type_crouching:
 	; Determine the type of swing:
 	ld a, (player_current_weapon)
@@ -1333,8 +1656,9 @@ player_update_determine_weapon_swing_type_crouching:
 	jr z, player_update_determine_weapon_swing_type_crouhcing_macuahuitl
 	cp 10
 	jr z, player_update_determine_weapon_swing_type_crouhcing_macuahuitl
-	; other weapons:
-	; ...
+	; directional weapons
+	or 1  ; nz
+	ret
 player_update_determine_weapon_swing_type_crouhcing_macuahuitl:
 	ld a, 18
 	ld (player_weapon_state_timer), a
@@ -1353,6 +1677,7 @@ player_update_determine_weapon_swing_type_crouching_machete:
 	ld a, PLAYER_WEAPON_SWING_MACHETE_CROUCHING
 player_update_determine_weapon_swing_type_crouching_determined:
 	ld (player_weapon_swing_type), a
+	xor a  ; z
 	ret
 
 

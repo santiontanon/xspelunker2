@@ -63,6 +63,13 @@ public class GenerateSprites {
         addPlayerFrame(sourceImage, 0, 80, data, dataLeft);
         addPlayerFrame(sourceImage, 16, 80, data, dataLeft);
         addPlayerFrame(sourceImage, 32, 80, data, dataLeft);
+        // shield:
+        addPlayerFrame(sourceImage, 0, 96, data, dataLeft);
+        addPlayerFrame(sourceImage, 16, 96, data, dataLeft);
+        addPlayerFrame(sourceImage, 32, 96, data, dataLeft);
+        addPlayerFrame(sourceImage, 48, 96, data, dataLeft);
+        addPlayerFrame(sourceImage, 0, 112, data, dataLeft);
+        addPlayerFrame(sourceImage, 16, 112, data, dataLeft);
         
         System.out.println("player data: " + data.size());
         System.out.println("player dataLeft: " + dataLeft.size());

@@ -1,11 +1,20 @@
 to do:
 
+***- BUG: it crashed once when a boulder fell down the screen
 ***- weapons:
-  ***- implement shield (idle/walking/crouching/falling/jumping)
   ***- implement directional sling (idle/walking/crouching/falling/jumping)
+    ***- this is like shield, but has an intermediate diagonal position (should be same code)
+    ***- when releasing space, fire bullet (for now, just an empty routine that plays an SFX)
+    ***- draw bullets (for sling/blowgun/atlatl/ray gun)
+    ***- fire stones with the sling (small parabola)
+    ***- decrease the number of bullets
+    ***- if no bullets, nothing happens when releasing space (maybe "wrong" SFX)
   ***- implement directional blowgun (idle/walking/crouching/falling/jumping)
+    ***- short range straight line
   ***- implement directional atlatl (idle/walking/crouching/falling/jumping)
+    ***- long parabola
   ***- implement directional ray gun (idle/walking/crouching/falling/jumping)
+    ***- long range straight line
 
 - Damage:
   - hitpoints (design hud: HP, oxygen in water, current item)
