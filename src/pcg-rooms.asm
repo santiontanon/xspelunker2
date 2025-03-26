@@ -21,7 +21,12 @@ pcg_generate_room:
 		ld bc, MAX_ROOM_OBJECTS * ROOM_OBJECT_STRUCT_SIZE - 1
 		xor a
 		ld (current_room__objects_sentinel), a
+		ld (current_room__player_bullets_sentinel), a
 		call clear_memory_a
+
+		ld hl, current_room__player_bullets
+		ld bc, MAX_ROOM_PLAYER_BULLETS * ROOM_OBJECT_STRUCT_SIZE - 1
+		call clear_memory
 
 		ld hl, current_room__tile_objects
 		ld (tmp_pcg_room__next_tile_object_ptr), hl

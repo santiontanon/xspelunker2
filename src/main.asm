@@ -383,6 +383,8 @@ current_room__max_scroll_x: ds virtual 1
 current_room__max_scroll_y: ds virtual 1
 current_room__objects: ds virtual MAX_ROOM_OBJECTS * ROOM_OBJECT_STRUCT_SIZE
 current_room__objects_sentinel: ds virtual 1
+current_room__player_bullets: ds virtual MAX_ROOM_PLAYER_BULLETS * ROOM_OBJECT_STRUCT_SIZE
+current_room__player_bullets_sentinel: ds virtual 1
 current_room__tile_objects: ds virtual MAX_ROOM_TILE_OBJECTS * ROOM_TILE_OBJECT_STRUCT_SIZE
 current_room__tile_objects_sentinel: ds virtual 1
 
@@ -392,6 +394,7 @@ RAM_to_zero_on_game_start:
 draw_room_row_offset: ds virtual 2
 sprite_attribute_table: ds virtual MAX_SPRITES * 4  ; first 2 sprites are the player sprites, 3rd is player weapon
 n_displayed_object_sprites: ds virtual 1
+n_displayed_object_sprites_without_player_bullets: ds virtual 1
 n_displayed_object_sprites_last_frame: ds virtual 1
 
 room_desired_scroll_x: ds virtual 1

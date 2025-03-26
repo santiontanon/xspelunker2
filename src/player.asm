@@ -1296,20 +1296,20 @@ player_update_state_directional_weapon_no_right:
 	bit 7, a
 	jr z, player_update_state_directional_weapon_diagonal_up
 	; pointing the weapon up:
-	ld a, (PLAYER_WEAPON_DIRECTIONAL_UP)
+	ld a, PLAYER_WEAPON_DIRECTIONAL_UP
 	ld (player_weapon_swing_type), a
 	ld a, 29
 	ld (player_requested_frame), a
 	jp player_update_update_sprite_position
 player_update_state_directional_weapon_diagonal_up:
 	; pointing the weapon diagonal-up:
-	ld a, (PLAYER_WEAPON_DIRECTIONAL_FW_UP)
+	ld a, PLAYER_WEAPON_DIRECTIONAL_FW_UP
 	ld (player_weapon_swing_type), a
 	ld a, 28
 	ld (player_requested_frame), a
 	jp player_update_update_sprite_position
 player_update_state_directional_weapon_no_up:
-	ld a, (PLAYER_WEAPON_DIRECTIONAL_FW)
+	ld a, PLAYER_WEAPON_DIRECTIONAL_FW
 	ld (player_weapon_swing_type), a
 	ld a, 27
 	ld (player_requested_frame), a
@@ -1320,13 +1320,13 @@ player_update_state_directional_weapon_shield:
 	bit 5, a
 	jr nz, player_update_state_directional_weapon_shield_no_up
 	; pointing the shield up:
-	ld a, (PLAYER_WEAPON_SHIELD_UP)
+	ld a, PLAYER_WEAPON_SHIELD_UP
 	ld (player_weapon_swing_type), a
 	ld a, 22
 	ld (player_requested_frame), a
 	jp player_update_update_sprite_position
 player_update_state_directional_weapon_shield_no_up:
-	ld a, (PLAYER_WEAPON_SHIELD_FORWARD)
+	ld a, PLAYER_WEAPON_SHIELD_FORWARD
 	ld (player_weapon_swing_type), a
 	ld a, 21
 	ld (player_requested_frame), a
@@ -1417,19 +1417,19 @@ player_update_state_directional_weapon_jumping_loop_done:
 	bit 7, a
 	jr z, player_update_state_directional_weapon_jumping_diagonal_up
 	; pointing the weapon up:
-	ld a, (PLAYER_WEAPON_DIRECTIONAL_UP)
+	ld a, PLAYER_WEAPON_DIRECTIONAL_UP
 	ld (player_weapon_swing_type), a
 	ld a, 29
 	ld (player_requested_frame), a
 	jp player_update_update_sprite_position
 player_update_state_directional_weapon_jumping_diagonal_up:
-	ld a, (PLAYER_WEAPON_DIRECTIONAL_FW_UP)
+	ld a, PLAYER_WEAPON_DIRECTIONAL_FW_UP
 	ld (player_weapon_swing_type), a
 	ld a, 28
 	ld (player_requested_frame), a
 	jp player_update_update_sprite_position
 player_update_state_directional_weapon_jumping_no_up:
-	ld a, (PLAYER_WEAPON_DIRECTIONAL_FW)
+	ld a, PLAYER_WEAPON_DIRECTIONAL_FW
 	ld (player_weapon_swing_type), a
 	ld a, 27
 	ld (player_requested_frame), a
@@ -1440,13 +1440,13 @@ player_update_state_directional_weapon_jumping_shield:
 	bit 5, a
 	jr nz, player_update_state_directional_weapon_jumping_shield_no_up
 	; pointing the shield up:
-	ld a, (PLAYER_WEAPON_SHIELD_UP)
+	ld a, PLAYER_WEAPON_SHIELD_UP
 	ld (player_weapon_swing_type), a
 	ld a, 24
 	ld (player_requested_frame), a
 	jp player_update_update_sprite_position
 player_update_state_directional_weapon_jumping_shield_no_up:
-	ld a, (PLAYER_WEAPON_SHIELD_FORWARD)
+	ld a, PLAYER_WEAPON_SHIELD_FORWARD
 	ld (player_weapon_swing_type), a
 	ld a, 23
 	ld (player_requested_frame), a
@@ -1550,19 +1550,19 @@ player_update_state_directional_weapon_falling_speed_loop_done:
 	bit 7, a
 	jr z, player_update_state_directional_weapon_falling_diagonal_up
 	; pointing the weapon up:
-	ld a, (PLAYER_WEAPON_DIRECTIONAL_UP)
+	ld a, PLAYER_WEAPON_DIRECTIONAL_UP
 	ld (player_weapon_swing_type), a
 	ld a, 29
 	ld (player_requested_frame), a
 	jp player_update_update_sprite_position
 player_update_state_directional_weapon_falling_diagonal_up:
-	ld a, (PLAYER_WEAPON_DIRECTIONAL_FW_UP)
+	ld a, PLAYER_WEAPON_DIRECTIONAL_FW_UP
 	ld (player_weapon_swing_type), a
 	ld a, 28
 	ld (player_requested_frame), a
 	jp player_update_update_sprite_position
 player_update_state_directional_weapon_falling_no_up:
-	ld a, (PLAYER_WEAPON_DIRECTIONAL_FW)
+	ld a, PLAYER_WEAPON_DIRECTIONAL_FW
 	ld (player_weapon_swing_type), a
 	ld a, 27
 	ld (player_requested_frame), a
@@ -1573,13 +1573,13 @@ player_update_state_directional_weapon_falling_shield:
 	bit 5, a
 	jr nz, player_update_state_directional_weapon_falling_shield_no_up	
 	; pointing the shield up:
-	ld a, (PLAYER_WEAPON_SHIELD_UP)
+	ld a, PLAYER_WEAPON_SHIELD_UP
 	ld (player_weapon_swing_type), a
 	ld a, 24
 	ld (player_requested_frame), a
 	jp player_update_update_sprite_position
 player_update_state_directional_weapon_falling_shield_no_up:
-	ld a, (PLAYER_WEAPON_SHIELD_FORWARD)
+	ld a, PLAYER_WEAPON_SHIELD_FORWARD
 	ld (player_weapon_swing_type), a
 	ld a, 23
 	ld (player_requested_frame), a
@@ -1657,19 +1657,19 @@ player_update_state_directional_weapon_crouching_still_crouching:
 ; 	bit 7, a
 ; 	jr z, player_update_state_directional_weapon_crouching_diagonal_up
 ; 	; pointing the weapon up:
-; 	ld a, (PLAYER_WEAPON_DIRECTIONAL_UP)
+; 	ld a, PLAYER_WEAPON_DIRECTIONAL_UP
 ; 	ld (player_weapon_swing_type), a
 ; 	ld a, 29
 ; 	ld (player_requested_frame), a
 ; 	jp player_update_update_sprite_position
 ; player_update_state_directional_weapon_crouching_diagonal_up:
-	ld a, (PLAYER_WEAPON_DIRECTIONAL_FW_UP)
+	ld a, PLAYER_WEAPON_DIRECTIONAL_FW_UP
 	ld (player_weapon_swing_type), a
 	ld a, 31
 	ld (player_requested_frame), a
 	jp player_update_update_sprite_position
 player_update_state_directional_weapon_crouching_no_up:
-	ld a, (PLAYER_WEAPON_DIRECTIONAL_FW)
+	ld a, PLAYER_WEAPON_DIRECTIONAL_FW
 	ld (player_weapon_swing_type), a
 	ld a, 30
 	ld (player_requested_frame), a
@@ -1695,11 +1695,176 @@ player_update_fire_directional_bullet:
 	cp 3  ; shield
 	ret z
 
-	; ...
+	; check if we have enough bullets:
+	sub 4
+	ld hl, player_inventory_weapon_ammo
+	ADD_HL_A
+	ld a, (hl)  ; a = number of bullets left
+	or a
+	jp z, player_update_fire_directional_bullet_no_bullets
+	dec (hl)
+
+	call ptr_to_new_sprite_object_player_bullet
+	ret nz
+	push hl
+	pop ix  ; transfer the pointer to ix for later
+	ld a, (player_current_weapon)
+	sub 4
+	push hl
+		ld hl, player_weapon_duration_table
+		ADD_HL_A
+		ld a, (hl)
+	pop hl
+	push af
+		ld a, (player_current_weapon)
+		add a, SPRITE_OBJECT_TYPE_PLAYER_BULLET_STONE - 4  ; 4 is the first weapon that fires bullets
+		ld (hl), a
+		inc hl
+		ld de, player_x
+		ex de, hl
+		ldi  ; pixel x
+		ldi  ; tile x
+		ldi  ; pixel y
+		ldi  ; tile y
+		ex de, hl	
+	pop af
+	ld (hl), a  ; state (frames left)
+	inc hl
+	; is player looking left or right?
+	ld a, (player_state)
+	and #01
+	add a, a
+	dec a
+	neg
+	ld c, a  ; c = -1 if looking left, 1 is looking right
+
+	ld a, (player_current_weapon)
+	cp 4  ; sling
+	jr z, player_update_fire_directional_bullet_parabollic
+	cp 6  ; atlatl
+	jr z, player_update_fire_directional_bullet_parabollic
+player_update_fire_directional_bullet_straight:
+	ld a, (player_weapon_swing_type)
+	cp PLAYER_WEAPON_DIRECTIONAL_FW
+	jr z, player_update_fire_directional_bullet_fw_straight
+	cp PLAYER_WEAPON_DIRECTIONAL_FW_UP
+	jr z, player_update_fire_directional_bullet_fw_up_straight
+player_update_fire_directional_bullet_up_straight:
+	ld (hl), 0  ; speed x
+	inc hl
+	ld (hl), -4  ; speed y
+	ld bc, #0000  ; start offset: 0, 0
+	jp player_update_fire_directional_bullet_speed_set
+player_update_fire_directional_bullet_fw_straight:
+	ld a, c
+	add a, a
+	add a, a
+	ld (hl), a  ; speed x
+	inc hl
+	ld (hl), 0  ; speed y
+	ld b, 0
+	ld c, a  ; start offset: 4, 6  or -4, 6 (depending on player facing)
+	ld a, (player_state)
+	and #fe
+	cp PLAYER_STATE_DIRECTIONAL_WEAPON_CROUCHING
+	jr nz, player_update_fire_directional_bullet_speed_set
+	inc (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+; 	ld b, 8
+	jr player_update_fire_directional_bullet_speed_set
+player_update_fire_directional_bullet_fw_up_straight:
+	ld a, c
+	add a, a
+	add a, c
+	ld (hl), a  ; speed x (3 or -3)
+	inc hl
+	ld (hl), -3  ; speed y
+	ld b, 4
+	add a, c
+	ld c, a  ; start offset: 4, 4  or -4, 4 (depending on player facing)
+	ld a, (player_state)
+	and #fe
+	cp PLAYER_STATE_DIRECTIONAL_WEAPON_CROUCHING
+	jr nz, player_update_fire_directional_bullet_speed_set
+	inc (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	ld b, 4
+	jp player_update_fire_directional_bullet_speed_set
+
+player_update_fire_directional_bullet_parabollic:
+	ld a, (player_weapon_swing_type)
+	cp PLAYER_WEAPON_DIRECTIONAL_FW
+	jr z, player_update_fire_directional_bullet_fw
+	cp PLAYER_WEAPON_DIRECTIONAL_FW_UP
+	jr z, player_update_fire_directional_bullet_fw_up
+player_update_fire_directional_bullet_up:
+	ld (hl), 0  ; speed x
+	inc hl
+	ld (hl), -6  ; speed y
+	ld bc, #0000  ; start offset: 0, 0
+	jr player_update_fire_directional_bullet_speed_set
+player_update_fire_directional_bullet_fw:
+	ld a, c
+	add a, a
+	add a, a
+	ld (hl), a  ; speed x
+	inc hl
+	ld (hl), -2  ; speed y
+	ld c, a	
+	ld b, 8  ; start offset: 4, 8  or -4, 8 (depending on player facing)
+	ld a, (player_state)
+	and #fe
+	cp PLAYER_STATE_DIRECTIONAL_WEAPON_CROUCHING
+	jr nz, player_update_fire_directional_bullet_speed_set
+	inc (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	ld b, 4
+	jr player_update_fire_directional_bullet_speed_set
+player_update_fire_directional_bullet_fw_up:
+	ld a, c
+	add a, a
+	add a, c
+	ld (hl), a  ; speed x (3 or -3)
+	inc hl
+	ld (hl), -4  ; speed y
+	add a, c
+	ld c, a  ; start offset: 4, 4  or -4, 4 (depending on player facing)
+	ld b, 4
+	ld a, (player_current_weapon)
+	cp 4  ; sling
+	jr z, player_update_fire_directional_bullet_fw_up_continue
+	ld a, c
+	add a, a
+	sub 8
+	ld c, a
+	jr player_update_fire_directional_bullet_speed_set
+player_update_fire_directional_bullet_fw_up_continue:
+	ld a, (player_state)
+	and #fe
+	cp PLAYER_STATE_DIRECTIONAL_WEAPON_CROUCHING
+	jr nz, player_update_fire_directional_bullet_speed_set
+	inc (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	ld b, 8
+player_update_fire_directional_bullet_speed_set:
+	call update_sprite_objects_move_object
+	; move it one more time, so that the bullet starts a bit separated from the player:
+	ld c, (ix + ROOM_OBJECT_STRUCT_SPEED_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_SPEED_Y)
+	call update_sprite_objects_move_object	
+
+	ld a, (player_current_weapon)
+	cp 7
+	jr z, player_update_fire_directional_bullet_sfx_raygun
+	ld hl, SFX_weapon_swing
+	jp play_SFX_with_high_priority
+player_update_fire_directional_bullet_sfx_raygun:
+	ld hl, SFX_raygun
+	jp play_SFX_with_high_priority
+
+player_update_fire_directional_bullet_no_bullets:
 	ld hl, SFX_ui_wrong
-	call play_SFX_with_high_priority
-	; ...
-	ret
+	jp play_SFX_with_high_priority
+
+;-----------------------------------------------
+player_weapon_duration_table:
+	db 64, 24, 64, 64
 
 
 ;-----------------------------------------------

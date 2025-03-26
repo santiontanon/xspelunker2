@@ -640,6 +640,28 @@ SFX_explosion:
 ;   db 10,#00  ; silence
 ;   db SFX_CMD_END
 
+SFX_raygun:
+  db 7,#b8    ;; SFX all channels to tone
+  db 4,#40,5,#00    ;; frequency
+  db 10,#10          ;; volume
+  db 11,#00,12,#10  ;; envelope frequency
+  db 13,#09         ;; shape of the envelope
+  db MUSIC_CMD_SKIP,MUSIC_CMD_SKIP
+  db 4,#60,5,#00    ;; frequency
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db 4,#80,5,#00    ;; frequency
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db 4,#a0,5,#00    ;; frequency
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db 4,#c0,5,#00    ;; frequency
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db 4,#e0,5,#00    ;; frequency
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db 4,#00,5,#01    ;; frequency
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db 10,#00          ;; silence
+  db SFX_CMD_END  
+
 
 ;-----------------------------------------------
 ; Sound effects used for the percussion in the songs

@@ -59,7 +59,7 @@ upload_sprites_to_vdp_no_weapon:
 ; to clear the extra sprites in the previous frame.
 upload_displayed_object_sprites_to_vdp:
 	ld a, (interrupt_cycle)
-	or #01
+	and #01
 	jr nz, upload_displayed_object_sprites_to_vdp_flip
 	ld a, (n_displayed_object_sprites)
 	ld iyl, a

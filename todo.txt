@@ -1,23 +1,13 @@
 to do:
 
-***- directional weapons:
-  ***- fire directional sling (idle/walking/crouching/falling/jumping)
-    ***- draw bullet sprites (for sling/blowgun/atlatl/ray gun)
-    ***- fire stones with the sling (small parabola)
-    ***- decrease the number of bullets
-    ***- if no bullets, nothing happens when releasing space (maybe "wrong" SFX)
-  ***- fire directional blowgun (short range straight line)
-  ***- fire directional atlatl (long parabola)
-  ***- fire directional ray gun (long range straight line)
-
-- Damage:
-  - hitpoints (design hud: HP, oxygen in water, current item, bullets left if applicable)
-  - get hurt by spikes
-  - game over screen when you run out of health
-  - get hurt by running out of oxygen in water (swimming animation goes faster when out of oxygen, and maybe player changes color to purple/blue?)
-  - decide whether you get hurt by falling from a height
-  - if a boulder falls on top of you, take damage (and where are you spawned? on top of the boulder?)
-  - now I can implement the "quit" button in the inventory screen (have a "are you sure? y/n" small dialog)
+***- Damage:
+  ***- hitpoints (design hud: HP, oxygen in water, current item, bullets left if applicable)
+  ***- get hurt by spikes
+  ***- game over screen when you run out of health
+  ***- get hurt by running out of oxygen in water (swimming animation goes faster when out of oxygen, and maybe player changes color to purple/blue?)
+  ***- decide whether you get hurt by falling from a height
+  ***- if a boulder falls on top of you, take damage (and where are you spawned? on top of the boulder?)
+  ***- now I can implement the "quit" button in the inventory screen (have a "are you sure? y/n" small dialog)
 
 - breakable walls:
   - instantiate them at room creation
@@ -94,6 +84,7 @@ to do:
   - brain games screen
   - title screen
   - options menu (redefine keys/controls): add this to title screen, as well as in-game
+    - allow configuring inventory shortcut (down+jump), interaction key (down? up? or special key?)
   - game start screen where you choose game name, difficulty, seed, etc.
       - procedural generation depending on a name. By default, you play in "xspelunker2" level, with difficulty "x".
       - the first letter determines the difficulty level. So, one would choose "a walk in the park" for easy games, or "zebras all the way" for the heardest)

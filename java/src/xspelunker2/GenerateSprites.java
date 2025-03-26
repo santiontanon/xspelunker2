@@ -112,9 +112,23 @@ public class GenerateSprites {
         BufferedImage sourceImage = ImageIO.read(new File("data/objects.png"));
         List<Integer> data = new ArrayList<>();
         
+        // common sprites to all areas:
         data.addAll(extractSprite(sourceImage, 0, 136, 15));  // water splash
         data.addAll(extractSprite(sourceImage, 16, 136, 15));  // dust left
         data.addAll(extractSprite(sourceImage, 32, 136, 15));  // dust right
+        data.addAll(extractSprite(sourceImage, 0, 152, 14));  // stone
+        data.addAll(extractSprite(sourceImage, 0, 168, 10));  // dart
+        data.addAll(extractSprite(sourceImage, 16, 168, 10));
+        data.addAll(extractSprite(sourceImage, 32, 168, 10));
+        data.addAll(extractSprite(sourceImage, 48, 168, 10));
+        data.addAll(extractSprite(sourceImage, 0, 184, 9));  // spear
+        data.addAll(extractSprite(sourceImage, 16, 184, 9));
+        data.addAll(extractSprite(sourceImage, 32, 184, 9));
+        data.addAll(extractSprite(sourceImage, 48, 184, 9));
+        data.addAll(extractSprite(sourceImage, 0, 200, 2));  // raygun
+        data.addAll(extractSprite(sourceImage, 16, 200, 2));
+        data.addAll(extractSprite(sourceImage, 32, 200, 2));
+        data.addAll(extractSprite(sourceImage, 48, 200, 2));
         
         System.out.println("data: " + data.size());
         Z80Assembler.dataToBinary(data, outputPath + ".bin");        
