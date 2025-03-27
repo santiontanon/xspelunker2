@@ -1,14 +1,20 @@
 to do:
 
 ***- Damage:
-  ***- hitpoints (design hud: HP, oxygen in water, current item, bullets left if applicable):
-    ***- method that overlays HUD on the room (just draw depending on the scroll position), saving what was there before, and then restores it
-    ***- have a timer and when timer reaches 0, hud disappears (need to redraw room on that frame)
-    ***- each time something changes (HP, oxygen, coming out of inventory, ammo), reset the timer
-    ***- config option that will let you keep it "always" or "only when something changes"
-  ***- get hurt by spikes (reset timer when getting hurt)
+  ***- get hurt by spikes (make sure hud gets redraw when getting hurt)
   ***- game over screen when you run out of health
-  ***- get hurt by running out of oxygen in water (swimming animation goes faster when out of oxygen, and maybe player changes color to purple/blue?)
+  ***- when you get hurt, get some immunity time (player flashing)
+  ***- hurt animation (fall backwards)
+  ***- get hurt by running out of oxygen in water
+    ***- have an oxygen variable
+    ***- when switching to swimming, set the oxygen value to some max value (e.g. 64)
+    ***- while in the water, this value decreases (until reaching 0)
+    ***- when reaching zero, your health starts decreasing
+    ***- draw oxygen in the hud while in water
+    ***- when zero:
+      ***- flash from blue to red in hud
+      ***- swimming animation goes faster
+      ***- SFX
   ***- decide whether you get hurt by falling from a height
   ***- if a boulder falls on top of you, take damage (and where are you spawned? on top of the boulder?)
   ***- now I can implement the "quit" button in the inventory screen (have a "are you sure? y/n" small dialog)
@@ -89,7 +95,7 @@ to do:
   - title screen
   - options menu (redefine keys/controls): add this to title screen, as well as in-game
     - allow configuring inventory shortcut (down+jump), interaction key (down? up? or special key?)
-    - allow configuring if hud is always there or not
+    - allow configuring if hud is always there or not (config_hud_always_visible)
   - game start screen where you choose game name, difficulty, seed, etc.
       - procedural generation depending on a name. By default, you play in "xspelunker2" level, with difficulty "x".
       - the first letter determines the difficulty level. So, one would choose "a walk in the park" for easy games, or "zebras all the way" for the heardest)

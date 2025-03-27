@@ -7,24 +7,33 @@ draw_hud_player_health:
 	rrca
 	and #3f
 	ld b, a  ; number of hearts to display
-	ld a, (player_health)
-	ld c, a  ; remaining health to display
+	push af
+		ld a, (player_health)
+		ld c, a  ; remaining health to display
 draw_hud_player_health_loop:
-	ld e, 4
-	ld a, c
-	cp 4
-	jr nc, draw_hud_player_health_loop_continue
-	ld e, a
+		ld e, 4
+		ld a, c
+		cp 4
+		jr nc, draw_hud_player_health_loop_continue
+		ld e, a
 draw_hud_player_health_loop_continue:
-	ld a, c
-	sub e
-	ld c, a
-	ld a, e
-	inc a  ; first heart tile is tile 1
-	ld (hl), a
+		ld a, c
+		sub e
+		ld c, a
+		ld a, e
+		inc a  ; first heart tile is tile 1
+		ld (hl), a
+		inc hl
+		djnz draw_hud_player_health_loop
+	pop af
+	; make sure we use at least 5 positions (otherwise, coins look weird):
+draw_hud_player_health_loop2:
+	cp 5
+	ret nc
+	ld (hl), 0
 	inc hl
-	djnz draw_hud_player_health_loop
-	ret
+	inc a
+	jr draw_hud_player_health_loop2
 
 
 ;-----------------------------------------------
@@ -68,9 +77,28 @@ draw_hud_current_weapon:
 		or a
 		jr z, draw_hud_current_weapon_no_rerender
 
-		; update the weapon tiles in the hud:
-		; ...
+		SETMEGAROMPAGE_8000 TILES_PAGE
 
+		; update the weapon tiles in the hud:
+		; from: hud_weapon_tiles_bin + a*64
+		; to: CHRTBL2 + 15*8  /  CLRTBL2 + 15*8
+		ld a, (player_current_weapon)
+		add a, a  ; * 2
+		add a, a  ; * 4
+		add a, a  ; * 8
+		add a, a  ; * 16
+		ld l, a
+		ld h, 0
+		add hl, hl  ; * 32
+		add hl, hl  ; * 64
+		ld bc, hud_weapon_tiles_bin
+		add hl, bc
+		ld de, CHRTBL2 + 15*8
+		ld b, 32
+		call fast_small_LDIRVM
+		ld de, CLRTBL2 + 15*8
+		ld b, 32
+		call fast_small_LDIRVM
 draw_hud_current_weapon_no_rerender:
 	pop de
 	pop hl

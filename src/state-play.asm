@@ -2,7 +2,7 @@
 state_play:
 	call disable_VDP_output
 		ld hl, RAM_to_zero_on_game_start
-		ld bc, RAM_to_zero_on_game_start_end - RAM_to_zero_on_game_start
+		ld bc, (RAM_to_zero_on_game_start_end - RAM_to_zero_on_game_start) - 1
 		call clear_memory
 
 		; initial player position:
@@ -175,6 +175,9 @@ state_play_loop_continue:
 	ld c, SPRITES_PAGE
 	call call_hl_in_page_c_8000
 
+	ld a, (config_hud_always_visible)
+	or a
+	jr nz, state_play_loop_continue_hud_always_visible
 	ld hl, hud_redraw_timer
 	ld a, (hl)
 	or a
@@ -182,6 +185,7 @@ state_play_loop_continue:
 	dec (hl)
 	dec a
 	jr z, state_play_loop_room_redraw  ; we need to redraw for sure
+state_play_loop_continue_hud_always_visible:
 state_play_loop_continue_no_hud:
 	ld a, (redraw_whole_room_flag)
 	or a
