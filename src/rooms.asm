@@ -1,14 +1,115 @@
 ;-----------------------------------------------
-draw_room:
-	xor a
-	ld (redraw_whole_room_flag), a
-	ld bc, (room_scroll_x)  ; c = x offset, b = y offset
+draw_room_with_hud:
 
+	call draw_room_compute_ptrs
+
+	; hl = ptr from where to draw
+	; de = room width - 32
+	; copy the room content underneath the hud:
+	push hl
+	push de
+		ld b, d
+		ld c, e
+		ld de, hud_draw_buffer
+		push bc
+			ld bc, 32
+			ldir
+		pop bc
+		add hl, bc
+		ld bc, 32
+		ldir
+	pop de
+	pop hl
+
+	; Draw the hud:
+	push hl
+	push de
+		call draw_hud_player_health
+	pop de
+	pop hl
+	push hl
+	push de
+		call draw_hud_coins
+	pop de
+	pop hl
+	push hl
+	push de
+		call draw_hud_current_weapon
+	pop de
+	pop hl
+	push hl
+	push de
+		call draw_hud_current_weapon_ammo
+		ld hl, NAMTBL2
+		call SETWRT
+	pop de
+	pop hl
+	push hl
+	push de
+		; Draw the room:
+	    ld a, (VDP.DW)
+	    ld c, a
+	    ld b, 24
+draw_room_with_hud_row_loop:
+		push bc
+			ld b, 32
+draw_room_with_hud_column_loop:
+			outi
+			jp nz, draw_room_with_hud_column_loop
+			add hl, de
+		pop bc
+		djnz draw_room_with_hud_row_loop
+	pop hl
+	pop de
+
+	; Restore the content below the hud:
+	ld b, h
+	ld c, l
+	ld hl, hud_draw_buffer
+	push bc
+		ld bc, 32
+		ldir
+	pop bc
+	ex de, hl
+		add hl, bc
+	ex de, hl
+	ld bc, 32
+	ldir
+	ret
+
+
+;-----------------------------------------------
+draw_room:
 	ld hl, NAMTBL2
 	call SETWRT
 
+	call draw_room_compute_ptrs
+
+	; hl = ptr from where to draw
+	; de = room width - 32
+    ld a, (VDP.DW)
+    ld c, a
+    ld b, 24
+draw_room_row_loop:
+	push bc
+		ld b, 32
+draw_room_column_loop:
+		outi
+		jp nz, draw_room_column_loop
+		add hl, de
+	pop bc
+	djnz draw_room_row_loop
+	ret
+
+
+;-----------------------------------------------
+; output:
+; - hl = ptr from where to draw
+; - de = room width - 32
+draw_room_compute_ptrs:
 	; start drawing from: current_room__tile_map + (room_scroll_x) + (room_scroll_y) * width
 	; if the width is not 32 or 64, we know that room_scroll_y == 0 anyway
+	ld bc, (room_scroll_x)  ; c = x offset, b = y offset
 	ld a, (current_room__width)
 	ld h, 0
 	ld l, a
@@ -73,21 +174,6 @@ draw_room_width32_entrypoint:
 draw_room_continue:
 	ld bc, current_room__tile_map
 	add hl, bc
-
-	; hl = ptr from where to draw
-	; de = room width
-    ld a, (VDP.DW)
-    ld c, a
-    ld b, 24
-draw_room_row_loop:
-	push bc
-		ld b, 32
-draw_room_column_loop:
-		outi
-		jp nz, draw_room_column_loop
-		add hl, de
-	pop bc
-	djnz draw_room_row_loop
 	ret
 
 

@@ -164,6 +164,7 @@ call_hl_in_page_c_8000_return:
     include "player.asm"
     include "sprite-objects.asm"
     include "tile-objects.asm"
+    include "hud.asm"
 
 ;     include "state-braingames.asm"
 ;     include "state-gamestart.asm"
@@ -402,10 +403,6 @@ room_desired_scroll_y: ds virtual 1
 room_scroll_x: ds virtual 1
 room_scroll_y: ds virtual 1
 
-keyboard_line_state:        ds virtual 1  ; interleaved bytes state/clicks
-keyboard_line_clicks:       ds virtual 3
-keyboard_line_state_prev:   ds virtual 2
-
 ; game state variables:
 player_x: ds virtual 2  ; 2nd byte is the tile coordinate, and 1st the pixel
 player_y: ds virtual 2  ; 2nd byte is the tile coordinate, and 1st the pixel
@@ -440,6 +437,15 @@ redraw_whole_room_flag: ds virtual 1
 ; inventory state variables:
 inventory_cursor_position_x: ds virtual 1
 inventory_cursor_position_y: ds virtual 1
+
+hud_redraw_timer: ds virtual 1  ; if this is 0, the hud is not drawn
+hud_rerender_coins: ds virtual 1  ; != 0 when the number of coins changes
+hud_rerender_weapon: ds virtual 1  ; != 0 when the ammo number changes
+hud_draw_buffer: ds virtual 64
+
+keyboard_line_state:        ds virtual 1  ; interleaved bytes state/clicks
+keyboard_line_clicks:       ds virtual 3
+keyboard_line_state_prev:   ds virtual 2
 
 RAM_to_zero_on_game_start_end:
 

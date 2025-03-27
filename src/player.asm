@@ -1704,6 +1704,11 @@ player_update_fire_directional_bullet:
 	jp z, player_update_fire_directional_bullet_no_bullets
 	dec (hl)
 
+	ld a, 100
+	ld (hud_rerender_weapon), a
+	ld (hud_redraw_timer), a
+	ld (redraw_whole_room_flag), a
+
 	call ptr_to_new_sprite_object_player_bullet
 	ret nz
 	push hl

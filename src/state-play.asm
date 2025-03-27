@@ -132,8 +132,13 @@ state_play_from_inventory:
 		ld hl, sprite_attribute_table + 2 + 8
 		ld (hl), 8
 
+		ld a, 100
+		ld (hud_redraw_timer), a
+		ld (hud_rerender_coins), a
+		ld (hud_rerender_weapon), a
+
 		call maybe_recenter_scroll_and_set_actual
-		call draw_room
+		call draw_room_with_hud
 		call player_update_update_sprite_position
 		xor a
 		ld (n_displayed_object_sprites), a
@@ -169,15 +174,35 @@ state_play_loop_continue:
 	ld hl, upload_sprites_to_vdp
 	ld c, SPRITES_PAGE
 	call call_hl_in_page_c_8000
+
+	ld hl, hud_redraw_timer
+	ld a, (hl)
+	or a
+	jr z, state_play_loop_continue_no_hud
+	dec (hl)
+	dec a
+	jr z, state_play_loop_room_redraw  ; we need to redraw for sure
+state_play_loop_continue_no_hud:
 	ld a, (redraw_whole_room_flag)
 	or a
 	jr nz, state_play_loop_room_redraw
 	call update_animations_in_vdp
 	jr state_play_loop
 state_play_loop_room_redraw:
-	call draw_room
+	call state_play_rerender_room
 	call update_animations_in_vdp
 	jr state_play_loop
+
+
+;-----------------------------------------------
+state_play_rerender_room:
+	xor a
+	ld (redraw_whole_room_flag), a
+
+	ld a, (hud_redraw_timer)
+	or a
+	jp z, draw_room  ; no hud
+	jp draw_room_with_hud
 
 
 ;-----------------------------------------------
