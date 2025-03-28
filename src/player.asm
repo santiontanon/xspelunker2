@@ -14,9 +14,28 @@ player_jump_speed_table:
 	db 6, 6, 6, 4, 4, 3, 3, 2
 	db 2, 1, 2, 1, 1, 0, 1, 0, 0, 0, #ff  ; 1 / 3  ; 42 total jump height in 18 frames / good for 50Hz
 
+player_hurt_speed_table:
+	db 2, 2, 1, 1, 1, 0, 1, 0
+	db 0, 0, 0, 0, 0, 0, 0, 0, #ff
+
 
 ;-----------------------------------------------
 player_update:
+	; first thing is to check for collision with hazards (e.g. spikes):
+	ld hl, player_immunity_timer
+	ld a, (hl)
+	or a
+	jr nz, player_update_immune
+	ld a, (player_health)
+	or a
+	jr z, player_update_continue
+	ld e, 3  ; hazard
+	call player_check_collision_idle_with_e
+	call z, player_hit_hazard
+	jr player_update_continue
+player_update_immune:
+	dec (hl)
+player_update_continue:
 	xor a
 	ld (player_no_rope_or_ladder_this_frame), a
 player_update_from_ladder_fail:
@@ -29,6 +48,37 @@ player_update_from_ladder_fail:
 	ld d, (hl)
 	ex hl, de
 	jp hl
+
+
+;-----------------------------------------------
+player_hit_hazard:
+	ld a, PLAYER_IMMUNITY_TIME
+	ld (player_immunity_timer), a
+
+	ld a, HUD_MAX_TIME
+	ld (hud_redraw_timer), a
+	ld (redraw_whole_room_flag), a
+
+	ld a, (player_state)
+	and #01
+	add a, PLAYER_STATE_HURT
+	ld (player_state), a
+	xor a
+	ld (player_state_timer), a	
+
+	ld hl, player_health
+	dec (hl)
+	ld a, (hl)
+	or a
+	jr nz, player_hit_hazard_continue
+	; player is dead:
+	ld a, (player_state)
+	and #01
+	add a, PLAYER_STATE_DEAD
+	ld (player_state), a
+player_hit_hazard_continue:
+	ld hl, SFX_playerhit
+	jp play_SFX_with_high_priority
 
 
 ;-----------------------------------------------
@@ -83,7 +133,7 @@ player_update_update_sprite_position_early_clock_bit:
 	ld a, COLOR_DARK_RED | #80
 	ld (bc), a
 	ld iyl, #80
-	jr player_update_update_sprite_weapon
+	jr player_update_update_sprite_check_flashing
 
 player_update_update_sprite_position_no_early_clock_bit:
 	ld (de), a
@@ -101,6 +151,18 @@ player_update_update_sprite_position_no_early_clock_bit:
 	ld (bc), a
 	ld iyl, 0
 
+player_update_update_sprite_check_flashing:
+	ld a, (player_immunity_timer)
+	or a
+	jr z, player_update_update_sprite_weapon
+	; flashing:
+	ld a, (interrupt_cycle)
+	bit 2, a
+	jr z, player_update_update_sprite_weapon
+	; erase the player sprite:
+	xor a
+	ld (de), a
+	ld (bc), a
 player_update_update_sprite_weapon:
 	inc bc  ; bc now points to the weapon sprite attributes
 	ld a, (player_requested_weapon_sprite)
@@ -163,6 +225,8 @@ player_update_state_fn_table:
 	dw player_update_state_directional_weapon_jumping
 	dw player_update_state_directional_weapon_falling
 	dw player_update_state_directional_weapon_crouching
+	dw player_update_state_hurt
+	dw player_update_state_dead
 
 
 ;-----------------------------------------------
@@ -1690,6 +1754,55 @@ player_update_state_directional_weapon_crouching_shield_no_up:
 
 
 ;-----------------------------------------------
+player_update_state_hurt:
+	ld a, PLAYER_IMMUNITY_TIME
+	ld (player_immunity_timer), a  ; keep renewing this timer, until player recovers
+
+	ld a, (player_state)
+	and #01
+	jr nz, player_update_state_hurt_left
+	call player_update_move_one_pixel_left_considering_collisions_no_direction_change
+	jr player_update_state_hurt_continue
+player_update_state_hurt_left:
+	call player_update_move_one_pixel_right_considering_collisions_no_direction_change
+player_update_state_hurt_continue:
+
+	; move up:
+	ld a, (player_state_timer)
+	inc a
+	ld (player_state_timer), a
+	ld hl, player_hurt_speed_table - 1
+	ADD_HL_A
+	ld a, (hl)
+	cp #ff
+	jp z, player_update_switch_to_falling
+	ld b, a
+	or a
+	jr z, player_update_state_hurt_speed_loop_done
+player_update_state_hurt_speed_loop:
+	push bc
+		call player_update_move_one_pixel_up_considering_collisions
+	pop bc
+	djnz player_update_state_hurt_speed_loop
+player_update_state_hurt_speed_loop_done:
+	ld a, 32
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+
+
+;-----------------------------------------------
+player_update_state_dead:
+	ld hl, player_state_timer
+	inc (hl)
+	ld a, (hl)
+	cp 100
+	jp z, state_game_over
+	ld a, 33
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+
+
+;-----------------------------------------------
 player_update_fire_directional_bullet:
 	ld a, (player_current_weapon)
 	cp 3  ; shield
@@ -1704,7 +1817,7 @@ player_update_fire_directional_bullet:
 	jp z, player_update_fire_directional_bullet_no_bullets
 	dec (hl)
 
-	ld a, 100
+	ld a, HUD_MAX_TIME
 	ld (hud_rerender_weapon), a
 	ld (hud_redraw_timer), a
 	ld (redraw_whole_room_flag), a
@@ -2304,6 +2417,7 @@ player_update_move_one_pixel_right_considering_collisions:
 	ld a, (player_state)
 	and #fe
 	ld (player_state), a
+player_update_move_one_pixel_right_considering_collisions_no_direction_change:
 	ld hl, player_x
 	ld a, (hl)
 	inc a
@@ -2333,6 +2447,7 @@ player_update_move_one_pixel_left_considering_collisions:
 	ld a, (player_state)
 	or #01
 	ld (player_state), a
+player_update_move_one_pixel_left_considering_collisions_no_direction_change:
 	ld hl, player_x
 	ld a, (hl)
 	dec a

@@ -132,7 +132,7 @@ state_play_from_inventory:
 		ld hl, sprite_attribute_table + 2 + 8
 		ld (hl), 8
 
-		ld a, 100
+		ld a, HUD_MAX_TIME
 		ld (hud_redraw_timer), a
 		ld (hud_rerender_coins), a
 		ld (hud_rerender_weapon), a

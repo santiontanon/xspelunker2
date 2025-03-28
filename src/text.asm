@@ -37,6 +37,7 @@ text_concatenate_strings:
 
 
 ; ------------------------------------------------
+; Always uses tiles 12, 13, ..., 31
 ; input:
 ; - ix: sentence to draw (first byte is the length)
 ; - de: target NAMTBL2 address

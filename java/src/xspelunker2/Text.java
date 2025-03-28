@@ -50,6 +50,8 @@ public class Text {
         addLineSafe(lines_with_constant, "Brain Games (2025)", "CREDITS1", 16);
         addLineSafe(lines_with_constant, "Santiago Ontañón", "CREDITS2", 16);
 
+        addLineSafe(lines_with_constant, "Game Over", "GAME_OVER", 16);
+                
         addLineSafe(lines_with_constant, "Entering", "ENTERING", 16);
         addLineSafe(lines_with_constant, "Loading area...", "LOADING_AREA", 16);
         addLineSafe(lines_with_constant, "the jungle", "AREA0_NAME", 16);

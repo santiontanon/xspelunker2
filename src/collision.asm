@@ -3,6 +3,8 @@
 ; - z: collision
 ; - nz: no collision
 player_check_collision_idle:
+	ld e, 2  ; wall
+player_check_collision_idle_with_e:
 	ld a, (player_y + 1)
 	ld b, a
 	ld a, (player_x + 1)
@@ -20,9 +22,11 @@ IF COLLISION_UNIT_TESTING == 0
 	jp z, player_exit_room_left
 ENDIF
 	push bc
+	push de
 		call get_room_tile_type
+	pop de
 	pop bc
-	cp 2  ; wall
+	cp e
 	ret z
 	; collision with the head:
 	ld a, (player_y + 1)
@@ -32,8 +36,10 @@ ENDIF
 	jr c, player_check_collision_idle_continue2
 	inc b
 player_check_collision_idle_continue2:
-	call get_room_tile_type
-	cp 2
+	push de
+		call get_room_tile_type
+	pop de
+	cp e
 	ret
 player_check_collision_idle_no_collision:
 	or 1

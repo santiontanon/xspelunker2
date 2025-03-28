@@ -70,12 +70,16 @@ public class GenerateSprites {
         addPlayerFrame(sourceImage, 48, 96, data, dataLeft);
         addPlayerFrame(sourceImage, 0, 112, data, dataLeft);
         addPlayerFrame(sourceImage, 16, 112, data, dataLeft);
-        // directional: 27, ..., 32
+        // directional: 27, ..., 31
         addPlayerFrame(sourceImage, 0, 128, data, dataLeft);
         addPlayerFrame(sourceImage, 16, 128, data, dataLeft);
         addPlayerFrame(sourceImage, 32, 128, data, dataLeft);
         addPlayerFrame(sourceImage, 32, 112, data, dataLeft);
         addPlayerFrame(sourceImage, 48, 112, data, dataLeft);
+        // hurt: 32
+        addPlayerFrame(sourceImage, 48, 0, data, dataLeft);
+        // dead: 33
+        addPlayerFrame(sourceImage, 48, 16, data, dataLeft);
         
         System.out.println("player data: " + data.size());
         System.out.println("player dataLeft: " + dataLeft.size());

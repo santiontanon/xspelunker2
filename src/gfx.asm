@@ -60,6 +60,47 @@ clear_screen_left_to_right_loop2:
     djnz clear_screen_left_to_right_loop
     ret
 
+
+;-----------------------------------------------
+; sets the name table of the banks to: 0, 1, 2, 3, ..., 255
+; and clears all patterns and attributes to 0
+set_bitmap_mode:
+    xor a
+set_bitmap_mode_a_color:
+    ld bc, 8 * 256 * 3
+    push bc
+        ld hl, CLRTBL2
+        call fast_FILVRM
+        xor a
+    pop bc
+    ld hl, CHRTBL2
+    call fast_FILVRM
+    ; jp set_bitmap_name_table_all_banks
+
+
+;-----------------------------------------------
+; sets the name table of the banks to: 0, 1, 2, 3, ..., 255
+set_bitmap_name_table_all_banks:
+    ld hl, NAMTBL2
+    call set_bitmap_name_table
+    ld hl, NAMTBL2 + 256
+    call set_bitmap_name_table
+set_bitmap_name_table_bank3:
+    ld hl, NAMTBL2 + 512
+
+set_bitmap_name_table:
+    call SETWRT
+    ld a, (VDP.DW)
+    ld c, a
+    xor a
+    ld b, a
+set_bitmap_name_table_bank3_loop:
+    out (c), a
+    inc a
+    djnz set_bitmap_name_table_bank3_loop
+    ret
+
+
 ;-----------------------------------------------
 ; a: byte
 ; bc: amount to write

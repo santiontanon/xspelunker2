@@ -175,6 +175,7 @@ call_hl_in_page_c_8000_return:
     include "state-interarea.asm"
     include "state-play.asm"
     include "state-inventory.asm"
+    include "state-gameover.asm"
 
 end_of_code:
 
@@ -438,6 +439,7 @@ player_inventory_items: ds virtual N_INVENTORY_ITEM_TYPES
 player_inventory_coins: ds virtual 1
 player_inventory_map_pieces: ds virtual N_MAP_PIECES
 player_current_weapon: ds virtual 1
+player_immunity_timer: ds virtual 1  ; if != 0, nothing can hurt the player
 
 redraw_whole_room_flag: ds virtual 1
 

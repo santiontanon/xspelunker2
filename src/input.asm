@@ -88,13 +88,13 @@ read_joystick_noB:
 
 ;-----------------------------------------------
 ; Waits until the player presses space
-; wait_for_space:
-;     call update_keyboard_buffers
-;     ld a,(keyboard_line_clicks)
-;     bit 0,a
-;     ret nz
-;     halt
-;     jr wait_for_space
+wait_for_space:
+    call update_keyboard_buffers
+    ld a, (keyboard_line_clicks)
+    bit 0, a
+    ret nz
+    halt
+    jr wait_for_space
 
 
 ;-----------------------------------------------
