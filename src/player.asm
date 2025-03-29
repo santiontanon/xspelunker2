@@ -52,19 +52,20 @@ player_update_from_ladder_fail:
 
 ;-----------------------------------------------
 player_hit_hazard:
-	ld a, PLAYER_IMMUNITY_TIME
-	ld (player_immunity_timer), a
-
-	ld a, HUD_MAX_TIME
-	ld (hud_redraw_timer), a
-	ld (redraw_whole_room_flag), a
-
 	ld a, (player_state)
 	and #01
 	add a, PLAYER_STATE_HURT
 	ld (player_state), a
 	xor a
 	ld (player_state_timer), a	
+
+player_lose_health:
+	ld a, PLAYER_IMMUNITY_TIME
+	ld (player_immunity_timer), a
+
+	ld a, HUD_MAX_TIME
+	ld (hud_redraw_timer), a
+	ld (redraw_whole_room_flag), a
 
 	ld hl, player_health
 	dec (hl)
@@ -466,6 +467,10 @@ player_update_state_falling_speed_loop_done:
 
 ;-----------------------------------------------
 player_update_switch_to_jumping_from_swimming:
+	ld a, HUD_MAX_TIME
+	ld (hud_redraw_timer), a
+	ld (redraw_whole_room_flag), a
+
 	xor a
 	ld (player_jump_no_grab_timer), a
 	ld (player_jump_is_cancelable), a
@@ -918,7 +923,32 @@ player_update_switch_to_swimming_from_falling:
 	ld a, 1  ; max inertia down
 	ld (player_water_inertia_y), a
 
+	ld a, PLAYER_MAX_OXYGEN
+	ld (player_oxygen), a
+	ld a, HUD_MAX_TIME
+	ld (hud_redraw_timer), a
+	ld (redraw_whole_room_flag), a
+
 player_update_state_swimming:
+	ld a, (interrupt_cycle)
+	and #0f
+	jr nz, player_update_state_swimming_oxygen_done
+	ld a, (player_oxygen)
+	or a
+	jr z, player_update_state_swimming_oxygen_zero
+	dec a
+	ld (player_oxygen), a
+	jr player_update_state_swimming_oxygen_non_zero
+player_update_state_swimming_oxygen_zero:
+	ld a, (player_immunity_timer)
+	or a
+	call z, player_lose_health
+player_update_state_swimming_oxygen_non_zero:
+	ld a, HUD_MAX_TIME
+	ld (hud_redraw_timer), a
+	ld (redraw_whole_room_flag), a
+player_update_state_swimming_oxygen_done:
+
 	ld a, (interrupt_cycle)
 	and #01
 	jp z, player_update_state_swimming_no_player_control

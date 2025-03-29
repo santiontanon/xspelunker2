@@ -169,7 +169,7 @@ SFX_watersplash_soft:
 
 SFX_playerhit:
   db 7,#b8  ; SFX all channels to tone
-  db 10,#0f  ; volume
+  db 10,#0c  ; volume
   db 4,#00, 5,#08 ; frequency
   db MUSIC_CMD_SKIP
   db MUSIC_CMD_SKIP

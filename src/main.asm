@@ -433,6 +433,7 @@ player_no_rope_or_ladder_this_frame: ds virtual 1  ; to prevent infinite loops i
 
 player_health: ds virtual 1
 player_max_health: ds virtual 1
+player_oxygen: ds virtual 1
 player_inventory_weapons: ds virtual N_INVENTORY_WEAPON_TYPES
 player_inventory_weapon_ammo: ds virtual 4
 player_inventory_items: ds virtual N_INVENTORY_ITEM_TYPES
@@ -458,6 +459,9 @@ keyboard_line_state_prev:   ds virtual 2
 
 RAM_to_zero_on_game_start_end:
 
+; temporary variables:
+tmp_hud_drawing_hl: ds virtual 2
+tmp_hud_drawing_de: ds virtual 2
 
 config_hud_always_visible: ds virtual 1
 

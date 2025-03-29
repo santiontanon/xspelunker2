@@ -70,6 +70,51 @@ draw_hud_coins_no_rerender:
 
 
 ;-----------------------------------------------
+draw_hud_oxygen:
+	ld a, (player_state)
+	and #fe
+	cp PLAYER_STATE_SWIMMING
+	ret nz
+	ld a, (player_oxygen)
+	or a
+	jr z, draw_hud_oxygen_zero
+draw_hud_oxygen_continue:
+	ld de, 16 - (PLAYER_MAX_OXYGEN / 4)
+	add hl, de
+	ld b, PLAYER_MAX_OXYGEN / 2
+draw_hud_oxygen_loop:
+	or a
+	jr z, draw_hud_oxygen_loop_0
+	dec a
+	jr z, draw_hud_oxygen_loop_1
+	dec a
+	ld (hl), 7
+	jr draw_hud_oxygen_loop_continue
+draw_hud_oxygen_loop_0:
+	ld (hl), 0
+	jr draw_hud_oxygen_loop_continue
+draw_hud_oxygen_loop_1:
+	ld (hl), 8
+draw_hud_oxygen_loop_continue:
+	inc hl
+	djnz draw_hud_oxygen_loop
+	ret
+
+draw_hud_oxygen_zero:
+	ld a, (interrupt_cycle)
+	bit 4, a
+	ld a, (player_oxygen)
+	jr z, draw_hud_oxygen_continue
+	xor a
+	ld de, 16 - (PLAYER_MAX_OXYGEN / 4)
+	add hl, de
+	ld b, PLAYER_MAX_OXYGEN / 2 - 1
+	ld (hl), 9
+	inc hl
+	jr draw_hud_oxygen_loop
+
+
+;-----------------------------------------------
 draw_hud_current_weapon:
 	push hl
 	push de

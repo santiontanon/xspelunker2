@@ -6,65 +6,60 @@ draw_room_with_hud:
 	; hl = ptr from where to draw
 	; de = room width - 32
 	; copy the room content underneath the hud:
-	push hl
-	push de
-		ld b, d
-		ld c, e
-		ld de, hud_draw_buffer
-		push bc
-			ld bc, 32
-			ldir
-		pop bc
-		add hl, bc
+	ld (tmp_hud_drawing_hl), hl
+	ld (tmp_hud_drawing_de), de
+	ld b, d
+	ld c, e
+	ld de, hud_draw_buffer
+	push bc
 		ld bc, 32
 		ldir
-	pop de
-	pop hl
+	pop bc
+	add hl, bc
+	ld bc, 32
+	ldir
 
 	; Draw the hud:
-	push hl
-	push de
-		call draw_hud_player_health
-	pop de
-	pop hl
-	push hl
-	push de
-		call draw_hud_coins
-	pop de
-	pop hl
-	push hl
-	push de
-		call draw_hud_current_weapon
-	pop de
-	pop hl
-	push hl
-	push de
-		call draw_hud_current_weapon_ammo
-		ld hl, NAMTBL2
-		call SETWRT
-	pop de
-	pop hl
-	push hl
-	push de
-		; Draw the room:
-	    ld a, (VDP.DW)
-	    ld c, a
-	    ld b, 24
+	ld hl, (tmp_hud_drawing_hl)
+	call draw_hud_player_health
+
+	ld hl, (tmp_hud_drawing_hl)
+	ld de, (tmp_hud_drawing_de)
+	call draw_hud_coins
+
+	ld hl, (tmp_hud_drawing_hl)
+	call draw_hud_oxygen
+
+	ld hl, (tmp_hud_drawing_hl)
+	ld de, (tmp_hud_drawing_de)
+	call draw_hud_current_weapon
+
+	ld hl, (tmp_hud_drawing_hl)
+	ld de, (tmp_hud_drawing_de)
+	call draw_hud_current_weapon_ammo
+
+	ld hl, NAMTBL2
+	call SETWRT
+
+	ld hl, (tmp_hud_drawing_hl)
+	ld de, (tmp_hud_drawing_de)
+	; Draw the room:
+    ld a, (VDP.DW)
+    ld c, a
+    ld b, 24
 draw_room_with_hud_row_loop:
-		push bc
-			ld b, 32
+	push bc
+		ld b, 32
 draw_room_with_hud_column_loop:
-			outi
-			jp nz, draw_room_with_hud_column_loop
-			add hl, de
-		pop bc
-		djnz draw_room_with_hud_row_loop
-	pop hl
-	pop de
+		outi
+		jp nz, draw_room_with_hud_column_loop
+		add hl, de
+	pop bc
+	djnz draw_room_with_hud_row_loop
 
 	; Restore the content below the hud:
-	ld b, h
-	ld c, l
+	ld bc, (tmp_hud_drawing_de)
+	ld de, (tmp_hud_drawing_hl)
 	ld hl, hud_draw_buffer
 	push bc
 		ld bc, 32

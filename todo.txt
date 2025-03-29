@@ -1,19 +1,13 @@
 to do:
 
-***- Damage:
-  ***- get hurt by running out of oxygen in water
-    ***- have an oxygen variable
-    ***- when switching to swimming, set the oxygen value to some max value (e.g. 64)
-    ***- while in the water, this value decreases (until reaching 0)
-    ***- when reaching zero, your health starts decreasing
-    ***- draw oxygen in the hud while in water
-    ***- when zero:
-      ***- flash from blue to red in hud
-      ***- swimming animation goes faster
-      ***- SFX
-  ***- decide whether you get hurt by falling from a height
-  ***- if a boulder falls on top of you, take damage (and where are you spawned? on top of the boulder?)
-  ***- now I can implement the "quit" button in the inventory screen (have a "are you sure? y/n" small dialog)
+***- Implement the "quit" button in the inventory screen (have a "are you sure? y/n" small dialog):
+  ***- remove the "draw_sentence20_simple" method (replace by a bitmap nametable and normal text rendering in inter-area screen)
+  ***- create dialogue screen that just displays a message (passed by argument) and then "yes" "no" as options, and you select them with arrow keys/space. By default it's on "no"
+  ***- if you click "yes", go to game over screen
+  ***- if you click "no" go back to inventory
+***- Implement a third option of the HUD that is fixed at the top (also selectable via options config variable):
+  ***- mock it up (with "life", "coins", weapon", etc. texts if they fit within the top 2 rows of tiles)
+***- if a boulder falls on top of you, take damage: if there is space to the side where you would go with damage, just go there. Otherwise, teleport above the boulder. Find a place to test this.
 
 - breakable walls:
   - instantiate them at room creation
@@ -21,6 +15,28 @@ to do:
   - make this work with the inter-room transitions (broken wall, overwrites the collision)
   - once broken they should remain broken for the rest of the game (global state)
   - make sure they work down/left/right/up (when breaing a path down/up that needs a ladder, replace by proper ladder piece)
+
+- spawn and draw items in the game
+  - pick up items (inventory) (to pick up an item, crouch in front of it)
+
+- PCG to do: optional treasure (in Java):
+    - draw items:
+      - coins
+      - bullets (rocks/darts/spears/battery packs)
+      - maize (increases max life)
+      - map pieces
+    - sample random rooms that have no tags (ideally in leaf divisions with no tags), and add optional treasure/story trivia labels
+         (might or might not be reachable)
+        - add "small keys" and some of the objects above are chest_locked with small keys
+    - dictionary with puzzles/riddles/hints/story
+    - draw them (weapons, supplies, extra HP)
+    - add them to the map
+    - other ideas for items:
+        - pottery, obsidian blade, corn kernels, jade beads, feathers,
+          stone tool (e.g. axe head), jade mask, scepter/staff, codices (maya books), human skulls
+        - fragments of a calendar stone (maybe this is what you get from the bosses)
+    - ensure I can have all the types of puzzles I listed above from La Mulana
+    - ensure I can have things like "double jump" as the key and a whole area/path that requires it (or more than one)
 
 - Implement PCGWorld in assembler:
   - data structure
@@ -34,8 +50,6 @@ to do:
   - keep Java/assembler versions in sync (try different random seeds)
 
 - being able to complete the game in assembler:
-  - spawn and draw items in the game
-  - pick up items (inventory) (to pick up an item, crouch in front of it)
   - render doors (and be blocked by them)
   - use keys in locks to open doors
   - press buttons to open doors
@@ -56,25 +70,6 @@ to do:
   - enemy spawn (remember never to have them in room edges, so that you cannot spawn on top of one)
   - kill enemies and get hurt by them
   - design all the enemies on the pyramid biome and spawn them
-
-- PCG to do: optional treasure:
-    - draw items:
-      - coins
-      - bullets (rocks/darts/spears/battery packs)
-      - maize (increases max life)
-      - map pieces
-    - sample random rooms that have no tags (ideally in leaf divisions with no tags), and add optional treasure/story trivia labels
-         (might or might not be reachable)
-        - add "small keys" and some of the objects above are chest_locked with small keys
-    - dictionary with puzzles/riddles/hints/story
-    - draw them (weapons, supplies, extra HP)
-    - add them to the map
-    - other ideas for items:
-        - pottery, obsidian blade, corn kernels, jade beads, feathers,
-          stone tool (e.g. axe head), jade mask, scepter/staff, codices (maya books), human skulls
-        - fragments of a calendar stone (maybe this is what you get from the bosses)
-    - ensure I can have all the types of puzzles I listed above from La Mulana
-    - ensure I can have things like "double jump" as the key and a whole area/path that requires it (or more than one)
 
 - when using the "map" item in the inventory, display an overall map, with all the pieces you have currently collected (and some clues in the form of maya writing that appear in the pieces)
 
