@@ -42,51 +42,50 @@ text_concatenate_strings:
 ; - ix: sentence to draw (first byte is the length)
 ; - de: target NAMTBL2 address
 ; - iyl: color (attribute byte)
-draw_sentence20_simple_white:
-	ld iyl, COLOR_WHITE * 16
-draw_sentence20_simple:
-	push de
-		push de
-			call clear_text_rendering_buffer
-		pop de
-		; determine if we are writing to bank 1, 2 or 3:
-		ld h, d
-		ld l, e
-		ld bc, NAMTBL2 + 256
-		or a
-		sbc hl, bc
-		jr c, draw_sentence20_simple_bank1
-		ld bc, 256
-		sbc hl, bc
-		jr c, draw_sentence20_simple_bank2
-draw_sentence20_simple_bank3:
-		ld de, CHRTBL2 + (12 + 256*2)*8
-		jp draw_sentence20_simple_continue
-draw_sentence20_simple_bank1:
-		ld de, CHRTBL2 + 12*8
-		jp draw_sentence20_simple_continue
-draw_sentence20_simple_bank2:
-		ld de, CHRTBL2 + (12 + 256)*8
-draw_sentence20_simple_continue:
-		push ix
-		pop hl
-		ld iyh, 128
-		ld b, 20
-		call draw_sentence_to_vdp
-	pop hl  ; NAMTBL2 address
-    call SETWRT
-    ld a, (VDP.DW)
-    ld c, a
+; draw_sentence20_simple_white:
+; 	ld iyl, COLOR_WHITE * 16
+; draw_sentence20_simple:
+; 	push de
+; 		push de
+; 			call clear_text_rendering_buffer
+; 		pop de
+; 		; determine if we are writing to bank 1, 2 or 3:
+; 		ld h, d
+; 		ld l, e
+; 		ld bc, NAMTBL2 + 256
+; 		or a
+; 		sbc hl, bc
+; 		jr c, draw_sentence20_simple_bank1
+; 		ld bc, 256
+; 		sbc hl, bc
+; 		jr c, draw_sentence20_simple_bank2
+; draw_sentence20_simple_bank3:
+; 		ld de, CHRTBL2 + (12 + 256*2)*8
+; 		jp draw_sentence20_simple_continue
+; draw_sentence20_simple_bank1:
+; 		ld de, CHRTBL2 + 12*8
+; 		jp draw_sentence20_simple_continue
+; draw_sentence20_simple_bank2:
+; 		ld de, CHRTBL2 + (12 + 256)*8
+; draw_sentence20_simple_continue:
+; 		push ix
+; 		pop hl
+; 		ld iyh, 128
+; 		ld b, 20
+; 		call draw_sentence_to_vdp
+; 	pop hl  ; NAMTBL2 address
+;     call SETWRT
+;     ld a, (VDP.DW)
+;     ld c, a
 
-    ; write 12, 13, 14, ... to the proper position in the name table
-    ld a, 12
-    ld b, 20
-draw_sentence20_simple_loop:
-    out (c), a
-    inc a
-    djnz draw_sentence20_simple_loop
-	ret
-
+;     ; write 12, 13, 14, ... to the proper position in the name table
+;     ld a, 12
+;     ld b, 20
+; draw_sentence20_simple_loop:
+;     out (c), a
+;     inc a
+;     djnz draw_sentence20_simple_loop
+; 	ret
 
 
 ; ------------------------------------------------

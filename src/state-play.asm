@@ -26,15 +26,15 @@ state_play:
 
 		; generate area:
 		ld hl, pcg_generate_area
-; 		ld e, 0  ; area to generate
+		ld e, 0  ; area to generate
 ; 		ld e, 5  ; area to generate
-		ld e, 1  ; area to generate
+; 		ld e, 1  ; area to generate
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
 
 		; generate room:
-; 		ld e, 0
-		ld e, 2
+		ld e, 0
+; 		ld e, 2
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000

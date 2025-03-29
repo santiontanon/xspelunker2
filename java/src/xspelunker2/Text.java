@@ -51,6 +51,9 @@ public class Text {
         addLineSafe(lines_with_constant, "Santiago Ontañón", "CREDITS2", 16);
 
         addLineSafe(lines_with_constant, "Game Over", "GAME_OVER", 16);
+        addLineSafe(lines_with_constant, "Are you sure?", "ARE_YOU_SURE", 16);
+        addLineSafe(lines_with_constant, "Yes", "YES", 4);
+        addLineSafe(lines_with_constant, "No", "NO", 4);
                 
         addLineSafe(lines_with_constant, "Entering", "ENTERING", 16);
         addLineSafe(lines_with_constant, "Loading area...", "LOADING_AREA", 16);

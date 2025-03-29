@@ -1,17 +1,17 @@
 ;-----------------------------------------------
 area_names:
-	dw TEXT_AREA0_NAME, NAMTBL2 + 10*32 + 10
-	dw TEXT_AREA1_NAME, NAMTBL2 + 10*32 + 6
-	dw TEXT_AREA2_NAME, NAMTBL2 + 10*32 + 10
-	dw TEXT_AREA3_NAME, NAMTBL2 + 10*32 + 10
-	dw TEXT_AREA4_NAME, NAMTBL2 + 10*32 + 10
-	dw TEXT_AREA5_NAME, NAMTBL2 + 10*32 + 10
-	dw TEXT_AREA6_NAME, NAMTBL2 + 10*32 + 10
-	dw TEXT_AREA7_NAME, NAMTBL2 + 10*32 + 10
-	dw TEXT_AREA8_NAME, NAMTBL2 + 10*32 + 10
-	dw TEXT_AREA9_NAME, NAMTBL2 + 10*32 + 10
-	dw TEXT_AREA10_NAME, NAMTBL2 + 10*32 + 10
-	dw TEXT_AREA11_NAME, NAMTBL2 + 10*32 + 10
+	dw TEXT_AREA0_NAME, CHRTBL2 + (10*32 + 10) * 8
+	dw TEXT_AREA1_NAME, CHRTBL2 + (10*32 + 6) * 8
+	dw TEXT_AREA2_NAME, CHRTBL2 + (10*32 + 10) * 8
+	dw TEXT_AREA3_NAME, CHRTBL2 + (10*32 + 10) * 8
+	dw TEXT_AREA4_NAME, CHRTBL2 + (10*32 + 10) * 8
+	dw TEXT_AREA5_NAME, CHRTBL2 + (10*32 + 10) * 8
+	dw TEXT_AREA6_NAME, CHRTBL2 + (10*32 + 10) * 8
+	dw TEXT_AREA7_NAME, CHRTBL2 + (10*32 + 10) * 8
+	dw TEXT_AREA8_NAME, CHRTBL2 + (10*32 + 10) * 8
+	dw TEXT_AREA9_NAME, CHRTBL2 + (10*32 + 10) * 8
+	dw TEXT_AREA10_NAME, CHRTBL2 + (10*32 + 10) * 8
+	dw TEXT_AREA11_NAME, CHRTBL2 + (10*32 + 10) * 8
 
 
 ;-----------------------------------------------
@@ -20,42 +20,47 @@ area_names:
 ; - hl: ptr to room x, room y, direction of entrance
 interarea_exit:
 	push hl
-	push af
-		; clear the screen:
-		call clear_screen_left_to_right
-	pop af
-	push af
-		ld hl, area_names
-		add a, a
-		add a, a
-		ADD_HL_A
-		ld e, (hl)
-		inc hl
-		ld d, (hl)  ; de: name of the area we are entering
-		inc hl
-		ld c, (hl)
-		inc hl
-		ld b, (hl)  ; bc: name table position where to render (since each require a different centering position)
-		push bc
+		push af
+			; clear the screen:
+			call clear_screen_left_to_right
+			call set_bitmap_mode
+		pop af
+		push af
+			ld hl, area_names
+			add a, a
+			add a, a
+			ADD_HL_A
+			ld e, (hl)
+			inc hl
+			ld d, (hl)  ; de: name of the area we are entering
+			inc hl
+			ld c, (hl)
+			inc hl
+			ld b, (hl)  ; bc: name table position where to render (since each require a different centering position)
+			push bc
 
-			; print "entering [area name]":
-			ld ix, TEXT_ENTERING
-			ld hl, text_concatenate_strings
-			ld c, TEXT_PAGE
-			call call_hl_in_page_c_8000
+				SETMEGAROMPAGE_8000 TEXT_PAGE
 
-			ld ix, buffer_4096
-		pop de  ; position to render text
-		ld hl, draw_sentence20_simple_white
-		ld c, TEXT_PAGE
-		call call_hl_in_page_c_8000
+				; print "entering [area name]":
+				ld ix, TEXT_ENTERING
+				call text_concatenate_strings
 
-		ld ix, TEXT_LOADING_AREA
-		ld de, NAMTBL2 + 16*32 + 10
-		ld hl, draw_sentence20_simple_white
-		ld c, TEXT_PAGE
-		call call_hl_in_page_c_8000
-	pop af
+				call clear_text_rendering_buffer
+			pop de  ; position to render text
+
+			ld hl, buffer_4096
+			ld iy, #80f0
+			ld b, 20
+			call draw_sentence_to_vdp
+
+			call clear_text_rendering_buffer
+			ld hl, TEXT_LOADING_AREA
+			ld de, CHRTBL2 + (16*32 + 10)*8
+			ld iy, #80f0
+			ld b, 16
+			call draw_sentence_to_vdp
+
+		pop af
 	pop hl
 	ld sp, stack  ; reset the stack, so we can jump here from wherever we want
 	push hl

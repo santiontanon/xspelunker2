@@ -1,10 +1,5 @@
 to do:
 
-***- Implement the "quit" button in the inventory screen (have a "are you sure? y/n" small dialog):
-  ***- remove the "draw_sentence20_simple" method (replace by a bitmap nametable and normal text rendering in inter-area screen)
-  ***- create dialogue screen that just displays a message (passed by argument) and then "yes" "no" as options, and you select them with arrow keys/space. By default it's on "no"
-  ***- if you click "yes", go to game over screen
-  ***- if you click "no" go back to inventory
 ***- Implement a third option of the HUD that is fixed at the top (also selectable via options config variable):
   ***- mock it up (with "life", "coins", weapon", etc. texts if they fit within the top 2 rows of tiles)
 ***- if a boulder falls on top of you, take damage: if there is space to the side where you would go with damage, just go there. Otherwise, teleport above the boulder. Find a place to test this.

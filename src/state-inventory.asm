@@ -3,6 +3,7 @@ state_inventory:
 	ld hl, SFX_ui_select
 	call play_SFX_with_high_priority
 
+state_inventory_no_sfx:
 	call disable_VDP_output
 		call clear_all_the_sprites
 		call setup_inventory_gfx
@@ -120,8 +121,10 @@ state_inventory_update_cursor_button_row0:
 	jr z, state_inventory_update_cursor_button_options
 
 state_inventory_update_cursor_button_quit:
-	; ...
-	ret
+	ld ix, TEXT_ARE_YOU_SURE
+	ld hl, state_game_over  ; yes
+	ld de, state_inventory_no_sfx  ; no
+	jp state_yesno_dialog
 
 state_inventory_update_cursor_button_back:
 	call disable_VDP_output
