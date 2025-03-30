@@ -1,52 +1,62 @@
 ;-----------------------------------------------
-draw_room_with_hud:
+draw_room_only_hud
+	call draw_room_compute_ptrs
+	ld b, 2
+	jr draw_room_with_hud_entry_point
 
+
+;-----------------------------------------------
+; When the hud is not "full" (it only has small parts), we draw it on top of the room itself,
+; and then transfer those tiles to the VDP to make things faster.
+draw_room_with_hud:
 	call draw_room_compute_ptrs
 
-	; hl = ptr from where to draw
-	; de = room width - 32
-	; copy the room content underneath the hud:
-	ld (tmp_hud_drawing_hl), hl
-	ld (tmp_hud_drawing_de), de
-	ld b, d
-	ld c, e
-	ld de, hud_draw_buffer
+	ld b, 24
+draw_room_with_hud_entry_point:
 	push bc
+		; hl = ptr from where to draw
+		; de = room width - 32
+		; copy the room content underneath the hud:
+		ld (tmp_hud_drawing_hl), hl
+		ld (tmp_hud_drawing_de), de
+		ld b, d
+		ld c, e
+		ld de, hud_draw_buffer
+		push bc
+			ld bc, 32
+			ldir
+		pop bc
+		add hl, bc
 		ld bc, 32
 		ldir
+
+		; Draw the hud:
+		ld a, (config_hud_type)
+		cp 2
+		jr nz, draw_room_with_hud_minimal
+		call draw_hud_full
+
+		ld hl, NAMTBL2 + 32*2  ; when the hud is full, we draw the room 2 rows lower
+		call SETWRT
 	pop bc
-	add hl, bc
-	ld bc, 32
-	ldir
+	dec b  ; with full hud, we draw 2 less rows of map
+	dec b
+	ret z  ; if we are only drawing the hud, we are done
+	push bc
+		jr draw_room_with_hud_drawn
+draw_room_with_hud_minimal:
+		call draw_hud_minimal
 
-	; Draw the hud:
-	ld hl, (tmp_hud_drawing_hl)
-	call draw_hud_player_health
+		ld hl, NAMTBL2
+		call SETWRT
+draw_room_with_hud_drawn:
 
-	ld hl, (tmp_hud_drawing_hl)
-	ld de, (tmp_hud_drawing_de)
-	call draw_hud_coins
-
-	ld hl, (tmp_hud_drawing_hl)
-	call draw_hud_oxygen
-
-	ld hl, (tmp_hud_drawing_hl)
-	ld de, (tmp_hud_drawing_de)
-	call draw_hud_current_weapon
-
-	ld hl, (tmp_hud_drawing_hl)
-	ld de, (tmp_hud_drawing_de)
-	call draw_hud_current_weapon_ammo
-
-	ld hl, NAMTBL2
-	call SETWRT
-
-	ld hl, (tmp_hud_drawing_hl)
-	ld de, (tmp_hud_drawing_de)
+		ld hl, (tmp_hud_drawing_hl)
+		ld de, (tmp_hud_drawing_de)
+	pop bc  ; number of rows to draw
 	; Draw the room:
     ld a, (VDP.DW)
     ld c, a
-    ld b, 24
 draw_room_with_hud_row_loop:
 	push bc
 		ld b, 32
@@ -70,6 +80,9 @@ draw_room_with_hud_column_loop:
 	ex de, hl
 	ld bc, 32
 	ldir
+
+	xor a
+	ld (redraw_flags), a
 	ret
 
 
@@ -94,6 +107,9 @@ draw_room_column_loop:
 		add hl, de
 	pop bc
 	djnz draw_room_row_loop
+
+	xor a
+	ld (redraw_flags), a	
 	ret
 
 

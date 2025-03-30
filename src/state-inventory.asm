@@ -1,9 +1,21 @@
 ;-----------------------------------------------
+state_inventory_from_quit:
+	ld a, 7
+	ld (inventory_cursor_position_x), a
+	jr state_inventory_entry_point
+
+
+;-----------------------------------------------
 state_inventory:
 	ld hl, SFX_ui_select
 	call play_SFX_with_high_priority
 
-state_inventory_no_sfx:
+	xor a
+	ld (inventory_cursor_position_x), a
+state_inventory_entry_point:
+	xor a
+	ld (inventory_cursor_position_y), a
+
 	call disable_VDP_output
 		call clear_all_the_sprites
 		call setup_inventory_gfx
@@ -19,10 +31,6 @@ state_inventory_no_sfx:
 		call draw_inventory_player
 		call draw_inventory_cursor
 	call enable_VDP_output
-
-	xor a
-	ld (inventory_cursor_position_x), a
-	ld (inventory_cursor_position_y), a
 
 state_inventory_loop:
 	halt
@@ -123,7 +131,7 @@ state_inventory_update_cursor_button_row0:
 state_inventory_update_cursor_button_quit:
 	ld ix, TEXT_ARE_YOU_SURE
 	ld hl, state_game_over  ; yes
-	ld de, state_inventory_no_sfx  ; no
+	ld de, state_inventory_from_quit  ; no
 	jp state_yesno_dialog
 
 state_inventory_update_cursor_button_back:

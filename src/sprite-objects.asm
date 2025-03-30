@@ -386,7 +386,13 @@ get_sprite_object_sprite_coordinates_continue:
 	add a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
 	dec a  ; sprites y in the VDP is off by 1 pixel
 	ld b, a
-
+	ld a, (config_hud_type)
+	cp 2  ; full hud
+	jr nz, get_sprite_object_sprite_coordinates_no_full_hud
+	ld a, 16  ; move sprites 16 pixels down
+	add a, b
+	ld b, a
+get_sprite_object_sprite_coordinates_no_full_hud:
 	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	ld hl, room_scroll_x
 	sub (hl)

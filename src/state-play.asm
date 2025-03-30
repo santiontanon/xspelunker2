@@ -101,6 +101,8 @@ state_play:
 		ld (hl), a
 		inc hl
 		ld (hl), a  ; player_max_health
+		ld a, PLAYER_MAX_OXYGEN
+		ld (player_oxygen), a
 
 state_play_from_loaded_room:
 		call clear_all_the_sprites
@@ -134,8 +136,8 @@ state_play_from_inventory:
 
 		ld a, HUD_MAX_TIME
 		ld (hud_redraw_timer), a
-		ld (hud_rerender_coins), a
-		ld (hud_rerender_weapon), a
+		ld a, #ff  ; redraw everything the first time
+		ld (redraw_flags), a
 
 		call maybe_recenter_scroll_and_set_actual
 		call draw_room_with_hud
@@ -175,7 +177,7 @@ state_play_loop_continue:
 	ld c, SPRITES_PAGE
 	call call_hl_in_page_c_8000
 
-	ld a, (config_hud_always_visible)
+	ld a, (config_hud_type)
 	or a
 	jr nz, state_play_loop_continue_hud_always_visible
 	ld hl, hud_redraw_timer
@@ -187,26 +189,35 @@ state_play_loop_continue:
 	jr z, state_play_loop_room_redraw  ; we need to redraw for sure
 state_play_loop_continue_hud_always_visible:
 state_play_loop_continue_no_hud:
-	ld a, (redraw_whole_room_flag)
-	or a
+	ld a, (redraw_flags)
+	bit ROOM_REDRAW_FLAG_BIT, a
 	jr nz, state_play_loop_room_redraw
+	bit HUD_REDRAW_FLAG_BIT, a
+	jr nz, state_play_loop_hud_redraw
 	call update_animations_in_vdp
 	jr state_play_loop
 state_play_loop_room_redraw:
 	call state_play_rerender_room
 	call update_animations_in_vdp
 	jr state_play_loop
+state_play_loop_hud_redraw:
+	call state_play_rerender_hud
+	call update_animations_in_vdp
+	jr state_play_loop
 
 
 ;-----------------------------------------------
 state_play_rerender_room:
-	xor a
-	ld (redraw_whole_room_flag), a
-
 	ld a, (hud_redraw_timer)
 	or a
 	jp z, draw_room  ; no hud
 	jp draw_room_with_hud
+
+state_play_rerender_hud:
+	ld a, (hud_redraw_timer)
+	or a
+	ret z
+	jp draw_room_only_hud
 
 
 ;-----------------------------------------------

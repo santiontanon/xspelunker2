@@ -1,21 +1,24 @@
 to do:
 
-***- Implement a third option of the HUD that is fixed at the top (also selectable via options config variable):
-  ***- mock it up (with "life", "coins", weapon", etc. texts if they fit within the top 2 rows of tiles)
 ***- if a boulder falls on top of you, take damage: if there is space to the side where you would go with damage, just go there. Otherwise, teleport above the boulder. Find a place to test this.
+
+***- options menu (redefine keys/controls): add this to title screen, as well as in-game
+  ***- allow configuring inventory shortcut (down+jump), interaction key (down? up? or special key?)
+  ***- allow configuring if hud is always there or not (config_hud_type): recompute current_room__max_scroll_y
 
 - breakable walls:
   - instantiate them at room creation
-  - being able to hit them with all weapons and projectiles (make sure hammer hits down when hitting on top of them)
-  - make this work with the inter-room transitions (broken wall, overwrites the collision)
+  - being able to hit them with all weapons and projectiles (make sure hammer hits down when hitting on top of them): for now just call a function that plays an SFX to get feedback
+  - give them hit-points and destroy them
   - once broken they should remain broken for the rest of the game (global state)
+  - make this work with the inter-room transitions (broken wall, overwrites the collision)
   - make sure they work down/left/right/up (when breaing a path down/up that needs a ladder, replace by proper ladder piece)
 
 - spawn and draw items in the game
   - pick up items (inventory) (to pick up an item, crouch in front of it)
 
 - PCG to do: optional treasure (in Java):
-    - draw items:
+    - draw items in Gimp:
       - coins
       - bullets (rocks/darts/spears/battery packs)
       - maize (increases max life)
@@ -24,14 +27,8 @@ to do:
          (might or might not be reachable)
         - add "small keys" and some of the objects above are chest_locked with small keys
     - dictionary with puzzles/riddles/hints/story
-    - draw them (weapons, supplies, extra HP)
     - add them to the map
-    - other ideas for items:
-        - pottery, obsidian blade, corn kernels, jade beads, feathers,
-          stone tool (e.g. axe head), jade mask, scepter/staff, codices (maya books), human skulls
-        - fragments of a calendar stone (maybe this is what you get from the bosses)
-    - ensure I can have all the types of puzzles I listed above from La Mulana
-    - ensure I can have things like "double jump" as the key and a whole area/path that requires it (or more than one)
+    - should I ensure winged sandals are spawned (double/higher jump) for some areas?
 
 - Implement PCGWorld in assembler:
   - data structure
@@ -79,9 +76,6 @@ to do:
 - menus:
   - brain games screen
   - title screen
-  - options menu (redefine keys/controls): add this to title screen, as well as in-game
-    - allow configuring inventory shortcut (down+jump), interaction key (down? up? or special key?)
-    - allow configuring if hud is always there or not (config_hud_always_visible)
   - game start screen where you choose game name, difficulty, seed, etc.
       - procedural generation depending on a name. By default, you play in "xspelunker2" level, with difficulty "x".
       - the first letter determines the difficulty level. So, one would choose "a walk in the park" for easy games, or "zebras all the way" for the heardest)

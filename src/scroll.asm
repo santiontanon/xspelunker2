@@ -40,7 +40,7 @@ maybe_recenter_scroll_vertical:
 	xor a
 maybe_recenter_scroll_no_y_overflow:	
 	sub b
-	cp 18
+	cp 17
 	jr nc, maybe_recenter_scroll_recenter_y
 	cp 6
 	jr c, maybe_recenter_scroll_recenter_y
@@ -92,8 +92,8 @@ update_scroll:
 	ld a, e
 	cp c
 	jr z, update_scroll_vertical
-	ld a, 1
-	ld (redraw_whole_room_flag), a
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)
 	jp c, update_scroll_right
 	dec e
 	jp update_scroll_vertical
@@ -104,8 +104,8 @@ update_scroll_vertical:
 	ld a, d
 	cp b
 	jr z, update_scroll_done
-	ld a, 1
-	ld (redraw_whole_room_flag), a
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)
 	jp c, update_scroll_down
 	dec d
 	jp update_scroll_done

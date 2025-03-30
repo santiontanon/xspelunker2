@@ -65,7 +65,8 @@ player_lose_health:
 
 	ld a, HUD_MAX_TIME
 	ld (hud_redraw_timer), a
-	ld (redraw_whole_room_flag), a
+	ld hl, redraw_flags
+	set HUD_REDRAW_FLAG_BIT, (hl)
 
 	ld hl, player_health
 	dec (hl)
@@ -97,6 +98,14 @@ player_update_update_sprite_position:
 	add a, (hl)
 	dec a  ; sprites y in the VDP is off by 1 pixel
 	ld ixh, a
+
+	ld a, (config_hud_type)
+	cp 2  ; full hud
+	ld a, ixh
+	jr nz, player_update_update_sprite_position_no_full_hud
+	add a, 16  ; move sprites 16 pixels down
+	ld ixh, a
+player_update_update_sprite_position_no_full_hud:
 
 	ld (de), a
 	ld (bc), a
@@ -469,7 +478,8 @@ player_update_state_falling_speed_loop_done:
 player_update_switch_to_jumping_from_swimming:
 	ld a, HUD_MAX_TIME
 	ld (hud_redraw_timer), a
-	ld (redraw_whole_room_flag), a
+	ld hl, redraw_flags
+	set HUD_REDRAW_FLAG_BIT, (hl)
 
 	xor a
 	ld (player_jump_no_grab_timer), a
@@ -927,7 +937,8 @@ player_update_switch_to_swimming_from_falling:
 	ld (player_oxygen), a
 	ld a, HUD_MAX_TIME
 	ld (hud_redraw_timer), a
-	ld (redraw_whole_room_flag), a
+	ld hl, redraw_flags
+	set HUD_REDRAW_FLAG_BIT, (hl)
 
 player_update_state_swimming:
 	ld a, (interrupt_cycle)
@@ -946,7 +957,8 @@ player_update_state_swimming_oxygen_zero:
 player_update_state_swimming_oxygen_non_zero:
 	ld a, HUD_MAX_TIME
 	ld (hud_redraw_timer), a
-	ld (redraw_whole_room_flag), a
+	ld hl, redraw_flags
+	set HUD_REDRAW_FLAG_BIT, (hl)
 player_update_state_swimming_oxygen_done:
 
 	ld a, (interrupt_cycle)
@@ -1848,9 +1860,10 @@ player_update_fire_directional_bullet:
 	dec (hl)
 
 	ld a, HUD_MAX_TIME
-	ld (hud_rerender_weapon), a
 	ld (hud_redraw_timer), a
-	ld (redraw_whole_room_flag), a
+	ld hl, redraw_flags
+	set HUD_REDRAW_FLAG_BIT, (hl)
+	set WEAPON_REDRAW_FLAG_BIT, (hl)
 
 	call ptr_to_new_sprite_object_player_bullet
 	ret nz
@@ -2416,8 +2429,8 @@ player_pushing_block_found_continue2:
 	; force redraw:
 	xor a
 	ld (player_push_block_timer), a
-	inc a
-	ld (redraw_whole_room_flag), a
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)
 
 	ld hl, SFX_push_object
 	jp play_SFX_with_high_priority

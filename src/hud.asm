@@ -1,4 +1,59 @@
 ;-----------------------------------------------
+draw_hud_minimal:
+	ld hl, (tmp_hud_drawing_hl)
+	call draw_hud_player_health
+
+	ld hl, (tmp_hud_drawing_hl)
+	ld de, (tmp_hud_drawing_de)
+	call draw_hud_coins
+
+	ld hl, (tmp_hud_drawing_hl)
+	call draw_hud_oxygen
+
+	ld hl, (tmp_hud_drawing_hl)
+	ld de, (tmp_hud_drawing_de)
+	call draw_hud_current_weapon
+
+	ld hl, (tmp_hud_drawing_hl)
+	ld de, (tmp_hud_drawing_de)
+	jp draw_hud_current_weapon_ammo
+
+
+;-----------------------------------------------
+hud_full_nametable:
+	db 19, 20, 21, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 29, 30, 31, 0, 0, 0, 0, 24, 25, 26, 27, 0, 0
+	db 6,   0,  0,  0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0,  0,  0,  0, 0, 0, 0, 0,  0,  0,  0,  0, 0, 0
+
+draw_hud_full:
+	ld hl, hud_full_nametable
+	ld de, buffer_4096 + 32  ; we render the hud in "buffer_4096 + 32" to leave some leeway to render the coins/ammo
+	ld bc, 64
+	ldir
+
+	ld hl, buffer_4096 + 32 + 4
+	call draw_hud_player_health
+
+	ld hl, buffer_4096 + 32
+	ld de, 0
+	call draw_hud_coins
+
+	ld hl, buffer_4096 + 64 + 4
+	call draw_hud_oxygen_always
+
+	ld hl, buffer_4096 + 32
+	ld de, 0
+	call draw_hud_current_weapon
+
+	ld hl, buffer_4096 + 64
+	call draw_hud_current_weapon_ammo
+
+	ld hl, buffer_4096 + 32
+	ld de, NAMTBL2
+	ld b, 64
+	jp fast_small_LDIRVM
+
+
+;-----------------------------------------------
 ; input:
 ; - hl: ptr where to draw
 draw_hud_player_health:
@@ -45,11 +100,9 @@ draw_hud_coins:
 	ld bc, 32
 	add hl, bc
 	ld (hl), 6  ; coin tile
-	ld a, (hud_rerender_coins)
-	or a
+	ld a, (redraw_flags)
+	bit COINS_REDRAW_FLAG_BIT, a
 	jr z, draw_hud_coins_no_rerender
-	xor a
-	ld (hud_rerender_coins), a
 	ld a, (player_inventory_coins)
 	ld de, CHRTBL2 + 10*8
 	ld iy, #8000 + COLOR_WHITE*16
@@ -75,6 +128,7 @@ draw_hud_oxygen:
 	and #fe
 	cp PLAYER_STATE_SWIMMING
 	ret nz
+draw_hud_oxygen_always:
 	ld a, (player_oxygen)
 	or a
 	jr z, draw_hud_oxygen_zero
@@ -118,8 +172,8 @@ draw_hud_oxygen_zero:
 draw_hud_current_weapon:
 	push hl
 	push de
-		ld a, (hud_rerender_weapon)
-		or a
+		ld a, (redraw_flags)
+		bit WEAPON_REDRAW_FLAG_BIT, a
 		jr z, draw_hud_current_weapon_no_rerender
 
 		SETMEGAROMPAGE_8000 TILES_PAGE
@@ -172,11 +226,9 @@ draw_hud_current_weapon_ammo:
 		ld hl, player_inventory_weapon_ammo
 		ADD_HL_A
 		ld e, (hl)  ; e = number of bullets left
-		ld a, (hud_rerender_weapon)
-		or a
+		ld a, (redraw_flags)
+		bit COINS_REDRAW_FLAG_BIT, a
 		jr z, draw_hud_current_weapon_ammo_no_rerender
-		xor a
-		ld (hud_rerender_weapon), a
 		ld a, e
 		ld de, CHRTBL2 + 13*8
 		ld iy, #0800 + COLOR_WHITE*16

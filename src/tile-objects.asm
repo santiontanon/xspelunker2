@@ -74,8 +74,8 @@ update_tile_objects_pushable_block:
 
 	call room_render_tile_objects
 	; force redraw:
-	ld a, 1
-	ld (redraw_whole_room_flag), a
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)
 	jp update_tile_objects_loop_continue
 
 update_tile_objects_pushable_block_collision:
@@ -104,8 +104,8 @@ update_tile_objects_pushable_block_remove:
 
 		call room_render_tile_objects
 		; force redraw:
-		ld a, 1
-		ld (redraw_whole_room_flag), a
+		ld hl, redraw_flags
+		set ROOM_REDRAW_FLAG_BIT, (hl)
 	pop hl
 	pop af  ; we do an extra pop, since we are skipping the one at update_tile_objects_loop_continue
 	jp update_tile_objects_loop
