@@ -1,6 +1,8 @@
 to do:
 
-***- if a boulder falls on top of you, take damage: if there is space to the side where you would go with damage, just go there. Otherwise, teleport above the boulder. Find a place to test this.
+***- detect if a boulder falls on top of you: when moving a boulder down, check if we are moving it onto the player
+***- if a boulder falls on top of you, take damage
+  ***- if there is space to the side where you would go with damage, just go there. Otherwise, teleport above the boulder. Find a place to test this.
 
 ***- options menu (redefine keys/controls): add this to title screen, as well as in-game
   ***- allow configuring inventory shortcut (down+jump), interaction key (down? up? or special key?)
