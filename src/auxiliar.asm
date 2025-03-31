@@ -86,8 +86,8 @@ CheckIf60Hz_vdpLoop:
 wait_b_halts_skippable:
     halt
     call update_keyboard_buffers
-    ld a, (keyboard_line_clicks)
-    bit 0, a
+    ld a, (keyboard_clicks)
+    bit KEY_WEAPON_BIT, a
     ret nz
     djnz wait_b_halts_skippable
     ret

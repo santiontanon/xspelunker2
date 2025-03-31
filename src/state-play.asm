@@ -6,9 +6,9 @@ state_play:
 		call clear_memory
 
 		; initial player position:
-		ld hl, #0800
+		ld hl, #0a00
 		ld (player_x), hl
-		ld hl, #0500
+		ld hl, #0a00
 		ld (player_y), hl
 		ld a, #ff
 		ld (player_requested_weapon_sprite), a
@@ -26,14 +26,15 @@ state_play:
 
 		; generate area:
 		ld hl, pcg_generate_area
-		ld e, 0  ; area to generate
+; 		ld e, 0  ; area to generate
 ; 		ld e, 5  ; area to generate
-; 		ld e, 1  ; area to generate
+		ld e, 1  ; area to generate
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
 
 		; generate room:
-		ld e, 0
+; 		ld e, 0
+		ld e, 1
 ; 		ld e, 2
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
@@ -109,6 +110,18 @@ state_play_from_loaded_room:
 		call room_render_tile_objects
 state_play_from_inventory:
 		ld sp, stack  ; reset the stack, so we can jump here from wherever we want
+
+		; recauculate y scroll limits, which depend on the hud option:
+		ld a, (current_room__height)
+		sub 24
+		ld (current_room__max_scroll_y), a
+		ld a, (config_hud_type)
+		cp 2  ; full hud
+		jr nz, state_play_from_inventory__no_full_hud
+		ld a, (current_room__max_scroll_y)
+		add a, 2
+		ld (current_room__max_scroll_y), a
+state_play_from_inventory__no_full_hud:
 
 		; setup sprites:
 		SETMEGAROMPAGE_8000 SPRITES_PAGE

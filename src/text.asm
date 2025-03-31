@@ -88,6 +88,16 @@ text_concatenate_strings:
 ; 	ret
 
 
+draw_sentence_to_vdp_clearing_text_buffer:
+	push hl
+	push de
+	push bc
+		call clear_text_rendering_buffer
+	pop bc
+	pop de
+	pop hl
+
+
 ; ------------------------------------------------
 ; Draws a sentence to video memory
 ; input:

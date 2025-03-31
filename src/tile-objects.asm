@@ -72,7 +72,31 @@ update_tile_objects_pushable_block:
 	cp b
 	jr z, update_tile_objects_pushable_block_remove
 
+	; See if we hit the player:
+	dec hl
+	ld b, (hl)
+	dec hl
+	ld c, (hl)  ; c, b: block coordinates
+	ld a, (player_x + 1)
+	cp c
+	jr c, update_tile_objects_pushable_block_no_player_hit
+	inc c
+	inc c
+	cp c
+	jr nc, update_tile_objects_pushable_block_no_player_hit
+	ld a, (player_y + 1)
+	inc b
+	cp b
+	jr nz, update_tile_objects_pushable_block_no_player_hit
+
+	; move the player on top of the block, to prevent getting trapped:
+	sub 2
+	ld (player_y + 1), a
+	call player_hit_hazard
+
+update_tile_objects_pushable_block_no_player_hit:
 	call room_render_tile_objects
+
 	; force redraw:
 	ld hl, redraw_flags
 	set ROOM_REDRAW_FLAG_BIT, (hl)

@@ -47,11 +47,14 @@ state_yesno_dialog_loop:
 		call update_dialog_pointer_sprite
 		call update_keyboard_buffers
 
-		ld a, (keyboard_line_clicks)  ; RIGHT, DOWN, UP, LEFT, DEL, INS, HOME, SPACE
-		bit 0, a  ; space
+		ld a, (keyboard_clicks)
+		bit KEY_WEAPON_BIT, a  ; space
 		jr nz, state_yesno_dialog_loop_end
-		and #60  ; up or down
+		bit KEY_UP_BIT, a
+		jr nz, state_yesno_dialog_change_option
+		bit KEY_DOWN_BIT, a
 		jr z, state_yesno_dialog_loop
+state_yesno_dialog_change_option:
 		ld a, (tmp_dialog_pointer_position)
 		xor #01
 		ld (tmp_dialog_pointer_position), a

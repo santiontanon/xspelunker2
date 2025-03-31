@@ -2,6 +2,16 @@
     include "sound-constants.asm"
 
 
+KEY_WEAPON_BIT: equ 0
+KEY_JUMP_BIT: equ 1
+KEY_INVENTORY_BIT: equ 2
+KEY_INTERACT_BIT: equ 3
+KEY_LEFT_BIT: equ 4
+KEY_UP_BIT: equ 5
+KEY_DOWN_BIT: equ 6
+KEY_RIGHT_BIT: equ 7
+
+
 MAX_SPRITES: equ 32
 FIRST_OBJECT_SPRITE: equ 3  ; 0, 1 are the player, 2 is player weapon
 

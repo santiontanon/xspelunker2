@@ -91,10 +91,7 @@ Execute:
     ld (rng_seed1), hl
     ld (rng_seed2), hl
 
-;     xor a
-;     ld a, 1
-    ld a, 2
-    ld (config_hud_type), a
+    call state_options_reset
 
 ;     jp state_braingames
     jp state_play
@@ -178,6 +175,7 @@ call_hl_in_page_c_8000_return:
     include "state-inventory.asm"
     include "state-gameover.asm"
     include "state-yesno-dialog.asm"
+    include "state-options.asm"
 
 end_of_code:
 
@@ -464,9 +462,13 @@ inventory_cursor_position_y: ds virtual 1
 hud_redraw_timer: ds virtual 1  ; if this is 0, the hud is not drawn (when config_hud_type == 0)
 hud_draw_buffer: ds virtual 64
 
-keyboard_line_state:        ds virtual 1  ; interleaved bytes state/clicks
-keyboard_line_clicks:       ds virtual 3
-keyboard_line_state_prev:   ds virtual 2
+; keyboard_line_state:        ds virtual 1  ; interleaved bytes state/clicks
+; keyboard_line_clicks:       ds virtual 3
+; keyboard_line_state_prev:   ds virtual 2
+
+keyboard_state:        ds virtual 1
+keyboard_clicks:       ds virtual 1
+keyboard_state_prev:   ds virtual 1
 
 RAM_to_zero_on_game_start_end:
 
@@ -476,7 +478,10 @@ tmp_hud_drawing_de: ds virtual 2
 tmp_dialog_pointer_position: equ tmp_hud_drawing_hl
 
 config_hud_type: ds virtual 1  ; 0: minimal, 1: minimal always visible, 2: full
-
+config_inventory_key_combo: ds virtual 1  ; 0: down+jump, 1: none
+config_interact_with_down: ds virtual 1  ; 0: yes, 1: no
+; each key is matrix row + bit mask
+config_keyboard: ds virtual 2 * 8  ; RIGHT, DOWN, UP, LEFT, INTERACT, INVENTORY, JUMP, SPACE
 
 ; sound variables:
 MUSIC_tempo:                        ds virtual 1

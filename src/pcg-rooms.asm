@@ -114,16 +114,6 @@ pcg_generate_room__xy_loop_x_skip:
 	add a, a
 	add a, d  ; a * 24
 	ld (current_room__height), a
-	sub 24
-	ld (current_room__max_scroll_y), a
-
-	ld a, (config_hud_type)
-	cp 2  ; full hud
-	jr nz, pcg_generate_room__no_full_hud
-	ld a, (current_room__max_scroll_y)
-	add a, 2
-	ld (current_room__max_scroll_y), a
-pcg_generate_room__no_full_hud:
 
 	; Get the room seed (from the area seed, generate as many numbers as the room ID):
 	ld hl, (current_area__seed)

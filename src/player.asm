@@ -39,6 +39,12 @@ player_update_continue:
 	xor a
 	ld (player_no_rope_or_ladder_this_frame), a
 player_update_from_ladder_fail:
+
+	; go to the inventory from any state:
+	ld a, (keyboard_clicks)
+	bit KEY_INVENTORY_BIT, a
+	jp nz, state_inventory
+
 	ld a, (player_state)
 	ld hl, player_update_state_fn_table
 	and #fe  ; lowest bit is direction (0: right, 1: left)
@@ -249,20 +255,17 @@ player_update_switch_to_idle:
 
 player_update_state_idle:
 	; check for walk/crouch:
-	ld a, (keyboard_line_state)
-	bit 7, a
+	ld a, (keyboard_state)
+	bit KEY_RIGHT_BIT, a
 	jr z, player_update_switch_to_walking_right
-	bit 4, a
+	bit KEY_LEFT_BIT, a
 	jr z, player_update_switch_to_walking_left
 
-; 	ld a, (keyboard_line_clicks)
-; 	bit 6, a
-; 	jp nz, player_update_switch_to_crouching
-	bit 6, a
+	bit KEY_DOWN_BIT, a
 	jp z, player_update_switch_to_crouching
 
 	; check for rope/ladder climb:
-	bit 5, a
+	bit KEY_UP_BIT, a
 	jp nz, player_update_state_idle_no_rope
 	ld a, (player_no_rope_or_ladder_this_frame)
 	or a
@@ -271,13 +274,13 @@ player_update_state_idle:
 	jp z, player_update_switch_to_rope_or_ladder
 player_update_state_idle_no_rope:
 	; check for weapon:
-	ld a, (keyboard_line_clicks)
-	bit 0, a
+	ld a, (keyboard_clicks)
+	bit KEY_WEAPON_BIT, a
 	jp nz, player_update_switch_to_weapon_swing
 
 	; check for jump
-	ld a, (keyboard_line_clicks + 2)
-	bit 2, a
+	ld a, (keyboard_clicks)
+	bit KEY_JUMP_BIT, a
 	jp nz, player_update_switch_to_jumping
 
 	; check for falling:
@@ -310,8 +313,8 @@ player_update_switch_to_walking_right:
 
 player_update_state_walking:
 	; check for rope climb:
-	ld a, (keyboard_line_state)
-	bit 5, a
+	ld a, (keyboard_state)
+	bit KEY_UP_BIT, a
 	jp nz, player_update_state_walking_no_rope
 	ld a, (player_no_rope_or_ladder_this_frame)
 	or a
@@ -321,27 +324,26 @@ player_update_state_walking:
 player_update_state_walking_no_rope:
 
 	; check for weapon:
-	ld a, (keyboard_line_clicks)
-	bit 0, a
+	ld a, (keyboard_clicks)
+	bit KEY_WEAPON_BIT, a
 	jp nz, player_update_switch_to_weapon_swing
 
 	; check for jump
-	ld a, (keyboard_line_clicks + 2)
-	bit 2, a
+	bit KEY_JUMP_BIT, a
 	jp nz, player_update_switch_to_jumping
 
 	; check for idle:
-	ld a, (keyboard_line_state)
-	bit 7, a
+	ld a, (keyboard_state)
+	bit KEY_RIGHT_BIT, a
 	jr z, player_update_state_walking_right
-	bit 4, a
+	bit KEY_LEFT_BIT, a
 	jr z, player_update_state_walking_left
 	jp player_update_switch_to_idle
 
 player_update_state_walking_right:
 	; check for crawling:
-	ld a, (keyboard_line_state)
-	bit 6, a
+	ld a, (keyboard_state)
+	bit KEY_DOWN_BIT, a
 	jp z, player_update_switch_to_crawling_right
 
 	; check for falling:
@@ -357,8 +359,8 @@ player_update_state_walking_right:
 
 player_update_state_walking_left:
 	; check for crawling:
-	ld a, (keyboard_line_state)
-	bit 6, a
+	ld a, (keyboard_state)
+	bit KEY_DOWN_BIT, a
 	jp z, player_update_switch_to_crawling_left
 
 	; check for falling:
@@ -405,17 +407,17 @@ player_update_switch_to_falling:
 
 player_update_state_falling:
 	; check for weapon:
-	ld a, (keyboard_line_clicks)
-	bit 0, a
+	ld a, (keyboard_clicks)
+	bit KEY_WEAPON_BIT, a
 	jp nz, player_update_switch_to_weapon_swing_falling
 
 	; movement left/right:
-	ld a, (keyboard_line_state)
-	bit 7, a
+	ld a, (keyboard_state)
+	bit KEY_RIGHT_BIT, a
 	push af
 		call z, player_update_move_one_pixel_right_considering_collisions
 	pop af
-	bit 4, a
+	bit KEY_LEFT_BIT, a
 	call z, player_update_move_one_pixel_left_considering_collisions
 
 	ld a, (player_no_rope_or_ladder_this_frame)
@@ -429,8 +431,8 @@ player_update_state_falling:
 	jp player_update_state_falling_no_rope
 player_update_state_falling_check_rope_or_ladder:
 	; check for rope climb:
-	ld a, (keyboard_line_state)
-	bit 5, a  ; up
+	ld a, (keyboard_state)
+	bit KEY_UP_BIT, a
 	jp nz, player_update_state_falling_no_rope
 	call check_player_on_rope_or_ladder
 	jp z, player_update_switch_to_rope_or_ladder
@@ -502,8 +504,8 @@ player_update_switch_to_jumping_from_rope_or_ladder:
 	ld (player_jump_no_grab_timer), a
 	ld a, 1
 	ld (player_jump_is_cancelable), a
-	ld a, (keyboard_line_state)
-	bit 6, a  ; down
+	ld a, (keyboard_state)
+	bit KEY_DOWN_BIT, a
 	jp z, player_update_switch_to_falling
 	ld hl, SFX_jump
 	call play_SFX_with_high_priority
@@ -540,25 +542,25 @@ player_update_state_jumping:
 	ld (player_jump_no_grab_timer), a
 	jp player_update_state_jumping_no_rope
 player_update_state_jumping_check_rope_or_ladder:
-	ld a, (keyboard_line_state)
-	bit 5, a  ; up
+	ld a, (keyboard_state)
+	bit KEY_UP_BIT, a
 	jp nz, player_update_state_jumping_no_rope
 	call check_player_on_rope_or_ladder
 	jp z, player_update_switch_to_rope_or_ladder
 player_update_state_jumping_no_rope:
 
 	; check for weapon:
-	ld a, (keyboard_line_clicks)
-	bit 0, a
+	ld a, (keyboard_clicks)
+	bit KEY_WEAPON_BIT, a
 	jp nz, player_update_switch_to_weapon_swing_jumping
 
 	; movement left/right:
-	ld a, (keyboard_line_state)
-	bit 7, a
+	ld a, (keyboard_state)
+	bit KEY_RIGHT_BIT, a
 	push af
 		call z, player_update_move_one_pixel_right_considering_collisions
 	pop af
-	bit 4, a
+	bit KEY_LEFT_BIT, a
 	call z, player_update_move_one_pixel_left_considering_collisions
 
 	ld a, (player_jump_is_cancelable)
@@ -566,8 +568,8 @@ player_update_state_jumping_no_rope:
 	jr z, player_update_state_jumping_cannot_cancel
 	; did the player release the jump key?
 	; check for jump
-	ld a, (keyboard_line_state + 2)
-	bit 2, a
+	ld a, (keyboard_state)
+	bit KEY_JUMP_BIT, a
 	call nz, player_update_stop_jumping
 player_update_state_jumping_cannot_cancel:
 
@@ -619,20 +621,24 @@ player_update_switch_to_crouching_from_weapon:
 
 player_update_state_crouching:
 	; check for weapon swing:
-	ld a, (keyboard_line_clicks + 0)
-	bit 0, a
+	ld a, (keyboard_clicks)
+	bit KEY_WEAPON_BIT, a
 	jp nz, player_update_switch_to_weapon_swing_crouching
 
 	; check for inventory:
-	ld a, (keyboard_line_clicks + 2)
-	bit 2, a
+	ld a, (config_inventory_key_combo)
+	or a
+	jr nz, player_update_state_crouching_no_combo_for_inventory
+	ld a, (keyboard_clicks)
+	bit KEY_JUMP_BIT, a
 	jp nz, state_inventory
+player_update_state_crouching_no_combo_for_inventory:
 
 	; check for crawl:
-	ld a, (keyboard_line_state)
-	bit 7, a
+	ld a, (keyboard_state)
+	bit KEY_RIGHT_BIT, a
 	jr z, player_update_switch_to_crawling_right
-	bit 4, a
+	bit KEY_LEFT_BIT, a
 	jr z, player_update_switch_to_crawling_left
 
 	; check for falling:
@@ -640,16 +646,16 @@ player_update_state_crouching:
 	jp nz, player_update_switch_to_falling
 
 	; check for idle:
-	ld a, (keyboard_line_state)
-	bit 6, a
+	ld a, (keyboard_state)
+	bit KEY_DOWN_BIT, a
 	jr z, player_update_state_crouching_still_crouching
 	; check if there would be collision if we get up:
 	call player_check_collision_idle
 	jp nz, player_update_switch_to_idle
 player_update_state_crouching_still_crouching:
 	; See if we are on top of a rope/ladder:
-	ld a, (keyboard_line_state)
-	bit 6, a
+	ld a, (keyboard_state)
+	bit KEY_DOWN_BIT, a
 	jr nz, player_update_state_crouching_no_down  ; this could happen if player is not pressing down but with a collision on top preventing getting up
 	call check_player_on_top_of_rope_or_ladder
 	jp z, player_update_switch_to_rope_or_ladder_from_platform
@@ -672,27 +678,27 @@ player_update_switch_to_crawling_right:
 
 player_update_state_crawling:
 	; check for weapon swing:
-	ld a, (keyboard_line_clicks)
-	bit 0, a
+	ld a, (keyboard_clicks)
+	bit KEY_WEAPON_BIT, a
 	jp nz, player_update_switch_to_weapon_swing_crouching
 
 	; check for inventory:
-	ld a, (keyboard_line_clicks + 2)
-	bit 2, a
+	ld a, (keyboard_clicks)
+	bit KEY_JUMP_BIT, a
 	jp nz, state_inventory
 	
 	; check for crouch:
-	ld a, (keyboard_line_state)
-	bit 7, a
+	ld a, (keyboard_state)
+	bit KEY_RIGHT_BIT, a
 	jr z, player_update_state_crawling_right
-	bit 4, a
+	bit KEY_LEFT_BIT, a
 	jr z, player_update_state_crawling_left
 	jp player_update_switch_to_crouching
 
 player_update_state_crawling_right:
 	; check for back to walking:
-	ld a, (keyboard_line_state)
-	bit 6, a
+	ld a, (keyboard_state)
+	bit KEY_DOWN_BIT, a
 	jr z, player_update_state_crawling_right_still_crawling
 	call player_check_collision_idle
 	jp nz, player_update_switch_to_walking_right
@@ -710,8 +716,8 @@ player_update_state_crawling_right_still_crawling:
 
 player_update_state_crawling_left:
 	; check for back to walking:
-	ld a, (keyboard_line_state)
-	bit 6, a
+	ld a, (keyboard_state)
+	bit KEY_DOWN_BIT, a
 	jr z, player_update_state_crawling_left_still_crawling
 	call player_check_collision_idle
 	jp nz, player_update_switch_to_walking_left
@@ -728,8 +734,8 @@ player_update_state_crawling_left_still_crawling:
 
 player_update_state_crawling_continue:
 
-	ld a, (keyboard_line_state)
-	bit 6, a
+	ld a, (keyboard_state)
+	bit KEY_DOWN_BIT, a
 	jr nz, player_update_state_crawling_no_down  ; this could happen if player is not pressing down but with a collision on top preventing getting up
 	; if we are still here, player is still crouching, see if we are on top of a rope/ladder:
 	call check_player_on_top_of_rope_or_ladder
@@ -772,21 +778,21 @@ player_update_state_rope:
 	; move up and down:
 	ld a, (interrupt_cycle)
 	and #01
-	ld a, (keyboard_line_state)
+	ld a, (keyboard_state)
 	jr z, player_update_state_rope_skip_movement
-	bit 6, a  ; down
+	bit KEY_DOWN_BIT, a
 	push af
 		jr nz, player_update_state_rope_continue
 		call player_update_move_one_pixel_down_considering_collisions
 		jr z, player_update_state_rope_switch_to_idle_pop
 player_update_state_rope_continue:
 	pop af
-	bit 5, a  ; up
+	bit KEY_UP_BIT, a  ; up
 	push af
 		call z, player_update_move_one_pixel_up_considering_collisions
 	pop af
 player_update_state_rope_skip_movement:
-	bit 4, a  ; left
+	bit KEY_LEFT_BIT, a  ; left
 	jr nz, player_update_state_rope_continue2
 	push af
 		ld a, (player_state)
@@ -794,7 +800,7 @@ player_update_state_rope_skip_movement:
 		ld (player_state), a
 	pop af
 player_update_state_rope_continue2:
-	bit 7, a  ; right
+	bit KEY_RIGHT_BIT, a  ; right
 	jr nz, player_update_state_rope_continue3
 	ld a, (player_state)
 	and #fe
@@ -802,8 +808,8 @@ player_update_state_rope_continue2:
 player_update_state_rope_continue3:
 
 	; check for jump
-	ld a, (keyboard_line_clicks + 2)
-	bit 2, a
+	ld a, (keyboard_clicks)
+	bit KEY_JUMP_BIT, a
 	jp nz, player_update_switch_to_jumping_from_rope_or_ladder
 
 	call check_player_on_top_of_rope_or_ladder
@@ -867,24 +873,24 @@ player_update_state_ladder:
 	; move up and down:
 	ld a, (interrupt_cycle)
 	and #01
-	ld a, (keyboard_line_state)
+	ld a, (keyboard_state)
 	jr z, player_update_state_ladder_skip_movement
-	bit 6, a  ; down
+	bit KEY_DOWN_BIT, a  ; down
 	push af
 		jr nz, player_update_state_ladder_continue
 		call player_update_move_one_pixel_down_considering_collisions
 		jr z, player_update_state_ladder_switch_to_idle_pop
 player_update_state_ladder_continue:
 	pop af
-	bit 5, a  ; up
+	bit KEY_UP_BIT, a  ; up
 	push af
 		call z, player_update_move_one_pixel_up_considering_collisions
 	pop af
 player_update_state_ladder_skip_movement:
 
 	; check for jump
-	ld a, (keyboard_line_clicks + 2)
-	bit 2, a
+	ld a, (keyboard_clicks)
+	bit KEY_JUMP_BIT, a
 	jp nz, player_update_switch_to_jumping_from_rope_or_ladder
 
 	call check_player_on_top_of_rope_or_ladder
@@ -965,9 +971,9 @@ player_update_state_swimming_oxygen_done:
 	and #01
 	jp z, player_update_state_swimming_no_player_control
 	; player control:
-	ld a, (keyboard_line_state)  ; RIGHT, DOWN, UP, LEFT, DEL, INS, HOME, SPACE
+	ld a, (keyboard_state)
 	ld hl, player_water_inertia_x
-	bit 4, a
+	bit KEY_LEFT_BIT, a
 	jr nz, player_update_state_swimming_no_left
 	; left:
 	ld a, (player_water_inertia_x)
@@ -984,10 +990,10 @@ player_update_state_swimming_left_reset_inertia:
 	ld a, -PLAYER_MAX_SWIMMING_INERTIA_TIME
 	ld (player_water_inertia_x), a
 player_update_state_swimming_left_done:
-	ld a, (keyboard_line_state)
+	ld a, (keyboard_state)
 player_update_state_swimming_no_left:
 
-	bit 7, a
+	bit KEY_RIGHT_BIT, a
 	jr nz, player_update_state_swimming_no_right
 	; right:
 	ld a, (player_water_inertia_x)
@@ -1004,10 +1010,10 @@ player_update_state_swimming_right_reset_inertia:
 	ld a, PLAYER_MAX_SWIMMING_INERTIA_TIME
 	ld (player_water_inertia_x), a
 player_update_state_swimming_right_done:
-	ld a, (keyboard_line_state)
+	ld a, (keyboard_state)
 player_update_state_swimming_no_right:
 
-	bit 5, a
+	bit KEY_UP_BIT, a
 	jr nz, player_update_state_swimming_no_up
 	; up:
 	ld a, (player_water_inertia_y)
@@ -1024,10 +1030,10 @@ player_update_state_swimming_up_reset_inertia:
 	ld a, -PLAYER_MAX_SWIMMING_INERTIA_TIME
 	ld (player_water_inertia_y), a
 player_update_state_swimming_up_done:
-	ld a, (keyboard_line_state)
+	ld a, (keyboard_state)
 player_update_state_swimming_no_up:
 
-	bit 6, a
+	bit KEY_DOWN_BIT, a
 	jr nz, player_update_state_swimming_no_down
 	; down:
 	ld a, (player_water_inertia_y)
@@ -1185,12 +1191,12 @@ player_update_state_weapon_swing_jumping:
 	ld (player_jump_no_grab_timer), a
 player_update_state_weapon_swing_jumping_continue:
 	; movement left/right:
-	ld a, (keyboard_line_state)
-	bit 7, a
+	ld a, (keyboard_state)
+	bit KEY_RIGHT_BIT, a
 	push af
 		call z, player_update_move_one_pixel_right_considering_collisions
 	pop af
-	bit 4, a
+	bit KEY_LEFT_BIT, a
 	call z, player_update_move_one_pixel_left_considering_collisions
 
 	ld a, (player_jump_is_cancelable)
@@ -1198,8 +1204,8 @@ player_update_state_weapon_swing_jumping_continue:
 	jr z, player_update_state_weapon_swing_jumping_cannot_cancel
 	; did the player release the jump key?
 	; check for jump
-	ld a, (keyboard_line_state + 2)
-	bit 2, a
+	ld a, (keyboard_state)
+	bit KEY_JUMP_BIT, a
 	call nz, player_update_stop_jumping
 player_update_state_weapon_swing_jumping_cannot_cancel:
 
@@ -1259,12 +1265,12 @@ player_update_switch_to_weapon_swing_falling_continue:
 
 player_update_state_weapon_swing_falling:
 	; movement left/right:
-	ld a, (keyboard_line_state)
-	bit 7, a
+	ld a, (keyboard_state)
+	bit KEY_RIGHT_BIT, a
 	push af
 		call z, player_update_move_one_pixel_right_considering_collisions
 	pop af
-	bit 4, a
+	bit KEY_LEFT_BIT, a
 	call z, player_update_move_one_pixel_left_considering_collisions
 
 	ld a, (player_jump_no_grab_timer)
@@ -1355,25 +1361,25 @@ player_update_switch_to_directional_weapon:
 	ld (player_state), a
 player_update_state_directional_weapon:
 	; check for weapon:
-	ld a, (keyboard_line_state)
-	bit 0, a
+	ld a, (keyboard_state)
+	bit KEY_WEAPON_BIT, a
 	jp z, player_update_state_directional_weapon_still_holding_fire
 	call player_update_fire_directional_bullet
 	jp player_update_switch_to_idle
 player_update_state_directional_weapon_still_holding_fire:
-	bit 6, a
+	bit KEY_DOWN_BIT, a
 	jp z, player_update_switch_to_directional_weapon_crouching
 
 	; check for change of direction:
-	ld a, (keyboard_line_clicks)
-	bit 4, a  ; left
+	ld a, (keyboard_clicks)
+	bit KEY_LEFT_BIT, a  ; left
 	jp z, player_update_state_directional_weapon_no_left
 	ld a, (player_state)
 	or 1
 	ld (player_state), a
 player_update_state_directional_weapon_no_left:
-	ld a, (keyboard_line_clicks)
-	bit 7, a  ; right
+	ld a, (keyboard_clicks)
+	bit KEY_RIGHT_BIT, a  ; right
 	jp z, player_update_state_directional_weapon_no_right
 	ld a, (player_state)
 	and #fe
@@ -1381,8 +1387,8 @@ player_update_state_directional_weapon_no_left:
 player_update_state_directional_weapon_no_right:
 
 	; check for jump
-	ld a, (keyboard_line_clicks + 2)
-	bit 2, a
+	ld a, (keyboard_clicks)
+	bit KEY_JUMP_BIT, a
 	jp nz, player_update_switch_to_directional_weapon_jumping_from_idle
 
 	; check for falling:
@@ -1394,12 +1400,12 @@ player_update_state_directional_weapon_no_right:
 	jr z, player_update_state_directional_weapon_shield
 
 	; regular directional weapons:
-	ld a, (keyboard_line_state)
-	bit 5, a
+	ld a, (keyboard_state)
+	bit KEY_UP_BIT, a
 	jr nz, player_update_state_directional_weapon_no_up
-	bit 4, a
+	bit KEY_LEFT_BIT, a
 	jr z, player_update_state_directional_weapon_diagonal_up
-	bit 7, a
+	bit KEY_RIGHT_BIT, a
 	jr z, player_update_state_directional_weapon_diagonal_up
 	; pointing the weapon up:
 	ld a, PLAYER_WEAPON_DIRECTIONAL_UP
@@ -1422,8 +1428,8 @@ player_update_state_directional_weapon_no_up:
 	jp player_update_update_sprite_position
 
 player_update_state_directional_weapon_shield:
-	ld a, (keyboard_line_state)
-	bit 5, a
+	ld a, (keyboard_state)
+	bit KEY_UP_BIT, a
 	jr nz, player_update_state_directional_weapon_shield_no_up
 	; pointing the shield up:
 	ld a, PLAYER_WEAPON_SHIELD_UP
@@ -1461,15 +1467,15 @@ player_update_state_directional_weapon_jumping:
 player_update_state_directional_weapon_jumping_continue:
 
 	; check for change of direction:
-	ld a, (keyboard_line_clicks)
-	bit 4, a  ; left
+	ld a, (keyboard_clicks)
+	bit KEY_LEFT_BIT, a  ; left
 	jp z, player_update_state_directional_weapon_jumping_no_left
 	ld a, (player_state)
 	or 1
 	ld (player_state), a
 player_update_state_directional_weapon_jumping_no_left:
-	ld a, (keyboard_line_clicks)
-	bit 7, a  ; right
+	ld a, (keyboard_clicks)
+	bit KEY_RIGHT_BIT, a  ; right
 	jp z, player_update_state_directional_weapon_jumping_no_right
 	ld a, (player_state)
 	and #fe
@@ -1481,8 +1487,8 @@ player_update_state_directional_weapon_jumping_no_right:
 	jr z, player_update_state_directional_weapon_jumping_cannot_cancel
 	; did the player release the jump key?
 	; check for jump
-	ld a, (keyboard_line_state + 2)
-	bit 2, a
+	ld a, (keyboard_state)
+	bit KEY_JUMP_BIT, a
 	call nz, player_update_stop_jumping
 player_update_state_directional_weapon_jumping_cannot_cancel:
 
@@ -1506,8 +1512,8 @@ player_update_state_directional_weapon_jumping_speed_loop:
 player_update_state_directional_weapon_jumping_loop_done:
 
 	; weapon release?
-	ld a, (keyboard_line_state)
-	bit 0, a
+	ld a, (keyboard_state)
+	bit KEY_WEAPON_BIT, a
 	jp nz, player_update_state_directional_weapon_jumping_done
 
 	ld a, (player_current_weapon)
@@ -1515,12 +1521,12 @@ player_update_state_directional_weapon_jumping_loop_done:
 	jr z, player_update_state_directional_weapon_jumping_shield
 
 	; regular directional weapons:
-	ld a, (keyboard_line_state)
-	bit 5, a
+	ld a, (keyboard_state)
+	bit KEY_UP_BIT, a
 	jr nz, player_update_state_directional_weapon_jumping_no_up
-	bit 4, a
+	bit KEY_LEFT_BIT, a
 	jr z, player_update_state_directional_weapon_jumping_diagonal_up
-	bit 7, a
+	bit KEY_RIGHT_BIT, a
 	jr z, player_update_state_directional_weapon_jumping_diagonal_up
 	; pointing the weapon up:
 	ld a, PLAYER_WEAPON_DIRECTIONAL_UP
@@ -1542,8 +1548,8 @@ player_update_state_directional_weapon_jumping_no_up:
 	jp player_update_update_sprite_position
 
 player_update_state_directional_weapon_jumping_shield:
-	ld a, (keyboard_line_state)
-	bit 5, a
+	ld a, (keyboard_state)
+	bit KEY_UP_BIT, a
 	jr nz, player_update_state_directional_weapon_jumping_shield_no_up
 	; pointing the shield up:
 	ld a, PLAYER_WEAPON_SHIELD_UP
@@ -1589,15 +1595,15 @@ player_update_state_directional_weapon_falling:
 player_update_state_directional_weapon_falling_continue:
 
 	; check for change of direction:
-	ld a, (keyboard_line_clicks)
-	bit 4, a  ; left
+	ld a, (keyboard_clicks)
+	bit KEY_LEFT_BIT, a  ; left
 	jp z, player_update_state_directional_weapon_falling_no_left
 	ld a, (player_state)
 	or 1
 	ld (player_state), a
 player_update_state_directional_weapon_falling_no_left:
-	ld a, (keyboard_line_clicks)
-	bit 7, a  ; right
+	ld a, (keyboard_clicks)
+	bit KEY_RIGHT_BIT, a  ; right
 	jp z, player_update_state_directional_weapon_falling_no_right
 	ld a, (player_state)
 	and #fe
@@ -1639,8 +1645,8 @@ player_update_state_directional_weapon_falling_speed_loop:
 player_update_state_directional_weapon_falling_speed_loop_done:
 
 	; weapon release?
-	ld a, (keyboard_line_state)
-	bit 0, a
+	ld a, (keyboard_state)
+	bit KEY_WEAPON_BIT, a
 	jp nz, player_update_state_directional_weapon_falling_done
 
 	ld a, (player_current_weapon)
@@ -1648,12 +1654,12 @@ player_update_state_directional_weapon_falling_speed_loop_done:
 	jr z, player_update_state_directional_weapon_falling_shield
 
 	; regular directional weapons:
-	ld a, (keyboard_line_state)
-	bit 5, a
+	ld a, (keyboard_state)
+	bit KEY_UP_BIT, a
 	jr nz, player_update_state_directional_weapon_falling_no_up
-	bit 4, a
+	bit KEY_LEFT_BIT, a
 	jr z, player_update_state_directional_weapon_falling_diagonal_up
-	bit 7, a
+	bit KEY_RIGHT_BIT, a
 	jr z, player_update_state_directional_weapon_falling_diagonal_up
 	; pointing the weapon up:
 	ld a, PLAYER_WEAPON_DIRECTIONAL_UP
@@ -1675,8 +1681,8 @@ player_update_state_directional_weapon_falling_no_up:
 	jp player_update_update_sprite_position
 
 player_update_state_directional_weapon_falling_shield:
-	ld a, (keyboard_line_state)
-	bit 5, a
+	ld a, (keyboard_state)
+	bit KEY_UP_BIT, a
 	jr nz, player_update_state_directional_weapon_falling_shield_no_up	
 	; pointing the shield up:
 	ld a, PLAYER_WEAPON_SHIELD_UP
@@ -1710,28 +1716,28 @@ player_update_switch_to_directional_weapon_crouching:
 	add a, PLAYER_STATE_DIRECTIONAL_WEAPON_CROUCHING
 	ld (player_state), a
 player_update_state_directional_weapon_crouching:
-	ld a, (keyboard_line_state)
-	bit 0, a
+	ld a, (keyboard_state)
+	bit KEY_WEAPON_BIT, a
 	jp z, player_update_state_directional_weapon_crouching_still_holding_fire
 	call player_update_fire_directional_bullet
 	jp player_update_switch_to_crouching
 player_update_state_directional_weapon_crouching_still_holding_fire:
 
 	; check for inventory:
-	ld a, (keyboard_line_clicks + 2)
-	bit 2, a
+	ld a, (keyboard_clicks)
+	bit KEY_JUMP_BIT, a
 	jp nz, state_inventory
 
 	; check for change of direction:
-	ld a, (keyboard_line_clicks)
-	bit 4, a  ; left
+	ld a, (keyboard_clicks)
+	bit KEY_LEFT_BIT, a  ; left
 	jp z, player_update_state_directional_weapon_crouching_no_left
 	ld a, (player_state)
 	or 1
 	ld (player_state), a
 player_update_state_directional_weapon_crouching_no_left:
-	ld a, (keyboard_line_clicks)
-	bit 7, a  ; right
+	ld a, (keyboard_clicks)
+	bit KEY_RIGHT_BIT, a  ; right
 	jp z, player_update_state_directional_weapon_crouching_no_right
 	ld a, (player_state)
 	and #fe
@@ -1743,8 +1749,8 @@ player_update_state_directional_weapon_crouching_no_right:
 	jp nz, player_update_switch_to_falling_with_directional
 
 	; check for idle:
-	ld a, (keyboard_line_state)
-	bit 6, a
+	ld a, (keyboard_state)
+	bit KEY_DOWN_BIT, a
 	jr z, player_update_state_directional_weapon_crouching_still_crouching
 	call player_check_collision_idle
 	jp nz, player_update_switch_to_directional_weapon
@@ -1755,20 +1761,9 @@ player_update_state_directional_weapon_crouching_still_crouching:
 	jr z, player_update_state_directional_weapon_crouching_shield
 
 	; regular directional weapons:
-	ld a, (keyboard_line_state)
-	bit 5, a
+	ld a, (keyboard_state)
+	bit KEY_UP_BIT, a
 	jr nz, player_update_state_directional_weapon_crouching_no_up
-; 	bit 4, a
-; 	jr z, player_update_state_directional_weapon_crouching_diagonal_up
-; 	bit 7, a
-; 	jr z, player_update_state_directional_weapon_crouching_diagonal_up
-; 	; pointing the weapon up:
-; 	ld a, PLAYER_WEAPON_DIRECTIONAL_UP
-; 	ld (player_weapon_swing_type), a
-; 	ld a, 29
-; 	ld (player_requested_frame), a
-; 	jp player_update_update_sprite_position
-; player_update_state_directional_weapon_crouching_diagonal_up:
 	ld a, PLAYER_WEAPON_DIRECTIONAL_FW_UP
 	ld (player_weapon_swing_type), a
 	ld a, 31
@@ -1782,8 +1777,8 @@ player_update_state_directional_weapon_crouching_no_up:
 	jp player_update_update_sprite_position
 
 player_update_state_directional_weapon_crouching_shield:
-	ld a, (keyboard_line_state)
-	bit 5, a
+	ld a, (keyboard_state)
+	bit KEY_UP_BIT, a
 	jr nz, player_update_state_directional_weapon_crouching_shield_no_up
 	; pointing the shield up:
 	ld a, 26
@@ -2066,8 +2061,8 @@ player_update_determine_weapon_swing_type_machete:
 	call play_SFX_with_high_priority
 	ld a, 8
 	ld (player_weapon_state_timer), a
-	ld a, (keyboard_line_state)
-	bit 5, a  ; up
+	ld a, (keyboard_state)
+	bit KEY_UP_BIT, a  ; up
 	jr z, player_update_determine_weapon_swing_type_machete_up
 	; swing machete forward:
 	ld a, PLAYER_WEAPON_SWING_MACHETE_FORWARD
@@ -2118,10 +2113,10 @@ player_update_determine_weapon_swing_type_jumping_machete:
 	call play_SFX_with_high_priority
 	ld a, 8
 	ld (player_weapon_state_timer), a
-	ld a, (keyboard_line_state)
-	bit 5, a  ; up
+	ld a, (keyboard_state)
+	bit KEY_UP_BIT, a  ; up
 	jr z, player_update_determine_weapon_swing_type_jumping_machete_up
-	bit 6, a  ; down
+	bit KEY_DOWN_BIT, a  ; down
 	jr z, player_update_determine_weapon_swing_type_jumping_machete_down
 	; swing machete forward:
 	ld a, PLAYER_WEAPON_SWING_MACHETE_FORWARD

@@ -6,6 +6,13 @@ state_inventory_from_quit:
 
 
 ;-----------------------------------------------
+state_inventory_from_options:
+	ld a, 4
+	ld (inventory_cursor_position_x), a
+	jr state_inventory_entry_point
+
+
+;-----------------------------------------------
 state_inventory:
 	ld hl, SFX_ui_select
 	call play_SFX_with_high_priority
@@ -46,20 +53,20 @@ state_inventory_loop:
 state_inventory_update_cursor:
 	ld hl, (inventory_cursor_position_x)
 	push hl
-		ld a, (keyboard_line_clicks)  ; RIGHT, DOWN, UP, LEFT, DEL, INS, HOME, SPACE
-		bit 7, a  ; right
+		ld a, (keyboard_clicks)
+		bit KEY_RIGHT_BIT, a  ; right
 		push af
 			call nz, state_inventory_update_cursor_right
 		pop af
-		bit 6, a  ; down
+		bit KEY_DOWN_BIT, a  ; down
 		push af
 			call nz, state_inventory_update_cursor_down
 		pop af
-		bit 5, a  ; up
+		bit KEY_UP_BIT, a  ; up
 		push af
 			call nz, state_inventory_update_cursor_up
 		pop af
-		bit 4, a  ; left
+		bit KEY_LEFT_BIT, a  ; left
 		push af
 			call nz, state_inventory_update_cursor_left
 		pop af
@@ -78,11 +85,10 @@ state_inventory_update_cursor:
 	call state_inventory_update_item_text
 state_inventory_update_cursor_continue:
 
-	ld a, (keyboard_line_clicks)
-	bit 0, a  ; space
+	ld a, (keyboard_clicks)
+	bit KEY_WEAPON_BIT, a  ; space
 	jp nz, state_inventory_update_cursor_button
-	ld a, (keyboard_line_clicks + 2)
-	bit 2, a
+	bit KEY_JUMP_BIT, a
 	jp nz, state_inventory_update_cursor_button_back
 	ret
 
@@ -140,8 +146,7 @@ state_inventory_update_cursor_button_back:
 	jp state_play_from_inventory
 
 state_inventory_update_cursor_button_options:
-	; ...
-	ret
+	jp state_options
 
 
 state_inventory_update_cursor_right:

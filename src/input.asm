@@ -1,30 +1,82 @@
+; KEY_WEAPON_BIT: equ 0
+; KEY_JUMP_BIT: equ 1
+; KEY_INVENTORY_BIT: equ 2
+; KEY_INTERACT_BIT: equ 3
+; KEY_LEFT_BIT: equ 4
+; KEY_UP_BIT: equ 5
+; KEY_DOWN_BIT: equ 6
+; KEY_RIGHT_BIT: equ 7
+
 ;-----------------------------------------------
-; updates the 'keyboard_line_state' and 'keyboard_line_state_prev' buffers
+; updates the 'keyboard_state', 'keyboard_state_prev', and 'keyboard_clicks'
 update_keyboard_buffers:
-    ld a, #08
-    call SNSMAT
-    ld (keyboard_line_state), a  ; RIGHT, DOWN, UP, LEFT, DEL, INS, HOME, SPACE
-
-    ld a, #04
-    call SNSMAT
-    ld (keyboard_line_state + 2), a  ; R, Q, P, O, N, M, L, K
-
+    ld b, 8
+    ld hl, config_keyboard
+    xor a
+update_keyboard_buffers_loop:
+    push af
+    push bc
+        ld a, (hl)  ; keyboard martrix line
+        inc hl
+        push hl
+            call SNSMAT
+        pop hl
+        ld c, (hl)  ; mask
+        inc hl
+        and c
+        jr z, update_keyboard_buffers_loop_pressed
+    pop bc
+    pop af
+    rlca
+    or #1
+    djnz update_keyboard_buffers_loop
+    jr update_keyboard_buffers_loop_done
+update_keyboard_buffers_loop_pressed:
+    pop bc
+    pop af
+    rlca
+    djnz update_keyboard_buffers_loop
+update_keyboard_buffers_loop_done:
+    ld (keyboard_state), a
     call read_joystick
 
-    ld de, keyboard_line_state
-    ld hl, keyboard_line_state_prev
-    ld bc, #0204  ; c just > b so that "ldi" will not interferer with b.
-update_keyboard_buffers_loop:
-        ld a, (de)
-        xor (hl)
-        and (hl)  ; a now has the value to save in "keyboard_line_clicks" (which is "keyboard_line_state", offset by 1)
-        ex de, hl
-            ldi
-        ex de, hl
-        ld (de), a  ; save the click in "keyboard_line_clicks"
-        inc de
-    djnz update_keyboard_buffers_loop
+    ld hl, keyboard_state_prev
+    ld a, (keyboard_state)
+    ld b, (hl)
+    ld (hl), a
+    xor b
+    and b
+    ld (keyboard_clicks), a
     ret
+
+
+;-----------------------------------------------
+; updates the 'keyboard_line_state' and 'keyboard_line_state_prev' buffers
+; update_keyboard_buffers:
+;     ld a, #08
+;     call SNSMAT
+;     ld (keyboard_line_state), a  ; RIGHT, DOWN, UP, LEFT, DEL, INS, HOME, SPACE
+
+;     ld a, #04
+;     call SNSMAT
+;     ld (keyboard_line_state + 2), a  ; R, Q, P, O, N, M, L, K
+
+;     call read_joystick
+
+;     ld de, keyboard_line_state
+;     ld hl, keyboard_line_state_prev
+;     ld bc, #0204  ; c just > b so that "ldi" will not interferer with b.
+; update_keyboard_buffers_loop:
+;         ld a, (de)
+;         xor (hl)
+;         and (hl)  ; a now has the value to save in "keyboard_line_clicks" (which is "keyboard_line_state", offset by 1)
+;         ex de, hl
+;             ldi
+;         ex de, hl
+;         ld (de), a  ; save the click in "keyboard_line_clicks"
+;         inc de
+;     djnz update_keyboard_buffers_loop
+;     ret
 
 
 ;-----------------------------------------------
@@ -40,10 +92,12 @@ read_joystick:
     dec a
     call RDPSG  ; a = -, -, B, A, right, left, down, up
     ei
+    ret
+
     ; convert the joystick input to keyboard input
     ld c, a
     ; arrows/space:
-    ld hl, keyboard_line_state
+    ld hl, keyboard_state
     ld a, (hl)
     
     rr c
@@ -71,18 +125,21 @@ read_joystick_noRight:
     and #fe
 read_joystick_noA:
 
-    ld (hl), a   ; we add the joystick input to the keyboard input
-
-    ; m (button 2):
-    inc hl
-    inc hl  ; hl = keyboard_line_state+2
-    ld a, (hl)
     rr c
-    jr c,read_joystick_noB
+    jr c, read_joystick_noB
     and #fb
 read_joystick_noB:
-    ld (hl), a   ; we add the joystick input to the keyboard input
 
+    ld (hl), a   ; we add the joystick input to the keyboard input
+;     ; m (button 2):
+;     inc hl
+;     inc hl  ; hl = keyboard_line_state+2
+;     ld a, (hl)
+;     rr c
+;     jr c,read_joystick_noB
+;     and #fb
+; read_joystick_noB:
+;     ld (hl), a   ; we add the joystick input to the keyboard input
     ret
 
 
@@ -90,8 +147,10 @@ read_joystick_noB:
 ; Waits until the player presses space
 wait_for_space:
     call update_keyboard_buffers
-    ld a, (keyboard_line_clicks)
-    bit 0, a
+    ld a, (keyboard_clicks)
+    bit KEY_WEAPON_BIT, a
+    ret nz
+    bit KEY_JUMP_BIT, a
     ret nz
     halt
     jr wait_for_space
