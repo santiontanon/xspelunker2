@@ -95,6 +95,7 @@ pcg_generate_room__xy_loop_x_skip:
 	sub iyl
 	inc a
 	ld iyl, a  ; iyl now has width in "screens"
+	ld (current_room__width_in_screens), a
 	add a, a
 	add a, a
 	add a, a
@@ -107,6 +108,7 @@ pcg_generate_room__xy_loop_x_skip:
 	sub iyh
 	inc a
 	ld iyh, a  ; iyl now has height in "screens"
+	ld (current_room__height_in_screens), a
 	add a, a
 	add a, a
 	add a, a
@@ -303,8 +305,194 @@ pcg_generate_room__fg_loop_x_skip:
 	call pcg_generate_room__prettyfy_pyramid
 
 	; Instantiate 'current_area__objects':
+	ld ix, current_area__objects
+pcg_generate_room__object_loop:
+	ld a, (ix)
+	cp #ff
+	jr z, pcg_generate_room__object_loop_end
+	; see if the object is in this room:
+	ld a, (ix + AREA_OBJECT_STRUCT_OFFSET)
+	call area_object_offset_to_x_y_in_chunks
+	; convert coordinates to in-room coordinates:
+	ld de, (current_room__x)  ; e = current_room__x, d = current_room__y
+	or a
+	rl d  ; in chunks
+	rl e  ; in chunks
+	ld a, c
+	sub e
+	jr c, pcg_generate_room__object_loop_next  ; out of bounds left 
+	ld c, a
+	ld a, (current_room__width_in_screens)
+	add a, a  ; in chunks
+	cp c
+	jr c, pcg_generate_room__object_loop_next  ; out of bounds right 
+	ld a, b
+	sub d
+	jr c, pcg_generate_room__object_loop_next  ; out of bounds top 
+	ld b, a
+	ld a, (current_room__height_in_screens)
+	add a, a  ; in chunks
+	cp b
+	jr c, pcg_generate_room__object_loop_next  ; out of bounds bottom 
+
+	; object is in this room:
+	ld a, (ix + AREA_OBJECT_STRUCT_TYPE)
+	cp TAG_BREAKABLE_WALL1
+	jp z, pcg_generate_room__object_breakable_wall
+	cp TAG_BREAKABLE_WALL2
+	jp z, pcg_generate_room__object_breakable_wall
+	cp TAG_BREAKABLE_WALL3
+	jp z, pcg_generate_room__object_breakable_wall
+	cp TAG_BREAKABLE_WALL4
+	jp z, pcg_generate_room__object_breakable_wall
+
 	; ...
 
+pcg_generate_room__object_loop_next:
+	ld bc, AREA_OBJECT_STRUCT_SIZE
+	add ix, bc
+	jr pcg_generate_room__object_loop
+pcg_generate_room__object_loop_end:
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - ix: ptr to the area object
+; - c, b: x, y of where to spawn the object (in chunks)
+pcg_generate_room__object_breakable_wall:
+	; get the chunk type where we are placing the object:
+	push bc
+		call get_chunk_id_from_coordinates  ; a = chunk ID
+		ld hl, pyramid_chunk_fg_bank_ptrs
+		call pcg_get_chunk_ptr
+		ld a, (ix + AREA_OBJECT_STRUCT_EXTRA)  ; get the direction of the wall
+		cp PCG_DIRECTION_LEFT
+		jr z, pcg_generate_room__object_breakable_wall_left
+		cp PCG_DIRECTION_LEFT
+		jr z, pcg_generate_room__object_breakable_wall_up
+		cp PCG_DIRECTION_LEFT
+		jr z, pcg_generate_room__object_breakable_wall_right
+pcg_generate_room__object_breakable_wall_down:
+		ld e, CHUNK_LOCATION_BREAKABLE_DOWN
+		jr pcg_generate_room__object_breakable_wall_mask_set
+pcg_generate_room__object_breakable_wall_right:
+		ld e, CHUNK_LOCATION_BREAKABLE_RIGHT
+		jr pcg_generate_room__object_breakable_wall_mask_set
+pcg_generate_room__object_breakable_wall_up:
+		ld e, CHUNK_LOCATION_BREAKABLE_UP
+		jr pcg_generate_room__object_breakable_wall_mask_set
+pcg_generate_room__object_breakable_wall_left:
+		ld e, CHUNK_LOCATION_BREAKABLE_LEFT
+pcg_generate_room__object_breakable_wall_mask_set:
+
+		; select one chunk location for a breakable wall that matches the direction constraint:
+		call sample_chunk_location  ; de: ptr to the location
+	pop bc  ; chunk coordinates
+
+	ASSERT_D_NOT_EQ 0
+
+	; spawn the breakable wall object:
+	ld iy, (tmp_pcg_room__next_tile_object_ptr)
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 0  ; ID
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_BREAKABLE_WALL1  ; type
+	inc de
+	; x = c * CHUNK_WIDTH + (de)
+	ld a, c
+	add a, a
+	add a, a
+	add a, a
+	add a, a  ; assumes CHUNK_WIDTH = 16
+	ld c, a
+	ld a, (de)
+	add a, c
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), a  ; x
+	inc de
+	; y = b * CHUNK_HEIGHT + (de)
+	ld a, b
+	add a, a
+	add a, a
+	ld b, a
+	add a, a
+	add a, b  ; assumes CHUNK_HEIGHT = 12
+	ld b, a
+	ld a, (de)
+	add a, b
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), a  ; y
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 8  ; state (hitpoints)
+	inc de
+	ld a, (de)
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_WIDTH), a  ; width
+	inc de
+	ld a, (de)
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_HEIGHT), a  ; height
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_LAST_HIT_ID), #ff  ; can be hit by anything
+	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE - 4  ; "- 4", since we already did 4 "inc de"
+	add iy, bc
+	ld (tmp_pcg_room__next_tile_object_ptr), iy
+
+	jp pcg_generate_room__object_loop_next
+
+
+;-----------------------------------------------
+; input:
+; - hl: ptr to chunk
+; - e: location type
+; output:
+; - de: ptr to the selected location
+sample_chunk_location:
+	ld a, e
+	ld bc, CHUNK_WIDTH * CHUNK_HEIGHT
+	add hl, bc
+	ld b, MAX_CHUNK_LOCATIONS
+	ld de, 0
+sample_chunk_location_loop:
+	cp (hl)
+	jr nz, sample_chunk_location_loop_next
+	push af
+		ld a, d
+		or a
+		jr z, sample_chunk_location_select
+		call random_a
+		and #01
+		jr z, sample_chunk_location_skip
+sample_chunk_location_select:
+		ld d, h
+		ld e, l
+sample_chunk_location_skip:
+	pop af
+sample_chunk_location_loop_next:
+	inc hl
+	inc hl
+	inc hl
+	inc hl
+	inc hl
+	djnz sample_chunk_location_loop
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - c, b: x, y of where to spawn the object (in chunks)
+get_chunk_id_from_coordinates:
+	; chunk id = (current_area__chunks_ids + c + b * (current_area__width) * 2)
+	ld a, (current_area__width)
+	add a, a
+	ld e, a
+	ld d, 0
+	ld hl, 0
+	ld a, b
+	or a
+	jr z, get_chunk_id_from_coordinates_loop_done
+get_chunk_id_from_coordinates_loop:
+	add hl, de
+	djnz get_chunk_id_from_coordinates_loop
+get_chunk_id_from_coordinates_loop_done:
+	ld b, 0
+	add hl, bc
+	ld bc, current_area__chunks_ids
+	add hl, bc
+	ld a, (hl)
 	ret
 
 
@@ -780,5 +968,28 @@ pcg_get_chunk_ptr_already_loaded:
 pcg_get_chunk_ptr_loop:
 	add hl, de
 	djnz pcg_get_chunk_ptr_loop
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - a: offset (x+y*width)
+; output:
+; - c, b: x, y in chunk coordinates
+area_object_offset_to_x_y_in_chunks:
+	push af
+		ld a, (current_area__width)
+		add a, a
+		ld e, a  ; width in chunks
+	pop af
+	ld b, 0
+area_object_offset_to_x_y_in_chunks_loop:
+	cp e
+	jr c, area_object_offset_to_x_y_in_chunks_loop_done
+	sub e
+	inc b
+	jp area_object_offset_to_x_y_in_chunks_loop
+area_object_offset_to_x_y_in_chunks_loop_done:
+	ld c, a
 	ret
 

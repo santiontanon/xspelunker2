@@ -137,6 +137,34 @@ update_tile_objects_pushable_block_remove:
 
 ;-----------------------------------------------
 ; input:
+; - ix: ptr to breakable wall
+; - a: collision ID
+breakable_wall_hit_by_player:
+	ld a, iyl
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_LAST_HIT_ID), a
+
+	dec (ix + ROOM_TILE_OBJECT_STRUCT_STATE)
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)
+	or a
+	jr nz, breakable_wall_hit_by_player_continue
+
+	; wall destroyed!
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)
+	ld hl, SFX_enemy_kill
+	call play_SFX_with_high_priority
+	call room_remove_breakable_wall
+	push ix
+	pop hl
+	jp delete_tile_object_in_hl
+
+breakable_wall_hit_by_player_continue:
+	ld hl, SFX_enemy_hit
+	jp play_SFX_with_high_priority
+
+
+;-----------------------------------------------
+; input:
 ; - hl: ptr of the tile object to delete
 delete_tile_object_in_hl:
 	; copy:
@@ -174,7 +202,9 @@ room_render_tile_objects_loop:
 	; render the object:
 	push hl
 		inc hl
-		add a, (hl)  ; type
+		ld a, (hl)  ; type
+		cp TAG_BREAKABLE_WALL1  ; all breakable walls are this type when instantiated in a room
+		jr z, room_render_tile_objects_loop_continue
 		inc hl
 		ld c, (hl)  ; x
 		ld ixl, c
@@ -327,7 +357,9 @@ room_remove_tile_objects_loop:
 	push bc
 	push hl
 		inc hl
-		add a, (hl)  ; type
+		ld a, (hl)  ; type
+		cp TAG_BREAKABLE_WALL1  ; all breakable walls are this type when instantiated in a room
+		jr z, room_remove_tile_objects_loop_continue		
 		inc hl
 		ld c, (hl)  ; x
 		ld ixl, c
@@ -459,6 +491,31 @@ room_remove_tile_objects_delete_object_loop_x:
 
 
 ;-----------------------------------------------
+; input:
+; - ix: ptr to the object
+room_remove_breakable_wall:
+	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	call get_room_tile_ptr
+	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_WIDTH)
+	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_HEIGHT)
+room_remove_breakable_wall_loop_y:
+	push bc
+	push hl
+room_remove_breakable_wall_loop_x:
+		ld (hl), 0
+		inc hl
+		dec c
+		jr nz, room_remove_breakable_wall_loop_x
+	pop hl
+	pop bc
+	ld a, (current_room__width)
+	ADD_HL_A
+	djnz room_remove_breakable_wall_loop_y
+	ret
+
+
+;-----------------------------------------------
 ; types:
 ; - 0: save background, then render
 ; - 1: render directly
@@ -471,7 +528,7 @@ endm
 
 tile_object_gfx_table:
 REPT TAG_PUSHABLE_BLOCK  ; add filler
-	TILE_OBJECT_DATA 0, 0, 0, 0
+	TILE_OBJECT_DATA 2, 0, 0, 0
 ENDR
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_pushable_block_gfx
 

@@ -33,8 +33,8 @@ state_play:
 		call call_hl_in_page_c_8000
 
 		; generate room:
-; 		ld e, 0
-		ld e, 1
+		ld e, 0
+; 		ld e, 1
 ; 		ld e, 2
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE

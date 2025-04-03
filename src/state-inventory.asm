@@ -88,7 +88,7 @@ state_inventory_update_cursor_continue:
 	ld a, (keyboard_clicks)
 	bit KEY_WEAPON_BIT, a  ; space
 	jp nz, state_inventory_update_cursor_button
-	bit KEY_JUMP_BIT, a
+	bit KEY_INVENTORY_BIT, a
 	jp nz, state_inventory_update_cursor_button_back
 	ret
 

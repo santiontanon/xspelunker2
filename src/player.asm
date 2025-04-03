@@ -194,6 +194,8 @@ player_update_update_sprite_weapon:
 	inc bc
 	inc bc
 	ld a, (player_current_weapon)
+	cp 2  ; macuahuitl
+	jr z, player_update_update_sprite_weapon_macuahuitl
 	cp 8  ; obsidian knive
 	jr z, player_update_update_sprite_weapon_obsidian_knive
 	cp 9  ; fire hammer
@@ -213,6 +215,11 @@ player_update_update_sprite_weapon_ice_macuahuitl:
 player_update_update_sprite_weapon_fire_hammer:
 	ld a, iyl
 	or COLOR_RED
+	ld (bc), a  ; color / early clock bit
+	ret
+player_update_update_sprite_weapon_macuahuitl:
+	ld a, iyl
+	or COLOR_LIGHT_RED
 	ld (bc), a  ; color / early clock bit
 	ret
 
@@ -1053,7 +1060,6 @@ player_update_state_swimming_down_done:
 player_update_state_swimming_no_down:
 
 player_update_state_swimming_no_player_control:
-
 	; update inertia x:
 	ld a, (player_water_inertia_x)
 	or a
@@ -1157,6 +1163,8 @@ player_update_state_swimming_inertia_y_done:
 
 ;-----------------------------------------------
 player_update_switch_to_weapon_swing:
+	call get_next_hit_id
+	ld (player_current_swing_hit_id), a
 	call player_update_determine_weapon_swing_type
 	jp nz, player_update_switch_to_directional_weapon
 player_update_switch_to_idle_keep_weapon:
@@ -1176,6 +1184,8 @@ player_update_state_weapon_swing:
 
 ;-----------------------------------------------
 player_update_switch_to_weapon_swing_jumping:
+	call get_next_hit_id
+	ld (player_current_swing_hit_id), a
 	call player_update_determine_weapon_swing_type_jumping
 	jp nz, player_update_switch_to_directional_weapon_jumping
 	ld a, (player_state)
@@ -1255,6 +1265,8 @@ player_update_switch_to_weapon_swing_falling_from_jumping:
 	jr player_update_switch_to_weapon_swing_falling_continue
 
 player_update_switch_to_weapon_swing_falling:
+	call get_next_hit_id
+	ld (player_current_swing_hit_id), a
 	call player_update_determine_weapon_swing_type_jumping
 	jp nz, player_update_switch_to_directional_weapon_falling
 player_update_switch_to_weapon_swing_falling_continue:
@@ -1336,6 +1348,8 @@ player_update_state_weapon_swing_falling_swing_done:
 
 ;-----------------------------------------------
 player_update_switch_to_weapon_swing_crouching:
+	call get_next_hit_id
+	ld (player_current_swing_hit_id), a
 	call player_update_determine_weapon_swing_type_crouching
 	jp nz, player_update_switch_to_directional_weapon_crouching
 	ld a, (player_state)
@@ -1999,6 +2013,9 @@ player_update_fire_directional_bullet_fw_up_continue:
 	inc (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	ld b, 8
 player_update_fire_directional_bullet_speed_set:
+	inc hl
+	call get_next_hit_id
+	ld (hl), a
 	call update_sprite_objects_move_object
 	; move it one more time, so that the bullet starts a bit separated from the player:
 	ld c, (ix + ROOM_OBJECT_STRUCT_SPEED_X)
@@ -2183,16 +2200,17 @@ player_update_weapon_sprite_request:
 	cp PLAYER_WEAPON_SWING_HAMMER1
 	jr z, player_update_weapon_sprite_request_hammer1
 	cp PLAYER_WEAPON_SWING_HAMMER2
-	jr z, player_update_weapon_sprite_request_hammer2
+	jp z, player_update_weapon_sprite_request_hammer2
 	cp PLAYER_WEAPON_SWING_MACUAHUITL1
-	jr z, player_update_weapon_sprite_request_macuahuitl1
+	jp z, player_update_weapon_sprite_request_macuahuitl1
 player_update_weapon_sprite_request_continue:
 	; weapon sprite setup:
 	ld a, (player_weapon_swing_type)
 	ld c, a
 	add a, a
 	add a, a
-	add a, c  ; a *= 5
+	add a, a
+	sub c  ; a *= 7
 	ld hl, weapon_sprite_swing_table
 	ADD_HL_A
 	ld de, player_requested_weapon_sprite
@@ -2210,6 +2228,53 @@ player_update_weapon_sprite_request_x_set:
 	ldi
 	ld a, (hl)
 	ld (player_requested_frame), a
+
+	; check if the weapon has hit something:
+	ld a, (player_current_swing_hit_id)
+	ld iyl, a
+	; compute the hit box:
+	; - ((player_x) + (de - 1)) / 8 + (player_x + 1)
+	; - ((player_y) + (de)) / 8 + (player_y + 1)
+	dec de
+	ld a, (de)  ; y offset
+	ld b, a
+	ld a, (player_y)
+	add a, b
+	sra a
+	sra a
+	sra a
+	ld b, a
+	ld a, (player_y + 1)
+	add a, b
+	ld b, a
+
+	dec de
+	ld a, (de)  ; x offset
+	ld c, a
+	ld a, (player_x)
+	add a, c
+	sra a
+	sra a
+	sra a
+	ld c, a
+	ld a, (player_x + 1)
+	add a, c
+	ld d, b  
+	ld e, a  ; e, d: hit box start
+
+	inc hl
+	ld a, (hl)  ; hitbox width
+	or a 
+	jp z, player_update_update_sprite_position  ; no weapon hitbox
+	add a, e
+	ld c, a
+	inc hl
+	ld a, (hl)  ; hitbox height
+	add a, d
+	ld l, c
+	ld h, a
+	call player_weapon_hitbox_check
+
 	jp player_update_update_sprite_position
 
 player_update_weapon_sprite_request_hammer1:
@@ -2224,32 +2289,32 @@ player_update_weapon_sprite_request_hammer1:
 player_update_weapon_sprite_request_hammer2:
 	ld a, (player_weapon_state_timer)
 	cp 10
-	jr nz, player_update_weapon_sprite_request_continue
+	jp nz, player_update_weapon_sprite_request_continue
 	ld a, PLAYER_WEAPON_SWING_HAMMER3
 	ld (player_weapon_swing_type), a
-	jr player_update_weapon_sprite_request_continue
+	jp player_update_weapon_sprite_request_continue
 player_update_weapon_sprite_request_macuahuitl1:
 	ld a, (player_weapon_state_timer)
 	cp 10
-	jr nz, player_update_weapon_sprite_request_continue
+	jp nz, player_update_weapon_sprite_request_continue
 	ld hl, SFX_weapon_swing
 	call play_SFX_with_high_priority
 	ld a, PLAYER_WEAPON_SWING_MACUAHUITL2
 	ld (player_weapon_swing_type), a
-	jr player_update_weapon_sprite_request_continue
+	jp player_update_weapon_sprite_request_continue
 
 
 weapon_sprite_swing_table:
-	; weapon sprite, x offset right, x offset left, y offset
-	db 0, 16, -16, 0, 14  ; machete forward
-	db 1, 0, 0, -10, 15  ; machete up
-	db 0, 16, -16, 5, 17  ; machete crouching
-	db 2, 0, 0, 8, 16  ; machete down
-	db 3, -7, 7, -2, 15  ; hammer1
-	db 4, 0, 0, -8, 18  ; hammer2
-	db 5, 16, -16, 0, 19  ; hammer3
-	db #ff, 0, 0, 0, 20  ; macuahuitl1
-	db 6, 15, -15, 0, 14  ; macuahuitl2
+	; weapon sprite, x offset right, x offset left, y offset, player frame, hitbox width, hitbox height (in tiles)
+	db 0,   16, -16,   5, 14,  1,  1  ; machete forward
+	db 1,    4,  -4,  -7, 15,  1,  1  ; machete up
+	db 0,   16, -16,  10, 17,  1,  1  ; machete crouching
+	db 2,    4,  -4,  16, 16,  1,  1  ; machete down
+	db 3,   -7,   7,  -2, 15,  1,  1  ; hammer1
+	db 4,    0,   0,  -8, 18,  2,  1  ; hammer2
+	db 5,   16, -16,   0, 19,  2,  2  ; hammer3
+	db #ff,  0,   0,   5, 20,  0,  0  ; macuahuitl1
+	db 6,   15, -15,   5, 14,  2,  1  ; macuahuitl2
 
 
 ;-----------------------------------------------
@@ -2548,3 +2613,72 @@ player_update_move_one_pixel_up_considering_collisions_continue:
 	ld hl, player_y
 	ld (hl), PLAYER_COLLISION_UP_LEEWAY
 	ret
+
+
+;-----------------------------------------------
+get_next_hit_id:
+	ld a, (player_new_hit_id)
+	inc a
+	ld (player_new_hit_id), a
+	cp #ff
+	ret nz
+	xor a
+	ld (player_new_hit_id), a
+	ret
+
+
+;-----------------------------------------------
+; Checks if a player weapon has hit an enemy or object.
+; input:
+; - de, hl: collision box (in tile coordinates: from [e, d] to [l, h])
+; - iyl: collision ID
+player_weapon_hitbox_check:
+	push ix
+		; iterate over the list of tile objects, to see if we hit a breakable wall:
+		ld ix, current_room__tile_objects
+player_weapon_hitbox_check_tile_object_loop:
+		ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
+		cp #ff
+		jr z, player_weapon_hitbox_check_tile_object_loop_done
+		ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+		cp TAG_BREAKABLE_WALL1  ; all breakable walls are this type when instantiated in a room
+		jr nz, player_weapon_hitbox_check_tile_object_loop_continue
+
+		; breakable wall, check for collision:
+		ld a, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+		cp l
+		jr nc, player_weapon_hitbox_check_tile_object_loop_continue
+		add a, (ix + ROOM_TILE_OBJECT_STRUCT_WIDTH)
+		cp e
+		jr c, player_weapon_hitbox_check_tile_object_loop_continue
+		ld a, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+		cp h
+		jr nc, player_weapon_hitbox_check_tile_object_loop_continue
+		add a, (ix + ROOM_TILE_OBJECT_STRUCT_HEIGHT)
+		cp d
+		jr c, player_weapon_hitbox_check_tile_object_loop_continue
+
+		; check collision ID:
+		ld a, iyl
+		cp (ix + ROOM_TILE_OBJECT_STRUCT_LAST_HIT_ID)
+		jr z, player_weapon_hitbox_check_tile_object_loop_continue
+
+		; collision!
+		; Here, a = collidion ID
+		push hl
+		push de
+			call breakable_wall_hit_by_player
+		pop de
+		pop hl
+
+player_weapon_hitbox_check_tile_object_loop_continue:
+		ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
+		add ix, bc
+		jr player_weapon_hitbox_check_tile_object_loop
+player_weapon_hitbox_check_tile_object_loop_done:
+
+		; iterate over the list of enemies to see if we hit any:
+		; ...
+	pop ix
+	ret
+

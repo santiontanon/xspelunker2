@@ -84,13 +84,13 @@ update_sprite_objects_player_bullets_loop:
 	cp #ff  ; sentinel
 	ret z
 	sub SPRITE_OBJECT_TYPE_PLAYER_BULLET_STONE
-	jr z, update_sprite_objects_player_bullet_stone
+	jp z, update_sprite_objects_player_bullet_stone
 	dec a
-	jr z, update_sprite_objects_player_bullet_dart
+	jp z, update_sprite_objects_player_bullet_dart
 	dec a
-	jr z, update_sprite_objects_player_bullet_spear
+	jp z, update_sprite_objects_player_bullet_spear
 	dec a
-	jr z, update_sprite_objects_player_bullet_ray
+	jp z, update_sprite_objects_player_bullet_ray
 update_sprite_objects_player_bullets_loop_next:
 	ld de, ROOM_OBJECT_STRUCT_SIZE
 	add ix, de
@@ -165,6 +165,23 @@ update_sprite_objects_pushing_block_dust:
 
 
 ;-----------------------------------------------
+update_sprite_objects_player_bullet_small_hitbox:
+	ld hl, #0101
+update_sprite_objects_player_bullet_hitbox:
+	ld e, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld d, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	ld a, l
+	add a, e
+	ld l, a
+	ld a, d
+	add a, h
+	ld h, a
+	ld a, (ix + ROOM_OBJECT_STRUCT_HIT_ID)
+	ld iyl, a
+	jp player_weapon_hitbox_check
+
+
+;-----------------------------------------------
 update_sprite_objects_player_bullet_stone:
 update_sprite_objects_player_bullet_dart:
 update_sprite_objects_player_bullet_spear:
@@ -201,6 +218,8 @@ update_sprite_objects_player_bullet_ray:
 	cp SPRITE_OBJECT_TYPE_PLAYER_BULLET_DART
 	jr z, update_sprite_objects_player_bullet_straight_dart
 update_sprite_objects_player_bullet_straight_ray:
+	call update_sprite_objects_player_bullet_small_hitbox
+
 	ld d, COLOR_GREEN
 	ld c, 0
 	ld a, (ix + ROOM_OBJECT_STRUCT_SPEED_Y)
@@ -223,6 +242,8 @@ update_sprite_objects_player_bullet_straight_ray_fw:
 	jr update_sprite_objects_player_bullet_straight_dart_sprite_set
 
 update_sprite_objects_player_bullet_straight_dart:
+	call update_sprite_objects_player_bullet_small_hitbox
+
 	ld d, COLOR_YELLOW
 	ld c, 0
 	ld a, (ix + ROOM_OBJECT_STRUCT_SPEED_Y)
@@ -248,6 +269,8 @@ update_sprite_objects_player_bullet_straight_dart_sprite_set:
 	jp update_sprite_objects_player_bullet_decrease_timer_and_delete_if_necessary
 
 update_sprite_objects_player_bullet_stone_parabolla:
+	call update_sprite_objects_player_bullet_small_hitbox
+
 	; parabolic movement:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
 	and #03
@@ -274,7 +297,7 @@ update_sprite_objects_player_bullet_spear_parabolla:
 	jr z, update_sprite_objects_player_bullet_spear_continue
 	inc (ix + ROOM_OBJECT_STRUCT_SPEED_Y)
 update_sprite_objects_player_bullet_spear_continue:
-	ld d, COLOR_GREY
+	ld d, COLOR_LIGHT_RED
 	ld c, 0
 	ld a, (ix + ROOM_OBJECT_STRUCT_SPEED_X)
 	or a
@@ -289,17 +312,28 @@ update_sprite_objects_player_bullet_spear_continue:
 	inc a
 	xor (ix + ROOM_OBJECT_STRUCT_SPEED_X)
 	jp m, update_sprite_objects_player_bullet_spear_horizontal_upright
+	ld hl, #0202
 	ld e, 56  ; \
-	jr update_sprite_objects_player_bullet_straight_dart_sprite_set
+	jr update_sprite_objects_player_bullet_straight_spear_sprite_set
 update_sprite_objects_player_bullet_spear_horizontal_upright:
+	ld hl, #0202
 	ld e, 52  ; /
-	jr update_sprite_objects_player_bullet_straight_dart_sprite_set
+	jr update_sprite_objects_player_bullet_straight_spear_sprite_set
 update_sprite_objects_player_bullet_spear_horizontal:
+	ld hl, #0102
 	ld e, 44  ; -
-	jr update_sprite_objects_player_bullet_straight_dart_sprite_set
+	jr update_sprite_objects_player_bullet_straight_spear_sprite_set
 update_sprite_objects_player_bullet_spear_vertical:
+	ld hl, #0201
 	ld e, 48  ; |
-	jr update_sprite_objects_player_bullet_straight_dart_sprite_set
+update_sprite_objects_player_bullet_straight_spear_sprite_set:
+	push hl
+		call get_sprite_object_sprite_coordinates
+		call z, add_sprite_to_this_frame
+	pop hl
+	call update_sprite_objects_player_bullet_hitbox
+	jp update_sprite_objects_player_bullet_decrease_timer_and_delete_if_necessary
+
 
 update_sprite_objects_player_bullet_decrease_timer_and_delete_if_necessary:
 	dec (ix + ROOM_OBJECT_STRUCT_STATE)

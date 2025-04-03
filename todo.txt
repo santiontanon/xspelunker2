@@ -1,12 +1,14 @@
 to do:
 
 ***- breakable walls:
-  ***- instantiate them at room creation
-  ***- being able to hit them with all weapons and projectiles (make sure hammer hits down when hitting on top of them): for now just call a function that plays an SFX to get feedback
-  ***- give them hit-points and destroy them
-  ***- once broken they should remain broken for the rest of the game (global state)
-  ***- make this work with the inter-room transitions (broken wall, overwrites the collision)
+  ***- BUG: why can't I change rooms through the broken wall?
+  ***- once broken they should remain broken for the rest of the game (global state): figure out a way to compute IDs for room objects
+  ***- each weapon deals a different damage
+  ***- sprite decoration for breaking a wall
+  ***- make this work with the inter-room transitions (broken wall, overwrites the collision from the other side)
   ***- make sure they work down/left/right/up (when breaing a path down/up that needs a ladder, replace by proper ladder piece)
+
+***- make space for code in the first page by moving all the UI parts to another page (inventory, options, game over, interarea, yesno-dialog, etc.)
 
 - spawn and draw items in the game
   - pick up items (inventory) (to pick up an item, crouch in front of it)

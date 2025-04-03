@@ -24,6 +24,22 @@ ENDIF
 
 
 ;-----------------------------------------------
+ASSERT_D_NOT_EQ: macro value
+IF DEBUG == 1
+	push af
+		ld a, d
+		cp value
+		jr nz, ASSERT_D_NOT_EQ_OK
+		; assertion failed!
+		di
+		halt
+ASSERT_D_NOT_EQ_OK:
+	pop af
+ENDIF
+	endm
+
+
+;-----------------------------------------------
 ASSERT_B_NOT_EQ: macro value
 IF DEBUG == 1
 	push af

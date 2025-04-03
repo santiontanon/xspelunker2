@@ -392,6 +392,8 @@ current_area__objects: ds virtual MAX_AREA_N_OBJECTS * AREA_OBJECT_STRUCT_SIZE
 current_room__id: ds virtual 1
 current_room__x: ds virtual 1  ; coordinates within the area of the top-left room corner (in "rooms")
 current_room__y: ds virtual 1
+current_room__width_in_screens: ds virtual 1
+current_room__height_in_screens: ds virtual 1
 current_room__width: ds virtual 1
 current_room__height: ds virtual 1
 current_room__tile_map: ds virtual MAX_ROOM_SIZE
@@ -448,6 +450,10 @@ player_inventory_coins: ds virtual 1
 player_inventory_map_pieces: ds virtual N_MAP_PIECES
 player_current_weapon: ds virtual 1
 player_immunity_timer: ds virtual 1  ; if != 0, nothing can hurt the player
+
+player_current_swing_hit_id: ds virtual 1
+player_new_hit_id: ds virtual 1
+
 
 redraw_flags: ds virtual 1  ; bits:
                             ; - 0: room

@@ -167,6 +167,7 @@ SFX_watersplash_soft:
 ;   db 10,#00  ; silence
 ;   db SFX_CMD_END   
 
+
 SFX_playerhit:
   db 7,#b8  ; SFX all channels to tone
   db 10,#0c  ; volume
@@ -503,82 +504,82 @@ SFX_explosion:
 ;   db SFX_CMD_END
 
 
-; SFX_enemy_hit:
-;   db 7, #b8  ; tone in all three channels
-;   db 10,#0d  ; volume
-;   db 5, #01, 4+MUSIC_CMD_TIME_STEP_FLAG, #b0
-;   db 5+MUSIC_CMD_TIME_STEP_FLAG, #02
-;   db 5+MUSIC_CMD_TIME_STEP_FLAG, #03
-;   db 5+MUSIC_CMD_TIME_STEP_FLAG, #04
-;   db 5+MUSIC_CMD_TIME_STEP_FLAG, #05
-;   db 5+MUSIC_CMD_TIME_STEP_FLAG, #06
-;   db 10,#0a  ; volume
-;   db 5+MUSIC_CMD_TIME_STEP_FLAG, #01
-;   db 5+MUSIC_CMD_TIME_STEP_FLAG, #02
-;   db 5+MUSIC_CMD_TIME_STEP_FLAG, #03
-;   db 5+MUSIC_CMD_TIME_STEP_FLAG, #04
-;   db 5+MUSIC_CMD_TIME_STEP_FLAG, #05
-;   db 5+MUSIC_CMD_TIME_STEP_FLAG, #06
-;   db 10,#06  ; volume
-;   db 5+MUSIC_CMD_TIME_STEP_FLAG, #01
-;   db 5+MUSIC_CMD_TIME_STEP_FLAG, #02
-;   db 5+MUSIC_CMD_TIME_STEP_FLAG, #03
-;   db 5+MUSIC_CMD_TIME_STEP_FLAG, #04
-;   db 5+MUSIC_CMD_TIME_STEP_FLAG, #05
-;   db 5+MUSIC_CMD_TIME_STEP_FLAG, #06
-;   db 10,#00  ; silence
-;   db SFX_CMD_END
+SFX_enemy_hit:
+  db 7, #b8  ; tone in all three channels
+  db 10,#0d  ; volume
+  db 5, #01, 4+MUSIC_CMD_TIME_STEP_FLAG, #b0
+  db 5+MUSIC_CMD_TIME_STEP_FLAG, #02
+  db 5+MUSIC_CMD_TIME_STEP_FLAG, #03
+  db 5+MUSIC_CMD_TIME_STEP_FLAG, #04
+  db 5+MUSIC_CMD_TIME_STEP_FLAG, #05
+  db 5+MUSIC_CMD_TIME_STEP_FLAG, #06
+  db 10,#0a  ; volume
+  db 5+MUSIC_CMD_TIME_STEP_FLAG, #01
+  db 5+MUSIC_CMD_TIME_STEP_FLAG, #02
+  db 5+MUSIC_CMD_TIME_STEP_FLAG, #03
+  db 5+MUSIC_CMD_TIME_STEP_FLAG, #04
+  db 5+MUSIC_CMD_TIME_STEP_FLAG, #05
+  db 5+MUSIC_CMD_TIME_STEP_FLAG, #06
+  db 10,#06  ; volume
+  db 5+MUSIC_CMD_TIME_STEP_FLAG, #01
+  db 5+MUSIC_CMD_TIME_STEP_FLAG, #02
+  db 5+MUSIC_CMD_TIME_STEP_FLAG, #03
+  db 5+MUSIC_CMD_TIME_STEP_FLAG, #04
+  db 5+MUSIC_CMD_TIME_STEP_FLAG, #05
+  db 5+MUSIC_CMD_TIME_STEP_FLAG, #06
+  db 10,#00  ; silence
+  db SFX_CMD_END
 
 
-; SFX_enemy_kill:
-;   db  7,#b8    ;; SFX all channels to tone
-;   db 10,#0f    ;; volume
-;   db 4,0, 5,8 ;; frequency
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
-;   db 5,6      ;; frequency
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
-;   db 10,#0b    ;; volume
-;   db 5,4      ;; frequency
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
-;   db 10,#08    ;; volume
-;   db 5,2      ;; frequency
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
-;   db 10,#0d    ;; volume
-;   db 5,6 ;; frequency
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
-;   db 5,4      ;; frequency
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
-;   db 10,#08    ;; volume
-;   db 5,3      ;; frequency
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
-;   db 10,#06    ;; volume
-;   db 5,2      ;; frequency
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
-;   db 10,#0b    ;; volume
-;   db 5,4 ;; frequency
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
-;   db 5,3      ;; frequency
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
-;   db 10,#06    ;; volume
-;   db 5,2      ;; frequency
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
-;   db 10,#04    ;; volume
-;   db 5,1      ;; frequency
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
-;   db 10,#00    ;; silence
-;   db SFX_CMD_END      
+SFX_enemy_kill:
+  db  7,#b8    ;; SFX all channels to tone
+  db 10,#0f    ;; volume
+  db 4,0, 5,8 ;; frequency
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 5,6      ;; frequency
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 10,#0b    ;; volume
+  db 5,4      ;; frequency
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 10,#08    ;; volume
+  db 5,2      ;; frequency
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 10,#0d    ;; volume
+  db 5,6 ;; frequency
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 5,4      ;; frequency
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 10,#08    ;; volume
+  db 5,3      ;; frequency
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 10,#06    ;; volume
+  db 5,2      ;; frequency
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 10,#0b    ;; volume
+  db 5,4 ;; frequency
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 5,3      ;; frequency
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 10,#06    ;; volume
+  db 5,2      ;; frequency
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 10,#04    ;; volume
+  db 5,1      ;; frequency
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 10,#00    ;; silence
+  db SFX_CMD_END      
 
 
 ; SFX_item_pickup:
