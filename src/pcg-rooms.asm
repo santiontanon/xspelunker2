@@ -321,10 +321,11 @@ pcg_generate_room__object_loop:
 	ld a, c
 	sub e
 	jr c, pcg_generate_room__object_loop_next  ; out of bounds left 
-	ld c, a
+	ld c, a  ; c = (object chunk x) - (room chunk x)
 	ld a, (current_room__width_in_screens)
 	add a, a  ; in chunks
-	cp c
+	cp c  ; if a <= c, out of bounds
+	jr z, pcg_generate_room__object_loop_next  ; out of bounds right 
 	jr c, pcg_generate_room__object_loop_next  ; out of bounds right 
 	ld a, b
 	sub d
@@ -332,7 +333,8 @@ pcg_generate_room__object_loop:
 	ld b, a
 	ld a, (current_room__height_in_screens)
 	add a, a  ; in chunks
-	cp b
+	cp b  ; if a <= b, out of bounds
+	jr z, pcg_generate_room__object_loop_next  ; out of bounds bottom 
 	jr c, pcg_generate_room__object_loop_next  ; out of bounds bottom 
 
 	; object is in this room:
@@ -392,10 +394,7 @@ pcg_generate_room__object_breakable_wall_mask_set:
 
 	ASSERT_D_NOT_EQ 0
 
-	; spawn the breakable wall object:
-	ld iy, (tmp_pcg_room__next_tile_object_ptr)
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 0  ; ID
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_BREAKABLE_WALL1  ; type
+	; compute object coordinates:
 	inc de
 	; x = c * CHUNK_WIDTH + (de)
 	ld a, c
@@ -406,6 +405,7 @@ pcg_generate_room__object_breakable_wall_mask_set:
 	ld c, a
 	ld a, (de)
 	add a, c
+	ld c, a
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), a  ; x
 	inc de
 	; y = b * CHUNK_HEIGHT + (de)
@@ -418,14 +418,55 @@ pcg_generate_room__object_breakable_wall_mask_set:
 	ld b, a
 	ld a, (de)
 	add a, b
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), a  ; y
+	ld b, a
+	inc de
+	ld a, (de)  ; width
+	ld l, a
+	inc de
+	ld a, (de)  ; height
+	ld e, l
+	ld d, a  ; here: c, b: x, y coordinates, e, d: width, height
+
+	; check if the wall was already destroyed:
+	ld a, (ix + AREA_OBJECT_STRUCT_ID)
+	push bc
+	push de
+		call get_global_state_object_offset
+	pop de
+	pop bc
+	ld a, (hl)
+	or a
+	jp z, pcg_generate_room__object_breakable_wall_continue
+	; wall was already destroyed:
+	push de
+		call get_room_tile_ptr
+	pop bc
+pcg_generate_room__object_breakable_wall_destroyed_loop_y:
+	push bc
+	push hl
+pcg_generate_room__object_breakable_wall_destroyed_loop_x:
+		ld (hl), 0
+		inc hl
+		dec c
+		jr nz, pcg_generate_room__object_breakable_wall_destroyed_loop_x
+	pop hl
+	pop bc
+	ld a, (current_room__width)
+	ADD_HL_A
+	djnz pcg_generate_room__object_breakable_wall_destroyed_loop_y
+	jp pcg_generate_room__object_loop_next
+
+pcg_generate_room__object_breakable_wall_continue:	
+	; spawn the breakable wall object:
+	ld iy, (tmp_pcg_room__next_tile_object_ptr)
+	ld a, (ix + AREA_OBJECT_STRUCT_ID)
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), a  ; ID (this is used to compute the offset in "global_object_state" corresponding to this object)
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_BREAKABLE_WALL1  ; type
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), c  ; x
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), b  ; y
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 8  ; state (hitpoints)
-	inc de
-	ld a, (de)
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_WIDTH), a  ; width
-	inc de
-	ld a, (de)
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_HEIGHT), a  ; height
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_WIDTH), e  ; width
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_HEIGHT), d  ; height
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_LAST_HIT_ID), #ff  ; can be hit by anything
 	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE - 4  ; "- 4", since we already did 4 "inc de"
 	add iy, bc

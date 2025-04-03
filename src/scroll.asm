@@ -42,7 +42,7 @@ maybe_recenter_scroll_no_y_overflow:
 	sub b
 	cp 17
 	jr nc, maybe_recenter_scroll_recenter_y
-	cp 6
+	cp 5
 	jr c, maybe_recenter_scroll_recenter_y
 	ret
 

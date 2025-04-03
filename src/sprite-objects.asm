@@ -165,6 +165,9 @@ update_sprite_objects_pushing_block_dust:
 
 
 ;-----------------------------------------------
+; input:
+; - ix: ptr to the bullet sprite object
+; - iyh: bullet damage
 update_sprite_objects_player_bullet_small_hitbox:
 	ld hl, #0101
 update_sprite_objects_player_bullet_hitbox:
@@ -214,10 +217,11 @@ update_sprite_objects_player_bullet_ray:
 	cp SPRITE_OBJECT_TYPE_PLAYER_BULLET_STONE
 	jr z, update_sprite_objects_player_bullet_stone_parabolla
 	cp SPRITE_OBJECT_TYPE_PLAYER_BULLET_SPEAR
-	jr z, update_sprite_objects_player_bullet_spear_parabolla
+	jp z, update_sprite_objects_player_bullet_spear_parabolla
 	cp SPRITE_OBJECT_TYPE_PLAYER_BULLET_DART
 	jr z, update_sprite_objects_player_bullet_straight_dart
 update_sprite_objects_player_bullet_straight_ray:
+	ld iyh, RAYGUN_DAMAGE
 	call update_sprite_objects_player_bullet_small_hitbox
 
 	ld d, COLOR_GREEN
@@ -242,6 +246,7 @@ update_sprite_objects_player_bullet_straight_ray_fw:
 	jr update_sprite_objects_player_bullet_straight_dart_sprite_set
 
 update_sprite_objects_player_bullet_straight_dart:
+	ld iyh, DART_DAMAGE
 	call update_sprite_objects_player_bullet_small_hitbox
 
 	ld d, COLOR_YELLOW
@@ -269,6 +274,7 @@ update_sprite_objects_player_bullet_straight_dart_sprite_set:
 	jp update_sprite_objects_player_bullet_decrease_timer_and_delete_if_necessary
 
 update_sprite_objects_player_bullet_stone_parabolla:
+	ld iyh, STONE_DAMAGE
 	call update_sprite_objects_player_bullet_small_hitbox
 
 	; parabolic movement:
@@ -331,6 +337,7 @@ update_sprite_objects_player_bullet_straight_spear_sprite_set:
 		call get_sprite_object_sprite_coordinates
 		call z, add_sprite_to_this_frame
 	pop hl
+	ld iyh, SPEAR_DAMAGE
 	call update_sprite_objects_player_bullet_hitbox
 	jp update_sprite_objects_player_bullet_decrease_timer_and_delete_if_necessary
 

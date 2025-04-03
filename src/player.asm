@@ -2198,12 +2198,19 @@ player_update_weapon_sprite_request:
 	; animation frames:
 	ld a, (player_weapon_swing_type)
 	cp PLAYER_WEAPON_SWING_HAMMER1
-	jr z, player_update_weapon_sprite_request_hammer1
+	jp z, player_update_weapon_sprite_request_hammer1
 	cp PLAYER_WEAPON_SWING_HAMMER2
 	jp z, player_update_weapon_sprite_request_hammer2
 	cp PLAYER_WEAPON_SWING_MACUAHUITL1
 	jp z, player_update_weapon_sprite_request_macuahuitl1
 player_update_weapon_sprite_request_continue:
+	; damage:
+	ld a, (player_current_weapon)
+	ld hl, player_weapon_damages
+	ADD_HL_A
+	ld a, (hl)
+	ld iyh, a
+
 	; weapon sprite setup:
 	ld a, (player_weapon_swing_type)
 	ld c, a
@@ -2285,7 +2292,7 @@ player_update_weapon_sprite_request_hammer1:
 	call play_SFX_with_high_priority
 	ld a, PLAYER_WEAPON_SWING_HAMMER2
 	ld (player_weapon_swing_type), a
-	jr player_update_weapon_sprite_request_continue
+	jp player_update_weapon_sprite_request_continue
 player_update_weapon_sprite_request_hammer2:
 	ld a, (player_weapon_state_timer)
 	cp 10
@@ -2315,6 +2322,11 @@ weapon_sprite_swing_table:
 	db 5,   16, -16,   0, 19,  2,  2  ; hammer3
 	db #ff,  0,   0,   5, 20,  0,  0  ; macuahuitl1
 	db 6,   15, -15,   5, 14,  2,  1  ; macuahuitl2
+
+player_weapon_damages:
+	db 1, 3, 2, 0   ; machete, hammer, macuahuitl, shield
+	db 0, 0, 0, 0   ; throwing weapons
+	db 2, 5, 3      ; upgraded machete, hammer, macuahuitl
 
 
 ;-----------------------------------------------
@@ -2632,6 +2644,7 @@ get_next_hit_id:
 ; input:
 ; - de, hl: collision box (in tile coordinates: from [e, d] to [l, h])
 ; - iyl: collision ID
+; - iyh: weapon damage
 player_weapon_hitbox_check:
 	push ix
 		; iterate over the list of tile objects, to see if we hit a breakable wall:
@@ -2663,8 +2676,9 @@ player_weapon_hitbox_check_tile_object_loop:
 		cp (ix + ROOM_TILE_OBJECT_STRUCT_LAST_HIT_ID)
 		jr z, player_weapon_hitbox_check_tile_object_loop_continue
 
-		; collision!
-		; Here, a = collidion ID
+		; collision! Here:
+		; - a = collidion ID
+		; - iyh: damage to deal
 		push hl
 		push de
 			call breakable_wall_hit_by_player

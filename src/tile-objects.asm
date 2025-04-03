@@ -139,24 +139,25 @@ update_tile_objects_pushable_block_remove:
 ; input:
 ; - ix: ptr to breakable wall
 ; - a: collision ID
+; - iyh: damage to deal
 breakable_wall_hit_by_player:
 	ld a, iyl
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_LAST_HIT_ID), a
 
-	dec (ix + ROOM_TILE_OBJECT_STRUCT_STATE)
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)
-	or a
-	jr nz, breakable_wall_hit_by_player_continue
+	sub iyh
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), a
+	jr z, breakable_wall_hit_by_player_destroyed
+	jr nc, breakable_wall_hit_by_player_continue
 
+breakable_wall_hit_by_player_destroyed:
 	; wall destroyed!
 	ld hl, redraw_flags
 	set ROOM_REDRAW_FLAG_BIT, (hl)
 	ld hl, SFX_enemy_kill
 	call play_SFX_with_high_priority
-	call room_remove_breakable_wall
-	push ix
-	pop hl
-	jp delete_tile_object_in_hl
+
+	jp room_remove_breakable_wall
 
 breakable_wall_hit_by_player_continue:
 	ld hl, SFX_enemy_hit
@@ -494,6 +495,11 @@ room_remove_tile_objects_delete_object_loop_x:
 ; input:
 ; - ix: ptr to the object
 room_remove_breakable_wall:
+	; mark its deletion in the global state:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
+	call get_global_state_object_offset
+	ld (hl), 1  ; mark the object as deleted
+
 	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
 	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
 	call get_room_tile_ptr
@@ -512,6 +518,30 @@ room_remove_breakable_wall_loop_x:
 	ld a, (current_room__width)
 	ADD_HL_A
 	djnz room_remove_breakable_wall_loop_y
+	push ix
+	pop hl
+	jp delete_tile_object_in_hl
+
+
+;-----------------------------------------------
+; input:
+; - a: object ID
+get_global_state_object_offset:
+	; offset is: global_object_state + area_ID * MAX_AREA_N_OBJECTS + object_ID
+	push af
+		ld a, (current_area__id)
+		ld hl, global_object_state
+		ld de, MAX_AREA_N_OBJECTS
+		or a
+		jr z, get_global_state_object_offset_loop_end
+get_global_state_object_offset_loop:
+		add hl, de
+		dec a
+		jr nz, get_global_state_object_offset_loop
+get_global_state_object_offset_loop_end:
+	pop af
+	ADD_HL_A
+
 	ret
 
 

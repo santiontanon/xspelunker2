@@ -421,6 +421,13 @@ room_scroll_x: ds virtual 1
 room_scroll_y: ds virtual 1
 
 ; game state variables:
+
+; for each area, and for each possible area object:
+; - 0: object is as it was at initialization
+; - 1: object was removed
+; the offset of a given object is: area_ID * MAX_AREA_N_OBJECTS + object_ID
+global_object_state: ds virtual MAX_AREA_N_OBJECTS * MAX_WORLD_AREAS
+
 player_x: ds virtual 2  ; 2nd byte is the tile coordinate, and 1st the pixel
 player_y: ds virtual 2  ; 2nd byte is the tile coordinate, and 1st the pixel
 player_state: ds virtual 1
