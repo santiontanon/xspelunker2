@@ -682,27 +682,35 @@ check_collision_with_next_chunk_left:
 		call get_chunk_ids_current_room_ptr  ; ixl now has player_y % 12
 	pop bc
 	dec hl
-	ld a, (hl)  ; chunk ID
-	ld h, 0
-	ld l, a
-	add hl, hl
-	add hl, hl
-	ld de, chunk_edgecollisions_pyramid + 2
-	add hl, de
-	ld e, (hl)  ; e = bitmask with collisions on the right edge of the chunk
-	ld a, ixl
-	sra a
-	; check if the corresponding bit is on/off:
+	push hl
+		ld a, (hl)  ; chunk ID
+		ld h, 0
+		ld l, a
+		add hl, hl
+		add hl, hl
+		ld de, chunk_edgecollisions_pyramid + 2
+		add hl, de
+		ld e, (hl)  ; e = bitmask with collisions on the right edge of the chunk
+		ld a, ixl
+		sra a
+		; check if the corresponding bit is on/off:
 check_collision_with_next_chunk_left_loop:
-	jr z, check_collision_with_next_chunk_left_bit_found
-	rr e
-	dec a
-	jp 	check_collision_with_next_chunk_left_loop
+		jr z, check_collision_with_next_chunk_left_bit_found
+		rr e
+		dec a
+		jp 	check_collision_with_next_chunk_left_loop
 check_collision_with_next_chunk_left_bit_found:
-	ld a, e
-	and #01
-	xor #01  ; reverse the bit to get the flag we want
-	ret
+		ld a, e
+		and #01
+		xor #01  ; reverse the bit to get the flag we want
+	pop hl
+	ret nz
+	; collision, check if a door or breakable wall was open:
+	ld de, -current_area__chunks_ids
+	add hl, de
+	ld e, l  ; e = chunk we are looking at
+	ld ixh, 1  ; entering from the right
+	jp  check_collision_with_next_chunk_check_horizontal_open_wall
 
 
 ;-----------------------------------------------
@@ -716,27 +724,105 @@ check_collision_with_next_chunk_right:
 		call get_chunk_ids_current_room_ptr  ; ixl now has player_y % 12
 	pop bc
 	inc hl
-	ld a, (hl)  ; chunk ID
-	ld h, 0
-	ld l, a
-	add hl, hl
-	add hl, hl
-	ld de, chunk_edgecollisions_pyramid
-	add hl, de
-	ld e, (hl)  ; e = bitmask with collisions on the left edge of the chunk
-	ld a, ixl
-	sra a
-	; check if the corresponding bit is on/off:
+	push hl
+		ld a, (hl)  ; chunk ID
+		ld h, 0
+		ld l, a
+		add hl, hl
+		add hl, hl
+		ld de, chunk_edgecollisions_pyramid
+		add hl, de
+		ld e, (hl)  ; e = bitmask with collisions on the left edge of the chunk
+		ld a, ixl
+		sra a
+		; check if the corresponding bit is on/off:
 check_collision_with_next_chunk_right_loop:
-	jr z, check_collision_with_next_chunk_right_bit_found
-	rr e
-	dec a
-	jp 	check_collision_with_next_chunk_right_loop
+		jr z, check_collision_with_next_chunk_right_bit_found
+		rr e
+		dec a
+		jp 	check_collision_with_next_chunk_right_loop
 check_collision_with_next_chunk_right_bit_found:
-	ld a, e
-	and #01
-	xor #01  ; reverse the bit to get the flag we want
+		ld a, e
+		and #01
+		xor #01  ; reverse the bit to get the flag we want
+	pop hl
+	ret nz
+	; collision, check if a door or breakable wall was open:
+	ld de, -current_area__chunks_ids
+	add hl, de
+	ld e, l  ; e = chunk we are looking at
+	ld ixh, 0  ; entering from the left
+	jp  check_collision_with_next_chunk_check_horizontal_open_wall
+
+
+;-----------------------------------------------
+; input:
+; - ixl: within chunk tile coordinate to check
+; - ixh: 0 (from left), 1 (from right)
+; - e: chunk we are looking at
+check_collision_with_next_chunk_check_horizontal_open_wall:
+	ld a, (current_area__id)
+	inc a
+	ld d, a  ; area ID + 1
+	ld hl, global_state__open_walls
+check_collision_with_next_chunk_right_open_wall_loop:
+	ld a, (hl)
+	or a
+	ret z  ; no more open walls to check
+	cp d
+	jr nz, check_collision_with_next_chunk_right_open_wall_loop_next6
+	inc hl
+	ld a, (hl)
+	cp e
+	jr nz, check_collision_with_next_chunk_right_open_wall_loop_next5
+	inc hl
+	ld a, ixh
+	or a
+	jr nz, check_collision_with_next_chunk_check_horizontal_open_wall_right
+	ld a, (hl)
+	or a  ; if it's not in the left, we are not interested
+	jr nz, check_collision_with_next_chunk_right_open_wall_loop_next4
+	inc hl
+	ld a, (hl)
+	cp ixl  ; y coordinate within this chunk
+	jr nc, check_collision_with_next_chunk_right_open_wall_loop_next3
+	inc hl  ; skip width
+check_collision_with_next_chunk_check_horizontal_open_wall_right_continue:
+	inc hl
+	add a, (hl)  ; a = y + height
+	cp ixl  ; y coordinate within this chunk
+	jr z, check_collision_with_next_chunk_right_open_wall_loop_next1
+	jr c, check_collision_with_next_chunk_right_open_wall_loop_next1
+	; wall was open! no collision!
+	or 1
 	ret
+check_collision_with_next_chunk_right_open_wall_loop_next6:
+	inc hl
+check_collision_with_next_chunk_right_open_wall_loop_next5:
+	inc hl
+check_collision_with_next_chunk_right_open_wall_loop_next4:
+	inc hl
+check_collision_with_next_chunk_right_open_wall_loop_next3:
+	inc hl
+check_collision_with_next_chunk_right_open_wall_loop_next2:
+	inc hl
+check_collision_with_next_chunk_right_open_wall_loop_next1:
+	inc hl
+	jr check_collision_with_next_chunk_right_open_wall_loop
+
+check_collision_with_next_chunk_check_horizontal_open_wall_right:
+	ld c, (hl)
+	inc hl
+	ld b, (hl)
+	cp ixl  ; y coordinate within this chunk
+	jr nc, check_collision_with_next_chunk_right_open_wall_loop_next3
+	inc hl
+	ld a, (hl)
+	add a, c
+	cp CHUNK_WIDTH - 1
+	ld a, b  ; recover 'y' in a
+	jr nc, check_collision_with_next_chunk_right_open_wall_loop_next2
+	jr check_collision_with_next_chunk_check_horizontal_open_wall_right_continue
 
 
 ;-----------------------------------------------

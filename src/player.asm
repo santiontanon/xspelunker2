@@ -2666,9 +2666,16 @@ player_weapon_hitbox_check_tile_object_loop:
 		cp #ff
 		jr z, player_weapon_hitbox_check_tile_object_loop_done
 		ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
-		cp TAG_BREAKABLE_WALL1  ; all breakable walls are this type when instantiated in a room
+		cp TAG_BREAKABLE_WALL1
+		jr z, player_weapon_hitbox_check_tile_object_loop_breakable_wall
+		cp TAG_BREAKABLE_WALL2
+		jr z, player_weapon_hitbox_check_tile_object_loop_breakable_wall
+		cp TAG_BREAKABLE_WALL3
+		jr z, player_weapon_hitbox_check_tile_object_loop_breakable_wall
+		cp TAG_BREAKABLE_WALL4
 		jr nz, player_weapon_hitbox_check_tile_object_loop_continue
 
+player_weapon_hitbox_check_tile_object_loop_breakable_wall:
 		; breakable wall, check for collision:
 		ld a, (ix + ROOM_TILE_OBJECT_STRUCT_X)
 		cp l

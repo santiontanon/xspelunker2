@@ -30,6 +30,6 @@
   <object id="5" type="door-left" x="0" y="8" width="16" height="24"/>
   <object id="6" type="breakable-right" x="112" y="40" width="16" height="40"/>
   <object id="7" type="door-right" x="112" y="8" width="16" height="24"/>
-  <object id="8" type="breakable-left" x="0" y="32" width="16" height="40"/>
+  <object id="8" type="breakable-left" x="0" y="40" width="16" height="40"/>
  </objectgroup>
 </map>

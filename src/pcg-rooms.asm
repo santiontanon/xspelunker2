@@ -428,12 +428,9 @@ pcg_generate_room__object_breakable_wall_mask_set:
 	ld d, a  ; here: c, b: x, y coordinates, e, d: width, height
 
 	; check if the wall was already destroyed:
-	ld a, (ix + AREA_OBJECT_STRUCT_ID)
-	push bc
-	push de
-		call get_global_state_object_offset
-	pop de
-	pop bc
+	ld a, (ix + AREA_OBJECT_STRUCT_TYPE)
+	ld hl, global_state__objects
+	ADD_HL_A
 	ld a, (hl)
 	or a
 	jp z, pcg_generate_room__object_breakable_wall_continue
@@ -460,8 +457,9 @@ pcg_generate_room__object_breakable_wall_continue:
 	; spawn the breakable wall object:
 	ld iy, (tmp_pcg_room__next_tile_object_ptr)
 	ld a, (ix + AREA_OBJECT_STRUCT_ID)
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), a  ; ID (this is used to compute the offset in "global_object_state" corresponding to this object)
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_BREAKABLE_WALL1  ; type
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), a  ; ID
+	ld a, (ix + AREA_OBJECT_STRUCT_TYPE)
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), a  ; type
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), c  ; x
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), b  ; y
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 8  ; state (hitpoints)

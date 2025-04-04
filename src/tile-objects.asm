@@ -204,7 +204,13 @@ room_render_tile_objects_loop:
 	push hl
 		inc hl
 		ld a, (hl)  ; type
-		cp TAG_BREAKABLE_WALL1  ; all breakable walls are this type when instantiated in a room
+		cp TAG_BREAKABLE_WALL1
+		jr z, room_render_tile_objects_loop_continue
+		cp TAG_BREAKABLE_WALL2
+		jr z, room_render_tile_objects_loop_continue
+		cp TAG_BREAKABLE_WALL3
+		jr z, room_render_tile_objects_loop_continue
+		cp TAG_BREAKABLE_WALL4
 		jr z, room_render_tile_objects_loop_continue
 		inc hl
 		ld c, (hl)  ; x
@@ -359,7 +365,13 @@ room_remove_tile_objects_loop:
 	push hl
 		inc hl
 		ld a, (hl)  ; type
-		cp TAG_BREAKABLE_WALL1  ; all breakable walls are this type when instantiated in a room
+		cp TAG_BREAKABLE_WALL1
+		jr z, room_remove_tile_objects_loop_continue		
+		cp TAG_BREAKABLE_WALL2
+		jr z, room_remove_tile_objects_loop_continue		
+		cp TAG_BREAKABLE_WALL3
+		jr z, room_remove_tile_objects_loop_continue		
+		cp TAG_BREAKABLE_WALL4
 		jr z, room_remove_tile_objects_loop_continue		
 		inc hl
 		ld c, (hl)  ; x
@@ -496,15 +508,65 @@ room_remove_tile_objects_delete_object_loop_x:
 ; - ix: ptr to the object
 room_remove_breakable_wall:
 	; mark its deletion in the global state:
-	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
-	call get_global_state_object_offset
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	ld hl, global_state__objects
+	ADD_HL_A
 	ld (hl), 1  ; mark the object as deleted
 
+	; Create an entry in "global_state__open_walls":
+	ld hl, global_state__open_walls
+room_remove_breakable_wall_open_wall_loop:
+	ld a, (hl)
+	or a
+	jr z, room_remove_breakable_wall_open_wall_loop_end
+	ld bc, 6
+	add hl, bc
+	jr room_remove_breakable_wall_open_wall_loop
+room_remove_breakable_wall_open_wall_loop_end:
+	ld a, (current_area__id)
+	inc a  ; so that we don't have a 0
+	ld (hl), a
+	inc hl
 	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
 	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
-	call get_room_tile_ptr
-	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_WIDTH)
-	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_HEIGHT)
+	push hl
+	push ix
+		call get_chunk_ids_current_room_ptr
+		ld bc, -current_area__chunks_ids
+		add hl, bc
+		ld a, l
+	pop ix
+	pop hl
+	ld (hl), a  ; chunk where this wall is
+	inc hl
+
+	; get within-chunk coordinates:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	and #0f
+	ld c, a  ; c = x % CHUNK_WIDTH
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+room_remove_breakable_wall_continue_within_chunk_y_loop:
+	cp CHUNK_HEIGHT
+	jr c, room_remove_breakable_wall_continue
+	sub CHUNK_HEIGHT
+	jr room_remove_breakable_wall_continue_within_chunk_y_loop
+room_remove_breakable_wall_continue:
+	ld b, a  ; b = y % CHUNK_HEIGHT
+	ld (hl), c
+	inc hl
+	ld (hl), b
+	inc hl
+	ld e, (ix + ROOM_TILE_OBJECT_STRUCT_WIDTH)
+	ld d, (ix + ROOM_TILE_OBJECT_STRUCT_HEIGHT)
+	ld (hl), e
+	inc hl
+	ld (hl), d
+
+	push de
+		ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+		ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+		call get_room_tile_ptr
+	pop bc
 room_remove_breakable_wall_loop_y:
 	push bc
 	push hl
@@ -521,28 +583,6 @@ room_remove_breakable_wall_loop_x:
 	push ix
 	pop hl
 	jp delete_tile_object_in_hl
-
-
-;-----------------------------------------------
-; input:
-; - a: object ID
-get_global_state_object_offset:
-	; offset is: global_object_state + area_ID * MAX_AREA_N_OBJECTS + object_ID
-	push af
-		ld a, (current_area__id)
-		ld hl, global_object_state
-		ld de, MAX_AREA_N_OBJECTS
-		or a
-		jr z, get_global_state_object_offset_loop_end
-get_global_state_object_offset_loop:
-		add hl, de
-		dec a
-		jr nz, get_global_state_object_offset_loop
-get_global_state_object_offset_loop_end:
-	pop af
-	ADD_HL_A
-
-	ret
 
 
 ;-----------------------------------------------

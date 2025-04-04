@@ -350,7 +350,6 @@ public class GenerateChunkData {
                         throw new Exception(o.type + " has x coordinates: " + o.x + ", " + (o.x+o.dx) + " in " + c.path);
                     }
                 }
-
                 if (o.type.equals("breakable-left") || o.type.equals("breakable-up") ||
                     o.type.equals("breakable-right") || o.type.equals("breakable-down")) {
                     for(int i = o.y/8;i<(o.y+o.dy)/8;i++) {

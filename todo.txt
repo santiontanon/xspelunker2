@@ -1,9 +1,9 @@
 to do:
 
 ***- breakable walls:
-  ***- make this work with the inter-room transitions (broken wall, overwrites the collision from the other side)
   ***- sprite decoration for breaking a wall
-  ***- make sure they work down/left/right/up (when breaing a path down/up that needs a ladder, replace by proper ladder piece)
+  ***- for up/down if we need a ladder, replace by proper ladder piece
+  ***- apply global_state__open_walls to up/down too
 
 - spawn and draw items in the game
   - pick up items (inventory) (to pick up an item, crouch in front of it)

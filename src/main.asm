@@ -169,8 +169,6 @@ call_hl_in_page_c_8000_return:
     include "tile-objects.asm"
     include "hud.asm"
 
-;     include "state-braingames.asm"
-;     include "state-gamestart.asm"
     include "state-interarea.asm"
     include "state-play.asm"
 
@@ -354,9 +352,7 @@ end_of_page_5:
 start_of_page_6:
 
 end_of_page_6:
-    ds #c000-$    
-
-
+    ds #c000-$
 
 
 ;-----------------------------------------------
@@ -424,11 +420,19 @@ room_scroll_y: ds virtual 1
 
 ; game state variables:
 
-; for each area, and for each possible area object:
-; - 0: object is as it was at initialization
-; - 1: object was removed
-; the offset of a given object is: area_ID * MAX_AREA_N_OBJECTS + object_ID
-global_object_state: ds virtual MAX_AREA_N_OBJECTS * MAX_WORLD_AREAS
+; for each possible unique object, we maintain its state:
+; - 0: default state
+; - 1: broken breakable wall, picked up item, opened lock/door
+; the offset of a given object is its tag ID
+global_state__objects: ds virtual N_UNIQUE_TAGS
+
+; These are used to correct collisions in 'check_collision_with_next_chunk_left', etc.
+; Specifically, if a wall/door is open, we overwrite the calculation of the method above. We keep this
+; in this separate list, since we would have to re-generate a room to reconstruct this info from the
+; 'global_object_state' list.
+; area ID + 1, chunk, x1, y1, x2, y2
+global_state__open_walls: ds virtual 6 * N_PATH_OPENING_TAGS
+
 
 player_x: ds virtual 2  ; 2nd byte is the tile coordinate, and 1st the pixel
 player_y: ds virtual 2  ; 2nd byte is the tile coordinate, and 1st the pixel
