@@ -43,7 +43,10 @@ player_update_from_ladder_fail:
 	; go to the inventory from any state:
 	ld a, (keyboard_clicks)
 	bit KEY_INVENTORY_BIT, a
-	jp nz, state_inventory
+	jr z, player_update_no_inventory
+	SETMEGAROMPAGE_8000 TEXT_PAGE
+	jp state_inventory
+player_update_no_inventory:
 
 	ld a, (player_state)
 	ld hl, player_update_state_fn_table
@@ -638,7 +641,9 @@ player_update_state_crouching:
 	jr nz, player_update_state_crouching_no_combo_for_inventory
 	ld a, (keyboard_clicks)
 	bit KEY_JUMP_BIT, a
-	jp nz, state_inventory
+	jp z, player_update_state_crouching_no_combo_for_inventory
+	SETMEGAROMPAGE_8000 TEXT_PAGE
+	jp state_inventory
 player_update_state_crouching_no_combo_for_inventory:
 
 	; check for crawl:
@@ -692,7 +697,10 @@ player_update_state_crawling:
 	; check for inventory:
 	ld a, (keyboard_clicks)
 	bit KEY_JUMP_BIT, a
-	jp nz, state_inventory
+	jp z, player_update_state_crawling_no_inventory
+	SETMEGAROMPAGE_8000 TEXT_PAGE
+	jp state_inventory
+player_update_state_crawling_no_inventory:
 	
 	; check for crouch:
 	ld a, (keyboard_state)
@@ -1740,7 +1748,10 @@ player_update_state_directional_weapon_crouching_still_holding_fire:
 	; check for inventory:
 	ld a, (keyboard_clicks)
 	bit KEY_JUMP_BIT, a
-	jp nz, state_inventory
+	jp z, player_update_state_directional_weapon_crouching_no_inventory
+	SETMEGAROMPAGE_8000 TEXT_PAGE
+	jp state_inventory
+player_update_state_directional_weapon_crouching_no_inventory:
 
 	; check for change of direction:
 	ld a, (keyboard_clicks)
@@ -1843,6 +1854,7 @@ player_update_state_hurt_speed_loop_done:
 
 ;-----------------------------------------------
 player_update_state_dead:
+	SETMEGAROMPAGE_8000 TEXT_PAGE  ; in case we jump to game over
 	ld hl, player_state_timer
 	inc (hl)
 	ld a, (hl)

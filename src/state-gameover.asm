@@ -6,7 +6,7 @@ state_game_over:
 
 	call set_bitmap_mode
 
-	SETMEGAROMPAGE_8000 TEXT_PAGE
+	; SETMEGAROMPAGE_8000 TEXT_PAGE  ; not needed, as this is in the text page
 	call clear_text_rendering_buffer
 	ld hl, TEXT_GAME_OVER
 	ld de, CHRTBL2 + (10*32+13)*8

@@ -1,10 +1,8 @@
 to do:
 
-***- make space for code in the first page by moving all the UI parts to another page (inventory, options, game over, interarea, yesno-dialog, etc.)
-
 ***- breakable walls:
-  ***- sprite decoration for breaking a wall
   ***- make this work with the inter-room transitions (broken wall, overwrites the collision from the other side)
+  ***- sprite decoration for breaking a wall
   ***- make sure they work down/left/right/up (when breaing a path down/up that needs a ladder, replace by proper ladder piece)
 
 - spawn and draw items in the game

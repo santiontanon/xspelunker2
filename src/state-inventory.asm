@@ -135,6 +135,7 @@ state_inventory_update_cursor_button_row0:
 	jr z, state_inventory_update_cursor_button_options
 
 state_inventory_update_cursor_button_quit:
+	SETMEGAROMPAGE_8000 TEXT_PAGE
 	ld ix, TEXT_ARE_YOU_SURE
 	ld hl, state_game_over  ; yes
 	ld de, state_inventory_from_quit  ; no
@@ -501,8 +502,6 @@ max_length_of_sentence_in_one_line_limit_reached:
 
 ;-----------------------------------------------
 draw_inventory_player:
-	SETMEGAROMPAGE_8000 SPRITES_PAGE
-
 	ld a, (interrupt_cycle)
 	bit 4, a
 	jr z, draw_inventory_player_frame2
@@ -513,7 +512,7 @@ draw_inventory_player_frame2:
 draw_inventory_player_frame_set:
 	ld de, SPRTBL2
 	ld bc, 64
-	call fast_LDIRVM
+	call fast_LDIRVM_from_sprites_page
 
 	; upload sprite attributes:
 	ld hl, buffer_4096

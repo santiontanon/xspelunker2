@@ -14,13 +14,12 @@ state_options:
 	call clear_screen_left_to_right
 	call set_bitmap_mode
 
-	SETMEGAROMPAGE_8000 SPRITES_PAGE
 	ld hl, dialog_sprites_bin
 	ld de, SPRTBL2
 	ld bc, dialog_sprites_bin_end - dialog_sprites_bin
-	call fast_LDIRVM
+	call fast_LDIRVM_from_sprites_page
 
-	SETMEGAROMPAGE_8000 TEXT_PAGE
+	; SETMEGAROMPAGE_8000 TEXT_PAGE
 	call state_options_draw_text
 
 	xor a
@@ -239,7 +238,7 @@ update_options_pointer_sprite_continue2:
 
 ;-----------------------------------------------
 state_options_draw_text:
-	SETMEGAROMPAGE_8000 TEXT_PAGE
+	; SETMEGAROMPAGE_8000 TEXT_PAGE
 	ld hl, state_options_text_table
 ; 	ld b, 12
 	ld b, 9

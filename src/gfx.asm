@@ -146,6 +146,18 @@ fast_FILVRM_small_loop:
     ret
 
 
+
+;-----------------------------------------------
+fast_LDIRVM_from_sprites_page:
+    ld a, (current_megarom_page_in_8000)
+    push af
+        SETMEGAROMPAGE_8000 SPRITES_PAGE
+        call fast_LDIRVM
+    pop af
+    SETMEGAROMPAGE_8000_A
+    ret
+
+
 ;-----------------------------------------------
 ; hl: source data
 ; de: target address in the VDP

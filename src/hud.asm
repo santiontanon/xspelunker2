@@ -103,6 +103,7 @@ draw_hud_coins:
 	ld a, (redraw_flags)
 	bit COINS_REDRAW_FLAG_BIT, a
 	jr z, draw_hud_coins_no_rerender
+	SETMEGAROMPAGE_8000 TEXT_PAGE  ; for "draw_inventory_number"
 	ld a, (player_inventory_coins)
 	ld de, CHRTBL2 + 10*8
 	ld iy, #8000 + COLOR_WHITE*16
@@ -229,6 +230,7 @@ draw_hud_current_weapon_ammo:
 		ld a, (redraw_flags)
 		bit COINS_REDRAW_FLAG_BIT, a
 		jr z, draw_hud_current_weapon_ammo_no_rerender
+		SETMEGAROMPAGE_8000 TEXT_PAGE  ; for "draw_inventory_number"
 		ld a, e
 		ld de, CHRTBL2 + 13*8
 		ld iy, #0800 + COLOR_WHITE*16

@@ -12,11 +12,10 @@ state_yesno_dialog:
 			call clear_screen_left_to_right
 			call set_bitmap_mode
 
-			SETMEGAROMPAGE_8000 SPRITES_PAGE
 			ld hl, dialog_sprites_bin
 			ld de, SPRTBL2
 			ld bc, dialog_sprites_bin_end - dialog_sprites_bin
-			call fast_LDIRVM
+			call fast_LDIRVM_from_sprites_page
 
 			SETMEGAROMPAGE_8000 TEXT_PAGE
 			call clear_text_rendering_buffer
