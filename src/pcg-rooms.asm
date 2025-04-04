@@ -514,6 +514,15 @@ sample_chunk_location_loop_next:
 ; input:
 ; - c, b: x, y of where to spawn the object (in chunks)
 get_chunk_id_from_coordinates:
+	ld a, (current_room__x)
+	add a, a
+	add a, c
+	ld c, a
+	ld a, (current_room__y)
+	add a, a
+	add a, b
+	ld b, a
+
 	; chunk id = (current_area__chunks_ids + c + b * (current_area__width) * 2)
 	ld a, (current_area__width)
 	add a, a

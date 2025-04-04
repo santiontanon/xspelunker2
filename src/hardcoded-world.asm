@@ -48,7 +48,7 @@ hardcoded_area_data_1__divisionIDs:
   db 0, 11, 11, 10, 10, 0, 10, 10
   db 0, 0, 0, 0, 7, 7, 7, 7
   db 0, 0, 0, 0, 7, 7, 7, 0
-hardcoded_area_data_1__tags:
+hardcoded_area_data_1__tags:  ; tag, offset, extra
   db TAG_BUTTON_DOOR2, 44, 1
   db TAG_BREAKABLE_WALL2, 29, 1
   db TAG_BREAKABLE_WALL3, 27, 8

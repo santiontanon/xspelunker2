@@ -33,9 +33,8 @@ state_play:
 		call call_hl_in_page_c_8000
 
 		; generate room:
-		ld e, 0
-; 		ld e, 1
-; 		ld e, 2
+; 		ld e, 0  ; breakable left (area 1)
+		ld e, 9  ; breakable down (area 1)
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
@@ -111,7 +110,7 @@ state_play_from_loaded_room:
 state_play_from_inventory:
 		ld sp, stack  ; reset the stack, so we can jump here from wherever we want
 
-		; recauculate y scroll limits, which depend on the hud option:
+		; recalculate y scroll limits, which depend on the hud option:
 		ld a, (current_room__height)
 		sub 24
 		ld (current_room__max_scroll_y), a

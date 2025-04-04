@@ -196,25 +196,44 @@ get_room_tile_ptr:
 	ld a, (current_room__width)
 	cp 64
 	jr z, get_room_tile_ptr_width64
+	cp 96
+	jr z, get_room_tile_ptr_width96
+	cp 128
+	jr z, get_room_tile_ptr_width128
 get_room_tile_ptr_width32:
 	; in this case, we know room_scroll_x == 0
 	ld l, b
 	ld h, 0
+	jr get_room_tile_ptr_width32_entry_point
+get_room_tile_ptr_width96:
+	; in this case, we know room_scroll_x == 0
+	ld l, b
+	ld h, 0
+	ld a, c  ; preserve c
+	ld c, b
+	ld b, 0
 	add hl, hl
-	add hl, hl
-	add hl, hl
-	add hl, hl
-	add hl, hl  ; hl = y * 32
-	jp get_room_tile_ptr_continue
-get_room_tile_ptr_width64:
+	add hl, bc  ; hl = y * 3
+	ld c, a
+	jr get_room_tile_ptr_width96_entry_point
+get_room_tile_ptr_width128:
+	; in this case, we know room_scroll_x == 0
 	ld l, b
 	ld h, 0
 	add hl, hl
+	jr get_room_tile_ptr_width128_entry_point
+get_room_tile_ptr_width64:
+	ld l, b
+	ld h, 0
+get_room_tile_ptr_width128_entry_point:
+	add hl, hl
+get_room_tile_ptr_width32_entry_point:
+get_room_tile_ptr_width96_entry_point:
 	add hl, hl
 	add hl, hl
 	add hl, hl
 	add hl, hl
-	add hl, hl  ; hl = y * 64
+	add hl, hl  ; hl = y * 128
 get_room_tile_ptr_continue:
 	ld b, 0
 	add hl, bc

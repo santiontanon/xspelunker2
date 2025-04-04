@@ -2331,7 +2331,7 @@ weapon_sprite_swing_table:
 	db 2,    4,  -4,  16, 16,  1,  1  ; machete down
 	db 3,   -7,   7,  -2, 15,  1,  1  ; hammer1
 	db 4,    0,   0,  -8, 18,  2,  1  ; hammer2
-	db 5,   16, -16,   0, 19,  2,  2  ; hammer3
+	db 5,   16, -16,   0, 19,  2,  3  ; hammer3 (hits down)
 	db #ff,  0,   0,   5, 20,  0,  0  ; macuahuitl1
 	db 6,   15, -15,   5, 14,  2,  1  ; macuahuitl2
 

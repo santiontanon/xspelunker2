@@ -3,7 +3,6 @@ to do:
 ***- breakable walls:
   ***- sprite decoration for breaking a wall
   ***- for up/down if we need a ladder, replace by proper ladder piece
-  ***- apply global_state__open_walls to up/down too
 
 - spawn and draw items in the game
   - pick up items (inventory) (to pick up an item, crouch in front of it)
