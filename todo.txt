@@ -1,17 +1,15 @@
 to do:
 
 ***- PCG to do: optional treasure (in Java):
-    ***- draw items in Gimp:
-      ***- coins (sprite or tile?)
-      ***- bullets (rocks/darts/spears/battery packs)
-      ***- maize (increases max life)
-      ***- map pieces
-    ***- sample random rooms that have no tags (ideally in leaf divisions with no tags), and add optional treasure/story trivia labels
-         (might or might not be reachable)
-        ***- add "small keys" and some of the objects above are chest_locked with small keys
-    ***- dictionary with puzzles/riddles/hints/story
-    ***- add them to the map
-    ***- should I ensure winged sandals are spawned (double/higher jump) for some areas?
+    ***- check how many rooms without tags are there in average per area in 1000 generations
+    ***- spawn weapons: 10 weapons, one per area (sling is in the jungle)
+      ***- for each area, sample a room with no tags (preferring leaf divisions with no tags)
+      ***- small chance of the weapon being in a chest (and then spawn a small key in the map following the same procedure)
+    ***- 8 times: pick a random area, same room selection as above, and spawn a heart (+1 life)
+    ***- for all the other optional items: sandals, belt, etc. do the same
+      ***- ensure winged sandals are spawned in one of the first 3 pyramids (so that I can assume it's there for the later zones)
+    ***- in all the chunks without a tag, have a 1/8 (?) chance of spawning a tablet
+    ***- dictionary with puzzles/riddles/hints/story to assign a text to each tablet (figure out how to assign an ID to each tablet)
 
 - Implement PCGWorld in assembler:
   - data structure
@@ -26,8 +24,10 @@ to do:
 
 - spawn and draw items in the game
   - pick up items (inventory) (to pick up an item, crouch in front of it)
+  - visualize small keys in the hud/inventory (up to a limit, and then don't draw more)
 
 - being able to complete the game in assembler:
+  - open small chests with small keys (maintain global chest state: closed, open, picked-up)
   - render doors (and be blocked by them)
   - use keys in locks to open doors
   - press buttons to open doors
