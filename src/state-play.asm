@@ -33,8 +33,8 @@ state_play:
 		call call_hl_in_page_c_8000
 
 		; generate room:
-; 		ld e, 0  ; breakable left (area 1)
-		ld e, 9  ; breakable down (area 1)
+		ld e, 0  ; breakable left (area 1)
+; 		ld e, 9  ; breakable down (area 1)
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000

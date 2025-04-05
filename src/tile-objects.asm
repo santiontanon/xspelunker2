@@ -154,9 +154,20 @@ breakable_wall_hit_by_player_destroyed:
 	; wall destroyed!
 	ld hl, redraw_flags
 	set ROOM_REDRAW_FLAG_BIT, (hl)
-	ld hl, SFX_enemy_kill
-	call play_SFX_with_high_priority
 
+	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_WIDTH)
+	sub 2
+	sra a
+	add a, c
+	ld c, a
+	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_HEIGHT)
+	sub 2
+	sra a
+	add a, b
+	ld b, a
+	call spawn_explosion
 	jp room_remove_breakable_wall
 
 breakable_wall_hit_by_player_continue:
@@ -561,28 +572,33 @@ room_remove_breakable_wall_continue:
 	ld (hl), e
 	inc hl
 	ld (hl), d
+	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	call room_remove_breakable_wall_restore_background
+	push ix
+	pop hl
+	jp delete_tile_object_in_hl
 
+
+;-----------------------------------------------
+room_remove_breakable_wall_restore_background:
 	push de
-		ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
-		ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
 		call get_room_tile_ptr
 	pop bc
-room_remove_breakable_wall_loop_y:
+room_remove_breakable_wall_restore_background_loop_y:
 	push bc
 	push hl
-room_remove_breakable_wall_loop_x:
+room_remove_breakable_wall_restore_background_loop_x:
 		ld (hl), 0
 		inc hl
 		dec c
-		jr nz, room_remove_breakable_wall_loop_x
+		jr nz, room_remove_breakable_wall_restore_background_loop_x
 	pop hl
 	pop bc
 	ld a, (current_room__width)
 	ADD_HL_A
-	djnz room_remove_breakable_wall_loop_y
-	push ix
-	pop hl
-	jp delete_tile_object_in_hl
+	djnz room_remove_breakable_wall_restore_background_loop_y
+	ret
 
 
 ;-----------------------------------------------

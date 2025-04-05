@@ -435,23 +435,9 @@ pcg_generate_room__object_breakable_wall_mask_set:
 	or a
 	jp z, pcg_generate_room__object_breakable_wall_continue
 	; wall was already destroyed:
-	push de
-		call get_room_tile_ptr
-	pop bc
-pcg_generate_room__object_breakable_wall_destroyed_loop_y:
-	push bc
-	push hl
-pcg_generate_room__object_breakable_wall_destroyed_loop_x:
-		ld (hl), 0
-		inc hl
-		dec c
-		jr nz, pcg_generate_room__object_breakable_wall_destroyed_loop_x
-	pop hl
-	pop bc
-	ld a, (current_room__width)
-	ADD_HL_A
-	djnz pcg_generate_room__object_breakable_wall_destroyed_loop_y
+	call room_remove_breakable_wall_restore_background
 	jp pcg_generate_room__object_loop_next
+
 
 pcg_generate_room__object_breakable_wall_continue:	
 	; spawn the breakable wall object:

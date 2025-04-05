@@ -1,24 +1,17 @@
 to do:
 
-***- breakable walls:
-  ***- sprite decoration for breaking a wall
-  ***- for up/down if we need a ladder, replace by proper ladder piece
-
-- spawn and draw items in the game
-  - pick up items (inventory) (to pick up an item, crouch in front of it)
-
-- PCG to do: optional treasure (in Java):
-    - draw items in Gimp:
-      - coins (sprite or tile?)
-      - bullets (rocks/darts/spears/battery packs)
-      - maize (increases max life)
-      - map pieces
-    - sample random rooms that have no tags (ideally in leaf divisions with no tags), and add optional treasure/story trivia labels
+***- PCG to do: optional treasure (in Java):
+    ***- draw items in Gimp:
+      ***- coins (sprite or tile?)
+      ***- bullets (rocks/darts/spears/battery packs)
+      ***- maize (increases max life)
+      ***- map pieces
+    ***- sample random rooms that have no tags (ideally in leaf divisions with no tags), and add optional treasure/story trivia labels
          (might or might not be reachable)
-        - add "small keys" and some of the objects above are chest_locked with small keys
-    - dictionary with puzzles/riddles/hints/story
-    - add them to the map
-    - should I ensure winged sandals are spawned (double/higher jump) for some areas?
+        ***- add "small keys" and some of the objects above are chest_locked with small keys
+    ***- dictionary with puzzles/riddles/hints/story
+    ***- add them to the map
+    ***- should I ensure winged sandals are spawned (double/higher jump) for some areas?
 
 - Implement PCGWorld in assembler:
   - data structure
@@ -30,6 +23,9 @@ to do:
   - verify it matches exactly what I get in Java
   - for some areas (pyramids, etc.) have some predefined shapes (e.g. pyramid shape), that can be chosen with some probability. And maybe also different shapes for the confluence, etc.
   - keep Java/assembler versions in sync (try different random seeds)
+
+- spawn and draw items in the game
+  - pick up items (inventory) (to pick up an item, crouch in front of it)
 
 - being able to complete the game in assembler:
   - render doors (and be blocked by them)

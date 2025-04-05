@@ -73,6 +73,27 @@ spawn_pushing_block_dust:
 
 
 ;-----------------------------------------------
+; input:
+; - c, b: tile coordinates where to spawn
+spawn_explosion:	
+	call ptr_to_new_sprite_object
+	ret nz
+	ld (hl), SPRITE_OBJECT_TYPE_EXPLOSION
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), c  ; tile x
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), b  ; tile y
+	inc hl
+	ld (hl), 8  ; state (frames left)
+	ld hl, SFX_enemy_kill
+	jp play_SFX_with_high_priority
+
+
+;-----------------------------------------------
 update_sprite_objects_player_bullets:
 	ld a, (n_displayed_object_sprites_without_player_bullets)
 	ld (n_displayed_object_sprites), a
@@ -110,18 +131,12 @@ update_sprite_objects_loop:
 	ret z
 	cp #ff  ; sentinel
 	ret z
-	dec a
+	cp SPRITE_OBJECT_TYPE_WATER_SPLASH
 	jr z, update_sprite_objects_water_splash
-	dec a
+	cp SPRITE_OBJECT_TYPE_BLOCK_DUST
 	jr z, update_sprite_objects_pushing_block_dust
-; 	dec a
-; 	jr z, update_sprite_objects_player_bullet_stone
-; 	dec a
-; 	jr z, update_sprite_objects_player_bullet_dart
-; 	dec a
-; 	jr z, update_sprite_objects_player_bullet_spear
-; 	dec a
-; 	jr z, update_sprite_objects_player_bullet_ray
+	cp SPRITE_OBJECT_TYPE_EXPLOSION
+	jr z, update_sprite_objects_explosion
 update_sprite_objects_loop_next:
 	ld de, ROOM_OBJECT_STRUCT_SIZE
 	add ix, de
@@ -159,6 +174,16 @@ update_sprite_objects_pushing_block_dust:
 	ld d, COLOR_WHITE
 	ld e, 20
 	ld c, 4
+	call get_sprite_object_sprite_coordinates
+	call z, add_sprite_to_this_frame
+	jp update_sprite_objects_decrease_timer_and_delete_if_necessary
+
+
+;-----------------------------------------------
+update_sprite_objects_explosion:
+	ld d, COLOR_WHITE
+	ld e, 76
+	ld c, 0
 	call get_sprite_object_sprite_coordinates
 	call z, add_sprite_to_this_frame
 	jp update_sprite_objects_decrease_timer_and_delete_if_necessary

@@ -135,8 +135,9 @@ public class GenerateSprites {
         data.addAll(extractSprite(sourceImage, 16, 200, 2));
         data.addAll(extractSprite(sourceImage, 32, 200, 2));
         data.addAll(extractSprite(sourceImage, 48, 200, 2));
+        data.addAll(extractSprite(sourceImage, 48, 136, 15));  // explosion
         
-        System.out.println("data: " + data.size());
+        System.out.println("extractPyramidObjectSprites: " + data.size());
         Z80Assembler.dataToBinary(data, outputPath + ".bin");        
     }
 
