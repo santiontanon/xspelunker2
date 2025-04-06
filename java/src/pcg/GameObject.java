@@ -317,6 +317,15 @@ public class GameObject {
             case "item-ice-cape":
                 tx = 80; ty = 112;
                 break;
+            case "lever":
+                tx = 224; ty = 32;
+                break;
+            case "boss-lock":
+                tx = 192; ty = 48;
+                break;
+            case "boss-door":
+                tx = 192; ty = 64; tdx = 32; tdy = 32;
+                break;
             default:
                 System.err.println("Cannot render placed object: " + type);
         }

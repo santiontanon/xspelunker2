@@ -1,26 +1,25 @@
 to do:
 
-- spawn and draw items in the game
-  - pick up items (inventory) (to pick up an item, crouch in front of it)
-  - visualize small keys in the hud/inventory (up to a limit, and then don't draw more)
-
-- Implement PCGWorld in assembler:
-  - data structure
-      - withinChestTag: do I need this? maybe I can just remove tags that are "withinChestTag" from the tag list
-      - chestContent
-      - spanningTree: ID, parent, n_descendants, root point, tags (this is stored twice for convenience) (64 * 10 -> 640 bytes)
-      - global object list (4 * 64 -> 256 bytes) (how does this work? do I need it globally? per area? how do I mark that an item is taken or a door open, globally?)
-  - implement it and generate the whole thing in assembler
-  - verify it matches exactly what I get in Java
-  - for some areas (pyramids, etc.) have some predefined shapes (e.g. pyramid shape), that can be chosen with some probability. And maybe also different shapes for the confluence, etc.
-  - keep Java/assembler versions in sync (try different random seeds)
+***- spawn and draw items in the game
+  ***- spawn boss keys (as an example): create tile objects
+  ***- when loading a room and spawning an objet, load the necessary tiles for that object into the "slot for tile items"
+  ***- draw the keys
+  ***- pick up items (inventory) (to pick up an item, crouch in front of it)
+  ***- spawn the other color keys
+  ***- spawn small keys
+    ***- visualize small keys in the hud/inventory (up to a limit, and then don't draw more)
+  ***- spawn the cog, etc. keys
+  ***- spawn optional items
+  ***- spawn weapons
+  ***- any other pick-up-able item left?
 
 - being able to complete the game in assembler:
-  - open small chests with small keys (maintain global chest state: closed, open, picked-up)
+  - spawn and open small chests with small keys (maintain global chest state: closed, open, picked-up)
+  - spawn and open chests with keys
   - render doors (and be blocked by them)
   - use keys in locks to open doors
   - press buttons to open doors
-  - combination clues (how to interact with clues? crouch? up?)
+  - combination clues (how to interact with clues? crouch? up?) [not all are readable yet, maya clues/story are only readable after 2nd piece put in calendar stone]
   - interact with combination levers (hit them to change their state)
   - open the boss doors (door open animation with some SFX/music, so, it's clear it's important)
   - enter a boss door (for now just an empty room with the item you are supposed to get)
@@ -29,7 +28,22 @@ to do:
   - design ending room (maya calendar stone where you place what you get from the bosses, etc.)
     - 1st idol on calendar stone, opens door to 3rd pyramid
     - 3rd idol on calendar stone, opens door to temple of fire
+  - design teleporter in atlantis/mars/moon and how the interaction would go (no need to think of the riddle yet)
   - ensure that ALL tags are instantiated now during room creation
+
+- Implement PCGWorld in assembler:
+  - data structure
+      - withinChestTag: do I need this? maybe I can just remove tags that are "withinChestTag" from the tag list
+      - chestContent
+      - spanningTree: ID, parent, n_descendants, root point, tags (this is stored twice for convenience)
+      - global object list (4 * 64 -> 256 bytes) (how does this work? do I need it globally? per area? how do I mark that an item is taken or a door open, globally?)
+  - implement it and generate the whole thing in assembler
+  - verify it matches exactly what I get in Java
+  - for some areas (pyramids, etc.) have some predefined shapes (e.g. pyramid shape), that can be chosen with some probability. And maybe also different shapes for the confluence, etc.
+  - keep Java/assembler versions in sync (try different random seeds)
+
+- item effects:
+  - for anti-grav belt, you can overwrite it by pressing "down" (to fall quick)
 
 - enemies:
   - come up with a list of enemies for pyramid (consider both sprite enemies and larger tile-based enemies)
@@ -39,9 +53,6 @@ to do:
   - design all the enemies on the pyramid biome and spawn them
 
 - when using the "map" item in the inventory, display an overall map, with all the pieces you have currently collected (and some clues in the form of maya writing that appear in the pieces)
-
-- item effects (and if I need more items, think of maya masks, collars, etc.):
-  - for anti-grav belt, you can overwrite it by pressing "down" (to fall quick)
 
 - jungle biome
   - implement it

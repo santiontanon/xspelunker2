@@ -1,1 +1,36 @@
-<?xml version="1.0" encoding="UTF-8"?><map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="16"> <properties>  <property name="down" value="stairs"/>  <property name="up" value="stairs"/> </properties> <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="256" columns="16">  <image source="tiles.png" width="128" height="128"/> </tileset> <layer name="Tile Layer 1" width="16" height="12">  <data encoding="csv">156,156,1,1,1,1,1,249,168,1,1,1,1,1,247,247,152,152,1,1,1,1,1,249,168,1,1,1,1,1,153,153,163,164,1,1,1,186,187,187,187,187,188,1,1,1,162,162,162,162,1,1,1,183,184,184,184,184,185,1,1,1,164,163,158,162,1,1,1,1,1,1,1,1,1,1,1,1,162,159,254,144,144,1,1,1,1,1,1,1,1,1,1,254,144,144,250,194,195,1,1,1,1,1,1,1,1,1,1,250,194,195,209,210,211,1,1,1,1,1,1,1,1,1,1,209,210,211,225,226,227,1,1,1,1,1,1,1,1,1,1,225,226,227,241,242,243,1,1,1,1,1,1,1,1,1,1,241,242,243,151,156,247,156,1,1,254,90,91,144,1,1,156,247,247,156,153,152,153,152,1,1,1,249,168,1,1,1,152,153,153,152</data> </layer> <objectgroup name="objects">  <object id="4" type="item" x="40" y="0" width="16" height="16"/>  <object id="5" type="item" x="72" y="0" width="16" height="16"/>  <object id="6" type="big-item" x="48" y="56" width="32" height="24"/>  <object id="8" type="breakable-left" x="0" y="48" width="24" height="32"/>  <object id="10" type="breakable-right" x="104" y="48" width="24" height="32"/>  <object id="12" type="door-right" x="112" y="16" width="16" height="24"/>  <object id="13" type="door-left" x="0" y="16" width="16" height="24"/>  <object id="14" type="4x4-item" x="48" y="48" width="32" height="32"/> </objectgroup></map>
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="16">
+ <properties>
+  <property name="down" value="stairs"/>
+  <property name="up" value="stairs"/>
+ </properties>
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="256" columns="16">
+  <image source="tiles.png" width="128" height="128"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="16" height="12">
+  <data encoding="csv">
+156,156,1,1,1,1,1,249,168,1,1,1,1,1,247,247,
+152,152,1,1,1,1,1,249,168,1,1,1,1,1,153,153,
+163,164,1,1,1,186,187,187,187,187,188,1,1,1,162,162,
+162,162,1,1,1,183,184,184,184,184,185,1,1,1,164,163,
+158,162,1,1,1,1,1,1,1,1,1,1,1,1,162,159,
+254,144,144,1,1,1,1,1,1,1,1,1,1,254,144,144,
+250,194,195,1,1,1,1,1,1,1,1,1,1,250,194,195,
+209,210,211,1,1,1,1,1,1,1,1,1,1,209,210,211,
+225,226,227,1,1,1,1,1,1,1,1,1,1,225,226,227,
+241,242,243,1,1,1,1,1,1,1,1,1,1,241,242,243,
+151,156,247,156,1,1,254,105,106,144,1,1,156,247,247,156,
+153,152,153,152,1,1,1,249,168,1,1,1,152,153,153,152
+</data>
+ </layer>
+ <objectgroup name="objects">
+  <object id="4" type="item" x="40" y="0" width="16" height="16"/>
+  <object id="5" type="item" x="72" y="0" width="16" height="16"/>
+  <object id="6" type="big-item" x="48" y="56" width="32" height="24"/>
+  <object id="8" type="breakable-left" x="0" y="48" width="24" height="32"/>
+  <object id="10" type="breakable-right" x="104" y="48" width="24" height="32"/>
+  <object id="12" type="door-right" x="112" y="16" width="16" height="24"/>
+  <object id="13" type="door-left" x="0" y="16" width="16" height="24"/>
+  <object id="14" type="4x4-item" x="48" y="48" width="32" height="32"/>
+ </objectgroup>
+</map>

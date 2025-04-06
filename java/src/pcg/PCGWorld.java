@@ -747,8 +747,14 @@ public class PCGWorld {
         
         // spawn maya secret puzzle clues:
         for(int i = 0;i<4;i++) {
-            if (!tagLess.isEmpty()) {
-                int idx = r.nextInt(32) % tagLess.size();
+            List<AreaDivision> candidates = new ArrayList<>();
+            for(AreaDivision d:tagLess) {
+                if (d.root.a.ID != 10 && d.root.a.ID != 11) {
+                    candidates.add(d);
+                }
+            }
+            if (!candidates.isEmpty()) {
+                int idx = r.nextInt(64) % candidates.size();
                 AreaDivision d = tagLess.get(idx);
                 AreaPoint p = randomDivisionPoint(d, true);
                 addTag(p, "maya-riddle-clue" + (i+1), d);

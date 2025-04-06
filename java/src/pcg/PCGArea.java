@@ -1399,14 +1399,6 @@ public class PCGArea {
                 case "block-puzzle3":
                 case "block-puzzle4":
                     break;
-                case "boss1-chestlock":
-                case "boss2-chestlock":
-                case "boss3-chestlock":
-                case "boss4-chestlock":
-                case "boss5-chestlock":
-                case "boss6-chestlock":
-                case "boss7-chestlock":
-                    break;
                 case "boss1-key":
                 case "boss2-key":
                 case "boss3-key":
@@ -1500,6 +1492,24 @@ public class PCGArea {
                     }
                     ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
                                                   go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, go.type));
+                    break;
+                }
+                case "boss1-chestlock":
+                case "boss2-chestlock":
+                case "boss3-chestlock":
+                case "boss4-chestlock":
+                case "boss5-chestlock":
+                case "boss6-chestlock":
+                case "boss7-chestlock":
+                {
+                    TMXObject place = ra.fg_chunks[go.x][go.y].randomObject("item", r);
+                    if (place == null) return false;
+                    ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
+                                                  go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "boss-lock"));
+                    place = ra.fg_chunks[go.x][go.y].randomObject("4x4-item", r);
+                    if (place == null) return false;
+                    ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
+                                                  go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "boss-door"));
                     break;
                 }
                 
@@ -1716,7 +1726,17 @@ public class PCGArea {
                         if (place == null) return false;
                         ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
                                                       go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-down"));
-                    }                            
+                    }
+                    // spawn the 8 switches:
+                    int n_switches_spawned = 0;
+                    for(TMXObject place2:ra.fg_chunks[go.x][go.y].locations) {
+                        if (place2.type.equals("item")) {
+                            ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place2.x,
+                                                          go.y*RoomChunk.CHUNK_HEIGHT*8 + place2.y, "lever"));
+                            n_switches_spawned++;
+                            if (n_switches_spawned >= 8) break;
+                        }
+                    }
                     break;                                
                 }         
 
