@@ -34,9 +34,9 @@ public class PCGWorld {
     public static final int DIRECTION_LEFT = 8;
     public static final int DIRECTION_IN = 16;  // connection that goes through a "gate"/"door", and not the edge of a room.
 
-    public int n_areas = 10;
-    public int n_divisions = 65;
-    public int min_divisions_per_area[] = {3, 7, 7, 4, 7, 1, 7, 7, 7, 7};
+    public int n_areas = 12;
+    public int n_divisions = 80;
+    public int min_divisions_per_area[] = {3, 7, 7, 4, 7, 1, 7, 7, 7, 7, 7, 7};
     public String areaNames[] = {
         "Jungle",
         "Temple of Inscriptions",
@@ -48,6 +48,8 @@ public class PCGWorld {
         "Atlantic Caves",
         "Temple of Fire",
         "Atlantis",
+        "Mars Pyramid",
+        "Moon Cave",
     };
     public int areaDebugPositions[][] = {
         {160, 40},
@@ -60,6 +62,8 @@ public class PCGWorld {
         {300, 450},
         {150, 600},
         {500, 450},
+        {500, 40},
+        {500, 200},
     };
     public int areaSizes[][] = {
         {8, 2},
@@ -70,6 +74,8 @@ public class PCGWorld {
         {3, 3},
         {6, 8},
         {6, 8},
+        {8, 8},
+        {8, 8},
         {8, 8},
         {8, 8},
     };
@@ -92,6 +98,8 @@ public class PCGWorld {
         {".x.",
          "xxx",
          ".x."},
+        null,
+        null,
         null,
         null,
         null,
@@ -198,12 +206,21 @@ public class PCGWorld {
             n_times_reached_generation_stage[1]++;
             if (!generateInterAreaConnections(w)) continue;  // hardcoded connections
             n_times_reached_generation_stage[2]++;
-            w.spanningTree = generateSpanningTree(w);
+            w.spanningTree = generateSpanningTree(w, 0);
             if (w.spanningTree == null) continue;
+            List<AreaDivision> marsSpanningTree = generateSpanningTree(w, 10);
+            List<AreaDivision> moonSpanningTree = generateSpanningTree(w, 11);
             n_times_reached_generation_stage[3]++;
-            if (!generateMission(w, w.spanningTree, usedKeysAndLocks)) continue;
+            if (!generateMission(w, w.spanningTree, marsSpanningTree, moonSpanningTree, usedKeysAndLocks)) continue;
             n_times_reached_generation_stage[7]++;
 //            if (!createLoopConnections(w, w.spanningTree)) continue;
+            // Create mars/moon missions:
+            // ...
+            List<AreaDivision> allAreas = new ArrayList<>();
+            allAreas.addAll(w.spanningTree);
+            allAreas.addAll(marsSpanningTree);
+            allAreas.addAll(moonSpanningTree);
+            if (!spawnOptionalObjects(w, allAreas)) continue;
             return w;
         }
         return null;
@@ -253,7 +270,7 @@ public class PCGWorld {
                     seed = randomAreaPoint(w.areas.get(i), true);
                 }
                 divisionSeeds.add(seed);
-                addTag(seed, "seed");  // we mark them, so that we do not repeat any
+                addTag(seed, "seed", null);  // we mark them, so that we do not repeat any
                 seed.a.divisionIDs[seed.x][seed.y] = getNextDivisionID();
                 seed.a.nDivisions++;
                 n_divisions_left--;
@@ -267,13 +284,13 @@ public class PCGWorld {
                 seed = randomAreaPoint(w, true);
             }            
             divisionSeeds.add(seed);
-            addTag(seed, "seed");  // we mark them, so that we do not repeat any
+            addTag(seed, "seed", null);  // we mark them, so that we do not repeat any
             seed.a.divisionIDs[seed.x][seed.y] = getNextDivisionID();
             seed.a.nDivisions++;
         }
         // remove the temporary tags, which were used only to ensure we have no repetition
         for(AreaPoint seed:divisionSeeds) {
-            removeTag(seed, "seed");
+            removeTag(seed, "seed", null);
         }
         floodFillDivisionIDs(w);
         
@@ -290,11 +307,11 @@ public class PCGWorld {
         AreaPoint a0p1 = randomAreaBottomMostPoint(w.areas.get(0), true);
         if (a0p1 == null) return false;
         a0p1.direction = DIRECTION_DOWN;
-        addTag(a0p1, "connection");
+        addTag(a0p1, "connection", null);
         AreaPoint a0p2 = randomAreaBottomMostPoint(w.areas.get(0), true);
         if (a0p2 == null) return false;
         a0p2.direction = DIRECTION_DOWN;
-        addTag(a0p2, "connection");
+        addTag(a0p2, "connection", null);
         if (a0p2.x < a0p1.x) {
             // flip them:
             AreaPoint tmp = a0p2;
@@ -304,59 +321,59 @@ public class PCGWorld {
         AreaPoint a1p1 = randomAreaTopMostPoint(w.areas.get(1), true);
         if (a1p1 == null) return false;
         a1p1.direction = DIRECTION_UP;
-        addTag(a1p1, "connection");
+        addTag(a1p1, "connection", null);
         AreaPoint a1p2 = randomAreaBottomMostPoint(w.areas.get(1), true);
         if (a1p2 == null) return false;
         a1p2.direction = DIRECTION_DOWN;
-        addTag(a1p2, "connection");
+        addTag(a1p2, "connection", null);
         
         AreaPoint a2p1 = randomAreaTopMostPoint(w.areas.get(2), true);
         if (a2p1 == null) return false;
         a2p1.direction = DIRECTION_UP;
-        addTag(a2p1, "connection");
+        addTag(a2p1, "connection", null);
         AreaPoint a2p2 = randomAreaBottomMostPoint(w.areas.get(2), true);
         if (a2p2 == null) return false;
         a2p2.direction = DIRECTION_DOWN;
-        addTag(a2p2, "connection");
+        addTag(a2p2, "connection", null);
 
         AreaPoint a4p1 = randomAreaTopMostPoint(w.areas.get(4), true);
         if (a4p1 == null) return false;
         a4p1.direction = DIRECTION_UP;
-        addTag(a4p1, "connection");
+        addTag(a4p1, "connection", null);
         AreaPoint a4p2 = randomAreaBottomMostPoint(w.areas.get(4), true);
         if (a4p2 == null) return false;
         a4p2.direction = DIRECTION_DOWN;
-        addTag(a4p2, "connection");
+        addTag(a4p2, "connection", null);
 
         AreaPoint a6p1 = randomAreaRightMostPoint(w.areas.get(6), true);
         if (a6p1 == null) return false;
         a6p1.direction = DIRECTION_RIGHT;
-        addTag(a6p1, "connection");
+        addTag(a6p1, "connection", null);
         AreaPoint a6p2 = null;
 
         AreaPoint a7p1 = randomAreaLeftMostPoint(w.areas.get(7), true);
         if (a7p1 == null) return false;
         a7p1.direction = DIRECTION_LEFT;
-        addTag(a7p1, "connection");
+        addTag(a7p1, "connection", null);
         AreaPoint a7p2 = null;
         AreaPoint a7p3 = randomAreaRightMostPoint(w.areas.get(7), true);
         if (a7p3 == null) return false;
         a7p3.direction = DIRECTION_RIGHT;
-        addTag(a7p3, "connection");
+        addTag(a7p3, "connection", null);
 
         AreaPoint a8p1 = randomAreaTopMostPoint(w.areas.get(8), true);
         if (a8p1 == null) return false;
         a8p1.direction = DIRECTION_UP;
-        addTag(a8p1, "connection");
+        addTag(a8p1, "connection", null);
         AreaPoint a8p2 = randomAreaTopMostPoint(w.areas.get(8), true);
         if (a8p2 == null) return false;
         a8p2.direction = DIRECTION_UP;
-        addTag(a8p2, "connection");
+        addTag(a8p2, "connection", null);
         
         AreaPoint a9p1 = randomAreaLeftMostPoint(w.areas.get(9), true);
         if (a9p1 == null) return false;
         a9p1.direction = DIRECTION_LEFT;
-        addTag(a9p1, "connection");
+        addTag(a9p1, "connection", null);
         
         if (r.nextBoolean()) {
             // connect caves left to fire temple:
@@ -387,34 +404,34 @@ public class PCGWorld {
             w.interAreaconnections.add(new InterAreaConnection(a7p2, a8p2, InterAreaConnection.BIDIRECTIONAL, r));
         }
         
-        removeTag(a0p1, "connection");
-        removeTag(a0p2, "connection");
-        removeTag(a1p1, "connection");
-        removeTag(a1p2, "connection");
-        removeTag(a2p1, "connection");
-        removeTag(a2p2, "connection");
-        removeTag(a4p1, "connection");
-        removeTag(a4p2, "connection");
-        removeTag(a4p1, "connection");
-        removeTag(a4p2, "connection");
-        removeTag(a6p1, "connection");
-        if (a6p2 != null) removeTag(a6p2, "connection");
-        removeTag(a7p1, "connection");
-        if (a7p2 != null) removeTag(a7p2, "connection");
-        removeTag(a7p3, "connection");
-        removeTag(a8p1, "connection");
-        removeTag(a8p2, "connection");
-        removeTag(a9p1, "connection");
+        removeTag(a0p1, "connection", null);
+        removeTag(a0p2, "connection", null);
+        removeTag(a1p1, "connection", null);
+        removeTag(a1p2, "connection", null);
+        removeTag(a2p1, "connection", null);
+        removeTag(a2p2, "connection", null);
+        removeTag(a4p1, "connection", null);
+        removeTag(a4p2, "connection", null);
+        removeTag(a4p1, "connection", null);
+        removeTag(a4p2, "connection", null);
+        removeTag(a6p1, "connection", null);
+        if (a6p2 != null) removeTag(a6p2, "connection", null);
+        removeTag(a7p1, "connection", null);
+        if (a7p2 != null) removeTag(a7p2, "connection", null);
+        removeTag(a7p3, "connection", null);
+        removeTag(a8p1, "connection", null);
+        removeTag(a8p2, "connection", null);
+        removeTag(a9p1, "connection", null);
         return true;
     }
     
     
-    public List<AreaDivision> generateSpanningTree(World w) throws Exception
+    public List<AreaDivision> generateSpanningTree(World w, int startArea) throws Exception
     {
         List<AreaDivision> tree = new ArrayList<>();
         List<Integer> IDsInTree = new ArrayList<>();
         
-        AreaPoint start = randomAreaLeftMostPoint(w.areas.get(0), true);
+        AreaPoint start = randomAreaLeftMostPoint(w.areas.get(startArea), true);
         AreaDivision div = new AreaDivision(start, start.a.divisionIDs[start.x][start.y], null);
         tree.add(div);
         IDsInTree.add(div.divisionID);
@@ -514,7 +531,10 @@ public class PCGWorld {
     }
     
     
-    public boolean generateMission(World w, List<AreaDivision> tree, List<String> usedKeysAndLocks)
+    public boolean generateMission(World w, List<AreaDivision> tree, 
+                                   List<AreaDivision> marsSpanningTree,
+                                   List<AreaDivision> moonSpanningTree,
+                                   List<String> usedKeysAndLocks)
     {
         // Pick important divisions:
         AreaDivision start = tree.get(0);
@@ -536,6 +556,22 @@ public class PCGWorld {
         }
         AreaDivision boss5 = randomAreaDivisionOnlyLeaves(w.areas.get(9), tree, true);
         if (boss5 == null) {
+            return false;
+        }
+
+        AreaDivision teleporter_atlantis = randomAreaDivisionFavoringLeaves(w.areas.get(9), tree, true);
+        addTag(randomDivisionPoint(teleporter_atlantis, true), "teleporter-atlantis", teleporter_atlantis);
+        AreaDivision teleporter_mars = marsSpanningTree.get(0);
+        AreaDivision teleporter_moon = moonSpanningTree.get(0);
+        addTag(randomDivisionPoint(teleporter_mars, true), "teleporter-mars", teleporter_mars);
+        addTag(randomDivisionPoint(teleporter_moon, true), "teleporter-moon", teleporter_moon);
+        
+        AreaDivision boss6 = randomAreaDivisionOnlyLeaves(w.areas.get(10), marsSpanningTree, true);
+        if (boss6 == null) {
+            return false;
+        }
+        AreaDivision boss7 = randomAreaDivisionOnlyLeaves(w.areas.get(11), moonSpanningTree, true);
+        if (boss7 == null) {
             return false;
         }
         AreaDivision midpoint = randomAreaDivisionFavoringLeaves(w.areas.get(5), tree, true);
@@ -596,7 +632,7 @@ public class PCGWorld {
         }
         quests.addAll(quests2);
         
-        // for the last 2 bosses, create "current reachable area" (from midpoint on), and do the same
+        // for the bosses 4 and 5, create "current reachable area" (from midpoint on), and do the same
         QuestSpec q4 = new QuestSpec(midpoint, boss4, n_subquests_per_boss, null, null, null, "boss4");
         QuestSpec q5 = new QuestSpec(midpoint, boss5, n_subquests_per_boss, null, null, null, "boss5");
         List<AreaDivision> blocks2 = new ArrayList<>();
@@ -608,9 +644,29 @@ public class PCGWorld {
         List<Quest> quests3 = generateSubquests(w, tree, open, useable, reachable, usedConnections);
         if (quests3 == null) return false;
         quests.addAll(quests3);
+
+        // for the bosses 6 and 7, create "current reachable area" from some point in areas 10 and 11, and do the same:
+        QuestSpec q6 = new QuestSpec(teleporter_mars, boss6, 2, null, null, null, "boss6");
+        List<AreaDivision> blocks3 = new ArrayList<>();
+        useable = reachableArea(marsSpanningTree, teleporter_mars, blocks3);
+        reachable = reachableArea(marsSpanningTree, teleporter_mars, blocks3);
+        open = new ArrayList<>();
+        open.add(q6);
+        List<Quest> quests4 = generateSubquests(w, marsSpanningTree, open, useable, reachable, usedConnections);
+        if (quests4 == null) return false;
+        quests.addAll(quests4);
+        
+        QuestSpec q7 = new QuestSpec(teleporter_mars, boss7, 2, null, null, null, "boss7");
+        List<AreaDivision> blocks4 = new ArrayList<>();
+        useable = reachableArea(moonSpanningTree, teleporter_moon, blocks4);
+        reachable = reachableArea(moonSpanningTree, teleporter_moon, blocks4);
+        open = new ArrayList<>();
+        open.add(q7);
+        List<Quest> quests5 = generateSubquests(w, moonSpanningTree, open, useable, reachable, usedConnections);
+        if (quests5 == null) return false;
+        quests.addAll(quests5);
         
         n_times_reached_generation_stage[6]++;
-        
         
         for(Quest q:quests) {
             if (q.lockPoint != null) {
@@ -631,6 +687,190 @@ public class PCGWorld {
 //            w.connections.removeAll(roDelete);
 //        }
 
+        return true;
+    }
+    
+    
+    public boolean spawnOptionalObjects(World w, List<AreaDivision> allAreas)
+    {
+        int weaponAreas[] = {
+          1, 2, 4, // hammer in inscriptions, macuahuitl in pyramid 2, shield in inverted pyramid
+          0, 4, 6, 9, // sling in jungle, blowgun in inverted, atlatl in caves, raygun in atlantis
+          7, 8, 9, // obsidian knive in caves, fire hammer in fire temple, ice macuahuitl in atlantis
+        };
+        String weaponTags[] = {
+            "WEAPON_HAMMER",
+            "WEAPON_MACUAHUITL",
+            "WEAPON_SHIELD",
+            "WEAPON_SLING",
+            "WEAPON_BLOWGUN",
+            "WEAPON_ATLATL",
+            "WEAPON_RAYGUN",
+            "WEAPON_OBSIDIAN_KNIVE",
+            "WEAPON_FIRE_HAMMER",
+            "WEAPON_ICE_MACUAHUITL",            
+        };
+        int mapPieceAreas[] = {
+            1, 2, 4,
+            6, 8, 9, 10, 11
+        };
+        String optionalItemTags[] = {
+          "item-sandals",
+          "item-gloves",
+          "item-hurakan",
+          "item-armor",
+          "item-chaac",
+          "item-seashell",
+          "item-belt",
+          "item-ice-cape",
+        };
+        
+        List<AreaDivision> tagLess = new ArrayList<>();
+        for(AreaDivision d: allAreas) {
+            if (d.tags.isEmpty()) tagLess.add(d);
+        }
+        
+        // tagLess divisions per area:
+//        {
+//            for(int i = 0;i<12;i++) {
+//                int n = 0;
+//                for(AreaDivision d: allAreas) {
+//                    if (d.root.a.ID == i && d.tags.isEmpty()) n++;
+//                }
+//                System.out.println("tagLess in area " + i + ": " + n);
+//            }
+//        }
+        
+        System.out.println("tagLess divisions (before): " + tagLess.size() + " / " + allAreas.size());
+     
+        int n_small_keys = 0;
+        
+        // spawn maya secret puzzle clues:
+        for(int i = 0;i<4;i++) {
+            if (!tagLess.isEmpty()) {
+                int idx = r.nextInt(32) % tagLess.size();
+                AreaDivision d = tagLess.get(idx);
+                AreaPoint p = randomDivisionPoint(d, true);
+                addTag(p, "maya-riddle-clue" + (i+1), d);
+                tagLess.remove(d);
+            }            
+        }
+        
+        // Spawn weapons (1/16th chance that one is not there):
+        for(int i = 0;i<10;i++) {
+            List<AreaDivision> candidates = new ArrayList<>();
+            for(AreaDivision d:tagLess) {
+                if (d.root.a.ID == weaponAreas[i]) {
+                    candidates.add(d);
+                }
+            }
+            if (!candidates.isEmpty() && r.nextInt(16) != 0) {
+                int idx = r.nextInt(16) % candidates.size();
+                AreaDivision d = candidates.get(idx);
+                AreaPoint p = randomDivisionPoint(d, true);
+                if (n_small_keys < 4 && r.nextInt(4) == 0) {
+                    // place in a small key chest!
+                    n_small_keys++;
+                    addTag(p, "small-key-chest" + n_small_keys, d);
+                    w.chestContent.put("small-key-chest" + n_small_keys, weaponTags[i]);
+                } else {
+                    addTag(p, weaponTags[i], d);
+                }
+                tagLess.remove(d);
+            }
+        }
+
+        // Spawn map pieces: (all are always there)
+        for(int i = 0;i<mapPieceAreas.length;i++) {
+            List<AreaDivision> candidates = new ArrayList<>();
+            for(AreaDivision d:tagLess) {
+                if (d.root.a.ID == mapPieceAreas[i]) {
+                    candidates.add(d);
+                }
+            }
+            if (!candidates.isEmpty()) {
+                int idx = r.nextInt(16) % candidates.size();
+                AreaDivision d = candidates.get(idx);
+                AreaPoint p = randomDivisionPoint(d, true);
+                addTag(p, "map-piece" + (i+1), d);
+                tagLess.remove(d);
+            }
+        }
+        
+        // Spawn hearts: (1/16th chance that one is not there)
+        for(int i = 0;i<5;i++) {
+            if (!tagLess.isEmpty() && r.nextInt(16) != 0) {
+                int idx = r.nextInt(32) % tagLess.size();
+                AreaDivision d = tagLess.get(idx);
+                AreaPoint p = randomDivisionPoint(d, true);
+                if (n_small_keys < 4 && r.nextInt(4) == 0) {
+                    // place in a small key chest!
+                    n_small_keys++;
+                    addTag(p, "small-key-chest" + n_small_keys, d);
+                    w.chestContent.put("small-key-chest" + n_small_keys, "heart" + (i+1));
+                } else {
+                    addTag(p, "heart" + (i+1), d);
+                }
+                tagLess.remove(d);
+            }            
+        }
+        
+        // Spawn optional items: (1/16th chance that one is not there)
+        for(int i = 0;i<optionalItemTags.length;i++) {
+            List<AreaDivision> candidates = tagLess;
+            if (i == 0) {
+                // must be spawned in one of the pyramid areas:
+                candidates = new ArrayList<>();
+                for(AreaDivision d:tagLess) {
+                    if (d.root.a.ID == 1 ||
+                        d.root.a.ID == 2 ||
+                        d.root.a.ID == 3 ||
+                        d.root.a.ID == 4) {
+                        candidates.add(d);
+                    }
+                }
+            }
+            // sandals (i == 0) are always spawned (if possible):
+            if (!candidates.isEmpty() && (i == 0 || r.nextInt(16) != 0)) {
+                int idx = r.nextInt(32) % candidates.size();
+                AreaDivision d = candidates.get(idx);
+                AreaPoint p = randomDivisionPoint(d, true);
+                if (i != 0 && n_small_keys < 4 && r.nextInt(4) == 0) {
+                    // place in a small key chest!
+                    n_small_keys++;
+                    addTag(p, "small-key-chest" + n_small_keys, d);
+                    w.chestContent.put("small-key-chest" + n_small_keys, optionalItemTags[i]);
+                } else {
+                    addTag(p, optionalItemTags[i], d);
+                }
+                tagLess.remove(d);
+            }            
+        }
+        
+        // spawn small keys:
+        for(int i = 0;i<n_small_keys;i++) {
+            if (!tagLess.isEmpty() && r.nextInt(16) != 0) {
+                int idx = r.nextInt(32) % tagLess.size();
+                AreaDivision d = tagLess.get(idx);
+                AreaPoint p = randomDivisionPoint(d, true);
+                addTag(p, "small-key" + (i+1), d);
+                tagLess.remove(d);
+            }            
+        }        
+        
+        // spawn random trivia:
+        for(int i = 0;i<8;i++) {
+            if (!tagLess.isEmpty() && r.nextInt(16) != 0) {
+                int idx = r.nextInt(32) % tagLess.size();
+                AreaDivision d = tagLess.get(idx);
+                AreaPoint p = randomDivisionPoint(d, true);
+                addTag(p, "story-trivia" + (i+1), d);
+                tagLess.remove(d);
+            }            
+        }
+        
+        System.out.println("tagLess divisions (after): " + tagLess.size());
+            
         return true;
     }
     
@@ -679,13 +919,15 @@ public class PCGWorld {
                     case "boss3":
                     case "boss4":
                     case "boss5":
+                    case "boss6":
+                    case "boss7":
                         lock_tag = qs.goalTag + "-chestlock";
                         key_tags = new String[]{qs.goalTag + "-key"};
                         quest_type = 1;
                         break;
                     default:
                 }
-                
+
                 if (availableLockKeysChests.isEmpty() && quest_type == 1 && lock_tag == null) {
                     // if we are out of chests, just use key/lock:
                     quest_type = 2;
@@ -696,7 +938,7 @@ public class PCGWorld {
                 switch(quest_type) {
                     case 0:
                         if (lock_tag == null) {
-                            lock_tag = random_lock(availableLockKeysObstacles);
+                            lock_tag = randomLock(availableLockKeysObstacles);
                             if (lock_tag == null) {
                                 return null;
                             }
@@ -711,7 +953,7 @@ public class PCGWorld {
 
                     case 1:
                         if (lock_tag == null) {
-                            lock_tag = random_lock(availableLockKeysChests);
+                            lock_tag = randomLock(availableLockKeysChests);
                             if (lock_tag == null) {
                                 return null;
                             }
@@ -728,7 +970,7 @@ public class PCGWorld {
 
                     case 2:
                         if (lock_tag == null) {
-                            lock_tag = random_lock(availableLockKeys);
+                            lock_tag = randomLock(availableLockKeys);
                             if (lock_tag == null) {
                                 return null;
                             }
@@ -788,7 +1030,7 @@ public class PCGWorld {
     }
     
     
-    public String random_lock(HashMap<String, String[]> locks)
+    public String randomLock(HashMap<String, String[]> locks)
     {
         if (locks.isEmpty()) return null;
         int n = r.nextInt(locks.keySet().size());
@@ -1244,7 +1486,7 @@ public class PCGWorld {
     }
     
     
-    public boolean addTag(AreaPoint p, String tag)
+    public boolean addTag(AreaPoint p, String tag, AreaDivision d)
     {
         if (tag == null) {
             return false;
@@ -1264,14 +1506,18 @@ public class PCGWorld {
             }
             l.add(tag);
         }
+        if (d!= null && !d.tags.contains(tag)) {
+            d.tags.add(tag);
+        }
         
         return true;
     }
     
     
-    public void removeTag(AreaPoint p, String tag)
+    public void removeTag(AreaPoint p, String tag, AreaDivision d)
     {
         if (tag == null) return;
+        if (d != null) d.tags.remove(tag);
         List<String> l = p.a.tags[p.x][p.y];
         if (l == null) return;
         p.a.tags[p.x][p.y].remove(tag);

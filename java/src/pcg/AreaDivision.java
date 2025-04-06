@@ -4,6 +4,9 @@
  */
 package pcg;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author santi
@@ -13,6 +16,7 @@ public class AreaDivision {
     public int divisionID;
     public AreaDivision parent;
     public int nDescendants = 0;  // number of tree nodes below (not including this one)
+    public List<String> tags = new ArrayList<>();
     
     
     public AreaDivision(AreaPoint a_root, int a_id, AreaDivision a_parent)

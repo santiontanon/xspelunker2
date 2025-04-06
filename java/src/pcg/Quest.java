@@ -5,7 +5,6 @@
 package pcg;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -40,18 +39,18 @@ public class Quest {
     public boolean addTags(World w, PCGWorld pcg)
     {
         if (startTag != null) {
-            if (!pcg.addTag(startPoint, startTag)) return false;
+            if (!pcg.addTag(startPoint, startTag, startDivision)) return false;
         }
         if (goalTag != null) {
-            if (!pcg.addTag(goalPoint, goalTag)) return false;
+            if (!pcg.addTag(goalPoint, goalTag, goalDivision)) return false;
         }
         if (lockTag != null) {
-            if (!pcg.addTag(lockPoint, lockTag)) return false;
+            if (!pcg.addTag(lockPoint, lockTag, lockDivision)) return false;
         }
         
         for(int i = 0;i<keyPoints.size();i++) {
             if (keyTags.get(i) != null) {
-                if (!pcg.addTag(keyPoints.get(i), keyTags.get(i))) return false;
+                if (!pcg.addTag(keyPoints.get(i), keyTags.get(i), keyDivisions.get(i))) return false;
             }
         }
 

@@ -12,7 +12,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import util.Pair;
 import util.TMXObject;
-import util.Z80Assembler;
 
 /**
  *
@@ -790,6 +789,57 @@ public class PCGArea {
                 case "button2":
                 case "button3":
                 case "button4":
+                case "heart1":
+                case "heart2":
+                case "heart3":
+                case "heart4":
+                case "heart5":
+                case "small-key-chest1":
+                case "small-key-chest2":
+                case "small-key-chest3":
+                case "small-key-chest4":
+                case "small-key1":
+                case "small-key2":
+                case "small-key3":
+                case "small-key4":
+                case "map-piece1":
+                case "map-piece2":
+                case "map-piece3":
+                case "map-piece4":
+                case "map-piece5":
+                case "map-piece6":
+                case "map-piece7":
+                case "map-piece8":
+                case "WEAPON_HAMMER":
+                case "WEAPON_MACUAHUITL":
+                case "WEAPON_SHIELD":
+                case "WEAPON_SLING":
+                case "WEAPON_BLOWGUN":
+                case "WEAPON_ATLATL":
+                case "WEAPON_RAYGUN":
+                case "WEAPON_OBSIDIAN_KNIVE":
+                case "WEAPON_FIRE_HAMMER":
+                case "WEAPON_ICE_MACUAHUITL":
+                case "item-sandals":
+                case "item-gloves":
+                case "item-hurakan":
+                case "item-armor":
+                case "item-chaac":
+                case "item-seashell":
+                case "item-belt":
+                case "item-ice-cape":
+                case "maya-riddle-clue1":
+                case "maya-riddle-clue2":
+                case "maya-riddle-clue3":
+                case "maya-riddle-clue4":
+                case "story-trivia1":
+                case "story-trivia2":
+                case "story-trivia3":
+                case "story-trivia4":
+                case "story-trivia5":
+                case "story-trivia6":
+                case "story-trivia7":
+                case "story-trivia8":
                     tagToPlace = tag;
                     break;
 
@@ -878,12 +928,7 @@ public class PCGArea {
                             ra.pieceTypes[x][y] == 0x1 ||
                             ra.pieceTypes[x][y] == 0x2 ||
                             ra.pieceTypes[x][y] == 0x4 ||
-//                                                ra.pieceTypes[x][y] == 0x7 ||
                             ra.pieceTypes[x][y] == 0x8
-//                                                || ra.pieceTypes[x][y] == 0xb ||
-//                                                ra.pieceTypes[x][y] == 0xd ||
-//                                                ra.pieceTypes[x][y] == 0xe ||
-//                                                ra.pieceTypes[x][y] == 0xf
                             ) {
                             continue;
                         }
@@ -948,7 +993,6 @@ public class PCGArea {
                     String upTag = null, downTag = null;
                     String chunkPoolName = "standard";
                     HashMap<Integer, List<RoomChunk>> chunkPool = fg_chunks;
-//                    boolean placeBackground = true;
                     if (placedTags[j][i] != null) {
                         switch(placedTags[j][i]) {
                             case "boss1-chestlock":
@@ -958,10 +1002,8 @@ public class PCGArea {
                             case "boss5-chestlock":
                             case "boss6-chestlock":
                             case "boss7-chestlock":
-//                            case "boss":
                                 chunkPoolName = "boss";
                                 chunkPool = boss_chunks;
-//                                placeBackground = false;
                                 break;
                                 
                             case "block-puzzle1":
@@ -1071,6 +1113,57 @@ public class PCGArea {
                             case "button2":
                             case "button3":
                             case "button4":    
+                            case "heart1":
+                            case "heart2":
+                            case "heart3":
+                            case "heart4":
+                            case "heart5":
+                            case "small-key-chest1":
+                            case "small-key-chest2":
+                            case "small-key-chest3":
+                            case "small-key-chest4":
+                            case "small-key1":
+                            case "small-key2":
+                            case "small-key3":
+                            case "small-key4":
+                            case "map-piece1":
+                            case "map-piece2":
+                            case "map-piece3":
+                            case "map-piece4":
+                            case "map-piece5":
+                            case "map-piece6":
+                            case "map-piece7":
+                            case "map-piece8":
+                            case "WEAPON_HAMMER":
+                            case "WEAPON_MACUAHUITL":
+                            case "WEAPON_SHIELD":
+                            case "WEAPON_SLING":
+                            case "WEAPON_BLOWGUN":
+                            case "WEAPON_ATLATL":
+                            case "WEAPON_RAYGUN":
+                            case "WEAPON_OBSIDIAN_KNIVE":
+                            case "WEAPON_FIRE_HAMMER":
+                            case "WEAPON_ICE_MACUAHUITL":
+                            case "item-sandals":
+                            case "item-gloves":
+                            case "item-hurakan":
+                            case "item-armor":
+                            case "item-chaac":
+                            case "item-seashell":
+                            case "item-belt":
+                            case "item-ice-cape":
+                            case "maya-riddle-clue1":
+                            case "maya-riddle-clue2":
+                            case "maya-riddle-clue3":
+                            case "maya-riddle-clue4":
+                            case "story-trivia1":
+                            case "story-trivia2":
+                            case "story-trivia3":
+                            case "story-trivia4":
+                            case "story-trivia5":
+                            case "story-trivia6":
+                            case "story-trivia7":
+                            case "story-trivia8":
                                 necessaryObjectTypes.add("item");
                                 break;
 
@@ -1109,14 +1202,6 @@ public class PCGArea {
                         }
                     }
                      
-//                    if (placeBackground) {
-//                        if (r.nextInt(p_of_non_first_bg) == 0) {
-//                            ra.bg_chunks[j][i] = bg_chunks.get(1 + r.nextInt(bg_chunks.size() - 1));
-//                        } else {
-//                            ra.bg_chunks[j][i] = bg_chunks.get(0);
-//                        }
-//                    }
-                    
                     if (i > 0) above = ra.fg_chunks[j][i-1];
                     if (above == null) {
                         // top of the map:
@@ -1204,263 +1289,14 @@ public class PCGArea {
                         ra.objectPlaceholders.add(new GameObjectPlaceholder(placedTags[j][i], j, i, nextObjectID, extra));
                         nextObjectID++;
                     }
-                    /*
-                    if (placedTags[j][i] != null) {
-                        switch(placedTags[j][i]) {
-                            case "boss1-key":
-                            case "boss2-key":
-                            case "boss3-key":
-                            case "boss4-key":
-                            case "boss5-key":
-                            case "red-key":
-                            case "green-key":
-                            case "blue-key":
-                            case "yellow-key":
-                            case "purple-key":
-                            case "white-key":
-                            case "red-chest":
-                            case "green-chest":
-                            case "blue-chest":
-                            case "yellow-chest":
-                            case "purple-chest":
-                            case "white-chest":
-                            case "gear-key":
-                            case "ball-key":
-                            case "idol-key":
-                            case "astronaut-key":
-                            case "trial1-clue":
-                            case "trial2-clue":
-                            case "trial3-clue":
-                            case "trial4-clue":
-                            case "combination1-clue":
-                            case "combination2-clue":
-                            case "combination3-clue":
-                            case "combination4-clue":
-                            case "button1":
-                            case "button2":
-                            case "button3":
-                            case "button4":    
-                            {
-                                TMXObject place = ra.fg_chunks[j][i].randomObject("item", r);
-                                if (place == null) {
-                                    return null;
-                                }
-                                ra.objects.add(new GameObject(j*RoomChunk.CHUNK_WIDTH*8 + place.x,
-                                                              i*RoomChunk.CHUNK_HEIGHT*8 + place.y, placedTags[j][i]));
-                                break;
-                            }
-
-                            case "gear-lock":
-                            case "idol-lock":
-                            {
-                                TMXObject place = ra.fg_chunks[j][i].randomObject("big-item", r);
-                                if (place == null) {
-                                    return null;
-                                }
-                                ra.objects.add(new GameObject(j*RoomChunk.CHUNK_WIDTH*8 + place.x,
-                                                              i*RoomChunk.CHUNK_HEIGHT*8 + place.y, placedTags[j][i]));
-                                if (necessaryObjectTypes.contains("door-left")) {
-                                    place = ra.fg_chunks[j][i].randomObject("door-left", r);
-                                    if (place == null) return null;
-                                    ra.objects.add(new GameObject(j*RoomChunk.CHUNK_WIDTH*8 + place.x,
-                                                                  i*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-left"));
-                                } else if (necessaryObjectTypes.contains("door-up")) {
-                                    place = ra.fg_chunks[j][i].randomObject("door-up", r);
-                                    if (place == null) return null;
-                                    ra.objects.add(new GameObject(j*RoomChunk.CHUNK_WIDTH*8 + place.x,
-                                                                  i*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-up"));
-                                } else if (necessaryObjectTypes.contains("door-right")) {
-                                    place = ra.fg_chunks[j][i].randomObject("door-right", r);
-                                    if (place == null) return null;
-                                    ra.objects.add(new GameObject(j*RoomChunk.CHUNK_WIDTH*8 + place.x,
-                                                                  i*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-right"));
-                                } else if (necessaryObjectTypes.contains("door-down")) {
-                                    place = ra.fg_chunks[j][i].randomObject("door-down", r);
-                                    if (place == null) return null;
-                                    ra.objects.add(new GameObject(j*RoomChunk.CHUNK_WIDTH*8 + place.x,
-                                                                  i*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-down"));
-                                }
-                                break;
-                            }
-
-                            case "red-lock":
-                            case "green-lock":
-                            case "blue-lock":
-                            case "yellow-lock":
-                            case "purple-lock":
-                            case "white-lock":
-                            case "ball-lock":
-                            case "astronaut-lock":
-                            {
-                                TMXObject place = ra.fg_chunks[j][i].randomObject("item", r);
-                                if (place == null) {
-                                    return null;
-                                }
-                                ra.objects.add(new GameObject(j*RoomChunk.CHUNK_WIDTH*8 + place.x,
-                                                              i*RoomChunk.CHUNK_HEIGHT*8 + place.y, placedTags[j][i]));
-                                if (necessaryObjectTypes.contains("door-left")) {
-                                    place = ra.fg_chunks[j][i].randomObject("door-left", r);
-                                    if (place == null) return null;
-                                    ra.objects.add(new GameObject(j*RoomChunk.CHUNK_WIDTH*8 + place.x,
-                                                                  i*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-left"));
-                                } else if (necessaryObjectTypes.contains("door-up")) {
-                                    place = ra.fg_chunks[j][i].randomObject("door-up", r);
-                                    if (place == null) return null;
-                                    ra.objects.add(new GameObject(j*RoomChunk.CHUNK_WIDTH*8 + place.x,
-                                                                  i*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-up"));
-                                } else if (necessaryObjectTypes.contains("door-right")) {
-                                    place = ra.fg_chunks[j][i].randomObject("door-right", r);
-                                    if (place == null) return null;
-                                    ra.objects.add(new GameObject(j*RoomChunk.CHUNK_WIDTH*8 + place.x,
-                                                                  i*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-right"));
-                                } else if (necessaryObjectTypes.contains("door-down")) {
-                                    place = ra.fg_chunks[j][i].randomObject("door-down", r);
-                                    if (place == null) return null;
-                                    ra.objects.add(new GameObject(j*RoomChunk.CHUNK_WIDTH*8 + place.x,
-                                                                  i*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-down"));
-                                }                            
-                                break;
-                            }
-
-                            case "breakable-wall1":
-                            case "breakable-wall2":
-                            case "breakable-wall3":
-                            case "breakable-wall4":                        
-                            {
-                                if (necessaryObjectTypes.contains("breakable-left")) {
-                                    TMXObject place = ra.fg_chunks[j][i].randomObject("breakable-left", r);
-                                    if (place == null) {
-                                        return null;
-                                    }
-                                    ra.objects.add(new GameObject(j*RoomChunk.CHUNK_WIDTH*8 + place.x,
-                                                                  i*RoomChunk.CHUNK_HEIGHT*8 + place.y,
-                                                                  place.dx, place.dy, "breakable-left"));
-                                } else if (necessaryObjectTypes.contains("breakable-up")) {
-                                    TMXObject place = ra.fg_chunks[j][i].randomObject("breakable-up", r);
-                                    if (place == null) return null;
-                                    ra.objects.add(new GameObject(j*RoomChunk.CHUNK_WIDTH*8 + place.x,
-                                                                  i*RoomChunk.CHUNK_HEIGHT*8 + place.y,
-                                                                  place.dx, place.dy, "breakable-up"));
-                                } else if (necessaryObjectTypes.contains("breakable-right")) {
-                                    TMXObject place = ra.fg_chunks[j][i].randomObject("breakable-right", r);
-                                    if (place == null) return null;
-                                    ra.objects.add(new GameObject(j*RoomChunk.CHUNK_WIDTH*8 + place.x,
-                                                                  i*RoomChunk.CHUNK_HEIGHT*8 + place.y,
-                                                                  place.dx, place.dy, "breakable-right"));
-                                } else if (necessaryObjectTypes.contains("breakable-down")) {
-                                    TMXObject place = ra.fg_chunks[j][i].randomObject("breakable-down", r);
-                                    if (place == null) return null;
-                                    ra.objects.add(new GameObject(j*RoomChunk.CHUNK_WIDTH*8 + place.x,
-                                                                  i*RoomChunk.CHUNK_HEIGHT*8 + place.y,
-                                                                  place.dx, place.dy, "breakable-down"));
-                                }
-                                break;
-                            }
-                            
-                            case "button-door1":
-                            case "button-door2":
-                            case "button-door3":
-                            case "button-door4":
-                            {
-                                if (necessaryObjectTypes.contains("door-left")) {
-                                    TMXObject place = ra.fg_chunks[j][i].randomObject("door-left", r);
-                                    if (place == null) {
-                                        return null;
-                                    }
-                                    ra.objects.add(new GameObject(j*RoomChunk.CHUNK_WIDTH*8 + place.x,
-                                                                  i*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-left"));
-                                } else if (necessaryObjectTypes.contains("door-up")) {
-                                    TMXObject place = ra.fg_chunks[j][i].randomObject("door-up", r);
-                                    if (place == null) return null;
-                                    ra.objects.add(new GameObject(j*RoomChunk.CHUNK_WIDTH*8 + place.x,
-                                                                  i*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-up"));
-                                } else if (necessaryObjectTypes.contains("door-right")) {
-                                    TMXObject place = ra.fg_chunks[j][i].randomObject("door-right", r);
-                                    if (place == null) return null;
-                                    ra.objects.add(new GameObject(j*RoomChunk.CHUNK_WIDTH*8 + place.x,
-                                                                  i*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-right"));
-                                } else if (necessaryObjectTypes.contains("door-down")) {
-                                    TMXObject place = ra.fg_chunks[j][i].randomObject("door-down", r);
-                                    if (place == null) return null;
-                                    ra.objects.add(new GameObject(j*RoomChunk.CHUNK_WIDTH*8 + place.x,
-                                                                  i*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-down"));
-                                }                            
-                                break;
-                            }        
-                            
-                            case "trial1-lock":
-                            case "trial2-lock":
-                            case "trial3-lock":
-                            case "trial4-lock":
-                            {
-                                TMXObject place = ra.fg_chunks[j][i].randomObject("4x4-item", r);
-                                if (place == null) {
-                                    return null;
-                                }
-                                ra.objects.add(new GameObject(j*RoomChunk.CHUNK_WIDTH*8 + place.x,
-                                                              i*RoomChunk.CHUNK_HEIGHT*8 + place.y, placedTags[j][i]));
-                                if (necessaryObjectTypes.contains("door-left")) {
-                                    place = ra.fg_chunks[j][i].randomObject("door-left", r);
-                                    if (place == null) return null;
-                                    ra.objects.add(new GameObject(j*RoomChunk.CHUNK_WIDTH*8 + place.x,
-                                                                  i*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-left"));
-                                } else if (necessaryObjectTypes.contains("door-up")) {
-                                    place = ra.fg_chunks[j][i].randomObject("door-up", r);
-                                    if (place == null) return null;
-                                    ra.objects.add(new GameObject(j*RoomChunk.CHUNK_WIDTH*8 + place.x,
-                                                                  i*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-up"));
-                                } else if (necessaryObjectTypes.contains("door-right")) {
-                                    place = ra.fg_chunks[j][i].randomObject("door-right", r);
-                                    if (place == null) return null;
-                                    ra.objects.add(new GameObject(j*RoomChunk.CHUNK_WIDTH*8 + place.x,
-                                                                  i*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-right"));
-                                } else if (necessaryObjectTypes.contains("door-down")) {
-                                    place = ra.fg_chunks[j][i].randomObject("door-down", r);
-                                    if (place == null) return null;
-                                    ra.objects.add(new GameObject(j*RoomChunk.CHUNK_WIDTH*8 + place.x,
-                                                                  i*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-down"));
-                                }                            
-                                break;                                
-                            }
-                            
-                            case "combination1-lock":
-                            case "combination2-lock":
-                            case "combination3-lock":
-                            case "combination4-lock":
-                            {
-                                TMXObject place;
-                                if (necessaryObjectTypes.contains("door-left")) {
-                                    place = ra.fg_chunks[j][i].randomObject("door-left", r);
-                                    if (place == null) return null;
-                                    ra.objects.add(new GameObject(j*RoomChunk.CHUNK_WIDTH*8 + place.x,
-                                                                  i*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-left"));
-                                } else if (necessaryObjectTypes.contains("door-up")) {
-                                    place = ra.fg_chunks[j][i].randomObject("door-up", r);
-                                    if (place == null) return null;
-                                    ra.objects.add(new GameObject(j*RoomChunk.CHUNK_WIDTH*8 + place.x,
-                                                                  i*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-up"));
-                                } else if (necessaryObjectTypes.contains("door-right")) {
-                                    place = ra.fg_chunks[j][i].randomObject("door-right", r);
-                                    if (place == null) return null;
-                                    ra.objects.add(new GameObject(j*RoomChunk.CHUNK_WIDTH*8 + place.x,
-                                                                  i*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-right"));
-                                } else if (necessaryObjectTypes.contains("door-down")) {
-                                    place = ra.fg_chunks[j][i].randomObject("door-down", r);
-                                    if (place == null) return null;
-                                    ra.objects.add(new GameObject(j*RoomChunk.CHUNK_WIDTH*8 + place.x,
-                                                                  i*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-down"));
-                                }                            
-                                break;                                
-                            }                            
-                        }
-                    }
-                    */
                     
                 } else {
                     ra.fg_chunks[j][i] = null;
                 }
             }
         }
+        
+        if (!spawnObjects(ra, w, placedTags, r)) return null;
         
         return ra;
     }
@@ -1534,6 +1370,361 @@ public class PCGArea {
             }
         }
         return ra_bg_chunks;
+    }
+    
+    
+    public boolean spawnObjects(RenderedArea ra, World w, String placedTags[][], MSXRandom r)
+    {
+        Area a = ra.a;
+        
+        // Spawn pushable blocks:
+        for(int i = 0;i<a.height * ROOM_HEIGHT;i++) {
+            for(int j = 0;j<a.width * ROOM_WIDTH;j++) {                
+                if (ra.fg_chunks[j][i] == null) continue;
+                for(TMXObject place:ra.fg_chunks[j][i].locations) {
+                    if (place.type.equals("pushable-block")) {
+                        ra.objects.add(new GameObject(j*RoomChunk.CHUNK_WIDTH*8 + place.x,
+                                                      i*RoomChunk.CHUNK_HEIGHT*8 + place.y, "pushable-block"));
+                    }
+                }
+            }
+        }
+        
+        
+        // Note, this does not respect the RNG state of the MSX version:
+        for(GameObjectPlaceholder go:ra.objectPlaceholders) {
+            switch(go.type) {
+                case "block-puzzle1":
+                case "block-puzzle2":
+                case "block-puzzle3":
+                case "block-puzzle4":
+                    break;
+                case "boss1-chestlock":
+                case "boss2-chestlock":
+                case "boss3-chestlock":
+                case "boss4-chestlock":
+                case "boss5-chestlock":
+                case "boss6-chestlock":
+                case "boss7-chestlock":
+                    break;
+                case "boss1-key":
+                case "boss2-key":
+                case "boss3-key":
+                case "boss4-key":
+                case "boss5-key":
+                case "boss6-key":
+                case "boss7-key":
+                case "red-key":
+                case "green-key":
+                case "blue-key":
+                case "yellow-key":
+                case "purple-key":
+                case "white-key":
+                case "red-chest":
+                case "green-chest":
+                case "blue-chest":
+                case "yellow-chest":
+                case "purple-chest":
+                case "white-chest":
+                case "gear-key":
+                case "ball-key":
+                case "idol-key":
+                case "astronaut-key":
+                case "trial1-clue":
+                case "trial2-clue":
+                case "trial3-clue":
+                case "trial4-clue":
+                case "combination1-clue":
+                case "combination2-clue":
+                case "combination3-clue":
+                case "combination4-clue":
+                case "button1":
+                case "button2":
+                case "button3":
+                case "button4":    
+                case "heart1":
+                case "heart2":
+                case "heart3":
+                case "heart4":
+                case "heart5":
+                case "small-key-chest1":
+                case "small-key-chest2":
+                case "small-key-chest3":
+                case "small-key-chest4":
+                case "small-key1":
+                case "small-key2":
+                case "small-key3":
+                case "small-key4":
+                case "map-piece1":
+                case "map-piece2":
+                case "map-piece3":
+                case "map-piece4":
+                case "map-piece5":
+                case "map-piece6":
+                case "map-piece7":
+                case "map-piece8":
+                case "WEAPON_HAMMER":
+                case "WEAPON_MACUAHUITL":
+                case "WEAPON_SHIELD":
+                case "WEAPON_SLING":
+                case "WEAPON_BLOWGUN":
+                case "WEAPON_ATLATL":
+                case "WEAPON_RAYGUN":
+                case "WEAPON_OBSIDIAN_KNIVE":
+                case "WEAPON_FIRE_HAMMER":
+                case "WEAPON_ICE_MACUAHUITL":
+                case "item-sandals":
+                case "item-gloves":
+                case "item-hurakan":
+                case "item-armor":
+                case "item-chaac":
+                case "item-seashell":
+                case "item-belt":
+                case "item-ice-cape":
+                case "maya-riddle-clue1":
+                case "maya-riddle-clue2":
+                case "maya-riddle-clue3":
+                case "maya-riddle-clue4":
+                case "story-trivia1":
+                case "story-trivia2":
+                case "story-trivia3":
+                case "story-trivia4":
+                case "story-trivia5":
+                case "story-trivia6":
+                case "story-trivia7":
+                case "story-trivia8":
+                {
+                    TMXObject place = ra.fg_chunks[go.x][go.y].randomObject("item", r);
+                    if (place == null) {
+                        return false;
+                    }
+                    ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
+                                                  go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, go.type));
+                    break;
+                }
+                
+                case "gear-lock":
+                case "idol-lock":
+                {
+                    TMXObject place = ra.fg_chunks[go.x][go.y].randomObject("big-item", r);
+                    if (place == null) {
+                        return false;
+                    }
+                    ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
+                                                  go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, placedTags[go.x][go.y]));
+                    int lockDirection = w.lockDirections.get(placedTags[go.x][go.y]);
+                    switch(lockDirection) {
+                        case PCGWorld.DIRECTION_LEFT:
+                            place = ra.fg_chunks[go.x][go.y].randomObject("door-left", r);
+                            if (place == null) return false;
+                            ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
+                                                          go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-left"));
+                            break;
+                        case PCGWorld.DIRECTION_UP:
+                            place = ra.fg_chunks[go.x][go.y].randomObject("door-up", r);
+                            if (place == null) return false;
+                            ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
+                                                          go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-up"));
+                            break;
+                        case PCGWorld.DIRECTION_RIGHT:
+                            place = ra.fg_chunks[go.x][go.y].randomObject("door-right", r);
+                            if (place == null) return false;
+                            ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
+                                                          go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-right"));
+                            break;
+                        case PCGWorld.DIRECTION_DOWN:
+                            place = ra.fg_chunks[go.x][go.y].randomObject("door-down", r);
+                            if (place == null) return false;
+                            ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
+                                                          go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-down"));
+                            break;
+                    }
+                    break;
+                }
+
+                case "red-lock":
+                case "green-lock":
+                case "blue-lock":
+                case "yellow-lock":
+                case "purple-lock":
+                case "white-lock":
+                case "ball-lock":
+                case "astronaut-lock":
+                {
+                    TMXObject place = ra.fg_chunks[go.x][go.y].randomObject("item", r);
+                    if (place == null) return false;
+                    ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
+                                                  go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, placedTags[go.x][go.y]));
+                    int lockDirection = w.lockDirections.get(placedTags[go.x][go.y]);
+                    switch(lockDirection) {
+                        case PCGWorld.DIRECTION_LEFT:
+                            place = ra.fg_chunks[go.x][go.y].randomObject("door-left", r);
+                            if (place == null) return false;
+                            ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
+                                                          go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-left"));
+                            break;
+                        case PCGWorld.DIRECTION_UP:
+                            place = ra.fg_chunks[go.x][go.y].randomObject("door-up", r);
+                            if (place == null) return false;
+                            ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
+                                                          go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-up"));
+                            break;
+                        case PCGWorld.DIRECTION_RIGHT:
+                            place = ra.fg_chunks[go.x][go.y].randomObject("door-right", r);
+                            if (place == null) return false;
+                            ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
+                                                          go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-right"));
+                            break;
+                        case PCGWorld.DIRECTION_DOWN:
+                            place = ra.fg_chunks[go.x][go.y].randomObject("door-down", r);
+                            if (place == null) return false;
+                            ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
+                                                          go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-down"));
+                            break;
+                    }
+                    break;
+                }
+
+                case "breakable-wall1":
+                case "breakable-wall2":
+                case "breakable-wall3":
+                case "breakable-wall4":                        
+                {
+                    int lockDirection = w.lockDirections.get(placedTags[go.x][go.y]);
+                    if (lockDirection == PCGWorld.DIRECTION_LEFT) {
+                        TMXObject place = ra.fg_chunks[go.x][go.y].randomObject("breakable-left", r);
+                        if (place == null) {
+                            return false;
+                        }
+                        ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
+                                                      go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y,
+                                                      place.dx, place.dy, "breakable-left"));
+                    } else if (lockDirection == PCGWorld.DIRECTION_UP) {
+                        TMXObject place = ra.fg_chunks[go.x][go.y].randomObject("breakable-up", r);
+                        if (place == null) return false;
+                        ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
+                                                      go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y,
+                                                      place.dx, place.dy, "breakable-up"));
+                    } else if (lockDirection == PCGWorld.DIRECTION_RIGHT) {
+                        TMXObject place = ra.fg_chunks[go.x][go.y].randomObject("breakable-right", r);
+                        if (place == null) return false;
+                        ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
+                                                      go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y,
+                                                      place.dx, place.dy, "breakable-right"));
+                    } else if (lockDirection == PCGWorld.DIRECTION_DOWN) {
+                        TMXObject place = ra.fg_chunks[go.x][go.y].randomObject("breakable-down", r);
+                        if (place == null) return false;
+                        ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
+                                                      go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y,
+                                                      place.dx, place.dy, "breakable-down"));
+                    }
+                    break;
+                }
+
+                case "button-door1":
+                case "button-door2":
+                case "button-door3":
+                case "button-door4":
+                {
+                    int lockDirection = w.lockDirections.get(placedTags[go.x][go.y]);
+                    if (lockDirection == PCGWorld.DIRECTION_LEFT) {
+                        TMXObject place = ra.fg_chunks[go.x][go.y].randomObject("door-left", r);
+                        if (place == null) {
+                            return false;
+                        }
+                        ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
+                                                      go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-left"));
+                    } else if (lockDirection == PCGWorld.DIRECTION_UP) {
+                        TMXObject place = ra.fg_chunks[go.x][go.y].randomObject("door-up", r);
+                        if (place == null) return false;
+                        ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
+                                                      go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-up"));
+                    } else if (lockDirection == PCGWorld.DIRECTION_RIGHT) {
+                        TMXObject place = ra.fg_chunks[go.x][go.y].randomObject("door-right", r);
+                        if (place == null) return false;
+                        ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
+                                                      go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-right"));
+                    } else if (lockDirection == PCGWorld.DIRECTION_DOWN) {
+                        TMXObject place = ra.fg_chunks[go.x][go.y].randomObject("door-down", r);
+                        if (place == null) return false;
+                        ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
+                                                      go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-down"));
+                    }                            
+                    break;
+                }        
+
+                case "trial1-lock":
+                case "trial2-lock":
+                case "trial3-lock":
+                case "trial4-lock":
+                {
+                    TMXObject place = ra.fg_chunks[go.x][go.y].randomObject("4x4-item", r);
+                    if (place == null) {
+                        return false;
+                    }
+                    ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
+                                                  go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, placedTags[go.x][go.y]));
+                    int lockDirection = w.lockDirections.get(placedTags[go.x][go.y]);
+                    if (lockDirection == PCGWorld.DIRECTION_LEFT) {
+                        place = ra.fg_chunks[go.x][go.y].randomObject("door-left", r);
+                        if (place == null) return false;
+                        ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
+                                                      go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-left"));
+                    } else if (lockDirection == PCGWorld.DIRECTION_UP) {
+                        place = ra.fg_chunks[go.x][go.y].randomObject("door-up", r);
+                        if (place == null) return false;
+                        ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
+                                                      go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-up"));
+                    } else if (lockDirection == PCGWorld.DIRECTION_RIGHT) {
+                        place = ra.fg_chunks[go.x][go.y].randomObject("door-right", r);
+                        if (place == null) return false;
+                        ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
+                                                      go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-right"));
+                    } else if (lockDirection == PCGWorld.DIRECTION_DOWN) {
+                        place = ra.fg_chunks[go.x][go.y].randomObject("door-down", r);
+                        if (place == null) return false;
+                        ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
+                                                      go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-down"));
+                    }                            
+                    break;                                
+                }
+
+                case "combination1-lock":
+                case "combination2-lock":
+                case "combination3-lock":
+                case "combination4-lock":
+                {
+                    TMXObject place;
+                    int lockDirection = w.lockDirections.get(placedTags[go.x][go.y]);
+                    if (lockDirection == PCGWorld.DIRECTION_LEFT) {
+                        place = ra.fg_chunks[go.x][go.y].randomObject("door-left", r);
+                        if (place == null) return false;
+                        ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
+                                                      go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-left"));
+                    } else if (lockDirection == PCGWorld.DIRECTION_UP) {
+                        place = ra.fg_chunks[go.x][go.y].randomObject("door-up", r);
+                        if (place == null) return false;
+                        ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
+                                                      go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-up"));
+                    } else if (lockDirection == PCGWorld.DIRECTION_RIGHT) {
+                        place = ra.fg_chunks[go.x][go.y].randomObject("door-right", r);
+                        if (place == null) return false;
+                        ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
+                                                      go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-right"));
+                    } else if (lockDirection == PCGWorld.DIRECTION_DOWN) {
+                        place = ra.fg_chunks[go.x][go.y].randomObject("door-down", r);
+                        if (place == null) return false;
+                        ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
+                                                      go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-down"));
+                    }                            
+                    break;                                
+                }         
+
+                default:
+                    System.err.println("Don't know how to draw object type: " + go.type);
+            }
+        }
+        return true;
     }
         
 }

@@ -48,6 +48,9 @@ public class AssemblerTags {
         "TAG_START",
         "TAG_ENDING",
         "TAG_MIDPOINT",
+        "TAG_TELEPORTER_ATLANTIS",
+        "TAG_TELEPORTER_MARS",
+        "TAG_TELEPORTER_MOON",
         "TAG_BUTTON1",
         "TAG_BUTTON2",
         "TAG_BUTTON3",
@@ -108,6 +111,63 @@ public class AssemblerTags {
         "TAG_BOSS7",
         "TAG_BOSS7_KEY",
         "TAG_BOSS7_CHESTLOCK",
+        // weapons:
+        "TAG_WEAPON_HAMMER",
+        "TAG_WEAPON_MACUAHUITL",
+        "TAG_WEAPON_SHIELD",
+        "TAG_WEAPON_SLING",
+        "TAG_WEAPON_BLOWGUN",
+        "TAG_WEAPON_ATLATL",
+        "TAG_WEAPON_RAYGUN",
+        "TAG_WEAPON_OBSIDIAN_KNIVE",
+        "TAG_WEAPON_FIRE_HAMMER",
+        "TAG_WEAPON_ICE_MACUAHUITL",
+        // map pieces:
+        "TAG_MAP_PIECE1",  // pyramid 1
+        "TAG_MAP_PIECE2",  // pyramid 2
+        "TAG_MAP_PIECE3",  // pyramid 3 + confluence
+        "TAG_MAP_PIECE4",  // fire shaft + both caves
+        "TAG_MAP_PIECE5",  // fire temple
+        "TAG_MAP_PIECE6",  // atlantis
+        "TAG_MAP_PIECE7",  // mars
+        "TAG_MAP_PIECE8",  // moon
+        // hearts:
+        "TAG_HEART1",
+        "TAG_HEART2",
+        "TAG_HEART3",
+        "TAG_HEART4",
+        "TAG_HEART5",
+        // clues/story:
+        "TAG_MAYA_RIDDLE_CLUE1",
+        "TAG_MAYA_RIDDLE_CLUE2",
+        "TAG_MAYA_RIDDLE_CLUE3",
+        "TAG_MAYA_RIDDLE_CLUE4",
+        "TAG_STORY_TRIVIA1",
+        "TAG_STORY_TRIVIA2",
+        "TAG_STORY_TRIVIA3",
+        "TAG_STORY_TRIVIA4",
+        "TAG_STORY_TRIVIA5",
+        "TAG_STORY_TRIVIA6",
+        "TAG_STORY_TRIVIA7",
+        "TAG_STORY_TRIVIA8",
+        // optional items:
+        "TAG_ITEM_SANDALS",
+        "TAG_ITEM_GLOVES",
+        "TAG_ITEM_HURAKAN",
+        "TAG_ITEM_ARMOR",
+        "TAG_ITEM_CHAAC",
+        "TAG_ITEM_SEASHELL",
+        "TAG_ITEM_BELT",
+        "TAG_ITEM_ICE_CAPE",        
+        // small keys:
+        "TAG_SMALL_KEY1",
+        "TAG_SMALL_KEY2",
+        "TAG_SMALL_KEY3",
+        "TAG_SMALL_KEY4",
+        "TAG_SMALL_KEY_CHEST1",
+        "TAG_SMALL_KEY_CHEST2",
+        "TAG_SMALL_KEY_CHEST3",
+        "TAG_SMALL_KEY_CHEST4",
         // misc (not tags that will be placed, but used for tile-object types):
         "TAG_PUSHABLE_BLOCK",
     };
@@ -141,8 +201,15 @@ public class AssemblerTags {
     public static void generateAssemblerEnum()
     {
         for(int i = 0;i<tags.length;i++) {
+            if (tags[i].equals("TAG_PUSHABLE_BLOCK")) {
+                System.out.println("; tags above can ONLY appear once in the whole game");
+                System.out.println("N_UNIQUE_TAGS: equ " + i);
+                System.out.println("; tags below can appear multiple times (and do not have state, they are reset every time you enter in a room):");
+            }
             System.out.println(tags[i] + ": equ " + i);
         }
+        
+        
     }
     
     

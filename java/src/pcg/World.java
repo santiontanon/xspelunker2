@@ -82,12 +82,12 @@ public class World {
         }
         
         int legend_x = 725;
-        int legend_y = 50;
+        int legend_y = 40;
         
         g.setColor(Color.BLACK);
         g.setFont(tagFont);
         g.drawString("Tag list:", legend_x, legend_y);
-        legend_y += 10;
+        legend_y += 8;
 //        System.out.println("Tag list:");
         for(int i = 0;i<tagList.size();i++) {
             String tag = tagList.get(i);
@@ -99,7 +99,7 @@ public class World {
             if (locations.size() > 1) {
                 System.err.println("Tag '" + tag + "' is in more than one location: " + locations);
             }
-            legend_y += 10;
+            legend_y += 8;
         }
     }
     

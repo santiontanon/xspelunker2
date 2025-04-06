@@ -1,15 +1,8 @@
 to do:
 
-***- PCG to do: optional treasure (in Java):
-    ***- check how many rooms without tags are there in average per area in 1000 generations
-    ***- spawn weapons: 10 weapons, one per area (sling is in the jungle)
-      ***- for each area, sample a room with no tags (preferring leaf divisions with no tags)
-      ***- small chance of the weapon being in a chest (and then spawn a small key in the map following the same procedure)
-    ***- 8 times: pick a random area, same room selection as above, and spawn a heart (+1 life)
-    ***- for all the other optional items: sandals, belt, etc. do the same
-      ***- ensure winged sandals are spawned in one of the first 3 pyramids (so that I can assume it's there for the later zones)
-    ***- in all the chunks without a tag, have a 1/8 (?) chance of spawning a tablet
-    ***- dictionary with puzzles/riddles/hints/story to assign a text to each tablet (figure out how to assign an ID to each tablet)
+- spawn and draw items in the game
+  - pick up items (inventory) (to pick up an item, crouch in front of it)
+  - visualize small keys in the hud/inventory (up to a limit, and then don't draw more)
 
 - Implement PCGWorld in assembler:
   - data structure
@@ -21,10 +14,6 @@ to do:
   - verify it matches exactly what I get in Java
   - for some areas (pyramids, etc.) have some predefined shapes (e.g. pyramid shape), that can be chosen with some probability. And maybe also different shapes for the confluence, etc.
   - keep Java/assembler versions in sync (try different random seeds)
-
-- spawn and draw items in the game
-  - pick up items (inventory) (to pick up an item, crouch in front of it)
-  - visualize small keys in the hud/inventory (up to a limit, and then don't draw more)
 
 - being able to complete the game in assembler:
   - open small chests with small keys (maintain global chest state: closed, open, picked-up)
