@@ -27,14 +27,15 @@ state_play:
 		; generate area:
 		ld hl, pcg_generate_area
 ; 		ld e, 0  ; area to generate
-; 		ld e, 5  ; area to generate
-		ld e, 1  ; area to generate
+; 		ld e, 1  ; area to generate
+		ld e, 2  ; area to generate
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
 
 		; generate room:
-		ld e, 0  ; breakable left (area 1)
+; 		ld e, 0  ; breakable left (area 1)
 ; 		ld e, 9  ; breakable down (area 1)
+		ld e, 29  ; boss key (area 2)
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
@@ -133,6 +134,7 @@ state_play_from_inventory__no_full_hud:
 		ld a, TILES_PAGE
 		ld hl, tiles_pyramid_zx0
 		call setup_game_tiles
+		call state_play_upload_object_tiles_to_vdp_if_necessary
 
 		; init sprite attribute table:
 		ld hl, sprite_attribute_table + 2
@@ -281,4 +283,52 @@ state_play_update_agenda_cycle_odd:  ; player + player bullets + sprite objects
 	call maybe_recenter_scroll
 	call update_scroll
 	jp state_play_loop_continue
+
+
+
+state_play_upload_object_tiles_to_vdp_if_necessary:
+	ld hl, (item_object_to_upload_to_vdp)
+	ld a, h
+	or a
+	ret z
+	push hl
+		ld hl, object_tiles_zx0
+		ld de, #c000
+		ld c, TILES_PAGE
+		call dzx0_from_page_c
+	pop hl
+	push hl
+		ld de, CHRTBL2 + FIRST_ITEM_TILE*8
+		ld b, 32
+		call fast_small_LDIRVM
+	pop hl
+	push hl
+		ld de, CHRTBL2 + FIRST_ITEM_TILE*8 + 256*8
+		ld b, 32
+		call fast_small_LDIRVM
+	pop hl
+	push hl
+		ld de, CHRTBL2 + FIRST_ITEM_TILE*8 + 256*8*2
+		ld b, 32
+		call fast_small_LDIRVM
+	pop hl
+	ld bc, 32
+	add hl, bc
+	push hl
+		ld de, CLRTBL2 + FIRST_ITEM_TILE*8
+		ld b, 32
+		call fast_small_LDIRVM
+	pop hl
+	push hl
+		ld de, CLRTBL2 + FIRST_ITEM_TILE*8 + 256*8
+		ld b, 32
+		call fast_small_LDIRVM
+	pop hl
+	ld de, CLRTBL2 + FIRST_ITEM_TILE*8 + 256*8*2
+	ld b, 32
+	call fast_small_LDIRVM
+
+	ld hl, 0
+	ld (item_object_to_upload_to_vdp), hl
+	ret
 

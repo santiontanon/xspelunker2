@@ -78,8 +78,8 @@ public class GenerateChunkData {
             fw.write("PYRAMID_STANDARD_CHUNK_FIRST_ID: equ " + 0 + "\n");
             fw.write("PYRAMID_BOSS_CHUNK_POOL_SIZE: equ " + (pcg.first_block_chunk - pcg.first_boss_chunk) + "\n");
             fw.write("PYRAMID_BOSS_CHUNK_POOL_FIRST_ID: equ " + pcg.first_boss_chunk + "\n");
-            fw.write("PYRAMID_BLOCK_CHUNK_POOL_SIZE: equ " + (pcg.first_block_chunk - pcg.first_block_chunk) + "\n");
-            fw.write("PYRAMID_BLOCK_CHUNK_POOL_FIRST_ID: equ " + pcg.first_boss_chunk + "\n");
+            fw.write("PYRAMID_BLOCK_CHUNK_POOL_SIZE: equ " + (pcg.first_combination_chunk - pcg.first_block_chunk) + "\n");
+            fw.write("PYRAMID_BLOCK_CHUNK_POOL_FIRST_ID: equ " + pcg.first_block_chunk + "\n");
             fw.write("PYRAMID_COMBINATION_CHUNK_POOL_SIZE: equ " + (pcg.all_fg_chunks.size() - pcg.first_combination_chunk) + "\n");
             fw.write("PYRAMID_COMBINATION_CHUNK_POOL_FIRST_ID: equ " + pcg.first_combination_chunk + "\n");
             fw.flush();

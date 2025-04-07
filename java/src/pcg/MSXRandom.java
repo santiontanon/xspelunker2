@@ -9,7 +9,7 @@ package pcg;
  * @author santi
  */
 public class MSXRandom {
-    int rng_seed1, rng_seed2;
+    public int rng_seed1, rng_seed2;
     
     public MSXRandom(int seed1, int seed2)
     {

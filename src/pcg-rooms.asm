@@ -15,6 +15,9 @@ pcg_generate_room:
 	ld a, e
 	ld (current_room__id), a
 
+	ld hl, 0
+	ld (item_object_to_upload_to_vdp), hl
+
 	push de
 		ld hl, current_room__objects
 		ld (tmp_pcg_room__next_object_ptr), hl
@@ -347,6 +350,8 @@ pcg_generate_room__object_loop:
 	jp z, pcg_generate_room__object_breakable_wall
 	cp TAG_BREAKABLE_WALL4
 	jp z, pcg_generate_room__object_breakable_wall
+	cp TAG_BOSS1_KEY
+	jp z, pcg_generate_room__object_regular_item
 
 	; ...
 
@@ -452,9 +457,89 @@ pcg_generate_room__object_breakable_wall_continue:
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_WIDTH), e  ; width
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_HEIGHT), d  ; height
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_LAST_HIT_ID), #ff  ; can be hit by anything
-	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE - 4  ; "- 4", since we already did 4 "inc de"
+	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
 	add iy, bc
 	ld (tmp_pcg_room__next_tile_object_ptr), iy
+
+	jp pcg_generate_room__object_loop_next
+
+
+;-----------------------------------------------
+; - ix: ptr to the area object
+; - c, b: x, y of where to spawn the object (in chunks)
+pcg_generate_room__object_regular_item:
+	; get the chunk type where we are placing the object:
+	push bc
+		call get_chunk_id_from_coordinates  ; a = chunk ID
+		ld hl, pyramid_chunk_fg_bank_ptrs
+		call pcg_get_chunk_ptr
+		ld e, CHUNK_LOCATION_ITEM
+		call sample_chunk_location  ; de: ptr to the location
+	pop bc  ; chunk coordinates
+
+	ASSERT_D_NOT_EQ 0
+
+	; compute object coordinates:
+	inc de
+	; x = c * CHUNK_WIDTH + (de)
+	ld a, c
+	add a, a
+	add a, a
+	add a, a
+	add a, a  ; assumes CHUNK_WIDTH = 16
+	ld c, a
+	ld a, (de)
+	add a, c
+	ld c, a
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), a  ; x
+	inc de
+	; y = b * CHUNK_HEIGHT + (de)
+	ld a, b
+	add a, a
+	add a, a
+	ld b, a
+	add a, a
+	add a, b  ; assumes CHUNK_HEIGHT = 12
+	ld b, a
+	ld a, (de)
+	add a, b
+	ld b, a  ; here: c, b: x, y coordinates
+
+	; check if the item was already picked up:
+	ld a, (ix + AREA_OBJECT_STRUCT_TYPE)
+	ld hl, global_state__objects
+	ADD_HL_A
+	ld a, (hl)
+	or a
+	jp z, pcg_generate_room__object_regular_item_continue
+	; item was already picked up:
+	jp pcg_generate_room__object_loop_next
+
+pcg_generate_room__object_regular_item_continue:	
+	; spawn the breakable wall object:
+	ld iy, (tmp_pcg_room__next_tile_object_ptr)
+	ld a, (ix + AREA_OBJECT_STRUCT_ID)
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), a  ; ID
+	ld a, (ix + AREA_OBJECT_STRUCT_TYPE)
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), a  ; type
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), c  ; x
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), b  ; y
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0  ; state (hitpoints)
+	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
+	add iy, bc
+	ld (tmp_pcg_room__next_tile_object_ptr), iy
+
+	; set which object gfx to up load vdp (starting at tile FIRST_ITEM_TILE):
+	ld hl, object_tiles_start_ptrs
+	ld b, 0
+	ld c, a
+	add hl, bc
+	add hl, bc
+	ld a, (hl)
+	inc hl
+	ld h, (hl)
+	ld l, a
+	ld (item_object_to_upload_to_vdp), hl
 
 	jp pcg_generate_room__object_loop_next
 
@@ -649,13 +734,18 @@ pcg_generate_room__prettyfy_pyramid_rope_loop:
 		jr c, pcg_generate_room__prettyfy_pyramid_rope_done
 		add hl, bc
 		ld a, (hl)
-		or a
-		jr z, pcg_generate_room__prettyfy_pyramid_rope_keep_going
-		cp 5*16 + 8  ; torch
-		jr z, pcg_generate_room__prettyfy_pyramid_rope_keep_going
-		and #f0
-		cp #60  ; row 6 contains tiles only present on background tiles
-		jr nz, pcg_generate_room__prettyfy_pyramid_rope_done
+		cp 9*16 + 7  ; brick
+		jr z, pcg_generate_room__prettyfy_pyramid_rope_done
+		cp 9*16 + 8  ; brick
+		jr z, pcg_generate_room__prettyfy_pyramid_rope_done
+		cp 8*16+15  ; thin brick
+		jr z, pcg_generate_room__prettyfy_pyramid_rope_done
+		cp 8*16+14  ; thin brick
+		jr z, pcg_generate_room__prettyfy_pyramid_rope_done
+		cp 15*16+13  ; thin brick
+		jr z, pcg_generate_room__prettyfy_pyramid_rope_done
+		cp 8*16 + 7  ; top rope piece
+		jr z, pcg_generate_room__prettyfy_pyramid_rope_done
 pcg_generate_room__prettyfy_pyramid_rope_keep_going:
 		call random_a
 		and #03
@@ -684,7 +774,29 @@ pcg_generate_room__prettyfy_pyramid_ladder_loop:
 		ld a, (hl)
 		or a
 		jr z, pcg_generate_room__prettyfy_pyramid_ladder_keep_going
-		cp 5*16 + 8  ; torch
+		cp 6*16 + 8  ; ladder top-left
+		jr z, pcg_generate_room__prettyfy_pyramid_ladder_done
+		cp 6*16 + 9  ; ladder top-right
+		jr z, pcg_generate_room__prettyfy_pyramid_ladder_done
+		cp 7*16 + 12  ; ladder top-left
+		jr c, pcg_generate_room__prettyfy_pyramid_ladder_keep_going
+		cp 8*16 + 1  ; torch
+		jr z, pcg_generate_room__prettyfy_pyramid_ladder_keep_going
+		cp 8*16 + 2  ; background
+		jr z, pcg_generate_room__prettyfy_pyramid_ladder_keep_going
+		cp 9*16 + 5  ; background
+		jr z, pcg_generate_room__prettyfy_pyramid_ladder_keep_going
+		cp 10*16 + 0  ; background
+		jr z, pcg_generate_room__prettyfy_pyramid_ladder_keep_going
+		cp 10*16 + 6  ; background
+		jr z, pcg_generate_room__prettyfy_pyramid_ladder_keep_going
+		cp 11*16 + 12  ; background
+		jr z, pcg_generate_room__prettyfy_pyramid_ladder_keep_going
+		cp 12*16 + 0  ; background
+		jr z, pcg_generate_room__prettyfy_pyramid_ladder_keep_going
+		cp 12*16 + 8  ; background
+		jr z, pcg_generate_room__prettyfy_pyramid_ladder_keep_going
+		cp 15*16 + 5  ; background
 		jr z, pcg_generate_room__prettyfy_pyramid_ladder_keep_going
 		and #f0
 		cp #60  ; row 6 contains tiles only present on background tiles
@@ -1027,3 +1139,160 @@ area_object_offset_to_x_y_in_chunks_loop_done:
 	ld c, a
 	ret
 
+
+
+;-----------------------------------------------
+object_tiles_start_ptrs:
+REPT TAG_BOSS1_KEY
+	dw buffer_4096 + 0 * 64
+ENDR
+	dw buffer_4096 + 0 * 64  ; TAG_BOSS1_KEY
+; TAG_NONE: equ 0
+; TAG_BLOCK_PUZZLE1: equ 1
+; TAG_BLOCK_PUZZLE2: equ 2
+; TAG_BLOCK_PUZZLE3: equ 3
+; TAG_BLOCK_PUZZLE4: equ 4
+; TAG_BUTTON_DOOR1: equ 5
+; TAG_BUTTON_DOOR2: equ 6
+; TAG_BUTTON_DOOR3: equ 7
+; TAG_BUTTON_DOOR4: equ 8
+; TAG_BREAKABLE_WALL1: equ 9
+; TAG_BREAKABLE_WALL2: equ 10
+; TAG_BREAKABLE_WALL3: equ 11
+; TAG_BREAKABLE_WALL4: equ 12
+; TAG_RED_LOCK: equ 13
+; TAG_GREEN_LOCK: equ 14
+; TAG_BLUE_LOCK: equ 15
+; TAG_YELLOW_LOCK: equ 16
+; TAG_WHITE_LOCK: equ 17
+; TAG_PURPLE_LOCK: equ 18
+; TAG_TRIAL1_LOCK: equ 19
+; TAG_TRIAL2_LOCK: equ 20
+; TAG_TRIAL3_LOCK: equ 21
+; TAG_TRIAL4_LOCK: equ 22
+; TAG_COMBINATION1_LOCK: equ 23
+; TAG_COMBINATION2_LOCK: equ 24
+; TAG_COMBINATION3_LOCK: equ 25
+; TAG_COMBINATION4_LOCK: equ 26
+; TAG_BALL_LOCK: equ 27
+; TAG_IDOL_LOCK: equ 28
+; TAG_GEAR_LOCK: equ 29
+; TAG_ASTRONAUT_LOCK: equ 30
+; TAG_START: equ 31
+; TAG_ENDING: equ 32
+; TAG_MIDPOINT: equ 33
+; TAG_TELEPORTER_ATLANTIS: equ 34
+; TAG_TELEPORTER_MARS: equ 35
+; TAG_TELEPORTER_MOON: equ 36
+; TAG_BUTTON1: equ 37
+; TAG_BUTTON2: equ 38
+; TAG_BUTTON3: equ 39
+; TAG_BUTTON4: equ 40
+; TAG_BREAKABLE_WALL1_KEY: equ 41
+; TAG_BREAKABLE_WALL2_KEY: equ 42
+; TAG_BREAKABLE_WALL3_KEY: equ 43
+; TAG_BREAKABLE_WALL4_KEY: equ 44
+; TAG_BLOCK_PUZZLE_KEY1: equ 45
+; TAG_BLOCK_PUZZLE_KEY2: equ 46
+; TAG_BLOCK_PUZZLE_KEY3: equ 47
+; TAG_BLOCK_PUZZLE_KEY4: equ 48
+; TAG_RED_KEY: equ 49
+; TAG_GREEN_KEY: equ 50
+; TAG_BLUE_KEY: equ 51
+; TAG_YELLOW_KEY: equ 52
+; TAG_WHITE_KEY: equ 53
+; TAG_PURPLE_KEY: equ 54
+; TAG_RED_CHEST: equ 55
+; TAG_GREEN_CHEST: equ 56
+; TAG_BLUE_CHEST: equ 57
+; TAG_YELLOW_CHEST: equ 58
+; TAG_WHITE_CHEST: equ 59
+; TAG_PURPLE_CHEST: equ 60
+; TAG_TRIAL1_CLUE: equ 61
+; TAG_TRIAL2_CLUE: equ 62
+; TAG_TRIAL3_CLUE: equ 63
+; TAG_TRIAL4_CLUE: equ 64
+; TAG_COMBINATION1_CLUE: equ 65
+; TAG_COMBINATION2_CLUE: equ 66
+; TAG_COMBINATION3_CLUE: equ 67
+; TAG_COMBINATION4_CLUE: equ 68
+; TAG_BALL_KEY: equ 69
+; TAG_IDOL_KEY: equ 70
+; TAG_GEAR_KEY: equ 71
+; TAG_ASTRONAUT_KEY: equ 72
+; TAG_BOSS1: equ 73
+; TAG_BOSS1_KEY: equ 74
+; TAG_BOSS1_CHESTLOCK: equ 75
+; TAG_BOSS2: equ 76
+; TAG_BOSS2_KEY: equ 77
+; TAG_BOSS2_CHESTLOCK: equ 78
+; TAG_BOSS3: equ 79
+; TAG_BOSS3_KEY: equ 80
+; TAG_BOSS3_CHESTLOCK: equ 81
+; TAG_BOSS4: equ 82
+; TAG_BOSS4_KEY: equ 83
+; TAG_BOSS4_CHESTLOCK: equ 84
+; TAG_BOSS5: equ 85
+; TAG_BOSS5_KEY: equ 86
+; TAG_BOSS5_CHESTLOCK: equ 87
+; TAG_BOSS6: equ 88
+; TAG_BOSS6_KEY: equ 89
+; TAG_BOSS6_CHESTLOCK: equ 90
+; TAG_BOSS7: equ 91
+; TAG_BOSS7_KEY: equ 92
+; TAG_BOSS7_CHESTLOCK: equ 93
+; TAG_WEAPON_HAMMER: equ 94
+; TAG_WEAPON_MACUAHUITL: equ 95
+; TAG_WEAPON_SHIELD: equ 96
+; TAG_WEAPON_SLING: equ 97
+; TAG_WEAPON_BLOWGUN: equ 98
+; TAG_WEAPON_ATLATL: equ 99
+; TAG_WEAPON_RAYGUN: equ 100
+; TAG_WEAPON_OBSIDIAN_KNIVE: equ 101
+; TAG_WEAPON_FIRE_HAMMER: equ 102
+; TAG_WEAPON_ICE_MACUAHUITL: equ 103
+; TAG_MAP_PIECE1: equ 104
+; TAG_MAP_PIECE2: equ 105
+; TAG_MAP_PIECE3: equ 106
+; TAG_MAP_PIECE4: equ 107
+; TAG_MAP_PIECE5: equ 108
+; TAG_MAP_PIECE6: equ 109
+; TAG_MAP_PIECE7: equ 110
+; TAG_MAP_PIECE8: equ 111
+; TAG_HEART1: equ 112
+; TAG_HEART2: equ 113
+; TAG_HEART3: equ 114
+; TAG_HEART4: equ 115
+; TAG_HEART5: equ 116
+; TAG_MAYA_RIDDLE_CLUE1: equ 117
+; TAG_MAYA_RIDDLE_CLUE2: equ 118
+; TAG_MAYA_RIDDLE_CLUE3: equ 119
+; TAG_MAYA_RIDDLE_CLUE4: equ 120
+; TAG_STORY_TRIVIA1: equ 121
+; TAG_STORY_TRIVIA2: equ 122
+; TAG_STORY_TRIVIA3: equ 123
+; TAG_STORY_TRIVIA4: equ 124
+; TAG_STORY_TRIVIA5: equ 125
+; TAG_STORY_TRIVIA6: equ 126
+; TAG_STORY_TRIVIA7: equ 127
+; TAG_STORY_TRIVIA8: equ 128
+; TAG_ITEM_SANDALS: equ 129
+; TAG_ITEM_GLOVES: equ 130
+; TAG_ITEM_HURAKAN: equ 131
+; TAG_ITEM_ARMOR: equ 132
+; TAG_ITEM_CHAAC: equ 133
+; TAG_ITEM_SEASHELL: equ 134
+; TAG_ITEM_BELT: equ 135
+; TAG_ITEM_ICE_CAPE: equ 136
+; TAG_SMALL_KEY1: equ 137
+; TAG_SMALL_KEY2: equ 138
+; TAG_SMALL_KEY3: equ 139
+; TAG_SMALL_KEY4: equ 140
+; TAG_SMALL_KEY_CHEST1: equ 141
+; TAG_SMALL_KEY_CHEST2: equ 142
+; TAG_SMALL_KEY_CHEST3: equ 143
+; TAG_SMALL_KEY_CHEST4: equ 144
+; ; tags above can ONLY appear once in the whole game
+; N_UNIQUE_TAGS: equ 145
+; ; tags below can appear multiple times (and do not have state, they are reset every time you enter in a room):
+; TAG_PUSHABLE_BLOCK: equ 145	

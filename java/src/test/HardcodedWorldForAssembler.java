@@ -35,7 +35,7 @@ public class HardcodedWorldForAssembler {
         PCGArea pcg2 = new PCGArea(true);
         
         World w = pcg1.generate(r);
-        for(int i = 0;i<10;i++) {
+        for(int i = 0;i<pcg1.n_areas;i++) {
             generateAssemblerAreaData(w, i, pcg2);
         }
         generateAssemblerWorldData(w);
@@ -117,21 +117,26 @@ public class HardcodedWorldForAssembler {
         
         System.out.println("hardcoded_area_data_"+areaIndex+"__tags:");
         List<Pair<Integer, String>> tagList = pcg2.getSortedTagList(a);
+        int n_tags = tagList.size();
         for(Pair<Integer, String> tag_position:tagList) {
             int offset = tag_position.left;
             String tag = tag_position.right;
             int lockDirection = 0;
+            if (w.withinChestTag.contains(tag)) {
+                n_tags--;
+                continue;
+            }
             if (w.lockDirections.containsKey(tag)) {
                 lockDirection = w.lockDirections.get(tag);
             }
             System.out.println("  db " + AssemblerTags.tagToAssembler(tag) + ", " + offset + ", " + lockDirection);
         }
-        if (tagList.size() > MAX_N_TAGS) {
+        if (n_tags > MAX_N_TAGS) {
             throw new Exception("Too many tags!");
         }
-        if (tagList.size() < MAX_N_TAGS) {
+        if (n_tags < MAX_N_TAGS) {
             System.out.println("  ; filler");
-            System.out.println("  ds " + (MAX_N_TAGS - tagList.size())*3 + ", 0");            
+            System.out.println("  ds " + (MAX_N_TAGS - n_tags)*3 + ", 0");            
         }    
     }
     

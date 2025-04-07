@@ -227,49 +227,69 @@ setup_game_tiles:
 
     ; bank 0:
     ld hl, buffer_4096
-    ld de, CHRTBL2 + 32*8
-    ld bc, 224*8
+    ld de, CHRTBL2 + 64*8
+    ld bc, 192*8
     call fast_LDIRVM
 
-    ld hl, buffer_4096 + 224*8
-    ld de, CLRTBL2 + 32*8
-    ld bc, 224*8
+    ld hl, buffer_4096 + 192*8
+    ld de, CLRTBL2 + 64*8
+    ld bc, 192*8
     call fast_LDIRVM
 
     ; bank 1:
     ld hl, buffer_4096
-    ld de, CHRTBL2 + 256*8 + 32*8
-    ld bc, 224*8
+    ld de, CHRTBL2 + 256*8 + 64*8
+    ld bc, 192*8
     call fast_LDIRVM
 
-    ld hl, buffer_4096 + 224*8
-    ld de, CLRTBL2 + 256*8 + 32*8
-    ld bc, 224*8
+    ld hl, buffer_4096 + 192*8
+    ld de, CLRTBL2 + 256*8 + 64*8
+    ld bc, 192*8
     call fast_LDIRVM
 
     ; bank 2:
     ld hl, buffer_4096
-    ld de, CHRTBL2 + 256*8*2 + 32*8
-    ld bc, 224*8
+    ld de, CHRTBL2 + 256*8*2 + 64*8
+    ld bc, 192*8
     call fast_LDIRVM
 
-    ld hl, buffer_4096 + 224*8
-    ld de, CLRTBL2 + 256*8*2 + 32*8
-    ld bc, 224*8
+    ld hl, buffer_4096 + 192*8
+    ld de, CLRTBL2 + 256*8*2 + 64*8
+    ld bc, 192*8
     call fast_LDIRVM
 
-    ; hud tiles:
+    ; hud tiles (includes generic in-game tiles too, like coins, etc.):
     ld hl, tiles_hud_zx0
     ld de, buffer_4096
     call dzx0
 
     ld hl, buffer_4096
     ld de, CHRTBL2
-    ld bc, 32*8
+    ld bc, 64*8
     call fast_LDIRVM
 
-    ld hl, buffer_4096 + 32*8
+    ld hl, buffer_4096 + 64*8
     ld de, CLRTBL2
-    ld bc, 32*8
+    ld bc, 64*8
+    call fast_LDIRVM
+
+    ld hl, buffer_4096
+    ld de, CHRTBL2 + 256*8
+    ld bc, 64*8
+    call fast_LDIRVM
+
+    ld hl, buffer_4096 + 64*8
+    ld de, CLRTBL2 + 256*8
+    ld bc, 64*8
+    call fast_LDIRVM
+
+    ld hl, buffer_4096
+    ld de, CHRTBL2 + 256*8*2
+    ld bc, 64*8
+    call fast_LDIRVM
+
+    ld hl, buffer_4096 + 64*8
+    ld de, CLRTBL2 + 256*8*2
+    ld bc, 64*8
     jp fast_LDIRVM
 

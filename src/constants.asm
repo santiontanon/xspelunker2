@@ -28,6 +28,9 @@ WEAPON_REDRAW_FLAG_BIT: equ 3  ; weapon and ammo
 
 HUD_MAX_TIME: equ 100
 
+FIRST_ITEM_TILE: equ 44  ; tiles 44, 45, 46, 47 are reserved for items/chests/locks spawned in the current room
+FIRST_LARGE_ITEM_TILE: equ 48  ; tiles 48 - 63 are reserved for large items (e.g. doors) spawned in the current room
+
 CHUNK_WIDTH: equ 16
 CHUNK_HEIGHT: equ 12
 MAX_CHUNK_LOCATIONS: equ 12
@@ -47,7 +50,7 @@ PCG_DIRECTION_DOWN_BIT: equ 0
 INTERAREA_CONNECTION_SIZE: equ 8  ; id1, id2, x1, y1, direction1, x2, y2, direction2
 
 
-MAX_WORLD_AREAS: equ 10
+MAX_WORLD_AREAS: equ 12
 MAX_AREA_WIDTH: equ 16  
 MAX_AREA_SIZE: equ 8 * 8  ; as long as width * height is smaller or equal to 8 * 8, we are fine
 MAX_AREA_N_TAGS: equ 32

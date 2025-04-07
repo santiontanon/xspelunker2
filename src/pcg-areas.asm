@@ -980,6 +980,7 @@ pcg_generate_area__place_tags_loop:
 	jp z, pcg_generate_area__place_tags_loop_directional
 	call pcg_generate_area__place_tags_is_normal_tag_p
 	jp z, pcg_generate_area__place_tags_loop_normal
+pcg_generate_area__place_tags_loop_next_ignored:
 	jp pcg_generate_area__place_tags_loop_next  ; ignore this tag
 
 pcg_generate_area__place_tags_loop_block_puzzle:
@@ -1410,6 +1411,7 @@ pcg_generate_area__choose_chunks_loop_x_no_connection_down:
 		jp z, pcg_generate_area__choose_chunks_loop_x_4x4_item_tag
 		call pcg_generate_area__choose_chunks_is_combination_lock_tag_p
 		jp z, pcg_generate_area__choose_chunks_loop_x_combination_lock_tag
+pcg_generate_area__ignore_tag:
 		jp pcg_generate_area__choose_chunks_loop_x_continue
 
 pcg_generate_area__choose_chunks_loop_x_boss_tag:
@@ -1851,6 +1853,57 @@ pcg_generate_area__item_tags:
     db TAG_BUTTON2
     db TAG_BUTTON3
     db TAG_BUTTON4
+    db TAG_WEAPON_HAMMER
+    db TAG_WEAPON_MACUAHUITL
+    db TAG_WEAPON_SHIELD
+    db TAG_WEAPON_SLING
+    db TAG_WEAPON_BLOWGUN
+    db TAG_WEAPON_ATLATL
+    db TAG_WEAPON_RAYGUN
+    db TAG_WEAPON_OBSIDIAN_KNIVE
+    db TAG_WEAPON_FIRE_HAMMER
+    db TAG_WEAPON_ICE_MACUAHUITL
+    db TAG_MAP_PIECE1
+    db TAG_MAP_PIECE2
+    db TAG_MAP_PIECE3
+    db TAG_MAP_PIECE4
+    db TAG_MAP_PIECE5
+    db TAG_MAP_PIECE6
+    db TAG_MAP_PIECE7
+    db TAG_MAP_PIECE8
+    db TAG_HEART1
+    db TAG_HEART2
+    db TAG_HEART3
+    db TAG_HEART4
+    db TAG_HEART5
+    db TAG_MAYA_RIDDLE_CLUE1
+    db TAG_MAYA_RIDDLE_CLUE2
+    db TAG_MAYA_RIDDLE_CLUE3
+    db TAG_MAYA_RIDDLE_CLUE4
+    db TAG_STORY_TRIVIA1
+    db TAG_STORY_TRIVIA2
+    db TAG_STORY_TRIVIA3
+    db TAG_STORY_TRIVIA4
+    db TAG_STORY_TRIVIA5
+    db TAG_STORY_TRIVIA6
+    db TAG_STORY_TRIVIA7
+    db TAG_STORY_TRIVIA8
+    db TAG_ITEM_SANDALS
+    db TAG_ITEM_GLOVES
+    db TAG_ITEM_HURAKAN
+    db TAG_ITEM_ARMOR
+    db TAG_ITEM_CHAAC
+    db TAG_ITEM_SEASHELL
+    db TAG_ITEM_BELT
+    db TAG_ITEM_ICE_CAPE
+    db TAG_SMALL_KEY1
+    db TAG_SMALL_KEY2
+    db TAG_SMALL_KEY3
+    db TAG_SMALL_KEY4
+    db TAG_SMALL_KEY_CHEST1
+    db TAG_SMALL_KEY_CHEST2
+    db TAG_SMALL_KEY_CHEST3
+    db TAG_SMALL_KEY_CHEST4
     db 0
 
 pcg_generate_area__boss_tags:

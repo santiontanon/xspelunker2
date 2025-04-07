@@ -222,7 +222,7 @@ room_render_tile_objects_loop:
 		cp TAG_BREAKABLE_WALL3
 		jr z, room_render_tile_objects_loop_continue
 		cp TAG_BREAKABLE_WALL4
-		jr z, room_render_tile_objects_loop_continue
+		jr z, room_render_tile_objects_loop_continue		
 		inc hl
 		ld c, (hl)  ; x
 		ld ixl, c
@@ -613,12 +613,17 @@ endm
 
 
 tile_object_gfx_table:
-REPT TAG_PUSHABLE_BLOCK  ; add filler
+REPT TAG_BOSS1_KEY  ; add filler
+	TILE_OBJECT_DATA 2, 0, 0, 0
+ENDR
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx
+REPT TAG_PUSHABLE_BLOCK - (TAG_BOSS1_KEY + 1)  ; add filler
 	TILE_OBJECT_DATA 2, 0, 0, 0
 ENDR
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_pushable_block_gfx
 
-
+tile_object_regular_object_gfx:
+	db FIRST_ITEM_TILE, FIRST_ITEM_TILE+1, FIRST_ITEM_TILE+2, FIRST_ITEM_TILE+3
 tile_object_pushable_block_gfx:
 	db 185, 187, 182, 184
 

@@ -1,9 +1,8 @@
 to do:
 
 ***- spawn and draw items in the game
-  ***- spawn boss keys (as an example): create tile objects
-  ***- when loading a room and spawning an objet, load the necessary tiles for that object into the "slot for tile items"
-  ***- draw the keys
+  ***- make it work for all other boss keys
+  ***- can I remove the tags that are useless on the assembler side? e.g. "TAG_BOSS1", "TAG_BREAKABLE_WALL1_KEY"
   ***- pick up items (inventory) (to pick up an item, crouch in front of it)
   ***- spawn the other color keys
   ***- spawn small keys
