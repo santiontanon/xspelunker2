@@ -582,21 +582,21 @@ SFX_enemy_kill:
   db SFX_CMD_END      
 
 
-; SFX_item_pickup:
-;   db 7, #b8  ; tone in all three channels
-;   db 10,#0d  ; volume
-;   db 5, #04, 4+MUSIC_CMD_TIME_STEP_FLAG, #00
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
-;   db 4,#80,5+MUSIC_CMD_TIME_STEP_FLAG, #03
-;   db 4+MUSIC_CMD_TIME_STEP_FLAG, #00
-;   db 4,#80,5+MUSIC_CMD_TIME_STEP_FLAG, #02
-;   db 4+MUSIC_CMD_TIME_STEP_FLAG, #00
-;   db 4,#80,5+MUSIC_CMD_TIME_STEP_FLAG, #01
-;   db 4+MUSIC_CMD_TIME_STEP_FLAG, #00
-;   db 10,#00  ; silence
-;   db SFX_CMD_END
+SFX_item_pickup:
+  db 7, #b8  ; tone in all three channels
+  db 10,#0d  ; volume
+  db 5, #04, 4+MUSIC_CMD_TIME_STEP_FLAG, #00
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 4,#80,5+MUSIC_CMD_TIME_STEP_FLAG, #03
+  db 4+MUSIC_CMD_TIME_STEP_FLAG, #00
+  db 4,#80,5+MUSIC_CMD_TIME_STEP_FLAG, #02
+  db 4+MUSIC_CMD_TIME_STEP_FLAG, #00
+  db 4,#80,5+MUSIC_CMD_TIME_STEP_FLAG, #01
+  db 4+MUSIC_CMD_TIME_STEP_FLAG, #00
+  db 10,#00  ; silence
+  db SFX_CMD_END
 
 
 ; SFX_potion_use:

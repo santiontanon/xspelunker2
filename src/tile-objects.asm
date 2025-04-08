@@ -58,7 +58,7 @@ update_tile_objects_pushable_block:
 		jr z, update_tile_objects_pushable_block_collision
 
 		; block should fall!
-		call room_remove_tile_objects
+		call room_undraw_tile_objects
 	pop hl
 	ld a, (hl)  ; block y
 	inc a
@@ -364,26 +364,26 @@ room_render_tile_objects_render_loop_x:
 
 ;-----------------------------------------------
 ; restores the background that was removed by tile objects
-room_remove_tile_objects:
+room_undraw_tile_objects:
 	ld hl, current_room__tile_objects_sentinel - ROOM_TILE_OBJECT_STRUCT_SIZE  ; ptr to the last object
 	ld b, (current_room__tile_objects_sentinel - current_room__tile_objects)/ROOM_TILE_OBJECT_STRUCT_SIZE
-room_remove_tile_objects_loop:
+room_undraw_tile_objects_loop:
 	ld a, (hl)  ; ID
 	cp #ff
-	jr z, room_remove_tile_objects_loop_continue_no_pop
+	jr z, room_undraw_tile_objects_loop_continue_no_pop
 	; render the object:
 	push bc
 	push hl
 		inc hl
 		ld a, (hl)  ; type
 		cp TAG_BREAKABLE_WALL1
-		jr z, room_remove_tile_objects_loop_continue		
+		jr z, room_undraw_tile_objects_loop_continue		
 		cp TAG_BREAKABLE_WALL2
-		jr z, room_remove_tile_objects_loop_continue		
+		jr z, room_undraw_tile_objects_loop_continue		
 		cp TAG_BREAKABLE_WALL3
-		jr z, room_remove_tile_objects_loop_continue		
+		jr z, room_undraw_tile_objects_loop_continue		
 		cp TAG_BREAKABLE_WALL4
-		jr z, room_remove_tile_objects_loop_continue		
+		jr z, room_undraw_tile_objects_loop_continue		
 		inc hl
 		ld c, (hl)  ; x
 		ld ixl, c
@@ -400,20 +400,20 @@ room_remove_tile_objects_loop:
 		add hl, bc
 		ld a, (hl)
 		or a
-		jr z, room_remove_tile_objects_restore_background  ; type 0: we had saved the background
+		jr z, room_undraw_tile_objects_restore_background  ; type 0: we had saved the background
 		dec a
-		jr z, room_remove_tile_objects_delete_object  ; type 1: we just replace with 0s
-room_remove_tile_objects_loop_continue:
+		jr z, room_undraw_tile_objects_delete_object  ; type 1: we just replace with 0s
+room_undraw_tile_objects_loop_continue:
 	pop hl
 	pop bc
-room_remove_tile_objects_loop_continue_no_pop:
+room_undraw_tile_objects_loop_continue_no_pop:
 	ld de, -ROOM_TILE_OBJECT_STRUCT_SIZE
 	add hl, de
-	djnz room_remove_tile_objects_loop
+	djnz room_undraw_tile_objects_loop
 	ret
 
 
-room_remove_tile_objects_restore_background:
+room_undraw_tile_objects_restore_background:
 		; - hl: ptr to tile_object_gfx_table
 		; - ixl, ixh: x, y of the object
 		inc hl
@@ -429,59 +429,59 @@ room_remove_tile_objects_restore_background:
 			call get_room_tile_ptr
 		pop bc
 		push ix
-room_remove_tile_objects_restore_background_loop_y:
+room_undraw_tile_objects_restore_background_loop_y:
 			push ix
 			push bc
 			push hl
-room_remove_tile_objects_restore_background_loop_x:
+room_undraw_tile_objects_restore_background_loop_x:
 				; check that:
 				; - ixl < current_room__width
 				; - ixl >= 0
 				; - ixh < current_room__height
 				ld a, (current_room__width)
 				cp ixl
-				jr z, room_remove_tile_objects_restore_background_loop_x_continue
-				jr c, room_remove_tile_objects_restore_background_loop_x_continue
+				jr z, room_undraw_tile_objects_restore_background_loop_x_continue
+				jr c, room_undraw_tile_objects_restore_background_loop_x_continue
 				ld a, ixl
 				or a
-				jp m, room_remove_tile_objects_restore_background_loop_x_continue
+				jp m, room_undraw_tile_objects_restore_background_loop_x_continue
 				ld a, (current_room__height)
 				cp ixh
-				jr z, room_remove_tile_objects_restore_background_loop_x_continue
-				jr c, room_remove_tile_objects_restore_background_loop_x_continue
+				jr z, room_undraw_tile_objects_restore_background_loop_x_continue
+				jr c, room_undraw_tile_objects_restore_background_loop_x_continue
 
 				; restore background:
 				ld a, (iy + ROOM_TILE_OBJECT_STRUCT_BACKGROUND)
 				ld (hl), a
-room_remove_tile_objects_restore_background_loop_x_continue
+room_undraw_tile_objects_restore_background_loop_x_continue
 				inc hl
 				inc iy
 				inc ixl
 				ld a, ixl
 				or a
-				jr nz, room_remove_tile_objects_restore_background_loop_x_continue2
+				jr nz, room_undraw_tile_objects_restore_background_loop_x_continue2
 				; if ixl turned 0, it means the previous pointer was probably bad, so, we need to recompute it:
 				push bc
 					ld c, ixl
 					ld b, ixh
 					call get_room_tile_ptr					
 				pop bc
-room_remove_tile_objects_restore_background_loop_x_continue2:
+room_undraw_tile_objects_restore_background_loop_x_continue2:
 
 				dec c
-				jr nz, room_remove_tile_objects_restore_background_loop_x
+				jr nz, room_undraw_tile_objects_restore_background_loop_x
 			pop hl
 			pop bc
 			pop ix
 			inc ixh
 			ld a, (current_room__width)
 			ADD_HL_A
-			djnz room_remove_tile_objects_restore_background_loop_y
+			djnz room_undraw_tile_objects_restore_background_loop_y
 		pop ix
-		jp room_remove_tile_objects_loop_continue
+		jp room_undraw_tile_objects_loop_continue
 
 
-room_remove_tile_objects_delete_object:
+room_undraw_tile_objects_delete_object:
 		; Note, we do not need to take into account room bounds here, since this method
 		; is for objects that are static, and hence will always be within screen bounds.
 		; - hl: ptr to tile_object_gfx_table
@@ -496,22 +496,22 @@ room_remove_tile_objects_delete_object:
 			ld b, ixh
 			call get_room_tile_ptr
 		pop bc
-room_remove_tile_objects_delete_object_loop_y:
+room_undraw_tile_objects_delete_object_loop_y:
 
 		push bc
 		push hl
-room_remove_tile_objects_delete_object_loop_x:
+room_undraw_tile_objects_delete_object_loop_x:
 			; restore background:
 			ld (hl), 0
 			inc hl
 			dec c
-			jr nz, room_remove_tile_objects_delete_object_loop_x
+			jr nz, room_undraw_tile_objects_delete_object_loop_x
 		pop hl
 		pop bc
 		ld a, (current_room__width)
 		ADD_HL_A
-		djnz room_remove_tile_objects_delete_object_loop_y
-		jp room_remove_tile_objects_loop_continue
+		djnz room_undraw_tile_objects_delete_object_loop_y
+		jp room_undraw_tile_objects_loop_continue
 
 
 ;-----------------------------------------------
@@ -599,6 +599,246 @@ room_remove_breakable_wall_restore_background_loop_x:
 	ADD_HL_A
 	djnz room_remove_breakable_wall_restore_background_loop_y
 	ret
+
+
+;-----------------------------------------------
+; output:
+; - z: no object behind
+; - nz: object behind
+; - ix: ptr to object if one found
+get_tile_object_behind_player:
+	ld a, (player_x+1)
+	ld c, a
+	ld a, (player_y+1)
+	ld b, a
+	ld ix, current_room__tile_objects
+get_tile_object_behind_player_loop:
+	ld a, (ix)  ; ID
+	cp #ff
+	ret z
+	; for now, assume all objects are 16x16:
+	ld a, b
+	cp (ix+ROOM_TILE_OBJECT_STRUCT_Y)
+	jr nz, get_tile_object_behind_player_loop_next
+	ld a, c
+    cp (ix+ROOM_TILE_OBJECT_STRUCT_X)
+    jr z, get_tile_object_behind_player_found
+    dec a
+    cp (ix+ROOM_TILE_OBJECT_STRUCT_X)
+	jr z, get_tile_object_behind_player_found
+get_tile_object_behind_player_loop_next:
+	ld de, ROOM_TILE_OBJECT_STRUCT_SIZE
+	add ix, de
+	jp get_tile_object_behind_player_loop
+get_tile_object_behind_player_found:
+	or 1
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - ix: ptr to object
+interact_with_tile_object:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	ld hl, object_interaction_function_ptrs
+	ld b, 0
+	ld c, a
+	add hl, bc
+	add hl, bc
+	ld a, (hl)
+	inc hl
+	ld h, (hl)
+	ld l, a
+	jp (hl)
+
+object_interaction_function_ptrs:
+REPT TAG_BOSS1_KEY
+	dw object_interaction_function_empty
+ENDR
+	; TAG_RED_LOCK: equ 13
+	; TAG_GREEN_LOCK: equ 14
+	; TAG_BLUE_LOCK: equ 15
+	; TAG_YELLOW_LOCK: equ 16
+	; TAG_WHITE_LOCK: equ 17
+	; TAG_PURPLE_LOCK: equ 18
+	; TAG_TRIAL1_LOCK: equ 19
+	; TAG_TRIAL2_LOCK: equ 20
+	; TAG_TRIAL3_LOCK: equ 21
+	; TAG_TRIAL4_LOCK: equ 22
+	; TAG_COMBINATION1_LOCK: equ 23
+	; TAG_COMBINATION2_LOCK: equ 24
+	; TAG_COMBINATION3_LOCK: equ 25
+	; TAG_COMBINATION4_LOCK: equ 26
+	; TAG_BALL_LOCK: equ 27
+	; TAG_IDOL_LOCK: equ 28
+	; TAG_GEAR_LOCK: equ 29
+	; TAG_ASTRONAUT_LOCK: equ 30
+	; TAG_TELEPORTER_ATLANTIS: equ 34
+	; TAG_TELEPORTER_MARS: equ 35
+	; TAG_TELEPORTER_MOON: equ 36
+	; TAG_RED_KEY: equ 41
+	; TAG_GREEN_KEY: equ 42
+	; TAG_BLUE_KEY: equ 43
+	; TAG_YELLOW_KEY: equ 44
+	; TAG_WHITE_KEY: equ 45
+	; TAG_PURPLE_KEY: equ 46
+	; TAG_RED_CHEST: equ 47
+	; TAG_GREEN_CHEST: equ 48
+	; TAG_BLUE_CHEST: equ 49
+	; TAG_YELLOW_CHEST: equ 50
+	; TAG_WHITE_CHEST: equ 51
+	; TAG_PURPLE_CHEST: equ 52
+	; TAG_TRIAL1_CLUE: equ 53
+	; TAG_TRIAL2_CLUE: equ 54
+	; TAG_TRIAL3_CLUE: equ 55
+	; TAG_TRIAL4_CLUE: equ 56
+	; TAG_COMBINATION1_CLUE: equ 57
+	; TAG_COMBINATION2_CLUE: equ 58
+	; TAG_COMBINATION3_CLUE: equ 59
+	; TAG_COMBINATION4_CLUE: equ 60
+	; TAG_BALL_KEY: equ 61
+	; TAG_IDOL_KEY: equ 62
+	; TAG_GEAR_KEY: equ 63
+	; TAG_ASTRONAUT_KEY: equ 64
+	dw object_interaction_function_pickup_item  ; TAG_BOSS1_KEY:
+	; TAG_BOSS1_CHESTLOCK: equ 67
+	; TAG_BOSS2_KEY: equ 69
+	; TAG_BOSS2_CHESTLOCK: equ 70
+	; TAG_BOSS3_KEY: equ 72
+	; TAG_BOSS3_CHESTLOCK: equ 73
+	; TAG_BOSS4_KEY: equ 75
+	; TAG_BOSS4_CHESTLOCK: equ 76
+	; TAG_BOSS5_KEY: equ 78
+	; TAG_BOSS5_CHESTLOCK: equ 79
+	; TAG_BOSS6_KEY: equ 81
+	; TAG_BOSS6_CHESTLOCK: equ 82
+	; TAG_BOSS7_KEY: equ 84
+	; TAG_BOSS7_CHESTLOCK: equ 85
+	; TAG_WEAPON_HAMMER: equ 86
+	; TAG_WEAPON_MACUAHUITL: equ 87
+	; TAG_WEAPON_SHIELD: equ 88
+	; TAG_WEAPON_SLING: equ 89
+	; TAG_WEAPON_BLOWGUN: equ 90
+	; TAG_WEAPON_ATLATL: equ 91
+	; TAG_WEAPON_RAYGUN: equ 92
+	; TAG_WEAPON_OBSIDIAN_KNIVE: equ 93
+	; TAG_WEAPON_FIRE_HAMMER: equ 94
+	; TAG_WEAPON_ICE_MACUAHUITL: equ 95
+	; TAG_MAP_PIECE1: equ 96
+	; TAG_MAP_PIECE2: equ 97
+	; TAG_MAP_PIECE3: equ 98
+	; TAG_MAP_PIECE4: equ 99
+	; TAG_MAP_PIECE5: equ 100
+	; TAG_MAP_PIECE6: equ 101
+	; TAG_MAP_PIECE7: equ 102
+	; TAG_MAP_PIECE8: equ 103
+	; TAG_HEART1: equ 104
+	; TAG_HEART2: equ 105
+	; TAG_HEART3: equ 106
+	; TAG_HEART4: equ 107
+	; TAG_HEART5: equ 108
+	; TAG_MAYA_RIDDLE_CLUE1: equ 109
+	; TAG_MAYA_RIDDLE_CLUE2: equ 110
+	; TAG_MAYA_RIDDLE_CLUE3: equ 111
+	; TAG_MAYA_RIDDLE_CLUE4: equ 112
+	; TAG_STORY_TRIVIA1: equ 113
+	; TAG_STORY_TRIVIA2: equ 114
+	; TAG_STORY_TRIVIA3: equ 115
+	; TAG_STORY_TRIVIA4: equ 116
+	; TAG_STORY_TRIVIA5: equ 117
+	; TAG_STORY_TRIVIA6: equ 118
+	; TAG_STORY_TRIVIA7: equ 119
+	; TAG_STORY_TRIVIA8: equ 120
+	; TAG_ITEM_SANDALS: equ 121
+	; TAG_ITEM_GLOVES: equ 122
+	; TAG_ITEM_HURAKAN: equ 123
+	; TAG_ITEM_ARMOR: equ 124
+	; TAG_ITEM_CHAAC: equ 125
+	; TAG_ITEM_SEASHELL: equ 126
+	; TAG_ITEM_BELT: equ 127
+	; TAG_ITEM_ICE_CAPE: equ 128
+	; TAG_SMALL_KEY1: equ 129
+	; TAG_SMALL_KEY2: equ 130
+	; TAG_SMALL_KEY3: equ 131
+	; TAG_SMALL_KEY4: equ 132
+	; TAG_SMALL_KEY_CHEST1: equ 133
+	; TAG_SMALL_KEY_CHEST2: equ 134
+	; TAG_SMALL_KEY_CHEST3: equ 135
+	; TAG_SMALL_KEY_CHEST4: equ 136
+	ret
+
+object_interaction_inventory_slot:
+	db #ff, #ff, #ff, #ff, #ff  ; none, block puzzles
+	db #ff, #ff, #ff, #ff  ; button doors
+	db #ff, #ff, #ff, #ff  ; breakable walls
+	db #ff, #ff, #ff, #ff, #ff, #ff  ; color locks
+	db #ff, #ff, #ff, #ff  ; trial locks
+	db #ff, #ff, #ff, #ff  ; combination locks
+	db #ff, #ff, #ff, #ff  ; special locks
+	db #ff, #ff, #ff, #ff, #ff, #ff  ; start, ending, midpoint, teleporters
+	db #ff, #ff, #ff, #ff  ; buttons
+	db 15, 16, 17, 18, 19, 20  ; color keys
+	db #ff, #ff, #ff, #ff, #ff, #ff  ; color chests
+	db #ff, #ff, #ff, #ff  ; trial clues
+	db #ff, #ff, #ff, #ff  ; combination clues
+	db 21, 22, 23, 24  ; key items
+	db #ff, 0, #ff  ; boss1
+	db #ff, 1, #ff  ; boss2
+	db #ff, 2, #ff  ; boss3
+	db #ff, 3, #ff  ; boss4
+	db #ff, 4, #ff  ; boss5
+	db #ff, 5, #ff  ; boss6
+	db #ff, 6, #ff  ; boss7
+	db 1 + 128, 2 + 128, 3 + 128  ; weapons
+	db 4 + 128, 5 + 128, 6 + 128, 7 + 128  ; ranged weapons
+	db 8 + 128, 9 + 128, 10 + 128  ; upgraded weapons
+	db #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff  ; map pieces
+	db #ff, #ff, #ff, #ff, #ff  ; hearts
+	db #ff, #ff, #ff, #ff  ; riddle clues
+	db #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff  ; story trivia
+	db 25, 26, 27, 28, 29, 30  ; maya upgrade items
+	db 31, 32  ; alien upgrade items
+	db #ff, #ff, #ff, #ff  ; small keys
+	db #ff, #ff, #ff, #ff  ; small key chests
+
+
+;-----------------------------------------------
+object_interaction_function_empty:
+	ret
+
+
+;-----------------------------------------------
+object_interaction_function_pickup_item:
+	ld hl, SFX_item_pickup
+	call play_SFX_with_high_priority
+
+	; add to inventory:
+	ld hl, object_interaction_inventory_slot
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	ADD_HL_A
+	ld a, (hl)
+	cp N_INVENTORY_ITEM_TYPES
+	ret nc  ; should never happen
+
+	; add to inventory:
+	ld hl, player_inventory_items
+	ADD_HL_A	
+	ld (hl), 1
+
+	; mark as taken:
+	ld hl, global_state__objects
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	ADD_HL_A
+	ld (hl), 1
+
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)
+
+	push ix
+		call room_undraw_tile_objects
+	pop hl
+	call delete_tile_object_in_hl
+	jp room_render_tile_objects
 
 
 ;-----------------------------------------------

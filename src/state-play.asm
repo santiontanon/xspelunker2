@@ -327,8 +327,5 @@ state_play_upload_object_tiles_to_vdp_if_necessary:
 	ld de, CLRTBL2 + FIRST_ITEM_TILE*8 + 256*8*2
 	ld b, 32
 	call fast_small_LDIRVM
-
-	ld hl, 0
-	ld (item_object_to_upload_to_vdp), hl
 	ret
 

@@ -1135,11 +1135,11 @@ inventory_item_positions:
 	db 4, 5, 6  ; first 3 idols
 	db 4, 5, 6, 7  ; last 4 boss idols
 	db 8, 9, 10, 11, 12, 13  ; color keys
-	db 14, 15, 16, 17  ; key items
-	db 18, 19, 20, 21, 22, 23  ; maya upgrade items
-	db 24, 25  ; alien upgrade items
-	db 26, 27, 28  ; elaine letters
-	db 29  ; map
+	db 14, 15, 16, 17  ; key items (21 - 24)
+	db 18, 19, 20, 21, 22, 23  ; maya upgrade items (25 - 30)
+	db 24, 25  ; alien upgrade items (31, 32)
+	db 26, 27, 28  ; elaine letters (33, 34, 35)
+	db 29  ; map (36)
 inventory_item_positions_end:
 
 inventory_item_gfx:

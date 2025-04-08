@@ -297,6 +297,11 @@ player_update_state_idle_no_rope:
 	call player_check_collision_down_inc
 	jp nz, player_update_switch_to_falling
 
+	; check for interact:
+	ld a, (keyboard_clicks)
+	bit KEY_INTERACT_BIT, a
+	call nz, player_update_interact
+
 	ld a, (interrupt_cycle)
 	rrca
 	rrca
@@ -1866,6 +1871,14 @@ player_update_state_dead:
 
 
 ;-----------------------------------------------
+player_update_interact:
+	; see if there is an interactuable object nearby:
+	call get_tile_object_behind_player
+	ret z  ; no tile object behind
+	jp interact_with_tile_object
+
+
+;-----------------------------------------------
 player_update_fire_directional_bullet:
 	ld a, (player_current_weapon)
 	cp 3  ; shield
@@ -2494,7 +2507,7 @@ player_pushing_block_found_continue:
 player_pushing_block_found_no_collision:
 		; push block:
 		push ix
-			call room_remove_tile_objects
+			call room_undraw_tile_objects
 		pop ix
 	pop bc
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_X)  ; block x

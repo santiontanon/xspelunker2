@@ -93,7 +93,7 @@ public class GenerateTiles {
         BufferedImage sourceImage = ImageIO.read(new File(pngPath));
         List<Integer> data = new ArrayList<>();
 
-        // boss keys
+        // boss keys (0, ... ,6)
         extratTilesOneObject(sourceImage, 16, 0, 16, 16, data);
         extratTilesOneObject(sourceImage, 32, 0, 16, 16, data);
         extratTilesOneObject(sourceImage, 48, 0, 16, 16, data);
@@ -101,6 +101,8 @@ public class GenerateTiles {
         extratTilesOneObject(sourceImage, 80, 0, 16, 16, data);
         extratTilesOneObject(sourceImage, 96, 0, 16, 16, data);
         extratTilesOneObject(sourceImage, 112, 0, 16, 16, data);
+        // boss lock (7)
+        extratTilesOneObject(sourceImage, 192, 48, 16, 16, data);
         
         Z80Assembler.dataToBinary(data, outputPath + ".bin");
         ZX0Wrapper.main(outputPath+".bin", outputPath+".zx0", true, false);

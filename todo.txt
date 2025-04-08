@@ -1,15 +1,14 @@
 to do:
 
 ***- spawn and draw items in the game
-  ***- make it work for all other boss keys
-  ***- can I remove the tags that are useless on the assembler side? e.g. "TAG_BOSS1", "TAG_BREAKABLE_WALL1_KEY"
-  ***- pick up items (inventory) (to pick up an item, crouch in front of it)
+  ***- interact key from crouching/walking/crawling
+  ***- down key if option is configured (from teh same states)
   ***- spawn the other color keys
-  ***- spawn small keys
+  ***- spawn small keys (and pick them up)
     ***- visualize small keys in the hud/inventory (up to a limit, and then don't draw more)
   ***- spawn the cog, etc. keys
-  ***- spawn optional items
-  ***- spawn weapons
+  ***- spawn weapons (and pick them up)
+  ***- spawn optional items (and pick them up, gain ammo, life, coins, etc.)
   ***- any other pick-up-able item left?
 
 - being able to complete the game in assembler:

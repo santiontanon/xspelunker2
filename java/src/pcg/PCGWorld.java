@@ -139,15 +139,23 @@ public class PCGWorld {
         availableLockKeysObstacles.put("button-door3", new String[]{"button3"});
         availableLockKeysObstacles.put("button-door4", new String[]{"button4"});
 
-        availableLockKeysObstacles.put("breakable-wall1", new String[]{"wall1-key"});
-        availableLockKeysObstacles.put("breakable-wall2", new String[]{"wall2-key"});
-        availableLockKeysObstacles.put("breakable-wall3", new String[]{"wall3-key"});
-        availableLockKeysObstacles.put("breakable-wall4", new String[]{"wall4-key"});
+//        availableLockKeysObstacles.put("breakable-wall1", new String[]{"wall1-key"});
+//        availableLockKeysObstacles.put("breakable-wall2", new String[]{"wall2-key"});
+//        availableLockKeysObstacles.put("breakable-wall3", new String[]{"wall3-key"});
+//        availableLockKeysObstacles.put("breakable-wall4", new String[]{"wall4-key"});
+        availableLockKeysObstacles.put("breakable-wall1", new String[]{"none"});
+        availableLockKeysObstacles.put("breakable-wall2", new String[]{"none"});
+        availableLockKeysObstacles.put("breakable-wall3", new String[]{"none"});
+        availableLockKeysObstacles.put("breakable-wall4", new String[]{"none"});
 
-        availableLockKeysObstacles.put("block-puzzle1", new String[]{"block-key1"});
-        availableLockKeysObstacles.put("block-puzzle2", new String[]{"block-key2"});
-        availableLockKeysObstacles.put("block-puzzle3", new String[]{"block-key3"});
-        availableLockKeysObstacles.put("block-puzzle4", new String[]{"block-key4"});
+//        availableLockKeysObstacles.put("block-puzzle1", new String[]{"block-key1"});
+//        availableLockKeysObstacles.put("block-puzzle2", new String[]{"block-key2"});
+//        availableLockKeysObstacles.put("block-puzzle3", new String[]{"block-key3"});
+//        availableLockKeysObstacles.put("block-puzzle4", new String[]{"block-key4"});
+        availableLockKeysObstacles.put("block-puzzle1", new String[]{"none"});
+        availableLockKeysObstacles.put("block-puzzle2", new String[]{"none"});
+        availableLockKeysObstacles.put("block-puzzle3", new String[]{"none"});
+        availableLockKeysObstacles.put("block-puzzle4", new String[]{"none"});
 
         // Chest locks:
         availableLockKeysChests.put("red-chest", new String[]{"red-key"});
@@ -221,8 +229,17 @@ public class PCGWorld {
             allAreas.addAll(marsSpanningTree);
             allAreas.addAll(moonSpanningTree);
             if (!spawnOptionalObjects(w, allAreas)) continue;
+            
+            // remove "none" tags:
+            for(AreaDivision d:allAreas) {
+                d.tags.remove("none");
+            }
+            for(Area a:w.areas) {
+                a.removeTag("none");
+            }
+            
             return w;
-        }
+        }        
         return null;
     }
 

@@ -350,7 +350,10 @@ pcg_generate_room__object_loop:
 	jp z, pcg_generate_room__object_breakable_wall
 	cp TAG_BREAKABLE_WALL4
 	jp z, pcg_generate_room__object_breakable_wall
-	cp TAG_BOSS1_KEY
+	push ix
+		ld ixl, a
+		call pcg_generate_area__choose_chunks_is_item_tag_p
+	pop ix
 	jp z, pcg_generate_room__object_regular_item
 
 	; ...
@@ -1143,10 +1146,9 @@ area_object_offset_to_x_y_in_chunks_loop_done:
 
 ;-----------------------------------------------
 object_tiles_start_ptrs:
-REPT TAG_BOSS1_KEY
+REPT TAG_BOSS1
 	dw buffer_4096 + 0 * 64
 ENDR
-	dw buffer_4096 + 0 * 64  ; TAG_BOSS1_KEY
 ; TAG_NONE: equ 0
 ; TAG_BLOCK_PUZZLE1: equ 1
 ; TAG_BLOCK_PUZZLE2: equ 2
@@ -1188,14 +1190,6 @@ ENDR
 ; TAG_BUTTON2: equ 38
 ; TAG_BUTTON3: equ 39
 ; TAG_BUTTON4: equ 40
-; TAG_BREAKABLE_WALL1_KEY: equ 41
-; TAG_BREAKABLE_WALL2_KEY: equ 42
-; TAG_BREAKABLE_WALL3_KEY: equ 43
-; TAG_BREAKABLE_WALL4_KEY: equ 44
-; TAG_BLOCK_PUZZLE_KEY1: equ 45
-; TAG_BLOCK_PUZZLE_KEY2: equ 46
-; TAG_BLOCK_PUZZLE_KEY3: equ 47
-; TAG_BLOCK_PUZZLE_KEY4: equ 48
 ; TAG_RED_KEY: equ 49
 ; TAG_GREEN_KEY: equ 50
 ; TAG_BLUE_KEY: equ 51
@@ -1220,27 +1214,27 @@ ENDR
 ; TAG_IDOL_KEY: equ 70
 ; TAG_GEAR_KEY: equ 71
 ; TAG_ASTRONAUT_KEY: equ 72
-; TAG_BOSS1: equ 73
-; TAG_BOSS1_KEY: equ 74
-; TAG_BOSS1_CHESTLOCK: equ 75
-; TAG_BOSS2: equ 76
-; TAG_BOSS2_KEY: equ 77
-; TAG_BOSS2_CHESTLOCK: equ 78
-; TAG_BOSS3: equ 79
-; TAG_BOSS3_KEY: equ 80
-; TAG_BOSS3_CHESTLOCK: equ 81
-; TAG_BOSS4: equ 82
-; TAG_BOSS4_KEY: equ 83
-; TAG_BOSS4_CHESTLOCK: equ 84
-; TAG_BOSS5: equ 85
-; TAG_BOSS5_KEY: equ 86
-; TAG_BOSS5_CHESTLOCK: equ 87
-; TAG_BOSS6: equ 88
-; TAG_BOSS6_KEY: equ 89
-; TAG_BOSS6_CHESTLOCK: equ 90
-; TAG_BOSS7: equ 91
-; TAG_BOSS7_KEY: equ 92
-; TAG_BOSS7_CHESTLOCK: equ 93
+	dw buffer_4096  ; TAG_BOSS1
+	dw buffer_4096 + 0 * 64  ; TAG_BOSS1_KEY
+	dw buffer_4096 + 7 * 64  ; TAG_BOSS1_CHESTLOCK
+	dw buffer_4096  ; TAG_BOSS2
+	dw buffer_4096 + 1 * 64  ; TAG_BOSS2_KEY
+	dw buffer_4096 + 7 * 64  ; TAG_BOSS2_CHESTLOCK
+	dw buffer_4096  ; TAG_BOSS3
+	dw buffer_4096 + 2 * 64  ; TAG_BOSS3_KEY
+	dw buffer_4096 + 7 * 64  ; TAG_BOSS3_CHESTLOCK
+	dw buffer_4096  ; TAG_BOSS4
+	dw buffer_4096 + 3 * 64  ; TAG_BOSS4_KEY
+	dw buffer_4096 + 7 * 64  ; TAG_BOSS4_CHESTLOCK
+	dw buffer_4096  ; TAG_BOSS5
+	dw buffer_4096 + 4 * 64  ; TAG_BOSS5_KEY
+	dw buffer_4096 + 7 * 64  ; TAG_BOSS5_CHESTLOCK
+	dw buffer_4096  ; TAG_BOSS6
+	dw buffer_4096 + 5 * 64  ; TAG_BOSS6_KEY
+	dw buffer_4096 + 7 * 64  ; TAG_BOSS6_CHESTLOCK
+	dw buffer_4096  ; TAG_BOSS7
+	dw buffer_4096 + 6 * 64  ; TAG_BOSS7_KEY
+	dw buffer_4096 + 7 * 64  ; TAG_BOSS7_CHESTLOCK
 ; TAG_WEAPON_HAMMER: equ 94
 ; TAG_WEAPON_MACUAHUITL: equ 95
 ; TAG_WEAPON_SHIELD: equ 96

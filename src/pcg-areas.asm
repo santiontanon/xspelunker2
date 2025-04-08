@@ -1817,7 +1817,7 @@ pcg_generate_area__normal_tags:
 	db TAG_BOSS5_CHESTLOCK
 	db TAG_BOSS6_CHESTLOCK
 	db TAG_BOSS7_CHESTLOCK
-pcg_generate_area__item_tags:	
+pcg_generate_area__item_tags:
     db TAG_BOSS1_KEY
     db TAG_BOSS2_KEY
     db TAG_BOSS3_KEY

@@ -540,9 +540,9 @@ public class PCGArea {
         
         int p_of_path = 8;  // probability is 1 / 8
 
-        System.out.println("PCGArea.generate -----------------------------------");
+//        System.out.println("PCGArea.generate -----------------------------------");
         r.setSeed(a.rng_seed1, a.rng_seed2);
-        System.out.println("initial seed: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+//        System.out.println("initial seed: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
         
         if (!mergeAreaRooms(a, r)) return null;
         
@@ -555,7 +555,7 @@ public class PCGArea {
 
         // - Generate spanning trees for each division, so each position in a
         //   division is reachable from any other.
-        System.out.println("seed before: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+//        System.out.println("seed before: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
         List<Integer> closed = new ArrayList<>();
         for(int i = 0;i<a.height*2;i++) {
             for(int j = 0;j<a.width*2;j++) {
@@ -603,7 +603,7 @@ public class PCGArea {
 //            }
 //            System.out.println(line);
 //        }
-        System.out.println("seed afterwards: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+//        System.out.println("seed afterwards: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
         
 
         // Ensure the marked paths exist:
@@ -639,7 +639,7 @@ public class PCGArea {
 //            }
 //            System.out.println(line);
 //        }
-        System.out.println("seed afterwards 2: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+//        System.out.println("seed afterwards 2: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
         
         // Add random paths:
 //        System.out.println("pieceTypes: area " + a.ID + " (random)");
@@ -666,7 +666,7 @@ public class PCGArea {
                 }
             }
         }       
-        System.out.println("seed afterwards 3: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+//        System.out.println("seed afterwards 3: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
         
         // Add connection directions: (not needed as this is already done in the a.connectinos above)
         for(InterAreaConnection c:w.interAreaconnections) {
@@ -705,7 +705,7 @@ public class PCGArea {
 //            }
 //            System.out.println(line);
 //        }
-        System.out.println("seed afterwards 4: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+//        System.out.println("seed afterwards 4: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
         
         // Place tags into chunks:
         String placedTags[][] = new String[a.width * ROOM_WIDTH][a.height * ROOM_HEIGHT];
@@ -724,7 +724,7 @@ public class PCGArea {
             int j = (tag_location.left % a.width) * ROOM_WIDTH;
             int i = (tag_location.left / a.width) * ROOM_HEIGHT;
             String tag = tag_location.right;
-            System.out.println("    seed ("+tag+": "+Z80Assembler.toHex8bit(AssemblerTags.assemblerID(tag))+"): " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+//            System.out.println("    seed ("+tag+": "+Z80Assembler.toHex8bit(AssemblerTags.assemblerID(tag))+"): " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
 //            System.out.println("Placing tag:" + tag + ", " + j + ", " + i);
 
             if (w.withinChestTag.contains(tag)) {
@@ -989,7 +989,7 @@ public class PCGArea {
             }
         }
               
-        System.out.println("seed afterwards 5: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+//        System.out.println("seed afterwards 5: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
         
         // Choose chunks:
         for(int i = 0;i<a.height * ROOM_HEIGHT;i++) {
@@ -1277,16 +1277,16 @@ public class PCGArea {
                     }
                     
                     {
-                        List<Integer> choiceIds = new ArrayList<>();
-                        for(RoomChunk c:choices) {
-                            choiceIds.add(all_fg_chunks.indexOf(c));
-                        }
-                        System.out.println("constraints: type: " + ra.pieceTypes[j][i] + ", upTag: " + upTag + ", downTag: " + downTag + ", necessaryObjectTypes: " + necessaryObjectTypes + ", chunkPool: " + chunkPoolName);
-                        System.out.println("    seed before: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
-                        System.out.println("    chunk choices: " + j + ", " + i + ": " + choiceIds);
+//                        List<Integer> choiceIds = new ArrayList<>();
+//                        for(RoomChunk c:choices) {
+//                            choiceIds.add(all_fg_chunks.indexOf(c));
+//                        }
+//                        System.out.println("constraints: type: " + ra.pieceTypes[j][i] + ", upTag: " + upTag + ", downTag: " + downTag + ", necessaryObjectTypes: " + necessaryObjectTypes + ", chunkPool: " + chunkPoolName);
+//                        System.out.println("    seed before: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+//                        System.out.println("    chunk choices: " + j + ", " + i + ": " + choiceIds);
                         int idx = r.nextInt(8) % choices.size();
                         ra.fg_chunks[j][i] = choices.get(idx);
-                        System.out.println("    chosen: " + all_fg_chunks.indexOf(ra.fg_chunks[j][i]) + ", " + ra.fg_chunks[j][i].tags);
+//                        System.out.println("    chosen: " + all_fg_chunks.indexOf(ra.fg_chunks[j][i]) + ", " + ra.fg_chunks[j][i].tags);
                     }
                     if (placedTags[j][i] != null) {
                         int extra = 0;

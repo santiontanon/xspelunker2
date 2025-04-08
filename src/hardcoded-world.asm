@@ -92,8 +92,6 @@ hardcoded_area_data_2__tags:
   db TAG_BREAKABLE_WALL4, 43, 1
   db TAG_GREEN_LOCK, 33, 8
   db TAG_GEAR_LOCK, 31, 1
-  db TAG_BREAKABLE_WALL4_KEY, 43, 0
-  db TAG_BLOCK_PUZZLE_KEY3, 25, 0
   db TAG_BLUE_KEY, 32, 0
   db TAG_WHITE_CHEST, 36, 0
   db TAG_BOSS1_KEY, 59, 0
@@ -102,7 +100,7 @@ hardcoded_area_data_2__tags:
   db TAG_MAP_PIECE2, 52, 0
   db TAG_ITEM_GLOVES, 10, 0
   ; filler
-  ds 57, 0
+  ds 63, 0
 hardcoded_area_data_3__seed:
   dw #e3c4, #fb22
 hardcoded_area_data_3__id:
@@ -266,15 +264,13 @@ hardcoded_area_data_7__tags:
   db TAG_BLOCK_PUZZLE4, 16, 8
   db TAG_BUTTON_DOOR2, 10, 4
   db TAG_BREAKABLE_WALL3, 20, 1
-  db TAG_BREAKABLE_WALL3_KEY, 20, 0
-  db TAG_BLOCK_PUZZLE_KEY4, 16, 0
   db TAG_YELLOW_CHEST, 10, 0
   db TAG_BOSS4_KEY, 4, 0
   db TAG_BOSS5_KEY, 26, 0
   db TAG_WEAPON_OBSIDIAN_KNIVE, 33, 0
   db TAG_ITEM_HURAKAN, 23, 0
   ; filler
-  ds 66, 0
+  ds 72, 0
 hardcoded_area_data_8__seed:
   dw #c7fa, #4a5e
 hardcoded_area_data_8__id:
@@ -415,7 +411,6 @@ hardcoded_area_data_11__divisionIDs:
 hardcoded_area_data_11__tags:
   db TAG_BLOCK_PUZZLE2, 49, 4
   db TAG_TELEPORTER_MOON, 56, 0
-  db TAG_BLOCK_PUZZLE_KEY2, 49, 0
   db TAG_BOSS7_KEY, 41, 0
   db TAG_BOSS7_CHESTLOCK, 46, 0
   db TAG_MAP_PIECE8, 59, 0
@@ -424,7 +419,7 @@ hardcoded_area_data_11__tags:
   db TAG_ITEM_BELT, 15, 0
   db TAG_SMALL_KEY1, 43, 0
   ; filler
-  ds 66, 0
+  ds 69, 0
 hardcoded_world_data__interarea_connections:
   ; each connection is 8 bytes: areaID1, areaID2, x1, y1, direction1, x2, y2, direction2
   db 0, 1, 4, 3, 1, 14, 6, 4

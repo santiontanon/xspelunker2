@@ -75,4 +75,19 @@ public class Area {
             tags[p.x][p.y] = null;
         }
     }
+
+
+    public void removeTag(String tag)
+    {
+        for(int j = 0;j<tags.length;j++) {
+            for(int i=0;i<tags[0].length;i++) {
+                if (tags[j][i] == null) continue;
+                tags[j][i].remove(tag);
+                if (tags[j][i].isEmpty()) {
+                    tags[j][i] = null;
+                }
+            }
+        }
+    }
+    
 }
