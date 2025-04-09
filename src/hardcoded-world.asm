@@ -94,7 +94,8 @@ hardcoded_area_data_2__tags:
   db TAG_GEAR_LOCK, 31, 1
   db TAG_BLUE_KEY, 32, 0
   db TAG_WHITE_CHEST, 36, 0
-  db TAG_BOSS1_KEY, 59, 0
+;   db TAG_BOSS1_KEY, 59, 0
+  db TAG_HEART1, 59, 0
   db TAG_BOSS2_CHESTLOCK, 23, 0
   db TAG_WEAPON_MACUAHUITL, 49, 0
   db TAG_MAP_PIECE2, 52, 0

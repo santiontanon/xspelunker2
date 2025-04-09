@@ -93,7 +93,7 @@ public class GenerateTiles {
         BufferedImage sourceImage = ImageIO.read(new File(pngPath));
         List<Integer> data = new ArrayList<>();
 
-        // boss keys (0, ... ,6)
+        // boss keys (0, ..., 6)
         extratTilesOneObject(sourceImage, 16, 0, 16, 16, data);
         extratTilesOneObject(sourceImage, 32, 0, 16, 16, data);
         extratTilesOneObject(sourceImage, 48, 0, 16, 16, data);
@@ -103,7 +103,45 @@ public class GenerateTiles {
         extratTilesOneObject(sourceImage, 112, 0, 16, 16, data);
         // boss lock (7)
         extratTilesOneObject(sourceImage, 192, 48, 16, 16, data);
-        
+        // color keys (8, ..., 13)
+        extratTilesOneObject(sourceImage, 96, 16, 16, 16, data);
+        extratTilesOneObject(sourceImage, 112, 16, 16, 16, data);
+        extratTilesOneObject(sourceImage, 128, 16, 16, 16, data);
+        extratTilesOneObject(sourceImage, 144, 16, 16, 16, data);
+        extratTilesOneObject(sourceImage, 160, 16, 16, 16, data);
+        extratTilesOneObject(sourceImage, 176, 16, 16, 16, data);
+        // key items (14, 15, 16, 17):
+        extratTilesOneObject(sourceImage, 16, 16, 16, 16, data);
+        extratTilesOneObject(sourceImage, 32, 16, 16, 16, data);
+        extratTilesOneObject(sourceImage, 0, 32, 16, 16, data);
+        extratTilesOneObject(sourceImage, 48, 16, 16, 16, data);
+        // upgrade items (18, ..., 25):
+        extratTilesOneObject(sourceImage, 80, 16, 16, 16, data);
+        extratTilesOneObject(sourceImage, 80, 32, 16, 16, data);
+        extratTilesOneObject(sourceImage, 80, 48, 16, 16, data);
+        extratTilesOneObject(sourceImage, 80, 64, 16, 16, data);
+        extratTilesOneObject(sourceImage, 48, 48, 16, 16, data);
+        extratTilesOneObject(sourceImage, 80, 80, 16, 16, data);
+        extratTilesOneObject(sourceImage, 80, 96, 16, 16, data);
+        extratTilesOneObject(sourceImage, 80, 112, 16, 16, data);
+        // weapons (26, ..., 35)
+        extratTilesOneObject(sourceImage, 176, 128, 16, 16, data);
+        extratTilesOneObject(sourceImage, 96, 144, 16, 16, data);
+        extratTilesOneObject(sourceImage, 96, 160, 16, 16, data);
+        extratTilesOneObject(sourceImage, 96, 176, 16, 16, data);
+        extratTilesOneObject(sourceImage, 112, 176, 16, 16, data);
+        extratTilesOneObject(sourceImage, 144, 176, 16, 16, data);
+        extratTilesOneObject(sourceImage, 160, 176, 16, 16, data);
+        extratTilesOneObject(sourceImage, 136, 112, 16, 16, data);
+        extratTilesOneObject(sourceImage, 192, 128, 16, 16, data);
+        extratTilesOneObject(sourceImage, 136, 144, 16, 16, data);
+        // small key (36)
+        extratTilesOneObject(sourceImage, 216, 0, 16, 16, data);
+        // map piece (37)
+        extratTilesOneObject(sourceImage, 80, 128, 16, 16, data);
+        // heart (38)
+        extratTilesOneObject(sourceImage, 200, 0, 16, 16, data);
+
         Z80Assembler.dataToBinary(data, outputPath + ".bin");
         ZX0Wrapper.main(outputPath+".bin", outputPath+".zx0", true, false);
     }    

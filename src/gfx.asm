@@ -219,77 +219,83 @@ fast_small_LDIRVM_loop:
 ;-----------------------------------------------
 ; input:
 ; - hl: ptr to tiles
-; - a: megarom page where the tiles are
+; - c: megarom page where the tiles are
 setup_game_tiles:
+    ld a, (current_megarom_page_in_8000)
+    push af
+    ld a, c
+        SETMEGAROMPAGE_8000_A
+        ld de, buffer_4096
+        call dzx0
+
+        ; bank 0:
+        ld hl, buffer_4096
+        ld de, CHRTBL2 + 64*8
+        ld bc, 192*8
+        call fast_LDIRVM
+
+        ld hl, buffer_4096 + 192*8
+        ld de, CLRTBL2 + 64*8
+        ld bc, 192*8
+        call fast_LDIRVM
+
+        ; bank 1:
+        ld hl, buffer_4096
+        ld de, CHRTBL2 + 256*8 + 64*8
+        ld bc, 192*8
+        call fast_LDIRVM
+
+        ld hl, buffer_4096 + 192*8
+        ld de, CLRTBL2 + 256*8 + 64*8
+        ld bc, 192*8
+        call fast_LDIRVM
+
+        ; bank 2:
+        ld hl, buffer_4096
+        ld de, CHRTBL2 + 256*8*2 + 64*8
+        ld bc, 192*8
+        call fast_LDIRVM
+
+        ld hl, buffer_4096 + 192*8
+        ld de, CLRTBL2 + 256*8*2 + 64*8
+        ld bc, 192*8
+        call fast_LDIRVM
+
+        ; hud tiles (includes generic in-game tiles too, like coins, etc.):
+        ld hl, tiles_hud_zx0
+        ld de, buffer_4096
+        call dzx0
+
+        ld hl, buffer_4096
+        ld de, CHRTBL2
+        ld bc, 64*8
+        call fast_LDIRVM
+
+        ld hl, buffer_4096 + 64*8
+        ld de, CLRTBL2
+        ld bc, 64*8
+        call fast_LDIRVM
+
+        ld hl, buffer_4096
+        ld de, CHRTBL2 + 256*8
+        ld bc, 64*8
+        call fast_LDIRVM
+
+        ld hl, buffer_4096 + 64*8
+        ld de, CLRTBL2 + 256*8
+        ld bc, 64*8
+        call fast_LDIRVM
+
+        ld hl, buffer_4096
+        ld de, CHRTBL2 + 256*8*2
+        ld bc, 64*8
+        call fast_LDIRVM
+
+        ld hl, buffer_4096 + 64*8
+        ld de, CLRTBL2 + 256*8*2
+        ld bc, 64*8
+        call fast_LDIRVM
+    pop af
     SETMEGAROMPAGE_8000_A
-    ld de, buffer_4096
-    call dzx0
-
-    ; bank 0:
-    ld hl, buffer_4096
-    ld de, CHRTBL2 + 64*8
-    ld bc, 192*8
-    call fast_LDIRVM
-
-    ld hl, buffer_4096 + 192*8
-    ld de, CLRTBL2 + 64*8
-    ld bc, 192*8
-    call fast_LDIRVM
-
-    ; bank 1:
-    ld hl, buffer_4096
-    ld de, CHRTBL2 + 256*8 + 64*8
-    ld bc, 192*8
-    call fast_LDIRVM
-
-    ld hl, buffer_4096 + 192*8
-    ld de, CLRTBL2 + 256*8 + 64*8
-    ld bc, 192*8
-    call fast_LDIRVM
-
-    ; bank 2:
-    ld hl, buffer_4096
-    ld de, CHRTBL2 + 256*8*2 + 64*8
-    ld bc, 192*8
-    call fast_LDIRVM
-
-    ld hl, buffer_4096 + 192*8
-    ld de, CLRTBL2 + 256*8*2 + 64*8
-    ld bc, 192*8
-    call fast_LDIRVM
-
-    ; hud tiles (includes generic in-game tiles too, like coins, etc.):
-    ld hl, tiles_hud_zx0
-    ld de, buffer_4096
-    call dzx0
-
-    ld hl, buffer_4096
-    ld de, CHRTBL2
-    ld bc, 64*8
-    call fast_LDIRVM
-
-    ld hl, buffer_4096 + 64*8
-    ld de, CLRTBL2
-    ld bc, 64*8
-    call fast_LDIRVM
-
-    ld hl, buffer_4096
-    ld de, CHRTBL2 + 256*8
-    ld bc, 64*8
-    call fast_LDIRVM
-
-    ld hl, buffer_4096 + 64*8
-    ld de, CLRTBL2 + 256*8
-    ld bc, 64*8
-    call fast_LDIRVM
-
-    ld hl, buffer_4096
-    ld de, CHRTBL2 + 256*8*2
-    ld bc, 64*8
-    call fast_LDIRVM
-
-    ld hl, buffer_4096 + 64*8
-    ld de, CLRTBL2 + 256*8*2
-    ld bc, 64*8
-    jp fast_LDIRVM
+    ret
 

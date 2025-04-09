@@ -652,7 +652,7 @@ interact_with_tile_object:
 	jp (hl)
 
 object_interaction_function_ptrs:
-REPT TAG_BOSS1_KEY
+REPT TAG_RED_KEY
 	dw object_interaction_function_empty
 ENDR
 	; TAG_RED_LOCK: equ 13
@@ -676,96 +676,103 @@ ENDR
 	; TAG_TELEPORTER_ATLANTIS: equ 34
 	; TAG_TELEPORTER_MARS: equ 35
 	; TAG_TELEPORTER_MOON: equ 36
-	; TAG_RED_KEY: equ 41
-	; TAG_GREEN_KEY: equ 42
-	; TAG_BLUE_KEY: equ 43
-	; TAG_YELLOW_KEY: equ 44
-	; TAG_WHITE_KEY: equ 45
-	; TAG_PURPLE_KEY: equ 46
-	; TAG_RED_CHEST: equ 47
-	; TAG_GREEN_CHEST: equ 48
-	; TAG_BLUE_CHEST: equ 49
-	; TAG_YELLOW_CHEST: equ 50
-	; TAG_WHITE_CHEST: equ 51
-	; TAG_PURPLE_CHEST: equ 52
-	; TAG_TRIAL1_CLUE: equ 53
-	; TAG_TRIAL2_CLUE: equ 54
-	; TAG_TRIAL3_CLUE: equ 55
-	; TAG_TRIAL4_CLUE: equ 56
-	; TAG_COMBINATION1_CLUE: equ 57
-	; TAG_COMBINATION2_CLUE: equ 58
-	; TAG_COMBINATION3_CLUE: equ 59
-	; TAG_COMBINATION4_CLUE: equ 60
-	; TAG_BALL_KEY: equ 61
-	; TAG_IDOL_KEY: equ 62
-	; TAG_GEAR_KEY: equ 63
-	; TAG_ASTRONAUT_KEY: equ 64
-	dw object_interaction_function_pickup_item  ; TAG_BOSS1_KEY:
-	; TAG_BOSS1_CHESTLOCK: equ 67
-	; TAG_BOSS2_KEY: equ 69
-	; TAG_BOSS2_CHESTLOCK: equ 70
-	; TAG_BOSS3_KEY: equ 72
-	; TAG_BOSS3_CHESTLOCK: equ 73
-	; TAG_BOSS4_KEY: equ 75
-	; TAG_BOSS4_CHESTLOCK: equ 76
-	; TAG_BOSS5_KEY: equ 78
-	; TAG_BOSS5_CHESTLOCK: equ 79
-	; TAG_BOSS6_KEY: equ 81
-	; TAG_BOSS6_CHESTLOCK: equ 82
-	; TAG_BOSS7_KEY: equ 84
-	; TAG_BOSS7_CHESTLOCK: equ 85
-	; TAG_WEAPON_HAMMER: equ 86
-	; TAG_WEAPON_MACUAHUITL: equ 87
-	; TAG_WEAPON_SHIELD: equ 88
-	; TAG_WEAPON_SLING: equ 89
-	; TAG_WEAPON_BLOWGUN: equ 90
-	; TAG_WEAPON_ATLATL: equ 91
-	; TAG_WEAPON_RAYGUN: equ 92
-	; TAG_WEAPON_OBSIDIAN_KNIVE: equ 93
-	; TAG_WEAPON_FIRE_HAMMER: equ 94
-	; TAG_WEAPON_ICE_MACUAHUITL: equ 95
-	; TAG_MAP_PIECE1: equ 96
-	; TAG_MAP_PIECE2: equ 97
-	; TAG_MAP_PIECE3: equ 98
-	; TAG_MAP_PIECE4: equ 99
-	; TAG_MAP_PIECE5: equ 100
-	; TAG_MAP_PIECE6: equ 101
-	; TAG_MAP_PIECE7: equ 102
-	; TAG_MAP_PIECE8: equ 103
-	; TAG_HEART1: equ 104
-	; TAG_HEART2: equ 105
-	; TAG_HEART3: equ 106
-	; TAG_HEART4: equ 107
-	; TAG_HEART5: equ 108
-	; TAG_MAYA_RIDDLE_CLUE1: equ 109
-	; TAG_MAYA_RIDDLE_CLUE2: equ 110
-	; TAG_MAYA_RIDDLE_CLUE3: equ 111
-	; TAG_MAYA_RIDDLE_CLUE4: equ 112
-	; TAG_STORY_TRIVIA1: equ 113
-	; TAG_STORY_TRIVIA2: equ 114
-	; TAG_STORY_TRIVIA3: equ 115
-	; TAG_STORY_TRIVIA4: equ 116
-	; TAG_STORY_TRIVIA5: equ 117
-	; TAG_STORY_TRIVIA6: equ 118
-	; TAG_STORY_TRIVIA7: equ 119
-	; TAG_STORY_TRIVIA8: equ 120
-	; TAG_ITEM_SANDALS: equ 121
-	; TAG_ITEM_GLOVES: equ 122
-	; TAG_ITEM_HURAKAN: equ 123
-	; TAG_ITEM_ARMOR: equ 124
-	; TAG_ITEM_CHAAC: equ 125
-	; TAG_ITEM_SEASHELL: equ 126
-	; TAG_ITEM_BELT: equ 127
-	; TAG_ITEM_ICE_CAPE: equ 128
-	; TAG_SMALL_KEY1: equ 129
-	; TAG_SMALL_KEY2: equ 130
-	; TAG_SMALL_KEY3: equ 131
-	; TAG_SMALL_KEY4: equ 132
-	; TAG_SMALL_KEY_CHEST1: equ 133
-	; TAG_SMALL_KEY_CHEST2: equ 134
-	; TAG_SMALL_KEY_CHEST3: equ 135
-	; TAG_SMALL_KEY_CHEST4: equ 136
-	ret
+	dw object_interaction_function_pickup_item  ; TAG_RED_KEY
+	dw object_interaction_function_pickup_item  ; TAG_GREEN_KEY
+	dw object_interaction_function_pickup_item  ; TAG_BLUE_KEY
+	dw object_interaction_function_pickup_item  ; TAG_YELLOW_KEY
+	dw object_interaction_function_pickup_item  ; TAG_WHITE_KEY
+	dw object_interaction_function_pickup_item  ; TAG_PURPLE_KEY
+	dw object_interaction_function_empty  ; TAG_RED_CHEST
+	dw object_interaction_function_empty  ; TAG_GREEN_CHEST
+	dw object_interaction_function_empty  ; TAG_BLUE_CHEST
+	dw object_interaction_function_empty  ; TAG_YELLOW_CHEST
+	dw object_interaction_function_empty  ; TAG_WHITE_CHEST
+	dw object_interaction_function_empty  ; TAG_PURPLE_CHEST
+	dw object_interaction_function_empty  ; TAG_TRIAL1_CLUE
+	dw object_interaction_function_empty  ; TAG_TRIAL2_CLUE
+	dw object_interaction_function_empty  ; TAG_TRIAL3_CLUE
+	dw object_interaction_function_empty  ; TAG_TRIAL4_CLUE
+	dw object_interaction_function_empty  ; TAG_COMBINATION1_CLUE
+	dw object_interaction_function_empty  ; TAG_COMBINATION2_CLUE
+	dw object_interaction_function_empty  ; TAG_COMBINATION3_CLUE
+	dw object_interaction_function_empty  ; TAG_COMBINATION4_CLUE
+	dw object_interaction_function_pickup_item  ; TAG_BALL_KEY
+	dw object_interaction_function_pickup_item  ; TAG_IDOL_KEY
+	dw object_interaction_function_pickup_item  ; TAG_GEAR_KEY
+	dw object_interaction_function_pickup_item  ; TAG_ASTRONAUT_KEY
+	dw object_interaction_function_empty  ; TAG_BOSS1
+	dw object_interaction_function_pickup_item  ; TAG_BOSS1_KEY
+	dw object_interaction_function_empty  ; TAG_BOSS1_CHESTLOCK
+	dw object_interaction_function_empty  ; TAG_BOSS2
+	dw object_interaction_function_pickup_item  ; TAG_BOSS2_KEY
+	dw object_interaction_function_empty  ; TAG_BOSS2_CHESTLOCK
+	dw object_interaction_function_empty  ; TAG_BOSS3
+	dw object_interaction_function_pickup_item  ; TAG_BOSS3_KEY
+	dw object_interaction_function_empty  ; TAG_BOSS3_CHESTLOCK
+	dw object_interaction_function_empty  ; TAG_BOSS4
+	dw object_interaction_function_pickup_item  ; TAG_BOSS4_KEY
+	dw object_interaction_function_empty  ; TAG_BOSS4_CHESTLOCK
+	dw object_interaction_function_empty  ; TAG_BOSS5
+	dw object_interaction_function_pickup_item  ; TAG_BOSS5_KEY
+	dw object_interaction_function_empty  ; TAG_BOSS5_CHESTLOCK
+	dw object_interaction_function_empty  ; TAG_BOSS6
+	dw object_interaction_function_pickup_item  ; TAG_BOSS6_KEY
+	dw object_interaction_function_empty  ; TAG_BOSS6_CHESTLOCK
+	dw object_interaction_function_empty  ; TAG_BOSS7
+	dw object_interaction_function_pickup_item  ; TAG_BOSS7_KEY
+	dw object_interaction_function_empty  ; TAG_BOSS7_CHESTLOCK
+	dw object_interaction_function_pickup_weapon  ; TAG_WEAPON_HAMMER
+	dw object_interaction_function_pickup_weapon  ; TAG_WEAPON_MACUAHUITL
+	dw object_interaction_function_pickup_weapon  ; TAG_WEAPON_SHIELD
+	dw object_interaction_function_pickup_weapon  ; TAG_WEAPON_SLING
+	dw object_interaction_function_pickup_weapon  ; TAG_WEAPON_BLOWGUN
+	dw object_interaction_function_pickup_weapon  ; TAG_WEAPON_ATLATL
+	dw object_interaction_function_pickup_weapon  ; TAG_WEAPON_RAYGUN
+	dw object_interaction_function_pickup_weapon  ; TAG_WEAPON_OBSIDIAN_KNIVE
+	dw object_interaction_function_pickup_weapon  ; TAG_WEAPON_FIRE_HAMMER
+	dw object_interaction_function_pickup_weapon  ; TAG_WEAPON_ICE_MACUAHUITL
+	dw object_interaction_function_pickup_map_piece  ; TAG_MAP_PIECE1
+	dw object_interaction_function_pickup_map_piece  ; TAG_MAP_PIECE2
+	dw object_interaction_function_pickup_map_piece  ; TAG_MAP_PIECE3
+	dw object_interaction_function_pickup_map_piece  ; TAG_MAP_PIECE4
+	dw object_interaction_function_pickup_map_piece  ; TAG_MAP_PIECE5
+	dw object_interaction_function_pickup_map_piece  ; TAG_MAP_PIECE6
+	dw object_interaction_function_pickup_map_piece  ; TAG_MAP_PIECE7
+	dw object_interaction_function_pickup_map_piece  ; TAG_MAP_PIECE8
+	dw object_interaction_function_pickup_heart  ; TAG_HEART1
+	dw object_interaction_function_pickup_heart  ; TAG_HEART2
+	dw object_interaction_function_pickup_heart  ; TAG_HEART3
+	dw object_interaction_function_pickup_heart  ; TAG_HEART4
+	dw object_interaction_function_pickup_heart  ; TAG_HEART5
+	dw object_interaction_function_empty  ; TAG_MAYA_RIDDLE_CLUE1
+	dw object_interaction_function_empty  ; TAG_MAYA_RIDDLE_CLUE2
+	dw object_interaction_function_empty  ; TAG_MAYA_RIDDLE_CLUE3
+	dw object_interaction_function_empty  ; TAG_MAYA_RIDDLE_CLUE4
+	dw object_interaction_function_empty  ; TAG_STORY_TRIVIA1
+	dw object_interaction_function_empty  ; TAG_STORY_TRIVIA2
+	dw object_interaction_function_empty  ; TAG_STORY_TRIVIA3
+	dw object_interaction_function_empty  ; TAG_STORY_TRIVIA4
+	dw object_interaction_function_empty  ; TAG_STORY_TRIVIA5
+	dw object_interaction_function_empty  ; TAG_STORY_TRIVIA6
+	dw object_interaction_function_empty  ; TAG_STORY_TRIVIA7
+	dw object_interaction_function_empty  ; TAG_STORY_TRIVIA8
+	dw object_interaction_function_pickup_item  ; TAG_ITEM_SANDALS
+	dw object_interaction_function_pickup_item  ; TAG_ITEM_GLOVES
+	dw object_interaction_function_pickup_item  ; TAG_ITEM_HURAKAN
+	dw object_interaction_function_pickup_item  ; TAG_ITEM_ARMOR
+	dw object_interaction_function_pickup_item  ; TAG_ITEM_CHAAC
+	dw object_interaction_function_pickup_item  ; TAG_ITEM_SEASHELL
+	dw object_interaction_function_pickup_item  ; TAG_ITEM_BELT
+	dw object_interaction_function_pickup_item  ; TAG_ITEM_ICE_CAPE
+	dw object_interaction_function_pickup_small_key  ; TAG_SMALL_KEY1
+	dw object_interaction_function_pickup_small_key  ; TAG_SMALL_KEY2
+	dw object_interaction_function_pickup_small_key  ; TAG_SMALL_KEY3
+	dw object_interaction_function_pickup_small_key  ; TAG_SMALL_KEY4
+	dw object_interaction_function_empty  ; TAG_SMALL_KEY_CHEST1
+	dw object_interaction_function_empty  ; TAG_SMALL_KEY_CHEST2
+	dw object_interaction_function_empty  ; TAG_SMALL_KEY_CHEST3
+	dw object_interaction_function_empty  ; TAG_SMALL_KEY_CHEST4
+
 
 object_interaction_inventory_slot:
 	db #ff, #ff, #ff, #ff, #ff  ; none, block puzzles
@@ -777,11 +784,11 @@ object_interaction_inventory_slot:
 	db #ff, #ff, #ff, #ff  ; special locks
 	db #ff, #ff, #ff, #ff, #ff, #ff  ; start, ending, midpoint, teleporters
 	db #ff, #ff, #ff, #ff  ; buttons
-	db 15, 16, 17, 18, 19, 20  ; color keys
+	db 14, 15, 16, 17, 18, 19  ; color keys
 	db #ff, #ff, #ff, #ff, #ff, #ff  ; color chests
 	db #ff, #ff, #ff, #ff  ; trial clues
 	db #ff, #ff, #ff, #ff  ; combination clues
-	db 21, 22, 23, 24  ; key items
+	db 20, 21, 22, 23  ; key items
 	db #ff, 0, #ff  ; boss1
 	db #ff, 1, #ff  ; boss2
 	db #ff, 2, #ff  ; boss3
@@ -789,15 +796,15 @@ object_interaction_inventory_slot:
 	db #ff, 4, #ff  ; boss5
 	db #ff, 5, #ff  ; boss6
 	db #ff, 6, #ff  ; boss7
-	db 1 + 128, 2 + 128, 3 + 128  ; weapons
-	db 4 + 128, 5 + 128, 6 + 128, 7 + 128  ; ranged weapons
-	db 8 + 128, 9 + 128, 10 + 128  ; upgraded weapons
+	db 1, 2, 3  ; weapons
+	db 4, 5, 6, 7  ; ranged weapons
+	db 8, 9, 10  ; upgraded weapons
 	db #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff  ; map pieces
 	db #ff, #ff, #ff, #ff, #ff  ; hearts
 	db #ff, #ff, #ff, #ff  ; riddle clues
 	db #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff  ; story trivia
-	db 25, 26, 27, 28, 29, 30  ; maya upgrade items
-	db 31, 32  ; alien upgrade items
+	db 24, 25, 26, 27, 28, 29  ; maya upgrade items
+	db 30, 31  ; alien upgrade items
 	db #ff, #ff, #ff, #ff  ; small keys
 	db #ff, #ff, #ff, #ff  ; small key chests
 
@@ -809,9 +816,6 @@ object_interaction_function_empty:
 
 ;-----------------------------------------------
 object_interaction_function_pickup_item:
-	ld hl, SFX_item_pickup
-	call play_SFX_with_high_priority
-
 	; add to inventory:
 	ld hl, object_interaction_inventory_slot
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
@@ -825,6 +829,12 @@ object_interaction_function_pickup_item:
 	ADD_HL_A	
 	ld (hl), 1
 
+object_interaction_function_pickup_weapon_continue:
+object_interaction_function_pickup_small_key_continue:
+	ld hl, SFX_item_pickup
+	call play_SFX_with_high_priority
+
+object_interaction_function_pickup_heart_continue:
 	; mark as taken:
 	ld hl, global_state__objects
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
@@ -842,6 +852,81 @@ object_interaction_function_pickup_item:
 
 
 ;-----------------------------------------------
+object_interaction_function_pickup_weapon:
+	; add to inventory:
+	ld hl, object_interaction_inventory_slot
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	ADD_HL_A
+	ld a, (hl)
+	cp N_INVENTORY_WEAPON_TYPES
+	ret nc  ; should never happen
+
+	; add to inventory:
+	ld hl, player_inventory_weapons
+	ld b, 0
+	ld c, a
+	add hl, bc
+	ld (hl), 1
+
+	; add some small amount of ammo:
+	sub 4
+	jr c, object_interaction_function_pickup_weapon_continue
+	cp 4
+	jr nc, object_interaction_function_pickup_weapon_continue
+	ld hl, player_inventory_weapon_ammo
+	ld c, a
+	add hl, bc
+	ld (hl), 5
+
+	jr object_interaction_function_pickup_weapon_continue
+
+
+;-----------------------------------------------
+object_interaction_function_pickup_small_key:
+	ld hl, player_inventory_n_small_keys
+	inc (hl)
+	jr object_interaction_function_pickup_small_key_continue
+
+
+;-----------------------------------------------
+object_interaction_function_pickup_map_piece:
+	ld hl, SFX_item_pickup
+	call play_SFX_with_high_priority
+
+	ld hl, player_inventory_map_pieces
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	sub (TAG_MAP_PIECE1 - 1)
+	ADD_HL_A
+	ld (hl), 1
+
+	ld de, TEXT_MAP_PIECE_PICKUP
+	jr object_interaction_function_pickup_map_piece_continue
+
+
+;-----------------------------------------------
+object_interaction_function_pickup_heart:
+	ld hl, SFX_item_pickup
+	call play_SFX_with_high_priority
+
+	ld a, (player_max_health)
+	add a, 4
+	ld (player_max_health), a
+	ld (player_health), a
+
+	call draw_room_with_hud  ; update the hud just to show the updated health
+
+	ld de, TEXT_HEART_PICKUP
+object_interaction_function_pickup_map_piece_continue:
+	ld hl, display_in_game_message
+	ld c, TEXT_PAGE
+	push ix
+		call call_hl_in_page_c_8000
+	pop ix
+
+	jp object_interaction_function_pickup_heart_continue
+
+
+;-----------------------------------------------
 ; types:
 ; - 0: save background, then render
 ; - 1: render directly
@@ -853,14 +938,101 @@ endm
 
 
 tile_object_gfx_table:
-REPT TAG_BOSS1_KEY  ; add filler
+REPT TAG_RED_KEY  ; add filler
 	TILE_OBJECT_DATA 2, 0, 0, 0
 ENDR
-	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx
-REPT TAG_PUSHABLE_BLOCK - (TAG_BOSS1_KEY + 1)  ; add filler
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_RED_KEY
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_GREEN_KEY
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_BLUE_KEY
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_YELLOW_KEY
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_WHITE_KEY
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_PURPLE_KEY
+REPT TAG_BALL_KEY - TAG_RED_CHEST   ; add filler
 	TILE_OBJECT_DATA 2, 0, 0, 0
 ENDR
-	TILE_OBJECT_DATA 0, 2, 2, tile_object_pushable_block_gfx
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_BALL_KEY
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_IDOL_KEY
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_GEAR_KEY
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ASTRONAUT_KEY
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_BOSS1
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_BOSS1_KEY
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_BOSS1_CHESTLOCK
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_BOSS2
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_BOSS2_KEY
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_BOSS2_CHESTLOCK
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_BOSS3
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_BOSS3_KEY
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_BOSS3_CHESTLOCK
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_BOSS4
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_BOSS4_KEY
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_BOSS4_CHESTLOCK
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_BOSS5
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_BOSS5_KEY
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_BOSS5_CHESTLOCK
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_BOSS6
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_BOSS6_KEY
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_BOSS6_CHESTLOCK
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_BOSS7
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_BOSS7_KEY
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_BOSS7_CHESTLOCK
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_WEAPON_HAMMER
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_WEAPON_MACUAHUITL
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_WEAPON_SHIELD
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_WEAPON_SLING
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_WEAPON_BLOWGUN
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_WEAPON_ATLATL
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_WEAPON_RAYGUN
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_WEAPON_OBSIDIAN_KNIVE
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_WEAPON_FIRE_HAMMER
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_WEAPON_ICE_MACUAHUITL
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_MAP_PIECE1
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_MAP_PIECE2
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_MAP_PIECE3
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_MAP_PIECE4
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_MAP_PIECE5
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_MAP_PIECE6
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_MAP_PIECE7
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_MAP_PIECE8
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_HEART1
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_HEART2
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_HEART3
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_HEART4
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_HEART5
+REPT TAG_ITEM_SANDALS - TAG_MAYA_RIDDLE_CLUE1  ; add filler
+	TILE_OBJECT_DATA 2, 0, 0, 0
+ENDR
+; TAG_MAYA_RIDDLE_CLUE1: equ 109
+; TAG_MAYA_RIDDLE_CLUE2: equ 110
+; TAG_MAYA_RIDDLE_CLUE3: equ 111
+; TAG_MAYA_RIDDLE_CLUE4: equ 112
+; TAG_STORY_TRIVIA1: equ 113
+; TAG_STORY_TRIVIA2: equ 114
+; TAG_STORY_TRIVIA3: equ 115
+; TAG_STORY_TRIVIA4: equ 116
+; TAG_STORY_TRIVIA5: equ 117
+; TAG_STORY_TRIVIA6: equ 118
+; TAG_STORY_TRIVIA7: equ 119
+; TAG_STORY_TRIVIA8: equ 120
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ITEM_SANDALS
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ITEM_GLOVES
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ITEM_HURAKAN
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ITEM_ARMOR
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ITEM_CHAAC
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ITEM_SEASHELL
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ITEM_BELT
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ITEM_ICE_CAPE
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_SMALL_KEY1
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_SMALL_KEY2
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_SMALL_KEY3
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_SMALL_KEY4
+REPT TAG_PUSHABLE_BLOCK - TAG_SMALL_KEY_CHEST1  ; add filler
+	TILE_OBJECT_DATA 2, 0, 0, 0
+ENDR
+; TAG_SMALL_KEY_CHEST1: equ 133
+; TAG_SMALL_KEY_CHEST2: equ 134
+; TAG_SMALL_KEY_CHEST3: equ 135
+; TAG_SMALL_KEY_CHEST4: equ 136	
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_pushable_block_gfx  ; TAG_PUSHABLE_BLOCK
 
 tile_object_regular_object_gfx:
 	db FIRST_ITEM_TILE, FIRST_ITEM_TILE+1, FIRST_ITEM_TILE+2, FIRST_ITEM_TILE+3

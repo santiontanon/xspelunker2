@@ -382,8 +382,8 @@ config_keyboard_rom:
 	db 8, #40  ; down: down
 	db 8, #20  ; up: up
 	db 8, #10  ; left: left
-	db 5, #80  ; interact: z
-	db 5, #20  ; inventory: x
+	db 5, #20  ; interact: x
+	db 5, #80  ; inventory: z
 	db 3, #01  ; jump: c
 	db 8, #01  ; weapon: space
 

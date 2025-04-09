@@ -1,21 +1,18 @@
 to do:
 
-***- spawn and draw items in the game
-  ***- interact key from crouching/walking/crawling
-  ***- down key if option is configured (from teh same states)
-  ***- spawn the other color keys
-  ***- spawn small keys (and pick them up)
-    ***- visualize small keys in the hud/inventory (up to a limit, and then don't draw more)
-  ***- spawn the cog, etc. keys
-  ***- spawn weapons (and pick them up)
-  ***- spawn optional items (and pick them up, gain ammo, life, coins, etc.)
-  ***- any other pick-up-able item left?
+***- small chests:
+  ***- spawn them
+  ***- open them with small keys (they get replaced by the item inside). Might need "chest content" array (colored chests, and small chests):
+    ***- when interacting with them, if you don't have the key, message stating that
+      ***- for messages, draw a horizontal line above and below the message, to make it look nicer
+    ***- if you do, lose the key, and open the chest
+  ***- maintain this in the global state (leaving the room and cominb back in should show the item)
+  ***- pickup the item and maintain that in the global state too (global chest state: closed, open, picked-up)
 
 - being able to complete the game in assembler:
-  - spawn and open small chests with small keys (maintain global chest state: closed, open, picked-up)
-  - spawn and open chests with keys
+  - spawn and open chests with colored keys
   - render doors (and be blocked by them)
-  - use keys in locks to open doors
+  - use keys in locks to open doors (including gear, ball, etc.)
   - press buttons to open doors
   - combination clues (how to interact with clues? crouch? up?) [not all are readable yet, maya clues/story are only readable after 2nd piece put in calendar stone]
   - interact with combination levers (hit them to change their state)
@@ -49,6 +46,7 @@ to do:
   - enemy spawn (remember never to have them in room edges, so that you cannot spawn on top of one)
   - kill enemies and get hurt by them
   - design all the enemies on the pyramid biome and spawn them
+  - spawn optional items when killing them (and pick them up, gain ammo, life, coins, etc.)
 
 - when using the "map" item in the inventory, display an overall map, with all the pieces you have currently collected (and some clues in the form of maya writing that appear in the pieces)
 

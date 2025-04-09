@@ -225,7 +225,10 @@ public class Text {
         addLineSafe(lines_with_constant, "The second letter from Elaine. Press FIRE to read it.", "ITEM_LETTER2", 80);
         addLineSafe(lines_with_constant, "The third letter from Elaine. Press FIRE to read it.", "ITEM_LETTER3", 80);
         addLineSafe(lines_with_constant, "Map: a map of the ruins that I have been composing as I find pieces of it. Press FIRE to examine it.", "ITEM_MAP", 80);
-        
+       
+        // In-game messages:
+        addLineSafe(lines_with_constant, "As you consume the still beating heart, you feel your strength increasing!", "HEART_PICKUP", 112);
+        addLineSafe(lines_with_constant, "One more piece of the map!", "MAP_PIECE_PICKUP", 112);
         
         List<Integer> numbers = font.convertStringToAssembler("0123456789 ");
         System.out.println("Numbers: " + numbers);

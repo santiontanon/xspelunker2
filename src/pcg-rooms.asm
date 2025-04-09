@@ -1146,7 +1146,7 @@ area_object_offset_to_x_y_in_chunks_loop_done:
 
 ;-----------------------------------------------
 object_tiles_start_ptrs:
-REPT TAG_BOSS1
+REPT TAG_RED_KEY
 	dw buffer_4096 + 0 * 64
 ENDR
 ; TAG_NONE: equ 0
@@ -1190,12 +1190,15 @@ ENDR
 ; TAG_BUTTON2: equ 38
 ; TAG_BUTTON3: equ 39
 ; TAG_BUTTON4: equ 40
-; TAG_RED_KEY: equ 49
-; TAG_GREEN_KEY: equ 50
-; TAG_BLUE_KEY: equ 51
-; TAG_YELLOW_KEY: equ 52
-; TAG_WHITE_KEY: equ 53
-; TAG_PURPLE_KEY: equ 54
+	dw buffer_4096 + 8 * 64  ; TAG_RED_KEY
+	dw buffer_4096 + 9 * 64  ; TAG_GREEN_KEY
+	dw buffer_4096 + 10 * 64  ; TAG_BLUE_KEY
+	dw buffer_4096 + 11 * 64  ; TAG_YELLOW_KEY
+	dw buffer_4096 + 12 * 64  ; TAG_WHITE_KEY
+	dw buffer_4096 + 13 * 64  ; TAG_PURPLE_KEY
+REPT TAG_BALL_KEY - TAG_RED_CHEST
+	dw buffer_4096 + 0 * 64
+ENDR
 ; TAG_RED_CHEST: equ 55
 ; TAG_GREEN_CHEST: equ 56
 ; TAG_BLUE_CHEST: equ 57
@@ -1210,10 +1213,10 @@ ENDR
 ; TAG_COMBINATION2_CLUE: equ 66
 ; TAG_COMBINATION3_CLUE: equ 67
 ; TAG_COMBINATION4_CLUE: equ 68
-; TAG_BALL_KEY: equ 69
-; TAG_IDOL_KEY: equ 70
-; TAG_GEAR_KEY: equ 71
-; TAG_ASTRONAUT_KEY: equ 72
+	dw buffer_4096 + 14 * 64  ; TAG_BALL_KEY
+	dw buffer_4096 + 15 * 64  ; TAG_IDOL_KEY
+	dw buffer_4096 + 16 * 64  ; TAG_GEAR_KEY
+	dw buffer_4096 + 17 * 64  ; TAG_ASTRONAUT_KEY
 	dw buffer_4096  ; TAG_BOSS1
 	dw buffer_4096 + 0 * 64  ; TAG_BOSS1_KEY
 	dw buffer_4096 + 7 * 64  ; TAG_BOSS1_CHESTLOCK
@@ -1235,29 +1238,31 @@ ENDR
 	dw buffer_4096  ; TAG_BOSS7
 	dw buffer_4096 + 6 * 64  ; TAG_BOSS7_KEY
 	dw buffer_4096 + 7 * 64  ; TAG_BOSS7_CHESTLOCK
-; TAG_WEAPON_HAMMER: equ 94
-; TAG_WEAPON_MACUAHUITL: equ 95
-; TAG_WEAPON_SHIELD: equ 96
-; TAG_WEAPON_SLING: equ 97
-; TAG_WEAPON_BLOWGUN: equ 98
-; TAG_WEAPON_ATLATL: equ 99
-; TAG_WEAPON_RAYGUN: equ 100
-; TAG_WEAPON_OBSIDIAN_KNIVE: equ 101
-; TAG_WEAPON_FIRE_HAMMER: equ 102
-; TAG_WEAPON_ICE_MACUAHUITL: equ 103
-; TAG_MAP_PIECE1: equ 104
-; TAG_MAP_PIECE2: equ 105
-; TAG_MAP_PIECE3: equ 106
-; TAG_MAP_PIECE4: equ 107
-; TAG_MAP_PIECE5: equ 108
-; TAG_MAP_PIECE6: equ 109
-; TAG_MAP_PIECE7: equ 110
-; TAG_MAP_PIECE8: equ 111
-; TAG_HEART1: equ 112
-; TAG_HEART2: equ 113
-; TAG_HEART3: equ 114
-; TAG_HEART4: equ 115
-; TAG_HEART5: equ 116
+	dw buffer_4096 + 26 * 64  ; TAG_WEAPON_HAMMER
+	dw buffer_4096 + 27 * 64  ; TAG_WEAPON_MACUAHUITL
+	dw buffer_4096 + 28 * 64  ; TAG_WEAPON_SHIELD
+	dw buffer_4096 + 29 * 64  ; TAG_WEAPON_SLING
+	dw buffer_4096 + 30 * 64  ; TAG_WEAPON_BLOWGUN
+	dw buffer_4096 + 31 * 64  ; TAG_WEAPON_ATLATL
+	dw buffer_4096 + 32 * 64  ; TAG_WEAPON_RAYGUN
+	dw buffer_4096 + 33 * 64  ; TAG_WEAPON_OBSIDIAN_KNIVE
+	dw buffer_4096 + 34 * 64  ; TAG_WEAPON_FIRE_HAMMER
+	dw buffer_4096 + 35 * 64  ; TAG_WEAPON_ICE_MACUAHUITL
+	dw buffer_4096 + 37 * 64  ; TAG_MAP_PIECE1
+	dw buffer_4096 + 37 * 64  ; TAG_MAP_PIECE2
+	dw buffer_4096 + 37 * 64  ; TAG_MAP_PIECE3
+	dw buffer_4096 + 37 * 64  ; TAG_MAP_PIECE4
+	dw buffer_4096 + 37 * 64  ; TAG_MAP_PIECE5
+	dw buffer_4096 + 37 * 64  ; TAG_MAP_PIECE6
+	dw buffer_4096 + 37 * 64  ; TAG_MAP_PIECE7
+	dw buffer_4096 + 37 * 64  ; TAG_MAP_PIECE8
+	dw buffer_4096 + 38 * 64  ; TAG_HEART1
+	dw buffer_4096 + 38 * 64  ; TAG_HEART2
+	dw buffer_4096 + 38 * 64  ; TAG_HEART3
+	dw buffer_4096 + 38 * 64  ; TAG_HEART4
+REPT TAG_ITEM_SANDALS - TAG_MAYA_RIDDLE_CLUE1
+	dw buffer_4096
+ENDR
 ; TAG_MAYA_RIDDLE_CLUE1: equ 117
 ; TAG_MAYA_RIDDLE_CLUE2: equ 118
 ; TAG_MAYA_RIDDLE_CLUE3: equ 119
@@ -1270,18 +1275,21 @@ ENDR
 ; TAG_STORY_TRIVIA6: equ 126
 ; TAG_STORY_TRIVIA7: equ 127
 ; TAG_STORY_TRIVIA8: equ 128
-; TAG_ITEM_SANDALS: equ 129
-; TAG_ITEM_GLOVES: equ 130
-; TAG_ITEM_HURAKAN: equ 131
-; TAG_ITEM_ARMOR: equ 132
-; TAG_ITEM_CHAAC: equ 133
-; TAG_ITEM_SEASHELL: equ 134
-; TAG_ITEM_BELT: equ 135
-; TAG_ITEM_ICE_CAPE: equ 136
-; TAG_SMALL_KEY1: equ 137
-; TAG_SMALL_KEY2: equ 138
-; TAG_SMALL_KEY3: equ 139
-; TAG_SMALL_KEY4: equ 140
+	dw buffer_4096 + 18 * 64  ; TAG_ITEM_SANDALS
+	dw buffer_4096 + 19 * 64  ; TAG_ITEM_GLOVES
+	dw buffer_4096 + 20 * 64  ; TAG_ITEM_HURAKAN
+	dw buffer_4096 + 21 * 64  ; TAG_ITEM_ARMOR
+	dw buffer_4096 + 22 * 64  ; TAG_ITEM_CHAAC
+	dw buffer_4096 + 23 * 64  ; TAG_ITEM_SEASHELL
+	dw buffer_4096 + 24 * 64  ; TAG_ITEM_BELT
+	dw buffer_4096 + 25 * 64  ; TAG_ITEM_ICE_CAPE
+	dw buffer_4096 + 36 * 64  ; TAG_SMALL_KEY1
+	dw buffer_4096 + 36 * 64  ; TAG_SMALL_KEY2
+	dw buffer_4096 + 36 * 64  ; TAG_SMALL_KEY3
+	dw buffer_4096 + 36 * 64  ; TAG_SMALL_KEY4
+REPT N_UNIQUE_TAGS - TAG_SMALL_KEY1
+	dw buffer_4096
+ENDR
 ; TAG_SMALL_KEY_CHEST1: equ 141
 ; TAG_SMALL_KEY_CHEST2: equ 142
 ; TAG_SMALL_KEY_CHEST3: equ 143

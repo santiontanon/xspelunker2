@@ -77,25 +77,25 @@ state_play:
 ; 		ld (player_inventory_items+32), a
 ; 		ld (player_inventory_items+33), a
 ; 		ld (player_inventory_items+34), a
-		ld (player_inventory_items+35), a
+		ld (player_inventory_items+35), a  ; map
 		ld (player_inventory_weapons), a
-		ld (player_inventory_weapons+1), a
-		ld (player_inventory_weapons+2), a
-		ld (player_inventory_weapons+3), a
-		ld (player_inventory_weapons+4), a
-		ld (player_inventory_weapons+5), a
-		ld (player_inventory_weapons+6), a
-		ld (player_inventory_weapons+7), a
+; 		ld (player_inventory_weapons+1), a
+; 		ld (player_inventory_weapons+2), a
+; 		ld (player_inventory_weapons+3), a
+; 		ld (player_inventory_weapons+4), a
+; 		ld (player_inventory_weapons+5), a
+; 		ld (player_inventory_weapons+6), a
+; 		ld (player_inventory_weapons+7), a
 ; 		ld (player_inventory_weapons+8), a
 ; 		ld (player_inventory_weapons+9), a
 ; 		ld (player_inventory_weapons+10), a
 ; 		ld a, 123
 ; 		ld (player_inventory_coins), a
-		ld a, 25
-		ld (player_inventory_weapon_ammo), a
-		ld (player_inventory_weapon_ammo + 1), a
-		ld (player_inventory_weapon_ammo + 2), a
-		ld (player_inventory_weapon_ammo + 3), a
+; 		ld a, 25
+; 		ld (player_inventory_weapon_ammo), a
+; 		ld (player_inventory_weapon_ammo + 1), a
+; 		ld (player_inventory_weapon_ammo + 2), a
+; 		ld (player_inventory_weapon_ammo + 3), a
 
 		ld a, PLAYER_INITIAL_MAX_HEALTH
 		ld hl, player_health
@@ -131,7 +131,7 @@ state_play_from_inventory__no_full_hud:
 		call fast_LDIRVM
 
 		; setup tiles:
-		ld a, TILES_PAGE
+		ld c, TILES_PAGE
 		ld hl, tiles_pyramid_zx0
 		call setup_game_tiles
 		call state_play_upload_object_tiles_to_vdp_if_necessary

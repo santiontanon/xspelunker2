@@ -347,6 +347,11 @@ player_update_state_walking_no_rope:
 	bit KEY_JUMP_BIT, a
 	jp nz, player_update_switch_to_jumping
 
+	; check for interact:
+	ld a, (keyboard_clicks)
+	bit KEY_INTERACT_BIT, a
+	call nz, player_update_interact
+
 	; check for idle:
 	ld a, (keyboard_state)
 	bit KEY_RIGHT_BIT, a
@@ -370,7 +375,6 @@ player_update_state_walking_right:
 	; collision: check if player is pushing a block:
 	call player_pushing_right
 	jr player_update_state_walking_continue
-
 
 player_update_state_walking_left:
 	; check for crawling:
@@ -622,6 +626,11 @@ player_update_stop_jumping:
 
 ;-----------------------------------------------
 player_update_switch_to_crouching:
+	; check for interact:
+	ld a, (config_interact_with_down)
+	or a
+	call z, player_update_interact
+
 	; recenter scroll:
 	call maybe_recenter_scroll_recenter_x
 	call maybe_recenter_scroll_recenter_y
@@ -654,13 +663,18 @@ player_update_state_crouching_no_combo_for_inventory:
 	; check for crawl:
 	ld a, (keyboard_state)
 	bit KEY_RIGHT_BIT, a
-	jr z, player_update_switch_to_crawling_right
+	jr z, player_update_switch_to_crawling_right_from_crouching
 	bit KEY_LEFT_BIT, a
-	jr z, player_update_switch_to_crawling_left
+	jr z, player_update_switch_to_crawling_left_from_crouching
 
 	; check for falling:
 	call player_check_collision_down_inc
 	jp nz, player_update_switch_to_falling
+
+	; check for interact:
+	ld a, (keyboard_clicks)
+	bit KEY_INTERACT_BIT, a
+	call nz, player_update_interact
 
 	; check for idle:
 	ld a, (keyboard_state)
@@ -685,11 +699,21 @@ player_update_state_crouching_no_down:
 
 ;-----------------------------------------------
 player_update_switch_to_crawling_left:
+	; check for interact:
+	ld a, (config_interact_with_down)
+	or a
+	call z, player_update_interact
+player_update_switch_to_crawling_left_from_crouching:
 	ld a, PLAYER_STATE_CRAWLING + 1
 	ld (player_state), a
 	jp player_update_state_crawling
 
 player_update_switch_to_crawling_right:
+	; check for interact:
+	ld a, (config_interact_with_down)
+	or a
+	call z, player_update_interact
+player_update_switch_to_crawling_right_from_crouching:
 	ld a, PLAYER_STATE_CRAWLING
 	ld (player_state), a
 
@@ -707,6 +731,11 @@ player_update_state_crawling:
 	jp state_inventory
 player_update_state_crawling_no_inventory:
 	
+	; check for interact:
+	ld a, (keyboard_clicks)
+	bit KEY_INTERACT_BIT, a
+	call nz, player_update_interact
+
 	; check for crouch:
 	ld a, (keyboard_state)
 	bit KEY_RIGHT_BIT, a

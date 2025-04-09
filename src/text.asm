@@ -245,3 +245,73 @@ draw_font_character_loop_no_next_tile:
     djnz draw_font_character_loop
     ret
 
+
+; ------------------------------------------------
+; Calculates the maximum length that can be rendered without overflowing iyl pixels.
+; Only "spaces" are considered as possible splits
+; input:
+; - hl: sentence
+; - iyl: max pixels in the line
+; output:
+; - a: number of characters that can be drawn
+max_length_of_sentence_in_one_line:
+    ld ixl, 0  ; best found so far
+    ld ixh, 0  ; current character
+    ld b, (hl)  ; get the sentence length
+    inc hl
+    xor a  ; pixels drawn
+    ld d, 0
+max_length_of_sentence_in_one_line_loop:
+    ld e, (hl)
+    ex af, af'
+        ld a, e
+        or a  ; is it a space?
+        jr nz, max_length_of_sentence_in_one_line_no_space
+        ld a, ixh
+        inc a  ; we increase it in one to skip the space
+        ld ixl, a
+max_length_of_sentence_in_one_line_no_space:
+    ex af, af'
+    inc ixh
+    push hl
+        ld hl, font_bin
+        add hl, de
+        add hl, de
+        add hl, de   ; index of the letter is a*3
+        add a, (hl)   ; letter width in pixels
+    pop hl
+    inc hl  ; does not modify the flags
+    cp iyl
+    jr nc, max_length_of_sentence_in_one_line_limit_reached
+    djnz max_length_of_sentence_in_one_line_loop
+    ld a, ixh
+    ret
+max_length_of_sentence_in_one_line_limit_reached:
+    ld a, ixl
+    ret
+
+
+; ------------------------------------------------
+; Calculates the width of a text string
+; Only "spaces" are considered as possible splits
+; input:
+; - hl: sentence
+; output:
+; - a: sentence width (assuming it's < 256)
+text_string_width:
+    ld d, 0
+    ld b, (hl)  ; get the sentence length
+    inc hl
+    xor a  ; pixels drawn
+text_string_width_loop:
+    ld e, (hl)
+    push hl
+        ld hl, font_bin
+        add hl, de
+        add hl, de
+        add hl, de   ; index of the letter is a*3
+        add a, (hl)   ; letter width in pixels
+    pop hl
+    inc hl  ; does not modify the flags
+    djnz text_string_width_loop
+    ret

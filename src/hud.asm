@@ -8,6 +8,10 @@ draw_hud_minimal:
 	call draw_hud_coins
 
 	ld hl, (tmp_hud_drawing_hl)
+	ld de, (tmp_hud_drawing_de)
+	call draw_hud_small_keys
+
+	ld hl, (tmp_hud_drawing_hl)
 	call draw_hud_oxygen
 
 	ld hl, (tmp_hud_drawing_hl)
@@ -36,6 +40,10 @@ draw_hud_full:
 	ld hl, buffer_4096 + 32
 	ld de, 0
 	call draw_hud_coins
+
+	ld hl, buffer_4096 + 32
+	ld de, 0
+	call draw_hud_small_keys
 
 	ld hl, buffer_4096 + 64 + 4
 	call draw_hud_oxygen_always
@@ -121,6 +129,21 @@ draw_hud_coins_no_rerender:
 	inc hl
 	ld (hl), 12
 	ret
+
+
+;-----------------------------------------------
+draw_hud_small_keys:
+	add hl, de
+	ld bc, 32 + 5
+	add hl, bc
+	ld a, (player_inventory_n_small_keys)
+draw_hud_small_keys_loop:
+	or a
+	ret z
+	ld (hl), 22  ; key tile
+	inc hl
+	dec a
+	jr draw_hud_small_keys_loop
 
 
 ;-----------------------------------------------
@@ -228,7 +251,7 @@ draw_hud_current_weapon_ammo:
 		ADD_HL_A
 		ld e, (hl)  ; e = number of bullets left
 		ld a, (redraw_flags)
-		bit COINS_REDRAW_FLAG_BIT, a
+		bit WEAPON_REDRAW_FLAG_BIT, a
 		jr z, draw_hud_current_weapon_ammo_no_rerender
 		SETMEGAROMPAGE_8000 TEXT_PAGE  ; for "draw_inventory_number"
 		ld a, e

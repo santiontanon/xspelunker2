@@ -29,6 +29,7 @@ state_inventory_entry_point:
 		call draw_inventory_items
 		call draw_inventory_weapons
 		call draw_inventory_player_health
+		call draw_inventory_small_keys
 		ld a, (player_inventory_coins)
 		ld de, CHRTBL2 + (2*32+19)*8
 		ld iy, #8000 + COLOR_WHITE*16
@@ -396,6 +397,7 @@ state_inventory_update_item_text_print_loop:
     ld hl, buffer_4096
     push de
     push hl
+		ld iyl, 17*8  ; 17 = inventory space for text
 	    call max_length_of_sentence_in_one_line
     pop hl
 	pop de    
@@ -454,50 +456,6 @@ state_inventory_update_item_text_clear_text_loop:
 	add hl, de
 	djnz state_inventory_update_item_text_clear_text_loop
 	ret
-
-
-; ------------------------------------------------
-; Calculates the maximum length that can be rendered without overflowing a single line of text
-; in the inventory (17 tiles wide). Only "spaces" are considered as possible splits
-; input:
-; - hl: sentence
-; output:
-; - a: number of characters that can be drawn
-max_length_of_sentence_in_one_line:
-    ld ixl, 0  ; best found so far
-    ld ixh, 0  ; current character
-    ld b, (hl)  ; get the sentence length
-    inc hl
-    xor a  ; pixels drawn
-max_length_of_sentence_in_one_line_loop:
-    ld d, 0
-    ld e, (hl)
-    ex af, af'
-        ld a, e
-        or a  ; is it a space?
-        jr nz, max_length_of_sentence_in_one_line_no_space
-        ld a, ixh
-        inc a  ; we increase it in one to skip the space
-        ld ixl, a
-max_length_of_sentence_in_one_line_no_space:
-    ex af, af'
-    inc ixh
-    push hl
-        ld hl, font_bin
-        add hl, de
-        add hl, de
-        add hl, de   ; index of the letter is a*3
-        add a, (hl)   ; letter width in pixels
-    pop hl
-    inc hl  ; does not modify the flags
-    cp 17*8  ; 17 = inventory space for text
-    jr nc, max_length_of_sentence_in_one_line_limit_reached
-    djnz max_length_of_sentence_in_one_line_loop
-    ld a, ixh
-    ret
-max_length_of_sentence_in_one_line_limit_reached:
-    ld a, ixl
-    ret
 
 
 ;-----------------------------------------------
@@ -664,6 +622,19 @@ draw_inventory_player_health_loop_continue:
 	inc hl
 	djnz draw_inventory_player_health_loop
 	ret
+
+
+;-----------------------------------------------
+draw_inventory_small_keys:
+	ld a, (player_inventory_n_small_keys)
+	or a
+	ret z
+
+	ld hl, NAMTBL2 + 4*32+7
+	ld b, 0
+	ld c, a
+	ld a, 24  ; small key tile
+	jp fast_FILVRM
 
 
 ;-----------------------------------------------
@@ -1163,10 +1134,10 @@ inventory_item_gfx:
 	db 118, 119, 86, 87  ; yellow key
 	db 56, 57, 88, 89  ; purple key
 	db 58, 59, 90, 91  ; white key
-	db 32, 33, 64, 65  ; clay suit
-	db 34, 35, 66, 67  ; gear
 	db 36, 37, 68, 69  ; ball
 	db 38, 39, 70, 71  ; idol
+	db 34, 35, 66, 67  ; gear	
+	db 32, 33, 64, 65  ; clay suit
 	db 40, 41, 72, 73  ; sandals
 	db 42, 43, 74, 75  ; gloves
 	db 44, 45, 76, 77  ; hurakán blessing
@@ -1229,7 +1200,7 @@ inventory_item_texts:
 	dw TEXT_ITEM_BOSS_IDOL, TEXT_ITEM_BOSS_IDOL, TEXT_ITEM_BOSS_IDOL
 	dw TEXT_ITEM_RED_KEY, TEXT_ITEM_GREEN_KEY, TEXT_ITEM_BLUE_KEY, TEXT_ITEM_YELLOW_KEY
 	dw TEXT_ITEM_PURPLE_KEY, TEXT_ITEM_WHITE_KEY
-	dw TEXT_ITEM_CLAY_SUIT, TEXT_ITEM_GEAR, TEXT_ITEM_BALL, TEXT_ITEM_IDOL
+	dw TEXT_ITEM_BALL, TEXT_ITEM_IDOL, TEXT_ITEM_GEAR, TEXT_ITEM_CLAY_SUIT
 	dw TEXT_ITEM_SANDALS, TEXT_ITEM_GLOVES, TEXT_ITEM_HURAKAN_BLESSING, TEXT_ITEM_COTTON_ARMOR
 	dw TEXT_ITEM_CHAAC_BLESSING, TEXT_ITEM_SEASHELL, TEXT_ITEM_BELT, TEXT_ITEM_ICE_CAPE
 	dw TEXT_ITEM_LETTER1, TEXT_ITEM_LETTER2, TEXT_ITEM_LETTER3, TEXT_ITEM_MAP
