@@ -33,18 +33,17 @@ state_play:
 		call call_hl_in_page_c_8000
 
 		; generate room:
-; 		ld e, 0  ; breakable left (area 1)
-; 		ld e, 9  ; breakable down (area 1)
-		ld e, 29  ; boss key (area 2)
+; 		ld e, 0
+		ld e, 17
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
 
 		; debug:
 		ld a, 1
-; 		ld (player_inventory_items), a
-; 		ld (player_inventory_items+1), a
-; 		ld (player_inventory_items+2), a
+		ld (player_inventory_items), a
+		ld (player_inventory_items+1), a
+		ld (player_inventory_items+2), a
 ; 		ld (player_inventory_items+3), a
 ; 		ld (player_inventory_items+4), a
 ; 		ld (player_inventory_items+5), a
@@ -52,38 +51,38 @@ state_play:
 ; 		ld (player_inventory_items+7), a
 ; 		ld (player_inventory_items+8), a
 ; 		ld (player_inventory_items+9), a
-; 		ld (player_inventory_items+10), a
+		ld (player_inventory_items+10), a
 ; 		ld (player_inventory_items+11), a
 ; 		ld (player_inventory_items+12), a
 ; 		ld (player_inventory_items+13), a
 ; 		ld (player_inventory_items+14), a
 ; 		ld (player_inventory_items+15), a
 ; 		ld (player_inventory_items+16), a
-; 		ld (player_inventory_items+17), a
-; 		ld (player_inventory_items+18), a
-; 		ld (player_inventory_items+19), a
-; 		ld (player_inventory_items+20), a
-; 		ld (player_inventory_items+21), a
-; 		ld (player_inventory_items+22), a
-; 		ld (player_inventory_items+23), a
-; 		ld (player_inventory_items+24), a
-; 		ld (player_inventory_items+25), a
-; 		ld (player_inventory_items+26), a
-; 		ld (player_inventory_items+27), a
-; 		ld (player_inventory_items+28), a
-; 		ld (player_inventory_items+29), a
-; 		ld (player_inventory_items+30), a
-; 		ld (player_inventory_items+31), a
-; 		ld (player_inventory_items+32), a
-; 		ld (player_inventory_items+33), a
-; 		ld (player_inventory_items+34), a
+		ld (player_inventory_items+17), a
+		ld (player_inventory_items+18), a
+		ld (player_inventory_items+19), a
+		ld (player_inventory_items+20), a  ; small keys
+		ld (player_inventory_items+21), a
+		ld (player_inventory_items+22), a
+		ld (player_inventory_items+23), a
+		ld (player_inventory_items+24), a  ; clay suit (last key item)
+		ld (player_inventory_items+25), a
+		ld (player_inventory_items+26), a
+		ld (player_inventory_items+27), a
+		ld (player_inventory_items+28), a
+		ld (player_inventory_items+29), a
+		ld (player_inventory_items+30), a
+		ld (player_inventory_items+31), a
+		ld (player_inventory_items+32), a
+		ld (player_inventory_items+33), a
+		ld (player_inventory_items+34), a
 		ld (player_inventory_items+35), a  ; map
 		ld (player_inventory_weapons), a
-; 		ld (player_inventory_weapons+1), a
+		ld (player_inventory_weapons+1), a
 ; 		ld (player_inventory_weapons+2), a
 ; 		ld (player_inventory_weapons+3), a
-; 		ld (player_inventory_weapons+4), a
-; 		ld (player_inventory_weapons+5), a
+		ld (player_inventory_weapons+4), a
+		ld (player_inventory_weapons+5), a
 ; 		ld (player_inventory_weapons+6), a
 ; 		ld (player_inventory_weapons+7), a
 ; 		ld (player_inventory_weapons+8), a
@@ -96,6 +95,8 @@ state_play:
 ; 		ld (player_inventory_weapon_ammo + 1), a
 ; 		ld (player_inventory_weapon_ammo + 2), a
 ; 		ld (player_inventory_weapon_ammo + 3), a
+		ld a, 1
+		ld (player_inventory_n_small_keys), a
 
 		ld a, PLAYER_INITIAL_MAX_HEALTH
 		ld hl, player_health
@@ -187,6 +188,10 @@ state_play_loop:
 state_play_loop_continue:
 	halt
 	; game redraw:
+	ld a, (redraw_flags)
+	bit REUPLOAD_INGAME_OBJECT_TILES_FLAG_BIT, a
+	call nz, state_play_upload_object_tiles_to_vdp_if_necessary
+
 	ld hl, upload_sprites_to_vdp
 	ld c, SPRITES_PAGE
 	call call_hl_in_page_c_8000
@@ -285,18 +290,74 @@ state_play_update_agenda_cycle_odd:  ; player + player bullets + sprite objects
 	jp state_play_loop_continue
 
 
-
 state_play_upload_object_tiles_to_vdp_if_necessary:
+	ld hl, redraw_flags
+	ld a, (hl)
+	and REUPLOAD_INGAME_OBJECT_TILES_FLAG_CLEAR_MASK
+	ld (hl), a
+
+	ld hl, object_tiles_zx0
+	ld de, buffer_4096
+	ld c, TILES_PAGE
+	call dzx0_from_page_c
+
+	; update hud weapon tiles:
+	ld a, (player_current_item)
+	; 0 - 10: a + 26  ; weapons
+	; 11 - 17: a - 11 ; boss keys
+	; 18 - 24: 47  ; idols
+	; 25 - 30: a - 17  ; color keys,
+	; 31: a = 37  ; small key
+	; 32 - 35: a - 17  ; color keys, key items
+	cp 11
+	jr c, state_play_upload_object_tiles_to_vdp_if_necessary_weapon
+	cp 18
+	jr c, state_play_upload_object_tiles_to_vdp_if_necessary_boss_key
+	cp 25
+	jr c, state_play_upload_object_tiles_to_vdp_if_necessary_idol
+	cp 31
+	jr c, state_play_upload_object_tiles_to_vdp_if_necessary_color_keys
+	jr z, state_play_upload_object_tiles_to_vdp_if_necessary_small_key
+	; key items
+	add a, -18
+	jr state_play_upload_object_tiles_to_vdp_if_necessary_selected_item_set
+state_play_upload_object_tiles_to_vdp_if_necessary_color_keys:
+	add a, -17
+	jr state_play_upload_object_tiles_to_vdp_if_necessary_selected_item_set
+state_play_upload_object_tiles_to_vdp_if_necessary_small_key:
+	ld a, 37
+	jr state_play_upload_object_tiles_to_vdp_if_necessary_selected_item_set
+state_play_upload_object_tiles_to_vdp_if_necessary_idol:
+	ld a, 47
+	jr state_play_upload_object_tiles_to_vdp_if_necessary_selected_item_set
+state_play_upload_object_tiles_to_vdp_if_necessary_boss_key:
+	add a, -11
+	jr state_play_upload_object_tiles_to_vdp_if_necessary_selected_item_set
+state_play_upload_object_tiles_to_vdp_if_necessary_weapon:
+	add a, 26  ; index of machete in the object tiles
+state_play_upload_object_tiles_to_vdp_if_necessary_selected_item_set:
+	ld l, a
+	ld h, 0
+	add hl, hl
+	add hl, hl
+	add hl, hl
+	add hl, hl
+	add hl, hl
+	add hl, hl  ; * 64	
+	ld bc, buffer_4096
+	add hl, bc
+	ld de, CHRTBL2 + 15*8
+	ld b, 32
+	call fast_small_LDIRVM
+	ld de, CLRTBL2 + 15*8
+	ld b, 32
+	call fast_small_LDIRVM	
+
+	; update in-game object tiles:
 	ld hl, (item_object_to_upload_to_vdp)
 	ld a, h
 	or a
 	ret z
-	push hl
-		ld hl, object_tiles_zx0
-		ld de, #c000
-		ld c, TILES_PAGE
-		call dzx0_from_page_c
-	pop hl
 	push hl
 		ld de, CHRTBL2 + FIRST_ITEM_TILE*8
 		ld b, 32
@@ -326,6 +387,5 @@ state_play_upload_object_tiles_to_vdp_if_necessary:
 	pop hl
 	ld de, CLRTBL2 + FIRST_ITEM_TILE*8 + 256*8*2
 	ld b, 32
-	call fast_small_LDIRVM
-	ret
+	jp fast_small_LDIRVM
 

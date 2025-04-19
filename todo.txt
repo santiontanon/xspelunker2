@@ -1,18 +1,9 @@
 to do:
 
-***- small chests:
-  ***- spawn them
-  ***- open them with small keys (they get replaced by the item inside). Might need "chest content" array (colored chests, and small chests):
-    ***- when interacting with them, if you don't have the key, message stating that
-      ***- for messages, draw a horizontal line above and below the message, to make it look nicer
-    ***- if you do, lose the key, and open the chest
-  ***- maintain this in the global state (leaving the room and cominb back in should show the item)
-  ***- pickup the item and maintain that in the global state too (global chest state: closed, open, picked-up)
-
 - being able to complete the game in assembler:
-  - spawn and open chests with colored keys
-  - render doors (and be blocked by them)
-  - use keys in locks to open doors (including gear, ball, etc.)
+  ***- spawn and open chests with colored keys
+  - spawn doors
+  - spawn key locks and use them to open doors (including gear, ball, etc.)
   - press buttons to open doors
   - combination clues (how to interact with clues? crouch? up?) [not all are readable yet, maya clues/story are only readable after 2nd piece put in calendar stone]
   - interact with combination levers (hit them to change their state)
@@ -24,7 +15,10 @@ to do:
     - 1st idol on calendar stone, opens door to 3rd pyramid
     - 3rd idol on calendar stone, opens door to temple of fire
   - design teleporter in atlantis/mars/moon and how the interaction would go (no need to think of the riddle yet)
-  - ensure that ALL tags are instantiated now during room creation
+  - ensure that ALL tags are instantiated and are functional now during room creation
+
+- item effects:
+  - for anti-grav belt, you can overwrite it by pressing "down" (to fall quick)
 
 - Implement PCGWorld in assembler:
   - data structure
@@ -36,9 +30,6 @@ to do:
   - verify it matches exactly what I get in Java
   - for some areas (pyramids, etc.) have some predefined shapes (e.g. pyramid shape), that can be chosen with some probability. And maybe also different shapes for the confluence, etc.
   - keep Java/assembler versions in sync (try different random seeds)
-
-- item effects:
-  - for anti-grav belt, you can overwrite it by pressing "down" (to fall quick)
 
 - enemies:
   - come up with a list of enemies for pyramid (consider both sprite enemies and larger tile-based enemies)
@@ -155,9 +146,9 @@ X-Spelunker 2 (e-ke-se pe-lu-ne-ke-le):
     "And not only that, look at all of those alien artifacts connected to it. What are they trying to do here?"
     "It is full of inscriptions, but I do not know what do they say!"
 
-[at this point, the player can try ti use the idol in the calendar stone, but they will not know how to use it, so, the only way forward is to go back to the jungle entrance, where they will find that Elaine has written them a letter]
+[at this point, the player can try to use the idol in the calendar stone, but they will not know how to use it, so, the only way forward is to go back to the jungle entrance, where they will find that Elaine has written them a letter]
 
-- If you go back to the jungle, you will find Elaine's letters waiting:
+- If you go back to the jungle, you will find Elaine's letter waiting:
     Michael,
 
     I have deciphered the inscription. The glyphs surrounding the drawing translate to "Star Alignment Nexus" and "Seven Celestial Keys." So, it seems to refer to seven keys required to activate this "Nexus". I have consulted with some experts in the ancient Maya, and they believe this could be referring to a calendar stone. Have you come across one of them?

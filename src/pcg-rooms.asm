@@ -352,6 +352,11 @@ pcg_generate_room__object_loop:
 	jp z, pcg_generate_room__object_breakable_wall
 	push ix
 		ld ixl, a
+		call pcg_generate_area__choose_chunks_is_chest_tag_p
+	pop ix
+	jp z, pcg_generate_room__object_chest
+	push ix
+		ld ixl, a
 		call pcg_generate_area__choose_chunks_is_item_tag_p
 	pop ix
 	jp z, pcg_generate_room__object_regular_item
@@ -402,31 +407,7 @@ pcg_generate_room__object_breakable_wall_mask_set:
 
 	ASSERT_D_NOT_EQ 0
 
-	; compute object coordinates:
-	inc de
-	; x = c * CHUNK_WIDTH + (de)
-	ld a, c
-	add a, a
-	add a, a
-	add a, a
-	add a, a  ; assumes CHUNK_WIDTH = 16
-	ld c, a
-	ld a, (de)
-	add a, c
-	ld c, a
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), a  ; x
-	inc de
-	; y = b * CHUNK_HEIGHT + (de)
-	ld a, b
-	add a, a
-	add a, a
-	ld b, a
-	add a, a
-	add a, b  ; assumes CHUNK_HEIGHT = 12
-	ld b, a
-	ld a, (de)
-	add a, b
-	ld b, a
+	call pcg_generate_room__compute_object_coordinates
 	inc de
 	ld a, (de)  ; width
 	ld l, a
@@ -470,6 +451,45 @@ pcg_generate_room__object_breakable_wall_continue:
 ;-----------------------------------------------
 ; - ix: ptr to the area object
 ; - c, b: x, y of where to spawn the object (in chunks)
+pcg_generate_room__object_chest:
+	; get the chunk type where we are placing the object:
+	push bc
+		call get_chunk_id_from_coordinates  ; a = chunk ID
+		ld hl, pyramid_chunk_fg_bank_ptrs
+		call pcg_get_chunk_ptr
+		ld e, CHUNK_LOCATION_ITEM
+		call sample_chunk_location  ; de: ptr to the location
+	pop bc  ; chunk coordinates
+
+	ASSERT_D_NOT_EQ 0
+
+	; compute object coordinates:
+	call pcg_generate_room__compute_object_coordinates
+	; here: c, b: x, y coordinates
+
+	; check if chest was already open:
+	ld a, (ix + AREA_OBJECT_STRUCT_TYPE)
+	ld hl, global_state__objects
+	ADD_HL_A
+	ld a, (hl)
+	or a
+	jp z, pcg_generate_room__object_regular_item_continue
+	; chest was already open, see if the item was picked up
+	ld d, (ix + AREA_OBJECT_STRUCT_TYPE)
+	call get_chest_content  ; e = chest content
+	ld hl, global_state__objects
+	ld d, 0
+	add hl, de
+	ld a, (hl)
+	or a
+	jp nz, pcg_generate_room__object_loop_next  ; chest inside object was already picked up
+	ld d, e
+	jp pcg_generate_room__object_regular_item_continue_de_set
+
+
+;-----------------------------------------------
+; - ix: ptr to the area object
+; - c, b: x, y of where to spawn the object (in chunks)
 pcg_generate_room__object_regular_item:
 	; get the chunk type where we are placing the object:
 	push bc
@@ -483,6 +503,47 @@ pcg_generate_room__object_regular_item:
 	ASSERT_D_NOT_EQ 0
 
 	; compute object coordinates:
+	call pcg_generate_room__compute_object_coordinates
+	; here: c, b: x, y coordinates
+
+	; check if the item was already picked up:
+	ld a, (ix + AREA_OBJECT_STRUCT_TYPE)
+	ld hl, global_state__objects
+	ADD_HL_A
+	ld a, (hl)
+	or a
+	jp z, pcg_generate_room__object_regular_item_continue
+	; item was already picked up:
+	jp pcg_generate_room__object_loop_next
+
+pcg_generate_room__object_regular_item_continue:	
+	; spawn the breakable wall object:
+	ld d, (ix + AREA_OBJECT_STRUCT_ID)
+	ld e, (ix + AREA_OBJECT_STRUCT_TYPE)
+pcg_generate_room__object_regular_item_continue_de_set:
+	ld iy, (tmp_pcg_room__next_tile_object_ptr)
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), d  ; ID
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), e  ; type
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), c  ; x
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), b  ; y
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0  ; state (hitpoints)
+	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
+	add iy, bc
+	ld (tmp_pcg_room__next_tile_object_ptr), iy
+
+	; set which object gfx to up load vdp (starting at tile FIRST_ITEM_TILE):
+	call set_item_object_to_upload_to_vdp
+
+	jp pcg_generate_room__object_loop_next
+
+
+;-----------------------------------------------
+; input:
+; - de: ptr to a chunk location
+; - c, b: x, y of where to spawn the object (in chunks)
+; output:
+; - c, b: x, y coordinates
+pcg_generate_room__compute_object_coordinates:
 	inc de
 	; x = c * CHUNK_WIDTH + (de)
 	ld a, c
@@ -506,45 +567,8 @@ pcg_generate_room__object_regular_item:
 	ld b, a
 	ld a, (de)
 	add a, b
-	ld b, a  ; here: c, b: x, y coordinates
-
-	; check if the item was already picked up:
-	ld a, (ix + AREA_OBJECT_STRUCT_TYPE)
-	ld hl, global_state__objects
-	ADD_HL_A
-	ld a, (hl)
-	or a
-	jp z, pcg_generate_room__object_regular_item_continue
-	; item was already picked up:
-	jp pcg_generate_room__object_loop_next
-
-pcg_generate_room__object_regular_item_continue:	
-	; spawn the breakable wall object:
-	ld iy, (tmp_pcg_room__next_tile_object_ptr)
-	ld a, (ix + AREA_OBJECT_STRUCT_ID)
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), a  ; ID
-	ld a, (ix + AREA_OBJECT_STRUCT_TYPE)
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), a  ; type
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), c  ; x
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), b  ; y
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0  ; state (hitpoints)
-	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
-	add iy, bc
-	ld (tmp_pcg_room__next_tile_object_ptr), iy
-
-	; set which object gfx to up load vdp (starting at tile FIRST_ITEM_TILE):
-	ld hl, object_tiles_start_ptrs
-	ld b, 0
-	ld c, a
-	add hl, bc
-	add hl, bc
-	ld a, (hl)
-	inc hl
-	ld h, (hl)
-	ld l, a
-	ld (item_object_to_upload_to_vdp), hl
-
-	jp pcg_generate_room__object_loop_next
+	ld b, a
+	ret
 
 
 ;-----------------------------------------------
@@ -1143,6 +1167,47 @@ area_object_offset_to_x_y_in_chunks_loop_done:
 	ret
 
 
+;-----------------------------------------------
+; input:
+; - d: chest object ID
+; output:
+; - z: not found
+; - nz: found
+; - e: object ID
+get_chest_content:
+	ld hl, current_world__chest_content
+get_chest_content_loop:
+	ld a, (hl)
+	cp #ff
+	ret z
+	cp d
+	jr z, get_chest_content_found
+	inc hl
+	inc hl
+	jr get_chest_content_loop
+
+get_chest_content_found:
+	inc hl
+	ld e, (hl)
+	or 1  ; nz
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - e: item ID
+set_item_object_to_upload_to_vdp:
+	ld hl, object_tiles_start_ptrs
+	ld d, 0
+	add hl, de
+	add hl, de
+	ld a, (hl)
+	inc hl
+	ld h, (hl)
+	ld l, a
+	ld (item_object_to_upload_to_vdp), hl
+	ret
+
 
 ;-----------------------------------------------
 object_tiles_start_ptrs:
@@ -1248,18 +1313,19 @@ ENDR
 	dw buffer_4096 + 33 * 64  ; TAG_WEAPON_OBSIDIAN_KNIVE
 	dw buffer_4096 + 34 * 64  ; TAG_WEAPON_FIRE_HAMMER
 	dw buffer_4096 + 35 * 64  ; TAG_WEAPON_ICE_MACUAHUITL
-	dw buffer_4096 + 37 * 64  ; TAG_MAP_PIECE1
-	dw buffer_4096 + 37 * 64  ; TAG_MAP_PIECE2
-	dw buffer_4096 + 37 * 64  ; TAG_MAP_PIECE3
-	dw buffer_4096 + 37 * 64  ; TAG_MAP_PIECE4
-	dw buffer_4096 + 37 * 64  ; TAG_MAP_PIECE5
-	dw buffer_4096 + 37 * 64  ; TAG_MAP_PIECE6
-	dw buffer_4096 + 37 * 64  ; TAG_MAP_PIECE7
-	dw buffer_4096 + 37 * 64  ; TAG_MAP_PIECE8
-	dw buffer_4096 + 38 * 64  ; TAG_HEART1
-	dw buffer_4096 + 38 * 64  ; TAG_HEART2
-	dw buffer_4096 + 38 * 64  ; TAG_HEART3
-	dw buffer_4096 + 38 * 64  ; TAG_HEART4
+	dw buffer_4096 + 38 * 64  ; TAG_MAP_PIECE1
+	dw buffer_4096 + 38 * 64  ; TAG_MAP_PIECE2
+	dw buffer_4096 + 38 * 64  ; TAG_MAP_PIECE3
+	dw buffer_4096 + 38 * 64  ; TAG_MAP_PIECE4
+	dw buffer_4096 + 38 * 64  ; TAG_MAP_PIECE5
+	dw buffer_4096 + 38 * 64  ; TAG_MAP_PIECE6
+	dw buffer_4096 + 38 * 64  ; TAG_MAP_PIECE7
+	dw buffer_4096 + 38 * 64  ; TAG_MAP_PIECE8
+	dw buffer_4096 + 39 * 64  ; TAG_HEART1
+	dw buffer_4096 + 39 * 64  ; TAG_HEART2
+	dw buffer_4096 + 39 * 64  ; TAG_HEART3
+	dw buffer_4096 + 39 * 64  ; TAG_HEART4
+	dw buffer_4096 + 39 * 64  ; TAG_HEART5
 REPT TAG_ITEM_SANDALS - TAG_MAYA_RIDDLE_CLUE1
 	dw buffer_4096
 ENDR
@@ -1283,17 +1349,14 @@ ENDR
 	dw buffer_4096 + 23 * 64  ; TAG_ITEM_SEASHELL
 	dw buffer_4096 + 24 * 64  ; TAG_ITEM_BELT
 	dw buffer_4096 + 25 * 64  ; TAG_ITEM_ICE_CAPE
-	dw buffer_4096 + 36 * 64  ; TAG_SMALL_KEY1
-	dw buffer_4096 + 36 * 64  ; TAG_SMALL_KEY2
-	dw buffer_4096 + 36 * 64  ; TAG_SMALL_KEY3
-	dw buffer_4096 + 36 * 64  ; TAG_SMALL_KEY4
-REPT N_UNIQUE_TAGS - TAG_SMALL_KEY1
-	dw buffer_4096
-ENDR
-; TAG_SMALL_KEY_CHEST1: equ 141
-; TAG_SMALL_KEY_CHEST2: equ 142
-; TAG_SMALL_KEY_CHEST3: equ 143
-; TAG_SMALL_KEY_CHEST4: equ 144
+	dw buffer_4096 + 37 * 64  ; TAG_SMALL_KEY1
+	dw buffer_4096 + 37 * 64  ; TAG_SMALL_KEY2
+	dw buffer_4096 + 37 * 64  ; TAG_SMALL_KEY3
+	dw buffer_4096 + 37 * 64  ; TAG_SMALL_KEY4
+	dw buffer_4096 + 40 * 64  ; TAG_SMALL_KEY_CHEST1
+	dw buffer_4096 + 40 * 64  ; TAG_SMALL_KEY_CHEST2
+	dw buffer_4096 + 40 * 64  ; TAG_SMALL_KEY_CHEST3
+	dw buffer_4096 + 40 * 64  ; TAG_SMALL_KEY_CHEST4
 ; ; tags above can ONLY appear once in the whole game
 ; N_UNIQUE_TAGS: equ 145
 ; ; tags below can appear multiple times (and do not have state, they are reset every time you enter in a room):

@@ -14,7 +14,7 @@ state_game_over:
 	ld b, 6
 	call draw_sentence_to_vdp
 
-	call wait_for_space
+	call wait_for_click
 
 	call clear_screen_left_to_right
 

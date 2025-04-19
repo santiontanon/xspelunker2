@@ -44,7 +44,7 @@ state_inventory_loop:
 	halt
 	call draw_inventory_player
 	call draw_inventory_cursor
-	call draw_inventory_selected_weapon_highlight
+	call draw_inventory_selected_item_highlight
 	call update_keyboard_buffers
 	call state_inventory_update_cursor
 	jr state_inventory_loop
@@ -630,11 +630,16 @@ draw_inventory_small_keys:
 	or a
 	ret z
 
-	ld hl, NAMTBL2 + 4*32+7
-	ld b, 0
-	ld c, a
-	ld a, 24  ; small key tile
-	jp fast_FILVRM
+	ld de, CHRTBL2 + (256 + 171)*8
+	ld iy, #0800 + COLOR_GREY*16
+	ld b, 1
+	jp draw_inventory_number
+
+; 	ld hl, NAMTBL2 + 4*32+7
+; 	ld b, 0
+; 	ld c, a
+; 	ld a, 24  ; small key tile
+; 	jp fast_FILVRM
 
 
 ;-----------------------------------------------
@@ -700,11 +705,11 @@ draw_inventory_items_loop_next:
 
 
 ;-----------------------------------------------
-draw_inventory_selected_weapon_highlight:
+draw_inventory_selected_item_highlight:
 	ld a, (interrupt_cycle)
 	bit 4, a
-	jr z, draw_inventory_selected_weapon_highlight_erase
-	ld a, (player_current_weapon)
+	jr z, draw_inventory_selected_item_highlight_erase
+	ld a, (player_current_item)
 	ld hl, inventory_selected_weapon_sprites
 	add a, a
 	add a, a
@@ -712,7 +717,7 @@ draw_inventory_selected_weapon_highlight:
 	ld de, SPRATR2 + 7*4
 	ld b, 4
 	jp fast_small_LDIRVM
-draw_inventory_selected_weapon_highlight_erase:
+draw_inventory_selected_item_highlight_erase:
 	ld hl, SPRATR2 + 7*4
 	xor a
 	ld bc, 4
@@ -1032,6 +1037,7 @@ WEAPON_ITEM_FN: macro x, y, fn
 	dw fn
 	endm
 inventory_weapon_item_fns:
+	; weapons:
 	WEAPON_ITEM_FN 0, 2, select_weapon0
 	WEAPON_ITEM_FN 1, 2, select_weapon1
 	WEAPON_ITEM_FN 2, 2, select_weapon2
@@ -1040,6 +1046,30 @@ inventory_weapon_item_fns:
 	WEAPON_ITEM_FN 1, 3, select_weapon5
 	WEAPON_ITEM_FN 2, 3, select_weapon6
 	WEAPON_ITEM_FN 3, 3, select_weapon7
+	; boss keys
+	WEAPON_ITEM_FN 4, 1, select_boss_key1
+	WEAPON_ITEM_FN 5, 1, select_boss_key2
+	WEAPON_ITEM_FN 6, 1, select_boss_key3
+	WEAPON_ITEM_FN 7, 1, select_boss_key4
+	; idols
+	WEAPON_ITEM_FN 8, 1, select_idol1
+	WEAPON_ITEM_FN 9, 1, select_idol2
+	WEAPON_ITEM_FN 4, 2, select_idol3
+	WEAPON_ITEM_FN 5, 2, select_idol4
+	; color keys
+	WEAPON_ITEM_FN 6, 2, select_color_key1
+	WEAPON_ITEM_FN 7, 2, select_color_key2
+	WEAPON_ITEM_FN 8, 2, select_color_key3
+	WEAPON_ITEM_FN 9, 2, select_color_key4
+	WEAPON_ITEM_FN 4, 3, select_color_key5
+	WEAPON_ITEM_FN 5, 3, select_color_key6
+	; small keys
+	WEAPON_ITEM_FN 6, 3, select_key_small_key
+	; key items
+	WEAPON_ITEM_FN 7, 3, select_key_item1
+	WEAPON_ITEM_FN 8, 3, select_key_item2
+	WEAPON_ITEM_FN 9, 3, select_key_item3
+	WEAPON_ITEM_FN 4, 4, select_key_item4
 	db #ff
 
 select_weapon0:
@@ -1055,7 +1085,7 @@ select_weapon_generic:  ; c = weapon to select
 	or a
 	ret z
 	ld a, c
-	ld (player_current_weapon), a
+	ld (player_current_item), a
 	ld hl, SFX_ui_select
 	jp play_SFX_with_high_priority	
 select_weapon0_upgraded:
@@ -1098,6 +1128,121 @@ select_weapon7:
 	ld c, 7
 	jr select_weapon_generic
 
+select_boss_key1:
+	ld hl, player_inventory_items  ; boss key 1
+	ld de, player_inventory_items + 3
+	ld bc, #0e0b  ; 11 and 14 (boss key 1 and 4)
+select_idol_generic:
+select_boss_key_generic:
+	ld a, (hl)
+	or a
+	ld a, c
+	jr nz, select_boss_key_generic_continue2
+select_boss_key_generic_continue1:
+	ld a, (de)
+	or a
+	ret z
+	ld a, b
+select_boss_key_generic_continue2:
+	ld (player_current_item), a
+	ld hl, SFX_ui_select
+	jp play_SFX_with_high_priority	
+
+select_boss_key2:
+	ld hl, player_inventory_items + 1
+	ld de, player_inventory_items + 4
+	ld bc, #0f0c  ; 12 and 15 (boss key 2 and 5)
+	jr select_boss_key_generic
+
+select_boss_key3:
+	ld hl, player_inventory_items + 2
+	ld de, player_inventory_items + 5
+	ld bc, #100d  ; 13 and 16 (boss key 3 and 6)
+	jr select_boss_key_generic
+
+select_boss_key4:
+	ld de, player_inventory_items + 6
+	ld b, 17  ; boss key 7
+	jr select_boss_key_generic_continue1
+
+select_idol1:
+	ld hl, player_inventory_items + 7 ; idol 1
+	ld de, player_inventory_items + 10
+	ld bc, #1215  ; 18 and 21 (idol 1 and 4)
+	jr select_idol_generic
+
+select_idol2:
+	ld hl, player_inventory_items + 8
+	ld de, player_inventory_items + 11
+	ld bc, #1316  ; 19 and 22 (idol 2 and 5)
+	jr select_idol_generic
+
+select_idol3:
+	ld hl, player_inventory_items + 9
+	ld de, player_inventory_items + 12
+	ld bc, #1417  ; 20 and 23 (idol 3 and 6)
+	jr select_idol_generic
+
+select_idol4:
+	ld de, player_inventory_items + 13
+	ld b, 24  ; idol 7
+	jr select_boss_key_generic_continue1
+
+select_color_key1:
+	ld de, player_inventory_items + 14
+	ld b, 25
+	jr select_boss_key_generic_continue1
+
+select_color_key2:
+	ld de, player_inventory_items + 15
+	ld b, 26
+	jr select_boss_key_generic_continue1
+
+select_color_key3:
+	ld de, player_inventory_items + 16
+	ld b, 27
+	jr select_boss_key_generic_continue1
+
+select_color_key4:
+	ld de, player_inventory_items + 17
+	ld b, 28
+	jr select_boss_key_generic_continue1
+
+select_color_key5:
+	ld de, player_inventory_items + 18
+	ld b, 29
+	jr select_boss_key_generic_continue1
+
+select_color_key6:
+	ld de, player_inventory_items + 19
+	ld b, 30
+	jr select_boss_key_generic_continue1
+
+select_key_small_key:
+	ld de, player_inventory_items + 20
+	ld b, 31
+	jp select_boss_key_generic_continue1
+
+select_key_item1:
+	ld de, player_inventory_items + 21
+	ld b, 32
+	jp select_boss_key_generic_continue1
+
+select_key_item2:
+	ld de, player_inventory_items + 22
+	ld b, 33
+	jp select_boss_key_generic_continue1
+
+select_key_item3:
+	ld de, player_inventory_items + 23
+	ld b, 34
+	jp select_boss_key_generic_continue1
+
+select_key_item4:
+	ld de, player_inventory_items + 24
+	ld b, 35
+	jp select_boss_key_generic_continue1
+
 
 ;-----------------------------------------------
 inventory_item_positions:
@@ -1106,10 +1251,11 @@ inventory_item_positions:
 	db 4, 5, 6  ; first 3 idols
 	db 4, 5, 6, 7  ; last 4 boss idols
 	db 8, 9, 10, 11, 12, 13  ; color keys
-	db 14, 15, 16, 17  ; key items (21 - 24)
-	db 18, 19, 20, 21, 22, 23  ; maya upgrade items (25 - 30)
-	db 24, 25  ; alien upgrade items (31, 32)
-	db 26, 27, 28  ; elaine letters (33, 34, 35)
+	db 14  ; small keys
+	db 15, 16, 17, 18  ; key items (21 - 24)
+	db 19, 20, 21, 22, 23, 24  ; maya upgrade items (25 - 30)
+	db 25, 26  ; alien upgrade items (31, 32)
+	db 27, 28  ; elaine letters (33, 34, 35)
 	db 29  ; map (36)
 inventory_item_positions_end:
 
@@ -1134,6 +1280,7 @@ inventory_item_gfx:
 	db 118, 119, 86, 87  ; yellow key
 	db 56, 57, 88, 89  ; purple key
 	db 58, 59, 90, 91  ; white key
+	db 138, 139, 170, 171  ; small keys
 	db 36, 37, 68, 69  ; ball
 	db 38, 39, 70, 71  ; idol
 	db 34, 35, 66, 67  ; gear	
@@ -1143,12 +1290,12 @@ inventory_item_gfx:
 	db 44, 45, 76, 77  ; hurakán blessing
 	db 46, 47, 78, 79  ; cotton armor
 	db 60, 61, 92, 93  ; chaac blessing
-	db 62, 63, 94, 95  ; seashell
+	db 18, 19, 50, 51  ; seashell
 	db 20, 21, 52, 53  ; antigrav-belt
 	db 22, 23, 54, 55  ; ice cape
 	db 24, 25, 56, 57  ; letter 1
 	db 26, 27, 58, 59  ; letter 2
-	db 28, 29, 60, 61  ; letter 3
+	; db 28, 29, 60, 61  ; letter 3
 	db 30, 31, 62, 63  ; map
 inventory_item_gfx_end:
 
@@ -1176,6 +1323,7 @@ inventory_sprites_end:
 
 
 inventory_selected_weapon_sprites:
+	; weapons:
 	db 71, 8, 28, COLOR_WHITE
 	db 71, 32, 28, COLOR_WHITE
 	db 71, 56, 28, COLOR_WHITE
@@ -1187,6 +1335,37 @@ inventory_selected_weapon_sprites:
 	db 71, 8, 28, COLOR_WHITE
 	db 71, 32, 28, COLOR_WHITE
 	db 71, 56, 28, COLOR_WHITE
+	; boss keys:
+	db 47, 112, 28, COLOR_WHITE
+	db 47, 136, 28, COLOR_WHITE
+	db 47, 160, 28, COLOR_WHITE
+	db 47, 112, 28, COLOR_WHITE
+	db 47, 136, 28, COLOR_WHITE
+	db 47, 160, 28, COLOR_WHITE
+	db 47, 184, 28, COLOR_WHITE
+	; idols:
+	db 47, 208, 28, COLOR_WHITE
+	db 47, 232, 28, COLOR_WHITE
+	db 71, 112, 28, COLOR_WHITE
+	db 47, 208, 28, COLOR_WHITE
+	db 48, 232, 28, COLOR_WHITE
+	db 71, 112, 28, COLOR_WHITE
+	db 71, 136, 28, COLOR_WHITE
+	; color keys:
+	db 71, 160, 28, COLOR_WHITE
+	db 71, 184, 28, COLOR_WHITE
+	db 71, 208, 28, COLOR_WHITE
+	db 71, 232, 28, COLOR_WHITE
+	db 95, 112, 28, COLOR_WHITE
+	db 95, 136, 28, COLOR_WHITE
+	; small keys:
+	db 95, 160, 28, COLOR_WHITE
+	; key items:
+	db 95, 184, 28, COLOR_WHITE
+	db 95, 208, 28, COLOR_WHITE
+	db 95, 232, 28, COLOR_WHITE
+	db 119, 112, 28, COLOR_WHITE
+
 
 inventory_weapon_texts:
 	dw TEXT_WEAPON_MACHETE, TEXT_WEAPON_HAMMER, TEXT_WEAPON_MACUAHUITL, TEXT_WEAPON_SHIELD
@@ -1199,11 +1378,13 @@ inventory_item_texts:
 	dw TEXT_ITEM_BOSS_IDOL, TEXT_ITEM_BOSS_IDOL, TEXT_ITEM_BOSS_IDOL, TEXT_ITEM_BOSS_IDOL
 	dw TEXT_ITEM_BOSS_IDOL, TEXT_ITEM_BOSS_IDOL, TEXT_ITEM_BOSS_IDOL
 	dw TEXT_ITEM_RED_KEY, TEXT_ITEM_GREEN_KEY, TEXT_ITEM_BLUE_KEY, TEXT_ITEM_YELLOW_KEY
-	dw TEXT_ITEM_PURPLE_KEY, TEXT_ITEM_WHITE_KEY
+	dw TEXT_ITEM_PURPLE_KEY, TEXT_ITEM_WHITE_KEY, TEXT_ITEM_SMALL_KEYS
 	dw TEXT_ITEM_BALL, TEXT_ITEM_IDOL, TEXT_ITEM_GEAR, TEXT_ITEM_CLAY_SUIT
 	dw TEXT_ITEM_SANDALS, TEXT_ITEM_GLOVES, TEXT_ITEM_HURAKAN_BLESSING, TEXT_ITEM_COTTON_ARMOR
 	dw TEXT_ITEM_CHAAC_BLESSING, TEXT_ITEM_SEASHELL, TEXT_ITEM_BELT, TEXT_ITEM_ICE_CAPE
-	dw TEXT_ITEM_LETTER1, TEXT_ITEM_LETTER2, TEXT_ITEM_LETTER3, TEXT_ITEM_MAP
+	dw TEXT_ITEM_LETTER1, TEXT_ITEM_LETTER2
+	; dw TEXT_ITEM_LETTER3
+	dw TEXT_ITEM_MAP
 
 
 IF (inventory_item_positions_end - inventory_item_positions) != N_INVENTORY_ITEM_TYPES

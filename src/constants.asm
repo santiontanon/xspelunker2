@@ -20,11 +20,15 @@ MAX_ROOM_PLAYER_BULLETS: equ 8
 MAX_ROOM_TILE_OBJECTS: equ 10
 MAX_ROOM_SIZE: equ 32*24*4
 MAX_INTERAREA_CONNECTIONS: equ 12
+MAX_CHESTS: equ 10
 
 ROOM_REDRAW_FLAG_BIT: equ 0
 HUD_REDRAW_FLAG_BIT: equ 1
 COINS_REDRAW_FLAG_BIT: equ 2
 WEAPON_REDRAW_FLAG_BIT: equ 3  ; weapon and ammo
+REUPLOAD_INGAME_OBJECT_TILES_FLAG_BIT: equ 4
+REUPLOAD_INGAME_OBJECT_TILES_FLAG_CLEAR_MASK: equ #ef  ; assuming REUPLOAD_INGAME_OBJECT_TILES_FLAG_BIT = 4
+
 
 HUD_MAX_TIME: equ 100
 
@@ -153,12 +157,13 @@ RAYGUN_DAMAGE: equ 2
 ; - 7 boss keys
 ; - 7 boss idols
 ; - 6 color keys
+; - 1 small key
 ; - 4 key items (clay doll, gear, ball, idol)
 ; - 6 mayan upgrade items (sandals, etc.)
 ; - 2 alien upgrade items
-; - 3 elaine letters
+; - 2 elaine letters
 ; - 1 map
-N_INVENTORY_ITEM_TYPES: equ 7 + 7 + 6 + 4 + 6 + 2 + 3 + 1
+N_INVENTORY_ITEM_TYPES: equ 7 + 7 + 6 + 1 + 4 + 6 + 2 + 2 + 1
 N_INVENTORY_WEAPON_TYPES: equ 4 + 4 + 3  ; 4 base, 4 ranged, 3 upgrades
 
 ; - initial piece just has: jungle + first pyramid, then one piece for each of the rest

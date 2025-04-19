@@ -1725,6 +1725,13 @@ pcg_generate_area__choose_chunks_is_button_door_tag_p:
 	pop hl
 	ret
 
+pcg_generate_area__choose_chunks_is_chest_tag_p:
+	push hl
+		ld hl, pcg_generate_area__chest_tags
+		call pcg_generate_area__tag_in_list
+	pop hl
+	ret
+
 pcg_generate_area__choose_chunks_is_small_lock_tag_p:
 	push hl
 		ld hl, pcg_generate_area__small_lock_tags
@@ -1959,4 +1966,18 @@ pcg_generate_area__button_door_tags:
     db TAG_BUTTON_DOOR3
     db TAG_BUTTON_DOOR4
     db 0
+
+pcg_generate_area__chest_tags:
+    db TAG_RED_CHEST
+    db TAG_GREEN_CHEST
+    db TAG_BLUE_CHEST
+    db TAG_YELLOW_CHEST
+    db TAG_WHITE_CHEST
+    db TAG_PURPLE_CHEST
+	db TAG_SMALL_KEY_CHEST1
+	db TAG_SMALL_KEY_CHEST2
+	db TAG_SMALL_KEY_CHEST3
+	db TAG_SMALL_KEY_CHEST4
+    db 0
+
 

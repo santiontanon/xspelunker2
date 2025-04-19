@@ -1,3 +1,7 @@
+in_game_message_border_tile_attributes:
+	db #00, #00, #00, #ff, #ff, #00, #00, #00
+
+
 ;-----------------------------------------------
 ; input:
 ; - de: text to display
@@ -10,6 +14,7 @@ display_in_game_message:
     	ld bc, 256
     	call LDIRMV
 
+    	; clear all tiles:
 		ld hl, CLRTBL2 + 256*8
 		ld bc, 256*8
 		xor a
@@ -20,6 +25,21 @@ display_in_game_message:
 		call fast_FILVRM
 	    ld hl, NAMTBL2 + 256
     	call set_bitmap_name_table
+
+    	; draw white lines on top and bottom of message:
+    	ld hl, in_game_message_border_tile_attributes
+    	ld de, CLRTBL2 + (256 + 1)*8 
+    	ld b, 8
+    	call fast_small_LDIRVM
+    	ld a, 1
+    	ld hl, NAMTBL2 + 256
+    	ld b, 32
+    	call fast_FILVRM_small
+    	ld a, 1
+    	ld hl, NAMTBL2 + 256 + 7*32
+    	ld b, 32
+    	call fast_FILVRM_small
+
 	pop hl
 
 	; draw text:
@@ -117,7 +137,7 @@ display_in_game_message_center:
 	call draw_sentence_to_vdp	
 
 display_in_game_message_continue:
-	call wait_for_space
+	call wait_for_click
 
 	; restore tiles in middle bank:
 	ld hl, CLRTBL2 + 256*8
@@ -137,5 +157,7 @@ display_in_game_message_continue:
 	ld c, TILES_PAGE
 	ld hl, tiles_pyramid_zx0
 	call setup_game_tiles
-; 	jp state_play_upload_object_tiles_to_vdp_if_necessary
-	ret
+
+	ld c, TILES_PAGE
+	ld hl, state_play_upload_object_tiles_to_vdp_if_necessary
+	jp call_hl_in_page_c_8000  ; we just use this, so that the 8000 page is restored to TEXT when returning.

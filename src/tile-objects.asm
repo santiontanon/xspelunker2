@@ -768,10 +768,10 @@ ENDR
 	dw object_interaction_function_pickup_small_key  ; TAG_SMALL_KEY2
 	dw object_interaction_function_pickup_small_key  ; TAG_SMALL_KEY3
 	dw object_interaction_function_pickup_small_key  ; TAG_SMALL_KEY4
-	dw object_interaction_function_empty  ; TAG_SMALL_KEY_CHEST1
-	dw object_interaction_function_empty  ; TAG_SMALL_KEY_CHEST2
-	dw object_interaction_function_empty  ; TAG_SMALL_KEY_CHEST3
-	dw object_interaction_function_empty  ; TAG_SMALL_KEY_CHEST4
+	dw object_interaction_function_small_chest  ; TAG_SMALL_KEY_CHEST1
+	dw object_interaction_function_small_chest  ; TAG_SMALL_KEY_CHEST2
+	dw object_interaction_function_small_chest  ; TAG_SMALL_KEY_CHEST3
+	dw object_interaction_function_small_chest  ; TAG_SMALL_KEY_CHEST4
 
 
 object_interaction_inventory_slot:
@@ -788,7 +788,7 @@ object_interaction_inventory_slot:
 	db #ff, #ff, #ff, #ff, #ff, #ff  ; color chests
 	db #ff, #ff, #ff, #ff  ; trial clues
 	db #ff, #ff, #ff, #ff  ; combination clues
-	db 20, 21, 22, 23  ; key items
+	db 21, 22, 23, 24  ; key items
 	db #ff, 0, #ff  ; boss1
 	db #ff, 1, #ff  ; boss2
 	db #ff, 2, #ff  ; boss3
@@ -803,9 +803,9 @@ object_interaction_inventory_slot:
 	db #ff, #ff, #ff, #ff, #ff  ; hearts
 	db #ff, #ff, #ff, #ff  ; riddle clues
 	db #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff  ; story trivia
-	db 24, 25, 26, 27, 28, 29  ; maya upgrade items
-	db 30, 31  ; alien upgrade items
-	db #ff, #ff, #ff, #ff  ; small keys
+	db 25, 26, 27, 28, 29, 30  ; maya upgrade items
+	db 31, 32  ; alien upgrade items
+	db 20, 20, 20, 20  ; small keys
 	db #ff, #ff, #ff, #ff  ; small key chests
 
 
@@ -842,7 +842,7 @@ object_interaction_function_pickup_heart_continue:
 	ld (hl), 1
 
 	ld hl, redraw_flags
-	set ROOM_REDRAW_FLAG_BIT, (hl)
+	ld (hl), #ff
 
 	push ix
 		call room_undraw_tile_objects
@@ -885,6 +885,8 @@ object_interaction_function_pickup_weapon:
 object_interaction_function_pickup_small_key:
 	ld hl, player_inventory_n_small_keys
 	inc (hl)
+	ld hl, player_inventory_items + 20  ; small key
+	ld (hl), 1
 	jr object_interaction_function_pickup_small_key_continue
 
 
@@ -924,6 +926,64 @@ object_interaction_function_pickup_map_piece_continue:
 	pop ix
 
 	jp object_interaction_function_pickup_heart_continue
+
+
+;-----------------------------------------------
+object_interaction_function_small_chest:
+	; check if the player has "small key" selected
+	ld hl, player_current_item
+	ld a, (hl)
+	cp 31  ; small key
+	jr nz, object_interaction_function_small_chest_fail
+
+	; lose small key:
+	ld (hl), 0  ; machete
+	ld hl, player_inventory_n_small_keys
+	dec (hl)
+	ld a, (hl)
+	or a
+	jr nz, object_interaction_function_small_chest_continue
+	ld hl, player_inventory_items + 20  ; small key location
+	ld (hl), 0
+object_interaction_function_small_chest_continue:
+	; update chest state:
+	ld hl, global_state__objects
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	ADD_HL_A
+	ld (hl), 1  ; chest is open
+	ld d, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	ld hl, get_chest_content
+	ld c, PCG_PAGE
+	call call_hl_in_page_c_8000
+
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_TYPE), e
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_ID), e
+
+	ld hl, set_item_object_to_upload_to_vdp
+	ld c, PCG_PAGE
+	call call_hl_in_page_c_8000
+
+	ld hl, SFX_ui_select
+	call play_SFX_with_high_priority
+
+	ld hl, redraw_flags
+	ld (hl), #ff
+	call room_undraw_tile_objects
+	jp room_render_tile_objects
+
+object_interaction_function_small_chest_fail:
+	ld hl, SFX_ui_wrong
+	call play_SFX_with_high_priority
+
+	ld de, TEXT_WRONG_KEY
+	ld hl, display_in_game_message
+	ld c, TEXT_PAGE
+	push ix
+		call call_hl_in_page_c_8000
+	pop ix
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)
+	jp room_render_tile_objects
 
 
 ;-----------------------------------------------
@@ -1025,13 +1085,11 @@ ENDR
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_SMALL_KEY2
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_SMALL_KEY3
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_SMALL_KEY4
-REPT TAG_PUSHABLE_BLOCK - TAG_SMALL_KEY_CHEST1  ; add filler
-	TILE_OBJECT_DATA 2, 0, 0, 0
-ENDR
-; TAG_SMALL_KEY_CHEST1: equ 133
-; TAG_SMALL_KEY_CHEST2: equ 134
-; TAG_SMALL_KEY_CHEST3: equ 135
-; TAG_SMALL_KEY_CHEST4: equ 136	
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_SMALL_KEY_CHEST1
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_SMALL_KEY_CHEST2
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_SMALL_KEY_CHEST3
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_SMALL_KEY_CHEST4
+
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_pushable_block_gfx  ; TAG_PUSHABLE_BLOCK
 
 tile_object_regular_object_gfx:

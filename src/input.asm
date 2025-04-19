@@ -144,16 +144,18 @@ read_joystick_noB:
 
 
 ;-----------------------------------------------
-; Waits until the player presses space
-wait_for_space:
+; Waits until the player presses button 1, button 2, or interaction key
+wait_for_click:
     call update_keyboard_buffers
     ld a, (keyboard_clicks)
     bit KEY_WEAPON_BIT, a
     ret nz
     bit KEY_JUMP_BIT, a
     ret nz
+    bit KEY_INTERACT_BIT, a
+    ret nz
     halt
-    jr wait_for_space
+    jr wait_for_click
 
 
 ;-----------------------------------------------

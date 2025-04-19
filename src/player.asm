@@ -196,7 +196,7 @@ player_update_update_sprite_weapon:
 	ld (bc), a  ; x
 	inc bc
 	inc bc
-	ld a, (player_current_weapon)
+	ld a, (player_current_item)
 	cp 2  ; macuahuitl
 	jr z, player_update_update_sprite_weapon_macuahuitl
 	cp 8  ; obsidian knive
@@ -286,7 +286,12 @@ player_update_state_idle_no_rope:
 	; check for weapon:
 	ld a, (keyboard_clicks)
 	bit KEY_WEAPON_BIT, a
-	jp nz, player_update_switch_to_weapon_swing
+	jp z, player_update_state_idle_no_weapon_swing
+	ld a, (player_current_item)
+	cp 12  ; first non-weapon
+	jp c, player_update_switch_to_weapon_swing
+	call player_update_interact
+player_update_state_idle_no_weapon_swing:
 
 	; check for jump
 	ld a, (keyboard_clicks)
@@ -341,9 +346,15 @@ player_update_state_walking_no_rope:
 	; check for weapon:
 	ld a, (keyboard_clicks)
 	bit KEY_WEAPON_BIT, a
-	jp nz, player_update_switch_to_weapon_swing
+	jp z, player_update_state_walking_no_weapon_swing
+	ld a, (player_current_item)
+	cp 12  ; first non-weapon
+	jp c, player_update_switch_to_weapon_swing
+	call player_update_interact
+player_update_state_walking_no_weapon_swing:
 
 	; check for jump
+	ld a, (keyboard_clicks)
 	bit KEY_JUMP_BIT, a
 	jp nz, player_update_switch_to_jumping
 
@@ -428,7 +439,12 @@ player_update_state_falling:
 	; check for weapon:
 	ld a, (keyboard_clicks)
 	bit KEY_WEAPON_BIT, a
-	jp nz, player_update_switch_to_weapon_swing_falling
+	jp z, player_update_state_falling_no_weapon_swing
+	ld a, (player_current_item)
+	cp 12  ; first non-weapon
+	jp c, player_update_switch_to_weapon_swing_falling
+	call player_update_interact
+player_update_state_falling_no_weapon_swing:
 
 	; movement left/right:
 	ld a, (keyboard_state)
@@ -571,7 +587,12 @@ player_update_state_jumping_no_rope:
 	; check for weapon:
 	ld a, (keyboard_clicks)
 	bit KEY_WEAPON_BIT, a
-	jp nz, player_update_switch_to_weapon_swing_jumping
+	jp z, player_update_state_jumping_no_weapon_swing
+	ld a, (player_current_item)
+	cp 12  ; first non-weapon
+	jp c, player_update_switch_to_weapon_swing_jumping
+	call player_update_interact
+player_update_state_jumping_no_weapon_swing:
 
 	; movement left/right:
 	ld a, (keyboard_state)
@@ -647,7 +668,12 @@ player_update_state_crouching:
 	; check for weapon swing:
 	ld a, (keyboard_clicks)
 	bit KEY_WEAPON_BIT, a
-	jp nz, player_update_switch_to_weapon_swing_crouching
+	jp z, player_update_state_crouching_no_weapon_swing
+	ld a, (player_current_item)
+	cp 12  ; first non-weapon
+	jp c, player_update_switch_to_weapon_swing_crouching
+	call player_update_interact
+player_update_state_crouching_no_weapon_swing:
 
 	; check for inventory:
 	ld a, (config_inventory_key_combo)
@@ -721,7 +747,12 @@ player_update_state_crawling:
 	; check for weapon swing:
 	ld a, (keyboard_clicks)
 	bit KEY_WEAPON_BIT, a
-	jp nz, player_update_switch_to_weapon_swing_crouching
+	jp z, player_update_state_crawling_no_weapon_swing
+	ld a, (player_current_item)
+	cp 12  ; first non-weapon
+	jp c, player_update_switch_to_weapon_swing_crouching
+	call player_update_interact
+player_update_state_crawling_no_weapon_swing:
 
 	; check for inventory:
 	ld a, (keyboard_clicks)
@@ -1451,7 +1482,7 @@ player_update_state_directional_weapon_no_right:
 	call player_check_collision_down_inc
 	jp nz, player_update_switch_to_falling_with_directional
 
-	ld a, (player_current_weapon)
+	ld a, (player_current_item)
 	cp 3  ; shield
 	jr z, player_update_state_directional_weapon_shield
 
@@ -1572,7 +1603,7 @@ player_update_state_directional_weapon_jumping_loop_done:
 	bit KEY_WEAPON_BIT, a
 	jp nz, player_update_state_directional_weapon_jumping_done
 
-	ld a, (player_current_weapon)
+	ld a, (player_current_item)
 	cp 3  ; shield
 	jr z, player_update_state_directional_weapon_jumping_shield
 
@@ -1705,7 +1736,7 @@ player_update_state_directional_weapon_falling_speed_loop_done:
 	bit KEY_WEAPON_BIT, a
 	jp nz, player_update_state_directional_weapon_falling_done
 
-	ld a, (player_current_weapon)
+	ld a, (player_current_item)
 	cp 3  ; shield
 	jr z, player_update_state_directional_weapon_falling_shield
 
@@ -1815,7 +1846,7 @@ player_update_state_directional_weapon_crouching_no_right:
 	jp nz, player_update_switch_to_directional_weapon
 player_update_state_directional_weapon_crouching_still_crouching:
 
-	ld a, (player_current_weapon)
+	ld a, (player_current_item)
 	cp 3  ; shield
 	jr z, player_update_state_directional_weapon_crouching_shield
 
@@ -1909,7 +1940,7 @@ player_update_interact:
 
 ;-----------------------------------------------
 player_update_fire_directional_bullet:
-	ld a, (player_current_weapon)
+	ld a, (player_current_item)
 	cp 3  ; shield
 	ret z
 
@@ -1932,7 +1963,7 @@ player_update_fire_directional_bullet:
 	ret nz
 	push hl
 	pop ix  ; transfer the pointer to ix for later
-	ld a, (player_current_weapon)
+	ld a, (player_current_item)
 	sub 4
 	push hl
 		ld hl, player_weapon_duration_table
@@ -1940,7 +1971,7 @@ player_update_fire_directional_bullet:
 		ld a, (hl)
 	pop hl
 	push af
-		ld a, (player_current_weapon)
+		ld a, (player_current_item)
 		add a, SPRITE_OBJECT_TYPE_PLAYER_BULLET_STONE - 4  ; 4 is the first weapon that fires bullets
 		ld (hl), a
 		inc hl
@@ -1962,7 +1993,7 @@ player_update_fire_directional_bullet:
 	neg
 	ld c, a  ; c = -1 if looking left, 1 is looking right
 
-	ld a, (player_current_weapon)
+	ld a, (player_current_item)
 	cp 4  ; sling
 	jr z, player_update_fire_directional_bullet_parabollic
 	cp 6  ; atlatl
@@ -2051,7 +2082,7 @@ player_update_fire_directional_bullet_fw_up:
 	add a, c
 	ld c, a  ; start offset: 4, 4  or -4, 4 (depending on player facing)
 	ld b, 4
-	ld a, (player_current_weapon)
+	ld a, (player_current_item)
 	cp 4  ; sling
 	jr z, player_update_fire_directional_bullet_fw_up_continue
 	ld a, c
@@ -2076,7 +2107,7 @@ player_update_fire_directional_bullet_speed_set:
 	ld b, (ix + ROOM_OBJECT_STRUCT_SPEED_Y)
 	call update_sprite_objects_move_object	
 
-	ld a, (player_current_weapon)
+	ld a, (player_current_item)
 	cp 7
 	jr z, player_update_fire_directional_bullet_sfx_raygun
 	ld hl, SFX_weapon_swing
@@ -2101,7 +2132,7 @@ player_weapon_duration_table:
 ; - nz: directional weapon
 player_update_determine_weapon_swing_type:
 	; Determine the type of swing:
-	ld a, (player_current_weapon)
+	ld a, (player_current_item)
 	or a
 	jr z, player_update_determine_weapon_swing_type_machete
 	cp 1
@@ -2153,7 +2184,7 @@ player_update_determine_weapon_swing_type_determined:
 ; - nz: directional weapon
 player_update_determine_weapon_swing_type_jumping:
 	; Determine the type of swing:
-	ld a, (player_current_weapon)
+	ld a, (player_current_item)
 	or a
 	jr z, player_update_determine_weapon_swing_type_jumping_machete
 	cp 8
@@ -2209,7 +2240,7 @@ player_update_determine_weapon_swing_type_jumping_determined:
 ; - nz: directional weapon
 player_update_determine_weapon_swing_type_crouching:
 	; Determine the type of swing:
-	ld a, (player_current_weapon)
+	ld a, (player_current_item)
 	or a
 	jr z, player_update_determine_weapon_swing_type_crouching_machete
 	cp 8
@@ -2259,7 +2290,7 @@ player_update_weapon_sprite_request:
 	jp z, player_update_weapon_sprite_request_macuahuitl1
 player_update_weapon_sprite_request_continue:
 	; damage:
-	ld a, (player_current_weapon)
+	ld a, (player_current_item)
 	ld hl, player_weapon_damages
 	ADD_HL_A
 	ld a, (hl)

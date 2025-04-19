@@ -25,6 +25,7 @@ public class HardcodedWorldForAssembler {
     public static final int MAX_AREA_HEIGHT = 8;
     public static final int MAX_N_TAGS = 32;
     public static final int MAX_CONNECTIONS = 12;
+    public static final int MAX_CHESTS = 10;
     
     public static void main(String args[]) throws Exception
     {
@@ -61,8 +62,29 @@ public class HardcodedWorldForAssembler {
                                (c.p1.x * 2 + c.p1_x_chunk_offs) + ", " + (c.p1.y * 2 + c.p1_y_chunk_offs) + ", " + c.p1.direction + ", " +
                                (c.p2.x * 2 + c.p2_x_chunk_offs) + ", " + (c.p2.y * 2 + c.p2_y_chunk_offs) + ", " + c.p2.direction);
         }
+        if (w.interAreaconnections.size() > MAX_CONNECTIONS) {
+            throw new Exception("More connections than supported: " + w.interAreaconnections.size());
+        }
         if (w.interAreaconnections.size() < MAX_CONNECTIONS) {
             System.out.println("  ds " + (MAX_CONNECTIONS - w.interAreaconnections.size()) * 8 + ", #ff");
+        }
+        System.out.println("  db #ff  ; sentinel");
+
+        // Chest content:
+        int n_chests = 0;
+        System.out.println("hardcoded_world_data__chest_content:");
+        System.out.println("  ; each entry is 2 bytes: chest_id, content_id");
+        for(String chest:w.chestContent.keySet()) {
+            if (chest.contains("boss")) continue;
+            System.out.println("  db " + AssemblerTags.tagToAssembler(chest) + ", " + AssemblerTags.tagToAssembler(w.chestContent.get(chest)));
+            n_chests++;
+        }
+        if (n_chests > MAX_CHESTS) {
+            System.err.println(w.chestContent);
+            throw new Exception("More chests than supported: " + n_chests);
+        }
+        if (n_chests < MAX_CHESTS) {
+            System.out.println("  ds " + (MAX_CHESTS - n_chests) * 2 + ", #ff");
         }
         System.out.println("  db #ff  ; sentinel");
     }

@@ -7,9 +7,9 @@ draw_hud_minimal:
 	ld de, (tmp_hud_drawing_de)
 	call draw_hud_coins
 
-	ld hl, (tmp_hud_drawing_hl)
-	ld de, (tmp_hud_drawing_de)
-	call draw_hud_small_keys
+; 	ld hl, (tmp_hud_drawing_hl)
+; 	ld de, (tmp_hud_drawing_de)
+; 	call draw_hud_small_keys
 
 	ld hl, (tmp_hud_drawing_hl)
 	call draw_hud_oxygen
@@ -41,9 +41,9 @@ draw_hud_full:
 	ld de, 0
 	call draw_hud_coins
 
-	ld hl, buffer_4096 + 32
-	ld de, 0
-	call draw_hud_small_keys
+; 	ld hl, buffer_4096 + 32
+; 	ld de, 0
+; 	call draw_hud_small_keys
 
 	ld hl, buffer_4096 + 64 + 4
 	call draw_hud_oxygen_always
@@ -132,18 +132,18 @@ draw_hud_coins_no_rerender:
 
 
 ;-----------------------------------------------
-draw_hud_small_keys:
-	add hl, de
-	ld bc, 32 + 5
-	add hl, bc
-	ld a, (player_inventory_n_small_keys)
-draw_hud_small_keys_loop:
-	or a
-	ret z
-	ld (hl), 22  ; key tile
-	inc hl
-	dec a
-	jr draw_hud_small_keys_loop
+; draw_hud_small_keys:
+; 	add hl, de
+; 	ld bc, 32 + 5
+; 	add hl, bc
+; 	ld a, (player_inventory_n_small_keys)
+; draw_hud_small_keys_loop:
+; 	or a
+; 	ret z
+; 	ld (hl), 22  ; key tile
+; 	inc hl
+; 	dec a
+; 	jr draw_hud_small_keys_loop
 
 
 ;-----------------------------------------------
@@ -194,37 +194,6 @@ draw_hud_oxygen_zero:
 
 ;-----------------------------------------------
 draw_hud_current_weapon:
-	push hl
-	push de
-		ld a, (redraw_flags)
-		bit WEAPON_REDRAW_FLAG_BIT, a
-		jr z, draw_hud_current_weapon_no_rerender
-
-		SETMEGAROMPAGE_8000 TILES_PAGE
-
-		; update the weapon tiles in the hud:
-		; from: hud_weapon_tiles_bin + a*64
-		; to: CHRTBL2 + 15*8  /  CLRTBL2 + 15*8
-		ld a, (player_current_weapon)
-		add a, a  ; * 2
-		add a, a  ; * 4
-		add a, a  ; * 8
-		add a, a  ; * 16
-		ld l, a
-		ld h, 0
-		add hl, hl  ; * 32
-		add hl, hl  ; * 64
-		ld bc, hud_weapon_tiles_bin
-		add hl, bc
-		ld de, CHRTBL2 + 15*8
-		ld b, 32
-		call fast_small_LDIRVM
-		ld de, CLRTBL2 + 15*8
-		ld b, 32
-		call fast_small_LDIRVM
-draw_hud_current_weapon_no_rerender:
-	pop de
-	pop hl
 	ld bc, 30
 	add hl, bc
 	ld (hl), 15
@@ -241,7 +210,7 @@ draw_hud_current_weapon_no_rerender:
 
 ;-----------------------------------------------
 draw_hud_current_weapon_ammo:
-	ld a, (player_current_weapon)
+	ld a, (player_current_item)
 	sub 4
 	ret c
 	cp 4

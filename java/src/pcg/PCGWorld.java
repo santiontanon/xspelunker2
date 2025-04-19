@@ -948,6 +948,13 @@ public class PCGWorld {
                         key_tags = new String[]{qs.goalTag + "-key"};
                         quest_type = 1;
                         break;
+                    case "midpoint":
+                    case "ending":
+                        // midpoint or ending cannot be inside a chest!
+                        if (quest_type == 1) {
+                            quest_type = r.nextInt(2) * 2;  // 0 or 2                        
+                        }
+                        break;
                     default:
                 }
 

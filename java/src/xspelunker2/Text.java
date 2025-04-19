@@ -209,6 +209,7 @@ public class Text {
         addLineSafe(lines_with_constant, "Yellow key: a small metalic yellow key.", "ITEM_YELLOW_KEY", 80);
         addLineSafe(lines_with_constant, "Purple key: a small metalic purple key.", "ITEM_PURPLE_KEY", 80);
         addLineSafe(lines_with_constant, "White key: a small metalic white key.", "ITEM_WHITE_KEY", 80);
+        addLineSafe(lines_with_constant, "Small keys: some small rusty keys.", "ITEM_SMALL_KEYS", 80);
         addLineSafe(lines_with_constant, "Clay suit: a small statuette made out of clay. It sure looks like an astronaut to me, but it's probably an old suit of armor.", "ITEM_CLAY_SUIT", 80);
         addLineSafe(lines_with_constant, "Gear: a small stone gear, maybe part of some mechanism?", "ITEM_GEAR", 80);
         addLineSafe(lines_with_constant, "Stone Ball: a pretty hefty solid ball made out of stone.", "ITEM_BALL", 80);
@@ -223,12 +224,13 @@ public class Text {
         addLineSafe(lines_with_constant, "Ice cape: a cape with a coating of ice, which seems never to melt. It'll protect me from heat.", "ITEM_ICE_CAPE", 80);
         addLineSafe(lines_with_constant, "A letter from Elaine. Press FIRE to read it.", "ITEM_LETTER1", 80);
         addLineSafe(lines_with_constant, "The second letter from Elaine. Press FIRE to read it.", "ITEM_LETTER2", 80);
-        addLineSafe(lines_with_constant, "The third letter from Elaine. Press FIRE to read it.", "ITEM_LETTER3", 80);
+//        addLineSafe(lines_with_constant, "The third letter from Elaine. Press FIRE to read it.", "ITEM_LETTER3", 80);
         addLineSafe(lines_with_constant, "Map: a map of the ruins that I have been composing as I find pieces of it. Press FIRE to examine it.", "ITEM_MAP", 80);
        
         // In-game messages:
         addLineSafe(lines_with_constant, "As you consume the still beating heart, you feel your strength increasing!", "HEART_PICKUP", 112);
         addLineSafe(lines_with_constant, "One more piece of the map!", "MAP_PIECE_PICKUP", 112);
+        addLineSafe(lines_with_constant, "That does not seem to be the correct key for this lock!", "WRONG_KEY", 112);
         
         List<Integer> numbers = font.convertStringToAssembler("0123456789 ");
         System.out.println("Numbers: " + numbers);
