@@ -1,9 +1,16 @@
 to do:
 
+***- doors:
+  ***- spawn doors
+  ***- spawn color locks
+  ***- spawn gear lock
+  ***- spawn ball lock
+  ***- spawn doll lock
+  ***- spawn idol lock
+  ***- use keys/key items in the locks and open door
+  ***- keep the door open when leaving and coming back to the room
+
 - being able to complete the game in assembler:
-  ***- spawn and open chests with colored keys
-  - spawn doors
-  - spawn key locks and use them to open doors (including gear, ball, etc.)
   - press buttons to open doors
   - combination clues (how to interact with clues? crouch? up?) [not all are readable yet, maya clues/story are only readable after 2nd piece put in calendar stone]
   - interact with combination levers (hit them to change their state)

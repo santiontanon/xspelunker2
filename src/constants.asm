@@ -163,7 +163,7 @@ RAYGUN_DAMAGE: equ 2
 ; - 2 alien upgrade items
 ; - 2 elaine letters
 ; - 1 map
-N_INVENTORY_ITEM_TYPES: equ 7 + 7 + 6 + 1 + 4 + 6 + 2 + 2 + 1
+N_INVENTORY_ITEM_TYPES: equ 7 + 7 + 6 + 1 + 4 + 6 + 2 + 2 + 1  ; 36
 N_INVENTORY_WEAPON_TYPES: equ 4 + 4 + 3  ; 4 base, 4 ranged, 3 upgrades
 
 ; - initial piece just has: jungle + first pyramid, then one piece for each of the rest

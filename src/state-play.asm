@@ -41,9 +41,9 @@ state_play:
 
 		; debug:
 		ld a, 1
-		ld (player_inventory_items), a
-		ld (player_inventory_items+1), a
-		ld (player_inventory_items+2), a
+; 		ld (player_inventory_items), a
+; 		ld (player_inventory_items+1), a
+; 		ld (player_inventory_items+2), a
 ; 		ld (player_inventory_items+3), a
 ; 		ld (player_inventory_items+4), a
 ; 		ld (player_inventory_items+5), a

@@ -682,12 +682,12 @@ ENDR
 	dw object_interaction_function_pickup_item  ; TAG_YELLOW_KEY
 	dw object_interaction_function_pickup_item  ; TAG_WHITE_KEY
 	dw object_interaction_function_pickup_item  ; TAG_PURPLE_KEY
-	dw object_interaction_function_empty  ; TAG_RED_CHEST
-	dw object_interaction_function_empty  ; TAG_GREEN_CHEST
-	dw object_interaction_function_empty  ; TAG_BLUE_CHEST
-	dw object_interaction_function_empty  ; TAG_YELLOW_CHEST
-	dw object_interaction_function_empty  ; TAG_WHITE_CHEST
-	dw object_interaction_function_empty  ; TAG_PURPLE_CHEST
+	dw object_interaction_function_chest  ; TAG_RED_CHEST
+	dw object_interaction_function_chest  ; TAG_GREEN_CHEST
+	dw object_interaction_function_chest  ; TAG_BLUE_CHEST
+	dw object_interaction_function_chest  ; TAG_YELLOW_CHEST
+	dw object_interaction_function_chest  ; TAG_WHITE_CHEST
+	dw object_interaction_function_chest  ; TAG_PURPLE_CHEST
 	dw object_interaction_function_empty  ; TAG_TRIAL1_CLUE
 	dw object_interaction_function_empty  ; TAG_TRIAL2_CLUE
 	dw object_interaction_function_empty  ; TAG_TRIAL3_CLUE
@@ -929,6 +929,28 @@ object_interaction_function_pickup_map_piece_continue:
 
 
 ;-----------------------------------------------
+object_interaction_function_chest:
+	; check if the player has the proper key selected
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	add 25 - TAG_RED_CHEST
+	ld c, a  ; c = desired key
+	ld hl, player_current_item
+	cp (hl)
+	jr nz, object_interaction_function_chest_fail
+
+	; lose key:
+	ld (hl), 0  ; machete
+	ld a, c
+	sub 25  ; position of the first color key
+	ld b, 0
+	ld c, a
+	ld hl, player_inventory_items + 14
+	add hl, bc  ; key location
+	ld (hl), 0
+	jp object_interaction_function_small_chest_continue
+
+
+;-----------------------------------------------
 object_interaction_function_small_chest:
 	; check if the player has "small key" selected
 	ld hl, player_current_item
@@ -971,6 +993,7 @@ object_interaction_function_small_chest_continue:
 	call room_undraw_tile_objects
 	jp room_render_tile_objects
 
+object_interaction_function_chest_fail:
 object_interaction_function_small_chest_fail:
 	ld hl, SFX_ui_wrong
 	call play_SFX_with_high_priority
@@ -1007,9 +1030,20 @@ ENDR
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_YELLOW_KEY
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_WHITE_KEY
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_PURPLE_KEY
-REPT TAG_BALL_KEY - TAG_RED_CHEST   ; add filler
-	TILE_OBJECT_DATA 2, 0, 0, 0
-ENDR
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_RED_CHEST
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_GREEN_CHEST
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_BLUE_CHEST
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_YELLOW_CHEST
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_WHITE_CHEST
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_PURPLE_CHEST
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_TRIAL1_CLUE
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_TRIAL2_CLUE
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_TRIAL3_CLUE
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_TRIAL4_CLUE
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_COMBINATION1_CLUE
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_COMBINATION2_CLUE
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_COMBINATION3_CLUE
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_COMBINATION4_CLUE
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_BALL_KEY
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_IDOL_KEY
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_GEAR_KEY

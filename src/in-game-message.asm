@@ -156,8 +156,9 @@ display_in_game_message_continue:
 
 	ld c, TILES_PAGE
 	ld hl, tiles_pyramid_zx0
-	call setup_game_tiles
+	call setup_game_tiles_only_biome
 
 	ld c, TILES_PAGE
 	ld hl, state_play_upload_object_tiles_to_vdp_if_necessary
 	jp call_hl_in_page_c_8000  ; we just use this, so that the 8000 page is restored to TEXT when returning.
+
