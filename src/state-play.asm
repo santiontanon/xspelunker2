@@ -6,7 +6,8 @@ state_play:
 		call clear_memory
 
 		; initial player position:
-		ld hl, #0a00
+; 		ld hl, #0a00
+		ld hl, #1000
 		ld (player_x), hl
 		ld hl, #0a00
 		ld (player_y), hl
@@ -27,14 +28,15 @@ state_play:
 		; generate area:
 		ld hl, pcg_generate_area
 ; 		ld e, 0  ; area to generate
-; 		ld e, 1  ; area to generate
-		ld e, 2  ; area to generate
+; 		ld e, 7  ; area to generate
+		ld e, 8  ; area to generate
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
 
 		; generate room:
 ; 		ld e, 0
-		ld e, 17
+; 		ld e, 5
+		ld e, 0
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
@@ -353,11 +355,11 @@ state_play_upload_object_tiles_to_vdp_if_necessary_selected_item_set:
 	ld b, 32
 	call fast_small_LDIRVM	
 
-	; update in-game object tiles:
+	; update in-game item object tiles:
 	ld hl, (item_object_to_upload_to_vdp)
 	ld a, h
 	or a
-	ret z
+	jr z, state_play_upload_object_tiles_to_vdp_if_necessary_continue
 	push hl
 		ld de, CHRTBL2 + FIRST_ITEM_TILE*8
 		ld b, 32
@@ -387,5 +389,56 @@ state_play_upload_object_tiles_to_vdp_if_necessary_selected_item_set:
 	pop hl
 	ld de, CLRTBL2 + FIRST_ITEM_TILE*8 + 256*8*2
 	ld b, 32
+	call fast_small_LDIRVM
+
+state_play_upload_object_tiles_to_vdp_if_necessary_continue:
+	ld hl, object_large_tiles_zx0
+	ld de, buffer_4096
+	ld c, TILES_PAGE
+	call dzx0_from_page_c
+
+	; update in-game large object tiles:
+	ld hl, (large_object_to_upload_to_vdp)
+	ld a, (large_object_to_upload_to_vdp_size)
+	ld b, a
+	ld a, h
+	or a
+	ret z
+	push hl
+	push bc
+		ld de, CHRTBL2 + FIRST_LARGE_ITEM_TILE*8
+		ld b, 32
+		call fast_small_LDIRVM
+	pop bc
+	pop hl
+	push hl
+	push bc
+		ld de, CHRTBL2 + FIRST_LARGE_ITEM_TILE*8 + 256*8
+		call fast_small_LDIRVM
+	pop bc
+	pop hl
+	push hl
+	push bc
+		ld de, CHRTBL2 + FIRST_LARGE_ITEM_TILE*8 + 256*8*2
+		call fast_small_LDIRVM
+	pop bc
+	pop hl
+	ld c, b
+	ld b, 0
+	add hl, bc
+	ld b, c
+	push hl
+	push bc
+		ld de, CLRTBL2 + FIRST_LARGE_ITEM_TILE*8
+		call fast_small_LDIRVM
+	pop bc
+	pop hl
+	push hl
+	push bc
+		ld de, CLRTBL2 + FIRST_LARGE_ITEM_TILE*8 + 256*8
+		call fast_small_LDIRVM
+	pop bc
+	pop hl
+	ld de, CLRTBL2 + FIRST_LARGE_ITEM_TILE*8 + 256*8*2
 	jp fast_small_LDIRVM
 

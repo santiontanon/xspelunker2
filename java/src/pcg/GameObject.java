@@ -97,10 +97,10 @@ public class GameObject {
             case "yellow-key":
                 tx = 144; ty = 16;
                 break;
-            case "purple-key":
+            case "white-key":
                 tx = 160; ty = 16;
                 break;
-            case "white-key":
+            case "purple-key":
                 tx = 176; ty = 16;
                 break;
 
@@ -116,10 +116,10 @@ public class GameObject {
             case "yellow-chest":
                 tx = 144; ty = 32;
                 break;
-            case "purple-chest":
+            case "white-chest":
                 tx = 160; ty = 32;
                 break;
-            case "white-chest":
+            case "purple-chest":
                 tx = 176; ty = 32;
                 break;
             case "gear-key":
@@ -151,22 +151,22 @@ public class GameObject {
                 tx = 64; ty = 16;
                 break;                
             case "red-lock":
-                tx = 96; ty = 48;
+                tx = 96; ty = 64;
                 break;
             case "green-lock":
-                tx = 112; ty = 48;
+                tx = 112; ty = 64;
                 break;
             case "blue-lock":
-                tx = 128; ty = 48;
+                tx = 128; ty = 64;
                 break;
             case "yellow-lock":
-                tx = 144; ty = 48;
-                break;
-            case "purple-lock":
-                tx = 160; ty = 48;
+                tx = 144; ty = 64;
                 break;
             case "white-lock":
-                tx = 176; ty = 48;
+                tx = 160; ty = 64;
+                break;
+            case "purple-lock":
+                tx = 176; ty = 64;
                 break;
 
             case "trial1-clue":

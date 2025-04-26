@@ -158,7 +158,7 @@ RAYGUN_DAMAGE: equ 2
 ; - 7 boss idols
 ; - 6 color keys
 ; - 1 small key
-; - 4 key items (clay doll, gear, ball, idol)
+; - 4 key items (ball, idol, gear, clay doll)
 ; - 6 mayan upgrade items (sandals, etc.)
 ; - 2 alien upgrade items
 ; - 2 elaine letters
@@ -312,6 +312,8 @@ TAG_SMALL_KEY_CHEST4: equ 136
 N_UNIQUE_TAGS: equ 137
 ; tags below can appear multiple times (and do not have state, they are reset every time you enter in a room):
 TAG_PUSHABLE_BLOCK: equ 137
+TAG_DOOR_VERTICAL: equ 138
+TAG_DOOR_HORIZONTAL: equ 139
 
 N_PATH_OPENING_TAGS: equ 32  ; there are less than this, but just in case (this is the number of tags above that spawn a breakable wall or door).
 

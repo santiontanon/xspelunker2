@@ -1938,12 +1938,12 @@ pcg_generate_area__small_lock_tags:
     db TAG_WHITE_LOCK 
     db TAG_PURPLE_LOCK
     db TAG_BALL_LOCK
+    db TAG_ASTRONAUT_LOCK
     db 0
 
 pcg_generate_area__big_lock_tags:
     db TAG_IDOL_LOCK
     db TAG_GEAR_LOCK
-    db TAG_ASTRONAUT_LOCK
     db 0
 
 pcg_generate_area__4x4_item_tags:

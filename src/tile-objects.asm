@@ -222,7 +222,11 @@ room_render_tile_objects_loop:
 		cp TAG_BREAKABLE_WALL3
 		jr z, room_render_tile_objects_loop_continue
 		cp TAG_BREAKABLE_WALL4
-		jr z, room_render_tile_objects_loop_continue		
+		jr z, room_render_tile_objects_loop_continue
+		cp TAG_DOOR_VERTICAL
+		jp z, room_render_tile_objects_render_v_door
+		cp TAG_DOOR_HORIZONTAL
+		jp z, room_render_tile_objects_render_h_door
 		inc hl
 		ld c, (hl)  ; x
 		ld ixl, c
@@ -337,6 +341,7 @@ room_render_tile_objects_render:
 		ld e, (hl)
 		inc hl
 		ld d, (hl)  ; de = ptr to the graphics
+room_render_tile_objects_render_entry_point:
 		; compute ptr where to draw:
 		push bc
 			ld c, ixl
@@ -360,6 +365,39 @@ room_render_tile_objects_render_loop_x:
 		ADD_HL_A
 		djnz room_render_tile_objects_render_loop_y
 		jp room_render_tile_objects_loop_continue
+
+
+;-----------------------------------------------
+room_render_tile_objects_render_v_door:
+	inc hl
+	ld c, (hl)  ; x
+	ld ixl, c
+	inc hl
+	ld b, (hl)  ; y
+	ld ixh, b
+	ld bc, #0301
+	inc hl
+	inc hl
+	inc hl
+	inc hl
+	ld de, tile_object_v_door_gfx
+	jp room_render_tile_objects_render_entry_point
+
+
+room_render_tile_objects_render_h_door:
+	inc hl
+	ld c, (hl)  ; x
+	ld ixl, c
+	inc hl
+	ld b, (hl)  ; y
+	ld ixh, b
+	ld bc, #0104
+	inc hl
+	inc hl
+	inc hl
+	inc hl
+	ld de, tile_object_h_door_gfx
+	jp room_render_tile_objects_render_entry_point
 
 
 ;-----------------------------------------------
@@ -581,6 +619,9 @@ room_remove_breakable_wall_continue:
 
 
 ;-----------------------------------------------
+; input:
+; - c, b: x, y
+; - e, d: width, height
 room_remove_breakable_wall_restore_background:
 	push de
 		call get_room_tile_ptr
@@ -607,24 +648,30 @@ room_remove_breakable_wall_restore_background_loop_x:
 ; - nz: object behind
 ; - ix: ptr to object if one found
 get_tile_object_behind_player:
-	ld a, (player_x+1)
+	ld a, (player_x + 1)
 	ld c, a
-	ld a, (player_y+1)
+	ld a, (player_y + 1)
 	ld b, a
 	ld ix, current_room__tile_objects
 get_tile_object_behind_player_loop:
 	ld a, (ix)  ; ID
 	cp #ff
 	ret z
-	; for now, assume all objects are 16x16:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)  ; type
+	cp TAG_GEAR_LOCK
+	jr z, get_tile_object_behind_player_32x24_object
+	cp TAG_IDOL_LOCK
+	jr z, get_tile_object_behind_player_32x24_object
+
+	; 16x16 objects:
 	ld a, b
-	cp (ix+ROOM_TILE_OBJECT_STRUCT_Y)
+	cp (ix + ROOM_TILE_OBJECT_STRUCT_Y)
 	jr nz, get_tile_object_behind_player_loop_next
 	ld a, c
-    cp (ix+ROOM_TILE_OBJECT_STRUCT_X)
+    cp (ix + ROOM_TILE_OBJECT_STRUCT_X)
     jr z, get_tile_object_behind_player_found
     dec a
-    cp (ix+ROOM_TILE_OBJECT_STRUCT_X)
+    cp (ix + ROOM_TILE_OBJECT_STRUCT_X)
 	jr z, get_tile_object_behind_player_found
 get_tile_object_behind_player_loop_next:
 	ld de, ROOM_TILE_OBJECT_STRUCT_SIZE
@@ -633,6 +680,25 @@ get_tile_object_behind_player_loop_next:
 get_tile_object_behind_player_found:
 	or 1
 	ret
+
+get_tile_object_behind_player_32x24_object:
+	ld a, b
+	dec a
+	cp (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	jr nz, get_tile_object_behind_player_loop_next
+	ld a, c
+    cp (ix + ROOM_TILE_OBJECT_STRUCT_X)
+    jr z, get_tile_object_behind_player_found
+    dec a
+    cp (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	jr z, get_tile_object_behind_player_found
+    dec a
+    cp (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	jr z, get_tile_object_behind_player_found
+    dec a
+    cp (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	jr z, get_tile_object_behind_player_found
+	jr get_tile_object_behind_player_loop_next
 
 
 ;-----------------------------------------------
@@ -652,30 +718,30 @@ interact_with_tile_object:
 	jp (hl)
 
 object_interaction_function_ptrs:
-REPT TAG_RED_KEY
+REPT TAG_RED_LOCK
 	dw object_interaction_function_empty
 ENDR
-	; TAG_RED_LOCK: equ 13
-	; TAG_GREEN_LOCK: equ 14
-	; TAG_BLUE_LOCK: equ 15
-	; TAG_YELLOW_LOCK: equ 16
-	; TAG_WHITE_LOCK: equ 17
-	; TAG_PURPLE_LOCK: equ 18
-	; TAG_TRIAL1_LOCK: equ 19
-	; TAG_TRIAL2_LOCK: equ 20
-	; TAG_TRIAL3_LOCK: equ 21
-	; TAG_TRIAL4_LOCK: equ 22
-	; TAG_COMBINATION1_LOCK: equ 23
-	; TAG_COMBINATION2_LOCK: equ 24
-	; TAG_COMBINATION3_LOCK: equ 25
-	; TAG_COMBINATION4_LOCK: equ 26
-	; TAG_BALL_LOCK: equ 27
-	; TAG_IDOL_LOCK: equ 28
-	; TAG_GEAR_LOCK: equ 29
-	; TAG_ASTRONAUT_LOCK: equ 30
-	; TAG_TELEPORTER_ATLANTIS: equ 34
-	; TAG_TELEPORTER_MARS: equ 35
-	; TAG_TELEPORTER_MOON: equ 36
+	dw object_interaction_function_open_small_lock  ; TAG_RED_LOCK
+	dw object_interaction_function_open_small_lock  ; TAG_GREEN_LOCK
+	dw object_interaction_function_open_small_lock  ; TAG_BLUE_LOCK
+	dw object_interaction_function_open_small_lock  ; TAG_YELLOW_LOCK
+	dw object_interaction_function_open_small_lock  ; TAG_WHITE_LOCK
+	dw object_interaction_function_open_small_lock  ; TAG_PURPLE_LOCK
+	dw object_interaction_function_empty  ; TAG_TRIAL1_LOCK
+	dw object_interaction_function_empty  ; TAG_TRIAL2_LOCK
+	dw object_interaction_function_empty  ; TAG_TRIAL3_LOCK
+	dw object_interaction_function_empty  ; TAG_TRIAL4_LOCK
+	dw object_interaction_function_empty  ; TAG_COMBINATION1_LOCK
+	dw object_interaction_function_empty  ; TAG_COMBINATION2_LOCK
+	dw object_interaction_function_empty  ; TAG_COMBINATION3_LOCK
+	dw object_interaction_function_empty  ; TAG_COMBINATION4_LOCK
+	dw object_interaction_function_open_ball_lock  ; TAG_BALL_LOCK
+	dw object_interaction_function_open_idol_lock  ; TAG_IDOL_LOCK
+	dw object_interaction_function_open_gear_lock  ; TAG_GEAR_LOCK
+	dw object_interaction_function_open_astronaut_lock  ; TAG_ASTRONAUT_LOCK
+	dw object_interaction_function_empty  ; TAG_TELEPORTER_ATLANTIS
+	dw object_interaction_function_empty  ; TAG_TELEPORTER_MARS
+	dw object_interaction_function_empty  ; TAG_TELEPORTER_MOON
 	dw object_interaction_function_pickup_item  ; TAG_RED_KEY
 	dw object_interaction_function_pickup_item  ; TAG_GREEN_KEY
 	dw object_interaction_function_pickup_item  ; TAG_BLUE_KEY
@@ -1009,6 +1075,202 @@ object_interaction_function_small_chest_fail:
 	jp room_render_tile_objects
 
 
+object_interaction_function_item_use_fail:
+	ld hl, SFX_ui_wrong
+	call play_SFX_with_high_priority
+
+	ld de, TEXT_WRONG_ITEM
+	ld hl, display_in_game_message
+	ld c, TEXT_PAGE
+	push ix
+		call call_hl_in_page_c_8000
+	pop ix
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)
+	jp room_render_tile_objects
+
+
+;-----------------------------------------------
+object_interaction_function_open_small_lock:
+	; check if the player has the proper key selected
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	add 25 - TAG_RED_LOCK
+	ld c, a  ; c = desired key
+	ld hl, player_current_item
+	cp (hl)
+	jr nz, object_interaction_function_chest_fail
+
+	; lose key:
+	ld (hl), 0  ; machete
+	ld a, c
+	sub 25  ; position of the first color key
+	ld b, 0
+	ld c, a
+	ld hl, player_inventory_items + 14
+	add hl, bc  ; key location
+	ld (hl), 0
+
+object_interaction_function_open_small_lock_entry_point:
+	; update lock state:
+	ld hl, global_state__objects
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	ADD_HL_A
+	ld (hl), 1  ; lock is open
+
+	; update the lock gfx (we call both, since one of them would be the correct one):
+	ld e, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	ld hl, set_item_object_to_upload_to_vdp
+	ld c, PCG_PAGE
+	call call_hl_in_page_c_8000	
+	ld e, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	ld hl, set_large_object_to_upload_to_vdp
+	ld c, PCG_PAGE
+	call call_hl_in_page_c_8000	
+
+	ld hl, SFX_ui_select
+	call play_SFX_with_high_priority
+
+	ld hl, redraw_flags
+	ld (hl), #ff
+	call room_undraw_tile_objects
+	call find_room_door_object_ptr
+	jp nz, room_render_tile_objects  ; no door
+	push hl
+	pop ix
+
+	; Create an entry in "global_state__open_walls":
+	ld hl, global_state__open_walls
+room_mark_open_door_loop:
+	ld a, (hl)
+	or a
+	jr z, room_mark_open_door_loop_end
+	ld bc, 6
+	add hl, bc
+	jr room_mark_open_door_loop
+room_mark_open_door_loop_end:
+	ld a, (current_area__id)
+	inc a  ; so that we don't have a 0
+	ld (hl), a
+	inc hl
+	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	push hl
+	push ix
+		call get_chunk_ids_current_room_ptr
+		ld bc, -current_area__chunks_ids
+		add hl, bc
+		ld a, l
+	pop ix
+	pop hl
+	ld (hl), a  ; chunk where this door is
+	inc hl
+	; get within-chunk coordinates:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	and #0f
+	ld c, a  ; c = x % CHUNK_WIDTH
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+room_mark_open_door_chunk_y_loop:
+	cp CHUNK_HEIGHT
+	jr c, room_mark_open_door__continue
+	sub CHUNK_HEIGHT
+	jr room_mark_open_door_chunk_y_loop
+room_mark_open_door__continue:
+	ld b, a  ; b = y % CHUNK_HEIGHT
+	ld (hl), c
+	inc hl
+	ld (hl), b
+	inc hl
+
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	cp TAG_DOOR_VERTICAL
+	jr z, room_mark_open_door__vertical
+	ld e, 4
+	ld d, 1
+	jr room_mark_open_door__dimensions_set
+room_mark_open_door__vertical:
+	ld e, 1
+	ld d, 3
+room_mark_open_door__dimensions_set:
+	ld (hl), e
+	inc hl
+	ld (hl), d
+
+	; remove door:
+	push ix
+	pop hl
+	call delete_tile_object_in_hl
+	jp room_render_tile_objects
+
+
+;-----------------------------------------------
+object_interaction_function_open_ball_lock:
+	ld a, 11 + 21  ; ball
+	ld hl, player_current_item
+	cp (hl)
+	jp nz, object_interaction_function_item_use_fail
+	ld (hl), 0  ; machete
+	ld hl, player_inventory_items + 21  ; ball
+	ld (hl), 0
+	jp object_interaction_function_open_small_lock_entry_point
+
+object_interaction_function_open_idol_lock:
+	ld a, 11 + 22  ; idol
+	ld hl, player_current_item
+	cp (hl)
+	jp nz, object_interaction_function_item_use_fail
+	ld (hl), 0  ; machete
+	ld hl, player_inventory_items + 22  ; idol
+	ld (hl), 0
+	jp object_interaction_function_open_small_lock_entry_point
+
+object_interaction_function_open_gear_lock:
+	ld a, 11 + 23  ; gear
+	ld hl, player_current_item
+	cp (hl)
+	jp nz, object_interaction_function_item_use_fail
+	ld (hl), 0  ; machete
+	ld hl, player_inventory_items + 23  ; gear
+	ld (hl), 0
+	jp object_interaction_function_open_small_lock_entry_point
+
+object_interaction_function_open_astronaut_lock:
+	ld a, 11 + 24  ; astronaut
+	ld hl, player_current_item
+	cp (hl)
+	jp nz, object_interaction_function_item_use_fail
+	ld (hl), 0  ; machete
+	ld hl, player_inventory_items + 24  ; astronaut
+	ld (hl), 0
+	jp object_interaction_function_open_small_lock_entry_point
+
+
+;-----------------------------------------------
+; output:
+; - z: door found
+; - nz: door not found
+; - hl: door ptr
+find_room_door_object_ptr:
+	ld hl, current_room__tile_objects
+	; : ds virtual MAX_ROOM_TILE_OBJECTS * ROOM_TILE_OBJECT_STRUCT_SIZE
+find_room_door_object_ptr_loop:
+	ld a, (hl)
+	cp #ff
+	jr z, find_room_door_object_ptr_not_found
+	inc hl
+	ld a, (hl)  ; type
+	dec hl
+	cp TAG_DOOR_VERTICAL
+	ret z
+	cp TAG_DOOR_HORIZONTAL
+	ret z
+	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
+	add hl, bc
+	jr find_room_door_object_ptr_loop
+find_room_door_object_ptr_not_found:
+	or 1
+	ret
+
+
 ;-----------------------------------------------
 ; types:
 ; - 0: save background, then render
@@ -1021,9 +1283,56 @@ endm
 
 
 tile_object_gfx_table:
-REPT TAG_RED_KEY  ; add filler
+REPT TAG_RED_LOCK  ; add filler
 	TILE_OBJECT_DATA 2, 0, 0, 0
 ENDR
+; TAG_NONE: equ 0
+; TAG_BLOCK_PUZZLE1: equ 1
+; TAG_BLOCK_PUZZLE2: equ 2
+; TAG_BLOCK_PUZZLE3: equ 3
+; TAG_BLOCK_PUZZLE4: equ 4
+; TAG_BUTTON_DOOR1: equ 5
+; TAG_BUTTON_DOOR2: equ 6
+; TAG_BUTTON_DOOR3: equ 7
+; TAG_BUTTON_DOOR4: equ 8
+; TAG_BREAKABLE_WALL1: equ 9
+; TAG_BREAKABLE_WALL2: equ 10
+; TAG_BREAKABLE_WALL3: equ 11
+; TAG_BREAKABLE_WALL4: equ 12
+	TILE_OBJECT_DATA 1, 2, 2, tile_object_regular_object_gfx  ; TAG_RED_LOCK
+	TILE_OBJECT_DATA 1, 2, 2, tile_object_regular_object_gfx  ; TAG_GREEN_LOCK
+	TILE_OBJECT_DATA 1, 2, 2, tile_object_regular_object_gfx  ; TAG_BLUE_LOCK
+	TILE_OBJECT_DATA 1, 2, 2, tile_object_regular_object_gfx  ; TAG_YELLOW_LOCK
+	TILE_OBJECT_DATA 1, 2, 2, tile_object_regular_object_gfx  ; TAG_WHITE_LOCK
+	TILE_OBJECT_DATA 1, 2, 2, tile_object_regular_object_gfx  ; TAG_PURPLE_LOCK
+REPT TAG_BALL_LOCK - TAG_TRIAL1_LOCK  ; add filler
+	TILE_OBJECT_DATA 2, 0, 0, 0
+ENDR
+; TAG_TRIAL1_LOCK: equ 19
+; TAG_TRIAL2_LOCK: equ 20
+; TAG_TRIAL3_LOCK: equ 21
+; TAG_TRIAL4_LOCK: equ 22
+; TAG_COMBINATION1_LOCK: equ 23
+; TAG_COMBINATION2_LOCK: equ 24
+; TAG_COMBINATION3_LOCK: equ 25
+; TAG_COMBINATION4_LOCK: equ 26
+	TILE_OBJECT_DATA 1, 2, 2, tile_object_regular_object_gfx  ; TAG_BALL_LOCK
+	TILE_OBJECT_DATA 1, 4, 3, tile_object_idol_lock_locked_gfx  ; TAG_IDOL_LOCK
+	TILE_OBJECT_DATA 1, 4, 3, tile_object_gear_lock_locked_gfx  ; TAG_GEAR_LOCK
+	TILE_OBJECT_DATA 1, 2, 2, tile_object_regular_object_gfx  ; TAG_ASTRONAUT_LOCK
+REPT TAG_RED_KEY - TAG_START  ; add filler
+	TILE_OBJECT_DATA 2, 0, 0, 0
+ENDR
+; TAG_START: equ 31
+; TAG_ENDING: equ 32
+; TAG_MIDPOINT: equ 33
+; TAG_TELEPORTER_ATLANTIS: equ 34
+; TAG_TELEPORTER_MARS: equ 35
+; TAG_TELEPORTER_MOON: equ 36
+; TAG_BUTTON1: equ 37
+; TAG_BUTTON2: equ 38
+; TAG_BUTTON3: equ 39
+; TAG_BUTTON4: equ 40	
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_RED_KEY
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_GREEN_KEY
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_BLUE_KEY
@@ -1125,9 +1434,19 @@ ENDR
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_SMALL_KEY_CHEST4
 
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_pushable_block_gfx  ; TAG_PUSHABLE_BLOCK
+	TILE_OBJECT_DATA 1, 1, 3, tile_object_v_door_gfx  ; TAG_DOOR_VERTICAL
+	TILE_OBJECT_DATA 1, 4, 1, tile_object_h_door_gfx  ; TAG_DOOR_HORIZONTAL
 
 tile_object_regular_object_gfx:
 	db FIRST_ITEM_TILE, FIRST_ITEM_TILE+1, FIRST_ITEM_TILE+2, FIRST_ITEM_TILE+3
 tile_object_pushable_block_gfx:
 	db 185, 187, 182, 184
-
+tile_object_h_door_gfx:
+	db 109, 110, 110, 111
+tile_object_v_door_gfx:
+	db 106, 107, 108
+tile_object_idol_lock_locked_gfx:
+tile_object_gear_lock_locked_gfx:
+	db 48, 49, 50, 51
+	db 52, 53, 54, 55
+	db 56, 57, 58, 59

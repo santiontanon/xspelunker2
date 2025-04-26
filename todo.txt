@@ -1,27 +1,22 @@
 to do:
 
-***- doors:
-  ***- spawn doors
-  ***- spawn color locks
-  ***- spawn gear lock
-  ***- spawn ball lock
-  ***- spawn doll lock
-  ***- spawn idol lock
-  ***- use keys/key items in the locks and open door
-  ***- keep the door open when leaving and coming back to the room
+***- press buttons to open doors:
+  ***- spawn buttons
+  ***- spawn button doors
+  ***- open doors with button
+  ***- keep buttons pressed when leaving and coming back
 
-- being able to complete the game in assembler:
-  - press buttons to open doors
+- being able to complete the game in MSX:
   - combination clues (how to interact with clues? crouch? up?) [not all are readable yet, maya clues/story are only readable after 2nd piece put in calendar stone]
   - interact with combination levers (hit them to change their state)
+  - trials (those are solved in front of te gods I drew)
   - open the boss doors (door open animation with some SFX/music, so, it's clear it's important)
   - enter a boss door (for now just an empty room with the item you are supposed to get)
     - obtain the "power stones": each stone represents one of the six creator deities (the last one requires two of them). Maybe to see them you have to inspect them in the inventory (too small otherwise)
-  - trials (those are solved in front of te gods I drew)
   - design ending room (maya calendar stone where you place what you get from the bosses, etc.)
     - 1st idol on calendar stone, opens door to 3rd pyramid
     - 3rd idol on calendar stone, opens door to temple of fire
-  - design teleporter in atlantis/mars/moon and how the interaction would go (no need to think of the riddle yet)
+  - design teleporter in atlantis/mars/moon and how the interaction would go (think of the type of Maya riddle that would activate it)
   - ensure that ALL tags are instantiated and are functional now during room creation
 
 - item effects:
@@ -38,6 +33,15 @@ to do:
   - for some areas (pyramids, etc.) have some predefined shapes (e.g. pyramid shape), that can be chosen with some probability. And maybe also different shapes for the confluence, etc.
   - keep Java/assembler versions in sync (try different random seeds)
 
+- using idols in stone calendar, has effects on the map:
+  - 2nd, activates messages (letters glow against the stone tables now)
+  - 4th, activates teleporters to move faster across maps (or maybe this also with the 3rd?, 4th feels too late!)
+  - 5th, lets you turn on the calendar stone (activate defenses)
+  - 6th (two halves from Mars/Moon), (activate offensive capabilities, and destroy alien hardware)
+  - with final secret stone (prism?): opens dimensional portal for YOU to travel throughout the universe
+
+- when using the "map" item in the inventory, display an overall map, with all the pieces you have currently collected (and some clues in the form of maya writing that appear in the pieces)
+
 - enemies:
   - come up with a list of enemies for pyramid (consider both sprite enemies and larger tile-based enemies)
   - implement at least one enemy
@@ -45,8 +49,6 @@ to do:
   - kill enemies and get hurt by them
   - design all the enemies on the pyramid biome and spawn them
   - spawn optional items when killing them (and pick them up, gain ammo, life, coins, etc.)
-
-- when using the "map" item in the inventory, display an overall map, with all the pieces you have currently collected (and some clues in the form of maya writing that appear in the pieces)
 
 - jungle biome
   - implement it
@@ -64,13 +66,6 @@ to do:
   - game intro sequence
 
 - music
-
-- using idols in stone calendar, has effects on the map:
-  - 2nd, activates messages (letters glow against the stone tables now)
-  - 4th, activates teleporters to move faster across maps (or maybe this also with the 3rd?, 4th feels too late!)
-  - 5th, lets you turn on the calendar stone (activate defenses)
-  - 6th (two halves from Mars/Moon), (activate offensive capabilities, and destroy alien hardware)
-  - with final secret stone (prism?): opens dimensional portal for YOU to travel throughout the universe
 
 - first boss: Huracán, the Storm Bringer (A large, imposing figure wreathed in swirling winds and lightning. Could have feathered serpent elements): wind, lightning, tornadoes
 - second boss: Camazotz, the Bat God: A giant bat-like creature with glowing red eyes and sharp claws.
@@ -267,7 +262,7 @@ PCGWorld:
       - if the lock_tag is not specified in the quest spec, pick one at random of the appropriate type, not used before
         - ...
       - addTags: if there is a tag there that is incompatible, FAIL!
-  - generate quest specs for boss4, 5
+  - generate quest specs for boss 4, 5
   - generateSubquests (same as before, but with different reachable/useable area)
   - set "lockKeys" to all the used locks and keys (not needed in assembler, only used for debugging)
 

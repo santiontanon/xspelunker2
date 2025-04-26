@@ -76,6 +76,8 @@ public class Text {
         addLineSafe(lines_with_constant, "Inventory with 'down + jump': no", "OPTIONS3B", 20);
         addLineSafe(lines_with_constant, "Interact with 'down': yes", "OPTIONS4A", 16);
         addLineSafe(lines_with_constant, "Interact with 'down': no", "OPTIONS4B", 16);
+        addLineSafe(lines_with_constant, "Interact with 'up': yes", "OPTIONS5A", 16);
+        addLineSafe(lines_with_constant, "Interact with 'up': no", "OPTIONS5B", 16);
         addLineSafe(lines_with_constant, "Right:", "KEYBOARD1", 9);
         addLineSafe(lines_with_constant, "Up:", "KEYBOARD3", 9);
         addLineSafe(lines_with_constant, "Down:", "KEYBOARD2", 9);
@@ -231,6 +233,7 @@ public class Text {
         addLineSafe(lines_with_constant, "As you consume the still beating heart, you feel your strength increasing!", "HEART_PICKUP", 112);
         addLineSafe(lines_with_constant, "One more piece of the map!", "MAP_PIECE_PICKUP", 112);
         addLineSafe(lines_with_constant, "That does not seem to be the correct key for this lock!", "WRONG_KEY", 112);
+        addLineSafe(lines_with_constant, "That does not seem to be the correct item to use here!", "WRONG_ITEM", 112);
         
         List<Integer> numbers = font.convertStringToAssembler("0123456789 ");
         System.out.println("Numbers: " + numbers);

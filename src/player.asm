@@ -264,6 +264,14 @@ player_update_switch_to_idle:
 	ld (player_state), a
 
 player_update_state_idle:
+	; check for interact with "up":
+	ld a, (config_interact_with_up)
+	or a
+	jr nz, player_update_state_idle_no_interact_with_up
+	ld a, (keyboard_clicks)
+	bit KEY_UP_BIT, a
+	call nz, player_update_interact
+player_update_state_idle_no_interact_with_up:
 	; check for walk/crouch:
 	ld a, (keyboard_state)
 	bit KEY_RIGHT_BIT, a
@@ -332,6 +340,15 @@ player_update_switch_to_walking_right:
 	ld (player_state), a
 
 player_update_state_walking:
+	; check for interact with "up":
+	ld a, (config_interact_with_up)
+	or a
+	jr nz, player_update_state_walking_no_interact_with_up
+	ld a, (keyboard_clicks)
+	bit KEY_UP_BIT, a
+	call nz, player_update_interact
+player_update_state_walking_no_interact_with_up:
+
 	; check for rope climb:
 	ld a, (keyboard_state)
 	bit KEY_UP_BIT, a
