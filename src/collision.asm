@@ -928,7 +928,7 @@ check_collision_with_next_chunk_check_horizontal_open_wall_right:
 	add a, c
 	cp CHUNK_WIDTH - 1
 	ld a, b  ; recover 'y' in a
-	jr nc, check_collision_with_next_chunk_check_horizontal_open_wall_loop_next2
+	jr c, check_collision_with_next_chunk_check_horizontal_open_wall_loop_next2
 	jr check_collision_with_next_chunk_check_horizontal_open_wall_right_continue
 
 

@@ -374,6 +374,15 @@ pcg_generate_room__object_loop:
 	cp TAG_GEAR_LOCK
 	jp z, pcg_generate_room__object_gear_lock
 
+	cp TAG_BUTTON_DOOR1
+	jp z, pcg_generate_room__object_button_door
+	cp TAG_BUTTON_DOOR2
+	jp z, pcg_generate_room__object_button_door
+	cp TAG_BUTTON_DOOR3
+	jp z, pcg_generate_room__object_button_door
+	cp TAG_BUTTON_DOOR4
+	jp z, pcg_generate_room__object_button_door
+
 	; ...
 
 pcg_generate_room__object_loop_next:
@@ -519,8 +528,16 @@ pcg_generate_room__object_regular_item:
 	call pcg_generate_room__compute_object_coordinates
 	; here: c, b: x, y coordinates
 
-	; check if the item was already picked up:
+	; check if the item was already picked up (except buttons):
 	ld a, (ix + AREA_OBJECT_STRUCT_TYPE)
+	cp TAG_BUTTON1
+	jr z, pcg_generate_room__object_regular_item_continue
+	cp TAG_BUTTON2
+	jr z, pcg_generate_room__object_regular_item_continue
+	cp TAG_BUTTON3
+	jr z, pcg_generate_room__object_regular_item_continue
+	cp TAG_BUTTON4
+	jr z, pcg_generate_room__object_regular_item_continue
 	ld hl, global_state__objects
 	ADD_HL_A
 	ld a, (hl)
@@ -638,11 +655,8 @@ pcg_generate_room__object_small_lock_direction_set:
 	jr z, pcg_generate_room__object_small_lock_direction_set2
 	ld e, TAG_DOOR_VERTICAL
 	cp PCG_DIRECTION_RIGHT
-	ld a, (current_room__width)
-	dec a
-	ld d, c  ; save the current 'x', in case it's not a "right" door
-	ld c, a  ; put the door at the right-edge of the room
-	jr z, pcg_generate_room__object_small_lock_direction_set2
+	jr z, pcg_generate_room__object_small_lock_direction_set2_right
+
 	ld c, d  ; restore the proper 'x'
 	; down:
 	ld e, TAG_DOOR_HORIZONTAL
@@ -661,6 +675,13 @@ pcg_generate_room__object_small_lock_direction_set2:
 	ld (tmp_pcg_room__next_tile_object_ptr), iy
 
 	jp pcg_generate_room__object_loop_next
+
+pcg_generate_room__object_small_lock_direction_set2_right:
+	ld a, (current_room__width)
+	dec a
+	ld d, c  ; save the current 'x', in case it's not a "right" door
+	ld c, a  ; put the door at the right-edge of the room
+	jr pcg_generate_room__object_small_lock_direction_set2
 
 
 ;-----------------------------------------------
@@ -702,6 +723,16 @@ pcg_generate_room__object_gear_lock:
 			call set_large_object_to_upload_to_vdp
 		pop hl  ; chunk ptr
 
+		jp pcg_generate_room__object_small_lock_spawn_door
+
+
+;-----------------------------------------------
+pcg_generate_room__object_button_door:
+	; get the chunk type where we are placing the object:
+	push bc
+		call get_chunk_id_from_coordinates  ; a = chunk ID
+		ld hl, pyramid_chunk_fg_bank_ptrs
+		call pcg_get_chunk_ptr
 		jp pcg_generate_room__object_small_lock_spawn_door
 
 
@@ -1383,6 +1414,14 @@ set_item_object_to_upload_to_vdp:
 	jr z, set_item_object_to_upload_to_vdp_ball_lock
 	cp TAG_ASTRONAUT_LOCK
 	jr z, set_item_object_to_upload_to_vdp_astronaut_lock
+	cp TAG_BUTTON1
+	jr z, set_item_object_to_upload_to_vdp_button
+	cp TAG_BUTTON2
+	jr z, set_item_object_to_upload_to_vdp_button
+	cp TAG_BUTTON3
+	jr z, set_item_object_to_upload_to_vdp_button
+	cp TAG_BUTTON4
+	jr z, set_item_object_to_upload_to_vdp_button
 	ld hl, object_tiles_start_ptrs
 	ld d, 0
 	add hl, de
@@ -1409,6 +1448,16 @@ set_item_object_to_upload_to_vdp_astronaut_lock:
 	or a
 	jr z, set_item_object_to_upload_to_vdp_continue
 	ld hl, buffer_4096 + 57 * 64  ; astronaut lock (unlocked)
+	jr set_item_object_to_upload_to_vdp_continue
+
+set_item_object_to_upload_to_vdp_button:
+	ld hl, global_state__objects
+	ADD_HL_A
+	ld a, (hl)
+	or a
+	ld hl, buffer_4096 + 58 * 64  ; button (not pressed)
+	jr z, set_item_object_to_upload_to_vdp_continue
+	ld hl, buffer_4096 + 59 * 64  ; button (pressed)
 	jr set_item_object_to_upload_to_vdp_continue
 
 
@@ -1490,7 +1539,7 @@ ENDR
 	dw buffer_4096  ; TAG_IDOL_LOCK: equ 28
 	dw buffer_4096  ; TAG_GEAR_LOCK: equ 29
 	dw buffer_4096 + 56 * 64  ; TAG_ASTRONAUT_LOCK: equ 30
-REPT TAG_RED_KEY - TAG_START
+REPT TAG_BUTTON1 - TAG_START
 	dw buffer_4096
 ENDR
 ; TAG_START: equ 31
@@ -1499,10 +1548,10 @@ ENDR
 ; TAG_TELEPORTER_ATLANTIS: equ 34
 ; TAG_TELEPORTER_MARS: equ 35
 ; TAG_TELEPORTER_MOON: equ 36
-; TAG_BUTTON1: equ 37
-; TAG_BUTTON2: equ 38
-; TAG_BUTTON3: equ 39
-; TAG_BUTTON4: equ 40
+	dw buffer_4096 + 58 * 64  ; TAG_BUTTON1
+	dw buffer_4096 + 58 * 64  ; TAG_BUTTON2
+	dw buffer_4096 + 58 * 64  ; TAG_BUTTON3
+	dw buffer_4096 + 58 * 64  ; TAG_BUTTON4
 	dw buffer_4096 + 8 * 64  ; TAG_RED_KEY
 	dw buffer_4096 + 9 * 64  ; TAG_GREEN_KEY
 	dw buffer_4096 + 10 * 64  ; TAG_BLUE_KEY

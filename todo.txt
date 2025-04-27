@@ -1,14 +1,16 @@
 to do:
 
-***- press buttons to open doors:
-  ***- spawn buttons
-  ***- spawn button doors
-  ***- open doors with button
-  ***- keep buttons pressed when leaving and coming back
+***- combination puzzles:
+  ***- write a list of possible combination clues (at least 8)
+  ***- mock-up the tablet reading visuals in gimp
+  ***- table associating tablet IDs with message IDs (1 byte -> word)
+  ***- inspect combination clues and draw tablets and messages
+  ***- spawn and render combination levers
+  ***- spawn combination puzzle door
+  ***- interact with combination levers
+  ***- open door when puzzle is solved
 
 - being able to complete the game in MSX:
-  - combination clues (how to interact with clues? crouch? up?) [not all are readable yet, maya clues/story are only readable after 2nd piece put in calendar stone]
-  - interact with combination levers (hit them to change their state)
   - trials (those are solved in front of te gods I drew)
   - open the boss doors (door open animation with some SFX/music, so, it's clear it's important)
   - enter a boss door (for now just an empty room with the item you are supposed to get)
@@ -24,7 +26,6 @@ to do:
 
 - Implement PCGWorld in assembler:
   - data structure
-      - withinChestTag: do I need this? maybe I can just remove tags that are "withinChestTag" from the tag list
       - chestContent
       - spanningTree: ID, parent, n_descendants, root point, tags (this is stored twice for convenience)
       - global object list (4 * 64 -> 256 bytes) (how does this work? do I need it globally? per area? how do I mark that an item is taken or a door open, globally?)

@@ -191,7 +191,7 @@ SFX_playerhit:
   db SFX_CMD_END   
 
 
-; SFX_door_open:
+SFX_door_open:
 SFX_push_object:
   db  7,#b8  ; SFX all channels to tone
   db 10,#0f  ; volume

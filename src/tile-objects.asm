@@ -8,9 +8,17 @@ update_tile_objects_loop:
 	; render the object:
 	push hl
 		inc hl
-		add a, (hl)  ; type
+		ld a, (hl)  ; type
 		cp TAG_PUSHABLE_BLOCK
 		jr z, update_tile_objects_pushable_block
+		cp TAG_BUTTON1
+		jp z, update_tile_objects_button
+		cp TAG_BUTTON2
+		jp z, update_tile_objects_button
+		cp TAG_BUTTON3
+		jp z, update_tile_objects_button
+		cp TAG_BUTTON4
+		jp z, update_tile_objects_button
 update_tile_objects_loop_continue:
 	pop hl
 	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
@@ -132,6 +140,64 @@ update_tile_objects_pushable_block_remove:
 		set ROOM_REDRAW_FLAG_BIT, (hl)
 	pop hl
 	pop af  ; we do an extra pop, since we are skipping the one at update_tile_objects_loop_continue
+	jp update_tile_objects_loop
+
+
+;-----------------------------------------------
+update_tile_objects_button:
+		ld e, a  ; save the object type
+		ld a, (player_x + 1)
+		ld c, a
+		ld a, (player_y + 1)
+		ld b, a
+		inc hl
+		ld a, (hl)  ; x
+		inc hl
+		cp c
+		jr z, update_tile_objects_button_x_ok
+		dec c
+		cp c
+		jr nz, update_tile_objects_button_next
+	update_tile_objects_button_x_ok:
+		ld a, (hl)  ; y
+		cp b
+		jr nz, update_tile_objects_button_next
+		; player is on top:
+
+		; see if it's already pressed:
+		ld hl, global_state__objects
+		ld d, 0
+		add hl, de
+		ld a, (hl)
+		or a
+		jr nz, update_tile_objects_button_next  ; it was already pressed
+
+		; press button, and open the door:
+		ld (hl), 1
+
+		; 'e' contains the object type
+		ld hl, set_item_object_to_upload_to_vdp
+		ld c, PCG_PAGE
+		call call_hl_in_page_c_8000
+
+		ld hl, redraw_flags
+		ld (hl), #ff
+
+	pop ix  ; recover object ptr
+
+	; update door state:
+	ld hl, global_state__objects
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	add TAG_BUTTON_DOOR1 - TAG_BUTTON1
+	ADD_HL_A
+	ld (hl), 1  ; lock is open
+
+	jp object_interaction_function_open_small_lock_entry_point
+
+update_tile_objects_button_next:
+	pop hl
+	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
+	add hl, bc
 	jp update_tile_objects_loop
 
 
@@ -739,6 +805,9 @@ ENDR
 	dw object_interaction_function_open_idol_lock  ; TAG_IDOL_LOCK
 	dw object_interaction_function_open_gear_lock  ; TAG_GEAR_LOCK
 	dw object_interaction_function_open_astronaut_lock  ; TAG_ASTRONAUT_LOCK
+	dw object_interaction_function_empty  ; TAG_START
+	dw object_interaction_function_empty  ; TAG_ENDING
+	dw object_interaction_function_empty  ; TAG_MIDPOINT
 	dw object_interaction_function_empty  ; TAG_TELEPORTER_ATLANTIS
 	dw object_interaction_function_empty  ; TAG_TELEPORTER_MARS
 	dw object_interaction_function_empty  ; TAG_TELEPORTER_MOON
@@ -1127,7 +1196,7 @@ object_interaction_function_open_small_lock_entry_point:
 	ld c, PCG_PAGE
 	call call_hl_in_page_c_8000	
 
-	ld hl, SFX_ui_select
+	ld hl, SFX_door_open
 	call play_SFX_with_high_priority
 
 	ld hl, redraw_flags
@@ -1320,7 +1389,7 @@ ENDR
 	TILE_OBJECT_DATA 1, 4, 3, tile_object_idol_lock_locked_gfx  ; TAG_IDOL_LOCK
 	TILE_OBJECT_DATA 1, 4, 3, tile_object_gear_lock_locked_gfx  ; TAG_GEAR_LOCK
 	TILE_OBJECT_DATA 1, 2, 2, tile_object_regular_object_gfx  ; TAG_ASTRONAUT_LOCK
-REPT TAG_RED_KEY - TAG_START  ; add filler
+REPT TAG_BUTTON1 - TAG_START  ; add filler
 	TILE_OBJECT_DATA 2, 0, 0, 0
 ENDR
 ; TAG_START: equ 31
@@ -1329,10 +1398,10 @@ ENDR
 ; TAG_TELEPORTER_ATLANTIS: equ 34
 ; TAG_TELEPORTER_MARS: equ 35
 ; TAG_TELEPORTER_MOON: equ 36
-; TAG_BUTTON1: equ 37
-; TAG_BUTTON2: equ 38
-; TAG_BUTTON3: equ 39
-; TAG_BUTTON4: equ 40	
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_BUTTON1
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_BUTTON2
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_BUTTON3
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_BUTTON4
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_RED_KEY
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_GREEN_KEY
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_BLUE_KEY
