@@ -716,7 +716,7 @@ public class PCGArea {
         }
 
         // Get all tags:
-        List<Pair<Integer, String>> tagList = getSortedTagList(a);
+        List<Pair<Integer, String>> tagList = a.getSortedTagList();
      
 //        System.out.println("---- placing tags for area " + a.ID + " ----");
 //        System.out.println("seed before: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
@@ -1310,36 +1310,6 @@ public class PCGArea {
         return ra;
     }
     
-
-    public List<Pair<Integer, String>> getSortedTagList(Area a)
-    {
-        List<Pair<Integer, String>> tagList = new ArrayList<>();        
-        for(int i = 0;i<a.height;i++) {
-            for(int j = 0;j<a.width;j++) {
-                if (a.tags[j][i] != null) {
-                    for(String tag:a.tags[j][i]) {
-                        tagList.add(new Pair<>(j+i*a.width, tag));
-                    }
-                }
-            }
-        }
-        Collections.sort(tagList, new Comparator<Pair<Integer, String>>(){
-            @Override
-            public int compare(Pair<Integer, String> o1, Pair<Integer, String> o2) {
-                try {
-                    int tag1 = AssemblerTags.assemblerID(o1.right);
-                    int tag2 = AssemblerTags.assemblerID(o2.right);
-                    return Integer.compare(tag1, tag2);
-                } catch(Exception e) {
-                    e.printStackTrace();
-                    System.exit(0);
-                    return 0;
-                }
-            }
-        });
-        return tagList;
-    }
-
     
     public RoomChunk[][] getBGChunksLikeInMSX(RenderedArea ra)
     {

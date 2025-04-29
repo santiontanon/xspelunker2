@@ -89,9 +89,9 @@ public class Inventory {
         
         Z80Assembler.dataToBinary(data, outputPath + ".bin");
         ZX0Wrapper.main(outputPath+".bin", outputPath+".zx0", true, false);
-        
     }
-    
+
+
     public static void extractTiles(String pngPath, int firstRow, int lastRow, String outputPath) throws Exception
     {
         List<Integer> bitmap_data = new ArrayList<>();

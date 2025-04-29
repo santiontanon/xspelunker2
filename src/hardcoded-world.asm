@@ -443,3 +443,16 @@ hardcoded_world_data__chest_content:
   db TAG_WHITE_CHEST, TAG_BOSS1_KEY
   ds 10, #ff
   db #ff  ; sentinel
+hardcoded_world_data__tablet_content:
+  ; each entry is 3 bytes: tablet_id, content_ptr
+  db TAG_COMBINATION2_CLUE
+  dw combination_tablet_type_2_fn
+  db TAG_COMBINATION1_CLUE
+  dw combination_tablet_type_2_fn
+  ds 42, #ff
+  db #ff  ; sentinel
+hardcoded_world_data__combination_solutions:
+  db 1, 1, 2, 0, 1, 1, 1, 2
+  db 1, 0, 2, 0, 2, 0, 0, 0
+  db 0, 1, 1, 2, 2, 0, 0, 2
+  db 0, 1, 1, 1, 1, 0, 1, 1

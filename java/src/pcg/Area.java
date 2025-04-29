@@ -6,6 +6,8 @@ package pcg;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import util.Pair;
 
@@ -90,4 +92,33 @@ public class Area {
         }
     }
     
+    
+    public List<Pair<Integer, String>> getSortedTagList()
+    {
+        List<Pair<Integer, String>> tagList = new ArrayList<>();        
+        for(int i = 0;i<height;i++) {
+            for(int j = 0;j<width;j++) {
+                if (tags[j][i] != null) {
+                    for(String tag:tags[j][i]) {
+                        tagList.add(new Pair<>(j+i*width, tag));
+                    }
+                }
+            }
+        }
+        Collections.sort(tagList, new Comparator<Pair<Integer, String>>(){
+            @Override
+            public int compare(Pair<Integer, String> o1, Pair<Integer, String> o2) {
+                try {
+                    int tag1 = AssemblerTags.assemblerID(o1.right);
+                    int tag2 = AssemblerTags.assemblerID(o2.right);
+                    return Integer.compare(tag1, tag2);
+                } catch(Exception e) {
+                    e.printStackTrace();
+                    System.exit(0);
+                    return 0;
+                }
+            }
+        });
+        return tagList;
+    }    
 }

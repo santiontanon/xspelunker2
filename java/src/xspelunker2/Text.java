@@ -235,6 +235,12 @@ public class Text {
         addLineSafe(lines_with_constant, "That does not seem to be the correct key for this lock!", "WRONG_KEY", 112);
         addLineSafe(lines_with_constant, "That does not seem to be the correct item to use here!", "WRONG_ITEM", 112);
         
+        // Combination clue verse:
+        addLineSafe(lines_with_constant, "Dance of traversal:", "COMBINATION_CLUE1", 12);
+        addLineSafe(lines_with_constant, "Face left", "COMBINATION_CLUE2", 8);
+        addLineSafe(lines_with_constant, "Face forward", "COMBINATION_CLUE3", 8);
+        addLineSafe(lines_with_constant, "Face right", "COMBINATION_CLUE4", 8);
+        
         List<Integer> numbers = font.convertStringToAssembler("0123456789 ");
         System.out.println("Numbers: " + numbers);
         List<Integer> letters = font.convertStringToAssembler("ABCDEFGHIJKLMNOPQRSTUVWXYZ ");

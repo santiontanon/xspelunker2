@@ -1,10 +1,6 @@
 to do:
 
 ***- combination puzzles:
-  ***- write a list of possible combination clues (at least 8)
-  ***- mock-up the tablet reading visuals in gimp
-  ***- table associating tablet IDs with message IDs (1 byte -> word)
-  ***- inspect combination clues and draw tablets and messages
   ***- spawn and render combination levers
   ***- spawn combination puzzle door
   ***- interact with combination levers
@@ -16,8 +12,14 @@ to do:
   - enter a boss door (for now just an empty room with the item you are supposed to get)
     - obtain the "power stones": each stone represents one of the six creator deities (the last one requires two of them). Maybe to see them you have to inspect them in the inventory (too small otherwise)
   - design ending room (maya calendar stone where you place what you get from the bosses, etc.)
+  - using idols in stone calendar, has effects on the map:
     - 1st idol on calendar stone, opens door to 3rd pyramid
+    - 2nd, activates maya / story messages (letters glow against the stone tables now)
     - 3rd idol on calendar stone, opens door to temple of fire
+    - 4th, activates teleporters to move faster across maps (or maybe this also with the 3rd?, 4th feels too late!)
+    - 5th, lets you turn on the calendar stone (activate defenses)
+    - 6th (two halves from Mars/Moon), (activate offensive capabilities, and destroy alien hardware)
+    - with final secret stone (prism?): opens dimensional portal for YOU to travel throughout the universe  
   - design teleporter in atlantis/mars/moon and how the interaction would go (think of the type of Maya riddle that would activate it)
   - ensure that ALL tags are instantiated and are functional now during room creation
 
@@ -33,13 +35,6 @@ to do:
   - verify it matches exactly what I get in Java
   - for some areas (pyramids, etc.) have some predefined shapes (e.g. pyramid shape), that can be chosen with some probability. And maybe also different shapes for the confluence, etc.
   - keep Java/assembler versions in sync (try different random seeds)
-
-- using idols in stone calendar, has effects on the map:
-  - 2nd, activates messages (letters glow against the stone tables now)
-  - 4th, activates teleporters to move faster across maps (or maybe this also with the 3rd?, 4th feels too late!)
-  - 5th, lets you turn on the calendar stone (activate defenses)
-  - 6th (two halves from Mars/Moon), (activate offensive capabilities, and destroy alien hardware)
-  - with final secret stone (prism?): opens dimensional portal for YOU to travel throughout the universe
 
 - when using the "map" item in the inventory, display an overall map, with all the pieces you have currently collected (and some clues in the form of maya writing that appear in the pieces)
 

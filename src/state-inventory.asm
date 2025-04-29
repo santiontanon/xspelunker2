@@ -979,11 +979,23 @@ setup_inventory_gfx:
 	ld bc, inventory_sprites_end - inventory_sprites
 	call fast_LDIRVM
 
+	ld hl, inventory_tiles_nametable_zx0
+	ld de, buffer_4096
+	ld c, TILES_PAGE
+	call dzx0_from_page_c
+
+	; Draw inventory screen:
+	ld hl, buffer_4096
+	ld de, NAMTBL2
+	ld bc, 768
+	call fast_LDIRVM
+
 	; tiles
 	ld hl, inventory_tiles_bank0_zx0
 	ld de, buffer_4096
 	ld c, TILES_PAGE
 	call dzx0_from_page_c
+
 	ld hl, buffer_4096
 	ld de, CHRTBL2
 	ld bc, 256*8
@@ -1017,18 +1029,7 @@ setup_inventory_gfx:
 	ld hl, buffer_4096 + 256*8
 	ld de, CLRTBL2 + 256*8*2
 	ld bc, 256*8
-	call fast_LDIRVM
-
-	ld hl, inventory_tiles_nametable_zx0
-	ld de, buffer_4096
-	ld c, TILES_PAGE
-	call dzx0_from_page_c
-
-	; Draw inventory screen:
-	ld hl, buffer_4096
-	ld de, NAMTBL2
-	ld bc, 768
-	jp fast_LDIRVM
+	jp fast_LDIRVM	
 
 
 ;-----------------------------------------------

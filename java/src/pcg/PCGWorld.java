@@ -238,6 +238,42 @@ public class PCGWorld {
                 a.removeTag("none");
             }
             
+            // generate tablet contents:
+//            int n_combination_tablets = 0;
+//            int n_trial_tablets = 0;
+//            int n_riddle_tablets = 0;
+//            int n_trivia_tablets = 0;
+            for(Area a:w.areas) {
+                List<Pair<Integer, String>> tagList = a.getSortedTagList();
+                for(Pair<Integer, String> tag_position:tagList) {
+                    String tag = tag_position.right;
+//                    System.out.println(tag);
+                    if (tag.toLowerCase().contains("-clue") &&
+                        tag.toLowerCase().contains("combination")) {
+                        // combination clue:
+                        int type = r.nextInt(4);
+                        w.tabletContent.put(tag, "combination_tablet_type_"+type+"_fn");
+                    } else if (tag.toLowerCase().contains("-clue") &&
+                        tag.toLowerCase().contains("trial")) {
+                        // combination clue:
+                        // ...
+                    } else if (tag.toLowerCase().contains("riddle-clue")) {
+                        // maya riddle clue:
+                        // ...
+                    } else if (tag.toLowerCase().contains("story-trivia")) {
+                        // story trivia:
+                        // ...
+                    }
+                }
+            }
+            
+            for(int j = 0;j<4;j++) {
+                for(int k = 0;k<8;k++) {
+                    w.combinationSolutions[j][k] = r.nextInt(8)%3;
+                }
+            }
+            
+            
             return w;
         }        
         return null;

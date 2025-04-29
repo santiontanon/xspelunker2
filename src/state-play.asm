@@ -36,7 +36,7 @@ state_play:
 
 		; generate room:
 ; 		ld e, 0
-		ld e, 12
+		ld e, 28
 ; 		ld e, 5
 ; 		ld e, 0
 		ld hl, pcg_generate_room

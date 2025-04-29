@@ -142,6 +142,8 @@ public class GenerateTiles {
         // button (58, 59)
         extratTilesOneObject(sourceImage, 192, 16, 16, 16, data);  // up
         extratTilesOneObject(sourceImage, 192, 32, 16, 16, data);  // pressed
+        // tablet (60)
+        extratTilesOneObject(sourceImage, 96, 48, 16, 16, data);
 
         Z80Assembler.dataToBinary(data, outputPath + ".bin");
         ZX0Wrapper.main(outputPath+".bin", outputPath+".zx0", true, false);

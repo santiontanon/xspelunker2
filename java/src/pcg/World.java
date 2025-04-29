@@ -23,8 +23,10 @@ public class World {
     public List<InterAreaConnection> interAreaconnections = new ArrayList<>();
     public HashMap<String, Integer> lockDirections = new HashMap<>();
     public HashMap<String, String> chestContent = new HashMap<>();
+    public HashMap<String, String> tabletContent = new HashMap<>();
     public List<String> withinChestTag = new ArrayList<>();
     public List<AreaDivision> spanningTree;
+    public int[][] combinationSolutions = new int[4][8];
     
     // Used for verifying if game is solveable:
     public HashMap<String, List<String>> lockKeys = new HashMap<>();  

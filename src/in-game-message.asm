@@ -161,7 +161,6 @@ display_in_game_message_center:
 
 display_in_game_message_continue:
 	call wait_for_click
-
 	xor a
 	ld (keyboard_clicks), a
 

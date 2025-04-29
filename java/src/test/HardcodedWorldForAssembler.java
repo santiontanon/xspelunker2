@@ -26,6 +26,7 @@ public class HardcodedWorldForAssembler {
     public static final int MAX_N_TAGS = 32;
     public static final int MAX_CONNECTIONS = 12;
     public static final int MAX_CHESTS = 10;
+    public static final int MAX_TABLETS = 16;
     
     public static void main(String args[]) throws Exception
     {
@@ -87,6 +88,36 @@ public class HardcodedWorldForAssembler {
             System.out.println("  ds " + (MAX_CHESTS - n_chests) * 2 + ", #ff");
         }
         System.out.println("  db #ff  ; sentinel");
+        
+        // Tablet content:
+        int n_tablets = 0;
+        System.out.println("hardcoded_world_data__tablet_content:");
+        System.out.println("  ; each entry is 3 bytes: tablet_id, content_ptr");
+        for(String tablet:w.tabletContent.keySet()) {
+            System.out.println("  db " + AssemblerTags.tagToAssembler(tablet));
+            System.out.println("  dw " + w.tabletContent.get(tablet));
+            n_tablets++;
+        }
+        if (n_tablets > MAX_TABLETS) {
+            throw new Exception("More tablets than supported: " + n_tablets);
+        }
+        if (n_tablets < MAX_TABLETS) {
+            System.out.println("  ds " + (MAX_TABLETS - n_tablets) * 3 + ", #ff");
+        }
+        System.out.println("  db #ff  ; sentinel");
+        
+        System.out.println("hardcoded_world_data__combination_solutions:");
+        for(int i = 0;i<4;i++) {
+            System.out.println("  db " + w.combinationSolutions[i][0] + ", " +
+                                         w.combinationSolutions[i][1] + ", " +
+                                         w.combinationSolutions[i][2] + ", " +
+                                         w.combinationSolutions[i][3] + ", " +
+                                         w.combinationSolutions[i][4] + ", " +
+                                         w.combinationSolutions[i][5] + ", " +
+                                         w.combinationSolutions[i][6] + ", " +
+                                         w.combinationSolutions[i][7]);
+        }
+        
     }
     
     
@@ -138,7 +169,7 @@ public class HardcodedWorldForAssembler {
         }
         
         System.out.println("hardcoded_area_data_"+areaIndex+"__tags:");
-        List<Pair<Integer, String>> tagList = pcg2.getSortedTagList(a);
+        List<Pair<Integer, String>> tagList = a.getSortedTagList();
         int n_tags = tagList.size();
         for(Pair<Integer, String> tag_position:tagList) {
             int offset = tag_position.left;

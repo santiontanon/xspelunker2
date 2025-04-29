@@ -811,6 +811,10 @@ ENDR
 	dw object_interaction_function_empty  ; TAG_TELEPORTER_ATLANTIS
 	dw object_interaction_function_empty  ; TAG_TELEPORTER_MARS
 	dw object_interaction_function_empty  ; TAG_TELEPORTER_MOON
+	dw object_interaction_function_empty  ; TAG_BUTTON1
+	dw object_interaction_function_empty  ; TAG_BUTTON2
+	dw object_interaction_function_empty  ; TAG_BUTTON3
+	dw object_interaction_function_empty  ; TAG_BUTTON4
 	dw object_interaction_function_pickup_item  ; TAG_RED_KEY
 	dw object_interaction_function_pickup_item  ; TAG_GREEN_KEY
 	dw object_interaction_function_pickup_item  ; TAG_BLUE_KEY
@@ -823,14 +827,14 @@ ENDR
 	dw object_interaction_function_chest  ; TAG_YELLOW_CHEST
 	dw object_interaction_function_chest  ; TAG_WHITE_CHEST
 	dw object_interaction_function_chest  ; TAG_PURPLE_CHEST
-	dw object_interaction_function_empty  ; TAG_TRIAL1_CLUE
-	dw object_interaction_function_empty  ; TAG_TRIAL2_CLUE
-	dw object_interaction_function_empty  ; TAG_TRIAL3_CLUE
-	dw object_interaction_function_empty  ; TAG_TRIAL4_CLUE
-	dw object_interaction_function_empty  ; TAG_COMBINATION1_CLUE
-	dw object_interaction_function_empty  ; TAG_COMBINATION2_CLUE
-	dw object_interaction_function_empty  ; TAG_COMBINATION3_CLUE
-	dw object_interaction_function_empty  ; TAG_COMBINATION4_CLUE
+	dw object_interaction_function_tablet  ; TAG_TRIAL1_CLUE
+	dw object_interaction_function_tablet  ; TAG_TRIAL2_CLUE
+	dw object_interaction_function_tablet  ; TAG_TRIAL3_CLUE
+	dw object_interaction_function_tablet  ; TAG_TRIAL4_CLUE
+	dw object_interaction_function_tablet  ; TAG_COMBINATION1_CLUE
+	dw object_interaction_function_tablet  ; TAG_COMBINATION2_CLUE
+	dw object_interaction_function_tablet  ; TAG_COMBINATION3_CLUE
+	dw object_interaction_function_tablet  ; TAG_COMBINATION4_CLUE
 	dw object_interaction_function_pickup_item  ; TAG_BALL_KEY
 	dw object_interaction_function_pickup_item  ; TAG_IDOL_KEY
 	dw object_interaction_function_pickup_item  ; TAG_GEAR_KEY
@@ -879,18 +883,18 @@ ENDR
 	dw object_interaction_function_pickup_heart  ; TAG_HEART3
 	dw object_interaction_function_pickup_heart  ; TAG_HEART4
 	dw object_interaction_function_pickup_heart  ; TAG_HEART5
-	dw object_interaction_function_empty  ; TAG_MAYA_RIDDLE_CLUE1
-	dw object_interaction_function_empty  ; TAG_MAYA_RIDDLE_CLUE2
-	dw object_interaction_function_empty  ; TAG_MAYA_RIDDLE_CLUE3
-	dw object_interaction_function_empty  ; TAG_MAYA_RIDDLE_CLUE4
-	dw object_interaction_function_empty  ; TAG_STORY_TRIVIA1
-	dw object_interaction_function_empty  ; TAG_STORY_TRIVIA2
-	dw object_interaction_function_empty  ; TAG_STORY_TRIVIA3
-	dw object_interaction_function_empty  ; TAG_STORY_TRIVIA4
-	dw object_interaction_function_empty  ; TAG_STORY_TRIVIA5
-	dw object_interaction_function_empty  ; TAG_STORY_TRIVIA6
-	dw object_interaction_function_empty  ; TAG_STORY_TRIVIA7
-	dw object_interaction_function_empty  ; TAG_STORY_TRIVIA8
+	dw object_interaction_function_tablet  ; TAG_MAYA_RIDDLE_CLUE1
+	dw object_interaction_function_tablet  ; TAG_MAYA_RIDDLE_CLUE2
+	dw object_interaction_function_tablet  ; TAG_MAYA_RIDDLE_CLUE3
+	dw object_interaction_function_tablet  ; TAG_MAYA_RIDDLE_CLUE4
+	dw object_interaction_function_tablet  ; TAG_STORY_TRIVIA1
+	dw object_interaction_function_tablet  ; TAG_STORY_TRIVIA2
+	dw object_interaction_function_tablet  ; TAG_STORY_TRIVIA3
+	dw object_interaction_function_tablet  ; TAG_STORY_TRIVIA4
+	dw object_interaction_function_tablet  ; TAG_STORY_TRIVIA5
+	dw object_interaction_function_tablet  ; TAG_STORY_TRIVIA6
+	dw object_interaction_function_tablet  ; TAG_STORY_TRIVIA7
+	dw object_interaction_function_tablet  ; TAG_STORY_TRIVIA8
 	dw object_interaction_function_pickup_item  ; TAG_ITEM_SANDALS
 	dw object_interaction_function_pickup_item  ; TAG_ITEM_GLOVES
 	dw object_interaction_function_pickup_item  ; TAG_ITEM_HURAKAN
@@ -1311,6 +1315,29 @@ object_interaction_function_open_astronaut_lock:
 	ld hl, player_inventory_items + 24  ; astronaut
 	ld (hl), 0
 	jp object_interaction_function_open_small_lock_entry_point
+
+
+;-----------------------------------------------
+object_interaction_function_tablet:
+	; Determine tablet content:
+	ld hl, current_world__tablet_content
+object_interaction_function_tablet_loop:
+	ld a, (hl)
+	cp (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	jr z, object_interaction_function_tablet_found
+	inc hl
+	inc hl
+	inc hl
+	jr object_interaction_function_tablet_loop
+object_interaction_function_tablet_found:
+	inc hl
+	ld e, (hl)
+	inc hl
+	ld d, (hl)
+
+	ld c, TEXT_PAGE
+	ld hl, display_tablet
+	jp call_hl_in_page_c_8000
 
 
 ;-----------------------------------------------
