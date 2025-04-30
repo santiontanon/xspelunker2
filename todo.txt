@@ -1,13 +1,14 @@
 to do:
 
-***- combination puzzles:
-  ***- spawn and render combination levers
-  ***- spawn combination puzzle door
-  ***- interact with combination levers
-  ***- open door when puzzle is solved
+***- trials:
+  ***- create a list of trial clues (at least 8)
+  ***- assign clues to tablets (and mark which trials have to be done)
+  ***- spawn trial clues
+  ***- spawn god figures
+  ***- spawn god figure doors
+  ***- open door if trials are completed
 
 - being able to complete the game in MSX:
-  - trials (those are solved in front of te gods I drew)
   - open the boss doors (door open animation with some SFX/music, so, it's clear it's important)
   - enter a boss door (for now just an empty room with the item you are supposed to get)
     - obtain the "power stones": each stone represents one of the six creator deities (the last one requires two of them). Maybe to see them you have to inspect them in the inventory (too small otherwise)

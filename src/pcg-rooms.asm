@@ -20,6 +20,11 @@ pcg_generate_room:
 	ld (large_object_to_upload_to_vdp), hl
 
 	push de
+		ld hl, current_room__combination_levers_state
+		ld bc, 8 - 1
+		ld a, 1
+		call clear_memory_a
+
 		ld hl, current_room__objects
 		ld (tmp_pcg_room__next_object_ptr), hl
 		ld bc, MAX_ROOM_OBJECTS * ROOM_OBJECT_STRUCT_SIZE - 1
@@ -324,13 +329,13 @@ pcg_generate_room__object_loop:
 	rl e  ; in chunks
 	ld a, c
 	sub e
-	jr c, pcg_generate_room__object_loop_next  ; out of bounds left 
+	jp c, pcg_generate_room__object_loop_next  ; out of bounds left 
 	ld c, a  ; c = (object chunk x) - (room chunk x)
 	ld a, (current_room__width_in_screens)
 	add a, a  ; in chunks
 	cp c  ; if a <= c, out of bounds
-	jr z, pcg_generate_room__object_loop_next  ; out of bounds right 
-	jr c, pcg_generate_room__object_loop_next  ; out of bounds right 
+	jp z, pcg_generate_room__object_loop_next  ; out of bounds right 
+	jp c, pcg_generate_room__object_loop_next  ; out of bounds right 
 	ld a, b
 	sub d
 	jr c, pcg_generate_room__object_loop_next  ; out of bounds top 
@@ -382,6 +387,15 @@ pcg_generate_room__object_loop:
 	jp z, pcg_generate_room__object_button_door
 	cp TAG_BUTTON_DOOR4
 	jp z, pcg_generate_room__object_button_door
+
+	cp TAG_COMBINATION1_LOCK
+	jp z, pcg_generate_room__object_combination_lock
+	cp TAG_COMBINATION2_LOCK
+	jp z, pcg_generate_room__object_combination_lock
+	cp TAG_COMBINATION3_LOCK
+	jp z, pcg_generate_room__object_combination_lock
+	cp TAG_COMBINATION4_LOCK
+	jp z, pcg_generate_room__object_combination_lock
 
 	; ...
 
@@ -657,7 +671,6 @@ pcg_generate_room__object_small_lock_direction_set:
 	cp PCG_DIRECTION_RIGHT
 	jr z, pcg_generate_room__object_small_lock_direction_set2_right
 
-	ld c, d  ; restore the proper 'x'
 	; down:
 	ld e, TAG_DOOR_HORIZONTAL
 	ld a, (current_room__height)
@@ -733,6 +746,66 @@ pcg_generate_room__object_button_door:
 		call get_chunk_id_from_coordinates  ; a = chunk ID
 		ld hl, pyramid_chunk_fg_bank_ptrs
 		call pcg_get_chunk_ptr
+		jp pcg_generate_room__object_small_lock_spawn_door
+
+
+;-----------------------------------------------
+pcg_generate_room__object_combination_lock:
+	; get the chunk type where we are placing the object:
+	push bc
+		call get_chunk_id_from_coordinates  ; a = chunk ID
+		ld hl, pyramid_chunk_fg_bank_ptrs
+		call pcg_get_chunk_ptr
+	pop bc
+	push hl
+		push bc
+			; spawn the levers:
+			ld iyl, 1  ; first ID 
+			ld bc, CHUNK_WIDTH * CHUNK_HEIGHT
+			add hl, bc
+pcg_generate_room__object_combination_lock_loop:
+			ld a, (hl)
+			or a
+			jr z, pcg_generate_room__object_combination_lock_loop_end
+			cp CHUNK_LOCATION_ITEM
+			jr nz, pcg_generate_room__object_combination_lock_loop_next
+		pop bc  ; recover the chunk coordinates
+		push bc
+			push hl
+				ex de, hl
+				call pcg_generate_room__compute_object_coordinates
+				; spawn a lever object:
+				ld a, iyl
+				push iy
+					ld iy, (tmp_pcg_room__next_tile_object_ptr)
+					ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), a  ; ID
+					ld e, (ix + AREA_OBJECT_STRUCT_TYPE)
+					ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), e  ; type
+					ld (iy + ROOM_TILE_OBJECT_STRUCT_X), c  ; x
+					ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), b  ; y
+					ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 1  ; state
+					ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
+					add iy, bc
+					ld (tmp_pcg_room__next_tile_object_ptr), iy
+				pop iy
+				inc iyl
+			pop hl
+pcg_generate_room__object_combination_lock_loop_next:
+			inc hl
+			inc hl
+			inc hl
+			inc hl
+			inc hl
+			jr pcg_generate_room__object_combination_lock_loop
+pcg_generate_room__object_combination_lock_loop_end:
+
+			; set which object gfx to up load vdp (starting at tile FIRST_ITEM_TILE):
+			ld e, TAG_COMBINATION1_LOCK
+			call set_large_object_to_upload_to_vdp
+
+		pop bc
+	pop hl
+	push bc
 		jp pcg_generate_room__object_small_lock_spawn_door
 
 
@@ -1466,6 +1539,8 @@ set_item_object_to_upload_to_vdp_button:
 ; - e: item ID
 set_large_object_to_upload_to_vdp:
 	ld a, e
+	cp TAG_COMBINATION1_LOCK
+	jr z, set_large_object_to_upload_to_vdp_combination_lock
 	cp TAG_IDOL_LOCK
 	jr z, set_large_object_to_upload_to_vdp_idol_lock
 	cp TAG_GEAR_LOCK
@@ -1476,6 +1551,10 @@ set_large_object_to_upload_to_vdp:
 	; TAG_TRIAL4_LOCK: equ 22
 	ld e, 32*8
 	ld hl, buffer_4096 + 48 * 16  ; boss door
+	jr set_large_object_to_upload_to_vdp_ptr_set
+set_large_object_to_upload_to_vdp_combination_lock:
+	ld e, 6*8
+	ld hl, buffer_4096 + 96 * 16  ; lever
 	jr set_large_object_to_upload_to_vdp_ptr_set
 set_large_object_to_upload_to_vdp_idol_lock:
 	ld hl, buffer_4096 + 0 * 16
@@ -1597,16 +1676,16 @@ ENDR
 	dw buffer_4096  ; TAG_BOSS7
 	dw buffer_4096 + 6 * 64  ; TAG_BOSS7_KEY
 	dw buffer_4096 + 7 * 64  ; TAG_BOSS7_CHESTLOCK
-	dw buffer_4096 + 26 * 64  ; TAG_WEAPON_HAMMER
-	dw buffer_4096 + 27 * 64  ; TAG_WEAPON_MACUAHUITL
-	dw buffer_4096 + 28 * 64  ; TAG_WEAPON_SHIELD
-	dw buffer_4096 + 29 * 64  ; TAG_WEAPON_SLING
-	dw buffer_4096 + 30 * 64  ; TAG_WEAPON_BLOWGUN
-	dw buffer_4096 + 31 * 64  ; TAG_WEAPON_ATLATL
-	dw buffer_4096 + 32 * 64  ; TAG_WEAPON_RAYGUN
-	dw buffer_4096 + 33 * 64  ; TAG_WEAPON_OBSIDIAN_KNIVE
-	dw buffer_4096 + 34 * 64  ; TAG_WEAPON_FIRE_HAMMER
-	dw buffer_4096 + 35 * 64  ; TAG_WEAPON_ICE_MACUAHUITL
+	dw buffer_4096 + 27 * 64  ; TAG_WEAPON_HAMMER
+	dw buffer_4096 + 28 * 64  ; TAG_WEAPON_MACUAHUITL
+	dw buffer_4096 + 29 * 64  ; TAG_WEAPON_SHIELD
+	dw buffer_4096 + 30 * 64  ; TAG_WEAPON_SLING
+	dw buffer_4096 + 31 * 64  ; TAG_WEAPON_BLOWGUN
+	dw buffer_4096 + 32 * 64  ; TAG_WEAPON_ATLATL
+	dw buffer_4096 + 33 * 64  ; TAG_WEAPON_RAYGUN
+	dw buffer_4096 + 34 * 64  ; TAG_WEAPON_OBSIDIAN_KNIVE
+	dw buffer_4096 + 35 * 64  ; TAG_WEAPON_FIRE_HAMMER
+	dw buffer_4096 + 36 * 64  ; TAG_WEAPON_ICE_MACUAHUITL
 	dw buffer_4096 + 38 * 64  ; TAG_MAP_PIECE1
 	dw buffer_4096 + 38 * 64  ; TAG_MAP_PIECE2
 	dw buffer_4096 + 38 * 64  ; TAG_MAP_PIECE3

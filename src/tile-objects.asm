@@ -293,6 +293,14 @@ room_render_tile_objects_loop:
 		jp z, room_render_tile_objects_render_v_door
 		cp TAG_DOOR_HORIZONTAL
 		jp z, room_render_tile_objects_render_h_door
+		cp TAG_COMBINATION1_LOCK
+		jp z, room_render_tile_objects_render_combination_lever
+		cp TAG_COMBINATION2_LOCK
+		jp z, room_render_tile_objects_render_combination_lever
+		cp TAG_COMBINATION3_LOCK
+		jp z, room_render_tile_objects_render_combination_lever
+		cp TAG_COMBINATION4_LOCK
+		jp z, room_render_tile_objects_render_combination_lever
 		inc hl
 		ld c, (hl)  ; x
 		ld ixl, c
@@ -463,6 +471,26 @@ room_render_tile_objects_render_h_door:
 	inc hl
 	inc hl
 	ld de, tile_object_h_door_gfx
+	jp room_render_tile_objects_render_entry_point
+
+
+room_render_tile_objects_render_combination_lever:
+	inc hl
+	ld c, (hl)  ; x
+	ld ixl, c
+	inc hl
+	ld b, (hl)  ; y
+	inc hl
+	ld ixh, b
+	ld bc, #0202
+	ld a, (hl)
+	add a, a
+	add a, a
+	ld de, tile_object_lever_left_object_gfx
+	ADD_DE_A
+	inc hl
+	inc hl
+	inc hl
 	jp room_render_tile_objects_render_entry_point
 
 
@@ -797,10 +825,10 @@ ENDR
 	dw object_interaction_function_empty  ; TAG_TRIAL2_LOCK
 	dw object_interaction_function_empty  ; TAG_TRIAL3_LOCK
 	dw object_interaction_function_empty  ; TAG_TRIAL4_LOCK
-	dw object_interaction_function_empty  ; TAG_COMBINATION1_LOCK
-	dw object_interaction_function_empty  ; TAG_COMBINATION2_LOCK
-	dw object_interaction_function_empty  ; TAG_COMBINATION3_LOCK
-	dw object_interaction_function_empty  ; TAG_COMBINATION4_LOCK
+	dw object_interaction_function_combination_lever  ; TAG_COMBINATION1_LOCK
+	dw object_interaction_function_combination_lever  ; TAG_COMBINATION2_LOCK
+	dw object_interaction_function_combination_lever  ; TAG_COMBINATION3_LOCK
+	dw object_interaction_function_combination_lever  ; TAG_COMBINATION4_LOCK
 	dw object_interaction_function_open_ball_lock  ; TAG_BALL_LOCK
 	dw object_interaction_function_open_idol_lock  ; TAG_IDOL_LOCK
 	dw object_interaction_function_open_gear_lock  ; TAG_GEAR_LOCK
@@ -1200,6 +1228,7 @@ object_interaction_function_open_small_lock_entry_point:
 	ld c, PCG_PAGE
 	call call_hl_in_page_c_8000	
 
+object_interaction_function_open_combination_lock_entry_point:
 	ld hl, SFX_door_open
 	call play_SFX_with_high_priority
 
@@ -1341,6 +1370,65 @@ object_interaction_function_tablet_found:
 
 
 ;-----------------------------------------------
+object_interaction_function_combination_lever:
+	ld hl, SFX_ui_move
+	call play_SFX_with_high_priority
+
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)
+	inc a
+	cp 3
+	jr nz, object_interaction_function_combination_lever_continue
+	xor a
+object_interaction_function_combination_lever_continue:
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), a
+
+	; mark combination state:
+	ld hl, current_room__combination_levers_state
+	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
+	dec c
+	ld b, 0
+	add hl, bc
+	ld (hl), a
+
+	; check if the combination is the correct one:
+	ld hl, global_state__objects
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	ADD_HL_A
+	ld a, (hl)
+	or a
+	jr nz, object_interaction_function_combination_lever_already_open
+	push hl
+		ld hl, current_world__combination_solutions
+		ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+		sub TAG_COMBINATION1_LOCK
+		add a, a
+		add a, a
+		add a, a
+		ADD_HL_A
+		ld de, current_room__combination_levers_state
+		ld b, 8
+object_interaction_function_combination_lever_loop:
+		ld a, (de)
+		cp (hl)
+		jr nz, object_interaction_function_combination_lever_incorrect
+		inc hl
+		inc de
+		djnz object_interaction_function_combination_lever_loop
+	pop hl
+	ld (hl), 1  ; mark as open
+	jp object_interaction_function_open_combination_lock_entry_point
+
+object_interaction_function_combination_lever_incorrect:
+	pop hl
+
+object_interaction_function_combination_lever_already_open:
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)
+	call room_undraw_tile_objects
+	jp room_render_tile_objects
+
+
+;-----------------------------------------------
 ; output:
 ; - z: door found
 ; - nz: door not found
@@ -1401,17 +1489,17 @@ ENDR
 	TILE_OBJECT_DATA 1, 2, 2, tile_object_regular_object_gfx  ; TAG_YELLOW_LOCK
 	TILE_OBJECT_DATA 1, 2, 2, tile_object_regular_object_gfx  ; TAG_WHITE_LOCK
 	TILE_OBJECT_DATA 1, 2, 2, tile_object_regular_object_gfx  ; TAG_PURPLE_LOCK
-REPT TAG_BALL_LOCK - TAG_TRIAL1_LOCK  ; add filler
+REPT TAG_COMBINATION1_LOCK - TAG_TRIAL1_LOCK  ; add filler
 	TILE_OBJECT_DATA 2, 0, 0, 0
 ENDR
 ; TAG_TRIAL1_LOCK: equ 19
 ; TAG_TRIAL2_LOCK: equ 20
 ; TAG_TRIAL3_LOCK: equ 21
 ; TAG_TRIAL4_LOCK: equ 22
-; TAG_COMBINATION1_LOCK: equ 23
-; TAG_COMBINATION2_LOCK: equ 24
-; TAG_COMBINATION3_LOCK: equ 25
-; TAG_COMBINATION4_LOCK: equ 26
+	TILE_OBJECT_DATA 1, 2, 2, tile_object_lever_up_object_gfx  ; TAG_COMBINATION1_LOCK
+	TILE_OBJECT_DATA 1, 2, 2, tile_object_lever_up_object_gfx  ; TAG_COMBINATION2_LOCK
+	TILE_OBJECT_DATA 1, 2, 2, tile_object_lever_up_object_gfx  ; TAG_COMBINATION3_LOCK
+	TILE_OBJECT_DATA 1, 2, 2, tile_object_lever_up_object_gfx  ; TAG_COMBINATION4_LOCK
 	TILE_OBJECT_DATA 1, 2, 2, tile_object_regular_object_gfx  ; TAG_BALL_LOCK
 	TILE_OBJECT_DATA 1, 4, 3, tile_object_idol_lock_locked_gfx  ; TAG_IDOL_LOCK
 	TILE_OBJECT_DATA 1, 4, 3, tile_object_gear_lock_locked_gfx  ; TAG_GEAR_LOCK
@@ -1546,3 +1634,11 @@ tile_object_gear_lock_locked_gfx:
 	db 48, 49, 50, 51
 	db 52, 53, 54, 55
 	db 56, 57, 58, 59
+tile_object_lever_left_object_gfx:
+	db 48, 53, 51, 52
+tile_object_lever_up_object_gfx:
+	db 50, 53, 51, 52
+tile_object_lever_right_object_gfx:
+	db 53, 49, 51, 52
+
+

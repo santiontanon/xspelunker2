@@ -165,6 +165,8 @@ public class GenerateTiles {
         extratTilesOneObject(sourceImage, 96, 208, 32, 32, data);  // closed
         extratTilesOneObject(sourceImage, 128, 208, 32, 32, data);  // opening
         extratTilesOneObject(sourceImage, 160, 208, 32, 32, data);  // open
+        // levers (96)
+        extratTilesOneObject(sourceImage, 208, 32, 24, 16, data);  // closed
 
         Z80Assembler.dataToBinary(data, outputPath + ".bin");
         ZX0Wrapper.main(outputPath+".bin", outputPath+".zx0", true, false);

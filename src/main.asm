@@ -422,6 +422,7 @@ current_room__player_bullets: ds virtual MAX_ROOM_PLAYER_BULLETS * ROOM_OBJECT_S
 current_room__player_bullets_sentinel: ds virtual 1
 current_room__tile_objects: ds virtual MAX_ROOM_TILE_OBJECTS * ROOM_TILE_OBJECT_STRUCT_SIZE
 current_room__tile_objects_sentinel: ds virtual 1
+current_room__combination_levers_state: ds virtual 8  ; to simplify combination lever checking
 
 RAM_to_zero_on_game_start:
 

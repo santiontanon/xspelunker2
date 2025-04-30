@@ -530,6 +530,8 @@ player_update_state_falling_speed_loop_done:
 
 ;-----------------------------------------------
 player_update_switch_to_jumping_from_swimming:
+	ld a, PLAYER_MAX_OXYGEN
+	ld (player_oxygen), a	
 	ld a, HUD_MAX_TIME
 	ld (hud_redraw_timer), a
 	ld hl, redraw_flags
