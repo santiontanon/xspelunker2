@@ -149,10 +149,10 @@ display_in_game_message_center:
 		add a, a
 		add a, a
 		ex hl, de
-			ld hl, CHRTBL2 + 11 * 32 * 8
+			ld hl, CHRTBL2 + 12 * 32 * 8
 			ld b, 0
 			ld c, a
-		add hl, bc
+			add hl, bc
 		ex hl, de
 		ld iy, #80f0
 	pop bc

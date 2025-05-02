@@ -21,6 +21,14 @@ player_hurt_speed_table:
 
 ;-----------------------------------------------
 player_update:
+	ld hl, (current_room__trial_fn)
+	ld a, h
+	or a
+	jr z, player_update_no_trial_fn
+	ld bc, player_update_no_trial_fn
+	push bc
+	jp (hl)
+player_update_no_trial_fn:
 	; first thing is to check for collision with hazards (e.g. spikes):
 	ld hl, player_immunity_timer
 	ld a, (hl)

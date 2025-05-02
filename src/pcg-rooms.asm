@@ -18,9 +18,10 @@ pcg_generate_room:
 	ld hl, 0
 	ld (item_object_to_upload_to_vdp), hl
 	ld (large_object_to_upload_to_vdp), hl
+	ld (current_room__trial_fn), hl
 
 	push de
-		ld hl, current_room__combination_levers_state
+		ld hl, player_combination_levers_state
 		ld bc, 8 - 1
 		ld a, 1
 		call clear_memory_a
@@ -29,6 +30,7 @@ pcg_generate_room:
 		ld (tmp_pcg_room__next_object_ptr), hl
 		ld bc, MAX_ROOM_OBJECTS * ROOM_OBJECT_STRUCT_SIZE - 1
 		xor a
+		ld (player_trial_completion_state), a
 		ld (current_room__objects_sentinel), a
 		ld (current_room__player_bullets_sentinel), a
 		call clear_memory_a
@@ -338,13 +340,13 @@ pcg_generate_room__object_loop:
 	jp c, pcg_generate_room__object_loop_next  ; out of bounds right 
 	ld a, b
 	sub d
-	jr c, pcg_generate_room__object_loop_next  ; out of bounds top 
+	jp c, pcg_generate_room__object_loop_next  ; out of bounds top 
 	ld b, a
 	ld a, (current_room__height_in_screens)
 	add a, a  ; in chunks
 	cp b  ; if a <= b, out of bounds
-	jr z, pcg_generate_room__object_loop_next  ; out of bounds bottom 
-	jr c, pcg_generate_room__object_loop_next  ; out of bounds bottom 
+	jp z, pcg_generate_room__object_loop_next  ; out of bounds bottom 
+	jp c, pcg_generate_room__object_loop_next  ; out of bounds bottom 
 
 	; object is in this room:
 	ld a, (ix + AREA_OBJECT_STRUCT_TYPE)
@@ -397,6 +399,15 @@ pcg_generate_room__object_loop:
 	cp TAG_COMBINATION4_LOCK
 	jp z, pcg_generate_room__object_combination_lock
 
+	cp TAG_TRIAL1_LOCK
+	jp z, pcg_generate_room__object_trial_lock
+	cp TAG_TRIAL2_LOCK
+	jp z, pcg_generate_room__object_trial_lock
+	cp TAG_TRIAL3_LOCK
+	jp z, pcg_generate_room__object_trial_lock
+	cp TAG_TRIAL4_LOCK
+	jp z, pcg_generate_room__object_trial_lock
+
 	; ...
 
 pcg_generate_room__object_loop_next:
@@ -420,9 +431,9 @@ pcg_generate_room__object_breakable_wall:
 		ld a, (ix + AREA_OBJECT_STRUCT_EXTRA)  ; get the direction of the wall
 		cp PCG_DIRECTION_LEFT
 		jr z, pcg_generate_room__object_breakable_wall_left
-		cp PCG_DIRECTION_LEFT
+		cp PCG_DIRECTION_UP
 		jr z, pcg_generate_room__object_breakable_wall_up
-		cp PCG_DIRECTION_LEFT
+		cp PCG_DIRECTION_RIGHT
 		jr z, pcg_generate_room__object_breakable_wall_right
 pcg_generate_room__object_breakable_wall_down:
 		ld e, CHUNK_LOCATION_BREAKABLE_DOWN
@@ -640,6 +651,7 @@ pcg_generate_room__object_small_lock_direction_set:
 
 	pop bc  ; coordinates in chunks
 
+pcg_generate_room__object_small_lock_spawn_door_no_ladder_replacement:
 	; Clear the background behind the door:
 	call pcg_generate_room__compute_object_coordinates
 	inc de
@@ -657,7 +669,7 @@ pcg_generate_room__object_small_lock_direction_set:
 	ADD_HL_A
 	ld a, (hl)
 	or a
-	jp nz, pcg_generate_room__object_loop_next  ; item was already open, do not spawn door
+	jp nz, pcg_generate_room__maybe_replace_door_by_ladder  ; item was already open, do not spawn door
 
 	; spawn the door:
 	ld a, (ix + AREA_OBJECT_STRUCT_EXTRA)  ; a = direction
@@ -696,6 +708,51 @@ pcg_generate_room__object_small_lock_direction_set2_right:
 	ld c, a  ; put the door at the right-edge of the room
 	jr pcg_generate_room__object_small_lock_direction_set2
 
+
+;-----------------------------------------------
+pcg_generate_room__maybe_replace_door_by_ladder:
+	; c, b: x, y of the door object
+	; If it's a door down to an inter-area connection, replace by a ladder:
+	ld a, (ix + AREA_OBJECT_STRUCT_EXTRA)  ; a = direction
+	cp PCG_DIRECTION_DOWN
+	jp nz, pcg_generate_room__object_loop_next
+	; is it an inter-area connection? (check if we are at the edge of the map, or there is no chunk below)
+	push bc
+		ld a, (current_room__y)
+		ld c, a
+		ld a, (current_room__height_in_screens)
+		add a, c
+		ld c, a
+		ld a, (current_area__height)
+		cp c
+	pop bc
+	jr z, pcg_generate_room__maybe_replace_door_by_ladder_inter_area_connection
+	push bc
+		; see if there is a chunk below:
+		call get_player_chunk_coordinates
+		inc b  ; chunk below
+		ld e, PCG_PAGE
+		ld hl, get_chunk_id_from_coordinates
+		call call_hl_in_page_e_8000
+		ld a, (hl)
+		cp #ff
+	pop bc
+	jp nz, pcg_generate_room__object_loop_next
+
+pcg_generate_room__maybe_replace_door_by_ladder_inter_area_connection:
+	; replace by a ladder:
+	ld a, (current_room__height)
+	dec a
+	ld b, a  ; put the door at the bottom of the room
+	call get_room_tile_ptr
+	ld (hl), 254  ; platform
+	inc hl
+	ld (hl), 168  ; ladder-left
+	inc hl
+	ld (hl), 136  ; ladder-right
+	inc hl
+	ld (hl), 254  ; platform
+	ret
 
 ;-----------------------------------------------
 pcg_generate_room__object_idol_lock:
@@ -806,6 +863,72 @@ pcg_generate_room__object_combination_lock_loop_end:
 		pop bc
 	pop hl
 	push bc
+		jp pcg_generate_room__object_small_lock_spawn_door
+
+
+;-----------------------------------------------
+pcg_generate_room__object_trial_lock:
+	; get the chunk type where we are placing the object:
+	push bc
+		call get_chunk_id_from_coordinates  ; a = chunk ID
+		ld hl, pyramid_chunk_fg_bank_ptrs
+		call pcg_get_chunk_ptr
+		ld e, CHUNK_LOCATION_4X4_ITEM
+		push hl
+			call sample_chunk_location  ; de: ptr to the location
+		pop hl
+	pop bc  ; chunk coordinates
+
+	ASSERT_D_NOT_EQ 0
+
+	push bc
+		push hl
+			; compute object coordinates:
+			call pcg_generate_room__compute_object_coordinates
+			; here: c, b: x, y coordinates
+
+			; spawn the lock:
+			ld d, (ix + AREA_OBJECT_STRUCT_ID)
+			ld e, (ix + AREA_OBJECT_STRUCT_TYPE)
+			ld iy, (tmp_pcg_room__next_tile_object_ptr)
+			ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), d  ; ID
+			ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), e  ; type
+			ld (iy + ROOM_TILE_OBJECT_STRUCT_X), c  ; x
+			ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), b  ; y
+			ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0  ; state (hitpoints)
+			ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
+			add iy, bc
+			ld (tmp_pcg_room__next_tile_object_ptr), iy
+
+			; set which object gfx to up load vdp (starting at tile FIRST_ITEM_TILE):
+			call set_large_object_to_upload_to_vdp
+
+			; check if the lock has already been open
+			ld a, (ix + AREA_OBJECT_STRUCT_TYPE)
+			ld hl, global_state__objects
+			ADD_HL_A
+			ld a, (hl)
+			or a
+			jp nz, pcg_generate_room__object_trial_lock_continue  ; item was already open, no need to set a trial fn
+
+			ld hl, current_world__trial_types
+			ld a, (ix + AREA_OBJECT_STRUCT_TYPE)
+			sub TAG_TRIAL1_LOCK
+			ADD_HL_A
+			ld a, (hl)
+			add a, a
+			ld hl, trial_fn_ptrs
+			ADD_HL_A
+			ld a, (hl)
+			inc hl
+			ld h, (hl)
+			ld l, a
+			ld (current_room__trial_fn), hl
+
+pcg_generate_room__object_trial_lock_continue:
+
+		pop hl  ; chunk ptr
+
 		jp pcg_generate_room__object_small_lock_spawn_door
 
 
@@ -1545,12 +1668,32 @@ set_large_object_to_upload_to_vdp:
 	jr z, set_large_object_to_upload_to_vdp_idol_lock
 	cp TAG_GEAR_LOCK
 	jr z, set_large_object_to_upload_to_vdp_gear_lock
-	; TAG_TRIAL1_LOCK: equ 19
-	; TAG_TRIAL2_LOCK: equ 20
-	; TAG_TRIAL3_LOCK: equ 21
-	; TAG_TRIAL4_LOCK: equ 22
+	cp TAG_TRIAL1_LOCK
+	jr z, set_large_object_to_upload_to_vdp_trial1_lock
+	cp TAG_TRIAL2_LOCK
+	jr z, set_large_object_to_upload_to_vdp_trial2_lock
+	cp TAG_TRIAL3_LOCK
+	jr z, set_large_object_to_upload_to_vdp_trial3_lock
+	cp TAG_TRIAL4_LOCK
+	jr z, set_large_object_to_upload_to_vdp_trial4_lock
 	ld e, 32*8
 	ld hl, buffer_4096 + 48 * 16  ; boss door
+	jr set_large_object_to_upload_to_vdp_ptr_set
+set_large_object_to_upload_to_vdp_trial1_lock:
+	ld e, 16*8
+	ld hl, buffer_4096 + 102 * 16  ; god 1 image
+	jr set_large_object_to_upload_to_vdp_ptr_set
+set_large_object_to_upload_to_vdp_trial2_lock:
+	ld e, 16*8
+	ld hl, buffer_4096 + 118 * 16  ; god 2 image
+	jr set_large_object_to_upload_to_vdp_ptr_set
+set_large_object_to_upload_to_vdp_trial3_lock:
+	ld e, 16*8
+	ld hl, buffer_4096 + 134 * 16  ; god 3 image
+	jr set_large_object_to_upload_to_vdp_ptr_set
+set_large_object_to_upload_to_vdp_trial4_lock:
+	ld e, 16*8
+	ld hl, buffer_4096 + 150 * 16  ; god 4 image
 	jr set_large_object_to_upload_to_vdp_ptr_set
 set_large_object_to_upload_to_vdp_combination_lock:
 	ld e, 6*8

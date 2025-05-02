@@ -756,6 +756,14 @@ get_tile_object_behind_player_loop:
 	jr z, get_tile_object_behind_player_32x24_object
 	cp TAG_IDOL_LOCK
 	jr z, get_tile_object_behind_player_32x24_object
+	cp TAG_TRIAL1_LOCK
+	jr z, get_tile_object_behind_player_32x32_object
+	cp TAG_TRIAL2_LOCK
+	jr z, get_tile_object_behind_player_32x32_object
+	cp TAG_TRIAL3_LOCK
+	jr z, get_tile_object_behind_player_32x32_object
+	cp TAG_TRIAL4_LOCK
+	jr z, get_tile_object_behind_player_32x32_object
 
 	; 16x16 objects:
 	ld a, b
@@ -780,6 +788,7 @@ get_tile_object_behind_player_32x24_object:
 	dec a
 	cp (ix + ROOM_TILE_OBJECT_STRUCT_Y)
 	jr nz, get_tile_object_behind_player_loop_next
+get_tile_object_behind_player_32x24_object_x:
 	ld a, c
     cp (ix + ROOM_TILE_OBJECT_STRUCT_X)
     jr z, get_tile_object_behind_player_found
@@ -793,6 +802,14 @@ get_tile_object_behind_player_32x24_object:
     cp (ix + ROOM_TILE_OBJECT_STRUCT_X)
 	jr z, get_tile_object_behind_player_found
 	jr get_tile_object_behind_player_loop_next
+
+get_tile_object_behind_player_32x32_object:
+	ld a, b
+	dec a
+	dec a
+	cp (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	jr nz, get_tile_object_behind_player_loop_next
+	jr get_tile_object_behind_player_32x24_object_x
 
 
 ;-----------------------------------------------
@@ -821,10 +838,10 @@ ENDR
 	dw object_interaction_function_open_small_lock  ; TAG_YELLOW_LOCK
 	dw object_interaction_function_open_small_lock  ; TAG_WHITE_LOCK
 	dw object_interaction_function_open_small_lock  ; TAG_PURPLE_LOCK
-	dw object_interaction_function_empty  ; TAG_TRIAL1_LOCK
-	dw object_interaction_function_empty  ; TAG_TRIAL2_LOCK
-	dw object_interaction_function_empty  ; TAG_TRIAL3_LOCK
-	dw object_interaction_function_empty  ; TAG_TRIAL4_LOCK
+	dw object_interaction_function_inspect_god  ; TAG_TRIAL1_LOCK
+	dw object_interaction_function_inspect_god  ; TAG_TRIAL2_LOCK
+	dw object_interaction_function_inspect_god  ; TAG_TRIAL3_LOCK
+	dw object_interaction_function_inspect_god  ; TAG_TRIAL4_LOCK
 	dw object_interaction_function_combination_lever  ; TAG_COMBINATION1_LOCK
 	dw object_interaction_function_combination_lever  ; TAG_COMBINATION2_LOCK
 	dw object_interaction_function_combination_lever  ; TAG_COMBINATION3_LOCK
@@ -1297,6 +1314,50 @@ room_mark_open_door__dimensions_set:
 	inc hl
 	ld (hl), d
 
+	; If it's a door down to an inter-area connection, replace by a ladder:
+	cp TAG_DOOR_HORIZONTAL
+	jr nz, room_mark_open_door__no_ladder_replacement
+	; is it at the bottom of the room?
+	ld a, (current_room__height)
+	dec a
+	cp (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	jr nz, room_mark_open_door__no_ladder_replacement
+	; is it an inter-area connection? (check if we are at the edge of the map, or there is no chunk below)
+	ld a, (current_room__y)
+	ld c, a
+	ld a, (current_room__height_in_screens)
+	add a, c
+	ld c, a
+	ld a, (current_area__height)
+	cp c
+	jr z, room_mark_open_door__inter_area_connection
+
+	; see if there is a chunk below:
+	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	call get_player_chunk_coordinates
+	inc b  ; chunk below
+	ld e, PCG_PAGE
+	ld hl, get_chunk_id_from_coordinates
+	call call_hl_in_page_e_8000
+	ld a, (hl)
+	cp #ff
+	jr nz, room_mark_open_door__no_ladder_replacement
+
+room_mark_open_door__inter_area_connection:
+	; replace by a ladder:
+	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	call get_room_tile_ptr
+	ld (hl), 254  ; platform
+	inc hl
+	ld (hl), 168  ; ladder-left
+	inc hl
+	ld (hl), 136  ; ladder-right
+	inc hl
+	ld (hl), 254  ; platform
+
+room_mark_open_door__no_ladder_replacement:
 	; remove door:
 	push ix
 	pop hl
@@ -1383,7 +1444,7 @@ object_interaction_function_combination_lever_continue:
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), a
 
 	; mark combination state:
-	ld hl, current_room__combination_levers_state
+	ld hl, player_combination_levers_state
 	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
 	dec c
 	ld b, 0
@@ -1405,7 +1466,7 @@ object_interaction_function_combination_lever_continue:
 		add a, a
 		add a, a
 		ADD_HL_A
-		ld de, current_room__combination_levers_state
+		ld de, player_combination_levers_state
 		ld b, 8
 object_interaction_function_combination_lever_loop:
 		ld a, (de)
@@ -1426,6 +1487,35 @@ object_interaction_function_combination_lever_already_open:
 	set ROOM_REDRAW_FLAG_BIT, (hl)
 	call room_undraw_tile_objects
 	jp room_render_tile_objects
+
+
+;-----------------------------------------------
+object_interaction_function_inspect_god:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	sub TAG_TRIAL1_LOCK
+	jr z, object_interaction_function_inspect_god1
+	dec a
+	jr z, object_interaction_function_inspect_god2
+	dec a
+	jr z, object_interaction_function_inspect_god3
+	ld de, TEXT_TRIAL_GOD4
+	jr object_interaction_function_inspect_god_continue
+object_interaction_function_inspect_god1:
+	ld de, TEXT_TRIAL_GOD1
+	jr object_interaction_function_inspect_god_continue
+object_interaction_function_inspect_god2:
+	ld de, TEXT_TRIAL_GOD2
+	jr object_interaction_function_inspect_god_continue
+object_interaction_function_inspect_god3:
+	ld de, TEXT_TRIAL_GOD3
+	jr object_interaction_function_inspect_god_continue
+object_interaction_function_inspect_god_continue:
+	ld hl, display_in_game_message
+	ld c, TEXT_PAGE
+	push ix
+		call call_hl_in_page_c_8000
+	pop ix
+	ret
 
 
 ;-----------------------------------------------
@@ -1489,13 +1579,10 @@ ENDR
 	TILE_OBJECT_DATA 1, 2, 2, tile_object_regular_object_gfx  ; TAG_YELLOW_LOCK
 	TILE_OBJECT_DATA 1, 2, 2, tile_object_regular_object_gfx  ; TAG_WHITE_LOCK
 	TILE_OBJECT_DATA 1, 2, 2, tile_object_regular_object_gfx  ; TAG_PURPLE_LOCK
-REPT TAG_COMBINATION1_LOCK - TAG_TRIAL1_LOCK  ; add filler
-	TILE_OBJECT_DATA 2, 0, 0, 0
-ENDR
-; TAG_TRIAL1_LOCK: equ 19
-; TAG_TRIAL2_LOCK: equ 20
-; TAG_TRIAL3_LOCK: equ 21
-; TAG_TRIAL4_LOCK: equ 22
+	TILE_OBJECT_DATA 1, 4, 4, tile_object_4x4_object_gfx  ; TAG_TRIAL1_LOCK
+	TILE_OBJECT_DATA 1, 4, 4, tile_object_4x4_object_gfx  ; TAG_TRIAL2_LOCK
+	TILE_OBJECT_DATA 1, 4, 4, tile_object_4x4_object_gfx  ; TAG_TRIAL3_LOCK
+	TILE_OBJECT_DATA 1, 2, 2, tile_object_4x4_object_gfx  ; TAG_TRIAL4_LOCK
 	TILE_OBJECT_DATA 1, 2, 2, tile_object_lever_up_object_gfx  ; TAG_COMBINATION1_LOCK
 	TILE_OBJECT_DATA 1, 2, 2, tile_object_lever_up_object_gfx  ; TAG_COMBINATION2_LOCK
 	TILE_OBJECT_DATA 1, 2, 2, tile_object_lever_up_object_gfx  ; TAG_COMBINATION3_LOCK
@@ -1640,5 +1727,9 @@ tile_object_lever_up_object_gfx:
 	db 50, 53, 51, 52
 tile_object_lever_right_object_gfx:
 	db 53, 49, 51, 52
-
+tile_object_4x4_object_gfx:
+	db 48, 49, 50, 51
+	db 52, 53, 54, 55
+	db 56, 57, 58, 59
+	db 60, 61, 62, 63
 

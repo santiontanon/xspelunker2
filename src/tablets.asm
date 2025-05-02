@@ -218,7 +218,7 @@ combination_tablet_type_4_fn:
 	ld de, CHRTBL2 + 48*8
 	ld bc, NAMTBL2 + 10 + 7*32
 	ld a, 48
-	call combination_tablet_type_4_fn_line
+	call combination_tablet_print_line_12
 
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
 	sub TAG_COMBINATION1_CLUE
@@ -256,7 +256,7 @@ combination_tablet_type_4_fn_continue:
 			pop de
 			push af
 				push de
-					call combination_tablet_type_4_fn_line
+					call combination_tablet_print_line_12
 				pop hl
 				ld bc, 12*8
 				add hl, bc
@@ -273,9 +273,119 @@ combination_tablet_type_4_fn_continue:
 	add a, 12
 	dec iyl
 	jr nz, combination_tablet_type_4_fn_loop1
-	; ...
-
 	ret
+
+
+
+;-----------------------------------------------
+trial_tablet_fn:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	sub TAG_TRIAL1_CLUE
+	ld hl, current_world__trial_types
+	ADD_HL_A
+	ld a, (hl)  ; a = type of message to display
+	
+	ld hl, trial_tablet_messages
+	add a, a
+	ld c, a
+	ld b, 0
+	add hl, bc
+	ld a, (hl)
+	inc hl
+	ld h, (hl)
+	ld l, a  ; ptr to base message
+
+	; concatenate message + god name:
+	ld de, buffer_4096
+	ld c, (hl)
+	inc c
+	ld b, 0
+	ldir
+	push de
+		ld hl, trial_tablet_message_godnames
+		ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+		sub TAG_TRIAL1_CLUE
+		add a, a
+		ld c, a
+		ld b, 0
+		add hl, bc
+		ld a, (hl)
+		inc hl
+		ld h, (hl)
+		ld l, a  ; ptr to god name
+		ld a, (buffer_4096)
+		add a, (hl)  ; length of god name
+		ld (buffer_4096), a
+	pop de
+	ld b, 0
+	ld c, (hl)
+	inc hl
+	ldir
+
+	ld hl, buffer_4096
+
+	ld bc, NAMTBL2 + 9 + 8*32
+	ld (buffer_4096 + 1024), bc
+	ld de, CHRTBL2 + (256 + 48)*8
+	ld (buffer_4096 + 1026), de
+	ld a, 48
+	ld (buffer_4096 + 1028), a
+
+	; Print splitting the line:
+trial_tablet_fn_loop:
+	push hl
+		ld iyl, 12*8
+		call max_length_of_sentence_in_one_line
+	pop hl
+	ld c, (hl)  ; original length
+    push bc
+    push hl
+		ld (hl), a  ; max length
+		ld bc, (buffer_4096 + 1024)
+		ld de, (buffer_4096 + 1026)
+		ld a, (buffer_4096 + 1028)
+		call combination_tablet_print_line_12
+	pop hl
+	pop bc
+    ld a, c
+	sub (hl)  ; left-over length
+	ret z
+	ld c, (hl)
+	ld b, 0
+    add hl, bc  ; we advance hl to the remainder of the sentence
+    ld (hl), a  ; left-over length
+    push hl
+    	; next line:
+    	ld hl, (buffer_4096 + 1024)
+    	ld bc, 32
+    	add hl, bc
+    	ld (buffer_4096 + 1024), hl
+    	ld hl, (buffer_4096 + 1026)
+    	ld bc, 12*8
+    	add hl, bc
+    	ld (buffer_4096 + 1026), hl
+    	ld a, (buffer_4096 + 1028)
+    	add a, 12
+    	ld (buffer_4096 + 1028), a
+    pop hl
+	jr trial_tablet_fn_loop
+
+
+trial_tablet_message_godnames:
+	dw TEXT_TRIAL_CLUE_GODNAME1
+	dw TEXT_TRIAL_CLUE_GODNAME2
+	dw TEXT_TRIAL_CLUE_GODNAME3
+	dw TEXT_TRIAL_CLUE_GODNAME4
+
+trial_tablet_messages:
+	dw TEXT_TRIAL_CLUE1
+	dw TEXT_TRIAL_CLUE2
+	dw TEXT_TRIAL_CLUE3
+	dw TEXT_TRIAL_CLUE4
+	dw TEXT_TRIAL_CLUE5
+	dw TEXT_TRIAL_CLUE6
+	dw TEXT_TRIAL_CLUE7
+	dw TEXT_TRIAL_CLUE8
 
 
 ;-----------------------------------------------
@@ -284,7 +394,7 @@ combination_tablet_type_4_fn_continue:
 ; - hl: text
 ; - de: CHRTBL2 ptr
 ; - a: first tile number
-combination_tablet_type_4_fn_line:
+combination_tablet_print_line_12:
 	push bc
 	push af
 		push de
@@ -303,11 +413,9 @@ combination_tablet_type_4_fn_line:
         ld c, a
     pop af
     ld b, 12
-combination_tablet_type_4_fn_line_loop:
+combination_tablet_print_line_12_loop:
     out (c), a
     inc a
     dec b
-    jp nz, combination_tablet_type_4_fn_line_loop
+    jp nz, combination_tablet_print_line_12_loop
 	ret
-
-

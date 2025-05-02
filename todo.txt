@@ -1,21 +1,23 @@
 to do:
 
-***- trials:
-  ***- create a list of trial clues (at least 8)
-  ***- assign clues to tablets (and mark which trials have to be done)
-  ***- spawn trial clues
-  ***- spawn god figures
-  ***- spawn god figure doors
-  ***- open door if trials are completed
+***- boss doors:
+  ***- spawn boss doors
+  ***- spawn boss locks
+  ***- open the boss doors (door open animation with some SFX/music, so, it's clear it's important)
+  ***- keep door open when leaving and coming back
+  ***- enter a boss door (for now just an empty room with the power stone in the floor)
+  ***- when picking up the power stone:
+    ***- play some special SFX
+    ***- message of what you just obtained
+    ***- teleport back outside
+    ***- walking back into the boss room from that point on just results in the empty room
+  ***- when inspecting the power stones in the inventory: each stone represents one of the six creator deities (the last one requires two of them). Just text? an image?
 
 - being able to complete the game in MSX:
-  - open the boss doors (door open animation with some SFX/music, so, it's clear it's important)
-  - enter a boss door (for now just an empty room with the item you are supposed to get)
-    - obtain the "power stones": each stone represents one of the six creator deities (the last one requires two of them). Maybe to see them you have to inspect them in the inventory (too small otherwise)
   - design ending room (maya calendar stone where you place what you get from the bosses, etc.)
   - using idols in stone calendar, has effects on the map:
     - 1st idol on calendar stone, opens door to 3rd pyramid
-    - 2nd, activates maya / story messages (letters glow against the stone tables now)
+    - 2nd activates maya / story messages (letters glow against the stone tables now)
     - 3rd idol on calendar stone, opens door to temple of fire
     - 4th, activates teleporters to move faster across maps (or maybe this also with the 3rd?, 4th feels too late!)
     - 5th, lets you turn on the calendar stone (activate defenses)
@@ -29,10 +31,10 @@ to do:
 
 - Implement PCGWorld in assembler:
   - data structure
-      - chestContent
       - spanningTree: ID, parent, n_descendants, root point, tags (this is stored twice for convenience)
       - global object list (4 * 64 -> 256 bytes) (how does this work? do I need it globally? per area? how do I mark that an item is taken or a door open, globally?)
   - implement it and generate the whole thing in assembler
+  - safety checks to make sure all generated levels are playable (no more than 1 tag per division, try all RNG seeds in Java, etc.), adjust # divisions needed, etc.
   - verify it matches exactly what I get in Java
   - for some areas (pyramids, etc.) have some predefined shapes (e.g. pyramid shape), that can be chosen with some probability. And maybe also different shapes for the confluence, etc.
   - keep Java/assembler versions in sync (try different random seeds)
@@ -48,7 +50,7 @@ to do:
   - spawn optional items when killing them (and pick them up, gain ammo, life, coins, etc.)
 
 - jungle biome
-  - implement it
+  - implement it (remember to keep ladder tiles in place for down-door opening code)
   - special chunk for start position (start tag) and set start position there (on the left-edge of map)
   - add jungle events (village, npcs, maybe shop, etc.)
 
@@ -59,7 +61,7 @@ to do:
       - procedural generation depending on a name. By default, you play in "xspelunker2" level, with difficulty "x".
       - the first letter determines the difficulty level. So, one would choose "a walk in the park" for easy games, or "zebras all the way" for the heardest)
           - passwords ties to the name (with a 16 bit hash for example)
-  - for each difficulty, determine how to simplify the game (map sizes? enemy rates? number of puzzles? enemy aggressivity?)
+  - for each difficulty, determine how to simplify the game (map sizes? enemy rates? number of puzzles? enemy aggressivity? ensure games are all playable with checks in Java)
   - game intro sequence
 
 - music
@@ -67,8 +69,8 @@ to do:
 - first boss: Huracán, the Storm Bringer (A large, imposing figure wreathed in swirling winds and lightning. Could have feathered serpent elements): wind, lightning, tornadoes
 - second boss: Camazotz, the Bat God: A giant bat-like creature with glowing red eyes and sharp claws.
 - third boss: Xibalba Lords (Multiple Bosses or Phases): Skeletal figures with ornate Mayan headdresses, representing the rulers of the underworld (summins skeletons or shadows)
-- caves biome
-- temple of fire biome
+- caves biome (remember to keep ladder tiles in place for down-door opening code)
+- temple of fire biome (remember to keep ladder tiles in place for down-door opening code)
 - fourth boss: The Obsidian Golem: A hulking golem made of obsidian, with glowing cracks filled with molten lava..
 - atlantis biome (do I need to move the possible set of up/down/left/right tags to 4 instead of just 2?)
 - fifth boss: Atlantean Guardian (Underwater Boss): A colossal robotic creature with bioluminescent features, resembling a deep-sea creature (laser beams from tentacles, summons robotic fish)
@@ -83,7 +85,7 @@ to do:
     - mars/moon are generated separately, with their own quests (they are independent)
     - once solved, the same ending room can be used to reach the true ending
 
-- mars biome
+- mars biome (remember to keep ladder tiles in place for down-door opening code)
   - can you jump higher in the moon/mars? fall slower?
 - moon biome (similar to mars, but different color scheme, it could even be the same with palette changed)
 - 6th boss: (ideas: "The Solar Stone Jaguar", "The Martian Terracotta Warrior", "The Dust Stone Golem")

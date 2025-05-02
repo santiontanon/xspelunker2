@@ -167,6 +167,11 @@ public class GenerateTiles {
         extratTilesOneObject(sourceImage, 160, 208, 32, 32, data);  // open
         // levers (96)
         extratTilesOneObject(sourceImage, 208, 32, 24, 16, data);  // closed
+        // god images (102)
+        extratTilesOneObject(sourceImage, 0, 72, 32, 32, data);  // Itzanma
+        extratTilesOneObject(sourceImage, 32, 72, 32, 32, data);  // kukulcan
+        extratTilesOneObject(sourceImage, 0, 104, 32, 32, data);  // ixchel
+        extratTilesOneObject(sourceImage, 32, 104, 32, 32, data);  // chaac
 
         Z80Assembler.dataToBinary(data, outputPath + ".bin");
         ZX0Wrapper.main(outputPath+".bin", outputPath+".zx0", true, false);

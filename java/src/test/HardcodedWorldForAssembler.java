@@ -57,7 +57,7 @@ public class HardcodedWorldForAssembler {
     {
         // Connections:
         System.out.println("hardcoded_world_data__interarea_connections:");
-        System.out.println("  ; each connection is 8 bytes: areaID1, areaID2, x1, y1, direction1, x2, y2, direction2");
+        System.out.println("  ; each connection is 8 bytes: areaID1, areaID2, x1, y1, direction1, x2, y2, direction2 (coordinates are in chunks)");
         for(InterAreaConnection c:w.interAreaconnections) {
             System.out.println("  db " + c.p1.a.ID + ", " + c.p2.a.ID + ", " +
                                (c.p1.x * 2 + c.p1_x_chunk_offs) + ", " + (c.p1.y * 2 + c.p1_y_chunk_offs) + ", " + c.p1.direction + ", " +
@@ -117,6 +117,11 @@ public class HardcodedWorldForAssembler {
                                          w.combinationSolutions[i][6] + ", " +
                                          w.combinationSolutions[i][7]);
         }
+        System.out.println("hardcoded_world_data__trial_types:");
+        System.out.println("  db " + w.trialTypes[0] + ", " +
+                                     w.trialTypes[1] + ", " +
+                                     w.trialTypes[2] + ", " +
+                                     w.trialTypes[3]);
         
     }
     

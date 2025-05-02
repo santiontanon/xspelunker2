@@ -1011,10 +1011,15 @@ pcg_generate_area__place_tags_loop_continue:
 		add a, a
 		ld e, a
 		ld d, 0
-		; we do not need to check if 'b' is 0, since no map can have height 0!
+
+		ld a, b
+		or a
+		jr z, pcg_generate_area__place_tags_loop_ptr_loop_done
+		
 pcg_generate_area__place_tags_loop_ptr_loop:
 		add hl, de
 		djnz  pcg_generate_area__place_tags_loop_ptr_loop
+pcg_generate_area__place_tags_loop_ptr_loop_done:
 		add hl, hl  ; hl = (y * 2) * width * 2
 		ld b, 0
 		add hl, bc  ; hl = x + (y * 2) * width * 2

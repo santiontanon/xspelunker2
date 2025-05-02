@@ -255,8 +255,8 @@ public class PCGWorld {
                         w.tabletContent.put(tag, "combination_tablet_type_"+type+"_fn");
                     } else if (tag.toLowerCase().contains("-clue") &&
                         tag.toLowerCase().contains("trial")) {
-                        // combination clue:
-                        // ...
+                        // trial clue:
+                        w.tabletContent.put(tag, "trial_tablet_fn");
                     } else if (tag.toLowerCase().contains("riddle-clue")) {
                         // maya riddle clue:
                         // ...
@@ -271,6 +271,10 @@ public class PCGWorld {
                 for(int k = 0;k<8;k++) {
                     w.combinationSolutions[j][k] = r.nextInt(8)%3;
                 }
+            }
+
+            for(int j = 0;j<4;j++) {
+                w.trialTypes[j] = r.nextInt(8);
             }
             
             
@@ -1572,8 +1576,9 @@ public class PCGWorld {
             }
             l.add(tag);
         }
-        if (d!= null && !d.tags.contains(tag)) {
+        if (d != null && !d.tags.contains(tag)) {
             d.tags.add(tag);
+            // System.out.println(" - " + d.divisionID + " + " + tag);
         }
         
         return true;

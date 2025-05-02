@@ -334,6 +334,18 @@ public class GenerateChunkData {
         } else {
             // Check that breakable wall or doors going up/down are centered:
             for(TMXObject o:c.locations) {
+                if (o.type.equals("4x4-item")) {
+                    for(TMXObject o2:c.locations) {
+                        if (o2.type.equals("door-down")) {
+                            if (o2.y == o.y + 32) {
+                                if ((o.x + o.dx) > o2.x && o.x < (o2.x + o2.dx)) {
+                                    // overlap!
+                                    throw new Exception("4x4-item is on top of door in " + c.path);
+                                }
+                            }
+                        }
+                    }
+                }
                 if (o.type.equals("breakable-down") || o.type.equals("door-down")) {
                     if (o.y + o.dy != 12*8) {
                         throw new Exception(o.type + " has y coordinates: " + o.y + ", " + (o.y+o.dy) + " in " + c.path);

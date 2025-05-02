@@ -240,6 +240,26 @@ public class Text {
         addLineSafe(lines_with_constant, "Face left", "COMBINATION_CLUE2", 8);
         addLineSafe(lines_with_constant, "Face forward", "COMBINATION_CLUE3", 8);
         addLineSafe(lines_with_constant, "Face right", "COMBINATION_CLUE4", 8);
+
+        // Trial god descriptions:
+        addLineSafe(lines_with_constant, "A stone carving of the mayan god Itzanma.", "TRIAL_GOD1", 96);  // often regarded as the supreme creator god and the ruler of heaven, day, and night. He was also a culture hero, credited with giving humankind writing and the calendar, and was the patron god of medicine
+        addLineSafe(lines_with_constant, "A stone carving of the mayan god Kukulkan.", "TRIAL_GOD2", 96);  // associated with wisdom, rain, wind, storms, and life
+        addLineSafe(lines_with_constant, "A stone carving of the mayan god Ixchel.", "TRIAL_GOD3", 96);  // primarily associated with fertility, pregnancy, childbirth, and midwifery
+        addLineSafe(lines_with_constant, "A stone carving of the mayan god Chaac.", "TRIAL_GOD4", 96);  // supreme Mayan god of rain, thunder, and lightning
+        
+        // Trial clues:
+        addLineSafe(lines_with_constant, "Itzanma.", "TRIAL_CLUE_GODNAME1", 8);
+        addLineSafe(lines_with_constant, "Kukulkan.", "TRIAL_CLUE_GODNAME2", 8);
+        addLineSafe(lines_with_constant, "Ixchel.", "TRIAL_CLUE_GODNAME3", 8);
+        addLineSafe(lines_with_constant, "Chaac.", "TRIAL_CLUE_GODNAME4", 8);
+        addLineSafe(lines_with_constant, "Kneel down in front of ", "TRIAL_CLUE1", 96);
+        addLineSafe(lines_with_constant, "Jump to show respect, repeat it three times to gain the favor of ", "TRIAL_CLUE2", 96);
+        addLineSafe(lines_with_constant, "Thrust your weapon, left and right. Only then you'll calm ", "TRIAL_CLUE3", 96);
+        addLineSafe(lines_with_constant, "Patience, wait with patience. That's what will be noticed by ", "TRIAL_CLUE4", 96);
+        addLineSafe(lines_with_constant, "Attack the ground below ", "TRIAL_CLUE5", 96);
+        addLineSafe(lines_with_constant, "Bow your head down and cross under my figure, first left and then right. ", "TRIAL_CLUE6", 96);
+        addLineSafe(lines_with_constant, "Show your respects. Execute the holy dance: turn left and right three times. ", "TRIAL_CLUE7", 96);
+        addLineSafe(lines_with_constant, "Show me your attack prowess. Show your weapon 5 times in front of me. ", "TRIAL_CLUE8", 96);
         
         List<Integer> numbers = font.convertStringToAssembler("0123456789 ");
         System.out.println("Numbers: " + numbers);

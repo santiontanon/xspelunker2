@@ -93,6 +93,12 @@ public class PCGPatternNKeysAndLock extends PCGPattern {
         if (q.goalPoint == null) {
             return null;
         }
+
+//        System.out.println("lock: " + q.lockDivision.divisionID + " -> " + q.goalDivision.divisionID);
+        if (!useable.contains(q.lockDivision)) {
+            System.out.println("!!!!! (keylock)" + q.lockDivision.divisionID);
+        }            
+        
         if (q.lockPoint.a == q.goalPoint.a && 
             (Math.abs(q.lockPoint.x - q.goalPoint.x) + 
              Math.abs(q.lockPoint.y - q.goalPoint.y)) == 1 &&
@@ -105,6 +111,8 @@ public class PCGPatternNKeysAndLock extends PCGPattern {
         
         // update "reachable" (remove "goal" and all its descendants):
         {
+//            AreaDivision rootToRemove = qs.goal;
+            AreaDivision rootToRemove = q.lockDivision;
             List<AreaDivision> toRemove = new ArrayList<>();
             for(AreaDivision d:reachable) {
                 if (pcg.treeParents(d).contains(qs.goal)) {
@@ -113,7 +121,7 @@ public class PCGPatternNKeysAndLock extends PCGPattern {
             }
             for(AreaDivision d:useable) {
                 if (!toRemove.contains(d)) {
-                    if (pcg.treeParents(d).contains(qs.goal)) {
+                    if (pcg.treeParents(d).contains(rootToRemove)) {
                         toRemove.add(d);
                     }
                 }

@@ -149,6 +149,30 @@ call_hl_in_page_c_8000_return:
     ret  ; 1 byte
 
 
+;-----------------------------------------------
+; 28 bytes total
+; input:
+; - hl: target address
+; - e: target page
+call_hl_in_page_e_8000:
+    ld a, (current_megarom_page_in_8000)  ; 3 bytes
+    push af  ; 1 byte
+        ld a, e  ; 1 byte
+        di  ; 1 byte
+        ld (#7000), a  ; 3 bytes
+        ld (current_megarom_page_in_8000), a  ; 3 bytes
+        ei  ; 1 byte
+        ld de, call_hl_in_page_e_8000 + (call_hl_in_page_e_8000_return - call_hl_in_page_e_8000)  ; 3 bytes
+        push de  ; push return address  ; 1 byte
+        jp hl  ; 1 byte
+call_hl_in_page_e_8000_return:
+    pop af  ; 1 byte
+    di  ; 1 byte
+    ld (#7000), a  ; 3 bytes
+    ld (current_megarom_page_in_8000), a  ; 3 bytes
+    ei
+    ret  ; 1 byte
+
     include "interrupt.asm"
 
 
@@ -167,6 +191,7 @@ call_hl_in_page_c_8000_return:
     include "player.asm"
     include "sprite-objects.asm"
     include "tile-objects.asm"
+    include "trial-fns.asm"
     include "hud.asm"
 
     include "state-interarea.asm"
@@ -392,11 +417,12 @@ text_draw_buffer: ds virtual 32*8
 
 current_world__seed: ds virtual 4
 current_world__area_data: ds virtual WORLD_AREA__SIZE * MAX_WORLD_AREAS
-; each connection is 8 bytes: ; id1, id2, x1, y1, direction1, x2, y2, direction2
+; each connection is 8 bytes: ; id1, id2, x1, y1, direction1, x2, y2, direction2 (coordinates are in chunks)
 current_world__interarea_connections: ds virtual MAX_INTERAREA_CONNECTIONS * INTERAREA_CONNECTION_SIZE + 1  ; +1 byte for the #ff sentinel
 current_world__chest_content: ds virtual MAX_CHESTS * 2 + 1  ; chest_tag, content_tag (+1 byte for the #ff sentinel)
 current_world__tablet_content: ds virtual MAX_TABLETS * 3 + 1  ; tablet_tag, content_ptr (+1 byte for the #ff sentinel)
 current_world__combination_solutions: ds virtual 4 * 8
+current_world__trial_types: ds virtual 4
 
 current_area__seed: ds virtual 4
 current_area__id: ds virtual 1
@@ -407,7 +433,7 @@ current_area__chunks_ids: ds virtual MAX_AREA_SIZE * 2 * 2
 current_area__objects: ds virtual MAX_AREA_N_OBJECTS * AREA_OBJECT_STRUCT_SIZE
 
 current_room__id: ds virtual 1
-current_room__x: ds virtual 1  ; coordinates within the area of the top-left room corner (in "rooms")
+current_room__x: ds virtual 1  ; coordinates within the area of the top-left room corner (in "screens")
 current_room__y: ds virtual 1
 current_room__width_in_screens: ds virtual 1
 current_room__height_in_screens: ds virtual 1
@@ -422,7 +448,7 @@ current_room__player_bullets: ds virtual MAX_ROOM_PLAYER_BULLETS * ROOM_OBJECT_S
 current_room__player_bullets_sentinel: ds virtual 1
 current_room__tile_objects: ds virtual MAX_ROOM_TILE_OBJECTS * ROOM_TILE_OBJECT_STRUCT_SIZE
 current_room__tile_objects_sentinel: ds virtual 1
-current_room__combination_levers_state: ds virtual 8  ; to simplify combination lever checking
+current_room__trial_fn: ds virtual 2
 
 RAM_to_zero_on_game_start:
 
@@ -472,6 +498,8 @@ player_jump_no_grab_timer: ds virtual 1  ; player can grab to ropes/ladders only
                                          ; This is used for when jumping off a ladder/rope, so that the player does not grab again immediately on the next frame.
 player_push_block_timer: ds virtual 1
 player_no_rope_or_ladder_this_frame: ds virtual 1  ; to prevent infinite loops in the player routine when holding to a ladder fails
+player_combination_levers_state: ds virtual 8  ; to simplify combination lever checking
+player_trial_completion_state: ds virtual 1
 
 player_health: ds virtual 1
 player_max_health: ds virtual 1

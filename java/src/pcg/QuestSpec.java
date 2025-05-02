@@ -17,6 +17,7 @@ public class QuestSpec {
 
     public QuestSpec(AreaDivision a_start, AreaDivision a_goal, int a_n, AreaPoint a_startPoint, AreaPoint a_goalPoint, String a_startTag, String a_goalTag)
     {
+        // System.out.println("QuestSpec: start: " + a_start.divisionID + ", goal: " + a_goal.divisionID);
         start = a_start;
         goal = a_goal;
         startPoint = a_startPoint;

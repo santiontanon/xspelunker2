@@ -27,6 +27,7 @@ public class World {
     public List<String> withinChestTag = new ArrayList<>();
     public List<AreaDivision> spanningTree;
     public int[][] combinationSolutions = new int[4][8];
+    public int[] trialTypes = new int[4];
     
     // Used for verifying if game is solveable:
     public HashMap<String, List<String>> lockKeys = new HashMap<>();  
