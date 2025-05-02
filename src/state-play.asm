@@ -116,7 +116,9 @@ state_play:
 
 state_play_from_loaded_room:
 		call clear_all_the_sprites
-		call room_render_tile_objects
+		ld c, TILES_PAGE
+		ld hl, room_render_tile_objects
+		call call_hl_in_page_c_8000
 state_play_from_inventory:
 		ld sp, stack  ; reset the stack, so we can jump here from wherever we want
 
@@ -279,7 +281,9 @@ state_play_update_agenda_cycle_even_0:  ; player + player bullets + tile objects
 	call update_keyboard_buffers
 	call player_update
 	call update_sprite_objects_player_bullets
-	call update_tile_objects
+	ld c, TILES_PAGE
+	ld hl, update_tile_objects
+	call call_hl_in_page_c_8000
 	call maybe_recenter_scroll
 	call update_scroll
 	jp state_play_loop_continue

@@ -13,21 +13,22 @@ to do:
     ***- walking back into the boss room from that point on just results in the empty room
   ***- when inspecting the power stones in the inventory: each stone represents one of the six creator deities (the last one requires two of them). Just text? an image?
 
-- being able to complete the game in MSX:
-  - design ending room (maya calendar stone where you place what you get from the bosses, etc.)
+- design ending room (maya calendar stone where you place what you get from the bosses, etc.)
   - using idols in stone calendar, has effects on the map:
-    - 1st idol on calendar stone, opens door to 3rd pyramid
-    - 2nd activates maya / story messages (letters glow against the stone tables now)
-    - 3rd idol on calendar stone, opens door to temple of fire
-    - 4th, activates teleporters to move faster across maps (or maybe this also with the 3rd?, 4th feels too late!)
-    - 5th, lets you turn on the calendar stone (activate defenses)
+    - 1st idol on calendar stone, opens door to 3rd pyramid (spawn door, and open it)
+    - 2nd activates teleporters to move faster across maps (think what are these teleporters and where are they spawned)
+    - 3rd idol on calendar stone, opens door to temple of fire (spawn door and open it)
+    - 4th + 5th, lets you turn on the calendar stone (activate defenses) (for first ending)
     - 6th (two halves from Mars/Moon), (activate offensive capabilities, and destroy alien hardware)
-    - with final secret stone (prism?): opens dimensional portal for YOU to travel throughout the universe  
-  - design teleporter in atlantis/mars/moon and how the interaction would go (think of the type of Maya riddle that would activate it)
-  - ensure that ALL tags are instantiated and are functional now during room creation
+    - with final secret stone (prism that can only be obtained when all stones are placed?): opens dimensional portal for YOU to travel throughout the universe
+
+- design teleporter in atlantis/mars/moon and how the interaction would go (think of the type of Maya riddle that would activate it)
+
+- ensure that ALL tags are instantiated and are functional now during room creation (e.g. story / maya tablets)
 
 - item effects:
   - for anti-grav belt, you can overwrite it by pressing "down" (to fall quick)
+  - when using the "map" item in the inventory, display an overall map, with all the pieces you have currently collected (and some clues in the form of maya writing that appear in the pieces)
 
 - Implement PCGWorld in assembler:
   - data structure
@@ -38,8 +39,6 @@ to do:
   - verify it matches exactly what I get in Java
   - for some areas (pyramids, etc.) have some predefined shapes (e.g. pyramid shape), that can be chosen with some probability. And maybe also different shapes for the confluence, etc.
   - keep Java/assembler versions in sync (try different random seeds)
-
-- when using the "map" item in the inventory, display an overall map, with all the pieces you have currently collected (and some clues in the form of maya writing that appear in the pieces)
 
 - enemies:
   - come up with a list of enemies for pyramid (consider both sprite enemies and larger tile-based enemies)
@@ -93,7 +92,7 @@ to do:
 
 - second ending
 
-- secret puzzle: add strings in the ROM that can be read via a hex reader of the ROM (encode them as decimal numbers in the .asm file, so that they are not visible from the source easily), that form a puzzle, giving you a clue (e.g. a code) for something to do in the game to get a special ending. this will enable the 3rd ending (last piece to fit in the calendar)
+- secret puzzle 2: add strings in the ROM that can be read via a hex reader of the ROM (encode them as decimal numbers in the .asm file, so that they are not visible from the source easily), that form a puzzle, giving you a clue (e.g. a code) for something to do in the game to get a special ending. this will enable the 3rd ending (last piece to fit in the calendar)
 - think of more secrets to add to the game (maybe secret rooms that depend on the RNG spawning certain things)
 
 --------------------

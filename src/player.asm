@@ -1962,7 +1962,9 @@ player_update_interact:
 	; see if there is an interactuable object nearby:
 	call get_tile_object_behind_player
 	ret z  ; no tile object behind
-	jp interact_with_tile_object
+	ld c, TILES_PAGE
+	ld hl, interact_with_tile_object
+	jp call_hl_in_page_c_8000
 
 
 ;-----------------------------------------------
@@ -2609,7 +2611,9 @@ player_pushing_block_found_no_collision:
 	cp c
 	jr z, player_pushing_block_found_out_of_screen
 player_pushing_block_found_continue2:
-	call room_render_tile_objects
+	ld c, TILES_PAGE
+	ld hl, room_render_tile_objects
+	call call_hl_in_page_c_8000
 	; force redraw:
 	xor a
 	ld (player_push_block_timer), a

@@ -298,3 +298,142 @@ update_animations_in_vdp_frame2:
 	ld hl, animations_pyramid_bin + 16*2
 	jr update_animations_in_vdp_frame_continue
 
+
+;-----------------------------------------------
+; output:
+; - z: no object behind
+; - nz: object behind
+; - ix: ptr to object if one found
+get_tile_object_behind_player:
+	ld a, (player_x + 1)
+	ld c, a
+	ld a, (player_y + 1)
+	ld b, a
+	ld ix, current_room__tile_objects
+get_tile_object_behind_player_loop:
+	ld a, (ix)  ; ID
+	cp #ff
+	ret z
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)  ; type
+	cp TAG_GEAR_LOCK
+	jr z, get_tile_object_behind_player_32x24_object
+	cp TAG_IDOL_LOCK
+	jr z, get_tile_object_behind_player_32x24_object
+	cp TAG_TRIAL1_LOCK
+	jr z, get_tile_object_behind_player_32x32_object
+	cp TAG_TRIAL2_LOCK
+	jr z, get_tile_object_behind_player_32x32_object
+	cp TAG_TRIAL3_LOCK
+	jr z, get_tile_object_behind_player_32x32_object
+	cp TAG_TRIAL4_LOCK
+	jr z, get_tile_object_behind_player_32x32_object
+
+	; 16x16 objects:
+	ld a, b
+	cp (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	jr nz, get_tile_object_behind_player_loop_next
+	ld a, c
+    cp (ix + ROOM_TILE_OBJECT_STRUCT_X)
+    jr z, get_tile_object_behind_player_found
+    dec a
+    cp (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	jr z, get_tile_object_behind_player_found
+get_tile_object_behind_player_loop_next:
+	ld de, ROOM_TILE_OBJECT_STRUCT_SIZE
+	add ix, de
+	jp get_tile_object_behind_player_loop
+get_tile_object_behind_player_found:
+	or 1
+	ret
+
+get_tile_object_behind_player_32x24_object:
+	ld a, b
+	dec a
+	cp (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	jr nz, get_tile_object_behind_player_loop_next
+get_tile_object_behind_player_32x24_object_x:
+	ld a, c
+    cp (ix + ROOM_TILE_OBJECT_STRUCT_X)
+    jr z, get_tile_object_behind_player_found
+    dec a
+    cp (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	jr z, get_tile_object_behind_player_found
+    dec a
+    cp (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	jr z, get_tile_object_behind_player_found
+    dec a
+    cp (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	jr z, get_tile_object_behind_player_found
+	jr get_tile_object_behind_player_loop_next
+
+get_tile_object_behind_player_32x32_object:
+	ld a, b
+	dec a
+	dec a
+	cp (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	jr nz, get_tile_object_behind_player_loop_next
+	jr get_tile_object_behind_player_32x24_object_x
+
+
+;-----------------------------------------------
+; input:
+; - ix: ptr to breakable wall
+; - a: collision ID
+; - iyh: damage to deal
+breakable_wall_hit_by_player:
+	ld a, iyl
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_LAST_HIT_ID), a
+
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)
+	sub iyh
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), a
+	jr z, breakable_wall_hit_by_player_destroyed
+	jr nc, breakable_wall_hit_by_player_continue
+
+breakable_wall_hit_by_player_destroyed:
+	; wall destroyed!
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)
+
+	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_WIDTH)
+	sub 2
+	sra a
+	add a, c
+	ld c, a
+	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_HEIGHT)
+	sub 2
+	sra a
+	add a, b
+	ld b, a
+	call spawn_explosion
+	jp room_remove_breakable_wall
+
+breakable_wall_hit_by_player_continue:
+	ld hl, SFX_enemy_hit
+	jp play_SFX_with_high_priority
+
+
+;-----------------------------------------------
+; input:
+; - c, b: x, y
+; - e, d: width, height
+room_remove_breakable_wall_restore_background:
+	push de
+		call get_room_tile_ptr
+	pop bc
+room_remove_breakable_wall_restore_background_loop_y:
+	push bc
+	push hl
+room_remove_breakable_wall_restore_background_loop_x:
+		ld (hl), 0
+		inc hl
+		dec c
+		jr nz, room_remove_breakable_wall_restore_background_loop_x
+	pop hl
+	pop bc
+	ld a, (current_room__width)
+	ADD_HL_A
+	djnz room_remove_breakable_wall_restore_background_loop_y
+	ret
