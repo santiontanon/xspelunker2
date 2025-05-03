@@ -315,6 +315,7 @@ N_UNIQUE_TAGS: equ 137
 TAG_PUSHABLE_BLOCK: equ 137
 TAG_DOOR_VERTICAL: equ 138
 TAG_DOOR_HORIZONTAL: equ 139
+TAG_DOOR_BOSS: equ 140
 
 N_PATH_OPENING_TAGS: equ 32  ; there are less than this, but just in case (this is the number of tags above that spawn a breakable wall or door).
 

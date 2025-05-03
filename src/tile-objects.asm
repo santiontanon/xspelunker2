@@ -818,6 +818,10 @@ ENDR
 	dw object_interaction_function_small_chest  ; TAG_SMALL_KEY_CHEST2
 	dw object_interaction_function_small_chest  ; TAG_SMALL_KEY_CHEST3
 	dw object_interaction_function_small_chest  ; TAG_SMALL_KEY_CHEST4
+	dw object_interaction_function_empty  ; TAG_PUSHABLE_BLOCK
+	dw object_interaction_function_empty  ; TAG_DOOR_VERTICAL
+	dw object_interaction_function_empty  ; TAG_DOOR_HORIZONTAL
+	dw object_interaction_function_empty  ; TAG_DOOR_BOSS
 
 
 object_interaction_inventory_slot:
@@ -1569,6 +1573,8 @@ ENDR
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_pushable_block_gfx  ; TAG_PUSHABLE_BLOCK
 	TILE_OBJECT_DATA 1, 1, 3, tile_object_v_door_gfx  ; TAG_DOOR_VERTICAL
 	TILE_OBJECT_DATA 1, 4, 1, tile_object_h_door_gfx  ; TAG_DOOR_HORIZONTAL
+	TILE_OBJECT_DATA 1, 4, 4, tile_object_4x4_object_gfx  ; TAG_DOOR_BOSS
+	
 
 tile_object_regular_object_gfx:
 	db FIRST_ITEM_TILE, FIRST_ITEM_TILE+1, FIRST_ITEM_TILE+2, FIRST_ITEM_TILE+3

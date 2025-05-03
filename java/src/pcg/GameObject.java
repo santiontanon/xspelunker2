@@ -324,7 +324,7 @@ public class GameObject {
                 tx = 192; ty = 48;
                 break;
             case "boss-door":
-                tx = 192; ty = 64; tdx = 32; tdy = 32;
+                tx = 96; ty = 208; tdx = 32; tdy = 32;
                 break;
             default:
                 System.err.println("Cannot render placed object: " + type);

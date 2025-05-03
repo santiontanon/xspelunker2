@@ -1,8 +1,6 @@
 to do:
 
 ***- boss doors:
-  ***- spawn boss doors
-  ***- spawn boss locks
   ***- open the boss doors (door open animation with some SFX/music, so, it's clear it's important)
   ***- keep door open when leaving and coming back
   ***- enter a boss door (for now just an empty room with the power stone in the floor)
@@ -200,26 +198,18 @@ X-Spelunker 2 (e-ke-se pe-lu-ne-ke-le):
       - 6 levels of maya underworld
       - 13 levels of maya upperworld
 
-  - types of puzzles/challenges:
-    - press a button once
+  - additional types of puzzles/challenges:
     - keep a button pressed to open a door
-    - use an object somewhere (e.g. a key, or a relic)
-    - break a wall
-    - box pushing
     - walkable wall
-    - requiring an item (e.g. double jump)
     - "do something that should not have any effect" (e.g. stand still somewhere, use an item in a certain place (e.g. kill the invisible enemy))
       - this can be arbitrarily complex, as the clue can be one, or a set of multiple clues that have to be pieced together
     - "walk the correct path" (e.g. climb some ladders in the correct order)
-    - find a combination/order (e.g. press a certain combination of buttons, destroy boxes in a certain order (which might contain words/symbols))
     - maze
     - challenging section (e.g. an area with lots of enemies, or spikes, etc.)
     - timed chellenges (e.g. completing something before a door closes, or the "destroying all the vases before the time lamp expires")
     - any of the above but where the clue requires decyphering a language
-    - bosses
   - maya text:
     https://www.mayaarchaeologist.co.uk/public-resources/maya-world/maya-writing-system/
-  - main quest not too hard, so most people can complete it, but secret very hard mission full of secrets
   - eagle is sky, snake is earth, and jaguar the underworld. Jaguar and Eagle are the warriors
   - ball game: two gods from the sky played ball near the underworld, went down and played with the underworld gods (who wanted to kill humans, since they were only worshipping the sky gods). The two won, and one knel and cut his head, which went up the sky and formed the sun, the other did the same and formed the moon. they protect humans from the underworld gods.
     - in my game, I could make it so that the story is wrong, and they are mars and moon instead of sun and moon, and those are the palces you visit.

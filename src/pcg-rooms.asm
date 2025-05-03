@@ -376,6 +376,13 @@ pcg_generate_room__object_loop:
 		ld a, ixl
 	pop ix
 	jp z, pcg_generate_room__object_small_lock
+	push ix
+		ld ixl, a
+		call pcg_generate_area__choose_chunks_is_boss_tag_p
+		ld a, ixl
+	pop ix
+	jp z, pcg_generate_room__object_boss_lock
+
 	cp TAG_IDOL_LOCK
 	jp z, pcg_generate_room__object_idol_lock
 	cp TAG_GEAR_LOCK
@@ -930,6 +937,74 @@ pcg_generate_room__object_trial_lock_continue:
 		pop hl  ; chunk ptr
 
 		jp pcg_generate_room__object_small_lock_spawn_door
+
+
+;-----------------------------------------------
+pcg_generate_room__object_boss_lock:
+	; spawn the lock:
+	; get the chunk type where we are placing the object:
+	push bc
+		call get_chunk_id_from_coordinates  ; a = chunk ID
+		ld hl, pyramid_chunk_fg_bank_ptrs
+		call pcg_get_chunk_ptr
+		ld e, CHUNK_LOCATION_ITEM
+		push hl
+			call sample_chunk_location  ; de: ptr to the location
+		pop hl
+	pop bc  ; chunk coordinates
+
+	ASSERT_D_NOT_EQ 0
+
+	push bc
+		push hl
+			; compute object coordinates:
+			call pcg_generate_room__compute_object_coordinates
+			; here: c, b: x, y coordinates
+
+			; spawn the lock:
+			ld d, (ix + AREA_OBJECT_STRUCT_ID)
+			ld e, (ix + AREA_OBJECT_STRUCT_TYPE)
+			ld iy, (tmp_pcg_room__next_tile_object_ptr)
+			ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), d  ; ID
+			ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), e  ; type
+			ld (iy + ROOM_TILE_OBJECT_STRUCT_X), c  ; x
+			ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), b  ; y
+			ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0  ; state (hitpoints)
+			ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
+			add iy, bc
+			ld (tmp_pcg_room__next_tile_object_ptr), iy
+
+			; set which object gfx to up load vdp (starting at tile FIRST_ITEM_TILE):
+			call set_item_object_to_upload_to_vdp
+		pop hl  ; chunk ptr
+
+		; spawn the boss door:
+		ld e, CHUNK_LOCATION_4X4_ITEM
+		call sample_chunk_location  ; de: ptr to the location
+	pop bc  ; chunk coordinates
+
+	ASSERT_D_NOT_EQ 0
+
+	; compute object coordinates:
+	call pcg_generate_room__compute_object_coordinates
+	; here: c, b: x, y coordinates
+
+	; spawn the lock:
+	ld iy, (tmp_pcg_room__next_tile_object_ptr)
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 0  ; ID (boss doors have ID 0)
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_DOOR_BOSS  ; type
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), c  ; x
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), b  ; y
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0  ; state (hitpoints)
+	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
+	add iy, bc
+	ld (tmp_pcg_room__next_tile_object_ptr), iy
+
+	; set which object gfx to up load vdp:
+	ld e, TAG_DOOR_BOSS
+	call set_large_object_to_upload_to_vdp
+
+	jp pcg_generate_room__object_loop_next
 
 
 ;-----------------------------------------------
@@ -1676,7 +1751,10 @@ set_large_object_to_upload_to_vdp:
 	jr z, set_large_object_to_upload_to_vdp_trial3_lock
 	cp TAG_TRIAL4_LOCK
 	jr z, set_large_object_to_upload_to_vdp_trial4_lock
-	ld e, 32*8
+	; cp TAG_DOOR_BOSS
+	; jr z, set_large_object_to_upload_to_vdp_boss_door
+set_large_object_to_upload_to_vdp_boss_door:
+	ld e, 16*8
 	ld hl, buffer_4096 + 48 * 16  ; boss door
 	jr set_large_object_to_upload_to_vdp_ptr_set
 set_large_object_to_upload_to_vdp_trial1_lock:

@@ -28,8 +28,8 @@ state_play:
 		; generate area:
 		ld hl, pcg_generate_area
 ; 		ld e, 0  ; area to generate
-; 		ld e, 1  ; area to generate
-		ld e, 2  ; area to generate
+		ld e, 1  ; area to generate
+; 		ld e, 2  ; area to generate
 ; 		ld e, 4  ; area to generate
 ; 		ld e, 7  ; area to generate
 ; 		ld e, 8  ; area to generate
@@ -38,8 +38,8 @@ state_play:
 
 		; generate room:
 ; 		ld e, 0
-; 		ld e, 18
-		ld e, 16
+		ld e, 19
+; 		ld e, 16
 ; 		ld e, 19
 ; 		ld e, 5
 ; 		ld e, 0
