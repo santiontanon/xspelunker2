@@ -1,8 +1,6 @@
 to do:
 
 ***- boss doors:
-  ***- open the boss doors (door open animation with some SFX/music, so, it's clear it's important)
-  ***- keep door open when leaving and coming back
   ***- enter a boss door (for now just an empty room with the power stone in the floor)
   ***- when picking up the power stone:
     ***- play some special SFX

@@ -748,25 +748,25 @@ ENDR
 	dw object_interaction_function_pickup_item  ; TAG_ASTRONAUT_KEY
 	dw object_interaction_function_empty  ; TAG_BOSS1
 	dw object_interaction_function_pickup_item  ; TAG_BOSS1_KEY
-	dw object_interaction_function_empty  ; TAG_BOSS1_CHESTLOCK
+	dw object_interaction_function_open_boss_lock  ; TAG_BOSS1_CHESTLOCK
 	dw object_interaction_function_empty  ; TAG_BOSS2
 	dw object_interaction_function_pickup_item  ; TAG_BOSS2_KEY
-	dw object_interaction_function_empty  ; TAG_BOSS2_CHESTLOCK
+	dw object_interaction_function_open_boss_lock  ; TAG_BOSS2_CHESTLOCK
 	dw object_interaction_function_empty  ; TAG_BOSS3
 	dw object_interaction_function_pickup_item  ; TAG_BOSS3_KEY
-	dw object_interaction_function_empty  ; TAG_BOSS3_CHESTLOCK
+	dw object_interaction_function_open_boss_lock  ; TAG_BOSS3_CHESTLOCK
 	dw object_interaction_function_empty  ; TAG_BOSS4
 	dw object_interaction_function_pickup_item  ; TAG_BOSS4_KEY
-	dw object_interaction_function_empty  ; TAG_BOSS4_CHESTLOCK
+	dw object_interaction_function_open_boss_lock  ; TAG_BOSS4_CHESTLOCK
 	dw object_interaction_function_empty  ; TAG_BOSS5
 	dw object_interaction_function_pickup_item  ; TAG_BOSS5_KEY
-	dw object_interaction_function_empty  ; TAG_BOSS5_CHESTLOCK
+	dw object_interaction_function_open_boss_lock  ; TAG_BOSS5_CHESTLOCK
 	dw object_interaction_function_empty  ; TAG_BOSS6
 	dw object_interaction_function_pickup_item  ; TAG_BOSS6_KEY
-	dw object_interaction_function_empty  ; TAG_BOSS6_CHESTLOCK
+	dw object_interaction_function_open_boss_lock  ; TAG_BOSS6_CHESTLOCK
 	dw object_interaction_function_empty  ; TAG_BOSS7
 	dw object_interaction_function_pickup_item  ; TAG_BOSS7_KEY
-	dw object_interaction_function_empty  ; TAG_BOSS7_CHESTLOCK
+	dw object_interaction_function_open_boss_lock  ; TAG_BOSS7_CHESTLOCK
 	dw object_interaction_function_pickup_weapon  ; TAG_WEAPON_HAMMER
 	dw object_interaction_function_pickup_weapon  ; TAG_WEAPON_MACUAHUITL
 	dw object_interaction_function_pickup_weapon  ; TAG_WEAPON_SHIELD
@@ -1045,6 +1045,7 @@ object_interaction_function_small_chest_continue:
 
 object_interaction_function_chest_fail:
 object_interaction_function_small_chest_fail:
+object_interaction_function_open_boss_lock_fail:
 	ld hl, SFX_ui_wrong
 	call play_SFX_with_high_priority
 
@@ -1382,6 +1383,73 @@ object_interaction_function_inspect_god_continue:
 		call call_hl_in_page_c_8000
 	pop ix
 	ret
+
+
+;-----------------------------------------------
+object_interaction_function_open_boss_lock:
+	; check if the player has the proper key selected
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	ld c, 11
+	sub TAG_BOSS1_CHESTLOCK
+object_interaction_function_open_boss_lock_key_id_loop:
+	cp 3
+	jr c, object_interaction_function_open_boss_lock_key_id_computed_done
+	inc c
+	sub 3
+	jr object_interaction_function_open_boss_lock_key_id_loop
+object_interaction_function_open_boss_lock_key_id_computed_done:
+	; c = desired key
+	ld a, c
+
+	ld hl, player_current_item
+	cp (hl)
+	jp nz, object_interaction_function_open_boss_lock_fail
+
+	; lose key:
+	ld (hl), 0  ; machete
+	ld a, c
+	sub 11
+	ld c, a
+	ld b, 0
+	ld hl, player_inventory_items
+	add hl, bc  ; key location
+	ld (hl), 0
+
+	; update lock state:
+	ld hl, global_state__objects
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	ADD_HL_A
+	ld (hl), 1  ; lock is open
+
+	; open boss door:
+	ld hl, SFX_ui_select
+	call play_SFX_with_high_priority
+	ld b, 30
+	call wait_b_halts
+
+	ld a, 16*8
+	ld hl, buffer_4096 + (48 + 16) * 16  ; boss door frame 1
+	ld (large_object_to_upload_to_vdp), hl
+	ld (large_object_to_upload_to_vdp_size), a
+	call state_play_upload_object_tiles_to_vdp_if_necessary
+	ld hl, SFX_door_open
+	call play_SFX_with_high_priority
+
+	ld b, 30
+	call wait_b_halts
+
+	ld a, 16*8
+	ld hl, buffer_4096 + (48 + 32) * 16  ; boss door frame 2
+	ld (large_object_to_upload_to_vdp), hl
+	ld (large_object_to_upload_to_vdp_size), a
+	call state_play_upload_object_tiles_to_vdp_if_necessary
+	ld hl, SFX_door_open
+	call play_SFX_with_high_priority
+
+	ld hl, redraw_flags
+	ld (hl), #ff
+	call room_undraw_tile_objects
+	jp room_render_tile_objects  ; no door
 
 
 ;-----------------------------------------------

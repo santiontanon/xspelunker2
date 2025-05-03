@@ -73,10 +73,10 @@ CheckIf60Hz_vdpLoop:
 ; waits a given number of "halts"
 ; input:
 ; - b: number of halts
-; wait_b_halts:
-;     halt
-;     djnz wait_b_halts
-;     ret
+wait_b_halts:
+    halt
+    djnz wait_b_halts
+    ret
 
 
 ; -----------------------------------------------

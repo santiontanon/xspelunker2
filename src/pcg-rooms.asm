@@ -1004,6 +1004,18 @@ pcg_generate_room__object_boss_lock:
 	ld e, TAG_DOOR_BOSS
 	call set_large_object_to_upload_to_vdp
 
+	; check if the lock has already been open
+	ld a, (ix + AREA_OBJECT_STRUCT_TYPE)
+	ld hl, global_state__objects
+	ADD_HL_A
+	ld a, (hl)
+	or a
+	jp z, pcg_generate_room__object_loop_next  ; door was already open
+
+	; change door image to open:
+	ld hl, buffer_4096 + (48 + 32) * 16  ; boss door frame 2
+	ld (large_object_to_upload_to_vdp), hl
+
 	jp pcg_generate_room__object_loop_next
 
 
