@@ -1,13 +1,9 @@
 to do:
 
-***- boss doors:
-  ***- enter a boss door (for now just an empty room with the power stone in the floor)
-  ***- when picking up the power stone:
-    ***- play some special SFX
-    ***- message of what you just obtained
-    ***- teleport back outside
-    ***- walking back into the boss room from that point on just results in the empty room
-  ***- when inspecting the power stones in the inventory: each stone represents one of the six creator deities (the last one requires two of them). Just text? an image?
+***- inspect power stones in inventory:
+  ***- draw in gimp
+  ***- create TILED image for each stone (7 variants)
+  ***- display them in game + text to go along
 
 - design ending room (maya calendar stone where you place what you get from the bosses, etc.)
   - using idols in stone calendar, has effects on the map:
@@ -16,7 +12,7 @@ to do:
     - 3rd idol on calendar stone, opens door to temple of fire (spawn door and open it)
     - 4th + 5th, lets you turn on the calendar stone (activate defenses) (for first ending)
     - 6th (two halves from Mars/Moon), (activate offensive capabilities, and destroy alien hardware)
-    - with final secret stone (prism that can only be obtained when all stones are placed?): opens dimensional portal for YOU to travel throughout the universe
+    - with final secret stone (prism that can only be obtained when all stones are placed, by defeating an 8th boss that appears after solving the secret riddle): opens dimensional portal for YOU to travel throughout the universe
 
 - design teleporter in atlantis/mars/moon and how the interaction would go (think of the type of Maya riddle that would activate it)
 
@@ -89,6 +85,7 @@ to do:
 - second ending
 
 - secret puzzle 2: add strings in the ROM that can be read via a hex reader of the ROM (encode them as decimal numbers in the .asm file, so that they are not visible from the source easily), that form a puzzle, giving you a clue (e.g. a code) for something to do in the game to get a special ending. this will enable the 3rd ending (last piece to fit in the calendar)
+- 8th boss (appears after solving the secret puzzle 2, and gives you the final prism for the calendar stone)
 - think of more secrets to add to the game (maybe secret rooms that depend on the RNG spawning certain things)
 
 --------------------

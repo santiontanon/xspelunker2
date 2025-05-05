@@ -234,6 +234,8 @@ public class Text {
         addLineSafe(lines_with_constant, "One more piece of the map!", "MAP_PIECE_PICKUP", 112);
         addLineSafe(lines_with_constant, "That does not seem to be the correct key for this lock!", "WRONG_KEY", 112);
         addLineSafe(lines_with_constant, "That does not seem to be the correct item to use here!", "WRONG_ITEM", 112);
+        addLineSafe(lines_with_constant, "You found a very strange object. A stone of some sort, but some strange power comes from inside it. It must be important.", "FIRST_POWER_STONE", 112);
+        addLineSafe(lines_with_constant, "You found another power stone!", "OTHER_POWER_STONES", 112);
         
         // Combination clue verse:
         addLineSafe(lines_with_constant, "Dance of traversal:", "COMBINATION_CLUE1", 12);

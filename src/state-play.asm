@@ -50,8 +50,8 @@ state_play:
 		; debug:
 		ld a, 1
 		ld (player_inventory_items), a
-		ld (player_inventory_items+1), a
-		ld (player_inventory_items+2), a
+; 		ld (player_inventory_items+1), a
+; 		ld (player_inventory_items+2), a
 ; 		ld (player_inventory_items+3), a
 ; 		ld (player_inventory_items+4), a
 ; 		ld (player_inventory_items+5), a
@@ -59,7 +59,7 @@ state_play:
 ; 		ld (player_inventory_items+7), a
 ; 		ld (player_inventory_items+8), a
 ; 		ld (player_inventory_items+9), a
-		ld (player_inventory_items+10), a
+; 		ld (player_inventory_items+10), a
 ; 		ld (player_inventory_items+11), a
 ; 		ld (player_inventory_items+12), a
 ; 		ld (player_inventory_items+13), a
@@ -184,6 +184,10 @@ state_play_from_inventory__no_full_hud:
 	ld (n_displayed_object_sprites_without_player_bullets), a
 
 state_play_loop:
+	ld hl, (in_game_event_fn_ptr)
+	ld a, h
+	or a
+	call nz, state_play_loop_event_fn
 	; get the appropriate update function for this frame:
 	ld a, (game_cycle)
 	inc a
@@ -232,6 +236,16 @@ state_play_loop_hud_redraw:
 	call state_play_rerender_hud
 	call update_animations_in_vdp
 	jr state_play_loop
+
+
+;-----------------------------------------------
+state_play_loop_event_fn:
+	ld a, (in_game_event_fn_page)
+	ld c, a
+	call call_hl_in_page_c_8000
+	ld hl, 0
+	ld (in_game_event_fn_ptr), hl
+	ret
 
 
 ;-----------------------------------------------

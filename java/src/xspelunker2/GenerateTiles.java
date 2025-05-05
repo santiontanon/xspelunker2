@@ -124,7 +124,7 @@ public class GenerateTiles {
         extratTilesOneObject(sourceImage, 144, 32, 16, 16, data);
         extratTilesOneObject(sourceImage, 160, 32, 16, 16, data);
         extratTilesOneObject(sourceImage, 176, 32, 16, 16, data);
-        // idol (47)
+        // power stone (47)
         extratTilesOneObject(sourceImage, 64, 32, 16, 16, data);
         // colored locks (48, ..., 53)
         extratTilesOneObject(sourceImage, 96, 64, 16, 16, data);

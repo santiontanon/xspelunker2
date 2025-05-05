@@ -128,3 +128,15 @@ upload_displayed_object_sprites_to_vdp_flip_loop2:
     jr nz, upload_displayed_object_sprites_to_vdp_flip_loop
 	jp upload_displayed_object_sprites_to_vdp_uploaded
 
+
+;-----------------------------------------------
+; input:
+; - de: ptr to desired player sprite
+copy_player_sprite_to_buffer:
+	ld hl, buffer_4096
+	ex de, hl
+	ld bc, 64
+	ldir
+	ret
+
+

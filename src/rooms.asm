@@ -327,6 +327,8 @@ get_tile_object_behind_player_loop:
 	jr z, get_tile_object_behind_player_32x32_object
 	cp TAG_TRIAL4_LOCK
 	jr z, get_tile_object_behind_player_32x32_object
+	cp TAG_DOOR_BOSS
+	jr z, get_tile_object_behind_player_32x32_object
 
 	; 16x16 objects:
 	ld a, b

@@ -203,6 +203,14 @@ update_tile_objects_button_next:
 	jp update_tile_objects_loop
 
 
+
+;-----------------------------------------------
+delete_tile_object_in_ix:
+	push ix
+	pop hl
+	; jr delete_tile_object_in_hl
+
+
 ;-----------------------------------------------
 ; input:
 ; - hl: ptr of the tile object to delete
@@ -821,7 +829,8 @@ ENDR
 	dw object_interaction_function_empty  ; TAG_PUSHABLE_BLOCK
 	dw object_interaction_function_empty  ; TAG_DOOR_VERTICAL
 	dw object_interaction_function_empty  ; TAG_DOOR_HORIZONTAL
-	dw object_interaction_function_empty  ; TAG_DOOR_BOSS
+	dw object_interaction_function_boss_door  ; TAG_DOOR_BOSS
+	dw object_interaction_function_power_stone  ; TAG_POWER_STONE
 
 
 object_interaction_inventory_slot:
@@ -1422,7 +1431,7 @@ object_interaction_function_open_boss_lock_key_id_computed_done:
 	ld (hl), 1  ; lock is open
 
 	; open boss door:
-	ld hl, SFX_ui_select
+	ld hl, SFX_explosion
 	call play_SFX_with_high_priority
 	ld b, 30
 	call wait_b_halts
@@ -1432,7 +1441,7 @@ object_interaction_function_open_boss_lock_key_id_computed_done:
 	ld (large_object_to_upload_to_vdp), hl
 	ld (large_object_to_upload_to_vdp_size), a
 	call state_play_upload_object_tiles_to_vdp_if_necessary
-	ld hl, SFX_door_open
+	ld hl, SFX_explosion
 	call play_SFX_with_high_priority
 
 	ld b, 30
@@ -1443,13 +1452,27 @@ object_interaction_function_open_boss_lock_key_id_computed_done:
 	ld (large_object_to_upload_to_vdp), hl
 	ld (large_object_to_upload_to_vdp_size), a
 	call state_play_upload_object_tiles_to_vdp_if_necessary
-	ld hl, SFX_door_open
+	ld hl, SFX_explosion
 	call play_SFX_with_high_priority
 
 	ld hl, redraw_flags
 	ld (hl), #ff
 	call room_undraw_tile_objects
 	jp room_render_tile_objects  ; no door
+
+
+;-----------------------------------------------
+object_interaction_function_boss_door:
+	ld c, BOSS_PAGE
+	ld hl, enter_boss_door
+	jp call_hl_in_page_c_8000
+
+
+;-----------------------------------------------
+object_interaction_function_power_stone:
+	ld c, BOSS_PAGE
+	ld hl, pick_up_boss_power_stone
+	jp call_hl_in_page_c_8000
 
 
 ;-----------------------------------------------
@@ -1642,6 +1665,7 @@ ENDR
 	TILE_OBJECT_DATA 1, 1, 3, tile_object_v_door_gfx  ; TAG_DOOR_VERTICAL
 	TILE_OBJECT_DATA 1, 4, 1, tile_object_h_door_gfx  ; TAG_DOOR_HORIZONTAL
 	TILE_OBJECT_DATA 1, 4, 4, tile_object_4x4_object_gfx  ; TAG_DOOR_BOSS
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_POWER_STONE
 	
 
 tile_object_regular_object_gfx:

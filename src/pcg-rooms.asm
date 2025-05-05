@@ -6,6 +6,35 @@ tmp_pcg_room__next_tile_object_ptr: equ tmp_pcg_room__next_object_ptr - 2
 tmp_pcg_room__chunk_x: equ tmp_pcg_room__next_tile_object_ptr - 1
 tmp_pcg_room__chunk_y: equ tmp_pcg_room__chunk_x - 1
 
+
+;-----------------------------------------------
+pcg_generate_room_reset_state:
+	ld hl, player_combination_levers_state
+	ld bc, 8 - 1
+	ld a, 1
+	call clear_memory_a
+
+	ld hl, current_room__objects
+	ld (tmp_pcg_room__next_object_ptr), hl
+	ld bc, MAX_ROOM_OBJECTS * ROOM_OBJECT_STRUCT_SIZE - 1
+	xor a
+	ld (player_trial_completion_state), a
+	ld (current_room__objects_sentinel), a
+	ld (current_room__player_bullets_sentinel), a
+	call clear_memory_a
+
+	ld hl, current_room__player_bullets
+	ld bc, MAX_ROOM_PLAYER_BULLETS * ROOM_OBJECT_STRUCT_SIZE - 1
+	call clear_memory
+
+	ld hl, current_room__tile_objects
+	ld (tmp_pcg_room__next_tile_object_ptr), hl
+	ld bc, MAX_ROOM_TILE_OBJECTS * ROOM_TILE_OBJECT_STRUCT_SIZE - 1
+	ld a, #ff
+	ld (current_room__tile_objects_sentinel), a
+	jp clear_memory_a
+
+
 ;-----------------------------------------------
 ; This method fills in the "current_room" data structure by generating a room
 ; using the information in "current_area". 
@@ -21,30 +50,7 @@ pcg_generate_room:
 	ld (current_room__trial_fn), hl
 
 	push de
-		ld hl, player_combination_levers_state
-		ld bc, 8 - 1
-		ld a, 1
-		call clear_memory_a
-
-		ld hl, current_room__objects
-		ld (tmp_pcg_room__next_object_ptr), hl
-		ld bc, MAX_ROOM_OBJECTS * ROOM_OBJECT_STRUCT_SIZE - 1
-		xor a
-		ld (player_trial_completion_state), a
-		ld (current_room__objects_sentinel), a
-		ld (current_room__player_bullets_sentinel), a
-		call clear_memory_a
-
-		ld hl, current_room__player_bullets
-		ld bc, MAX_ROOM_PLAYER_BULLETS * ROOM_OBJECT_STRUCT_SIZE - 1
-		call clear_memory
-
-		ld hl, current_room__tile_objects
-		ld (tmp_pcg_room__next_tile_object_ptr), hl
-		ld bc, MAX_ROOM_TILE_OBJECTS * ROOM_TILE_OBJECT_STRUCT_SIZE - 1
-		ld a, #ff
-		ld (current_room__tile_objects_sentinel), a
-		call clear_memory_a
+		call pcg_generate_room_reset_state
 	pop de	
 
 	; Find x1, y1, x2, y2 of the room in the room IDs map:
@@ -985,13 +991,21 @@ pcg_generate_room__object_boss_lock:
 
 	ASSERT_D_NOT_EQ 0
 
+	ld a, (ix + AREA_OBJECT_STRUCT_TYPE)
+	ld hl, global_state__objects
+	ADD_HL_A
+	ld a, (hl)
+	cp 2  ; boss killed
+	jp z, pcg_generate_room__object_loop_next
+
 	; compute object coordinates:
 	call pcg_generate_room__compute_object_coordinates
 	; here: c, b: x, y coordinates
 
 	; spawn the lock:
 	ld iy, (tmp_pcg_room__next_tile_object_ptr)
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 0  ; ID (boss doors have ID 0)
+	ld a, (ix + AREA_OBJECT_STRUCT_TYPE)
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), a  ; ID (boss doors have as ID the type of the corresponding lock)
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_DOOR_BOSS  ; type
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), c  ; x
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), b  ; y

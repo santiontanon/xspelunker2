@@ -80,8 +80,8 @@ public class RoomChunk {
     {
         RoomChunk chunk = this.clone();
         
-        for(int i = 0;i<CHUNK_HEIGHT;i++) {
-            for(int j = 0;j<CHUNK_WIDTH;j++) {
+        for(int i = 0;i<chunk.tiles[0].length;i++) {
+            for(int j = 0;j<chunk.tiles.length;j++) {
                 if (biome.equals("pyramid")) {
                     int tile = tiles[j][i];
                     switch(tile) {

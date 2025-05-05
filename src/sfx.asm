@@ -388,6 +388,58 @@ SFX_explosion:
   db SFX_CMD_END   
 
 
+SFX_enter_door:
+  db  7,#9c  ; noise in channel C, and tone in channels B and A
+  db 10,#0b  ; volume
+  db  6+MUSIC_CMD_TIME_STEP_FLAG,#10  ; noise frequency
+  db MUSIC_CMD_SKIP,MUSIC_CMD_SKIP
+  db 10,#09  ; volume
+  db MUSIC_CMD_SKIP,MUSIC_CMD_SKIP
+  db 10,#00  ; silence
+  db MUSIC_CMD_SKIP,MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP,MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP,MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP,MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP,MUSIC_CMD_SKIP
+  db 10,#0b  ; volume
+  db MUSIC_CMD_SKIP,MUSIC_CMD_SKIP
+  db 10,#09  ; volume
+  db MUSIC_CMD_SKIP,MUSIC_CMD_SKIP
+  db 10,#00  ; silence
+  db MUSIC_CMD_SKIP,MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP,MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP,MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP,MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP,MUSIC_CMD_SKIP
+  db 10,#0b  ; volume
+  db MUSIC_CMD_SKIP,MUSIC_CMD_SKIP
+  db 10,#09  ; volume
+  db MUSIC_CMD_SKIP,MUSIC_CMD_SKIP
+  db 10,#00  ; silence
+  db MUSIC_CMD_SKIP,MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP,MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP,MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP,MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP,MUSIC_CMD_SKIP
+  db 10,#0b  ; volume
+  db MUSIC_CMD_SKIP,MUSIC_CMD_SKIP
+  db 10,#09  ; volume
+  db MUSIC_CMD_SKIP,MUSIC_CMD_SKIP
+  db 10,#00  ; silence
+  db MUSIC_CMD_SKIP,MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP,MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP,MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP,MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP,MUSIC_CMD_SKIP
+  db 10,#0b  ; volume
+  db MUSIC_CMD_SKIP,MUSIC_CMD_SKIP
+  db 10,#09  ; volume
+  db MUSIC_CMD_SKIP,MUSIC_CMD_SKIP
+  db 10,#00  ; silence
+  db 7, #b8  ; tone in all three channels
+  db SFX_CMD_END
+
+
 ; SFX_shield:
 ;   db  7,#9c    ;; noise in channel C, and tone in channels B and A
 ;   db 10,#0f    ;; volume
@@ -624,6 +676,7 @@ SFX_item_pickup:
 ;   db 5+MUSIC_CMD_TIME_STEP_FLAG, #05
 ;   db 10,#00  ; silence
 ;   db SFX_CMD_END
+
 
 SFX_raygun:
   db 7,#b8    ;; SFX all channels to tone
