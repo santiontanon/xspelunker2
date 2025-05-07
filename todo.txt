@@ -1,15 +1,20 @@
 to do:
 
 ***- design ending room (maya calendar stone where you place what you get from the bosses, etc.)
-  ***- mock it up in gimp/tiled
-  ***- spawn it and render it in the game (how does the tileset work here?)
-  ***- interact with it
-  ***- using power stones in stone calendar, has effects on the map (you can still inspect the power stones after being placed in the calendar stone: INSPECT_POWER_STONE_FROM_CALENDAR):
-    ***- 1st idol on calendar stone, opens door to 3rd pyramid (spawn door, and open it)
+  ***- spawn it and render it in the game (how does the tileset work here? probably != than "pyramid")
+    ***- create room and tileset for it (TILED + png)
+    ***- force the ending room to be a single screen room when generating the map
+    ***- when loading this room, use the predefined room for it (adapt the connections on the sides/bottom)
+    ***- spawn the two tablets on the sides and interact with them (draw the drawings on them, identical): these are the inscriptions you will send to Elaine when I implement the story
+    ***- interact with the sockets (depending on story state: nothing, place the power stone, or inspect the stone if there is one there: INSPECT_POWER_STONE_FROM_CALENDAR)
+    ***- one socket has a stone that seems depleted (you will replace that one with the final 6th/7th stone)
+    ***- 6th and 7th stone are halves, reuse gfx (top/bottom part), but create inventory items, once you have both halves, they merge into one, and you can inspect it (create event for this)
+  ***- using power stones in stone calendar:
+    ***- 1st idol on calendar stone, opens door to 3rd pyramid (spawn door, and open it) (and something lights up in the calendar stone: 0: off, 1: two dots go red, 3: numbers red, 5: all months go some color, 7: color change)
     ***- 2nd activates teleporters to move faster across maps (think what are these teleporters and where are they spawned)
-    ***- 3rd idol on calendar stone, opens door to temple of fire (spawn door and open it)
-    ***- 4th + 5th, lets you turn on the calendar stone (activate defenses) (for first ending)
-    ***- 6th (two halves from Mars/Moon), (activate offensive capabilities, and destroy alien hardware)
+    ***- 3rd idol on calendar stone, opens door to temple of fire (spawn door and open it), and makes numerals in calendar turn red (to indicate it is activating)
+    ***- 4th + 5th, lets you turn on the calendar stone (activate defenses) (for first ending), months turn of some color too (purple? red?)
+    ***- 6th/7th (two halves from Mars/Moon), (activate offensive capabilities, and destroy alien hardware): replace the depleted stone, you can only place this last
     ***- with final secret stone (prism that can only be obtained when all stones are placed, by defeating an 8th boss that appears after solving the secret riddle): opens dimensional portal for YOU to travel throughout the universe
 
 - Maya puzzle and teleporters in atlantis/mars/moon (https://mayaglyphs.org/)
@@ -124,17 +129,17 @@ X-Spelunker 2 (e-ke-se pe-lu-ne-ke-le):
 
 [The player explores the pyramid, solving puzzles until they find their way to the first boss, and defeat it, obtaining the first idol]
 
-- When the first "idol" is found:
-    "What is this? it looks like an idol, but it seems fully charged with static electricity! Why was that beast guarding this so tightly?"
+- When the first "power stone" is found:
+    "What is this? it is a small polished stone, but it seems fully charged with static electricity! Why was that beast guarding this so tightly?"
 
 [The player might find the second boss and second idol here, or find first the calendar stone, in any case, as soon as the player finds the calendar stone, the following event happens]
 
 - When finding the calendar stone for the first time:
-    "Look at that! That is a gigantic Mayan calendar stone! And it's in perfect condition!"
-    "And not only that, look at all of those alien artifacts connected to it. What are they trying to do here?"
+    "Look at that! That is a gigantic Mayan Tzolk'in calendar stone! Although it seems to be half-buried, it's in perfect condition!"
+    "But there is something strange in the middle, it has some empty sockets, like if something was taken out."
     "It is full of inscriptions, but I do not know what do they say!"
 
-[at this point, the player can try to use the idol in the calendar stone, but they will not know how to use it, so, the only way forward is to go back to the jungle entrance, where they will find that Elaine has written them a letter]
+[at this point, the player can try to use the power stone in the calendar stone, but they will not know how to use it, so, the only way forward is to go back to the jungle entrance, where they will find that Elaine has written them a letter]
 
 - If you go back to the jungle, you will find Elaine's letter waiting:
     Michael,
