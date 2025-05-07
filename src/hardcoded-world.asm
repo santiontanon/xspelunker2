@@ -462,3 +462,5 @@ hardcoded_world_data__combination_solutions:
   db 1, 1, 1, 2, 1, 1, 0, 2
 hardcoded_world_data__trial_types:
   db 4, 3, 0, 5
+hardcoded_world_data__power_stone_numbers:
+  db 7, 4, 8, 3, 5

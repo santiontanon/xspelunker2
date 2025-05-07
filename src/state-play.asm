@@ -57,8 +57,8 @@ state_play:
 ; 		ld (player_inventory_items+5), a
 ; 		ld (player_inventory_items+6), a
 ; 		ld (player_inventory_items+7), a
-; 		ld (player_inventory_items+8), a
-; 		ld (player_inventory_items+9), a
+		ld (player_inventory_items+8), a
+		ld (player_inventory_items+9), a
 ; 		ld (player_inventory_items+10), a
 ; 		ld (player_inventory_items+11), a
 ; 		ld (player_inventory_items+12), a

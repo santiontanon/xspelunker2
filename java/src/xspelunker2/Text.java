@@ -204,7 +204,7 @@ public class Text {
         
         // Item descriptions:
         addLineSafe(lines_with_constant, "Boss key: A heavy stone key with some engraved symbols.", "ITEM_BOSS_KEY", 80);
-        addLineSafe(lines_with_constant, "Power stone: A strange looking, very well polished stone. I can feel some sort of power radiating from it.", "ITEM_BOSS_IDOL", 80);
+        addLineSafe(lines_with_constant, "Power stone: A strange looking, very well polished stone. Press INTERACT to examine it.", "ITEM_BOSS_IDOL", 80);
         addLineSafe(lines_with_constant, "Red key: a small metalic red key.", "ITEM_RED_KEY", 80);
         addLineSafe(lines_with_constant, "Green key: a small metalic green key.", "ITEM_GREEN_KEY", 80);
         addLineSafe(lines_with_constant, "Blue key: a small metalic blue key.", "ITEM_BLUE_KEY", 80);
@@ -224,9 +224,9 @@ public class Text {
         addLineSafe(lines_with_constant, "Seashell: somehow I can hear it ringing when there is something hidden in a room.", "ITEM_SEASHELL", 80);
         addLineSafe(lines_with_constant, "Antigravity belt: alien technology, lets me fall through the air slowly. I can turn it off pressing DOWN.", "ITEM_BELT", 80);
         addLineSafe(lines_with_constant, "Ice cape: a cape with a coating of ice, which seems never to melt. It'll protect me from heat.", "ITEM_ICE_CAPE", 80);
-        addLineSafe(lines_with_constant, "A letter from Elaine. Press FIRE to read it.", "ITEM_LETTER1", 80);
-        addLineSafe(lines_with_constant, "The second letter from Elaine. Press FIRE to read it.", "ITEM_LETTER2", 80);
-//        addLineSafe(lines_with_constant, "The third letter from Elaine. Press FIRE to read it.", "ITEM_LETTER3", 80);
+        addLineSafe(lines_with_constant, "A letter from Elaine. Press INTERACT to read it.", "ITEM_LETTER1", 80);
+        addLineSafe(lines_with_constant, "The second letter from Elaine. Press INTERACT to read it.", "ITEM_LETTER2", 80);
+//        addLineSafe(lines_with_constant, "The third letter from Elaine. Press INTERACT to read it.", "ITEM_LETTER3", 80);
         addLineSafe(lines_with_constant, "Map: a map of the ruins that I have been composing as I find pieces of it. Press FIRE to examine it.", "ITEM_MAP", 80);
        
         // In-game messages:
@@ -236,6 +236,10 @@ public class Text {
         addLineSafe(lines_with_constant, "That does not seem to be the correct item to use here!", "WRONG_ITEM", 112);
         addLineSafe(lines_with_constant, "You found a very strange object. A stone of some sort, but some strange power comes from inside it. It must be important.", "FIRST_POWER_STONE", 112);
         addLineSafe(lines_with_constant, "You found another power stone!", "OTHER_POWER_STONES", 112);
+        
+        // power stone inspection:
+        addLineSafe(lines_with_constant, "A stone I found. Some sort of power radiates from it.", "INSPECT_POWER_STONE", 32);
+        addLineSafe(lines_with_constant, "I grabbed the stone temporarily to inspect it.", "INSPECT_POWER_STONE_FROM_CALENDAR", 32);
         
         // Combination clue verse:
         addLineSafe(lines_with_constant, "Dance of traversal:", "COMBINATION_CLUE1", 12);

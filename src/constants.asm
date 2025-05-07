@@ -156,7 +156,7 @@ RAYGUN_DAMAGE: equ 2
 
 
 ; - 7 boss keys
-; - 7 boss idols
+; - 7 boss power stones
 ; - 6 color keys
 ; - 1 small key
 ; - 4 key items (ball, idol, gear, clay doll)

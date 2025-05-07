@@ -22,7 +22,8 @@ state_inventory:
 state_inventory_entry_point:
 	xor a
 	ld (inventory_cursor_position_y), a
-
+state_inventory_entry_point_from_item_inspection:
+	ld sp, stack  ; reset the stack, so we can jump here from wherever we want
 	call disable_VDP_output
 		call clear_all_the_sprites
 		call setup_inventory_gfx
@@ -89,9 +90,35 @@ state_inventory_update_cursor_continue:
 	ld a, (keyboard_clicks)
 	bit KEY_WEAPON_BIT, a  ; space
 	jp nz, state_inventory_update_cursor_button
+	bit KEY_INTERACT_BIT, a  ; interact
+	jp nz, state_inventory_update_cursor_interact
 	bit KEY_INVENTORY_BIT, a
 	jp nz, state_inventory_update_cursor_button_back
 	ret
+
+state_inventory_update_cursor_interact:
+	; interact with power stones:
+	ld a, (inventory_cursor_position_y)
+	dec a
+	jr z, state_inventory_update_cursor_interact_row1
+	dec a
+	jr z, state_inventory_update_cursor_interact_row2
+	ret
+state_inventory_update_cursor_interact_row1:
+	ld a, (inventory_cursor_position_x)
+	cp 8
+	jp z, state_inventory_update_cursor_interact_power_stone1
+	cp 9
+	jp z, state_inventory_update_cursor_interact_power_stone2
+	ret
+state_inventory_update_cursor_interact_row2:
+	ld a, (inventory_cursor_position_x)
+	cp 4
+	jp z, state_inventory_update_cursor_interact_power_stone3
+	cp 5
+	jp z, state_inventory_update_cursor_interact_power_stone4
+	ret
+
 
 state_inventory_update_cursor_button:
 	ld a, (inventory_cursor_position_y)
@@ -126,7 +153,6 @@ state_inventory_update_cursor_button_loop_next1:
 	inc hl
 	inc hl
 	jr state_inventory_update_cursor_button_loop
-	ret
 
 state_inventory_update_cursor_button_row0:
 	ld a, (inventory_cursor_position_x)
@@ -292,6 +318,164 @@ state_inventory_update_cursor_up_row2_left:
 	ld (inventory_cursor_position_x), a
 	ld (inventory_cursor_position_y), a
 	ret
+
+
+;-----------------------------------------------
+state_inventory_update_cursor_interact_power_stone1:
+	ld a, (player_inventory_items + 7)
+	or a
+	ld e, 0
+	jr nz, state_inventory_update_cursor_interact_power_stone
+	ld a, (player_inventory_items + 7 + 3)
+	or a
+	ld e, 3
+	jr nz, state_inventory_update_cursor_interact_power_stone
+	ret
+state_inventory_update_cursor_interact_power_stone2:
+	ld a, (player_inventory_items + 7 + 1)
+	or a
+	ld e, 1
+	jr nz, state_inventory_update_cursor_interact_power_stone
+	ld a, (player_inventory_items + 7 + 4)
+	or a
+	ld e, 4
+	jr nz, state_inventory_update_cursor_interact_power_stone
+	ret
+state_inventory_update_cursor_interact_power_stone3:
+	ld a, (player_inventory_items + 7 + 2)
+	or a
+	ld e, 2
+	jr nz, state_inventory_update_cursor_interact_power_stone
+	ld a, (player_inventory_items + 7 + 5)
+	or a
+	ld e, 5
+	jr nz, state_inventory_update_cursor_interact_power_stone
+	ret
+state_inventory_update_cursor_interact_power_stone4:
+	ld a, (player_inventory_items + 7 + 6)
+	or a
+	ld e, 6
+	ret z
+state_inventory_update_cursor_interact_power_stone:
+	; jp display_power_stone_closeup
+
+;-----------------------------------------------
+; input:
+; - e: power stone number
+display_power_stone_closeup:
+	call disable_VDP_output
+		push de
+		    call clear_all_the_sprites
+			xor a
+			ld hl, NAMTBL2
+			ld bc, 768
+			call fast_FILVRM
+
+			ld hl, power_stones_tiles_zx0
+			ld de, buffer_4096
+			ld c, TILES_PAGE
+			call dzx0_from_page_c
+
+			ld hl, buffer_4096
+			ld de, CHRTBL2
+			ld bc, 256*8
+			call fast_LDIRVM
+			ld hl, buffer_4096 + 256*8
+			ld de, CLRTBL2
+			ld bc, 256*8
+			call fast_LDIRVM
+
+			ld hl, buffer_4096
+			ld de, CHRTBL2 + 256*8
+			ld bc, 256*8
+			call fast_LDIRVM
+			ld hl, buffer_4096 + 256*8
+			ld de, CLRTBL2 + 256*8
+			ld bc, 256*8
+			call fast_LDIRVM
+
+			ld hl, buffer_4096
+			ld de, CHRTBL2 + 256*8*2
+			ld bc, 256*8
+			call fast_LDIRVM
+			ld hl, buffer_4096 + 256*8
+			ld de, CLRTBL2 + 256*8*2
+			ld bc, 256*8
+			call fast_LDIRVM	
+
+			ld hl, power_stones_nametable_zx0
+			ld de, buffer_4096
+			ld c, TILES_PAGE
+			call dzx0_from_page_c
+		pop de  ; e = power stone number
+
+		; draw the appropriate number
+		ld a, e
+		cp 6
+		jr nc, display_power_stone_closeup_no_number
+		ld d, 0
+		ld hl, current_world__power_stone_numbers
+		add hl, de
+		ld a, (hl)
+		add a, 118
+		ld (buffer_4096 + 13 + 14*32), a
+display_power_stone_closeup_no_number:
+
+		; draw appropriate animal:
+		; start tile = 128 + e * 3 (if e < 5), and 176 + (e-5) * 3 otherwise
+		ld a, e
+		cp 5
+		jr c, display_power_stone_closeup_leq5
+		sub 5
+		ld c, a
+		add a, a
+		add a, c
+		add a, 176
+		jr display_power_stone_closeup_continue
+display_power_stone_closeup_leq5:
+		ld c, a
+		add a, a
+		add a, c
+		add a, 128
+display_power_stone_closeup_continue:
+		ld hl, buffer_4096 + 15 + 9*32
+		ld de, 30
+		ld b, 3
+display_power_stone_closeup_animal_loop:
+		ld (hl), a
+		inc a
+		inc hl
+		ld (hl), a
+		inc a
+		inc hl
+		ld (hl), a
+		add a, 14
+		add hl, de
+		djnz display_power_stone_closeup_animal_loop
+
+		ld hl, buffer_4096
+		ld de, NAMTBL2
+		ld bc, 768
+		call fast_LDIRVM
+
+		call clear_text_rendering_buffer
+		ld hl, TEXT_INSPECT_POWER_STONE
+		ld de, CHRTBL2 + (225 + 256*2)*8
+		ld iy, #80f0
+		ld b, 30
+		call draw_sentence_to_vdp
+    call enable_VDP_output
+
+	call wait_for_click
+	xor a
+	ld (keyboard_clicks), a
+
+	ld hl, redraw_flags
+	ld (hl), #ff
+
+	ld a, TEXT_PAGE
+	ld hl, state_inventory_entry_point_from_item_inspection
+	jp jp_to_hl_in_page_a_8000
 
 
 ;-----------------------------------------------
@@ -1053,10 +1237,10 @@ inventory_weapon_item_fns:
 	WEAPON_ITEM_FN 6, 1, select_boss_key3
 	WEAPON_ITEM_FN 7, 1, select_boss_key4
 	; idols
-	WEAPON_ITEM_FN 8, 1, select_idol1
-	WEAPON_ITEM_FN 9, 1, select_idol2
-	WEAPON_ITEM_FN 4, 2, select_idol3
-	WEAPON_ITEM_FN 5, 2, select_idol4
+	WEAPON_ITEM_FN 8, 1, select_power_stone1
+	WEAPON_ITEM_FN 9, 1, select_power_stone2
+	WEAPON_ITEM_FN 4, 2, select_power_stone3
+	WEAPON_ITEM_FN 5, 2, select_power_stone4
 	; color keys
 	WEAPON_ITEM_FN 6, 2, select_color_key1
 	WEAPON_ITEM_FN 7, 2, select_color_key2
@@ -1133,7 +1317,7 @@ select_boss_key1:
 	ld hl, player_inventory_items  ; boss key 1
 	ld de, player_inventory_items + 3
 	ld bc, #0e0b  ; 11 and 14 (boss key 1 and 4)
-select_idol_generic:
+select_power_stone_generic:
 select_boss_key_generic:
 	ld a, (hl)
 	or a
@@ -1166,25 +1350,25 @@ select_boss_key4:
 	ld b, 17  ; boss key 7
 	jr select_boss_key_generic_continue1
 
-select_idol1:
+select_power_stone1:
 	ld hl, player_inventory_items + 7 ; idol 1
 	ld de, player_inventory_items + 10
 	ld bc, #1215  ; 18 and 21 (idol 1 and 4)
-	jr select_idol_generic
+	jr select_power_stone_generic
 
-select_idol2:
+select_power_stone2:
 	ld hl, player_inventory_items + 8
 	ld de, player_inventory_items + 11
 	ld bc, #1316  ; 19 and 22 (idol 2 and 5)
-	jr select_idol_generic
+	jr select_power_stone_generic
 
-select_idol3:
+select_power_stone3:
 	ld hl, player_inventory_items + 9
 	ld de, player_inventory_items + 12
 	ld bc, #1417  ; 20 and 23 (idol 3 and 6)
-	jr select_idol_generic
+	jr select_power_stone_generic
 
-select_idol4:
+select_power_stone4:
 	ld de, player_inventory_items + 13
 	ld b, 24  ; idol 7
 	jr select_boss_key_generic_continue1
@@ -1249,8 +1433,8 @@ select_key_item4:
 inventory_item_positions:
 	db 0, 1, 2  ; first 3 boss keys
 	db 0, 1, 2, 3  ; last 4 boss keys
-	db 4, 5, 6  ; first 3 idols
-	db 4, 5, 6, 7  ; last 4 boss idols
+	db 4, 5, 6  ; first 3 power stones
+	db 4, 5, 6, 7  ; last 4 boss power stones
 	db 8, 9, 10, 11, 12, 13  ; color keys
 	db 14  ; small keys
 	db 15, 16, 17, 18  ; key items (21 - 24)
@@ -1268,13 +1452,13 @@ inventory_item_gfx:
 	db 104, 105, 136, 137  ; boss key 5
 	db 106, 107, 138, 139  ; boss key 6
 	db 108, 109, 140, 141  ; boss key 7
-	db 110, 111, 142, 143  ; boss idol 1
-	db 110, 111, 142, 143  ; boss idol 2
-	db 110, 111, 160, 161  ; boss idol 3
-	db 110, 111, 142, 143  ; boss idol 4
-	db 110, 111, 142, 143  ; boss idol 5
-	db 110, 111, 160, 161  ; boss idol 6
-	db 110, 111, 160, 161  ; boss idol 7
+	db 110, 111, 142, 143  ; boss power stone 1
+	db 110, 111, 142, 143  ; boss power stone 2
+	db 110, 111, 160, 161  ; boss power stone 3
+	db 110, 111, 142, 143  ; boss power stone 4
+	db 110, 111, 142, 143  ; boss power stone 5
+	db 110, 111, 160, 161  ; boss power stone 6
+	db 110, 111, 160, 161  ; boss power stone 7
 	db 112, 113, 80, 81  ; red key
 	db 114, 115, 82, 83  ; green key
 	db 116, 117, 84, 85  ; blue key

@@ -276,6 +276,10 @@ public class PCGWorld {
             for(int j = 0;j<4;j++) {
                 w.trialTypes[j] = r.nextInt(8);
             }
+
+            for(int j = 0;j<5;j++) {
+                w.powerStoneNumbers[j] = r.nextInt(8) + 1;
+            }
             
             
             return w;

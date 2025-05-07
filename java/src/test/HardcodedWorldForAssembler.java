@@ -122,7 +122,12 @@ public class HardcodedWorldForAssembler {
                                      w.trialTypes[1] + ", " +
                                      w.trialTypes[2] + ", " +
                                      w.trialTypes[3]);
-        
+        System.out.println("hardcoded_world_data__power_stone_numbers:");
+        System.out.println("  db " + w.powerStoneNumbers[0] + ", " +
+                                     w.powerStoneNumbers[1] + ", " +
+                                     w.powerStoneNumbers[2] + ", " +
+                                     w.powerStoneNumbers[3] + ", " +
+                                     w.powerStoneNumbers[4]);
     }
     
     

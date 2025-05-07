@@ -1,34 +1,29 @@
 to do:
 
-***- inspect power stones in inventory:
-  ***- draw in gimp
-  ***- create TILED image for each stone (7 variants)
-  ***- display them in game + text to go along
+***- design ending room (maya calendar stone where you place what you get from the bosses, etc.)
+  ***- mock it up in gimp/tiled
+  ***- spawn it and render it in the game (how does the tileset work here?)
+  ***- interact with it
+  ***- using power stones in stone calendar, has effects on the map (you can still inspect the power stones after being placed in the calendar stone: INSPECT_POWER_STONE_FROM_CALENDAR):
+    ***- 1st idol on calendar stone, opens door to 3rd pyramid (spawn door, and open it)
+    ***- 2nd activates teleporters to move faster across maps (think what are these teleporters and where are they spawned)
+    ***- 3rd idol on calendar stone, opens door to temple of fire (spawn door and open it)
+    ***- 4th + 5th, lets you turn on the calendar stone (activate defenses) (for first ending)
+    ***- 6th (two halves from Mars/Moon), (activate offensive capabilities, and destroy alien hardware)
+    ***- with final secret stone (prism that can only be obtained when all stones are placed, by defeating an 8th boss that appears after solving the secret riddle): opens dimensional portal for YOU to travel throughout the universe
 
-- design ending room (maya calendar stone where you place what you get from the bosses, etc.)
-  - using idols in stone calendar, has effects on the map:
-    - 1st idol on calendar stone, opens door to 3rd pyramid (spawn door, and open it)
-    - 2nd activates teleporters to move faster across maps (think what are these teleporters and where are they spawned)
-    - 3rd idol on calendar stone, opens door to temple of fire (spawn door and open it)
-    - 4th + 5th, lets you turn on the calendar stone (activate defenses) (for first ending)
-    - 6th (two halves from Mars/Moon), (activate offensive capabilities, and destroy alien hardware)
-    - with final secret stone (prism that can only be obtained when all stones are placed, by defeating an 8th boss that appears after solving the secret riddle): opens dimensional portal for YOU to travel throughout the universe
+- Maya puzzle and teleporters in atlantis/mars/moon (https://mayaglyphs.org/)
 
-- design teleporter in atlantis/mars/moon and how the interaction would go (think of the type of Maya riddle that would activate it)
-
-- ensure that ALL tags are instantiated and are functional now during room creation (e.g. story / maya tablets)
+- ensure that ALL tags are instantiated and are functional now during room creation (e.g. story tablets)
 
 - item effects:
   - for anti-grav belt, you can overwrite it by pressing "down" (to fall quick)
-  - when using the "map" item in the inventory, display an overall map, with all the pieces you have currently collected (and some clues in the form of maya writing that appear in the pieces)
+  - when using the "map" item in the inventory, display an overall map, with all the pieces you have currently collected (and clues to teach you mayan numerals)
 
 - Implement PCGWorld in assembler:
-  - data structure
-      - spanningTree: ID, parent, n_descendants, root point, tags (this is stored twice for convenience)
-      - global object list (4 * 64 -> 256 bytes) (how does this work? do I need it globally? per area? how do I mark that an item is taken or a door open, globally?)
   - implement it and generate the whole thing in assembler
+    - spanningTree: ID, parent, n_descendants, root point, tags (this is stored twice for convenience)
   - safety checks to make sure all generated levels are playable (no more than 1 tag per division, try all RNG seeds in Java, etc.), adjust # divisions needed, etc.
-  - verify it matches exactly what I get in Java
   - for some areas (pyramids, etc.) have some predefined shapes (e.g. pyramid shape), that can be chosen with some probability. And maybe also different shapes for the confluence, etc.
   - keep Java/assembler versions in sync (try different random seeds)
 
@@ -85,7 +80,7 @@ to do:
 - second ending
 
 - secret puzzle 2: add strings in the ROM that can be read via a hex reader of the ROM (encode them as decimal numbers in the .asm file, so that they are not visible from the source easily), that form a puzzle, giving you a clue (e.g. a code) for something to do in the game to get a special ending. this will enable the 3rd ending (last piece to fit in the calendar)
-- 8th boss (appears after solving the secret puzzle 2, and gives you the final prism for the calendar stone)
+- 8th boss (appears after solving the secret puzzle 2, and gives you the final prism for the calendar stone). Where does it appear? maybe spawn an 8th boss, and just keep it hidden until this happens?
 - think of more secrets to add to the game (maybe secret rooms that depend on the RNG spawning certain things)
 
 --------------------
@@ -183,6 +178,16 @@ X-Spelunker 2 (e-ke-se pe-lu-ne-ke-le):
 
 - After placing the fifth stone, the center of the calendar stone lights up, indicating that you can activate the celandar stone protection any time. As soon as you attempt to press it, the aliens show up, and the final confrontation with them begins. If you win, you can activate the stone and beat the game.
 
+  - Maya puzzle:
+    - in Atlantis:
+      - screen with an inscription saying (in Maya): "crouch under the snake at night, attack under the jaguar during the day" (the "snake/jaguar" can change randomly from up to 4, and the "crouch/attack" can be crouch/attack/jump)
+      - there is a room with a snake statue (only one) and one with a jaguar state (only one), and maybe 2 other rooms with 2 other statues
+      - on another room, there is a dial, where you can change the time (day/night/etc.), have 4 options, and start in one that will never be chosen.
+    - Mayan clues should teach you the meaning of "crouch/attack/jump/snake/jaguar/day/night/etc."
+    - Power stones will have a glyph and a number in maya (meaning the number of times the action has to be performed)
+    - mayan numerals are learned from pieces of map  
+    - When a part of the ritual is done, the statue reacts somehow, to indicate you did something
+    - When returning to the room with the inscription after all parts are done, two teleporters show up
 
   - points to remember (for lore/clues):
       - the first attempt to create humans was from mud, but those were destroyed in the great flood 
@@ -193,7 +198,7 @@ X-Spelunker 2 (e-ke-se pe-lu-ne-ke-le):
       - 6 levels of maya underworld
       - 13 levels of maya upperworld
 
-  - additional types of puzzles/challenges:
+  - potential additional types of puzzles/challenges:
     - keep a button pressed to open a door
     - walkable wall
     - "do something that should not have any effect" (e.g. stand still somewhere, use an item in a certain place (e.g. kill the invisible enemy))
@@ -205,6 +210,7 @@ X-Spelunker 2 (e-ke-se pe-lu-ne-ke-le):
     - any of the above but where the clue requires decyphering a language
   - maya text:
     https://www.mayaarchaeologist.co.uk/public-resources/maya-world/maya-writing-system/
+    https://mayaglyphs.org/
   - eagle is sky, snake is earth, and jaguar the underworld. Jaguar and Eagle are the warriors
   - ball game: two gods from the sky played ball near the underworld, went down and played with the underworld gods (who wanted to kill humans, since they were only worshipping the sky gods). The two won, and one knel and cut his head, which went up the sky and formed the sun, the other did the same and formed the moon. they protect humans from the underworld gods.
     - in my game, I could make it so that the story is wrong, and they are mars and moon instead of sun and moon, and those are the palces you visit.
