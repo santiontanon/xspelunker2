@@ -179,6 +179,7 @@ display_in_game_message_continue:
 	ld hl, redraw_flags
 	ld (hl), #ff
 
-	ld c, TILES_PAGE
-	ld hl, tiles_pyramid_zx0
+	ld a, (current_room__tileset_page)
+	ld c, a
+	ld hl, (current_room__tileset_ptr)
 	jp setup_game_tiles_only_biome

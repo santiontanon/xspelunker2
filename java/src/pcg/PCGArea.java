@@ -22,6 +22,7 @@ public class PCGArea {
     
     public static final int ROOM_WIDTH = 2;
     public static final int ROOM_HEIGHT = 2;
+    public static final int CALENDAR_ROOM_ID = 100;  // some ID that is impossible to arise naturally
     public static final int n_connections_per_type[] = {
         0, 1, 1, 2, 1, 2, 2, 3,
         1, 2, 2, 3, 2, 3, 3, 4,
@@ -523,7 +524,22 @@ public class PCGArea {
                     }
                 }
             }
-        }        
+        }
+        
+        // Ensure that the "calendar stone" room is not merged with anything:
+        if (a.ID == 3) {  // "the confluence"
+            for(int i = 0;i<h;i++) {
+                for(int j = 0;j<w;j++) {
+                    if (a.tags[j][i] != null && a.tags[j][i].contains("ending")) {
+                        if (a.tags[j][i].size() > 1) {
+                            System.err.println("More than one tag on the ending room!");
+                            return false;
+                        }
+                        a.rooms[j][i] = CALENDAR_ROOM_ID;
+                    }
+                }
+            }
+        }
         return true;
     }
         
@@ -736,6 +752,7 @@ public class PCGArea {
             switch(tag) {
                 case "start":
                 case "midpoint":
+                case "ending":
                     // ignore
                     break;
 

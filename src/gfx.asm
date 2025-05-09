@@ -221,47 +221,43 @@ fast_small_LDIRVM_loop:
 ; - hl: ptr to tiles
 ; - c: megarom page where the tiles are
 setup_game_tiles:
-    ld a, (current_megarom_page_in_8000)
-    push af
-        call setup_game_tiles_biome_internal
+    call setup_game_tiles_biome_internal
 
-        ; hud tiles (includes generic in-game tiles too, like coins, etc.):
-        ld hl, tiles_hud_zx0
-        ld de, buffer_4096
-        call dzx0
+    ; hud tiles (includes generic in-game tiles too, like coins, etc.):
+    ld hl, tiles_hud_zx0
+    ld de, buffer_4096
+    ld c, TILES_PAGE
+    call dzx0_from_page_c
 
-        ld hl, buffer_4096
-        ld de, CHRTBL2
-        ld bc, 64*8
-        call fast_LDIRVM
+    ld hl, buffer_4096
+    ld de, CHRTBL2
+    ld bc, 48*8
+    call fast_LDIRVM
 
-        ld hl, buffer_4096 + 64*8
-        ld de, CLRTBL2
-        ld bc, 64*8
-        call fast_LDIRVM
+    ld hl, buffer_4096 + 48*8
+    ld de, CLRTBL2
+    ld bc, 48*8
+    call fast_LDIRVM
 
-        ld hl, buffer_4096
-        ld de, CHRTBL2 + 256*8
-        ld bc, 64*8
-        call fast_LDIRVM
+    ld hl, buffer_4096
+    ld de, CHRTBL2 + 256*8
+    ld bc, 48*8
+    call fast_LDIRVM
 
-        ld hl, buffer_4096 + 64*8
-        ld de, CLRTBL2 + 256*8
-        ld bc, 64*8
-        call fast_LDIRVM
+    ld hl, buffer_4096 + 48*8
+    ld de, CLRTBL2 + 256*8
+    ld bc, 48*8
+    call fast_LDIRVM
 
-        ld hl, buffer_4096
-        ld de, CHRTBL2 + 256*8*2
-        ld bc, 64*8
-        call fast_LDIRVM
+    ld hl, buffer_4096
+    ld de, CHRTBL2 + 256*8*2
+    ld bc, 48*8
+    call fast_LDIRVM
 
-        ld hl, buffer_4096 + 64*8
-        ld de, CLRTBL2 + 256*8*2
-        ld bc, 64*8
-        call fast_LDIRVM
-    pop af
-    SETMEGAROMPAGE_8000_A
-    ret
+    ld hl, buffer_4096 + 48*8
+    ld de, CLRTBL2 + 256*8*2
+    ld bc, 48*8
+    jp fast_LDIRVM
 
 
 ;-----------------------------------------------
@@ -269,12 +265,12 @@ setup_game_tiles:
 ; - hl: ptr to tiles
 ; - c: megarom page where the tiles are
 setup_game_tiles_only_biome:
-    ld a, (current_megarom_page_in_8000)
-    push af
-        call setup_game_tiles_biome_internal
-    pop af
-    SETMEGAROMPAGE_8000_A
-    ret
+;     ld a, (current_megarom_page_in_8000)
+;     push af
+;         call setup_game_tiles_biome_internal
+;     pop af
+;     SETMEGAROMPAGE_8000_A
+;     ret
 
 
 ;-----------------------------------------------
@@ -282,40 +278,73 @@ setup_game_tiles_only_biome:
 ; - hl: ptr to tiles
 ; - c: megarom page where the tiles are
 setup_game_tiles_biome_internal:
-    ld a, c
-    SETMEGAROMPAGE_8000_A
     ld de, buffer_4096
-    call dzx0
+    call dzx0_from_page_c
+
+    ld a, (current_room__tileset_overrides_item_tiles)
+    ld bc, 192*8
+    ld de, CHRTBL2 + 64*8
+    or a
+    jr z, setup_game_tiles_biome_internal_continue
+    ld bc, 208*8
+    ld de, CHRTBL2 + 48*8
+setup_game_tiles_biome_internal_continue:
 
     ; bank 0:
     ld hl, buffer_4096
-    ld de, CHRTBL2 + 64*8
-    ld bc, 192*8
-    call fast_LDIRVM
-
-    ld hl, buffer_4096 + 192*8
-    ld de, CLRTBL2 + 64*8
-    ld bc, 192*8
-    call fast_LDIRVM
+    push hl
+    push bc
+        push de
+            call fast_LDIRVM
+        pop hl
+        ld bc, CLRTBL2 - CHRTBL2
+        add hl, bc
+        ex de, hl  ; de = CLRTBL2 + 64*8
+    pop bc
+    pop hl
+    add hl, bc
+    push bc
+        push de
+            call fast_LDIRVM
+        pop hl
+        ld bc, CHRTBL2 + 256*8 - CLRTBL2
+        add hl, bc
+        ex de, hl  ; de = CHRTBL2 + 256*8 + 64*8
+    pop bc
 
     ; bank 1:
     ld hl, buffer_4096
-    ld de, CHRTBL2 + 256*8 + 64*8
-    ld bc, 192*8
-    call fast_LDIRVM
-
-    ld hl, buffer_4096 + 192*8
-    ld de, CLRTBL2 + 256*8 + 64*8
-    ld bc, 192*8
-    call fast_LDIRVM
+    push hl
+    push bc
+        push de
+            call fast_LDIRVM
+        pop hl
+        ld bc, CLRTBL2 - CHRTBL2
+        add hl, bc
+        ex de, hl  ; de = CLRTBL2 + 256*8 + 64*8
+    pop bc
+    pop hl
+    add hl, bc
+    push bc
+        push de
+            call fast_LDIRVM
+        pop hl
+        ld bc, CHRTBL2 + 256*8 - CLRTBL2
+        add hl, bc  ; de = CHRTBL2 + 256*8*2 + 64*8
+        ex de, hl
+    pop bc
 
     ; bank 2:
     ld hl, buffer_4096
-    ld de, CHRTBL2 + 256*8*2 + 64*8
-    ld bc, 192*8
-    call fast_LDIRVM
-
-    ld hl, buffer_4096 + 192*8
-    ld de, CLRTBL2 + 256*8*2 + 64*8
-    ld bc, 192*8
+    push hl
+    push bc
+        push de
+            call fast_LDIRVM
+        pop hl
+        ld bc, CLRTBL2 - CHRTBL2
+        add hl, bc
+        ex de, hl  ; de = CLRTBL2 + 256*8*2 + 64*8
+    pop bc
+    pop hl
+    add hl, bc
     jp fast_LDIRVM

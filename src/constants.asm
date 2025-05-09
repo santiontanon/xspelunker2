@@ -53,7 +53,7 @@ PCG_DIRECTION_RIGHT_BIT: equ 1
 PCG_DIRECTION_DOWN_BIT: equ 0
 
 INTERAREA_CONNECTION_SIZE: equ 8  ; id1, id2, x1, y1, direction1, x2, y2, direction2
-
+CALENDAR_ROOM_ID: equ 100  ; areas are at most 8 * 8 rooms in size, so this ID is impossible to generate naturally
 
 MAX_WORLD_AREAS: equ 12
 MAX_AREA_WIDTH: equ 16  

@@ -268,6 +268,13 @@ public class RoomChunk {
     }
     
     
+    public void loadGfx(String path) throws Exception
+    {
+        File f = new File(path);
+        gfx = ImageIO.read(f);
+    }
+    
+    
     public void draw(int x, int y, Graphics2D g)
     {
         float scale = 1.0f;
@@ -280,8 +287,8 @@ public class RoomChunk {
             }
         }
         
-        for(int i = 0;i<CHUNK_HEIGHT;i++) {
-            for(int j = 0;j<CHUNK_WIDTH;j++) {
+        for(int i = 0;i<tiles[0].length;i++) {
+            for(int j = 0;j<tiles.length;j++) {
                 if (tiles[j][i] >= 1) {
                     int tx = ((tiles[j][i]) % 16) * 8;
                     int ty = ((tiles[j][i]) / 16) * 8;
@@ -295,5 +302,15 @@ public class RoomChunk {
                 }
             }
         }        
+    }
+    
+    
+    public void clearTiles(int x0, int y0, int x1, int y1)
+    {
+        for(int i = y0;i<y1;i++) {
+            for(int j = x0;j<x1;j++) {
+                tiles[j][i] = 0;
+            }
+        }
     }
 }

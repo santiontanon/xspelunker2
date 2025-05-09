@@ -1,3 +1,4 @@
+;-----------------------------------------------
 ; Temporary variables (overlapping with the buffer):
 tmp_pcg_room__current_target_chunk_bank_id: equ buffer_4096 + 4094
 tmp_pcg_room__current_decompressed_chunk_bank_id: equ tmp_pcg_room__current_target_chunk_bank_id - 1
@@ -8,7 +9,42 @@ tmp_pcg_room__chunk_y: equ tmp_pcg_room__chunk_x - 1
 
 
 ;-----------------------------------------------
+area_default_tileset_ptrs:
+	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid - 32  ; jungle
+	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid - 32  ; pyramid 1
+	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid - 32  ; pyramid 2
+	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid - 32  ; confluence
+	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid - 32  ; pyramid 3
+	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid - 32  ; fire shaft
+	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid - 32  ; pacific caves
+	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid - 32  ; atlantic caves
+	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid - 32  ; fire temple
+	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid - 32  ; atlantis
+	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid - 32  ; mars
+	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid - 32  ; moon
+
+
+;-----------------------------------------------
 pcg_generate_room_reset_state:
+	ld hl, area_default_tileset_ptrs
+	ld a, (current_area__id)
+	add a, a
+	ld c, a
+	add a, a
+	add a, c  ; a * 6
+	ADD_HL_A
+	ld de, current_room__tileset_ptr
+	ldi
+	ldi  ; current_room__tileset_ptr
+	ldi
+	ldi  ; current_room__animation_fn_ptr
+	ldi
+	ldi  ; current_room__collision_ptr
+	ld a, TILES_PAGE
+	ld (current_room__tileset_page), a
+	xor a
+	ld (current_room__tileset_overrides_item_tiles), a
+
 	ld hl, player_combination_levers_state
 	ld bc, 8 - 1
 	ld a, 1
@@ -152,6 +188,11 @@ pcg_generate_room__seed_generated:
 	ld hl, current_room__tile_map
 	ld bc, MAX_ROOM_SIZE - 1
 	call clear_memory
+
+	; check if it's a special room:
+	ld a, (current_room__id)
+	cp CALENDAR_ROOM_ID
+	jp z, pcg_generate_room__calendar	
 
 	; Add background chunks randomly:
 	; here:
@@ -1831,19 +1872,6 @@ object_tiles_start_ptrs:
 REPT TAG_RED_LOCK
 	dw buffer_4096
 ENDR
-; TAG_NONE: equ 0
-; TAG_BLOCK_PUZZLE1: equ 1
-; TAG_BLOCK_PUZZLE2: equ 2
-; TAG_BLOCK_PUZZLE3: equ 3
-; TAG_BLOCK_PUZZLE4: equ 4
-; TAG_BUTTON_DOOR1: equ 5
-; TAG_BUTTON_DOOR2: equ 6
-; TAG_BUTTON_DOOR3: equ 7
-; TAG_BUTTON_DOOR4: equ 8
-; TAG_BREAKABLE_WALL1: equ 9
-; TAG_BREAKABLE_WALL2: equ 10
-; TAG_BREAKABLE_WALL3: equ 11
-; TAG_BREAKABLE_WALL4: equ 12
 	dw buffer_4096 + 48 * 64  ; TAG_RED_LOCK
 	dw buffer_4096 + 49 * 64  ; TAG_GREEN_LOCK
 	dw buffer_4096 + 50 * 64  ; TAG_BLUE_LOCK
@@ -1853,14 +1881,6 @@ ENDR
 REPT TAG_BALL_LOCK - TAG_TRIAL1_LOCK
 	dw buffer_4096
 ENDR
-; TAG_TRIAL1_LOCK: equ 19
-; TAG_TRIAL2_LOCK: equ 20
-; TAG_TRIAL3_LOCK: equ 21
-; TAG_TRIAL4_LOCK: equ 22
-; TAG_COMBINATION1_LOCK: equ 23
-; TAG_COMBINATION2_LOCK: equ 24
-; TAG_COMBINATION3_LOCK: equ 25
-; TAG_COMBINATION4_LOCK: equ 26
 	dw buffer_4096 + 54 * 64  ; TAG_BALL_LOCK: equ 27
 	dw buffer_4096  ; TAG_IDOL_LOCK: equ 28
 	dw buffer_4096  ; TAG_GEAR_LOCK: equ 29
@@ -1946,21 +1966,18 @@ ENDR
 	dw buffer_4096 + 39 * 64  ; TAG_HEART3
 	dw buffer_4096 + 39 * 64  ; TAG_HEART4
 	dw buffer_4096 + 39 * 64  ; TAG_HEART5
-REPT TAG_ITEM_SANDALS - TAG_MAYA_RIDDLE_CLUE1
-	dw buffer_4096
-ENDR
-; TAG_MAYA_RIDDLE_CLUE1: equ 117
-; TAG_MAYA_RIDDLE_CLUE2: equ 118
-; TAG_MAYA_RIDDLE_CLUE3: equ 119
-; TAG_MAYA_RIDDLE_CLUE4: equ 120
-; TAG_STORY_TRIVIA1: equ 121
-; TAG_STORY_TRIVIA2: equ 122
-; TAG_STORY_TRIVIA3: equ 123
-; TAG_STORY_TRIVIA4: equ 124
-; TAG_STORY_TRIVIA5: equ 125
-; TAG_STORY_TRIVIA6: equ 126
-; TAG_STORY_TRIVIA7: equ 127
-; TAG_STORY_TRIVIA8: equ 128
+	dw buffer_4096 + 60 * 64  ; TAG_MAYA_RIDDLE_CLUE1
+	dw buffer_4096 + 60 * 64  ; TAG_MAYA_RIDDLE_CLUE2
+	dw buffer_4096 + 60 * 64  ; TAG_MAYA_RIDDLE_CLUE3
+	dw buffer_4096 + 60 * 64  ; TAG_MAYA_RIDDLE_CLUE4
+	dw buffer_4096 + 60 * 64  ; TAG_STORY_TRIVIA1
+	dw buffer_4096 + 60 * 64  ; TAG_STORY_TRIVIA2
+	dw buffer_4096 + 60 * 64  ; TAG_STORY_TRIVIA3
+	dw buffer_4096 + 60 * 64  ; TAG_STORY_TRIVIA4
+	dw buffer_4096 + 60 * 64  ; TAG_STORY_TRIVIA5
+	dw buffer_4096 + 60 * 64  ; TAG_STORY_TRIVIA6
+	dw buffer_4096 + 60 * 64  ; TAG_STORY_TRIVIA7
+	dw buffer_4096 + 60 * 64  ; TAG_STORY_TRIVIA8
 	dw buffer_4096 + 18 * 64  ; TAG_ITEM_SANDALS
 	dw buffer_4096 + 19 * 64  ; TAG_ITEM_GLOVES
 	dw buffer_4096 + 20 * 64  ; TAG_ITEM_HURAKAN
@@ -1977,8 +1994,145 @@ ENDR
 	dw buffer_4096 + 40 * 64  ; TAG_SMALL_KEY_CHEST2
 	dw buffer_4096 + 40 * 64  ; TAG_SMALL_KEY_CHEST3
 	dw buffer_4096 + 40 * 64  ; TAG_SMALL_KEY_CHEST4
-; ; tags above can ONLY appear once in the whole game
-; N_UNIQUE_TAGS: equ 145
 ; ; tags below can appear multiple times (and do not have state, they are reset every time you enter in a room):
-; TAG_PUSHABLE_BLOCK: equ 145	
+; TAG_PUSHABLE_BLOCK: equ 137
+; TAG_DOOR_VERTICAL: equ 138
+; TAG_DOOR_HORIZONTAL: equ 139
+; TAG_DOOR_BOSS: equ 140
+; TAG_POWER_STONE: equ 141
 
+
+;-----------------------------------------------
+pcg_generate_room__calendar:
+	; name table:
+	ld hl, calendar_room_zx0
+	ld de, current_room__tile_map
+	ld c, CHUNKS_PYRAMID_PAGE
+	call dzx0_from_page_c
+
+	; tile sets, collisions, and animation ptrs:
+	ld bc, tiles_calendar_zx0
+	ld (current_room__tileset_ptr), bc
+	ld bc, update_animations_in_vdp_calendar
+	ld (current_room__animation_fn_ptr), bc
+	ld bc, tile_collision_types_calendar - 32
+	ld (current_room__collision_ptr), bc
+	ld a, TILES_PAGE
+	ld (current_room__tileset_page), a
+	ld a, 1
+	ld (current_room__tileset_overrides_item_tiles), a
+
+	; open the appropriate walls:
+	ld a, (current_room__y)
+	add a, a  ; y in chunks
+	ld b, a
+	ld a, (current_area__width)
+	add a, a  ; width in chunks
+	ld c, a
+	ld a, b
+	or a
+	ld a, 0
+	jr z, pcg_generate_room__calendar_ptr_loop_end
+pcg_generate_room__calendar_ptr_loop:
+	add a, c
+	djnz pcg_generate_room__calendar_ptr_loop
+pcg_generate_room__calendar_ptr_loop_end:
+	ld c, a
+	ld a, (current_room__x)
+	add a, a
+	add a, c
+	ld hl, current_area__chunks_ids
+	ADD_HL_A
+	ld a, (hl)  ; top-left chunk ID
+	push hl
+		ld b, PCG_DIRECTION_LEFT
+		call pcg_generate_room__chunk_direction_open
+		jr z, pcg_generate_room__calendar_continue1
+		ld bc, #0600
+		ld de, #0402
+		call room_remove_breakable_wall_restore_background
+pcg_generate_room__calendar_continue1:
+	pop hl
+	inc hl
+	ld a, (hl)  ; top-right chunk ID
+	push hl
+		ld b, PCG_DIRECTION_RIGHT
+		call pcg_generate_room__chunk_direction_open
+		jr z, pcg_generate_room__calendar_continue2
+		ld bc, #061e
+		ld de, #0402
+		call room_remove_breakable_wall_restore_background
+pcg_generate_room__calendar_continue2:
+	pop hl
+	ld a, (current_area__width)
+	add a, a  ; width in chunks
+	dec a
+	ld e, a
+	ld d, 0
+	add hl, de
+	ld a, (hl)  ; bottom-left chunk ID
+	push hl
+		ld b, PCG_DIRECTION_LEFT
+		call pcg_generate_room__chunk_direction_open
+		jr z, pcg_generate_room__calendar_continue3
+		ld bc, #0e00
+		ld de, #0402
+		call room_remove_breakable_wall_restore_background
+pcg_generate_room__calendar_continue3:
+	pop hl
+	ld a, (hl)  ; bottom-left chunk ID
+	push hl
+		ld b, PCG_DIRECTION_DOWN
+		call pcg_generate_room__chunk_direction_open
+		jr z, pcg_generate_room__calendar_continue4
+		ld bc, #1604
+		ld de, #0208
+		call room_remove_breakable_wall_restore_background
+pcg_generate_room__calendar_continue4:
+	pop hl
+	inc hl
+	ld a, (hl)  ; bottom-right chunk ID
+	push hl
+		ld b, PCG_DIRECTION_DOWN
+		call pcg_generate_room__chunk_direction_open
+		jr z, pcg_generate_room__calendar_continue5
+		ld bc, #1614
+		ld de, #0208
+		call room_remove_breakable_wall_restore_background
+pcg_generate_room__calendar_continue5:
+	pop hl
+	ld a, (hl)  ; bottom-right chunk ID
+	ld b, PCG_DIRECTION_RIGHT
+	call pcg_generate_room__chunk_direction_open
+	jr z, pcg_generate_room__calendar_continue6
+	ld bc, #0e1e
+	ld de, #0402
+	call room_remove_breakable_wall_restore_background
+pcg_generate_room__calendar_continue6:
+
+	; spawn objects:
+	; ...
+
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - a: chunk ID
+; - b: direction to check
+; output:
+; - z: closed
+; - nz: open
+pcg_generate_room__chunk_direction_open:
+	ld h, 0
+	ld l, a
+	add hl, hl
+	add hl, hl
+	ld d, 0
+	ld e, a
+	add hl, de
+	ld de, pyramid_chunk_flags
+	add hl, de
+	ld a, (hl)  ; top-left chunk type
+	and b
+	ret

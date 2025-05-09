@@ -28,8 +28,9 @@ state_play:
 		; generate area:
 		ld hl, pcg_generate_area
 ; 		ld e, 0  ; area to generate
-		ld e, 1  ; area to generate
+; 		ld e, 1  ; area to generate
 ; 		ld e, 2  ; area to generate
+		ld e, 3  ; area to generate
 ; 		ld e, 4  ; area to generate
 ; 		ld e, 7  ; area to generate
 ; 		ld e, 8  ; area to generate
@@ -38,8 +39,9 @@ state_play:
 
 		; generate room:
 ; 		ld e, 0
-		ld e, 19
+; 		ld e, 19
 ; 		ld e, 16
+		ld e, 1
 ; 		ld e, 19
 ; 		ld e, 5
 ; 		ld e, 0
@@ -142,8 +144,9 @@ state_play_from_inventory__no_full_hud:
 		call fast_LDIRVM
 
 		; setup tiles:
-		ld c, TILES_PAGE
-		ld hl, tiles_pyramid_zx0
+		ld a, (current_room__tileset_page)
+		ld c, a
+		ld hl, (current_room__tileset_ptr)
 		call setup_game_tiles
 		call state_play_upload_object_tiles_to_vdp_if_necessary
 
@@ -226,16 +229,24 @@ state_play_loop_continue_no_hud:
 	jr nz, state_play_loop_room_redraw
 	bit HUD_REDRAW_FLAG_BIT, a
 	jr nz, state_play_loop_hud_redraw
-	call update_animations_in_vdp
-	jr state_play_loop
+	ld bc, state_play_loop  ; return address
+	push bc
+	ld hl, (current_room__animation_fn_ptr)
+	jp (hl)
+
 state_play_loop_room_redraw:
 	call state_play_rerender_room
-	call update_animations_in_vdp
-	jr state_play_loop
+	ld bc, state_play_loop  ; return address
+	push bc
+	ld hl, (current_room__animation_fn_ptr)
+	jp (hl)
+
 state_play_loop_hud_redraw:
 	call state_play_rerender_hud
-	call update_animations_in_vdp
-	jr state_play_loop
+	ld bc, state_play_loop  ; return address
+	push bc
+	ld hl, (current_room__animation_fn_ptr)
+	jp (hl)
 
 
 ;-----------------------------------------------

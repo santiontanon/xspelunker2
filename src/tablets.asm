@@ -72,8 +72,9 @@ display_tablet_continue:
 	ld bc, 768
 	call fast_FILVRM
 
-	ld c, TILES_PAGE
-	ld hl, tiles_pyramid_zx0
+	ld a, (current_room__tileset_page)
+	ld c, a
+	ld hl, (current_room__tileset_ptr)
 	jp setup_game_tiles
 
 

@@ -365,9 +365,11 @@ get_room_tile_type_continue:
 	ld bc, current_room__tile_map
 	add hl, bc
 	ld a, (hl)
+	or a
+	ret z  ; 0 is directly no collision (we exit early, as the table below starts at 32)
 
 	; get collision type:
-	ld hl, tile_collision_types_pyramid
+	ld hl, (current_room__collision_ptr)
 	ADD_HL_A
 	ld a, (hl)
 	ret
@@ -1178,6 +1180,8 @@ check_for_interarea_exit_done:
 ENDIF
 
 ;-----------------------------------------------
+; the first 32 tiles canot appear in a level, so, we only define collision for the other 224 tiles
+
 ; 0: no collision
 ; 1: platform (you can jump through)
 ; 2: wall
@@ -1192,8 +1196,6 @@ tile_collision_types_pyramid:
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     db 0, 0, 0, 4, 0, 0, 0, 0, 8, 8, 2, 2, 2, 2, 2, 2
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2
     db 4, 0, 0, 5, 2, 2, 5, 6, 8, 1, 1, 1, 2, 3, 2, 2
@@ -1204,6 +1206,23 @@ tile_collision_types_pyramid:
     db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
     db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
     db 2, 2, 2, 2, 2, 0, 2, 2, 7, 2, 2, 2, 3, 2, 1, 5
+
+
+tile_collision_types_calendar:
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 0, 0, 0, 0, 0, 0, 0, 0, 8, 8, 0, 0, 0, 0, 0, 0
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2
+    db 0, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 2, 0, 0, 0, 0
+    db 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 0, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 2, 2, 2, 2, 2, 0, 2, 0, 7, 2, 0, 0, 0, 2, 0, 0
 
 
 ;-----------------------------------------------

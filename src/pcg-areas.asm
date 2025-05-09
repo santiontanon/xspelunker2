@@ -380,7 +380,32 @@ pcg_generate_area__merge_rooms_loop_x_skip:
 	inc d
 	dec b
 	jp nz, pcg_generate_area__merge_rooms_loop_y
+
+	; Ensure that the "calendar stone" room is not merged with anything:
+	ld a, (current_area__id)
+	cp 3  ; 'the confluence'
+	ret nz 
+
+	; hl = ptr to tags for this area
+	ld hl, current_world__area_data + 3*WORLD_AREA__SIZE + WORLD_AREA__TAGS_OFFSET
+pcg_generate_area__merge_rooms_calendar_loop:
+	ld a, (hl)
+	or a
+	ret z
+	cp TAG_ENDING
+	jr nz, pcg_generate_area__merge_rooms_calendar_loop_next
+	; found!
+	inc hl
+	ld a, (hl)
+	ld hl, current_area__room_ids
+	ADD_HL_A
+	ld (hl), CALENDAR_ROOM_ID
 	ret
+pcg_generate_area__merge_rooms_calendar_loop_next:
+	inc hl
+	inc hl
+	inc hl
+    jr pcg_generate_area__merge_rooms_calendar_loop
 
 
 ;-----------------------------------------------

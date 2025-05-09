@@ -1,14 +1,9 @@
 to do:
 
 ***- design ending room (maya calendar stone where you place what you get from the bosses, etc.)
-  ***- spawn it and render it in the game (how does the tileset work here? probably != than "pyramid")
-    ***- create room and tileset for it (TILED + png)
-    ***- force the ending room to be a single screen room when generating the map
-    ***- when loading this room, use the predefined room for it (adapt the connections on the sides/bottom)
-    ***- spawn the two tablets on the sides and interact with them (draw the drawings on them, identical): these are the inscriptions you will send to Elaine when I implement the story
-    ***- interact with the sockets (depending on story state: nothing, place the power stone, or inspect the stone if there is one there: INSPECT_POWER_STONE_FROM_CALENDAR)
-    ***- one socket has a stone that seems depleted (you will replace that one with the final 6th/7th stone)
-    ***- 6th and 7th stone are halves, reuse gfx (top/bottom part), but create inventory items, once you have both halves, they merge into one, and you can inspect it (create event for this)
+  ***- spawn the two tablets on the sides and interact with them (draw the drawings on them, identical): these are the inscriptions you will send to Elaine when I implement the story
+  ***- interact with the sockets (depending on story state: nothing, place the power stone, inspect the stone if there is one there: INSPECT_POWER_STONE_FROM_CALENDAR, or message for the depleted power stone)
+  ***- 6th and 7th stone are halves, reuse gfx (top/bottom part), but create inventory items, once you have both halves, they merge into one, and you can inspect it (create event for this)
   ***- using power stones in stone calendar:
     ***- 1st idol on calendar stone, opens door to 3rd pyramid (spawn door, and open it) (and something lights up in the calendar stone: 0: off, 1: two dots go red, 3: numbers red, 5: all months go some color, 7: color change)
     ***- 2nd activates teleporters to move faster across maps (think what are these teleporters and where are they spawned)
