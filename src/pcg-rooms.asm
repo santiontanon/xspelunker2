@@ -2001,6 +2001,7 @@ ENDR
 ; TAG_DOOR_BOSS: equ 140
 ; TAG_POWER_STONE: equ 141
 ; TAG_CALENDAR_TABLET: equ 142
+; TAG_CALENDAR_SOCKET: equ 143
 
 
 ;-----------------------------------------------
@@ -2110,29 +2111,47 @@ pcg_generate_room__calendar_continue5:
 pcg_generate_room__calendar_continue6:
 
 	; spawn the tablets:
+	ld hl, pcg_generate_room__calendar_objects
+	ld b, 8
 	ld iy, (tmp_pcg_room__next_tile_object_ptr)
-	ld a, (ix + AREA_OBJECT_STRUCT_TYPE)
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 0  ; id
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_CALENDAR_TABLET  ; type
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 7  ; x
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 15  ; y
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0  ; state (hitpoints)
-	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
-	add iy, bc
-	ld a, (ix + AREA_OBJECT_STRUCT_TYPE)
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 0  ; id
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_CALENDAR_TABLET  ; type
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 23  ; x
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 15  ; y
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0  ; state (hitpoints)
-	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
-	add iy, bc
-	ld (tmp_pcg_room__next_tile_object_ptr), iy	
+	ld de, global_state__power_calendar - 2  ; -2, since we only have the state for the sockets (state of tablets does not matter)
+pcg_generate_room__calendar_object_loop:
+	ld a, (hl)
+	inc hl
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), a  ; id
+	ld a, (hl)
+	inc hl
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), a  ; type
+	ld a, (hl)
+	inc hl
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), a  ; x
+	ld a, (hl)
+	inc hl
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), a  ; y
+	ld a, (de)
+	inc de
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), a  ; state
+	push de
+		ld de, ROOM_TILE_OBJECT_STRUCT_SIZE
+		add iy, de
+	pop de
+	djnz pcg_generate_room__calendar_object_loop
+	ld (tmp_pcg_room__next_tile_object_ptr), iy
 
 	; tablet gfx:
 	ld hl, buffer_4096 + 60 * 64
 	ld (item_object_to_upload_to_vdp), hl
 	ret
+
+pcg_generate_room__calendar_objects:
+	db 0, TAG_CALENDAR_TABLET, 7, 15
+	db 0, TAG_CALENDAR_TABLET, 23, 15
+	db 0, TAG_CALENDAR_SOCKET, 14, 15  ; has a spent stone
+	db 1, TAG_CALENDAR_SOCKET, 16, 15
+	db 2, TAG_CALENDAR_SOCKET, 13, 12
+	db 3, TAG_CALENDAR_SOCKET, 17, 12
+	db 4, TAG_CALENDAR_SOCKET, 14, 9
+	db 5, TAG_CALENDAR_SOCKET, 16, 9
 
 
 ;-----------------------------------------------

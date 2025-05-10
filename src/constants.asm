@@ -12,6 +12,14 @@ KEY_DOWN_BIT: equ 6
 KEY_RIGHT_BIT: equ 7
 
 
+STORY_STATE__START: equ 0
+STORY_STATE__FOUND_CALENDAR: equ 1
+STORY_STATE__GOT_LETTER1: equ 2
+STORY_STATE__ENTERED_INVERTED_PYRAMID: equ 3
+STORY_STATE__FOUND_LOST_VENDOR: equ 4
+STORY_STATE__GOT_LETTER2: equ 5
+
+
 MAX_SPRITES: equ 32
 FIRST_OBJECT_SPRITE: equ 3  ; 0, 1 are the player, 2 is player weapon
 
@@ -156,7 +164,7 @@ RAYGUN_DAMAGE: equ 2
 
 
 ; - 7 boss keys
-; - 7 boss power stones
+; - 7 boss power stones (6 power stones + central prism)
 ; - 6 color keys
 ; - 1 small key
 ; - 4 key items (ball, idol, gear, clay doll)
@@ -319,6 +327,7 @@ TAG_DOOR_HORIZONTAL: equ 139
 TAG_DOOR_BOSS: equ 140
 TAG_POWER_STONE: equ 141
 TAG_CALENDAR_TABLET: equ 142
+TAG_CALENDAR_SOCKET: equ 143
 
 N_PATH_OPENING_TAGS: equ 32  ; there are less than this, but just in case (this is the number of tags above that spawn a breakable wall or door).
 

@@ -1,8 +1,11 @@
 to do:
 
 ***- design ending room (maya calendar stone where you place what you get from the bosses, etc.)
-  ***- interact with the sockets (depending on story state: nothing, place the power stone, inspect the stone if there is one there: INSPECT_POWER_STONE_FROM_CALENDAR, or message for the depleted power stone)
-  ***- 6th and 7th stone are halves, reuse gfx (top/bottom part), but create inventory items, once you have both halves, they merge into one, and you can inspect it (create event for this)
+  ***- 6th and 7th stone are halves:
+    ***- create the half stone item and spawn it on bosses 6 and 7
+    ***- pick it up, and show as half on inventory
+    ***- if you pick the second, message that the two halves merged into one, and now you have the full 6th stone
+    ***- if you try to use the half stone on the calendar socket, you cannot
   ***- BUG: if you jump up into a narrow brick from below, just so that the head goes through from the left, you can get stuck (e.g., can happen in calendar room)  
   ***- using power stones in stone calendar:
     ***- 1st idol on calendar stone, opens door to 3rd pyramid (spawn door, and open it) (and something lights up in the calendar stone: 0: off, 1: two dots go red, 3: numbers red, 5: all months go some color, 7: color change)

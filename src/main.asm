@@ -507,6 +507,17 @@ global_state__objects: ds virtual N_UNIQUE_TAGS
 ; area ID + 1, chunk, x1, y1, x2, y2
 global_state__open_walls: ds virtual 6 * N_PATH_OPENING_TAGS
 
+global_state__story: ds virtual 1  ; 0: start
+                                   ; 1: found calendar stone
+                                   ; 2: got letter 1 from Elaine
+                                   ; 3: entered inverted pyramid
+                                   ; 4: found lost dynamite vendor in inverted pyramid
+                                   ; 5: get letter 2 from Elaine (allows you to place the 3rd stone)
+
+global_state__power_calendar: ds virtual 6  ; 0: empty
+                                            ; 1: inactive stone
+                                            ; 2 - 7: one of the power stones 
+global_state__n_power_stones_in_calendar: ds virtual 1  ; for convenience (it should be the number of elements in 'global_state__power_calendar' >= 2)
 
 player_x: ds virtual 2  ; 2nd byte is the tile coordinate, and 1st the pixel
 player_y: ds virtual 2  ; 2nd byte is the tile coordinate, and 1st the pixel

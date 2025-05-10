@@ -357,109 +357,116 @@ state_inventory_update_cursor_interact_power_stone4:
 	ld e, 6
 	ret z
 state_inventory_update_cursor_interact_power_stone:
-	; jp display_power_stone_closeup
+	ld ix, TEXT_INSPECT_POWER_STONE
+	call display_power_stone_closeup
+	ld a, TEXT_PAGE
+	ld hl, state_inventory_entry_point_from_item_inspection
+	jp jp_to_hl_in_page_a_8000
+
 
 ;-----------------------------------------------
 ; input:
+; - ix: message to display
 ; - e: power stone number
 display_power_stone_closeup:
 	call disable_VDP_output
-		push de
-		    call clear_all_the_sprites
-			xor a
-			ld hl, NAMTBL2
-			ld bc, 768
-			call fast_FILVRM
+		push ix
+			push de
+			    call clear_all_the_sprites
+				xor a
+				ld hl, NAMTBL2
+				ld bc, 768
+				call fast_FILVRM
 
-			ld hl, power_stones_tiles_zx0
-			ld de, buffer_4096
-			ld c, TILES_PAGE
-			call dzx0_from_page_c
+				ld hl, power_stones_tiles_zx0
+				ld de, buffer_4096
+				ld c, TILES_PAGE
+				call dzx0_from_page_c
 
-			ld hl, buffer_4096
-			ld de, CHRTBL2
-			ld bc, 256*8
-			call fast_LDIRVM
-			ld hl, buffer_4096 + 256*8
-			ld de, CLRTBL2
-			ld bc, 256*8
-			call fast_LDIRVM
+				ld hl, buffer_4096
+				ld de, CHRTBL2
+				ld bc, 256*8
+				call fast_LDIRVM
+				ld hl, buffer_4096 + 256*8
+				ld de, CLRTBL2
+				ld bc, 256*8
+				call fast_LDIRVM
 
-			ld hl, buffer_4096
-			ld de, CHRTBL2 + 256*8
-			ld bc, 256*8
-			call fast_LDIRVM
-			ld hl, buffer_4096 + 256*8
-			ld de, CLRTBL2 + 256*8
-			ld bc, 256*8
-			call fast_LDIRVM
+				ld hl, buffer_4096
+				ld de, CHRTBL2 + 256*8
+				ld bc, 256*8
+				call fast_LDIRVM
+				ld hl, buffer_4096 + 256*8
+				ld de, CLRTBL2 + 256*8
+				ld bc, 256*8
+				call fast_LDIRVM
 
-			ld hl, buffer_4096
-			ld de, CHRTBL2 + 256*8*2
-			ld bc, 256*8
-			call fast_LDIRVM
-			ld hl, buffer_4096 + 256*8
-			ld de, CLRTBL2 + 256*8*2
-			ld bc, 256*8
-			call fast_LDIRVM	
+				ld hl, buffer_4096
+				ld de, CHRTBL2 + 256*8*2
+				ld bc, 256*8
+				call fast_LDIRVM
+				ld hl, buffer_4096 + 256*8
+				ld de, CLRTBL2 + 256*8*2
+				ld bc, 256*8
+				call fast_LDIRVM	
 
-			ld hl, power_stones_nametable_zx0
-			ld de, buffer_4096
-			ld c, TILES_PAGE
-			call dzx0_from_page_c
-		pop de  ; e = power stone number
+				ld hl, power_stones_nametable_zx0
+				ld de, buffer_4096
+				ld c, TILES_PAGE
+				call dzx0_from_page_c
+			pop de  ; e = power stone number
 
-		; draw the appropriate number
-		ld a, e
-		cp 6
-		jr nc, display_power_stone_closeup_no_number
-		ld d, 0
-		ld hl, current_world__power_stone_numbers
-		add hl, de
-		ld a, (hl)
-		add a, 118
-		ld (buffer_4096 + 13 + 14*32), a
+			; draw the appropriate number
+			ld a, e
+			cp 6
+			jr nc, display_power_stone_closeup_no_number
+			ld d, 0
+			ld hl, current_world__power_stone_numbers
+			add hl, de
+			ld a, (hl)
+			add a, 118
+			ld (buffer_4096 + 13 + 14*32), a
 display_power_stone_closeup_no_number:
 
-		; draw appropriate animal:
-		; start tile = 128 + e * 3 (if e < 5), and 176 + (e-5) * 3 otherwise
-		ld a, e
-		cp 5
-		jr c, display_power_stone_closeup_leq5
-		sub 5
-		ld c, a
-		add a, a
-		add a, c
-		add a, 176
-		jr display_power_stone_closeup_continue
+			; draw appropriate animal:
+			; start tile = 128 + e * 3 (if e < 5), and 176 + (e-5) * 3 otherwise
+			ld a, e
+			cp 5
+			jr c, display_power_stone_closeup_leq5
+			sub 5
+			ld c, a
+			add a, a
+			add a, c
+			add a, 176
+			jr display_power_stone_closeup_continue
 display_power_stone_closeup_leq5:
-		ld c, a
-		add a, a
-		add a, c
-		add a, 128
+			ld c, a
+			add a, a
+			add a, c
+			add a, 128
 display_power_stone_closeup_continue:
-		ld hl, buffer_4096 + 15 + 9*32
-		ld de, 30
-		ld b, 3
+			ld hl, buffer_4096 + 15 + 9*32
+			ld de, 30
+			ld b, 3
 display_power_stone_closeup_animal_loop:
-		ld (hl), a
-		inc a
-		inc hl
-		ld (hl), a
-		inc a
-		inc hl
-		ld (hl), a
-		add a, 14
-		add hl, de
-		djnz display_power_stone_closeup_animal_loop
+			ld (hl), a
+			inc a
+			inc hl
+			ld (hl), a
+			inc a
+			inc hl
+			ld (hl), a
+			add a, 14
+			add hl, de
+			djnz display_power_stone_closeup_animal_loop
 
-		ld hl, buffer_4096
-		ld de, NAMTBL2
-		ld bc, 768
-		call fast_LDIRVM
+			ld hl, buffer_4096
+			ld de, NAMTBL2
+			ld bc, 768
+			call fast_LDIRVM
 
-		call clear_text_rendering_buffer
-		ld hl, TEXT_INSPECT_POWER_STONE
+			call clear_text_rendering_buffer
+		pop hl
 		ld de, CHRTBL2 + (225 + 256*2)*8
 		ld iy, #80f0
 		ld b, 30
@@ -472,10 +479,7 @@ display_power_stone_closeup_animal_loop:
 
 	ld hl, redraw_flags
 	ld (hl), #ff
-
-	ld a, TEXT_PAGE
-	ld hl, state_inventory_entry_point_from_item_inspection
-	jp jp_to_hl_in_page_a_8000
+	ret
 
 
 ;-----------------------------------------------
@@ -1321,13 +1325,13 @@ select_power_stone_generic:
 select_boss_key_generic:
 	ld a, (hl)
 	or a
-	ld a, c
+	ld a, b
 	jr nz, select_boss_key_generic_continue2
 select_boss_key_generic_continue1:
 	ld a, (de)
 	or a
 	ret z
-	ld a, b
+	ld a, c
 select_boss_key_generic_continue2:
 	ld (player_current_item), a
 	ld hl, SFX_ui_select
@@ -1351,26 +1355,26 @@ select_boss_key4:
 	jr select_boss_key_generic_continue1
 
 select_power_stone1:
-	ld hl, player_inventory_items + 7 ; idol 1
+	ld hl, player_inventory_items + 7 ; power stone 1
 	ld de, player_inventory_items + 10
-	ld bc, #1215  ; 18 and 21 (idol 1 and 4)
+	ld bc, #1215  ; 18 and 21 (power stone 1 and 4)
 	jr select_power_stone_generic
 
 select_power_stone2:
 	ld hl, player_inventory_items + 8
 	ld de, player_inventory_items + 11
-	ld bc, #1316  ; 19 and 22 (idol 2 and 5)
+	ld bc, #1316  ; 19 and 22 (power stone 2 and 5)
 	jr select_power_stone_generic
 
 select_power_stone3:
 	ld hl, player_inventory_items + 9
 	ld de, player_inventory_items + 12
-	ld bc, #1417  ; 20 and 23 (idol 3 and 6)
+	ld bc, #1417  ; 20 and 23 (power stone 3 and 6)
 	jr select_power_stone_generic
 
 select_power_stone4:
 	ld de, player_inventory_items + 13
-	ld b, 24  ; idol 7
+	ld b, 24  ; power stone 7 (prism)
 	jr select_boss_key_generic_continue1
 
 select_color_key1:
@@ -1434,7 +1438,7 @@ inventory_item_positions:
 	db 0, 1, 2  ; first 3 boss keys
 	db 0, 1, 2, 3  ; last 4 boss keys
 	db 4, 5, 6  ; first 3 power stones
-	db 4, 5, 6, 7  ; last 4 boss power stones
+	db 4, 5, 6, 7  ; last 3 boss power stones + prism
 	db 8, 9, 10, 11, 12, 13  ; color keys
 	db 14  ; small keys
 	db 15, 16, 17, 18  ; key items (21 - 24)

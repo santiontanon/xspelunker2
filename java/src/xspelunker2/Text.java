@@ -236,6 +236,9 @@ public class Text {
         addLineSafe(lines_with_constant, "That does not seem to be the correct item to use here!", "WRONG_ITEM", 112);
         addLineSafe(lines_with_constant, "You found a very strange object. A stone of some sort, but some strange power comes from inside it. It must be important.", "FIRST_POWER_STONE", 112);
         addLineSafe(lines_with_constant, "You found another power stone!", "OTHER_POWER_STONES", 112);
+        addLineSafe(lines_with_constant, "There is a stone occupying this socket.", "CALENDAR_SOCKET_INACTIVE_STONE", 112);
+        addLineSafe(lines_with_constant, "It looks like an empty socket to place something inside.", "CALENDAR_SOCKET_EMPTY", 112);
+        addLineSafe(lines_with_constant, "I am scared of placing more stones! What if it fully activates?", "CALENDAR_SOCKET_REFUSE_TO_PLACE", 112);
         
         // power stone inspection:
         addLineSafe(lines_with_constant, "A stone I found. Some sort of power radiates from it.", "INSPECT_POWER_STONE", 32);
@@ -270,6 +273,7 @@ public class Text {
         // Calendar tablet:
         addLineSafe(lines_with_constant, "Look at this! I do not understand these annotations!", "CALENDAR_TABLET1", 32);
         addLineSafe(lines_with_constant, "I have noted them down in my diary just in case.", "CALENDAR_TABLET2", 32);
+        
         
         List<Integer> numbers = font.convertStringToAssembler("0123456789 ");
         System.out.println("Numbers: " + numbers);

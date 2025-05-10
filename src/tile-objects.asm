@@ -271,6 +271,8 @@ room_render_tile_objects_loop:
 		jp z, room_render_tile_objects_render_combination_lever
 		cp TAG_COMBINATION4_LOCK
 		jp z, room_render_tile_objects_render_combination_lever
+		cp TAG_CALENDAR_SOCKET
+		jp z, room_render_tile_objects_render_calendar_socket
 		inc hl
 		ld c, (hl)  ; x
 		ld ixl, c
@@ -457,6 +459,30 @@ room_render_tile_objects_render_combination_lever:
 	add a, a
 	add a, a
 	ld de, tile_object_lever_left_object_gfx
+	ADD_DE_A
+	inc hl
+	inc hl
+	inc hl
+	jp room_render_tile_objects_render_entry_point
+
+
+room_render_tile_objects_render_calendar_socket:
+	inc hl
+	ld c, (hl)  ; x
+	ld ixl, c
+	inc hl
+	ld b, (hl)  ; y
+	inc hl
+	ld ixh, b
+	ld bc, #0202
+	ld a, (hl)  ; state
+	cp 2
+	jr c, room_render_tile_objects_render_calendar_socket_continue
+	ld a, 2
+room_render_tile_objects_render_calendar_socket_continue:
+	add a, a
+	add a, a
+	ld de, tile_object_calendar_socket_gfx
 	ADD_DE_A
 	inc hl
 	inc hl
@@ -832,6 +858,7 @@ ENDR
 	dw object_interaction_function_boss_door  ; TAG_DOOR_BOSS
 	dw object_interaction_function_power_stone  ; TAG_POWER_STONE
 	dw object_interaction_function_tablet  ; TAG_CALENDAR_TABLET
+	dw object_interaction_function_calendar_socket  ; TAG_CALENDAR_SOCKET
 
 
 object_interaction_inventory_slot:
@@ -1483,6 +1510,109 @@ object_interaction_function_power_stone:
 
 
 ;-----------------------------------------------
+object_interaction_function_calendar_socket:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)
+	or a
+	jr z, object_interaction_function_calendar_socket_empty
+	cp 1
+	jp z, object_interaction_function_calendar_socket_inactive
+
+	; it has a stone:
+	push ix
+		ld ix, TEXT_INSPECT_POWER_STONE_FROM_CALENDAR
+		sub 2
+		ld e, a  ; stone number
+		ld hl, display_power_stone_closeup
+		ld c, TEXT_PAGE
+		call call_hl_in_page_c_8000
+	pop ix
+
+	; restore in-game gfx:
+	ld hl, redraw_flags
+	ld (hl), #ff
+	xor a
+	ld hl, NAMTBL2
+	ld bc, 768
+	call fast_FILVRM
+	ld a, (current_room__tileset_page)
+	ld c, a
+	ld hl, (current_room__tileset_ptr)
+	jp setup_game_tiles
+
+object_interaction_function_calendar_socket_empty:
+	ld a, (global_state__story)
+	cp STORY_STATE__GOT_LETTER1
+	jr c, object_interaction_function_calendar_socket_empty_before_letter1
+	; empty socket after letter 1:
+	cp STORY_STATE__GOT_LETTER2
+	jr c, object_interaction_function_calendar_socket_empty_before_letter2
+object_interaction_function_calendar_socket_try_to_place:
+	; try to place stone:
+	ld a, (player_current_item)
+	sub 11 + 7  ; first power stone (11 weapons + 7 boss keys)
+	jr c, object_interaction_function_calendar_socket_incorrect_item
+	cp 6
+	jr nc, object_interaction_function_calendar_socket_incorrect_item
+	; place a stone:
+	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
+	ld b, 0
+	ld hl, global_state__power_calendar
+	add hl, bc
+	add a, 2  ; +2, since 0 is "no stone" and 1 is "inactive stone".
+	ld (hl), a
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), a
+	ld hl, global_state__n_power_stones_in_calendar
+	inc (hl)
+
+	; lose it from the inventory:
+	ld hl, player_current_item
+	ld a, (player_current_item)
+	ld (hl), 0  ; machete
+	sub 11
+	ld c, a
+	ld b, 0
+	ld hl, player_inventory_items
+	add hl, bc
+	ld (hl), 0
+
+	; redraw the room:
+	ld hl, SFX_ui_select
+	call play_SFX_with_high_priority
+
+	ld hl, redraw_flags
+	ld (hl), #ff
+	call room_undraw_tile_objects
+	jp room_render_tile_objects
+
+
+object_interaction_function_calendar_socket_incorrect_item:
+	ld de, TEXT_WRONG_ITEM
+	jr object_interaction_function_calendar_socket_continue
+
+object_interaction_function_calendar_socket_empty_before_letter2:
+	; only place the first 2 stones:
+	ld a, (global_state__n_power_stones_in_calendar)
+	cp 2
+	jr c, object_interaction_function_calendar_socket_try_to_place
+	ld de, TEXT_CALENDAR_SOCKET_REFUSE_TO_PLACE
+	jr object_interaction_function_calendar_socket_continue
+
+object_interaction_function_calendar_socket_empty_before_letter1:
+	ld de, TEXT_CALENDAR_SOCKET_EMPTY
+	jr object_interaction_function_calendar_socket_continue
+
+object_interaction_function_calendar_socket_inactive:
+	ld de, TEXT_CALENDAR_SOCKET_INACTIVE_STONE
+object_interaction_function_calendar_socket_continue:
+	ld hl, display_in_game_message
+	ld c, TEXT_PAGE
+	push ix
+		call call_hl_in_page_c_8000
+	pop ix
+	ret
+
+
+;-----------------------------------------------
 ; output:
 ; - z: door found
 ; - nz: door not found
@@ -1674,7 +1804,8 @@ ENDR
 	TILE_OBJECT_DATA 1, 4, 4, tile_object_4x4_object_gfx  ; TAG_DOOR_BOSS
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_POWER_STONE
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_CALENDAR_TABLET
-	
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_CALENDAR_SOCKET
+
 
 tile_object_regular_object_gfx:
 	db FIRST_ITEM_TILE, FIRST_ITEM_TILE+1, FIRST_ITEM_TILE+2, FIRST_ITEM_TILE+3
@@ -1700,4 +1831,9 @@ tile_object_4x4_object_gfx:
 	db 52, 53, 54, 55
 	db 56, 57, 58, 59
 	db 60, 61, 62, 63
+tile_object_calendar_socket_gfx:
+	db 190, 191, 206, 207
+	db 222, 223, 238, 239
+	db 220, 221, 236, 237
+
 

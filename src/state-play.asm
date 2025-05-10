@@ -5,6 +5,15 @@ state_play:
 		ld bc, (RAM_to_zero_on_game_start_end - RAM_to_zero_on_game_start) - 1
 		call clear_memory
 
+		ld a, 1  ; inactive stone
+		ld (global_state__power_calendar), a
+		ld a, 2 + 0  ; first power stone
+		ld (global_state__power_calendar + 1), a
+		ld a, 1
+		ld (global_state__n_power_stones_in_calendar), a
+		ld a, STORY_STATE__GOT_LETTER1
+		ld (global_state__story), a
+
 		; initial player position:
 		ld hl, #0a00
 ; 		ld hl, #1000
@@ -58,9 +67,9 @@ state_play:
 ; 		ld (player_inventory_items+4), a
 ; 		ld (player_inventory_items+5), a
 ; 		ld (player_inventory_items+6), a
-; 		ld (player_inventory_items+7), a
-		ld (player_inventory_items+8), a
-		ld (player_inventory_items+9), a
+; 		ld (player_inventory_items+7), a  ; first stone
+		ld (player_inventory_items+8), a  ; second stone
+		ld (player_inventory_items+9), a  ; third stone
 ; 		ld (player_inventory_items+10), a
 ; 		ld (player_inventory_items+11), a
 ; 		ld (player_inventory_items+12), a
