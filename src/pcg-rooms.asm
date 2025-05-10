@@ -2002,6 +2002,7 @@ ENDR
 ; TAG_POWER_STONE: equ 141
 ; TAG_CALENDAR_TABLET: equ 142
 ; TAG_CALENDAR_SOCKET: equ 143
+; TAG_HALF_POWER_STONE: equ 144
 
 
 ;-----------------------------------------------

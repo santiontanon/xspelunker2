@@ -859,6 +859,7 @@ ENDR
 	dw object_interaction_function_power_stone  ; TAG_POWER_STONE
 	dw object_interaction_function_tablet  ; TAG_CALENDAR_TABLET
 	dw object_interaction_function_calendar_socket  ; TAG_CALENDAR_SOCKET
+	dw object_interaction_function_half_power_stone  ; TAG_HALF_POWER_STONE
 
 
 object_interaction_inventory_slot:
@@ -1509,6 +1510,12 @@ object_interaction_function_power_stone:
 	jp call_hl_in_page_c_8000
 
 
+object_interaction_function_half_power_stone:
+	ld c, BOSS_PAGE
+	ld hl, pick_up_boss_half_power_stone
+	jp call_hl_in_page_c_8000
+
+
 ;-----------------------------------------------
 object_interaction_function_calendar_socket:
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)
@@ -1805,6 +1812,7 @@ ENDR
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_POWER_STONE
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_CALENDAR_TABLET
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_CALENDAR_SOCKET
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_half_power_stone_gfx  ; TAG_HALF_POWER_STONE
 
 
 tile_object_regular_object_gfx:
@@ -1835,5 +1843,6 @@ tile_object_calendar_socket_gfx:
 	db 190, 191, 206, 207
 	db 222, 223, 238, 239
 	db 220, 221, 236, 237
-
+tile_object_half_power_stone_gfx:
+	db 0, 0, FIRST_ITEM_TILE+2, FIRST_ITEM_TILE+3
 

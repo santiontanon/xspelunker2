@@ -58,8 +58,8 @@ player_check_collision_left:
 	; collision with the feet:
 	inc b
 	ld a, (player_y)
-	or a
-	jr z, player_check_collision_left_continue
+	cp PLAYER_COLLISION_UP_LEEWAY
+	jr c, player_check_collision_left_continue
 	inc b
 player_check_collision_left_continue:
 IF COLLISION_UNIT_TESTING == 0	
@@ -107,14 +107,14 @@ player_check_collision_right:
 	inc c
 	inc b
 	ld a, (player_y)
-	or a
-	jr z, player_check_collision_right_continue
+	cp PLAYER_COLLISION_UP_LEEWAY
+	jr c, player_check_collision_right_continue
 	inc b
 player_check_collision_right_continue:
 IF COLLISION_UNIT_TESTING == 0	
 	ld a, (current_room__width)
 	cp c
-	jp z, player_exit_room_right	
+	jp z, player_exit_room_right
 ENDIF
 	push bc
 		call get_room_tile_type

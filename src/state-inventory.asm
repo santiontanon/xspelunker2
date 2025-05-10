@@ -1325,13 +1325,13 @@ select_power_stone_generic:
 select_boss_key_generic:
 	ld a, (hl)
 	or a
-	ld a, b
+	ld a, c
 	jr nz, select_boss_key_generic_continue2
 select_boss_key_generic_continue1:
 	ld a, (de)
 	or a
 	ret z
-	ld a, c
+	ld a, b
 select_boss_key_generic_continue2:
 	ld (player_current_item), a
 	ld hl, SFX_ui_select
@@ -1357,19 +1357,19 @@ select_boss_key4:
 select_power_stone1:
 	ld hl, player_inventory_items + 7 ; power stone 1
 	ld de, player_inventory_items + 10
-	ld bc, #1215  ; 18 and 21 (power stone 1 and 4)
+	ld bc, #1512  ; 18 and 21 (power stone 1 and 4)
 	jr select_power_stone_generic
 
 select_power_stone2:
 	ld hl, player_inventory_items + 8
 	ld de, player_inventory_items + 11
-	ld bc, #1316  ; 19 and 22 (power stone 2 and 5)
+	ld bc, #1613  ; 19 and 22 (power stone 2 and 5)
 	jr select_power_stone_generic
 
 select_power_stone3:
 	ld hl, player_inventory_items + 9
 	ld de, player_inventory_items + 12
-	ld bc, #1417  ; 20 and 23 (power stone 3 and 6)
+	ld bc, #1714  ; 20 and 23 (power stone 3 and 6)
 	jr select_power_stone_generic
 
 select_power_stone4:
@@ -1446,6 +1446,7 @@ inventory_item_positions:
 	db 25, 26  ; alien upgrade items (31, 32)
 	db 27, 28  ; elaine letters (33, 34, 35)
 	db 29  ; map (36)
+	db 6  ; half stone (turns into 6th power stone when picking up the second half)
 inventory_item_positions_end:
 
 inventory_item_gfx:
@@ -1486,6 +1487,7 @@ inventory_item_gfx:
 	db 26, 27, 58, 59  ; letter 2
 	; db 28, 29, 60, 61  ; letter 3
 	db 30, 31, 62, 63  ; map
+	db 0, 0, 160, 161  ; half power stone
 inventory_item_gfx_end:
 
 inventory_weapon_positions:
@@ -1532,7 +1534,7 @@ inventory_selected_weapon_sprites:
 	db 47, 136, 28, COLOR_WHITE
 	db 47, 160, 28, COLOR_WHITE
 	db 47, 184, 28, COLOR_WHITE
-	; idols:
+	; power stones:
 	db 47, 208, 28, COLOR_WHITE
 	db 47, 232, 28, COLOR_WHITE
 	db 71, 112, 28, COLOR_WHITE
@@ -1564,8 +1566,8 @@ inventory_weapon_texts:
 inventory_item_texts:
 	dw TEXT_ITEM_BOSS_KEY, TEXT_ITEM_BOSS_KEY, TEXT_ITEM_BOSS_KEY, TEXT_ITEM_BOSS_KEY
 	dw TEXT_ITEM_BOSS_KEY, TEXT_ITEM_BOSS_KEY, TEXT_ITEM_BOSS_KEY
-	dw TEXT_ITEM_BOSS_IDOL, TEXT_ITEM_BOSS_IDOL, TEXT_ITEM_BOSS_IDOL, TEXT_ITEM_BOSS_IDOL
-	dw TEXT_ITEM_BOSS_IDOL, TEXT_ITEM_BOSS_IDOL, TEXT_ITEM_BOSS_IDOL
+	dw TEXT_ITEM_BOSS_POWER_STONE, TEXT_ITEM_BOSS_POWER_STONE, TEXT_ITEM_BOSS_POWER_STONE, TEXT_ITEM_BOSS_POWER_STONE
+	dw TEXT_ITEM_BOSS_POWER_STONE, TEXT_ITEM_BOSS_POWER_STONE, TEXT_ITEM_BOSS_POWER_STONE
 	dw TEXT_ITEM_RED_KEY, TEXT_ITEM_GREEN_KEY, TEXT_ITEM_BLUE_KEY, TEXT_ITEM_YELLOW_KEY
 	dw TEXT_ITEM_WHITE_KEY, TEXT_ITEM_PURPLE_KEY, TEXT_ITEM_SMALL_KEYS
 	dw TEXT_ITEM_BALL, TEXT_ITEM_IDOL, TEXT_ITEM_GEAR, TEXT_ITEM_CLAY_SUIT
@@ -1574,6 +1576,7 @@ inventory_item_texts:
 	dw TEXT_ITEM_LETTER1, TEXT_ITEM_LETTER2
 	; dw TEXT_ITEM_LETTER3
 	dw TEXT_ITEM_MAP
+	dw TEXT_ITEM_HALF_POWER_STONE
 
 
 IF (inventory_item_positions_end - inventory_item_positions) != N_INVENTORY_ITEM_TYPES

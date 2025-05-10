@@ -123,11 +123,18 @@ enter_boss_door_loop:
 		ld (hl), 20
 	pop bc
 
+enter_boss_door_loop__spawn_stone:
 	; DEBUG: spawn power stone
 	; - c: boss number
+	ld a, c
+	ld b, TAG_POWER_STONE
+	cp 5  ; 6th and 7th bosses drop half stones
+	jr c, enter_boss_door__spawn_full_stone
+	ld b, TAG_HALF_POWER_STONE
+enter_boss_door__spawn_full_stone:
 	ld iy, (tmp_pcg_room__next_tile_object_ptr)
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), c  ; ID is the boss number
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_POWER_STONE  ; type
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), b  ; type
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 15  ; x
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 20  ; y
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0  ; state (hitpoints)
@@ -236,6 +243,39 @@ pick_up_boss_power_stone_continue:
 
 
 ;-----------------------------------------------
+pick_up_boss_half_power_stone:
+	; set event to close the door:
+	ld hl, event__exit_boss_door
+	ld (in_game_event_fn_ptr), hl
+	ld a, BOSS_PAGE
+	ld (in_game_event_fn_page), a
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
+	ld (in_game_event_fn_arg), a
+
+	ld hl, SFX_item_pickup
+	call play_SFX_with_high_priority
+
+	; add to inventory:
+	ld hl, player_inventory_items + INVENTORY_ITEM_HALD_POWER_STONE
+	ld a, (hl)
+	or a
+	jr nz, pick_up_boss_second_half_power_stone
+	ld (hl), 1
+
+	; message:
+	ld de, TEXT_FOUND_HALF_POWER_STONE  ; TEXT_FOUND_SECOND_HALF_POWER_STONE
+	jr pick_up_boss_power_stone_continue
+
+pick_up_boss_second_half_power_stone:
+	ld (hl), 0  ; remove the half stone
+	ld hl, player_inventory_items + 7 + 5
+	ld (hl), 1  ; gain a full power stone
+	; message:
+	ld de, TEXT_FOUND_SECOND_HALF_POWER_STONE
+	jr pick_up_boss_power_stone_continue
+
+
+;-----------------------------------------------
 event__exit_boss_door:
 	; update boss state as killed (so that boss door does not spawn any more):
 	ld a, (in_game_event_fn_arg)
@@ -269,10 +309,20 @@ event__exit_boss_door_loop:
 	djnz event__exit_boss_door_loop
 
 	; find the door tile object:
+event__exit_boss_door_remove_door_object:
+	ld c, TILES_PAGE
+	ld hl, room_undraw_tile_objects
+	call call_hl_in_page_c_8000
+
 	call find_boss_door_object_ptr
-	ret nz  ; not found (should never happen)
+	jr nz, event__exit_boss_door_no_door_to_remove  ; not found (should never happen)
 	ld c, TILES_PAGE
 	ld hl, delete_tile_object_in_ix
+	call call_hl_in_page_c_8000
+
+event__exit_boss_door_no_door_to_remove:
+	ld c, TILES_PAGE
+	ld hl, room_render_tile_objects
 	jp call_hl_in_page_c_8000
 
 

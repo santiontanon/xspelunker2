@@ -172,8 +172,10 @@ RAYGUN_DAMAGE: equ 2
 ; - 2 alien upgrade items
 ; - 2 elaine letters
 ; - 1 map
-N_INVENTORY_ITEM_TYPES: equ 7 + 7 + 6 + 1 + 4 + 6 + 2 + 2 + 1  ; 36
+; - 1 half stone
+N_INVENTORY_ITEM_TYPES: equ 7 + 7 + 6 + 1 + 4 + 6 + 2 + 2 + 1 + 1  ; 37
 N_INVENTORY_WEAPON_TYPES: equ 4 + 4 + 3  ; 4 base, 4 ranged, 3 upgrades
+INVENTORY_ITEM_HALD_POWER_STONE: equ 7 + 7 + 6 + 1 + 4 + 6 + 2 + 2 + 1
 
 ; - initial piece just has: jungle + first pyramid, then one piece for each of the rest
 N_MAP_PIECES: equ 9
@@ -328,6 +330,7 @@ TAG_DOOR_BOSS: equ 140
 TAG_POWER_STONE: equ 141
 TAG_CALENDAR_TABLET: equ 142
 TAG_CALENDAR_SOCKET: equ 143
+TAG_HALF_POWER_STONE: equ 144  ; what bosses 6 and 7 drop
 
 N_PATH_OPENING_TAGS: equ 32  ; there are less than this, but just in case (this is the number of tags above that spawn a breakable wall or door).
 

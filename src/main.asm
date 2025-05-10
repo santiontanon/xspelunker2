@@ -519,8 +519,8 @@ global_state__power_calendar: ds virtual 6  ; 0: empty
                                             ; 2 - 7: one of the power stones 
 global_state__n_power_stones_in_calendar: ds virtual 1  ; for convenience (it should be the number of elements in 'global_state__power_calendar' >= 2)
 
-player_x: ds virtual 2  ; 2nd byte is the tile coordinate, and 1st the pixel
-player_y: ds virtual 2  ; 2nd byte is the tile coordinate, and 1st the pixel
+player_x: ds virtual 2  ; 1st the pixel and 2nd byte is the tile coordinate
+player_y: ds virtual 2  ; 1st the pixel and 2nd byte is the tile coordinate
 player_state: ds virtual 1
 player_state_timer: ds virtual 1
 player_weapon_state_timer: ds virtual 1

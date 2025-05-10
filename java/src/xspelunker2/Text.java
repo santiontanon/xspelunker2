@@ -204,7 +204,8 @@ public class Text {
         
         // Item descriptions:
         addLineSafe(lines_with_constant, "Boss key: A heavy stone key with some engraved symbols.", "ITEM_BOSS_KEY", 80);
-        addLineSafe(lines_with_constant, "Power stone: A strange looking, very well polished stone. Press INTERACT to examine it.", "ITEM_BOSS_IDOL", 80);
+        addLineSafe(lines_with_constant, "Power stone: A strange looking, very well polished stone. Press INTERACT to examine it.", "ITEM_BOSS_POWER_STONE", 80);
+        addLineSafe(lines_with_constant, "One half of a power stone. I need the other half for this to be useful.", "ITEM_HALF_POWER_STONE", 80);
         addLineSafe(lines_with_constant, "Red key: a small metalic red key.", "ITEM_RED_KEY", 80);
         addLineSafe(lines_with_constant, "Green key: a small metalic green key.", "ITEM_GREEN_KEY", 80);
         addLineSafe(lines_with_constant, "Blue key: a small metalic blue key.", "ITEM_BLUE_KEY", 80);
@@ -236,6 +237,8 @@ public class Text {
         addLineSafe(lines_with_constant, "That does not seem to be the correct item to use here!", "WRONG_ITEM", 112);
         addLineSafe(lines_with_constant, "You found a very strange object. A stone of some sort, but some strange power comes from inside it. It must be important.", "FIRST_POWER_STONE", 112);
         addLineSafe(lines_with_constant, "You found another power stone!", "OTHER_POWER_STONES", 112);
+        addLineSafe(lines_with_constant, "This is only one half of a power stone!", "FOUND_HALF_POWER_STONE", 112);
+        addLineSafe(lines_with_constant, "I found the second half of the power stone, and they fit together!!", "FOUND_SECOND_HALF_POWER_STONE", 112);
         addLineSafe(lines_with_constant, "There is a stone occupying this socket.", "CALENDAR_SOCKET_INACTIVE_STONE", 112);
         addLineSafe(lines_with_constant, "It looks like an empty socket to place something inside.", "CALENDAR_SOCKET_EMPTY", 112);
         addLineSafe(lines_with_constant, "I am scared of placing more stones! What if it fully activates?", "CALENDAR_SOCKET_REFUSE_TO_PLACE", 112);
