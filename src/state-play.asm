@@ -41,7 +41,7 @@ state_play:
 ; 		ld e, 0
 ; 		ld e, 19
 ; 		ld e, 16
-		ld e, 1
+		ld e, CALENDAR_ROOM_ID
 ; 		ld e, 19
 ; 		ld e, 5
 ; 		ld e, 0

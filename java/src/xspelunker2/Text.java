@@ -267,6 +267,10 @@ public class Text {
         addLineSafe(lines_with_constant, "Show your respects. Execute the holy dance: turn left and right three times. ", "TRIAL_CLUE7", 96);
         addLineSafe(lines_with_constant, "Show me your attack prowess. Show your weapon 5 times in front of me. ", "TRIAL_CLUE8", 96);
         
+        // Calendar tablet:
+        addLineSafe(lines_with_constant, "Look at this! I do not understand these annotations!", "CALENDAR_TABLET1", 32);
+        addLineSafe(lines_with_constant, "I have noted them down in my diary just in case.", "CALENDAR_TABLET2", 32);
+        
         List<Integer> numbers = font.convertStringToAssembler("0123456789 ");
         System.out.println("Numbers: " + numbers);
         List<Integer> letters = font.convertStringToAssembler("ABCDEFGHIJKLMNOPQRSTUVWXYZ ");

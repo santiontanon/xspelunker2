@@ -831,6 +831,7 @@ ENDR
 	dw object_interaction_function_empty  ; TAG_DOOR_HORIZONTAL
 	dw object_interaction_function_boss_door  ; TAG_DOOR_BOSS
 	dw object_interaction_function_power_stone  ; TAG_POWER_STONE
+	dw object_interaction_function_tablet  ; TAG_CALENDAR_TABLET
 
 
 object_interaction_inventory_slot:
@@ -1285,6 +1286,12 @@ object_interaction_function_open_astronaut_lock:
 
 ;-----------------------------------------------
 object_interaction_function_tablet:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	cp TAG_CALENDAR_TABLET
+	jr nz, object_interaction_function_tablet_not_calendar
+	ld de, calendar_tablet_fn
+	jr object_interaction_function_tablet_ptr_set
+object_interaction_function_tablet_not_calendar:
 	; Determine tablet content:
 	ld hl, current_world__tablet_content
 object_interaction_function_tablet_loop:
@@ -1301,10 +1308,10 @@ object_interaction_function_tablet_found:
 	inc hl
 	ld d, (hl)
 
+object_interaction_function_tablet_ptr_set:
 	ld c, TEXT_PAGE
 	ld hl, display_tablet
 	jp call_hl_in_page_c_8000
-
 
 ;-----------------------------------------------
 object_interaction_function_combination_lever:
@@ -1666,6 +1673,7 @@ ENDR
 	TILE_OBJECT_DATA 1, 4, 1, tile_object_h_door_gfx  ; TAG_DOOR_HORIZONTAL
 	TILE_OBJECT_DATA 1, 4, 4, tile_object_4x4_object_gfx  ; TAG_DOOR_BOSS
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_POWER_STONE
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_CALENDAR_TABLET
 	
 
 tile_object_regular_object_gfx:

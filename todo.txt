@@ -1,9 +1,9 @@
 to do:
 
 ***- design ending room (maya calendar stone where you place what you get from the bosses, etc.)
-  ***- spawn the two tablets on the sides and interact with them (draw the drawings on them, identical): these are the inscriptions you will send to Elaine when I implement the story
   ***- interact with the sockets (depending on story state: nothing, place the power stone, inspect the stone if there is one there: INSPECT_POWER_STONE_FROM_CALENDAR, or message for the depleted power stone)
   ***- 6th and 7th stone are halves, reuse gfx (top/bottom part), but create inventory items, once you have both halves, they merge into one, and you can inspect it (create event for this)
+  ***- BUG: if you jump up into a narrow brick from below, just so that the head goes through from the left, you can get stuck (e.g., can happen in calendar room)  
   ***- using power stones in stone calendar:
     ***- 1st idol on calendar stone, opens door to 3rd pyramid (spawn door, and open it) (and something lights up in the calendar stone: 0: off, 1: two dots go red, 3: numbers red, 5: all months go some color, 7: color change)
     ***- 2nd activates teleporters to move faster across maps (think what are these teleporters and where are they spawned)
@@ -12,7 +12,7 @@ to do:
     ***- 6th/7th (two halves from Mars/Moon), (activate offensive capabilities, and destroy alien hardware): replace the depleted stone, you can only place this last
     ***- with final secret stone (prism that can only be obtained when all stones are placed, by defeating an 8th boss that appears after solving the secret riddle): opens dimensional portal for YOU to travel throughout the universe
 
-- Maya puzzle and teleporters in atlantis/mars/moon (https://mayaglyphs.org/)
+- Maya puzzle and teleporters in atlantis/mars/moon (https://mayaglyphs.org/). The letter received from Elaine should give some clues of Maya -> English, and then the rest should be obtained from the clues gathered around the map. So, here, I should draw/sketch all the letters/diagrams in the intro + Elaine letters too.
 
 - ensure that ALL tags are instantiated and are functional now during room creation (e.g. story tablets)
 
@@ -139,7 +139,7 @@ X-Spelunker 2 (e-ke-se pe-lu-ne-ke-le):
 - If you go back to the jungle, you will find Elaine's letter waiting:
     Michael,
 
-    I have deciphered the inscription. The glyphs surrounding the drawing translate to "Star Alignment Nexus" and "Seven Celestial Keys." So, it seems to refer to seven keys required to activate this "Nexus". I have consulted with some experts in the ancient Maya, and they believe this could be referring to a calendar stone. Have you come across one of them?
+    I have deciphered the inscription. The glyphs surrounding the drawing translate to "Star Alignment Nexus" and "Six Power Stones." So, it seems to refer to six keys required to activate this "Nexus". I have consulted with some experts in the ancient Maya, and they believe this could be referring to a calendar stone. Have you come across one of them?
 
     Ancient texts reveal that the Mayans were not alone. They received knowledge from beings beyond the stars, but this knowledge came with a price. The built these calendar stones to predict when the Star People will come back, but it seems that one of these calendar stones is special, and is the key to receiving the Star People. If it can be destroyed, we might be able to stop them!
 
@@ -147,7 +147,7 @@ X-Spelunker 2 (e-ke-se pe-lu-ne-ke-le):
 
     Elaine
 
-    [ps: I attach a translated version of the diagram, which might be of use]
+    [ps: I attach a translated version of the inscription, which might be of use]
 
     Then:
     Xavier: "The calendar stone! So, that's what it is!"
@@ -170,7 +170,7 @@ X-Spelunker 2 (e-ke-se pe-lu-ne-ke-le):
 
 - After beating the third pyramid and the third boss (obtaining the third idol), the player is squeamish of using it on the calendar stone, since the goal is to destroy it, and powering it up too much, might help the aliens. At this point, if you go back to get explosives, you can get them, but you will also get a letter from Elaine, explaining more details. She hopes you have not yet destroyed it, since it seems this calendar stone was not designed to receive the star people, but to prevent them from coming, by blocking the dimensional portals they had open. The ancient Maya built it, but with the Maya gone, and no one to take care of it, somehow the stones that powered it were taken away and it allowed aliens to come. So, you should not destroy it, but power it up! The aliens have bene able to come, precisely because the stone is not powered up! She hopes you have not yet destroyed it.
 
-- You mist find all the idols and power up the stone before the aliens themselves find it and destroy it!
+- You must find all the idols and power up the stone before the aliens themselves find it and destroy it!
 
 - After that, you put the third idol in the stone, and that opens access to the next areas where you can find the fourth and fifth bosses, to get the final two idols and put them in the stone.
 

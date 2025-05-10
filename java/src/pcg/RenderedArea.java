@@ -104,11 +104,11 @@ public class RenderedArea {
                 c.clearTiles(20, 22, 28, 24);
             }
             if ((pieceTypes[calendar_room_x*2 + 1][calendar_room_y*2] & PCGWorld.DIRECTION_RIGHT) != 0) {
-                // open path left on the top-left:
+                // open path right on the top-right:
                 c.clearTiles(30, 6, 32, 10);
             }
             if ((pieceTypes[calendar_room_x*2 + 1][calendar_room_y*2 + 1] & PCGWorld.DIRECTION_RIGHT) != 0) {
-                // open path left on the bottom-left:
+                // open path right on the bottom-right:
                 c.clearTiles(30, 14, 32, 18);
             }
 

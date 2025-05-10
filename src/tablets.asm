@@ -2,6 +2,7 @@
 ; input:
 ; - de: ptr to tablet content fn
 display_tablet:
+	call disable_VDP_output
 	push de
 		; clear the screen:
 		call clear_all_the_sprites
@@ -12,37 +13,41 @@ display_tablet:
 
 		; display base tablet:
 		ld hl, tablet_tiles_zx0
-		ld de, buffer_4096
-		call dzx0
+		ld de, tablet_nametable_zx0
 
-		ld hl, buffer_4096
-		ld de, CHRTBL2
-		ld bc, 256*8
-		call fast_LDIRVM
-		ld hl, buffer_4096 + 256*8
-		ld de, CLRTBL2
-		ld bc, 256*8
-		call fast_LDIRVM
+display_tablet_ptrs_set:
+		push de
+			ld de, buffer_4096
+			call dzx0
 
-		ld hl, buffer_4096
-		ld de, CHRTBL2 + 256*8
-		ld bc, 256*8
-		call fast_LDIRVM
-		ld hl, buffer_4096 + 256*8
-		ld de, CLRTBL2 + 256*8
-		ld bc, 256*8
-		call fast_LDIRVM
+			ld hl, buffer_4096
+			ld de, CHRTBL2
+			ld bc, 256*8
+			call fast_LDIRVM
+			ld hl, buffer_4096 + 256*8
+			ld de, CLRTBL2
+			ld bc, 256*8
+			call fast_LDIRVM
 
-		ld hl, buffer_4096
-		ld de, CHRTBL2 + 256*8*2
-		ld bc, 256*8
-		call fast_LDIRVM
-		ld hl, buffer_4096 + 256*8
-		ld de, CLRTBL2 + 256*8*2
-		ld bc, 256*8
-		call fast_LDIRVM	
+			ld hl, buffer_4096
+			ld de, CHRTBL2 + 256*8
+			ld bc, 256*8
+			call fast_LDIRVM
+			ld hl, buffer_4096 + 256*8
+			ld de, CLRTBL2 + 256*8
+			ld bc, 256*8
+			call fast_LDIRVM
 
-		ld hl, tablet_nametable_zx0
+			ld hl, buffer_4096
+			ld de, CHRTBL2 + 256*8*2
+			ld bc, 256*8
+			call fast_LDIRVM
+			ld hl, buffer_4096 + 256*8
+			ld de, CLRTBL2 + 256*8*2
+			ld bc, 256*8
+			call fast_LDIRVM	
+
+		pop hl
 		ld de, buffer_4096
 		call dzx0
 
@@ -58,6 +63,8 @@ display_tablet:
 	push bc
 	jp (hl)
 display_tablet_continue:
+
+	call enable_VDP_output
 
 	call wait_for_click
 	xor a
@@ -76,6 +83,33 @@ display_tablet_continue:
 	ld c, a
 	ld hl, (current_room__tileset_ptr)
 	jp setup_game_tiles
+
+
+
+;-----------------------------------------------
+calendar_tablet_fn:
+	pop bc  ; simulate a ret
+	ld de, calendar_tablet_fn2
+	push de
+		ld hl, tablet_calendar_tiles_zx0
+		ld de, tablet_calendar_nametable_zx0
+		jp display_tablet_ptrs_set
+
+
+;-----------------------------------------------
+calendar_tablet_fn2:
+	call clear_text_rendering_buffer
+	ld hl, TEXT_CALENDAR_TABLET1
+	ld de, CHRTBL2 + 22*32*8 + 8
+	ld iy, #80f0
+	ld b, 32
+	call draw_sentence_to_vdp
+	call clear_text_rendering_buffer
+	ld hl, TEXT_CALENDAR_TABLET2
+	ld de, CHRTBL2 + 23*32*8 + 2*8
+	ld iy, #80f0
+	ld b, 32
+	jp draw_sentence_to_vdp
 
 
 ;-----------------------------------------------

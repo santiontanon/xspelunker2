@@ -311,12 +311,14 @@ TAG_SMALL_KEY_CHEST3: equ 135
 TAG_SMALL_KEY_CHEST4: equ 136
 ; tags above can ONLY appear once in the whole game
 N_UNIQUE_TAGS: equ 137
+
 ; tags below can appear multiple times (and do not have state, they are reset every time you enter in a room):
 TAG_PUSHABLE_BLOCK: equ 137
 TAG_DOOR_VERTICAL: equ 138
 TAG_DOOR_HORIZONTAL: equ 139
 TAG_DOOR_BOSS: equ 140
 TAG_POWER_STONE: equ 141
+TAG_CALENDAR_TABLET: equ 142
 
 N_PATH_OPENING_TAGS: equ 32  ; there are less than this, but just in case (this is the number of tags above that spawn a breakable wall or door).
 

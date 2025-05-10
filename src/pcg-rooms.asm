@@ -2000,6 +2000,7 @@ ENDR
 ; TAG_DOOR_HORIZONTAL: equ 139
 ; TAG_DOOR_BOSS: equ 140
 ; TAG_POWER_STONE: equ 141
+; TAG_CALENDAR_TABLET: equ 142
 
 
 ;-----------------------------------------------
@@ -2013,8 +2014,6 @@ pcg_generate_room__calendar:
 	; tile sets, collisions, and animation ptrs:
 	ld bc, tiles_calendar_zx0
 	ld (current_room__tileset_ptr), bc
-	ld bc, update_animations_in_vdp_calendar
-	ld (current_room__animation_fn_ptr), bc
 	ld bc, tile_collision_types_calendar - 32
 	ld (current_room__collision_ptr), bc
 	ld a, TILES_PAGE
@@ -2110,9 +2109,29 @@ pcg_generate_room__calendar_continue5:
 	call room_remove_breakable_wall_restore_background
 pcg_generate_room__calendar_continue6:
 
-	; spawn objects:
-	; ...
+	; spawn the tablets:
+	ld iy, (tmp_pcg_room__next_tile_object_ptr)
+	ld a, (ix + AREA_OBJECT_STRUCT_TYPE)
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 0  ; id
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_CALENDAR_TABLET  ; type
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 7  ; x
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 15  ; y
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0  ; state (hitpoints)
+	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
+	add iy, bc
+	ld a, (ix + AREA_OBJECT_STRUCT_TYPE)
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 0  ; id
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_CALENDAR_TABLET  ; type
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 23  ; x
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 15  ; y
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0  ; state (hitpoints)
+	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
+	add iy, bc
+	ld (tmp_pcg_room__next_tile_object_ptr), iy	
 
+	; tablet gfx:
+	ld hl, buffer_4096 + 60 * 64
+	ld (item_object_to_upload_to_vdp), hl
 	ret
 
 
