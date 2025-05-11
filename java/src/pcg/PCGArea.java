@@ -862,6 +862,16 @@ public class PCGArea {
                 case "story-trivia6":
                 case "story-trivia7":
                 case "story-trivia8":
+                case "teleporter1":
+                case "teleporter2":
+                case "teleporter3":
+                case "teleporter4":
+                case "teleporter5":
+                case "teleporter6":
+                case "teleporter7":
+                case "teleporter8":
+                case "teleporter-moon":
+                case "teleporter-mars":
                     tagToPlace = tag;
                     break;
 
@@ -1191,6 +1201,19 @@ public class PCGArea {
                                 necessaryObjectTypes.add("item");
                                 break;
 
+                            case "teleporter1":
+                            case "teleporter2":
+                            case "teleporter3":
+                            case "teleporter4":
+                            case "teleporter5":
+                            case "teleporter6":
+                            case "teleporter7":
+                            case "teleporter8":
+                            case "teleporter-mars":
+                            case "teleporter-moon":
+                                necessaryObjectTypes.add("big-item");
+                                break;
+                                
                             case "trial1-lock":
                             case "trial2-lock":
                             case "trial3-lock":
@@ -1483,6 +1506,25 @@ public class PCGArea {
                 case "story-trivia8":
                 {
                     TMXObject place = ra.fg_chunks[go.x][go.y].randomObject("item", r);
+                    if (place == null) {
+                        return false;
+                    }
+                    ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
+                                                  go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, go.type));
+                    break;
+                }
+                case "teleporter1":
+                case "teleporter2":
+                case "teleporter3":
+                case "teleporter4":
+                case "teleporter5":
+                case "teleporter6":
+                case "teleporter7":
+                case "teleporter8":
+                case "teleporter-mars":
+                case "teleporter-moon":
+                {
+                    TMXObject place = ra.fg_chunks[go.x][go.y].randomObject("big-item", r);
                     if (place == null) {
                         return false;
                     }

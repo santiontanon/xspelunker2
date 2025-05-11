@@ -95,9 +95,9 @@ public class PCGPatternNKeysAndLock extends PCGPattern {
         }
 
 //        System.out.println("lock: " + q.lockDivision.divisionID + " -> " + q.goalDivision.divisionID);
-        if (!useable.contains(q.lockDivision)) {
-            System.out.println("!!!!! (keylock)" + q.lockDivision.divisionID);
-        }            
+//        if (!useable.contains(q.lockDivision)) {
+//            System.out.println("!!!!! (keylock) " + q.lockDivision.divisionID);
+//        }            
         
         if (q.lockPoint.a == q.goalPoint.a && 
             (Math.abs(q.lockPoint.x - q.goalPoint.x) + 
@@ -138,8 +138,8 @@ public class PCGPatternNKeysAndLock extends PCGPattern {
         for(int i = 0;i<nKeys;i++) {
             int n_retries = 5;
             if (reachable.isEmpty()) {
-                System.out.println("PCGPatternNKeysAndLock: no divisions left for more keys!");
-                break;
+                System.err.println("PCGPatternNKeysAndLock: no divisions left for more keys (we were spawning key " + i + ": " + keytags[i] + ")!");
+                return null;
             }
             AreaDivision keyDivision = null;
             AreaPoint keyPoint = null;

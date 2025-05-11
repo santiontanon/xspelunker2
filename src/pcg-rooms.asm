@@ -462,6 +462,23 @@ pcg_generate_room__object_loop:
 	cp TAG_TRIAL4_LOCK
 	jp z, pcg_generate_room__object_trial_lock
 
+	cp TAG_TELEPORTER1
+	jp z, pcg_generate_room__object_teleporter
+	cp TAG_TELEPORTER2
+	jp z, pcg_generate_room__object_teleporter
+	cp TAG_TELEPORTER3
+	jp z, pcg_generate_room__object_teleporter
+	cp TAG_TELEPORTER4
+	jp z, pcg_generate_room__object_teleporter
+	cp TAG_TELEPORTER5
+	jp z, pcg_generate_room__object_teleporter
+	cp TAG_TELEPORTER6
+	jp z, pcg_generate_room__object_teleporter
+	cp TAG_TELEPORTER7
+	jp z, pcg_generate_room__object_teleporter
+	cp TAG_TELEPORTER8
+	jp z, pcg_generate_room__object_teleporter
+
 	; ...
 
 pcg_generate_room__object_loop_next:
@@ -848,6 +865,42 @@ pcg_generate_room__object_gear_lock:
 		pop hl  ; chunk ptr
 
 		jp pcg_generate_room__object_small_lock_spawn_door
+
+
+;-----------------------------------------------
+pcg_generate_room__object_teleporter:
+	; get the chunk type where we are placing the object:
+	push bc
+		call get_chunk_id_from_coordinates  ; a = chunk ID
+		ld hl, pyramid_chunk_fg_bank_ptrs
+		call pcg_get_chunk_ptr
+		ld e, CHUNK_LOCATION_BIG_ITEM
+		push hl
+			call sample_chunk_location  ; de: ptr to the location
+		pop hl
+	pop bc  ; chunk coordinates
+
+	ASSERT_D_NOT_EQ 0
+
+	; compute object coordinates:
+	call pcg_generate_room__compute_object_coordinates
+	; here: c, b: x, y coordinates
+
+	; spawn the teleporter:
+	ld d, (ix + AREA_OBJECT_STRUCT_ID)
+	ld e, (ix + AREA_OBJECT_STRUCT_TYPE)
+	ld iy, (tmp_pcg_room__next_tile_object_ptr)
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), d  ; ID
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), e  ; type
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), c  ; x
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), b  ; y
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0  ; state
+	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
+	add iy, bc
+	ld (tmp_pcg_room__next_tile_object_ptr), iy
+
+	; set which object gfx to up load vdp (starting at tile FIRST_ITEM_TILE):
+	jp set_large_object_to_upload_to_vdp
 
 
 ;-----------------------------------------------
@@ -1818,8 +1871,19 @@ set_large_object_to_upload_to_vdp:
 	jr z, set_large_object_to_upload_to_vdp_trial3_lock
 	cp TAG_TRIAL4_LOCK
 	jr z, set_large_object_to_upload_to_vdp_trial4_lock
-	; cp TAG_DOOR_BOSS
-	; jr z, set_large_object_to_upload_to_vdp_boss_door
+	cp TAG_DOOR_BOSS
+	jr z, set_large_object_to_upload_to_vdp_boss_door
+	; teleporters:
+	ld a, (global_state__story)
+	cp STORY_STATE__PLACED_FIRST_POWER_STONE
+	jr c, set_large_object_to_upload_to_vdp__teleporter_off
+	ld e, 12*8
+	ld hl, buffer_4096 + 178 * 16  ; teleporter on
+	jr set_large_object_to_upload_to_vdp_ptr_set	
+set_large_object_to_upload_to_vdp__teleporter_off:
+	ld e, 12*8
+	ld hl, buffer_4096 + 166 * 16  ; teleporter off
+	jr set_large_object_to_upload_to_vdp_ptr_set	
 set_large_object_to_upload_to_vdp_boss_door:
 	ld e, 16*8
 	ld hl, buffer_4096 + 48 * 16  ; boss door
@@ -1994,6 +2058,9 @@ ENDR
 	dw buffer_4096 + 40 * 64  ; TAG_SMALL_KEY_CHEST2
 	dw buffer_4096 + 40 * 64  ; TAG_SMALL_KEY_CHEST3
 	dw buffer_4096 + 40 * 64  ; TAG_SMALL_KEY_CHEST4
+; REPT TAG_PUSHABLE_BLOCK - TAG_TELEPORTER1
+; 	dw buffer_4096
+; ENDR
 ; ; tags below can appear multiple times (and do not have state, they are reset every time you enter in a room):
 ; TAG_PUSHABLE_BLOCK: equ 137
 ; TAG_DOOR_VERTICAL: equ 138
@@ -2153,6 +2220,18 @@ pcg_generate_room__calendar_objects:
 	db 3, TAG_CALENDAR_SOCKET, 17, 12
 	db 4, TAG_CALENDAR_SOCKET, 14, 9
 	db 5, TAG_CALENDAR_SOCKET, 16, 9
+
+
+;-----------------------------------------------
+pcg_generate_room__calendar_turn_on_phase1:
+	ld hl, CLRTBL2 + 72*8
+	ld a, #48  ; blue + red
+	ld b, 8
+	call fast_FILVRM_small
+	ld hl, CLRTBL2 + (256 + 72)*8
+	ld a, #48  ; blue + red
+	ld b, 8
+	jp fast_FILVRM_small
 
 
 ;-----------------------------------------------

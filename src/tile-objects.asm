@@ -852,6 +852,14 @@ ENDR
 	dw object_interaction_function_small_chest  ; TAG_SMALL_KEY_CHEST2
 	dw object_interaction_function_small_chest  ; TAG_SMALL_KEY_CHEST3
 	dw object_interaction_function_small_chest  ; TAG_SMALL_KEY_CHEST4
+	dw object_interaction_function_teleporter  ; TAG_SMALL_KEY_TELEPORTER1
+	dw object_interaction_function_teleporter  ; TAG_SMALL_KEY_TELEPORTER2
+	dw object_interaction_function_teleporter  ; TAG_SMALL_KEY_TELEPORTER3
+	dw object_interaction_function_teleporter  ; TAG_SMALL_KEY_TELEPORTER4
+	dw object_interaction_function_teleporter  ; TAG_SMALL_KEY_TELEPORTER5
+	dw object_interaction_function_teleporter  ; TAG_SMALL_KEY_TELEPORTER6
+	dw object_interaction_function_teleporter  ; TAG_SMALL_KEY_TELEPORTER7
+	dw object_interaction_function_teleporter  ; TAG_SMALL_KEY_TELEPORTER8
 	dw object_interaction_function_empty  ; TAG_PUSHABLE_BLOCK
 	dw object_interaction_function_empty  ; TAG_DOOR_VERTICAL
 	dw object_interaction_function_empty  ; TAG_DOOR_HORIZONTAL
@@ -1341,6 +1349,7 @@ object_interaction_function_tablet_ptr_set:
 	ld hl, display_tablet
 	jp call_hl_in_page_c_8000
 
+
 ;-----------------------------------------------
 object_interaction_function_combination_lever:
 	ld hl, SFX_ui_move
@@ -1568,8 +1577,6 @@ object_interaction_function_calendar_socket_try_to_place:
 	add a, 2  ; +2, since 0 is "no stone" and 1 is "inactive stone".
 	ld (hl), a
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), a
-	ld hl, global_state__n_power_stones_in_calendar
-	inc (hl)
 
 	; lose it from the inventory:
 	ld hl, player_current_item
@@ -1589,8 +1596,20 @@ object_interaction_function_calendar_socket_try_to_place:
 	ld hl, redraw_flags
 	ld (hl), #ff
 	call room_undraw_tile_objects
-	jp room_render_tile_objects
+	call room_render_tile_objects
 
+	ld hl, global_state__n_power_stones_in_calendar
+	inc (hl)
+	ld a, (hl)
+	cp 1 
+	jr z, object_interaction_function_calendar_socket_1st_stone
+	cp 3
+	jr z, object_interaction_function_calendar_socket_3rd_stone
+	cp 5 
+	jr z, object_interaction_function_calendar_socket_5th_stone
+	cp 6
+	jr z, object_interaction_function_calendar_socket_6th_stone
+	ret
 
 object_interaction_function_calendar_socket_incorrect_item:
 	ld de, TEXT_WRONG_ITEM
@@ -1616,6 +1635,40 @@ object_interaction_function_calendar_socket_continue:
 	push ix
 		call call_hl_in_page_c_8000
 	pop ix
+	ret
+
+object_interaction_function_calendar_socket_1st_stone:
+	ld a, STORY_STATE__PLACED_FIRST_POWER_STONE
+	ld (global_state__story), a
+	push ix
+		ld de, TEXT_FIRST_POWER_STONE1
+		ld hl, display_in_game_message
+		ld c, TEXT_PAGE
+		call call_hl_in_page_c_8000
+
+		ld de, TEXT_FIRST_POWER_STONE2
+		ld hl, display_in_game_message
+		ld c, TEXT_PAGE
+		call call_hl_in_page_c_8000
+	pop ix
+	ret
+
+object_interaction_function_calendar_socket_3rd_stone:
+	; ...
+	ret
+
+object_interaction_function_calendar_socket_5th_stone:
+	; ...
+	ret
+
+object_interaction_function_calendar_socket_6th_stone:
+	; ...
+	ret
+
+
+;-----------------------------------------------
+object_interaction_function_teleporter:
+	; ...
 	ret
 
 
@@ -1804,6 +1857,14 @@ ENDR
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_SMALL_KEY_CHEST2
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_SMALL_KEY_CHEST3
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_SMALL_KEY_CHEST4
+	TILE_OBJECT_DATA 1, 4, 3, tile_object_teleporter_gfx  ; TAG_TELEPORTER1
+	TILE_OBJECT_DATA 1, 4, 3, tile_object_teleporter_gfx  ; TAG_TELEPORTER2
+	TILE_OBJECT_DATA 1, 4, 3, tile_object_teleporter_gfx  ; TAG_TELEPORTER3
+	TILE_OBJECT_DATA 1, 4, 3, tile_object_teleporter_gfx  ; TAG_TELEPORTER4
+	TILE_OBJECT_DATA 1, 4, 3, tile_object_teleporter_gfx  ; TAG_TELEPORTER5
+	TILE_OBJECT_DATA 1, 4, 3, tile_object_teleporter_gfx  ; TAG_TELEPORTER6
+	TILE_OBJECT_DATA 1, 4, 3, tile_object_teleporter_gfx  ; TAG_TELEPORTER7
+	TILE_OBJECT_DATA 1, 4, 3, tile_object_teleporter_gfx  ; TAG_TELEPORTER8
 
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_pushable_block_gfx  ; TAG_PUSHABLE_BLOCK
 	TILE_OBJECT_DATA 1, 1, 3, tile_object_v_door_gfx  ; TAG_DOOR_VERTICAL
@@ -1823,6 +1884,7 @@ tile_object_h_door_gfx:
 	db 109, 110, 110, 111
 tile_object_v_door_gfx:
 	db 106, 107, 108
+tile_object_teleporter_gfx:
 tile_object_idol_lock_locked_gfx:
 tile_object_gear_lock_locked_gfx:
 	db 48, 49, 50, 51

@@ -35,8 +35,10 @@ public class PCGWorld {
     public static final int DIRECTION_IN = 16;  // connection that goes through a "gate"/"door", and not the edge of a room.
 
     public int n_areas = 12;
-    public int n_divisions = 80;
-    public int min_divisions_per_area[] = {3, 7, 7, 4, 7, 1, 7, 7, 7, 7, 7, 7};
+//    public int n_divisions = 80;
+//    public int min_divisions_per_area[] = {3, 7, 7, 4, 7, 1, 7, 7, 7, 7, 7, 7};
+    public int n_divisions = 112;
+    public int min_divisions_per_area[] = {4, 8, 8, 4, 8, 1, 8, 8, 8, 8, 7, 7};
     public String areaNames[] = {
         "Jungle",
         "Temple of Inscriptions",
@@ -202,7 +204,7 @@ public class PCGWorld {
             List<String> usedKeysAndLocks = new ArrayList<>();
 
             if (i == n_retries - 1) {
-                r.setSeed1(0);  // we know this seed works
+                r.setSeed1(1);  // we know this seed works
                 n_times_defaulting_to_safe_seed++;
             }
             System.out.println("PCG.generate: ---- attempt " + i + " ----");
@@ -775,6 +777,20 @@ public class PCGWorld {
             1, 2, 4,
             6, 8, 9, 10, 11
         };
+        int teleporterAreas[] = {
+          0, 1, 2, 4,
+          6, 7, 8, 9,
+        };
+        String teleporterTags[] = {
+            "teleporter1",
+            "teleporter2",
+            "teleporter3",
+            "teleporter4",
+            "teleporter5",
+            "teleporter6",
+            "teleporter7",
+            "teleporter8",
+        };        
         String optionalItemTags[] = {
           "item-sandals",
           "item-gloves",
@@ -880,6 +896,23 @@ public class PCGWorld {
                 }
                 tagLess.remove(d);
             }            
+        }
+        
+        // Spawn teleporters (1/16th chance that one is not there):
+        for(int i = 0;i<8;i++) {
+            List<AreaDivision> candidates = new ArrayList<>();
+            for(AreaDivision d:tagLess) {
+                if (d.root.a.ID == teleporterAreas[i]) {
+                    candidates.add(d);
+                }
+            }
+            if (!candidates.isEmpty() && r.nextInt(16) != 0) {
+                int idx = r.nextInt(16) % candidates.size();
+                AreaDivision d = candidates.get(idx);
+                AreaPoint p = randomDivisionPoint(d, true);
+                addTag(p, teleporterTags[i], d);
+                tagLess.remove(d);
+            }
         }
         
         // Spawn optional items: (1/16th chance that one is not there)
@@ -1204,6 +1237,7 @@ public class PCGWorld {
         List<AreaDivision> otherCandidates = new ArrayList<>();
         for(AreaDivision d:tree) {
             if (excludeRoot && d.parent == null) continue;
+            if (d.tags != null && !d.tags.isEmpty()) continue;
             if (a == null || d.root.a.ID == a.ID) {
                 if (d.nDescendants == 0) {
                     leafCandidates.add(d);                    
@@ -1569,6 +1603,11 @@ public class PCGWorld {
         if (l == null) {
             l = new ArrayList<>();
             p.a.tags[p.x][p.y] = l;
+        }
+        
+//        a.tags[j][i].contains("ending")
+        if (!tag.equals("ending") && l.contains("ending")) {
+            System.err.println("Adding " + tag + " to ending room!");
         }
         
         if (!l.contains(tag)) {

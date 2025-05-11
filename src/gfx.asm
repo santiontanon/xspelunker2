@@ -347,4 +347,27 @@ setup_game_tiles_biome_internal_continue:
     pop bc
     pop hl
     add hl, bc
-    jp fast_LDIRVM
+    call fast_LDIRVM
+
+    ; tileset modifications in calendar room:
+    ld a, (current_area__id)
+    cp 3
+    ret nz
+    ld a, (current_room__id)
+    cp CALENDAR_ROOM_ID
+    ret nz
+    ld a, (global_state__n_power_stones_in_calendar)
+    or a
+    ret z
+    ; first stone effect:
+    ld hl, pcg_generate_room__calendar_turn_on_phase1
+    ld c, PCG_PAGE
+    call call_hl_in_page_c_8000    
+    ; third stone effect:
+    ; ...
+    ; fifth stone effect:
+    ; ...
+    ; last stone effect:
+    ; ...
+    ret
+

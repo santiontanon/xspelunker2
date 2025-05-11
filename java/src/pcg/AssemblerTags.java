@@ -168,11 +168,27 @@ public class AssemblerTags {
         "TAG_SMALL_KEY_CHEST2",
         "TAG_SMALL_KEY_CHEST3",
         "TAG_SMALL_KEY_CHEST4",
+        // Teleporters:
+        "TAG_TELEPORTER1",
+        "TAG_TELEPORTER2",
+        "TAG_TELEPORTER3",
+        "TAG_TELEPORTER4",
+        "TAG_TELEPORTER5",
+        "TAG_TELEPORTER6",
+        "TAG_TELEPORTER7",
+        "TAG_TELEPORTER8",
         // misc (not tags that will be placed, but used for tile-object types):
         "TAG_PUSHABLE_BLOCK",
+        "TAG_DOOR_VERTICAL",
+        "TAG_DOOR_HORIZONTAL",
+        "TAG_DOOR_BOSS",
+        "TAG_POWER_STONE",
+        "TAG_CALENDAR_TABLET",
+        "TAG_CALENDAR_SOCKET",
+        "TAG_HALF_POWER_STONE",
     };
     
-    
+
     public static String tagToAssembler(String tag)
     {
         String tag2 = "TAG_" + tag;

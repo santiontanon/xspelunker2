@@ -11,8 +11,8 @@ state_play:
 ; 		ld (global_state__power_calendar + 1), a
 ; 		ld a, 1
 ; 		ld (global_state__n_power_stones_in_calendar), a
-; 		ld a, STORY_STATE__GOT_LETTER1
-; 		ld (global_state__story), a
+		ld a, set_large_object_to_upload_to_vdp
+		ld (global_state__story), a
 
 		; initial player position:
 		ld hl, #0a00
@@ -36,10 +36,10 @@ state_play:
 
 		; generate area:
 		ld hl, pcg_generate_area
-; 		ld e, 0  ; area to generate
+		ld e, 0  ; area to generate
 ; 		ld e, 1  ; area to generate
 ; 		ld e, 2  ; area to generate
-		ld e, 3  ; area to generate
+; 		ld e, 3  ; area to generate
 ; 		ld e, 4  ; area to generate
 ; 		ld e, 7  ; area to generate
 ; 		ld e, 8  ; area to generate
@@ -48,10 +48,10 @@ state_play:
 		call call_hl_in_page_c_8000
 
 		; generate room:
-; 		ld e, 0
+		ld e, 0
 ; 		ld e, 19
 ; 		ld e, 16
-		ld e, CALENDAR_ROOM_ID
+; 		ld e, CALENDAR_ROOM_ID
 ; 		ld e, 19
 ; 		ld e, 5
 ; 		ld e, 0
@@ -69,9 +69,9 @@ state_play:
 ; 		ld (player_inventory_items+4), a
 		ld (player_inventory_items+5), a
 		ld (player_inventory_items+6), a
-; 		ld (player_inventory_items+7), a  ; first stone
-; 		ld (player_inventory_items+8), a  ; second stone
-; 		ld (player_inventory_items+9), a  ; third stone
+		ld (player_inventory_items+7), a  ; first stone
+		ld (player_inventory_items+8), a  ; second stone
+		ld (player_inventory_items+9), a  ; third stone
 ; 		ld (player_inventory_items+10), a
 ; 		ld (player_inventory_items+11), a
 ; 		ld (player_inventory_items+12), a

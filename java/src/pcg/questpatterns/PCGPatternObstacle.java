@@ -92,9 +92,9 @@ public class PCGPatternObstacle extends PCGPattern {
         }            
 
 //        System.out.println("lock: " + q.lockDivision.divisionID + " -> " + q.goalDivision.divisionID);
-        if (!useable.contains(q.lockDivision)) {
-            System.out.println("!!!!! (obstable) " + q.lockDivision.divisionID);
-        }            
+//        if (!useable.contains(q.lockDivision)) {
+//            System.out.println("!!!!! (obstacle) " + q.lockDivision.divisionID);
+//        }            
         
         if (q.lockPoint.a == q.goalPoint.a && 
             (Math.abs(q.lockPoint.x - q.goalPoint.x) + 

@@ -326,6 +326,16 @@ public class GameObject {
             case "boss-door":
                 tx = 96; ty = 208; tdx = 32; tdy = 32;
                 break;
+            case "teleporter1":
+            case "teleporter2":
+            case "teleporter3":
+            case "teleporter4":
+            case "teleporter5":
+            case "teleporter6":
+            case "teleporter7":
+            case "teleporter8":
+                tx = 224; ty = 40; tdx = 32; tdy = 24;
+                break;
             default:
                 System.err.println("Cannot render placed object: " + type);
         }

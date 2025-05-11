@@ -176,6 +176,10 @@ public class GenerateTiles {
         extratTilesOneObject(sourceImage, 32, 72, 32, 32, data);  // kukulcan
         extratTilesOneObject(sourceImage, 0, 104, 32, 32, data);  // ixchel
         extratTilesOneObject(sourceImage, 32, 104, 32, 32, data);  // chaac
+        // teleporters (166)
+        extratTilesOneObject(sourceImage, 224, 40, 32, 24, data);  // teleporter off
+        extratTilesOneObject(sourceImage, 224, 64, 32, 24, data);  // teleporter on
+        extratTilesOneObject(sourceImage, 224, 88, 32, 24, data);  // teleporter interacted
 
         Z80Assembler.dataToBinary(data, outputPath + ".bin");
         ZX0Wrapper.main(outputPath+".bin", outputPath+".zx0", true, false);
