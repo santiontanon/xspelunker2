@@ -228,7 +228,7 @@ public class Text {
         addLineSafe(lines_with_constant, "A letter from Elaine. Press INTERACT to read it.", "ITEM_LETTER1", 80);
         addLineSafe(lines_with_constant, "The second letter from Elaine. Press INTERACT to read it.", "ITEM_LETTER2", 80);
 //        addLineSafe(lines_with_constant, "The third letter from Elaine. Press INTERACT to read it.", "ITEM_LETTER3", 80);
-        addLineSafe(lines_with_constant, "Map: a map of the ruins that I have been composing as I find pieces of it. Press FIRE to examine it.", "ITEM_MAP", 80);
+        addLineSafe(lines_with_constant, "Map: a map of the ruins that I have been composing as I find pieces of it. Press INTERACT to examine it.", "ITEM_MAP", 80);
        
         // In-game messages:
         addLineSafe(lines_with_constant, "As you consume the still beating heart, you feel your strength increasing!", "HEART_PICKUP", 112);
@@ -243,7 +243,6 @@ public class Text {
         addLineSafe(lines_with_constant, "It looks like an empty socket to place something inside.", "CALENDAR_SOCKET_EMPTY", 112);
         addLineSafe(lines_with_constant, "I am scared of placing more stones! What if it fully activates?", "CALENDAR_SOCKET_REFUSE_TO_PLACE", 112);
         addLineSafe(lines_with_constant, "It fits! The whole thing is activating! And it feels like something else in the ruins just activated. What did I just do?!", "FIRST_POWER_STONE1", 112);
-        addLineSafe(lines_with_constant, "Wait a minute! That map that I brought with me! It seems it's also reacting!", "FIRST_POWER_STONE2", 112);
         
         // power stone inspection:
         addLineSafe(lines_with_constant, "A stone I found. Some sort of power radiates from it.", "INSPECT_POWER_STONE", 32);

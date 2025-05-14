@@ -123,14 +123,13 @@ public class AssemblerTags {
         "TAG_WEAPON_FIRE_HAMMER",
         "TAG_WEAPON_ICE_MACUAHUITL",
         // map pieces:
-        "TAG_MAP_PIECE1",  // pyramid 1
-        "TAG_MAP_PIECE2",  // pyramid 2
-        "TAG_MAP_PIECE3",  // pyramid 3 + confluence
-        "TAG_MAP_PIECE4",  // fire shaft + both caves
-        "TAG_MAP_PIECE5",  // fire temple
-        "TAG_MAP_PIECE6",  // atlantis
-        "TAG_MAP_PIECE7",  // mars
-        "TAG_MAP_PIECE8",  // moon
+        "TAG_MAP_PIECE1",  // pyramid 2
+        "TAG_MAP_PIECE2",  // pyramid 3 + confluence
+        "TAG_MAP_PIECE3",  // fire shaft + both caves
+        "TAG_MAP_PIECE4",  // fire temple
+        "TAG_MAP_PIECE5",  // atlantis
+        "TAG_MAP_PIECE6",  // mars
+        "TAG_MAP_PIECE7",  // moon
         // hearts:
         "TAG_HEART1",
         "TAG_HEART2",

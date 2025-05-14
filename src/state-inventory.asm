@@ -103,6 +103,8 @@ state_inventory_update_cursor_interact:
 	jr z, state_inventory_update_cursor_interact_row1
 	dec a
 	jr z, state_inventory_update_cursor_interact_row2
+	cp 3
+	jr z, state_inventory_update_cursor_interact_row5
 	ret
 state_inventory_update_cursor_interact_row1:
 	ld a, (inventory_cursor_position_x)
@@ -117,6 +119,11 @@ state_inventory_update_cursor_interact_row2:
 	jp z, state_inventory_update_cursor_interact_power_stone3
 	cp 5
 	jp z, state_inventory_update_cursor_interact_power_stone4
+	ret
+state_inventory_update_cursor_interact_row5:
+	ld a, (inventory_cursor_position_x)
+	cp 9
+	jp z, state_inventory_update_cursor_interact_map
 	ret
 
 
@@ -480,6 +487,12 @@ display_power_stone_closeup_animal_loop:
 	ld hl, redraw_flags
 	ld (hl), #ff
 	ret
+
+
+;-----------------------------------------------
+state_inventory_update_cursor_interact_map:
+	call display_map_closeup
+	jp state_inventory_entry_point_from_item_inspection
 
 
 ;-----------------------------------------------

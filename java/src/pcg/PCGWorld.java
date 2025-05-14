@@ -254,7 +254,7 @@ public class PCGWorld {
                         tag.toLowerCase().contains("combination")) {
                         // combination clue:
                         int type = r.nextInt(4);
-                        w.tabletContent.put(tag, "combination_tablet_type_"+type+"_fn");
+                        w.tabletContent.put(tag, "combination_tablet_type_"+(type+1)+"_fn");
                     } else if (tag.toLowerCase().contains("-clue") &&
                         tag.toLowerCase().contains("trial")) {
                         // trial clue:
@@ -756,6 +756,20 @@ public class PCGWorld {
     
     public boolean spawnOptionalObjects(World w, List<AreaDivision> allAreas)
     {
+        /*
+        "Jungle",
+        "Temple of Inscriptions",
+        "Hidden Temple",
+        "Confluence",
+        "Inverted Pyramid",
+        "Fire Shaft",
+        "Pacific Caves",
+        "Atlantic Caves",
+        "Temple of Fire",
+        "Atlantis",
+        "Mars Pyramid",
+        "Moon Cave",        
+        */
         int weaponAreas[] = {
           1, 2, 4, // hammer in inscriptions, macuahuitl in pyramid 2, shield in inverted pyramid
           0, 4, 6, 9, // sling in jungle, blowgun in inverted, atlatl in caves, raygun in atlantis
@@ -774,8 +788,9 @@ public class PCGWorld {
             "WEAPON_ICE_MACUAHUITL",            
         };
         int mapPieceAreas[] = {
-            1, 2, 4,
-            6, 8, 9, 10, 11
+            2, 4,  // hidden / inverted+confluence
+            6, 8, 9,  // fireshaft+pacific+atlantic, temple of fire, atlantis
+            10, 11,  // mars, moon
         };
         int teleporterAreas[] = {
           0, 1, 2, 4,

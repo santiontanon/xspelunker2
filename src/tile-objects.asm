@@ -818,7 +818,6 @@ ENDR
 	dw object_interaction_function_pickup_map_piece  ; TAG_MAP_PIECE5
 	dw object_interaction_function_pickup_map_piece  ; TAG_MAP_PIECE6
 	dw object_interaction_function_pickup_map_piece  ; TAG_MAP_PIECE7
-	dw object_interaction_function_pickup_map_piece  ; TAG_MAP_PIECE8
 	dw object_interaction_function_pickup_heart  ; TAG_HEART1
 	dw object_interaction_function_pickup_heart  ; TAG_HEART2
 	dw object_interaction_function_pickup_heart  ; TAG_HEART3
@@ -1645,11 +1644,6 @@ object_interaction_function_calendar_socket_1st_stone:
 		ld hl, display_in_game_message
 		ld c, TEXT_PAGE
 		call call_hl_in_page_c_8000
-
-		ld de, TEXT_FIRST_POWER_STONE2
-		ld hl, display_in_game_message
-		ld c, TEXT_PAGE
-		call call_hl_in_page_c_8000
 	pop ix
 	ret
 
@@ -1820,7 +1814,6 @@ ENDR
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_MAP_PIECE5
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_MAP_PIECE6
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_MAP_PIECE7
-	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_MAP_PIECE8
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_HEART1
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_HEART2
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_HEART3

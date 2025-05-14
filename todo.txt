@@ -1,10 +1,6 @@
 to do:
 
 ***- 1st power stone:
-  ***- draw the map in gimp:
-    ***- draw the different pieces
-    ***- hints for Maya puzzle (Maya numerals, they should become clear when all pieces are put together)
-  ***- when using the "map" item in the inventory, display an overall map, with all the pieces you have currently collected
   ***- interacting with a teleporter activates it (from red to blue) and brings up the map with markers in each location for which you have already visited the teleporter, and for which you have the map:
     ***- first time it will say: "the map is reacting to this device, some places are lighting up!"
     ***- now there is a small UI with an "exit" button at the top, and you can press up/down to move through the dots you have active
@@ -12,7 +8,7 @@ to do:
   ***- first time teleporting, message: "Woah! I just teleported!"
 ***- 3rd power stone on calendar stone, opens door to temple of fire (spawn door and open it), and makes numerals in calendar turn red (to indicate it is activating). Message that "I heard something open"
 ***- 4th + 5th, lets you turn on the calendar stone (activate defenses) (for first ending), months turn of some color too (purple? red?). Activate interacting with central socket. When this happens, the calendar stone disappears (it sinks into the wall, to leave enough tiles available for the final boss), all the rooom entrances close, and the final confrontation with the aliens begins in that same room. If you win, ending C.
-***- Maya puzzle and double teleporter room in atlantis (leading to teleporters in mars/moon) (https://mayaglyphs.org/). The letter received from Elaine should give some clues of Maya -> English (phonetic), and then the rest should be obtained from the clues gathered around the map. So, here, I should draw/sketch all the letters/diagrams in the intro + Elaine letters too.
+***- Maya puzzle and double teleporter room in atlantis (leading to teleporters in mars/moon, and with animal statues for solving the puzzle) (https://mayaglyphs.org/). The letter received from Elaine should give some clues of Maya -> English (phonetic), and then the rest should be obtained from the clues gathered around the map. So, here, I should draw/sketch all the letters/diagrams in the intro + Elaine letters too.
 ***- 6th/7th (two halves from Mars/Moon), (activate offensive capabilities, and destroy alien hardware): replace the depleted stone, you can only place this last. Same as above, but ending B.
 ***- Second Maya puzzle for the prism: involves looking for secrets in the ROM, as well as knowing actual Maya words (first Maya puzzle is phonetic, this one is actual Maya)
 ***- with final secret stone (prism that can only be obtained when all stones are placed, by defeating an 8th boss that appears after solving the secret riddle): opens dimensional portal for YOU to travel throughout the universe. Same confrontation with aliens, but if you win, a teleporter shows up with some controls, that teleports you to their home planet, to face the final final boss. If you win, ending A.
@@ -21,6 +17,7 @@ to do:
 
 - item effects:
   - for anti-grav belt, you can overwrite it by pressing "down" (to fall quick)
+  - mini maps for all the areas where you have a map (highlighting the sreen where you are at)
 
 - Implement PCGWorld in assembler:
   - implement it and generate the whole thing in assembler
@@ -181,10 +178,12 @@ X-Spelunker 2 (e-ke-se pe-lu-ne-ke-le):
       - there is a room with a snake statue (only one) and one with a jaguar state (only one), and maybe 2 other rooms with 2 other statues
       - on another room, there is a dial, where you can change the time (day/night/etc.), have 4 options, and start in one that will never be chosen.
     - Mayan clues should teach you the meaning of "crouch/attack/jump/snake/jaguar/day/night/etc."
-    - Power stones will have a glyph and a number in maya (meaning the number of times the action has to be performed)
-    - mayan numerals are learned from pieces of map  
+    Ok - Power stones will have a glyph and a number in maya (meaning the number of times the action has to be performed)
+    - mayan numerals are learned from pieces of map + calendar stone
     - When a part of the ritual is done, the statue reacts somehow, to indicate you did something
     - When returning to the room with the inscription after all parts are done, two teleporters show up
+    - letter 1 from Elaine: contains a transcription of some inscription (too small to read, but it will have some annotations of some Maya symbol phonetics): this will be useful for the second Maya puzzle (for the prism). Letter 2 contains some more, and each Maya clue a bit more.
+      - For this puzzle, the ROM will teach you some Maya words, and there will be a Maya inscription written phonetically with what you have to do.
 
   - points to remember (for lore/clues):
       - the first attempt to create humans was from mud, but those were destroyed in the great flood 

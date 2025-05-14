@@ -2024,7 +2024,6 @@ ENDR
 	dw buffer_4096 + 38 * 64  ; TAG_MAP_PIECE5
 	dw buffer_4096 + 38 * 64  ; TAG_MAP_PIECE6
 	dw buffer_4096 + 38 * 64  ; TAG_MAP_PIECE7
-	dw buffer_4096 + 38 * 64  ; TAG_MAP_PIECE8
 	dw buffer_4096 + 39 * 64  ; TAG_HEART1
 	dw buffer_4096 + 39 * 64  ; TAG_HEART2
 	dw buffer_4096 + 39 * 64  ; TAG_HEART3

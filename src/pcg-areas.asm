@@ -1915,7 +1915,6 @@ pcg_generate_area__item_tags:
     db TAG_MAP_PIECE5
     db TAG_MAP_PIECE6
     db TAG_MAP_PIECE7
-    db TAG_MAP_PIECE8
     db TAG_HEART1
     db TAG_HEART2
     db TAG_HEART3
