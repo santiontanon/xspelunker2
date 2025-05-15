@@ -536,6 +536,7 @@ global_state__objects: ds virtual N_UNIQUE_TAGS
 global_state__open_walls: ds virtual 6 * N_PATH_OPENING_TAGS
 
 global_state__story: ds virtual 1
+global_state__used_teleporter_before: ds virtual 1
 
 global_state__power_calendar: ds virtual 6  ; 0: empty
                                             ; 1: inactive stone
@@ -613,6 +614,7 @@ RAM_to_zero_on_game_start_end:
 tmp_hud_drawing_hl: ds virtual 2
 tmp_hud_drawing_de: ds virtual 2
 tmp_dialog_pointer_position: equ tmp_hud_drawing_hl
+tmp_map_pointer_position: equ tmp_hud_drawing_hl
 
 config_hud_type: ds virtual 1  ; 0: minimal, 1: minimal always visible, 2: full
 config_inventory_key_combo: ds virtual 1  ; 0: down+jump, 1: none

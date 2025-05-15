@@ -22,6 +22,18 @@ upload_sprites_to_vdp_player_left:
 upload_sprites_to_vdp_player_direction_set:
 	push de
 		add hl, bc
+		ld a, (player_state)
+		and #fe
+		cp PLAYER_STATE_TELEPORT_IN
+		jr nz, upload_sprites_to_vdp_no_teleport
+		; teleport sprite animation:
+		ld de, buffer_4096
+		ld bc, 64
+		ldir
+		ld a, (player_state_timer)
+		call sprites_teleport_animation
+		ld hl, buffer_4096
+upload_sprites_to_vdp_no_teleport:
 		ld de, SPRTBL2
 		ld b, 64
 		call fast_small_LDIRVM
@@ -140,3 +152,28 @@ copy_player_sprite_to_buffer:
 	ret
 
 
+;-----------------------------------------------
+; input:
+; - a: 0: sprite completely hidden, 32: sprite completely showing
+sprites_teleport_animation:
+	neg
+	add a, 32
+	ld hl, buffer_4096
+	srl a
+	ld b, a
+	ret z
+	xor a
+	ld de, 16
+sprites_teleport_animation_loop:
+	push hl
+		ld (hl), a
+		add hl, de
+		ld (hl), a
+		add hl, de
+		ld (hl), a
+		add hl, de
+		ld (hl), a
+	pop hl
+	inc hl
+	djnz sprites_teleport_animation_loop
+	ret

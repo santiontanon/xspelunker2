@@ -1874,11 +1874,22 @@ set_large_object_to_upload_to_vdp:
 	cp TAG_DOOR_BOSS
 	jr z, set_large_object_to_upload_to_vdp_boss_door
 	; teleporters:
-	ld a, (global_state__story)
-	cp STORY_STATE__PLACED_FIRST_POWER_STONE
-	jr c, set_large_object_to_upload_to_vdp__teleporter_off
+	ld a, (global_state__n_power_stones_in_calendar)
+	or a
+	jr z, set_large_object_to_upload_to_vdp__teleporter_off
+	; check if the teleporter was activated by the player:
+	ld d, 0
+	ld hl, global_state__objects
+	add hl, de
+	ld a, (hl)
+	or a
+	jr nz, set_large_object_to_upload_to_vdp_teleporter_activated_by_player
 	ld e, 12*8
 	ld hl, buffer_4096 + 178 * 16  ; teleporter on
+	jr set_large_object_to_upload_to_vdp_ptr_set
+set_large_object_to_upload_to_vdp_teleporter_activated_by_player:
+	ld e, 12*8
+	ld hl, buffer_4096 + 190 * 16  ; teleporter activated by player
 	jr set_large_object_to_upload_to_vdp_ptr_set	
 set_large_object_to_upload_to_vdp__teleporter_off:
 	ld e, 12*8

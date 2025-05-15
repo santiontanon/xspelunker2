@@ -1,17 +1,19 @@
 to do:
 
-***- 1st power stone:
-  ***- interacting with a teleporter activates it (from red to blue) and brings up the map with markers in each location for which you have already visited the teleporter, and for which you have the map:
-    ***- first time it will say: "the map is reacting to this device, some places are lighting up!"
-    ***- now there is a small UI with an "exit" button at the top, and you can press up/down to move through the dots you have active
-    ***- space/interact/jump teleports you there
-  ***- first time teleporting, message: "Woah! I just teleported!"
-***- 3rd power stone on calendar stone, opens door to temple of fire (spawn door and open it), and makes numerals in calendar turn red (to indicate it is activating). Message that "I heard something open"
-***- 4th + 5th, lets you turn on the calendar stone (activate defenses) (for first ending), months turn of some color too (purple? red?). Activate interacting with central socket. When this happens, the calendar stone disappears (it sinks into the wall, to leave enough tiles available for the final boss), all the rooom entrances close, and the final confrontation with the aliens begins in that same room. If you win, ending C.
+***- 3rd power stone on calendar stone:
+  ***- spawn door that blocks entrance to temple of fire (in shaft)
+  ***- placing the 3rd power stone opens it
+  ***- message that "I think I heard some door open deep into the ruins!"
+  ***- numbers turn red after placing the 3rd stone
+***- 4th + 5th:
+  ***- center lights up (pulsates)
+  ***- interact with center makes the calendar stone disappear (sinks into the wall with the same effect as when boss doors disappear)
+  ***- all room entrances close, and two gaps open at the top (aliens will drop from there)
+  ***- then just jump to ending (for now just black screen that jumps to game over)
 ***- Maya puzzle and double teleporter room in atlantis (leading to teleporters in mars/moon, and with animal statues for solving the puzzle) (https://mayaglyphs.org/). The letter received from Elaine should give some clues of Maya -> English (phonetic), and then the rest should be obtained from the clues gathered around the map. So, here, I should draw/sketch all the letters/diagrams in the intro + Elaine letters too.
 ***- 6th/7th (two halves from Mars/Moon), (activate offensive capabilities, and destroy alien hardware): replace the depleted stone, you can only place this last. Same as above, but ending B.
-***- Second Maya puzzle for the prism: involves looking for secrets in the ROM, as well as knowing actual Maya words (first Maya puzzle is phonetic, this one is actual Maya)
-***- with final secret stone (prism that can only be obtained when all stones are placed, by defeating an 8th boss that appears after solving the secret riddle): opens dimensional portal for YOU to travel throughout the universe. Same confrontation with aliens, but if you win, a teleporter shows up with some controls, that teleports you to their home planet, to face the final final boss. If you win, ending A.
+***- Second Maya puzzle for the prism: involves looking for secrets in the ROM, to learn how to "speak", and then speak a given maya word in the center of the calendar, that will activate the prism (where is this final clue? Probably somewhere in Mars/Moon?)
+***- with the prism: opens dimensional portal for YOU to travel throughout the universe. Same confrontation with aliens, but if you win, a teleporter shows up with some controls, that teleports you to their home planet, to face the final final boss. If you win, ending A.
 
 - ensure that ALL tags are instantiated and are functional now during room creation (e.g. story tablets)
 
@@ -59,7 +61,7 @@ to do:
 - fourth boss: The Obsidian Golem: A hulking golem made of obsidian, with glowing cracks filled with molten lava..
 - atlantis biome (do I need to move the possible set of up/down/left/right tags to 4 instead of just 2?)
 - fifth boss: Atlantean Guardian (Underwater Boss): A colossal robotic creature with bioluminescent features, resembling a deep-sea creature (laser beams from tentacles, summons robotic fish)
-
+- confrontation with the aliens after activating the calendar stone
 - first ending sequence
 
 - secret quest:
@@ -78,8 +80,8 @@ to do:
 
 - second ending
 
-- secret puzzle 2: add strings in the ROM that can be read via a hex reader of the ROM (encode them as decimal numbers in the .asm file, so that they are not visible from the source easily), that form a puzzle, giving you a clue (e.g. a code) for something to do in the game to get a special ending. this will enable the 3rd ending (last piece to fit in the calendar)
-- 8th boss (appears after solving the secret puzzle 2, and gives you the final prism for the calendar stone). Where does it appear? maybe spawn an 8th boss, and just keep it hidden until this happens?
+- secret puzzle 2: add strings in the ROM that can be read via a hex reader of the ROM (encode them as decimal numbers in the .asm file, so that they are not visible from the source easily), that form a puzzle, giving you a clue (it tells you "how to speak") for how to interact with the center of the calendar to fully activate the stone.
+- 8th bossL: after beating the combat against the aliens, you can teleport to their home planet, and fight against their leader (final final boss)
 - think of more secrets to add to the game (maybe secret rooms that depend on the RNG spawning certain things)
 
 --------------------

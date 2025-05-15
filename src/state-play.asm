@@ -7,46 +7,12 @@ state_play:
 
 		ld a, 1  ; inactive stone
 		ld (global_state__power_calendar), a
-; 		ld a, 2 + 0  ; first power stone
-; 		ld (global_state__power_calendar + 1), a
-; 		ld a, 1
-; 		ld (global_state__n_power_stones_in_calendar), a
-		ld a, set_large_object_to_upload_to_vdp
+		ld a, 2 + 0  ; first power stone
+		ld (global_state__power_calendar + 1), a
+		ld a, 1
+		ld (global_state__n_power_stones_in_calendar), a
+		ld a, STORY_STATE__START
 		ld (global_state__story), a
-
-		; initial player position:
-		ld hl, #0a00
-; 		ld hl, #1000
-		ld (player_x), hl
-		ld hl, #0a00
-		ld (player_y), hl
-		ld a, #ff
-		ld (player_requested_weapon_sprite), a
-
-		; set random seed:
-		ld hl, #aaaa
-		ld (current_world__seed), hl
-		ld hl, #aaaa
-		ld (current_world__seed + 2), hl
-
-		; generate world:
-		ld hl, pcg_generate_world
-		ld c, PCG_PAGE
-		call call_hl_in_page_c_8000
-
-		; generate area:
-		ld hl, pcg_generate_area
-		ld e, 0  ; area to generate
-; 		ld e, 3  ; area to generate
-		ld c, PCG_PAGE
-		call call_hl_in_page_c_8000
-
-		; generate room:
-		ld e, 0
-; 		ld e, CALENDAR_ROOM_ID
-		ld hl, pcg_generate_room
-		ld c, PCG_PAGE
-		call call_hl_in_page_c_8000
 
 		; debug:
 		ld a, 1
@@ -107,6 +73,49 @@ state_play:
 ; 		ld (player_inventory_weapon_ammo + 3), a
 		ld a, 1
 		ld (player_inventory_n_small_keys), a
+		ld (global_state__objects + TAG_MAP_PIECE1), a
+		ld (global_state__objects + TAG_MAP_PIECE2), a
+		ld (global_state__objects + TAG_MAP_PIECE3), a
+		ld (global_state__objects + TAG_MAP_PIECE4), a
+; 		ld (global_state__objects + TAG_TELEPORTER1), a
+		ld (global_state__objects + TAG_TELEPORTER4), a
+		ld (global_state__objects + TAG_TELEPORTER5), a
+
+		; initial player position:
+		ld hl, #0a00
+; 		ld hl, #1000
+		ld (player_x), hl
+		ld hl, #0a00
+		ld (player_y), hl
+		ld a, #ff
+		ld (player_requested_weapon_sprite), a
+
+		; set random seed:
+		ld hl, #aaaa
+		ld (current_world__seed), hl
+		ld hl, #aaaa
+		ld (current_world__seed + 2), hl
+
+		; generate world:
+		ld hl, pcg_generate_world
+		ld c, PCG_PAGE
+		call call_hl_in_page_c_8000
+
+		; generate area:
+		ld hl, pcg_generate_area
+; 		ld e, 0  ; area to generate
+		ld e, 1  ; area to generate
+; 		ld e, 3  ; area to generate
+		ld c, PCG_PAGE
+		call call_hl_in_page_c_8000
+
+		; generate room:
+; 		ld e, 0
+		ld e, 10
+; 		ld e, CALENDAR_ROOM_ID
+		ld hl, pcg_generate_room
+		ld c, PCG_PAGE
+		call call_hl_in_page_c_8000
 
 		ld a, PLAYER_INITIAL_MAX_HEALTH
 		ld hl, player_health
@@ -441,7 +450,6 @@ state_play_upload_object_tiles_to_vdp_if_necessary_continue:
 	push hl
 	push bc
 		ld de, CHRTBL2 + FIRST_LARGE_ITEM_TILE*8
-		ld b, 32
 		call fast_small_LDIRVM
 	pop bc
 	pop hl

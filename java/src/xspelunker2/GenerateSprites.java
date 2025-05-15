@@ -148,6 +148,7 @@ public class GenerateSprites {
         List<Integer> data = new ArrayList<>();
         
         data.addAll(extractSprite(sourceImage, 0, 0, 15));  // arrow
+        data.addAll(extractSprite(sourceImage, 16, 0, 15));  // circle (for map teleportation)
         
         System.out.println("data: " + data.size());
         Z80Assembler.dataToBinary(data, outputPath + ".bin");        

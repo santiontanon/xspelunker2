@@ -51,8 +51,7 @@ public class Inventory {
         data.addAll(GenerateSprites.extractSprite(sourceImage, 64, 16, 15));  // selected weapon down
         
         System.out.println("sprite data: " + data.size());
-        Z80Assembler.dataToBinary(data, outputPath + ".bin");        
-        
+        Z80Assembler.dataToBinary(data, outputPath + ".bin");                
     }
     
     

@@ -101,7 +101,10 @@ player_hit_hazard_continue:
 
 
 ;-----------------------------------------------
-player_update_update_sprite_position:
+; output:
+; - ixl: sprite x (useful for the weapon sprite code)
+; - iyl: 0 or #80 depending if we are setting early clock bit or not
+player_update_update_sprite_position_coordinates:
 	ld de, sprite_attribute_table
 	ld bc, sprite_attribute_table + 4
 
@@ -160,7 +163,7 @@ player_update_update_sprite_position_early_clock_bit:
 	ld a, COLOR_DARK_RED | #80
 	ld (bc), a
 	ld iyl, #80
-	jr player_update_update_sprite_check_flashing
+	ret
 
 player_update_update_sprite_position_no_early_clock_bit:
 	ld (de), a
@@ -177,6 +180,12 @@ player_update_update_sprite_position_no_early_clock_bit:
 	ld a, COLOR_DARK_RED
 	ld (bc), a
 	ld iyl, 0
+	ret	
+
+
+;-----------------------------------------------
+player_update_update_sprite_position:
+	call player_update_update_sprite_position_coordinates
 
 player_update_update_sprite_check_flashing:
 	ld a, (player_immunity_timer)
@@ -261,6 +270,7 @@ player_update_state_fn_table:
 	dw player_update_state_directional_weapon_crouching
 	dw player_update_state_hurt
 	dw player_update_state_dead
+	dw player_update_state_teleport_in
 
 
 ;-----------------------------------------------
@@ -1955,6 +1965,44 @@ player_update_state_dead:
 	ld a, 33
 	ld (player_requested_frame), a
 	jp player_update_update_sprite_position
+
+
+;-----------------------------------------------
+player_update_state_teleport_in:
+	ld hl, player_state_timer
+	inc (hl)
+	ld a, (hl)
+
+	ld hl, SFX_teleport
+	cp 2
+	call z, play_SFX_with_high_priority
+
+	cp 32
+	jp z, player_update_state_teleport_in_done
+
+	; teleport animation:
+	call player_update_update_sprite_position_coordinates
+	; replace color with white:
+	ld a, COLOR_WHITE
+	or iyl
+	ld (de), a
+	ld (bc), a
+	jp player_update_update_sprite_weapon
+
+player_update_state_teleport_in_done:
+	ld hl, global_state__used_teleporter_before
+	ld a, (hl)
+	or a
+	jp nz, player_update_switch_to_idle
+	ld (hl), 1
+
+	ld de, TEXT_FIRST_TELEPORTATION2
+	ld hl, display_in_game_message
+	ld c, TEXT_PAGE
+	push ix
+		call call_hl_in_page_c_8000
+	pop ix
+	jp player_update_switch_to_idle
 
 
 ;-----------------------------------------------

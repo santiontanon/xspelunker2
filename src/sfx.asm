@@ -634,6 +634,7 @@ SFX_enemy_kill:
   db SFX_CMD_END      
 
 
+SFX_activate_teleporter:
 SFX_item_pickup:
   db 7, #b8  ; tone in all three channels
   db 10,#0d  ; volume
@@ -647,6 +648,36 @@ SFX_item_pickup:
   db 4+MUSIC_CMD_TIME_STEP_FLAG, #00
   db 4,#80,5+MUSIC_CMD_TIME_STEP_FLAG, #01
   db 4+MUSIC_CMD_TIME_STEP_FLAG, #00
+  db 10,#00  ; silence
+  db SFX_CMD_END
+
+SFX_teleport:
+  db 7, #b8  ; tone in all three channels
+  db 10,#0d  ; volume
+  db 5, #06, 4+MUSIC_CMD_TIME_STEP_FLAG, #00
+  db MUSIC_CMD_SKIP
+  db 5, #06, 4+MUSIC_CMD_TIME_STEP_FLAG, #80
+  db MUSIC_CMD_SKIP
+  db 5, #05, 4+MUSIC_CMD_TIME_STEP_FLAG, #00
+  db MUSIC_CMD_SKIP
+  db 5, #05, 4+MUSIC_CMD_TIME_STEP_FLAG, #80
+  db MUSIC_CMD_SKIP
+  db 5, #04, 4+MUSIC_CMD_TIME_STEP_FLAG, #00
+  db MUSIC_CMD_SKIP
+  db 5, #04, 4+MUSIC_CMD_TIME_STEP_FLAG, #80
+  db MUSIC_CMD_SKIP
+  db 5, #03, 4+MUSIC_CMD_TIME_STEP_FLAG, #00
+  db MUSIC_CMD_SKIP
+  db 5, #03, 4+MUSIC_CMD_TIME_STEP_FLAG, #80
+  db MUSIC_CMD_SKIP
+  db 5, #02, 4+MUSIC_CMD_TIME_STEP_FLAG, #00
+  db MUSIC_CMD_SKIP
+  db 5, #02, 4+MUSIC_CMD_TIME_STEP_FLAG, #80
+  db MUSIC_CMD_SKIP
+  db 5, #01, 4+MUSIC_CMD_TIME_STEP_FLAG, #00
+  db MUSIC_CMD_SKIP
+  db 5, #01, 4+MUSIC_CMD_TIME_STEP_FLAG, #80
+  db MUSIC_CMD_SKIP
   db 10,#00  ; silence
   db SFX_CMD_END
 

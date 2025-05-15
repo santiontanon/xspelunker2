@@ -272,6 +272,22 @@ get_tile_object_behind_player_loop:
 	jr z, get_tile_object_behind_player_32x32_object
 	cp TAG_DOOR_BOSS
 	jr z, get_tile_object_behind_player_32x32_object
+	cp TAG_TELEPORTER1
+	jr z, get_tile_object_behind_player_32x24_object
+	cp TAG_TELEPORTER2
+	jr z, get_tile_object_behind_player_32x24_object
+	cp TAG_TELEPORTER3
+	jr z, get_tile_object_behind_player_32x24_object
+	cp TAG_TELEPORTER4
+	jr z, get_tile_object_behind_player_32x24_object
+	cp TAG_TELEPORTER5
+	jr z, get_tile_object_behind_player_32x24_object
+	cp TAG_TELEPORTER6
+	jr z, get_tile_object_behind_player_32x24_object
+	cp TAG_TELEPORTER7
+	jr z, get_tile_object_behind_player_32x24_object
+	cp TAG_TELEPORTER8
+	jr z, get_tile_object_behind_player_32x24_object
 
 	; 16x16 objects:
 	ld a, b

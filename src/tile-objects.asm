@@ -851,14 +851,14 @@ ENDR
 	dw object_interaction_function_small_chest  ; TAG_SMALL_KEY_CHEST2
 	dw object_interaction_function_small_chest  ; TAG_SMALL_KEY_CHEST3
 	dw object_interaction_function_small_chest  ; TAG_SMALL_KEY_CHEST4
-	dw object_interaction_function_teleporter  ; TAG_SMALL_KEY_TELEPORTER1
-	dw object_interaction_function_teleporter  ; TAG_SMALL_KEY_TELEPORTER2
-	dw object_interaction_function_teleporter  ; TAG_SMALL_KEY_TELEPORTER3
-	dw object_interaction_function_teleporter  ; TAG_SMALL_KEY_TELEPORTER4
-	dw object_interaction_function_teleporter  ; TAG_SMALL_KEY_TELEPORTER5
-	dw object_interaction_function_teleporter  ; TAG_SMALL_KEY_TELEPORTER6
-	dw object_interaction_function_teleporter  ; TAG_SMALL_KEY_TELEPORTER7
-	dw object_interaction_function_teleporter  ; TAG_SMALL_KEY_TELEPORTER8
+	dw object_interaction_function_teleporter  ; TAG_TELEPORTER1
+	dw object_interaction_function_teleporter  ; TAG_TELEPORTER2
+	dw object_interaction_function_teleporter  ; TAG_TELEPORTER3
+	dw object_interaction_function_teleporter  ; TAG_TELEPORTER4
+	dw object_interaction_function_teleporter  ; TAG_TELEPORTER5
+	dw object_interaction_function_teleporter  ; TAG_TELEPORTER6
+	dw object_interaction_function_teleporter  ; TAG_TELEPORTER7
+	dw object_interaction_function_teleporter  ; TAG_TELEPORTER8
 	dw object_interaction_function_empty  ; TAG_PUSHABLE_BLOCK
 	dw object_interaction_function_empty  ; TAG_DOOR_VERTICAL
 	dw object_interaction_function_empty  ; TAG_DOOR_HORIZONTAL
@@ -1662,8 +1662,50 @@ object_interaction_function_calendar_socket_6th_stone:
 
 ;-----------------------------------------------
 object_interaction_function_teleporter:
-	; ...
-	ret
+	ld a, (global_state__n_power_stones_in_calendar)
+	or a
+	ret z  ; no power stones in calendar yet, teleporters are off
+	ld e, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	ld d, 0
+	ld hl, global_state__objects
+	add hl, de
+	ld a, (hl)
+	or a
+	jr z, object_interaction_function_teleporter_was_off
+
+	; teleporter was already activated, teleport!
+	ld hl, global_state__used_teleporter_before
+	ld a, (hl)
+	or a
+	jr nz, object_interaction_function_teleporter_not_first_time
+	ld de, TEXT_FIRST_TELEPORTATION1
+	ld hl, display_in_game_message
+	ld c, TEXT_PAGE
+	push ix
+		call call_hl_in_page_c_8000
+	pop ix
+object_interaction_function_teleporter_not_first_time:
+
+	ld hl, display_map_from_teleporter
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000
+	
+	jp state_play_from_loaded_room
+object_interaction_function_teleporter_was_off:
+	; activate teleporter:
+	ld (hl), 1
+
+	ld hl, SFX_activate_teleporter
+	call play_SFX_with_high_priority
+
+	ld hl, redraw_flags
+	ld (hl), #ff
+
+	ld e, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	ld hl, set_large_object_to_upload_to_vdp
+	ld c, PCG_PAGE
+	jp call_hl_in_page_c_8000
+
 
 
 ;-----------------------------------------------
@@ -1692,6 +1734,32 @@ find_room_door_object_ptr_not_found:
 	or 1
 	ret
 
+
+;-----------------------------------------------
+; input:
+; - e: type
+; output:
+; - z: object found
+; - nz: object not found
+; - hl: object ptr
+find_object_ptr:
+	ld hl, current_room__tile_objects
+	; : ds virtual MAX_ROOM_TILE_OBJECTS * ROOM_TILE_OBJECT_STRUCT_SIZE
+find_object_ptr_loop:
+	ld a, (hl)
+	cp #ff
+	jr z, find_object_ptr_not_found
+	inc hl
+	ld a, (hl)  ; type
+	dec hl
+	cp e
+	ret z
+	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
+	add hl, bc
+	jr find_object_ptr_loop
+find_object_ptr_not_found:
+	or 1
+	ret
 
 ;-----------------------------------------------
 ; types:
