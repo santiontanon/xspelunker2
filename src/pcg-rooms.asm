@@ -6,6 +6,7 @@ tmp_pcg_room__next_object_ptr: equ tmp_pcg_room__current_decompressed_chunk_bank
 tmp_pcg_room__next_tile_object_ptr: equ tmp_pcg_room__next_object_ptr - 2
 tmp_pcg_room__chunk_x: equ tmp_pcg_room__next_tile_object_ptr - 1
 tmp_pcg_room__chunk_y: equ tmp_pcg_room__chunk_x - 1
+tmp_pcg_room__is_midpoint_room: equ tmp_pcg_room__chunk_y - 1
 
 
 ;-----------------------------------------------
@@ -57,6 +58,7 @@ pcg_generate_room_reset_state:
 	ld (player_trial_completion_state), a
 	ld (current_room__objects_sentinel), a
 	ld (current_room__player_bullets_sentinel), a
+	ld (tmp_pcg_room__is_midpoint_room), a
 	call clear_memory_a
 
 	ld hl, current_room__player_bullets
@@ -479,6 +481,9 @@ pcg_generate_room__object_loop:
 	cp TAG_TELEPORTER8
 	jp z, pcg_generate_room__object_teleporter
 
+	cp TAG_MIDPOINT
+	jp z, pcg_generate_room__object_midpoint_door
+
 	; ...
 
 pcg_generate_room__object_loop_next:
@@ -486,6 +491,10 @@ pcg_generate_room__object_loop_next:
 	add ix, bc
 	jp pcg_generate_room__object_loop
 pcg_generate_room__object_loop_end:
+
+	ld a, (tmp_pcg_room__is_midpoint_room)
+	or a
+	jp nz, pcg_generate_room__open_midpoint_door
 	ret
 
 
@@ -904,6 +913,12 @@ pcg_generate_room__object_teleporter:
 
 
 ;-----------------------------------------------
+pcg_generate_room__object_midpoint_door:
+	ld a, 1
+	ld (tmp_pcg_room__is_midpoint_room), a
+	; jr pcg_generate_room__object_button_door
+
+
 pcg_generate_room__object_button_door:
 	; get the chunk type where we are placing the object:
 	push bc
@@ -2245,6 +2260,60 @@ pcg_generate_room__calendar_turn_on_phase1:
 
 
 ;-----------------------------------------------
+pcg_generate_room__calendar_turn_on_phase2_tile_ids:
+	db 80, 81, 83, 85, 89, 92, 93, 94, 146, 153, 171, 172, 175
+pcg_generate_room__calendar_turn_on_phase2_tile_ids_end:
+
+pcg_generate_room__calendar_turn_on_phase2_partial_tile_clr:
+	db COLOR_DARK_BLUE*16 + COLOR_RED, COLOR_DARK_BLUE*16 + COLOR_RED
+	db COLOR_DARK_BLUE*16, COLOR_DARK_BLUE*16
+	db COLOR_DARK_BLUE*16 + COLOR_RED, COLOR_DARK_BLUE*16 + COLOR_RED
+	db COLOR_DARK_BLUE*16, COLOR_DARK_BLUE*16
+
+
+pcg_generate_room__calendar_turn_on_phase2:
+	ld hl, pcg_generate_room__calendar_turn_on_phase2_tile_ids
+	ld b, pcg_generate_room__calendar_turn_on_phase2_tile_ids_end - pcg_generate_room__calendar_turn_on_phase2_tile_ids
+pcg_generate_room__calendar_turn_on_phase2_loop:
+	ld a, (hl)
+	inc hl
+	push bc
+	push hl
+		; bank 1:
+		ld h, 0
+		ld l, a
+		add hl, hl
+		add hl, hl
+		add hl, hl
+		ld de, CLRTBL2 + 256*8
+		add hl, de
+		ld a, COLOR_DARK_BLUE*16 + COLOR_RED
+		ld b, 8
+		push hl
+			call fast_FILVRM_small
+		pop hl
+		; bank 2:
+		ld de, 256*8
+		add hl, de
+		ld a, COLOR_DARK_BLUE*16 + COLOR_RED
+		ld b, 8
+		call fast_FILVRM_small
+	pop hl
+	pop bc
+	djnz pcg_generate_room__calendar_turn_on_phase2_loop
+
+	; tiles that have to be half-changed: 82, 84 (only appear in the middle bank):
+	ld hl, pcg_generate_room__calendar_turn_on_phase2_partial_tile_clr
+	ld de, CLRTBL2 + (256 + 82)*8
+	ld b, 8
+	call fast_small_LDIRVM
+	ld hl, pcg_generate_room__calendar_turn_on_phase2_partial_tile_clr
+	ld de, CLRTBL2 + (256 + 84)*8
+	ld b, 8
+	jp fast_small_LDIRVM
+
+
+;-----------------------------------------------
 ; input:
 ; - a: chunk ID
 ; - b: direction to check
@@ -2263,4 +2332,92 @@ pcg_generate_room__chunk_direction_open:
 	add hl, de
 	ld a, (hl)  ; top-left chunk type
 	and b
+	ret
+
+
+;-----------------------------------------------
+; This door has to be open with this special function, since the event that 
+; opens it is in a different room than the door itself, and hence the 
+; 'room_mark_open_door' cannot be called at that point. So, we delay it until
+; we load the door where the TAG_MIDPOINT tag is.
+pcg_generate_room__open_midpoint_door:
+	ld a, (global_state__objects + TAG_MIDPOINT)
+	or a
+	ret nz  ; already open
+	ld a, (global_state__n_power_stones_in_calendar)
+	cp 3
+	ret c  ; not at the point of opening it yet
+	ld e, TAG_DOOR_HORIZONTAL
+	ld c, TILES_PAGE
+	ld hl, find_object_ptr
+	call call_hl_in_page_c_8000
+	ld a, 1
+	ld (global_state__objects + TAG_MIDPOINT), a  ; mark the door as already open
+	push hl
+	pop ix
+	call room_mark_open_door
+	ld c, TILES_PAGE
+	ld hl, delete_tile_object_in_ix
+	jp call_hl_in_page_c_8000
+
+;-----------------------------------------------
+; input:
+; - ix: ptr to the door object
+room_mark_open_door:
+	; Create an entry in "global_state__open_walls":
+	ld hl, global_state__open_walls
+room_mark_open_door_loop:
+	ld a, (hl)
+	or a
+	jr z, room_mark_open_door_loop_end
+	ld bc, 6
+	add hl, bc
+	jr room_mark_open_door_loop
+room_mark_open_door_loop_end:
+	ld a, (current_area__id)
+	inc a  ; so that we don't have a 0
+	ld (hl), a
+	inc hl
+	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	push hl
+	push ix
+		call get_chunk_ids_current_room_ptr
+		ld bc, -current_area__chunks_ids
+		add hl, bc
+		ld a, l
+	pop ix
+	pop hl
+	ld (hl), a  ; chunk where this door is
+	inc hl
+	; get within-chunk coordinates:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	and #0f
+	ld c, a  ; c = x % CHUNK_WIDTH
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+room_mark_open_door_chunk_y_loop:
+	cp CHUNK_HEIGHT
+	jr c, room_mark_open_door__continue
+	sub CHUNK_HEIGHT
+	jr room_mark_open_door_chunk_y_loop
+room_mark_open_door__continue:
+	ld b, a  ; b = y % CHUNK_HEIGHT
+	ld (hl), c
+	inc hl
+	ld (hl), b
+	inc hl
+
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	cp TAG_DOOR_VERTICAL
+	jr z, room_mark_open_door__vertical
+	ld e, 4
+	ld d, 1
+	jr room_mark_open_door__dimensions_set
+room_mark_open_door__vertical:
+	ld e, 1
+	ld d, 3
+room_mark_open_door__dimensions_set:
+	ld (hl), e
+	inc hl
+	ld (hl), d
 	ret

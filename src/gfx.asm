@@ -356,15 +356,23 @@ setup_game_tiles_biome_internal_continue:
     ld a, (current_room__id)
     cp CALENDAR_ROOM_ID
     ret nz
+
+    ; first stone effect:
     ld a, (global_state__n_power_stones_in_calendar)
     or a
     ret z
-    ; first stone effect:
     ld hl, pcg_generate_room__calendar_turn_on_phase1
     ld c, PCG_PAGE
     call call_hl_in_page_c_8000    
+
     ; third stone effect:
-    ; ...
+    ld a, (global_state__n_power_stones_in_calendar)
+    cp 3
+    ret c
+    ld hl, pcg_generate_room__calendar_turn_on_phase2
+    ld c, PCG_PAGE
+    call call_hl_in_page_c_8000    
+
     ; fifth stone effect:
     ; ...
     ; last stone effect:

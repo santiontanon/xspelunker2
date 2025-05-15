@@ -1170,63 +1170,12 @@ object_interaction_function_open_combination_lock_entry_point:
 	pop ix
 
 	; Create an entry in "global_state__open_walls":
-	ld hl, global_state__open_walls
-room_mark_open_door_loop:
-	ld a, (hl)
-	or a
-	jr z, room_mark_open_door_loop_end
-	ld bc, 6
-	add hl, bc
-	jr room_mark_open_door_loop
-room_mark_open_door_loop_end:
-	ld a, (current_area__id)
-	inc a  ; so that we don't have a 0
-	ld (hl), a
-	inc hl
-	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
-	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
-	push hl
-	push ix
-		call get_chunk_ids_current_room_ptr
-		ld bc, -current_area__chunks_ids
-		add hl, bc
-		ld a, l
-	pop ix
-	pop hl
-	ld (hl), a  ; chunk where this door is
-	inc hl
-	; get within-chunk coordinates:
-	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_X)
-	and #0f
-	ld c, a  ; c = x % CHUNK_WIDTH
-	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
-room_mark_open_door_chunk_y_loop:
-	cp CHUNK_HEIGHT
-	jr c, room_mark_open_door__continue
-	sub CHUNK_HEIGHT
-	jr room_mark_open_door_chunk_y_loop
-room_mark_open_door__continue:
-	ld b, a  ; b = y % CHUNK_HEIGHT
-	ld (hl), c
-	inc hl
-	ld (hl), b
-	inc hl
-
-	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
-	cp TAG_DOOR_VERTICAL
-	jr z, room_mark_open_door__vertical
-	ld e, 4
-	ld d, 1
-	jr room_mark_open_door__dimensions_set
-room_mark_open_door__vertical:
-	ld e, 1
-	ld d, 3
-room_mark_open_door__dimensions_set:
-	ld (hl), e
-	inc hl
-	ld (hl), d
+	ld hl, room_mark_open_door
+	ld c, PCG_PAGE
+	call call_hl_in_page_c_8000
 
 	; If it's a door down to an inter-area connection, replace by a ladder:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
 	cp TAG_DOOR_HORIZONTAL
 	jr nz, room_mark_open_door__no_ladder_replacement
 	; is it at the bottom of the room?
@@ -1640,7 +1589,7 @@ object_interaction_function_calendar_socket_1st_stone:
 	ld a, STORY_STATE__PLACED_FIRST_POWER_STONE
 	ld (global_state__story), a
 	push ix
-		ld de, TEXT_FIRST_POWER_STONE1
+		ld de, TEXT_PLACE_FIRST_POWER_STONE
 		ld hl, display_in_game_message
 		ld c, TEXT_PAGE
 		call call_hl_in_page_c_8000
@@ -1648,7 +1597,12 @@ object_interaction_function_calendar_socket_1st_stone:
 	ret
 
 object_interaction_function_calendar_socket_3rd_stone:
-	; ...
+	push ix
+		ld de, TEXT_PLACE_THIRD_POWER_STONE
+		ld hl, display_in_game_message
+		ld c, TEXT_PAGE
+		call call_hl_in_page_c_8000
+	pop ix
 	ret
 
 object_interaction_function_calendar_socket_5th_stone:

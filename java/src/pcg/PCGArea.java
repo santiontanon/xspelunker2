@@ -751,7 +751,6 @@ public class PCGArea {
             int connectionToClose = 0;  // for breakable walls
             switch(tag) {
                 case "start":
-                case "midpoint":
                 case "ending":
                     // ignore
                     break;
@@ -909,6 +908,7 @@ public class PCGArea {
                 case "combination2-lock":
                 case "combination3-lock":
                 case "combination4-lock":
+                case "midpoint":
                 {
                     if (!w.lockDirections.containsKey(tag)) {
                         System.err.println("lockDirections does not contain " + tag + "!!!");
@@ -1110,7 +1110,19 @@ public class PCGArea {
                                     case PCGWorld.DIRECTION_DOWN: necessaryObjectTypes.add("door-down"); break;
                                 }
                                 break;
-                            }                        
+                            }
+                            
+                            case "midpoint":
+                            {
+                                int lockDirection = w.lockDirections.get(placedTags[j][i]);
+                                switch(lockDirection) {
+                                    case PCGWorld.DIRECTION_LEFT: necessaryObjectTypes.add("door-left"); break;
+                                    case PCGWorld.DIRECTION_UP: necessaryObjectTypes.add("door-up"); break;
+                                    case PCGWorld.DIRECTION_RIGHT: necessaryObjectTypes.add("door-right"); break;
+                                    case PCGWorld.DIRECTION_DOWN: necessaryObjectTypes.add("door-down"); break;
+                                }
+                                break;
+                            }
 
                             case "boss1-key":
                             case "boss2-key":
@@ -1673,6 +1685,7 @@ public class PCGArea {
                 case "button-door2":
                 case "button-door3":
                 case "button-door4":
+                case "midpoint":
                 {
                     int lockDirection = w.lockDirections.get(placedTags[go.x][go.y]);
                     if (lockDirection == PCGWorld.DIRECTION_LEFT) {

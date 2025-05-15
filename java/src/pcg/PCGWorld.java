@@ -637,7 +637,13 @@ public class PCGWorld {
         if (boss7 == null) {
             return false;
         }
-        AreaDivision midpoint = randomAreaDivisionFavoringLeaves(w.areas.get(5), tree, true);
+//        AreaDivision midpoint = randomAreaDivisionFavoringLeaves(w.areas.get(5), tree, true);
+        AreaDivision midpoint = getDivisionByID(w.areas.get(5).divisionIDs[1][0], tree);
+        w.lockDirections.put("midpoint", DIRECTION_DOWN);
+        w.lockKeys.put("midpoint", new ArrayList<>());
+        w.lockKeys.get("midpoint").add("boss1");
+        w.lockKeys.get("midpoint").add("boss2");
+        w.lockKeys.get("midpoint").add("boss3");
         AreaDivision ending = getDivisionByID(w.areas.get(3).divisionIDs[3][0], tree);
 
 //        System.out.println("Key division depths: " +

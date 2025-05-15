@@ -1441,6 +1441,9 @@ pcg_generate_area__choose_chunks_loop_x_no_connection_down:
 		jp z, pcg_generate_area__choose_chunks_loop_x_4x4_item_tag
 		call pcg_generate_area__choose_chunks_is_combination_lock_tag_p
 		jp z, pcg_generate_area__choose_chunks_loop_x_combination_lock_tag
+		ld a, ixl
+		cp TAG_MIDPOINT
+		jp z, pcg_generate_area__choose_chunks_loop_x_midpoint_tag
 pcg_generate_area__ignore_tag:
 		jp pcg_generate_area__choose_chunks_loop_x_continue
 
@@ -1492,6 +1495,7 @@ pcg_generate_area__choose_chunks_loop_x_big_lock_tag:
 		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_BIG_ITEM_MASK
 		; jp pcg_generate_area__choose_chunks_loop_x_button_door_tag
 
+pcg_generate_area__choose_chunks_loop_x_midpoint_tag:
 pcg_generate_area__choose_chunks_loop_x_button_door_tag:
 		push hl
 		push bc
@@ -1844,6 +1848,7 @@ pcg_generate_area__directional_tags:
     db TAG_COMBINATION2_LOCK
     db TAG_COMBINATION3_LOCK
     db TAG_COMBINATION4_LOCK
+    db TAG_MIDPOINT
     db 0
 
 pcg_generate_area__normal_tags:

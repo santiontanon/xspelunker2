@@ -242,9 +242,10 @@ public class Text {
         addLineSafe(lines_with_constant, "There is a stone occupying this socket.", "CALENDAR_SOCKET_INACTIVE_STONE", 112);
         addLineSafe(lines_with_constant, "It looks like an empty socket to place something inside.", "CALENDAR_SOCKET_EMPTY", 112);
         addLineSafe(lines_with_constant, "I am scared of placing more stones! What if it fully activates?", "CALENDAR_SOCKET_REFUSE_TO_PLACE", 112);
-        addLineSafe(lines_with_constant, "It fits! The whole thing is activating! And it feels like something else in the ruins just activated. What did I just do?!", "FIRST_POWER_STONE1", 112);
+        addLineSafe(lines_with_constant, "It fits! The whole thing is activating! And it feels like something else in the ruins just activated. What did I just do?!", "PLACE_FIRST_POWER_STONE", 112);
         addLineSafe(lines_with_constant, "My map is reacting to this device! Some places are lighting up!", "FIRST_TELEPORTATION1", 112);
         addLineSafe(lines_with_constant, "Woah! I think I just teleported!", "FIRST_TELEPORTATION2", 112);
+        addLineSafe(lines_with_constant, "I think I heard some door open deep into the ruins!", "PLACE_THIRD_POWER_STONE", 112);
 
         // power stone inspection:
         addLineSafe(lines_with_constant, "A stone I found. Some sort of power radiates from it.", "INSPECT_POWER_STONE", 32);

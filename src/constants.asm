@@ -75,7 +75,7 @@ WORLD_AREA__TAGS_OFFSET equ WORLD_AREA__DIVISION_IDS_OFFSET + MAX_AREA_SIZE  ; e
 
 AREA_OBJECT_STRUCT_SIZE: equ 4
 AREA_OBJECT_STRUCT_TYPE: equ 0
-AREA_OBJECT_STRUCT_OFFSET: equ 1
+AREA_OBJECT_STRUCT_OFFSET: equ 1  ; in chunks
 AREA_OBJECT_STRUCT_ID: equ 2  ; these are area-relative. So, to globally identify an object, we need (area, ID)
 AREA_OBJECT_STRUCT_EXTRA: equ 3
 

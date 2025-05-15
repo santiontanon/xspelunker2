@@ -1,10 +1,6 @@
 to do:
 
-***- 3rd power stone on calendar stone:
-  ***- spawn door that blocks entrance to temple of fire (in shaft)
-  ***- placing the 3rd power stone opens it
-  ***- message that "I think I heard some door open deep into the ruins!"
-  ***- numbers turn red after placing the 3rd stone
+***- BUG: entering from the side of the calendar room does not have the correct collisions
 ***- 4th + 5th:
   ***- center lights up (pulsates)
   ***- interact with center makes the calendar stone disappear (sinks into the wall with the same effect as when boss doors disappear)
@@ -12,10 +8,10 @@ to do:
   ***- then just jump to ending (for now just black screen that jumps to game over)
 ***- Maya puzzle and double teleporter room in atlantis (leading to teleporters in mars/moon, and with animal statues for solving the puzzle) (https://mayaglyphs.org/). The letter received from Elaine should give some clues of Maya -> English (phonetic), and then the rest should be obtained from the clues gathered around the map. So, here, I should draw/sketch all the letters/diagrams in the intro + Elaine letters too.
 ***- 6th/7th (two halves from Mars/Moon), (activate offensive capabilities, and destroy alien hardware): replace the depleted stone, you can only place this last. Same as above, but ending B.
-***- Second Maya puzzle for the prism: involves looking for secrets in the ROM, to learn how to "speak", and then speak a given maya word in the center of the calendar, that will activate the prism (where is this final clue? Probably somewhere in Mars/Moon?)
+***- Second Maya puzzle for the prism: involves looking for secrets in the ROM, to learn how to "speak", and then speak a given maya word in the center of the calendar, that will activate the prism (where is this final clue? Probably somewhere in Mars/Moon?). Add strings in the ROM that can be read via a hex reader of the ROM (encode them as decimal numbers in the .asm file, so that they are not visible from the source easily), that form a puzzle, giving you a clue (it tells you "how to speak") for how to interact with the center of the calendar to fully activate the stone.
 ***- with the prism: opens dimensional portal for YOU to travel throughout the universe. Same confrontation with aliens, but if you win, a teleporter shows up with some controls, that teleports you to their home planet, to face the final final boss. If you win, ending A.
 
-- ensure that ALL tags are instantiated and are functional now during room creation (e.g. story tablets)
+- ensure that ALL tags are instantiated and are functional now during room creation (e.g. story tablets): game should be beatable beginning to end!
 
 - item effects:
   - for anti-grav belt, you can overwrite it by pressing "down" (to fall quick)
@@ -39,7 +35,7 @@ to do:
 - jungle biome
   - implement it (remember to keep ladder tiles in place for down-door opening code)
   - special chunk for start position (start tag) and set start position there (on the left-edge of map)
-  - add jungle events (village, npcs, maybe shop, etc.)
+  - add jungle events (village, npcs, shop where to use the coins, etc.)
 
 - menus:
   - brain games screen (think of a Maya-themed way for this)
@@ -77,11 +73,10 @@ to do:
 - moon biome (similar to mars, but different color scheme, it could even be the same with palette changed)
 - 6th boss: (ideas: "The Solar Stone Jaguar", "The Martian Terracotta Warrior", "The Dust Stone Golem")
 - 7th boss (ideas: "The Lunar Obsidian Sentinel" (tall, slender, smooth black, reflective surfaces), "The Lunar Crystal Serpent", "The Moon Stone Monolith")
-
 - second ending
 
-- secret puzzle 2: add strings in the ROM that can be read via a hex reader of the ROM (encode them as decimal numbers in the .asm file, so that they are not visible from the source easily), that form a puzzle, giving you a clue (it tells you "how to speak") for how to interact with the center of the calendar to fully activate the stone.
-- 8th bossL: after beating the combat against the aliens, you can teleport to their home planet, and fight against their leader (final final boss)
+- 8th boss: after beating the combat against the aliens, you can teleport to their home planet, and fight against their leader (final final boss)
+- final good ending
 - think of more secrets to add to the game (maybe secret rooms that depend on the RNG spawning certain things)
 
 --------------------

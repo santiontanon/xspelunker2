@@ -11,7 +11,7 @@ state_play:
 		ld (global_state__power_calendar + 1), a
 		ld a, 1
 		ld (global_state__n_power_stones_in_calendar), a
-		ld a, STORY_STATE__START
+		ld a, STORY_STATE__GOT_LETTER2
 		ld (global_state__story), a
 
 		; debug:
@@ -104,15 +104,15 @@ state_play:
 		; generate area:
 		ld hl, pcg_generate_area
 ; 		ld e, 0  ; area to generate
-		ld e, 1  ; area to generate
-; 		ld e, 3  ; area to generate
+; 		ld e, 5  ; area to generate
+		ld e, 3  ; area to generate
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
 
 		; generate room:
 ; 		ld e, 0
-		ld e, 10
-; 		ld e, CALENDAR_ROOM_ID
+; 		ld e, 0
+		ld e, CALENDAR_ROOM_ID
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
