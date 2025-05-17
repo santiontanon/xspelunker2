@@ -1,17 +1,12 @@
 to do:
 
-***- BUG: entering from the side of the calendar room does not have the correct collisions
-***- 4th + 5th:
-  ***- center lights up (pulsates)
-  ***- interact with center makes the calendar stone disappear (sinks into the wall with the same effect as when boss doors disappear)
-  ***- all room entrances close, and two gaps open at the top (aliens will drop from there)
-  ***- then just jump to ending (for now just black screen that jumps to game over)
+***- BUG: entering from the side of the calendar room does not have the correct collisions (maybe I need to split the calendar screen into 4 chunks, and just overwrite the chunk IDs, so that it's like the other rooms? (figure this out before defining the 2 teleporters room))
 ***- Maya puzzle and double teleporter room in atlantis (leading to teleporters in mars/moon, and with animal statues for solving the puzzle) (https://mayaglyphs.org/). The letter received from Elaine should give some clues of Maya -> English (phonetic), and then the rest should be obtained from the clues gathered around the map. So, here, I should draw/sketch all the letters/diagrams in the intro + Elaine letters too.
 ***- 6th/7th (two halves from Mars/Moon), (activate offensive capabilities, and destroy alien hardware): replace the depleted stone, you can only place this last. Same as above, but ending B.
 ***- Second Maya puzzle for the prism: involves looking for secrets in the ROM, to learn how to "speak", and then speak a given maya word in the center of the calendar, that will activate the prism (where is this final clue? Probably somewhere in Mars/Moon?). Add strings in the ROM that can be read via a hex reader of the ROM (encode them as decimal numbers in the .asm file, so that they are not visible from the source easily), that form a puzzle, giving you a clue (it tells you "how to speak") for how to interact with the center of the calendar to fully activate the stone.
 ***- with the prism: opens dimensional portal for YOU to travel throughout the universe. Same confrontation with aliens, but if you win, a teleporter shows up with some controls, that teleports you to their home planet, to face the final final boss. If you win, ending A.
 
-- ensure that ALL tags are instantiated and are functional now during room creation (e.g. story tablets): game should be beatable beginning to end!
+- write and spawn story trivia tablets
 
 - item effects:
   - for anti-grav belt, you can overwrite it by pressing "down" (to fall quick)
@@ -35,7 +30,7 @@ to do:
 - jungle biome
   - implement it (remember to keep ladder tiles in place for down-door opening code)
   - special chunk for start position (start tag) and set start position there (on the left-edge of map)
-  - add jungle events (village, npcs, shop where to use the coins, etc.)
+  - add jungle events: start, elaine letters, find bomb maker, shop to use coins with (what do they sell? healing, supplies and save game; maybe some random item/weapons that were not spawned in the game?)
 
 - menus:
   - brain games screen (think of a Maya-themed way for this)
@@ -58,7 +53,7 @@ to do:
 - atlantis biome (do I need to move the possible set of up/down/left/right tags to 4 instead of just 2?)
 - fifth boss: Atlantean Guardian (Underwater Boss): A colossal robotic creature with bioluminescent features, resembling a deep-sea creature (laser beams from tentacles, summons robotic fish)
 - confrontation with the aliens after activating the calendar stone
-- first ending sequence
+- first ending sequence: the calendar stone machine activates and creates a defensive barrier around earth, the alien armada that was coming turns back, but promises revenge
 
 - secret quest:
     - distribute a series of k clues needed to unlock something in atlantis
@@ -73,10 +68,10 @@ to do:
 - moon biome (similar to mars, but different color scheme, it could even be the same with palette changed)
 - 6th boss: (ideas: "The Solar Stone Jaguar", "The Martian Terracotta Warrior", "The Dust Stone Golem")
 - 7th boss (ideas: "The Lunar Obsidian Sentinel" (tall, slender, smooth black, reflective surfaces), "The Lunar Crystal Serpent", "The Moon Stone Monolith")
-- second ending
+- second ending: the calendar stone machine activates, and not only creates a defensive barrier, but also activates its offensive mechanism and destroys the alien armada that was coming
 
 - 8th boss: after beating the combat against the aliens, you can teleport to their home planet, and fight against their leader (final final boss)
-- final good ending
+- final good ending: play second ending, and then the stone opens a portal for you to travel to the alien world, and fight against their leader in a final final battle. At the end, you become the ruler of their empire.
 - think of more secrets to add to the game (maybe secret rooms that depend on the RNG spawning certain things)
 
 --------------------

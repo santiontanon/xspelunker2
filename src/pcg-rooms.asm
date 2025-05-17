@@ -2095,6 +2095,7 @@ ENDR
 ; TAG_CALENDAR_TABLET: equ 142
 ; TAG_CALENDAR_SOCKET: equ 143
 ; TAG_HALF_POWER_STONE: equ 144
+; TAG_CALENDAR_STONE_CENTER: equ 145
 
 
 ;-----------------------------------------------
@@ -2205,7 +2206,7 @@ pcg_generate_room__calendar_continue6:
 
 	; spawn the tablets:
 	ld hl, pcg_generate_room__calendar_objects
-	ld b, 8
+	ld b, 9
 	ld iy, (tmp_pcg_room__next_tile_object_ptr)
 	ld de, global_state__power_calendar - 2  ; -2, since we only have the state for the sockets (state of tablets does not matter)
 pcg_generate_room__calendar_object_loop:
@@ -2237,14 +2238,15 @@ pcg_generate_room__calendar_object_loop:
 	ret
 
 pcg_generate_room__calendar_objects:
-	db 0, TAG_CALENDAR_TABLET, 7, 15
-	db 0, TAG_CALENDAR_TABLET, 23, 15
+	db 0, TAG_CALENDAR_TABLET, 6, 15
+	db 0, TAG_CALENDAR_TABLET, 24, 15
 	db 0, TAG_CALENDAR_SOCKET, 14, 15  ; has a spent stone
 	db 1, TAG_CALENDAR_SOCKET, 16, 15
 	db 2, TAG_CALENDAR_SOCKET, 13, 12
 	db 3, TAG_CALENDAR_SOCKET, 17, 12
 	db 4, TAG_CALENDAR_SOCKET, 14, 9
 	db 5, TAG_CALENDAR_SOCKET, 16, 9
+	db 0, TAG_CALENDAR_STONE_CENTER, 15, 12
 
 
 ;-----------------------------------------------
@@ -2349,7 +2351,7 @@ pcg_generate_room__open_midpoint_door:
 	ret c  ; not at the point of opening it yet
 	ld e, TAG_DOOR_HORIZONTAL
 	ld c, TILES_PAGE
-	ld hl, find_object_ptr
+	ld hl, find_tile_object_ptr
 	call call_hl_in_page_c_8000
 	ld a, 1
 	ld (global_state__objects + TAG_MIDPOINT), a  ; mark the door as already open

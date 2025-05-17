@@ -9,7 +9,7 @@ state_play:
 		ld (global_state__power_calendar), a
 		ld a, 2 + 0  ; first power stone
 		ld (global_state__power_calendar + 1), a
-		ld a, 1
+		ld a, 5
 		ld (global_state__n_power_stones_in_calendar), a
 		ld a, STORY_STATE__GOT_LETTER2
 		ld (global_state__story), a
@@ -260,12 +260,11 @@ state_play_loop_hud_redraw:
 
 ;-----------------------------------------------
 state_play_loop_event_fn:
+	ld de, 0
+	ld (in_game_event_fn_ptr), de
 	ld a, (in_game_event_fn_page)
 	ld c, a
-	call call_hl_in_page_c_8000
-	ld hl, 0
-	ld (in_game_event_fn_ptr), hl
-	ret
+	jp call_hl_in_page_c_8000
 
 
 ;-----------------------------------------------

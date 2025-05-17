@@ -18,6 +18,8 @@ STORY_STATE__GOT_LETTER1: equ 2
 STORY_STATE__PLACED_FIRST_POWER_STONE: equ 3
 STORY_STATE__FOUND_LOST_VENDOR: equ 4
 STORY_STATE__GOT_LETTER2: equ 5
+STORY_STATE__FIGHTING_ALIENS: equ 6  ; calendar stone triggered, and player is fighting aliens
+STORY_STATE__DEFEATED_ALIENS: equ 7  ; calendar stone triggered, and player just won the alien battle
 
 
 MAX_SPRITES: equ 32
@@ -339,6 +341,7 @@ TAG_POWER_STONE: equ 148
 TAG_CALENDAR_TABLET: equ 149
 TAG_CALENDAR_SOCKET: equ 150
 TAG_HALF_POWER_STONE: equ 151
+TAG_CALENDAR_STONE_CENTER: equ 152
 
 N_PATH_OPENING_TAGS: equ 32  ; there are less than this, but just in case (this is the number of tags above that spawn a breakable wall or door).
 

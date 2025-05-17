@@ -178,7 +178,7 @@ display_map_from_teleporter_find_room_loop_found:
 
 	; find teleporter object, and set player in its position:
 	ld e, a
-	ld hl, find_object_ptr
+	ld hl, find_tile_object_ptr
 	ld c, TILES_PAGE
 	call call_hl_in_page_c_8000
 	push hl

@@ -371,11 +371,5 @@ setup_game_tiles_biome_internal_continue:
     ret c
     ld hl, pcg_generate_room__calendar_turn_on_phase2
     ld c, PCG_PAGE
-    call call_hl_in_page_c_8000    
-
-    ; fifth stone effect:
-    ; ...
-    ; last stone effect:
-    ; ...
-    ret
+    jp call_hl_in_page_c_8000
 

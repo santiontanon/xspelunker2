@@ -246,6 +246,12 @@ public class Text {
         addLineSafe(lines_with_constant, "My map is reacting to this device! Some places are lighting up!", "FIRST_TELEPORTATION1", 112);
         addLineSafe(lines_with_constant, "Woah! I think I just teleported!", "FIRST_TELEPORTATION2", 112);
         addLineSafe(lines_with_constant, "I think I heard some door open deep into the ruins!", "PLACE_THIRD_POWER_STONE", 112);
+        addLineSafe(lines_with_constant, "Is the calendar stone fully powered up?! The center started pulsating!", "PLACE_FIFTH_POWER_STONE", 112);
+        addLineSafe(lines_with_constant, "Touch the calendar stone?", "TOUCH_STONE_QUESTION", 112);
+        addLineSafe(lines_with_constant, "You move your hand towards the calendar stone, but before you touch it, the room starts shaking!", "CALENDAR_CENTER_MSG1", 112);
+        addLineSafe(lines_with_constant, "That was the last of them! Ok, I can now continue with what I was doing!", "CALENDAR_CENTER_MSG2", 112);
+        addLineSafe(lines_with_constant, "You place your hand in the center, and the stone starts shaking...", "CALENDAR_CENTER_MSG3", 112);
+        
 
         // power stone inspection:
         addLineSafe(lines_with_constant, "A stone I found. Some sort of power radiates from it.", "INSPECT_POWER_STONE", 32);

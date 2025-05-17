@@ -27,6 +27,8 @@ MAP_PAGE: equ 3
 CHUNKS_PYRAMID_PAGE: equ 4
 TEXT_PAGE: equ 5
 BOSS_PAGE: equ 6
+CALENDAR_EVENTS_PAGE: equ 6
+ENDING_PAGE: equ 6
 MUSIC_PAGE: equ 7
 
 
@@ -441,6 +443,9 @@ boss_room_1_zx0:
 
     include "bosses.asm"
 
+    include "calendar-room-events.asm"
+    include "ending.asm"
+
 
 end_of_page_6:
     ds #c000-$
@@ -542,6 +547,7 @@ global_state__power_calendar: ds virtual 6  ; 0: empty
                                             ; 1: inactive stone
                                             ; 2 - 7: one of the power stones 
 global_state__n_power_stones_in_calendar: ds virtual 1  ; for convenience (it should be the number of elements in 'global_state__power_calendar' >= 2)
+global_state__solved_final_riddle: ds virtual 1
 
 player_x: ds virtual 2  ; 1st the pixel and 2nd byte is the tile coordinate
 player_y: ds virtual 2  ; 1st the pixel and 2nd byte is the tile coordinate

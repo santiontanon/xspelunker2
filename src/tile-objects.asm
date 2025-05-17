@@ -19,6 +19,8 @@ update_tile_objects_loop:
 		jp z, update_tile_objects_button
 		cp TAG_BUTTON4
 		jp z, update_tile_objects_button
+		cp TAG_CALENDAR_STONE_CENTER
+		jp z, update_tile_objects_calendar_stone_center
 update_tile_objects_loop_continue:
 	pop hl
 	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
@@ -203,6 +205,20 @@ update_tile_objects_button_next:
 	jp update_tile_objects_loop
 
 
+;-----------------------------------------------
+update_tile_objects_calendar_stone_center:
+	; just foce redrawing, since this object has an animation:
+	ld a, (global_state__n_power_stones_in_calendar)
+	cp 5
+	jp c, update_tile_objects_loop_continue
+
+	call room_undraw_tile_objects
+	call room_render_tile_objects
+
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)
+	jp update_tile_objects_loop_continue
+
 
 ;-----------------------------------------------
 delete_tile_object_in_ix:
@@ -273,6 +289,8 @@ room_render_tile_objects_loop:
 		jp z, room_render_tile_objects_render_combination_lever
 		cp TAG_CALENDAR_SOCKET
 		jp z, room_render_tile_objects_render_calendar_socket
+		cp TAG_CALENDAR_STONE_CENTER
+		jp z, room_render_tile_objects_render_calendar_stone_center
 		inc hl
 		ld c, (hl)  ; x
 		ld ixl, c
@@ -487,6 +505,36 @@ room_render_tile_objects_render_calendar_socket_continue:
 	inc hl
 	inc hl
 	inc hl
+	jp room_render_tile_objects_render_entry_point
+
+
+room_render_tile_objects_render_calendar_stone_center:
+	inc hl
+	ld c, (hl)  ; x
+	ld ixl, c
+	inc hl
+	ld b, (hl)  ; y
+	inc hl
+	ld ixh, b
+	ld bc, #0202
+	inc hl
+	inc hl
+	inc hl
+	ld de, tile_object_calendar_stone_center_gfx
+	ld a, (global_state__n_power_stones_in_calendar)
+	cp 5
+	jp c, room_render_tile_objects_render_entry_point
+	ld a, (interrupt_cycle)
+	rrca
+	rrca
+	rrca
+	rrca
+	and #03
+	jp z, room_render_tile_objects_render_entry_point
+	ld de, tile_object_calendar_stone_center_frame3_gfx
+	cp 2
+	jp z, room_render_tile_objects_render_entry_point
+	ld de, tile_object_calendar_stone_center_frame2_gfx
 	jp room_render_tile_objects_render_entry_point
 
 
@@ -867,6 +915,7 @@ ENDR
 	dw object_interaction_function_tablet  ; TAG_CALENDAR_TABLET
 	dw object_interaction_function_calendar_socket  ; TAG_CALENDAR_SOCKET
 	dw object_interaction_function_half_power_stone  ; TAG_HALF_POWER_STONE
+	dw object_interaction_function_calendar_center  ; TAG_CALENDAR_STONE_CENTER
 
 
 object_interaction_inventory_slot:
@@ -1606,11 +1655,40 @@ object_interaction_function_calendar_socket_3rd_stone:
 	ret
 
 object_interaction_function_calendar_socket_5th_stone:
-	; ...
+	push ix
+		ld de, TEXT_PLACE_FIFTH_POWER_STONE
+		ld hl, display_in_game_message
+		ld c, TEXT_PAGE
+		call call_hl_in_page_c_8000
+	pop ix
 	ret
 
 object_interaction_function_calendar_socket_6th_stone:
 	; ...
+	ret
+
+
+;-----------------------------------------------
+object_interaction_function_calendar_center:
+	ld a, (global_state__n_power_stones_in_calendar)
+	cp 5
+	ret c
+	ld a, (global_state__story)
+	cp STORY_STATE__FIGHTING_ALIENS
+	ret z
+	cp STORY_STATE__DEFEATED_ALIENS
+	jr z, object_interaction_function_calendar_center_continue2
+	ld hl, object_interaction_function_calendar_center_in_text_page
+object_interaction_function_calendar_center_continue:
+	ld a, TEXT_PAGE
+	jp jp_to_hl_in_page_a_8000
+
+object_interaction_function_calendar_center_continue2:
+	; trigger ending:
+	ld hl, calendar_stone_center_trigger_ending_event_fn
+	ld (in_game_event_fn_ptr), hl
+	ld a, CALENDAR_EVENTS_PAGE
+	ld (in_game_event_fn_page), a
 	ret
 
 
@@ -1696,13 +1774,13 @@ find_room_door_object_ptr_not_found:
 ; - z: object found
 ; - nz: object not found
 ; - hl: object ptr
-find_object_ptr:
+find_tile_object_ptr:
 	ld hl, current_room__tile_objects
 	; : ds virtual MAX_ROOM_TILE_OBJECTS * ROOM_TILE_OBJECT_STRUCT_SIZE
-find_object_ptr_loop:
+find_tile_object_ptr_loop:
 	ld a, (hl)
 	cp #ff
-	jr z, find_object_ptr_not_found
+	jr z, find_tile_object_ptr_not_found
 	inc hl
 	ld a, (hl)  ; type
 	dec hl
@@ -1710,8 +1788,8 @@ find_object_ptr_loop:
 	ret z
 	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
 	add hl, bc
-	jr find_object_ptr_loop
-find_object_ptr_not_found:
+	jr find_tile_object_ptr_loop
+find_tile_object_ptr_not_found:
 	or 1
 	ret
 
@@ -1889,6 +1967,7 @@ ENDR
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_CALENDAR_TABLET
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_CALENDAR_SOCKET
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_half_power_stone_gfx  ; TAG_HALF_POWER_STONE
+	TILE_OBJECT_DATA 1, 2, 2, tile_object_calendar_stone_center_gfx  ; TAG_CALENDAR_STONE_CENTER
 
 
 tile_object_regular_object_gfx:
@@ -1923,3 +2002,9 @@ tile_object_calendar_socket_gfx:
 tile_object_half_power_stone_gfx:
 	db 0, 0, FIRST_ITEM_TILE+2, FIRST_ITEM_TILE+3
 
+tile_object_calendar_stone_center_gfx:
+	db 147, 148, 180, 181
+tile_object_calendar_stone_center_frame2_gfx:
+	db 116, 117, 118, 119
+tile_object_calendar_stone_center_frame3_gfx:
+	db 213, 229, 120, 121

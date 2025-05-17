@@ -17,52 +17,7 @@ ENDR
 display_in_game_message:
 	; clear all the tiles in the bank:
 	push de
-		; clear sprites that are in the message area (y > 48, y < 120)
-		ld hl, sprite_attribute_table
-		ld b, MAX_SPRITES
-display_in_game_message__clear_sprites_loop:
-		ld a, (hl)  ; y
-		cp 48
-		jr c, display_in_game_message__clear_sprites_loop_next
-		cp 120
-		jr nc, display_in_game_message__clear_sprites_loop_next
-		ld (hl), 200  ; move out of the screen
-display_in_game_message__clear_sprites_loop_next:
-		inc hl
-		inc hl
-		inc hl
-		inc hl
-		djnz display_in_game_message__clear_sprites_loop
-		ld hl, sprite_attribute_table
-		ld de, SPRATR2
-		ld b, MAX_SPRITES * 4
-		call fast_small_LDIRVM		
-
-		; save the content below:
-    	ld hl, NAMTBL2 + 256
-    	ld de, buffer_4096 + 1024
-    	ld bc, 256
-    	call LDIRMV
-
-    	; clear all biome tiles:
-		ld hl, CLRTBL2 + (256 + 16*6)*8
-		ld bc, (256 - 16*6)*8
-		xor a
-		call fast_FILVRM
-		ld hl, CHRTBL2 + (256 + 16*6)*8
-		ld bc, (256 - 16*6)*8
-		xor a
-		call fast_FILVRM
-		ld hl, in_game_message_tiles
-		ld de, NAMTBL2 + 256
-		ld bc, 256
-		call fast_LDIRVM
-
-    	; draw white lines on top and bottom of message:
-    	ld hl, in_game_message_border_tile_attributes
-    	ld de, CLRTBL2 + (256 + 97)*8 
-    	ld b, 8
-    	call fast_small_LDIRVM
+		call display_in_game_message_draw_box
 	pop hl
 
 	; draw text:
@@ -183,3 +138,54 @@ display_in_game_message_continue:
 	ld c, a
 	ld hl, (current_room__tileset_ptr)
 	jp setup_game_tiles_only_biome
+
+
+;-----------------------------------------------
+display_in_game_message_draw_box:
+	; clear sprites that are in the message area (y > 48, y < 120)
+	ld hl, sprite_attribute_table
+	ld b, MAX_SPRITES
+display_in_game_message__clear_sprites_loop:
+	ld a, (hl)  ; y
+	cp 48
+	jr c, display_in_game_message__clear_sprites_loop_next
+	cp 120
+	jr nc, display_in_game_message__clear_sprites_loop_next
+	ld (hl), 200  ; move out of the screen
+display_in_game_message__clear_sprites_loop_next:
+	inc hl
+	inc hl
+	inc hl
+	inc hl
+	djnz display_in_game_message__clear_sprites_loop
+	ld hl, sprite_attribute_table
+	ld de, SPRATR2
+	ld b, MAX_SPRITES * 4
+	call fast_small_LDIRVM		
+
+	; save the content below:
+	ld hl, NAMTBL2 + 256
+	ld de, buffer_4096 + 1024
+	ld bc, 256
+	call LDIRMV
+
+	; clear all biome tiles:
+	ld hl, CLRTBL2 + (256 + 16*6)*8
+	ld bc, (256 - 16*6)*8
+	xor a
+	call fast_FILVRM
+	ld hl, CHRTBL2 + (256 + 16*6)*8
+	ld bc, (256 - 16*6)*8
+	xor a
+	call fast_FILVRM
+	ld hl, in_game_message_tiles
+	ld de, NAMTBL2 + 256
+	ld bc, 256
+	call fast_LDIRVM
+
+	; draw white lines on top and bottom of message:
+	ld hl, in_game_message_border_tile_attributes
+	ld de, CLRTBL2 + (256 + 97)*8 
+	ld b, 8
+	jp fast_small_LDIRVM
+
