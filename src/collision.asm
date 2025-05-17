@@ -685,6 +685,8 @@ check_collision_with_next_chunk_left:
 	pop bc
 	dec hl
 	push hl
+		call check_collision_with_next_chunk_check_if_its_special_room_left_right
+		jr z, check_collision_with_next_chunk_left_continue
 		ld a, (hl)  ; chunk ID
 		ld h, 0
 		ld l, a
@@ -693,6 +695,7 @@ check_collision_with_next_chunk_left:
 		ld de, chunk_edgecollisions_pyramid + 2
 		add hl, de
 		ld e, (hl)  ; e = bitmask with collisions on the right edge of the chunk
+check_collision_with_next_chunk_left_continue:
 		ld a, ixl
 		sra a
 		; check if the corresponding bit is on/off:
@@ -730,6 +733,8 @@ check_collision_with_next_chunk_right:
 	pop bc
 	inc hl
 	push hl
+		call check_collision_with_next_chunk_check_if_its_special_room_left_right
+		jr z, check_collision_with_next_chunk_right_continue
 		ld a, (hl)  ; chunk ID
 		ld h, 0
 		ld l, a
@@ -738,6 +743,7 @@ check_collision_with_next_chunk_right:
 		ld de, chunk_edgecollisions_pyramid
 		add hl, de
 		ld e, (hl)  ; e = bitmask with collisions on the left edge of the chunk
+check_collision_with_next_chunk_right_continue:
 		ld a, ixl
 		sra a
 		; check if the corresponding bit is on/off:
@@ -780,6 +786,8 @@ check_collision_with_next_chunk_up:
 	or a
 	sbc hl, de
 	push hl
+		call check_collision_with_next_chunk_check_if_its_special_room_up_down
+		jr z, check_collision_with_next_chunk_up_continue
 		ld a, (hl)  ; chunk ID
 		ld h, 0
 		ld l, a
@@ -788,6 +796,7 @@ check_collision_with_next_chunk_up:
 		ld de, chunk_edgecollisions_pyramid + 3
 		add hl, de
 		ld e, (hl)  ; e = bitmask with collisions on the down edge of the chunk
+check_collision_with_next_chunk_up_continue:
 		ld a, c
 		and #0f
 		sra a
@@ -831,6 +840,8 @@ check_collision_with_next_chunk_down:
 	add hl, de
 	push hl
 		ld a, (hl)  ; chunk ID
+		call check_collision_with_next_chunk_check_if_its_special_room_up_down
+		jr z, check_collision_with_next_chunk_down_continue
 		ld h, 0
 		ld l, a
 		add hl, hl
@@ -838,6 +849,7 @@ check_collision_with_next_chunk_down:
 		ld de, chunk_edgecollisions_pyramid + 1
 		add hl, de
 		ld e, (hl)  ; e = bitmask with collisions on the up edge of the chunk
+check_collision_with_next_chunk_down_continue:
 		ld a, c
 		and #0f
 		sra a
@@ -861,6 +873,52 @@ check_collision_with_next_chunk_down_bit_found:
 	push bc  ; preserve player coordinates
 		call check_collision_with_next_chunk_check_vertical_open_wall
 	pop bc
+	ret
+
+
+;-----------------------------------------------
+; Note: all special rooms have the "contract" that the openings above/below/left/right
+;       are all in the same positions
+; input:
+; - hl: ptr to current_area__chunks_ids
+; output:
+; - e: collision mask
+; - z: it is a special room
+; - nz: it is not
+check_collision_with_next_chunk_check_if_its_special_room_left_right:
+	ld e, #33
+	jr check_collision_with_next_chunk_check_if_its_special_room_continue
+check_collision_with_next_chunk_check_if_its_special_room_up_down:
+	ld e, #c3
+check_collision_with_next_chunk_check_if_its_special_room_continue:
+	ld a, (current_area__id)
+	cp 3  ; confluence
+	jr z, check_collision_with_next_chunk_check_if_its_special_room_confluence
+	or 1  ; it is not a special room
+	ret
+
+check_collision_with_next_chunk_check_if_its_special_room_confluence:
+	push hl
+	push bc
+		ld bc, -current_area__chunks_ids
+		add hl, bc
+		ld a, (current_area__width)
+		add a, a
+		ld d, a  ; d = width in chunks
+		ld a, (current_area__calendar_room_chunk_id_offset)
+		cp l
+		jr z, check_collision_with_next_chunk_check_if_its_special_room_confluence_done
+		inc a
+		cp l
+		jr z, check_collision_with_next_chunk_check_if_its_special_room_confluence_done
+		add a, d
+		cp l
+		jr z, check_collision_with_next_chunk_check_if_its_special_room_confluence_done
+		dec a
+		cp l
+check_collision_with_next_chunk_check_if_its_special_room_confluence_done:
+	pop bc
+	pop hl
 	ret
 
 

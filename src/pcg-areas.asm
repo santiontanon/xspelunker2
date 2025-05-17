@@ -15,6 +15,7 @@ tmp_pcg_area__next_area_object_ptr: equ tmp_pcg_area__chunk_candidates + 16
 tmp_pcg_area__next_area_object_id: equ tmp_pcg_area__next_area_object_ptr + 2
 tmp_pcg_area__tag_to_place: equ tmp_pcg_area__next_area_object_id + 1
 tmp_pcg_area__tag_extra: equ tmp_pcg_area__tag_to_place + 1  ; lock direction, chest content
+; tmp_pcg_area__calendar_room_offset: equ tmp_pcg_area__tag_extra + 1
 
 ;-----------------------------------------------
 ; Pseudocode for this method:
@@ -68,6 +69,7 @@ pcg_generate_area__world_area_ptr_set:
 	call pcg_generate_area__inter_area_connections  ; updates 'tmp_pcg_area__piece_types'
 	call pcg_generate_area__place_tags  ; fills 'tmp_pcg_area__placed_tags'
 	call pcg_generate_area__choose_chunks  ; fills 'current_area__chunks_ids' and 'current_area__objects'
+	; call pgc_generate_area__special_rooms
 	ret
 
 
@@ -397,9 +399,14 @@ pcg_generate_area__merge_rooms_calendar_loop:
 	; found!
 	inc hl
 	ld a, (hl)
+	ld (current_area__calendar_room_chunk_id_offset), a  ; temporarily store the room offset
 	ld hl, current_area__room_ids
 	ADD_HL_A
 	ld (hl), CALENDAR_ROOM_ID
+	; convert it to chunk offset
+	ld a, (current_area__calendar_room_chunk_id_offset)
+	call room_offset_to_chunk_offset
+	ld (current_area__calendar_room_chunk_id_offset), a
 	ret
 pcg_generate_area__merge_rooms_calendar_loop_next:
 	inc hl
@@ -1793,6 +1800,62 @@ pcg_generate_area__choose_chunks_is_combination_lock_tag_p:
 		call pcg_generate_area__tag_in_list
 	pop hl
 	ret
+
+
+;-----------------------------------------------
+room_offset_to_chunk_offset:
+	ld d, a
+	; the offset is in rooms, we need to convert it to chunks:
+	; - a = x + y * width
+	; - we want: x*2 + y*2*width*2
+	; we isolate x:
+	push af
+		ld a, (current_area__width)
+		ld e, a
+	pop af
+room_offset_to_chunk_offset_loop:
+	cp e
+	jr c, room_offset_to_chunk_offset_loop_loop_done
+	sub e
+	jr room_offset_to_chunk_offset_loop
+room_offset_to_chunk_offset_loop_loop_done:
+	; - a = x
+	; - e: area width (in rooms)
+	; - d: room offset
+	ld c, a
+	ld a, d
+	sub c  ; a = y * width
+	add a, a
+	add a, a  ; a = y * 2 * width * 2
+	add a, c
+	add a, c  ; a = offset in chunks
+	ret
+
+
+;-----------------------------------------------
+; pgc_generate_area__special_rooms:
+; 	ld a, (current_area__id)
+; 	cp 3
+; 	jr z, pgc_generate_area__special_rooms_confluence
+; 	; ...
+; 	ret
+
+; pgc_generate_area__special_rooms_confluence:
+; 	; locate where is the calendar stone room:
+; 	ld a, (tmp_pcg_area__calendar_room_offset)
+;	call room_offset_to_chunk_offset
+; 	ld hl, current_area__chunks_ids
+; 	ADD_HL_A
+; 	ld (hl), CALENDAR_ROOM_CHUNK_ID
+; 	inc hl
+; 	ld (hl), CALENDAR_ROOM_CHUNK_ID
+; 	ld d, 0
+; 	add hl, de
+; 	add hl, de
+; 	ld (hl), CALENDAR_ROOM_CHUNK_ID
+; 	dec hl
+; 	ld (hl), CALENDAR_ROOM_CHUNK_ID
+; 	ret
 
 
 ;-----------------------------------------------

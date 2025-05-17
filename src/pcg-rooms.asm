@@ -2142,7 +2142,7 @@ pcg_generate_room__calendar_ptr_loop_end:
 		ld b, PCG_DIRECTION_LEFT
 		call pcg_generate_room__chunk_direction_open
 		jr z, pcg_generate_room__calendar_continue1
-		ld bc, #0600
+		ld bc, #0400
 		ld de, #0402
 		call room_remove_breakable_wall_restore_background
 pcg_generate_room__calendar_continue1:
@@ -2153,7 +2153,7 @@ pcg_generate_room__calendar_continue1:
 		ld b, PCG_DIRECTION_RIGHT
 		call pcg_generate_room__chunk_direction_open
 		jr z, pcg_generate_room__calendar_continue2
-		ld bc, #061e
+		ld bc, #041e
 		ld de, #0402
 		call room_remove_breakable_wall_restore_background
 pcg_generate_room__calendar_continue2:
@@ -2169,7 +2169,7 @@ pcg_generate_room__calendar_continue2:
 		ld b, PCG_DIRECTION_LEFT
 		call pcg_generate_room__chunk_direction_open
 		jr z, pcg_generate_room__calendar_continue3
-		ld bc, #0e00
+		ld bc, #1000
 		ld de, #0402
 		call room_remove_breakable_wall_restore_background
 pcg_generate_room__calendar_continue3:
@@ -2199,7 +2199,7 @@ pcg_generate_room__calendar_continue5:
 	ld b, PCG_DIRECTION_RIGHT
 	call pcg_generate_room__chunk_direction_open
 	jr z, pcg_generate_room__calendar_continue6
-	ld bc, #0e1e
+	ld bc, #101e
 	ld de, #0402
 	call room_remove_breakable_wall_restore_background
 pcg_generate_room__calendar_continue6:
@@ -2238,8 +2238,8 @@ pcg_generate_room__calendar_object_loop:
 	ret
 
 pcg_generate_room__calendar_objects:
-	db 0, TAG_CALENDAR_TABLET, 6, 15
-	db 0, TAG_CALENDAR_TABLET, 24, 15
+	db 0, TAG_CALENDAR_TABLET, 5, 9
+	db 0, TAG_CALENDAR_TABLET, 25, 9
 	db 0, TAG_CALENDAR_SOCKET, 14, 15  ; has a spent stone
 	db 1, TAG_CALENDAR_SOCKET, 16, 15
 	db 2, TAG_CALENDAR_SOCKET, 13, 12
@@ -2361,6 +2361,7 @@ pcg_generate_room__open_midpoint_door:
 	ld c, TILES_PAGE
 	ld hl, delete_tile_object_in_ix
 	jp call_hl_in_page_c_8000
+
 
 ;-----------------------------------------------
 ; input:

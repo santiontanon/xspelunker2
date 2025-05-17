@@ -1,8 +1,20 @@
 to do:
 
-***- BUG: entering from the side of the calendar room does not have the correct collisions (maybe I need to split the calendar screen into 4 chunks, and just overwrite the chunk IDs, so that it's like the other rooms? (figure this out before defining the 2 teleporters room))
 ***- Maya puzzle and double teleporter room in atlantis (leading to teleporters in mars/moon, and with animal statues for solving the puzzle) (https://mayaglyphs.org/). The letter received from Elaine should give some clues of Maya -> English (phonetic), and then the rest should be obtained from the clues gathered around the map. So, here, I should draw/sketch all the letters/diagrams in the intro + Elaine letters too.
-***- 6th/7th (two halves from Mars/Moon), (activate offensive capabilities, and destroy alien hardware): replace the depleted stone, you can only place this last. Same as above, but ending B.
+  ***- draw the double teleporter room in Gimp/Tiled (see if I can fit it in a 32*24 room)
+  ***- spawn it in the game (and make sure collisions around work, like the calendar stone room)
+  ***- draw the tablet that gives you the final instruction (all variations) (https://mayaglyphs.org/)
+  ***- spawn the tablet in the room (and draw it depending on the random riddle that was chosen)
+  ***- draw the first letter from Elaine
+  ***- being able to inspect it in the inventory
+  ***- draw the second letter form Elaine
+  ***- being able to inspect it in the inventory
+  ***- draw the Maya tablet clues
+  ***- spawn and draw them in the game
+  ***- code that checks that you have solved the riddle, and activate the teleporters when this happens
+  ***- make sure they remain active if you leave the room, and that you cannot solve the riddle twice
+  ***- teleport to mars/moon and back
+***- 6th/7th (two halves from Mars/Moon): replace the depleted stone, you can only place this last. Make sure this triggers ending B.
 ***- Second Maya puzzle for the prism: involves looking for secrets in the ROM, to learn how to "speak", and then speak a given maya word in the center of the calendar, that will activate the prism (where is this final clue? Probably somewhere in Mars/Moon?). Add strings in the ROM that can be read via a hex reader of the ROM (encode them as decimal numbers in the .asm file, so that they are not visible from the source easily), that form a puzzle, giving you a clue (it tells you "how to speak") for how to interact with the center of the calendar to fully activate the stone.
 ***- with the prism: opens dimensional portal for YOU to travel throughout the universe. Same confrontation with aliens, but if you win, a teleporter shows up with some controls, that teleports you to their home planet, to face the final final boss. If you win, ending A.
 
