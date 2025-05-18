@@ -433,7 +433,7 @@ public class PCGWorld {
         a8p2.direction = DIRECTION_UP;
         addTag(a8p2, "connection", null);
         
-        AreaPoint a9p1 = randomAreaLeftMostPoint(w.areas.get(9), true);
+        AreaPoint a9p1 = areaBottomLeftMostPoint(w.areas.get(9), true);
         if (a9p1 == null) return false;
         a9p1.direction = DIRECTION_LEFT;
         addTag(a9p1, "connection", null);
@@ -597,10 +597,20 @@ public class PCGWorld {
     public boolean generateMission(World w, List<AreaDivision> tree, 
                                    List<AreaDivision> marsSpanningTree,
                                    List<AreaDivision> moonSpanningTree,
-                                   List<String> usedKeysAndLocks)
+                                   List<String> usedKeysAndLocks) throws Exception
     {
         // Pick important divisions:
         AreaDivision start = tree.get(0);
+        
+//        AreaDivision teleporter_atlantis = randomAreaDivisionFavoringLeaves(w.areas.get(9), tree, true);
+        AreaPoint teleporter_atlantis_p = randomAreaTopMostPoint(w.areas.get(9), true);
+        AreaDivision teleporter_atlantis = getDivisionByID(teleporter_atlantis_p.a.divisionIDs[teleporter_atlantis_p.x][teleporter_atlantis_p.y], tree);
+        addTag(randomDivisionPoint(teleporter_atlantis, true), "teleporter-atlantis", teleporter_atlantis);
+        AreaDivision teleporter_mars = marsSpanningTree.get(0);
+        AreaDivision teleporter_moon = moonSpanningTree.get(0);
+        addTag(randomDivisionPoint(teleporter_mars, true), "teleporter-mars", teleporter_mars);
+        addTag(randomDivisionPoint(teleporter_moon, true), "teleporter-moon", teleporter_moon);
+        
         AreaDivision boss1 = randomAreaDivisionOnlyLeaves(w.areas.get(1), tree, true);
         if (boss1 == null) {
             return false;
@@ -621,13 +631,6 @@ public class PCGWorld {
         if (boss5 == null) {
             return false;
         }
-
-        AreaDivision teleporter_atlantis = randomAreaDivisionFavoringLeaves(w.areas.get(9), tree, true);
-        addTag(randomDivisionPoint(teleporter_atlantis, true), "teleporter-atlantis", teleporter_atlantis);
-        AreaDivision teleporter_mars = marsSpanningTree.get(0);
-        AreaDivision teleporter_moon = moonSpanningTree.get(0);
-        addTag(randomDivisionPoint(teleporter_mars, true), "teleporter-mars", teleporter_mars);
-        addTag(randomDivisionPoint(teleporter_moon, true), "teleporter-moon", teleporter_moon);
         
         AreaDivision boss6 = randomAreaDivisionOnlyLeaves(w.areas.get(10), marsSpanningTree, true);
         if (boss6 == null) {
@@ -1440,7 +1443,7 @@ public class PCGWorld {
         while(attempts > 0) {
             int y = r.nextInt(a.height);
             for(int x = 0;x<a.width ;x++) {
-                if (a.rooms[x][y] >= 0) {
+                if ((x == 0 || a.rooms[x - 1][y] < 0) && a.rooms[x][y] >= 0) {
                     if (!tagLess || (a.tags[x][y] == null || a.tags[x][y].isEmpty())) {
                         return new AreaPoint(a, x, y);
                     } else {
@@ -1452,6 +1455,25 @@ public class PCGWorld {
         }
         return null;
     }
+    
+    
+    public AreaPoint areaBottomLeftMostPoint(Area a, boolean tagLess) throws Exception
+    {
+        for(int y = a.height-1;y>=0;y--) {
+            for(int x = 0;x<a.width;x++) {
+                if ((x == 0 || a.rooms[x - 1][y] < 0) &&
+                    a.rooms[x][y] >= 0) {
+                    if (!tagLess || (a.tags[x][y] == null || a.tags[x][y].isEmpty())) {
+                        return new AreaPoint(a, x, y);
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+        
+        return null;
+    }    
     
 
     public AreaPoint randomAreaRightMostPoint(Area a, boolean tagLess) throws Exception

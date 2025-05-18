@@ -1,8 +1,6 @@
 to do:
 
-***- Maya puzzle and double teleporter room in atlantis (leading to teleporters in mars/moon, and with animal statues for solving the puzzle) (https://mayaglyphs.org/). The letter received from Elaine should give some clues of Maya -> English (phonetic), and then the rest should be obtained from the clues gathered around the map. So, here, I should draw/sketch all the letters/diagrams in the intro + Elaine letters too.
-  ***- draw the double teleporter room in Gimp/Tiled (see if I can fit it in a 32*24 room)
-  ***- spawn it in the game (and make sure collisions around work, like the calendar stone room)
+***- Maya puzzle and double teleporter room in atlantis:
   ***- draw the tablet that gives you the final instruction (all variations) (https://mayaglyphs.org/)
   ***- spawn the tablet in the room (and draw it depending on the random riddle that was chosen)
   ***- draw the first letter from Elaine

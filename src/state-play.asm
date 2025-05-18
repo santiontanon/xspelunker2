@@ -105,14 +105,16 @@ state_play:
 		ld hl, pcg_generate_area
 ; 		ld e, 0  ; area to generate
 ; 		ld e, 5  ; area to generate
-		ld e, 3  ; area to generate
+; 		ld e, 3  ; area to generate
+		ld e, 9  ; area to generate
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
 
 		; generate room:
 ; 		ld e, 0
 ; 		ld e, 0
-		ld e, CALENDAR_ROOM_ID
+; 		ld e, CALENDAR_ROOM_ID
+		ld e, TELEPORTER_ROOM_ID
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000

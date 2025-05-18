@@ -69,60 +69,75 @@ public class RenderedArea {
         }
         
         // overwrite the special rooms:
-        if (a.ID == 3) {
-            int calendar_room_x = 0;
-            int calendar_room_y = 0;
+        {
+            int special_room_x = 0;
+            int special_room_y = 0;
             // the confluence
+            RoomChunk c = null;
             for(int i = 0;i<a.height;i++) {
                 for(int j = 0;j<a.width;j++) {
                     if (a.rooms[j][i] == PCGArea.CALENDAR_ROOM_ID) {
-                        calendar_room_x = j;
-                        calendar_room_y = i;
+                        special_room_x = j;
+                        special_room_y = i;
+                        c = new RoomChunk("data/calendar-room.tmx", 0);
+                        c.loadGfx("data/calendar-tiles.png");
+                    } else if (a.rooms[j][i] == PCGArea.TELEPORTER_ROOM_ID) {
+                        special_room_x = j;
+                        special_room_y = i;
+                        c = new RoomChunk("data/teleporter-room.tmx", 0);
+                        c.loadGfx("data/teleporter-room-tiles.png");
                     }
                 }
             }
-            
-            // Load the chunk:
-            RoomChunk c = new RoomChunk("data/calendar-room.tmx", 0);
-            c.loadGfx("data/calendar-tiles.png");
-            
-            // Adapt it:
-            if ((pieceTypes[calendar_room_x*2][calendar_room_y*2] & PCGWorld.DIRECTION_LEFT) != 0) {
-                // open path left on the top-left:
-                c.clearTiles(0, 6, 2, 10);
-            }
-            if ((pieceTypes[calendar_room_x*2][calendar_room_y*2 + 1] & PCGWorld.DIRECTION_LEFT) != 0) {
-                // open path left on the bottom-left:
-                c.clearTiles(0, 14, 2, 18);
-            }
-            if ((pieceTypes[calendar_room_x*2][calendar_room_y*2 + 1] & PCGWorld.DIRECTION_DOWN) != 0) {
-                // open path down on the bottom-left:
-                c.clearTiles(4, 22, 12, 24);
-            }
-            if ((pieceTypes[calendar_room_x*2 + 1][calendar_room_y*2 + 1] & PCGWorld.DIRECTION_DOWN) != 0) {
-                // open path down on the bottom-right:
-                c.clearTiles(20, 22, 28, 24);
-            }
-            if ((pieceTypes[calendar_room_x*2 + 1][calendar_room_y*2] & PCGWorld.DIRECTION_RIGHT) != 0) {
-                // open path right on the top-right:
-                c.clearTiles(30, 6, 32, 10);
-            }
-            if ((pieceTypes[calendar_room_x*2 + 1][calendar_room_y*2 + 1] & PCGWorld.DIRECTION_RIGHT) != 0) {
-                // open path right on the bottom-right:
-                c.clearTiles(30, 14, 32, 18);
-            }
 
-            // draw it:
-            g.setColor(Color.black);
-            g.fillRect(RoomChunk.start_x + calendar_room_x * 32 * 8,
-                       RoomChunk.start_y + calendar_room_y * 24 * 8, 32*8, 24*8);
-            c.draw(calendar_room_x * 32 * 8,
-                   calendar_room_y * 24 * 8, g);
-            GameObject o = new GameObject((calendar_room_x * 32 + 7) * 8,
-                                          (calendar_room_y * 24 + 15) * 8, "story-trivia1");
-            o.draw(g);
-            o.x = (calendar_room_x * 32 + 23) * 8;
-            o.draw(g);
+            if (c != null) {                
+                // Adapt it:
+                if ((pieceTypes[special_room_x*2][special_room_y*2] & PCGWorld.DIRECTION_LEFT) != 0) {
+                    // open path left on the top-left:
+                    c.clearTiles(0, 4, 2, 8);
+                }
+                if ((pieceTypes[special_room_x*2][special_room_y*2 + 1] & PCGWorld.DIRECTION_LEFT) != 0) {
+                    // open path left on the bottom-left:
+                    c.clearTiles(0, 16, 2, 20);
+                }
+                if ((pieceTypes[special_room_x*2][special_room_y*2 + 1] & PCGWorld.DIRECTION_DOWN) != 0) {
+                    // open path down on the bottom-left:
+                    c.clearTiles(4, 22, 12, 24);
+                }
+                if ((pieceTypes[special_room_x*2 + 1][special_room_y*2 + 1] & PCGWorld.DIRECTION_DOWN) != 0) {
+                    // open path down on the bottom-right:
+                    c.clearTiles(20, 22, 28, 24);
+                }
+                if ((pieceTypes[special_room_x*2 + 1][special_room_y*2] & PCGWorld.DIRECTION_RIGHT) != 0) {
+                    // open path right on the top-right:
+                    c.clearTiles(30, 4, 32, 8);
+                }
+                if ((pieceTypes[special_room_x*2 + 1][special_room_y*2 + 1] & PCGWorld.DIRECTION_RIGHT) != 0) {
+                    // open path right on the bottom-right:
+                    c.clearTiles(30, 16, 32, 20);
+                }
+
+                // draw it:
+                g.setColor(Color.black);
+                g.fillRect(RoomChunk.start_x + special_room_x * 32 * 8,
+                           RoomChunk.start_y + special_room_y * 24 * 8, 32*8, 24*8);
+                c.draw(special_room_x * 32 * 8,
+                       special_room_y * 24 * 8, g);
+                
+                if (a.ID == 3) {
+                    // calendar room:
+                    GameObject o = new GameObject((special_room_x * 32 + 7) * 8,
+                                                  (special_room_y * 24 + 15) * 8, "story-trivia1");
+                    o.draw(g);
+                    o.x = (special_room_x * 32 + 23) * 8;
+                    o.draw(g);
+                } else if (a.ID == 9) {
+                    // teleporter room:
+                    GameObject o = new GameObject((special_room_x * 32 + 15) * 8,
+                                                  (special_room_y * 24 + 9) * 8, "story-trivia1");
+                    o.draw(g);
+                }
+            }
         }
     }
     

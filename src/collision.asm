@@ -894,10 +894,13 @@ check_collision_with_next_chunk_check_if_its_special_room_continue:
 	ld a, (current_area__id)
 	cp 3  ; confluence
 	jr z, check_collision_with_next_chunk_check_if_its_special_room_confluence
+	cp 9  ; atlantis
+	jr z, check_collision_with_next_chunk_check_if_its_special_room_atlantis
 	or 1  ; it is not a special room
 	ret
 
 check_collision_with_next_chunk_check_if_its_special_room_confluence:
+check_collision_with_next_chunk_check_if_its_special_room_atlantis:
 	push hl
 	push bc
 		ld bc, -current_area__chunks_ids
@@ -905,7 +908,8 @@ check_collision_with_next_chunk_check_if_its_special_room_confluence:
 		ld a, (current_area__width)
 		add a, a
 		ld d, a  ; d = width in chunks
-		ld a, (current_area__calendar_room_chunk_id_offset)
+		ld a, (current_area__special_room_chunk_id_offset)
+check_collision_with_next_chunk_check_if_its_special_room_atlantis_entry_point:
 		cp l
 		jr z, check_collision_with_next_chunk_check_if_its_special_room_confluence_done
 		inc a

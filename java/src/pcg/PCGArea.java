@@ -5,14 +5,11 @@
 package pcg;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import util.Pair;
 import util.TMXObject;
-import util.Z80Assembler;
 
 /**
  *
@@ -22,7 +19,9 @@ public class PCGArea {
     
     public static final int ROOM_WIDTH = 2;
     public static final int ROOM_HEIGHT = 2;
+    public static final int SPECIAL_ROOM_IDS_START = 100;
     public static final int CALENDAR_ROOM_ID = 100;  // some ID that is impossible to arise naturally
+    public static final int TELEPORTER_ROOM_ID = 101;  // some ID that is impossible to arise naturally
     public static final int n_connections_per_type[] = {
         0, 1, 1, 2, 1, 2, 2, 3,
         1, 2, 2, 3, 2, 3, 3, 4,
@@ -432,26 +431,59 @@ public class PCGArea {
         int w = a.width;
         int h = a.height;
                 
+        // Ensure that the "calendar stone" and "teleporter" rooms is not merged with anything:
+        if (a.ID == 3) {  // "the confluence"
+            for(int i = 0;i<h;i++) {
+                for(int j = 0;j<w;j++) {
+                    if (a.tags[j][i] != null && a.tags[j][i].contains("ending")) {
+                        if (a.tags[j][i].size() > 1) {
+                            System.err.println("More than one tag on the ending room!");
+                            return false;
+                        }
+                        a.rooms[j][i] = CALENDAR_ROOM_ID;
+                    }
+                }
+            }
+        }
+        if (a.ID == 9) {  // "atlantis"
+            for(int i = 0;i<h;i++) {
+                for(int j = 0;j<w;j++) {
+                    if (a.tags[j][i] != null && a.tags[j][i].contains("teleporter-atlantis")) {
+                        if (a.tags[j][i].size() > 1) {
+                            System.err.println("More than one tag on the teleporter room!");
+                            return false;
+                        }
+                        a.rooms[j][i] = TELEPORTER_ROOM_ID;
+                    }
+                }
+            }
+        }
+
         // reset room IDs:
         int newID = 0;
         boolean processed[][] = new boolean[w][h];
         for(int i = 0;i<h;i++) {
             for(int j = 0;j<w;j++) {
-                if (a.divisionIDs[j][i] != 0) {
+                if (a.divisionIDs[j][i] != 0 && a.rooms[j][i] < SPECIAL_ROOM_IDS_START) {
                     a.rooms[j][i] = newID;
                     newID++;
-                } else {
+                    processed[j][i] = false;
+                } else if (a.rooms[j][i] < SPECIAL_ROOM_IDS_START) {
                     a.rooms[j][i] = -1;
+                    processed[j][i] = false;
+                } else {
+                    processed[j][i] = true;
                 }
-                processed[j][i] = false;
             }
         }
         for(int i = 0;i<h;i++) {
             for(int j = 0;j<w;j++) {
-                if (a.rooms[j][i] >= 0 && !processed[j][i]) {
+                if ( a.rooms[j][i] >= SPECIAL_ROOM_IDS_START) {
+                    processed[j][i] = true;
+                } else if (a.rooms[j][i] >= 0 && a.rooms[j][i] < SPECIAL_ROOM_IDS_START && !processed[j][i]) {
                     processed[j][i] = true;
                     // Try merging to the right:
-                    if (j + 1 < w) {
+                    if (j + 1 < w && a.rooms[j + 1][i] < SPECIAL_ROOM_IDS_START) {
                         if (a.divisionIDs[j][i] == a.divisionIDs[j + 1][i] &&
                             !processed[j + 1][i]) {
                             // we can make a 2x1:
@@ -459,7 +491,7 @@ public class PCGArea {
                             processed[j + 1][i] = true;
                             
                             // Try doing a 2x2 room:
-                            if (i + 1 < h) {
+                            if (i + 1 < h && a.rooms[j][i + 1] < SPECIAL_ROOM_IDS_START) {
                                 if (a.divisionIDs[j][i] == a.divisionIDs[j][i + 1] &&
                                     a.divisionIDs[j][i] == a.divisionIDs[j + 1][i + 1] &&
                                     !processed[j][i + 1] &&
@@ -474,13 +506,13 @@ public class PCGArea {
                             }
                             
                             // Try doing a 3x1 room:
-                            if (j + 2 < w) {
+                            if (j + 2 < w && a.rooms[j + 2][i] < SPECIAL_ROOM_IDS_START) {
                                 if (a.divisionIDs[j][i] == a.divisionIDs[j + 2][i] &&
                                     !processed[j + 2][i]) {
                                     // we can make a 3x1:
                                     a.rooms[j + 2][i] =  a.rooms[j][i];
                                     processed[j + 2][i] = true;
-                                    if (j + 3 < w) {
+                                    if (j + 3 < w && a.rooms[j + 3][i] < SPECIAL_ROOM_IDS_START) {
                                         if (a.divisionIDs[j][i] == a.divisionIDs[j + 3][i] &&
                                             !processed[j + 3][i]) {
                                             // we can make a 4x1:
@@ -495,7 +527,7 @@ public class PCGArea {
                         }
                     }
                     // Try to merge down:
-                    if (i + 1 < h) {
+                    if (i + 1 < h && a.rooms[j][i + 1] < SPECIAL_ROOM_IDS_START) {
                         if (a.divisionIDs[j][i] == a.divisionIDs[j][i + 1] &&
                             !processed[j][i + 1]) {
                             // we can make a 1x2:
@@ -503,13 +535,13 @@ public class PCGArea {
                             processed[j][i + 1] = true;
                             
                             // Try doing a 1x3 room:
-                            if (i + 2 < h) {
+                            if (i + 2 < h && a.rooms[j][i + 2] < SPECIAL_ROOM_IDS_START) {
                                 if (a.divisionIDs[j][i] == a.divisionIDs[j][i + 2] &&
                                     !processed[j][i + 2]) {
                                     // we can make a 1x3:
                                     a.rooms[j][i + 2] =  a.rooms[j][i];
                                     processed[j][i + 2] = true;
-                                    if (i + 3 < h) {
+                                    if (i + 3 < h && a.rooms[j][i + 3] < SPECIAL_ROOM_IDS_START) {
                                         if (a.divisionIDs[j][i] == a.divisionIDs[j][i + 3] &&
                                             !processed[j][i + 3]) {
                                             // we can make a 4x1:
@@ -526,20 +558,6 @@ public class PCGArea {
             }
         }
         
-        // Ensure that the "calendar stone" room is not merged with anything:
-        if (a.ID == 3) {  // "the confluence"
-            for(int i = 0;i<h;i++) {
-                for(int j = 0;j<w;j++) {
-                    if (a.tags[j][i] != null && a.tags[j][i].contains("ending")) {
-                        if (a.tags[j][i].size() > 1) {
-                            System.err.println("More than one tag on the ending room!");
-                            return false;
-                        }
-                        a.rooms[j][i] = CALENDAR_ROOM_ID;
-                    }
-                }
-            }
-        }
         return true;
     }
         

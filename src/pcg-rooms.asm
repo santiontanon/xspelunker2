@@ -194,7 +194,9 @@ pcg_generate_room__seed_generated:
 	; check if it's a special room:
 	ld a, (current_room__id)
 	cp CALENDAR_ROOM_ID
-	jp z, pcg_generate_room__calendar	
+	jp z, pcg_generate_room__calendar
+	cp TELEPORTER_ROOM_ID
+	jp z, pcg_generate_room__teleporter
 
 	; Add background chunks randomly:
 	; here:
@@ -2116,6 +2118,67 @@ pcg_generate_room__calendar:
 	ld a, 1
 	ld (current_room__tileset_overrides_item_tiles), a
 
+	call pcg_generate_room__calendar_open_walls
+
+	; spawn the tablets:
+	ld hl, pcg_generate_room__calendar_objects
+	ld b, 9
+	ld iy, (tmp_pcg_room__next_tile_object_ptr)
+	ld de, global_state__power_calendar - 2  ; -2, since we only have the state for the sockets (state of tablets does not matter)
+pcg_generate_room__calendar_object_loop:
+	ld a, (hl)
+	inc hl
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), a  ; id
+	ld a, (hl)
+	inc hl
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), a  ; type
+	ld a, (hl)
+	inc hl
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), a  ; x
+	ld a, (hl)
+	inc hl
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), a  ; y
+	ld a, (de)
+	inc de
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), a  ; state
+	push de
+		ld de, ROOM_TILE_OBJECT_STRUCT_SIZE
+		add iy, de
+	pop de
+	djnz pcg_generate_room__calendar_object_loop
+	ld (tmp_pcg_room__next_tile_object_ptr), iy
+
+	; tablet gfx:
+	ld hl, buffer_4096 + 60 * 64
+	ld (item_object_to_upload_to_vdp), hl
+	ret
+
+pcg_generate_room__calendar_objects:
+	db 0, TAG_CALENDAR_TABLET, 5, 9
+	db 0, TAG_CALENDAR_TABLET, 25, 9
+	db 0, TAG_CALENDAR_SOCKET, 14, 15  ; has a spent stone
+	db 1, TAG_CALENDAR_SOCKET, 16, 15
+	db 2, TAG_CALENDAR_SOCKET, 13, 12
+	db 3, TAG_CALENDAR_SOCKET, 17, 12
+	db 4, TAG_CALENDAR_SOCKET, 14, 9
+	db 5, TAG_CALENDAR_SOCKET, 16, 9
+	db 0, TAG_CALENDAR_STONE_CENTER, 15, 12
+
+
+;-----------------------------------------------
+pcg_generate_room__calendar_turn_on_phase1:
+	ld hl, CLRTBL2 + 72*8
+	ld a, #48  ; blue + red
+	ld b, 8
+	call fast_FILVRM_small
+	ld hl, CLRTBL2 + (256 + 72)*8
+	ld a, #48  ; blue + red
+	ld b, 8
+	jp fast_FILVRM_small
+
+
+;-----------------------------------------------
+pcg_generate_room__calendar_open_walls:
 	; open the appropriate walls:
 	ld a, (current_room__y)
 	add a, a  ; y in chunks
@@ -2203,62 +2266,36 @@ pcg_generate_room__calendar_continue5:
 	ld de, #0402
 	call room_remove_breakable_wall_restore_background
 pcg_generate_room__calendar_continue6:
+	ret
 
-	; spawn the tablets:
-	ld hl, pcg_generate_room__calendar_objects
-	ld b, 9
-	ld iy, (tmp_pcg_room__next_tile_object_ptr)
-	ld de, global_state__power_calendar - 2  ; -2, since we only have the state for the sockets (state of tablets does not matter)
-pcg_generate_room__calendar_object_loop:
-	ld a, (hl)
-	inc hl
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), a  ; id
-	ld a, (hl)
-	inc hl
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), a  ; type
-	ld a, (hl)
-	inc hl
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), a  ; x
-	ld a, (hl)
-	inc hl
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), a  ; y
-	ld a, (de)
-	inc de
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), a  ; state
-	push de
-		ld de, ROOM_TILE_OBJECT_STRUCT_SIZE
-		add iy, de
-	pop de
-	djnz pcg_generate_room__calendar_object_loop
-	ld (tmp_pcg_room__next_tile_object_ptr), iy
+
+;-----------------------------------------------
+pcg_generate_room__teleporter:
+	; name table:
+	ld hl, teleporter_room_zx0
+	ld de, current_room__tile_map
+	ld c, CHUNKS_PYRAMID_PAGE
+	call dzx0_from_page_c
+
+	; tile sets, collisions, and animation ptrs:
+	ld bc, tiles_teleporter_zx0
+	ld (current_room__tileset_ptr), bc
+	ld bc, tile_collision_types_pyramid - 32
+	ld (current_room__collision_ptr), bc
+	ld a, TILES_PAGE
+	ld (current_room__tileset_page), a
+	ld a, 1
+	ld (current_room__tileset_overrides_item_tiles), a
+
+	call pcg_generate_room__calendar_open_walls
+
+	; spawn the tablet:
+	; ...
 
 	; tablet gfx:
 	ld hl, buffer_4096 + 60 * 64
 	ld (item_object_to_upload_to_vdp), hl
 	ret
-
-pcg_generate_room__calendar_objects:
-	db 0, TAG_CALENDAR_TABLET, 5, 9
-	db 0, TAG_CALENDAR_TABLET, 25, 9
-	db 0, TAG_CALENDAR_SOCKET, 14, 15  ; has a spent stone
-	db 1, TAG_CALENDAR_SOCKET, 16, 15
-	db 2, TAG_CALENDAR_SOCKET, 13, 12
-	db 3, TAG_CALENDAR_SOCKET, 17, 12
-	db 4, TAG_CALENDAR_SOCKET, 14, 9
-	db 5, TAG_CALENDAR_SOCKET, 16, 9
-	db 0, TAG_CALENDAR_STONE_CENTER, 15, 12
-
-
-;-----------------------------------------------
-pcg_generate_room__calendar_turn_on_phase1:
-	ld hl, CLRTBL2 + 72*8
-	ld a, #48  ; blue + red
-	ld b, 8
-	call fast_FILVRM_small
-	ld hl, CLRTBL2 + (256 + 72)*8
-	ld a, #48  ; blue + red
-	ld b, 8
-	jp fast_FILVRM_small
 
 
 ;-----------------------------------------------

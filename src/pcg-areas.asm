@@ -110,6 +110,56 @@ pcg_generate_area__initialize_room_ids_loop_x_continue:
 
 
 ;-----------------------------------------------
+pcg_generate_area__mark_special_rooms:
+	ld a, #ff
+	ld (current_area__special_room_room_id_offset), a
+
+	; Ensure that the "calendar stone" and "teleporter" rooms are not merged with anything:
+	ld hl, current_world__area_data + WORLD_AREA__TAGS_OFFSET
+	ld a, (current_area__id)
+	or a
+	jr z, pcg_generate_area__mark_special_rooms_start
+	ld bc, WORLD_AREA__SIZE
+pcg_generate_area__mark_special_rooms_start_loop:
+	add hl, bc
+	dec a
+	jr nz, pcg_generate_area__mark_special_rooms_start_loop
+pcg_generate_area__mark_special_rooms_start:
+	; hl = ptr to tags for this area
+pcg_generate_area__mark_special_rooms_loop:
+	ld a, (hl)
+	or a
+	ret z
+	cp TAG_ENDING
+	jr nz, pcg_generate_area__mark_special_rooms_loop_next
+	ld e, CALENDAR_ROOM_ID
+pcg_generate_area__mark_special_rooms_loop_found:
+	; calendar room found!
+	inc hl
+	ld a, (hl)
+	ld (current_area__special_room_room_id_offset), a
+	ld hl, current_area__room_ids
+	ADD_HL_A
+	ld (hl), e
+	; convert it to chunk offset
+	ld a, (current_area__special_room_room_id_offset)
+	call room_offset_to_chunk_offset
+	ld (current_area__special_room_chunk_id_offset), a
+	ret
+pcg_generate_area__mark_special_rooms_loop_next:
+	cp TAG_TELEPORTER_ATLANTIS
+	jr nz, pcg_generate_area__mark_special_rooms_loop_next2
+	; teleporter room found!
+	ld e, TELEPORTER_ROOM_ID
+	jr pcg_generate_area__mark_special_rooms_loop_found
+pcg_generate_area__mark_special_rooms_loop_next2:
+	inc hl
+	inc hl
+	inc hl
+    jr pcg_generate_area__mark_special_rooms_loop
+
+
+;-----------------------------------------------
 ; This method attempts to merge neighboring rooms that belong to the same division.
 ; It will try to make rooms that are 2x1, 3x1, 4x1, 2x2, 1x2, 1x3, or 1x4 in size.
 pcg_generate_area__merge_rooms:
@@ -120,8 +170,17 @@ pcg_generate_area__merge_rooms:
 	ld de, tmp_pcg_area__division_ids_tmp
 	ld bc, MAX_AREA_SIZE
 	ldir
-	ld hl, tmp_pcg_area__division_ids_tmp
 
+	call pcg_generate_area__mark_special_rooms
+	ld a, (current_area__special_room_room_id_offset)
+	cp #ff
+	jr z, pcg_generate_area__merge_rooms_no_special_room
+	ld hl, tmp_pcg_area__division_ids_tmp
+	ADD_HL_A
+	ld (hl), 0  ; mark the special room as processed, so that we do not merge it
+pcg_generate_area__merge_rooms_no_special_room:
+
+	ld hl, tmp_pcg_area__division_ids_tmp
 	ld bc, (current_area__width)
 	ld ixl, c
 	ld ixh, b  ; ixl: width, ixh: height
@@ -382,37 +441,7 @@ pcg_generate_area__merge_rooms_loop_x_skip:
 	inc d
 	dec b
 	jp nz, pcg_generate_area__merge_rooms_loop_y
-
-	; Ensure that the "calendar stone" room is not merged with anything:
-	ld a, (current_area__id)
-	cp 3  ; 'the confluence'
-	ret nz 
-
-	; hl = ptr to tags for this area
-	ld hl, current_world__area_data + 3*WORLD_AREA__SIZE + WORLD_AREA__TAGS_OFFSET
-pcg_generate_area__merge_rooms_calendar_loop:
-	ld a, (hl)
-	or a
-	ret z
-	cp TAG_ENDING
-	jr nz, pcg_generate_area__merge_rooms_calendar_loop_next
-	; found!
-	inc hl
-	ld a, (hl)
-	ld (current_area__calendar_room_chunk_id_offset), a  ; temporarily store the room offset
-	ld hl, current_area__room_ids
-	ADD_HL_A
-	ld (hl), CALENDAR_ROOM_ID
-	; convert it to chunk offset
-	ld a, (current_area__calendar_room_chunk_id_offset)
-	call room_offset_to_chunk_offset
-	ld (current_area__calendar_room_chunk_id_offset), a
 	ret
-pcg_generate_area__merge_rooms_calendar_loop_next:
-	inc hl
-	inc hl
-	inc hl
-    jr pcg_generate_area__merge_rooms_calendar_loop
 
 
 ;-----------------------------------------------

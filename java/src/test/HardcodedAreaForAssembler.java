@@ -35,19 +35,25 @@ public class HardcodedAreaForAssembler {
         RenderedArea ra0 = pcg2.generate(w.areas.get(0), w, r);
         RenderedArea ra1 = pcg2.generate(w.areas.get(1), w, r);
         RenderedArea ra2 = pcg2.generate(w.areas.get(2), w, r);
-//        RenderedArea ra3 = pcg2.generate(w.areas.get(3), w, r);
-//        RenderedArea ra4 = pcg2.generate(w.areas.get(4), w, r);
-//        RenderedArea ra5 = pcg2.generate(w.areas.get(5), w, r);
-//        RenderedArea ra6 = pcg2.generate(w.areas.get(6), w, r);
+        RenderedArea ra3 = pcg2.generate(w.areas.get(3), w, r);
+        RenderedArea ra4 = pcg2.generate(w.areas.get(4), w, r);
+        RenderedArea ra5 = pcg2.generate(w.areas.get(5), w, r);
+        RenderedArea ra6 = pcg2.generate(w.areas.get(6), w, r);
+        RenderedArea ra7 = pcg2.generate(w.areas.get(7), w, r);
+        RenderedArea ra8 = pcg2.generate(w.areas.get(8), w, r);
+        RenderedArea ra9 = pcg2.generate(w.areas.get(9), w, r);
 //        generateAssemblerRenderedAreaData(ra0, w.areas.get(0), pcg2);
-        generateAssemblerRenderedAreaData(ra1, w.areas.get(1), pcg2);
+        generateAssemblerRenderedAreaData(ra1, w.areas.get(9), pcg2);
         GenerationTest.visualizeArea(ra0, "tmp/area"+0+".png", pcg2);
         GenerationTest.visualizeArea(ra1, "tmp/area"+1+".png", pcg2);
         GenerationTest.visualizeArea(ra2, "tmp/area"+2+".png", pcg2);
-//        GenerationTest.visualizeArea(ra3, "tmp/area"+3+".png", pcg2);
-//        GenerationTest.visualizeArea(ra4, "tmp/area"+4+".png", pcg2);
-//        GenerationTest.visualizeArea(ra5, "tmp/area"+5+".png", pcg2);
-//        GenerationTest.visualizeArea(ra6, "tmp/area"+6+".png", pcg2);
+        GenerationTest.visualizeArea(ra3, "tmp/area"+3+".png", pcg2);
+        GenerationTest.visualizeArea(ra4, "tmp/area"+4+".png", pcg2);
+        GenerationTest.visualizeArea(ra5, "tmp/area"+5+".png", pcg2);
+        GenerationTest.visualizeArea(ra6, "tmp/area"+6+".png", pcg2);
+        GenerationTest.visualizeArea(ra7, "tmp/area"+7+".png", pcg2);
+        GenerationTest.visualizeArea(ra8, "tmp/area"+8+".png", pcg2);
+        GenerationTest.visualizeArea(ra9, "tmp/area"+9+".png", pcg2);
     }
     
     
