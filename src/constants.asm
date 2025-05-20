@@ -343,6 +343,7 @@ TAG_CALENDAR_TABLET: equ 149
 TAG_CALENDAR_SOCKET: equ 150
 TAG_HALF_POWER_STONE: equ 151
 TAG_CALENDAR_STONE_CENTER: equ 152
+TAG_MAYA_PUZZLE_TABLET: equ 153
 
 N_PATH_OPENING_TAGS: equ 32  ; there are less than this, but just in case (this is the number of tags above that spawn a breakable wall or door).
 

@@ -916,6 +916,7 @@ ENDR
 	dw object_interaction_function_calendar_socket  ; TAG_CALENDAR_SOCKET
 	dw object_interaction_function_half_power_stone  ; TAG_HALF_POWER_STONE
 	dw object_interaction_function_calendar_center  ; TAG_CALENDAR_STONE_CENTER
+	dw object_interaction_function_tablet  ; TAG_MAYA_PUZZLE_TABLET
 
 
 object_interaction_inventory_slot:
@@ -1325,6 +1326,11 @@ object_interaction_function_tablet:
 	ld de, calendar_tablet_fn
 	jr object_interaction_function_tablet_ptr_set
 object_interaction_function_tablet_not_calendar:
+	cp TAG_MAYA_PUZZLE_TABLET
+	jr nz, object_interaction_function_tablet_not_maya_puzzle
+	ld de, maya_puzzle_tablet_fn
+	jr object_interaction_function_tablet_ptr_set
+object_interaction_function_tablet_not_maya_puzzle:
 	; Determine tablet content:
 	ld hl, current_world__tablet_content
 object_interaction_function_tablet_loop:
@@ -1968,7 +1974,7 @@ ENDR
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_CALENDAR_SOCKET
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_half_power_stone_gfx  ; TAG_HALF_POWER_STONE
 	TILE_OBJECT_DATA 1, 2, 2, tile_object_calendar_stone_center_gfx  ; TAG_CALENDAR_STONE_CENTER
-
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_MAYA_PUZZLE_TABLET
 
 tile_object_regular_object_gfx:
 	db FIRST_ITEM_TILE, FIRST_ITEM_TILE+1, FIRST_ITEM_TILE+2, FIRST_ITEM_TILE+3

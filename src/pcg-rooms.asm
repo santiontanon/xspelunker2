@@ -2098,6 +2098,7 @@ ENDR
 ; TAG_CALENDAR_SOCKET: equ 143
 ; TAG_HALF_POWER_STONE: equ 144
 ; TAG_CALENDAR_STONE_CENTER: equ 145
+; TAG_CALENDAR_STONE_CENTER: equ 153
 
 
 ;-----------------------------------------------
@@ -2290,7 +2291,19 @@ pcg_generate_room__teleporter:
 	call pcg_generate_room__calendar_open_walls
 
 	; spawn the tablet:
-	; ...
+	; spawn the tablets:
+	ld iy, (tmp_pcg_room__next_tile_object_ptr)
+	ld a, (hl)
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 0  ; id
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_MAYA_PUZZLE_TABLET  ; type
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 15  ; x
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 9  ; y
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0  ; state
+	push de
+		ld de, ROOM_TILE_OBJECT_STRUCT_SIZE
+		add iy, de
+	pop de
+	ld (tmp_pcg_room__next_tile_object_ptr), iy
 
 	; tablet gfx:
 	ld hl, buffer_4096 + 60 * 64

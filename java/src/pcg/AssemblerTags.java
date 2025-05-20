@@ -185,6 +185,8 @@ public class AssemblerTags {
         "TAG_CALENDAR_TABLET",
         "TAG_CALENDAR_SOCKET",
         "TAG_HALF_POWER_STONE",
+        "TAG_CALENDAR_STONE_CENTER",
+        "TAG_CALENDAR_TABLET",
     };
     
 

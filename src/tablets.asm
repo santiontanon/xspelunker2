@@ -454,3 +454,262 @@ combination_tablet_print_line_12_loop:
     dec b
     jp nz, combination_tablet_print_line_12_loop
 	ret
+
+
+;-----------------------------------------------
+maya_puzzle_tablet_fn:
+	call maya_puzzle_tablet_fn_load_extra_tiles
+
+	; display the maya puzzle tiles:
+	ld hl, NAMTBL2 + 8 + 7*32
+	ld ix, current_world__maya_puzzle_riddles
+	call maya_puzzle_tablet_fn_draw_line
+
+	ld hl, NAMTBL2 + 8 + 15*32
+	ld ix, current_world__maya_puzzle_riddles + 3
+	; jp maya_puzzle_tablet_fn_draw_line
+	; ret
+
+
+;-----------------------------------------------
+; input:
+; - ix: ptr to the line
+; - hl: nametable ptr where to start drawing
+maya_puzzle_tablet_fn_draw_line:
+	push hl
+		ld hl, maya_puzzle_tablet_fn_draw_line_table1
+		ld b, 0
+		ld c, (ix)
+		add hl, bc
+		add hl, bc
+		ld e, (hl)
+		inc hl
+		ld d, (hl)
+	pop hl
+	call maya_puzzle_tablet_fn_draw_line_concept
+	push hl
+		ld hl, maya_puzzle_tablet_fn_draw_line_table2
+		ld b, 0
+		ld c, (ix + 1)
+		add hl, bc
+		add hl, bc
+		ld e, (hl)
+		inc hl
+		ld d, (hl)
+	pop hl
+	call maya_puzzle_tablet_fn_draw_line_concept
+	push hl
+		ld hl, maya_puzzle_tablet_fn_draw_line_table3
+		ld b, 0
+		ld c, (ix + 2)
+		add hl, bc
+		add hl, bc
+		ld e, (hl)
+		inc hl
+		ld d, (hl)
+	pop hl
+	jp maya_puzzle_tablet_fn_draw_line_concept
+
+maya_puzzle_tablet_fn_draw_line_concept:
+	ld a, (de)  ; n characters to draw
+	inc de
+maya_puzzle_tablet_fn_draw_line_loop1:	
+	push af
+		; check if we need to jump to a new line:
+		ld a, l
+		ex de, hl
+			add a, (hl)  ; add width
+		ex de, hl
+		and #1f  ; x coordinate
+		cp 25
+		jr c, maya_puzzle_tablet_fn_draw_line_loop1_continue
+		; we need to go to the next line:
+		ld a, l
+		and #e0
+		add a, 8
+		ld l, a
+		ld a, 128
+		ADD_HL_A
+maya_puzzle_tablet_fn_draw_line_loop1_continue:
+		ld a, (de)  ; width
+		inc de
+		ld b, a
+		ld a, (de)  ; first tile
+		inc de
+		push de
+		push hl
+		push bc
+			ld e, a
+			call maya_puzzle_tablet_fn_draw_glyph
+		pop bc
+		pop hl
+		pop de
+		ld c, b
+		ld b, 0
+		add hl, bc
+	pop af
+	dec a
+	jr nz, maya_puzzle_tablet_fn_draw_line_loop1
+	ret
+
+
+maya_puzzle_tablet_fn_draw_line_table1:
+	dw maya_puzzle_tablet_fn_draw_line_table_strike
+	dw maya_puzzle_tablet_fn_draw_line_table_strike_east
+	dw maya_puzzle_tablet_fn_draw_line_table_strike_west
+	dw maya_puzzle_tablet_fn_draw_line_table_sit
+	dw maya_puzzle_tablet_fn_draw_line_table_sit_east
+	dw maya_puzzle_tablet_fn_draw_line_table_sit_west
+	dw maya_puzzle_tablet_fn_draw_line_table_blowgun
+	dw maya_puzzle_tablet_fn_draw_line_table_blowgun_east
+	dw maya_puzzle_tablet_fn_draw_line_table_blowgun_west
+	dw maya_puzzle_tablet_fn_draw_line_table_standup_we
+	dw maya_puzzle_tablet_fn_draw_line_table_standup_ew
+	dw maya_puzzle_tablet_fn_draw_line_table_ascend
+
+maya_puzzle_tablet_fn_draw_line_table2:
+	dw maya_puzzle_tablet_fn_draw_line_table_here
+	dw maya_puzzle_tablet_fn_draw_line_table_below_jaguar
+	dw maya_puzzle_tablet_fn_draw_line_table_above_jaguar
+	dw maya_puzzle_tablet_fn_draw_line_table_below_snake
+	dw maya_puzzle_tablet_fn_draw_line_table_above_snake
+	dw maya_puzzle_tablet_fn_draw_line_table_below_eagle
+	dw maya_puzzle_tablet_fn_draw_line_table_above_eagle
+	dw maya_puzzle_tablet_fn_draw_line_table_below_fish
+	dw maya_puzzle_tablet_fn_draw_line_table_above_fish
+	dw maya_puzzle_tablet_fn_draw_line_table_below_ladder
+	dw maya_puzzle_tablet_fn_draw_line_table_ladder
+
+maya_puzzle_tablet_fn_draw_line_table3:
+	dw maya_puzzle_tablet_fn_draw_line_table_number_2
+	dw maya_puzzle_tablet_fn_draw_line_table_number_3
+	dw maya_puzzle_tablet_fn_draw_line_table_number_4
+	dw maya_puzzle_tablet_fn_draw_line_table_number_5
+	dw maya_puzzle_tablet_fn_draw_line_table_number_6
+
+maya_puzzle_tablet_fn_draw_line_table_strike:
+	db 1, 3, 32
+maya_puzzle_tablet_fn_draw_line_table_strike_east:
+	db 2, 3, 32, 3, 80
+maya_puzzle_tablet_fn_draw_line_table_strike_west:
+	db 2, 3, 32, 2, 46
+maya_puzzle_tablet_fn_draw_line_table_sit:
+	db 1, 3, 35
+maya_puzzle_tablet_fn_draw_line_table_sit_east:
+	db 2, 3, 35, 3, 80
+maya_puzzle_tablet_fn_draw_line_table_sit_west:
+	db 2, 3, 35, 2, 46
+maya_puzzle_tablet_fn_draw_line_table_blowgun:
+	db 1, 2, 44
+maya_puzzle_tablet_fn_draw_line_table_blowgun_east:
+	db 2, 2, 44, 3, 80
+maya_puzzle_tablet_fn_draw_line_table_blowgun_west:
+	db 2, 2, 44, 2, 46
+maya_puzzle_tablet_fn_draw_line_table_standup_we:
+	db 4, 3, 41, 2, 46, 3, 41, 3, 80
+maya_puzzle_tablet_fn_draw_line_table_standup_ew:
+	db 4, 3, 41, 3, 80, 3, 41, 2, 46
+maya_puzzle_tablet_fn_draw_line_table_ascend:
+	db 1, 3, 38
+maya_puzzle_tablet_fn_draw_line_table_here:
+	db 1, 6, 86
+maya_puzzle_tablet_fn_draw_line_table_below_jaguar:
+	db 2, 5, 128, 3, 136
+maya_puzzle_tablet_fn_draw_line_table_above_jaguar:
+	db 2, 3, 83, 3, 136
+maya_puzzle_tablet_fn_draw_line_table_below_snake:
+	db 2, 5, 128, 3, 139
+maya_puzzle_tablet_fn_draw_line_table_above_snake:
+	db 2, 3, 83, 3, 139
+maya_puzzle_tablet_fn_draw_line_table_below_eagle:
+	db 2, 5, 128, 4, 176
+maya_puzzle_tablet_fn_draw_line_table_above_eagle:
+	db 2, 3, 83, 4, 176
+maya_puzzle_tablet_fn_draw_line_table_below_fish:
+	db 2, 5, 128, 3, 180
+maya_puzzle_tablet_fn_draw_line_table_above_fish:
+	db 2, 3, 83, 3, 180
+maya_puzzle_tablet_fn_draw_line_table_below_ladder:
+	db 2, 5, 128, 3, 133
+maya_puzzle_tablet_fn_draw_line_table_ladder:
+	db 1, 3, 133
+maya_puzzle_tablet_fn_draw_line_table_number_2:
+	db 1, 1, 184
+maya_puzzle_tablet_fn_draw_line_table_number_3:
+	db 1, 1, 185
+maya_puzzle_tablet_fn_draw_line_table_number_4:
+	db 1, 1, 186
+maya_puzzle_tablet_fn_draw_line_table_number_5:
+	db 1, 1, 187
+maya_puzzle_tablet_fn_draw_line_table_number_6:
+	db 2, 1, 183, 1, 187
+
+
+;-----------------------------------------------
+; input:
+; - hl: ptr to name table where to draw
+; - b: width
+; - e: top-left tile
+maya_puzzle_tablet_fn_draw_glyph:
+	ld a, 3
+maya_puzzle_tablet_fn_draw_glyph_loop_y:
+	push af
+	push bc
+		push hl
+			push bc
+				call SETWRT
+			pop bc
+		    ld a, (VDP.DW)
+		    ld c, a
+		    push de
+maya_puzzle_tablet_fn_draw_glyph_loop_x:
+			    out (c), e
+			    inc e
+			    djnz maya_puzzle_tablet_fn_draw_glyph_loop_x
+			pop de
+			ld a, 16
+			add a, e
+			ld e, a 
+		pop hl
+		ld bc, 32
+		add hl, bc
+	pop bc
+	pop af
+	dec a
+	jr nz, maya_puzzle_tablet_fn_draw_glyph_loop_y
+	ret
+
+
+;-----------------------------------------------
+maya_puzzle_tablet_fn_load_extra_tiles:
+	ld hl, tablet_maya_tiles_zx0
+	ld de, buffer_4096
+	ld c, TILES_PAGE
+	call dzx0_from_page_c
+
+	ld hl, buffer_4096
+	ld de, CHRTBL2 + 32*8
+	ld bc, 192*8
+	call fast_LDIRVM
+	ld hl, buffer_4096 + 192*8
+	ld de, CLRTBL2 + 32*8
+	ld bc, 192*8
+	call fast_LDIRVM
+
+	ld hl, buffer_4096
+	ld de, CHRTBL2 + 256*8 + 32*8
+	ld bc, 192*8
+	call fast_LDIRVM
+	ld hl, buffer_4096 + 192*8
+	ld de, CLRTBL2 + 256*8 + 32*8
+	ld bc, 192*8
+	call fast_LDIRVM
+
+	ld hl, buffer_4096
+	ld de, CHRTBL2 + 256*8*2 + 32*8
+	ld bc, 192*8
+	call fast_LDIRVM
+	ld hl, buffer_4096 + 192*8
+	ld de, CLRTBL2 + 256*8*2 + 32*8
+	ld bc, 192*8
+	jp fast_LDIRVM	

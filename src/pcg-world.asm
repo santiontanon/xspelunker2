@@ -11,4 +11,19 @@ pcg_generate_world:
 	ld de, current_world__area_data
 	ld bc, hardcoded_world_data_end - hardcoded_world_data
 	ldir
-	ret
+
+	jp pcg_generate_maya_puzzle_riddles
+
+
+;-----------------------------------------------
+; input:
+; - c: modulo
+; output:
+; - a: random % c
+pcg_random_modulo:
+	call random_a
+pcg_random_modulo_loop:
+	cp c
+	ret c
+	sub c
+	jr pcg_random_modulo_loop
