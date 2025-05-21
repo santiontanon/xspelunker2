@@ -1,9 +1,13 @@
 to do:
 
 ***- Maya puzzle and double teleporter room in atlantis:
-  ***- code that checks that you have solved the riddle (sound when you solve the first line, and then when you solve the second), and activate the teleporters when this happens
-  ***- make sure they remain active if you leave the room, and that you cannot solve the riddle twice
-  ***- teleport to mars/moon and back
+  ***- teleport to mars/moon and back:
+    ***- replace teleporter tiles by actual objects that can be interacted with TAG_TELEPORTER_ATLANTIS (ids 0 or 1)
+    ***- object_interaction_function_teleporter_atlantis
+    ***- spawn TAG_TELEPORTER_MARS / TAG_TELEPORTER_MOON
+    ***- use them to teleport to mars/moon
+    ***- object_interaction_function_teleporter_mars (to teleport back)
+    ***- object_interaction_function_teleporter_moon (to teleport back)
   ***- draw the first letter from Elaine
   ***- being able to inspect it in the inventory
   ***- draw the second letter form Elaine

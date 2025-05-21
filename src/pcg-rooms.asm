@@ -2305,7 +2305,20 @@ pcg_generate_room__teleporter:
 	pop de
 	ld (tmp_pcg_room__next_tile_object_ptr), iy
 
-	; tablet gfx:
+	; trial fns & teleporter gfx:
+	ld hl, buffer_4096 + 190 * 16  ; teleporter activated by player
+	ld a, (global_state__maya_riddle)
+	cp 2
+	jr z, pcg_generate_room__teleporter_trial_done
+	ld hl, maya_puzzle_trial_fn
+	ld (current_room__trial_fn), hl
+	ld hl, buffer_4096 + 166 * 16  ; teleporter off
+pcg_generate_room__teleporter_trial_done:
+	ld (large_object_to_upload_to_vdp), hl
+	ld a, 12*8
+	ld (large_object_to_upload_to_vdp_size), a
+
+	; tablet gfx:	
 	ld hl, buffer_4096 + 60 * 64
 	ld (item_object_to_upload_to_vdp), hl
 	ret

@@ -559,6 +559,7 @@ global_state__power_calendar: ds virtual 6  ; 0: empty
                                             ; 1: inactive stone
                                             ; 2 - 7: one of the power stones 
 global_state__n_power_stones_in_calendar: ds virtual 1  ; for convenience (it should be the number of elements in 'global_state__power_calendar' >= 2)
+global_state__maya_riddle: ds virtual 1  ; 0: not solved, 1: solved first line, 2: solved
 global_state__solved_final_riddle: ds virtual 1
 
 player_x: ds virtual 2  ; 1st the pixel and 2nd byte is the tile coordinate

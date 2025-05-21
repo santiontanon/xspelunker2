@@ -302,3 +302,386 @@ trial_fn_in_front_of_god_p_no_god:
 	or 1
 	ret
 
+
+;-----------------------------------------------
+maya_puzzle_trial_fn:
+	ld a, (global_state__maya_riddle)
+	or a
+	jr z, maya_puzzle_trial_fn_first_line
+	ld ix, current_world__maya_puzzle_riddles + 3
+	jr maya_puzzle_trial_fn_continue
+maya_puzzle_trial_fn_first_line:
+	ld ix, current_world__maya_puzzle_riddles
+maya_puzzle_trial_fn_continue:
+	ld a, (ix)
+	cp 11
+	jr z, maya_puzzle_trial_fn_ascend_special_case
+	; if the player is not in place, don't even check:
+	call maya_puzzle_trial_fn_check_player_is_in_location
+	jr nz, maya_puzzle_trial_fn_action_player_invalidated
+	call maya_puzzle_trial_fn_check_player_has_not_done_something_illegal
+	jr z, maya_puzzle_trial_fn_action_player_invalidated
+
+	; in "even" states, we are waiting for the action,
+	; in "odd" states, we are waiting for the action to stop.
+	ld a, (player_trial_completion_state)
+	and #1
+	jr nz, maya_puzzle_trial_fn_continue_odd
+	; even states:
+	call maya_puzzle_trial_fn_check_player_has_done_the_action
+	ret nz
+maya_puzzle_trial_fn_one_instance_done:
+	ld a, (player_trial_completion_state)
+	inc a
+	ld (player_trial_completion_state), a
+	ret
+
+maya_puzzle_trial_fn_continue_odd:
+	; check that the action has finished:
+	call maya_puzzle_trial_fn_check_player_has_done_the_action
+	ret z
+	ld a, (player_trial_completion_state)
+	inc a
+	ld (player_trial_completion_state), a
+	srl a
+	cp (ix + 2)  ; number of times we need to repeat
+	ret nz
+	; trial line solved!
+	ld hl, SFX_ui_select
+	call play_SFX_with_high_priority
+	ld a, (global_state__maya_riddle)
+	or a
+	jr z, maya_puzzle_trial_fn_solved_first_line
+	; full riddle solved!
+	ld a, 2
+	ld (global_state__maya_riddle), a
+	ld hl, 0
+	ld (current_room__trial_fn), hl
+	; activate teleporters:
+	ld hl, buffer_4096 + 190 * 16  ; teleporter activated by player
+	ld (large_object_to_upload_to_vdp), hl
+	ld a, 12*8
+	ld (large_object_to_upload_to_vdp_size), a
+
+	ld hl, redraw_flags
+	set REUPLOAD_INGAME_OBJECT_TILES_FLAG_BIT, (hl)
+	ret	
+
+maya_puzzle_trial_fn_action_player_invalidated:
+	xor a
+	ld (player_trial_completion_state), a
+	ret
+
+maya_puzzle_trial_fn_solved_first_line:
+	; a == 0 here
+	ld (player_trial_completion_state), a
+	inc a
+	ld (global_state__maya_riddle), a
+	ret
+
+
+maya_puzzle_trial_fn_ascend_special_case:
+	; ...
+	; jp to 'maya_puzzle_trial_fn_one_instance_done' each time player climbs the ladder once
+	ret
+
+
+maya_puzzle_trial_fn_check_player_has_done_the_action:
+	ld a, (ix)
+	ld hl, maya_puzzle_trial_fn_action_table
+maya_puzzle_trial_fn_check_player_has_done_the_action_entry_point:
+	add a, a
+	ADD_HL_A
+	ld a, (hl)
+	inc hl
+	ld h, (hl)
+	ld l, a
+	jp hl
+
+
+maya_puzzle_trial_fn_check_player_is_in_location:
+	ld a, (ix + 1)
+	ld hl, maya_puzzle_trial_fn_location_table
+	jr maya_puzzle_trial_fn_check_player_has_done_the_action_entry_point
+
+
+maya_puzzle_trial_fn_check_player_has_not_done_something_illegal:
+	ld a, (ix)
+	ld hl, maya_puzzle_trial_fn_illegal_table
+	jr maya_puzzle_trial_fn_check_player_has_done_the_action_entry_point
+
+
+
+maya_puzzle_trial_fn_action_table:
+	dw maya_puzzle_trial_fn_strike
+	dw maya_puzzle_trial_fn_strike_east
+	dw maya_puzzle_trial_fn_strike_west
+	dw maya_puzzle_trial_fn_sit
+	dw maya_puzzle_trial_fn_sit_east
+	dw maya_puzzle_trial_fn_sit_west
+	dw maya_puzzle_trial_fn_blowgun
+	dw maya_puzzle_trial_fn_blowgun_east
+	dw maya_puzzle_trial_fn_blowgun_west
+	dw maya_puzzle_trial_fn_standup_w_e
+	dw maya_puzzle_trial_fn_standup_e_w
+
+maya_puzzle_trial_fn_illegal_table:
+	dw maya_puzzle_trial_fn_illegal_strike
+	dw maya_puzzle_trial_fn_illegal_strike_east
+	dw maya_puzzle_trial_fn_illegal_strike_west
+	dw maya_puzzle_trial_fn_illegal_sit
+	dw maya_puzzle_trial_fn_illegal_sit_east
+	dw maya_puzzle_trial_fn_illegal_sit_west
+	dw maya_puzzle_trial_fn_illegal_blowgun
+	dw maya_puzzle_trial_fn_illegal_blowgun_east
+	dw maya_puzzle_trial_fn_illegal_blowgun_west
+	dw maya_puzzle_trial_fn_illegal_standup_w_e
+	dw maya_puzzle_trial_fn_illegal_standup_e_w
+
+maya_puzzle_trial_fn_location_table:
+	dw maya_puzzle_trial_fn_location_here
+	dw maya_puzzle_trial_fn_location_below_jaguar
+	dw maya_puzzle_trial_fn_location_above_jaguar
+	dw maya_puzzle_trial_fn_location_below_snake
+	dw maya_puzzle_trial_fn_location_above_snake
+	dw maya_puzzle_trial_fn_location_below_eagle
+	dw maya_puzzle_trial_fn_location_above_eagle
+	dw maya_puzzle_trial_fn_location_below_fish
+	dw maya_puzzle_trial_fn_location_above_fish
+	dw maya_puzzle_trial_fn_location_below_ladder
+
+maya_puzzle_trial_fn_strike:
+	ld a, (player_state)
+	and #fe  ; remove direction
+	cp PLAYER_STATE_WEAPON_SWING
+	ret
+
+maya_puzzle_trial_fn_strike_east:
+	ld a, (player_state)
+	cp PLAYER_STATE_WEAPON_SWING  ; right
+	ret
+
+maya_puzzle_trial_fn_strike_west:
+	ld a, (player_state)
+	cp PLAYER_STATE_WEAPON_SWING + 1 ; left
+	ret
+
+maya_puzzle_trial_fn_sit:
+	ld a, (player_state)
+	and #fe  ; remove direction
+	cp PLAYER_STATE_CROUCHING
+	ret
+
+maya_puzzle_trial_fn_sit_east:
+	ld a, (player_state)
+	cp PLAYER_STATE_CROUCHING
+	ret
+
+maya_puzzle_trial_fn_sit_west:
+	ld a, (player_state)
+	cp PLAYER_STATE_CROUCHING + 1
+	ret
+
+maya_puzzle_trial_fn_blowgun:
+	ld a, (player_state)
+	and #fe  ; remove direction
+	cp PLAYER_STATE_DIRECTIONAL_WEAPON
+	ret nz
+	ld a, (player_current_item)
+	cp 5  ; blowgun
+	ret
+
+maya_puzzle_trial_fn_blowgun_east:
+	ld a, (player_state)
+	cp PLAYER_STATE_DIRECTIONAL_WEAPON
+	ret nz
+	ld a, (player_current_item)
+	cp 5  ; blowgun
+	ret
+
+maya_puzzle_trial_fn_blowgun_west:
+	ld a, (player_state)
+	cp PLAYER_STATE_DIRECTIONAL_WEAPON + 1
+	ret nz
+	ld a, (player_current_item)
+	cp 5  ; blowgun
+	ret
+
+maya_puzzle_trial_fn_standup_w_e:
+	ld a, (player_state)
+	and #01
+	xor #01
+	ret
+
+maya_puzzle_trial_fn_standup_e_w:
+	ld a, (player_state)
+	and #01
+	ret
+
+
+maya_puzzle_trial_fn_illegal_strike:
+	ld a, (player_state)
+	and #fe
+	cp PLAYER_STATE_JUMPING
+	ret z
+	cp PLAYER_STATE_CROUCHING
+	ret z
+	cp PLAYER_STATE_CRAWLING
+	ret
+
+maya_puzzle_trial_fn_illegal_strike_east:
+	ld a, (player_state)
+	and #01
+	xor #01  ; if player is facing west, illegal!
+	ret z
+	jr maya_puzzle_trial_fn_illegal_strike
+
+maya_puzzle_trial_fn_illegal_strike_west:
+	ld a, (player_state)
+	and #01  ; if player is facing east, illegal!
+	ret z
+	jr maya_puzzle_trial_fn_illegal_strike
+
+maya_puzzle_trial_fn_illegal_sit:
+	ld a, (player_state)
+	and #fe
+	cp PLAYER_STATE_WEAPON_SWING
+	ret z
+	cp PLAYER_STATE_JUMPING
+	ret
+
+maya_puzzle_trial_fn_illegal_sit_east:
+	ld a, (player_state)
+	and #01
+	xor #01  ; if player is facing west, illegal!
+	ret z
+	jr maya_puzzle_trial_fn_illegal_sit
+
+maya_puzzle_trial_fn_illegal_sit_west:
+	ld a, (player_state)
+	and #01  ; if player is facing east, illegal!
+	ret z
+	jr maya_puzzle_trial_fn_illegal_sit
+
+maya_puzzle_trial_fn_illegal_blowgun:
+	ld a, (player_current_item)
+	cp 5  ; blowgun
+	jr nz, maya_puzzle_trial_fn_illegal_blowgun_fail
+	jr maya_puzzle_trial_fn_illegal_strike
+maya_puzzle_trial_fn_illegal_blowgun_fail:
+	xor a
+	ret
+
+maya_puzzle_trial_fn_illegal_blowgun_east:
+	ld a, (player_current_item)
+	cp 5  ; blowgun
+	jr nz, maya_puzzle_trial_fn_illegal_blowgun_fail
+	jr maya_puzzle_trial_fn_illegal_strike_east
+
+maya_puzzle_trial_fn_illegal_blowgun_west:
+	ld a, (player_current_item)
+	cp 5  ; blowgun
+	jr nz, maya_puzzle_trial_fn_illegal_blowgun_fail
+	jr maya_puzzle_trial_fn_illegal_strike_west
+
+maya_puzzle_trial_fn_illegal_standup_w_e:
+maya_puzzle_trial_fn_illegal_standup_e_w:
+	ld a, (player_state)
+	and #fe
+	cp PLAYER_STATE_JUMPING
+	ret z
+	cp PLAYER_STATE_CROUCHING
+	ret z
+	cp PLAYER_STATE_CRAWLING
+	ret z
+	cp PLAYER_STATE_WEAPON_SWING
+	ret
+
+
+maya_puzzle_trial_fn_location_here:
+	ld a, (player_y + 1)
+	cp 9
+	ret nz
+	ld a, (player_x + 1)
+	sub 14
+maya_puzzle_trial_fn_location_entry_point:
+	ret c
+	cp 4
+	jr nc, maya_puzzle_trial_fn_location_here_fail
+	xor a  ; in place!
+	ret
+maya_puzzle_trial_fn_location_here_fail:
+	or 1
+	ret
+
+maya_puzzle_trial_fn_location_below_jaguar:
+	ld a, (player_y + 1)
+	cp 6
+	ret nz
+	ld a, (player_x + 1)
+	sub 10
+	jr maya_puzzle_trial_fn_location_entry_point
+
+maya_puzzle_trial_fn_location_above_jaguar:
+	ld a, (player_y + 1)
+	cp 2
+	ret nz
+	ld a, (player_x + 1)
+	sub 10
+	jr maya_puzzle_trial_fn_location_entry_point
+
+maya_puzzle_trial_fn_location_below_snake:
+	ld a, (player_y + 1)
+	cp 13
+	ret nz
+	ld a, (player_x + 1)
+	sub 2
+	jr maya_puzzle_trial_fn_location_entry_point
+
+maya_puzzle_trial_fn_location_above_snake:
+	ld a, (player_y + 1)
+	cp 9
+	ret nz
+	ld a, (player_x + 1)
+	sub 2
+	jr maya_puzzle_trial_fn_location_entry_point
+
+maya_puzzle_trial_fn_location_below_eagle:
+	ld a, (player_y + 1)
+	cp 6
+	ret nz
+	ld a, (player_x + 1)
+	sub 18
+	jr maya_puzzle_trial_fn_location_entry_point
+
+maya_puzzle_trial_fn_location_above_eagle:
+	ld a, (player_y + 1)
+	cp 2
+	ret nz
+	ld a, (player_x + 1)
+	sub 18
+	jr maya_puzzle_trial_fn_location_entry_point
+
+maya_puzzle_trial_fn_location_below_fish:
+	ld a, (player_y + 1)
+	cp 13
+	ret nz
+	ld a, (player_x + 1)
+	sub 26
+	jr maya_puzzle_trial_fn_location_entry_point
+
+maya_puzzle_trial_fn_location_above_fish:
+	ld a, (player_y + 1)
+	cp 9
+	ret nz
+	ld a, (player_x + 1)
+	sub 26
+	jr maya_puzzle_trial_fn_location_entry_point
+
+maya_puzzle_trial_fn_location_below_ladder:
+	ld a, (player_y + 1)
+	cp 16
+	ret nz
+	ld a, (player_x + 1)
+	sub 14
+	jr maya_puzzle_trial_fn_location_entry_point

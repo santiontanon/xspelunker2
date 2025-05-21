@@ -502,6 +502,8 @@ maya_puzzle_tablet_fn_draw_line:
 		ld hl, maya_puzzle_tablet_fn_draw_line_table3
 		ld b, 0
 		ld c, (ix + 2)
+		dec c
+		dec c
 		add hl, bc
 		add hl, bc
 		ld e, (hl)

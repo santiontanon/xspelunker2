@@ -25,12 +25,7 @@
 ;    8: above fish
 ;    9: below ladder
 ;    10: ladder (can only go with ascend)
-; - number:
-;    0: 2 times
-;    1: 3 times
-;    2: 4 times
-;    3: 5 times
-;    4: 6 times
+; - number of times (2 - 6)
 
 ;-----------------------------------------------
 pcg_generate_maya_puzzle_riddles:
@@ -56,6 +51,7 @@ pcg_generate_maya_puzzle_riddle_sentence:
 pcg_generate_maya_puzzle_riddle_sentence_number:
 	ld c, 5
 	call pcg_random_modulo
+	add a, 2
 	ld (hl), a
 	ret
 
