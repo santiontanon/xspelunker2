@@ -68,9 +68,7 @@ pcg_generate_area__world_area_ptr_set:
 	call pcg_generate_area__random_connections  ; updates 'tmp_pcg_area__piece_types'
 	call pcg_generate_area__inter_area_connections  ; updates 'tmp_pcg_area__piece_types'
 	call pcg_generate_area__place_tags  ; fills 'tmp_pcg_area__placed_tags'
-	call pcg_generate_area__choose_chunks  ; fills 'current_area__chunks_ids' and 'current_area__objects'
-	; call pgc_generate_area__special_rooms
-	ret
+	jp pcg_generate_area__choose_chunks  ; fills 'current_area__chunks_ids' and 'current_area__objects'
 
 
 ;-----------------------------------------------
@@ -1862,29 +1860,35 @@ room_offset_to_chunk_offset_loop_loop_done:
 
 
 ;-----------------------------------------------
-; pgc_generate_area__special_rooms:
-; 	ld a, (current_area__id)
-; 	cp 3
-; 	jr z, pgc_generate_area__special_rooms_confluence
-; 	; ...
-; 	ret
-
-; pgc_generate_area__special_rooms_confluence:
-; 	; locate where is the calendar stone room:
-; 	ld a, (tmp_pcg_area__calendar_room_offset)
-;	call room_offset_to_chunk_offset
-; 	ld hl, current_area__chunks_ids
-; 	ADD_HL_A
-; 	ld (hl), CALENDAR_ROOM_CHUNK_ID
-; 	inc hl
-; 	ld (hl), CALENDAR_ROOM_CHUNK_ID
-; 	ld d, 0
-; 	add hl, de
-; 	add hl, de
-; 	ld (hl), CALENDAR_ROOM_CHUNK_ID
-; 	dec hl
-; 	ld (hl), CALENDAR_ROOM_CHUNK_ID
-; 	ret
+; input:
+; - e: chunk offset
+; output:
+; - e: room offset
+covert_chunk_offset_to_room_offset:
+	; - chunk offset = x + y * width*2
+	; - room offset = x/2 + y/2 * width
+	ld a, e
+	ld hl, current_area__width
+	ld c, (hl)  ; width in rooms
+	srl a  ; a = x/2 + y * width
+	ld e, a
+	ld b, 0
+covert_chunk_offset_to_room_offset_loop:
+	cp c
+	jr c, covert_chunk_offset_to_room_offset_loop_done
+	sub c
+	inc b
+	jr covert_chunk_offset_to_room_offset_loop
+covert_chunk_offset_to_room_offset_loop_done:
+	; a = x/2
+	; b = y
+	srl b
+	ret z  ; y/2 = 0
+covert_chunk_offset_to_room_offset_loop2:
+	add a, c
+	djnz covert_chunk_offset_to_room_offset_loop2
+	ld e, a
+	ret
 
 
 ;-----------------------------------------------
@@ -1952,6 +1956,8 @@ pcg_generate_area__normal_tags:
 	db TAG_TELEPORTER6
 	db TAG_TELEPORTER7
 	db TAG_TELEPORTER8
+	db TAG_TELEPORTER_MARS
+	db TAG_TELEPORTER_MOON
 	db TAG_BOSS1_CHESTLOCK
 	db TAG_BOSS2_CHESTLOCK
 	db TAG_BOSS3_CHESTLOCK

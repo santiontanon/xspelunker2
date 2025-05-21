@@ -136,70 +136,86 @@ display_map_from_teleporter_loop_end:
 	ld hl, redraw_flags
 	ld (hl), #ff
 
-	; teleport:
-	call disable_VDP_output
+	ld b, 0
+	ld c, a
+	ld hl, map_teleporter_areas
+	add hl, bc
+	ld b, (hl)  ; area ID
 	ld a, (tmp_map_pointer_position)
-	; load the area:
-	push af
-		ld b, 0
-		ld c, a
-		ld hl, map_teleporter_areas
-		add hl, bc
-
-		ld e, (hl)
-		ld hl, pcg_generate_area
-		ld c, PCG_PAGE
-		call call_hl_in_page_c_8000
-	pop af
-
-	; get the room where the teleporter is:
-	ld hl, current_area__objects
 	add a, TAG_TELEPORTER1
-	push af
-		ld bc, AREA_OBJECT_STRUCT_SIZE
-display_map_from_teleporter_find_room_loop:
-		cp (hl)
-		jr z, display_map_from_teleporter_find_room_loop_found
-		add hl, bc
-		jr display_map_from_teleporter_find_room_loop
-display_map_from_teleporter_find_room_loop_found:
-		inc hl
-		ld a, (hl)  ; teleporter offset
-		; convert offset from chunk coordinates to room coordinates:
-		call covert_chunk_offset_to_room_offset
-		ld c, a
-		ld hl, current_area__room_ids
-		add hl, bc
-		ld e, (hl)  ; room ID
-		ld hl, pcg_generate_room
-		ld c, PCG_PAGE
-		call call_hl_in_page_c_8000
-	pop af
+	ld c, a  ; teleporter object ID
 
-	; find teleporter object, and set player in its position:
-	ld e, a
-	ld hl, find_tile_object_ptr
-	ld c, TILES_PAGE
-	call call_hl_in_page_c_8000
-	push hl
-	pop ix
-	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_X)
-	inc a
-	ld (player_x + 1), a
-	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
-	inc a
-	ld (player_y + 1), a
-	ld a, 6
-	ld (player_x), a
-	xor a
-	ld (player_y), a
-	ld (player_state_timer), a
-	ld a, PLAYER_STATE_TELEPORT_IN
-	ld (player_state), a
-	ld a, 31  ; immune while teleporting
-	ld (player_immunity_timer), a
+	ld hl, object_interaction_function_teleport_to_area_object
+	ld a, TILES_PAGE
+	jp jp_to_hl_in_page_a_8000
+
+; 	; teleport:
+; 	call disable_VDP_output
+; 	ld a, (tmp_map_pointer_position)
+; 	; load the area:
+; 	push af
+; 		ld b, 0
+; 		ld c, a
+; 		ld hl, map_teleporter_areas
+; 		add hl, bc
+
+; 		ld e, (hl)
+; 		ld hl, pcg_generate_area
+; 		ld c, PCG_PAGE
+; 		call call_hl_in_page_c_8000
+; 	pop af
+
+; 	; get the room where the teleporter is:
+; 	ld hl, current_area__objects
+; 	add a, TAG_TELEPORTER1
+; 	push af
+; 		ld bc, AREA_OBJECT_STRUCT_SIZE
+; display_map_from_teleporter_find_room_loop:
+; 		cp (hl)
+; 		jr z, display_map_from_teleporter_find_room_loop_found
+; 		add hl, bc
+; 		jr display_map_from_teleporter_find_room_loop
+; display_map_from_teleporter_find_room_loop_found:
+; 		inc hl
+; 		ld a, (hl)  ; teleporter offset
+; 		; convert offset from chunk coordinates to room coordinates:
+; 		ld hl, covert_chunk_offset_to_room_offset
+;       ld c, PCG_PAGE
+;       ld e, a
+;       call call_hl_in_page_c_8000
+;       ld c, e
+; 		ld hl, current_area__room_ids
+; 		add hl, bc
+; 		ld e, (hl)  ; room ID
+; 		ld hl, pcg_generate_room
+; 		ld c, PCG_PAGE
+; 		call call_hl_in_page_c_8000
+; 	pop af
+
+; 	; find teleporter object, and set player in its position:
+; 	ld e, a
+; 	ld hl, find_tile_object_ptr
+; 	ld c, TILES_PAGE
+; 	call call_hl_in_page_c_8000
+; 	push hl
+; 	pop ix
+; 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+; 	inc a
+; 	ld (player_x + 1), a
+; 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+; 	inc a
+; 	ld (player_y + 1), a
+; 	ld a, 6
+; 	ld (player_x), a
+; 	xor a
+; 	ld (player_y), a
+; 	ld (player_state_timer), a
+; 	ld a, PLAYER_STATE_TELEPORT_IN
+; 	ld (player_state), a
+; 	ld a, 31  ; immune while teleporting
+; 	ld (player_immunity_timer), a
 	
-	jp state_play_from_loaded_room
+; 	jp state_play_from_loaded_room
 
 
 display_map_from_teleporter_color_cycle:
@@ -307,36 +323,6 @@ display_map_from_teleporter_loop_prev_loop:
 	and #07
 	ld c, a
 	jp display_map_from_teleporter_loop_prev_loop
-
-
-;-----------------------------------------------
-; input:
-; - a: chunk offset
-; output:
-; - a: room offset
-covert_chunk_offset_to_room_offset:
-	; - chunk offset = x + y * width*2
-	; - room offset = x/2 + y/2 * width
-	ld hl, current_area__width
-	ld c, (hl)  ; width in rooms
-	srl a  ; a = x/2 + y * width
-	ld e, a
-	ld b, 0
-covert_chunk_offset_to_room_offset_loop:
-	cp c
-	jr c, covert_chunk_offset_to_room_offset_loop_done
-	sub c
-	inc b
-	jr covert_chunk_offset_to_room_offset_loop
-covert_chunk_offset_to_room_offset_loop_done:
-	; a = x/2
-	; b = y
-	srl b
-	ret z  ; y/2 = 0
-covert_chunk_offset_to_room_offset_loop2:
-	add a, c
-	djnz covert_chunk_offset_to_room_offset_loop2
-	ret
 
 
 ;-----------------------------------------------

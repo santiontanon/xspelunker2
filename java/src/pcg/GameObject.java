@@ -334,6 +334,8 @@ public class GameObject {
             case "teleporter6":
             case "teleporter7":
             case "teleporter8":
+            case "teleporter-mars":
+            case "teleporter-moon":
                 tx = 224; ty = 40; tdx = 32; tdy = 24;
                 break;
             default:

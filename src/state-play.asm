@@ -13,6 +13,8 @@ state_play:
 		ld (global_state__n_power_stones_in_calendar), a
 		ld a, STORY_STATE__GOT_LETTER2
 		ld (global_state__story), a
+		ld a, 2  ; maya riddle solved
+		ld (global_state__maya_riddle), a
 
 		; debug:
 		ld a, 1

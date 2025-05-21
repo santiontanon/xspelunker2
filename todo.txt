@@ -1,18 +1,12 @@
 to do:
 
 ***- Maya puzzle and double teleporter room in atlantis:
-  ***- teleport to mars/moon and back:
-    ***- replace teleporter tiles by actual objects that can be interacted with TAG_TELEPORTER_ATLANTIS (ids 0 or 1)
-    ***- object_interaction_function_teleporter_atlantis
-    ***- spawn TAG_TELEPORTER_MARS / TAG_TELEPORTER_MOON
-    ***- use them to teleport to mars/moon
-    ***- object_interaction_function_teleporter_mars (to teleport back)
-    ***- object_interaction_function_teleporter_moon (to teleport back)
-  ***- draw the first letter from Elaine
+  ***- better puzzle solved SFX (use for maya puzzle, and maybe also for combination puzzle and trials, anything else?)
+  ***- draw/write the first letter from Elaine
   ***- being able to inspect it in the inventory
-  ***- draw the second letter form Elaine
+  ***- draw/write the second letter form Elaine
   ***- being able to inspect it in the inventory
-  ***- draw the Maya tablet clues
+  ***- draw/write the Maya tablet clues
   ***- spawn and draw them in the game
 ***- 6th/7th (two halves from Mars/Moon): replace the depleted stone, you can only place this last. Make sure this triggers ending B.: what you get from each boss is a puzzle box with the clue "observe the celestial stones", and a code made out of animal faces, and a keyboard with numbers below. You need to enter the numbers in the correct order, and the box will open to reveal the half stone (the puzzle box goes to the boss key location in the inventory).
 ***- Second Maya puzzle for the prism: involves looking for secrets in the ROM, to learn how to "speak", and then speak a given maya word in the center of the calendar, that will activate the prism (where is this final clue? Probably somewhere in Mars/Moon?). Add strings in the ROM that can be read via a hex reader of the ROM (encode them as decimal numbers in the .asm file, so that they are not visible from the source easily), that form a puzzle, giving you a clue (it tells you "how to speak") for how to interact with the center of the calendar to fully activate the stone.

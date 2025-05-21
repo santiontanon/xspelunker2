@@ -482,6 +482,10 @@ pcg_generate_room__object_loop:
 	jp z, pcg_generate_room__object_teleporter
 	cp TAG_TELEPORTER8
 	jp z, pcg_generate_room__object_teleporter
+	cp TAG_TELEPORTER_MARS
+	jp z, pcg_generate_room__object_teleporter
+	cp TAG_TELEPORTER_MOON
+	jp z, pcg_generate_room__object_teleporter
 
 	cp TAG_MIDPOINT
 	jp z, pcg_generate_room__object_midpoint_door
@@ -1890,6 +1894,10 @@ set_large_object_to_upload_to_vdp:
 	jr z, set_large_object_to_upload_to_vdp_trial4_lock
 	cp TAG_DOOR_BOSS
 	jr z, set_large_object_to_upload_to_vdp_boss_door
+	cp TAG_TELEPORTER_MARS
+	jr z, set_large_object_to_upload_to_vdp_teleporter_activated_by_player
+	cp TAG_TELEPORTER_MOON
+	jr z, set_large_object_to_upload_to_vdp_teleporter_activated_by_player
 	; teleporters:
 	ld a, (global_state__n_power_stones_in_calendar)
 	or a
@@ -2290,19 +2298,27 @@ pcg_generate_room__teleporter:
 
 	call pcg_generate_room__calendar_open_walls
 
-	; spawn the tablet:
-	; spawn the tablets:
+	; spawn the tablet / teleporters:
+	ld hl, pcg_generate_room__teleporter_objects
+	ld b, 9
 	ld iy, (tmp_pcg_room__next_tile_object_ptr)
+pcg_generate_room__teleporter_object_loop:
 	ld a, (hl)
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 0  ; id
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_MAYA_PUZZLE_TABLET  ; type
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 15  ; x
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 9  ; y
+	inc hl
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), a  ; id
+	ld a, (hl)
+	inc hl
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), a  ; type
+	ld a, (hl)
+	inc hl
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), a  ; x
+	ld a, (hl)
+	inc hl
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), a  ; y
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0  ; state
-	push de
-		ld de, ROOM_TILE_OBJECT_STRUCT_SIZE
-		add iy, de
-	pop de
+	ld de, ROOM_TILE_OBJECT_STRUCT_SIZE
+	add iy, de
+	djnz pcg_generate_room__teleporter_object_loop
 	ld (tmp_pcg_room__next_tile_object_ptr), iy
 
 	; trial fns & teleporter gfx:
@@ -2322,6 +2338,11 @@ pcg_generate_room__teleporter_trial_done:
 	ld hl, buffer_4096 + 60 * 64
 	ld (item_object_to_upload_to_vdp), hl
 	ret
+
+pcg_generate_room__teleporter_objects:
+	db 0, TAG_MAYA_PUZZLE_TABLET, 15, 9
+	db 0, TAG_TELEPORTER_ATLANTIS, 12, 19
+	db 1, TAG_TELEPORTER_ATLANTIS_TO_MOON, 16, 19
 
 
 ;-----------------------------------------------

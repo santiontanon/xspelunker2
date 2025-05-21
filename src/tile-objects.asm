@@ -797,9 +797,9 @@ ENDR
 	dw object_interaction_function_empty  ; TAG_START
 	dw object_interaction_function_empty  ; TAG_ENDING
 	dw object_interaction_function_empty  ; TAG_MIDPOINT
-	dw object_interaction_function_empty  ; TAG_TELEPORTER_ATLANTIS
-	dw object_interaction_function_empty  ; TAG_TELEPORTER_MARS
-	dw object_interaction_function_empty  ; TAG_TELEPORTER_MOON
+	dw object_interaction_function_teleporter_atlantis  ; TAG_TELEPORTER_ATLANTIS
+	dw object_interaction_function_teleporter_mars  ; TAG_TELEPORTER_MARS
+	dw object_interaction_function_teleporter_moon  ; TAG_TELEPORTER_MOON
 	dw object_interaction_function_empty  ; TAG_BUTTON1
 	dw object_interaction_function_empty  ; TAG_BUTTON2
 	dw object_interaction_function_empty  ; TAG_BUTTON3
@@ -917,6 +917,7 @@ ENDR
 	dw object_interaction_function_half_power_stone  ; TAG_HALF_POWER_STONE
 	dw object_interaction_function_calendar_center  ; TAG_CALENDAR_STONE_CENTER
 	dw object_interaction_function_tablet  ; TAG_MAYA_PUZZLE_TABLET
+	dw object_interaction_function_teleporter_atlantis  ; TAG_TELEPORTER_ATLANTIS_TO_MOON
 
 
 object_interaction_inventory_slot:
@@ -1745,6 +1746,107 @@ object_interaction_function_teleporter_was_off:
 	jp call_hl_in_page_c_8000
 
 
+;-----------------------------------------------
+object_interaction_function_teleporter_atlantis:
+	ld a, (global_state__maya_riddle)
+	cp 2
+	ret nz  ; teleporters to mars/moon are still off
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
+	or a
+	jr z, object_interaction_function_teleporter_atlantis_to_mars
+object_interaction_function_teleporter_atlantis_to_moon:
+	ld bc, 11*256 + TAG_TELEPORTER_MOON
+	jr object_interaction_function_teleport_to_area_object
+object_interaction_function_teleporter_atlantis_to_mars:
+	ld bc, 10*256 + TAG_TELEPORTER_MARS
+	jr object_interaction_function_teleport_to_area_object
+
+
+;-----------------------------------------------
+object_interaction_function_teleporter_mars:
+	ld bc, 9*256 + TAG_TELEPORTER_ATLANTIS
+	jr object_interaction_function_teleport_to_area_object
+
+
+;-----------------------------------------------
+object_interaction_function_teleporter_moon:
+	ld bc, 9*256 + TAG_TELEPORTER_ATLANTIS_TO_MOON
+	; jr object_interaction_function_teleport_to_area_object
+
+
+;-----------------------------------------------
+; input:
+; - b: area
+; - c: teleporter object ID
+object_interaction_function_teleport_to_area_object:
+	; teleport:
+	push bc
+		ld a, b
+		call interarea_exit_screen
+	pop bc
+
+	ld a, b
+	cp 9
+	jr nz, object_interaction_function_teleport_to_area_object_continue
+	; teleporting to Atlantis, this is a special case, we need to go to the teleporter room:
+	ld a, c
+	ld e, TELEPORTER_ROOM_ID
+	push af
+		jr object_interaction_function_teleport_to_area_object_room_id_set
+object_interaction_function_teleport_to_area_object_continue:
+
+	; get the room where the teleporter is:
+	ld hl, current_area__objects
+	ld a, c
+	push af
+		ld bc, AREA_OBJECT_STRUCT_SIZE
+object_interaction_function_teleport_to_area_object_find_room_loop:
+		cp (hl)
+		jr z, object_interaction_function_teleport_to_area_object_find_room_loop_found
+		add hl, bc
+		jr object_interaction_function_teleport_to_area_object_find_room_loop
+object_interaction_function_teleport_to_area_object_find_room_loop_found:
+		inc hl
+		ld a, (hl)  ; teleporter offset
+		; convert offset from chunk coordinates to room coordinates:
+		ld hl, covert_chunk_offset_to_room_offset
+      	ld c, PCG_PAGE
+      	ld e, a
+    	call call_hl_in_page_c_8000
+	    ld c, e
+		ld hl, current_area__room_ids
+		add hl, bc
+		ld e, (hl)  ; room ID
+object_interaction_function_teleport_to_area_object_room_id_set:
+		ld hl, pcg_generate_room
+		ld c, PCG_PAGE
+		call call_hl_in_page_c_8000
+	pop af
+
+	; find teleporter object, and set player in its position:
+	ld e, a
+	ld hl, find_tile_object_ptr
+	ld c, TILES_PAGE
+	call call_hl_in_page_c_8000
+	push hl
+	pop ix
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	inc a
+	ld (player_x + 1), a
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	inc a
+	ld (player_y + 1), a
+	ld a, 6
+	ld (player_x), a
+	xor a
+	ld (player_y), a
+	ld (player_state_timer), a
+	ld a, PLAYER_STATE_TELEPORT_IN
+	ld (player_state), a
+	ld a, 31  ; immune while teleporting
+	ld (player_immunity_timer), a
+	jp state_play_from_loaded_room
+
 
 ;-----------------------------------------------
 ; output:
@@ -1845,15 +1947,15 @@ ENDR
 	TILE_OBJECT_DATA 1, 4, 3, tile_object_idol_lock_locked_gfx  ; TAG_IDOL_LOCK
 	TILE_OBJECT_DATA 1, 4, 3, tile_object_gear_lock_locked_gfx  ; TAG_GEAR_LOCK
 	TILE_OBJECT_DATA 1, 2, 2, tile_object_regular_object_gfx  ; TAG_ASTRONAUT_LOCK
-REPT TAG_BUTTON1 - TAG_START  ; add filler
+REPT TAG_TELEPORTER_ATLANTIS - TAG_START  ; add filler
 	TILE_OBJECT_DATA 2, 0, 0, 0
 ENDR
 ; TAG_START: equ 31
 ; TAG_ENDING: equ 32
 ; TAG_MIDPOINT: equ 33
-; TAG_TELEPORTER_ATLANTIS: equ 34
-; TAG_TELEPORTER_MARS: equ 35
-; TAG_TELEPORTER_MOON: equ 36
+	TILE_OBJECT_DATA 1, 4, 3, tile_object_teleporter_gfx  ; TAG_TELEPORTER_ATLANTIS
+	TILE_OBJECT_DATA 1, 4, 3, tile_object_teleporter_gfx  ; TAG_TELEPORTER_MARS
+	TILE_OBJECT_DATA 1, 4, 3, tile_object_teleporter_gfx  ; TAG_TELEPORTER_MOON
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_BUTTON1
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_BUTTON2
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_BUTTON3
@@ -1975,6 +2077,7 @@ ENDR
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_half_power_stone_gfx  ; TAG_HALF_POWER_STONE
 	TILE_OBJECT_DATA 1, 2, 2, tile_object_calendar_stone_center_gfx  ; TAG_CALENDAR_STONE_CENTER
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_MAYA_PUZZLE_TABLET
+	TILE_OBJECT_DATA 1, 4, 3, tile_object_teleporter_gfx  ; TAG_TELEPORTER_ATLANTIS_TO_MOON
 
 tile_object_regular_object_gfx:
 	db FIRST_ITEM_TILE, FIRST_ITEM_TILE+1, FIRST_ITEM_TILE+2, FIRST_ITEM_TILE+3

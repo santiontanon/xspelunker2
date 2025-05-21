@@ -288,6 +288,14 @@ get_tile_object_behind_player_loop:
 	jr z, get_tile_object_behind_player_32x24_object
 	cp TAG_TELEPORTER8
 	jr z, get_tile_object_behind_player_32x24_object
+	cp TAG_TELEPORTER_ATLANTIS
+	jr z, get_tile_object_behind_player_32x24_object
+	cp TAG_TELEPORTER_ATLANTIS_TO_MOON
+	jr z, get_tile_object_behind_player_32x24_object
+	cp TAG_TELEPORTER_MARS
+	jr z, get_tile_object_behind_player_32x24_object
+	cp TAG_TELEPORTER_MOON
+	jr z, get_tile_object_behind_player_32x24_object
 
 	; 16x16 objects:
 	ld a, b
