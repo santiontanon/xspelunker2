@@ -373,3 +373,38 @@ setup_game_tiles_biome_internal_continue:
     ld c, PCG_PAGE
     jp call_hl_in_page_c_8000
 
+
+; -----------------------------------------------
+; input:
+; - hl: ptr to zx0 compressed tiles
+; - c: page where the tiles are
+decompress_tiles_to_all_banks:
+    ld de, buffer_4096
+    call dzx0_from_page_c
+
+    ld hl, buffer_4096
+    ld de, CHRTBL2
+    ld bc, 256*8
+    call fast_LDIRVM
+    ld hl, buffer_4096 + 256*8
+    ld de, CLRTBL2
+    ld bc, 256*8
+    call fast_LDIRVM
+
+    ld hl, buffer_4096
+    ld de, CHRTBL2 + 256*8
+    ld bc, 256*8
+    call fast_LDIRVM
+    ld hl, buffer_4096 + 256*8
+    ld de, CLRTBL2 + 256*8
+    ld bc, 256*8
+    call fast_LDIRVM
+
+    ld hl, buffer_4096
+    ld de, CHRTBL2 + 256*8*2
+    ld bc, 256*8
+    call fast_LDIRVM
+    ld hl, buffer_4096 + 256*8
+    ld de, CLRTBL2 + 256*8*2
+    ld bc, 256*8
+    jp fast_LDIRVM

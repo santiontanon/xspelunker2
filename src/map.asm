@@ -377,7 +377,6 @@ display_map_draw_map_internal:
 		call fast_LDIRVM	
 
 		; draw the map pieces:
-
 		; piece 0 is at 0, 0, size 32, 13
 		ld hl, map_nametable_piece0_zx0
 		ld de, NAMTBL2

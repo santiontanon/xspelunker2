@@ -347,7 +347,7 @@ maya_puzzle_trial_fn_continue_odd:
 	cp (ix + 2)  ; number of times we need to repeat
 	ret nz
 	; trial line solved!
-	ld hl, SFX_ui_select
+	ld hl, SFX_secret
 	call play_SFX_with_high_priority
 	ld a, (global_state__maya_riddle)
 	or a

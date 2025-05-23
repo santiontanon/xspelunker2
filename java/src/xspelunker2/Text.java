@@ -287,6 +287,14 @@ public class Text {
         addLineSafe(lines_with_constant, "Look at this! I do not understand these annotations!", "CALENDAR_TABLET1", 32);
         addLineSafe(lines_with_constant, "I have noted them down in my diary just in case.", "CALENDAR_TABLET2", 32);
         
+        // Elaine letter:
+        addLineSafe(lines_with_constant, "Michael,", "ELAINE_LETTER1A_LINE1", 28);
+        addLineSafe(lines_with_constant, "I deciphered the inscription. It talks about a 'Star Alignment Nexus' and about 'Celestial Stones' being the keys required to activate it. I consulted some experts, and we believe this nexus could be a calendar stone. Have you found one?", "ELAINE_LETTER1A_LINE2", 28*5);
+        addLineSafe(lines_with_constant, "Ancient texts reveal that the Maya received knowledge from beings beyond the stars. The built these calendar stones to predict when the Star People will come back, but it seems that one of these calendar stones is special.", "ELAINE_LETTER1A_LINE3", 28*5);
+        addLineSafe(lines_with_constant, "I think if we can destroy it, we can stop them!", "ELAINE_LETTER1A_LINE4", 28);
+        addLineSafe(lines_with_constant, "Michael, I believe in you, but please be careful. I will keep investigating and send you anything I find.", "ELAINE_LETTER1A_LINE5", 28*3);
+        addLineSafe(lines_with_constant, "Elaine", "ELAINE_LETTER1A_LINE6", 28);
+        addLineSafe(lines_with_constant, "ps: I attach the translation!", "ELAINE_LETTER1A_LINE7", 28*2);
         
         List<Integer> numbers = font.convertStringToAssembler("0123456789 ");
         System.out.println("Numbers: " + numbers);
@@ -310,6 +318,9 @@ public class Text {
             for(String line:lines_with_constant.keySet()) {
                 String key = lines_with_constant.get(line);
                 List<Integer> encoded = font.convertStringToAssembler(line);
+                if (encoded.get(0) >= 256) {
+                    throw new Exception("Line has more than 256 characters ("+encoded.get(0)+"), it will not work on assembler!");
+                }
                 String encoded_str = "" + encoded;
                 fw.write("TEXT_" + key + ":  db " + encoded_str.substring(1, encoded_str.length() - 1) + "\n");
             }

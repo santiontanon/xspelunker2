@@ -1041,11 +1041,11 @@ object_interaction_function_pickup_map_piece:
 	ld hl, SFX_item_pickup
 	call play_SFX_with_high_priority
 
-	ld hl, player_inventory_map_pieces
-	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
-	sub (TAG_MAP_PIECE1 - 1)
-	ADD_HL_A
-	ld (hl), 1
+; 	ld hl, player_inventory_map_pieces
+; 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+; 	sub (TAG_MAP_PIECE1 - 1)
+; 	ADD_HL_A
+; 	ld (hl), 1
 
 	ld de, TEXT_MAP_PIECE_PICKUP
 	jr object_interaction_function_pickup_map_piece_continue
@@ -1209,7 +1209,7 @@ object_interaction_function_open_small_lock_entry_point:
 	call call_hl_in_page_c_8000	
 
 object_interaction_function_open_combination_lock_entry_point:
-	ld hl, SFX_door_open
+	ld hl, SFX_secret
 	call play_SFX_with_high_priority
 
 	ld hl, redraw_flags
@@ -1479,7 +1479,7 @@ object_interaction_function_open_boss_lock_key_id_computed_done:
 	ld (hl), 1  ; lock is open
 
 	; open boss door:
-	ld hl, SFX_explosion
+	ld hl, SFX_secret
 	call play_SFX_with_high_priority
 	ld b, 30
 	call wait_b_halts
@@ -1594,7 +1594,7 @@ object_interaction_function_calendar_socket_try_to_place:
 	ld (hl), 0
 
 	; redraw the room:
-	ld hl, SFX_ui_select
+	ld hl, SFX_secret
 	call play_SFX_with_high_priority
 
 	ld hl, redraw_flags

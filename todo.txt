@@ -1,11 +1,15 @@
 to do:
 
 ***- Maya puzzle and double teleporter room in atlantis:
-  ***- better puzzle solved SFX (use for maya puzzle, and maybe also for combination puzzle and trials, anything else?)
-  ***- draw/write the first letter from Elaine
-  ***- being able to inspect it in the inventory
+  ***- letter 1 from elaine: 
+    ***- draw the "translated version of the inscription" in GIMP + text:
+      ***- draw the glyph annotations: palenque, celestial stone, abeve, below and somb syllables
+      ***- compose the, in TILED
+      ***- draw it in the game, with the following text:
+        The entrance to Palenque has been uncovered. There is where we will start. Where we taught them. Where the first nexus was built.
+
+        The second nexus near Tunguska to the east was lost. But the first remains. The first was the star alignment nexus. It will be enough. It is imperative that you locate the entrance to Palenque, the nexus that lies below, and the six celestial stones. The locals hid them from us. But we will find them. Locate them before our fleet arrives. This time the planet will be ours. They will not stop us again. Death to the humans.
   ***- draw/write the second letter form Elaine
-  ***- being able to inspect it in the inventory
   ***- draw/write the Maya tablet clues
   ***- spawn and draw them in the game
 ***- 6th/7th (two halves from Mars/Moon): replace the depleted stone, you can only place this last. Make sure this triggers ending B.: what you get from each boss is a puzzle box with the clue "observe the celestial stones", and a code made out of animal faces, and a keyboard with numbers below. You need to enter the numbers in the correct order, and the box will open to reveal the half stone (the puzzle box goes to the boss key location in the inventory).
@@ -16,7 +20,6 @@ to do:
 
 - item effects:
   - for anti-grav belt, you can overwrite it by pressing "down" (to fall quick)
-  - mini maps for all the areas where you have a map (highlighting the sreen where you are at)
 
 - Implement PCGWorld in assembler:
   - implement it and generate the whole thing in assembler
@@ -125,25 +128,14 @@ X-Spelunker 2 (e-ke-se pe-lu-ne-ke-le):
 
 [at this point, the player can try to use the power stone in the calendar stone, but they will not know how to use it, so, the only way forward is to go back to the jungle entrance, where they will find that Elaine has written them a letter]
 
-- If you go back to the jungle, you will find Elaine's letter waiting:
-    Michael,
-
-    I have deciphered the inscription. The glyphs surrounding the drawing translate to "Star Alignment Nexus" and "Six Power Stones." So, it seems to refer to six keys required to activate this "Nexus". I have consulted with some experts in the ancient Maya, and they believe this could be referring to a calendar stone. Have you come across one of them?
-
-    Ancient texts reveal that the Mayans were not alone. They received knowledge from beings beyond the stars, but this knowledge came with a price. The built these calendar stones to predict when the Star People will come back, but it seems that one of these calendar stones is special, and is the key to receiving the Star People. If it can be destroyed, we might be able to stop them!
-
-    Michael, please be careful. This is more dangerous than we imagined. I will keep investigating and send you anything I can find. I believe in you. 
-
-    Elaine
-
-    [ps: I attach a translated version of the inscription, which might be of use]
+- If you go back to the jungle, you will find Elaine's letter waiting (auto inspect it, you can inspect it later in the inventory too)
 
     Then:
     Xavier: "The calendar stone! So, that's what it is!"
 
 [Xavier at this point decides to send Elaine a letter back, with more writings that were found on the calendar stone, to see if she can translate them]
 
-    "Elaine, I found more glyphs around the base of the stone, they seem to show star charts, and strange symbols that I don't recognize. I'm sending you a copy, can you take a look?"
+    "Elaine, I found more glyphs around the base of the stone, written around a map of the world as the Maya conceived it, and annotated with strange symbols that I don't recognize. I'm sending you a copy, can you take a look?"
 
 [from this point on the player believes that their goal is to destroy the stone, so asking some NPCs in the jungle they find out that the one person in town that has access to explosives had disappeared in the pyramid. After visiting the stone again with the translation, the player should now know how to use the idol.]
 
@@ -161,19 +153,6 @@ X-Spelunker 2 (e-ke-se pe-lu-ne-ke-le):
 - Each time you put one more idol in the stone, the ruins power up a bit more, opening certain doors, and activating certain devices that were before off, letting you access new areas, or get fater from place to place. 
 
 - After placing the fifth stone, the center of the calendar stone lights up, indicating that you can activate the celandar stone protection any time. As soon as you attempt to press it, the aliens show up, and the final confrontation with them begins. If you win, you can activate the stone and beat the game.
-
-  - Maya puzzle:
-    - in Atlantis:
-      - screen with an inscription saying (in Maya): "crouch under the snake at night, attack under the jaguar during the day" (the "snake/jaguar" can change randomly from up to 4, and the "crouch/attack" can be crouch/attack/jump)
-      - there is a room with a snake statue (only one) and one with a jaguar state (only one), and maybe 2 other rooms with 2 other statues
-      - on another room, there is a dial, where you can change the time (day/night/etc.), have 4 options, and start in one that will never be chosen.
-    - Mayan clues should teach you the meaning of "crouch/attack/jump/snake/jaguar/day/night/etc."
-    Ok - Power stones will have a glyph and a number in maya (meaning the number of times the action has to be performed)
-    - mayan numerals are learned from pieces of map + calendar stone
-    - When a part of the ritual is done, the statue reacts somehow, to indicate you did something
-    - When returning to the room with the inscription after all parts are done, two teleporters show up
-    - letter 1 from Elaine: contains a transcription of some inscription (too small to read, but it will have some annotations of some Maya symbol phonetics): this will be useful for the second Maya puzzle (for the prism). Letter 2 contains some more, and each Maya clue a bit more.
-      - For this puzzle, the ROM will teach you some Maya words, and there will be a Maya inscription written phonetically with what you have to do.
 
   - points to remember (for lore/clues):
       - the first attempt to create humans was from mud, but those were destroyed in the great flood 

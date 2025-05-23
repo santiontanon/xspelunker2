@@ -122,6 +122,10 @@ state_inventory_update_cursor_interact_row2:
 	ret
 state_inventory_update_cursor_interact_row5:
 	ld a, (inventory_cursor_position_x)
+	cp 7
+	jp z, state_inventory_update_cursor_interact_letter1
+	cp 8
+	jp z, state_inventory_update_cursor_interact_letter2
 	cp 9
 	jp z, state_inventory_update_cursor_interact_map
 	ret
@@ -366,9 +370,7 @@ state_inventory_update_cursor_interact_power_stone4:
 state_inventory_update_cursor_interact_power_stone:
 	ld ix, TEXT_INSPECT_POWER_STONE
 	call display_power_stone_closeup
-	ld a, TEXT_PAGE
-	ld hl, state_inventory_entry_point_from_item_inspection
-	jp jp_to_hl_in_page_a_8000
+	jp state_inventory_entry_point_from_item_inspection
 
 
 ;-----------------------------------------------
@@ -386,36 +388,8 @@ display_power_stone_closeup:
 				call fast_FILVRM
 
 				ld hl, power_stones_tiles_zx0
-				ld de, buffer_4096
 				ld c, TILES_PAGE
-				call dzx0_from_page_c
-
-				ld hl, buffer_4096
-				ld de, CHRTBL2
-				ld bc, 256*8
-				call fast_LDIRVM
-				ld hl, buffer_4096 + 256*8
-				ld de, CLRTBL2
-				ld bc, 256*8
-				call fast_LDIRVM
-
-				ld hl, buffer_4096
-				ld de, CHRTBL2 + 256*8
-				ld bc, 256*8
-				call fast_LDIRVM
-				ld hl, buffer_4096 + 256*8
-				ld de, CLRTBL2 + 256*8
-				ld bc, 256*8
-				call fast_LDIRVM
-
-				ld hl, buffer_4096
-				ld de, CHRTBL2 + 256*8*2
-				ld bc, 256*8
-				call fast_LDIRVM
-				ld hl, buffer_4096 + 256*8
-				ld de, CLRTBL2 + 256*8*2
-				ld bc, 256*8
-				call fast_LDIRVM	
+				call decompress_tiles_to_all_banks
 
 				ld hl, power_stones_nametable_zx0
 				ld de, buffer_4096
@@ -487,6 +461,18 @@ display_power_stone_closeup_animal_loop:
 	ld hl, redraw_flags
 	ld (hl), #ff
 	ret
+
+
+;-----------------------------------------------
+state_inventory_update_cursor_interact_letter1:
+	call display_elaine_letter1
+	jp state_inventory_entry_point_from_item_inspection
+
+
+;-----------------------------------------------
+state_inventory_update_cursor_interact_letter2:
+	; ...
+	jp state_inventory_entry_point_from_item_inspection
 
 
 ;-----------------------------------------------
@@ -602,7 +588,7 @@ state_inventory_update_item_text_print_loop:
 	    call max_length_of_sentence_in_one_line
     pop hl
 	pop de    
-    ; limit the sentence to that width and rraw it:
+    ; limit the sentence to that width and draw it:
     ld c, (hl)   ; we save the old length
     ld (hl), a
     push bc
@@ -1163,6 +1149,18 @@ draw_inventory_number_tens_done:
 
 ;-----------------------------------------------
 draw_inventory_map:
+	ld hl, draw_inventory_map_to_piece_table
+	ld a, (current_area__id)
+	ADD_HL_A
+	ld a, (hl)
+	cp #ff
+	jr z, draw_inventory_map_have_map
+	ld hl, global_state__objects + TAG_MAP_PIECE1
+	ADD_HL_A
+	ld a, (hl)
+	or a
+	jr nz, draw_inventory_map_have_map
+
 	SETMEGAROMPAGE_8000 TEXT_PAGE
 	call clear_text_rendering_buffer
 	ld hl, TEXT_NO_MAP
@@ -1170,6 +1168,158 @@ draw_inventory_map:
 	ld iy, #2000 + COLOR_DARK_YELLOW
 	ld b, 5
 	jp draw_sentence_to_vdp
+
+draw_inventory_map_have_map:
+	; Loop 1, draw the map:
+	ld a, (current_area__height)
+	ld b, a
+	ld a, (current_area__width)
+	ld c, a
+	ld hl, draw_inventory_map_row_ptrs
+	ld de, current_area__room_ids
+draw_inventory_map_have_map_loop_y:
+	push bc
+	push hl
+		ld a, (hl)
+		inc hl
+		ld h, (hl)
+		ld l, a
+		ld b, c
+		push bc
+		push de
+			call SETWRT
+		pop de
+		pop bc
+        ld a, (VDP.DW)
+        ld c, a
+draw_inventory_map_have_map_loop_x:
+		ld a, (de)
+		cp #ff
+		jr z, draw_inventory_map_have_map_loop_x_skip
+		; room:
+		; check if we need to connect to the right:
+		ld l, a
+		inc de
+		ld a, (de)
+		dec de
+		cp l
+		ld a, 1
+		jr nz, draw_inventory_map_have_map_loop_x_room_no_right_connection
+		ld a, 0
+draw_inventory_map_have_map_loop_x_room_no_right_connection:
+REPT 7
+	    out (c), a
+	    nop
+ENDR
+		; check if we need to connect down:
+		push af
+			ld a, (de)
+			push af
+				ld a, (current_area__width)
+				ld l, a
+				ld h, 0
+				add hl, de
+				ld l, (hl)  ; this might overflow outside of the map, but it's ok.
+			pop af
+			cp l
+			jr nz, draw_inventory_map_have_map_loop_x_room_no_down_connection
+		pop af
+	    out (c), a
+	    jr draw_inventory_map_have_map_loop_x_continue
+draw_inventory_map_have_map_loop_x_room_no_down_connection:
+		pop af
+		ld a, #ff
+	    out (c), a
+		jr draw_inventory_map_have_map_loop_x_continue
+draw_inventory_map_have_map_loop_x_skip:
+		; no room:
+		ld a, #ff
+REPT 8
+	    out (c), a
+	    nop
+ENDR
+
+draw_inventory_map_have_map_loop_x_continue:
+		inc de
+		djnz draw_inventory_map_have_map_loop_x
+	pop hl
+	pop bc
+	inc hl
+	inc hl
+	djnz draw_inventory_map_have_map_loop_y
+
+	; Loop 2, change the map colors to indicate where the player is:
+	ld a, (current_room__id)
+	ld iyl, a
+	ld a, (current_area__height)
+	ld b, a
+	ld a, (current_area__width)
+	ld c, a
+	ld hl, draw_inventory_map_row_ptrs
+	ld de, current_area__room_ids
+draw_inventory_map_have_map_loop_y2:
+	push bc
+	push hl
+		ld a, (hl)
+		inc hl
+		ld h, (hl)
+		ld l, a
+		ld b, c
+		push bc
+		push de
+			ld bc, CLRTBL2 - CHRTBL2
+			add hl, bc
+			call SETWRT
+		pop de
+		pop bc
+        ld a, (VDP.DW)
+        ld c, a
+draw_inventory_map_have_map_loop_x2:
+		ld a, (de)
+		cp iyl
+		jr nz, draw_inventory_map_have_map_loop_x2_no_player
+		; player is here:
+		ld a, COLOR_DARK_RED + COLOR_DARK_YELLOW*16
+REPT 8
+	    out (c), a
+	    nop
+ENDR
+	    jr draw_inventory_map_have_map_loop_x2_continue
+draw_inventory_map_have_map_loop_x2_no_player:
+		; no player:
+		ld a, COLOR_DARK_YELLOW*16
+REPT 8
+	    out (c), a
+	    nop
+ENDR
+draw_inventory_map_have_map_loop_x2_continue:
+		inc de
+		djnz draw_inventory_map_have_map_loop_x2
+	pop hl
+	pop bc
+	inc hl
+	inc hl
+	djnz draw_inventory_map_have_map_loop_y2
+	ret
+
+
+draw_inventory_map_row_ptrs:
+	dw CHRTBL2 + (256 + 117) * 8
+	dw CHRTBL2 + (256*2 + 1) * 8
+	dw CHRTBL2 + (256*2 + 1 + 1*32) * 8
+	dw CHRTBL2 + (256*2 + 1 + 2*32) * 8
+	dw CHRTBL2 + (256*2 + 1 + 3*32) * 8
+	dw CHRTBL2 + (256*2 + 1 + 4*32) * 8
+	dw CHRTBL2 + (256*2 + 1 + 5*32) * 8
+	dw CHRTBL2 + (256*2 + 1 + 6*32) * 8
+
+
+draw_inventory_map_to_piece_table:
+	db #ff, #ff  ; junle, inscriptions
+	db 0  ; hidden
+	db 1, 1  ; confluence, inverted
+	db 2, 2, 2  ; caves, fire shaft, caves
+	db 3, 4, 5, 6  ; fire, atlantis, mars, moon
 
 
 ;-----------------------------------------------
