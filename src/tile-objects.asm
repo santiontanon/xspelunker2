@@ -1726,7 +1726,7 @@ object_interaction_function_teleporter:
 object_interaction_function_teleporter_not_first_time:
 
 	ld hl, display_map_from_teleporter
-	ld c, TEXT_PAGE
+	ld c, MAP_PAGE
 	call call_hl_in_page_c_8000
 	
 	jp state_play_from_loaded_room

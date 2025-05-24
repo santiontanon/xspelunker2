@@ -14,7 +14,7 @@ display_tablet:
 		; display base tablet:
 		ld hl, tablet_tiles_zx0
 		ld de, tablet_nametable_zx0
-		ld c, TEXT_PAGE
+		ld c, CALENDAR_TABLET_TILES_PAGE
 display_tablet_ptrs_set:
 		push de
 		push bc
@@ -95,7 +95,7 @@ calendar_tablet_fn:
 	push de
 		ld hl, tablet_calendar_tiles_zx0
 		ld de, tablet_calendar_nametable_zx0
-		ld c, CALENDAR_TILES_PAGE
+		ld c, CALENDAR_TABLET_TILES_PAGE
 		jp display_tablet_ptrs_set
 
 
@@ -220,7 +220,8 @@ combination_tablet_add_direction_symbol_continue:
 ; - de: ptr to zx0-compressed extra tiles
 combination_tablet_load_extra_tiles:
 	ld de, buffer_4096
-	call dzx0
+	ld c, CALENDAR_TABLET_TILES_PAGE
+	call dzx0_from_page_c
 
 	ld hl, buffer_4096
 	ld de, CHRTBL2 + 32*8

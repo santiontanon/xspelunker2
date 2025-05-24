@@ -287,7 +287,7 @@ public class Text {
         addLineSafe(lines_with_constant, "Look at this! I do not understand these annotations!", "CALENDAR_TABLET1", 32);
         addLineSafe(lines_with_constant, "I have noted them down in my diary just in case.", "CALENDAR_TABLET2", 32);
         
-        // Elaine letter:
+        // Elaine letters:
         addLineSafe(lines_with_constant, "Michael,", "ELAINE_LETTER1A_LINE1", 28);
         addLineSafe(lines_with_constant, "I deciphered the inscription. It talks about a 'Star Alignment Nexus' and about 'Celestial Stones' being the keys required to activate it. I consulted some experts, and we believe this nexus could be a calendar stone. Have you found one?", "ELAINE_LETTER1A_LINE2", 28*5);
         addLineSafe(lines_with_constant, "Ancient texts reveal that the Maya received knowledge from beings beyond the stars. The built these calendar stones to predict when the Star People will come back, but it seems that one of these calendar stones is special.", "ELAINE_LETTER1A_LINE3", 28*5);
@@ -297,15 +297,25 @@ public class Text {
         addLineSafe(lines_with_constant, "ps: I attach the translation!", "ELAINE_LETTER1A_LINE7", 28*2);
 
         addLineSafe(lines_with_constant, "The entrance to Palenque has been uncovered. There is where we will start. Where we taught them. Where the first nexus was built.", "ELAINE_LETTER1B_LINE1", 28*3);
-        addLineSafe(lines_with_constant, "The second nexus near Tunguska to the east was lost. But the first remains. The first was the star alignment nexus. It will be enough.", "ELAINE_LETTER1B_LINE2", 28*3);
+        addLineSafe(lines_with_constant, "The second nexus near Tunguska to the east was lost. But the first remains. The first was the star alignment nexus, and is poweref off.", "ELAINE_LETTER1B_LINE2", 28*3);
         addLineSafe(lines_with_constant, "Locate Palenque. The nexus lies below. The six celestial stones... they hid them from us. Locate them before our fleet arrives above.", "ELAINE_LETTER1B_LINE3", 28*4);
         addLineSafe(lines_with_constant, "This time the planet will be ours.", "ELAINE_LETTER1B_LINE4", 28);
-        addLineSafe(lines_with_constant, "Palenque", "ELAINE_LETTER1B_LINE5", 5);
-        addLineSafe(lines_with_constant, "celestial", "ELAINE_LETTER1B_LINE6", 5);
-        addLineSafe(lines_with_constant, "stone", "ELAINE_LETTER1B_LINE7", 5);
-        addLineSafe(lines_with_constant, "above", "ELAINE_LETTER1B_LINE8", 5);
-        addLineSafe(lines_with_constant, "below", "ELAINE_LETTER1B_LINE9", 5);
+        addLineSafe(lines_with_constant, "celestial", "ELAINE_LETTER1B_LINE5", 5);
+        addLineSafe(lines_with_constant, "stone", "ELAINE_LETTER1B_LINE6", 5);
+        addLineSafe(lines_with_constant, "below", "ELAINE_LETTER1B_LINE7", 5);
         
+        addLineSafe(lines_with_constant, "Michael! I hope this reaches you on time!", "ELAINE_LETTER2A_LINE1", 28);
+        addLineSafe(lines_with_constant, "DO NOT DESTROY THE CALENDAR STONE!!!", "ELAINE_LETTER2A_LINE2", 28);
+        addLineSafe(lines_with_constant, "The inscriptions you sent me were key. The calendar stone is a weapon! The Maya built it to prevent the star people from coming.", "ELAINE_LETTER2A_LINE3", 28*3);
+        addLineSafe(lines_with_constant, "With the Maya gone and the nexus powered off, the aliens have returned.", "ELAINE_LETTER2A_LINE4", 28*2);
+        addLineSafe(lines_with_constant, "But we can use the nexus to stop them. Find the power stones before them and power the nexus up! And please be careful!", "ELAINE_LETTER2A_LINE5", 28*3);
+
+        addLineSafe(lines_with_constant, "The star people gave us knowledge... and death. They wanted slaves, knowledgeable slaves.", "ELAINE_LETTER2B_LINE1", 28*3);
+        addLineSafe(lines_with_constant, "With their knowledge, we built weapons. The star alignment nexus and the power stone", "ELAINE_LETTER2B_LINE2A", 24*2);
+        addLineSafe(lines_with_constant, "nexus. When they attacked, we were ready.", "ELAINE_LETTER2B_LINE2B", 24);
+        addLineSafe(lines_with_constant, "With time our knowledge turned into myth. The power stone nexus was destroyed, and the remaining power stones offered as tribute to the gods. One of them taken to the Mars beast and Ixchel, away from this planet.", "ELAINE_LETTER2B_LINE3", 28*5);
+        addLineSafe(lines_with_constant, "Now look at the nexus here: useless.", "ELAINE_LETTER2B_LINE4", 24);
+          
         List<Integer> numbers = font.convertStringToAssembler("0123456789 ");
         System.out.println("Numbers: " + numbers);
         List<Integer> letters = font.convertStringToAssembler("ABCDEFGHIJKLMNOPQRSTUVWXYZ ");

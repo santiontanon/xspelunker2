@@ -471,13 +471,15 @@ state_inventory_update_cursor_interact_letter1:
 
 ;-----------------------------------------------
 state_inventory_update_cursor_interact_letter2:
-	; ...
+	call display_elaine_letter2
 	jp state_inventory_entry_point_from_item_inspection
 
 
 ;-----------------------------------------------
 state_inventory_update_cursor_interact_map:
-	call display_map_closeup
+	ld hl, display_map_closeup
+	ld c, MAP_PAGE
+	call call_hl_in_page_c_8000
 	jp state_inventory_entry_point_from_item_inspection
 
 

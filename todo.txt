@@ -1,8 +1,7 @@
 to do:
 
 ***- Maya puzzle and double teleporter room in atlantis:
-  ***- draw/write the second letter form Elaine: strike, ascend, here, na, sa
-  ***- draw/write the Maya tablet clues: look, sit, ladder, stand up, blowgun, leopard, snake, eagle, fish, syllables: a, e, wa, ke, ne, pe, le, se, chi, hi, ti, cho, mo, to, ju, lu, pu, yu
+  ***- draw/write the Maya tablet clues: ascend, sit, ladder, stand up, blowgun, leopard, snake, eagle, fish, syllables: a, e, na, sa, wa, ke, ne, pe, le, se, chi, hi, ti, cho, mo, to, ju, lu, pu, yu (the syllables will be added by teaching you Maya words, which are written with the syllables, so, it's not that obvious)
   ***- spawn and draw them in the game
 ***- 6th/7th (two halves from Mars/Moon): replace the depleted stone, you can only place this last. Make sure this triggers ending B.: what you get from each boss is a puzzle box with the clue "observe the celestial stones", and a code made out of animal faces, and a keyboard with numbers below. You need to enter the numbers in the correct order, and the box will open to reveal the half stone (the puzzle box goes to the boss key location in the inventory).
 ***- Second Maya puzzle for the prism: involves looking for secrets in the ROM, to learn how to "speak", and then speak a given maya word in the center of the calendar, that will activate the prism (where is this final clue? Probably somewhere in Mars/Moon?). Add strings in the ROM that can be read via a hex reader of the ROM (encode them as decimal numbers in the .asm file, so that they are not visible from the source easily), that form a puzzle, giving you a clue (it tells you "how to speak") for how to interact with the center of the calendar to fully activate the stone.
