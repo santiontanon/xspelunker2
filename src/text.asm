@@ -98,6 +98,15 @@ draw_sentence_to_vdp_clearing_text_buffer:
 	pop hl
 
 
+DRAW_SENTENCE_TO_VDP_MACRO: MACRO TEXT, VRAM, ATTRIBUTE, LENGTH
+	ld hl, TEXT
+	ld de, VRAM
+	ld #8000 + ATTRIBUTE
+	ld b, LENGTH
+	call draw_sentence_to_vdp
+	ENDM
+
+
 ; ------------------------------------------------
 ; Draws a sentence to video memory
 ; input:

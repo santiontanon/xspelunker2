@@ -14,11 +14,12 @@ display_tablet:
 		; display base tablet:
 		ld hl, tablet_tiles_zx0
 		ld de, tablet_nametable_zx0
-
+		ld c, TEXT_PAGE
 display_tablet_ptrs_set:
 		push de
+		push bc
 			ld de, buffer_4096
-			call dzx0
+			call dzx0_from_page_c
 
 			ld hl, buffer_4096
 			ld de, CHRTBL2
@@ -47,9 +48,10 @@ display_tablet_ptrs_set:
 			ld bc, 256*8
 			call fast_LDIRVM	
 
+		pop bc
 		pop hl
 		ld de, buffer_4096
-		call dzx0
+		call dzx0_from_page_c
 
 		ld hl, buffer_4096
 		ld de, NAMTBL2
@@ -93,6 +95,7 @@ calendar_tablet_fn:
 	push de
 		ld hl, tablet_calendar_tiles_zx0
 		ld de, tablet_calendar_nametable_zx0
+		ld c, CALENDAR_TILES_PAGE
 		jp display_tablet_ptrs_set
 
 

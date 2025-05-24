@@ -1,6 +1,12 @@
 ;-----------------------------------------------
 display_elaine_letter1:
+	; page 1:
 	call disable_VDP_output
+		ld a, 28
+		ld (tmp_letter_line_width), a
+		ld a, #0f
+		ld (tmp_letter_line_color), a
+
 	    call clear_all_the_sprites
 		xor a
 		ld hl, NAMTBL2
@@ -62,6 +68,89 @@ display_elaine_letter1:
     call enable_VDP_output
 
 	call wait_for_click
+
+	; page 2:
+	call disable_VDP_output
+		ld hl, elaine_letter1b_tiles_zx0
+		ld c, TILES_PAGE
+		call decompress_tiles_to_all_banks
+
+		ld hl, elaine_letter1b_nametable_zx0
+		ld de, buffer_4096
+		ld c, TILES_PAGE
+		call dzx0_from_page_c
+
+		ld hl, buffer_4096
+		ld de, NAMTBL2
+		ld bc, 768
+		call fast_LDIRVM
+
+		ld hl, TEXT_ELAINE_LETTER1B_LINE1
+		ld a, 55
+		ld de, NAMTBL2 + (2 + 5*32)
+		ld ix, CHRTBL2
+		call display_elaine_letter_paragraph
+
+		ld hl, TEXT_ELAINE_LETTER1B_LINE2
+		ld a, 55
+		ld de, NAMTBL2 + (2 + 9*32)
+		ld ix, CHRTBL2 + 8*256
+		call display_elaine_letter_paragraph
+
+		ld hl, TEXT_ELAINE_LETTER1B_LINE2
+		ld a, 55
+		ld de, NAMTBL2 + (2 + 9*32)
+		ld ix, CHRTBL2 + 8*256
+		call display_elaine_letter_paragraph
+
+		ld hl, TEXT_ELAINE_LETTER1B_LINE3
+		ld a, 55 + 28*3
+		ld de, NAMTBL2 + (2 + 13*32)
+		call display_elaine_letter_paragraph
+
+		ld hl, TEXT_ELAINE_LETTER1B_LINE4
+		ld a, 55
+		ld de, NAMTBL2 + (2 + 17*32)
+		ld ix, CHRTBL2 + 2*8*256
+		call display_elaine_letter_paragraph
+
+		; annotations:
+		ld a, 5
+		ld (tmp_letter_line_width), a
+		ld a, COLOR_LIGHT_RED * 16 + COLOR_WHITE
+		ld (tmp_letter_line_color), a
+
+		ld hl, TEXT_ELAINE_LETTER1B_LINE5
+		ld a, 55 + 28*3
+		ld de, NAMTBL2 + (6 + 2*32)
+		ld ix, CHRTBL2
+		call display_elaine_letter_paragraph
+		ld hl, TEXT_ELAINE_LETTER1B_LINE6
+		ld a, 55 + 28*3 + 5
+		ld de, NAMTBL2 + (19 + 2*32)
+		call display_elaine_letter_paragraph
+		ld hl, TEXT_ELAINE_LETTER1B_LINE7
+		ld a, 55 + 28*3 + 5*2
+		ld de, NAMTBL2 + (19 + 3*32)
+		call display_elaine_letter_paragraph
+
+		ld hl, TEXT_ELAINE_LETTER1B_LINE8
+		ld a, 55 + 28*3
+		ld de, NAMTBL2 + (7 + 22*32)
+		ld ix, CHRTBL2 + 256*8*2
+		call display_elaine_letter_paragraph
+
+		ld hl, TEXT_ELAINE_LETTER1B_LINE9
+		ld a, 55 + 28*3 + 5
+		ld de, NAMTBL2 + (18 + 22*32)
+		ld ix, CHRTBL2 + 256*8*2
+		call display_elaine_letter_paragraph
+
+
+    call enable_VDP_output
+
+	call wait_for_click
+
 	xor a
 	ld (keyboard_clicks), a
 
@@ -107,7 +196,7 @@ display_elaine_letter_paragraph_loop:
 			    ld hl, buffer_4096
 			    push hl
 			    push ix
-					ld iyl, 29*8  ; 28 = letter space for text
+					ld iyl, 28*8  ; 28 = letter space for text
 				    call max_length_of_sentence_in_one_line
 				pop ix
 				pop hl
@@ -122,8 +211,11 @@ display_elaine_letter_paragraph_loop:
 			pop de  ; recover ; CHRTBL2 ptr
 			push bc
 				; draw the first line:
-				ld iy, #800f
-				ld b, 28
+				ld a, (tmp_letter_line_width)
+				ld b, a
+				ld a, (tmp_letter_line_color)
+				ld iyl, a
+				ld iyh, #80
 				call draw_sentence_to_vdp
 			pop bc
 		pop hl
@@ -135,9 +227,10 @@ display_elaine_letter_paragraph_loop:
 				call SETWRT
 		        ld a, (VDP.DW)
 		        ld c, a
-			pop af
 
-			ld b, 28
+				ld a, (tmp_letter_line_width)
+				ld b, a
+			pop af
 display_elaine_letter_paragraph_name_table_loop:
 		    out (c), a
 		    inc a
@@ -167,47 +260,4 @@ display_elaine_letter_paragraph_name_table_loop:
 	add hl, bc
 	ex de, hl
 	jp display_elaine_letter_paragraph_loop
-
-
-			; code from the inventory part to draw multiline paragraphs:
-			;     ; limit the sentence to that width and draw it:
-			;     ld c, (hl)   ; we save the old length
-			;     ld (hl), a
-			;     push bc
-			;     push hl
-			;     	push hl
-			;     	push de
-			; 	    	call clear_text_rendering_buffer
-			; 	    pop de
-			; 	    pop hl
-			;         ; draw the first part of the sentence:
-			;         ld iy, #80f0
-			;         ld b, 17
-			;         push de
-			; 			call draw_sentence_to_vdp
-			; 		pop de
-			;     pop hl
-			;     pop bc
-			;     ld a, c
-			;     sub (hl)  ; length left
-			;     ret z  ; if we have drawn the whole sentence, we are done
-			;     push de
-			; 	    ld c, (hl)  ; c: length of the segment we just drew, 
-			; 	    ld e, a  ; e: remaining length
-			; 	    ld (hl), e
-			; 	    push bc
-			; 	        ld b, 0
-			; 	        add hl, bc  ; we advance hl to the remainder of the sentence
-			; 	        inc hl  ; skip the space we were splitting on
-			; 	        ld c, e  ; move the sentence to the left
-			; 	        ld de, buffer_4096 + 1
-			; 	        ldir
-			; 	    pop bc
-			; 	pop hl
-			; 	; next line:
-			; 	ld de, 32*8
-			; 	add hl, de
-			; 	ex de, hl
-
-
 

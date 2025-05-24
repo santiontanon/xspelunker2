@@ -1,16 +1,8 @@
 to do:
 
 ***- Maya puzzle and double teleporter room in atlantis:
-  ***- letter 1 from elaine: 
-    ***- draw the "translated version of the inscription" in GIMP + text:
-      ***- draw the glyph annotations: palenque, celestial stone, abeve, below and somb syllables
-      ***- compose the, in TILED
-      ***- draw it in the game, with the following text:
-        The entrance to Palenque has been uncovered. There is where we will start. Where we taught them. Where the first nexus was built.
-
-        The second nexus near Tunguska to the east was lost. But the first remains. The first was the star alignment nexus. It will be enough. It is imperative that you locate the entrance to Palenque, the nexus that lies below, and the six celestial stones. The locals hid them from us. But we will find them. Locate them before our fleet arrives. This time the planet will be ours. They will not stop us again. Death to the humans.
-  ***- draw/write the second letter form Elaine
-  ***- draw/write the Maya tablet clues
+  ***- draw/write the second letter form Elaine: strike, ascend, here, na, sa
+  ***- draw/write the Maya tablet clues: look, sit, ladder, stand up, blowgun, leopard, snake, eagle, fish, syllables: a, e, wa, ke, ne, pe, le, se, chi, hi, ti, cho, mo, to, ju, lu, pu, yu
   ***- spawn and draw them in the game
 ***- 6th/7th (two halves from Mars/Moon): replace the depleted stone, you can only place this last. Make sure this triggers ending B.: what you get from each boss is a puzzle box with the clue "observe the celestial stones", and a code made out of animal faces, and a keyboard with numbers below. You need to enter the numbers in the correct order, and the box will open to reveal the half stone (the puzzle box goes to the boss key location in the inventory).
 ***- Second Maya puzzle for the prism: involves looking for secrets in the ROM, to learn how to "speak", and then speak a given maya word in the center of the calendar, that will activate the prism (where is this final clue? Probably somewhere in Mars/Moon?). Add strings in the ROM that can be read via a hex reader of the ROM (encode them as decimal numbers in the .asm file, so that they are not visible from the source easily), that form a puzzle, giving you a clue (it tells you "how to speak") for how to interact with the center of the calendar to fully activate the stone.

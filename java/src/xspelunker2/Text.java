@@ -295,6 +295,16 @@ public class Text {
         addLineSafe(lines_with_constant, "Michael, I believe in you, but please be careful. I will keep investigating and send you anything I find.", "ELAINE_LETTER1A_LINE5", 28*3);
         addLineSafe(lines_with_constant, "Elaine", "ELAINE_LETTER1A_LINE6", 28);
         addLineSafe(lines_with_constant, "ps: I attach the translation!", "ELAINE_LETTER1A_LINE7", 28*2);
+
+        addLineSafe(lines_with_constant, "The entrance to Palenque has been uncovered. There is where we will start. Where we taught them. Where the first nexus was built.", "ELAINE_LETTER1B_LINE1", 28*3);
+        addLineSafe(lines_with_constant, "The second nexus near Tunguska to the east was lost. But the first remains. The first was the star alignment nexus. It will be enough.", "ELAINE_LETTER1B_LINE2", 28*3);
+        addLineSafe(lines_with_constant, "Locate Palenque. The nexus lies below. The six celestial stones... they hid them from us. Locate them before our fleet arrives above.", "ELAINE_LETTER1B_LINE3", 28*4);
+        addLineSafe(lines_with_constant, "This time the planet will be ours.", "ELAINE_LETTER1B_LINE4", 28);
+        addLineSafe(lines_with_constant, "Palenque", "ELAINE_LETTER1B_LINE5", 5);
+        addLineSafe(lines_with_constant, "celestial", "ELAINE_LETTER1B_LINE6", 5);
+        addLineSafe(lines_with_constant, "stone", "ELAINE_LETTER1B_LINE7", 5);
+        addLineSafe(lines_with_constant, "above", "ELAINE_LETTER1B_LINE8", 5);
+        addLineSafe(lines_with_constant, "below", "ELAINE_LETTER1B_LINE9", 5);
         
         List<Integer> numbers = font.convertStringToAssembler("0123456789 ");
         System.out.println("Numbers: " + numbers);
