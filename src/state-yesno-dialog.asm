@@ -15,7 +15,6 @@ state_yesno_dialog:
 			ld de, SPRTBL2
 			ld bc, dialog_sprites_bin_end - dialog_sprites_bin
 			call fast_LDIRVM_from_sprites_page
-			call clear_text_rendering_buffer
 		pop hl
 		call state_yesno_dialog_draw_text
 		call state_yesno_dialog_mainloop
@@ -67,27 +66,22 @@ state_yesno_dialog_in_game:
 			call display_in_game_message_draw_box
 		pop hl
 
-		push hl		
-			call clear_text_rendering_buffer
-		pop hl
 		ld de, CHRTBL2 + (12*32+8)*8
 		ld iy, #80f0
 		ld b, 16
-		call draw_sentence_to_vdp
+		call draw_sentence_to_vdp_clearing_text_buffer
 
-		call clear_text_rendering_buffer
 		ld hl, TEXT_YES
 		ld de, CHRTBL2 + (14*32+14)*8
 		ld iy, #80f0
 		ld b, 4
-		call draw_sentence_to_vdp
+		call draw_sentence_to_vdp_clearing_text_buffer
 
-		call clear_text_rendering_buffer
 		ld hl, TEXT_NO
 		ld de, CHRTBL2 + (15*32+14)*8
 		ld iy, #80f0
 		ld b, 4
-		call draw_sentence_to_vdp
+		call draw_sentence_to_vdp_clearing_text_buffer
 
 		call state_yesno_dialog_mainloop
 
@@ -130,27 +124,22 @@ state_yesno_dialog_in_game_done:
 ; input:
 ; - hl: text to render
 state_yesno_dialog_draw_text:
-	push hl		
-		call clear_text_rendering_buffer
-	pop hl
 	ld de, CHRTBL2 + (9*32+12)*8
 	ld iy, #80f0
 	ld b, 8
-	call draw_sentence_to_vdp
+	call draw_sentence_to_vdp_clearing_text_buffer
 
-	call clear_text_rendering_buffer
 	ld hl, TEXT_YES
 	ld de, CHRTBL2 + (12*32+14)*8
 	ld iy, #80f0
 	ld b, 4
-	call draw_sentence_to_vdp
+	call draw_sentence_to_vdp_clearing_text_buffer
 
-	call clear_text_rendering_buffer
 	ld hl, TEXT_NO
 	ld de, CHRTBL2 + (13*32+14)*8
 	ld iy, #80f0
 	ld b, 4
-	jp draw_sentence_to_vdp
+	jp draw_sentence_to_vdp_clearing_text_buffer
 
 
 ;-----------------------------------------------

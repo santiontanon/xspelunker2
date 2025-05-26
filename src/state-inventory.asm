@@ -445,13 +445,11 @@ display_power_stone_closeup_animal_loop:
 			ld de, NAMTBL2
 			ld bc, 768
 			call fast_LDIRVM
-
-			call clear_text_rendering_buffer
 		pop hl
 		ld de, CHRTBL2 + (225 + 256*2)*8
 		ld iy, #80f0
 		ld b, 30
-		call draw_sentence_to_vdp
+		call draw_sentence_to_vdp_clearing_text_buffer
     call enable_VDP_output
 
 	call wait_for_click
@@ -465,13 +463,17 @@ display_power_stone_closeup_animal_loop:
 
 ;-----------------------------------------------
 state_inventory_update_cursor_interact_letter1:
-	call display_elaine_letter1
+	ld hl, display_elaine_letter1
+	ld c, TABLET_LETTER_PAGE
+	call call_hl_in_page_c_8000
 	jp state_inventory_entry_point_from_item_inspection
 
 
 ;-----------------------------------------------
 state_inventory_update_cursor_interact_letter2:
-	call display_elaine_letter2
+	ld hl, display_elaine_letter2
+	ld c, TABLET_LETTER_PAGE
+	call call_hl_in_page_c_8000
 	jp state_inventory_entry_point_from_item_inspection
 
 
@@ -595,16 +597,11 @@ state_inventory_update_item_text_print_loop:
     ld (hl), a
     push bc
     push hl
-    	push hl
-    	push de
-	    	call clear_text_rendering_buffer
-	    pop de
-	    pop hl
         ; draw the first part of the sentence:
         ld iy, #80f0
         ld b, 17
         push de
-			call draw_sentence_to_vdp
+			call draw_sentence_to_vdp_clearing_text_buffer
 		pop de
     pop hl
     pop bc
@@ -1084,10 +1081,6 @@ draw_inventory_weapons_fire_hammer_sprite:
 draw_inventory_number:
 	push de
 	push bc
-		push af
-			SETMEGAROMPAGE_8000 TEXT_PAGE
-			call clear_text_rendering_buffer
-		pop af
 		ld de, buffer_4096 + 1
 		ld c, 0  ; number of characters
 
@@ -1146,7 +1139,7 @@ draw_inventory_number_tens_done:
 		ld (hl), c
 	pop bc
 	pop de
-	jp draw_sentence_to_vdp
+	jp draw_sentence_to_vdp_clearing_text_buffer
 
 
 ;-----------------------------------------------
@@ -1164,12 +1157,11 @@ draw_inventory_map:
 	jr nz, draw_inventory_map_have_map
 
 	SETMEGAROMPAGE_8000 TEXT_PAGE
-	call clear_text_rendering_buffer
 	ld hl, TEXT_NO_MAP
 	ld de, CHRTBL2 + (256*2+32*2+3)*8
 	ld iy, #2000 + COLOR_DARK_YELLOW
 	ld b, 5
-	jp draw_sentence_to_vdp
+	jp draw_sentence_to_vdp_clearing_text_buffer
 
 draw_inventory_map_have_map:
 	; Loop 1, draw the map:

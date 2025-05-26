@@ -7,6 +7,18 @@ clear_text_rendering_buffer_bc_set:
 
 
 ; ------------------------------------------------
+copy_ix_text_to_buffer_4096:
+	push ix
+	pop hl
+	ld de, buffer_4096
+	ld c, (hl)
+	ld b, 0
+	inc c
+	ldir
+	ret
+
+
+; ------------------------------------------------
 ; concatenates two strings into buffer_4096
 ; input:
 ; - ix: string1
@@ -88,6 +100,15 @@ text_concatenate_strings:
 ; 	ret
 
 
+DRAW_SENTENCE_TO_VDP_MACRO: MACRO TEXT, VRAM, ATTRIBUTE, LENGTH
+	ld hl, TEXT
+	ld de, VRAM
+	ld #8000 + ATTRIBUTE
+	ld b, LENGTH
+	call draw_sentence_to_vdp_clearing_text_buffer
+	ENDM
+
+
 draw_sentence_to_vdp_clearing_text_buffer:
 	push hl
 	push de
@@ -98,15 +119,6 @@ draw_sentence_to_vdp_clearing_text_buffer:
 	pop hl
 
 
-DRAW_SENTENCE_TO_VDP_MACRO: MACRO TEXT, VRAM, ATTRIBUTE, LENGTH
-	ld hl, TEXT
-	ld de, VRAM
-	ld #8000 + ATTRIBUTE
-	ld b, LENGTH
-	call draw_sentence_to_vdp
-	ENDM
-
-
 ; ------------------------------------------------
 ; Draws a sentence to video memory
 ; input:
@@ -115,7 +127,7 @@ DRAW_SENTENCE_TO_VDP_MACRO: MACRO TEXT, VRAM, ATTRIBUTE, LENGTH
 ; - iyl: color (attribute byte)
 ; - iyh: pixel to start from (128 to start in pixel 0)
 ; - b: expected width in tiles
-draw_sentence_to_vdp:
+draw_sentence_to_vdp_internal:
 	push de
 	push bc
 		ld de, text_draw_buffer
@@ -262,7 +274,10 @@ draw_font_character_loop_no_next_tile:
 ; - hl: sentence
 ; - iyl: max pixels in the line
 ; output:
-; - a: number of characters that can be drawn
+; - a/ixl: number of characters that can be drawn
+max_length_of_sentence_in_one_line_ix:
+	push ix
+	pop hl
 max_length_of_sentence_in_one_line:
     ld ixl, 0  ; best found so far
     ld ixh, 0  ; current character
@@ -294,6 +309,7 @@ max_length_of_sentence_in_one_line_no_space:
     jr nc, max_length_of_sentence_in_one_line_limit_reached
     djnz max_length_of_sentence_in_one_line_loop
     ld a, ixh
+    ld ixl, a
     ret
 max_length_of_sentence_in_one_line_limit_reached:
     ld a, ixl

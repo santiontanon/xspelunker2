@@ -14,12 +14,12 @@ display_elaine_letter1:
 		call fast_FILVRM
 
 		ld hl, elaine_letter1_tiles_zx0
-		ld c, CALENDAR_TABLET_TILES_PAGE
+		ld c, TABLET_LETTER_PAGE
 		call decompress_tiles_to_all_banks
 
 		ld hl, elaine_letter1_nametable_zx0
 		ld de, buffer_4096
-		ld c, CALENDAR_TABLET_TILES_PAGE
+		ld c, TABLET_LETTER_PAGE
 		call dzx0_from_page_c
 
 		ld hl, buffer_4096
@@ -75,12 +75,12 @@ display_elaine_letter1:
 FIRST_LETTER1B_USEABLE_TILE: equ 60
 
 		ld hl, elaine_letter1b_tiles_zx0
-		ld c, CALENDAR_TABLET_TILES_PAGE
+		ld c, TABLET_LETTER_PAGE
 		call decompress_tiles_to_all_banks
 
 		ld hl, elaine_letter1b_nametable_zx0
 		ld de, buffer_4096
-		ld c, CALENDAR_TABLET_TILES_PAGE
+		ld c, TABLET_LETTER_PAGE
 		call dzx0_from_page_c
 
 		ld hl, buffer_4096
@@ -168,12 +168,12 @@ display_elaine_letter2:
 		call fast_FILVRM
 
 		ld hl, elaine_letter1_tiles_zx0
-		ld c, CALENDAR_TABLET_TILES_PAGE
+		ld c, TABLET_LETTER_PAGE
 		call decompress_tiles_to_all_banks
 
 		ld hl, elaine_letter1_nametable_zx0
 		ld de, buffer_4096
-		ld c, CALENDAR_TABLET_TILES_PAGE
+		ld c, TABLET_LETTER_PAGE
 		call dzx0_from_page_c
 
 		ld hl, buffer_4096
@@ -229,12 +229,12 @@ display_elaine_letter2:
 FIRST_LETTER2B_USEABLE_TILE: equ 67
 
 		ld hl, elaine_letter2b_tiles_zx0
-		ld c, CALENDAR_TABLET_TILES_PAGE
+		ld c, TABLET_LETTER_PAGE
 		call decompress_tiles_to_all_banks
 
 		ld hl, elaine_letter2b_nametable_zx0
 		ld de, buffer_4096
-		ld c, CALENDAR_TABLET_TILES_PAGE
+		ld c, TABLET_LETTER_PAGE
 		call dzx0_from_page_c
 
 		ld hl, buffer_4096
@@ -292,12 +292,14 @@ FIRST_LETTER2B_USEABLE_TILE: equ 67
 display_elaine_letter_paragraph:
 	push af
 	push de
+	push ix
 		; copy text to buffer_4096:
-		ld de, buffer_4096
-		ld c, (hl)
-		ld b, 0
-		inc bc
-		ldir
+		push hl
+		pop ix
+		ld hl, copy_ix_text_to_buffer_4096
+		ld c, TEXT_PAGE
+		call call_hl_in_page_c_8000
+	pop ix
 	pop de
 	pop af
 display_elaine_letter_paragraph_loop:
@@ -325,17 +327,15 @@ display_elaine_letter_paragraph_loop:
 			    	add a, a
 			    	add a, a
 					ld iyl, a
-				    call max_length_of_sentence_in_one_line
+					ld ix, buffer_4096
+					ld hl, max_length_of_sentence_in_one_line_ix
+					ld c, TEXT_PAGE
+				    call call_hl_in_page_c_8000
+				    ld a, ixl
 				pop ix
 				pop hl
 				ld c, (hl)  ; we save the old length
 				ld (hl), a  ; write the length of the first line
-
-				push bc
-				push hl
-					call clear_text_rendering_buffer
-				pop hl
-				pop bc
 			pop de  ; recover ; CHRTBL2 ptr
 			push bc
 				; draw the first line:
@@ -344,7 +344,7 @@ display_elaine_letter_paragraph_loop:
 				ld a, (tmp_letter_line_color)
 				ld iyl, a
 				ld iyh, #80
-				call draw_sentence_to_vdp
+				call draw_sentence_to_vdp_from_another_page
 			pop bc
 		pop hl
 	pop af

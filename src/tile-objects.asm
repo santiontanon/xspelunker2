@@ -1349,7 +1349,7 @@ object_interaction_function_tablet_found:
 	ld d, (hl)
 
 object_interaction_function_tablet_ptr_set:
-	ld c, TEXT_PAGE
+	ld c, TABLET_LETTER_PAGE
 	ld hl, display_tablet
 	jp call_hl_in_page_c_8000
 

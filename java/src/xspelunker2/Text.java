@@ -326,6 +326,11 @@ public class Text {
         addLineSafe(lines_with_constant, "With writing, we recorded the sound of the sacred animal", "TABLET_MAYA2_LINE1", 18*2);
         addLineSafe(lines_with_constant, "names in stone. The jaguar, the snake, the eagle and the fish: BA-LA-MA, CHA-NA, KO-KA-A-JA and KA-YA.", "TABLET_MAYA2_LINE2", 18*4);
 
+        addLineSafe(lines_with_constant, "The first words they taught us were 'sit' (CHU-MU) and 'stand' (WA-LA). We should have suspected something...", "TABLET_MAYA3_LINE1", 18*4);
+        addLineSafe(lines_with_constant, "I prefer words related to my occupation, like 'ladder' (E-BU) or 'ascend' (T'A-BA).", "TABLET_MAYA3_LINE2", 18*3);
+
+        addLineSafe(lines_with_constant, "My favorite part about writing is being able to write sounds, like", "TABLET_MAYA4_LINE1", 18*2);
+        
         // Syllables
         addLineSafe(lines_with_constant, "ke", "KE", 2);
         addLineSafe(lines_with_constant, "ki", "KI", 2);

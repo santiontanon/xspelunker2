@@ -34,6 +34,11 @@ clear_all_the_sprites:
 ;-----------------------------------------------
 clear_screen_left_to_right:
     call clear_all_the_sprites
+    ; ensure tile 0 is all black (we only need to ensure this on bank 3 for XSpelunker 2):
+    ld hl, CLRTBL2 + 256*8*2
+    ld b, 8
+    xor a
+    call fast_FILVRM_small
     ld b, 32
     ld hl, NAMTBL2
 clear_screen_left_to_right_loop:

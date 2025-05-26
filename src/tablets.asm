@@ -14,7 +14,7 @@ display_tablet:
 		; display base tablet:
 		ld hl, tablet_tiles_zx0
 		ld de, tablet_nametable_zx0
-		ld c, CALENDAR_TABLET_TILES_PAGE
+		ld c, TABLET_LETTER_PAGE
 display_tablet_ptrs_set:
 		push de
 		push bc
@@ -95,24 +95,22 @@ calendar_tablet_fn:
 	push de
 		ld hl, tablet_calendar_tiles_zx0
 		ld de, tablet_calendar_nametable_zx0
-		ld c, CALENDAR_TABLET_TILES_PAGE
+		ld c, TABLET_LETTER_PAGE
 		jp display_tablet_ptrs_set
 
 
 ;-----------------------------------------------
 calendar_tablet_fn2:
-	call clear_text_rendering_buffer
 	ld hl, TEXT_CALENDAR_TABLET1
 	ld de, CHRTBL2 + 22*32*8 + 8
 	ld iy, #80f0
 	ld b, 32
-	call draw_sentence_to_vdp
-	call clear_text_rendering_buffer
+	call draw_sentence_to_vdp_from_another_page
 	ld hl, TEXT_CALENDAR_TABLET2
 	ld de, CHRTBL2 + 23*32*8 + 2*8
 	ld iy, #80f0
 	ld b, 32
-	jp draw_sentence_to_vdp
+	jp draw_sentence_to_vdp_from_another_page
 
 
 ;-----------------------------------------------
@@ -220,7 +218,7 @@ combination_tablet_add_direction_symbol_continue:
 ; - de: ptr to zx0-compressed extra tiles
 combination_tablet_load_extra_tiles:
 	ld de, buffer_4096
-	ld c, CALENDAR_TABLET_TILES_PAGE
+	ld c, TABLET_LETTER_PAGE
 	call dzx0_from_page_c
 
 	ld hl, buffer_4096
@@ -436,14 +434,9 @@ trial_tablet_messages:
 combination_tablet_print_line_12:
 	push bc
 	push af
-		push de
-		push hl
-			call clear_text_rendering_buffer
-		pop hl
-		pop de
 		ld iy, #800e
 		ld b, 12
-		call draw_sentence_to_vdp
+		call draw_sentence_to_vdp_from_another_page
 	pop af
 	pop hl
     push af
@@ -725,12 +718,12 @@ maya_puzzle_tablet_fn_load_extra_tiles_hl_set:
 ;-----------------------------------------------
 maya_clue1_tablet_fn:
 	ld hl, tablet_maya1_tiles_zx0
-	ld c, CALENDAR_TABLET_TILES_PAGE
+	ld c, TABLET_LETTER_PAGE
 	call maya_puzzle_tablet_fn_load_extra_tiles_hl_set
 
 	ld hl, tablet_maya1_nametable_zx0
 	ld de, buffer_4096
-	ld c, CALENDAR_TABLET_TILES_PAGE
+	ld c, TABLET_LETTER_PAGE
 	call dzx0_from_page_c
 
 	ld hl, buffer_4096
@@ -793,20 +786,18 @@ maya_clue1_tablet_fn:
 	ld hl, TEXT_SE
 	ld a, 91 + 2*16 + 18 + 4 
 	ld de, NAMTBL2 + (23 + 23*32)
-	call display_elaine_letter_paragraph	
-
-	ret
+	jp display_elaine_letter_paragraph	
 
 
 ;-----------------------------------------------
 maya_clue2_tablet_fn:
 	ld hl, tablet_maya2_tiles_zx0
-	ld c, CALENDAR_TABLET_TILES_PAGE
+	ld c, TABLET_LETTER_PAGE
 	call maya_puzzle_tablet_fn_load_extra_tiles_hl_set
 
 	ld hl, tablet_maya2_nametable_zx0
 	ld de, buffer_4096
-	ld c, CALENDAR_TABLET_TILES_PAGE
+	ld c, TABLET_LETTER_PAGE
 	call dzx0_from_page_c
 
 	ld hl, buffer_4096
@@ -829,14 +820,44 @@ maya_clue2_tablet_fn:
 	ld a, 126
 	ld de, NAMTBL2 + (7 + 8*32)
 	ld ix, CHRTBL2 + 8*256
-	call display_elaine_letter_paragraph
-
-	ret
+	jp display_elaine_letter_paragraph
 
 
 ;-----------------------------------------------
 maya_clue3_tablet_fn:
+	ld hl, tablet_maya3_tiles_zx0
+	ld c, TABLET_LETTER_PAGE
+	call maya_puzzle_tablet_fn_load_extra_tiles_hl_set
+
+	ld hl, tablet_maya3_nametable_zx0
+	ld de, buffer_4096
+	ld c, TABLET_LETTER_PAGE
+	call dzx0_from_page_c
+
+	ld hl, buffer_4096
+	ld de, NAMTBL2
+	ld bc, 768
+	call fast_LDIRVM
+
+	ld a, 18
+	ld (tmp_letter_line_width), a
+	ld a, COLOR_GREY
+	ld (tmp_letter_line_color), a
+
+	ld hl, TEXT_TABLET_MAYA3_LINE1
+	ld a, 126
+	ld de, NAMTBL2 + (7 + 6*32)
+	ld ix, CHRTBL2
+	call display_elaine_letter_paragraph
+
+	ld hl, TEXT_TABLET_MAYA2_LINE2
+	ld a, 126
+	ld de, NAMTBL2 + (7 + 8*32)
+	ld ix, CHRTBL2 + 8*256
+	call display_elaine_letter_paragraph	
+	
 	; ...
+
 	ret
 
 
@@ -850,3 +871,4 @@ maya_clue4_tablet_fn:
 story_trivia_tablet_fn:
 	; ...
 	ret
+

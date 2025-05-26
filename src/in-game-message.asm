@@ -49,16 +49,11 @@ display_in_game_message_print_loop:
     ld (hl), a
     push bc
     push hl
-    	push hl
-    	push de
-	    	call clear_text_rendering_buffer
-	    pop de
-	    pop hl
         ; draw the first part of the sentence:
         ld iy, #80f0
         ld b, 28
         push de
-			call draw_sentence_to_vdp
+			call draw_sentence_to_vdp_clearing_text_buffer
 		pop de
     pop hl
     pop bc
@@ -86,9 +81,6 @@ display_in_game_message_print_loop:
 
 display_in_game_message_center:
 	push hl
-		call clear_text_rendering_buffer
-	pop hl
-	push hl
 		call text_string_width
 	pop hl
 	; start position is: 128 - a/2
@@ -112,7 +104,7 @@ display_in_game_message_center:
 		ld iy, #80f0
 	pop bc
 	inc b
-	call draw_sentence_to_vdp	
+	call draw_sentence_to_vdp_clearing_text_buffer	
 
 display_in_game_message_continue:
 	call wait_for_click

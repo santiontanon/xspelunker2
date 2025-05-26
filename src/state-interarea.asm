@@ -211,20 +211,18 @@ interarea_exit_screen:
 					; print "entering [area name]":
 					ld ix, TEXT_ENTERING
 					call text_concatenate_strings
-					call clear_text_rendering_buffer
 				pop de  ; position to render text
 
 				ld hl, buffer_4096
 				ld iy, #80f0
 				ld b, 20
-				call draw_sentence_to_vdp
+				call draw_sentence_to_vdp_clearing_text_buffer
 
-				call clear_text_rendering_buffer
 				ld hl, TEXT_LOADING_AREA
 				ld de, CHRTBL2 + (16*32 + 10)*8
 				ld iy, #80f0
 				ld b, 16
-				call draw_sentence_to_vdp
+				call draw_sentence_to_vdp_clearing_text_buffer
 			pop af
 		pop hl
 		push hl
