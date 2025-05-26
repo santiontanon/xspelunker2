@@ -1,8 +1,20 @@
 to do:
 
-***- draw/write the Maya tablet clues:
-  ***- draw tablet 4 (syllables)
-***- 6th/7th (two halves from Mars/Moon): replace the depleted stone, you can only place this last. Make sure this triggers ending B.: what you get from each boss is a puzzle box with the clue "observe the celestial stones", and a code made out of animal faces, and a keyboard with numbers below. You need to enter the numbers in the correct order, and the box will open to reveal the half stone (the puzzle box goes to the boss key location in the inventory).
+***- 6th/7th (two halves from Mars/Moon):
+  ***- replace "power stone" by "celestial stone" in text (does it still fit?)
+  ***- create puzzle box object (1 and 2)
+  ***- the object that you get defeating bosses 6 and 7 are these puzsle boxes (the puzzle box goes to the boss key location in the inventory).
+    ***- add description to inventory and gfx
+  ***- inspecting the object in the inventory, opens a puzzle
+    ***- draft the puzzle (with clue "look at celestial stone")
+    ***- assign the question randomly during PCG
+    ***- render it
+    ***- interaction with the puzzle
+  ***- solving the puzzle gives you the half power stone:
+    ***- message, add to inventory, and lose the puzzle box
+  ***- once you have the final stone, you can replace the inactive one on the calendar stone
+  ***- say some message that it seems to be fully powered up now
+  ***- go to ending B
 ***- Second Maya puzzle: involves looking for secrets in the ROM, to learn how to "speak", and then speak a given maya word in the center of the calendar, that will activate the prism (where is this final clue? Probably somewhere in Mars/Moon?). Add strings in the ROM that can be read via a hex reader of the ROM (encode them as decimal numbers in the .asm file, so that they are not visible from the source easily), that form a puzzle, giving you a clue (it tells you "how to speak") for how to interact with the center of the calendar to fully activate the stone. Collect all the syllables available.
 ***- with the prism: opens dimensional portal for YOU to travel throughout the universe. Same confrontation with aliens, but if you win, a teleporter shows up with some controls, that teleports you to their home planet, to face the final final boss. If you win, ending A.
 
