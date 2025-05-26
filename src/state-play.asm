@@ -85,8 +85,9 @@ state_play:
 		ld (global_state__objects + TAG_TELEPORTER5), a
 
 		; initial player position:
-		ld hl, #0a00
+; 		ld hl, #0a00
 ; 		ld hl, #1000
+		ld hl, #1400
 		ld (player_x), hl
 		ld hl, #0a00
 		ld (player_y), hl
@@ -109,7 +110,8 @@ state_play:
 ; 		ld e, 0  ; area to generate
 ; 		ld e, 5  ; area to generate
 ; 		ld e, 3  ; area to generate
-		ld e, 9  ; area to generate
+; 		ld e, 9  ; area to generate
+		ld e, 2  ; area to generate
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
 
@@ -117,7 +119,8 @@ state_play:
 ; 		ld e, 0
 ; 		ld e, 0
 ; 		ld e, CALENDAR_ROOM_ID
-		ld e, TELEPORTER_ROOM_ID
+; 		ld e, TELEPORTER_ROOM_ID
+		ld e, 24
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000

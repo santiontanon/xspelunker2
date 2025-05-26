@@ -467,7 +467,31 @@ hardcoded_world_data__tablet_content:
   dw combination_tablet_type_1_fn
   db TAG_COMBINATION4_CLUE
   dw combination_tablet_type_1_fn
-  ds 39, #ff
+  db TAG_MAYA_RIDDLE_CLUE1
+  dw maya_clue1_tablet_fn
+  db TAG_MAYA_RIDDLE_CLUE2
+  dw maya_clue2_tablet_fn
+  db TAG_MAYA_RIDDLE_CLUE3
+  dw maya_clue3_tablet_fn
+  db TAG_STORY_TRIVIA1
+  dw story_trivia_tablet_fn
+  db TAG_MAYA_RIDDLE_CLUE4
+  dw maya_clue4_tablet_fn
+  db TAG_STORY_TRIVIA2
+  dw story_trivia_tablet_fn
+  db TAG_STORY_TRIVIA3
+  dw story_trivia_tablet_fn
+  db TAG_STORY_TRIVIA4
+  dw story_trivia_tablet_fn
+  db TAG_STORY_TRIVIA5
+  dw story_trivia_tablet_fn
+  db TAG_STORY_TRIVIA6
+  dw story_trivia_tablet_fn
+  db TAG_STORY_TRIVIA7
+  dw story_trivia_tablet_fn
+  db TAG_STORY_TRIVIA8
+  dw story_trivia_tablet_fn
+  ds 15, #ff
   db #ff  ; sentinel
 hardcoded_world_data__combination_solutions:
   db 0, 1, 2, 0, 1, 1, 2, 1

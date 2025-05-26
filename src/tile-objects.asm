@@ -2027,21 +2027,18 @@ ENDR
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_HEART3
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_HEART4
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_HEART5
-REPT TAG_ITEM_SANDALS - TAG_MAYA_RIDDLE_CLUE1  ; add filler
-	TILE_OBJECT_DATA 2, 0, 0, 0
-ENDR
-; TAG_MAYA_RIDDLE_CLUE1: equ 109
-; TAG_MAYA_RIDDLE_CLUE2: equ 110
-; TAG_MAYA_RIDDLE_CLUE3: equ 111
-; TAG_MAYA_RIDDLE_CLUE4: equ 112
-; TAG_STORY_TRIVIA1: equ 113
-; TAG_STORY_TRIVIA2: equ 114
-; TAG_STORY_TRIVIA3: equ 115
-; TAG_STORY_TRIVIA4: equ 116
-; TAG_STORY_TRIVIA5: equ 117
-; TAG_STORY_TRIVIA6: equ 118
-; TAG_STORY_TRIVIA7: equ 119
-; TAG_STORY_TRIVIA8: equ 120
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_MAYA_RIDDLE_CLUE1
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_MAYA_RIDDLE_CLUE2
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_MAYA_RIDDLE_CLUE3
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_MAYA_RIDDLE_CLUE4
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_STORY_TRIVIA1
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_STORY_TRIVIA2
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_STORY_TRIVIA3
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_STORY_TRIVIA4
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_STORY_TRIVIA5
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_STORY_TRIVIA6
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_STORY_TRIVIA7
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_STORY_TRIVIA8
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ITEM_SANDALS
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ITEM_GLOVES
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ITEM_HURAKAN

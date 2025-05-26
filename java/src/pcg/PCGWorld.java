@@ -259,12 +259,17 @@ public class PCGWorld {
                         tag.toLowerCase().contains("trial")) {
                         // trial clue:
                         w.tabletContent.put(tag, "trial_tablet_fn");
-                    } else if (tag.toLowerCase().contains("riddle-clue")) {
-                        // maya riddle clue:
-                        // ...
+                    } else if (tag.toLowerCase().contains("riddle-clue1")) {
+                        w.tabletContent.put(tag, "maya_clue1_tablet_fn");
+                    } else if (tag.toLowerCase().contains("riddle-clue2")) {
+                        w.tabletContent.put(tag, "maya_clue2_tablet_fn");
+                    } else if (tag.toLowerCase().contains("riddle-clue3")) {
+                        w.tabletContent.put(tag, "maya_clue3_tablet_fn");
+                    } else if (tag.toLowerCase().contains("riddle-clue4")) {
+                        w.tabletContent.put(tag, "maya_clue4_tablet_fn");
                     } else if (tag.toLowerCase().contains("story-trivia")) {
                         // story trivia:
-                        // ...
+                        w.tabletContent.put(tag, "story_trivia_tablet_fn");
                     }
                 }
             }

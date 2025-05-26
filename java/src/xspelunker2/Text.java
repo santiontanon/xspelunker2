@@ -315,7 +315,20 @@ public class Text {
         addLineSafe(lines_with_constant, "nexus. When they attacked, we were ready.", "ELAINE_LETTER2B_LINE2B", 24);
         addLineSafe(lines_with_constant, "With time our knowledge turned into myth. The power stone nexus was destroyed, and the remaining power stones offered as tribute to the gods. One of them taken to the Mars beast and Ixchel, away from this planet.", "ELAINE_LETTER2B_LINE3", 28*5);
         addLineSafe(lines_with_constant, "Now look at the nexus here: useless.", "ELAINE_LETTER2B_LINE4", 24);
-          
+        
+        // Maya tablet clues:
+        addLineSafe(lines_with_constant, "They taught us to write ideas and sounds. We could write about", "TABLET_MAYA1_LINE1", 18*2);
+        addLineSafe(lines_with_constant, "the feared Jaguar (Bahlam), and also how we said it: BA-LA-MA.", "TABLET_MAYA1_LINE2", 18*2);
+        addLineSafe(lines_with_constant, "We could write all we said.", "TABLET_MAYA1_LINE3", 16);
+        addLineSafe(lines_with_constant, "We could finally write about blowguns (PU-WA)!", "TABLET_MAYA1_LINE4", 16*2);
+        addLineSafe(lines_with_constant, "We learned the power of sounds.", "TABLET_MAYA1_LINE5", 18);
+
+        // Syllables
+        addLineSafe(lines_with_constant, "ke", "KE", 2);
+        addLineSafe(lines_with_constant, "ki", "KI", 2);
+        addLineSafe(lines_with_constant, "se", "SE", 2);
+        
+        
         List<Integer> numbers = font.convertStringToAssembler("0123456789 ");
         System.out.println("Numbers: " + numbers);
         List<Integer> letters = font.convertStringToAssembler("ABCDEFGHIJKLMNOPQRSTUVWXYZ ");

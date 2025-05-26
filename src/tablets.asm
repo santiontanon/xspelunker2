@@ -689,8 +689,9 @@ maya_puzzle_tablet_fn_draw_glyph_loop_x:
 ;-----------------------------------------------
 maya_puzzle_tablet_fn_load_extra_tiles:
 	ld hl, tablet_maya_tiles_zx0
-	ld de, buffer_4096
 	ld c, TILES_PAGE
+maya_puzzle_tablet_fn_load_extra_tiles_hl_set:
+	ld de, buffer_4096
 	call dzx0_from_page_c
 
 	ld hl, buffer_4096
@@ -719,3 +720,103 @@ maya_puzzle_tablet_fn_load_extra_tiles:
 	ld de, CLRTBL2 + 256*8*2 + 32*8
 	ld bc, 192*8
 	jp fast_LDIRVM	
+
+
+;-----------------------------------------------
+maya_clue1_tablet_fn:
+	ld hl, tablet_maya1_tiles_zx0
+	ld c, CALENDAR_TABLET_TILES_PAGE
+	call maya_puzzle_tablet_fn_load_extra_tiles_hl_set
+
+	ld hl, tablet_maya1_nametable_zx0
+	ld de, buffer_4096
+	ld c, CALENDAR_TABLET_TILES_PAGE
+	call dzx0_from_page_c
+
+	ld hl, buffer_4096
+	ld de, NAMTBL2
+	ld bc, 768
+	call fast_LDIRVM
+
+	ld a, 18
+	ld (tmp_letter_line_width), a
+	ld a, COLOR_GREY
+	ld (tmp_letter_line_color), a
+
+	ld hl, TEXT_TABLET_MAYA1_LINE1
+	ld a, 91
+	ld de, NAMTBL2 + (7 + 6*32)
+	ld ix, CHRTBL2
+	call display_elaine_letter_paragraph	
+
+	ld hl, TEXT_TABLET_MAYA1_LINE2
+	ld a, 91
+	ld de, NAMTBL2 + (7 + 8*32)
+	ld ix, CHRTBL2 + 256*8
+	call display_elaine_letter_paragraph	
+
+	ld a, 16
+	ld (tmp_letter_line_width), a
+
+	ld hl, TEXT_TABLET_MAYA1_LINE3
+	ld a, 91 + 2*18
+	ld de, NAMTBL2 + (7 + 15*32)
+	ld ix, CHRTBL2 + 256*8
+	call display_elaine_letter_paragraph	
+
+	ld hl, TEXT_TABLET_MAYA1_LINE4
+	ld a, 91
+	ld de, NAMTBL2 + (7 + 16*32)
+	ld ix, CHRTBL2 + 256*8*2
+	call display_elaine_letter_paragraph	
+
+	ld a, 18
+	ld (tmp_letter_line_width), a
+
+	ld hl, TEXT_TABLET_MAYA1_LINE5
+	ld a, 91 + 2*16
+	ld de, NAMTBL2 + (7 + 19*32)
+	call display_elaine_letter_paragraph	
+
+	ld a, 2
+	ld (tmp_letter_line_width), a
+	ld hl, TEXT_KE
+	ld a, 91 + 2*16 + 18
+	ld de, NAMTBL2 + (10 + 22*32)
+	call display_elaine_letter_paragraph	
+
+	ld hl, TEXT_KI
+	ld a, 91 + 2*16 + 18 + 2 
+	ld de, NAMTBL2 + (16 + 22*32)
+	call display_elaine_letter_paragraph	
+
+	ld hl, TEXT_SE
+	ld a, 91 + 2*16 + 18 + 4 
+	ld de, NAMTBL2 + (23 + 23*32)
+	call display_elaine_letter_paragraph	
+
+	ret
+
+
+;-----------------------------------------------
+maya_clue2_tablet_fn:
+	; ...
+	ret
+
+
+;-----------------------------------------------
+maya_clue3_tablet_fn:
+	; ...
+	ret
+
+
+;-----------------------------------------------
+maya_clue4_tablet_fn:
+	; ...
+	ret
+
+
+;-----------------------------------------------
+story_trivia_tablet_fn:
+	; ...
+	ret

@@ -26,7 +26,7 @@ public class HardcodedWorldForAssembler {
     public static final int MAX_N_TAGS = 32;
     public static final int MAX_CONNECTIONS = 12;
     public static final int MAX_CHESTS = 10;
-    public static final int MAX_TABLETS = 16;
+    public static final int MAX_TABLETS = 20;
     
     public static void main(String args[]) throws Exception
     {
