@@ -1,11 +1,11 @@
 to do:
 
 ***- draw/write the Maya tablet clues:
-  ***- design and draw tablet 2 (leftover: ascend, sit, ladder, stand up, snake, eagle, fish)
-  ***- design and draw tablet 3
-  ***- design and draw tablet 4
+  ***- design and draw tablet 2 (jaguar (?), snake, eagle, fish)
+  ***- design and draw tablet 3 (sit, stand up)
+  ***- design and draw tablet 4 (ascend, ladder)
 ***- 6th/7th (two halves from Mars/Moon): replace the depleted stone, you can only place this last. Make sure this triggers ending B.: what you get from each boss is a puzzle box with the clue "observe the celestial stones", and a code made out of animal faces, and a keyboard with numbers below. You need to enter the numbers in the correct order, and the box will open to reveal the half stone (the puzzle box goes to the boss key location in the inventory).
-***- Second Maya puzzle for the prism: involves looking for secrets in the ROM, to learn how to "speak", and then speak a given maya word in the center of the calendar, that will activate the prism (where is this final clue? Probably somewhere in Mars/Moon?). Add strings in the ROM that can be read via a hex reader of the ROM (encode them as decimal numbers in the .asm file, so that they are not visible from the source easily), that form a puzzle, giving you a clue (it tells you "how to speak") for how to interact with the center of the calendar to fully activate the stone. Syllables available: ke, ki, si, pu, wa, t'a, ba, chu, mu, e, bu, la, ma, chan, na, pe, lu, ne, le, ko, ka, a, ja, ya
+***- Second Maya puzzle: involves looking for secrets in the ROM, to learn how to "speak", and then speak a given maya word in the center of the calendar, that will activate the prism (where is this final clue? Probably somewhere in Mars/Moon?). Add strings in the ROM that can be read via a hex reader of the ROM (encode them as decimal numbers in the .asm file, so that they are not visible from the source easily), that form a puzzle, giving you a clue (it tells you "how to speak") for how to interact with the center of the calendar to fully activate the stone. Syllables available: ke, ki, si, pu, wa, t'a, ba, chu, mu, e, bu, la, ma, chan, na, pe, lu, ne, le, ko, ka, a, ja, ya
 ***- with the prism: opens dimensional portal for YOU to travel throughout the universe. Same confrontation with aliens, but if you win, a teleporter shows up with some controls, that teleports you to their home planet, to face the final final boss. If you win, ending A.
 
 - write and spawn story trivia tablets
@@ -65,7 +65,9 @@ to do:
 
 - 8th boss: after beating the combat against the aliens, you can teleport to their home planet, and fight against their leader (final final boss)
 - final good ending: play second ending, and then the stone opens a portal for you to travel to the alien world, and fight against their leader in a final final battle. At the end, you become the ruler of their empire.
-- think of more secrets to add to the game (maybe secret rooms that depend on the RNG spawning certain things)
+- Potential new secret ideas:
+  - "speak" the animal names in the animal room to get their blessings (if you get all four, you do double damage)
+  - special condition for triggering "angry bosses" (they change color). For each one you beat i this hard mode, you get something in the ending, and if you get them all, you get a special mention. The conditions might be things like: certain bit in the random seed to be "11" (so, not all seeds are good), dive into water X times in the same room without doing anything else, etc.
 
 --------------------
 

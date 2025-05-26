@@ -688,7 +688,7 @@ maya_puzzle_tablet_fn_draw_glyph_loop_x:
 
 ;-----------------------------------------------
 maya_puzzle_tablet_fn_load_extra_tiles:
-	ld hl, tablet_maya_tiles_zx0
+	ld hl, tablet_maya_riddle_tiles_zx0
 	ld c, TILES_PAGE
 maya_puzzle_tablet_fn_load_extra_tiles_hl_set:
 	ld de, buffer_4096
@@ -800,7 +800,37 @@ maya_clue1_tablet_fn:
 
 ;-----------------------------------------------
 maya_clue2_tablet_fn:
-	; ...
+	ld hl, tablet_maya2_tiles_zx0
+	ld c, CALENDAR_TABLET_TILES_PAGE
+	call maya_puzzle_tablet_fn_load_extra_tiles_hl_set
+
+	ld hl, tablet_maya2_nametable_zx0
+	ld de, buffer_4096
+	ld c, CALENDAR_TABLET_TILES_PAGE
+	call dzx0_from_page_c
+
+	ld hl, buffer_4096
+	ld de, NAMTBL2
+	ld bc, 768
+	call fast_LDIRVM
+
+	ld a, 18
+	ld (tmp_letter_line_width), a
+	ld a, COLOR_GREY
+	ld (tmp_letter_line_color), a
+
+	ld hl, TEXT_TABLET_MAYA2_LINE1
+	ld a, 126
+	ld de, NAMTBL2 + (7 + 6*32)
+	ld ix, CHRTBL2
+	call display_elaine_letter_paragraph
+
+	ld hl, TEXT_TABLET_MAYA2_LINE2
+	ld a, 126
+	ld de, NAMTBL2 + (7 + 8*32)
+	ld ix, CHRTBL2 + 8*256
+	call display_elaine_letter_paragraph
+
 	ret
 
 

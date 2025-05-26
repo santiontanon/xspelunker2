@@ -323,6 +323,9 @@ public class Text {
         addLineSafe(lines_with_constant, "We could finally write about blowguns (PU-WA)!", "TABLET_MAYA1_LINE4", 16*2);
         addLineSafe(lines_with_constant, "We learned the power of sounds.", "TABLET_MAYA1_LINE5", 18);
 
+        addLineSafe(lines_with_constant, "With writing, we recorded the sound of the sacred animal", "TABLET_MAYA2_LINE1", 18*2);
+        addLineSafe(lines_with_constant, "names in stone. The jaguar, the snake, the eagle and the fish: BA-LA-MA, CHA-NA, KO-KA-A-JA and KA-YA.", "TABLET_MAYA2_LINE2", 18*4);
+
         // Syllables
         addLineSafe(lines_with_constant, "ke", "KE", 2);
         addLineSafe(lines_with_constant, "ki", "KI", 2);
