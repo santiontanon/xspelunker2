@@ -335,6 +335,10 @@ public class Text {
         addLineSafe(lines_with_constant, "ke", "KE", 2);
         addLineSafe(lines_with_constant, "ki", "KI", 2);
         addLineSafe(lines_with_constant, "se", "SE", 2);
+        addLineSafe(lines_with_constant, "pe", "PE", 2);
+        addLineSafe(lines_with_constant, "le", "LE", 2);
+        addLineSafe(lines_with_constant, "lu", "LU", 2);
+        addLineSafe(lines_with_constant, "ne", "NE", 2);
         
         
         List<Integer> numbers = font.convertStringToAssembler("0123456789 ");

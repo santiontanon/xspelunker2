@@ -468,7 +468,7 @@ hardcoded_world_data__tablet_content:
   db TAG_COMBINATION4_CLUE
   dw combination_tablet_type_1_fn
   db TAG_MAYA_RIDDLE_CLUE1
-  dw maya_clue3_tablet_fn
+  dw maya_clue1_tablet_fn
   db TAG_MAYA_RIDDLE_CLUE2
   dw maya_clue2_tablet_fn
   db TAG_MAYA_RIDDLE_CLUE3
