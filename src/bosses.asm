@@ -128,10 +128,15 @@ enter_boss_door_loop__spawn_stone:
 	; - c: boss number
 	ld a, c
 	ld b, TAG_POWER_STONE
+	ld hl, buffer_4096 + 47 * 64  ; power stone
 	cp 5  ; 6th and 7th bosses drop half stones
-	jr c, enter_boss_door__spawn_full_stone
-	ld b, TAG_HALF_POWER_STONE
-enter_boss_door__spawn_full_stone:
+	jr c, enter_boss_door__spawn_item_set
+	ld hl, buffer_4096 + 61 * 64  ; puzzlebox
+	ld b, TAG_PUZZLEBOX_MARS
+	cp 5
+	jr z, enter_boss_door__spawn_item_set
+	ld b, TAG_PUZZLEBOX_MOON
+enter_boss_door__spawn_item_set:
 	ld iy, (tmp_pcg_room__next_tile_object_ptr)
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), c  ; ID is the boss number
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), b  ; type
@@ -143,7 +148,6 @@ enter_boss_door__spawn_full_stone:
 	ld (tmp_pcg_room__next_tile_object_ptr), iy
 
 	; set which object gfx to up load vdp:
-	ld hl, buffer_4096 + 47 * 64
 	ld (item_object_to_upload_to_vdp), hl
 
 	jp state_play_from_loaded_room
@@ -243,7 +247,15 @@ pick_up_boss_power_stone_continue:
 
 
 ;-----------------------------------------------
-pick_up_boss_half_power_stone:
+; pick_up_boss_half_power_stone:
+pick_up_boss_puzzlebox_mars:
+	ld hl, player_inventory_items + INVENTORY_ITEM_PUZZLEBOX_MARS
+	ld (hl), 1
+	jr pick_up_boss_puzzlebox_continue
+pick_up_boss_puzzlebox_moon:
+	ld hl, player_inventory_items + INVENTORY_ITEM_PUZZLEBOX_MOON
+	ld (hl), 1
+pick_up_boss_puzzlebox_continue:
 	; set event to close the door:
 	ld hl, event__exit_boss_door
 	ld (in_game_event_fn_ptr), hl
@@ -255,24 +267,20 @@ pick_up_boss_half_power_stone:
 	ld hl, SFX_item_pickup
 	call play_SFX_with_high_priority
 
-	; add to inventory:
-	ld hl, player_inventory_items + INVENTORY_ITEM_HALD_POWER_STONE
-	ld a, (hl)
-	or a
-	jr nz, pick_up_boss_second_half_power_stone
-	ld (hl), 1
-
-	; message:
-	ld de, TEXT_FOUND_HALF_POWER_STONE  ; TEXT_FOUND_SECOND_HALF_POWER_STONE
+	ld de, TEXT_FOUND_PUZZLEBOX
 	jr pick_up_boss_power_stone_continue
 
-pick_up_boss_second_half_power_stone:
-	ld (hl), 0  ; remove the half stone
-	ld hl, player_inventory_items + 7 + 5
-	ld (hl), 1  ; gain a full power stone
 	; message:
-	ld de, TEXT_FOUND_SECOND_HALF_POWER_STONE
-	jr pick_up_boss_power_stone_continue
+; 	ld de, TEXT_FOUND_HALF_POWER_STONE  ; TEXT_FOUND_SECOND_HALF_POWER_STONE
+; 	jr pick_up_boss_power_stone_continue
+
+; pick_up_boss_second_half_power_stone:
+; 	ld (hl), 0  ; remove the half stone
+; 	ld hl, player_inventory_items + 7 + 5
+; 	ld (hl), 1  ; gain a full power stone
+; 	; message:
+; 	ld de, TEXT_FOUND_SECOND_HALF_POWER_STONE
+; 	jr pick_up_boss_power_stone_continue
 
 
 ;-----------------------------------------------

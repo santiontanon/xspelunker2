@@ -103,10 +103,19 @@ text_concatenate_strings:
 DRAW_SENTENCE_TO_VDP_MACRO: MACRO TEXT, VRAM, ATTRIBUTE, LENGTH
 	ld hl, TEXT
 	ld de, VRAM
-	ld #8000 + ATTRIBUTE
+	ld iy, #8000 + ATTRIBUTE
 	ld b, LENGTH
 	call draw_sentence_to_vdp_clearing_text_buffer
 	ENDM
+
+DRAW_SENTENCE_TO_VDP_REMOTE_MACRO: MACRO TEXT, VRAM, ATTRIBUTE, LENGTH
+	ld hl, TEXT
+	ld de, VRAM
+	ld iy, #8000 + ATTRIBUTE
+	ld b, LENGTH
+	call draw_sentence_to_vdp_from_another_page
+	ENDM
+
 
 
 draw_sentence_to_vdp_clearing_text_buffer:

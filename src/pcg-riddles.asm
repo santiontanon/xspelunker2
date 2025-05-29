@@ -29,10 +29,22 @@
 
 ;-----------------------------------------------
 pcg_generate_maya_puzzle_riddles:
+	; Generate the sentences for Maya puzzle 1:
 	ld hl, current_world__maya_puzzle_riddles
 	call pcg_generate_maya_puzzle_riddle_sentence
 	ld hl, current_world__maya_puzzle_riddles + 3
-	jp pcg_generate_maya_puzzle_riddle_sentence
+	call pcg_generate_maya_puzzle_riddle_sentence
+
+	; Generate the combinations for Maya puzzle 2:
+	ld b, 8
+	ld hl, current_world__maya_puzzle2_combination1
+pcg_generate_maya_puzzle_riddles__puzzle2_loop:
+	ld c, 5
+	call pcg_random_modulo
+	ld (hl), a
+	inc hl
+	djnz pcg_generate_maya_puzzle_riddles__puzzle2_loop
+	ret
 
 
 ;-----------------------------------------------

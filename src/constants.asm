@@ -177,9 +177,12 @@ RAYGUN_DAMAGE: equ 2
 ; - 2 elaine letters
 ; - 1 map
 ; - 1 half stone
-N_INVENTORY_ITEM_TYPES: equ 7 + 7 + 6 + 1 + 4 + 6 + 2 + 2 + 1 + 1  ; 37
+; - 2 puzzle boxes
+N_INVENTORY_ITEM_TYPES: equ 7 + 7 + 6 + 1 + 4 + 6 + 2 + 2 + 1 + 1 + 2  ; 39
 N_INVENTORY_WEAPON_TYPES: equ 4 + 4 + 3  ; 4 base, 4 ranged, 3 upgrades
-INVENTORY_ITEM_HALD_POWER_STONE: equ 7 + 7 + 6 + 1 + 4 + 6 + 2 + 2 + 1
+INVENTORY_ITEM_HALF_POWER_STONE: equ 7 + 7 + 6 + 1 + 4 + 6 + 2 + 2 + 1
+INVENTORY_ITEM_PUZZLEBOX_MARS: equ 7 + 7 + 6 + 1 + 4 + 6 + 2 + 2 + 1 + 1
+INVENTORY_ITEM_PUZZLEBOX_MOON: equ 7 + 7 + 6 + 1 + 4 + 6 + 2 + 2 + 1 + 1 + 1
 
 ; - initial piece just has: jungle + first pyramid, then one piece for each of the rest
 ; N_MAP_PIECES: equ 9
@@ -345,6 +348,8 @@ TAG_HALF_POWER_STONE: equ 151
 TAG_CALENDAR_STONE_CENTER: equ 152
 TAG_MAYA_PUZZLE_TABLET: equ 153
 TAG_TELEPORTER_ATLANTIS_TO_MOON: equ 154
+TAG_PUZZLEBOX_MARS: equ 155
+TAG_PUZZLEBOX_MOON: equ 156
 
 N_PATH_OPENING_TAGS: equ 32  ; there are less than this, but just in case (this is the number of tags above that spawn a breakable wall or door).
 

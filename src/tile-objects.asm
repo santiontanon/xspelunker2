@@ -207,7 +207,7 @@ update_tile_objects_button_next:
 
 ;-----------------------------------------------
 update_tile_objects_calendar_stone_center:
-	; just foce redrawing, since this object has an animation:
+	; just force redrawing, since this object has an animation:
 	ld a, (global_state__n_power_stones_in_calendar)
 	cp 5
 	jp c, update_tile_objects_loop_continue
@@ -914,10 +914,12 @@ ENDR
 	dw object_interaction_function_power_stone  ; TAG_POWER_STONE
 	dw object_interaction_function_tablet  ; TAG_CALENDAR_TABLET
 	dw object_interaction_function_calendar_socket  ; TAG_CALENDAR_SOCKET
-	dw object_interaction_function_half_power_stone  ; TAG_HALF_POWER_STONE
+	dw object_interaction_function_empty  ; TAG_HALF_POWER_STONE
 	dw object_interaction_function_calendar_center  ; TAG_CALENDAR_STONE_CENTER
 	dw object_interaction_function_tablet  ; TAG_MAYA_PUZZLE_TABLET
 	dw object_interaction_function_teleporter_atlantis  ; TAG_TELEPORTER_ATLANTIS_TO_MOON
+	dw object_interaction_function_pickup_puzzlebox_mars  ; TAG_PUZZLEBOX_MARS
+	dw object_interaction_function_pickup_puzzlebox_moon  ; TAG_PUZZLEBOX_MOON
 
 
 object_interaction_inventory_slot:
@@ -1523,9 +1525,20 @@ object_interaction_function_power_stone:
 	jp call_hl_in_page_c_8000
 
 
-object_interaction_function_half_power_stone:
+; object_interaction_function_half_power_stone:
+; 	ld c, BOSS_PAGE
+; 	ld hl, pick_up_boss_half_power_stone
+; 	jp call_hl_in_page_c_8000
+
+
+object_interaction_function_pickup_puzzlebox_mars:
 	ld c, BOSS_PAGE
-	ld hl, pick_up_boss_half_power_stone
+	ld hl, pick_up_boss_puzzlebox_mars
+	jp call_hl_in_page_c_8000
+
+object_interaction_function_pickup_puzzlebox_moon:
+	ld c, BOSS_PAGE
+	ld hl, pick_up_boss_puzzlebox_moon
 	jp call_hl_in_page_c_8000
 
 
@@ -1632,6 +1645,9 @@ object_interaction_function_calendar_socket_empty_before_letter1:
 	jr object_interaction_function_calendar_socket_continue
 
 object_interaction_function_calendar_socket_inactive:
+	ld a, (global_state__n_power_stones_in_calendar)
+	cp 5
+	jr z, object_interaction_function_calendar_socket_try_to_place
 	ld de, TEXT_CALENDAR_SOCKET_INACTIVE_STONE
 object_interaction_function_calendar_socket_continue:
 	ld hl, display_in_game_message
@@ -1671,7 +1687,16 @@ object_interaction_function_calendar_socket_5th_stone:
 	ret
 
 object_interaction_function_calendar_socket_6th_stone:
-	; ...
+	push ix
+		ld de, TEXT_PLACE_SIXTH_POWER_STONE
+		ld hl, display_in_game_message
+		ld c, TEXT_PAGE
+		call call_hl_in_page_c_8000
+		ld de, TEXT_PLACE_SIXTH_POWER_STONE2
+		ld hl, display_in_game_message
+		ld c, TEXT_PAGE
+		call call_hl_in_page_c_8000
+	pop ix
 	ret
 
 
@@ -2075,6 +2100,8 @@ ENDR
 	TILE_OBJECT_DATA 1, 2, 2, tile_object_calendar_stone_center_gfx  ; TAG_CALENDAR_STONE_CENTER
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_MAYA_PUZZLE_TABLET
 	TILE_OBJECT_DATA 1, 4, 3, tile_object_teleporter_gfx  ; TAG_TELEPORTER_ATLANTIS_TO_MOON
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_PUZZLEBOX_MARS
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_PUZZLEBOX_MOON
 
 tile_object_regular_object_gfx:
 	db FIRST_ITEM_TILE, FIRST_ITEM_TILE+1, FIRST_ITEM_TILE+2, FIRST_ITEM_TILE+3

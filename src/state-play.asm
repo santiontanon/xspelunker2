@@ -9,7 +9,15 @@ state_play:
 		ld (global_state__power_calendar), a
 		ld a, 2 + 0  ; first power stone
 		ld (global_state__power_calendar + 1), a
-		ld a, 5
+		inc a
+		ld (global_state__power_calendar + 2), a
+		inc a
+		ld (global_state__power_calendar + 3), a
+		inc a
+		ld (global_state__power_calendar + 4), a
+; 		inc a
+; 		ld (global_state__power_calendar + 5), a
+		ld a, 4
 		ld (global_state__n_power_stones_in_calendar), a
 		ld a, STORY_STATE__GOT_LETTER2
 		ld (global_state__story), a
@@ -23,15 +31,15 @@ state_play:
 ; 		ld (player_inventory_items+2), a
 ; 		ld (player_inventory_items+3), a
 ; 		ld (player_inventory_items+4), a
-		ld (player_inventory_items+5), a
-		ld (player_inventory_items+6), a
-		ld (player_inventory_items+7), a  ; first stone
-		ld (player_inventory_items+8), a  ; second stone
-		ld (player_inventory_items+9), a  ; third stone
+; 		ld (player_inventory_items+5), a  ; mars boss key
+; 		ld (player_inventory_items+6), a  ; moon boss key
+; 		ld (player_inventory_items+7), a  ; first stone
+; 		ld (player_inventory_items+8), a  ; second stone
+; 		ld (player_inventory_items+9), a  ; third stone
 ; 		ld (player_inventory_items+10), a
-; 		ld (player_inventory_items+11), a
-; 		ld (player_inventory_items+12), a
-; 		ld (player_inventory_items+13), a
+		ld (player_inventory_items+11), a  ; 5th stone
+; 		ld (player_inventory_items+12), a  ; sixth stone
+; 		ld (player_inventory_items+13), a  ; [UNUSED]
 ; 		ld (player_inventory_items+14), a
 ; 		ld (player_inventory_items+15), a
 ; 		ld (player_inventory_items+16), a
@@ -55,6 +63,8 @@ state_play:
 		ld (player_inventory_items+34), a
 		ld (player_inventory_items+35), a  ; map
 ; 		ld (player_inventory_items+36), a  ; half power stone
+		ld (player_inventory_items+INVENTORY_ITEM_PUZZLEBOX_MARS), a
+		ld (player_inventory_items+INVENTORY_ITEM_PUZZLEBOX_MOON), a
 		ld (player_inventory_weapons), a
 		ld (player_inventory_weapons+1), a
 ; 		ld (player_inventory_weapons+2), a
@@ -109,18 +119,20 @@ state_play:
 		ld hl, pcg_generate_area
 ; 		ld e, 0  ; area to generate
 ; 		ld e, 5  ; area to generate
-; 		ld e, 3  ; area to generate
+		ld e, 3  ; area to generate
 ; 		ld e, 9  ; area to generate
-		ld e, 2  ; area to generate
+; 		ld e, 2  ; area to generate
+; 		ld e, 10  ; area to generate
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
 
 		; generate room:
 ; 		ld e, 0
 ; 		ld e, 0
-; 		ld e, CALENDAR_ROOM_ID
+		ld e, CALENDAR_ROOM_ID
 ; 		ld e, TELEPORTER_ROOM_ID
-		ld e, 24
+; 		ld e, 24
+; 		ld e, 18
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000

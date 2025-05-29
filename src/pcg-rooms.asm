@@ -2096,18 +2096,19 @@ ENDR
 ; REPT TAG_PUSHABLE_BLOCK - TAG_TELEPORTER1
 ; 	dw buffer_4096
 ; ENDR
-; ; tags below can appear multiple times (and do not have state, they are reset every time you enter in a room):
-; TAG_PUSHABLE_BLOCK: equ 137
-; TAG_DOOR_VERTICAL: equ 138
-; TAG_DOOR_HORIZONTAL: equ 139
-; TAG_DOOR_BOSS: equ 140
-; TAG_POWER_STONE: equ 141
-; TAG_CALENDAR_TABLET: equ 142
-; TAG_CALENDAR_SOCKET: equ 143
-; TAG_HALF_POWER_STONE: equ 144
-; TAG_CALENDAR_STONE_CENTER: equ 145
-; TAG_CALENDAR_STONE_CENTER: equ 153
-
+; TAG_PUSHABLE_BLOCK: equ 144
+; TAG_DOOR_VERTICAL: equ 145
+; TAG_DOOR_HORIZONTAL: equ 146
+; TAG_DOOR_BOSS: equ 147
+; TAG_POWER_STONE: equ 148
+; TAG_CALENDAR_TABLET: equ 149
+; TAG_CALENDAR_SOCKET: equ 150
+; TAG_HALF_POWER_STONE: equ 151
+; TAG_CALENDAR_STONE_CENTER: equ 152
+; TAG_MAYA_PUZZLE_TABLET: equ 153
+; TAG_TELEPORTER_ATLANTIS_TO_MOON: equ 154
+; TAG_PUZZLEBOX_MARS: equ 155
+; TAG_PUZZLEBOX_MOON: equ 156
 
 ;-----------------------------------------------
 pcg_generate_room__calendar:

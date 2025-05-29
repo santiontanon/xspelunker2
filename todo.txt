@@ -1,22 +1,20 @@
 to do:
 
-***- 6th/7th (two halves from Mars/Moon):
-  ***- replace "power stone" by "celestial stone" in text (does it still fit?)
-  ***- create puzzle box object (1 and 2)
-  ***- the object that you get defeating bosses 6 and 7 are these puzsle boxes (the puzzle box goes to the boss key location in the inventory).
-    ***- add description to inventory and gfx
-  ***- inspecting the object in the inventory, opens a puzzle
-    ***- draft the puzzle (with clue "look at celestial stone")
-    ***- assign the question randomly during PCG
-    ***- render it
-    ***- interaction with the puzzle
-  ***- solving the puzzle gives you the half power stone:
-    ***- message, add to inventory, and lose the puzzle box
-  ***- once you have the final stone, you can replace the inactive one on the calendar stone
-  ***- say some message that it seems to be fully powered up now
-  ***- go to ending B
-***- Second Maya puzzle: involves looking for secrets in the ROM, to learn how to "speak", and then speak a given maya word in the center of the calendar, that will activate the prism (where is this final clue? Probably somewhere in Mars/Moon?). Add strings in the ROM that can be read via a hex reader of the ROM (encode them as decimal numbers in the .asm file, so that they are not visible from the source easily), that form a puzzle, giving you a clue (it tells you "how to speak") for how to interact with the center of the calendar to fully activate the stone. Collect all the syllables available.
-***- with the prism: opens dimensional portal for YOU to travel throughout the universe. Same confrontation with aliens, but if you win, a teleporter shows up with some controls, that teleports you to their home planet, to face the final final boss. If you win, ending A.
+***- Second Maya puzzle:
+  ***- Add a new tablet (new TAG to spawn) in either mars or moon with the final clue: "The nexus will listen to its name. But only when fully powered up. Speak its secret name to its center" (and then a random Maya Glyph made out of 3-4 syllables)
+    ***- spawn the tablet
+    ***- write the text part
+    ***- put all the syllable gfx in a file and generate data for assembler
+    ***- randomly pick from the set of syllables (generate the riddle)
+      ***- logic to compose syllables (some might have constraints)
+    ***- render the syllables
+  ***- add clues in the ROM: write a script that can generate a "db" statement for a given sentence (on a separate repo, so that it's not checked to GitHub).
+    ***- write the clue (redefine the action keys as T, A, L, K), to "those who will listen"
+  ***- implement the detection of TALK and triger it in the center
+    ***- UI for talking (probably just a "in-game message", but where you can type)
+  ***- when saying the correct word, the stone replies with some Maya word (feedback to understand that this means you have solved it)
+  ***- after Aliens, calendar does its thing, but a teleporter appears
+  ***- if you enter, it teleports you to their home planet, to face the final final boss. If you win, ending A.
 
 - write and spawn story trivia tablets
 
@@ -78,6 +76,7 @@ to do:
 - Potential new secret ideas:
   - "speak" the animal names in the animal room to get their blessings (if you get all four, you do double damage)
   - special condition for triggering "angry bosses" (they change color). For each one you beat i this hard mode, you get something in the ending, and if you get them all, you get a special mention. The conditions might be things like: certain bit in the random seed to be "11" (so, not all seeds are good), dive into water X times in the same room without doing anything else, etc.
+  - have an chest/door locked with keys from ALL colors, and that can only be open in a world where all color keys spawn (not sure how hard this is). If it is very hard, an idea is to have the story trivia tablets give you a clue about the random seed that can be used for this.
 
 --------------------
 

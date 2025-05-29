@@ -229,6 +229,7 @@ public class Text {
         addLineSafe(lines_with_constant, "The second letter from Elaine. Press INTERACT to read it.", "ITEM_LETTER2", 80);
 //        addLineSafe(lines_with_constant, "The third letter from Elaine. Press INTERACT to read it.", "ITEM_LETTER3", 80);
         addLineSafe(lines_with_constant, "Map: a map of the ruins that I have been composing as I find pieces of it. Press INTERACT to examine it.", "ITEM_MAP", 80);
+        addLineSafe(lines_with_constant, "Puzzle box: it looks like a puzzlebox made out of very finely worked stone. Press INTERACT to inspect it.", "ITEM_PUZZLEBOX", 80);
        
         // In-game messages:
         addLineSafe(lines_with_constant, "As you consume the still beating heart, you feel your strength increasing!", "HEART_PICKUP", 112);
@@ -237,9 +238,10 @@ public class Text {
         addLineSafe(lines_with_constant, "That does not seem to be the correct item to use here!", "WRONG_ITEM", 112);
         addLineSafe(lines_with_constant, "You found a very strange object. A stone of some sort, but some strange power comes from inside it. It must be important.", "FIRST_POWER_STONE", 112);
         addLineSafe(lines_with_constant, "You found another power stone!", "OTHER_POWER_STONES", 112);
-        addLineSafe(lines_with_constant, "This is only one half of a power stone!", "FOUND_HALF_POWER_STONE", 112);
-        addLineSafe(lines_with_constant, "I found the second half of the power stone, and they fit together!!", "FOUND_SECOND_HALF_POWER_STONE", 112);
+        addLineSafe(lines_with_constant, "A puzzle box!", "FOUND_PUZZLEBOX", 112);
         addLineSafe(lines_with_constant, "There is a stone occupying this socket.", "CALENDAR_SOCKET_INACTIVE_STONE", 112);
+        addLineSafe(lines_with_constant, "You replace the inactive stone by your final power stone.", "PLACE_SIXTH_POWER_STONE", 112);
+        addLineSafe(lines_with_constant, "Nothing has visually changed, but I can feel that NOW the calendar stone is fully powered up.", "PLACE_SIXTH_POWER_STONE2", 112);
         addLineSafe(lines_with_constant, "It looks like an empty socket to place something inside.", "CALENDAR_SOCKET_EMPTY", 112);
         addLineSafe(lines_with_constant, "I am scared of placing more stones! What if it fully activates?", "CALENDAR_SOCKET_REFUSE_TO_PLACE", 112);
         addLineSafe(lines_with_constant, "It fits! The whole thing is activating! And it feels like something else in the ruins just activated. What did I just do?!", "PLACE_FIRST_POWER_STONE", 112);
@@ -308,12 +310,12 @@ public class Text {
         addLineSafe(lines_with_constant, "DO NOT DESTROY THE CALENDAR STONE!!!", "ELAINE_LETTER2A_LINE2", 28);
         addLineSafe(lines_with_constant, "The inscriptions you sent me were key. The calendar stone is a weapon! The Maya built it to prevent the star people from coming.", "ELAINE_LETTER2A_LINE3", 28*3);
         addLineSafe(lines_with_constant, "With the Maya gone and the nexus powered off, the aliens have returned.", "ELAINE_LETTER2A_LINE4", 28*2);
-        addLineSafe(lines_with_constant, "But we can use the nexus to stop them. Find the power stones before them and power the nexus up! And please be careful!", "ELAINE_LETTER2A_LINE5", 28*3);
+        addLineSafe(lines_with_constant, "But we can use the nexus to stop them. Find the celestial stones before them and power the nexus up! And please be careful!", "ELAINE_LETTER2A_LINE5", 28*3);
 
         addLineSafe(lines_with_constant, "The star people gave us knowledge... and death. They wanted slaves, knowledgeable slaves.", "ELAINE_LETTER2B_LINE1", 28*3);
         addLineSafe(lines_with_constant, "With their knowledge, we built weapons. The star alignment nexus and the power stone", "ELAINE_LETTER2B_LINE2A", 24*2);
         addLineSafe(lines_with_constant, "nexus. When they attacked, we were ready.", "ELAINE_LETTER2B_LINE2B", 24);
-        addLineSafe(lines_with_constant, "With time our knowledge turned into myth. The power stone nexus was destroyed, and the remaining power stones offered as tribute to the gods. One of them taken to the Mars beast and Ixchel, away from this planet.", "ELAINE_LETTER2B_LINE3", 28*5);
+        addLineSafe(lines_with_constant, "With time our knowledge turned into myth. The power stone nexus was destroyed, and the remaining celestial stones offered as tribute to the gods. One of them taken to the Mars beast and Ixchel, away from this planet.", "ELAINE_LETTER2B_LINE3", 28*5);
         addLineSafe(lines_with_constant, "Now look at the nexus here: useless.", "ELAINE_LETTER2B_LINE4", 24);
         
         // Maya tablet clues:
@@ -339,6 +341,14 @@ public class Text {
         addLineSafe(lines_with_constant, "le", "LE", 2);
         addLineSafe(lines_with_constant, "lu", "LU", 2);
         addLineSafe(lines_with_constant, "ne", "NE", 2);
+        
+        // Puzzlebox:
+        addLineSafe(lines_with_constant, "Attempt to open", "PUZZLEBOX_OPTION1", 16);
+        addLineSafe(lines_with_constant, "Use up/down to change the dials.", "PUZZLEBOX_INSTRUCTIONS", 18);
+        addLineSafe(lines_with_constant, "That did not work!", "PUZZLEBOX_FAILURE", 10);
+        addLineSafe(lines_with_constant, "That was it! It opened!", "PUZZLEBOX_SUCCESS", 14);
+        addLineSafe(lines_with_constant, "The puzzle box contained one half of a power stone!", "FOUND_HALF_POWER_STONE", 112);
+        addLineSafe(lines_with_constant, "The puzzle box contained another half of a power stone, and they fit together!!", "FOUND_SECOND_HALF_POWER_STONE", 112);
         
         
         List<Integer> numbers = font.convertStringToAssembler("0123456789 ");

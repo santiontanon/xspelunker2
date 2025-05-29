@@ -108,6 +108,10 @@ state_inventory_update_cursor_interact:
 	ret
 state_inventory_update_cursor_interact_row1:
 	ld a, (inventory_cursor_position_x)
+	cp 6
+	jp z, state_inventory_update_cursor_interact_maybe_puzzlebox1
+	cp 7
+	jp z, state_inventory_update_cursor_interact_maybe_puzzlebox2
 	cp 8
 	jp z, state_inventory_update_cursor_interact_power_stone1
 	cp 9
@@ -370,6 +374,28 @@ state_inventory_update_cursor_interact_power_stone4:
 state_inventory_update_cursor_interact_power_stone:
 	ld ix, TEXT_INSPECT_POWER_STONE
 	call display_power_stone_closeup
+	jp state_inventory_entry_point_from_item_inspection
+
+
+;-----------------------------------------------
+state_inventory_update_cursor_interact_maybe_puzzlebox1:
+	ld a, (player_inventory_items + INVENTORY_ITEM_PUZZLEBOX_MARS)
+	or a
+	ret z
+	ld ix, current_world__maya_puzzle2_combination1
+	ld hl, display_puzzlebox_closeup
+	ld c, TABLET_LETTER_PAGE
+	call call_hl_in_page_c_8000
+	jp state_inventory_entry_point_from_item_inspection
+
+state_inventory_update_cursor_interact_maybe_puzzlebox2:
+	ld a, (player_inventory_items + INVENTORY_ITEM_PUZZLEBOX_MOON)
+	or a
+	ret z
+	ld ix, current_world__maya_puzzle2_combination2
+	ld hl, display_puzzlebox_closeup
+	ld c, TABLET_LETTER_PAGE
+	call call_hl_in_page_c_8000
 	jp state_inventory_entry_point_from_item_inspection
 
 
@@ -1595,7 +1621,7 @@ inventory_item_positions:
 	db 0, 1, 2  ; first 3 boss keys
 	db 0, 1, 2, 3  ; last 4 boss keys
 	db 4, 5, 6  ; first 3 power stones
-	db 4, 5, 6, 7  ; last 3 boss power stones + prism
+	db 4, 5, 6, 7  ; last 3 boss power stones + place holder for something
 	db 8, 9, 10, 11, 12, 13  ; color keys
 	db 14  ; small keys
 	db 15, 16, 17, 18  ; key items (21 - 24)
@@ -1604,6 +1630,7 @@ inventory_item_positions:
 	db 27, 28  ; elaine letters (33, 34, 35)
 	db 29  ; map (36)
 	db 6  ; half stone (turns into 6th power stone when picking up the second half)
+	db 2, 3  ; puzzle boxes
 inventory_item_positions_end:
 
 inventory_item_gfx:
@@ -1645,6 +1672,8 @@ inventory_item_gfx:
 	; db 28, 29, 60, 61  ; letter 3
 	db 30, 31, 62, 63  ; map
 	db 0, 0, 160, 161  ; half power stone
+	db 174, 175, 176, 177  ; puzzlebox
+	db 174, 175, 176, 177  ; puzzlebox
 inventory_item_gfx_end:
 
 inventory_weapon_positions:
@@ -1734,6 +1763,7 @@ inventory_item_texts:
 	; dw TEXT_ITEM_LETTER3
 	dw TEXT_ITEM_MAP
 	dw TEXT_ITEM_HALF_POWER_STONE
+	dw TEXT_ITEM_PUZZLEBOX, TEXT_ITEM_PUZZLEBOX
 
 
 IF (inventory_item_positions_end - inventory_item_positions) != N_INVENTORY_ITEM_TYPES

@@ -15,6 +15,17 @@ ENDR
 ; input:
 ; - de: text to display
 display_in_game_message:
+	call display_in_game_message_internal
+	ld a, (current_room__tileset_page)
+	ld c, a
+	ld hl, (current_room__tileset_ptr)
+	jp setup_game_tiles_only_biome
+
+
+;-----------------------------------------------
+; input:
+; - de: text to display
+display_in_game_message_internal:
 	; clear all the tiles in the bank:
 	push de
 		call display_in_game_message_draw_box
@@ -125,11 +136,7 @@ display_in_game_message_continue:
 
 	ld hl, redraw_flags
 	ld (hl), #ff
-
-	ld a, (current_room__tileset_page)
-	ld c, a
-	ld hl, (current_room__tileset_ptr)
-	jp setup_game_tiles_only_biome
+	ret
 
 
 ;-----------------------------------------------
