@@ -394,8 +394,9 @@ hardcoded_area_data_10__tags:
   db TAG_ITEM_BELT, 33, 0
   db TAG_SMALL_KEY2, 24, 0
   db TAG_SMALL_KEY3, 21, 0
+  db TAG_CALENDAR_NAME_CLUE, 34, 0
   ; filler
-  ds 69, 0
+  ds 66, 0
 hardcoded_area_data_11__seed:
   dw #83f0, #f0c4
 hardcoded_area_data_11__id:
@@ -464,9 +465,9 @@ hardcoded_world_data__tablet_content:
   db TAG_TRIAL3_CLUE
   dw trial_tablet_fn
   db TAG_COMBINATION2_CLUE
-  dw combination_tablet_type_1_fn
+  dw combination_tablet_type_2_fn
   db TAG_COMBINATION4_CLUE
-  dw combination_tablet_type_1_fn
+  dw combination_tablet_type_3_fn
   db TAG_MAYA_RIDDLE_CLUE1
   dw maya_clue1_tablet_fn
   db TAG_MAYA_RIDDLE_CLUE2
@@ -489,16 +490,18 @@ hardcoded_world_data__tablet_content:
   dw story_trivia_tablet_fn
   db TAG_STORY_TRIVIA7
   dw story_trivia_tablet_fn
+  db TAG_CALENDAR_NAME_CLUE
+  dw calendar_name_clue_tablet_fn
   db TAG_STORY_TRIVIA8
   dw story_trivia_tablet_fn
   ds 15, #ff
   db #ff  ; sentinel
 hardcoded_world_data__combination_solutions:
-  db 0, 1, 2, 0, 1, 1, 2, 1
-  db 1, 1, 0, 0, 2, 2, 0, 1
-  db 2, 1, 0, 2, 1, 0, 1, 0
-  db 1, 2, 2, 0, 1, 1, 2, 1
+  db 2, 0, 1, 1, 2, 1, 1, 1
+  db 0, 0, 2, 2, 0, 1, 2, 1
+  db 0, 2, 1, 0, 1, 0, 1, 2
+  db 2, 0, 1, 1, 2, 1, 1, 1
 hardcoded_world_data__trial_types:
-  db 1, 4, 5, 6
+  db 5, 6, 3, 4
 hardcoded_world_data__power_stone_numbers:
-  db 4, 5, 2, 3, 8
+  db 2, 3, 8, 4, 4

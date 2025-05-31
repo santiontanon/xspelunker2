@@ -12,7 +12,8 @@ pcg_generate_world:
 	ld bc, hardcoded_world_data_end - hardcoded_world_data
 	ldir
 
-	jp pcg_generate_maya_puzzle_riddles
+	call pcg_generate_maya_puzzle_riddles
+	jp pcg_generate_syllable_riddle
 
 
 ;-----------------------------------------------

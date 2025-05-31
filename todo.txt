@@ -1,32 +1,18 @@
 to do:
 
 ***- Second Maya puzzle:
-  ***- Add a new tablet (new TAG to spawn) in either mars or moon with the final clue: "The nexus will listen to its name. But only when fully powered up. Speak its secret name to its center" (and then a random Maya Glyph made out of 3-4 syllables)
-    ***- spawn the tablet
-    ***- write the text part
-    ***- put all the syllable gfx in a file and generate data for assembler
-    ***- randomly pick from the set of syllables (generate the riddle)
-      ***- logic to compose syllables (some might have constraints)
-    ***- render the syllables
   ***- add clues in the ROM: write a script that can generate a "db" statement for a given sentence (on a separate repo, so that it's not checked to GitHub).
     ***- write the clue (redefine the action keys as T, A, L, K), to "those who will listen"
   ***- implement the detection of TALK and triger it in the center
     ***- UI for talking (probably just a "in-game message", but where you can type)
-  ***- when saying the correct word, the stone replies with some Maya word (feedback to understand that this means you have solved it)
+  ***- when saying the correct word, you get an SFX and: "After you speak, the claendar stone rumbles, and the word 'AJ PAYAL' comes out of it, and its pulsating light seems to have changed color". You cannot speak again with it.
   ***- after Aliens, calendar does its thing, but a teleporter appears
   ***- if you enter, it teleports you to their home planet, to face the final final boss. If you win, ending A.
 
-- write and spawn story trivia tablets
+- write and spawn story trivia tablets (decide if they hide a riddle, e.g. which seed has all color keys)
 
 - item effects:
   - for anti-grav belt, you can overwrite it by pressing "down" (to fall quick)
-
-- Implement PCGWorld in assembler:
-  - implement it and generate the whole thing in assembler
-    - spanningTree: ID, parent, n_descendants, root point, tags (this is stored twice for convenience)
-  - safety checks to make sure all generated levels are playable (no more than 1 tag per division, try all RNG seeds in Java, etc.), adjust # divisions needed, etc.
-  - for some areas (pyramids, etc.) have some predefined shapes (e.g. pyramid shape), that can be chosen with some probability. And maybe also different shapes for the confluence, etc.
-  - keep Java/assembler versions in sync (try different random seeds)
 
 - enemies:
   - come up with a list of enemies for pyramid (consider both sprite enemies and larger tile-based enemies)
@@ -40,6 +26,13 @@ to do:
   - implement it (remember to keep ladder tiles in place for down-door opening code)
   - special room for start position (start tag) and set start position there (on the left-edge of map)
   - add jungle events: start, elaine letters, find bomb maker, shop to use coins with (what do they sell? healing, supplies and save game; maybe some random item/weapons that were not spawned in the game?; make sure blow gun is sold for sure if not spawned, as it might be needed for Maya riddle)
+
+- Implement PCGWorld in assembler:
+  - implement it and generate the whole thing in assembler
+    - spanningTree: ID, parent, n_descendants, root point, tags (this is stored twice for convenience)
+  - safety checks to make sure all generated levels are playable (no more than 1 tag per division, try all RNG seeds in Java, etc.), adjust # divisions needed, etc.
+  - for some areas (pyramids, etc.) have some predefined shapes (e.g. pyramid shape), that can be chosen with some probability. And maybe also different shapes for the confluence, etc.
+  - keep Java/assembler versions in sync (try different random seeds)
 
 - menus:
   - brain games screen (think of a Maya-themed way for this)
@@ -62,17 +55,17 @@ to do:
 - atlantis biome (do I need to move the possible set of up/down/left/right tags to 4 instead of just 2?)
 - fifth boss: Atlantean Guardian (Underwater Boss): A colossal robotic creature with bioluminescent features, resembling a deep-sea creature (laser beams from tentacles, summons robotic fish)
 - confrontation with the aliens after activating the calendar stone
-- first ending sequence: the calendar stone machine activates and creates a defensive barrier around earth, the alien armada that was coming turns back, but promises revenge
+- first ending sequence: Elaine drops from the ceiling on a rope and rescues you. The calendar stone machine activates and creates a defensive barrier around earth, the alien armada that was coming turns back, but promises revenge.
 
 - mars biome (remember to keep ladder tiles in place for down-door opening code)
   - can you jump higher in the moon/mars? fall slower?
 - moon biome (similar to mars, but different color scheme, it could even be the same with palette changed)
 - 6th boss: (ideas: "The Solar Stone Jaguar", "The Martian Terracotta Warrior", "The Dust Stone Golem")
 - 7th boss (ideas: "The Lunar Obsidian Sentinel" (tall, slender, smooth black, reflective surfaces), "The Lunar Crystal Serpent", "The Moon Stone Monolith")
-- second ending: the calendar stone machine activates, and not only creates a defensive barrier, but also activates its offensive mechanism and destroys the alien armada that was coming
+- second ending: the calendar stone machine not only creates a defensive barrier, but also activates its offensive mechanism and destroys the alien armada that was coming. You hope that will deterr them from coming again.
 
 - 8th boss: after beating the combat against the aliens, you can teleport to their home planet, and fight against their leader (final final boss)
-- final good ending: play second ending, and then the stone opens a portal for you to travel to the alien world, and fight against their leader in a final final battle. At the end, you become the ruler of their empire.
+- final good ending: the stone opens a portal for you to travel to the alien world, and fight against their leader in a final final battle. When you defeat it and come back, Elaine is there waiting to save you, but you arrive having become the ruler of alien empire.
 - Potential new secret ideas:
   - "speak" the animal names in the animal room to get their blessings (if you get all four, you do double damage)
   - special condition for triggering "angry bosses" (they change color). For each one you beat i this hard mode, you get something in the ending, and if you get them all, you get a special mention. The conditions might be things like: certain bit in the random seed to be "11" (so, not all seeds are good), dive into water X times in the same room without doing anything else, etc.

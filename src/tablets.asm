@@ -910,6 +910,42 @@ maya_clue4_tablet_fn:
 
 
 ;-----------------------------------------------
+calendar_name_clue_tablet_fn:
+	ld hl, tablet_maya_syllable_tiles_zx0
+	ld c, TABLET_LETTER_PAGE
+	call maya_puzzle_tablet_fn_load_extra_tiles_hl_set
+
+	; render the word:
+	ld hl, current_world__maya_puzzle3_nametable
+	ld de, NAMTBL2 + 9*32 + 11
+	ld b, 10
+	call fast_small_LDIRVM
+
+	ld hl, current_world__maya_puzzle3_nametable + 10
+	ld de, NAMTBL2 + 10*32 + 11
+	ld b, 10
+	call fast_small_LDIRVM
+
+	ld hl, current_world__maya_puzzle3_nametable + 20
+	ld de, NAMTBL2 + 11*32 + 11
+	ld b, 10
+	call fast_small_LDIRVM
+
+
+	ld a, 18
+	ld (tmp_letter_line_width), a
+	ld a, COLOR_GREY
+	ld (tmp_letter_line_color), a
+
+	ld hl, TEXT_TABLET_CALENDAR_NAME_CLUE
+	ld a, 176
+	ld de, NAMTBL2 + (7 + 5*32)
+	ld ix, CHRTBL2
+	jp display_elaine_letter_paragraph
+
+
+
+;-----------------------------------------------
 story_trivia_tablet_fn:
 	; ...
 	ret

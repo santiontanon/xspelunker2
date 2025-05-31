@@ -907,6 +907,7 @@ ENDR
 	dw object_interaction_function_teleporter  ; TAG_TELEPORTER6
 	dw object_interaction_function_teleporter  ; TAG_TELEPORTER7
 	dw object_interaction_function_teleporter  ; TAG_TELEPORTER8
+	dw object_interaction_function_tablet  ; TAG_CALENDAR_NAME_CLUE
 	dw object_interaction_function_empty  ; TAG_PUSHABLE_BLOCK
 	dw object_interaction_function_empty  ; TAG_DOOR_VERTICAL
 	dw object_interaction_function_empty  ; TAG_DOOR_HORIZONTAL
@@ -2088,6 +2089,7 @@ ENDR
 	TILE_OBJECT_DATA 1, 4, 3, tile_object_teleporter_gfx  ; TAG_TELEPORTER6
 	TILE_OBJECT_DATA 1, 4, 3, tile_object_teleporter_gfx  ; TAG_TELEPORTER7
 	TILE_OBJECT_DATA 1, 4, 3, tile_object_teleporter_gfx  ; TAG_TELEPORTER8
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_CALENDAR_NAME_CLUE
 
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_pushable_block_gfx  ; TAG_PUSHABLE_BLOCK
 	TILE_OBJECT_DATA 1, 1, 3, tile_object_v_door_gfx  ; TAG_DOOR_VERTICAL

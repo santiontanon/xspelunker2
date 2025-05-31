@@ -298,7 +298,7 @@ public class Text {
         addLineSafe(lines_with_constant, "Elaine", "ELAINE_LETTER1A_LINE6", 28);
         addLineSafe(lines_with_constant, "ps: I attach the translation!", "ELAINE_LETTER1A_LINE7", 28*2);
 
-        addLineSafe(lines_with_constant, "The entrance to Palenque has been uncovered. There is where we will start. Where we taught them. Where the first nexus was built.", "ELAINE_LETTER1B_LINE1", 28*3);
+        addLineSafe(lines_with_constant, "The entrance to Palenque has been uncovered. That is where we will start. Where we taught them. Where the first nexus was built.", "ELAINE_LETTER1B_LINE1", 28*3);
         addLineSafe(lines_with_constant, "The second nexus near Tunguska to the east was lost. But the first remains. The first was the star alignment nexus, and is poweref off.", "ELAINE_LETTER1B_LINE2", 28*3);
         addLineSafe(lines_with_constant, "Locate Palenque. The nexus lies below. The six celestial stones... they hid them from us. Locate them before our fleet arrives above.", "ELAINE_LETTER1B_LINE3", 28*4);
         addLineSafe(lines_with_constant, "This time the planet will be ours.", "ELAINE_LETTER1B_LINE4", 28);
@@ -332,6 +332,8 @@ public class Text {
         addLineSafe(lines_with_constant, "I prefer words related to my occupation, like 'ladder' (E-BU) or 'ascend' (T'A-BA).", "TABLET_MAYA3_LINE2", 18*3);
 
         addLineSafe(lines_with_constant, "My favorite part about writing is being able to write sounds, like", "TABLET_MAYA4_LINE1", 18*2);
+        
+        addLineSafe(lines_with_constant, "The nexus will listen to its name when fully powered up. Speak its secret name in the center", "TABLET_CALENDAR_NAME_CLUE", 18*3);
         
         // Syllables
         addLineSafe(lines_with_constant, "ke", "KE", 2);

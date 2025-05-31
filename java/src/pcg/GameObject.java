@@ -188,7 +188,8 @@ public class GameObject {
             case "story-trivia5":
             case "story-trivia6":
             case "story-trivia7":
-            case "story-trivia8":                
+            case "story-trivia8":       
+            case "calendar-name-clue":
                 tx = 96; ty = 48;
                 break;
                 

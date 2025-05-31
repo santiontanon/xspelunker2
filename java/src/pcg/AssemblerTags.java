@@ -176,6 +176,7 @@ public class AssemblerTags {
         "TAG_TELEPORTER6",
         "TAG_TELEPORTER7",
         "TAG_TELEPORTER8",
+        "TAG_CALENDAR_NAME_CLUE",
         // misc (not tags that will be placed, but used for tile-object types):
         "TAG_PUSHABLE_BLOCK",
         "TAG_DOOR_VERTICAL",
@@ -186,7 +187,8 @@ public class AssemblerTags {
         "TAG_CALENDAR_SOCKET",
         "TAG_HALF_POWER_STONE",
         "TAG_CALENDAR_STONE_CENTER",
-        "TAG_CALENDAR_TABLET",
+        "TAG_MAYA_PUZZLE_TABLET",
+        "TAG_TELEPORTER_ATLANTIS_TO_MOON",
         "TAG_PUZZLEBOX_MARS",
         "TAG_PUZZLEBOX_MOON",
     };

@@ -889,6 +889,7 @@ public class PCGArea {
                 case "teleporter8":
                 case "teleporter-moon":
                 case "teleporter-mars":
+                case "calendar-name-clue":
                     tagToPlace = tag;
                     break;
 
@@ -1228,6 +1229,7 @@ public class PCGArea {
                             case "story-trivia6":
                             case "story-trivia7":
                             case "story-trivia8":
+                            case "calendar-name-clue":
                                 necessaryObjectTypes.add("item");
                                 break;
 
@@ -1534,6 +1536,7 @@ public class PCGArea {
                 case "story-trivia6":
                 case "story-trivia7":
                 case "story-trivia8":
+                case "calendar-name-clue":
                 {
                     TMXObject place = ra.fg_chunks[go.x][go.y].randomObject("item", r);
                     if (place == null) {

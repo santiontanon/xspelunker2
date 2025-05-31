@@ -270,6 +270,9 @@ public class PCGWorld {
                     } else if (tag.toLowerCase().contains("story-trivia")) {
                         // story trivia:
                         w.tabletContent.put(tag, "story_trivia_tablet_fn");
+                    } else if (tag.toLowerCase().contains("calendar-name-clue")) {
+                        // story trivia:
+                        w.tabletContent.put(tag, "calendar_name_clue_tablet_fn");
                     }
                 }
             }
@@ -985,7 +988,7 @@ public class PCGWorld {
                 addTag(p, "small-key" + (i+1), d);
                 tagLess.remove(d);
             }            
-        }        
+        }
         
         // spawn random trivia:
         for(int i = 0;i<8;i++) {
@@ -996,6 +999,23 @@ public class PCGWorld {
                 addTag(p, "story-trivia" + (i+1), d);
                 tagLess.remove(d);
             }            
+        }
+        
+        // Spawn calendar name clue (in mars/moon):
+        {
+            List<AreaDivision> candidates = new ArrayList<>();
+            for(AreaDivision d: tagLess) {
+                if (d.root.a.ID == 10 || d.root.a.ID == 11) {
+                    candidates.add(d);
+                }
+            }
+            if (!candidates.isEmpty()) {
+                int idx = r.nextInt(32) % candidates.size();
+                AreaDivision d = candidates.get(idx);
+                AreaPoint p = randomDivisionPoint(d, true);
+                addTag(p, "calendar-name-clue", d);
+                tagLess.remove(d);
+            }
         }
         
         System.out.println("tagLess divisions (after): " + tagLess.size());
