@@ -5,6 +5,10 @@ state_play:
 		ld bc, (RAM_to_zero_on_game_start_end - RAM_to_zero_on_game_start) - 1
 		call clear_memory
 
+		ld hl, check_redefined_keys
+		ld c, TEXT_PAGE
+		call call_hl_in_page_c_8000
+
 		ld a, 1  ; inactive stone
 		ld (global_state__power_calendar), a
 		ld a, 2 + 0  ; first power stone
@@ -118,21 +122,21 @@ state_play:
 		; generate area:
 		ld hl, pcg_generate_area
 ; 		ld e, 0  ; area to generate
-; 		ld e, 5  ; area to generate
+		ld e, 1  ; area to generate
 ; 		ld e, 3  ; area to generate
 ; 		ld e, 9  ; area to generate
 ; 		ld e, 2  ; area to generate
-		ld e, 10  ; area to generate
+; 		ld e, 10  ; area to generate
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
 
 		; generate room:
 ; 		ld e, 0
-; 		ld e, 0
+		ld e, 1
 ; 		ld e, CALENDAR_ROOM_ID
 ; 		ld e, TELEPORTER_ROOM_ID
 ; 		ld e, 24
-		ld e, 14  ; 18  ; boss
+; 		ld e, 14  ; 18  ; boss
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000

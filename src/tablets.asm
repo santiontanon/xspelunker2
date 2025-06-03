@@ -944,9 +944,308 @@ calendar_name_clue_tablet_fn:
 	jp display_elaine_letter_paragraph
 
 
+; ------------------------------------------------
+copy_ix_text_page7_to_buffer_4096:
+	push ix
+	pop hl
+	ld de, buffer_4096
+	ld c, (hl)
+	ld b, 0
+	inc c
+	ldir
+	ret
+
 
 ;-----------------------------------------------
-story_trivia_tablet_fn:
-	; ...
-	ret
+story_trivia_tablet_number_1:
+	db 32, 31, 31, 31
+story_trivia_tablet_number_2:
+	db 33, 31, 31, 31
+story_trivia_tablet_number_3:
+	db 32, 31, 33, 31
+story_trivia_tablet_number_4:
+	db 33, 31, 33, 31
+story_trivia_tablet_number_5:
+	db 34, 31, 34, 31
+story_trivia_tablet_number_6:
+	db 35, 34, 36, 34
+story_trivia_tablet_number_7:
+	db 32, 34, 37, 34
+story_trivia_tablet_number_8:
+	db 38, 34, 39, 34
+story_trivia_tablet_number_9:
+	db 33, 34, 33, 34
+story_trivia_tablet_number_10:
+	db 34, 34, 34, 34
+story_trivia_tablet_number_11:
+	db 35, 40, 36, 40
+story_trivia_tablet_number_12:
+	db 32, 40, 37, 40
+story_trivia_tablet_number_13:
+	db 38, 40, 39, 40
+story_trivia_tablet_number_14:
+	db 33, 40, 33, 40
+story_trivia_tablet_number_15:
+	db 34, 40, 34, 40
+
+
+story_trivia_tablet_fn_story1:
+	ld hl, tablet_trivia_tiles_zx0
+	ld c, TABLET_LETTER_PAGE
+	call maya_puzzle_tablet_fn_load_extra_tiles_hl_set
+
+	ld a, 18
+	ld (tmp_letter_line_width), a
+	ld a, COLOR_GREY
+	ld (tmp_letter_line_color), a
+
+	ld hl, TEXT_TABLET_TRIVIA1_1
+	ld a, 48
+	ld de, NAMTBL2 + (7 + 5*32)
+	ld ix, CHRTBL2
+	call display_elaine_letter_paragraph_page7
+
+	ld hl, TEXT_TABLET_TRIVIA1_2
+	ld a, 48
+	ld de, NAMTBL2 + (7 + 8*32)
+	ld ix, CHRTBL2 + 256*8
+	call display_elaine_letter_paragraph_page7
+
+	ld hl, TEXT_TABLET_TRIVIA1_3
+	ld a, 48 + 18*4
+	ld de, NAMTBL2 + (7 + 13*32)
+	call display_elaine_letter_paragraph_page7
+
+	ld hl, TEXT_TABLET_TRIVIA1_4
+	ld a, 48
+	ld de, NAMTBL2 + (7 + 16*32)
+	ld ix, CHRTBL2 + 256*8*2
+	call display_elaine_letter_paragraph_page7
+
+	ld hl, story_trivia_tablet_number_1
+	jp story_trivia_tablet_fn_story3_draw_numbers
+
+
+story_trivia_tablet_fn_story2:
+	ld hl, tablet_trivia_tiles_zx0
+	ld c, TABLET_LETTER_PAGE
+	call maya_puzzle_tablet_fn_load_extra_tiles_hl_set
+
+	ld a, 18
+	ld (tmp_letter_line_width), a
+	ld a, COLOR_GREY
+	ld (tmp_letter_line_color), a
+
+	ld hl, TEXT_TABLET_TRIVIA2_1
+	ld a, 48
+	ld de, NAMTBL2 + (7 + 5*32)
+	ld ix, CHRTBL2
+	call display_elaine_letter_paragraph_page7
+
+	ld hl, TEXT_TABLET_TRIVIA2_2
+	ld a, 48
+	ld de, NAMTBL2 + (7 + 8*32)
+	ld ix, CHRTBL2 + 256*8
+	call display_elaine_letter_paragraph_page7
+
+	ld hl, TEXT_TABLET_TRIVIA2_3
+	ld a, 48 + 18*5
+	ld de, NAMTBL2 + (7 + 13*32)
+	call display_elaine_letter_paragraph_page7
+
+	ld hl, story_trivia_tablet_number_2
+	jp story_trivia_tablet_fn_story3_draw_numbers
+
+
+story_trivia_tablet_fn_story3:
+	ld hl, TEXT_TABLET_TRIVIA3_2
+	ld de, story_trivia_tablet_number_3
+	push de
+		push hl
+			ld hl, TEXT_TABLET_TRIVIA3_1
+story_trivia_tablet_fn_story3_entrypoint:
+			push hl
+				ld hl, tablet_trivia_tiles_zx0
+				ld c, TABLET_LETTER_PAGE
+				call maya_puzzle_tablet_fn_load_extra_tiles_hl_set
+			pop hl
+
+			ld a, 18
+			ld (tmp_letter_line_width), a
+			ld a, COLOR_GREY
+			ld (tmp_letter_line_color), a
+
+			ld a, 48
+			ld de, NAMTBL2 + (7 + 5*32)
+			ld ix, CHRTBL2
+			call display_elaine_letter_paragraph_page7
+		pop hl
+		ld a, 48
+		ld de, NAMTBL2 + (7 + 8*32)
+		ld ix, CHRTBL2 + 256*8
+		call display_elaine_letter_paragraph_page7
+	pop hl
+story_trivia_tablet_fn_story3_draw_numbers:
+	; draw numbers:
+	ld a, h  ; in case we don't want to draw a number
+	or a
+	ret z
+	push hl
+		ld de, NAMTBL2 + 23 + 21*32
+		ld b, 2
+		call fast_small_LDIRVM 
+	pop hl
+	inc hl
+	inc hl
+	ld de, NAMTBL2 + 23 + 22*32
+	ld b, 2
+	jp fast_small_LDIRVM 
+
+
+story_trivia_tablet_fn_story4:
+	ld hl, TEXT_TABLET_TRIVIA4_2
+	ld de, story_trivia_tablet_number_4
+	push de
+		push hl
+			ld hl, TEXT_TABLET_TRIVIA4_1
+			jp story_trivia_tablet_fn_story3_entrypoint
+
+
+story_trivia_tablet_fn_story5:
+	ld hl, TEXT_TABLET_TRIVIA5_2
+	ld de, story_trivia_tablet_number_5
+	push de
+		push hl
+			ld hl, TEXT_TABLET_TRIVIA5_1
+			jp story_trivia_tablet_fn_story3_entrypoint
+
+
+story_trivia_tablet_fn_story6:
+	ld hl, TEXT_TABLET_TRIVIA6_2
+	ld de, story_trivia_tablet_number_6
+	push de
+		push hl
+			ld hl, TEXT_TABLET_TRIVIA6_1
+			jp story_trivia_tablet_fn_story3_entrypoint
+
+
+story_trivia_tablet_fn_story7:
+	ld hl, TEXT_TABLET_TRIVIA7_2
+	ld de, story_trivia_tablet_number_7
+	push de
+		push hl
+			ld hl, TEXT_TABLET_TRIVIA7_1
+			jp story_trivia_tablet_fn_story3_entrypoint
+
+
+story_trivia_tablet_fn_story8:
+	ld hl, TEXT_TABLET_TRIVIA8_2
+	ld de, story_trivia_tablet_number_8
+	push de
+		push hl
+			ld hl, TEXT_TABLET_TRIVIA8_1
+			jp story_trivia_tablet_fn_story3_entrypoint
+
+
+story_trivia_tablet_fn_story9:
+	ld hl, TEXT_TABLET_TRIVIA9_2
+	ld de, story_trivia_tablet_number_9
+	push de
+		push hl
+			ld hl, TEXT_TABLET_TRIVIA9_1
+			jp story_trivia_tablet_fn_story3_entrypoint
+
+
+story_trivia_tablet_fn_story10:
+	ld hl, TEXT_TABLET_TRIVIA10_2
+	ld de, story_trivia_tablet_number_10
+	push de
+		push hl
+			ld hl, TEXT_TABLET_TRIVIA10_1
+			jp story_trivia_tablet_fn_story3_entrypoint
+
+
+story_trivia_tablet_fn_story11:
+	ld hl, TEXT_TABLET_TRIVIA11_2
+	ld de, story_trivia_tablet_number_11
+	push de
+		push hl
+			ld hl, TEXT_TABLET_TRIVIA11_1
+			jp story_trivia_tablet_fn_story3_entrypoint
+
+
+story_trivia_tablet_fn_story12:
+	ld hl, TEXT_TABLET_TRIVIA12_2
+	ld de, story_trivia_tablet_number_12
+	push de
+		push hl
+			ld hl, TEXT_TABLET_TRIVIA12_1
+			jp story_trivia_tablet_fn_story3_entrypoint
+
+
+story_trivia_tablet_fn_story13:
+	ld hl, TEXT_TABLET_TRIVIA13_2
+	ld de, story_trivia_tablet_number_13
+	push de
+		push hl
+			ld hl, TEXT_TABLET_TRIVIA13_1
+			jp story_trivia_tablet_fn_story3_entrypoint
+
+
+story_trivia_tablet_fn_story14:
+	ld hl, TEXT_TABLET_TRIVIA14_2
+	ld de, story_trivia_tablet_number_14
+	push de
+		push hl
+			ld hl, TEXT_TABLET_TRIVIA14_1
+			jp story_trivia_tablet_fn_story3_entrypoint
+
+
+story_trivia_tablet_fn_story15:
+	ld hl, TEXT_TABLET_TRIVIA15_2
+	ld de, story_trivia_tablet_number_15
+	push de
+		push hl
+			ld hl, TEXT_TABLET_TRIVIA15_1
+			jp story_trivia_tablet_fn_story3_entrypoint
+
+
+story_trivia_tablet_fn_clue1:
+	ld a, 18
+	ld (tmp_letter_line_width), a
+	ld a, COLOR_GREY
+	ld (tmp_letter_line_color), a
+
+	ld hl, TEXT_TABLET_TRIVIA_CLUE1_1
+	ld a, 32
+	ld de, NAMTBL2 + (7 + 5*32)
+	ld ix, CHRTBL2
+	jp display_elaine_letter_paragraph_page7
+
+
+story_trivia_tablet_fn_clue2:
+	ld hl, TEXT_TABLET_TRIVIA_CLUE2_2
+	ld de, 0
+	push de
+		push hl
+			ld hl, TEXT_TABLET_TRIVIA_CLUE2_1
+			jp story_trivia_tablet_fn_story3_entrypoint
+
+
+story_trivia_tablet_fn_clue3:
+	ld hl, TEXT_TABLET_TRIVIA_CLUE3_2
+	ld de, 0
+	push de
+		push hl
+			ld hl, TEXT_TABLET_TRIVIA_CLUE3_1
+			jp story_trivia_tablet_fn_story3_entrypoint
+
+
+story_trivia_tablet_fn_clue4:
+	ld hl, TEXT_TABLET_TRIVIA_CLUE4_2
+	ld de, 0
+	push de
+		push hl
+			ld hl, TEXT_TABLET_TRIVIA_CLUE4_1
+			jp story_trivia_tablet_fn_story3_entrypoint
 

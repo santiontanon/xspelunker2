@@ -1,18 +1,14 @@
 to do:
 
-***- Second Maya puzzle:
-  ***- add clues in the ROM: write a script that can generate a "db" statement for a given sentence (on a separate repo, so that it's not checked to GitHub).
-    ***- write the clue (redefine the action keys as T, A, L, K), to "those who will listen"
-  ***- implement the detection of TALK and triger it in the center
-    ***- UI for talking (probably just a "in-game message", but where you can type)
-  ***- when saying the correct word, you get an SFX and: "After you speak, the claendar stone rumbles, and the word 'AJ PAYAL' comes out of it, and its pulsating light seems to have changed color". You cannot speak again with it.
-  ***- after Aliens, calendar does its thing, but a teleporter appears
-  ***- if you enter, it teleports you to their home planet, to face the final final boss. If you win, ending A.
-
-- write and spawn story trivia tablets (decide if they hide a riddle, e.g. which seed has all color keys)
-
-- item effects:
-  - for anti-grav belt, you can overwrite it by pressing "down" (to fall quick)
+***- item effects:
+  ***- sandals
+  ***- gloves
+  ***- hurakán blessing: since boss 1 is huracan, do I want to change this to something else?
+  ***- cotton armor
+  ***- chaac blessing
+  ***- seashell
+  ***- antigrav-belt: you can overwrite it by pressing "down" (to fall quick)
+  ***- ice cape
 
 - enemies:
   - come up with a list of enemies for pyramid (consider both sprite enemies and larger tile-based enemies)
@@ -48,10 +44,10 @@ to do:
 
 - first boss: Huracán, the Storm Bringer (A large, imposing figure wreathed in swirling winds and lightning. Could have feathered serpent elements): wind, lightning, tornadoes
 - second boss: Camazotz, the Bat God: A giant bat-like creature with glowing red eyes and sharp claws.
-- third boss: Xibalba Lords (Multiple Bosses or Phases): Skeletal figures with ornate Mayan headdresses, representing the rulers of the underworld (summins skeletons or shadows)
+- third boss: The Obsidian Golem: A hulking golem made of obsidian, with glowing cracks.
 - caves biome (remember to keep ladder tiles in place for down-door opening code)
 - temple of fire biome (remember to keep ladder tiles in place for down-door opening code)
-- fourth boss: The Obsidian Golem: A hulking golem made of obsidian, with glowing cracks filled with molten lava..
+- fourth boss (Xibalba): Xibalba Lords: Hun Camé (One Death) and Vucub Camé (Seven Death): Skeletal figures with ornate Mayan headdresses, representing the rulers of the underworld (summons skeletons or shadows) 
 - atlantis biome (do I need to move the possible set of up/down/left/right tags to 4 instead of just 2?)
 - fifth boss: Atlantean Guardian (Underwater Boss): A colossal robotic creature with bioluminescent features, resembling a deep-sea creature (laser beams from tentacles, summons robotic fish)
 - confrontation with the aliens after activating the calendar stone
@@ -68,8 +64,9 @@ to do:
 - final good ending: the stone opens a portal for you to travel to the alien world, and fight against their leader in a final final battle. When you defeat it and come back, Elaine is there waiting to save you, but you arrive having become the ruler of alien empire.
 - Potential new secret ideas:
   - "speak" the animal names in the animal room to get their blessings (if you get all four, you do double damage)
-  - special condition for triggering "angry bosses" (they change color). For each one you beat i this hard mode, you get something in the ending, and if you get them all, you get a special mention. The conditions might be things like: certain bit in the random seed to be "11" (so, not all seeds are good), dive into water X times in the same room without doing anything else, etc.
-  - have an chest/door locked with keys from ALL colors, and that can only be open in a world where all color keys spawn (not sure how hard this is). If it is very hard, an idea is to have the story trivia tablets give you a clue about the random seed that can be used for this.
+  - special condition for triggering "angry bosses" (they change color). For each one you beat in this hard mode, you get something in the ending, and if you get them all, you get a special mention. The conditions might be things like: certain bit in the random seed to be "11" (so, not all seeds are good), dive into water X times in the same room without doing anything else, etc.
+  - have an chest/door locked with keys from ALL colors, and that can only be open in a world where all color keys spawn. Single lock that changes color, cycling through all.
+  - Special huge chest that has a lock with a number. Each time you use a small key, it reduces by one. But the number is larger than the keys in one world. the state of the chest should be saved to the ROM, and if you beat the game, it remains. It might give you access to a final alien weapon to really kill the final boss. If you play again on the same seed, the chest will be blocked somehow (so, you need a different seed)
 
 --------------------
 

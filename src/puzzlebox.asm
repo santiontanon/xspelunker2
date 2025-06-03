@@ -231,6 +231,8 @@ puzzlebox_state2_fire_solved:
 	ld hl, SFX_secret
 	call play_SFX_with_high_priority
 
+	call clear_all_the_sprites
+
 	ld hl, CLRTBL2 + 256*8*2
 	ld bc, 256*8
 	xor a

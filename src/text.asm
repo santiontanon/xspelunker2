@@ -143,6 +143,9 @@ draw_sentence_to_vdp_internal:
 	    ld b, (hl)   ; get the sentence length
 	    inc hl
 	    ld c, iyh
+	    ld a, b
+	    or a
+	    jr z, draw_sentence_to_vdp_loop_end
 draw_sentence_to_vdp_loop:
 	    push bc
 	    push hl
@@ -156,6 +159,7 @@ draw_sentence_to_vdp_loop:
 	    ; next character
 	    inc hl  
 	    djnz draw_sentence_to_vdp_loop
+draw_sentence_to_vdp_loop_end:
 	pop bc
 	pop de
 	ld a, iyl

@@ -26,6 +26,33 @@ display_in_game_message:
 ; input:
 ; - de: text to display
 display_in_game_message_internal:
+	call display_in_game_message_draw_message
+
+	call wait_for_click
+	xor a
+	ld (keyboard_clicks), a
+
+	; restore tiles in middle bank:
+	ld hl, CLRTBL2 + (256 + 16*6)*8
+	ld bc, (256-16*6)*8
+	; xor a
+	call fast_FILVRM
+
+	; restore content below:
+	ld hl, buffer_4096 + 1024
+	ld de, NAMTBL2 + 256
+	ld bc, 256
+	call fast_LDIRVM
+
+	ld hl, redraw_flags
+	ld (hl), #ff
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - de: text to display
+display_in_game_message_draw_message:
 	; clear all the tiles in the bank:
 	push de
 		call display_in_game_message_draw_box
@@ -70,7 +97,7 @@ display_in_game_message_print_loop:
     pop bc
     ld a, c
     sub (hl)  ; length left
-    jr z, display_in_game_message_continue  ; if we have drawn the whole sentence, we are done
+    ret z  ; if we have drawn the whole sentence, we are done
     push de
 	    ld c, (hl)  ; c: length of the segment we just drew, 
 	    ld e, a  ; e: remaining length
@@ -115,28 +142,7 @@ display_in_game_message_center:
 		ld iy, #80f0
 	pop bc
 	inc b
-	call draw_sentence_to_vdp_clearing_text_buffer	
-
-display_in_game_message_continue:
-	call wait_for_click
-	xor a
-	ld (keyboard_clicks), a
-
-	; restore tiles in middle bank:
-	ld hl, CLRTBL2 + (256 + 16*6)*8
-	ld bc, (256-16*6)*8
-	; xor a
-	call fast_FILVRM
-
-	; restore content below:
-	ld hl, buffer_4096 + 1024
-	ld de, NAMTBL2 + 256
-	ld bc, 256
-	call fast_LDIRVM
-
-	ld hl, redraw_flags
-	ld (hl), #ff
-	ret
+	jp draw_sentence_to_vdp_clearing_text_buffer	
 
 
 ;-----------------------------------------------

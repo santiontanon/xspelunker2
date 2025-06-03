@@ -2007,13 +2007,19 @@ player_update_state_teleport_in_done:
 
 ;-----------------------------------------------
 player_update_interact:
+	ld a, (config_keyboard_special_case)
+	or a
+	jp nz, player_update_interact_special_case
 	; see if there is an interactuable object nearby:
 	call get_tile_object_behind_player
 	ret z  ; no tile object behind
 	ld c, TILES_PAGE
 	ld hl, interact_with_tile_object
 	jp call_hl_in_page_c_8000
-
+player_update_interact_special_case:
+	ld c, TABLET_LETTER_PAGE
+	ld hl, interact_special_case
+	jp call_hl_in_page_c_8000
 
 ;-----------------------------------------------
 player_update_fire_directional_bullet:

@@ -110,6 +110,7 @@ public class PCGWorld {
     public HashMap<String, String[]> availableLockKeysObstacles = new HashMap<>();
     public HashMap<String, String[]> availableLockKeysChests = new HashMap<>();
     public HashMap<String, String[]> availableLockKeys = new HashMap<>();
+    public List<String> remainingTriviaTabletFns = new ArrayList<>();
 
 
     public MSXRandom r;
@@ -189,6 +190,27 @@ public class PCGWorld {
         availableLockKeys.put("idol-lock", new String[]{"idol-key"});
         availableLockKeys.put("gear-lock", new String[]{"gear-key"});
         availableLockKeys.put("astronaut-lock", new String[]{"astronaut-key"});
+        
+        remainingTriviaTabletFns.clear();
+        remainingTriviaTabletFns.add("story_trivia_tablet_fn_story1");
+        remainingTriviaTabletFns.add("story_trivia_tablet_fn_story2");
+        remainingTriviaTabletFns.add("story_trivia_tablet_fn_story3");
+        remainingTriviaTabletFns.add("story_trivia_tablet_fn_story4");
+        remainingTriviaTabletFns.add("story_trivia_tablet_fn_story5");
+        remainingTriviaTabletFns.add("story_trivia_tablet_fn_story6");
+        remainingTriviaTabletFns.add("story_trivia_tablet_fn_story7");
+        remainingTriviaTabletFns.add("story_trivia_tablet_fn_story8");
+        remainingTriviaTabletFns.add("story_trivia_tablet_fn_story9");
+        remainingTriviaTabletFns.add("story_trivia_tablet_fn_story10");
+        remainingTriviaTabletFns.add("story_trivia_tablet_fn_story11");
+        remainingTriviaTabletFns.add("story_trivia_tablet_fn_story12");
+        remainingTriviaTabletFns.add("story_trivia_tablet_fn_story13");
+        remainingTriviaTabletFns.add("story_trivia_tablet_fn_story14");
+        remainingTriviaTabletFns.add("story_trivia_tablet_fn_story15");
+        remainingTriviaTabletFns.add("story_trivia_tablet_fn_clue1");
+        remainingTriviaTabletFns.add("story_trivia_tablet_fn_clue2");
+        remainingTriviaTabletFns.add("story_trivia_tablet_fn_clue3");
+        remainingTriviaTabletFns.add("story_trivia_tablet_fn_clue4");
     }
 
 
@@ -269,7 +291,9 @@ public class PCGWorld {
                         w.tabletContent.put(tag, "maya_clue4_tablet_fn");
                     } else if (tag.toLowerCase().contains("story-trivia")) {
                         // story trivia:
-                        w.tabletContent.put(tag, "story_trivia_tablet_fn");
+                        String tablet_fn = remainingTriviaTabletFns.get(r.nextInt(remainingTriviaTabletFns.size()));
+                        w.tabletContent.put(tag, tablet_fn);
+                        remainingTriviaTabletFns.remove(tablet_fn);
                     } else if (tag.toLowerCase().contains("calendar-name-clue")) {
                         // story trivia:
                         w.tabletContent.put(tag, "calendar_name_clue_tablet_fn");

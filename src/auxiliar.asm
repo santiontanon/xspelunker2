@@ -131,6 +131,38 @@ clear_memory_a_entry_point:
 
 
 ;-----------------------------------------------
+; Adapted from the CHGET routine here: https://sourceforge.net/p/cbios/cbios/ci/master/tree/src/main.asm#l289
+; It returns 0 if no key is ready to be read
+getcharacter_nonwaiting:
+    ld hl, (GETPNT)
+    ld de, (PUTPNT)
+    call DCOMPR
+    jr z, getcharacter_nonwaiting_invalidkey
+    ; there is a character ready to be read:
+    ld a, (hl)
+    push af
+        inc hl
+        ld a, l
+        cp #00ff & (KEYBUF + 40)
+        jr nz, getcharacter_nonwaiting_nowrap
+        ld hl, KEYBUF
+getcharacter_nonwaiting_nowrap:
+        ld (GETPNT), hl
+    pop af
+    ret
+getcharacter_nonwaiting_invalidkey:
+    xor a
+    ret
+
+getcharacter_nonwaiting_reset:
+    di
+    ld hl, (PUTPNT)
+    ld (GETPNT), hl
+    ei
+    ret
+
+
+;-----------------------------------------------
 ; Source: https://wikiti.brandonw.net/index.php?title=Z80_Routines:Math:Random
 ; Generates a 16 bit random number
 ; - rng_seed1: 16-bit seed value
@@ -161,4 +193,5 @@ random_a:
     pop bc
     pop hl
     ret
+
 

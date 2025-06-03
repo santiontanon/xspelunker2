@@ -40,318 +40,380 @@ public class Text {
         font.printFontInfo();
                 
         // Text lines:        
-        HashMap<String,String> lines_with_constant = new LinkedHashMap<>();
+        HashMap<String,String> lines_with_constant_page1 = new LinkedHashMap<>();
+        HashMap<String,String> lines_with_constant_page2 = new LinkedHashMap<>();
         
         // Title:
-        addLineSafe(lines_with_constant, "Brain Games (2025)", "CREDITS1", 16);
-        addLineSafe(lines_with_constant, "Santiago Ontañón", "CREDITS2", 16);
+        addLineSafe(lines_with_constant_page1, "Brain Games (2025)", "CREDITS1", 16);
+        addLineSafe(lines_with_constant_page1, "Santiago Ontañón", "CREDITS2", 16);
 
-        addLineSafe(lines_with_constant, "Game Over", "GAME_OVER", 16);
-        addLineSafe(lines_with_constant, "Are you sure?", "ARE_YOU_SURE", 16);
-        addLineSafe(lines_with_constant, "Yes", "YES", 4);
-        addLineSafe(lines_with_constant, "No", "NO", 4);
+        addLineSafe(lines_with_constant_page1, "Game Over", "GAME_OVER", 16);
+        addLineSafe(lines_with_constant_page1, "Are you sure?", "ARE_YOU_SURE", 16);
+        addLineSafe(lines_with_constant_page1, "Yes", "YES", 4);
+        addLineSafe(lines_with_constant_page1, "No", "NO", 4);
                 
-        addLineSafe(lines_with_constant, "Entering", "ENTERING", 16);
-        addLineSafe(lines_with_constant, "Loading area...", "LOADING_AREA", 16);
-        addLineSafe(lines_with_constant, "the jungle", "AREA0_NAME", 16);
-        addLineSafe(lines_with_constant, "the Temple of Inscriptions", "AREA1_NAME", 16);
-        addLineSafe(lines_with_constant, "the Hidden Temple", "AREA2_NAME", 16);
-        addLineSafe(lines_with_constant, "the confluence", "AREA3_NAME", 16);
-        addLineSafe(lines_with_constant, "the Inverted Pyramid", "AREA4_NAME", 16);
-        addLineSafe(lines_with_constant, "the fire shaft", "AREA5_NAME", 16);
-        addLineSafe(lines_with_constant, "the Pacific Caves", "AREA6_NAME", 16);
-        addLineSafe(lines_with_constant, "the Atlantic Caves", "AREA7_NAME", 16);
-        addLineSafe(lines_with_constant, "the Temple of Fire", "AREA8_NAME", 16);
-        addLineSafe(lines_with_constant, "Atlantis", "AREA9_NAME", 16);
-        addLineSafe(lines_with_constant, "Mars", "AREA10_NAME", 16);
-        addLineSafe(lines_with_constant, "the Moon", "AREA11_NAME", 16);
+        addLineSafe(lines_with_constant_page1, "Entering", "ENTERING", 16);
+        addLineSafe(lines_with_constant_page1, "Loading area...", "LOADING_AREA", 16);
+        addLineSafe(lines_with_constant_page1, "the jungle", "AREA0_NAME", 16);
+        addLineSafe(lines_with_constant_page1, "the Temple of Inscriptions", "AREA1_NAME", 16);
+        addLineSafe(lines_with_constant_page1, "the Hidden Temple", "AREA2_NAME", 16);
+        addLineSafe(lines_with_constant_page1, "the confluence", "AREA3_NAME", 16);
+        addLineSafe(lines_with_constant_page1, "the Inverted Pyramid", "AREA4_NAME", 16);
+        addLineSafe(lines_with_constant_page1, "the fire shaft", "AREA5_NAME", 16);
+        addLineSafe(lines_with_constant_page1, "the Pacific Caves", "AREA6_NAME", 16);
+        addLineSafe(lines_with_constant_page1, "the Atlantic Caves", "AREA7_NAME", 16);
+        addLineSafe(lines_with_constant_page1, "Xibalba", "AREA8_NAME", 16);
+        addLineSafe(lines_with_constant_page1, "Atlantis", "AREA9_NAME", 16);
+        addLineSafe(lines_with_constant_page1, "Mars", "AREA10_NAME", 16);
+        addLineSafe(lines_with_constant_page1, "the Moon", "AREA11_NAME", 16);
 
-        addLineSafe(lines_with_constant, "No map", "NO_MAP", 8);
+        addLineSafe(lines_with_constant_page1, "No map", "NO_MAP", 8);
 
-        addLineSafe(lines_with_constant, "Back", "OPTIONS1", 16);
-        addLineSafe(lines_with_constant, "Hud: minimal (on change)", "OPTIONS2A", 16);
-        addLineSafe(lines_with_constant, "Hud: minimal", "OPTIONS2B", 16);
-        addLineSafe(lines_with_constant, "Hud: full", "OPTIONS2C", 16);
-        addLineSafe(lines_with_constant, "Inventory with 'down + jump': yes", "OPTIONS3A", 20);
-        addLineSafe(lines_with_constant, "Inventory with 'down + jump': no", "OPTIONS3B", 20);
-        addLineSafe(lines_with_constant, "Interact with 'down': yes", "OPTIONS4A", 16);
-        addLineSafe(lines_with_constant, "Interact with 'down': no", "OPTIONS4B", 16);
-        addLineSafe(lines_with_constant, "Interact with 'up': yes", "OPTIONS5A", 16);
-        addLineSafe(lines_with_constant, "Interact with 'up': no", "OPTIONS5B", 16);
-        addLineSafe(lines_with_constant, "Right:", "KEYBOARD1", 9);
-        addLineSafe(lines_with_constant, "Up:", "KEYBOARD3", 9);
-        addLineSafe(lines_with_constant, "Down:", "KEYBOARD2", 9);
-        addLineSafe(lines_with_constant, "Left:", "KEYBOARD4", 9);
-        addLineSafe(lines_with_constant, "Interact:", "KEYBOARD5", 9);
-        addLineSafe(lines_with_constant, "Inventory:", "KEYBOARD6", 9);
-        addLineSafe(lines_with_constant, "Jump:", "KEYBOARD7", 9);
-        addLineSafe(lines_with_constant, "Weapon:", "KEYBOARD8", 9);
+        addLineSafe(lines_with_constant_page1, "Back", "OPTIONS1", 16);
+        addLineSafe(lines_with_constant_page1, "Hud: minimal (on change)", "OPTIONS2A", 16);
+        addLineSafe(lines_with_constant_page1, "Hud: minimal", "OPTIONS2B", 16);
+        addLineSafe(lines_with_constant_page1, "Hud: full", "OPTIONS2C", 16);
+        addLineSafe(lines_with_constant_page1, "Inventory with 'down + jump': yes", "OPTIONS3A", 20);
+        addLineSafe(lines_with_constant_page1, "Inventory with 'down + jump': no", "OPTIONS3B", 20);
+        addLineSafe(lines_with_constant_page1, "Interact with 'down': yes", "OPTIONS4A", 16);
+        addLineSafe(lines_with_constant_page1, "Interact with 'down': no", "OPTIONS4B", 16);
+        addLineSafe(lines_with_constant_page1, "Interact with 'up': yes", "OPTIONS5A", 16);
+        addLineSafe(lines_with_constant_page1, "Interact with 'up': no", "OPTIONS5B", 16);
+        addLineSafe(lines_with_constant_page1, "Right:", "KEYBOARD1", 9);
+        addLineSafe(lines_with_constant_page1, "Up:", "KEYBOARD3", 9);
+        addLineSafe(lines_with_constant_page1, "Down:", "KEYBOARD2", 9);
+        addLineSafe(lines_with_constant_page1, "Left:", "KEYBOARD4", 9);
+        addLineSafe(lines_with_constant_page1, "Interact:", "KEYBOARD5", 9);
+        addLineSafe(lines_with_constant_page1, "Inventory:", "KEYBOARD6", 9);
+        addLineSafe(lines_with_constant_page1, "Jump:", "KEYBOARD7", 9);
+        addLineSafe(lines_with_constant_page1, "Weapon:", "KEYBOARD8", 9);
 
-        addLineSafe(lines_with_constant, "[Choose a key]", "CHOOSE_KEY", 9);
+        addLineSafe(lines_with_constant_page1, "[Choose a key]", "CHOOSE_KEY", 9);
         
         // Keyboard matrix:
-        addLineSafe(lines_with_constant, "7", "KEY_0_7", 8);
-        addLineSafe(lines_with_constant, "6", "KEY_0_6", 8);
-        addLineSafe(lines_with_constant, "5", "KEY_0_5", 8);
-        addLineSafe(lines_with_constant, "4", "KEY_0_4", 8);
-        addLineSafe(lines_with_constant, "3", "KEY_0_3", 8);
-        addLineSafe(lines_with_constant, "2", "KEY_0_2", 8);
-        addLineSafe(lines_with_constant, "1", "KEY_0_1", 8);
-        addLineSafe(lines_with_constant, "0", "KEY_0_0", 8);
+        addLineSafe(lines_with_constant_page1, "7", "KEY_0_7", 8);
+        addLineSafe(lines_with_constant_page1, "6", "KEY_0_6", 8);
+        addLineSafe(lines_with_constant_page1, "5", "KEY_0_5", 8);
+        addLineSafe(lines_with_constant_page1, "4", "KEY_0_4", 8);
+        addLineSafe(lines_with_constant_page1, "3", "KEY_0_3", 8);
+        addLineSafe(lines_with_constant_page1, "2", "KEY_0_2", 8);
+        addLineSafe(lines_with_constant_page1, "1", "KEY_0_1", 8);
+        addLineSafe(lines_with_constant_page1, "0", "KEY_0_0", 8);
 
-        addLineSafe(lines_with_constant, ";", "KEY_1_7", 8);
-        addLineSafe(lines_with_constant, "]", "KEY_1_6", 8);
-        addLineSafe(lines_with_constant, "[", "KEY_1_5", 8);
-        addLineSafe(lines_with_constant, "\\", "KEY_1_4", 8);
-        addLineSafe(lines_with_constant, "=", "KEY_1_3", 8);
-        addLineSafe(lines_with_constant, "-", "KEY_1_2", 8);
-        addLineSafe(lines_with_constant, "9", "KEY_1_1", 8);
-        addLineSafe(lines_with_constant, "8", "KEY_1_0", 8);
+        addLineSafe(lines_with_constant_page1, ";", "KEY_1_7", 8);
+        addLineSafe(lines_with_constant_page1, "]", "KEY_1_6", 8);
+        addLineSafe(lines_with_constant_page1, "[", "KEY_1_5", 8);
+        addLineSafe(lines_with_constant_page1, "\\", "KEY_1_4", 8);
+        addLineSafe(lines_with_constant_page1, "=", "KEY_1_3", 8);
+        addLineSafe(lines_with_constant_page1, "-", "KEY_1_2", 8);
+        addLineSafe(lines_with_constant_page1, "9", "KEY_1_1", 8);
+        addLineSafe(lines_with_constant_page1, "8", "KEY_1_0", 8);
 
-        addLineSafe(lines_with_constant, "b", "KEY_2_7", 8);
-        addLineSafe(lines_with_constant, "a", "KEY_2_6", 8);
-        addLineSafe(lines_with_constant, "Accent", "KEY_2_5", 8);
-        addLineSafe(lines_with_constant, "/", "KEY_2_4", 8);
-        addLineSafe(lines_with_constant, ".", "KEY_2_3", 8);
-        addLineSafe(lines_with_constant, ",", "KEY_2_2", 8);
-        addLineSafe(lines_with_constant, "`", "KEY_2_1", 8);
-        addLineSafe(lines_with_constant, "'", "KEY_2_0", 8);
+        addLineSafe(lines_with_constant_page1, "b", "KEY_2_7", 8);
+        addLineSafe(lines_with_constant_page1, "a", "KEY_2_6", 8);
+        addLineSafe(lines_with_constant_page1, "Accent", "KEY_2_5", 8);
+        addLineSafe(lines_with_constant_page1, "/", "KEY_2_4", 8);
+        addLineSafe(lines_with_constant_page1, ".", "KEY_2_3", 8);
+        addLineSafe(lines_with_constant_page1, ",", "KEY_2_2", 8);
+        addLineSafe(lines_with_constant_page1, "`", "KEY_2_1", 8);
+        addLineSafe(lines_with_constant_page1, "'", "KEY_2_0", 8);
 
-        addLineSafe(lines_with_constant, "j", "KEY_3_7", 8);
-        addLineSafe(lines_with_constant, "i", "KEY_3_6", 8);
-        addLineSafe(lines_with_constant, "h", "KEY_3_5", 8);
-        addLineSafe(lines_with_constant, "g", "KEY_3_4", 8);
-        addLineSafe(lines_with_constant, "f", "KEY_3_3", 8);
-        addLineSafe(lines_with_constant, "e", "KEY_3_2", 8);
-        addLineSafe(lines_with_constant, "d", "KEY_3_1", 8);
-        addLineSafe(lines_with_constant, "c", "KEY_3_0", 8);
+        addLineSafe(lines_with_constant_page1, "j", "KEY_3_7", 8);
+        addLineSafe(lines_with_constant_page1, "i", "KEY_3_6", 8);
+        addLineSafe(lines_with_constant_page1, "h", "KEY_3_5", 8);
+        addLineSafe(lines_with_constant_page1, "g", "KEY_3_4", 8);
+        addLineSafe(lines_with_constant_page1, "f", "KEY_3_3", 8);
+        addLineSafe(lines_with_constant_page1, "e", "KEY_3_2", 8);
+        addLineSafe(lines_with_constant_page1, "d", "KEY_3_1", 8);
+        addLineSafe(lines_with_constant_page1, "c", "KEY_3_0", 8);
 
-        addLineSafe(lines_with_constant, "r", "KEY_4_7", 8);
-        addLineSafe(lines_with_constant, "q", "KEY_4_6", 8);
-        addLineSafe(lines_with_constant, "p", "KEY_4_5", 8);
-        addLineSafe(lines_with_constant, "o", "KEY_4_4", 8);
-        addLineSafe(lines_with_constant, "n", "KEY_4_3", 8);
-        addLineSafe(lines_with_constant, "m", "KEY_4_2", 8);
-        addLineSafe(lines_with_constant, "l", "KEY_4_1", 8);
-        addLineSafe(lines_with_constant, "k", "KEY_4_0", 8);
+        addLineSafe(lines_with_constant_page1, "r", "KEY_4_7", 8);
+        addLineSafe(lines_with_constant_page1, "q", "KEY_4_6", 8);
+        addLineSafe(lines_with_constant_page1, "p", "KEY_4_5", 8);
+        addLineSafe(lines_with_constant_page1, "o", "KEY_4_4", 8);
+        addLineSafe(lines_with_constant_page1, "n", "KEY_4_3", 8);
+        addLineSafe(lines_with_constant_page1, "m", "KEY_4_2", 8);
+        addLineSafe(lines_with_constant_page1, "l", "KEY_4_1", 8);
+        addLineSafe(lines_with_constant_page1, "k", "KEY_4_0", 8);
 
-        addLineSafe(lines_with_constant, "z", "KEY_5_7", 8);
-        addLineSafe(lines_with_constant, "y", "KEY_5_6", 8);
-        addLineSafe(lines_with_constant, "x", "KEY_5_5", 8);
-        addLineSafe(lines_with_constant, "w", "KEY_5_4", 8);
-        addLineSafe(lines_with_constant, "v", "KEY_5_3", 8);
-        addLineSafe(lines_with_constant, "u", "KEY_5_2", 8);
-        addLineSafe(lines_with_constant, "t", "KEY_5_1", 8);
-        addLineSafe(lines_with_constant, "s", "KEY_5_0", 8);
+        addLineSafe(lines_with_constant_page1, "z", "KEY_5_7", 8);
+        addLineSafe(lines_with_constant_page1, "y", "KEY_5_6", 8);
+        addLineSafe(lines_with_constant_page1, "x", "KEY_5_5", 8);
+        addLineSafe(lines_with_constant_page1, "w", "KEY_5_4", 8);
+        addLineSafe(lines_with_constant_page1, "v", "KEY_5_3", 8);
+        addLineSafe(lines_with_constant_page1, "u", "KEY_5_2", 8);
+        addLineSafe(lines_with_constant_page1, "t", "KEY_5_1", 8);
+        addLineSafe(lines_with_constant_page1, "s", "KEY_5_0", 8);
         
-        addLineSafe(lines_with_constant, "F3", "KEY_6_7", 8);
-        addLineSafe(lines_with_constant, "F2", "KEY_6_6", 8);
-        addLineSafe(lines_with_constant, "F1", "KEY_6_5", 8);
-        addLineSafe(lines_with_constant, "Code", "KEY_6_4", 8);
-        addLineSafe(lines_with_constant, "Caps", "KEY_6_3", 8);
-        addLineSafe(lines_with_constant, "Graph", "KEY_6_2", 8);
-        addLineSafe(lines_with_constant, "Ctrl", "KEY_6_1", 8);
-        addLineSafe(lines_with_constant, "Shift", "KEY_6_0", 8);
+        addLineSafe(lines_with_constant_page1, "F3", "KEY_6_7", 8);
+        addLineSafe(lines_with_constant_page1, "F2", "KEY_6_6", 8);
+        addLineSafe(lines_with_constant_page1, "F1", "KEY_6_5", 8);
+        addLineSafe(lines_with_constant_page1, "Code", "KEY_6_4", 8);
+        addLineSafe(lines_with_constant_page1, "Caps", "KEY_6_3", 8);
+        addLineSafe(lines_with_constant_page1, "Graph", "KEY_6_2", 8);
+        addLineSafe(lines_with_constant_page1, "Ctrl", "KEY_6_1", 8);
+        addLineSafe(lines_with_constant_page1, "Shift", "KEY_6_0", 8);
 
-        addLineSafe(lines_with_constant, "Ret", "KEY_7_7", 8);
-        addLineSafe(lines_with_constant, "Select", "KEY_7_6", 8);
-        addLineSafe(lines_with_constant, "BS", "KEY_7_5", 8);
-        addLineSafe(lines_with_constant, "Stop", "KEY_7_4", 8);
-        addLineSafe(lines_with_constant, "Tab", "KEY_7_3", 8);
-        addLineSafe(lines_with_constant, "Esc", "KEY_7_2", 8);
-        addLineSafe(lines_with_constant, "F5", "KEY_7_1", 8);
-        addLineSafe(lines_with_constant, "F4", "KEY_7_0", 8);
+        addLineSafe(lines_with_constant_page1, "Ret", "KEY_7_7", 8);
+        addLineSafe(lines_with_constant_page1, "Select", "KEY_7_6", 8);
+        addLineSafe(lines_with_constant_page1, "BS", "KEY_7_5", 8);
+        addLineSafe(lines_with_constant_page1, "Stop", "KEY_7_4", 8);
+        addLineSafe(lines_with_constant_page1, "Tab", "KEY_7_3", 8);
+        addLineSafe(lines_with_constant_page1, "Esc", "KEY_7_2", 8);
+        addLineSafe(lines_with_constant_page1, "F5", "KEY_7_1", 8);
+        addLineSafe(lines_with_constant_page1, "F4", "KEY_7_0", 8);
         
-        addLineSafe(lines_with_constant, "Right", "KEY_8_7", 8);
-        addLineSafe(lines_with_constant, "Down", "KEY_8_6", 8);
-        addLineSafe(lines_with_constant, "Up", "KEY_8_5", 8);
-        addLineSafe(lines_with_constant, "Left", "KEY_8_4", 8);
-        addLineSafe(lines_with_constant, "Del", "KEY_8_3", 8);
-        addLineSafe(lines_with_constant, "Ins", "KEY_8_2", 8);
-        addLineSafe(lines_with_constant, "Home", "KEY_8_1", 8);
-        addLineSafe(lines_with_constant, "Space", "KEY_8_0", 8);
+        addLineSafe(lines_with_constant_page1, "Right", "KEY_8_7", 8);
+        addLineSafe(lines_with_constant_page1, "Down", "KEY_8_6", 8);
+        addLineSafe(lines_with_constant_page1, "Up", "KEY_8_5", 8);
+        addLineSafe(lines_with_constant_page1, "Left", "KEY_8_4", 8);
+        addLineSafe(lines_with_constant_page1, "Del", "KEY_8_3", 8);
+        addLineSafe(lines_with_constant_page1, "Ins", "KEY_8_2", 8);
+        addLineSafe(lines_with_constant_page1, "Home", "KEY_8_1", 8);
+        addLineSafe(lines_with_constant_page1, "Space", "KEY_8_0", 8);
 
-        addLineSafe(lines_with_constant, "N-4", "KEY_9_7", 8);
-        addLineSafe(lines_with_constant, "N-3", "KEY_9_6", 8);
-        addLineSafe(lines_with_constant, "N-2", "KEY_9_5", 8);
-        addLineSafe(lines_with_constant, "N-1", "KEY_9_4", 8);
-        addLineSafe(lines_with_constant, "N-0", "KEY_9_3", 8);
-        addLineSafe(lines_with_constant, "N-/", "KEY_9_2", 8);
-        addLineSafe(lines_with_constant, "N-+", "KEY_9_1", 8);
-        addLineSafe(lines_with_constant, "N-*", "KEY_9_0", 8);
+        addLineSafe(lines_with_constant_page1, "N-4", "KEY_9_7", 8);
+        addLineSafe(lines_with_constant_page1, "N-3", "KEY_9_6", 8);
+        addLineSafe(lines_with_constant_page1, "N-2", "KEY_9_5", 8);
+        addLineSafe(lines_with_constant_page1, "N-1", "KEY_9_4", 8);
+        addLineSafe(lines_with_constant_page1, "N-0", "KEY_9_3", 8);
+        addLineSafe(lines_with_constant_page1, "N-/", "KEY_9_2", 8);
+        addLineSafe(lines_with_constant_page1, "N-+", "KEY_9_1", 8);
+        addLineSafe(lines_with_constant_page1, "N-*", "KEY_9_0", 8);
 
-        addLineSafe(lines_with_constant, "N-.", "KEY_10_7", 8);
-        addLineSafe(lines_with_constant, "N-,", "KEY_10_6", 8);
-        addLineSafe(lines_with_constant, "N--", "KEY_10_5", 8);
-        addLineSafe(lines_with_constant, "N-9", "KEY_10_4", 8);
-        addLineSafe(lines_with_constant, "N-8", "KEY_10_3", 8);
-        addLineSafe(lines_with_constant, "N-7", "KEY_10_2", 8);
-        addLineSafe(lines_with_constant, "N-6", "KEY_10_1", 8);
-        addLineSafe(lines_with_constant, "N-5", "KEY_10_0", 8);
+        addLineSafe(lines_with_constant_page1, "N-.", "KEY_10_7", 8);
+        addLineSafe(lines_with_constant_page1, "N-,", "KEY_10_6", 8);
+        addLineSafe(lines_with_constant_page1, "N--", "KEY_10_5", 8);
+        addLineSafe(lines_with_constant_page1, "N-9", "KEY_10_4", 8);
+        addLineSafe(lines_with_constant_page1, "N-8", "KEY_10_3", 8);
+        addLineSafe(lines_with_constant_page1, "N-7", "KEY_10_2", 8);
+        addLineSafe(lines_with_constant_page1, "N-6", "KEY_10_1", 8);
+        addLineSafe(lines_with_constant_page1, "N-5", "KEY_10_0", 8);
         
         // Weapon descriptions:
-        addLineSafe(lines_with_constant, "My trusty machete! A light, but very agile and versatile weapon. I can attack in any direction with it.", "WEAPON_MACHETE", 80);
-        addLineSafe(lines_with_constant, "Stone hammer. A very heavy but powerful hammer. Slow to swing, but if it hits, this weapon will deal a lot of damage.", "WEAPON_HAMMER", 80);
-        addLineSafe(lines_with_constant, "A Mayan Macuahuitl. Half-way between a long sword and a club. It is made of a large wooden plank, with obsidian blades along the two edges.", "WEAPON_MACUAHUITL", 80);
-        addLineSafe(lines_with_constant, "A sturdy wooden shield, it should be able to protect me from some projectiles.", "WEAPON_SHIELD", 80);
-        addLineSafe(lines_with_constant, "A leather sling. I can use this to throw stones at enemies. I need to make sure to keep collecting the stones I find.", "WEAPON_SLING", 80);
-        addLineSafe(lines_with_constant, "A Mayan blowgun. With this I can throw darts at enemies from a distance.", "WEAPON_BLOWGUN", 80);
-        addLineSafe(lines_with_constant, "Atlatl. A curious Mayan tool used for hunting. It throw spears and arrows at a much larger distance than I could with my bare hands.", "WEAPON_ATLATL", 80);
-        addLineSafe(lines_with_constant, "Raygun. Some sort of energy weapon, clearly of alien manufacture. It seems to require a battery pack to work.", "WEAPON_RAYGUN", 80);
-        addLineSafe(lines_with_constant, "Obsidian knive. A great replacement for my trusty machete. It feels and handles the same, but the blade is much sharper.", "WEAPON_OBSIDIAN_KNIVE", 80);
-        addLineSafe(lines_with_constant, "Fire hammer. A heavy stone hammer that seems to have been imbued with some sort of fire enchantment (via technology? magic?).", "WEAPON_FIRE_HAMMER", 80);
-        addLineSafe(lines_with_constant, "Ice macuahuitl. An enchanted macuahuitl that seems very cold to the touch dealing additional damage to any foe I hit with it.", "WEAPON_ICE_MACUAHUITL", 80);
+        addLineSafe(lines_with_constant_page1, "My trusty machete! A light, but very agile and versatile weapon. I can attack in any direction with it.", "WEAPON_MACHETE", 80);
+        addLineSafe(lines_with_constant_page1, "Stone hammer. A very heavy but powerful hammer. Slow to swing, but if it hits, this weapon will deal a lot of damage.", "WEAPON_HAMMER", 80);
+        addLineSafe(lines_with_constant_page1, "A Mayan Macuahuitl. Half-way between a long sword and a club. It is made of a large wooden plank, with obsidian blades along the two edges.", "WEAPON_MACUAHUITL", 80);
+        addLineSafe(lines_with_constant_page1, "A sturdy wooden shield, it should be able to protect me from some projectiles.", "WEAPON_SHIELD", 80);
+        addLineSafe(lines_with_constant_page1, "A leather sling. I can use this to throw stones at enemies. I need to make sure to keep collecting the stones I find.", "WEAPON_SLING", 80);
+        addLineSafe(lines_with_constant_page1, "A Mayan blowgun. With this I can throw darts at enemies from a distance.", "WEAPON_BLOWGUN", 80);
+        addLineSafe(lines_with_constant_page1, "Atlatl. A curious Mayan tool used for hunting. It throw spears and arrows at a much larger distance than I could with my bare hands.", "WEAPON_ATLATL", 80);
+        addLineSafe(lines_with_constant_page1, "Raygun. Some sort of energy weapon, clearly of alien manufacture. It seems to require a battery pack to work.", "WEAPON_RAYGUN", 80);
+        addLineSafe(lines_with_constant_page1, "Obsidian knive. A great replacement for my trusty machete. It feels and handles the same, but the blade is much sharper.", "WEAPON_OBSIDIAN_KNIVE", 80);
+        addLineSafe(lines_with_constant_page1, "Fire hammer. A heavy stone hammer that seems to have been imbued with some sort of fire enchantment (via technology? magic?).", "WEAPON_FIRE_HAMMER", 80);
+        addLineSafe(lines_with_constant_page1, "Ice macuahuitl. An enchanted macuahuitl that seems very cold to the touch dealing additional damage to any foe I hit with it.", "WEAPON_ICE_MACUAHUITL", 80);
         
         // Item descriptions:
-        addLineSafe(lines_with_constant, "Boss key: A heavy stone key with some engraved symbols.", "ITEM_BOSS_KEY", 80);
-        addLineSafe(lines_with_constant, "Power stone: A strange looking, very well polished stone. Press INTERACT to examine it.", "ITEM_BOSS_POWER_STONE", 80);
-        addLineSafe(lines_with_constant, "One half of a power stone. I need the other half for this to be useful.", "ITEM_HALF_POWER_STONE", 80);
-        addLineSafe(lines_with_constant, "Red key: a small metalic red key.", "ITEM_RED_KEY", 80);
-        addLineSafe(lines_with_constant, "Green key: a small metalic green key.", "ITEM_GREEN_KEY", 80);
-        addLineSafe(lines_with_constant, "Blue key: a small metalic blue key.", "ITEM_BLUE_KEY", 80);
-        addLineSafe(lines_with_constant, "Yellow key: a small metalic yellow key.", "ITEM_YELLOW_KEY", 80);
-        addLineSafe(lines_with_constant, "Purple key: a small metalic purple key.", "ITEM_PURPLE_KEY", 80);
-        addLineSafe(lines_with_constant, "White key: a small metalic white key.", "ITEM_WHITE_KEY", 80);
-        addLineSafe(lines_with_constant, "Small keys: some small rusty keys.", "ITEM_SMALL_KEYS", 80);
-        addLineSafe(lines_with_constant, "Clay suit: a small statuette made out of clay. It sure looks like an astronaut to me, but it's probably an old suit of armor.", "ITEM_CLAY_SUIT", 80);
-        addLineSafe(lines_with_constant, "Gear: a small stone gear, maybe part of some mechanism?", "ITEM_GEAR", 80);
-        addLineSafe(lines_with_constant, "Stone Ball: a pretty hefty solid ball made out of stone.", "ITEM_BALL", 80);
-        addLineSafe(lines_with_constant, "Idol: a golden idol statuette.", "ITEM_IDOL", 80);
-        addLineSafe(lines_with_constant, "Winged sandals: a pair of winged copper sandals. I am not sure how, but I feel I am lighter with them.", "ITEM_SANDALS", 80);
-        addLineSafe(lines_with_constant, "Gloves: a pair of leather gloves. I can push things without fear of hurting myself with these.", "ITEM_GLOVES", 80);
-        addLineSafe(lines_with_constant, "Hurakán blessing: a small token depicting the Mayan Hurakán deity. I feel fast like the wind with it on!", "ITEM_HURAKAN_BLESSING", 80);
-        addLineSafe(lines_with_constant, "Cotton armor: a classic Mayan armor. It will protect me from damage.", "ITEM_COTTON_ARMOR", 80);
-        addLineSafe(lines_with_constant, "Chaac blessing: a small token depicting the Mayan Chaac deity. Water feels less daunting with it.", "ITEM_CHAAC_BLESSING", 80);
-        addLineSafe(lines_with_constant, "Seashell: somehow I can hear it ringing when there is something hidden in a room.", "ITEM_SEASHELL", 80);
-        addLineSafe(lines_with_constant, "Antigravity belt: alien technology, lets me fall through the air slowly. I can turn it off pressing DOWN.", "ITEM_BELT", 80);
-        addLineSafe(lines_with_constant, "Ice cape: a cape with a coating of ice, which seems never to melt. It'll protect me from heat.", "ITEM_ICE_CAPE", 80);
-        addLineSafe(lines_with_constant, "A letter from Elaine. Press INTERACT to read it.", "ITEM_LETTER1", 80);
-        addLineSafe(lines_with_constant, "The second letter from Elaine. Press INTERACT to read it.", "ITEM_LETTER2", 80);
+        addLineSafe(lines_with_constant_page1, "Boss key: A heavy stone key with some engraved symbols.", "ITEM_BOSS_KEY", 80);
+        addLineSafe(lines_with_constant_page1, "Power stone: A strange looking, very well polished stone. Press INTERACT to examine it.", "ITEM_BOSS_POWER_STONE", 80);
+        addLineSafe(lines_with_constant_page1, "One half of a power stone. I need the other half for this to be useful.", "ITEM_HALF_POWER_STONE", 80);
+        addLineSafe(lines_with_constant_page1, "Red key: a small metalic red key.", "ITEM_RED_KEY", 80);
+        addLineSafe(lines_with_constant_page1, "Green key: a small metalic green key.", "ITEM_GREEN_KEY", 80);
+        addLineSafe(lines_with_constant_page1, "Blue key: a small metalic blue key.", "ITEM_BLUE_KEY", 80);
+        addLineSafe(lines_with_constant_page1, "Yellow key: a small metalic yellow key.", "ITEM_YELLOW_KEY", 80);
+        addLineSafe(lines_with_constant_page1, "Purple key: a small metalic purple key.", "ITEM_PURPLE_KEY", 80);
+        addLineSafe(lines_with_constant_page1, "White key: a small metalic white key.", "ITEM_WHITE_KEY", 80);
+        addLineSafe(lines_with_constant_page1, "Small keys: some small rusty keys.", "ITEM_SMALL_KEYS", 80);
+        addLineSafe(lines_with_constant_page1, "Clay suit: a small statuette made out of clay. It sure looks like an astronaut to me, but it's probably an old suit of armor.", "ITEM_CLAY_SUIT", 80);
+        addLineSafe(lines_with_constant_page1, "Gear: a small stone gear, maybe part of some mechanism?", "ITEM_GEAR", 80);
+        addLineSafe(lines_with_constant_page1, "Stone Ball: a pretty hefty solid ball made out of stone.", "ITEM_BALL", 80);
+        addLineSafe(lines_with_constant_page1, "Idol: a golden idol statuette.", "ITEM_IDOL", 80);
+        addLineSafe(lines_with_constant_page1, "Winged sandals: a pair of winged copper sandals. I am not sure how, but I feel I am lighter with them.", "ITEM_SANDALS", 80);
+        addLineSafe(lines_with_constant_page1, "Gloves: a pair of leather gloves. I can push things without fear of hurting myself with these.", "ITEM_GLOVES", 80);
+        addLineSafe(lines_with_constant_page1, "Hurakán blessing: a small token depicting the Mayan Hurakán deity. I feel fast like the wind with it on!", "ITEM_HURAKAN_BLESSING", 80);
+        addLineSafe(lines_with_constant_page1, "Cotton armor: a classic Mayan armor. It will protect me from damage.", "ITEM_COTTON_ARMOR", 80);
+        addLineSafe(lines_with_constant_page1, "Chaac blessing: a small token depicting the Mayan Chaac deity. Water feels less daunting with it.", "ITEM_CHAAC_BLESSING", 80);
+        addLineSafe(lines_with_constant_page1, "Seashell: somehow I can hear it ringing when there is something hidden in a room.", "ITEM_SEASHELL", 80);
+        addLineSafe(lines_with_constant_page1, "Antigravity belt: alien technology, lets me fall through the air slowly. I can turn it off pressing DOWN.", "ITEM_BELT", 80);
+        addLineSafe(lines_with_constant_page1, "Ice cape: a cape with a coating of ice, which seems never to melt. It'll protect me from heat.", "ITEM_ICE_CAPE", 80);
+        addLineSafe(lines_with_constant_page1, "A letter from Elaine. Press INTERACT to read it.", "ITEM_LETTER1", 80);
+        addLineSafe(lines_with_constant_page1, "The second letter from Elaine. Press INTERACT to read it.", "ITEM_LETTER2", 80);
 //        addLineSafe(lines_with_constant, "The third letter from Elaine. Press INTERACT to read it.", "ITEM_LETTER3", 80);
-        addLineSafe(lines_with_constant, "Map: a map of the ruins that I have been composing as I find pieces of it. Press INTERACT to examine it.", "ITEM_MAP", 80);
-        addLineSafe(lines_with_constant, "Puzzle box: it looks like a puzzlebox made out of very finely worked stone. Press INTERACT to inspect it.", "ITEM_PUZZLEBOX", 80);
+        addLineSafe(lines_with_constant_page1, "Map: a map of the ruins that I have been composing as I find pieces of it. Press INTERACT to examine it.", "ITEM_MAP", 80);
+        addLineSafe(lines_with_constant_page1, "Puzzle box: it looks like a puzzlebox made out of very finely worked stone. Press INTERACT to inspect it.", "ITEM_PUZZLEBOX", 80);
        
         // In-game messages:
-        addLineSafe(lines_with_constant, "As you consume the still beating heart, you feel your strength increasing!", "HEART_PICKUP", 112);
-        addLineSafe(lines_with_constant, "One more piece of the map!", "MAP_PIECE_PICKUP", 112);
-        addLineSafe(lines_with_constant, "That does not seem to be the correct key for this lock!", "WRONG_KEY", 112);
-        addLineSafe(lines_with_constant, "That does not seem to be the correct item to use here!", "WRONG_ITEM", 112);
-        addLineSafe(lines_with_constant, "You found a very strange object. A stone of some sort, but some strange power comes from inside it. It must be important.", "FIRST_POWER_STONE", 112);
-        addLineSafe(lines_with_constant, "You found another power stone!", "OTHER_POWER_STONES", 112);
-        addLineSafe(lines_with_constant, "A puzzle box!", "FOUND_PUZZLEBOX", 112);
-        addLineSafe(lines_with_constant, "There is a stone occupying this socket.", "CALENDAR_SOCKET_INACTIVE_STONE", 112);
-        addLineSafe(lines_with_constant, "You replace the inactive stone by your final power stone.", "PLACE_SIXTH_POWER_STONE", 112);
-        addLineSafe(lines_with_constant, "Nothing has visually changed, but I can feel that NOW the calendar stone is fully powered up.", "PLACE_SIXTH_POWER_STONE2", 112);
-        addLineSafe(lines_with_constant, "It looks like an empty socket to place something inside.", "CALENDAR_SOCKET_EMPTY", 112);
-        addLineSafe(lines_with_constant, "I am scared of placing more stones! What if it fully activates?", "CALENDAR_SOCKET_REFUSE_TO_PLACE", 112);
-        addLineSafe(lines_with_constant, "It fits! The whole thing is activating! And it feels like something else in the ruins just activated. What did I just do?!", "PLACE_FIRST_POWER_STONE", 112);
-        addLineSafe(lines_with_constant, "My map is reacting to this device! Some places are lighting up!", "FIRST_TELEPORTATION1", 112);
-        addLineSafe(lines_with_constant, "Woah! I think I just teleported!", "FIRST_TELEPORTATION2", 112);
-        addLineSafe(lines_with_constant, "I think I heard some door open deep into the ruins!", "PLACE_THIRD_POWER_STONE", 112);
-        addLineSafe(lines_with_constant, "Is the calendar stone fully powered up?! The center started pulsating!", "PLACE_FIFTH_POWER_STONE", 112);
-        addLineSafe(lines_with_constant, "Touch the calendar stone?", "TOUCH_STONE_QUESTION", 112);
-        addLineSafe(lines_with_constant, "You move your hand towards the calendar stone, but before you touch it, the room starts shaking!", "CALENDAR_CENTER_MSG1", 112);
-        addLineSafe(lines_with_constant, "That was the last of them! Ok, I can now continue with what I was doing!", "CALENDAR_CENTER_MSG2", 112);
-        addLineSafe(lines_with_constant, "You place your hand in the center, and the stone starts shaking...", "CALENDAR_CENTER_MSG3", 112);
-        
+        addLineSafe(lines_with_constant_page1, "As you consume the still beating heart, you feel your strength increasing!", "HEART_PICKUP", 112);
+        addLineSafe(lines_with_constant_page1, "One more piece of the map!", "MAP_PIECE_PICKUP", 112);
+        addLineSafe(lines_with_constant_page1, "That does not seem to be the correct key for this lock!", "WRONG_KEY", 112);
+        addLineSafe(lines_with_constant_page1, "That does not seem to be the correct item to use here!", "WRONG_ITEM", 112);
+        addLineSafe(lines_with_constant_page1, "You found a very strange object. A stone of some sort, but some strange power comes from inside it. It must be important.", "FIRST_POWER_STONE", 112);
+        addLineSafe(lines_with_constant_page1, "You found another power stone!", "OTHER_POWER_STONES", 112);
+        addLineSafe(lines_with_constant_page1, "A puzzle box!", "FOUND_PUZZLEBOX", 112);
+        addLineSafe(lines_with_constant_page1, "There is a stone occupying this socket.", "CALENDAR_SOCKET_INACTIVE_STONE", 112);
+        addLineSafe(lines_with_constant_page1, "You replace the inactive stone by your final power stone.", "PLACE_SIXTH_POWER_STONE", 112);
+        addLineSafe(lines_with_constant_page1, "Nothing has visually changed, but I can feel that NOW the calendar stone is fully powered up.", "PLACE_SIXTH_POWER_STONE2", 112);
+        addLineSafe(lines_with_constant_page1, "It looks like an empty socket to place something inside.", "CALENDAR_SOCKET_EMPTY", 112);
+        addLineSafe(lines_with_constant_page1, "I am scared of placing more stones! What if it fully activates?", "CALENDAR_SOCKET_REFUSE_TO_PLACE", 112);
+        addLineSafe(lines_with_constant_page1, "It fits! The whole thing is activating! And it feels like something else in the ruins just activated. What did I just do?!", "PLACE_FIRST_POWER_STONE", 112);
+        addLineSafe(lines_with_constant_page1, "My map is reacting to this device! Some places are lighting up!", "FIRST_TELEPORTATION1", 112);
+        addLineSafe(lines_with_constant_page1, "Woah! I think I just teleported!", "FIRST_TELEPORTATION2", 112);
+        addLineSafe(lines_with_constant_page1, "I think I heard some door open deep into the ruins!", "PLACE_THIRD_POWER_STONE", 112);
+        addLineSafe(lines_with_constant_page1, "Is the calendar stone fully powered up?! The center started pulsating!", "PLACE_FIFTH_POWER_STONE", 112);
+        addLineSafe(lines_with_constant_page1, "Touch the calendar stone?", "TOUCH_STONE_QUESTION", 112);
+        addLineSafe(lines_with_constant_page1, "You move your hand towards the calendar stone, but before you touch it, the room starts shaking!", "CALENDAR_CENTER_MSG1", 112);
+        addLineSafe(lines_with_constant_page1, "That was the last of them! Ok, I can now continue with what I was doing!", "CALENDAR_CENTER_MSG2", 112);
+        addLineSafe(lines_with_constant_page1, "You place your hand in the center, and the stone starts shaking...", "CALENDAR_CENTER_MSG3", 112);
+        addLineSafe(lines_with_constant_page1, "Type what you want to say:", "TALK", 112);     
+        addLineSafe(lines_with_constant_page1, "No one listened...", "TALK_FAIL", 112);     
+        addLineSafe(lines_with_constant_page1, "After you speak, the room rumbles, and you hear a voice in an unknown language. It seems your words were heard!", "TALK_SUCCESS1", 112);
 
         // power stone inspection:
-        addLineSafe(lines_with_constant, "A stone I found. Some sort of power radiates from it.", "INSPECT_POWER_STONE", 32);
-        addLineSafe(lines_with_constant, "I grabbed the stone temporarily to inspect it.", "INSPECT_POWER_STONE_FROM_CALENDAR", 32);
+        addLineSafe(lines_with_constant_page1, "A stone I found. Some sort of power radiates from it.", "INSPECT_POWER_STONE", 32);
+        addLineSafe(lines_with_constant_page1, "I grabbed the stone temporarily to inspect it.", "INSPECT_POWER_STONE_FROM_CALENDAR", 32);
         
         // Combination clue verse:
-        addLineSafe(lines_with_constant, "Dance of traversal:", "COMBINATION_CLUE1", 12);
-        addLineSafe(lines_with_constant, "Face left", "COMBINATION_CLUE2", 8);
-        addLineSafe(lines_with_constant, "Face forward", "COMBINATION_CLUE3", 8);
-        addLineSafe(lines_with_constant, "Face right", "COMBINATION_CLUE4", 8);
+        addLineSafe(lines_with_constant_page1, "Dance of traversal:", "COMBINATION_CLUE1", 12);
+        addLineSafe(lines_with_constant_page1, "Face left", "COMBINATION_CLUE2", 8);
+        addLineSafe(lines_with_constant_page1, "Face forward", "COMBINATION_CLUE3", 8);
+        addLineSafe(lines_with_constant_page1, "Face right", "COMBINATION_CLUE4", 8);
 
         // Trial god descriptions:
-        addLineSafe(lines_with_constant, "A stone carving of the mayan god Itzanma.", "TRIAL_GOD1", 96);  // often regarded as the supreme creator god and the ruler of heaven, day, and night. He was also a culture hero, credited with giving humankind writing and the calendar, and was the patron god of medicine
-        addLineSafe(lines_with_constant, "A stone carving of the mayan god Kukulkan.", "TRIAL_GOD2", 96);  // associated with wisdom, rain, wind, storms, and life
-        addLineSafe(lines_with_constant, "A stone carving of the mayan god Ixchel.", "TRIAL_GOD3", 96);  // primarily associated with fertility, pregnancy, childbirth, and midwifery
-        addLineSafe(lines_with_constant, "A stone carving of the mayan god Chaac.", "TRIAL_GOD4", 96);  // supreme Mayan god of rain, thunder, and lightning
+        addLineSafe(lines_with_constant_page1, "A stone carving of the mayan god Itzanma.", "TRIAL_GOD1", 96);  // often regarded as the supreme creator god and the ruler of heaven, day, and night. He was also a culture hero, credited with giving humankind writing and the calendar, and was the patron god of medicine
+        addLineSafe(lines_with_constant_page1, "A stone carving of the mayan god Kukulkan.", "TRIAL_GOD2", 96);  // associated with wisdom, rain, wind, storms, and life
+        addLineSafe(lines_with_constant_page1, "A stone carving of the mayan god Ixchel.", "TRIAL_GOD3", 96);  // primarily associated with fertility, pregnancy, childbirth, and midwifery
+        addLineSafe(lines_with_constant_page1, "A stone carving of the mayan god Chaac.", "TRIAL_GOD4", 96);  // supreme Mayan god of rain, thunder, and lightning
         
         // Trial clues:
-        addLineSafe(lines_with_constant, "Itzanma.", "TRIAL_CLUE_GODNAME1", 8);
-        addLineSafe(lines_with_constant, "Kukulkan.", "TRIAL_CLUE_GODNAME2", 8);
-        addLineSafe(lines_with_constant, "Ixchel.", "TRIAL_CLUE_GODNAME3", 8);
-        addLineSafe(lines_with_constant, "Chaac.", "TRIAL_CLUE_GODNAME4", 8);
-        addLineSafe(lines_with_constant, "Kneel down in front of ", "TRIAL_CLUE1", 96);
-        addLineSafe(lines_with_constant, "Jump to show respect, repeat it three times to gain the favor of ", "TRIAL_CLUE2", 96);
-        addLineSafe(lines_with_constant, "Thrust your weapon, left and right. Only then you'll calm ", "TRIAL_CLUE3", 96);
-        addLineSafe(lines_with_constant, "Patience, wait with patience. That's what will be noticed by ", "TRIAL_CLUE4", 96);
-        addLineSafe(lines_with_constant, "Attack the ground below ", "TRIAL_CLUE5", 96);
-        addLineSafe(lines_with_constant, "Bow your head down and cross under my figure, first left and then right. ", "TRIAL_CLUE6", 96);
-        addLineSafe(lines_with_constant, "Show your respects. Execute the holy dance: turn left and right three times. ", "TRIAL_CLUE7", 96);
-        addLineSafe(lines_with_constant, "Show me your attack prowess. Show your weapon 5 times in front of me. ", "TRIAL_CLUE8", 96);
+        addLineSafe(lines_with_constant_page1, "Itzanma.", "TRIAL_CLUE_GODNAME1", 8);
+        addLineSafe(lines_with_constant_page1, "Kukulkan.", "TRIAL_CLUE_GODNAME2", 8);
+        addLineSafe(lines_with_constant_page1, "Ixchel.", "TRIAL_CLUE_GODNAME3", 8);
+        addLineSafe(lines_with_constant_page1, "Chaac.", "TRIAL_CLUE_GODNAME4", 8);
+        addLineSafe(lines_with_constant_page1, "Kneel down in front of ", "TRIAL_CLUE1", 96);
+        addLineSafe(lines_with_constant_page1, "Jump to show respect, repeat it three times to gain the favor of ", "TRIAL_CLUE2", 96);
+        addLineSafe(lines_with_constant_page1, "Thrust your weapon, left and right. Only then you'll calm ", "TRIAL_CLUE3", 96);
+        addLineSafe(lines_with_constant_page1, "Patience, wait with patience. That's what will be noticed by ", "TRIAL_CLUE4", 96);
+        addLineSafe(lines_with_constant_page1, "Attack the ground below ", "TRIAL_CLUE5", 96);
+        addLineSafe(lines_with_constant_page1, "Bow your head down and cross under my figure, first left and then right. ", "TRIAL_CLUE6", 96);
+        addLineSafe(lines_with_constant_page1, "Show your respects. Execute the holy dance: turn left and right three times. ", "TRIAL_CLUE7", 96);
+        addLineSafe(lines_with_constant_page1, "Show me your attack prowess. Show your weapon 5 times in front of me. ", "TRIAL_CLUE8", 96);
         
         // Calendar tablet:
-        addLineSafe(lines_with_constant, "Look at this! I do not understand these annotations!", "CALENDAR_TABLET1", 32);
-        addLineSafe(lines_with_constant, "I have noted them down in my diary just in case.", "CALENDAR_TABLET2", 32);
+        addLineSafe(lines_with_constant_page1, "Look at this! I do not understand these annotations!", "CALENDAR_TABLET1", 32);
+        addLineSafe(lines_with_constant_page1, "I have noted them down in my diary just in case.", "CALENDAR_TABLET2", 32);
         
         // Elaine letters:
-        addLineSafe(lines_with_constant, "Michael,", "ELAINE_LETTER1A_LINE1", 28);
-        addLineSafe(lines_with_constant, "I deciphered the inscription. It talks about a 'Star Alignment Nexus' and about 'Celestial Stones' being the keys required to activate it. I consulted some experts, and we believe this nexus could be a calendar stone. Have you found one?", "ELAINE_LETTER1A_LINE2", 28*5);
-        addLineSafe(lines_with_constant, "Ancient texts reveal that the Maya received knowledge from beings beyond the stars. The built these calendar stones to predict when the Star People will come back, but it seems that one of these calendar stones is special.", "ELAINE_LETTER1A_LINE3", 28*5);
-        addLineSafe(lines_with_constant, "I think if we can destroy it, we can stop them!", "ELAINE_LETTER1A_LINE4", 28);
-        addLineSafe(lines_with_constant, "Michael, I believe in you, but please be careful. I will keep investigating and send you anything I find.", "ELAINE_LETTER1A_LINE5", 28*3);
-        addLineSafe(lines_with_constant, "Elaine", "ELAINE_LETTER1A_LINE6", 28);
-        addLineSafe(lines_with_constant, "ps: I attach the translation!", "ELAINE_LETTER1A_LINE7", 28*2);
+        addLineSafe(lines_with_constant_page1, "Michael,", "ELAINE_LETTER1A_LINE1", 28);
+        addLineSafe(lines_with_constant_page1, "I deciphered the inscription. It talks about a 'Star Alignment Nexus' and about 'Celestial Stones' being the keys required to activate it. I consulted some experts, and we believe this nexus could be a calendar stone. Have you found one?", "ELAINE_LETTER1A_LINE2", 28*5);
+        addLineSafe(lines_with_constant_page1, "Ancient texts reveal that the Maya received knowledge from beings beyond the stars. The built these calendar stones to predict when the Star People will come back, but it seems that one of these calendar stones is special.", "ELAINE_LETTER1A_LINE3", 28*5);
+        addLineSafe(lines_with_constant_page1, "I think if we can destroy it, we can stop them!", "ELAINE_LETTER1A_LINE4", 28);
+        addLineSafe(lines_with_constant_page1, "Michael, I believe in you, but please be careful. I will keep investigating and send you anything I find.", "ELAINE_LETTER1A_LINE5", 28*3);
+        addLineSafe(lines_with_constant_page1, "Elaine", "ELAINE_LETTER1A_LINE6", 28);
+        addLineSafe(lines_with_constant_page1, "ps: I attach the translation!", "ELAINE_LETTER1A_LINE7", 28*2);
 
-        addLineSafe(lines_with_constant, "The entrance to Palenque has been uncovered. That is where we will start. Where we taught them. Where the first nexus was built.", "ELAINE_LETTER1B_LINE1", 28*3);
-        addLineSafe(lines_with_constant, "The second nexus near Tunguska to the east was lost. But the first remains. The first was the star alignment nexus, and is poweref off.", "ELAINE_LETTER1B_LINE2", 28*3);
-        addLineSafe(lines_with_constant, "Locate Palenque. The nexus lies below. The six celestial stones... they hid them from us. Locate them before our fleet arrives above.", "ELAINE_LETTER1B_LINE3", 28*4);
-        addLineSafe(lines_with_constant, "This time the planet will be ours.", "ELAINE_LETTER1B_LINE4", 28);
-        addLineSafe(lines_with_constant, "celestial", "ELAINE_LETTER1B_LINE5", 5);
-        addLineSafe(lines_with_constant, "stone", "ELAINE_LETTER1B_LINE6", 5);
-        addLineSafe(lines_with_constant, "below", "ELAINE_LETTER1B_LINE7", 5);
+        addLineSafe(lines_with_constant_page1, "The entrance to Palenque has been uncovered. That is where we will start. Where we taught them. Where the first nexus was built.", "ELAINE_LETTER1B_LINE1", 28*3);
+        addLineSafe(lines_with_constant_page1, "The second nexus near Tunguska to the east was lost. But the first remains. The first was the star alignment nexus, and is poweref off.", "ELAINE_LETTER1B_LINE2", 28*3);
+        addLineSafe(lines_with_constant_page1, "Locate Palenque. The nexus lies below. The six celestial stones... they hid them from us. Locate them before our fleet arrives above.", "ELAINE_LETTER1B_LINE3", 28*4);
+        addLineSafe(lines_with_constant_page1, "This time the planet will be ours.", "ELAINE_LETTER1B_LINE4", 28);
+        addLineSafe(lines_with_constant_page1, "celestial", "ELAINE_LETTER1B_LINE5", 5);
+        addLineSafe(lines_with_constant_page1, "stone", "ELAINE_LETTER1B_LINE6", 5);
+        addLineSafe(lines_with_constant_page1, "below", "ELAINE_LETTER1B_LINE7", 5);
         
-        addLineSafe(lines_with_constant, "Michael! I hope this reaches you on time!", "ELAINE_LETTER2A_LINE1", 28);
-        addLineSafe(lines_with_constant, "DO NOT DESTROY THE CALENDAR STONE!!!", "ELAINE_LETTER2A_LINE2", 28);
-        addLineSafe(lines_with_constant, "The inscriptions you sent me were key. The calendar stone is a weapon! The Maya built it to prevent the star people from coming.", "ELAINE_LETTER2A_LINE3", 28*3);
-        addLineSafe(lines_with_constant, "With the Maya gone and the nexus powered off, the aliens have returned.", "ELAINE_LETTER2A_LINE4", 28*2);
-        addLineSafe(lines_with_constant, "But we can use the nexus to stop them. Find the celestial stones before them and power the nexus up! And please be careful!", "ELAINE_LETTER2A_LINE5", 28*3);
+        addLineSafe(lines_with_constant_page1, "Michael! I hope this reaches you on time!", "ELAINE_LETTER2A_LINE1", 28);
+        addLineSafe(lines_with_constant_page1, "DO NOT DESTROY THE CALENDAR STONE!!!", "ELAINE_LETTER2A_LINE2", 28);
+        addLineSafe(lines_with_constant_page1, "The inscriptions you sent me were key. The calendar stone is a weapon! The Maya built it to prevent the star people from coming.", "ELAINE_LETTER2A_LINE3", 28*3);
+        addLineSafe(lines_with_constant_page1, "With the Maya gone and the nexus powered off, the aliens have returned.", "ELAINE_LETTER2A_LINE4", 28*2);
+        addLineSafe(lines_with_constant_page1, "But we can use the nexus to stop them. Find the celestial stones before them and power the nexus up! And please be careful!", "ELAINE_LETTER2A_LINE5", 28*3);
 
-        addLineSafe(lines_with_constant, "The star people gave us knowledge... and death. They wanted slaves, knowledgeable slaves.", "ELAINE_LETTER2B_LINE1", 28*3);
-        addLineSafe(lines_with_constant, "With their knowledge, we built weapons. The star alignment nexus and the power stone", "ELAINE_LETTER2B_LINE2A", 24*2);
-        addLineSafe(lines_with_constant, "nexus. When they attacked, we were ready.", "ELAINE_LETTER2B_LINE2B", 24);
-        addLineSafe(lines_with_constant, "With time our knowledge turned into myth. The power stone nexus was destroyed, and the remaining celestial stones offered as tribute to the gods. One of them taken to the Mars beast and Ixchel, away from this planet.", "ELAINE_LETTER2B_LINE3", 28*5);
-        addLineSafe(lines_with_constant, "Now look at the nexus here: useless.", "ELAINE_LETTER2B_LINE4", 24);
+        addLineSafe(lines_with_constant_page1, "The star people gave us knowledge... and death. They wanted slaves, knowledgeable slaves.", "ELAINE_LETTER2B_LINE1", 28*3);
+        addLineSafe(lines_with_constant_page1, "With their knowledge, we built weapons. The star alignment nexus and the power stone", "ELAINE_LETTER2B_LINE2A", 24*2);
+        addLineSafe(lines_with_constant_page1, "nexus. When they attacked, we were ready.", "ELAINE_LETTER2B_LINE2B", 24);
+        addLineSafe(lines_with_constant_page1, "With time our knowledge turned into myth. The power stone nexus was destroyed, and the remaining celestial stones offered as tribute to the gods. One of them taken to the Mars beast and Ixchel, away from this planet.", "ELAINE_LETTER2B_LINE3", 28*5);
+        addLineSafe(lines_with_constant_page1, "Now look at the nexus here: useless.", "ELAINE_LETTER2B_LINE4", 24);
         
         // Maya tablet clues:
-        addLineSafe(lines_with_constant, "They taught us to write ideas and sounds. We could write about", "TABLET_MAYA1_LINE1", 18*2);
-        addLineSafe(lines_with_constant, "the feared Jaguar (Bahlam), and also how we said it: BA-LA-MA.", "TABLET_MAYA1_LINE2", 18*2);
-        addLineSafe(lines_with_constant, "We could write all we said.", "TABLET_MAYA1_LINE3", 16);
-        addLineSafe(lines_with_constant, "We could finally write about blowguns (PU-WA)!", "TABLET_MAYA1_LINE4", 16*2);
-        addLineSafe(lines_with_constant, "We learned the power of sounds.", "TABLET_MAYA1_LINE5", 18);
+        addLineSafe(lines_with_constant_page1, "They taught us to write ideas and sounds. We could write about", "TABLET_MAYA1_LINE1", 18*2);
+        addLineSafe(lines_with_constant_page1, "the feared Jaguar (Bahlam), and also how we said it: BA-LA-MA.", "TABLET_MAYA1_LINE2", 18*2);
+        addLineSafe(lines_with_constant_page1, "We could write all we said.", "TABLET_MAYA1_LINE3", 16);
+        addLineSafe(lines_with_constant_page1, "We could finally write about blowguns (PU-WA)!", "TABLET_MAYA1_LINE4", 16*2);
+        addLineSafe(lines_with_constant_page1, "We learned the power of sounds.", "TABLET_MAYA1_LINE5", 18);
 
-        addLineSafe(lines_with_constant, "With writing, we recorded the sound of the sacred animal", "TABLET_MAYA2_LINE1", 18*2);
-        addLineSafe(lines_with_constant, "names in stone. The jaguar, the snake, the eagle and the fish: BA-LA-MA, CHA-NA, KO-KA-A-JA and KA-YA.", "TABLET_MAYA2_LINE2", 18*4);
+        addLineSafe(lines_with_constant_page1, "With writing, we recorded the sound of the sacred animal", "TABLET_MAYA2_LINE1", 18*2);
+        addLineSafe(lines_with_constant_page1, "names in stone. The jaguar, the snake, the eagle and the fish: BA-LA-MA, CHA-NA, KO-KA-A-JA and KA-YA.", "TABLET_MAYA2_LINE2", 18*4);
 
-        addLineSafe(lines_with_constant, "The first words they taught us were 'sit' (CHU-MU) and 'stand' (WA-LA). We should have suspected something...", "TABLET_MAYA3_LINE1", 18*4);
-        addLineSafe(lines_with_constant, "I prefer words related to my occupation, like 'ladder' (E-BU) or 'ascend' (T'A-BA).", "TABLET_MAYA3_LINE2", 18*3);
+        addLineSafe(lines_with_constant_page1, "The first words they taught us were 'sit' (CHU-MU) and 'stand' (WA-LA). We should have suspected something...", "TABLET_MAYA3_LINE1", 18*4);
+        addLineSafe(lines_with_constant_page1, "I prefer words related to my occupation, like 'ladder' (E-BU) or 'ascend' (T'A-BA).", "TABLET_MAYA3_LINE2", 18*3);
 
-        addLineSafe(lines_with_constant, "My favorite part about writing is being able to write sounds, like", "TABLET_MAYA4_LINE1", 18*2);
+        addLineSafe(lines_with_constant_page1, "My favorite part about writing is being able to write sounds, like", "TABLET_MAYA4_LINE1", 18*2);
         
-        addLineSafe(lines_with_constant, "The nexus will listen to its name when fully powered up. Speak its secret name in the center", "TABLET_CALENDAR_NAME_CLUE", 18*3);
+        addLineSafe(lines_with_constant_page1, "The nexus will listen to its name when fully powered up. Speak its secret name in the center", "TABLET_CALENDAR_NAME_CLUE", 18*3);
         
         // Syllables
-        addLineSafe(lines_with_constant, "ke", "KE", 2);
-        addLineSafe(lines_with_constant, "ki", "KI", 2);
-        addLineSafe(lines_with_constant, "se", "SE", 2);
-        addLineSafe(lines_with_constant, "pe", "PE", 2);
-        addLineSafe(lines_with_constant, "le", "LE", 2);
-        addLineSafe(lines_with_constant, "lu", "LU", 2);
-        addLineSafe(lines_with_constant, "ne", "NE", 2);
+        addLineSafe(lines_with_constant_page1, "ke", "KE", 2);
+        addLineSafe(lines_with_constant_page1, "ki", "KI", 2);
+        addLineSafe(lines_with_constant_page1, "se", "SE", 2);
+        addLineSafe(lines_with_constant_page1, "pe", "PE", 2);
+        addLineSafe(lines_with_constant_page1, "le", "LE", 2);
+        addLineSafe(lines_with_constant_page1, "lu", "LU", 2);
+        addLineSafe(lines_with_constant_page1, "ne", "NE", 2);
         
         // Puzzlebox:
-        addLineSafe(lines_with_constant, "Attempt to open", "PUZZLEBOX_OPTION1", 16);
-        addLineSafe(lines_with_constant, "Use up/down to change the dials.", "PUZZLEBOX_INSTRUCTIONS", 18);
-        addLineSafe(lines_with_constant, "That did not work!", "PUZZLEBOX_FAILURE", 10);
-        addLineSafe(lines_with_constant, "That was it! It opened!", "PUZZLEBOX_SUCCESS", 14);
-        addLineSafe(lines_with_constant, "The puzzle box contained one half of a power stone!", "FOUND_HALF_POWER_STONE", 112);
-        addLineSafe(lines_with_constant, "The puzzle box contained another half of a power stone, and they fit together!!", "FOUND_SECOND_HALF_POWER_STONE", 112);
+        addLineSafe(lines_with_constant_page1, "Attempt to open", "PUZZLEBOX_OPTION1", 16);
+        addLineSafe(lines_with_constant_page1, "Use up/down to change the dials.", "PUZZLEBOX_INSTRUCTIONS", 18);
+        addLineSafe(lines_with_constant_page1, "That did not work!", "PUZZLEBOX_FAILURE", 10);
+        addLineSafe(lines_with_constant_page1, "That was it! It opened!", "PUZZLEBOX_SUCCESS", 14);
+        addLineSafe(lines_with_constant_page1, "The puzzle box contained one half of a power stone!", "FOUND_HALF_POWER_STONE", 112);
+        addLineSafe(lines_with_constant_page1, "The puzzle box contained another half of a power stone, and they fit together!!", "FOUND_SECOND_HALF_POWER_STONE", 112);
         
+        // Trivia tablets:
+        addLineSafe(lines_with_constant_page2, "This is a translation of the tablets Stephens and I found under the mud. The story was", "TABLET_TRIVIA1_1", 18*3);
+        addLineSafe(lines_with_constant_page2, "too fantastical to be made public, and hence we deemed it better that they remained in Palenque where we found them.", "TABLET_TRIVIA1_2", 18*4);
+        addLineSafe(lines_with_constant_page2, "Frederick Catherwood", "TABLET_TRIVIA1_3", 18*4);
+        addLineSafe(lines_with_constant_page2, "My name is Yatzil, and I wrote these tablets so that the story of the contact with those who came from the stars is not forgotten.", "TABLET_TRIVIA1_4", 18*5);
+
+        addLineSafe(lines_with_constant_page2, "My father was an astronomer. He knew everything about the 400 stars in the sky. One night", "TABLET_TRIVIA2_1", 18*3);
+        addLineSafe(lines_with_constant_page2, "he noticed something odd. A new star had appeared in the sky. One that moved. The Palenque lord was warned. He thought Itzamná had sent a messenger", "TABLET_TRIVIA2_2", 18*5);
+        addLineSafe(lines_with_constant_page2, "to recognize them as the true rulers of Palenque. They were wrong...", "TABLET_TRIVIA2_3", 18*3);
+
+        addLineSafe(lines_with_constant_page2, "They descended in a flying building. When it landed, its doors open and three people came out.", "TABLET_TRIVIA3_1", 18*3);
+        addLineSafe(lines_with_constant_page2, "Three small, strange, green people. They spoke our language and claimed to come from the stars. 'From which one?' Asked the lord. But they declined to answer.", "TABLET_TRIVIA3_2", 18*5);
+
+        addLineSafe(lines_with_constant_page2, "The star people taught us to write and gave us tools to construct large structures and move", "TABLET_TRIVIA4_1", 18*3);
+        addLineSafe(lines_with_constant_page2, "large stones. We would build the strongest city in the world! But we were fools. For what they wanted was labor. And we were doing it for them.", "TABLET_TRIVIA4_2", 18*5);
+
+        addLineSafe(lines_with_constant_page2, "They wanted two large pyramids. But they had to rise down, rather than rise up!", "TABLET_TRIVIA5_1", 18*3);
+        addLineSafe(lines_with_constant_page2, "They wanted to buildings to extend deep underground. 'No!' We explained, 'We will reach Xibalba!'. But they replied that we were ignorant. We kept building.", "TABLET_TRIVIA5_2", 18*5);
+
+        addLineSafe(lines_with_constant_page2, "When the two great pyramids were finished, the star people demanded us to dig deeper.", "TABLET_TRIVIA6_1", 18*3);
+        addLineSafe(lines_with_constant_page2, "And a third pyramid, completely underground was started. My father warned me that nothing good could come from digging into the udnerworld. He was suspicious.", "TABLET_TRIVIA6_2", 18*5);
+
+        addLineSafe(lines_with_constant_page2, "My late father was right. The third pyramid was build, and in its deepest end, an underground", "TABLET_TRIVIA7_1", 18*3);
+        addLineSafe(lines_with_constant_page2, "cenote was found. But not one filled with water, but with heat and flames: 'the fire shaft'. The star people rejoiced. We should ahve been scared...", "TABLET_TRIVIA7_2", 18*5);
+
+        addLineSafe(lines_with_constant_page2, "What we found beyond the fire shaft was our worst nightmare. Even the star people allowed", "TABLET_TRIVIA8_1", 18*3);
+        addLineSafe(lines_with_constant_page2, "us to stop digging. We had reached the gates of Xibalba itself!", "TABLET_TRIVIA8_2", 18*5);
+
+        addLineSafe(lines_with_constant_page2, "But the discovery of Xibalba was not the end. We learned they were seeking for a place", "TABLET_TRIVIA9_1", 18*3);
+        addLineSafe(lines_with_constant_page2, "called Atlantis, sunk under the sea, but that they knew could be reached under Palenque. That's what they wanted, and through the fire shaft we found it...", "TABLET_TRIVIA9_2", 18*5);
+
+        addLineSafe(lines_with_constant_page2, "After discovering Atlantis, we were convinced that the star people were actually gods.", "TABLET_TRIVIA10_1", 18*3);
+        addLineSafe(lines_with_constant_page2, "From Atlantis they produced a magical device. A 'teleporting gate' they called it! The lord of Palenque was thrilled. We would now rule the world!", "TABLET_TRIVIA10_2", 18*5);
+
+        addLineSafe(lines_with_constant_page2, "And then one day I overheard them. The star people were not gods. They were our enemies.", "TABLET_TRIVIA11_1", 18*3);
+        addLineSafe(lines_with_constant_page2, "Scouts for an invading armada. They wanted Atlantis to open a gate. A gate to the stars through which they would come and conquer us. They didn't know I knew.", "TABLET_TRIVIA11_2", 18*5);
+
+        addLineSafe(lines_with_constant_page2, "We found a way to defend ourselves. They underestimated us. We learned faster than", "TABLET_TRIVIA12_1", 18*3);
+        addLineSafe(lines_with_constant_page2, "they expected and we build weapons. Weapons that would let us fight them when they turned against us. We built the... [the remainder of this tablet was not legible]", "TABLET_TRIVIA12_2", 18*5);
+
+        addLineSafe(lines_with_constant_page2, "The story of our last stand is too large for these tablets. But we prevailed. They were not", "TABLET_TRIVIA13_1", 18*3);
+        addLineSafe(lines_with_constant_page2, "expecting us to use their technology. Our weapon prevented their armada to come, and our warriors finished their scouts off.", "TABLET_TRIVIA13_2", 18*5);
+
+        addLineSafe(lines_with_constant_page2, "Our victory came at a great cost. But much was also gained. Atlantis was ours,", "TABLET_TRIVIA14_1", 18*3);
+        addLineSafe(lines_with_constant_page2, "and we controlled the gates. Those who entered them speak of reaching other worlds. About new pyramids being built. By us. By the Maya!", "TABLET_TRIVIA14_2", 18*5);
+
+        addLineSafe(lines_with_constant_page2, "And so, this is our story. Of how the great pyramids came to be. Of how we were tricked but", "TABLET_TRIVIA15_1", 18*3);
+        addLineSafe(lines_with_constant_page2, "prevailed. Of how my father was right. And And if they try to come again, I hope we are ready again. Yatzil.", "TABLET_TRIVIA15_2", 18*5);
+
+        addLineSafe(lines_with_constant_page2, "Before going on a hunt, warriors prayed in the animal altars to receive their blessing.", "TABLET_TRIVIA_CLUE1_1", 18*3);
+
+        addLineSafe(lines_with_constant_page2, "Five colossi guard the these lands. Insult their pride, and they will transform.", "TABLET_TRIVIA_CLUE2_1", 18*3);
+        addLineSafe(lines_with_constant_page2, "Huracan, for example, prides itself on the purity of Palenque's underground water. So, do not litter it!", "TABLET_TRIVIA_CLUE2_2", 18*4);
+
+        addLineSafe(lines_with_constant_page2, "The star people insisted that we live in one of many possible worlds.", "TABLET_TRIVIA_CLUE3_1", 18*3);
+        addLineSafe(lines_with_constant_page2, "That these worlds are entangled, and that there were contraptions that touched more than one such world, and operating it required action in all of them.", "TABLET_TRIVIA_CLUE3_2", 18*5);
+
+        addLineSafe(lines_with_constant_page2, "The star people talked about multiple worlds. Palenque existed in all of them.", "TABLET_TRIVIA_CLUE4_1", 18*3);
+        addLineSafe(lines_with_constant_page2, "But some questions only had answers in some of those worlds.", "TABLET_TRIVIA_CLUE4_2", 18*3);
         
         List<Integer> numbers = font.convertStringToAssembler("0123456789 ");
         System.out.println("Numbers: " + numbers);
@@ -372,8 +434,8 @@ public class Text {
         // Save without compression:
         {
             FileWriter fw = new FileWriter(new File("src/autogenerated/text-data.asm"));
-            for(String line:lines_with_constant.keySet()) {
-                String key = lines_with_constant.get(line);
+            for(String line:lines_with_constant_page1.keySet()) {
+                String key = lines_with_constant_page1.get(line);
                 List<Integer> encoded = font.convertStringToAssembler(line);
                 if (encoded.get(0) >= 256) {
                     throw new Exception("Line has more than 256 characters ("+encoded.get(0)+"), it will not work on assembler!");
@@ -383,6 +445,22 @@ public class Text {
             }
             fw.close();
         }
+
+        // Save without compression:
+        {
+            FileWriter fw = new FileWriter(new File("src/autogenerated/text-data-page7.asm"));
+            for(String line:lines_with_constant_page2.keySet()) {
+                String key = lines_with_constant_page2.get(line);
+                List<Integer> encoded = font.convertStringToAssembler(line);
+                if (encoded.get(0) >= 256) {
+                    throw new Exception("Line has more than 256 characters ("+encoded.get(0)+"), it will not work on assembler!");
+                }
+                String encoded_str = "" + encoded;
+                fw.write("TEXT_" + key + ":  db " + encoded_str.substring(1, encoded_str.length() - 1) + "\n");
+            }
+            fw.close();
+        }
+
     }
     
     
@@ -390,6 +468,9 @@ public class Text {
     {
         if (font.stringWidthInPixels(line) > maxWidthInTiles*8) {
             throw new Exception("'"+line+"' is wider than " + maxWidthInTiles + " tiles! (" + font.stringWidthInPixels(line) + " pixels, vs " + maxWidthInTiles*8 + ")");
+        }
+        if (lines_with_constant.containsKey(line)) {
+            throw new Exception("repeated line!");
         }
         lines_with_constant.put(line, tag);
     }

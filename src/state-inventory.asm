@@ -17,6 +17,11 @@ state_inventory:
 	ld hl, SFX_ui_select
 	call play_SFX_with_high_priority
 
+	; reset sprites:
+	ld hl, sprite_attribute_table
+	ld bc, MAX_SPRITES * 4 + 3 - 1
+	call clear_memory
+
 	xor a
 	ld (inventory_cursor_position_x), a
 state_inventory_entry_point:

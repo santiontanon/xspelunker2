@@ -38,8 +38,8 @@ state_options_loop:
 	jr nz, state_options_loop_up
 	jr state_options_loop
 state_options_loop_end:
-
 	call clear_screen_left_to_right
+	call check_redefined_keys
 	jp state_inventory_from_options
 
 
@@ -383,6 +383,33 @@ state_options_draw_text_loop3_end:
 	djnz state_options_draw_text_loop2
 
 	ret
+
+
+;-----------------------------------------------
+check_redefined_keys:
+	ld hl, config_keyboard + 4*2
+	ld de, check_redefined_keys_special_case_table
+	ld b, 8
+check_redefined_keys_loop:
+	ld a, (de)
+	cp (hl)
+	jr nz, check_redefined_keys_default
+	inc hl
+	inc de
+	djnz check_redefined_keys_loop
+	ld a, 1
+	ld (config_keyboard_special_case), a
+	ret
+check_redefined_keys_default:
+	xor a
+	ld (config_keyboard_special_case), a
+	ret
+
+check_redefined_keys_special_case_table:
+	db 5, #02
+	db 2, #40
+	db 4, #02
+	db 4, #01
 
 
 ;-----------------------------------------------

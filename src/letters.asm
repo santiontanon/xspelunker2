@@ -289,6 +289,16 @@ FIRST_LETTER2B_USEABLE_TILE: equ 67
 ; - a: first tile to use
 ; - de: NAMTBL2 ptr
 ; - ix: base CHRTBL2 address (1st, 2nd or 3rd bank?)
+display_elaine_letter_paragraph_page7:
+	push af
+	push de
+	push ix
+		; copy text to buffer_4096:
+		push hl
+		pop ix
+		ld c, TABLET_LETTER_PAGE
+		ld hl, copy_ix_text_page7_to_buffer_4096
+		jr display_elaine_letter_paragraph_continue
 display_elaine_letter_paragraph:
 	push af
 	push de
@@ -296,8 +306,9 @@ display_elaine_letter_paragraph:
 		; copy text to buffer_4096:
 		push hl
 		pop ix
-		ld hl, copy_ix_text_to_buffer_4096
 		ld c, TEXT_PAGE
+		ld hl, copy_ix_text_to_buffer_4096
+display_elaine_letter_paragraph_continue:
 		call call_hl_in_page_c_8000
 	pop ix
 	pop de
@@ -388,4 +399,185 @@ display_elaine_letter_paragraph_name_table_loop:
 	add hl, bc
 	ex de, hl
 	jp display_elaine_letter_paragraph_loop
+
+
+
+;-----------------------------------------------
+; This is here just because I did not want to give additional clues about what it does.
+interact_special_case:
+	ld de, TEXT_TALK
+	ld hl, display_in_game_message_draw_message
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000
+	call getcharacter_nonwaiting_reset
+
+	ld hl, buffer_4096 + 2048
+	ld bc, 20 + 1 - 1
+	call clear_memory
+interact_special_case_loop:
+	halt
+	call interact_special_case_draw
+	call getcharacter_nonwaiting
+	cp 27
+	jr z, interact_special_case_loop_end
+	cp 13
+	jr z, interact_special_case_loop_end
+	cp 8
+	jp z, interact_special_case_loop_bs
+	or a
+	jp nz, interact_special_case_loop_general
+	jr interact_special_case_loop
+interact_special_case_loop_end:
+
+	xor a
+	ld (keyboard_clicks), a
+
+	; restore tiles in middle bank:
+	ld hl, CLRTBL2 + (256 + 16*6)*8
+	ld bc, (256-16*6)*8
+	; xor a
+	call fast_FILVRM
+
+	; restore content below:
+	ld hl, buffer_4096 + 1024
+	ld de, NAMTBL2 + 256
+	ld bc, 256
+	call fast_LDIRVM
+
+	ld hl, redraw_flags
+	ld (hl), #ff
+
+	ld a, (current_area__id)
+	cp 3
+	jr nz, interact_special_case_fail
+	ld a, (current_room__id)
+	cp CALENDAR_ROOM_ID
+	jr nz, interact_special_case_fail
+	ld a, (global_state__solved_final_riddle)
+	or a
+	jr nz, interact_special_case_fail
+	ld a, (global_state__n_power_stones_in_calendar)
+	cp 6
+	jr nz, interact_special_case_fail
+
+	ld a, (player_x + 1)
+	cp 14
+	jr c, interact_special_case_fail
+	cp 18
+	jr nc, interact_special_case_fail
+	ld a, (player_y + 1)
+	cp 12
+	jr nz, interact_special_case_fail
+
+	; check word:
+	ld hl, buffer_4096 + 2048
+	ld de, current_world__maya_puzzle3_word
+interact_special_case_check_loop:
+	ld a, (de)
+	cp (hl)
+	jr nz, interact_special_case_fail
+	or a
+	jr z, interact_special_case_success
+	inc hl
+	inc de
+	jr interact_special_case_check_loop
+
+interact_special_case_success:
+	ld a, 1
+	ld (global_state__solved_final_riddle), a
+	ld de, TEXT_TALK_SUCCESS1
+	jr interact_special_case_success_continue
+
+interact_special_case_fail:
+	ld de, TEXT_TALK_FAIL
+interact_special_case_success_continue:
+	push de
+		ld a, (current_room__tileset_page)
+		ld c, a
+		ld hl, (current_room__tileset_ptr)
+		call setup_game_tiles_only_biome
+	pop de
+	ld hl, display_in_game_message
+	ld a, TEXT_PAGE
+	jp jp_to_hl_in_page_a_8000
+
+
+interact_special_case_loop_bs:
+	ld a, (buffer_4096 + 2048 + 20)
+	or a
+	jp z, interact_special_case_loop
+	dec a
+	ld (buffer_4096 + 2048 + 20), a
+	ld hl, buffer_4096 + 2048
+	ADD_HL_A
+	ld (hl), 0
+	jp interact_special_case_loop
+
+interact_special_case_loop_general:
+	cp #27
+	jr z, interact_special_case_loop_general_in
+	cp #61
+	jp c, interact_special_case_loop
+	cp #7b
+	jp nc, interact_special_case_loop
+interact_special_case_loop_general_in:
+	push af
+		ld a, (buffer_4096 + 2048 + 20)
+		inc a
+		cp 20
+		jr nz, interact_special_case_loop_general_in_continue
+		dec a
+interact_special_case_loop_general_in_continue:
+		ld (buffer_4096 + 2048 + 20), a
+		dec a
+		ld hl, buffer_4096 + 2048
+		ADD_HL_A
+	pop af
+	ld (hl), a
+	jp interact_special_case_loop
+
+
+interact_special_case_draw:
+	ld de, buffer_4096 + 2048 + 21
+	xor a
+	ld (de), a
+
+	ld hl, buffer_4096 + 2048
+interact_special_case_draw_loop:
+	ld a, (hl)
+	or a
+	jr z, interact_special_case_draw_done
+
+	push hl
+		cp #27
+		jr z, interact_special_case_draw_loop_q
+		
+		sub #61
+		ld hl, interact_special_case_table
+		ADD_HL_A
+		ld a, (hl)
+		ld ixl, a
+		jr interact_special_case_draw_loop_ix_set
+interact_special_case_draw_loop_q:
+		ld ixl, 9
+interact_special_case_draw_loop_ix_set:
+		ld hl, buffer_4096 + 2048 + 21
+		ld a, (hl)
+		inc (hl)
+		inc hl
+		ADD_HL_A
+		ld a, ixl
+		ld (hl), a
+	pop hl
+	inc hl
+	jr interact_special_case_draw_loop
+interact_special_case_draw_done:
+	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096 + 2048 + 21, CHRTBL2 + (10+14*32)*8, #f0, 20
+	ret
+
+interact_special_case_table:
+	db 108, 110, 112, 114, 116, 118, 120, 122
+	db 124, 125, 127, 129, 130, 133, 135, 137
+	db 139, 141, 143, 145, 147, 149, 152, 155
+	db 158, 160
 
