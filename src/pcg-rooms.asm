@@ -578,6 +578,9 @@ pcg_generate_room__object_breakable_wall_continue:
 	add iy, bc
 	ld (tmp_pcg_room__next_tile_object_ptr), iy
 
+	ld a, 1
+	ld (play_seashell_flag), a
+
 	jp pcg_generate_room__object_loop_next
 
 
@@ -2079,7 +2082,7 @@ ENDR
 	dw buffer_4096 + 60 * 64  ; TAG_STORY_TRIVIA8
 	dw buffer_4096 + 18 * 64  ; TAG_ITEM_SANDALS
 	dw buffer_4096 + 19 * 64  ; TAG_ITEM_GLOVES
-	dw buffer_4096 + 20 * 64  ; TAG_ITEM_HURAKAN
+	dw buffer_4096 + 20 * 64  ; TAG_ITEM_WARRIOR_HAT
 	dw buffer_4096 + 21 * 64  ; TAG_ITEM_ARMOR
 	dw buffer_4096 + 22 * 64  ; TAG_ITEM_CHAAC
 	dw buffer_4096 + 23 * 64  ; TAG_ITEM_SEASHELL

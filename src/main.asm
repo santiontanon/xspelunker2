@@ -707,6 +707,7 @@ player_inventory_n_small_keys: ds virtual 1
 ; player_inventory_map_pieces: ds virtual N_MAP_PIECES
 player_current_item: ds virtual 1  ; 0 - 10 are weapons, 11 - 35 are inventory key items
 player_immunity_timer: ds virtual 1  ; if != 0, nothing can hurt the player
+player_can_double_jump: ds virtual 1
 
 player_current_swing_hit_id: ds virtual 1
 player_new_hit_id: ds virtual 1
@@ -720,6 +721,7 @@ redraw_flags: ds virtual 1  ; bits:
 in_game_event_fn_ptr: ds virtual 2
 in_game_event_fn_page: ds virtual 1
 in_game_event_fn_arg: ds virtual 1
+play_seashell_flag: ds virtual 1
 
 ; inventory state variables:
 inventory_cursor_position_x: ds virtual 1

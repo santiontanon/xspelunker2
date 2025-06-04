@@ -2037,7 +2037,7 @@ pcg_generate_area__item_tags:
     db TAG_STORY_TRIVIA8
     db TAG_ITEM_SANDALS
     db TAG_ITEM_GLOVES
-    db TAG_ITEM_HURAKAN
+    db TAG_ITEM_WARRIOR_HAT
     db TAG_ITEM_ARMOR
     db TAG_ITEM_CHAAC
     db TAG_ITEM_SEASHELL

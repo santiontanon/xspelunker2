@@ -55,13 +55,13 @@ state_play:
 		ld (player_inventory_items+22), a
 		ld (player_inventory_items+23), a
 		ld (player_inventory_items+24), a  ; clay suit (last key item)
-		ld (player_inventory_items+25), a
-		ld (player_inventory_items+26), a
-		ld (player_inventory_items+27), a
-		ld (player_inventory_items+28), a
-		ld (player_inventory_items+29), a
-		ld (player_inventory_items+30), a
-		ld (player_inventory_items+31), a
+		ld (player_inventory_items+25), a  ; sandals
+		ld (player_inventory_items+26), a  ; gloves
+		ld (player_inventory_items+27), a  ; warrior hat
+		ld (player_inventory_items+28), a  ; cotton armor
+		ld (player_inventory_items+29), a  ; chaac blessing
+		ld (player_inventory_items+30), a  ; seashell
+		ld (player_inventory_items+31), a  ; antigrav belt
 		ld (player_inventory_items+32), a
 		ld (player_inventory_items+33), a
 		ld (player_inventory_items+34), a
@@ -103,7 +103,8 @@ state_play:
 ; 		ld hl, #1000
 		ld hl, #1400
 		ld (player_x), hl
-		ld hl, #0a00
+; 		ld hl, #0a00
+		ld hl, #0800
 		ld (player_y), hl
 		ld a, #ff
 		ld (player_requested_weapon_sprite), a
@@ -122,8 +123,9 @@ state_play:
 		; generate area:
 		ld hl, pcg_generate_area
 ; 		ld e, 0  ; area to generate
-		ld e, 1  ; area to generate
+; 		ld e, 1  ; area to generate
 ; 		ld e, 3  ; area to generate
+		ld e, 4  ; area to generate
 ; 		ld e, 9  ; area to generate
 ; 		ld e, 2  ; area to generate
 ; 		ld e, 10  ; area to generate
@@ -132,8 +134,9 @@ state_play:
 
 		; generate room:
 ; 		ld e, 0
-		ld e, 1
+; 		ld e, 1
 ; 		ld e, CALENDAR_ROOM_ID
+		ld e, 31
 ; 		ld e, TELEPORTER_ROOM_ID
 ; 		ld e, 24
 ; 		ld e, 14  ; 18  ; boss
@@ -213,11 +216,25 @@ state_play_from_inventory__no_full_hud:
 
 	call enable_VDP_output
 
-	ld a, #ff  ; so that we start with 0
-	ld (game_cycle), a
+	ld a, #ff
+	ld (game_cycle), a  ; so that we start with 0
+	ld (player_requested_weapon_sprite), a
 	xor a
 	ld (n_displayed_object_sprites), a
 	ld (n_displayed_object_sprites_without_player_bullets), a
+
+	; Seashell effect:
+	ld a, (player_inventory_items + INVENTORY_ITEM_SEASHELL)
+	or a
+	jr z, state_play_loop
+	ld a, (play_seashell_flag)
+	or a
+	jr z, state_play_loop
+	; player has the seashell, play if there is a breakable wall in the room:
+	xor a
+	ld (play_seashell_flag), a
+	ld hl, SFX_secret
+	call play_SFX_with_high_priority
 
 state_play_loop:
 	ld hl, (in_game_event_fn_ptr)

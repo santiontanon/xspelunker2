@@ -885,7 +885,7 @@ ENDR
 	dw object_interaction_function_tablet  ; TAG_STORY_TRIVIA8
 	dw object_interaction_function_pickup_item  ; TAG_ITEM_SANDALS
 	dw object_interaction_function_pickup_item  ; TAG_ITEM_GLOVES
-	dw object_interaction_function_pickup_item  ; TAG_ITEM_HURAKAN
+	dw object_interaction_function_pickup_item  ; TAG_ITEM_WARRIOR_HAT
 	dw object_interaction_function_pickup_item  ; TAG_ITEM_ARMOR
 	dw object_interaction_function_pickup_item  ; TAG_ITEM_CHAAC
 	dw object_interaction_function_pickup_item  ; TAG_ITEM_SEASHELL
@@ -2067,7 +2067,7 @@ ENDR
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_STORY_TRIVIA8
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ITEM_SANDALS
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ITEM_GLOVES
-	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ITEM_HURAKAN
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ITEM_WARRIOR_HAT
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ITEM_ARMOR
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ITEM_CHAAC
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ITEM_SEASHELL

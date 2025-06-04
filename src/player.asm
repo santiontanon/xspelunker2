@@ -10,6 +10,9 @@ player_fall_speed_table:
 
 PLAYER_JUMP_STOP_INDEX: equ 12  ; when we release the jump key, we will move to this index in the
 								; jump speed table, if we are not already past that
+PLAYER_JUMP_DOUBLE_JUMP_INDEX: equ 8
+PLAYER_JUMP_DOUBLE_JUMP_INDEX_RESTART: equ 3
+
 player_jump_speed_table:
 	db 6, 6, 6, 4, 4, 3, 3, 2
 	db 2, 1, 2, 1, 1, 0, 1, 0, 0, 0, #ff  ; 1 / 3  ; 42 total jump height in 18 frames / good for 50Hz
@@ -74,9 +77,26 @@ player_hit_hazard:
 	add a, PLAYER_STATE_HURT
 	ld (player_state), a
 	xor a
-	ld (player_state_timer), a	
+	ld (player_state_timer), a
+	ld c, 2  ; amount of damage to take
 
+;-----------------------------------------------
+; input:
+; - c: amount of damage (if player has cotton armor, it'll be cut in half)
 player_lose_health:
+	ld a, (player_inventory_items + INVENTORY_ITEM_COTTON_ARMOR)
+	or a
+	jr z, player_lose_health_non_reducible
+	; player has the cotton armor, reduce damage to half:
+	inc c
+	srl c
+	; jr player_lose_health_non_reducible
+
+
+;-----------------------------------------------
+; input:
+; - c: amount of damage (ignores cotton armor)
+player_lose_health_non_reducible:
 	ld a, PLAYER_IMMUNITY_TIME
 	ld (player_immunity_timer), a
 
@@ -86,8 +106,12 @@ player_lose_health:
 	set HUD_REDRAW_FLAG_BIT, (hl)
 
 	ld hl, player_health
-	dec (hl)
 	ld a, (hl)
+	sub c  ; reduce damage
+	jr nc, player_lose_health_nc
+	xor a  ; health cannot go below 0
+player_lose_health_nc:
+	ld (hl), a
 	or a
 	jr nz, player_hit_hazard_continue
 	; player is dead:
@@ -416,8 +440,8 @@ player_update_state_walking_right:
 	call player_check_collision_down_inc
 	jr nz, player_update_switch_to_falling
 
-	call player_update_move_one_pixel_right_considering_collisions
-	jr nz, player_update_state_walking_continue
+	call player_update_move_one_pixel_right_considering_collisions_and_warrior_hat
+	jr nz, player_update_state_walking_continue_no_push
 	; collision: check if player is pushing a block:
 	call player_pushing_right
 	jr player_update_state_walking_continue
@@ -432,11 +456,15 @@ player_update_state_walking_left:
 	call player_check_collision_down_inc
 	jr nz, player_update_switch_to_falling
 
-	call player_update_move_one_pixel_left_considering_collisions
-	jr nz, player_update_state_walking_continue
+	call player_update_move_one_pixel_left_considering_collisions_and_warrior_hat
+	jr nz, player_update_state_walking_continue_no_push
 	; collision: check if player is pushing a block:
 	call player_pushing_left
+	jr player_update_state_walking_continue
 
+player_update_state_walking_continue_no_push:
+	xor a
+	ld (player_push_block_timer), a
 player_update_state_walking_continue:
 	ld a, (player_push_block_timer)
 	or a
@@ -485,10 +513,10 @@ player_update_state_falling_no_weapon_swing:
 	ld a, (keyboard_state)
 	bit KEY_RIGHT_BIT, a
 	push af
-		call z, player_update_move_one_pixel_right_considering_collisions
+		call z, player_update_move_one_pixel_right_considering_collisions_and_warrior_hat
 	pop af
 	bit KEY_LEFT_BIT, a
-	call z, player_update_move_one_pixel_left_considering_collisions
+	call z, player_update_move_one_pixel_left_considering_collisions_and_warrior_hat
 
 	ld a, (player_no_rope_or_ladder_this_frame)
 	or a
@@ -517,30 +545,12 @@ player_update_state_falling_no_rope:
 	jp z, player_update_switch_to_swimming_from_falling
 
 	; move down:
-	ld a, (player_state_timer)
-	ld e, a
-	inc e
-	ld hl, player_fall_speed_table
-	ADD_HL_A
-	ld a, (hl)
-	cp #ff
-	jr nz, player_update_state_falling_speed_determined
-	dec e
-	dec hl
-	ld a, (hl)
-player_update_state_falling_speed_determined:
-	ld b, a
+	call player_update_falling_logic_internal
+
+	ld a, (player_inventory_items + INVENTORY_ITEM_SANDALS)
 	or a
-	ld a, e
-	ld (player_state_timer), a
-	jr z, player_update_state_falling_speed_loop_done
-player_update_state_falling_speed_loop:
-	push bc
-		call player_update_move_one_pixel_down_considering_collisions
-	pop bc
-	jr z, player_update_state_falling_speed_loop_done
-	djnz player_update_state_falling_speed_loop
-player_update_state_falling_speed_loop_done:
+	call nz, player_update_double_jump_check_falling	
+
 	ld a, 2
 	ld (player_requested_frame), a
 	jp player_update_update_sprite_position
@@ -592,6 +602,7 @@ player_update_switch_to_jumping_from_rope_or_ladder:
 player_update_switch_to_jumping:
 	ld a, 1
 	ld (player_jump_is_cancelable), a
+	ld (player_can_double_jump), a
 	ld hl, SFX_jump
 	call play_SFX_with_high_priority
 	xor a
@@ -635,10 +646,10 @@ player_update_state_jumping_no_weapon_swing:
 	ld a, (keyboard_state)
 	bit KEY_RIGHT_BIT, a
 	push af
-		call z, player_update_move_one_pixel_right_considering_collisions
+		call z, player_update_move_one_pixel_right_considering_collisions_and_warrior_hat
 	pop af
 	bit KEY_LEFT_BIT, a
-	call z, player_update_move_one_pixel_left_considering_collisions
+	call z, player_update_move_one_pixel_left_considering_collisions_and_warrior_hat
 
 	ld a, (player_jump_is_cancelable)
 	or a
@@ -669,9 +680,14 @@ player_update_state_jumping_speed_loop:
 	djnz player_update_state_jumping_speed_loop
 player_update_state_jumping_speed_loop_done:
 
+	ld a, (player_inventory_items + INVENTORY_ITEM_SANDALS)
+	or a
+	call nz, player_update_double_jump_check
+
 	ld a, 2
 	ld (player_requested_frame), a
 	jp player_update_update_sprite_position
+
 
 player_update_stop_jumping:
 	ld a, (player_state_timer)
@@ -680,6 +696,62 @@ player_update_stop_jumping:
 	ld a, PLAYER_JUMP_STOP_INDEX
 	ld (player_state_timer), a
 	ret
+
+
+player_update_double_jump_check:
+	; we only got here if the player has the sandals:
+	ld a, (player_can_double_jump)
+	or a
+	ret z
+	ld a, (keyboard_clicks)
+	bit KEY_JUMP_BIT, a
+	ret z
+	; we can only double jump towards the end of the jump:
+	ld a, (player_state_timer)
+	cp PLAYER_JUMP_DOUBLE_JUMP_INDEX
+	ret c
+	xor a
+	ld (player_can_double_jump), a
+	ld a, PLAYER_JUMP_DOUBLE_JUMP_INDEX_RESTART
+	ld (player_state_timer), a
+	ld hl, SFX_jump
+	jp play_SFX_with_high_priority
+
+
+player_update_double_jump_check_falling:
+	; we only got here if the player has the sandals:
+	ld a, (player_can_double_jump)
+	or a
+	ret z
+	ld a, (keyboard_clicks)
+	bit KEY_JUMP_BIT, a
+	ret z
+	xor a
+	ld (player_can_double_jump), a
+	; switch to the proper state:
+	ld a, (player_state)
+	and #fe
+	cp PLAYER_STATE_WEAPON_SWING_FALLING
+	jr z, player_update_double_jump_check_falling_to_weapon_swing_jumping
+	cp PLAYER_STATE_DIRECTIONAL_WEAPON_FALLING
+	jr z, player_update_double_jump_check_falling_to_directional_weapon_jumping
+player_update_double_jump_check_falling_to_jumping:
+	ld c, PLAYER_STATE_JUMPING
+	jr player_update_double_jump_check_falling_target_state_set
+player_update_double_jump_check_falling_to_weapon_swing_jumping:
+	ld c, PLAYER_STATE_WEAPON_SWING_JUMPING
+	jr player_update_double_jump_check_falling_target_state_set
+player_update_double_jump_check_falling_to_directional_weapon_jumping:
+	ld c, PLAYER_STATE_DIRECTIONAL_WEAPON_JUMPING
+player_update_double_jump_check_falling_target_state_set:
+	ld a, (player_state)
+	and #01
+	add a, c
+	ld (player_state), a
+	ld a, PLAYER_JUMP_DOUBLE_JUMP_INDEX_RESTART
+	ld (player_state_timer), a
+	ld hl, SFX_jump
+	jp play_SFX_with_high_priority
 
 
 ;-----------------------------------------------
@@ -1064,8 +1136,14 @@ player_update_switch_to_swimming_from_falling:
 	set HUD_REDRAW_FLAG_BIT, (hl)
 
 player_update_state_swimming:
+	ld c, #0f  ; default: lose 1 oxygen each 16 frames
+	ld a, (player_inventory_items + INVENTORY_ITEM_CHAAC_BLESSING)
+	or a
+	jr z, player_update_state_swimming_no_chaac_blessing
+	ld c, #7f  ; with chaac blessing: lose 1 oxygen each 128 frames
+player_update_state_swimming_no_chaac_blessing
 	ld a, (interrupt_cycle)
-	and #0f
+	and c
 	jr nz, player_update_state_swimming_oxygen_done
 	ld a, (player_oxygen)
 	or a
@@ -1076,7 +1154,8 @@ player_update_state_swimming:
 player_update_state_swimming_oxygen_zero:
 	ld a, (player_immunity_timer)
 	or a
-	call z, player_lose_health
+	ld c, 1
+	call z, player_lose_health_non_reducible
 player_update_state_swimming_oxygen_non_zero:
 	ld a, HUD_MAX_TIME
 	ld (hud_redraw_timer), a
@@ -1314,10 +1393,10 @@ player_update_state_weapon_swing_jumping_continue:
 	ld a, (keyboard_state)
 	bit KEY_RIGHT_BIT, a
 	push af
-		call z, player_update_move_one_pixel_right_considering_collisions
+		call z, player_update_move_one_pixel_right_considering_collisions_and_warrior_hat
 	pop af
 	bit KEY_LEFT_BIT, a
-	call z, player_update_move_one_pixel_left_considering_collisions
+	call z, player_update_move_one_pixel_left_considering_collisions_and_warrior_hat
 
 	ld a, (player_jump_is_cancelable)
 	or a
@@ -1328,6 +1407,10 @@ player_update_state_weapon_swing_jumping_continue:
 	bit KEY_JUMP_BIT, a
 	call nz, player_update_stop_jumping
 player_update_state_weapon_swing_jumping_cannot_cancel:
+
+	ld a, (player_inventory_items + INVENTORY_ITEM_SANDALS)
+	or a
+	call nz, player_update_double_jump_check
 
 	; move up:
 	ld a, (player_state_timer)
@@ -1390,10 +1473,10 @@ player_update_state_weapon_swing_falling:
 	ld a, (keyboard_state)
 	bit KEY_RIGHT_BIT, a
 	push af
-		call z, player_update_move_one_pixel_right_considering_collisions
+		call z, player_update_move_one_pixel_right_considering_collisions_and_warrior_hat
 	pop af
 	bit KEY_LEFT_BIT, a
-	call z, player_update_move_one_pixel_left_considering_collisions
+	call z, player_update_move_one_pixel_left_considering_collisions_and_warrior_hat
 
 	ld a, (player_jump_no_grab_timer)
 	or a
@@ -1411,30 +1494,11 @@ player_update_state_weapon_swing_falling_continue:
 	jp z, player_update_switch_to_swimming_from_falling
 
 	; move down:
-	ld a, (player_state_timer)
-	ld e, a
-	inc e
-	ld hl, player_fall_speed_table
-	ADD_HL_A
-	ld a, (hl)
-	cp #ff
-	jr nz, player_update_state_weapon_swing_falling_speed_determined
-	dec e
-	dec hl
-	ld a, (hl)
-player_update_state_weapon_swing_falling_speed_determined:
-	ld b, a
+	call player_update_falling_logic_internal
+
+	ld a, (player_inventory_items + INVENTORY_ITEM_SANDALS)
 	or a
-	ld a, e
-	ld (player_state_timer), a
-	jr z, player_update_state_weapon_swing_falling_speed_loop_done
-player_update_state_weapon_swing_falling_speed_loop:
-	push bc
-		call player_update_move_one_pixel_down_considering_collisions
-	pop bc
-	jr z, player_update_state_weapon_swing_falling_speed_loop_done
-	djnz player_update_state_weapon_swing_falling_speed_loop
-player_update_state_weapon_swing_falling_speed_loop_done:
+	call nz, player_update_double_jump_check_falling	
 
 	ld hl, player_weapon_state_timer
 	ld a, (hl)
@@ -1616,6 +1680,10 @@ player_update_state_directional_weapon_jumping_no_right:
 	call nz, player_update_stop_jumping
 player_update_state_directional_weapon_jumping_cannot_cancel:
 
+	ld a, (player_inventory_items + INVENTORY_ITEM_SANDALS)
+	or a
+	call nz, player_update_double_jump_check
+
 	; move up:
 	ld a, (player_state_timer)
 	inc a
@@ -1743,30 +1811,11 @@ player_update_state_directional_weapon_falling_no_right:
 	jp z, player_update_switch_to_swimming_from_falling
 
 	; move down:
-	ld a, (player_state_timer)
-	ld e, a
-	inc e
-	ld hl, player_fall_speed_table
-	ADD_HL_A
-	ld a, (hl)
-	cp #ff
-	jr nz, player_update_state_directional_weapon_falling_speed_determined
-	dec e
-	dec hl
-	ld a, (hl)
-player_update_state_directional_weapon_falling_speed_determined:
-	ld b, a
+	call player_update_falling_logic_internal
+
+	ld a, (player_inventory_items + INVENTORY_ITEM_SANDALS)
 	or a
-	ld a, e
-	ld (player_state_timer), a
-	jr z, player_update_state_directional_weapon_falling_speed_loop_done
-player_update_state_directional_weapon_falling_speed_loop:
-	push bc
-		call player_update_move_one_pixel_down_considering_collisions
-	pop bc
-	jr z, player_update_state_directional_weapon_falling_speed_loop_done
-	djnz player_update_state_directional_weapon_falling_speed_loop
-player_update_state_directional_weapon_falling_speed_loop_done:
+	call nz, player_update_double_jump_check_falling	
 
 	; weapon release?
 	ld a, (keyboard_state)
@@ -2003,6 +2052,48 @@ player_update_state_teleport_in_done:
 		call call_hl_in_page_c_8000
 	pop ix
 	jp player_update_switch_to_idle
+
+
+;-----------------------------------------------
+; Player falling speed (accounting for antigrav belt)
+player_update_falling_logic_internal:
+	ld a, (player_inventory_items + INVENTORY_ITEM_ANTIGRAV_BELT)
+	or a
+	jr z, player_update_falling_logic_internal_no_antigrav_belt
+	ld a, (keyboard_state)
+	bit KEY_DOWN_BIT, a
+	jr z, player_update_falling_logic_internal_no_antigrav_belt  ; override the antigrav belt
+	; player using the antigrav belt, limit to the first 6 frames of 'player_fall_speed_table':
+	ld a, (player_state_timer)
+	cp 6
+	jr c, player_update_falling_logic_internal_no_antigrav_belt
+	ld a, 6
+	ld (player_state_timer), a
+player_update_falling_logic_internal_no_antigrav_belt:
+	ld a, (player_state_timer)
+	ld e, a
+	inc e
+	ld hl, player_fall_speed_table
+	ADD_HL_A
+	ld a, (hl)
+	cp #ff
+	jr nz, player_update_falling_logic_internal_speed_determined
+	dec e
+	dec hl
+	ld a, (hl)
+player_update_falling_logic_internal_speed_determined:
+	ld b, a
+	or a
+	ld a, e
+	ld (player_state_timer), a
+	ret z
+player_update_falling_logic_internal_speed_loop:
+	push bc
+		call player_update_move_one_pixel_down_considering_collisions
+	pop bc
+	ret z
+	djnz player_update_falling_logic_internal_speed_loop
+	ret
 
 
 ;-----------------------------------------------
@@ -2592,10 +2683,16 @@ player_pushing_left_no_block:
 ; - ix: ptr to object
 ; - c: direction to push (-1 left, 1 right)
 player_pushing_block_found:
+	ld b, PLAYER_PUSHING_TIME
+	ld a, (player_inventory_items + INVENTORY_ITEM_GLOVES)
+	or a
+	jr z, player_pushing_block_found_no_gloves
+	ld b, PLAYER_PUSHING_TIME / 4  ; gloves reduce push time by 4
+player_pushing_block_found_no_gloves:
 	ld a, (player_push_block_timer)
 	inc a
 	ld (player_push_block_timer), a
-	cp PLAYER_PUSHING_TIME
+	cp b
 	ret nz
 
 	; check if the block would collide with something in the new position:
@@ -2698,6 +2795,24 @@ ENDIF
 ; output:
 ; - z: collision
 ; - nz: no collision
+player_update_move_one_pixel_right_considering_collisions_and_warrior_hat:
+	ld a, (player_inventory_items + INVENTORY_ITEM_WARRIOR_HAT)
+	or a
+	jr z, player_update_move_one_pixel_right_considering_collisions
+	; player has the hat, move 25% faster
+	ld a, (interrupt_cycle)
+	and #03
+	jr nz, player_update_move_one_pixel_right_considering_collisions
+	; move two pixels at once:
+	call player_update_move_one_pixel_right_considering_collisions
+	ret z
+	jp player_update_move_one_pixel_right_considering_collisions
+
+
+;-----------------------------------------------
+; output:
+; - z: collision
+; - nz: no collision
 player_update_move_one_pixel_right_considering_collisions:
 	ld a, (player_state)
 	and #fe
@@ -2722,6 +2837,24 @@ player_update_move_one_pixel_right_considering_collisions_continue:
 	ld hl, player_x
 	ld (hl), 8 - PLAYER_COLLISION_WIDTH
 	ret  ; we must have "z" here, as a result of 'player_check_collision_right'
+
+
+;-----------------------------------------------
+; output:
+; - z: collision
+; - nz: no collision
+player_update_move_one_pixel_left_considering_collisions_and_warrior_hat:
+	ld a, (player_inventory_items + INVENTORY_ITEM_WARRIOR_HAT)
+	or a
+	jr z, player_update_move_one_pixel_left_considering_collisions
+	; player has the hat, move 50% faster
+	ld a, (interrupt_cycle)
+	and #03
+	jr nz, player_update_move_one_pixel_left_considering_collisions
+	; move two pixels at once:
+	call player_update_move_one_pixel_left_considering_collisions
+	ret z
+	jp player_update_move_one_pixel_left_considering_collisions
 
 
 ;-----------------------------------------------

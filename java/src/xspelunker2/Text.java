@@ -220,7 +220,8 @@ public class Text {
         addLineSafe(lines_with_constant_page1, "Idol: a golden idol statuette.", "ITEM_IDOL", 80);
         addLineSafe(lines_with_constant_page1, "Winged sandals: a pair of winged copper sandals. I am not sure how, but I feel I am lighter with them.", "ITEM_SANDALS", 80);
         addLineSafe(lines_with_constant_page1, "Gloves: a pair of leather gloves. I can push things without fear of hurting myself with these.", "ITEM_GLOVES", 80);
-        addLineSafe(lines_with_constant_page1, "Hurakán blessing: a small token depicting the Mayan Hurakán deity. I feel fast like the wind with it on!", "ITEM_HURAKAN_BLESSING", 80);
+//        addLineSafe(lines_with_constant_page1, "Hurakán blessing: a small token depicting the Mayan Hurakán deity. I feel fast like the wind with it on!", "ITEM_HURAKAN_BLESSING", 80);
+        addLineSafe(lines_with_constant_page1, "Maya warrior hat: I feel swift like a Maya warrior when I put it ton!", "ITEM_WARRIOR_HAT", 80);
         addLineSafe(lines_with_constant_page1, "Cotton armor: a classic Mayan armor. It will protect me from damage.", "ITEM_COTTON_ARMOR", 80);
         addLineSafe(lines_with_constant_page1, "Chaac blessing: a small token depicting the Mayan Chaac deity. Water feels less daunting with it.", "ITEM_CHAAC_BLESSING", 80);
         addLineSafe(lines_with_constant_page1, "Seashell: somehow I can hear it ringing when there is something hidden in a room.", "ITEM_SEASHELL", 80);

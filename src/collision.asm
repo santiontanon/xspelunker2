@@ -839,9 +839,9 @@ check_collision_with_next_chunk_down:
 	ld d, 0
 	add hl, de
 	push hl
-		ld a, (hl)  ; chunk ID
 		call check_collision_with_next_chunk_check_if_its_special_room_up_down
 		jr z, check_collision_with_next_chunk_down_continue
+		ld a, (hl)  ; chunk ID
 		ld h, 0
 		ld l, a
 		add hl, hl

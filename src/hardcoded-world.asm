@@ -390,7 +390,7 @@ hardcoded_area_data_10__tags:
   db TAG_BOSS6_KEY, 60, 0
   db TAG_BOSS6_CHESTLOCK, 38, 0
   db TAG_MAP_PIECE6, 35, 0
-  db TAG_ITEM_HURAKAN, 2, 0
+  db TAG_ITEM_WARRIOR_HAT, 2, 0
   db TAG_ITEM_BELT, 33, 0
   db TAG_SMALL_KEY2, 24, 0
   db TAG_SMALL_KEY3, 21, 0

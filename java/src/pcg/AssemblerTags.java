@@ -152,7 +152,7 @@ public class AssemblerTags {
         // optional items:
         "TAG_ITEM_SANDALS",
         "TAG_ITEM_GLOVES",
-        "TAG_ITEM_HURAKAN",
+        "TAG_ITEM_WARRIOR_HAT",
         "TAG_ITEM_ARMOR",
         "TAG_ITEM_CHAAC",
         "TAG_ITEM_SEASHELL",

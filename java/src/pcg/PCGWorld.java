@@ -850,7 +850,7 @@ public class PCGWorld {
         String optionalItemTags[] = {
           "item-sandals",
           "item-gloves",
-          "item-hurakan",
+          "item-warrior-hat",
           "item-armor",
           "item-chaac",
           "item-seashell",
