@@ -1,15 +1,19 @@
 to do:
 
-***- BUG: connection down between area 4 and 5 has a breakable wall that does not turn into a ladder when broken
-***- BUG: you can land on a platform one or two pixels below the floor
-
-- enemies:
-  - come up with a list of enemies for pyramid (consider both sprite enemies and larger tile-based enemies)
-  - implement at least one enemy
-  - enemy spawn (remember never to have them in room edges, so that you cannot spawn on top of one)
-  - kill enemies and get hurt by them
-  - implement all the enemies on the pyramid biome and spawn them
-  - spawn optional items when killing them (and pick them up, gain ammo, life, coins, etc.)
+***- enemies:
+  ***- snakes:
+    ***- draw them (two variants: dashers, and aggressive)
+    ***- spawn one dasher snake per room for now: routine that finds suitable spots and picks one at random (remember never to have them in room edges, so that you cannot spawn on top of one)
+    ***- implement the basic snake dasher behavior in game (like in XSpelunker)
+    ***- determine how am I going to budget the sprites among enemy types (can I fit them all? do I need to limit the number of types per room?)
+    ***- for each area, define min-max enemies per room, and weights for each kind, and sample how many (depending on room size), and spawn them based on that
+    ***- kill enemies and get hurt by them
+    ***- spawn optional items when killing them (and pick them up, gain ammo, life, coins, etc.)
+    ***- poison spitting snakes
+  ***- bats: two types: slower and faster
+  ***- skeletons (variants: walk-left-right+pause to look around, bone-throwers-straight, bone-throwers-parabola)
+  ***- piranhas (types: just-swim, swim-and-jump)
+  ***- tile-based-enemy: carnivore plant that extends tentacles at you left-right-up (and maybe diagonals). Decide whether to spawn arbitrarily, or if it would take the spot of a 4x4 item
 
 - jungle biome
   - implement it (remember to keep ladder tiles in place for down-door opening code)

@@ -225,7 +225,7 @@ public class Text {
         addLineSafe(lines_with_constant_page1, "Cotton armor: a classic Mayan armor. It will protect me from damage.", "ITEM_COTTON_ARMOR", 80);
         addLineSafe(lines_with_constant_page1, "Chaac blessing: a small token depicting the Mayan Chaac deity. Water feels less daunting with it.", "ITEM_CHAAC_BLESSING", 80);
         addLineSafe(lines_with_constant_page1, "Seashell: somehow I can hear it ringing when there is something hidden in a room.", "ITEM_SEASHELL", 80);
-        addLineSafe(lines_with_constant_page1, "Antigravity belt: alien technology, lets me fall through the air slowly. I can turn it off pressing DOWN.", "ITEM_BELT", 80);
+        addLineSafe(lines_with_constant_page1, "Antigravity belt: alien technology, lets me fall through the air slowly (hold the UP key).", "ITEM_BELT", 80);
         addLineSafe(lines_with_constant_page1, "Ice cape: a cape with a coating of ice, which seems never to melt. It'll protect me from heat.", "ITEM_ICE_CAPE", 80);
         addLineSafe(lines_with_constant_page1, "A letter from Elaine. Press INTERACT to read it.", "ITEM_LETTER1", 80);
         addLineSafe(lines_with_constant_page1, "The second letter from Elaine. Press INTERACT to read it.", "ITEM_LETTER2", 80);

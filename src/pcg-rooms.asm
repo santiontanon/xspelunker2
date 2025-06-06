@@ -557,7 +557,19 @@ pcg_generate_room__object_breakable_wall_mask_set:
 	or a
 	jp z, pcg_generate_room__object_breakable_wall_continue
 	; wall was already destroyed:
-	call room_remove_breakable_wall_restore_background
+	push bc
+	push de
+		call room_remove_breakable_wall_restore_background
+	pop de
+	pop bc
+
+	; check if it's a breakable wall at the bottom of a room:
+	ld a, b
+	add a, d
+	ld d, a
+	ld a, (current_room__height)
+	cp d
+	jp z, pcg_generate_room__maybe_replace_door_by_ladder_continue
 	jp pcg_generate_room__object_loop_next
 
 
@@ -805,6 +817,7 @@ pcg_generate_room__maybe_replace_door_by_ladder:
 	ld a, (ix + AREA_OBJECT_STRUCT_EXTRA)  ; a = direction
 	cp PCG_DIRECTION_DOWN
 	jp nz, pcg_generate_room__object_loop_next
+pcg_generate_room__maybe_replace_door_by_ladder_continue:
 	; is it an inter-area connection? (check if we are at the edge of the map, or there is no chunk below)
 	push bc
 		ld a, (current_room__y)
@@ -832,7 +845,7 @@ pcg_generate_room__maybe_replace_door_by_ladder_inter_area_connection:
 	; replace by a ladder:
 	ld a, (current_room__height)
 	dec a
-	ld b, a  ; put the door at the bottom of the room
+	ld b, a  ; put the ladder at the bottom of the room
 	call get_room_tile_ptr
 	ld (hl), 254  ; platform
 	inc hl

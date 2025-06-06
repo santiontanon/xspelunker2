@@ -390,8 +390,11 @@ public class GenerateChunkData {
                     if (o.y + o.dy != 12*8) {
                         throw new Exception(o.type + " has y coordinates: " + o.y + ", " + (o.y+o.dy) + " in " + c.path);
                     }
-                    if (o.x > 7*8 || (o.x + o.dx) < 9*8) {
+                    if (o.x != 6*8) {
                         throw new Exception(o.type + " has x coordinates: " + o.x + ", " + (o.x+o.dx) + " in " + c.path);
+                    }
+                    if (o.dx != 4*8) {
+                        throw new Exception(o.type + " has width != 32 in " + c.path);
                     }
                 }
                 if (o.type.equals("breakable-up") || o.type.equals("door-up")) {

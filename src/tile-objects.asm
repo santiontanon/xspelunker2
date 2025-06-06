@@ -751,6 +751,7 @@ room_remove_breakable_wall_continue:
 	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
 	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
 	call room_remove_breakable_wall_restore_background
+	call room_maybe_spawn_ladder_after_opening_wall
 	push ix
 	pop hl
 	jp delete_tile_object_in_hl
@@ -1231,12 +1232,32 @@ object_interaction_function_open_combination_lock_entry_point:
 	; If it's a door down to an inter-area connection, replace by a ladder:
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
 	cp TAG_DOOR_HORIZONTAL
-	jr nz, room_mark_open_door__no_ladder_replacement
+	call z, room_maybe_spawn_ladder_after_opening_door
+	; remove door:
+	push ix
+	pop hl
+	call delete_tile_object_in_hl
+	jp room_render_tile_objects
+
+
+;-----------------------------------------------
+; input:
+; - ix: ptr to an object (either a door or a breakable wall)
+room_maybe_spawn_ladder_after_opening_door:
 	; is it at the bottom of the room?
 	ld a, (current_room__height)
 	dec a
 	cp (ix + ROOM_TILE_OBJECT_STRUCT_Y)
-	jr nz, room_mark_open_door__no_ladder_replacement
+	ret nz
+	jr room_maybe_spawn_ladder_after_opening_door_or_wall
+
+room_maybe_spawn_ladder_after_opening_wall:
+	ld a, (current_room__height)
+	sub (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	sub (ix + ROOM_TILE_OBJECT_STRUCT_HEIGHT)
+	ret nz
+
+room_maybe_spawn_ladder_after_opening_door_or_wall:
 	; is it an inter-area connection? (check if we are at the edge of the map, or there is no chunk below)
 	ld a, (current_room__y)
 	ld c, a
@@ -1245,7 +1266,7 @@ object_interaction_function_open_combination_lock_entry_point:
 	ld c, a
 	ld a, (current_area__height)
 	cp c
-	jr z, room_mark_open_door__inter_area_connection
+	jr z, room_maybe_spawn_ladder_after_opening_door_or_wall__inter_area_connection
 
 	; see if there is a chunk below:
 	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
@@ -1257,12 +1278,14 @@ object_interaction_function_open_combination_lock_entry_point:
 	call call_hl_in_page_e_8000
 	ld a, (hl)
 	cp #ff
-	jr nz, room_mark_open_door__no_ladder_replacement
+	ret nz
 
-room_mark_open_door__inter_area_connection:
+room_maybe_spawn_ladder_after_opening_door_or_wall__inter_area_connection:
 	; replace by a ladder:
 	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
-	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	ld a, (current_room__height)
+	dec a
+	ld b, a
 	call get_room_tile_ptr
 	ld (hl), 254  ; platform
 	inc hl
@@ -1271,13 +1294,7 @@ room_mark_open_door__inter_area_connection:
 	ld (hl), 136  ; ladder-right
 	inc hl
 	ld (hl), 254  ; platform
-
-room_mark_open_door__no_ladder_replacement:
-	; remove door:
-	push ix
-	pop hl
-	call delete_tile_object_in_hl
-	jp room_render_tile_objects
+	ret
 
 
 ;-----------------------------------------------

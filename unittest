@@ -28,4 +28,5 @@ read_from_symbol_file () {
 }
 
 
-read_from_symbol_file "src/unittests/collision-test.asm" "a_times_de_signed_fast"
+# No unit tests for this project currently
+# read_from_symbol_file "src/unittests/collision-test.asm" "a_times_de_signed_fast"

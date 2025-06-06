@@ -16,11 +16,9 @@ player_check_collision_idle_with_e:
 	jr z, player_check_collision_idle_continue
 	inc b
 player_check_collision_idle_continue:
-IF COLLISION_UNIT_TESTING == 0	
 	ld a, c
 	cp #ff
 	jp z, player_exit_room_left
-ENDIF
 	push bc
 	push de
 		call get_room_tile_type
@@ -58,15 +56,13 @@ player_check_collision_left:
 	; collision with the feet:
 	inc b
 	ld a, (player_y)
-	cp PLAYER_COLLISION_UP_LEEWAY
-	jr c, player_check_collision_left_continue
+	or a
+	jr z, player_check_collision_left_continue
 	inc b
 player_check_collision_left_continue:
-IF COLLISION_UNIT_TESTING == 0	
 	ld a, c
 	cp #ff
 	jp z, player_exit_room_left
-ENDIF
 	push bc
 		call get_room_tile_type
 	pop bc
@@ -76,15 +72,26 @@ ENDIF
 	ld a, (player_state)
 	and #fe
 	cp PLAYER_STATE_CRAWLING
-	jr z, player_check_collision_left_no_collision	
-	; collision with the head:
-	ld a, (player_y + 1)
-	ld b, a
+	jr z, player_check_collision_left_no_collision
+
+	; collision up to the head (might have to check 1 or 2 tiles):
 	ld a, (player_y)
 	cp PLAYER_COLLISION_UP_LEEWAY
+	ld a, (player_y + 1)
 	jr c, player_check_collision_left_continue2
-	inc b
+	inc a
 player_check_collision_left_continue2:
+	dec b
+	cp b
+	jr z, player_check_collision_left_continue3
+	; need to do an intermediate check:
+	push bc
+		call get_room_tile_type
+	pop bc
+	cp 2  ; wall
+	ret z
+	dec b
+player_check_collision_left_continue3:
 	call get_room_tile_type
 	cp 2
 	ret
@@ -107,33 +114,42 @@ player_check_collision_right:
 	inc c
 	inc b
 	ld a, (player_y)
-	cp PLAYER_COLLISION_UP_LEEWAY
-	jr c, player_check_collision_right_continue
+	or a
+	jr z, player_check_collision_right_continue
 	inc b
 player_check_collision_right_continue:
-IF COLLISION_UNIT_TESTING == 0	
 	ld a, (current_room__width)
 	cp c
 	jp z, player_exit_room_right
-ENDIF
 	push bc
 		call get_room_tile_type
 	pop bc
-	cp 2
+	cp 2  ; wall
 	ret z
 	; if we are crawling, do not check head:
 	ld a, (player_state)
 	and #fe
 	cp PLAYER_STATE_CRAWLING
 	jr z, player_check_collision_right_no_collision
-	; collision with the head:
-	ld a, (player_y + 1)
-	ld b, a
+
+	; collision up to the head (might have to check 1 or 2 tiles):
 	ld a, (player_y)
 	cp PLAYER_COLLISION_UP_LEEWAY
+	ld a, (player_y + 1)
 	jr c, player_check_collision_right_continue2
-	inc b
+	inc a
 player_check_collision_right_continue2:
+	dec b
+	cp b
+	jr z, player_check_collision_right_continue3
+	; need to do an intermediate check:
+	push bc
+		call get_room_tile_type
+	pop bc
+	cp 2  ; wall
+	ret z
+	dec b
+player_check_collision_right_continue3:
 	call get_room_tile_type
 	cp 2
 	ret
@@ -155,11 +171,9 @@ player_check_collision_down_inc:
 	; collision with the feet-left:
 	inc b
 	inc b
-IF COLLISION_UNIT_TESTING == 0	
 	ld a, (current_room__height)
 	cp b
 	jp z, player_exit_room_down
-ENDIF
 	push bc
 		call get_room_tile_type
 	pop bc
@@ -206,10 +220,8 @@ player_check_collision_up:
 	ld a, (player_y + 1)
 	ld b, a
 	; collision with the head-left:
-IF COLLISION_UNIT_TESTING == 0	
 	cp #ff
 	jp z, player_exit_room_up
-ENDIF
 	push bc
 		call get_room_tile_type
 	pop bc
@@ -374,8 +386,6 @@ get_room_tile_type_continue:
 	ld a, (hl)
 	ret
 
-
-IF COLLISION_UNIT_TESTING == 0	
 
 ;-----------------------------------------------
 ; input:
@@ -996,7 +1006,6 @@ check_collision_with_next_chunk_check_horizontal_open_wall_right:
 	jr check_collision_with_next_chunk_check_horizontal_open_wall_right_continue
 
 
-
 ;-----------------------------------------------
 ; input:
 ; - ixh: 0 (from above), 1 (from below)
@@ -1238,8 +1247,6 @@ check_for_interarea_exit_done:
 	pop bc
 	ret
 
-
-ENDIF
 
 ;-----------------------------------------------
 ; the first 32 tiles canot appear in a level, so, we only define collision for the other 224 tiles

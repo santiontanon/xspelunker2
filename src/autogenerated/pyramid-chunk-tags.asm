@@ -18,7 +18,7 @@ pyramid_standard_chunk_pool:
   db 2, #00, #00  ; data/patterns/room0010-3.tmx (7)
   dw #05db
   db 2, #00, #00  ; data/patterns/room0010-4.tmx (8)
-  dw #0ddf
+  dw #099f
   db 3, #00, #01  ; data/patterns/room0011-1.tmx (9)
   dw #008f
   db 3, #00, #01  ; data/patterns/room0011-2.tmx (10)

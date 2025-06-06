@@ -2,6 +2,9 @@
     include "sound-constants.asm"
 
 
+COLLISION_DEBUG: equ 0
+
+
 KEY_WEAPON_BIT: equ 0
 KEY_JUMP_BIT: equ 1
 KEY_INVENTORY_BIT: equ 2
@@ -113,7 +116,7 @@ ROOM_TILE_OBJECT_STRUCT_WIDTH: equ 9  ; only used by breakable walls
 ROOM_TILE_OBJECT_STRUCT_HEIGHT: equ 10  ; only used by breakable walls
 ROOM_TILE_OBJECT_STRUCT_LAST_HIT_ID: equ 11  ; only used by breakable walls
 
-PLAYER_COLLISION_UP_LEEWAY: equ 3  ; collision box height will be 16 - PLAYER_COLLISION_UP_LEEWAY
+PLAYER_COLLISION_UP_LEEWAY: equ 3  ; collision box height will be 16 - (8 - PLAYER_COLLISION_UP_LEEWAY)
 PLAYER_COLLISION_WIDTH: equ 4
 PLAYER_MAX_SWIMMING_INERTIA_TIME: equ 8
 PLAYER_PIXEL_X_ON_LADDER: equ 6

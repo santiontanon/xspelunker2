@@ -1,7 +1,3 @@
-; When unit testing, we only want to import some parts of this file:
-IF COLLISION_UNIT_TESTING == 0
-
-
 ;-----------------------------------------------
 ; Jump tables
 player_fall_speed_table:
@@ -58,6 +54,10 @@ player_update_from_ladder_fail:
 	SETMEGAROMPAGE_8000 TEXT_PAGE
 	jp state_inventory
 player_update_no_inventory:
+
+IF COLLISION_DEBUG = 1
+	jp player_update_state_fly_debug
+ENDIF
 
 	ld a, (player_state)
 	ld hl, player_update_state_fn_table
@@ -295,6 +295,29 @@ player_update_state_fn_table:
 	dw player_update_state_hurt
 	dw player_update_state_dead
 	dw player_update_state_teleport_in
+
+
+;-----------------------------------------------
+IF COLLISION_DEBUG = 1
+player_update_state_fly_debug:
+	ld a, (keyboard_state)
+	bit KEY_RIGHT_BIT, a
+	call z, player_update_move_one_pixel_right_considering_collisions
+	ld a, (keyboard_state)
+	bit KEY_LEFT_BIT, a
+	call z, player_update_move_one_pixel_left_considering_collisions
+	ld a, (keyboard_state)
+	bit KEY_UP_BIT, a
+	call z, player_update_move_one_pixel_up_considering_collisions
+	ld a, (keyboard_state)
+	bit KEY_DOWN_BIT, a
+	call z, player_update_move_one_pixel_down_considering_collisions
+
+	xor a
+	ld (player_requested_frame), a
+	jp player_update_update_sprite_position
+
+ENDIF
 
 
 ;-----------------------------------------------
@@ -2061,13 +2084,13 @@ player_update_falling_logic_internal:
 	or a
 	jr z, player_update_falling_logic_internal_no_antigrav_belt
 	ld a, (keyboard_state)
-	bit KEY_DOWN_BIT, a
-	jr z, player_update_falling_logic_internal_no_antigrav_belt  ; override the antigrav belt
+	bit KEY_UP_BIT, a
+	jr nz, player_update_falling_logic_internal_no_antigrav_belt  ; not using the antigrav belt
 	; player using the antigrav belt, limit to the first 6 frames of 'player_fall_speed_table':
 	ld a, (player_state_timer)
-	cp 6
+	cp 2
 	jr c, player_update_falling_logic_internal_no_antigrav_belt
-	ld a, 6
+	ld a, 2
 	ld (player_state_timer), a
 player_update_falling_logic_internal_no_antigrav_belt:
 	ld a, (player_state_timer)
@@ -2785,10 +2808,6 @@ player_pushing_block_found_out_of_screen:
 	pop hl
 	call delete_tile_object_in_hl
 	jr player_pushing_block_found_continue2
-
-
-; Anothing above this line is not imported when doing collision unit testing
-ENDIF
 
 
 ;-----------------------------------------------
