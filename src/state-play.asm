@@ -175,8 +175,17 @@ state_play_from_inventory__no_full_hud:
 		; setup sprites:
 		SETMEGAROMPAGE_8000 SPRITES_PAGE
 		ld hl, pyramid_object_sprites_bin
-		ld de, SPRTBL2 + 32 * FIRST_OBJECT_SPRITE  ; first three reserved for player / weapon
+		ld de, SPRTBL2 + 32 * FIRST_OBJECT_SPRITE_PATTERN  ; first three reserved for player / weapon
 		ld bc, pyramid_object_sprites_bin_end - pyramid_object_sprites_bin
+		call fast_LDIRVM
+
+		ld hl, pyramid_enemy_sprites_zx0
+		ld de, buffer_4096
+		ld c, ENEMIES_PAGE
+		call dzx0_from_page_c
+		ld hl, buffer_4096		
+		ld de, SPRTBL2 + 32 * FIRST_ENEMY_SPRITE_PATTERN
+		ld bc, (64 - FIRST_ENEMY_SPRITE_PATTERN) * 32
 		call fast_LDIRVM
 
 		; setup tiles:
@@ -367,6 +376,9 @@ state_play_update_agenda_cycle_odd:  ; player + player bullets + sprite objects
 	call player_update
 
 	call update_sprite_objects
+	ld hl, update_sprite_enemies
+	ld c, ENEMIES_PAGE
+	call call_hl_in_page_c_8000
 	ld a, (n_displayed_object_sprites)
 	ld (n_displayed_object_sprites_without_player_bullets), a
 	call update_sprite_objects_player_bullets

@@ -2,8 +2,8 @@
 ; Temporary variables (overlapping with the buffer):
 tmp_pcg_room__current_target_chunk_bank_id: equ buffer_4096 + 4094
 tmp_pcg_room__current_decompressed_chunk_bank_id: equ tmp_pcg_room__current_target_chunk_bank_id - 1
-tmp_pcg_room__next_object_ptr: equ tmp_pcg_room__current_decompressed_chunk_bank_id - 2
-tmp_pcg_room__next_tile_object_ptr: equ tmp_pcg_room__next_object_ptr - 2
+tmp_pcg_room__next_enemy_ptr: equ tmp_pcg_room__current_decompressed_chunk_bank_id - 2
+tmp_pcg_room__next_tile_object_ptr: equ tmp_pcg_room__next_enemy_ptr - 2
 tmp_pcg_room__chunk_x: equ tmp_pcg_room__next_tile_object_ptr - 1
 tmp_pcg_room__chunk_y: equ tmp_pcg_room__chunk_x - 1
 tmp_pcg_room__is_midpoint_room: equ tmp_pcg_room__chunk_y - 1
@@ -51,14 +51,15 @@ pcg_generate_room_reset_state:
 	ld a, 1
 	call clear_memory_a
 
-	ld hl, current_room__objects
-	ld (tmp_pcg_room__next_object_ptr), hl
-	ld bc, MAX_ROOM_OBJECTS * ROOM_OBJECT_STRUCT_SIZE - 1
+	ld hl, current_room__sprite_objects
+	ld bc, MAX_ROOM_SPRITE_OBJECTS * ROOM_OBJECT_STRUCT_SIZE - 1
 	xor a
 	ld (player_trial_completion_state), a
-	ld (current_room__objects_sentinel), a
-	ld (current_room__player_bullets_sentinel), a
 	ld (tmp_pcg_room__is_midpoint_room), a
+	call clear_memory_a
+	ld hl, current_room__sprite_enemies
+	ld (tmp_pcg_room__next_enemy_ptr), hl
+	ld bc, MAX_ROOM_SPRITE_OBJECTS * ROOM_OBJECT_STRUCT_SIZE - 1
 	call clear_memory_a
 
 	ld hl, current_room__player_bullets
@@ -70,6 +71,9 @@ pcg_generate_room_reset_state:
 	ld bc, MAX_ROOM_TILE_OBJECTS * ROOM_TILE_OBJECT_STRUCT_SIZE - 1
 	ld a, #ff
 	ld (current_room__tile_objects_sentinel), a
+	ld (current_room__sprite_objects_sentinel), a
+	ld (current_room__player_bullets_sentinel), a
+	ld (current_room__sprite_enemies_sentinel), a
 	jp clear_memory_a
 
 
@@ -497,6 +501,8 @@ pcg_generate_room__object_loop_next:
 	add ix, bc
 	jp pcg_generate_room__object_loop
 pcg_generate_room__object_loop_end:
+
+	call pcg_generate_room__spawn_enemies
 
 	ld a, (tmp_pcg_room__is_midpoint_room)
 	or a

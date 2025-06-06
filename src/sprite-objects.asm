@@ -14,8 +14,19 @@ ptr_to_new_sprite_object_player_bullet:
 ; - z: we could find a new ptr
 ; - nz: no ptrs available
 ; - hl: ptr if one was available
+ptr_to_new_sprite_enemy:
+	ld hl, current_room__sprite_enemies
+	ld de, ROOM_OBJECT_STRUCT_SIZE
+	jp ptr_to_new_sprite_object_loop
+
+
+;-----------------------------------------------
+; output:
+; - z: we could find a new ptr
+; - nz: no ptrs available
+; - hl: ptr if one was available
 ptr_to_new_sprite_object:
-	ld hl, current_room__objects
+	ld hl, current_room__sprite_objects
 	ld de, ROOM_OBJECT_STRUCT_SIZE
 ptr_to_new_sprite_object_loop:
 	ld a, (hl)
@@ -124,7 +135,7 @@ update_sprite_objects_player_bullets_loop_next_after_deletion:
 update_sprite_objects:
 	xor a
 	ld (n_displayed_object_sprites), a
-	ld ix, current_room__objects
+	ld ix, current_room__sprite_objects
 update_sprite_objects_loop:
 	ld a, (ix)
 	or a
@@ -530,7 +541,7 @@ sprite_object_remove_object:
 	add hl, bc
 	push hl
 	push de
-		ld hl, current_room__objects_sentinel - ROOM_OBJECT_STRUCT_SIZE
+		ld hl, current_room__sprite_objects_sentinel - ROOM_OBJECT_STRUCT_SIZE
 		or a
 		sbc hl, de  ; hl = amount to copy
 		ld b, h

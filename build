@@ -18,7 +18,7 @@ read_from_symbol_file () {
 
 # Calculate ROM/RAM space available:
 TOTALUSED=0
-for IDX in "_0" "_1" "_2" "_3" "_4" "_5" "_6" "_7"
+for IDX in "_0" "_1" "_2" "_3" "_4" "_5" "_6" "_7" "_8"
 do
 	PAGESIZE=16384
 	STARTDEC=$(read_from_symbol_file "start_of_page${IDX}:" xspelunker2.sym)

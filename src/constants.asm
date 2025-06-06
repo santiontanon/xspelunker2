@@ -27,9 +27,17 @@ STORY_STATE__DEFEATED_ALIENS: equ 7  ; calendar stone triggered, and player just
 
 MAX_SPRITES: equ 32
 FIRST_OBJECT_SPRITE: equ 3  ; 0, 1 are the player, 2 is player weapon
+; The VDP can hold 64 16x16 sprite patterns, we will use them as follows:
+; - 0, 1: player
+; - 2: player weapon
+; - 3 - 23: misc sprites (player bullets, splashes, explosion, etc.)
+; - 24 - 63: enemies
+FIRST_OBJECT_SPRITE_PATTERN: equ 3
+FIRST_ENEMY_SPRITE_PATTERN: equ 24
 
-MAX_ROOM_OBJECTS: equ 16
+MAX_ROOM_SPRITE_OBJECTS: equ 8  ; water splashes, etc. (decorations)
 MAX_ROOM_PLAYER_BULLETS: equ 8
+MAX_ROOM_SPRITE_ENEMIES: equ 10
 MAX_ROOM_TILE_OBJECTS: equ 10
 MAX_ROOM_SIZE: equ 32*24*4
 MAX_INTERAREA_CONNECTIONS: equ 12
@@ -104,6 +112,7 @@ ROOM_OBJECT_STRUCT_STATE: equ 5
 ROOM_OBJECT_STRUCT_SPEED_X: equ 6
 ROOM_OBJECT_STRUCT_SPEED_Y: equ 7
 ROOM_OBJECT_STRUCT_HIT_ID: equ 8  ; used by player bullets only, to avoid multi-hit
+ROOM_OBJECT_STRUCT_HEALTH: equ 8  ; used by enemies only
 
 ROOM_TILE_OBJECT_STRUCT_SIZE: equ 12
 ROOM_TILE_OBJECT_STRUCT_ID: equ 0
@@ -168,6 +177,9 @@ STONE_DAMAGE: equ 1
 DART_DAMAGE: equ 1
 SPEAR_DAMAGE: equ 2
 RAYGUN_DAMAGE: equ 2
+
+
+ENEMY_SNAKE_DASHER: equ 1
 
 
 ; - 7 boss keys
