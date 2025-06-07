@@ -109,8 +109,10 @@ ROOM_OBJECT_STRUCT_TILE_X: equ 2
 ROOM_OBJECT_STRUCT_PIXEL_Y: equ 3
 ROOM_OBJECT_STRUCT_TILE_Y: equ 4
 ROOM_OBJECT_STRUCT_STATE: equ 5
+ROOM_OBJECT_STRUCT_STATE_TIMER: equ 6  ; used by enemies (instead of SPEED_X)
 ROOM_OBJECT_STRUCT_SPEED_X: equ 6
 ROOM_OBJECT_STRUCT_SPEED_Y: equ 7
+ROOM_OBJECT_STRUCT_LAST_HIT_ID: equ 7  ; used by enemies (instead of SPEED_Y)
 ROOM_OBJECT_STRUCT_HIT_ID: equ 8  ; used by player bullets only, to avoid multi-hit
 ROOM_OBJECT_STRUCT_HEALTH: equ 8  ; used by enemies only
 

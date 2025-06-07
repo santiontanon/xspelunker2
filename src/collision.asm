@@ -1,4 +1,22 @@
 ;-----------------------------------------------
+; input:
+; - c, b: tile x, y
+; output:
+; - z: collision
+; - nz: no collision
+general_check_collision:
+	call get_room_tile_type
+	dec a
+	ret z  ; platform
+	dec a
+	ret z  ; wall
+	cp 4
+	ret z  ; rope-platform-top
+	cp 6
+	ret  ; ladder-platform-top
+
+
+;-----------------------------------------------
 ; output:
 ; - z: collision
 ; - nz: no collision
@@ -380,6 +398,7 @@ get_room_tile_type_continue:
 	or a
 	ret z  ; 0 is directly no collision (we exit early, as the table below starts at 32)
 
+get_collision_tile_type_of_a:
 	; get collision type:
 	ld hl, (current_room__collision_ptr)
 	ADD_HL_A

@@ -738,6 +738,7 @@ player_can_double_jump: ds virtual 1
 
 player_current_swing_hit_id: ds virtual 1
 player_new_hit_id: ds virtual 1
+player_weapon_hitbox_check_result: ds virtual 1  ; 1: no hit, 0: hit
 
 
 redraw_flags: ds virtual 1  ; bits:

@@ -72,13 +72,17 @@ ENDIF
 
 ;-----------------------------------------------
 player_hit_hazard:
+	ld c, 2  ; amount of damage to take
+player_hit_damage_c:
 	ld a, (player_state)
 	and #01
 	add a, PLAYER_STATE_HURT
 	ld (player_state), a
 	xor a
 	ld (player_state_timer), a
-	ld c, 2  ; amount of damage to take
+	ld a, #ff
+	ld (player_requested_weapon_sprite), a
+
 
 ;-----------------------------------------------
 ; input:
@@ -2967,8 +2971,13 @@ get_next_hit_id:
 ; - de, hl: collision box (in tile coordinates: from [e, d] to [l, h])
 ; - iyl: collision ID
 ; - iyh: weapon damage
+; output:
+; - z: hit
+; - nz: no hit
 player_weapon_hitbox_check:
 	push ix
+		ld a, 1
+		ld (player_weapon_hitbox_check_result), a
 		; iterate over the list of tile objects, to see if we hit a breakable wall:
 		ld ix, current_room__tile_objects
 player_weapon_hitbox_check_tile_object_loop:
@@ -2986,7 +2995,7 @@ player_weapon_hitbox_check_tile_object_loop:
 		jr nz, player_weapon_hitbox_check_tile_object_loop_continue
 
 player_weapon_hitbox_check_tile_object_loop_breakable_wall:
-		; breakable wall, check for collision:
+		; breakable wall, check for collision: (in tile coordinates: from [e, d] to [l, h])
 		ld a, (ix + ROOM_TILE_OBJECT_STRUCT_X)
 		cp l
 		jr nc, player_weapon_hitbox_check_tile_object_loop_continue
@@ -3013,6 +3022,8 @@ player_weapon_hitbox_check_tile_object_loop_breakable_wall:
 			call breakable_wall_hit_by_player
 		pop de
 		pop hl
+		xor a
+		ld (player_weapon_hitbox_check_result), a
 
 player_weapon_hitbox_check_tile_object_loop_continue:
 		ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
@@ -3021,7 +3032,46 @@ player_weapon_hitbox_check_tile_object_loop_continue:
 player_weapon_hitbox_check_tile_object_loop_done:
 
 		; iterate over the list of enemies to see if we hit any:
-		; ...
+		ld ix, current_room__sprite_enemies
+player_weapon_hitbox_check_enemy_loop:
+		ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
+		cp #ff
+		jr z, player_weapon_hitbox_check_enemy_loop_done
+		; enemy, check for collision: (in tile coordinates: from [e, d] to [l, h])
+		; assume enemies are 2x2 in size
+		ld a, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+		cp l
+		jr nc, player_weapon_hitbox_check_enemy_continue
+		add a, 2
+		cp e
+		jr c, player_weapon_hitbox_check_enemy_continue
+		ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+		cp h
+		jr nc, player_weapon_hitbox_check_enemy_continue
+		add a, 2
+		cp d
+		jr c, player_weapon_hitbox_check_enemy_continue
+
+		; check collision ID:
+		ld a, iyl
+		cp (ix + ROOM_OBJECT_STRUCT_LAST_HIT_ID)
+		jr z, player_weapon_hitbox_check_enemy_continue
+
+		; enemy hit!
+		ld hl, enemy_hit
+		ld c, ENEMIES_PAGE
+		call call_hl_in_page_c_8000
+
+		xor a
+		ld (player_weapon_hitbox_check_result), a
+
+player_weapon_hitbox_check_enemy_continue:
+		ld bc, ROOM_OBJECT_STRUCT_SIZE
+		add ix, bc
+		jr player_weapon_hitbox_check_enemy_loop
+player_weapon_hitbox_check_enemy_loop_done:
 	pop ix
+	ld a, (player_weapon_hitbox_check_result)
+	or a
 	ret
 

@@ -204,6 +204,9 @@ update_sprite_objects_explosion:
 ; input:
 ; - ix: ptr to the bullet sprite object
 ; - iyh: bullet damage
+; output:
+; - z: hit something
+; - nz: did not hit anything
 update_sprite_objects_player_bullet_small_hitbox:
 	ld hl, #0101
 update_sprite_objects_player_bullet_hitbox:
@@ -284,6 +287,7 @@ update_sprite_objects_player_bullet_straight_ray_fw:
 update_sprite_objects_player_bullet_straight_dart:
 	ld iyh, DART_DAMAGE
 	call update_sprite_objects_player_bullet_small_hitbox
+	jp z, update_sprite_objects_player_bullet_delete
 
 	ld d, COLOR_YELLOW
 	ld c, 0
@@ -312,6 +316,7 @@ update_sprite_objects_player_bullet_straight_dart_sprite_set:
 update_sprite_objects_player_bullet_stone_parabolla:
 	ld iyh, STONE_DAMAGE
 	call update_sprite_objects_player_bullet_small_hitbox
+	jp z, update_sprite_objects_player_bullet_delete
 
 	; parabolic movement:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
@@ -375,6 +380,7 @@ update_sprite_objects_player_bullet_straight_spear_sprite_set:
 	pop hl
 	ld iyh, SPEAR_DAMAGE
 	call update_sprite_objects_player_bullet_hitbox
+	jp z, update_sprite_objects_player_bullet_delete  ; hit something, delete the bullet
 	jp update_sprite_objects_player_bullet_decrease_timer_and_delete_if_necessary
 
 
@@ -579,3 +585,28 @@ sprite_object_remove_object_player_bullet:
 	ldir  ; shift all the objects left
 	ret
 
+
+;-----------------------------------------------
+sprite_object_remove_object_enemy:
+	; shift all the objects one position left:
+	ld (ix), 0  ; clear the current object type (only needed if this is the last object, but just in case).
+	ld d, ixh
+	ld e, ixl
+	ld h, d
+	ld l, e
+	ld bc, ROOM_OBJECT_STRUCT_SIZE
+	add hl, bc
+	push hl
+	push de
+		ld hl, current_room__sprite_enemies_sentinel - ROOM_OBJECT_STRUCT_SIZE
+		or a
+		sbc hl, de  ; hl = amount to copy
+		ld b, h
+		ld c, l
+	pop de
+	pop hl
+	ld a, c
+	or b
+	ret z  ; nothing to copy
+	ldir  ; shift all the objects left
+	ret
