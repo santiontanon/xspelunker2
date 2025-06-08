@@ -94,6 +94,7 @@ Execute:
     ; initial default random seed:
     ld hl, #aaaa
     ld (rng_seed1), hl
+    ld hl, #bbbb
     ld (rng_seed2), hl
 
     SETMEGAROMPAGE_8000 TEXT_PAGE
@@ -649,13 +650,13 @@ current_room__max_scroll_x: ds virtual 1
 current_room__max_scroll_y: ds virtual 1
     ; We separate the sprite objects into 4 groups: player, player bullets, enemies, and other objects
 current_room__player_bullets: ds virtual MAX_ROOM_PLAYER_BULLETS * ROOM_OBJECT_STRUCT_SIZE
-current_room__player_bullets_sentinel: ds virtual 1
+current_room__player_bullets_sentinel: ds virtual 1  ; set to #ff
 current_room__sprite_enemies: ds virtual MAX_ROOM_SPRITE_ENEMIES * ROOM_OBJECT_STRUCT_SIZE
-current_room__sprite_enemies_sentinel: ds virtual 1
+current_room__sprite_enemies_sentinel: ds virtual 1  ; set to #ff
 current_room__sprite_objects: ds virtual MAX_ROOM_SPRITE_OBJECTS * ROOM_OBJECT_STRUCT_SIZE
-current_room__sprite_objects_sentinel: ds virtual 1
+current_room__sprite_objects_sentinel: ds virtual 1  ; set to #ff
 current_room__tile_objects: ds virtual MAX_ROOM_TILE_OBJECTS * ROOM_TILE_OBJECT_STRUCT_SIZE
-current_room__tile_objects_sentinel: ds virtual 1
+current_room__tile_objects_sentinel: ds virtual 1  ; set to #fe
 current_room__trial_fn: ds virtual 2
 current_room__tileset_ptr: ds virtual 2
 current_room__animation_fn_ptr: ds virtual 2

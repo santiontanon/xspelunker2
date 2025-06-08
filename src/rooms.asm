@@ -257,6 +257,8 @@ get_tile_object_behind_player_loop:
 	ld a, (ix)  ; ID
 	cp #ff
 	ret z
+	cp #fe  ; sentinel in tile objects is #fe
+	ret z
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)  ; type
 	cp TAG_GEAR_LOCK
 	jr z, get_tile_object_behind_player_32x24_object

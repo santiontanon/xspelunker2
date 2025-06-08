@@ -2626,7 +2626,7 @@ player_pushing_right:
 	ld hl, current_room__tile_objects
 player_pushing_right_loop:
 	ld a, (hl)  ; ID
-	cp #ff
+	cp #fe  ; sentinel in tile objects is #fe
 	jr z, player_pushing_right_no_block
 	push hl
 		inc hl
@@ -2671,7 +2671,7 @@ player_pushing_left:
 	ld hl, current_room__tile_objects
 player_pushing_left_loop:
 	ld a, (hl)  ; ID
-	cp #ff
+	cp #fe  ; sentinel in tile objects is #fe
 	jr z, player_pushing_left_no_block
 	push hl
 		inc hl
@@ -3058,9 +3058,11 @@ player_weapon_hitbox_check_enemy_loop:
 		jr z, player_weapon_hitbox_check_enemy_continue
 
 		; enemy hit!
-		ld hl, enemy_hit
-		ld c, ENEMIES_PAGE
-		call call_hl_in_page_c_8000
+		push ix
+			ld hl, enemy_hit
+			ld c, ENEMIES_PAGE
+			call call_hl_in_page_c_8000
+		pop ix
 
 		xor a
 		ld (player_weapon_hitbox_check_result), a

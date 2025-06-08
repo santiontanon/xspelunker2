@@ -374,6 +374,12 @@ TAG_MAYA_PUZZLE_TABLET: equ 154
 TAG_TELEPORTER_ATLANTIS_TO_MOON: equ 155
 TAG_PUZZLEBOX_MARS: equ 156
 TAG_PUZZLEBOX_MOON: equ 157
+TAG_COIN: equ 158
+TAG_CORN: equ 159
+TAG_STONES: equ 160
+TAG_DARTS: equ 161
+TAG_SPEARS: equ 162
+TAG_BATTERY: equ 163
 
 N_PATH_OPENING_TAGS: equ 32  ; there are less than this, but just in case (this is the number of tags above that spawn a breakable wall or door).
 

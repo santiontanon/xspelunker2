@@ -75,18 +75,18 @@ state_play:
 ; 		ld (player_inventory_weapons+3), a
 		ld (player_inventory_weapons+4), a
 		ld (player_inventory_weapons+5), a
-; 		ld (player_inventory_weapons+6), a
-; 		ld (player_inventory_weapons+7), a
+		ld (player_inventory_weapons+6), a
+		ld (player_inventory_weapons+7), a
 ; 		ld (player_inventory_weapons+8), a
 ; 		ld (player_inventory_weapons+9), a
 ; 		ld (player_inventory_weapons+10), a
 ; 		ld a, 123
 ; 		ld (player_inventory_coins), a
 		ld a, 25
-; 		ld (player_inventory_weapon_ammo), a
+		ld (player_inventory_weapon_ammo), a
 		ld (player_inventory_weapon_ammo + 1), a
-; 		ld (player_inventory_weapon_ammo + 2), a
-; 		ld (player_inventory_weapon_ammo + 3), a
+		ld (player_inventory_weapon_ammo + 2), a
+		ld (player_inventory_weapon_ammo + 3), a
 		ld a, 1
 		ld (player_inventory_n_small_keys), a
 		ld (global_state__objects + TAG_MAP_PIECE1), a

@@ -1,7 +1,7 @@
 to do:
 
 ***- enemies:
-  ***- spawn optional items when killing them (and pick them up, gain ammo, life, coins, etc.)
+  ***- adjust the collision box for bullets/weapons so that if pixel_y >=4 they hit in the tile below
   ***- poison spitting snakes (parabolla shot?) (different variation of green)
   ***- piranhas (types: just-swim, swim-and-jump)
   ***- bats: two types: slower and faster

@@ -343,7 +343,7 @@ find_boss_door_object_ptr:
 	ld ix, current_room__tile_objects
 find_boss_door_object_ptr_loop:
 	ld a, (ix)
-	cp #ff
+	cp #fe  ; sentinel in tile objects is #fe
 	jr z, find_boss_door_object_ptr_not_found
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)  ; type
 	cp TAG_DOOR_BOSS

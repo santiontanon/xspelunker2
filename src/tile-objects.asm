@@ -1,9 +1,109 @@
 ;-----------------------------------------------
+; output:
+; - z: we could find a new ptr
+; - nz: no ptrs available
+; - hl: ptr if one was available
+ptr_to_new_tile_object:
+	ld hl, current_room__tile_objects
+	ld de, ROOM_TILE_OBJECT_STRUCT_SIZE
+ptr_to_new_tile_object_loop:
+	ld a, (hl)
+	inc a  ; cp #ff
+	ret z
+	inc a  ; cp #fe
+	jr z, ptr_to_new_tile_object_reached_sentinel
+	add hl, de
+	jp ptr_to_new_tile_object_loop
+ptr_to_new_tile_object_reached_sentinel:
+	or 1
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - c, b: x, y tile coordinates
+spawn_tile_object_5_coins:
+	ld e, 5
+	jr spawn_tile_object_e_coins
+spawn_tile_object_1_coin:
+	ld e, 1
+spawn_tile_object_e_coins:
+	push bc
+	push de
+		call room_undraw_tile_objects
+	pop de
+	pop bc
+	ld d, TAG_COIN
+spawn_tile_object_continue:
+	push de
+		call ptr_to_new_tile_object
+	pop de
+	ret nz
+	ld (hl), 0  ; ID
+	inc hl
+	ld (hl), d  ; type
+	inc hl
+	ld (hl), c  ; tile x
+	inc hl
+	ld (hl), b  ; tile y
+	inc hl
+	ld (hl), e  ; state (number of coins/live/arrows, etc.)
+	jp room_render_tile_objects
+
+
+spawn_tile_object_corn:
+	push bc
+		call room_undraw_tile_objects
+	pop bc
+	ld d, TAG_CORN
+	ld e, 4
+	jp spawn_tile_object_continue
+
+
+spawn_tile_object_2_stones:
+	push bc
+		call room_undraw_tile_objects
+	pop bc
+	ld d, TAG_STONES
+	ld e, 2
+	jp spawn_tile_object_continue
+
+
+spawn_tile_object_2_darts:
+	push bc
+		call room_undraw_tile_objects
+	pop bc
+	ld d, TAG_DARTS
+	ld e, 2
+	jp spawn_tile_object_continue
+
+
+spawn_tile_object_2_spears:
+	push bc
+		call room_undraw_tile_objects
+	pop bc
+	ld d, TAG_SPEARS
+	ld e, 2
+	jp spawn_tile_object_continue
+
+
+spawn_tile_object_battery:
+	push bc
+		call room_undraw_tile_objects
+	pop bc
+	ld d, TAG_BATTERY
+	ld e, 2
+	jp spawn_tile_object_continue
+
+
+;-----------------------------------------------
 update_tile_objects:
 	ld hl, current_room__tile_objects
 update_tile_objects_loop:
 	ld a, (hl)  ; ID
 	cp #ff
+	ret z
+	cp #fe
 	ret z
 	; render the object:
 	push hl
@@ -234,7 +334,7 @@ delete_tile_object_in_hl:
 	; copy:
 	; - from: hl + ROOM_TILE_OBJECT_STRUCT_SIZE
 	; - to: hl
-	; - amount: (current_room__tile_objects_sentinel - (hl + ROOM_TILE_OBJECT_STRUCT_SIZE) + 1
+	; - amount: (current_room__tile_objects_sentinel - (hl + ROOM_TILE_OBJECT_STRUCT_SIZE)
 	; to:
 	ld e, l
 	ld d, h
@@ -246,7 +346,6 @@ delete_tile_object_in_hl:
 		ld hl, current_room__tile_objects_sentinel
 		or a
 		sbc hl, bc
-		inc hl
 		ld c, l
 		ld b, h
 	pop hl
@@ -262,6 +361,8 @@ room_render_tile_objects:
 room_render_tile_objects_loop:
 	ld a, (hl)  ; ID
 	cp #ff
+	ret z
+	cp #fe
 	ret z
 	; render the object:
 	push hl
@@ -362,8 +463,9 @@ room_render_tile_objects_render_saving_background_loop_x:
 				ld a, (hl)
 				ld (iy + ROOM_TILE_OBJECT_STRUCT_BACKGROUND), a
 				ld a, (de)
+				or a
+				jr z, room_render_tile_objects_render_saving_background_loop_x_continue
 				ld (hl), a
-
 room_render_tile_objects_render_saving_background_loop_x_continue:
 				inc de
 				inc hl
@@ -922,7 +1024,12 @@ ENDR
 	dw object_interaction_function_teleporter_atlantis  ; TAG_TELEPORTER_ATLANTIS_TO_MOON
 	dw object_interaction_function_pickup_puzzlebox_mars  ; TAG_PUZZLEBOX_MARS
 	dw object_interaction_function_pickup_puzzlebox_moon  ; TAG_PUZZLEBOX_MOON
-
+	dw object_interaction_function_pickup_coins  ; TAG_COIN
+	dw object_interaction_function_pickup_corn  ; TAG_CORN
+	dw object_interaction_function_pickup_stones  ; TAG_STONES
+	dw object_interaction_function_pickup_darts  ; TAG_DARTS
+	dw object_interaction_function_pickup_spears  ; TAG_SPEARS
+	dw object_interaction_function_pickup_battery  ; TAG_BATTERY
 
 object_interaction_inventory_slot:
 	db #ff, #ff, #ff, #ff, #ff  ; none, block puzzles
@@ -1892,6 +1999,97 @@ object_interaction_function_teleport_to_area_object_room_id_set:
 
 
 ;-----------------------------------------------
+object_interaction_function_pickup_coins:
+	; gain coins:
+	ld a, (player_inventory_coins)
+	add a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)  ; number of coins
+	jr nc, object_interaction_function_pickup_coins_continue
+	ld a, 255  ; max coins
+object_interaction_function_pickup_coins_continue:
+	ld (player_inventory_coins), a
+object_interaction_function_pickup_coins_entry_point:
+
+	ld hl, SFX_item_pickup
+	call play_SFX_with_high_priority
+
+	ld hl, redraw_flags
+	ld (hl), #ff
+
+	push ix
+		call room_undraw_tile_objects
+	pop hl
+	call delete_tile_object_in_hl
+	jp room_render_tile_objects
+
+
+;-----------------------------------------------
+object_interaction_function_pickup_corn:
+	; gain corn:
+	ld a, (player_max_health)
+	ld c, a
+	ld a, (player_health)
+	add a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)  ; amount to heal
+	cp c
+	jr c, object_interaction_function_pickup_corn_continue
+	ld a, c
+object_interaction_function_pickup_corn_continue:
+	ld (player_health), a
+	jp object_interaction_function_pickup_coins_entry_point
+
+
+;-----------------------------------------------
+object_interaction_function_pickup_stones:
+	ld c, 99
+	ld a, (player_inventory_weapon_ammo)
+	add a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)  ; # of stones
+	cp c
+	jr c, object_interaction_function_pickup_stones_continue
+	ld a, c
+object_interaction_function_pickup_stones_continue:
+	ld (player_inventory_weapon_ammo), a
+	jp object_interaction_function_pickup_coins_entry_point
+
+
+;-----------------------------------------------
+object_interaction_function_pickup_darts:
+	ld c, 99
+	ld a, (player_inventory_weapon_ammo + 1)
+	add a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)  ; # of stones
+	cp c
+	jr c, object_interaction_function_pickup_darts_continue
+	ld a, c
+object_interaction_function_pickup_darts_continue:
+	ld (player_inventory_weapon_ammo + 1), a
+	jp object_interaction_function_pickup_coins_entry_point
+
+
+;-----------------------------------------------
+object_interaction_function_pickup_spears:
+	ld c, 99
+	ld a, (player_inventory_weapon_ammo + 2)
+	add a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)  ; # of stones
+	cp c
+	jr c, object_interaction_function_pickup_spears_continue
+	ld a, c
+object_interaction_function_pickup_spears_continue:
+	ld (player_inventory_weapon_ammo + 2), a
+	jp object_interaction_function_pickup_coins_entry_point
+
+
+;-----------------------------------------------
+object_interaction_function_pickup_battery:
+	ld c, 99
+	ld a, (player_inventory_weapon_ammo + 3)
+	add a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)  ; # of stones
+	cp c
+	jr c, object_interaction_function_pickup_battery_continue
+	ld a, c
+object_interaction_function_pickup_battery_continue:
+	ld (player_inventory_weapon_ammo + 3), a
+	jp object_interaction_function_pickup_coins_entry_point
+
+
+;-----------------------------------------------
 ; output:
 ; - z: door found
 ; - nz: door not found
@@ -1902,6 +2100,8 @@ find_room_door_object_ptr:
 find_room_door_object_ptr_loop:
 	ld a, (hl)
 	cp #ff
+	jr z, find_room_door_object_ptr_not_found
+	cp #fe
 	jr z, find_room_door_object_ptr_not_found
 	inc hl
 	ld a, (hl)  ; type
@@ -1931,6 +2131,8 @@ find_tile_object_ptr:
 find_tile_object_ptr_loop:
 	ld a, (hl)
 	cp #ff
+	jr z, find_tile_object_ptr_not_found
+	cp #fe
 	jr z, find_tile_object_ptr_not_found
 	inc hl
 	ld a, (hl)  ; type
@@ -2121,6 +2323,13 @@ ENDR
 	TILE_OBJECT_DATA 1, 4, 3, tile_object_teleporter_gfx  ; TAG_TELEPORTER_ATLANTIS_TO_MOON
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_PUZZLEBOX_MARS
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_PUZZLEBOX_MOON
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_coin_gfx  ; TAG_COIN
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_corn_gfx  ; TAG_CORN
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_stones_gfx  ; TAG_STONES
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_darts_gfx  ; TAG_DARTS
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_spears_gfx  ; TAG_SPEARS
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_battery_gfx  ; TAG_BATTERY
+
 
 tile_object_regular_object_gfx:
 	db FIRST_ITEM_TILE, FIRST_ITEM_TILE+1, FIRST_ITEM_TILE+2, FIRST_ITEM_TILE+3
@@ -2160,3 +2369,16 @@ tile_object_calendar_stone_center_frame2_gfx:
 	db 116, 117, 118, 119
 tile_object_calendar_stone_center_frame3_gfx:
 	db 213, 229, 120, 121
+
+tile_object_coin_gfx:
+	db 0, 0, 6, 0
+tile_object_corn_gfx:
+	db 32, 33, 34, 35
+tile_object_stones_gfx:
+	db 0, 0, 36, 37
+tile_object_darts_gfx:
+	db 0, 0, 40, 41
+tile_object_spears_gfx:
+	db 0, 0, 38, 39
+tile_object_battery_gfx:
+	db 42, 0, 43, 0

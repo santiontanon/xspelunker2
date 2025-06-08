@@ -7,22 +7,22 @@ tmp_pcg_room__next_tile_object_ptr: equ tmp_pcg_room__next_enemy_ptr - 2
 tmp_pcg_room__chunk_x: equ tmp_pcg_room__next_tile_object_ptr - 1
 tmp_pcg_room__chunk_y: equ tmp_pcg_room__chunk_x - 1
 tmp_pcg_room__is_midpoint_room: equ tmp_pcg_room__chunk_y - 1
-
+tmp_pcg_room__previous_seed: equ tmp_pcg_room__is_midpoint_room - 4
 
 ;-----------------------------------------------
 area_default_tileset_ptrs:
-	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid - 32  ; jungle
-	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid - 32  ; pyramid 1
-	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid - 32  ; pyramid 2
-	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid - 32  ; confluence
-	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid - 32  ; pyramid 3
-	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid - 32  ; fire shaft
-	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid - 32  ; pacific caves
-	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid - 32  ; atlantic caves
-	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid - 32  ; fire temple
-	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid - 32  ; atlantis
-	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid - 32  ; mars
-	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid - 32  ; moon
+	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid  ; jungle
+	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid  ; pyramid 1
+	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid  ; pyramid 2
+	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid  ; confluence
+	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid  ; pyramid 3
+	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid  ; fire shaft
+	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid  ; pacific caves
+	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid  ; atlantic caves
+	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid  ; fire temple
+	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid  ; atlantis
+	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid  ; mars
+	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid  ; moon
 
 
 ;-----------------------------------------------
@@ -70,11 +70,13 @@ pcg_generate_room_reset_state:
 	ld (tmp_pcg_room__next_tile_object_ptr), hl
 	ld bc, MAX_ROOM_TILE_OBJECTS * ROOM_TILE_OBJECT_STRUCT_SIZE - 1
 	ld a, #ff
-	ld (current_room__tile_objects_sentinel), a
+	call clear_memory_a
 	ld (current_room__sprite_objects_sentinel), a
 	ld (current_room__player_bullets_sentinel), a
 	ld (current_room__sprite_enemies_sentinel), a
-	jp clear_memory_a
+	dec a  ; the sentinel for tile objects is #fe, since the whole space is initialzied to #ff
+	ld (current_room__tile_objects_sentinel), a
+	ret
 
 
 ;-----------------------------------------------
@@ -83,6 +85,12 @@ pcg_generate_room_reset_state:
 ; input:
 ; - e: room ID
 pcg_generate_room:
+	; preserve the random seed:
+	ld hl, (rng_seed1)
+	ld (tmp_pcg_room__previous_seed), hl
+	ld hl, (rng_seed2)
+	ld (tmp_pcg_room__previous_seed + 2), hl
+
 	ld a, e
 	ld (current_room__id), a
 
@@ -515,7 +523,13 @@ pcg_generate_room__object_loop_end:
 
 	ld a, (tmp_pcg_room__is_midpoint_room)
 	or a
-	jp nz, pcg_generate_room__open_midpoint_door
+	call nz, pcg_generate_room__open_midpoint_door
+
+	; preserve the random seed:
+	ld hl, (tmp_pcg_room__previous_seed)
+	ld (rng_seed1), hl
+	ld hl, (tmp_pcg_room__previous_seed + 2)
+	ld (rng_seed2), hl
 	ret
 
 
@@ -2158,7 +2172,7 @@ pcg_generate_room__calendar:
 	; tile sets, collisions, and animation ptrs:
 	ld bc, tiles_calendar_zx0
 	ld (current_room__tileset_ptr), bc
-	ld bc, tile_collision_types_calendar - 32
+	ld bc, tile_collision_types_calendar
 	ld (current_room__collision_ptr), bc
 	ld a, TILES_PAGE
 	ld (current_room__tileset_page), a
@@ -2327,7 +2341,7 @@ pcg_generate_room__teleporter:
 	; tile sets, collisions, and animation ptrs:
 	ld bc, tiles_teleporter_zx0
 	ld (current_room__tileset_ptr), bc
-	ld bc, tile_collision_types_pyramid - 32
+	ld bc, tile_collision_types_pyramid
 	ld (current_room__collision_ptr), bc
 	ld a, TILES_PAGE
 	ld (current_room__tileset_page), a
