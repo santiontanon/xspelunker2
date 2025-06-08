@@ -2599,7 +2599,7 @@ player_update_weapon_sprite_request_macuahuitl1:
 
 weapon_sprite_swing_table:
 	; weapon sprite, x offset right, x offset left, y offset, player frame, hitbox width, hitbox height (in tiles)
-	db 0,   16, -16,   5, 14,  1,  1  ; machete forward
+	db 0,    8,  -8,   5, 14,  2,  1  ; machete forward
 	db 1,    4,  -4,  -7, 15,  1,  1  ; machete up
 	db 0,   16, -16,  10, 17,  1,  1  ; machete crouching
 	db 2,    4,  -4,  16, 16,  1,  1  ; machete down
@@ -3059,9 +3059,13 @@ player_weapon_hitbox_check_enemy_loop:
 
 		; enemy hit!
 		push ix
+		push hl
+		push de
 			ld hl, enemy_hit
 			ld c, ENEMIES_PAGE
 			call call_hl_in_page_c_8000
+		pop de
+		pop hl
 		pop ix
 
 		xor a

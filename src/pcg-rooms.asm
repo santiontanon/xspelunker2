@@ -59,7 +59,7 @@ pcg_generate_room_reset_state:
 	call clear_memory_a
 	ld hl, current_room__sprite_enemies
 	ld (tmp_pcg_room__next_enemy_ptr), hl
-	ld bc, MAX_ROOM_SPRITE_OBJECTS * ROOM_OBJECT_STRUCT_SIZE - 1
+	ld bc, MAX_ROOM_SPRITE_ENEMIES * ROOM_OBJECT_STRUCT_SIZE - 1
 	call clear_memory_a
 
 	ld hl, current_room__player_bullets

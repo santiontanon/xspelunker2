@@ -156,6 +156,9 @@ public class GenerateSprites {
         data.addAll(extractSprite(sourceImage, 16, 0, 12));
         data.addAll(extractSpriteFlipped(sourceImage, 0, 0, 12));  // snake left
         data.addAll(extractSpriteFlipped(sourceImage, 16, 0, 12));
+        data.addAll(extractSprite(sourceImage, 32, 0, 12));  // snake spitting right
+        data.addAll(extractSpriteFlipped(sourceImage, 32, 0, 12));  // snake spitting left
+        data.addAll(extractSpriteFlipped(sourceImage, 48, 0, 12));  // poison
         
         System.out.println("extractEnemySprites: " + data.size());
         Z80Assembler.dataToBinary(data, outputPath + ".bin");   

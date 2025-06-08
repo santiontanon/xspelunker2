@@ -504,26 +504,26 @@ SFX_enter_door:
 ;   db SFX_CMD_END
 
 
-; SFX_flame_bullet:
-;   db  7,#9c  ; noise in channel C, and tone in channels B and A
-;   db 10,#04  ; volume
-;   db  6+MUSIC_CMD_TIME_STEP_FLAG,#10  ; noise frequency
-;   db MUSIC_CMD_SKIP
-;   db 10+MUSIC_CMD_TIME_STEP_FLAG,#08  ; volume
-;   db MUSIC_CMD_SKIP
-;   db 10+MUSIC_CMD_TIME_STEP_FLAG,#0a  ; volume
-;   db MUSIC_CMD_SKIP
-;   db 10+MUSIC_CMD_TIME_STEP_FLAG,#0c  ; volume
-;   db MUSIC_CMD_SKIP
-;   db 10+MUSIC_CMD_TIME_STEP_FLAG,#0a  ; volume
-;   db MUSIC_CMD_SKIP
-;   db 10+MUSIC_CMD_TIME_STEP_FLAG,#08  ; volume
-;   db MUSIC_CMD_SKIP
-;   db 10+MUSIC_CMD_TIME_STEP_FLAG,#04  ; volume
-;   db MUSIC_CMD_SKIP
-;   db 10,#00  ; silence
-;   db 7, #b8  ; tone in all three channels
-;   db SFX_CMD_END
+SFX_enemy_bullet:
+  db  7,#9c  ; noise in channel C, and tone in channels B and A
+  db 10,#04  ; volume
+  db  6+MUSIC_CMD_TIME_STEP_FLAG,#10  ; noise frequency
+  db MUSIC_CMD_SKIP
+  db 10+MUSIC_CMD_TIME_STEP_FLAG,#08  ; volume
+  db MUSIC_CMD_SKIP
+  db 10+MUSIC_CMD_TIME_STEP_FLAG,#0a  ; volume
+  db MUSIC_CMD_SKIP
+  db 10+MUSIC_CMD_TIME_STEP_FLAG,#0c  ; volume
+  db MUSIC_CMD_SKIP
+  db 10+MUSIC_CMD_TIME_STEP_FLAG,#0a  ; volume
+  db MUSIC_CMD_SKIP
+  db 10+MUSIC_CMD_TIME_STEP_FLAG,#08  ; volume
+  db MUSIC_CMD_SKIP
+  db 10+MUSIC_CMD_TIME_STEP_FLAG,#04  ; volume
+  db MUSIC_CMD_SKIP
+  db 10,#00  ; silence
+  db 7, #b8  ; tone in all three channels
+  db SFX_CMD_END
 
 
 ; SFX_spell:

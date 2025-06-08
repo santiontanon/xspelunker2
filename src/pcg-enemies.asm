@@ -45,7 +45,9 @@ pcg_generate_room__spawn_snake:
 	dec c
 	ex af, af'
 	ret nz
-	ld (hl), ENEMY_SNAKE_DASHER
+; 	ld (hl), ENEMY_SNAKE
+; 	ld (hl), ENEMY_SNAKE_DASHER
+	ld (hl), ENEMY_SNAKE_POISON
 	inc hl
 	ld (hl), 0
 	inc hl

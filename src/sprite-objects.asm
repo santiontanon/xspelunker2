@@ -212,6 +212,11 @@ update_sprite_objects_player_bullet_small_hitbox:
 update_sprite_objects_player_bullet_hitbox:
 	ld e, (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	ld d, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
+	cp 4
+	jr c, update_sprite_objects_player_bullet_hitbox_continue
+	inc d
+update_sprite_objects_player_bullet_hitbox_continue:
 	ld a, l
 	add a, e
 	ld l, a
