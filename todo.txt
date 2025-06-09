@@ -1,6 +1,5 @@
 to do:
 
-***- shield: deflects bullets
 ***- enemies:
   ***- piranhas (types: slow-swimmers, fast-swim-and-jump)
   ***- bats: two types: slower and faster

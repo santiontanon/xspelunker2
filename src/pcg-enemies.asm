@@ -65,7 +65,7 @@ pcg_generate_room__spawn_snake:
 	inc hl
 	ld (hl), #ff  ; hit ID
 	inc hl
-	ld (hl), 1  ; health
+	ld (hl), 2  ; health
 	ret
 
 

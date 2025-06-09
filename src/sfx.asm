@@ -440,47 +440,47 @@ SFX_enter_door:
   db SFX_CMD_END
 
 
-; SFX_shield:
-;   db  7,#9c    ;; noise in channel C, and tone in channels B and A
-;   db 10,#0f    ;; volume
-;   db  6,#04    ;; noise frequency
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
-;   db 10,#00    ;; volume
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
+SFX_shield:
+  db  7,#9c    ;; noise in channel C, and tone in channels B and A
+  db 10,#0f    ;; volume
+  db  6,#04    ;; noise frequency
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 10,#00    ;; volume
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
 
-;   db  6,#01    ;; noise frequency
-;   db 10,#0c    ;; volume
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
-;   db 10,#00    ;; volume
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
+  db  6,#01    ;; noise frequency
+  db 10,#0c    ;; volume
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 10,#00    ;; volume
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
 
-;   db 10,#0a    ;; volume
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
-;   db  7,#b8    ;; SFX all channels to tone
-;   db 10,#0c    ;; volume
-;   db 4,#20, 5,0 ;; frequency
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
-;   db 10,#00    ;; volume
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
+  db 10,#0a    ;; volume
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db  7,#b8    ;; SFX all channels to tone
+  db 10,#0c    ;; volume
+  db 4,#20, 5,0 ;; frequency
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 10,#00    ;; volume
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
 
-;   db 10,#0a    ;; volume
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
-;   db 10,#00    ;; volume
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
-;   db 10,#08    ;; volume
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
-;   db 10,#00    ;; volume
-;   db SFX_CMD_END
+  db 10,#0a    ;; volume
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 10,#00    ;; volume
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 10,#08    ;; volume
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 10,#00    ;; volume
+  db SFX_CMD_END
 
 
 ; SFX_arrow_bullet:

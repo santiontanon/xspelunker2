@@ -333,7 +333,8 @@ update_enemy_snake_poison_spit_left_continue2:
 ;-----------------------------------------------
 update_enemy_poison_bullet:
 	ld c, 2  ; damage to deal
-	call update_enemy_hurt_player
+	call update_enemy_hurt_player_shieldable
+	jp z, update_enemy_delete
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
 	or a
 	jr nz, update_enemy_poison_bullet_left
@@ -376,6 +377,89 @@ update_enemy_delete:
 ;-----------------------------------------------
 ; input:
 ; - c: amount of damage to deal
+; output:
+; - z: hit
+; - nz: no hit
+update_enemy_hurt_player_shieldable:
+	ld a, (player_current_item)
+	cp 3  ; shield
+	jp nz, update_enemy_hurt_player
+	ld a, (player_state)
+	and #fe
+	cp PLAYER_STATE_DIRECTIONAL_WEAPON
+	jp nz, update_enemy_hurt_player
+	; check if the player has the shield up and in the correct direction:
+	ld a, (player_weapon_swing_type)
+	cp PLAYER_WEAPON_SHIELD_UP
+	jr z, update_enemy_hurt_player_shieldable_shield_up
+	cp PLAYER_WEAPON_SHIELD_FORWARD
+	jr nz, update_enemy_hurt_player
+update_enemy_hurt_player_shieldable_shield_fw:
+	ld a, (player_state)
+	and #01
+	jr z, update_enemy_hurt_player_shieldable_shield_right
+
+update_enemy_hurt_player_shieldable_shield_left:
+	ld a, (player_x + 1)
+	dec a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	jr z, update_enemy_hurt_player_shieldable_shield_left_y
+	dec a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	jr nz, update_enemy_hurt_player
+update_enemy_hurt_player_shieldable_shield_left_y:
+	ld a, (player_y + 1)
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	jr z, update_enemy_hurt_player_shieldable_shielded
+	inc a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	jr z, update_enemy_hurt_player_shieldable_shielded
+	jp update_enemy_hurt_player
+
+update_enemy_hurt_player_shieldable_shield_right:
+	ld a, (player_x + 1)
+	inc a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
+; 	jr z, update_enemy_hurt_player_shieldable_shield_left_y
+; 	inc a
+; 	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	jr nz, update_enemy_hurt_player
+update_enemy_hurt_player_shieldable_shield_right_y:
+	ld a, (player_y + 1)
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	jr z, update_enemy_hurt_player_shieldable_shielded
+	inc a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	jr z, update_enemy_hurt_player_shieldable_shielded
+	jp update_enemy_hurt_player
+
+update_enemy_hurt_player_shieldable_shield_up:
+	ld a, (player_x + 1)
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	jr z, update_enemy_hurt_player_shieldable_shield_up_y
+	dec a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ret nz
+update_enemy_hurt_player_shieldable_shield_up_y:
+	ld a, (player_y + 1)
+	dec a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	jr z, update_enemy_hurt_player_shieldable_shielded
+	jp update_enemy_hurt_player
+
+update_enemy_hurt_player_shieldable_shielded:
+	ld hl, SFX_shield
+	call play_SFX_with_high_priority
+	xor a  ; hit
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - c: amount of damage to deal
+; output:
+; - z: hit
+; - nz: no hit
 update_enemy_hurt_player:
 	ld a, (player_immunity_timer)
 	or a
@@ -391,7 +475,9 @@ update_enemy_hurt_player_y:
 	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	ret nz
 	; player is hit!
-	jp player_hit_damage_c
+	call player_hit_damage_c
+	xor a  ; hit
+	ret
 
 
 ;-----------------------------------------------

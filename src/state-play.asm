@@ -71,8 +71,8 @@ state_play:
 		ld (player_inventory_items+INVENTORY_ITEM_PUZZLEBOX_MOON), a
 		ld (player_inventory_weapons), a
 		ld (player_inventory_weapons+1), a
-; 		ld (player_inventory_weapons+2), a
-; 		ld (player_inventory_weapons+3), a
+		ld (player_inventory_weapons+2), a
+		ld (player_inventory_weapons+3), a
 		ld (player_inventory_weapons+4), a
 		ld (player_inventory_weapons+5), a
 		ld (player_inventory_weapons+6), a
