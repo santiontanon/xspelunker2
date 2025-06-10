@@ -9,14 +9,19 @@ update_sprite_enemies_loop:
 	ret z
 	cp #ff  ; sentinel
 	ret z
-	cp ENEMY_SNAKE
+	dec a  ; cp ENEMY_SNAKE
 	jr z, update_enemy_snake
-	cp ENEMY_SNAKE_DASHER
-	jr z, update_enemy_snake_dasher
-	cp ENEMY_SNAKE_POISON
+	dec a  ; cp ENEMY_SNAKE_DASHER
+	jp z, update_enemy_snake_dasher
+	dec a  ; cp ENEMY_SNAKE_POISON
 	jp z, update_enemy_snake_poison
-	cp ENEMY_POISON_BULLET
+	dec a  ; cp ENEMY_POISON_BULLET
 	jp z, update_enemy_poison_bullet
+	dec a  ; cp ENEMY_FISH
+	jp z, update_enemy_fish
+	dec a  ; cp ENEMY_FISH_JUMPER
+	jp z, update_enemy_fish_jumper
+
 update_sprite_enemies_loop_next:
 	ld de, ROOM_OBJECT_STRUCT_SIZE
 	add ix, de
@@ -210,9 +215,9 @@ update_enemy_snake_poison_right:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2  ; spit right!
 	jr update_enemy_snake_poison_right_continue
 update_enemy_snake_poison_right_no_spit:
-	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
-	and #1
-	jr z, update_enemy_snake_poison_right_continue
+; 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+; 	and #1
+; 	jr z, update_enemy_snake_poison_right_continue
 	call update_enemy_can_move_right
 	jr z, update_enemy_snake_poison_switch_to_state_left
 	call update_enemy_move_right
@@ -238,9 +243,9 @@ update_enemy_snake_poison_left:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 3  ; spit left!
 	jr update_enemy_snake_poison_left_continue
 update_enemy_snake_poison_left_no_spit:	
-	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
-	and #1
-	jr z, update_enemy_snake_poison_left_continue
+; 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+; 	and #1
+; 	jr z, update_enemy_snake_poison_left_continue
 	call update_enemy_can_move_left
 	jr z, update_enemy_snake_poison_switch_to_state_right
 	call update_enemy_move_left
@@ -341,10 +346,10 @@ update_enemy_poison_bullet:
 
 update_enemy_poison_bullet_right:
 	call update_enemy_bullet_can_move_right
-	jr z, update_enemy_delete
+	jp z, update_enemy_delete
 	call update_enemy_move_right
 	call update_enemy_bullet_can_move_right
-	jr z, update_enemy_delete
+	jp z, update_enemy_delete
 	call update_enemy_move_right
 	ld d, COLOR_GREEN
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 6) * 4 
@@ -355,10 +360,10 @@ update_enemy_poison_bullet_right:
 
 update_enemy_poison_bullet_left:
 	call update_enemy_bullet_can_move_left
-	jr z, update_enemy_delete
+	jp z, update_enemy_delete
 	call update_enemy_move_left
 	call update_enemy_bullet_can_move_left
-	jr z, update_enemy_delete
+	jp z, update_enemy_delete
 	call update_enemy_move_left
 	ld d, COLOR_GREEN
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 6) * 4 
@@ -366,6 +371,73 @@ update_enemy_poison_bullet_left:
 	call get_sprite_object_sprite_coordinates
 	call z, add_sprite_to_this_frame	
 	jp update_sprite_enemies_loop_next
+
+
+;-----------------------------------------------
+update_enemy_fish:
+	ld c, 1  ; damage to deal
+	call update_enemy_hurt_player
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	or a
+	jr z, update_enemy_fish_right
+	dec a
+	jr z, update_enemy_fish_left
+	; we cannever reach here ...
+
+update_enemy_fish_right:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	and #1
+	jr z, update_enemy_fish_right_continue
+	call update_enemy_can_move_right_water
+	jr z, update_enemy_fish_switch_to_state_left
+	call update_enemy_move_right
+	jr update_enemy_fish_right_continue
+update_enemy_fish_switch_to_state_left:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1  ; left
+update_enemy_fish_right_continue:
+	ld d, COLOR_PURPLE
+update_enemy_fish_right_continue_color_set:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	rrca
+	and #04
+	add a, (FIRST_ENEMY_SPRITE_PATTERN + 7) * 4 
+	ld e, a
+	ld c, 0
+	call get_sprite_object_sprite_coordinates
+	call z, add_sprite_to_this_frame	
+	jp update_sprite_enemies_loop_next
+
+update_enemy_fish_left:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	and #1
+	jr z, update_enemy_fish_left_continue
+	call update_enemy_can_move_left_water
+	jr z, update_enemy_fish_switch_to_state_right
+	call update_enemy_move_left
+	jr update_enemy_fish_left_continue
+update_enemy_fish_switch_to_state_right:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
+update_enemy_fish_left_continue:
+	ld d, COLOR_PURPLE
+update_enemy_fish_left_continue_color_set:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	rrca
+	and #04
+	add a, (FIRST_ENEMY_SPRITE_PATTERN + 11) * 4 
+	ld e, a
+	ld c, 0
+	call get_sprite_object_sprite_coordinates
+	call z, add_sprite_to_this_frame	
+	jp update_sprite_enemies_loop_next
+
+
+;-----------------------------------------------
+update_enemy_fish_jumper:
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+
+	; ...
+	jr update_enemy_fish_right_continue
 
 
 ;-----------------------------------------------
@@ -473,7 +545,15 @@ update_enemy_hurt_player:
 update_enemy_hurt_player_y:
 	ld a, (player_y + 1)
 	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	jr z, update_enemy_hurt_player_collision
+	inc a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	jr z, update_enemy_hurt_player_collision
+	dec a
+	dec a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	ret nz
+update_enemy_hurt_player_collision:
 	; player is hit!
 	call player_hit_damage_c
 	xor a  ; hit
@@ -568,6 +648,39 @@ update_enemy_can_move_left:
 	jr nz, update_enemy_can_move_left_cannot
 	or 1
 	ret
+
+
+;-----------------------------------------------
+; input:
+; - ix: enemy ptr
+; output:
+; - z: canot
+; - nz: can
+update_enemy_can_move_right_water:
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	or a
+	ret nz
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc c
+	inc c
+	jp general_check_collision
+
+
+;-----------------------------------------------
+; input:
+; - ix: enemy ptr
+; output:
+; - z: canot
+; - nz: can
+update_enemy_can_move_left_water:
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	or a
+	ret nz
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	dec c
+	jp general_check_collision
 
 
 ;-----------------------------------------------

@@ -336,12 +336,34 @@ player_in_water:
 	ret
 
 
+player_in_water_from_water:
+	ld a, (player_x + 1)
+	ld c, a
+	ld a, (player_y + 1)
+	ld b, a
+	inc b
+	call get_room_tile_type
+	cp 4  ; water
+	ret z
+	ld a, c
+	cp 32
+	ret c
+	cp 48
+	jr nc, player_in_water_from_water_no_water
+	xor a  ; consider we are still in water, as the player is over an item
+	ret 
+player_in_water_from_water_no_water:
+	or 1
+	ret
+
+
 ;-----------------------------------------------
 ; input:
 ; - c: tile x
 ; - b: tile y
 ; output:
 ; - a: tile collision type
+; - c: actual tile
 get_room_tile_type:
 	ld a, (current_room__width)
 	cp 32*2
@@ -400,6 +422,7 @@ get_room_tile_type_continue:
 
 get_collision_tile_type_of_a:
 	; get collision type:
+	ld c, a
 	ld hl, (current_room__collision_ptr)
 	ADD_HL_A
 	ld a, (hl)

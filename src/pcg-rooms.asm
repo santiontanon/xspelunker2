@@ -960,7 +960,8 @@ pcg_generate_room__object_teleporter:
 	ld (tmp_pcg_room__next_tile_object_ptr), iy
 
 	; set which object gfx to up load vdp (starting at tile FIRST_ITEM_TILE):
-	jp set_large_object_to_upload_to_vdp
+	call set_large_object_to_upload_to_vdp
+	jp pcg_generate_room__object_loop_next
 
 
 ;-----------------------------------------------

@@ -785,6 +785,8 @@ tmp_letter_line_width: equ tmp_hud_drawing_hl
 tmp_letter_line_color: equ tmp_hud_drawing_hl + 1
 tmp_puzzlebox_state: equ tmp_hud_drawing_hl
 tmp_puzzlebox_pointer: equ tmp_hud_drawing_hl + 4
+tmp_enemy_pcg_platform_loc_ptr: equ temporary_variables
+tmp_enemy_pcg_water_loc_ptr: equ temporary_variables + 2
 
 config_hud_type: ds virtual 1  ; 0: minimal, 1: minimal always visible, 2: full
 config_inventory_key_combo: ds virtual 1  ; 0: down+jump, 1: none

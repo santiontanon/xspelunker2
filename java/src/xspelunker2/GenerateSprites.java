@@ -159,15 +159,15 @@ public class GenerateSprites {
         data.addAll(extractSprite(sourceImage, 32, 0, 12));  // snake spitting right
         data.addAll(extractSpriteFlipped(sourceImage, 32, 0, 12));  // snake spitting left
         data.addAll(extractSpriteFlipped(sourceImage, 48, 0, 12));  // poison
-        // piranha:
+        // piranha (7):
         data.addAll(extractSprite(sourceImage, 0, 16, 9));  // fish right
         data.addAll(extractSprite(sourceImage, 16, 16, 9));
         data.addAll(extractSprite(sourceImage, 32, 16, 9));  // fish jump right
         data.addAll(extractSprite(sourceImage, 48, 16, 9));
-        data.addAll(extractSprite(sourceImage, 0, 16, 9));  // fish left
-        data.addAll(extractSprite(sourceImage, 16, 16, 9));
-        data.addAll(extractSprite(sourceImage, 32, 16, 9));  // fish jump left
-        data.addAll(extractSprite(sourceImage, 48, 16, 9));
+        data.addAll(extractSpriteFlipped(sourceImage, 0, 16, 9));  // fish left
+        data.addAll(extractSpriteFlipped(sourceImage, 16, 16, 9));
+        data.addAll(extractSpriteFlipped(sourceImage, 32, 16, 9));  // fish jump left
+        data.addAll(extractSpriteFlipped(sourceImage, 48, 16, 9));
         
         System.out.println("extractEnemySprites: " + data.size());
         Z80Assembler.dataToBinary(data, outputPath + ".bin");   

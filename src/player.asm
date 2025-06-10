@@ -1190,6 +1190,11 @@ player_update_state_swimming_oxygen_non_zero:
 	set HUD_REDRAW_FLAG_BIT, (hl)
 player_update_state_swimming_oxygen_done:
 
+	; check for interact:
+	ld a, (keyboard_clicks)
+	bit KEY_INTERACT_BIT, a
+	call nz, player_update_interact
+
 	ld a, (interrupt_cycle)
 	and #01
 	jp z, player_update_state_swimming_no_player_control
@@ -1363,7 +1368,9 @@ player_update_state_swimming_inertia_y_negative:
 player_update_state_swimming_inertia_y_done:
 
 	; check if we are exiting the water:
-	call player_in_water
+	call player_in_water_from_water  ; the difference from "player_in_water" is that
+									 ; this method considers that we are still in the water
+									 ; if we go through an "item"
 	jp nz, player_update_switch_to_jumping_from_swimming
 
 	ld a, (interrupt_cycle)
