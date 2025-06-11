@@ -526,6 +526,11 @@ player_update_switch_to_falling:
 	ld (player_state), a
 
 player_update_state_falling:
+	; check for interact:
+	ld a, (keyboard_clicks)
+	bit KEY_INTERACT_BIT, a
+	call nz, player_update_interact
+
 	; check for weapon:
 	ld a, (keyboard_clicks)
 	bit KEY_WEAPON_BIT, a
@@ -658,6 +663,11 @@ player_update_state_jumping_check_rope_or_ladder:
 	call check_player_on_rope_or_ladder
 	jp z, player_update_switch_to_rope_or_ladder
 player_update_state_jumping_no_rope:
+
+	; check for interact:
+	ld a, (keyboard_clicks)
+	bit KEY_INTERACT_BIT, a
+	call nz, player_update_interact
 
 	; check for weapon:
 	ld a, (keyboard_clicks)

@@ -265,11 +265,11 @@ get_tile_object_behind_player_loop:
 	cp TAG_IDOL_LOCK
 	jr z, get_tile_object_behind_player_32x24_object
 	cp TAG_TRIAL1_LOCK
-	jr z, get_tile_object_behind_player_32x32_object
+	jp z, get_tile_object_behind_player_32x32_object
 	cp TAG_TRIAL2_LOCK
-	jr z, get_tile_object_behind_player_32x32_object
+	jp z, get_tile_object_behind_player_32x32_object
 	cp TAG_TRIAL3_LOCK
-	jr z, get_tile_object_behind_player_32x32_object
+	jp z, get_tile_object_behind_player_32x32_object
 	cp TAG_TRIAL4_LOCK
 	jr z, get_tile_object_behind_player_32x32_object
 	cp TAG_DOOR_BOSS
@@ -302,7 +302,15 @@ get_tile_object_behind_player_loop:
 	; 16x16 objects:
 	ld a, b
 	cp (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	jr z, get_tile_object_behind_player_check_x
+	dec a
+	cp (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	jr z, get_tile_object_behind_player_check_x
+	inc a
+	inc a
+	cp (ix + ROOM_TILE_OBJECT_STRUCT_Y)
 	jr nz, get_tile_object_behind_player_loop_next
+get_tile_object_behind_player_check_x:
 	ld a, c
     cp (ix + ROOM_TILE_OBJECT_STRUCT_X)
     jr z, get_tile_object_behind_player_found

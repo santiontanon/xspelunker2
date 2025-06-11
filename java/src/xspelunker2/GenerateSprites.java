@@ -168,6 +168,16 @@ public class GenerateSprites {
         data.addAll(extractSpriteFlipped(sourceImage, 16, 16, 9));
         data.addAll(extractSpriteFlipped(sourceImage, 32, 16, 9));  // fish jump left
         data.addAll(extractSpriteFlipped(sourceImage, 48, 16, 9));
+        // bats: (15):
+        data.addAll(extractSprite(sourceImage, 0, 32, 9));  // bat right
+        data.addAll(extractSprite(sourceImage, 16, 32, 9));
+        data.addAll(extractSpriteFlipped(sourceImage, 0, 32, 9));  // bat left
+        data.addAll(extractSpriteFlipped(sourceImage, 16, 32, 9));
+        data.addAll(extractSprite(sourceImage, 32, 32, 9));  // bat hanging
+        
+        if (data.size() > 40 * 32) {
+            throw new Exception("More enemy sprites than the engine can handle!");
+        }
         
         System.out.println("extractEnemySprites: " + data.size());
         Z80Assembler.dataToBinary(data, outputPath + ".bin");   

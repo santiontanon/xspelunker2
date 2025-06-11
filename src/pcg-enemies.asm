@@ -111,7 +111,8 @@ pcg_generate_room__spawn_fish:
 	dec b
 	ex af, af'
 	ret nz
-	ld (hl), ENEMY_FISH
+; 	ld (hl), ENEMY_FISH
+	ld (hl), ENEMY_FISH_JUMPER
 	inc hl
 	ld (hl), 0
 	inc hl
@@ -125,7 +126,9 @@ pcg_generate_room__spawn_fish:
 	and #01
 	ld (hl), a  ; state
 	inc hl
-	ld (hl), 0  ; state timer
+	call random_a  ; randomly face left or right
+	and #1f
+	ld (hl), a  ; state timer
 	inc hl
 	ld (hl), #ff  ; hit ID
 	inc hl
