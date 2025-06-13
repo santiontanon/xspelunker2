@@ -195,3 +195,15 @@ random_a:
     ret
 
 
+;-----------------------------------------------
+; input:
+; - c: modulo
+; output:
+; - a: random % c
+random_modulo:
+    call random_a
+random_modulo_loop:
+    cp c
+    ret c
+    sub c
+    jr random_modulo_loop

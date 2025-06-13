@@ -40,7 +40,7 @@ pcg_generate_maya_puzzle_riddles:
 	ld hl, current_world__maya_puzzle2_combination1
 pcg_generate_maya_puzzle_riddles__puzzle2_loop:
 	ld c, 5
-	call pcg_random_modulo
+	call random_modulo
 	ld (hl), a
 	inc hl
 	djnz pcg_generate_maya_puzzle_riddles__puzzle2_loop
@@ -51,18 +51,18 @@ pcg_generate_maya_puzzle_riddles__puzzle2_loop:
 pcg_generate_maya_puzzle_riddle_sentence:
 	; generate verb:
 	ld c, 12
-	call pcg_random_modulo
+	call random_modulo
 	ld (hl), a
 	inc hl
 	cp 11  ; ascend
 	jr z, pcg_generate_maya_puzzle_riddle_sentence_ascend
 	ld c, 10
-	call pcg_random_modulo
+	call random_modulo
 	ld (hl), a
 	inc hl
 pcg_generate_maya_puzzle_riddle_sentence_number:
 	ld c, 5
-	call pcg_random_modulo
+	call random_modulo
 	add a, 2
 	ld (hl), a
 	ret
@@ -111,7 +111,7 @@ syllable_riddle__sample_from_grammar:
 syllable_riddle__sample_from_grammar_continue:
 
 	ld c, 4 + 4 + 4 + 2 + 3 + 3  ; grammar rule weights
-	call pcg_random_modulo
+	call random_modulo
 	sub 4
 	jp c, syllable_riddle__sample_from_grammar_rule1
 	sub 4
@@ -160,7 +160,7 @@ syllable_riddle__sample_piece_loop:
 		or a
 		jr z, syllable_riddle__sample_piece_first_candidate
 		inc c
-		call pcg_random_modulo
+		call random_modulo
 		or a
 		jr nz, syllable_riddle__sample_piece_loop_next
 		jr syllable_riddle__sample_piece_replace_candidate

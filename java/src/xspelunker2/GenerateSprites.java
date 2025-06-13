@@ -152,28 +152,30 @@ public class GenerateSprites {
         List<Integer> data = new ArrayList<>();
         
         // snakes:
-        data.addAll(extractSprite(sourceImage, 0, 0, 12));  // snake right
-        data.addAll(extractSprite(sourceImage, 16, 0, 12));
-        data.addAll(extractSpriteFlipped(sourceImage, 0, 0, 12));  // snake left
-        data.addAll(extractSpriteFlipped(sourceImage, 16, 0, 12));
-        data.addAll(extractSprite(sourceImage, 32, 0, 12));  // snake spitting right
-        data.addAll(extractSpriteFlipped(sourceImage, 32, 0, 12));  // snake spitting left
-        data.addAll(extractSpriteFlipped(sourceImage, 48, 0, 12));  // poison
+        data.addAll(extractSprite(sourceImage, 0, 0, 15));  // snake right
+        data.addAll(extractSprite(sourceImage, 16, 0, 15));
+        data.addAll(extractSpriteFlipped(sourceImage, 0, 0, 15));  // snake left
+        data.addAll(extractSpriteFlipped(sourceImage, 16, 0, 15));
+        data.addAll(extractSprite(sourceImage, 32, 0, 15));  // snake spitting right
+        data.addAll(extractSpriteFlipped(sourceImage, 32, 0, 15));  // snake spitting left
+        data.addAll(extractSpriteFlipped(sourceImage, 48, 0, 15));  // poison
         // piranha (7):
-        data.addAll(extractSprite(sourceImage, 0, 16, 9));  // fish right
-        data.addAll(extractSprite(sourceImage, 16, 16, 9));
-        data.addAll(extractSprite(sourceImage, 32, 16, 9));  // fish jump right
-        data.addAll(extractSprite(sourceImage, 48, 16, 9));
-        data.addAll(extractSpriteFlipped(sourceImage, 0, 16, 9));  // fish left
-        data.addAll(extractSpriteFlipped(sourceImage, 16, 16, 9));
-        data.addAll(extractSpriteFlipped(sourceImage, 32, 16, 9));  // fish jump left
-        data.addAll(extractSpriteFlipped(sourceImage, 48, 16, 9));
+        data.addAll(extractSprite(sourceImage, 0, 16, 15));  // fish right
+        data.addAll(extractSprite(sourceImage, 16, 16, 15));
+        data.addAll(extractSprite(sourceImage, 32, 16, 15));  // fish jump right
+        data.addAll(extractSprite(sourceImage, 48, 16, 15));
+        data.addAll(extractSpriteFlipped(sourceImage, 0, 16, 15));  // fish left
+        data.addAll(extractSpriteFlipped(sourceImage, 16, 16, 15));
+        data.addAll(extractSpriteFlipped(sourceImage, 32, 16, 15));  // fish jump left
+        data.addAll(extractSpriteFlipped(sourceImage, 48, 16, 15));
         // bats: (15):
-        data.addAll(extractSprite(sourceImage, 0, 32, 9));  // bat right
-        data.addAll(extractSprite(sourceImage, 16, 32, 9));
-        data.addAll(extractSpriteFlipped(sourceImage, 0, 32, 9));  // bat left
-        data.addAll(extractSpriteFlipped(sourceImage, 16, 32, 9));
-        data.addAll(extractSprite(sourceImage, 32, 32, 9));  // bat hanging
+        data.addAll(extractSprite(sourceImage, 0, 32, 15));  // bat right
+        data.addAll(extractSprite(sourceImage, 16, 32, 15));
+        data.addAll(extractSpriteFlipped(sourceImage, 0, 32, 15));  // bat left
+        data.addAll(extractSpriteFlipped(sourceImage, 16, 32, 15));
+        data.addAll(extractSprite(sourceImage, 32, 32, 15));  // bat hanging
+        // bullet (20):
+        data.addAll(extractSprite(sourceImage, 64, 0, 15));  // bullet
         
         if (data.size() > 40 * 32) {
             throw new Exception("More enemy sprites than the engine can handle!");

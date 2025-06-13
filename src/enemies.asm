@@ -21,6 +21,12 @@ update_sprite_enemies_loop:
 	jp z, update_enemy_fish
 	dec a  ; cp ENEMY_FISH_JUMPER
 	jp z, update_enemy_fish_jumper
+	dec a  ; ENEMY_BAT
+	jp z, update_enemy_bat
+	dec a  ; ENEMY_BAT_AGGRESSIVE
+	jp z, update_enemy_bat_aggressive
+	dec a  ; ENEMY_BULLET
+	jp z, update_enemy_bullet
 
 update_sprite_enemies_loop_next:
 	ld de, ROOM_OBJECT_STRUCT_SIZE
@@ -514,6 +520,373 @@ update_enemy_fish_jumper_jump_table_update_continue2:
 
 
 ;-----------------------------------------------
+update_enemy_bat_aggressive:
+update_enemy_bat:
+	ld c, 1  ; damage to deal
+	call update_enemy_hurt_player
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	or a
+	jr z, update_enemy_bat_stay
+	dec a
+	jr z, update_enemy_bat_nw
+	dec a
+	jr z, update_enemy_bat_n
+	dec a
+	jr z, update_enemy_bat_ne
+	dec a
+	jr z, update_enemy_bat_e
+	dec a
+	jr z, update_enemy_bat_se
+	dec a
+	jr z, update_enemy_bat_s
+	dec a
+	jr z, update_enemy_bat_sw
+	dec a
+	jr z, update_enemy_bat_w
+	dec a
+	jr z, update_enemy_bat_hang
+
+update_enemy_bat_nw:
+	call update_enemy_move_left
+
+update_enemy_bat_n:
+	call update_enemy_move_up
+	jr update_enemy_bat_stay_w
+
+update_enemy_bat_ne:
+	call update_enemy_move_up
+
+update_enemy_bat_e:
+	call update_enemy_move_right
+	jr update_enemy_bat_stay
+
+update_enemy_bat_se:
+	call update_enemy_move_right
+
+update_enemy_bat_s:
+	call update_enemy_move_down
+	jr update_enemy_bat_stay
+
+update_enemy_bat_sw:
+	call update_enemy_move_down
+
+update_enemy_bat_w:
+	call update_enemy_move_left
+
+update_enemy_bat_stay_w:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	and #07
+	call z, update_enemy_bat_stay_change_direction
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 17) * 4 
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	cp ENEMY_BAT_AGGRESSIVE
+	jr z, update_enemy_bat_stay_w_purple
+	ld d, COLOR_BLUE
+	jp enemy_sprite_and_continue_animated
+update_enemy_bat_stay_w_purple:
+	ld d, COLOR_PURPLE
+	jp enemy_sprite_and_continue_animated
+
+
+update_enemy_bat_stay:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	and #07
+	call z, update_enemy_bat_stay_change_direction
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 15) * 4 
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	cp ENEMY_BAT_AGGRESSIVE
+	jr z, update_enemy_bat_stay_purple
+	ld d, COLOR_BLUE
+	jp enemy_sprite_and_continue_animated
+update_enemy_bat_stay_purple:
+	ld d, COLOR_PURPLE
+	jp enemy_sprite_and_continue_animated
+
+update_enemy_bat_hang:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 64
+	jr nz, update_enemy_bat_hang_continue
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 6  ; fly down
+update_enemy_bat_hang_continue:
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 19) * 4 
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	cp ENEMY_BAT_AGGRESSIVE
+	jr z, update_enemy_bat_hang_purple
+	ld d, COLOR_BLUE
+	jp enemy_sprite_and_continue
+update_enemy_bat_hang_purple:
+	ld d, COLOR_PURPLE
+	jp enemy_sprite_and_continue
+
+update_enemy_bat_stay_change_direction:
+	; see if we want to hang from ceiling:
+	call update_enemy_bat_under_ceiling_p
+	jr nz, update_enemy_bat_stay_change_direction_no_hang
+	call random_a
+	and #03
+	jr nz, update_enemy_bat_stay_change_direction_no_hang
+	; hang!
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 9
+	jr update_enemy_bat_hang
+update_enemy_bat_stay_change_direction_no_hang:	
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	cp ENEMY_BAT_AGGRESSIVE
+	jr nz, update_enemy_bat_stay_change_direction_no_fire
+	; chance to fire a bullet:
+	call random_a
+	and #1f
+	jr nz, update_enemy_bat_stay_change_direction_no_fire
+	call update_enemy_fire_directional_bullet_towards_player
+
+update_enemy_bat_stay_change_direction_no_fire:
+	; pick a state from 0, 1, 2, 3, 4, 5, 6, 7, 8
+	call random_a
+	and #07
+	jr nz, update_enemy_bat_stay_change_direction_keep_direction
+	ld c, 9
+	call random_modulo
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), a
+update_enemy_bat_stay_change_direction_keep_direction:
+
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	cp 2
+	jr nc, update_enemy_bat_stay_change_direction_check_right_edge
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	ld hl, update_enemy_bat_update_left_edge
+	ADD_HL_A
+	ld a, (hl)
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), a
+
+update_enemy_bat_stay_change_direction_check_right_edge:
+	ld a, (current_room__width)
+	sub 4
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	jr nc, update_enemy_bat_stay_change_direction_check_top_edge
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	ld hl, update_enemy_bat_update_right_edge
+	ADD_HL_A
+	ld a, (hl)
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), a
+
+update_enemy_bat_stay_change_direction_check_top_edge:
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	cp 2
+	jr nc, update_enemy_bat_stay_change_direction_check_bottom_edge
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	ld hl, update_enemy_bat_update_top_edge
+	ADD_HL_A
+	ld a, (hl)
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), a
+
+update_enemy_bat_stay_change_direction_check_bottom_edge:
+	ld a, (current_room__height)
+	sub 4
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	ret nc
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	ld hl, update_enemy_bat_update_bottom_edge
+	ADD_HL_A
+	ld a, (hl)
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), a
+	ret
+
+update_enemy_bat_under_ceiling_p:
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	push bc
+		call get_room_tile_type
+	pop bc
+	or a
+	ret nz
+	inc c
+	push bc
+		call get_room_tile_type
+	pop bc
+	or a
+	ret nz
+	dec b
+	push bc
+		call get_room_tile_type
+	pop bc
+	cp 2
+	ret nz
+	dec c
+	push bc
+		call get_room_tile_type
+	pop bc
+	cp 2
+	ret
+
+
+update_enemy_bat_update_left_edge:
+	db 0, 3, 2, 3, 4, 5, 6, 5, 4
+
+update_enemy_bat_update_right_edge:
+	db 0, 1, 2, 1, 8, 7, 6, 7, 8
+
+update_enemy_bat_update_top_edge
+	db 0, 7, 6, 5, 4, 5, 6, 7, 8
+
+update_enemy_bat_update_bottom_edge:
+	db 0, 1, 2, 3, 4, 3, 2, 1, 8
+
+
+;-----------------------------------------------
+update_enemy_bullet:
+	ld c, 1  ; damage to deal
+	call update_enemy_hurt_player_shieldable
+	jp z, update_enemy_delete
+	
+	; move:
+	ld a, (ix + ROOM_OBJECT_STRUCT_SPEED_Y)
+	or a
+    jp p,update_enemy_bullet_no_yspeed_flip
+    neg
+update_enemy_bullet_no_yspeed_flip:
+    ld b, a
+    ld a, (ix + ROOM_OBJECT_STRUCT_SPEED_X)
+    or a
+    jp p,update_enemy_bullet_no_xspeed_flip
+    neg
+update_enemy_bullet_no_xspeed_flip:
+    ld c, a
+    cp b
+    jp c,update_enemy_bullet_y_is_bigger
+    ; Bresenham for when the XDIFF > YDIFF
+update_enemy_bullet_x_is_bigger:
+    ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+    sub b  ; we subtract y difference from the error term 
+    ld (ix + ROOM_OBJECT_STRUCT_STATE), a
+    ld b, 0
+    jp p, update_enemy_bullet_x_is_bigger_no_error_overflow
+    ld b, 1
+    add a, c
+    ld (ix + ROOM_OBJECT_STRUCT_STATE), a
+update_enemy_bullet_x_is_bigger_no_error_overflow:
+    ld c, 1
+    jp update_enemy_bullet_choose_quadrant
+
+    ; Bresenham for when the XDIFF < YDIFF
+update_enemy_bullet_y_is_bigger:
+    ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+    sub c  ; we subtract y difference from the error term 
+    ld (ix + ROOM_OBJECT_STRUCT_STATE), a
+    ld c, 0
+    jp p,update_enemy_bullet_y_is_bigger_no_error_overflow
+    ld c, 1
+    add a, b
+    ld (ix + ROOM_OBJECT_STRUCT_STATE), a
+update_enemy_bullet_y_is_bigger_no_error_overflow:
+    ld b, 1
+
+update_enemy_bullet_choose_quadrant:
+    ld a, (ix + ROOM_OBJECT_STRUCT_SPEED_Y)
+    or a
+    jp p,update_enemy_bullet_no_yspeed_flip2
+    ld a, b
+    neg
+    ld b, a
+update_enemy_bullet_no_yspeed_flip2:
+    ld a, (ix + ROOM_OBJECT_STRUCT_SPEED_X)
+    or a
+    jp p,update_enemy_bullet_no_xspeed_flip2
+    ld a, c
+    neg
+    ld c, a
+update_enemy_bullet_no_xspeed_flip2:
+
+	sla c
+	sla b
+	call update_enemy_move_cb
+
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	call general_check_collision
+	jp z, update_enemy_delete
+
+update_enemy_bullet_continue:
+	ld d, COLOR_YELLOW
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 20) * 4 
+	jp enemy_sprite_and_continue
+
+
+;-----------------------------------------------
+update_enemy_move_cb:
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	add a, c
+	jp p, update_enemy_move_cb_positive_x
+	dec (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	add a, 8
+update_enemy_move_cb_positive_x:
+	cp 8
+	jr c, update_enemy_move_cb_carry_x
+	inc (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	add a, -8
+update_enemy_move_cb_carry_x:
+	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_X), a
+
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
+	add a, b
+	jp p, update_enemy_move_cb_positive_y
+	dec (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	add a, 8
+update_enemy_move_cb_positive_y:
+	cp 8
+	jr c, update_enemy_move_cb_carry_y
+	inc (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	add a, -8
+update_enemy_move_cb_carry_y:
+	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_Y), a
+	ret
+
+
+;-----------------------------------------------
+update_enemy_fire_directional_bullet_towards_player:
+	; see if player is close enough:
+	ld a, (player_x + 1)
+	sub (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	cp 16 
+	ret p
+	cp -16
+	ret m
+	ld c, a
+	ld a, (player_y + 1)
+	sub (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	cp 16 
+	ret p
+	cp -16
+	ret m
+	ld b, a
+	; fire a bullet:
+	push bc
+		call ptr_to_new_sprite_enemy
+	pop bc
+	ret nz
+	ld (hl), ENEMY_BULLET
+	inc hl
+	ld (hl), 0  ; pixel X
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	inc hl
+	ld (hl), a
+	inc hl
+	ld (hl), 4  ; pixel Y
+	inc hl
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	ld (hl), a
+	inc hl
+	ld (hl), 0  ; state
+	inc hl
+	ld (hl), c  ; speed x
+	inc hl
+	ld (hl), b  ; speed y
+	ld hl, SFX_enemy_bullet
+	jp play_SFX_with_high_priority
+
+
+;-----------------------------------------------
 ; input:
 ; - d: sprite color
 ; - e: sprite frame
@@ -716,6 +1089,37 @@ update_enemy_move_left:
 	ld a, 7
 update_enemy_move_left_continue:
 	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_X), a
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - ix: enemy ptr
+update_enemy_move_up:
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
+	dec a
+	cp #ff
+	jr nz, update_enemy_move_up_continue
+	dec (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	ld a, 7
+update_enemy_move_up_continue:
+	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_Y), a
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - ix: enemy ptr
+update_enemy_move_down:
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
+	inc a
+	cp 8
+	jr nz, update_enemy_move_down_continue
+	inc (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	xor a
+update_enemy_move_down_continue:
+	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_Y), a
+	or 1  ; movement happened
 	ret
 
 

@@ -15,16 +15,3 @@ pcg_generate_world:
 	call pcg_generate_maya_puzzle_riddles
 	jp pcg_generate_syllable_riddle
 
-
-;-----------------------------------------------
-; input:
-; - c: modulo
-; output:
-; - a: random % c
-pcg_random_modulo:
-	call random_a
-pcg_random_modulo_loop:
-	cp c
-	ret c
-	sub c
-	jr pcg_random_modulo_loop

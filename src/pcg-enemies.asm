@@ -4,10 +4,58 @@ pcg_generate_room__spawn_enemies:
 	call pcg__find_enemy_spawn_locations
 ; 	call pcg_generate_room__spawn_snake
 ; 	call pcg_generate_room__spawn_snake
-	call pcg_generate_room__spawn_snake
-	call pcg_generate_room__spawn_snake
-	call pcg_generate_room__spawn_fish
-	call pcg_generate_room__spawn_fish
+; 	call pcg_generate_room__spawn_snake
+; 	call pcg_generate_room__spawn_snake
+; 	call pcg_generate_room__spawn_fish
+; 	call pcg_generate_room__spawn_fish
+	call pcg_generate_room__spawn_bat
+	call pcg_generate_room__spawn_bat
+	call pcg_generate_room__spawn_bat_aggressive
+	call pcg_generate_room__spawn_bat_aggressive
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - hl: ptr to positions
+; - a: position index
+; - e: number of positions total we have in this buffer of positions
+; output:
+; - hl: ptr
+; - z: ptr found
+; - nz: no ptr found
+pcg_generate_room__spawn_enemy_get_new_ptr:
+	push bc
+		push de
+			ld e, a
+			ld d, 0
+			add hl, de
+			add hl, de
+			ld e, (hl)
+			inc hl
+			ld d, (hl)
+		pop bc
+		; remove the position (shift all the positions left):
+		sub c
+		neg
+		dec a  ; a = number of positions we need to copy to the left
+		push de
+			ld e, l
+			ld d, h
+			dec de
+			inc hl
+			or a
+			jr z, pcg_generate_room__spawn_enemy_get_new_ptr_continue
+			ld c, a
+			ld b, 0
+			sla c
+			rl b
+			ldir
+pcg_generate_room__spawn_enemy_get_new_ptr_continue:
+			; find a new enemy ptr:
+			call ptr_to_new_sprite_enemy
+		pop de
+	pop bc
 	ret
 
 
@@ -18,31 +66,10 @@ pcg_generate_room__spawn_snake:
 	ld a, c
 	or a
 	ret z  ; no positions available
-	call pcg_random_modulo
-	ld e, a
-	ld d, 0
+	call random_modulo
 	ld hl, buffer_4096
-	add hl, de
-	add hl, de
-	ld e, (hl)
-	inc hl
-	ld d, (hl)
-	; remove the position (shift all the positions left):
-	push bc
-	push de
-		ld e, l
-		ld d, h
-		dec de
-		inc hl
-		ld b, 0
-		sla c
-		rl b
-		ldir
-
-		; find a new enemy ptr:
-		call ptr_to_new_sprite_enemy
-	pop de
-	pop bc
+	ld e, c
+	call pcg_generate_room__spawn_enemy_get_new_ptr
 	ex af, af'  ; preserve the z flag
 	dec c
 	ex af, af'
@@ -80,33 +107,11 @@ pcg_generate_room__spawn_fish:
 	ret z  ; no positions available
 	push bc
 		ld c, b
-		call pcg_random_modulo
+		call random_modulo
 	pop bc
-	ld e, a
-	ld d, 0
 	ld hl, buffer_4096 + 512
-	add hl, de
-	add hl, de
-	ld e, (hl)
-	inc hl
-	ld d, (hl)
-	; remove the position (shift all the positions left):
-	push bc
-	push de
-		ld e, l
-		ld d, h
-		dec de
-		inc hl
-		ld c, b
-		ld b, 0
-		sla c
-		rl b
-		ldir
-
-		; find a new enemy ptr:
-		call ptr_to_new_sprite_enemy
-	pop de
-	pop bc
+	ld e, b
+	call pcg_generate_room__spawn_enemy_get_new_ptr
 	ex af, af'  ; preserve the z flag
 	dec b
 	ex af, af'
@@ -129,6 +134,49 @@ pcg_generate_room__spawn_fish:
 	call random_a  ; randomly face left or right
 	and #1f
 	ld (hl), a  ; state timer
+	inc hl
+	ld (hl), #ff  ; hit ID
+	inc hl
+	ld (hl), 1  ; health
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - c: number of positions available (in buffer_4096)
+pcg_generate_room__spawn_bat_aggressive:
+	ld ixl, ENEMY_BAT_AGGRESSIVE
+	jr pcg_generate_room__spawn_bat_continue
+pcg_generate_room__spawn_bat:
+	ld ixl, ENEMY_BAT
+pcg_generate_room__spawn_bat_continue:
+	ld a, c
+	or a
+	ret z  ; no positions available
+	call random_modulo
+	ld hl, buffer_4096
+	ld e, c
+	call pcg_generate_room__spawn_enemy_get_new_ptr
+	ex af, af'  ; preserve the z flag
+	dec c
+	ex af, af'
+	ret nz
+	ld a, ixl
+	ld (hl), a
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), e  ; tile x
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), d  ; tile y
+	inc hl
+	; call random_a  ; randomly face left or right
+	; and #01
+	ld (hl), 0  ; state
+	inc hl
+	ld (hl), 0
 	inc hl
 	ld (hl), #ff  ; hit ID
 	inc hl
