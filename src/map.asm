@@ -136,6 +136,7 @@ display_map_from_teleporter_loop_end:
 	ld hl, redraw_flags
 	ld (hl), #ff
 
+	ld a, (tmp_map_pointer_position)
 	ld b, 0
 	ld c, a
 	ld hl, map_teleporter_areas

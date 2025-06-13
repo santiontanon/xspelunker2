@@ -838,14 +838,14 @@ public class PCGWorld {
           6, 7, 8, 9,
         };
         String teleporterTags[] = {
-            "teleporter1",
-            "teleporter2",
-            "teleporter3",
-            "teleporter4",
-            "teleporter5",
-            "teleporter6",
-            "teleporter7",
-            "teleporter8",
+            "teleporter1",  // jungle
+            "teleporter2",  // pyramid 1
+            "teleporter3",  // pyramid 2
+            "teleporter4",  // inverted pyramid
+            "teleporter5",  // caves left
+            "teleporter6",  // caves right
+            "teleporter7",  // xibalba
+            "teleporter8",  // atlantis
         };        
         String optionalItemTags[] = {
           "item-sandals",

@@ -1870,24 +1870,26 @@ covert_chunk_offset_to_room_offset:
 	ld a, e
 	ld hl, current_area__width
 	ld c, (hl)  ; width in rooms
-	srl a  ; a = x/2 + y * width
-	ld e, a
+	sla c  ; c = width * 2
 	ld b, 0
-covert_chunk_offset_to_room_offset_loop:
+covert_chunk_offset_to_room_offset_loop_1:
 	cp c
-	jr c, covert_chunk_offset_to_room_offset_loop_done
+	jr c, covert_chunk_offset_to_room_offset_loop_1_done
 	sub c
 	inc b
-	jr covert_chunk_offset_to_room_offset_loop
-covert_chunk_offset_to_room_offset_loop_done:
-	; a = x/2
+	jr covert_chunk_offset_to_room_offset_loop_1
+covert_chunk_offset_to_room_offset_loop_1_done:
 	; b = y
-	srl b
-	ret z  ; y/2 = 0
-covert_chunk_offset_to_room_offset_loop2:
+	; a = x
+	srl a  ; a = x/2
+	srl b  ; b = y/2
+	ld c, (hl)  ; c = width
+	jr z, covert_chunk_offset_to_room_offset_loop_2_done
+covert_chunk_offset_to_room_offset_loop_2:
 	add a, c
-	djnz covert_chunk_offset_to_room_offset_loop2
-	ld e, a
+	djnz covert_chunk_offset_to_room_offset_loop_2
+covert_chunk_offset_to_room_offset_loop_2_done:
+	ld e, a  ; e = x/2 + y/2 * width
 	ret
 
 
