@@ -8,10 +8,14 @@ pcg_generate_room__spawn_enemies:
 ; 	call pcg_generate_room__spawn_snake
 ; 	call pcg_generate_room__spawn_fish
 ; 	call pcg_generate_room__spawn_fish
-	call pcg_generate_room__spawn_bat
-	call pcg_generate_room__spawn_bat
-	call pcg_generate_room__spawn_bat_aggressive
-	call pcg_generate_room__spawn_bat_aggressive
+; 	call pcg_generate_room__spawn_bat
+; 	call pcg_generate_room__spawn_bat
+; 	call pcg_generate_room__spawn_bat_aggressive
+; 	call pcg_generate_room__spawn_bat_aggressive
+; 	call pcg_generate_room__spawn_skeleton
+	call pcg_generate_room__spawn_skeleton
+	call pcg_generate_room__spawn_skeleton_thrower1
+	call pcg_generate_room__spawn_skeleton_thrower2
 	ret
 
 
@@ -181,6 +185,50 @@ pcg_generate_room__spawn_bat_continue:
 	ld (hl), #ff  ; hit ID
 	inc hl
 	ld (hl), 1  ; health
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - c: number of positions available (in buffer_4096)
+pcg_generate_room__spawn_skeleton_thrower1:
+	ld ixl, ENEMY_SKELETON_THROWER1
+	jr pcg_generate_room__spawn_skeleton_continue
+pcg_generate_room__spawn_skeleton_thrower2:
+	ld ixl, ENEMY_SKELETON_THROWER2
+	jr pcg_generate_room__spawn_skeleton_continue
+pcg_generate_room__spawn_skeleton:
+	ld ixl, ENEMY_SKELETON
+pcg_generate_room__spawn_skeleton_continue:
+	ld a, c
+	or a
+	ret z  ; no positions available
+	call random_modulo
+	ld hl, buffer_4096
+	ld e, c
+	call pcg_generate_room__spawn_enemy_get_new_ptr
+	ex af, af'  ; preserve the z flag
+	dec c
+	ex af, af'
+	ret nz
+	ld a, ixl
+	ld (hl), a
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), e  ; tile x
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), d  ; tile y
+	inc hl
+	ld (hl), 0  ; state
+	inc hl
+	ld (hl), 0  ; state timer
+	inc hl
+	ld (hl), #ff  ; hit ID
+	inc hl
+	ld (hl), 2  ; health
 	ret
 
 

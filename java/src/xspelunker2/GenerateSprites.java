@@ -176,6 +176,22 @@ public class GenerateSprites {
         data.addAll(extractSprite(sourceImage, 32, 32, 15));  // bat hanging
         // bullet (20):
         data.addAll(extractSprite(sourceImage, 64, 0, 15));  // bullet
+        // skeletons (21):
+        data.addAll(extractSprite(sourceImage, 0, 48, 15));  // right walk
+        data.addAll(extractSprite(sourceImage, 16, 48, 15));  // 
+        data.addAll(extractSprite(sourceImage, 32, 48, 15));  // right shoot
+        data.addAll(extractSprite(sourceImage, 48, 48, 15));  // 
+        data.addAll(extractSpriteFlipped(sourceImage, 0, 48, 15));  // left walk
+        data.addAll(extractSpriteFlipped(sourceImage, 16, 48, 15));  // 
+        data.addAll(extractSpriteFlipped(sourceImage, 32, 48, 15));  // left shoot
+        data.addAll(extractSpriteFlipped(sourceImage, 48, 48, 15));  // 
+        data.addAll(extractSprite(sourceImage, 64, 48, 15));  // right idle
+        data.addAll(extractSpriteFlipped(sourceImage, 64, 48, 15));  // left idle
+        // bone bullet (31)
+        data.addAll(extractSprite(sourceImage, 80, 0, 15));
+        data.addAll(extractSprite(sourceImage, 80, 16, 15));
+        data.addAll(extractSprite(sourceImage, 80, 32, 15));
+        data.addAll(extractSprite(sourceImage, 80, 48, 15));
         
         if (data.size() > 40 * 32) {
             throw new Exception("More enemy sprites than the engine can handle!");

@@ -27,6 +27,16 @@ update_sprite_enemies_loop:
 	jp z, update_enemy_bat_aggressive
 	dec a  ; ENEMY_BULLET
 	jp z, update_enemy_bullet
+	dec a  ; ENEMY_SKELETON
+	jp z, update_enemy_skeleton
+	dec a  ; ENEMY_SKELETON_THROWER1
+	jp z, update_enemy_skeleton_thrower1
+	dec a  ; ENEMY_SKELETON_THROWER2
+	jp z, update_enemy_skeleton_thrower2
+	dec a  ; ENEMY_BONE_BULLET
+	jp z, update_enemy_bone_bullet
+	dec a  ; ENEMY_BONE_PARABOLA_BULLET
+	jp z, update_enemy_bone_parabola_bullet
 
 update_sprite_enemies_loop_next:
 	ld de, ROOM_OBJECT_STRUCT_SIZE
@@ -188,7 +198,7 @@ update_enemy_snake_poison_switch_to_state_right:
 update_enemy_snake_poison_right:
 	; spit?
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
-	cp 16
+	cp 32
 	jr c, update_enemy_snake_poison_right_no_spit
 	ld a, (player_y + 1)
 	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
@@ -212,7 +222,7 @@ update_enemy_snake_poison_switch_to_state_left:
 update_enemy_snake_poison_left:
 	; spit?
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
-	cp 16
+	cp 32
 	jr c, update_enemy_snake_poison_left_no_spit
 	ld a, (player_y + 1)
 	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
@@ -329,6 +339,91 @@ update_enemy_poison_bullet_left:
 	ld d, COLOR_GREEN
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 6) * 4 
 	jp enemy_sprite_and_continue
+
+
+;-----------------------------------------------
+update_enemy_bone_bullet:
+	ld c, 2  ; damage to deal
+	call update_enemy_hurt_player_shieldable
+	jp z, update_enemy_delete
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	or a
+	jr nz, update_enemy_bone_bullet_left
+
+update_enemy_bone_bullet_right:
+	call update_enemy_bullet_move_right_if_possible
+	jp z, update_enemy_delete
+	call update_enemy_bullet_move_right_if_possible
+	jp z, update_enemy_delete
+	ld d, COLOR_YELLOW
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 31) * 4 
+	jp enemy_sprite_and_continue_animated4
+
+update_enemy_bone_bullet_left:
+	call update_enemy_bullet_move_left_if_possible
+	jp z, update_enemy_delete
+	call update_enemy_bullet_move_left_if_possible
+	jp z, update_enemy_delete
+	ld d, COLOR_YELLOW
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 31) * 4 
+	jp enemy_sprite_and_continue_animated4
+
+
+;-----------------------------------------------
+update_enemy_bone_parabola_bullet_table:
+	db -3, -3, -2, -2, -1, -1,  0,  0
+	db  0,  1,  1,  2,  2,  3,  3,  4
+
+
+update_enemy_bone_parabola_bullet:
+	ld c, 2  ; damage to deal
+	call update_enemy_hurt_player_shieldable
+	jp z, update_enemy_delete
+	; out of bounds?
+	ld a, (current_room__width)
+	ld c, a
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	cp c
+	jp nc, update_enemy_delete
+	ld a, (current_room__height)
+	ld c, a
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	cp c
+	jp nc, update_enemy_delete
+	; parabola:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 128
+	jr nz, update_enemy_bone_parabola_bullet_continue
+	jp update_enemy_delete
+	ld a, 64
+update_enemy_bone_parabola_bullet_continue:
+	srl a
+	cp 16
+	jr c, update_enemy_bone_parabola_bullet_continue2
+	ld a, 15
+update_enemy_bone_parabola_bullet_continue2:
+	ld hl, update_enemy_bone_parabola_bullet_table
+	ADD_HL_A
+	ld b, (hl)
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	or a
+	jr nz, update_enemy_bone_parabola_bullet_left
+
+update_enemy_bone_parabola_bullet_right:
+	ld c, 2
+	call update_enemy_move_cb
+	ld d, COLOR_DARK_YELLOW
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 31) * 4 
+	jp enemy_sprite_and_continue_animated4
+
+update_enemy_bone_parabola_bullet_left:
+	ld c, -2
+	call update_enemy_move_cb
+	ld d, COLOR_DARK_YELLOW
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 31) * 4 
+	jp enemy_sprite_and_continue_animated4
 
 
 ;-----------------------------------------------
@@ -814,6 +909,256 @@ update_enemy_bullet_continue:
 
 
 ;-----------------------------------------------
+update_enemy_skeleton:
+	ld c, 1  ; damage to deal
+	call update_enemy_hurt_player
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	or a
+	jr z, update_enemy_skeleton_idle
+	dec a
+	jr z, update_enemy_skeleton_right
+	dec a
+	jr z, update_enemy_skeleton_left
+	; we cannever reach here ...
+
+update_enemy_skeleton_switch_to_state_idle:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
+update_enemy_skeleton_idle:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 64
+	jr nz, update_enemy_skeleton_idle_continue
+	call random_a
+	and #01
+	jr z, update_enemy_skeleton_switch_to_state_right
+	jr update_enemy_skeleton_switch_to_state_left
+update_enemy_skeleton_idle_continue:
+	ld d, COLOR_WHITE
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 29) * 4 
+	jp enemy_sprite_and_continue_animated_slow
+
+update_enemy_skeleton_switch_to_state_right:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1
+	jr update_enemy_skeleton_right_continue
+update_enemy_skeleton_right:
+	call random_a
+	and #3f
+	jr z, update_enemy_skeleton_switch_to_state_idle
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	and #01
+	jr z, update_enemy_skeleton_right_continue
+	call update_enemy_move_right_if_possible
+	jr z, update_enemy_skeleton_switch_to_state_left
+update_enemy_skeleton_right_continue:
+	ld d, COLOR_WHITE
+update_enemy_skeleton_right_continue_color_set:
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 21) * 4 
+	jp enemy_sprite_and_continue_animated
+
+update_enemy_skeleton_switch_to_state_left:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2  ; left
+	jr update_enemy_skeleton_left_continue
+update_enemy_skeleton_left:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	and #01
+	jr z, update_enemy_skeleton_left_continue
+	call update_enemy_move_left_if_possible
+	jr z, update_enemy_skeleton_switch_to_state_right
+update_enemy_skeleton_left_continue:
+	ld d, COLOR_WHITE
+update_enemy_skeleton_left_continue_color_set:
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 25) * 4 
+	jp enemy_sprite_and_continue_animated
+
+
+;-----------------------------------------------
+update_enemy_skeleton_thrower1:
+update_enemy_skeleton_thrower2:
+	ld c, 1  ; damage to deal
+	call update_enemy_hurt_player
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	or a
+	jr z, update_enemy_skeleton_thrower_right
+	dec a
+	jr z, update_enemy_skeleton_thrower_left
+	dec a
+	jp z, update_enemy_skeleton_thrower_throw_right
+	dec a
+	jp z, update_enemy_skeleton_thrower_throw_left
+	; we cannever reach here ...
+
+update_enemy_skeleton_thrower_switch_to_state_right_from_throw:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+update_enemy_skeleton_thrower_switch_to_state_right:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
+	jr update_enemy_skeleton_thrower_right_continue
+update_enemy_skeleton_thrower_right:
+	; throw?
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 32
+	jr c, update_enemy_skeleton_thrower_right_no_throw
+	ld a, (player_x + 1)
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	jr c, update_enemy_skeleton_thrower_right_no_throw
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	cp ENEMY_SKELETON_THROWER2
+	jr z, update_enemy_skeleton_thrower_right_throw
+	ld a, (player_y + 1)
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	jr nz, update_enemy_skeleton_thrower_right_no_throw
+update_enemy_skeleton_thrower_right_throw:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2  ; throw right!
+	jr update_enemy_skeleton_thrower_right_continue
+update_enemy_skeleton_thrower_right_no_throw:
+	call update_enemy_move_right_if_possible
+	jr z, update_enemy_skeleton_thrower_switch_to_state_left
+update_enemy_skeleton_thrower_right_continue:
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 21) * 4
+	ld d, COLOR_YELLOW
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	cp ENEMY_SKELETON_THROWER1
+	jp z, enemy_sprite_and_continue_animated
+	ld d, COLOR_DARK_YELLOW
+	jp enemy_sprite_and_continue_animated
+
+update_enemy_skeleton_thrower_switch_to_state_left_from_throw:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+update_enemy_skeleton_thrower_switch_to_state_left:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1  ; left
+	jr update_enemy_skeleton_thrower_left_continue
+update_enemy_skeleton_thrower_left:
+	; throw?
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 32
+	jr c, update_enemy_skeleton_thrower_left_no_throw
+	ld a, (player_x + 1)
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	jr nc, update_enemy_skeleton_thrower_left_no_throw
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	cp ENEMY_SKELETON_THROWER2
+	jr z, update_enemy_skeleton_thrower_left_throw
+	ld a, (player_y + 1)
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	jr nz, update_enemy_skeleton_thrower_left_no_throw
+update_enemy_skeleton_thrower_left_throw:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 3  ; throw left!
+	jr update_enemy_skeleton_thrower_left_continue
+update_enemy_skeleton_thrower_left_no_throw:	
+	call update_enemy_move_left_if_possible
+	jr z, update_enemy_skeleton_thrower_switch_to_state_right
+update_enemy_skeleton_thrower_left_continue:
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 25) * 4
+	ld d, COLOR_YELLOW
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	cp ENEMY_SKELETON_THROWER1
+	jp z, enemy_sprite_and_continue_animated
+	ld d, COLOR_DARK_YELLOW
+	jp enemy_sprite_and_continue_animated
+
+update_enemy_skeleton_thrower_throw_right:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 32
+	jp z, update_enemy_skeleton_thrower_switch_to_state_right_from_throw
+	cp 16
+	jr nz, update_enemy_skeleton_thrower_throw_right_continue2
+	; throw:
+	call ptr_to_new_sprite_enemy
+	jr nz, update_enemy_skeleton_thrower_throw_right_continue2
+	ld (hl), ENEMY_BONE_BULLET
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	cp ENEMY_SKELETON_THROWER1
+	jr z, update_enemy_skeleton_thrower_throw_right_continue
+	ld (hl), ENEMY_BONE_PARABOLA_BULLET
+update_enemy_skeleton_thrower_throw_right_continue:
+	inc hl
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	ld (hl), a
+	inc hl
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	inc a
+	ld (hl), a
+	inc hl
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
+	ld (hl), a
+	inc hl
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	ld (hl), a
+	inc hl
+	ld (hl), 0  ; right
+	inc hl
+	ld (hl), 0  ; state timer
+
+	ld hl, SFX_enemy_bullet
+	call play_SFX_with_high_priority	
+update_enemy_skeleton_thrower_throw_right_continue2:
+	ld d, COLOR_YELLOW
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	cp ENEMY_SKELETON_THROWER1
+	jp z, update_enemy_skeleton_thrower_throw_right_continue3
+	ld d, COLOR_DARK_YELLOW
+update_enemy_skeleton_thrower_throw_right_continue3:
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 23) * 4
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 16
+	jp c, enemy_sprite_and_continue
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 24) * 4
+	jp enemy_sprite_and_continue
+
+update_enemy_skeleton_thrower_throw_left:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 32
+	jp z, update_enemy_skeleton_thrower_switch_to_state_left_from_throw
+	cp 16
+	jr nz, update_enemy_skeleton_thrower_throw_left_continue2
+	; throw:
+	call ptr_to_new_sprite_enemy
+	jr nz, update_enemy_skeleton_thrower_throw_right_continue2
+	ld (hl), ENEMY_BONE_BULLET
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	cp ENEMY_SKELETON_THROWER1
+	jr z, update_enemy_skeleton_thrower_throw_left_continue
+	ld (hl), ENEMY_BONE_PARABOLA_BULLET
+update_enemy_skeleton_thrower_throw_left_continue:
+	inc hl
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	ld (hl), a
+	inc hl
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	dec a
+	ld (hl), a
+	inc hl
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
+	ld (hl), a
+	inc hl
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	ld (hl), a
+	inc hl
+	ld (hl), 1  ; left
+	inc hl
+	ld (hl), 0  ; state timer
+
+	ld hl, SFX_enemy_bullet
+	call play_SFX_with_high_priority
+update_enemy_skeleton_thrower_throw_left_continue2:
+	ld d, COLOR_YELLOW
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	cp ENEMY_SKELETON_THROWER1
+	jp z, update_enemy_skeleton_thrower_throw_left_continue3
+	ld d, COLOR_DARK_YELLOW
+update_enemy_skeleton_thrower_throw_left_continue3:
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 27) * 4
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 16
+	jp c, enemy_sprite_and_continue
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 28) * 4
+	jp enemy_sprite_and_continue
+
+
+;-----------------------------------------------
 update_enemy_move_cb:
 	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
 	add a, c
@@ -884,6 +1229,33 @@ update_enemy_fire_directional_bullet_towards_player:
 	ld (hl), b  ; speed y
 	ld hl, SFX_enemy_bullet
 	jp play_SFX_with_high_priority
+
+
+;-----------------------------------------------
+; input:
+; - d: sprite color
+; - e: sprite frame
+enemy_sprite_and_continue_animated_slow:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	rrca
+	rrca
+	and #04
+	add a, e
+	ld e, a
+	jr enemy_sprite_and_continue
+
+
+;-----------------------------------------------
+; input:
+; - d: sprite color
+; - e: sprite frame
+enemy_sprite_and_continue_animated4:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	rlca
+	and #0c
+	add a, e
+	ld e, a
+	jp enemy_sprite_and_continue
 
 
 ;-----------------------------------------------
@@ -1286,6 +1658,8 @@ enemy_hit:
 	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
 	cp ENEMY_POISON_BULLET
 	ret z  ; we cannot damage bullets
+	cp ENEMY_BULLET
+	ret z  ; we cannot damage bullets
 	ld a, iyl
 	ld (ix + ROOM_OBJECT_STRUCT_LAST_HIT_ID), a
 	ld a, (ix + ROOM_OBJECT_STRUCT_HEALTH)
@@ -1296,14 +1670,21 @@ enemy_hit:
 	ld hl, SFX_enemy_hit
 	jp play_SFX_with_high_priority
 enemy_hit_killed:
-	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
-	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-	push bc
-		call sprite_object_remove_object_enemy
-	pop bc
-	push bc
-		call spawn_explosion
-	pop bc
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	push af
+		ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+		ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+		push bc
+			call sprite_object_remove_object_enemy
+		pop bc
+		push bc
+			call spawn_explosion
+		pop bc
+	pop af
+	cp ENEMY_BONE_BULLET
+	ret z  ; bones do not have drops
+	cp ENEMY_BONE_PARABOLA_BULLET
+	ret z  ; bones do not have drops
 	call random_a
 	; item drop:
 	cp 8 * 2
