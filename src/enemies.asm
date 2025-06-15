@@ -37,6 +37,8 @@ update_sprite_enemies_loop:
 	jp z, update_enemy_bone_bullet
 	dec a  ; ENEMY_BONE_PARABOLA_BULLET
 	jp z, update_enemy_bone_parabola_bullet
+	dec a  ; ENEMY_PARABOLLA_BULLET
+	jp z, update_enemy_parabola_bullet
 
 update_sprite_enemies_loop_next:
 	ld de, ROOM_OBJECT_STRUCT_SIZE
@@ -377,7 +379,7 @@ update_enemy_bone_parabola_bullet_table:
 
 
 update_enemy_bone_parabola_bullet:
-	ld c, 2  ; damage to deal
+	ld c, 1  ; damage to deal
 	call update_enemy_hurt_player_shieldable
 	jp z, update_enemy_delete
 	; out of bounds?
@@ -424,6 +426,45 @@ update_enemy_bone_parabola_bullet_left:
 	ld d, COLOR_DARK_YELLOW
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 31) * 4 
 	jp enemy_sprite_and_continue_animated4
+
+
+;-----------------------------------------------
+update_enemy_parabola_bullet:
+	ld c, 1  ; damage to deal
+	call update_enemy_hurt_player_shieldable
+	jp z, update_enemy_delete
+	; out of bounds?
+	ld a, (current_room__width)
+	ld c, a
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	cp c
+	jp nc, update_enemy_delete
+	ld a, (current_room__height)
+	ld c, a
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	cp c
+	jp nc, update_enemy_delete
+	; parabola:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 128
+	jr nz, update_enemy_parabola_bullet_continue
+	jp update_enemy_delete
+	ld a, 64
+update_enemy_parabola_bullet_continue:
+	srl a
+	cp 16
+	jr c, update_enemy_parabola_bullet_continue2
+	ld a, 15
+update_enemy_parabola_bullet_continue2:
+	ld hl, update_enemy_bone_parabola_bullet_table
+	ADD_HL_A
+	ld b, (hl)
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld c, (ix + ROOM_OBJECT_STRUCT_STATE)
+	call update_enemy_move_cb
+	ld d, COLOR_DARK_YELLOW
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 20) * 4 
+	jp enemy_sprite_and_continue
 
 
 ;-----------------------------------------------
@@ -1659,6 +1700,8 @@ enemy_hit:
 	cp ENEMY_POISON_BULLET
 	ret z  ; we cannot damage bullets
 	cp ENEMY_BULLET
+	ret z  ; we cannot damage bullets
+	cp ENEMY_PARABOLA_BULLET
 	ret z  ; we cannot damage bullets
 	ld a, iyl
 	ld (ix + ROOM_OBJECT_STRUCT_LAST_HIT_ID), a

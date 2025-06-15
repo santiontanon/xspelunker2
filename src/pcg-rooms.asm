@@ -76,6 +76,12 @@ pcg_generate_room_reset_state:
 	ld (current_room__sprite_enemies_sentinel), a
 	dec a  ; the sentinel for tile objects is #fe, since the whole space is initialzied to #ff
 	ld (current_room__tile_objects_sentinel), a
+
+	ld hl, 0
+	ld (enemy_tiles_to_upload_to_vdp), hl
+	ld (tile_enemy_hit_fn_ptr), hl
+	ld a, #ff
+	ld (tile_enemy_last_collision_id), a
 	ret
 
 

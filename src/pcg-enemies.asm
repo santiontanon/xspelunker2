@@ -13,9 +13,10 @@ pcg_generate_room__spawn_enemies:
 ; 	call pcg_generate_room__spawn_bat_aggressive
 ; 	call pcg_generate_room__spawn_bat_aggressive
 ; 	call pcg_generate_room__spawn_skeleton
-	call pcg_generate_room__spawn_skeleton
-	call pcg_generate_room__spawn_skeleton_thrower1
-	call pcg_generate_room__spawn_skeleton_thrower2
+; 	call pcg_generate_room__spawn_skeleton
+; 	call pcg_generate_room__spawn_skeleton_thrower1
+; 	call pcg_generate_room__spawn_skeleton_thrower2
+	call pcg_generate_room__spawn_carnivore_plant
 	ret
 
 
@@ -229,6 +230,151 @@ pcg_generate_room__spawn_skeleton_continue:
 	ld (hl), #ff  ; hit ID
 	inc hl
 	ld (hl), 2  ; health
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - c: number of positions available (in buffer_4096)
+pcg_generate_room__spawn_carnivore_plant:
+	; Iterate over the positions and find which are candidates for a carnivore plant,
+	; which needs a 4x4 space, instead of only 2x2:
+	ld iyl, 0  ; number of viable positions so far
+	ld hl, buffer_4096
+	push bc
+		ld b, c
+pcg_generate_room__spawn_carnivore_plant_loop:
+		push bc
+			ld c, (hl)
+			inc hl
+			ld b, (hl)
+			inc hl
+			push hl
+			push bc
+				call get_room_tile_ptr
+				ld a, (current_room__width)
+				ld b, 0
+				ld c, a
+				or a
+				sbc hl, bc
+				sbc hl, bc
+				dec hl  ; ptr to top-left
+				; first row:
+				ld a, (hl)
+				or a
+				jr nz, pcg_generate_room__spawn_carnivore_plant_loop_skip
+				inc hl
+				ld a, (hl)
+				or a
+				jr nz, pcg_generate_room__spawn_carnivore_plant_loop_skip
+				inc hl
+				ld a, (hl)
+				or a
+				jr nz, pcg_generate_room__spawn_carnivore_plant_loop_skip
+				inc hl
+				ld a, (hl)
+				or a
+				jr nz, pcg_generate_room__spawn_carnivore_plant_loop_skip
+				; second row:
+				add hl, bc
+				ld a, (hl)
+				or a
+				jr nz, pcg_generate_room__spawn_carnivore_plant_loop_skip
+				dec hl
+				ld a, (hl)
+				or a
+				jr nz, pcg_generate_room__spawn_carnivore_plant_loop_skip
+				dec hl
+				ld a, (hl)
+				or a
+				jr nz, pcg_generate_room__spawn_carnivore_plant_loop_skip
+				dec hl
+				ld a, (hl)
+				or a
+				jr nz, pcg_generate_room__spawn_carnivore_plant_loop_skip
+				; third row:
+				add hl, bc
+				ld a, (hl)
+				or a
+				jr nz, pcg_generate_room__spawn_carnivore_plant_loop_skip
+				inc hl
+				inc hl
+				inc hl
+				ld a, (hl)
+				or a
+				jr nz, pcg_generate_room__spawn_carnivore_plant_loop_skip
+				; fourth row:
+				add hl, bc
+				ld a, (hl)
+				or a
+				jr nz, pcg_generate_room__spawn_carnivore_plant_loop_skip
+				dec hl
+				dec hl
+				dec hl
+				ld a, (hl)
+				or a
+				jr nz, pcg_generate_room__spawn_carnivore_plant_loop_skip
+				; viable position!
+				ld a, iyl
+				or a
+				jr z, pcg_generate_room__spawn_carnivore_plant_loop_replace
+				; reservoir sampling:
+				ld c, a
+				call random_modulo
+				or a
+				jr nz, pcg_generate_room__spawn_carnivore_plant_loop_skip
+pcg_generate_room__spawn_carnivore_plant_loop_replace:
+			pop bc
+			pop hl
+			ld ixl, c
+			ld ixh, b
+			inc iyl
+			jr pcg_generate_room__spawn_carnivore_plant_loop_next
+pcg_generate_room__spawn_carnivore_plant_loop_skip:
+			pop bc
+			pop hl
+pcg_generate_room__spawn_carnivore_plant_loop_next:
+		pop bc
+		djnz pcg_generate_room__spawn_carnivore_plant_loop
+	pop bc
+
+	ld a, iyl
+	or a
+	ret z
+	; we found at leat one viable position, spawn the plant:
+	ld hl, ptr_to_new_tile_object
+	ld c, TILES_PAGE
+	call call_hl_in_page_c_8000
+	ret nz
+	ld c, ixl
+	dec c
+	ld b, ixh
+	dec b
+	dec b
+	ld (tile_enemy_ptr), hl
+	ld (hl), 0  ; ID
+	inc hl
+	ld (hl), TAG_ENEMY_CARNIVORE_PLANT  ; type
+	inc hl
+	ld (hl), c  ; tile x
+	inc hl
+	ld (hl), b  ; tile y
+	inc hl
+	ld (hl), 0  ; state
+	inc hl
+	ld (hl), 0  ; state timer
+	inc hl
+	ld (hl), 16  ; hit points
+
+	ld hl, tile_enemy_work_memory
+	ld (hl), 0  ; tongue length = 0
+
+	ld hl, enemy_carnivoreplant_tiles_zx0
+	ld (enemy_tiles_to_upload_to_vdp), hl
+	ld a, ENEMY_TILES_PAGE
+	ld (enemy_tiles_to_upload_to_vdp_page), a
+	ld hl, enemy_carnivore_plant_hit
+	ld (tile_enemy_hit_fn_ptr), hl
 	ret
 
 

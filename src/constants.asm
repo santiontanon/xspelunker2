@@ -56,6 +56,7 @@ HUD_MAX_TIME: equ 100
 
 FIRST_ITEM_TILE: equ 44  ; tiles 44, 45, 46, 47 are reserved for items/chests/locks spawned in the current room
 FIRST_LARGE_ITEM_TILE: equ 48  ; tiles 48 - 63 are reserved for large items (e.g. doors) spawned in the current room
+FIRST_ENEMY_TILE: equ 64
 
 CHUNK_WIDTH: equ 16
 CHUNK_HEIGHT: equ 12
@@ -122,7 +123,9 @@ ROOM_TILE_OBJECT_STRUCT_TYPE: equ 1
 ROOM_TILE_OBJECT_STRUCT_X: equ 2  ; tile resolution
 ROOM_TILE_OBJECT_STRUCT_Y: equ 3
 ROOM_TILE_OBJECT_STRUCT_STATE: equ 4  ; for breakable walls, these are the remaining hit points
-ROOM_TILE_OBJECT_STRUCT_BACKGROUND: equ 5  ; 4 bytes
+ROOM_TILE_OBJECT_STRUCT_STATE_TIMER: equ 5  ; for tile-based enemies
+ROOM_TILE_OBJECT_STRUCT_HEALTH: equ 6  ; for tile-based enemies
+ROOM_TILE_OBJECT_STRUCT_BACKGROUND: equ 5  ; 4 bytes (only for 2x2 objects)
 ROOM_TILE_OBJECT_STRUCT_WIDTH: equ 9  ; only used by breakable walls
 ROOM_TILE_OBJECT_STRUCT_HEIGHT: equ 10  ; only used by breakable walls
 ROOM_TILE_OBJECT_STRUCT_LAST_HIT_ID: equ 11  ; only used by breakable walls
@@ -195,6 +198,7 @@ ENEMY_SKELETON_THROWER1: equ 11
 ENEMY_SKELETON_THROWER2: equ 12
 ENEMY_BONE_BULLET: equ 13
 ENEMY_BONE_PARABOLA_BULLET: equ 14
+ENEMY_PARABOLA_BULLET: equ 15
 
 
 ; - 7 boss keys
@@ -393,7 +397,7 @@ TAG_STONES: equ 160
 TAG_DARTS: equ 161
 TAG_SPEARS: equ 162
 TAG_BATTERY: equ 163
-
+TAG_ENEMY_CARNIVORE_PLANT: equ 164
 N_PATH_OPENING_TAGS: equ 32  ; there are less than this, but just in case (this is the number of tags above that spawn a breakable wall or door).
 
 

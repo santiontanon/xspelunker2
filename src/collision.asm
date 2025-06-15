@@ -423,9 +423,9 @@ get_room_tile_type_continue:
 get_collision_tile_type_of_a:
 	; get collision type:
 	ld c, a
-	ld hl, (current_room__collision_ptr)
-	ADD_HL_A
-	ld a, (hl)
+	ld bc, (current_room__collision_ptr)
+	ADD_BC_A
+	ld a, (bc)
 	ret
 
 
@@ -1307,8 +1307,8 @@ tile_collision_types_pyramid:
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
+    db 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
     db 0, 0, 0, 4, 0, 0, 0, 0, 8, 8, 2, 2, 2, 2, 2, 2
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2
     db 4, 0, 0, 5, 2, 2, 5, 6, 8, 1, 1, 1, 2, 3, 2, 2

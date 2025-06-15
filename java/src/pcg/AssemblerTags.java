@@ -197,6 +197,8 @@ public class AssemblerTags {
         "TAG_DARTS",
         "TAG_SPEARS",
         "TAG_BATTERY",
+        // enemies:
+        "TAG_ENEMY_CARNIVORE_PLANT",
     };
     
 

@@ -487,6 +487,11 @@ state_play_upload_object_tiles_to_vdp_if_necessary_selected_item_set:
 	call fast_small_LDIRVM
 
 state_play_upload_object_tiles_to_vdp_if_necessary_continue:
+	ld hl, (large_object_to_upload_to_vdp)
+	ld a, h
+	or a
+	jr z, state_play_upload_enemy_tiles_to_vdp_if_necessary
+
 	ld hl, object_large_tiles_zx0
 	ld de, buffer_4096
 	ld c, TILES_PAGE
@@ -496,9 +501,6 @@ state_play_upload_object_tiles_to_vdp_if_necessary_continue:
 	ld hl, (large_object_to_upload_to_vdp)
 	ld a, (large_object_to_upload_to_vdp_size)
 	ld b, a
-	ld a, h
-	or a
-	ret z
 	push hl
 	push bc
 		ld de, CHRTBL2 + FIRST_LARGE_ITEM_TILE*8
@@ -534,5 +536,49 @@ state_play_upload_object_tiles_to_vdp_if_necessary_continue:
 	pop bc
 	pop hl
 	ld de, CLRTBL2 + FIRST_LARGE_ITEM_TILE*8 + 256*8*2
-	jp fast_small_LDIRVM
+	call fast_small_LDIRVM
+
+state_play_upload_enemy_tiles_to_vdp_if_necessary:
+	ld hl, (enemy_tiles_to_upload_to_vdp)
+	ld a, h
+	or l
+	ret z
+	ld de, buffer_4096
+	ld a, (enemy_tiles_to_upload_to_vdp_page)
+	ld c, a
+	call dzx0_from_page_c
+
+	ld hl, buffer_4096
+	ld bc, 256
+	push hl
+	push bc
+		ld de, CHRTBL2 + FIRST_ENEMY_TILE*8
+		call fast_LDIRVM
+	pop bc
+	pop hl
+	push hl
+	push bc
+		ld de, CHRTBL2 + FIRST_ENEMY_TILE*8 + 256*8
+		call fast_LDIRVM
+	pop bc
+	pop hl
+	push bc
+		ld de, CHRTBL2 + FIRST_ENEMY_TILE*8 + 256*8*2
+		call fast_LDIRVM
+	pop bc
+	ld hl, buffer_4096 + 32*8
+	push hl
+	push bc
+		ld de, CLRTBL2 + FIRST_ENEMY_TILE*8
+		call fast_LDIRVM
+	pop bc
+	pop hl
+	push hl
+	push bc
+		ld de, CLRTBL2 + FIRST_ENEMY_TILE*8 + 256*8
+		call fast_LDIRVM
+	pop bc
+	pop hl
+	ld de, CLRTBL2 + FIRST_ENEMY_TILE*8 + 256*8*2
+	jp fast_LDIRVM
 

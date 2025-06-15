@@ -2995,6 +2995,11 @@ player_weapon_hitbox_check:
 	push ix
 		ld a, 1
 		ld (player_weapon_hitbox_check_result), a
+
+		ld bc, (tile_enemy_hit_fn_ptr)
+		ld a, b
+		or c
+		call nz, player_weapon_hitbox_check_tile_enemy
 		; iterate over the list of tile objects, to see if we hit a breakable wall:
 		ld ix, current_room__tile_objects
 player_weapon_hitbox_check_tile_object_loop:
@@ -3096,5 +3101,65 @@ player_weapon_hitbox_check_enemy_loop_done:
 	pop ix
 	ld a, (player_weapon_hitbox_check_result)
 	or a
+	ret
+
+player_weapon_hitbox_check_tile_enemy:
+	ld a, (tile_enemy_last_collision_id)
+	cp iyl
+	ret z
+	; - de, hl: collision box (in tile coordinates: from [e, d] to [l, h])
+	push de
+	push hl
+		ld c, e
+		ld b, d
+		push bc
+			ld a, l
+			sub e
+			ld e, a
+			ld a, h
+			sub d
+			ld d, a
+		pop bc
+		push de
+			call get_room_tile_ptr
+		pop bc
+		; hl ptr, and c, b are the width and height of the hit box:
+player_weapon_hitbox_check_tile_enemy_loop_y:
+		push bc
+			push hl
+				ld b, c
+player_weapon_hitbox_check_tile_enemy_loop_x:
+				push bc
+					ld a, (hl)
+					cp 64
+					jr c, player_weapon_hitbox_check_tile_enemy_loop_x_skip
+					cp 96
+					jr nc, player_weapon_hitbox_check_tile_enemy_loop_x_skip
+					; hit!
+					ld e, a
+					ld hl, (tile_enemy_hit_fn_ptr)
+					ld c, TILES_PAGE
+					call call_hl_in_page_c_8000
+				pop bc
+			pop hl
+		pop bc
+	pop hl
+	pop de
+	xor a
+	ld (player_weapon_hitbox_check_result), a  ; mark a hit
+	ret
+player_weapon_hitbox_check_tile_enemy_loop_x_skip
+				inc hl
+				pop bc
+				djnz player_weapon_hitbox_check_tile_enemy_loop_x
+			pop hl
+			ld a, (current_room__width)
+			ld c, a
+			ld b, 0
+			add hl, bc
+		pop bc
+		djnz player_weapon_hitbox_check_tile_enemy_loop_y
+	pop hl
+	pop de
 	ret
 

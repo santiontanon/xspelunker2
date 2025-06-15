@@ -1,7 +1,6 @@
 to do:
 
 ***- enemies:
-  ***- tile-based-enemy: carnivore plant that extends tentacles at you left-right-up (and maybe diagonals). Decide whether to spawn arbitrarily, or if it would take the spot of a 4x4 item
   ***- for each area, define min-max enemies per room, and weights for each kind, and sample how many (depending on room size), and spawn them based on that
 
 - jungle biome:

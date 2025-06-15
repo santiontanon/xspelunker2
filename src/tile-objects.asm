@@ -121,6 +121,8 @@ update_tile_objects_loop:
 		jp z, update_tile_objects_button
 		cp TAG_CALENDAR_STONE_CENTER
 		jp z, update_tile_objects_calendar_stone_center
+		cp TAG_ENEMY_CARNIVORE_PLANT
+		jp z, update_tile_objects_enemy_carnivore_plant
 update_tile_objects_loop_continue:
 	pop hl
 	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
@@ -312,9 +314,9 @@ update_tile_objects_calendar_stone_center:
 	cp 5
 	jp c, update_tile_objects_loop_continue
 
+update_tile_objects_loop_force_redraw_and_continue
 	call room_undraw_tile_objects
 	call room_render_tile_objects
-
 	ld hl, redraw_flags
 	set ROOM_REDRAW_FLAG_BIT, (hl)
 	jp update_tile_objects_loop_continue
@@ -392,6 +394,8 @@ room_render_tile_objects_loop:
 		jp z, room_render_tile_objects_render_calendar_socket
 		cp TAG_CALENDAR_STONE_CENTER
 		jp z, room_render_tile_objects_render_calendar_stone_center
+		cp TAG_ENEMY_CARNIVORE_PLANT
+		jp z, room_render_tile_objects_render_enemy_carnivore_plant
 		inc hl
 		ld c, (hl)  ; x
 		ld ixl, c
@@ -662,6 +666,8 @@ room_undraw_tile_objects_loop:
 		jr z, room_undraw_tile_objects_loop_continue		
 		cp TAG_BREAKABLE_WALL4
 		jr z, room_undraw_tile_objects_loop_continue		
+		cp TAG_ENEMY_CARNIVORE_PLANT
+		jp z, room_render_tile_objects_undraw_enemy_carnivore_plant		
 		inc hl
 		ld c, (hl)  ; x
 		ld ixl, c
@@ -1030,6 +1036,7 @@ ENDR
 	dw object_interaction_function_pickup_darts  ; TAG_DARTS
 	dw object_interaction_function_pickup_spears  ; TAG_SPEARS
 	dw object_interaction_function_pickup_battery  ; TAG_BATTERY
+	dw object_interaction_function_empty  ; TAG_ENEMY_CARNIVORE_PLANT
 
 object_interaction_inventory_slot:
 	db #ff, #ff, #ff, #ff, #ff  ; none, block puzzles
@@ -2329,6 +2336,7 @@ ENDR
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_darts_gfx  ; TAG_DARTS
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_spears_gfx  ; TAG_SPEARS
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_battery_gfx  ; TAG_BATTERY
+	TILE_OBJECT_DATA 1, 4, 4, tile_object_carnivore_plant  ; TAG_ENEMY_CARNIVORE_PLANT
 
 
 tile_object_regular_object_gfx:
@@ -2382,3 +2390,4 @@ tile_object_spears_gfx:
 	db 0, 0, 38, 39
 tile_object_battery_gfx:
 	db 42, 0, 43, 0
+

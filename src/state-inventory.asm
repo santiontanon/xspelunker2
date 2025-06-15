@@ -419,12 +419,12 @@ display_power_stone_closeup:
 				call fast_FILVRM
 
 				ld hl, power_stones_tiles_zx0
-				ld c, TILES_PAGE
+				ld c, MAP_PAGE
 				call decompress_tiles_to_all_banks
 
 				ld hl, power_stones_nametable_zx0
 				ld de, buffer_4096
-				ld c, TILES_PAGE
+				ld c, MAP_PAGE
 				call dzx0_from_page_c
 			pop de  ; e = power stone number
 

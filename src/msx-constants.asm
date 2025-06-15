@@ -230,6 +230,16 @@ ADD_DE_A_END
 
 
 ; --------------------------------
+ADD_BC_A: MACRO 
+    add a, c
+    ld c, a
+    jp nc, ADD_BC_A_END
+    inc b
+ADD_BC_A_END
+    ENDM    
+
+
+; --------------------------------
 ADD_IX_A: MACRO 
     add a, ixl
     ld ixl, a
