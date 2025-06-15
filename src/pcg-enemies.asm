@@ -1,22 +1,171 @@
 ;-----------------------------------------------
-pcg_generate_room__spawn_enemies:
+pcg_enemy_generation_table:
+	dw pcg_enemy_generation_table_jungle
+	dw pcg_enemy_generation_table_pyramid1
+	dw pcg_enemy_generation_table_pyramid2
+	dw pcg_enemy_generation_table_confluence
+	dw pcg_enemy_generation_table_pyramid3
+	dw pcg_enemy_generation_table_fire_shaft
+	dw pcg_enemy_generation_table_caves_west
+	dw pcg_enemy_generation_table_caves_east
+	dw pcg_enemy_generation_table_xibalba
+	dw pcg_enemy_generation_table_atlantis
+	dw pcg_enemy_generation_table_mars
+	dw pcg_enemy_generation_table_moon
+
+pcg_enemy_generation_table_jungle:
+pcg_enemy_generation_table_pyramid1:
+pcg_enemy_generation_table_pyramid2:
+pcg_enemy_generation_table_confluence:
+pcg_enemy_generation_table_pyramid3:
+pcg_enemy_generation_table_fire_shaft:
+pcg_enemy_generation_table_caves_west:
+pcg_enemy_generation_table_caves_east:
+pcg_enemy_generation_table_xibalba:
+pcg_enemy_generation_table_atlantis:
+pcg_enemy_generation_table_mars:
+pcg_enemy_generation_table_moon:
+	; weights (all sprite-based) should add up to 32
+	db 2  ; 2 enemies per "screen" area
+	db TAG_ENEMY_CARNIVORE_PLANT, 80  ; tile-based enemy type and chance (out of 256)
+	db 10  ; 10 possible sprite enemy types to be spawned
+	db ENEMY_SNAKE, 5  ; enemy type and weight
+	db ENEMY_SNAKE_POISON, 2
+	db ENEMY_POISON_BULLET, 1
+	db ENEMY_FISH, 5
+	db ENEMY_FISH_JUMPER, 2
+	db ENEMY_BAT, 5
+	db ENEMY_BAT_AGGRESSIVE, 2
+	db ENEMY_SKELETON, 5
+	db ENEMY_SKELETON_THROWER1, 2
+	db ENEMY_SKELETON_THROWER2, 1
+
+
+;-----------------------------------------------
+pcg_generate_room__spawn_enemies:	
+	ld hl, pcg_enemy_generation_table
+	ld a, (current_area__id)
+	add a, a
+	ADD_HL_A
+	ld e, (hl)
+	inc hl
+	ld d, (hl)
+	ex de, hl  ; hl = ptr to the enemy specs of this area
+
+	; determine the area of the current room:
+	ld a, (current_room__width)
+	rrca
+	rrca
+	rrca
+	rrca
+	rrca
+	and #07  ; room width in screens
+	ld b, a  ; current number of screens
+	ld c, a
+	ld a, (current_room__height)
+pcg_generate_room__spawn_enemies_loop1:
+	sub 24
+	jr z, pcg_generate_room__spawn_enemies_loop1_done
+	push af
+		ld a, b
+		add a, c
+		ld b, a
+	pop af
+	jr pcg_generate_room__spawn_enemies_loop1
+pcg_generate_room__spawn_enemies_loop1_done:
+
+	ld c, (hl)   ; number of enemies per screen
+	xor a   ; number of enemies in this room
+pcg_generate_room__spawn_enemies_loop2:
+	add a, c
+	djnz pcg_generate_room__spawn_enemies_loop2
+
+	push hl
+	push af
+		call pcg__find_enemy_spawn_locations
+	pop af
+	pop hl
+
+	; here 'a' has the target number of enemies we want to spawn:
+	inc hl
+	push hl
+		inc hl
+		inc hl  ; point to the number of options for sprite enemies
+pcg_generate_room__spawn_enemies_loop3:
+		push af
+		push hl
+			; spawn enemy:
+			call pcg_generate_room__spawn_one_enemy
+		pop hl
+		pop af
+		dec a
+		jr nz, pcg_generate_room__spawn_enemies_loop3
+	pop hl
+
+	; chance of spawning a tile-based enemy:
+	inc hl
+	ld a, (hl)
+	ld c, a
+	dec hl
+	call random_a
+	cp c
+	ret nc
+	ld a, (hl)
+	cp TAG_ENEMY_CARNIVORE_PLANT
+	jp z, pcg_generate_room__spawn_carnivore_plant
 	; ...
-	call pcg__find_enemy_spawn_locations
-; 	call pcg_generate_room__spawn_snake
-; 	call pcg_generate_room__spawn_snake
-; 	call pcg_generate_room__spawn_snake
-; 	call pcg_generate_room__spawn_snake
-; 	call pcg_generate_room__spawn_fish
-; 	call pcg_generate_room__spawn_fish
-; 	call pcg_generate_room__spawn_bat
-; 	call pcg_generate_room__spawn_bat
-; 	call pcg_generate_room__spawn_bat_aggressive
-; 	call pcg_generate_room__spawn_bat_aggressive
-; 	call pcg_generate_room__spawn_skeleton
-; 	call pcg_generate_room__spawn_skeleton
-; 	call pcg_generate_room__spawn_skeleton_thrower1
-; 	call pcg_generate_room__spawn_skeleton_thrower2
-	call pcg_generate_room__spawn_carnivore_plant
+	ret
+
+
+;-----------------------------------------------
+; - hl: ptr to enemy weights
+; - c, b: number of spots 
+pcg_generate_room__spawn_one_enemy:
+	; choose an enemy type by weight:
+	push bc
+		ld b, (hl)  ; number of options
+		inc hl
+		ld a, b
+		or a
+		jr z, pcg_generate_room__spawn_one_enemy_done
+		call random_a
+		and #1f
+pcg_generate_room__spawn_one_enemy_loop:
+		ld c, (hl)  ; enmy type
+		inc hl
+		sub (hl)  ; weight
+		jr c, pcg_generate_room__spawn_one_enemy_chosen
+		inc hl
+		djnz pcg_generate_room__spawn_one_enemy_loop
+pcg_generate_room__spawn_one_enemy_chosen:
+		ld a, c
+	pop bc
+
+	; spawn an enemy:
+	cp ENEMY_SNAKE
+	jp z, pcg_generate_room__spawn_snake
+	cp ENEMY_SNAKE_DASHER
+	jp z, pcg_generate_room__spawn_snake_dasher
+	cp ENEMY_SNAKE_POISON
+	jp z, pcg_generate_room__spawn_snake_poison
+	cp ENEMY_FISH
+	jp z, pcg_generate_room__spawn_fish
+	cp ENEMY_FISH_JUMPER
+	jp z, pcg_generate_room__spawn_fish_jumper
+	cp ENEMY_BAT
+	jp z, pcg_generate_room__spawn_bat
+	cp ENEMY_BAT_AGGRESSIVE
+	jp z, pcg_generate_room__spawn_bat_aggressive
+	cp ENEMY_SKELETON
+	jp z, pcg_generate_room__spawn_skeleton
+	cp ENEMY_SKELETON_THROWER1
+	jp z, pcg_generate_room__spawn_skeleton_thrower1
+	cp ENEMY_SKELETON_THROWER2
+	jp z, pcg_generate_room__spawn_skeleton_thrower2
+	ret
+
+pcg_generate_room__spawn_one_enemy_done:
+	pop bc
 	ret
 
 
@@ -67,7 +216,15 @@ pcg_generate_room__spawn_enemy_get_new_ptr_continue:
 ;-----------------------------------------------
 ; input:
 ; - c: number of positions available (in buffer_4096)
+pcg_generate_room__spawn_snake_poison:
+	ld ixl, ENEMY_SNAKE_POISON
+	jr pcg_generate_room__spawn_snake_continue
+pcg_generate_room__spawn_snake_dasher:
+	ld ixl, ENEMY_SNAKE_DASHER
+	jr pcg_generate_room__spawn_snake_continue
 pcg_generate_room__spawn_snake:
+	ld ixl, ENEMY_SNAKE
+pcg_generate_room__spawn_snake_continue
 	ld a, c
 	or a
 	ret z  ; no positions available
@@ -79,9 +236,8 @@ pcg_generate_room__spawn_snake:
 	dec c
 	ex af, af'
 	ret nz
-; 	ld (hl), ENEMY_SNAKE
-; 	ld (hl), ENEMY_SNAKE_DASHER
-	ld (hl), ENEMY_SNAKE_POISON
+	ld a, ixl
+	ld (hl), a
 	inc hl
 	ld (hl), 0
 	inc hl
@@ -106,7 +262,12 @@ pcg_generate_room__spawn_snake:
 ;-----------------------------------------------
 ; input:
 ; - b: number of positions available (in buffer_4096 + 512)
+pcg_generate_room__spawn_fish_jumper:
+	ld ixl, ENEMY_FISH_JUMPER
+	jr pcg_generate_room__spawn_fish_continue
 pcg_generate_room__spawn_fish:
+	ld ixl, ENEMY_FISH
+pcg_generate_room__spawn_fish_continue:
 	ld a, b
 	or a
 	ret z  ; no positions available
@@ -121,8 +282,8 @@ pcg_generate_room__spawn_fish:
 	dec b
 	ex af, af'
 	ret nz
-; 	ld (hl), ENEMY_FISH
-	ld (hl), ENEMY_FISH_JUMPER
+	ld a, ixl
+	ld (hl), a
 	inc hl
 	ld (hl), 0
 	inc hl

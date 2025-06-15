@@ -1,12 +1,12 @@
 to do:
 
-***- enemies:
-  ***- for each area, define min-max enemies per room, and weights for each kind, and sample how many (depending on room size), and spawn them based on that
-
-- jungle biome:
-  - implement it (remember to keep ladder tiles in place for down-door opening code)
-  - special room for start position (start tag) and set start position there (on the left-edge of map)
-  - add jungle events: start, elaine letters, find bomb maker, shop to use coins with (what do they sell? healing, supplies and save game; maybe some random item/weapons that were not spawned in the game?; make sure blow gun is sold for sure if not spawned, as it might be needed for Maya riddle)
+***- jungle biome:
+  ***- mock up in gimp/tiled
+  ***- small set of patterns (remember to keep ladder tiles in place for down-door opening code)
+  ***- add it to the game
+  ***- jungle enemies (sprite enemies only?)
+  ***- special room for start position (start tag) and set start position there (on the left-edge of map)
+  ***- add jungle events: start, elaine letters, find bomb maker, shop to use coins with (what do they sell? healing, supplies and save game; maybe some random item/weapons that were not spawned in the game?; make sure blow gun is sold for sure if not spawned, as it might be needed for Maya riddle)
 
 - Implement PCGWorld in assembler:
   - implement it and generate the whole thing in assembler
