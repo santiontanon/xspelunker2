@@ -269,22 +269,50 @@ carnivore_plants_tongue_tips:
 
 
 update_tile_objects_enemy_carnivore_plant_killed:
-	push ix
-		ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
-		ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
-		inc c
-		inc b
-		inc b
-		call spawn_explosion
-		call room_undraw_tile_objects
-	pop hl
+	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	push bc
+		push ix
+			call spawn_big_explosion
+			call room_undraw_tile_objects
+		pop hl
+		push hl
+			call delete_tile_object_in_hl
+			call room_render_tile_objects
+			; force redraw:
+			ld hl, redraw_flags
+			set ROOM_REDRAW_FLAG_BIT, (hl)
+		pop hl
+	pop bc
 	push hl
-		call delete_tile_object_in_hl
-		call room_render_tile_objects
-		; force redraw:
-		ld hl, redraw_flags
-		set ROOM_REDRAW_FLAG_BIT, (hl)
+		; chance of 3 drops:
+		inc c
+		push bc
+			ld hl, enemy_maybe_spawn_drop
+			ld e, ENEMIES_PAGE
+			call call_hl_in_page_e_8000
+		pop bc
+		dec c
+		inc b
+		inc b
+		push bc
+			ld hl, enemy_maybe_spawn_drop
+			ld e, ENEMIES_PAGE
+			call call_hl_in_page_e_8000
+		pop bc
+		inc c
+		inc c
+		ld hl, enemy_maybe_spawn_drop
+		ld e, ENEMIES_PAGE
+		call call_hl_in_page_e_8000
 	pop hl
+; 	push hl
+; 		call delete_tile_object_in_hl
+; 		call room_render_tile_objects
+; 		; force redraw:
+; 		ld hl, redraw_flags
+; 		set ROOM_REDRAW_FLAG_BIT, (hl)
+; 	pop hl
 	pop af  ; we do an extra pop, since we are skipping the one at update_tile_objects_loop_continue
 	jp update_tile_objects_loop
 
@@ -398,7 +426,7 @@ room_render_tile_objects_render_enemy_carnivore_plant_next_tongue_piece_ptr_righ
 tile_object_carnivore_plant:
 	db 0, 0, 0, 0
 	db 0, 64, 65, 0
-	db 80, 81, 82, 0
+	db 80, 81, 82, 92  ; We use a "92", which is an empty tile, so that the player can hit that spot
 	db 73, 74, 75, 76
 
 tile_object_carnivore_plant_open:
@@ -468,6 +496,8 @@ enemy_carnivore_plant_hit:
 	jr c, enemy_carnivore_plant_hit_tongue
 	cp 79
 	jr z, enemy_carnivore_plant_hit_tongue
+	cp 92
+	jr z, enemy_carnivore_plant_hit_body
 	cp 87
 	jr nc, enemy_carnivore_plant_hit_tongue
 enemy_carnivore_plant_hit_body:

@@ -1728,58 +1728,65 @@ enemy_hit_killed:
 	ret z  ; bones do not have drops
 	cp ENEMY_BONE_PARABOLA_BULLET
 	ret z  ; bones do not have drops
+	; jp enemy_maybe_spawn_drop
+
+
+;-----------------------------------------------
+; input:
+; - c, b: x, y coordinates of the drop
+enemy_maybe_spawn_drop:
 	call random_a
 	; item drop:
 	cp 8 * 2
 	ld hl, spawn_tile_object_1_coin
-	jr c, enemy_hit_spawn_drop
+	jr c, enemy_maybe_spawn_drop_drop
 	cp 16 * 2
 	ld hl, spawn_tile_object_corn
-	jr c, enemy_hit_spawn_drop
+	jr c, enemy_maybe_spawn_drop_drop
 	cp 24 * 2
 	ld hl, spawn_tile_object_2_stones
-	jr c, enemy_hit_spawn_drop_stones
+	jr c, enemy_maybe_spawn_drop_drop_stones
 	cp 32 * 2
 	ld hl, spawn_tile_object_2_darts
-	jr c, enemy_hit_spawn_drop_darts
+	jr c, enemy_maybe_spawn_drop_drop_darts
 	cp 40 * 2
 	ld hl, spawn_tile_object_2_spears
-	jr c, enemy_hit_spawn_drop_spears
+	jr c, enemy_maybe_spawn_drop_drop_spears
 	cp 48 * 2
 	ld hl, spawn_tile_object_battery
-	jr c, enemy_hit_spawn_drop_battery
-enemy_hit_continue:
+	jr c, enemy_maybe_spawn_drop_drop_battery
+enemy_maybe_spawn_drop_continue:
 	ld hl, redraw_flags
 	set ROOM_REDRAW_FLAG_BIT, (hl)
 	ld hl, SFX_enemy_kill
 	jp play_SFX_with_high_priority
 
-enemy_hit_spawn_drop:
+enemy_maybe_spawn_drop_drop:
 	ld e, TILES_PAGE
 	call call_hl_in_page_e_8000
-	jr enemy_hit_continue
+	jr enemy_maybe_spawn_drop_continue
 
-enemy_hit_spawn_drop_stones:
+enemy_maybe_spawn_drop_drop_stones:
 	ld a, (player_inventory_weapons+4)  ; do we have the sling?
 	or a
-	jr z, enemy_hit_continue
-	jr enemy_hit_spawn_drop
+	jr z, enemy_maybe_spawn_drop_continue
+	jr enemy_maybe_spawn_drop_drop
 
-enemy_hit_spawn_drop_darts:
+enemy_maybe_spawn_drop_drop_darts:
 	ld a, (player_inventory_weapons+5)  ; do we have the blowgun?
 	or a
-	jr z, enemy_hit_continue
-	jr enemy_hit_spawn_drop
+	jr z, enemy_maybe_spawn_drop_continue
+	jr enemy_maybe_spawn_drop_drop
 
-enemy_hit_spawn_drop_spears:
+enemy_maybe_spawn_drop_drop_spears:
 	ld a, (player_inventory_weapons+6)  ; do we have the atlatl
 	or a
-	jr z, enemy_hit_continue
-	jr enemy_hit_spawn_drop
+	jr z, enemy_maybe_spawn_drop_continue
+	jr enemy_maybe_spawn_drop_drop
 
-enemy_hit_spawn_drop_battery:
+enemy_maybe_spawn_drop_drop_battery:
 	ld a, (player_inventory_weapons+7)  ; do we have the raygun
 	or a
-	jr z, enemy_hit_continue
-	jr enemy_hit_spawn_drop
+	jr z, enemy_maybe_spawn_drop_continue
+	jr enemy_maybe_spawn_drop_drop
 

@@ -1039,38 +1039,38 @@ ENDR
 	dw object_interaction_function_empty  ; TAG_ENEMY_CARNIVORE_PLANT
 
 object_interaction_inventory_slot:
-	db #ff, #ff, #ff, #ff, #ff  ; none, block puzzles
-	db #ff, #ff, #ff, #ff  ; button doors
-	db #ff, #ff, #ff, #ff  ; breakable walls
-	db #ff, #ff, #ff, #ff, #ff, #ff  ; color locks
-	db #ff, #ff, #ff, #ff  ; trial locks
-	db #ff, #ff, #ff, #ff  ; combination locks
-	db #ff, #ff, #ff, #ff  ; special locks
-	db #ff, #ff, #ff, #ff, #ff, #ff  ; start, ending, midpoint, teleporters
-	db #ff, #ff, #ff, #ff  ; buttons
-	db 14, 15, 16, 17, 18, 19  ; color keys
-	db #ff, #ff, #ff, #ff, #ff, #ff  ; color chests
-	db #ff, #ff, #ff, #ff  ; trial clues
-	db #ff, #ff, #ff, #ff  ; combination clues
-	db 21, 22, 23, 24  ; key items
-	db #ff, 0, #ff  ; boss1
-	db #ff, 1, #ff  ; boss2
-	db #ff, 2, #ff  ; boss3
-	db #ff, 3, #ff  ; boss4
-	db #ff, 4, #ff  ; boss5
-	db #ff, 5, #ff  ; boss6
-	db #ff, 6, #ff  ; boss7
-	db 1, 2, 3  ; weapons
-	db 4, 5, 6, 7  ; ranged weapons
-	db 8, 9, 10  ; upgraded weapons
-	db #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff  ; map pieces
-	db #ff, #ff, #ff, #ff, #ff  ; hearts
-	db #ff, #ff, #ff, #ff  ; riddle clues
-	db #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff  ; story trivia
-	db 25, 26, 27, 28, 29, 30  ; maya upgrade items
-	db 31, 32  ; alien upgrade items
-	db 20, 20, 20, 20  ; small keys
-	db #ff, #ff, #ff, #ff  ; small key chests
+	db #ff, #ff, #ff, #ff, #ff  ; none, block puzzles: 0
+	db #ff, #ff, #ff, #ff  ; button doors: 5
+	db #ff, #ff, #ff, #ff  ; breakable walls: 9
+	db #ff, #ff, #ff, #ff, #ff, #ff  ; color locks: 13
+	db #ff, #ff, #ff, #ff  ; trial locks: 19
+	db #ff, #ff, #ff, #ff  ; combination locks: 23
+	db #ff, #ff, #ff, #ff  ; special locks: 27
+	db #ff, #ff, #ff, #ff, #ff, #ff  ; start, ending, midpoint, teleporters: 31
+	db #ff, #ff, #ff, #ff  ; buttons: 37
+	db 14, 15, 16, 17, 18, 19  ; color keys: 41
+	db #ff, #ff, #ff, #ff, #ff, #ff  ; color chests: 47
+	db #ff, #ff, #ff, #ff  ; trial clues: 53
+	db #ff, #ff, #ff, #ff  ; combination clues: 57
+	db 21, 22, 23, 24  ; key items: 61
+	db #ff, 0, #ff  ; boss1: 65
+	db #ff, 1, #ff  ; boss2: 68
+	db #ff, 2, #ff  ; boss3: 71
+	db #ff, 3, #ff  ; boss4: 74
+	db #ff, 4, #ff  ; boss5: 77
+	db #ff, 5, #ff  ; boss6: 80
+	db #ff, 6, #ff  ; boss7: 83
+	db 1, 2, 3  ; weapons: 86
+	db 4, 5, 6, 7  ; ranged weapons: 89
+	db 8, 9, 10  ; upgraded weapons: 93
+	db #ff, #ff, #ff, #ff, #ff, #ff, #ff  ; map pieces: 96
+	db #ff, #ff, #ff, #ff, #ff  ; hearts: 103
+	db #ff, #ff, #ff, #ff  ; riddle clues: 108
+	db #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff  ; story trivia: 112
+	db 25, 26, 27, 28, 29, 30  ; maya upgrade items: 120
+	db 31, 32  ; alien upgrade items: 126
+	db 20, 20, 20, 20  ; small keys: 128
+	db #ff, #ff, #ff, #ff  ; small key chests: 132
 
 
 ;-----------------------------------------------

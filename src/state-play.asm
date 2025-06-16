@@ -11,22 +11,22 @@ state_play:
 
 		ld a, 1  ; inactive stone
 		ld (global_state__power_calendar), a
-		ld a, 2 + 0  ; first power stone
-		ld (global_state__power_calendar + 1), a
-		inc a
-		ld (global_state__power_calendar + 2), a
-		inc a
-		ld (global_state__power_calendar + 3), a
-		inc a
-		ld (global_state__power_calendar + 4), a
+; 		ld a, 2 + 0  ; first power stone
+; 		ld (global_state__power_calendar + 1), a
+; 		inc a
+; 		ld (global_state__power_calendar + 2), a
+; 		inc a
+; 		ld (global_state__power_calendar + 3), a
+; 		inc a
+; 		ld (global_state__power_calendar + 4), a
 ; 		inc a
 ; 		ld (global_state__power_calendar + 5), a
-		ld a, 4
-		ld (global_state__n_power_stones_in_calendar), a
-		ld a, STORY_STATE__GOT_LETTER2
-		ld (global_state__story), a
-		ld a, 2  ; maya riddle solved
-		ld (global_state__maya_riddle), a
+; 		ld a, 4
+; 		ld (global_state__n_power_stones_in_calendar), a
+; 		ld a, STORY_STATE__GOT_LETTER2
+; 		ld (global_state__story), a
+; 		ld a, 2  ; maya riddle solved
+; 		ld (global_state__maya_riddle), a
 
 		; debug:
 		ld a, 1
@@ -41,67 +41,67 @@ state_play:
 ; 		ld (player_inventory_items+8), a  ; second stone
 ; 		ld (player_inventory_items+9), a  ; third stone
 ; 		ld (player_inventory_items+10), a
-		ld (player_inventory_items+11), a  ; 5th stone
+; 		ld (player_inventory_items+11), a  ; 5th stone
 ; 		ld (player_inventory_items+12), a  ; sixth stone
 ; 		ld (player_inventory_items+13), a  ; [UNUSED]
 ; 		ld (player_inventory_items+14), a
 ; 		ld (player_inventory_items+15), a
 ; 		ld (player_inventory_items+16), a
-		ld (player_inventory_items+17), a
-		ld (player_inventory_items+18), a
-		ld (player_inventory_items+19), a
-		ld (player_inventory_items+20), a  ; small keys
-		ld (player_inventory_items+21), a
-		ld (player_inventory_items+22), a
-		ld (player_inventory_items+23), a
-		ld (player_inventory_items+24), a  ; clay suit (last key item)
-		ld (player_inventory_items+25), a  ; sandals
-		ld (player_inventory_items+26), a  ; gloves
-		ld (player_inventory_items+27), a  ; warrior hat
-		ld (player_inventory_items+28), a  ; cotton armor
-		ld (player_inventory_items+29), a  ; chaac blessing
-		ld (player_inventory_items+30), a  ; seashell
-		ld (player_inventory_items+31), a  ; antigrav belt
-		ld (player_inventory_items+32), a
-		ld (player_inventory_items+33), a
-		ld (player_inventory_items+34), a
+; 		ld (player_inventory_items+17), a
+; 		ld (player_inventory_items+18), a
+; 		ld (player_inventory_items+19), a
+; 		ld (player_inventory_items+20), a  ; small keys
+; 		ld (player_inventory_items+21), a
+; 		ld (player_inventory_items+22), a
+; 		ld (player_inventory_items+23), a
+; 		ld (player_inventory_items+24), a  ; clay suit (last key item)
+; 		ld (player_inventory_items+25), a  ; sandals
+; 		ld (player_inventory_items+26), a  ; gloves
+; 		ld (player_inventory_items+27), a  ; warrior hat
+; 		ld (player_inventory_items+28), a  ; cotton armor
+; 		ld (player_inventory_items+29), a  ; chaac blessing
+; 		ld (player_inventory_items+30), a  ; seashell
+; 		ld (player_inventory_items+31), a  ; antigrav belt
+; 		ld (player_inventory_items+32), a
+; 		ld (player_inventory_items+33), a
+; 		ld (player_inventory_items+34), a
 		ld (player_inventory_items+35), a  ; map
 ; 		ld (player_inventory_items+36), a  ; half power stone
-		ld (player_inventory_items+INVENTORY_ITEM_PUZZLEBOX_MARS), a
-		ld (player_inventory_items+INVENTORY_ITEM_PUZZLEBOX_MOON), a
-		ld (player_inventory_weapons), a
-		ld (player_inventory_weapons+1), a
-		ld (player_inventory_weapons+2), a
-		ld (player_inventory_weapons+3), a
-		ld (player_inventory_weapons+4), a
-		ld (player_inventory_weapons+5), a
-		ld (player_inventory_weapons+6), a
-		ld (player_inventory_weapons+7), a
+; 		ld (player_inventory_items+INVENTORY_ITEM_PUZZLEBOX_MARS), a
+; 		ld (player_inventory_items+INVENTORY_ITEM_PUZZLEBOX_MOON), a
+; 		ld (player_inventory_weapons), a
+; 		ld (player_inventory_weapons+1), a
+; 		ld (player_inventory_weapons+2), a
+; 		ld (player_inventory_weapons+3), a
+; 		ld (player_inventory_weapons+4), a
+; 		ld (player_inventory_weapons+5), a
+; 		ld (player_inventory_weapons+6), a
+; 		ld (player_inventory_weapons+7), a
 ; 		ld (player_inventory_weapons+8), a
 ; 		ld (player_inventory_weapons+9), a
 ; 		ld (player_inventory_weapons+10), a
 ; 		ld a, 123
 ; 		ld (player_inventory_coins), a
-		ld a, 25
-		ld (player_inventory_weapon_ammo), a
-		ld (player_inventory_weapon_ammo + 1), a
-		ld (player_inventory_weapon_ammo + 2), a
-		ld (player_inventory_weapon_ammo + 3), a
-		ld a, 1
-		ld (player_inventory_n_small_keys), a
-		ld (global_state__objects + TAG_MAP_PIECE1), a
-		ld (global_state__objects + TAG_MAP_PIECE2), a
-		ld (global_state__objects + TAG_MAP_PIECE3), a
-		ld (global_state__objects + TAG_MAP_PIECE4), a
-		ld (global_state__objects + TAG_MAP_PIECE5), a
+; 		ld a, 25
+; 		ld (player_inventory_weapon_ammo), a
+; 		ld (player_inventory_weapon_ammo + 1), a
+; 		ld (player_inventory_weapon_ammo + 2), a
+; 		ld (player_inventory_weapon_ammo + 3), a
+; 		ld a, 1
+; 		ld (player_inventory_n_small_keys), a
+; 		ld (global_state__objects + TAG_MAP_PIECE1), a
+; 		ld (global_state__objects + TAG_MAP_PIECE2), a
+; 		ld (global_state__objects + TAG_MAP_PIECE3), a
+; 		ld (global_state__objects + TAG_MAP_PIECE4), a
+; 		ld (global_state__objects + TAG_MAP_PIECE5), a
 ; 		ld (global_state__objects + TAG_TELEPORTER1), a
-		ld (global_state__objects + TAG_TELEPORTER4), a
-		ld (global_state__objects + TAG_TELEPORTER5), a
+; 		ld (global_state__objects + TAG_TELEPORTER4), a
+; 		ld (global_state__objects + TAG_TELEPORTER5), a
 
 		; initial player position:
-; 		ld hl, #0a00
+		ld hl, #0a00
 ; 		ld hl, #1000
-		ld hl, #1400
+; 		ld hl, #1400
 		ld (player_x), hl
 ; 		ld hl, #0a00
 		ld hl, #0800
@@ -133,7 +133,8 @@ state_play:
 		call call_hl_in_page_c_8000
 
 		; generate room:
-		ld e, 1
+		ld e, 0
+; 		ld e, 1
 ; 		ld e, 1
 ; 		ld e, CALENDAR_ROOM_ID
 ; 		ld e, 31

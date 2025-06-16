@@ -86,10 +86,17 @@ spawn_pushing_block_dust:
 ;-----------------------------------------------
 ; input:
 ; - c, b: tile coordinates where to spawn
-spawn_explosion:	
-	call ptr_to_new_sprite_object
+spawn_big_explosion:
+	ld e, SPRITE_OBJECT_TYPE_BIG_EXPLOSION
+	jr spawn_explosion_continue
+spawn_explosion:
+	ld e, SPRITE_OBJECT_TYPE_EXPLOSION
+spawn_explosion_continue:
+	push de
+		call ptr_to_new_sprite_object
+	pop de
 	ret nz
-	ld (hl), SPRITE_OBJECT_TYPE_EXPLOSION
+	ld (hl), e  ; type
 	inc hl
 	ld (hl), 0
 	inc hl
@@ -148,6 +155,8 @@ update_sprite_objects_loop:
 	jr z, update_sprite_objects_pushing_block_dust
 	cp SPRITE_OBJECT_TYPE_EXPLOSION
 	jr z, update_sprite_objects_explosion
+	cp SPRITE_OBJECT_TYPE_BIG_EXPLOSION
+	jr z, update_sprite_objects_big_explosion
 update_sprite_objects_loop_next:
 	ld de, ROOM_OBJECT_STRUCT_SIZE
 	add ix, de
@@ -198,6 +207,33 @@ update_sprite_objects_explosion:
 	call get_sprite_object_sprite_coordinates
 	call z, add_sprite_to_this_frame
 	jp update_sprite_objects_decrease_timer_and_delete_if_necessary
+
+
+;-----------------------------------------------
+update_sprite_objects_big_explosion:
+	ld d, COLOR_WHITE
+	ld e, 76
+	ld c, 0
+	inc (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	call get_sprite_object_sprite_coordinates
+	call z, add_sprite_to_this_frame
+	dec (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	inc (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	ld c, 0
+	call get_sprite_object_sprite_coordinates
+	call z, add_sprite_to_this_frame
+	inc (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	inc (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld c, 0
+	call get_sprite_object_sprite_coordinates
+	call z, add_sprite_to_this_frame
+	dec (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	dec (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	dec (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	dec (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	jp update_sprite_objects_decrease_timer_and_delete_if_necessary
+
 
 
 ;-----------------------------------------------

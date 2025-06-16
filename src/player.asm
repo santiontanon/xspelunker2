@@ -517,6 +517,9 @@ player_update_state_walking_continue_pushing:
 
 
 ;-----------------------------------------------
+player_update_switch_to_falling_dropping_from_ladder_rope:
+	xor a
+	ld (player_can_double_jump), a
 player_update_switch_to_falling:
 	xor a
 	ld (player_state_timer), a
@@ -614,13 +617,13 @@ player_update_switch_to_jumping_from_swimming:
 	jp player_update_state_jumping  ; skip the rope check, to avoid an infinite loop
 
 player_update_switch_to_jumping_from_rope_or_ladder:
-	ld a, 10  ; do not graph to another ladder/rope for a few frames
+	ld a, 10  ; do not grab to another ladder/rope for a few frames
 	ld (player_jump_no_grab_timer), a
 	ld a, 1
 	ld (player_jump_is_cancelable), a
 	ld a, (keyboard_state)
 	bit KEY_DOWN_BIT, a
-	jp z, player_update_switch_to_falling
+	jp z, player_update_switch_to_falling_dropping_from_ladder_rope
 	ld hl, SFX_jump
 	call play_SFX_with_high_priority
 	ld a, 4 ; skip the first jump states, to make the jump shorter
