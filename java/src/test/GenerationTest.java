@@ -11,7 +11,6 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -39,7 +38,8 @@ public class GenerationTest {
         MSXRandom r = new MSXRandom(0, 0xaaaa);
 
         PCGWorld pcg1 = new PCGWorld();
-        PCGArea pcg2 = new PCGArea(true);
+        PCGArea pcg2_jungle = new PCGArea(true, "jungle");
+        PCGArea pcg2_pyramid = new PCGArea(true, "pyramid");
         
         int nPCGAreaErrors = 0;
         HashMap<String, Integer> chunkStats = new HashMap<>();
@@ -88,6 +88,25 @@ public class GenerationTest {
                 System.err.println("Error: game cannot be solved!");
             }
             for(int j = 0;j<w.areas.size();j++) {
+                PCGArea pcg2 = null;
+                switch(j) {
+                    case 0:
+                        pcg2 = pcg2_jungle;
+                        break;
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:
+                    case 6:
+                    case 7:
+                    case 8:
+                    case 9:
+                    case 10:
+                    case 11:
+                        pcg2 = pcg2_pyramid;
+                        break;
+                }
                 RenderedArea ra = pcg2.generate(w.areas.get(j), w, r);
                 if (ra != null) {
                     visualizeArea(ra, "tmp/area"+j+".png", pcg2);
@@ -141,7 +160,7 @@ public class GenerationTest {
         BufferedImage img = new BufferedImage(ra.fg_chunks.length * 8 * RoomChunk.CHUNK_WIDTH + 80,
                                               ra.fg_chunks[0].length * 8 * RoomChunk.CHUNK_HEIGHT + 80,
                                               BufferedImage.TYPE_3BYTE_BGR);
-        ra.draw((Graphics2D)img.getGraphics(), pcg, true);
+        ra.draw((Graphics2D)img.getGraphics(), pcg, pcg.biome, true);
         ImageIO.write(img, "png", new File(path));
 //        JFrame w = new JFrame() {
 //            @Override

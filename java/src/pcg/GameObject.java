@@ -300,7 +300,7 @@ public class GameObject {
             case "item-gloves":
                 tx = 80; ty = 32;
                 break;
-            case "item-hurakan":
+            case "item-warrior-hat":
                 tx = 80; ty = 48;
                 break;
             case "item-armor":

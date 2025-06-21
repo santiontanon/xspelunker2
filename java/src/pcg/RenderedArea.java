@@ -33,7 +33,7 @@ public class RenderedArea {
     }
     
     
-    public void draw(Graphics2D g, PCGArea pcg, boolean prettyfy) throws Exception
+    public void draw(Graphics2D g, PCGArea pcg, String biome, boolean prettyfy) throws Exception
     {      
         RoomChunk bg_chunks[][] = pcg.getBGChunksLikeInMSX(this);
         RoomChunk fg_chunks2[][] = fg_chunks;
@@ -48,7 +48,16 @@ public class RenderedArea {
                 }
             }
             
-            prettifyRoomsPyramid(fg_chunks2);
+            switch(biome) {
+                case "jungle":
+                    prettifyRoomsjungle(fg_chunks2);
+                    break;
+                case "pyramid":
+                    prettifyRoomsPyramid(fg_chunks2);
+                    break;
+                default:
+                    throw new Exception("Unsupported biome: " + biome);
+            }
         }
         
         for(int i = 0;i<fg_chunks[0].length;i++) {
@@ -79,12 +88,12 @@ public class RenderedArea {
                     if (a.rooms[j][i] == PCGArea.CALENDAR_ROOM_ID) {
                         special_room_x = j;
                         special_room_y = i;
-                        c = new RoomChunk("data/calendar-room.tmx", 0);
+                        c = new RoomChunk("data/calendar-room.tmx", 0, "pyramid");
                         c.loadGfx("data/calendar-tiles.png");
                     } else if (a.rooms[j][i] == PCGArea.TELEPORTER_ROOM_ID) {
                         special_room_x = j;
                         special_room_y = i;
-                        c = new RoomChunk("data/teleporter-room.tmx", 0);
+                        c = new RoomChunk("data/teleporter-room.tmx", 0, "pyramid");
                         c.loadGfx("data/teleporter-room-tiles.png");
                     }
                 }
@@ -255,6 +264,12 @@ public class RenderedArea {
     }
     */
     
+    
+    public void prettifyRoomsjungle(RoomChunk fg_chunks[][])
+    {
+        // ...
+    }
+
     
     public void prettifyRoomsPyramid(RoomChunk fg_chunks[][])
     {

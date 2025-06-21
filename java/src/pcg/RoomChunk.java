@@ -29,6 +29,7 @@ public class RoomChunk {
     public static final int CHUNK_HEIGHT = 12;
     
     public int type;
+    String biome = null;
     
     public int tiles[][];
     public HashMap<String, String> tags;
@@ -42,7 +43,8 @@ public class RoomChunk {
     }
     
     
-    public RoomChunk(String tmxPath, int a_type) throws Exception {
+    public RoomChunk(String tmxPath, int a_type, String a_biome) throws Exception {
+        biome = a_biome;
         path = tmxPath;
         type = a_type;
         
@@ -57,6 +59,7 @@ public class RoomChunk {
     public RoomChunk clone()
     {
         RoomChunk c = new RoomChunk();
+        c.biome = biome;
         c.type = type;
         c.tiles = new int[tiles.length][tiles[0].length];
         for(int j = 0;j<tiles.length;j++) {
@@ -275,11 +278,23 @@ public class RoomChunk {
     }
     
     
-    public void draw(int x, int y, Graphics2D g)
+    public void draw(int x, int y, Graphics2D g) throws Exception
     {
         float scale = 1.0f;
         if (gfx == null) {
-            File f = new File("data/patterns/tiles.png");
+            String path = null;
+            if (biome == null) throw new Exception("null biome!");
+            switch(biome) {
+                case "jungle":
+                    path = "data/jungle/tiles.png";
+                    break;
+                case "pyramid":
+                    path = "data/pyramid/tiles.png";
+                    break;
+                default:
+                    throw new Exception("Unsupported biome: " + biome);
+            }
+            File f = new File(path);
             try {
                 gfx = ImageIO.read(f);
             } catch (IOException ex) {

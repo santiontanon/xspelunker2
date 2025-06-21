@@ -14,7 +14,7 @@ import pcg.RoomChunk;
 public class TileUsageStats {
     public static void main(String args[]) throws Exception
     {
-        PCGArea pcg = new PCGArea(false);
+        PCGArea pcg = new PCGArea(false, "pyramid");
         
         int tileCounts[] = new int[256];
         for(RoomChunk c:pcg.bg_chunks) {

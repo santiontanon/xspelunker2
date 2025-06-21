@@ -1,10 +1,17 @@
 to do:
 
 ***- jungle biome:
-  ***- mock up in gimp/tiled
-  ***- small set of patterns (remember to keep ladder tiles in place for down-door opening code)
-  ***- add it to the game
-  ***- jungle enemies (sprite enemies only?)
+  ***- generate levels in Java (make sure it works for at least 1000 seeds):
+    ***- add at least one tile of each type that can have a "breakable-up"
+    ***- add the other "block" chunk types (adapted from pyramid)
+  ***- fix: "Unsupported tag: teleporter-atlantis"
+  ***- fix: "More than one tag on the ending room!"
+  ***- pattern variations with water bodies:
+    ***- a few with small ponds
+    ***- some with large water bodies that extend to the right/left (all at the same height)
+  ***- add diversity to the patterns until satisficing
+  ***- add the biome to the game (bring patterns, and new collisino table)
+  ***- jungle enemies
   ***- special room for start position (start tag) and set start position there (on the left-edge of map)
   ***- add jungle events: start, elaine letters, find bomb maker, shop to use coins with (what do they sell? healing, supplies and save game; maybe some random item/weapons that were not spawned in the game?; make sure blow gun is sold for sure if not spawned, as it might be needed for Maya riddle)
 
@@ -30,7 +37,7 @@ to do:
 - first boss: Huracán, the Storm Bringer (A large, imposing figure wreathed in swirling winds and lightning. Could have feathered serpent elements): wind, lightning, tornadoes
 - second boss: Camazotz, the Bat God: A giant bat-like creature with glowing red eyes and sharp claws.
 - third boss: The Obsidian Golem: A hulking golem made of obsidian, with glowing cracks.
-- caves biome (remember to keep ladder tiles in place for down-door opening code). Implement ice cape effect for lava. Skeleton that spit fire (flamethrower through mouth)
+- caves biome (remember to keep ladder tiles in place for down-door opening code). Implement ice cape effect for lava. Skeleton that spit fire (flamethrower through mouth). Is the confluence a "caves biome area" (except the calendar room)?
 - xibalba biome (remember to keep ladder tiles in place for down-door opening code)
 - fourth boss (Xibalba): Xibalba Lords: Hun Camé (One Death) and Vucub Camé (Seven Death): Skeletal figures with ornate Mayan headdresses, representing the rulers of the underworld (summons skeletons or shadows) 
 - atlantis biome (do I need to move the possible set of up/down/left/right tags to 4 instead of just 2?)

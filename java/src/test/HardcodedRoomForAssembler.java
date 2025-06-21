@@ -25,7 +25,7 @@ public class HardcodedRoomForAssembler {
         MSXRandom r = new MSXRandom(0, 0xaaaa);
 
         PCGWorld pcg1 = new PCGWorld();
-        PCGArea pcg2 = new PCGArea(true);
+        PCGArea pcg2 = new PCGArea(true, "pyramid");
         
         World w = pcg1.generate(r);
         pcg2.generate(w.areas.get(0), w, r);
