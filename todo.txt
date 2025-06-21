@@ -1,16 +1,12 @@
 to do:
 
 ***- jungle biome:
-  ***- generate levels in Java (make sure it works for at least 1000 seeds):
-    ***- add at least one tile of each type that can have a "breakable-up"
-    ***- add the other "block" chunk types (adapted from pyramid)
-  ***- fix: "Unsupported tag: teleporter-atlantis"
-  ***- fix: "More than one tag on the ending room!"
   ***- pattern variations with water bodies:
     ***- a few with small ponds
+    ***- add more hazards
     ***- some with large water bodies that extend to the right/left (all at the same height)
   ***- add diversity to the patterns until satisficing
-  ***- add the biome to the game (bring patterns, and new collisino table)
+  ***- add the biome to the game (bring patterns, and new collision table)
   ***- jungle enemies
   ***- special room for start position (start tag) and set start position there (on the left-edge of map)
   ***- add jungle events: start, elaine letters, find bomb maker, shop to use coins with (what do they sell? healing, supplies and save game; maybe some random item/weapons that were not spawned in the game?; make sure blow gun is sold for sure if not spawned, as it might be needed for Maya riddle)

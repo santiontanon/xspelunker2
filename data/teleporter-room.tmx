@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="32" height="24" tilewidth="8" tileheight="8" nextobjectid="12">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="32" height="24" tilewidth="8" tileheight="8" nextobjectid="14">
  <properties>
   <property name="down" value="stairs"/>
   <property name="up" value="stairs"/>
  </properties>
  <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="256" columns="16">
   <image source="teleporter-room-tiles.png" width="128" height="128"/>
- </tileset>
- <tileset firstgid="257" name="tiles" tilewidth="8" tileheight="8" tilecount="256" columns="16">
-  <image source="patterns/tiles.png" width="128" height="128"/>
  </tileset>
  <layer name="Tile Layer 1" width="32" height="24">
   <data encoding="csv">
@@ -40,5 +37,7 @@
  </layer>
  <objectgroup name="objects">
   <object id="9" type="item" x="120" y="72" width="16" height="16"/>
+  <object id="12" type="big-item" x="96" y="152" width="32" height="24"/>
+  <object id="13" type="big-item" x="128" y="152" width="32" height="24"/>
  </objectgroup>
 </map>

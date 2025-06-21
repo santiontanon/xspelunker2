@@ -36,7 +36,7 @@ public class Quest {
     }
     
     
-    public boolean addTags(World w, PCGWorld pcg)
+    public boolean addTags(World w, PCGWorld pcg) throws Exception
     {
         if (startTag != null) {
             if (!pcg.addTag(startPoint, startTag, startDivision)) return false;

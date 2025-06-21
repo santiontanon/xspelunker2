@@ -37,8 +37,8 @@ public class PCGWorld {
     public int n_areas = 12;
 //    public int n_divisions = 80;
 //    public int min_divisions_per_area[] = {3, 7, 7, 4, 7, 1, 7, 7, 7, 7, 7, 7};
-    public int n_divisions = 112;
-    public int min_divisions_per_area[] = {4, 8, 8, 4, 8, 1, 8, 8, 8, 8, 7, 7};
+    public int n_divisions = 120;
+    public int min_divisions_per_area[] = {6, 8, 8, 4, 8, 1, 8, 8, 8, 8, 7, 7};
     public String areaNames[] = {
         "Jungle",
         "Temple of Inscriptions",
@@ -340,7 +340,7 @@ public class PCGWorld {
     }
 
     
-    public boolean generateDivisions(World w)
+    public boolean generateDivisions(World w) throws Exception
     {
         // Step 2: Generate the divisions:
         
@@ -680,6 +680,7 @@ public class PCGWorld {
         w.lockKeys.get("midpoint").add("boss2");
         w.lockKeys.get("midpoint").add("boss3");
         AreaDivision ending = getDivisionByID(w.areas.get(3).divisionIDs[3][0], tree);
+        addTag(new AreaPoint(w.areas.get(3), 3, 0), "ending", ending);
 
 //        System.out.println("Key division depths: " +
 //                           divisionTreeDepth(boss1) + ", " + 
@@ -795,7 +796,7 @@ public class PCGWorld {
     }
     
     
-    public boolean spawnOptionalObjects(World w, List<AreaDivision> allAreas)
+    public boolean spawnOptionalObjects(World w, List<AreaDivision> allAreas) throws Exception
     {
         /*
         "Jungle",
@@ -1061,7 +1062,7 @@ public class PCGWorld {
     */
     public List<Quest> generateSubquests(World w, List<AreaDivision> tree, List<QuestSpec> open,
                                          List<AreaDivision> useable, List<AreaDivision> reachable,
-                                         List<InterAreaConnection> usedConnections)
+                                         List<InterAreaConnection> usedConnections) throws Exception
     {
         PCGPatternAtoB pat_a2b = new PCGPatternAtoB();
         PCGPatternObstacle pat_o = new PCGPatternObstacle();
@@ -1686,7 +1687,7 @@ public class PCGWorld {
     }
     
     
-    public boolean addTag(AreaPoint p, String tag, AreaDivision d)
+    public boolean addTag(AreaPoint p, String tag, AreaDivision d) throws Exception
     {
         if (tag == null) {
             return false;
@@ -1699,7 +1700,8 @@ public class PCGWorld {
         
 //        a.tags[j][i].contains("ending")
         if (!tag.equals("ending") && l.contains("ending")) {
-            System.err.println("Adding " + tag + " to ending room!");
+//            System.err.println("Adding " + tag + " to ending room!");
+            throw new Exception("Adding " + tag + " to ending room!");
         }
         
         if (!l.contains(tag)) {

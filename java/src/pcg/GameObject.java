@@ -319,7 +319,7 @@ public class GameObject {
                 tx = 80; ty = 112;
                 break;
             case "lever":
-                tx = 224; ty = 32;
+                tx = 208; ty = 48;
                 break;
             case "boss-lock":
                 tx = 192; ty = 48;
@@ -335,6 +335,7 @@ public class GameObject {
             case "teleporter6":
             case "teleporter7":
             case "teleporter8":
+            case "teleporter-atlantis":
             case "teleporter-mars":
             case "teleporter-moon":
                 tx = 224; ty = 40; tdx = 32; tdy = 24;

@@ -129,30 +129,39 @@ public class PCGArea {
         fg_chunks.get(0x0).add(new RoomChunk("data/jungle/room0000-1.tmx", 0x0, "jungle"));
         
         fg_chunks.get(0x1).add(new RoomChunk("data/jungle/room0001-1.tmx", 0x1, "jungle"));
+        fg_chunks.get(0x1).add(new RoomChunk("data/jungle/room0001-2.tmx", 0x1, "jungle"));
 
         fg_chunks.get(0x2).add(new RoomChunk("data/jungle/room0010-1.tmx", 0x2, "jungle"));
+        fg_chunks.get(0x2).add(new RoomChunk("data/jungle/room0010-2.tmx", 0x2, "jungle"));
 
         fg_chunks.get(0x3).add(new RoomChunk("data/jungle/room0011-1.tmx", 0x3, "jungle"));
         fg_chunks.get(0x3).add(new RoomChunk("data/jungle/room0011-2.tmx", 0x3, "jungle"));
+        fg_chunks.get(0x3).add(new RoomChunk("data/jungle/room0011-3.tmx", 0x3, "jungle"));
 
         fg_chunks.get(0x4).add(new RoomChunk("data/jungle/room0100-1.tmx", 0x4, "jungle"));
         fg_chunks.get(0x4).add(new RoomChunk("data/jungle/room0100-2.tmx", 0x4, "jungle"));
+        fg_chunks.get(0x4).add(new RoomChunk("data/jungle/room0100-3.tmx", 0x4, "jungle"));
 
         fg_chunks.get(0x5).add(new RoomChunk("data/jungle/room0101-1.tmx", 0x5, "jungle"));
         fg_chunks.get(0x5).add(new RoomChunk("data/jungle/room0101-2.tmx", 0x5, "jungle"));
 
         fg_chunks.get(0x6).add(new RoomChunk("data/jungle/room0110-1.tmx", 0x6, "jungle"));
         fg_chunks.get(0x6).add(new RoomChunk("data/jungle/room0110-2.tmx", 0x6, "jungle"));
+        fg_chunks.get(0x6).add(new RoomChunk("data/jungle/room0110-3.tmx", 0x6, "jungle"));
 
         fg_chunks.get(0x7).add(new RoomChunk("data/jungle/room0111-1.tmx", 0x7, "jungle"));
         fg_chunks.get(0x7).add(new RoomChunk("data/jungle/room0111-2.tmx", 0x7, "jungle"));
 
         fg_chunks.get(0x8).add(new RoomChunk("data/jungle/room1000-1.tmx", 0x8, "jungle"));
+        fg_chunks.get(0x8).add(new RoomChunk("data/jungle/room1000-2.tmx", 0x8, "jungle"));
 
         fg_chunks.get(0x9).add(new RoomChunk("data/jungle/room1001-1.tmx", 0x9, "jungle"));
         fg_chunks.get(0x9).add(new RoomChunk("data/jungle/room1001-2.tmx", 0x9, "jungle"));
+        fg_chunks.get(0x9).add(new RoomChunk("data/jungle/room1001-3.tmx", 0x9, "jungle"));
 
         fg_chunks.get(0xa).add(new RoomChunk("data/jungle/room1010-1.tmx", 0xa, "jungle"));
+        fg_chunks.get(0xa).add(new RoomChunk("data/jungle/room1010-2.tmx", 0xa, "jungle"));
+        fg_chunks.get(0xa).add(new RoomChunk("data/jungle/room1010-3.tmx", 0xa, "jungle"));
 
         fg_chunks.get(0xb).add(new RoomChunk("data/jungle/room1011-1.tmx", 0xb, "jungle"));
         fg_chunks.get(0xb).add(new RoomChunk("data/jungle/room1011-2.tmx", 0xb, "jungle"));
@@ -164,6 +173,7 @@ public class PCGArea {
         fg_chunks.get(0xd).add(new RoomChunk("data/jungle/room1101-2.tmx", 0xd, "jungle"));
 
         fg_chunks.get(0xe).add(new RoomChunk("data/jungle/room1110-1.tmx", 0xe, "jungle"));
+        fg_chunks.get(0xe).add(new RoomChunk("data/jungle/room1110-2.tmx", 0xe, "jungle"));
 
         fg_chunks.get(0xf).add(new RoomChunk("data/jungle/room1111-1.tmx", 0xf, "jungle"));
         fg_chunks.get(0xf).add(new RoomChunk("data/jungle/room1111-2.tmx", 0xf, "jungle"));
@@ -179,21 +189,17 @@ public class PCGArea {
         }
         {
             List<RoomChunk> l = new ArrayList<>();
-//            l.add(new RoomChunk("data/pyramid/block0011-1.tmx", 0x3));
-//            l.add(new RoomChunk("data/pyramid/block0011-2.tmx", 0x3));
-//            l.add(new RoomChunk("data/pyramid/block0101-1.tmx", 0x5));
-//            l.add(new RoomChunk("data/pyramid/block0101-2.tmx", 0x5));
-//            l.add(new RoomChunk("data/pyramid/block0101-3.tmx", 0x5));
-//            l.add(new RoomChunk("data/pyramid/block0101-4.tmx", 0x5));
+            l.add(new RoomChunk("data/jungle/block0011-1.tmx", 0x3, "jungle"));
+            l.add(new RoomChunk("data/jungle/block0011-2.tmx", 0x3, "jungle"));
+            l.add(new RoomChunk("data/jungle/block0101-1.tmx", 0x5, "jungle"));
+            l.add(new RoomChunk("data/jungle/block0101-2.tmx", 0x5, "jungle"));
             l.add(new RoomChunk("data/jungle/block0110-1.tmx", 0x6, "jungle"));
-//            l.add(new RoomChunk("data/pyramid/block0110-2.tmx", 0x6));
-//            l.add(new RoomChunk("data/pyramid/block0111-1.tmx", 0x7));
-//            l.add(new RoomChunk("data/pyramid/block1001-1.tmx", 0x9));
-//            l.add(new RoomChunk("data/pyramid/block1001-2.tmx", 0x9));
-//            l.add(new RoomChunk("data/pyramid/block1010-1.tmx", 0xa));
-//            l.add(new RoomChunk("data/pyramid/block1100-1.tmx", 0xc));
-//            l.add(new RoomChunk("data/pyramid/block1100-2.tmx", 0xc));
-//
+            l.add(new RoomChunk("data/jungle/block0111-1.tmx", 0x7, "jungle"));
+            l.add(new RoomChunk("data/jungle/block1001-1.tmx", 0x9, "jungle"));
+            l.add(new RoomChunk("data/jungle/block1001-2.tmx", 0x9, "jungle"));
+            l.add(new RoomChunk("data/jungle/block1010-1.tmx", 0xa, "jungle"));
+            l.add(new RoomChunk("data/jungle/block1100-1.tmx", 0xc, "jungle"));
+
             for(RoomChunk c2:l) {
                 block_chunks.get(c2.type).add(c2);
                 List<RoomChunk> current = new ArrayList<>();
@@ -292,9 +298,7 @@ public class PCGArea {
         }
         List<RoomChunk> combination_raw_chunks = new ArrayList<>();
         combination_raw_chunks.add(new RoomChunk("data/jungle/combination0000-1.tmx", 0, "jungle"));
-//        combination_raw_chunks.add(new RoomChunk("data/pyramid/combination0001-1.tmx", 0x1));
-//        combination_raw_chunks.add(new RoomChunk("data/pyramid/combination0100-1.tmx", 0x4));
-//        combination_raw_chunks.add(new RoomChunk("data/pyramid/combination0101-1.tmx", 0x5));
+        combination_raw_chunks.add(new RoomChunk("data/jungle/combination0001-1.tmx", 1, "jungle"));
         for(int type = 0;type<16;type++) {
             for(RoomChunk chunk:combination_raw_chunks) {
                 if ((type & PCGWorld.DIRECTION_LEFT) == 0 && (chunk.type & PCGWorld.DIRECTION_LEFT) != 0) continue;
@@ -471,6 +475,7 @@ public class PCGArea {
         boss_chunks.get(0x1).add(new RoomChunk("data/pyramid/boss0001-2.tmx", 0x1, "pyramid"));
         boss_chunks.get(0x2).add(new RoomChunk("data/pyramid/boss0010-1.tmx", 0x2, "pyramid"));
         boss_chunks.get(0x3).add(new RoomChunk("data/pyramid/boss0011-1.tmx", 0x3, "pyramid"));
+        boss_chunks.get(0x3).add(new RoomChunk("data/pyramid/boss0011-2.tmx", 0x3, "pyramid"));
         boss_chunks.get(0x4).add(new RoomChunk("data/pyramid/boss0100-1.tmx", 0x4, "pyramid"));
         boss_chunks.get(0x4).add(new RoomChunk("data/pyramid/boss0100-2.tmx", 0x4, "pyramid"));
         boss_chunks.get(0x5).add(new RoomChunk("data/pyramid/boss0101-1.tmx", 0x5, "pyramid"));
@@ -491,6 +496,7 @@ public class PCGArea {
         boss_chunks.get(0xc).add(new RoomChunk("data/pyramid/boss1100-2.tmx", 0xc, "pyramid"));
         boss_chunks.get(0xd).add(new RoomChunk("data/pyramid/boss1101-1.tmx", 0xd, "pyramid"));
         boss_chunks.get(0xd).add(new RoomChunk("data/pyramid/boss1101-2.tmx", 0xd, "pyramid"));
+        boss_chunks.get(0xd).add(new RoomChunk("data/pyramid/boss1101-3.tmx", 0xd, "pyramid"));
         boss_chunks.get(0xe).add(new RoomChunk("data/pyramid/boss1110-1.tmx", 0xe, "pyramid"));
         boss_chunks.get(0xe).add(new RoomChunk("data/pyramid/boss1110-2.tmx", 0xe, "pyramid"));
         boss_chunks.get(0xf).add(new RoomChunk("data/pyramid/boss1111-1.tmx", 0xf, "pyramid"));
@@ -1144,6 +1150,7 @@ public class PCGArea {
                 case "teleporter6":
                 case "teleporter7":
                 case "teleporter8":
+                case "teleporter-atlantis":
                 case "teleporter-moon":
                 case "teleporter-mars":
                 case "calendar-name-clue":
@@ -1498,6 +1505,7 @@ public class PCGArea {
                             case "teleporter6":
                             case "teleporter7":
                             case "teleporter8":
+                            case "teleporter-atlantis":
                             case "teleporter-mars":
                             case "teleporter-moon":
                                 necessaryObjectTypes.add("big-item");
@@ -1596,8 +1604,9 @@ public class PCGArea {
                         if (!choicesWithTag.isEmpty()) {
                             choices = choicesWithTag;
                         } else {
-                            System.err.println("No " +chunkPoolName+ " chunks with up/down tags: " + upTag + "/" + downTag + ", objects " + necessaryObjectTypes + ", and type: " + ra.pieceTypes[j][i] + " (at " + j + ", " + i + " area " + a.ID + ", placed tags: "+placedTags[j][i]+")");
-                            return null;
+                            throw new Exception("No " +chunkPoolName+ " chunks with up/down tags: " + upTag + "/" + downTag + ", objects " + necessaryObjectTypes + ", and type: " + ra.pieceTypes[j][i] + " (at " + j + ", " + i + " area " + a.ID + ", placed tags: "+placedTags[j][i]+")");
+//                            System.err.println("No " +chunkPoolName+ " chunks with up/down tags: " + upTag + "/" + downTag + ", objects " + necessaryObjectTypes + ", and type: " + ra.pieceTypes[j][i] + " (at " + j + ", " + i + " area " + a.ID + ", placed tags: "+placedTags[j][i]+")");
+//                            return null;
                         }
                     }
                     if (biome.equals("jungle")) {
@@ -1611,15 +1620,17 @@ public class PCGArea {
                             }
                         }
                         if (choices2.isEmpty() && !choices.isEmpty()) {
-                            System.err.println("All " +chunkPoolName+ " chunks eliminated since they had stairs for up/down tags: " + upTag + "/" + downTag + ", objects " + necessaryObjectTypes + ", and type: " + ra.pieceTypes[j][i] + " (at " + j + ", " + i + " area " + a.ID + ", placed tags: "+placedTags[j][i]+")");
-                            return null;
+                            throw new Exception("All " +chunkPoolName+ " chunks eliminated since they had stairs for up/down tags: " + upTag + "/" + downTag + ", objects " + necessaryObjectTypes + ", and type: " + ra.pieceTypes[j][i] + " (at " + j + ", " + i + " area " + a.ID + ", placed tags: "+placedTags[j][i]+")");
+//                            System.err.println("All " +chunkPoolName+ " chunks eliminated since they had stairs for up/down tags: " + upTag + "/" + downTag + ", objects " + necessaryObjectTypes + ", and type: " + ra.pieceTypes[j][i] + " (at " + j + ", " + i + " area " + a.ID + ", placed tags: "+placedTags[j][i]+")");
+//                            return null;
                         }
                         choices = choices2;
                     }
                     
                     if (choices.isEmpty()) {
-                        System.err.println("No " +chunkPoolName+ " chunks for type " + ra.pieceTypes[j][i]);
-                        return null;
+                        throw new Exception("No " +chunkPoolName+ " chunks for type " + ra.pieceTypes[j][i]);
+//                        System.err.println("No " +chunkPoolName+ " chunks for type " + ra.pieceTypes[j][i]);
+//                        return null;
                     }
                     
                     {
@@ -1828,6 +1839,7 @@ public class PCGArea {
                 case "teleporter6":
                 case "teleporter7":
                 case "teleporter8":
+                case "teleporter-atlantis":
                 case "teleporter-mars":
                 case "teleporter-moon":
                 {
