@@ -18,6 +18,7 @@ public class PatternVerification {
     {
         MSXRandom r = new MSXRandom(0, 0xaaaa);
         PCGArea pcg2 = new PCGArea(true, "pyramid");
+//        PCGArea pcg2 = new PCGArea(true, "jungle");
         
         for(int i = 0;i<16;i++) {
             for(RoomChunk c:pcg2.fg_chunks.get(i)) {

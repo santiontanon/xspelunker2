@@ -2,6 +2,7 @@
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="36">
  <properties>
   <property name="down" value="stairs"/>
+  <property name="left" value="hole"/>
  </properties>
  <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="256" columns="16">
   <image source="tiles.png" width="128" height="128"/>
@@ -18,7 +19,7 @@
 191,190,1,1,209,210,211,119,120,255,1,1,1,1,196,197,
 1,1,103,104,225,226,227,172,170,255,1,1,1,1,212,213,
 1,1,119,120,241,242,243,1,1,1,1,1,1,1,228,229,
-200,199,200,200,199,202,201,1,1,1,1,1,203,202,235,234,
+200,199,200,200,199,202,201,1,1,1,1,1,1,203,235,234,
 215,215,215,215,216,216,216,169,137,149,149,149,151,235,216,216
 </data>
  </layer>

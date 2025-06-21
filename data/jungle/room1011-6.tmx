@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="17">
+ <properties>
+  <property name="down" value="hole"/>
+  <property name="left" value="hole"/>
+  <property name="right" value="hole"/>
+ </properties>
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="256" columns="16">
+  <image source="tiles.png" width="128" height="128"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="16" height="12">
+  <data encoding="csv">
+236,236,234,236,235,234,235,234,236,234,235,234,234,236,235,234,
+236,235,236,234,235,236,219,220,219,234,234,235,236,234,235,236,
+1,1,97,98,1,1,1,1,1,1,97,98,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,1,1,101,102,1,1,
+103,104,1,1,1,1,1,1,1,1,1,1,117,118,103,104,
+119,120,148,150,149,149,149,150,136,149,149,150,149,165,119,120,
+200,199,202,206,1,1,1,1,256,1,1,1,203,200,200,200,
+215,215,215,246,1,1,1,1,1,1,1,1,247,216,216,216
+</data>
+ </layer>
+ <objectgroup name="objects">
+  <object id="14" type="item" x="56" y="56" width="16" height="16"/>
+  <object id="15" type="big-item" x="48" y="48" width="32" height="24"/>
+  <object id="16" type="4x4-item" x="48" y="40" width="32" height="32"/>
+ </objectgroup>
+</map>

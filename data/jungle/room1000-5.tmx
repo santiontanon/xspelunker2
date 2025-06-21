@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="22">
+ <properties>
+  <property name="left" value="water"/>
+ </properties>
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="256" columns="16">
+  <image source="tiles.png" width="128" height="128"/>
+  <tile id="0">
+   <properties>
+    <property name="left" value="water"/>
+    <property name="right" value="water"/>
+   </properties>
+  </tile>
+  <tile id="201">
+   <properties>
+    <property name="left" value="water"/>
+   </properties>
+  </tile>
+  <tile id="255">
+   <properties>
+    <property name="left" value="water"/>
+    <property name="right" value="water"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="Tile Layer 1" width="16" height="12">
+  <data encoding="csv">
+215,236,235,236,235,235,236,235,234,235,235,236,236,234,236,236,
+231,235,221,220,221,221,220,220,220,219,220,236,221,234,235,236,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,247,215,
+1,1,1,1,1,1,103,104,103,104,104,103,104,104,214,215,
+1,1,1,1,1,103,119,120,119,120,119,120,119,120,247,216,
+1,1,1,1,1,119,119,120,119,120,119,120,119,120,214,216,
+100,100,100,100,203,218,199,218,218,218,199,204,119,120,247,216,
+129,129,129,129,234,236,235,236,235,236,236,220,119,120,247,215,
+129,129,129,129,234,235,1,1,1,1,103,120,119,119,247,216,
+129,129,129,129,235,234,1,1,1,103,119,120,119,119,247,215,
+129,129,205,202,236,236,199,200,200,199,199,199,200,200,216,215,
+200,200,200,199,236,216,215,216,215,216,216,216,215,216,216,216
+</data>
+ </layer>
+ <objectgroup name="objects">
+  <object id="14" type="breakable-right" x="112" y="16" width="16" height="32"/>
+  <object id="15" type="door-right" x="112" y="24" width="16" height="24"/>
+  <object id="16" type="item" x="80" y="64" width="16" height="16"/>
+  <object id="17" type="4x4-item" x="48" y="16" width="32" height="32"/>
+  <object id="18" type="big-item" x="48" y="24" width="32" height="24"/>
+  <object id="20" type="door-down" x="48" y="80" width="32" height="16"/>
+  <object id="21" type="breakable-down" x="48" y="80" width="32" height="16"/>
+ </objectgroup>
+</map>

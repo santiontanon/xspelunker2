@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="15">
+ <properties>
+  <property name="down" value="hole"/>
+  <property name="left" value="water"/>
+  <property name="right" value="hole"/>
+  <property name="up" value="hole"/>
+ </properties>
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="256" columns="16">
+  <image source="tiles.png" width="128" height="128"/>
+  <tile id="255">
+   <properties>
+    <property name="left" value="water"/>
+    <property name="right" value="water"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="Tile Layer 1" width="16" height="12">
+  <data encoding="csv">
+215,215,1,1,1,1,1,1,1,1,1,1,1,1,230,215,
+232,233,1,1,1,1,1,1,1,1,1,1,1,180,182,230,
+1,1,1,148,149,150,150,150,150,150,169,137,150,151,147,1,
+1,1,1,1,1,1,1,97,98,1,249,168,1,145,163,1,
+1,1,1,1,1,1,1,1,1,1,249,168,1,161,163,1,
+1,203,204,1,1,1,1,1,1,1,249,168,1,145,147,1,
+100,214,246,1,1,1,1,1,1,148,149,150,151,151,163,1,
+129,247,217,1,1,1,1,1,1,1,1,1,1,161,147,1,
+129,214,246,1,1,1,1,1,1,1,1,1,103,161,163,104,
+129,247,217,1,1,1,1,1,1,1,1,1,119,177,179,120,
+129,214,217,204,1,1,1,1,1,1,1,1,198,200,200,215,
+200,200,215,215,1,1,1,1,1,1,1,1,215,216,216,216
+</data>
+ </layer>
+ <objectgroup name="objects">
+  <object id="14" type="item" x="56" y="0" width="16" height="16"/>
+ </objectgroup>
+</map>

@@ -1,11 +1,6 @@
 to do:
 
 ***- jungle biome:
-  ***- pattern variations with water bodies:
-    ***- a few with small ponds
-    ***- add more hazards
-    ***- some with large water bodies that extend to the right/left (all at the same height)
-  ***- add diversity to the patterns until satisficing
   ***- add the biome to the game (bring patterns, and new collision table)
   ***- jungle enemies
   ***- special room for start position (start tag) and set start position there (on the left-edge of map)
