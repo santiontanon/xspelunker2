@@ -61,6 +61,7 @@ pcg_generate_area__world_area_ptr_set:
 	ldi
 	ldi
 
+	call pcg_generate_area__initialize_ptrs
 	call pcg_generate_area__initialize_room_ids  ; initializes 'current_area__room_ids'
 	call pcg_generate_area__merge_rooms  ; merges rooms in 'current_area__room_ids'
 	call pcg_generate_area__division_spanning_trees  ; fills 'tmp_pcg_area__piece_types'
@@ -68,7 +69,57 @@ pcg_generate_area__world_area_ptr_set:
 	call pcg_generate_area__random_connections  ; updates 'tmp_pcg_area__piece_types'
 	call pcg_generate_area__inter_area_connections  ; updates 'tmp_pcg_area__piece_types'
 	call pcg_generate_area__place_tags  ; fills 'tmp_pcg_area__placed_tags'
-	jp pcg_generate_area__choose_chunks  ; fills 'current_area__chunks_ids' and 'current_area__objects'
+	jp  pcg_generate_area__choose_chunks  ; fills 'current_area__chunks_ids' and 'current_area__objects'
+
+; 	; DEBUG:
+; 	call pcg_generate_area__choose_chunks  ; fills 'current_area__chunks_ids' and 'current_area__objects'
+; ; 	ld hl, hardcoded_area_data__room_ids
+; ; 	ld de, current_area__room_ids
+; ; 	ld bc, 8 * 2
+; ; 	ld hl, hardcoded_area_data__tmp_pcg_area__piece_types
+; ; 	ld de, tmp_pcg_area__piece_types
+; ; 	ld bc, 16 * 4
+; 	ld hl, hardcoded_area_data__chunk_ids
+; 	ld de, current_area__chunks_ids
+; 	ld bc, 16 * 4
+; 	call pcg_debug__arrays_equal
+; 	ret
+
+
+pcg_debug__arrays_equal:
+	ld a, (de)
+	cp (hl)
+	jr nz, pcg_debug__arrays_equal_fail
+	inc de
+	inc hl
+	dec bc
+	ld a, c
+	or b
+	ret z
+	jr pcg_debug__arrays_equal
+
+
+pcg_debug__arrays_equal_fail:
+	di
+	halt
+
+
+;-----------------------------------------------
+; Initializes all the pointers depending on the current biome
+pcg_generate_area__initialize_ptrs:
+	ld a, (current_area__id)
+	or a
+	jr z, pcg_generate_area__initialize_ptrs_jungle
+pcg_generate_area__initialize_ptrs_pyramid:
+	ld hl, pyramid_chunk_ptrs_and_constants
+	jr pcg_generate_area__initialize_ptrs_continue
+pcg_generate_area__initialize_ptrs_jungle
+	ld hl, jungle_chunk_ptrs_and_constants
+pcg_generate_area__initialize_ptrs_continue:
+	ld de, current_area__n_chunk_banks
+	ld bc, (current_area__combination_chunk_pool_first_id + 1) - current_area__n_chunk_banks
+	ldir
+	ret
 
 
 ;-----------------------------------------------
@@ -1352,6 +1403,8 @@ pcg_generate_area__choose_chunks:
 	ld hl, tmp_pcg_area__piece_types
 pcg_generate_area__choose_chunks_loop_y:
 	push bc
+		xor a
+		ld (tmp_pcg_area__left_tag), a  ; init the left tag
 pcg_generate_area__choose_chunks_loop_x:
 		xor a
 		ld (tmp_pcg_area__tag_to_place), a
@@ -1360,14 +1413,20 @@ pcg_generate_area__choose_chunks_loop_x:
 		jp z, pcg_generate_area__choose_chunks_loop_x_next_set_previous_flags
 		ld de, 0
 		ld (tmp_pcg_area__necessary_object_types), de  ; necessaryObjectTypes
-		ld de, pyramid_standard_chunk_pool
-		ld ixh, PYRAMID_STANDARD_CHUNK_POOL_SIZE  ; chunk pool size
+		ld de, (current_area__standard_chunk_pool_ptr)
+		ld a, (current_area__standard_chunk_pool_size)
+		ld ixh, a  ; chunk pool size
 		ld iyl, 0  ; ID if first chunk in pool
-		ld iyh, #00  ; upTag/downTag  ; ll-uu-rr-dd
+		ld a, (tmp_pcg_area__left_tag)
+		ld iyh, a  ; upTag/downTag  ; ll-uu-rr-dd
+		ld a, (hl)  ; recover the piece type again
 
 		and PCG_DIRECTION_UP
 		jp z, pcg_generate_area__choose_chunks_loop_x_no_connection_up
-		ld iyh, #20  ; upTag to "stairs" by default (in case there is nothing above)
+		ld a, iyh
+		and #cf  ; isolate the up flag
+		or #20
+		ld iyh, a  ; upTag to "stairs" by default (in case there is nothing above)
 		ld a, (tmp_pcg_area__size_in_chunks + 1)  ; height
 		cp b
 		jr z, pcg_generate_area__choose_chunks_loop_x_no_chunk_above
@@ -1385,7 +1444,10 @@ pcg_generate_area__choose_chunks_loop_x:
 			and PCG_DIRECTION_DOWN
 			jp nz, pcg_generate_area__choose_chunks_loop_x_chunk_above_has_down_connection
 			; The chunk above does not have a connection down, it means it's a door / breakable wall down:
-			ld iyh, #10  ; upTag to "hole"
+			ld a, iyh
+			and #cf  ; isolate the up flag
+			or #10  ; upTag to "hole"
+			ld iyh, a  ; upTag to "stairs" by default (in case there is nothing above)
 			jp pcg_generate_area__choose_chunks_loop_x_no_chunk_above_pop
 pcg_generate_area__choose_chunks_loop_x_chunk_above_has_down_connection:
 			; get the "downTag" of the chunk above, and overwrite "upTag":
@@ -1482,15 +1544,19 @@ pcg_generate_area__ignore_tag:
 		jp pcg_generate_area__choose_chunks_loop_x_continue
 
 pcg_generate_area__choose_chunks_loop_x_boss_tag:
-		ld de, pyramid_boss_chunk_pool
-		ld ixh, PYRAMID_BOSS_CHUNK_POOL_SIZE  ; chunk pool size
-		ld iyl, PYRAMID_BOSS_CHUNK_POOL_FIRST_ID  ; ID if first chunk in pool
+		ld de, (current_area__boss_chunk_pool_ptr)
+		ld a, (current_area__boss_chunk_pool_size)
+		ld ixh, a  ; chunk pool size
+		ld a, (current_area__boss_chunk_pool_first_id)
+		ld iyl, a  ; ID if first chunk in pool
 		jp pcg_generate_area__choose_chunks_loop_x_continue
 
 pcg_generate_area__choose_chunks_loop_x_block_puzzle_tag:
-		ld de, pyramid_block_chunk_pool
-		ld ixh, PYRAMID_BLOCK_CHUNK_POOL_SIZE  ; chunk pool size
-		ld iyl, PYRAMID_BLOCK_CHUNK_POOL_FIRST_ID  ; ID if first chunk in pool
+		ld de, (current_area__block_chunk_pool_ptr)
+		ld a, (current_area__block_chunk_pool_size)
+		ld ixh, a  ; chunk pool size
+		ld a, (current_area__block_chunk_pool_first_id)
+		ld iyl, a  ; ID if first chunk in pool
 		jp pcg_generate_area__choose_chunks_loop_x_continue
 
 pcg_generate_area__choose_chunks_loop_x_breakable_wall_tag:
@@ -1575,9 +1641,11 @@ pcg_generate_area__choose_chunks_loop_x_4x4_item_tag:
 		jp pcg_generate_area__choose_chunks_loop_x_button_door_tag
 
 pcg_generate_area__choose_chunks_loop_x_combination_lock_tag:
-		ld de, pyramid_combination_chunk_pool
-		ld ixh, PYRAMID_COMBINATION_CHUNK_POOL_SIZE  ; chunk pool size
-		ld iyl, PYRAMID_COMBINATION_CHUNK_POOL_FIRST_ID  ; ID if first chunk in pool
+		ld de, (current_area__combination_chunk_pool_ptr)
+		ld a, (current_area__combination_chunk_pool_size)
+		ld ixh, a  ; chunk pool size
+		ld a, (current_area__combination_chunk_pool_first_id)
+		ld iyl, a  ; ID if first chunk in pool
 		jp pcg_generate_area__choose_chunks_loop_x_button_door_tag
 
 pcg_generate_area__choose_chunks_loop_x_continue:
@@ -1606,6 +1674,24 @@ pcg_generate_area__choose_chunks_loop_x_chunk_loop:
 				and iyh
 				cp iyh
 				jp nz, pcg_generate_area__choose_chunks_loop_x_chunk_loop_next_inc3
+
+				; In jungle, only use stairs for inter-area connections:
+				ld a, (current_area__id)
+				or a
+				jr nz, pcg_generate_area__choose_chunks_loop_x_chunk_loop_continue
+				; we are in the jungle:
+				; does this piece have an inter-area connectino down?
+				ld a, iyh
+				and #03
+				cp #02
+				jr z, pcg_generate_area__choose_chunks_loop_x_chunk_loop_continue
+				; we have an inter-area connection down:
+				ld a, (de)  ; left/up/right/down tags
+				and #03
+				cp #02  ; stairs down
+				jr z, pcg_generate_area__choose_chunks_loop_x_chunk_loop_next_inc3
+
+pcg_generate_area__choose_chunks_loop_x_chunk_loop_continue:
 				inc de
 				push hl
 					ld a, (de)
@@ -1693,8 +1779,8 @@ pcg_generate_area__choose_chunks_loop_x_sample_chunk_loop_done:
 				add hl, hl
 				add hl, hl
 				ADD_HL_A  ; hl = a * 5
-				ld de, pyramid_chunk_flags
-				add hl, de  ; hl = pyramid_chunk_flags + a * 5
+				ld de, (current_area__chunk_flags_ptr)
+				add hl, de  ; hl = chunk_flags + a * 5
 				inc hl
 				inc hl
 				ld e, (hl)  ; left/up/right/down tags
@@ -2124,3 +2210,32 @@ pcg_generate_area__chest_tags:
     db 0
 
 
+jungle_chunk_ptrs_and_constants:
+	db (jungle_chunk_fg_bank_ptrs_end - jungle_chunk_fg_bank_ptrs) / 2  ; number of banks
+	db CHUNKS_JUNGLE_PAGE
+	dw jungle_chunk_fg_bank_ptrs
+	dw jungle_standard_chunk_pool
+	dw jungle_boss_chunk_pool
+	dw jungle_block_chunk_pool
+	dw jungle_combination_chunk_pool
+	dw jungle_chunk_flags
+	dw chunk_edgecollisions_jungle
+	db JUNGLE_STANDARD_CHUNK_POOL_SIZE, JUNGLE_STANDARD_CHUNK_FIRST_ID
+	db JUNGLE_BOSS_CHUNK_POOL_SIZE, JUNGLE_BOSS_CHUNK_POOL_FIRST_ID
+	db JUNGLE_BLOCK_CHUNK_POOL_SIZE, JUNGLE_BLOCK_CHUNK_POOL_FIRST_ID
+	db JUNGLE_COMBINATION_CHUNK_POOL_SIZE, JUNGLE_COMBINATION_CHUNK_POOL_FIRST_ID
+
+pyramid_chunk_ptrs_and_constants:
+	db (pyramid_chunk_fg_bank_ptrs_end - pyramid_chunk_fg_bank_ptrs) / 2  ; number of banks
+	db CHUNKS_PYRAMID_PAGE
+	dw pyramid_chunk_fg_bank_ptrs
+	dw pyramid_standard_chunk_pool
+	dw pyramid_boss_chunk_pool
+	dw pyramid_block_chunk_pool
+	dw pyramid_combination_chunk_pool
+	dw pyramid_chunk_flags
+	dw chunk_edgecollisions_pyramid
+	db PYRAMID_STANDARD_CHUNK_POOL_SIZE, PYRAMID_STANDARD_CHUNK_FIRST_ID
+	db PYRAMID_BOSS_CHUNK_POOL_SIZE, PYRAMID_BOSS_CHUNK_POOL_FIRST_ID
+	db PYRAMID_BLOCK_CHUNK_POOL_SIZE, PYRAMID_BLOCK_CHUNK_POOL_FIRST_ID
+	db PYRAMID_COMBINATION_CHUNK_POOL_SIZE, PYRAMID_COMBINATION_CHUNK_POOL_FIRST_ID

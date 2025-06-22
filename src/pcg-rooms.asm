@@ -11,17 +11,29 @@ tmp_pcg_room__previous_seed: equ tmp_pcg_room__is_midpoint_room - 4
 
 ;-----------------------------------------------
 area_default_tileset_ptrs:
-	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid  ; jungle
+	db JUNGLE_TILES_PAGE
+	dw tiles_jungle_zx0, update_animations_in_vdp_jungle, tile_collision_types_jungle  ; jungle
+	db PYRAMID_TILES_PAGE
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid  ; pyramid 1
+	db PYRAMID_TILES_PAGE
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid  ; pyramid 2
+	db PYRAMID_TILES_PAGE
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid  ; confluence
+	db PYRAMID_TILES_PAGE
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid  ; pyramid 3
+	db PYRAMID_TILES_PAGE
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid  ; fire shaft
+	db PYRAMID_TILES_PAGE
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid  ; pacific caves
+	db PYRAMID_TILES_PAGE
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid  ; atlantic caves
+	db PYRAMID_TILES_PAGE
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid  ; fire temple
+	db PYRAMID_TILES_PAGE
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid  ; atlantis
+	db PYRAMID_TILES_PAGE
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid  ; mars
+	db PYRAMID_TILES_PAGE
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid, tile_collision_types_pyramid  ; moon
 
 
@@ -29,20 +41,20 @@ area_default_tileset_ptrs:
 pcg_generate_room_reset_state:
 	ld hl, area_default_tileset_ptrs
 	ld a, (current_area__id)
-	add a, a
 	ld c, a
 	add a, a
-	add a, c  ; a * 6
+	add a, a
+	add a, a
+	sub c  ; a * 7
 	ADD_HL_A
-	ld de, current_room__tileset_ptr
+	ld de, current_room__tileset_page
+	ldi  ; current_room__tileset_page
 	ldi
 	ldi  ; current_room__tileset_ptr
 	ldi
 	ldi  ; current_room__animation_fn_ptr
 	ldi
 	ldi  ; current_room__collision_ptr
-	ld a, TILES_PAGE
-	ld (current_room__tileset_page), a
 	xor a
 	ld (current_room__tileset_overrides_item_tiles), a
 
@@ -244,7 +256,7 @@ pcg_generate_room__fb_chunk_ptr_loop:
 	push hl
 	push ix
 	push iy
-		call pcg_generate_room_background_pyramid
+		call pcg_generate_room_background
 	pop iy
 	pop ix
 	pop hl
@@ -255,7 +267,8 @@ pcg_generate_room__fb_chunk_ptr_loop:
 	; - ixl/ixh have the x1, y1 coordinates of the room
 	ld a, #ff
 	ld (tmp_pcg_room__current_decompressed_chunk_bank_id), a
-	ld b, (pyramid_chunk_fg_bank_ptrs_end - pyramid_chunk_fg_bank_ptrs) / 2  ; number of banks
+	ld a, (current_area__n_chunk_banks)
+	ld b, a
 pcg_generate_room__fg_loop_bank_id:
 	push bc
 	push hl
@@ -284,7 +297,7 @@ pcg_generate_room__fg_loop_x:
 			ld a, (hl)
 			push hl
 				push bc
-					ld hl, pyramid_chunk_fg_bank_ptrs
+					ld hl, (current_area__chunk_fg_bank_ptrs)
 					call pcg_get_chunk_ptr
 				pop bc
 				push bc
@@ -382,7 +395,7 @@ pcg_generate_room__fg_loop_x_skip:
 	jp nz, pcg_generate_room__fg_loop_bank_id
 
 	; Auto-fill ladders/ropes/etc. and randomize tiles:
-	call pcg_generate_room__prettyfy_pyramid
+	call pcg_generate_room__prettify
 
 	; Instantiate 'current_area__objects':
 	ld ix, current_area__objects
@@ -547,7 +560,7 @@ pcg_generate_room__object_breakable_wall:
 	; get the chunk type where we are placing the object:
 	push bc
 		call get_chunk_id_from_coordinates  ; a = chunk ID
-		ld hl, pyramid_chunk_fg_bank_ptrs
+		ld hl, (current_area__chunk_fg_bank_ptrs)
 		call pcg_get_chunk_ptr
 		ld a, (ix + AREA_OBJECT_STRUCT_EXTRA)  ; get the direction of the wall
 		cp PCG_DIRECTION_LEFT
@@ -638,7 +651,7 @@ pcg_generate_room__object_chest:
 	; get the chunk type where we are placing the object:
 	push bc
 		call get_chunk_id_from_coordinates  ; a = chunk ID
-		ld hl, pyramid_chunk_fg_bank_ptrs
+		ld hl, (current_area__chunk_fg_bank_ptrs)
 		call pcg_get_chunk_ptr
 		ld e, CHUNK_LOCATION_ITEM
 		call sample_chunk_location  ; de: ptr to the location
@@ -677,7 +690,7 @@ pcg_generate_room__object_regular_item:
 	; get the chunk type where we are placing the object:
 	push bc
 		call get_chunk_id_from_coordinates  ; a = chunk ID
-		ld hl, pyramid_chunk_fg_bank_ptrs
+		ld hl, (current_area__chunk_fg_bank_ptrs)
 		call pcg_get_chunk_ptr
 		ld e, CHUNK_LOCATION_ITEM
 		call sample_chunk_location  ; de: ptr to the location
@@ -735,7 +748,7 @@ pcg_generate_room__object_small_lock:
 	; get the chunk type where we are placing the object:
 	push bc
 		call get_chunk_id_from_coordinates  ; a = chunk ID
-		ld hl, pyramid_chunk_fg_bank_ptrs
+		ld hl, (current_area__chunk_fg_bank_ptrs)
 		call pcg_get_chunk_ptr
 		ld e, CHUNK_LOCATION_ITEM
 		push hl
@@ -897,7 +910,7 @@ pcg_generate_room__object_gear_lock:
 	; get the chunk type where we are placing the object:
 	push bc
 		call get_chunk_id_from_coordinates  ; a = chunk ID
-		ld hl, pyramid_chunk_fg_bank_ptrs
+		ld hl, (current_area__chunk_fg_bank_ptrs)
 		call pcg_get_chunk_ptr
 		ld e, CHUNK_LOCATION_BIG_ITEM
 		push hl
@@ -938,7 +951,7 @@ pcg_generate_room__object_teleporter:
 	; get the chunk type where we are placing the object:
 	push bc
 		call get_chunk_id_from_coordinates  ; a = chunk ID
-		ld hl, pyramid_chunk_fg_bank_ptrs
+		ld hl, (current_area__chunk_fg_bank_ptrs)
 		call pcg_get_chunk_ptr
 		ld e, CHUNK_LOCATION_BIG_ITEM
 		push hl
@@ -981,7 +994,7 @@ pcg_generate_room__object_button_door:
 	; get the chunk type where we are placing the object:
 	push bc
 		call get_chunk_id_from_coordinates  ; a = chunk ID
-		ld hl, pyramid_chunk_fg_bank_ptrs
+		ld hl, (current_area__chunk_fg_bank_ptrs)
 		call pcg_get_chunk_ptr
 		jp pcg_generate_room__object_small_lock_spawn_door
 
@@ -991,7 +1004,7 @@ pcg_generate_room__object_combination_lock:
 	; get the chunk type where we are placing the object:
 	push bc
 		call get_chunk_id_from_coordinates  ; a = chunk ID
-		ld hl, pyramid_chunk_fg_bank_ptrs
+		ld hl, (current_area__chunk_fg_bank_ptrs)
 		call pcg_get_chunk_ptr
 	pop bc
 	push hl
@@ -1051,7 +1064,7 @@ pcg_generate_room__object_trial_lock:
 	; get the chunk type where we are placing the object:
 	push bc
 		call get_chunk_id_from_coordinates  ; a = chunk ID
-		ld hl, pyramid_chunk_fg_bank_ptrs
+		ld hl, (current_area__chunk_fg_bank_ptrs)
 		call pcg_get_chunk_ptr
 		ld e, CHUNK_LOCATION_4X4_ITEM
 		push hl
@@ -1118,7 +1131,7 @@ pcg_generate_room__object_boss_lock:
 	; get the chunk type where we are placing the object:
 	push bc
 		call get_chunk_id_from_coordinates  ; a = chunk ID
-		ld hl, pyramid_chunk_fg_bank_ptrs
+		ld hl, (current_area__chunk_fg_bank_ptrs)
 		call pcg_get_chunk_ptr
 		ld e, CHUNK_LOCATION_ITEM
 		push hl
@@ -1318,282 +1331,11 @@ get_chunk_id_from_coordinates_loop_done:
 
 
 ;-----------------------------------------------
-; This method:
-; - completes ropes, ladders, dragon/face blocks
-; - randomizes brick tiles
-pcg_generate_room__prettyfy_pyramid:
-	; Part 1: reconstruct ropes/ladders/faces/dragon:
-	ld hl, current_room__tile_map
-	ld bc, (current_room__width)
-	ld a, (current_room__width)
-	ld e, a
-	ld d, 0	
-pcg_generate_room__prettyfy_pyramid_loop_y:
-	push bc
-		ld b, c
-		ld c, 15*16 + 6
-pcg_generate_room__prettyfy_pyramid_loop_x:
-		ld a, (hl)
-		sub c
-		jr c, pcg_generate_room__prettyfy_pyramid_loop_x_continue
-		jr z, pcg_generate_room__prettyfy_pyramid_bricks_randomize
-		dec a
-		jr z, pcg_generate_room__prettyfy_pyramid_rubble_randomize
-		dec a
-		jp z, pcg_generate_room__prettyfy_pyramid_ladder
-		dec a
-		jp z, pcg_generate_room__prettyfy_pyramid_face1
-		dec a
-		jp z, pcg_generate_room__prettyfy_pyramid_face2
-		dec a
-		jp z, pcg_generate_room__prettyfy_pyramid_dragon_head
-		dec a
-		jr z, pcg_generate_room__prettyfy_pyramid_spike_tip_randomize
-		dec a
-		jr z, pcg_generate_room__prettyfy_pyramid_thin_bricks_randomize
-		dec a
-		jr z, pcg_generate_room__prettyfy_pyramid_platform_randomize
-		jp pcg_generate_room__prettyfy_pyramid_rope
-pcg_generate_room__prettyfy_pyramid_loop_x_continue:
-		inc hl
-		djnz pcg_generate_room__prettyfy_pyramid_loop_x
-	pop bc
-	djnz pcg_generate_room__prettyfy_pyramid_loop_y
-	ret
-
-pcg_generate_room__prettyfy_pyramid_spike_tip_randomize:
-	call random_a
-	and #01
-	jr z, pcg_generate_room__prettyfy_pyramid_spike_tip_randomize_continue
-	ld (hl), 8*16 + 13
-pcg_generate_room__prettyfy_pyramid_spike_tip_randomize_continue:
-	call random_a
-	and #01
-	add a, 8*16 + 4
-	add hl, de
-	ld (hl), a
-	sbc hl, de
-	jp pcg_generate_room__prettyfy_pyramid_loop_x_continue
-
-pcg_generate_room__prettyfy_pyramid_platform_randomize:
-	call random_a
-	and #01
-	jp z, pcg_generate_room__prettyfy_pyramid_loop_x_continue
-	ld (hl), 8*16 + 9
-	jp pcg_generate_room__prettyfy_pyramid_loop_x_continue
-
-pcg_generate_room__prettyfy_pyramid_thin_bricks_randomize:
-	call random_a
-	and #03
-	sub 2
-	jp c, pcg_generate_room__prettyfy_pyramid_loop_x_continue
-	add a, 8*16 + 14
-	ld (hl), a
-	jp pcg_generate_room__prettyfy_pyramid_loop_x_continue
-
-pcg_generate_room__prettyfy_pyramid_rubble_randomize:
-	call random_a
-	and #03
-	jp z, pcg_generate_room__prettyfy_pyramid_loop_x_continue
-	add a, 10*16 + 0
-	ld (hl), a
-	jp pcg_generate_room__prettyfy_pyramid_loop_x_continue
-
-pcg_generate_room__prettyfy_pyramid_bricks_randomize:
-	call random_a
-	cp 96
-	jr nc, pcg_generate_room__prettyfy_pyramid_bricks_randomize_continue
-	; ld (hl), 9*16 + 5
-	add hl, de
-	ld (hl), 9*16 + 8
-	sbc hl, de
-	jp pcg_generate_room__prettyfy_pyramid_loop_x_continue
-pcg_generate_room__prettyfy_pyramid_bricks_randomize_continue:
-	cp 160
-	jr nc, pcg_generate_room__prettyfy_pyramid_bricks_randomize_continue2
-	ld (hl), 9*16 + 6
-	add hl, de
-	ld (hl), 9*16 + 8
-	sbc hl, de
-	jp pcg_generate_room__prettyfy_pyramid_loop_x_continue
-pcg_generate_room__prettyfy_pyramid_bricks_randomize_continue2:
-	ld (hl), 9*16 + 11
-	add hl, de
-	ld (hl), 9*16 + 7
-	sbc hl, de
-	jp pcg_generate_room__prettyfy_pyramid_loop_x_continue
-
-
-pcg_generate_room__prettyfy_pyramid_rope:
-	push hl
-	push bc
-		ld bc, current_room__tile_map
-pcg_generate_room__prettyfy_pyramid_rope_loop:
-		or a
-		sbc hl, de  ; go one row up
-; 		or a
-		sbc hl, bc  ; check if we are out of the map
-		jr c, pcg_generate_room__prettyfy_pyramid_rope_done
-		add hl, bc
-		ld a, (hl)
-		cp 9*16 + 7  ; brick
-		jr z, pcg_generate_room__prettyfy_pyramid_rope_done
-		cp 9*16 + 8  ; brick
-		jr z, pcg_generate_room__prettyfy_pyramid_rope_done
-		cp 8*16+15  ; thin brick
-		jr z, pcg_generate_room__prettyfy_pyramid_rope_done
-		cp 8*16+14  ; thin brick
-		jr z, pcg_generate_room__prettyfy_pyramid_rope_done
-		cp 15*16+13  ; thin brick
-		jr z, pcg_generate_room__prettyfy_pyramid_rope_done
-		cp 8*16 + 7  ; top rope piece
-		jr z, pcg_generate_room__prettyfy_pyramid_rope_done
-pcg_generate_room__prettyfy_pyramid_rope_keep_going:
-		call random_a
-		and #03
-		jp nz, pcg_generate_room__prettyfy_pyramid_rope_keep_going2
-		ld (hl), 8*16 + 3  ; rope knot
-		jr pcg_generate_room__prettyfy_pyramid_rope_loop
-pcg_generate_room__prettyfy_pyramid_rope_keep_going2:
-		ld (hl), 8*16 + 6  ; rope
-		jr pcg_generate_room__prettyfy_pyramid_rope_loop
-pcg_generate_room__prettyfy_pyramid_rope_done:
-	pop bc
-	pop hl
-	jp pcg_generate_room__prettyfy_pyramid_loop_x_continue
-
-pcg_generate_room__prettyfy_pyramid_ladder:
-	push hl
-	push bc
-		ld bc, current_room__tile_map
-pcg_generate_room__prettyfy_pyramid_ladder_loop:
-		or a
-		sbc hl, de  ; go one row up
-		or a
-		sbc hl, bc  ; check if we are out of the map
-		jr c, pcg_generate_room__prettyfy_pyramid_ladder_done
-		add hl, bc
-		ld a, (hl)
-		or a
-		jr z, pcg_generate_room__prettyfy_pyramid_ladder_keep_going
-		cp 6*16 + 8  ; ladder top-left
-		jr z, pcg_generate_room__prettyfy_pyramid_ladder_done
-		cp 6*16 + 9  ; ladder top-right
-		jr z, pcg_generate_room__prettyfy_pyramid_ladder_done
-		cp 7*16 + 12  ; ladder top-left
-		jr c, pcg_generate_room__prettyfy_pyramid_ladder_keep_going
-		cp 8*16 + 1  ; torch
-		jr z, pcg_generate_room__prettyfy_pyramid_ladder_keep_going
-		cp 8*16 + 2  ; background
-		jr z, pcg_generate_room__prettyfy_pyramid_ladder_keep_going
-		cp 9*16 + 5  ; background
-		jr z, pcg_generate_room__prettyfy_pyramid_ladder_keep_going
-		cp 10*16 + 0  ; background
-		jr z, pcg_generate_room__prettyfy_pyramid_ladder_keep_going
-		cp 10*16 + 6  ; background
-		jr z, pcg_generate_room__prettyfy_pyramid_ladder_keep_going
-		cp 11*16 + 12  ; background
-		jr z, pcg_generate_room__prettyfy_pyramid_ladder_keep_going
-		cp 12*16 + 0  ; background
-		jr z, pcg_generate_room__prettyfy_pyramid_ladder_keep_going
-		cp 12*16 + 8  ; background
-		jr z, pcg_generate_room__prettyfy_pyramid_ladder_keep_going
-		cp 15*16 + 5  ; background
-		jr z, pcg_generate_room__prettyfy_pyramid_ladder_keep_going
-		and #f0
-		cp #60  ; row 6 contains tiles only present on background tiles
-		jr nz, pcg_generate_room__prettyfy_pyramid_ladder_done
-pcg_generate_room__prettyfy_pyramid_ladder_keep_going:
-		ld (hl), 15*16 + 8  ; ladder-left
-		inc hl
-		ld (hl), 10*16 + 7  ; ladder-right
-		dec hl
-		jr pcg_generate_room__prettyfy_pyramid_ladder_loop
-pcg_generate_room__prettyfy_pyramid_ladder_done:
-	pop bc
-	pop hl
-	jp pcg_generate_room__prettyfy_pyramid_loop_x_continue
-
-pcg_generate_room__prettyfy_pyramid_face1:
-	push hl
-		inc hl
-		ld (hl), 12*16 + 1
-		inc hl
-		ld (hl), 12*16 + 2
-		add hl, de
-		ld (hl), 13*16 + 2
-		dec hl
-		ld (hl), 13*16 + 1
-		dec hl
-		ld (hl), 13*16 + 0
-		add hl, de
-		ld (hl), 14*16 + 0
-		inc hl
-		ld (hl), 14*16 + 1
-		inc hl
-		ld (hl), 14*16 + 2
-		add hl, de
-		ld (hl), 15*16 + 2
-		dec hl
-		ld (hl), 15*16 + 1
-		dec hl
-		ld (hl), 15*16 + 0
-	pop hl
-	jp pcg_generate_room__prettyfy_pyramid_loop_x_continue
-
-pcg_generate_room__prettyfy_pyramid_face2:
-	push hl
-		inc hl
-		ld (hl), 12*16 + 9
-		inc hl
-		ld (hl), 12*16 + 10
-		inc hl
-		ld (hl), 12*16 + 11
-		add hl, de
-		ld (hl), 13*16 + 11
-		dec hl
-		ld (hl), 13*16 + 10
-		dec hl
-		ld (hl), 13*16 + 9
-		dec hl
-		ld (hl), 13*16 + 8
-		add hl, de
-		ld (hl), 14*16 + 8
-		inc hl
-		ld (hl), 14*16 + 9
-		inc hl
-		ld (hl), 14*16 + 10
-		inc hl
-		ld (hl), 14*16 + 11
-	pop hl
-	jp pcg_generate_room__prettyfy_pyramid_loop_x_continue
-
-pcg_generate_room__prettyfy_pyramid_dragon_head:
-	push hl
-		inc hl
-		ld (hl), 11*16 + 13
-		inc hl
-		ld (hl), 11*16 + 14
-		inc hl
-		ld (hl), 11*16 + 15
-		add hl, de
-		ld (hl), 12*16 + 15
-		dec hl
-		ld (hl), 12*16 + 14
-		dec hl
-		ld (hl), 12*16 + 13
-		dec hl
-		ld (hl), 12*16 + 12
-		add hl, de
-		ld (hl), 13*16 + 12
-		inc hl
-		ld (hl), 13*16 + 13
-		inc hl
-		ld (hl), 13*16 + 14
-		inc hl
-		ld (hl), 13*16 + 15
-	pop hl
-	jp pcg_generate_room__prettyfy_pyramid_loop_x_continue
+pcg_generate_room_background:
+	ld a, (current_area__id)
+	or a
+	ret z  ; no background for jungle
+	; jp pcg_generate_room_background_pyramid
 
 
 ;-----------------------------------------------
@@ -1654,7 +1396,7 @@ pcg_generate_room_get_fg_chunk_flags:
 	push hl
 	push bc
 		ld a, (hl)
-		ld hl, pyramid_chunk_flags
+		ld hl, (current_area__chunk_flags_ptr)
 		ld c, a
 		ld b, 0
 		add hl, bc  ; each chunk has 5 bytes
@@ -1802,7 +1544,8 @@ pcg_get_chunk_ptr:
 		inc hl
 		ld h, (hl)
 		ld l, e
-		ld c, CHUNKS_PYRAMID_PAGE
+		ld a, (current_area__chunks_page)
+		ld c, a
 		ld de, buffer_4096
 		call dzx0_from_page_c
 pcg_get_chunk_ptr_already_loaded:
@@ -2177,6 +1920,8 @@ pcg_generate_room__calendar:
 	call dzx0_from_page_c
 
 	; tile sets, collisions, and animation ptrs:
+	ld a, PYRAMID_TILES_PAGE
+	ld (current_room__tileset_page), a
 	ld bc, tiles_calendar_zx0
 	ld (current_room__tileset_ptr), bc
 	ld bc, tile_collision_types_calendar
@@ -2473,7 +2218,7 @@ pcg_generate_room__chunk_direction_open:
 	ld d, 0
 	ld e, a
 	add hl, de
-	ld de, pyramid_chunk_flags
+	ld de, (current_area__chunk_flags_ptr)
 	add hl, de
 	ld a, (hl)  ; top-left chunk type
 	and b

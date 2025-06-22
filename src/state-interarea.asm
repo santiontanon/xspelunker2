@@ -16,7 +16,7 @@ area_names:
 
 ;-----------------------------------------------
 ; input:
-; - a: target area ID
+; - e: target area ID
 ; - hl: ptr to room x, room y, direction of entrance
 interarea_exit:
 	call interarea_exit_screen
@@ -182,7 +182,6 @@ interarea_exit_right:
 
 ;-----------------------------------------------
 interarea_exit_screen:
-	ld e, a
 	ld a, (current_megarom_page_in_8000)
 	push af
 		ld a, e

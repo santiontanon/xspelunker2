@@ -80,122 +80,216 @@ public class RoomChunk {
     
     
     public RoomChunk simplifyTiles(String biome) throws Exception
+    {        
+        switch(biome) {
+            case "jungle": return simplifyTilesJungle(biome);
+            case "pyramid": return simplifyTilesPyramid(biome);
+            default:
+                throw new Exception("Undefined biome " + biome);
+        }
+    }
+
+    
+    public RoomChunk simplifyTilesJungle(String biome) throws Exception
     {
         RoomChunk chunk = this.clone();
-        
         for(int i = 0;i<chunk.tiles[0].length;i++) {
             for(int j = 0;j<chunk.tiles.length;j++) {
-                if (biome.equals("pyramid")) {
-                    int tile = tiles[j][i];
-                    switch(tile) {
-                        // spikes:
-                        case 15*16 + 12:
-                        case 8*16 + 13:
-                            tile = 15*16 + 12;
-                            break;
-                        case 8*16 + 4:
-                        case 8*16 + 5:
-//                            tile = 7*16 + 14;
-                            tile = 0;
-                            break;
-                        // ropes:
-                        case 8*16 + 3:
-                        case 8*16 + 6:
+                int tile = tiles[j][i];
+                switch(tile) {
+                    // ropes:
+                    case 8*16 + 3:
+                    case 8*16 + 6:
+                        tile = 0;  // remove ropes, they will be reconstructed
+                        break;
+                    // tree-left:
+                    case 9*16 + 0:
+                    case 10*16 + 0:
+                        tile = 9*16 + 0;
+                        break;
+                    // tree-center:
+                    case 9*16 + 1:
+                    case 10*16 + 1:
+                        tile = 9*16 + 1;
+                        break;
+                    // tree-right:
+                    case 9*16 + 2:
+                    case 10*16 + 2:
+                        tile = 9*16 + 2;
+                        break;
+                    // branch:
+                    case 9*16 + 4:
+                    case 9*16 + 5:
+                        tile = 9*16 + 4;
+                        break;
+                    // rubble:
+                    case 10*16 + 9:
+                    case 10*16 + 10:
+                    case 10*16 + 11:
+                    case 15*16 + 14:
+                        tile = 15*16 + 14;
+                        break;
+                    // floor:
+                    case 12*16 + 6:
+                    case 12*16 + 7:
+                    case 12*16 + 9:
+                    case 13*16 + 9:
+                        tile = 12*16 + 6;
+                        break;
+                    // wall:
+                    case 13*16 + 5:
+                    case 13*16 + 6:
+                    case 13*16 + 7:
+                    case 13*16 + 8:
+                    case 14*16 + 5:
+                    case 14*16 + 6:
+                    case 14*16 + 7:
+                    case 14*16 + 8:
+                    case 15*16 + 6:
+                    case 15*16 + 5:
+                        tile = 13*16 + 6;
+                        break;
+                    // foliage:
+                    case 14*16 + 9:
+                    case 14*16 + 10:
+                    case 14*16 + 11:
+                        tile = 14*16 + 9;
+                        break;
+                    // foliage bottom:
+                    case 13*16 + 10:
+                    case 13*16 + 11:
+                    case 13*16 + 12:
+                        tile = 13*16 + 10;
+                        break;
+                    // background foliage:
+                    case 6*16 + 6:
+                    case 6*16 + 7:
+                    case 7*16 + 6:
+                    case 7*16 + 7:
+                        tile = 7*16 + 6;
+                        break;
+                }
+                chunk.tiles[j][i] = tile;                
+            }
+        }
+        return chunk;
+    }
+
+
+    public RoomChunk simplifyTilesPyramid(String biome) throws Exception
+    {
+        RoomChunk chunk = this.clone();
+        for(int i = 0;i<chunk.tiles[0].length;i++) {
+            for(int j = 0;j<chunk.tiles.length;j++) {
+                int tile = tiles[j][i];
+                switch(tile) {
+                    // spikes:
+                    case 15*16 + 12:
+                    case 8*16 + 13:
+                        tile = 15*16 + 12;
+                        break;
+                    case 8*16 + 4:
+                    case 8*16 + 5:
+                        tile = 0;
+                        break;
+                    // ropes:
+                    case 8*16 + 3:
+                    case 8*16 + 6:
 //                            tile = 8*16 + 4;
-                            tile = 0;  // remove ropes, they will be reconstructed
-                            break;
-                        // platforms:
-                        case 15*16 + 14:
-                        case 8*16 + 9:
-                            tile = 15*16 + 14;
-                            break;
-                        // bricks top:
-                        case 15*16 + 6:
-                        case 9*16 + 6:
-                        case 9*16 + 11:
-                            tile = 15*16 + 6;
+                        tile = 0;  // remove ropes, they will be reconstructed
+                        break;
+                    // platforms:
+                    case 15*16 + 14:
+                    case 8*16 + 9:
+                        tile = 15*16 + 14;
+                        break;
+                    // bricks top:
+                    case 15*16 + 6:
+                    case 9*16 + 6:
+                    case 9*16 + 11:
+                        tile = 15*16 + 6;
 //                            if (tiles[j][i + 1] != 9*16 + 7 &&
 //                                tiles[j][i + 1] != 9*16 + 8) {
 //                                throw new Exception("Malformed chunk! brick top is not on top of a brick bottom tile!");
 //                            }
-                            break;
-                        // bricks bottom:
-                        case 9*16 + 7:
-                        case 9*16 + 8:
+                        break;
+                    // bricks bottom:
+                    case 9*16 + 7:
+                    case 9*16 + 8:
 //                            tile = 9*16 + 7;
+                        tile = 0;
+                        break;
+                    // thin bricks:
+                    case 15*16 + 13:
+                    case 8*16 + 14:
+                    case 8*16 + 15:
+                        tile = 15*16 + 13;
+                        break;
+                    // rubble:
+                    case 15*16 + 7:
+                    case 10*16 + 1:
+                    case 10*16 + 2:
+                    case 10*16 + 3:
+                        tile = 15*16 + 7;
+                        break;
+                    // stairs (leave only the bottom piece):
+                    case 15*16 + 8:
+                        if (i<CHUNK_HEIGHT-1 && tiles[j][i+1] == 15*16 + 8) {
                             tile = 0;
-                            break;
-                        // thin bricks:
-                        case 15*16 + 13:
-                        case 8*16 + 14:
-                        case 8*16 + 15:
-                            tile = 15*16 + 13;
-                            break;
-                        // rubble:
-                        case 15*16 + 7:
-                        case 10*16 + 1:
-                        case 10*16 + 2:
-                        case 10*16 + 3:
-                            tile = 15*16 + 7;
-                            break;
-                        // stairs (leave only the bottom piece):
-                        case 15*16 + 8:
-                            if (i<CHUNK_HEIGHT-1 && tiles[j][i+1] == 15*16 + 8) {
-                                tile = 0;
-                            }
-                            break;
-                        case 10*16 + 7:
-                            if (i<CHUNK_HEIGHT-1 && tiles[j][i+1] == 10*16+7) {
-                                tile = 0;
-                            }
-                            break;
-                        // face 1 pattern:
-                        case 12*16 + 1:
-                        case 12*16 + 2:
-                        case 13*16 + 0:
-                        case 13*16 + 1:
-                        case 13*16 + 2:
-                        case 14*16 + 0:
-                        case 14*16 + 1:
-                        case 14*16 + 2:
-                        case 15*16 + 0:
-                        case 15*16 + 1:
-                        case 15*16 + 2:
+                        }
+                        break;
+                    case 10*16 + 7:
+                        if (i<CHUNK_HEIGHT-1 && tiles[j][i+1] == 10*16+7) {
                             tile = 0;
-                            break;                            
-                        // face 2 pattern:
-                        case 12*16 + 9:
-                        case 12*16 + 10:
-                        case 12*16 + 11:
-                        case 13*16 + 8:
-                        case 13*16 + 9:
-                        case 13*16 + 10:
-                        case 13*16 + 11:
-                        case 14*16 + 8:
-                        case 14*16 + 9:
-                        case 14*16 + 10:
-                        case 14*16 + 11:
-                            tile = 0;
-                            break;
-                        // dragon pattern:
-                        case 11*16 + 13:
-                        case 11*16 + 14:
-                        case 11*16 + 15:
-                        case 12*16 + 12:
-                        case 12*16 + 13:
-                        case 12*16 + 14:
-                        case 12*16 + 15:
-                        case 13*16 + 12:
-                        case 13*16 + 13:
-                        case 13*16 + 14:
-                        case 13*16 + 15:
+                        }
+                        break;
+                    // face 1 pattern:
+                    case 12*16 + 1:
+                    case 12*16 + 2:
+                    case 13*16 + 0:
+                    case 13*16 + 1:
+                    case 13*16 + 2:
+                    case 14*16 + 0:
+                    case 14*16 + 1:
+                    case 14*16 + 2:
+                    case 15*16 + 0:
+                    case 15*16 + 1:
+                    case 15*16 + 2:
+                        tile = 0;
+                        break;                            
+                    // face 2 pattern:
+                    case 12*16 + 9:
+                    case 12*16 + 10:
+                    case 12*16 + 11:
+                    case 13*16 + 8:
+                    case 13*16 + 9:
+                    case 13*16 + 10:
+                    case 13*16 + 11:
+                    case 14*16 + 8:
+                    case 14*16 + 9:
+                    case 14*16 + 10:
+                    case 14*16 + 11:
+                        tile = 0;
+                        break;
+                    // dragon pattern:
+                    case 11*16 + 13:
+                    case 11*16 + 14:
+                    case 11*16 + 15:
+                    case 12*16 + 12:
+                    case 12*16 + 13:
+                    case 12*16 + 14:
+                    case 12*16 + 15:
+                    case 13*16 + 12:
+                    case 13*16 + 13:
+                    case 13*16 + 14:
+                    case 13*16 + 15:
 //                        case 15*16 + 12:
 //                        case 15*16 + 13:
 //                        case 15*16 + 14:
 //                        case 15*16 + 15:
-                            tile = 0;
-                            break;
-                        // figure pattern:
+                        tile = 0;
+                        break;
+                    // figure pattern:
 //                        case 12*16 + 6:
 //                        case 12*16 + 7:
 //                        case 13*16 + 5:
@@ -213,10 +307,9 @@ public class RoomChunk {
 //                        case 15*16 + 4:
 //                            tile = 0;
 //                            break;
-                        default:
-                    }
-                    chunk.tiles[j][i] = tile;
+                    default:
                 }
+                chunk.tiles[j][i] = tile;
             }
         }
         

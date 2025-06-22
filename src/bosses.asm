@@ -109,7 +109,7 @@ enter_boss_door_loop:
 		call dzx0
 
 		ld c, PCG_PAGE
-		ld hl, pcg_generate_room__prettyfy_pyramid
+		ld hl, pcg_generate_room__prettify_pyramid
 		call call_hl_in_page_c_8000
 
 		; player position:

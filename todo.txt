@@ -1,7 +1,10 @@
 to do:
 
 ***- jungle biome:
-  ***- add the biome to the game (bring patterns, and new collision table)
+  ***- prettify jungle in Java
+  ***- prettify jungle in assembler
+  ***- tile animations (just water)
+  ***- background foliage is not very distinguishable from foreground foliage
   ***- jungle enemies
   ***- special room for start position (start tag) and set start position there (on the left-edge of map)
   ***- add jungle events: start, elaine letters, find bomb maker, shop to use coins with (what do they sell? healing, supplies and save game; maybe some random item/weapons that were not spawned in the game?; make sure blow gun is sold for sure if not spawned, as it might be needed for Maya riddle)

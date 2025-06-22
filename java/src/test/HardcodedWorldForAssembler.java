@@ -34,10 +34,30 @@ public class HardcodedWorldForAssembler {
 
 
         PCGWorld pcg1 = new PCGWorld();
-        PCGArea pcg2 = new PCGArea(true, "pyramid");
+        PCGArea pcg2_jungle = new PCGArea(true, "jungle");
+        PCGArea pcg2_pyramid = new PCGArea(true, "pyramid");
         
         World w = pcg1.generate(r);
         for(int i = 0;i<pcg1.n_areas;i++) {
+            PCGArea pcg2 = null;
+            switch(i) {
+                case 0:
+                    pcg2 = pcg2_jungle;
+                    break;
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                case 6:
+                case 7:
+                case 8:
+                case 9:
+                case 10:
+                case 11:
+                    pcg2 = pcg2_pyramid;
+                    break;
+            }                    
             generateAssemblerAreaData(w, i, pcg2);
         }
         generateAssemblerWorldData(w);

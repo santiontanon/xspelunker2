@@ -1,4 +1,10 @@
 ;-----------------------------------------------
+update_animations_in_vdp_jungle:
+	; ...
+	ret
+
+
+;-----------------------------------------------
 update_animations_in_vdp_pyramid:
 	ld a, (interrupt_cycle)
 	and #07

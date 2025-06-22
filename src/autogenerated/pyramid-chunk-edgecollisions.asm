@@ -81,6 +81,7 @@
   db #3f, #ff, #3f, #c3  ; data/pyramid/boss0001-2.tmx
   db #3f, #ff, #21, #ff  ; data/pyramid/boss0010-1.tmx
   db #3f, #ff, #21, #c3  ; data/pyramid/boss0011-1.tmx
+  db #3f, #ff, #21, #c3  ; data/pyramid/boss0011-2.tmx
   db #3f, #81, #3f, #ff  ; data/pyramid/boss0100-1.tmx
   db #3f, #81, #3f, #ff  ; data/pyramid/boss0100-2.tmx
   db #3f, #81, #3f, #c3  ; data/pyramid/boss0101-1.tmx
@@ -101,6 +102,7 @@
   db #20, #80, #3f, #ff  ; data/pyramid/boss1100-2.tmx
   db #20, #80, #3f, #99  ; data/pyramid/boss1101-1.tmx
   db #20, #80, #3f, #99  ; data/pyramid/boss1101-2.tmx
+  db #20, #80, #3f, #99  ; data/pyramid/boss1101-3.tmx
   db #20, #00, #20, #ff  ; data/pyramid/boss1110-1.tmx
   db #20, #00, #20, #ff  ; data/pyramid/boss1110-2.tmx
   db #20, #00, #20, #99  ; data/pyramid/boss1111-1.tmx

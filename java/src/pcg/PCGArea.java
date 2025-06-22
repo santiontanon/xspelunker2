@@ -59,6 +59,9 @@ public class PCGArea {
                 if (simplifyChunks) {
                     List<RoomChunk> simplified = new ArrayList<>();
                     for(RoomChunk c:fg_chunks.get(i)) {
+                        if (c.type != i) {
+                            throw new Exception("Chunk was placed in the wrong type group! " + c.path);
+                        }
                         simplified.add(c.simplifyTiles(biome));
                     }
                     fg_chunks.put(i, simplified);
@@ -133,7 +136,7 @@ public class PCGArea {
 
         fg_chunks.get(0x2).add(new RoomChunk("data/jungle/room0010-1.tmx", 0x2, "jungle"));
         fg_chunks.get(0x2).add(new RoomChunk("data/jungle/room0010-2.tmx", 0x2, "jungle"));
-        fg_chunks.get(0x2).add(new RoomChunk("data/jungle/room0010-3.tmx", 0x3, "jungle"));
+        fg_chunks.get(0x2).add(new RoomChunk("data/jungle/room0010-3.tmx", 0x2, "jungle"));
 
         fg_chunks.get(0x3).add(new RoomChunk("data/jungle/room0011-1.tmx", 0x3, "jungle"));
         fg_chunks.get(0x3).add(new RoomChunk("data/jungle/room0011-2.tmx", 0x3, "jungle"));
@@ -341,7 +344,7 @@ public class PCGArea {
 
                 if ((type & PCGWorld.DIRECTION_LEFT) != 0 && (chunk.type & PCGWorld.DIRECTION_LEFT) == 0) {
                     // open a path to the left:
-                    for(int i = 4;i<7;i++) {
+                    for(int i = 8;i<10;i++) {
                         for(int j = 0;j<2;j++) {
                             chunk2.tiles[j][i] = 0;
                         }
@@ -365,7 +368,7 @@ public class PCGArea {
                 }
                 if ((type & PCGWorld.DIRECTION_RIGHT) != 0 && (chunk.type & PCGWorld.DIRECTION_RIGHT) == 0) {
                     // open a path right:
-                    for(int i = 4;i<7;i++) {
+                    for(int i = 8;i<10;i++) {
                         for(int j = 14;j<16;j++) {
                             chunk2.tiles[j][i] = 0;
                         }
@@ -1694,6 +1697,9 @@ public class PCGArea {
 //                        System.out.println("constraints: type: " + ra.pieceTypes[j][i] + ", upTag: " + upTag + ", downTag: " + downTag + ", necessaryObjectTypes: " + necessaryObjectTypes + ", chunkPool: " + chunkPoolName);
 //                        System.out.println("    seed before: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
 //                        System.out.println("    chunk choices: " + j + ", " + i + ": " + choiceIds);
+                        ra.pieceChoosingRNGSeed1[j][i] = r.rng_seed1;
+                        ra.pieceChoosingRNGSeed2[j][i] = r.rng_seed2;
+                        ra.pieceChoosingChoicesSize[j][i] = choices.size();
                         int idx = r.nextInt(8) % choices.size();
                         ra.fg_chunks[j][i] = choices.get(idx);
 //                        System.out.println("    chosen: " + all_fg_chunks.indexOf(ra.fg_chunks[j][i]) + ", " + ra.fg_chunks[j][i].tags);

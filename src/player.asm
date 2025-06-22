@@ -2794,7 +2794,9 @@ player_pushing_block_found_continue:
 player_pushing_block_found_no_collision:
 		; push block:
 		push ix
-			call room_undraw_tile_objects
+			ld hl, room_undraw_tile_objects
+			ld c, TILES_PAGE
+			call call_hl_in_page_c_8000
 		pop ix
 	pop bc
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_X)  ; block x
