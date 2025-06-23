@@ -395,7 +395,9 @@ pcg_generate_room__fg_loop_x_skip:
 	jp nz, pcg_generate_room__fg_loop_bank_id
 
 	; Auto-fill ladders/ropes/etc. and randomize tiles:
+    out (#2c),a  ; DEBUG
 	call pcg_generate_room__prettify
+    out (#2d),a  ; DEBUG
 
 	; Instantiate 'current_area__objects':
 	ld ix, current_area__objects
@@ -533,9 +535,9 @@ pcg_generate_room__object_loop_end:
 	ld hl, room_render_tile_objects
 	ld C, TILES_PAGE
 	call call_hl_in_page_c_8000
-    out (#2c),a  ; DEBUG
+;     out (#2c),a  ; DEBUG
 	call pcg_generate_room__spawn_enemies
-    out (#2d),a	  ; DEBUG
+;     out (#2d),a	  ; DEBUG
 	ld hl, room_undraw_tile_objects
 	ld C, TILES_PAGE
 	call call_hl_in_page_c_8000

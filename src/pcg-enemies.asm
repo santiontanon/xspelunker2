@@ -103,12 +103,14 @@ pcg_generate_room__spawn_enemies_loop3:
 	pop hl
 
 	; chance of spawning a tile-based enemy:
-	inc hl
-	ld a, (hl)
-	ld c, a
-	dec hl
-	call random_a
-	cp c
+	push bc
+		inc hl
+		ld a, (hl)
+		ld c, a
+		dec hl
+		call random_a
+		cp c
+	pop bc
 	ret nc
 	ld a, (hl)
 	cp TAG_ENEMY_CARNIVORE_PLANT

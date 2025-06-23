@@ -137,17 +137,21 @@ public class RoomChunk {
                         tile = 12*16 + 6;
                         break;
                     // wall:
-                    case 13*16 + 5:
                     case 13*16 + 6:
                     case 13*16 + 7:
+                        tile = 13*16 + 6;  // center
+                        break;
+                    case 13*16 + 5:
+                    case 15*16 + 6:
+                        tile = 13*16 + 5;  // left
+                        break;
                     case 13*16 + 8:
-                    case 14*16 + 5:
+                    case 15*16 + 5:
+                        tile = 13*16 + 8;  // right
+                        break;
                     case 14*16 + 6:
                     case 14*16 + 7:
-                    case 14*16 + 8:
-                    case 15*16 + 6:
-                    case 15*16 + 5:
-                        tile = 13*16 + 6;
+                        tile = 14*16 + 6;  // bottom
                         break;
                     // foliage:
                     case 14*16 + 9:
@@ -162,12 +166,12 @@ public class RoomChunk {
                         tile = 13*16 + 10;
                         break;
                     // background foliage:
-                    case 6*16 + 6:
-                    case 6*16 + 7:
-                    case 7*16 + 6:
-                    case 7*16 + 7:
-                        tile = 7*16 + 6;
-                        break;
+//                    case 6*16 + 6:
+//                    case 6*16 + 7:
+//                    case 7*16 + 6:
+//                    case 7*16 + 7:
+//                        tile = 7*16 + 6;
+//                        break;
                 }
                 chunk.tiles[j][i] = tile;                
             }

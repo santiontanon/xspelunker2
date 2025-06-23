@@ -780,7 +780,7 @@ maya_clue1_tablet_fn:
 
 	ld hl, TEXT_KI
 	ld a, 91 + 2*16 + 18 + 2 
-	ld de, NAMTBL2 + (16 + 22*32)
+	ld de, NAMTBL2 + (16 + 23*32)
 	call display_elaine_letter_paragraph	
 
 	ld hl, TEXT_SE
