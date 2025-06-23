@@ -345,12 +345,15 @@ delete_tile_object_in_hl:
 	push hl
 		ld c, l
 		ld b, h
-		ld hl, current_room__tile_objects_sentinel
+		ld hl, current_room__tile_objects_sentinel + 1  ; + 1 to at least copy the sentinel for the last element
 		or a
 		sbc hl, bc
 		ld c, l
 		ld b, h
 	pop hl
+; 	ld a, b  ; not needed, as we will always at least copy 1 byte
+; 	or c
+; 	ret z
 	ldir
 	ret
 

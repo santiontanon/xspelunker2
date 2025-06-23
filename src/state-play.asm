@@ -69,7 +69,7 @@ state_play:
 ; 		ld (player_inventory_items+36), a  ; half power stone
 ; 		ld (player_inventory_items+INVENTORY_ITEM_PUZZLEBOX_MARS), a
 ; 		ld (player_inventory_items+INVENTORY_ITEM_PUZZLEBOX_MOON), a
-; 		ld (player_inventory_weapons), a
+		ld (player_inventory_weapons), a
 ; 		ld (player_inventory_weapons+1), a
 ; 		ld (player_inventory_weapons+2), a
 ; 		ld (player_inventory_weapons+3), a

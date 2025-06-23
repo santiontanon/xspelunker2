@@ -243,11 +243,14 @@ get_room_tile_ptr_continue:
 
 
 ;-----------------------------------------------
+; Should return the last object that matches (since that's the one that is rendered on top).
 ; output:
 ; - z: no object behind
 ; - nz: object behind
 ; - ix: ptr to object if one found
 get_tile_object_behind_player:
+	ld hl, 0
+	ld (tmp_get_tile_object_behind_player_ptr), hl
 	ld a, (player_x + 1)
 	ld c, a
 	ld a, (player_y + 1)
@@ -256,12 +259,12 @@ get_tile_object_behind_player:
 get_tile_object_behind_player_loop:
 	ld a, (ix)  ; ID
 	cp #ff
-	ret z
+	jp z, get_tile_object_behind_player_done
 	cp #fe  ; sentinel in tile objects is #fe
-	ret z
+	jp z, get_tile_object_behind_player_done
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)  ; type
 	cp TAG_GEAR_LOCK
-	jr z, get_tile_object_behind_player_32x24_object
+	jp z, get_tile_object_behind_player_32x24_object
 	cp TAG_IDOL_LOCK
 	jr z, get_tile_object_behind_player_32x24_object
 	cp TAG_TRIAL1_LOCK
@@ -271,9 +274,9 @@ get_tile_object_behind_player_loop:
 	cp TAG_TRIAL3_LOCK
 	jp z, get_tile_object_behind_player_32x32_object
 	cp TAG_TRIAL4_LOCK
-	jr z, get_tile_object_behind_player_32x32_object
+	jp z, get_tile_object_behind_player_32x32_object
 	cp TAG_DOOR_BOSS
-	jr z, get_tile_object_behind_player_32x32_object
+	jp z, get_tile_object_behind_player_32x32_object
 	cp TAG_TELEPORTER1
 	jr z, get_tile_object_behind_player_32x24_object
 	cp TAG_TELEPORTER2
@@ -322,7 +325,13 @@ get_tile_object_behind_player_loop_next:
 	add ix, de
 	jp get_tile_object_behind_player_loop
 get_tile_object_behind_player_found:
-	or 1
+	ld (tmp_get_tile_object_behind_player_ptr), ix
+	jr get_tile_object_behind_player_loop_next
+
+get_tile_object_behind_player_done:
+	ld ix, (tmp_get_tile_object_behind_player_ptr)
+	ld a, ixl
+	or ixh
 	ret
 
 get_tile_object_behind_player_32x24_object:
