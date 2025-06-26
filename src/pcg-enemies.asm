@@ -14,6 +14,14 @@ pcg_enemy_generation_table:
 	dw pcg_enemy_generation_table_moon
 
 pcg_enemy_generation_table_jungle:
+	; weights (all sprite-based) should add up to 32
+	db 2  ; 2 enemies per "screen" area
+	db TAG_ENEMY_CARNIVORE_PLANT, 80  ; tile-based enemy type and chance (out of 256)
+	db 3  ; 3 possible sprite enemy types to be spawned
+	db ENEMY_FROG, 12  ; enemy type and weight
+	db ENEMY_FROG_JUMPER, 12
+	db ENEMY_FROG_TONGUE, 10
+
 pcg_enemy_generation_table_pyramid1:
 pcg_enemy_generation_table_pyramid2:
 pcg_enemy_generation_table_confluence:
@@ -29,10 +37,10 @@ pcg_enemy_generation_table_moon:
 	db 2  ; 2 enemies per "screen" area
 	db TAG_ENEMY_CARNIVORE_PLANT, 80  ; tile-based enemy type and chance (out of 256)
 	db 10  ; 10 possible sprite enemy types to be spawned
-	db ENEMY_SNAKE, 5  ; enemy type and weight
+	db ENEMY_SNAKE, 6  ; enemy type and weight
 	db ENEMY_SNAKE_POISON, 2
 	db ENEMY_POISON_BULLET, 1
-	db ENEMY_FISH, 5
+	db ENEMY_FISH, 6
 	db ENEMY_FISH_JUMPER, 2
 	db ENEMY_BAT, 5
 	db ENEMY_BAT_AGGRESSIVE, 2
@@ -164,6 +172,12 @@ pcg_generate_room__spawn_one_enemy_chosen:
 	jp z, pcg_generate_room__spawn_skeleton_thrower1
 	cp ENEMY_SKELETON_THROWER2
 	jp z, pcg_generate_room__spawn_skeleton_thrower2
+	cp ENEMY_FROG
+	jp z, pcg_generate_room__spawn_frog
+	cp ENEMY_FROG_JUMPER
+	jp z, pcg_generate_room__spawn_frog_jumper
+	cp ENEMY_FROG_TONGUE
+	jp z, pcg_generate_room__spawn_frog_tongue
 	ret
 
 pcg_generate_room__spawn_one_enemy_done:
@@ -355,14 +369,29 @@ pcg_generate_room__spawn_bat_continue:
 ;-----------------------------------------------
 ; input:
 ; - c: number of positions available (in buffer_4096)
+pcg_generate_room__spawn_frog:
+	ld ixl, ENEMY_FROG
+	ld ixh, 1  ; hitpoints
+	jr pcg_generate_room__spawn_skeleton_continue	
+pcg_generate_room__spawn_frog_jumper:
+	ld ixl, ENEMY_FROG_JUMPER
+	ld ixh, 2  ; hitpoints
+	jr pcg_generate_room__spawn_skeleton_continue	
+pcg_generate_room__spawn_frog_tongue:
+	ld ixl, ENEMY_FROG_TONGUE
+	ld ixh, 2  ; hitpoints
+	jr pcg_generate_room__spawn_skeleton_continue	
 pcg_generate_room__spawn_skeleton_thrower1:
 	ld ixl, ENEMY_SKELETON_THROWER1
+	ld ixh, 2  ; hitpoints
 	jr pcg_generate_room__spawn_skeleton_continue
 pcg_generate_room__spawn_skeleton_thrower2:
 	ld ixl, ENEMY_SKELETON_THROWER2
+	ld ixh, 2  ; hitpoints
 	jr pcg_generate_room__spawn_skeleton_continue
 pcg_generate_room__spawn_skeleton:
 	ld ixl, ENEMY_SKELETON
+	ld ixh, 2  ; hitpoints
 pcg_generate_room__spawn_skeleton_continue:
 	ld a, c
 	or a
@@ -392,7 +421,8 @@ pcg_generate_room__spawn_skeleton_continue:
 	inc hl
 	ld (hl), #ff  ; hit ID
 	inc hl
-	ld (hl), 2  ; health
+	ld a, ixh
+	ld (hl), a  ; health
 	ret
 
 

@@ -1,8 +1,15 @@
 to do:
 
 ***- jungle biome:
-  ***- jungle enemies: monkeys (2 versions: pace left/right and jump, stone throwing), scorpions (just pace left/right), bees (like in xspelunker?)
-  ***- special room for start position (start tag) and set start position there (on the left-edge of map)
+  ***- jungle enemies:
+    ***- frogs: move in small jumps, and might do a big jump, also from time to time they stick their tongue out that reaches maybe 4 tiles. Basic frog just moves left/right, then we have a jumping frog, and then a jumping + tonguing with 1/2/2 health points. They deal 1 damage in contact, and 2 damage with the tongue
+    ***- bee nests (like in xspelunker)
+    ***- monkeys: a) pace left/right and jump (they might go up a platform), b) sometimes stop and throw a stone
+    ***- ant colonies (tile enemy that spawns ants) (this will be reused in the caves, with a different type of ant)
+      ***- ants: just move around not too fast and can climb walls up/down, or even hang from the ceiling
+    ***- carnivoreplant tongue should go through ropes
+    ***- change "update_sprite_enemies" list of cp/jp to a jump table
+  ***- special room for start position (start tag) and set start position there (on the left-edge of map):
   ***- add jungle events: start, elaine letters, find bomb maker, shop to use coins with (what do they sell? healing, supplies and save game; maybe some random item/weapons that were not spawned in the game?; make sure blow gun is sold for sure if not spawned, as it might be needed for Maya riddle)
 
 - Implement PCGWorld in assembler:
@@ -30,7 +37,7 @@ to do:
 - caves biome (remember to keep ladder tiles in place for down-door opening code). Implement ice cape effect for lava. Skeleton that spit fire (flamethrower through mouth). Is the confluence a "caves biome area" (except the calendar room)?
 - xibalba biome (remember to keep ladder tiles in place for down-door opening code)
 - fourth boss (Xibalba): Xibalba Lords: Hun Camé (One Death) and Vucub Camé (Seven Death): Skeletal figures with ornate Mayan headdresses, representing the rulers of the underworld (summons skeletons or shadows) 
-- atlantis biome (do I need to move the possible set of up/down/left/right tags to 4 instead of just 2?)
+- atlantis biome (do I need to move the possible set of up/down/left/right tags to 4 instead of just 2?): crocodiles as an additional water enemy?
 - fifth boss: Atlantean Guardian (Underwater Boss): A colossal robotic creature with bioluminescent features, resembling a deep-sea creature (laser beams from tentacles, summons robotic fish)
 - confrontation with the aliens after activating the calendar stone
 - first ending sequence: Elaine drops from the ceiling on a rope and rescues you. The calendar stone machine activates and creates a defensive barrier around earth, the alien armada that was coming turns back, but promises revenge.

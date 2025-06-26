@@ -39,6 +39,12 @@ update_sprite_enemies_loop:
 	jp z, update_enemy_bone_parabola_bullet
 	dec a  ; ENEMY_PARABOLLA_BULLET
 	jp z, update_enemy_parabola_bullet
+	dec a  ; ENEMY_FROG
+	jp z, update_enemy_frog
+	dec a  ; ENEMY_FROG_JUMPING
+	jp z, update_enemy_frog_jumping
+	dec a  ; ENEMY_FROG_TONGUE
+	jp z, update_enemy_frog_tongue
 
 update_sprite_enemies_loop_next:
 	ld de, ROOM_OBJECT_STRUCT_SIZE
@@ -72,7 +78,7 @@ update_enemy_snake_right:
 update_enemy_snake_right_continue:
 	ld d, COLOR_DARK_YELLOW
 update_enemy_snake_right_continue_color_set:
-	ld e, FIRST_ENEMY_SPRITE_PATTERN * 4 
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 1) * 4 
 	jp enemy_sprite_and_continue_animated
 
 update_enemy_snake_switch_to_state_left:
@@ -87,7 +93,7 @@ update_enemy_snake_left:
 update_enemy_snake_left_continue:
 	ld d, COLOR_DARK_YELLOW
 update_enemy_snake_left_continue_color_set:
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 2) * 4 
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 3) * 4 
 	jp enemy_sprite_and_continue_animated
 
 
@@ -275,7 +281,7 @@ update_enemy_snake_poison_spit_right_continue:
 	call play_SFX_with_high_priority	
 update_enemy_snake_poison_spit_right_continue2:
 	ld d, COLOR_GREEN
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 4) * 4 
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 5) * 4 
 	jp enemy_sprite_and_continue
 
 update_enemy_snake_poison_spit_left:
@@ -311,7 +317,7 @@ update_enemy_snake_poison_spit_left_continue:
 	call play_SFX_with_high_priority
 update_enemy_snake_poison_spit_left_continue2:
 	ld d, COLOR_GREEN
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 5) * 4 
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 6) * 4 
 	jp enemy_sprite_and_continue
 
 
@@ -330,7 +336,7 @@ update_enemy_poison_bullet_right:
 	call update_enemy_bullet_move_right_if_possible
 	jp z, update_enemy_delete
 	ld d, COLOR_GREEN
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 6) * 4 
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 7) * 4 
 	jp enemy_sprite_and_continue
 
 update_enemy_poison_bullet_left:
@@ -339,7 +345,7 @@ update_enemy_poison_bullet_left:
 	call update_enemy_bullet_move_left_if_possible
 	jp z, update_enemy_delete
 	ld d, COLOR_GREEN
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 6) * 4 
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 7) * 4 
 	jp enemy_sprite_and_continue
 
 
@@ -463,7 +469,7 @@ update_enemy_parabola_bullet_continue2:
 	ld c, (ix + ROOM_OBJECT_STRUCT_STATE)
 	call update_enemy_move_cb
 	ld d, COLOR_DARK_YELLOW
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 20) * 4 
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 0) * 4 
 	jp enemy_sprite_and_continue
 
 
@@ -491,7 +497,7 @@ update_enemy_fish_right:
 update_enemy_fish_right_continue:
 	ld d, COLOR_PURPLE
 update_enemy_fish_right_continue_color_set:
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 7) * 4 
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 8) * 4 
 	jp enemy_sprite_and_continue_animated
 
 update_enemy_fish_switch_to_state_left:
@@ -506,7 +512,7 @@ update_enemy_fish_left:
 update_enemy_fish_left_continue:
 	ld d, COLOR_PURPLE
 update_enemy_fish_left_continue_color_set:
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 11) * 4 
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 12) * 4 
 	jp enemy_sprite_and_continue_animated
 
 
@@ -594,10 +600,10 @@ update_enemy_fish_jumper_right_jump:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	cp 21
 	jr nc, update_enemy_fish_jumper_right_jump_up
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 9) * 4 
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 10) * 4 
 	jr update_enemy_fish_jumper_right_sprite_set
 update_enemy_fish_jumper_right_jump_up:
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 10) * 4 
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 11) * 4 
 update_enemy_fish_jumper_right_sprite_set:
 	ld c, 0
 	call get_sprite_object_sprite_coordinates
@@ -630,10 +636,10 @@ update_enemy_fish_jumper_left_jump:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	cp 21
 	jr nc, update_enemy_fish_jumper_left_jump_up
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 13) * 4 
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 14) * 4 
 	jr update_enemy_fish_jumper_left_sprite_set
 update_enemy_fish_jumper_left_jump_up:
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 14) * 4 
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 15) * 4 
 update_enemy_fish_jumper_left_sprite_set:
 	jp enemy_sprite_and_continue
 
@@ -714,7 +720,7 @@ update_enemy_bat_stay_w:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	and #07
 	call z, update_enemy_bat_stay_change_direction
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 17) * 4 
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 18) * 4 
 	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
 	cp ENEMY_BAT_AGGRESSIVE
 	jr z, update_enemy_bat_stay_w_purple
@@ -729,7 +735,7 @@ update_enemy_bat_stay:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	and #07
 	call z, update_enemy_bat_stay_change_direction
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 15) * 4 
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 16) * 4 
 	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
 	cp ENEMY_BAT_AGGRESSIVE
 	jr z, update_enemy_bat_stay_purple
@@ -746,7 +752,7 @@ update_enemy_bat_hang:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 6  ; fly down
 update_enemy_bat_hang_continue:
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 19) * 4 
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 20) * 4 
 	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
 	cp ENEMY_BAT_AGGRESSIVE
 	jr z, update_enemy_bat_hang_purple
@@ -945,7 +951,7 @@ update_enemy_bullet_no_xspeed_flip2:
 
 update_enemy_bullet_continue:
 	ld d, COLOR_YELLOW
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 20) * 4 
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 0) * 4 
 	jp enemy_sprite_and_continue
 
 
@@ -1196,6 +1202,18 @@ update_enemy_skeleton_thrower_throw_left_continue3:
 	cp 16
 	jp c, enemy_sprite_and_continue
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 28) * 4
+	jp enemy_sprite_and_continue
+
+
+;-----------------------------------------------
+update_enemy_frog_tongue:
+update_enemy_frog_jumping:
+update_enemy_frog:
+	ld c, 1  ; damage to deal
+	call update_enemy_hurt_player
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld d, COLOR_GREEN
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 16) * 4 
 	jp enemy_sprite_and_continue
 
 

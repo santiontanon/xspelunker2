@@ -180,7 +180,7 @@ state_play_from_inventory__no_full_hud:
 		ld bc, pyramid_object_sprites_bin_end - pyramid_object_sprites_bin
 		call fast_LDIRVM
 
-		ld hl, pyramid_enemy_sprites_zx0
+		ld hl, (current_room__enemy_sprites_ptr)
 		ld de, buffer_4096
 		ld c, ENEMIES_PAGE
 		call dzx0_from_page_c
