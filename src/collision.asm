@@ -17,6 +17,18 @@ general_check_collision:
 
 
 ;-----------------------------------------------
+; input:
+; - c, b: tile x, y
+; output:
+; - z: collision
+; - nz: no collision
+general_check_collision_up:
+	call get_room_tile_type
+	cp 2
+	ret
+
+
+;-----------------------------------------------
 ; output:
 ; - z: collision
 ; - nz: no collision

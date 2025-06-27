@@ -2,13 +2,12 @@ to do:
 
 ***- jungle biome:
   ***- jungle enemies:
-    ***- frogs: move in small jumps, and might do a big jump, also from time to time they stick their tongue out that reaches maybe 4 tiles. Basic frog just moves left/right, then we have a jumping frog, and then a jumping + tonguing with 1/2/2 health points. They deal 1 damage in contact, and 2 damage with the tongue
+    ***- jump+tongue frogs: every once in a while, chance of sticking the tongue out (see how do handle collision with the player, whatever is easier, even if I have to create a new enemy type just for the tongue)
     ***- bee nests (like in xspelunker)
     ***- monkeys: a) pace left/right and jump (they might go up a platform), b) sometimes stop and throw a stone
-    ***- ant colonies (tile enemy that spawns ants) (this will be reused in the caves, with a different type of ant)
-      ***- ants: just move around not too fast and can climb walls up/down, or even hang from the ceiling
     ***- carnivoreplant tongue should go through ropes
-    ***- change "update_sprite_enemies" list of cp/jp to a jump table
+    ***- ant colonies (tile enemy that spawns ants) (this will be reused in the caves, with a different type of ant) (update the pcg-enemies code, to allow specifying more than one tilebased enemy per area)
+      ***- ants: just move around not too fast and can climb walls up/down, or even hang from the ceiling
   ***- special room for start position (start tag) and set start position there (on the left-edge of map):
   ***- add jungle events: start, elaine letters, find bomb maker, shop to use coins with (what do they sell? healing, supplies and save game; maybe some random item/weapons that were not spawned in the game?; make sure blow gun is sold for sure if not spawned, as it might be needed for Maya riddle)
 

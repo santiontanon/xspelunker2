@@ -17,10 +17,12 @@ pcg_enemy_generation_table_jungle:
 	; weights (all sprite-based) should add up to 32
 	db 2  ; 2 enemies per "screen" area
 	db TAG_ENEMY_CARNIVORE_PLANT, 80  ; tile-based enemy type and chance (out of 256)
-	db 3  ; 3 possible sprite enemy types to be spawned
-	db ENEMY_FROG, 12  ; enemy type and weight
-	db ENEMY_FROG_JUMPER, 12
-	db ENEMY_FROG_TONGUE, 10
+	db 1  ; 3 possible sprite enemy types to be spawned
+	db ENEMY_FROG_JUMPER, 32
+; 	db 3  ; 3 possible sprite enemy types to be spawned
+; 	db ENEMY_FROG, 12  ; enemy type and weight
+; 	db ENEMY_FROG_JUMPER, 12
+; 	db ENEMY_FROG_TONGUE, 10
 
 pcg_enemy_generation_table_pyramid1:
 pcg_enemy_generation_table_pyramid2:
@@ -415,7 +417,9 @@ pcg_generate_room__spawn_skeleton_continue:
 	inc hl
 	ld (hl), d  ; tile y
 	inc hl
-	ld (hl), 0  ; state
+	call random_a
+	and #01
+	ld (hl), a  ; state
 	inc hl
 	ld (hl), 0  ; state timer
 	inc hl

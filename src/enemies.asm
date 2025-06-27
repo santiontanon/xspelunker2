@@ -1,4 +1,26 @@
 ;-----------------------------------------------
+enemy_update_fn_table:
+	dw update_enemy_snake
+	dw update_enemy_snake_dasher
+	dw update_enemy_snake_poison
+	dw update_enemy_poison_bullet
+	dw update_enemy_fish
+	dw update_enemy_fish_jumper
+	dw update_enemy_bat
+	dw update_enemy_bat_aggressive
+	dw update_enemy_bullet
+	dw update_enemy_skeleton
+	dw update_enemy_skeleton_thrower1
+	dw update_enemy_skeleton_thrower2
+	dw update_enemy_bone_bullet
+	dw update_enemy_bone_parabola_bullet
+	dw update_enemy_parabola_bullet
+	dw update_enemy_frog
+	dw update_enemy_frog_jumping
+	dw update_enemy_frog_tongue
+
+
+;-----------------------------------------------
 update_sprite_enemies:
 	; we do not need to initialize "n_displayed_object_sprites", since this is always called
 	; after "update_sprite_objects"
@@ -9,42 +31,14 @@ update_sprite_enemies_loop:
 	ret z
 	cp #ff  ; sentinel
 	ret z
-	dec a  ; cp ENEMY_SNAKE
-	jr z, update_enemy_snake
-	dec a  ; cp ENEMY_SNAKE_DASHER
-	jp z, update_enemy_snake_dasher
-	dec a  ; cp ENEMY_SNAKE_POISON
-	jp z, update_enemy_snake_poison
-	dec a  ; cp ENEMY_POISON_BULLET
-	jp z, update_enemy_poison_bullet
-	dec a  ; cp ENEMY_FISH
-	jp z, update_enemy_fish
-	dec a  ; cp ENEMY_FISH_JUMPER
-	jp z, update_enemy_fish_jumper
-	dec a  ; ENEMY_BAT
-	jp z, update_enemy_bat
-	dec a  ; ENEMY_BAT_AGGRESSIVE
-	jp z, update_enemy_bat_aggressive
-	dec a  ; ENEMY_BULLET
-	jp z, update_enemy_bullet
-	dec a  ; ENEMY_SKELETON
-	jp z, update_enemy_skeleton
-	dec a  ; ENEMY_SKELETON_THROWER1
-	jp z, update_enemy_skeleton_thrower1
-	dec a  ; ENEMY_SKELETON_THROWER2
-	jp z, update_enemy_skeleton_thrower2
-	dec a  ; ENEMY_BONE_BULLET
-	jp z, update_enemy_bone_bullet
-	dec a  ; ENEMY_BONE_PARABOLA_BULLET
-	jp z, update_enemy_bone_parabola_bullet
-	dec a  ; ENEMY_PARABOLLA_BULLET
-	jp z, update_enemy_parabola_bullet
-	dec a  ; ENEMY_FROG
-	jp z, update_enemy_frog
-	dec a  ; ENEMY_FROG_JUMPING
-	jp z, update_enemy_frog_jumping
-	dec a  ; ENEMY_FROG_TONGUE
-	jp z, update_enemy_frog_tongue
+	add a, a
+	ld hl, enemy_update_fn_table - 2
+	ADD_HL_A
+	ld a, (hl)
+	inc hl
+	ld h, (hl)
+	ld l, a
+	jp (hl)
 
 update_sprite_enemies_loop_next:
 	ld de, ROOM_OBJECT_STRUCT_SIZE
@@ -517,10 +511,10 @@ update_enemy_fish_left_continue_color_set:
 
 
 ;-----------------------------------------------
-fish_jumper_jump_table:  ; 42 steps
-	db          -5,-5,-5,-5,-5
-	db -4,-4,-4,-4,-3,-3,-3,-2
-	db -2,-1,-2,-1,-1,-1, 0, 0
+fish_jumper_jump_table:  ; 42 steps 
+	db          -5,-5,-5,-5,-5  ; -25 pixels
+	db -4,-4,-4,-4,-3,-3,-3,-2  ; -27 pixels (total: -52)
+	db -2,-1,-2,-1,-1,-1, 0, 0  ;  -8 pixels (total: -60)
 	db  0, 0, 1, 1, 1, 2, 1, 2
 	db  2, 3, 3, 3, 4, 4, 4, 4
 	db  5, 5, 5, 5, 5
@@ -962,16 +956,16 @@ update_enemy_skeleton:
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
 	or a
-	jr z, update_enemy_skeleton_idle
-	dec a
 	jr z, update_enemy_skeleton_right
 	dec a
 	jr z, update_enemy_skeleton_left
+	; dec a
+	; jr z, update_enemy_skeleton_idle
 	; we cannever reach here ...
 
 update_enemy_skeleton_switch_to_state_idle:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
-	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2
 update_enemy_skeleton_idle:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	cp 64
@@ -986,7 +980,7 @@ update_enemy_skeleton_idle_continue:
 	jp enemy_sprite_and_continue_animated_slow
 
 update_enemy_skeleton_switch_to_state_right:
-	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
 	jr update_enemy_skeleton_right_continue
 update_enemy_skeleton_right:
 	call random_a
@@ -1004,7 +998,7 @@ update_enemy_skeleton_right_continue_color_set:
 	jp enemy_sprite_and_continue_animated
 
 update_enemy_skeleton_switch_to_state_left:
-	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2  ; left
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1  ; left
 	jr update_enemy_skeleton_left_continue
 update_enemy_skeleton_left:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
@@ -1206,15 +1200,175 @@ update_enemy_skeleton_thrower_throw_left_continue3:
 
 
 ;-----------------------------------------------
-update_enemy_frog_tongue:
-update_enemy_frog_jumping:
 update_enemy_frog:
 	ld c, 1  ; damage to deal
 	call update_enemy_hurt_player
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	or a
+	jr z, update_enemy_frog_right
+	dec a
+	jr z, update_enemy_frog_left
+	; we cannever reach here ...
+
+update_enemy_frog_switch_to_state_right:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
+	jr update_enemy_frog_right_continue
+update_enemy_frog_right:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	bit 3, a
+	jr z, update_enemy_frog_right_continue
+	and #01
+	jr z, update_enemy_frog_right_continue
+	call update_enemy_move_right_if_possible
+	jr z, update_enemy_frog_switch_to_state_left
+update_enemy_frog_right_continue:
 	ld d, COLOR_GREEN
+update_enemy_frog_right_continue_color_set:
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 16) * 4 
+	jp enemy_sprite_and_continue_animated
+
+update_enemy_frog_switch_to_state_left:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1  ; left
+	jr update_enemy_frog_left_continue
+update_enemy_frog_left:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	bit 3, a
+	jr z, update_enemy_frog_left_continue
+	and #01
+	jr z, update_enemy_frog_left_continue
+	call update_enemy_move_left_if_possible
+	jr z, update_enemy_frog_switch_to_state_right
+update_enemy_frog_left_continue:
+	ld d, COLOR_GREEN
+update_enemy_frog_left_continue_color_set:
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 19) * 4 
+	jp enemy_sprite_and_continue_animated
+
+
+;-----------------------------------------------
+update_enemy_frog_tongue:
+update_enemy_frog_jumping:
+	ld c, 2  ; damage to deal
+	call update_enemy_hurt_player
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+update_enemy_frog_jumping_continue:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	or a
+	jr z, update_enemy_frog_jumping_right
+	dec a
+	jr z, update_enemy_frog_jumping_left
+	dec a
+	jr z, update_enemy_frog_jumping_jump_right
+	dec a
+	jr z, update_enemy_frog_jumping_jump_left
+
+update_enemy_frog_jumping_action_chance_right:
+update_enemy_frog_jumping_action_chance_left:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+	; chance to jump or tongue:
+	call random_a
+	and #03
+	jr nz, update_enemy_frog_jumping_continue
+	; jump!
+	inc (ix + ROOM_OBJECT_STRUCT_STATE)
+	inc (ix + ROOM_OBJECT_STRUCT_STATE)
+	jr update_enemy_frog_jumping_continue
+
+update_enemy_frog_jumping_switch_to_state_right_reset_time:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+update_enemy_frog_jumping_switch_to_state_right:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
+	jr update_enemy_frog_jumping_right_continue
+update_enemy_frog_jumping_right:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 36
+	jr z, update_enemy_frog_jumping_action_chance_right
+	bit 3, a
+	jr z, update_enemy_frog_jumping_right_continue
+	call update_enemy_move_right_if_possible
+	jr z, update_enemy_frog_jumping_switch_to_state_left
+update_enemy_frog_jumping_right_continue:
+	ld d, COLOR_DARK_GREEN
+update_enemy_frog_jumping_right_continue_color_set:
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 16) * 4 
+	jp enemy_sprite_and_continue_animated
+
+update_enemy_frog_jumping_switch_to_state_left_reset_time:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+update_enemy_frog_jumping_switch_to_state_left:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1  ; left
+	jr update_enemy_frog_jumping_left_continue
+update_enemy_frog_jumping_left:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 36
+	jr z, update_enemy_frog_jumping_action_chance_left
+	bit 3, a
+	jr z, update_enemy_frog_jumping_left_continue
+	call update_enemy_move_left_if_possible
+	jr z, update_enemy_frog_jumping_switch_to_state_right
+update_enemy_frog_jumping_left_continue:
+	ld d, COLOR_DARK_GREEN
+update_enemy_frog_jumping_left_continue_color_set:
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 19) * 4 
+	jp enemy_sprite_and_continue_animated
+
+update_enemy_frog_jumping_jump_right:
+	call update_enemy_frog_jumping_jump
+	jr z, update_enemy_frog_jumping_switch_to_state_right_reset_time
+	call update_enemy_bullet_move_right_if_possible
+	ld d, COLOR_DARK_GREEN
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 17) * 4 
 	jp enemy_sprite_and_continue
+
+update_enemy_frog_jumping_jump_left:
+	call update_enemy_frog_jumping_jump
+	jr z, update_enemy_frog_jumping_switch_to_state_left_reset_time
+	call update_enemy_bullet_move_left_if_possible
+	ld d, COLOR_DARK_GREEN
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 20) * 4 
+	jp enemy_sprite_and_continue
+
+; returns:
+; - z: if frog has landed
+; - nz: otherwise
+update_enemy_frog_jumping_jump:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 31
+	jr c, update_enemy_frog_jumping_jump_continue
+	ld a, 31
+update_enemy_frog_jumping_jump_continue:
+	ld hl, frog_jump_table
+	ADD_HL_A
+	ld a, (hl)  ; amount to move
+	or a
+	ld b, a
+	jr z, update_enemy_frog_jumping_jump_done
+	jp m, update_enemy_frog_jumping_jump_raise
+update_enemy_frog_jumping_jump_fall:
+	push bc
+		call update_enemy_move_down_if_possible
+	pop bc
+	ret z
+	djnz update_enemy_frog_jumping_jump_fall
+	or 1
+	ret
+update_enemy_frog_jumping_jump_raise:
+	push bc
+		call update_enemy_move_up_if_possible
+	pop bc
+	inc b
+	jr nz, update_enemy_frog_jumping_jump_raise
+update_enemy_frog_jumping_jump_done:
+	or 1
+	ret
+
+frog_jump_table:  ; 32 steps 
+	db -4,-4					;  -8 pixels
+	db -4,-4,-4,-4,-3,-3,-3,-2  ; -27 pixels
+	db -2,-1,-2,-1,-1,-1, 0, 0  ;  -8 pixels (total: -43)
+	db  0, 0, 1, 1, 1, 2, 1, 2
+	db  2, 3, 3, 3, 4, 4
 
 
 ;-----------------------------------------------
@@ -1526,6 +1680,18 @@ update_enemy_move_left_continue:
 ;-----------------------------------------------
 ; input:
 ; - ix: enemy ptr
+; output:
+; - z: cannot
+; - nz: can
+update_enemy_move_up_if_possible:
+	call update_enemy_can_move_up
+	ret z
+	; jp update_enemy_move_up
+
+
+;-----------------------------------------------
+; input:
+; - ix: enemy ptr
 update_enemy_move_up:
 	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
 	dec a
@@ -1536,6 +1702,18 @@ update_enemy_move_up:
 update_enemy_move_up_continue:
 	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_Y), a
 	ret
+
+
+;-----------------------------------------------
+; input:
+; - ix: enemy ptr
+; output:
+; - z: cannot
+; - nz: can
+update_enemy_move_down_if_possible:
+	call update_enemy_can_move_down
+	ret z
+	; jp update_enemy_move_down
 
 
 ;-----------------------------------------------
@@ -1591,7 +1769,7 @@ update_enemy_can_move_left_cannot:
 ; input:
 ; - ix: enemy ptr
 ; output:
-; - z: canot
+; - z: cannot
 ; - nz: can
 update_enemy_can_move_left:
 	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
@@ -1618,7 +1796,57 @@ update_enemy_can_move_left:
 ; input:
 ; - ix: enemy ptr
 ; output:
-; - z: canot
+; - z: cannot
+; - nz: can
+update_enemy_can_move_up:
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
+	or a
+	ret nz
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	call general_check_collision_up
+	ret z
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc c
+	call general_check_collision_up
+	jr z, update_enemy_can_move_left_cannot
+	or 1
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - ix: enemy ptr
+; output:
+; - z: cannot
+; - nz: can
+update_enemy_can_move_down:
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
+	or a
+	ret nz
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc b
+	inc b
+	call general_check_collision
+	ret z
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc c
+	inc b
+	inc b
+	call general_check_collision
+	jr z, update_enemy_can_move_left_cannot
+	or 1
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - ix: enemy ptr
+; output:
+; - z: cannot
 ; - nz: can
 update_enemy_water_move_right_if_possible:
 	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
@@ -1640,7 +1868,7 @@ update_enemy_water_move_right_if_possible_move:
 ; input:
 ; - ix: enemy ptr
 ; output:
-; - z: canot
+; - z: cannot
 ; - nz: can
 update_enemy_water_move_left_if_possible:
 	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
@@ -1661,7 +1889,7 @@ update_enemy_water_move_left_if_possible_move:
 ; input:
 ; - ix: enemy ptr
 ; output:
-; - z: canot
+; - z: cannot
 ; - nz: can
 update_enemy_bullet_move_right_if_possible:
 	ld a, (current_room__width)
@@ -1688,7 +1916,7 @@ update_enemy_bullet_move_right_if_possible_move:
 ; input:
 ; - ix: enemy ptr
 ; output:
-; - z: canot
+; - z: cannot
 ; - nz: can
 update_enemy_bullet_move_left_if_possible:
 	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_X)
