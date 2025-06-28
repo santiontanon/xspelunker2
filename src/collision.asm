@@ -75,6 +75,28 @@ player_check_collision_idle_no_collision:
 
 
 ;-----------------------------------------------
+player_check_collision_crouching_with_e:
+	ld a, (player_y + 1)
+	ld b, a
+	ld a, (player_x + 1)
+	ld c, a
+	inc b
+	ld a, (player_y)
+	or a
+	jr z, player_check_collision_crouching_with_e_continue
+	inc b
+player_check_collision_crouching_with_e_continue:
+	ld a, c
+	cp #ff
+	jp z, player_exit_room_left
+	push de
+		call get_room_tile_type
+	pop de
+	cp e
+	ret	
+
+
+;-----------------------------------------------
 ; output:
 ; - z: collision
 ; - nz: no collision

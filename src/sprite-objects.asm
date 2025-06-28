@@ -487,6 +487,7 @@ update_sprite_objects_move_object_no_overflow_y:
 ; input:
 ; - ix: object ptr
 ; - c: x offset
+; - d: sprite color
 ; output:
 ; - c, b: sprite x, y
 ; - d: updated sprite color with early clock bit

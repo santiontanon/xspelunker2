@@ -36,10 +36,25 @@ player_update_no_trial_fn:
 	ld a, (player_health)
 	or a
 	jr z, player_update_continue
+	; in these 3 states, the player is shorter:
+	ld a, (player_state)
+	and #fe
+	cp PLAYER_STATE_CROUCHING
+	jr z, player_update_immune_check_hazard_short
+	cp PLAYER_STATE_CRAWLING
+	jr z, player_update_immune_check_hazard_short
+; 	cp PLAYER_STATE_SWIMMING  ; no hazards in water (right?)
+; 	jr z, player_update_immune_check_hazard_short
 	ld e, 3  ; hazard
 	call player_check_collision_idle_with_e
 	call z, player_hit_hazard
 	jr player_update_continue
+player_update_immune_check_hazard_short:
+	ld e, 3  ; hazard
+	call player_check_collision_crouching_with_e
+	call z, player_hit_hazard
+	jr player_update_continue
+
 player_update_immune:
 	dec (hl)
 player_update_continue:

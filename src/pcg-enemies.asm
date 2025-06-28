@@ -17,12 +17,13 @@ pcg_enemy_generation_table_jungle:
 	; weights (all sprite-based) should add up to 32
 	db 2  ; 2 enemies per "screen" area
 	db TAG_ENEMY_CARNIVORE_PLANT, 80  ; tile-based enemy type and chance (out of 256)
-	db 1  ; 3 possible sprite enemy types to be spawned
-	db ENEMY_FROG_JUMPER, 32
-; 	db 3  ; 3 possible sprite enemy types to be spawned
-; 	db ENEMY_FROG, 12  ; enemy type and weight
-; 	db ENEMY_FROG_JUMPER, 12
-; 	db ENEMY_FROG_TONGUE, 10
+	db 6  ; 3 possible sprite enemy types to be spawned
+	db ENEMY_SNAKE, 8  ; enemy type and weight
+	db ENEMY_SNAKE_DASHER, 4
+	db ENEMY_SNAKE_POISON, 4
+	db ENEMY_FROG, 8  ; enemy type and weight
+	db ENEMY_FROG_JUMPER, 4
+	db ENEMY_FROG_TONGUE, 4
 
 pcg_enemy_generation_table_pyramid1:
 pcg_enemy_generation_table_pyramid2:
@@ -39,10 +40,11 @@ pcg_enemy_generation_table_moon:
 	db 2  ; 2 enemies per "screen" area
 	db TAG_ENEMY_CARNIVORE_PLANT, 80  ; tile-based enemy type and chance (out of 256)
 	db 10  ; 10 possible sprite enemy types to be spawned
-	db ENEMY_SNAKE, 6  ; enemy type and weight
+	db ENEMY_SNAKE, 5  ; enemy type and weight
+	db ENEMY_SNAKE_DASHER, 2
 	db ENEMY_SNAKE_POISON, 2
 	db ENEMY_POISON_BULLET, 1
-	db ENEMY_FISH, 6
+	db ENEMY_FISH, 5
 	db ENEMY_FISH_JUMPER, 2
 	db ENEMY_BAT, 5
 	db ENEMY_BAT_AGGRESSIVE, 2
