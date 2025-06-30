@@ -134,7 +134,7 @@ state_play:
 
 		; generate room:
 		ld e, 0
-; 		ld e, 1
+; 		ld e, 0
 ; 		ld e, 1
 ; 		ld e, CALENDAR_ROOM_ID
 ; 		ld e, 31

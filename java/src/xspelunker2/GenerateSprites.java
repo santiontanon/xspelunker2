@@ -183,6 +183,11 @@ public class GenerateSprites {
         data.addAll(extractSprite(sourceImage, 80, 80, 15));
         data.addAll(extractSpriteFlipped(sourceImage, 48, 80, 15));  // frog tongue left
         data.addAll(extractSpriteFlipped(sourceImage, 64, 80, 15));
+        // bee (27)
+        data.addAll(extractSprite(sourceImage, 0, 112, 15));  // bee right
+        data.addAll(extractSprite(sourceImage, 16, 112, 15));
+        data.addAll(extractSpriteFlipped(sourceImage, 0, 112, 15));  // bee left
+        data.addAll(extractSpriteFlipped(sourceImage, 16, 112, 15));
 
         if (data.size() > 40 * 32) {
             throw new Exception("More enemy sprites than the engine can handle!");

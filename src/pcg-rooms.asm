@@ -45,7 +45,7 @@ pcg_generate_room_reset_state:
 	add a, a
 	add a, a
 	add a, a
-	sub c  ; a * 7
+	add c  ; a * 9
 	ADD_HL_A
 	ld de, current_room__tileset_page
 	ldi  ; current_room__tileset_page

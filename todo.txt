@@ -2,10 +2,6 @@ to do:
 
 ***- jungle biome:
   ***- jungle enemies:
-    ***- bee nests (like in xspelunker) (are they tiles?):
-      ***- create "bee" enemy (for now just static)
-      ***- if player is nearby, spawn bees at regular intervals
-      ***- make bee move towards the player, very slowly (like in xspelunker)
     ***- BUG: frogs can get stuck when they jump
     ***- ant colonies (tile enemy that spawns ants) (this will be reused in the caves, with a different type of ant)
       ***- ants: just move around not too fast and can climb walls up/down, or even hang from the ceiling

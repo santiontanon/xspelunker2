@@ -18,6 +18,7 @@ enemy_update_fn_table:
 	dw update_enemy_frog
 	dw update_enemy_frog_jumping
 	dw update_enemy_frog_tongue
+	dw update_enemy_bee
 
 
 ;-----------------------------------------------
@@ -1573,6 +1574,58 @@ frog_jump_table:  ; 32 steps
 
 
 ;-----------------------------------------------
+update_enemy_bee:
+	ld e, 1  ; damage to deal
+	call update_enemy_hurt_player
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	and #1
+	jr z, update_enemy_bee_movement_done
+
+	; move towards player:
+	ld a, (player_x + 1)
+	dec a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	jr c, update_enemy_bee_left
+	jr nz, update_enemy_bee_right
+	; same tile:
+	ld a, (player_x)
+	cp (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	jr c, update_enemy_bee_left
+	jr z, update_enemy_bee_y
+update_enemy_bee_right:
+	; right:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), (FIRST_ENEMY_SPRITE_PATTERN + 27) * 4
+	call update_enemy_move_right
+	jr update_enemy_bee_y
+update_enemy_bee_left:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), (FIRST_ENEMY_SPRITE_PATTERN + 29) * 4
+	call update_enemy_move_left
+
+update_enemy_bee_y:
+	ld a, (player_y + 1)
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	jr c, update_enemy_bee_up
+	jr nz, update_enemy_bee_down
+	; same tile:
+	ld a, (player_y)
+	cp (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
+	jr c, update_enemy_bee_up
+	jr z, update_enemy_bee_movement_done
+update_enemy_bee_down:
+	; down:
+	call update_enemy_move_down
+	jr update_enemy_bee_movement_done
+update_enemy_bee_up:
+	call update_enemy_move_up
+
+update_enemy_bee_movement_done:
+	ld d, COLOR_DARK_YELLOW
+	ld e, (ix + ROOM_OBJECT_STRUCT_STATE)
+	jp enemy_sprite_and_continue_animated_fast
+
+
+;-----------------------------------------------
 update_enemy_move_cb:
 	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
 	add a, c
@@ -1667,6 +1720,20 @@ enemy_sprite_and_continue_animated4:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	rlca
 	and #0c
+	add a, e
+	ld e, a
+	jp enemy_sprite_and_continue
+
+
+;-----------------------------------------------
+; input:
+; - d: sprite color
+; - e: sprite frame
+enemy_sprite_and_continue_animated_fast:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	and #01
+	add a, a
+	add a, a
 	add a, e
 	ld e, a
 	jp enemy_sprite_and_continue

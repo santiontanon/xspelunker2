@@ -553,7 +553,47 @@ update_tile_objects_enemy_bee_hive:
 	or a
 	jp z, update_tile_objects_2x2_enemy_killed	
 
-	; ...
+	inc (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	and #3f
+	cp #3f
+	jp nz, update_tile_objects_loop_continue
+	; check if player is closeby:
+	ld a, (player_x + 1)
+	sub (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	cp 20
+	ret p
+	cp -20
+	ret m
+	ld a, (player_y + 1)
+	sub (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	cp 16
+	ret p
+	cp -16
+	ret m
+
+	; spawn a bee:
+	call ptr_to_new_sprite_enemy
+	ret nz
+	ld (hl), ENEMY_BEE
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	ld (hl), a  ; tile x
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_Y)	
+	ld (hl), a  ; tile y
+	inc hl
+	ld (hl), 0  ; state
+	inc hl
+	ld (hl), 0  ; state timer
+	inc hl
+	ld (hl), #ff  ; hit ID
+	inc hl
+	ld (hl), 0  ; health	
 	jp update_tile_objects_loop_continue
 
 

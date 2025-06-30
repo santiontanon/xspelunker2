@@ -16,12 +16,12 @@ pcg_enemy_generation_table:
 pcg_enemy_generation_table_jungle:
 	; weights (all sprite-based) should add up to 32
 	db 2  ; 2 enemies per "screen" area
-	db 1
-	db TAG_ENEMY_BEE_HIVE, 255  ; tile-based enemy type and chance (out of 256)
-; 	db 3  ; 2 possible tile enemy types to be spawned
-; 	db TAG_ENEMY_CARNIVORE_PLANT, 32  ; tile-based enemy type and chance (out of 256)
-; 	db TAG_ENEMY_BEE_HIVE, 96  ; tile-based enemy type and chance (out of 256)
-; 	db TAG_ENEMY_ANT_COLONY, 128  ; tile-based enemy type and chance (out of 256)
+; 	db 1
+; 	db TAG_ENEMY_BEE_HIVE, 255  ; tile-based enemy type and chance (out of 256)
+	db 3  ; 2 possible tile enemy types to be spawned
+	db TAG_ENEMY_CARNIVORE_PLANT, 32  ; tile-based enemy type and chance (out of 256)
+	db TAG_ENEMY_BEE_HIVE, 96  ; tile-based enemy type and chance (out of 256)
+	db TAG_ENEMY_ANT_COLONY, 128  ; tile-based enemy type and chance (out of 256)
 	db 6  ; 3 possible sprite enemy types to be spawned
 	db ENEMY_SNAKE, 8  ; enemy type and weight
 	db ENEMY_SNAKE_DASHER, 4
@@ -45,7 +45,7 @@ pcg_enemy_generation_table_moon:
 	db 2  ; 2 enemies per "screen" area
 	db 1
 	db TAG_ENEMY_CARNIVORE_PLANT, 96  ; tile-based enemy type and chance (out of 256)
-	db 10  ; 10 possible sprite enemy types to be spawned
+	db 11  ; 10 possible sprite enemy types to be spawned
 	db ENEMY_SNAKE, 5  ; enemy type and weight
 	db ENEMY_SNAKE_DASHER, 2
 	db ENEMY_SNAKE_POISON, 2
@@ -223,49 +223,6 @@ pcg_generate_room__spawn_one_enemy_done:
 ; - nz: no ptr found
 ; - decrements 'c' if a position is found
 pcg_generate_room__spawn_enemy_get_new_ptr:
-; 	ld a, c
-; 	or a
-; 	jr z, pcg_generate_room__spawn_enemy_get_new_ptr_not_found  ; no positions available
-; 	call random_modulo
-; 	ld hl, buffer_4096
-; 	ld e, c
-; 	push bc
-; 		push de
-; 			ld e, a
-; 			ld d, 0
-; 			add hl, de
-; 			add hl, de
-; 			ld e, (hl)
-; 			inc hl
-; 			ld d, (hl)
-; 		pop bc
-; 		; remove the position (shift all the positions left):
-; 		sub c
-; 		neg
-; 		dec a  ; a = number of positions we need to copy to the left
-; 		push de
-; 			ld e, l
-; 			ld d, h
-; 			dec de
-; 			inc hl
-; 			or a
-; 			jr z, pcg_generate_room__spawn_enemy_get_new_ptr_continue
-; 			ld c, a
-; 			ld b, 0
-; 			sla c
-; 			rl b
-; 			ldir
-; pcg_generate_room__spawn_enemy_get_new_ptr_continue:
-; 			; find a new enemy ptr:
-; 			call ptr_to_new_sprite_enemy
-; 		pop de
-; 	pop bc
-; 	ex af, af'  ; preserve the z flag
-; 	dec c
-; 	ex af, af'
-; 	ret
-; pcg_generate_room__spawn_enemy_get_new_ptr_not_found:
-; 	or 1
 	call pcg_generate_room__spawn_enemy_get_new_position
 	ret nz
 	push bc
