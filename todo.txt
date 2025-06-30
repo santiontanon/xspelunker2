@@ -2,11 +2,14 @@ to do:
 
 ***- jungle biome:
   ***- jungle enemies:
-    ***- carnivoreplant tongue should go through ropes
-    ***- bee nests (like in xspelunker)
-    ***- monkeys: a) pace left/right and jump (they might go up a platform), b) sometimes stop and throw a stone
-    ***- ant colonies (tile enemy that spawns ants) (this will be reused in the caves, with a different type of ant) (update the pcg-enemies code, to allow specifying more than one tilebased enemy per area)
+    ***- bee nests (like in xspelunker) (are they tiles?):
+      ***- create "bee" enemy (for now just static)
+      ***- if player is nearby, spawn bees at regular intervals
+      ***- make bee move towards the player, very slowly (like in xspelunker)
+    ***- BUG: frogs can get stuck when they jump
+    ***- ant colonies (tile enemy that spawns ants) (this will be reused in the caves, with a different type of ant)
       ***- ants: just move around not too fast and can climb walls up/down, or even hang from the ceiling
+    ***- monkeys: a) pace left/right and jump (they might go up a platform), b) sometimes stop and throw a stone
   ***- special room for start position (start tag) and set start position there (on the left-edge of map):
   ***- add jungle events: start, elaine letters, find bomb maker, shop to use coins with (what do they sell? healing, supplies and save game; maybe some random item/weapons that were not spawned in the game?; make sure blow gun is sold for sure if not spawned, as it might be needed for Maya riddle)
 

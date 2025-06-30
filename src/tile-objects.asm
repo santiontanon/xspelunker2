@@ -123,6 +123,10 @@ update_tile_objects_loop:
 		jp z, update_tile_objects_calendar_stone_center
 		cp TAG_ENEMY_CARNIVORE_PLANT
 		jp z, update_tile_objects_enemy_carnivore_plant
+		cp TAG_ENEMY_BEE_HIVE
+		jp z, update_tile_objects_enemy_bee_hive
+		cp TAG_ENEMY_ANT_COLONY
+		jp z, update_tile_objects_enemy_ant_colony
 update_tile_objects_loop_continue:
 	pop hl
 	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
@@ -1040,6 +1044,8 @@ ENDR
 	dw object_interaction_function_pickup_spears  ; TAG_SPEARS
 	dw object_interaction_function_pickup_battery  ; TAG_BATTERY
 	dw object_interaction_function_empty  ; TAG_ENEMY_CARNIVORE_PLANT
+	dw object_interaction_function_empty  ; TAG_ENEMY_BEE_HIVE
+	dw object_interaction_function_empty  ; TAG_ENEMY_ANT_COLONY
 
 object_interaction_inventory_slot:
 	db #ff, #ff, #ff, #ff, #ff  ; none, block puzzles: 0
@@ -2342,6 +2348,8 @@ ENDR
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_spears_gfx  ; TAG_SPEARS
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_battery_gfx  ; TAG_BATTERY
 	TILE_OBJECT_DATA 1, 4, 4, tile_object_carnivore_plant  ; TAG_ENEMY_CARNIVORE_PLANT
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_bee_hive  ; TAG_ENEMY_BEE_HIVE
+	TILE_OBJECT_DATA 1, 3, 2, tile_object_ant_colony  ; TAG_ENEMY_ANT_COLONY
 
 
 tile_object_regular_object_gfx:
@@ -2396,3 +2404,11 @@ tile_object_spears_gfx:
 tile_object_battery_gfx:
 	db 42, 0, 43, 0
 
+
+tile_object_bee_hive:
+	db 64, 65
+	db 66, 67
+
+tile_object_ant_colony:
+	db 0, 68, 0
+	db 69, 70, 71

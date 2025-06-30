@@ -535,13 +535,13 @@ pcg_generate_room__object_loop_end:
 
 	; Render the tile objects (and then remove them), to ensure enemies are not spawned on top:
 	ld hl, room_render_tile_objects
-	ld C, TILES_PAGE
+	ld c, TILES_PAGE
 	call call_hl_in_page_c_8000
 ;     out (#2c),a  ; DEBUG
 	call pcg_generate_room__spawn_enemies
 ;     out (#2d),a	  ; DEBUG
 	ld hl, room_undraw_tile_objects
-	ld C, TILES_PAGE
+	ld c, TILES_PAGE
 	call call_hl_in_page_c_8000
 
 	ld a, (tmp_pcg_room__is_midpoint_room)

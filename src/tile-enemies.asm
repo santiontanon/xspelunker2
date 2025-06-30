@@ -5,6 +5,7 @@ CARNIVORE_PLANT_MAX_TONGUE_TIP_PTR: equ tile_enemy_work_memory + 1 + CARNIVORE_P
 ; - each tongue segment has 3 bytes: background (to undraw), tile, direction of next
 ; - 2 bytes at the end for room tile ptr of the current tongue tip
 
+
 ;-----------------------------------------------
 ; input:
 ; - hl: object ptr + 1
@@ -15,7 +16,7 @@ update_tile_objects_enemy_carnivore_plant:
 
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_HEALTH)
 	or a
-	jp z, update_tile_objects_enemy_carnivore_plant_killed
+	jp z, update_tile_objects_4x4_enemy_killed
 
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)
 	dec a
@@ -86,14 +87,6 @@ update_tile_objects_enemy_carnivore_plant_switch_to_idle:
 	jp update_tile_objects_loop_force_redraw_and_continue
 
 update_tile_objects_enemy_carnivore_plant_tongue
-	; tile_enemy_work_memory
-; 	ld hl, tile_enemy_work_memory
-; 	ld (hl), 0
-; 	inc (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
-; 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
-; 	cp 2
-; 	jp nz, update_tile_objects_loop_continue
-; 	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER), 0
 	; elongate the tongue by one position:
 	ld hl, tile_enemy_work_memory
 	ld a, (hl)
@@ -177,8 +170,18 @@ update_tile_objects_enemy_carnivore_plant_tongue_elongate_loop_continue3:
 	ld c, a
 	push de
 		call room_render_tile_objects_render_enemy_carnivore_plant_next_tongue_piece_ptr
-		ld a, (de)
-		or a
+		ld a, (de)  ; a = background tile where we want to move
+		or a  ; is it background?
+		jr z, update_tile_objects_enemy_carnivore_plant_tongue_elongate_loop_end
+		; check if it's background/rope
+		push de
+			ld de, (current_room__collision_ptr)
+			ADD_DE_A
+			ld a, (de)
+		pop de
+		or a  ; background
+		jr z, update_tile_objects_enemy_carnivore_plant_tongue_elongate_loop_end
+		cp 5  ; rope
 		jr z, update_tile_objects_enemy_carnivore_plant_tongue_elongate_loop_end
 	pop de
 	djnz update_tile_objects_enemy_carnivore_plant_tongue_elongate_loop
@@ -201,7 +204,8 @@ update_tile_objects_enemy_carnivore_plant_tongue_elongate_loop_end:
 	inc hl
 	ld (hl), c  ; new direction
 	inc hl
-	ld (hl), 0  ; background
+	ld a, (de)
+	ld (hl), a  ; background
 	inc hl
 	call update_tile_objects_enemy_carnivore_plant_tongue_tip
 	ld (hl), a  ; new last tile
@@ -268,7 +272,34 @@ carnivore_plants_tongue_tips:
 	db 68, 90, 89, 79
 
 
-update_tile_objects_enemy_carnivore_plant_killed:
+;-----------------------------------------------
+update_tile_objects_2x2_enemy_killed:
+	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	push bc
+		push ix
+			call spawn_explosion
+			call room_undraw_tile_objects
+		pop hl
+		push hl
+			call delete_tile_object_in_hl
+			call room_render_tile_objects
+			; force redraw:
+			ld hl, redraw_flags
+			set ROOM_REDRAW_FLAG_BIT, (hl)
+		pop hl
+	pop bc
+	push hl
+		ld hl, enemy_maybe_spawn_drop
+		ld e, ENEMIES_PAGE
+		call call_hl_in_page_e_8000
+	pop hl
+	pop af  ; we do an extra pop, since we are skipping the one at update_tile_objects_loop_continue
+	jp update_tile_objects_loop
+
+
+;-----------------------------------------------
+update_tile_objects_4x4_enemy_killed:
 	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
 	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
 	push bc
@@ -306,13 +337,6 @@ update_tile_objects_enemy_carnivore_plant_killed:
 		ld e, ENEMIES_PAGE
 		call call_hl_in_page_e_8000
 	pop hl
-; 	push hl
-; 		call delete_tile_object_in_hl
-; 		call room_render_tile_objects
-; 		; force redraw:
-; 		ld hl, redraw_flags
-; 		set ROOM_REDRAW_FLAG_BIT, (hl)
-; 	pop hl
 	pop af  ; we do an extra pop, since we are skipping the one at update_tile_objects_loop_continue
 	jp update_tile_objects_loop
 
@@ -437,11 +461,6 @@ tile_object_carnivore_plant_open:
 
 
 ;-----------------------------------------------
-
-; WORK MEMORY: 0xeea1
-; eased tile:  0xe042
-
-
 room_render_tile_objects_undraw_enemy_carnivore_plant:
 	; undraw tongue:
 	inc hl
@@ -518,6 +537,56 @@ enemy_carnivore_plant_hit_tongue:
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 3  ; retract tongue
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER), 0
 enemy_carnivore_plant_hit_continue:
+	ld a, iyl
+	ld (tile_enemy_last_collision_id), a
+
+	ld hl, SFX_enemy_hit
+	jp play_SFX_with_high_priority
+
+
+;-----------------------------------------------
+update_tile_objects_enemy_bee_hive:
+	dec hl
+	push hl
+	pop ix
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_HEALTH)
+	or a
+	jp z, update_tile_objects_2x2_enemy_killed	
+
+	; ...
+	jp update_tile_objects_loop_continue
+
+
+;-----------------------------------------------
+update_tile_objects_enemy_ant_colony:
+	dec hl
+	push hl
+	pop ix
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_HEALTH)
+	or a
+	jp z, update_tile_objects_2x2_enemy_killed
+
+	; ...
+	jp update_tile_objects_loop_continue
+
+
+;-----------------------------------------------
+; input:
+; - e: tile idx that was hit
+; - iyl: collision ID
+; - iyh: weapon damage
+enemy_ant_colony_hit:
+enemy_bee_hive_hit:
+	ld ix, (tile_enemy_ptr)
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_HEALTH)
+	sub iyh
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_HEALTH), a
+	jr z, enemy_ant_colony_hit_dead
+	jr nc, enemy_ant_colony_hit_continue
+enemy_ant_colony_hit_dead:
+	; tile enemy killed!
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_HEALTH), 0
+enemy_ant_colony_hit_continue:
 	ld a, iyl
 	ld (tile_enemy_last_collision_id), a
 

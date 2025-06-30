@@ -126,10 +126,10 @@ ROOM_TILE_OBJECT_STRUCT_Y: equ 3
 ROOM_TILE_OBJECT_STRUCT_STATE: equ 4  ; for breakable walls, these are the remaining hit points
 ROOM_TILE_OBJECT_STRUCT_STATE_TIMER: equ 5  ; for tile-based enemies
 ROOM_TILE_OBJECT_STRUCT_HEALTH: equ 6  ; for tile-based enemies
-ROOM_TILE_OBJECT_STRUCT_BACKGROUND: equ 5  ; 4 bytes (only for 2x2 objects)
+ROOM_TILE_OBJECT_STRUCT_BACKGROUND: equ 7  ; 4 bytes (only for 2x2 objects)
 ROOM_TILE_OBJECT_STRUCT_WIDTH: equ 9  ; only used by breakable walls
 ROOM_TILE_OBJECT_STRUCT_HEIGHT: equ 10  ; only used by breakable walls
-ROOM_TILE_OBJECT_STRUCT_LAST_HIT_ID: equ 11  ; only used by breakable walls
+ROOM_TILE_OBJECT_STRUCT_LAST_HIT_ID: equ 11  ; only used by breakable walls / enemies
 
 PLAYER_COLLISION_UP_LEEWAY: equ 3  ; collision box height will be 16 - (8 - PLAYER_COLLISION_UP_LEEWAY)
 PLAYER_COLLISION_WIDTH: equ 4
@@ -184,7 +184,7 @@ DART_DAMAGE: equ 1
 SPEAR_DAMAGE: equ 2
 RAYGUN_DAMAGE: equ 2
 
-
+; Types of sprite enemies (tile-based enemies are with the other tags below):
 ENEMY_SNAKE: equ 1
 ENEMY_SNAKE_DASHER: equ 2
 ENEMY_SNAKE_POISON: equ 3
@@ -402,6 +402,8 @@ TAG_DARTS: equ 161
 TAG_SPEARS: equ 162
 TAG_BATTERY: equ 163
 TAG_ENEMY_CARNIVORE_PLANT: equ 164
+TAG_ENEMY_BEE_HIVE: equ 165
+TAG_ENEMY_ANT_COLONY: equ 166
 N_PATH_OPENING_TAGS: equ 32  ; there are less than this, but just in case (this is the number of tags above that spawn a breakable wall or door).
 
 
