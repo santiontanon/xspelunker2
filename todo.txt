@@ -1,8 +1,8 @@
 to do:
 
 ***- jungle biome:
+  ***- BUG: do not spawn enemy drops over anything that is not just background (to prevent being able to walk through them)
   ***- jungle enemies:
-    ***- BUG: frogs can get stuck when they jump
     ***- ant colonies (tile enemy that spawns ants) (this will be reused in the caves, with a different type of ant)
       ***- ants: just move around not too fast and can climb walls up/down, or even hang from the ceiling
     ***- monkeys: a) pace left/right and jump (they might go up a platform), b) sometimes stop and throw a stone

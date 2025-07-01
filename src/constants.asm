@@ -3,6 +3,8 @@
 
 
 COLLISION_DEBUG: equ 0
+; COLLISION_DEBUG: equ 1  ; player
+; COLLISION_DEBUG: equ 2  ; enemies
 
 
 KEY_WEAPON_BIT: equ 0

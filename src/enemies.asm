@@ -68,7 +68,7 @@ update_enemy_snake_right:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	and #01
 	jr z, update_enemy_snake_right_continue
-	call update_enemy_move_right_if_possible
+	call update_enemy_move_right_if_possible_platform
 	jr z, update_enemy_snake_switch_to_state_left
 update_enemy_snake_right_continue:
 	ld d, COLOR_DARK_YELLOW
@@ -83,7 +83,7 @@ update_enemy_snake_left:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	and #01
 	jr z, update_enemy_snake_left_continue
-	call update_enemy_move_left_if_possible
+	call update_enemy_move_left_if_possible_platform
 	jr z, update_enemy_snake_switch_to_state_right
 update_enemy_snake_left_continue:
 	ld d, COLOR_DARK_YELLOW
@@ -126,7 +126,7 @@ update_enemy_snake_dasher_right_no_dash:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	and #1
 	jr z, update_enemy_snake_dasher_right_continue
-	call update_enemy_move_right_if_possible
+	call update_enemy_move_right_if_possible_platform
 	jr z, update_enemy_snake_dasher_switch_to_state_left
 update_enemy_snake_dasher_right_continue:
 	ld d, COLOR_DARK_GREEN
@@ -150,7 +150,7 @@ update_enemy_snake_dasher_left_no_dash:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	and #1
 	jr z, update_enemy_snake_dasher_left_continue
-	call update_enemy_move_left_if_possible
+	call update_enemy_move_left_if_possible_platform
 	jr z, update_enemy_snake_dasher_switch_to_state_right
 update_enemy_snake_dasher_left_continue:
 	ld d, COLOR_DARK_GREEN
@@ -162,9 +162,9 @@ update_enemy_snake_dasher_dash_right:
 	jr z, update_enemy_snake_dasher_switch_to_state_left
 	cp 32
 	jr nc, update_enemy_snake_dasher_right_continue
-	call update_enemy_move_right_if_possible
+	call update_enemy_move_right_if_possible_platform
 	jr z, update_enemy_snake_dasher_right_continue
-	call update_enemy_move_right_if_possible
+	call update_enemy_move_right_if_possible_platform
 	jr update_enemy_snake_dasher_right_continue
 
 update_enemy_snake_dasher_dash_left:
@@ -173,9 +173,9 @@ update_enemy_snake_dasher_dash_left:
 	jr z, update_enemy_snake_dasher_switch_to_state_right
 	cp 32
 	jr nc, update_enemy_snake_dasher_left_continue
-	call update_enemy_move_left_if_possible
+	call update_enemy_move_left_if_possible_platform
 	jr z, update_enemy_snake_dasher_left_continue
-	call update_enemy_move_left_if_possible
+	call update_enemy_move_left_if_possible_platform
 	jr update_enemy_snake_dasher_left_continue
 
 
@@ -213,7 +213,7 @@ update_enemy_snake_poison_right:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2  ; spit right!
 	jr update_enemy_snake_poison_right_continue
 update_enemy_snake_poison_right_no_spit:
-	call update_enemy_move_right_if_possible
+	call update_enemy_move_right_if_possible_platform
 	jr z, update_enemy_snake_poison_switch_to_state_left
 update_enemy_snake_poison_right_continue:
 	ld d, COLOR_GREEN
@@ -237,7 +237,7 @@ update_enemy_snake_poison_left:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 3  ; spit left!
 	jr update_enemy_snake_poison_left_continue
 update_enemy_snake_poison_left_no_spit:	
-	call update_enemy_move_left_if_possible
+	call update_enemy_move_left_if_possible_platform
 	jr z, update_enemy_snake_poison_switch_to_state_right
 update_enemy_snake_poison_left_continue:
 	ld d, COLOR_GREEN
@@ -990,7 +990,7 @@ update_enemy_skeleton_right:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	and #01
 	jr z, update_enemy_skeleton_right_continue
-	call update_enemy_move_right_if_possible
+	call update_enemy_move_right_if_possible_platform
 	jr z, update_enemy_skeleton_switch_to_state_left
 update_enemy_skeleton_right_continue:
 	ld d, COLOR_WHITE
@@ -1005,7 +1005,7 @@ update_enemy_skeleton_left:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	and #01
 	jr z, update_enemy_skeleton_left_continue
-	call update_enemy_move_left_if_possible
+	call update_enemy_move_left_if_possible_platform
 	jr z, update_enemy_skeleton_switch_to_state_right
 update_enemy_skeleton_left_continue:
 	ld d, COLOR_WHITE
@@ -1055,7 +1055,7 @@ update_enemy_skeleton_thrower_right_throw:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2  ; throw right!
 	jr update_enemy_skeleton_thrower_right_continue
 update_enemy_skeleton_thrower_right_no_throw:
-	call update_enemy_move_right_if_possible
+	call update_enemy_move_right_if_possible_platform
 	jr z, update_enemy_skeleton_thrower_switch_to_state_left
 update_enemy_skeleton_thrower_right_continue:
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 21) * 4
@@ -1090,7 +1090,7 @@ update_enemy_skeleton_thrower_left_throw:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 3  ; throw left!
 	jr update_enemy_skeleton_thrower_left_continue
 update_enemy_skeleton_thrower_left_no_throw:	
-	call update_enemy_move_left_if_possible
+	call update_enemy_move_left_if_possible_platform
 	jr z, update_enemy_skeleton_thrower_switch_to_state_right
 update_enemy_skeleton_thrower_left_continue:
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 25) * 4
@@ -1221,7 +1221,7 @@ update_enemy_frog_right:
 	jr z, update_enemy_frog_right_continue
 	and #01
 	jr z, update_enemy_frog_right_continue
-	call update_enemy_move_right_if_possible
+	call update_enemy_move_right_if_possible_platform
 	jr z, update_enemy_frog_switch_to_state_left
 update_enemy_frog_right_continue:
 	ld d, COLOR_GREEN
@@ -1238,7 +1238,7 @@ update_enemy_frog_left:
 	jr z, update_enemy_frog_left_continue
 	and #01
 	jr z, update_enemy_frog_left_continue
-	call update_enemy_move_left_if_possible
+	call update_enemy_move_left_if_possible_platform
 	jr z, update_enemy_frog_switch_to_state_right
 update_enemy_frog_left_continue:
 	ld d, COLOR_GREEN
@@ -1307,7 +1307,7 @@ update_enemy_frog_jumping_right:
 	jr z, update_enemy_frog_jumping_action_chance
 	bit 3, a
 	jr z, update_enemy_frog_jumping_right_continue
-	call update_enemy_move_right_if_possible
+	call update_enemy_move_right_if_possible_platform
 	jr z, update_enemy_frog_jumping_switch_to_state_left
 update_enemy_frog_jumping_right_continue:
 	ld d, iyl
@@ -1326,7 +1326,7 @@ update_enemy_frog_jumping_left:
 	jr z, update_enemy_frog_jumping_action_chance
 	bit 3, a
 	jr z, update_enemy_frog_jumping_left_continue
-	call update_enemy_move_left_if_possible
+	call update_enemy_move_left_if_possible_platform
 	jr z, update_enemy_frog_jumping_switch_to_state_right
 update_enemy_frog_jumping_left_continue:
 	ld d, iyl
@@ -1337,7 +1337,7 @@ update_enemy_frog_jumping_left_continue_color_set:
 update_enemy_frog_jumping_jump_right:
 	call update_enemy_frog_jumping_jump
 	jr z, update_enemy_frog_jumping_switch_to_state_right_reset_time
-	call update_enemy_bullet_move_right_if_possible
+	call update_enemy_move_right_if_possible
 	ld d, iyl
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 17) * 4 
 	jp enemy_sprite_and_continue
@@ -1345,7 +1345,7 @@ update_enemy_frog_jumping_jump_right:
 update_enemy_frog_jumping_jump_left:
 	call update_enemy_frog_jumping_jump
 	jr z, update_enemy_frog_jumping_switch_to_state_left_reset_time
-	call update_enemy_bullet_move_left_if_possible
+	call update_enemy_move_left_if_possible
 	ld d, iyl
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 20) * 4 
 	jp enemy_sprite_and_continue
@@ -1958,6 +1958,18 @@ update_enemy_hurt_player_y_short:
 ; output:
 ; - z: cannot
 ; - nz: can
+update_enemy_move_right_if_possible_platform:
+	call update_enemy_can_move_right_platform
+	ret z
+	jp update_enemy_move_right
+
+
+;-----------------------------------------------
+; input:
+; - ix: enemy ptr
+; output:
+; - z: cannot
+; - nz: can
 update_enemy_move_right_if_possible:
 	call update_enemy_can_move_right
 	ret z
@@ -1978,6 +1990,18 @@ update_enemy_move_right_continue:
 	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_X), a
 	or 1  ; movement happened
 	ret
+
+
+;-----------------------------------------------
+; input:
+; - ix: enemy ptr
+; output:
+; - z: cannot
+; - nz: can
+update_enemy_move_left_if_possible_platform:
+	call update_enemy_can_move_left_platform
+	ret z
+	jp update_enemy_move_left
 
 
 ;-----------------------------------------------
@@ -2079,6 +2103,40 @@ update_enemy_can_move_right:
 	inc b
 	call general_check_collision
 	ret z
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
+	or a
+	jr z, update_enemy_can_move_right_can
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc c
+	inc c
+	inc b
+	inc b
+	jp general_check_collision
+update_enemy_can_move_right_can:
+update_enemy_can_move_left_can:
+	or 1
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - ix: enemy ptr
+; output:
+; - z: cannot
+; - nz: can
+update_enemy_can_move_right_platform:
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	cp 4
+	ret nz
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc c
+	inc c
+	inc b
+	call general_check_collision
+	ret z
+	; check if the platform ends:
 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	inc c
@@ -2090,7 +2148,7 @@ update_enemy_can_move_right:
 	or 1
 	ret
 update_enemy_can_move_right_cannot:
-update_enemy_can_move_left_cannot:	
+update_enemy_can_move_left_cannot:
 	xor a
 	ret
 
@@ -2102,6 +2160,34 @@ update_enemy_can_move_left_cannot:
 ; - z: cannot
 ; - nz: can
 update_enemy_can_move_left:
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	cp 4
+	ret nz
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+; 	dec c
+	inc b
+	call general_check_collision
+	ret z
+
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
+	or a
+	jr z, update_enemy_can_move_left_can
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	; dec c
+	inc b
+	inc b
+	jp general_check_collision
+
+
+;-----------------------------------------------
+; input:
+; - ix: enemy ptr
+; output:
+; - z: cannot
+; - nz: can
+update_enemy_can_move_left_platform:
 	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
 	cp 4
 	ret nz
@@ -2132,17 +2218,18 @@ update_enemy_can_move_up:
 	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
 	or a
 	ret nz
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	cp 4
+	jr nc, update_enemy_can_move_up_continue
 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	call general_check_collision_up
 	ret z
+update_enemy_can_move_up_continue:
 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	inc c
-	call general_check_collision_up
-	jr z, update_enemy_can_move_left_cannot
-	or 1
-	ret
+	jp general_check_collision_up
 
 
 ;-----------------------------------------------
@@ -2155,21 +2242,22 @@ update_enemy_can_move_down:
 	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
 	or a
 	ret nz
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	cp 4
+	jr nc, update_enemy_can_move_down_continue
 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	inc b
 	inc b
 	call general_check_collision
 	ret z
+update_enemy_can_move_down_continue;
 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	inc c
 	inc b
 	inc b
-	call general_check_collision
-	jr z, update_enemy_can_move_left_cannot
-	or 1
-	ret
+	jp general_check_collision
 
 
 ;-----------------------------------------------
