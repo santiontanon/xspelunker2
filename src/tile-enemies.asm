@@ -562,19 +562,19 @@ update_tile_objects_enemy_bee_hive:
 	ld a, (player_x + 1)
 	sub (ix + ROOM_TILE_OBJECT_STRUCT_X)
 	cp 20
-	ret p
+	jp p, update_tile_objects_loop_continue
 	cp -20
-	ret m
+	jp m, update_tile_objects_loop_continue
 	ld a, (player_y + 1)
 	sub (ix + ROOM_TILE_OBJECT_STRUCT_Y)
 	cp 16
-	ret p
+	jp p, update_tile_objects_loop_continue
 	cp -16
-	ret m
+	jp m, update_tile_objects_loop_continue
 
 	; spawn a bee:
 	call ptr_to_new_sprite_enemy
-	ret nz
+	jp nz, update_tile_objects_loop_continue
 	ld (hl), ENEMY_BEE
 	inc hl
 	ld (hl), 0

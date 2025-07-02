@@ -122,8 +122,9 @@ state_play:
 
 		; generate area:
 		ld hl, pcg_generate_area
-		ld e, 0  ; area to generate
-; 		ld e, 1  ; area to generate
+; 		ld e, 0  ; area to generate
+		ld e, 1  ; area to generate
+; 		ld e, 2  ; area to generate
 ; 		ld e, 3  ; area to generate
 ; 		ld e, 4  ; area to generate
 ; 		ld e, 9  ; area to generate
@@ -133,6 +134,7 @@ state_play:
 		call call_hl_in_page_c_8000
 
 		; generate room:
+; 		ld e, 0
 		ld e, 0
 ; 		ld e, 0
 ; 		ld e, 1
@@ -292,21 +294,24 @@ state_play_loop_continue_no_hud:
 	ld bc, state_play_loop  ; return address
 	push bc
 	ld hl, (current_room__animation_fn_ptr)
-	jp (hl)
+	ld a, TILE_ANIMATIONS_PAGE
+	jp jp_to_hl_in_page_a_8000
 
 state_play_loop_room_redraw:
 	call state_play_rerender_room
 	ld bc, state_play_loop  ; return address
 	push bc
 	ld hl, (current_room__animation_fn_ptr)
-	jp (hl)
+	ld a, TILE_ANIMATIONS_PAGE
+	jp jp_to_hl_in_page_a_8000
 
 state_play_loop_hud_redraw:
 	call state_play_rerender_hud
 	ld bc, state_play_loop  ; return address
 	push bc
 	ld hl, (current_room__animation_fn_ptr)
-	jp (hl)
+	ld a, TILE_ANIMATIONS_PAGE
+	jp jp_to_hl_in_page_a_8000
 
 
 ;-----------------------------------------------

@@ -2566,36 +2566,43 @@ player_update_weapon_sprite_request_x_set:
 	dec de
 	ld a, (de)  ; y offset
 	ld b, a
-	ld a, (player_y)
+	ld a, (player_y)  ; pixel y
 	add a, b
 	sra a
 	sra a
 	sra a
 	ld b, a
-	ld a, (player_y + 1)
+	ld a, (player_y + 1)  ; tile y
 	add a, b
 	ld b, a
 
 	dec de
 	ld a, (de)  ; x offset
 	ld c, a
-	ld a, (player_x)
+	ld a, (player_x)  ; pixel x
 	add a, c
-	sra a
-	sra a
-	sra a
-	ld c, a
-	ld a, (player_x + 1)
-	add a, c
-	ld d, b  
-	ld e, a  ; e, d: hit box start
-
-	inc hl
-	ld a, (hl)  ; hitbox width
-	or a 
-	jp z, player_update_update_sprite_position  ; no weapon hitbox
-	add a, e
-	ld c, a
+	sub 4
+	push af
+		sra a
+		sra a
+		sra a
+		ld c, a
+		ld a, (player_x + 1)  ; tile x
+		add a, c
+		ld d, b  
+		ld e, a  ; e, d: hit box start
+		inc hl
+		ld a, (hl)  ; hitbox width
+		or a 
+		jp z, player_update_update_sprite_position_pop_af  ; no weapon hitbox
+		add a, e
+		ld c, a
+	pop af
+	and #07
+	cp 2
+	jr c, player_update_weapon_sprite_request_hit_box_width_set
+	inc c  ; we need to widen the hitbox
+player_update_weapon_sprite_request_hit_box_width_set:
 	inc hl
 	ld a, (hl)  ; hitbox height
 	add a, d
@@ -2604,11 +2611,14 @@ player_update_weapon_sprite_request_x_set:
 	call player_weapon_hitbox_check
 
 	jp player_update_update_sprite_position
+player_update_update_sprite_position_pop_af:
+	pop af
+	jp player_update_update_sprite_position
 
 player_update_weapon_sprite_request_hammer1:
 	ld a, (player_weapon_state_timer)
 	cp 18
-	jr nz, player_update_weapon_sprite_request_continue
+	jp nz, player_update_weapon_sprite_request_continue
 	ld hl, SFX_weapon_swing_slow
 	call play_SFX_with_high_priority
 	ld a, PLAYER_WEAPON_SWING_HAMMER2
@@ -3044,12 +3054,14 @@ player_weapon_hitbox_check_tile_object_loop_breakable_wall:
 		add a, (ix + ROOM_TILE_OBJECT_STRUCT_WIDTH)
 		cp e
 		jr c, player_weapon_hitbox_check_tile_object_loop_continue
+		jr z, player_weapon_hitbox_check_tile_object_loop_continue
 		ld a, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
 		cp h
 		jr nc, player_weapon_hitbox_check_tile_object_loop_continue
 		add a, (ix + ROOM_TILE_OBJECT_STRUCT_HEIGHT)
 		cp d
 		jr c, player_weapon_hitbox_check_tile_object_loop_continue
+		jr z, player_weapon_hitbox_check_tile_object_loop_continue
 
 		; check collision ID:
 		ld a, iyl
@@ -3087,12 +3099,14 @@ player_weapon_hitbox_check_enemy_loop:
 		add a, 2
 		cp e
 		jr c, player_weapon_hitbox_check_enemy_continue
+		jr z, player_weapon_hitbox_check_enemy_continue
 		ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 		cp h
 		jr nc, player_weapon_hitbox_check_enemy_continue
 		add a, 2
 		cp d
 		jr c, player_weapon_hitbox_check_enemy_continue
+		jr z, player_weapon_hitbox_check_enemy_continue
 
 		; check collision ID:
 		ld a, iyl

@@ -22,6 +22,7 @@
 CORE_CODE_PAGE: equ 0
 PCG_PAGE: equ 1
 TILES_PAGE: equ 2
+TILE_ANIMATIONS_PAGE: equ 2
 PYRAMID_TILES_PAGE: equ 2
 SPRITES_PAGE: equ 3
 MAP_PAGE: equ 3
@@ -220,7 +221,6 @@ draw_sentence_to_vdp_from_another_page:
     include "sfx.asm"
     include "collision.asm"
     include "rooms.asm"
-    include "tile-animations.asm"
     include "scroll.asm"
     include "player.asm"
     include "sprite-objects.asm"
@@ -345,6 +345,7 @@ tablet_maya_riddle_tiles_zx0:
 
     include "tile-objects.asm"
     include "tile-enemies.asm"
+    include "tile-animations.asm"
 
 end_of_page_2:
     ds #c000-$    
@@ -899,7 +900,9 @@ tmp_puzzlebox_pointer: equ tmp_hud_drawing_hl + 4
 tmp_enemy_pcg_platform_loc_ptr: equ temporary_variables
 tmp_enemy_pcg_water_loc_ptr: equ temporary_variables + 2
 tmp_enemy_pcg_ceiling_loc_ptr: equ temporary_variables + 4
-tmp_enemy_pcg_n_ceiling_locs: equ temporary_variables + 6
+tmp_enemy_pcg_n_platform_locs: equ temporary_variables + 6
+tmp_enemy_pcg_n_water_locs: equ temporary_variables + 7
+tmp_enemy_pcg_n_ceiling_locs: equ temporary_variables + 8
 tmp_get_tile_object_behind_player_ptr: equ temporary_variables
 
 config_hud_type: ds virtual 1  ; 0: minimal, 1: minimal always visible, 2: full

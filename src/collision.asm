@@ -22,7 +22,7 @@ general_check_collision:
 ; output:
 ; - z: collision
 ; - nz: no collision
-general_check_collision_up:
+general_check_collision_with_wall:
 	call get_room_tile_type
 	cp 2
 	ret

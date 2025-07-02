@@ -207,6 +207,15 @@ public class GenerateSprites {
         data.addAll(extractSprite(sourceImage, 16, 112, 15));
         data.addAll(extractSpriteFlipped(sourceImage, 0, 112, 15));  // bee left
         data.addAll(extractSpriteFlipped(sourceImage, 16, 112, 15));
+        // monkey (31)
+        data.addAll(extractSprite(sourceImage, 0, 128, 15));  // monkey right
+        data.addAll(extractSprite(sourceImage, 16, 128, 15));
+        data.addAll(extractSprite(sourceImage, 32, 128, 15));
+        data.addAll(extractSprite(sourceImage, 48, 128, 15));
+        data.addAll(extractSpriteFlipped(sourceImage, 0, 128, 15));  // monkey left
+        data.addAll(extractSpriteFlipped(sourceImage, 16, 128, 15));
+        data.addAll(extractSpriteFlipped(sourceImage, 32, 128, 15));
+        data.addAll(extractSpriteFlipped(sourceImage, 48, 128, 15));
 
         if (data.size() > 40 * 32) {
             throw new Exception("More enemy sprites than the engine can handle!");
