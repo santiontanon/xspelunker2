@@ -2071,6 +2071,10 @@ update_enemy_hurt_player:
 	ld a, (player_immunity_timer)
 	or a
 	ret nz  ; player immune
+	ld a, (player_state)
+	and #fe
+	cp PLAYER_STATE_DEAD
+	ret z  ; player already dead
 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	ld a, (player_x + 1)
