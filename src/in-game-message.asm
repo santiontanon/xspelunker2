@@ -149,7 +149,9 @@ display_in_game_message_center:
 display_in_game_message_draw_box:
 	; clear sprites that are in the message area (y > 48, y < 120)
 	ld hl, sprite_attribute_table
-	ld b, MAX_SPRITES
+	ld a, (n_displayed_object_sprites)
+	add a, FIRST_OBJECT_SPRITE
+	ld b, a
 display_in_game_message__clear_sprites_loop:
 	ld a, (hl)  ; y
 	cp 48
@@ -165,7 +167,11 @@ display_in_game_message__clear_sprites_loop_next:
 	djnz display_in_game_message__clear_sprites_loop
 	ld hl, sprite_attribute_table
 	ld de, SPRATR2
-	ld b, MAX_SPRITES * 4
+	ld a, (n_displayed_object_sprites)
+	add a, FIRST_OBJECT_SPRITE
+	add a, a
+	add a, a
+	ld b, a
 	call fast_small_LDIRVM		
 
 	; save the content below:

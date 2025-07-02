@@ -322,22 +322,23 @@ trial_tablet_fn:
 	ADD_HL_A
 	ld a, (hl)  ; a = type of message to display
 	
-	ld hl, trial_tablet_messages
-	add a, a
-	ld c, a
-	ld b, 0
-	add hl, bc
-	ld a, (hl)
-	inc hl
-	ld h, (hl)
-	ld l, a  ; ptr to base message
+	push ix
+		ld hl, trial_tablet_messages
+		add a, a
+		ld c, a
+		ld b, 0
+		add hl, bc
+		ld a, (hl)
+		ld ixl, a
+		inc hl
+		ld a, (hl)
+		ld ixh, a  ; ptr to base message
+		ld hl, copy_ix_text_to_buffer_4096
+		ld c, TEXT_PAGE
+		call call_hl_in_page_c_8000
+	pop ix
 
 	; concatenate message + god name:
-	ld de, buffer_4096
-	ld c, (hl)
-	inc c
-	ld b, 0
-	ldir
 	push de
 		ld hl, trial_tablet_message_godnames
 		ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
@@ -350,13 +351,23 @@ trial_tablet_fn:
 		inc hl
 		ld h, (hl)
 		ld l, a  ; ptr to god name
-		ld a, (buffer_4096)
-		add a, (hl)  ; length of god name
-		ld (buffer_4096), a
 	pop de
-	ld b, 0
+	push de
+		push hl
+		pop ix
+		ld hl, copy_ix_text_to_de
+		ld c, TEXT_PAGE
+		call call_hl_in_page_c_8000
+	pop hl
+	; update text length, and move the godname one position to the left (remove the length on that part of the sentence):
+	ld a, (buffer_4096)
+	add a, (hl)
+	ld (buffer_4096), a
 	ld c, (hl)
+	ld d, h
+	ld e, l
 	inc hl
+	ld b, 0
 	ldir
 
 	ld hl, buffer_4096
@@ -372,7 +383,11 @@ trial_tablet_fn:
 trial_tablet_fn_loop:
 	push hl
 		ld iyl, 12*8
-		call max_length_of_sentence_in_one_line
+		push hl
+		pop ix
+		ld hl, max_length_of_sentence_in_one_line_ix
+		ld c, TEXT_PAGE
+		call call_hl_in_page_c_8000
 	pop hl
 	ld c, (hl)  ; original length
     push bc

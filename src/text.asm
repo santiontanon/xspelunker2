@@ -8,9 +8,10 @@ clear_text_rendering_buffer_bc_set:
 
 ; ------------------------------------------------
 copy_ix_text_to_buffer_4096:
+	ld de, buffer_4096
+copy_ix_text_to_de:
 	push ix
 	pop hl
-	ld de, buffer_4096
 	ld c, (hl)
 	ld b, 0
 	inc c
