@@ -45,20 +45,18 @@ pcg_enemy_generation_table_moon:
 	db 2  ; 2 enemies per "screen" area
 	db 1
 	db TAG_ENEMY_CARNIVORE_PLANT, 96  ; tile-based enemy type and chance (out of 256)
-; 	db 11  ; possible sprite enemy types to be spawned (weights below should add up to 32)
-; 	db ENEMY_SNAKE, 5  ; enemy type and weight
-; 	db ENEMY_SNAKE_DASHER, 2
-; 	db ENEMY_SNAKE_POISON, 2
-; 	db ENEMY_POISON_BULLET, 1
-; 	db ENEMY_FISH, 5
-; 	db ENEMY_FISH_JUMPER, 2
-; 	db ENEMY_BAT, 5
-; 	db ENEMY_BAT_AGGRESSIVE, 2
-; 	db ENEMY_SKELETON, 5
-; 	db ENEMY_SKELETON_THROWER1, 2
-; 	db ENEMY_SKELETON_THROWER2, 1
-	db 1
-	db ENEMY_BAT, 32
+	db 11  ; possible sprite enemy types to be spawned (weights below should add up to 32)
+	db ENEMY_SNAKE, 5  ; enemy type and weight
+	db ENEMY_SNAKE_DASHER, 2
+	db ENEMY_SNAKE_POISON, 2
+	db ENEMY_POISON_BULLET, 1
+	db ENEMY_FISH, 5
+	db ENEMY_FISH_JUMPER, 2
+	db ENEMY_BAT, 5
+	db ENEMY_BAT_AGGRESSIVE, 2
+	db ENEMY_SKELETON, 5
+	db ENEMY_SKELETON_THROWER1, 2
+	db ENEMY_SKELETON_THROWER2, 1
 
 
 ;-----------------------------------------------
