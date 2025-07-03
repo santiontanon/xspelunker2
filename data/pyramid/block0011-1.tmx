@@ -2,6 +2,7 @@
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="12">
  <properties>
   <property name="down" value="hole"/>
+  <property name="right" value="hole"/>
  </properties>
  <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="256" columns="16">
   <image source="tiles.png" width="128" height="128"/>

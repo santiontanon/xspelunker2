@@ -1,1 +1,32 @@
-<?xml version="1.0" encoding="UTF-8"?><map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="6"> <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="256" columns="16">  <image source="tiles.png" width="128" height="128"/> </tileset> <layer name="Tile Layer 1" width="16" height="12">  <data encoding="csv">156,156,247,156,247,151,156,156,247,156,156,156,151,156,247,247,152,152,153,152,153,153,152,152,153,152,152,152,153,152,153,153,186,188,97,98,1,1,103,1,1,1,1,103,97,98,1,1,155,141,1,1,1,1,104,1,1,1,1,1,1,1,1,1,183,185,1,1,1,1,1,1,1,1,1,1,1,1,1,1,144,144,144,1,1,244,245,1,1,244,245,1,1,244,245,1,248,1,1,1,1,196,197,1,1,196,197,1,1,196,197,1,248,1,1,1,1,212,213,1,1,212,213,1,1,212,213,1,248,1,1,1,1,228,229,253,142,228,229,253,142,228,229,1,248,1,1,1,1,244,245,133,134,244,245,133,134,244,245,1,151,156,247,156,151,156,156,156,151,156,247,156,156,247,247,156,153,152,153,152,153,152,152,152,153,152,153,152,152,153,153,152</data> </layer> <objectgroup name="objects">  <object id="1" type="item" x="16" y="64" width="16" height="16"/>  <object id="2" type="big-item" x="8" y="56" width="32" height="24"/>  <object id="3" type="breakable-left" x="0" y="48" width="8" height="32"/>  <object id="4" type="door-left" x="0" y="16" width="16" height="24"/>  <object id="5" type="4x4-item" x="8" y="48" width="32" height="32"/> </objectgroup></map>
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="6">
+ <properties>
+  <property name="right" value="hole"/>
+ </properties>
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="256" columns="16">
+  <image source="tiles.png" width="128" height="128"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="16" height="12">
+  <data encoding="csv">
+156,156,247,156,247,151,156,156,247,156,156,156,151,156,247,247,
+152,152,153,152,153,153,152,152,153,152,152,152,153,152,153,153,
+186,188,97,98,1,1,103,1,1,1,1,103,97,98,1,1,
+155,141,1,1,1,1,104,1,1,1,1,1,1,1,1,1,
+183,185,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+144,144,144,1,1,244,245,1,1,244,245,1,1,244,245,1,
+248,1,1,1,1,196,197,1,1,196,197,1,1,196,197,1,
+248,1,1,1,1,212,213,1,1,212,213,1,1,212,213,1,
+248,1,1,1,1,228,229,253,142,228,229,253,142,228,229,1,
+248,1,1,1,1,244,245,133,134,244,245,133,134,244,245,1,
+151,156,247,156,151,156,156,156,151,156,247,156,156,247,247,156,
+153,152,153,152,153,152,152,152,153,152,153,152,152,153,153,152
+</data>
+ </layer>
+ <objectgroup name="objects">
+  <object id="1" type="item" x="16" y="64" width="16" height="16"/>
+  <object id="2" type="big-item" x="8" y="56" width="32" height="24"/>
+  <object id="3" type="breakable-left" x="0" y="48" width="8" height="32"/>
+  <object id="4" type="door-left" x="0" y="16" width="16" height="24"/>
+  <object id="5" type="4x4-item" x="8" y="48" width="32" height="32"/>
+ </objectgroup>
+</map>

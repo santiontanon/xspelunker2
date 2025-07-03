@@ -22,6 +22,7 @@ public class PCGArea {
     public static final int SPECIAL_ROOM_IDS_START = 100;
     public static final int CALENDAR_ROOM_ID = 100;  // some ID that is impossible to arise naturally
     public static final int TELEPORTER_ROOM_ID = 101;  // some ID that is impossible to arise naturally
+    public static final int START_ROOM_ID = 102;  // some ID that is impossible to arise naturally
     public static final int n_connections_per_type[] = {
         0, 1, 1, 2, 1, 2, 2, 3,
         1, 2, 2, 3, 2, 3, 3, 4,
@@ -580,6 +581,7 @@ public class PCGArea {
                             chunk2.removeObjectTypes("breakable-left");
                             chunk2.removeObjectTypes("door-left");
                             chunk2.path += " + left";
+                            chunk2.tags.put("left", "hole");
                             block_chunks.get(chunk2.type).add(chunk2);
                             current2.add(chunk2);
                         }
@@ -623,6 +625,7 @@ public class PCGArea {
                             chunk2.removeObjectTypes("breakable-right");
                             chunk2.removeObjectTypes("door-right");
                             chunk2.path += " + right";
+                            chunk2.tags.put("right", "hole");
                             block_chunks.get(chunk2.type).add(chunk2);
                             current2.add(chunk2);
                         }
@@ -682,6 +685,7 @@ public class PCGArea {
                     chunk2.removeObjectTypes("door-left");
                     chunk2.removeObjectTypes("breakable-left");
                     chunk2.path += " + left";
+                    chunk2.tags.put("left", "hole");
                 }
                 if ((type & PCGWorld.DIRECTION_UP) != 0 && (chunk.type & PCGWorld.DIRECTION_UP) == 0) {
                     // open a path up:
@@ -705,6 +709,7 @@ public class PCGArea {
                     chunk2.removeObjectTypes("door-right");
                     chunk2.removeObjectTypes("breakable-right");
                     chunk2.path += " + right";
+                    chunk2.tags.put("right", "hole");
                 }
                 if ((type & PCGWorld.DIRECTION_DOWN) != 0 && (chunk.type & PCGWorld.DIRECTION_DOWN) == 0) {
                     // open a path down:
@@ -730,6 +735,19 @@ public class PCGArea {
         int h = a.height;
                 
         // Ensure that the "calendar stone" and "teleporter" rooms is not merged with anything:
+        if (a.ID == 0) {  // "the jungle"
+            for(int i = 0;i<h;i++) {
+                for(int j = 0;j<w;j++) {
+                    if (a.tags[j][i] != null && a.tags[j][i].contains("start")) {
+                        if (a.tags[j][i].size() > 1) {
+                            System.err.println("More than one tag on the start room!");
+                            return false;
+                        }
+                        a.rooms[j][i] = START_ROOM_ID;
+                    }
+                }
+            }
+        }        
         if (a.ID == 3) {  // "the confluence"
             for(int i = 0;i<h;i++) {
                 for(int j = 0;j<w;j++) {
@@ -1588,6 +1606,8 @@ public class PCGArea {
                         if ((ra.pieceTypes[j][i] & PCGWorld.DIRECTION_UP) != 0) {
                             upTag = "stairs";  // up/down connections from outside the map always via stairs
                         }
+                    } else if (a.rooms[j/2][(i-1)/2] >= SPECIAL_ROOM_IDS_START && (ra.pieceTypes[j][i] & PCGWorld.DIRECTION_UP) != 0) {
+                        upTag = "hole";
                     } else {
                         if ((ra.pieceTypes[j][i] & PCGWorld.DIRECTION_UP) != 0) {
                             if ((ra.pieceTypes[j][i - 1] & PCGWorld.DIRECTION_DOWN) != 0) {
@@ -1602,15 +1622,21 @@ public class PCGArea {
                         }
                     }
                     if (left != null) {
-                        if ((ra.pieceTypes[j][i] & PCGWorld.DIRECTION_LEFT) != 0) {
-                            if ((ra.pieceTypes[j - 1][i] & PCGWorld.DIRECTION_RIGHT) != 0) {
-                                if (left.tags.containsKey("right")) {
-                                    leftTag = left.tags.get("right");
-                                }
-                            }
+                        if (a.rooms[(j-1)/2][i/2] >= SPECIAL_ROOM_IDS_START && (ra.pieceTypes[j][i] & PCGWorld.DIRECTION_LEFT) != 0) {
+                            leftTag = "hole";
                         } else {
-                            // ignore the above tag, as we have a breakable wall/door above here
+                            if ((ra.pieceTypes[j][i] & PCGWorld.DIRECTION_LEFT) != 0) {
+                                if ((ra.pieceTypes[j - 1][i] & PCGWorld.DIRECTION_RIGHT) != 0) {
+                                    if (left.tags.containsKey("right")) {
+                                        leftTag = left.tags.get("right");
+                                    }
+                                }
+                            } else {
+                                // ignore the left tag, as we have a breakable wall/door above here
+                            }
                         }
+                    } else {
+                        leftTag = null;
                     }
                     if ((ra.pieceTypes[j][i] & PCGWorld.DIRECTION_DOWN) != 0) {
                         if (i == a.height * ROOM_HEIGHT - 1 || ra.pieceTypes[j][i+1] < 0) {
