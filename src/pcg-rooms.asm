@@ -225,6 +225,8 @@ pcg_generate_room__seed_generated:
 
 	; check if it's a special room:
 	ld a, (current_room__id)
+	cp START_ROOM_ID
+	jp z, pcg_generate_room__start
 	cp CALENDAR_ROOM_ID
 	jp z, pcg_generate_room__calendar
 	cp TELEPORTER_ROOM_ID
@@ -1915,6 +1917,165 @@ ENDR
 ; TAG_PUZZLEBOX_MARS: equ 155
 ; TAG_PUZZLEBOX_MOON: equ 156
 
+
+;-----------------------------------------------
+pcg_generate_room__start:
+	; name table:
+	ld hl, start_room_zx0
+	ld de, current_room__tile_map
+	ld c, MAP_PAGE
+	call dzx0_from_page_c
+
+	; tile sets, collisions, and animation ptrs:
+	ld bc, tiles_jungle_zx0
+	ld (current_room__tileset_ptr), bc
+	ld bc, tile_collision_types_jungle
+	ld (current_room__collision_ptr), bc
+	ld a, JUNGLE_TILES_PAGE
+	ld (current_room__tileset_page), a
+	xor a
+	ld (current_room__tileset_overrides_item_tiles), a
+	
+	; open/close the appropriate walls:
+	ld a, (current_room__y)
+	add a, a  ; y in chunks
+	ld b, a
+	ld a, (current_area__width)
+	add a, a  ; width in chunks
+	ld c, a
+	ld a, b
+	or a
+	ld a, 0
+	jr z, pcg_generate_room__start_ptr_loop_end
+pcg_generate_room__start_ptr_loop:
+	add a, c
+	djnz pcg_generate_room__start_ptr_loop
+pcg_generate_room__start_ptr_loop_end:
+	ld c, a
+	ld a, (current_room__x)
+	add a, a
+	add a, c
+	ld hl, current_area__chunks_ids
+	ADD_HL_A
+	ld a, (hl)  ; top-left chunk ID
+	push hl
+		ld b, PCG_DIRECTION_UP
+		call pcg_generate_room__chunk_direction_open
+		jr z, pcg_generate_room__start_continue1
+		ld bc, #0002
+		ld de, #010c
+		call room_remove_breakable_wall_restore_background
+pcg_generate_room__start_continue1:
+	pop hl
+	inc hl
+	ld a, (hl)  ; top-right chunk ID
+	push hl
+		ld b, PCG_DIRECTION_UP
+		call pcg_generate_room__chunk_direction_open
+		jr z, pcg_generate_room__start_continue2
+		ld bc, #0012
+		ld de, #010c
+		call room_remove_breakable_wall_restore_background
+pcg_generate_room__start_continue2:
+	pop hl
+	ld a, (hl)  ; top-right chunk ID
+	push hl
+		ld b, PCG_DIRECTION_RIGHT
+		call pcg_generate_room__chunk_direction_open
+		jr z, pcg_generate_room__start_continue3
+		ld bc, #021e
+		ld de, #0802
+		call room_remove_breakable_wall_restore_background
+		ld hl, current_room__tile_map + 30 + 1*32
+		ld (hl), 229
+		inc hl
+		ld (hl), 230
+		ld hl, current_room__tile_map + 30 + 10*32
+		ld (hl), 197
+		inc hl
+		ld (hl), 198
+pcg_generate_room__start_continue3:
+	pop hl
+	ld a, (current_area__width)
+	add a, a  ; width in chunks
+	ld e, a
+	ld d, 0
+	add hl, de
+	ld a, (hl)  ; bottom-right chunk ID
+	push hl
+		ld b, PCG_DIRECTION_RIGHT
+		call pcg_generate_room__chunk_direction_open
+		jr z, pcg_generate_room__start_continue4
+		ld bc, #0e1e
+		ld de, #0702
+		call room_remove_breakable_wall_restore_background
+		ld hl, current_room__tile_map + 30 + 13*32
+		ld (hl), 229
+		inc hl
+		ld (hl), 230
+		ld hl, current_room__tile_map + 30 + 21*32
+		ld (hl), 149
+		inc hl
+		ld (hl), 164
+		ld hl, current_room__tile_map + 30 + 22*32
+		ld (hl), 197
+		inc hl
+		ld (hl), 198
+pcg_generate_room__start_continue4:
+	pop hl	
+	ld a, (hl)  ; bottom-right chunk ID
+	push hl
+		ld b, PCG_DIRECTION_DOWN
+		call pcg_generate_room__chunk_direction_open
+		jr nz, pcg_generate_room__start_continue5
+		ld hl, current_room__tile_map + 22 + 21*32
+		ld a, (hl)
+		dec hl
+		ld (hl), a
+		xor a
+		ld hl, current_room__tile_map + 21 + 22*32
+		ld (hl), a
+		ld hl, current_room__tile_map + 21 + 23*32
+		ld (hl), a
+		ld hl, current_room__tile_map + 28 + 21*32
+		ld a, (hl)
+		dec hl
+		ld (hl), a
+		xor a
+		ld hl, current_room__tile_map + 27 + 22*32
+		ld (hl), a
+		ld hl, current_room__tile_map + 27 + 23*32
+		ld (hl), a
+pcg_generate_room__start_continue5:
+	pop hl
+	dec hl
+	ld a, (hl)  ; bottom-left chunk ID
+	ld b, PCG_DIRECTION_DOWN
+	call pcg_generate_room__chunk_direction_open
+	jr nz, pcg_generate_room__start_continue6
+	ld hl, current_room__tile_map + 5 + 21*32
+	ld a, (hl)
+	dec hl
+	ld (hl), a
+	xor a
+	ld hl, current_room__tile_map + 4 + 22*32
+	ld (hl), a
+	ld hl, current_room__tile_map + 4 + 23*32
+	ld (hl), a
+	ld hl, current_room__tile_map + 11 + 21*32
+	ld a, (hl)
+	dec hl
+	ld (hl), a
+	xor a
+	ld hl, current_room__tile_map + 10 + 22*32
+	ld (hl), a
+	ld hl, current_room__tile_map + 10 + 23*32
+	ld (hl), a
+pcg_generate_room__start_continue6:
+
+	ret 
+
+
 ;-----------------------------------------------
 pcg_generate_room__calendar:
 	; name table:
@@ -1924,13 +2085,11 @@ pcg_generate_room__calendar:
 	call dzx0_from_page_c
 
 	; tile sets, collisions, and animation ptrs:
-	ld a, PYRAMID_TILES_PAGE
-	ld (current_room__tileset_page), a
 	ld bc, tiles_calendar_zx0
 	ld (current_room__tileset_ptr), bc
 	ld bc, tile_collision_types_calendar
 	ld (current_room__collision_ptr), bc
-	ld a, TILES_PAGE
+	ld a, PYRAMID_TILES_PAGE
 	ld (current_room__tileset_page), a
 	ld a, 1
 	ld (current_room__tileset_overrides_item_tiles), a

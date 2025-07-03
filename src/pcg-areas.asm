@@ -183,7 +183,7 @@ pcg_generate_area__mark_special_rooms_loop:
 	jr nz, pcg_generate_area__mark_special_rooms_loop_next
 	ld e, CALENDAR_ROOM_ID
 pcg_generate_area__mark_special_rooms_loop_found:
-	; calendar room found!
+	; special room found!
 	inc hl
 	ld a, (hl)
 	ld (current_area__special_room_room_id_offset), a
@@ -202,6 +202,12 @@ pcg_generate_area__mark_special_rooms_loop_next:
 	ld e, TELEPORTER_ROOM_ID
 	jr pcg_generate_area__mark_special_rooms_loop_found
 pcg_generate_area__mark_special_rooms_loop_next2:
+	cp TAG_START
+	jr nz, pcg_generate_area__mark_special_rooms_loop_next3
+	; teleporter room found!
+	ld e, START_ROOM_ID
+	jr pcg_generate_area__mark_special_rooms_loop_found
+pcg_generate_area__mark_special_rooms_loop_next3:
 	inc hl
 	inc hl
 	inc hl

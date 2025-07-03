@@ -1,13 +1,9 @@
 to do:
 
-***- jungle biome:
-  ***- add start room to the assembler side:
-    ***- use it (make sure no enemies are spawned)
-    ***- open the appropriate paths
-  ***- add jungle events: 
-    ***- shop to use coins with (what do they sell? healing, supplies and save game; maybe some random item/weapons that were not spawned in the game?; make sure blow gun is sold for sure if not spawned, as it might be needed for a Maya riddle)
-    ***- elaine letters
-    ***- find bomb maker (he just makes the dynamite, it is still sold in the shop, where you will get the letter before purchasing the dynamite, or maybe make it so expensive to buy that it's actually impossible to buy it anyway)
+***- jungle events: 
+  ***- shop to use coins with (what do they sell? healing, supplies and save game; maybe some random item/weapons that were not spawned in the game?; make sure blow gun is sold for sure if not spawned, as it might be needed for a Maya riddle)
+  ***- elaine letters
+  ***- find bomb maker (he just makes the dynamite, it is still sold in the shop, where you will get the letter before purchasing the dynamite, or maybe make it so expensive to buy that it's actually impossible to buy it anyway)
 
 - Implement PCGWorld in assembler:
   - Java: for some areas (pyramids, etc.) have some predefined shapes (e.g. pyramid shape), that can be chosen with some probability. And maybe also different shapes for the confluence, etc. or even have a desired shape that is respected with some probability, so that it more or less resembles the shape, but not always exactly (e.g.: run normal algorithm, and if the room is not on the target shape, have a 0.5 chance of dropping it)
