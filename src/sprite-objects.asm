@@ -157,6 +157,8 @@ update_sprite_objects_loop:
 	jr z, update_sprite_objects_explosion
 	cp SPRITE_OBJECT_TYPE_BIG_EXPLOSION
 	jr z, update_sprite_objects_big_explosion
+	cp SPRITE_OBJECT_TYPE_SHOPKEEPER
+	jp z, update_sprite_objects_shopkeeper
 update_sprite_objects_loop_next:
 	ld de, ROOM_OBJECT_STRUCT_SIZE
 	add ix, de
@@ -234,6 +236,27 @@ update_sprite_objects_big_explosion:
 	dec (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	jp update_sprite_objects_decrease_timer_and_delete_if_necessary
 
+
+;-----------------------------------------------
+update_sprite_objects_shopkeeper:
+	inc (ix + ROOM_OBJECT_STRUCT_STATE)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	and #08
+	add a, (FIRST_ENEMY_SPRITE_PATTERN + 0) * 4
+	ld e, a 
+	ld d, COLOR_DARK_YELLOW
+	ld c, 0
+	push af
+		call get_sprite_object_sprite_coordinates
+		call z, add_sprite_to_this_frame
+	pop af
+	add a, 4
+	ld e, a
+	ld d, COLOR_DARK_BLUE
+	ld c, 0
+	call get_sprite_object_sprite_coordinates
+	call z, add_sprite_to_this_frame
+	jp update_sprite_objects_loop_next
 
 
 ;-----------------------------------------------

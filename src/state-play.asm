@@ -99,12 +99,14 @@ state_play:
 ; 		ld (global_state__objects + TAG_TELEPORTER5), a
 
 		; initial player position:
-		ld hl, #0a00
+		ld hl, #0100
+; 		ld hl, #0a00
 ; 		ld hl, #1000
 ; 		ld hl, #1400
 		ld (player_x), hl
+		ld hl, #0b00
 ; 		ld hl, #0a00
-		ld hl, #0800
+; 		ld hl, #0800
 		ld (player_y), hl
 		ld a, #ff
 		ld (player_requested_weapon_sprite), a

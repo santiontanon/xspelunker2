@@ -1,9 +1,32 @@
 to do:
 
 ***- jungle events: 
-  ***- shop to use coins with (what do they sell? healing, supplies and save game; maybe some random item/weapons that were not spawned in the game?; make sure blow gun is sold for sure if not spawned, as it might be needed for a Maya riddle)
-  ***- elaine letters
-  ***- find bomb maker (he just makes the dynamite, it is still sold in the shop, where you will get the letter before purchasing the dynamite, or maybe make it so expensive to buy that it's actually impossible to buy it anyway)
+  ***- enter the shop:
+    ***- mock up the UI (should be simple)
+    ***- items to purchase: corn, stones, darts, spears (when weapons available), blowgun if not spawned in the game (have an array with items to add to the shop), and maybe some other items now spawned in the game. (if you don't have the weapons, just say "sold-out" on some)
+    ***- being able to purchase items 
+  ***- events:
+    *** - As soon as we enter the pyramid (either of them) for the first time, the character says:
+        "Ok, I made it to the ruins! I need to find a way to sabotage the Alien operation!"
+        "I need to find where are they coming from, and how to stop them!"
+    ***- When the first "power stone" is found:
+      "What is this? it is a small polished stone, but it seems fully charged with static electricity! Why was that beast guarding this so tightly?"
+    ***- When finding the calendar stone for the first time:
+      "Look at that! That is a gigantic Mayan Tzolk'in calendar stone! Although it seems to be half-buried, it's in perfect condition!"
+      "But there is something strange in the middle, it has some empty sockets, like if something was taken out."
+      "It is full of inscriptions, but I do not know what do they say!"
+    ***- the only way forward is to go back to the jungle entrance, where they will find that Elaine has written them a letter]
+      ***- Aapo will have an explamation mark on top.
+      ***- interacting with him: "Bix a beel Mr. Xavier! I have a letter for you!" (and then jump directly to the letter-reading screen, if you exit, go back to inventory, etc.)
+      ***- Xavier: "The calendar stone! So, that's what it is!"
+      ***- [Xavier at this point decides to send Elaine a letter back, with more writings that were found on the calendar stone, to see if she can translate them]
+        ***- "Elaine, I found more glyphs around the base of the stone, written around a map of the world as the Maya conceived it, and annotated with strange symbols that I don't recognize. I'm sending you a copy, can you take a look?"
+    ***- Interacting with Aapo: ind out that the one person in town that has access to explosives had disappeared in the pyramid. After visiting the stone again with the translation, the player should now know how to use the idol.]
+    ***- When using the first idol in the calendar stone:
+      "It fits! And the whole thing is activating! What did I just do?!"
+    ***- Somewhere in the inverted pyramid (after placing at least one power stone), they find the person they were looking for (with access to dynamite and rescue him). He says that you should come back later and he can sell you explosives, but he will need some time to gather them. So, you decide to keep exploring.
+    ***- After beating the third pyramid and the third boss (obtaining the third idol), the player is squeamish of using it on the calendar stone, since the goal is to destroy it, and powering it up too much, might help the aliens. At this point, if you go back to get explosives, you can get them, but you will also get a letter from Elaine, explaining more details. She hopes you have not yet destroyed it, since it seems this calendar stone was not designed to receive the star people, but to prevent them from coming, by blocking the dimensional portals they had open. The ancient Maya built it, but with the Maya gone, and no one to take care of it, somehow the stones that powered it were taken away and it allowed aliens to come. So, you should not destroy it, but power it up! The aliens have bene able to come, precisely because the stone is not powered up! She hopes you have not yet destroyed it.
+      ***- The bomb maker just makes the dynamite, it is still sold in the shop, it should be so expensive to buy that it's actually impossible to buy it anyway, but now you can get another letter.
 
 - Implement PCGWorld in assembler:
   - Java: for some areas (pyramids, etc.) have some predefined shapes (e.g. pyramid shape), that can be chosen with some probability. And maybe also different shapes for the confluence, etc. or even have a desired shape that is respected with some probability, so that it more or less resembles the shape, but not always exactly (e.g.: run normal algorithm, and if the room is not on the target shape, have a 0.5 chance of dropping it)
@@ -85,79 +108,34 @@ X-Spelunker 2 (e-ki-se pe-lu-ne-ke-le):
     Elaine: Xavier! This is insane! You can't go alone!
     Xavier: I've been there before. I will be ready!
 
-[game starts, and the player controls Xavier, starting in the jungle, playing until finding the entrance to one of the two underground pyramids that can be accessed through the jungle]
 
-- As soon as we enter the pyramid (either of them) for the first time, the character says:
-    "Ok, I made it to the ruins! I need to find a way to sabotage the Alien operation!"
-    "I need to find where are they coming from, and how to stop them!"
+- points to remember (for lore/clues):
+    - the first attempt to create humans was from mud, but those were destroyed in the great flood 
+    - the second attempt was from wood, but they could not worship and were destroyed (survivors are monkeys)
+    - six creator deities: the Framer and the Shaper, Tepew and Quetzal Serpent, along with Xpiyacóc and Xmucané. These deities, helped Heart of Sky, also known as Hurakán, create the Earth.
+    - Hunajpu and Xbalanqué were two twins who deteated the gods of the underworld in a ball game, and then became the sun and moon
+    - After that, humans were created from white and yellow maize (Maize is sacred to Maya because of this)
+    - 6 levels of maya underworld
+    - 13 levels of maya upperworld
 
-[The player explores the pyramid, solving puzzles until they find their way to the first boss, and defeat it, obtaining the first idol]
-
-- When the first "power stone" is found:
-    "What is this? it is a small polished stone, but it seems fully charged with static electricity! Why was that beast guarding this so tightly?"
-
-[The player might find the second boss and second idol here, or find first the calendar stone, in any case, as soon as the player finds the calendar stone, the following event happens]
-
-- When finding the calendar stone for the first time:
-    "Look at that! That is a gigantic Mayan Tzolk'in calendar stone! Although it seems to be half-buried, it's in perfect condition!"
-    "But there is something strange in the middle, it has some empty sockets, like if something was taken out."
-    "It is full of inscriptions, but I do not know what do they say!"
-
-[at this point, the player can try to use the power stone in the calendar stone, but they will not know how to use it, so, the only way forward is to go back to the jungle entrance, where they will find that Elaine has written them a letter]
-
-- If you go back to the jungle, you will find Elaine's letter waiting (auto inspect it, you can inspect it later in the inventory too)
-
-    Then:
-    Xavier: "The calendar stone! So, that's what it is!"
-
-[Xavier at this point decides to send Elaine a letter back, with more writings that were found on the calendar stone, to see if she can translate them]
-
-    "Elaine, I found more glyphs around the base of the stone, written around a map of the world as the Maya conceived it, and annotated with strange symbols that I don't recognize. I'm sending you a copy, can you take a look?"
-
-[from this point on the player believes that their goal is to destroy the stone, so asking some NPCs in the jungle they find out that the one person in town that has access to explosives had disappeared in the pyramid. After visiting the stone again with the translation, the player should now know how to use the idol.]
-
-- When using the first idol in the calendar stone:
-    "It fits! And the whole thing is activating! What did I just do?!"
-
-- Somewhere in the inverted pyramid (after placing at least one power stone), they find the person they were looking for (with access to dynamite and rescue him). He says that you should come back later and he can sell you explosives, but he will need some time to gather them. So, you decide to keep exploring.
-
-- After beating the third pyramid and the third boss (obtaining the third idol), the player is squeamish of using it on the calendar stone, since the goal is to destroy it, and powering it up too much, might help the aliens. At this point, if you go back to get explosives, you can get them, but you will also get a letter from Elaine, explaining more details. She hopes you have not yet destroyed it, since it seems this calendar stone was not designed to receive the star people, but to prevent them from coming, by blocking the dimensional portals they had open. The ancient Maya built it, but with the Maya gone, and no one to take care of it, somehow the stones that powered it were taken away and it allowed aliens to come. So, you should not destroy it, but power it up! The aliens have bene able to come, precisely because the stone is not powered up! She hopes you have not yet destroyed it.
-
-- You must find all the idols and power up the stone before the aliens themselves find it and destroy it!
-
-- After that, you put the third idol in the stone, and that opens access to the next areas where you can find the fourth and fifth bosses, to get the final two idols and put them in the stone.
-
-- Each time you put one more idol in the stone, the ruins power up a bit more, opening certain doors, and activating certain devices that were before off, letting you access new areas, or get fater from place to place. 
-
-- After placing the fifth stone, the center of the calendar stone lights up, indicating that you can activate the celandar stone protection any time. As soon as you attempt to press it, the aliens show up, and the final confrontation with them begins. If you win, you can activate the stone and beat the game.
-
-  - points to remember (for lore/clues):
-      - the first attempt to create humans was from mud, but those were destroyed in the great flood 
-      - the second attempt was from wood, but they could not worship and were destroyed (survivors are monkeys)
-      - six creator deities: the Framer and the Shaper, Tepew and Quetzal Serpent, along with Xpiyacóc and Xmucané. These deities, helped Heart of Sky, also known as Hurakán, create the Earth.
-      - Hunajpu and Xbalanqué were two twins who deteated the gods of the underworld in a ball game, and then became the sun and moon
-      - After that, humans were created from white and yellow maize (Maize is sacred to Maya because of this)
-      - 6 levels of maya underworld
-      - 13 levels of maya upperworld
-
-  - potential additional types of puzzles/challenges:
-    - keep a button pressed to open a door
-    - walkable wall
-    - "do something that should not have any effect" (e.g. stand still somewhere, use an item in a certain place (e.g. kill the invisible enemy))
-      - this can be arbitrarily complex, as the clue can be one, or a set of multiple clues that have to be pieced together
-    - "walk the correct path" (e.g. climb some ladders in the correct order)
-    - maze
-    - challenging section (e.g. an area with lots of enemies, or spikes, etc.)
-    - timed chellenges (e.g. completing something before a door closes, or the "destroying all the vases before the time lamp expires")
-    - any of the above but where the clue requires decyphering a language
-  - maya text:
-    https://www.mayaarchaeologist.co.uk/public-resources/maya-world/maya-writing-system/
-    https://mayaglyphs.org/
-  - eagle is sky, snake is earth, and jaguar the underworld. Jaguar and Eagle are the warriors
-  - ball game: two gods from the sky played ball near the underworld, went down and played with the underworld gods (who wanted to kill humans, since they were only worshipping the sky gods). The two won, and one knel and cut his head, which went up the sky and formed the sun, the other did the same and formed the moon. they protect humans from the underworld gods.
-    - in my game, I could make it so that the story is wrong, and they are mars and moon instead of sun and moon, and those are the palces you visit.
-  - cenote under chichen itza could be a level (perhaps some sacrifices there)
-  - list of important deities for clues/story: https://www.villapalmarcancun.com/discover-cancun/heritage/most-important-mayan-gods
+- potential additional types of puzzles/challenges:
+  - keep a button pressed to open a door
+  - walkable wall
+  - "do something that should not have any effect" (e.g. stand still somewhere, use an item in a certain place (e.g. kill the invisible enemy))
+    - this can be arbitrarily complex, as the clue can be one, or a set of multiple clues that have to be pieced together
+  - "walk the correct path" (e.g. climb some ladders in the correct order)
+  - maze
+  - challenging section (e.g. an area with lots of enemies, or spikes, etc.)
+  - timed chellenges (e.g. completing something before a door closes, or the "destroying all the vases before the time lamp expires")
+  - any of the above but where the clue requires decyphering a language
+- maya text:
+  https://www.mayaarchaeologist.co.uk/public-resources/maya-world/maya-writing-system/
+  https://mayaglyphs.org/
+- eagle is sky, snake is earth, and jaguar the underworld. Jaguar and Eagle are the warriors
+- ball game: two gods from the sky played ball near the underworld, went down and played with the underworld gods (who wanted to kill humans, since they were only worshipping the sky gods). The two won, and one knel and cut his head, which went up the sky and formed the sun, the other did the same and formed the moon. they protect humans from the underworld gods.
+  - in my game, I could make it so that the story is wrong, and they are mars and moon instead of sun and moon, and those are the palces you visit.
+- cenote under chichen itza could be a level (perhaps some sacrifices there)
+- list of important deities for clues/story: https://www.villapalmarcancun.com/discover-cancun/heritage/most-important-mayan-gods
 
 - altar(s) where you can sacrifice bodies to some Mayan gods: carrying corpses/heads/hearts of enemies? sacrificing them with some sacrificial dagger pleases the gods and you get random things (refill life, supplies, and maybe a special weapon that can only be gotten this way). Think a bit more on this, to see if I can get a nice mechanics that has some depth (e.g., sacrificing bigger corpses gives you more, but you become slow when carrying a corpse, and hence it's harder, etc.).
 

@@ -1046,6 +1046,7 @@ ENDR
 	dw object_interaction_function_empty  ; TAG_ENEMY_CARNIVORE_PLANT
 	dw object_interaction_function_empty  ; TAG_ENEMY_BEE_HIVE
 	dw object_interaction_function_empty  ; TAG_ENEMY_ANT_COLONY
+	dw object_interaction_function_shopkeeper  ; TAG_NPC_SHOPKEEPER
 
 object_interaction_inventory_slot:
 	db #ff, #ff, #ff, #ff, #ff  ; none, block puzzles: 0
@@ -2108,6 +2109,17 @@ object_interaction_function_pickup_battery_continue:
 
 
 ;-----------------------------------------------
+object_interaction_function_shopkeeper:
+	ld de, TEXT_SHOPKEEPER1
+	ld hl, display_in_game_message
+	ld c, TEXT_PAGE
+	push ix
+		call call_hl_in_page_c_8000
+	pop ix
+	ret
+
+
+;-----------------------------------------------
 ; output:
 ; - z: door found
 ; - nz: door not found
@@ -2350,6 +2362,7 @@ ENDR
 	TILE_OBJECT_DATA 1, 4, 4, tile_object_carnivore_plant  ; TAG_ENEMY_CARNIVORE_PLANT
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_bee_hive  ; TAG_ENEMY_BEE_HIVE
 	TILE_OBJECT_DATA 1, 3, 2, tile_object_ant_colony  ; TAG_ENEMY_ANT_COLONY
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOPEEPER
 
 
 tile_object_regular_object_gfx:

@@ -2073,6 +2073,34 @@ pcg_generate_room__start_continue5:
 	ld (hl), a
 pcg_generate_room__start_continue6:
 
+	; spawn the NPCs (each NPC has a sprite object to render it, and then an invisible tile object behind, to interact with it):
+	call ptr_to_new_sprite_object
+	jr nz, pcg_generate_room__start_continue7
+	ld (hl), SPRITE_OBJECT_TYPE_SHOPKEEPER
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), 7  ; tile x
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), 11  ; tile y
+pcg_generate_room__start_continue7:
+	; ...
+
+	; spawn the invisible tile objects:
+	ld iy, (tmp_pcg_room__next_tile_object_ptr)
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 0  ; id
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_NPC_SHOPKEEPER  ; type
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 7  ; x
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 11  ; y
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0  ; state
+	ld de, ROOM_TILE_OBJECT_STRUCT_SIZE
+	add iy, de
+	ld (tmp_pcg_room__next_tile_object_ptr), iy	
+
+	ld hl, jungle_start_npc_sprites_zx0
+	ld (current_room__enemy_sprites_ptr), hl
 	ret 
 
 

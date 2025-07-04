@@ -197,10 +197,11 @@ public class AssemblerTags {
         "TAG_DARTS",
         "TAG_SPEARS",
         "TAG_BATTERY",
-        // enemies:
+        // enemies/npcs:
         "TAG_ENEMY_CARNIVORE_PLANT",
         "TAG_ENEMY_BEE_HIVE",
         "TAG_ENEMY_ANT_COLONY",
+        "TAG_NPC_SHOPKEEPER",
     };
     
 

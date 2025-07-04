@@ -1,0 +1,332 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package xspelunker2;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.StringTokenizer;
+import music.MSXNote;
+import music.MSXSong;
+import music.MSXSongWavGenerator;
+import music.PSGInstrument;
+import util.ZX0Wrapper;
+
+/**
+ *
+ * @author santi
+ */
+public class Music {
+    public static String noteNames[][] = {{"do","c"}, 
+                                          {"do#", "reb","c#","db"},
+                                          {"re","d"},
+                                          {"re#", "mib","d#","eb"},
+                                          {"mi","e"},
+                                          {"fa","f"},
+                                          {"fa#", "solb","f#","gb"},
+                                          {"sol","g"},
+                                          {"sol#", "lab","g#","ab"},
+                                          {"la","a"},
+                                          {"la#", "sib","a#","bb"},
+                                          {"si","b"}};
+    
+    public static void main(String args[]) throws Exception
+    {        
+        playTSVMusic("data/music/jungle1.tsv", 6, 12);  // Variation on the original Jungle XSpelunker song
+    }
+
+
+    public static void printNotePeriods(int note, String noteName)
+    {
+        int period = MSXNote.PSGNotePeriod(note); 
+        System.out.println(noteName + ": " + (period/256) + ", " + (period%256));
+    }
+    
+    
+    public static void compileAssemblerSong(MSXSong song, String fileName, List<Integer> notesUsed) throws Exception
+    {
+        PrintStream w = new PrintStream(new File(fileName + ".asm"));
+        song.convertToAssembler("song", notesUsed, "  include \"../../constants.asm\"", w);
+        w.flush();
+        w.close();  
+        
+        cl.Main.main(new String[]{fileName + ".asm", "-bin", fileName + ".bin"});
+//        nl.grauw.glass.Assembler.main(new String[]{fileName + ".asm", fileName + ".bin"});
+        ZX0Wrapper.main(fileName+".bin", fileName+".zx0", true, false);        
+    }
+    
+    public static MSXSong loadTSVMusic(String fileName, boolean hasPAKETHeader) throws Exception
+    {
+        // Init:
+        MSXSong song = new MSXSong();
+        
+        int ch_instrument[] = {MSXNote.INSTRUMENT_SQUARE_WAVE, 
+                               MSXNote.INSTRUMENT_SQUARE_WAVE, 
+                               MSXNote.INSTRUMENT_SQUARE_WAVE};
+        String ch_instrument_name[] = {null, null, null};
+        MSXNote channelNotes[] = {null, null, null};
+        
+        BufferedReader br = new BufferedReader(new FileReader(fileName));
+        
+        if (hasPAKETHeader) {
+            if (!readTSVPAKETHeader(br)) return null;
+        }
+        
+        while(br.ready()) {
+            String line = br.readLine();
+            String channels[] = line.split("\t");
+            for(int channel = 0;channel<channels.length;channel++) {
+                String commands[] = channels[channel].split(",");
+                for(String command:commands) {
+                    command = command.strip();
+                    if (command.length() == 0) continue;
+                    command = command.toLowerCase();
+                    StringTokenizer tokenizer = new StringTokenizer(command, "()");
+                    String commandName = tokenizer.nextToken();
+                    switch(commandName) {
+                        case "-":
+                            {
+                                MSXNote note = new MSXNote(0);
+                                song.channels[channel].add(note);
+                                channelNotes[channel] = note;                            
+                            }
+                            break;
+                        case "squarewave":
+                            ch_instrument[channel] = MSXNote.INSTRUMENT_SQUARE_WAVE;
+                            break;
+                        case "piano":
+                            ch_instrument[channel] = MSXNote.INSTRUMENT_PIANO;
+                            break;
+                        case "pianosoft":
+                            ch_instrument[channel] = MSXNote.INSTRUMENT_PIANO_SOFT;
+                            break;
+                        case "wind":
+                            ch_instrument[channel] = MSXNote.INSTRUMENT_WIND;
+                            break;
+                        case "pianostaccato":
+                            ch_instrument[channel] = MSXNote.INSTRUMENT_PIANO_STACCATO;
+                            break;
+                        case "windfading":
+                            ch_instrument[channel] = MSXNote.INSTRUMENT_WIND_FADING;
+                            break;
+                        case "pad":
+                            ch_instrument[channel] = MSXNote.INSTRUMENT_PAD;
+                            break;
+                        case "fade":
+                            ch_instrument[channel] = MSXNote.INSTRUMENT_FADE;
+                            break;
+                        case "shortwind":
+                            ch_instrument[channel] = MSXNote.INSTRUMENT_SHORTWIND;
+                            break;
+                        case "vibrating":
+                            ch_instrument[channel] = MSXNote.INSTRUMENT_PIANO_FREQUENCY_VIBRATION;
+                            break;
+                        case "shortwindecho":
+                            ch_instrument[channel] = MSXNote.INSTRUMENT_SHORTWIND_ECHO;
+                            break;
+                        case "repeat":
+                            {
+                                int parameter = Integer.parseInt(tokenizer.nextToken());
+                                MSXNote note = new MSXNote(MSXNote.START_REPEAT, parameter);
+                                song.channels[channel].add(note);
+                                channelNotes[channel] = note;                            
+                            }
+                            break;
+                        case "endrepeat":
+                            {
+                                MSXNote note = new MSXNote(MSXNote.END_REPEAT, 0);
+                                song.channels[channel].add(note);
+                                channelNotes[channel] = note;                            
+                            }
+                            break;
+                        case "sfx":
+                            {
+                                String sfx = tokenizer.nextToken();
+                                MSXNote note = new MSXNote(sfx,0);
+                                song.channels[channel].add(note);
+                                channelNotes[channel] = note;                            
+                            }
+                            break;
+                        case "volume":
+                            {
+                                Integer volume = Integer.parseInt(tokenizer.nextToken());
+                                MSXNote note = new MSXNote(MSXNote.SET_VOLUME, volume);
+                                song.channels[channel].add(note);
+                                channelNotes[channel] = note;
+                            }
+                            break;
+                        default:
+                            int found = -1;
+                            for(String instrument:MSXSongWavGenerator.loadedInstruments.keySet()) {
+                                if (commandName.equals(instrument)) {
+                                    // it's an instrument:
+                                    ch_instrument[channel] = MSXNote.INSTRUMENT_LOADED;
+                                    ch_instrument_name[channel] = commandName;
+                                    found = 1;
+                                }
+                            }
+                            if (found != -1) break;
+                            found = -1;
+                            // it's a note!
+                            String noteStr = command.substring(0, command.length()-1);
+                            String octaveStr = command.substring(command.length()-1);
+                            for(int idx = 0; idx<noteNames.length; idx++) {
+                                String noteGroup[] = noteNames[idx];
+                                for(String noteName:noteGroup) {
+                                    if (noteStr.equals(noteName)) {
+                                        found = idx;
+                                        break;
+                                    }
+                                }
+                                if (found != -1) break;
+                            }
+                            if (found != -1) {
+                                int octave = Integer.parseInt(octaveStr);
+                                MSXNote note = new MSXNote(octave, found, 15, 0, ch_instrument[channel]);
+                                note.loadedInstrument = ch_instrument_name[channel];
+                                song.channels[channel].add(note);
+                                channelNotes[channel] = note;
+                            } else {
+                                throw new Exception("unrecognized command: " + command);
+                            }
+                            break;
+                    }
+                }
+            }
+
+            // advance time:
+            for(int i = 0;i<3;i++) {
+                MSXNote note = channelNotes[i];
+                if (note == null) {
+                    note = new MSXNote(0);
+                    song.channels[i].add(note);
+                    channelNotes[i] = note;
+                }
+                if (note.absoluteNote >= -2) {
+                    // if it's a note:
+                    note.duration++;
+                }
+            }
+        }
+
+        return song;
+    }
+    
+    public static boolean readTSVPAKETHeader(BufferedReader br) throws Exception
+    {
+        // Read the header:
+        boolean parseInstrumentSpeed = false;
+        boolean songFound = false;
+        boolean instrumentsFound = false;
+        boolean sfxFound = false;
+        while(br.ready()) {
+            String line = br.readLine();
+            String columns[] = line.split("\t");
+            if (columns.length > 0) {
+                if (columns[0].equals("song:")) {
+                    songFound = true;
+                    break;
+
+                } else if (columns[0].equals("instruments:")) {
+                    parseInstrumentSpeed = false;
+                    instrumentsFound = true;
+                    sfxFound = false;
+
+                } else if (columns[0].equals("instruments-with-speed:")) {
+                    parseInstrumentSpeed = true;
+                    instrumentsFound = true;
+                    sfxFound = false;
+
+                } else if (columns[0].equals("sfx:")) {
+                    instrumentsFound = false;
+                    sfxFound = true;
+
+                } else if (instrumentsFound && columns.length>=2 && !columns[0].isEmpty() && !columns[1].isEmpty()) {
+                    // instrument found:
+                    String instrumentName = columns[0].trim().toLowerCase();
+                    String instrumentDefinition[];                    
+                    PSGInstrument instrument = new PSGInstrument();
+                    if (parseInstrumentSpeed) {
+                        if (columns.length < 3) {
+                            throw new Exception("Expected three tab-separated columns for each instrument after instruments-with-speed!");
+                        }
+                        instrument.speed = Integer.parseInt(columns[1]);
+                        instrumentDefinition = columns[2].split(",");
+                    } else {
+                        instrumentDefinition = columns[1].split(",");
+                    }
+                    for(String str:instrumentDefinition) {
+                        int v = Integer.parseInt(str);
+                        if (v < 0) {
+                            if ((-v) > instrument.volume.size()) {
+                                throw new Exception("Instrument repeat larger than insturment lenth in " + instrumentName);
+                            }
+                            instrument.repeat = v;
+                            break;
+                        }
+                        instrument.volume.add(v);
+                    }
+                    if (MSXSongWavGenerator.loadedInstruments.containsKey(instrumentName)) {
+                        // Check that the definitions match:
+                        if (!MSXSongWavGenerator.loadedInstruments.get(instrumentName).equals(instrument)) {
+                            throw new Exception("instrument " + instrumentName + " redefined in a different way than in a previously loaded song!");
+                        }
+                    }
+                    MSXSongWavGenerator.loadedInstruments.put(instrumentName, instrument);
+                    System.out.println("TSVMusic new instrument: " + instrumentName + " -> " + instrument);
+
+                /*
+                } else if (sfxFound && !columns[0].isEmpty() && !columns[1].isEmpty()) {
+                    // sfx found:
+                    String sfxName = columns[0].trim().toLowerCase();
+                    String sfxFileName = columns[1].trim();
+                    if (sfxFileName.startsWith("\"")) {
+                        sfxFileName = sfxFileName.substring(1, sfxFileName.length()-1);
+                    }
+                    int type;
+                    if (sfxFileName.endsWith(".asm")) {
+                        type = PAKSFX.RAW_PAK_ASSEMBLER;
+                    } else if (sfxFileName.endsWith(".bin")) {
+                        type = PAKSFX.RAW_PAK_BINARY;
+                    } else if (sfxFileName.endsWith(".afx")) {
+                        type = PAKSFX.AYFX;
+                    } else {
+                        throw new Exception("Unrecognized file termination for SFX: " + sfxFileName);
+                    }
+                    PAKSFX sfx = new PAKSFX("sfx_" + sfxName, songPath + File.separator + sfxFileName, type);
+                    sfxs.put(sfxName, sfx);
+                    config.info("TSVMusic new sfx: " + sfxName + " -> " + sfxFileName);
+                */
+                }
+            }
+        }     
+        if (!songFound) return false;        
+        return true;
+    }
+    
+    public static List<Integer> playTSVMusic(MSXSong song, int tempo) throws Exception
+    {
+        List<Integer> buffer = MSXSongWavGenerator.generateBuffer(tempo, song);
+        MSXSongWavGenerator.playBuffer(buffer);        
+        return buffer;
+    }
+    
+    public static List<Integer> playTSVMusic(String fileName, int tempo, int transpose) throws Exception
+    {
+        MSXSong song = loadTSVMusic(fileName, false);
+        song.transpose(transpose);
+        return playTSVMusic(song, tempo);
+    }    
+
+    public static List<Integer> playTSVMusic(String fileName, int tempo, boolean hasPAKETheader) throws Exception
+    {
+        return playTSVMusic(loadTSVMusic(fileName, hasPAKETheader), tempo);
+    }    
+    
+}
