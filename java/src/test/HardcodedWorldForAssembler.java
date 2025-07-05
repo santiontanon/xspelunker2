@@ -4,6 +4,7 @@
  */
 package test;
 
+import java.util.ArrayList;
 import java.util.List;
 import pcg.Area;
 import pcg.InterAreaConnection;
@@ -148,6 +149,24 @@ public class HardcodedWorldForAssembler {
                                      w.powerStoneNumbers[2] + ", " +
                                      w.powerStoneNumbers[3] + ", " +
                                      w.powerStoneNumbers[4]);
+        List<String> itemsForShop = new ArrayList<>();
+        List<String> notSpawned = w.getUnspawnedItemTags();
+        if (notSpawned.contains("WEAPON_BLOWGUN")) {
+            itemsForShop.add(AssemblerTags.tagToAssembler("WEAPON_BLOWGUN"));
+            notSpawned.remove("WEAPON_BLOWGUN");
+        }
+        while(!notSpawned.isEmpty() && itemsForShop.size()<2) {
+            itemsForShop.add(notSpawned.get(0));
+            notSpawned.remove(0);
+        }
+        System.out.println("hardcoded_world_data__shop_extra_items:");
+        for(int i = 0;i<2;i++) {
+            String tag = "0";
+            if (itemsForShop.size() > i) {
+                tag = itemsForShop.get(i);
+            }
+            System.out.println("  db " + tag);
+        }
     }
     
     

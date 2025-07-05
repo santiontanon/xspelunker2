@@ -412,6 +412,8 @@ TAG_ENEMY_CARNIVORE_PLANT: equ 164
 TAG_ENEMY_BEE_HIVE: equ 165
 TAG_ENEMY_ANT_COLONY: equ 166
 TAG_NPC_SHOPKEEPER: equ 167
+TAG_NPC_SHOP: equ 168
+TAG_DYNAMITE: equ 169
 N_PATH_OPENING_TAGS: equ 32  ; there are less than this, but just in case (this is the number of tags above that spawn a breakable wall or door).
 
 

@@ -38,7 +38,12 @@ public class Music {
     
     public static void main(String args[]) throws Exception
     {        
-        playTSVMusic("data/music/jungle1.tsv", 6, 12);  // Variation on the original Jungle XSpelunker song
+//        playTSVMusic("data/music/jungle1.tsv", 6, 12);  // Variation on the original Jungle XSpelunker song
+        playTSVMusic("data/music/jungle1a.tsv", 6, 12);  // variation on the bass line
+        /*
+        to do:
+        - the second part of jungle1/jungle1a is terrible. Find a better second part.
+        */
     }
 
 

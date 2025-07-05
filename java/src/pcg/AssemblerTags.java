@@ -202,6 +202,8 @@ public class AssemblerTags {
         "TAG_ENEMY_BEE_HIVE",
         "TAG_ENEMY_ANT_COLONY",
         "TAG_NPC_SHOPKEEPER",
+        "TAG_NPC_SHOP",
+        "TAG_DYNAMITE",
     };
     
 

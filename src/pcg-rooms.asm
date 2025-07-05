@@ -2090,9 +2090,18 @@ pcg_generate_room__start_continue7:
 
 	; spawn the invisible tile objects:
 	ld iy, (tmp_pcg_room__next_tile_object_ptr)
+	; shopkeeper:
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 0  ; id
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_NPC_SHOPKEEPER  ; type
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 7  ; x
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 11  ; y
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0  ; state
+	ld de, ROOM_TILE_OBJECT_STRUCT_SIZE
+	add iy, de
+
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 0  ; id
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_NPC_SHOP  ; type
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 10  ; x
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 11  ; y
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0  ; state
 	ld de, ROOM_TILE_OBJECT_STRUCT_SIZE

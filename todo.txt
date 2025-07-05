@@ -2,9 +2,12 @@ to do:
 
 ***- jungle events: 
   ***- enter the shop:
-    ***- mock up the UI (should be simple)
-    ***- items to purchase: corn, stones, darts, spears (when weapons available), blowgun if not spawned in the game (have an array with items to add to the shop), and maybe some other items now spawned in the game. (if you don't have the weapons, just say "sold-out" on some)
-    ***- being able to purchase items 
+    ***- render the extra items
+    ***- render the price of each item (or "n/a", if n/a text is "Sorry, I am out of those.")
+    ***- draw the player character on the left and the amount of gold available
+    ***- add a "back button"
+    ***- navigate the UI displaying the price and text (explanatino for each item)
+    ***- purchase items! message of not having enough gold if necessary
   ***- events:
     *** - As soon as we enter the pyramid (either of them) for the first time, the character says:
         "Ok, I made it to the ruins! I need to find a way to sabotage the Alien operation!"
@@ -21,7 +24,7 @@ to do:
       ***- Xavier: "The calendar stone! So, that's what it is!"
       ***- [Xavier at this point decides to send Elaine a letter back, with more writings that were found on the calendar stone, to see if she can translate them]
         ***- "Elaine, I found more glyphs around the base of the stone, written around a map of the world as the Maya conceived it, and annotated with strange symbols that I don't recognize. I'm sending you a copy, can you take a look?"
-    ***- Interacting with Aapo: ind out that the one person in town that has access to explosives had disappeared in the pyramid. After visiting the stone again with the translation, the player should now know how to use the idol.]
+    ***- Interacting with Aapo: find out that the one person in town that has access to explosives had disappeared in the pyramid. After visiting the stone again with the translation, the player should now know how to use the idol.]
     ***- When using the first idol in the calendar stone:
       "It fits! And the whole thing is activating! What did I just do?!"
     ***- Somewhere in the inverted pyramid (after placing at least one power stone), they find the person they were looking for (with access to dynamite and rescue him). He says that you should come back later and he can sell you explosives, but he will need some time to gather them. So, you decide to keep exploring.

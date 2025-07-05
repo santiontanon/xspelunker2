@@ -506,9 +506,9 @@ hardcoded_world_data__trial_types:
   db 2, 1, 1, 4
 hardcoded_world_data__power_stone_numbers:
   db 2, 7, 5, 4, 4
-
-
-
+hardcoded_world_data__shop_extra_items:
+  db 0
+  db 0
 
 
 ; DEBUG DATA:

@@ -913,6 +913,7 @@ public class PCGWorld {
                     n_small_keys++;
                     addTag(p, "small-key-chest" + n_small_keys, d);
                     w.chestContent.put("small-key-chest" + n_small_keys, weaponTags[i]);
+                    w.withinChestTag.add(weaponTags[i]);
                 } else {
                     addTag(p, weaponTags[i], d);
                 }
@@ -948,6 +949,7 @@ public class PCGWorld {
                     n_small_keys++;
                     addTag(p, "small-key-chest" + n_small_keys, d);
                     w.chestContent.put("small-key-chest" + n_small_keys, "heart" + (i+1));
+                    w.withinChestTag.add("heart" + (i+1));
                 } else {
                     addTag(p, "heart" + (i+1), d);
                 }
@@ -997,6 +999,7 @@ public class PCGWorld {
                     n_small_keys++;
                     addTag(p, "small-key-chest" + n_small_keys, d);
                     w.chestContent.put("small-key-chest" + n_small_keys, optionalItemTags[i]);
+                    w.withinChestTag.add(optionalItemTags[i]);
                 } else {
                     addTag(p, optionalItemTags[i], d);
                 }

@@ -245,4 +245,43 @@ public class World {
         return new Color((float)r*factor, (float)g*factor, (float)b*factor);
     }
     
+    
+    public List<String> getUnspawnedItemTags()
+    {
+        String candidates[] = {
+            "WEAPON_HAMMER",
+            "WEAPON_MACUAHUITL",
+            "WEAPON_SHIELD",
+            "WEAPON_SLING",
+            "WEAPON_BLOWGUN",
+            "WEAPON_ATLATL",
+            "WEAPON_RAYGUN",
+            "WEAPON_OBSIDIAN_KNIVE",
+            "WEAPON_FIRE_HAMMER",
+            "WEAPON_ICE_MACUAHUITL",
+            "item-sandals",
+            "item-gloves",
+            "item-warrior-hat",
+            "item-armor",
+            "item-chaac",
+            "item-seashell",
+            "item-belt",
+            "item-ice-cape",
+        };
+        
+        List<String> notSpawned = new ArrayList<>();
+        
+        for(String candidate:candidates) {
+            List<AreaPoint> l = findTagLocations(candidate);
+            if (l != null && !l.isEmpty()) {
+                continue;
+            }
+            if (withinChestTag.contains(candidate)) {
+                continue;
+            }
+            notSpawned.add(candidate);
+        }
+        
+        return notSpawned;
+    }
 }
