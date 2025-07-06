@@ -133,6 +133,7 @@ jp_to_hl_in_page_a_8000:
     ld (current_megarom_page_in_8000), a  ; 3 bytes
     ld (#7000), a  ; 3 bytes
     ei  ; 1 byte
+jp_to_hl:
     jp hl  ; 1 byte
 
 
@@ -149,10 +150,7 @@ call_hl_in_page_c_8000:
         ld (#7000), a  ; 3 bytes
         ld (current_megarom_page_in_8000), a  ; 3 bytes
         ei  ; 1 byte
-        ld bc, call_hl_in_page_c_8000 + (call_hl_in_page_c_8000_return - call_hl_in_page_c_8000)  ; 3 bytes
-        push bc  ; push return address  ; 1 byte
-        jp hl  ; 1 byte
-call_hl_in_page_c_8000_return:
+        call jp_to_hl
     ex af, af'  ; preserve the return af of the function we called
         pop af  ; 1 byte
         di  ; 1 byte
@@ -176,10 +174,7 @@ call_hl_in_page_e_8000:
         ld (#7000), a  ; 3 bytes
         ld (current_megarom_page_in_8000), a  ; 3 bytes
         ei  ; 1 byte
-        ld de, call_hl_in_page_e_8000 + (call_hl_in_page_e_8000_return - call_hl_in_page_e_8000)  ; 3 bytes
-        push de  ; push return address  ; 1 byte
-        jp hl  ; 1 byte
-call_hl_in_page_e_8000_return:
+        call jp_to_hl
     ex af, af'  ; preserve the return af of the function we called
         pop af  ; 1 byte
         di  ; 1 byte
@@ -191,6 +186,12 @@ call_hl_in_page_e_8000_return:
 
 
 ;-----------------------------------------------
+; input:
+; - hl: sentence to draw (first byte is the length)
+; - de: target VRAM address (ptr to CHRTBL2)
+; - iyl: color (attribute byte)
+; - iyh: pixel to start from (128 to start in pixel 0)
+; - b: expected width in tiles
 draw_sentence_to_vdp_from_another_page:
     ld a, (current_megarom_page_in_8000)  ; 3 bytes
     push af  ; 1 byte
@@ -917,6 +918,8 @@ tmp_enemy_pcg_n_platform_locs: equ temporary_variables + 6
 tmp_enemy_pcg_n_water_locs: equ temporary_variables + 7
 tmp_enemy_pcg_n_ceiling_locs: equ temporary_variables + 8
 tmp_get_tile_object_behind_player_ptr: equ temporary_variables
+tmp_shop_cursor_position: equ temporary_variables
+
 
 config_hud_type: ds virtual 1  ; 0: minimal, 1: minimal always visible, 2: full
 config_inventory_key_combo: ds virtual 1  ; 0: down+jump, 1: none

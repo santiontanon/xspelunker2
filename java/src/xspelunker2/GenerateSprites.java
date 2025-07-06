@@ -172,6 +172,7 @@ public class GenerateSprites {
     public static void extractStartNPCSprites(String outputPath) throws Exception
     {
         BufferedImage sourceImage = ImageIO.read(new File("data/objects.png"));
+        BufferedImage sourceImage2 = ImageIO.read(new File("data/inventory-sprites.png"));
         List<Integer> data = new ArrayList<>();
         
         // shopeeker (0):
@@ -179,6 +180,9 @@ public class GenerateSprites {
         data.addAll(extractSprite(sourceImage, 144, 80, 4));  // dark blue
         data.addAll(extractSprite(sourceImage, 160, 80, 10));  // dark yellow
         data.addAll(extractSprite(sourceImage, 160, 80, 4));  // dark blue
+
+        data.addAll(GenerateSprites.extractSprite(sourceImage2, 0, 0, 15));  // left bracket
+        data.addAll(GenerateSprites.extractSprite(sourceImage2, 16, 0, 15));  // right bracket
     
         if (data.size() > 40 * 32) {
             throw new Exception("More NPC sprites than the engine can handle!");

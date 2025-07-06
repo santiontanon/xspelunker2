@@ -417,6 +417,11 @@ public class Text {
         addLineSafe(lines_with_constant_page2, "The star people talked about multiple worlds. Palenque existed in all of them.", "TABLET_TRIVIA_CLUE4_1", 18*3);
         addLineSafe(lines_with_constant_page2, "But some questions only had answers in some of those worlds.", "TABLET_TRIVIA_CLUE4_2", 18*3);
         
+        // shop:
+        addLineSafe(lines_with_constant_page1, "Money:", "SHOP_MONEY", 4);
+        addLineSafe(lines_with_constant_page1, "--", "SHOP_OUT", 2);
+        
+        
         List<Integer> numbers = font.convertStringToAssembler("0123456789 ");
         System.out.println("Numbers: " + numbers);
         List<Integer> letters = font.convertStringToAssembler("ABCDEFGHIJKLMNOPQRSTUVWXYZ ");

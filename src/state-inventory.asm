@@ -1109,6 +1109,8 @@ draw_inventory_weapons_fire_hammer_sprite:
 ; - de: VRAM address to draw to (CHRTBL2)
 ; - iyl: color (attribute byte)
 ; - iyh: pixel to start from (128 to start in pixel 0)
+draw_inventory_number_ixl:
+	ld a, ixl
 draw_inventory_number:
 	push de
 	push bc
