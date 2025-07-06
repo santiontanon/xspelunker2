@@ -1,9 +1,6 @@
 to do:
 
 ***- jungle events: 
-  ***- As soon as we enter the pyramid (either of them) for the first time, the character says:
-      "Ok, I made it to the ruins! I need to find a way to sabotage the Alien operation!"
-      "I need to find where are they coming from, and how to stop them!"
   ***- When the first "power stone" is found:
     "What is this? it is a small polished stone, but it seems fully charged with static electricity! Why was that beast guarding this so tightly?"
   ***- When finding the calendar stone for the first time:

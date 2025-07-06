@@ -259,7 +259,8 @@ public class Text {
         addLineSafe(lines_with_constant_page1, "No one listened...", "TALK_FAIL", 112);     
         addLineSafe(lines_with_constant_page1, "After you speak, the room rumbles, and you hear a voice in an unknown language. It seems your words were heard!", "TALK_SUCCESS1", 112);
         addLineSafe(lines_with_constant_page1, "Bix a beel Mr. Xavier! I am Aapo! Please check my shop! I am also the postman in Palenke. If you have any mail to send or receive, talk to me.", "SHOPKEEPER1", 112);
-
+        addLineSafe(lines_with_constant_page1, "Ok, I made it to the ruins! I need a way to sabotage the Alien operation! Let's find out where are they coming from, and how to stop them!", "STORY_ENTER_RUINS", 112);
+        
         // power stone inspection:
         addLineSafe(lines_with_constant_page1, "A stone I found. Some sort of power radiates from it.", "INSPECT_POWER_STONE", 32);
         addLineSafe(lines_with_constant_page1, "I grabbed the stone temporarily to inspect it.", "INSPECT_POWER_STONE_FROM_CALENDAR", 32);

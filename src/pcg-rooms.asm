@@ -96,6 +96,11 @@ pcg_generate_room_reset_state:
 	ld (tile_enemy_hit_fn_ptr), hl
 	ld a, #ff
 	ld (tile_enemy_last_collision_id), a
+
+	ld hl, default_in_game_event_fn
+	ld (in_game_event_fn_ptr), hl
+	ld a, PCG_PAGE
+	ld (in_game_event_fn_page), a
 	ret
 
 
@@ -2511,4 +2516,27 @@ room_mark_open_door__dimensions_set:
 	ld (hl), e
 	inc hl
 	ld (hl), d
+	ret
+
+
+;-----------------------------------------------
+; this method checks for any events that should happen upon entering a room:
+default_in_game_event_fn:
+	ld a, (global_state__story)
+	cp STORY_STATE__START
+	jr z, default_in_game_event_fn_start
+	; ...
+	ret
+
+default_in_game_event_fn_start:
+	ld a, (current_area__id)
+	or a
+	ret z
+	; entered the ruins:
+	ld de, TEXT_STORY_ENTER_RUINS
+	ld hl, display_in_game_message
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000
+	ld a, STORY_STATE__ENTERED_RUINS
+	ld (global_state__story), a
 	ret

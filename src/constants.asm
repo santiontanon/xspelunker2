@@ -18,13 +18,14 @@ KEY_RIGHT_BIT: equ 7
 
 
 STORY_STATE__START: equ 0
-STORY_STATE__FOUND_CALENDAR: equ 1
-STORY_STATE__GOT_LETTER1: equ 2
-STORY_STATE__PLACED_FIRST_POWER_STONE: equ 3
-STORY_STATE__FOUND_LOST_VENDOR: equ 4
-STORY_STATE__GOT_LETTER2: equ 5
-STORY_STATE__FIGHTING_ALIENS: equ 6  ; calendar stone triggered, and player is fighting aliens
-STORY_STATE__DEFEATED_ALIENS: equ 7  ; calendar stone triggered, and player just won the alien battle
+STORY_STATE__ENTERED_RUINS: equ 1
+STORY_STATE__FOUND_CALENDAR: equ 2
+STORY_STATE__GOT_LETTER1: equ 3
+STORY_STATE__PLACED_FIRST_POWER_STONE: equ 4
+STORY_STATE__FOUND_LOST_VENDOR: equ 5
+STORY_STATE__GOT_LETTER2: equ 6
+STORY_STATE__FIGHTING_ALIENS: equ 7  ; calendar stone triggered, and player is fighting aliens
+STORY_STATE__DEFEATED_ALIENS: equ 8  ; calendar stone triggered, and player just won the alien battle
 
 
 MAX_SPRITES: equ 32
