@@ -1,4 +1,40 @@
 ;-----------------------------------------------
+calendar_stone_room_enter_event_fn:
+	ld a, (global_state__story)
+	cp STORY_STATE__ENTERED_RUINS
+	jr z, calendar_stone_room_enter_event_fn_first_time
+	cp STORY_STATE__GOT_LETTER1
+	jr z, calendar_stone_room_enter_event_fn_after_letter1
+	ret
+
+calendar_stone_room_enter_event_fn_first_time:
+	; found calendar stone for the first time:
+	ld de, TEXT_FIND_CALENDAR_STONE1
+	ld hl, display_in_game_message_textpage3
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000
+
+	ld de, TEXT_FIND_CALENDAR_STONE2
+	ld hl, display_in_game_message_textpage3
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000
+
+	ld a, STORY_STATE__FOUND_CALENDAR
+	ld (global_state__story), a
+	ret
+
+calendar_stone_room_enter_event_fn_after_letter1:
+	ld de, TEXT_CALENDAR_AFTER_LETTER1
+	ld hl, display_in_game_message_textpage3
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000
+
+	ld a, STORY_STATE__CALENDAR_AFTER_LETTER1
+	ld (global_state__story), a
+	ret
+
+
+;-----------------------------------------------
 calendar_stone_center_trigger_battle_event_fn:
 	ld de, TEXT_CALENDAR_CENTER_MSG1
 	ld hl, display_in_game_message

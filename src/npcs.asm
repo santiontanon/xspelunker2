@@ -1,3 +1,80 @@
+object_interaction_function_shopkeeper_internal:
+	ld a, (global_state__story)
+	cp STORY_STATE__FOUND_CALENDAR
+	jr z, object_interaction_function_shopkeeper_internal_letter1
+	cp STORY_STATE__GOT_LETTER1
+	jp z, object_interaction_function_shopkeeper_internal_lost_person
+	cp STORY_STATE__PLACED_FIRST_POWER_STONE
+	jp z, object_interaction_function_shopkeeper_internal_lost_person
+	ld de, TEXT_SHOPKEEPER1
+	ld hl, display_in_game_message
+	ld c, TEXT_PAGE
+	jp call_hl_in_page_c_8000
+
+object_interaction_function_shopkeeper_internal_letter1:
+	ld de, TEXT_LETTER1_ARRIVED1
+	ld hl, display_in_game_message_textpage3
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000
+	
+	ld hl, display_elaine_letter1
+	ld c, TABLET_LETTER_PAGE
+	call call_hl_in_page_c_8000
+
+	call disable_VDP_output
+	ld hl, NAMTBL2
+	ld bc, 768
+	xor a
+	call fast_FILVRM
+	call enable_VDP_output
+
+	ld hl, redraw_flags
+	set REUPLOAD_INGAME_OBJECT_TILES_FLAG_BIT, (hl)
+	ld a, (current_room__tileset_page)
+	ld c, a
+	ld hl, (current_room__tileset_ptr)
+	call setup_game_tiles
+	call state_play_upload_object_tiles_to_vdp_if_necessary
+	; gain letter:
+	ld a, 1
+	ld (player_inventory_items+33), a
+	ld a, STORY_STATE__GOT_LETTER1
+	ld (global_state__story), a
+
+	ld hl, object_interaction_function_shopkeeper_internal_letter1_part2
+	ld (in_game_event_fn_ptr), hl
+	ld a, NPCS_PAGE
+	ld (in_game_event_fn_page), a
+	ret
+
+object_interaction_function_shopkeeper_internal_letter1_part2:
+	ld de, TEXT_LETTER1_ARRIVED2
+	ld hl, display_in_game_message_textpage3
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000
+
+	ld de, TEXT_LETTER1_ARRIVED3
+	ld hl, display_in_game_message_textpage3
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000
+
+	ld de, TEXT_LETTER1_ARRIVED4
+	ld hl, display_in_game_message_textpage3
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000
+
+	ld de, TEXT_LETTER1_ARRIVED5
+	ld hl, display_in_game_message_textpage3
+	ld c, TEXT_PAGE
+	jp call_hl_in_page_c_8000
+
+object_interaction_function_shopkeeper_internal_lost_person:
+	ld de, TEXT_SHOPKEEPER_LOST_PERSON
+	ld hl, display_in_game_message_textpage3
+	ld c, TEXT_PAGE
+	jp call_hl_in_page_c_8000
+
+
 ;-----------------------------------------------
 object_interaction_function_shop_internal:
 	ld hl, SFX_ui_select

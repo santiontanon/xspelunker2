@@ -256,6 +256,25 @@ update_sprite_objects_shopkeeper:
 	ld c, 0
 	call get_sprite_object_sprite_coordinates
 	call z, add_sprite_to_this_frame
+
+	ld a, (global_state__story)
+	cp STORY_STATE__FOUND_CALENDAR
+	jp z, update_sprite_objects_shopkeeper_got_letter
+	jp update_sprite_objects_loop_next
+update_sprite_objects_shopkeeper_got_letter:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	and #04
+	ret z
+	; display an exclamation mark:
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 6) * 4 
+	ld d, COLOR_DARK_YELLOW
+	ld c, 0
+	call get_sprite_object_sprite_coordinates
+	jp nz, update_sprite_objects_loop_next
+	ld a, -16
+	add a, b
+	ld b, a
+	call add_sprite_to_this_frame
 	jp update_sprite_objects_loop_next
 
 

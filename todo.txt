@@ -1,21 +1,6 @@
 to do:
 
 ***- jungle events: 
-  ***- When the first "power stone" is found:
-    "What is this? it is a small polished stone, but it seems fully charged with static electricity! Why was that beast guarding this so tightly?"
-  ***- When finding the calendar stone for the first time:
-    "Look at that! That is a gigantic Mayan Tzolk'in calendar stone! Although it seems to be half-buried, it's in perfect condition!"
-    "But there is something strange in the middle, it has some empty sockets, like if something was taken out."
-    "It is full of inscriptions, but I do not know what do they say!"
-  ***- the only way forward is to go back to the jungle entrance, where they will find that Elaine has written them a letter]
-    ***- Aapo will have an explamation mark on top.
-    ***- interacting with him: "Bix a beel Mr. Xavier! I have a letter for you!" (and then jump directly to the letter-reading screen, if you exit, go back to inventory, etc.)
-    ***- Xavier: "The calendar stone! So, that's what it is!"
-    ***- [Xavier at this point decides to send Elaine a letter back, with more writings that were found on the calendar stone, to see if she can translate them]
-      ***- "Elaine, I found more glyphs around the base of the stone, written around a map of the world as the Maya conceived it, and annotated with strange symbols that I don't recognize. I'm sending you a copy, can you take a look?"
-  ***- Interacting with Aapo: find out that the one person in town that has access to explosives had disappeared in the pyramid. After visiting the stone again with the translation, the player should now know how to use the idol.]
-  ***- When using the first idol in the calendar stone:
-    "It fits! And the whole thing is activating! What did I just do?!"
   ***- Somewhere in the inverted pyramid (after placing at least one power stone), they find the person they were looking for (with access to dynamite and rescue him). He says that you should come back later and he can sell you explosives, but he will need some time to gather them. So, you decide to keep exploring.
   ***- After beating the third pyramid and the third boss (obtaining the third idol), the player is squeamish of using it on the calendar stone, since the goal is to destroy it, and powering it up too much, might help the aliens. At this point, if you go back to get explosives, you can get them, but you will also get a letter from Elaine, explaining more details. She hopes you have not yet destroyed it, since it seems this calendar stone was not designed to receive the star people, but to prevent them from coming, by blocking the dimensional portals they had open. The ancient Maya built it, but with the Maya gone, and no one to take care of it, somehow the stones that powered it were taken away and it allowed aliens to come. So, you should not destroy it, but power it up! The aliens have bene able to come, precisely because the stone is not powered up! She hopes you have not yet destroyed it.
     ***- The bomb maker just makes the dynamite, it is still sold in the shop, it should be so expensive to buy that it's actually impossible to buy it anyway, but now you can get another letter.

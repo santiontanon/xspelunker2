@@ -2169,6 +2169,11 @@ pcg_generate_room__calendar_object_loop:
 	; tablet gfx:
 	ld hl, buffer_4096 + 60 * 64
 	ld (item_object_to_upload_to_vdp), hl
+
+	ld hl, calendar_stone_room_enter_event_fn
+	ld (in_game_event_fn_ptr), hl
+	ld a, CALENDAR_EVENTS_PAGE
+	ld (in_game_event_fn_page), a
 	ret
 
 pcg_generate_room__calendar_objects:

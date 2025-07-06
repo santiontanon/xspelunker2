@@ -23,21 +23,21 @@ state_play:
 ; 		ld (global_state__power_calendar + 5), a
 ; 		ld a, 4
 ; 		ld (global_state__n_power_stones_in_calendar), a
-; 		ld a, STORY_STATE__GOT_LETTER2
-; 		ld (global_state__story), a
+		ld a, STORY_STATE__GOT_LETTER1
+		ld (global_state__story), a
 ; 		ld a, 2  ; maya riddle solved
 ; 		ld (global_state__maya_riddle), a
 
 		; debug:
 		ld a, 1
-; 		ld (player_inventory_items), a
+		ld (player_inventory_items), a
 ; 		ld (player_inventory_items+1), a
 ; 		ld (player_inventory_items+2), a
 ; 		ld (player_inventory_items+3), a
 ; 		ld (player_inventory_items+4), a
 ; 		ld (player_inventory_items+5), a  ; mars boss key
 ; 		ld (player_inventory_items+6), a  ; moon boss key
-; 		ld (player_inventory_items+7), a  ; first stone
+		ld (player_inventory_items+7), a  ; first stone
 ; 		ld (player_inventory_items+8), a  ; second stone
 ; 		ld (player_inventory_items+9), a  ; third stone
 ; 		ld (player_inventory_items+10), a
@@ -63,8 +63,8 @@ state_play:
 ; 		ld (player_inventory_items+30), a  ; seashell
 ; 		ld (player_inventory_items+31), a  ; antigrav belt
 ; 		ld (player_inventory_items+32), a
-; 		ld (player_inventory_items+33), a
-; 		ld (player_inventory_items+34), a
+; 		ld (player_inventory_items+33), a  ; letter 1
+; 		ld (player_inventory_items+34), a  ; letter 2
 		ld (player_inventory_items+35), a  ; map
 ; 		ld (player_inventory_items+36), a  ; half power stone
 ; 		ld (player_inventory_items+INVENTORY_ITEM_PUZZLEBOX_MARS), a
@@ -124,10 +124,10 @@ state_play:
 
 		; generate area:
 		ld hl, pcg_generate_area
-		ld e, 0  ; area to generate
+; 		ld e, 0  ; area to generate
 ; 		ld e, 1  ; area to generate
 ; 		ld e, 2  ; area to generate
-; 		ld e, 3  ; area to generate
+		ld e, 3  ; area to generate
 ; 		ld e, 4  ; area to generate
 ; 		ld e, 9  ; area to generate
 ; 		ld e, 2  ; area to generate
@@ -136,11 +136,11 @@ state_play:
 		call call_hl_in_page_c_8000
 
 		; generate room:
-		ld e, START_ROOM_ID
+; 		ld e, START_ROOM_ID
 ; 		ld e, 0
-; 		ld e, 0
+; 		ld e, 26
 ; 		ld e, 1
-; 		ld e, CALENDAR_ROOM_ID
+		ld e, CALENDAR_ROOM_ID
 ; 		ld e, 31
 ; 		ld e, TELEPORTER_ROOM_ID
 ; 		ld e, 24

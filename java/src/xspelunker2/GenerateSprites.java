@@ -183,7 +183,9 @@ public class GenerateSprites {
 
         data.addAll(GenerateSprites.extractSprite(sourceImage2, 0, 0, 15));  // left bracket
         data.addAll(GenerateSprites.extractSprite(sourceImage2, 16, 0, 15));  // right bracket
-    
+
+        data.addAll(extractSprite(sourceImage, 176, 80, 10));  // dark yellow (question mark)
+
         if (data.size() > 40 * 32) {
             throw new Exception("More NPC sprites than the engine can handle!");
         }

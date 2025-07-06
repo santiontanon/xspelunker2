@@ -2112,9 +2112,8 @@ object_interaction_function_pickup_battery_continue:
 
 ;-----------------------------------------------
 object_interaction_function_shopkeeper:
-	ld de, TEXT_SHOPKEEPER1
-	ld hl, display_in_game_message
-	ld c, TEXT_PAGE
+	ld hl, object_interaction_function_shopkeeper_internal
+	ld c, NPCS_PAGE
 	push ix
 		call call_hl_in_page_c_8000
 	pop ix
