@@ -1147,9 +1147,14 @@ draw_inventory_number_tens_loop:
 		jp draw_inventory_number_tens_loop
 draw_inventory_number_tens_loop_done:	
 		push af
+			ld a, c  ; number of digits
+			or a
+			jr nz, draw_inventory_number_tens_draw
 			ld a, b
 			or a
 			jr z, draw_inventory_number_tens_done
+draw_inventory_number_tens_draw:
+			ld a, b
 			ld hl, text_numbers
 			ADD_HL_A
 			ld a, (hl)

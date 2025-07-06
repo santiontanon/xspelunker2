@@ -72,15 +72,15 @@ state_play:
 		ld (player_inventory_weapons), a  ; machete
 ; 		ld (player_inventory_weapons+1), a
 ; 		ld (player_inventory_weapons+2), a
-; 		ld (player_inventory_weapons+3), a
-; 		ld (player_inventory_weapons+4), a
-; 		ld (player_inventory_weapons+5), a
+; 		ld (player_inventory_weapons+3), a  ; shield
+; 		ld (player_inventory_weapons+4), a  ; sling
+; 		ld (player_inventory_weapons+5), a   ; blowgun
 ; 		ld (player_inventory_weapons+6), a
 ; 		ld (player_inventory_weapons+7), a
 ; 		ld (player_inventory_weapons+8), a
 ; 		ld (player_inventory_weapons+9), a
 ; 		ld (player_inventory_weapons+10), a
-; 		ld a, 123
+; 		ld a, 202
 ; 		ld (player_inventory_coins), a
 ; 		ld a, 25
 ; 		ld (player_inventory_weapon_ammo), a
@@ -152,6 +152,7 @@ state_play:
 		ld a, PLAYER_INITIAL_MAX_HEALTH
 		ld hl, player_health
 		ld (hl), a
+; 		ld (hl), 6
 		inc hl
 		ld (hl), a  ; player_max_health
 		ld a, PLAYER_MAX_OXYGEN

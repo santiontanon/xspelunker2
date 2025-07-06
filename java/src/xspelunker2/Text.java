@@ -420,6 +420,14 @@ public class Text {
         // shop:
         addLineSafe(lines_with_constant_page1, "Money:", "SHOP_MONEY", 4);
         addLineSafe(lines_with_constant_page1, "--", "SHOP_OUT", 2);
+        addLineSafe(lines_with_constant_page1, "Sorry! I am out of those.", "SHOP_OUT_DESCRIPTION", 78);
+        addLineSafe(lines_with_constant_page1, "Try our delicious corn!", "SHOP_CORN", 78);
+        addLineSafe(lines_with_constant_page1, "Maybe you are interested on some of our finest stones?", "SHOP_STONES", 78);
+        addLineSafe(lines_with_constant_page1, "Or perhaps you need some darts for your blowgun?", "SHOP_DARTS", 78);
+        addLineSafe(lines_with_constant_page1, "My spears are the finest!", "SHOP_SPEARS", 78);
+        addLineSafe(lines_with_constant_page1, "I am not sure what this is, we find them scattered in the ruins. It can be yours for a small price!", "SHOP_BATTERY", 78);
+        addLineSafe(lines_with_constant_page1, "If you ever need to blow something up. This is the thing for you.", "SHOP_DYNAMITE", 78);
+        addLineSafe(lines_with_constant_page1, "This is a specialty item that was found by my son in the temple of inscriptions.", "SHOP_EXTRA_OBJECT", 78);
         
         
         List<Integer> numbers = font.convertStringToAssembler("0123456789 ");

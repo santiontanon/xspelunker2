@@ -111,13 +111,15 @@ draw_hud_coins:
 	ld a, (redraw_flags)
 	bit COINS_REDRAW_FLAG_BIT, a
 	jr z, draw_hud_coins_no_rerender
-	SETMEGAROMPAGE_8000 TEXT_PAGE  ; for "draw_inventory_number"
 	ld a, (player_inventory_coins)
 	ld de, CHRTBL2 + 10*8
 	ld iy, #8000 + COLOR_WHITE*16
 	ld b, 3
 	push hl
-		call draw_inventory_number
+		ld ixl, a
+		ld hl, draw_inventory_number_ixl
+		ld c, TEXT_PAGE
+		call call_hl_in_page_c_8000
 	pop hl
 draw_hud_coins_no_rerender:
 	inc hl
@@ -222,13 +224,15 @@ draw_hud_current_weapon_ammo:
 		ld a, (redraw_flags)
 		bit WEAPON_REDRAW_FLAG_BIT, a
 		jr z, draw_hud_current_weapon_ammo_no_rerender
-		SETMEGAROMPAGE_8000 TEXT_PAGE  ; for "draw_inventory_number"
 		ld a, e
 		ld de, CHRTBL2 + 13*8
 		ld iy, #0800 + COLOR_WHITE*16
 		ld b, 2
 		push hl
-			call draw_inventory_number
+			ld ixl, a
+			ld hl, draw_inventory_number_ixl
+			ld c, TEXT_PAGE
+			call call_hl_in_page_c_8000
 		pop hl
 draw_hud_current_weapon_ammo_no_rerender:
 	pop hl

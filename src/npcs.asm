@@ -64,21 +64,13 @@ object_interaction_function_shop_internal_price_loop_next:
 	inc hl
 	djnz object_interaction_function_shop_internal_price_loop
 
-	; draw player coins:
 	ld hl, TEXT_SHOP_MONEY
 	ld iy, #08f0
 	ld de, CHRTBL2 + (256*2 + 123)*8
 	ld b, 4
 	call draw_sentence_to_vdp_from_another_page
 
-	ld a, (player_inventory_coins)
-	ld ixl, a
-	ld b, 3
-	ld iy, #80f0
-	ld de, CHRTBL2 + (256*2 + 120)*8
-	ld hl, draw_inventory_number_ixl
-	ld c, TEXT_PAGE
-	call call_hl_in_page_c_8000
+	call shop_update_coins_and_description_after_movement
 
 	; interaction loop:
 object_interaction_function_shop_internal_loop:
@@ -156,7 +148,7 @@ synthesize_shop_list_has_atlatl:
 	inc hl
 	ld (hl), TAG_BATTERY
 	inc hl
-	ld c, 8
+	ld c, 10
 	ld a, (player_inventory_weapons + 7)
 	or a
 	jr nz, synthesize_shop_list_has_battery
@@ -188,6 +180,101 @@ synthesize_shop_list_continue1:
 synthesize_shop_list_continue2:
 	ld (hl), c
 	ret
+
+
+;-----------------------------------------------
+shop_text_descriptions:
+	dw TEXT_SHOP_CORN
+	dw TEXT_SHOP_STONES
+	dw TEXT_SHOP_DARTS
+	dw TEXT_SHOP_SPEARS
+	dw TEXT_SHOP_BATTERY
+	dw TEXT_SHOP_DYNAMITE
+	dw TEXT_SHOP_EXTRA_OBJECT
+	dw TEXT_SHOP_EXTRA_OBJECT
+	dw 0
+shop_update_coins_and_description_after_movement:
+	ld a, (player_inventory_coins)
+	ld ixl, a
+	ld b, 3
+	ld iy, #80f0
+	ld de, CHRTBL2 + (256*2 + 120)*8
+	ld hl, draw_inventory_number_ixl
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000
+
+	; clear previous text:
+	ld hl, CHRTBL2 + (256*2 + 128) * 8
+	ld bc, (206 - 128) * 8
+	xor a
+	call fast_FILVRM
+
+	; draw new text:
+	ld a, (tmp_shop_cursor_position)
+	add a, a
+	ld hl, shop_text_descriptions
+	ADD_HL_A
+	ld a, (hl)
+	inc hl
+	ld h, (hl)
+	ld l, a
+	or h
+	ret z
+
+	ld a, (tmp_shop_cursor_position)
+	add a, a
+	ld de, buffer_4096 + 256 + 1
+	ADD_DE_A
+	ld a, (de)
+	or a
+	jr nz, shop_text_descriptions_continue
+	ld hl, TEXT_SHOP_OUT_DESCRIPTION
+shop_text_descriptions_continue:
+
+	; copy the text to write to RAM:
+	ld de, buffer_4096 + 512
+	push de
+		push hl
+		pop ix
+		ld hl, copy_ix_text_to_de
+		ld c, TEXT_PAGE
+		call call_hl_in_page_c_8000
+	pop hl
+	ld de, CHRTBL2 + (256*2 + 128)*8
+shop_text_descriptions_loop:
+	push hl
+	push de
+		ld iyl, 26*8
+		push hl
+		pop ix
+		ld hl, max_length_of_sentence_in_one_line_ix
+		ld c, TEXT_PAGE
+		call call_hl_in_page_c_8000
+	pop de
+	pop hl
+	ld c, (hl)  ; original length
+    push bc
+    push hl
+		push de
+			ld (hl), a  ; max length
+			ld iy, #80f0
+			ld b, 26
+			call draw_sentence_to_vdp_from_another_page
+		pop hl
+		ld bc, 26*8
+		add hl, bc
+		ex de, hl
+	pop hl
+	pop bc
+    ld a, c
+	sub (hl)  ; left-over length
+	ret z
+	ld c, (hl)
+	ld b, 0
+    add hl, bc  ; we advance hl to the remainder of the sentence
+    ld (hl), a  ; left-over length
+	jr shop_text_descriptions_loop
+
 
 
 ;-----------------------------------------------
@@ -272,13 +359,122 @@ shop_update_cursor_select:
 	ld a, (tmp_shop_cursor_position)
 	cp 8  ; "back"
 	jr z, shop_update_cursor_select_back
-	; ...
-	ret
+	; do we have enough money?
+	ld hl, buffer_4096 + 256
+	add a, a
+	ADD_HL_A
+	ld c, (hl)  ; item to buy
+	inc hl
+	ld b, (hl)  ; cost
+	ld a, (player_inventory_coins)
+	cp b
+	jr c, shop_update_cursor_select_not_enough_money
+	ld a, b
+	or a
+	jr z, shop_update_cursor_select_out_of_stock
+	; purchase item "c":
+	ld a, c
+	cp TAG_CORN
+	jr z, shop_update_cursor_select_corn
+	cp TAG_STONES
+	jr z, shop_update_cursor_select_stones
+	cp TAG_DARTS
+	jp z, shop_update_cursor_select_darts
+	cp TAG_SPEARS
+	jp z, shop_update_cursor_select_spears
+	cp TAG_BATTERY
+	jp z, shop_update_cursor_select_battery
+	cp TAG_DYNAMITE
+	jr z, shop_update_cursor_select_dynamite
+shop_update_cursor_select_extra_object:
+	cp TAG_WEAPON_ICE_MACUAHUITL + 1
+	jr nc, shop_update_cursor_select_extra_object_not_weapon
+	; purchased a weapon:
+	sub TAG_WEAPON_HAMMER
+	ld hl, player_inventory_weapons + 1
+	ADD_HL_A
+	ld a, (hl)
+	or a
+	jr nz, shop_update_cursor_select_already_have_it
+	ld (hl), 1  ; add the weapon
+	jr shop_update_cursor_select_corn_continue2
+
+shop_update_cursor_select_extra_object_not_weapon:
+	sub TAG_ITEM_SANDALS
+	ld hl, player_inventory_items + 25
+	ADD_HL_A
+	ld a, (hl)
+	or a
+	jr nz, shop_update_cursor_select_already_have_it
+	ld (hl), 1  ; add the item
+	jr shop_update_cursor_select_corn_continue2
+
+
 shop_update_cursor_select_back:
 	ld hl, SFX_ui_select
 	call play_SFX_with_high_priority
 	xor a  ; end the shop
 	ret
+shop_update_cursor_select_maxed_out:
+shop_update_cursor_select_out_of_stock:
+shop_update_cursor_select_not_enough_money:
+shop_update_cursor_select_dynamite:
+shop_update_cursor_select_already_have_it:
+	ld hl, SFX_ui_wrong
+	call play_SFX_with_high_priority
+	or 1  ; do not end the shop
+	ret
+
+shop_update_cursor_select_corn:
+	ld a, (player_max_health)
+	ld c, a
+	ld a, (player_health)
+	cp c
+	jr z, shop_update_cursor_select_maxed_out
+	add a, 4
+	cp c
+	jr c, shop_update_cursor_select_corn_continue
+	ld a, c
+shop_update_cursor_select_corn_continue:
+	ld (player_health), a
+
+shop_update_cursor_select_corn_continue2:
+	ld a, (player_inventory_coins)
+	sub b
+	ld (player_inventory_coins), a
+	ld hl, SFX_ui_select
+	call play_SFX_with_high_priority
+	call shop_redraw_hud
+	call shop_update_coins_and_description_after_movement
+	or 1  ; do not end the shop
+	ret
+
+shop_update_cursor_select_stones:
+	ld hl, player_inventory_weapon_ammo
+shop_update_cursor_select_stones_entry_point:
+	ld c, 99
+	ld a, (hl)
+	cp c
+	jr z, shop_update_cursor_select_maxed_out	
+	add a, 5  ; # of stones
+	cp c
+	jr c, shop_update_cursor_select_stones_continue
+	ld a, c
+shop_update_cursor_select_stones_continue:
+	ld (hl), a
+	jr shop_update_cursor_select_corn_continue2
+
+shop_update_cursor_select_darts:
+	ld hl, player_inventory_weapon_ammo + 1
+	jr shop_update_cursor_select_stones_entry_point
+
+shop_update_cursor_select_spears:
+	ld hl, player_inventory_weapon_ammo + 2
+	jr shop_update_cursor_select_stones_entry_point
+
+shop_update_cursor_select_battery:
+	ld hl, player_inventory_weapon_ammo + 3
+	jr shop_update_cursor_select_stones_entry_point
 
 
 shop_update_cursor_right:
@@ -300,7 +496,8 @@ shop_update_cursor_right_loop:
 	jr z, shop_update_cursor_right_loop
 shop_update_cursor_right_done:
 	ld hl, SFX_ui_move
-	jp play_SFX_with_high_priority	
+	call play_SFX_with_high_priority	
+	jp shop_update_coins_and_description_after_movement
 
 shop_update_cursor_left:
 	ld a, (tmp_shop_cursor_position)
@@ -318,8 +515,21 @@ shop_update_cursor_left_loop:
 	or a
 	jr z, shop_update_cursor_left_loop
 	ld hl, SFX_ui_move
-	jp play_SFX_with_high_priority	
+	call play_SFX_with_high_priority	
+	jp shop_update_coins_and_description_after_movement
 
+
+;-----------------------------------------------
+shop_redraw_hud:
+	ld hl, redraw_flags
+	set COINS_REDRAW_FLAG_BIT, (hl)
+	set WEAPON_REDRAW_FLAG_BIT, (hl)
+	ld a, (tmp_shop_cursor_position)
+	push af
+		call draw_room_only_hud
+	pop af
+	ld (tmp_shop_cursor_position), a
+	ret
 
 ;-----------------------------------------------
 display_shop_base_ui:

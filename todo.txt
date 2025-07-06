@@ -1,8 +1,6 @@
 to do:
 
 ***- jungle events: 
-  ***- shop: display a text for each item as you move through or "Sorry, I am out of those."
-  ***- shop: purchase items! message of not having enough gold if necessary
   ***- As soon as we enter the pyramid (either of them) for the first time, the character says:
       "Ok, I made it to the ruins! I need to find a way to sabotage the Alien operation!"
       "I need to find where are they coming from, and how to stop them!"
