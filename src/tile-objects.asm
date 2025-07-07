@@ -1318,7 +1318,8 @@ object_interaction_function_open_boss_lock_fail:
 	pop ix
 	ld hl, redraw_flags
 	set ROOM_REDRAW_FLAG_BIT, (hl)
-	jp room_render_tile_objects
+; 	jp room_render_tile_objects
+	ret
 
 
 object_interaction_function_item_use_fail:
@@ -1333,7 +1334,8 @@ object_interaction_function_item_use_fail:
 	pop ix
 	ld hl, redraw_flags
 	set ROOM_REDRAW_FLAG_BIT, (hl)
-	jp room_render_tile_objects
+; 	jp room_render_tile_objects
+	ret
 
 
 ;-----------------------------------------------

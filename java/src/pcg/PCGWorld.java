@@ -83,20 +83,35 @@ public class PCGWorld {
     };
     public String predefinedAreaLayouts[][] = {
         null,
-        null,
-        null,
+        {"...xx...",
+         "...xx...",
+         "..xxxx..",
+         "..xxxx..",
+         ".xxxxxx.",
+         ".xxxxxx.",
+         "xxxxxxxx",
+         "xxxxxxxx",
+         },
+        {"...xx...",
+         "...xx...",
+         "..xxxx..",
+         "..xxxx..",
+         ".xxxxxx.",
+         ".xxxxxx.",
+         "xxxxxxxx",
+         "xxxxxxxx",
+         },
         {"x..xxx..x",
          "xxxxxxxxx",
          "....x...."},
-        null,
-//        {".xxxxxxxx.",
-//         ".xxxxxxxx.",
-//         "..xxxxxx..",
-//         "..xxxxxx..",
-//         "...xxxx...",
-//         "...xxxx...",
-//         "....xx....",
-//         "....xx...."},
+        {"xxxxxxxx",
+         "xxxxxxxx",
+         ".xxxxxx.",
+         ".xxxxxx.",
+         "..xxxx..",
+         "..xxxx..",
+         "...xx...",
+         "...xx..."},
         {".x.",
          "xxx",
          ".x."},
@@ -106,7 +121,15 @@ public class PCGWorld {
         null,
         null,
         null,
-        };    
+        };   
+    public double predefinedAreaLayouts_f[] = {
+      0.0,
+      0.95, 0.95,  // two pyramids only respect the pattern with chance 0.5
+      1.0,  // confluence folow the exact pattern
+      0.95,  // inverted pyramid follows the pattern with chance 0.5
+      1.0,  // fire shaft
+      0.0, 0.0, 0.0, 0.0, 0.0, 0.0
+    };
     public HashMap<String, String[]> availableLockKeysObstacles = new HashMap<>();
     public HashMap<String, String[]> availableLockKeysChests = new HashMap<>();
     public HashMap<String, String[]> availableLockKeys = new HashMap<>();
@@ -226,7 +249,7 @@ public class PCGWorld {
             List<String> usedKeysAndLocks = new ArrayList<>();
 
             if (i == n_retries - 1) {
-                r.setSeed1(1);  // we know this seed works
+                r.setSeed1(0);  // we know this seed works
                 n_times_defaulting_to_safe_seed++;
             }
             System.out.println("PCG.generate: ---- attempt " + i + " ----");
@@ -327,7 +350,7 @@ public class PCGWorld {
             if (predefinedAreaLayouts[i] == null) {
                 a = generateArea(i, areaSizes[i][0], areaSizes[i][1]);
             } else {
-                a = generateArea(i, areaSizes[i][0], areaSizes[i][1], predefinedAreaLayouts[i]);
+                a = generateArea(i, areaSizes[i][0], areaSizes[i][1], predefinedAreaLayouts[i], predefinedAreaLayouts_f[i]);
             }
             if (a == null) return false;
             a.areaX = areaDebugPositions[i][0];
@@ -1448,15 +1471,30 @@ public class PCGWorld {
 
     public Area generateArea(int ID, int w, int h)
     {
-        return generateArea(ID, w, h, null);
+        return generateArea(ID, w, h, null, 0.0);
     }
 
     
-    public Area generateArea(int ID, int w, int h, String layout[])
+    public Area generateArea(int ID, int w, int h, String layout[], double layoutAdherence)
     {
         Area a = new Area(ID, w, h, r.rng_seed1, r.rng_seed2);
 
-        if (layout == null) {
+        if (layout != null && layoutAdherence == 1.0) {
+            // use layout:
+            if (layout.length != h || layout[0].length() != w) {
+                System.err.println("Area layout does not match expected size!");
+                return null;
+            }
+            a.nRooms = 0;
+            for(int i = 0;i<h;i++) {
+                for(int j = 0;j<w;j++) {
+                    if (layout[i].charAt(j) != '.') {
+                        a.rooms[j][i] = a.nRooms;
+                        a.nRooms++;                        
+                    }
+                }
+            }            
+        } else if (layout == null) {
             // Grow the area from the center:
             a.nRooms = 1;
             a.rooms[w/2][h/2] = 0;
@@ -1474,20 +1512,31 @@ public class PCGWorld {
                 }
             }
         } else {
-            // use layout:
-            if (layout.length != h || layout[0].length() != w) {
-                System.err.println("Area layout does not match expected size!");
-                return null;
-            }
-            a.nRooms = 0;
-            for(int i = 0;i<h;i++) {
-                for(int j = 0;j<w;j++) {
-                    if (layout[i].charAt(j) != '.') {
-                        a.rooms[j][i] = a.nRooms;
-                        a.nRooms++;                        
+            // use the layout as a guideline:
+            // Grow the area from the center, with a chance of rejecting if the
+            // dows not follow the layout:
+            a.nRooms = 1;
+            a.rooms[w/2][h/2] = 0;
+            while(a.nRooms < w * h * 0.5) {
+                // pick a random spot in the map:
+                int x = r.nextInt(w);
+                int y = r.nextInt(h);
+                if (a.rooms[x][y] == -1 &&
+                    ((x > 0 && a.rooms[x - 1][y] >= 0) ||
+                     (x < w - 1 && a.rooms[x + 1][y] >= 0) ||
+                     (y > 0 && a.rooms[x][y - 1] >= 0) ||
+                     (y < h - 1 && a.rooms[x][y + 1] >= 0))) {
+                    boolean accept = true;
+                    if (layout[y].charAt(x) == '.' &&
+                        r.nextInt(64) < 64*layoutAdherence)  {
+                        accept = false;
+                    }
+                    if (accept) {
+                       a.rooms[x][y] = a.nRooms;
+                       a.nRooms++;
                     }
                 }
-            }
+            }            
         }
         
         return a;

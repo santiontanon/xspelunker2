@@ -192,217 +192,219 @@ pyramid_boss_chunk_pool:
   dw #0005
   db 7, #01, #16  ; data/pyramid/boss0111-3.tmx (94)  up: hole, right: hole, down: stairs, 
   dw #0005
-  db 8, #01, #40  ; data/pyramid/boss1000-1.tmx (95)  left: hole, 
+  db 7, #01, #26  ; data/pyramid/boss0111-4.tmx (95)  up: stairs, right: hole, down: stairs, 
   dw #0005
-  db 9, #01, #41  ; data/pyramid/boss1001-1.tmx (96)  left: hole, down: hole, 
+  db 8, #01, #40  ; data/pyramid/boss1000-1.tmx (96)  left: hole, 
   dw #0005
-  db 9, #01, #42  ; data/pyramid/boss1001-2.tmx (97)  left: hole, down: stairs, 
+  db 9, #01, #41  ; data/pyramid/boss1001-1.tmx (97)  left: hole, down: hole, 
   dw #0005
-  db 10, #01, #44  ; data/pyramid/boss1010-1.tmx (98)  left: hole, right: hole, 
+  db 9, #01, #42  ; data/pyramid/boss1001-2.tmx (98)  left: hole, down: stairs, 
   dw #0005
-  db 11, #01, #45  ; data/pyramid/boss1011-1.tmx (99)  left: hole, right: hole, down: hole, 
+  db 10, #01, #44  ; data/pyramid/boss1010-1.tmx (99)  left: hole, right: hole, 
   dw #0005
-  db 12, #01, #50  ; data/pyramid/boss1100-1.tmx (100)  left: hole, up: hole, 
+  db 11, #01, #45  ; data/pyramid/boss1011-1.tmx (100)  left: hole, right: hole, down: hole, 
   dw #0005
-  db 12, #01, #60  ; data/pyramid/boss1100-2.tmx (101)  left: hole, up: stairs, 
+  db 12, #01, #50  ; data/pyramid/boss1100-1.tmx (101)  left: hole, up: hole, 
   dw #0005
-  db 13, #01, #51  ; data/pyramid/boss1101-1.tmx (102)  left: hole, up: hole, down: hole, 
+  db 12, #01, #60  ; data/pyramid/boss1100-2.tmx (102)  left: hole, up: stairs, 
   dw #0005
-  db 13, #01, #61  ; data/pyramid/boss1101-2.tmx (103)  left: hole, up: stairs, down: hole, 
+  db 13, #01, #51  ; data/pyramid/boss1101-1.tmx (103)  left: hole, up: hole, down: hole, 
   dw #0005
-  db 13, #01, #52  ; data/pyramid/boss1101-3.tmx (104)  left: hole, up: hole, down: stairs, 
+  db 13, #01, #61  ; data/pyramid/boss1101-2.tmx (104)  left: hole, up: stairs, down: hole, 
   dw #0005
-  db 14, #01, #54  ; data/pyramid/boss1110-1.tmx (105)  left: hole, up: hole, right: hole, 
+  db 13, #01, #52  ; data/pyramid/boss1101-3.tmx (105)  left: hole, up: hole, down: stairs, 
   dw #0005
-  db 14, #01, #64  ; data/pyramid/boss1110-2.tmx (106)  left: hole, up: stairs, right: hole, 
+  db 14, #01, #54  ; data/pyramid/boss1110-1.tmx (106)  left: hole, up: hole, right: hole, 
   dw #0005
-  db 15, #01, #55  ; data/pyramid/boss1111-1.tmx (107)  left: hole, up: hole, right: hole, down: hole, 
+  db 14, #01, #64  ; data/pyramid/boss1110-2.tmx (107)  left: hole, up: stairs, right: hole, 
   dw #0005
-  db 15, #01, #65  ; data/pyramid/boss1111-2.tmx (108)  left: hole, up: stairs, right: hole, down: hole, 
+  db 15, #01, #55  ; data/pyramid/boss1111-1.tmx (108)  left: hole, up: hole, right: hole, down: hole, 
   dw #0005
-  db 15, #01, #66  ; data/pyramid/boss1111-3.tmx (109)  left: hole, up: stairs, right: hole, down: stairs, 
+  db 15, #01, #65  ; data/pyramid/boss1111-2.tmx (109)  left: hole, up: stairs, right: hole, down: hole, 
   dw #0005
-  db 15, #01, #56  ; data/pyramid/boss1111-4.tmx (110)  left: hole, up: hole, right: hole, down: stairs, 
+  db 15, #01, #66  ; data/pyramid/boss1111-3.tmx (110)  left: hole, up: stairs, right: hole, down: stairs, 
+  dw #0005
+  db 15, #01, #56  ; data/pyramid/boss1111-4.tmx (111)  left: hole, up: hole, right: hole, down: stairs, 
   dw #0005
 pyramid_block_chunk_pool:
-  db 3, #00, #05  ; data/pyramid/block0011-1.tmx (111)  right: hole, down: hole, 
+  db 3, #00, #05  ; data/pyramid/block0011-1.tmx (112)  right: hole, down: hole, 
   dw #099f
-  db 3, #00, #06  ; data/pyramid/block0011-2.tmx (112)  right: hole, down: stairs, 
+  db 3, #00, #06  ; data/pyramid/block0011-2.tmx (113)  right: hole, down: stairs, 
   dw #099f
-  db 5, #00, #11  ; data/pyramid/block0101-1.tmx (113)  up: hole, down: hole, 
+  db 5, #00, #11  ; data/pyramid/block0101-1.tmx (114)  up: hole, down: hole, 
   dw #0829
-  db 5, #00, #21  ; data/pyramid/block0101-2.tmx (114)  up: stairs, down: hole, 
+  db 5, #00, #21  ; data/pyramid/block0101-2.tmx (115)  up: stairs, down: hole, 
   dw #0829
-  db 5, #00, #12  ; data/pyramid/block0101-3.tmx (115)  up: hole, down: stairs, 
+  db 5, #00, #12  ; data/pyramid/block0101-3.tmx (116)  up: hole, down: stairs, 
   dw #0829
-  db 5, #00, #22  ; data/pyramid/block0101-4.tmx (116)  up: stairs, down: stairs, 
+  db 5, #00, #22  ; data/pyramid/block0101-4.tmx (117)  up: stairs, down: stairs, 
   dw #0829
-  db 6, #00, #14  ; data/pyramid/block0110-1.tmx (117)  up: hole, right: hole, 
+  db 6, #00, #14  ; data/pyramid/block0110-1.tmx (118)  up: hole, right: hole, 
   dw #0849
-  db 6, #00, #24  ; data/pyramid/block0110-2.tmx (118)  up: stairs, right: hole, 
+  db 6, #00, #24  ; data/pyramid/block0110-2.tmx (119)  up: stairs, right: hole, 
   dw #0849
-  db 7, #00, #15  ; data/pyramid/block0011-1.tmx + up (119)  up: hole, right: hole, down: hole, 
+  db 7, #00, #15  ; data/pyramid/block0011-1.tmx + up (120)  up: hole, right: hole, down: hole, 
   dw #088f
-  db 7, #00, #16  ; data/pyramid/block0011-2.tmx + up (120)  up: hole, right: hole, down: stairs, 
+  db 7, #00, #16  ; data/pyramid/block0011-2.tmx + up (121)  up: hole, right: hole, down: stairs, 
   dw #088f
-  db 7, #00, #15  ; data/pyramid/block0101-1.tmx + right (121)  up: hole, right: hole, down: hole, 
+  db 7, #00, #15  ; data/pyramid/block0101-1.tmx + right (122)  up: hole, right: hole, down: hole, 
   dw #0809
-  db 7, #00, #25  ; data/pyramid/block0101-2.tmx + right (122)  up: stairs, right: hole, down: hole, 
+  db 7, #00, #25  ; data/pyramid/block0101-2.tmx + right (123)  up: stairs, right: hole, down: hole, 
   dw #0809
-  db 7, #00, #16  ; data/pyramid/block0101-3.tmx + right (123)  up: hole, right: hole, down: stairs, 
+  db 7, #00, #16  ; data/pyramid/block0101-3.tmx + right (124)  up: hole, right: hole, down: stairs, 
   dw #0809
-  db 7, #00, #26  ; data/pyramid/block0101-4.tmx + right (124)  up: stairs, right: hole, down: stairs, 
+  db 7, #00, #26  ; data/pyramid/block0101-4.tmx + right (125)  up: stairs, right: hole, down: stairs, 
   dw #0809
-  db 7, #00, #15  ; data/pyramid/block0110-1.tmx + down (125)  up: hole, right: hole, down: hole, 
+  db 7, #00, #15  ; data/pyramid/block0110-1.tmx + down (126)  up: hole, right: hole, down: hole, 
   dw #0809
-  db 7, #00, #25  ; data/pyramid/block0110-2.tmx + down (126)  up: stairs, right: hole, down: hole, 
+  db 7, #00, #25  ; data/pyramid/block0110-2.tmx + down (127)  up: stairs, right: hole, down: hole, 
   dw #0809
-  db 7, #00, #16  ; data/pyramid/block0111-1.tmx (127)  up: hole, right: hole, down: stairs, 
+  db 7, #00, #16  ; data/pyramid/block0111-1.tmx (128)  up: hole, right: hole, down: stairs, 
   dw #0809
-  db 9, #00, #41  ; data/pyramid/block1001-1.tmx (128)  left: hole, down: hole, 
+  db 9, #00, #41  ; data/pyramid/block1001-1.tmx (129)  left: hole, down: hole, 
   dw #0a31
-  db 9, #00, #42  ; data/pyramid/block1001-2.tmx (129)  left: hole, down: stairs, 
+  db 9, #00, #42  ; data/pyramid/block1001-2.tmx (130)  left: hole, down: stairs, 
   dw #0a31
-  db 10, #00, #44  ; data/pyramid/block1010-1.tmx (130)  left: hole, right: hole, 
+  db 10, #00, #44  ; data/pyramid/block1010-1.tmx (131)  left: hole, right: hole, 
   dw #0d51
-  db 11, #00, #45  ; data/pyramid/block0011-1.tmx + left (131)  left: hole, right: hole, down: hole, 
+  db 11, #00, #45  ; data/pyramid/block0011-1.tmx + left (132)  left: hole, right: hole, down: hole, 
   dw #0917
-  db 11, #00, #46  ; data/pyramid/block0011-2.tmx + left (132)  left: hole, right: hole, down: stairs, 
+  db 11, #00, #46  ; data/pyramid/block0011-2.tmx + left (133)  left: hole, right: hole, down: stairs, 
   dw #0917
-  db 11, #00, #45  ; data/pyramid/block1001-1.tmx + right (133)  left: hole, right: hole, down: hole, 
+  db 11, #00, #45  ; data/pyramid/block1001-1.tmx + right (134)  left: hole, right: hole, down: hole, 
   dw #0811
-  db 11, #00, #46  ; data/pyramid/block1001-2.tmx + right (134)  left: hole, right: hole, down: stairs, 
+  db 11, #00, #46  ; data/pyramid/block1001-2.tmx + right (135)  left: hole, right: hole, down: stairs, 
   dw #0811
-  db 11, #00, #45  ; data/pyramid/block1010-1.tmx + down (135)  left: hole, right: hole, down: hole, 
+  db 11, #00, #45  ; data/pyramid/block1010-1.tmx + down (136)  left: hole, right: hole, down: hole, 
   dw #0911
-  db 12, #00, #50  ; data/pyramid/block1100-1.tmx (136)  left: hole, up: hole, 
+  db 12, #00, #50  ; data/pyramid/block1100-1.tmx (137)  left: hole, up: hole, 
   dw #0a60
-  db 12, #00, #60  ; data/pyramid/block1100-2.tmx (137)  left: hole, up: stairs, 
+  db 12, #00, #60  ; data/pyramid/block1100-2.tmx (138)  left: hole, up: stairs, 
   dw #0a60
-  db 13, #00, #51  ; data/pyramid/block0101-1.tmx + left (138)  left: hole, up: hole, down: hole, 
+  db 13, #00, #51  ; data/pyramid/block0101-1.tmx + left (139)  left: hole, up: hole, down: hole, 
   dw #0821
-  db 13, #00, #61  ; data/pyramid/block0101-2.tmx + left (139)  left: hole, up: stairs, down: hole, 
+  db 13, #00, #61  ; data/pyramid/block0101-2.tmx + left (140)  left: hole, up: stairs, down: hole, 
   dw #0821
-  db 13, #00, #52  ; data/pyramid/block0101-3.tmx + left (140)  left: hole, up: hole, down: stairs, 
+  db 13, #00, #52  ; data/pyramid/block0101-3.tmx + left (141)  left: hole, up: hole, down: stairs, 
   dw #0821
-  db 13, #00, #62  ; data/pyramid/block0101-4.tmx + left (141)  left: hole, up: stairs, down: stairs, 
+  db 13, #00, #62  ; data/pyramid/block0101-4.tmx + left (142)  left: hole, up: stairs, down: stairs, 
   dw #0821
-  db 13, #00, #51  ; data/pyramid/block1001-1.tmx + up (142)  left: hole, up: hole, down: hole, 
+  db 13, #00, #51  ; data/pyramid/block1001-1.tmx + up (143)  left: hole, up: hole, down: hole, 
   dw #0a21
-  db 13, #00, #52  ; data/pyramid/block1001-2.tmx + up (143)  left: hole, up: hole, down: stairs, 
+  db 13, #00, #52  ; data/pyramid/block1001-2.tmx + up (144)  left: hole, up: hole, down: stairs, 
   dw #0a21
-  db 13, #00, #51  ; data/pyramid/block1100-1.tmx + down (144)  left: hole, up: hole, down: hole, 
+  db 13, #00, #51  ; data/pyramid/block1100-1.tmx + down (145)  left: hole, up: hole, down: hole, 
   dw #0a20
-  db 13, #00, #61  ; data/pyramid/block1100-2.tmx + down (145)  left: hole, up: stairs, down: hole, 
+  db 13, #00, #61  ; data/pyramid/block1100-2.tmx + down (146)  left: hole, up: stairs, down: hole, 
   dw #0a20
-  db 14, #00, #54  ; data/pyramid/block0110-1.tmx + left (146)  left: hole, up: hole, right: hole, 
+  db 14, #00, #54  ; data/pyramid/block0110-1.tmx + left (147)  left: hole, up: hole, right: hole, 
   dw #0841
-  db 14, #00, #64  ; data/pyramid/block0110-2.tmx + left (147)  left: hole, up: stairs, right: hole, 
+  db 14, #00, #64  ; data/pyramid/block0110-2.tmx + left (148)  left: hole, up: stairs, right: hole, 
   dw #0841
-  db 14, #00, #54  ; data/pyramid/block1010-1.tmx + up (148)  left: hole, up: hole, right: hole, 
+  db 14, #00, #54  ; data/pyramid/block1010-1.tmx + up (149)  left: hole, up: hole, right: hole, 
   dw #0c41
-  db 14, #00, #54  ; data/pyramid/block1100-1.tmx + right (149)  left: hole, up: hole, right: hole, 
+  db 14, #00, #54  ; data/pyramid/block1100-1.tmx + right (150)  left: hole, up: hole, right: hole, 
   dw #0840
-  db 14, #00, #64  ; data/pyramid/block1100-2.tmx + right (150)  left: hole, up: stairs, right: hole, 
+  db 14, #00, #64  ; data/pyramid/block1100-2.tmx + right (151)  left: hole, up: stairs, right: hole, 
   dw #0840
-  db 15, #00, #55  ; data/pyramid/block0011-1.tmx + left + up (151)  left: hole, up: hole, right: hole, down: hole, 
+  db 15, #00, #55  ; data/pyramid/block0011-1.tmx + left + up (152)  left: hole, up: hole, right: hole, down: hole, 
   dw #0807
-  db 15, #00, #56  ; data/pyramid/block0011-2.tmx + left + up (152)  left: hole, up: hole, right: hole, down: stairs, 
+  db 15, #00, #56  ; data/pyramid/block0011-2.tmx + left + up (153)  left: hole, up: hole, right: hole, down: stairs, 
   dw #0807
-  db 15, #00, #55  ; data/pyramid/block0101-1.tmx + left + right (153)  left: hole, up: hole, right: hole, down: hole, 
+  db 15, #00, #55  ; data/pyramid/block0101-1.tmx + left + right (154)  left: hole, up: hole, right: hole, down: hole, 
   dw #0801
-  db 15, #00, #65  ; data/pyramid/block0101-2.tmx + left + right (154)  left: hole, up: stairs, right: hole, down: hole, 
+  db 15, #00, #65  ; data/pyramid/block0101-2.tmx + left + right (155)  left: hole, up: stairs, right: hole, down: hole, 
   dw #0801
-  db 15, #00, #56  ; data/pyramid/block0101-3.tmx + left + right (155)  left: hole, up: hole, right: hole, down: stairs, 
+  db 15, #00, #56  ; data/pyramid/block0101-3.tmx + left + right (156)  left: hole, up: hole, right: hole, down: stairs, 
   dw #0801
-  db 15, #00, #66  ; data/pyramid/block0101-4.tmx + left + right (156)  left: hole, up: stairs, right: hole, down: stairs, 
+  db 15, #00, #66  ; data/pyramid/block0101-4.tmx + left + right (157)  left: hole, up: stairs, right: hole, down: stairs, 
   dw #0801
-  db 15, #00, #55  ; data/pyramid/block0110-1.tmx + left + down (157)  left: hole, up: hole, right: hole, down: hole, 
+  db 15, #00, #55  ; data/pyramid/block0110-1.tmx + left + down (158)  left: hole, up: hole, right: hole, down: hole, 
   dw #0801
-  db 15, #00, #65  ; data/pyramid/block0110-2.tmx + left + down (158)  left: hole, up: stairs, right: hole, down: hole, 
+  db 15, #00, #65  ; data/pyramid/block0110-2.tmx + left + down (159)  left: hole, up: stairs, right: hole, down: hole, 
   dw #0801
-  db 15, #00, #56  ; data/pyramid/block0111-1.tmx + left (159)  left: hole, up: hole, right: hole, down: stairs, 
+  db 15, #00, #56  ; data/pyramid/block0111-1.tmx + left (160)  left: hole, up: hole, right: hole, down: stairs, 
   dw #0801
-  db 15, #00, #55  ; data/pyramid/block1001-1.tmx + up + right (160)  left: hole, up: hole, right: hole, down: hole, 
+  db 15, #00, #55  ; data/pyramid/block1001-1.tmx + up + right (161)  left: hole, up: hole, right: hole, down: hole, 
   dw #0801
-  db 15, #00, #56  ; data/pyramid/block1001-2.tmx + up + right (161)  left: hole, up: hole, right: hole, down: stairs, 
+  db 15, #00, #56  ; data/pyramid/block1001-2.tmx + up + right (162)  left: hole, up: hole, right: hole, down: stairs, 
   dw #0801
-  db 15, #00, #55  ; data/pyramid/block1010-1.tmx + up + down (162)  left: hole, up: hole, right: hole, down: hole, 
+  db 15, #00, #55  ; data/pyramid/block1010-1.tmx + up + down (163)  left: hole, up: hole, right: hole, down: hole, 
   dw #0801
-  db 15, #00, #55  ; data/pyramid/block1100-1.tmx + right + down (163)  left: hole, up: hole, right: hole, down: hole, 
+  db 15, #00, #55  ; data/pyramid/block1100-1.tmx + right + down (164)  left: hole, up: hole, right: hole, down: hole, 
   dw #0800
-  db 15, #00, #65  ; data/pyramid/block1100-2.tmx + right + down (164)  left: hole, up: stairs, right: hole, down: hole, 
+  db 15, #00, #65  ; data/pyramid/block1100-2.tmx + right + down (165)  left: hole, up: stairs, right: hole, down: hole, 
   dw #0800
 pyramid_combination_chunk_pool:
-  db 0, #00, #00  ; data/pyramid/combination0000-1.tmx (165)  
+  db 0, #00, #00  ; data/pyramid/combination0000-1.tmx (166)  
   dw #0781
-  db 1, #00, #01  ; data/pyramid/combination0000-1.tmx + down (166)  down: hole, 
+  db 1, #00, #01  ; data/pyramid/combination0000-1.tmx + down (167)  down: hole, 
   dw #0381
-  db 1, #00, #02  ; data/pyramid/combination0001-1.tmx (167)  down: stairs, 
+  db 1, #00, #02  ; data/pyramid/combination0001-1.tmx (168)  down: stairs, 
   dw #0381
-  db 2, #00, #04  ; data/pyramid/combination0000-1.tmx + right (168)  right: hole, 
+  db 2, #00, #04  ; data/pyramid/combination0000-1.tmx + right (169)  right: hole, 
   dw #0581
-  db 3, #00, #05  ; data/pyramid/combination0000-1.tmx + right + down (169)  right: hole, down: hole, 
+  db 3, #00, #05  ; data/pyramid/combination0000-1.tmx + right + down (170)  right: hole, down: hole, 
   dw #0181
-  db 3, #00, #06  ; data/pyramid/combination0001-1.tmx + right (170)  right: hole, down: stairs, 
+  db 3, #00, #06  ; data/pyramid/combination0001-1.tmx + right (171)  right: hole, down: stairs, 
   dw #0181
-  db 4, #00, #10  ; data/pyramid/combination0000-1.tmx + up (171)  up: hole, 
+  db 4, #00, #10  ; data/pyramid/combination0000-1.tmx + up (172)  up: hole, 
   dw #0681
-  db 4, #00, #20  ; data/pyramid/combination0100-1.tmx (172)  up: stairs, 
+  db 4, #00, #20  ; data/pyramid/combination0100-1.tmx (173)  up: stairs, 
   dw #0681
-  db 5, #00, #11  ; data/pyramid/combination0000-1.tmx + up + down (173)  up: hole, down: hole, 
+  db 5, #00, #11  ; data/pyramid/combination0000-1.tmx + up + down (174)  up: hole, down: hole, 
   dw #0281
-  db 5, #00, #12  ; data/pyramid/combination0001-1.tmx + up (174)  up: hole, down: stairs, 
+  db 5, #00, #12  ; data/pyramid/combination0001-1.tmx + up (175)  up: hole, down: stairs, 
   dw #0281
-  db 5, #00, #21  ; data/pyramid/combination0100-1.tmx + down (175)  up: stairs, down: hole, 
+  db 5, #00, #21  ; data/pyramid/combination0100-1.tmx + down (176)  up: stairs, down: hole, 
   dw #0281
-  db 5, #00, #22  ; data/pyramid/combination0101-1.tmx (176)  up: stairs, down: stairs, 
+  db 5, #00, #22  ; data/pyramid/combination0101-1.tmx (177)  up: stairs, down: stairs, 
   dw #0281
-  db 6, #00, #14  ; data/pyramid/combination0000-1.tmx + up + right (177)  up: hole, right: hole, 
+  db 6, #00, #14  ; data/pyramid/combination0000-1.tmx + up + right (178)  up: hole, right: hole, 
   dw #0481
-  db 6, #00, #24  ; data/pyramid/combination0100-1.tmx + right (178)  up: stairs, right: hole, 
+  db 6, #00, #24  ; data/pyramid/combination0100-1.tmx + right (179)  up: stairs, right: hole, 
   dw #0481
-  db 7, #00, #15  ; data/pyramid/combination0000-1.tmx + up + right + down (179)  up: hole, right: hole, down: hole, 
+  db 7, #00, #15  ; data/pyramid/combination0000-1.tmx + up + right + down (180)  up: hole, right: hole, down: hole, 
   dw #0081
-  db 7, #00, #16  ; data/pyramid/combination0001-1.tmx + up + right (180)  up: hole, right: hole, down: stairs, 
+  db 7, #00, #16  ; data/pyramid/combination0001-1.tmx + up + right (181)  up: hole, right: hole, down: stairs, 
   dw #0081
-  db 7, #00, #25  ; data/pyramid/combination0100-1.tmx + right + down (181)  up: stairs, right: hole, down: hole, 
+  db 7, #00, #25  ; data/pyramid/combination0100-1.tmx + right + down (182)  up: stairs, right: hole, down: hole, 
   dw #0081
-  db 7, #00, #26  ; data/pyramid/combination0101-1.tmx + right (182)  up: stairs, right: hole, down: stairs, 
+  db 7, #00, #26  ; data/pyramid/combination0101-1.tmx + right (183)  up: stairs, right: hole, down: stairs, 
   dw #0081
-  db 8, #00, #40  ; data/pyramid/combination0000-1.tmx + left (183)  left: hole, 
+  db 8, #00, #40  ; data/pyramid/combination0000-1.tmx + left (184)  left: hole, 
   dw #0701
-  db 9, #00, #41  ; data/pyramid/combination0000-1.tmx + left + down (184)  left: hole, down: hole, 
+  db 9, #00, #41  ; data/pyramid/combination0000-1.tmx + left + down (185)  left: hole, down: hole, 
   dw #0301
-  db 9, #00, #42  ; data/pyramid/combination0001-1.tmx + left (185)  left: hole, down: stairs, 
+  db 9, #00, #42  ; data/pyramid/combination0001-1.tmx + left (186)  left: hole, down: stairs, 
   dw #0301
-  db 10, #00, #44  ; data/pyramid/combination0000-1.tmx + left + right (186)  left: hole, right: hole, 
+  db 10, #00, #44  ; data/pyramid/combination0000-1.tmx + left + right (187)  left: hole, right: hole, 
   dw #0501
-  db 11, #00, #45  ; data/pyramid/combination0000-1.tmx + left + right + down (187)  left: hole, right: hole, down: hole, 
+  db 11, #00, #45  ; data/pyramid/combination0000-1.tmx + left + right + down (188)  left: hole, right: hole, down: hole, 
   dw #0101
-  db 11, #00, #46  ; data/pyramid/combination0001-1.tmx + left + right (188)  left: hole, right: hole, down: stairs, 
+  db 11, #00, #46  ; data/pyramid/combination0001-1.tmx + left + right (189)  left: hole, right: hole, down: stairs, 
   dw #0101
-  db 12, #00, #50  ; data/pyramid/combination0000-1.tmx + left + up (189)  left: hole, up: hole, 
+  db 12, #00, #50  ; data/pyramid/combination0000-1.tmx + left + up (190)  left: hole, up: hole, 
   dw #0601
-  db 12, #00, #60  ; data/pyramid/combination0100-1.tmx + left (190)  left: hole, up: stairs, 
+  db 12, #00, #60  ; data/pyramid/combination0100-1.tmx + left (191)  left: hole, up: stairs, 
   dw #0601
-  db 13, #00, #51  ; data/pyramid/combination0000-1.tmx + left + up + down (191)  left: hole, up: hole, down: hole, 
+  db 13, #00, #51  ; data/pyramid/combination0000-1.tmx + left + up + down (192)  left: hole, up: hole, down: hole, 
   dw #0201
-  db 13, #00, #52  ; data/pyramid/combination0001-1.tmx + left + up (192)  left: hole, up: hole, down: stairs, 
+  db 13, #00, #52  ; data/pyramid/combination0001-1.tmx + left + up (193)  left: hole, up: hole, down: stairs, 
   dw #0201
-  db 13, #00, #61  ; data/pyramid/combination0100-1.tmx + left + down (193)  left: hole, up: stairs, down: hole, 
+  db 13, #00, #61  ; data/pyramid/combination0100-1.tmx + left + down (194)  left: hole, up: stairs, down: hole, 
   dw #0201
-  db 13, #00, #62  ; data/pyramid/combination0101-1.tmx + left (194)  left: hole, up: stairs, down: stairs, 
+  db 13, #00, #62  ; data/pyramid/combination0101-1.tmx + left (195)  left: hole, up: stairs, down: stairs, 
   dw #0201
-  db 14, #00, #54  ; data/pyramid/combination0000-1.tmx + left + up + right (195)  left: hole, up: hole, right: hole, 
+  db 14, #00, #54  ; data/pyramid/combination0000-1.tmx + left + up + right (196)  left: hole, up: hole, right: hole, 
   dw #0401
-  db 14, #00, #64  ; data/pyramid/combination0100-1.tmx + left + right (196)  left: hole, up: stairs, right: hole, 
+  db 14, #00, #64  ; data/pyramid/combination0100-1.tmx + left + right (197)  left: hole, up: stairs, right: hole, 
   dw #0401
-  db 15, #00, #55  ; data/pyramid/combination0000-1.tmx + left + up + right + down (197)  left: hole, up: hole, right: hole, down: hole, 
+  db 15, #00, #55  ; data/pyramid/combination0000-1.tmx + left + up + right + down (198)  left: hole, up: hole, right: hole, down: hole, 
   dw #0001
-  db 15, #00, #56  ; data/pyramid/combination0001-1.tmx + left + up + right (198)  left: hole, up: hole, right: hole, down: stairs, 
+  db 15, #00, #56  ; data/pyramid/combination0001-1.tmx + left + up + right (199)  left: hole, up: hole, right: hole, down: stairs, 
   dw #0001
-  db 15, #00, #65  ; data/pyramid/combination0100-1.tmx + left + right + down (199)  left: hole, up: stairs, right: hole, down: hole, 
+  db 15, #00, #65  ; data/pyramid/combination0100-1.tmx + left + right + down (200)  left: hole, up: stairs, right: hole, down: hole, 
   dw #0001
-  db 15, #00, #66  ; data/pyramid/combination0101-1.tmx + left + right (200)  left: hole, up: stairs, right: hole, down: stairs, 
+  db 15, #00, #66  ; data/pyramid/combination0101-1.tmx + left + right (201)  left: hole, up: stairs, right: hole, down: stairs, 
   dw #0001

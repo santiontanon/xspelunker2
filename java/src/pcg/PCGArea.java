@@ -523,6 +523,7 @@ public class PCGArea {
         boss_chunks.get(0x7).add(new RoomChunk("data/pyramid/boss0111-1.tmx", 0x7, "pyramid"));
         boss_chunks.get(0x7).add(new RoomChunk("data/pyramid/boss0111-2.tmx", 0x7, "pyramid"));
         boss_chunks.get(0x7).add(new RoomChunk("data/pyramid/boss0111-3.tmx", 0x7, "pyramid"));
+        boss_chunks.get(0x7).add(new RoomChunk("data/pyramid/boss0111-4.tmx", 0x7, "pyramid"));
         boss_chunks.get(0x8).add(new RoomChunk("data/pyramid/boss1000-1.tmx", 0x8, "pyramid"));
         boss_chunks.get(0x9).add(new RoomChunk("data/pyramid/boss1001-1.tmx", 0x9, "pyramid"));
         boss_chunks.get(0x9).add(new RoomChunk("data/pyramid/boss1001-2.tmx", 0x9, "pyramid"));

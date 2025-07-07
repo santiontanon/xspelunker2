@@ -1,7 +1,7 @@
 to do:
 
+***- BUG: why are white skeletons so hard to hit from the right? (maybe all enemies?)
 ***- Implement PCGWorld in assembler:
-  ***- Java: for some areas (pyramids, etc.) have some predefined shapes (e.g. pyramid shape), that can be chosen with some probability. And maybe also different shapes for the confluence, etc. or even have a desired shape that is respected with some probability, so that it more or less resembles the shape, but not always exactly (e.g.: run normal algorithm, and if the room is not on the target shape, have a 0.5 chance of dropping it)
   ***- make a list of smaller to-do items to implement it
   ***- implement it and generate the whole thing in assembler (add as many comments as possible, as I might have to modify things later on to add more secrets) (spanningTree: ID, parent, n_descendants, root point, tags (this is stored twice for convenience))
   ***- keep Java/assembler versions in sync (try different random seeds): generate the expected structures on Java, and test with pcg_debug__arrays_equal at each step
@@ -17,7 +17,7 @@ to do:
   - for each difficulty, determine how to simplify the game (map sizes? enemy rates? number of puzzles? enemy aggressivity? ensure games are all playable with checks in Java)
   - game intro sequence
 
-- music: intro, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending
+- music: intro, letters, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 25 have potential)
 
 - first boss: Huracán, the Storm Bringer (A large, imposing figure wreathed in swirling winds and lightning. Could have feathered serpent elements): wind, lightning, tornadoes
 - second boss: Camazotz, the Bat God: A giant bat-like creature with glowing red eyes and sharp claws.

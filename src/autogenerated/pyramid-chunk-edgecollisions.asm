@@ -93,6 +93,7 @@
   db #3f, #01, #20, #9f  ; data/pyramid/boss0111-1.tmx
   db #3f, #01, #20, #9f  ; data/pyramid/boss0111-2.tmx
   db #3f, #01, #20, #ff  ; data/pyramid/boss0111-3.tmx
+  db #3f, #01, #20, #ff  ; data/pyramid/boss0111-4.tmx
   db #21, #ff, #3f, #ff  ; data/pyramid/boss1000-1.tmx
   db #21, #ff, #3f, #c3  ; data/pyramid/boss1001-1.tmx
   db #21, #ff, #3f, #c3  ; data/pyramid/boss1001-2.tmx
