@@ -7,6 +7,16 @@ object_interaction_function_shopkeeper_internal:
 	jp z, object_interaction_function_shopkeeper_internal_lost_person
 	cp STORY_STATE__PLACED_FIRST_POWER_STONE
 	jp z, object_interaction_function_shopkeeper_internal_lost_person
+	ld a, (global_state__story)
+	cp STORY_STATE__GOT_LETTER2
+	jr nc, object_interaction_function_shopkeeper_internal_default
+	cp STORY_STATE__FOUND_LOST_VENDOR
+	jr nz, object_interaction_function_shopkeeper_internal_default
+	ld a, (global_state__n_power_stones_in_calendar)
+	cp 2
+	jp nc, object_interaction_function_shopkeeper_internal_letter2
+
+object_interaction_function_shopkeeper_internal_default:
 	ld de, TEXT_SHOPKEEPER1_1
 	ld hl, display_in_game_message
 	ld c, TEXT_PAGE
@@ -75,6 +85,49 @@ object_interaction_function_shopkeeper_internal_lost_person:
 	ld c, TEXT_PAGE
 	jp call_hl_in_page_c_8000
 
+object_interaction_function_shopkeeper_internal_letter2:
+	ld de, TEXT_LETTER2_ARRIVED1
+	ld hl, display_in_game_message_textpage3
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000
+	
+	ld hl, display_elaine_letter2
+	ld c, TABLET_LETTER_PAGE
+	call call_hl_in_page_c_8000
+
+	call disable_VDP_output
+	ld hl, NAMTBL2
+	ld bc, 768
+	xor a
+	call fast_FILVRM
+	call enable_VDP_output
+
+	ld hl, redraw_flags
+	set REUPLOAD_INGAME_OBJECT_TILES_FLAG_BIT, (hl)
+	ld a, (current_room__tileset_page)
+	ld c, a
+	ld hl, (current_room__tileset_ptr)
+	call setup_game_tiles
+	call state_play_upload_object_tiles_to_vdp_if_necessary
+	; gain letter:
+	ld a, 1
+	ld (player_inventory_items + 34), a
+	ld a, STORY_STATE__GOT_LETTER2
+	ld (global_state__story), a
+
+	ld hl, object_interaction_function_shopkeeper_internal_letter2_part2
+	ld (in_game_event_fn_ptr), hl
+	ld a, NPCS_PAGE
+	ld (in_game_event_fn_page), a
+	ret
+
+
+object_interaction_function_shopkeeper_internal_letter2_part2:
+	ld de, TEXT_LETTER2_ARRIVED2
+	ld hl, display_in_game_message_textpage3
+	ld c, TEXT_PAGE
+	jp call_hl_in_page_c_8000
+
 
 ;-----------------------------------------------
 object_interaction_function_lost_vendor_internal:
@@ -100,11 +153,18 @@ object_interaction_function_lost_vendor_internal:
 
 ;-----------------------------------------------
 object_interaction_function_shopkeeper2_internal:
+	ld a, (global_state__story)
+	cp STORY_STATE__GOT_LETTER2
+	jr nc, object_interaction_function_shopkeeper2_internal_dynamite_made
 	ld de, TEXT_SHOPKEEPER2_1
 	ld hl, display_in_game_message_textpage3
 	ld c, TEXT_PAGE
-	call call_hl_in_page_c_8000
-	ret
+	jp call_hl_in_page_c_8000
+object_interaction_function_shopkeeper2_internal_dynamite_made:
+	ld de, TEXT_SHOPKEEPER2_2
+	ld hl, display_in_game_message_textpage3
+	ld c, TEXT_PAGE
+	jp call_hl_in_page_c_8000
 
 
 ;-----------------------------------------------
@@ -149,6 +209,8 @@ object_interaction_function_shop_internal_price_loop:
 				ld a, (hl)  ; price
 				or a
 				jr z, object_interaction_function_shop_internal_price_loop_n_a
+				cp #ff
+				jr z, object_interaction_function_shop_internal_price_loop_300
 				; price:
 				ld ixl, a
 				ld b, 2
@@ -156,6 +218,18 @@ object_interaction_function_shop_internal_price_loop:
 				ld hl, draw_inventory_number_ixl
 				ld c, TEXT_PAGE
 				call call_hl_in_page_c_8000
+				jr object_interaction_function_shop_internal_price_loop_next
+object_interaction_function_shop_internal_price_loop_300:
+				push de
+					ld de, TEXT_300
+					ld hl, copy_text_from_textpage3
+					ld c, TEXT_PAGE3
+					call call_hl_in_page_c_8000
+					ld hl, buffer_4096
+					ld iy, #80f0
+					ld b, 2
+				pop de
+				call draw_sentence_to_vdp_from_another_page
 				jr object_interaction_function_shop_internal_price_loop_next
 object_interaction_function_shop_internal_price_loop_n_a:
 				; n/a:
@@ -268,6 +342,11 @@ synthesize_shop_list_has_battery:
 	ld (hl), TAG_DYNAMITE
 	inc hl
 	ld (hl), 0
+	ld a, (global_state__story)
+	cp STORY_STATE__GOT_LETTER2
+	jr c, synthesize_shop_list_dynamite_not_available
+	ld (hl), #ff
+synthesize_shop_list_dynamite_not_available:
 	inc hl
 	ld a, (current_world__shop_extra_items)
 	ld (hl), a

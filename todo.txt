@@ -1,15 +1,11 @@
 to do:
 
-***- lost vendor events: 
-  ***- After beating the third pyramid and the third boss (obtaining the third idol), the player is squeamish of using it on the calendar stone, since the goal is to destroy it, and powering it up too much, might help the aliens. At this point, if you go back to get explosives, you can get them, but you will also get a letter from Elaine, explaining more details. She hopes you have not yet destroyed it, since it seems this calendar stone was not designed to receive the star people, but to prevent them from coming, by blocking the dimensional portals they had open. The ancient Maya built it, but with the Maya gone, and no one to take care of it, somehow the stones that powered it were taken away and it allowed aliens to come. So, you should not destroy it, but power it up! The aliens have bene able to come, precisely because the stone is not powered up! She hopes you have not yet destroyed it.
-    ***- The bomb maker just makes the dynamite, it is still sold in the shop, it should be so expensive to buy that it's actually impossible to buy it anyway, but now you can get another letter.
-
-- Implement PCGWorld in assembler:
-  - Java: for some areas (pyramids, etc.) have some predefined shapes (e.g. pyramid shape), that can be chosen with some probability. And maybe also different shapes for the confluence, etc. or even have a desired shape that is respected with some probability, so that it more or less resembles the shape, but not always exactly (e.g.: run normal algorithm, and if the room is not on the target shape, have a 0.5 chance of dropping it)
-  - implement it and generate the whole thing in assembler (add as many comments as possible, as I might have to modify things later on to add more secrets)
-    - spanningTree: ID, parent, n_descendants, root point, tags (this is stored twice for convenience)
-    - keep Java/assembler versions in sync (try different random seeds): generate the expected structures on Java, and test with pcg_debug__arrays_equal at each step
-  - safety checks to make sure all generated levels are playable (no more than 1 tag per division, try all RNG seeds in Java, etc.), adjust # divisions needed, etc.
+***- Implement PCGWorld in assembler:
+  ***- Java: for some areas (pyramids, etc.) have some predefined shapes (e.g. pyramid shape), that can be chosen with some probability. And maybe also different shapes for the confluence, etc. or even have a desired shape that is respected with some probability, so that it more or less resembles the shape, but not always exactly (e.g.: run normal algorithm, and if the room is not on the target shape, have a 0.5 chance of dropping it)
+  ***- make a list of smaller to-do items to implement it
+  ***- implement it and generate the whole thing in assembler (add as many comments as possible, as I might have to modify things later on to add more secrets) (spanningTree: ID, parent, n_descendants, root point, tags (this is stored twice for convenience))
+  ***- keep Java/assembler versions in sync (try different random seeds): generate the expected structures on Java, and test with pcg_debug__arrays_equal at each step
+  ***- safety checks to make sure all generated levels are playable (no more than 1 tag per division, try all RNG seeds in Java, etc.), adjust # divisions needed, etc.
 
 - menus:
   - brain games screen (think of a Maya-themed way for this)

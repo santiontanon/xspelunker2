@@ -264,11 +264,16 @@ update_sprite_objects_shopkeeper:
 	ld a, (global_state__story)
 	cp STORY_STATE__FOUND_CALENDAR
 	jp z, update_sprite_objects_shopkeeper_got_letter
+	cp STORY_STATE__FOUND_LOST_VENDOR
+	jp nz, update_sprite_objects_loop_next
+	ld a, (global_state__n_power_stones_in_calendar)
+	cp 2
+	jr nc, update_sprite_objects_shopkeeper_got_letter
 	jp update_sprite_objects_loop_next
 update_sprite_objects_shopkeeper_got_letter:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
 	and #04
-	ret z
+	jp z, update_sprite_objects_loop_next
 	; display an exclamation mark:
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 6) * 4 
 	ld d, COLOR_DARK_YELLOW

@@ -274,6 +274,11 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "Oh no! Here, I sketched a path in this map for you, and be careful ok!", "FOUND_LOST_VENDOR2", 112);
         addLineSafe(lines_with_constant_page3, "Lost person: Dyos bo'otik stranger! I'll see you around!", "FOUND_LOST_VENDOR3", 112);
         addLineSafe(lines_with_constant_page3, "Bix a beel stranger! Thanks for saving me! I heard from Aapo that you wanted to purchase dynamite. Give me some days and I can make some!", "SHOPKEEPER2_1", 112);
+        addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! I have a another letter for you!", "LETTER2_ARRIVED1", 112);
+        addLineSafe(lines_with_constant_page3, "Woah... that was close... Glad I did not get that dynamite on time...", "LETTER2_ARRIVED2", 112);
+        addLineSafe(lines_with_constant_page3, "Bix a beel stranger! Aapo should be fully supplied with my dynamite now!", "SHOPKEEPER2_2", 112);
+        addLineSafe(lines_with_constant_page3, "300", "300", 112);
+        
         
         // power stone inspection:
         addLineSafe(lines_with_constant_page1, "A stone I found. Some sort of power radiates from it.", "INSPECT_POWER_STONE", 32);

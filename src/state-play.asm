@@ -21,25 +21,26 @@ state_play:
 ; 		ld (global_state__power_calendar + 4), a
 ; 		inc a
 ; 		ld (global_state__power_calendar + 5), a
-; 		ld a, 4
+; 		ld a, 2
 ; 		ld (global_state__n_power_stones_in_calendar), a
 ; 		ld a, STORY_STATE__GOT_LETTER1
 ; 		ld a, STORY_STATE__PLACED_FIRST_POWER_STONE
-		ld a, STORY_STATE__FOUND_LOST_VENDOR
-		ld (global_state__story), a
+; 		ld a, STORY_STATE__FOUND_LOST_VENDOR
+; 		ld a, STORY_STATE__GOT_LETTER2
+; 		ld (global_state__story), a
 ; 		ld a, 2  ; maya riddle solved
 ; 		ld (global_state__maya_riddle), a
 
 		; debug:
 		ld a, 1
-		ld (player_inventory_items), a
+; 		ld (player_inventory_items), a
 ; 		ld (player_inventory_items+1), a
 ; 		ld (player_inventory_items+2), a
 ; 		ld (player_inventory_items+3), a
 ; 		ld (player_inventory_items+4), a
 ; 		ld (player_inventory_items+5), a  ; mars boss key
 ; 		ld (player_inventory_items+6), a  ; moon boss key
-		ld (player_inventory_items+7), a  ; first stone
+; 		ld (player_inventory_items+7), a  ; first stone
 ; 		ld (player_inventory_items+8), a  ; second stone
 ; 		ld (player_inventory_items+9), a  ; third stone
 ; 		ld (player_inventory_items+10), a
@@ -101,8 +102,8 @@ state_play:
 ; 		ld (global_state__objects + TAG_TELEPORTER5), a
 
 		; initial player position:
-; 		ld hl, #0100
-		ld hl, #0a00
+		ld hl, #0100
+; 		ld hl, #0a00
 ; 		ld hl, #1000
 ; 		ld hl, #1400
 		ld (player_x), hl
