@@ -159,6 +159,10 @@ update_sprite_objects_loop:
 	jr z, update_sprite_objects_big_explosion
 	cp SPRITE_OBJECT_TYPE_SHOPKEEPER
 	jp z, update_sprite_objects_shopkeeper
+	cp SPRITE_OBJECT_TYPE_LOST_VENDOR
+	jp z, update_sprite_objects_lost_vendor
+	cp SPRITE_OBJECT_TYPE_SHOPKEEPER2
+	jp z, update_sprite_objects_shopkeeper2
 update_sprite_objects_loop_next:
 	ld de, ROOM_OBJECT_STRUCT_SIZE
 	add ix, de
@@ -276,6 +280,41 @@ update_sprite_objects_shopkeeper_got_letter:
 	ld b, a
 	call add_sprite_to_this_frame
 	jp update_sprite_objects_loop_next
+
+
+;-----------------------------------------------
+update_sprite_objects_lost_vendor:
+	ld a, (global_state__story)
+	cp STORY_STATE__FOUND_LOST_VENDOR
+	jp z, update_sprite_objects_delete
+	inc (ix + ROOM_OBJECT_STRUCT_STATE)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	and #08
+	add a, (FIRST_ENEMY_SPRITE_PATTERN + 35) * 4
+update_sprite_objects_shopkeeper2_entry_point:
+	ld e, a 
+	ld d, COLOR_DARK_YELLOW
+	ld c, 0
+	push af
+		call get_sprite_object_sprite_coordinates
+		call z, add_sprite_to_this_frame
+	pop af
+	add a, 4
+	ld e, a
+	ld d, COLOR_DARK_RED
+	ld c, 0
+	call get_sprite_object_sprite_coordinates
+	call z, add_sprite_to_this_frame
+	jp update_sprite_objects_loop_next
+
+
+;-----------------------------------------------
+update_sprite_objects_shopkeeper2:
+	inc (ix + ROOM_OBJECT_STRUCT_STATE)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	and #08
+	add a, (FIRST_ENEMY_SPRITE_PATTERN + 7) * 4
+	jr update_sprite_objects_shopkeeper2_entry_point
 
 
 ;-----------------------------------------------

@@ -1,3 +1,4 @@
+;-----------------------------------------------
 object_interaction_function_shopkeeper_internal:
 	ld a, (global_state__story)
 	cp STORY_STATE__FOUND_CALENDAR
@@ -6,7 +7,7 @@ object_interaction_function_shopkeeper_internal:
 	jp z, object_interaction_function_shopkeeper_internal_lost_person
 	cp STORY_STATE__PLACED_FIRST_POWER_STONE
 	jp z, object_interaction_function_shopkeeper_internal_lost_person
-	ld de, TEXT_SHOPKEEPER1
+	ld de, TEXT_SHOPKEEPER1_1
 	ld hl, display_in_game_message
 	ld c, TEXT_PAGE
 	jp call_hl_in_page_c_8000
@@ -73,6 +74,37 @@ object_interaction_function_shopkeeper_internal_lost_person:
 	ld hl, display_in_game_message_textpage3
 	ld c, TEXT_PAGE
 	jp call_hl_in_page_c_8000
+
+
+;-----------------------------------------------
+object_interaction_function_lost_vendor_internal:
+	ld de, TEXT_FOUND_LOST_VENDOR1
+	ld hl, display_in_game_message_textpage3
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000
+
+	ld de, TEXT_FOUND_LOST_VENDOR2
+	ld hl, display_in_game_message_textpage3
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000
+
+	ld de, TEXT_FOUND_LOST_VENDOR3
+	ld hl, display_in_game_message_textpage3
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000
+
+	ld a, STORY_STATE__FOUND_LOST_VENDOR
+	ld (global_state__story), a
+	ret
+
+
+;-----------------------------------------------
+object_interaction_function_shopkeeper2_internal:
+	ld de, TEXT_SHOPKEEPER2_1
+	ld hl, display_in_game_message_textpage3
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000
+	ret
 
 
 ;-----------------------------------------------

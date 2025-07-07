@@ -165,7 +165,7 @@ public class HardcodedWorldForAssembler {
             if (itemsForShop.size() > i) {
                 tag = itemsForShop.get(i);
             }
-            System.out.println("  db " + tag);
+            System.out.println("  db " + AssemblerTags.tagToAssembler(tag));
         }
     }
     

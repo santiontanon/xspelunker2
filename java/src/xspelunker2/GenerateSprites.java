@@ -186,6 +186,12 @@ public class GenerateSprites {
 
         data.addAll(extractSprite(sourceImage, 176, 80, 10));  // dark yellow (question mark)
 
+        // dynamite maker (7):
+        data.addAll(extractSprite(sourceImage, 144, 96, 10));  // dark yellow
+        data.addAll(extractSprite(sourceImage, 144, 96, 6));  // dark red
+        data.addAll(extractSprite(sourceImage, 160, 96, 10));  // dark yellow
+        data.addAll(extractSprite(sourceImage, 160, 96, 6));  // dark red
+        
         if (data.size() > 40 * 32) {
             throw new Exception("More NPC sprites than the engine can handle!");
         }
@@ -260,6 +266,7 @@ public class GenerateSprites {
     public static void extractPyramidEnemySprites(String outputPath) throws Exception
     {
         BufferedImage sourceImage = ImageIO.read(new File("data/enemies.png"));
+        BufferedImage sourceImage2 = ImageIO.read(new File("data/objects.png"));
         List<Integer> data = new ArrayList<>();
         
         // bullet (0):
@@ -287,7 +294,7 @@ public class GenerateSprites {
         data.addAll(extractSpriteFlipped(sourceImage, 0, 32, 15));  // bat left
         data.addAll(extractSpriteFlipped(sourceImage, 16, 32, 15));
         data.addAll(extractSprite(sourceImage, 32, 32, 15));  // bat hanging
-        // skeletons (22):
+        // skeletons (21):
         data.addAll(extractSprite(sourceImage, 0, 48, 15));  // right walk
         data.addAll(extractSprite(sourceImage, 16, 48, 15));  // 
         data.addAll(extractSprite(sourceImage, 32, 48, 15));  // right shoot
@@ -298,11 +305,16 @@ public class GenerateSprites {
         data.addAll(extractSpriteFlipped(sourceImage, 48, 48, 15));  // 
         data.addAll(extractSprite(sourceImage, 64, 48, 15));  // right idle
         data.addAll(extractSpriteFlipped(sourceImage, 64, 48, 15));  // left idle
-        // bone bullet (32)
+        // bone bullet (31)
         data.addAll(extractSprite(sourceImage, 80, 0, 15));
         data.addAll(extractSprite(sourceImage, 80, 16, 15));
         data.addAll(extractSprite(sourceImage, 80, 32, 15));
         data.addAll(extractSprite(sourceImage, 80, 48, 15));
+        // lost vendor (35)
+        data.addAll(extractSprite(sourceImage2, 144, 96, 10));  // dark yellow
+        data.addAll(extractSprite(sourceImage2, 144, 96, 6));  // dark red
+        data.addAll(extractSprite(sourceImage2, 160, 96, 10));  // dark yellow
+        data.addAll(extractSprite(sourceImage2, 160, 96, 6));  // dark red
         
         if (data.size() > 40 * 32) {
             throw new Exception("More enemy sprites than the engine can handle!");

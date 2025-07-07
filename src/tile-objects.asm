@@ -127,6 +127,8 @@ update_tile_objects_loop:
 		jp z, update_tile_objects_enemy_bee_hive
 		cp TAG_ENEMY_ANT_COLONY
 		jp z, update_tile_objects_enemy_ant_colony
+		cp TAG_LOST_VENDOR
+		jp z, update_tile_objects_lost_vendor
 update_tile_objects_loop_continue:
 	pop hl
 	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
@@ -241,6 +243,7 @@ update_tile_objects_pushable_block_remove:
 	dec hl
 	dec hl
 	dec hl
+update_tile_objects_delete_object:
 	push hl
 		call delete_tile_object_in_hl
 
@@ -323,6 +326,35 @@ update_tile_objects_loop_force_redraw_and_continue
 	call room_render_tile_objects
 	ld hl, redraw_flags
 	set ROOM_REDRAW_FLAG_BIT, (hl)
+	jp update_tile_objects_loop_continue
+
+
+;-----------------------------------------------
+update_tile_objects_lost_vendor:
+	ld a, (global_state__story)
+	cp STORY_STATE__FOUND_LOST_VENDOR
+	jp z, update_tile_objects_delete_object
+	push hl
+	pop ix
+	dec ix
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)
+	or a
+	jp nz, update_tile_objects_loop_continue
+	; spawn sprite object:
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 1
+	call ptr_to_new_sprite_object
+	jp nz, update_tile_objects_loop_continue
+	ld (hl), SPRITE_OBJECT_TYPE_LOST_VENDOR
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	ld (hl), a
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	ld (hl), a
 	jp update_tile_objects_loop_continue
 
 
@@ -1024,6 +1056,7 @@ ENDR
 	dw object_interaction_function_teleporter  ; TAG_TELEPORTER7
 	dw object_interaction_function_teleporter  ; TAG_TELEPORTER8
 	dw object_interaction_function_tablet  ; TAG_CALENDAR_NAME_CLUE
+	dw object_interaction_function_lost_vendor  ; TAG_LOST_VENDOR
 	dw object_interaction_function_empty  ; TAG_PUSHABLE_BLOCK
 	dw object_interaction_function_empty  ; TAG_DOOR_VERTICAL
 	dw object_interaction_function_empty  ; TAG_DOOR_HORIZONTAL
@@ -1049,6 +1082,7 @@ ENDR
 	dw object_interaction_function_shopkeeper  ; TAG_NPC_SHOPKEEPER
 	dw object_interaction_function_shop  ; TAG_NPC_SHOP
 	dw object_interaction_function_empty  ; TAG_DYNAMITE
+	dw object_interaction_function_shopkeeper2  ; TAG_NPC_SHOPKEEPER2
 
 object_interaction_inventory_slot:
 	db #ff, #ff, #ff, #ff, #ff  ; none, block puzzles: 0
@@ -1117,6 +1151,7 @@ object_interaction_function_pickup_heart_continue:
 	ADD_HL_A
 	ld (hl), 1
 
+object_interaction_function_delete_object:
 	ld hl, redraw_flags
 	ld (hl), #ff
 
@@ -2121,6 +2156,26 @@ object_interaction_function_shopkeeper:
 
 
 ;-----------------------------------------------
+object_interaction_function_lost_vendor:
+	ld hl, object_interaction_function_lost_vendor_internal
+	ld c, NPCS_PAGE
+	push ix
+		call call_hl_in_page_c_8000
+	pop ix
+	ret
+
+
+;-----------------------------------------------
+object_interaction_function_shopkeeper2:
+	ld hl, object_interaction_function_shopkeeper2_internal
+	ld c, NPCS_PAGE
+	push ix
+		call call_hl_in_page_c_8000
+	pop ix
+	ret
+
+
+;-----------------------------------------------
 object_interaction_function_shop:
 	ld hl, object_interaction_function_shop_internal
 	ld c, NPCS_PAGE
@@ -2350,6 +2405,7 @@ ENDR
 	TILE_OBJECT_DATA 1, 4, 3, tile_object_teleporter_gfx  ; TAG_TELEPORTER7
 	TILE_OBJECT_DATA 1, 4, 3, tile_object_teleporter_gfx  ; TAG_TELEPORTER8
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_CALENDAR_NAME_CLUE
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_LOST_VENDOR
 
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_pushable_block_gfx  ; TAG_PUSHABLE_BLOCK
 	TILE_OBJECT_DATA 1, 1, 3, tile_object_v_door_gfx  ; TAG_DOOR_VERTICAL
@@ -2373,9 +2429,10 @@ ENDR
 	TILE_OBJECT_DATA 1, 4, 4, tile_object_carnivore_plant  ; TAG_ENEMY_CARNIVORE_PLANT
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_bee_hive  ; TAG_ENEMY_BEE_HIVE
 	TILE_OBJECT_DATA 1, 3, 2, tile_object_ant_colony  ; TAG_ENEMY_ANT_COLONY
-	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOPEEPER
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOPKEEPER
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOP
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_DYNAMITE
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOPLEEPER2
 
 
 tile_object_regular_object_gfx:

@@ -340,6 +340,9 @@ public class GameObject {
             case "teleporter-moon":
                 tx = 224; ty = 48; tdx = 32; tdy = 24;
                 break;
+            case "lost-vendor":
+                tx = 144; ty = 96;
+                break;
             default:
                 System.err.println("Cannot render placed object: " + type);
         }

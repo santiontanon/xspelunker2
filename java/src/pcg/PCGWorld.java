@@ -246,13 +246,11 @@ public class PCGWorld {
             if (!generateMission(w, w.spanningTree, marsSpanningTree, moonSpanningTree, usedKeysAndLocks)) continue;
             n_times_reached_generation_stage[7]++;
 //            if (!createLoopConnections(w, w.spanningTree)) continue;
-            // Create mars/moon missions:
-            // ...
             List<AreaDivision> allAreas = new ArrayList<>();
             allAreas.addAll(w.spanningTree);
             allAreas.addAll(marsSpanningTree);
             allAreas.addAll(moonSpanningTree);
-            if (!spawnOptionalObjects(w, allAreas)) continue;
+            if (!spawnAdditionalObjects(w, allAreas)) continue;
             
             // remove "none" tags:
             for(AreaDivision d:allAreas) {
@@ -796,7 +794,7 @@ public class PCGWorld {
     }
     
     
-    public boolean spawnOptionalObjects(World w, List<AreaDivision> allAreas) throws Exception
+    public boolean spawnAdditionalObjects(World w, List<AreaDivision> allAreas) throws Exception
     {
         /*
         "Jungle",
@@ -877,6 +875,26 @@ public class PCGWorld {
         
         System.out.println("tagLess divisions (before): " + tagLess.size() + " / " + allAreas.size());
      
+        // lost vendor:
+        {
+            List<AreaDivision> candidates = new ArrayList<>();
+            for(AreaDivision d:tagLess) {
+                if (d.root.a.ID == 2) {  // hidden temple
+                    candidates.add(d);
+                }
+            }
+            if (candidates.isEmpty()) {
+                System.err.println("No division available for the lost vendor!");
+                return false;
+            } else {
+                int idx = r.nextInt(64) % candidates.size();
+                AreaDivision d = candidates.get(idx);
+                AreaPoint p = randomDivisionPoint(d, true);
+                addTag(p, "lost-vendor", d);
+                tagLess.remove(d);
+            }            
+        }
+        
         int n_small_keys = 0;
         
         // spawn maya secret puzzle clues:
@@ -889,7 +907,7 @@ public class PCGWorld {
             }
             if (!candidates.isEmpty()) {
                 int idx = r.nextInt(64) % candidates.size();
-                AreaDivision d = tagLess.get(idx);
+                AreaDivision d = candidates.get(idx);
                 AreaPoint p = randomDivisionPoint(d, true);
                 addTag(p, "maya-riddle-clue" + (i+1), d);
                 tagLess.remove(d);

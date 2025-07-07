@@ -23,7 +23,9 @@ state_play:
 ; 		ld (global_state__power_calendar + 5), a
 ; 		ld a, 4
 ; 		ld (global_state__n_power_stones_in_calendar), a
-		ld a, STORY_STATE__GOT_LETTER1
+; 		ld a, STORY_STATE__GOT_LETTER1
+; 		ld a, STORY_STATE__PLACED_FIRST_POWER_STONE
+		ld a, STORY_STATE__FOUND_LOST_VENDOR
 		ld (global_state__story), a
 ; 		ld a, 2  ; maya riddle solved
 ; 		ld (global_state__maya_riddle), a
@@ -99,8 +101,8 @@ state_play:
 ; 		ld (global_state__objects + TAG_TELEPORTER5), a
 
 		; initial player position:
-		ld hl, #0100
-; 		ld hl, #0a00
+; 		ld hl, #0100
+		ld hl, #0a00
 ; 		ld hl, #1000
 ; 		ld hl, #1400
 		ld (player_x), hl
@@ -124,10 +126,10 @@ state_play:
 
 		; generate area:
 		ld hl, pcg_generate_area
-; 		ld e, 0  ; area to generate
+		ld e, 0  ; area to generate
 ; 		ld e, 1  ; area to generate
 ; 		ld e, 2  ; area to generate
-		ld e, 3  ; area to generate
+; 		ld e, 3  ; area to generate
 ; 		ld e, 4  ; area to generate
 ; 		ld e, 9  ; area to generate
 ; 		ld e, 2  ; area to generate
@@ -136,11 +138,11 @@ state_play:
 		call call_hl_in_page_c_8000
 
 		; generate room:
-; 		ld e, START_ROOM_ID
+		ld e, START_ROOM_ID
 ; 		ld e, 0
 ; 		ld e, 26
-; 		ld e, 1
-		ld e, CALENDAR_ROOM_ID
+; 		ld e, 0
+; 		ld e, CALENDAR_ROOM_ID
 ; 		ld e, 31
 ; 		ld e, TELEPORTER_ROOM_ID
 ; 		ld e, 24

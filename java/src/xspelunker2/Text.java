@@ -259,7 +259,7 @@ public class Text {
         addLineSafe(lines_with_constant_page1, "Type what you want to say:", "TALK", 112);     
         addLineSafe(lines_with_constant_page1, "No one listened...", "TALK_FAIL", 112);     
         addLineSafe(lines_with_constant_page1, "After you speak, the room rumbles, and you hear a voice in an unknown language. It seems your words were heard!", "TALK_SUCCESS1", 112);
-        addLineSafe(lines_with_constant_page1, "Aapo: Bix a beel Mr. Xavier! I am Aapo! Please check my shop! I am also the postman in Palenke. If you have any mail to send or receive, talk to me.", "SHOPKEEPER1", 112);
+        addLineSafe(lines_with_constant_page1, "Aapo: Bix a beel Mr. Xavier! I am Aapo! Please check my shop! I am also the postman in Palenke. If you have any mail to send or receive, talk to me.", "SHOPKEEPER1_1", 112);
         addLineSafe(lines_with_constant_page1, "Ok, I made it to the ruins! I need a way to sabotage the Alien operation! Let's find out where are they coming from, and how to stop them!", "STORY_ENTER_RUINS", 112);
         addLineSafe(lines_with_constant_page3, "Look at that! That is a gigantic Mayan Tzolk'in calendar stone! Although it seems to be half-buried, it's in perfect condition!", "FIND_CALENDAR_STONE1", 112);     
         addLineSafe(lines_with_constant_page3, "But there is something strange in the middle, it has some empty sockets, like if something was taken out.", "FIND_CALENDAR_STONE2", 112);
@@ -270,8 +270,10 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "There you go! Here Aapo! I'll come back in a few days to see if I got an answer!", "LETTER1_ARRIVED5", 112);
         addLineSafe(lines_with_constant_page3, "Aapo: you want to buy dynamite you say? Sorry, my supplier went into the ruins and has not come back yet! Maybe he got lost?", "SHOPKEEPER_LOST_PERSON", 112);
         addLineSafe(lines_with_constant_page3, "So, this is the Nexus, and the power stones I am finding is what activates it... I will have to be careful with that...", "CALENDAR_AFTER_LETTER1", 112);
-                
-
+        addLineSafe(lines_with_constant_page3, "Lost person: Bix a beel stranger! I was hunting for treasures for Aapo as usual and... got lost... Would you happen to know the way out?", "FOUND_LOST_VENDOR1", 112);
+        addLineSafe(lines_with_constant_page3, "Oh no! Here, I sketched a path in this map for you, and be careful ok!", "FOUND_LOST_VENDOR2", 112);
+        addLineSafe(lines_with_constant_page3, "Lost person: Dyos bo'otik stranger! I'll see you around!", "FOUND_LOST_VENDOR3", 112);
+        addLineSafe(lines_with_constant_page3, "Bix a beel stranger! Thanks for saving me! I heard from Aapo that you wanted to purchase dynamite. Give me some days and I can make some!", "SHOPKEEPER2_1", 112);
         
         // power stone inspection:
         addLineSafe(lines_with_constant_page1, "A stone I found. Some sort of power radiates from it.", "INSPECT_POWER_STONE", 32);

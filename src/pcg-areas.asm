@@ -2146,6 +2146,7 @@ pcg_generate_area__item_tags:
     db TAG_SMALL_KEY_CHEST3
     db TAG_SMALL_KEY_CHEST4
     db TAG_CALENDAR_NAME_CLUE
+    db TAG_LOST_VENDOR
     db 0
 
 pcg_generate_area__boss_tags:

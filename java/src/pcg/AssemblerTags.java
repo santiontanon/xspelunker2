@@ -177,6 +177,7 @@ public class AssemblerTags {
         "TAG_TELEPORTER7",
         "TAG_TELEPORTER8",
         "TAG_CALENDAR_NAME_CLUE",
+        "TAG_LOST_VENDOR",
         // misc (not tags that will be placed, but used for tile-object types):
         "TAG_PUSHABLE_BLOCK",
         "TAG_DOOR_VERTICAL",
@@ -204,6 +205,7 @@ public class AssemblerTags {
         "TAG_NPC_SHOPKEEPER",
         "TAG_NPC_SHOP",
         "TAG_DYNAMITE",
+        "TAG_NPC_SHOPKEEPER2",
     };
     
 

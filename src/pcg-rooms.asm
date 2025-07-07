@@ -451,6 +451,8 @@ pcg_generate_room__object_loop:
 	jp z, pcg_generate_room__object_breakable_wall
 	cp TAG_BREAKABLE_WALL4
 	jp z, pcg_generate_room__object_breakable_wall
+	cp TAG_LOST_VENDOR
+	jp z, pcg_generate_room__object_lost_vendor	
 	push ix
 		ld ixl, a
 		call pcg_generate_area__choose_chunks_is_chest_tag_p
@@ -713,7 +715,7 @@ pcg_generate_room__object_regular_item:
 	call pcg_generate_room__compute_object_coordinates
 	; here: c, b: x, y coordinates
 
-	; check if the item was already picked up (except buttons):
+	; check if the item was already picked up (except a few special tags):
 	ld a, (ix + AREA_OBJECT_STRUCT_TYPE)
 	cp TAG_BUTTON1
 	jr z, pcg_generate_room__object_regular_item_continue
@@ -722,6 +724,8 @@ pcg_generate_room__object_regular_item:
 	cp TAG_BUTTON3
 	jr z, pcg_generate_room__object_regular_item_continue
 	cp TAG_BUTTON4
+	jr z, pcg_generate_room__object_regular_item_continue
+	cp TAG_LOST_VENDOR
 	jr z, pcg_generate_room__object_regular_item_continue
 	ld hl, global_state__objects
 	ADD_HL_A
@@ -1008,6 +1012,15 @@ pcg_generate_room__object_button_door:
 		ld hl, (current_area__chunk_fg_bank_ptrs)
 		call pcg_get_chunk_ptr
 		jp pcg_generate_room__object_small_lock_spawn_door
+
+
+;-----------------------------------------------
+pcg_generate_room__object_lost_vendor:
+	ld a, (global_state__story)
+	cp STORY_STATE__PLACED_FIRST_POWER_STONE
+	jp nz, pcg_generate_room__object_loop_next
+	; spawn lost vendor:
+	jp pcg_generate_room__object_regular_item
 
 
 ;-----------------------------------------------
@@ -1908,6 +1921,7 @@ ENDR
 	dw buffer_4096  ; TAG_TELEPORTER7
 	dw buffer_4096  ; TAG_TELEPORTER8
 	dw buffer_4096 + 60 * 64  ; TAG_CALENDAR_NAME_CLUE
+	dw buffer_4096  ; TAG_LOST_VENDOR
 ; TAG_PUSHABLE_BLOCK: equ 144
 ; TAG_DOOR_VERTICAL: equ 145
 ; TAG_DOOR_HORIZONTAL: equ 146
@@ -1940,7 +1954,9 @@ pcg_generate_room__start:
 	ld (current_room__tileset_page), a
 	xor a
 	ld (current_room__tileset_overrides_item_tiles), a
-	
+		ld hl, jungle_start_npc_sprites_zx0
+	ld (current_room__enemy_sprites_ptr), hl
+
 	; open/close the appropriate walls:
 	ld a, (current_room__y)
 	add a, a  ; y in chunks
@@ -2079,6 +2095,8 @@ pcg_generate_room__start_continue5:
 pcg_generate_room__start_continue6:
 
 	; spawn the NPCs (each NPC has a sprite object to render it, and then an invisible tile object behind, to interact with it):
+	ld iy, (tmp_pcg_room__next_tile_object_ptr)
+
 	call ptr_to_new_sprite_object
 	jr nz, pcg_generate_room__start_continue7
 	ld (hl), SPRITE_OBJECT_TYPE_SHOPKEEPER
@@ -2091,10 +2109,35 @@ pcg_generate_room__start_continue6:
 	inc hl
 	ld (hl), 11  ; tile y
 pcg_generate_room__start_continue7:
-	; ...
+
+	ld a, (global_state__story)
+	cp STORY_STATE__FOUND_LOST_VENDOR
+	jr c, pcg_generate_room__start_continue9
+
+	; spawn the second vendor, and open his hut:
+	call ptr_to_new_sprite_object
+	jr nz, pcg_generate_room__start_continue8
+	ld (hl), SPRITE_OBJECT_TYPE_SHOPKEEPER2
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), 22  ; tile x
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), 13  ; tile y
+pcg_generate_room__start_continue8:
 
 	; spawn the invisible tile objects:
-	ld iy, (tmp_pcg_room__next_tile_object_ptr)
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 0  ; id
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_NPC_SHOPKEEPER2  ; type
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 22  ; x
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 13  ; y
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0  ; state
+	ld de, ROOM_TILE_OBJECT_STRUCT_SIZE
+	add iy, de
+
+pcg_generate_room__start_continue9:
 	; shopkeeper:
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 0  ; id
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_NPC_SHOPKEEPER  ; type
@@ -2112,9 +2155,6 @@ pcg_generate_room__start_continue7:
 	ld de, ROOM_TILE_OBJECT_STRUCT_SIZE
 	add iy, de
 	ld (tmp_pcg_room__next_tile_object_ptr), iy	
-
-	ld hl, jungle_start_npc_sprites_zx0
-	ld (current_room__enemy_sprites_ptr), hl
 	ret 
 
 
