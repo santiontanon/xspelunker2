@@ -3093,7 +3093,12 @@ player_weapon_hitbox_check_enemy_loop:
 		jr z, player_weapon_hitbox_check_enemy_loop_done
 		; enemy, check for collision: (in tile coordinates: from [e, d] to [l, h])
 		; assume enemies are 2x2 in size
+		ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+		cp 4
 		ld a, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+		jr c, player_weapon_hitbox_check_enemy_loop_no_inc_x
+		inc a
+player_weapon_hitbox_check_enemy_loop_no_inc_x:
 		cp l
 		jr nc, player_weapon_hitbox_check_enemy_continue
 		add a, 2

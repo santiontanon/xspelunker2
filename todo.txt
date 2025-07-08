@@ -1,19 +1,27 @@
 to do:
 
-***- BUG: why are white skeletons so hard to hit from the right? (maybe all enemies?)
 ***- Implement PCGWorld in assembler:
-  ***- make a list of smaller to-do items to implement it
-  ***- implement it and generate the whole thing in assembler (add as many comments as possible, as I might have to modify things later on to add more secrets) (spanningTree: ID, parent, n_descendants, root point, tags (this is stored twice for convenience))
-  ***- keep Java/assembler versions in sync (try different random seeds): generate the expected structures on Java, and test with pcg_debug__arrays_equal at each step
+  ***- generate_area_layouts: implement (start a new ROM page for this part of the code)
+  ***- generate_area_layouts: verify it exactly matches Java with a couple of random seeds
+  ***- generate_divisions: implement
+  ***- generate_divisions: verify it exactly matches Java with a couple of random seeds
+  ***- generate_area_connections: implement
+  ***- generate_area_connections: verify it exactly matches Java with a couple of random seeds
+  ***- generate_spanning_tree: implement (spanningTree: ID, parent, n_descendants, root point, tags (this is stored twice for convenience))
+  ***- generate_spanning_tree: verify it exactly matches Java with a couple of random seeds
+  ***- generate_mission: implement
+  ***- generate_mission: verify it exactly matches Java with a couple of random seeds
+  ***- spawn_additional_objects: implement
+  ***- generate tablet contents, combination solutions, trial types, and power stone numbers.
   ***- safety checks to make sure all generated levels are playable (no more than 1 tag per division, try all RNG seeds in Java, etc.), adjust # divisions needed, etc.
 
 - menus:
   - brain games screen (think of a Maya-themed way for this)
   - title screen (can go to start or options menu, to redefine keys, etc.)
   - game start screen where you choose game name, difficulty, seed, etc.
-      - procedural generation depending on a name. By default, you play in "xspelunker2" level, with difficulty "x".
+      - procedural generation depending on a name. By default, you play in "xspelunker2" level, with difficulty "x". I might want to add a "random seed monument" somewhere in the game, that displays the current random seed in a non-obvious way (until you get the clue).
       - the first letter determines the difficulty level. So, one would choose "a walk in the park" for easy games, or "zebras all the way" for the heardest)
-          - passwords ties to the name (with a 16 bit hash for example)
+          - passwords tied to the name (to the random seed in particular)
   - for each difficulty, determine how to simplify the game (map sizes? enemy rates? number of puzzles? enemy aggressivity? ensure games are all playable with checks in Java)
   - game intro sequence
 
@@ -146,6 +154,9 @@ PCGWorld:
   - generate quest specs for boss 4, 5
   - generateSubquests (same as before, but with different reachable/useable area)
   - set "lockKeys" to all the used locks and keys (not needed in assembler, only used for debugging)
+7.- spawnAdditionalObjects
+8.- remove "none" tags
+9.- generate tablet contents, combination solutions, trial types, and power stone numbers.
 
 PCGArea:
 0.- mergeAreaRooms
