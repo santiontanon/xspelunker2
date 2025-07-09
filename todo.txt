@@ -1,8 +1,6 @@
 to do:
 
 ***- Implement PCGWorld in assembler:
-  ***- generate_area_layouts: implement (start a new ROM page for this part of the code)
-  ***- generate_area_layouts: verify it exactly matches Java with a couple of random seeds
   ***- generate_divisions: implement
   ***- generate_divisions: verify it exactly matches Java with a couple of random seeds
   ***- generate_area_connections: implement
@@ -11,15 +9,16 @@ to do:
   ***- generate_spanning_tree: verify it exactly matches Java with a couple of random seeds
   ***- generate_mission: implement
   ***- generate_mission: verify it exactly matches Java with a couple of random seeds
+  ***- if any of the methods above fail, retry world generation. Retry 4 times, and if it fails, resort to seed 0.
   ***- spawn_additional_objects: implement
-  ***- generate tablet contents, combination solutions, trial types, and power stone numbers.
+  ***- pcg_generate_world__puzzles: generate tablet contents, combination solutions, trial types, and power stone numbers.
   ***- safety checks to make sure all generated levels are playable (no more than 1 tag per division, try all RNG seeds in Java, etc.), adjust # divisions needed, etc.
 
 - menus:
   - brain games screen (think of a Maya-themed way for this)
   - title screen (can go to start or options menu, to redefine keys, etc.)
   - game start screen where you choose game name, difficulty, seed, etc.
-      - procedural generation depending on a name. By default, you play in "xspelunker2" level, with difficulty "x". I might want to add a "random seed monument" somewhere in the game, that displays the current random seed in a non-obvious way (until you get the clue).
+      - procedural generation depending on a name. By default, you play in "xspelunker2" level, with difficulty "x". I might want to add a "random seed monument" somewhere in the game, that displays the current random seed in a non-obvious way (until you get the clue). If rng_seed 0 had to be used, maybe this monument should by destroyed in this seed?
       - the first letter determines the difficulty level. So, one would choose "a walk in the park" for easy games, or "zebras all the way" for the heardest)
           - passwords tied to the name (to the random seed in particular)
   - for each difficulty, determine how to simplify the game (map sizes? enemy rates? number of puzzles? enemy aggressivity? ensure games are all playable with checks in Java)

@@ -8,7 +8,7 @@
 ;-----------------------------------------------
 ; pages:
 ; 0: #4000 - #7fff: core code
-; 1: #8000 - #bfff: pcg code
+; 1: #8000 - #bfff: pcg code (area, room, enemies)
 ; 2: #8000 - #bfff: tile gfx, pyramid tiles
 ; 3: #8000 - #bfff: sprites, map, additional tiles, enemy tiles
 ; 4: #8000 - #bfff: jungle, pyramid chunks
@@ -18,10 +18,12 @@
 ; 8: #8000 - #bfff: enemies
 ; 9: #8000 - #bfff: jungle tiles, npc interactions
 ; 10: #8000 - #bfff: text3
+; 11: #8000 - #bfff: pcg code (world)
 
 
 CORE_CODE_PAGE: equ 0
 PCG_PAGE: equ 1
+PCG_PAGE_WORLD: equ 11
 TILES_PAGE: equ 2
 TILE_ANIMATIONS_PAGE: equ 2
 PYRAMID_TILES_PAGE: equ 2
@@ -245,10 +247,8 @@ end_of_page_0:
     org #8000
 start_of_page_1:
 
-    include "pcg-world.asm"
     include "pcg-areas.asm"
     include "pcg-rooms.asm"
-    include "pcg-riddles.asm"
     include "pcg-enemies.asm"
     include "pcg-prettify.asm"
 
@@ -287,10 +287,6 @@ jungle_chunk_fg_bank_ptrs:
     dw jungle_chunk_fg_bank_8_zx0
     dw jungle_chunk_fg_bank_9_zx0
 jungle_chunk_fg_bank_ptrs_end:
-
-hardcoded_world_data:
-    include "hardcoded-world.asm"
-hardcoded_world_data_end:
 
 
 puzzle3_msg_data1:
@@ -715,6 +711,24 @@ copy_text_from_textpage3:
 
 
 end_of_page_10:
+    ds #c000-$
+
+
+;-----------------------------------------------
+; PAGE 10: pcg (world)
+; mdl:page 11
+    org #8000
+start_of_page_11:
+
+    include "pcg-world.asm"
+    include "pcg-riddles.asm"
+
+hardcoded_world_data:
+    include "hardcoded-world.asm"
+hardcoded_world_data_end:
+
+
+end_of_page_11:
     ds (#c000-$) - (puzzle3_msg_data3_end-puzzle3_msg_data3)
 
 puzzle3_msg_data3:
@@ -737,6 +751,14 @@ buffer_4096: ds virtual 4096
 text_draw_buffer: ds virtual 32*8
 
 current_world__seed: ds virtual 4
+; WORLD_AREA__SIZE: 4 + 1 + 1 + 1 + MAX_AREA_SIZE * 2 + MAX_AREA_N_TAGS * 3
+; each world area is:
+; - seed: 4 bytes
+; - id: 1 byte
+; - width, height: 1 + 1 bytes
+; - connections: MAX_AREA_SIZE bytes
+; - divisionIDs: MAX_AREA_SIZE bytes
+; - tags: MAX_AREA_N_TAGS * 3
 current_world__area_data: ds virtual WORLD_AREA__SIZE * MAX_WORLD_AREAS
 ; each connection is 8 bytes: ; id1, id2, x1, y1, direction1, x2, y2, direction2 (coordinates are in chunks)
 current_world__interarea_connections: ds virtual MAX_INTERAREA_CONNECTIONS * INTERAREA_CONNECTION_SIZE + 1  ; +1 byte for the #ff sentinel
@@ -951,7 +973,7 @@ tmp_enemy_pcg_n_water_locs: equ temporary_variables + 7
 tmp_enemy_pcg_n_ceiling_locs: equ temporary_variables + 8
 tmp_get_tile_object_behind_player_ptr: equ temporary_variables
 tmp_shop_cursor_position: equ temporary_variables
-
+tmp_pcg_world__tmp_ptr: equ temporary_variables
 
 config_hud_type: ds virtual 1  ; 0: minimal, 1: minimal always visible, 2: full
 config_inventory_key_combo: ds virtual 1  ; 0: down+jump, 1: none

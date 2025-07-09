@@ -66,6 +66,9 @@ public class MSXRandom {
     
     public int nextInt(int limit)
     {
-        return random() % limit;
+        // we do % 256 to mimick how it happens on the MSX side:
+        int a = random() % 256;
+        // System.out.println("random_modulo: " + a + ", " + limit);
+        return a % limit;
     }
 }

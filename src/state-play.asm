@@ -114,16 +114,19 @@ state_play:
 		ld a, #ff
 		ld (player_requested_weapon_sprite), a
 
+pcg_debug_start:
 		; set random seed:
-		ld hl, #aaaa
+; 		ld hl, #aaaa
+		ld hl, 0
 		ld (current_world__seed), hl
 		ld hl, #aaaa
 		ld (current_world__seed + 2), hl
 
 		; generate world:
 		ld hl, pcg_generate_world
-		ld c, PCG_PAGE
+		ld c, PCG_PAGE_WORLD
 		call call_hl_in_page_c_8000
+pcg_debug_end:
 
 		; generate area:
 		ld hl, pcg_generate_area

@@ -12,6 +12,7 @@ import pcg.questpatterns.PCGPatternNKeysAndChestLock;
 import pcg.questpatterns.PCGPatternNKeysAndLock;
 import pcg.questpatterns.PCGPatternObstacle;
 import util.Pair;
+import util.Z80Assembler;
 
 /**
  *
@@ -343,7 +344,7 @@ public class PCGWorld {
     }
 
     
-    public boolean generateAreaLayouts(World w)
+    public boolean generateAreaLayouts(World w) throws Exception
     {
         for(int i = 0;i<n_areas;i++) {
             Area a;
@@ -1469,13 +1470,13 @@ public class PCGWorld {
     }
 
 
-    public Area generateArea(int ID, int w, int h)
+    public Area generateArea(int ID, int w, int h) throws Exception
     {
         return generateArea(ID, w, h, null, 0.0);
     }
 
     
-    public Area generateArea(int ID, int w, int h, String layout[], double layoutAdherence)
+    public Area generateArea(int ID, int w, int h, String layout[], double layoutAdherence) throws Exception
     {
         Area a = new Area(ID, w, h, r.rng_seed1, r.rng_seed2);
 
@@ -1494,45 +1495,53 @@ public class PCGWorld {
                     }
                 }
             }            
-        } else if (layout == null) {
-            // Grow the area from the center:
-            a.nRooms = 1;
-            a.rooms[w/2][h/2] = 0;
-            while(a.nRooms < w * h * 0.5) {
-                // pick a random spot in the map:
-                int x = r.nextInt(w);
-                int y = r.nextInt(h);
-                if (a.rooms[x][y] == -1 &&
-                    ((x > 0 && a.rooms[x - 1][y] >= 0) ||
-                     (x < w - 1 && a.rooms[x + 1][y] >= 0) ||
-                     (y > 0 && a.rooms[x][y - 1] >= 0) ||
-                     (y < h - 1 && a.rooms[x][y + 1] >= 0))) {
-                    a.rooms[x][y] = a.nRooms;
-                    a.nRooms++;
-                }
-            }
+//        } else if (layout == null) {
+//            // Grow the area from the center:
+//            a.nRooms = 1;
+//            a.rooms[w/2][h/2] = 0;
+////            System.out.println("Starting area layout generation:");
+//            while(a.nRooms < w * h * 0.5) {
+//                // pick a random spot in the map:
+//                int y = r.nextInt(h);
+//                int x = r.nextInt(w);
+//                if (a.rooms[x][y] == -1 &&
+//                    ((x > 0 && a.rooms[x - 1][y] >= 0) ||
+//                     (x < w - 1 && a.rooms[x + 1][y] >= 0) ||
+//                     (y > 0 && a.rooms[x][y - 1] >= 0) ||
+//                     (y < h - 1 && a.rooms[x][y + 1] >= 0))) {
+//                    a.rooms[x][y] = a.nRooms;
+////                    System.out.println("  room at " + x + ", " + y);
+//                    a.nRooms++;
+//                }
+//            }
         } else {
             // use the layout as a guideline:
             // Grow the area from the center, with a chance of rejecting if the
             // dows not follow the layout:
+//            System.out.println("----------------");
+//            System.out.println("seed: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
             a.nRooms = 1;
             a.rooms[w/2][h/2] = 0;
+//            System.out.println("Starting area layout generation (approximate):");
             while(a.nRooms < w * h * 0.5) {
                 // pick a random spot in the map:
-                int x = r.nextInt(w);
+//                System.out.println("seed: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
                 int y = r.nextInt(h);
+                int x = r.nextInt(w);
+//                System.out.println("  x, y: " + x + ", " + y);
                 if (a.rooms[x][y] == -1 &&
                     ((x > 0 && a.rooms[x - 1][y] >= 0) ||
                      (x < w - 1 && a.rooms[x + 1][y] >= 0) ||
                      (y > 0 && a.rooms[x][y - 1] >= 0) ||
                      (y < h - 1 && a.rooms[x][y + 1] >= 0))) {
                     boolean accept = true;
-                    if (layout[y].charAt(x) == '.' &&
-                        r.nextInt(64) < 64*layoutAdherence)  {
+                    if (layout != null && layout[y].charAt(x) == '.' &&
+                        r.nextInt(256) < 256*layoutAdherence)  {
                         accept = false;
                     }
                     if (accept) {
                        a.rooms[x][y] = a.nRooms;
+//                       System.out.println("  room at " + x + ", " + y);
                        a.nRooms++;
                     }
                 }
