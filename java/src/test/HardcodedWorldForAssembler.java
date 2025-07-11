@@ -31,7 +31,7 @@ public class HardcodedWorldForAssembler {
     
     public static void main(String args[]) throws Exception
     {
-        MSXRandom r = new MSXRandom(0, 0xaaaa);
+        MSXRandom r = new MSXRandom(0, 0x5555);
 
 
         PCGWorld pcg1 = new PCGWorld();
@@ -204,17 +204,24 @@ public class HardcodedWorldForAssembler {
         for(int i = 0;i<a.height;i++) {
             String line = "  db ";
             for(int j = 0;j<a.width;j++) {
+                int ID = a.divisionIDs[j][i];
+                if (ID > 255) {
+                    throw new Exception("Division ID is larger than 255!");
+                }
+                if (ID == 0) {
+                    ID = 255;
+                }
                 if (j == 0) {
-                    line += a.divisionIDs[j][i];
+                    line += ID;
                 } else {
-                    line += ", " + a.divisionIDs[j][i];
+                    line += ", " + ID;
                 }
             }
             System.out.println(line);
         }
         if (a.height * a.width < MAX_AREA_WIDTH * MAX_AREA_HEIGHT) {
             System.out.println("  ; filler");
-            System.out.println("  ds " + (MAX_AREA_WIDTH * MAX_AREA_HEIGHT - a.height * a.width) + ", 0");
+            System.out.println("  ds " + (MAX_AREA_WIDTH * MAX_AREA_HEIGHT - a.height * a.width) + ", #ff");
         }
         
         System.out.println("hardcoded_area_data_"+areaIndex+"__tags:");

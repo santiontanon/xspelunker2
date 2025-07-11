@@ -973,7 +973,6 @@ tmp_enemy_pcg_n_water_locs: equ temporary_variables + 7
 tmp_enemy_pcg_n_ceiling_locs: equ temporary_variables + 8
 tmp_get_tile_object_behind_player_ptr: equ temporary_variables
 tmp_shop_cursor_position: equ temporary_variables
-tmp_pcg_world__tmp_ptr: equ temporary_variables
 
 config_hud_type: ds virtual 1  ; 0: minimal, 1: minimal always visible, 2: full
 config_inventory_key_combo: ds virtual 1  ; 0: down+jump, 1: none

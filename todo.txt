@@ -1,8 +1,6 @@
 to do:
 
 ***- Implement PCGWorld in assembler:
-  ***- generate_divisions: implement
-  ***- generate_divisions: verify it exactly matches Java with a couple of random seeds
   ***- generate_area_connections: implement
   ***- generate_area_connections: verify it exactly matches Java with a couple of random seeds
   ***- generate_spanning_tree: implement (spanningTree: ID, parent, n_descendants, root point, tags (this is stored twice for convenience))
@@ -128,7 +126,7 @@ PCGWorld:
   - for each area: generateArea
     - if layout is not prespecified: start from the center, and randomly grow out until 0.5 of the area is used
 2.- generateDivisions
-  - set predefined divisions (in "confluence")
+  - set predefined divisions (e.g. in "confluence")
   - add minimum number of division seeds to each area (without repeating any)
   - randomly distribute the other division seeds
   - for each area: floodFillDivisionIDs

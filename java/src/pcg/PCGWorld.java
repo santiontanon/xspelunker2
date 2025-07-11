@@ -38,8 +38,10 @@ public class PCGWorld {
     public int n_areas = 12;
 //    public int n_divisions = 80;
 //    public int min_divisions_per_area[] = {3, 7, 7, 4, 7, 1, 7, 7, 7, 7, 7, 7};
-    public int n_divisions = 120;
-    public int min_divisions_per_area[] = {6, 8, 8, 4, 8, 1, 8, 8, 8, 8, 7, 7};
+//    public int n_divisions = 120;
+//    public int min_divisions_per_area[] = {6, 8, 8, 4, 8, 1, 8, 8, 8, 8, 7, 7};
+    public int n_divisions = 122;
+    public int min_divisions_per_area[] = {6, 12, 12, 5, 12, 3, 12, 12, 12, 12, 12, 12};
     public String areaNames[] = {
         "Jungle",
         "Temple of Inscriptions",
@@ -365,6 +367,7 @@ public class PCGWorld {
     public boolean generateDivisions(World w) throws Exception
     {
         // Step 2: Generate the divisions:
+        next_divisionID = 1;
         
         // Hardcoded divisions:
         int confluenceId1 = getNextDivisionID();
@@ -377,7 +380,7 @@ public class PCGWorld {
         w.areas.get(3).divisionIDs[5][1] = confluenceId2;
         w.areas.get(3).nDivisions += 2;
 
-        int n_divisions_left = n_divisions - 2;
+//        int n_divisions_left = n_divisions - 2;
         List<AreaPoint> divisionSeeds = new ArrayList<>();
         // Generate the minimum # of divisions requested in each area:
         for(int i = 0;i<n_areas;i++) {
@@ -389,22 +392,23 @@ public class PCGWorld {
                 divisionSeeds.add(seed);
                 addTag(seed, "seed", null);  // we mark them, so that we do not repeat any
                 seed.a.divisionIDs[seed.x][seed.y] = getNextDivisionID();
+//                System.out.println("  saving division: " + seed.a.divisionIDs[seed.x][seed.y]);
                 seed.a.nDivisions++;
-                n_divisions_left--;
+//                n_divisions_left--;
             }
         }
         
-        for(int i = 0;i<n_divisions_left;i++) {
-            AreaPoint seed;
-            seed = randomAreaPoint(w, true);
-            while (seed.a.divisionIDs[seed.x][seed.y] != 0) {
-                seed = randomAreaPoint(w, true);
-            }            
-            divisionSeeds.add(seed);
-            addTag(seed, "seed", null);  // we mark them, so that we do not repeat any
-            seed.a.divisionIDs[seed.x][seed.y] = getNextDivisionID();
-            seed.a.nDivisions++;
-        }
+//        for(int i = 0;i<n_divisions_left;i++) {
+//            AreaPoint seed;
+//            seed = randomAreaPoint(w, true);
+//            while (seed.a.divisionIDs[seed.x][seed.y] != 0) {
+//                seed = randomAreaPoint(w, true);
+//            }            
+//            divisionSeeds.add(seed);
+//            addTag(seed, "seed", null);  // we mark them, so that we do not repeat any
+//            seed.a.divisionIDs[seed.x][seed.y] = getNextDivisionID();
+//            seed.a.nDivisions++;
+//        }
         // remove the temporary tags, which were used only to ensure we have no repetition
         for(AreaPoint seed:divisionSeeds) {
             removeTag(seed, "seed", null);
@@ -1494,26 +1498,7 @@ public class PCGWorld {
                         a.nRooms++;                        
                     }
                 }
-            }            
-//        } else if (layout == null) {
-//            // Grow the area from the center:
-//            a.nRooms = 1;
-//            a.rooms[w/2][h/2] = 0;
-////            System.out.println("Starting area layout generation:");
-//            while(a.nRooms < w * h * 0.5) {
-//                // pick a random spot in the map:
-//                int y = r.nextInt(h);
-//                int x = r.nextInt(w);
-//                if (a.rooms[x][y] == -1 &&
-//                    ((x > 0 && a.rooms[x - 1][y] >= 0) ||
-//                     (x < w - 1 && a.rooms[x + 1][y] >= 0) ||
-//                     (y > 0 && a.rooms[x][y - 1] >= 0) ||
-//                     (y < h - 1 && a.rooms[x][y + 1] >= 0))) {
-//                    a.rooms[x][y] = a.nRooms;
-////                    System.out.println("  room at " + x + ", " + y);
-//                    a.nRooms++;
-//                }
-//            }
+            }
         } else {
             // use the layout as a guideline:
             // Grow the area from the center, with a chance of rejecting if the
@@ -1694,8 +1679,10 @@ public class PCGWorld {
     public AreaPoint randomAreaPoint(Area a, boolean tagLess)
     {
         while(true) {
-            int x = r.nextInt(a.width);
-            int y = r.nextInt(a.height);
+            int p = r.nextInt(a.width * a.height);
+//            System.out.println("division rng: " + p);
+            int x = p % a.width;
+            int y = p / a.width;
             if (a.rooms[x][y] >= 0) {
                 if (!tagLess || (a.tags[x][y] == null || a.tags[x][y].isEmpty())) {
                     return new AreaPoint(a, x, y);
@@ -1831,7 +1818,8 @@ public class PCGWorld {
         }
         
         while(!open.isEmpty()) {
-            AreaPoint p = open.remove(r.nextInt(open.size()));
+//            AreaPoint p = open.remove(r.nextInt(open.size()));
+            AreaPoint p = open.remove(0);
             
             if (p.x > 0 &&
                 a.rooms[p.x - 1][p.y] >= 0 &&

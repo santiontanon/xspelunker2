@@ -86,22 +86,22 @@ pcg_generate_area__world_area_ptr_set:
 ; 	ret
 
 
-pcg_debug__arrays_equal:
-	ld a, (de)
-	cp (hl)
-	jr nz, pcg_debug__arrays_equal_fail
-	inc de
-	inc hl
-	dec bc
-	ld a, c
-	or b
-	ret z
-	jr pcg_debug__arrays_equal
+; pcg_debug__arrays_equal:
+; 	ld a, (de)
+; 	cp (hl)
+; 	jr nz, pcg_debug__arrays_equal_fail
+; 	inc de
+; 	inc hl
+; 	dec bc
+; 	ld a, c
+; 	or b
+; 	ret z
+; 	jr pcg_debug__arrays_equal
 
 
-pcg_debug__arrays_equal_fail:
-	di
-	halt
+; pcg_debug__arrays_equal_fail:
+; 	di
+; 	halt
 
 
 ;-----------------------------------------------
