@@ -1635,7 +1635,7 @@ public class PCGWorld {
         List<AreaPoint> candidates = new ArrayList<>();
         for(int i = 0;i<a.height;i++) {
             for(int j = 0;j<a.width;j++) {
-                if (a.rooms[j][i] >= 0 && (i == a.height -1 || a.rooms[j][i+1] < 0)) {
+                if (a.rooms[j][i] >= 0 && (i == a.height - 1 || a.rooms[j][i+1] < 0)) {
                     if (a.tags[j][i] == null || a.tags[j][i].isEmpty() || !tagLess) {
                         candidates.add(new AreaPoint(a, j, i));
                     }

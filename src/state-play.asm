@@ -142,7 +142,7 @@ pcg_debug_end:
 
 		; generate room:
 		ld e, START_ROOM_ID
-; 		ld e, 5
+; 		ld e, 17
 ; 		ld e, 26
 ; 		ld e, 0
 ; 		ld e, CALENDAR_ROOM_ID

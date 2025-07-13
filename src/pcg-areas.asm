@@ -69,7 +69,7 @@ pcg_generate_area__world_area_ptr_set:
 	call pcg_generate_area__random_connections  ; updates 'tmp_pcg_area__piece_types'
 	call pcg_generate_area__inter_area_connections  ; updates 'tmp_pcg_area__piece_types'
 	call pcg_generate_area__place_tags  ; fills 'tmp_pcg_area__placed_tags'
-	jp  pcg_generate_area__choose_chunks  ; fills 'current_area__chunks_ids' and 'current_area__objects'
+	jp pcg_generate_area__choose_chunks  ; fills 'current_area__chunks_ids' and 'current_area__objects'
 
 ; 	; DEBUG:
 ; 	call pcg_generate_area__choose_chunks  ; fills 'current_area__chunks_ids' and 'current_area__objects'
@@ -140,7 +140,7 @@ pcg_generate_area__initialize_room_ids_loop_y:
 		ld b, c
 pcg_generate_area__initialize_room_ids_loop_x:
 		ld a, (de)  ; division ID
-		or a
+		cp #ff
 		jr z, pcg_generate_area__initialize_room_ids_loop_x_no_room
 		ex af, af'
 			ld (ix), a  ; room ID
@@ -218,7 +218,7 @@ pcg_generate_area__mark_special_rooms_loop_next3:
 ; This method attempts to merge neighboring rooms that belong to the same division.
 ; It will try to make rooms that are 2x1, 3x1, 4x1, 2x2, 1x2, 1x3, or 1x4 in size.
 pcg_generate_area__merge_rooms:
-	; make a copy of the division IDs (we will use to mark which rooms have already been processed)
+	; make a copy of the division IDs (we will use it to mark which rooms have already been processed)
 	ld hl, (tmp_pcg_area__ptr_to_world_area)
 	ld bc, WORLD_AREA__DIVISION_IDS_OFFSET
 	add hl, bc  ; hl = division IDs ptr
@@ -232,7 +232,7 @@ pcg_generate_area__merge_rooms:
 	jr z, pcg_generate_area__merge_rooms_no_special_room
 	ld hl, tmp_pcg_area__division_ids_tmp
 	ADD_HL_A
-	ld (hl), 0  ; mark the special room as processed, so that we do not merge it
+	ld (hl), #ff  ; mark the special room as processed, so that we do not merge it
 pcg_generate_area__merge_rooms_no_special_room:
 
 	ld hl, tmp_pcg_area__division_ids_tmp
@@ -247,9 +247,9 @@ pcg_generate_area__merge_rooms_loop_y:
 pcg_generate_area__merge_rooms_loop_x:
 		push bc
 			ld a, (hl)
-			or a
+			cp #ff
 			jp z, pcg_generate_area__merge_rooms_loop_x_skip
-			ld (hl), 0  ; mark as "processed"
+			ld (hl), #ff  ; mark as "processed"
 			ld iyl, a  ; iyl will hold the division ID we are merging
 
 			; check if we can make a 2x1 room:
@@ -271,7 +271,7 @@ pcg_generate_area__merge_rooms_loop_x:
 				ld (hl), a  ; set the room ID of the room to the right
 				or a
 				sbc hl, bc
-				ld (hl), 0  ; mark the room to the right as "processed"
+				ld (hl), #ff  ; mark the room to the right as "processed"
 				dec hl  ; recover hl to point again to the division ID of the original room
 			pop bc
 
@@ -302,9 +302,9 @@ pcg_generate_area__merge_rooms_loop_x:
 					ld (hl), a  ; set the room ID of the room (0, +1)
 					or a
 					sbc hl, de
-					ld (hl), 0  ; mark room (0, +1) as "processed"
+					ld (hl), #ff  ; mark room (0, +1) as "processed"
 					inc hl
-					ld (hl), 0  ; mark room (+1, +1) as "processed"
+					ld (hl), #ff  ; mark room (+1, +1) as "processed"
 				pop de
 				sbc hl, bc
 				dec hl  ; recover hl to point again to the division ID of the original room
@@ -341,7 +341,7 @@ pcg_generate_area__merge_rooms_loop_x_2x2_failed:
 				ld (hl), a  ; set the room ID of the room to the right
 				or a
 				sbc hl, bc
-				ld (hl), 0  ; mark the room to the right as "processed"
+				ld (hl), #ff  ; mark the room to the right as "processed"
 				dec hl
 				dec hl  ; recover hl to point again to the division ID of the original room
 			pop bc
@@ -371,7 +371,7 @@ pcg_generate_area__merge_rooms_loop_x_2x2_failed:
 				ld (hl), a  ; set the room ID of the room to the right
 				or a
 				sbc hl, bc
-				ld (hl), 0  ; mark the room to the right as "processed"
+				ld (hl), #ff  ; mark the room to the right as "processed"
 				dec hl
 				dec hl
 				dec hl  ; recover hl to point again to the division ID of the original room
@@ -402,7 +402,7 @@ pcg_generate_area__merge_rooms_loop_x_2x1_failed:
 					ld (hl), a  ; set the room ID of the room below
 					or a
 					sbc hl, de
-					ld (hl), 0  ; mark the room to the right as "processed"
+					ld (hl), #ff  ; mark the room to the right as "processed"
 				pop de
 				sbc hl, bc  ; recover hl to point again to the division ID of the original room
 			pop bc
@@ -432,7 +432,7 @@ pcg_generate_area__merge_rooms_loop_x_2x1_failed:
 					ld (hl), a  ; set the room ID of the room below
 					or a
 					sbc hl, de
-					ld (hl), 0  ; mark the room to the right as "processed"
+					ld (hl), #ff  ; mark the room to the right as "processed"
 				pop de
 				sbc hl, bc
 				sbc hl, bc  ; recover hl to point again to the division ID of the original room
@@ -466,7 +466,7 @@ pcg_generate_area__merge_rooms_loop_x_2x1_failed:
 					ld (hl), a  ; set the room ID of the room below
 					or a
 					sbc hl, de
-					ld (hl), 0  ; mark the room to the right as "processed"
+					ld (hl), #ff  ; mark the room to the right as "processed"
 				pop de
 				sbc hl, bc
 				sbc hl, bc
@@ -507,6 +507,11 @@ pcg_generate_area__division_spanning_trees:
 	ld a, #ff
 	call clear_memory_a
 
+	ld hl, tmp_pcg_area__division_ids_tmp
+	ld bc, MAX_AREA_SIZE * 2 * 2 - 1
+	ld a, #ff
+	call clear_memory_a
+	
 	; make a copy of the division IDs, but at chunk resolution
 	; (we will use to mark which rooms have already been processed)
 	call pcg_generate_area__chunk_resolution_division_ids
@@ -516,15 +521,13 @@ pcg_generate_area__division_spanning_trees:
 	sla b
 	sla c	
 	ld ixl, c  ; ixl: width (in chunks)
-	ld d, 0  ; e: x, d: y
 pcg_generate_area__division_spanning_trees_loop_y:
 	push bc
 		ld b, c
-		ld e, 0
 pcg_generate_area__division_spanning_trees_loop_x:
 		push bc
 			ld a, (hl)
-			or a
+			cp #ff
 			jp z, pcg_generate_area__division_spanning_trees_loop_x_skip
 
 			; generate spanning tree:
@@ -545,7 +548,7 @@ pcg_generate_area__division_spanning_trees_loop_x_skip:
 ; - hl: ptr to 'tmp_pcg_area__division_ids_tmp' where to start the spanning tree
 pcg_generate_area__division_spanning_trees_generate:
 	ld a, (hl)
-	ld (hl), 0  ; mark the position as "closed"
+	ld (hl), #ff  ; mark the position as "closed"
 	ld iyl, a  ; division ID we are filling
 	ld bc, tmp_pcg_area__division_ids_tmp
 	or a
@@ -586,7 +589,7 @@ pcg_generate_area__division_spanning_trees_generate_loop_continue:
 	jr c, pcg_generate_area__division_spanning_trees_generate_loop_left_done  ; we are out of the map
 	call pcg_generate_area__division_spanning_trees_generate_open_push_a
 	jr c, pcg_generate_area__division_spanning_trees_generate_loop_left_done
-	ld (hl), 0  ; mark as processed
+	ld (hl), #ff  ; mark as processed
 	ld bc, tmp_pcg_area__piece_types - tmp_pcg_area__division_ids_tmp
 	add hl, bc  ; hl now points to the piece type to the left
 	ld a, (hl)
@@ -619,7 +622,7 @@ pcg_generate_area__division_spanning_trees_generate_loop_left_done:
 	jr c, pcg_generate_area__division_spanning_trees_generate_loop_up_done  ; we are out of the map
 	call pcg_generate_area__division_spanning_trees_generate_open_push_a
 	jr c, pcg_generate_area__division_spanning_trees_generate_loop_up_done
-	ld (hl), 0  ; mark as processed
+	ld (hl), #ff  ; mark as processed
 	ld bc, tmp_pcg_area__piece_types - tmp_pcg_area__division_ids_tmp
 	add hl, bc  ; hl now points to the piece type above
 	ld a, (hl)
@@ -650,7 +653,7 @@ pcg_generate_area__division_spanning_trees_generate_loop_up_done:
 	inc a  ; right
 	call pcg_generate_area__division_spanning_trees_generate_open_push_a
 	jr c, pcg_generate_area__division_spanning_trees_generate_loop_right_done
-	ld (hl), 0  ; mark as processed
+	ld (hl), #ff  ; mark as processed
 	ld bc, tmp_pcg_area__piece_types - tmp_pcg_area__division_ids_tmp
 	add hl, bc  ; hl now points to the piece type to the right
 	ld a, (hl)
@@ -684,7 +687,7 @@ pcg_generate_area__division_spanning_trees_generate_loop_right_done:
 	jr c, pcg_generate_area__division_spanning_trees_generate_loop_down_done  ; we are out of the map (since MAX_AREA_SIZE * 2 * 2 is 256)
 	call pcg_generate_area__division_spanning_trees_generate_open_push_a
 	jr c, pcg_generate_area__division_spanning_trees_generate_loop_down_done
-	ld (hl), 0  ; mark as processed
+	ld (hl), #ff  ; mark as processed
 	ld bc, tmp_pcg_area__piece_types - tmp_pcg_area__division_ids_tmp
 	add hl, bc  ; hl now points to the piece type above
 	ld a, (hl)
@@ -918,8 +921,10 @@ pcg_generate_area__random_connections_loop_y:
 	push bc
 pcg_generate_area__random_connections_loop_x:
 		ld a, (hl)
-		or a
-		jp m, pcg_generate_area__random_connections_loop_x_skip
+; 		or a
+; 		jp m, pcg_generate_area__random_connections_loop_x_skip
+		cp #ff
+		jp z, pcg_generate_area__random_connections_loop_x_skip
 
 		ld a, c
 		cp ixl
@@ -1614,11 +1619,19 @@ pcg_generate_area__choose_chunks_loop_x_button_door_tag:
 		cp PCG_DIRECTION_LEFT
 		jr nz, pcg_generate_area__choose_chunks_loop_x_button_door_tag_no_left
 		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_DOOR_LEFT_MASK
+		; clear the left tag:
+		ld a, iyh
+		and #3f
+		ld iyh, a
 		jp pcg_generate_area__choose_chunks_loop_x_continue
 pcg_generate_area__choose_chunks_loop_x_button_door_tag_no_left:
 		cp PCG_DIRECTION_UP
 		jr nz, pcg_generate_area__choose_chunks_loop_x_button_door_tag_no_up
 		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_DOOR_UP_MASK
+		; clear the up tag:
+		ld a, iyh
+		and #cf
+		ld iyh, a
 		jp pcg_generate_area__choose_chunks_loop_x_continue
 pcg_generate_area__choose_chunks_loop_x_button_door_tag_no_up:
 		cp PCG_DIRECTION_RIGHT
@@ -1686,7 +1699,7 @@ pcg_generate_area__choose_chunks_loop_x_chunk_loop:
 				or a
 				jr nz, pcg_generate_area__choose_chunks_loop_x_chunk_loop_continue
 				; we are in the jungle:
-				; does this piece have an inter-area connectino down?
+				; does this piece have an inter-area connection down?
 				ld a, iyh
 				and #03
 				cp #02

@@ -1,10 +1,15 @@
-tmp_pcg_world__floodfill_open_list: equ buffer_4096  ; 256 bytes
+tmp_pcg_world__floodfill_open_list: equ buffer_4096  ; 256 bytes (should be 256-aligned)
 tmp_pcg_world__floodfill_open_list_bot: equ buffer_4096 + 256  ; w bytes
 tmp_pcg_world__floodfill_open_list_top: equ tmp_pcg_world__floodfill_open_list_bot + 2  ; 2 bytes
 tmp_pcg_world__tmp_ptr: equ tmp_pcg_world__floodfill_open_list_top + 2  ; 2 bytes
+tmp_pcg_world__tags: equ tmp_pcg_world__tmp_ptr + 2  ; MAX_AREA_SIZE * MAX_WORLD_AREAS * 2 bytes  ; tags for all areas, at most 2 tags per room
+
+tmp_pcg_world__candidates_list: equ tmp_pcg_world__floodfill_open_list
+tmp_pcg_world__candidates_list_size: equ tmp_pcg_world__candidates_list + 256
 
 tmp_pcg_world__area_0_connections: equ current_world__area_data + 4 + 1 + 1 + 1
 tmp_pcg_world__area_0_divisions: equ current_world__area_data + 4 + 1 + 1 + 1 + MAX_AREA_SIZE
+tmp_pcg_world__area_11_divisions: equ current_world__area_data + 4 + 1 + 1 + 1 + MAX_AREA_SIZE + WORLD_AREA__SIZE*11
 
 
 ;-----------------------------------------------
@@ -94,7 +99,9 @@ pcg__full_layout:  ; for those areas for which we do not want to have a predefin
 	db 1, 1, 1, 1, 1, 1, 1, 1
 
 pgc__n_divisions_per_area:
-	db 6, 12, 12, 3, 12, 3, 12, 12, 12, 12, 12, 12  ; 120 + 2 divisions (+ 2 since there are 2 hardcoded divisions in the confluence)
+	db  6, 12, 12,  3
+	db 12,  3, 12, 12
+	db 12, 12, 12, 12  ; 120 + 2 divisions (+ 2 since there are 2 hardcoded divisions in the confluence)
 
 
 ;-----------------------------------------------
@@ -111,15 +118,20 @@ pcg_generate_world:
 	call pcg_generate_world__init
 	call pcg_generate_world__generate_area_layouts
 	call pcg_generate_world__generate_divisions
-	call pcg_generate_world__generate_area_connections
-	call pcg_generate_world__generate_spanning_tree
-	call pcg_generate_world__generate_mission
-	call pcg_generate_world__spawn_additional_objects
+; 	call pcg_generate_world__generate_area_connections
+; 	jr nz, pcg_generate_world_fail
+; 	call pcg_generate_world__generate_spanning_tree
+; 	call pcg_generate_world__generate_mission
+; 	call pcg_generate_world__spawn_additional_objects
 ;     out (#2d),a  ; DEBUG	
 
 	; DEBUG:
 ; 	ld hl, hardcoded_area_data_0__divisionIDs
 ; 	ld de, tmp_pcg_world__area_0_divisions
+; 	ld bc, MAX_AREA_SIZE
+; 	call pcg_debug__arrays_equal
+; 	ld hl, hardcoded_area_data_11__divisionIDs
+; 	ld de, tmp_pcg_world__area_11_divisions
 ; 	ld bc, MAX_AREA_SIZE
 ; 	call pcg_debug__arrays_equal
 
@@ -131,6 +143,9 @@ pcg_generate_world:
 
 	jp pcg_generate_world__puzzles
 
+pcg_generate_world_fail:
+	di
+	halt
 
 
 ; pcg_debug__arrays_equal:
@@ -569,12 +584,13 @@ pcg_generate_world__area_division_floodfill_loop:
 	ld a, (de)
 	ld b, a  ; y
 	inc e
+	; Here: c = x, b = y
 	ld a, c
 	or a  ; x == 0?
 	jr z, pcg_generate_world__area_division_floodfill_loop_no_left
 	; check left:
 	ld hl, (tmp_pcg_world__tmp_ptr)
-	ld a, (de)
+	ld a, (de)  ; offset
 	ADD_HL_A
 	ld a, (hl)
 	ex af, af'  ; save the division ID in a'
@@ -583,7 +599,9 @@ pcg_generate_world__area_division_floodfill_loop:
 	or a  ; do we have a division ID there already?
 	jr nz, pcg_generate_world__area_division_floodfill_loop_no_left
 	ex af, af'
+	dec c
 	call pcg_generate_world__area_division_floodfill_push
+	inc c
 pcg_generate_world__area_division_floodfill_loop_no_left:
 	ld a, c
 	inc a
@@ -591,7 +609,7 @@ pcg_generate_world__area_division_floodfill_loop_no_left:
 	jr z, pcg_generate_world__area_division_floodfill_loop_no_right
 	; check right:
 	ld hl, (tmp_pcg_world__tmp_ptr)
-	ld a, (de)
+	ld a, (de)  ; offset
 	ADD_HL_A
 	ld a, (hl)
 	ex af, af'  ; save the division ID in a'
@@ -600,14 +618,16 @@ pcg_generate_world__area_division_floodfill_loop_no_left:
 	or a  ; do we have a division ID there already?
 	jr nz, pcg_generate_world__area_division_floodfill_loop_no_right
 	ex af, af'
+	inc c
 	call pcg_generate_world__area_division_floodfill_push
+	dec c
 pcg_generate_world__area_division_floodfill_loop_no_right:
 	ld a, b
 	or a  ; y == 0?
 	jr z, pcg_generate_world__area_division_floodfill_loop_no_up
 	; check up:
 	ld hl, (tmp_pcg_world__tmp_ptr)
-	ld a, (de)
+	ld a, (de)  ; offset
 	ADD_HL_A
 	ld a, (hl)
 	ex af, af'  ; save the division ID in a'
@@ -621,7 +641,9 @@ pcg_generate_world__area_division_floodfill_loop_no_right:
 	or a  ; do we have a division ID there already?
 	jr nz, pcg_generate_world__area_division_floodfill_loop_no_up
 	ex af, af'
+	dec b
 	call pcg_generate_world__area_division_floodfill_push
+	inc b
 pcg_generate_world__area_division_floodfill_loop_no_up:
 	ld a, b
 	inc a
@@ -629,7 +651,7 @@ pcg_generate_world__area_division_floodfill_loop_no_up:
 	jr z, pcg_generate_world__area_division_floodfill_loop_no_down
 	; check down:
 	ld hl, (tmp_pcg_world__tmp_ptr)
-	ld a, (de)
+	ld a, (de)  ; offset
 	ADD_HL_A
 	ld a, (hl)
 	ex af, af'  ; save the division ID in a'
@@ -642,7 +664,9 @@ pcg_generate_world__area_division_floodfill_loop_no_up:
 	or a  ; do we have a division ID there already?
 	jr nz, pcg_generate_world__area_division_floodfill_loop_no_down
 	ex af, af'
+	inc b
 	call pcg_generate_world__area_division_floodfill_push
+	dec b
 pcg_generate_world__area_division_floodfill_loop_no_down:
 	inc e
 	ld (tmp_pcg_world__floodfill_open_list_bot), de
@@ -656,14 +680,17 @@ pcg_generate_world__area_division_floodfill_loop_no_down:
 
 
 pcg_generate_world__area_division_floodfill_push:
+	; hl: ptr to the division we are filling
+	; de: ptr to the open list
+	; c, b: x, y
 	ld (hl), a  ; update the division ID
 	push de
 		ld de, (tmp_pcg_world__floodfill_open_list_top)
 		ld a, c
-		ld (de), a
+		ld (de), a  ; x
 		inc e
 		ld a, b
-		ld (de), a
+		ld (de), a  ; y
 		inc e
 		push bc
 			ld bc, (tmp_pcg_world__tmp_ptr)
@@ -671,7 +698,7 @@ pcg_generate_world__area_division_floodfill_push:
 			sbc hl, bc
 		pop bc
 		ld a, l
-		ld (de), a
+		ld (de), a  ; offset
 		inc e
 		ld (tmp_pcg_world__floodfill_open_list_top), de
 	pop de
@@ -680,8 +707,204 @@ pcg_generate_world__area_division_floodfill_push:
 
 ;-----------------------------------------------
 pcg_generate_world__generate_area_connections:
+	; clear all the tags, as we will use them to prevent replication of inter-area connections:
+	ld hl, tmp_pcg_world__tags
+	ld bc, MAX_AREA_SIZE * MAX_WORLD_AREAS * 2 - 1
+	call clear_memory
+
+	; a0p1:
+	xor a
+	call pcg_generate_world__random_bottom_most_point_tagless
+	ret nz
+	push bc
+		xor a
+		ld b, 1  ; just some random tag value
+		ld c, l
+		call pcg_generate_world__add_tag
+	pop bc
+
+	; a0p2:
 	; ...
+
+	; swap a0p1/a0p2 so that a0p1.x < a0p2.x:
+	; ...
+
+	; a1p1:
+	; ...
+
+	; create jungle -> temple of inscriptions connection:
+	; ...
+
+	; a2p1:
+	; ...
+
+	; create jungle -> hidden temple connection:
+	; ...
+
+	; rest of connections:
+	; ...
+
+	; clear the tags again:
+	ld hl, tmp_pcg_world__tags
+	ld bc, MAX_AREA_SIZE * MAX_WORLD_AREAS * 2 - 1
+	jp clear_memory
+
+
+;-----------------------------------------------
+; input:
+; - a: target area
+; output:
+; - c, b: x, y coordinates of the point
+; - l: offset (x + y * width)
+; - z: found
+; - nz: no point found
+pcg_generate_world__random_bottom_most_point_tagless:
+	; get divisions and tags ptrs:
+	; - tags: tmp_pcg_world__tags + MAX_AREA_SIZE * 2 * a 
+	; - divisions: current_world__area_data + WORLD_AREA__SIZE * a + 4 + 1 + 1 + 1 + MAX_AREA_SIZE
+	ld de, tmp_pcg_world__tags
+	ld hl, current_world__area_data + 4 + 1
+	or a
+	jr z, pcg_generate_world__random_bottom_most_point_tagless_ptrs_loop_done
+pcg_generate_world__random_bottom_most_point_tagless_ptrs_loop:
+	ld bc, WORLD_AREA__SIZE
+	add hl, bc
+	ex hl, de
+		ld bc, MAX_AREA_SIZE * 2
+		add hl, bc
+	ex hl, de
+	dec a
+	jr nz, pcg_generate_world__random_bottom_most_point_tagless_ptrs_loop
+pcg_generate_world__random_bottom_most_point_tagless_ptrs_loop_done:
+	ld c, (hl)
+	inc hl
+	ld b, (hl)
+	push bc
+		ld bc, MAX_AREA_SIZE + 1
+		add hl, bc
+	pop bc
+	; Here:
+	; - hl: ptr to divisions
+	; - de: ptr to tags
+	; - c, b: area width, height
+	ld ixl, c
+	ld ixh, b
+	dec ixh  ; ixh = height - 1
+
+	; find candidates:
+	ld iy, tmp_pcg_world__candidates_list
+	xor a
+	ld (tmp_pcg_world__candidates_list_size), a
+pcg_generate_world__random_bottom_most_point_tagless_candidates_loop_y:
+	push bc
+pcg_generate_world__random_bottom_most_point_tagless_candidates_loop_x:
+		ld a, (hl)
+		inc a  ; cp #ff
+		jr z, pcg_generate_world__random_bottom_most_point_tagless_candidates_loop_x_next
+		; there is a room here:
+		ld a, b
+		cp ixh
+		jr z, pcg_generate_world__random_bottom_most_point_tagless_candidates_loop_x_continue
+		; is there a room below?
+		push bc
+			ld b, 0
+			ld c, ixl
+			add hl, bc
+			ld a, (hl)
+			inc a  ; cp #ff
+		pop bc
+		jr nz, pcg_generate_world__random_bottom_most_point_tagless_candidates_loop_x_next  ; not a bottom room
+pcg_generate_world__random_bottom_most_point_tagless_candidates_loop_x_continue:
+		; potential candidate, just check if it's tagless:
+		ld a, (de)
+		or a
+		jr nz, pcg_generate_world__random_bottom_most_point_tagless_candidates_loop_x_next
+		; add a candidate:
+		ld a, c
+		sub ixl
+		neg
+		ld (iy), a  ; x
+		ld a, b
+		sub ixh
+		dec a
+		neg
+		ld (iy + 1), a  ; y
+		inc iy
+		inc iy
+		ld a, (tmp_pcg_world__candidates_list_size)
+		inc a
+		ld (tmp_pcg_world__candidates_list_size), a
+pcg_generate_world__random_bottom_most_point_tagless_candidates_loop_x_next:
+		inc hl
+		inc de
+		inc de
+		dec c
+		jr nz, pcg_generate_world__random_bottom_most_point_tagless_candidates_loop_x
+	pop bc
+	djnz pcg_generate_world__random_bottom_most_point_tagless_candidates_loop_y
+
+	; choose one at random:
+	ld a, (tmp_pcg_world__candidates_list_size)
+	or a
+	jr z, pcg_generate_world__random_bottom_most_point_tagless_fail
+	ld c, a
+	call random_modulo
+	add a, a
+	ld hl, tmp_pcg_world__candidates_list
+	ADD_HL_A
+	ld c, (hl)
+	inc hl
+	ld b, (hl)
+
+	ld a, b
+	or a
+	ld a, c
+	jr z, pcg_generate_world__random_bottom_most_point_tagless_candidates_final_loop_done
+pcg_generate_world__random_bottom_most_point_tagless_candidates_final_loop:
+	add a, ixl
+	djnz pcg_generate_world__random_bottom_most_point_tagless_candidates_final_loop
+pcg_generate_world__random_bottom_most_point_tagless_candidates_final_loop_done:
+	ld b, (hl)  ; recover y
+	ld l, a  ; l = offset (x + y * width)
 	ret
+pcg_generate_world__random_bottom_most_point_tagless_fail:
+	or 1
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - a: area
+; - b: tag
+; - c: offset
+; output:
+; - z: success
+; - nz: failure
+pcg_generate_world__add_tag:
+	ld hl, tmp_pcg_world__tags
+	or a
+	jr z, pcg_generate_world__add_tag_loop_done
+	ld de, MAX_AREA_SIZE * 2
+pcg_generate_world__add_tag_loop:
+	add hl, de
+	dec a
+	jr nz, pcg_generate_world__add_tag_loop
+pcg_generate_world__add_tag_loop_done:
+	push bc
+		ld b, 0
+		add hl, bc
+		add hl, bc  ; we add it twice, since we can have two tags per room
+	pop bc
+	ld a, (hl)
+	or a
+	jr z, pcg_generate_world__add_tag_found_spot
+	inc hl
+	ld a, (hl)
+	or a
+	ret nz
+pcg_generate_world__add_tag_found_spot:
+	ld (hl), b
+	ret  ; we will always have "z" here
 
 
 ;-----------------------------------------------

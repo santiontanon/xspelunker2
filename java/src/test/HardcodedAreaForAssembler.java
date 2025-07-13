@@ -26,7 +26,7 @@ public class HardcodedAreaForAssembler {
     public static void main(String args[]) throws Exception
     {
         boolean include_pcg_area__debug_data = true;
-        MSXRandom r = new MSXRandom(0, 0xaaaa);
+        MSXRandom r = new MSXRandom(0, 0x5555);
 
 
         PCGWorld pcg1 = new PCGWorld();
@@ -35,7 +35,7 @@ public class HardcodedAreaForAssembler {
         
         World w = pcg1.generate(r);        
         RenderedArea ra0 = pcg2_jungle.generate(w.areas.get(0), w, r);
-//        RenderedArea ra1 = pcg2.generate(w.areas.get(1), w, r);
+        RenderedArea ra1 = pcg2_pyramid.generate(w.areas.get(1), w, r);
 //        RenderedArea ra2 = pcg2.generate(w.areas.get(2), w, r);
 //        RenderedArea ra3 = pcg2.generate(w.areas.get(3), w, r);
 //        RenderedArea ra4 = pcg2.generate(w.areas.get(4), w, r);
@@ -45,9 +45,9 @@ public class HardcodedAreaForAssembler {
 //        RenderedArea ra8 = pcg2.generate(w.areas.get(8), w, r);
 //        RenderedArea ra9 = pcg2.generate(w.areas.get(9), w, r);
         generateAssemblerRenderedAreaData(ra0, w.areas.get(0), pcg2_jungle, include_pcg_area__debug_data);
-//        generateAssemblerRenderedAreaData(ra1, w.areas.get(9), pcg2);
+//        generateAssemblerRenderedAreaData(ra1, w.areas.get(1), pcg2_pyramid, include_pcg_area__debug_data);
         GenerationTest.visualizeArea(ra0, "tmp/area"+0+".png", pcg2_jungle);
-//        GenerationTest.visualizeArea(ra1, "tmp/area"+1+".png", pcg2);
+//        GenerationTest.visualizeArea(ra1, "tmp/area"+1+".png", pcg2_pyramid);
 //        GenerationTest.visualizeArea(ra2, "tmp/area"+2+".png", pcg2);
 //        GenerationTest.visualizeArea(ra3, "tmp/area"+3+".png", pcg2);
 //        GenerationTest.visualizeArea(ra4, "tmp/area"+4+".png", pcg2);

@@ -2034,14 +2034,8 @@ pcg_generate_room__start_continue3:
 		ld (hl), 229
 		inc hl
 		ld (hl), 230
-		ld hl, current_room__tile_map + 30 + 21*32
-		ld (hl), 149
-		inc hl
-		ld (hl), 164
-		ld hl, current_room__tile_map + 30 + 22*32
-		ld (hl), 197
-		inc hl
-		ld (hl), 198
+		ld hl, current_room__tile_map + 31 + 21*32
+		ld (hl), 0
 pcg_generate_room__start_continue4:
 	pop hl	
 	ld a, (hl)  ; bottom-right chunk ID

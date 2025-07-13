@@ -2,6 +2,12 @@ to do:
 
 ***- Implement PCGWorld in assembler:
   ***- generate_area_connections: implement
+    ***- randomAreaBottomMostPoint
+    ***- randomAreaTopMostPoint
+    ***- randomAreaLeftMostPoint
+    ***- randomAreaRightMostPoint
+    ***- call them to generate the connectino locations
+    ***- fill-in current_world__interarea_connections
   ***- generate_area_connections: verify it exactly matches Java with a couple of random seeds
   ***- generate_spanning_tree: implement (spanningTree: ID, parent, n_descendants, root point, tags (this is stored twice for convenience))
   ***- generate_spanning_tree: verify it exactly matches Java with a couple of random seeds

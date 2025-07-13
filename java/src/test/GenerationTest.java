@@ -36,7 +36,7 @@ public class GenerationTest {
     
     public static void main(String args[]) throws Exception
     {
-        MSXRandom r = new MSXRandom(0, 0xaaaa);
+        MSXRandom r = new MSXRandom(0, 0x5555);
 
         PCGWorld pcg1 = new PCGWorld();
         PCGArea pcg2_jungle = new PCGArea(true, "jungle");
@@ -101,7 +101,7 @@ public class GenerationTest {
 ////        System.out.println("Leaves in area 1: " + (pcg1.area_1_n_leaves_accum / (double)pcg1.area_1_n_leaves_count));
 //        System.out.println("nPCGAreaErrors: " + nPCGAreaErrors);
 
-        r.setSeed(0, 0xaaaa);
+        r.setSeed(0, 0x5555);
         World w = pcg1.generate(r);
         if (w != null) {
             if (!Solver.solveGame(w)) {
