@@ -4,11 +4,19 @@ tmp_pcg_world__floodfill_open_list_top: equ tmp_pcg_world__floodfill_open_list_b
 tmp_pcg_world__tmp_ptr: equ tmp_pcg_world__floodfill_open_list_top + 2  ; 2 bytes
 tmp_pcg_world__tags: equ tmp_pcg_world__tmp_ptr + 2  ; MAX_AREA_SIZE * MAX_WORLD_AREAS * 2 bytes  ; tags for all areas, at most 2 tags per room
 
+pcg_generate_world_tmp_a0p1: equ tmp_pcg_world__tags + MAX_AREA_SIZE * MAX_WORLD_AREAS * 2
+pcg_generate_world_tmp_a0p2: equ pcg_generate_world_tmp_a0p1 + 2
+pcg_generate_world_tmp_a1p1: equ pcg_generate_world_tmp_a0p2 + 2
+pcg_generate_world_tmp_a1p2: equ pcg_generate_world_tmp_a1p1 + 2
+pcg_generate_world_tmp_a2p1: equ pcg_generate_world_tmp_a1p2 + 2
+pcg_generate_world_tmp_a2p2: equ pcg_generate_world_tmp_a2p1 + 2
+
 tmp_pcg_world__candidates_list: equ tmp_pcg_world__floodfill_open_list
 tmp_pcg_world__candidates_list_size: equ tmp_pcg_world__candidates_list + 256
 
 tmp_pcg_world__area_0_connections: equ current_world__area_data + 4 + 1 + 1 + 1
-tmp_pcg_world__area_0_divisions: equ current_world__area_data + 4 + 1 + 1 + 1 + MAX_AREA_SIZE
+tmp_pcg_world__area_0_divisions: equ tmp_pcg_world__area_0_connections + MAX_AREA_SIZE
+tmp_pcg_world__area_0_tags: equ tmp_pcg_world__area_0_divisions + MAX_AREA_SIZE
 tmp_pcg_world__area_11_divisions: equ current_world__area_data + 4 + 1 + 1 + 1 + MAX_AREA_SIZE + WORLD_AREA__SIZE*11
 
 
@@ -116,13 +124,14 @@ pcg_generate_world:
 
 ;     out (#2c),a  ; DEBUG	
 	call pcg_generate_world__init
-	call pcg_generate_world__generate_area_layouts
-	call pcg_generate_world__generate_divisions
-; 	call pcg_generate_world__generate_area_connections
-; 	jr nz, pcg_generate_world_fail
-; 	call pcg_generate_world__generate_spanning_tree
-; 	call pcg_generate_world__generate_mission
-; 	call pcg_generate_world__spawn_additional_objects
+	call pcg_generate_world__generate_area_layouts  ; uses the connections space to store the layout
+	call pcg_generate_world__generate_divisions  ; fills divisionIDs 
+	call pcg_generate_world__generate_area_connections  ; fills current_world__interarea_connections
+	jr nz, pcg_generate_world_fail
+	call pcg_generate_world__generate_spanning_tree  ; generates connections (each tree root to its parent)
+	call pcg_generate_world__generate_mission  ; adds all the area tags to the divisions
+	call pcg_generate_world__spawn_additional_objects  ; fills additional tags to some divisions
+	call pcg_generate_world__generate_tag_data  ; generates the area tags, chest content and shop extra items from all the info above
 ;     out (#2d),a  ; DEBUG	
 
 	; DEBUG:
@@ -136,12 +145,12 @@ pcg_generate_world:
 ; 	call pcg_debug__arrays_equal
 
 	; for now just copy over the hardcoded data:
-	ld hl, hardcoded_world_data
-	ld de, current_world__area_data
-	ld bc, hardcoded_world_data_end - hardcoded_world_data
-	ldir
+; 	ld hl, hardcoded_world_data
+; 	ld de, current_world__area_data
+; 	ld bc, hardcoded_world_data_end - hardcoded_world_data
+; 	ldir
 
-	jp pcg_generate_world__puzzles
+	jp pcg_generate_world__puzzles  ; tablet contents, combination puzzles, trial types, stone numbers 
 
 pcg_generate_world_fail:
 	di
@@ -189,8 +198,7 @@ pcg_generate_world__init:
 ; - tags: MAX_AREA_N_TAGS * 3
 ; This method fills:
 ; - seed, id, width, height
-; - uses the connections space to store the layout (which will later be overwritten) by
-;   pcg_generate_world__generate_area_connections.
+; - uses the connections space to store the layout (which will later be overwritten).
 pcg_generate_world__generate_area_layouts:
 	ld b, MAX_WORLD_AREAS
 	ld de, current_world__area_data
@@ -706,48 +714,388 @@ pcg_generate_world__area_division_floodfill_push:
 
 
 ;-----------------------------------------------
+; output:
+; - z: success
+; - nz: failure
 pcg_generate_world__generate_area_connections:
 	; clear all the tags, as we will use them to prevent replication of inter-area connections:
 	ld hl, tmp_pcg_world__tags
 	ld bc, MAX_AREA_SIZE * MAX_WORLD_AREAS * 2 - 1
 	call clear_memory
 
+	ld hl, current_world__interarea_connections
+	ld (tmp_pcg_world__tmp_ptr), hl	
+
 	; a0p1:
 	xor a
 	call pcg_generate_world__random_bottom_most_point_tagless
 	ret nz
-	push bc
-		xor a
-		ld b, 1  ; just some random tag value
-		ld c, l
-		call pcg_generate_world__add_tag
-	pop bc
+	ld (pcg_generate_world_tmp_a0p1), bc
+	xor a
+	ld b, 1  ; just some random tag value
+	call pcg_generate_world__add_tag
 
 	; a0p2:
-	; ...
+	xor a
+	call pcg_generate_world__random_bottom_most_point_tagless
+	ret nz
+	ld (pcg_generate_world_tmp_a0p2), bc
+	xor a
+	ld b, 1  ; just some random tag value
+	call pcg_generate_world__add_tag
 
 	; swap a0p1/a0p2 so that a0p1.x < a0p2.x:
-	; ...
+	ld bc, (pcg_generate_world_tmp_a0p1)
+	ld de, (pcg_generate_world_tmp_a0p2)
+	ld a, c
+	cp e
+	jr c, pcg_generate_world__generate_area_connections_no_a0p1_a0p2_swap
+	ld (pcg_generate_world_tmp_a0p1), de
+	ld (pcg_generate_world_tmp_a0p2), bc
+pcg_generate_world__generate_area_connections_no_a0p1_a0p2_swap:
 
 	; a1p1:
-	; ...
+	ld a, 1
+	call pcg_generate_world__random_top_most_point_tagless
+	ret nz
+	ld (pcg_generate_world_tmp_a1p1), bc
+	ld a, 1
+	ld b, 1  ; just some random tag value
+	call pcg_generate_world__add_tag
 
 	; create jungle -> temple of inscriptions connection:
-	; ...
+	ld bc, (pcg_generate_world_tmp_a0p1)
+	ld de, (pcg_generate_world_tmp_a1p1)
+	ld iyl, 0
+	ld iyh, 1
+	ld ixl, PCG_DIRECTION_DOWN
+	ld ixh, PCG_DIRECTION_UP
+	call pcg_generate_world__generate_area_connections_add_connection
 
 	; a2p1:
-	; ...
+	ld a, 2
+	call pcg_generate_world__random_top_most_point_tagless
+	ret nz
+	ld (pcg_generate_world_tmp_a2p1), bc
+	ld a, 2
+	ld b, 1  ; just some random tag value
+	call pcg_generate_world__add_tag
 
 	; create jungle -> hidden temple connection:
-	; ...
+	ld bc, (pcg_generate_world_tmp_a0p2)
+	ld de, (pcg_generate_world_tmp_a2p1)
+	ld iyl, 0
+	ld iyh, 2
+	ld ixl, PCG_DIRECTION_DOWN
+	ld ixh, PCG_DIRECTION_UP
+	call pcg_generate_world__generate_area_connections_add_connection
 
-	; rest of connections:
-	; ...
+	; a1p2:
+	ld a, 1
+	call pcg_generate_world__random_bottom_most_point_tagless
+	ret nz
+	ld (pcg_generate_world_tmp_a1p1), bc
+	ld a, 1
+	ld b, 1  ; just some random tag value
+	call pcg_generate_world__add_tag
+
+	; a2p2:
+	ld a, 2
+	call pcg_generate_world__random_bottom_most_point_tagless
+	ret nz
+	ld (pcg_generate_world_tmp_a2p1), bc
+	ld a, 2
+	ld b, 1  ; just some random tag value
+	call pcg_generate_world__add_tag
+	
+	; temple of inscriptions connection -> confluence:
+	ld bc, (pcg_generate_world_tmp_a1p1)
+	ld de, #0000
+	ld iyl, 1
+	ld iyh, 3
+	ld ixl, PCG_DIRECTION_DOWN
+	ld ixh, PCG_DIRECTION_UP
+	call pcg_generate_world__generate_area_connections_add_connection
+
+	; hidden temple connection -> confluence:
+	ld bc, (pcg_generate_world_tmp_a2p1)
+	ld de, #0008
+	ld iyl, 2
+	ld iyh, 3
+	ld ixl, PCG_DIRECTION_DOWN
+	ld ixh, PCG_DIRECTION_UP
+	call pcg_generate_world__generate_area_connections_add_connection
+
+	; a4p1:
+	ld a, 4
+	call pcg_generate_world__random_top_most_point_tagless
+	ret nz
+	ld (pcg_generate_world_tmp_a0p1), bc
+	ld a, 4
+	ld b, 1  ; just some random tag value
+	call pcg_generate_world__add_tag
+	
+	; confluence -> inverted pyramid:
+	ld bc, #0204
+	ld de, (pcg_generate_world_tmp_a0p1)
+	ld iyl, 3
+	ld iyh, 4
+	ld ixl, PCG_DIRECTION_DOWN
+	ld ixh, PCG_DIRECTION_UP
+	call pcg_generate_world__generate_area_connections_add_connection
+
+	; a4p2:
+	ld a, 4
+	call pcg_generate_world__random_bottom_most_point_tagless
+	ret nz
+	ld (pcg_generate_world_tmp_a0p2), bc
+	ld a, 4
+	ld b, 1  ; just some random tag value
+	call pcg_generate_world__add_tag
+	
+	; inverted pyramid -> fire shaft:
+	ld bc, (pcg_generate_world_tmp_a0p2)
+	ld de, #0001
+	ld iyl, 4
+	ld iyh, 5
+	ld ixl, PCG_DIRECTION_DOWN
+	ld ixh, PCG_DIRECTION_UP
+	call pcg_generate_world__generate_area_connections_add_connection
+
+	; a6p1:
+	ld a, 6
+	call pcg_generate_world__random_right_most_point_tagless
+	ret nz
+	ld (pcg_generate_world_tmp_a0p1), bc
+	ld a, 6
+	ld b, 1  ; just some random tag value
+	call pcg_generate_world__add_tag
+
+	; fire shaft -> caves west:
+	ld bc, #0100
+	ld de, (pcg_generate_world_tmp_a0p1)
+	ld iyl, 5
+	ld iyh, 6
+	ld ixl, PCG_DIRECTION_LEFT
+	ld ixh, PCG_DIRECTION_RIGHT
+	call pcg_generate_world__generate_area_connections_add_connection
+
+	; a7p1:
+	ld a, 7
+	call pcg_generate_world__random_left_most_point_tagless
+	ret nz
+	ld (pcg_generate_world_tmp_a0p1), bc
+	ld a, 7
+	ld b, 1  ; just some random tag value
+	call pcg_generate_world__add_tag
+
+	; fire shaft -> caves west:
+	ld bc, #0102
+	ld de, (pcg_generate_world_tmp_a0p1)
+	ld iyl, 5
+	ld iyh, 7
+	ld ixl, PCG_DIRECTION_RIGHT
+	ld ixh, PCG_DIRECTION_LEFT
+	call pcg_generate_world__generate_area_connections_add_connection
+    
+	; a8p1:
+	ld a, 8
+	call pcg_generate_world__random_top_most_point_tagless
+	ret nz
+	ld (pcg_generate_world_tmp_a0p1), bc
+	ld a, 8
+	ld b, 1  ; just some random tag value
+	call pcg_generate_world__add_tag
+
+	; fire shaft -> caves west:
+	ld bc, #0201
+	ld de, (pcg_generate_world_tmp_a0p1)
+	ld iyl, 5
+	ld iyh, 8
+	ld ixl, PCG_DIRECTION_DOWN
+	ld ixh, PCG_DIRECTION_UP
+	call pcg_generate_world__generate_area_connections_add_connection    
+
+	; a7p3:
+	ld a, 7
+	call pcg_generate_world__random_right_most_point_tagless
+	ret nz
+	ld (pcg_generate_world_tmp_a0p1), bc
+	ld a, 7
+	ld b, 1  ; just some random tag value
+	call pcg_generate_world__add_tag
+
+	; a9p1:
+	ld a, 9
+	call pcg_generate_world__random_bottom_left_most_point
+	ret nz
+	ld (pcg_generate_world_tmp_a1p1), bc
+	ld a, 9
+	ld b, 1  ; just some random tag value
+	call pcg_generate_world__add_tag
+
+	; caves east -> atlantis:
+	ld bc, (pcg_generate_world_tmp_a0p1)
+	ld de, (pcg_generate_world_tmp_a1p1)
+	ld iyl, 7
+	ld iyh, 9
+	ld ixl, PCG_DIRECTION_RIGHT
+	ld ixh, PCG_DIRECTION_LEFT
+	call pcg_generate_world__generate_area_connections_add_connection    
+
+	; a8p2:
+	ld a, 8
+	call pcg_generate_world__random_top_most_point_tagless
+	ret nz
+	ld (pcg_generate_world_tmp_a1p2), bc
+	ld a, 8
+	ld b, 1  ; just some random tag value
+	call pcg_generate_world__add_tag
+
+	call random_a
+	and #01
+	jr nz, pcg_generate_world__generate_area_connections_connection_to_east_caves	
+pcg_generate_world__generate_area_connections_connection_to_west_caves:
+	; a6p2:
+	ld a, 6
+	call pcg_generate_world__random_bottom_most_point_tagless
+	ret nz
+	ld (pcg_generate_world_tmp_a2p2), bc
+	ld a, 6
+	ld b, 1  ; just some random tag value
+	call pcg_generate_world__add_tag
+
+	; caves west -> xibalba:
+	ld bc, (pcg_generate_world_tmp_a2p2)
+	ld de, (pcg_generate_world_tmp_a1p2)
+	ld iyl, 6
+	ld iyh, 8
+	ld ixl, PCG_DIRECTION_DOWN
+	ld ixh, PCG_DIRECTION_UP
+	call pcg_generate_world__generate_area_connections_add_connection
+
+	jr pcg_generate_world__generate_area_connections_connection_to_caves_done
+pcg_generate_world__generate_area_connections_connection_to_east_caves:
+	; a7p2:
+	ld a, 7
+	call pcg_generate_world__random_bottom_most_point_tagless
+	ret nz
+	ld (pcg_generate_world_tmp_a2p2), bc
+	ld a, 7
+	ld b, 1  ; just some random tag value
+	call pcg_generate_world__add_tag
+
+	; caves west -> xibalba:
+	ld bc, (pcg_generate_world_tmp_a2p2)
+	ld de, (pcg_generate_world_tmp_a1p2)
+	ld iyl, 7
+	ld iyh, 8
+	ld ixl, PCG_DIRECTION_DOWN
+	ld ixh, PCG_DIRECTION_UP
+pcg_generate_world__generate_area_connections_connection_to_caves_done:
+
+	ld hl, (tmp_pcg_world__tmp_ptr)
+	ld (hl), #ff  ; sentinel
 
 	; clear the tags again:
 	ld hl, tmp_pcg_world__tags
 	ld bc, MAX_AREA_SIZE * MAX_WORLD_AREAS * 2 - 1
-	jp clear_memory
+	call clear_memory
+
+	xor a  ; z
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - iyl: area 1
+; - iyl: area 2
+; - c, b: x1, y1
+; - e, d: x2, y2
+; - ixl: direction1
+; - ixh: direction2
+pcg_generate_world__generate_area_connections_add_connection:
+	ld hl, (tmp_pcg_world__tmp_ptr)
+	; - each connection is 8 bytes: areaID1, areaID2, x1, y1, direction1, x2, y2, direction2 (coordinates are in chunks)
+	ld a, iyl
+	ld (hl), a
+	inc hl
+	ld a, iyh
+	ld (hl), a
+	inc hl
+	ld a, ixl
+	call pcg_generate_world__generate_area_connections_add_connection_random_chunk
+	ld (hl), c
+	inc hl
+	ld (hl), b
+	inc hl
+	ld a, ixl
+	ld (hl), a
+	inc hl
+	ld c, e
+	ld b, d
+	ld a, ixh
+	call pcg_generate_world__generate_area_connections_add_connection_random_chunk
+	ld (hl), c
+	inc hl
+	ld (hl), b
+	inc hl
+	ld a, ixh
+	ld (hl), a
+	inc hl
+	ld (tmp_pcg_world__tmp_ptr), hl
+	ret
+
+
+pcg_generate_world__generate_area_connections_add_connection_random_chunk:
+	cp PCG_DIRECTION_LEFT
+	jr z, pcg_generate_world__generate_area_connections_add_connection_random_chunk_left
+	cp PCG_DIRECTION_UP
+	jr z, pcg_generate_world__generate_area_connections_add_connection_random_chunk_up
+	cp PCG_DIRECTION_RIGHT
+	jr z, pcg_generate_world__generate_area_connections_add_connection_random_chunk_right
+pcg_generate_world__generate_area_connections_add_connection_random_chunk_down:
+	call random_a
+	and #01
+	add a, c
+	add a, c
+	ld c, a
+	ld a, b
+	add a, a
+	inc a
+	ld b, a
+	ret
+pcg_generate_world__generate_area_connections_add_connection_random_chunk_up:
+	call random_a
+	and #01
+	add a, c
+	add a, c
+	ld c, a
+	ld a, b
+	add a, a
+	ld b, a
+	ret
+pcg_generate_world__generate_area_connections_add_connection_random_chunk_left:
+	ld a, c
+	add a, c
+	ld c, a
+	call random_a
+	and #01
+	add a, b
+	add a, b
+	ld b, a
+	ret
+pcg_generate_world__generate_area_connections_add_connection_random_chunk_right:
+	ld a, c
+	add a, c
+	inc a
+	ld c, a
+	call random_a
+	and #01
+	add a, b
+	add a, b
+	ld b, a
+	ret
 
 
 ;-----------------------------------------------
@@ -789,7 +1137,6 @@ pcg_generate_world__random_bottom_most_point_tagless_ptrs_loop_done:
 	; - c, b: area width, height
 	ld ixl, c
 	ld ixh, b
-	dec ixh  ; ixh = height - 1
 
 	; find candidates:
 	ld iy, tmp_pcg_world__candidates_list
@@ -803,15 +1150,17 @@ pcg_generate_world__random_bottom_most_point_tagless_candidates_loop_x:
 		jr z, pcg_generate_world__random_bottom_most_point_tagless_candidates_loop_x_next
 		; there is a room here:
 		ld a, b
-		cp ixh
+		cp 1  ; are we at the bottom
 		jr z, pcg_generate_world__random_bottom_most_point_tagless_candidates_loop_x_continue
 		; is there a room below?
 		push bc
+		push hl
 			ld b, 0
 			ld c, ixl
 			add hl, bc
 			ld a, (hl)
 			inc a  ; cp #ff
+		pop hl
 		pop bc
 		jr nz, pcg_generate_world__random_bottom_most_point_tagless_candidates_loop_x_next  ; not a bottom room
 pcg_generate_world__random_bottom_most_point_tagless_candidates_loop_x_continue:
@@ -826,7 +1175,6 @@ pcg_generate_world__random_bottom_most_point_tagless_candidates_loop_x_continue:
 		ld (iy), a  ; x
 		ld a, b
 		sub ixh
-		dec a
 		neg
 		ld (iy + 1), a  ; y
 		inc iy
@@ -843,6 +1191,7 @@ pcg_generate_world__random_bottom_most_point_tagless_candidates_loop_x_next:
 	pop bc
 	djnz pcg_generate_world__random_bottom_most_point_tagless_candidates_loop_y
 
+pcg_generate_world__random_bottom_most_point_tagless_sample:
 	; choose one at random:
 	ld a, (tmp_pcg_world__candidates_list_size)
 	or a
@@ -866,6 +1215,7 @@ pcg_generate_world__random_bottom_most_point_tagless_candidates_final_loop:
 pcg_generate_world__random_bottom_most_point_tagless_candidates_final_loop_done:
 	ld b, (hl)  ; recover y
 	ld l, a  ; l = offset (x + y * width)
+	xor a  ; z
 	ret
 pcg_generate_world__random_bottom_most_point_tagless_fail:
 	or 1
@@ -874,13 +1224,368 @@ pcg_generate_world__random_bottom_most_point_tagless_fail:
 
 ;-----------------------------------------------
 ; input:
+; - a: target area
+; output:
+; - c, b: x, y coordinates of the point
+; - l: offset (x + y * width)
+; - z: found
+; - nz: no point found
+pcg_generate_world__random_top_most_point_tagless:
+	; get divisions and tags ptrs:
+	; - tags: tmp_pcg_world__tags + MAX_AREA_SIZE * 2 * a 
+	; - divisions: current_world__area_data + WORLD_AREA__SIZE * a + 4 + 1 + 1 + 1 + MAX_AREA_SIZE
+	ld de, tmp_pcg_world__tags
+	ld hl, current_world__area_data + 4 + 1
+	or a
+	jr z, pcg_generate_world__random_top_most_point_tagless_ptrs_loop_done
+pcg_generate_world__random_top_most_point_tagless_ptrs_loop:
+	ld bc, WORLD_AREA__SIZE
+	add hl, bc
+	ex hl, de
+		ld bc, MAX_AREA_SIZE * 2
+		add hl, bc
+	ex hl, de
+	dec a
+	jr nz, pcg_generate_world__random_top_most_point_tagless_ptrs_loop
+pcg_generate_world__random_top_most_point_tagless_ptrs_loop_done:
+	ld c, (hl)
+	inc hl
+	ld b, (hl)
+	push bc
+		ld bc, MAX_AREA_SIZE + 1
+		add hl, bc
+	pop bc
+	; Here:
+	; - hl: ptr to divisions
+	; - de: ptr to tags
+	; - c, b: area width, height
+	ld ixl, c
+	ld ixh, b
+
+	; find candidates:
+	ld iy, tmp_pcg_world__candidates_list
+	xor a
+	ld (tmp_pcg_world__candidates_list_size), a
+pcg_generate_world__random_top_most_point_tagless_candidates_loop_y:
+	push bc
+pcg_generate_world__random_top_most_point_tagless_candidates_loop_x:
+		ld a, (hl)
+		inc a  ; cp #ff
+		jr z, pcg_generate_world__random_top_most_point_tagless_candidates_loop_x_next
+		; there is a room here:
+		ld a, b
+		cp ixh  ; are we at the top of the map?
+		jr z, pcg_generate_world__random_top_most_point_tagless_candidates_loop_x_continue
+		; is there a room above?
+		push bc
+		push hl
+			ld b, 0
+			ld c, ixl
+			or a
+			sbc hl, bc
+			ld a, (hl)
+			inc a  ; cp #ff
+		pop hl
+		pop bc
+		jr nz, pcg_generate_world__random_top_most_point_tagless_candidates_loop_x_next  ; not a top room
+pcg_generate_world__random_top_most_point_tagless_candidates_loop_x_continue:
+		; potential candidate, just check if it's tagless:
+		ld a, (de)
+		or a
+		jr nz, pcg_generate_world__random_top_most_point_tagless_candidates_loop_x_next
+		; add a candidate:
+		ld a, c
+		sub ixl
+		neg
+		ld (iy), a  ; x
+		ld a, b
+		sub ixh
+		neg
+		ld (iy + 1), a  ; y
+		inc iy
+		inc iy
+		ld a, (tmp_pcg_world__candidates_list_size)
+		inc a
+		ld (tmp_pcg_world__candidates_list_size), a
+pcg_generate_world__random_top_most_point_tagless_candidates_loop_x_next:
+		inc hl
+		inc de
+		inc de
+		dec c
+		jr nz, pcg_generate_world__random_top_most_point_tagless_candidates_loop_x
+	pop bc
+	djnz pcg_generate_world__random_top_most_point_tagless_candidates_loop_y
+	jp pcg_generate_world__random_bottom_most_point_tagless_sample
+
+
+;-----------------------------------------------
+; input:
+; - a: target area
+; output:
+; - c, b: x, y coordinates of the point
+; - l: offset (x + y * width)
+; - z: found
+; - nz: no point found
+pcg_generate_world__random_left_most_point_tagless:
+	; get divisions and tags ptrs:
+	; - tags: tmp_pcg_world__tags + MAX_AREA_SIZE * 2 * a 
+	; - divisions: current_world__area_data + WORLD_AREA__SIZE * a + 4 + 1 + 1 + 1 + MAX_AREA_SIZE
+	ld de, tmp_pcg_world__tags
+	ld hl, current_world__area_data + 4 + 1
+	or a
+	jr z, pcg_generate_world__random_left_most_point_tagless_ptrs_loop_done
+pcg_generate_world__random_left_most_point_tagless_ptrs_loop:
+	ld bc, WORLD_AREA__SIZE
+	add hl, bc
+	ex hl, de
+		ld bc, MAX_AREA_SIZE * 2
+		add hl, bc
+	ex hl, de
+	dec a
+	jr nz, pcg_generate_world__random_left_most_point_tagless_ptrs_loop
+pcg_generate_world__random_left_most_point_tagless_ptrs_loop_done:
+	ld c, (hl)
+	inc hl
+	ld b, (hl)
+	push bc
+		ld bc, MAX_AREA_SIZE + 1
+		add hl, bc
+	pop bc
+	; Here:
+	; - hl: ptr to divisions
+	; - de: ptr to tags
+	; - c, b: area width, height
+	ld ixl, c
+	ld ixh, b
+
+	; find candidates:
+	ld iy, tmp_pcg_world__candidates_list
+	xor a
+	ld (tmp_pcg_world__candidates_list_size), a
+pcg_generate_world__random_left_most_point_tagless_candidates_loop_y:
+	push bc
+pcg_generate_world__random_left_most_point_tagless_candidates_loop_x:
+		ld a, (hl)
+		inc a  ; cp #ff
+		jr z, pcg_generate_world__random_left_most_point_tagless_candidates_loop_x_next
+		; there is a room here:
+		ld a, c
+		cp ixl  ; are we at the left-most of the map?
+		jr z, pcg_generate_world__random_left_most_point_tagless_candidates_loop_x_continue
+		; is there a room to the left
+		dec hl
+		ld a, (hl)
+		inc hl
+		inc a  ; cp #ff
+		jr nz, pcg_generate_world__random_left_most_point_tagless_candidates_loop_x_next  ; not a top room
+pcg_generate_world__random_left_most_point_tagless_candidates_loop_x_continue:
+		; potential candidate, just check if it's tagless:
+		ld a, (de)
+		or a
+		jr nz, pcg_generate_world__random_left_most_point_tagless_candidates_loop_x_next
+		; add a candidate:
+		ld a, c
+		sub ixl
+		neg
+		ld (iy), a  ; x
+		ld a, b
+		sub ixh
+		neg
+		ld (iy + 1), a  ; y
+		inc iy
+		inc iy
+		ld a, (tmp_pcg_world__candidates_list_size)
+		inc a
+		ld (tmp_pcg_world__candidates_list_size), a
+pcg_generate_world__random_left_most_point_tagless_candidates_loop_x_next:
+		inc hl
+		inc de
+		inc de
+		dec c
+		jr nz, pcg_generate_world__random_left_most_point_tagless_candidates_loop_x
+	pop bc
+	djnz pcg_generate_world__random_left_most_point_tagless_candidates_loop_y
+	jp pcg_generate_world__random_bottom_most_point_tagless_sample
+
+
+;-----------------------------------------------
+; input:
+; - a: target area
+; output:
+; - c, b: x, y coordinates of the point
+; - l: offset (x + y * width)
+; - z: found
+; - nz: no point found
+pcg_generate_world__random_right_most_point_tagless:
+	; get divisions and tags ptrs:
+	; - tags: tmp_pcg_world__tags + MAX_AREA_SIZE * 2 * a 
+	; - divisions: current_world__area_data + WORLD_AREA__SIZE * a + 4 + 1 + 1 + 1 + MAX_AREA_SIZE
+	ld de, tmp_pcg_world__tags
+	ld hl, current_world__area_data + 4 + 1
+	or a
+	jr z, pcg_generate_world__random_right_most_point_tagless_ptrs_loop_done
+pcg_generate_world__random_right_most_point_tagless_ptrs_loop:
+	ld bc, WORLD_AREA__SIZE
+	add hl, bc
+	ex hl, de
+		ld bc, MAX_AREA_SIZE * 2
+		add hl, bc
+	ex hl, de
+	dec a
+	jr nz, pcg_generate_world__random_right_most_point_tagless_ptrs_loop
+pcg_generate_world__random_right_most_point_tagless_ptrs_loop_done:
+	ld c, (hl)
+	inc hl
+	ld b, (hl)
+	push bc
+		ld bc, MAX_AREA_SIZE + 1
+		add hl, bc
+	pop bc
+	; Here:
+	; - hl: ptr to divisions
+	; - de: ptr to tags
+	; - c, b: area width, height
+	ld ixl, c
+	ld ixh, b
+
+	; find candidates:
+	ld iy, tmp_pcg_world__candidates_list
+	xor a
+	ld (tmp_pcg_world__candidates_list_size), a
+pcg_generate_world__random_right_most_point_tagless_candidates_loop_y:
+	push bc
+pcg_generate_world__random_right_most_point_tagless_candidates_loop_x:
+		ld a, (hl)
+		inc a  ; cp #ff
+		jr z, pcg_generate_world__random_right_most_point_tagless_candidates_loop_x_next
+		; there is a room here:
+		ld a, c
+		cp 1  ; are we at the right-most of the map?
+		jr z, pcg_generate_world__random_right_most_point_tagless_candidates_loop_x_continue
+		; is there a room to the right
+		inc hl
+		ld a, (hl)
+		dec hl
+		inc a  ; cp #ff
+		jr nz, pcg_generate_world__random_right_most_point_tagless_candidates_loop_x_next  ; not a top room
+pcg_generate_world__random_right_most_point_tagless_candidates_loop_x_continue:
+		; potential candidate, just check if it's tagless:
+		ld a, (de)
+		or a
+		jr nz, pcg_generate_world__random_right_most_point_tagless_candidates_loop_x_next
+		; add a candidate:
+		ld a, c
+		sub ixl
+		neg
+		ld (iy), a  ; x
+		ld a, b
+		sub ixh
+		neg
+		ld (iy + 1), a  ; y
+		inc iy
+		inc iy
+		ld a, (tmp_pcg_world__candidates_list_size)
+		inc a
+		ld (tmp_pcg_world__candidates_list_size), a
+pcg_generate_world__random_right_most_point_tagless_candidates_loop_x_next:
+		inc hl
+		inc de
+		inc de
+		dec c
+		jr nz, pcg_generate_world__random_right_most_point_tagless_candidates_loop_x
+	pop bc
+	djnz pcg_generate_world__random_right_most_point_tagless_candidates_loop_y
+	jp pcg_generate_world__random_bottom_most_point_tagless_sample
+
+
+;-----------------------------------------------:
+; input:
+; - a: target area
+; output:
+; - c, b: x, y coordinates of the point
+; - l: offset (x + y * width)
+; - z: found
+; - nz: no point found
+pcg_generate_world__random_bottom_left_most_point:
+	; get divisions ptr:
+	; - divisions: current_world__area_data + WORLD_AREA__SIZE * a + 4 + 1 + 1 + 1 + MAX_AREA_SIZE
+	ld hl, current_world__area_data + 4 + 1
+	or a
+	jr z, pcg_generate_world__random_bottom_left_most_point_ptrs_loop_done
+pcg_generate_world__random_bottom_left_most_point_ptrs_loop:
+	ld bc, WORLD_AREA__SIZE
+	add hl, bc
+	dec a
+	jr nz, pcg_generate_world__random_bottom_left_most_point_ptrs_loop
+pcg_generate_world__random_bottom_left_most_point_ptrs_loop_done:
+	ld c, (hl)
+	inc hl
+	ld b, (hl)
+	push bc
+		ld bc, MAX_AREA_SIZE + 1
+		add hl, bc
+	pop bc
+	; Here:
+	; - hl: ptr to divisions
+	; - c, b: area width, height
+	ld ixl, c
+	ld ixh, b
+
+	; find first match in every map row, and keep the last:
+	ld iy, #0000
+pcg_generate_world__random_bottom_left_most_point_candidates_loop_y:
+	push bc
+pcg_generate_world__random_bottom_left_most_point_candidates_loop_x:
+		ld a, (hl)
+		inc a  ; cp #ff
+		jr z, pcg_generate_world__random_bottom_left_most_point_candidates_loop_x_next
+		; there is a room here:
+		ld a, c
+		sub ixl
+		neg
+		ld iyl, a  ; x
+		ld a, b
+		sub ixh
+		neg
+		ld iyh, a  ; y
+		; next row:
+		ld b, 0
+		add hl, bc
+		jr pcg_generate_world__random_bottom_left_most_point_candidates_loop_y_next
+pcg_generate_world__random_bottom_left_most_point_candidates_loop_x_next:
+		inc hl
+		dec c
+		jr nz, pcg_generate_world__random_bottom_left_most_point_candidates_loop_x
+pcg_generate_world__random_bottom_left_most_point_candidates_loop_y_next:
+	pop bc
+	djnz pcg_generate_world__random_bottom_left_most_point_candidates_loop_y
+	ld c, iyl
+	ld b, iyh
+
+	ld a, b
+	or a
+	ld a, c
+	jr z, pcg_generate_world__random_bottom_left_most_point_final_loop_done
+pcg_generate_world__random_bottom_left_most_point_final_loop:
+	add a, ixl
+	djnz pcg_generate_world__random_bottom_left_most_point_final_loop
+pcg_generate_world__random_bottom_left_most_point_final_loop_done:
+	ld b, iyh
+	ld l, a  ; l = offset (x + y * width)
+	xor a  ; z
+	ret
+
+
+;-----------------------------------------------
+; input:
 ; - a: area
 ; - b: tag
-; - c: offset
+; - l: offset
 ; output:
 ; - z: success
 ; - nz: failure
 pcg_generate_world__add_tag:
+	ld c, l
 	ld hl, tmp_pcg_world__tags
 	or a
 	jr z, pcg_generate_world__add_tag_loop_done
@@ -909,7 +1614,18 @@ pcg_generate_world__add_tag_found_spot:
 
 ;-----------------------------------------------
 pcg_generate_world__generate_spanning_tree:
-	; ...
+	ld hl, tmp_pcg_world__area_0_connections
+	ld b, MAX_WORLD_AREAS
+pcg_generate_world__generate_spanning_tree_loop:
+	push bc
+		push hl
+			ld bc, MAX_AREA_SIZE - 1
+			call clear_memory
+		pop hl
+		ld bc, WORLD_AREA__SIZE
+		add hl, bc
+	pop bc
+	djnz pcg_generate_world__generate_spanning_tree_loop
 	ret
 
 
@@ -922,6 +1638,36 @@ pcg_generate_world__generate_mission:
 ;-----------------------------------------------
 pcg_generate_world__spawn_additional_objects:
 	; ...
+	ret
+
+
+;-----------------------------------------------
+pcg_generate_world__generate_tag_data:
+	ld hl, tmp_pcg_world__area_0_tags
+	ld b, MAX_WORLD_AREAS
+
+pcg_generate_world__generate_tag_data_loop:
+	push bc
+		push hl
+			ld bc, MAX_AREA_N_TAGS * 3 - 1
+			call clear_memory
+		pop hl
+		ld bc, WORLD_AREA__SIZE
+		add hl, bc
+	pop bc
+	djnz pcg_generate_world__generate_tag_data_loop
+
+	; chest content:
+	ld hl, current_world__chest_content
+	ld bc, MAX_CHESTS * 2
+	ld a, #ff
+	call clear_memory_a
+
+	; extra shop items:
+	ld hl, current_world__shop_extra_items
+	ld (hl), 0
+	inc hl
+	ld (hl), 0
 	ret
 
 

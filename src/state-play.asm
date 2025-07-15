@@ -141,7 +141,7 @@ pcg_debug_end:
 		call call_hl_in_page_c_8000
 
 		; generate room:
-		ld e, START_ROOM_ID
+		ld e, 0  ; START_ROOM_ID
 ; 		ld e, 17
 ; 		ld e, 26
 ; 		ld e, 0

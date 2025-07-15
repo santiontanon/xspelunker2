@@ -424,6 +424,7 @@ public class PCGWorld {
     
     public boolean generateInterAreaConnections(World w) throws Exception
     {
+//        System.out.println("seed: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
         // Hardcoded area connections:
         AreaPoint a0p1 = randomAreaBottomMostPoint(w.areas.get(0), true);
         if (a0p1 == null) return false;
@@ -443,59 +444,75 @@ public class PCGWorld {
         if (a1p1 == null) return false;
         a1p1.direction = DIRECTION_UP;
         addTag(a1p1, "connection", null);
+        w.interAreaconnections.add(new InterAreaConnection(a0p1, a1p1, InterAreaConnection.BIDIRECTIONAL, r));
+
+        AreaPoint a2p1 = randomAreaTopMostPoint(w.areas.get(2), true);
+        if (a2p1 == null) return false;
+        a2p1.direction = DIRECTION_UP;
+        addTag(a2p1, "connection", null);        
+        w.interAreaconnections.add(new InterAreaConnection(a0p2, a2p1, InterAreaConnection.BIDIRECTIONAL, r));
+
         AreaPoint a1p2 = randomAreaBottomMostPoint(w.areas.get(1), true);
         if (a1p2 == null) return false;
         a1p2.direction = DIRECTION_DOWN;
         addTag(a1p2, "connection", null);
         
-        AreaPoint a2p1 = randomAreaTopMostPoint(w.areas.get(2), true);
-        if (a2p1 == null) return false;
-        a2p1.direction = DIRECTION_UP;
-        addTag(a2p1, "connection", null);
         AreaPoint a2p2 = randomAreaBottomMostPoint(w.areas.get(2), true);
         if (a2p2 == null) return false;
         a2p2.direction = DIRECTION_DOWN;
         addTag(a2p2, "connection", null);
+        
+        w.interAreaconnections.add(new InterAreaConnection(a1p2, new AreaPoint(w.areas.get(3), 0, 0, DIRECTION_UP), InterAreaConnection.BIDIRECTIONAL, r));
+        w.interAreaconnections.add(new InterAreaConnection(a2p2, new AreaPoint(w.areas.get(3), 8, 0, DIRECTION_UP), InterAreaConnection.BIDIRECTIONAL, r));
 
+//        System.out.println("seed: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+        
         AreaPoint a4p1 = randomAreaTopMostPoint(w.areas.get(4), true);
         if (a4p1 == null) return false;
         a4p1.direction = DIRECTION_UP;
         addTag(a4p1, "connection", null);
+        w.interAreaconnections.add(new InterAreaConnection(new AreaPoint(w.areas.get(3), 4, 2, DIRECTION_DOWN), a4p1, InterAreaConnection.BIDIRECTIONAL, r));
+
         AreaPoint a4p2 = randomAreaBottomMostPoint(w.areas.get(4), true);
         if (a4p2 == null) return false;
         a4p2.direction = DIRECTION_DOWN;
         addTag(a4p2, "connection", null);
-
+        w.interAreaconnections.add(new InterAreaConnection(a4p2, new AreaPoint(w.areas.get(5), 1, 0, DIRECTION_UP), InterAreaConnection.BIDIRECTIONAL, r));
+        
         AreaPoint a6p1 = randomAreaRightMostPoint(w.areas.get(6), true);
         if (a6p1 == null) return false;
         a6p1.direction = DIRECTION_RIGHT;
         addTag(a6p1, "connection", null);
-        AreaPoint a6p2 = null;
+        w.interAreaconnections.add(new InterAreaConnection(new AreaPoint(w.areas.get(5), 0, 1, DIRECTION_LEFT), a6p1, InterAreaConnection.BIDIRECTIONAL, r));
 
         AreaPoint a7p1 = randomAreaLeftMostPoint(w.areas.get(7), true);
         if (a7p1 == null) return false;
         a7p1.direction = DIRECTION_LEFT;
-        addTag(a7p1, "connection", null);
-        AreaPoint a7p2 = null;
-        AreaPoint a7p3 = randomAreaRightMostPoint(w.areas.get(7), true);
-        if (a7p3 == null) return false;
-        a7p3.direction = DIRECTION_RIGHT;
-        addTag(a7p3, "connection", null);
-
+        addTag(a7p1, "connection", null);        
+        w.interAreaconnections.add(new InterAreaConnection(new AreaPoint(w.areas.get(5), 2, 1, DIRECTION_RIGHT), a7p1, InterAreaConnection.BIDIRECTIONAL, r));
+        
         AreaPoint a8p1 = randomAreaTopMostPoint(w.areas.get(8), true);
         if (a8p1 == null) return false;
         a8p1.direction = DIRECTION_UP;
         addTag(a8p1, "connection", null);
+        w.interAreaconnections.add(new InterAreaConnection(new AreaPoint(w.areas.get(5), 1, 2, DIRECTION_DOWN), a8p1, InterAreaConnection.BIDIRECTIONAL, r));
+        
+        AreaPoint a7p3 = randomAreaRightMostPoint(w.areas.get(7), true);
+        if (a7p3 == null) return false;
+        a7p3.direction = DIRECTION_RIGHT;
+        addTag(a7p3, "connection", null);    
+        AreaPoint a9p1 = areaBottomLeftMostPoint(w.areas.get(9), true);
+        if (a9p1 == null) return false;
+        a9p1.direction = DIRECTION_LEFT;
+        addTag(a9p1, "connection", null);        
+        w.interAreaconnections.add(new InterAreaConnection(a7p3, a9p1, InterAreaConnection.BIDIRECTIONAL, r));
+        
         AreaPoint a8p2 = randomAreaTopMostPoint(w.areas.get(8), true);
         if (a8p2 == null) return false;
         a8p2.direction = DIRECTION_UP;
         addTag(a8p2, "connection", null);
-        
-        AreaPoint a9p1 = areaBottomLeftMostPoint(w.areas.get(9), true);
-        if (a9p1 == null) return false;
-        a9p1.direction = DIRECTION_LEFT;
-        addTag(a9p1, "connection", null);
-        
+        AreaPoint a6p2 = null;
+        AreaPoint a7p2 = null;
         if (r.nextBoolean()) {
             // connect caves left to fire temple:
             a6p2 = randomAreaBottomMostPoint(w.areas.get(6), true);
@@ -507,17 +524,6 @@ public class PCGWorld {
             if (a7p2 == null) return false;
             a7p2.direction = DIRECTION_DOWN;
         }
-        
-        w.interAreaconnections.add(new InterAreaConnection(a0p1, a1p1, InterAreaConnection.BIDIRECTIONAL, r));
-        w.interAreaconnections.add(new InterAreaConnection(a0p2, a2p1, InterAreaConnection.BIDIRECTIONAL, r));
-        w.interAreaconnections.add(new InterAreaConnection(a1p2, new AreaPoint(w.areas.get(3), 0, 0, DIRECTION_UP), InterAreaConnection.BIDIRECTIONAL, r));
-        w.interAreaconnections.add(new InterAreaConnection(a2p2, new AreaPoint(w.areas.get(3), 8, 0, DIRECTION_UP), InterAreaConnection.BIDIRECTIONAL, r));
-        w.interAreaconnections.add(new InterAreaConnection(new AreaPoint(w.areas.get(3), 4, 2, DIRECTION_DOWN), a4p1, InterAreaConnection.BIDIRECTIONAL, r));
-        w.interAreaconnections.add(new InterAreaConnection(a4p2, new AreaPoint(w.areas.get(5), 1, 0, DIRECTION_UP), InterAreaConnection.BIDIRECTIONAL, r));
-        w.interAreaconnections.add(new InterAreaConnection(new AreaPoint(w.areas.get(5), 0, 1, DIRECTION_LEFT), a6p1, InterAreaConnection.BIDIRECTIONAL, r));
-        w.interAreaconnections.add(new InterAreaConnection(new AreaPoint(w.areas.get(5), 2, 1, DIRECTION_RIGHT), a7p1, InterAreaConnection.BIDIRECTIONAL, r));
-        w.interAreaconnections.add(new InterAreaConnection(new AreaPoint(w.areas.get(5), 1, 2, DIRECTION_DOWN), a8p1, InterAreaConnection.BIDIRECTIONAL, r));
-        w.interAreaconnections.add(new InterAreaConnection(a7p3, a9p1, InterAreaConnection.BIDIRECTIONAL, r));
         if (a6p2 != null) {
             w.interAreaconnections.add(new InterAreaConnection(a6p2, a8p2, InterAreaConnection.BIDIRECTIONAL, r));
         }
@@ -1553,21 +1559,26 @@ public class PCGWorld {
     
     public AreaPoint randomAreaLeftMostPoint(Area a, boolean tagLess) throws Exception
     {
-        int attempts = 100;
-        while(attempts > 0) {
-            int y = r.nextInt(a.height);
-            for(int x = 0;x<a.width ;x++) {
-                if ((x == 0 || a.rooms[x - 1][y] < 0) && a.rooms[x][y] >= 0) {
-                    if (!tagLess || (a.tags[x][y] == null || a.tags[x][y].isEmpty())) {
-                        return new AreaPoint(a, x, y);
-                    } else {
-                        break;
+        List<AreaPoint> candidates = new ArrayList<>();
+        for(int i = 0;i<a.height;i++) {
+            for(int j = 0;j<a.width;j++) {
+                if (a.rooms[j][i] >= 0 && (j == 0 || a.rooms[j-1][i] < 0)) {
+                    if (a.tags[j][i] == null || a.tags[j][i].isEmpty() || !tagLess) {
+                        candidates.add(new AreaPoint(a, j, i));
                     }
                 }
             }
-            attempts--;
         }
-        return null;
+       
+        if (candidates.isEmpty()) {
+            return null;
+        }
+//        System.out.println("randomAreaLeftMostPoint: " + candidates);
+//        System.out.println("  seed: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+        int choice = r.nextInt(candidates.size());
+//        System.out.println("  choice: " + choice);
+//        System.out.println("  randomAreaLeftMostPoint: " + candidates.get(choice));
+        return candidates.get(choice);
     }
     
     
@@ -1592,41 +1603,51 @@ public class PCGWorld {
 
     public AreaPoint randomAreaRightMostPoint(Area a, boolean tagLess) throws Exception
     {
-        int attempts = 100;
-        while(attempts > 0) {
-            int y = r.nextInt(a.height);
-            for(int x = a.width - 1;x>0;x--) {
-                if (a.rooms[x][y] >= 0) {
-                    if (!tagLess || (a.tags[x][y] == null || a.tags[x][y].isEmpty())) {
-                        return new AreaPoint(a, x, y);
-                    } else {
-                        break;
+        List<AreaPoint> candidates = new ArrayList<>();
+        for(int i = 0;i<a.height;i++) {
+            for(int j = 0;j<a.width;j++) {
+                if (a.rooms[j][i] >= 0 && (j == a.width-1 || a.rooms[j+1][i] < 0)) {
+                    if (a.tags[j][i] == null || a.tags[j][i].isEmpty() || !tagLess) {
+                        candidates.add(new AreaPoint(a, j, i));
                     }
                 }
             }
-            attempts--;
         }
-        return null;
+       
+        if (candidates.isEmpty()) {
+            return null;
+        }
+//        System.out.println("randomAreaRightMostPoint: " + candidates);
+//        System.out.println("  seed: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+        int choice = r.nextInt(candidates.size());
+//        System.out.println("  choice: " + choice);
+//        System.out.println("  randomAreaRightMostPoint: " + candidates.get(choice));
+        return candidates.get(choice);        
     }
 
 
     public AreaPoint randomAreaTopMostPoint(Area a, boolean tagLess) throws Exception
     {
-        int attempts = 100;
-        while(attempts > 0) {
-            int x = r.nextInt(a.width);
-            for(int y = 0;y<a.height ;y++) {
-                if (a.rooms[x][y] >= 0) {
-                    if (!tagLess || (a.tags[x][y] == null || a.tags[x][y].isEmpty())) {
-                        return new AreaPoint(a, x, y);
-                    } else {
-                        break;
+        List<AreaPoint> candidates = new ArrayList<>();
+        for(int i = 0;i<a.height;i++) {
+            for(int j = 0;j<a.width;j++) {
+                if (a.rooms[j][i] >= 0 && (i == 0 || a.rooms[j][i-1] < 0)) {
+                    if (a.tags[j][i] == null || a.tags[j][i].isEmpty() || !tagLess) {
+                        candidates.add(new AreaPoint(a, j, i));
                     }
                 }
             }
-            attempts--;
         }
-        return null;
+       
+        if (candidates.isEmpty()) {
+            return null;
+        }
+//        System.out.println("randomAreaTopMostPoint ("+a.ID+"): " + candidates);
+//        System.out.println("  seed: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+        int choice = r.nextInt(candidates.size());
+//        System.out.println("  choice: " + choice);
+//        System.out.println("  randomAreaTopMostPoint: " + candidates.get(choice));
+        return candidates.get(choice);        
     }
     
 
@@ -1646,7 +1667,12 @@ public class PCGWorld {
         if (candidates.isEmpty()) {
             return null;
         }
-        return candidates.get(r.nextInt(candidates.size()));
+//        System.out.println("randomAreaBottomMostPoint: " + candidates);
+//        System.out.println("  seed: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+        int choice = r.nextInt(candidates.size());
+//        System.out.println("  choice: " + choice);
+//        System.out.println("  randomAreaBottomMostPoint: " + candidates.get(choice));
+        return candidates.get(choice);
     }
     
     

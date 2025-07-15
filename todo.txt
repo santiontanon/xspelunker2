@@ -1,14 +1,6 @@
 to do:
 
 ***- Implement PCGWorld in assembler:
-  ***- generate_area_connections: implement
-    ***- randomAreaBottomMostPoint
-    ***- randomAreaTopMostPoint
-    ***- randomAreaLeftMostPoint
-    ***- randomAreaRightMostPoint
-    ***- call them to generate the connectino locations
-    ***- fill-in current_world__interarea_connections
-  ***- generate_area_connections: verify it exactly matches Java with a couple of random seeds
   ***- generate_spanning_tree: implement (spanningTree: ID, parent, n_descendants, root point, tags (this is stored twice for convenience))
   ***- generate_spanning_tree: verify it exactly matches Java with a couple of random seeds
   ***- generate_mission: implement
@@ -16,6 +8,8 @@ to do:
   ***- if any of the methods above fail, retry world generation. Retry 4 times, and if it fails, resort to seed 0.
   ***- spawn_additional_objects: implement
   ***- pcg_generate_world__puzzles: generate tablet contents, combination solutions, trial types, and power stone numbers.
+  ***- chest content
+  ***- shop extra items
   ***- safety checks to make sure all generated levels are playable (no more than 1 tag per division, try all RNG seeds in Java, etc.), adjust # divisions needed, etc.
 
 - menus:
