@@ -555,12 +555,13 @@ public class PCGWorld {
     
     public List<AreaDivision> generateSpanningTree(World w, int startArea) throws Exception
     {
+//        System.out.println("\n\nNEW TREE\n\n");
         List<AreaDivision> tree = new ArrayList<>();
         List<Integer> IDsInTree = new ArrayList<>();
         
         AreaPoint start = randomAreaLeftMostPoint(w.areas.get(startArea), true);
         AreaDivision div = new AreaDivision(start, start.a.divisionIDs[start.x][start.y], null);
-        tree.add(div);
+        addDivisionToTree(tree, div);
         IDsInTree.add(div.divisionID);
         
         // Add the rest one by one:
@@ -568,12 +569,15 @@ public class PCGWorld {
         open.add(div);
         while(!open.isEmpty()) {
             div = open.get(r.nextInt(open.size()));
+//            System.out.println("---- pop: " + div.divisionID);
             open.remove(div);
             List<AreaPoint> neighborPoints = getDivisionNeighborPoints(w, div);
             while(!neighborPoints.isEmpty()) {
+//                System.out.println("neighborPoints: " + neighborPoints.size());
                 AreaPoint p = neighborPoints.remove(r.nextInt(neighborPoints.size()));
                 int id = p.a.divisionIDs[p.x][p.y];
                 if (!IDsInTree.contains(id)) {
+//                    System.out.println("    child: " + p.x + ", " + p.y);
                     IDsInTree.add(id);
                     AreaDivision div2 = new AreaDivision(p, id, div);
                     p.a.divisionRoot[p.x][p.y] = true;
@@ -596,6 +600,7 @@ public class PCGWorld {
 //                }
             } else {
                 a.connections[d.root.x][d.root.y] |= d.root.direction;
+                System.out.println("connection ("+d.divisionID+"->"+d.parent.divisionID+"): " + a.ID + ", " + d.root.direction + ", " + (d.root.x + d.root.y*a.width));
                 switch(d.root.direction) {
                     case DIRECTION_LEFT:
                         a.connections[d.root.x - 1][d.root.y] |= DIRECTION_RIGHT;
@@ -650,6 +655,8 @@ public class PCGWorld {
     
     public void addDivisionToTree(List<AreaDivision> tree, AreaDivision div)
     {
+//        System.out.println("addDivisionToTree: " + div.root.a.ID + ", " + div.root.x + ", " + div.root.y + ", " + (div.root.x + div.root.y*div.root.a.width) + ", " + div.root.direction);
+//        System.out.println("    divisionID: " + div.divisionID);
         tree.add(div);
         while(div.parent != null) {
             div = div.parent;
@@ -907,7 +914,7 @@ public class PCGWorld {
 //            }
 //        }
         
-        System.out.println("tagLess divisions (before): " + tagLess.size() + " / " + allAreas.size());
+//        System.out.println("tagLess divisions (before): " + tagLess.size() + " / " + allAreas.size());
      
         // lost vendor:
         {
@@ -1098,7 +1105,7 @@ public class PCGWorld {
             }
         }
         
-        System.out.println("tagLess divisions (after): " + tagLess.size());
+//        System.out.println("tagLess divisions (after): " + tagLess.size());
             
         return true;
     }
@@ -1243,7 +1250,7 @@ public class PCGWorld {
             }
             if (tmp == null) {
                 return null;
-            }            
+            }
             
             if (!connectedTree(reachable)) {
                 System.err.println("Reachable area became disconnected!");
@@ -1410,61 +1417,112 @@ public class PCGWorld {
     
     public List<AreaPoint> getDivisionNeighborPoints(World w, AreaDivision div)
     {
-        int dx[] = {-1, 0, 1, 0};
-        int dy[] = { 0,-1, 0, 1};
-        int direction[] = {DIRECTION_RIGHT, DIRECTION_DOWN, DIRECTION_LEFT, DIRECTION_UP};
-        List<Integer> neighborIDs = new ArrayList<>();
-        List<AreaPoint> neighbors = new ArrayList<>();
+//        int dx[] = {-1, 0, 1, 0};
+//        int dy[] = { 0,-1, 0, 1};
+//        int direction[] = {DIRECTION_RIGHT, DIRECTION_DOWN, DIRECTION_LEFT, DIRECTION_UP};
+//        List<Integer> neighborIDs = new ArrayList<>();
+//        List<AreaPoint> neighbors = new ArrayList<>();
+//        Area a = div.root.a;
+//        List<Integer> closed = new ArrayList<>();
+//        List<Integer> open = new ArrayList<>();
+//        open.add(div.root.x + div.root.y * a.width);
+//        while(!open.isEmpty()) {
+//            int tmp = open.remove(0);
+//            closed.add(tmp);
+//            int x = tmp % a.width;
+//            int y = tmp / a.width;
+//            for(int i = 0;i<4;i++) {
+//                int x2 = x + dx[i];
+//                int y2 = y + dy[i];
+//                if (x2 >= 0 && x2 < a.width &&
+//                    y2 >= 0 && y2 < a.height &&
+//                    a.rooms[x2][y2] >= 0) {
+//                    if (a.divisionIDs[x2][y2] == div.divisionID) {
+//                        int tmp2 = x2 + y2 * a.width;
+//                        if (!open.contains(tmp2) && !closed.contains(tmp2)) {
+//                            open.add(tmp2);
+//                        }
+//                    } else {
+//                        int id2 = a.divisionIDs[x2][y2];
+//                        if (!neighborIDs.contains(id2)) {
+//                            neighborIDs.add(id2);
+//                            neighbors.add(new AreaPoint(a, x2, y2, direction[i]));
+//                        }
+//                    }
+//                }
+//            }
+//        }
+        
+        // Alternative method, easier to implement in assembler:
         Area a = div.root.a;
-        List<Integer> closed = new ArrayList<>();
-        List<Integer> open = new ArrayList<>();
-        open.add(div.root.x + div.root.y * a.width);
-        while(!open.isEmpty()) {
-            int tmp = open.remove(0);
-            closed.add(tmp);
-            int x = tmp % a.width;
-            int y = tmp / a.width;
-            for(int i = 0;i<4;i++) {
-                int x2 = x + dx[i];
-                int y2 = y + dy[i];
-                if (x2 >= 0 && x2 < a.width &&
-                    y2 >= 0 && y2 < a.height &&
-                    a.rooms[x2][y2] >= 0) {
-                    if (a.divisionIDs[x2][y2] == div.divisionID) {
-                        int tmp2 = x2 + y2 * a.width;
-                        if (!open.contains(tmp2) && !closed.contains(tmp2)) {
-                            open.add(tmp2);
-                        }
-                    } else {
-                        int id2 = a.divisionIDs[x2][y2];
-                        if (!neighborIDs.contains(id2)) {
-                            neighborIDs.add(id2);
-                            neighbors.add(new AreaPoint(a, x2, y2, direction[i]));
-                        }
-                    }
+        List<AreaPoint> neighbors = new ArrayList<>(); 
+        for(int i = 0;i<a.height;i++) {
+            for(int j = 0;j<a.width;j++) {
+                if (a.rooms[j][i] < 0) continue;
+                if (j > 0 &&
+                    a.divisionIDs[j - 1][i] == div.divisionID &&
+                    a.divisionIDs[j][i] != div.divisionID) {
+                    neighbors.add(new AreaPoint(a, j, i, DIRECTION_LEFT));
+                    continue;
+                }
+                if (j < a.width - 1 &&
+                    a.divisionIDs[j + 1][i] == div.divisionID &&
+                    a.divisionIDs[j][i] != div.divisionID) {
+                    neighbors.add(new AreaPoint(a, j, i, DIRECTION_RIGHT));
+                    continue;
+                }
+                if (i > 0 &&
+                    a.divisionIDs[j][i - 1] == div.divisionID &&
+                    a.divisionIDs[j][i] != div.divisionID) {
+                    neighbors.add(new AreaPoint(a, j, i, DIRECTION_UP));
+                    continue;
+                }
+                if (i < a.height - 1 &&
+                    a.divisionIDs[j][i + 1] == div.divisionID &&
+                    a.divisionIDs[j][i] != div.divisionID) {
+                    neighbors.add(new AreaPoint(a, j, i, DIRECTION_DOWN));
                 }
             }
         }
+
+//        System.out.println("division: " + div.divisionID);
+//        System.out.println("neighbors:");
+//        for(AreaPoint p:neighbors) {
+//            System.out.println("    " + p + ", divisionID: " + p.a.divisionIDs[p.x][p.y]);
+//        }
+
+//        if (neighbors.size() != neighbors2.size()) {
+//            System.out.println("n1: " + neighbors.size() + "\tn2: " + neighbors2.size());
+//            System.out.println("division: " + div.divisionID);
+//            System.out.println("neighbors:");
+//            for(AreaPoint p:neighbors) {
+//                System.out.println("    " + p + ", divisionID: " + p.a.divisionIDs[p.x][p.y]);
+//            }
+//            System.out.println("neighbors2:");
+//            for(AreaPoint p:neighbors2) {
+//                System.out.println("    " + p + ", divisionID: " + p.a.divisionIDs[p.x][p.y]);
+//            }
+//        }
         
         // Only use bidirectional connections:
         for(InterAreaConnection c:w.interAreaconnections) {
             if (c.p1.a.divisionIDs[c.p1.x][c.p1.y] == div.divisionID &&
                 c.direction == InterAreaConnection.BIDIRECTIONAL) {
-                int id2 = c.p2.a.divisionIDs[c.p2.x][c.p2.y];
-                if (!neighborIDs.contains(id2)) {
-                    neighborIDs.add(id2);
-                    neighbors.add(c.p2);
+//                int id2 = c.p2.a.divisionIDs[c.p2.x][c.p2.y];
+//                if (!neighborIDs.contains(id2)) {
+//                    neighborIDs.add(id2);
+                neighbors.add(c.p2);
 //                    System.out.println("connection 1: " + c.p1.a.divisionIDs[c.p1.x][c.p1.y] + " -> " + c.p2.a.divisionIDs[c.p2.x][c.p2.y]);
-                }
+//                }
             }
             if (c.p2.a.divisionIDs[c.p2.x][c.p2.y] == div.divisionID &&
                 c.direction == InterAreaConnection.BIDIRECTIONAL) {
-                int id2 = c.p1.a.divisionIDs[c.p1.x][c.p1.y];
-                if (!neighborIDs.contains(id2)) {
-                    neighborIDs.add(id2);
-                    neighbors.add(c.p1);
+//                int id2 = c.p1.a.divisionIDs[c.p1.x][c.p1.y];
+//                if (!neighborIDs.contains(id2)) {
+//                    neighborIDs.add(id2);
+                neighbors.add(c.p1);
 //                    System.out.println("connection 2: " + c.p1.a.divisionIDs[c.p1.x][c.p1.y] + " -> " + c.p2.a.divisionIDs[c.p2.x][c.p2.y]);
-                }
+//                }
             }
         }
         

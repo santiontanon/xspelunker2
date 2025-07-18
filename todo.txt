@@ -1,11 +1,27 @@
 to do:
 
 ***- Implement PCGWorld in assembler:
-  ***- generate_spanning_tree: implement (spanningTree: ID, parent, n_descendants, root point, tags (this is stored twice for convenience))
-  ***- generate_spanning_tree: verify it exactly matches Java with a couple of random seeds
-  ***- generate_mission: implement
-  ***- generate_mission: verify it exactly matches Java with a couple of random seeds
-  ***- if any of the methods above fail, retry world generation. Retry 4 times, and if it fails, resort to seed 0.
+  ***- generate_mission:
+    ***- store where the MST for regular world, mars and moon begin and end (and size of each) during MST generation
+    ***- pick important divisions:
+      ***- start
+      ***- teleporter atlantis (+ point + tag) 
+      ***- teleporters moon/mars (+ points + tags)
+      ***- bosses
+      ***- midpoint
+      ***- ending (+ point + tag)
+      ***- ensure selected points are the same as in Java
+    ***- quests:
+      ***- QuestSpec structure
+      ***- create q1, q2, q3, q_m and q_e
+      ***- reachable area and get useable + reachable (check it matches Java)
+      ***- generateSubquests
+      ***- generate quests1 (I don't need to return "quests1", that's jusst for the solver in Java)
+      ***- quests2
+      ***- quests3
+      ***- quests4
+      ***- quests5
+    ***- verify it works
   ***- spawn_additional_objects: implement
   ***- pcg_generate_world__puzzles: generate tablet contents, combination solutions, trial types, and power stone numbers.
   ***- chest content
@@ -16,7 +32,7 @@ to do:
   - brain games screen (think of a Maya-themed way for this)
   - title screen (can go to start or options menu, to redefine keys, etc.)
   - game start screen where you choose game name, difficulty, seed, etc.
-      - procedural generation depending on a name. By default, you play in "xspelunker2" level, with difficulty "x". I might want to add a "random seed monument" somewhere in the game, that displays the current random seed in a non-obvious way (until you get the clue). If rng_seed 0 had to be used, maybe this monument should by destroyed in this seed?
+      - procedural generation depending on a name. By default, you play in "xspelunker2" level, with difficulty "x". I might want to add a "random seed monument" somewhere in the game, that displays the current random seed in a non-obvious way (until you get the clue). When a seed fails, just error out, and ask user to enter another name.
       - the first letter determines the difficulty level. So, one would choose "a walk in the park" for easy games, or "zebras all the way" for the heardest)
           - passwords tied to the name (to the random seed in particular)
   - for each difficulty, determine how to simplify the game (map sizes? enemy rates? number of puzzles? enemy aggressivity? ensure games are all playable with checks in Java)
@@ -131,14 +147,14 @@ PCGWorld:
   - randomly distribute the other division seeds
   - for each area: floodFillDivisionIDs
     - "open" list with all the seeds: start filling neighboring (picking random points from this open list as the next)
-4.- generateAreaConnections:
+3.- generateAreaConnections:
   - using "randomAreaBottomMostPoint"-like functions, pick connection points, and add to the list of "connections"
-5.- generateSpanningTree
+4.- generateSpanningTree
   - randomAreaLeftMostPoint to get the starting point/division
   - open list with that initial division
   - then iterate until open is empty, removing one at random and adding all the neighbors with "getDivisionNeighborPoints"
   - Result is a spanning tree, which could be encoded in assembler as just an array of "AreaDivision" structs
-6.- generateMission
+5.- generateMission
   - boss1, ..., boss5, midpoint, ending: sampling divisions (favoring or requiring leaves)
   - generate quest specs for boss1, 2, 3, midpoint and ending
   - generateSubquests:
@@ -151,9 +167,9 @@ PCGWorld:
   - generate quest specs for boss 4, 5
   - generateSubquests (same as before, but with different reachable/useable area)
   - set "lockKeys" to all the used locks and keys (not needed in assembler, only used for debugging)
-7.- spawnAdditionalObjects
-8.- remove "none" tags
-9.- generate tablet contents, combination solutions, trial types, and power stone numbers.
+6.- spawnAdditionalObjects
+7.- remove "none" tags
+8.- generate tablet contents, combination solutions, trial types, and power stone numbers.
 
 PCGArea:
 0.- mergeAreaRooms
