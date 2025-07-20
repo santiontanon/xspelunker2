@@ -1,32 +1,17 @@
 to do:
 
 ***- Implement PCGWorld in assembler:
-  ***- generate_mission:
-    ***- store where the MST for regular world, mars and moon begin and end (and size of each) during MST generation
-    ***- pick important divisions:
-      ***- start
-      ***- teleporter atlantis (+ point + tag) 
-      ***- teleporters moon/mars (+ points + tags)
-      ***- bosses
-      ***- midpoint
-      ***- ending (+ point + tag)
-      ***- ensure selected points are the same as in Java
-    ***- quests:
-      ***- QuestSpec structure
-      ***- create q1, q2, q3, q_m and q_e
-      ***- reachable area and get useable + reachable (check it matches Java)
-      ***- generateSubquests
-      ***- generate quests1 (I don't need to return "quests1", that's jusst for the solver in Java)
-      ***- quests2
-      ***- quests3
-      ***- quests4
-      ***- quests5
-    ***- verify it works
+  ***- generateSubquests
+      ***- PCGPatternAtoB (first version that just does this, so, no subquests)
+      ***- PCGPatternObstacle
+      ***- PCGPatternNKeysAndChestLock
+      ***- PCGPatternNKeysAndLock
+  ***- generate all the other subquests required for the game (path to midpoint, boss4, etc.)
   ***- spawn_additional_objects: implement
   ***- pcg_generate_world__puzzles: generate tablet contents, combination solutions, trial types, and power stone numbers.
   ***- chest content
   ***- shop extra items
-  ***- safety checks to make sure all generated levels are playable (no more than 1 tag per division, try all RNG seeds in Java, etc.), adjust # divisions needed, etc.
+  ***- safety checks to make sure all generated levels are playable (no more than 1 tag per division, try all RNG seeds in Java, etc.), adjust # divisions needed, etc. assembler - Java sync on all conditions.
 
 - menus:
   - brain games screen (think of a Maya-themed way for this)
@@ -66,7 +51,7 @@ to do:
   - special condition for triggering "angry bosses" (they change color). For each one you beat in this hard mode, you get something in the ending, and if you get them all, you get a special mention. The conditions might be things like: certain bit in the random seed to be "11" (so, not all seeds are good), dive into water X times in the same room without doing anything else, etc.
   - have a chest/door locked with keys from ALL colors, and that can only be open in a world where all color keys spawn. Single lock that changes color, cycling through all.
   - Special huge chest that has a lock with a number. Each time you use a small key, it reduces by one. But the number is larger than the keys in one world. the state of the chest should be saved to the ROM, and if you beat the game, it remains. It might give you access to a final alien weapon to really kill the final boss. If you play again on the same seed, the chest will be blocked somehow (so, you need a different seed)
-  - room that has 4 locks (one from each cardinal directions), but in each world, it can only be reached from one direction. Upon opening all 4, it reveals a passage to a secret level (the "lost world", which is like jungle but with dinosaurs? is there an alternate ending here?)
+  - room that has 4 locks (one from each cardinal directions), but in each world, it can only be reached from one direction. Upon opening all 4, it reveals a passage to a secret level (the "lost world", which is like jungle but with dinosaurs? is there an alternate ending here?, or the "underground cenote", where sacrifices were made)
 
 --------------------
 

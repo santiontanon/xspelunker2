@@ -52,9 +52,9 @@ public class PCGWorld {
         "Pacific Caves",
         "Atlantic Caves",
         "Temple of Fire",
-        "Atlantis",
-        "Mars Pyramid",
-        "Moon Cave",
+        "Atlantis",  // 9
+        "Mars Pyramid",  // 10
+        "Moon Cave",  // 11
     };
     public int areaDebugPositions[][] = {
         {160, 40},
@@ -600,7 +600,7 @@ public class PCGWorld {
 //                }
             } else {
                 a.connections[d.root.x][d.root.y] |= d.root.direction;
-                System.out.println("connection ("+d.divisionID+"->"+d.parent.divisionID+"): " + a.ID + ", " + d.root.direction + ", " + (d.root.x + d.root.y*a.width));
+//                System.out.println("connection ("+d.divisionID+"->"+d.parent.divisionID+"): " + a.ID + ", " + d.root.direction + ", " + (d.root.x + d.root.y*a.width));
                 switch(d.root.direction) {
                     case DIRECTION_LEFT:
                         a.connections[d.root.x - 1][d.root.y] |= DIRECTION_RIGHT;
@@ -673,7 +673,6 @@ public class PCGWorld {
         // Pick important divisions:
         AreaDivision start = tree.get(0);
         
-//        AreaDivision teleporter_atlantis = randomAreaDivisionFavoringLeaves(w.areas.get(9), tree, true);
         AreaPoint teleporter_atlantis_p = randomAreaTopMostPoint(w.areas.get(9), true);
         AreaDivision teleporter_atlantis = getDivisionByID(teleporter_atlantis_p.a.divisionIDs[teleporter_atlantis_p.x][teleporter_atlantis_p.y], tree);
         addTag(randomDivisionPoint(teleporter_atlantis, true), "teleporter-atlantis", teleporter_atlantis);
@@ -711,6 +710,16 @@ public class PCGWorld {
         if (boss7 == null) {
             return false;
         }
+        
+//        System.out.println("Boss divisions: " +
+//                           boss1.divisionID + ", " +
+//                           boss2.divisionID + ", " +
+//                           boss3.divisionID + ", " +
+//                           boss4.divisionID + ", " +
+//                           boss5.divisionID + ", " +
+//                           boss6.divisionID + ", " +
+//                           boss7.divisionID);
+        
 //        AreaDivision midpoint = randomAreaDivisionFavoringLeaves(w.areas.get(5), tree, true);
         AreaDivision midpoint = getDivisionByID(w.areas.get(5).divisionIDs[1][0], tree);
         w.lockDirections.put("midpoint", DIRECTION_DOWN);
@@ -719,7 +728,7 @@ public class PCGWorld {
         w.lockKeys.get("midpoint").add("boss2");
         w.lockKeys.get("midpoint").add("boss3");
         AreaDivision ending = getDivisionByID(w.areas.get(3).divisionIDs[3][0], tree);
-        addTag(new AreaPoint(w.areas.get(3), 3, 0), "ending", ending);
+//        addTag(new AreaPoint(w.areas.get(3), 3, 0), "ending", ending);
 
 //        System.out.println("Key division depths: " +
 //                           divisionTreeDepth(boss1) + ", " + 
@@ -731,34 +740,25 @@ public class PCGWorld {
 //                           divisionTreeDepth(ending));
         
         List<Quest> quests = new ArrayList<>();
-        List<InterAreaConnection> usedConnections = new ArrayList<>();
+//        List<InterAreaConnection> usedConnections = new ArrayList<>();
                 
         n_times_reached_generation_stage[4]++;
         
         // for the first 3 bosses, create "current reachable area" up to midpoint, and start process of sub-puzzles:
-//        int n_subquests_per_boss = 3;
-//        int n_subquests_for_midpoint = 2;
-//        int n_subquests_for_ending = 2;
+        List<AreaDivision> useable = reachableArea(tree, start, midpoint);
+        List<AreaDivision> reachable = reachableArea(tree, start, midpoint);
+        reachable.add(midpoint);
+
         int n_subquests_per_boss = 3;
         int n_subquests_for_midpoint = 2;
         int n_subquests_for_ending = 2;
-        QuestSpec q1 = new QuestSpec(start, boss1, n_subquests_per_boss, null, null, null, "boss1");
-        QuestSpec q2 = new QuestSpec(start, boss2, n_subquests_per_boss, null, null, null, "boss2");
-        QuestSpec q3 = new QuestSpec(start, boss3, n_subquests_per_boss, null, null, null, "boss3");
-        QuestSpec q_m = new QuestSpec(start, midpoint, n_subquests_for_midpoint, null, null, "start", "midpoint");
-        QuestSpec q_e = new QuestSpec(start, ending, n_subquests_for_ending, null, null, null, "ending");
-        List<AreaDivision> blocks1 = new ArrayList<>();
-        blocks1.add(midpoint);
-        List<AreaDivision> useable = reachableArea(tree, start, blocks1);
-        List<AreaDivision> reachable = reachableArea(tree, start, blocks1);
-        reachable.add(midpoint);
         List<QuestSpec> open = new ArrayList<>();
-        open.add(q1);
-        open.add(q2);
-        open.add(q3);
-        open.add(q_m);
-        open.add(q_e);
-        List<Quest> quests1 = generateSubquests(w, tree, open, useable, reachable, usedConnections);
+        open.add(new QuestSpec(start, boss1, n_subquests_per_boss, null, null, null, "boss1"));
+        open.add(new QuestSpec(start, boss2, n_subquests_per_boss, null, null, null, "boss2"));
+        open.add(new QuestSpec(start, boss3, n_subquests_per_boss, null, null, null, "boss3"));
+        open.add(new QuestSpec(start, midpoint, n_subquests_for_midpoint, null, null, "start", "midpoint"));
+        open.add(new QuestSpec(start, ending, n_subquests_for_ending, null, null, null, "ending"));
+        List<Quest> quests1 = generateSubquests(w, tree, open, useable, reachable);
         if (quests1 == null) {
             return false;
         }
@@ -770,7 +770,7 @@ public class PCGWorld {
         QuestSpec q1b = new QuestSpec(boss1, midpoint, 0, null, null, null, null);
         open = new ArrayList<>();
         open.add(q1b);
-        List<Quest> quests2 = generateSubquests(w, tree, open, useable, reachable, usedConnections);
+        List<Quest> quests2 = generateSubquests(w, tree, open, useable, reachable);
         if (quests2 == null) {
             return false;
         }
@@ -779,34 +779,31 @@ public class PCGWorld {
         // for the bosses 4 and 5, create "current reachable area" (from midpoint on), and do the same
         QuestSpec q4 = new QuestSpec(midpoint, boss4, n_subquests_per_boss, null, null, null, "boss4");
         QuestSpec q5 = new QuestSpec(midpoint, boss5, n_subquests_per_boss, null, null, null, "boss5");
-        List<AreaDivision> blocks2 = new ArrayList<>();
-        useable = reachableArea(tree, midpoint, blocks2);
-        reachable = reachableArea(tree, start, blocks2);
+        useable = reachableArea(tree, midpoint, null);
+        reachable = reachableArea(tree, start, null);
         open = new ArrayList<>();
         open.add(q4);
         open.add(q5);
-        List<Quest> quests3 = generateSubquests(w, tree, open, useable, reachable, usedConnections);
+        List<Quest> quests3 = generateSubquests(w, tree, open, useable, reachable);
         if (quests3 == null) return false;
         quests.addAll(quests3);
 
         // for the bosses 6 and 7, create "current reachable area" from some point in areas 10 and 11, and do the same:
         QuestSpec q6 = new QuestSpec(teleporter_mars, boss6, 2, null, null, null, "boss6");
-        List<AreaDivision> blocks3 = new ArrayList<>();
-        useable = reachableArea(marsSpanningTree, teleporter_mars, blocks3);
-        reachable = reachableArea(marsSpanningTree, teleporter_mars, blocks3);
+        useable = reachableArea(marsSpanningTree, teleporter_mars, null);
+        reachable = reachableArea(marsSpanningTree, teleporter_mars, null);
         open = new ArrayList<>();
         open.add(q6);
-        List<Quest> quests4 = generateSubquests(w, marsSpanningTree, open, useable, reachable, usedConnections);
+        List<Quest> quests4 = generateSubquests(w, marsSpanningTree, open, useable, reachable);
         if (quests4 == null) return false;
         quests.addAll(quests4);
         
         QuestSpec q7 = new QuestSpec(teleporter_mars, boss7, 2, null, null, null, "boss7");
-        List<AreaDivision> blocks4 = new ArrayList<>();
-        useable = reachableArea(moonSpanningTree, teleporter_moon, blocks4);
-        reachable = reachableArea(moonSpanningTree, teleporter_moon, blocks4);
+        useable = reachableArea(moonSpanningTree, teleporter_moon, null);
+        reachable = reachableArea(moonSpanningTree, teleporter_moon, null);
         open = new ArrayList<>();
         open.add(q7);
-        List<Quest> quests5 = generateSubquests(w, moonSpanningTree, open, useable, reachable, usedConnections);
+        List<Quest> quests5 = generateSubquests(w, moonSpanningTree, open, useable, reachable);
         if (quests5 == null) return false;
         quests.addAll(quests5);
         
@@ -1123,8 +1120,7 @@ public class PCGWorld {
     - reachable: divisions that the player can reach (and can be used for pathfinding).
     */
     public List<Quest> generateSubquests(World w, List<AreaDivision> tree, List<QuestSpec> open,
-                                         List<AreaDivision> useable, List<AreaDivision> reachable,
-                                         List<InterAreaConnection> usedConnections) throws Exception
+                                         List<AreaDivision> useable, List<AreaDivision> reachable) throws Exception
     {
         PCGPatternAtoB pat_a2b = new PCGPatternAtoB();
         PCGPatternObstacle pat_o = new PCGPatternObstacle();
@@ -1306,14 +1302,15 @@ public class PCGWorld {
     }
     
     
-    public List<AreaDivision> reachableArea(List<AreaDivision> tree, AreaDivision start, List<AreaDivision> blocks)
+    public List<AreaDivision> reachableArea(List<AreaDivision> tree, AreaDivision start, AreaDivision block)
     {
+        System.out.println("reachableArea:");
         List<AreaDivision> reachable = new ArrayList<>();
         for(AreaDivision d:tree) {
             boolean blocked = false;
             List<AreaDivision> parents = treeParents(d);
             for(AreaDivision d2:parents) {
-                if (blocks.contains(d2)) {
+                if (block != null && block == d2) {
                     blocked = true;
                     break;
                 }
@@ -1321,6 +1318,7 @@ public class PCGWorld {
             if (!blocked) {
                 if (parents.contains(start)) {
                     reachable.add(d);
+                    System.out.println("Reachable: " + d.divisionID);
                 }
             }
         }
@@ -1352,9 +1350,13 @@ public class PCGWorld {
                         if (depth > currentDepth) {
                             currentDepth = depth;
                             leafCandidates.clear();
+                            leafCandidates.add(d);
+                        } else if (depth == currentDepth) {
+                            leafCandidates.add(d);
                         }
-                    } 
-                    leafCandidates.add(d);                    
+                    } else {
+                        leafCandidates.add(d);
+                    }
                 }
             }
         }

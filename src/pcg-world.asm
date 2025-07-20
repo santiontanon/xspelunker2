@@ -1,52 +1,116 @@
-tmp_pcg_world__floodfill_open_list: equ buffer_4096  ; 256 bytes (should be 256-aligned)
-tmp_pcg_world__floodfill_open_list_bot: equ buffer_4096 + 256  ; 2 bytes
-tmp_pcg_world__floodfill_open_list_top: equ tmp_pcg_world__floodfill_open_list_bot + 2  ; 2 bytes
-tmp_pcg_world__tmp_ptr: equ tmp_pcg_world__floodfill_open_list_top + 2  ; 2 bytes
-tmp_pcg_world__tags: equ tmp_pcg_world__tmp_ptr + 2  ; MAX_AREA_SIZE * MAX_WORLD_AREAS * 2 bytes  ; tags for all areas, at most 2 tags per room
+PCG_WORLD_START_ADDRESS: equ $
 
-pcg_generate_world_tmp_a0p1: equ tmp_pcg_world__tags + MAX_AREA_SIZE * MAX_WORLD_AREAS * 2
-pcg_generate_world_tmp_a0p2: equ pcg_generate_world_tmp_a0p1 + 2
-pcg_generate_world_tmp_a1p1: equ pcg_generate_world_tmp_a0p2 + 2
-pcg_generate_world_tmp_a1p2: equ pcg_generate_world_tmp_a1p1 + 2
-pcg_generate_world_tmp_a2p1: equ pcg_generate_world_tmp_a1p2 + 2
-pcg_generate_world_tmp_a2p2: equ pcg_generate_world_tmp_a2p1 + 2
+	org #c000
+
+tmp_pcg_world__floodfill_open_list: ds virtual 256  ; (should be 256-aligned)
+tmp_pcg_world__floodfill_open_list_bot: ds virtual 2
+tmp_pcg_world__floodfill_open_list_top: ds virtual 2
 
 tmp_pcg_world__candidates_list: equ tmp_pcg_world__floodfill_open_list
-tmp_pcg_world__candidates_list_size: equ tmp_pcg_world__candidates_list + 256
+tmp_pcg_world__candidates_list_top: equ tmp_pcg_world__floodfill_open_list_bot
+tmp_pcg_world__candidates_list_size: equ tmp_pcg_world__floodfill_open_list_top
 
-tmp_pcg_world__minimum_spanning_tree_top: equ pcg_generate_world_tmp_a2p2 + 2
-tmp_pcg_world__minimum_spanning_tree_n_nodes: equ tmp_pcg_world__minimum_spanning_tree_top + 2
-tmp_pcg_world__minimum_spanning_tree: equ tmp_pcg_world__minimum_spanning_tree_n_nodes + 1  ; 128*10 bytes (assume 128 divisions)
-tmp_pcg_world__mst_neighbors_list: equ tmp_pcg_world__minimum_spanning_tree + 128 * MSP_STRUCTURE_SIZE
-tmp_pcg_world__mst_neighbors_list_top: equ tmp_pcg_world__mst_neighbors_list + 256
-tmp_pcg_world__mst_neighbors_list_size: equ tmp_pcg_world__mst_neighbors_list_top + 2
-tmp_pcg_world__mst_divisions: equ tmp_pcg_world__mst_neighbors_list_size + 1  ; 128 bytes (assume 128 divisions, one byte per division with 0 or 1, "1" meaning the division is in the tree already)
+tmp_pcg_world__mst_open_list: equ tmp_pcg_world__candidates_list
+tmp_pcg_world__mst_open_list_top: equ tmp_pcg_world__candidates_list_top
+tmp_pcg_world__mst_open_list_size: equ tmp_pcg_world__candidates_list_size
 
-tmp_pcg_world__mst_open_list: equ tmp_pcg_world__floodfill_open_list
-tmp_pcg_world__mst_open_list_size: equ tmp_pcg_world__floodfill_open_list_bot
-tmp_pcg_world__mst_open_list_top: equ tmp_pcg_world__floodfill_open_list_top
+tmp_pcg_world__tmp_ptr: ds virtual 2
+tmp_pcg_world__tags: ds virtual MAX_AREA_SIZE * MAX_WORLD_AREAS * 2  ; tags for all areas, at most 2 tags per room
 
+pcg_generate_world_tmp_a0p1: ds virtual 2
+pcg_generate_world_tmp_a0p2: ds virtual 2
+pcg_generate_world_tmp_a1p1: ds virtual 2
+pcg_generate_world_tmp_a1p2: ds virtual 2
+pcg_generate_world_tmp_a2p1: ds virtual 2
+pcg_generate_world_tmp_a2p2: ds virtual 2
+
+tmp_pcg_world__minimum_spanning_tree_top: ds virtual 2
+tmp_pcg_world__minimum_spanning_tree_n_nodes: ds virtual 1
+tmp_pcg_world__minimum_spanning_tree: ds virtual 128*MST_STRUCTURE_SIZE  ; (assume 128 divisions)
+tmp_pcg_world__mst_neighbors_list: ds virtual 256
+tmp_pcg_world__mst_neighbors_list_top: ds virtual 2
+tmp_pcg_world__mst_neighbors_list_size: ds virtual 1
+tmp_pcg_world__mst_divisions: ds virtual 128  ; assume 128 divisions, one byte per division with 0 or 1, "1" meaning the division is in the tree already.
+
+tmp_pcg_world__mst_mars_start: ds virtual 2
+tmp_pcg_world__mst_moon_start: ds virtual 2
+tmp_pcg_world__mst_main_n_nodes: ds virtual 1
+tmp_pcg_world__mst_mars_n_nodes: ds virtual 1
+tmp_pcg_world__mst_moon_n_nodes: ds virtual 1
+
+tmp_pcg_world__lock_directions: ds virtual 20 * 2  ; 40 bytes (assume at most 20 locks)
+tmp_pcg_world__lock_directions_size: ds virtual 1
+
+tmp_pcg_world__mission_start_node: ds virtual 2
+tmp_pcg_world__mission_teleporter_atlantis_node: ds virtual 2
+tmp_pcg_world__mission_teleporter_mars_node: ds virtual 2
+tmp_pcg_world__mission_teleporter_moon_node: ds virtual 2
+tmp_pcg_world__mission_boss1_node: ds virtual 2
+tmp_pcg_world__mission_boss2_node: ds virtual 2
+tmp_pcg_world__mission_boss3_node: ds virtual 2
+tmp_pcg_world__mission_boss4_node: ds virtual 2
+tmp_pcg_world__mission_boss5_node: ds virtual 2
+tmp_pcg_world__mission_boss6_node: ds virtual 2
+tmp_pcg_world__mission_boss7_node: ds virtual 2
+tmp_pcg_world__mission_midpoint_node: ds virtual 2
+tmp_pcg_world__mission_ending_node: ds virtual 2
+
+
+IF $ > #d000
+	ERROR "pcg-world.asm uses too much RAM in buffer_4096!"
+ENDIF
+
+	org current_room__tile_map
+
+tmp_pcg_world__useable_nodes: ds virtual 128 * 2
+tmp_pcg_world__useable_nodes_size: ds virtual 1
+tmp_pcg_world__reachable_nodes: ds virtual 128 * 2
+tmp_pcg_world__reachable_nodes_size: ds virtual 1
+
+tmp_pcg_world__quest_spec_open_list: ds virtual QUEST_SPEC_STRUCTURE_SIZE * 32
+tmp_pcg_world__quest_spec_open_list_size: ds virtual 1
+
+
+IF $ > current_room__tile_map + MAX_ROOM_SIZE
+	ERROR "pcg-world.asm uses too much RAM in current_room__tile_map!"
+ENDIF
+
+	org PCG_WORLD_START_ADDRESS
 
 tmp_pcg_world__area_0_connections: equ current_world__area_data + 4 + 1 + 1 + 1
 tmp_pcg_world__area_0_divisions: equ tmp_pcg_world__area_0_connections + MAX_AREA_SIZE
 tmp_pcg_world__area_0_tags: equ tmp_pcg_world__area_0_divisions + MAX_AREA_SIZE
 tmp_pcg_world__area_10_connections: equ current_world__area_data + 4 + 1 + 1 + 1 + WORLD_AREA__SIZE*10
 tmp_pcg_world__area_11_connections: equ current_world__area_data + 4 + 1 + 1 + 1 + WORLD_AREA__SIZE*11
+tmp_pcg_world__area_3_divisions: equ current_world__area_data + 4 + 1 + 1 + 1 + MAX_AREA_SIZE + WORLD_AREA__SIZE*3
+tmp_pcg_world__area_5_divisions: equ current_world__area_data + 4 + 1 + 1 + 1 + MAX_AREA_SIZE + WORLD_AREA__SIZE*5
+tmp_pcg_world__area_9_divisions: equ current_world__area_data + 4 + 1 + 1 + 1 + MAX_AREA_SIZE + WORLD_AREA__SIZE*9
 tmp_pcg_world__area_10_divisions: equ current_world__area_data + 4 + 1 + 1 + 1 + MAX_AREA_SIZE + WORLD_AREA__SIZE*10
 tmp_pcg_world__area_11_divisions: equ current_world__area_data + 4 + 1 + 1 + 1 + MAX_AREA_SIZE + WORLD_AREA__SIZE*11
 
-; Minimum-spanning tree node structure (10 bytes):
-MSP_STRUCTURE_SIZE: equ 11
-MSP_DIVISION_ID: equ 0
-MSP_AREA_ID: equ 1
-MSP_X: equ 2
-MSP_Y: equ 3
-MSP_OFFSET: equ 4
-MSP_N_DESCENDANTS: equ 5
-MSP_TAG1: equ 6
-MSP_TAG2: equ 7
-MSP_PARENT_DIRECTION: equ 8
-MSP_PARENT_PTR: equ 9  ; 2 bytes
+; Minimum-spanning tree node structure (12 bytes):
+MST_STRUCTURE_SIZE: equ 12
+MST_DIVISION_ID: equ 0
+MST_AREA_ID: equ 1
+MST_X: equ 2
+MST_Y: equ 3
+MST_OFFSET: equ 4
+MST_N_DESCENDANTS: equ 5
+MST_TAG1: equ 6
+MST_TAG2: equ 7
+MST_PARENT_DIRECTION: equ 8
+MST_PARENT_PTR: equ 9  ; 2 bytes
+MST_DEPTH: equ 11
+
+; Quest-spec structure:
+QUEST_SPEC_STRUCTURE_SIZE: equ 9
+QUEST_SPEC_START_DIV_PTR: equ 0
+QUEST_SPEC_GOAL_DIV_PTR: equ 2
+QUEST_SPEC_START_POINT_OFFSET: equ 4
+QUEST_SPEC_GOAL_POINT_OFFSET: equ 5
+QUEST_SPEC_START_TAG: equ 6
+QUEST_SPEC_GOAL_TAG: equ 7
+QUEST_SPEC_N_SUBQUESTS: equ 8
 
 
 ;-----------------------------------------------
@@ -158,7 +222,9 @@ pcg_generate_world:
 	call pcg_generate_world__generate_area_connections  ; fills current_world__interarea_connections
 	jr nz, pcg_generate_world_fail
 	call pcg_generate_world__generate_spanning_tree  ; generates connections (each tree root to its parent)
+	jr nz, pcg_generate_world_fail
 	call pcg_generate_world__generate_mission  ; adds all the area tags to the divisions
+	jr nz, pcg_generate_world_fail
 	call pcg_generate_world__spawn_additional_objects  ; fills additional tags to some divisions
 	call pcg_generate_world__generate_tag_data  ; generates the area tags, chest content and shop extra items from all the info above
 ;     out (#2d),a  ; DEBUG	
@@ -1679,12 +1745,26 @@ pcg_generate_world__generate_spanning_tree_clear_loop:
 	ld h, 0
 	call pcg_generate_world__generate_spanning_tree_internal
 
+	ld a, (tmp_pcg_world__minimum_spanning_tree_n_nodes)
+	ld (tmp_pcg_world__mst_main_n_nodes), a
+	ld hl, (tmp_pcg_world__minimum_spanning_tree_top)
+	ld (tmp_pcg_world__mst_mars_start), hl
+
 	; Minimum-Spanning Tree for Mars:
 	ld a, 10
 	call pcg_generate_world__random_left_most_point_tagless
 	ret nz
 	ld h, 10
 	call pcg_generate_world__generate_spanning_tree_internal
+
+	ld a, (tmp_pcg_world__mst_main_n_nodes)
+	ld b, a
+	ld a, (tmp_pcg_world__minimum_spanning_tree_n_nodes)
+	sub b
+	ld (tmp_pcg_world__mst_mars_n_nodes), a
+
+	ld hl, (tmp_pcg_world__minimum_spanning_tree_top)
+	ld (tmp_pcg_world__mst_moon_start), hl
 
 	; Minimum-Spanning Tree for Moon:
 	ld a, 11
@@ -1693,22 +1773,31 @@ pcg_generate_world__generate_spanning_tree_clear_loop:
 	ld h, 11
 	call pcg_generate_world__generate_spanning_tree_internal
 
+	ld a, (tmp_pcg_world__mst_main_n_nodes)
+	ld b, a
+	ld a, (tmp_pcg_world__mst_mars_n_nodes)
+	ld c, a
+	ld a, (tmp_pcg_world__minimum_spanning_tree_n_nodes)
+	sub b
+	sub c
+	ld (tmp_pcg_world__mst_moon_n_nodes), a
+
 	; Add connections:
 	ld a, (tmp_pcg_world__minimum_spanning_tree_n_nodes)
 	ld b, a
 	ld ix, tmp_pcg_world__minimum_spanning_tree
 pcg_generate_world__generate_spanning_tree_connections_loop:
-	ld a, (ix + MSP_PARENT_PTR)
+	ld a, (ix + MST_PARENT_PTR)
 	ld iyl, a
-	ld a, (ix + MSP_PARENT_PTR + 1)
+	ld a, (ix + MST_PARENT_PTR + 1)
 	ld iyh, a  ; iy = parent ptr
 	or iyl  ; if no parent, skip
 	jr z, pcg_generate_world__generate_spanning_tree_connections_loop_next
-	ld a, (ix + MSP_AREA_ID)
-	cp (iy + MSP_AREA_ID)  ; if it's an interarea connection, skip
+	ld a, (ix + MST_AREA_ID)
+	cp (iy + MST_AREA_ID)  ; if it's an interarea connection, skip
 	jr nz, pcg_generate_world__generate_spanning_tree_connections_loop_next
 	; get connections ptr:
-	push bc  ; mdl-watch: "connection area", a
+	push bc
 		call pcg_generate_world__get_area_ptr
 		ld bc, 5
 		add hl, bc
@@ -1716,7 +1805,7 @@ pcg_generate_world__generate_spanning_tree_connections_loop:
 		inc hl
 		inc hl  ; hl = ptr to connections
 	pop bc
-	ld a, (ix + MSP_PARENT_DIRECTION)  ; mdl-watch: "    direction", a
+	ld a, (ix + MST_PARENT_DIRECTION)
 	cp PCG_DIRECTION_LEFT
 	jr z, pcg_generate_world__generate_spanning_tree_connections_loop_left
 	cp PCG_DIRECTION_UP
@@ -1724,7 +1813,7 @@ pcg_generate_world__generate_spanning_tree_connections_loop:
 	cp PCG_DIRECTION_RIGHT
 	jr z, pcg_generate_world__generate_spanning_tree_connections_loop_right
 pcg_generate_world__generate_spanning_tree_connections_loop_down:
-	ld a, (ix + MSP_OFFSET)  ; mdl-watch: "    offset", a
+	ld a, (ix + MST_OFFSET)
 	ADD_HL_A
 	ld a, (hl)
 	or PCG_DIRECTION_DOWN
@@ -1736,7 +1825,7 @@ pcg_generate_world__generate_spanning_tree_connections_loop_down:
 	ld (hl), a
 	jr pcg_generate_world__generate_spanning_tree_connections_loop_next
 pcg_generate_world__generate_spanning_tree_connections_loop_left:
-	ld a, (ix + MSP_OFFSET)  ; mdl-watch: "    offset", a
+	ld a, (ix + MST_OFFSET)
 	ADD_HL_A
 	ld a, (hl)
 	or PCG_DIRECTION_LEFT
@@ -1747,7 +1836,7 @@ pcg_generate_world__generate_spanning_tree_connections_loop_left:
 	ld (hl), a
 	jr pcg_generate_world__generate_spanning_tree_connections_loop_next
 pcg_generate_world__generate_spanning_tree_connections_loop_up:
-	ld a, (ix + MSP_OFFSET)  ; mdl-watch: "    offset", a
+	ld a, (ix + MST_OFFSET)
 	ADD_HL_A
 	ld a, (hl)
 	or PCG_DIRECTION_UP
@@ -1760,7 +1849,7 @@ pcg_generate_world__generate_spanning_tree_connections_loop_up:
 	ld (hl), a
 	jr pcg_generate_world__generate_spanning_tree_connections_loop_next
 pcg_generate_world__generate_spanning_tree_connections_loop_right:
-	ld a, (ix + MSP_OFFSET)  ; mdl-watch: "    offset", a
+	ld a, (ix + MST_OFFSET)
 	ADD_HL_A
 	ld a, (hl)
 	or PCG_DIRECTION_RIGHT
@@ -1770,7 +1859,7 @@ pcg_generate_world__generate_spanning_tree_connections_loop_right:
 	or PCG_DIRECTION_LEFT
 	ld (hl), a
 pcg_generate_world__generate_spanning_tree_connections_loop_next:
-	ld de, MSP_STRUCTURE_SIZE
+	ld de, MST_STRUCTURE_SIZE
 	add ix, de
 	dec b
 	jp nz, pcg_generate_world__generate_spanning_tree_connections_loop
@@ -1811,8 +1900,6 @@ pcg_generate_world__generate_spanning_tree_loop:
 	push de
 		call pcg_generate_world__mst_get_division_neighbor_points
 	pop ix
-
-	; ld a, (ix + MSP_DIVISION_ID)  ; mdl-watch: "---- pop:", a
 
 	; iterate through them in a random order:
 pcg_generate_world__generate_spanning_tree_neighbor_loop:
@@ -1934,7 +2021,7 @@ pcg_generate_world__mst_get_division_neighbor_points:
 	; get ptr to area:
 	ld ixl, e
 	ld ixh, d
-	ld a, (ix + MSP_AREA_ID)
+	ld a, (ix + MST_AREA_ID)
 	call pcg_generate_world__get_area_ptr  ; hl = area ptr
 
 	; get area width/height, and ptr to division IDs:
@@ -1955,7 +2042,7 @@ pcg_generate_world__mst_get_division_neighbor_points_loop_x:
 		ld a, (hl)
 		cp #ff
 		jr z, pcg_generate_world__mst_get_division_neighbor_points_loop_x_next
-		cp (ix + MSP_DIVISION_ID)
+		cp (ix + MST_DIVISION_ID)
 		jr z, pcg_generate_world__mst_get_division_neighbor_points_loop_x_next
 
 		; check left:
@@ -1965,7 +2052,7 @@ pcg_generate_world__mst_get_division_neighbor_points_loop_x:
 		dec hl
 		ld a, (hl)
 		inc hl
-		cp (ix + MSP_DIVISION_ID)
+		cp (ix + MST_DIVISION_ID)
 		jr nz, pcg_generate_world__mst_get_division_neighbor_points_loop_x_skip_left
 		; found a neighbor:
 		ld a, (hl)  ; division ID
@@ -1980,7 +2067,7 @@ pcg_generate_world__mst_get_division_neighbor_points_loop_x_skip_left:
 		inc hl
 		ld a, (hl)
 		dec hl
-		cp (ix + MSP_DIVISION_ID)
+		cp (ix + MST_DIVISION_ID)
 		jr nz, pcg_generate_world__mst_get_division_neighbor_points_loop_x_skip_right
 		; found a neighbor:
 		ld a, (hl)  ; division ID
@@ -1998,7 +2085,7 @@ pcg_generate_world__mst_get_division_neighbor_points_loop_x_skip_right:
 		sbc hl, de
 		ld a, (hl)
 		add hl, de
-		cp (ix + MSP_DIVISION_ID)
+		cp (ix + MST_DIVISION_ID)
 		jr nz, pcg_generate_world__mst_get_division_neighbor_points_loop_x_skip_up
 		; found a neighbor:
 		ld a, (hl)  ; division ID
@@ -2016,7 +2103,7 @@ pcg_generate_world__mst_get_division_neighbor_points_loop_x_skip_up:
 		ld a, (hl)
 		or a
 		sbc hl, de
-		cp (ix + MSP_DIVISION_ID)
+		cp (ix + MST_DIVISION_ID)
 		jr nz, pcg_generate_world__mst_get_division_neighbor_points_loop_x_next
 		; found a neighbor:
 		ld a, (hl)  ; division ID
@@ -2027,7 +2114,7 @@ pcg_generate_world__mst_get_division_neighbor_points_loop_add_neighbor:
 			ld hl, (tmp_pcg_world__mst_neighbors_list_top)
 			ld (hl), a  ; division ID
 			inc hl
-			ld a, (ix + MSP_AREA_ID)
+			ld a, (ix + MST_AREA_ID)
 			ld (hl), a  ; area ID
 			inc hl
 			ld a, c
@@ -2056,7 +2143,7 @@ pcg_generate_world__mst_get_division_neighbor_points_loop_x_next:
 
 	; Find neighbors through inter-area connections:
 	; - here ix still has a pointer to the minimum-spanning-tree node
-	ld a, (ix + MSP_DIVISION_ID)
+	ld a, (ix + MST_DIVISION_ID)
 	ld iy, current_world__interarea_connections
 pcg_generate_world__mst_get_division_connections_loop:
 	ld a, (iy)
@@ -2079,7 +2166,7 @@ pcg_generate_world__mst_get_division_connections_loop:
 	pop ix
 	ADD_HL_A
 	ld a, (hl)  ; division ID of the first point of this connection
-	cp (ix + MSP_DIVISION_ID)
+	cp (ix + MST_DIVISION_ID)
 	jr nz, pcg_generate_world__mst_get_division_connections_loop_check_p2
 	; add p2 as a neighbor:
 	ld a, (iy + 1)  ; p2.area
@@ -2139,7 +2226,7 @@ pcg_generate_world__mst_get_division_connections_loop_check_p2:
 	pop ix
 	ADD_HL_A
 	ld a, (hl)  ; division ID of the second point of this connection
-	cp (ix + MSP_DIVISION_ID)
+	cp (ix + MST_DIVISION_ID)
 	jr nz, pcg_generate_world__mst_get_division_connections_loop_next
 	; add p1 as a neighbor:
 	ld a, (iy)  ; p1.area
@@ -2290,6 +2377,22 @@ pcg_generate_world__push_mst_node_ptr_loop_done:
 	inc hl
 	ld (hl), d
 	inc hl
+	ld a, e
+	or d
+	jr z, pcg_generate_world__push_mst_node_depth_set
+	ex de, hl
+	push bc
+		ld bc, MST_DEPTH
+		add hl, bc
+		ld a, (hl)  ; parent depth
+		inc a
+		or a
+		sbc hl, bc  ; restore the parent ptr
+	pop bc
+	ex de, hl
+pcg_generate_world__push_mst_node_depth_set:
+	ld (hl), a  ; depth
+	inc hl
 	ld (tmp_pcg_world__minimum_spanning_tree_top), hl
 
 pcg_generate_world__push_mst_node_n_descendants_loop:
@@ -2297,7 +2400,7 @@ pcg_generate_world__push_mst_node_n_descendants_loop:
 	or d
 	ret z  ; if parent is empty, we are done
 	; otherwise, increase n_descendants by one:
-	ld hl, MSP_N_DESCENDANTS
+	ld hl, MST_N_DESCENDANTS
 	add hl, de
 	inc (hl)
 	ld de, 4
@@ -2309,9 +2412,516 @@ pcg_generate_world__push_mst_node_n_descendants_loop:
 
 
 ;-----------------------------------------------
+; output:
+; - z: all ok
+; - nz: some error happened
 pcg_generate_world__generate_mission:
+	ld hl, tmp_pcg_world__minimum_spanning_tree
+	ld (tmp_pcg_world__mission_start_node), hl
+
+	ld a, 9  ; atlantis
+	call pcg_generate_world__random_top_most_point_tagless
+	ret nz
+	ld b, 0
+	ld c, l
+	ld hl, tmp_pcg_world__area_9_divisions
+	add hl, bc
+	ld a, (hl)  ; division ID
+	call pcg_generate_world__get_mst_node_by_division_id
+	ld (tmp_pcg_world__mission_teleporter_atlantis_node), hl
+	ld a, TAG_TELEPORTER_ATLANTIS
+	call pcg_generate_world__add_tag_to_random_point_in_mst_node_division
+	ret nz
+
+	ld hl, (tmp_pcg_world__mst_mars_start)
+	ld (tmp_pcg_world__mission_teleporter_mars_node), hl
+	ld a, TAG_TELEPORTER_MARS
+	call pcg_generate_world__add_tag_to_random_point_in_mst_node_division
+	ret nz
+
+	ld hl, (tmp_pcg_world__mst_moon_start)
+	ld (tmp_pcg_world__mission_teleporter_moon_node), hl
+	ld a, TAG_TELEPORTER_MOON
+	call pcg_generate_world__add_tag_to_random_point_in_mst_node_division
+	ret nz
+
+	; boss locations:
+	ld ix, tmp_pcg_world__minimum_spanning_tree
+	ld a, (tmp_pcg_world__mst_main_n_nodes)
+	ld c, 1  ; temple of inscriptions
+	call pcg_generate_world__random_area_mst_node_only_leaves
+	ret nz
+	ld (tmp_pcg_world__mission_boss1_node), hl
+
+	ld ix, tmp_pcg_world__minimum_spanning_tree
+	ld a, (tmp_pcg_world__mst_main_n_nodes)
+	ld c, 2  ; hidden temple
+	call pcg_generate_world__random_area_mst_node_only_leaves
+	ret nz
+	ld (tmp_pcg_world__mission_boss2_node), hl
+
+	ld ix, tmp_pcg_world__minimum_spanning_tree
+	ld a, (tmp_pcg_world__mst_main_n_nodes)
+	ld c, 4  ; inverted pyramid
+	call pcg_generate_world__random_area_mst_node_only_leaves
+	ret nz
+	ld (tmp_pcg_world__mission_boss3_node), hl
+
+	ld ix, tmp_pcg_world__minimum_spanning_tree
+	ld a, (tmp_pcg_world__mst_main_n_nodes)
+	ld c, 8  ; xibalba
+	call pcg_generate_world__random_area_mst_node_only_leaves
+	ret nz
+	ld (tmp_pcg_world__mission_boss4_node), hl
+
+	ld ix, tmp_pcg_world__minimum_spanning_tree
+	ld a, (tmp_pcg_world__mst_main_n_nodes)
+	ld c, 9  ; atlantis
+	call pcg_generate_world__random_area_mst_node_only_leaves
+	ret nz
+	ld (tmp_pcg_world__mission_boss5_node), hl
+
+	ld ix, (tmp_pcg_world__mst_mars_start)
+	ld a, (tmp_pcg_world__mst_mars_n_nodes)
+	ld c, 10  ; mars
+	call pcg_generate_world__random_area_mst_node_only_leaves
+	ret nz
+	ld (tmp_pcg_world__mission_boss6_node), hl
+
+	ld ix, (tmp_pcg_world__mst_moon_start)
+	ld a, (tmp_pcg_world__mst_moon_n_nodes)
+	ld c, 11  ; moon
+	call pcg_generate_world__random_area_mst_node_only_leaves
+	ret nz
+	ld (tmp_pcg_world__mission_boss7_node), hl
+
+	; midpoint:
+	ld a, (tmp_pcg_world__area_5_divisions + 1)  ; division ID
+	call pcg_generate_world__get_mst_node_by_division_id
+	ld (tmp_pcg_world__mission_midpoint_node), hl
+	ld c, TAG_MIDPOINT
+	ld b, PCG_DIRECTION_DOWN
+	call pcg_generate_world__add_lock_direction
+
+	; ending:
+	ld a, (tmp_pcg_world__area_3_divisions + 3)  ; division ID
+	call pcg_generate_world__get_mst_node_by_division_id
+	ld (tmp_pcg_world__mission_ending_node), hl
+
+	; Generate quests:
+	ld ix, tmp_pcg_world__minimum_spanning_tree  ; root
+	ld iy, (tmp_pcg_world__mission_midpoint_node)  ; do not go past this point
+	call pcg_generate_world__reachable_nodes
+
+	ld hl, tmp_pcg_world__reachable_nodes
+	ld de, tmp_pcg_world__useable_nodes
+	ld bc, 128 * 2 + 1
+	ldir  ; useable are the same as reachable at the beginning
+
+	; add "midpoint" to the reachable list (not to the useable list)
+	ld hl, tmp_pcg_world__reachable_nodes_size
+	ld a, (hl)
+	inc (hl)
+	ld hl, tmp_pcg_world__reachable_nodes
+	add a, a
+	ADD_HL_A
+	ld bc, (tmp_pcg_world__mission_midpoint_node)
+	ld (hl), c
+	inc hl
+	ld (hl), b
+
+	xor a
+	ld (tmp_pcg_world__quest_spec_open_list), a
+	PCG_WORLD__PUSH_QUEST tmp_pcg_world__mission_start_node, tmp_pcg_world__mission_boss1_node, 3, #ff, #ff, TAG_NONE, TAG_BOSS1
+	PCG_WORLD__PUSH_QUEST tmp_pcg_world__mission_start_node, tmp_pcg_world__mission_boss2_node, 3, #ff, #ff, TAG_NONE, TAG_BOSS2
+	PCG_WORLD__PUSH_QUEST tmp_pcg_world__mission_start_node, tmp_pcg_world__mission_boss3_node, 3, #ff, #ff, TAG_NONE, TAG_BOSS3
+	PCG_WORLD__PUSH_QUEST tmp_pcg_world__mission_start_node, tmp_pcg_world__mission_midpoint_node, 2, #ff, #ff, TAG_START, TAG_MIDPOINT
+	PCG_WORLD__PUSH_QUEST tmp_pcg_world__mission_start_node, tmp_pcg_world__mission_ending_node, 2, #ff, #ff, TAG_NONE, TAG_ENDING
+
 	; ...
+
+	; if (generateSubquests(w, tree, open, useable, reachable) == null) return false;
+
+	; // path to midpoint:
+	; QuestSpec q1b = new QuestSpec(boss1, midpoint, 0, null, null, null, null);
+	; open = new ArrayList<>();
+	; open.add(q1b);
+	; if (generateSubquests(w, tree, open, useable, reachable) == null) return false
+
+	; // for the bosses 4 and 5, create "current reachable area" (from midpoint on), and do the same
+	; QuestSpec q4 = new QuestSpec(midpoint, boss4, n_subquests_per_boss, null, null, null, "boss4");
+	; QuestSpec q5 = new QuestSpec(midpoint, boss5, n_subquests_per_boss, null, null, null, "boss5");
+	; List<AreaDivision> blocks2 = new ArrayList<>();
+	; useable = reachableArea(tree, midpoint, blocks2);
+	; reachable = reachableArea(tree, start, blocks2);
+	; open = new ArrayList<>();
+	; open.add(q4);
+	; open.add(q5);
+	; if (generateSubquests(w, tree, open, useable, reachable) == null) return false
+
+	; // for the bosses 6 and 7, create "current reachable area" from some point in areas 10 and 11, and do the same:
+	; QuestSpec q6 = new QuestSpec(teleporter_mars, boss6, 2, null, null, null, "boss6");
+	; List<AreaDivision> blocks3 = new ArrayList<>();
+	; useable = reachableArea(marsSpanningTree, teleporter_mars, blocks3);
+	; reachable = reachableArea(marsSpanningTree, teleporter_mars, blocks3);
+	; open = new ArrayList<>();
+	; open.add(q6);
+	; if (generateSubquests(w, marsSpanningTree, open, useable, reachable) == null) return false
+
+	; QuestSpec q7 = new QuestSpec(teleporter_mars, boss7, 2, null, null, null, "boss7");
+	; List<AreaDivision> blocks4 = new ArrayList<>();
+	; useable = reachableArea(moonSpanningTree, teleporter_moon, blocks4);
+	; reachable = reachableArea(moonSpanningTree, teleporter_moon, blocks4);
+	; open = new ArrayList<>();
+	; open.add(q7);
+	; if (generateSubquests(w, moonSpanningTree, open, useable, reachable) == null) return false
+
+	xor a  ; z
 	ret
+
+
+;-----------------------------------------------
+; point offset #ff is ignored
+PCG_WORLD__PUSH_QUEST: macro start_node_ptr, goal_node_ptr, n_subquests, start_point_offset, goal_point_offset, start_tag, goal_tag
+	ld hl, tmp_pcg_world__quest_spec_open_list_size
+	ld a, (hl)
+	inc (hl)
+	ld hl, tmp_pcg_world__quest_spec_open_list
+IF QUEST_SPEC_STRUCTURE_SIZE != 9
+	ERROR "QUEST_SPEC_STRUCTURE_SIZE != 9!"
+ENDIF
+	ld c, a
+	add a, a
+	add a, a
+	add a, a
+	add a, c
+	ADD_HL_A
+
+	ld de, (start_node_ptr)
+	ld (hl), e
+	inc hl
+	ld (hl), d
+
+	ld de, (goal_node_ptr)
+	ld (hl), e
+	inc hl
+	ld (hl), d
+	inc hl
+	ld (hl), start_point_offset
+	inc hl
+	ld (hl), goal_point_offset
+	inc hl
+	ld (hl), start_tag
+	inc hl
+	ld (hl), goal_tag
+	inc hl
+	ld (hl), n_subquests
+	endm
+
+
+;-----------------------------------------------
+; input:
+; - ix: start node
+; - iy: block
+pcg_generate_world__reachable_nodes:
+	xor a
+	ld (tmp_pcg_world__useable_nodes_size), a
+	ld hl, tmp_pcg_world__minimum_spanning_tree
+	ld a, (tmp_pcg_world__minimum_spanning_tree_n_nodes)
+	ld b, a
+pcg_generate_world__reachable_nodes_loop:
+	; check if the node is a child of "ix", without going through "iy"
+	push bc
+		push hl
+pcg_generate_world__reachable_nodes_loop_parent_loop:
+			ld c, ixl
+			ld b, ixh
+			or a
+			sbc hl, bc
+			jr z, pcg_generate_world__reachable_nodes_match
+			add hl, bc
+			ld c, iyl
+			ld b, iyh
+			or a
+			sbc hl, bc
+			jr z, pcg_generate_world__reachable_nodes_block
+			add hl, bc
+
+			ld bc, MST_PARENT_PTR
+			add hl, bc
+			ld a, (hl)
+			inc hl
+			ld h, (hl)
+			ld l, a
+			or h
+			jr z, pcg_generate_world__reachable_nodes_block  ; we reached the top without crossing the start node
+			jr pcg_generate_world__reachable_nodes_loop_parent_loop
+
+pcg_generate_world__reachable_nodes_block:
+		pop hl
+pcg_generate_world__reachable_nodes_loop_next:
+		ld bc, MST_STRUCTURE_SIZE
+		add hl, bc
+	pop bc
+	djnz pcg_generate_world__reachable_nodes_loop
+	ret	
+
+pcg_generate_world__reachable_nodes_match:
+		pop hl
+
+		; add node to rechable:
+		ex de, hl
+			ld hl, tmp_pcg_world__reachable_nodes_size
+			ld a, (hl)
+			inc (hl)
+			ld hl, tmp_pcg_world__reachable_nodes
+			add a, a
+			ADD_HL_A
+			ld (hl), e
+			inc hl
+			ld (hl), d
+		ex de, hl
+		ld a, (hl)  ; mdl-watch: "reachable", a
+		jr pcg_generate_world__reachable_nodes_loop_next
+
+
+;-----------------------------------------------
+; input:
+; - c: lock tag
+; - b: direction
+pcg_generate_world__add_lock_direction:
+	ld hl, tmp_pcg_world__lock_directions_size
+	ld a, (hl)
+	inc (hl)
+	ld hl, tmp_pcg_world__lock_directions
+	add a, a
+	ADD_HL_A
+	ld (hl), c
+	inc hl
+	ld (hl), b
+	ret
+
+
+;-----------------------------------------------
+; Selects a random leaf on the minimum spanning tree, favoring leaves that
+; have a higher depth.
+; input:
+; - ix: MST root node ptr
+; - a: MST size
+; - c: target area
+; output:
+; - hl: ptr to mst node
+; - z: found one
+; - nz: not found
+pcg_generate_world__random_area_mst_node_only_leaves:
+	ld b, a
+	xor a
+	ld (tmp_pcg_world__candidates_list_size), a
+	ld iyl, 0  ; current best depth
+pcg_generate_world__random_area_mst_node_only_leaves_loop:
+	ld a, (ix + MST_N_DESCENDANTS)
+	or a
+	jr nz, pcg_generate_world__random_area_mst_node_only_leaves_loop_next
+	; leaf:
+	ld a, (ix + MST_AREA_ID)
+	cp c
+	jr nz, pcg_generate_world__random_area_mst_node_only_leaves_loop_next
+	ld a, (ix + MST_DEPTH)
+	cp iyl
+	jr c, pcg_generate_world__random_area_mst_node_only_leaves_loop_next
+	jr z, pcg_generate_world__random_area_mst_node_only_leaves_same_depth
+	; we found a deeper leaf, reset the list:
+	ld iyl, a  ; new depth
+	xor a
+	ld (tmp_pcg_world__candidates_list_size), a
+pcg_generate_world__random_area_mst_node_only_leaves_same_depth:
+	; new leaf, add to the list:
+	ld hl, tmp_pcg_world__candidates_list_size
+	ld a, (hl)
+	inc (hl)
+	add a, a
+	ld hl, tmp_pcg_world__candidates_list
+	ADD_HL_A
+	ld a, ixl
+	ld (hl), a
+	inc hl
+	ld a, ixh
+	ld (hl), a
+
+pcg_generate_world__random_area_mst_node_only_leaves_loop_next:
+	ld de, MST_STRUCTURE_SIZE
+	add ix, de
+	djnz pcg_generate_world__random_area_mst_node_only_leaves_loop
+
+	ld a, (tmp_pcg_world__candidates_list_size)
+	or a
+	jr z, pcg_generate_world__random_area_mst_node_only_leaves_fail
+
+	ld c, a
+	call random_modulo
+	ld hl, tmp_pcg_world__candidates_list
+	add a, a
+	ADD_HL_A
+	ld a, (hl)
+	inc hl
+	ld h, (hl)
+	ld l, a
+	xor a  ; z
+	ld a, (hl)
+	ret
+pcg_generate_world__random_area_mst_node_only_leaves_fail:
+	or 1  ; nz
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - a: tag
+; - hl: mst note
+; output:
+; - z: all ok
+; - nz: tag could not be added (too many tags in the division)
+pcg_generate_world__add_tag_to_random_point_in_mst_node_division:
+	; pick a random note from the division:
+	ld b, a  ; tag
+	push bc
+	push hl
+		call pcg_generate_world__random_division_point_from_mst_node_tagless
+	pop de
+	pop bc
+	ret nz  ; no point available
+
+	; add tag to the point:
+	push de
+		inc de
+		ld a, (de)  ; area ID (since MST_AREA_ID == 1)
+		; here l = offset of the point sampled above
+		call pcg_generate_world__add_tag
+	pop hl
+	ret nz  ; we cannot add the tag
+	
+	; add tag to mst node:
+	ld de, MST_TAG1
+	add hl, de
+	ld 	a, (hl)
+	or a
+	jr nz, pcg_generate_world__add_tag_to_random_point_in_mst_node_division_continue
+	ld (hl), b  ; tag
+	xor a  ; z
+	ret
+pcg_generate_world__add_tag_to_random_point_in_mst_node_division_continue:
+	inc hl
+	ld 	a, (hl)
+	or a
+	ret nz  ; node already has 2 tags, which is the max!
+	ld (hl), b  ; tag
+	xor a  ; z
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - hl: ptr to mst node
+; output:
+; - c, b: x, y
+; - l: offset
+pcg_generate_world__random_division_point_from_mst_node_tagless:
+	ld a, (hl)  ; division ID
+	inc hl
+	push af
+		ld a, (hl)  ; area ID
+		dec hl
+
+		; get divisions and tags ptrs:
+		; - tags: tmp_pcg_world__tags + MAX_AREA_SIZE * 2 * a 
+		; - divisions: current_world__area_data + WORLD_AREA__SIZE * a + 4 + 1 + 1 + 1 + MAX_AREA_SIZE
+		ld de, tmp_pcg_world__tags
+		ld hl, current_world__area_data + 4 + 1
+		or a
+		jr z, pcg_generate_world__random_division_point_from_mst_node_tagless_ptrs_loop_done
+pcg_generate_world__random_division_point_from_mst_node_tagless_ptrs_loop:
+		ld bc, WORLD_AREA__SIZE
+		add hl, bc
+		ex hl, de
+			ld bc, MAX_AREA_SIZE * 2
+			add hl, bc
+		ex hl, de
+		dec a
+		jr nz, pcg_generate_world__random_division_point_from_mst_node_tagless_ptrs_loop
+pcg_generate_world__random_division_point_from_mst_node_tagless_ptrs_loop_done:
+		ld c, (hl)
+		inc hl
+		ld b, (hl)
+		push bc
+			ld bc, MAX_AREA_SIZE + 1
+			add hl, bc
+		pop bc
+		; Here:
+		; - hl: ptr to divisions
+		; - de: ptr to tags
+		; - c, b: area width, height
+		ld ixl, c
+		ld ixh, b
+
+		; find candidates:
+		ld iy, tmp_pcg_world__candidates_list
+		ld (tmp_pcg_world__candidates_list_top), iy
+		xor a
+		ld (tmp_pcg_world__candidates_list_size), a
+	pop af  ; recover the target division ID
+	ld iyl, a  ; division ID we are after
+pcg_generate_world__random_division_point_from_mst_node_tagless_candidates_loop_y:
+	push bc
+pcg_generate_world__random_division_point_from_mst_node_tagless_candidates_loop_x:
+		ld a, (hl)
+		cp iyl  ; matches the division ID?
+		jr nz, pcg_generate_world__random_division_point_from_mst_node_tagless_candidates_loop_x_next
+		; potential candidate, just check if it's tagless:
+		ld a, (de)
+		or a
+		jr nz, pcg_generate_world__random_division_point_from_mst_node_tagless_candidates_loop_x_next
+		; add a candidate:
+		push hl
+			ld hl, (tmp_pcg_world__candidates_list_top)
+			ld a, c
+			sub ixl
+			neg
+			ld (hl), a  ; x
+			inc hl
+			ld a, b
+			sub ixh
+			neg
+			ld (hl), a  ; y
+			inc hl
+			ld (tmp_pcg_world__candidates_list_top), hl
+		pop hl
+		ld a, (tmp_pcg_world__candidates_list_size)
+		inc a
+		ld (tmp_pcg_world__candidates_list_size), a
+pcg_generate_world__random_division_point_from_mst_node_tagless_candidates_loop_x_next:
+		inc hl
+		inc de
+		inc de
+		dec c
+		jr nz, pcg_generate_world__random_division_point_from_mst_node_tagless_candidates_loop_x
+	pop bc
+	djnz pcg_generate_world__random_division_point_from_mst_node_tagless_candidates_loop_y
+	jp pcg_generate_world__random_bottom_most_point_tagless_sample
+
+
+;-----------------------------------------------
+; input:
+; - a: division ID
+; output:
+; - hl: ptr to mst node
+pcg_generate_world__get_mst_node_by_division_id:
+	ld hl, tmp_pcg_world__minimum_spanning_tree
+	ld bc, MST_STRUCTURE_SIZE
+pcg_generate_world__get_mst_node_by_division_id_loop:
+	cp (hl)  ; since MST_DIVISION_ID == 0, we can just cp (hl).
+	ret z
+	add hl, bc
+	jr pcg_generate_world__get_mst_node_by_division_id_loop
 
 
 ;-----------------------------------------------
