@@ -1242,7 +1242,6 @@ public class PCGWorld {
                         availableLockKeysChests.remove(lock);
                     }
                 }
-                
             }
             if (tmp == null) {
                 return null;

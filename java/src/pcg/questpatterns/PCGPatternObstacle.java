@@ -107,7 +107,6 @@ public class PCGPatternObstacle extends PCGPattern {
                 
         // update "reachable" (remove "goal" and all its descendants):
         {
-//            AreaDivision rootToRemove = qs.goal;
             AreaDivision rootToRemove = q.lockDivision;
             List<AreaDivision> toRemove = new ArrayList<>();
             for(AreaDivision d:reachable) {

@@ -14,6 +14,9 @@ tmp_pcg_world__mst_open_list: equ tmp_pcg_world__candidates_list
 tmp_pcg_world__mst_open_list_top: equ tmp_pcg_world__candidates_list_top
 tmp_pcg_world__mst_open_list_size: equ tmp_pcg_world__candidates_list_size
 
+tmp_pcg_world__tag_list: equ tmp_pcg_world__candidates_list
+tmp_pcg_world__tag_list_size: equ tmp_pcg_world__candidates_list_size
+
 tmp_pcg_world__tmp_ptr: ds virtual 2
 tmp_pcg_world__tags: ds virtual MAX_AREA_SIZE * MAX_WORLD_AREAS * 2  ; tags for all areas, at most 2 tags per room
 
@@ -67,7 +70,8 @@ tmp_pcg_world__useable_nodes_size: ds virtual 1
 tmp_pcg_world__reachable_nodes: ds virtual 128 * 2
 tmp_pcg_world__reachable_nodes_size: ds virtual 1
 
-tmp_pcg_world__quest_spec_open_list: ds virtual QUEST_SPEC_STRUCTURE_SIZE * 32
+SUB_QUEST_OPEN_LIST_SIZE: equ 32
+tmp_pcg_world__quest_spec_open_list: ds virtual QUEST_SPEC_STRUCTURE_SIZE * SUB_QUEST_OPEN_LIST_SIZE
 tmp_pcg_world__quest_spec_open_list_size: ds virtual 1
 
 
@@ -80,13 +84,13 @@ ENDIF
 tmp_pcg_world__area_0_connections: equ current_world__area_data + 4 + 1 + 1 + 1
 tmp_pcg_world__area_0_divisions: equ tmp_pcg_world__area_0_connections + MAX_AREA_SIZE
 tmp_pcg_world__area_0_tags: equ tmp_pcg_world__area_0_divisions + MAX_AREA_SIZE
-tmp_pcg_world__area_10_connections: equ current_world__area_data + 4 + 1 + 1 + 1 + WORLD_AREA__SIZE*10
-tmp_pcg_world__area_11_connections: equ current_world__area_data + 4 + 1 + 1 + 1 + WORLD_AREA__SIZE*11
-tmp_pcg_world__area_3_divisions: equ current_world__area_data + 4 + 1 + 1 + 1 + MAX_AREA_SIZE + WORLD_AREA__SIZE*3
-tmp_pcg_world__area_5_divisions: equ current_world__area_data + 4 + 1 + 1 + 1 + MAX_AREA_SIZE + WORLD_AREA__SIZE*5
-tmp_pcg_world__area_9_divisions: equ current_world__area_data + 4 + 1 + 1 + 1 + MAX_AREA_SIZE + WORLD_AREA__SIZE*9
-tmp_pcg_world__area_10_divisions: equ current_world__area_data + 4 + 1 + 1 + 1 + MAX_AREA_SIZE + WORLD_AREA__SIZE*10
-tmp_pcg_world__area_11_divisions: equ current_world__area_data + 4 + 1 + 1 + 1 + MAX_AREA_SIZE + WORLD_AREA__SIZE*11
+tmp_pcg_world__area_10_connections: equ tmp_pcg_world__area_0_connections + WORLD_AREA__SIZE*10
+tmp_pcg_world__area_11_connections: equ tmp_pcg_world__area_0_connections + WORLD_AREA__SIZE*11
+tmp_pcg_world__area_3_divisions: equ tmp_pcg_world__area_0_divisions + WORLD_AREA__SIZE*3
+tmp_pcg_world__area_5_divisions: equ tmp_pcg_world__area_0_divisions + WORLD_AREA__SIZE*5
+tmp_pcg_world__area_9_divisions: equ tmp_pcg_world__area_0_divisions + WORLD_AREA__SIZE*9
+tmp_pcg_world__area_10_divisions: equ tmp_pcg_world__area_0_divisions + WORLD_AREA__SIZE*10
+tmp_pcg_world__area_11_divisions: equ tmp_pcg_world__area_0_divisions + WORLD_AREA__SIZE*11
 
 ; Minimum-spanning tree node structure (12 bytes):
 MST_STRUCTURE_SIZE: equ 12
@@ -233,15 +237,15 @@ pcg_generate_world:
 	ld hl, hardcoded_area_data_0__connections
 	ld de, tmp_pcg_world__area_0_connections
 	ld bc, MAX_AREA_SIZE * 2
-	call pcg_debug__arrays_equal  ; mdl-watch: "checking area 0"
+	call pcg_debug__arrays_equal  ; mdl-watch: "checking area 0", hl, de
 	ld hl, hardcoded_area_data_10__connections
 	ld de, tmp_pcg_world__area_10_connections
 	ld bc, MAX_AREA_SIZE * 2
-	call pcg_debug__arrays_equal  ; mdl-watch: "checking area 10"
+	call pcg_debug__arrays_equal  ; mdl-watch: "checking area 10", hl, de
 	ld hl, hardcoded_area_data_11__connections
 	ld de, tmp_pcg_world__area_11_connections
 	ld bc, MAX_AREA_SIZE * 2
-	call pcg_debug__arrays_equal  ; mdl-watch: "checking area 11"
+	call pcg_debug__arrays_equal  ; mdl-watch: "checking area 11", hl, de
 
 	; for now just copy over the hardcoded data:
 ; 	ld hl, hardcoded_world_data
@@ -1684,7 +1688,7 @@ pcg_generate_world__random_bottom_left_most_point_final_loop_done:
 ; - z: success
 ; - nz: failure
 pcg_generate_world__add_tag:
-	ld c, l
+	ld c, l  ; mdl-watch: "pcg_generate_world__add_tag", a, b, l
 	ld hl, tmp_pcg_world__tags
 	or a
 	jr z, pcg_generate_world__add_tag_loop_done
@@ -2537,10 +2541,10 @@ pcg_generate_world__generate_mission:
 	PCG_WORLD__PUSH_QUEST tmp_pcg_world__mission_start_node, tmp_pcg_world__mission_boss3_node, 3, #ff, #ff, TAG_NONE, TAG_BOSS3
 	PCG_WORLD__PUSH_QUEST tmp_pcg_world__mission_start_node, tmp_pcg_world__mission_midpoint_node, 2, #ff, #ff, TAG_START, TAG_MIDPOINT
 	PCG_WORLD__PUSH_QUEST tmp_pcg_world__mission_start_node, tmp_pcg_world__mission_ending_node, 2, #ff, #ff, TAG_NONE, TAG_ENDING
+	call pcg_generate_world__generate_subquests
+	ret nz
 
 	; ...
-
-	; if (generateSubquests(w, tree, open, useable, reachable) == null) return false;
 
 	; // path to midpoint:
 	; QuestSpec q1b = new QuestSpec(boss1, midpoint, 0, null, null, null, null);
@@ -2581,6 +2585,89 @@ pcg_generate_world__generate_mission:
 
 
 ;-----------------------------------------------
+; output:
+; - z: success
+; - nz: failure
+pcg_generate_world__generate_subquests:
+	ld a, (tmp_pcg_world__quest_spec_open_list_size)
+	or a
+	ret z
+
+	ld ix, tmp_pcg_world__quest_spec_open_list  ; ix = ptr to first subquest in the open list
+
+	; Choose the subquest pattern to use, and use it to decompose the subquest:
+
+	; ...
+
+	call pcg_generate_world__subquest_pattern__a_to_b
+	ret nz
+
+	ld hl, tmp_pcg_world__quest_spec_open_list + QUEST_SPEC_STRUCTURE_SIZE
+	ld de, tmp_pcg_world__quest_spec_open_list
+	ld bc, (SUB_QUEST_OPEN_LIST_SIZE - 1) * QUEST_SPEC_STRUCTURE_SIZE
+	ldir
+	ld hl, tmp_pcg_world__quest_spec_open_list_size
+	dec (hl)
+	jr pcg_generate_world__generate_subquests
+
+
+;-----------------------------------------------
+; input:
+; - ix: ptr to subquest
+; output:
+; - z: success
+; - nz: failure
+pcg_generate_world__subquest_pattern__a_to_b:
+	; add start tag:
+	ld e, (ix + QUEST_SPEC_START_DIV_PTR)
+	ld d, (ix + QUEST_SPEC_START_DIV_PTR + 1)
+	ld a, (ix + QUEST_SPEC_START_TAG)  ; mdl-watch: "pcg_generate_world__subquest_pattern__a_to_b: start", a
+	or a
+	jr z, pcg_generate_world__subquest_pattern__a_to_b_start_tag_set
+	ld b, a
+	ld a, (ix + QUEST_SPEC_START_POINT_OFFSET)
+	cp #ff
+	jr nz, pcg_generate_world__subquest_pattern__a_to_b_start_offset_set
+	; get offset from mst node:
+	push de
+REPT MST_OFFSET
+		inc de
+ENDR
+		ld a, (de)
+		ld l, a
+	pop de
+pcg_generate_world__subquest_pattern__a_to_b_start_offset_set:
+	call pcg_generate_world__add_tag_to_point_in_mst_node_division
+	ret nz
+pcg_generate_world__subquest_pattern__a_to_b_start_tag_set:
+
+	; add goal tag:
+	ld e, (ix + QUEST_SPEC_GOAL_DIV_PTR)
+	ld d, (ix + QUEST_SPEC_GOAL_DIV_PTR + 1)
+	ld a, (ix + QUEST_SPEC_GOAL_TAG)  ; mdl-watch: "pcg_generate_world__subquest_pattern__a_to_b: goal", a
+	or a
+	jr z, pcg_generate_world__subquest_pattern__a_to_b_goal_tag_set
+	ld b, a
+	ld a, (ix + QUEST_SPEC_GOAL_POINT_OFFSET)
+	cp #ff
+	jr nz, pcg_generate_world__subquest_pattern__a_to_b_goal_offset_set
+	; get offset from mst node:
+	push de
+REPT MST_OFFSET
+		inc de
+ENDR
+		ld a, (de)
+		ld l, a
+	pop de
+pcg_generate_world__subquest_pattern__a_to_b_goal_offset_set:
+	call pcg_generate_world__add_tag_to_point_in_mst_node_division
+	ret nz
+pcg_generate_world__subquest_pattern__a_to_b_goal_tag_set:
+	xor a  ; z
+	ret
+
+
+;-----------------------------------------------
 ; point offset #ff is ignored
 PCG_WORLD__PUSH_QUEST: macro start_node_ptr, goal_node_ptr, n_subquests, start_point_offset, goal_point_offset, start_tag, goal_tag
 	ld hl, tmp_pcg_world__quest_spec_open_list_size
@@ -2601,7 +2688,7 @@ ENDIF
 	ld (hl), e
 	inc hl
 	ld (hl), d
-
+	inc hl
 	ld de, (goal_node_ptr)
 	ld (hl), e
 	inc hl
@@ -2681,7 +2768,7 @@ pcg_generate_world__reachable_nodes_match:
 			inc hl
 			ld (hl), d
 		ex de, hl
-		ld a, (hl)  ; mdl-watch: "reachable", a
+		ld a, (hl)
 		jr pcg_generate_world__reachable_nodes_loop_next
 
 
@@ -2777,7 +2864,7 @@ pcg_generate_world__random_area_mst_node_only_leaves_fail:
 ;-----------------------------------------------
 ; input:
 ; - a: tag
-; - hl: mst note
+; - hl: mst node
 ; output:
 ; - z: all ok
 ; - nz: tag could not be added (too many tags in the division)
@@ -2790,7 +2877,18 @@ pcg_generate_world__add_tag_to_random_point_in_mst_node_division:
 	pop de
 	pop bc
 	ret nz  ; no point available
+	; jp pcg_generate_world__add_tag_to_point_in_mst_node_division
 
+
+;-----------------------------------------------
+; input:
+; - b: tag
+; - de: mst node
+; - l: point offset
+; output:
+; - z: all ok
+; - nz: tag could not be added (too many tags in the division)
+pcg_generate_world__add_tag_to_point_in_mst_node_division:
 	; add tag to the point:
 	push de
 		inc de
@@ -2932,19 +3030,37 @@ pcg_generate_world__spawn_additional_objects:
 
 ;-----------------------------------------------
 pcg_generate_world__generate_tag_data:
+	ld de, tmp_pcg_world__tags
 	ld hl, tmp_pcg_world__area_0_tags
 	ld b, MAX_WORLD_AREAS
-
-pcg_generate_world__generate_tag_data_loop:
+pcg_generate_world__generate_tag_data_area_loop:
 	push bc
 		push hl
-			ld bc, MAX_AREA_N_TAGS * 3 - 1
-			call clear_memory
+			push de
+				ld bc, MAX_AREA_N_TAGS * 3 - 1
+				call clear_memory
+			pop hl
+			push hl
+				; Get all the placed tags in the area: tag + offset
+				call pcg_generate_world__generate_sorted_area_tag_list  ; list goes to "tmp_pcg_world__tag_list"
+			pop de
 		pop hl
+
+		push hl
+		push de
+			call pcg_generate_world__generate_tag_data_internal
+		pop de
+		pop hl
+
+		; Advance the pointers
 		ld bc, WORLD_AREA__SIZE
 		add hl, bc
+		ex de, hl
+			ld bc, MAX_AREA_SIZE * 2
+			add hl, bc
+		ex de, hl
 	pop bc
-	djnz pcg_generate_world__generate_tag_data_loop
+	djnz pcg_generate_world__generate_tag_data_area_loop
 
 	; chest content:
 	ld hl, current_world__chest_content
@@ -2952,11 +3068,174 @@ pcg_generate_world__generate_tag_data_loop:
 	ld a, #ff
 	call clear_memory_a
 
+	; ...
+
 	; extra shop items:
 	ld hl, current_world__shop_extra_items
 	ld (hl), 0
 	inc hl
 	ld (hl), 0
+
+	; ...
+
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - hl: pointer to the tag area data to generate
+pcg_generate_world__generate_tag_data_internal:
+	ld a, (tmp_pcg_world__tag_list_size)  ; mdl-watch: "pcg_generate_world__generate_tag_data_internal", hl
+	ld b, a
+	or a
+	jr z, pcg_generate_world__generate_tag_data_internal_loop_done
+	ld de, tmp_pcg_world__tag_list
+pcg_generate_world__generate_tag_data_internal_loop:
+	; For each tag:
+	ld a, (de)
+
+	; check if it's within a chest:
+	; ...
+	; jr z, pcg_generate_world__generate_tag_data_internal_loop_next
+
+	ld iyl, 0  ; default direction:
+	; check if it's a lock in tmp_pcg_world__lock_directions, and get its direction:
+	push hl
+	push bc
+		ld a, (tmp_pcg_world__lock_directions_size)
+		ld hl, tmp_pcg_world__lock_directions
+		or a
+		jr z, pcg_generate_world__generate_tag_data_internal_lock_direction_loop_done
+		ld b, a
+		ld a, (de)  ; recover the tag
+pcg_generate_world__generate_tag_data_internal_lock_direction_loop:
+		cp (hl)
+		jr nz, pcg_generate_world__generate_tag_data_internal_lock_direction_loop_next
+		inc hl
+		ld a, (hl)  ; lock direction
+		ld iyl, a
+		jr pcg_generate_world__generate_tag_data_internal_lock_direction_loop_done
+pcg_generate_world__generate_tag_data_internal_lock_direction_loop_next:
+		inc hl
+		inc hl
+		djnz pcg_generate_world__generate_tag_data_internal_lock_direction_loop
+pcg_generate_world__generate_tag_data_internal_lock_direction_loop_done:
+	pop bc
+	pop hl
+
+	ld a, (de)  ; tag
+	ld (hl), a
+	inc hl
+	inc de
+	ld a, (de)  ; offset
+	ld (hl), a
+	inc hl
+	inc de
+	ld a, iyl  ; direction
+	ld (hl), a
+	inc hl
+	jr pcg_generate_world__generate_tag_data_internal_loop_next_no_inc
+
+pcg_generate_world__generate_tag_data_internal_loop_next:
+	inc de
+	inc de
+pcg_generate_world__generate_tag_data_internal_loop_next_no_inc:
+	djnz pcg_generate_world__generate_tag_data_internal_loop
+pcg_generate_world__generate_tag_data_internal_loop_done:
+	ld (hl), #ff  ; sentinel
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - hl: ptr to the entry of the corresponding area in "tmp_pcg_world__tags".
+pcg_generate_world__generate_sorted_area_tag_list:
+	ld de, tmp_pcg_world__tag_list  ; mdl-watch: "pcg_generate_world__generate_sorted_area_tag_list"
+	ld iyl, 0  ; list size
+	ld b, MAX_AREA_SIZE
+pcg_generate_world__generate_sorted_area_tag_list_loop:
+	ld a, (hl)
+	or a
+	jr z, pcg_generate_world__generate_sorted_area_tag_list_loop_next2
+	; there is a tag:
+	ld (de), a  ; tag  ; mdl-watch: "    tag 1: ", a
+	inc de
+	ld a, b
+	sub MAX_AREA_SIZE
+	neg
+	ld (de), a  ; offset  ; mdl-watch: "    offset 1: ", a
+	inc de
+	inc iyl
+
+	inc hl
+	ld a, (hl)
+	or a
+	jr z, pcg_generate_world__generate_sorted_area_tag_list_loop_next1
+	; there is a second tag:
+	ld (de), a  ; tag  ; mdl-watch: "    tag 2: ", a
+	inc de
+	ld a, b
+	sub MAX_AREA_SIZE
+	neg
+	ld (de), a  ; offset  ; mdl-watch: "    offset 2: ", a
+	inc de
+	inc iyl
+	jr pcg_generate_world__generate_sorted_area_tag_list_loop_next1
+
+pcg_generate_world__generate_sorted_area_tag_list_loop_next2:
+	inc hl
+pcg_generate_world__generate_sorted_area_tag_list_loop_next1:
+	inc hl
+
+	djnz pcg_generate_world__generate_sorted_area_tag_list_loop
+
+	ld a, iyl
+	ld (tmp_pcg_world__tag_list_size), a  ; mdl-watch:  "    n tags:", a
+
+	cp 2
+	jr c, pcg_generate_world__generate_sorted_area_tag_list_sort_done
+
+	; Sort them by increasing TAG (bubble sort):
+	ld b, iyl
+	dec b
+	ld hl, tmp_pcg_world__tag_list
+	ld de, tmp_pcg_world__tag_list + 2
+pcg_generate_world__generate_sorted_area_tag_list_sort_loop1:
+	push bc
+		ld ixl, 0  ; no swap  ; mdl-watch: "sort iteration", b
+pcg_generate_world__generate_sorted_area_tag_list_sort_loop2:
+		ld a, (de)
+		cp (hl)
+		jr nc, pcg_generate_world__generate_sorted_area_tag_list_sort_loop2_next
+		; swap:
+		ld ixl, 1
+		ld c, (hl)  ; mdl-watch: "    swap", c, a
+		ld (hl), a
+		ld a, c
+		ld (de), a
+
+		inc de
+		inc hl
+		ld a, (de)
+		ld c, (hl)
+		ld (hl), a
+		ld a, c
+		ld (de), a
+		dec de
+		dec hl
+
+pcg_generate_world__generate_sorted_area_tag_list_sort_loop2_next:
+		inc hl
+		inc de
+		inc hl
+		inc de
+		djnz pcg_generate_world__generate_sorted_area_tag_list_sort_loop2
+	pop bc
+	ld a, ixl
+	or a
+	jr z, pcg_generate_world__generate_sorted_area_tag_list_sort_done  ; no swap done in the last iteration
+	djnz pcg_generate_world__generate_sorted_area_tag_list_sort_loop1
+pcg_generate_world__generate_sorted_area_tag_list_sort_done:
 	ret
 
 
