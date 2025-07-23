@@ -25,7 +25,7 @@ public class PCGPatternNKeysAndChestLock extends PCGPattern {
     {
 //        System.out.println("PCGPatternNKeysAndChestLock: " + qs.startTag + " -> " +  Arrays.toString(keytags) + " -> " + locktag + " -> " + qs.goalTag);
         int nKeys = keytags.length;
-        Quest q = new Quest(nKeys + "-keys-and-lock: " + qs.start.divisionID + " -> " + qs.goal.divisionID);
+        Quest q = new Quest(nKeys + "-keys-and-chestlock: " + qs.start.divisionID + " -> " + qs.goal.divisionID);
         q.useable.addAll(useable);
         q.reachable.addAll(reachable);
         
@@ -50,6 +50,7 @@ public class PCGPatternNKeysAndChestLock extends PCGPattern {
         
         // update "reachable" (remove "goal" and all its descendants):
         {
+            System.out.println("    remove reachable/useable under " + qs.goal.divisionID);
             List<AreaDivision> toRemove = new ArrayList<>();
             for(AreaDivision d:reachable) {
                 if (pcg.treeParents(d).contains(qs.goal)) {
@@ -69,6 +70,8 @@ public class PCGPatternNKeysAndChestLock extends PCGPattern {
             }
 //            System.out.println("  PCGPatternNKeysAndChestLock: goal ("+qs.goalTag+") set to " + qs.goal + " with lock at "+q.lockDivision+". Removing: " + toRemove);
         }
+        
+        System.out.println("    key tags: " + Arrays.toString(keytags));
         
         // Sample nodes in the reachable tree, with bias to leaves, and to leaves that are close to the goal:
         List<QuestSpec> subquests = new ArrayList<>();

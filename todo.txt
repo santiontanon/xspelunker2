@@ -2,6 +2,7 @@ to do:
 
 ***- Implement PCGWorld in assembler:
   ***- Verify generateSubquests matches Java
+  ***- remove all the "DEBUG" line in pcg-world.asm
   ***- generate all the other subquests required for the game (path to midpoint, boss4, etc.)
   ***- spawn_additional_objects
   ***- shop extra items (in "pcg_generate_world__generate_tag_data")

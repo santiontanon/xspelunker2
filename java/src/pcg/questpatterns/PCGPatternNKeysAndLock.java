@@ -5,6 +5,7 @@
 package pcg.questpatterns;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import pcg.AreaDivision;
 import pcg.AreaPoint;
@@ -21,7 +22,7 @@ import util.Pair;
 public class PCGPatternNKeysAndLock extends PCGPattern {
     public Pair<Quest, List<QuestSpec>> generate(World w, QuestSpec qs, String keytags[], String locktag, List<AreaDivision> useable, List<AreaDivision> reachable, PCGWorld pcg)
     {
-//        System.out.println("PCGPatternNKeysAndLock: " + qs.startTag + " -> " +  Arrays.toString(keytags) + " -> " + locktag + " -> " + qs.goalTag);
+        System.out.println("    PCGPatternNKeysAndLock: " + qs.startTag + " -> " +  Arrays.toString(keytags) + " -> " + locktag + " -> " + qs.goalTag);
         int nKeys = keytags.length;
         Quest q = new Quest(nKeys + "-keys-and-lock: " + qs.start.divisionID + " -> " + qs.goal.divisionID);
         q.useable.addAll(useable);
@@ -109,10 +110,11 @@ public class PCGPatternNKeysAndLock extends PCGPattern {
         }
             
         
-        // update "reachable" (remove "goal" and all its descendants):
+        // update "reachable" (remove the descendants of the lock):
         {
 //            AreaDivision rootToRemove = qs.goal;
             AreaDivision rootToRemove = q.lockDivision;
+            System.out.println("    remove reachable/useable under " + rootToRemove.divisionID);
             List<AreaDivision> toRemove = new ArrayList<>();
             for(AreaDivision d:reachable) {
 //                if (pcg.treeParents(d).contains(qs.goal)) {

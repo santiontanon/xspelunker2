@@ -26,4 +26,14 @@ public class QuestSpec {
         goalTag = a_goalTag;
         nSubQuests = a_n;
     }
+    
+    
+    @Override
+    public String toString()
+    {
+        return "QuestSpec(div " + start.divisionID + ", div " + goal.divisionID + ", " +
+                        (startPoint == null? "-" : "off " + (startPoint.x + startPoint.y * startPoint.a.width)) + ", " +
+                        (startPoint == null? "-" : "off " + (goalPoint.x + goalPoint.y * goalPoint.a.width)) + ", " +
+                         startTag + ", " + goalTag + ", " + nSubQuests + ")";
+    }
 }

@@ -7,7 +7,6 @@ package pcg;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import pcg.questpatterns.PCGPatternAtoB;
 import pcg.questpatterns.PCGPatternNKeysAndChestLock;
@@ -135,9 +134,12 @@ public class PCGWorld {
       1.0,  // fire shaft
       0.0, 0.0, 0.0, 0.0, 0.0, 0.0
     };
-    public LinkedHashMap<String, String[]> availableLockKeysObstacles = new LinkedHashMap<>();
-    public LinkedHashMap<String, String[]> availableLockKeysChests = new LinkedHashMap<>();
-    public LinkedHashMap<String, String[]> availableLockKeys = new LinkedHashMap<>();
+    public HashMap<String, String[]> availableLockKeysObstacles = new HashMap<>();
+    public HashMap<String, String[]> availableLockKeysChests = new HashMap<>();
+    public HashMap<String, String[]> availableLockKeys = new HashMap<>();
+    public List<String> availableLockKeysObstaclesSorted = new ArrayList<>();
+    public List<String> availableLockKeysChestsSorted = new ArrayList<>();
+    public List<String> availableLockKeysSorted = new ArrayList<>();
     public List<String> remainingTriviaTabletFns = new ArrayList<>();
 
 
@@ -162,6 +164,9 @@ public class PCGWorld {
         availableLockKeysObstacles.clear();
         availableLockKeysChests.clear();
         availableLockKeys.clear();
+        availableLockKeysObstaclesSorted.clear();
+        availableLockKeysChestsSorted.clear();
+        availableLockKeysSorted.clear();
         
         // Key lock combinations:
         // obstacles:
@@ -169,24 +174,28 @@ public class PCGWorld {
         availableLockKeysObstacles.put("button-door2", new String[]{"button2"});
         availableLockKeysObstacles.put("button-door3", new String[]{"button3"});
         availableLockKeysObstacles.put("button-door4", new String[]{"button4"});
+        availableLockKeysObstaclesSorted.add("button-door1");
+        availableLockKeysObstaclesSorted.add("button-door2");
+        availableLockKeysObstaclesSorted.add("button-door3");
+        availableLockKeysObstaclesSorted.add("button-door4");
 
-//        availableLockKeysObstacles.put("breakable-wall1", new String[]{"wall1-key"});
-//        availableLockKeysObstacles.put("breakable-wall2", new String[]{"wall2-key"});
-//        availableLockKeysObstacles.put("breakable-wall3", new String[]{"wall3-key"});
-//        availableLockKeysObstacles.put("breakable-wall4", new String[]{"wall4-key"});
         availableLockKeysObstacles.put("breakable-wall1", new String[]{"none"});
         availableLockKeysObstacles.put("breakable-wall2", new String[]{"none"});
         availableLockKeysObstacles.put("breakable-wall3", new String[]{"none"});
         availableLockKeysObstacles.put("breakable-wall4", new String[]{"none"});
+        availableLockKeysObstaclesSorted.add("breakable-wall1");
+        availableLockKeysObstaclesSorted.add("breakable-wall2");
+        availableLockKeysObstaclesSorted.add("breakable-wall3");
+        availableLockKeysObstaclesSorted.add("breakable-wall4");
 
-//        availableLockKeysObstacles.put("block-puzzle1", new String[]{"block-key1"});
-//        availableLockKeysObstacles.put("block-puzzle2", new String[]{"block-key2"});
-//        availableLockKeysObstacles.put("block-puzzle3", new String[]{"block-key3"});
-//        availableLockKeysObstacles.put("block-puzzle4", new String[]{"block-key4"});
         availableLockKeysObstacles.put("block-puzzle1", new String[]{"none"});
         availableLockKeysObstacles.put("block-puzzle2", new String[]{"none"});
         availableLockKeysObstacles.put("block-puzzle3", new String[]{"none"});
         availableLockKeysObstacles.put("block-puzzle4", new String[]{"none"});
+        availableLockKeysObstaclesSorted.add("block-puzzle1");
+        availableLockKeysObstaclesSorted.add("block-puzzle2");
+        availableLockKeysObstaclesSorted.add("block-puzzle3");
+        availableLockKeysObstaclesSorted.add("block-puzzle4");
 
         // Chest locks:
         availableLockKeysChests.put("red-chest", new String[]{"red-key"});
@@ -195,6 +204,12 @@ public class PCGWorld {
         availableLockKeysChests.put("yellow-chest", new String[]{"yellow-key"});
         availableLockKeysChests.put("white-chest", new String[]{"white-key"});
         availableLockKeysChests.put("purple-chest", new String[]{"purple-key"});
+        availableLockKeysChestsSorted.add("red-chest");
+        availableLockKeysChestsSorted.add("green-chest");
+        availableLockKeysChestsSorted.add("blue-chest");
+        availableLockKeysChestsSorted.add("yellow-chest");
+        availableLockKeysChestsSorted.add("white-chest");
+        availableLockKeysChestsSorted.add("purple-chest");
 
         // locks:
         availableLockKeys.put("red-lock", new String[]{"red-key"});
@@ -203,21 +218,39 @@ public class PCGWorld {
         availableLockKeys.put("yellow-lock", new String[]{"yellow-key"});
         availableLockKeys.put("white-lock", new String[]{"white-key"});
         availableLockKeys.put("purple-lock", new String[]{"purple-key"});
+        availableLockKeysSorted.add("red-lock");
+        availableLockKeysSorted.add("green-lock");
+        availableLockKeysSorted.add("blue-lock");
+        availableLockKeysSorted.add("yellow-lock");
+        availableLockKeysSorted.add("white-lock");
+        availableLockKeysSorted.add("purple-lock");
 
         availableLockKeys.put("trial1-lock", new String[]{"trial1-clue"});
         availableLockKeys.put("trial2-lock", new String[]{"trial2-clue"});
         availableLockKeys.put("trial3-lock", new String[]{"trial3-clue"});
         availableLockKeys.put("trial4-lock", new String[]{"trial4-clue"});
+        availableLockKeysSorted.add("trial1-lock");
+        availableLockKeysSorted.add("trial2-lock");
+        availableLockKeysSorted.add("trial3-lock");
+        availableLockKeysSorted.add("trial4-lock");
 
         availableLockKeys.put("combination1-lock", new String[]{"combination1-clue"});
         availableLockKeys.put("combination2-lock", new String[]{"combination2-clue"});
         availableLockKeys.put("combination3-lock", new String[]{"combination3-clue"});
         availableLockKeys.put("combination4-lock", new String[]{"combination4-clue"});
+        availableLockKeysSorted.add("combination1-lock");
+        availableLockKeysSorted.add("combination2-lock");
+        availableLockKeysSorted.add("combination3-lock");
+        availableLockKeysSorted.add("combination4-lock");
 
         availableLockKeys.put("ball-lock", new String[]{"ball-key"});
         availableLockKeys.put("idol-lock", new String[]{"idol-key"});
         availableLockKeys.put("gear-lock", new String[]{"gear-key"});
         availableLockKeys.put("astronaut-lock", new String[]{"astronaut-key"});
+        availableLockKeysSorted.add("ball-lock");
+        availableLockKeysSorted.add("idol-lock");
+        availableLockKeysSorted.add("gear-lock");
+        availableLockKeysSorted.add("astronaut-lock");
         
         remainingTriviaTabletFns.clear();
         remainingTriviaTabletFns.add("story_trivia_tablet_fn_story1");
@@ -1124,6 +1157,7 @@ public class PCGWorld {
     public List<Quest> generateSubquests(World w, List<AreaDivision> tree, List<QuestSpec> open,
                                          List<AreaDivision> useable, List<AreaDivision> reachable) throws Exception
     {
+        System.out.println("-------- generateSubquests --------");
         PCGPatternAtoB pat_a2b = new PCGPatternAtoB();
         PCGPatternObstacle pat_o = new PCGPatternObstacle();
         PCGPatternNKeysAndChestLock pat_kcl = new PCGPatternNKeysAndChestLock();
@@ -1132,11 +1166,14 @@ public class PCGWorld {
         List<Quest> quests = new ArrayList<>();
 
         while(!open.isEmpty()) {
-            // System.out.println("open: " + open.size() + ", useable: " + useable.size() + ", reachable: " + reachable.size());
+            System.out.println("open: " + open.size() + ", useable: " + useable.size() + ", reachable: " + reachable.size());
+            System.out.println("    seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
             QuestSpec qs = open.remove(0);
             Pair<Quest, List<QuestSpec>> tmp = null;
+            System.out.println("    QuestSpec: " + qs);
             // Choose quest:
             if (qs.nSubQuests == 0) {
+                System.out.println("    quest_type: a_to_b");
                 // Just a path, no subquests:
                 tmp = pat_a2b.generate(w, qs, useable, reachable);
                 if (tmp == null) {
@@ -1163,7 +1200,8 @@ public class PCGWorld {
                     case "ending":
                         // midpoint or ending cannot be inside a chest!
                         if (quest_type == 1) {
-                            quest_type = r.nextInt(2) * 2;  // 0 or 2                        
+                            quest_type = r.nextInt(2) * 2;  // 0 or 2
+                            System.out.println("        new quest_type (midpoint/ending): " + quest_type);
                         }
                         break;
                     default:
@@ -1177,16 +1215,18 @@ public class PCGWorld {
 //                System.out.println("key_tags: " + Arrays.toString(key_tags));
                 
 //                System.out.println("locks left: " + availableLockKeysObstacles.size() + ", " + availableLockKeysChests.size() + ", " + availableLockKeys.size());
-                
+    
+                System.out.println("    quest_type: " + quest_type);
+
                 switch(quest_type) {
                     case 0:
                         if (lock_tag == null) {
-                            lock_tag = randomLock(availableLockKeysObstacles);
+                            lock_tag = randomLock(availableLockKeysObstaclesSorted);
                             if (lock_tag == null) {
                                 return null;
                             }
                             key_tags = availableLockKeysObstacles.get(lock_tag);
-                            availableLockKeysObstacles.remove(lock_tag);
+                            availableLockKeysObstaclesSorted.remove(lock_tag);
                         }
                         tmp = pat_o.generate(w, qs, key_tags[0], lock_tag, useable, reachable, this);
                         if (tmp == null) {
@@ -1196,12 +1236,12 @@ public class PCGWorld {
 
                     case 1:
                         if (lock_tag == null) {
-                            lock_tag = randomLock(availableLockKeysChests);
+                            lock_tag = randomLock(availableLockKeysChestsSorted);
                             if (lock_tag == null) {
                                 return null;
                             }
                             key_tags = availableLockKeysChests.get(lock_tag);
-                            availableLockKeysChests.remove(lock_tag);
+                            availableLockKeysChestsSorted.remove(lock_tag);
                         }
                         w.chestContent.put(lock_tag, qs.goalTag);
                         w.withinChestTag.add(qs.goalTag);
@@ -1213,12 +1253,12 @@ public class PCGWorld {
 
                     case 2:
                         if (lock_tag == null) {
-                            lock_tag = randomLock(availableLockKeys);
+                            lock_tag = randomLock(availableLockKeysSorted);
                             if (lock_tag == null) {
                                 return null;
                             }
                             key_tags = availableLockKeys.get(lock_tag);
-                            availableLockKeys.remove(lock_tag);
+                            availableLockKeysSorted.remove(lock_tag);
                         }
                         tmp = pat_kl.generate(w, qs, key_tags, lock_tag, useable, reachable, this);
                         if (tmp == null) {
@@ -1242,8 +1282,8 @@ public class PCGWorld {
                         }
                     }
                     for(String lock:toDelete) {
-                        availableLockKeys.remove(lock);
-                        availableLockKeysChests.remove(lock);
+                        availableLockKeysSorted.remove(lock);
+                        availableLockKeysChestsSorted.remove(lock);
                     }
                 }
             }
@@ -1272,15 +1312,13 @@ public class PCGWorld {
     }
     
     
-    public String randomLock(HashMap<String, String[]> locks)
+    public String randomLock(List<String> sortedLocks) throws Exception
     {
-        if (locks.isEmpty()) return null;
-        int n = r.nextInt(locks.keySet().size());
-        for(String lock:locks.keySet()) {
-            if (n == 0) return lock;
-            n--;
-        }
-        return null;
+        if (sortedLocks.isEmpty()) return null;
+        System.out.println("        randomLock seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+        int n = r.nextInt(sortedLocks.size());
+        System.out.println("        randomLock: " + n + " / " + sortedLocks.size());
+        return sortedLocks.get(n);
     }
     
     
