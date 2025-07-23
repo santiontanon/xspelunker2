@@ -4,7 +4,7 @@ set -e
 # We expect HL == 0 if all tests pass, or contain the number of the test that failed otherwise.
 read_from_symbol_file () {
 	echo "Executing tests in $1..."	
-	print_lines=true
+	print_lines=false
 	while IFS= read -r line; do
 		if [[ $print_lines == true ]] ;
 		then
@@ -28,5 +28,4 @@ read_from_symbol_file () {
 }
 
 
-# No unit tests for this project currently
-# read_from_symbol_file "src/unittests/collision-test.asm" "a_times_de_signed_fast"
+read_from_symbol_file "src/unittests/pcg-world-test.asm" "test__"

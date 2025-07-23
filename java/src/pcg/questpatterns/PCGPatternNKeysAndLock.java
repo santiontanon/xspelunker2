@@ -153,6 +153,7 @@ public class PCGPatternNKeysAndLock extends PCGPattern {
                 if (keyPoint != null) {
                     break;
                 }
+//                System.out.println("!!!!!!");
                 candidates.remove(keyDivision);
                 n_retries--;
             }

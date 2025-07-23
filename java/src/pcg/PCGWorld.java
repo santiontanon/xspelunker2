@@ -5,7 +5,9 @@
 package pcg;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import pcg.questpatterns.PCGPatternAtoB;
 import pcg.questpatterns.PCGPatternNKeysAndChestLock;
@@ -133,9 +135,9 @@ public class PCGWorld {
       1.0,  // fire shaft
       0.0, 0.0, 0.0, 0.0, 0.0, 0.0
     };
-    public HashMap<String, String[]> availableLockKeysObstacles = new HashMap<>();
-    public HashMap<String, String[]> availableLockKeysChests = new HashMap<>();
-    public HashMap<String, String[]> availableLockKeys = new HashMap<>();
+    public LinkedHashMap<String, String[]> availableLockKeysObstacles = new LinkedHashMap<>();
+    public LinkedHashMap<String, String[]> availableLockKeysChests = new LinkedHashMap<>();
+    public LinkedHashMap<String, String[]> availableLockKeys = new LinkedHashMap<>();
     public List<String> remainingTriviaTabletFns = new ArrayList<>();
 
 
@@ -1172,6 +1174,8 @@ public class PCGWorld {
                     quest_type = 2;
                 }
                 
+//                System.out.println("key_tags: " + Arrays.toString(key_tags));
+                
 //                System.out.println("locks left: " + availableLockKeysObstacles.size() + ", " + availableLockKeysChests.size() + ", " + availableLockKeys.size());
                 
                 switch(quest_type) {
@@ -1317,7 +1321,7 @@ public class PCGWorld {
             if (!blocked) {
                 if (parents.contains(start)) {
                     reachable.add(d);
-                    System.out.println("Reachable: " + d.divisionID);
+//                    System.out.println("Reachable: " + d.divisionID);
                 }
             }
         }

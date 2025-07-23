@@ -39,7 +39,6 @@ public class PCGPatternNKeysAndChestLock extends PCGPattern {
         q.goalTag = qs.goalTag;
         
         // Generate key and lock locations:
-        // lock is the point that connects to the goal (in the parent area)
         q.lockDivision = q.goalDivision;
         q.lockPoint = q.goalPoint;
         q.lockTag = locktag;
@@ -48,7 +47,6 @@ public class PCGPatternNKeysAndChestLock extends PCGPattern {
         if (!pcg.canPlaceTag(q.lockPoint, q.lockTag)) {
             System.out.println("!!!");
         }
-        
         
         // update "reachable" (remove "goal" and all its descendants):
         {
@@ -90,6 +88,7 @@ public class PCGPatternNKeysAndChestLock extends PCGPattern {
 //                System.out.println("    chest keyDivision "+keytags[i]+": " + keyDivision);
                 keyPoint = pcg.randomDivisionPoint(keyDivision, true);
                 if (keyPoint != null) break;
+//                System.out.println("!!!!!!");
                 n_retries--;
                 candidates.remove(keyDivision);
             }

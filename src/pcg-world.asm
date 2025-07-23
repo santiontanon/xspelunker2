@@ -74,6 +74,12 @@ SUB_QUEST_OPEN_LIST_SIZE: equ 32
 tmp_pcg_world__quest_spec_open_list: ds virtual QUEST_SPEC_STRUCTURE_SIZE * SUB_QUEST_OPEN_LIST_SIZE
 tmp_pcg_world__quest_spec_open_list_size: ds virtual 1
 
+tmp_pcg_world__available_lock_keys_obstacles: ds virtual tmp_pcg_world__available_lock_keys_chests_rom - tmp_pcg_world__available_lock_keys_obstacles_rom
+tmp_pcg_world__available_lock_keys_chests: ds virtual tmp_pcg_world__available_lock_keys_rom - tmp_pcg_world__available_lock_keys_chests_rom
+tmp_pcg_world__available_lock_keys: ds virtual tmp_pcg_world__available_lock_keys_init_rom_end - tmp_pcg_world__available_lock_keys_rom
+
+tmp_pcg_world__lock_tag_tmp: ds virtual 1
+tmp_pcg_world__key_tag_tmp: ds virtual 1
 
 IF $ > current_room__tile_map + MAX_ROOM_SIZE
 	ERROR "pcg-world.asm uses too much RAM in current_room__tile_map!"
@@ -207,6 +213,52 @@ pgc__n_divisions_per_area:
 	db  6, 12, 12,  3
 	db 12,  3, 12, 12
 	db 12, 12, 12, 12  ; 120 + 2 divisions (+ 2 since there are 2 hardcoded divisions in the confluence)
+
+
+tmp_pcg_world__available_lock_keys_init_rom:
+tmp_pcg_world__available_lock_keys_obstacles_rom:
+	db TAG_BUTTON_DOOR1, TAG_BUTTON1
+	db TAG_BUTTON_DOOR2, TAG_BUTTON2
+	db TAG_BUTTON_DOOR3, TAG_BUTTON3
+	db TAG_BUTTON_DOOR4, TAG_BUTTON4
+	db TAG_BREAKABLE_WALL1, TAG_NONE
+	db TAG_BREAKABLE_WALL2, TAG_NONE
+	db TAG_BREAKABLE_WALL3, TAG_NONE
+	db TAG_BREAKABLE_WALL4, TAG_NONE
+	db TAG_BLOCK_PUZZLE1, TAG_NONE
+	db TAG_BLOCK_PUZZLE2, TAG_NONE
+	db TAG_BLOCK_PUZZLE3, TAG_NONE
+	db TAG_BLOCK_PUZZLE4, TAG_NONE
+	db #ff
+tmp_pcg_world__available_lock_keys_chests_rom:
+	db TAG_RED_CHEST, TAG_RED_KEY
+	db TAG_GREEN_CHEST, TAG_GREEN_KEY
+	db TAG_BLUE_CHEST, TAG_BLUE_KEY
+	db TAG_YELLOW_CHEST, TAG_YELLOW_KEY
+	db TAG_WHITE_CHEST, TAG_WHITE_KEY
+	db TAG_PURPLE_CHEST, TAG_PURPLE_KEY
+	db #ff
+tmp_pcg_world__available_lock_keys_rom:
+	db TAG_RED_LOCK, TAG_RED_KEY
+	db TAG_GREEN_LOCK, TAG_GREEN_KEY
+	db TAG_BLUE_LOCK, TAG_BLUE_KEY
+	db TAG_YELLOW_LOCK, TAG_YELLOW_KEY
+	db TAG_WHITE_LOCK, TAG_WHITE_KEY
+	db TAG_PURPLE_LOCK, TAG_PURPLE_KEY
+	db TAG_TRIAL1_LOCK, TAG_TRIAL1_CLUE
+	db TAG_TRIAL2_LOCK, TAG_TRIAL2_CLUE
+	db TAG_TRIAL3_LOCK, TAG_TRIAL3_CLUE
+	db TAG_TRIAL4_LOCK, TAG_TRIAL4_CLUE
+	db TAG_COMBINATION1_LOCK, TAG_COMBINATION1_CLUE
+	db TAG_COMBINATION2_LOCK, TAG_COMBINATION2_CLUE
+	db TAG_COMBINATION3_LOCK, TAG_COMBINATION3_CLUE
+	db TAG_COMBINATION4_LOCK, TAG_COMBINATION4_CLUE
+	db TAG_BALL_LOCK, TAG_BALL_KEY
+	db TAG_IDOL_LOCK, TAG_IDOL_KEY
+	db TAG_GEAR_LOCK, TAG_GEAR_KEY
+	db TAG_ASTRONAUT_LOCK, TAG_ASTRONAUT_KEY
+	db #ff
+tmp_pcg_world__available_lock_keys_init_rom_end:
 
 
 ;-----------------------------------------------
@@ -1704,15 +1756,58 @@ pcg_generate_world__add_tag_loop_done:
 		add hl, bc  ; we add it twice, since we can have two tags per room
 	pop bc
 	ld a, (hl)
+	cp b
+	ret z  ; tag is already there
 	or a
 	jr z, pcg_generate_world__add_tag_found_spot
 	inc hl
 	ld a, (hl)
+	cp b
+	ret z  ; tag is already there
 	or a
 	ret nz
 pcg_generate_world__add_tag_found_spot:
 	ld (hl), b
 	ret  ; we will always have "z" here
+
+
+;-----------------------------------------------
+; Same as "pcg_generate_world__add_tag" but only checks if the tag can be added instead of
+; actually adding it.
+; input:
+; - a: area
+; - b: tag
+; - l: offset
+; output:
+; - z: success
+; - nz: failure
+pcg_generate_world__could_add_tag:
+	ld c, l  ; mdl-watch: "pcg_generate_world__add_tag", a, b, l
+	ld hl, tmp_pcg_world__tags
+	or a
+	jr z, pcg_generate_world__could_add_tag_loop_done
+	ld de, MAX_AREA_SIZE * 2
+pcg_generate_world__could_add_tag_loop:
+	add hl, de
+	dec a
+	jr nz, pcg_generate_world__could_add_tag_loop
+pcg_generate_world__could_add_tag_loop_done:
+	push bc
+		ld b, 0
+		add hl, bc
+		add hl, bc  ; we add it twice, since we can have two tags per room
+	pop bc
+	ld a, (hl)
+	cp b
+	ret z  ; tag is already there
+	or a
+	ret z  ; empty spot
+	inc hl
+	ld a, (hl)
+	cp b
+	ret z  ; tag is already there
+	or a
+	ret
 
 
 ;-----------------------------------------------
@@ -2420,6 +2515,11 @@ pcg_generate_world__push_mst_node_n_descendants_loop:
 ; - z: all ok
 ; - nz: some error happened
 pcg_generate_world__generate_mission:
+	ld hl, tmp_pcg_world__available_lock_keys_init_rom
+	ld de, tmp_pcg_world__available_lock_keys_obstacles
+	ld bc, tmp_pcg_world__available_lock_keys_init_rom_end - tmp_pcg_world__available_lock_keys_init_rom
+	ldir
+
 	ld hl, tmp_pcg_world__minimum_spanning_tree
 	ld (tmp_pcg_world__mission_start_node), hl
 
@@ -2589,26 +2689,204 @@ pcg_generate_world__generate_mission:
 ; - z: success
 ; - nz: failure
 pcg_generate_world__generate_subquests:
-	ld a, (tmp_pcg_world__quest_spec_open_list_size)
+	ld a, (tmp_pcg_world__quest_spec_open_list_size)  ; mdl-watch: "pcg_generate_world__generate_subquests", a
 	or a
 	ret z
 
 	ld ix, tmp_pcg_world__quest_spec_open_list  ; ix = ptr to first subquest in the open list
 
 	; Choose the subquest pattern to use, and use it to decompose the subquest:
+	ld a, (ix + QUEST_SPEC_N_SUBQUESTS)
+	or a
+	jp z, pcg_generate_world__generate_subquests_0_subquests
+	; need a decomposition pattern that can decompose a quest into other subquests:
+	ld c, 3
+	call random_modulo
+	ld c, a  ; quest type
+	ld iyl, 0  ; key_tag
+	ld iyh, 0  ; lock_tag
 
-	; ...
+	ld a, (ix + QUEST_SPEC_GOAL_TAG)
+	cp TAG_BOSS1
+	jr z, pcg_generate_world__generate_subquests_boss_tag
+	cp TAG_BOSS2
+	jr z, pcg_generate_world__generate_subquests_boss_tag
+	cp TAG_BOSS3
+	jr z, pcg_generate_world__generate_subquests_boss_tag
+	cp TAG_BOSS4
+	jr z, pcg_generate_world__generate_subquests_boss_tag
+	cp TAG_BOSS5
+	jr z, pcg_generate_world__generate_subquests_boss_tag
+	cp TAG_BOSS6
+	jr z, pcg_generate_world__generate_subquests_boss_tag
+	cp TAG_BOSS7
+	jr z, pcg_generate_world__generate_subquests_boss_tag
+	cp TAG_MIDPOINT
+	jr z, pcg_generate_world__generate_subquests_midpoint_ending_tag
+	cp TAG_ENDING
+	jr z, pcg_generate_world__generate_subquests_midpoint_ending_tag
+	jr pcg_generate_world__generate_subquests_continue
+pcg_generate_world__generate_subquests_boss_tag:
+	ld c, 1  ; quest type
+	inc a
+	ld iyl, a  ; key_tag
+	inc a
+	ld iyh, a  ; lock_tag
+	jr pcg_generate_world__generate_subquests_continue
+pcg_generate_world__generate_subquests_midpoint_ending_tag:
+	call random_a
+	and #01
+	add a, a
+	ld c, a  ; quest type 0 or 2: obstacle, key_lock
+pcg_generate_world__generate_subquests_continue:
 
+	; if we aer out of chests, just use key/lock:
+	ld a, (tmp_pcg_world__available_lock_keys_chests)
+	cp #ff
+	jr nz, pcg_generate_world__generate_subquests_continue2
+	ld a, c  ; quest type
+	cp 1
+	jr nz, pcg_generate_world__generate_subquests_continue2
+	ld a, iyh
+	cp #ff
+	jr nz, pcg_generate_world__generate_subquests_continue2
+
+	ld c, 2  ; quest type = key/lock
+
+pcg_generate_world__generate_subquests_continue2:
+	ld a, c  ; mdl-watch: "quest pattern decomposition type:", a
+	or a
+	jr z, pcg_generate_world__generate_subquests_obstacle_decomposition
+	dec a
+	jr z, pcg_generate_world__generate_subquests_lock_chest_decomposition
+pcg_generate_world__generate_subquests_lock_key_decomposition:
+	ld a, iyh  ; lock tag
+	or a
+	jr nz, pcg_generate_world__generate_subquests_lock_key_decomposition_lock_set
+	ld hl, tmp_pcg_world__available_lock_keys
+	call pcg_generate_world__generate_subquests_sample_lock_key
+	ret nz
+pcg_generate_world__generate_subquests_lock_key_decomposition_lock_set:
+	call pcg_generate_world__subquest_pattern__lock_key
+	ret nz
+	jr pcg_generate_world__generate_subquests_decomposed
+
+pcg_generate_world__generate_subquests_obstacle_decomposition:
+	ld a, iyh  ; lock tag
+	or a
+	jr nz, pcg_generate_world__generate_subquests_obstacle_decomposition_lock_set
+	ld hl, tmp_pcg_world__available_lock_keys_obstacles
+	call pcg_generate_world__generate_subquests_sample_lock_key
+	ret nz
+pcg_generate_world__generate_subquests_obstacle_decomposition_lock_set:
+	call pcg_generate_world__subquest_pattern__obstacle
+	ret nz
+	jr pcg_generate_world__generate_subquests_decomposed
+
+pcg_generate_world__generate_subquests_lock_chest_decomposition:
+	ld a, iyh  ; lock tag
+	or a
+	jr nz, pcg_generate_world__generate_subquests_lock_chest_decomposition_lock_set
+	ld hl, tmp_pcg_world__available_lock_keys_chests
+	call pcg_generate_world__generate_subquests_sample_lock_key
+	ret nz
+pcg_generate_world__generate_subquests_lock_chest_decomposition_lock_set:
+	call pcg_generate_world__add_chest_content
+	call pcg_generate_world__subquest_pattern__chest
+	ret nz
+	jr pcg_generate_world__generate_subquests_decomposed
+
+pcg_generate_world__generate_subquests_0_subquests:
 	call pcg_generate_world__subquest_pattern__a_to_b
 	ret nz
-
+pcg_generate_world__generate_subquests_decomposed:
 	ld hl, tmp_pcg_world__quest_spec_open_list + QUEST_SPEC_STRUCTURE_SIZE
 	ld de, tmp_pcg_world__quest_spec_open_list
 	ld bc, (SUB_QUEST_OPEN_LIST_SIZE - 1) * QUEST_SPEC_STRUCTURE_SIZE
 	ldir
 	ld hl, tmp_pcg_world__quest_spec_open_list_size
 	dec (hl)
-	jr pcg_generate_world__generate_subquests
+	jp pcg_generate_world__generate_subquests
+
+
+;-----------------------------------------------
+; input:
+; - hl: list of available lock keys
+; output:
+; - iyl: key
+; - iyh: lock
+; - z: success
+; - nz: failure
+pcg_generate_world__generate_subquests_sample_lock_key:
+	push bc
+		ld c, 0
+		push hl
+pcg_generate_world__generate_subquests_sample_lock_key_loop:
+			ld a, (hl)
+			cp #ff
+			jr z, pcg_generate_world__generate_subquests_sample_lock_key_count_done
+			inc hl
+			inc hl
+			inc c
+			jr pcg_generate_world__generate_subquests_sample_lock_key_loop
+pcg_generate_world__generate_subquests_sample_lock_key_count_done:
+		pop hl
+		ld a, c
+		or a
+		jr z, pcg_generate_world__generate_subquests_sample_lock_key_fail
+		call random_modulo
+		add a, a
+		ADD_HL_A
+		ld a, (hl)
+		ld iyh, a
+		inc hl
+		ld a, (hl)
+		ld iyl, a
+
+		; remove the key/lock from the array:
+		ld d, h
+		ld e, l
+		dec de
+		inc hl
+pcg_generate_world__generate_subquests_sample_lock_key_delete_loop:
+		ld a, (hl)
+		cp #ff
+		jr z, pcg_generate_world__generate_subquests_sample_lock_key_delete_loop_done
+		ldi
+		ldi
+		jr pcg_generate_world__generate_subquests_sample_lock_key_delete_loop
+pcg_generate_world__generate_subquests_sample_lock_key_delete_loop_done:
+		ld (de), a  ; copy the #ff
+
+	pop bc
+	xor a
+	ret
+pcg_generate_world__generate_subquests_sample_lock_key_fail:
+	pop bc
+	or 1  ; nz
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - iyh: chest
+; - (ix + QUEST_SPEC_GOAL_TAG): chest content
+pcg_generate_world__add_chest_content:
+	ld hl, current_world__chest_content
+pcg_generate_world__add_chest_content_loop:
+	ld a, (hl)
+	cp #ff
+	jr z, pcg_generate_world__add_chest_content_loop_done
+	inc hl
+	inc hl
+	jr pcg_generate_world__add_chest_content_loop
+pcg_generate_world__add_chest_content_loop_done:
+	ld a, iyh
+	ld (hl), a
+	inc hl
+	ld a, (ix + QUEST_SPEC_GOAL_TAG)
+	ld (hl), a
+	ret
 
 
 ;-----------------------------------------------
@@ -2623,34 +2901,404 @@ pcg_generate_world__subquest_pattern__a_to_b:
 	ld d, (ix + QUEST_SPEC_START_DIV_PTR + 1)
 	ld a, (ix + QUEST_SPEC_START_TAG)  ; mdl-watch: "pcg_generate_world__subquest_pattern__a_to_b: start", a
 	or a
-	jr z, pcg_generate_world__subquest_pattern__a_to_b_start_tag_set
-	ld b, a
-	ld a, (ix + QUEST_SPEC_START_POINT_OFFSET)
-	cp #ff
-	jr nz, pcg_generate_world__subquest_pattern__a_to_b_start_offset_set
-	; get offset from mst node:
-	push de
-REPT MST_OFFSET
-		inc de
-ENDR
-		ld a, (de)
-		ld l, a
-	pop de
-pcg_generate_world__subquest_pattern__a_to_b_start_offset_set:
-	call pcg_generate_world__add_tag_to_point_in_mst_node_division
+	call nz, pcg_generate_world__subquest_pattern__add_tag
 	ret nz
-pcg_generate_world__subquest_pattern__a_to_b_start_tag_set:
 
 	; add goal tag:
 	ld e, (ix + QUEST_SPEC_GOAL_DIV_PTR)
 	ld d, (ix + QUEST_SPEC_GOAL_DIV_PTR + 1)
 	ld a, (ix + QUEST_SPEC_GOAL_TAG)  ; mdl-watch: "pcg_generate_world__subquest_pattern__a_to_b: goal", a
 	or a
-	jr z, pcg_generate_world__subquest_pattern__a_to_b_goal_tag_set
+	call nz, pcg_generate_world__subquest_pattern__add_tag
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - ix: ptr to subquest
+; - iyh: lock tag
+; output:
+; - z: success
+; - nz: failure
+pcg_generate_world__subquest_pattern__obstacle:
+	; Lock is the point that connects to the goal (in the area of the parent)
+	ld a, iyh
+	ld (tmp_pcg_world__lock_tag_tmp), a
+
+	; Get the parent area and desired point (if no more parents, fail):
+	; If the parent is in a different area than the current division, 
+	; we are going through an inter-area connection.
+	ld c, (QUEST_SPEC_GOAL_DIV_PTR)
+	ld b, (QUEST_SPEC_GOAL_DIV_PTR + 1)
+	push bc
+	pop iy
+pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop:
+	ld a, (iy + MST_PARENT_PTR)  ; mdl-watch: "pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop", iy
+	or (iy + MST_PARENT_PTR + 1)
+	ret z  ; no more parents, fail
+
+	; See if we could place the tag (and set the lock direction):
+	ld b, (iy + MST_PARENT_PTR)
+	ld c, (iy + MST_PARENT_PTR + 1)
+	inc bc
+	ld a, (bc)  ; MST_AREA_ID of the parent
+	dec bc
+	cp (iy + MST_AREA_ID)
+	jr nz, pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection
+
+	; get area width since we might need it before:
+	push bc  ; mdl-watch: "    same area"
+		call pcg_generate_world__get_area_ptr
+		ld bc, 5
+		add hl, bc
+		ld d, (hl)  ; area width
+
+		ld a, (iy + MST_PARENT_DIRECTION)
+		ld e, (iy + MST_OFFSET)
+	pop iy
+	cp PCG_DIRECTION_LEFT
+	jr z, pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_left
+	cp PCG_DIRECTION_UP
+	jr z, pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_up
+	cp PCG_DIRECTION_RIGHT
+	jr z, pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_right
+
+pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_down:
+	ld b, (iy + MST_AREA_ID)
+	ld a, e  ; offset
+	add a, d  ; area width
+	ld e, a
+	ld c, PCG_DIRECTION_UP
+	jr pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_continue
+
+pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_left:
+	ld b, (iy + MST_AREA_ID)
+	dec e  ; offset
+	ld c, PCG_DIRECTION_RIGHT
+	jr pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_continue
+
+pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_up:
+	ld b, (iy + MST_AREA_ID)
+	ld a, e  ; offset
+	sub a, d  ; area width
+	ld e, a
+	ld c, PCG_DIRECTION_DOWN
+	jr pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_continue
+
+pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_right:
+	ld b, (iy + MST_AREA_ID)
+	inc e  ; offset
+	ld c, PCG_DIRECTION_LEFT
+	jr pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_continue
+
+pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection:
+	; Find the inter-area connection that goes from area 'a' to area 'iy + MST_AREA_ID'
+	; and get the offset and direction of the point in area 'a':
+	ld e, a
+	push bc  ; save the ptr to the parent
+		ld hl, current_world__interarea_connections
+pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_loop:
+		ld a, (hl)  ; mdl-watch: "    interarea loop", a, e, hl, iy
+		cp #ff
+		jr z, pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_fail
+		inc hl
+		cp e
+		jr z, pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_pre_match1
+		ld a, (hl)
+		inc hl
+		cp e
+		jr z, pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_pre_match2
+		; no match!
+		jr pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_loop_next
+
+pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_pre_match1:
+		ld a, (hl)  ; mdl-watch: "    interarea loop pre_match1", a, hl
+		inc hl
+		cp (iy + MST_AREA_ID)
+		jr z, pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_match1
+		; no match!
+		jr pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_loop_next
+
+pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_pre_match2:
+		ld a, (hl)
+		inc hl
+		cp e
+		jr z, pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_match2
+		; no match!
+		jr pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_loop_next
+
+pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_loop_next:
+		ld bc, 6
+		add hl, bc
+		jr pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_loop
+
+pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_fail:
+	pop iy
+	or 1  ; nz
+	ret
+
+pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_match1:
+		; we need: direction1, and offset = x1 + y1 * width1
+		ld c, (hl)  ; x1
+		inc hl
+		ld b, (hl)  ; y1
+		inc hl
+		ld d, (hl)  ; direction1
+		jr pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_match_continue
+pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_match2:
+		; we need: direction2, and offset = x2 + y2 * width2
+		inc hl
+		inc hl
+		inc hl
+		ld c, (hl)  ; x2
+		inc hl
+		ld b, (hl)  ; y2
+		inc hl
+		ld d, (hl)  ; direction2
+pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_match_continue:
+		push bc	
+		push ix
+			ld a, e  ; area ID
+			call pcg_generate_world__layout_offset_from_c_b_area
+		pop ix
+		pop bc
+		ld b, e  ; area ID
+		ld c, d  ; direction
+		ld e, a  ; offset
+	pop iy  ; set the current node to the parent ptr
+
+pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_continue:
+
+	; here:
+	; - b: area ID where to place the lock
+	; - c: direction of the lock
+	; - e: offset where to place the lock
+
+	; Try to place the tag, and if successful, we are done, otherwise,
+	; loop back to get the parent's parent:
+
+	; - b: tag
+	; - de: mst node
+	; - l: point offset
+	ld l, e  ; offset  ; mdl-watch: "pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_continue"
+	ld e, iyl
+	ld d, iyh  ; mst node ptr
+	ld a, (tmp_pcg_world__lock_tag_tmp)
 	ld b, a
-	ld a, (ix + QUEST_SPEC_GOAL_POINT_OFFSET)
+	push bc
+	push de
+	push hl
+		call pcg_generate_world__could_add_tag_to_point_in_mst_node_division_p
+	pop hl
+	pop de
+	pop bc
+	jp nz, pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop
+
+	; place the lock tag, and lock direction:
+	push bc
+	push hl
+		call pcg_generate_world__add_tag_to_point_in_mst_node_division
+	pop hl
+	pop bc
+	ld a, (tmp_pcg_world__lock_tag_tmp)
+	; here:
+	; - a: lock tag
+	; - c: lock direction
+	; - l: lock offset
+	ld b, c
+	ld c, a
+	push hl
+	push bc
+		call pcg_generate_world__add_lock_direction
+	pop bc
+	pop hl
+
+	; remove all the descendants of the lock point from "useable" and "reachable":
+	ld a, (iy + MST_DIVISION_ID)
+	push iy
+	push hl
+	push bc
+		call pcg_generate_world__remove_useable_reachable_descendants
+	pop bc
+	pop hl
+	pop iy
+	ld a, l
+	push af
+		ld a, c  ; lock tag
+		push af
+			; push a new sub quest, start -> lock:
+			ld hl, tmp_pcg_world__quest_spec_open_list_size
+			ld a, (hl)
+			inc (hl)
+			ld hl, tmp_pcg_world__quest_spec_open_list
+			ld c, a
+			add a, a
+			add a, a
+			add a, a
+			add a, c
+			ADD_HL_A
+			ld e, (ix + QUEST_SPEC_START_DIV_PTR)
+			ld d, (ix + QUEST_SPEC_START_DIV_PTR + 1)
+			ld (hl), e
+			inc hl
+			ld (hl), d
+			inc hl
+			push iy
+			pop de
+			ld (hl), e
+			inc hl
+			ld (hl), d
+			inc hl
+			ld a, (ix + QUEST_SPEC_START_POINT_OFFSET)
+			ld (hl), a
+			inc hl
+		pop af  
+		ld (hl), a  ; lock offset
+		inc hl
+		ld a, (ix + QUEST_SPEC_START_TAG)
+		ld (hl), a
+		inc hl
+	pop af  ; lock tag
+	ld (hl), a
+	inc hl
+	ld a, (ix + QUEST_SPEC_N_SUBQUESTS)
+	dec a
+	ld (hl), a
+
+	; add the remainder of the tags (start/goal, which can be done just calling a_to_b):
+	jp pcg_generate_world__subquest_pattern__a_to_b
+
+
+;-----------------------------------------------
+; input:
+; - ix: ptr to subquest
+; - iyl: key tag
+; - iyh: lock tag
+; output:
+; - z: success
+; - nz: failure
+pcg_generate_world__subquest_pattern__chest:
+	; remove goal and its descendants from reachable/useable:
+	ld l, (ix + QUEST_SPEC_GOAL_DIV_PTR)
+	ld h, (ix + QUEST_SPEC_GOAL_DIV_PTR + 1)
+	ld a, (hl)  ; division ID of goal
+	call pcg_generate_world__remove_useable_reachable_descendants
+
+	; Pick key division (randomAreaDivisionFavoringLeaves), and point (randomDivisionPoint):
+	; ...
+
+	; place all tags (start, key, lock):
+	; ...
+
+	; create subquest: start -> key:
+	; ...
+
+	xor a  ; z
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - ix: ptr to subquest
+; - iyl: key tag
+; - iyh: lock tag
+; output:
+; - z: success
+; - nz: failure
+pcg_generate_world__subquest_pattern__lock_key:
+	; ...
+	xor a  ; z
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - a: division of the mst node whose descendants we need to remove
+pcg_generate_world__remove_useable_reachable_descendants:
+	ld iyl, a  ; mdl-watch: "pcg_generate_world__remove_useable_reachable_descendants", a
+	ld hl, tmp_pcg_world__useable_nodes
+	ld a, (tmp_pcg_world__useable_nodes_size)
+	ld b, a
+	call pcg_generate_world__remove_useable_reachable_descendants_internal
+	ld a, iyh
+	ld (tmp_pcg_world__useable_nodes_size), a
+
+	ld hl, tmp_pcg_world__reachable_nodes
+	ld a, (tmp_pcg_world__reachable_nodes_size)
+	ld b, a
+	call pcg_generate_world__remove_useable_reachable_descendants_internal
+	ld a, iyh
+	ld (tmp_pcg_world__reachable_nodes_size), a
+	ret
+
+pcg_generate_world__remove_useable_reachable_descendants_internal
+	; copy the list to a temporary space:
+	push hl
+	push bc
+		ld de, tmp_pcg_world__floodfill_open_list
+		add a, a
+		ld b, 0
+		ld c, a
+		ldir
+	pop bc
+	pop de
+	ld hl, tmp_pcg_world__floodfill_open_list
+
+	; copy the elements back one by one if they do not have iyl as the parent:
+	ld iyh, 0  ; size of the new list
+pcg_generate_world__remove_useable_reachable_descendants_internal_loop:
+	push bc
+		ld c, (hl)
+		inc hl
+		ld b, (hl)
+		dec hl
+		push hl
+pcg_generate_world__remove_useable_reachable_descendants_internal_loop_parent_loop:
+			ld a, (bc)
+			cp iyl
+			jr z, pcg_generate_world__remove_useable_reachable_descendants_internal_loop_next
+			; get the parent:
+			ld hl, 9
+			add hl, bc
+			ld c, (hl)
+			inc hl
+			ld b, (hl)
+			ld a, c
+			or b
+			jr z, pcg_generate_world__remove_useable_reachable_descendants_internal_loop_keep
+			jr pcg_generate_world__remove_useable_reachable_descendants_internal_loop_parent_loop
+pcg_generate_world__remove_useable_reachable_descendants_internal_loop_keep:
+		pop hl
+		push hl
+			ld a, (hl)
+			ld (de), a
+			inc hl
+			inc de
+			ld a, (hl)
+			ld (de), a
+			inc de
+			inc iyh
+pcg_generate_world__remove_useable_reachable_descendants_internal_loop_next:
+		pop hl
+		inc hl
+		inc hl
+	pop bc
+	djnz pcg_generate_world__remove_useable_reachable_descendants_internal_loop
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - de: div ptr
+; - a: tag
+; output:
+; - z: success
+; - nz: failed to place the tag
+pcg_generate_world__subquest_pattern__add_tag:
+	ld b, a
+	ld a, (ix + QUEST_SPEC_START_POINT_OFFSET)
 	cp #ff
-	jr nz, pcg_generate_world__subquest_pattern__a_to_b_goal_offset_set
+	jr nz, pcg_generate_world__subquest_pattern__add_tag_offset_set
 	; get offset from mst node:
 	push de
 REPT MST_OFFSET
@@ -2659,12 +3307,8 @@ ENDR
 		ld a, (de)
 		ld l, a
 	pop de
-pcg_generate_world__subquest_pattern__a_to_b_goal_offset_set:
-	call pcg_generate_world__add_tag_to_point_in_mst_node_division
-	ret nz
-pcg_generate_world__subquest_pattern__a_to_b_goal_tag_set:
-	xor a  ; z
-	ret
+pcg_generate_world__subquest_pattern__add_tag_offset_set:
+	jp pcg_generate_world__add_tag_to_point_in_mst_node_division
 
 
 ;-----------------------------------------------
@@ -2902,6 +3546,8 @@ pcg_generate_world__add_tag_to_point_in_mst_node_division:
 	ld de, MST_TAG1
 	add hl, de
 	ld 	a, (hl)
+	cp b
+	ret z  ; tag is already there
 	or a
 	jr nz, pcg_generate_world__add_tag_to_random_point_in_mst_node_division_continue
 	ld (hl), b  ; tag
@@ -2910,11 +3556,55 @@ pcg_generate_world__add_tag_to_point_in_mst_node_division:
 pcg_generate_world__add_tag_to_random_point_in_mst_node_division_continue:
 	inc hl
 	ld 	a, (hl)
+	cp b
+	ret z  ; tag is already there
 	or a
 	ret nz  ; node already has 2 tags, which is the max!
 	ld (hl), b  ; tag
 	xor a  ; z
 	ret
+
+
+;-----------------------------------------------
+; Same as "pcg_generate_world__add_tag_to_point_in_mst_node_division", but only checks if
+; the tag can be added, insteasd of actually adding it.
+; input:
+; - b: tag
+; - de: mst node
+; - l: point offset
+; output:
+; - z: all ok
+; - nz: tag could not be added (too many tags in the division)
+pcg_generate_world__could_add_tag_to_point_in_mst_node_division_p:
+	; add tag to the point:
+	push de
+		inc de
+		ld a, (de)  ; area ID (since MST_AREA_ID == 1)
+		; here l = offset of the point sampled above
+		call pcg_generate_world__could_add_tag
+	pop hl
+	ret nz  ; we cannot add the tag
+	
+	; add tag to mst node:
+	ld de, MST_TAG1
+	add hl, de
+	ld 	a, (hl)
+	cp b
+	ret z  ; tag is already there
+	or a
+	jr nz, pcg_generate_world__could_add_tag_to_point_in_mst_node_division_p_continue
+	xor a  ; z
+	ret
+pcg_generate_world__could_add_tag_to_point_in_mst_node_division_p_continue:
+	inc hl
+	ld 	a, (hl)
+	cp b
+	ret z  ; tag is already there
+	or a
+	ret nz  ; node already has 2 tags, which is the max!
+	xor a  ; z
+	ret
+
 
 
 ;-----------------------------------------------
@@ -3068,8 +3758,6 @@ pcg_generate_world__generate_tag_data_area_loop:
 	ld a, #ff
 	call clear_memory_a
 
-	; ...
-
 	; extra shop items:
 	ld hl, current_world__shop_extra_items
 	ld (hl), 0
@@ -3095,8 +3783,8 @@ pcg_generate_world__generate_tag_data_internal_loop:
 	ld a, (de)
 
 	; check if it's within a chest:
-	; ...
-	; jr z, pcg_generate_world__generate_tag_data_internal_loop_next
+	call pcg_generate_world__tag_is_in_a_chest_p
+	jr z, pcg_generate_world__generate_tag_data_internal_loop_next
 
 	ld iyl, 0  ; default direction:
 	; check if it's a lock in tmp_pcg_world__lock_directions, and get its direction:
@@ -3148,6 +3836,30 @@ pcg_generate_world__generate_tag_data_internal_loop_done:
 
 ;-----------------------------------------------
 ; input:
+; - a: tag
+; output:
+; - z: tag is within a chest
+; - nz: tag is not within a chest
+pcg_generate_world__tag_is_in_a_chest_p:
+	ld c, a
+	ld hl, current_world__chest_content
+pcg_generate_world__tag_is_in_a_chest_p_loop:
+	ld a, (hl)
+	cp #ff
+	jr z, pcg_generate_world__tag_is_in_a_chest_p_not_found
+	inc hl
+	ld a, (hl)
+	cp c
+	ret z  ; found
+	inc hl
+	jr pcg_generate_world__tag_is_in_a_chest_p_loop
+pcg_generate_world__tag_is_in_a_chest_p_not_found:
+	or 1  ; nz
+	ret
+
+
+;-----------------------------------------------
+; input:
 ; - hl: ptr to the entry of the corresponding area in "tmp_pcg_world__tags".
 pcg_generate_world__generate_sorted_area_tag_list:
 	ld de, tmp_pcg_world__tag_list  ; mdl-watch: "pcg_generate_world__generate_sorted_area_tag_list"
@@ -3192,24 +3904,26 @@ pcg_generate_world__generate_sorted_area_tag_list_loop_next1:
 	ld a, iyl
 	ld (tmp_pcg_world__tag_list_size), a  ; mdl-watch:  "    n tags:", a
 
-	cp 2
-	jr c, pcg_generate_world__generate_sorted_area_tag_list_sort_done
-
+pcg_generate_world__generate_sorted_area_tag_list_sort:
 	; Sort them by increasing TAG (bubble sort):
+	ld a, iyl
+	cp 2
+	ret c
+
 	ld b, iyl
 	dec b
-	ld hl, tmp_pcg_world__tag_list
-	ld de, tmp_pcg_world__tag_list + 2
 pcg_generate_world__generate_sorted_area_tag_list_sort_loop1:
 	push bc
-		ld ixl, 0  ; no swap  ; mdl-watch: "sort iteration", b
+		ld hl, tmp_pcg_world__tag_list
+		ld de, tmp_pcg_world__tag_list + 2
+		ld ixl, 0  ; no swap
 pcg_generate_world__generate_sorted_area_tag_list_sort_loop2:
 		ld a, (de)
 		cp (hl)
 		jr nc, pcg_generate_world__generate_sorted_area_tag_list_sort_loop2_next
 		; swap:
 		ld ixl, 1
-		ld c, (hl)  ; mdl-watch: "    swap", c, a
+		ld c, (hl)
 		ld (hl), a
 		ld a, c
 		ld (de), a
