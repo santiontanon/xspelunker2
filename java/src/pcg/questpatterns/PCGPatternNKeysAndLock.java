@@ -115,7 +115,8 @@ public class PCGPatternNKeysAndLock extends PCGPattern {
             AreaDivision rootToRemove = q.lockDivision;
             List<AreaDivision> toRemove = new ArrayList<>();
             for(AreaDivision d:reachable) {
-                if (pcg.treeParents(d).contains(qs.goal)) {
+//                if (pcg.treeParents(d).contains(qs.goal)) {
+                if (pcg.treeParents(d).contains(rootToRemove)) {
                     toRemove.add(d);
                 }
             }

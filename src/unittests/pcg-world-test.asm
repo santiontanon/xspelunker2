@@ -11,7 +11,6 @@
 	include "empty-callbacks.asm"
 
 
-
 ;-----------------------------------------------
 test_start:
 	call test__remove_useable_reachable_descendants

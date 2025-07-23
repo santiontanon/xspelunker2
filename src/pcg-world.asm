@@ -2925,174 +2925,8 @@ pcg_generate_world__subquest_pattern__obstacle:
 	ld a, iyh
 	ld (tmp_pcg_world__lock_tag_tmp), a
 
-	; Get the parent area and desired point (if no more parents, fail):
-	; If the parent is in a different area than the current division, 
-	; we are going through an inter-area connection.
-	ld c, (QUEST_SPEC_GOAL_DIV_PTR)
-	ld b, (QUEST_SPEC_GOAL_DIV_PTR + 1)
-	push bc
-	pop iy
-pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop:
-	ld a, (iy + MST_PARENT_PTR)  ; mdl-watch: "pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop", iy
-	or (iy + MST_PARENT_PTR + 1)
-	ret z  ; no more parents, fail
-
-	; See if we could place the tag (and set the lock direction):
-	ld b, (iy + MST_PARENT_PTR)
-	ld c, (iy + MST_PARENT_PTR + 1)
-	inc bc
-	ld a, (bc)  ; MST_AREA_ID of the parent
-	dec bc
-	cp (iy + MST_AREA_ID)
-	jr nz, pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection
-
-	; get area width since we might need it before:
-	push bc  ; mdl-watch: "    same area"
-		call pcg_generate_world__get_area_ptr
-		ld bc, 5
-		add hl, bc
-		ld d, (hl)  ; area width
-
-		ld a, (iy + MST_PARENT_DIRECTION)
-		ld e, (iy + MST_OFFSET)
-	pop iy
-	cp PCG_DIRECTION_LEFT
-	jr z, pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_left
-	cp PCG_DIRECTION_UP
-	jr z, pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_up
-	cp PCG_DIRECTION_RIGHT
-	jr z, pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_right
-
-pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_down:
-	ld b, (iy + MST_AREA_ID)
-	ld a, e  ; offset
-	add a, d  ; area width
-	ld e, a
-	ld c, PCG_DIRECTION_UP
-	jr pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_continue
-
-pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_left:
-	ld b, (iy + MST_AREA_ID)
-	dec e  ; offset
-	ld c, PCG_DIRECTION_RIGHT
-	jr pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_continue
-
-pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_up:
-	ld b, (iy + MST_AREA_ID)
-	ld a, e  ; offset
-	sub a, d  ; area width
-	ld e, a
-	ld c, PCG_DIRECTION_DOWN
-	jr pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_continue
-
-pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_right:
-	ld b, (iy + MST_AREA_ID)
-	inc e  ; offset
-	ld c, PCG_DIRECTION_LEFT
-	jr pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_continue
-
-pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection:
-	; Find the inter-area connection that goes from area 'a' to area 'iy + MST_AREA_ID'
-	; and get the offset and direction of the point in area 'a':
-	ld e, a
-	push bc  ; save the ptr to the parent
-		ld hl, current_world__interarea_connections
-pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_loop:
-		ld a, (hl)  ; mdl-watch: "    interarea loop", a, e, hl, iy
-		cp #ff
-		jr z, pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_fail
-		inc hl
-		cp e
-		jr z, pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_pre_match1
-		ld a, (hl)
-		inc hl
-		cp e
-		jr z, pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_pre_match2
-		; no match!
-		jr pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_loop_next
-
-pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_pre_match1:
-		ld a, (hl)  ; mdl-watch: "    interarea loop pre_match1", a, hl
-		inc hl
-		cp (iy + MST_AREA_ID)
-		jr z, pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_match1
-		; no match!
-		jr pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_loop_next
-
-pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_pre_match2:
-		ld a, (hl)
-		inc hl
-		cp e
-		jr z, pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_match2
-		; no match!
-		jr pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_loop_next
-
-pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_loop_next:
-		ld bc, 6
-		add hl, bc
-		jr pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_loop
-
-pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_fail:
-	pop iy
-	or 1  ; nz
-	ret
-
-pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_match1:
-		; we need: direction1, and offset = x1 + y1 * width1
-		ld c, (hl)  ; x1
-		inc hl
-		ld b, (hl)  ; y1
-		inc hl
-		ld d, (hl)  ; direction1
-		jr pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_match_continue
-pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_match2:
-		; we need: direction2, and offset = x2 + y2 * width2
-		inc hl
-		inc hl
-		inc hl
-		ld c, (hl)  ; x2
-		inc hl
-		ld b, (hl)  ; y2
-		inc hl
-		ld d, (hl)  ; direction2
-pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_interarea_connection_match_continue:
-		push bc	
-		push ix
-			ld a, e  ; area ID
-			call pcg_generate_world__layout_offset_from_c_b_area
-		pop ix
-		pop bc
-		ld b, e  ; area ID
-		ld c, d  ; direction
-		ld e, a  ; offset
-	pop iy  ; set the current node to the parent ptr
-
-pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_continue:
-
-	; here:
-	; - b: area ID where to place the lock
-	; - c: direction of the lock
-	; - e: offset where to place the lock
-
-	; Try to place the tag, and if successful, we are done, otherwise,
-	; loop back to get the parent's parent:
-
-	; - b: tag
-	; - de: mst node
-	; - l: point offset
-	ld l, e  ; offset  ; mdl-watch: "pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_continue"
-	ld e, iyl
-	ld d, iyh  ; mst node ptr
-	ld a, (tmp_pcg_world__lock_tag_tmp)
-	ld b, a
-	push bc
-	push de
-	push hl
-		call pcg_generate_world__could_add_tag_to_point_in_mst_node_division_p
-	pop hl
-	pop de
-	pop bc
-	jp nz, pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop
+	call pcg_generate_world__subquest_pattern__pick_goal_lock_node  ; iy: chosen node
+	ret nz
 
 	; place the lock tag, and lock direction:
 	push bc
@@ -3100,6 +2934,8 @@ pcg_generate_world__subquest_pattern__obstacle_find_lock_node_loop_continue:
 		call pcg_generate_world__add_tag_to_point_in_mst_node_division
 	pop hl
 	pop bc
+	ret nz
+
 	ld a, (tmp_pcg_world__lock_tag_tmp)
 	; here:
 	; - a: lock tag
@@ -3184,17 +3020,83 @@ pcg_generate_world__subquest_pattern__chest:
 	ld a, (hl)  ; division ID of goal
 	call pcg_generate_world__remove_useable_reachable_descendants
 
-	; Pick key division (randomAreaDivisionFavoringLeaves), and point (randomDivisionPoint):
-	; ...
+pcg_generate_world__subquest_pattern__lock_key_entry_point:
+	; Pick key division:
+	push ix
+	push iy
+		call pcg_generate_world__random_mst_node_favoring_leaves_tagless
+	pop iy
+	pop ix
+	ret nz
 
-	; place all tags (start, key, lock):
-	; ...
+	; Pick a random point on the key division:
+	ex de, hl  ; hl = pointer to the mst node
+	push hl
+	push ix
+	push iy
+		call pcg_generate_world__random_division_point_from_mst_node_tagless  ; c, b: x, y, l: offset
+	pop iy
+	pop ix
+	pop de  ; ptr to mst node
+	ret nz
 
-	; create subquest: start -> key:
-	; ...
+	; Place key tag:
+	ld b, iyl  ; mdl-watch: "pcg_generate_world__subquest_pattern__chest 3"
+	push bc
+	push hl
+	push de
+		call pcg_generate_world__add_tag_to_point_in_mst_node_division
+	pop de
+	pop hl
+	pop bc
+	ret nz
 
-	xor a  ; z
-	ret
+	; push a new sub quest, start -> key:
+	ld a, b  ; mdl-watch: "pcg_generate_world__subquest_pattern__chest 4"
+	push af
+		ld a, l
+		push af
+			ld hl, tmp_pcg_world__quest_spec_open_list_size
+			ld a, (hl)
+			inc (hl)
+			ld hl, tmp_pcg_world__quest_spec_open_list
+			ld c, a
+			add a, a
+			add a, a
+			add a, a
+			add a, c
+			ADD_HL_A
+			push de
+				ld e, (ix + QUEST_SPEC_START_DIV_PTR)
+				ld d, (ix + QUEST_SPEC_START_DIV_PTR + 1)
+				ld (hl), e
+				inc hl
+				ld (hl), d
+				inc hl
+			pop de
+			ld (hl), e  ; goal div ptr
+			inc hl
+			ld (hl), d
+			inc hl
+			ld a, (ix + QUEST_SPEC_START_POINT_OFFSET)
+			ld (hl), a
+			inc hl
+		pop af  
+		ld (hl), a  ; key offset
+		inc hl
+		ld a, (ix + QUEST_SPEC_START_TAG)
+		ld (hl), a
+		inc hl
+	pop af  ; key tag
+	pop af  ; lock tag
+	ld (hl), a
+	inc hl
+	ld a, (ix + QUEST_SPEC_N_SUBQUESTS)
+	dec a
+	ld (hl), a
+
+	; add the remainder of the tags (start/goal, which can be done just calling a_to_b):
+	jp pcg_generate_world__subquest_pattern__a_to_b
 
 
 ;-----------------------------------------------
@@ -3206,8 +3108,306 @@ pcg_generate_world__subquest_pattern__chest:
 ; - z: success
 ; - nz: failure
 pcg_generate_world__subquest_pattern__lock_key:
-	; ...
+	ld (tmp_pcg_world__tmp_ptr), iy
+
+	; Lock is the point that connects to the goal (in the area of the parent)
+	; (computed in the same exact way as for the __obstacle subquest pattern)
+	call pcg_generate_world__subquest_pattern__pick_goal_lock_node  ; iy: chosen node
+	ret nz
+
+	; place the lock tag, and lock direction:
+	push bc
+	push hl
+		call pcg_generate_world__add_tag_to_point_in_mst_node_division
+	pop hl
+	pop bc
+	ret nz
+
+	ld a, (tmp_pcg_world__lock_tag_tmp)
+	; here:
+	; - a: lock tag
+	; - c: lock direction
+	; - l: lock offset
+	ld b, c
+	ld c, a
+	push hl
+	push bc
+		call pcg_generate_world__add_lock_direction
+	pop bc
+	pop hl
+
+	; Update "reachable" (remove the descendants of the lock):
+	; remove all the descendants of the lock point from "useable" and "reachable":
+	ld a, (iy + MST_DIVISION_ID)
+	push hl
+	push bc
+		call pcg_generate_world__remove_useable_reachable_descendants
+	pop bc
+	pop hl
+
+	ld iy, (tmp_pcg_world__tmp_ptr)  ; recover key tag and lock tag
+	jp pcg_generate_world__subquest_pattern__lock_key_entry_point
+
+
+;-----------------------------------------------
+; input:
+; - ix: ptr to subquest
+; output:
+; - iy: ptr to chosen node
+; - z: success
+; - nz: failure
+pcg_generate_world__subquest_pattern__pick_goal_lock_node:
+	; Get the parent area and desired point (if no more parents, fail):
+	; If the parent is in a different area than the current division, 
+	; we are going through an inter-area connection.
+	ld c, (QUEST_SPEC_GOAL_DIV_PTR)
+	ld b, (QUEST_SPEC_GOAL_DIV_PTR + 1)
+	push bc
+	pop iy
+pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop:
+	ld a, (iy + MST_PARENT_PTR)
+	or (iy + MST_PARENT_PTR + 1)
+	ret z  ; no more parents, fail
+
+	; See if we could place the tag (and set the lock direction):
+	ld b, (iy + MST_PARENT_PTR)
+	ld c, (iy + MST_PARENT_PTR + 1)
+	inc bc
+	ld a, (bc)  ; MST_AREA_ID of the parent
+	dec bc
+	cp (iy + MST_AREA_ID)
+	jr nz, pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection
+
+	; get area width since we might need it before:
+	push bc  ; mdl-watch: "    same area"
+		call pcg_generate_world__get_area_ptr
+		ld bc, 5
+		add hl, bc
+		ld d, (hl)  ; area width
+
+		ld a, (iy + MST_PARENT_DIRECTION)
+		ld e, (iy + MST_OFFSET)
+	pop iy
+	cp PCG_DIRECTION_LEFT
+	jr z, pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_left
+	cp PCG_DIRECTION_UP
+	jr z, pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_up
+	cp PCG_DIRECTION_RIGHT
+	jr z, pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_right
+
+pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_down:
+	ld b, (iy + MST_AREA_ID)
+	ld a, e  ; offset
+	add a, d  ; area width
+	ld e, a
+	ld c, PCG_DIRECTION_UP
+	jr pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_continue
+
+pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_left:
+	ld b, (iy + MST_AREA_ID)
+	dec e  ; offset
+	ld c, PCG_DIRECTION_RIGHT
+	jr pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_continue
+
+pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_up:
+	ld b, (iy + MST_AREA_ID)
+	ld a, e  ; offset
+	sub a, d  ; area width
+	ld e, a
+	ld c, PCG_DIRECTION_DOWN
+	jr pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_continue
+
+pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_right:
+	ld b, (iy + MST_AREA_ID)
+	inc e  ; offset
+	ld c, PCG_DIRECTION_LEFT
+	jr pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_continue
+
+pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection:
+	; Find the inter-area connection that goes from area 'a' to area 'iy + MST_AREA_ID'
+	; and get the offset and direction of the point in area 'a':
+	ld e, a
+	push bc  ; save the ptr to the parent
+		ld hl, current_world__interarea_connections
+pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection_loop:
+		ld a, (hl)
+		cp #ff
+		jr z, pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection_fail
+		inc hl
+		cp e
+		jr z, pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection_pre_match1
+		ld a, (hl)
+		inc hl
+		cp e
+		jr z, pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection_pre_match2
+		; no match!
+		jr pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection_loop_next
+
+pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection_pre_match1:
+		ld a, (hl)
+		inc hl
+		cp (iy + MST_AREA_ID)
+		jr z, pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection_match1
+		; no match!
+		jr pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection_loop_next
+
+pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection_pre_match2:
+		ld a, (hl)
+		inc hl
+		cp e
+		jr z, pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection_match2
+		; no match!
+		jr pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection_loop_next
+
+pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection_loop_next:
+		ld bc, 6
+		add hl, bc
+		jr pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection_loop
+
+pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection_fail:
+	pop iy
+	or 1  ; nz
+	ret
+
+pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection_match1:
+		; we need: direction1, and offset = x1 + y1 * width1
+		ld c, (hl)  ; x1
+		inc hl
+		ld b, (hl)  ; y1
+		inc hl
+		ld d, (hl)  ; direction1
+		jr pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection_match_continue
+pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection_match2:
+		; we need: direction2, and offset = x2 + y2 * width2
+		inc hl
+		inc hl
+		inc hl
+		ld c, (hl)  ; x2
+		inc hl
+		ld b, (hl)  ; y2
+		inc hl
+		ld d, (hl)  ; direction2
+pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection_match_continue:
+		push bc	
+		push ix
+			ld a, e  ; area ID
+			call pcg_generate_world__layout_offset_from_c_b_area
+		pop ix
+		pop bc
+		ld b, e  ; area ID
+		ld c, d  ; direction
+		ld e, a  ; offset
+	pop iy  ; set the current node to the parent ptr
+
+pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_continue:
+
+	; here:
+	; - b: area ID where to place the lock
+	; - c: direction of the lock
+	; - e: offset where to place the lock
+
+	; Try to place the tag, and if successful, we are done, otherwise,
+	; loop back to get the parent's parent:
+
+	; - b: tag
+	; - de: mst node
+	; - l: point offset
+	ld l, e  ; offset  ; mdl-watch: "pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_continue"
+	ld e, iyl
+	ld d, iyh  ; mst node ptr
+	ld a, (tmp_pcg_world__lock_tag_tmp)
+	ld b, a
+	push bc
+	push de
+	push hl
+		call pcg_generate_world__could_add_tag_to_point_in_mst_node_division_p
+	pop hl
+	pop de
+	pop bc
+	jp nz, pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop
+	ret
+
+
+;-----------------------------------------------
+; output:
+; - de: ptr to mst node
+; - z: success
+; - nz: failure
+pcg_generate_world__random_mst_node_favoring_leaves_tagless:
+	ld hl, tmp_pcg_world__useable_nodes
+	ld a, (tmp_pcg_world__useable_nodes_size)
+	ld b, a
+	or a
+	jr z, pcg_generate_world__random_mst_node_favoring_leaves_tagless_fail
+	ld iyl, 1  ; not yet found any leaf
+	xor a
+	ld (tmp_pcg_world__candidates_list_size), a
+pcg_generate_world__random_mst_node_favoring_leaves_tagless_loop:
+	ld e, (hl)
+	inc hl
+	ld d, (hl)
+	inc hl
+	ld ixl, e
+	ld ixh, d
+	ld a, (ix + MST_PARENT_PTR)
+	or (ix + MST_PARENT_PTR + 1)
+	jr z, pcg_generate_world__random_mst_node_favoring_leaves_tagless_loop_next  ; it's the root
+	ld a, (ix + MST_TAG1)
+	or a
+	jr nz, pcg_generate_world__random_mst_node_favoring_leaves_tagless_loop_next  ; it's not tagless
+	ld a, (ix + MST_N_DESCENDANTS)
+	or a
+	jr z, pcg_generate_world__random_mst_node_favoring_leaves_tagless_loop_leaf
+	; no leaf:
+	ld a, iyl
+	or a
+	jr z, pcg_generate_world__random_mst_node_favoring_leaves_tagless_loop_next  ; we already have some leaves, so, ignore
+	jr pcg_generate_world__random_mst_node_favoring_leaves_tagless_loop_leaf_continue
+
+pcg_generate_world__random_mst_node_favoring_leaves_tagless_loop_leaf:
+	; leaf:
+	ld a, iyl
+	or a
+	jr z, pcg_generate_world__random_mst_node_favoring_leaves_tagless_loop_leaf_continue
+	; clear the current candidate list, which had non-leaves:
+	xor a
+	ld (tmp_pcg_world__candidates_list_size), a
+
+pcg_generate_world__random_mst_node_favoring_leaves_tagless_loop_leaf_continue:
+	push hl
+		ld hl, tmp_pcg_world__candidates_list_size
+		ld a, (hl)
+		inc (hl)
+		ld hl, tmp_pcg_world__candidates_list
+		add a, a
+		ADD_HL_A
+		ld a, ixl
+		ld (hl), a
+		inc hl
+		ld a, ixh
+		ld (hl), a
+	pop hl
+
+pcg_generate_world__random_mst_node_favoring_leaves_tagless_loop_next:
+	djnz pcg_generate_world__random_mst_node_favoring_leaves_tagless_loop
+
+	; sample one at random:
+	ld a, (tmp_pcg_world__candidates_list_size)
+	or a
+	jr z, pcg_generate_world__random_mst_node_favoring_leaves_tagless_fail
+	ld c, a
+	call random_modulo
+	ld hl, tmp_pcg_world__candidates_list
+	add a, a
+	ADD_HL_A
+	ld e, (hl)
+	inc hl
+	ld d, (hl)
+
 	xor a  ; z
+	ret
+pcg_generate_world__random_mst_node_favoring_leaves_tagless_fail:
+	or 1  ; nz
 	ret
 
 
@@ -3534,7 +3734,7 @@ pcg_generate_world__add_tag_to_random_point_in_mst_node_division:
 ; - nz: tag could not be added (too many tags in the division)
 pcg_generate_world__add_tag_to_point_in_mst_node_division:
 	; add tag to the point:
-	push de
+	push de  ; mdl-watch: "pcg_generate_world__add_tag_to_point_in_mst_node_division", b, de, l
 		inc de
 		ld a, (de)  ; area ID (since MST_AREA_ID == 1)
 		; here l = offset of the point sampled above

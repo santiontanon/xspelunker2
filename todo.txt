@@ -1,12 +1,7 @@
 to do:
 
 ***- Implement PCGWorld in assembler:
-  ***- generateSubquests
-      ***- PCGPatternNKeysAndChestLock:
-        ***- randomAreaDivisionFavoringLeaves (maybe make it only pick tagless nodes, both in assembler and Java, and then I do not need retries)
-        ***- randomDivisionPoint
-      ***- PCGPatternNKeysAndLock
-  ***- Verify it matches Java
+  ***- Verify generateSubquests matches Java
   ***- generate all the other subquests required for the game (path to midpoint, boss4, etc.)
   ***- spawn_additional_objects
   ***- shop extra items (in "pcg_generate_world__generate_tag_data")
