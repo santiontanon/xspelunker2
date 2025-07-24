@@ -41,8 +41,11 @@ public class PCGWorld {
 //    public int min_divisions_per_area[] = {3, 7, 7, 4, 7, 1, 7, 7, 7, 7, 7, 7};
 //    public int n_divisions = 120;
 //    public int min_divisions_per_area[] = {6, 8, 8, 4, 8, 1, 8, 8, 8, 8, 7, 7};
-    public int n_divisions = 122;
-    public int min_divisions_per_area[] = {6, 12, 12, 5, 12, 3, 12, 12, 12, 12, 12, 12};
+//    public int n_divisions = 122;
+//    public int min_divisions_per_area[] = {6, 12, 12, 5, 12, 3, 12, 12, 12, 12, 12, 12};
+    public int n_divisions = 134;
+    public int min_divisions_per_area[] = {6, 15, 15, 6, 15, 3, 12, 12, 13, 13, 12, 12};
+    
     public String areaNames[] = {
         "Jungle",
         "Temple of Inscriptions",
@@ -427,6 +430,7 @@ public class PCGWorld {
                 divisionSeeds.add(seed);
                 addTag(seed, "seed", null);  // we mark them, so that we do not repeat any
                 seed.a.divisionIDs[seed.x][seed.y] = getNextDivisionID();
+//                System.out.println("  division: " + (seed.x + seed.y*seed.a.width) + ", " + seed.a.divisionIDs[seed.x][seed.y]);
 //                System.out.println("  saving division: " + seed.a.divisionIDs[seed.x][seed.y]);
                 seed.a.nDivisions++;
 //                n_divisions_left--;
@@ -802,14 +806,14 @@ public class PCGWorld {
         n_times_reached_generation_stage[5]++;
         
         // path to midpoint:
-        QuestSpec q1b = new QuestSpec(boss1, midpoint, 0, null, null, null, null);
-        open = new ArrayList<>();
-        open.add(q1b);
-        List<Quest> quests2 = generateSubquests(w, tree, open, useable, reachable);
-        if (quests2 == null) {
-            return false;
-        }
-        quests.addAll(quests2);
+//        QuestSpec q1b = new QuestSpec(boss1, midpoint, 0, null, null, null, null);
+//        open = new ArrayList<>();
+//        open.add(q1b);
+//        List<Quest> quests2 = generateSubquests(w, tree, open, useable, reachable);
+//        if (quests2 == null) {
+//            return false;
+//        }
+//        quests.addAll(quests2);
         
         // for the bosses 4 and 5, create "current reachable area" (from midpoint on), and do the same
         QuestSpec q4 = new QuestSpec(midpoint, boss4, n_subquests_per_boss, null, null, null, "boss4");
@@ -1166,7 +1170,7 @@ public class PCGWorld {
         List<Quest> quests = new ArrayList<>();
 
         while(!open.isEmpty()) {
-            System.out.println("open: " + open.size() + ", useable: " + useable.size() + ", reachable: " + reachable.size());
+            System.out.println("\nopen: " + open.size() + ", useable: " + useable.size() + ", reachable: " + reachable.size());
             System.out.println("    seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
             QuestSpec qs = open.remove(0);
             Pair<Quest, List<QuestSpec>> tmp = null;
@@ -1427,8 +1431,10 @@ public class PCGWorld {
         }
 
         if (!leafCandidates.isEmpty()) {
+            System.out.println("        randomAreaDivisionFavoringLeaves candidate list size (leaf): " + leafCandidates.size());
             return leafCandidates.get(r.nextInt(leafCandidates.size()));
         } else if (!otherCandidates.isEmpty()) {
+            System.out.println("        randomAreaDivisionFavoringLeaves candidate list size (non leaf): " + otherCandidates.size());
             return otherCandidates.get(r.nextInt(otherCandidates.size()));            
         }
         if (a == null) {
@@ -1795,6 +1801,7 @@ public class PCGWorld {
                 }
             }
         }
+        System.out.println("    randomDivisionPoint from "+d.divisionID+", candidates: " + candidates.size());
         if (candidates.isEmpty()) {
             return null;
         }
@@ -1909,6 +1916,10 @@ public class PCGWorld {
         if (d != null && !d.tags.contains(tag)) {
             d.tags.add(tag);
             // System.out.println(" - " + d.divisionID + " + " + tag);
+        }
+        
+        if (d != null) {
+            System.out.println("    addTag: " + tag + " to division " + d.divisionID + " (offset: " + (p.x + p.y*p.a.width) + ")");
         }
         
         return true;

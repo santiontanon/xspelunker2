@@ -74,6 +74,7 @@ public class PCGPatternNKeysAndLock extends PCGPattern {
                 } else {
                     q.lockPoint = destination;
                 }
+                System.out.println("    getConnectionDestination (area, direction, offset): " + destination.a.ID + ", " + destination.direction + ", " + (destination.x + destination.y*destination.a.width));
                 w.lockDirections.put(locktag, getConnectionDirection(w, lockTargetDiv.root));
             }
             if (q.lockPoint == null) {
@@ -164,9 +165,11 @@ public class PCGPatternNKeysAndLock extends PCGPattern {
 //                System.err.println("PCGPatternNKeysAndLock: could not find key location, useable: " + useable);
                 return null;
             }
+            System.out.println("    key division: " + keyDivision.divisionID);
             q.keyDivisions.add(keyDivision);
             q.keyPoints.add(keyPoint);
             q.keyTags.add(keytags[i]);
+            System.out.println("   *** new quest offset (key-lock): " + (keyPoint.x + keyPoint.y * keyPoint.a.width));
             subquests.add(new QuestSpec(qs.start, keyDivision, qs.nSubQuests - 1, q.startPoint, keyPoint, qs.startTag, keytags[i]));
         }
         

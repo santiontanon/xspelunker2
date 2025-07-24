@@ -99,9 +99,11 @@ public class PCGPatternNKeysAndChestLock extends PCGPattern {
 //                System.err.println("PCGPatternNKeysAndLock: could not find key location, useable: " + useable);
                 return null;
             }
+            System.out.println("    key division: " + keyDivision.divisionID);
             q.keyDivisions.add(keyDivision);
             q.keyPoints.add(keyPoint);
             q.keyTags.add(keytags[i]);
+            System.out.println("   *** new quest offset (chestLock): " + (keyPoint.x + keyPoint.y * keyPoint.a.width));
             subquests.add(new QuestSpec(qs.start, keyDivision, qs.nSubQuests - 1, q.startPoint, keyPoint, qs.startTag, keytags[i]));
         }
         

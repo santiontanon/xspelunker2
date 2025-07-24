@@ -136,6 +136,7 @@ public class PCGPatternObstacle extends PCGPattern {
         q.keyPoints.add(keyPoint);
         q.keyTags.add(keytag);
         List<QuestSpec> subquests = new ArrayList<>();
+        System.out.println("   *** new quest offset (obstacle): " + (keyPoint.x + keyPoint.y * keyPoint.a.width));
         subquests.add(new QuestSpec(qs.start, keyDivision, qs.nSubQuests - 1, q.startPoint, keyPoint, qs.startTag, keytag));
         
         return new Pair<>(q, subquests);
