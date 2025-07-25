@@ -283,17 +283,17 @@ public class PCGWorld {
         r = a_r;
         World w;
                 
-        // 5 retries:
-        int n_retries = 6;
+        // 1 retry:
+        int n_retries = 2;
         for(int i = 0; i<n_retries; i++) {
             this.initKeysAndLocks();
             List<String> usedKeysAndLocks = new ArrayList<>();
 
             if (i == n_retries - 1) {
-                r.setSeed1(0);  // we know this seed works
+                r.setSeed(0, 0xaaaa);  // we know this seed works
                 n_times_defaulting_to_safe_seed++;
             }
-            System.out.println("PCG.generate: ---- attempt " + i + " ----");
+            System.out.println("PCG.generate: ---- attempt " + i + " (seed "+r.rng_seed1 +"/"+r.rng_seed2+") ----");
             w = new World();
             if (!generateAreaLayouts(w)) continue;
             n_times_reached_generation_stage[0]++;
@@ -307,7 +307,10 @@ public class PCGWorld {
             List<AreaDivision> marsSpanningTree = generateSpanningTree(w, 10);
             List<AreaDivision> moonSpanningTree = generateSpanningTree(w, 11);
             n_times_reached_generation_stage[3]++;
-            if (!generateMission(w, w.spanningTree, marsSpanningTree, moonSpanningTree, usedKeysAndLocks)) continue;
+            if (!generateMission(w, w.spanningTree, marsSpanningTree, moonSpanningTree, usedKeysAndLocks)) {
+                System.out.println("    generateMission failed");
+                continue;
+            }
             n_times_reached_generation_stage[7]++;
 //            if (!createLoopConnections(w, w.spanningTree)) continue;
             List<AreaDivision> allAreas = new ArrayList<>();
@@ -767,7 +770,7 @@ public class PCGWorld {
         w.lockKeys.get("midpoint").add("boss2");
         w.lockKeys.get("midpoint").add("boss3");
         AreaDivision ending = getDivisionByID(w.areas.get(3).divisionIDs[3][0], tree);
-//        addTag(new AreaPoint(w.areas.get(3), 3, 0), "ending", ending);
+        addTag(new AreaPoint(w.areas.get(3), 3, 0), "ending", ending);
 
 //        System.out.println("Key division depths: " +
 //                           divisionTreeDepth(boss1) + ", " + 
@@ -1161,7 +1164,7 @@ public class PCGWorld {
     public List<Quest> generateSubquests(World w, List<AreaDivision> tree, List<QuestSpec> open,
                                          List<AreaDivision> useable, List<AreaDivision> reachable) throws Exception
     {
-        System.out.println("-------- generateSubquests --------");
+//        System.out.println("-------- generateSubquests --------");
         PCGPatternAtoB pat_a2b = new PCGPatternAtoB();
         PCGPatternObstacle pat_o = new PCGPatternObstacle();
         PCGPatternNKeysAndChestLock pat_kcl = new PCGPatternNKeysAndChestLock();
@@ -1170,17 +1173,18 @@ public class PCGWorld {
         List<Quest> quests = new ArrayList<>();
 
         while(!open.isEmpty()) {
-            System.out.println("\nopen: " + open.size() + ", useable: " + useable.size() + ", reachable: " + reachable.size());
-            System.out.println("    seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+//            System.out.println("open: " + open.size() + ", useable: " + useable.size() + ", reachable: " + reachable.size());
+//            System.out.println("    seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
             QuestSpec qs = open.remove(0);
             Pair<Quest, List<QuestSpec>> tmp = null;
-            System.out.println("    QuestSpec: " + qs);
+//            System.out.println("    QuestSpec: " + qs);
             // Choose quest:
             if (qs.nSubQuests == 0) {
-                System.out.println("    quest_type: a_to_b");
+//                System.out.println("    quest_type: a_to_b");
                 // Just a path, no subquests:
                 tmp = pat_a2b.generate(w, qs, useable, reachable);
                 if (tmp == null) {
+                    System.out.println("    generateSubquests failed a-to-b pattern");
                     return null;
                 }            
             } else {
@@ -1205,13 +1209,13 @@ public class PCGWorld {
                         // midpoint or ending cannot be inside a chest!
                         if (quest_type == 1) {
                             quest_type = r.nextInt(2) * 2;  // 0 or 2
-                            System.out.println("        new quest_type (midpoint/ending): " + quest_type);
+//                            System.out.println("        new quest_type (midpoint/ending): " + quest_type);
                         }
                         break;
                     default:
                 }
 
-                if (availableLockKeysChests.isEmpty() && quest_type == 1 && lock_tag == null) {
+                if (availableLockKeysChestsSorted.isEmpty() && quest_type == 1 && lock_tag == null) {
                     // if we are out of chests, just use key/lock:
                     quest_type = 2;
                 }
@@ -1220,13 +1224,14 @@ public class PCGWorld {
                 
 //                System.out.println("locks left: " + availableLockKeysObstacles.size() + ", " + availableLockKeysChests.size() + ", " + availableLockKeys.size());
     
-                System.out.println("    quest_type: " + quest_type);
+//                System.out.println("    quest_type: " + quest_type);
 
                 switch(quest_type) {
                     case 0:
                         if (lock_tag == null) {
                             lock_tag = randomLock(availableLockKeysObstaclesSorted);
                             if (lock_tag == null) {
+                                System.out.println("    generateSubquests failed obstacle: no more locks available");
                                 return null;
                             }
                             key_tags = availableLockKeysObstacles.get(lock_tag);
@@ -1234,6 +1239,7 @@ public class PCGWorld {
                         }
                         tmp = pat_o.generate(w, qs, key_tags[0], lock_tag, useable, reachable, this);
                         if (tmp == null) {
+                            System.out.println("    generateSubquests failed obstacle pattern");
                             return null;
                         }            
                         break;
@@ -1242,6 +1248,7 @@ public class PCGWorld {
                         if (lock_tag == null) {
                             lock_tag = randomLock(availableLockKeysChestsSorted);
                             if (lock_tag == null) {
+                                System.out.println("    generateSubquests failed key-chest: no more locks available");
                                 return null;
                             }
                             key_tags = availableLockKeysChests.get(lock_tag);
@@ -1251,6 +1258,7 @@ public class PCGWorld {
                         w.withinChestTag.add(qs.goalTag);
                         tmp = pat_kcl.generate(w, qs, key_tags, lock_tag, useable, reachable, this);
                         if (tmp == null) {
+                            System.out.println("    generateSubquests failed key-chest pattern");
                             return null;
                         }            
                         break;
@@ -1259,6 +1267,7 @@ public class PCGWorld {
                         if (lock_tag == null) {
                             lock_tag = randomLock(availableLockKeysSorted);
                             if (lock_tag == null) {
+                                System.out.println("    generateSubquests failed key-lock: no more locks available");
                                 return null;
                             }
                             key_tags = availableLockKeys.get(lock_tag);
@@ -1266,6 +1275,7 @@ public class PCGWorld {
                         }
                         tmp = pat_kl.generate(w, qs, key_tags, lock_tag, useable, reachable, this);
                         if (tmp == null) {
+                            System.out.println("    generateSubquests failed key-lock pattern");
                             return null;
                         }            
                         break;
@@ -1292,6 +1302,7 @@ public class PCGWorld {
                 }
             }
             if (tmp == null) {
+                System.out.println("    generateSubquests failed tmp = null");
                 return null;
             }
             
@@ -1305,6 +1316,7 @@ public class PCGWorld {
             open.addAll(nextSubquests);
             quests.add(q);
             if (!q.addTags(w, this)) {
+                System.out.println("    generateSubquests failed adding tags");
                 return null;
             }
 //            if (!q.addPaths(w, this, usedConnections)) {
@@ -1319,9 +1331,9 @@ public class PCGWorld {
     public String randomLock(List<String> sortedLocks) throws Exception
     {
         if (sortedLocks.isEmpty()) return null;
-        System.out.println("        randomLock seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+//        System.out.println("        randomLock seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
         int n = r.nextInt(sortedLocks.size());
-        System.out.println("        randomLock: " + n + " / " + sortedLocks.size());
+//        System.out.println("        randomLock: " + n + " / " + sortedLocks.size());
         return sortedLocks.get(n);
     }
     
@@ -1349,7 +1361,7 @@ public class PCGWorld {
     
     public List<AreaDivision> reachableArea(List<AreaDivision> tree, AreaDivision start, AreaDivision block)
     {
-        System.out.println("reachableArea:");
+//        System.out.println("reachableArea:");
         List<AreaDivision> reachable = new ArrayList<>();
         for(AreaDivision d:tree) {
             boolean blocked = false;
@@ -1416,31 +1428,48 @@ public class PCGWorld {
     
     public AreaDivision randomAreaDivisionFavoringLeaves(Area a, List<AreaDivision> tree, boolean excludeRoot)
     {
-        List<AreaDivision> leafCandidates = new ArrayList<>();
-        List<AreaDivision> otherCandidates = new ArrayList<>();
+//        List<AreaDivision> leafCandidates = new ArrayList<>();
+//        List<AreaDivision> otherCandidates = new ArrayList<>();
+//        for(AreaDivision d:tree) {
+//            if (excludeRoot && d.parent == null) continue;
+//            if (d.tags != null && !d.tags.isEmpty()) continue;
+//            if (a == null || d.root.a.ID == a.ID) {
+//                if (d.nDescendants == 0) {
+//                    leafCandidates.add(d);                    
+//                } else {
+//                    otherCandidates.add(d);                    
+//                }
+//            }
+//        }
+//
+//        if (!leafCandidates.isEmpty()) {
+////            System.out.println("        randomAreaDivisionFavoringLeaves candidate list size (leaf): " + leafCandidates.size());
+//            return leafCandidates.get(r.nextInt(leafCandidates.size()));
+//        } else if (!otherCandidates.isEmpty()) {
+////            System.out.println("        randomAreaDivisionFavoringLeaves candidate list size (non leaf): " + otherCandidates.size());
+//            return otherCandidates.get(r.nextInt(otherCandidates.size()));            
+//        }
+//        return null;
+        
+        // Alternate implementation, which favors nodes with fewer descendants instead
+        // (to prevent blocking lots of tree nodes):
+        List<AreaDivision> candidates = new ArrayList<>();
+        int best_n_descendants = 255;
         for(AreaDivision d:tree) {
             if (excludeRoot && d.parent == null) continue;
             if (d.tags != null && !d.tags.isEmpty()) continue;
             if (a == null || d.root.a.ID == a.ID) {
-                if (d.nDescendants == 0) {
-                    leafCandidates.add(d);                    
-                } else {
-                    otherCandidates.add(d);                    
+                if (d.nDescendants < best_n_descendants) {
+                    candidates.clear();
+                    best_n_descendants = d.nDescendants;
                 }
+                candidates.add(d);
             }
-        }
-
-        if (!leafCandidates.isEmpty()) {
-            System.out.println("        randomAreaDivisionFavoringLeaves candidate list size (leaf): " + leafCandidates.size());
-            return leafCandidates.get(r.nextInt(leafCandidates.size()));
-        } else if (!otherCandidates.isEmpty()) {
-            System.out.println("        randomAreaDivisionFavoringLeaves candidate list size (non leaf): " + otherCandidates.size());
-            return otherCandidates.get(r.nextInt(otherCandidates.size()));            
-        }
-        if (a == null) {
-            System.out.println("randomAreaDivisionFavoringLeaves: no divisions left!!");
-        } else {
-            System.out.println("randomAreaDivisionFavoringLeaves: Area " + a.ID + " does not have divisions!!");
+        }        
+        
+        if (!candidates.isEmpty()) {
+//            System.out.println("        randomAreaDivisionFavoringLeaves candidate list size ("+best_n_descendants+"): " + candidates.size());
+            return candidates.get(r.nextInt(candidates.size()));
         }
         return null;
     }
@@ -1794,6 +1823,8 @@ public class PCGWorld {
                     if (tagLess) {
                         if (a.tags[j][i] == null || a.tags[j][i].isEmpty()) {
                             candidates.add(new AreaPoint(a, j, i));
+//                        } else {
+//                            System.out.println("        randomDivisionPoint: found tags!" + a.tags[j][i]);
                         }
                     } else {
                         candidates.add(new AreaPoint(a, j, i));
@@ -1801,7 +1832,7 @@ public class PCGWorld {
                 }
             }
         }
-        System.out.println("    randomDivisionPoint from "+d.divisionID+", candidates: " + candidates.size());
+//        System.out.println("    randomDivisionPoint from "+d.divisionID+", candidates: " + candidates.size());
         if (candidates.isEmpty()) {
             return null;
         }
@@ -1907,7 +1938,7 @@ public class PCGWorld {
         if (!l.contains(tag)) {
             for(String tag2:l) {
                 if (tagsCollide(tag, tag2)) {
-                    System.out.println("addTag: two locks/doors in one point!!! " + tag + ", " + tag2);
+//                    System.out.println("addTag: two locks/doors in one point!!! " + tag + ", " + tag2);
                     return false;
                 }
             }
@@ -1918,9 +1949,9 @@ public class PCGWorld {
             // System.out.println(" - " + d.divisionID + " + " + tag);
         }
         
-        if (d != null) {
-            System.out.println("    addTag: " + tag + " to division " + d.divisionID + " (offset: " + (p.x + p.y*p.a.width) + ")");
-        }
+//        if (d != null) {
+//            System.out.println("    addTag: " + tag + " to division " + d.divisionID + " (offset: " + (p.x + p.y*p.a.width) + ")");
+//        }
         
         return true;
     }

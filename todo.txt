@@ -1,7 +1,17 @@
 to do:
 
 ***- Implement PCGWorld in assembler:
-  ***- spawn_additional_objects
+  ***- spawn_additional_objects:
+    ***- lost vendor
+    ***- maka secret puzzle clues
+    ***- weapons
+    ***- map pieces
+    ***- hearts
+    ***- teleporters
+    ***- optional items
+    ***- small keys
+    ***- random trivia
+    ***- calendar name clue
   ***- shop extra items (in "pcg_generate_world__generate_tag_data")
   ***- pcg_generate_world__puzzles: generate tablet contents, combination solutions, trial types, and power stone numbers.
   ***- safety checks to make sure all generated levels are playable (no more than 1 tag per division, try all RNG seeds in Java, etc.), adjust # divisions needed, etc. assembler - Java sync on all conditions.

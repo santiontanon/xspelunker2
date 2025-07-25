@@ -22,7 +22,7 @@ import util.Pair;
 public class PCGPatternNKeysAndLock extends PCGPattern {
     public Pair<Quest, List<QuestSpec>> generate(World w, QuestSpec qs, String keytags[], String locktag, List<AreaDivision> useable, List<AreaDivision> reachable, PCGWorld pcg)
     {
-        System.out.println("    PCGPatternNKeysAndLock: " + qs.startTag + " -> " +  Arrays.toString(keytags) + " -> " + locktag + " -> " + qs.goalTag);
+//        System.out.println("    PCGPatternNKeysAndLock: " + qs.startTag + " -> " +  Arrays.toString(keytags) + " -> " + locktag + " -> " + qs.goalTag);
         int nKeys = keytags.length;
         Quest q = new Quest(nKeys + "-keys-and-lock: " + qs.start.divisionID + " -> " + qs.goal.divisionID);
         q.useable.addAll(useable);
@@ -44,6 +44,7 @@ public class PCGPatternNKeysAndLock extends PCGPattern {
             AreaDivision lockTargetDiv = q.lockDivision;
             q.lockDivision = q.lockDivision.parent;
             if (q.lockDivision == null) {
+                System.out.println("    PCGPatternNKeysAndLock: reached root node without finding a proper lock position!");
                 return null;
             }
             if (q.lockDivision != null && q.lockDivision.root.a == lockTargetDiv.root.a) {
@@ -74,11 +75,11 @@ public class PCGPatternNKeysAndLock extends PCGPattern {
                 } else {
                     q.lockPoint = destination;
                 }
-                System.out.println("    getConnectionDestination (area, direction, offset): " + destination.a.ID + ", " + destination.direction + ", " + (destination.x + destination.y*destination.a.width));
+//                System.out.println("    getConnectionDestination (area, direction, offset): " + destination.a.ID + ", " + destination.direction + ", " + (destination.x + destination.y*destination.a.width));
                 w.lockDirections.put(locktag, getConnectionDirection(w, lockTargetDiv.root));
             }
             if (q.lockPoint == null) {
-                System.out.println("PCGPatternNKeysAndLock: could not place the lock!");
+                System.out.println("    PCGPatternNKeysAndLock: could not place the lock!");
                 return null;
             }      
             q.lockTag = locktag;
@@ -90,9 +91,11 @@ public class PCGPatternNKeysAndLock extends PCGPattern {
         
 
         if (q.lockDivision == null) {
+            System.out.println("PCGPatternNKeysAndLock: lockDivision == null!");
             return null;
         }
         if (q.goalPoint == null) {
+            System.out.println("PCGPatternNKeysAndLock: goalPoint == null!");
             return null;
         }
 
@@ -115,7 +118,7 @@ public class PCGPatternNKeysAndLock extends PCGPattern {
         {
 //            AreaDivision rootToRemove = qs.goal;
             AreaDivision rootToRemove = q.lockDivision;
-            System.out.println("    remove reachable/useable under " + rootToRemove.divisionID);
+//            System.out.println("    remove reachable/useable under " + rootToRemove.divisionID);
             List<AreaDivision> toRemove = new ArrayList<>();
             for(AreaDivision d:reachable) {
 //                if (pcg.treeParents(d).contains(qs.goal)) {
@@ -141,8 +144,8 @@ public class PCGPatternNKeysAndLock extends PCGPattern {
         List<QuestSpec> subquests = new ArrayList<>();
         for(int i = 0;i<nKeys;i++) {
             int n_retries = 5;
-            if (reachable.isEmpty()) {
-                System.err.println("PCGPatternNKeysAndLock: no divisions left for more keys (we were spawning key " + i + ": " + keytags[i] + ")!");
+            if (useable.isEmpty()) {
+                System.out.println("    PCGPatternNKeysAndLock: no divisions left for more keys (we were spawning key " + i + ": " + keytags[i] + ")!");
                 return null;
             }
             AreaDivision keyDivision = null;
@@ -151,25 +154,29 @@ public class PCGPatternNKeysAndLock extends PCGPattern {
             candidates.addAll(useable);
             while(n_retries > 0) {
                 keyDivision = pcg.randomAreaDivisionFavoringLeaves(null, candidates, true);
-                if (keyDivision == null) return null;
+                if (keyDivision == null) {
+                    System.out.println("    PCGPatternNKeysAndLock: could not find a division for the key (from " + useable.size() + ")");
+                    return null;
+                }
 //                System.out.println("    keyDivision "+keytags[i]+": " + keyDivision);
                 keyPoint = pcg.randomDivisionPoint(keyDivision, true);
                 if (keyPoint != null) {
                     break;
                 }
+                System.out.println("    PCGPatternNKeysAndLock: could not find a point for the key in " + keyDivision);
 //                System.out.println("!!!!!!");
                 candidates.remove(keyDivision);
                 n_retries--;
             }
             if (keyPoint == null) {
-//                System.err.println("PCGPatternNKeysAndLock: could not find key location, useable: " + useable);
+                System.out.println("    PCGPatternNKeysAndLock: could not find key location, useable: " + useable);
                 return null;
             }
-            System.out.println("    key division: " + keyDivision.divisionID);
+//            System.out.println("    key division: " + keyDivision.divisionID);
             q.keyDivisions.add(keyDivision);
             q.keyPoints.add(keyPoint);
             q.keyTags.add(keytags[i]);
-            System.out.println("   *** new quest offset (key-lock): " + (keyPoint.x + keyPoint.y * keyPoint.a.width));
+//            System.out.println("   *** new quest offset (key-lock): " + (keyPoint.x + keyPoint.y * keyPoint.a.width));
             subquests.add(new QuestSpec(qs.start, keyDivision, qs.nSubQuests - 1, q.startPoint, keyPoint, qs.startTag, keytags[i]));
         }
         

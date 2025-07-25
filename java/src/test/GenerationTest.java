@@ -36,7 +36,7 @@ public class GenerationTest {
     
     public static void main(String args[]) throws Exception
     {
-        MSXRandom r = new MSXRandom(0, 0x5555);
+        MSXRandom r = new MSXRandom(0, 0xaaaa);
 
         PCGWorld pcg1 = new PCGWorld();
         PCGArea pcg2_jungle = new PCGArea(true, "jungle");
@@ -49,93 +49,93 @@ public class GenerationTest {
             typeStats[i] = 0;
         }
         
-//        for(int i = 0;i<1000;i++) {
-////        for(int i = 0;i<65536;i++) {
-////        for(int i = 0;i<5000;i++) {
-//            r.setSeed1(i);
-//            World w = pcg1.generate(r);
-//            if (w == null) {
-//                System.out.println("Cannot generate with seed " + i);
-//                break;
-//            } else {
-//                System.out.println("PCG success with seed " + i);
+        for(int i = 0;i<1000;i++) {
+//        for(int i = 0;i<65536;i++) {
+//        for(int i = 0;i<5000;i++) {
+            r.setSeed1(i);
+            World w = pcg1.generate(r);
+            if (w == null) {
+                System.out.println("Cannot generate with seed " + i);
+                break;
+            } else {
+                System.out.println("PCG success with seed " + i);
 //                if (!Solver.solveGame(w)) {
 //                    System.out.println("Solver error with seed " + i);
 //                } else {
 //                    System.out.println("Solver success with seed " + i);
 //                }
-//                
-//                for(int j = 0;j<w.areas.size();j++) {
-//                    PCGArea pcg2 = null;
-//                    switch(j) {
-//                        case 0:
-//                            pcg2 = pcg2_jungle;
-//                            break;
-//                        case 1:
-//                        case 2:
-//                        case 3:
-//                        case 4:
-//                        case 5:
-//                        case 6:
-//                        case 7:
-//                        case 8:
-//                        case 9:
-//                        case 10:
-//                        case 11:
-//                            pcg2 = pcg2_pyramid;
-//                            break;
-//                    }                    
-//                    RenderedArea ra = pcg2.generate(w.areas.get(j), w, r);
-//                    if (ra == null) {
-//                        System.out.println("PCGArea error with seed " + i + ", area " + j);
-//                        nPCGAreaErrors++;
-//                    } else {
-//                        ra.stats(chunkStats, typeStats);
-//                        checkNumAnimations(ra, pcg2);
-//                    }
+                
+                for(int j = 0;j<w.areas.size();j++) {
+                    PCGArea pcg2 = null;
+                    switch(j) {
+                        case 0:
+                            pcg2 = pcg2_jungle;
+                            break;
+                        case 1:
+                        case 2:
+                        case 3:
+                        case 4:
+                        case 5:
+                        case 6:
+                        case 7:
+                        case 8:
+                        case 9:
+                        case 10:
+                        case 11:
+                            pcg2 = pcg2_pyramid;
+                            break;
+                    }                    
+                    RenderedArea ra = pcg2.generate(w.areas.get(j), w, r);
+                    if (ra == null) {
+                        System.out.println("PCGArea error with seed " + i + ", area " + j);
+                        nPCGAreaErrors++;
+                    } else {
+                        ra.stats(chunkStats, typeStats);
+                        checkNumAnimations(ra, pcg2);
+                    }
+                }
+            }
+        }
+        System.out.println("n_times_defaulting_to_safe_seed: " + pcg1.n_times_defaulting_to_safe_seed);
+        System.out.println("Generation stage stats: " + Arrays.toString(pcg1.n_times_reached_generation_stage));
+//        System.out.println("Leaves in area 1: " + (pcg1.area_1_n_leaves_accum / (double)pcg1.area_1_n_leaves_count));
+        System.out.println("nPCGAreaErrors: " + nPCGAreaErrors);
+
+//        r.setSeed(0, 0x5555);
+//        World w = pcg1.generate(r);
+//        if (w != null) {
+//            if (!Solver.solveGame(w)) {
+//                System.err.println("Error: game cannot be solved!");
+//            }
+//            for(int j = 0;j<w.areas.size();j++) {
+//                PCGArea pcg2 = null;
+//                switch(j) {
+//                    case 0:
+//                        pcg2 = pcg2_jungle;
+//                        break;
+//                    case 1:
+//                    case 2:
+//                    case 3:
+//                    case 4:
+//                    case 5:
+//                    case 6:
+//                    case 7:
+//                    case 8:
+//                    case 9:
+//                    case 10:
+//                    case 11:
+//                        pcg2 = pcg2_pyramid;
+//                        break;
+//                }
+//                RenderedArea ra = pcg2.generate(w.areas.get(j), w, r);
+//                if (ra != null) {
+//                    visualizeArea(ra, "tmp/area"+j+".png", pcg2);
+//                    ra.stats(chunkStats, typeStats);
+//                    checkNumAnimations(ra, pcg2);
 //                }
 //            }
+//            visualizeWorld(w);
 //        }
-//        System.out.println("n_times_defaulting_to_safe_seed: " + pcg1.n_times_defaulting_to_safe_seed);
-//        System.out.println("Generation stage stats: " + Arrays.toString(pcg1.n_times_reached_generation_stage));
-////        System.out.println("Leaves in area 1: " + (pcg1.area_1_n_leaves_accum / (double)pcg1.area_1_n_leaves_count));
-//        System.out.println("nPCGAreaErrors: " + nPCGAreaErrors);
-
-        r.setSeed(0, 0x5555);
-        World w = pcg1.generate(r);
-        if (w != null) {
-            if (!Solver.solveGame(w)) {
-                System.err.println("Error: game cannot be solved!");
-            }
-            for(int j = 0;j<w.areas.size();j++) {
-                PCGArea pcg2 = null;
-                switch(j) {
-                    case 0:
-                        pcg2 = pcg2_jungle;
-                        break;
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 4:
-                    case 5:
-                    case 6:
-                    case 7:
-                    case 8:
-                    case 9:
-                    case 10:
-                    case 11:
-                        pcg2 = pcg2_pyramid;
-                        break;
-                }
-                RenderedArea ra = pcg2.generate(w.areas.get(j), w, r);
-                if (ra != null) {
-                    visualizeArea(ra, "tmp/area"+j+".png", pcg2);
-                    ra.stats(chunkStats, typeStats);
-                    checkNumAnimations(ra, pcg2);
-                }
-            }
-            visualizeWorld(w);
-        }
 
         
         System.out.println("Tile type stats:");

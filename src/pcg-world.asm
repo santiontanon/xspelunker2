@@ -1160,7 +1160,7 @@ pcg_generate_world__generate_area_connections_connection_to_east_caves:
 	ld ixl, PCG_DIRECTION_DOWN
 	ld ixh, PCG_DIRECTION_UP
 	call pcg_generate_world__generate_area_connections_add_connection
-	
+
 pcg_generate_world__generate_area_connections_connection_to_caves_done:
 
 	ld hl, (tmp_pcg_world__tmp_ptr)
@@ -2806,7 +2806,7 @@ pcg_generate_world__generate_subquests_continue:
 	cp 1
 	jr nz, pcg_generate_world__generate_subquests_continue2
 	ld a, iyh
-	cp #ff
+	or a
 	jr nz, pcg_generate_world__generate_subquests_continue2
 
 	ld c, 2  ; quest type = key/lock
@@ -3459,7 +3459,7 @@ pcg_generate_world__random_mst_node_favoring_leaves_tagless:
 	ld b, a
 	or a
 	jr z, pcg_generate_world__random_mst_node_favoring_leaves_tagless_fail
-	ld iyl, 1  ; not yet found any leaf
+	ld iyl, 255  ; best n_descendants
 	xor a
 	ld (tmp_pcg_world__candidates_list_size), a
 pcg_generate_world__random_mst_node_favoring_leaves_tagless_loop:
@@ -3475,24 +3475,15 @@ pcg_generate_world__random_mst_node_favoring_leaves_tagless_loop:
 	ld a, (ix + MST_TAG1)
 	or a
 	jr nz, pcg_generate_world__random_mst_node_favoring_leaves_tagless_loop_next  ; it's not tagless
-	ld a, (ix + MST_N_DESCENDANTS)
-	or a
-	jr z, pcg_generate_world__random_mst_node_favoring_leaves_tagless_loop_leaf
-	; no leaf:
 	ld a, iyl
-	or a
-	jr z, pcg_generate_world__random_mst_node_favoring_leaves_tagless_loop_next  ; we already have some leaves, so, ignore
-	jr pcg_generate_world__random_mst_node_favoring_leaves_tagless_loop_leaf_continue
-
-pcg_generate_world__random_mst_node_favoring_leaves_tagless_loop_leaf:
-	; leaf:
-	ld a, iyl
-	or a
+	cp (ix + MST_N_DESCENDANTS)
+	jr c, pcg_generate_world__random_mst_node_favoring_leaves_tagless_loop_next  ; we have something with less descendants, ignore
 	jr z, pcg_generate_world__random_mst_node_favoring_leaves_tagless_loop_leaf_continue
-	; clear the current candidate list, which had non-leaves:
+	; clear the current candidate list, which had nodes with more descendants:
 	xor a
 	ld (tmp_pcg_world__candidates_list_size), a
-	ld iyl, a  ; mark that we have already found at least one leaf
+	ld a, (ix + MST_N_DESCENDANTS)
+	ld iyl, a  ; mark the current best number of descendants
 
 pcg_generate_world__random_mst_node_favoring_leaves_tagless_loop_leaf_continue:
 	push hl

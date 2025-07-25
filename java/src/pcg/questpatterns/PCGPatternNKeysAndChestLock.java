@@ -50,7 +50,7 @@ public class PCGPatternNKeysAndChestLock extends PCGPattern {
         
         // update "reachable" (remove "goal" and all its descendants):
         {
-            System.out.println("    remove reachable/useable under " + qs.goal.divisionID);
+//            System.out.println("    remove reachable/useable under " + qs.goal.divisionID);
             List<AreaDivision> toRemove = new ArrayList<>();
             for(AreaDivision d:reachable) {
                 if (pcg.treeParents(d).contains(qs.goal)) {
@@ -71,7 +71,7 @@ public class PCGPatternNKeysAndChestLock extends PCGPattern {
 //            System.out.println("  PCGPatternNKeysAndChestLock: goal ("+qs.goalTag+") set to " + qs.goal + " with lock at "+q.lockDivision+". Removing: " + toRemove);
         }
         
-        System.out.println("    key tags: " + Arrays.toString(keytags));
+//        System.out.println("    key tags: " + Arrays.toString(keytags));
         
         // Sample nodes in the reachable tree, with bias to leaves, and to leaves that are close to the goal:
         List<QuestSpec> subquests = new ArrayList<>();
@@ -99,11 +99,11 @@ public class PCGPatternNKeysAndChestLock extends PCGPattern {
 //                System.err.println("PCGPatternNKeysAndLock: could not find key location, useable: " + useable);
                 return null;
             }
-            System.out.println("    key division: " + keyDivision.divisionID);
+//            System.out.println("    key division: " + keyDivision.divisionID);
             q.keyDivisions.add(keyDivision);
             q.keyPoints.add(keyPoint);
             q.keyTags.add(keytags[i]);
-            System.out.println("   *** new quest offset (chestLock): " + (keyPoint.x + keyPoint.y * keyPoint.a.width));
+//            System.out.println("   *** new quest offset (chestLock): " + (keyPoint.x + keyPoint.y * keyPoint.a.width));
             subquests.add(new QuestSpec(qs.start, keyDivision, qs.nSubQuests - 1, q.startPoint, keyPoint, qs.startTag, keytags[i]));
         }
         

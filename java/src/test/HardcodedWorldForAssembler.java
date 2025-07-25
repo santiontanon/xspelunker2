@@ -31,7 +31,7 @@ public class HardcodedWorldForAssembler {
     
     public static void main(String args[]) throws Exception
     {
-        MSXRandom r = new MSXRandom(0, 0x5555);
+        MSXRandom r = new MSXRandom(0, 0xaaaa);
 
 
         PCGWorld pcg1 = new PCGWorld();
