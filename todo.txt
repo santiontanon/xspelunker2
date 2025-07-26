@@ -2,7 +2,6 @@ to do:
 
 ***- Implement PCGWorld in assembler:
   ***- spawn_additional_objects:
-    ***- lost vendor
     ***- maka secret puzzle clues
     ***- weapons
     ***- map pieces

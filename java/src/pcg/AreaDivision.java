@@ -32,4 +32,11 @@ public class AreaDivision {
     {
         return "div(" + divisionID + ")";
     }
+    
+    
+    public int depth()
+    {
+        if (parent == null) return 0;
+        return parent.depth() + 1;
+    }
 }

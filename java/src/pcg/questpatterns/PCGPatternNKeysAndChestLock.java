@@ -44,32 +44,34 @@ public class PCGPatternNKeysAndChestLock extends PCGPattern {
         q.lockTag = locktag;
         q.lockToGoalPathType = Quest.PATH_NONE;
         
-        if (!pcg.canPlaceTag(q.lockPoint, q.lockTag)) {
-            System.out.println("!!!");
+        List<String> allowedTags = new ArrayList<>();
+        allowedTags.add(q.goalTag);
+        if (!pcg.canPlaceTag(q.lockPoint, q.lockTag, allowedTags)) {
+            System.out.println("!!! -> cannot place " + q.lockTag + " since we have " + q.lockPoint.a.tags[q.lockPoint.x][q.lockPoint.y] + " (allowed tags: " + allowedTags + ")");
         }
         
         // update "reachable" (remove "goal" and all its descendants):
-        {
-//            System.out.println("    remove reachable/useable under " + qs.goal.divisionID);
-            List<AreaDivision> toRemove = new ArrayList<>();
-            for(AreaDivision d:reachable) {
-                if (pcg.treeParents(d).contains(qs.goal)) {
-                    toRemove.add(d);
-                }
-            }
-            for(AreaDivision d:useable) {
-                if (!toRemove.contains(d)) {
-                    if (pcg.treeParents(d).contains(qs.goal)) {
-                        toRemove.add(d);
-                    }
-                }
-            }
-            for(AreaDivision d:toRemove) {
-                reachable.remove(d);
-                useable.remove(d);
-            }
-//            System.out.println("  PCGPatternNKeysAndChestLock: goal ("+qs.goalTag+") set to " + qs.goal + " with lock at "+q.lockDivision+". Removing: " + toRemove);
-        }
+//        {
+//            List<AreaDivision> toRemove = new ArrayList<>();
+//            for(AreaDivision d:reachable) {
+//                if (pcg.treeParents(d).contains(qs.goal)) {
+//                    toRemove.add(d);
+//                }
+//            }
+//            for(AreaDivision d:useable) {
+//                if (!toRemove.contains(d)) {
+//                    if (pcg.treeParents(d).contains(qs.goal)) {
+//                        toRemove.add(d);
+//                    }
+//                }
+//            }
+//            for(AreaDivision d:toRemove) {
+//                reachable.remove(d);
+//                useable.remove(d);
+//            }
+////            System.out.println("    remove reachable/useable under " + qs.goal.divisionID + " (leaving us with " + reachable.size() + ", " + useable.size() + ")");
+////            System.out.println("  PCGPatternNKeysAndChestLock: goal ("+qs.goalTag+") set to " + qs.goal + " with lock at "+q.lockDivision+". Removing: " + toRemove);
+//        }
         
 //        System.out.println("    key tags: " + Arrays.toString(keytags));
         
@@ -103,8 +105,9 @@ public class PCGPatternNKeysAndChestLock extends PCGPattern {
             q.keyDivisions.add(keyDivision);
             q.keyPoints.add(keyPoint);
             q.keyTags.add(keytags[i]);
-//            System.out.println("   *** new quest offset (chestLock): " + (keyPoint.x + keyPoint.y * keyPoint.a.width));
-            subquests.add(new QuestSpec(qs.start, keyDivision, qs.nSubQuests - 1, q.startPoint, keyPoint, qs.startTag, keytags[i]));
+            QuestSpec q2 = new QuestSpec(qs.start, keyDivision, qs.nSubQuests - 1, q.startPoint, keyPoint, qs.startTag, keytags[i]);
+//            System.out.println("   new subquest (from key-chest): " + q2);
+            subquests.add(q2);
         }
         
         return new Pair<>(q, subquests);

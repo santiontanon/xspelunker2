@@ -741,7 +741,7 @@ public class PCGArea {
                 for(int j = 0;j<w;j++) {
                     if (a.tags[j][i] != null && a.tags[j][i].contains("start")) {
                         if (a.tags[j][i].size() > 1) {
-                            System.err.println("More than one tag on the start room!");
+                            System.err.println("More than one tag on the start room! " + a.tags[j][i]);
                             return false;
                         }
                         a.rooms[j][i] = START_ROOM_ID;
@@ -754,7 +754,7 @@ public class PCGArea {
                 for(int j = 0;j<w;j++) {
                     if (a.tags[j][i] != null && a.tags[j][i].contains("ending")) {
                         if (a.tags[j][i].size() > 1) {
-                            System.err.println("More than one tag on the ending room!");
+                            System.err.println("More than one tag on the ending room! " + a.tags[j][i]);
                             return false;
                         }
                         a.rooms[j][i] = CALENDAR_ROOM_ID;
@@ -767,7 +767,7 @@ public class PCGArea {
                 for(int j = 0;j<w;j++) {
                     if (a.tags[j][i] != null && a.tags[j][i].contains("teleporter-atlantis")) {
                         if (a.tags[j][i].size() > 1) {
-                            System.err.println("More than one tag on the teleporter room!");
+                            System.err.println("More than one tag on the teleporter room! " + a.tags[j][i]);
                             return false;
                         }
                         a.rooms[j][i] = TELEPORTER_ROOM_ID;

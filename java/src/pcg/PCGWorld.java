@@ -290,7 +290,7 @@ public class PCGWorld {
             List<String> usedKeysAndLocks = new ArrayList<>();
 
             if (i == n_retries - 1) {
-                r.setSeed(0, 0xaaaa);  // we know this seed works
+                r.setSeed(0, 0x5555);  // we know this seed works
                 n_times_defaulting_to_safe_seed++;
             }
             System.out.println("PCG.generate: ---- attempt " + i + " (seed "+r.rng_seed1 +"/"+r.rng_seed2+") ----");
@@ -714,6 +714,7 @@ public class PCGWorld {
     {
         // Pick important divisions:
         AreaDivision start = tree.get(0);
+        addTag(start.root, "start", start);
         
         AreaPoint teleporter_atlantis_p = randomAreaTopMostPoint(w.areas.get(9), true);
         AreaDivision teleporter_atlantis = getDivisionByID(teleporter_atlantis_p.a.divisionIDs[teleporter_atlantis_p.x][teleporter_atlantis_p.y], tree);
@@ -752,7 +753,13 @@ public class PCGWorld {
         if (boss7 == null) {
             return false;
         }
-        
+        addTag(boss1.root, "boss1-chestlock", boss1);
+        addTag(boss2.root, "boss2-chestlock", boss2);
+        addTag(boss3.root, "boss3-chestlock", boss3);
+        addTag(boss4.root, "boss4-chestlock", boss4);
+        addTag(boss5.root, "boss5-chestlock", boss5);
+        addTag(boss6.root, "boss6-chestlock", boss6);
+        addTag(boss7.root, "boss7-chestlock", boss7);
 //        System.out.println("Boss divisions: " +
 //                           boss1.divisionID + ", " +
 //                           boss2.divisionID + ", " +
@@ -953,7 +960,7 @@ public class PCGWorld {
 //            }
 //        }
         
-//        System.out.println("tagLess divisions (before): " + tagLess.size() + " / " + allAreas.size());
+        System.out.println("tagLess divisions (before): " + tagLess.size() + " / " + allAreas.size());
      
         // lost vendor:
         {
@@ -967,9 +974,11 @@ public class PCGWorld {
                 System.err.println("No division available for the lost vendor!");
                 return false;
             } else {
-                int idx = r.nextInt(64) % candidates.size();
+                int idx = r.nextInt(candidates.size());
+                System.out.println("lost vendor candidates: " + idx + " / " + candidates.size() + "  ->  " + candidates);
                 AreaDivision d = candidates.get(idx);
                 AreaPoint p = randomDivisionPoint(d, true);
+                System.out.println("lost vendor div / offset: " + d.divisionID + ", " + p.offset());
                 addTag(p, "lost-vendor", d);
                 tagLess.remove(d);
             }            
@@ -986,7 +995,7 @@ public class PCGWorld {
                 }
             }
             if (!candidates.isEmpty()) {
-                int idx = r.nextInt(64) % candidates.size();
+                int idx = r.nextInt(candidates.size());
                 AreaDivision d = candidates.get(idx);
                 AreaPoint p = randomDivisionPoint(d, true);
                 addTag(p, "maya-riddle-clue" + (i+1), d);
@@ -1003,7 +1012,7 @@ public class PCGWorld {
                 }
             }
             if (!candidates.isEmpty() && r.nextInt(16) != 0) {
-                int idx = r.nextInt(16) % candidates.size();
+                int idx = r.nextInt(candidates.size());
                 AreaDivision d = candidates.get(idx);
                 AreaPoint p = randomDivisionPoint(d, true);
                 if (n_small_keys < 4 && r.nextInt(4) == 0) {
@@ -1028,7 +1037,7 @@ public class PCGWorld {
                 }
             }
             if (!candidates.isEmpty()) {
-                int idx = r.nextInt(16) % candidates.size();
+                int idx = r.nextInt(candidates.size());
                 AreaDivision d = candidates.get(idx);
                 AreaPoint p = randomDivisionPoint(d, true);
                 addTag(p, "map-piece" + (i+1), d);
@@ -1039,7 +1048,7 @@ public class PCGWorld {
         // Spawn hearts: (1/16th chance that one is not there)
         for(int i = 0;i<5;i++) {
             if (!tagLess.isEmpty() && r.nextInt(16) != 0) {
-                int idx = r.nextInt(32) % tagLess.size();
+                int idx = r.nextInt(tagLess.size());
                 AreaDivision d = tagLess.get(idx);
                 AreaPoint p = randomDivisionPoint(d, true);
                 if (n_small_keys < 4 && r.nextInt(4) == 0) {
@@ -1064,7 +1073,7 @@ public class PCGWorld {
                 }
             }
             if (!candidates.isEmpty() && r.nextInt(16) != 0) {
-                int idx = r.nextInt(16) % candidates.size();
+                int idx = r.nextInt(candidates.size());
                 AreaDivision d = candidates.get(idx);
                 AreaPoint p = randomDivisionPoint(d, true);
                 addTag(p, teleporterTags[i], d);
@@ -1089,7 +1098,7 @@ public class PCGWorld {
             }
             // sandals (i == 0) are always spawned (if possible):
             if (!candidates.isEmpty() && (i == 0 || r.nextInt(16) != 0)) {
-                int idx = r.nextInt(32) % candidates.size();
+                int idx = r.nextInt(candidates.size());
                 AreaDivision d = candidates.get(idx);
                 AreaPoint p = randomDivisionPoint(d, true);
                 if (i != 0 && n_small_keys < 4 && r.nextInt(4) == 0) {
@@ -1108,7 +1117,7 @@ public class PCGWorld {
         // spawn small keys:
         for(int i = 0;i<n_small_keys;i++) {
             if (!tagLess.isEmpty() && r.nextInt(16) != 0) {
-                int idx = r.nextInt(32) % tagLess.size();
+                int idx = r.nextInt(tagLess.size());
                 AreaDivision d = tagLess.get(idx);
                 AreaPoint p = randomDivisionPoint(d, true);
                 addTag(p, "small-key" + (i+1), d);
@@ -1119,7 +1128,7 @@ public class PCGWorld {
         // spawn random trivia:
         for(int i = 0;i<8;i++) {
             if (!tagLess.isEmpty() && r.nextInt(16) != 0) {
-                int idx = r.nextInt(32) % tagLess.size();
+                int idx = r.nextInt(tagLess.size());
                 AreaDivision d = tagLess.get(idx);
                 AreaPoint p = randomDivisionPoint(d, true);
                 addTag(p, "story-trivia" + (i+1), d);
@@ -1136,7 +1145,7 @@ public class PCGWorld {
                 }
             }
             if (!candidates.isEmpty()) {
-                int idx = r.nextInt(32) % candidates.size();
+                int idx = r.nextInt(candidates.size());
                 AreaDivision d = candidates.get(idx);
                 AreaPoint p = randomDivisionPoint(d, true);
                 addTag(p, "calendar-name-clue", d);
@@ -1149,13 +1158,6 @@ public class PCGWorld {
         return true;
     }
     
-    
-    public int divisionTreeDepth(AreaDivision d)
-    {
-        if (d.parent == null) return 0;
-        return 1 + divisionTreeDepth(d.parent);
-    }
-
     
     /*
     - useable: divisions that can be used to place new tags (keys, locks, etc.).
@@ -1175,6 +1177,7 @@ public class PCGWorld {
         while(!open.isEmpty()) {
 //            System.out.println("open: " + open.size() + ", useable: " + useable.size() + ", reachable: " + reachable.size());
 //            System.out.println("    seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+//            System.out.println("    useable: " + useable);
             QuestSpec qs = open.remove(0);
             Pair<Quest, List<QuestSpec>> tmp = null;
 //            System.out.println("    QuestSpec: " + qs);
@@ -1206,6 +1209,11 @@ public class PCGWorld {
                         break;
                     case "midpoint":
                     case "ending":
+                    case "none":
+                    case "button1":
+                    case "button2":
+                    case "button3":
+                    case "button4":
                         // midpoint or ending cannot be inside a chest!
                         if (quest_type == 1) {
                             quest_type = r.nextInt(2) * 2;  // 0 or 2
@@ -1401,18 +1409,20 @@ public class PCGWorld {
         int currentDepth = -1;
         for(AreaDivision d:tree) {
             if (a == null || d.root.a.ID == a.ID) {
-                if (d.nDescendants == 0) {
-                    if (preferDeeper) {
-                        int depth = divisionTreeDepth(d);
-                        if (depth > currentDepth) {
-                            currentDepth = depth;
-                            leafCandidates.clear();
-                            leafCandidates.add(d);
-                        } else if (depth == currentDepth) {
+                if (d.tags == null || d.tags.isEmpty()) {
+                    if (d.nDescendants == 0) {
+                        if (preferDeeper) {
+                            int depth = d.depth();
+                            if (depth > currentDepth) {
+                                currentDepth = depth;
+                                leafCandidates.clear();
+                                leafCandidates.add(d);
+                            } else if (depth == currentDepth) {
+                                leafCandidates.add(d);
+                            }
+                        } else {
                             leafCandidates.add(d);
                         }
-                    } else {
-                        leafCandidates.add(d);
                     }
                 }
             }
@@ -1460,10 +1470,13 @@ public class PCGWorld {
             if (d.tags != null && !d.tags.isEmpty()) continue;
             if (a == null || d.root.a.ID == a.ID) {
                 if (d.nDescendants < best_n_descendants) {
+//                    System.out.println("" + d.nDescendants);
                     candidates.clear();
                     best_n_descendants = d.nDescendants;
                 }
-                candidates.add(d);
+                if (d.nDescendants == best_n_descendants) {
+                    candidates.add(d);
+                }
             }
         }        
         
@@ -1903,18 +1916,24 @@ public class PCGWorld {
     }
     
     
-    public boolean canPlaceTag(AreaPoint p, String tag)
+    public boolean canPlaceTag(AreaPoint p, String tag, List<String> allowedTags)
     {
         List<String> l = p.a.tags[p.x][p.y];
-        if (l == null) return true;        
-        if (!l.contains(tag)) {
-            for(String tag2:l) {
-                if (tagsCollide(tag, tag2)) {
-                    return false;
-                }
-            }
+        if (l == null) return true;
+        for(String tag2:l) {
+            if (tag2.equals(tag)) continue;
+            if (allowedTags.contains(tag2)) continue;
+            return false;
         }
         return true;
+//        if (!l.contains(tag)) {
+//            for(String tag2:l) {
+//                if (tagsCollide(tag, tag2)) {
+//                    return false;
+//                }
+//            }
+//        }
+//        return true;
     }
     
     
@@ -1922,6 +1941,9 @@ public class PCGWorld {
     {
         if (tag == null) {
             return false;
+        }
+        if (tag.equals("none")) {
+            return true;
         }
         List<String> l = p.a.tags[p.x][p.y];
         if (l == null) {
@@ -1931,8 +1953,10 @@ public class PCGWorld {
         
 //        a.tags[j][i].contains("ending")
         if (!tag.equals("ending") && l.contains("ending")) {
-//            System.err.println("Adding " + tag + " to ending room!");
             throw new Exception("Adding " + tag + " to ending room!");
+        }
+        if (!tag.equals("start") && l.contains("start")) {
+            throw new Exception("Adding " + tag + " to start room!");
         }
         
         if (!l.contains(tag)) {

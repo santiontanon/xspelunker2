@@ -52,7 +52,7 @@ public class GenerationTest {
         for(int i = 0;i<1000;i++) {
 //        for(int i = 0;i<65536;i++) {
 //        for(int i = 0;i<5000;i++) {
-            r.setSeed1(i);
+            r.setSeed(i, 0x5555);
             World w = pcg1.generate(r);
             if (w == null) {
                 System.out.println("Cannot generate with seed " + i);
@@ -104,9 +104,9 @@ public class GenerationTest {
 //        r.setSeed(0, 0x5555);
 //        World w = pcg1.generate(r);
 //        if (w != null) {
-//            if (!Solver.solveGame(w)) {
-//                System.err.println("Error: game cannot be solved!");
-//            }
+////            if (!Solver.solveGame(w)) {
+////                System.err.println("Error: game cannot be solved!");
+////            }
 //            for(int j = 0;j<w.areas.size();j++) {
 //                PCGArea pcg2 = null;
 //                switch(j) {

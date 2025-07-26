@@ -33,7 +33,7 @@ public class QuestSpec {
     {
         return "QuestSpec(div " + start.divisionID + ", div " + goal.divisionID + ", " +
                         (startPoint == null? "-" : "off " + (startPoint.x + startPoint.y * startPoint.a.width)) + ", " +
-                        (startPoint == null? "-" : "off " + (goalPoint.x + goalPoint.y * goalPoint.a.width)) + ", " +
+                        (goalPoint == null? "-" : "off " + (goalPoint.x + goalPoint.y * goalPoint.a.width)) + ", " +
                          startTag + ", " + goalTag + ", " + nSubQuests + ")";
     }
 }

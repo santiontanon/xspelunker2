@@ -43,8 +43,10 @@ public class PCGPatternObstacle extends PCGPattern {
         // Generate key and lock locations:
         // lock is the point that connects to the goal (in the parent area)
         q.lockDivision = q.goalDivision;
+        AreaDivision rootToRemove = q.goalDivision;
         while(true) {
             AreaDivision lockTargetDiv = q.lockDivision;
+            rootToRemove = q.lockDivision;
             q.lockDivision = q.lockDivision.parent;
             if (q.lockDivision == null) {
                 return null;
@@ -86,8 +88,10 @@ public class PCGPatternObstacle extends PCGPattern {
             }
                         
             q.lockTag = locktag;
-            if (pcg.canPlaceTag(q.lockPoint, q.lockTag)) {
+            if (pcg.canPlaceTag(q.lockPoint, q.lockTag, new ArrayList<>())) {
                 break;
+            } else {
+//                System.out.println("!!!!! -> cannot place " + q.lockTag + " since we have " + q.lockPoint.a.tags[q.lockPoint.x][q.lockPoint.y]);                
             }
         }            
 
@@ -107,7 +111,7 @@ public class PCGPatternObstacle extends PCGPattern {
                 
         // update "reachable" (remove "goal" and all its descendants):
         {
-            AreaDivision rootToRemove = q.lockDivision;
+//            AreaDivision rootToRemove = q.lockDivision;
             List<AreaDivision> toRemove = new ArrayList<>();
             for(AreaDivision d:reachable) {
 //                if (pcg.treeParents(d).contains(qs.goal)) {
@@ -126,6 +130,7 @@ public class PCGPatternObstacle extends PCGPattern {
                 reachable.remove(d);
                 useable.remove(d);
             }
+//            System.out.println("    remove reachable/useable under " + rootToRemove.divisionID + " (leaving us with " + reachable.size() + ", " + useable.size() + ")");
 //            System.out.println("  PCGPatternObstacle: goal ("+qs.goalTag+") set to " + qs.goal + " with lock at "+q.lockDivision+". Removing: " + toRemove);
         }
         
@@ -136,8 +141,9 @@ public class PCGPatternObstacle extends PCGPattern {
         q.keyPoints.add(keyPoint);
         q.keyTags.add(keytag);
         List<QuestSpec> subquests = new ArrayList<>();
-//        System.out.println("   *** new quest offset (obstacle): " + (keyPoint.x + keyPoint.y * keyPoint.a.width));
-        subquests.add(new QuestSpec(qs.start, keyDivision, qs.nSubQuests - 1, q.startPoint, keyPoint, qs.startTag, keytag));
+        QuestSpec q2 = new QuestSpec(qs.start, keyDivision, qs.nSubQuests - 1, q.startPoint, keyPoint, qs.startTag, keytag);
+//        System.out.println("   new subquest (from obstacle): " + q2);
+        subquests.add(q2);
         
         return new Pair<>(q, subquests);
     }

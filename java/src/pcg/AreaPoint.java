@@ -34,6 +34,12 @@ public class AreaPoint {
     }
     
     
+    public int offset()
+    {
+        return x + y * a.width;
+    }
+    
+    
     @Override
     public String toString()
     {

@@ -65,25 +65,39 @@ public class World {
             g.setColor(Color.BLUE);
             g.drawLine(x1, y1, x2, y2);
         }
-                
-        for(List<AreaPoint> path:debugPaths) {
-            AreaPoint previous_p = null;
-            for(AreaPoint p:path) {
+        
+        // Draw spanning tree:
+        for(AreaDivision d:spanningTree) {
+            if (d.parent != null) {
+                // draw connection:
+                int x1 = d.root.a.areaX + d.root.x * roomSizeX + roomSizeX/2;
+                int y1 = d.root.a.areaY + d.root.y * roomSizeY + roomSizeY/2;
+                int x2 = d.parent.root.a.areaX + d.parent.root.x * roomSizeX + roomSizeX/2;
+                int y2 = d.parent.root.a.areaY + d.parent.root.y * roomSizeY + roomSizeY/2;
                 g.setColor(Color.WHITE);
-                g.fillRect(p.a.areaX + p.x*roomSizeX + 2,
-                           p.a.areaY + p.y*roomSizeY + 2, roomSizeX - 5, roomSizeY - 5);
-                if (previous_p != null && previous_p.a.ID != p.a.ID) {
-                    // draw connection:
-                    int x1 = previous_p.a.areaX + previous_p.x * roomSizeX + roomSizeX/2;
-                    int y1 = previous_p.a.areaY + previous_p.y * roomSizeY + roomSizeY/2;
-                    int x2 = p.a.areaX + p.x * roomSizeX + roomSizeX/2;
-                    int y2 = p.a.areaY + p.y * roomSizeY + roomSizeY/2;
-                    g.setColor(Color.WHITE);
-                    g.drawLine(x1, y1, x2, y2);
-                }
-                previous_p = p;
+                g.drawLine(x1, y1, x2, y2);
+//                System.out.println("tree: " + d.parent.divisionID + " -> " + d.divisionID);
             }
         }
+
+//        for(List<AreaPoint> path:debugPaths) {
+//            AreaPoint previous_p = null;
+//            for(AreaPoint p:path) {
+//                g.setColor(Color.WHITE);
+//                g.fillRect(p.a.areaX + p.x*roomSizeX + 2,
+//                           p.a.areaY + p.y*roomSizeY + 2, roomSizeX - 5, roomSizeY - 5);
+//                if (previous_p != null && previous_p.a.ID != p.a.ID) {
+//                    // draw connection:
+//                    int x1 = previous_p.a.areaX + previous_p.x * roomSizeX + roomSizeX/2;
+//                    int y1 = previous_p.a.areaY + previous_p.y * roomSizeY + roomSizeY/2;
+//                    int x2 = p.a.areaX + p.x * roomSizeX + roomSizeX/2;
+//                    int y2 = p.a.areaY + p.y * roomSizeY + roomSizeY/2;
+//                    g.setColor(Color.WHITE);
+//                    g.drawLine(x1, y1, x2, y2);
+//                }
+//                previous_p = p;
+//            }
+//        }
         
         int legend_x = 725;
         int legend_y = 40;

@@ -118,7 +118,7 @@ pcg_debug_start:
 		; set random seed:
 		ld hl, 0
 		ld (current_world__seed), hl
-		ld hl, #aaaa
+		ld hl, #5555
 		ld (current_world__seed + 2), hl
 
 		; generate world:

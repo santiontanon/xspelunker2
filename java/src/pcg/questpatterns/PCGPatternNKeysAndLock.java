@@ -40,8 +40,10 @@ public class PCGPatternNKeysAndLock extends PCGPattern {
         // Generate key and lock locations:
         // lock is the point that connects to the goal (in the parent area)
         q.lockDivision = q.goalDivision;
+        AreaDivision rootToRemove = q.goalDivision;
         while(true) {
             AreaDivision lockTargetDiv = q.lockDivision;
+            rootToRemove = q.lockDivision;
             q.lockDivision = q.lockDivision.parent;
             if (q.lockDivision == null) {
                 System.out.println("    PCGPatternNKeysAndLock: reached root node without finding a proper lock position!");
@@ -84,8 +86,10 @@ public class PCGPatternNKeysAndLock extends PCGPattern {
             }      
             q.lockTag = locktag;
 
-            if (pcg.canPlaceTag(q.lockPoint, q.lockTag)) {
+            if (pcg.canPlaceTag(q.lockPoint, q.lockTag, new ArrayList<>())) {
                 break;
+            } else {
+//                System.out.println("!!!! -> cannot place " + q.lockTag + " since we have " + q.lockPoint.a.tags[q.lockPoint.x][q.lockPoint.y]);
             }
         }
         
@@ -117,7 +121,7 @@ public class PCGPatternNKeysAndLock extends PCGPattern {
         // update "reachable" (remove the descendants of the lock):
         {
 //            AreaDivision rootToRemove = qs.goal;
-            AreaDivision rootToRemove = q.lockDivision;
+//            AreaDivision rootToRemove = q.lockDivision;
 //            System.out.println("    remove reachable/useable under " + rootToRemove.divisionID);
             List<AreaDivision> toRemove = new ArrayList<>();
             for(AreaDivision d:reachable) {
@@ -137,6 +141,7 @@ public class PCGPatternNKeysAndLock extends PCGPattern {
                 reachable.remove(d);
                 useable.remove(d);
             }
+//            System.out.println("    remove reachable/useable under " + rootToRemove.divisionID + " (leaving us with " + reachable.size() + ", " + useable.size() + ")");
 //            System.out.println("  PCGPatternNKeysAndLock: goal ("+qs.goalTag+") set to " + qs.goal + " with lock at "+q.lockDivision+". Removing: " + toRemove);
         }
         
@@ -175,9 +180,10 @@ public class PCGPatternNKeysAndLock extends PCGPattern {
 //            System.out.println("    key division: " + keyDivision.divisionID);
             q.keyDivisions.add(keyDivision);
             q.keyPoints.add(keyPoint);
-            q.keyTags.add(keytags[i]);
-//            System.out.println("   *** new quest offset (key-lock): " + (keyPoint.x + keyPoint.y * keyPoint.a.width));
-            subquests.add(new QuestSpec(qs.start, keyDivision, qs.nSubQuests - 1, q.startPoint, keyPoint, qs.startTag, keytags[i]));
+            q.keyTags.add(keytags[i]);  
+            QuestSpec q2 = new QuestSpec(qs.start, keyDivision, qs.nSubQuests - 1, q.startPoint, keyPoint, qs.startTag, keytags[i]);
+//            System.out.println("   new subquest (from key-lock): " + q2);
+            subquests.add(q2);
         }
         
         return new Pair<>(q, subquests);

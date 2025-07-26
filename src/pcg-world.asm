@@ -80,6 +80,7 @@ tmp_pcg_world__available_lock_keys: ds virtual tmp_pcg_world__available_lock_key
 
 tmp_pcg_world__lock_tag_tmp: ds virtual 1
 tmp_pcg_world__key_tag_tmp: ds virtual 1
+tmp_pcg_world__root_to_remove: ds virtual 2
 
 IF $ > current_room__tile_map + MAX_ROOM_SIZE
 	ERROR "pcg-world.asm uses too much RAM in current_room__tile_map!"
@@ -287,6 +288,7 @@ pcg_generate_world:
 	call pcg_generate_world__generate_mission  ; adds all the area tags to the divisions
 	jr nz, pcg_generate_world_fail
 	call pcg_generate_world__spawn_additional_objects  ; fills additional tags to some divisions
+	jr nz, pcg_generate_world_fail
 	call pcg_generate_world__generate_tag_data  ; generates the area tags, chest content and shop extra items from all the info above
 ;     out (#2d),a  ; DEBUG	
 
@@ -2536,6 +2538,9 @@ pcg_generate_world__generate_mission:
 
 	ld hl, tmp_pcg_world__minimum_spanning_tree
 	ld (tmp_pcg_world__mission_start_node), hl
+	ld b, TAG_START
+	ex de, hl  ; mst node
+	call pcg_generate_world__add_tag_to_root_in_mst_node_division
 
 	ld a, 9  ; atlantis
 	call pcg_generate_world__random_top_most_point_tagless
@@ -2570,6 +2575,9 @@ pcg_generate_world__generate_mission:
 	call pcg_generate_world__random_area_mst_node_only_leaves
 	ret nz
 	ld (tmp_pcg_world__mission_boss1_node), hl
+	ld b, TAG_BOSS1
+	ex de, hl  ; mst node
+	call pcg_generate_world__add_tag_to_root_in_mst_node_division
 
 	ld ix, tmp_pcg_world__minimum_spanning_tree
 	ld a, (tmp_pcg_world__mst_main_n_nodes)
@@ -2577,6 +2585,9 @@ pcg_generate_world__generate_mission:
 	call pcg_generate_world__random_area_mst_node_only_leaves
 	ret nz
 	ld (tmp_pcg_world__mission_boss2_node), hl
+	ld b, TAG_BOSS2
+	ex de, hl  ; mst node
+	call pcg_generate_world__add_tag_to_root_in_mst_node_division
 
 	ld ix, tmp_pcg_world__minimum_spanning_tree
 	ld a, (tmp_pcg_world__mst_main_n_nodes)
@@ -2584,6 +2595,9 @@ pcg_generate_world__generate_mission:
 	call pcg_generate_world__random_area_mst_node_only_leaves
 	ret nz
 	ld (tmp_pcg_world__mission_boss3_node), hl
+	ld b, TAG_BOSS3
+	ex de, hl  ; mst node
+	call pcg_generate_world__add_tag_to_root_in_mst_node_division
 
 	ld ix, tmp_pcg_world__minimum_spanning_tree
 	ld a, (tmp_pcg_world__mst_main_n_nodes)
@@ -2591,6 +2605,9 @@ pcg_generate_world__generate_mission:
 	call pcg_generate_world__random_area_mst_node_only_leaves
 	ret nz
 	ld (tmp_pcg_world__mission_boss4_node), hl
+	ld b, TAG_BOSS4
+	ex de, hl  ; mst node
+	call pcg_generate_world__add_tag_to_root_in_mst_node_division
 
 	ld ix, tmp_pcg_world__minimum_spanning_tree
 	ld a, (tmp_pcg_world__mst_main_n_nodes)
@@ -2598,6 +2615,9 @@ pcg_generate_world__generate_mission:
 	call pcg_generate_world__random_area_mst_node_only_leaves
 	ret nz
 	ld (tmp_pcg_world__mission_boss5_node), hl
+	ld b, TAG_BOSS5
+	ex de, hl  ; mst node
+	call pcg_generate_world__add_tag_to_root_in_mst_node_division
 
 	ld ix, (tmp_pcg_world__mst_mars_start)
 	ld a, (tmp_pcg_world__mst_mars_n_nodes)
@@ -2605,6 +2625,9 @@ pcg_generate_world__generate_mission:
 	call pcg_generate_world__random_area_mst_node_only_leaves
 	ret nz
 	ld (tmp_pcg_world__mission_boss6_node), hl
+	ld b, TAG_BOSS6
+	ex de, hl  ; mst node
+	call pcg_generate_world__add_tag_to_root_in_mst_node_division
 
 	ld ix, (tmp_pcg_world__mst_moon_start)
 	ld a, (tmp_pcg_world__mst_moon_n_nodes)
@@ -2612,6 +2635,9 @@ pcg_generate_world__generate_mission:
 	call pcg_generate_world__random_area_mst_node_only_leaves
 	ret nz
 	ld (tmp_pcg_world__mission_boss7_node), hl
+	ld b, TAG_BOSS6
+	ex de, hl  ; mst node
+	call pcg_generate_world__add_tag_to_root_in_mst_node_division
 
 	; midpoint:
 	ld a, (tmp_pcg_world__area_5_divisions + 1)  ; division ID
@@ -2625,6 +2651,11 @@ pcg_generate_world__generate_mission:
 	ld a, (tmp_pcg_world__area_3_divisions + 3)  ; division ID
 	call pcg_generate_world__get_mst_node_by_division_id
 	ld (tmp_pcg_world__mission_ending_node), hl
+	ld b, TAG_ENDING
+	ex de, hl  ; mst node
+	ld l, 3
+	call pcg_generate_world__add_tag_to_point_in_mst_node_division
+	ret nz
 
 	; Generate quests:
 	ld ix, tmp_pcg_world__minimum_spanning_tree  ; root
@@ -2777,9 +2808,19 @@ pcg_generate_world__generate_subquests:
 	cp TAG_BOSS7
 	jr z, pcg_generate_world__generate_subquests_boss_tag
 	cp TAG_MIDPOINT
-	jr z, pcg_generate_world__generate_subquests_midpoint_ending_tag
+	jr z, pcg_generate_world__generate_subquests_no_chest
 	cp TAG_ENDING
-	jr z, pcg_generate_world__generate_subquests_midpoint_ending_tag
+	jr z, pcg_generate_world__generate_subquests_no_chest
+	cp TAG_BUTTON1
+	jr z, pcg_generate_world__generate_subquests_no_chest
+	cp TAG_BUTTON2
+	jr z, pcg_generate_world__generate_subquests_no_chest
+	cp TAG_BUTTON3
+	jr z, pcg_generate_world__generate_subquests_no_chest
+	cp TAG_BUTTON4
+	jr z, pcg_generate_world__generate_subquests_no_chest
+	cp TAG_NONE
+	jr z, pcg_generate_world__generate_subquests_no_chest
 	jr pcg_generate_world__generate_subquests_continue
 pcg_generate_world__generate_subquests_boss_tag:
 	ld c, 1  ; quest type  ; mdl-watch: "    boss tag"
@@ -2788,7 +2829,7 @@ pcg_generate_world__generate_subquests_boss_tag:
 	inc a
 	ld iyh, a  ; lock_tag
 	jr pcg_generate_world__generate_subquests_continue
-pcg_generate_world__generate_subquests_midpoint_ending_tag:
+pcg_generate_world__generate_subquests_no_chest:
 	ld a, c
 	cp 1
 	jr nz, pcg_generate_world__generate_subquests_continue
@@ -3008,7 +3049,7 @@ pcg_generate_world__subquest_pattern__obstacle:
 	ld a, iyh
 	ld (tmp_pcg_world__lock_tag_tmp), a
 
-	call pcg_generate_world__subquest_pattern__pick_goal_lock_node  ; iy: chosen node, l = point offset
+	call pcg_generate_world__subquest_pattern__pick_goal_lock_node  ; iy: chosen node, l = point offset, (tmp_pcg_world__root_to_remove) = root to remove
 	ret nz
 	; place the lock tag, and lock direction:
 	push bc
@@ -3035,10 +3076,11 @@ pcg_generate_world__subquest_pattern__obstacle:
 	pop hl
 
 	; remove all the descendants of the lock point from "useable" and "reachable":
-	ld a, (iy + MST_DIVISION_ID)
 	push iy
 	push hl
 	push bc
+		ld iy, (tmp_pcg_world__root_to_remove)
+		ld a, (iy + MST_DIVISION_ID)
 		call pcg_generate_world__remove_useable_reachable_descendants
 	pop bc
 	pop hl
@@ -3066,6 +3108,7 @@ pcg_generate_world__subquest_pattern__obstacle:
 			inc hl
 			push iy
 			pop de
+			ld a, (iy + MST_DIVISION_ID)  ; DEBUG  ; mdl-watch: "       *** new quest goal division:", a
 			ld (hl), e
 			inc hl
 			ld (hl), d
@@ -3176,6 +3219,7 @@ pcg_generate_world__subquest_pattern__lock_key_entry_point:
 				ld (hl), d
 				inc hl
 			pop de
+			ld a, (de)  ; DEBUG  ; mdl-watch: "       *** new quest goal division:", a
 			ld (hl), e  ; goal div ptr
 			inc hl
 			ld (hl), d
@@ -3225,7 +3269,7 @@ pcg_generate_world__subquest_pattern__lock_key:
 	; (computed in the same exact way as for the __obstacle subquest pattern)
 	ld a, iyh
 	ld (tmp_pcg_world__lock_tag_tmp), a
-	call pcg_generate_world__subquest_pattern__pick_goal_lock_node  ; iy = chosen node, l = point offset
+	call pcg_generate_world__subquest_pattern__pick_goal_lock_node  ; iy = chosen node, l = point offset, (tmp_pcg_world__root_to_remove) = root to remove
 	ret nz
 
 	; place the lock tag, and lock direction:
@@ -3254,9 +3298,10 @@ pcg_generate_world__subquest_pattern__lock_key:
 
 	; Update "reachable" (remove the descendants of the lock):
 	; remove all the descendants of the lock point from "useable" and "reachable":
-	ld a, (iy + MST_DIVISION_ID)  ; mdl-watch: "    iy value after", iy
 	push hl
 	push bc
+		ld iy, (tmp_pcg_world__root_to_remove)
+		ld a, (iy + MST_DIVISION_ID)
 		call pcg_generate_world__remove_useable_reachable_descendants
 	pop bc
 	pop hl
@@ -3270,6 +3315,8 @@ pcg_generate_world__subquest_pattern__lock_key:
 ; - ix: ptr to subquest
 ; output:
 ; - iy: ptr to chosen node
+; - l: offset
+; - (tmp_pcg_world__root_to_remove): ptr to the root to remove from useable/reachable
 ; - z: success
 ; - nz: failure
 pcg_generate_world__subquest_pattern__pick_goal_lock_node:
@@ -3280,12 +3327,14 @@ pcg_generate_world__subquest_pattern__pick_goal_lock_node:
 	ld b, (ix + QUEST_SPEC_GOAL_DIV_PTR + 1)
 	push bc
 	pop iy
+	ld (tmp_pcg_world__root_to_remove), iy
 pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop:
 	ld a, (iy + MST_PARENT_PTR)
 	or (iy + MST_PARENT_PTR + 1)
 	jp z, pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection_fail_no_pop  ; no more parents, fail
 
 	; See if we could place the tag (and set the lock direction):
+	ld (tmp_pcg_world__root_to_remove), iy
 	ld c, (iy + MST_PARENT_PTR)
 	ld b, (iy + MST_PARENT_PTR + 1)
 	inc bc
@@ -3519,7 +3568,7 @@ pcg_generate_world__random_mst_node_favoring_leaves_tagless_loop_next:
 	xor a  ; z
 	ret
 pcg_generate_world__random_mst_node_favoring_leaves_tagless_fail:
-	or 1  ; nz
+	or 1  ; nz  ; msl-watch: "pcg_generate_world__random_mst_node_favoring_leaves_tagless_fail"
 	ret
 
 
@@ -3531,13 +3580,17 @@ pcg_generate_world__remove_useable_reachable_descendants:
 	ld hl, tmp_pcg_world__useable_nodes
 	ld a, (tmp_pcg_world__useable_nodes_size)
 	ld b, a
+	or a
+	jr z, pcg_generate_world__remove_useable_reachable_descendants_continue
 	call pcg_generate_world__remove_useable_reachable_descendants_internal
 	ld a, iyh
 	ld (tmp_pcg_world__useable_nodes_size), a
-
+pcg_generate_world__remove_useable_reachable_descendants_continue:
 	ld hl, tmp_pcg_world__reachable_nodes
 	ld a, (tmp_pcg_world__reachable_nodes_size)
 	ld b, a
+	or a
+	ret z
 	call pcg_generate_world__remove_useable_reachable_descendants_internal
 	ld a, iyh
 	ld (tmp_pcg_world__reachable_nodes_size), a
@@ -3850,10 +3903,18 @@ pcg_generate_world__add_tag_to_random_point_in_mst_node_division:
 ; output:
 ; - z: all ok
 ; - nz: tag could not be added (too many tags in the division)
+pcg_generate_world__add_tag_to_root_in_mst_node_division:
+	push de
+REPT MST_OFFSET
+		inc de
+ENDR
+		ld a, (de)
+		ld l, a  ; get offset of the root
+	pop de
 pcg_generate_world__add_tag_to_point_in_mst_node_division:
 	; add tag to the point:
 	push de
-; 		ld a, (de)  ; DEBUG  ; mdl-watch: "pcg_generate_world__add_tag_to_point_in_mst_node_division (tag, div, offset)", b, a, l
+		; ld a, (de)  ; DEBUG  ; mdl-watch: "pcg_generate_world__add_tag_to_point_in_mst_node_division (tag, div, offset)", b, a, l
 		inc de
 		ld a, (de)  ; area ID (since MST_AREA_ID == 1)
 		; here l = offset of the point sampled above
@@ -3932,8 +3993,10 @@ pcg_generate_world__could_add_tag_to_point_in_mst_node_division_p_continue:
 ; output:
 ; - c, b: x, y
 ; - l: offset
+; - z: success
+; - nz: failure
 pcg_generate_world__random_division_point_from_mst_node_tagless:
-	ld a, (hl)  ; division ID  ; mdl-watch: "    pcg_generate_world__random_division_point_from_mst_node_tagless", a
+	ld a, (hl)  ; division ID  ; mdl-watch: "    pcg_generate_world__random_division_point_from_mst_node_tagless (div)", a
 	inc hl
 	push af
 		ld a, (hl)  ; area ID
@@ -4033,7 +4096,174 @@ pcg_generate_world__get_mst_node_by_division_id_loop:
 
 ;-----------------------------------------------
 pcg_generate_world__spawn_additional_objects:
-	; ...
+	; get the list of all the tagless nodes:
+	xor a
+	ld (tmp_pcg_world__candidates_list_size), a
+	ld ix, tmp_pcg_world__minimum_spanning_tree
+	ld a, (tmp_pcg_world__minimum_spanning_tree_n_nodes)
+	ld b, a
+	ld de, MST_STRUCTURE_SIZE
+pcg_generate_world__spawn_additional_objects_tagless_loop:
+	ld a, (ix + MST_TAG1)
+	or a
+	jr nz, pcg_generate_world__spawn_additional_objects_tagless_loop_next
+	ld hl, tmp_pcg_world__candidates_list_size
+	ld a, (hl)
+	inc (hl)
+	ld hl, tmp_pcg_world__candidates_list
+	add a, a
+	ADD_HL_A
+	ld a, ixl
+	ld (hl), a
+	inc hl
+	ld a, ixh
+	ld (hl), a
+pcg_generate_world__spawn_additional_objects_tagless_loop_next:
+	add ix, de
+	djnz pcg_generate_world__spawn_additional_objects_tagless_loop
+
+    ; lost vendor: pick a random tagless division from area 2:
+	ld c, 2  ; lost temple
+	call pcg_generate_world__spawn_additional_objects_sample_node_from_area  ; hl = ptr to node
+	ret nz
+	push hl
+		call pcg_generate_world__random_division_point_from_mst_node_tagless  ; c, b: x, y, l: offset
+	pop de  ; mdl-watch: "lost vendor:", c, b, l
+	ret nz
+	ld b, TAG_LOST_VENDOR
+	call pcg_generate_world__add_tag_to_point_in_mst_node_division
+	ret nz
+
+    ; make secret puzzle clues
+    ; ...
+
+    ; weapons
+    ; ...
+
+    ; map pieces
+    ; ...
+
+    ; hearts
+    ; ...
+
+    ; teleporters
+    ; ...
+
+    ; optional items
+    ; ...
+
+    ; small keys
+    ; ...
+
+    ; random trivia
+    ; ...
+
+    ; calendar name clue
+    ; ...
+
+    xor a  ; z
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - c: target area
+; output:
+; - hl: ptr to node
+; - z: success
+; - nz: failure
+pcg_generate_world__spawn_additional_objects_sample_node_from_area:
+	ld hl, tmp_pcg_world__candidates_list
+	ld a, (tmp_pcg_world__candidates_list_size)
+	ld b, a
+	or a
+	jr z, pcg_generate_world__spawn_additional_objects_sample_node_from_area_fail
+	ld ixl, 0  ; number of matches
+pcg_generate_world__spawn_additional_objects_sample_node_from_area_loop:
+	ld e, (hl)
+	inc hl
+	ld d, (hl)
+	inc hl
+	inc de
+	ld a, (de)  ; MST_AREA_ID
+	cp c
+	jr nz, pcg_generate_world__spawn_additional_objects_sample_node_from_area_loop_next
+; 	dec de  ; DEBUG
+; 	ld a, (de)  ; DEBUG mdl-watch: "    tag less candidate div", a
+	inc ixl
+pcg_generate_world__spawn_additional_objects_sample_node_from_area_loop_next:
+	djnz pcg_generate_world__spawn_additional_objects_sample_node_from_area_loop
+	ld a, ixl
+	or a
+	jr z, pcg_generate_world__spawn_additional_objects_sample_node_from_area_fail
+	push bc
+		ld c, a
+		call random_modulo
+		ld ixl, a  ; selected node, mdl-watch: "additional objects candidates chosen/candidates:", a, c
+	pop bc
+
+	; second loop, copying the list to a new location, skipping the selected on (to
+	; remove it):
+	; - copy the list to "tmp_pcg_world__useable_nodes" (without the selected one)
+	; - then copy it back to "tmp_pcg_world__candidates_list"
+	; - decrease its size by 1 
+	ld hl, tmp_pcg_world__candidates_list_size
+	ld a, (hl)
+	dec (hl)
+	ld hl, tmp_pcg_world__candidates_list
+	ld de, tmp_pcg_world__useable_nodes
+	ld b, a
+pcg_generate_world__spawn_additional_objects_sample_node_from_area_loop2:
+	push de
+		ld e, (hl)
+		inc hl
+		ld d, (hl)
+		dec hl
+		inc de
+		ld a, (de)  ; MST_AREA_ID
+		cp c
+	pop de
+	jr nz, pcg_generate_world__spawn_additional_objects_sample_node_from_area_loop2_no_match
+	; match:
+	ld a, ixl
+	dec ixl
+	or a
+	jr nz, pcg_generate_world__spawn_additional_objects_sample_node_from_area_loop2_no_match
+	; found!
+	ld a, (hl)
+	ld iyl, a
+	inc hl
+	ld a, (hl)
+	ld iyh, a
+	inc hl
+	jr pcg_generate_world__spawn_additional_objects_sample_node_from_area_loop2_next
+pcg_generate_world__spawn_additional_objects_sample_node_from_area_loop2_no_match:
+	ld a, (hl)
+	ld (de), a
+	inc hl
+	inc de	
+	ld a, (hl)
+	ld (de), a
+	inc hl
+	inc de
+pcg_generate_world__spawn_additional_objects_sample_node_from_area_loop2_next:
+	djnz pcg_generate_world__spawn_additional_objects_sample_node_from_area_loop2
+
+	ld hl, tmp_pcg_world__useable_nodes
+	ld de, tmp_pcg_world__candidates_list
+	ld a, (tmp_pcg_world__candidates_list_size)
+	add a, a
+	ld b, 0
+	ld c, a
+	ldir
+
+	push iy
+	pop hl
+
+	xor a  ; z
+	ret
+pcg_generate_world__spawn_additional_objects_sample_node_from_area_fail:
+	or 1  ; nz
 	ret
 
 
