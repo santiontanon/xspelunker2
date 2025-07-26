@@ -1429,9 +1429,22 @@ pcg_generate_area__choose_chunks_loop_x:
 		ld ixh, a  ; chunk pool size
 		ld iyl, 0  ; ID if first chunk in pool
 		ld a, (tmp_pcg_area__left_tag)
-		ld iyh, a  ; upTag/downTag  ; ll-uu-rr-dd
+		ld iyh, a  ; up/down/left/right tags  ; ll-uu-rr-dd
 		ld a, (hl)  ; recover the piece type again
 
+		and PCG_DIRECTION_LEFT
+		jp z, pcg_generate_area__choose_chunks_loop_x_no_connection_left
+		; if there is a connection left but the left tag is 00, it means there was a
+		; breakable-wall/door to the left, and we need to make the tag to be "hole":
+		ld a, iyh
+		and #c0
+		jr nz, pcg_generate_area__choose_chunks_loop_x_no_connection_left
+		ld a, iyh
+		or #40  ; left tag to "hole"
+		ld iyh, a
+
+pcg_generate_area__choose_chunks_loop_x_no_connection_left:
+		ld a, (hl)  ; recover the piece type again
 		and PCG_DIRECTION_UP
 		jp z, pcg_generate_area__choose_chunks_loop_x_no_connection_up
 		ld a, iyh

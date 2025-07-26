@@ -975,17 +975,15 @@ public class PCGWorld {
                 return false;
             } else {
                 int idx = r.nextInt(candidates.size());
-                System.out.println("lost vendor candidates: " + idx + " / " + candidates.size() + "  ->  " + candidates);
+//                System.out.println("lost vendor candidates: " + idx + " / " + candidates.size() + "  ->  " + candidates);
                 AreaDivision d = candidates.get(idx);
                 AreaPoint p = randomDivisionPoint(d, true);
-                System.out.println("lost vendor div / offset: " + d.divisionID + ", " + p.offset());
+//                System.out.println("lost vendor div / offset: " + d.divisionID + ", " + p.offset());
                 addTag(p, "lost-vendor", d);
                 tagLess.remove(d);
             }            
         }
-        
-        int n_small_keys = 0;
-        
+                
         // spawn maya secret puzzle clues:
         for(int i = 0;i<4;i++) {
             List<AreaDivision> candidates = new ArrayList<>();
@@ -996,12 +994,16 @@ public class PCGWorld {
             }
             if (!candidates.isEmpty()) {
                 int idx = r.nextInt(candidates.size());
+//                System.out.println("maya riddle clue candidates: " + idx + " / " + candidates.size() + "  ->  " + candidates);
                 AreaDivision d = candidates.get(idx);
                 AreaPoint p = randomDivisionPoint(d, true);
+//                System.out.println("maya-riddle-clue "+(i+1)+" div / offset: " + d.divisionID + ", " + p.offset());
                 addTag(p, "maya-riddle-clue" + (i+1), d);
                 tagLess.remove(d);
             }            
         }
+        
+        int n_small_keys = 0;
         
         // Spawn weapons (1/16th chance that one is not there):
         for(int i = 0;i<10;i++) {

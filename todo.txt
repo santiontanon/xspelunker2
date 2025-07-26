@@ -2,13 +2,14 @@ to do:
 
 ***- Implement PCGWorld in assembler:
   ***- spawn_additional_objects:
-    ***- maka secret puzzle clues
-    ***- weapons
-    ***- map pieces
-    ***- hearts
-    ***- teleporters
-    ***- optional items
-    ***- small keys
+    ***- for weapons, map pieces, hearts, teleporters:
+      ***- define a table with target area, probability of not spawning, probability of small key chest, object
+      ***- weapons
+      ***- map pieces
+      ***- hearts
+      ***- teleporters
+    ***- optional items (sandals are special)
+    ***- small keys (as many as needed)
     ***- random trivia
     ***- calendar name clue
   ***- shop extra items (in "pcg_generate_world__generate_tag_data")

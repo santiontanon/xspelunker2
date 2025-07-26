@@ -1632,9 +1632,11 @@ public class PCGArea {
                                     if (left.tags.containsKey("right")) {
                                         leftTag = left.tags.get("right");
                                     }
+                                } else {
+                                    // breakable wall/door, we need a hole:
+                                    leftTag = "hole";
                                 }
                             } else {
-                                // ignore the left tag, as we have a breakable wall/door above here
                             }
                         }
                     } else {
@@ -1650,6 +1652,7 @@ public class PCGArea {
                         }
                     }
 
+//                    System.out.println(j + ", " + i + ", upTag: " + upTag + ", leftTag: " + leftTag);
                     
                     if (necessaryObjectTypes.contains("breakable-up") ||
                         necessaryObjectTypes.contains("door-up")) {

@@ -82,6 +82,9 @@ tmp_pcg_world__lock_tag_tmp: ds virtual 1
 tmp_pcg_world__key_tag_tmp: ds virtual 1
 tmp_pcg_world__root_to_remove: ds virtual 2
 
+tmp_pcg_world__tagless_list: ds virtual 256
+tmp_pcg_world__tagless_list_size: ds virtual 1
+
 IF $ > current_room__tile_map + MAX_ROOM_SIZE
 	ERROR "pcg-world.asm uses too much RAM in current_room__tile_map!"
 ENDIF
@@ -278,39 +281,39 @@ pcg_generate_world:
 	ldi
 
 ;     out (#2c),a  ; DEBUG	
-	call pcg_generate_world__init
-	call pcg_generate_world__generate_area_layouts  ; uses the connections space to store the layout
-	call pcg_generate_world__generate_divisions  ; fills divisionIDs 
-	call pcg_generate_world__generate_area_connections  ; fills current_world__interarea_connections
-	jr nz, pcg_generate_world_fail
-	call pcg_generate_world__generate_spanning_tree  ; generates connections (each tree root to its parent)
-	jr nz, pcg_generate_world_fail
-	call pcg_generate_world__generate_mission  ; adds all the area tags to the divisions
-	jr nz, pcg_generate_world_fail
-	call pcg_generate_world__spawn_additional_objects  ; fills additional tags to some divisions
-	jr nz, pcg_generate_world_fail
-	call pcg_generate_world__generate_tag_data  ; generates the area tags, chest content and shop extra items from all the info above
-;     out (#2d),a  ; DEBUG	
+; 	call pcg_generate_world__init
+; 	call pcg_generate_world__generate_area_layouts  ; uses the connections space to store the layout
+; 	call pcg_generate_world__generate_divisions  ; fills divisionIDs 
+; 	call pcg_generate_world__generate_area_connections  ; fills current_world__interarea_connections
+; 	jr nz, pcg_generate_world_fail
+; 	call pcg_generate_world__generate_spanning_tree  ; generates connections (each tree root to its parent)
+; 	jr nz, pcg_generate_world_fail
+; 	call pcg_generate_world__generate_mission  ; adds all the area tags to the divisions
+; 	jr nz, pcg_generate_world_fail
+; 	call pcg_generate_world__spawn_additional_objects  ; fills additional tags to some divisions
+; 	jr nz, pcg_generate_world_fail
+; 	call pcg_generate_world__generate_tag_data  ; generates the area tags, chest content and shop extra items from all the info above
+; ;     out (#2d),a  ; DEBUG	
 
-	; DEBUG:
-	ld hl, hardcoded_area_data_0__connections
-	ld de, tmp_pcg_world__area_0_connections
-	ld bc, MAX_AREA_SIZE * 2  ; + MAX_AREA_N_TAGS * 3
-	call pcg_debug__arrays_equal  ; mdl-watch: "checking area 0", hl, de
-	ld hl, hardcoded_area_data_10__connections
-	ld de, tmp_pcg_world__area_10_connections
-	ld bc, MAX_AREA_SIZE * 2
-	call pcg_debug__arrays_equal  ; mdl-watch: "checking area 10", hl, de
-	ld hl, hardcoded_area_data_11__connections
-	ld de, tmp_pcg_world__area_11_connections
-	ld bc, MAX_AREA_SIZE * 2
-	call pcg_debug__arrays_equal  ; mdl-watch: "checking area 11", hl, de
+; 	; DEBUG:
+; 	ld hl, hardcoded_area_data_0__connections
+; 	ld de, tmp_pcg_world__area_0_connections
+; 	ld bc, MAX_AREA_SIZE * 2  ; + MAX_AREA_N_TAGS * 3
+; 	call pcg_debug__arrays_equal  ; mdl-watch: "checking area 0", hl, de
+; 	ld hl, hardcoded_area_data_10__connections
+; 	ld de, tmp_pcg_world__area_10_connections
+; 	ld bc, MAX_AREA_SIZE * 2
+; 	call pcg_debug__arrays_equal  ; mdl-watch: "checking area 10", hl, de
+; 	ld hl, hardcoded_area_data_11__connections
+; 	ld de, tmp_pcg_world__area_11_connections
+; 	ld bc, MAX_AREA_SIZE * 2
+; 	call pcg_debug__arrays_equal  ; mdl-watch: "checking area 11", hl, de
 
 	; for now just copy over the hardcoded data:
-; 	ld hl, hardcoded_world_data
-; 	ld de, current_world__area_data
-; 	ld bc, hardcoded_world_data_end - hardcoded_world_data
-; 	ldir
+	ld hl, hardcoded_world_data
+	ld de, current_world__area_data
+	ld bc, hardcoded_world_data_end - hardcoded_world_data
+	ldir
 
 	jp pcg_generate_world__puzzles  ; tablet contents, combination puzzles, trial types, stone numbers 
 
@@ -4098,7 +4101,7 @@ pcg_generate_world__get_mst_node_by_division_id_loop:
 pcg_generate_world__spawn_additional_objects:
 	; get the list of all the tagless nodes:
 	xor a
-	ld (tmp_pcg_world__candidates_list_size), a
+	ld (tmp_pcg_world__tagless_list_size), a
 	ld ix, tmp_pcg_world__minimum_spanning_tree
 	ld a, (tmp_pcg_world__minimum_spanning_tree_n_nodes)
 	ld b, a
@@ -4107,10 +4110,10 @@ pcg_generate_world__spawn_additional_objects_tagless_loop:
 	ld a, (ix + MST_TAG1)
 	or a
 	jr nz, pcg_generate_world__spawn_additional_objects_tagless_loop_next
-	ld hl, tmp_pcg_world__candidates_list_size
+	ld hl, tmp_pcg_world__tagless_list_size
 	ld a, (hl)
 	inc (hl)
-	ld hl, tmp_pcg_world__candidates_list
+	ld hl, tmp_pcg_world__tagless_list
 	add a, a
 	ADD_HL_A
 	ld a, ixl
@@ -4134,8 +4137,26 @@ pcg_generate_world__spawn_additional_objects_tagless_loop_next:
 	call pcg_generate_world__add_tag_to_point_in_mst_node_division
 	ret nz
 
-    ; make secret puzzle clues
-    ; ...
+    ; spaen maya secret puzzle clues
+    ld b, 4
+pcg_generate_world__spawn_additional_objects_maya_clues_loop:
+	push bc
+		call pcg_generate_world__spawn_additional_objects_sample_node_except_areas_10_11  ; hl = ptr to node
+		ret nz
+		push hl
+			call pcg_generate_world__random_division_point_from_mst_node_tagless  ; c, b: x, y, l: offset
+		pop de  ; mdl-watch: "maya secret puzzle clue:", c, b, l
+		ret nz
+	pop bc
+	push bc
+		ld a, 4
+		sub b
+		add a, TAG_MAYA_RIDDLE_CLUE1
+		ld b, a
+		call pcg_generate_world__add_tag_to_point_in_mst_node_division
+		ret nz
+	pop bc
+	djnz pcg_generate_world__spawn_additional_objects_maya_clues_loop
 
     ; weapons
     ; ...
@@ -4173,8 +4194,8 @@ pcg_generate_world__spawn_additional_objects_tagless_loop_next:
 ; - z: success
 ; - nz: failure
 pcg_generate_world__spawn_additional_objects_sample_node_from_area:
-	ld hl, tmp_pcg_world__candidates_list
-	ld a, (tmp_pcg_world__candidates_list_size)
+	ld hl, tmp_pcg_world__tagless_list
+	ld a, (tmp_pcg_world__tagless_list_size)
 	ld b, a
 	or a
 	jr z, pcg_generate_world__spawn_additional_objects_sample_node_from_area_fail
@@ -4205,12 +4226,12 @@ pcg_generate_world__spawn_additional_objects_sample_node_from_area_loop_next:
 	; second loop, copying the list to a new location, skipping the selected on (to
 	; remove it):
 	; - copy the list to "tmp_pcg_world__useable_nodes" (without the selected one)
-	; - then copy it back to "tmp_pcg_world__candidates_list"
+	; - then copy it back to "tmp_pcg_world__tagless_list"
 	; - decrease its size by 1 
-	ld hl, tmp_pcg_world__candidates_list_size
+	ld hl, tmp_pcg_world__tagless_list_size
 	ld a, (hl)
 	dec (hl)
-	ld hl, tmp_pcg_world__candidates_list
+	ld hl, tmp_pcg_world__tagless_list
 	ld de, tmp_pcg_world__useable_nodes
 	ld b, a
 pcg_generate_world__spawn_additional_objects_sample_node_from_area_loop2:
@@ -4249,9 +4270,10 @@ pcg_generate_world__spawn_additional_objects_sample_node_from_area_loop2_no_matc
 pcg_generate_world__spawn_additional_objects_sample_node_from_area_loop2_next:
 	djnz pcg_generate_world__spawn_additional_objects_sample_node_from_area_loop2
 
+debug_point:
 	ld hl, tmp_pcg_world__useable_nodes
-	ld de, tmp_pcg_world__candidates_list
-	ld a, (tmp_pcg_world__candidates_list_size)
+	ld de, tmp_pcg_world__tagless_list
+	ld a, (tmp_pcg_world__tagless_list_size)
 	add a, a
 	ld b, 0
 	ld c, a
@@ -4263,6 +4285,108 @@ pcg_generate_world__spawn_additional_objects_sample_node_from_area_loop2_next:
 	xor a  ; z
 	ret
 pcg_generate_world__spawn_additional_objects_sample_node_from_area_fail:
+	or 1  ; nz
+	ret
+
+
+;-----------------------------------------------
+; output:
+; - hl: ptr to node
+; - z: success
+; - nz: failure
+pcg_generate_world__spawn_additional_objects_sample_node_except_areas_10_11:
+	ld hl, tmp_pcg_world__tagless_list
+	ld a, (tmp_pcg_world__tagless_list_size)
+	ld b, a
+	or a
+	jr z, pcg_generate_world__spawn_additional_objects_sample_node_except_areas_10_11_fail
+	ld ixl, 0  ; number of matches
+pcg_generate_world__spawn_additional_objects_sample_node_except_areas_10_11_loop:
+	ld e, (hl)
+	inc hl
+	ld d, (hl)
+	inc hl
+	inc de
+	ld a, (de)  ; MST_AREA_ID
+	cp 10
+	jr z, pcg_generate_world__spawn_additional_objects_sample_node_except_areas_10_11_loop_next
+	cp 11
+	jr z, pcg_generate_world__spawn_additional_objects_sample_node_except_areas_10_11_loop_next
+	inc ixl
+pcg_generate_world__spawn_additional_objects_sample_node_except_areas_10_11_loop_next:
+	djnz pcg_generate_world__spawn_additional_objects_sample_node_except_areas_10_11_loop
+	ld a, ixl
+	or a
+	jr z, pcg_generate_world__spawn_additional_objects_sample_node_except_areas_10_11_fail
+	push bc
+		ld c, a
+		call random_modulo
+		ld ixl, a  ; selected node, mdl-watch: "additional objects candidates chosen/candidates:", a, c
+	pop bc
+
+	; second loop, copying the list to a new location, skipping the selected on (to
+	; remove it):
+	; - copy the list to "tmp_pcg_world__useable_nodes" (without the selected one)
+	; - then copy it back to "tmp_pcg_world__tagless_list"
+	; - decrease its size by 1 
+	ld hl, tmp_pcg_world__tagless_list_size
+	ld a, (hl)
+	dec (hl)
+	ld hl, tmp_pcg_world__tagless_list
+	ld de, tmp_pcg_world__useable_nodes
+	ld b, a
+pcg_generate_world__spawn_additional_objects_sample_node_except_areas_10_11_loop2:
+	push de
+		ld e, (hl)
+		inc hl
+		ld d, (hl)
+		dec hl
+		inc de
+		ld a, (de)  ; MST_AREA_ID
+	pop de
+	cp 10
+	jr z, pcg_generate_world__spawn_additional_objects_sample_node_except_areas_10_11_loop2_no_match
+	cp 11
+	jr z, pcg_generate_world__spawn_additional_objects_sample_node_except_areas_10_11_loop2_no_match
+	; match:
+	ld a, ixl
+	dec ixl
+	or a
+	jr nz, pcg_generate_world__spawn_additional_objects_sample_node_except_areas_10_11_loop2_no_match
+	; found!
+	ld a, (hl)
+	ld iyl, a
+	inc hl
+	ld a, (hl)
+	ld iyh, a
+	inc hl
+	jr pcg_generate_world__spawn_additional_objects_sample_node_except_areas_10_11_loop2_next
+pcg_generate_world__spawn_additional_objects_sample_node_except_areas_10_11_loop2_no_match:
+	ld a, (hl)
+	ld (de), a
+	inc hl
+	inc de	
+	ld a, (hl)
+	ld (de), a
+	inc hl
+	inc de
+pcg_generate_world__spawn_additional_objects_sample_node_except_areas_10_11_loop2_next:
+	djnz pcg_generate_world__spawn_additional_objects_sample_node_except_areas_10_11_loop2
+
+	ld hl, tmp_pcg_world__useable_nodes
+	ld de, tmp_pcg_world__tagless_list
+	ld a, (tmp_pcg_world__tagless_list_size)
+	add a, a
+	ld b, 0
+	ld c, a
+	ldir
+
+	push iy
+	pop hl
+
+	xor a  ; z
+	ret
+pcg_generate_world__spawn_additional_objects_sample_node_except_areas_10_11_fail:
 	or 1  ; nz
 	ret
 

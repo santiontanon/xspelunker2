@@ -201,6 +201,12 @@ pcg_generate_room__prettify_jungle_rope_loop:
 		ld a, (hl)
 		cp 8*16 + 7  ; top rope piece
 		jr z, pcg_generate_room__prettify_jungle_rope_done
+		cp 14*16 + 9  ; foliage
+		jr z, pcg_generate_room__prettify_jungle_rope_done
+		cp 14*16 + 10  ; foliage
+		jr z, pcg_generate_room__prettify_jungle_rope_done
+		cp 14*16 + 11  ; foliage
+		jr z, pcg_generate_room__prettify_jungle_rope_done
 pcg_generate_room__prettify_jungle_rope_keep_going:
 		PCG_PRETTIFY_RANDOM
 		and #03

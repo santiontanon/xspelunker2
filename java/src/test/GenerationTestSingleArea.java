@@ -36,7 +36,7 @@ public class GenerationTestSingleArea {
     
     public static void main(String args[]) throws Exception
     {
-        MSXRandom r = new MSXRandom(0, 0xaaaa);
+        MSXRandom r = new MSXRandom(0, 0x5555);
 
         PCGWorld pcg1 = new PCGWorld();
         PCGArea pcg2_jungle = new PCGArea(true, "jungle");
@@ -50,8 +50,8 @@ public class GenerationTestSingleArea {
         }
         
         int target_area_to_visualize = 0;
+//        for(int i = 0;i<1;i++) {
         for(int i = 0;i<1000;i++) {
-//        for(int i = 0;i<1000;i++) {
             r.setSeed1(i);
             World w = pcg1.generate(r);
             if (w == null) {
