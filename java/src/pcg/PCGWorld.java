@@ -1013,18 +1013,21 @@ public class PCGWorld {
                     candidates.add(d);
                 }
             }
-            if (!candidates.isEmpty() && r.nextInt(16) != 0) {
+            if (!candidates.isEmpty() && r.nextInt(256) <= 239) {
                 int idx = r.nextInt(candidates.size());
+//                System.out.println("weapon candidates: " + idx + " / " + candidates.size() + "  ->  " + candidates);
                 AreaDivision d = candidates.get(idx);
                 AreaPoint p = randomDivisionPoint(d, true);
-                if (n_small_keys < 4 && r.nextInt(4) == 0) {
+                if (n_small_keys < 4 && r.nextInt(256) < 63) {
                     // place in a small key chest!
                     n_small_keys++;
                     addTag(p, "small-key-chest" + n_small_keys, d);
+//                    System.out.println("weapon (with small key chest) div / offset: " + d.divisionID + ", " + p.offset());
                     w.chestContent.put("small-key-chest" + n_small_keys, weaponTags[i]);
                     w.withinChestTag.add(weaponTags[i]);
                 } else {
                     addTag(p, weaponTags[i], d);
+//                    System.out.println("weapon div / offset: " + d.divisionID + ", " + p.offset());
                 }
                 tagLess.remove(d);
             }
@@ -1040,27 +1043,32 @@ public class PCGWorld {
             }
             if (!candidates.isEmpty()) {
                 int idx = r.nextInt(candidates.size());
+//                System.out.println("map piece: " + idx + " / " + candidates.size() + "  ->  " + candidates);
                 AreaDivision d = candidates.get(idx);
                 AreaPoint p = randomDivisionPoint(d, true);
                 addTag(p, "map-piece" + (i+1), d);
+//                System.out.println("map piece div / offset: " + d.divisionID + ", " + p.offset());
                 tagLess.remove(d);
             }
         }
         
         // Spawn hearts: (1/16th chance that one is not there)
         for(int i = 0;i<5;i++) {
-            if (!tagLess.isEmpty() && r.nextInt(16) != 0) {
+            if (!tagLess.isEmpty() && r.nextInt(256) <= 239) {
                 int idx = r.nextInt(tagLess.size());
+//                System.out.println("heart candidates: " + idx + " / " + tagLess.size() + "  ->  " + tagLess);
                 AreaDivision d = tagLess.get(idx);
                 AreaPoint p = randomDivisionPoint(d, true);
-                if (n_small_keys < 4 && r.nextInt(4) == 0) {
+                if (n_small_keys < 4 && r.nextInt(256) < 63) {
                     // place in a small key chest!
                     n_small_keys++;
                     addTag(p, "small-key-chest" + n_small_keys, d);
+//                    System.out.println("heart (with small key chest) div / offset: " + d.divisionID + ", " + p.offset());
                     w.chestContent.put("small-key-chest" + n_small_keys, "heart" + (i+1));
                     w.withinChestTag.add("heart" + (i+1));
                 } else {
                     addTag(p, "heart" + (i+1), d);
+//                    System.out.println("heart div / offset: " + d.divisionID + ", " + p.offset());
                 }
                 tagLess.remove(d);
             }            
@@ -1074,11 +1082,13 @@ public class PCGWorld {
                     candidates.add(d);
                 }
             }
-            if (!candidates.isEmpty() && r.nextInt(16) != 0) {
+            if (!candidates.isEmpty() && r.nextInt(256) <= 239) {
                 int idx = r.nextInt(candidates.size());
+//                System.out.println("teleporter candidates (area "+teleporterAreas[i]+"): " + idx + " / " + candidates.size() + "  ->  " + candidates);
                 AreaDivision d = candidates.get(idx);
                 AreaPoint p = randomDivisionPoint(d, true);
                 addTag(p, teleporterTags[i], d);
+//                System.out.println("teleporter div / offset: " + d.divisionID + ", " + p.offset());
                 tagLess.remove(d);
             }
         }
@@ -1103,7 +1113,7 @@ public class PCGWorld {
                 int idx = r.nextInt(candidates.size());
                 AreaDivision d = candidates.get(idx);
                 AreaPoint p = randomDivisionPoint(d, true);
-                if (i != 0 && n_small_keys < 4 && r.nextInt(4) == 0) {
+                if (i != 0 && n_small_keys < 4 && r.nextInt(256) < 63) {
                     // place in a small key chest!
                     n_small_keys++;
                     addTag(p, "small-key-chest" + n_small_keys, d);
@@ -1118,7 +1128,7 @@ public class PCGWorld {
         
         // spawn small keys:
         for(int i = 0;i<n_small_keys;i++) {
-            if (!tagLess.isEmpty() && r.nextInt(16) != 0) {
+            if (!tagLess.isEmpty() && r.nextInt(256) <= 239) {
                 int idx = r.nextInt(tagLess.size());
                 AreaDivision d = tagLess.get(idx);
                 AreaPoint p = randomDivisionPoint(d, true);
@@ -1129,7 +1139,7 @@ public class PCGWorld {
         
         // spawn random trivia:
         for(int i = 0;i<8;i++) {
-            if (!tagLess.isEmpty() && r.nextInt(16) != 0) {
+            if (!tagLess.isEmpty() && r.nextInt(256) <= 239) {
                 int idx = r.nextInt(tagLess.size());
                 AreaDivision d = tagLess.get(idx);
                 AreaPoint p = randomDivisionPoint(d, true);
