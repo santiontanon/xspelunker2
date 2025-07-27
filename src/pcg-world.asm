@@ -359,21 +359,23 @@ pcg_generate_world:
 	call pcg_generate_world__spawn_additional_objects  ; fills additional tags to some divisions
 	jr nz, pcg_generate_world_fail
 	call pcg_generate_world__generate_tag_data  ; generates the area tags, chest content and shop extra items from all the info above
+	call pcg_generate_world__puzzles  ; tablet contents, combination puzzles, trial types, stone numbers 
+
 ;     out (#2d),a  ; DEBUG	
 
 	; DEBUG:
 	ld hl, hardcoded_area_data_0__connections
 	ld de, tmp_pcg_world__area_0_connections
 	ld bc, MAX_AREA_SIZE * 2  ; + MAX_AREA_N_TAGS * 3
-	call pcg_debug__arrays_equal  ; mdl-watch: "checking area 0", hl, de
+	call pcg_debug__arrays_equal  ; mdl-watch: "checking area 0", hl, de, bc
 	ld hl, hardcoded_area_data_10__connections
 	ld de, tmp_pcg_world__area_10_connections
 	ld bc, MAX_AREA_SIZE * 2
-	call pcg_debug__arrays_equal  ; mdl-watch: "checking area 10", hl, de
+	call pcg_debug__arrays_equal  ; mdl-watch: "checking area 10", hl, de, bc
 	ld hl, hardcoded_area_data_11__connections
 	ld de, tmp_pcg_world__area_11_connections
 	ld bc, MAX_AREA_SIZE * 2
-	call pcg_debug__arrays_equal  ; mdl-watch: "checking area 11", hl, de
+	call pcg_debug__arrays_equal  ; mdl-watch: "checking area 11", hl, de, bc
 
 	; for now just copy over the hardcoded data:
 ; 	ld hl, hardcoded_world_data
@@ -381,7 +383,8 @@ pcg_generate_world:
 ; 	ld bc, hardcoded_world_data_end - hardcoded_world_data
 ; 	ldir
 
-	jp pcg_generate_world__puzzles  ; tablet contents, combination puzzles, trial types, stone numbers 
+	ret
+
 
 pcg_generate_world_fail:
 	di  ; mdl-watch: "pcg_generate_world_fail!"
@@ -4352,19 +4355,115 @@ pcg_generate_world__spawn_additional_objects_other_object_loop_next:
 	dec b
 	jp nz, pcg_generate_world__spawn_additional_objects_other_object_loop
 
-    ; optional items
-    ; ...
-
-    ; small keys
-    ; ...
-
-    ; random trivia
-    ; ...
-
-    ; calendar name clue
-    ; ...
-
     xor a  ; z
+	ret
+
+
+;-----------------------------------------------
+get_not_spawned_item_tags_table:
+	db TAG_WEAPON_BLOWGUN  ; this one the first to ensure it will be in the shop if unspawned
+	db TAG_WEAPON_HAMMER
+	db TAG_WEAPON_MACUAHUITL
+	db TAG_WEAPON_SHIELD
+	db TAG_WEAPON_SLING
+	db TAG_WEAPON_ATLATL
+	db TAG_WEAPON_RAYGUN
+	db TAG_WEAPON_OBSIDIAN_KNIVE
+	db TAG_WEAPON_FIRE_HAMMER
+	db TAG_WEAPON_ICE_MACUAHUITL
+	db TAG_ITEM_SANDALS
+	db TAG_ITEM_GLOVES
+	db TAG_ITEM_WARRIOR_HAT
+	db TAG_ITEM_ARMOR
+	db TAG_ITEM_CHAAC
+	db TAG_ITEM_SEASHELL
+	db TAG_ITEM_BELT
+	db TAG_ITEM_ICE_CAPE
+get_not_spawned_item_tags_table_end
+
+
+pcg_generate_world__get_not_spawned_item_tags:
+	xor a
+	ld (tmp_pcg_world__candidates_list_size), a
+	ld hl, tmp_pcg_world__candidates_list
+	ld (hl), 0
+	inc hl
+	ld (hl), 0
+	dec hl
+
+	ld ix, get_not_spawned_item_tags_table
+	ld b, get_not_spawned_item_tags_table_end - get_not_spawned_item_tags_table
+pcg_generate_world__get_not_spawned_item_tags_loop:
+	push bc
+		ld c, (ix)  ; mdl-watch: "pcg_generate_world__get_not_spawned_item_tags", c
+		call pcg_generate_world__item_spawned_p
+	pop bc
+	jr z, pcg_generate_world__get_not_spawned_item_tags_loop_next
+	ld hl, tmp_pcg_world__candidates_list_size
+	ld a, (hl)
+	inc (hl)
+	ld hl, tmp_pcg_world__candidates_list
+	ADD_HL_A
+	ld a, (ix)  ; mdl-watch: "    not spawned"
+	ld (hl), a
+pcg_generate_world__get_not_spawned_item_tags_loop_next:
+	inc ix
+	djnz pcg_generate_world__get_not_spawned_item_tags_loop
+
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - c: item
+; output:
+; - z: spawned
+; - nz: not spawned
+pcg_generate_world__item_spawned_p:
+	ld hl, tmp_pcg_world__area_0_tags
+	ld b, MAX_WORLD_AREAS
+pcg_generate_world__item_spawned_p_area_loop:
+	push bc
+		push hl
+			ld b, MAX_AREA_N_TAGS
+pcg_generate_world__item_spawned_p_tag_loop:
+			ld a, (hl)
+			cp c
+			jr z, pcg_generate_world__item_spawned_p_found
+			cp #ff
+			jr z, pcg_generate_world__item_spawned_p_tag_loop_done
+			inc hl
+			inc hl
+			inc hl
+			djnz pcg_generate_world__item_spawned_p_tag_loop
+pcg_generate_world__item_spawned_p_tag_loop_done:
+		pop hl
+		ld de, WORLD_AREA__SIZE
+		add hl, de
+	pop bc
+	djnz pcg_generate_world__item_spawned_p_area_loop
+
+	; check if it's within chest tag:
+	ld hl, current_world__chest_content + 1
+	ld b, MAX_CHESTS
+pcg_generate_world__item_spawned_p_chest_loop:
+	ld a, (hl)
+	cp c
+	jr z, pcg_generate_world__item_spawned_p_found_no_pop
+	cp #ff
+	jr z, pcg_generate_world__item_spawned_p_chest_loop_done
+	inc hl
+	inc hl
+	djnz pcg_generate_world__item_spawned_p_chest_loop
+pcg_generate_world__item_spawned_p_chest_loop_done:
+	or 1  ; nz
+	ret
+
+pcg_generate_world__item_spawned_p_found:
+		pop hl
+	pop bc
+pcg_generate_world__item_spawned_p_found_no_pop:
+	xor a ; z
 	ret
 
 
@@ -4908,19 +5007,12 @@ pcg_generate_world__generate_tag_data_area_loop:
 	pop bc
 	djnz pcg_generate_world__generate_tag_data_area_loop
 
-	; chest content:
-	ld hl, current_world__chest_content
-	ld bc, MAX_CHESTS * 2
-	ld a, #ff
-	call clear_memory_a
-
 	; extra shop items:
-	ld hl, current_world__shop_extra_items
-	ld (hl), 0
-	inc hl
-	ld (hl), 0
-
-	; ...
+	call pcg_generate_world__get_not_spawned_item_tags  ; fills tmp_pcg_world__candidates_list
+	ld hl, tmp_pcg_world__candidates_list
+	ld de, current_world__shop_extra_items
+	ldi
+	ldi
 
 	ret
 
@@ -5124,6 +5216,54 @@ pcg_generate_world__puzzles:
 
 	; power stone numbers:
 	; ...
+
+	; for(Area a:w.areas) {
+	;     List<Pair<Integer, String>> tagList = a.getSortedTagList();
+	;     for(Pair<Integer, String> tag_position:tagList) {
+	;         String tag = tag_position.right;
+	;         if (tag.toLowerCase().contains("-clue") &&
+	;             tag.toLowerCase().contains("combination")) {
+	;             // combination clue:
+	;             int type = r.nextInt(4);
+	;             w.tabletContent.put(tag, "combination_tablet_type_"+(type+1)+"_fn");
+	;         } else if (tag.toLowerCase().contains("-clue") &&
+	;             tag.toLowerCase().contains("trial")) {
+	;             // trial clue:
+	;             w.tabletContent.put(tag, "trial_tablet_fn");
+	;         } else if (tag.toLowerCase().contains("riddle-clue1")) {
+	;             w.tabletContent.put(tag, "maya_clue1_tablet_fn");
+	;         } else if (tag.toLowerCase().contains("riddle-clue2")) {
+	;             w.tabletContent.put(tag, "maya_clue2_tablet_fn");
+	;         } else if (tag.toLowerCase().contains("riddle-clue3")) {
+	;             w.tabletContent.put(tag, "maya_clue3_tablet_fn");
+	;         } else if (tag.toLowerCase().contains("riddle-clue4")) {
+	;             w.tabletContent.put(tag, "maya_clue4_tablet_fn");
+	;         } else if (tag.toLowerCase().contains("story-trivia")) {
+	;             // story trivia:
+	;             String tablet_fn = remainingTriviaTabletFns.get(r.nextInt(remainingTriviaTabletFns.size()));
+	;             w.tabletContent.put(tag, tablet_fn);
+	;             remainingTriviaTabletFns.remove(tablet_fn);
+	;         } else if (tag.toLowerCase().contains("calendar-name-clue")) {
+	;             // story trivia:
+	;             w.tabletContent.put(tag, "calendar_name_clue_tablet_fn");
+	;         }
+	;     }
+	; }
+
+	; for(int j = 0;j<4;j++) {
+	;     for(int k = 0;k<8;k++) {
+	;         w.combinationSolutions[j][k] = r.nextInt(8)%3;
+	;     }
+	; }
+
+	; for(int j = 0;j<4;j++) {
+	;     w.trialTypes[j] = r.nextInt(8);
+	; }
+
+	; for(int j = 0;j<5;j++) {
+	;     w.powerStoneNumbers[j] = r.nextInt(8) + 1;
+	; }
+
 
 	call pcg_generate_maya_puzzle_riddles
 	jp pcg_generate_syllable_riddle

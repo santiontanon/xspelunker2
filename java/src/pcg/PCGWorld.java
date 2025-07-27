@@ -328,15 +328,10 @@ public class PCGWorld {
             }
             
             // generate tablet contents:
-//            int n_combination_tablets = 0;
-//            int n_trial_tablets = 0;
-//            int n_riddle_tablets = 0;
-//            int n_trivia_tablets = 0;
             for(Area a:w.areas) {
                 List<Pair<Integer, String>> tagList = a.getSortedTagList();
                 for(Pair<Integer, String> tag_position:tagList) {
                     String tag = tag_position.right;
-//                    System.out.println(tag);
                     if (tag.toLowerCase().contains("-clue") &&
                         tag.toLowerCase().contains("combination")) {
                         // combination clue:
@@ -1022,12 +1017,12 @@ public class PCGWorld {
                     // place in a small key chest!
                     n_small_keys++;
                     addTag(p, "small-key-chest" + n_small_keys, d);
-//                    System.out.println("weapon (with small key chest) div / offset: " + d.divisionID + ", " + p.offset());
+//                    System.out.println("weapon (with small key chest) "+weaponTags[i]+" div / offset: " + d.divisionID + ", " + p.offset());
                     w.chestContent.put("small-key-chest" + n_small_keys, weaponTags[i]);
                     w.withinChestTag.add(weaponTags[i]);
                 } else {
                     addTag(p, weaponTags[i], d);
-//                    System.out.println("weapon div / offset: " + d.divisionID + ", " + p.offset());
+//                    System.out.println("weapon "+weaponTags[i]+" div / offset: " + d.divisionID + ", " + p.offset());
                 }
                 tagLess.remove(d);
             }
