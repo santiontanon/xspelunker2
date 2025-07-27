@@ -1,12 +1,9 @@
 to do:
 
 ***- Implement PCGWorld in assembler:
-  ***- spawn_additional_objects:
-    ***- optional items (sandals are special)
-    ***- small keys (as many as needed)
-    ***- random trivia
-    ***- calendar name clue
-  ***- shop extra items (in "pcg_generate_world__generate_tag_data")
+  ***- shop extra items (in "pcg_generate_world__generate_tag_data"):
+    ***- getUnspawnedItemTags (maybe just have blowgun be the first, so I don't need to treat it separately)
+    ***- fill the two slots if possible
   ***- pcg_generate_world__puzzles: generate tablet contents, combination solutions, trial types, and power stone numbers.
   ***- safety checks to make sure all generated levels are playable (no more than 1 tag per division, try all RNG seeds in Java, etc.), adjust # divisions needed, etc. assembler - Java sync on all conditions.
 

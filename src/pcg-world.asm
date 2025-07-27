@@ -308,6 +308,31 @@ pcg_world__optional_object_table:
 	db TAG_TELEPORTER6, 7, 239, 0
 	db TAG_TELEPORTER7, 8, 239, 0
 	db TAG_TELEPORTER8, 9, 239, 0
+	; optional items:
+	db TAG_ITEM_SANDALS, #fe, 255, 0  ; #fe = areas 1, 2, 3 or 4
+	db TAG_ITEM_GLOVES, #ff, 239, 63
+	db TAG_ITEM_WARRIOR_HAT, #ff, 239, 63
+	db TAG_ITEM_ARMOR, #ff, 239, 63
+	db TAG_ITEM_CHAAC, #ff, 239, 63
+	db TAG_ITEM_SEASHELL, #ff, 239, 63
+	db TAG_ITEM_BELT, #ff, 239, 63
+	db TAG_ITEM_ICE_CAPE, #ff, 239, 63
+	; small keys:
+	db TAG_SMALL_KEY1, #ff, 255, 0
+	db TAG_SMALL_KEY2, #ff, 255, 0
+	db TAG_SMALL_KEY3, #ff, 255, 0
+	db TAG_SMALL_KEY4, #ff, 255, 0
+	; random trivia:
+	db TAG_STORY_TRIVIA1, #ff, 239, 0
+	db TAG_STORY_TRIVIA2, #ff, 239, 0
+	db TAG_STORY_TRIVIA3, #ff, 239, 0
+	db TAG_STORY_TRIVIA4, #ff, 239, 0
+	db TAG_STORY_TRIVIA5, #ff, 239, 0
+	db TAG_STORY_TRIVIA6, #ff, 239, 0
+	db TAG_STORY_TRIVIA7, #ff, 239, 0
+	db TAG_STORY_TRIVIA8, #ff, 239, 0
+	; calendar name clue:
+	db TAG_CALENDAR_NAME_CLUE, #fd, 255, 0  ; #fd = areas 10, 11
 pcg_world__optional_object_table_end:
 
 
@@ -2803,26 +2828,26 @@ pcg_generate_world__generate_subquests:
 	ld ix, tmp_pcg_world__quest_spec_open_list  ; ix = ptr to first subquest in the open list
 
 	; DEBUG-start
-	push hl
-		ld hl, (rng_seed1)  ; mdl-watch: "        seed1: ", hl
-		ld hl, (rng_seed2)  ; mdl-watch: "        seed2: ", hl
-	pop hl
+; 	push hl
+; 		ld hl, (rng_seed1)  ; mdl-watch: "        seed1: ", hl
+; 		ld hl, (rng_seed2)  ; mdl-watch: "        seed2: ", hl
+; 	pop hl
 	; DEBUG-end
 
 	; DEBUG-start:
-	ld a, (tmp_pcg_world__useable_nodes_size)  ; mdl-watch: "    useable", a
-	ld a, (tmp_pcg_world__reachable_nodes_size)  ; mdl-watch: "    reachable", a
-	ld e, (ix + QUEST_SPEC_START_DIV_PTR)
-	ld d, (ix + QUEST_SPEC_START_DIV_PTR + 1)
-	ld a, (de)  ; mdl-watch: "    start div", a
-	ld e, (ix + QUEST_SPEC_GOAL_DIV_PTR)
-	ld d, (ix + QUEST_SPEC_GOAL_DIV_PTR + 1)
-	ld a, (de)  ; mdl-watch: "    goal div", a
-	ld a, (ix + QUEST_SPEC_START_POINT_OFFSET)  ; mdl-watch: "    start offs", a
-	ld a, (ix + QUEST_SPEC_GOAL_POINT_OFFSET)  ; mdl-watch: "    goal offs", a
-	ld a, (ix + QUEST_SPEC_START_TAG)  ; mdl-watch: "    start tag", a
-	ld a, (ix + QUEST_SPEC_GOAL_TAG)  ; mdl-watch: "    goal tag", a
-	ld a, (ix + QUEST_SPEC_N_SUBQUESTS)  ; mdl-watch: "    subquests", a
+; 	ld a, (tmp_pcg_world__useable_nodes_size)  ; mdl-watch: "    useable", a
+; 	ld a, (tmp_pcg_world__reachable_nodes_size)  ; mdl-watch: "    reachable", a
+; 	ld e, (ix + QUEST_SPEC_START_DIV_PTR)
+; 	ld d, (ix + QUEST_SPEC_START_DIV_PTR + 1)
+; 	ld a, (de)  ; mdl-watch: "    start div", a
+; 	ld e, (ix + QUEST_SPEC_GOAL_DIV_PTR)
+; 	ld d, (ix + QUEST_SPEC_GOAL_DIV_PTR + 1)
+; 	ld a, (de)  ; mdl-watch: "    goal div", a
+; 	ld a, (ix + QUEST_SPEC_START_POINT_OFFSET)  ; mdl-watch: "    start offs", a
+; 	ld a, (ix + QUEST_SPEC_GOAL_POINT_OFFSET)  ; mdl-watch: "    goal offs", a
+; 	ld a, (ix + QUEST_SPEC_START_TAG)  ; mdl-watch: "    start tag", a
+; 	ld a, (ix + QUEST_SPEC_GOAL_TAG)  ; mdl-watch: "    goal tag", a
+; 	ld a, (ix + QUEST_SPEC_N_SUBQUESTS)  ; mdl-watch: "    subquests", a
 	; DEBUG-end:
 
 	; Choose the subquest pattern to use, and use it to decompose the subquest:
@@ -3158,7 +3183,7 @@ pcg_generate_world__subquest_pattern__obstacle:
 			inc hl
 			push iy
 			pop de
-			ld a, (iy + MST_DIVISION_ID)  ; DEBUG  ; mdl-watch: "       *** new quest goal division:", a
+; 			ld a, (iy + MST_DIVISION_ID)  ; DEBUG  ; mdl-watch: "       *** new quest goal division:", a
 			ld (hl), e
 			inc hl
 			ld (hl), d
@@ -3269,7 +3294,7 @@ pcg_generate_world__subquest_pattern__lock_key_entry_point:
 				ld (hl), d
 				inc hl
 			pop de
-			ld a, (de)  ; DEBUG  ; mdl-watch: "       *** new quest goal division:", a
+; 			ld a, (de)  ; DEBUG  ; mdl-watch: "       *** new quest goal division:", a
 			ld (hl), e  ; goal div ptr
 			inc hl
 			ld (hl), d
@@ -4212,6 +4237,36 @@ pcg_generate_world__spawn_additional_objects_maya_clues_loop:
     ld ix, pcg_world__optional_object_table
 pcg_generate_world__spawn_additional_objects_other_object_loop:
 	push bc
+		ld a, (ix)  ; tag
+		cp TAG_SMALL_KEY1
+		jr z, pcg_generate_world__spawn_additional_objects_other_object_loop_small_key1
+		cp TAG_SMALL_KEY2
+		jr z, pcg_generate_world__spawn_additional_objects_other_object_loop_small_key2
+		cp TAG_SMALL_KEY3
+		jr z, pcg_generate_world__spawn_additional_objects_other_object_loop_small_key3
+		cp TAG_SMALL_KEY4
+		jr z, pcg_generate_world__spawn_additional_objects_other_object_loop_small_key4
+		jr pcg_generate_world__spawn_additional_objects_other_object_loop_continue
+pcg_generate_world__spawn_additional_objects_other_object_loop_small_key1:
+		ld a, (tmp_pcg_world__n_small_keys)
+		cp 1 
+		jp c, pcg_generate_world__spawn_additional_objects_other_object_loop_next
+		jr pcg_generate_world__spawn_additional_objects_other_object_loop_continue
+pcg_generate_world__spawn_additional_objects_other_object_loop_small_key2:
+		ld a, (tmp_pcg_world__n_small_keys)
+		cp 2 
+		jp c, pcg_generate_world__spawn_additional_objects_other_object_loop_next
+		jr pcg_generate_world__spawn_additional_objects_other_object_loop_continue
+pcg_generate_world__spawn_additional_objects_other_object_loop_small_key3:
+		ld a, (tmp_pcg_world__n_small_keys)
+		cp 3 
+		jp c, pcg_generate_world__spawn_additional_objects_other_object_loop_next
+		jr pcg_generate_world__spawn_additional_objects_other_object_loop_continue
+pcg_generate_world__spawn_additional_objects_other_object_loop_small_key4:
+		ld a, (tmp_pcg_world__n_small_keys)
+		cp 4
+		jp c, pcg_generate_world__spawn_additional_objects_other_object_loop_next
+pcg_generate_world__spawn_additional_objects_other_object_loop_continue:
 		ld a, (ix + 2)
 		cp #ff
 		jr z, pcg_generate_world__spawn_additional_objects_other_object_loop_spawn
@@ -4223,9 +4278,25 @@ pcg_generate_world__spawn_additional_objects_other_object_loop_spawn:
 		ld a, (ix + 1)  ; area
 		cp #ff  ; any area
 		jr z, pcg_generate_world__spawn_additional_objects_other_object_loop_spawn_any_area
+		cp #fe  ; areas 1, 2, 3, 4
+		jr z, pcg_generate_world__spawn_additional_objects_other_object_loop_spawn_area_1_2_3_4
+		cp #fd  ; areas 10, 11
+		jr z, pcg_generate_world__spawn_additional_objects_other_object_loop_spawn_area_10_11
 		ld c, a  ; mdl-watch: "area: ", c
 		push ix
 			call pcg_generate_world__spawn_additional_objects_sample_node_from_area  ; hl = ptr to node
+		pop ix
+		ret nz
+		jr pcg_generate_world__spawn_additional_objects_other_object_loop_node_sampled
+pcg_generate_world__spawn_additional_objects_other_object_loop_spawn_area_1_2_3_4:
+		push ix
+			call pcg_generate_world__spawn_additional_objects_sample_node_areas_1_2_3_4  ; hl = ptr to node
+		pop ix
+		ret nz
+		jr pcg_generate_world__spawn_additional_objects_other_object_loop_node_sampled
+pcg_generate_world__spawn_additional_objects_other_object_loop_spawn_area_10_11:
+		push ix
+			call pcg_generate_world__spawn_additional_objects_sample_node_areas_10_11  ; hl = ptr to node
 		pop ix
 		ret nz
 		jr pcg_generate_world__spawn_additional_objects_other_object_loop_node_sampled
@@ -4278,7 +4349,8 @@ pcg_generate_world__spawn_additional_objects_other_object_loop_next:
 		ld de, 4
 		add ix, de
 	pop bc
-	djnz pcg_generate_world__spawn_additional_objects_other_object_loop
+	dec b
+	jp nz, pcg_generate_world__spawn_additional_objects_other_object_loop
 
     ; optional items
     ; ...
@@ -4380,7 +4452,6 @@ pcg_generate_world__spawn_additional_objects_sample_node_from_area_loop2_no_matc
 pcg_generate_world__spawn_additional_objects_sample_node_from_area_loop2_next:
 	djnz pcg_generate_world__spawn_additional_objects_sample_node_from_area_loop2
 
-debug_point:
 	ld hl, tmp_pcg_world__useable_nodes
 	ld de, tmp_pcg_world__tagless_list
 	ld a, (tmp_pcg_world__tagless_list_size)
@@ -4500,6 +4571,228 @@ pcg_generate_world__spawn_additional_objects_sample_node_except_areas_10_11_no_c
 	xor a  ; z
 	ret
 pcg_generate_world__spawn_additional_objects_sample_node_except_areas_10_11_fail:
+	or 1  ; nz
+	ret
+
+
+;-----------------------------------------------
+; output:
+; - hl: ptr to node
+; - z: success
+; - nz: failure
+pcg_generate_world__spawn_additional_objects_sample_node_areas_1_2_3_4:
+	ld hl, tmp_pcg_world__tagless_list
+	ld a, (tmp_pcg_world__tagless_list_size)
+	ld b, a
+	or a
+	jp z, pcg_generate_world__spawn_additional_objects_sample_node_areas_1_2_3_4_fail
+	ld ixl, 0  ; number of matches
+pcg_generate_world__spawn_additional_objects_sample_node_areas_1_2_3_4_loop:
+	ld e, (hl)
+	inc hl
+	ld d, (hl)
+	inc hl
+	inc de
+	ld a, (de)  ; MST_AREA_ID
+	cp 1
+	jr z, pcg_generate_world__spawn_additional_objects_sample_node_areas_1_2_3_4_loop_match
+	cp 2
+	jr z, pcg_generate_world__spawn_additional_objects_sample_node_areas_1_2_3_4_loop_match
+	cp 3
+	jr z, pcg_generate_world__spawn_additional_objects_sample_node_areas_1_2_3_4_loop_match
+	cp 4
+	jr z, pcg_generate_world__spawn_additional_objects_sample_node_areas_1_2_3_4_loop_match
+	jr pcg_generate_world__spawn_additional_objects_sample_node_areas_1_2_3_4_loop_next
+pcg_generate_world__spawn_additional_objects_sample_node_areas_1_2_3_4_loop_match:
+	inc ixl
+pcg_generate_world__spawn_additional_objects_sample_node_areas_1_2_3_4_loop_next:
+	djnz pcg_generate_world__spawn_additional_objects_sample_node_areas_1_2_3_4_loop
+	ld a, ixl
+	or a
+	jr z, pcg_generate_world__spawn_additional_objects_sample_node_areas_1_2_3_4_fail
+	push bc
+		ld c, a
+		call random_modulo
+		ld ixl, a  ; selected node, mdl-watch: "additional objects candidates chosen/candidates:", a, c
+	pop bc
+
+	; second loop, copying the list to a new location, skipping the selected on (to
+	; remove it):
+	; - copy the list to "tmp_pcg_world__useable_nodes" (without the selected one)
+	; - then copy it back to "tmp_pcg_world__tagless_list"
+	; - decrease its size by 1 
+	ld hl, tmp_pcg_world__tagless_list_size
+	ld a, (hl)
+	dec (hl)
+	ld hl, tmp_pcg_world__tagless_list
+	ld de, tmp_pcg_world__useable_nodes
+	ld b, a
+pcg_generate_world__spawn_additional_objects_sample_node_areas_1_2_3_4_loop2:
+	push de
+		ld e, (hl)
+		inc hl
+		ld d, (hl)
+		dec hl
+		inc de
+		ld a, (de)  ; MST_AREA_ID
+	pop de
+	cp 1
+	jr z, pcg_generate_world__spawn_additional_objects_sample_node_areas_1_2_3_4_loop2_match
+	cp 2
+	jr z, pcg_generate_world__spawn_additional_objects_sample_node_areas_1_2_3_4_loop2_match
+	cp 3
+	jr z, pcg_generate_world__spawn_additional_objects_sample_node_areas_1_2_3_4_loop2_match
+	cp 4
+	jr z, pcg_generate_world__spawn_additional_objects_sample_node_areas_1_2_3_4_loop2_match
+	jr pcg_generate_world__spawn_additional_objects_sample_node_areas_1_2_3_4_loop2_no_match
+pcg_generate_world__spawn_additional_objects_sample_node_areas_1_2_3_4_loop2_match:
+	; match:
+	ld a, ixl
+	dec ixl
+	or a
+	jr nz, pcg_generate_world__spawn_additional_objects_sample_node_areas_1_2_3_4_loop2_no_match
+	; found!
+	ld a, (hl)
+	ld iyl, a
+	inc hl
+	ld a, (hl)
+	ld iyh, a
+	inc hl
+	jr pcg_generate_world__spawn_additional_objects_sample_node_areas_1_2_3_4_loop2_next
+pcg_generate_world__spawn_additional_objects_sample_node_areas_1_2_3_4_loop2_no_match:
+	ld a, (hl)
+	ld (de), a
+	inc hl
+	inc de	
+	ld a, (hl)
+	ld (de), a
+	inc hl
+	inc de
+pcg_generate_world__spawn_additional_objects_sample_node_areas_1_2_3_4_loop2_next:
+	djnz pcg_generate_world__spawn_additional_objects_sample_node_areas_1_2_3_4_loop2
+
+	ld hl, tmp_pcg_world__useable_nodes
+	ld de, tmp_pcg_world__tagless_list
+	ld a, (tmp_pcg_world__tagless_list_size)
+	add a, a
+	jr z, pcg_generate_world__spawn_additional_objects_sample_node_areas_1_2_3_4_no_copy
+	ld b, 0
+	ld c, a
+	ldir
+pcg_generate_world__spawn_additional_objects_sample_node_areas_1_2_3_4_no_copy:
+	push iy
+	pop hl
+
+	xor a  ; z
+	ret
+pcg_generate_world__spawn_additional_objects_sample_node_areas_1_2_3_4_fail:
+	or 1  ; nz
+	ret
+
+
+;-----------------------------------------------
+; output:
+; - hl: ptr to node
+; - z: success
+; - nz: failure
+pcg_generate_world__spawn_additional_objects_sample_node_areas_10_11:
+	ld hl, tmp_pcg_world__tagless_list
+	ld a, (tmp_pcg_world__tagless_list_size)
+	ld b, a
+	or a
+	jp z, pcg_generate_world__spawn_additional_objects_sample_node_areas_10_11_fail
+	ld ixl, 0  ; number of matches
+pcg_generate_world__spawn_additional_objects_sample_node_areas_10_11_loop:
+	ld e, (hl)
+	inc hl
+	ld d, (hl)
+	inc hl
+	inc de
+	ld a, (de)  ; MST_AREA_ID
+	cp 10
+	jr z, pcg_generate_world__spawn_additional_objects_sample_node_areas_10_11_loop_match
+	cp 11
+	jr z, pcg_generate_world__spawn_additional_objects_sample_node_areas_10_11_loop_match
+	jr pcg_generate_world__spawn_additional_objects_sample_node_areas_10_11_loop_next
+pcg_generate_world__spawn_additional_objects_sample_node_areas_10_11_loop_match:
+	inc ixl
+pcg_generate_world__spawn_additional_objects_sample_node_areas_10_11_loop_next:
+	djnz pcg_generate_world__spawn_additional_objects_sample_node_areas_10_11_loop
+	ld a, ixl
+	or a
+	jr z, pcg_generate_world__spawn_additional_objects_sample_node_areas_10_11_fail
+	push bc
+		ld c, a
+		call random_modulo
+		ld ixl, a  ; selected node, mdl-watch: "additional objects candidates chosen/candidates:", a, c
+	pop bc
+
+	; second loop, copying the list to a new location, skipping the selected on (to
+	; remove it):
+	; - copy the list to "tmp_pcg_world__useable_nodes" (without the selected one)
+	; - then copy it back to "tmp_pcg_world__tagless_list"
+	; - decrease its size by 1 
+	ld hl, tmp_pcg_world__tagless_list_size
+	ld a, (hl)
+	dec (hl)
+	ld hl, tmp_pcg_world__tagless_list
+	ld de, tmp_pcg_world__useable_nodes
+	ld b, a
+pcg_generate_world__spawn_additional_objects_sample_node_areas_10_11_loop2:
+	push de
+		ld e, (hl)
+		inc hl
+		ld d, (hl)
+		dec hl
+		inc de
+		ld a, (de)  ; MST_AREA_ID
+	pop de
+	cp 10
+	jr z, pcg_generate_world__spawn_additional_objects_sample_node_areas_10_11_loop2_match
+	cp 11
+	jr z, pcg_generate_world__spawn_additional_objects_sample_node_areas_10_11_loop2_match
+	jr pcg_generate_world__spawn_additional_objects_sample_node_areas_10_11_loop2_no_match
+pcg_generate_world__spawn_additional_objects_sample_node_areas_10_11_loop2_match:
+	; match:
+	ld a, ixl
+	dec ixl
+	or a
+	jr nz, pcg_generate_world__spawn_additional_objects_sample_node_areas_10_11_loop2_no_match
+	; found!
+	ld a, (hl)
+	ld iyl, a
+	inc hl
+	ld a, (hl)
+	ld iyh, a
+	inc hl
+	jr pcg_generate_world__spawn_additional_objects_sample_node_areas_10_11_loop2_next
+pcg_generate_world__spawn_additional_objects_sample_node_areas_10_11_loop2_no_match:
+	ld a, (hl)
+	ld (de), a
+	inc hl
+	inc de	
+	ld a, (hl)
+	ld (de), a
+	inc hl
+	inc de
+pcg_generate_world__spawn_additional_objects_sample_node_areas_10_11_loop2_next:
+	djnz pcg_generate_world__spawn_additional_objects_sample_node_areas_10_11_loop2
+
+	ld hl, tmp_pcg_world__useable_nodes
+	ld de, tmp_pcg_world__tagless_list
+	ld a, (tmp_pcg_world__tagless_list_size)
+	add a, a
+	jr z, pcg_generate_world__spawn_additional_objects_sample_node_areas_10_11_no_copy
+	ld b, 0
+	ld c, a
+	ldir
+pcg_generate_world__spawn_additional_objects_sample_node_areas_10_11_no_copy:
+	push iy
+	pop hl
+
+	xor a  ; z
+	ret
+pcg_generate_world__spawn_additional_objects_sample_node_areas_10_11_fail:
 	or 1  ; nz
 	ret
 

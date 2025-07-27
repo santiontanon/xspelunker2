@@ -1111,16 +1111,19 @@ public class PCGWorld {
             // sandals (i == 0) are always spawned (if possible):
             if (!candidates.isEmpty() && (i == 0 || r.nextInt(16) != 0)) {
                 int idx = r.nextInt(candidates.size());
+//                System.out.println("optional candidates: " + idx + " / " + candidates.size() + "  ->  " + candidates);
                 AreaDivision d = candidates.get(idx);
                 AreaPoint p = randomDivisionPoint(d, true);
                 if (i != 0 && n_small_keys < 4 && r.nextInt(256) < 63) {
                     // place in a small key chest!
                     n_small_keys++;
                     addTag(p, "small-key-chest" + n_small_keys, d);
+//                    System.out.println("optional (within chest) div / offset: " + d.divisionID + ", " + p.offset());
                     w.chestContent.put("small-key-chest" + n_small_keys, optionalItemTags[i]);
                     w.withinChestTag.add(optionalItemTags[i]);
                 } else {
                     addTag(p, optionalItemTags[i], d);
+//                    System.out.println("optional div / offset: " + d.divisionID + ", " + p.offset());
                 }
                 tagLess.remove(d);
             }            
@@ -1128,11 +1131,13 @@ public class PCGWorld {
         
         // spawn small keys:
         for(int i = 0;i<n_small_keys;i++) {
-            if (!tagLess.isEmpty() && r.nextInt(256) <= 239) {
+            if (!tagLess.isEmpty()) {
                 int idx = r.nextInt(tagLess.size());
+//                System.out.println("small key candidates: " + idx + " / " + tagLess.size() + "  ->  " + tagLess);
                 AreaDivision d = tagLess.get(idx);
                 AreaPoint p = randomDivisionPoint(d, true);
                 addTag(p, "small-key" + (i+1), d);
+//                System.out.println("small key div / offset: " + d.divisionID + ", " + p.offset());
                 tagLess.remove(d);
             }            
         }
@@ -1141,9 +1146,11 @@ public class PCGWorld {
         for(int i = 0;i<8;i++) {
             if (!tagLess.isEmpty() && r.nextInt(256) <= 239) {
                 int idx = r.nextInt(tagLess.size());
+//                System.out.println("trivia candidates: " + idx + " / " + tagLess.size() + "  ->  " + tagLess);
                 AreaDivision d = tagLess.get(idx);
                 AreaPoint p = randomDivisionPoint(d, true);
                 addTag(p, "story-trivia" + (i+1), d);
+//                System.out.println("trivia div / offset: " + d.divisionID + ", " + p.offset());
                 tagLess.remove(d);
             }            
         }
@@ -1158,9 +1165,11 @@ public class PCGWorld {
             }
             if (!candidates.isEmpty()) {
                 int idx = r.nextInt(candidates.size());
+//                System.out.println("calendar name clue candidates: " + idx + " / " + candidates.size() + "  ->  " + candidates);
                 AreaDivision d = candidates.get(idx);
                 AreaPoint p = randomDivisionPoint(d, true);
                 addTag(p, "calendar-name-clue", d);
+//                System.out.println("calendar name clue div / offset: " + d.divisionID + ", " + p.offset());
                 tagLess.remove(d);
             }
         }
