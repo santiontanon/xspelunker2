@@ -22,8 +22,10 @@ public class World {
     public List<Area> areas = new ArrayList<>();
     public List<InterAreaConnection> interAreaconnections = new ArrayList<>();
     public HashMap<String, Integer> lockDirections = new HashMap<>();
-    public HashMap<String, String> chestContent = new HashMap<>();
-    public HashMap<String, String> tabletContent = new HashMap<>();
+    public HashMap<String, String> chestContentMap = new HashMap<>();
+    public List<String> chestContentSorted = new ArrayList<>();
+    public HashMap<String, String> tabletContentMap = new HashMap<>();
+    public List<String> tabletContentSorted = new ArrayList<>();
     public List<String> withinChestTag = new ArrayList<>();
     public List<AreaDivision> spanningTree;
     public int[][] combinationSolutions = new int[4][8];
@@ -298,4 +300,23 @@ public class World {
         
         return notSpawned;
     }
+    
+    
+    public void addChestContent(String k, String v)
+    {
+        chestContentMap.put(k, v);
+        if (!chestContentSorted.contains(k)) {
+            chestContentSorted.add(k);
+        }
+    }
+
+
+    public void addTabletContent(String k, String v)
+    {
+        tabletContentMap.put(k, v);
+        if (!tabletContentSorted.contains(k)) {
+            tabletContentSorted.add(k);
+        }
+    }
+
 }

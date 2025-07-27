@@ -4,6 +4,7 @@ set -e
 # We expect HL == 0 if all tests pass, or contain the number of the test that failed otherwise.
 read_from_symbol_file () {
 	echo "Executing tests in $1..."	
+
 	print_lines=false
 	while IFS= read -r line; do
 		if [[ $print_lines == true ]] ;

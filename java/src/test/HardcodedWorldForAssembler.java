@@ -96,13 +96,13 @@ public class HardcodedWorldForAssembler {
         int n_chests = 0;
         System.out.println("hardcoded_world_data__chest_content:");
         System.out.println("  ; each entry is 2 bytes: chest_id, content_id");
-        for(String chest:w.chestContent.keySet()) {
+        for(String chest:w.chestContentSorted) {
             if (chest.contains("boss")) continue;
-            System.out.println("  db " + AssemblerTags.tagToAssembler(chest) + ", " + AssemblerTags.tagToAssembler(w.chestContent.get(chest)));
+            System.out.println("  db " + AssemblerTags.tagToAssembler(chest) + ", " + AssemblerTags.tagToAssembler(w.chestContentMap.get(chest)));
             n_chests++;
         }
         if (n_chests > MAX_CHESTS) {
-            System.err.println(w.chestContent);
+            System.err.println(w.chestContentMap);
             throw new Exception("More chests than supported: " + n_chests);
         }
         if (n_chests < MAX_CHESTS) {
@@ -114,9 +114,9 @@ public class HardcodedWorldForAssembler {
         int n_tablets = 0;
         System.out.println("hardcoded_world_data__tablet_content:");
         System.out.println("  ; each entry is 3 bytes: tablet_id, content_ptr");
-        for(String tablet:w.tabletContent.keySet()) {
+        for(String tablet:w.tabletContentSorted) {
             System.out.println("  db " + AssemblerTags.tagToAssembler(tablet));
-            System.out.println("  dw " + w.tabletContent.get(tablet));
+            System.out.println("  dw " + w.tabletContentMap.get(tablet));
             n_tablets++;
         }
         if (n_tablets > MAX_TABLETS) {

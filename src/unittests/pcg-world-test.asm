@@ -15,6 +15,7 @@
 test_start:
 	call test__remove_useable_reachable_descendants
 	call test__pcg_generate_world__generate_sorted_area_tag_list_sort
+	call test__pcg_generate_world__generate_subquests_sample_lock_key_delete_selected
 
 test_end:
 	jr test_end
@@ -186,6 +187,45 @@ test__remove_useable_reachable_descendants:
 	call test__arrays_equal
 	ret nz
 	nop  ; mdl-watch: 'test__remove_useable_reachable_descendants, remove 2: success'
+	ret
+
+
+;-----------------------------------------------
+lock_key_options_rom:
+	db TAG_RED_CHEST, TAG_RED_KEY
+	db TAG_GREEN_CHEST, TAG_GREEN_KEY
+	db TAG_BLUE_CHEST, TAG_BLUE_KEY
+	db TAG_YELLOW_CHEST, TAG_YELLOW_KEY
+	db TAG_WHITE_CHEST, TAG_WHITE_KEY
+	db TAG_PURPLE_CHEST, TAG_PURPLE_KEY
+	db #ff
+lock_key_options_rom_end:
+
+lock_key_options_expected_rom:
+	db TAG_RED_CHEST, TAG_RED_KEY
+	db TAG_GREEN_CHEST, TAG_GREEN_KEY
+	db TAG_BLUE_CHEST, TAG_BLUE_KEY
+	db TAG_WHITE_CHEST, TAG_WHITE_KEY
+	db TAG_PURPLE_CHEST, TAG_PURPLE_KEY
+	db #ff
+lock_key_options_expected_rom_end:
+
+test__pcg_generate_world__generate_subquests_sample_lock_key_delete_selected:
+	ld hl, lock_key_options_rom
+	ld de, tmp_pcg_world__candidates_list
+	ld bc, lock_key_options_rom_end - lock_key_options_rom
+	ldir
+
+	ld iyl, TAG_YELLOW_KEY
+	ld hl, tmp_pcg_world__candidates_list
+	call pcg_generate_world__generate_subquests_sample_lock_key_delete_selected
+
+	ld hl, tmp_pcg_world__candidates_list
+	ld de, lock_key_options_expected_rom
+	ld bc, lock_key_options_expected_rom_end - lock_key_options_expected_rom
+	call test__arrays_equal
+	ret nz
+	nop  ; mdl-watch: 'test__pcg_generate_world__generate_subquests_sample_lock_key_delete_selected: success'
 	ret
 
 

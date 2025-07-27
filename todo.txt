@@ -1,9 +1,6 @@
 to do:
 
-***- Implement PCGWorld in assembler:
-  ***- pcg_generate_world__puzzles: generate tablet contents, combination solutions, trial types, and power stone numbers.
-  ***- BUG: with seed #0002, #5555 assembler and java are not in sync
-  ***- create a unit test that checks identity of Java and assembler for O(10) random seeds
+***- create a unit test that checks identity of Java and assembler for O(10) random seeds for world generation
 
 - menus:
   - brain games screen (think of a Maya-themed way for this)

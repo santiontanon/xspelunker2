@@ -23,6 +23,9 @@ import util.Pair;
 public class PCGPatternNKeysAndChestLock extends PCGPattern {
     public Pair<Quest, List<QuestSpec>> generate(World w, QuestSpec qs, String keytags[], String locktag, List<AreaDivision> useable, List<AreaDivision> reachable, PCGWorld pcg)
     {
+//        if (locktag.equals("white-chest")) {
+//            System.out.println("!!!!");
+//        }
 //        System.out.println("PCGPatternNKeysAndChestLock: " + qs.startTag + " -> " +  Arrays.toString(keytags) + " -> " + locktag + " -> " + qs.goalTag);
         int nKeys = keytags.length;
         Quest q = new Quest(nKeys + "-keys-and-chestlock: " + qs.start.divisionID + " -> " + qs.goal.divisionID);

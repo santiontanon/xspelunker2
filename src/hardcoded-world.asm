@@ -449,57 +449,68 @@ hardcoded_world_data__interarea_connections:
   db #ff  ; sentinel
 hardcoded_world_data__chest_content:
   ; each entry is 2 bytes: chest_id, content_id
+  db TAG_WHITE_CHEST, TAG_BOSS2_KEY
   db TAG_YELLOW_CHEST, TAG_BOSS3_KEY
   db TAG_PURPLE_CHEST, TAG_BOSS5_KEY
-  db TAG_SMALL_KEY_CHEST2, TAG_ITEM_ARMOR
   db TAG_GREEN_CHEST, TAG_BOSS6_KEY
   db TAG_SMALL_KEY_CHEST1, TAG_WEAPON_FIRE_HAMMER
-  db TAG_WHITE_CHEST, TAG_BOSS2_KEY
+  db TAG_SMALL_KEY_CHEST2, TAG_ITEM_ARMOR
   ds 8, #ff
   db #ff  ; sentinel
 hardcoded_world_data__tablet_content:
   ; each entry is 3 bytes: tablet_id, content_ptr
+  db TAG_COMBINATION1_CLUE
+  dw combination_tablet_type_4_fn
+  db TAG_COMBINATION2_CLUE
+  dw combination_tablet_type_4_fn
+  db TAG_COMBINATION3_CLUE
+  dw combination_tablet_type_3_fn
+  db TAG_COMBINATION4_CLUE
+  dw combination_tablet_type_1_fn
+  db TAG_TRIAL1_CLUE
+  dw trial_tablet_fn
+  db TAG_TRIAL2_CLUE
+  dw trial_tablet_fn
   db TAG_TRIAL3_CLUE
   dw trial_tablet_fn
-  db TAG_COMBINATION3_CLUE
-  dw combination_tablet_type_4_fn
+  db TAG_TRIAL4_CLUE
+  dw trial_tablet_fn
   db TAG_MAYA_RIDDLE_CLUE1
   dw maya_clue1_tablet_fn
   db TAG_MAYA_RIDDLE_CLUE2
   dw maya_clue2_tablet_fn
-  db TAG_TRIAL4_CLUE
-  dw trial_tablet_fn
   db TAG_MAYA_RIDDLE_CLUE3
   dw maya_clue3_tablet_fn
-  db TAG_STORY_TRIVIA1
-  dw story_trivia_tablet_fn_story8
   db TAG_MAYA_RIDDLE_CLUE4
   dw maya_clue4_tablet_fn
+  db TAG_STORY_TRIVIA1
+  dw story_trivia_tablet_fn_story8
   db TAG_STORY_TRIVIA2
-  dw story_trivia_tablet_fn_story2
+  dw story_trivia_tablet_fn_story14
   db TAG_STORY_TRIVIA3
-  dw story_trivia_tablet_fn_story13
+  dw story_trivia_tablet_fn_story5
   db TAG_STORY_TRIVIA4
-  dw story_trivia_tablet_fn_story4
-  db TAG_STORY_TRIVIA5
   dw story_trivia_tablet_fn_story1
+  db TAG_STORY_TRIVIA5
+  dw story_trivia_tablet_fn_story2
   db TAG_STORY_TRIVIA6
-  dw story_trivia_tablet_fn_story12
+  dw story_trivia_tablet_fn_story13
+  db TAG_STORY_TRIVIA7
+  dw story_trivia_tablet_fn_story4
+  db TAG_STORY_TRIVIA8
+  dw story_trivia_tablet_fn_clue3
   db TAG_CALENDAR_NAME_CLUE
   dw calendar_name_clue_tablet_fn
-  db TAG_STORY_TRIVIA8
-  dw story_trivia_tablet_fn_clue4
-  ds 18, #ff
   db #ff  ; sentinel
 hardcoded_world_data__combination_solutions:
-  db 0, 0, 1, 0, 0, 2, 2, 2
-  db 2, 1, 0, 2, 1, 0, 1, 0
-  db 0, 0, 0, 1, 2, 0, 1, 0
-  db 1, 1, 0, 1, 2, 0, 1, 0
+  db 1, 1, 0, 0, 2, 2, 2, 0
+  db 2, 0, 1, 0, 1, 0, 1, 0
+  db 0, 0, 0, 1, 1, 1, 2, 2
+  db 2, 0, 1, 0, 0, 2, 0, 2
 hardcoded_world_data__trial_types:
-  db 6, 1, 2, 3
+  db 0, 1, 6, 7
 hardcoded_world_data__power_stone_numbers:
-  db 1, 2, 7, 8, 5
+  db 5, 6, 8, 3, 7
 hardcoded_world_data__shop_extra_items:
   db 0
   db 0

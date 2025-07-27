@@ -328,42 +328,62 @@ public class PCGWorld {
             }
             
             // generate tablet contents:
-            for(Area a:w.areas) {
-                List<Pair<Integer, String>> tagList = a.getSortedTagList();
-                for(Pair<Integer, String> tag_position:tagList) {
-                    String tag = tag_position.right;
-                    if (tag.toLowerCase().contains("-clue") &&
-                        tag.toLowerCase().contains("combination")) {
-                        // combination clue:
-                        int type = r.nextInt(4);
-                        w.tabletContent.put(tag, "combination_tablet_type_"+(type+1)+"_fn");
-                    } else if (tag.toLowerCase().contains("-clue") &&
-                        tag.toLowerCase().contains("trial")) {
-                        // trial clue:
-                        w.tabletContent.put(tag, "trial_tablet_fn");
-                    } else if (tag.toLowerCase().contains("riddle-clue1")) {
-                        w.tabletContent.put(tag, "maya_clue1_tablet_fn");
-                    } else if (tag.toLowerCase().contains("riddle-clue2")) {
-                        w.tabletContent.put(tag, "maya_clue2_tablet_fn");
-                    } else if (tag.toLowerCase().contains("riddle-clue3")) {
-                        w.tabletContent.put(tag, "maya_clue3_tablet_fn");
-                    } else if (tag.toLowerCase().contains("riddle-clue4")) {
-                        w.tabletContent.put(tag, "maya_clue4_tablet_fn");
-                    } else if (tag.toLowerCase().contains("story-trivia")) {
-                        // story trivia:
-                        String tablet_fn = remainingTriviaTabletFns.get(r.nextInt(remainingTriviaTabletFns.size()));
-                        w.tabletContent.put(tag, tablet_fn);
-                        remainingTriviaTabletFns.remove(tablet_fn);
-                    } else if (tag.toLowerCase().contains("calendar-name-clue")) {
-                        // story trivia:
-                        w.tabletContent.put(tag, "calendar_name_clue_tablet_fn");
-                    }
-                }
+            for(int j = 0;j<4;j++) {
+                int type = r.nextInt(4);
+                w.addTabletContent("combination"+(j + 1)+"-clue", "combination_tablet_type_"+(type+1)+"_fn");
             }
+            w.addTabletContent("trial1-clue", "trial_tablet_fn");
+            w.addTabletContent("trial2-clue", "trial_tablet_fn");
+            w.addTabletContent("trial3-clue", "trial_tablet_fn");
+            w.addTabletContent("trial4-clue", "trial_tablet_fn");
+            w.addTabletContent("maya-riddle-clue1", "maya_clue1_tablet_fn");
+            w.addTabletContent("maya-riddle-clue2", "maya_clue2_tablet_fn");
+            w.addTabletContent("maya-riddle-clue3", "maya_clue3_tablet_fn");
+            w.addTabletContent("maya-riddle-clue4", "maya_clue4_tablet_fn");
+            for(int j = 0;j<8;j++) {
+                int idx = r.nextInt(remainingTriviaTabletFns.size());
+                String tablet_fn = remainingTriviaTabletFns.get(idx);
+//                System.out.println("trivia: " + idx + " / " + remainingTriviaTabletFns.size() + "  -> [" + tablet_fn + "]");
+                w.addTabletContent("story-trivia"+(j+1), tablet_fn);
+                remainingTriviaTabletFns.remove(tablet_fn);
+            }
+            w.addTabletContent("calendar-name-clue", "calendar_name_clue_tablet_fn");
+//            for(Area a:w.areas) {
+//                List<Pair<Integer, String>> tagList = a.getSortedTagList();
+//                for(Pair<Integer, String> tag_position:tagList) {
+//                    String tag = tag_position.right;
+//                    if (tag.toLowerCase().contains("-clue") &&
+//                        tag.toLowerCase().contains("combination")) {
+//                        // combination clue:
+//                        int type = r.nextInt(4);
+//                        w.tabletContent.put(tag, "combination_tablet_type_"+(type+1)+"_fn");
+//                    } else if (tag.toLowerCase().contains("-clue") &&
+//                        tag.toLowerCase().contains("trial")) {
+//                        // trial clue:
+//                        w.tabletContent.put(tag, "trial_tablet_fn");
+//                    } else if (tag.toLowerCase().contains("riddle-clue1")) {
+//                        w.tabletContent.put(tag, "maya_clue1_tablet_fn");
+//                    } else if (tag.toLowerCase().contains("riddle-clue2")) {
+//                        w.tabletContent.put(tag, "maya_clue2_tablet_fn");
+//                    } else if (tag.toLowerCase().contains("riddle-clue3")) {
+//                        w.tabletContent.put(tag, "maya_clue3_tablet_fn");
+//                    } else if (tag.toLowerCase().contains("riddle-clue4")) {
+//                        w.tabletContent.put(tag, "maya_clue4_tablet_fn");
+//                    } else if (tag.toLowerCase().contains("story-trivia")) {
+//                        // story trivia:
+//                        String tablet_fn = remainingTriviaTabletFns.get(r.nextInt(remainingTriviaTabletFns.size()));
+//                        w.tabletContent.put(tag, tablet_fn);
+//                        remainingTriviaTabletFns.remove(tablet_fn);
+//                    } else if (tag.toLowerCase().contains("calendar-name-clue")) {
+//                        // story trivia:
+//                        w.tabletContent.put(tag, "calendar_name_clue_tablet_fn");
+//                    }
+//                }
+//            }
             
             for(int j = 0;j<4;j++) {
                 for(int k = 0;k<8;k++) {
-                    w.combinationSolutions[j][k] = r.nextInt(8)%3;
+                    w.combinationSolutions[j][k] = r.nextInt(3);
                 }
             }
 
@@ -716,7 +736,9 @@ public class PCGWorld {
         addTag(randomDivisionPoint(teleporter_atlantis, true), "teleporter-atlantis", teleporter_atlantis);
         AreaDivision teleporter_mars = marsSpanningTree.get(0);
         AreaDivision teleporter_moon = moonSpanningTree.get(0);
+//        System.out.println("teleporter-mars");
         addTag(randomDivisionPoint(teleporter_mars, true), "teleporter-mars", teleporter_mars);
+//        System.out.println("teleporter-moon");
         addTag(randomDivisionPoint(teleporter_moon, true), "teleporter-moon", teleporter_moon);
         
         AreaDivision boss1 = randomAreaDivisionOnlyLeaves(w.areas.get(1), tree, true);
@@ -955,7 +977,7 @@ public class PCGWorld {
 //            }
 //        }
         
-        System.out.println("tagLess divisions (before): " + tagLess.size() + " / " + allAreas.size());
+//        System.out.println("tagLess divisions (before): " + tagLess.size() + " / " + allAreas.size());
      
         // lost vendor:
         {
@@ -1018,7 +1040,7 @@ public class PCGWorld {
                     n_small_keys++;
                     addTag(p, "small-key-chest" + n_small_keys, d);
 //                    System.out.println("weapon (with small key chest) "+weaponTags[i]+" div / offset: " + d.divisionID + ", " + p.offset());
-                    w.chestContent.put("small-key-chest" + n_small_keys, weaponTags[i]);
+                    w.addChestContent("small-key-chest" + n_small_keys, weaponTags[i]);
                     w.withinChestTag.add(weaponTags[i]);
                 } else {
                     addTag(p, weaponTags[i], d);
@@ -1059,7 +1081,7 @@ public class PCGWorld {
                     n_small_keys++;
                     addTag(p, "small-key-chest" + n_small_keys, d);
 //                    System.out.println("heart (with small key chest) div / offset: " + d.divisionID + ", " + p.offset());
-                    w.chestContent.put("small-key-chest" + n_small_keys, "heart" + (i+1));
+                    w.addChestContent("small-key-chest" + n_small_keys, "heart" + (i+1));
                     w.withinChestTag.add("heart" + (i+1));
                 } else {
                     addTag(p, "heart" + (i+1), d);
@@ -1114,7 +1136,7 @@ public class PCGWorld {
                     n_small_keys++;
                     addTag(p, "small-key-chest" + n_small_keys, d);
 //                    System.out.println("optional (within chest) div / offset: " + d.divisionID + ", " + p.offset());
-                    w.chestContent.put("small-key-chest" + n_small_keys, optionalItemTags[i]);
+                    w.addChestContent("small-key-chest" + n_small_keys, optionalItemTags[i]);
                     w.withinChestTag.add(optionalItemTags[i]);
                 } else {
                     addTag(p, optionalItemTags[i], d);
@@ -1278,7 +1300,7 @@ public class PCGWorld {
                             key_tags = availableLockKeysChests.get(lock_tag);
                             availableLockKeysChestsSorted.remove(lock_tag);
                         }
-                        w.chestContent.put(lock_tag, qs.goalTag);
+                        w.addChestContent(lock_tag, qs.goalTag);
                         w.withinChestTag.add(qs.goalTag);
                         tmp = pat_kcl.generate(w, qs, key_tags, lock_tag, useable, reachable, this);
                         if (tmp == null) {
@@ -1357,7 +1379,7 @@ public class PCGWorld {
         if (sortedLocks.isEmpty()) return null;
 //        System.out.println("        randomLock seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
         int n = r.nextInt(sortedLocks.size());
-//        System.out.println("        randomLock: " + n + " / " + sortedLocks.size());
+//        System.out.println("        randomLock: " + n + " / " + sortedLocks.size() + "  [" + sortedLocks.get(n) + " = "+AssemblerTags.assemblerID(sortedLocks.get(n))+"]");
         return sortedLocks.get(n);
     }
     
@@ -1865,7 +1887,9 @@ public class PCGWorld {
         if (candidates.isEmpty()) {
             return null;
         }
-        return candidates.get(r.nextInt(candidates.size()));
+        int idx = r.nextInt(candidates.size());
+//        System.out.println("randomDivisionPoint: " + idx + " / " + candidates.size() + "  ["+candidates.get(idx).offset()+"]  " + candidates);
+        return candidates.get(idx);
     }
 
     
