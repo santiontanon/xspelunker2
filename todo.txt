@@ -1,6 +1,8 @@
 to do:
 
-***- create a unit test that checks identity of Java and assembler for O(10) random seeds for world generation
+***- Make the equivalewncy test pass for all seeds
+***- MDL BUG: tracking execution of functions in debug-pcg is broken!
+***- improve the start shop room
 
 - menus:
   - brain games screen (think of a Maya-themed way for this)

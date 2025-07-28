@@ -338,7 +338,9 @@ pcg_world__optional_object_table_end:
 
 
 ;-----------------------------------------------
-; input:
+; output:
+; - z: success
+; - nz: failure
 pcg_generate_world:
 	ld hl, current_world__seed
 	ld de, rng_seed1
@@ -365,11 +367,10 @@ pcg_generate_world:
 ;     out (#2d),a  ; DEBUG	
 
 	; DEBUG:
-debug_label:
-	ld hl, hardcoded_world_data
-	ld de, current_world__area_data
-	ld bc, hardcoded_world_data_end - hardcoded_world_data
-	call pcg_debug__arrays_equal  ; mdl-watch: "checking hardcoded world data", hl, de, bc
+; 	ld hl, hardcoded_world_data
+; 	ld de, current_world__area_data
+; 	ld bc, hardcoded_world_data_end - hardcoded_world_data
+; 	call pcg_debug__arrays_equal  ; mdl-watch: "checking hardcoded world data", hl, de, bc
 ; 	ld hl, hardcoded_area_data_0__connections
 ; 	ld de, tmp_pcg_world__area_0_connections
 ; 	ld bc, MAX_AREA_SIZE * 2  ; + MAX_AREA_N_TAGS * 3
@@ -389,32 +390,33 @@ debug_label:
 ; 	ld bc, hardcoded_world_data_end - hardcoded_world_data
 ; 	ldir
 
+	xor a  ; z
 	ret
 
 
 pcg_generate_world_fail:
-	di  ; mdl-watch: "pcg_generate_world_fail!"
-	halt
+	or 1  ; nz, mdl-watch: "pcg_generate_world_fail!"
+	ret
 
 
-pcg_debug__arrays_equal:
-	ld a, (de)
-	cp (hl)
-	jr nz, pcg_debug__arrays_equal_fail
-	inc de
-	inc hl
-	dec bc
-	ld a, c
-	or b
-	ret z
-	jr pcg_debug__arrays_equal
+; pcg_debug__arrays_equal:
+; 	ld a, (de)
+; 	cp (hl)
+; 	jr nz, pcg_debug__arrays_equal_fail
+; 	inc de
+; 	inc hl
+; 	dec bc
+; 	ld a, c
+; 	or b
+; 	ret z
+; 	jr pcg_debug__arrays_equal
 
 
-pcg_debug__arrays_equal_fail:
-	ld a, (hl)  ; mdl-watch: "pcg_debug__arrays_equal_fail: (hl)", hl, a
-	ld a, (de)  ; mdl-watch: "pcg_debug__arrays_equal_fail: (de)", de, a
-	di  ; mdl-watch: "pcg_debug__arrays_equal_fail: bc", bc
-	halt
+; pcg_debug__arrays_equal_fail:
+; 	ld a, (hl)  ; mdl-watch: "pcg_debug__arrays_equal_fail: (hl)", hl, a
+; 	ld a, (de)  ; mdl-watch: "pcg_debug__arrays_equal_fail: (de)", de, a
+; 	di  ; mdl-watch: "pcg_debug__arrays_equal_fail: bc", bc
+; 	halt
 
 
 

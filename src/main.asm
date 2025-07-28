@@ -725,9 +725,11 @@ start_of_page_11:
     include "pcg-world.asm"
     include "pcg-riddles.asm"
 
+IF INCLUDE_HARDCODED_WORLD_DATA = 1
 hardcoded_world_data:
-    include "hardcoded-world.asm"
+    include "unittests/hardcoded-world-seed0.asm"
 hardcoded_world_data_end:
+ENDIF
 
 
 end_of_page_11:
