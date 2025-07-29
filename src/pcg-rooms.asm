@@ -2028,14 +2028,14 @@ pcg_generate_room__start_continue3:
 		call pcg_generate_room__chunk_direction_open
 		jr z, pcg_generate_room__start_continue4
 		ld bc, #0e1e
-		ld de, #0702
+		ld de, #0802
 		call room_remove_breakable_wall_restore_background
-		ld hl, current_room__tile_map + 30 + 13*32
-		ld (hl), 229
-		inc hl
-		ld (hl), 230
-		ld hl, current_room__tile_map + 31 + 21*32
-		ld (hl), 0
+; 		ld hl, current_room__tile_map + 30 + 13*32
+; 		ld (hl), 229
+; 		inc hl
+; 		ld (hl), 230
+; 		ld hl, current_room__tile_map + 31 + 21*32
+; 		ld (hl), 0
 pcg_generate_room__start_continue4:
 	pop hl	
 	ld a, (hl)  ; bottom-right chunk ID
@@ -2043,22 +2043,22 @@ pcg_generate_room__start_continue4:
 		ld b, PCG_DIRECTION_DOWN
 		call pcg_generate_room__chunk_direction_open
 		jr nz, pcg_generate_room__start_continue5
-		ld hl, current_room__tile_map + 22 + 21*32
+		ld hl, current_room__tile_map + 22 + 22*32
 		ld a, (hl)
 		dec hl
 		ld (hl), a
 		xor a
-		ld hl, current_room__tile_map + 21 + 22*32
-		ld (hl), a
+; 		ld hl, current_room__tile_map + 21 + 22*32
+; 		ld (hl), a
 		ld hl, current_room__tile_map + 21 + 23*32
 		ld (hl), a
-		ld hl, current_room__tile_map + 28 + 21*32
+		ld hl, current_room__tile_map + 28 + 22*32
 		ld a, (hl)
 		dec hl
 		ld (hl), a
 		xor a
-		ld hl, current_room__tile_map + 27 + 22*32
-		ld (hl), a
+; 		ld hl, current_room__tile_map + 27 + 22*32
+; 		ld (hl), a
 		ld hl, current_room__tile_map + 27 + 23*32
 		ld (hl), a
 pcg_generate_room__start_continue5:
@@ -2068,22 +2068,22 @@ pcg_generate_room__start_continue5:
 	ld b, PCG_DIRECTION_DOWN
 	call pcg_generate_room__chunk_direction_open
 	jr nz, pcg_generate_room__start_continue6
-	ld hl, current_room__tile_map + 5 + 21*32
+	ld hl, current_room__tile_map + 5 + 22*32
 	ld a, (hl)
 	dec hl
 	ld (hl), a
 	xor a
-	ld hl, current_room__tile_map + 4 + 22*32
-	ld (hl), a
+; 	ld hl, current_room__tile_map + 4 + 22*32
+; 	ld (hl), a
 	ld hl, current_room__tile_map + 4 + 23*32
 	ld (hl), a
-	ld hl, current_room__tile_map + 11 + 21*32
+	ld hl, current_room__tile_map + 11 + 22*32
 	ld a, (hl)
 	dec hl
 	ld (hl), a
 	xor a
-	ld hl, current_room__tile_map + 10 + 22*32
-	ld (hl), a
+; 	ld hl, current_room__tile_map + 10 + 22*32
+; 	ld (hl), a
 	ld hl, current_room__tile_map + 10 + 23*32
 	ld (hl), a
 pcg_generate_room__start_continue6:
