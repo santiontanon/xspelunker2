@@ -57,3 +57,6 @@ combination_tablet_type_3_fn:
 combination_tablet_type_4_fn:
 	db 0
 
+start_of_interrupt_code_rom:
+	db 0
+end_of_interrupt_code_rom:

@@ -19,12 +19,20 @@ import util.Z80Assembler;
  *
  * @author santi
  * 
- * This class is an implementation of a key-and-lock procedural quest generation
- * that tries to make things as simple as possible, so that it can be translated
- * to z80 assembler easily. Because of that, some routines do things in ways
- * that are suboptimal, or not very well principled, just because they are 
- * easier to translate to assembler this way.
- * 
+ * - This class is an implementation of a key-and-lock procedural quest generation
+ *   designed so that it can be translated to z80 assembler easily.
+ * - Because of that, some routines do things in ways that are suboptimal, not
+ *   very well principled, or convoluted, just because they are easier to
+ *   translate to assembler this way.
+ * - Also, the code is dirty and full of commented out code, print statements
+ *   and other unnecessary things, since I used them a lot when translating
+ *   to assembler, to ensure I got exactly the same behavior in Java than in 
+ *   assembler.
+ * - Why did I care that I got exactly the same behavior? Because in this way
+ *   I can do extensive tests on the Java side, compute statistics, etc. and
+ *   plan the game, in a way that would be very hard to do if only the
+ *   assembler version was available.
+ *   
  */
 public class PCGWorld {
     public static final int MAX_ROOM_AREA = 4;
@@ -308,7 +316,7 @@ public class PCGWorld {
             List<AreaDivision> moonSpanningTree = generateSpanningTree(w, 11);
             n_times_reached_generation_stage[3]++;
             if (!generateMission(w, w.spanningTree, marsSpanningTree, moonSpanningTree, usedKeysAndLocks)) {
-                System.out.println("    generateMission failed");
+//                System.out.println("    generateMission failed");
                 continue;
             }
             n_times_reached_generation_stage[7]++;
@@ -404,6 +412,8 @@ public class PCGWorld {
     
     public boolean generateAreaLayouts(World w) throws Exception
     {
+//        System.out.println("generateAreaLayouts seed: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+        
         for(int i = 0;i<n_areas;i++) {
             Area a;
             if (predefinedAreaLayouts[i] == null) {
@@ -727,6 +737,8 @@ public class PCGWorld {
                                    List<AreaDivision> moonSpanningTree,
                                    List<String> usedKeysAndLocks) throws Exception
     {
+//        System.out.println("generateMission seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+        
         // Pick important divisions:
         AreaDivision start = tree.get(0);
         addTag(start.root, "start", start);
@@ -740,6 +752,8 @@ public class PCGWorld {
         addTag(randomDivisionPoint(teleporter_mars, true), "teleporter-mars", teleporter_mars);
 //        System.out.println("teleporter-moon");
         addTag(randomDivisionPoint(teleporter_moon, true), "teleporter-moon", teleporter_moon);
+        
+//        System.out.println("just before boss locations seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
         
         AreaDivision boss1 = randomAreaDivisionOnlyLeaves(w.areas.get(1), tree, true);
         if (boss1 == null) {
@@ -757,10 +771,12 @@ public class PCGWorld {
         if (boss4 == null) {
             return false;
         }
+//        System.out.println("boss4 division: " + boss4);
         AreaDivision boss5 = randomAreaDivisionOnlyLeaves(w.areas.get(9), tree, true);
         if (boss5 == null) {
             return false;
         }
+//        System.out.println("boss5 division: " + boss5);
         
         AreaDivision boss6 = randomAreaDivisionOnlyLeaves(w.areas.get(10), marsSpanningTree, true);
         if (boss6 == null) {
@@ -864,7 +880,7 @@ public class PCGWorld {
         if (quests4 == null) return false;
         quests.addAll(quests4);
         
-        QuestSpec q7 = new QuestSpec(teleporter_mars, boss7, 2, null, null, null, "boss7");
+        QuestSpec q7 = new QuestSpec(teleporter_moon, boss7, 2, null, null, null, "boss7");
         useable = reachableArea(moonSpanningTree, teleporter_moon, null);
         reachable = reachableArea(moonSpanningTree, teleporter_moon, null);
         open = new ArrayList<>();
@@ -963,7 +979,12 @@ public class PCGWorld {
         
         List<AreaDivision> tagLess = new ArrayList<>();
         for(AreaDivision d: allAreas) {
-            if (d.tags.isEmpty()) tagLess.add(d);
+            if (d.tags.isEmpty()) {
+                tagLess.add(d);
+//                System.out.println("    " + d + ": " + d.tags);
+//            } else {
+//                System.out.println("    " + d + ": " + d.tags);
+            }
         }
         
         // tagLess divisions per area:
@@ -977,6 +998,7 @@ public class PCGWorld {
 //            }
 //        }
         
+//        System.out.println("spawnAdditionalObjects seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
 //        System.out.println("tagLess divisions (before): " + tagLess.size() + " / " + allAreas.size());
      
         // lost vendor:
@@ -995,7 +1017,7 @@ public class PCGWorld {
 //                System.out.println("lost vendor candidates: " + idx + " / " + candidates.size() + "  ->  " + candidates);
                 AreaDivision d = candidates.get(idx);
                 AreaPoint p = randomDivisionPoint(d, true);
-//                System.out.println("lost vendor div / offset: " + d.divisionID + ", " + p.offset());
+//                System.out.println("lost vendor div / area / offset: " + d.divisionID + ", " + d.root.a.ID + ", " + p.offset());
                 addTag(p, "lost-vendor", d);
                 tagLess.remove(d);
             }            
@@ -1024,13 +1046,21 @@ public class PCGWorld {
         
         // Spawn weapons (1/16th chance that one is not there):
         for(int i = 0;i<10;i++) {
+//            System.out.println("weapon seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
             List<AreaDivision> candidates = new ArrayList<>();
             for(AreaDivision d:tagLess) {
                 if (d.root.a.ID == weaponAreas[i]) {
                     candidates.add(d);
+//                    if (d.divisionID == 17) {
+//                        System.out.println("   " + d + ": " + d.root.a.ID);
+//                    }
+                } else {
+//                    if (d.divisionID == 17) {
+//                        System.out.println("   " + d + ": " + d.root.a.ID);
+//                    }
                 }
             }
-            if (!candidates.isEmpty() && r.nextInt(256) <= 239) {
+            if (r.nextInt(256) <= 239 && !candidates.isEmpty()) {
                 int idx = r.nextInt(candidates.size());
 //                System.out.println("weapon candidates: " + idx + " / " + candidates.size() + "  ->  " + candidates);
                 AreaDivision d = candidates.get(idx);
@@ -1052,6 +1082,7 @@ public class PCGWorld {
 
         // Spawn map pieces: (all are always there)
         for(int i = 0;i<mapPieceAreas.length;i++) {
+//            System.out.println("map piece seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
             List<AreaDivision> candidates = new ArrayList<>();
             for(AreaDivision d:tagLess) {
                 if (d.root.a.ID == mapPieceAreas[i]) {
@@ -1071,7 +1102,8 @@ public class PCGWorld {
         
         // Spawn hearts: (1/16th chance that one is not there)
         for(int i = 0;i<5;i++) {
-            if (!tagLess.isEmpty() && r.nextInt(256) <= 239) {
+//            System.out.println("heart seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+            if (r.nextInt(256) <= 239 && !tagLess.isEmpty()) {
                 int idx = r.nextInt(tagLess.size());
 //                System.out.println("heart candidates: " + idx + " / " + tagLess.size() + "  ->  " + tagLess);
                 AreaDivision d = tagLess.get(idx);
@@ -1093,13 +1125,14 @@ public class PCGWorld {
         
         // Spawn teleporters (1/16th chance that one is not there):
         for(int i = 0;i<8;i++) {
+//            System.out.println("teleporter seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
             List<AreaDivision> candidates = new ArrayList<>();
             for(AreaDivision d:tagLess) {
                 if (d.root.a.ID == teleporterAreas[i]) {
                     candidates.add(d);
                 }
             }
-            if (!candidates.isEmpty() && r.nextInt(256) <= 239) {
+            if (r.nextInt(256) <= 239 && !candidates.isEmpty()) {
                 int idx = r.nextInt(candidates.size());
 //                System.out.println("teleporter candidates (area "+teleporterAreas[i]+"): " + idx + " / " + candidates.size() + "  ->  " + candidates);
                 AreaDivision d = candidates.get(idx);
@@ -1112,6 +1145,7 @@ public class PCGWorld {
         
         // Spawn optional items: (1/16th chance that one is not there)
         for(int i = 0;i<optionalItemTags.length;i++) {
+//            System.out.println("optional item seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
             List<AreaDivision> candidates = tagLess;
             if (i == 0) {
                 // must be spawned in one of the pyramid areas:
@@ -1126,7 +1160,7 @@ public class PCGWorld {
                 }
             }
             // sandals (i == 0) are always spawned (if possible):
-            if (!candidates.isEmpty() && (i == 0 || r.nextInt(16) != 0)) {
+            if ((i == 0 || r.nextInt(256) <= 239) && !candidates.isEmpty()) {
                 int idx = r.nextInt(candidates.size());
 //                System.out.println("optional candidates: " + idx + " / " + candidates.size() + "  ->  " + candidates);
                 AreaDivision d = candidates.get(idx);
@@ -1143,12 +1177,16 @@ public class PCGWorld {
 //                    System.out.println("optional div / offset: " + d.divisionID + ", " + p.offset());
                 }
                 tagLess.remove(d);
-            }            
+            } else {
+//                System.out.println("    skip");
+            }
         }
         
         // spawn small keys:
         for(int i = 0;i<n_small_keys;i++) {
+//            System.out.println("small key seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
             if (!tagLess.isEmpty()) {
+//                System.out.println("small keys seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
                 int idx = r.nextInt(tagLess.size());
 //                System.out.println("small key candidates: " + idx + " / " + tagLess.size() + "  ->  " + tagLess);
                 AreaDivision d = tagLess.get(idx);
@@ -1161,7 +1199,8 @@ public class PCGWorld {
         
         // spawn random trivia:
         for(int i = 0;i<8;i++) {
-            if (!tagLess.isEmpty() && r.nextInt(256) <= 239) {
+//            System.out.println("trivia seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+            if (r.nextInt(256) <= 239 && !tagLess.isEmpty()) {
                 int idx = r.nextInt(tagLess.size());
 //                System.out.println("trivia candidates: " + idx + " / " + tagLess.size() + "  ->  " + tagLess);
                 AreaDivision d = tagLess.get(idx);
@@ -1181,6 +1220,7 @@ public class PCGWorld {
                 }
             }
             if (!candidates.isEmpty()) {
+//                System.out.println("calendar name clue seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
                 int idx = r.nextInt(candidates.size());
 //                System.out.println("calendar name clue candidates: " + idx + " / " + candidates.size() + "  ->  " + candidates);
                 AreaDivision d = candidates.get(idx);
@@ -1205,6 +1245,7 @@ public class PCGWorld {
                                          List<AreaDivision> useable, List<AreaDivision> reachable) throws Exception
     {
 //        System.out.println("-------- generateSubquests --------");
+//        System.out.println("    seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
         PCGPatternAtoB pat_a2b = new PCGPatternAtoB();
         PCGPatternObstacle pat_o = new PCGPatternObstacle();
         PCGPatternNKeysAndChestLock pat_kcl = new PCGPatternNKeysAndChestLock();
@@ -1225,12 +1266,13 @@ public class PCGWorld {
                 // Just a path, no subquests:
                 tmp = pat_a2b.generate(w, qs, useable, reachable);
                 if (tmp == null) {
-                    System.out.println("    generateSubquests failed a-to-b pattern");
+//                    System.out.println("    generateSubquests failed a-to-b pattern");
                     return null;
                 }            
             } else {
                 // choose between quests that require a separate key, or those that do not:
                 int quest_type = r.nextInt(3);
+//                System.out.println("    initial quest_type: " + quest_type);
                 String key_tags[] = null;
                 String lock_tag = null;
                 switch(qs.goalTag) {
@@ -1255,7 +1297,7 @@ public class PCGWorld {
                         // midpoint or ending cannot be inside a chest!
                         if (quest_type == 1) {
                             quest_type = r.nextInt(2) * 2;  // 0 or 2
-//                            System.out.println("        new quest_type (midpoint/ending): " + quest_type);
+//                            System.out.println("        new quest_type ("+qs.goalTag+"): " + quest_type);
                         }
                         break;
                     default:
@@ -1277,7 +1319,7 @@ public class PCGWorld {
                         if (lock_tag == null) {
                             lock_tag = randomLock(availableLockKeysObstaclesSorted);
                             if (lock_tag == null) {
-                                System.out.println("    generateSubquests failed obstacle: no more locks available");
+//                                System.out.println("    generateSubquests failed obstacle: no more locks available");
                                 return null;
                             }
                             key_tags = availableLockKeysObstacles.get(lock_tag);
@@ -1285,7 +1327,7 @@ public class PCGWorld {
                         }
                         tmp = pat_o.generate(w, qs, key_tags[0], lock_tag, useable, reachable, this);
                         if (tmp == null) {
-                            System.out.println("    generateSubquests failed obstacle pattern");
+//                            System.out.println("    generateSubquests failed obstacle pattern");
                             return null;
                         }            
                         break;
@@ -1294,7 +1336,7 @@ public class PCGWorld {
                         if (lock_tag == null) {
                             lock_tag = randomLock(availableLockKeysChestsSorted);
                             if (lock_tag == null) {
-                                System.out.println("    generateSubquests failed key-chest: no more locks available");
+//                                System.out.println("    generateSubquests failed key-chest: no more locks available");
                                 return null;
                             }
                             key_tags = availableLockKeysChests.get(lock_tag);
@@ -1304,7 +1346,7 @@ public class PCGWorld {
                         w.withinChestTag.add(qs.goalTag);
                         tmp = pat_kcl.generate(w, qs, key_tags, lock_tag, useable, reachable, this);
                         if (tmp == null) {
-                            System.out.println("    generateSubquests failed key-chest pattern");
+//                            System.out.println("    generateSubquests failed key-chest pattern");
                             return null;
                         }            
                         break;
@@ -1313,7 +1355,7 @@ public class PCGWorld {
                         if (lock_tag == null) {
                             lock_tag = randomLock(availableLockKeysSorted);
                             if (lock_tag == null) {
-                                System.out.println("    generateSubquests failed key-lock: no more locks available");
+//                                System.out.println("    generateSubquests failed key-lock: no more locks available");
                                 return null;
                             }
                             key_tags = availableLockKeys.get(lock_tag);
@@ -1321,7 +1363,7 @@ public class PCGWorld {
                         }
                         tmp = pat_kl.generate(w, qs, key_tags, lock_tag, useable, reachable, this);
                         if (tmp == null) {
-                            System.out.println("    generateSubquests failed key-lock pattern");
+//                            System.out.println("    generateSubquests failed key-lock pattern");
                             return null;
                         }            
                         break;
@@ -1348,7 +1390,7 @@ public class PCGWorld {
                 }
             }
             if (tmp == null) {
-                System.out.println("    generateSubquests failed tmp = null");
+//                System.out.println("    generateSubquests failed tmp = null");
                 return null;
             }
             
@@ -1362,7 +1404,7 @@ public class PCGWorld {
             open.addAll(nextSubquests);
             quests.add(q);
             if (!q.addTags(w, this)) {
-                System.out.println("    generateSubquests failed adding tags");
+//                System.out.println("    generateSubquests failed adding tags");
                 return null;
             }
 //            if (!q.addPaths(w, this, usedConnections)) {
@@ -1440,7 +1482,7 @@ public class PCGWorld {
     }
     
     
-    public AreaDivision randomAreaDivisionOnlyLeaves(Area a, List<AreaDivision> tree, boolean preferDeeper)
+    public AreaDivision randomAreaDivisionOnlyLeaves(Area a, List<AreaDivision> tree, boolean preferDeeper) throws Exception
     {
         List<AreaDivision> leafCandidates = new ArrayList<>();
         
@@ -1467,7 +1509,10 @@ public class PCGWorld {
         }
 
         if (!leafCandidates.isEmpty()) {
-            return leafCandidates.get(r.nextInt(leafCandidates.size()));
+//            System.out.println("randomAreaDivisionOnlyLeaves seed: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+            int idx = r.nextInt(leafCandidates.size());
+//            System.out.println("randomAreaDivisionOnlyLeaves: " + idx + " / " + leafCandidates.size() + ": " + leafCandidates);
+            return leafCandidates.get(idx);
         }
         // System.err.println("randomAreaDivisionOnlyLeaves: no leaf divisions left in area " + a.ID);
         return null;
@@ -1676,7 +1721,8 @@ public class PCGWorld {
     public Area generateArea(int ID, int w, int h, String layout[], double layoutAdherence) throws Exception
     {
         Area a = new Area(ID, w, h, r.rng_seed1, r.rng_seed2);
-
+//        System.out.println("generateArea: " + ID);
+        
         if (layout != null && layoutAdherence == 1.0) {
             // use layout:
             if (layout.length != h || layout[0].length() != w) {
@@ -1713,13 +1759,16 @@ public class PCGWorld {
                      (y > 0 && a.rooms[x][y - 1] >= 0) ||
                      (y < h - 1 && a.rooms[x][y + 1] >= 0))) {
                     boolean accept = true;
-                    if (layout != null && layout[y].charAt(x) == '.' &&
-                        r.nextInt(256) < 256*layoutAdherence)  {
-                        accept = false;
+                    if (layout != null && layout[y].charAt(x) == '.') {
+                        int tmp = r.nextInt(256);
+//                        System.out.println("        " + tmp + " <= " + (256*layoutAdherence));
+                        if (tmp < 256*layoutAdherence)  {
+                            accept = false;
+                        }
                     }
                     if (accept) {
                        a.rooms[x][y] = a.nRooms;
-//                       System.out.println("  room at " + x + ", " + y);
+//                       System.out.println("  room " + x + ", " + y + "  <-  " + a.nRooms);
                        a.nRooms++;
                     }
                 }

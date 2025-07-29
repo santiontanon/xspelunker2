@@ -44,9 +44,10 @@ public class PCGPatternNKeysAndLock extends PCGPattern {
         while(true) {
             AreaDivision lockTargetDiv = q.lockDivision;
             rootToRemove = q.lockDivision;
+//            System.out.println("   lock div moved from " + q.lockDivision + " to " + q.lockDivision.parent);            
             q.lockDivision = q.lockDivision.parent;
             if (q.lockDivision == null) {
-                System.out.println("    PCGPatternNKeysAndLock: reached root node without finding a proper lock position!");
+//                System.out.println("    PCGPatternNKeysAndLock: reached root node without finding a proper lock position!");
                 return null;
             }
             if (q.lockDivision != null && q.lockDivision.root.a == lockTargetDiv.root.a) {
@@ -73,7 +74,7 @@ public class PCGPatternNKeysAndLock extends PCGPattern {
             } else {
                 AreaPoint destination = getConnectionDestination(w, lockTargetDiv.root);
                 if (destination == null) {
-                    System.out.println("Cannot find connection destination starting at " + lockTargetDiv.root);
+//                    System.out.println("Cannot find connection destination starting at " + lockTargetDiv.root);
                 } else {
                     q.lockPoint = destination;
                 }
@@ -81,7 +82,7 @@ public class PCGPatternNKeysAndLock extends PCGPattern {
                 w.lockDirections.put(locktag, getConnectionDirection(w, lockTargetDiv.root));
             }
             if (q.lockPoint == null) {
-                System.out.println("    PCGPatternNKeysAndLock: could not place the lock!");
+//                System.out.println("    PCGPatternNKeysAndLock: could not place the lock!");
                 return null;
             }      
             q.lockTag = locktag;
@@ -95,11 +96,11 @@ public class PCGPatternNKeysAndLock extends PCGPattern {
         
 
         if (q.lockDivision == null) {
-            System.out.println("PCGPatternNKeysAndLock: lockDivision == null!");
+//            System.out.println("PCGPatternNKeysAndLock: lockDivision == null!");
             return null;
         }
         if (q.goalPoint == null) {
-            System.out.println("PCGPatternNKeysAndLock: goalPoint == null!");
+//            System.out.println("PCGPatternNKeysAndLock: goalPoint == null!");
             return null;
         }
 
@@ -150,7 +151,7 @@ public class PCGPatternNKeysAndLock extends PCGPattern {
         for(int i = 0;i<nKeys;i++) {
             int n_retries = 5;
             if (useable.isEmpty()) {
-                System.out.println("    PCGPatternNKeysAndLock: no divisions left for more keys (we were spawning key " + i + ": " + keytags[i] + ")!");
+//                System.out.println("    PCGPatternNKeysAndLock: no divisions left for more keys (we were spawning key " + i + ": " + keytags[i] + ")!");
                 return null;
             }
             AreaDivision keyDivision = null;
@@ -160,7 +161,7 @@ public class PCGPatternNKeysAndLock extends PCGPattern {
             while(n_retries > 0) {
                 keyDivision = pcg.randomAreaDivisionFavoringLeaves(null, candidates, true);
                 if (keyDivision == null) {
-                    System.out.println("    PCGPatternNKeysAndLock: could not find a division for the key (from " + useable.size() + ")");
+//                    System.out.println("    PCGPatternNKeysAndLock: could not find a division for the key (from " + useable.size() + ")");
                     return null;
                 }
 //                System.out.println("    keyDivision "+keytags[i]+": " + keyDivision);
@@ -168,13 +169,13 @@ public class PCGPatternNKeysAndLock extends PCGPattern {
                 if (keyPoint != null) {
                     break;
                 }
-                System.out.println("    PCGPatternNKeysAndLock: could not find a point for the key in " + keyDivision);
+//                System.out.println("    PCGPatternNKeysAndLock: could not find a point for the key in " + keyDivision);
 //                System.out.println("!!!!!!");
                 candidates.remove(keyDivision);
                 n_retries--;
             }
             if (keyPoint == null) {
-                System.out.println("    PCGPatternNKeysAndLock: could not find key location, useable: " + useable);
+//                System.out.println("    PCGPatternNKeysAndLock: could not find key location, useable: " + useable);
                 return null;
             }
 //            System.out.println("    key division: " + keyDivision.divisionID);

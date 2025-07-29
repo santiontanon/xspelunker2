@@ -26,7 +26,7 @@ import util.Pair;
 public class PCGPatternObstacle extends PCGPattern {
     public Pair<Quest, List<QuestSpec>> generate(World w, QuestSpec qs, String keytag, String locktag, List<AreaDivision> useable, List<AreaDivision> reachable, PCGWorld pcg)
     {
-//        System.out.println("PCGPatternObstacle: " + qs.startTag + " -> " +  keytag + " / " + locktag + " -> " + qs.goalTag);
+//        System.out.println("PCGPatternObstacle: " + qs + ", " +  keytag + " / " + locktag);
         Quest q = new Quest("obstacle: " + qs.start.divisionID + " -> " + qs.goal.divisionID);
         q.useable.addAll(useable);
         q.reachable.addAll(reachable);
@@ -47,6 +47,7 @@ public class PCGPatternObstacle extends PCGPattern {
         while(true) {
             AreaDivision lockTargetDiv = q.lockDivision;
             rootToRemove = q.lockDivision;
+//            System.out.println("   lock div moved from " + q.lockDivision + " to " + q.lockDivision.parent);
             q.lockDivision = q.lockDivision.parent;
             if (q.lockDivision == null) {
                 return null;

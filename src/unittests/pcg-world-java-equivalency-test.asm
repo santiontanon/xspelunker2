@@ -30,6 +30,12 @@ ENDIF
 IF PCG_WORLD_SEED1 = 10
 	include "hardcoded-world-seed10.asm"
 ENDIF
+IF PCG_WORLD_SEED1 = 11
+	include "hardcoded-world-seed11.asm"
+ENDIF
+IF PCG_WORLD_SEED1 = 12
+	include "hardcoded-world-seed12.asm"
+ENDIF
 hardcoded_world_data_end:
 	include "../pcg-world.asm"
 	include "../pcg-riddles.asm"
