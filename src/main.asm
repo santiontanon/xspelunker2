@@ -113,8 +113,8 @@ Execute:
     SETMEGAROMPAGE_8000 TEXT_PAGE
     call state_options_reset
 
-;     jp state_braingames
-    jp state_play
+    jp state_braingames
+;     jp state_play
 
 
 ;-----------------------------------------------
