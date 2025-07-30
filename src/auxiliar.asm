@@ -83,9 +83,14 @@ wait_b_halts:
 ; waits a given number of "halts" (can be skipped pressing space)
 ; input:
 ; - b: number of halts
+; output:
+; - nz: skipped
+; - z: not skipped
 wait_b_halts_skippable:
     halt
-    call update_keyboard_buffers
+    push bc
+        call update_keyboard_buffers
+    pop bc
     ld a, (keyboard_clicks)
     bit KEY_WEAPON_BIT, a
     ret nz
