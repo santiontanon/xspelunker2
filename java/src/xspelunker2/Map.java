@@ -170,10 +170,16 @@ public class Map {
         }
     }
     
-    
+
     public static Pair<BufferedImage, int[][]> extractUniqueTiles(String inputPath, String outputPath, int firstRow, int lastRow) throws Exception
     {
-        BufferedImage sourceImage = ImageIO.read(new File(inputPath));
+        BufferedImage img = ImageIO.read(new File(inputPath));
+        return new Pair<>(img, extractUniqueTiles(img, inputPath, outputPath, firstRow, lastRow));
+    }
+ 
+    
+    public static int[][] extractUniqueTiles(BufferedImage sourceImage, String inputPath, String outputPath, int firstRow, int lastRow) throws Exception
+    {
         List<List<Integer>> tiles = new ArrayList<>();
         List<Integer> tile = new ArrayList<>();
         int nameTable[][] = new int[sourceImage.getWidth()/8][lastRow-firstRow];
@@ -239,6 +245,6 @@ public class Map {
         
         ImageIO.write(outputImage, "png", new File(outputPath));
         
-        return new Pair<>(outputImage, nameTable);
+        return nameTable;
     }    
 }

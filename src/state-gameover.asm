@@ -6,7 +6,6 @@ state_game_over:
 
 	call set_bitmap_mode
 
-	; SETMEGAROMPAGE_8000 TEXT_PAGE  ; not needed, as this is in the text page
 	ld hl, TEXT_GAME_OVER
 	ld de, CHRTBL2 + (10*32+13)*8
 	ld iy, #80f0
@@ -17,4 +16,6 @@ state_game_over:
 
 	call clear_screen_left_to_right
 
-	jp state_play
+    ld hl, state_braingames
+    ld a, BRAINGAMES_PAGE
+    jp jp_to_hl_in_page_a_8000

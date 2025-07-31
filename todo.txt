@@ -1,8 +1,11 @@
 to do:
 
 ***- menus:
-  ***- title screen (can go to start or options menu, to redefine keys, etc.)
-  ***- game start screen where you choose game name, difficulty, seed, etc.
+  ***- title screen:
+    ***- flash "SPACE to start", "X for options"
+    ***- waiting enough time, jump to story state (for now empty, and just goes back to brain games
+    ***- X goes to options screen (like in-game)
+  ***- game start state where you choose game name, difficulty, seed, etc.
       ***- procedural generation depending on a name. By default, you play in "xspelunker2" level, with difficulty "x". I might want to add a "random seed monument" somewhere in the game (maybe a "stelae", that displays the current random seed in a non-obvious way (until you get the clue). When a seed fails, just error out, and ask user to enter another name.
       ***- the first letter determines the difficulty level. So, one would choose "a walk in the park" for easy games, or "zebras all the way" for the heardest)
           ***- passwords tied to the name (to the random seed in particular)

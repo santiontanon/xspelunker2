@@ -56,8 +56,7 @@ state_braingames_drop_loop:
 	call wait_b_halts_skippable
 
 state_braingames_done:
-	call clear_screen_left_to_right
-	jp state_play
+	jp state_title
 
 
 ;-----------------------------------------------
