@@ -15,11 +15,28 @@ state_title_loop:
 		call state_title_draw_space_to_start
 	    call update_keyboard_buffers
 	pop bc
+	; Check using the redefined keys (weapon and interact)
     ld a, (keyboard_clicks)
     bit KEY_WEAPON_BIT, a
     jr nz, state_title_loop_end
-    inc bc
+    bit KEY_INTERACT_BIT, a
+    jr nz, state_title_loop_options
 
+    ; chedk SPACE and X directly, in case they were redefined away
+    push bc
+	    ld a, 8
+	    call SNSMAT
+	    bit 0, a
+	pop bc
+    jr z, state_title_loop_end
+    push bc
+	    ld a, 5
+	    call SNSMAT
+	    bit 5, a
+	pop bc
+    jr z, state_title_loop_options
+
+    inc bc
     ld a, b
     cp 2
     jr z, state_title_loop_story
@@ -32,6 +49,13 @@ state_title_loop_end:
 state_title_loop_story:
 	ld hl, state_story
 	ld a, STORY_PAGE
+	jp jp_to_hl_in_page_a_8000
+
+state_title_loop_options:
+	ld a, 1
+	ld (options_called_from), a
+	ld hl, state_options
+	ld a, TEXT_PAGE
 	jp jp_to_hl_in_page_a_8000
 
 

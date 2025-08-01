@@ -2072,7 +2072,9 @@ player_update_state_dead:
 	inc (hl)
 	ld a, (hl)
 	cp 100
-	jp z, state_game_over
+	ld hl, state_game_over
+	ld a, GAME_OVER_PAGE
+	jp z, jp_to_hl_in_page_a_8000
 	ld a, 33
 	ld (player_requested_frame), a
 	jp player_update_update_sprite_position

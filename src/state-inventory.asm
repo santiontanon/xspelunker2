@@ -6,6 +6,13 @@ state_inventory_from_quit:
 
 
 ;-----------------------------------------------
+state_game_over_from_quit:
+	ld hl, state_game_over
+	ld a, GAME_OVER_PAGE
+	jp jp_to_hl_in_page_a_8000
+
+
+;-----------------------------------------------
 state_inventory_from_options:
 	ld a, 4
 	ld (inventory_cursor_position_x), a
@@ -182,9 +189,8 @@ state_inventory_update_cursor_button_row0:
 	jr z, state_inventory_update_cursor_button_options
 
 state_inventory_update_cursor_button_quit:
-	SETMEGAROMPAGE_8000 TEXT_PAGE
 	ld ix, TEXT_ARE_YOU_SURE
-	ld hl, state_game_over  ; yes
+	ld hl, state_game_over_from_quit  ; yes
 	ld de, state_inventory_from_quit  ; no
 	jp state_yesno_dialog
 
@@ -194,6 +200,8 @@ state_inventory_update_cursor_button_back:
 	jp state_play_from_inventory
 
 state_inventory_update_cursor_button_options:
+	xor a
+	ld (options_called_from), a
 	jp state_options
 
 

@@ -238,6 +238,8 @@ config_interact_with_up: ds virtual 1  ; 0: yes, 1: no
 ; each key is matrix row + bit mask
 config_keyboard: ds virtual 2 * 8  ; RIGHT, DOWN, UP, LEFT, INTERACT, INVENTORY, JUMP, SPACE
 
+options_called_from: ds virtual 1  ; 0: options called from inventory, 1: called from title
+
 ; sound variables:
 MUSIC_tempo:                        ds virtual 1
 MUSIC_original_tempo:               ds virtual 1  ; tempo that was requested before adjusting it for 50/60Hz.

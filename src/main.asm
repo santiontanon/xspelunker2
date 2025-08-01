@@ -29,6 +29,7 @@ PCG_PAGE_WORLD: equ 11
 BRAINGAMES_PAGE: equ 1
 TITLE_PAGE: equ 1
 STORY_PAGE: equ 11
+GAME_OVER_PAGE: equ 1
 TILES_PAGE: equ 2
 TILE_ANIMATIONS_PAGE: equ 2
 PYRAMID_TILES_PAGE: equ 2
@@ -266,6 +267,7 @@ title_nametable:
     include "state-braingames.asm"
     include "state-title.asm"
     include "state-gamestart.asm"
+    include "state-gameover.asm"
 
     include "pcg-areas.asm"
     include "pcg-rooms.asm"
@@ -547,7 +549,6 @@ start_of_page_5:
 
     include "state-inventory.asm"
     include "state-options.asm"
-    include "state-gameover.asm"
     include "state-yesno-dialog.asm"
     include "state-interarea.asm"
     include "in-game-message.asm"

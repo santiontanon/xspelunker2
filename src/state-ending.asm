@@ -5,7 +5,7 @@ ending_C:
 	; ...
 
 	ld hl, state_game_over	
-	ld a, TEXT_PAGE
+	ld a, GAME_OVER_PAGE
 	jp jp_to_hl_in_page_a_8000
 
 
@@ -16,7 +16,7 @@ ending_B:
 	; ...
 
 	ld hl, state_game_over	
-	ld a, TEXT_PAGE
+	ld a, GAME_OVER_PAGE
 	jp jp_to_hl_in_page_a_8000
 
 
@@ -27,5 +27,5 @@ ending_A:
 	; ...
 
 	ld hl, state_game_over	
-	ld a, TEXT_PAGE
+	ld a, GAME_OVER_PAGE
 	jp jp_to_hl_in_page_a_8000

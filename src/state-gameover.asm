@@ -10,7 +10,7 @@ state_game_over:
 	ld de, CHRTBL2 + (10*32+13)*8
 	ld iy, #80f0
 	ld b, 6
-	call draw_sentence_to_vdp_clearing_text_buffer
+	call draw_sentence_to_vdp_from_another_page
 
 	call wait_for_click
 

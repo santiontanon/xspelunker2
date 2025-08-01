@@ -40,7 +40,13 @@ state_options_loop:
 state_options_loop_end:
 	call clear_screen_left_to_right
 	call check_redefined_keys
-	jp state_inventory_from_options
+	ld a, (options_called_from)
+	or a
+	jp z, state_inventory_from_options
+	; called from title:
+	ld hl, state_title
+	ld a, TITLE_PAGE
+	jp jp_to_hl_in_page_a_8000
 
 
 state_options_loop_up:
@@ -98,7 +104,7 @@ state_options_loop_space_hud:
 state_options_loop_space_hud_continue
 	ld (config_hud_type), a
 	call state_options_draw_text
-	jr state_options_loop
+	jp state_options_loop
 
 
 state_options_loop_space_inventory:
@@ -168,11 +174,9 @@ redefine_key_wait_key_loop:
 	pop af
 
 	; Write b and c to the appropriate place in the config_keyboard array:
-	push bc
-		add a, a
-		ld hl, config_keyboard
-		ADD_HL_A
-	pop bc
+	add a, a
+	ld hl, config_keyboard
+	ADD_HL_A
 	ld (hl), b
 	inc hl
 	ld (hl), c
