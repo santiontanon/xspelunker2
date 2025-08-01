@@ -8,17 +8,31 @@ state_title:
 		call state_title_draw_credits
 	call enable_VDP_output
 
+	ld bc, 0  ; timer for the blinking text
 state_title_loop:
 	halt
-    call update_keyboard_buffers
+	push bc
+		call state_title_draw_space_to_start
+	    call update_keyboard_buffers
+	pop bc
     ld a, (keyboard_clicks)
     bit KEY_WEAPON_BIT, a
     jr nz, state_title_loop_end
+    inc bc
+
+    ld a, b
+    cp 2
+    jr z, state_title_loop_story
 
 	jr state_title_loop
 
 state_title_loop_end:
 	jp state_gamestart
+
+state_title_loop_story:
+	ld hl, state_story
+	ld a, STORY_PAGE
+	jp jp_to_hl_in_page_a_8000
 
 
 ;-----------------------------------------------
@@ -76,9 +90,15 @@ state_title_draw_title_loop:
 
 
 ;-----------------------------------------------
-state_title_text_nametable:
-	db 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234
-	db 240, 241, 242, 243, 244, 245, 246, 247, 248, 249
+state_title_text_nametable1:
+	db 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234  ; brain games
+state_title_text_nametable2:
+	db 245, 246, 247, 248, 249, 250, 251, 252, 253, 254  ; santiago ontanon
+state_title_text_nametable3:
+	db 235, 236, 237, 238, 239, 240, 241, 242, 243, 244  ; space to start
+
+
+;-----------------------------------------------
 state_title_draw_credits:
 	ld hl, TEXT_CREDITS1
 	ld de, CHRTBL2 + (256*2 + 224)*8
@@ -87,16 +107,50 @@ state_title_draw_credits:
 	call draw_sentence_to_vdp_from_another_page
 
 	ld hl, TEXT_CREDITS2
-	ld de, CHRTBL2 + (256*2 + 240)*8
+	ld de, CHRTBL2 + (256*2 + 245)*8
 	ld iy, #80f0
 	ld b, 10
 	call draw_sentence_to_vdp_from_another_page
 
-	ld hl, state_title_text_nametable
+	ld hl, state_title_text_nametable1
 	ld de, NAMTBL2 + 23*32 + 21
 	ld b, 11
 	call fast_small_LDIRVM
-	ld hl, state_title_text_nametable + 11
+	ld hl, state_title_text_nametable2
 	ld de, NAMTBL2 + 23*32
 	ld b, 10
 	jp fast_small_LDIRVM
+
+
+;-----------------------------------------------
+; input:
+; - c: timer
+state_title_draw_space_to_start:
+	ld a, c
+	and #08
+	jr z, state_title_draw_space_to_start_clear
+	ld a, c
+	and #40
+	jr z, state_title_draw_space_to_start_options
+	; draw text:
+	ld hl, TEXT_START2
+	jr state_title_draw_space_to_start_continue
+state_title_draw_space_to_start_options:
+	ld hl, TEXT_START1
+state_title_draw_space_to_start_continue:
+	ld de, CHRTBL2 + (256*2 + 235)*8
+	ld iy, #80f0
+	ld b, 10
+	call draw_sentence_to_vdp_from_another_page
+
+	ld hl, state_title_text_nametable3
+	ld de, NAMTBL2 + 17*32 + 12
+	ld b, 10
+	jp fast_small_LDIRVM
+
+state_title_draw_space_to_start_clear:
+	; clear text:
+	ld hl, CLRTBL2 + (256*2 + 235) * 8
+	ld b, 10*8
+	xor a
+	jp fast_FILVRM_small

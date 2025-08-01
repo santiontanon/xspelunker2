@@ -20,7 +20,7 @@ stack_size: equ 128
 ; 8: #8000 - #bfff: enemies
 ; 9: #8000 - #bfff: jungle tiles, npc interactions
 ; 10: #8000 - #bfff: text3
-; 11: #8000 - #bfff: pcg code (world)
+; 11: #8000 - #bfff: pcg code (world), story
 
 
 CORE_CODE_PAGE: equ 0
@@ -28,6 +28,7 @@ PCG_PAGE: equ 1
 PCG_PAGE_WORLD: equ 11
 BRAINGAMES_PAGE: equ 1
 TITLE_PAGE: equ 1
+STORY_PAGE: equ 11
 TILES_PAGE: equ 2
 TILE_ANIMATIONS_PAGE: equ 2
 PYRAMID_TILES_PAGE: equ 2
@@ -747,6 +748,8 @@ hardcoded_world_data:
     include "unittests/hardcoded-world-seed0.asm"
 hardcoded_world_data_end:
 ENDIF
+
+    include "state-story.asm"
 
 
 end_of_page_11:
