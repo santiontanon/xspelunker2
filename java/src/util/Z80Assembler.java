@@ -74,4 +74,16 @@ public class Z80Assembler {
         fos.flush();
         fos.close();
     }
+
+
+    public static void dataToBinary(int data[], String fileName) throws Exception
+    {
+        FileOutputStream fos = new FileOutputStream(fileName);
+        for(int v: data) {
+            fos.write(v);
+        }
+        fos.flush();
+        fos.close();
+    }
+    
 }

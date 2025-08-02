@@ -1,7 +1,9 @@
 to do:
 
 ***- game intro sequence:
-    (Xavier arrives to Elaine's house)
+    OK - extract tiles and name tables of background + elaine + bubble
+    ***- extract sprites
+    ***- animation of Xavier arriving at Elaine's house
     Elaine: If it isn't Michael S. Xavier in person!
     Xavier: Elaine!!! Elaine!!! Did you receive my letters?!
             I made a huge discovery!
@@ -21,7 +23,9 @@ to do:
     Xavier: No! You have not seen their technology. If they find out we know, we are done for. I have to go back! I have to stop them before they find out we know!
     Elaine: I'll go with you! Like in the old days!
     Xavier: It's better if I go alone. I need your help with something else. See this inscription? I think it's ancient Maya. Seek someone who can decipher it. I will set base camp in the jungle near Palenque, you know where I usually stay. Mail the translation there, and I'll get it.
-    Elaine: Xavier! This is insane! You can't go alone!
+    Ealine: Wait, you have spent months in Maya land and you cannot translate Maya?!
+    Xavier: ...
+    Elaine: Anyway... Xavier! This is insane! You can't go alone!
     Xavier: I've been there before. I will be ready!
 
 - game start state where you choose game name, difficulty, seed, etc.
