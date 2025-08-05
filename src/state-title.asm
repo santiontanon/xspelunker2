@@ -177,4 +177,4 @@ state_title_draw_space_to_start_clear:
 	ld hl, CLRTBL2 + (256*2 + 235) * 8
 	ld b, 10*8
 	xor a
-	jp fast_FILVRM_small
+	jp fast_small_FILVRM

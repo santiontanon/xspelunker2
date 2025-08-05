@@ -101,7 +101,7 @@ upload_displayed_object_sprites_to_vdp_uploaded:
 	ld hl, SPRATR2 + FIRST_OBJECT_SPRITE * 4
 	add hl, de
 	ld a, #e0
-	call fast_FILVRM_small
+	call fast_small_FILVRM
 
 upload_displayed_object_sprites_to_vdp_done:
 	ld a, iyl  ; (n_displayed_object_sprites)

@@ -89,7 +89,7 @@ state_yesno_dialog_in_game:
 		ld a, 200
 		ld hl, SPRATR2
 		ld b, 1
-		call fast_FILVRM_small
+		call fast_small_FILVRM
 
 		; restore tiles in middle bank:
 		ld hl, CLRTBL2 + (256 + 16*6)*8

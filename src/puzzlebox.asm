@@ -418,7 +418,7 @@ puzzlebox_draw_sprite_clear:
 	ld hl, SPRATR2
 	xor a
 	ld b, 4
-	jp fast_FILVRM_small
+	jp fast_small_FILVRM
 
 
 ;-----------------------------------------------

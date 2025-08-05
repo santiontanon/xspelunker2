@@ -189,25 +189,25 @@ combination_tablet_add_direction_symbol_continue:
 		ld a, e
 		push hl
 			ld b, 1
-			call fast_FILVRM_small
+			call fast_small_FILVRM
 		pop hl
 		inc a
 		inc hl
 		push hl
 			ld b, 1
-			call fast_FILVRM_small
+			call fast_small_FILVRM
 		pop hl
 		inc a
 		ld bc, 31
 		add hl, bc
 		push hl
 			ld b, 1
-			call fast_FILVRM_small
+			call fast_small_FILVRM
 		pop hl
 		inc a
 		inc hl
 		ld b, 1
-		call fast_FILVRM_small
+		call fast_small_FILVRM
 	pop de
 	pop hl
 	ret

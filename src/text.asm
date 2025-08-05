@@ -190,7 +190,7 @@ render_text_draw_buffer_loop:
 					add hl, bc
 				pop af
 				ld b, 8
-				call fast_FILVRM_small
+				call fast_small_FILVRM
 			pop hl
 			ld c, 8  ; b == 0 here
 			add hl, bc

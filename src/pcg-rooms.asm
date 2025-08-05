@@ -2227,11 +2227,11 @@ pcg_generate_room__calendar_turn_on_phase1:
 	ld hl, CLRTBL2 + 72*8
 	ld a, #48  ; blue + red
 	ld b, 8
-	call fast_FILVRM_small
+	call fast_small_FILVRM
 	ld hl, CLRTBL2 + (256 + 72)*8
 	ld a, #48  ; blue + red
 	ld b, 8
-	jp fast_FILVRM_small
+	jp fast_small_FILVRM
 
 
 ;-----------------------------------------------
@@ -2424,14 +2424,14 @@ pcg_generate_room__calendar_turn_on_phase2_loop:
 		ld a, COLOR_DARK_BLUE*16 + COLOR_RED
 		ld b, 8
 		push hl
-			call fast_FILVRM_small
+			call fast_small_FILVRM
 		pop hl
 		; bank 2:
 		ld de, 256*8
 		add hl, de
 		ld a, COLOR_DARK_BLUE*16 + COLOR_RED
 		ld b, 8
-		call fast_FILVRM_small
+		call fast_small_FILVRM
 	pop hl
 	pop bc
 	djnz pcg_generate_room__calendar_turn_on_phase2_loop

@@ -38,7 +38,7 @@ clear_screen_left_to_right:
     ld hl, CLRTBL2 + 256*8*2
     ld b, 8
     xor a
-    call fast_FILVRM_small
+    call fast_small_FILVRM
     ld b, 32
     ld hl, NAMTBL2
 clear_screen_left_to_right_loop:
@@ -138,16 +138,16 @@ fast_FILVRM_loop:
 ; a: byte
 ; b: amount to write
 ; hl: target address in the VDP
-fast_FILVRM_small:
+fast_small_FILVRM:
     push af
         call SETWRT
         ld a, (VDP.DW)
         ld c, a
     pop af
-fast_FILVRM_small_loop:
+fast_small_FILVRM_loop:
     out (c), a
     dec b
-    jp nz, fast_FILVRM_small_loop
+    jp nz, fast_small_FILVRM_loop
     ret
 
 
