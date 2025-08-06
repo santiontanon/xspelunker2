@@ -285,10 +285,21 @@ FIRST_LETTER2B_USEABLE_TILE: equ 67
 
 ;-----------------------------------------------
 ; input:
-; - hl: text
-; - a: first tile to use
+; - hl: text (iy for 'display_elaine_letter_paragraph_text_page3')
+; - a: first tile to use (b for 'display_elaine_letter_paragraph_text_page3')
 ; - de: NAMTBL2 ptr
 ; - ix: base CHRTBL2 address (1st, 2nd or 3rd bank?)
+display_elaine_letter_paragraph_text_page3:
+	ld a, b
+	push af
+	push de
+	push ix
+		; copy text to buffer_4096:
+		push iy
+		pop de
+		ld c, TEXT_PAGE3
+		ld hl, copy_text_from_textpage3
+		jr display_elaine_letter_paragraph_continue
 display_elaine_letter_paragraph_page7:
 	push af
 	push de
@@ -316,18 +327,16 @@ display_elaine_letter_paragraph_continue:
 display_elaine_letter_paragraph_loop:
 	push af
 		push de
-			push hl
-				; compute CHRTBL2 ptr: CHRTBL2 + c*8
-				ld l, a
-				ld h, 0
-				add hl, hl
-				add hl, hl
-				add hl, hl
-				push ix
-				pop de
-				add hl, de
-				ex de, hl
-			pop hl
+			; compute CHRTBL2 ptr: CHRTBL2 + c*8
+			ld l, a
+			ld h, 0
+			add hl, hl
+			add hl, hl
+			add hl, hl
+			push ix
+			pop de
+			add hl, de
+			ex de, hl
 			push de  ; CHRTBL2 ptr
 				; determine the first line:
 			    ld hl, buffer_4096

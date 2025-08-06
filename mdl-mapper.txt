@@ -1,0 +1,5 @@
+binary_size: 256*1024
+page_size: 16*1024
+initial_mapping: 0:0, 1:0, 1:1:, 0:3
+ram_mapper_type: NO_MAPPER
+binary_mapper_type: MSX_ASCII16_MAPPER

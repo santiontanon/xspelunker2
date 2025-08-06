@@ -1,13 +1,19 @@
 to do:
 
-***- game start state where you choose game name, difficulty, seed, etc.
-  ***- mockup the UI
-  ***- crete the UI in-game (entering world name, random seed / difficulty display, world generation progress, etc.)
-  ***- procedural generation depending on a name. By default, you play in "xspelunker2" level, with difficulty "x". I might want to add a "random seed monument" somewhere in the game (maybe a "stelae", that displays the current random seed in a non-obvious way (until you get the clue). When a seed fails, just error out, and ask user to enter another name.
-  ***- the first letter determines the difficulty level. So, one would choose "a walk in the park" for easy games, or "zebras all the way" for the heardest)
-      - passwords tied to the name (to the random seed in particular)
+***- game start state:
+  ***- edit the text
+  ***- compute random seed from the text, and display it
+  ***- compute difficulty level from text, and display it: easy / normal / hard
+    map characters to difficulties ("2" is normal)
+  ***- START calls the world generation process.
+    ***- have the seed actually affect the generation
+    ***- Each time a part starts, a message is printed in the console
+    ***- If generation fails: "The gods do not like this name. Try another one."
+    ***- If generation works: game start!
+  ***- the first letter determines the difficulty level.
+    ***- for each difficulty, determine how to simplify the game (map sizes? enemy rates? number of puzzles? enemy aggressivity? ensure games are all playable with checks in Java)
+  ***- "random seed monument" somewhere in the game (maybe a "stelae", that displays the current random seed in a non-obvious way (until you get the clue). When a seed fails, just error out, and ask user to enter another name.
   ***- optimize world pcg (currently 17146691 on seed #0000, #5555)
-  ***- for each difficulty, determine how to simplify the game (map sizes? enemy rates? number of puzzles? enemy aggressivity? ensure games are all playable with checks in Java)
 
 - music: intro, letters, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 25 have potential)
 

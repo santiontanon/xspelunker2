@@ -7,6 +7,8 @@ buffer_4096: ds virtual 4096
 
 text_draw_buffer: ds virtual 32*8
 
+current_world__name: ds virtual 16
+
 current_world__seed: ds virtual 4
 ; WORLD_AREA__SIZE: 4 + 1 + 1 + 1 + MAX_AREA_SIZE * 2 + MAX_AREA_N_TAGS * 3
 ; each world area is:
@@ -230,6 +232,8 @@ tmp_enemy_pcg_n_water_locs: equ temporary_variables + 7
 tmp_enemy_pcg_n_ceiling_locs: equ temporary_variables + 8
 tmp_get_tile_object_behind_player_ptr: equ temporary_variables
 tmp_shop_cursor_position: equ temporary_variables
+tmp_gamestart_cursor_position1: equ temporary_variables  ; world name, start, back or help
+tmp_gamestart_cursor_position2: equ temporary_variables + 1  ; position within the world name
 
 config_hud_type: ds virtual 1  ; 0: minimal, 1: minimal always visible, 2: full
 config_inventory_key_combo: ds virtual 1  ; 0: down+jump, 1: none

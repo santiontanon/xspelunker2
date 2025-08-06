@@ -104,6 +104,15 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "before...", "STORY52", 10);
         addLineSafe(lines_with_constant_page3, "I am ready!", "STORY53", 10);
         
+        addLineSafe(lines_with_constant_page3, "World Name", "GAMESTART1", 10);
+        addLineSafe(lines_with_constant_page3, "Seed", "GAMESTART2", 6);
+        addLineSafe(lines_with_constant_page3, "Difficulty", "GAMESTART3", 6);
+        addLineSafe(lines_with_constant_page3, "easy", "DIFFICULTY_EASY", 6);
+        addLineSafe(lines_with_constant_page3, "normal", "DIFFICULTY_NORMAL", 6);
+        addLineSafe(lines_with_constant_page3, "hard", "DIFFICULTY_HARD", 6);
+        addLineSafe(lines_with_constant_page3, "Name the world you will play in, to determine its characteristics.", "GAMESTART_CONSOLE_MSG1", 90);
+        addLineSafe(lines_with_constant_page3, "Each world is identified by its name. Choose wisely! The world name determines the random seed, and difficulty...", "GAMESTART_CONSOLE_MSG2", 90);
+        addLineSafe(lines_with_constant_page3, "Use the same name to play again on the same world. You can use letters, spaces and the numbers 0 - 4.", "GAMESTART_CONSOLE_MSG3", 90);
         
         addLineSafe(lines_with_constant_page1, "Game Over", "GAME_OVER", 16);
         addLineSafe(lines_with_constant_page1, "Are you sure?", "ARE_YOU_SURE", 16);
