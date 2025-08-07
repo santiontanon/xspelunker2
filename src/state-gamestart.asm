@@ -50,7 +50,22 @@ state_gamestart:
 
 		ld a, 1  ; start
 		ld (tmp_gamestart_cursor_position1), a
-		ld a, 11
+		; look for the end of the current word:
+		ld hl, current_world__name + 15
+		ld c, 16
+state_gamestart_init_loop:
+		ld a, (hl)
+		cp 26
+		jr nz, state_gamestart_init_loop_done
+		dec hl
+		dec c
+		jr nz, state_gamestart_init_loop
+state_gamestart_init_loop_done:
+		ld a, c
+		cp 16
+		jr nz, state_gamestart_init_loop_done_continue
+		dec a
+state_gamestart_init_loop_done_continue:
 		ld (tmp_gamestart_cursor_position2), a
 
 		call draw_gamestart_world_name
@@ -66,7 +81,6 @@ state_gamestart:
 state_gamestart_loop:
 	halt
 	call draw_gamestart_cursor
-	call update_keyboard_buffers
 	call state_gamestart_update_cursor
 	jr state_gamestart_loop
 	; jp state_play
@@ -109,6 +123,113 @@ draw_gamestart_world_name_loop:
 	inc hl
 	inc de
 	djnz draw_gamestart_world_name_loop
+
+	call gamestart_draw_difficulty
+	call gamestart_compute_random_seed
+	; jp gamestart_draw_random_seed
+
+
+gamestart_draw_random_seed:
+	ld de, buffer_4096
+	ld a, 4
+	ld (de), a
+	inc de
+
+	ld hl, (current_world__seed)
+	ld a, h
+	rrca
+	rrca
+	rrca
+	rrca
+	and #0f
+	call gamestart_draw_random_seed_add_digit
+	ld a, h
+	and #0f
+	call gamestart_draw_random_seed_add_digit
+	ld a, l
+	rrca
+	rrca
+	rrca
+	rrca
+	and #0f
+	call gamestart_draw_random_seed_add_digit
+	ld a, l
+	and #0f
+	call gamestart_draw_random_seed_add_digit
+
+	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096, CHRTBL2 + (256*2 + 128)*8, COLOR_WHITE*16, 4
+	ret
+
+
+;-----------------------------------------------
+gamestart_draw_random_seed_hex_digits:
+	db 22, 24, 26, 28, 30, 32, 35, 37, 39, 41, 108, 110, 112, 114, 116, 118
+
+gamestart_draw_random_seed_add_digit:
+	push hl
+		ld hl, gamestart_draw_random_seed_hex_digits
+		ADD_HL_A
+		ld a, (hl)
+		ld (de), a
+		inc de
+	pop hl
+	ret
+
+
+;-----------------------------------------------
+gamestart_compute_random_seed:
+	ld hl, current_world__name
+	ld de, #0000  ; initial seed
+	ld b, 8
+gamestart_compute_random_seed_loop:
+	ld a, (hl)
+	xor d
+	ld d, a
+	inc hl
+	ld a, (hl)
+	xor e
+	ld e, a
+	inc hl
+
+	; rotate the seed:
+ 	ld  a, e
+   	rla
+   	rl  d
+   	rl  e
+	djnz gamestart_compute_random_seed_loop
+
+	ld (current_world__seed), de
+	ld hl, #5555
+	ld (current_world__seed + 2), hl
+	ret
+
+
+;-----------------------------------------------
+gamestart_draw_difficulty:
+	ld a, (current_world__name)
+	ld c, 0
+	rrca
+	rrca
+	rl c
+	rrca
+	rrca
+	rl c
+	ld a, c
+	ld de, TEXT_DIFFICULTY_EASY
+	or a
+	jr z, gamestart_draw_difficulty_set
+	ld de, TEXT_DIFFICULTY_NORMAL
+	dec a
+	jr z, gamestart_draw_difficulty_set
+	ld de, TEXT_DIFFICULTY_HARD
+	dec a
+	jr z, gamestart_draw_difficulty_set
+	ld de, TEXT_DIFFICULTY_HARDEST
+gamestart_draw_difficulty_set:
+	ld hl, copy_text_from_textpage3
+	ld c, TEXT_PAGE3
+	call call_hl_in_page_c_8000
+	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096, CHRTBL2 + (256*2 + 140)*8, COLOR_BLUE*16, 6
 	ret
 
 
@@ -212,14 +333,14 @@ draw_gamestart_cursor_world_name_color_set:
 
 ;-----------------------------------------------
 state_gamestart_update_cursor:
+	ld a, (tmp_gamestart_cursor_position1)
+	or a
+	jr z, state_gamestart_update_cursor_world_name
+	call update_keyboard_buffers
 	ld a, (keyboard_clicks)
 	bit KEY_RIGHT_BIT, a  ; right
 	push af
 		call nz, state_gamestart_update_cursor_right
-	pop af
-	bit KEY_DOWN_BIT, a  ; down
-	push af
-		call nz, state_gamestart_update_cursor_down
 	pop af
 	bit KEY_UP_BIT, a  ; up
 	push af
@@ -236,8 +357,6 @@ state_gamestart_update_cursor:
 	ret
 state_gamestart_update_cursor_right:
 	ld a, (tmp_gamestart_cursor_position1)
-	or a
-	jr z, state_gamestart_update_cursor_right_name
 	inc a
 	cp 4
 	ret z
@@ -246,33 +365,95 @@ state_gamestart_update_cursor_move_set:
 	ld hl, SFX_ui_move
 	jp play_SFX_with_high_priority
 
-state_gamestart_update_cursor_down:
-	ld a, (tmp_gamestart_cursor_position1)
-	or a
-	ret nz
-	ld a, 1
-	jr state_gamestart_update_cursor_move_set
-
 state_gamestart_update_cursor_up:
-	ld a, (tmp_gamestart_cursor_position1)
-	or a
-	ret z
+	call getcharacter_nonwaiting_reset  ; get ready to move into the world name
 	xor a
 	jr state_gamestart_update_cursor_move_set
 
 state_gamestart_update_cursor_left:
 	ld a, (tmp_gamestart_cursor_position1)
-	or a
-	jr z, state_gamestart_update_cursor_left_name
 	dec a
 	ret z
 	jr state_gamestart_update_cursor_move_set
+
+state_gamestart_update_cursor_world_name:
+	; cursor is over the wolrd name:
+	call getcharacter_nonwaiting
+	or a
+	ret z
+	cp #1f
+	jr z, state_gamestart_update_cursor_world_name_down
+	cp #0d
+	jr z, state_gamestart_update_cursor_world_name_down
+	cp #1d
+	jr z, state_gamestart_update_cursor_left_name
+	cp #1c
+	jr z, state_gamestart_update_cursor_right_name
+	cp #08
+	jr z, state_gamestart_update_cursor_name_delete
+	cp ' '
+	jr z, state_gamestart_update_cursor_enter_character_space
+	cp '0'
+	ret c
+	cp '4' + 1
+	jr c, state_gamestart_update_cursor_enter_character_number
+	cp 'a'
+	ret c
+	cp 'z' + 1
+	jr c, state_gamestart_update_cursor_enter_character_letter
+	ret
+
+state_gamestart_update_cursor_world_name_down:
+	ld a, 1
+	jr state_gamestart_update_cursor_move_set
+
+state_gamestart_update_cursor_enter_character_space:
+	ld c, 26
+	jr state_gamestart_update_cursor_enter_character
+state_gamestart_update_cursor_enter_character_number:
+	add a, 27 - '0'
+	ld c, a
+	jr state_gamestart_update_cursor_enter_character
+state_gamestart_update_cursor_enter_character_letter:
+	sub 'a'
+	ld c, a	
+state_gamestart_update_cursor_enter_character:
+	ld a, (tmp_gamestart_cursor_position2)
+	cp 15
+	jr z, state_gamestart_update_cursor_enter_character_error
+	ld hl, current_world__name
+	ADD_HL_A
+	ld (hl), c
+	ld hl, SFX_ui_move
+	call play_SFX_with_high_priority
+	call draw_gamestart_world_name
+	ld a, (tmp_gamestart_cursor_position2)
+	cp 15
+	ret z
+	inc a
+	ld (tmp_gamestart_cursor_position2), a
+	ret
+
+state_gamestart_update_cursor_name_delete:
+	ld a, (tmp_gamestart_cursor_position2)
+	or a
+	jr z, state_gamestart_update_cursor_name_delete_continue
+	dec a
+	ld (tmp_gamestart_cursor_position2), a
+state_gamestart_update_cursor_name_delete_continue:
+	ld hl, current_world__name
+	ADD_HL_A
+	ld (hl), 26  ; space
+	ld hl, SFX_ui_move
+	call play_SFX_with_high_priority
+	jp draw_gamestart_world_name
 
 state_gamestart_update_cursor_right_name:
 	ld a, (tmp_gamestart_cursor_position2)
 	cp 15
 	ret z
 	inc a
+state_gamestart_update_cursor_name_position_set:
 	ld (tmp_gamestart_cursor_position2), a
 	ld hl, SFX_ui_move
 	jp play_SFX_with_high_priority
@@ -282,8 +463,10 @@ state_gamestart_update_cursor_left_name:
 	or a
 	ret z
 	dec a
-	ld (tmp_gamestart_cursor_position2), a
-	ld hl, SFX_ui_move
+	jr state_gamestart_update_cursor_name_position_set
+
+state_gamestart_update_cursor_enter_character_error:
+	ld hl, SFX_ui_wrong
 	jp play_SFX_with_high_priority
 
 state_gamestart_update_cursor_button:
@@ -310,6 +493,7 @@ state_gamestart_update_cursor_back:
     jp jp_to_hl_in_page_a_8000
 
 state_gamestart_update_cursor_help:
+	call clear_all_the_sprites
 	ld hl, SFX_ui_select
 	call play_SFX_with_high_priority
 	ld iy, TEXT_GAMESTART_CONSOLE_MSG2
