@@ -1,6 +1,20 @@
 ;-----------------------------------------------
 state_play:
 	call disable_VDP_output
+
+; pcg_debug_start:
+; 		; set random seed:
+; 		ld hl, 0
+; 		ld (current_world__seed), hl
+; 		ld hl, #5555
+; 		ld (current_world__seed + 2), hl
+
+; 		; generate world:
+; 		ld hl, pcg_generate_world
+; 		ld c, PCG_PAGE_WORLD
+; 		call call_hl_in_page_c_8000
+; pcg_debug_end:
+	
 		ld hl, RAM_to_zero_on_game_start
 		ld bc, (RAM_to_zero_on_game_start_end - RAM_to_zero_on_game_start) - 1
 		call clear_memory
@@ -113,19 +127,6 @@ state_play:
 		ld (player_y), hl
 		ld a, #ff
 		ld (player_requested_weapon_sprite), a
-
-pcg_debug_start:
-		; set random seed:
-		ld hl, 0
-		ld (current_world__seed), hl
-		ld hl, #5555
-		ld (current_world__seed + 2), hl
-
-		; generate world:
-		ld hl, pcg_generate_world
-		ld c, PCG_PAGE_WORLD
-		call call_hl_in_page_c_8000
-pcg_debug_end:
 
 		; generate area:
 		ld hl, pcg_generate_area

@@ -229,7 +229,7 @@ gamestart_draw_difficulty_set:
 	ld hl, copy_text_from_textpage3
 	ld c, TEXT_PAGE3
 	call call_hl_in_page_c_8000
-	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096, CHRTBL2 + (256*2 + 140)*8, COLOR_BLUE*16, 6
+	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096, CHRTBL2 + (256*2 + 140)*8, COLOR_WHITE*16, 6
 	ret
 
 
@@ -482,8 +482,31 @@ state_gamestart_update_cursor_button:
 	ret
 
 state_gamestart_update_cursor_start:
-	; ...
-	ret
+	call clear_all_the_sprites
+	call gamestart_clear_console
+	ld hl, SFX_ui_select
+	call play_SFX_with_high_priority
+	ld iy, TEXT_GAMESTART_CONSOLE_MSG4
+	ld b, 146
+	ld de, NAMTBL2 + 3 + 16*32
+	ld ix, CHRTBL2 + 256*2*8
+	call state_gamestart_console_paragraph
+
+	ld hl, pcg_generate_world
+	ld c, PCG_PAGE_WORLD
+	call call_hl_in_page_c_8000
+	jp z, state_play
+
+	; Generation failed:
+	call gamestart_clear_console
+	ld hl, SFX_ui_wrong
+	call play_SFX_with_high_priority
+	ld iy, TEXT_GAMESTART_CONSOLE_MSG5
+	ld b, 146
+	ld de, NAMTBL2 + 3 + 16*32
+	ld ix, CHRTBL2 + 256*2*8
+	jp state_gamestart_console_paragraph
+
 
 state_gamestart_update_cursor_back:
 	ld hl, SFX_ui_select
@@ -512,6 +535,24 @@ state_gamestart_update_cursor_help_loop:
 	ld de, NAMTBL2 + 3 + 16*32
 	ld ix, CHRTBL2 + 256*2*8
 	jp state_gamestart_console_paragraph
+
+
+;-----------------------------------------------
+gamestart_clear_console:
+	ld hl, NAMTBL2 + 3 + 16*32
+	ld b, 6
+gamestart_clear_console_loop:
+	push bc
+		push hl
+			ld b, 16
+			xor a
+			call fast_small_FILVRM
+		pop hl
+		ld bc, 32
+		add hl, bc
+	pop bc
+	djnz gamestart_clear_console_loop
+	ret
 
 
 ;-----------------------------------------------
