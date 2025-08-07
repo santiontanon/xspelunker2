@@ -1,67 +1,23 @@
-;-----------------------------------------------
-pcg_enemy_generation_table:
-	dw pcg_enemy_generation_table_jungle
-	dw pcg_enemy_generation_table_pyramid1
-	dw pcg_enemy_generation_table_pyramid2
-	dw pcg_enemy_generation_table_confluence
-	dw pcg_enemy_generation_table_pyramid3
-	dw pcg_enemy_generation_table_fire_shaft
-	dw pcg_enemy_generation_table_caves_west
-	dw pcg_enemy_generation_table_caves_east
-	dw pcg_enemy_generation_table_xibalba
-	dw pcg_enemy_generation_table_atlantis
-	dw pcg_enemy_generation_table_mars
-	dw pcg_enemy_generation_table_moon
-
-pcg_enemy_generation_table_jungle:
-	db 2  ; enemies per "screen" area
-	db 3  ; possible tile enemy types to be spawned
-	db TAG_ENEMY_CARNIVORE_PLANT, 48  ; tile-based enemy type and chance (out of 256)
-	db TAG_ENEMY_BEE_HIVE, 96  ; tile-based enemy type and chance (out of 256)
-	db TAG_ENEMY_ANT_COLONY, 128  ; tile-based enemy type and chance (out of 256)
-	db 10  ; possible sprite enemy types to be spawned (weights below should add up to 32)
-	db ENEMY_SNAKE, 4  ; enemy type and weight
-	db ENEMY_SNAKE_DASHER, 3
-	db ENEMY_SNAKE_POISON, 2
-	db ENEMY_FROG, 4  ; enemy type and weight
-	db ENEMY_FROG_JUMPER, 3
-	db ENEMY_FROG_TONGUE, 2
-	db ENEMY_MONKEY, 5  ; enemy type and weight
-	db ENEMY_MONKEY_THROWER, 3
-	db ENEMY_FISH, 4
-	db ENEMY_FISH_JUMPER, 2
-
-pcg_enemy_generation_table_pyramid1:
-pcg_enemy_generation_table_pyramid2:
-pcg_enemy_generation_table_confluence:
-pcg_enemy_generation_table_pyramid3:
-pcg_enemy_generation_table_fire_shaft:
-pcg_enemy_generation_table_caves_west:
-pcg_enemy_generation_table_caves_east:
-pcg_enemy_generation_table_xibalba:
-pcg_enemy_generation_table_atlantis:
-pcg_enemy_generation_table_mars:
-pcg_enemy_generation_table_moon:
-	db 2  ; 2 enemies per "screen" area
-	db 1
-	db TAG_ENEMY_CARNIVORE_PLANT, 96  ; tile-based enemy type and chance (out of 256)
-	db 11  ; possible sprite enemy types to be spawned (weights below should add up to 32)
-	db ENEMY_SNAKE, 5  ; enemy type and weight
-	db ENEMY_SNAKE_DASHER, 2
-	db ENEMY_SNAKE_POISON, 2
-	db ENEMY_POISON_BULLET, 1
-	db ENEMY_FISH, 5
-	db ENEMY_FISH_JUMPER, 2
-	db ENEMY_BAT, 5
-	db ENEMY_BAT_AGGRESSIVE, 2
-	db ENEMY_SKELETON, 5
-	db ENEMY_SKELETON_THROWER1, 2
-	db ENEMY_SKELETON_THROWER2, 1
+	include "pcg-enemies-easy.asm"  ; pcg_enemy_generation_table_easy
+	include "pcg-enemies-normal.asm"  ; pcg_enemy_generation_table_normal
+	include "pcg-enemies-hard.asm"  ; pcg_enemy_generation_table_hard
+	include "pcg-enemies-hardest.asm"  ; pcg_enemy_generation_table_hardest
 
 
 ;-----------------------------------------------
-pcg_generate_room__spawn_enemies:	
-	ld hl, pcg_enemy_generation_table
+pcg_generate_room__spawn_enemies:
+	ld a, (current_world__difficulty)
+	ld hl, pcg_enemy_generation_table_easy
+	or a
+	jr z, pcg_generate_room__spawn_enemies_difficulty_set
+	ld hl, pcg_enemy_generation_table_normal
+	dec a
+	jr z, pcg_generate_room__spawn_enemies_difficulty_set
+	ld hl, pcg_enemy_generation_table_hard
+	dec a
+	jr z, pcg_generate_room__spawn_enemies_difficulty_set
+	ld hl, pcg_enemy_generation_table_hardest
+pcg_generate_room__spawn_enemies_difficulty_set:
 	ld a, (current_area__id)
 	add a, a
 	ADD_HL_A

@@ -44,7 +44,9 @@ state_title_loop:
 	jr state_title_loop
 
 state_title_loop_end:
-	jp state_gamestart
+	ld hl, state_gamestart
+	ld a, GAMESTART_PAGE
+	jp jp_to_hl_in_page_a_8000
 
 state_title_loop_story:
 	ld hl, state_story

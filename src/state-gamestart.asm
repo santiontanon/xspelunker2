@@ -17,12 +17,12 @@ state_gamestart:
 		call fast_LDIRVM
 
 		ld hl, gamestart_tiles_zx0
-		ld c, TITLE_PAGE
+		ld c, GAMESTART_PAGE
 		call decompress_tiles_to_all_banks
 
 		ld hl, gamestart_nametable_zx0
 		ld de, buffer_4096
-		ld c, TITLE_PAGE
+		ld c, GAMESTART_PAGE
 		call dzx0_from_page_c
 
 		ld hl, buffer_4096
@@ -215,6 +215,7 @@ gamestart_draw_difficulty:
 	rrca
 	rl c
 	ld a, c
+	ld (current_world__difficulty), a
 	ld de, TEXT_DIFFICULTY_EASY
 	or a
 	jr z, gamestart_draw_difficulty_set

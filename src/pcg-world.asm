@@ -217,11 +217,6 @@ pcg__full_layout:  ; for those areas for which we do not want to have a predefin
 	db 1, 1, 1, 1, 1, 1, 1, 1
 
 pgc__n_divisions_per_area:
-; 	db  6, 12, 12,  3
-; 	db 12,  3, 12, 12
-; 	db 12, 12, 12, 12  ; 120 + 2 divisions (+ 2 since there are 2 hardcoded divisions in the confluence)
-; MAX_N_DIVISIONS: equ 128
-
 	db  6, 15, 15,  4
 	db 15,  3, 12, 12
 	db 13, 13, 12, 12  ; 132 + 2 divisions (+ 2 since there are 2 hardcoded divisions in the confluence)

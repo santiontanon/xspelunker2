@@ -1,5 +1,6 @@
 ;-----------------------------------------------
 state_play:
+	call clear_screen_left_to_right
 	call disable_VDP_output
 
 ; pcg_debug_start:
