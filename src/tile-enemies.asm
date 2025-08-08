@@ -506,8 +506,10 @@ room_render_tile_objects_undraw_enemy_carnivore_plant_continue:
 ; - iyl: collision ID
 ; - iyh: weapon damage
 enemy_carnivore_plant_hit:
+	call find_tile_enemy_ptr
+	ret nz
+; 	ld ix, (tile_enemy_ptr)
 	ld a, e
-	ld ix, (tile_enemy_ptr)
 	; these are tongue tiles, just retract the tongue: 68, 69, 70, 71, 72, 79, 87, 88, 89, 90
 	cp 68
 	jr c, enemy_carnivore_plant_hit_body
@@ -617,7 +619,9 @@ update_tile_objects_enemy_ant_colony:
 ; - iyh: weapon damage
 enemy_ant_colony_hit:
 enemy_bee_hive_hit:
-	ld ix, (tile_enemy_ptr)
+	call find_tile_enemy_ptr
+	ret nz
+; 	ld ix, (tile_enemy_ptr)
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_HEALTH)
 	sub iyh
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_HEALTH), a
@@ -632,3 +636,31 @@ enemy_ant_colony_hit_continue:
 
 	ld hl, SFX_enemy_hit
 	jp play_SFX_with_high_priority
+
+
+;-----------------------------------------------
+; output:
+; - ix: ptr
+; - z: found
+; - nz: not found
+find_tile_enemy_ptr:
+	ld ix, current_room__tile_objects
+	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
+find_tile_enemy_ptr_loop:
+	ld a, (ix)
+	cp #ff
+	jr z, find_tile_enemy_ptr_not_found
+	cp #fe
+	jr z, find_tile_enemy_ptr_not_found
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	cp TAG_ENEMY_CARNIVORE_PLANT
+	ret z
+	cp TAG_ENEMY_BEE_HIVE
+	ret z
+	cp TAG_ENEMY_ANT_COLONY
+	ret z
+	add ix, bc
+	jr find_tile_enemy_ptr_loop
+find_tile_enemy_ptr_not_found:
+	or 1
+	ret

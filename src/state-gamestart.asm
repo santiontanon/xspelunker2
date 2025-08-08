@@ -205,7 +205,26 @@ gamestart_compute_random_seed_loop:
 
 
 ;-----------------------------------------------
+gamestart_difficulty_settings_easy:
+	db 40  ; current_world__difficulty_attack_warn_time
+	db 3  ; current_world__difficulty_bullet_speed
+gamestart_difficulty_settings_easy_end:
+
+gamestart_difficulty_settings_normal:
+	db 32  ; current_world__difficulty_attack_warn_time
+	db 4  ; current_world__difficulty_bullet_speed
+
+gamestart_difficulty_settings_hard:
+	db 26  ; current_world__difficulty_attack_warn_time
+	db 5  ; current_world__difficulty_bullet_speed
+
+gamestart_difficulty_settings_hardest:
+	db 20  ; current_world__difficulty_attack_warn_time
+	db 6  ; current_world__difficulty_bullet_speed
+
+
 gamestart_draw_difficulty:
+	; infer difficulty:
 	ld a, (current_world__name)
 	ld c, 0
 	rrca
@@ -217,16 +236,27 @@ gamestart_draw_difficulty:
 	ld a, c
 	ld (current_world__difficulty), a
 	ld de, TEXT_DIFFICULTY_EASY
+	ld hl, gamestart_difficulty_settings_easy
 	or a
 	jr z, gamestart_draw_difficulty_set
 	ld de, TEXT_DIFFICULTY_NORMAL
+	ld hl, gamestart_difficulty_settings_normal
 	dec a
 	jr z, gamestart_draw_difficulty_set
 	ld de, TEXT_DIFFICULTY_HARD
+	ld hl, gamestart_difficulty_settings_hard
 	dec a
 	jr z, gamestart_draw_difficulty_set
 	ld de, TEXT_DIFFICULTY_HARDEST
+	ld hl, gamestart_difficulty_settings_hardest
 gamestart_draw_difficulty_set:
+	push de
+		ld de, current_world__difficulty_attack_warn_time
+		ld bc, gamestart_difficulty_settings_easy_end - gamestart_difficulty_settings_easy
+		ldir
+	pop de
+
+
 	ld hl, copy_text_from_textpage3
 	ld c, TEXT_PAGE3
 	call call_hl_in_page_c_8000

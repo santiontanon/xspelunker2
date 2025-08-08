@@ -159,10 +159,12 @@ update_enemy_snake_dasher_left_continue:
 	jp update_enemy_snake_left_continue_color_set
 
 update_enemy_snake_dasher_dash_right:
+	ld a, (current_world__difficulty_attack_warn_time)
+	ld c, a
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	cp 64
 	jr z, update_enemy_snake_dasher_switch_to_state_left
-	cp 32
+	cp c
 	jr nc, update_enemy_snake_dasher_right_continue
 	call update_enemy_move_right_if_possible_platform
 	jr z, update_enemy_snake_dasher_right_continue
@@ -170,10 +172,12 @@ update_enemy_snake_dasher_dash_right:
 	jr update_enemy_snake_dasher_right_continue
 
 update_enemy_snake_dasher_dash_left:
+	ld a, (current_world__difficulty_attack_warn_time)
+	ld c, a
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	cp 64
-	jr z, update_enemy_snake_dasher_switch_to_state_right
-	cp 32
+	jp z, update_enemy_snake_dasher_switch_to_state_right
+	cp c
 	jr nc, update_enemy_snake_dasher_left_continue
 	call update_enemy_move_left_if_possible_platform
 	jr z, update_enemy_snake_dasher_left_continue
@@ -246,13 +250,17 @@ update_enemy_snake_poison_left_continue:
 	jp update_enemy_snake_left_continue_color_set
 
 update_enemy_snake_poison_spit_right:
+	ld a, (current_world__difficulty_attack_warn_time)
+	add a, a
+	ld c, a
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
-	cp 32
+	cp c  ; warn time * 2
 	jr nz, update_enemy_snake_poison_spit_right_continue
 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
 update_enemy_snake_poison_spit_right_continue:
-	cp 16
+	srl c
+	cp c  ; warn time
 	jr nz, update_enemy_snake_poison_spit_right_continue2
 	; spit:
 	call ptr_to_new_sprite_enemy
@@ -282,13 +290,17 @@ update_enemy_snake_poison_spit_right_continue2:
 	jp enemy_sprite_and_continue
 
 update_enemy_snake_poison_spit_left:
+	ld a, (current_world__difficulty_attack_warn_time)
+	add a, a
+	ld c, a
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
-	cp 32
+	cp c  ; warn time * 2
 	jr nz, update_enemy_snake_poison_spit_left_continue
 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1
 update_enemy_snake_poison_spit_left_continue:
-	cp 16
+	srl c
+	cp c  ; warn time
 	jr nz, update_enemy_snake_poison_spit_left_continue2
 	; spit:
 	call ptr_to_new_sprite_enemy
@@ -328,18 +340,16 @@ update_enemy_poison_bullet:
 	jr nz, update_enemy_poison_bullet_left
 
 update_enemy_poison_bullet_right:
-	call update_enemy_bullet_move_right_if_possible
-	jp z, update_enemy_delete
-	call update_enemy_bullet_move_right_if_possible
+	ld a, (current_world__difficulty_bullet_speed)
+	call update_enemy_move_right_if_possible_a_times
 	jp z, update_enemy_delete
 	ld d, COLOR_GREEN
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 7) * 4 
 	jp enemy_sprite_and_continue
 
 update_enemy_poison_bullet_left:
-	call update_enemy_bullet_move_left_if_possible
-	jp z, update_enemy_delete
-	call update_enemy_bullet_move_left_if_possible
+	ld a, (current_world__difficulty_bullet_speed)
+	call update_enemy_move_left_if_possible_a_times
 	jp z, update_enemy_delete
 	ld d, COLOR_GREEN
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 7) * 4 
@@ -357,18 +367,16 @@ update_enemy_bone_bullet:
 	jr nz, update_enemy_bone_bullet_left
 
 update_enemy_bone_bullet_right:
-	call update_enemy_bullet_move_right_if_possible
-	jp z, update_enemy_delete
-	call update_enemy_bullet_move_right_if_possible
+	ld a, (current_world__difficulty_bullet_speed)
+	call update_enemy_move_right_if_possible_a_times
 	jp z, update_enemy_delete
 	ld d, COLOR_YELLOW
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 31) * 4 
 	jp enemy_sprite_and_continue_animated4
 
 update_enemy_bone_bullet_left:
-	call update_enemy_bullet_move_left_if_possible
-	jp z, update_enemy_delete
-	call update_enemy_bullet_move_left_if_possible
+	ld a, (current_world__difficulty_bullet_speed)
+	call update_enemy_move_left_if_possible_a_times
 	jp z, update_enemy_delete
 	ld d, COLOR_YELLOW
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 31) * 4 
@@ -743,8 +751,11 @@ update_enemy_bat_stay_purple:
 	jp enemy_sprite_and_continue_animated
 
 update_enemy_bat_hang:
+	ld a, (current_world__difficulty_attack_warn_time)
+	add a, a
+	ld c, a
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
-	cp 64
+	cp c  ; warn time * 2
 	jr nz, update_enemy_bat_hang_continue
 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 6  ; fly down
@@ -938,14 +949,45 @@ update_enemy_bullet_no_yspeed_flip2:
     ld c, a
 update_enemy_bullet_no_xspeed_flip2:
 
-	sla c
-	sla b
-	call update_enemy_move_cb
-
-	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
-	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-	call general_check_collision
+	ld a, c
+	or a
+	jr z, update_enemy_bullet_x_done
+	jp m, update_enemy_bullet_x_negative
+	ld a, (current_world__difficulty_bullet_speed)
+	push bc
+		call update_enemy_move_right_if_possible_a_times
+	pop bc
 	jp z, update_enemy_delete
+	jr update_enemy_bullet_x_done
+update_enemy_bullet_x_negative:
+	ld a, (current_world__difficulty_bullet_speed)
+	push bc
+		call update_enemy_move_left_if_possible_a_times
+	pop bc
+	jp z, update_enemy_delete
+update_enemy_bullet_x_done:
+
+	ld a, b
+	or a
+	jr z, update_enemy_bullet_y_done
+	jp m, update_enemy_bullet_x_negative
+	ld a, (current_world__difficulty_bullet_speed)
+	call update_enemy_move_down_if_possible_a_times
+	jp z, update_enemy_delete
+	jr update_enemy_bullet_y_done
+update_enemy_bullet_y_negative:
+	ld a, (current_world__difficulty_bullet_speed)
+	call update_enemy_move_up_if_possible_a_times
+	jp z, update_enemy_delete
+update_enemy_bullet_y_done:
+
+; 	sla c
+; 	sla b
+; 	call update_enemy_move_cb
+; 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+; 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+; 	call general_check_collision
+; 	jp z, update_enemy_delete
 
 update_enemy_bullet_continue:
 	ld d, COLOR_YELLOW
@@ -1105,10 +1147,14 @@ update_enemy_skeleton_thrower_left_continue:
 	jp enemy_sprite_and_continue_animated
 
 update_enemy_skeleton_thrower_throw_right:
+	ld a, (current_world__difficulty_attack_warn_time)
+	add a, a
+	ld c, a
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
-	cp 32
+	cp c
 	jp z, update_enemy_skeleton_thrower_switch_to_state_right_from_throw
-	cp 16
+	srl c
+	cp c
 	jr nz, update_enemy_skeleton_thrower_throw_right_continue2
 	; throw:
 	call ptr_to_new_sprite_enemy
@@ -1154,10 +1200,14 @@ update_enemy_skeleton_thrower_throw_right_continue3:
 	jp enemy_sprite_and_continue
 
 update_enemy_skeleton_thrower_throw_left:
+	ld a, (current_world__difficulty_attack_warn_time)
+	add a, a
+	ld c, a
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
-	cp 32
+	cp c
 	jp z, update_enemy_skeleton_thrower_switch_to_state_left_from_throw
-	cp 16
+	srl c
+	cp c
 	jr nz, update_enemy_skeleton_thrower_throw_left_continue2
 	; throw:
 	call ptr_to_new_sprite_enemy
@@ -1762,8 +1812,11 @@ update_enemy_monkey_switch_to_state_throw:
 	ret
 
 update_enemy_monkey_throw:
+	ld a, (current_world__difficulty_attack_warn_time)
+	ld c, a
+	srl c
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
-	cp 8
+	cp c  ; watn time / 2
 	jr nz, update_enemy_monkey_throw_continue
 	; throw:
 	call update_enemy_fire_directional_bullet_towards_player
@@ -2522,6 +2575,54 @@ update_enemy_bullet_move_left_if_possible_move:
 ;-----------------------------------------------
 ; input:
 ; - ix: enemy ptr
+; output:
+; - z: cannot
+; - nz: can
+update_enemy_bullet_move_down_if_possible:
+	ld a, (current_room__height)
+	dec a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	ret z  ; screen edge
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
+	or a
+	jr nz, update_enemy_bullet_move_down_if_possible_move
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc b
+	call general_check_collision
+	ret z
+update_enemy_bullet_move_down_if_possible_move:
+	call update_enemy_move_down
+	or 1
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - ix: enemy ptr
+; output:
+; - z: cannot
+; - nz: can
+update_enemy_bullet_move_up_if_possible:
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	ret z  ; screen edge
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
+	or a
+	jr nz, update_enemy_bullet_move_up_if_possible_move
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	dec b
+	call general_check_collision
+	ret z
+update_enemy_bullet_move_up_if_possible_move:
+	call update_enemy_move_up
+	or 1
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - ix: enemy ptr
 ; - iyl: hit ID
 ; - iyh: damage to deal
 enemy_hit:
@@ -2565,22 +2666,30 @@ enemy_hit_killed:
 ; - c, b: x, y coordinates of the drop
 enemy_maybe_spawn_drop:
 	; check that we are spawning over background:
-	call get_room_tile_type
+	push bc
+		call get_room_tile_type
+	pop bc
 	or a
 	jr nz, enemy_maybe_spawn_drop_continue
 	inc c
-	call get_room_tile_type
+	push bc
+		call get_room_tile_type
+	pop bc
 	dec c
 	or a
 	jr nz, enemy_maybe_spawn_drop_continue
 	inc b
-	call get_room_tile_type
+	push bc
+		call get_room_tile_type
+	pop bc
 	dec b
 	or a
 	jr nz, enemy_maybe_spawn_drop_continue
 	inc b
 	inc c
-	call get_room_tile_type
+	push bc
+		call get_room_tile_type
+	pop bc
 	dec b
 	dec c
 	or a
@@ -2640,4 +2749,108 @@ enemy_maybe_spawn_drop_drop_battery:
 	or a
 	jr z, enemy_maybe_spawn_drop_continue
 	jr enemy_maybe_spawn_drop_drop
+
+
+;-----------------------------------------------
+; input:
+; - a: number of frames to move * 2
+; output:
+; - z: collision
+; - nz: no collision
+update_enemy_move_right_if_possible_a_times:
+	srl a
+	ld b, a
+	jr nc, update_enemy_move_right_if_possible_a_times_continue
+	ld a, (game_cycle)
+	rrca
+	rrca
+	jr c, update_enemy_move_right_if_possible_a_times_continue
+	inc b
+update_enemy_move_right_if_possible_a_times_continue:
+update_enemy_move_right_if_possible_a_times_loop:
+	push bc
+		call update_enemy_bullet_move_right_if_possible
+	pop bc
+	ret z
+	djnz update_enemy_move_right_if_possible_a_times_loop
+	or 1  ; nz
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - a: number of frames to move * 2
+; output:
+; - z: collision
+; - nz: no collision
+update_enemy_move_left_if_possible_a_times:
+	srl a
+	ld b, a
+	jr nc, update_enemy_move_left_if_possible_a_times_continue
+	ld a, (game_cycle)
+	rrca
+	rrca
+	jr c, update_enemy_move_left_if_possible_a_times_continue
+	inc b
+update_enemy_move_left_if_possible_a_times_continue:
+update_enemy_move_left_if_possible_a_times_loop:
+	push bc
+		call update_enemy_bullet_move_left_if_possible
+	pop bc
+	ret z
+	djnz update_enemy_move_left_if_possible_a_times_loop
+	or 1  ; nz
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - a: number of frames to move * 2
+; output:
+; - z: collision
+; - nz: no collision
+update_enemy_move_down_if_possible_a_times:
+	srl a
+	ld b, a
+	jr nc, update_enemy_move_down_if_possible_a_times_continue
+	ld a, (game_cycle)
+	rrca
+	rrca
+	jr c, update_enemy_move_down_if_possible_a_times_continue
+	inc b
+update_enemy_move_down_if_possible_a_times_continue:
+update_enemy_move_down_if_possible_a_times_loop:
+	push bc
+		call update_enemy_bullet_move_down_if_possible
+	pop bc
+	ret z
+	djnz update_enemy_move_down_if_possible_a_times_loop
+	or 1  ; nz
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - a: number of frames to move * 2
+; output:
+; - z: collision
+; - nz: no collision
+update_enemy_move_up_if_possible_a_times:
+	srl a
+	ld b, a
+	jr nc, update_enemy_move_up_if_possible_a_times_continue
+	ld a, (game_cycle)
+	rrca
+	rrca
+	jr c, update_enemy_move_up_if_possible_a_times_continue
+	inc b
+update_enemy_move_up_if_possible_a_times_continue:
+update_enemy_move_up_if_possible_a_times_loop:
+	push bc
+		call update_enemy_bullet_move_up_if_possible
+	pop bc
+	ret z
+	djnz update_enemy_move_up_if_possible_a_times_loop
+	or 1  ; nz
+	ret
 

@@ -1,8 +1,7 @@
 to do:
 
-***- difficulty:
-  ***- bullet speed / enemy aggressivity
-  ***- map sizes: define map sizes for each difficulty level (variation should not be too much: maybe easy/normal be one size, and hard/hardest another?)
+
+***- difficulty affects map sizes: define map sizes for each difficulty level (variation should not be too much: maybe easy/normal be one size, and hard/hardest another?)
 ***- "random seed monument" somewhere in the game (maybe a "stelae", that displays the current random seed in a non-obvious way (until you get the clue). When a seed fails, just error out, and ask user to enter another name.
 ***- optimize world pcg (currently 17146691 on seed #0000, #5555)
 

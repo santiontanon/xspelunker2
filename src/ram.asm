@@ -9,6 +9,10 @@ text_draw_buffer: ds virtual 32*8
 
 current_world__name: ds virtual 16
 current_world__difficulty: ds virtual 1  ; 0: easy, 1: normal, 2: hard, 3: hardest (updated in "gamestart_draw_difficulty")
+; difficulty settings (derived from 'current_world__difficulty'):
+current_world__difficulty_attack_warn_time: ds virtual 1
+current_world__difficulty_bullet_speed: ds virtual 1
+
 
 current_world__seed: ds virtual 4
 ; WORLD_AREA__SIZE: 4 + 1 + 1 + 1 + MAX_AREA_SIZE * 2 + MAX_AREA_N_TAGS * 3
@@ -174,7 +178,7 @@ player_new_hit_id: ds virtual 1
 player_weapon_hitbox_check_result: ds virtual 1  ; 1: no hit, 0: hit
 
 tile_enemy_hit_fn_ptr: ds virtual 2
-tile_enemy_ptr: ds virtual 2
+; tile_enemy_ptr: ds virtual 2
 tile_enemy_last_collision_id: ds virtual 1
 tile_enemy_work_memory: ds virtual 64  ; - some large tile-based enemies need extra memory
                                        ; - only one is spawned per room at most. So, they can safely 
