@@ -1,6 +1,5 @@
 to do:
 
-***- update the PCG equivalency test (debug-pcg) again so that it passes once again
 ***- optimize world pcg:
   15039827 (openMSX)
   14570891 -> 14412187 (mdl)

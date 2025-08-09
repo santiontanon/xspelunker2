@@ -32,7 +32,6 @@ run_equivalency_test () {
 }
 
 run_equivalency_test "0"
-run_equivalency_test "1"
 run_equivalency_test "2"
 run_equivalency_test "3"
 run_equivalency_test "4"
@@ -41,4 +40,5 @@ run_equivalency_test "6"
 run_equivalency_test "9"
 run_equivalency_test "10"
 run_equivalency_test "12"
+run_equivalency_test "13"
 

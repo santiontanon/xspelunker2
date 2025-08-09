@@ -130,13 +130,12 @@ hardcoded_area_data_3__tags:
   db TAG_BUTTON_DOOR4, 13, 4
   db TAG_ASTRONAUT_LOCK, 8, 1
   db TAG_ENDING, 3, 0
-  db TAG_ENDING, 4, 0
   db TAG_BUTTON2, 11, 0
   db TAG_BUTTON4, 13, 0
   db TAG_BOSS1_KEY, 17, 0
   db TAG_STORY_TRIVIA6, 9, 0
   ; filler
-  ds 69, 0
+  ds 72, 0
 hardcoded_area_data_4__seed:
   dw #ab86, #4631
 hardcoded_area_data_4__id:
