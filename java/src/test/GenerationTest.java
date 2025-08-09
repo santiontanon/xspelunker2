@@ -49,9 +49,9 @@ public class GenerationTest {
             typeStats[i] = 0;
         }
         
-//        for(int i = 0;i<1000;i++) {
+////        for(int i = 0;i<1000;i++) {
 ////        for(int i = 0;i<65536;i++) {
-////        for(int i = 0;i<5000;i++) {
+//        for(int i = 0;i<5000;i++) {
 //            r.setSeed(i, 0x5555);
 //            World w = pcg1.generate(r);
 //            if (w == null) {
@@ -100,6 +100,7 @@ public class GenerationTest {
 //        System.out.println("Generation stage stats: " + Arrays.toString(pcg1.n_times_reached_generation_stage));
 ////        System.out.println("Leaves in area 1: " + (pcg1.area_1_n_leaves_accum / (double)pcg1.area_1_n_leaves_count));
 //        System.out.println("nPCGAreaErrors: " + nPCGAreaErrors);
+
 
         r.setSeed(0, 0x5555);
         World w = pcg1.generate(r);

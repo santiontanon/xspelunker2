@@ -2030,12 +2030,6 @@ pcg_generate_room__start_continue3:
 		ld bc, #0e1e
 		ld de, #0802
 		call room_remove_breakable_wall_restore_background
-; 		ld hl, current_room__tile_map + 30 + 13*32
-; 		ld (hl), 229
-; 		inc hl
-; 		ld (hl), 230
-; 		ld hl, current_room__tile_map + 31 + 21*32
-; 		ld (hl), 0
 pcg_generate_room__start_continue4:
 	pop hl	
 	ld a, (hl)  ; bottom-right chunk ID
@@ -2043,24 +2037,7 @@ pcg_generate_room__start_continue4:
 		ld b, PCG_DIRECTION_DOWN
 		call pcg_generate_room__chunk_direction_open
 		jr nz, pcg_generate_room__start_continue5
-		ld hl, current_room__tile_map + 22 + 22*32
-		ld a, (hl)
-		dec hl
-		ld (hl), a
-		xor a
-; 		ld hl, current_room__tile_map + 21 + 22*32
-; 		ld (hl), a
-		ld hl, current_room__tile_map + 21 + 23*32
-		ld (hl), a
-		ld hl, current_room__tile_map + 28 + 22*32
-		ld a, (hl)
-		dec hl
-		ld (hl), a
-		xor a
-; 		ld hl, current_room__tile_map + 27 + 22*32
-; 		ld (hl), a
-		ld hl, current_room__tile_map + 27 + 23*32
-		ld (hl), a
+		call pcg_generate_room__start_remove_ropes_bottom_right
 pcg_generate_room__start_continue5:
 	pop hl
 	dec hl
@@ -2068,25 +2045,52 @@ pcg_generate_room__start_continue5:
 	ld b, PCG_DIRECTION_DOWN
 	call pcg_generate_room__chunk_direction_open
 	jr nz, pcg_generate_room__start_continue6
-	ld hl, current_room__tile_map + 5 + 22*32
-	ld a, (hl)
-	dec hl
-	ld (hl), a
-	xor a
-; 	ld hl, current_room__tile_map + 4 + 22*32
-; 	ld (hl), a
-	ld hl, current_room__tile_map + 4 + 23*32
-	ld (hl), a
-	ld hl, current_room__tile_map + 11 + 22*32
-	ld a, (hl)
-	dec hl
-	ld (hl), a
-	xor a
-; 	ld hl, current_room__tile_map + 10 + 22*32
-; 	ld (hl), a
-	ld hl, current_room__tile_map + 10 + 23*32
-	ld (hl), a
+	call pcg_generate_room__start_remove_ropes_bottom_left
 pcg_generate_room__start_continue6:
+
+	; Check if there is an inter-area connection (and we need to spawn a ladder, and remove the ropes):
+	; each connection is 8 bytes: ; id1, id2, x1, y1, direction1, x2, y2, direction2 (coordinates are in chunks)
+	ld ix, current_world__interarea_connections
+	ld a, (ix)
+	or a
+	jr nz, pcg_generate_room__start_no_interarea_connection
+	ld a, (ix + 1)
+	cp 1
+	jr nz, pcg_generate_room__start_no_interarea_connection
+	ld a, (current_room__y)
+	add a, a
+	inc a  ; *2 + 1 t oconvert it to chunk coordinates
+	cp (ix + 3)
+	jr nz, pcg_generate_room__start_no_interarea_connection
+	ld a, (current_room__x)
+	add a, a
+	cp (ix + 2)
+	jr z, pcg_generate_room__start_interarea_connection_bottom_left
+	inc a
+	cp (ix + 2)
+	jr nz, pcg_generate_room__start_no_interarea_connection
+pcg_generate_room__start_interarea_connection_bottom_right:
+	call pcg_generate_room__start_remove_ropes_bottom_right
+	ld hl, current_room__tile_map + 23 + 22*32
+	ld (hl), 168  ; ladder left
+	inc hl
+	ld (hl), 136  ; ladder right
+	ld hl, current_room__tile_map + 23 + 23*32
+	ld (hl), 248  ; ladder left
+	inc hl
+	ld (hl), 167  ; ladder right
+	jr pcg_generate_room__start_no_interarea_connection
+pcg_generate_room__start_interarea_connection_bottom_left:
+	call pcg_generate_room__start_remove_ropes_bottom_left
+	ld hl, current_room__tile_map + 7 + 22*32
+	ld (hl), 168  ; ladder left
+	inc hl
+	ld (hl), 136  ; ladder right
+	ld hl, current_room__tile_map + 7 + 23*32
+	ld (hl), 248  ; ladder left
+	inc hl
+	ld (hl), 167  ; ladder right
+pcg_generate_room__start_no_interarea_connection:
 
 	; spawn the NPCs (each NPC has a sprite object to render it, and then an invisible tile object behind, to interact with it):
 	ld iy, (tmp_pcg_room__next_tile_object_ptr)
@@ -2150,6 +2154,40 @@ pcg_generate_room__start_continue9:
 	add iy, de
 	ld (tmp_pcg_room__next_tile_object_ptr), iy	
 	ret 
+
+pcg_generate_room__start_remove_ropes_bottom_right:
+	ld hl, current_room__tile_map + 22 + 22*32
+	ld a, (hl)
+	dec hl
+	ld (hl), a
+	xor a
+	ld hl, current_room__tile_map + 21 + 23*32
+	ld (hl), a
+	ld hl, current_room__tile_map + 28 + 22*32
+	ld a, (hl)
+	dec hl
+	ld (hl), a
+	xor a
+	ld hl, current_room__tile_map + 27 + 23*32
+	ld (hl), a
+	ret
+
+pcg_generate_room__start_remove_ropes_bottom_left:
+	ld hl, current_room__tile_map + 5 + 22*32
+	ld a, (hl)
+	dec hl
+	ld (hl), a
+	xor a
+	ld hl, current_room__tile_map + 4 + 23*32
+	ld (hl), a
+	ld hl, current_room__tile_map + 11 + 22*32
+	ld a, (hl)
+	dec hl
+	ld (hl), a
+	xor a
+	ld hl, current_room__tile_map + 10 + 23*32
+	ld (hl), a
+	ret
 
 
 ;-----------------------------------------------

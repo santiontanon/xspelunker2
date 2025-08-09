@@ -1,21 +1,35 @@
 ;-----------------------------------------------
+; NOTE: this code is never execute, only used for debugging/profiling PCG
+IF DEBUG_PCG = 1
+pcg_debug_start:
+	; set random seed:
+; 	ld hl, 0
+	ld hl, #e73b
+	ld (current_world__seed), hl
+	ld hl, #5555
+	ld (current_world__seed + 2), hl
+
+    ld hl, current_world__name_rom
+    ld de, current_world__name
+    ld bc, 16
+    ldir
+
+	ld hl, gamestart_compute_difficulty
+	ld c, GAMESTART_PAGE
+	call call_hl_in_page_c_8000
+
+	; generate world:
+	ld hl, pcg_generate_world
+	ld c, PCG_PAGE_WORLD
+	call call_hl_in_page_c_8000
+pcg_debug_end:
+ENDIF
+
+
+;-----------------------------------------------
 state_play:
 	call clear_screen_left_to_right
-	call disable_VDP_output
-
-; pcg_debug_start:
-; 		; set random seed:
-; 		ld hl, 0
-; 		ld (current_world__seed), hl
-; 		ld hl, #5555
-; 		ld (current_world__seed + 2), hl
-
-; 		; generate world:
-; 		ld hl, pcg_generate_world
-; 		ld c, PCG_PAGE_WORLD
-; 		call call_hl_in_page_c_8000
-; pcg_debug_end:
-	
+	call disable_VDP_output	
 		ld hl, RAM_to_zero_on_game_start
 		ld bc, (RAM_to_zero_on_game_start_end - RAM_to_zero_on_game_start) - 1
 		call clear_memory

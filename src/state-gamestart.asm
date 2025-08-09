@@ -124,8 +124,9 @@ draw_gamestart_world_name_loop:
 	inc de
 	djnz draw_gamestart_world_name_loop
 
-	call gamestart_draw_difficulty
 	call gamestart_compute_random_seed
+	call gamestart_compute_difficulty
+	call gamestart_draw_difficulty
 	; jp gamestart_draw_random_seed
 
 
@@ -223,7 +224,7 @@ gamestart_difficulty_settings_hardest:
 	db 6  ; current_world__difficulty_bullet_speed
 
 
-gamestart_draw_difficulty:
+gamestart_compute_difficulty:
 	; infer difficulty:
 	ld a, (current_world__name)
 	ld c, 0
@@ -255,8 +256,11 @@ gamestart_draw_difficulty_set:
 		ld bc, gamestart_difficulty_settings_easy_end - gamestart_difficulty_settings_easy
 		ldir
 	pop de
+	ret
 
 
+;-----------------------------------------------
+gamestart_draw_difficulty:
 	ld hl, copy_text_from_textpage3
 	ld c, TEXT_PAGE3
 	call call_hl_in_page_c_8000

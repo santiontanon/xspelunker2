@@ -131,7 +131,36 @@ QUEST_SPEC_N_SUBQUESTS: equ 8
 
 
 ;-----------------------------------------------
-pcg__area_sizes:
+pcg__area_sizes_easy:
+	db 6, 2
+	db 6, 6
+	db 6, 6
+	db 9, 3
+	db 6, 6
+	db 3, 3
+	db 4, 6
+	db 4, 6
+	db 6, 6
+	db 6, 6
+	db 6, 6
+	db 6, 6
+
+pcg__area_sizes_hard:
+pcg__area_sizes_normal:
+	db 7, 2
+	db 7, 7
+	db 7, 7
+	db 9, 3
+	db 7, 7
+	db 3, 3
+	db 5, 7
+	db 5, 7
+	db 7, 7
+	db 7, 7
+	db 7, 7
+	db 7, 7
+
+pcg__area_sizes_hardest:
 	db 8, 2
 	db 8, 8
 	db 8, 8
@@ -161,12 +190,12 @@ pcg__area_layout_fidelity:
 	db 1
 	db 1
 
-pcg__area_layout_ptrs:
+pcg__area_layout_ptrs_easy:
 	dw pcg__full_layout
-	dw pcg__temple_inscriptions_layout
-	dw pcg__hidden_temple_layout
+	dw pcg__temple_inscriptions_layout_easy
+	dw pcg__hidden_temple_layout_easy
 	dw pcg__confluence_layout
-	dw pcg__inverted_pyramid_layout
+	dw pcg__inverted_pyramid_layout_easy
 	dw pcg__fireshaft_layout
 	dw pcg__full_layout
 	dw pcg__full_layout
@@ -175,8 +204,73 @@ pcg__area_layout_ptrs:
 	dw pcg__full_layout
 	dw pcg__full_layout
 
-pcg__temple_inscriptions_layout:
-pcg__hidden_temple_layout:
+pcg__area_layout_ptrs_normal:
+pcg__area_layout_ptrs_hard:
+	dw pcg__full_layout
+	dw pcg__temple_inscriptions_layout_normal
+	dw pcg__hidden_temple_layout_normal
+	dw pcg__confluence_layout
+	dw pcg__inverted_pyramid_layout_normal
+	dw pcg__fireshaft_layout
+	dw pcg__full_layout
+	dw pcg__full_layout
+	dw pcg__full_layout
+	dw pcg__full_layout
+	dw pcg__full_layout
+	dw pcg__full_layout
+
+pcg__area_layout_ptrs_hardest:
+	dw pcg__full_layout
+	dw pcg__temple_inscriptions_layout_hardest
+	dw pcg__hidden_temple_layout_hardest
+	dw pcg__confluence_layout
+	dw pcg__inverted_pyramid_layout_hardest
+	dw pcg__fireshaft_layout
+	dw pcg__full_layout
+	dw pcg__full_layout
+	dw pcg__full_layout
+	dw pcg__full_layout
+	dw pcg__full_layout
+	dw pcg__full_layout
+
+pcg__temple_inscriptions_layout_easy:
+pcg__hidden_temple_layout_easy:
+	db 0, 0, 1, 1, 0, 0
+	db 0, 0, 1, 1, 0, 0
+	db 0, 1, 1, 1, 1, 0
+	db 0, 1, 1, 1, 1, 0
+	db 1, 1, 1, 1, 1, 1
+	db 1, 1, 1, 1, 1, 1
+
+pcg__inverted_pyramid_layout_easy:
+	db 1, 1, 1, 1, 1, 1
+	db 1, 1, 1, 1, 1, 1
+	db 0, 1, 1, 1, 1, 0
+	db 0, 1, 1, 1, 1, 0
+	db 0, 0, 1, 1, 0, 0
+	db 0, 0, 1, 1, 0, 0
+
+pcg__temple_inscriptions_layout_normal:
+pcg__hidden_temple_layout_normal:
+	db 0, 0, 0, 1, 0, 0, 0
+	db 0, 0, 1, 1, 1, 0, 0
+	db 0, 0, 1, 1, 1, 0, 0
+	db 0, 1, 1, 1, 1, 1, 0
+	db 0, 1, 1, 1, 1, 1, 0
+	db 1, 1, 1, 1, 1, 1, 1
+	db 1, 1, 1, 1, 1, 1, 1
+
+pcg__inverted_pyramid_layout_normal:
+	db 1, 1, 1, 1, 1, 1, 1
+	db 1, 1, 1, 1, 1, 1, 1
+	db 0, 1, 1, 1, 1, 1, 0
+	db 0, 1, 1, 1, 1, 1, 0
+	db 0, 0, 1, 1, 1, 0, 0
+	db 0, 0, 1, 1, 1, 0, 0
+	db 0, 0, 0, 1, 0, 0, 0
+
+pcg__temple_inscriptions_layout_hardest:
+pcg__hidden_temple_layout_hardest:
 	db 0, 0, 0, 1, 1, 0, 0, 0
 	db 0, 0, 0, 1, 1, 0, 0, 0
 	db 0, 0, 1, 1, 1, 1, 0, 0
@@ -185,21 +279,21 @@ pcg__hidden_temple_layout:
 	db 0, 1, 1, 1, 1, 1, 1, 0
 	db 1, 1, 1, 1, 1, 1, 1, 1
 	db 1, 1, 1, 1, 1, 1, 1, 1
+
+pcg__inverted_pyramid_layout_hardest:
+	db 1, 1, 1, 1, 1, 1, 1, 1
+	db 1, 1, 1, 1, 1, 1, 1, 1
+	db 0, 1, 1, 1, 1, 1, 1, 0
+	db 0, 1, 1, 1, 1, 1, 1, 0
+	db 0, 0, 1, 1, 1, 1, 0, 0
+	db 0, 0, 1, 1, 1, 1, 0, 0
+	db 0, 0, 0, 1, 1, 0, 0, 0
+	db 0, 0, 0, 1, 1, 0, 0, 0
 
 pcg__confluence_layout:
 	db 1, 0, 0, 1, 1, 1, 0, 0, 1
 	db 1, 1, 1, 1, 1, 1, 1, 1, 1
 	db 0, 0, 0, 0, 1, 0, 0, 0, 0
-
-pcg__inverted_pyramid_layout:
-	db 1, 1, 1, 1, 1, 1, 1, 1
-	db 1, 1, 1, 1, 1, 1, 1, 1
-	db 0, 1, 1, 1, 1, 1, 1, 0
-	db 0, 1, 1, 1, 1, 1, 1, 0
-	db 0, 0, 1, 1, 1, 1, 0, 0
-	db 0, 0, 1, 1, 1, 1, 0, 0
-	db 0, 0, 0, 1, 1, 0, 0, 0
-	db 0, 0, 0, 1, 1, 0, 0, 0
 
 pcg__fireshaft_layout:
 	db 0, 1, 0
@@ -344,7 +438,7 @@ pcg_generate_world:
 	ldi
 	ldi
 
-;     out (#2c),a  ; DEBUG	
+    out (#2c),a  ; DEBUG	
 	call pcg_generate_world__init
 	call pcg_generate_world__generate_area_layouts  ; uses the connections space to store the layout
 	call pcg_generate_world__generate_divisions  ; fills divisionIDs 
@@ -358,8 +452,7 @@ pcg_generate_world:
 	jr nz, pcg_generate_world_fail
 	call pcg_generate_world__generate_tag_data  ; generates the area tags, chest content and shop extra items from all the info above
 	call pcg_generate_world__puzzles  ; tablet contents, combination puzzles, trial types, stone numbers 
-
-;     out (#2d),a  ; DEBUG	
+    out (#2d),a  ; DEBUG	
 
 	; DEBUG:
 ; 	ld hl, hardcoded_world_data
@@ -477,7 +570,20 @@ pcg_generate_world__generate_area_layouts_loop:
 			ld (de), a  ; ID
 			inc de
 
-			ld hl, pcg__area_sizes
+			push af
+				ld a, (current_world__difficulty)				
+				ld hl, pcg__area_sizes_easy
+				or a
+				jr z, pcg_generate_world__generate_area_layouts_loop_sizes_set
+				ld hl, pcg__area_sizes_normal
+				dec a
+				jr z, pcg_generate_world__generate_area_layouts_loop_sizes_set
+				ld hl, pcg__area_sizes_hard
+				dec a
+				jr z, pcg_generate_world__generate_area_layouts_loop_sizes_set
+				ld hl, pcg__area_sizes_hardest
+pcg_generate_world__generate_area_layouts_loop_sizes_set:
+			pop af
 			add a, a
 			ADD_HL_A
 			ldi  ; width
@@ -487,7 +593,18 @@ pcg_generate_world__generate_area_layouts_loop:
 			ld c, (ix + 4 + 1)  ; width
 			ld b, (ix + 4 + 2)  ; height
 
-			ld hl, pcg__area_layout_ptrs
+			ld a, (current_world__difficulty)				
+			ld hl, pcg__area_layout_ptrs_easy
+			or a
+			jr z, pcg_generate_world__generate_area_layouts_loop_ptrs_set
+			ld hl, pcg__area_layout_ptrs_normal
+			dec a
+			jr z, pcg_generate_world__generate_area_layouts_loop_ptrs_set
+			ld hl, pcg__area_layout_ptrs_hard
+			dec a
+			jr z, pcg_generate_world__generate_area_layouts_loop_ptrs_set
+			ld hl, pcg__area_layout_ptrs_hardest
+pcg_generate_world__generate_area_layouts_loop_ptrs_set:
 			ld a, (ix + 4)  ; ID
 			add a, a
 			ADD_HL_A
@@ -510,7 +627,8 @@ pcg_generate_world__generate_area_layouts_loop:
 		add hl, bc
 		ex de, hl
 	pop bc
-	djnz pcg_generate_world__generate_area_layouts_loop
+	dec b
+	jp nz, pcg_generate_world__generate_area_layouts_loop
 	ret
 
 
@@ -2768,11 +2886,11 @@ pcg_generate_world__generate_mission:
 	ld a, (tmp_pcg_world__area_3_divisions + 3)  ; division ID
 	call pcg_generate_world__get_mst_node_by_division_id
 	ld (tmp_pcg_world__mission_ending_node), hl
-	ld b, TAG_ENDING
-	ex de, hl  ; mst node
-	ld l, 3
-	call pcg_generate_world__add_tag_to_point_in_mst_node_division
-	ret nz
+; 	ld b, TAG_ENDING
+; 	ex de, hl  ; mst node
+; 	ld l, 3
+; 	call pcg_generate_world__add_tag_to_point_in_mst_node_division
+; 	ret nz
 
 	; Generate quests:
 	ld ix, tmp_pcg_world__minimum_spanning_tree  ; root

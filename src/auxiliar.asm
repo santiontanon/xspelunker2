@@ -211,4 +211,4 @@ random_modulo_loop:
     cp c
     ret c
     sub c
-    jr random_modulo_loop
+    jp random_modulo_loop

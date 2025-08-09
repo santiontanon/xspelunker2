@@ -43,17 +43,8 @@ public class PCGWorld {
     public static final int DIRECTION_UP = 4;
     public static final int DIRECTION_LEFT = 8;
     public static final int DIRECTION_IN = 16;  // connection that goes through a "gate"/"door", and not the edge of a room.
-
-    public int n_areas = 12;
-//    public int n_divisions = 80;
-//    public int min_divisions_per_area[] = {3, 7, 7, 4, 7, 1, 7, 7, 7, 7, 7, 7};
-//    public int n_divisions = 120;
-//    public int min_divisions_per_area[] = {6, 8, 8, 4, 8, 1, 8, 8, 8, 8, 7, 7};
-//    public int n_divisions = 122;
-//    public int min_divisions_per_area[] = {6, 12, 12, 5, 12, 3, 12, 12, 12, 12, 12, 12};
-    public int n_divisions = 134;
-    public int min_divisions_per_area[] = {6, 15, 15, 6, 15, 3, 12, 12, 13, 13, 12, 12};
     
+    public int n_areas = 12;
     public String areaNames[] = {
         "Jungle",
         "Temple of Inscriptions",
@@ -82,51 +73,138 @@ public class PCGWorld {
         {500, 40},
         {500, 200},
     };
+
+    // Parameters for original level sizes (8*8): 1062 / 5000 fails
+//    public int n_divisions = 134;
+//    public int min_divisions_per_area[] = {6, 15, 15, 6, 15, 3, 12, 12, 13, 13, 12, 12};
+//    public int areaSizes[][] = {
+//        {8, 2}, {8, 8}, {8, 8}, {9, 3},
+//        {8, 8}, {3, 3}, {6, 8}, {6, 8},
+//        {8, 8}, {8, 8}, {8, 8}, {8, 8},
+//    };
+//    public String predefinedAreaLayouts[][] = {
+//        null,
+//        {"...xx...",
+//         "...xx...",
+//         "..xxxx..",
+//         "..xxxx..",
+//         ".xxxxxx.",
+//         ".xxxxxx.",
+//         "xxxxxxxx",
+//         "xxxxxxxx",
+//         },
+//        {"...xx...",
+//         "...xx...",
+//         "..xxxx..",
+//         "..xxxx..",
+//         ".xxxxxx.",
+//         ".xxxxxx.",
+//         "xxxxxxxx",
+//         "xxxxxxxx",
+//         },
+//        {"x..xxx..x",
+//         "xxxxxxxxx",
+//         "....x...."},
+//        {"xxxxxxxx",
+//         "xxxxxxxx",
+//         ".xxxxxx.",
+//         ".xxxxxx.",
+//         "..xxxx..",
+//         "..xxxx..",
+//         "...xx...",
+//         "...xx..."},
+//        {".x.",
+//         "xxx",
+//         ".x."},
+//        null,
+//        null,
+//        null,
+//        null,
+//        null,
+//        null,
+//        };
+
+//    // Slightly smaller sizes (7*7): 1031 / 5000 fails
+//    public int n_divisions = 134;
+//    public int min_divisions_per_area[] = {6, 15, 15, 6, 15, 3, 12, 12, 13, 13, 12, 12};
+//    public int areaSizes[][] = {
+//        {8, 2}, {7, 7}, {7, 7}, {9, 3},
+//        {7, 7}, {3, 3}, {5, 6}, {5, 6},
+//        {7, 7}, {7, 7}, {7, 7}, {7, 7},
+//    };
+//    public String predefinedAreaLayouts[][] = {
+//        null,
+//        {"...x...",
+//         "..xxx..",
+//         "..xxx..",
+//         ".xxxxx.",
+//         ".xxxxx.",
+//         "xxxxxxx",
+//         "xxxxxxx",
+//         },
+//        {"...x...",
+//         "..xxx..",
+//         "..xxx..",
+//         ".xxxxx.",
+//         ".xxxxx.",
+//         "xxxxxxx",
+//         "xxxxxxx",
+//         },
+//        {"x..xxx..x",
+//         "xxxxxxxxx",
+//         "....x...."},
+//        {"xxxxxxx",
+//         "xxxxxxx",
+//         ".xxxxx.",
+//         ".xxxxx.",
+//         "..xxx..",
+//         "..xxx..",
+//         "...x..."},
+//        {".x.",
+//         "xxx",
+//         ".x."},
+//        null,
+//        null,
+//        null,
+//        null,
+//        null,
+//        null,
+//        };
+
+
+    // Smaller sizes (6*6): 913 / 5000 fails
+    public int n_divisions = 134;
+    public int min_divisions_per_area[] = {6, 15, 15, 6, 15, 3, 12, 12, 13, 13, 12, 12};
     public int areaSizes[][] = {
-        {8, 2},
-        {8, 8},
-        {8, 8},
-        {9, 3},
-        {8, 8},
-        {3, 3},
-        {6, 8},
-        {6, 8},
-        {8, 8},
-        {8, 8},
-        {8, 8},
-        {8, 8},
+        {7, 2}, {6, 6}, {6, 6}, {9, 3},
+        {6, 6}, {3, 3}, {4, 6}, {4, 6},
+        {6, 6}, {6, 6}, {6, 6}, {6, 6},
     };
     public String predefinedAreaLayouts[][] = {
         null,
-        {"...xx...",
-         "...xx...",
-         "..xxxx..",
-         "..xxxx..",
-         ".xxxxxx.",
-         ".xxxxxx.",
-         "xxxxxxxx",
-         "xxxxxxxx",
+        {"..xx..",
+         "..xx..",
+         ".xxxx.",
+         ".xxxx.",
+         "xxxxxx",
+         "xxxxxx",
          },
-        {"...xx...",
-         "...xx...",
-         "..xxxx..",
-         "..xxxx..",
-         ".xxxxxx.",
-         ".xxxxxx.",
-         "xxxxxxxx",
-         "xxxxxxxx",
+        {"..xx..",
+         "..xx..",
+         ".xxxx.",
+         ".xxxx.",
+         "xxxxxx",
+         "xxxxxx",
          },
         {"x..xxx..x",
          "xxxxxxxxx",
          "....x...."},
-        {"xxxxxxxx",
-         "xxxxxxxx",
-         ".xxxxxx.",
-         ".xxxxxx.",
-         "..xxxx..",
-         "..xxxx..",
-         "...xx...",
-         "...xx..."},
+        {"xxxxxx",
+         "xxxxxx",
+         ".xxxx.",
+         ".xxxx.",
+         "..xx..",
+         "..xx.."},
         {".x.",
          "xxx",
          ".x."},
@@ -136,7 +214,9 @@ public class PCGWorld {
         null,
         null,
         null,
-        };   
+        };
+
+    
     public double predefinedAreaLayouts_f[] = {
       0.0,
       0.95, 0.95,  // two pyramids only respect the pattern with chance 0.5
@@ -810,7 +890,7 @@ public class PCGWorld {
         w.lockKeys.get("midpoint").add("boss2");
         w.lockKeys.get("midpoint").add("boss3");
         AreaDivision ending = getDivisionByID(w.areas.get(3).divisionIDs[3][0], tree);
-        addTag(new AreaPoint(w.areas.get(3), 3, 0), "ending", ending);
+//        addTag(new AreaPoint(w.areas.get(3), 3, 0), "ending", ending);
 
 //        System.out.println("Key division depths: " +
 //                           divisionTreeDepth(boss1) + ", " + 

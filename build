@@ -5,7 +5,7 @@ DEBUGARG=${2:-0}
 
 
 # Compile the game:
-java -jar java/mdl.jar src/main.asm -bin xspelunker2.rom -st xspelunker2.sym -equ DEBUG="$DEBUGARG" -equ INCLUDE_HARDCODED_WORLD_DATA="0" -asm+:html xspelunker2.html -sft xspelunker2.tsv
+java -jar java/mdl.jar src/main.asm -bin xspelunker2.rom -st xspelunker2.sym -equ DEBUG="$DEBUGARG" -equ DEBUG_PCG="0" -equ INCLUDE_HARDCODED_WORLD_DATA="0" -asm+:html xspelunker2.html -sft xspelunker2.tsv
 
 
 # Safety checks:

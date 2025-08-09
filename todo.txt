@@ -1,9 +1,10 @@
 to do:
 
-
-***- difficulty affects map sizes: define map sizes for each difficulty level (variation should not be too much: maybe easy/normal be one size, and hard/hardest another?)
-***- "random seed monument" somewhere in the game (maybe a "stelae", that displays the current random seed in a non-obvious way (until you get the clue). When a seed fails, just error out, and ask user to enter another name.
-***- optimize world pcg (currently 17146691 on seed #0000, #5555)
+***- update the PCG equivalency test (debug-pcg) again so that it passes once again
+***- optimize world pcg:
+  15039827 (openMSX)
+  14570891 -> 14412187 (mdl)
+***- "random seed monument" somewhere in the game (maybe a "stelae", that displays the current random seed in a non-obvious way (until you get the clue): it should give clues about what each bit does.
 
 - music: intro, letters, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 25 have potential)
 
