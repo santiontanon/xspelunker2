@@ -50,10 +50,13 @@ test_start:
 	ld hl, PCG_WORLD_SEED2
 	ld (current_world__seed + 2), hl
 
+	ld a, 3
+	ld (current_world__difficulty), a
+
 	; generate world:
 	call pcg_generate_world
 	jr z, pcg_generate_world_call_succeeded
-	nop  ; mdl-watch: "test__ pcg_generate_world call failed!"
+	nop  ; mdl-watch: "test__pcg_generate_world call failed!"
 pcg_generate_world_call_succeeded:
 
 	ld hl, hardcoded_world_data

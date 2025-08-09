@@ -128,11 +128,10 @@ hardcoded_area_data_3__tags:
   db TAG_BREAKABLE_WALL2, 14, 4
   db TAG_BREAKABLE_WALL4, 22, 1
   db TAG_ENDING, 3, 0
-  db TAG_ENDING, 5, 0
   db TAG_BUTTON2, 11, 0
   db TAG_MAYA_RIDDLE_CLUE2, 0, 0
   ; filler
-  ds 75, 0
+  ds 78, 0
 hardcoded_area_data_4__seed:
   dw #1a11, #8433
 hardcoded_area_data_4__id:

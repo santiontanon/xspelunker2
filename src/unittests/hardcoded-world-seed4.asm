@@ -128,13 +128,12 @@ hardcoded_area_data_3__divisionIDs:
 hardcoded_area_data_3__tags:
   db TAG_TRIAL3_LOCK, 13, 4
   db TAG_ENDING, 3, 0
-  db TAG_ENDING, 4, 0
   db TAG_HEART2, 15, 0
   db TAG_ITEM_CHAAC, 8, 0
   db TAG_ITEM_SEASHELL, 9, 0
   db TAG_SMALL_KEY1, 16, 0
   ; filler
-  ds 75, 0
+  ds 78, 0
 hardcoded_area_data_4__seed:
   dw #209e, #3368
 hardcoded_area_data_4__id:

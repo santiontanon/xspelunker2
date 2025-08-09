@@ -438,7 +438,7 @@ pcg_generate_world:
 	ldi
 	ldi
 
-    out (#2c),a  ; DEBUG	
+;     out (#2c),a  ; DEBUG	
 	call pcg_generate_world__init
 	call pcg_generate_world__generate_area_layouts  ; uses the connections space to store the layout
 	call pcg_generate_world__generate_divisions  ; fills divisionIDs 
@@ -452,7 +452,7 @@ pcg_generate_world:
 	jr nz, pcg_generate_world_fail
 	call pcg_generate_world__generate_tag_data  ; generates the area tags, chest content and shop extra items from all the info above
 	call pcg_generate_world__puzzles  ; tablet contents, combination puzzles, trial types, stone numbers 
-    out (#2d),a  ; DEBUG	
+;     out (#2d),a  ; DEBUG	
 
 	; DEBUG:
 ; 	ld hl, hardcoded_world_data
@@ -2751,13 +2751,13 @@ pcg_generate_world__push_mst_node_n_descendants_loop:
 ; - nz: some error happened
 pcg_generate_world__generate_mission:
 	; DEBUG-start
-; 	push hl  ; mdl-watch: "pcg_generate_world__generate_mission"
+; 	push hl  ; mdl-watch2: "pcg_generate_world__generate_mission"
 ; 		ld hl, (rng_seed1)  ; mdl-watch: "        seed1: ", hl
 ; 		ld hl, (rng_seed2)  ; mdl-watch: "        seed2: ", hl
 ; 	pop hl
 	; DEBUG-end
 
-	ld hl, pcg_world__available_lock_keys_init_rom
+	ld hl, pcg_world__available_lock_keys_init_rom  ; mdl-watch: "pcg_generate_world__generate_mission"
 	ld de, tmp_pcg_world__available_lock_keys_obstacles
 	ld bc, pcg_world__available_lock_keys_init_rom_end - pcg_world__available_lock_keys_init_rom
 	ldir
@@ -2886,11 +2886,11 @@ pcg_generate_world__generate_mission:
 	ld a, (tmp_pcg_world__area_3_divisions + 3)  ; division ID
 	call pcg_generate_world__get_mst_node_by_division_id
 	ld (tmp_pcg_world__mission_ending_node), hl
-; 	ld b, TAG_ENDING
-; 	ex de, hl  ; mst node
-; 	ld l, 3
-; 	call pcg_generate_world__add_tag_to_point_in_mst_node_division
-; 	ret nz
+	ld b, TAG_ENDING
+	ex de, hl  ; mst node
+	ld l, 3
+	call pcg_generate_world__add_tag_to_point_in_mst_node_division
+	ret nz
 
 	; Generate quests:
 	ld ix, tmp_pcg_world__minimum_spanning_tree  ; root
@@ -2920,7 +2920,8 @@ pcg_generate_world__generate_mission:
 	PCG_WORLD__PUSH_QUEST tmp_pcg_world__mission_start_node, tmp_pcg_world__mission_boss2_node, 3, #ff, #ff, TAG_NONE, TAG_BOSS2_CHESTLOCK
 	PCG_WORLD__PUSH_QUEST tmp_pcg_world__mission_start_node, tmp_pcg_world__mission_boss3_node, 3, #ff, #ff, TAG_NONE, TAG_BOSS3_CHESTLOCK
 	PCG_WORLD__PUSH_QUEST tmp_pcg_world__mission_start_node, tmp_pcg_world__mission_midpoint_node, 2, #ff, #ff, TAG_START, TAG_MIDPOINT
-	PCG_WORLD__PUSH_QUEST tmp_pcg_world__mission_start_node, tmp_pcg_world__mission_ending_node, 2, #ff, #ff, TAG_NONE, TAG_ENDING
+; 	PCG_WORLD__PUSH_QUEST tmp_pcg_world__mission_start_node, tmp_pcg_world__mission_ending_node, 2, #ff, #ff, TAG_NONE, TAG_ENDING
+	PCG_WORLD__PUSH_QUEST tmp_pcg_world__mission_start_node, tmp_pcg_world__mission_ending_node, 2, #ff, #ff, TAG_NONE, TAG_NONE
 	call pcg_generate_world__generate_subquests
 	ret nz
 

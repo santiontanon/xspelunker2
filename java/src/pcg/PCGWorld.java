@@ -75,54 +75,55 @@ public class PCGWorld {
     };
 
     // Parameters for original level sizes (8*8): 1062 / 5000 fails
-//    public int n_divisions = 134;
-//    public int min_divisions_per_area[] = {6, 15, 15, 6, 15, 3, 12, 12, 13, 13, 12, 12};
-//    public int areaSizes[][] = {
-//        {8, 2}, {8, 8}, {8, 8}, {9, 3},
-//        {8, 8}, {3, 3}, {6, 8}, {6, 8},
-//        {8, 8}, {8, 8}, {8, 8}, {8, 8},
-//    };
-//    public String predefinedAreaLayouts[][] = {
-//        null,
-//        {"...xx...",
-//         "...xx...",
-//         "..xxxx..",
-//         "..xxxx..",
-//         ".xxxxxx.",
-//         ".xxxxxx.",
-//         "xxxxxxxx",
-//         "xxxxxxxx",
-//         },
-//        {"...xx...",
-//         "...xx...",
-//         "..xxxx..",
-//         "..xxxx..",
-//         ".xxxxxx.",
-//         ".xxxxxx.",
-//         "xxxxxxxx",
-//         "xxxxxxxx",
-//         },
-//        {"x..xxx..x",
-//         "xxxxxxxxx",
-//         "....x...."},
-//        {"xxxxxxxx",
-//         "xxxxxxxx",
-//         ".xxxxxx.",
-//         ".xxxxxx.",
-//         "..xxxx..",
-//         "..xxxx..",
-//         "...xx...",
-//         "...xx..."},
-//        {".x.",
-//         "xxx",
-//         ".x."},
-//        null,
-//        null,
-//        null,
-//        null,
-//        null,
-//        null,
-//        };
+    public int n_divisions = 134;
+    public int min_divisions_per_area[] = {6, 15, 15, 6, 15, 3, 12, 12, 13, 13, 12, 12};
+    public int areaSizes[][] = {
+        {8, 2}, {8, 8}, {8, 8}, {9, 3},
+        {8, 8}, {3, 3}, {6, 8}, {6, 8},
+        {8, 8}, {8, 8}, {8, 8}, {8, 8},
+    };
+    public String predefinedAreaLayouts[][] = {
+        null,
+        {"...xx...",
+         "...xx...",
+         "..xxxx..",
+         "..xxxx..",
+         ".xxxxxx.",
+         ".xxxxxx.",
+         "xxxxxxxx",
+         "xxxxxxxx",
+         },
+        {"...xx...",
+         "...xx...",
+         "..xxxx..",
+         "..xxxx..",
+         ".xxxxxx.",
+         ".xxxxxx.",
+         "xxxxxxxx",
+         "xxxxxxxx",
+         },
+        {"x..xxx..x",
+         "xxxxxxxxx",
+         "....x...."},
+        {"xxxxxxxx",
+         "xxxxxxxx",
+         ".xxxxxx.",
+         ".xxxxxx.",
+         "..xxxx..",
+         "..xxxx..",
+         "...xx...",
+         "...xx..."},
+        {".x.",
+         "xxx",
+         ".x."},
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        };
+
 
 //    // Slightly smaller sizes (7*7): 1031 / 5000 fails
 //    public int n_divisions = 134;
@@ -172,49 +173,49 @@ public class PCGWorld {
 //        };
 
 
-    // Smaller sizes (6*6): 913 / 5000 fails
-    public int n_divisions = 134;
-    public int min_divisions_per_area[] = {6, 15, 15, 6, 15, 3, 12, 12, 13, 13, 12, 12};
-    public int areaSizes[][] = {
-        {7, 2}, {6, 6}, {6, 6}, {9, 3},
-        {6, 6}, {3, 3}, {4, 6}, {4, 6},
-        {6, 6}, {6, 6}, {6, 6}, {6, 6},
-    };
-    public String predefinedAreaLayouts[][] = {
-        null,
-        {"..xx..",
-         "..xx..",
-         ".xxxx.",
-         ".xxxx.",
-         "xxxxxx",
-         "xxxxxx",
-         },
-        {"..xx..",
-         "..xx..",
-         ".xxxx.",
-         ".xxxx.",
-         "xxxxxx",
-         "xxxxxx",
-         },
-        {"x..xxx..x",
-         "xxxxxxxxx",
-         "....x...."},
-        {"xxxxxx",
-         "xxxxxx",
-         ".xxxx.",
-         ".xxxx.",
-         "..xx..",
-         "..xx.."},
-        {".x.",
-         "xxx",
-         ".x."},
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        };
+//    // Smaller sizes (6*6): 913 / 5000 fails
+//    public int n_divisions = 134;
+//    public int min_divisions_per_area[] = {6, 15, 15, 6, 15, 3, 12, 12, 13, 13, 12, 12};
+//    public int areaSizes[][] = {
+//        {7, 2}, {6, 6}, {6, 6}, {9, 3},
+//        {6, 6}, {3, 3}, {4, 6}, {4, 6},
+//        {6, 6}, {6, 6}, {6, 6}, {6, 6},
+//    };
+//    public String predefinedAreaLayouts[][] = {
+//        null,
+//        {"..xx..",
+//         "..xx..",
+//         ".xxxx.",
+//         ".xxxx.",
+//         "xxxxxx",
+//         "xxxxxx",
+//         },
+//        {"..xx..",
+//         "..xx..",
+//         ".xxxx.",
+//         ".xxxx.",
+//         "xxxxxx",
+//         "xxxxxx",
+//         },
+//        {"x..xxx..x",
+//         "xxxxxxxxx",
+//         "....x...."},
+//        {"xxxxxx",
+//         "xxxxxx",
+//         ".xxxx.",
+//         ".xxxx.",
+//         "..xx..",
+//         "..xx.."},
+//        {".x.",
+//         "xxx",
+//         ".x."},
+//        null,
+//        null,
+//        null,
+//        null,
+//        null,
+//        null,
+//        };
 
     
     public double predefinedAreaLayouts_f[] = {
@@ -890,7 +891,7 @@ public class PCGWorld {
         w.lockKeys.get("midpoint").add("boss2");
         w.lockKeys.get("midpoint").add("boss3");
         AreaDivision ending = getDivisionByID(w.areas.get(3).divisionIDs[3][0], tree);
-//        addTag(new AreaPoint(w.areas.get(3), 3, 0), "ending", ending);
+        addTag(new AreaPoint(w.areas.get(3), 3, 0), "ending", ending);
 
 //        System.out.println("Key division depths: " +
 //                           divisionTreeDepth(boss1) + ", " + 
@@ -919,7 +920,8 @@ public class PCGWorld {
         open.add(new QuestSpec(start, boss2, n_subquests_per_boss, null, null, null, "boss2"));
         open.add(new QuestSpec(start, boss3, n_subquests_per_boss, null, null, null, "boss3"));
         open.add(new QuestSpec(start, midpoint, n_subquests_for_midpoint, null, null, "start", "midpoint"));
-        open.add(new QuestSpec(start, ending, n_subquests_for_ending, null, null, null, "ending"));
+//        open.add(new QuestSpec(start, ending, n_subquests_for_ending, null, null, null, "ending"));
+        open.add(new QuestSpec(start, ending, n_subquests_for_ending, null, null, null, null));
         List<Quest> quests1 = generateSubquests(w, tree, open, useable, reachable);
         if (quests1 == null) {
             return false;
@@ -1355,32 +1357,39 @@ public class PCGWorld {
 //                System.out.println("    initial quest_type: " + quest_type);
                 String key_tags[] = null;
                 String lock_tag = null;
-                switch(qs.goalTag) {
-                    case "boss1":
-                    case "boss2":
-                    case "boss3":
-                    case "boss4":
-                    case "boss5":
-                    case "boss6":
-                    case "boss7":
-                        lock_tag = qs.goalTag + "-chestlock";
-                        key_tags = new String[]{qs.goalTag + "-key"};
-                        quest_type = 1;
-                        break;
-                    case "midpoint":
-                    case "ending":
-                    case "none":
-                    case "button1":
-                    case "button2":
-                    case "button3":
-                    case "button4":
-                        // midpoint or ending cannot be inside a chest!
-                        if (quest_type == 1) {
-                            quest_type = r.nextInt(2) * 2;  // 0 or 2
+                if (qs.goalTag != null) {
+                    switch(qs.goalTag) {
+                        case "boss1":
+                        case "boss2":
+                        case "boss3":
+                        case "boss4":
+                        case "boss5":
+                        case "boss6":
+                        case "boss7":
+                            lock_tag = qs.goalTag + "-chestlock";
+                            key_tags = new String[]{qs.goalTag + "-key"};
+                            quest_type = 1;
+                            break;
+                        case "midpoint":
+                        case "ending":
+                        case "none":
+                        case "button1":
+                        case "button2":
+                        case "button3":
+                        case "button4":
+                            // midpoint or ending cannot be inside a chest!
+                            if (quest_type == 1) {
+                                quest_type = r.nextInt(2) * 2;  // 0 or 2
+    //                            System.out.println("        new quest_type ("+qs.goalTag+"): " + quest_type);
+                            }
+                            break;
+                        default:
+                    }
+                } else {
+                    if (quest_type == 1) {
+                        quest_type = r.nextInt(2) * 2;  // 0 or 2
 //                            System.out.println("        new quest_type ("+qs.goalTag+"): " + quest_type);
-                        }
-                        break;
-                    default:
+                    }                    
                 }
 
                 if (availableLockKeysChestsSorted.isEmpty() && quest_type == 1 && lock_tag == null) {

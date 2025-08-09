@@ -130,12 +130,11 @@ hardcoded_area_data_3__divisionIDs:
 hardcoded_area_data_3__tags:
   db TAG_COMBINATION2_LOCK, 13, 4
   db TAG_ENDING, 3, 0
-  db TAG_ENDING, 4, 0
   db TAG_MAYA_RIDDLE_CLUE3, 16, 0
   db TAG_STORY_TRIVIA3, 11, 0
   db TAG_ITEM_CHAAC, 0, 0
   ; filler
-  ds 78, 0
+  ds 81, 0
 hardcoded_area_data_4__seed:
   dw #cb92, #aadf
 hardcoded_area_data_4__id:

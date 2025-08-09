@@ -131,11 +131,10 @@ hardcoded_area_data_3__tags:
   db TAG_BREAKABLE_WALL4, 14, 4
   db TAG_COMBINATION3_LOCK, 17, 8
   db TAG_ENDING, 3, 0
-  db TAG_ENDING, 5, 0
   db TAG_RED_KEY, 16, 0
   db TAG_ITEM_SANDALS, 10, 0
   ; filler
-  ds 75, 0
+  ds 78, 0
 hardcoded_area_data_4__seed:
   dw #745c, #923f
 hardcoded_area_data_4__id:
