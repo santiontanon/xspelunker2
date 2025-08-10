@@ -20,7 +20,7 @@ import util.Pair;
  * @author santi
  */
 public class PCGPatternNKeysAndLock extends PCGPattern {
-    public Pair<Quest, List<QuestSpec>> generate(World w, QuestSpec qs, String keytags[], String locktag, List<AreaDivision> useable, List<AreaDivision> reachable, PCGWorld pcg)
+    public Pair<Quest, List<QuestSpec>> generate(World w, QuestSpec qs, String keytags[], String locktag, List<AreaDivision> useable, List<AreaDivision> reachable, PCGWorld pcg) throws Exception
     {
 //        System.out.println("    PCGPatternNKeysAndLock: " + qs.startTag + " -> " +  Arrays.toString(keytags) + " -> " + locktag + " -> " + qs.goalTag);
         int nKeys = keytags.length;
@@ -84,13 +84,14 @@ public class PCGPatternNKeysAndLock extends PCGPattern {
             if (q.lockPoint == null) {
 //                System.out.println("    PCGPatternNKeysAndLock: could not place the lock!");
                 return null;
-            }      
-            q.lockTag = locktag;
+            }
 
-            if (pcg.canPlaceTag(q.lockPoint, q.lockTag, new ArrayList<>())) {
+            q.lockTag = locktag;
+            if (pcg.canPlaceTag(q.lockPoint, q.lockTag, new ArrayList<>()) &&
+                pcg.canPlaceTag(q.lockTag, q.lockDivision)) {
                 break;
-            } else {
-//                System.out.println("!!!! -> cannot place " + q.lockTag + " since we have " + q.lockPoint.a.tags[q.lockPoint.x][q.lockPoint.y]);
+//            } else {
+//                System.out.println("!!!! -> cannot place " + q.lockTag + " since we have " + q.lockPoint.a.tags[q.lockPoint.x][q.lockPoint.y] + ", and " + q.lockDivision.tags);
             }
         }
         
@@ -118,6 +119,9 @@ public class PCGPatternNKeysAndLock extends PCGPattern {
             q.lockToGoalPathType = Quest.PATH_NORMAL;
         }
             
+        if (q.lockTag != null) {
+            if (!pcg.addTag(q.lockPoint, q.lockTag, q.lockDivision)) return null;
+        }
         
         // update "reachable" (remove the descendants of the lock):
         {
@@ -185,6 +189,19 @@ public class PCGPatternNKeysAndLock extends PCGPattern {
             QuestSpec q2 = new QuestSpec(qs.start, keyDivision, qs.nSubQuests - 1, q.startPoint, keyPoint, qs.startTag, keytags[i]);
 //            System.out.println("   new subquest (from key-lock): " + q2);
             subquests.add(q2);
+        }
+        
+        for(int i = 0;i<q.keyPoints.size();i++) {
+            if (q.keyTags.get(i) != null) {
+                if (!pcg.addTag(q.keyPoints.get(i), q.keyTags.get(i), q.keyDivisions.get(i))) return null;
+            }
+        }        
+        
+        if (q.startTag != null) {
+            if (!pcg.addTag(q.startPoint, q.startTag, q.startDivision)) return null;
+        }
+        if (q.goalTag != null) {
+            if (!pcg.addTag(q.goalPoint, q.goalTag, q.goalDivision)) return null;
         }
         
         return new Pair<>(q, subquests);

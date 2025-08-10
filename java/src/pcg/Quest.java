@@ -36,26 +36,26 @@ public class Quest {
     }
     
     
-    public boolean addTags(World w, PCGWorld pcg) throws Exception
-    {
-        if (startTag != null) {
-            if (!pcg.addTag(startPoint, startTag, startDivision)) return false;
-        }
-        if (goalTag != null) {
-            if (!pcg.addTag(goalPoint, goalTag, goalDivision)) return false;
-        }
-        if (lockTag != null) {
-            if (!pcg.addTag(lockPoint, lockTag, lockDivision)) return false;
-        }
-        
-        for(int i = 0;i<keyPoints.size();i++) {
-            if (keyTags.get(i) != null) {
-                if (!pcg.addTag(keyPoints.get(i), keyTags.get(i), keyDivisions.get(i))) return false;
-            }
-        }
-
-        return true;
-    }
+//    public boolean addTags(World w, PCGWorld pcg) throws Exception
+//    {
+//        if (startTag != null) {
+//            if (!pcg.addTag(startPoint, startTag, startDivision)) return false;
+//        }
+//        if (goalTag != null) {
+//            if (!pcg.addTag(goalPoint, goalTag, goalDivision)) return false;
+//        }
+//        if (lockTag != null) {
+//            if (!pcg.addTag(lockPoint, lockTag, lockDivision)) return false;
+//        }
+//        
+//        for(int i = 0;i<keyPoints.size();i++) {
+//            if (keyTags.get(i) != null) {
+//                if (!pcg.addTag(keyPoints.get(i), keyTags.get(i), keyDivisions.get(i))) return false;
+//            }
+//        }
+//
+//        return true;
+//    }
     
     /*
     public boolean addPaths(World w, PCGWorld pcg, List<AreaConnection> usedConnections)

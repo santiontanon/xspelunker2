@@ -24,7 +24,7 @@ import util.Pair;
  * 
  */
 public class PCGPatternObstacle extends PCGPattern {
-    public Pair<Quest, List<QuestSpec>> generate(World w, QuestSpec qs, String keytag, String locktag, List<AreaDivision> useable, List<AreaDivision> reachable, PCGWorld pcg)
+    public Pair<Quest, List<QuestSpec>> generate(World w, QuestSpec qs, String keytag, String locktag, List<AreaDivision> useable, List<AreaDivision> reachable, PCGWorld pcg) throws Exception
     {
 //        System.out.println("PCGPatternObstacle: " + qs + ", " +  keytag + " / " + locktag);
         Quest q = new Quest("obstacle: " + qs.start.divisionID + " -> " + qs.goal.divisionID);
@@ -47,7 +47,7 @@ public class PCGPatternObstacle extends PCGPattern {
         while(true) {
             AreaDivision lockTargetDiv = q.lockDivision;
             rootToRemove = q.lockDivision;
-//            System.out.println("   lock div moved from " + q.lockDivision + " to " + q.lockDivision.parent);
+//            System.out.println("    obstacle lock div moved from " + q.lockDivision + " to " + q.lockDivision.parent);
             q.lockDivision = q.lockDivision.parent;
             if (q.lockDivision == null) {
                 return null;
@@ -87,12 +87,14 @@ public class PCGPatternObstacle extends PCGPattern {
                 System.err.println("PCGPatternObstacle: could not place the lock!");
                 return null;
             }
+//            System.out.println("   lock point moved to " + q.lockPoint + ", offset: " + q.lockPoint.offset());
                         
             q.lockTag = locktag;
-            if (pcg.canPlaceTag(q.lockPoint, q.lockTag, new ArrayList<>())) {
+            if (pcg.canPlaceTag(q.lockPoint, q.lockTag, new ArrayList<>()) &&
+                pcg.canPlaceTag(q.lockTag, q.lockDivision)) {
                 break;
             } else {
-//                System.out.println("!!!!! -> cannot place " + q.lockTag + " since we have " + q.lockPoint.a.tags[q.lockPoint.x][q.lockPoint.y]);                
+//                System.out.println("!!!!! -> cannot place " + q.lockTag + " since we have " + q.lockPoint.a.tags[q.lockPoint.x][q.lockPoint.y]);
             }
         }            
 
@@ -109,7 +111,28 @@ public class PCGPatternObstacle extends PCGPattern {
         } else {
             q.lockToGoalPathType = Quest.PATH_NORMAL;
         }
-                
+
+        AreaDivision keyDivision = q.lockDivision;
+        AreaPoint keyPoint = q.lockPoint;
+        q.keyDivisions.add(keyDivision);
+//        System.out.println("    obstacle keyDivision "+keytag+": " + keyDivision);
+        q.keyPoints.add(keyPoint);
+        q.keyTags.add(keytag);        
+        if (q.lockTag != null) {
+            if (!pcg.addTag(q.lockPoint, q.lockTag, q.lockDivision)) return null;
+        }
+        for(int i = 0;i<q.keyPoints.size();i++) {
+            if (q.keyTags.get(i) != null) {
+                if (!pcg.addTag(q.keyPoints.get(i), q.keyTags.get(i), q.keyDivisions.get(i))) return null;
+            }
+        }
+        if (q.startTag != null) {
+            if (!pcg.addTag(q.startPoint, q.startTag, q.startDivision)) return null;
+        }
+        if (q.goalTag != null) {
+            if (!pcg.addTag(q.goalPoint, q.goalTag, q.goalDivision)) return null;
+        }
+        
         // update "reachable" (remove "goal" and all its descendants):
         {
 //            AreaDivision rootToRemove = q.lockDivision;
@@ -135,12 +158,6 @@ public class PCGPatternObstacle extends PCGPattern {
 //            System.out.println("  PCGPatternObstacle: goal ("+qs.goalTag+") set to " + qs.goal + " with lock at "+q.lockDivision+". Removing: " + toRemove);
         }
         
-        AreaDivision keyDivision = q.lockDivision;
-        AreaPoint keyPoint = q.lockPoint;
-        q.keyDivisions.add(keyDivision);
-//        System.out.println("    obstacle keyDivision "+keytag+": " + keyDivision);
-        q.keyPoints.add(keyPoint);
-        q.keyTags.add(keytag);
         List<QuestSpec> subquests = new ArrayList<>();
         QuestSpec q2 = new QuestSpec(qs.start, keyDivision, qs.nSubQuests - 1, q.startPoint, keyPoint, qs.startTag, keytag);
 //        System.out.println("   new subquest (from obstacle): " + q2);

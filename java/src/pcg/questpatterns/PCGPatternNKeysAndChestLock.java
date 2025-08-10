@@ -21,7 +21,7 @@ import util.Pair;
  * @author santi
  */
 public class PCGPatternNKeysAndChestLock extends PCGPattern {
-    public Pair<Quest, List<QuestSpec>> generate(World w, QuestSpec qs, String keytags[], String locktag, List<AreaDivision> useable, List<AreaDivision> reachable, PCGWorld pcg)
+    public Pair<Quest, List<QuestSpec>> generate(World w, QuestSpec qs, String keytags[], String locktag, List<AreaDivision> useable, List<AreaDivision> reachable, PCGWorld pcg) throws Exception
     {
 //        if (locktag.equals("white-chest")) {
 //            System.out.println("!!!!");
@@ -48,7 +48,7 @@ public class PCGPatternNKeysAndChestLock extends PCGPattern {
         q.lockToGoalPathType = Quest.PATH_NONE;
         
         List<String> allowedTags = new ArrayList<>();
-        allowedTags.add(q.goalTag);
+//        allowedTags.add(q.goalTag);
         if (!pcg.canPlaceTag(q.lockPoint, q.lockTag, allowedTags)) {
             System.out.println("!!! -> cannot place " + q.lockTag + " since we have " + q.lockPoint.a.tags[q.lockPoint.x][q.lockPoint.y] + " (allowed tags: " + allowedTags + ")");
         }
@@ -113,6 +113,19 @@ public class PCGPatternNKeysAndChestLock extends PCGPattern {
             subquests.add(q2);
         }
         
+        for(int i = 0;i<q.keyPoints.size();i++) {
+            if (q.keyTags.get(i) != null) {
+                if (!pcg.addTag(q.keyPoints.get(i), q.keyTags.get(i), q.keyDivisions.get(i))) return null;
+            }
+        }        
+        
+        if (q.startTag != null) {
+            if (!pcg.addTag(q.startPoint, q.startTag, q.startDivision)) return null;
+        }
+        if (q.lockTag != null) {
+            if (!pcg.addTag(q.goalPoint, q.lockTag, q.goalDivision)) return null;
+        }
+
         return new Pair<>(q, subquests);
     }
     

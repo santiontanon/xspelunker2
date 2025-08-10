@@ -1,8 +1,6 @@
 to do:
 
-***- optimize world pcg:
-  15039827 (openMSX)
-  14570891 -> 14412187 (mdl)
+***- make pcg-world test pass again: seed 7 does not match
 ***- "random seed monument" somewhere in the game (maybe a "stelae", that displays the current random seed in a non-obvious way (until you get the clue): it should give clues about what each bit does.
 
 - music: intro, letters, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 25 have potential)

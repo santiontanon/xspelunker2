@@ -484,6 +484,20 @@ public class PCGWorld {
                 w.powerStoneNumbers[j] = r.nextInt(8) + 1;
             }
             
+            boolean endingFound = false;
+            for(Area a:w.areas) {
+                for(int y = 0;y<a.height;y++) {
+                    for(int x = 0;x<a.width;x++) {
+                        List<String> l = a.tags[x][y];
+                        if (l != null && l.contains("ending")) {
+                            endingFound = true;
+                        }
+                    }
+                }
+            }
+            if (!endingFound) {
+                throw new Exception("Ending tag not found!");
+            }
             
             return w;
         }        
@@ -716,13 +730,23 @@ public class PCGWorld {
         List<AreaDivision> open = new ArrayList<>();
         open.add(div);
         while(!open.isEmpty()) {
-            div = open.get(r.nextInt(open.size()));
+            if (open.size() == 1) {
+                div = open.get(0);
+            } else {
+                div = open.get(r.nextInt(open.size()));
+            }
 //            System.out.println("---- pop: " + div.divisionID);
             open.remove(div);
             List<AreaPoint> neighborPoints = getDivisionNeighborPoints(w, div);
             while(!neighborPoints.isEmpty()) {
 //                System.out.println("neighborPoints: " + neighborPoints.size());
-                AreaPoint p = neighborPoints.remove(r.nextInt(neighborPoints.size()));
+                AreaPoint p;
+                if (neighborPoints.size() == 1) {
+                    p = neighborPoints.remove(0);
+                } else {
+                    p = neighborPoints.remove(r.nextInt(neighborPoints.size()));
+                }
+
                 int id = p.a.divisionIDs[p.x][p.y];
                 if (!IDsInTree.contains(id)) {
 //                    System.out.println("    child: " + p.x + ", " + p.y);
@@ -1063,7 +1087,7 @@ public class PCGWorld {
         for(AreaDivision d: allAreas) {
             if (d.tags.isEmpty()) {
                 tagLess.add(d);
-//                System.out.println("    " + d + ": " + d.tags);
+//                System.out.println("    " + d + " tagless");
 //            } else {
 //                System.out.println("    " + d + ": " + d.tags);
             }
@@ -1194,12 +1218,12 @@ public class PCGWorld {
                     // place in a small key chest!
                     n_small_keys++;
                     addTag(p, "small-key-chest" + n_small_keys, d);
-//                    System.out.println("heart (with small key chest) div / offset: " + d.divisionID + ", " + p.offset());
+//                    System.out.println("heart"+(i+1)+" (with small key chest) div / offset: " + d.divisionID + ", " + p.offset());
                     w.addChestContent("small-key-chest" + n_small_keys, "heart" + (i+1));
                     w.withinChestTag.add("heart" + (i+1));
                 } else {
                     addTag(p, "heart" + (i+1), d);
-//                    System.out.println("heart div / offset: " + d.divisionID + ", " + p.offset());
+//                    System.out.println("heart"+(i+1)+" div / offset: " + d.divisionID + ", " + p.offset());
                 }
                 tagLess.remove(d);
             }            
@@ -1492,10 +1516,10 @@ public class PCGWorld {
             List<QuestSpec> nextSubquests = tmp.right;
             open.addAll(nextSubquests);
             quests.add(q);
-            if (!q.addTags(w, this)) {
-//                System.out.println("    generateSubquests failed adding tags");
-                return null;
-            }
+//            if (!q.addTags(w, this)) {
+////                System.out.println("    generateSubquests failed adding tags");
+//                return null;
+//            }
 //            if (!q.addPaths(w, this, usedConnections)) {
 //                return null;
 //            }
@@ -2083,10 +2107,12 @@ public class PCGWorld {
     
     
     // If they "collide", we cannot have them in the same location:
-    public boolean tagsCollide(String tag, String tag2)
+    public boolean tagsCollide(String tag, String tag2) throws Exception
     {
-        if (tag.contains("-lock") || tag.contains("-door") || tag.contains("breakable-wall") || tag.contains("block-puzzle") || tag.contains("combination")) {
-            if (tag2.contains("-lock") || tag2.contains("-door") || tag2.contains("breakable-wall") || tag2.contains("block-puzzle") || tag2.contains("combination")) {
+//        System.out.println("tagsCollide: " + tag + " vs " + tag2 + " (" + AssemblerTags.assemblerID(tag) + " vs " + AssemblerTags.assemblerID(tag2) + ")");
+        if (tag.contains("-lock") || tag.contains("-door") || tag.contains("breakable-wall") || tag.contains("block-puzzle") || (tag.contains("combination") && tag.contains("lock"))) {
+            if (tag2.contains("-lock") || tag2.contains("-door") || tag2.contains("breakable-wall") || tag2.contains("block-puzzle") || (tag2.contains("combination") && tag2.contains("lock"))) {
+//                System.out.println("    collision!");
                 return true;
             }
         }
@@ -2094,16 +2120,29 @@ public class PCGWorld {
     }
     
     
-    public boolean canPlaceTag(AreaPoint p, String tag, List<String> allowedTags)
+    public boolean canPlaceTag(AreaPoint p, String tag, List<String> allowedTags) throws Exception
     {
         List<String> l = p.a.tags[p.x][p.y];
         if (l == null) return true;
+        if (l.size() > 1) return false;
         for(String tag2:l) {
-            if (tag2.equals(tag)) continue;
-            if (allowedTags.contains(tag2)) continue;
-            return false;
+            if (tag.equals(tag2)) continue;
+            if (tagsCollide(tag, tag2)) {
+//                    System.out.println("addTag: two locks/doors in one point!!! " + tag + ", " + tag2);
+                return false;
+            }
         }
         return true;
+
+//        List<String> l = p.a.tags[p.x][p.y];
+//        if (l == null) return true;
+//        for(String tag2:l) {
+//            if (tag2.equals(tag)) continue;
+//            if (allowedTags.contains(tag2)) continue;
+//            return false;
+//        }
+//        return true;
+        
 //        if (!l.contains(tag)) {
 //            for(String tag2:l) {
 //                if (tagsCollide(tag, tag2)) {
@@ -2115,6 +2154,23 @@ public class PCGWorld {
     }
     
     
+    public boolean canPlaceTag(String tag, AreaDivision div) throws Exception
+    {
+        List<String> l = div.tags;
+        if (l == null) return true;
+        if (l.size() > 1) return false;
+        for(String tag2:l) {
+            if (tag.equals(tag2)) continue;
+            if (tagsCollide(tag, tag2)) {
+//                    System.out.println("addTag: two locks/doors in one point!!! " + tag + ", " + tag2);
+                return false;
+            }
+        }
+        return true;
+
+    }    
+    
+    
     public boolean addTag(AreaPoint p, String tag, AreaDivision d) throws Exception
     {
         if (tag == null) {
@@ -2123,6 +2179,17 @@ public class PCGWorld {
         if (tag.equals("none")) {
             return true;
         }
+        
+//        if (tag.equals("boss6-key")) {
+//            System.out.println("!!");
+//        }
+
+//        if (d != null) {
+//            System.out.println("addTag: " + tag + " (div: "+d.divisionID+", area "+p.a.ID+", offset: " + (p.x + p.y*p.a.width) + ")");
+//        } else {
+//            System.out.println("addTag: " + tag + " (area "+p.a.ID+", offset: " + (p.x + p.y*p.a.width) + ")");
+//        }
+        
         List<String> l = p.a.tags[p.x][p.y];
         if (l == null) {
             l = new ArrayList<>();
@@ -2134,11 +2201,17 @@ public class PCGWorld {
             throw new Exception("Adding " + tag + " to ending room!");
         }
         if (!tag.equals("start") && l.contains("start")) {
-            throw new Exception("Adding " + tag + " to start room!");
+            System.err.println("Adding " + tag + " to start room!");
+            return false;
         }
-        
+                
         if (!l.contains(tag)) {
+            if (l.size() > 1) {
+                return false;
+            }
+
             for(String tag2:l) {
+                if (tag.equals(tag2)) continue;
                 if (tagsCollide(tag, tag2)) {
 //                    System.out.println("addTag: two locks/doors in one point!!! " + tag + ", " + tag2);
                     return false;
@@ -2146,13 +2219,28 @@ public class PCGWorld {
             }
             l.add(tag);
         }
+
         if (d != null && !d.tags.contains(tag)) {
+            if (d.tags.size() > 1) {
+                return false;
+            }
+            for(String tag2:d.tags) {
+                if (tag.equals(tag2)) continue;
+                if (tagsCollide(tag, tag2)) {
+//                    System.out.println("addTag: two locks/doors in one point!!! " + tag + ", " + tag2);
+                    return false;
+                }
+            }
+
             d.tags.add(tag);
             // System.out.println(" - " + d.divisionID + " + " + tag);
+//            System.out.println("    added! " + l + "  --  " + d.tags);
+//        } else {
+//            System.out.println("    added! " + l);
         }
         
 //        if (d != null) {
-//            System.out.println("    addTag: " + tag + " to division " + d.divisionID + " (offset: " + (p.x + p.y*p.a.width) + ")");
+//            System.out.println("addTag: " + tag + " to division " + d.divisionID + " (area "+d.root.a.ID+", offset: " + (p.x + p.y*p.a.width) + ")");
 //        }
         
         return true;

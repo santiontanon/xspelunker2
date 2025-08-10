@@ -1047,7 +1047,7 @@ pcg_generate_world__area_division_floodfill_loop_no_up:
 	ex af, af'
 	inc b
 	call pcg_generate_world__area_division_floodfill_push
-	dec b
+	; dec b
 pcg_generate_world__area_division_floodfill_loop_no_down:
 	inc e
 	ld (tmp_pcg_world__floodfill_open_list_bot), de
@@ -1986,14 +1986,16 @@ pcg_generate_world__add_tag_loop_done:
 	ret z  ; tag is already there
 	or a
 	jr z, pcg_generate_world__add_tag_found_spot
+	call pcg_generate_world__tags_collide
+	ret nz
 	inc hl
 	ld a, (hl)
 	cp b
 	ret z  ; tag is already there
 	or a
-	jr nz, pcg_generate_world__add_tag_fail  ; we do not "ret nz", so that we can have an mdl watch statemend
+	jr nz, pcg_generate_world__add_tag_fail  ; we do not "ret nz", so that we can have an mdl watch statement
 pcg_generate_world__add_tag_found_spot:
-	ld (hl), b
+	ld (hl), b  ; mdl-watch2: "added!"
 	ret  ; we will always have "z" here
 pcg_generate_world__add_tag_fail:
 	; DEBUG
@@ -2037,11 +2039,46 @@ pcg_generate_world__could_add_tag_loop_done:
 	ret z  ; tag is already there
 	or a
 	ret z  ; empty spot
+	call pcg_generate_world__tags_collide
+	ret nz
 	inc hl
 	ld a, (hl)
 	cp b
 	ret z  ; tag is already there
 	or a
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - a: tag1
+; - b: tag2
+; output:
+; - nz: collision
+; - z: all ok
+pcg_generate_world__tags_collide:
+	; collision if both tags are block puzzles, doors, breakable walls or other directional locks:
+	; - it happens that it's all tags before (and including) TAG_ASTRONAUT_LOCK
+	ld c, a  ; mdl-watch2: "    pcg_generate_world__tags_collide:", a, b
+	or a
+	jr z, pcg_generate_world__tags_collide_no_collision
+	cp TAG_ASTRONAUT_LOCK + 1
+	jr nc, pcg_generate_world__tags_collide_no_collision
+	ld a, b
+	or a
+	jr z, pcg_generate_world__tags_collide_no_collision
+	ld a, c
+	ld a, b
+	cp TAG_ASTRONAUT_LOCK + 1
+	ld a, c
+	jr nc, pcg_generate_world__tags_collide_no_collision
+	; collision:
+	or 1
+	ld a, c  ; mdl-watch2: "    collision!", a, b
+	ret
+pcg_generate_world__tags_collide_no_collision:
+	xor a  ; z
+	ld a, c
 	ret
 
 
@@ -2073,7 +2110,7 @@ pcg_generate_world__generate_spanning_tree_clear_loop:
 
 	; Minimum-Spanning Tree for the main map:
 	; Sample the root point (a random left-most point in jungle):
-	xor a
+	; xor a
 	call pcg_generate_world__random_left_most_point_tagless
 	ret nz
 	ld h, 0
@@ -2247,8 +2284,14 @@ pcg_generate_world__generate_spanning_tree_neighbor_loop:
 	; - area ID
 	; - x, y
 	; - direction
+	cp 1
+	jr z, pcg_generate_world__generate_spanning_tree_neighbor_loop_just_one
 	ld c, a
 	call random_modulo
+	jr pcg_generate_world__generate_spanning_tree_neighbor_loop_neighbor_selected
+pcg_generate_world__generate_spanning_tree_neighbor_loop_just_one:
+	xor a
+pcg_generate_world__generate_spanning_tree_neighbor_loop_neighbor_selected:
 	push af
 		ld c, a
 		add a, a
@@ -2290,7 +2333,6 @@ pcg_generate_world__generate_spanning_tree_neighbor_loop:
 			pop af
 
 			; push the new node we will create into the open list:
-			push hl
 			push de
 				ld hl, (tmp_pcg_world__mst_open_list_top)
 				ld de, (tmp_pcg_world__minimum_spanning_tree_top)
@@ -2302,7 +2344,6 @@ pcg_generate_world__generate_spanning_tree_neighbor_loop:
 				ld hl, tmp_pcg_world__mst_open_list_size
 				inc (hl)
 			pop de
-			pop hl
 
 			call pcg_generate_world__push_mst_node
 		pop ix
@@ -2331,7 +2372,7 @@ pcg_generate_world__generate_spanning_tree_neighbor_loop_next_continue:
 
 	ld hl, tmp_pcg_world__mst_neighbors_list_size
 	dec (hl)
-	jr pcg_generate_world__generate_spanning_tree_neighbor_loop
+	jp pcg_generate_world__generate_spanning_tree_neighbor_loop
 pcg_generate_world__generate_spanning_tree_neighbor_loop_done:
 
 	ld a, (tmp_pcg_world__mst_open_list_size)
@@ -2477,7 +2518,6 @@ pcg_generate_world__mst_get_division_neighbor_points_loop_x_next:
 
 	; Find neighbors through inter-area connections:
 	; - here ix still has a pointer to the minimum-spanning-tree node
-	ld a, (ix + MST_DIVISION_ID)
 	ld iy, current_world__interarea_connections
 pcg_generate_world__mst_get_division_connections_loop:
 	ld a, (iy)
@@ -2622,8 +2662,14 @@ pcg_generate_world__mst_random_pop_from_open:
 	dec hl
 	ld (tmp_pcg_world__mst_open_list_top), hl
 
+	cp 1
+	jr z, pcg_generate_world__mst_random_pop_from_open_1
 	ld c, a
 	call random_modulo
+	jp pcg_generate_world__mst_random_pop_from_open_sampled
+pcg_generate_world__mst_random_pop_from_open_1:
+	xor a
+pcg_generate_world__mst_random_pop_from_open_sampled:
 	ld hl, tmp_pcg_world__mst_open_list
 	add a, a
 	push af
@@ -2757,7 +2803,7 @@ pcg_generate_world__generate_mission:
 ; 	pop hl
 	; DEBUG-end
 
-	ld hl, pcg_world__available_lock_keys_init_rom  ; mdl-watch: "pcg_generate_world__generate_mission"
+	ld hl, pcg_world__available_lock_keys_init_rom
 	ld de, tmp_pcg_world__available_lock_keys_obstacles
 	ld bc, pcg_world__available_lock_keys_init_rom_end - pcg_world__available_lock_keys_init_rom
 	ldir
@@ -3378,7 +3424,7 @@ pcg_generate_world__subquest_pattern__obstacle:
 	push de
 		; b: tag to place
 		ld a, (tmp_pcg_world__lock_tag_tmp)
-		ld b, a
+		ld b, a  ; mdl-watch2: "pcg_generate_world__subquest_pattern__obstacle, tag:", a
 		call pcg_generate_world__add_tag_to_point_in_mst_node_division
 	pop de
 	pop hl
@@ -3485,7 +3531,7 @@ pcg_generate_world__subquest_pattern__obstacle_start_offset_set:
 ; - nz: failure
 pcg_generate_world__subquest_pattern__chest:
 
-	ld a, 1
+	ld a, 1  ; mdl-watch2: "    pcg_generate_world__subquest_pattern__chest, key/lock", iyl, iyh
 	ld (tmp_pcg_world__quest_type), a
 
 	; remove goal and its descendants from reachable/useable:
@@ -4279,7 +4325,7 @@ pcg_generate_world__add_tag_to_point_in_mst_node_division:
 	ret z  ; TAG_NONE does not need to be placed
 	; add tag to the point:
 	push de
-		; ld a, (de)  ; DEBUG  ; mdl-watch: "pcg_generate_world__add_tag_to_point_in_mst_node_division (tag, div, offset)", b, a, l
+; 		ld a, (de)  ; DEBUG  ; mdl-watch2: "pcg_generate_world__add_tag_to_point_in_mst_node_division (tag, div, offset)", b, a, l
 		inc de
 		ld a, (de)  ; area ID (since MST_AREA_ID == 1)
 		; here l = offset of the point sampled above
@@ -4290,7 +4336,7 @@ pcg_generate_world__add_tag_to_point_in_mst_node_division:
 	; add tag to mst node:
 	ld de, MST_TAG1
 	add hl, de
-	ld 	a, (hl)
+	ld 	a, (hl)  ; mdl-watch2: "    first", a
 	cp b
 	ret z  ; tag is already there
 	or a
@@ -4300,7 +4346,7 @@ pcg_generate_world__add_tag_to_point_in_mst_node_division:
 	ret
 pcg_generate_world__add_tag_to_random_point_in_mst_node_division_continue:
 	inc hl
-	ld 	a, (hl)
+	ld 	a, (hl)  ; mdl-watch2: "    second", a
 	cp b
 	ret z  ; tag is already there
 	or a
@@ -4337,19 +4383,15 @@ pcg_generate_world__could_add_tag_to_point_in_mst_node_division_p:
 	cp b
 	ret z  ; tag is already there
 	or a
-	jr nz, pcg_generate_world__could_add_tag_to_point_in_mst_node_division_p_continue
-	xor a  ; z
-	ret
-pcg_generate_world__could_add_tag_to_point_in_mst_node_division_p_continue:
+	ret z  ; no tag
+	call pcg_generate_world__tags_collide
+	ret nz
 	inc hl
 	ld 	a, (hl)
 	cp b
 	ret z  ; tag is already there
 	or a
-	ret nz  ; node already has 2 tags, which is the max!
-	xor a  ; z
 	ret
-
 
 
 ;-----------------------------------------------
@@ -4482,6 +4524,7 @@ pcg_generate_world__spawn_additional_objects_tagless_loop:
 	ld a, (ix + MST_TAG1)  ; mdl-watch2: "tagless div/tag1/tag2", l, a, h
 	or a
 	jr nz, pcg_generate_world__spawn_additional_objects_tagless_loop_next
+; 	ld l, (ix + MST_DIVISION_ID)  ; DEBUG  mdl-watch: "tagless div", l
 	ld hl, tmp_pcg_world__tagless_list_size
 	ld a, (hl)
 	inc (hl)

@@ -9,6 +9,9 @@ hardcoded_world_data:
 IF PCG_WORLD_SEED1 = 0
 	include "hardcoded-world-seed0.asm"
 ENDIF
+IF PCG_WORLD_SEED1 = 1
+	include "hardcoded-world-seed1.asm"
+ENDIF
 IF PCG_WORLD_SEED1 = 2
 	include "hardcoded-world-seed2.asm"
 ENDIF
@@ -23,6 +26,12 @@ IF PCG_WORLD_SEED1 = 5
 ENDIF
 IF PCG_WORLD_SEED1 = 6
 	include "hardcoded-world-seed6.asm"
+ENDIF
+IF PCG_WORLD_SEED1 = 7
+	include "hardcoded-world-seed7.asm"
+ENDIF
+IF PCG_WORLD_SEED1 = 8
+	include "hardcoded-world-seed8.asm"
 ENDIF
 IF PCG_WORLD_SEED1 = 9
 	include "hardcoded-world-seed9.asm"
