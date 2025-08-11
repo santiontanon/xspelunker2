@@ -2092,6 +2092,39 @@ pcg_generate_room__start_interarea_connection_bottom_left:
 	ld (hl), 167  ; ladder right
 pcg_generate_room__start_no_interarea_connection:
 
+	; random seed stela:
+	ld de, (current_world__seed)
+	bit 0, e
+	jr z, pcg_generate_room__start_seed_stella_bit0_done
+	ld hl, current_room__tile_map + 14 + 6*32
+	ld (hl), 223
+pcg_generate_room__start_seed_stella_bit0_done:
+	bit 1, e
+	jr z, pcg_generate_room__start_seed_stella_bit1_done
+	ld hl, current_room__tile_map + 15 + 6*32
+	ld (hl), 223
+pcg_generate_room__start_seed_stella_bit1_done:
+	bit 2, e
+	jr z, pcg_generate_room__start_seed_stella_bit2_done
+	ld hl, current_room__tile_map + 16 + 6*32
+	ld (hl), 223
+pcg_generate_room__start_seed_stella_bit2_done:
+	bit 3, e
+	jr z, pcg_generate_room__start_seed_stella_bit3_done
+	ld hl, current_room__tile_map + 17 + 6*32
+	ld (hl), 223
+pcg_generate_room__start_seed_stella_bit3_done:
+	bit 4, e
+	jr z, pcg_generate_room__start_seed_stella_bit4_done
+	ld hl, current_room__tile_map + 14 + 7*32
+	ld (hl), 223
+pcg_generate_room__start_seed_stella_bit4_done:
+	bit 5, e
+	jr z, pcg_generate_room__start_seed_stella_bit5_done
+	ld hl, current_room__tile_map + 17 + 7*32
+	ld (hl), 223
+pcg_generate_room__start_seed_stella_bit5_done:
+
 	; spawn the NPCs (each NPC has a sprite object to render it, and then an invisible tile object behind, to interact with it):
 	ld iy, (tmp_pcg_room__next_tile_object_ptr)
 

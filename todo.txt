@@ -1,10 +1,16 @@
 to do:
 
-***- "random seed monument" somewhere in the game (maybe a "stelae", that displays the current random seed in a non-obvious way (until you get the clue): it should give clues about what each bit does.
+***- first boss: Huracán, the Storm Bringer (A large, imposing figure wreathed in swirling winds and lightning. Could have feathered serpent elements): wind, lightning, tornadoes
+  ***- draw some mock up frames, and attacks
+  ***- design the background room
+  ***- add background room to the game
+  ***- boss wake up animation
+  ***- design attack patterns (easy/normal/hard/hardest) and implement them
+  ***- being able to kill the boss
+  ***- death animation/celebration
+  ***- angry version (skin of different color): decide the trigger condition, and implement it (are clues given anywhere? can't remember it I already added them?)
 
 - music: intro, letters, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 25 have potential)
-
-- first boss: Huracán, the Storm Bringer (A large, imposing figure wreathed in swirling winds and lightning. Could have feathered serpent elements): wind, lightning, tornadoes
 - second boss: Camazotz, the Bat God: A giant bat-like creature with glowing red eyes and sharp claws.
 - third boss: The Obsidian Golem: A hulking golem made of obsidian, with glowing cracks.
 - caves biome (remember to keep ladder tiles in place for down-door opening code). Implement ice cape effect for lava. Skeleton that spit fire (flamethrower through mouth), rockmen (that turn into an undestructible stone), caterpillars, worms, etc. Is the confluence a "caves biome area" (except the calendar room)?
@@ -27,7 +33,7 @@ to do:
 - final good ending: the stone opens a portal for you to travel to the alien world, and fight against their leader in a final final battle. When you defeat it and come back, Elaine is there waiting to save you, but you arrive having become the ruler of alien empire.
 - "speak" the animal names in the animal room to get their blessings (if you get all four, you do double damage): I already have the clue for this in the game, right? (TABLET_TRIVIA_CLUE1_1)
 - Potential new secret ideas:
-  - special condition for triggering "angry bosses" (they change color). For each one you beat in this hard mode, you get something in the ending, and if you get them all, you get a special mention. The conditions might be things like: certain bit in the random seed to be "11" (so, not all seeds are good), dive into water X times in the same room without doing anything else, etc.
+  - special condition for triggering "angry bosses" (they change color). For each one you beat in this hard mode, you get something in the ending, and if you get them all, you get a special mention. The conditions might be things like: certain bit in the random seed to be "11" (so, not all seeds are good), dive into water X times in the same room without doing anything else, etc. Use the "random seed stela" (maybe give a clue about it)
   - have a chest/door locked with keys from ALL colors, and that can only be open in a world where all color keys spawn. Single lock that changes color, cycling through all.
   - Special huge chest that has a lock with a number. Each time you use a small key, it reduces by one. But the number is larger than the keys in one world. the state of the chest should be saved to the ROM, and if you beat the game, it remains. It might give you access to a final alien weapon to really kill the final boss. If you play again on the same seed, the chest will be blocked somehow (so, you need a different seed)
   - room that has 4 locks (one from each cardinal directions), but in each world, it can only be reached from one direction. Upon opening all 4, it reveals a passage to a secret level (the "lost world", which is like jungle but with dinosaurs? is there an alternate ending here?, or the "underground cenote", where sacrifices were made)
