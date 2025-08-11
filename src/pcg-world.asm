@@ -3788,25 +3788,26 @@ pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_ri
 pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection:
 	; Find the inter-area connection that goes from area 'a' to area 'iy + MST_AREA_ID'
 	; and get the offset and direction of the point in area 'a':
-	ld e, a  ; mdl-watch2: "    interarea_connection path, area", e
+	ld e, a
+; 	ld a, (iy + MST_AREA_ID)  ; DEBUG: mdl-watch: "    interarea_connection path between areas:", e, a
 	push bc  ; save the ptr to the parent
 		ld hl, current_world__interarea_connections
 pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection_loop:
-		ld a, (hl)  ; mdl-watch2: "area1", a
+		ld a, (hl)  ; mdl-watch2: "        area1", a
 		cp #ff
 		jr z, pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection_fail
 		inc hl
 		cp e
 		jr z, pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection_pre_match1
-		ld a, (hl)
-		inc hl
+		ld a, (hl)  ; hl points to areaID2
 		cp e
 		jr z, pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection_pre_match2
 		; no match!
+		inc hl  ; hl points to x1
 		jr pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection_loop_next
 
 pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection_pre_match1:
-		ld a, (hl)
+		ld a, (hl)  ; hl points fo areaID2
 		cp (iy + MST_AREA_ID)
 		jr z, pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection_match1
 		inc hl
@@ -3814,10 +3815,13 @@ pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_in
 		jr pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection_loop_next
 
 pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection_pre_match2:
-		ld a, (hl)
-		cp e
+		dec hl
+		ld a, (hl)  ; hl points to areaID1
+		cp (iy + MST_AREA_ID)
 		jr z, pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection_match2
 		; no match!
+		inc hl
+		inc hl  ; hl points to x1
 		jr pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection_loop_next
 
 pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection_loop_next:
@@ -3844,6 +3848,8 @@ pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_in
 		jr pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection_match_continue
 pcg_generate_world__subquest_pattern__pick_goal_lock_node_find_lock_node_loop_interarea_connection_match2:
 		; we need: direction2, and offset = x2 + y2 * width2
+		inc hl
+		inc hl
 		inc hl
 		inc hl
 		inc hl

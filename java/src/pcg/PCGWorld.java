@@ -2233,7 +2233,6 @@ public class PCGWorld {
             }
 
             d.tags.add(tag);
-            // System.out.println(" - " + d.divisionID + " + " + tag);
 //            System.out.println("    added! " + l + "  --  " + d.tags);
 //        } else {
 //            System.out.println("    added! " + l);

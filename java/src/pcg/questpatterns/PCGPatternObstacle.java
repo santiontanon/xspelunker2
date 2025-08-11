@@ -81,6 +81,7 @@ public class PCGPatternObstacle extends PCGPattern {
                 } else {
                     q.lockPoint = destination;
                 }
+//                System.out.println("        inter-area code path, destination: " + destination);
                 w.lockDirections.put(locktag, getConnectionDirection(w, lockTargetDiv.root));
             }
             if (q.lockPoint == null) {

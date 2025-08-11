@@ -48,6 +48,33 @@ ENDIF
 IF PCG_WORLD_SEED1 = 13
 	include "hardcoded-world-seed13.asm"
 ENDIF
+IF PCG_WORLD_SEED1 = 14
+	include "hardcoded-world-seed14.asm"
+ENDIF
+IF PCG_WORLD_SEED1 = 15
+	include "hardcoded-world-seed15.asm"
+ENDIF
+IF PCG_WORLD_SEED1 = 16
+	include "hardcoded-world-seed16.asm"
+ENDIF
+IF PCG_WORLD_SEED1 = 17
+	include "hardcoded-world-seed17.asm"
+ENDIF
+IF PCG_WORLD_SEED1 = 18
+	include "hardcoded-world-seed18.asm"
+ENDIF
+IF PCG_WORLD_SEED1 = 19
+	include "hardcoded-world-seed19.asm"
+ENDIF
+IF PCG_WORLD_SEED1 = 20
+	include "hardcoded-world-seed20.asm"
+ENDIF
+IF PCG_WORLD_SEED1 = 21
+	include "hardcoded-world-seed21.asm"
+ENDIF
+IF PCG_WORLD_SEED1 = 22
+	include "hardcoded-world-seed22.asm"
+ENDIF
 hardcoded_world_data_end:
 	include "../pcg-world.asm"
 	include "../pcg-riddles.asm"
