@@ -2,10 +2,13 @@ to do:
 
 ***- first boss: Huracán, the Storm Bringer (A large, imposing figure wreathed in swirling winds and lightning. Could have feathered serpent elements): wind, lightning, tornadoes
   ***- draw some mock up frames, and attacks
-  ***- design the background room
-  ***- add background room to the game
+  ***- design the room
+  ***- design the whole boss behavior in Java
+  ***- add background room to the game:
+    ***- load tiles/nametables
+    ***- automatically compute tile collision maps
   ***- boss wake up animation
-  ***- design attack patterns (easy/normal/hard/hardest) and implement them
+  ***- implement attack patterns (including being able to destroy the scepter)
   ***- being able to kill the boss
   ***- death animation/celebration
   ***- angry version (skin of different color): decide the trigger condition, and implement it (are clues given anywhere? can't remember it I already added them?)

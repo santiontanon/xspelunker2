@@ -161,7 +161,7 @@ public class GenerationTest {
 
     
     public static void visualizeWorld(World world) throws Exception
-    {                
+    {
         JFrame w = new JFrame() {
             @Override
             public void paint(Graphics g) {

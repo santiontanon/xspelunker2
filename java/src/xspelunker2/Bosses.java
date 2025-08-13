@@ -1,0 +1,172 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package xspelunker2;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import javax.imageio.ImageIO;
+import util.ConvertPatternsToAssembler;
+import util.Z80Assembler;
+
+/**
+ *
+ * @author santi
+ */
+public class Bosses {
+    public static void main(String args[]) throws Exception
+    {
+        boss1Tiles();
+    }
+    
+    
+    public static void boss1Tiles() throws Exception
+    {
+        String boss1BaseTiles = "data/boss-pyramid-base-tiles.png";
+        String boss1Tiles = "data/boss1.png";
+        
+        // Identify the gaps in "boss1BaseTiles" where tiles can be saved:
+        BufferedImage baseImage = ImageIO.read(new File(boss1BaseTiles));
+        boolean availableTiles[] = new boolean[256];
+        {
+            int n_availableTiles = 0;
+            for(int i = 0;i<16;i++) {
+                for(int j = 0;j<16;j++) {
+                    boolean empty = tileIsEmpty(j, i, baseImage);
+                    if (i<3) empty = false;  // protect the top 3 rows
+                    availableTiles[j + i*16] = empty;
+                    if (empty) n_availableTiles++;
+                }
+            }
+            System.out.println("boss 1: available tiles " + n_availableTiles);
+        }
+        
+        // Extract all tiles from the boss file and add in the gaps:
+        {
+            BufferedImage sourceImage = ImageIO.read(new File(boss1Tiles));
+            HashMap<Integer, Integer> map = new HashMap<>();
+            List<List<Integer>> tiles = new ArrayList<>();
+            List<Integer> tile = new ArrayList<>();
+            int nameTable[][] = new int[sourceImage.getWidth()/8][sourceImage.getHeight()/8];
+            for(int i = 0;i<8*8;i++) tile.add(0);
+            tiles.add(tile);            
+            for(int i = 0;i<sourceImage.getHeight();i+=8) {
+                for(int j = 0;j<sourceImage.getWidth();j+=8) {
+                    tile = new ArrayList<>();
+                    for(int ii = 0;ii<8;ii++) {
+                        for(int jj = 0;jj<8;jj++) {
+                            int color = ConvertPatternsToAssembler.findMSXColor(j+jj, i+ii, sourceImage, 0);
+                            if (color == -1) throw new Exception("Unknown color at " + (j+jj) + ", " + (i+ii));
+                            tile.add(color);
+                        }
+                    }
+
+                    int found = -1;
+                    for(int tileIndex = 0;tileIndex<tiles.size();tileIndex++) {
+                        List<Integer> tile2 = tiles.get(tileIndex);
+                        boolean match = true;
+                        for(int k = 0;k<8*8;k++) {
+                            if (!tile.get(k).equals(tile2.get(k))) {
+                                match = false;
+                                break;
+                            }
+                        }
+                        if (match) {
+                            found = tileIndex;
+                            break;
+                        }
+                    }
+                    if (found == -1) {
+                        nameTable[j/8][i/8] = tiles.size();
+                        tiles.add(tile);
+                    } else {
+                        nameTable[j/8][i/8] = found;
+                    }                    
+                }
+            }
+            System.out.println("number of tiles of the boss: " + tiles.size());            
+//            for(int i = 0;i<nameTable[0].length;i++) {
+//                for(int j = 0;j<nameTable.length;j++) {
+//                    System.out.print(nameTable[j][i] + ", ");
+//                }
+//                System.out.println("");
+//            }
+
+            // Add all the new tiles:
+            map.put(0, 0);
+            for(int tileID = 1;tileID<tiles.size();tileID++) {
+                List<Integer> tile2 = tiles.get(tileID);
+                boolean found = false;
+                for(int i = 0;i<16;i++) {
+                    for(int j = 0;j<16;j++) {
+                        if (availableTiles[j+i*16]) {
+                            for(int ii = 0;ii<8;ii++) {
+                                for(int jj = 0;jj<8;jj++) {
+                                    baseImage.setRGB(j*8+jj, i*8+ii, ConvertPatternsToAssembler.MSXColorToRGB(tile2.get(jj+ii*8)));
+                                }
+                            }                            
+                            availableTiles[j+i*16] = false;
+                            map.put(tileID, j + i*16);
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (found) break;
+                }
+            }
+            
+            // Save all the tiles:
+            ImageIO.write(baseImage, "png", new File("data/boss1-tiles.png"));
+            
+            // Generate the name tables:
+            for(int i = 0;i<nameTable[0].length;i++) {
+                for(int j = 0;j<nameTable.length;j++) {
+                    nameTable[j][i] = map.get(nameTable[j][i]);
+                }
+            }
+            
+            List<Integer> nameTableData = new ArrayList<>();
+            addNameTable(nameTable, 10, 0, 16, 9, nameTableData);  // stone version (0 + 6*9)
+            addNameTable(nameTable, 4, 0, 10, 9, nameTableData);  // base position (54 + 6*9)
+            addNameTable(nameTable, 16, 0, 22, 7, nameTableData);  // staff up (108 + 6*7)
+            addNameTable(nameTable, 0, 7, 2, 9, nameTableData);  // face damage (150 + 2*2)
+            addNameTable(nameTable, 0, 20, 4, 24, nameTableData);  // legs 0 (154 + 4*4)
+            addNameTable(nameTable, 0, 9, 5, 13, nameTableData);  // legs 1 (170 + 5*4)
+            addNameTable(nameTable, 5, 9, 9, 13, nameTableData);  // legs 2 (190 + 4*4)
+            addNameTable(nameTable, 9, 9, 14, 13, nameTableData);  // legs 3 (206 + 5*4)
+            addNameTable(nameTable, 0, 13, 3, 17, nameTableData);  // legs 4 (226 + 3*4)
+            addNameTable(nameTable, 4, 20, 8, 23, nameTableData);  // legs 5 (crouch) (238 + 4*3)
+            addNameTable(nameTable, 16, 7, 22, 16, nameTableData);  // left-hand attack (250 + 6*9)            
+            addNameTable(nameTable, 11, 13, 16, 20, nameTableData);  // base position (no staff) (304 + 5*7)
+            addNameTable(nameTable, 17, 16, 22, 22, nameTableData);  // left-hand attack (no staff) (339 + 5*6)
+            addNameTable(nameTable, 3, 13, 11, 20, nameTableData);  // punch (369 + 8*7)
+            
+            System.out.println("name tables: " + nameTableData.size() + " bytes");
+            Z80Assembler.dataToBinary(nameTableData, "src/autogenerated/boss1-nametables.bin");
+        }
+    }
+    
+    
+    public static void addNameTable(int nameTable[][], int x1, int y1, int x2, int y2, List<Integer> data)
+    {
+        for(int i = y1;i<y2;i++) {
+            for(int j = x1; j<x2; j++) {
+                data.add(nameTable[j][i]);
+            }
+        }
+    }
+    
+    
+    public static boolean tileIsEmpty(int j, int i, BufferedImage img) throws Exception
+    {
+        List<Integer> attributes = ConvertPatternsToAssembler.generateAssemblerPatternAttributes(j, i, img, 0);
+        for(int v:attributes) {
+            if (v != 0) return false;
+        }
+        return true;
+    }
+}
