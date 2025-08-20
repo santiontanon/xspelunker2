@@ -94,11 +94,7 @@ enter_boss_door_loop:
 		call clear_screen_left_to_right
 	pop bc
 	push bc
-		; print boss name: 
 		; - c: boss number
-		; call set_bitmap_mode
-		; ...
-
 		ld c, PCG_PAGE
 		ld hl, pcg_generate_room_reset_state
 		call call_hl_in_page_c_8000
@@ -111,6 +107,21 @@ enter_boss_door_loop:
 		ld c, PCG_PAGE
 		ld hl, pcg_generate_room__prettify_pyramid
 		call call_hl_in_page_c_8000
+
+		ld a, BOSS_PAGE
+		ld (current_room__tileset_page), a
+		ld hl, boss_1_tiles_zx0
+		ld (current_room__tileset_ptr), hl
+		ld hl, update_animations_in_vdp_none
+		ld (current_room__animation_fn_ptr), hl
+		ld hl, tile_collision_types_boss1
+		ld (current_room__collision_ptr), hl
+		ld a, BOSS_PAGE
+		ld (current_room__collision_ptr_page), a
+		ld hl, boss1_sprites_zx0
+		ld (current_room__enemy_sprites_ptr), hl
+		xor a
+		ld (current_room__tileset_overrides_item_tiles), a
 
 		; player position:
 		ld hl, player_x
@@ -210,38 +221,41 @@ pick_up_boss_power_stone:
 	ld hl, SFX_item_pickup
 	call play_SFX_with_high_priority
 
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
+	push af
+
+		; message:
+		ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
+		ld de, TEXT_FIRST_POWER_STONE
+		or a
+		jr z, pick_up_boss_power_stone_continue
+		ld de, TEXT_OTHER_POWER_STONES
+pick_up_boss_power_stone_continue:
+		ld c, TEXT_PAGE
+		ld hl, display_in_game_message
+		call call_hl_in_page_c_8000
+
+		call disable_VDP_output
+
+		; teleport outside (store room/position before entering boss room):
+		ld a, (boss_door_exit_to_room)
+		ld e, a
+		ld hl, pcg_generate_room
+		ld c, PCG_PAGE
+		call call_hl_in_page_c_8000
+
+		ld a, (boss_door_exit_to_x)
+		ld (player_x + 1), a
+		ld a, (boss_door_exit_to_y)
+		ld (player_y + 1), a
+
 	; set event to close the door:
+	pop af
+	ld (in_game_event_fn_arg), a
 	ld hl, event__exit_boss_door
 	ld (in_game_event_fn_ptr), hl
 	ld a, BOSS_PAGE
 	ld (in_game_event_fn_page), a
-	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
-	ld (in_game_event_fn_arg), a
-
-	; message:
-	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
-	ld de, TEXT_FIRST_POWER_STONE
-	or a
-	jr z, pick_up_boss_power_stone_continue
-	ld de, TEXT_OTHER_POWER_STONES
-pick_up_boss_power_stone_continue:
-	ld c, TEXT_PAGE
-	ld hl, display_in_game_message
-	call call_hl_in_page_c_8000
-
-	call disable_VDP_output
-
-	; teleport outside (store room/position before entering boss room):
-	ld a, (boss_door_exit_to_room)
-	ld e, a
-	ld hl, pcg_generate_room
-	ld c, PCG_PAGE
-	call call_hl_in_page_c_8000
-
-	ld a, (boss_door_exit_to_x)
-	ld (player_x + 1), a
-	ld a, (boss_door_exit_to_y)
-	ld (player_y + 1), a
 
 	jp state_play_from_loaded_room
 
@@ -373,3 +387,23 @@ shift_boss_door_down:
 	pop hl
 	ld bc, 4*8
 	jp fast_FILVRM
+
+
+;-----------------------------------------------
+tile_collision_types_boss1:
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
+    db 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
+    db 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
+    db 3, 3, 0, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 3, 3, 3
+    db 0, 0, 3, 3, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3
+    db 3, 0, 3, 5, 2, 2, 5, 6, 3, 1, 1, 1, 2, 3, 2, 2
+    db 3, 3, 3, 3, 3, 3, 2, 2, 2, 3, 2, 2, 3, 3, 3, 3
+    db 3, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
+    db 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3
+    db 3, 3, 3, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
+    db 3, 3, 3, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
+    db 3, 3, 3, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
+    db 3, 3, 3, 2, 2, 3, 2, 2, 3, 3, 3, 3, 3, 2, 1, 5

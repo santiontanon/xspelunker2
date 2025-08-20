@@ -11,6 +11,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.Random;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import util.Tiled;
@@ -27,30 +28,34 @@ public class Boss1 {
     BufferedImage tileSet;
     int nameTables[];
     int room[][];
+    boolean firstDraw = true;
     
+    int behavior = 0;
     int state = 0;
+    int bossFrame = 0;
     int timer = 0;
     int bossx = 26, bossy = 13;
     int prev_x = 26, prev_y = 13;
     int prev_w = 6, prev_h = 9;
-    boolean firstDraw = true;
+    boolean hasStaff = true;
+    
+    Random r = new Random();
 
     
     public static void main(String args[]) throws Exception
     {
         /*
-        ***- draw boss bullets:
-            ***- small bullets fired from the eyes
-            ***- whirlwinds
-            ***- lightnings (like those in MoG boss 9, but telegraphed)
-        - design attack patterns:
-            - turn the current states into some variables (e.g., "boolean staff_broken = false")
-              to program the behavior more easily
-            - design several sequences, and randomly pick one or the other
-            - have in mind where can the player damage the boss
+        ***- behavior patterns:
+            ***- render bullets
+            ***- implement 5th behavior (death)
+            ***- destroy staff with one key
+            ***- damage the boss with one key (face animation)
+            ***- kill the boss with another key (to trigger the last behavior)
         - adjust to have sequences that require a choreography to dodge (can I write a script to ensure the effect I want?)
-        - patterns for the different difficulty levels
-        
+            - how should the room be? ropes? platforms?
+        - adjust patterns for the different difficulty levels
+        - draw the boss logo: "HURAKAN" + Maya glyph
+        - implement it in assembler
         */
         
         Boss1 b = new Boss1();
@@ -71,7 +76,7 @@ public class Boss1 {
         w.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         long start_time = System.currentTimeMillis();
-        long target_frame_interval = 20;
+        long target_frame_interval = 15;
         while(true) {
             Thread.yield();
             long current_time = System.currentTimeMillis();
@@ -107,196 +112,367 @@ public class Boss1 {
             firstDraw = false;
         }
         
-        switch(state) {
+        switch(bossFrame) {
             case 0:  // rock
                 drawBossFrame(g2d, 0, bossx, bossy);
                 break;
             case 1:  // still
-//                drawBossFrame(g2d, 1, bossx, bossy);
-                drawBossFrame(g2d, 9, bossx, bossy);  // no staff
+                if (hasStaff) {
+                    drawBossFrame(g2d, 1, bossx, bossy);
+                } else {
+                    drawBossFrame(g2d, 9, bossx, bossy);  // no staff
+                }
                 break;
             case 2:  // walk left
             {
                 int frame = (timer / 32) % 4;
-                drawBossFrame(g2d, 2 + frame, bossx, bossy);
+                if (hasStaff) {
+                    drawBossFrame(g2d, 2 + frame, bossx, bossy);
+                } else {
+                    drawBossFrame(g2d, 10 + frame, bossx, bossy);
+                }
                 break;
             }
             case 3:  // crouch
-            case 5:  // crouch
-                drawBossFrame(g2d, 6, bossx, bossy);
+                if (hasStaff) {
+                    drawBossFrame(g2d, 6, bossx, bossy);
+                } else {
+                    drawBossFrame(g2d, 14, bossx, bossy);
+                }
                 break;
             case 4:  // jumping
-                drawBossFrame(g2d, 1, bossx, bossy);
+                if (hasStaff) {
+                    drawBossFrame(g2d, 1, bossx, bossy);
+                } else {
+                    drawBossFrame(g2d, 9, bossx, bossy);
+                }
                 break;
-            case 6:  // scepter attack
-                drawBossFrame(g2d, 7, bossx, bossy);
+            case 6:  // staff attack
+                if (hasStaff) {
+                    drawBossFrame(g2d, 7, bossx, bossy);
+                } else {
+                    throw new Exception("Staff attack when staff is broken!");
+                }
                 break;
             case 7:  // left-hand attack
-                drawBossFrame(g2d, 8, bossx, bossy);
+                if (hasStaff) {
+                    drawBossFrame(g2d, 8, bossx, bossy);
+                } else {
+                    drawBossFrame(g2d, 15, bossx, bossy);
+                }
                 break;
-                
-            case 8:  // walk left without staff
-            {
-                int frame = (timer / 32) % 4;
-                drawBossFrame(g2d, 10 + frame, bossx, bossy);
+            case 8:  // punch
+                if (hasStaff) {
+                    throw new Exception("Punch attack when staff is not broken!");
+                } else {
+                    drawBossFrame(g2d, 16, bossx, bossy);
+                }
                 break;
-            }
-            case 9:  // crouch (no staff)
-            case 11:  // crouch (no staff)
-                drawBossFrame(g2d, 14, bossx, bossy);
-                break;
-            case 10:  // jumping (no staff)
-                drawBossFrame(g2d, 9, bossx, bossy);
-                break;
-            case 12:  // left-hand attack
-                drawBossFrame(g2d, 15, bossx, bossy);
-                break;
-            case 13:  // punch
-                drawBossFrame(g2d, 16, bossx, bossy);
-                break;
-                
+            default:
+                throw new Exception("Unknown state " + state);
         }
     }
     
     
     public void update() throws Exception
     {
-        switch(state) {
-            case 0:
-                timer ++;
-                if (timer >= 64) {
-                    state = 1;
-                    timer = 0;
+        switch(behavior) {
+            case 0: 
+            {
+                // Behavior 0: (wake up)
+                // - state 0: stone
+                // - state 1: idle
+                // - state 2: staff attack
+                // - state 3: end behavior
+                switch(state) {
+                    case 0: bossFrame = 0;
+                        timer ++;
+                        if (timer > 64) {
+                            state = 1;
+                            timer = 0;
+                        }
+                        break;
+                    case 1: bossFrame = 1;
+                        timer ++;
+                        if (timer > 64) {
+                            state = 2;
+                            timer = 0;
+                        }
+                        break;
+                    case 2: bossFrame = 6;
+                        timer ++;
+                        if (timer > 64) {
+                            state = 3;
+                            timer = 0;
+                        }
+                        break;
+                    case 3: bossFrame = 1;
+                        behavior = 1 + r.nextInt(3);
+                        System.out.println("next behavior: " + behavior);
+                        state = 0;
+                        timer = 0;
+                        break;
                 }
                 break;
-            case 1:
-                timer ++;
-                if (timer >= 64) {
-//                    state = 2;  // walk
-//                    state = 3;  // jump
-//                    state = 6;  // scenpter attack
-//                    state = 7;  // left-hand attack
-//                    state = 8;  // walk without staff
-//                    state = 9;  // jump without staff
-//                    state = 12;  // left-hand attack without staff
-                    state = 13;  // punch
-                    timer = 0;
+            }
+            
+            case 1: 
+            {
+                //Behavior 1: (walk and jump back)
+                //    - state 0: idle
+                //    - state 1: walk left
+                //        after each full step, randomly choose between keep walking, staff/punch attack, left-hand attack
+                //        after reaching the target position, jump back
+                //    - state 2: staff/punch attack
+                //    - state 3: left-hand attack (lighning)
+                //    - state 4: crouch
+                //    - state 5: jump back
+                //    - state 6: end behavior
+                switch(state) {
+                    case 0: 
+                    {
+                        bossFrame = 1;
+                        timer ++;
+                        if (timer > 64) {
+                            state = 1;
+                            timer = 0;
+                        }
+                        break;
+                    }
+                    case 1:
+                    {
+                        // walk left:
+                        bossFrame = 2;
+                        timer ++;
+                        timer = timer % 128;
+                        if ((timer % 128) == 0) {
+                            bossx--;
+                            state = r.nextInt(3) + 1;  // random 1, 2 or 3
+                            if (bossx <= 8) {
+                                state = 4;
+                                timer = 0;
+                            }
+                        }
+                        if ((timer % 128) == 64) bossx--;
+                        if ((timer % 128) == 96) bossx--;
+                        break;
+                    }
+                    case 2:
+                    {
+                        bossFrame = 6;
+                        timer ++;
+                        if (timer > 64) {
+                            state = 1;
+                            timer = 0;
+                        }
+                        break;
+                    }
+                    case 3:
+                    {
+                        bossFrame = 7;
+                        timer ++;
+                        if (timer > 64) {
+                            state = 1;
+                            timer = 0;
+                        }
+                        break;
+                    }
+                    case 4:
+                    {
+                        bossFrame = 3;
+                        timer ++;
+                        if (timer > 64) {
+                            state = 5;
+                            timer = 0;
+                        }
+                        break;
+                    }
+                    case 5:
+                    {
+                        bossFrame = 4;
+                        timer ++;
+                        if (timer <= 184) {
+                            if ((timer%8) == 0) {
+                                bossy--;
+                                if (timer == 184) {
+                                    bossx = 26;
+                                }
+                            }
+                        } else if (timer < 368) {
+                            if ((timer%8) == 0) bossy++;
+                        } else {
+                            timer = 0;
+                            state = 6;
+                            bossy++;
+                        }
+                        break;
+                    }
+                    case 6:
+                    {
+                        bossFrame = 3;
+                        timer ++;
+                        if (timer > 64) {
+                            behavior = 1 + r.nextInt(3);
+                            System.out.println("next behavior: " + behavior);
+                            state = 0;
+                            timer = 0;
+                        }
+                        break;
+                    }
+                        
                 }
                 break;
+            }
+            
             case 2:
-                // walk left:
-                timer ++;
-                timer = timer % 128;
-                if ((timer % 128) == 0) bossx--;
-                if ((timer % 128) == 64) bossx--;
-                if ((timer % 128) == 96) bossx--;
+            {
+                //Behavior 2: (jump attack)
+                //    - state 0: idle
+                //    - state 1: crouch
+                //    - state 2: jump to a new position
+                //    - state 3: land (crouch), and after a target number of jumps (3), end behavior
+                switch(state) {
+                    case 0:
+                        bossFrame = 1;
+                        timer ++;
+                        if (timer > 64) {
+                            state = 1;
+                            timer = 0;
+                        }
+                        break;
+                    case 1:
+                    case 3:
+                    case 5:
+                    case 7:
+                    case 9:
+                        bossFrame = 3;
+                        timer ++;
+                        if (timer > 64) {
+                            if (state == 9) {
+                                behavior = 1 + r.nextInt(3);
+                                System.out.println("next behavior: " + behavior);
+                                state = 0;
+                            } else {
+                                state++;
+                            }
+                            timer = 0;
+                        }
+                        break;
+                    case 2:
+                    case 4:
+                    case 6:
+                    case 8:
+                        bossFrame = 4;
+                        timer ++;
+                        if (timer <= 184) {
+                            if ((timer%8) == 0) {
+                                bossy--;
+                                if (timer == 184) {
+                                    if (state == 8) {
+                                        bossx = 26;
+                                    } else {
+                                        bossx = 8 + r.nextInt(16);  // in reality it should be the x coordinate of the player
+                                    }
+                                }
+                            }
+                        } else if (timer < 368) {
+                            if ((timer%8) == 0) bossy++;
+                        } else {
+                            timer = 0;
+                            bossy++;
+                            state++;
+                        }                        
+                        break;
+                }
                 break;
+            }
+            
             case 3:
-                // crouch before jumping
-                timer ++;
-                if (timer > 32) {
-                    timer = 0;
-                    state = 4;
-                    bossy--;
-                }
+            {
+                //Behavior 3: (bullet barrage)
+                //    - state 0: idle
+                //    - state 1: eye attack (bullets)
+                //        randomly go to one attack state (depending on staff/no-staff), state 2 or 3
+                //        after 4 bullet attacks, end behavior
+                //    - state 2: staff attack (back to 1)
+                //    - state 3: left-hand attack (lighning) (back to 1)
+                //    - state 4: end behavior
+                switch(state) {
+                    case 0:
+                        bossFrame = 1;
+                        timer ++;
+                        if (timer > 64) {
+                            state = 1;
+                            timer = 0;
+                        }
+                        break;
+                    case 1:
+                    case 4:
+                    case 7:
+                    case 10:
+                        bossFrame = 1;
+                        timer ++;
+                        if (timer > 16) {
+                            state += 1 + r.nextInt(2);
+                            timer = 0;
+                        }
+                        break;
+                    case 2:
+                    case 5:
+                    case 8:
+                    case 11:
+                    {
+                        bossFrame = 6;
+                        timer ++;
+                        if (timer > 32) {
+                            state += 2;
+                            timer = 0;
+                        }
+                        break;
+                    }
+                    case 3:
+                    case 6:
+                    case 9:
+                    case 12:
+                    {
+                        bossFrame = 7;
+                        timer ++;
+                        if (timer > 32) {
+                            state += 1;
+                            timer = 0;
+                        }
+                        break;
+                    }                        
+                    case 13:
+                    {
+                        behavior = 1 + r.nextInt(3);
+                        System.out.println("next behavior: " + behavior);
+                        state = 0;
+                        timer = 0;
+                        break;
+                    }
+                }                
                 break;
+            }
+            
             case 4:
-                // jumping
-                timer ++;
-                if (timer < 64) {
-                    if ((timer%8) == 0) bossy--;
-                } else if (timer < 128) {
-                    if ((timer%8) == 0) bossy++;
-                } else {
-                    timer = 0;
-                    state = 5;
-//                    bossy++;
-                }
-                break;
-            case 5:
-                // landing from a jump
-                timer ++;
-                if (timer > 32) {
-                    timer = 0;
-                    state = 1;
-                }
-                break;
-            case 6:
-                // staff attack
-                timer ++;
-                if (timer > 64) {
-                    timer = 0;
-                    state = 1;
-                }
-                break;
-            case 7:
-                // left-hand attack
-                timer ++;
-                if (timer > 64) {
-                    timer = 0;
-                    state = 1;
-                }
-                break;
+            {
+                //Behavior 4: (death)
+                //    - state 0: idle
+                //    - state 1: stone
+                //    - state 2: sinking into the ground with dust
+                //    - state 3: remain in this state forever
                 
-            case 8:
-                // walk left without staff:
-                timer ++;
-                timer = timer % 128;
-                if ((timer % 128) == 0) bossx--;
-                if ((timer % 128) == 64) bossx--;
-                if ((timer % 128) == 96) bossx--;
                 break;
-            case 9:
-                // crouch before jumping
-                timer ++;
-                if (timer > 32) {
-                    timer = 0;
-                    state = 10;
-                    bossy--;
-                }
-                break;
-            case 10:
-                // jumping
-                timer ++;
-                if (timer < 64) {
-                    if ((timer%8) == 0) bossy--;
-                } else if (timer < 128) {
-                    if ((timer%8) == 0) bossy++;
-                } else {
-                    timer = 0;
-                    state = 11;
-//                    bossy++;
-                }
-                break;
-            case 11:
-                // landing from a jump
-                timer ++;
-                if (timer > 32) {
-                    timer = 0;
-                    state = 1;
-                }
-                break;                
-            case 12:
-                // left-hand attack
-                timer ++;
-                if (timer > 64) {
-                    timer = 0;
-                    state = 1;
-                }
-                break;
-            case 13:
-                // punch
-                timer ++;
-                if (timer > 64) {
-                    timer = 0;
-                    state = 1;
-                }
-                break;
+            }
+            
+            default:
+                throw new Exception("Unknown behavior " + behavior);
                 
         }
     }
-    
-    
+
+
     public void drawRoom(Graphics2D g2d)
     {
         for(int i = 0;i<24;i++) {
@@ -305,8 +481,8 @@ public class Boss1 {
             }
         }
     }
-    
-    
+
+
     public void drawBossFrame(Graphics2D g2d, int ID, int x, int y) throws Exception
     {
         g2d.setColor(Color.black);
@@ -415,6 +591,7 @@ public class Boss1 {
     {
         int tx = tileID % 16;
         int ty = tileID / 16;
+        if (x<0 || x>=32 || y<0 || y>=24) return;
         g2d.drawImage(tileSet,
                       start_x + x*8*pixel_size, start_y + y*8*pixel_size,
                       start_x + (x+1)*8*pixel_size, start_y + (y+1)*8*pixel_size,

@@ -456,8 +456,7 @@ get_room_tile_type_continue:
 
 get_collision_tile_type_of_a:
 	; get collision type:
-	ld c, a
-	ld bc, (current_room__collision_ptr)
+	ld bc, current_room__collision_table
 	ADD_BC_A
 	ld a, (bc)
 	ret
@@ -1344,6 +1343,7 @@ check_for_interarea_exit_done:
 ; 6: rope-platform-top
 ; 7: ladder
 ; 8: ladder-platform-top
+; 9: boss hit-spot
 tile_collision_types_jungle:
 	db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
@@ -1399,6 +1399,7 @@ tile_collision_types_calendar:
     db 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     db 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     db 2, 2, 2, 2, 2, 0, 2, 0, 7, 2, 0, 0, 0, 2, 0, 0
+
 
 
 ;-----------------------------------------------

@@ -175,7 +175,7 @@ update_tile_objects_enemy_carnivore_plant_tongue_elongate_loop_continue3:
 		jr z, update_tile_objects_enemy_carnivore_plant_tongue_elongate_loop_end
 		; check if it's background/rope
 		push de
-			ld de, (current_room__collision_ptr)
+			ld de, current_room__collision_table
 			ADD_DE_A
 			ld a, (de)
 		pop de

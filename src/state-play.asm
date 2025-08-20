@@ -62,7 +62,7 @@ state_play:
 
 		; debug:
 		ld a, 1
-; 		ld (player_inventory_items), a
+		ld (player_inventory_items), a
 ; 		ld (player_inventory_items+1), a
 ; 		ld (player_inventory_items+2), a
 ; 		ld (player_inventory_items+3), a
@@ -145,8 +145,8 @@ state_play:
 
 		; generate area:
 		ld hl, pcg_generate_area
-		ld e, 0  ; area to generate
-; 		ld e, 1  ; area to generate
+; 		ld e, 0  ; area to generate
+		ld e, 1  ; area to generate
 ; 		ld e, 2  ; area to generate
 ; 		ld e, 3  ; area to generate
 ; 		ld e, 4  ; area to generate
@@ -157,8 +157,8 @@ state_play:
 		call call_hl_in_page_c_8000
 
 		; generate room:
-		ld e, START_ROOM_ID
-; 		ld e, 17
+; 		ld e, START_ROOM_ID
+		ld e, 20
 ; 		ld e, 26
 ; 		ld e, 0
 ; 		ld e, CALENDAR_ROOM_ID
@@ -184,6 +184,13 @@ state_play_from_loaded_room:
 		ld c, TILES_PAGE
 		ld hl, room_render_tile_objects
 		call call_hl_in_page_c_8000
+
+		ld a, (current_room__collision_ptr_page)
+		ld hl, (current_room__collision_ptr)
+		ld de, current_room__collision_table
+		ld bc, 256
+		call ldir_from_page_a
+
 state_play_from_inventory:
 		ld sp, stack  ; reset the stack, so we can jump here from wherever we want
 

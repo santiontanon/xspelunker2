@@ -168,6 +168,19 @@ getcharacter_nonwaiting_reset:
 
 
 ;-----------------------------------------------
+ldir_from_page_a:
+    ex af, af'
+    ld a, (current_megarom_page_in_8000)
+    push af
+        ex af, af'
+        SETMEGAROMPAGE_8000_A
+        ldir
+    pop af
+    SETMEGAROMPAGE_8000_A
+    ret
+
+
+;-----------------------------------------------
 ; Source: https://wikiti.brandonw.net/index.php?title=Z80_Routines:Math:Random
 ; Generates a 16 bit random number
 ; - rng_seed1: 16-bit seed value

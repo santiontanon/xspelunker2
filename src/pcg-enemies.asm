@@ -953,7 +953,7 @@ pcg__find_enemy_spawn_location_empty_p_macro: macro
 	or a
 	jr z, pcg__find_enemy_spawn_location_empty_p_macro_end
 	ex de, hl
-		ld hl, (current_room__collision_ptr)
+		ld hl, current_room__collision_table
 		ADD_HL_A
 		ld a, (hl)		
 	ex de, hl
@@ -966,7 +966,7 @@ pcg__find_enemy_spawn_location_empty_p_macro_end:
 pcg__find_enemy_spawn_location_platform_p_macro: macro
 	ld a, (hl)
 	ex de, hl
-		ld hl, (current_room__collision_ptr)
+		ld hl, current_room__collision_table
 		ADD_HL_A
 		ld a, (hl)		
 	ex de, hl
@@ -985,7 +985,7 @@ pcg__find_enemy_spawn_location_platform_p_macro_end:
 pcg__find_enemy_spawn_location_wall_p_macro: macro
 	ld a, (hl)
 	ex de, hl
-		ld hl, (current_room__collision_ptr)
+		ld hl, current_room__collision_table
 		ADD_HL_A
 		ld a, (hl)		
 	ex de, hl
@@ -997,7 +997,7 @@ pcg__find_enemy_spawn_location_wall_p_macro: macro
 pcg__find_enemy_spawn_location_water_p_macro: macro
 	ld a, (hl)
 	ex de, hl
-		ld hl, (current_room__collision_ptr)
+		ld hl, current_room__collision_table
 		ADD_HL_A
 		ld a, (hl)		
 	ex de, hl

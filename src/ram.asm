@@ -91,10 +91,12 @@ current_room__trial_fn: ds virtual 2
 current_room__tileset_page: ds virtual 1
 current_room__tileset_ptr: ds virtual 2
 current_room__animation_fn_ptr: ds virtual 2
-current_room__collision_ptr: ds virtual 2
+current_room__collision_ptr_page: ds virtual 1
+current_room__collision_ptr: ds virtual 2  ; 256 bytes of this ptr will be copied to 'current_room__collision_table'.
 current_room__enemy_sprites_ptr: ds virtual 2
 current_room__tileset_overrides_item_tiles: ds virtual 1
 
+current_room__collision_table: ds virtual 256
 
 RAM_to_zero_on_game_start:
 

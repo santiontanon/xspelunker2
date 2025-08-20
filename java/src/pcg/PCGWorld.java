@@ -125,12 +125,12 @@ public class PCGWorld {
         };
 
 
-//    // Slightly smaller sizes (7*7): 1031 / 5000 fails
-//    public int n_divisions = 134;
-//    public int min_divisions_per_area[] = {6, 15, 15, 6, 15, 3, 12, 12, 13, 13, 12, 12};
+    // Slightly smaller sizes (7*7): 1031 / 5000 fails (hard / normal)
+//    public int n_divisions = 136;
+//    public int min_divisions_per_area[] = {6, 15, 15, 4, 15, 3, 12, 12, 13, 13, 12, 12};
 //    public int areaSizes[][] = {
-//        {8, 2}, {7, 7}, {7, 7}, {9, 3},
-//        {7, 7}, {3, 3}, {5, 6}, {5, 6},
+//        {7, 2}, {7, 7}, {7, 7}, {9, 3},
+//        {7, 7}, {3, 3}, {5, 7}, {5, 7},
 //        {7, 7}, {7, 7}, {7, 7}, {7, 7},
 //    };
 //    public String predefinedAreaLayouts[][] = {

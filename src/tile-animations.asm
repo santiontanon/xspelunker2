@@ -1,4 +1,9 @@
 ;-----------------------------------------------
+update_animations_in_vdp_none:
+	ret
+
+
+;-----------------------------------------------
 update_animations_in_vdp_jungle:
 	ld a, (interrupt_cycle)
 	and #07
