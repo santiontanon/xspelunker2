@@ -1,13 +1,11 @@
 to do:
 
 ***- BUG: when there is an item underwater (e.g. hammer), player jumps: check that there is no water on top
+***- BUG: firing with a key equiped does not open a lock
 ***- first boss: Huracán, the Storm Bringer (A large, imposing figure wreathed in swirling winds and lightning. Could have feathered serpent elements): wind, lightning, tornadoes
   ***- boss1.asm with boss update routine
-    ***- boss wake up animation:
-      ***- trigger is walking to the center of the screen:
-    ***- boss appears with dust coming up from the floor (in stone mode)
-      ***- get the boss name tables
     ***- then flash to blue and start
+    ***- when boss is flashing to blue, bring the boss name sprite
   ***- implement behavior patterns
   ***- being able to destroy the staff
   ***- whirlwind

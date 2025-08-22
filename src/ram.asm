@@ -222,6 +222,9 @@ enemy_tiles_to_upload_to_vdp_page: ds virtual 2
 
 config_keyboard_special_case: ds virtual 1
 
+boss__state: ds virtual 1
+
+
 RAM_to_zero_on_game_start_end:
 
 ; temporary variables:

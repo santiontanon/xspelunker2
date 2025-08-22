@@ -120,7 +120,11 @@ enter_boss_door_loop:
 		ld (current_room__collision_ptr_page), a
 		ld hl, boss1_sprites_zx0
 		ld (current_room__enemy_sprites_ptr), hl
+		ld hl, 0
+		ld (large_object_to_upload_to_vdp), hl
 		xor a
+		ld (boss__state), a
+		inc a
 		ld (current_room__tileset_overrides_item_tiles), a
 
 		ld hl, state_play_update_agenda_boss
@@ -137,32 +141,32 @@ enter_boss_door_loop:
 		ld (hl), 20
 	pop bc
 
-enter_boss_door_loop__spawn_stone:
-	; DEBUG: spawn power stone
-	; - c: boss number
-	ld a, c
-	ld b, TAG_POWER_STONE
-	ld hl, buffer_4096 + 47 * 64  ; power stone
-	cp 5  ; 6th and 7th bosses drop half stones
-	jr c, enter_boss_door__spawn_item_set
-	ld hl, buffer_4096 + 61 * 64  ; puzzlebox
-	ld b, TAG_PUZZLEBOX_MARS
-	cp 5
-	jr z, enter_boss_door__spawn_item_set
-	ld b, TAG_PUZZLEBOX_MOON
-enter_boss_door__spawn_item_set:
-	ld iy, (tmp_pcg_room__next_tile_object_ptr)
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), c  ; ID is the boss number
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), b  ; type
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 15  ; x
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 20  ; y
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0  ; state (hitpoints)
-	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
-	add iy, bc
-	ld (tmp_pcg_room__next_tile_object_ptr), iy
+; enter_boss_door_loop__spawn_stone:
+; 	; DEBUG: spawn power stone
+; 	; - c: boss number
+; 	ld a, c
+; 	ld b, TAG_POWER_STONE
+; 	ld hl, buffer_4096 + 47 * 64  ; power stone
+; 	cp 5  ; 6th and 7th bosses drop half stones
+; 	jr c, enter_boss_door__spawn_item_set
+; 	ld hl, buffer_4096 + 61 * 64  ; puzzlebox
+; 	ld b, TAG_PUZZLEBOX_MARS
+; 	cp 5
+; 	jr z, enter_boss_door__spawn_item_set
+; 	ld b, TAG_PUZZLEBOX_MOON
+; enter_boss_door__spawn_item_set:
+; 	ld iy, (tmp_pcg_room__next_tile_object_ptr)
+; 	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), c  ; ID is the boss number
+; 	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), b  ; type
+; 	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 15  ; x
+; 	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 20  ; y
+; 	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0  ; state (hitpoints)
+; 	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
+; 	add iy, bc
+; 	ld (tmp_pcg_room__next_tile_object_ptr), iy
 
-	; set which object gfx to up load vdp:
-	ld (item_object_to_upload_to_vdp), hl
+; 	; set which object gfx to up load vdp:
+; 	ld (item_object_to_upload_to_vdp), hl
 
 	jp state_play_from_loaded_room
 
@@ -389,9 +393,74 @@ shift_boss_door_down:
 
 
 ;-----------------------------------------------
+; input:
+; - hl: frame ptr
+; - de: destination ptr
+; - c, b: width, height
+draw_boss_frame:
+draw_boss_frame_loop_y:
+	push bc
+		push de
+			ld b, c
+draw_boss_frame_loop_x:
+			ld a, (hl)
+			or a
+			jr z, draw_boss_frame_loop_x_skip
+			ld (de), a
+draw_boss_frame_loop_x_skip:
+			inc hl
+			inc de
+			djnz draw_boss_frame_loop_x
+		pop de
+		ex de, hl
+		ld a, (current_room__width)
+		; ld b, 0  ; not needed, b == 0 here already because of the djnz
+		ld c, a
+		add hl, bc
+		ex de, hl
+	pop bc
+	djnz draw_boss_frame_loop_y
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - hl: frame ptr
+; - de: destination ptr
+; - c, b: width, height
+draw_boss_frame_clearing:
+draw_boss_frame_clearing_loop_y:
+	push bc
+		push de
+			ld b, c
+draw_boss_frame_clearing_loop_x:
+			ld a, (hl)
+			ld (de), a
+			inc hl
+			inc de
+			djnz draw_boss_frame_clearing_loop_x
+		pop de
+		ex de, hl
+		ld a, (current_room__width)
+		; ld b, 0  ; not needed, b == 0 here already because of the djnz
+		ld c, a
+		add hl, bc
+		ex de, hl
+	pop bc
+	djnz draw_boss_frame_clearing_loop_y
+	ret
+
+
+;-----------------------------------------------
 update_boss_behavior:
+	ld a, (current_area__id)
+	cp 1
+	jp z, update_boss1_behavior
+
+
 	; ...
 	ret
+
 
 
 ;-----------------------------------------------
