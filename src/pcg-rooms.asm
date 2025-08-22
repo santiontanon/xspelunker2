@@ -13,51 +13,62 @@ tmp_pcg_room__previous_seed: equ tmp_pcg_room__is_midpoint_room - 4
 area_default_tileset_ptrs:
 	db JUNGLE_TILES_PAGE
 	dw tiles_jungle_zx0, update_animations_in_vdp_jungle
-	db 0
+	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_jungle, jungle_enemy_sprites_zx0  ; jungle
+
 	db PYRAMID_TILES_PAGE
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
-	db 0
+	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_pyramid, pyramid_enemy_sprites_zx0  ; pyramid 1
+
 	db PYRAMID_TILES_PAGE
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
-	db 0
+	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_pyramid, pyramid_enemy_sprites_zx0  ; pyramid 2
+
 	db PYRAMID_TILES_PAGE
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
-	db 0
+	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_pyramid, pyramid_enemy_sprites_zx0  ; confluence
+
 	db PYRAMID_TILES_PAGE
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
-	db 0
+	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_pyramid, pyramid_enemy_sprites_zx0  ; pyramid 3
+
 	db PYRAMID_TILES_PAGE
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
-	db 0
+	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_pyramid, pyramid_enemy_sprites_zx0  ; fire shaft
+
 	db PYRAMID_TILES_PAGE
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
-	db 0
+	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_pyramid, pyramid_enemy_sprites_zx0  ; pacific caves
+
 	db PYRAMID_TILES_PAGE
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
-	db 0
+	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_pyramid, pyramid_enemy_sprites_zx0  ; atlantic caves
+
 	db PYRAMID_TILES_PAGE
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
-	db 0
+	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_pyramid, pyramid_enemy_sprites_zx0  ; fire temple
+
 	db PYRAMID_TILES_PAGE
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
-	db 0
+	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_pyramid, pyramid_enemy_sprites_zx0  ; atlantis
+
 	db PYRAMID_TILES_PAGE
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
-	db 0
+	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_pyramid, pyramid_enemy_sprites_zx0  ; mars
+
 	db PYRAMID_TILES_PAGE
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
-	db 0
+	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_pyramid, pyramid_enemy_sprites_zx0  ; moon
 
 
@@ -84,6 +95,9 @@ pcg_generate_room_reset_state:
 	ldi  ; current_room__enemy_sprites_ptr
 	xor a
 	ld (current_room__tileset_overrides_item_tiles), a
+
+	ld hl, state_play_update_agenda_normal_play
+	ld (state_play_update_agenda_tbl_ptr), hl
 
 	; Even if this will be copied later (in state-play.asm), we need to copy it early, so that
 	; collision table is set when we get to pcg-enemies.asm.

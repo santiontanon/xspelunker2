@@ -98,6 +98,9 @@ current_room__tileset_overrides_item_tiles: ds virtual 1
 
 current_room__collision_table: ds virtual 256
 
+state_play_update_agenda_tbl_ptr: ds virtual 2
+
+
 RAM_to_zero_on_game_start:
 
 ; rendering variables:

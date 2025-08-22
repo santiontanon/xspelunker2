@@ -2,11 +2,11 @@ to do:
 
 ***- BUG: when there is an item underwater (e.g. hammer), player jumps: check that there is no water on top
 ***- first boss: Huracán, the Storm Bringer (A large, imposing figure wreathed in swirling winds and lightning. Could have feathered serpent elements): wind, lightning, tornadoes
-  ***- design the whole boss behavior in Java
-  ***- boss wake up animation:
-    ***- trigger is walking to the center of the screen
-    ***- initially boss is not there
-    ***- it appears with dust coming up from the floor (in stone mode)
+  ***- boss1.asm with boss update routine
+    ***- boss wake up animation:
+      ***- trigger is walking to the center of the screen:
+    ***- boss appears with dust coming up from the floor (in stone mode)
+      ***- get the boss name tables
     ***- then flash to blue and start
   ***- implement behavior patterns
   ***- being able to destroy the staff

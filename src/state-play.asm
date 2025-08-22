@@ -291,7 +291,7 @@ state_play_loop:
 	ld (game_cycle), a
 	add a, a
 	add a, a
-	ld hl, state_play_update_agenda
+	ld hl, (state_play_update_agenda_tbl_ptr)
 	ADD_HL_A
 	jp (hl)
 state_play_loop_continue:
@@ -371,7 +371,7 @@ state_play_rerender_hud:
 ;-----------------------------------------------
 ; Agenda:
 ; - We divide the cycles into blocks 8 cycles, and in each of those 8, we only update certain things
-state_play_update_agenda:
+state_play_update_agenda_normal_play:
 	jp state_play_update_agenda_cycle_even_0
 	db 0
 	jp state_play_update_agenda_cycle_odd
@@ -385,6 +385,24 @@ state_play_update_agenda:
 	jp state_play_update_agenda_cycle_odd
 	db 0
 	jp state_play_update_agenda_cycle_even
+	db 0
+	jp state_play_update_agenda_cycle_odd
+
+
+state_play_update_agenda_boss:
+	jp state_play_update_agenda_cycle_even_0_boss
+	db 0
+	jp state_play_update_agenda_cycle_odd
+	db 0
+	jp state_play_update_agenda_cycle_even_boss
+	db 0
+	jp state_play_update_agenda_cycle_odd
+	db 0
+	jp state_play_update_agenda_cycle_even_boss
+	db 0
+	jp state_play_update_agenda_cycle_odd
+	db 0
+	jp state_play_update_agenda_cycle_even_boss
 	db 0
 	jp state_play_update_agenda_cycle_odd
 
@@ -411,7 +429,6 @@ state_play_update_agenda_cycle_even_0:  ; player + player bullets + tile objects
 state_play_update_agenda_cycle_odd:  ; player + player bullets + sprite objects
 	call update_keyboard_buffers
 	call player_update
-
 	call update_sprite_objects
 	ld hl, update_sprite_enemies
 	ld c, ENEMIES_PAGE
@@ -423,7 +440,33 @@ state_play_update_agenda_cycle_odd:  ; player + player bullets + sprite objects
 	call update_scroll
 	jp state_play_loop_continue
 
+state_play_update_agenda_cycle_even_boss:  ; player + player bullets + boss
+	call update_keyboard_buffers
+	call player_update
+	call update_sprite_objects_player_bullets
+	ld c, BOSS_PAGE
+	ld hl, update_boss_behavior
+	call call_hl_in_page_c_8000
+	call maybe_recenter_scroll
+	call update_scroll
+	jp state_play_loop_continue
 
+state_play_update_agenda_cycle_even_0_boss:  ; player + player bullets + tile objects + boss
+	call update_keyboard_buffers
+	call player_update
+	call update_sprite_objects_player_bullets
+	ld c, BOSS_PAGE
+	ld hl, update_boss_behavior
+	call call_hl_in_page_c_8000
+	ld c, TILES_PAGE
+	ld hl, update_tile_objects
+	call call_hl_in_page_c_8000
+	call maybe_recenter_scroll
+	call update_scroll
+	jp state_play_loop_continue
+
+
+;-----------------------------------------------
 state_play_upload_object_tiles_to_vdp_if_necessary:
 	ld hl, redraw_flags
 	ld a, (hl)

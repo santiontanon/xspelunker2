@@ -48,6 +48,7 @@ TABLET_LETTER_PAGE: equ 7
 ENEMIES_PAGE: equ 8
 JUNGLE_TILES_PAGE: equ 9
 NPCS_PAGE: equ 9
+AREA_COLLISION_TABLES_PAGE: equ 1
 MUSIC_PAGE: equ 0  ; ???
 
 
@@ -341,6 +342,9 @@ jungle_chunk_fg_bank_ptrs:
     dw jungle_chunk_fg_bank_8_zx0
     dw jungle_chunk_fg_bank_9_zx0
 jungle_chunk_fg_bank_ptrs_end:
+
+
+    include "area-collision-tables.asm"
 
 
 puzzle3_msg_data1:

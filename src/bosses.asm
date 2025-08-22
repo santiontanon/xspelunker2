@@ -123,6 +123,9 @@ enter_boss_door_loop:
 		xor a
 		ld (current_room__tileset_overrides_item_tiles), a
 
+		ld hl, state_play_update_agenda_boss
+		ld (state_play_update_agenda_tbl_ptr), hl
+
 		; player position:
 		ld hl, player_x
 		ld (hl), 0
@@ -271,18 +274,14 @@ pick_up_boss_puzzlebox_moon:
 	ld (hl), 1
 pick_up_boss_puzzlebox_continue:
 	; set event to close the door:
-	ld hl, event__exit_boss_door
-	ld (in_game_event_fn_ptr), hl
-	ld a, BOSS_PAGE
-	ld (in_game_event_fn_page), a
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
-	ld (in_game_event_fn_arg), a
+	push af
 
-	ld hl, SFX_item_pickup
-	call play_SFX_with_high_priority
+		ld hl, SFX_item_pickup
+		call play_SFX_with_high_priority
 
-	ld de, TEXT_FOUND_PUZZLEBOX
-	jr pick_up_boss_power_stone_continue
+		ld de, TEXT_FOUND_PUZZLEBOX
+		jr pick_up_boss_power_stone_continue
 
 	; message:
 ; 	ld de, TEXT_FOUND_HALF_POWER_STONE  ; TEXT_FOUND_SECOND_HALF_POWER_STONE
@@ -387,6 +386,12 @@ shift_boss_door_down:
 	pop hl
 	ld bc, 4*8
 	jp fast_FILVRM
+
+
+;-----------------------------------------------
+update_boss_behavior:
+	; ...
+	ret
 
 
 ;-----------------------------------------------
