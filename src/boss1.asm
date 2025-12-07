@@ -8,8 +8,8 @@ BOSS1_NAMETABLE_STAFF_UP: equ boss1_name_tables + 108  ; 6*7
 BOSS1_NAMETABLE_FACE_DAMAGE: equ boss1_name_tables + 150  ; 2*2
 BOSS1_NAMETABLE_LEGS0: equ boss1_name_tables + 154  ; 4*4
 BOSS1_NAMETABLE_LEGS1: equ boss1_name_tables + 170  ; 5*4
-BOSS1_NAMETABLE_LEGS2: equ boss1_name_tables + 190  ; 4*4
-BOSS1_NAMETABLE_LEGS3: equ boss1_name_tables + 206  ; 5*4
+BOSS1_NAMETABLE_LEGS2: equ boss1_name_tables + 206  ; 4*4
+BOSS1_NAMETABLE_LEGS3: equ boss1_name_tables + 190  ; 5*4
 BOSS1_NAMETABLE_LEGS4: equ boss1_name_tables + 226  ; 3*4
 BOSS1_NAMETABLE_LEGS_CROUCH: equ boss1_name_tables + 238  ; 4*3
 BOSS1_NAMETABLE_LEFT_HAND_ATTACK: equ boss1_name_tables + 250  ; 6*9
@@ -39,54 +39,63 @@ boss1_frame_0_stone:
 	db 1  ; number of parts
 	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
 	dw #0906, BOSS1_NAMETABLE_STONE  ; dimensions and nametable
+	dw 0, #0906  ; boss__clear_bbox
 boss1_frame_1_idle:
 	db 2
 	db 0, 0
 	dw #0906, BOSS1_NAMETABLE_BASE
 	db 1, 5
 	dw #0404, BOSS1_NAMETABLE_LEGS0
+	dw 0, #0906  ; boss__clear_bbox
 boss1_frame_2_walk_1:
 	db 2
 	db 0, 0
 	dw #0906, BOSS1_NAMETABLE_BASE
 	db 0, 5
 	dw #0405, BOSS1_NAMETABLE_LEGS1
+	dw 0, #0906  ; boss__clear_bbox
 boss1_frame_3_walk_2:
 	db 2
 	db 0, 0
 	dw #0906, BOSS1_NAMETABLE_BASE
 	db 0, 5
 	dw #0405, BOSS1_NAMETABLE_LEGS2
+	dw 0, #0906  ; boss__clear_bbox
 boss1_frame_4_walk_3:
 	db 2
 	db 0, 0
 	dw #0906, BOSS1_NAMETABLE_BASE
 	db 1, 5
 	dw #0404, BOSS1_NAMETABLE_LEGS3
+	dw 0, #0906  ; boss__clear_bbox
 boss1_frame_5_walk_4:
 	db 2
 	db 0, 0
 	dw #0906, BOSS1_NAMETABLE_BASE
 	db 2, 5
-	dw #0304, BOSS1_NAMETABLE_LEGS4
+	dw #0403, BOSS1_NAMETABLE_LEGS4
+	dw 0, #0906  ; boss__clear_bbox
 boss1_frame_6_crouch:
 	db 2
 	db 0, 1
 	dw #0706, BOSS1_NAMETABLE_STAFF_UP
 	db 1, 6
 	dw #0304, BOSS1_NAMETABLE_LEGS_CROUCH
+	dw 32, #0806  ; boss__clear_bbox
 boss1_frame_7_staff_attack:
 	db 2
 	db 0, 0
 	dw #0706, BOSS1_NAMETABLE_STAFF_UP
 	db 1, 5
 	dw #0404, BOSS1_NAMETABLE_LEGS0
+	dw 0, #0906  ; boss__clear_bbox
 boss1_frame_8_left_hand_attack:
 	db 2
 	db 0, 0
 	dw #0906, BOSS1_NAMETABLE_LEFT_HAND_ATTACK
 	db 1, 5
 	dw #0404, BOSS1_NAMETABLE_LEGS0
+	dw 0, #0906  ; boss__clear_bbox
 
 boss1_frame_9_idle_no_staff:
 	db 2
@@ -94,48 +103,56 @@ boss1_frame_9_idle_no_staff:
 	dw #0705, BOSS1_NAMETABLE_BASE_NO_STAFF
 	db 1, 5
 	dw #0404, BOSS1_NAMETABLE_LEGS0
+	dw 1, #0905  ; boss__clear_bbox
 boss1_frame_10_walk_1_no_staff:
 	db 2
 	db 1, 0
 	dw #0705, BOSS1_NAMETABLE_BASE_NO_STAFF
 	db 0, 5
 	dw #0405, BOSS1_NAMETABLE_LEGS1
+	dw 1, #0905  ; boss__clear_bbox
 boss1_frame_11_walk_2_no_staff:
 	db 2
 	db 1, 0
 	dw #0705, BOSS1_NAMETABLE_BASE_NO_STAFF
 	db 0, 5
 	dw #0405, BOSS1_NAMETABLE_LEGS2
+	dw 1, #0905  ; boss__clear_bbox
 boss1_frame_12_walk_3_no_staff:
 	db 2
 	db 1, 0
 	dw #0705, BOSS1_NAMETABLE_BASE_NO_STAFF
 	db 1, 5
 	dw #0404, BOSS1_NAMETABLE_LEGS3
+	dw 1, #0905  ; boss__clear_bbox
 boss1_frame_13_walk_4_no_staff:
 	db 2
 	db 1, 0
 	dw #0705, BOSS1_NAMETABLE_BASE_NO_STAFF
 	db 2, 5
-	dw #0304, BOSS1_NAMETABLE_LEGS4
+	dw #0403, BOSS1_NAMETABLE_LEGS4
+	dw 1, #0905  ; boss__clear_bbox
 boss1_frame_14_crouch_no_staff:
 	db 2
 	db 1, 0
 	dw #0605, BOSS1_NAMETABLE_BASE_NO_STAFF
 	db 1, 5
 	dw #0404, BOSS1_NAMETABLE_LEGS_CROUCH
+	dw 33, #0805  ; boss__clear_bbox
 boss1_frame_15_left_hand_attack_no_staff:
 	db 2
 	db 1, 0
 	dw #0906, BOSS1_NAMETABLE_LEFT_HAND_ATTACK_NO_STAFF
 	db 1, 5
 	dw #0404, BOSS1_NAMETABLE_LEGS0
+	dw 1, #0905  ; boss__clear_bbox
 boss1_frame_16_punch_attack_no_staff:
 	db 2
 	db -2, 0
 	dw #0708, BOSS1_NAMETABLE_PUNCH
 	db 1, 5
 	dw #0404, BOSS1_NAMETABLE_LEGS0
+	dw -2, #0907  ; boss__clear_bbox
 
 
 ;-----------------------------------------------
@@ -160,13 +177,32 @@ update_boss1_behavior_0:
 	ret c
 
 	; player crossed the screen midpoint, trigger boss appearance:
+	ld a, 24
+	ld (boss__x), a
+	ld a, 13
+	ld (boss__y), a
+	ld a, 1
+	ld (boss__1_has_staff), a
+
+	; set the clear box:
+	ld hl, current_room__tile_map + 13*32 + 24
+	ld (boss__clear_bbox), hl
+	ld hl, #0906
+	ld (boss__clear_bbox + 2), hl
 	ld bc, #0106
 	ld de, current_room__tile_map + 21*32 + 24
 update_boss1_behavior_0_raise_loop:
 	ld hl, BOSS1_NAMETABLE_STONE
 	push bc
 		push de
-			call draw_boss_frame_part_clearing
+			push de
+			push hl
+			push bc
+				call draw_boss_frame_clear_previous_frame
+			pop bc
+			pop hl
+			pop de
+			call draw_boss_frame_part
 			xor a
 			call boss1_draw_dust
 			ld hl, draw_room_with_hud
@@ -197,7 +233,7 @@ update_boss1_behavior_0_raise_loop:
 	ld bc, #0906
 	ld de, current_room__tile_map + 13*32 + 24
 	ld hl, BOSS1_NAMETABLE_STONE
-	call draw_boss_frame_part_clearing
+	call draw_boss_frame_part
 	ld hl, draw_room_with_hud
 	ld c, TILES_PAGE
 	call call_hl_in_page_c_8000
@@ -232,13 +268,6 @@ update_boss1_behavior_0_waking_loop:
 
 	; Remove boss name (using sprites)
 	call update_boss1_behavior_bring_name_up
-
-	ld a, 26
-	ld (boss__x), a
-	ld a, 13
-	ld (boss__y), a
-	ld a, 1
-	ld (boss__1_has_staff), a
 
 update_boss1_behavior_0_choose_behavior:
 ; 	ld c, 3
@@ -310,7 +339,7 @@ update_boss1_behavior_1_state_1:
 	inc a
 	ld (boss__state), a
 	ld a, (boss__x)
-	cp 8
+	cp 10
 	jr nc, update_boss1_behavior_1_state_1_continue
 	ld a, 4
 	ld (boss__state), a
@@ -386,9 +415,10 @@ update_boss1_behavior_1_state_5_jumping:
 	ret nz
 	ld hl, boss__y
 	dec (hl)
+	ld a, (boss__state_timer)
 	cp 92
 	ret nz
-	ld a, 26
+	ld a, 24
 	ld (boss__x), a
 	ret
 update_boss1_behavior_1_state_5_falling:
@@ -406,6 +436,8 @@ update_boss1_behavior_1_state_5_land:
 	ld (boss__state_timer), a
 	ld a, 6
 	ld (boss__state), a
+	ld a, 13
+	ld (boss__y), a	
 	ret
 
 update_boss1_behavior_1_state_6:
@@ -476,6 +508,11 @@ update_boss1_draw_boss_frame_continue:
 	push hl
 		ld hl, redraw_flags
 		set ROOM_REDRAW_FLAG_BIT, (hl)
+
+		; compute draw pointer:
+		ld bc, (boss__x)
+		call get_room_tile_ptr
+		ex de, hl  ; hl = ptr where the boss is to be drawn
 	pop hl
 	jp draw_boss_frame
 
@@ -485,11 +522,9 @@ update_boss1_draw_boss_frame_1:  ; still
 	or a
 	jr z, update_boss1_draw_boss_frame_1_no_staff
 update_boss1_draw_boss_frame_1_staff:
-	ld de, current_room__tile_map + 13*32 + 24
 	ld hl, boss1_frame_1_idle
 	jr update_boss1_draw_boss_frame_continue
 update_boss1_draw_boss_frame_1_no_staff:
-	ld de, current_room__tile_map + 13*32 + 24
 	ld hl, boss1_frame_9_idle_no_staff
 	jr update_boss1_draw_boss_frame_continue
 
@@ -502,7 +537,7 @@ update_boss1_draw_boss_frame_2:  ; walk left frames
 	rla
 	rla
 	rla
-	and #0c  ; a = walk frame
+	and #03  ; a = walk frame
 	ld hl, boss1_frame_2_walk_1
 	jr z, update_boss1_draw_boss_frame_2_continue
 	dec a
@@ -513,7 +548,6 @@ update_boss1_draw_boss_frame_2:  ; walk left frames
 	jr z, update_boss1_draw_boss_frame_2_continue
 	ld hl, boss1_frame_5_walk_4
 update_boss1_draw_boss_frame_2_continue:
-	ld de, current_room__tile_map + 13*32 + 24
 	jr update_boss1_draw_boss_frame_continue
 
 update_boss1_draw_boss_frame_2_no_staff:
@@ -539,16 +573,13 @@ update_boss1_draw_boss_frame_3:  ; crouch
 	or a
 	jr z, update_boss1_draw_boss_frame_3_no_staff
 update_boss1_draw_boss_frame_3_staff:
-	ld de, current_room__tile_map + 13*32 + 24
 	ld hl, boss1_frame_6_crouch
 	jp update_boss1_draw_boss_frame_continue
 update_boss1_draw_boss_frame_3_no_staff:
-	ld de, current_room__tile_map + 13*32 + 24
 	ld hl, boss1_frame_14_crouch_no_staff
 	jp update_boss1_draw_boss_frame_continue
 
 update_boss1_draw_boss_frame_5  ; staff-attack
-	ld de, current_room__tile_map + 13*32 + 24
 	ld hl, boss1_frame_7_staff_attack
 	jp update_boss1_draw_boss_frame_continue
 
@@ -557,16 +588,13 @@ update_boss1_draw_boss_frame_6:  ; left-hand attack
 	or a
 	jr z, update_boss1_draw_boss_frame_6_no_staff
 update_boss1_draw_boss_frame_6_staff:
-	ld de, current_room__tile_map + 13*32 + 24
 	ld hl, boss1_frame_8_left_hand_attack
 	jp update_boss1_draw_boss_frame_continue
 update_boss1_draw_boss_frame_6_no_staff:
-	ld de, current_room__tile_map + 13*32 + 24
 	ld hl, boss1_frame_15_left_hand_attack_no_staff
 	jp update_boss1_draw_boss_frame_continue
 
 update_boss1_draw_boss_frame_7:  ; punch
-	ld de, current_room__tile_map + 13*32 + 24
 	ld hl, boss1_frame_16_punch_attack_no_staff
 	jp update_boss1_draw_boss_frame_continue
 

@@ -192,6 +192,8 @@ draw_room_continue:
 ; input:
 ; - c: x
 ; - b: y
+; output:
+; - hl: ptr
 get_room_tile_ptr:
 	ld a, (current_room__width)
 	cp 64

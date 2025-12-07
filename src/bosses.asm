@@ -94,7 +94,10 @@ enter_boss_door_loop:
 		call clear_screen_left_to_right
 	pop bc
 	push bc
+		; choose which room to load, player position, etc based on the boss number:
 		; - c: boss number
+		; ...
+
 		ld c, PCG_PAGE
 		ld hl, pcg_generate_room_reset_state
 		call call_hl_in_page_c_8000
@@ -141,6 +144,17 @@ enter_boss_door_loop:
 		ld (hl), 0
 		inc hl
 		ld (hl), 20
+
+		; make a copy of the boss room so that we can restore the background as the boss moves:
+		ld hl, current_room__tile_map
+		ld de, current_room__tile_map + 32*24*2
+		ld bc, 32*24*2
+		ldir
+		; clear the bbox:
+		ld hl, boss__clear_bbox + 2
+		ld (hl), 0
+		inc hl
+		ld (hl), 0
 	pop bc
 
 ; enter_boss_door_loop__spawn_stone:
@@ -399,49 +413,105 @@ shift_boss_door_down:
 ; - de: ptr to draw to
 ; - hl: ptr to frame struct
 draw_boss_frame:
+	push hl
+	push de
+		call draw_boss_frame_clear_previous_frame
+	pop de
+	pop hl
+
 	ld a, (hl)  ; number of frame parts
 	inc hl
 	or a
 	ret z
 	ld b, a
+	push de
 draw_boss_frame_loop:
-	push bc
-		push de
-			ld c, (hl)  ; x offset
-			inc hl
-			ld b, 0
-			ex de, hl
-				add hl, bc  ; add x offset
-			ex de, hl
-			ld a, (current_room__width)
-			ld c, a
-			ld a, (hl)  ; y offset
-			inc hl
-			or a
-			jr z, draw_boss_frame_loop_continue
-			ex de, hl
-draw_boss_frame_loop_y_offset_loop:
-				add hl, bc
-				dec a
-				jr nz, draw_boss_frame_loop_y_offset_loop
-			ex de, hl
-draw_boss_frame_loop_continue:
-			ld c, (hl)  ; width
-			inc hl
-			ld b, (hl)  ; height
-			inc hl
-			push hl
-				ld a, (hl)
+		push bc
+			push de
+				ld c, (hl)  ; x offset
 				inc hl
-				ld h, (hl)
-				ld l, a
-				call draw_boss_frame_part_clearing
-			pop hl
+				ld b, 0
+				ex de, hl
+					add hl, bc  ; add x offset
+				ex de, hl
+				ld a, (current_room__width)
+				ld c, a
+				ld a, (hl)  ; y offset
+				inc hl
+				or a
+				jr z, draw_boss_frame_loop_continue
+				ex de, hl
+draw_boss_frame_loop_y_offset_loop:
+					add hl, bc
+					dec a
+					jr nz, draw_boss_frame_loop_y_offset_loop
+				ex de, hl
+draw_boss_frame_loop_continue:
+				ld c, (hl)  ; width
+				inc hl
+				ld b, (hl)  ; height
+				inc hl
+				push hl
+					ld a, (hl)
+					inc hl
+					ld h, (hl)
+					ld l, a
+					call draw_boss_frame_part
+				pop hl
+			pop de
+			inc hl
+			inc hl
+		pop bc
+		djnz draw_boss_frame_loop
+		; set clear bbox:
+		ld c, (hl)
+		inc hl
+		ld b, (hl)  ; bc is the offset wrt original draw pointer
+		inc hl
+		ld de, boss__clear_bbox + 2
+		push bc
+			ldi
+			ldi
+		pop bc
+	pop hl
+	add hl, bc
+	ld (boss__clear_bbox), hl
+	ret
+
+
+;-----------------------------------------------
+draw_boss_frame_clear_previous_frame:
+		; clear the previous frame
+		ld bc, (boss__clear_bbox + 2)
+		ld a, c
+		or b
+		ret z
+		ld hl, (boss__clear_bbox)
+		ld e, l
+		ld d, h
+		push bc
+			ld bc, boss__room_bg_buffer - current_room__tile_map
+			add hl, bc
+		pop bc
+		; here:
+		; - hl: points to the bg buffer
+		; - de: points to the room part we want to clear
+draw_boss_frame_clear_previous_frame_y_loop:
+	push bc
+		ld b, 0
+		push hl
+		push de
+			ldir
 		pop de
-		inc hl
-		inc hl
+		pop hl
+		ld a, (current_room__width)
+		ld c, a
+		add hl, bc
+		ex de, hl
+			add hl, bc
+		ex de, hl
 	pop bc
-	djnz draw_boss_frame_loop
+	djnz draw_boss_frame_clear_previous_frame_y_loop
 	ret
 
 
@@ -450,48 +520,20 @@ draw_boss_frame_loop_continue:
 ; - hl: frame ptr
 ; - de: destination ptr
 ; - c, b: width, height
-; draw_boss_frame_part:
-; draw_boss_frame_loop_y:
-; 	push bc
-; 		push de
-; 			ld b, c
-; draw_boss_frame_part_loop_x:
-; 			ld a, (hl)
-; 			or a
-; 			jr z, draw_boss_frame_part_loop_x_skip
-; 			ld (de), a
-; draw_boss_frame_part_loop_x_skip:
-; 			inc hl
-; 			inc de
-; 			djnz draw_boss_frame_part_loop_x
-; 		pop de
-; 		ex de, hl
-; 		ld a, (current_room__width)
-; 		; ld b, 0  ; not needed, b == 0 here already because of the djnz
-; 		ld c, a
-; 		add hl, bc
-; 		ex de, hl
-; 	pop bc
-; 	djnz draw_boss_frame_loop_y
-; 	ret
-
-
-;-----------------------------------------------
-; input:
-; - hl: frame ptr
-; - de: destination ptr
-; - c, b: width, height
-draw_boss_frame_part_clearing:
-draw_boss_frame_part_clearing_loop_y:
+draw_boss_frame_part:
+draw_boss_frame_part_loop_y:
 	push bc
 		push de
 			ld b, c
-draw_boss_frame_part_clearing_loop_x:
+draw_boss_frame_part_loop_x:
 			ld a, (hl)
+			or a
+			jr z, draw_boss_frame_part_loop_x_skip
 			ld (de), a
+draw_boss_frame_part_loop_x_skip:
 			inc hl
 			inc de
-			djnz draw_boss_frame_part_clearing_loop_x
+			djnz draw_boss_frame_part_loop_x
 		pop de
 		ex de, hl
 		ld a, (current_room__width)
@@ -500,8 +542,36 @@ draw_boss_frame_part_clearing_loop_x:
 		add hl, bc
 		ex de, hl
 	pop bc
-	djnz draw_boss_frame_part_clearing_loop_y
+	djnz draw_boss_frame_part_loop_y
 	ret
+
+
+;-----------------------------------------------
+; input:
+; - hl: frame ptr
+; - de: destination ptr
+; - c, b: width, height
+; draw_boss_frame_part_clearing:
+; draw_boss_frame_part_clearing_loop_y:
+; 	push bc
+; 		push de
+; 			ld b, c
+; draw_boss_frame_part_clearing_loop_x:
+; 			ld a, (hl)
+; 			ld (de), a
+; 			inc hl
+; 			inc de
+; 			djnz draw_boss_frame_part_clearing_loop_x
+; 		pop de
+; 		ex de, hl
+; 		ld a, (current_room__width)
+; 		; ld b, 0  ; not needed, b == 0 here already because of the djnz
+; 		ld c, a
+; 		add hl, bc
+; 		ex de, hl
+; 	pop bc
+; 	djnz draw_boss_frame_part_clearing_loop_y
+; 	ret
 
 
 ;-----------------------------------------------

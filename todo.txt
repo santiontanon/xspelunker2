@@ -2,45 +2,43 @@ to do:
 
 ***- first boss:
   ***- implement behavior patterns:
-    ***- update_boss1_behavior_1: walk and jump back
-      ***- debug 1: just rotate through the walk animation (even if it does not walk)
-      ***- make it actually walk forward (forever, even if it will crash)
-      ***- make it jump backwards
-      ***- full behavior as intended
+    ***- draw_boss_frame_part: handle when the boss part to draw is outside of the room area: for now just handle up/down which can be used by comparing ptrs at the start of each row draw
     ***- update_boss1_behavior_2: jump attack
     ***- update_boss1_behavior_3: bullet barrage
     ***- update_boss1_behavior_4; death
-  ***- being able to destroy the staff
   ***- whirlwind
   ***- eye bullets
   ***- lightning attack
+  ***- being able to destroy the staff
   ***- being able to kill the boss
-  ***- death animation/celebration
+  ***- death animation/celebration and make power stone appear (old code for this is in "enter_boss_door_loop__spawn_stone", in bosses.asm)
   ***- angry version (skin of different color): decide the trigger condition, and implement it (are clues given anywhere? can't remember if I already added them?)
 ***- BUG: firing with a key equiped does not open a lock
 ***- BUG: when there is an item underwater (e.g. hammer), player jumps: check that there is no water on top? (or mark item as water?) (or look at the background buffer of the item (recursively until finding a non-item?)
 ***- clean the code: I have the same "split by line" text routine spread among multiple files, reorganize that!
+***- when a bullet does not hit an enemy, have a chance (or always) to remain in the map, so you can pick it up again (maybe some enemies will steal objects, and that can be used to bait them? or maybe some enemies wake up with noise and items dropping make noise? (as do dropping pushable blocks, or the player doing anything except crawling)).
 
+- maps look very empty, is it lack of music, or maybe enemy behaviors or spawn locations that are not ideal. Play around and make a list of things I don't like, to fix them.
 - music: intro, letters, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 25 have potential)
-- second boss: Camazotz, the Bat God: A giant bat-like creature with glowing red eyes and sharp claws.
-- third boss: The Obsidian Golem: A hulking golem made of obsidian, with glowing cracks.
+- second boss: Camazotz, the Bat God: A giant bat-like creature with glowing red eyes and sharp claws. (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
+- third boss: The Obsidian Golem: A hulking golem made of obsidian, with glowing cracks. (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
 - caves biome (remember to keep ladder tiles in place for down-door opening code). Implement ice cape effect for lava. Skeleton that spit fire (flamethrower through mouth), rockmen (that turn into an undestructible stone), caterpillars, worms, etc. Is the confluence a "caves biome area" (except the calendar room)?
     - ant colonies (tile enemy that spawns ants). ants/fire ants: just move around not too fast and can climb walls up/down, or even hang from the ceiling
 - xibalba biome (remember to keep ladder tiles in place for down-door opening code)
-- fourth boss (Xibalba): Xibalba Lords: Hun Camé (One Death) and Vucub Camé (Seven Death): Skeletal figures with ornate Mayan headdresses, representing the rulers of the underworld (summons skeletons or shadows) 
+- fourth boss (Xibalba): Xibalba Lords: Hun Camé (One Death) and Vucub Camé (Seven Death): Skeletal figures with ornate Mayan headdresses, representing the rulers of the underworld (summons skeletons or shadows). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
 - atlantis biome (do I need to move the possible set of up/down/left/right tags to 4 instead of just 2?): crocodiles as an additional water enemy?
-- fifth boss: Atlantean Guardian (Underwater Boss): A colossal robotic creature with bioluminescent features, resembling a deep-sea creature (laser beams from tentacles, summons robotic fish)
+- fifth boss: Atlantean Guardian (Underwater Boss): A colossal robotic creature with bioluminescent features, resembling a deep-sea creature (laser beams from tentacles, summons robotic fish). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
 - confrontation with the aliens after activating the calendar stone
 - first ending sequence: Elaine drops from the ceiling on a rope and rescues you. The calendar stone machine activates and creates a defensive barrier around earth, the alien armada that was coming turns back, but promises revenge.
 
 - mars biome (remember to keep ladder tiles in place for down-door opening code)
   - can you jump higher in the moon/mars? fall slower?
 - moon biome (similar to mars, but different color scheme, it could even be the same with palette changed)
-- 6th boss: (ideas: "The Solar Stone Jaguar", "The Martian Terracotta Warrior", "The Dust Stone Golem")
-- 7th boss (ideas: "The Lunar Obsidian Sentinel" (tall, slender, smooth black, reflective surfaces), "The Lunar Crystal Serpent", "The Moon Stone Monolith")
+- 6th boss: (ideas: "The Solar Stone Jaguar", "The Martian Terracotta Warrior", "The Dust Stone Golem"). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
+- 7th boss (ideas: "The Lunar Obsidian Sentinel" (tall, slender, smooth black, reflective surfaces), "The Lunar Crystal Serpent", "The Moon Stone Monolith"). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
 - second ending: the calendar stone machine not only creates a defensive barrier, but also activates its offensive mechanism and destroys the alien armada that was coming. You hope that will deterr them from coming again.
 
-- 8th boss: after beating the combat against the aliens, you can teleport to their home planet, and fight against their leader (final final boss)
+- 8th boss: after beating the combat against the aliens, you can teleport to their home planet, and fight against their leader (final final boss). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
 - final good ending: the stone opens a portal for you to travel to the alien world, and fight against their leader in a final final battle. When you defeat it and come back, Elaine is there waiting to save you, but you arrive having become the ruler of alien empire.
 - "speak" the animal names in the animal room to get their blessings (if you get all four, you do double damage): I already have the clue for this in the game, right? (TABLET_TRIVIA_CLUE1_1)
 - Potential new secret ideas:
@@ -48,6 +46,7 @@ to do:
   - have a chest/door locked with keys from ALL colors, and that can only be open in a world where all color keys spawn. Single lock that changes color, cycling through all.
   - Special huge chest that has a lock with a number. Each time you use a small key, it reduces by one. But the number is larger than the keys in one world. the state of the chest should be saved to the ROM, and if you beat the game, it remains. It might give you access to a final alien weapon to really kill the final boss. If you play again on the same seed, the chest will be blocked somehow (so, you need a different seed)
   - room that has 4 locks (one from each cardinal directions), but in each world, it can only be reached from one direction. Upon opening all 4, it reveals a passage to a secret level (the "lost world", which is like jungle but with dinosaurs? is there an alternate ending here?, or the "underground cenote", where sacrifices were made)
+
 
 --------------------
 
