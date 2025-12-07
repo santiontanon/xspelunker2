@@ -123,7 +123,9 @@ enter_boss_door_loop:
 		ld hl, 0
 		ld (large_object_to_upload_to_vdp), hl
 		xor a
+		ld (boss__behavior), a
 		ld (boss__state), a
+		ld (boss__state_timer), a
 		inc a
 		ld (current_room__tileset_overrides_item_tiles), a
 
@@ -394,32 +396,52 @@ shift_boss_door_down:
 
 ;-----------------------------------------------
 ; input:
-; - hl: frame ptr
-; - de: destination ptr
-; - c, b: width, height
+; - de: ptr to draw to
+; - hl: ptr to frame struct
 draw_boss_frame:
-draw_boss_frame_loop_y:
+	ld a, (hl)  ; number of frame parts
+	inc hl
+	or a
+	ret z
+	ld b, a
+draw_boss_frame_loop:
 	push bc
 		push de
-			ld b, c
-draw_boss_frame_loop_x:
-			ld a, (hl)
-			or a
-			jr z, draw_boss_frame_loop_x_skip
-			ld (de), a
-draw_boss_frame_loop_x_skip:
+			ld c, (hl)  ; x offset
 			inc hl
-			inc de
-			djnz draw_boss_frame_loop_x
+			ld b, 0
+			ex de, hl
+				add hl, bc  ; add x offset
+			ex de, hl
+			ld a, (current_room__width)
+			ld c, a
+			ld a, (hl)  ; y offset
+			inc hl
+			or a
+			jr z, draw_boss_frame_loop_continue
+			ex de, hl
+draw_boss_frame_loop_y_offset_loop:
+				add hl, bc
+				dec a
+				jr nz, draw_boss_frame_loop_y_offset_loop
+			ex de, hl
+draw_boss_frame_loop_continue:
+			ld c, (hl)  ; width
+			inc hl
+			ld b, (hl)  ; height
+			inc hl
+			push hl
+				ld a, (hl)
+				inc hl
+				ld h, (hl)
+				ld l, a
+				call draw_boss_frame_part_clearing
+			pop hl
 		pop de
-		ex de, hl
-		ld a, (current_room__width)
-		; ld b, 0  ; not needed, b == 0 here already because of the djnz
-		ld c, a
-		add hl, bc
-		ex de, hl
+		inc hl
+		inc hl
 	pop bc
-	djnz draw_boss_frame_loop_y
+	djnz draw_boss_frame_loop
 	ret
 
 
@@ -428,17 +450,48 @@ draw_boss_frame_loop_x_skip:
 ; - hl: frame ptr
 ; - de: destination ptr
 ; - c, b: width, height
-draw_boss_frame_clearing:
-draw_boss_frame_clearing_loop_y:
+; draw_boss_frame_part:
+; draw_boss_frame_loop_y:
+; 	push bc
+; 		push de
+; 			ld b, c
+; draw_boss_frame_part_loop_x:
+; 			ld a, (hl)
+; 			or a
+; 			jr z, draw_boss_frame_part_loop_x_skip
+; 			ld (de), a
+; draw_boss_frame_part_loop_x_skip:
+; 			inc hl
+; 			inc de
+; 			djnz draw_boss_frame_part_loop_x
+; 		pop de
+; 		ex de, hl
+; 		ld a, (current_room__width)
+; 		; ld b, 0  ; not needed, b == 0 here already because of the djnz
+; 		ld c, a
+; 		add hl, bc
+; 		ex de, hl
+; 	pop bc
+; 	djnz draw_boss_frame_loop_y
+; 	ret
+
+
+;-----------------------------------------------
+; input:
+; - hl: frame ptr
+; - de: destination ptr
+; - c, b: width, height
+draw_boss_frame_part_clearing:
+draw_boss_frame_part_clearing_loop_y:
 	push bc
 		push de
 			ld b, c
-draw_boss_frame_clearing_loop_x:
+draw_boss_frame_part_clearing_loop_x:
 			ld a, (hl)
 			ld (de), a
 			inc hl
 			inc de
-			djnz draw_boss_frame_clearing_loop_x
+			djnz draw_boss_frame_part_clearing_loop_x
 		pop de
 		ex de, hl
 		ld a, (current_room__width)
@@ -447,7 +500,7 @@ draw_boss_frame_clearing_loop_x:
 		add hl, bc
 		ex de, hl
 	pop bc
-	djnz draw_boss_frame_clearing_loop_y
+	djnz draw_boss_frame_part_clearing_loop_y
 	ret
 
 

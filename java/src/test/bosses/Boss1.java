@@ -147,21 +147,21 @@ public class Boss1 {
                     drawBossFrame(g2d, 9, bossx, bossy);
                 }
                 break;
-            case 6:  // staff attack
+            case 5:  // staff attack
                 if (hasStaff) {
                     drawBossFrame(g2d, 7, bossx, bossy);
                 } else {
                     throw new Exception("Staff attack when staff is broken!");
                 }
                 break;
-            case 7:  // left-hand attack
+            case 6:  // left-hand attack
                 if (hasStaff) {
                     drawBossFrame(g2d, 8, bossx, bossy);
                 } else {
                     drawBossFrame(g2d, 15, bossx, bossy);
                 }
                 break;
-            case 8:  // punch
+            case 7:  // punch
                 if (hasStaff) {
                     throw new Exception("Punch attack when staff is not broken!");
                 } else {
@@ -199,7 +199,7 @@ public class Boss1 {
                             timer = 0;
                         }
                         break;
-                    case 2: bossFrame = 6;
+                    case 2: bossFrame = 5;
                         timer ++;
                         if (timer > 64) {
                             state = 3;
@@ -259,7 +259,7 @@ public class Boss1 {
                     }
                     case 2:
                     {
-                        bossFrame = 6;
+                        bossFrame = 5;
                         timer ++;
                         if (timer > 64) {
                             state = 1;
@@ -269,7 +269,7 @@ public class Boss1 {
                     }
                     case 3:
                     {
-                        bossFrame = 7;
+                        bossFrame = 6;
                         timer ++;
                         if (timer > 64) {
                             state = 1;
@@ -422,7 +422,7 @@ public class Boss1 {
                     case 8:
                     case 11:
                     {
-                        bossFrame = 6;
+                        bossFrame = 5;
                         timer ++;
                         if (timer > 32) {
                             state += 2;
@@ -435,7 +435,7 @@ public class Boss1 {
                     case 9:
                     case 12:
                     {
-                        bossFrame = 7;
+                        bossFrame = 6;
                         timer ++;
                         if (timer > 32) {
                             state += 1;

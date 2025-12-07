@@ -222,8 +222,12 @@ enemy_tiles_to_upload_to_vdp_page: ds virtual 2
 
 config_keyboard_special_case: ds virtual 1
 
-boss__state: ds virtual 1
-
+boss__behavior: ds virtual 1  ; which boss behavior is being executed
+boss__state: ds virtual 1  ; state within the current boss behavior
+boss__state_timer: ds virtual 1
+boss__x: ds virtual 1
+boss__y: ds virtual 1
+boss__1_has_staff: ds virtual 1
 
 RAM_to_zero_on_game_start_end:
 
