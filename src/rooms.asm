@@ -195,6 +195,17 @@ draw_room_continue:
 ; output:
 ; - hl: ptr
 get_room_tile_ptr:
+	; sign extend b to hl:
+	ld l, b
+	ld a, b
+    rlca
+    sbc a
+    ld  h, a	
+
+	; old version that did not consider that "y" could be negative:
+; 	ld l, b
+; 	ld h, 0
+
 	ld a, (current_room__width)
 	cp 64
 	jr z, get_room_tile_ptr_width64
@@ -204,13 +215,9 @@ get_room_tile_ptr:
 	jr z, get_room_tile_ptr_width128
 get_room_tile_ptr_width32:
 	; in this case, we know room_scroll_x == 0
-	ld l, b
-	ld h, 0
 	jr get_room_tile_ptr_width32_entry_point
 get_room_tile_ptr_width96:
 	; in this case, we know room_scroll_x == 0
-	ld l, b
-	ld h, 0
 	ld a, c  ; preserve c
 	ld c, b
 	ld b, 0
@@ -220,13 +227,9 @@ get_room_tile_ptr_width96:
 	jr get_room_tile_ptr_width96_entry_point
 get_room_tile_ptr_width128:
 	; in this case, we know room_scroll_x == 0
-	ld l, b
-	ld h, 0
 	add hl, hl
 	jr get_room_tile_ptr_width128_entry_point
 get_room_tile_ptr_width64:
-	ld l, b
-	ld h, 0
 get_room_tile_ptr_width128_entry_point:
 	add hl, hl
 get_room_tile_ptr_width32_entry_point:

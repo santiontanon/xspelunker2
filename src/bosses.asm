@@ -499,11 +499,25 @@ draw_boss_frame_clear_previous_frame:
 draw_boss_frame_clear_previous_frame_y_loop:
 	push bc
 		ld b, 0
+
+		; if "de" < current_room__tile_map, skip row  ->  draw_boss_frame_clear_previous_frame_y_loop_skip
+		ex de, hl
+		push bc
+		push hl
+			ld bc, current_room__tile_map
+			or a  ; clear carry flag
+			sbc hl, bc
+		pop hl
+		pop bc
+		ex de, hl
+		jr c, draw_boss_frame_clear_previous_frame_y_loop_skip
+
 		push hl
 		push de
 			ldir
 		pop de
 		pop hl
+draw_boss_frame_clear_previous_frame_y_loop_skip:
 		ld a, (current_room__width)
 		ld c, a
 		add hl, bc
@@ -524,6 +538,18 @@ draw_boss_frame_part:
 draw_boss_frame_part_loop_y:
 	push bc
 		push de
+			; if "de" < current_room__tile_map, skip row  ->  draw_boss_frame_part_loop_y_skip
+			ex de, hl
+			push bc
+			push hl
+				ld bc, current_room__tile_map
+				or a  ; clear carry flag
+				sbc hl, bc
+			pop hl
+			pop bc
+			ex de, hl
+			jr c, draw_boss_frame_part_loop_y_skip
+
 			ld b, c
 draw_boss_frame_part_loop_x:
 			ld a, (hl)
@@ -534,16 +560,22 @@ draw_boss_frame_part_loop_x_skip:
 			inc hl
 			inc de
 			djnz draw_boss_frame_part_loop_x
+draw_boss_frame_part_loop_y_skip2:
 		pop de
 		ex de, hl
 		ld a, (current_room__width)
-		; ld b, 0  ; not needed, b == 0 here already because of the djnz
+		; ld b, 0
 		ld c, a
 		add hl, bc
 		ex de, hl
 	pop bc
 	djnz draw_boss_frame_part_loop_y
 	ret
+draw_boss_frame_part_loop_y_skip:
+			; advance 'hl':
+			ld b, 0
+			add hl, bc
+			jr draw_boss_frame_part_loop_y_skip2
 
 
 ;-----------------------------------------------

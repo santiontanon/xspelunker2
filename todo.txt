@@ -2,7 +2,6 @@ to do:
 
 ***- first boss:
   ***- implement behavior patterns:
-    ***- draw_boss_frame_part: handle when the boss part to draw is outside of the room area: for now just handle up/down which can be used by comparing ptrs at the start of each row draw
     ***- update_boss1_behavior_2: jump attack
     ***- update_boss1_behavior_3: bullet barrage
     ***- update_boss1_behavior_4; death
