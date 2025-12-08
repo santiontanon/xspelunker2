@@ -328,9 +328,9 @@ public class Boss1 {
             {
                 //Behavior 2: (jump attack)
                 //    - state 0: idle
-                //    - state 1: crouch
-                //    - state 2: jump to a new position
-                //    - state 3: land (crouch), and after a target number of jumps (3), end behavior
+                //    - state 1, 3, 5, 7: crouch
+                //    - state 2, 4, 6, 8: jump to a new position
+                //    - state 9: land (crouch) and end behavior
                 switch(state) {
                     case 0:
                         bossFrame = 1;
@@ -391,12 +391,12 @@ public class Boss1 {
             {
                 //Behavior 3: (bullet barrage)
                 //    - state 0: idle
-                //    - state 1: eye attack (bullets)
+                //    - state 1, 4, 7, 10: eye attack (bullets)
                 //        randomly go to one attack state (depending on staff/no-staff), state 2 or 3
                 //        after 4 bullet attacks, end behavior
-                //    - state 2: staff attack (back to 1)
-                //    - state 3: left-hand attack (lighning) (back to 1)
-                //    - state 4: end behavior
+                //    - state 2, 5, 8, 11: staff attack (back to 1)
+                //    - state 3, 6, 9, 12: left-hand attack (lighning) (back to 1)
+                //    - state 13: end behavior
                 switch(state) {
                     case 0:
                         bossFrame = 1;

@@ -270,10 +270,10 @@ update_boss1_behavior_0_waking_loop:
 	call update_boss1_behavior_bring_name_up
 
 update_boss1_behavior_0_choose_behavior:
-; 	ld c, 3
-; 	call random_modulo
-; 	inc a
-	ld a, 1  ; DEBUG: hardcode to "walk"
+	ld c, 3
+	call random_modulo
+	inc a
+	; ld a, 1  ; DEBUG: hardcode behavior
 	ld (boss__behavior), a  ; 1, 2, or 3
 	xor a
 	ld (boss__state), a
@@ -309,12 +309,14 @@ update_boss1_behavior_1:
 	jp update_boss1_behavior_1_state_6
 
 update_boss1_behavior_1_state_0:
+update_boss1_behavior_2_state_0:
+update_boss1_behavior_3_state_0:
 	ld a, 1
 	call update_boss1_draw_boss_frame
 	ld hl, boss__state_timer
 	inc (hl)
 	ld a, (hl)
-	cp 64
+	cp 32
 	ret c
 	ld a, 1
 	ld (boss__state), a
@@ -329,7 +331,7 @@ update_boss1_behavior_1_state_1:
 	ld hl, boss__state_timer
 	ld a, (hl)
 	inc a
-	and #7f
+	and #3f  ; #7f
 	ld (hl), a
 	ld hl, boss__x
 	jr nz, update_boss1_behavior_1_state_1_continue
@@ -348,9 +350,9 @@ update_boss1_behavior_1_state_1:
 	ret
 update_boss1_behavior_1_state_1_continue:
 	ld a, (boss__state_timer)
-	cp 64
+	cp 32  ; 64
 	jr z, update_boss1_behavior_1_state_1_move
-	cp 96
+	cp 48  ; 96
 	ret nz
 update_boss1_behavior_1_state_1_move:
 	ld hl, boss__x
@@ -386,17 +388,21 @@ update_boss1_behavior_1_state_3:
 	ret
 
 update_boss1_behavior_1_state_4:
+update_boss1_behavior_2_state_1:
+update_boss1_behavior_2_state_3:
+update_boss1_behavior_2_state_5:
+update_boss1_behavior_2_state_7:
 	ld a, 3
 	call update_boss1_draw_boss_frame
 	ld hl, boss__state_timer
 	inc (hl)
 	ld a, (hl)
-	cp 64
+	cp 32
 	ret nz
 	xor a
 	ld (boss__state_timer), a
-	ld a, 5
-	ld (boss__state), a
+	ld hl, boss__state
+	inc (hl)
 	ret
 
 update_boss1_behavior_1_state_5:
@@ -405,29 +411,27 @@ update_boss1_behavior_1_state_5:
 	ld hl, boss__state_timer
 	inc (hl)
 	ld a, (hl)
-	cp 92
+	cp 46
 	jr z, update_boss1_behavior_1_state_5_jumping
 	jr nc, update_boss1_behavior_1_state_5_falling
 update_boss1_behavior_1_state_5_jumping:
 	; jumping:
 	ld a, (boss__state_timer)
-	and #03
+	and #01
 	ret nz
 	ld hl, boss__y
 	dec (hl)
 	ld a, (boss__state_timer)
-	cp 92
+	cp 46
 	ret nz
 	ld a, 24
 	ld (boss__x), a
 	ret
 update_boss1_behavior_1_state_5_falling:
-	cp 184
+	cp 46 + (46/2)
 	jr nc, update_boss1_behavior_1_state_5_land
 	; falling:
 	ld a, (boss__state_timer)
-	and #03
-	ret nz
 	ld hl, boss__y
 	inc (hl)
 	ret
@@ -438,7 +442,8 @@ update_boss1_behavior_1_state_5_land:
 	ld (boss__state), a
 	ld a, 13
 	ld (boss__y), a	
-	ret
+	ld hl, SFX_explosion
+	jp play_SFX_with_high_priority
 
 update_boss1_behavior_1_state_6:
 	ld a, 3
@@ -454,26 +459,221 @@ update_boss1_behavior_1_state_6:
 ;-----------------------------------------------
 ; Behavior 2: jump attack
 ; - state 0: idle
-; - state 1: crouch
-; - state 2: jump to a new position
-; - state 3: land (crouch), and after a target number of jumps (3), end behavior
+; - state 1, 3, 5, 7: crouch
+; - state 2, 4, 6, 8: jump to a new position
+; - state 9: land (crouch), and end behavior
 update_boss1_behavior_2:
-	; ...
+	ld a, (boss__state)
+	or a
+	jp z, update_boss1_behavior_2_state_0
+	dec a
+	jp z, update_boss1_behavior_2_state_1
+	dec a
+	jp z, update_boss1_behavior_2_state_2
+	dec a
+	jp z, update_boss1_behavior_2_state_3
+	dec a
+	jp z, update_boss1_behavior_2_state_4
+	dec a
+	jp z, update_boss1_behavior_2_state_5
+	dec a
+	jp z, update_boss1_behavior_2_state_6
+	dec a
+	jp z, update_boss1_behavior_2_state_7
+	dec a
+	jp z, update_boss1_behavior_2_state_8
+	jp update_boss1_behavior_2_state_9
+
+update_boss1_behavior_2_state_2:
+update_boss1_behavior_2_state_4:
+update_boss1_behavior_2_state_6:
+update_boss1_behavior_2_state_8:
+	ld a, 4
+	call update_boss1_draw_boss_frame
+	ld hl, boss__state_timer
+	inc (hl)
+	ld a, (hl)
+	cp 46
+	jr z, update_boss1_behavior_2_state_2_jumping
+	jr nc, update_boss1_behavior_2_state_2_falling
+update_boss1_behavior_2_state_2_jumping:
+	; jumping:
+	ld a, (boss__state_timer)
+	and #01
+	ret nz
+	ld hl, boss__y
+	dec (hl)
+	ld a, (boss__state_timer)
+	cp 46
+	ret nz
+	ld a, (boss__state)
+	cp 8
+	jr z, update_boss1_behavior_2_state_2_jumping_last_jump
+	; fall to a random position:
+; 	ld c, 20
+; 	call random_modulo
+; 	add a, 2
+; 	ld (boss__x), a
+	; fall on top of player:
+	ld a, (player_x + 1)
+	sub 2
+	cp 2
+	jr nc, update_boss1_behavior_2_state_2_jumping_position_set_1
+	ld a, 2
+update_boss1_behavior_2_state_2_jumping_position_set_1:
+	cp 24
+	jr c, update_boss1_behavior_2_state_2_jumping_position_set_2
+	ld a, 24
+update_boss1_behavior_2_state_2_jumping_position_set_2:
+	ld (boss__x), a
+	ret
+update_boss1_behavior_2_state_2_jumping_last_jump:
+	ld a, 24
+	ld (boss__x), a
+	ret
+update_boss1_behavior_2_state_2_falling:
+	cp 46 + (46/2)
+	jr nc, update_boss1_behavior_2_state_2_land
+	; falling:
+	ld a, (boss__state_timer)
+	ld hl, boss__y
+	inc (hl)
+	ret
+update_boss1_behavior_2_state_2_land:
+	xor a
+	ld (boss__state_timer), a
+	ld hl, boss__state
+	inc (hl)
+	ld a, 13
+	ld (boss__y), a	
+	ld hl, SFX_explosion
+	jp play_SFX_with_high_priority
+
+update_boss1_behavior_2_state_9:
+	ld a, 3
+	call update_boss1_draw_boss_frame
+	ld hl, boss__state_timer
+	inc (hl)
+	ld a, (hl)
+	cp 64
+	ret nz
 	jp update_boss1_behavior_0_choose_behavior
 
 
 ;-----------------------------------------------
 ; Behavior 3: bullet barrage
 ; - state 0: idle
-; - state 1: eye attack (bullets)
+; - state 1, 4, 7, 10: eye attack (bullets)
 ;     randomly go to one attack state (depending on staff/no-staff), state 2 or 3
 ;     after 4 bullet attacks, end behavior
-; - state 2: staff attack (back to 1)
-; - state 3: left-hand attack (lighning) (back to 1)
-; - state 4: end behavior
+; - state 2, 5, 8, 11: staff attack (back to 1)
+; - state 3, 6, 9, 12: left-hand attack (lighning) (back to 1)
+; - state 13: end behavior
 update_boss1_behavior_3:
+	ld a, (boss__state)
+	or a
+	jp z, update_boss1_behavior_3_state_0
+	dec a
+	jp z, update_boss1_behavior_3_state_1
+	dec a
+	jp z, update_boss1_behavior_3_state_2
+	dec a
+	jp z, update_boss1_behavior_3_state_3
+	dec a
+	jp z, update_boss1_behavior_3_state_4
+	dec a
+	jp z, update_boss1_behavior_3_state_5
+	dec a
+	jp z, update_boss1_behavior_3_state_6
+	dec a
+	jp z, update_boss1_behavior_3_state_7
+	dec a
+	jp z, update_boss1_behavior_3_state_8
+	dec a
+	jp z, update_boss1_behavior_3_state_9
+	dec a
+	jp z, update_boss1_behavior_3_state_10
+	dec a
+	jp z, update_boss1_behavior_3_state_11
+	dec a
+	jp z, update_boss1_behavior_3_state_12
+	; update_boss1_behavior_3_state_13:
+	jp update_boss1_behavior_0_choose_behavior	
+
+update_boss1_behavior_3_state_1:
+update_boss1_behavior_3_state_4:
+update_boss1_behavior_3_state_7:
+update_boss1_behavior_3_state_10:
+	; eye attack, fire bullets:
 	; ...
-	jp update_boss1_behavior_0_choose_behavior
+
+	; from 1, randomly go to: 4, 5, 6
+	ld a, 1
+	call update_boss1_draw_boss_frame
+	ld hl, boss__state_timer
+	inc (hl)
+	ld a, (hl)
+	cp 32
+	ret c
+	ld c, 3
+	call random_modulo
+	add a, 3
+	ld hl, boss__state
+	add a, (hl)
+	ld (hl), a
+	xor a
+	ld (boss__state_timer), a
+	ret
+
+update_boss1_behavior_3_state_2:
+update_boss1_behavior_3_state_5:
+update_boss1_behavior_3_state_8:
+update_boss1_behavior_3_state_11:
+	; staff attack (whirlwind):
+	; ...
+
+	; from 2, randomly go to: 4, 5, 6
+	ld a, 5
+	call update_boss1_draw_boss_frame
+	ld hl, boss__state_timer
+	inc (hl)
+	ld a, (hl)
+	cp 32
+	ret c
+	ld c, 3
+	call random_modulo
+	add a, 2
+	ld hl, boss__state
+	add a, (hl)
+	ld (hl), a
+	xor a
+	ld (boss__state_timer), a
+	ret
+
+update_boss1_behavior_3_state_3:
+update_boss1_behavior_3_state_6:
+update_boss1_behavior_3_state_9:
+update_boss1_behavior_3_state_12:
+	; left-hand attack (lightning):
+	; ...
+
+	; from 3, randomly go to: 4, 5, 6
+	ld a, 6
+	call update_boss1_draw_boss_frame
+	ld hl, boss__state_timer
+	inc (hl)
+	ld a, (hl)
+	cp 32
+	ret c
+	ld c, 3
+	call random_modulo
+	inc a
+	ld hl, boss__state
+	add a, (hl)
+	ld (hl), a
+	xor a
+	ld (boss__state_timer), a
+	ret
 
 
 ;-----------------------------------------------
@@ -533,10 +733,10 @@ update_boss1_draw_boss_frame_2:  ; walk left frames
 	or a
 	jr z, update_boss1_draw_boss_frame_2_no_staff
 	ld a, (boss__state_timer)
-	rla
-	rla
-	rla
-	rla
+	rra
+	rra
+	rra
+	rra
 	and #03  ; a = walk frame
 	ld hl, boss1_frame_2_walk_1
 	jr z, update_boss1_draw_boss_frame_2_continue
@@ -552,11 +752,11 @@ update_boss1_draw_boss_frame_2_continue:
 
 update_boss1_draw_boss_frame_2_no_staff:
 	ld a, (boss__state_timer)
-	rla
-	rla
-	rla
-	rla
-	and #0c  ; a = walk frame
+	rra
+	rra
+	rra
+	rra
+	and #03  ; a = walk frame
 	ld hl, boss1_frame_10_walk_1_no_staff
 	jr z, update_boss1_draw_boss_frame_2_continue
 	dec a

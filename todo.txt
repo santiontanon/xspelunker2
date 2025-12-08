@@ -1,16 +1,14 @@
 to do:
 
 ***- first boss:
-  ***- implement behavior patterns:
-    ***- update_boss1_behavior_2: jump attack
-    ***- update_boss1_behavior_3: bullet barrage
-    ***- update_boss1_behavior_4; death
   ***- whirlwind
   ***- eye bullets
   ***- lightning attack
   ***- being able to destroy the staff
   ***- being able to kill the boss
+    ***- update_boss1_behavior_4: death
   ***- death animation/celebration and make power stone appear (old code for this is in "enter_boss_door_loop__spawn_stone", in bosses.asm)
+  ***- adjust behavior after playing a few times (should it start with a staff attack immediately after waking up?)
   ***- angry version (skin of different color): decide the trigger condition, and implement it (are clues given anywhere? can't remember if I already added them?)
 ***- BUG: firing with a key equiped does not open a lock
 ***- BUG: when there is an item underwater (e.g. hammer), player jumps: check that there is no water on top? (or mark item as water?) (or look at the background buffer of the item (recursively until finding a non-item?)
