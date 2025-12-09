@@ -580,30 +580,68 @@ draw_boss_frame_part_loop_y_skip:
 
 ;-----------------------------------------------
 ; input:
-; - hl: frame ptr
-; - de: destination ptr
-; - c, b: width, height
-; draw_boss_frame_part_clearing:
-; draw_boss_frame_part_clearing_loop_y:
-; 	push bc
-; 		push de
-; 			ld b, c
-; draw_boss_frame_part_clearing_loop_x:
-; 			ld a, (hl)
-; 			ld (de), a
-; 			inc hl
-; 			inc de
-; 			djnz draw_boss_frame_part_clearing_loop_x
-; 		pop de
-; 		ex de, hl
-; 		ld a, (current_room__width)
-; 		; ld b, 0  ; not needed, b == 0 here already because of the djnz
-; 		ld c, a
-; 		add hl, bc
-; 		ex de, hl
-; 	pop bc
-; 	djnz draw_boss_frame_part_clearing_loop_y
-; 	ret
+; - c, b: tile coordinate from where the bullet is fired
+; - ixl, ixh: pixel offset
+boss_fire_directional_bullet_towards_player_with_random_offset:
+	; see if player is close enough:
+	ld a, (player_x + 1)
+	sub c
+	ld e, a
+	ld a, (player_y + 1)
+	sub b
+	ld d, a
+	push bc
+		ld c, 3
+		call random_modulo
+		dec a
+		add a, e
+		ld e, a
+		ld c, 3
+		call random_modulo
+		dec a
+		add a, d
+		ld d, a
+		jr boss_fire_directional_bullet_towards_player_continue
+
+
+;-----------------------------------------------
+; input:
+; - c, b: tile coordinate from where the bullet is fired
+; - ixl, ixh: pixel offset
+boss_fire_directional_bullet_towards_player:
+	; see if player is close enough:
+	ld a, (player_x + 1)
+	sub c
+	ld e, a
+	ld a, (player_y + 1)
+	sub b
+	ld d, a
+	push bc
+boss_fire_directional_bullet_towards_player_continue:	
+	push de
+		call ptr_to_new_sprite_enemy
+	pop de
+	pop bc
+	ret nz
+	ld (hl), ENEMY_BULLET
+	inc hl
+	ld a, ixl
+	ld (hl), a  ; pixel X
+	inc hl
+	ld (hl), c  ; tile X
+	inc hl
+	ld a, ixh
+	ld (hl), a  ; pixel Y
+	inc hl
+	ld (hl), b  ; tile Y
+	inc hl
+	ld (hl), 0  ; state
+	inc hl
+	ld (hl), e  ; speed x
+	inc hl
+	ld (hl), d  ; speed y
+	ld hl, SFX_enemy_bullet
+	jp play_SFX_with_high_priority
 
 
 ;-----------------------------------------------

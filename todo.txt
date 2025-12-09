@@ -1,13 +1,21 @@
 to do:
 
 ***- first boss:
-  ***- whirlwind
-  ***- eye bullets
-  ***- lightning attack
-  ***- being able to destroy the staff
+  ***- BUG: bullet to player collision seems it is a bit off, specially when crouching (does the hit box reduce when crouching?)
+    ***- use "debug" sprites (bullet is an 8x8 box)
+    ***- make the bullet collision box just the top-left 8x8 box of a sprite (consider this for collisions in its movement)
+    ***- use player debug sprites too
+    ***- make sure collisions work as expected also when crouching
+  ***- whirlwind (much faster than a regular bullet, so, it needs to be dodged by knowing the pattern)
+  ***- lightning attack (there is a warning about it and then it strikes)
+  ***- being able to destroy the staff:
+    ***- give it a hitbox, and HP
+    ***- when HP <= 0 explosion and staff disappears
+    ***- staff-related behaviors are not possible anymore
   ***- being able to kill the boss
-    ***- update_boss1_behavior_4: death
-  ***- death animation/celebration and make power stone appear (old code for this is in "enter_boss_door_loop__spawn_stone", in bosses.asm)
+    ***- give it a hitbox and HP (plenty of HP)
+    ***- when HP <= 0: update_boss1_behavior_4: death (should have no hitbox anymore)
+  ***- death celebration and make power stone appear (old code for this is in "enter_boss_door_loop__spawn_stone", in bosses.asm)
   ***- adjust behavior after playing a few times (should it start with a staff attack immediately after waking up?)
   ***- angry version (skin of different color): decide the trigger condition, and implement it (are clues given anywhere? can't remember if I already added them?)
 ***- BUG: firing with a key equiped does not open a lock

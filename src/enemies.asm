@@ -897,16 +897,16 @@ update_enemy_bullet:
     jp p,update_enemy_bullet_no_yspeed_flip
     neg
 update_enemy_bullet_no_yspeed_flip:
-    ld b, a
+    ld b, a  ; b = |speed y|
     ld a, (ix + ROOM_OBJECT_STRUCT_SPEED_X)
     or a
     jp p,update_enemy_bullet_no_xspeed_flip
     neg
 update_enemy_bullet_no_xspeed_flip:
-    ld c, a
+    ld c, a  ; c = |speed x|
     cp b
     jp c,update_enemy_bullet_y_is_bigger
-    ; Bresenham for when the XDIFF > YDIFF
+    ; Bresenham for when the |speed x| > |speed y|
 update_enemy_bullet_x_is_bigger:
     ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
     sub b  ; we subtract y difference from the error term 
@@ -920,7 +920,7 @@ update_enemy_bullet_x_is_bigger_no_error_overflow:
     ld c, 1
     jp update_enemy_bullet_choose_quadrant
 
-    ; Bresenham for when the XDIFF < YDIFF
+    ; Bresenham for when the |speed x| < |speed y|
 update_enemy_bullet_y_is_bigger:
     ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
     sub c  ; we subtract y difference from the error term 
@@ -934,6 +934,9 @@ update_enemy_bullet_y_is_bigger_no_error_overflow:
     ld b, 1
 
 update_enemy_bullet_choose_quadrant:
+	; here:
+	; - b: number of steps we need to move in y (0 or 1)
+	; - c: number of steps we need to move in x (0 or 1)
     ld a, (ix + ROOM_OBJECT_STRUCT_SPEED_Y)
     or a
     jp p,update_enemy_bullet_no_yspeed_flip2
@@ -949,6 +952,9 @@ update_enemy_bullet_no_yspeed_flip2:
     ld c, a
 update_enemy_bullet_no_xspeed_flip2:
 
+	; here:
+	; - b: amount to move in y (-1, 0, or 1)
+	; - c: amount to move in x (-1, 0, or 1)
 	ld a, c
 	or a
 	jr z, update_enemy_bullet_x_done
@@ -970,7 +976,7 @@ update_enemy_bullet_x_done:
 	ld a, b
 	or a
 	jr z, update_enemy_bullet_y_done
-	jp m, update_enemy_bullet_x_negative
+	jp m, update_enemy_bullet_y_negative
 	ld a, (current_world__difficulty_bullet_speed)
 	call update_enemy_move_down_if_possible_a_times
 	jp z, update_enemy_delete
@@ -981,15 +987,6 @@ update_enemy_bullet_y_negative:
 	jp z, update_enemy_delete
 update_enemy_bullet_y_done:
 
-; 	sla c
-; 	sla b
-; 	call update_enemy_move_cb
-; 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
-; 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-; 	call general_check_collision
-; 	jp z, update_enemy_delete
-
-update_enemy_bullet_continue:
 	ld d, COLOR_YELLOW
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 0) * 4 
 	jp enemy_sprite_and_continue

@@ -29,10 +29,10 @@ boss1_name_y_table:
 	db  16,  17,  18,  19,  19,  19, 19, 20
 
 boss1_name_initial_sprite_attributes:
-	db -32, 112, FIRST_ENEMY_SPRITE_PATTERN*4, COLOR_WHITE
-	db -32, 128, (FIRST_ENEMY_SPRITE_PATTERN + 1)*4, COLOR_WHITE
-	db -16, 112, (FIRST_ENEMY_SPRITE_PATTERN + 2)*4, COLOR_WHITE
-	db -16, 128, (FIRST_ENEMY_SPRITE_PATTERN + 3)*4, COLOR_WHITE
+	db -32, 112, (FIRST_ENEMY_SPRITE_PATTERN + 1)*4, COLOR_WHITE
+	db -32, 128, (FIRST_ENEMY_SPRITE_PATTERN + 2)*4, COLOR_WHITE
+	db -16, 112, (FIRST_ENEMY_SPRITE_PATTERN + 3)*4, COLOR_WHITE
+	db -16, 128, (FIRST_ENEMY_SPRITE_PATTERN + 4)*4, COLOR_WHITE
 
 ;-----------------------------------------------
 boss1_frame_0_stone:
@@ -270,10 +270,10 @@ update_boss1_behavior_0_waking_loop:
 	call update_boss1_behavior_bring_name_up
 
 update_boss1_behavior_0_choose_behavior:
-	ld c, 3
-	call random_modulo
-	inc a
-	; ld a, 1  ; DEBUG: hardcode behavior
+; 	ld c, 3
+; 	call random_modulo
+; 	inc a
+	ld a, 3  ; DEBUG: hardcode behavior
 	ld (boss__behavior), a  ; 1, 2, or 3
 	xor a
 	ld (boss__state), a
@@ -605,14 +605,26 @@ update_boss1_behavior_3_state_4:
 update_boss1_behavior_3_state_7:
 update_boss1_behavior_3_state_10:
 	; eye attack, fire bullets:
-	; ...
-
 	; from 1, randomly go to: 4, 5, 6
 	ld a, 1
 	call update_boss1_draw_boss_frame
 	ld hl, boss__state_timer
 	inc (hl)
 	ld a, (hl)
+
+	and #07
+	jr nz, update_boss1_behavior_3_state_1_skip_bullet
+	ld a, (boss__x)
+	add a, 2
+	ld c, a
+	ld a, (boss__y)
+	inc a
+	ld b, a
+	ld ix, #0000	
+	call boss_fire_directional_bullet_towards_player_with_random_offset
+update_boss1_behavior_3_state_1_skip_bullet:
+
+	ld a, (boss__state_timer)
 	cp 32
 	ret c
 	ld c, 3

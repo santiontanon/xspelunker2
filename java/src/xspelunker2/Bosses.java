@@ -192,14 +192,15 @@ public class Bosses {
     {
         BufferedImage sourceImage = ImageIO.read(new File("data/boss-sprites.png"));
         List<Integer> data = new ArrayList<>();
-        
-        // common sprites to all areas:
+
+        // bullet must be the first sprite:
+        data.addAll(GenerateSprites.extractSprite(sourceImage, 48, 0, 15));  // bullet
+
         data.addAll(GenerateSprites.extractSprite(sourceImage, 80, 0, 15));  // boss name
         data.addAll(GenerateSprites.extractSprite(sourceImage, 96, 0, 15));
         data.addAll(GenerateSprites.extractSprite(sourceImage, 80, 16, 15));
         data.addAll(GenerateSprites.extractSprite(sourceImage, 96, 16, 15));
 
-        data.addAll(GenerateSprites.extractSprite(sourceImage, 48, 0, 15));  // bullet
         data.addAll(GenerateSprites.extractSprite(sourceImage, 0, 32, 15));  // danger mark
 
         data.addAll(GenerateSprites.extractSprite(sourceImage, 0, 0, 15));  // whirlwind
