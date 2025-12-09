@@ -195,13 +195,6 @@ update_boss1_behavior_0_raise_loop:
 	ld hl, BOSS1_NAMETABLE_STONE
 	push bc
 		push de
-			push de
-			push hl
-			push bc
-				call draw_boss_frame_clear_previous_frame
-			pop bc
-			pop hl
-			pop de
 			call draw_boss_frame_part
 			xor a
 			call boss1_draw_dust
@@ -220,6 +213,13 @@ update_boss1_behavior_0_raise_loop:
 			call call_hl_in_page_c_8000  ; just so that we do not lose the page we are at
 			ld b, 10
 			call wait_b_halts
+			push de
+			push hl
+			push bc
+				call draw_boss_frame_clear_previous_frame
+			pop bc
+			pop hl
+			pop de			
 		pop hl
 		ld bc, -32
 		add hl, bc

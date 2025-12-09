@@ -333,7 +333,7 @@ update_enemy_snake_poison_spit_left_continue2:
 ;-----------------------------------------------
 update_enemy_poison_bullet:
 	ld e, 2  ; damage to deal
-	call update_enemy_hurt_player_shieldable
+	call update_enemy_hurt_player_shieldable_bullet
 	jp z, update_enemy_delete
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
 	or a
@@ -359,7 +359,7 @@ update_enemy_poison_bullet_left:
 ;-----------------------------------------------
 update_enemy_bone_bullet:
 	ld e, 2  ; damage to deal
-	call update_enemy_hurt_player_shieldable
+	call update_enemy_hurt_player_shieldable_bullet
 	jp z, update_enemy_delete
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
@@ -391,7 +391,7 @@ update_enemy_bone_parabola_bullet_table:
 
 update_enemy_bone_parabola_bullet:
 	ld e, 1  ; damage to deal
-	call update_enemy_hurt_player_shieldable
+	call update_enemy_hurt_player_shieldable_bullet
 	jp z, update_enemy_delete
 	; out of bounds?
 	ld a, (current_room__width)
@@ -442,7 +442,7 @@ update_enemy_bone_parabola_bullet_left:
 ;-----------------------------------------------
 update_enemy_parabola_bullet:
 	ld e, 1  ; damage to deal
-	call update_enemy_hurt_player_shieldable
+	call update_enemy_hurt_player_shieldable_bullet
 	jp z, update_enemy_delete
 	; out of bounds?
 	ld a, (current_room__width)
@@ -888,7 +888,7 @@ update_enemy_bat_update_bottom_edge:
 ;-----------------------------------------------
 update_enemy_bullet:
 	ld e, 1  ; damage to deal
-	call update_enemy_hurt_player_shieldable
+	call update_enemy_hurt_player_shieldable_bullet
 	jp z, update_enemy_delete
 	
 	; move:
@@ -1984,81 +1984,81 @@ update_enemy_delete:
 ; output:
 ; - z: hit
 ; - nz: no hit
-update_enemy_hurt_player_shieldable:
+update_enemy_hurt_player_shieldable_bullet:
 	ld a, (player_current_item)
 	cp 3  ; shield
-	jp nz, update_enemy_hurt_player
+	jp nz, update_enemy_hurt_player_1x1
 	ld a, (player_state)
 	and #fe
 	cp PLAYER_STATE_DIRECTIONAL_WEAPON
-	jr z, update_enemy_hurt_player_shieldable_with_directional
+	jr z, update_enemy_hurt_player_shieldable_bullet_with_directional
 	cp PLAYER_STATE_DIRECTIONAL_WEAPON_JUMPING
-	jr z, update_enemy_hurt_player_shieldable_with_directional
+	jr z, update_enemy_hurt_player_shieldable_bullet_with_directional
 	cp PLAYER_STATE_DIRECTIONAL_WEAPON_FALLING
-	jr z, update_enemy_hurt_player_shieldable_with_directional
+	jr z, update_enemy_hurt_player_shieldable_bullet_with_directional
 	cp PLAYER_STATE_DIRECTIONAL_WEAPON_CROUCHING
-	jp nz, update_enemy_hurt_player
-update_enemy_hurt_player_shieldable_with_directional:
+	jp nz, update_enemy_hurt_player_1x1
+update_enemy_hurt_player_shieldable_bullet_with_directional:
 	; check if the player has the shield up and in the correct direction:
 	ld a, (player_weapon_swing_type)
 	cp PLAYER_WEAPON_SHIELD_UP
-	jr z, update_enemy_hurt_player_shieldable_shield_up
+	jr z, update_enemy_hurt_player_shieldable_bullet_shield_up
 	cp PLAYER_WEAPON_SHIELD_FORWARD
-	jp nz, update_enemy_hurt_player
-update_enemy_hurt_player_shieldable_shield_fw:
+	jp nz, update_enemy_hurt_player_1x1
+update_enemy_hurt_player_shieldable_bullet_shield_fw:
 	ld a, (player_state)
 	and #01
-	jr z, update_enemy_hurt_player_shieldable_shield_right
+	jr z, update_enemy_hurt_player_shieldable_bullet_shield_right
 
-update_enemy_hurt_player_shieldable_shield_left:
+update_enemy_hurt_player_shieldable_bullet_shield_left:
 	ld a, (player_x + 1)
 	dec a
 	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
-	jr z, update_enemy_hurt_player_shieldable_shield_left_y
+	jr z, update_enemy_hurt_player_shieldable_bullet_shield_left_y
 	dec a
 	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
-	jr nz, update_enemy_hurt_player
-update_enemy_hurt_player_shieldable_shield_left_y:
+	jp nz, update_enemy_hurt_player_1x1
+update_enemy_hurt_player_shieldable_bullet_shield_left_y:
 	ld a, (player_y + 1)
 	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-	jr z, update_enemy_hurt_player_shieldable_shielded
+	jr z, update_enemy_hurt_player_shieldable_bullet_shielded
 	inc a
 	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-	jr z, update_enemy_hurt_player_shieldable_shielded
-	jp update_enemy_hurt_player
+	jr z, update_enemy_hurt_player_shieldable_bullet_shielded
+	jp update_enemy_hurt_player_1x1
 
-update_enemy_hurt_player_shieldable_shield_right:
+update_enemy_hurt_player_shieldable_bullet_shield_right:
 	ld a, (player_x + 1)
 	inc a
 	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
-; 	jr z, update_enemy_hurt_player_shieldable_shield_left_y
+; 	jr z, update_enemy_hurt_player_shieldable_bullet_shield_left_y
 ; 	inc a
 ; 	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
-	jr nz, update_enemy_hurt_player
-update_enemy_hurt_player_shieldable_shield_right_y:
+	jp nz, update_enemy_hurt_player_1x1
+update_enemy_hurt_player_shieldable_bullet_shield_right_y:
 	ld a, (player_y + 1)
 	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-	jr z, update_enemy_hurt_player_shieldable_shielded
+	jr z, update_enemy_hurt_player_shieldable_bullet_shielded
 	inc a
 	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-	jr z, update_enemy_hurt_player_shieldable_shielded
-	jp update_enemy_hurt_player
+	jr z, update_enemy_hurt_player_shieldable_bullet_shielded
+	jp update_enemy_hurt_player_1x1
 
-update_enemy_hurt_player_shieldable_shield_up:
+update_enemy_hurt_player_shieldable_bullet_shield_up:
 	ld a, (player_x + 1)
 	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
-	jr z, update_enemy_hurt_player_shieldable_shield_up_y
+	jr z, update_enemy_hurt_player_shieldable_bullet_shield_up_y
 	dec a
 	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	ret nz
-update_enemy_hurt_player_shieldable_shield_up_y:
+update_enemy_hurt_player_shieldable_bullet_shield_up_y:
 	ld a, (player_y + 1)
 	dec a
 	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-	jr z, update_enemy_hurt_player_shieldable_shielded
-	jp update_enemy_hurt_player
+	jr z, update_enemy_hurt_player_shieldable_bullet_shielded
+	jp update_enemy_hurt_player_1x1
 
-update_enemy_hurt_player_shieldable_shielded:
+update_enemy_hurt_player_shieldable_bullet_shielded:
 	ld hl, SFX_shield
 	call play_SFX_with_high_priority
 	xor a  ; hit
@@ -2094,8 +2094,8 @@ update_enemy_hurt_player_bc_2x1_y:
 	ld a, (player_y + 1)
 	cp b
 	jr z, update_enemy_hurt_player_bc_2x1_collision
-	inc a
 update_enemy_hurt_player_bc_2x1_y_continue:
+	inc a
 	cp b
 	ret nz
 update_enemy_hurt_player_bc_2x1_collision:
@@ -2126,7 +2126,6 @@ update_enemy_hurt_player:
 	cp PLAYER_STATE_DEAD
 	ret z  ; player already dead
 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
-	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	ld a, (player_x + 1)
 	cp c
 	jr z, update_enemy_hurt_player_y
@@ -2134,6 +2133,7 @@ update_enemy_hurt_player:
 	cp c
 	ret nz
 update_enemy_hurt_player_y:
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	ld a, (player_state)
 	and #fe
 	cp PLAYER_STATE_CROUCHING
@@ -2163,6 +2163,57 @@ update_enemy_hurt_player_collision:
 update_enemy_hurt_player_y_short:
 	ld a, (player_y + 1)
 	jr update_enemy_hurt_player_y_continue
+
+
+;-----------------------------------------------
+; input:
+; - ix: enemy ptr
+; - e: amount of damage to deal
+; output:
+; - z: hit
+; - nz: no hit
+update_enemy_hurt_player_1x1:
+	ld a, (player_immunity_timer)
+	or a
+	ret nz  ; player immune
+	ld a, (player_state)
+	and #fe
+	cp PLAYER_STATE_DEAD
+	ret z  ; player already dead
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld a, (player_x + 1)
+	cp c
+	jr z, update_enemy_hurt_player_1x1_y
+	dec a
+	cp c
+	ret nz
+update_enemy_hurt_player_1x1_y:
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	ld a, (player_state)
+	and #fe
+	cp PLAYER_STATE_CROUCHING
+	jr z, update_enemy_hurt_player_1x1_y_short
+	cp PLAYER_STATE_CRAWLING
+	jr z, update_enemy_hurt_player_1x1_y_short
+	cp PLAYER_STATE_SWIMMING
+	jr z, update_enemy_hurt_player_1x1_y_short
+	ld a, (player_y + 1)
+	cp b  ; bullet_y == player_y?
+	jr z, update_enemy_hurt_player_1x1_collision
+update_enemy_hurt_player_1x1_y_continue:
+	inc a
+	cp b  ; bullet_y == player_y + 1?
+	ret nz
+update_enemy_hurt_player_1x1_collision:
+	; player is hit!
+	ld c, e
+	call player_hit_damage_c
+	xor a  ; hit
+	ret
+
+update_enemy_hurt_player_1x1_y_short:
+	ld a, (player_y + 1)
+	jr update_enemy_hurt_player_1x1_y_continue
 
 
 ;-----------------------------------------------
@@ -2534,7 +2585,7 @@ update_enemy_bullet_move_right_if_possible:
 	jr nz, update_enemy_bullet_move_right_if_possible_move
 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-	inc c
+	; inc c
 	inc c
 	inc b
 	call general_check_collision

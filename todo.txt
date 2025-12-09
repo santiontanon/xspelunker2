@@ -1,11 +1,6 @@
 to do:
 
 ***- first boss:
-  ***- BUG: bullet to player collision seems it is a bit off, specially when crouching (does the hit box reduce when crouching?)
-    ***- use "debug" sprites (bullet is an 8x8 box)
-    ***- make the bullet collision box just the top-left 8x8 box of a sprite (consider this for collisions in its movement)
-    ***- use player debug sprites too
-    ***- make sure collisions work as expected also when crouching
   ***- whirlwind (much faster than a regular bullet, so, it needs to be dodged by knowing the pattern)
   ***- lightning attack (there is a warning about it and then it strikes)
   ***- being able to destroy the staff:
