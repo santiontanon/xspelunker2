@@ -181,6 +181,28 @@ ldir_from_page_a:
 
 
 ;-----------------------------------------------
+a_mod_3:
+    push bc
+        ld c, a
+        rrca
+        rrca
+        rrca
+        rrca
+        add a, c
+        adc a, 0
+        ld c, a
+        rrca
+        rrca
+        add a, c
+        adc a, 1
+    pop bc
+    ret z
+    and #03
+    dec a
+    ret
+
+
+;-----------------------------------------------
 ; Source: https://wikiti.brandonw.net/index.php?title=Z80_Routines:Math:Random
 ; Generates a 16 bit random number
 ; - rng_seed1: 16-bit seed value

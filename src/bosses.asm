@@ -608,6 +608,8 @@ boss_fire_directional_bullet_towards_player_with_random_offset:
 ; input:
 ; - c, b: tile coordinate from where the bullet is fired
 ; - ixl, ixh: pixel offset
+; output:
+; - ix: bullet ptr
 boss_fire_directional_bullet_towards_player:
 	; see if player is close enough:
 	ld a, (player_x + 1)
@@ -623,25 +625,28 @@ boss_fire_directional_bullet_towards_player_continue:
 	pop de
 	pop bc
 	ret nz
-	ld (hl), ENEMY_BULLET
-	inc hl
-	ld a, ixl
-	ld (hl), a  ; pixel X
-	inc hl
-	ld (hl), c  ; tile X
-	inc hl
-	ld a, ixh
-	ld (hl), a  ; pixel Y
-	inc hl
-	ld (hl), b  ; tile Y
-	inc hl
-	ld (hl), 0  ; state
-	inc hl
-	ld (hl), e  ; speed x
-	inc hl
-	ld (hl), d  ; speed y
-	ld hl, SFX_enemy_bullet
-	jp play_SFX_with_high_priority
+	push hl
+		ld (hl), ENEMY_BULLET
+		inc hl
+		ld a, ixl
+		ld (hl), a  ; pixel X
+		inc hl
+		ld (hl), c  ; tile X
+		inc hl
+		ld a, ixh
+		ld (hl), a  ; pixel Y
+		inc hl
+		ld (hl), b  ; tile Y
+		inc hl
+		ld (hl), 0  ; state
+		inc hl
+		ld (hl), e  ; speed x
+		inc hl
+		ld (hl), d  ; speed y
+		ld hl, SFX_enemy_bullet
+		call play_SFX_with_high_priority
+	pop ix
+	ret
 
 
 ;-----------------------------------------------

@@ -125,6 +125,7 @@ ROOM_OBJECT_STRUCT_SPEED_Y: equ 7
 ROOM_OBJECT_STRUCT_LAST_HIT_ID: equ 7  ; used by enemies (instead of SPEED_Y)
 ROOM_OBJECT_STRUCT_HIT_ID: equ 8  ; used by player bullets only, to avoid multi-hit
 ROOM_OBJECT_STRUCT_HEALTH: equ 8  ; used by enemies only
+ROOM_OBJECT_STRUCT_BULLET_STATE: equ 8  ; used by some bullets only
 
 ROOM_TILE_OBJECT_STRUCT_SIZE: equ 12
 ROOM_TILE_OBJECT_STRUCT_ID: equ 0
@@ -214,6 +215,7 @@ ENEMY_FROG_TONGUE: equ 18
 ENEMY_BEE: equ 19
 ENEMY_MONKEY: equ 20
 ENEMY_MONKEY_THROWER: equ 21
+ENEMY_BULLET_WHIRLWIND: equ 22
 
 
 ; - 7 boss keys

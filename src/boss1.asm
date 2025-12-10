@@ -201,7 +201,7 @@ update_boss1_behavior_0_raise_loop:
 			ld hl, draw_room_with_hud
 			ld c, TILES_PAGE
 			call call_hl_in_page_c_8000  ; just so that we do not lose the page we are at
-			ld hl, SFX_explosion
+			ld hl, SFX_explosion_low_pitch
 			call play_SFX_with_high_priority
 			ld b, 10
 			call wait_b_halts
@@ -270,10 +270,10 @@ update_boss1_behavior_0_waking_loop:
 	call update_boss1_behavior_bring_name_up
 
 update_boss1_behavior_0_choose_behavior:
-; 	ld c, 3
-; 	call random_modulo
-; 	inc a
-	ld a, 3  ; DEBUG: hardcode behavior
+	ld c, 3
+	call random_modulo
+	inc a
+; 	ld a, 3  ; DEBUG: hardcode behavior
 	ld (boss__behavior), a  ; 1, 2, or 3
 	xor a
 	ld (boss__state), a
@@ -641,7 +641,7 @@ update_boss1_behavior_3_state_2:
 update_boss1_behavior_3_state_5:
 update_boss1_behavior_3_state_8:
 update_boss1_behavior_3_state_11:
-	; staff attack (whirlwind):
+	; staff attack (lightning):
 	; ...
 
 	; from 2, randomly go to: 4, 5, 6
@@ -666,15 +666,28 @@ update_boss1_behavior_3_state_3:
 update_boss1_behavior_3_state_6:
 update_boss1_behavior_3_state_9:
 update_boss1_behavior_3_state_12:
-	; left-hand attack (lightning):
-	; ...
-
+	; left-hand attack (whirlwind):	
 	; from 3, randomly go to: 4, 5, 6
 	ld a, 6
 	call update_boss1_draw_boss_frame
 	ld hl, boss__state_timer
 	inc (hl)
 	ld a, (hl)
+
+	cp 8
+	jr nz, update_boss1_behavior_3_state_3_skip_bullet
+	ld a, (boss__x)
+	ld c, a
+	ld a, (boss__y)
+	add a, 3
+	ld b, a
+	ld ix, #0000	
+	call boss_fire_directional_bullet_towards_player
+	ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BULLET_WHIRLWIND
+	ld (ix + ROOM_OBJECT_STRUCT_BULLET_STATE), 0
+update_boss1_behavior_3_state_3_skip_bullet:
+
+	ld a, (boss__state_timer)
 	cp 32
 	ret c
 	ld c, 3

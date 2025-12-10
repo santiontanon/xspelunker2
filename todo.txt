@@ -1,8 +1,9 @@
 to do:
 
 ***- first boss:
-  ***- whirlwind (much faster than a regular bullet, so, it needs to be dodged by knowing the pattern)
+  ***- collision with bullets is still a bit iffy, I think it collides on the right too quickly
   ***- lightning attack (there is a warning about it and then it strikes)
+  ***- sprites of dust when it lands like when rocks fall
   ***- being able to destroy the staff:
     ***- give it a hitbox, and HP
     ***- when HP <= 0 explosion and staff disappears
@@ -16,7 +17,7 @@ to do:
 ***- BUG: firing with a key equiped does not open a lock
 ***- BUG: when there is an item underwater (e.g. hammer), player jumps: check that there is no water on top? (or mark item as water?) (or look at the background buffer of the item (recursively until finding a non-item?)
 ***- clean the code: I have the same "split by line" text routine spread among multiple files, reorganize that!
-***- when a bullet does not hit an enemy, have a chance (or always) to remain in the map, so you can pick it up again (maybe some enemies will steal objects, and that can be used to bait them? or maybe some enemies wake up with noise and items dropping make noise? (as do dropping pushable blocks, or the player doing anything except crawling)).
+***- when a player bullet does not hit an enemy, have a chance (or always) to remain in the map, so you can pick it up again (maybe some enemies will steal objects, and that can be used to bait them? or maybe some enemies wake up with noise and items dropping make noise? (as do dropping pushable blocks, or the player doing anything except crawling)).
 
 - maps look very empty, is it lack of music, or maybe enemy behaviors or spawn locations that are not ideal. Play around and make a list of things I don't like, to fix them.
 - music: intro, letters, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 25 have potential)
