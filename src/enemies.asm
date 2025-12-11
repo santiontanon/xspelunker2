@@ -22,6 +22,7 @@ enemy_update_fn_table:
 	dw update_enemy_monkey
 	dw update_enemy_monkey_thrower
 	dw update_enemy_bullet_whirlwind  ; boss 1 attack
+	dw update_enemy_bullet_lightning  ; boss 1 attack
 
 
 ;-----------------------------------------------
@@ -1837,15 +1838,119 @@ update_enemy_bullet_whirlwind_y_negative:
 	jp z, update_enemy_delete
 update_enemy_bullet_whirlwind_y_done:
 
-	ld d, COLOR_WHITE  ; anomation of 6, 7, 8
+	ld d, COLOR_WHITE
+    ; animation of 6, 7, 8
 	ld a, (ix + ROOM_OBJECT_STRUCT_BULLET_STATE)
 	call a_mod_3
-	add a, FIRST_ENEMY_SPRITE_PATTERN + 6
+	add a, FIRST_ENEMY_SPRITE_PATTERN + 5
 	add a, a
 	add a, a
 	ld e, a  ; e = (FIRST_ENEMY_SPRITE_PATTERN + (state % 3)) * 4 
 	; ld e, (FIRST_ENEMY_SPRITE_PATTERN + 6) * 4 
 	jp enemy_sprite_and_continue
+
+
+;-----------------------------------------------
+update_enemy_bullet_lightning_colors:
+	db COLOR_DARK_BLUE
+	db COLOR_WHITE, COLOR_WHITE, COLOR_WHITE, COLOR_WHITE
+	db COLOR_LIGHT_BLUE
+	db COLOR_BLUE
+	db COLOR_DARK_BLUE
+
+update_enemy_bullet_lightning_piece_offsets:
+	db 0, (FIRST_ENEMY_SPRITE_PATTERN + 8) * 4 
+	db 0, (FIRST_ENEMY_SPRITE_PATTERN + 9) * 4 
+	db 0, (FIRST_ENEMY_SPRITE_PATTERN + 10) * 4 
+	db 8, (FIRST_ENEMY_SPRITE_PATTERN + 11) * 4 
+	db -8, (FIRST_ENEMY_SPRITE_PATTERN + 12) * 4 
+
+update_enemy_bullet_lightning:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	or a
+	jr z, update_enemy_bullet_lightning_state_0
+	dec a
+	jr z, update_enemy_bullet_lightning_state_1
+update_enemy_bullet_lightning_state_2:
+	inc (ix + ROOM_OBJECT_STRUCT_BULLET_STATE)
+	ld a, (ix + ROOM_OBJECT_STRUCT_BULLET_STATE)
+	cp 9
+	jr nz, update_enemy_bullet_lightning_state_0_continue
+	jp update_enemy_delete
+
+update_enemy_bullet_lightning_state_1:
+	inc (ix + ROOM_OBJECT_STRUCT_BULLET_STATE)
+	ld a, (ix + ROOM_OBJECT_STRUCT_BULLET_STATE)
+	cp 16
+	ret nz
+	; move to where the player is:
+	ld a, (ix + ROOM_OBJECT_STRUCT_SPEED_X)
+	ld (ix + ROOM_OBJECT_STRUCT_TILE_X), a
+	ld (ix + ROOM_OBJECT_STRUCT_TILE_Y), 20  ; ground height
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2  ; next state
+	ld (ix + ROOM_OBJECT_STRUCT_BULLET_STATE), 0
+	ret
+
+update_enemy_bullet_lightning_state_0:
+	inc (ix + ROOM_OBJECT_STRUCT_BULLET_STATE)
+	ld a, (ix + ROOM_OBJECT_STRUCT_BULLET_STATE)
+	cp 9
+	jr nz, update_enemy_bullet_lightning_state_0_continue
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1  ; next state
+	ld (ix + ROOM_OBJECT_STRUCT_BULLET_STATE), 0
+	ret
+update_enemy_bullet_lightning_state_0_continue:
+	ld hl, SFX_explosion
+	cp 3
+	call z, play_SFX_with_high_priority
+	ld hl, update_enemy_bullet_lightning_colors
+	ld a, (ix + ROOM_OBJECT_STRUCT_BULLET_STATE)
+	dec a
+	ADD_HL_A
+	ld d, (hl)
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 12) * 4 
+	ld c, 0
+	call get_sprite_object_sprite_coordinates
+	jp nz, update_sprite_enemies_loop_next
+	call add_sprite_to_this_frame
+	........
+	; pick the next piece, fixing the random seed:
+	ld hl, (rng_seed1)
+	push hl
+	ld hl, (rng_seed2)
+	push hl
+		ld hl, #0a0a
+		ld (rng_seed1), hl
+		ld h, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+		ld l, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+		ld (rng_seed2), hl
+update_enemy_bullet_lightning_loop:
+		push bc
+			ld c, 5
+			call random_modulo
+		pop bc
+		ld iyl, a  ; next piece
+		ld a, b
+		sub 16
+		jr c, update_enemy_bullet_lightning_done
+		ld b, a
+		ld hl, update_enemy_bullet_lightning_piece_offsets
+		ld a, iyl
+		add a, a
+		ADD_HL_A
+		ld a, c
+		add a, (hl)  ; offset of the next piece
+		ld c, a
+		inc hl
+		ld e, (hl)  ; sprite of the next piece
+		call add_sprite_to_this_frame
+		jr update_enemy_bullet_lightning_loop
+update_enemy_bullet_lightning_done:
+	pop hl
+	ld (rng_seed2), hl
+	pop hl
+	ld (rng_seed1), hl
+	jp update_sprite_enemies_loop_next
 
 
 ;-----------------------------------------------
@@ -2698,6 +2803,8 @@ enemy_hit:
 	cp ENEMY_PARABOLA_BULLET
 	ret z  ; we cannot damage bullets
 	cp ENEMY_BULLET_WHIRLWIND
+	ret z  ; we cannot damage bullets
+	cp ENEMY_BULLET_LIGHTNING
 	ret z  ; we cannot damage bullets
 	ld a, iyl
 	ld (ix + ROOM_OBJECT_STRUCT_LAST_HIT_ID), a

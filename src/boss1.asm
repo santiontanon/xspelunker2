@@ -273,7 +273,7 @@ update_boss1_behavior_0_choose_behavior:
 	ld c, 3
 	call random_modulo
 	inc a
-; 	ld a, 3  ; DEBUG: hardcode behavior
+	; ld a, 3  ; DEBUG: hardcode behavior
 	ld (boss__behavior), a  ; 1, 2, or 3
 	xor a
 	ld (boss__state), a
@@ -288,7 +288,7 @@ update_boss1_behavior_0_choose_behavior:
 ;     after each full step, randomly choose between keep walking, staff/punch attack, left-hand attack
 ;     after reaching the target position, jump back
 ; - state 2: staff/punch attack
-; - state 3: left-hand attack (lighning)
+; - state 3: left-hand attack (whirlwind)
 ; - state 4: crouch
 ; - state 5: jump back
 ; - state 6: end behavior
@@ -360,12 +360,17 @@ update_boss1_behavior_1_state_1_move:
 	ret
 
 update_boss1_behavior_1_state_2:
+	; staff attack (lightning):
+	ld a, (boss__state_timer)
+	cp 8
+	call z, update_boss1_spawn_lightning
+
 	ld a, 5
 	call update_boss1_draw_boss_frame
 	ld hl, boss__state_timer
 	inc (hl)
 	ld a, (hl)
-	cp 64
+	cp 32
 	ret nz
 	xor a
 	ld (boss__state_timer), a
@@ -374,12 +379,26 @@ update_boss1_behavior_1_state_2:
 	ret
 
 update_boss1_behavior_1_state_3:
+	; left hand attack (whirlwind)
 	ld a, 6
 	call update_boss1_draw_boss_frame
 	ld hl, boss__state_timer
 	inc (hl)
 	ld a, (hl)
-	cp 64
+	cp 8
+	jr nz, update_boss1_behavior_1_state_3_skip_bullet
+	ld a, (boss__x)
+	ld c, a
+	ld a, (boss__y)
+	add a, 3
+	ld b, a
+	ld ix, #0000	
+	call boss_fire_directional_bullet_towards_player
+	ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BULLET_WHIRLWIND
+	ld (ix + ROOM_OBJECT_STRUCT_BULLET_STATE), 0
+update_boss1_behavior_1_state_3_skip_bullet:
+	ld a, (boss__state_timer)
+	cp 32
 	ret nz
 	xor a
 	ld (boss__state_timer), a
@@ -442,6 +461,12 @@ update_boss1_behavior_1_state_5_land:
 	ld (boss__state), a
 	ld a, 13
 	ld (boss__y), a	
+	; spawn dust:
+	ld b, 20
+	ld a, (boss__x)
+	inc a
+	ld c, a
+	call spawn_4tile_appart_dust
 	ld hl, SFX_explosion
 	jp play_SFX_with_high_priority
 
@@ -546,6 +571,12 @@ update_boss1_behavior_2_state_2_land:
 	inc (hl)
 	ld a, 13
 	ld (boss__y), a	
+	; spawn dust:
+	ld b, 20
+	ld a, (boss__x)
+	inc a
+	ld c, a
+	call spawn_4tile_appart_dust
 	ld hl, SFX_explosion
 	jp play_SFX_with_high_priority
 
@@ -642,7 +673,9 @@ update_boss1_behavior_3_state_5:
 update_boss1_behavior_3_state_8:
 update_boss1_behavior_3_state_11:
 	; staff attack (lightning):
-	; ...
+	ld a, (boss__state_timer)
+	cp 8
+	call z, update_boss1_spawn_lightning
 
 	; from 2, randomly go to: 4, 5, 6
 	ld a, 5
@@ -710,6 +743,28 @@ update_boss1_behavior_3_state_3_skip_bullet:
 update_boss1_behavior_4:
 	; ...
 	jp update_boss1_behavior_0_choose_behavior
+
+
+;-----------------------------------------------
+update_boss1_spawn_lightning:
+	call ptr_to_new_sprite_enemy
+	ret nz
+	push hl
+	pop ix
+	ld (ix), ENEMY_BULLET_LIGHTNING
+	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_X), 0
+	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_Y), 0
+	ld a, (boss__x)
+	dec a
+	ld (ix + ROOM_OBJECT_STRUCT_TILE_X), a
+	ld a, (boss__y)
+	add a, -2
+	ld (ix + ROOM_OBJECT_STRUCT_TILE_Y), a
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0  ; state 0: lightning going up, state 1: waiting, state 2: lightning falling
+	ld (ix + ROOM_OBJECT_STRUCT_BULLET_STATE), 0  ; timer
+	ld a, (player_x + 1)
+	ld (ix + ROOM_OBJECT_STRUCT_SPEED_X), a  ; this stores the player x for the second lightning
+	ret
 
 
 ;-----------------------------------------------

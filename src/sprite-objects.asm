@@ -65,10 +65,31 @@ spawn_water_splash:
 ;-----------------------------------------------
 ; input:
 ; - c, b: tile coordinates of the block
-spawn_pushing_block_dust:	
+spawn_pushing_block_dust:
 	call ptr_to_new_sprite_object
 	ret nz
 	ld (hl), SPRITE_OBJECT_TYPE_BLOCK_DUST
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), c  ; tile x
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), b  ; tile y
+	inc hl
+	ld (hl), 8  ; state (frames left)
+	ld hl, SFX_explosion
+	jp play_SFX_with_high_priority
+
+
+;-----------------------------------------------
+; input:
+; - c, b: tile coordinates of the dust
+spawn_4tile_appart_dust:
+	call ptr_to_new_sprite_object
+	ret nz
+	ld (hl), SPRITE_OBJECT_TYPE_4TILE_APPART_DUST
 	inc hl
 	ld (hl), 0
 	inc hl
@@ -153,6 +174,8 @@ update_sprite_objects_loop:
 	jr z, update_sprite_objects_water_splash
 	cp SPRITE_OBJECT_TYPE_BLOCK_DUST
 	jr z, update_sprite_objects_pushing_block_dust
+	cp SPRITE_OBJECT_TYPE_4TILE_APPART_DUST
+	jr z, update_sprite_objects_4tile_appart_dust
 	cp SPRITE_OBJECT_TYPE_EXPLOSION
 	jr z, update_sprite_objects_explosion
 	cp SPRITE_OBJECT_TYPE_BIG_EXPLOSION
@@ -200,6 +223,22 @@ update_sprite_objects_pushing_block_dust:
 	ld d, COLOR_WHITE
 	ld e, 20
 	ld c, 4
+	call get_sprite_object_sprite_coordinates
+	call z, add_sprite_to_this_frame
+	jp update_sprite_objects_decrease_timer_and_delete_if_necessary
+
+
+;-----------------------------------------------
+update_sprite_objects_4tile_appart_dust:
+	ld d, COLOR_WHITE
+	ld e, 16
+	ld c, -5
+	call get_sprite_object_sprite_coordinates
+	call z, add_sprite_to_this_frame
+
+	ld d, COLOR_WHITE
+	ld e, 20
+	ld c, 22
 	call get_sprite_object_sprite_coordinates
 	call z, add_sprite_to_this_frame
 	jp update_sprite_objects_decrease_timer_and_delete_if_necessary

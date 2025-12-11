@@ -201,7 +201,7 @@ public class Bosses {
         data.addAll(GenerateSprites.extractSprite(sourceImage, 80, 16, 15));
         data.addAll(GenerateSprites.extractSprite(sourceImage, 96, 16, 15));
 
-        data.addAll(GenerateSprites.extractSprite(sourceImage, 0, 32, 15));  // danger mark
+//        data.addAll(GenerateSprites.extractSprite(sourceImage, 0, 32, 15));  // danger mark
 
         data.addAll(GenerateSprites.extractSprite(sourceImage, 0, 0, 15));  // whirlwind
         data.addAll(GenerateSprites.extractSprite(sourceImage, 16, 0, 15));
