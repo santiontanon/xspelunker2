@@ -893,21 +893,22 @@ update_enemy_bullet:
 	call update_enemy_hurt_player_shieldable_bullet
 	jp z, update_enemy_delete
 	
-	call update_enemy_bullet_bresenham
-	; - b: amount to move in y (-1, 0, or 1)
-	; - c: amount to move in x (-1, 0, or 1)
+	ld a, (current_world__difficulty_bullet_speed)
+	ld iyl, a
+	call update_enemy_bullet_bresenham_iyl_steps
+	; - b: amount to move in y
+	; - c: amount to move in x
 	ld a, c
-	or a
+	add a, a
 	jr z, update_enemy_bullet_x_done
 	jp m, update_enemy_bullet_x_negative
-	ld a, (current_world__difficulty_bullet_speed)
 	push bc
 		call update_enemy_bullet_move_right_if_possible_a_times
 	pop bc
 	jp z, update_enemy_delete
 	jr update_enemy_bullet_x_done
 update_enemy_bullet_x_negative:
-	ld a, (current_world__difficulty_bullet_speed)
+	neg
 	push bc
 		call update_enemy_bullet_move_left_if_possible_a_times
 	pop bc
@@ -915,15 +916,14 @@ update_enemy_bullet_x_negative:
 update_enemy_bullet_x_done:
 
 	ld a, b
-	or a
+	add a, a
 	jr z, update_enemy_bullet_y_done
 	jp m, update_enemy_bullet_y_negative
-	ld a, (current_world__difficulty_bullet_speed)
 	call update_enemy_bullet_move_down_if_possible_a_times
 	jp z, update_enemy_delete
 	jr update_enemy_bullet_y_done
 update_enemy_bullet_y_negative:
-	ld a, (current_world__difficulty_bullet_speed)
+	neg
 	call update_enemy_bullet_move_up_if_possible_a_times
 	jp z, update_enemy_delete
 update_enemy_bullet_y_done:
@@ -1803,21 +1803,20 @@ update_enemy_bullet_whirlwind:
 	ld iyl, 8
 update_enemy_bullet_whirlwind_speed_set:
 
-	call update_enemy_bullet_bresenham
-	; - b: amount to move in y (-1, 0, or 1)
-	; - c: amount to move in x (-1, 0, or 1)
+	call update_enemy_bullet_bresenham_iyl_steps
+	; - b: amount to move in y
+	; - c: amount to move in x
 	ld a, c
-	or a
+	add a, a
 	jr z, update_enemy_bullet_whirlwind_x_done
 	jp m, update_enemy_bullet_whirlwind_x_negative
-	ld a, iyl
 	push bc
 		call update_enemy_bullet_move_right_if_possible_a_times
 	pop bc
 	jp z, update_enemy_delete
 	jr update_enemy_bullet_whirlwind_x_done
 update_enemy_bullet_whirlwind_x_negative:
-	ld a, iyl
+	neg
 	push bc
 		call update_enemy_bullet_move_left_if_possible_a_times
 	pop bc
@@ -1825,15 +1824,14 @@ update_enemy_bullet_whirlwind_x_negative:
 update_enemy_bullet_whirlwind_x_done:
 
 	ld a, b
-	or a
+	add a, a
 	jr z, update_enemy_bullet_whirlwind_y_done
 	jp m, update_enemy_bullet_whirlwind_y_negative
-	ld a, iyl
 	call update_enemy_bullet_move_down_if_possible_a_times
 	jp z, update_enemy_delete
 	jr update_enemy_bullet_whirlwind_y_done
 update_enemy_bullet_whirlwind_y_negative:
-	ld a, iyl
+	neg
 	call update_enemy_bullet_move_up_if_possible_a_times
 	jp z, update_enemy_delete
 update_enemy_bullet_whirlwind_y_done:
@@ -1913,7 +1911,7 @@ update_enemy_bullet_lightning_state_0_continue:
 	call get_sprite_object_sprite_coordinates
 	jp nz, update_sprite_enemies_loop_next
 	call add_sprite_to_this_frame
-	........
+	
 	; pick the next piece, fixing the random seed:
 	ld hl, (rng_seed1)
 	push hl
@@ -3031,55 +3029,60 @@ update_enemy_bullet_move_up_if_possible_a_times_loop:
 ;-----------------------------------------------
 ; input:
 ; - ix: ptr to bullet object
+; - iyl: number of steps to apply
 ; output:
-; - c: number of times to move in x (-1, 0, 1)
-; - b: number of times to move in y (-1, 0, 1)
-update_enemy_bullet_bresenham:
+; - c: number of times to move in x (..., -2, -1, 0, 1, 2, ...)
+; - b: number of times to move in y (..., -2, -1, 0, 1, 2, ...)
+update_enemy_bullet_bresenham_iyl_steps:
 	ld a, (ix + ROOM_OBJECT_STRUCT_SPEED_Y)
 	or a
     jp p, update_enemy_bullet_bresenham_no_yspeed_flip
     neg
 update_enemy_bullet_bresenham_no_yspeed_flip:
-    ld b, a  ; b = |speed y|
+    ld d, a  ; d = |speed y|
     ld a, (ix + ROOM_OBJECT_STRUCT_SPEED_X)
     or a
     jp p,update_enemy_bullet_bresenham_no_xspeed_flip
     neg
 update_enemy_bullet_bresenham_no_xspeed_flip:
-    ld c, a  ; c = |speed x|
-    cp b
+    ld e, a  ; e = |speed x|
+    cp d
     jp c,update_enemy_bullet_bresenham_y_is_bigger
     ; Bresenham for when the |speed x| > |speed y|
 update_enemy_bullet_bresenham_x_is_bigger:
+	ld bc, 0
     ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
-    sub b  ; we subtract y difference from the error term 
-    ld (ix + ROOM_OBJECT_STRUCT_STATE), a
-    ld b, 0
+update_enemy_bullet_bresenham_x_is_bigger_loop:
+    sub d  ; we subtract y difference from the error term 
     jp p, update_enemy_bullet_bresenham_x_is_bigger_no_error_overflow
-    ld b, 1
-    add a, c
-    ld (ix + ROOM_OBJECT_STRUCT_STATE), a
+    inc b
+    add a, e
 update_enemy_bullet_bresenham_x_is_bigger_no_error_overflow:
-    ld c, 1
+    inc c
+    dec iyl
+    jr nz, update_enemy_bullet_bresenham_x_is_bigger_loop
+    ld (ix + ROOM_OBJECT_STRUCT_STATE), a
     jp update_enemy_bullet_bresenham_choose_quadrant
 
     ; Bresenham for when the |speed x| < |speed y|
 update_enemy_bullet_bresenham_y_is_bigger:
+	ld bc, 0
     ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
-    sub c  ; we subtract y difference from the error term 
-    ld (ix + ROOM_OBJECT_STRUCT_STATE), a
-    ld c, 0
+update_enemy_bullet_bresenham_y_is_bigger_loop:
+    sub e  ; we subtract x difference from the error term 
     jp p,update_enemy_bullet_bresenham_y_is_bigger_no_error_overflow
-    ld c, 1
-    add a, b
-    ld (ix + ROOM_OBJECT_STRUCT_STATE), a
+    inc c
+    add a, d
 update_enemy_bullet_bresenham_y_is_bigger_no_error_overflow:
-    ld b, 1
+    inc b
+    dec iyl
+    jr nz, update_enemy_bullet_bresenham_y_is_bigger_loop
+    ld (ix + ROOM_OBJECT_STRUCT_STATE), a
 
 update_enemy_bullet_bresenham_choose_quadrant:
 	; here:
-	; - b: number of steps we need to move in y (0 or 1)
-	; - c: number of steps we need to move in x (0 or 1)
+	; - b: number of steps we need to move in y
+	; - c: number of steps we need to move in x
     ld a, (ix + ROOM_OBJECT_STRUCT_SPEED_Y)
     or a
     jp p,update_enemy_bullet_bresenham_no_yspeed_flip2

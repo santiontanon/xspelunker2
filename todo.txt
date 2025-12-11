@@ -1,6 +1,5 @@
 to do:
 
-***- bullet bresenham is choppy when the bullets move in more than 1 pixel at a time speed. Rewrite it.
 ***- player collision with bullets and enemies is horrible, I need to make this much better, exact if possible (maybe a quick tile check first, and then a slower pixel-level check if it passes)
   ***- prepare a situation to debug this (maybe some fake control where I just magically fly the player around, and there is a bullet somewhere that moves slowly)
   ***- once this is all sorted out, make the lightning hurt the player

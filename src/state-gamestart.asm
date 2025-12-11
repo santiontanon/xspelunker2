@@ -208,20 +208,20 @@ gamestart_compute_random_seed_loop:
 ;-----------------------------------------------
 gamestart_difficulty_settings_easy:
 	db 40  ; current_world__difficulty_attack_warn_time
-	db 3  ; current_world__difficulty_bullet_speed
+	db 2  ; current_world__difficulty_bullet_speed
 gamestart_difficulty_settings_easy_end:
 
 gamestart_difficulty_settings_normal:
 	db 32  ; current_world__difficulty_attack_warn_time
-	db 4  ; current_world__difficulty_bullet_speed
+	db 3  ; current_world__difficulty_bullet_speed
 
 gamestart_difficulty_settings_hard:
 	db 26  ; current_world__difficulty_attack_warn_time
-	db 5  ; current_world__difficulty_bullet_speed
+	db 4  ; current_world__difficulty_bullet_speed
 
 gamestart_difficulty_settings_hardest:
 	db 20  ; current_world__difficulty_attack_warn_time
-	db 6  ; current_world__difficulty_bullet_speed
+	db 5  ; current_world__difficulty_bullet_speed
 
 
 gamestart_compute_difficulty:
