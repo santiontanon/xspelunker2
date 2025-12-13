@@ -1892,8 +1892,15 @@ update_enemy_bullet_lightning_state_1:
 	cp 16
 	ret nz
 	; move to where the player is:
-	ld a, (ix + ROOM_OBJECT_STRUCT_SPEED_X)
-	ld (ix + ROOM_OBJECT_STRUCT_TILE_X), a
+	ld b, (ix + ROOM_OBJECT_STRUCT_SPEED_Y)  ; player tile x
+	ld a, (ix + ROOM_OBJECT_STRUCT_SPEED_X)  ; player pixel x
+	sub 5
+	jr nc, update_enemy_bullet_lightning_state_1_continue
+	dec b
+	add a, 8
+update_enemy_bullet_lightning_state_1_continue:
+	ld (ix + ROOM_OBJECT_STRUCT_TILE_X), b
+	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_X), a
 	ld (ix + ROOM_OBJECT_STRUCT_TILE_Y), 20  ; ground height
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2  ; next state
 	ld (ix + ROOM_OBJECT_STRUCT_BULLET_STATE), 0
@@ -1921,7 +1928,12 @@ update_enemy_bullet_lightning_state_0_continue:
 	call get_sprite_object_sprite_coordinates
 	jp nz, update_sprite_enemies_loop_next
 	call add_sprite_to_this_frame
-	
+
+	push bc
+		ld iyh, 4  ; damage to deal
+		call update_enemy_hurt_player_2x2
+	pop bc
+
 	; pick the next piece, fixing the random seed:
 	ld hl, (rng_seed1)
 	push hl
@@ -1932,28 +1944,49 @@ update_enemy_bullet_lightning_state_0_continue:
 		ld h, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 		ld l, (ix + ROOM_OBJECT_STRUCT_TILE_X)
 		ld (rng_seed2), hl
+		push hl
 update_enemy_bullet_lightning_loop:
-		push bc
-			ld c, 5
-			call random_modulo
-		pop bc
-		ld iyl, a  ; next piece
-		ld a, b
-		sub 16
-		jr c, update_enemy_bullet_lightning_done
-		ld b, a
-		ld hl, update_enemy_bullet_lightning_piece_offsets
-		ld a, iyl
-		add a, a
-		ADD_HL_A
-		ld a, c
-		add a, (hl)  ; offset of the next piece
-		ld c, a
-		inc hl
-		ld e, (hl)  ; sprite of the next piece
-		call add_sprite_to_this_frame
-		jr update_enemy_bullet_lightning_loop
+			push bc
+				ld c, 5
+				call random_modulo
+			pop bc
+			ld iyl, a  ; next piece
+			ld a, b
+			sub 16
+			jr c, update_enemy_bullet_lightning_done
+			ld b, a
+			ld hl, update_enemy_bullet_lightning_piece_offsets
+			ld a, iyl
+			add a, a
+			ADD_HL_A
+			ld a, c
+			add a, (hl)  ; x offset of the next piece
+			ld c, a
+
+			ld a, (hl)  ; x offset of the next piece
+			sra a
+			sra a
+			sra a
+			add a, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+			ld (ix + ROOM_OBJECT_STRUCT_TILE_X), a
+			dec (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+			dec (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+
+			inc hl
+			ld e, (hl)  ; sprite of the next piece
+
+			call add_sprite_to_this_frame
+			push bc
+			push de
+				ld iyh, 4  ; damage to deal
+				call update_enemy_hurt_player_2x2
+			pop de
+			pop bc
+			jr update_enemy_bullet_lightning_loop
 update_enemy_bullet_lightning_done:
+		pop hl 
+		ld (ix + ROOM_OBJECT_STRUCT_TILE_Y), h
+		ld (ix + ROOM_OBJECT_STRUCT_TILE_X), l
 	pop hl
 	ld (rng_seed2), hl
 	pop hl

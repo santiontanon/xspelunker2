@@ -1,8 +1,5 @@
 to do:
 
-***- make the lightning of boss 1 hurt the player:
-   ***- make sure it aims correctly adjusting pixel level position
-   ***- make it deal damage to the player (unshieldable)
 ***- first boss: HURAKAN:
   ***- being able to destroy the staff:
     ***- give it a hitbox, and HP

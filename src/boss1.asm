@@ -273,7 +273,7 @@ update_boss1_behavior_0_choose_behavior:
 	ld c, 3
 	call random_modulo
 	inc a
-	; ld a, 3  ; DEBUG: hardcode behavior
+; 	ld a, 3  ; DEBUG: hardcode behavior
 	ld (boss__behavior), a  ; 1, 2, or 3
 	xor a
 	ld (boss__state), a
@@ -762,8 +762,9 @@ update_boss1_spawn_lightning:
 	ld (ix + ROOM_OBJECT_STRUCT_TILE_Y), a
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0  ; state 0: lightning going up, state 1: waiting, state 2: lightning falling
 	ld (ix + ROOM_OBJECT_STRUCT_BULLET_STATE), 0  ; timer
-	ld a, (player_x + 1)
-	ld (ix + ROOM_OBJECT_STRUCT_SPEED_X), a  ; this stores the player x for the second lightning
+	ld bc, (player_x)
+	ld (ix + ROOM_OBJECT_STRUCT_SPEED_X), c  ; this stores the player x for the second lightning (pixel)
+	ld (ix + ROOM_OBJECT_STRUCT_SPEED_Y), b  ; this stores the player x for the second lightning (tile)
 	ret
 
 
