@@ -1995,7 +1995,7 @@ pcg_generate_room__start:
 	; tile sets, collisions, and animation ptrs:
 	ld bc, tiles_jungle_zx0
 	ld (current_room__tileset_ptr), bc
-	xor a
+	ld a, AREA_COLLISION_TABLES_PAGE
 	ld (current_room__collision_ptr_page), a
 	ld bc, tile_collision_types_jungle
 	ld (current_room__collision_ptr), bc
@@ -2283,7 +2283,7 @@ pcg_generate_room__calendar:
 	; tile sets, collisions, and animation ptrs:
 	ld bc, tiles_calendar_zx0
 	ld (current_room__tileset_ptr), bc
-	xor a
+	ld a, AREA_COLLISION_TABLES_PAGE
 	ld (current_room__collision_ptr_page), a
 	ld bc, tile_collision_types_calendar
 	ld (current_room__collision_ptr), bc
@@ -2459,7 +2459,7 @@ pcg_generate_room__teleporter:
 	; tile sets, collisions, and animation ptrs:
 	ld bc, tiles_teleporter_zx0
 	ld (current_room__tileset_ptr), bc
-	xor a
+	ld a, AREA_COLLISION_TABLES_PAGE
 	ld (current_room__collision_ptr_page), a
 	ld bc, tile_collision_types_pyramid
 	ld (current_room__collision_ptr), bc

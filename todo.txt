@@ -1,8 +1,8 @@
 to do:
 
-***- player collision with bullets and enemies is horrible, I need to make this much better, exact if possible (maybe a quick tile check first, and then a slower pixel-level check if it passes)
-  ***- prepare a situation to debug this (maybe some fake control where I just magically fly the player around, and there is a bullet somewhere that moves slowly)
-  ***- once this is all sorted out, make the lightning hurt the player
+***- make the lightning of boss 1 hurt the player:
+   ***- make sure it aims correctly adjusting pixel level position
+   ***- make it deal damage to the player (unshieldable)
 ***- first boss: HURAKAN:
   ***- being able to destroy the staff:
     ***- give it a hitbox, and HP

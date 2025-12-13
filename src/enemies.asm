@@ -55,15 +55,15 @@ update_sprite_enemies_loop_next_after_deletion:
 
 ;-----------------------------------------------
 update_enemy_snake:
-	ld e, 1  ; damage to deal
-	call update_enemy_hurt_player
+	ld iyh, 1  ; damage to deal
+	call update_enemy_hurt_player_2x2
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
 	or a
 	jr z, update_enemy_snake_right
 	dec a
 	jr z, update_enemy_snake_left
-	; we cannever reach here ...
+	; we can never reach here.
 
 update_enemy_snake_switch_to_state_right:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
@@ -98,8 +98,8 @@ update_enemy_snake_left_continue_color_set:
 
 ;-----------------------------------------------
 update_enemy_snake_dasher:
-	ld e, 1  ; damage to deal
-	call update_enemy_hurt_player
+	ld iyh, 1  ; damage to deal
+	call update_enemy_hurt_player_2x2
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
 	or a
@@ -110,7 +110,7 @@ update_enemy_snake_dasher:
 	jp z, update_enemy_snake_dasher_dash_right
 	dec a
 	jp z, update_enemy_snake_dasher_dash_left
-	; we cannever reach here ...
+	; we cannever reach here.
 
 update_enemy_snake_dasher_switch_to_state_right:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
@@ -189,8 +189,8 @@ update_enemy_snake_dasher_dash_left:
 
 ;-----------------------------------------------
 update_enemy_snake_poison:
-	ld e, 1  ; damage to deal
-	call update_enemy_hurt_player
+	ld iyh, 1  ; damage to deal
+	call update_enemy_hurt_player_2x2
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
 	or a
@@ -201,7 +201,7 @@ update_enemy_snake_poison:
 	jp z, update_enemy_snake_poison_spit_right
 	dec a
 	jp z, update_enemy_snake_poison_spit_left
-	; we cannever reach here ...
+	; we cannever reach here.
 
 update_enemy_snake_poison_switch_to_state_right:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
@@ -277,6 +277,7 @@ update_enemy_snake_poison_spit_right_continue:
 	ld (hl), a
 	inc hl
 	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
+	add a, 4
 	ld (hl), a
 	inc hl
 	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
@@ -317,6 +318,7 @@ update_enemy_snake_poison_spit_left_continue:
 	ld (hl), a
 	inc hl
 	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
+	add a, 4
 	ld (hl), a
 	inc hl
 	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
@@ -334,7 +336,7 @@ update_enemy_snake_poison_spit_left_continue2:
 
 ;-----------------------------------------------
 update_enemy_poison_bullet:
-	ld e, 2  ; damage to deal
+	ld iyh, 2  ; damage to deal
 	call update_enemy_hurt_player_shieldable_bullet
 	jp z, update_enemy_delete
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
@@ -360,7 +362,7 @@ update_enemy_poison_bullet_left:
 
 ;-----------------------------------------------
 update_enemy_bone_bullet:
-	ld e, 2  ; damage to deal
+	ld iyh, 2  ; damage to deal
 	call update_enemy_hurt_player_shieldable_bullet
 	jp z, update_enemy_delete
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
@@ -392,7 +394,7 @@ update_enemy_bone_parabola_bullet_table:
 
 
 update_enemy_bone_parabola_bullet:
-	ld e, 1  ; damage to deal
+	ld iyh, 1  ; damage to deal
 	call update_enemy_hurt_player_shieldable_bullet
 	jp z, update_enemy_delete
 	; out of bounds?
@@ -443,7 +445,7 @@ update_enemy_bone_parabola_bullet_left:
 
 ;-----------------------------------------------
 update_enemy_parabola_bullet:
-	ld e, 1  ; damage to deal
+	ld iyh, 1  ; damage to deal
 	call update_enemy_hurt_player_shieldable_bullet
 	jp z, update_enemy_delete
 	; out of bounds?
@@ -482,15 +484,15 @@ update_enemy_parabola_bullet_continue2:
 
 ;-----------------------------------------------
 update_enemy_fish:
-	ld e, 1  ; damage to deal
-	call update_enemy_hurt_player
+	ld iyh, 1  ; damage to deal
+	call update_enemy_hurt_player_2x2
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
 	or a
 	jr z, update_enemy_fish_right
 	dec a
 	jr z, update_enemy_fish_left
-	; we cannever reach here ...
+	; we cannever reach here.
 
 update_enemy_fish_switch_to_state_right:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
@@ -533,8 +535,8 @@ fish_jumper_jump_table:  ; 42 steps
 	db  5, 5, 5, 5, 5
 
 update_enemy_fish_jumper:
-	ld e, 2  ; damage to deal
-	call update_enemy_hurt_player
+	ld iyh, 2  ; damage to deal
+	call update_enemy_hurt_player_2x2
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
 	or a
@@ -549,7 +551,7 @@ update_enemy_fish_jumper:
 	jp z, update_enemy_fish_jumper_right_jump
 	dec a
 	jp z, update_enemy_fish_jumper_left_jump
-	; we cannever reach here ...
+	; we cannever reach here.
 
 update_enemy_fish_jumper_right_switch_to_swim:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0	
@@ -671,8 +673,8 @@ update_enemy_fish_jumper_jump_table_update_continue2:
 ;-----------------------------------------------
 update_enemy_bat_aggressive:
 update_enemy_bat:
-	ld e, 1  ; damage to deal
-	call update_enemy_hurt_player
+	ld iyh, 1  ; damage to deal
+	call update_enemy_hurt_player_2x2
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
 	or a
@@ -889,7 +891,7 @@ update_enemy_bat_update_bottom_edge:
 
 ;-----------------------------------------------
 update_enemy_bullet:
-	ld e, 1  ; damage to deal
+	ld iyh, 1  ; damage to deal
 	call update_enemy_hurt_player_shieldable_bullet
 	jp z, update_enemy_delete
 	
@@ -935,8 +937,8 @@ update_enemy_bullet_y_done:
 
 ;-----------------------------------------------
 update_enemy_skeleton:
-	ld e, 1  ; damage to deal
-	call update_enemy_hurt_player
+	ld iyh, 1  ; damage to deal
+	call update_enemy_hurt_player_2x2
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
 	or a
@@ -945,7 +947,7 @@ update_enemy_skeleton:
 	jr z, update_enemy_skeleton_left
 	dec a
 	jr z, update_enemy_skeleton_idle
-	; we cannever reach here ...
+	; we cannever reach here.
 
 update_enemy_skeleton_switch_to_state_idle:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
@@ -1000,8 +1002,8 @@ update_enemy_skeleton_left_continue_color_set:
 ;-----------------------------------------------
 update_enemy_skeleton_thrower1:
 update_enemy_skeleton_thrower2:
-	ld e, 1  ; damage to deal
-	call update_enemy_hurt_player
+	ld iyh, 1  ; damage to deal
+	call update_enemy_hurt_player_2x2
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
 	or a
@@ -1012,7 +1014,7 @@ update_enemy_skeleton_thrower2:
 	jp z, update_enemy_skeleton_thrower_throw_right
 	dec a
 	jp z, update_enemy_skeleton_thrower_throw_left
-	; we cannever reach here ...
+	; we cannever reach here.
 
 update_enemy_skeleton_thrower_switch_to_state_right_from_throw:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
@@ -1193,15 +1195,15 @@ update_enemy_skeleton_thrower_throw_left_continue3:
 
 ;-----------------------------------------------
 update_enemy_frog:
-	ld e, 1  ; damage to deal
-	call update_enemy_hurt_player
+	ld iyh, 1  ; damage to deal
+	call update_enemy_hurt_player_2x2
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
 	or a
 	jr z, update_enemy_frog_right
 	dec a
 	jr z, update_enemy_frog_left
-	; we cannever reach here ...
+	; we cannever reach here.
 
 update_enemy_frog_switch_to_state_right:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
@@ -1245,8 +1247,8 @@ update_enemy_frog_tongue:
 update_enemy_frog_jumping:
 	ld iyl, COLOR_DARK_GREEN
 update_enemy_frog_jumping_color_set:
-	ld e, 2  ; damage to deal
-	call update_enemy_hurt_player
+	ld iyh, 2  ; damage to deal
+	call update_enemy_hurt_player_2x2
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 update_enemy_frog_jumping_continue:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
@@ -1362,11 +1364,12 @@ update_enemy_frog_jumping_tongue_right1:
 	call get_sprite_object_sprite_coordinates
 	jp nz, update_enemy_frog_jumping_tongue_right_done
 	call add_sprite_to_this_frame
-	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
-	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-	inc b
-	inc c
-	ld e, 2
+; 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+; 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+; 	inc b
+; 	inc c
+	ld bc, #0101
+	ld iyh, 2
 	call update_enemy_hurt_player_bc_2x1
 	jr update_enemy_frog_jumping_tongue_right_done
 update_enemy_frog_jumping_tongue_right2:
@@ -1376,12 +1379,13 @@ update_enemy_frog_jumping_tongue_right2:
 	call get_sprite_object_sprite_coordinates
 	jr nz, update_enemy_frog_jumping_tongue_right_done
 	call add_sprite_to_this_frame
-	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
-	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-	inc b
-	inc c
-	inc c
-	ld e, 2
+; 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+; 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+; 	inc b
+; 	inc c
+; 	inc c
+	ld bc, #0102	
+	ld iyh, 2
 	call update_enemy_hurt_player_bc_2x1
 	jr update_enemy_frog_jumping_tongue_right_done
 update_enemy_frog_jumping_tongue_right3:
@@ -1396,13 +1400,14 @@ update_enemy_frog_jumping_tongue_right3:
 	call get_sprite_object_sprite_coordinates
 	jr nz, update_enemy_frog_jumping_tongue_right_done
 	call add_sprite_to_this_frame
-	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
-	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-	inc b
-	inc c
-	inc c
-	inc c
-	ld e, 2
+; 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+; 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+; 	inc b
+; 	inc c
+; 	inc c
+; 	inc c
+	ld bc, #0103
+	ld iyh, 2
 	call update_enemy_hurt_player_bc_2x1
 	jr update_enemy_frog_jumping_tongue_right_done
 update_enemy_frog_jumping_tongue_right4:
@@ -1419,12 +1424,13 @@ update_enemy_frog_jumping_tongue_right4:
 	call add_sprite_to_this_frame
 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-	inc b
-	inc c
-	inc c
-	inc c
-	inc c
-	ld e, 2
+; 	inc b
+; 	inc c
+; 	inc c
+; 	inc c
+; 	inc c
+	ld bc, #0104
+	ld iyh, 2
 	call update_enemy_hurt_player_bc_2x1
 update_enemy_frog_jumping_tongue_right_done:
 	ld d, iyl
@@ -1452,11 +1458,12 @@ update_enemy_frog_jumping_tongue_left1:
 	call get_sprite_object_sprite_coordinates
 	jp nz, update_enemy_frog_jumping_tongue_left_done
 	call add_sprite_to_this_frame
-	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
-	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-	inc b
-	dec c
-	ld e, 2
+; 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+; 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+; 	inc b
+; 	dec c
+	ld bc, #01ff	
+	ld iyh, 2
 	call update_enemy_hurt_player_bc_2x1
 	jr update_enemy_frog_jumping_tongue_left_done
 update_enemy_frog_jumping_tongue_left2:
@@ -1466,12 +1473,13 @@ update_enemy_frog_jumping_tongue_left2:
 	call get_sprite_object_sprite_coordinates
 	jp nz, update_enemy_frog_jumping_tongue_left_done
 	call add_sprite_to_this_frame
-	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
-	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-	inc b
-	dec c
-	dec c
-	ld e, 2
+; 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+; 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+; 	inc b
+; 	dec c
+; 	dec c
+	ld bc, #01fe
+	ld iyh, 2
 	call update_enemy_hurt_player_bc_2x1
 	jr update_enemy_frog_jumping_tongue_left_done
 update_enemy_frog_jumping_tongue_left3:
@@ -1486,13 +1494,14 @@ update_enemy_frog_jumping_tongue_left3:
 	call get_sprite_object_sprite_coordinates
 	jp nz, update_enemy_frog_jumping_tongue_left_done
 	call add_sprite_to_this_frame
-	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
-	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-	inc b
-	dec c
-	dec c
-	dec c
-	ld e, 2
+; 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+; 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+; 	inc b
+; 	dec c
+; 	dec c
+; 	dec c
+	ld bc, #01fd	
+	ld iyh, 2
 	call update_enemy_hurt_player_bc_2x1
 	jp update_enemy_frog_jumping_tongue_left_done
 update_enemy_frog_jumping_tongue_left4:
@@ -1507,14 +1516,15 @@ update_enemy_frog_jumping_tongue_left4:
 	call get_sprite_object_sprite_coordinates
 	jp nz, update_enemy_frog_jumping_tongue_left_done
 	call add_sprite_to_this_frame
-	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
-	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-	inc b
-	dec c
-	dec c
-	dec c
-	dec c
-	ld e, 2
+; 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+; 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+; 	inc b
+; 	dec c
+; 	dec c
+; 	dec c
+; 	dec c
+	ld bc, #01fc	
+	ld iyh, 2
 	call update_enemy_hurt_player_bc_2x1
 update_enemy_frog_jumping_tongue_left_done:
 	ld d, iyl
@@ -1567,8 +1577,8 @@ frog_jump_table:  ; 32 steps
 
 ;-----------------------------------------------
 update_enemy_bee:
-	ld e, 1  ; damage to deal
-	call update_enemy_hurt_player
+	ld iyh, 1  ; damage to deal
+	call update_enemy_hurt_player_2x2
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	and #1
@@ -1624,9 +1634,9 @@ update_enemy_monkey_thrower:
 	jr update_enemy_monkey_continue
 update_enemy_monkey:
 	ld iyl, COLOR_DARK_BLUE
-	ld e, 1  ; damage to deal
+	ld iyh, 1  ; damage to deal
 update_enemy_monkey_continue:
-	call update_enemy_hurt_player
+	call update_enemy_hurt_player_2x2
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
 	or a
@@ -1641,7 +1651,7 @@ update_enemy_monkey_continue:
 	jp z, update_enemy_monkey_throw
 	dec a
 	jp z, update_enemy_monkey_throw
-	; we cannever reach here ...
+	; we cannever reach here.
 
 update_enemy_monkey_switch_to_state_right:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
@@ -1777,8 +1787,8 @@ update_enemy_monkey_throw_continue:
 
 ;-----------------------------------------------
 update_enemy_bullet_whirlwind:
-	ld e, 2  ; damage to deal
-	call update_enemy_hurt_player
+	ld iyh, 2  ; damage to deal
+	call update_enemy_hurt_player_2x2
 	jp z, update_enemy_delete
 
 	inc (ix + ROOM_OBJECT_STRUCT_BULLET_STATE)
@@ -2097,14 +2107,129 @@ update_enemy_delete:
 
 ;-----------------------------------------------
 ; input:
-; - e: amount of damage to deal
+; - ix: pointer to enemy object
+; - c, b: x, y, tile offset
+; output:
+; - z: collision
+; - nz: no collision
+update_enemy_player_collision_coarse_2x2:
+	; dx = (player tile x) - (enemy x + c)
+	ld a, (player_x + 1)  ; player tile coordinate
+	sub (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	sub c
+	; dx must be in [-2, 2]:
+	cp -2
+	jp m, update_enemy_player_collision_coarse_2x2_no_collision
+	cp 3
+	jp p, update_enemy_player_collision_coarse_2x2_no_collision
+
+	; dx = (player tile x) - (enemy x + c)
+	ld a, (player_y + 1)  ; player tile coordinate
+	sub (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	sub b
+	; dx must be in [-2, 2]:
+	cp -2
+	jp m, update_enemy_player_collision_coarse_2x2_no_collision
+	cp 3
+	jp p, update_enemy_player_collision_coarse_2x2_no_collision
+	xor a  ; collision
+	ret
+update_enemy_player_collision_coarse_2x2_no_collision:
+update_enemy_player_collision_pixel_level_no_collsion:
+	or 1  ; no collision
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - ix: pointer to enemy object
+; - c, b: x, y, tile offset
+; output:
+; - z: collision
+; - nz: no collision
+update_enemy_player_collision_coarse_1x1:
+	; dx = (player tile x) - (enemy x + c)
+	ld a, (player_x + 1)  ; player tile coordinate
+	sub (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	sub c
+	; dx must be in [-1, 1]:
+	cp -1
+	jp m, update_enemy_player_collision_coarse_2x2_no_collision
+	cp 2
+	jp p, update_enemy_player_collision_coarse_2x2_no_collision
+
+	; dx = (player tile x) - (enemy x + c)
+	ld a, (player_y + 1)  ; player tile coordinate
+	sub (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	sub b
+	; dx must be in [-1, 1]:
+	cp -1
+	jp m, update_enemy_player_collision_coarse_2x2_no_collision
+	cp 2
+	jp p, update_enemy_player_collision_coarse_2x2_no_collision
+	xor a  ; collision
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - c, b: x1, y1 (in pixel coordinates, relative to player)
+; - e, d: x2, y2 (in pixel coordinates, relative to player)
+; output:
+; - z: collision
+; - nz: no collision
+update_enemy_player_collision_pixel_level:
+	ld a, (player_state)
+	and #fe
+	cp PLAYER_STATE_CROUCHING
+	jr z, update_enemy_player_collision_pixel_level_short
+	cp PLAYER_STATE_CRAWLING
+	jr z, update_enemy_player_collision_pixel_level_short
+	cp PLAYER_STATE_SWIMMING
+	jr z, update_enemy_player_collision_pixel_level_short
+	; player bbox is: (6, 5) - (10, 16)  [offset by "8 - PLAYER_COLLISION_WIDTH/2"]
+	ld a, c
+	cp 10 - (8 - PLAYER_COLLISION_WIDTH/2)
+	jp p, update_enemy_player_collision_pixel_level_no_collsion
+	ld a, e
+	cp 6 - (8 - PLAYER_COLLISION_WIDTH/2)
+	jp m, update_enemy_player_collision_pixel_level_no_collsion
+	ld a, b
+	cp 16
+	jp p, update_enemy_player_collision_pixel_level_no_collsion
+	ld a, d
+	cp 5
+	jp m, update_enemy_player_collision_pixel_level_no_collsion
+	xor a  ; collision!
+	ret
+update_enemy_player_collision_pixel_level_short:
+	; player bbox is: (5, 10) - (11, 16)
+	ld a, c
+	cp 11 - (8 - PLAYER_COLLISION_WIDTH/2)
+	jp p, update_enemy_player_collision_pixel_level_no_collsion
+	ld a, e
+	cp 5 - (8 - PLAYER_COLLISION_WIDTH/2)
+	jp m, update_enemy_player_collision_pixel_level_no_collsion
+	ld a, b
+	cp 16
+	jp p, update_enemy_player_collision_pixel_level_no_collsion
+	ld a, d
+	cp 11
+	jp m, update_enemy_player_collision_pixel_level_no_collsion
+	xor a  ; collision!
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - iyh: amount of damage to deal
 ; output:
 ; - z: hit
 ; - nz: no hit
 update_enemy_hurt_player_shieldable_bullet:
 	ld a, (player_current_item)
 	cp 3  ; shield
-	jp nz, update_enemy_hurt_player_1x1
+	jp nz, update_enemy_hurt_player_bullet
 	ld a, (player_state)
 	and #fe
 	cp PLAYER_STATE_DIRECTIONAL_WEAPON
@@ -2114,14 +2239,14 @@ update_enemy_hurt_player_shieldable_bullet:
 	cp PLAYER_STATE_DIRECTIONAL_WEAPON_FALLING
 	jr z, update_enemy_hurt_player_shieldable_bullet_with_directional
 	cp PLAYER_STATE_DIRECTIONAL_WEAPON_CROUCHING
-	jp nz, update_enemy_hurt_player_1x1
+	jp nz, update_enemy_hurt_player_bullet
 update_enemy_hurt_player_shieldable_bullet_with_directional:
 	; check if the player has the shield up and in the correct direction:
 	ld a, (player_weapon_swing_type)
 	cp PLAYER_WEAPON_SHIELD_UP
 	jr z, update_enemy_hurt_player_shieldable_bullet_shield_up
 	cp PLAYER_WEAPON_SHIELD_FORWARD
-	jp nz, update_enemy_hurt_player_1x1
+	jp nz, update_enemy_hurt_player_bullet
 update_enemy_hurt_player_shieldable_bullet_shield_fw:
 	ld a, (player_state)
 	and #01
@@ -2134,7 +2259,7 @@ update_enemy_hurt_player_shieldable_bullet_shield_left:
 	jr z, update_enemy_hurt_player_shieldable_bullet_shield_left_y
 	dec a
 	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
-	jp nz, update_enemy_hurt_player_1x1
+	jp nz, update_enemy_hurt_player_bullet
 update_enemy_hurt_player_shieldable_bullet_shield_left_y:
 	ld a, (player_y + 1)
 	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
@@ -2142,7 +2267,7 @@ update_enemy_hurt_player_shieldable_bullet_shield_left_y:
 	inc a
 	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	jr z, update_enemy_hurt_player_shieldable_bullet_shielded
-	jp update_enemy_hurt_player_1x1
+	jp update_enemy_hurt_player_bullet
 
 update_enemy_hurt_player_shieldable_bullet_shield_right:
 	ld a, (player_x + 1)
@@ -2151,7 +2276,7 @@ update_enemy_hurt_player_shieldable_bullet_shield_right:
 ; 	jr z, update_enemy_hurt_player_shieldable_bullet_shield_left_y
 ; 	inc a
 ; 	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
-	jp nz, update_enemy_hurt_player_1x1
+	jp nz, update_enemy_hurt_player_bullet
 update_enemy_hurt_player_shieldable_bullet_shield_right_y:
 	ld a, (player_y + 1)
 	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
@@ -2159,7 +2284,7 @@ update_enemy_hurt_player_shieldable_bullet_shield_right_y:
 	inc a
 	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	jr z, update_enemy_hurt_player_shieldable_bullet_shielded
-	jp update_enemy_hurt_player_1x1
+	jp update_enemy_hurt_player_bullet
 
 update_enemy_hurt_player_shieldable_bullet_shield_up:
 	ld a, (player_x + 1)
@@ -2173,7 +2298,7 @@ update_enemy_hurt_player_shieldable_bullet_shield_up_y:
 	dec a
 	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	jr z, update_enemy_hurt_player_shieldable_bullet_shielded
-	jp update_enemy_hurt_player_1x1
+	jp update_enemy_hurt_player_bullet
 
 update_enemy_hurt_player_shieldable_bullet_shielded:
 	ld hl, SFX_shield
@@ -2185,7 +2310,7 @@ update_enemy_hurt_player_shieldable_bullet_shielded:
 ;-----------------------------------------------
 ; input:
 ; - c, b: enemy x, y tile coordinates
-; - e: amount of damage to deal
+; - iyh: amount of damage to deal
 ; output:
 ; - z: hit
 ; - nz: no hit
@@ -2193,48 +2318,63 @@ update_enemy_hurt_player_bc_2x1:
 	ld a, (player_immunity_timer)
 	or a
 	ret nz  ; player immune
-	ld a, (player_x + 1)
-	cp c
-	jr z, update_enemy_hurt_player_bc_2x1_y
-	dec a
-	cp c
-	ret nz
-update_enemy_hurt_player_bc_2x1_y:
 	ld a, (player_state)
 	and #fe
-	cp PLAYER_STATE_CROUCHING
-	jr z, update_enemy_hurt_player_bc_2x1_y_short
-	cp PLAYER_STATE_CRAWLING
-	jr z, update_enemy_hurt_player_bc_2x1_y_short
-	cp PLAYER_STATE_SWIMMING
-	jr z, update_enemy_hurt_player_bc_2x1_y_short
+	cp PLAYER_STATE_DEAD
+	ret z  ; player already dead
+	call update_enemy_player_collision_coarse_2x2
+	ret nz	
+
+	; ix: ptr to enemy, c, b: left-right of bbox, e, d: width, height of bbox.
+	; compute bullet pixel coordinates relative to player:
+	ld a, (player_x + 1)
+	sub (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	sub c
+	add a, a
+	add a, a
+	add a, a
+	ld c, a
+	ld a, (player_x)
+	add a, c
+	sub (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	neg  ; a = left-most bullet pixel in player coordinates
+	add a, 4
+	ld c, a  ; x1
+	add a, 8
+	ld e, a  ; x2
+
 	ld a, (player_y + 1)
-	cp b
-	jr z, update_enemy_hurt_player_bc_2x1_collision
-update_enemy_hurt_player_bc_2x1_y_continue:
-	inc a
-	cp b
+	sub (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	sub b
+	add a, a
+	add a, a
+	add a, a
+	ld b, a
+	ld a, (player_y)
+	add a, b
+	sub (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
+	neg  ; a = top-most bullet pixel in player coordinates
+	add a, 4
+	ld b, a  ; y1
+	add a, 12
+	ld d, a  ; y2
+	call update_enemy_player_collision_pixel_level
 	ret nz
-update_enemy_hurt_player_bc_2x1_collision:
-	; player is hit!
-	ld c, e
+
+	ld c, iyh
 	call player_hit_damage_c
 	xor a  ; hit
 	ret
-
-update_enemy_hurt_player_bc_2x1_y_short:
-	ld a, (player_y + 1)
-	jr update_enemy_hurt_player_bc_2x1_y_continue
 
 
 ;-----------------------------------------------
 ; input:
 ; - ix: enemy ptr
-; - e: amount of damage to deal
+; - iyh: amount of damage to deal
 ; output:
 ; - z: hit
 ; - nz: no hit
-update_enemy_hurt_player:
+update_enemy_hurt_player_2x2:
 	ld a, (player_immunity_timer)
 	or a
 	ret nz  ; player immune
@@ -2242,54 +2382,59 @@ update_enemy_hurt_player:
 	and #fe
 	cp PLAYER_STATE_DEAD
 	ret z  ; player already dead
-	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld bc, 0
+	call update_enemy_player_collision_coarse_2x2
+	ret nz
+update_enemy_hurt_player_2x2_coarse_passed:
+	; ix: ptr to enemy, c, b: left-right of bbox, e, d: width, height of bbox.
+	; compute bullet pixel coordinates relative to player:
 	ld a, (player_x + 1)
-	cp c
-	jr z, update_enemy_hurt_player_y
-	dec a
-	cp c
-	ret nz
-update_enemy_hurt_player_y:
-	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-	ld a, (player_state)
-	and #fe
-	cp PLAYER_STATE_CROUCHING
-	jr z, update_enemy_hurt_player_y_short
-	cp PLAYER_STATE_CRAWLING
-	jr z, update_enemy_hurt_player_y_short
-	cp PLAYER_STATE_SWIMMING
-	jr z, update_enemy_hurt_player_y_short
+	sub (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	add a, a
+	add a, a
+	add a, a
+	ld c, a
+	ld a, (player_x)
+	add a, c
+	sub (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	neg  ; a = left-most bullet pixel in player coordinates
+	add a, 4
+	ld c, a  ; x1
+	add a, 8
+	ld e, a  ; x2
+
 	ld a, (player_y + 1)
-	cp b
-	jr z, update_enemy_hurt_player_collision
-	inc a
-update_enemy_hurt_player_y_continue:
-	cp b
-	jr z, update_enemy_hurt_player_collision
-	dec a
-	dec a
-	cp b
+	sub (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	add a, a
+	add a, a
+	add a, a
+	ld b, a
+	ld a, (player_y)
+	add a, b
+	sub (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
+	neg  ; a = top-most bullet pixel in player coordinates
+	add a, 4
+	ld b, a  ; y1
+	add a, 12
+	ld d, a  ; y2
+	call update_enemy_player_collision_pixel_level
 	ret nz
-update_enemy_hurt_player_collision:
+
 	; player is hit!
-	ld c, e
+	ld c, iyh  ; damage
 	call player_hit_damage_c
 	xor a  ; hit
 	ret
-
-update_enemy_hurt_player_y_short:
-	ld a, (player_y + 1)
-	jr update_enemy_hurt_player_y_continue
 
 
 ;-----------------------------------------------
 ; input:
 ; - ix: enemy ptr
-; - e: amount of damage to deal
+; - iyh: amount of damage to deal
 ; output:
 ; - z: hit
 ; - nz: no hit
-update_enemy_hurt_player_1x1:
+update_enemy_hurt_player_bullet:
 	ld a, (player_immunity_timer)
 	or a
 	ret nz  ; player immune
@@ -2297,40 +2442,49 @@ update_enemy_hurt_player_1x1:
 	and #fe
 	cp PLAYER_STATE_DEAD
 	ret z  ; player already dead
-	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld bc, 0
+	call update_enemy_player_collision_coarse_1x1
+	ret nz
+	; ix: ptr to enemy, c, b: left-right of bbox, e, d: width, height of bbox.
+	; compute bullet pixel coordinates relative to player:
 	ld a, (player_x + 1)
-	cp c
-	jr z, update_enemy_hurt_player_1x1_y
-	dec a
-	cp c
-	ret nz
-update_enemy_hurt_player_1x1_y:
-	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-	ld a, (player_state)
-	and #fe
-	cp PLAYER_STATE_CROUCHING
-	jr z, update_enemy_hurt_player_1x1_y_short
-	cp PLAYER_STATE_CRAWLING
-	jr z, update_enemy_hurt_player_1x1_y_short
-	cp PLAYER_STATE_SWIMMING
-	jr z, update_enemy_hurt_player_1x1_y_short
+	sub (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	add a, a
+	add a, a
+	add a, a
+	ld c, a
+	ld a, (player_x)
+	add a, c
+	sub (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	neg  ; a = left-most bullet pixel in player coordinates
+	add a, 6
+	ld c, a  ; x1
+	add a, 4
+	ld e, a  ; x2
+
 	ld a, (player_y + 1)
-	cp b  ; bullet_y == player_y?
-	jr z, update_enemy_hurt_player_1x1_collision
-update_enemy_hurt_player_1x1_y_continue:
-	inc a
-	cp b  ; bullet_y == player_y + 1?
+	sub (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	add a, a
+	add a, a
+	add a, a
+	ld b, a
+	ld a, (player_y)
+	add a, b
+	sub (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
+	neg  ; a = top-most bullet pixel in player coordinates
+	add a, 2
+	ld b, a  ; y1
+	add a, 4
+	ld d, a  ; y2
+	call update_enemy_player_collision_pixel_level
 	ret nz
-update_enemy_hurt_player_1x1_collision:
+
 	; player is hit!
-	ld c, e
+	ld c, iyh
 	call player_hit_damage_c
 	xor a  ; hit
 	ret
 
-update_enemy_hurt_player_1x1_y_short:
-	ld a, (player_y + 1)
-	jr update_enemy_hurt_player_1x1_y_continue
 
 
 ;-----------------------------------------------
