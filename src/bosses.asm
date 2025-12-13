@@ -129,6 +129,7 @@ enter_boss_door_loop:
 		ld (boss__behavior), a
 		ld (boss__state), a
 		ld (boss__state_timer), a
+		ld (boss__last_collision_id), a
 		inc a
 		ld (current_room__tileset_overrides_item_tiles), a
 
@@ -430,7 +431,11 @@ draw_boss_frame_loop:
 			push de
 				ld c, (hl)  ; x offset
 				inc hl
-				ld b, 0
+				; sign extend c to bc:
+				ld a, c
+			    rlca
+			    sbc a
+			    ld  b, a	
 				ex de, hl
 					add hl, bc  ; add x offset
 				ex de, hl
@@ -650,6 +655,75 @@ boss_fire_directional_bullet_towards_player_continue:
 
 
 ;-----------------------------------------------
+; input:
+; - iyl: collision id
+; - iyh: damage to deal
+; - de, ix: collision box (in tile coordinates: from [e, d] to [ixl, ixh])
+player_weapon_hitbox_check_boss:
+	ld a, (boss__last_collision_id)
+	cp iyl
+	ret z
+
+	ld hl, (boss__hit_fn)
+	ld a, h
+	or l
+	ret z  ; no hit function defined!
+
+	push ix
+	pop hl
+
+	ld c, e
+	ld b, d
+	push bc
+		ld a, l
+		sub e
+		ld e, a
+		ld a, h
+		sub d
+		ld d, a
+	pop bc
+	push de
+		call get_room_tile_ptr
+	pop bc
+	; hl ptr, and c, b are the width and height of the hit box:
+player_weapon_hitbox_check_boss_loop_y:
+	push bc
+		push hl
+			ld b, c
+player_weapon_hitbox_check_boss_loop_x:
+			push bc
+				ld a, (hl)
+				ld e, a  ; save the tile number for "boss__hit_fn"
+				; get collision type:
+				ld bc, current_room__collision_table
+				ADD_BC_A
+				ld a, (bc)
+				cp 9  ; boss hit box
+				jr nz, player_weapon_hitbox_check_boss_loop_x_skip
+
+				; hit!
+				ld a, e
+				ld hl, (boss__hit_fn)
+				call jp_to_hl
+			pop bc
+		pop hl
+	pop bc
+	ret
+player_weapon_hitbox_check_boss_loop_x_skip
+			inc hl
+			pop bc
+			djnz player_weapon_hitbox_check_boss_loop_x
+		pop hl
+		ld a, (current_room__width)
+		ld c, a
+		ld b, 0
+		add hl, bc
+	pop bc
+	djnz player_weapon_hitbox_check_boss_loop_y
+	ret
+
+
+;-----------------------------------------------
 update_boss_behavior:
 	ld a, (current_area__id)
 	cp 1
@@ -662,20 +736,22 @@ update_boss_behavior:
 
 
 ;-----------------------------------------------
+; - 3: parts of boss that hit you
+; - 9: parts of boss that you can hit (and also hit you)
 tile_collision_types_boss1:
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-    db 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
-    db 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
-    db 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
-    db 3, 3, 0, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 3, 3, 3
-    db 0, 0, 3, 3, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3
-    db 3, 0, 3, 5, 2, 2, 5, 6, 3, 1, 1, 1, 2, 3, 2, 2
-    db 3, 3, 3, 3, 3, 3, 2, 2, 2, 3, 2, 2, 3, 3, 3, 3
-    db 3, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
-    db 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3
-    db 3, 3, 3, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
-    db 3, 3, 3, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
-    db 3, 3, 3, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
-    db 3, 3, 3, 2, 2, 3, 2, 2, 3, 3, 3, 3, 3, 2, 1, 5
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
+    db 9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 2, 2, 2, 9, 9, 9
+    db 0, 0, 9, 9, 0, 0, 0, 0, 9, 9, 9, 9, 9, 9, 9, 9
+    db 9, 0, 9, 5, 2, 2, 5, 6, 9, 1, 1, 1, 2, 3, 2, 2
+    db 9, 9, 9, 9, 9, 9, 2, 2, 2, 9, 2, 2, 9, 9, 9, 9
+    db 9, 2, 2, 2, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 2, 2, 2, 2, 2, 2, 9, 9, 9, 9
+    db 9, 9, 9, 2, 2, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
+    db 9, 9, 9, 2, 2, 9, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 0, 0, 0, 2, 2, 0, 2, 2, 0, 0, 0, 0, 3, 2, 1, 5

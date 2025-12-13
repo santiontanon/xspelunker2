@@ -134,15 +134,15 @@ boss1_frame_13_walk_4_no_staff:
 	dw 1, #0905  ; boss__clear_bbox
 boss1_frame_14_crouch_no_staff:
 	db 2
-	db 1, 0
-	dw #0605, BOSS1_NAMETABLE_BASE_NO_STAFF
-	db 1, 5
-	dw #0404, BOSS1_NAMETABLE_LEGS_CROUCH
+	db 1, 1
+	dw #0705, BOSS1_NAMETABLE_BASE_NO_STAFF
+	db 1, 6
+	dw #0304, BOSS1_NAMETABLE_LEGS_CROUCH
 	dw 33, #0805  ; boss__clear_bbox
 boss1_frame_15_left_hand_attack_no_staff:
 	db 2
 	db 1, 0
-	dw #0906, BOSS1_NAMETABLE_LEFT_HAND_ATTACK_NO_STAFF
+	dw #0605, BOSS1_NAMETABLE_LEFT_HAND_ATTACK_NO_STAFF
 	db 1, 5
 	dw #0404, BOSS1_NAMETABLE_LEGS0
 	dw 1, #0905  ; boss__clear_bbox
@@ -153,6 +153,11 @@ boss1_frame_16_punch_attack_no_staff:
 	db 1, 5
 	dw #0404, BOSS1_NAMETABLE_LEGS0
 	dw -2, #0907  ; boss__clear_bbox
+
+; boss1_frame_face_damage:
+; 	db 1
+; 	db 2, 1
+; 	dw #0202, BOSS1_NAMETABLE_FACE_DAMAGE
 
 
 ;-----------------------------------------------
@@ -183,6 +188,14 @@ update_boss1_behavior_0:
 	ld (boss__y), a
 	ld a, 1
 	ld (boss__1_has_staff), a
+	ld a, 16  ; staff hit points
+	ld (boss__1_staff_hp), a
+	ld hl, 32
+	ld (boss__hp), hl
+	ld hl, player_weapon_hitbox_check_boss__boss1_hit
+	ld (boss__hit_fn), hl
+	xor a
+	ld (boss__hit_timer), a
 
 	; set the clear box:
 	ld hl, current_room__tile_map + 13*32 + 24
@@ -273,11 +286,13 @@ update_boss1_behavior_0_choose_behavior:
 	ld c, 3
 	call random_modulo
 	inc a
-; 	ld a, 3  ; DEBUG: hardcode behavior
+	; ld a, 3  ; DEBUG: hardcode behavior
 	ld (boss__behavior), a  ; 1, 2, or 3
 	xor a
 	ld (boss__state), a
 	ld (boss__state_timer), a
+	inc a
+	ld (boss__active), a
 	ret
 
 
@@ -293,6 +308,10 @@ update_boss1_behavior_0_choose_behavior:
 ; - state 5: jump back
 ; - state 6: end behavior
 update_boss1_behavior_1:
+	ld a, (boss__state)
+	cp 2
+	call nz, boss1_check_if_staff_destroyed  ; check if staff destroyed any time the staff is not being used
+
 	ld a, (boss__state)
 	or a
 	jp z, update_boss1_behavior_1_state_0
@@ -360,12 +379,21 @@ update_boss1_behavior_1_state_1_move:
 	ret
 
 update_boss1_behavior_1_state_2:
-	; staff attack (lightning):
+	; staff attack (lightning) or punch attack
+	ld a, (boss__1_has_staff)
+	or a
+	jr nz, update_boss1_behavior_1_state_2_staff
+	; staff is destroyed, do punch attack instead:
+	ld a, 7
+	jr update_boss1_behavior_1_state_2_continue
+
+update_boss1_behavior_1_state_2_staff:
 	ld a, (boss__state_timer)
 	cp 8
 	call z, update_boss1_spawn_lightning
 
 	ld a, 5
+update_boss1_behavior_1_state_2_continue:
 	call update_boss1_draw_boss_frame
 	ld hl, boss__state_timer
 	inc (hl)
@@ -488,6 +516,8 @@ update_boss1_behavior_1_state_6:
 ; - state 2, 4, 6, 8: jump to a new position
 ; - state 9: land (crouch), and end behavior
 update_boss1_behavior_2:
+	call boss1_check_if_staff_destroyed  ; check if staff destroyed any time the staff is not being used
+
 	ld a, (boss__state)
 	or a
 	jp z, update_boss1_behavior_2_state_0
@@ -602,6 +632,18 @@ update_boss1_behavior_2_state_9:
 ; - state 13: end behavior
 update_boss1_behavior_3:
 	ld a, (boss__state)
+	cp 2
+	jr z, update_boss1_behavior_3_continue
+	cp 5
+	jr z, update_boss1_behavior_3_continue
+	cp 8
+	jr z, update_boss1_behavior_3_continue
+	cp 11
+	jr z, update_boss1_behavior_3_continue
+	call boss1_check_if_staff_destroyed  ; check if staff destroyed any time the staff is not being used
+update_boss1_behavior_3_continue:
+
+	ld a, (boss__state)
 	or a
 	jp z, update_boss1_behavior_3_state_0
 	dec a
@@ -672,6 +714,15 @@ update_boss1_behavior_3_state_2:
 update_boss1_behavior_3_state_5:
 update_boss1_behavior_3_state_8:
 update_boss1_behavior_3_state_11:
+	; staff attack (lightning) or punch attack
+	ld a, (boss__1_has_staff)
+	or a
+	jr nz, update_boss1_behavior_3_state_2_staff
+	; staff is destroyed, do punch attack instead:
+	ld a, 7
+	jr update_boss1_behavior_3_state_2_continue
+
+update_boss1_behavior_3_state_2_staff:
 	; staff attack (lightning):
 	ld a, (boss__state_timer)
 	cp 8
@@ -679,6 +730,7 @@ update_boss1_behavior_3_state_11:
 
 	; from 2, randomly go to: 4, 5, 6
 	ld a, 5
+update_boss1_behavior_3_state_2_continue:
 	call update_boss1_draw_boss_frame
 	ld hl, boss__state_timer
 	inc (hl)
@@ -742,7 +794,10 @@ update_boss1_behavior_3_state_3_skip_bullet:
 ; - state 3: remain in this state forever
 update_boss1_behavior_4:
 	; ...
-	jp update_boss1_behavior_0_choose_behavior
+
+	xor a
+	ld (boss__active), a
+	ret
 
 
 ;-----------------------------------------------
@@ -772,12 +827,13 @@ update_boss1_spawn_lightning:
 ; input:
 ; - a: frame to draw
 update_boss1_draw_boss_frame:
+	ld iyl, a  ; save the frame we are drawing for later
 	dec a
 	jr z, update_boss1_draw_boss_frame_1  ; still
 	dec a
 	jr z, update_boss1_draw_boss_frame_2  ; walk left frames
 	dec a
-	jr z, update_boss1_draw_boss_frame_3  ; crouch
+	jp z, update_boss1_draw_boss_frame_3  ; crouch
 	dec a
 	jr z, update_boss1_draw_boss_frame_4  ; jump
 	dec a
@@ -795,7 +851,30 @@ update_boss1_draw_boss_frame_continue:
 		call get_room_tile_ptr
 		ex de, hl  ; hl = ptr where the boss is to be drawn
 	pop hl
-	jp draw_boss_frame
+	push de
+		call draw_boss_frame
+	pop de  ; preserve the ptr of where to draw for the damage face
+	; check if we need to draw an overlay of the "damage face" when the boss is hit:
+	ld a, (boss__hit_timer)
+	or a
+	ret z
+	dec a
+	ld (boss__hit_timer), a
+
+	; check if its a crouch state:
+	ld a, iyl
+	cp 3
+	jr nz, update_boss1_draw_boss_frame_continue2
+	ld hl, 32*2 + 2
+	jr update_boss1_draw_boss_frame_continue3
+update_boss1_draw_boss_frame_continue2:
+	ld hl, 32 + 2
+update_boss1_draw_boss_frame_continue3:
+	add hl, de
+	ex de, hl  ; ptr of where to draw
+	ld hl, BOSS1_NAMETABLE_FACE_DAMAGE
+	ld bc, #0202  ; width, height
+	jp draw_boss_frame_part
 
 update_boss1_draw_boss_frame_4:  ; jump
 update_boss1_draw_boss_frame_1:  ; still
@@ -967,3 +1046,88 @@ boss1_draw_dust_loop_continue:
 	inc hl
 	djnz boss1_draw_dust_loop
 	ret
+
+
+;-----------------------------------------------
+; input:
+; - a: tile number that was hit
+; - iyh: damage to deal
+player_weapon_hitbox_check_boss__boss1_hit:
+	; did the player hit the staff or the boss?
+	; staff tiles: 3*16+6, 3*16+13, 5*16+8, 6*16+6, 7*16+8, 8*16+8
+	cp 3*16+6
+	jr z, player_weapon_hitbox_check_boss__boss1_hit_staff
+	cp 3*16+13
+	jr z, player_weapon_hitbox_check_boss__boss1_hit_staff
+	cp 5*16+8
+	jr z, player_weapon_hitbox_check_boss__boss1_hit_staff
+	cp 6*16+6
+	jr z, player_weapon_hitbox_check_boss__boss1_hit_staff
+	cp 7*16+8
+	jr z, player_weapon_hitbox_check_boss__boss1_hit_staff
+	cp 8*16+8
+	jr z, player_weapon_hitbox_check_boss__boss1_hit_staff
+
+	; hit the main body:
+	ld hl, (boss__hp)
+	ld a, h
+	or l
+	ret z  ; boss HP are already 0
+	ld a, iyh
+	or a
+	jr z, player_weapon_hitbox_check_boss__boss1_hit_continue2
+player_weapon_hitbox_check_boss__boss1_hit_loop:
+	dec hl
+	jr z, player_weapon_hitbox_check_boss__boss1_hit_continue2
+	dec a
+	jr nz, player_weapon_hitbox_check_boss__boss1_hit_loop
+player_weapon_hitbox_check_boss__boss1_hit_continue2:
+	ld (boss__hp), hl
+	ld a, 4
+	ld (boss__hit_timer), a
+
+player_weapon_hitbox_check_boss__boss1_hit_continue:
+	ld hl, SFX_enemy_hit
+	call play_SFX_with_high_priority
+	xor a
+	ld (player_weapon_hitbox_check_result), a  ; mark a hit
+	ld a, iyl
+	ld (boss__last_collision_id), a
+	ret
+
+player_weapon_hitbox_check_boss__boss1_hit_staff:
+	ld a, (boss__1_staff_hp)
+	or a
+	ret z  ; staff HP are already 0
+	sub iyh
+	jr nc, player_weapon_hitbox_check_boss__boss1_hit_staff_continue
+	xor a
+player_weapon_hitbox_check_boss__boss1_hit_staff_continue:
+	ld (boss__1_staff_hp), a
+	jr player_weapon_hitbox_check_boss__boss1_hit_continue
+
+
+
+;-----------------------------------------------
+boss1_check_if_staff_destroyed:
+	ld a, (boss__1_has_staff)
+	or a
+	ret z  ; boss already does not have a staff, nothing to do
+	ld a, (boss__1_staff_hp)
+	or a
+	ret nz
+	ld (boss__1_has_staff), a
+
+	ld bc, (boss__x)
+	inc b
+	inc b
+	push bc
+		ld e, SPRITE_OBJECT_TYPE_EXPLOSION
+		call spawn_explosion
+	pop bc
+	inc b
+	inc b
+	inc b
+	ld e, SPRITE_OBJECT_TYPE_EXPLOSION
+	jp spawn_explosion
+

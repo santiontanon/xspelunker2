@@ -2220,6 +2220,10 @@ update_enemy_player_collision_pixel_level:
 	jr z, update_enemy_player_collision_pixel_level_short
 	cp PLAYER_STATE_SWIMMING
 	jr z, update_enemy_player_collision_pixel_level_short
+	cp PLAYER_STATE_WEAPON_SWING_CROUCHING
+	jr z, update_enemy_player_collision_pixel_level_short
+	cp PLAYER_STATE_DIRECTIONAL_WEAPON_CROUCHING
+	jr z, update_enemy_player_collision_pixel_level_short
 	; player bbox is: (6, 5) - (10, 16)  [offset by "8 - PLAYER_COLLISION_WIDTH/2"]
 	ld a, c
 	cp 10 - (8 - PLAYER_COLLISION_WIDTH/2)

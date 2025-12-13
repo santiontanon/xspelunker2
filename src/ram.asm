@@ -182,8 +182,7 @@ player_current_swing_hit_id: ds virtual 1
 player_new_hit_id: ds virtual 1
 player_weapon_hitbox_check_result: ds virtual 1  ; 1: no hit, 0: hit
 
-tile_enemy_hit_fn_ptr: ds virtual 2
-; tile_enemy_ptr: ds virtual 2
+tile_enemy_hit_fn_ptr: ds virtual 2  ; custom function for the effect of hitting a tile-based enemy: if a player weapon hits a tile in the "tile enemy" range, this method will be called.
 tile_enemy_last_collision_id: ds virtual 1
 tile_enemy_work_memory: ds virtual 64  ; - some large tile-based enemies need extra memory
                                        ; - only one is spawned per room at most. So, they can safely 
@@ -222,6 +221,7 @@ enemy_tiles_to_upload_to_vdp_page: ds virtual 2
 
 config_keyboard_special_case: ds virtual 1
 
+boss__active: ds virtual 1  ; 1 when we are fighting a boss (only when the boss is alive), 0 otherwise
 boss__room_bg_buffer: equ current_room__tile_map + 32*24*2  ; the room is copied here, so that background can be restored when the boss moves around
 boss__behavior: ds virtual 1  ; which boss behavior is being executed
 boss__state: ds virtual 1  ; state within the current boss behavior
@@ -229,8 +229,12 @@ boss__state_timer: ds virtual 1
 boss__x: ds virtual 1
 boss__y: ds virtual 1
 boss__clear_bbox: ds virtual 4  ; ptr, w,h  (used to restore background)
+boss__hp: ds virtual 2  ; hit points, 16bit
+boss__last_collision_id: ds virtual 1
+boss__hit_fn: ds virtual 2  ; when the player hits a tile with collision type '9' this method is called
+boss__hit_timer: ds virtual 1  ; for displaying "boss hit" animations
 boss__1_has_staff: ds virtual 1
-
+boss__1_staff_hp: ds virtual 1
 RAM_to_zero_on_game_start_end:
 
 ; temporary variables:

@@ -11,7 +11,7 @@
 ; 6: rope-platform-top
 ; 7: ladder
 ; 8: ladder-platform-top
-; 9: boss hit-spot
+; 9: boss potential hit-spot (if player hits this, the function for hitting a boss is called)
 tile_collision_types_jungle:
 	db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0

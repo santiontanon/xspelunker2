@@ -1,14 +1,7 @@
 to do:
 
 ***- first boss: HURAKAN:
-  ***- being able to destroy the staff:
-    ***- give it a hitbox, and HP
-    ***- when HP <= 0 explosion and staff disappears: this only happens at certain points (for not interrupting behavior in the middle)
-    ***- staff-related behaviors are replaced with a punch from that point on
-  ***- being able to kill the boss
-    ***- give it a hitbox and HP (plenty of HP)
-    ***- when hit, change the face to the "damaged expression" and play the proper SFX
-    ***- when HP <= 0: update_boss1_behavior_4: death (should have no hitbox anymore)
+  ***- being able to kill the boss: when HP <= 0: update_boss1_behavior_4: death
   ***- death celebration and make power stone appear (old code for this is in "enter_boss_door_loop__spawn_stone", in bosses.asm)
   ***- put all the variables (wait time between behaviors/states/hp/etc.) in memory variables, so that we can define different difficulties easily (including the angry version)
   ***- angry version (skin of different color): decide the trigger condition, and implement it (are clues given anywhere? can't remember if I already added them?). It's similar, just difficulty goes up.

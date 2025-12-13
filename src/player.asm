@@ -36,22 +36,26 @@ player_update_no_trial_fn:
 	ld a, (player_health)
 	or a
 	jr z, player_update_continue
-	; in these 3 states, the player is shorter:
+	; in these states, the player is shorter:
 	ld a, (player_state)
 	and #fe
 	cp PLAYER_STATE_CROUCHING
 	jr z, player_update_immune_check_hazard_short
 	cp PLAYER_STATE_CRAWLING
 	jr z, player_update_immune_check_hazard_short
-; 	cp PLAYER_STATE_SWIMMING  ; no hazards in water (right?)
-; 	jr z, player_update_immune_check_hazard_short
-	ld e, 3  ; hazard
-	call player_check_collision_idle_with_e
+	cp PLAYER_STATE_SWIMMING
+	jr z, player_update_immune_check_hazard_short
+	cp PLAYER_STATE_WEAPON_SWING_CROUCHING
+	jr z, player_update_immune_check_hazard_short
+	cp PLAYER_STATE_DIRECTIONAL_WEAPON_CROUCHING
+	jr z, player_update_immune_check_hazard_short
+	ld de, #0903  ; hazard or boss
+	call player_check_collision_idle_with_de
 	call z, player_hit_hazard
 	jr player_update_continue
 player_update_immune_check_hazard_short:
-	ld e, 3  ; hazard
-	call player_check_collision_crouching_with_e
+	ld de, #0903  ; hazard or boss
+	call player_check_collision_crouching_with_de
 	call z, player_hit_hazard
 	jr player_update_continue
 
@@ -3028,6 +3032,19 @@ player_weapon_hitbox_check:
 		ld a, 1
 		ld (player_weapon_hitbox_check_result), a
 
+		ld a, (boss__active)
+		or a
+		jr z, player_weapon_hitbox_check_no_boss
+		ld c, BOSS_PAGE
+		push hl
+		push de
+			push hl
+			pop ix
+			ld hl, player_weapon_hitbox_check_boss
+			call call_hl_in_page_c_8000
+		pop de
+		pop hl
+player_weapon_hitbox_check_no_boss:
 		ld bc, (tile_enemy_hit_fn_ptr)
 		ld a, b
 		or c

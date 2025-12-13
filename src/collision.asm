@@ -33,8 +33,8 @@ general_check_collision_with_wall:
 ; - z: collision
 ; - nz: no collision
 player_check_collision_idle:
-	ld e, 2  ; wall
-player_check_collision_idle_with_e:
+	ld de, #02022  ; wall, wall
+player_check_collision_idle_with_de:
 	ld a, (player_y + 1)
 	ld b, a
 	ld a, (player_x + 1)
@@ -56,6 +56,8 @@ player_check_collision_idle_continue:
 	pop bc
 	cp e
 	ret z
+	cp d
+	ret z
 	; collision with the head:
 	ld a, (player_y + 1)
 	ld b, a
@@ -68,14 +70,13 @@ player_check_collision_idle_continue2:
 		call get_room_tile_type
 	pop de
 	cp e
-	ret
-player_check_collision_idle_no_collision:
-	or 1
+	ret z
+	cp d
 	ret
 
 
 ;-----------------------------------------------
-player_check_collision_crouching_with_e:
+player_check_collision_crouching_with_de:
 	ld a, (player_y + 1)
 	ld b, a
 	ld a, (player_x + 1)
@@ -83,9 +84,9 @@ player_check_collision_crouching_with_e:
 	inc b
 	ld a, (player_y)
 	or a
-	jr z, player_check_collision_crouching_with_e_continue
+	jr z, player_check_collision_crouching_with_de_continue
 	inc b
-player_check_collision_crouching_with_e_continue:
+player_check_collision_crouching_with_de_continue:
 	ld a, c
 	cp #ff
 	jp z, player_exit_room_left
@@ -93,7 +94,9 @@ player_check_collision_crouching_with_e_continue:
 		call get_room_tile_type
 	pop de
 	cp e
-	ret	
+	ret	z
+	cp d
+	ret
 
 
 ;-----------------------------------------------

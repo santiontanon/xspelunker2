@@ -508,7 +508,6 @@ room_render_tile_objects_undraw_enemy_carnivore_plant_continue:
 enemy_carnivore_plant_hit:
 	call find_tile_enemy_ptr
 	ret nz
-; 	ld ix, (tile_enemy_ptr)
 	ld a, e
 	; these are tongue tiles, just retract the tongue: 68, 69, 70, 71, 72, 79, 87, 88, 89, 90
 	cp 68
@@ -621,7 +620,6 @@ enemy_ant_colony_hit:
 enemy_bee_hive_hit:
 	call find_tile_enemy_ptr
 	ret nz
-; 	ld ix, (tile_enemy_ptr)
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_HEALTH)
 	sub iyh
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_HEALTH), a

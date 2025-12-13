@@ -657,7 +657,6 @@ pcg_generate_room__spawn_carnivore_plant:
 	ld b, ixh
 	dec b
 	dec b
-; 	ld (tile_enemy_ptr), hl
 	ld (hl), 0  ; ID
 	inc hl
 	ld (hl), TAG_ENEMY_CARNIVORE_PLANT  ; type
@@ -698,7 +697,6 @@ pcg_generate_room__spawn_ant_colony:
 	ld c, ixl
 	dec c
 	ld b, ixh
-; 	ld (tile_enemy_ptr), hl
 	ld (hl), 0  ; ID
 	inc hl
 	ld (hl), TAG_ENEMY_ANT_COLONY  ; type
@@ -740,7 +738,6 @@ pcg_generate_room__spawn_bee_hive:
 	pop bc
 	pop de
 	ret nz
-; 	ld (tile_enemy_ptr), hl
 	ld (hl), 0  ; ID
 	inc hl
 	ld (hl), TAG_ENEMY_BEE_HIVE  ; type
