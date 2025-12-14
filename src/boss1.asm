@@ -154,6 +154,18 @@ boss1_frame_16_punch_attack_no_staff:
 	dw #0404, BOSS1_NAMETABLE_LEGS0
 	dw -2, #0907  ; boss__clear_bbox
 
+boss1_frame_16_stone_with_staff:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0906, BOSS1_NAMETABLE_DEATH_WITH_STAFF  ; dimensions and nametable
+	dw 0, #0906  ; boss__clear_bbox
+boss1_frame_17_stone_without_staff:
+	db 1  ; number of parts
+	db 1, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0905, BOSS1_NAMETABLE_DEATH_WITHOUT_STAFF  ; dimensions and nametable
+	dw 0, #0905  ; boss__clear_bbox
+
+
 ; boss1_frame_face_damage:
 ; 	db 1
 ; 	db 2, 1
@@ -162,6 +174,22 @@ boss1_frame_16_punch_attack_no_staff:
 
 ;-----------------------------------------------
 update_boss1_behavior:
+	ld a, (boss__active)
+	or a
+	ret z
+	ld a, (boss__y)
+	cp 13
+	jr nz, update_boss1_behavior_continue
+	; boss is in the floor, check if it is dead
+	ld hl, (boss__hp)
+	ld a, h
+	or l
+	jr nz, update_boss1_behavior_continue
+	; boss is dead!
+	ld a, 4
+	ld (boss__behavior), a
+update_boss1_behavior_continue:
+
 	ld a, (boss__behavior)
 	or a
 	jp z, update_boss1_behavior_0  ; boss has not yet appeared, waiting for player to approach, and wake up
@@ -188,9 +216,9 @@ update_boss1_behavior_0:
 	ld (boss__y), a
 	ld a, 1
 	ld (boss__1_has_staff), a
-	ld a, 16  ; staff hit points
+	ld a, 4  ; staff hit points
 	ld (boss__1_staff_hp), a
-	ld hl, 32
+	ld hl, 4
 	ld (boss__hp), hl
 	ld hl, player_weapon_hitbox_check_boss__boss1_hit
 	ld (boss__hit_fn), hl
@@ -253,12 +281,32 @@ update_boss1_behavior_0_raise_loop:
 
 	; Bring boss name (using sprites)
 	call update_boss1_behavior_bring_name_down
+	call update_boss1_behavior_flash_stone_to_blue
+	call update_boss1_draw_boss_frame_1
+	; Remove boss name (using sprites)
+	call update_boss1_behavior_bring_name_up
 
+update_boss1_behavior_0_choose_behavior:
+	ld c, 3
+	call random_modulo
+	inc a
+	; ld a, 3  ; DEBUG: hardcode behavior
+	ld (boss__behavior), a  ; 1, 2, or 3
+	xor a
+	ld (boss__state), a
+	ld (boss__state_timer), a
+	inc a
+	ld (boss__active), a
+	ret
+
+
+;-----------------------------------------------
+update_boss1_behavior_flash_stone_to_blue:
 	; Turn boss to blue:
 	ld b, 6
 update_boss1_behavior_0_waking_loop:
 	push bc
-		call update_boss1_draw_boss_frame_1_staff
+		call update_boss1_draw_boss_frame_1
 		ld hl, draw_room_with_hud
 		ld c, TILES_PAGE
 		call call_hl_in_page_c_8000  ; just so that we do not lose the page we are at
@@ -276,23 +324,6 @@ update_boss1_behavior_0_waking_loop:
 		call wait_b_halts
 	pop bc
 	djnz update_boss1_behavior_0_waking_loop
-
-	call update_boss1_draw_boss_frame_1_staff
-
-	; Remove boss name (using sprites)
-	call update_boss1_behavior_bring_name_up
-
-update_boss1_behavior_0_choose_behavior:
-	ld c, 3
-	call random_modulo
-	inc a
-	; ld a, 3  ; DEBUG: hardcode behavior
-	ld (boss__behavior), a  ; 1, 2, or 3
-	xor a
-	ld (boss__state), a
-	ld (boss__state_timer), a
-	inc a
-	ld (boss__active), a
 	ret
 
 
@@ -788,12 +819,91 @@ update_boss1_behavior_3_state_3_skip_bullet:
 
 ;-----------------------------------------------
 ; Behavior 4: death
-; - state 0: idle
-; - state 1: stone
-; - state 2: sinking into the ground with dust
-; - state 3: remain in this state forever
 update_boss1_behavior_4:
-	; ...
+	; turn boss to stone:
+	ld b, 6
+update_boss1_behavior_4_loop_1:
+	push bc
+		call update_boss1_draw_boss_frame_1
+		ld hl, draw_room_with_hud
+		ld c, TILES_PAGE
+		call call_hl_in_page_c_8000  ; just so that we do not lose the page we are at
+		ld b, 12
+		call wait_b_halts
+
+		ld hl, boss1_frame_16_stone_with_staff
+		ld a, (boss__1_has_staff)
+		or a
+		jr nz, update_boss1_behavior_4_loop_1_continue
+		ld hl, boss1_frame_17_stone_without_staff
+update_boss1_behavior_4_loop_1_continue:
+		call update_boss1_draw_boss_frame_continue
+
+		ld hl, draw_room_with_hud
+		ld c, TILES_PAGE
+		call call_hl_in_page_c_8000
+		ld b, 12
+		call wait_b_halts
+	pop bc
+	djnz update_boss1_behavior_4_loop_1
+
+	ld bc, (boss__x)
+	call get_room_tile_ptr
+	ex de, hl  ; hl = ptr where the boss is to be drawn
+
+	; set the clear box:
+	ld (boss__clear_bbox), de
+	ld hl, #0906
+	ld (boss__clear_bbox + 2), hl
+	ld hl, BOSS1_NAMETABLE_DEATH_WITH_STAFF
+	ld bc, #0906
+	ld a, (boss__1_has_staff)
+	or a
+	jr nz, update_boss1_behavior_4_sink_loop
+	ld hl, BOSS1_NAMETABLE_DEATH_WITHOUT_STAFF
+	ld bc, #0905
+	inc de
+update_boss1_behavior_4_sink_loop:
+	push bc
+	push hl
+		push de
+			call draw_boss_frame_part
+			xor a
+			call boss1_draw_dust
+			ld hl, draw_room_with_hud
+			ld c, TILES_PAGE
+			call call_hl_in_page_c_8000  ; just so that we do not lose the page we are at
+			ld hl, SFX_explosion_low_pitch
+			call play_SFX_with_high_priority
+			ld b, 10
+			call wait_b_halts
+
+			ld a, 1
+			call boss1_draw_dust
+			ld hl, draw_room_with_hud
+			ld c, TILES_PAGE
+			call call_hl_in_page_c_8000  ; just so that we do not lose the page we are at
+			ld b, 10
+			call wait_b_halts
+			push de
+			push hl
+			push bc
+				call draw_boss_frame_clear_previous_frame
+			pop bc
+			pop hl
+			pop de			
+		pop hl
+		ld bc, 32
+		add hl, bc
+		ex de, hl
+	pop hl
+	pop bc
+	dec b
+	jp nz, update_boss1_behavior_4_sink_loop
+
+	ld hl, draw_room_with_hud
+	ld c, TILES_PAGE
+	call call_hl_in_page_c_8000
 
 	xor a
 	ld (boss__active), a
@@ -1032,7 +1142,11 @@ update_boss1_behavior_bring_name_up_loop:
 ; - a: 0 or 1
 boss1_draw_dust:
 	ld de, (BOSS1_NAMETABLE_DUST)
-	ld hl, current_room__tile_map + 21*32 + 24
+	ld hl, current_room__tile_map + 21*32
+	push af
+		ld a, (boss__x)
+		ADD_HL_A
+	pop af
 	ld b, 6
 boss1_draw_dust_loop:
 	or a

@@ -131,6 +131,7 @@ enter_boss_door_loop:
 		ld (boss__state_timer), a
 		ld (boss__last_collision_id), a
 		inc a
+		ld (boss__active), a
 		ld (current_room__tileset_overrides_item_tiles), a
 
 		ld hl, state_play_update_agenda_boss
@@ -752,6 +753,6 @@ tile_collision_types_boss1:
     db 9, 2, 2, 2, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
     db 9, 9, 9, 9, 9, 9, 2, 2, 2, 2, 2, 2, 9, 9, 9, 9
     db 9, 9, 9, 2, 2, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
-    db 9, 9, 9, 2, 2, 9, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 9, 9, 9, 2, 2, 9, 9, 9, 0, 0, 0, 0, 0, 0, 0, 0
     db 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     db 0, 0, 0, 2, 2, 0, 2, 2, 0, 0, 0, 0, 3, 2, 1, 5
