@@ -236,6 +236,8 @@ boss__hit_fn: ds virtual 2  ; when the player hits a tile with collision type '9
 boss__hit_timer: ds virtual 1  ; for displaying "boss hit" animations
 boss__1_has_staff: ds virtual 1
 boss__1_staff_hp: ds virtual 1
+boss__1_settings: ds virtual 8  ; difficulty parameters of the boss
+
 RAM_to_zero_on_game_start_end:
 
 ; temporary variables:

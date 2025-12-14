@@ -21,6 +21,38 @@ BOSS1_NAMETABLE_DEATH_WITHOUT_STAFF: equ boss1_name_tables + 479  ; 5*9
 BOSS1_NAMETABLE_DUST: equ boss1_name_tables + 524  ; 2*1
 
 
+BOSS_1_STAFF_HP_OFFSET: equ 0
+BOSS_1_HP_OFFSET: equ 1
+BOSS_1_WALK_TIME_OFFSET: equ 3
+BOSS_1_PAUSE_TIME_OFFSET: equ 4
+BOSS_1_ATTACK_TIME_OFFSET: equ 5
+BOSS_1_BULLET_TIME_OFFSET: equ 6
+BOSS_1_BULLET_FREQUENCY_OFFSET: equ 7
+
+;-----------------------------------------------
+boss1_difficulty_setting__easy:
+	db 16  ; staff hp
+	dw 32  ; boss hp
+	db 16, 32, 32, 32, #07  ; walk, crouch, staff/hand attack duration, bullet duration, bullet frequency
+boss1_difficulty_setting__normal:
+	db 24  ; staff hp
+	dw 48  ; boss hp
+	db 14, 28, 28, 32, #07  ; walk, crouch, staff/hand attack duration, bullet duration, bullet frequency
+boss1_difficulty_setting__hard:
+	db 32  ; staff hp
+	dw 64  ; boss hp
+	db 12, 24, 24, 32, #07  ; walk, crouch, staff/hand attack duration, bullet duration, bullet frequency
+boss1_difficulty_setting__hardest:
+	db 32  ; staff hp
+	dw 80  ; boss hp
+	db 8, 16, 16, 20, #03  ; walk, crouch, staff/hand attack duration, bullet duration, bullet frequency
+
+; boss1_difficulty_setting__angry:
+; 	db 48  ; staff hp
+; 	dw 128  ; boss hp
+; 	db 6, 12, 12, 24, #03  ; walk, crouch, staff/hand attack duration, bullet duration, bullet frequency
+
+
 ;-----------------------------------------------
 	db -48   ; just to remove the sprites when the name disappears
 boss1_name_y_table:
@@ -210,15 +242,31 @@ update_boss1_behavior_0:
 	ret c
 
 	; player crossed the screen midpoint, trigger boss appearance:
+	ld a, (current_world__difficulty)
+	ld hl, boss1_difficulty_setting__easy
+	or a
+	jr z, update_boss1_behavior_0_continue
+	ld hl, boss1_difficulty_setting__normal
+	dec a
+	jr z, update_boss1_behavior_0_continue
+	dec a
+	ld hl, boss1_difficulty_setting__hard
+	jr z, update_boss1_behavior_0_continue
+	ld hl, boss1_difficulty_setting__hardest
+update_boss1_behavior_0_continue:
+	ld de, boss__1_settings
+	ld bc, 8
+	ldir
+
 	ld a, 24
 	ld (boss__x), a
 	ld a, 13
 	ld (boss__y), a
 	ld a, 1
 	ld (boss__1_has_staff), a
-	ld a, 4  ; staff hit points
+	ld a, (boss__1_settings + BOSS_1_STAFF_HP_OFFSET)  ; staff hit points
 	ld (boss__1_staff_hp), a
-	ld hl, 4
+	ld hl, (boss__1_settings + BOSS_1_HP_OFFSET)
 	ld (boss__hp), hl
 	ld hl, player_weapon_hitbox_check_boss__boss1_hit
 	ld (boss__hit_fn), hl
@@ -290,7 +338,7 @@ update_boss1_behavior_0_choose_behavior:
 	ld c, 3
 	call random_modulo
 	inc a
-	; ld a, 3  ; DEBUG: hardcode behavior
+	; ld a, 1  ; DEBUG: hardcode behavior
 	ld (boss__behavior), a  ; 1, 2, or 3
 	xor a
 	ld (boss__state), a
@@ -366,7 +414,8 @@ update_boss1_behavior_3_state_0:
 	ld hl, boss__state_timer
 	inc (hl)
 	ld a, (hl)
-	cp 32
+	ld hl, boss__1_settings + BOSS_1_PAUSE_TIME_OFFSET
+	cp (hl)
 	ret c
 	ld a, 1
 	ld (boss__state), a
@@ -378,13 +427,25 @@ update_boss1_behavior_1_state_1:
 	; walk left:
 	ld a, 2
 	call update_boss1_draw_boss_frame
+	ld a, (boss__1_settings + BOSS_1_WALK_TIME_OFFSET)
+	ld c, a
+	add a, a
+	ld b, a  ; b = BOSS_1_WALK_TIME_OFFSET * 2 
+	add a, c
+	ld e, a  ; e = BOSS_1_WALK_TIME_OFFSET * 3
+	add a, c
+	dec a
+	ld c, a  ; c = BOSS_1_WALK_TIME_OFFSET * 4
 	ld hl, boss__state_timer
 	ld a, (hl)
 	inc a
-	and #3f  ; #7f
+	cp c
+	jr c, update_boss1_behavior_1_state_1_continue1
+	sub c
+update_boss1_behavior_1_state_1_continue1:
 	ld (hl), a
 	ld hl, boss__x
-	jr nz, update_boss1_behavior_1_state_1_continue
+	jr nz, update_boss1_behavior_1_state_1_continue2
 	dec (hl)
 	ld c, 3
 	call random_modulo
@@ -392,17 +453,17 @@ update_boss1_behavior_1_state_1:
 	ld (boss__state), a
 	ld a, (boss__x)
 	cp 10
-	jr nc, update_boss1_behavior_1_state_1_continue
+	jr nc, update_boss1_behavior_1_state_1_continue2
 	ld a, 4
 	ld (boss__state), a
 	xor a
 	ld (boss__state_timer), a
 	ret
-update_boss1_behavior_1_state_1_continue:
+update_boss1_behavior_1_state_1_continue2:
 	ld a, (boss__state_timer)
-	cp 32  ; 64
+	cp b  ; b = BOSS_1_WALK_TIME_OFFSET * 2 
 	jr z, update_boss1_behavior_1_state_1_move
-	cp 48  ; 96
+	cp e  ; e = BOSS_1_WALK_TIME_OFFSET * 3
 	ret nz
 update_boss1_behavior_1_state_1_move:
 	ld hl, boss__x
@@ -429,7 +490,8 @@ update_boss1_behavior_1_state_2_continue:
 	ld hl, boss__state_timer
 	inc (hl)
 	ld a, (hl)
-	cp 32
+	ld hl, boss__1_settings + BOSS_1_ATTACK_TIME_OFFSET
+	cp (hl)
 	ret nz
 	xor a
 	ld (boss__state_timer), a
@@ -457,7 +519,8 @@ update_boss1_behavior_1_state_3:
 	ld (ix + ROOM_OBJECT_STRUCT_BULLET_STATE), 0
 update_boss1_behavior_1_state_3_skip_bullet:
 	ld a, (boss__state_timer)
-	cp 32
+	ld hl, boss__1_settings + BOSS_1_ATTACK_TIME_OFFSET
+	cp (hl)
 	ret nz
 	xor a
 	ld (boss__state_timer), a
@@ -475,7 +538,8 @@ update_boss1_behavior_2_state_7:
 	ld hl, boss__state_timer
 	inc (hl)
 	ld a, (hl)
-	cp 32
+	ld hl, boss__1_settings + BOSS_1_PAUSE_TIME_OFFSET
+	cp (hl)
 	ret nz
 	xor a
 	ld (boss__state_timer), a
@@ -489,28 +553,27 @@ update_boss1_behavior_1_state_5:
 	ld hl, boss__state_timer
 	inc (hl)
 	ld a, (hl)
-	cp 46
+	cp 24
 	jr z, update_boss1_behavior_1_state_5_jumping
 	jr nc, update_boss1_behavior_1_state_5_falling
 update_boss1_behavior_1_state_5_jumping:
 	; jumping:
 	ld a, (boss__state_timer)
-	and #01
-	ret nz
 	ld hl, boss__y
 	dec (hl)
 	ld a, (boss__state_timer)
-	cp 46
+	cp 24
 	ret nz
 	ld a, 24
 	ld (boss__x), a
 	ret
 update_boss1_behavior_1_state_5_falling:
-	cp 46 + (46/2)
+	cp 24 + 12
 	jr nc, update_boss1_behavior_1_state_5_land
 	; falling:
 	ld a, (boss__state_timer)
 	ld hl, boss__y
+	inc (hl)
 	inc (hl)
 	ret
 update_boss1_behavior_1_state_5_land:
@@ -535,7 +598,8 @@ update_boss1_behavior_1_state_6:
 	ld hl, boss__state_timer
 	inc (hl)
 	ld a, (hl)
-	cp 64
+	ld hl, boss__1_settings + BOSS_1_PAUSE_TIME_OFFSET
+	cp (hl)
 	ret c
 	jp update_boss1_behavior_0_choose_behavior
 
@@ -579,27 +643,20 @@ update_boss1_behavior_2_state_8:
 	ld hl, boss__state_timer
 	inc (hl)
 	ld a, (hl)
-	cp 46
+	cp 24
 	jr z, update_boss1_behavior_2_state_2_jumping
 	jr nc, update_boss1_behavior_2_state_2_falling
 update_boss1_behavior_2_state_2_jumping:
 	; jumping:
 	ld a, (boss__state_timer)
-	and #01
-	ret nz
 	ld hl, boss__y
 	dec (hl)
 	ld a, (boss__state_timer)
-	cp 46
+	cp 24
 	ret nz
 	ld a, (boss__state)
 	cp 8
 	jr z, update_boss1_behavior_2_state_2_jumping_last_jump
-	; fall to a random position:
-; 	ld c, 20
-; 	call random_modulo
-; 	add a, 2
-; 	ld (boss__x), a
 	; fall on top of player:
 	ld a, (player_x + 1)
 	sub 2
@@ -618,11 +675,12 @@ update_boss1_behavior_2_state_2_jumping_last_jump:
 	ld (boss__x), a
 	ret
 update_boss1_behavior_2_state_2_falling:
-	cp 46 + (46/2)
+	cp 24 + 12
 	jr nc, update_boss1_behavior_2_state_2_land
 	; falling:
 	ld a, (boss__state_timer)
 	ld hl, boss__y
+	inc (hl)
 	inc (hl)
 	ret
 update_boss1_behavior_2_state_2_land:
@@ -647,7 +705,8 @@ update_boss1_behavior_2_state_9:
 	ld hl, boss__state_timer
 	inc (hl)
 	ld a, (hl)
-	cp 64
+	ld hl, boss__1_settings + BOSS_1_PAUSE_TIME_OFFSET
+	cp (hl)
 	ret nz
 	jp update_boss1_behavior_0_choose_behavior
 
@@ -715,8 +774,8 @@ update_boss1_behavior_3_state_10:
 	ld hl, boss__state_timer
 	inc (hl)
 	ld a, (hl)
-
-	and #07
+	ld hl, boss__1_settings + BOSS_1_BULLET_FREQUENCY_OFFSET
+	and (hl)
 	jr nz, update_boss1_behavior_3_state_1_skip_bullet
 	ld a, (boss__x)
 	add a, 2
@@ -729,7 +788,8 @@ update_boss1_behavior_3_state_10:
 update_boss1_behavior_3_state_1_skip_bullet:
 
 	ld a, (boss__state_timer)
-	cp 32
+	ld hl, boss__1_settings + BOSS_1_BULLET_TIME_OFFSET
+	cp (hl)
 	ret c
 	ld c, 3
 	call random_modulo
@@ -766,7 +826,8 @@ update_boss1_behavior_3_state_2_continue:
 	ld hl, boss__state_timer
 	inc (hl)
 	ld a, (hl)
-	cp 32
+	ld hl, boss__1_settings + BOSS_1_ATTACK_TIME_OFFSET
+	cp (hl)
 	ret c
 	ld c, 3
 	call random_modulo
@@ -804,7 +865,8 @@ update_boss1_behavior_3_state_12:
 update_boss1_behavior_3_state_3_skip_bullet:
 
 	ld a, (boss__state_timer)
-	cp 32
+	ld hl, boss__1_settings + BOSS_1_ATTACK_TIME_OFFSET
+	cp (hl)
 	ret c
 	ld c, 3
 	call random_modulo
@@ -1008,14 +1070,21 @@ update_boss1_draw_boss_frame_1_no_staff:
 	jr update_boss1_draw_boss_frame_continue
 
 update_boss1_draw_boss_frame_2:  ; walk left frames
+	ld a, (boss__1_settings + BOSS_1_WALK_TIME_OFFSET)
+	ld b, 0
+	ld c, a
+	ld a, (boss__state_timer)
+update_boss1_draw_boss_frame_2_frame_loop:
+	sub c
+	jr c, update_boss1_draw_boss_frame_2_frame_set
+	inc b
+	jr update_boss1_draw_boss_frame_2_frame_loop
+update_boss1_draw_boss_frame_2_frame_set:
 	ld a, (boss__1_has_staff)
 	or a
 	jr z, update_boss1_draw_boss_frame_2_no_staff
-	ld a, (boss__state_timer)
-	rra
-	rra
-	rra
-	rra
+
+	ld a, b
 	and #03  ; a = walk frame
 	ld hl, boss1_frame_2_walk_1
 	jr z, update_boss1_draw_boss_frame_2_continue
@@ -1030,12 +1099,9 @@ update_boss1_draw_boss_frame_2_continue:
 	jr update_boss1_draw_boss_frame_continue
 
 update_boss1_draw_boss_frame_2_no_staff:
-	ld a, (boss__state_timer)
-	rra
-	rra
-	rra
-	rra
+	ld a, b
 	and #03  ; a = walk frame
+
 	ld hl, boss1_frame_10_walk_1_no_staff
 	jr z, update_boss1_draw_boss_frame_2_continue
 	dec a
