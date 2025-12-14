@@ -193,6 +193,7 @@ redraw_flags: ds virtual 1  ; bits:
                             ; - 1: hud
                             ; - 2: hud coins (re-renders the text into the tiles)
                             ; - 3: hud ammo  (re-renders the text into the tiles)
+                            ; - 4: reupload ingame object tiles
 in_game_event_fn_ptr: ds virtual 2
 in_game_event_fn_page: ds virtual 1
 in_game_event_fn_arg: ds virtual 1

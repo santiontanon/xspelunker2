@@ -901,6 +901,15 @@ update_boss1_behavior_4_sink_loop:
 	dec b
 	jp nz, update_boss1_behavior_4_sink_loop
 
+	ld a, (boss__x)
+	add a, 3
+	ld e, a
+	ld d, 20  ; e, d: x, y coordinates
+	ld a, 0  ; boss number
+	call boss_spawn_power_stone
+
+	; ...
+
 	ld hl, draw_room_with_hud
 	ld c, TILES_PAGE
 	call call_hl_in_page_c_8000

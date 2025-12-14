@@ -1,9 +1,6 @@
 to do:
 
 ***- first boss: HURAKAN:
-  ***- make power stone appear (old code for this is in "enter_boss_door_loop__spawn_stone", in bosses.asm)
-  ***- when power stone is picked up, open door to the left
-  ***- mark as defeated (if you enter again, there should be no boss)
   ***- put all the variables (wait time between behaviors/states/hp/etc.) in memory variables, so that we can define different difficulties easily (including the angry version)
   ***- angry version (skin of different color): decide the trigger condition, and implement it (are clues given anywhere? can't remember if I already added them?). It's the same, just difficulty goes up.
 ***- BUG: firing with a key equiped does not open a lock
@@ -15,6 +12,7 @@ to do:
 - music: intro, letters, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 25 have potential)
 - boss music acts as a health bar (increases in speed as health goes down: 50%, 25%)
 - second boss: Camazotz, the Bat God: A giant bat-like creature with glowing red eyes and sharp claws. (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
+  - event__exit_boss_door might have to be updated to close the second boss door, and not the first.
 - third boss: The Obsidian Golem: A hulking golem made of obsidian, with glowing cracks. (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
 - caves biome (remember to keep ladder tiles in place for down-door opening code). Implement ice cape effect for lava. Skeleton that spit fire (flamethrower through mouth), rockmen (that turn into an undestructible stone), caterpillars, worms, etc. Is the confluence a "caves biome area" (except the calendar room)?
     - ant colonies (tile enemy that spawns ants). ants/fire ants: just move around not too fast and can climb walls up/down, or even hang from the ceiling

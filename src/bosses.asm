@@ -130,7 +130,7 @@ enter_boss_door_loop:
 		ld (boss__state), a
 		ld (boss__state_timer), a
 		ld (boss__last_collision_id), a
-		inc a
+		inc a  ; a = 1
 		ld (boss__active), a
 		ld (current_room__tileset_overrides_item_tiles), a
 
@@ -158,34 +158,6 @@ enter_boss_door_loop:
 		inc hl
 		ld (hl), 0
 	pop bc
-
-; enter_boss_door_loop__spawn_stone:
-; 	; DEBUG: spawn power stone
-; 	; - c: boss number
-; 	ld a, c
-; 	ld b, TAG_POWER_STONE
-; 	ld hl, buffer_4096 + 47 * 64  ; power stone
-; 	cp 5  ; 6th and 7th bosses drop half stones
-; 	jr c, enter_boss_door__spawn_item_set
-; 	ld hl, buffer_4096 + 61 * 64  ; puzzlebox
-; 	ld b, TAG_PUZZLEBOX_MARS
-; 	cp 5
-; 	jr z, enter_boss_door__spawn_item_set
-; 	ld b, TAG_PUZZLEBOX_MOON
-; enter_boss_door__spawn_item_set:
-; 	ld iy, (tmp_pcg_room__next_tile_object_ptr)
-; 	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), c  ; ID is the boss number
-; 	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), b  ; type
-; 	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 15  ; x
-; 	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 20  ; y
-; 	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0  ; state (hitpoints)
-; 	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
-; 	add iy, bc
-; 	ld (tmp_pcg_room__next_tile_object_ptr), iy
-
-; 	; set which object gfx to up load vdp:
-; 	ld (item_object_to_upload_to_vdp), hl
-
 	jp state_play_from_loaded_room
 
 
@@ -366,6 +338,10 @@ event__exit_boss_door_remove_door_object:
 event__exit_boss_door_no_door_to_remove:
 	ld c, TILES_PAGE
 	ld hl, room_render_tile_objects
+	call call_hl_in_page_c_8000
+
+	ld hl, draw_room_with_hud
+	ld c, TILES_PAGE
 	jp call_hl_in_page_c_8000
 
 
@@ -408,6 +384,44 @@ shift_boss_door_down:
 	pop hl
 	ld bc, 4*8
 	jp fast_FILVRM
+
+
+;-----------------------------------------------
+; input:
+; - a: boss number
+; - e, d: x, y coordinates to spawn the stone
+boss_spawn_power_stone:
+	ld b, TAG_POWER_STONE
+	ld hl, buffer_4096 + 47 * 64  ; power stone
+	cp 5  ; 6th and 7th bosses drop half stones in puzzle boxes
+	jr c, boss_spawn_power_stone_item_set
+	ld hl, buffer_4096 + 61 * 64  ; puzzlebox
+	ld b, TAG_PUZZLEBOX_MARS
+	cp 5
+	jr z, boss_spawn_power_stone_item_set
+	ld b, TAG_PUZZLEBOX_MOON
+boss_spawn_power_stone_item_set:
+	ld iy, (tmp_pcg_room__next_tile_object_ptr)
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), a  ; ID is the boss number
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), b  ; type
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), e  ; x
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), d  ; y
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0  ; state (hitpoints)
+	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
+	add iy, bc
+	ld (tmp_pcg_room__next_tile_object_ptr), iy
+
+	; set which object gfx to up load vdp:
+	ld (item_object_to_upload_to_vdp), hl
+	call state_play_upload_object_tiles_to_vdp_if_necessary
+
+	; refresh the current tile objects:
+	ld hl, room_undraw_tile_objects
+	ld c, TILES_PAGE
+	call call_hl_in_page_c_8000
+	ld hl, room_render_tile_objects
+	ld c, TILES_PAGE
+	jp call_hl_in_page_c_8000
 
 
 ;-----------------------------------------------

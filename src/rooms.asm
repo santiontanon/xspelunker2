@@ -82,6 +82,8 @@ draw_room_with_hud_column_loop:
 	ldir
 
 	xor a
+	ld a, (redraw_flags)
+	and AFTER_ROOOMREDRAW_CLEAR_MASK
 	ld (redraw_flags), a
 	ret
 
