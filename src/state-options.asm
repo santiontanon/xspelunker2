@@ -19,7 +19,6 @@ state_options:
 	ld bc, dialog_sprites_bin_end - dialog_sprites_bin
 	call fast_LDIRVM_from_sprites_page
 
-	; SETMEGAROMPAGE_8000 TEXT_PAGE
 	call state_options_draw_text
 
 	xor a
@@ -251,9 +250,7 @@ update_options_pointer_sprite_continue2:
 
 ;-----------------------------------------------
 state_options_draw_text:
-	; SETMEGAROMPAGE_8000 TEXT_PAGE
 	ld hl, state_options_text_table
-; 	ld b, 12
 	ld b, 9
 state_options_draw_text_loop:
 	push bc

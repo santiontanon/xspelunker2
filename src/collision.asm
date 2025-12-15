@@ -368,31 +368,9 @@ player_in_water:
 	ld a, (player_y + 1)
 	ld b, a
 	inc b
-; 	call get_room_tile_type
 	call get_room_tile_type_behind_item
 	cp 4  ; water
 	ret
-
-
-; player_in_water_from_water:
-; 	ld a, (player_x + 1)
-; 	ld c, a
-; 	ld a, (player_y + 1)
-; 	ld b, a
-; 	inc b
-; 	call get_room_tile_type
-; 	cp 4  ; water
-; 	ret z
-; 	ld a, c
-; 	cp 32
-; 	ret c
-; 	cp 48
-; 	jr nc, player_in_water_from_water_no_water
-; 	xor a  ; consider we are still in water, as the player is over an item
-; 	ret 
-; player_in_water_from_water_no_water:
-; 	or 1
-; 	ret
 
 
 ;-----------------------------------------------
@@ -401,60 +379,12 @@ player_in_water:
 ; - b: tile y
 ; output:
 ; - a: tile collision type
-; - c: actual tile
-; - hl: ptr to the actual tile
+; - c: tile
+; - hl: ptr to the tile
 get_room_tile_type:
-	ld a, (current_room__width)
-	cp 32*2
-	jr z, get_room_tile_type_width64
-	cp 32*3
-	jr z, get_room_tile_type_width96
-	cp 32*4
-	jr z, get_room_tile_type_width128
-get_room_tile_type_width32:
-	; in this case, we know room_scroll_x == 0
-	ld l, b
+	ld l, b  ; assume b is positive
 	ld h, 0
-	jp get_room_tile_type_width32_entry_point
-get_room_tile_type_width96:
-	; in this case, we know room_scroll_x == 0
-	ld l, b
-	ld h, 0
-
-	add hl, hl
-	add hl, hl
-	add hl, hl
-	add hl, hl
-	add hl, hl  ; hl = y * 32
-	push de
-		ld e, l
-		ld d, h
-		add hl, hl
-		add hl, de  ; hl = y (96)
-	pop de
-	jp get_room_tile_type_continue
-get_room_tile_type_width64:
-	; in this case, we know room_scroll_x == 0
-	ld l, b
-	ld h, 0
-	jp get_room_tile_type_width64_entry_point
-get_room_tile_type_width128:
-	ld l, b
-	ld h, 0
-	add hl, hl
-get_room_tile_type_width64_entry_point:
-	add hl, hl
-get_room_tile_type_width32_entry_point:
-	add hl, hl
-	add hl, hl
-	add hl, hl
-	add hl, hl
-	add hl, hl  ; hl = y * 128
-get_room_tile_type_continue:
-	ld b, 0
-	add hl, bc
-	ld bc, current_room__tile_map
-	add hl, bc
+	call get_room_tile_ptr_hl_set
 	ld a, (hl)
 	or a
 	ret z  ; 0 is directly no collision (we exit early, as the table below starts at 32)

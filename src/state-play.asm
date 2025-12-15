@@ -207,11 +207,11 @@ state_play_from_inventory:
 state_play_from_inventory__no_full_hud:
 
 		; setup sprites:
-		SETMEGAROMPAGE_8000 SPRITES_PAGE
+		ld a, SPRITES_PAGE
 		ld hl, pyramid_object_sprites_bin
 		ld de, SPRTBL2 + 32 * FIRST_OBJECT_SPRITE_PATTERN  ; first three reserved for player / weapon
 		ld bc, pyramid_object_sprites_bin_end - pyramid_object_sprites_bin
-		call fast_LDIRVM
+		call fast_LDIRVM_from_sprites_page
 
 		ld hl, (current_room__enemy_sprites_ptr)
 		ld de, buffer_4096

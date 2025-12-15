@@ -226,7 +226,7 @@ fast_small_LDIRVM_loop:
 ; - hl: ptr to tiles
 ; - c: megarom page where the tiles are
 setup_game_tiles:
-    call setup_game_tiles_biome_internal
+    call setup_game_tiles_only_biome
 
     ; hud tiles (includes generic in-game tiles too, like coins, etc.):
     ld hl, tiles_hud_zx0
@@ -270,19 +270,6 @@ setup_game_tiles:
 ; - hl: ptr to tiles
 ; - c: megarom page where the tiles are
 setup_game_tiles_only_biome:
-;     ld a, (current_megarom_page_in_8000)
-;     push af
-;         call setup_game_tiles_biome_internal
-;     pop af
-;     SETMEGAROMPAGE_8000_A
-;     ret
-
-
-;-----------------------------------------------
-; input:
-; - hl: ptr to tiles
-; - c: megarom page where the tiles are
-setup_game_tiles_biome_internal:
     ld de, buffer_4096
     call dzx0_from_page_c
 
@@ -290,10 +277,10 @@ setup_game_tiles_biome_internal:
     ld bc, 192*8
     ld de, CHRTBL2 + 64*8
     or a
-    jr z, setup_game_tiles_biome_internal_continue
+    jr z, setup_game_tiles_only_biome_continue
     ld bc, 208*8
     ld de, CHRTBL2 + 48*8
-setup_game_tiles_biome_internal_continue:
+setup_game_tiles_only_biome_continue:
 
     ; bank 0:
     ld hl, buffer_4096

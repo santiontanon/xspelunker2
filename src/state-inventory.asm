@@ -614,7 +614,6 @@ state_inventory_update_item_text_weapon_loop_next:
 	jp state_inventory_update_item_text_weapon_loop
 
 state_inventory_update_item_text_print:
-	SETMEGAROMPAGE_8000 TEXT_PAGE
 	; hl = text to print, copy it to buffer_4096
 	ld de, buffer_4096
 	ld a, (hl)
@@ -1202,7 +1201,6 @@ draw_inventory_map:
 	or a
 	jr nz, draw_inventory_map_have_map
 
-	SETMEGAROMPAGE_8000 TEXT_PAGE
 	ld hl, TEXT_NO_MAP
 	ld de, CHRTBL2 + (256*2+32*2+3)*8
 	ld iy, #2000 + COLOR_DARK_YELLOW

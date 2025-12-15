@@ -182,8 +182,8 @@ interarea_exit_right:
 
 ;-----------------------------------------------
 interarea_exit_screen:
-	ld a, (current_megarom_page_in_8000)
-	push af
+; 	ld a, (current_megarom_page_in_8000)
+; 	push af
 		ld a, e
 		push hl
 			push af
@@ -204,9 +204,7 @@ interarea_exit_screen:
 				inc hl
 				ld b, (hl)  ; bc: name table position where to render (since each require a different centering position)
 				push bc
-
-					SETMEGAROMPAGE_8000 TEXT_PAGE
-
+; 					SETMEGAROMPAGE_8000 TEXT_PAGE
 					; print "entering [area name]":
 					ld ix, TEXT_ENTERING
 					call text_concatenate_strings
@@ -241,6 +239,6 @@ interarea_exit_screen:
 
 			call clear_screen_left_to_right
 		pop hl
-	pop af
-	SETMEGAROMPAGE_8000_A  ; restore the page
+; 	pop af
+; 	SETMEGAROMPAGE_8000_A  ; restore the page
 	ret
