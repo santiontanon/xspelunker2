@@ -368,30 +368,31 @@ player_in_water:
 	ld a, (player_y + 1)
 	ld b, a
 	inc b
-	call get_room_tile_type
+; 	call get_room_tile_type
+	call get_room_tile_type_behind_item
 	cp 4  ; water
 	ret
 
 
-player_in_water_from_water:
-	ld a, (player_x + 1)
-	ld c, a
-	ld a, (player_y + 1)
-	ld b, a
-	inc b
-	call get_room_tile_type
-	cp 4  ; water
-	ret z
-	ld a, c
-	cp 32
-	ret c
-	cp 48
-	jr nc, player_in_water_from_water_no_water
-	xor a  ; consider we are still in water, as the player is over an item
-	ret 
-player_in_water_from_water_no_water:
-	or 1
-	ret
+; player_in_water_from_water:
+; 	ld a, (player_x + 1)
+; 	ld c, a
+; 	ld a, (player_y + 1)
+; 	ld b, a
+; 	inc b
+; 	call get_room_tile_type
+; 	cp 4  ; water
+; 	ret z
+; 	ld a, c
+; 	cp 32
+; 	ret c
+; 	cp 48
+; 	jr nc, player_in_water_from_water_no_water
+; 	xor a  ; consider we are still in water, as the player is over an item
+; 	ret 
+; player_in_water_from_water_no_water:
+; 	or 1
+; 	ret
 
 
 ;-----------------------------------------------
@@ -401,6 +402,7 @@ player_in_water_from_water_no_water:
 ; output:
 ; - a: tile collision type
 ; - c: actual tile
+; - hl: ptr to the actual tile
 get_room_tile_type:
 	ld a, (current_room__width)
 	cp 32*2
@@ -459,9 +461,45 @@ get_room_tile_type_continue:
 
 get_collision_tile_type_of_a:
 	; get collision type:
+	push bc
+		ld bc, current_room__collision_table
+		ADD_BC_A
+		ld a, (bc)
+	pop bc
+	ret
+
+
+;-----------------------------------------------
+; Some times the player walks over an item, but we want to know the tile type
+; of the tile that was behind that item. For example, when the player is swimming,
+; and we want to know if the player is still in the water.
+; input:
+; - c: tile x
+; - b: tile y
+; output:
+; - a: tile collision type
+get_room_tile_type_behind_item:
+	push bc
+		call get_room_tile_type
+	pop bc  ; coordinates are in e, d now
+	or a
+	ret nz  ; items are collision type == 0
+	ld a, (hl)  ; recover again the actual tile
+	cp FIRST_REGULAR_ITEM_TILE
+	jr c, get_room_tile_type_behind_item_non_item
+	cp LAST_REGULAR_ITEM_TILE
+	jr nc, get_room_tile_type_behind_item_non_item
+	; it's an item, we need to locate it, and get its background:
+	ld hl, get_tile_behind_tile_object
+	ld e, TILES_PAGE
+	call call_hl_in_page_e_8000
+	jr z, get_room_tile_type_behind_item_non_item
 	ld bc, current_room__collision_table
 	ADD_BC_A
 	ld a, (bc)
+	ret	
+get_room_tile_type_behind_item_non_item:
+	xor a
 	ret
 
 

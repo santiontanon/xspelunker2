@@ -906,6 +906,74 @@ room_remove_breakable_wall_continue:
 
 ;-----------------------------------------------
 ; input:
+; - c, b: x, y in tile coordinates
+; output:
+; - nz: found a tile object with saved background in those coordinates
+; - z: no tile object found to get the background
+; - a: if a tile object was found, a has the tile behind it
+get_tile_behind_tile_object:
+	ld ix, current_room__tile_objects
+get_tile_behind_tile_object_loop:
+	ld a, (ix)  ; ID
+	cp #ff
+	ret z
+	cp #fe
+	ret z
+
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	ld l, a
+	ld h, 0
+	add hl, hl
+	add hl, hl
+	ADD_HL_A  ; hl = a * 5
+	ld de, tile_object_gfx_table
+	add hl, de
+	ld a, (hl)
+	or a
+	jr nz, get_tile_behind_tile_object_loop_next
+    ; type 0: saving background
+    ld a, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+    cp c
+    jr z, get_tile_behind_tile_object_loop_check_y
+    inc a
+    cp c
+    jr z, get_tile_behind_tile_object_loop_check_y
+    jr get_tile_behind_tile_object_loop_next
+get_tile_behind_tile_object_loop_check_y:
+    ld a, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+    cp b
+    jr z, get_tile_behind_tile_object_loop_coordinate_match
+    inc a
+    cp b
+    jr z, get_tile_behind_tile_object_loop_coordinate_match
+    jr get_tile_behind_tile_object_loop_next
+get_tile_behind_tile_object_loop_coordinate_match:
+	ld a, b
+	sub (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	add a, a
+	add a, c
+	sub (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	add a, ROOM_TILE_OBJECT_STRUCT_BACKGROUND
+	push ix
+	pop hl
+	ADD_HL_A
+	ld a, (hl)  ; tile in the background buffer
+	cp FIRST_REGULAR_ITEM_TILE
+	ret c  ; we found the background tile!
+	cp LAST_REGULAR_ITEM_TILE
+	jr nc, get_tile_behind_tile_object_found  ; we cannot directly "ret", since we might have "z"
+	; the saved background tile is another item, continue
+get_tile_behind_tile_object_loop_next:
+	ld de, ROOM_TILE_OBJECT_STRUCT_SIZE
+	add ix, de
+	jr get_tile_behind_tile_object_loop
+get_tile_behind_tile_object_found:
+	or a  ; this ensures "nz", since a >= LAST_REGULAR_ITEM_TILE
+	ret
+
+
+;-----------------------------------------------
+; input:
 ; - ix: ptr to object
 interact_with_tile_object:
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)

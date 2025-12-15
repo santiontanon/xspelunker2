@@ -1,11 +1,9 @@
 to do:
 
-***- BUG: firing with a key equiped does not open a lock
-***- BUG: when there is an item underwater (e.g. hammer), player jumps: check that there is no water on top? (or mark item as water?) (or look at the background buffer of the item (recursively until finding a non-item?)
-***- clean the code: I have the same "split by line" text routine spread among multiple files, reorganize that!
+***- clean the code: I have the same "split by line" text routine spread among multiple files, reorganize that! I think I also have the code to calculate the tile ptr given tile coordinates more than once.
 ***- when a player bullet does not hit an enemy, have a chance (or always) to remain in the map, so you can pick it up again (maybe some enemies will steal objects, and that can be used to bait them? or maybe some enemies wake up with noise and items dropping make noise? (as do dropping pushable blocks, or the player doing anything except crawling)).
-
 - maps look very empty, is it lack of music, or maybe enemy behaviors or spawn locations that are not ideal? Play around and make a list of things I don't like, to fix them.
+
 - music: intro, letters, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 25 have potential)
 - boss music acts as a health bar (increases in speed as health goes down: 50%, 25%)
 - second boss: Camazotz, the Bat God: A giant bat-like creature with glowing red eyes and sharp claws. (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)

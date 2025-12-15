@@ -1400,7 +1400,8 @@ player_update_state_swimming_inertia_y_negative:
 player_update_state_swimming_inertia_y_done:
 
 	; check if we are exiting the water:
-	call player_in_water_from_water  ; the difference from "player_in_water" is that
+	call player_in_water
+; 	call player_in_water_from_water  ; the difference from "player_in_water" is that
 									 ; this method considers that we are still in the water
 									 ; if we go through an "item"
 	jp nz, player_update_switch_to_jumping_from_swimming
@@ -1432,7 +1433,7 @@ player_update_state_weapon_swing:
 	ld hl, player_weapon_state_timer
 	ld a, (hl)
 	or a
-	jp z,player_update_switch_to_idle
+	jp z, player_update_switch_to_idle
 	dec (hl)
 	jp player_update_weapon_sprite_request
 
@@ -1601,7 +1602,7 @@ player_update_state_weapon_swing_crouching:
 	ld hl, player_weapon_state_timer
 	ld a, (hl)
 	or a
-	jp z,player_update_switch_to_crouching_from_weapon
+	jp z, player_update_switch_to_crouching_from_weapon
 	dec (hl)
 
 	jp player_update_weapon_sprite_request
@@ -2180,6 +2181,7 @@ player_update_interact_special_case:
 	ld hl, interact_special_case
 	jp call_hl_in_page_c_8000
 
+
 ;-----------------------------------------------
 player_update_fire_directional_bullet:
 	ld a, (player_current_item)
@@ -2387,8 +2389,17 @@ player_update_determine_weapon_swing_type:
 	jr z, player_update_determine_weapon_swing_type_hammer
 	cp 10
 	jr z, player_update_determine_weapon_swing_type_macuahuitl
-	; directional weapons
-	or 1  ; nz
+	; directional weapons: 3, 4, 5, 6, 7
+	cp 8
+	jr c, player_update_determine_weapon_swing_type_directional
+	; not a weapon!
+	call player_update_interact
+	ld a, 1
+	ld (player_weapon_state_timer), a
+	ld a, PLAYER_WEAPON_SWING_ITEM
+	jr player_update_determine_weapon_swing_type_determined
+player_update_determine_weapon_swing_type_directional:
+	or 1
 	ret
 player_update_determine_weapon_swing_type_macuahuitl:
 	ld a, 18
@@ -2439,8 +2450,17 @@ player_update_determine_weapon_swing_type_jumping:
 	jr z, player_update_determine_weapon_swing_type_jumping_macuahuitl
 	cp 10
 	jr z, player_update_determine_weapon_swing_type_jumping_macuahuitl
-	; directional weapons
-	or 1  ; nz
+	; directional weapons: 3, 4, 5, 6, 7
+	cp 8
+	jr c, player_update_determine_weapon_swing_type_jumping_directional
+	; not a weapon!
+	call player_update_interact
+	ld a, 1
+	ld (player_weapon_state_timer), a
+	ld a, PLAYER_WEAPON_SWING_ITEM
+	jr player_update_determine_weapon_swing_type_jumping_determined
+player_update_determine_weapon_swing_type_jumping_directional:
+	or 1
 	ret
 player_update_determine_weapon_swing_type_jumping_macuahuitl:
 	ld a, 18
@@ -2495,8 +2515,17 @@ player_update_determine_weapon_swing_type_crouching:
 	jr z, player_update_determine_weapon_swing_type_crouhcing_macuahuitl
 	cp 10
 	jr z, player_update_determine_weapon_swing_type_crouhcing_macuahuitl
-	; directional weapons
-	or 1  ; nz
+	; directional weapons: 3, 4, 5, 6, 7
+	cp 8
+	jr c, player_update_determine_weapon_swing_type_crouching_directional
+	; not a weapon!
+	call player_update_interact
+	ld a, 1
+	ld (player_weapon_state_timer), a
+	ld a, PLAYER_WEAPON_SWING_ITEM
+	jr player_update_determine_weapon_swing_type_crouching_determined
+player_update_determine_weapon_swing_type_crouching_directional:
+	or 1
 	ret
 player_update_determine_weapon_swing_type_crouhcing_macuahuitl:
 	ld a, 18
@@ -2524,6 +2553,8 @@ player_update_determine_weapon_swing_type_crouching_determined:
 player_update_weapon_sprite_request:
 	; animation frames:
 	ld a, (player_weapon_swing_type)
+	cp PLAYER_WEAPON_SWING_ITEM
+	ret z
 	cp PLAYER_WEAPON_SWING_HAMMER1
 	jp z, player_update_weapon_sprite_request_hammer1
 	cp PLAYER_WEAPON_SWING_HAMMER2

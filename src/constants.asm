@@ -59,6 +59,10 @@ REUPLOAD_INGAME_OBJECT_TILES_FLAG_CLEAR_MASK: equ #ef  ; assuming REUPLOAD_INGAM
 
 HUD_MAX_TIME: equ 100
 
+; interactuable items: bullets, coins, and items/chests/locks have this tile range:
+FIRST_REGULAR_ITEM_TILE: equ 32
+LAST_REGULAR_ITEM_TILE: equ 48
+
 FIRST_ITEM_TILE: equ 44  ; tiles 44, 45, 46, 47 are reserved for items/chests/locks spawned in the current room
 FIRST_LARGE_ITEM_TILE: equ 48  ; tiles 48 - 63 are reserved for large items (e.g. doors) spawned in the current room
 FIRST_ENEMY_TILE: equ 64
@@ -189,6 +193,7 @@ PLAYER_WEAPON_SHIELD_UP: equ 10
 PLAYER_WEAPON_DIRECTIONAL_FW: equ 12
 PLAYER_WEAPON_DIRECTIONAL_FW_UP: equ 13
 PLAYER_WEAPON_DIRECTIONAL_UP: equ 14
+PLAYER_WEAPON_SWING_ITEM: equ 15  ; when the player presses the attack button with an item selected
 
 STONE_DAMAGE: equ 1
 DART_DAMAGE: equ 1
