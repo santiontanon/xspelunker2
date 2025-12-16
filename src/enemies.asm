@@ -3059,22 +3059,25 @@ enemy_maybe_spawn_drop:
 
 	call random_a
 	; item drop:
-	cp 8 * 2
+; 	cp 8 * 2
+; 	ld hl, spawn_tile_object_5_coins
+; 	jr c, enemy_maybe_spawn_drop_drop
+	cp 16 * 2
 	ld hl, spawn_tile_object_1_coin
 	jr c, enemy_maybe_spawn_drop_drop
-	cp 16 * 2
+	cp 24 * 2
 	ld hl, spawn_tile_object_corn
 	jr c, enemy_maybe_spawn_drop_drop
-	cp 24 * 2
-	ld hl, spawn_tile_object_2_stones
-	jr c, enemy_maybe_spawn_drop_drop_stones
 	cp 32 * 2
-	ld hl, spawn_tile_object_2_darts
-	jr c, enemy_maybe_spawn_drop_drop_darts
+	ld hl, spawn_tile_object_5_stones
+	jr c, enemy_maybe_spawn_drop_drop_stones
 	cp 40 * 2
-	ld hl, spawn_tile_object_2_spears
-	jr c, enemy_maybe_spawn_drop_drop_spears
+	ld hl, spawn_tile_object_5_darts
+	jr c, enemy_maybe_spawn_drop_drop_darts
 	cp 48 * 2
+	ld hl, spawn_tile_object_5_spears
+	jr c, enemy_maybe_spawn_drop_drop_spears
+	cp 64 * 2
 	ld hl, spawn_tile_object_battery
 	jr c, enemy_maybe_spawn_drop_drop_battery
 enemy_maybe_spawn_drop_continue:

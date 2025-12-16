@@ -22,9 +22,9 @@ ptr_to_new_tile_object_reached_sentinel:
 ;-----------------------------------------------
 ; input:
 ; - c, b: x, y tile coordinates
-spawn_tile_object_5_coins:
-	ld e, 5
-	jr spawn_tile_object_e_coins
+; spawn_tile_object_5_coins:
+; 	ld e, 5
+; 	jr spawn_tile_object_e_coins
 spawn_tile_object_1_coin:
 	ld e, 1
 spawn_tile_object_e_coins:
@@ -60,30 +60,30 @@ spawn_tile_object_corn:
 	jp spawn_tile_object_continue
 
 
-spawn_tile_object_2_stones:
+spawn_tile_object_5_stones:
 	push bc
 		call room_undraw_tile_objects
 	pop bc
 	ld d, TAG_STONES
-	ld e, 2
+	ld e, 5
 	jp spawn_tile_object_continue
 
 
-spawn_tile_object_2_darts:
+spawn_tile_object_5_darts:
 	push bc
 		call room_undraw_tile_objects
 	pop bc
 	ld d, TAG_DARTS
-	ld e, 2
+	ld e, 5
 	jp spawn_tile_object_continue
 
 
-spawn_tile_object_2_spears:
+spawn_tile_object_5_spears:
 	push bc
 		call room_undraw_tile_objects
 	pop bc
 	ld d, TAG_SPEARS
-	ld e, 2
+	ld e, 5
 	jp spawn_tile_object_continue
 
 
@@ -92,7 +92,7 @@ spawn_tile_object_battery:
 		call room_undraw_tile_objects
 	pop bc
 	ld d, TAG_BATTERY
-	ld e, 2
+	ld e, 5
 	jp spawn_tile_object_continue
 
 

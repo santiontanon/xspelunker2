@@ -861,11 +861,11 @@ maya_clue3_tablet_fn:
 
 	ld hl, TEXT_TABLET_MAYA3_LINE1
 	ld a, 126
-	ld de, NAMTBL2 + (7 + 6*32)
+	ld de, NAMTBL2 + (7 + 5*32)
 	ld ix, CHRTBL2
 	call display_elaine_letter_paragraph
 
-	ld hl, TEXT_TABLET_MAYA2_LINE2
+	ld hl, TEXT_TABLET_MAYA3_LINE2
 	ld a, 126
 	ld de, NAMTBL2 + (7 + 8*32)
 	ld ix, CHRTBL2 + 8*256

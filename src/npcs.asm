@@ -1,4 +1,14 @@
 ;-----------------------------------------------
+shopkeeper_default_messages:
+	dw TEXT_SHOPKEEPER1_1
+	dw TEXT_SHOPKEEPER1_2
+	dw TEXT_SHOPKEEPER1_3
+	dw TEXT_SHOPKEEPER1_4
+	dw TEXT_SHOPKEEPER1_5
+	dw TEXT_SHOPKEEPER1_6
+	dw TEXT_SHOPKEEPER1_7
+	dw TEXT_SHOPKEEPER1_8
+
 object_interaction_function_shopkeeper_internal:
 	ld a, (global_state__story)
 	cp STORY_STATE__FOUND_CALENDAR
@@ -17,8 +27,16 @@ object_interaction_function_shopkeeper_internal:
 	jp nc, object_interaction_function_shopkeeper_internal_letter2
 
 object_interaction_function_shopkeeper_internal_default:
-	ld de, TEXT_SHOPKEEPER1_1
-	ld hl, display_in_game_message
+	; pick one out of the 8 random messages:
+	call random_a
+	and #07
+	add a, a
+	ld hl, shopkeeper_default_messages
+	ADD_HL_A
+	ld e, (hl)
+	inc hl
+	ld d, (hl)
+	ld hl, display_in_game_message_textpage3
 	ld c, TEXT_PAGE
 	jp call_hl_in_page_c_8000
 

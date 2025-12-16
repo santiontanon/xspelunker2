@@ -328,7 +328,16 @@ public class Text {
         addLineSafe(lines_with_constant_page1, "Type what you want to say:", "TALK", 112);     
         addLineSafe(lines_with_constant_page1, "No one listened...", "TALK_FAIL", 112);     
         addLineSafe(lines_with_constant_page1, "After you speak, the room rumbles, and you hear a voice in an unknown language. It seems your words were heard!", "TALK_SUCCESS1", 112);
-        addLineSafe(lines_with_constant_page1, "Aapo: Bix a beel Mr. Xavier! I am Aapo! Please check my shop! I am also the postman in Palenke. If you have any mail to send or receive, talk to me.", "SHOPKEEPER1_1", 112);
+        // Aapo's random sentences:
+        addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! I am Aapo! Please check my shop! I am also the postman in Palenke. If you have any mail to send or receive, talk to me.", "SHOPKEEPER1_1", 112);
+        addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! I have heard reports of hunters finding new paths by breaking through walls, even the floor!", "SHOPKEEPER1_2", 112);
+        addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! If you are hurt, make sure to take a break and eat some of our delicious corn.", "SHOPKEEPER1_3", 112);
+        addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! Sorry, I cannot read or write, so, I cannot help you translate those texts...", "SHOPKEEPER1_4", 112);
+        addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! Make sure to collect all the coins you see! And spend them in my shop, of course...", "SHOPKEEPER1_5", 112);
+        addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! That stone tablet over there? It's a stella, but no one knows what it means!", "SHOPKEEPER1_6", 112);
+        addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! Underground ruins? Yes, we found two entrances in the jungle, not sure if both are still open...", "SHOPKEEPER1_7", 112);
+        addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! Sorry, I cannot accompany you this time. I have my shop to attend!", "SHOPKEEPER1_8", 112);
+        
         addLineSafe(lines_with_constant_page1, "Ok, I made it to the ruins! I need a way to sabotage the Alien operation! Let's find out where are they coming from, and how to stop them!", "STORY_ENTER_RUINS", 112);
         addLineSafe(lines_with_constant_page3, "Look at that! That is a gigantic Mayan Tzolk'in calendar stone! Although it seems to be half-buried, it's in perfect condition!", "FIND_CALENDAR_STONE1", 112);     
         addLineSafe(lines_with_constant_page3, "But there is something strange in the middle, it has some empty sockets, like if something was taken out.", "FIND_CALENDAR_STONE2", 112);
@@ -422,8 +431,8 @@ public class Text {
         addLineSafe(lines_with_constant_page1, "With writing, we recorded the sound of the sacred animal", "TABLET_MAYA2_LINE1", 18*2);
         addLineSafe(lines_with_constant_page1, "names in stone. The jaguar, the snake, the eagle and the fish: BA-LA-MA, CHA-NA, KO-KA-A-JA and KA-YA.", "TABLET_MAYA2_LINE2", 18*4);
 
-        addLineSafe(lines_with_constant_page1, "The first words they taught us were 'sit' (CHU-MU) and 'stand' (WA-LA). We should have suspected something...", "TABLET_MAYA3_LINE1", 18*4);
-        addLineSafe(lines_with_constant_page1, "I prefer words related to my occupation, like 'ladder' (E-BU) or 'ascend' (T'A-BA).", "TABLET_MAYA3_LINE2", 18*3);
+        addLineSafe(lines_with_constant_page1, "The first words they taught us were 'sit' (CHU-MU) and 'stand' (WA-LA). We should have", "TABLET_MAYA3_LINE1", 18*4);
+        addLineSafe(lines_with_constant_page1, "suspected something... I prefer words related to my occupation, like 'ladder' (E-BU) or 'ascend' (T'A-BA).", "TABLET_MAYA3_LINE2", 18*4);
 
         addLineSafe(lines_with_constant_page1, "My favorite part about writing is being able to write sounds, like", "TABLET_MAYA4_LINE1", 18*2);
         
