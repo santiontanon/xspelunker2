@@ -603,7 +603,7 @@ state_gamestart_console_paragraph:
 		ld (tmp_letter_line_width), a
 		ld a, #f0
 		ld (tmp_letter_line_color), a	
-		ld hl, display_elaine_letter_paragraph_text_page3
+		ld hl, display_paragraph_text_page3
 		ld c, TABLET_LETTER_PAGE
 		call call_hl_in_page_c_8000
 	pop hl

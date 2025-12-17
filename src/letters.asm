@@ -31,39 +31,39 @@ display_elaine_letter1:
 		ld a, 4
 		ld de, NAMTBL2 + (2 + 1*32)
 		ld ix, CHRTBL2
-		call display_elaine_letter_paragraph
+		call display_paragraph
 
 		ld hl, TEXT_ELAINE_LETTER1A_LINE2
 		ld a, 4+28
 		ld de, NAMTBL2 + (2 + 3*32)
-		call display_elaine_letter_paragraph
+		call display_paragraph
 
 		ld hl, TEXT_ELAINE_LETTER1A_LINE3
 		ld a, 2
 		ld de, NAMTBL2 + (2 + 9*32)
 		ld ix, CHRTBL2 + 256*8
-		call display_elaine_letter_paragraph
+		call display_paragraph
 
 		ld hl, TEXT_ELAINE_LETTER1A_LINE4
 		ld a, 2+28*5
 		ld de, NAMTBL2 + (2 + 15*32)
-		call display_elaine_letter_paragraph
+		call display_paragraph
 
 		ld hl, TEXT_ELAINE_LETTER1A_LINE5
 		ld a, 2
 		ld de, NAMTBL2 + (2 + 17*32)
 		ld ix, CHRTBL2 + 2*256*8
-		call display_elaine_letter_paragraph
+		call display_paragraph
 
 		ld hl, TEXT_ELAINE_LETTER1A_LINE6
 		ld a, 2 + 28*2
 		ld de, NAMTBL2 + (2 + 20*32)
-		call display_elaine_letter_paragraph
+		call display_paragraph
 
 		ld hl, TEXT_ELAINE_LETTER1A_LINE7
 		ld a, 2 + 28*3
 		ld de, NAMTBL2 + (2 + 22*32)
-		call display_elaine_letter_paragraph
+		call display_paragraph
 
     call enable_VDP_output
 
@@ -92,24 +92,24 @@ FIRST_LETTER1B_USEABLE_TILE: equ 60
 		ld a, FIRST_LETTER1B_USEABLE_TILE
 		ld de, NAMTBL2 + (2 + 5*32)
 		ld ix, CHRTBL2
-		call display_elaine_letter_paragraph
+		call display_paragraph
 
 		ld hl, TEXT_ELAINE_LETTER1B_LINE2
 		ld a, FIRST_LETTER1B_USEABLE_TILE
 		ld de, NAMTBL2 + (2 + 9*32)
 		ld ix, CHRTBL2 + 8*256
-		call display_elaine_letter_paragraph
+		call display_paragraph
 
 		ld hl, TEXT_ELAINE_LETTER1B_LINE2
 		ld a, FIRST_LETTER1B_USEABLE_TILE
 		ld de, NAMTBL2 + (2 + 9*32)
 		ld ix, CHRTBL2 + 8*256
-		call display_elaine_letter_paragraph
+		call display_paragraph
 
 		ld hl, TEXT_ELAINE_LETTER1B_LINE3
 		ld a, FIRST_LETTER1B_USEABLE_TILE + 28*3
 		ld de, NAMTBL2 + (2 + 13*32)
-		call display_elaine_letter_paragraph
+		call display_paragraph
 
 		ld a, 18
 		ld (tmp_letter_line_width), a
@@ -117,7 +117,7 @@ FIRST_LETTER1B_USEABLE_TILE: equ 60
 		ld a, FIRST_LETTER1B_USEABLE_TILE
 		ld de, NAMTBL2 + (2 + 17*32)
 		ld ix, CHRTBL2 + 2*8*256
-		call display_elaine_letter_paragraph
+		call display_paragraph
 
 		; annotations:
 		ld a, 5
@@ -129,17 +129,17 @@ FIRST_LETTER1B_USEABLE_TILE: equ 60
 		ld a, FIRST_LETTER1B_USEABLE_TILE + 28*3
 		ld de, NAMTBL2 + (19 + 2*32)
 		ld ix, CHRTBL2
-		call display_elaine_letter_paragraph
+		call display_paragraph
 		ld hl, TEXT_ELAINE_LETTER1B_LINE6
 		ld a, FIRST_LETTER1B_USEABLE_TILE + 28*3 + 5
 		ld de, NAMTBL2 + (19 + 3*32)
-		call display_elaine_letter_paragraph
+		call display_paragraph
 
 		ld hl, TEXT_ELAINE_LETTER1B_LINE7
 		ld a, FIRST_LETTER1B_USEABLE_TILE + 28*3
 		ld de, NAMTBL2 + (3 + 22*32)
 		ld ix, CHRTBL2 + 256*8*2
-		call display_elaine_letter_paragraph
+		call display_paragraph
     call enable_VDP_output
 
 	call wait_for_click
@@ -185,39 +185,39 @@ display_elaine_letter2:
 		ld a, 4
 		ld de, NAMTBL2 + (2 + 1*32)
 		ld ix, CHRTBL2
-		call display_elaine_letter_paragraph
+		call display_paragraph
 
 		ld hl, TEXT_ELAINE_LETTER2A_LINE2
 		ld a, 4+28
 		ld de, NAMTBL2 + (2 + 3*32)
-		call display_elaine_letter_paragraph
+		call display_paragraph
 
 		ld hl, TEXT_ELAINE_LETTER2A_LINE3
 		ld a, 4+28*2
 		ld de, NAMTBL2 + (2 + 5*32)
-		call display_elaine_letter_paragraph
+		call display_paragraph
 
 		ld hl, TEXT_ELAINE_LETTER2A_LINE4
 		ld a, 2
 		ld de, NAMTBL2 + (2 + 9*32)
 		ld ix, CHRTBL2 + 256*8
-		call display_elaine_letter_paragraph
+		call display_paragraph
 
 		ld hl, TEXT_ELAINE_LETTER2A_LINE5
 		ld a, 2+28*2
 		ld de, NAMTBL2 + (2 + 12*32)
-		call display_elaine_letter_paragraph
+		call display_paragraph
 
 		ld hl, TEXT_ELAINE_LETTER1A_LINE6
 		ld a, 2
 		ld de, NAMTBL2 + (2 + 16*32)
 		ld ix, CHRTBL2 + 256*8*2
-		call display_elaine_letter_paragraph
+		call display_paragraph
 
 		ld hl, TEXT_ELAINE_LETTER1A_LINE7
 		ld a, 2 + 28
 		ld de, NAMTBL2 + (2 + 18*32)
-		call display_elaine_letter_paragraph
+		call display_paragraph
 
     call enable_VDP_output
 
@@ -246,31 +246,31 @@ FIRST_LETTER2B_USEABLE_TILE: equ 67
 		ld a, FIRST_LETTER2B_USEABLE_TILE
 		ld de, NAMTBL2 + (2 + 3*32)
 		ld ix, CHRTBL2
-		call display_elaine_letter_paragraph
+		call display_paragraph
 
 		ld a, 24
 		ld (tmp_letter_line_width), a
 		ld hl, TEXT_ELAINE_LETTER2B_LINE2A
 		ld a, FIRST_LETTER2B_USEABLE_TILE + 2*28
 		ld de, NAMTBL2 + (2 + 6*32)
-		call display_elaine_letter_paragraph
+		call display_paragraph
 
 		ld hl, TEXT_ELAINE_LETTER2B_LINE2B
 		ld a, FIRST_LETTER2B_USEABLE_TILE
 		ld de, NAMTBL2 + (2 + 8*32)
 		ld ix, CHRTBL2 + 256*8
-		call display_elaine_letter_paragraph
+		call display_paragraph
 
 		ld hl, TEXT_ELAINE_LETTER2B_LINE3
 		ld a, FIRST_LETTER2B_USEABLE_TILE + 1*24
 		ld de, NAMTBL2 + (2 + 10*32)
-		call display_elaine_letter_paragraph
+		call display_paragraph
 
 		ld hl, TEXT_ELAINE_LETTER2B_LINE4
 		ld a, FIRST_LETTER2B_USEABLE_TILE
 		ld de, NAMTBL2 + (2 + 17*32)
 		ld ix, CHRTBL2 + 256*8*2
-		call display_elaine_letter_paragraph
+		call display_paragraph
     call enable_VDP_output
 
 	call wait_for_click
@@ -285,11 +285,13 @@ FIRST_LETTER2B_USEABLE_TILE: equ 67
 
 ;-----------------------------------------------
 ; input:
-; - hl: text (iy for 'display_elaine_letter_paragraph_text_page3')
-; - a: first tile to use (b for 'display_elaine_letter_paragraph_text_page3')
+; - hl: text (iy for 'display_paragraph_text_page3')
+; - a: first tile to use (b for 'display_paragraph_text_page3')
 ; - de: NAMTBL2 ptr
 ; - ix: base CHRTBL2 address (1st, 2nd or 3rd bank?)
-display_elaine_letter_paragraph_text_page3:
+; - (tmp_letter_line_width)
+; - (tmp_letter_line_color)
+display_paragraph_text_page3:
 	ld a, b
 	push af
 	push de
@@ -299,8 +301,8 @@ display_elaine_letter_paragraph_text_page3:
 		pop de
 		ld c, TEXT_PAGE3
 		ld hl, copy_text_from_textpage3
-		jr display_elaine_letter_paragraph_continue
-display_elaine_letter_paragraph_page7:
+		jr display_paragraph_continue
+display_paragraph_page7:
 	push af
 	push de
 	push ix
@@ -309,8 +311,8 @@ display_elaine_letter_paragraph_page7:
 		pop ix
 		ld c, TABLET_LETTER_PAGE
 		ld hl, copy_ix_text_page7_to_buffer_4096
-		jr display_elaine_letter_paragraph_continue
-display_elaine_letter_paragraph:
+		jr display_paragraph_continue
+display_paragraph:
 	push af
 	push de
 	push ix
@@ -319,12 +321,12 @@ display_elaine_letter_paragraph:
 		pop ix
 		ld c, TEXT_PAGE
 		ld hl, copy_ix_text_to_buffer_4096
-display_elaine_letter_paragraph_continue:
+display_paragraph_continue:
 		call call_hl_in_page_c_8000
 	pop ix
 	pop de
 	pop af
-display_elaine_letter_paragraph_loop:
+display_paragraph_loop:
 	push af
 		push de
 			; compute CHRTBL2 ptr: CHRTBL2 + c*8
@@ -379,10 +381,10 @@ display_elaine_letter_paragraph_loop:
 				ld a, (tmp_letter_line_width)
 				ld b, a
 			pop af
-display_elaine_letter_paragraph_name_table_loop:
+display_paragraph_name_table_loop:
 		    out (c), a
 		    inc a
-		    djnz display_elaine_letter_paragraph_name_table_loop
+		    djnz display_paragraph_name_table_loop
 		pop bc
 		ld e, a
 		ld hl, buffer_4096
@@ -407,7 +409,7 @@ display_elaine_letter_paragraph_name_table_loop:
 	ld bc, 32
 	add hl, bc
 	ex de, hl
-	jp display_elaine_letter_paragraph_loop
+	jp display_paragraph_loop
 
 
 

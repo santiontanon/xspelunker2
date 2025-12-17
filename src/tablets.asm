@@ -755,13 +755,13 @@ maya_clue1_tablet_fn:
 	ld a, 91
 	ld de, NAMTBL2 + (7 + 6*32)
 	ld ix, CHRTBL2
-	call display_elaine_letter_paragraph	
+	call display_paragraph	
 
 	ld hl, TEXT_TABLET_MAYA1_LINE2
 	ld a, 91
 	ld de, NAMTBL2 + (7 + 8*32)
 	ld ix, CHRTBL2 + 256*8
-	call display_elaine_letter_paragraph	
+	call display_paragraph	
 
 	ld a, 16
 	ld (tmp_letter_line_width), a
@@ -770,13 +770,13 @@ maya_clue1_tablet_fn:
 	ld a, 91 + 2*18
 	ld de, NAMTBL2 + (7 + 15*32)
 	ld ix, CHRTBL2 + 256*8
-	call display_elaine_letter_paragraph	
+	call display_paragraph	
 
 	ld hl, TEXT_TABLET_MAYA1_LINE4
 	ld a, 91
 	ld de, NAMTBL2 + (7 + 16*32)
 	ld ix, CHRTBL2 + 256*8*2
-	call display_elaine_letter_paragraph	
+	call display_paragraph	
 
 	ld a, 18
 	ld (tmp_letter_line_width), a
@@ -784,24 +784,24 @@ maya_clue1_tablet_fn:
 	ld hl, TEXT_TABLET_MAYA1_LINE5
 	ld a, 91 + 2*16
 	ld de, NAMTBL2 + (7 + 19*32)
-	call display_elaine_letter_paragraph	
+	call display_paragraph	
 
 	ld a, 2
 	ld (tmp_letter_line_width), a
 	ld hl, TEXT_KE
 	ld a, 91 + 2*16 + 18
 	ld de, NAMTBL2 + (10 + 22*32)
-	call display_elaine_letter_paragraph	
+	call display_paragraph	
 
 	ld hl, TEXT_KI
 	ld a, 91 + 2*16 + 18 + 2 
 	ld de, NAMTBL2 + (16 + 23*32)
-	call display_elaine_letter_paragraph	
+	call display_paragraph	
 
 	ld hl, TEXT_SE
 	ld a, 91 + 2*16 + 18 + 4 
 	ld de, NAMTBL2 + (23 + 23*32)
-	jp display_elaine_letter_paragraph	
+	jp display_paragraph	
 
 
 ;-----------------------------------------------
@@ -829,13 +829,13 @@ maya_clue2_tablet_fn:
 	ld a, 126
 	ld de, NAMTBL2 + (7 + 6*32)
 	ld ix, CHRTBL2
-	call display_elaine_letter_paragraph
+	call display_paragraph
 
 	ld hl, TEXT_TABLET_MAYA2_LINE2
 	ld a, 126
 	ld de, NAMTBL2 + (7 + 8*32)
 	ld ix, CHRTBL2 + 8*256
-	jp display_elaine_letter_paragraph
+	jp display_paragraph
 
 
 ;-----------------------------------------------
@@ -863,13 +863,13 @@ maya_clue3_tablet_fn:
 	ld a, 126
 	ld de, NAMTBL2 + (7 + 5*32)
 	ld ix, CHRTBL2
-	call display_elaine_letter_paragraph
+	call display_paragraph
 
 	ld hl, TEXT_TABLET_MAYA3_LINE2
 	ld a, 126
 	ld de, NAMTBL2 + (7 + 8*32)
 	ld ix, CHRTBL2 + 8*256
-	jp display_elaine_letter_paragraph	
+	jp display_paragraph	
 
 
 ;-----------------------------------------------
@@ -897,31 +897,31 @@ maya_clue4_tablet_fn:
 	ld a, 60
 	ld de, NAMTBL2 + (7 + 8*32)
 	ld ix, CHRTBL2 + 256*8
-	call display_elaine_letter_paragraph
+	call display_paragraph
 
 	ld a, 2
 	ld (tmp_letter_line_width), a
 	ld hl, TEXT_PE
 	ld a, 60 + 18*3
 	ld de, NAMTBL2 + (13 + 13*32)
-	call display_elaine_letter_paragraph
+	call display_paragraph
 
 	ld hl, TEXT_LU
 	ld a, 60 + 18*3 + 2
 	ld de, NAMTBL2 + (22 + 13*32)
-	call display_elaine_letter_paragraph
+	call display_paragraph
 
 	ld hl, TEXT_LE
 	ld a, 60
 	ld de, NAMTBL2 + (13 + 16*32)
 	ld ix, CHRTBL2 + 256*8*2
-	call display_elaine_letter_paragraph
+	call display_paragraph
 
 	ld hl, TEXT_NE
 	ld a, 60 + 2
 	ld de, NAMTBL2 + (22 + 16*32)
 	ld ix, CHRTBL2 + 256*8*2
-	jp display_elaine_letter_paragraph
+	jp display_paragraph
 
 
 ;-----------------------------------------------
@@ -956,7 +956,7 @@ calendar_name_clue_tablet_fn:
 	ld a, 176
 	ld de, NAMTBL2 + (7 + 5*32)
 	ld ix, CHRTBL2
-	jp display_elaine_letter_paragraph
+	jp display_paragraph
 
 
 ; ------------------------------------------------
@@ -1018,24 +1018,24 @@ story_trivia_tablet_fn_story1:
 	ld a, 48
 	ld de, NAMTBL2 + (7 + 5*32)
 	ld ix, CHRTBL2
-	call display_elaine_letter_paragraph_page7
+	call display_paragraph_page7
 
 	ld hl, TEXT_TABLET_TRIVIA1_2
 	ld a, 48
 	ld de, NAMTBL2 + (7 + 8*32)
 	ld ix, CHRTBL2 + 256*8
-	call display_elaine_letter_paragraph_page7
+	call display_paragraph_page7
 
 	ld hl, TEXT_TABLET_TRIVIA1_3
 	ld a, 48 + 18*4
 	ld de, NAMTBL2 + (7 + 13*32)
-	call display_elaine_letter_paragraph_page7
+	call display_paragraph_page7
 
 	ld hl, TEXT_TABLET_TRIVIA1_4
 	ld a, 48
 	ld de, NAMTBL2 + (7 + 16*32)
 	ld ix, CHRTBL2 + 256*8*2
-	call display_elaine_letter_paragraph_page7
+	call display_paragraph_page7
 
 	ld hl, story_trivia_tablet_number_1
 	jp story_trivia_tablet_fn_story3_draw_numbers
@@ -1055,18 +1055,18 @@ story_trivia_tablet_fn_story2:
 	ld a, 48
 	ld de, NAMTBL2 + (7 + 5*32)
 	ld ix, CHRTBL2
-	call display_elaine_letter_paragraph_page7
+	call display_paragraph_page7
 
 	ld hl, TEXT_TABLET_TRIVIA2_2
 	ld a, 48
 	ld de, NAMTBL2 + (7 + 8*32)
 	ld ix, CHRTBL2 + 256*8
-	call display_elaine_letter_paragraph_page7
+	call display_paragraph_page7
 
 	ld hl, TEXT_TABLET_TRIVIA2_3
 	ld a, 48 + 18*5
 	ld de, NAMTBL2 + (7 + 13*32)
-	call display_elaine_letter_paragraph_page7
+	call display_paragraph_page7
 
 	ld hl, story_trivia_tablet_number_2
 	jp story_trivia_tablet_fn_story3_draw_numbers
@@ -1093,12 +1093,12 @@ story_trivia_tablet_fn_story3_entrypoint:
 			ld a, 48
 			ld de, NAMTBL2 + (7 + 5*32)
 			ld ix, CHRTBL2
-			call display_elaine_letter_paragraph_page7
+			call display_paragraph_page7
 		pop hl
 		ld a, 48
 		ld de, NAMTBL2 + (7 + 8*32)
 		ld ix, CHRTBL2 + 256*8
-		call display_elaine_letter_paragraph_page7
+		call display_paragraph_page7
 	pop hl
 story_trivia_tablet_fn_story3_draw_numbers:
 	; draw numbers:
@@ -1235,7 +1235,7 @@ story_trivia_tablet_fn_clue1:
 	ld a, 32
 	ld de, NAMTBL2 + (7 + 5*32)
 	ld ix, CHRTBL2
-	jp display_elaine_letter_paragraph_page7
+	jp display_paragraph_page7
 
 
 story_trivia_tablet_fn_clue2:

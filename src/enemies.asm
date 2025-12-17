@@ -1633,7 +1633,7 @@ update_enemy_monkey_thrower:
 	ld e, 2  ; damage to deal
 	jr update_enemy_monkey_continue
 update_enemy_monkey:
-	ld iyl, COLOR_DARK_BLUE
+	ld iyl, COLOR_RED
 	ld iyh, 1  ; damage to deal
 update_enemy_monkey_continue:
 	call update_enemy_hurt_player_2x2

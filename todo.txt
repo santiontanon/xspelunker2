@@ -1,10 +1,7 @@
 to do:
 
-***- clean the code:
-  ***- split by line methods: display_elaine_letter_paragraph, display_in_game_message_draw_message, shop_text_descriptions_loop, state_inventory_update_item_text_print, trial_tablet_fn_loop
-  ***- revise enemies.asm: can I abstract away any of the functions shorten the code? it's gotten out of hand...
-***- some monkeys are the same color of water, when they fall, they are invisible
-***- exiting and re-entering a room respawns all enemies. Maybe have memory of the last room
+***- revise enemies.asm: can I abstract away any of the functions shorten the code? it's gotten out of hand...
+***- exiting/re-entering a room respawns all enemies. Maybe have memory of the last room
 
 - music: intro, letters, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 25 have potential)
 - boss music acts as a health bar (increases in speed as health goes down: 50%, 25%)
