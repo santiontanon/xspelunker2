@@ -2896,7 +2896,7 @@ update_enemy_bullet_move_right_if_possible:
 	; inc c
 	inc c
 	inc b
-	call general_check_collision
+	call general_check_collision_only_walls
 	ret z
 update_enemy_bullet_move_right_if_possible_move:
 	call update_enemy_move_right
@@ -2921,7 +2921,7 @@ update_enemy_bullet_move_left_if_possible:
 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	dec c
 	inc b
-	call general_check_collision
+	call general_check_collision_only_walls
 	ret z
 update_enemy_bullet_move_left_if_possible_move:
 	call update_enemy_move_left
@@ -2946,7 +2946,7 @@ update_enemy_bullet_move_down_if_possible:
 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	inc b
-	call general_check_collision
+	call general_check_collision_only_walls
 	ret z
 update_enemy_bullet_move_down_if_possible_move:
 	call update_enemy_move_down
@@ -2970,7 +2970,7 @@ update_enemy_bullet_move_up_if_possible:
 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	dec b
-	call general_check_collision
+	call general_check_collision_only_walls
 	ret z
 update_enemy_bullet_move_up_if_possible_move:
 	call update_enemy_move_up
