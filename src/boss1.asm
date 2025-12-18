@@ -987,7 +987,8 @@ update_boss1_spawn_lightning:
 	ret nz
 	push hl
 	pop ix
-	ld (ix), ENEMY_BULLET_LIGHTNING
+	ld (ix + ROOM_OBJECT_STRUCT_ID), 0  ; ID
+	ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BULLET_LIGHTNING
 	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_X), 0
 	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_Y), 0
 	ld a, (boss__x)

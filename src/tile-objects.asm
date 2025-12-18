@@ -344,6 +344,8 @@ update_tile_objects_lost_vendor:
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 1
 	call ptr_to_new_sprite_object
 	jp nz, update_tile_objects_loop_continue
+	ld (hl), 0  ; ID
+	inc hl
 	ld (hl), SPRITE_OBJECT_TYPE_LOST_VENDOR
 	inc hl
 	ld (hl), 0
@@ -374,6 +376,7 @@ delete_tile_object_in_hl:
 	; - to: hl
 	; - amount: (current_room__tile_objects_sentinel - (hl + ROOM_TILE_OBJECT_STRUCT_SIZE)
 	; to:
+	ld (hl), #ff  ; only really needed for the last object, but just in case
 	ld e, l
 	ld d, h
 	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
@@ -381,7 +384,7 @@ delete_tile_object_in_hl:
 	push hl
 		ld c, l
 		ld b, h
-		ld hl, current_room__tile_objects_sentinel + 1  ; + 1 to at least copy the sentinel for the last element
+		ld hl, current_room__tile_objects_sentinel  ; + 1 to at least copy the sentinel for the last element
 		or a
 		sbc hl, bc
 		ld c, l
@@ -690,7 +693,9 @@ room_undraw_tile_objects:
 	ld b, (current_room__tile_objects_sentinel - current_room__tile_objects)/ROOM_TILE_OBJECT_STRUCT_SIZE
 room_undraw_tile_objects_loop:
 	ld a, (hl)  ; ID
-	cp #ff
+	cp #ff  ; no object in this spot
+	jr z, room_undraw_tile_objects_loop_continue_no_pop
+	cp #fe  ; sentinel
 	jr z, room_undraw_tile_objects_loop_continue_no_pop
 	; render the object:
 	push bc
@@ -1144,13 +1149,13 @@ ENDR
 	dw object_interaction_function_pickup_darts  ; TAG_DARTS
 	dw object_interaction_function_pickup_spears  ; TAG_SPEARS
 	dw object_interaction_function_pickup_battery  ; TAG_BATTERY
-	dw object_interaction_function_empty  ; TAG_ENEMY_CARNIVORE_PLANT
-	dw object_interaction_function_empty  ; TAG_ENEMY_BEE_HIVE
-	dw object_interaction_function_empty  ; TAG_ENEMY_ANT_COLONY
 	dw object_interaction_function_shopkeeper  ; TAG_NPC_SHOPKEEPER
 	dw object_interaction_function_shop  ; TAG_NPC_SHOP
 	dw object_interaction_function_empty  ; TAG_DYNAMITE
 	dw object_interaction_function_shopkeeper2  ; TAG_NPC_SHOPKEEPER2
+	dw object_interaction_function_empty  ; TAG_ENEMY_CARNIVORE_PLANT
+	dw object_interaction_function_empty  ; TAG_ENEMY_BEE_HIVE
+	dw object_interaction_function_empty  ; TAG_ENEMY_ANT_COLONY
 
 object_interaction_inventory_slot:
 	db #ff, #ff, #ff, #ff, #ff  ; none, block puzzles: 0
@@ -2094,6 +2099,14 @@ object_interaction_function_teleport_to_area_object_find_room_loop_found:
 		add hl, bc
 		ld e, (hl)  ; room ID
 object_interaction_function_teleport_to_area_object_room_id_set:
+		; clear the enemy respawn table:
+		push de
+			ld hl, current_room__initial_enemy_ids_end
+			ld bc, (current_room__initial_enemy_ids_end - current_room__initial_enemy_ids) - 1
+			ld a, #ff
+			call clear_memory_a
+		pop de
+
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
@@ -2496,13 +2509,13 @@ ENDR
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_darts_gfx  ; TAG_DARTS
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_spears_gfx  ; TAG_SPEARS
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_battery_gfx  ; TAG_BATTERY
-	TILE_OBJECT_DATA 1, 4, 4, tile_object_carnivore_plant  ; TAG_ENEMY_CARNIVORE_PLANT
-	TILE_OBJECT_DATA 0, 2, 2, tile_object_bee_hive  ; TAG_ENEMY_BEE_HIVE
-	TILE_OBJECT_DATA 1, 3, 2, tile_object_ant_colony  ; TAG_ENEMY_ANT_COLONY
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOPKEEPER
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOP
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_DYNAMITE
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOPLEEPER2
+	TILE_OBJECT_DATA 1, 4, 4, tile_object_carnivore_plant  ; TAG_ENEMY_CARNIVORE_PLANT
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_bee_hive  ; TAG_ENEMY_BEE_HIVE
+	TILE_OBJECT_DATA 1, 3, 2, tile_object_ant_colony  ; TAG_ENEMY_ANT_COLONY
 
 
 tile_object_regular_object_gfx:

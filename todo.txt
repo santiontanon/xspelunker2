@@ -1,7 +1,13 @@
 to do:
 
-***- revise enemies.asm: can I abstract away any of the functions shorten the code? it's gotten out of hand...
-***- exiting/re-entering a room respawns all enemies. Maybe have memory of the last room
+***- revise enemies.asm: (currently 3294 lines)
+  ***- frog and snake should be identical:
+    ***- define a "patrol_left_right_platform" routine and reuse it for both: assumes states 0, 1 are "right/left"
+    ***- then just have logic for the sprite used
+    ***- try to reuse that routine for the other two snakes
+    ***- reuse it for fish and jumping fish
+    ***- reuse it for skeletons
+    ***- reuse it for monkeys
 
 - music: intro, letters, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 25 have potential)
 - boss music acts as a health bar (increases in speed as health goes down: 50%, 25%)

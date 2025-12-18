@@ -5,7 +5,248 @@
 
 
 ;-----------------------------------------------
+; If you have already killed an enemy in a room, make sure it remains killed if you re-enter if
+; shortly after. The logic is:
+; - We store which enemies have been killed for the last k (k = ENEMY_RESPAWN_TABLE_SIZE = 4) rooms
+;   you visited.
+; - After enemy spawn, we check that table to see if we need to remove some enemies
+; - Every time you leave a room, that table is updated with the information from the
+;   room you are just leaving.
+; - Hence, you might have to walk change rooms k times before coming back to a room for enemies to
+;   respawn.
+pcg_generate_room__enemy_respawn_logic:
+	; Store the list of enemy IDs we just spawned:
+	ld de, current_room__initial_enemy_ids
+	ld hl, current_room__sprite_enemies
+	ld bc, ROOM_OBJECT_STRUCT_SIZE
+pcg_generate_room__enemy_respawn_logic_loop1:
+	ld a, (hl)
+	add hl, bc
+	cp #ff  ; sentinel
+	jr z, pcg_generate_room__enemy_respawn_logic_loop1_done
+	ld (de), a
+	inc de
+	jr pcg_generate_room__enemy_respawn_logic_loop1
+pcg_generate_room__enemy_respawn_logic_loop1_done:
+
+	; potential tile enemy:
+	ld ix, current_room__tile_objects - ROOM_TILE_OBJECT_STRUCT_SIZE
+	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
+pcg_generate_room__enemy_respawn_logic_loop2:
+	add ix, bc
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
+	cp #ff
+	jr z, pcg_generate_room__enemy_respawn_logic_loop2_done
+	cp #fe  ; sentinel
+	jr z, pcg_generate_room__enemy_respawn_logic_loop2_done
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	cp FIRST_TILE_ENEMY_TAG
+	jr c, pcg_generate_room__enemy_respawn_logic_loop2
+	; found the tile enemy (since there can only be one, we are done)
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
+	ld (de), a
+	inc de
+pcg_generate_room__enemy_respawn_logic_loop2_done:
+
+	; See if we have an entry for this room in the "enemy_respawn_table":
+	ld ix, enemy_respawn_table
+	ld hl, 0
+	ld b, ENEMY_RESPAWN_TABLE_SIZE
+pcg_generate_room__enemy_respawn_logic_loop3:
+	ld a, (current_area__id)
+	cp (ix + 1)
+	jr nz, pcg_generate_room__enemy_respawn_logic_loop3_next
+	ld a, (current_room__id)
+	cp (ix + 2)
+	jr nz, pcg_generate_room__enemy_respawn_logic_loop3_next
+	; found!
+	push ix
+	pop hl
+	jr pcg_generate_room__enemy_respawn_logic_loop3_done
+pcg_generate_room__enemy_respawn_logic_loop3_next:
+	ld de, 1 + 1 + 1 + MAX_ROOM_SPRITE_ENEMIES + 1 + 1
+	add ix, de
+	djnz pcg_generate_room__enemy_respawn_logic_loop3
+pcg_generate_room__enemy_respawn_logic_loop3_done:
+	ld a, h
+	or l
+	ret z  ; we did not find an entry, so, nothing to be done
+
+	; delete all the enemies that were already killed:
+	inc hl  ; skip time
+	inc hl  ; skip area id
+	inc hl  ; skip room id
+pcg_generate_room__enemy_respawn_logic_loop4:
+	ld a, (hl)
+	cp #ff
+	ret z  ; we are done!
+	; delete the enemy with id "a":
+	ld c, a
+	call pcg_generate_room__enemy_respawn_logic__find_enemy_by_id
+	jr nz, pcg_generate_room__enemy_respawn_logic_loop4_not_sprite_enemy
+	push hl
+		; delete sprite enemy in "ix":
+		call sprite_object_remove_object_enemy
+	pop hl
+	jr pcg_generate_room__enemy_respawn_logic_loop4_next
+pcg_generate_room__enemy_respawn_logic_loop4_not_sprite_enemy:
+	call pcg_generate_room__enemy_respawn_logic__find_tile_enemy_by_id
+	jr nz, pcg_generate_room__enemy_respawn_logic_loop4_next  ; this should never happen, but just in case
+	push hl	
+		; delete tile enemy in "ix":
+		push ix
+			ld hl, room_undraw_tile_objects
+			ld c, TILES_PAGE
+			call call_hl_in_page_c_8000
+		pop ix
+
+		ld hl, delete_tile_object_in_ix
+		ld c, TILES_PAGE
+		call call_hl_in_page_c_8000
+
+		ld hl, room_render_tile_objects
+		ld c, TILES_PAGE
+		call call_hl_in_page_c_8000
+	pop hl
+pcg_generate_room__enemy_respawn_logic_loop4_next:
+	inc hl
+	jr pcg_generate_room__enemy_respawn_logic_loop4
+
+
+;-----------------------------------------------
+; This is called when leaving a room, just before calling "pcg_generate_room".
+pcg_generate_room__enemy_respawn_logic_on_exit_room:
+	; find a spot in enemy_respawn_table:
+	ld ix, enemy_respawn_table
+	ld hl, enemy_respawn_table  ; current candidate
+	ld c, (ix)  ; time of the oldest candidate
+	ld b, ENEMY_RESPAWN_TABLE_SIZE
+pcg_generate_room__enemy_respawn_logic_on_exit_room_loop1:
+	ld a, (current_area__id)
+	cp (ix + 1)
+	jr nz, pcg_generate_room__enemy_respawn_logic_on_exit_room_loop1_no_match
+	ld a, (current_room__id)
+	cp (ix + 2)
+	jr nz, pcg_generate_room__enemy_respawn_logic_on_exit_room_loop1_no_match
+	; we had this room already in the table, use it!
+	push ix
+	pop hl
+	jr pcg_generate_room__enemy_respawn_logic_on_exit_room_loop1_done
+pcg_generate_room__enemy_respawn_logic_on_exit_room_loop1_no_match:
+	ld a, (ix)
+	cp c
+	jr c, pcg_generate_room__enemy_respawn_logic_on_exit_room_loop1_not_better
+	push ix
+	pop hl
+	ld c, a
+pcg_generate_room__enemy_respawn_logic_on_exit_room_loop1_not_better:
+	ld de, 1 + 1 + 1 + MAX_ROOM_SPRITE_ENEMIES + 1 + 1
+	add ix, de
+	djnz pcg_generate_room__enemy_respawn_logic_on_exit_room_loop1
+pcg_generate_room__enemy_respawn_logic_on_exit_room_loop1_done:
+
+	; here:
+	; - hl: ptr to the entry in the enemy_respawn_table to use
+	ld (hl), 0  ; reset time
+	inc hl
+	ld a, (current_area__id)
+	ld (hl), a
+	inc hl
+	ld a, (current_room__id)
+	ld (hl), a
+	inc hl
+
+	; find which initial enemy IDs are dead, and store them in enemy_respawn_table:
+	ld de, current_room__initial_enemy_ids
+pcg_generate_room__enemy_respawn_logic_on_exit_room_loop2:
+	ld a, (de)
+	cp #ff  ; sentinel
+	jr z, pcg_generate_room__enemy_respawn_logic_on_exit_room_loop2_done
+	; check if there is an enemy with ID 'a', if there isn't, it means it's dead,
+	; and we need to add it to 'enemy_respawn_table' (in 'hl'):
+	ld c, a
+	push de
+		call pcg_generate_room__enemy_respawn_logic__find_enemy_by_id
+	pop de
+	jr z, pcg_generate_room__enemy_respawn_logic_on_exit_room_loop2_next
+	push de
+		call pcg_generate_room__enemy_respawn_logic__find_tile_enemy_by_id
+	pop de
+	jr z, pcg_generate_room__enemy_respawn_logic_on_exit_room_loop2_next
+	ld (hl), c
+	inc hl
+pcg_generate_room__enemy_respawn_logic_on_exit_room_loop2_next:
+	inc de
+	jr pcg_generate_room__enemy_respawn_logic_on_exit_room_loop2
+pcg_generate_room__enemy_respawn_logic_on_exit_room_loop2_done:
+
+	; increment the times of all the entries in the table
+	ld hl, enemy_respawn_table  ; current candidate
+	ld b, ENEMY_RESPAWN_TABLE_SIZE
+	ld de, 1 + 1 + 1 + MAX_ROOM_SPRITE_ENEMIES + 1 + 1
+pcg_generate_room__enemy_respawn_logic_on_exit_room_loop3:
+	ld a, (hl)
+	cp #ff
+	jr z, pcg_generate_room__enemy_respawn_logic_on_exit_room_loop3_next
+	inc (hl)
+pcg_generate_room__enemy_respawn_logic_on_exit_room_loop3_next:
+	add hl, de
+	djnz pcg_generate_room__enemy_respawn_logic_on_exit_room_loop3
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - c: enemy id to search for
+; output:
+; - z: found (and "ix" is the pointer)
+; - nz: not found
+pcg_generate_room__enemy_respawn_logic__find_enemy_by_id:
+	ld ix, current_room__sprite_enemies
+	ld de, ROOM_OBJECT_STRUCT_SIZE
+pcg_generate_room__enemy_respawn_logic__find_enemy_by_id_loop:
+	ld a, (ix)
+	cp c
+	ret z
+	cp #ff
+	jr z, pcg_generate_room__enemy_respawn_logic__find_enemy_by_id_not_found
+	cp #fe
+	jr z, pcg_generate_room__enemy_respawn_logic__find_enemy_by_id_not_found
+	add ix, de
+	jr pcg_generate_room__enemy_respawn_logic__find_enemy_by_id_loop
+pcg_generate_room__enemy_respawn_logic__find_enemy_by_id_not_found:
+	or 1
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - c: enemy id to search for
+; output:
+; - z: found (and "ix" is the pointer)
+; - nz: not found
+pcg_generate_room__enemy_respawn_logic__find_tile_enemy_by_id:
+	ld ix, current_room__tile_objects
+	ld de, ROOM_TILE_OBJECT_STRUCT_SIZE
+pcg_generate_room__enemy_respawn_logic__find_tile_enemy_by_id_loop:
+	ld a, (ix)
+	cp c
+	ret z
+	cp #ff
+	jr z, pcg_generate_room__enemy_respawn_logic__find_tile_enemy_by_id_not_found
+	cp #fe
+	jr z, pcg_generate_room__enemy_respawn_logic__find_tile_enemy_by_id_not_found
+	add ix, de
+	jr pcg_generate_room__enemy_respawn_logic__find_tile_enemy_by_id_loop
+pcg_generate_room__enemy_respawn_logic__find_tile_enemy_by_id_not_found:
+	or 1
+	ret
+
+
+;-----------------------------------------------
 pcg_generate_room__spawn_enemies:
+	ld a, #7f  ; first enemy ID (enemy IDs are only used to track which one was already killed, for respawn)
+	ld (tmp_enemy_pcg_next_enemy_id), a
 	ld a, (current_world__difficulty)
 	ld hl, pcg_enemy_generation_table_easy
 	or a
@@ -176,6 +417,13 @@ pcg_generate_room__spawn_enemy_get_new_ptr:
 		call ptr_to_new_sprite_enemy
 	pop de
 	pop bc
+	ret nz
+	ld a, (tmp_enemy_pcg_next_enemy_id)
+	ld (hl), a  ; ID
+	inc a
+	ld (tmp_enemy_pcg_next_enemy_id), a
+	inc hl
+	xor a  ; z
 	ret
 
 
@@ -194,6 +442,13 @@ pcg_generate_room__spawn_water_enemy_get_new_ptr:
 		call ptr_to_new_sprite_enemy
 	pop de
 	pop bc
+	ret nz
+	ld a, (tmp_enemy_pcg_next_enemy_id)
+	ld (hl), a  ; ID
+	inc a
+	ld (tmp_enemy_pcg_next_enemy_id), a
+	inc hl
+	xor a  ; z
 	ret
 
 
@@ -212,6 +467,13 @@ pcg_generate_room__spawn_ceiling_enemy_get_new_ptr:
 		call ptr_to_new_sprite_enemy
 	pop de
 	pop bc
+	ret nz
+	ld a, (tmp_enemy_pcg_next_enemy_id)
+	ld (hl), a  ; ID
+	inc a
+	ld (tmp_enemy_pcg_next_enemy_id), a
+	inc hl
+	xor a  ; z
 	ret
 
 
@@ -369,43 +631,47 @@ pcg_generate_room__spawn_enemy_get_new_ceiling_position_continue:
 
 ;-----------------------------------------------
 ; input:
-pcg_generate_room__spawn_snake_poison:
-	ld ixl, ENEMY_SNAKE_POISON
-	jr pcg_generate_room__spawn_snake_continue
-pcg_generate_room__spawn_snake_dasher:
-	ld ixl, ENEMY_SNAKE_DASHER
-	jr pcg_generate_room__spawn_snake_continue
-pcg_generate_room__spawn_snake:
-	ld ixl, ENEMY_SNAKE
-pcg_generate_room__spawn_snake_continue
-	call pcg_generate_room__spawn_enemy_get_new_ptr
-	ret nz
-	ld a, ixl
-	ld (hl), a
-	inc hl
-	ld (hl), 0
-	inc hl
-	ld (hl), e  ; tile x
-	inc hl
-	ld (hl), 0
-	inc hl
-	ld (hl), d  ; tile y
-	inc hl
-	call random_a  ; randomly face left or right
-	and #01
-	ld (hl), a  ; state
-	inc hl
-	ld (hl), 0  ; state timer
-	inc hl
-	ld (hl), #ff  ; hit ID
-	inc hl
-	ld (hl), 2  ; health
-	ret
+; pcg_generate_room__spawn_snake_poison:
+; 	ld ixl, ENEMY_SNAKE_POISON
+; 	ld ixh, 2
+; 	jr pcg_generate_room__spawn_snake_continue
+; pcg_generate_room__spawn_snake_dasher:
+; 	ld ixl, ENEMY_SNAKE_DASHER
+; 	ld ixh, 2
+; 	jr pcg_generate_room__spawn_snake_continue
+; pcg_generate_room__spawn_snake:
+; 	ld ixl, ENEMY_SNAKE
+; 	ld ixh, 2
+; pcg_generate_room__spawn_snake_continue
+; 	call pcg_generate_room__spawn_enemy_get_new_ptr
+; 	ret nz
+; 	ld a, ixl
+; 	ld (hl), a
+; 	inc hl
+; 	ld (hl), 0
+; 	inc hl
+; 	ld (hl), e  ; tile x
+; 	inc hl
+; 	ld (hl), 0
+; 	inc hl
+; 	ld (hl), d  ; tile y
+; 	inc hl
+; 	call random_a  ; randomly face left or right
+; 	and #01
+; 	ld (hl), a  ; state
+; 	inc hl
+; 	ld (hl), 0  ; state timer
+; 	inc hl
+; 	ld (hl), #ff  ; hit ID
+; 	inc hl
+; 	ld a, ixh
+; 	ld (hl), a  ; health
+; 	ret
 
 
 ;-----------------------------------------------
 ; input:
-; - b: number of positions available (in buffer_4096 + 512)
+; - b: number of positions available (in tmp_enemy_pcg_n_water_locs)
 pcg_generate_room__spawn_fish_jumper:
 	ld ixl, ENEMY_FISH_JUMPER
 	jr pcg_generate_room__spawn_fish_continue
@@ -429,7 +695,7 @@ pcg_generate_room__spawn_fish_continue:
 	and #01
 	ld (hl), a  ; state
 	inc hl
-	call random_a  ; randomly face left or right
+	call random_a  ; random state timer
 	and #1f
 	ld (hl), a  ; state timer
 	inc hl
@@ -441,6 +707,7 @@ pcg_generate_room__spawn_fish_continue:
 
 ;-----------------------------------------------
 ; input:
+; - b: number of positions available (in tmp_enemy_pcg_n_ceiling_locs)
 pcg_generate_room__spawn_bat_aggressive:
 	ld ixl, ENEMY_BAT_AGGRESSIVE
 	jr pcg_generate_room__spawn_bat_continue
@@ -474,6 +741,19 @@ pcg_generate_room__spawn_bat_continue:
 
 ;-----------------------------------------------
 ; input:
+; - b: number of positions available (in tmp_enemy_pcg_n_platform_locs)
+pcg_generate_room__spawn_snake_poison:
+	ld ixl, ENEMY_SNAKE_POISON
+	ld ixh, 2  ; hitpoints
+	jr pcg_generate_room__spawn_skeleton_continue
+pcg_generate_room__spawn_snake_dasher:
+	ld ixl, ENEMY_SNAKE_DASHER
+	ld ixh, 2  ; hitpoints
+	jr pcg_generate_room__spawn_skeleton_continue
+pcg_generate_room__spawn_snake:
+	ld ixl, ENEMY_SNAKE
+	ld ixh, 2  ; hitpoints
+	jr pcg_generate_room__spawn_skeleton_continue
 pcg_generate_room__spawn_monkey_thrower:
 	ld ixl, ENEMY_MONKEY_THROWER
 	ld ixh, 2  ; hitpoints
@@ -519,7 +799,7 @@ pcg_generate_room__spawn_skeleton_continue:
 	inc hl
 	ld (hl), d  ; tile y
 	inc hl
-	call random_a
+	call random_a  ; randomly face left or right
 	and #01
 	ld (hl), a  ; state
 	inc hl
@@ -657,7 +937,10 @@ pcg_generate_room__spawn_carnivore_plant:
 	ld b, ixh
 	dec b
 	dec b
-	ld (hl), 0  ; ID
+	ld a, (tmp_enemy_pcg_next_enemy_id)
+	ld (hl), a  ; ID
+	inc a
+	ld (tmp_enemy_pcg_next_enemy_id), a
 	inc hl
 	ld (hl), TAG_ENEMY_CARNIVORE_PLANT  ; type
 	inc hl
@@ -697,7 +980,10 @@ pcg_generate_room__spawn_ant_colony:
 	ld c, ixl
 	dec c
 	ld b, ixh
-	ld (hl), 0  ; ID
+	ld a, (tmp_enemy_pcg_next_enemy_id)
+	ld (hl), a  ; ID
+	inc a
+	ld (tmp_enemy_pcg_next_enemy_id), a
 	inc hl
 	ld (hl), TAG_ENEMY_ANT_COLONY  ; type
 	inc hl
@@ -738,7 +1024,10 @@ pcg_generate_room__spawn_bee_hive:
 	pop bc
 	pop de
 	ret nz
-	ld (hl), 0  ; ID
+	ld a, (tmp_enemy_pcg_next_enemy_id)
+	ld (hl), a  ; ID
+	inc a
+	ld (tmp_enemy_pcg_next_enemy_id), a
 	inc hl
 	ld (hl), TAG_ENEMY_BEE_HIVE  ; type
 	inc hl

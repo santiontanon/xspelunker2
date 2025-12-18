@@ -30,9 +30,9 @@ ptr_to_new_sprite_object:
 	ld de, ROOM_OBJECT_STRUCT_SIZE
 ptr_to_new_sprite_object_loop:
 	ld a, (hl)
-	or a
+	cp #ff  ; empty spot
 	ret z
-	inc a
+	cp #fe  ; sentinel
 	jr z, ptr_to_new_sprite_object_reached_sentinel
 	add hl, de
 	jp ptr_to_new_sprite_object_loop
@@ -47,6 +47,8 @@ ptr_to_new_sprite_object_reached_sentinel:
 spawn_water_splash:	
 	call ptr_to_new_sprite_object
 	ret nz
+	ld (hl), 0  ; ID
+	inc hl
 	ld (hl), SPRITE_OBJECT_TYPE_WATER_SPLASH
 	inc hl
 	ld (hl), 0
@@ -68,6 +70,8 @@ spawn_water_splash:
 spawn_pushing_block_dust:
 	call ptr_to_new_sprite_object
 	ret nz
+	ld (hl), 0  ; ID
+	inc hl
 	ld (hl), SPRITE_OBJECT_TYPE_BLOCK_DUST
 	inc hl
 	ld (hl), 0
@@ -89,6 +93,8 @@ spawn_pushing_block_dust:
 spawn_4tile_appart_dust:
 	call ptr_to_new_sprite_object
 	ret nz
+	ld (hl), 0  ; ID
+	inc hl
 	ld (hl), SPRITE_OBJECT_TYPE_4TILE_APPART_DUST
 	inc hl
 	ld (hl), 0
@@ -117,6 +123,8 @@ spawn_explosion_continue:
 		call ptr_to_new_sprite_object
 	pop de
 	ret nz
+	ld (hl), 0  ; ID
+	inc hl
 	ld (hl), e  ; type
 	inc hl
 	ld (hl), 0
@@ -138,11 +146,12 @@ update_sprite_objects_player_bullets:
 	ld (n_displayed_object_sprites), a
 	ld ix, current_room__player_bullets
 update_sprite_objects_player_bullets_loop:
-	ld a, (ix)
-	or a
+	ld a, (ix + ROOM_OBJECT_STRUCT_ID)
+	cp #ff  ; empty spot
 	ret z
-	cp #ff  ; sentinel
+	cp #fe  ; sentinel
 	ret z
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
 	sub SPRITE_OBJECT_TYPE_PLAYER_BULLET_STONE
 	jp z, update_sprite_objects_player_bullet_stone
 	dec a
@@ -165,11 +174,12 @@ update_sprite_objects:
 	ld (n_displayed_object_sprites), a
 	ld ix, current_room__sprite_objects
 update_sprite_objects_loop:
-	ld a, (ix)
-	or a
+	ld a, (ix + ROOM_OBJECT_STRUCT_ID)
+	cp #ff  ; empty spot
 	ret z
-	cp #ff  ; sentinel
+	cp #fe  ; sentinel
 	ret z
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
 	cp SPRITE_OBJECT_TYPE_WATER_SPLASH
 	jr z, update_sprite_objects_water_splash
 	cp SPRITE_OBJECT_TYPE_BLOCK_DUST
@@ -703,9 +713,11 @@ add_sprite_to_this_frame:
 
 
 ;-----------------------------------------------
+; input:
+; - ix: ptr to the object to remove
 sprite_object_remove_object:
 	; shift all the objects one position left:
-	ld (ix), 0  ; clear the current object type (only needed if this is the last object, but just in case).
+	ld (ix + ROOM_OBJECT_STRUCT_ID), #ff  ; clear the current object ID (only needed if this is the last object, but just in case).
 	ld d, ixh
 	ld e, ixl
 	ld h, d
@@ -728,9 +740,12 @@ sprite_object_remove_object:
 	ret
 
 
+;-----------------------------------------------
+; input:
+; - ix: ptr to the object to remove
 sprite_object_remove_object_player_bullet:
 	; shift all the objects one position left:
-	ld (ix), 0  ; clear the current object type (only needed if this is the last object, but just in case).
+	ld (ix + ROOM_OBJECT_STRUCT_ID), #ff  ; clear the current object type (only needed if this is the last object, but just in case).
 	ld d, ixh
 	ld e, ixl
 	ld h, d
@@ -754,9 +769,11 @@ sprite_object_remove_object_player_bullet:
 
 
 ;-----------------------------------------------
+; input:
+; - ix: ptr to the object to remove
 sprite_object_remove_object_enemy:
 	; shift all the objects one position left:
-	ld (ix), 0  ; clear the current object type (only needed if this is the last object, but just in case).
+	ld (ix + ROOM_OBJECT_STRUCT_ID), #ff  ; clear the current object type (only needed if this is the last object, but just in case).
 	ld d, ixh
 	ld e, ixl
 	ld h, d

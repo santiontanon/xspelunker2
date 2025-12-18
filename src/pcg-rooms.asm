@@ -112,30 +112,31 @@ pcg_generate_room_reset_state:
 	ld a, 1
 	call clear_memory_a
 
-	ld hl, current_room__sprite_objects
-	ld bc, MAX_ROOM_SPRITE_OBJECTS * ROOM_OBJECT_STRUCT_SIZE - 1
+; 	ld hl, current_room__sprite_objects
+; 	ld bc, MAX_ROOM_SPRITE_OBJECTS * ROOM_OBJECT_STRUCT_SIZE - 1
 	xor a
 	ld (player_trial_completion_state), a
 	ld (tmp_pcg_room__is_midpoint_room), a
-	call clear_memory_a
+; 	call clear_memory_a
 	ld hl, current_room__sprite_enemies
 	ld (tmp_pcg_room__next_enemy_ptr), hl
-	ld bc, MAX_ROOM_SPRITE_ENEMIES * ROOM_OBJECT_STRUCT_SIZE - 1
-	call clear_memory_a
+; 	ld bc, MAX_ROOM_SPRITE_ENEMIES * ROOM_OBJECT_STRUCT_SIZE - 1
+; 	call clear_memory_a
 
-	ld hl, current_room__player_bullets
-	ld bc, MAX_ROOM_PLAYER_BULLETS * ROOM_OBJECT_STRUCT_SIZE - 1
-	call clear_memory
+; 	ld hl, current_room__player_bullets
+; 	ld bc, MAX_ROOM_PLAYER_BULLETS * ROOM_OBJECT_STRUCT_SIZE - 1
+; 	call clear_memory
 
 	ld hl, current_room__tile_objects
 	ld (tmp_pcg_room__next_tile_object_ptr), hl
-	ld bc, MAX_ROOM_TILE_OBJECTS * ROOM_TILE_OBJECT_STRUCT_SIZE - 1
+	ld hl, current_room__player_bullets
+	ld bc, current_room__tile_objects_sentinel - current_room__player_bullets
 	ld a, #ff
 	call clear_memory_a
+	dec a  ; the sentinels are set to #fe, since the whole space is initialzied to #ff (to differentiate an "empty spot" from the "final sentinel")
 	ld (current_room__sprite_objects_sentinel), a
 	ld (current_room__player_bullets_sentinel), a
 	ld (current_room__sprite_enemies_sentinel), a
-	dec a  ; the sentinel for tile objects is #fe, since the whole space is initialzied to #ff
 	ld (current_room__tile_objects_sentinel), a
 
 	ld hl, 0
@@ -148,7 +149,11 @@ pcg_generate_room_reset_state:
 	ld (in_game_event_fn_ptr), hl
 	ld a, PCG_PAGE
 	ld (in_game_event_fn_page), a
-	ret
+
+	ld hl, current_room__initial_enemy_ids
+	ld bc, (current_room__initial_enemy_ids_end - current_room__initial_enemy_ids) - 1
+	ld a, #ff
+	jp clear_memory_a	
 
 
 ;-----------------------------------------------
@@ -595,6 +600,7 @@ pcg_generate_room__object_loop_end:
 	call call_hl_in_page_c_8000
 ;     out (#2c),a  ; DEBUG
 	call pcg_generate_room__spawn_enemies
+	call pcg_generate_room__enemy_respawn_logic
 ;     out (#2d),a	  ; DEBUG
 	ld hl, room_undraw_tile_objects
 	ld c, TILES_PAGE
@@ -2179,6 +2185,8 @@ pcg_generate_room__start_seed_stella_bit5_done:
 
 	call ptr_to_new_sprite_object
 	jr nz, pcg_generate_room__start_continue7
+	ld (hl), 0  ; id
+	inc hl
 	ld (hl), SPRITE_OBJECT_TYPE_SHOPKEEPER
 	inc hl
 	ld (hl), 0
@@ -2197,6 +2205,8 @@ pcg_generate_room__start_continue7:
 	; spawn the second vendor, and open his hut:
 	call ptr_to_new_sprite_object
 	jr nz, pcg_generate_room__start_continue8
+	ld (hl), 0
+	inc hl
 	ld (hl), SPRITE_OBJECT_TYPE_SHOPKEEPER2
 	inc hl
 	ld (hl), 0

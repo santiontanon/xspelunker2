@@ -95,13 +95,23 @@ current_room__collision_ptr_page: ds virtual 1
 current_room__collision_ptr: ds virtual 2  ; 256 bytes of this ptr will be copied to 'current_room__collision_table'.
 current_room__enemy_sprites_ptr: ds virtual 2
 current_room__tileset_overrides_item_tiles: ds virtual 1
-
 current_room__collision_table: ds virtual 256
+; Variables to remember which enemies have already been killed,
+; and do not respawn them unless you go a few rooms away and come back:
+current_room__initial_enemy_ids: ds virtual MAX_ROOM_SPRITE_ENEMIES + 1 + 1  ; IDs of the enemies that are spawned at room start (the "+ 1 + 1" is for the one possible tile enemy, and for the sentinel byte)
+current_room__initial_enemy_ids_end:
 
 state_play_update_agenda_tbl_ptr: ds virtual 2
 
-
 RAM_to_zero_on_game_start:
+
+; initialized to #ff
+enemy_respawn_table: ds ENEMY_RESPAWN_TABLE_SIZE * (1 + 1 + 1 + MAX_ROOM_SPRITE_ENEMIES + 1 + 1)
+    ; - time: 1 byte (how long has this been entry stored, incremented by 1 each time the player changes rooms)
+    ; - area_id, room_id: 1 + 1 bytes
+    ; - already_killed_enemy_ids: MAX_ROOM_SPRITE_ENEMIES + 1 + 1 bytes
+enemy_respawn_table_end:
+
 
 ; rendering variables:
 draw_room_row_offset: ds virtual 2
@@ -256,6 +266,7 @@ tmp_enemy_pcg_ceiling_loc_ptr: equ temporary_variables + 4
 tmp_enemy_pcg_n_platform_locs: equ temporary_variables + 6
 tmp_enemy_pcg_n_water_locs: equ temporary_variables + 7
 tmp_enemy_pcg_n_ceiling_locs: equ temporary_variables + 8
+tmp_enemy_pcg_next_enemy_id: equ temporary_variables + 9
 tmp_get_tile_object_behind_player_ptr: equ temporary_variables
 tmp_shop_cursor_position: equ temporary_variables
 tmp_gamestart_cursor_position1: equ temporary_variables  ; world name, start, back or help

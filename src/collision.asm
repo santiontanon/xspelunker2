@@ -578,6 +578,11 @@ player_exit_room_left:
 	pop de
 	ld a, (current_room__y)
 	push af
+		push de
+			ld hl, pcg_generate_room__enemy_respawn_logic_on_exit_room
+			ld c, PCG_PAGE
+			call call_hl_in_page_c_8000
+		pop de
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
@@ -622,6 +627,11 @@ player_exit_room_right:
 	pop de
 	ld a, (current_room__y)
 	push af	
+		push de
+			ld hl, pcg_generate_room__enemy_respawn_logic_on_exit_room
+			ld c, PCG_PAGE
+			call call_hl_in_page_c_8000
+		pop de
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
@@ -668,6 +678,11 @@ player_exit_room_up:
 	pop de
 	ld a, (current_room__x)
 	push af
+		push de
+			ld hl, pcg_generate_room__enemy_respawn_logic_on_exit_room
+			ld c, PCG_PAGE
+			call call_hl_in_page_c_8000
+		pop de
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
@@ -716,6 +731,11 @@ player_exit_room_down:
 	pop de
 	ld a, (current_room__x)
 	push af
+		push de
+			ld hl, pcg_generate_room__enemy_respawn_logic_on_exit_room
+			ld c, PCG_PAGE
+			call call_hl_in_page_c_8000
+		pop de
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000

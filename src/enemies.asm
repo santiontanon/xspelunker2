@@ -1,11 +1,11 @@
 ;-----------------------------------------------
 enemy_update_fn_table:
-	dw update_enemy_snake
-	dw update_enemy_snake_dasher
-	dw update_enemy_snake_poison
+	dw update_enemy_snake  ; left-to-right
+	dw update_enemy_snake_dasher  ; left-to-right + dash
+	dw update_enemy_snake_poison  ; left-to-right + poison bullet
 	dw update_enemy_poison_bullet
-	dw update_enemy_fish
-	dw update_enemy_fish_jumper
+	dw update_enemy_fish  ; swim left-to-right
+	dw update_enemy_fish_jumper  ; swim left-to-right + jump
 	dw update_enemy_bat
 	dw update_enemy_bat_aggressive
 	dw update_enemy_bullet
@@ -31,11 +31,12 @@ update_sprite_enemies:
 	; after "update_sprite_objects"
 	ld ix, current_room__sprite_enemies
 update_sprite_enemies_loop:
-	ld a, (ix)
-	or a
+	ld a, (ix + ROOM_OBJECT_STRUCT_ID)
+	cp #ff  ; empty object
 	ret z
-	cp #ff  ; sentinel
+	cp #fe  ; sentinel
 	ret z
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
 	add a, a
 	ld hl, enemy_update_fn_table - 2
 	ADD_HL_A
@@ -267,6 +268,8 @@ update_enemy_snake_poison_spit_right_continue:
 	; spit:
 	call ptr_to_new_sprite_enemy
 	jr nz, update_enemy_snake_poison_spit_right_continue2
+	ld (hl), 0  ; ID
+	inc hl
 	ld (hl), ENEMY_POISON_BULLET
 	inc hl
 	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
@@ -308,6 +311,8 @@ update_enemy_snake_poison_spit_left_continue:
 	; spit:
 	call ptr_to_new_sprite_enemy
 	jr nz, update_enemy_snake_poison_spit_right_continue2
+	ld (hl), 0  ; ID
+	inc hl
 	ld (hl), ENEMY_POISON_BULLET
 	inc hl
 	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
@@ -1099,6 +1104,8 @@ update_enemy_skeleton_thrower_throw_right:
 	; throw:
 	call ptr_to_new_sprite_enemy
 	jr nz, update_enemy_skeleton_thrower_throw_right_continue2
+	ld (hl), 0  ; ID
+	inc hl
 	ld (hl), ENEMY_BONE_BULLET
 	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
 	cp ENEMY_SKELETON_THROWER1
@@ -1152,6 +1159,8 @@ update_enemy_skeleton_thrower_throw_left:
 	; throw:
 	call ptr_to_new_sprite_enemy
 	jr nz, update_enemy_skeleton_thrower_throw_right_continue2
+	ld (hl), 0  ; ID
+	inc hl
 	ld (hl), ENEMY_BONE_BULLET
 	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
 	cp ENEMY_SKELETON_THROWER1
@@ -2046,6 +2055,8 @@ update_enemy_fire_directional_bullet_towards_player:
 		call ptr_to_new_sprite_enemy
 	pop bc
 	ret nz
+	ld (hl), 0  ; ID
+	inc hl
 	ld (hl), ENEMY_BULLET
 	inc hl
 	ld (hl), 0  ; pixel X

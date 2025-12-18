@@ -49,6 +49,8 @@ update_tile_objects_enemy_carnivore_plant_fire_spores
 	; fire a bullet:
 	call ptr_to_new_sprite_enemy
 	jr nz, update_tile_objects_enemy_carnivore_plant_fire_spores_continue
+	ld (hl), 0
+	inc hl
 	ld (hl), ENEMY_PARABOLA_BULLET
 	inc hl
 	ld (hl), 0  ; pixel x
@@ -576,6 +578,8 @@ update_tile_objects_enemy_bee_hive:
 	; spawn a bee:
 	call ptr_to_new_sprite_enemy
 	jp nz, update_tile_objects_loop_continue
+	ld (hl), 0
+	inc hl
 	ld (hl), ENEMY_BEE
 	inc hl
 	ld (hl), 0

@@ -646,6 +646,8 @@ boss_fire_directional_bullet_towards_player_continue:
 	pop bc
 	ret nz
 	push hl
+		ld (hl), 0  ; ID
+		inc hl
 		ld (hl), ENEMY_BULLET
 		inc hl
 		ld a, ixl

@@ -34,6 +34,11 @@ state_play:
 		ld bc, (RAM_to_zero_on_game_start_end - RAM_to_zero_on_game_start) - 1
 		call clear_memory
 
+		ld hl, enemy_respawn_table
+		ld bc, (enemy_respawn_table_end - enemy_respawn_table) - 1
+		ld a, #ff
+		call clear_memory_a
+
 		ld hl, check_redefined_keys
 		ld c, TEXT_PAGE
 		call call_hl_in_page_c_8000

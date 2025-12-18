@@ -60,6 +60,11 @@ interarea_exit_room_ptr_loop_done:
 interarea_exit_down:
 	; player enters from below
 	push hl
+		push de
+			ld hl, pcg_generate_room__enemy_respawn_logic_on_exit_room
+			ld c, PCG_PAGE
+			call call_hl_in_page_c_8000
+		pop de
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
@@ -92,6 +97,11 @@ interarea_exit_down:
 interarea_exit_left:
 	; player enters from the left
 	push hl
+		push de
+			ld hl, pcg_generate_room__enemy_respawn_logic_on_exit_room
+			ld c, PCG_PAGE
+			call call_hl_in_page_c_8000
+		pop de
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
@@ -121,6 +131,11 @@ interarea_exit_left:
 interarea_exit_up:
 	; player enters from above
 	push hl
+		push de
+			ld hl, pcg_generate_room__enemy_respawn_logic_on_exit_room
+			ld c, PCG_PAGE
+			call call_hl_in_page_c_8000
+		pop de
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
@@ -151,6 +166,11 @@ interarea_exit_up:
 interarea_exit_right:
 	; player enters from the right
 	push hl
+		push de
+			ld hl, pcg_generate_room__enemy_respawn_logic_on_exit_room
+			ld c, PCG_PAGE
+			call call_hl_in_page_c_8000
+		pop de
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000

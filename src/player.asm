@@ -2207,6 +2207,8 @@ player_update_fire_directional_bullet:
 	ret nz
 	push hl
 	pop ix  ; transfer the pointer to ix for later
+	ld (hl), 0  ; ID
+	inc hl
 	ld a, (player_current_item)
 	sub 4
 	push hl
@@ -2217,7 +2219,7 @@ player_update_fire_directional_bullet:
 	push af
 		ld a, (player_current_item)
 		add a, SPRITE_OBJECT_TYPE_PLAYER_BULLET_STONE - 4  ; 4 is the first weapon that fires bullets
-		ld (hl), a
+		ld (hl), a  ; type
 		inc hl
 		ld de, player_x
 		ex de, hl
@@ -3138,8 +3140,10 @@ player_weapon_hitbox_check_tile_object_loop_done:
 		; iterate over the list of enemies to see if we hit any:
 		ld ix, current_room__sprite_enemies
 player_weapon_hitbox_check_enemy_loop:
-		ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
-		cp #ff
+		ld a, (ix + ROOM_OBJECT_STRUCT_ID)
+		cp #ff  ; empty object
+		jr z, player_weapon_hitbox_check_enemy_loop_done
+		cp #fe  ; sentinel
 		jr z, player_weapon_hitbox_check_enemy_loop_done
 		; enemy, check for collision: (in tile coordinates: from [e, d] to [l, h])
 		; assume enemies are 2x2 in size
