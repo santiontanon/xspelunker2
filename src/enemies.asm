@@ -900,14 +900,27 @@ update_enemy_skeleton:
 	ld iyh, 1  ; damage to deal
 	call update_enemy_hurt_player_2x2
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	and #01
+	call nz, update_enemy__patrol_left_right_platform
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
-	or a
-	jr z, update_enemy_skeleton_right
-	dec a
-	jr z, update_enemy_skeleton_left
-	dec a
+	cp 2
 	jr z, update_enemy_skeleton_idle
-	; we cannever reach here.
+
+update_enemy_skeleton_walking:
+	call random_a
+	and #7f
+	jr z, update_enemy_skeleton_switch_to_state_idle
+update_enemy_skeleton_walking_continue:
+	ld d, COLOR_WHITE
+ 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+ 	add a, a
+ 	add a, a
+ 	add a, FIRST_ENEMY_SPRITE_PATTERN + 21
+ 	add a, a
+ 	add a, a
+ 	ld e, a
+	jp enemy_sprite_and_continue_animated
 
 update_enemy_skeleton_switch_to_state_idle:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
@@ -915,48 +928,17 @@ update_enemy_skeleton_switch_to_state_idle:
 update_enemy_skeleton_idle:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	cp 64
-	jr nz, update_enemy_skeleton_idle_continue
+	jr c, update_enemy_skeleton_idle_continue
 	call random_a
 	and #01
-	jr z, update_enemy_skeleton_switch_to_state_right
-	jr update_enemy_skeleton_switch_to_state_left
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0  ; right
+	jr z, update_enemy_skeleton_walking_continue
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1  ; left
+	jr update_enemy_skeleton_walking_continue
 update_enemy_skeleton_idle_continue:
 	ld d, COLOR_WHITE
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 29) * 4 
 	jp enemy_sprite_and_continue_animated_slow
-
-update_enemy_skeleton_switch_to_state_right:
-	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
-	jr update_enemy_skeleton_right_continue
-update_enemy_skeleton_right:
-	call random_a
-	and #3f
-	jr z, update_enemy_skeleton_switch_to_state_idle
-	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
-	and #01
-	jr z, update_enemy_skeleton_right_continue
-	call update_enemy_move_right_if_possible_platform
-	jr z, update_enemy_skeleton_switch_to_state_left
-update_enemy_skeleton_right_continue:
-	ld d, COLOR_WHITE
-update_enemy_skeleton_right_continue_color_set:
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 21) * 4 
-	jp enemy_sprite_and_continue_animated
-
-update_enemy_skeleton_switch_to_state_left:
-	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1  ; left
-	jr update_enemy_skeleton_left_continue
-update_enemy_skeleton_left:
-	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
-	and #01
-	jr z, update_enemy_skeleton_left_continue
-	call update_enemy_move_left_if_possible_platform
-	jr z, update_enemy_skeleton_switch_to_state_right
-update_enemy_skeleton_left_continue:
-	ld d, COLOR_WHITE
-update_enemy_skeleton_left_continue_color_set:
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 25) * 4 
-	jp enemy_sprite_and_continue_animated
 
 
 ;-----------------------------------------------
@@ -965,6 +947,7 @@ update_enemy_skeleton_thrower2:
 	ld iyh, 1  ; damage to deal
 	call update_enemy_hurt_player_2x2
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	call update_enemy__patrol_left_right_platform
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
 	or a
 	jr z, update_enemy_skeleton_thrower_right
@@ -978,30 +961,25 @@ update_enemy_skeleton_thrower2:
 
 update_enemy_skeleton_thrower_switch_to_state_right_from_throw:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
-update_enemy_skeleton_thrower_switch_to_state_right:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
 	jr update_enemy_skeleton_thrower_right_continue
 update_enemy_skeleton_thrower_right:
 	; throw?
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	cp 32
-	jr c, update_enemy_skeleton_thrower_right_no_throw
+	jr c, update_enemy_skeleton_thrower_right_continue
 	ld a, (player_x + 1)
 	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
-	jr c, update_enemy_skeleton_thrower_right_no_throw
+	jr c, update_enemy_skeleton_thrower_right_continue
 	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
 	cp ENEMY_SKELETON_THROWER2
 	jr z, update_enemy_skeleton_thrower_right_throw
 	ld a, (player_y + 1)
 	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-	jr nz, update_enemy_skeleton_thrower_right_no_throw
+	jr nz, update_enemy_skeleton_thrower_right_continue
 update_enemy_skeleton_thrower_right_throw:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2  ; throw right!
-	jr update_enemy_skeleton_thrower_right_continue
-update_enemy_skeleton_thrower_right_no_throw:
-	call update_enemy_move_right_if_possible_platform
-	jr z, update_enemy_skeleton_thrower_switch_to_state_left
 update_enemy_skeleton_thrower_right_continue:
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 21) * 4
 	ld d, COLOR_YELLOW
@@ -1013,30 +991,25 @@ update_enemy_skeleton_thrower_right_continue:
 
 update_enemy_skeleton_thrower_switch_to_state_left_from_throw:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
-update_enemy_skeleton_thrower_switch_to_state_left:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1  ; left
 	jr update_enemy_skeleton_thrower_left_continue
 update_enemy_skeleton_thrower_left:
 	; throw?
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	cp 32
-	jr c, update_enemy_skeleton_thrower_left_no_throw
+	jr c, update_enemy_skeleton_thrower_left_continue
 	ld a, (player_x + 1)
 	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
-	jr nc, update_enemy_skeleton_thrower_left_no_throw
+	jr nc, update_enemy_skeleton_thrower_left_continue
 	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
 	cp ENEMY_SKELETON_THROWER2
 	jr z, update_enemy_skeleton_thrower_left_throw
 	ld a, (player_y + 1)
 	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-	jr nz, update_enemy_skeleton_thrower_left_no_throw
+	jr nz, update_enemy_skeleton_thrower_left_continue
 update_enemy_skeleton_thrower_left_throw:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 3  ; throw left!
-	jr update_enemy_skeleton_thrower_left_continue
-update_enemy_skeleton_thrower_left_no_throw:	
-	call update_enemy_move_left_if_possible_platform
-	jr z, update_enemy_skeleton_thrower_switch_to_state_right
 update_enemy_skeleton_thrower_left_continue:
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 25) * 4
 	ld d, COLOR_YELLOW
@@ -1302,10 +1275,6 @@ update_enemy_frog_jumping_tongue_right1:
 	call get_sprite_object_sprite_coordinates
 	jp nz, update_enemy_frog_jumping_tongue_right_done
 	call add_sprite_to_this_frame
-; 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
-; 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-; 	inc b
-; 	inc c
 	ld bc, #0101
 	ld iyh, 2
 	call update_enemy_hurt_player_bc_2x1
@@ -1317,11 +1286,6 @@ update_enemy_frog_jumping_tongue_right2:
 	call get_sprite_object_sprite_coordinates
 	jr nz, update_enemy_frog_jumping_tongue_right_done
 	call add_sprite_to_this_frame
-; 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
-; 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-; 	inc b
-; 	inc c
-; 	inc c
 	ld bc, #0102	
 	ld iyh, 2
 	call update_enemy_hurt_player_bc_2x1
@@ -1338,12 +1302,6 @@ update_enemy_frog_jumping_tongue_right3:
 	call get_sprite_object_sprite_coordinates
 	jr nz, update_enemy_frog_jumping_tongue_right_done
 	call add_sprite_to_this_frame
-; 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
-; 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-; 	inc b
-; 	inc c
-; 	inc c
-; 	inc c
 	ld bc, #0103
 	ld iyh, 2
 	call update_enemy_hurt_player_bc_2x1
@@ -1362,11 +1320,6 @@ update_enemy_frog_jumping_tongue_right4:
 	call add_sprite_to_this_frame
 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-; 	inc b
-; 	inc c
-; 	inc c
-; 	inc c
-; 	inc c
 	ld bc, #0104
 	ld iyh, 2
 	call update_enemy_hurt_player_bc_2x1
@@ -1396,10 +1349,6 @@ update_enemy_frog_jumping_tongue_left1:
 	call get_sprite_object_sprite_coordinates
 	jp nz, update_enemy_frog_jumping_tongue_left_done
 	call add_sprite_to_this_frame
-; 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
-; 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-; 	inc b
-; 	dec c
 	ld bc, #01ff	
 	ld iyh, 2
 	call update_enemy_hurt_player_bc_2x1
@@ -1411,11 +1360,6 @@ update_enemy_frog_jumping_tongue_left2:
 	call get_sprite_object_sprite_coordinates
 	jp nz, update_enemy_frog_jumping_tongue_left_done
 	call add_sprite_to_this_frame
-; 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
-; 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-; 	inc b
-; 	dec c
-; 	dec c
 	ld bc, #01fe
 	ld iyh, 2
 	call update_enemy_hurt_player_bc_2x1
@@ -1432,12 +1376,6 @@ update_enemy_frog_jumping_tongue_left3:
 	call get_sprite_object_sprite_coordinates
 	jp nz, update_enemy_frog_jumping_tongue_left_done
 	call add_sprite_to_this_frame
-; 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
-; 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-; 	inc b
-; 	dec c
-; 	dec c
-; 	dec c
 	ld bc, #01fd	
 	ld iyh, 2
 	call update_enemy_hurt_player_bc_2x1
@@ -1454,13 +1392,6 @@ update_enemy_frog_jumping_tongue_left4:
 	call get_sprite_object_sprite_coordinates
 	jp nz, update_enemy_frog_jumping_tongue_left_done
 	call add_sprite_to_this_frame
-; 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
-; 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-; 	inc b
-; 	dec c
-; 	dec c
-; 	dec c
-; 	dec c
 	ld bc, #01fc	
 	ld iyh, 2
 	call update_enemy_hurt_player_bc_2x1
@@ -1576,65 +1507,39 @@ update_enemy_monkey:
 update_enemy_monkey_continue:
 	call update_enemy_hurt_player_2x2
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	call update_enemy__patrol_left_right_platform
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
 	or a
-	jr z, update_enemy_monkey_right
+	jr z, update_enemy_monkey_walking
 	dec a
-	jr z, update_enemy_monkey_left
-	dec a
-	jp z, update_enemy_monkey_jump
+	jr z, update_enemy_monkey_walking
 	dec a
 	jp z, update_enemy_monkey_jump
 	dec a
-	jp z, update_enemy_monkey_throw
-	dec a
-	jp z, update_enemy_monkey_throw
-	; we cannever reach here.
+	jp z, update_enemy_monkey_jump
+	jp update_enemy_monkey_throw
 
-update_enemy_monkey_switch_to_state_right:
-	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
-	jr update_enemy_monkey_right_continue
-update_enemy_monkey_right:
-	call update_enemy_move_right_if_possible_platform
-	jr z, update_enemy_monkey_switch_to_state_left
-update_enemy_monkey_right_continue:
+update_enemy_monkey_walking:
 	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
 	or a
-	jr nz, update_enemy_monkey_right_continue2
+	jr nz, update_enemy_monkey_walking_continue
 	; chance of jumping/throwing
 	call random_a
 	and #7
-	push af
-		call z, update_enemy_monkey_switch_to_state_jump
-	pop af
-	dec a
-	call z, update_enemy_monkey_switch_to_state_throw
-update_enemy_monkey_right_continue2:
-	ld d, iyl
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 31) * 4 
-	jp enemy_sprite_and_continue_animated
-
-update_enemy_monkey_switch_to_state_left:
-	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1  ; left
-	jr update_enemy_monkey_left_continue
-update_enemy_monkey_left:
-	call update_enemy_move_left_if_possible_platform
-	jr z, update_enemy_monkey_switch_to_state_right
-update_enemy_monkey_left_continue:
-	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
-	or a
-	jr nz, update_enemy_monkey_left_continue2
-	; chance of jumping/throwing
+	jr z, update_enemy_monkey_switch_to_state_jump
+update_enemy_monkey_walking_no_jump:
 	call random_a
 	and #7
-	push af
-		call z, update_enemy_monkey_switch_to_state_jump
-	pop af
-	dec a
-	call z, update_enemy_monkey_switch_to_state_throw
-update_enemy_monkey_left_continue2:	
+	jr z, update_enemy_monkey_switch_to_state_throw
+update_enemy_monkey_walking_continue:
 	ld d, iyl
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 35) * 4 
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	add a, a
+	add a, a
+	add a, FIRST_ENEMY_SPRITE_PATTERN + 31
+	add a, a
+	add a, a
+	ld e, a
 	jp enemy_sprite_and_continue_animated
 
 update_enemy_monkey_switch_to_state_jump:
@@ -1649,7 +1554,7 @@ update_enemy_monkey_switch_to_state_jump:
 	inc b
 	call get_room_tile_type
 	cp 1  ; platform
-	ret nz
+	jr nz, update_enemy_monkey_walking_no_jump
 	call update_enemy_move_down  ; move one pixel down directly to avoid the first collision
 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 20  ; start directly falling
 	jr update_enemy_monkey_switch_to_state_jump_continue
@@ -1657,14 +1562,13 @@ update_enemy_monkey_switch_to_state_jump_up:
 	; try to jump up:
 	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	cp 6
-	ret c  ; if monkey is up into the room, do not jump up
+	jr c, update_enemy_monkey_walking_no_jump  ; if monkey is up into the room, do not jump up
 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
 update_enemy_monkey_switch_to_state_jump_continue:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
 	and #01
 	add 2
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), a
-	ret
 
 update_enemy_monkey_jump:
 	call update_enemy_frog_jumping_jump
@@ -1689,13 +1593,12 @@ update_enemy_monkey_jump_continue:
 update_enemy_monkey_switch_to_state_throw:
 	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
 	cp ENEMY_MONKEY_THROWER
-	ret nz
+	jr nz, update_enemy_monkey_walking_continue
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
 	and #01
 	add 4
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), a
 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
-	ret
 
 update_enemy_monkey_throw:
 	ld a, (current_world__difficulty_attack_warn_time)

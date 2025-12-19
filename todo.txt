@@ -1,12 +1,17 @@
 to do:
 
-***- revise enemies.asm: (currently 3294 lines -> 3254)
-  ***- reuse patrol_left_right_platform for skeletons
-  ***- reuse patrol_left_right_platform for monkeys
+***- second boss: Camazotz, the Bat God: A giant bat-like creature with glowing red eyes and sharp claws. (remember room can only be of size 32*24*2 because of boss__room_bg_buffer):
+  ***- mockup of the god (paper/gimp/whatever)
+  ***- room in TILED (maybe bigger than that of Hurakan? the same?)
+  ***- make sure I can go in and out of the room
+  ***- design behaviors
+  ***- draw frames in gimp
+  ***- spawn boss
+  ***- implement behavior
+  ***- kill boss and get stone
 
 - music: intro, letters, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 25 have potential)
   - boss music acts as a health bar (increases in speed as health goes down: 50%, 25%)
-- second boss: Camazotz, the Bat God: A giant bat-like creature with glowing red eyes and sharp claws. (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
 - third boss: The Obsidian Golem: A hulking golem made of obsidian, with glowing cracks. (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
 - caves biome (remember to keep ladder tiles in place for down-door opening code). Implement ice cape effect for lava. Skeleton that spit fire (flamethrower through mouth), rockmen (that turn into an undestructible stone), caterpillars, worms, etc. Is the confluence a "caves biome area" (except the calendar room)?
     - ant colonies (tile enemy that spawns ants). ants/fire ants: just move around not too fast and can climb walls up/down, or even hang from the ceiling

@@ -30,8 +30,9 @@ pcg_enemy_generation_table_jungle_normal:
 	db ENEMY_MONKEY_THROWER, 2
 	db ENEMY_FISH, 4
 	db ENEMY_FISH_JUMPER, 2
-; 	db 1
-; 	db ENEMY_SNAKE_DASHER, 32  ; enemy type and weight
+; 	db 2
+; 	db ENEMY_MONKEY, 16  ; enemy type and weight
+; 	db ENEMY_MONKEY_THROWER, 16  ; enemy type and weight
 
 pcg_enemy_generation_table_pyramid1_normal:
 pcg_enemy_generation_table_pyramid2_normal:
@@ -58,3 +59,5 @@ pcg_enemy_generation_table_moon_normal:
 	db ENEMY_SKELETON, 5
 	db ENEMY_SKELETON_THROWER1, 2
 	db ENEMY_SKELETON_THROWER2, 2
+; 	db 1  ; possible sprite enemy types to be spawned (weights below should add up to 32)
+; 	db ENEMY_SKELETON_THROWER1, 32  ; enemy type and weight
