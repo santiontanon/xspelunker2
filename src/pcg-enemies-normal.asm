@@ -30,6 +30,8 @@ pcg_enemy_generation_table_jungle_normal:
 	db ENEMY_MONKEY_THROWER, 2
 	db ENEMY_FISH, 4
 	db ENEMY_FISH_JUMPER, 2
+; 	db 1
+; 	db ENEMY_SNAKE_DASHER, 32  ; enemy type and weight
 
 pcg_enemy_generation_table_pyramid1_normal:
 pcg_enemy_generation_table_pyramid2_normal:

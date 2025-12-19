@@ -59,41 +59,16 @@ update_enemy_snake:
 	ld iyh, 1  ; damage to deal
 	call update_enemy_hurt_player_2x2
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
-	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
-	or a
-	jr z, update_enemy_snake_right
-	dec a
-	jr z, update_enemy_snake_left
-	; we can never reach here.
-
-update_enemy_snake_switch_to_state_right:
-	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
-	jr update_enemy_snake_right_continue
-update_enemy_snake_right:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	and #01
-	jr z, update_enemy_snake_right_continue
-	call update_enemy_move_right_if_possible_platform
-	jr z, update_enemy_snake_switch_to_state_left
-update_enemy_snake_right_continue:
+	call nz, update_enemy__patrol_left_right_platform
 	ld d, COLOR_DARK_YELLOW
-update_enemy_snake_right_continue_color_set:
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 1) * 4 
-	jp enemy_sprite_and_continue_animated
-
-update_enemy_snake_switch_to_state_left:
-	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1  ; left
-	jr update_enemy_snake_left_continue
-update_enemy_snake_left:
-	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
-	and #01
-	jr z, update_enemy_snake_left_continue
-	call update_enemy_move_left_if_possible_platform
-	jr z, update_enemy_snake_switch_to_state_right
-update_enemy_snake_left_continue:
-	ld d, COLOR_DARK_YELLOW
-update_enemy_snake_left_continue_color_set:
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 3) * 4 
+ 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+ 	add a, a
+ 	add a, FIRST_ENEMY_SPRITE_PATTERN + 1
+ 	add a, a
+ 	add a, a
+ 	ld e, a
 	jp enemy_sprite_and_continue_animated
 
 
@@ -102,6 +77,9 @@ update_enemy_snake_dasher:
 	ld iyh, 1  ; damage to deal
 	call update_enemy_hurt_player_2x2
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	and #01
+	call nz, update_enemy__patrol_left_right_platform
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
 	or a
 	jr z, update_enemy_snake_dasher_right
@@ -120,22 +98,17 @@ update_enemy_snake_dasher_right:
 	; dash?
 	ld a, (player_y + 1)
 	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-	jr nz, update_enemy_snake_dasher_right_no_dash
+	jr nz, update_enemy_snake_dasher_right_continue
 	ld a, (player_x + 1)
 	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
-	jr c, update_enemy_snake_dasher_right_no_dash
+	jr c, update_enemy_snake_dasher_right_continue
 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2  ; dash right!
-	jr update_enemy_snake_dasher_right_continue
-update_enemy_snake_dasher_right_no_dash:
-	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
-	and #1
-	jr z, update_enemy_snake_dasher_right_continue
-	call update_enemy_move_right_if_possible_platform
-	jr z, update_enemy_snake_dasher_switch_to_state_left
 update_enemy_snake_dasher_right_continue:
 	ld d, COLOR_DARK_GREEN
-	jp update_enemy_snake_right_continue_color_set
+update_enemy_snake_right_continue_color_set:
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 1) * 4 
+	jp enemy_sprite_and_continue_animated
 
 update_enemy_snake_dasher_switch_to_state_left:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1  ; left
@@ -144,22 +117,17 @@ update_enemy_snake_dasher_left:
 	; dash?
 	ld a, (player_y + 1)
 	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-	jr nz, update_enemy_snake_dasher_left_no_dash
+	jr nz, update_enemy_snake_dasher_left_continue
 	ld a, (player_x + 1)
 	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
-	jr nc, update_enemy_snake_dasher_left_no_dash
+	jr nc, update_enemy_snake_dasher_left_continue
 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 3  ; dash left!
-	jr update_enemy_snake_dasher_right_continue
-update_enemy_snake_dasher_left_no_dash:	
-	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
-	and #1
-	jr z, update_enemy_snake_dasher_left_continue
-	call update_enemy_move_left_if_possible_platform
-	jr z, update_enemy_snake_dasher_switch_to_state_right
 update_enemy_snake_dasher_left_continue:
 	ld d, COLOR_DARK_GREEN
-	jp update_enemy_snake_left_continue_color_set
+update_enemy_snake_left_continue_color_set:
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 3) * 4 
+	jp enemy_sprite_and_continue_animated
 
 update_enemy_snake_dasher_dash_right:
 	ld a, (current_world__difficulty_attack_warn_time)
@@ -193,6 +161,7 @@ update_enemy_snake_poison:
 	ld iyh, 1  ; damage to deal
 	call update_enemy_hurt_player_2x2
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	call update_enemy__patrol_left_right_platform
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
 	or a
 	jr z, update_enemy_snake_poison_right
@@ -204,9 +173,6 @@ update_enemy_snake_poison:
 	jp z, update_enemy_snake_poison_spit_left
 	; we cannever reach here.
 
-update_enemy_snake_poison_switch_to_state_right:
-	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
-	jr update_enemy_snake_poison_right_continue
 update_enemy_snake_poison_right:
 	; spit?
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
@@ -220,17 +186,10 @@ update_enemy_snake_poison_right:
 	jr c, update_enemy_snake_poison_right_no_spit
 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2  ; spit right!
-	jr update_enemy_snake_poison_right_continue
 update_enemy_snake_poison_right_no_spit:
-	call update_enemy_move_right_if_possible_platform
-	jr z, update_enemy_snake_poison_switch_to_state_left
-update_enemy_snake_poison_right_continue:
 	ld d, COLOR_GREEN
 	jp update_enemy_snake_right_continue_color_set
 
-update_enemy_snake_poison_switch_to_state_left:
-	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1  ; left
-	jr update_enemy_snake_poison_left_continue
 update_enemy_snake_poison_left:
 	; spit?
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
@@ -244,11 +203,7 @@ update_enemy_snake_poison_left:
 	jr nc, update_enemy_snake_poison_left_no_spit
 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 3  ; spit left!
-	jr update_enemy_snake_poison_left_continue
 update_enemy_snake_poison_left_no_spit:	
-	call update_enemy_move_left_if_possible_platform
-	jr z, update_enemy_snake_poison_switch_to_state_right
-update_enemy_snake_poison_left_continue:
 	ld d, COLOR_GREEN
 	jp update_enemy_snake_left_continue_color_set
 
@@ -1207,45 +1162,19 @@ update_enemy_frog:
 	ld iyh, 1  ; damage to deal
 	call update_enemy_hurt_player_2x2
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
-	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
-	or a
-	jr z, update_enemy_frog_right
-	dec a
-	jr z, update_enemy_frog_left
-	; we cannever reach here.
-
-update_enemy_frog_switch_to_state_right:
-	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
-	jr update_enemy_frog_right_continue
-update_enemy_frog_right:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
-	bit 3, a
-	jr z, update_enemy_frog_right_continue
-	and #01
-	jr z, update_enemy_frog_right_continue
-	call update_enemy_move_right_if_possible_platform
-	jr z, update_enemy_frog_switch_to_state_left
-update_enemy_frog_right_continue:
+	and #09
+	cp #09
+	call z, update_enemy__patrol_left_right_platform
 	ld d, COLOR_GREEN
-update_enemy_frog_right_continue_color_set:
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 16) * 4 
-	jp enemy_sprite_and_continue_animated
-
-update_enemy_frog_switch_to_state_left:
-	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1  ; left
-	jr update_enemy_frog_left_continue
-update_enemy_frog_left:
-	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
-	bit 3, a
-	jr z, update_enemy_frog_left_continue
-	and #01
-	jr z, update_enemy_frog_left_continue
-	call update_enemy_move_left_if_possible_platform
-	jr z, update_enemy_frog_switch_to_state_right
-update_enemy_frog_left_continue:
-	ld d, COLOR_GREEN
-update_enemy_frog_left_continue_color_set:
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 19) * 4 
+ 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+ 	ld c, a
+ 	add a, a
+ 	add a, c
+ 	add a, FIRST_ENEMY_SPRITE_PATTERN + 16
+ 	add a, a
+ 	add a, a
+ 	ld e, a
 	jp enemy_sprite_and_continue_animated
 
 
@@ -2004,6 +1933,28 @@ update_enemy_bullet_lightning_done:
 
 
 ;-----------------------------------------------
+update_enemy__patrol_left_right_platform:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	or a
+	jr z, update_enemy__patrol_left_right_platform_right
+	dec a
+	jr z, update_enemy__patrol_left_right_platform_left
+	ret
+
+update_enemy__patrol_left_right_platform_right:
+	call update_enemy_move_right_if_possible_platform
+	ret nz
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1  ; left
+	ret
+
+update_enemy__patrol_left_right_platform_left:
+	call update_enemy_move_left_if_possible_platform
+	ret nz
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
+	ret
+
+
+;-----------------------------------------------
 update_enemy_move_cb:
 	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
 	add a, c
@@ -2532,7 +2483,6 @@ update_enemy_hurt_player_bullet:
 	call player_hit_damage_c
 	xor a  ; hit
 	ret
-
 
 
 ;-----------------------------------------------
