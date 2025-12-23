@@ -1,14 +1,27 @@
 to do:
 
 ***- second boss: Camazotz, the Bat God: A giant bat-like creature with glowing red eyes and sharp claws. (remember room can only be of size 32*24*2 because of boss__room_bg_buffer):
-  ***- mockup of the god (paper/gimp/whatever)
-  ***- room in TILED (maybe bigger than that of Hurakan? the same?)
+  ***- mockup of the god (paper/gimp/whatever):
+    OK - base position
+    ***- flying frame (facing forward?)
+    ***- mountain of bones with the skull frame (which will come back to life and form camazotz)
+  ***- room in TILED (maybe bigger than that of Hurakan? the same?): depending on the final gfx, make it tall or wide, so that the boss flying fits fine.
   ***- make sure I can go in and out of the room
-  ***- design behaviors
-  ***- draw frames in gimp
-  ***- spawn boss
-  ***- implement behavior
+  ***- spawn boss (bone pile that wakes up when you approach, and then it just stays in idle position)
+    ***- wake up animation
+    ***- two frame sequence of boss being idle
   ***- kill boss and get stone
+  ***- implement behaviors:
+    ***- draw frames in gimp for the behaviors below
+    - behavior 1: crouched (facing left or right):
+      - walks slowly forward/backward
+      - sonic boom through mouth
+      - bullets through eyes
+      - claw attack (with enough antitipation, swings its arm to claw you, with long reach)
+    - behavior 2: takes flight
+      - flies left and right (facing forward?)
+      - spawns small bats (of the aggressive kind that fire bullets): up to 4 at most in the screen? (test)
+      - sonic boom barrage from the sky, going from side to side firing them downwards every time it crosses your x coordinate
 
 - music: intro, letters, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 25 have potential)
   - boss music acts as a health bar (increases in speed as health goes down: 50%, 25%)
