@@ -1,10 +1,6 @@
 to do:
 
 ***- second boss: Camazotz, the Bat God: A giant bat-like creature with glowing red eyes and sharp claws. (remember room can only be of size 32*24*2 because of boss__room_bg_buffer):
-  ***- mockup of the god (paper/gimp/whatever):
-    OK - base position
-    OK - flying frame (facing forward)
-    ***- mountain of bones with the skull frame (which will come back to life and form camazotz)
   ***- room in TILED (maybe bigger than that of Hurakan? the same?): depending on the final gfx, make it tall or wide, so that the boss flying fits fine.
   ***- make sure I can go in and out of the room
   ***- spawn boss (bone pile that wakes up when you approach, and then it just stays in idle position)
