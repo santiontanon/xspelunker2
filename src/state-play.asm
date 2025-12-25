@@ -68,7 +68,7 @@ state_play:
 		; debug:
 		ld a, 1
 ; 		ld (player_inventory_items), a  ; first boss key
-; 		ld (player_inventory_items+1), a
+		ld (player_inventory_items+1), a
 ; 		ld (player_inventory_items+2), a
 ; 		ld (player_inventory_items+3), a
 ; 		ld (player_inventory_items+4), a
@@ -150,9 +150,9 @@ state_play:
 
 		; generate area:
 		ld hl, pcg_generate_area
-		ld e, 0  ; area to generate
+; 		ld e, 0  ; area to generate
 ; 		ld e, 1  ; area to generate <- first boss
-; 		ld e, 2  ; area to generate
+		ld e, 2  ; area to generate <- second boss
 ; 		ld e, 3  ; area to generate
 ; 		ld e, 4  ; area to generate
 ; 		ld e, 9  ; area to generate
@@ -164,6 +164,7 @@ state_play:
 		; generate room:
 		ld e, START_ROOM_ID
 ; 		ld e, 20  ; <- first boss
+		ld e, 16  ; <- second boss
 ; 		ld e, 26
 ; 		ld e, 0
 ; 		ld e, CALENDAR_ROOM_ID
@@ -199,10 +200,15 @@ state_play_from_loaded_room:
 state_play_from_inventory:
 		ld sp, stack  ; reset the stack, so we can jump here from wherever we want
 
-		; recalculate y scroll limits, which depend on the hud option:
+		; recalculate scroll limits, which depend on the hud option, and also are needed for
+		; predefined rooms (like boss rooms), for which these are not computed, as they do not
+		; go through pcg:
 		ld a, (current_room__height)
 		sub 24
 		ld (current_room__max_scroll_y), a
+		ld a, (current_room__width)
+		sub 32
+		ld (current_room__max_scroll_x), a		
 		ld a, (config_hud_type)
 		cp 2  ; full hud
 		jr nz, state_play_from_inventory__no_full_hud

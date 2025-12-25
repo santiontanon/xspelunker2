@@ -56,22 +56,25 @@ boss1_difficulty_setting__hardest:
 ;-----------------------------------------------
 	db -48   ; just to remove the sprites when the name disappears
 boss1_name_y_table:
+boss2_name_y_table:
 	db -32, -28, -24, -20, -16, -12, -9, -5
 	db  -2,   1,   4,   7,   9,  11, 13, 15
 	db  16,  17,  18,  19,  19,  19, 19, 20
 
 boss1_name_initial_sprite_attributes:
+boss2_name_initial_sprite_attributes:
 	db -32, 112, (FIRST_ENEMY_SPRITE_PATTERN + 1)*4, COLOR_WHITE
 	db -32, 128, (FIRST_ENEMY_SPRITE_PATTERN + 2)*4, COLOR_WHITE
 	db -16, 112, (FIRST_ENEMY_SPRITE_PATTERN + 3)*4, COLOR_WHITE
 	db -16, 128, (FIRST_ENEMY_SPRITE_PATTERN + 4)*4, COLOR_WHITE
+
 
 ;-----------------------------------------------
 boss1_frame_0_stone:
 	db 1  ; number of parts
 	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
 	dw #0906, BOSS1_NAMETABLE_STONE  ; dimensions and nametable
-	dw 0, #0906  ; boss__clear_bbox
+	dw 0, #0906  ; offset and boss__clear_bbox
 boss1_frame_1_idle:
 	db 2
 	db 0, 0
@@ -328,11 +331,17 @@ update_boss1_behavior_0_raise_loop:
 	call call_hl_in_page_c_8000
 
 	; Bring boss name (using sprites)
-	call update_boss1_behavior_bring_name_down
+	ld hl, boss1_name_initial_sprite_attributes
+	ld de, boss1_name_y_table
+	call update_boss_behavior_bring_name_down
 	call update_boss1_behavior_flash_stone_to_blue
 	call update_boss1_draw_boss_frame_1
+	ld b, 100
+	call wait_b_halts_skippable
 	; Remove boss name (using sprites)
-	call update_boss1_behavior_bring_name_up
+	ld hl, boss1_name_initial_sprite_attributes
+	ld de, boss1_name_y_table + 23
+	call update_boss_behavior_bring_name_up
 
 update_boss1_behavior_0_choose_behavior:
 	ld c, 3
@@ -970,8 +979,6 @@ update_boss1_behavior_4_sink_loop:
 	ld a, 0  ; boss number
 	call boss_spawn_power_stone
 
-	; ...
-
 	ld hl, draw_room_with_hud
 	ld c, TILES_PAGE
 	call call_hl_in_page_c_8000
@@ -1143,74 +1150,6 @@ update_boss1_draw_boss_frame_6_no_staff:
 update_boss1_draw_boss_frame_7:  ; punch
 	ld hl, boss1_frame_16_punch_attack_no_staff
 	jp update_boss1_draw_boss_frame_continue
-
-
-;-----------------------------------------------
-update_boss1_behavior_bring_name_down:
-	ld hl, boss1_name_initial_sprite_attributes
-	ld de, buffer_4096
-	ld bc, 4*4
-	ldir
-	ld b, 24
-	ld hl, boss1_name_y_table
-update_boss1_behavior_bring_name_down_loop:
-	ld a, (hl)
-	push hl
-	push bc
-		ld de, buffer_4096
-		ld (de), a
-		ld de, buffer_4096 + 4
-		ld (de), a
-		add a, 16
-		ld de, buffer_4096 + 8
-		ld (de), a
-		ld de, buffer_4096 + 12
-		ld (de), a
-		ld hl, buffer_4096
-		ld de, SPRATR2 + FIRST_OBJECT_SPRITE * 4
-		ld b, 4*4
-		call fast_small_LDIRVM
-		halt
-		halt
-	pop bc
-	pop hl
-	inc hl
-	djnz update_boss1_behavior_bring_name_down_loop
-	ret
-
-
-;-----------------------------------------------
-update_boss1_behavior_bring_name_up:
-	ld hl, boss1_name_initial_sprite_attributes
-	ld de, buffer_4096
-	ld bc, 4*4
-	ldir
-	ld b, 25
-	ld hl, boss1_name_y_table + 23
-update_boss1_behavior_bring_name_up_loop:
-	ld a, (hl)
-	push hl
-	push bc
-		ld de, buffer_4096
-		ld (de), a
-		ld de, buffer_4096 + 4
-		ld (de), a
-		add a, 16
-		ld de, buffer_4096 + 8
-		ld (de), a
-		ld de, buffer_4096 + 12
-		ld (de), a
-		ld hl, buffer_4096
-		ld de, SPRATR2 + FIRST_OBJECT_SPRITE * 4
-		ld b, 4*4
-		call fast_small_LDIRVM
-		halt
-		halt
-	pop bc
-	pop hl
-	dec hl
-	djnz update_boss1_behavior_bring_name_up_loop
-	ret
 
 
 ;-----------------------------------------------

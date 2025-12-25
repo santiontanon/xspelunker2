@@ -92,43 +92,60 @@ enter_boss_door_loop:
 
 		; clear the screen:
 		call clear_screen_left_to_right
-	pop bc
-	push bc
 		; choose which room to load, player position, etc based on the boss number:
-		; - c: boss number
-		; ...
-
 		ld c, PCG_PAGE
 		ld hl, pcg_generate_room_reset_state
 		call call_hl_in_page_c_8000
-
+	pop bc
+	push bc
 		; setup boss area/room:
+		; - c: boss number
+		ld a, c
+		or a
 		ld hl, boss_room_1_zx0
-		ld de, current_room__id
-		call dzx0
+		ld de, boss_1_tiles_zx0
+		ld bc, tile_collision_types_boss1
+		ld iy, boss1_sprites_zx0
+		jr z, enter_boss_door__room_ptr_set
+		dec a
+		ld hl, boss_room_2_zx0
+		ld de, boss_2_tiles_zx0
+		ld bc, tile_collision_types_boss2
+		ld iy, boss2_sprites_zx0
+		jr z, enter_boss_door__room_ptr_set
 
-		ld c, PCG_PAGE
-		ld hl, pcg_generate_room__prettify_pyramid
-		call call_hl_in_page_c_8000
+		; ...
 
-		ld a, BOSS_PAGE
-		ld (current_room__tileset_page), a
-		ld hl, boss_1_tiles_zx0
-		ld (current_room__tileset_ptr), hl
-		ld hl, update_animations_in_vdp_none
-		ld (current_room__animation_fn_ptr), hl
-		ld hl, tile_collision_types_boss1
-		ld (current_room__collision_ptr), hl
+enter_boss_door__room_ptr_set:
+		push bc
+		push iy
+			push de
+				ld de, current_room__id
+				call dzx0
+
+				ld c, PCG_PAGE
+				ld hl, pcg_generate_room__prettify_pyramid
+				call call_hl_in_page_c_8000
+
+				ld a, BOSS_PAGE
+				ld (current_room__tileset_page), a
+			pop de
+			ld (current_room__tileset_ptr), de
+			ld hl, update_animations_in_vdp_none
+			ld (current_room__animation_fn_ptr), hl
+		pop iy
+		pop bc
+		ld (current_room__collision_ptr), bc  ; collision types
 		ld a, BOSS_PAGE
 		ld (current_room__collision_ptr_page), a
-		ld hl, boss1_sprites_zx0
-		ld (current_room__enemy_sprites_ptr), hl
+		ld (current_room__enemy_sprites_ptr), iy
 		ld hl, 0
 		ld (large_object_to_upload_to_vdp), hl
 		xor a
 		ld (boss__behavior), a
 		ld (boss__state), a
 		ld (boss__state_timer), a
+		ld (boss__hit_timer), a	
 		ld (boss__last_collision_id), a
 		inc a  ; a = 1
 		ld (boss__active), a
@@ -141,7 +158,7 @@ enter_boss_door_loop:
 		ld hl, player_x
 		ld (hl), 0
 		inc hl
-		ld (hl), 3
+		ld (hl), 4
 		inc hl
 		ld (hl), 0
 		inc hl
@@ -741,10 +758,86 @@ player_weapon_hitbox_check_boss_loop_x_skip
 
 
 ;-----------------------------------------------
+; input:
+; - hl: initial sprite attributes
+; - de: y_table
+update_boss_behavior_bring_name_down:
+	push de
+		ld de, buffer_4096
+		ld bc, 4*4
+		ldir
+		ld b, 24
+	pop hl
+update_boss_behavior_bring_name_down_loop:
+	ld a, (hl)
+	push hl
+	push bc
+		ld de, buffer_4096
+		ld (de), a
+		ld de, buffer_4096 + 4
+		ld (de), a
+		add a, 16
+		ld de, buffer_4096 + 8
+		ld (de), a
+		ld de, buffer_4096 + 12
+		ld (de), a
+		ld hl, buffer_4096
+		ld de, SPRATR2 + FIRST_OBJECT_SPRITE * 4
+		ld b, 4*4
+		call fast_small_LDIRVM
+		halt
+		halt
+	pop bc
+	pop hl
+	inc hl
+	djnz update_boss_behavior_bring_name_down_loop
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - hl: initial sprite attributes
+; - de: y_table
+update_boss_behavior_bring_name_up:
+	push de
+		ld de, buffer_4096
+		ld bc, 4*4
+		ldir
+		ld b, 25
+	pop hl
+update_boss_behavior_bring_name_up_loop:
+	ld a, (hl)
+	push hl
+	push bc
+		ld de, buffer_4096
+		ld (de), a
+		ld de, buffer_4096 + 4
+		ld (de), a
+		add a, 16
+		ld de, buffer_4096 + 8
+		ld (de), a
+		ld de, buffer_4096 + 12
+		ld (de), a
+		ld hl, buffer_4096
+		ld de, SPRATR2 + FIRST_OBJECT_SPRITE * 4
+		ld b, 4*4
+		call fast_small_LDIRVM
+		halt
+		halt
+	pop bc
+	pop hl
+	dec hl
+	djnz update_boss_behavior_bring_name_up_loop
+	ret
+
+
+;-----------------------------------------------
 update_boss_behavior:
 	ld a, (current_area__id)
 	cp 1
 	jp z, update_boss1_behavior
+	cp 2
+	jp z, update_boss2_behavior
 
 
 	; ...
@@ -756,6 +849,7 @@ update_boss_behavior:
 ; - 3: parts of boss that hit you
 ; - 9: parts of boss that you can hit (and also hit you)
 tile_collision_types_boss1:
+tile_collision_types_boss2:
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0

@@ -1,23 +1,28 @@
 to do:
 
-***- second boss: Camazotz, the Bat God: A giant bat-like creature with glowing red eyes and sharp claws. (remember room can only be of size 32*24*2 because of boss__room_bg_buffer):
-  ***- room in TILED (maybe bigger than that of Hurakan? the same?): depending on the final gfx, make it tall or wide, so that the boss flying fits fine.
-  ***- make sure I can go in and out of the room
-  ***- spawn boss (bone pile that wakes up when you approach, and then it just stays in idle position)
-    ***- wake up animation
-    ***- two frame sequence of boss being idle
+***- second boss: Camazotz, the Bat God
   ***- kill boss and get stone
+    ***- figure out a way to swam boss frames for different parts (swapping tile sets), but keep the parts that are "hittable" and those that are not the same
+    ***- tile type table for boss 2
+    ***- death animation (undo the appearing animation)
+    ***- drop stone
   ***- implement behaviors:
     ***- draw frames in gimp for the behaviors below
-    - behavior 1: crouched (facing left or right):
-      - walks slowly forward/backward
-      - sonic boom through mouth
-      - bullets through eyes
-      - claw attack (with enough antitipation, swings its arm to claw you, with long reach)
-    - behavior 2: takes flight
+    ***- permanent animated red sprite in eyes
+    ***- behavior 1: crouched (facing left or right):
+      ***- walks slowly forward/backward
+      ***- sonic boom through mouth
+      ***- bullets through eyes
+      ***- claw attack (with enough antitipation, swings its arm to claw you, with long reach)
+      ***- hide behind wing if you shoot projectiles
+    ***- behavior 2: takes flight
       - flies left and right (facing forward?)
       - spawns small bats (of the aggressive kind that fire bullets): up to 4 at most in the screen? (test)
       - sonic boom barrage from the sky, going from side to side firing them downwards every time it crosses your x coordinate
+      - shoots spikes down, that remain in the floor (turns floor into spikes, so you need to go through the platforms)
+    ***- think of a 3rd behavior for when health is low and he's angry
+  ***- visual sign when you hit the boss (e.g. sprite mark)
+  ***- define the different difficulty levels
 
 - music: intro, letters, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 25 have potential)
   - boss music acts as a health bar (increases in speed as health goes down: 50%, 25%)

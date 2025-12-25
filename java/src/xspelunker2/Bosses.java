@@ -43,6 +43,9 @@ public class Bosses {
     {
         boss1Tiles();
         boss1Sprites();
+
+        boss2Tiles();
+        boss2Sprites();
     }
     
     
@@ -219,6 +222,155 @@ public class Bosses {
         ZX0Wrapper.main(outputPath + ".bin", outputPath + ".zx0", true, false);
     }
     
+    
+    public static void boss2Tiles() throws Exception
+    {
+        String boss1BaseTiles = "data/boss-pyramid-base-tiles.png";
+        String boss1Tiles = "data/boss2.png";
+        
+        // Identify the gaps in "boss1BaseTiles" where tiles can be saved:
+        BufferedImage baseImage = ImageIO.read(new File(boss1BaseTiles));
+        boolean availableTiles[] = new boolean[256];
+        int collision[] = new int[256];
+        {
+            int n_availableTiles = 0;
+            System.out.println("Collision table:");
+            for(int i = 0;i<16;i++) {
+                String line = "    db ";
+                for(int j = 0;j<16;j++) {
+                    boolean empty = tileIsEmpty(j, i, baseImage);
+                    if (i<3) empty = false;  // protect the top 3 rows
+                    availableTiles[j + i*16] = empty;
+                    if (empty) {
+                        n_availableTiles++;
+                        collision[j + i*16] = 3;
+                    } else {
+                        collision[j + i*16] = pyramid_collision[j + i*16];
+                    }
+                    line += collision[j + i*16] + ", ";
+                }
+                System.out.println(line.substring(0, line.length() - 2));
+            }
+            System.out.println("boss 2: available tiles " + n_availableTiles);
+        }
+        
+        // Extract all tiles from the boss file and add in the gaps:
+        {
+            BufferedImage sourceImage = ImageIO.read(new File(boss1Tiles));
+            HashMap<Integer, Integer> map = new HashMap<>();
+            List<List<Integer>> tiles = new ArrayList<>();
+            List<Integer> tile = new ArrayList<>();
+            int nameTable[][] = new int[sourceImage.getWidth()/8][sourceImage.getHeight()/8];
+            for(int i = 0;i<8*8;i++) tile.add(0);
+            tiles.add(tile);            
+            for(int i = 0;i<sourceImage.getHeight();i+=8) {
+                for(int j = 0;j<sourceImage.getWidth();j+=8) {
+                    tile = new ArrayList<>();
+                    for(int ii = 0;ii<8;ii++) {
+                        for(int jj = 0;jj<8;jj++) {
+                            int color = ConvertPatternsToAssembler.findMSXColor(j+jj, i+ii, sourceImage, 0);
+                            if (color == -1) throw new Exception("Unknown color at " + (j+jj) + ", " + (i+ii));
+                            tile.add(color);
+                        }
+                    }
+
+                    int found = -1;
+                    for(int tileIndex = 0;tileIndex<tiles.size();tileIndex++) {
+                        List<Integer> tile2 = tiles.get(tileIndex);
+                        boolean match = true;
+                        for(int k = 0;k<8*8;k++) {
+                            if (!tile.get(k).equals(tile2.get(k))) {
+                                match = false;
+                                break;
+                            }
+                        }
+                        if (match) {
+                            found = tileIndex;
+                            break;
+                        }
+                    }
+                    if (found == -1) {
+                        nameTable[j/8][i/8] = tiles.size();
+                        tiles.add(tile);
+                    } else {
+                        nameTable[j/8][i/8] = found;
+                    }                    
+                }
+            }
+            System.out.println("number of tiles of the boss: " + tiles.size());            
+//            for(int i = 0;i<nameTable[0].length;i++) {
+//                for(int j = 0;j<nameTable.length;j++) {
+//                    System.out.print(nameTable[j][i] + ", ");
+//                }
+//                System.out.println("");
+//            }
+
+            // Add all the new tiles:
+            map.put(0, 0);
+            for(int tileID = 1;tileID<tiles.size();tileID++) {
+                List<Integer> tile2 = tiles.get(tileID);
+                boolean found = false;
+                for(int i = 0;i<16;i++) {
+                    for(int j = 0;j<16;j++) {
+                        if (availableTiles[j+i*16]) {
+                            for(int ii = 0;ii<8;ii++) {
+                                for(int jj = 0;jj<8;jj++) {
+                                    baseImage.setRGB(j*8+jj, i*8+ii, ConvertPatternsToAssembler.MSXColorToRGB(tile2.get(jj+ii*8)));
+                                }
+                            }                            
+                            availableTiles[j+i*16] = false;
+                            map.put(tileID, j + i*16);
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (found) break;
+                }
+            }
+            
+            // Save all the tiles:
+            ImageIO.write(baseImage, "png", new File("data/boss2-tiles.png"));
+
+            GenerateTiles.extractTiles("data/boss2-tiles.png", "src/autogenerated/boss2-tiles", 24, 128);
+            
+            // Generate the name tables:
+            for(int i = 0;i<nameTable[0].length;i++) {
+                for(int j = 0;j<nameTable.length;j++) {
+                    nameTable[j][i] = map.get(nameTable[j][i]);
+                }
+            }
+            
+            List<Integer> nameTableData = new ArrayList<>();
+            addNameTable(nameTable, 17, 0, 26, 4, nameTableData);  // appearing 1 (0 + 9*4)
+            addNameTable(nameTable, 16, 4, 26, 9, nameTableData);  // appearing 2 (36 + 10*5)
+            addNameTable(nameTable, 16, 9, 26, 14, nameTableData);  // appearing 3(108 + 10*5)
+            addNameTable(nameTable, 16, 14, 26, 19, nameTableData);  // idle left (150 + 10*5)
+            
+            System.out.println("name tables: " + nameTableData.size() + " bytes");
+            Z80Assembler.dataToBinary(nameTableData, "src/autogenerated/boss2-nametables.bin");
+        }
+    }
+    
+    
+    public static void boss2Sprites() throws Exception
+    {
+        BufferedImage sourceImage = ImageIO.read(new File("data/boss-sprites.png"));
+        List<Integer> data = new ArrayList<>();
+
+        // bullet must be the first sprite:
+        data.addAll(GenerateSprites.extractSprite(sourceImage, 48, 0, 15));  // bullet
+
+        data.addAll(GenerateSprites.extractSprite(sourceImage, 80, 32, 15));  // boss name
+        data.addAll(GenerateSprites.extractSprite(sourceImage, 96, 32, 15));
+        data.addAll(GenerateSprites.extractSprite(sourceImage, 80, 48, 15));
+        data.addAll(GenerateSprites.extractSprite(sourceImage, 96, 48, 15));
+        
+        System.out.println("boss2Sprites: " + data.size());
+        String outputPath = "src/autogenerated/boss2-sprites";
+        Z80Assembler.dataToBinary(data, outputPath + ".bin");
+        ZX0Wrapper.main(outputPath + ".bin", outputPath + ".zx0", true, false);
+    }
+
     
     public static void addNameTable(int nameTable[][], int x1, int y1, int x2, int y2, List<Integer> data)
     {

@@ -273,7 +273,7 @@ public class ConvertPatternsToAssembler {
             if (!differentColors.contains(msxColor)) differentColors.add(msxColor);
             pixels.add(msxColor);
         }
-        if (differentColors.size()>2) System.out.println("ERROR "+(ERROR_color_count++)+": more than 2 colors in line " + tilex*PW + ", " + (tiley*PH) + "+" + line);
+        if (differentColors.size()>2) System.out.println("ERROR "+(ERROR_color_count++)+": more than 2 colors in line " + tilex*PW + ", " + (tiley*PH) + "+" + line + "  -->  " + pixels);
         return pixels;        
     }
     
@@ -295,7 +295,7 @@ public class ConvertPatternsToAssembler {
             if (!differentColors.contains(msxColor)) differentColors.add(msxColor);
             pixels.add(msxColor);
         }
-        if (differentColors.size()>2) System.out.println("ERROR "+(ERROR_color_count++)+": more than 2 colors in line " + tilex*PW + ", " + (tiley*PH) + "+" + line);
+        if (differentColors.size()>2) System.out.println("ERROR "+(ERROR_color_count++)+": more than 2 colors in line " + tilex*PW + ", " + (tiley*PH) + "+" + line  + "  -->  " + pixels);
         return pixels;        
     }    
     
