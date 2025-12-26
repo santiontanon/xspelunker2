@@ -2,14 +2,10 @@ to do:
 
 ***- second boss: Camazotz, the Bat God
   ***- behavior 1: crouched (facing left or right):
-    OK - add variable to mark if boss is facing left or right
-    OK - when stopping and player is in opposite side, flip:
-      OK - upload tiles to VDP as needed
-    ***- render flipped name table if facing right
-    ***- walk forward state walks left/right depending on facing direction
-    ***- chance to walk backwards
     ***- limit how far left/right boss can walk
-    ***- dash all the way forward
+    ***- chance to keep walking (from walk)
+    ***- chance to walk backwards (from idle)
+    ***- dash all the way forward (from idle)
     ***- tile type table for boss 2
     ***- permanent animated red sprite in eyes
     ***- sonic boom through mouth

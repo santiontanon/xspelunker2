@@ -43,53 +43,77 @@ boss2_frame_ptrs:
 	dw boss2_frame_6_walk_left_3
 	dw boss2_frame_7_walk_left_4
 
+boss2_frame_ptrs_flipped:
+	dw boss2_frame_0_appearing1
+	dw boss2_frame_1_appearing2
+	dw boss2_frame_2_appearing3
+	dw boss2_frame_3_idle_left
+	dw boss2_frame_4_walk_left_1_flipped
+	dw boss2_frame_5_walk_left_2_flipped
+	dw boss2_frame_6_walk_left_3_flipped
+	dw boss2_frame_7_walk_left_4_flipped
+
 boss2_frame_0_appearing1:
 	db 1  ; number of parts
 	db 2, 1  ; offset wrt the draw ptr (x offset, y offset)
 	dw #0409, BOSS2_NAMETABLE_APPEARING1  ; dimensions and nametable
 	dw 0, #050b  ; boss__clear_bbox
-
 boss2_frame_1_appearing2:
 	db 1  ; number of parts
 	db 2, 0  ; offset wrt the draw ptr (x offset, y offset)
 	dw #050a, BOSS2_NAMETABLE_APPEARING2  ; dimensions and nametable
 	dw 0, #050c  ; boss__clear_bbox
-
 boss2_frame_2_appearing3:
 	db 1  ; number of parts
 	db 1, 0  ; offset wrt the draw ptr (x offset, y offset)
 	dw #050b, BOSS2_NAMETABLE_APPEARING3  ; dimensions and nametable
 	dw 0, #050c  ; boss__clear_bbox
-
 boss2_frame_3_idle_left:
 	db 1  ; number of parts
 	db 1, 0  ; offset wrt the draw ptr (x offset, y offset)
 	dw #050b, BOSS2_NAMETABLE_IDLE_LEFT  ; dimensions and nametable
 	dw 0, #050c  ; boss__clear_bbox
-
 boss2_frame_4_walk_left_1:
 	db 1  ; number of parts
 	db 1, 0  ; offset wrt the draw ptr (x offset, y offset)
 	dw #050c, BOSS2_NAMETABLE_WALK_LEFT_1  ; dimensions and nametable
 	dw 0, #050d  ; boss__clear_bbox
-
 boss2_frame_5_walk_left_2:
 	db 1  ; number of parts
 	db 1, 0  ; offset wrt the draw ptr (x offset, y offset)
 	dw #050c, BOSS2_NAMETABLE_WALK_LEFT_2  ; dimensions and nametable
 	dw 0, #050d  ; boss__clear_bbox
-
 boss2_frame_6_walk_left_3:
 	db 1  ; number of parts
 	db 1, 0  ; offset wrt the draw ptr (x offset, y offset)
 	dw #050b, BOSS2_NAMETABLE_WALK_LEFT_3  ; dimensions and nametable
 	dw 0, #050c  ; boss__clear_bbox
-
 boss2_frame_7_walk_left_4:
 	db 1  ; number of parts
 	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
 	dw #050c, BOSS2_NAMETABLE_WALK_LEFT_4  ; dimensions and nametable
 	dw 0, #050c  ; boss__clear_bbox
+
+boss2_frame_4_walk_left_1_flipped:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #050c, BOSS2_NAMETABLE_WALK_LEFT_1  ; dimensions and nametable
+	dw 0, #050c  ; boss__clear_bbox
+boss2_frame_5_walk_left_2_flipped:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #050c, BOSS2_NAMETABLE_WALK_LEFT_2  ; dimensions and nametable
+	dw 0, #050c  ; boss__clear_bbox
+boss2_frame_6_walk_left_3_flipped:
+	db 1  ; number of parts
+	db 1, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #050b, BOSS2_NAMETABLE_WALK_LEFT_3  ; dimensions and nametable
+	dw 0, #050c  ; boss__clear_bbox
+boss2_frame_7_walk_left_4_flipped:
+	db 1  ; number of parts
+	db 1, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #050c, BOSS2_NAMETABLE_WALK_LEFT_4  ; dimensions and nametable
+	dw 0, #050d  ; boss__clear_bbox
 
 
 ;-----------------------------------------------
@@ -251,11 +275,19 @@ update_boss2_behavior_1_state_1:
 	ld hl, boss__state_timer
 	ld a, (hl)
 	and e
-	jr nz, update_boss2_behavior_1_state_1_continue
+	jr nz, update_boss2_behavior_1_state_1_continue2
+	ld a, (boss__2_direction)
+	or a
 	ld a, (boss__x)
+	jr nz, update_boss2_behavior_1_state_1_move_right
+update_boss2_behavior_1_state_1_move_left:
 	dec a
-	ld (boss__x), a
+	jr update_boss2_behavior_1_state_1_continue
+update_boss2_behavior_1_state_1_move_right:
+	inc a
 update_boss2_behavior_1_state_1_continue:
+	ld (boss__x), a
+update_boss2_behavior_1_state_1_continue2:
 	ld a, (hl)
 	inc (hl)
 
@@ -397,6 +429,12 @@ update_boss2_draw_boss_frame:
 	ld hl, boss2_frame_ptrs
 	add a, a
 	ADD_HL_A
+	ld a, (boss__2_direction)
+	or a
+	jr z, update_boss2_draw_boss_frame_continue
+	ld bc, boss2_frame_ptrs_flipped - boss2_frame_ptrs
+	add hl, bc
+update_boss2_draw_boss_frame_continue:
 	ld a, (hl)
 	inc hl
 	ld h, (hl)
@@ -410,8 +448,13 @@ update_boss2_draw_boss_frame:
 		call get_room_tile_ptr
 		ex de, hl  ; hl = ptr where the boss is to be drawn
 	pop hl
+	ld a, (boss__2_direction)
+	or a
 ; 	push de
-		call draw_boss_frame
+		push af
+			call z, draw_boss_frame
+		pop af
+		call nz, draw_boss_frame_flipped
 ; 	pop de  ; preserve the ptr of where to draw for the damage face
 
 	; check if we need to draw an overlay of the "damage face" when the boss is hit:

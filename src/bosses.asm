@@ -517,6 +517,81 @@ draw_boss_frame_loop_continue:
 
 
 ;-----------------------------------------------
+; input:
+; - de: ptr to draw to
+; - hl: ptr to frame struct
+draw_boss_frame_flipped:
+	push hl
+	push de
+		call draw_boss_frame_clear_previous_frame
+	pop de
+	pop hl
+
+	ld a, (hl)  ; number of frame parts
+	inc hl
+	or a
+	ret z
+	ld b, a
+	push de
+draw_boss_frame_flipped_loop:
+		push bc
+			push de
+				ld c, (hl)  ; x offset
+				inc hl
+				; sign extend c to bc:
+				ld a, c
+			    rlca
+			    sbc a
+			    ld  b, a	
+				ex de, hl
+					add hl, bc  ; add x offset
+				ex de, hl
+				ld a, (current_room__width)
+				ld c, a
+				ld a, (hl)  ; y offset
+				inc hl
+				or a
+				jr z, draw_boss_frame_flipped_loop_continue
+				ex de, hl
+draw_boss_frame_flipped_loop_y_offset_loop:
+					add hl, bc
+					dec a
+					jr nz, draw_boss_frame_flipped_loop_y_offset_loop
+				ex de, hl
+draw_boss_frame_flipped_loop_continue:
+				ld c, (hl)  ; width
+				inc hl
+				ld b, (hl)  ; height
+				inc hl
+				push hl
+					ld a, (hl)
+					inc hl
+					ld h, (hl)
+					ld l, a
+					call draw_boss_frame_part_flipped
+				pop hl
+			pop de
+			inc hl
+			inc hl
+		pop bc
+		djnz draw_boss_frame_flipped_loop
+		; set clear bbox:
+		ld c, (hl)
+		inc hl
+		ld b, (hl)  ; bc is the offset wrt original draw pointer
+		inc hl
+		ld de, boss__clear_bbox + 2
+		push bc
+			ldi
+			ldi
+		pop bc
+	pop hl
+	add hl, bc
+	ld (boss__clear_bbox), hl
+	ret
+
+
+;-----------------------------------------------
 draw_boss_frame_clear_previous_frame:
 		; clear the previous frame
 		ld bc, (boss__clear_bbox + 2)
@@ -613,6 +688,59 @@ draw_boss_frame_part_loop_y_skip:
 			ld b, 0
 			add hl, bc
 			jr draw_boss_frame_part_loop_y_skip2
+
+
+;-----------------------------------------------
+; input:
+; - hl: frame ptr
+; - de: destination ptr
+; - c, b: width, height
+draw_boss_frame_part_flipped:
+draw_boss_frame_part_flipped_loop_y:
+	push bc
+		push de
+			; if "de" < current_room__tile_map, skip row  ->  draw_boss_frame_part_loop_y_skip
+			ex de, hl
+			push bc
+			push hl
+				ld bc, current_room__tile_map
+				or a  ; clear carry flag
+				sbc hl, bc
+			pop hl
+			pop bc
+			ex de, hl
+			jr c, draw_boss_frame_part_flipped_loop_y_skip
+
+			push hl
+				; draw from hl to de:
+				ld b, 0
+				add hl, bc  ; move to the end of the row
+				dec hl
+				ld b, c
+draw_boss_frame_part_flipped_loop_x:
+				ld a, (hl)
+				or a
+				jr z, draw_boss_frame_part_flipped_loop_x_skip
+				ld (de), a
+draw_boss_frame_part_flipped_loop_x_skip:
+				dec hl
+				inc de
+				djnz draw_boss_frame_part_flipped_loop_x
+			pop hl
+draw_boss_frame_part_flipped_loop_y_skip:
+			; advance 'hl':
+			ld b, 0
+			add hl, bc
+		pop de
+		ex de, hl
+		ld a, (current_room__width)
+		; ld b, 0
+		ld c, a
+		add hl, bc
+		ex de, hl
+	pop bc
+	djnz draw_boss_frame_part_flipped_loop_y
+	ret
 
 
 ;-----------------------------------------------
