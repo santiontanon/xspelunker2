@@ -244,6 +244,7 @@ boss__hp: ds virtual 2  ; hit points, 16bit
 boss__last_collision_id: ds virtual 1
 boss__hit_fn: ds virtual 2  ; when the player hits a tile with collision type '9' this method is called
 boss__hit_timer: ds virtual 1  ; for displaying "boss hit" animations
+boss__2_direction:  ; 0: left, 1: right
 boss__1_has_staff: ds virtual 1
 boss__1_staff_hp: ds virtual 1
 boss__1_settings:
