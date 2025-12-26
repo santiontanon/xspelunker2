@@ -21,6 +21,8 @@ BOSS_2_HP_OFFSET: equ 0
 BOSS_2_WAIT_TIME_OFFSET: equ 2
 BOSS_2_WALK_TIME_OFFSET: equ 3
 BOSS_2_WALK_TIME_MASK_OFFSET: equ 4
+BOSS_2_DASH_TIME_OFFSET: equ 5
+BOSS_2_DASH_TIME_MASK_OFFSET: equ 6
 
 
 ;-----------------------------------------------
@@ -29,7 +31,7 @@ boss2_difficulty_setting__normal:
 boss2_difficulty_setting__hard:
 boss2_difficulty_setting__hardest:
 	dw 16  ; boss hp
-	db 32, 16, #0f  ; wait, walk, walk-time-mask
+	db 32, 16, #0f, 4, #03  ; wait, walk, walk-time-mask, dash, dash-time-mask
 
 
 ;-----------------------------------------------
@@ -118,6 +120,17 @@ boss2_frame_7_walk_left_4_flipped:
 
 ;-----------------------------------------------
 update_boss2_behavior:
+	; DEBUG:
+; 	ld a, 40
+; 	ld (boss__x), a
+; 	ld a, 17
+; 	ld (boss__y), a
+; ; 	ld a, 1
+; ; 	ld (boss__2_direction), a
+; 	ld a, 0
+; 	call update_boss2_draw_boss_frame
+; 	ret
+
 	ld a, (boss__active)
 	or a
 	ret z
@@ -165,7 +178,7 @@ update_boss2_behavior_init:
 	ld hl, boss2_difficulty_setting__hardest
 update_boss2_behavior_init_continue:
 	ld de, boss__2_settings
-	ld bc, 5
+	ld bc, 7
 	ldir
 
 	ld a, 49
@@ -248,7 +261,17 @@ update_boss2_behavior_1:
 	jr z, update_boss2_behavior_1_state_0
 	dec a
 	jr z, update_boss2_behavior_1_state_1
-	; ...
+	dec a
+	jp z, update_boss2_behavior_1_state_2
+	dec a
+	jp z, update_boss2_behavior_1_state_3
+	dec a
+	jp z, update_boss2_behavior_1_state_4
+	dec a
+	jp z, update_boss2_behavior_1_state_5
+	dec a
+	jp z, update_boss2_behavior_1_state_6
+	jp update_boss2_behavior_1_state_7
 
 update_boss2_behavior_1_state_0:
 	ld a, 3
@@ -261,11 +284,25 @@ update_boss2_behavior_1_state_0:
 	ret nz
 	xor a
 	ld (boss__state_timer), a
-	inc a
+	; chance of going to:
+	; - 1: walk forward: 4
+	; - 2: walk backward: 1
+	; - 3: dash: 1
+	; - 4, 5, 6: attacks: 1, 1, 1
+	ld c, 9
+	call random_modulo
+	cp 4
+	jr c, update_boss2_behavior_1_state_0_go_walk
+	sub 2
+	ld (boss__state), a
+	ret
+update_boss2_behavior_1_state_0_go_walk:
+	ld a, 1
 	ld (boss__state), a
 	ret
 
 update_boss2_behavior_1_state_1:
+	; Walk forward:
 	; walk frames loop: 4, 5, 6, 7
 	ld c, 4  ; frame
 	ld a, (boss__2_settings + BOSS_2_WALK_TIME_MASK_OFFSET)
@@ -282,15 +319,22 @@ update_boss2_behavior_1_state_1:
 	jr nz, update_boss2_behavior_1_state_1_move_right
 update_boss2_behavior_1_state_1_move_left:
 	dec a
+	; make sure the boss does not walk too to the left:
+	cp 1 - 1
+	jr nz, update_boss2_behavior_1_state_1_continue
+	ld a, 1
 	jr update_boss2_behavior_1_state_1_continue
 update_boss2_behavior_1_state_1_move_right:
 	inc a
+	; make sure the boss does not walk too to the left:
+	cp 50 + 1
+	jr nz, update_boss2_behavior_1_state_1_continue
+	ld a, 50
 update_boss2_behavior_1_state_1_continue:
 	ld (boss__x), a
 update_boss2_behavior_1_state_1_continue2:
 	ld a, (hl)
 	inc (hl)
-
 update_boss2_behavior_1_state_1_loop:
 	sub b
 	jr c, update_boss2_behavior_1_state_1_frame_set
@@ -300,10 +344,14 @@ update_boss2_behavior_1_state_1_frame_set:
 	ld a, c
 	cp 8
 	jr nc, update_boss2_behavior_1_state_1_done
-	call update_boss2_draw_boss_frame
-	; ...
-	ret
+	jp update_boss2_draw_boss_frame
 update_boss2_behavior_1_state_1_done:
+	; chance to keep walking:
+	call random_a
+	and #03
+	jr z, update_boss2_behavior_1_state_1_done_keep_walking
+update_boss2_behavior_1_state_2_done:
+update_boss2_behavior_1_state_3_done:
 	; switch to idle:
 	xor a
 	ld (boss__state_timer), a
@@ -329,7 +377,6 @@ update_boss2_behavior_1_state_1_done_player_right:
 update_boss2_behavior_1_state_1_done_player_right_done:
 	ld a, 3
 	jp update_boss2_draw_boss_frame
-
 update_boss2_behavior_1_state_1_done_player_left:
 	ld a, (boss__2_direction)
 	or a
@@ -344,6 +391,121 @@ update_boss2_behavior_1_state_1_done_player_left:
 update_boss2_behavior_1_state_1_done_player_left_done:
 	ld a, 3
 	jp update_boss2_draw_boss_frame
+update_boss2_behavior_1_state_1_done_keep_walking:
+	xor a
+	ld (boss__state_timer), a
+	ret
+
+update_boss2_behavior_1_state_2:
+	; Walk backward:
+	; walk frames loop: 7, 6, 5, 4
+	ld c, 7  ; frame
+	ld a, (boss__2_settings + BOSS_2_WALK_TIME_MASK_OFFSET)
+	ld e, a
+	ld a, (boss__2_settings + BOSS_2_WALK_TIME_OFFSET)
+	ld b, a
+	ld hl, boss__state_timer
+	ld a, (hl)
+	and e
+	jr nz, update_boss2_behavior_1_state_2_continue2
+	ld a, (boss__2_direction)
+	or a
+	ld a, (boss__x)
+	jr nz, update_boss2_behavior_1_state_2_move_right
+update_boss2_behavior_1_state_2_move_left:
+	inc a
+	; make sure the boss does not walk backwards too to the right:
+	cp 50 + 1
+	jr nz, update_boss2_behavior_1_state_2_continue
+	ld a, 50
+	jr update_boss2_behavior_1_state_2_continue
+update_boss2_behavior_1_state_2_move_right:
+	dec a
+	; make sure the boss does not walk backwrads too to the left:
+	cp 1 + 1
+	jr nz, update_boss2_behavior_1_state_2_continue
+	ld a, 1
+update_boss2_behavior_1_state_2_continue:
+	ld (boss__x), a
+update_boss2_behavior_1_state_2_continue2:
+	ld a, (hl)
+	inc (hl)
+update_boss2_behavior_1_state_2_loop:
+	sub b
+	jr c, update_boss2_behavior_1_state_2_frame_set
+	dec c
+	jr update_boss2_behavior_1_state_2_loop
+update_boss2_behavior_1_state_2_frame_set:
+	ld a, c
+	cp 3
+	jp z, update_boss2_behavior_1_state_2_done
+	jp update_boss2_draw_boss_frame
+
+update_boss2_behavior_1_state_3:
+	; Dash forward:
+	; walk frames loop: 4, 5, 6, 7
+	ld c, 4  ; frame
+	ld a, (boss__2_settings + BOSS_2_DASH_TIME_MASK_OFFSET)
+	ld e, a
+	ld a, (boss__2_settings + BOSS_2_DASH_TIME_OFFSET)
+	ld b, a
+	ld hl, boss__state_timer
+	ld a, (hl)
+	and e
+	jr nz, update_boss2_behavior_1_state_3_continue2
+	ld a, (boss__2_direction)
+	or a
+	ld a, (boss__x)
+	jr nz, update_boss2_behavior_1_state_3_move_right
+update_boss2_behavior_1_state_3_move_left:
+	dec a
+	; make sure the boss does not walk too to the left:
+	cp 1 - 1
+	jr nz, update_boss2_behavior_1_state_3_continue
+	ld a, 1
+	jr update_boss2_behavior_1_state_3_continue
+update_boss2_behavior_1_state_3_move_right:
+	inc a
+	; make sure the boss does not walk too to the left:
+	cp 50 + 1
+	jr nz, update_boss2_behavior_1_state_3_continue
+	ld a, 50
+update_boss2_behavior_1_state_3_continue:
+	ld (boss__x), a
+update_boss2_behavior_1_state_3_continue2:
+	ld a, (hl)
+	inc (hl)
+update_boss2_behavior_1_state_3_loop:
+	sub b
+	jr c, update_boss2_behavior_1_state_3_frame_set
+	inc c
+	jr update_boss2_behavior_1_state_3_loop
+update_boss2_behavior_1_state_3_frame_set:
+	ld a, c
+	cp 8
+	jr nc, update_boss2_behavior_1_state_3_next_step
+	jp update_boss2_draw_boss_frame
+update_boss2_behavior_1_state_3_next_step:
+	; check if the boss reached the wall
+	ld a, (boss__x)
+	cp 1
+	jp z, update_boss2_behavior_1_state_3_done
+	cp 50
+	jp z, update_boss2_behavior_1_state_3_done
+	xor a
+	ld (boss__state_timer), a
+	ret
+
+
+update_boss2_behavior_1_state_4:
+update_boss2_behavior_1_state_5:
+update_boss2_behavior_1_state_6:
+update_boss2_behavior_1_state_7:
+	; ...
+	xor a
+	ld (boss__state_timer), a
+	ld (boss__state), a
+	ret	
 
 
 ;-----------------------------------------------

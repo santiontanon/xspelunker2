@@ -41,16 +41,39 @@ general_check_collision_with_wall:
 
 
 ;-----------------------------------------------
+; This is what is used to check collisions with hazzards, and also
+; to see if we can get up when the player is crouching.
+; - collision range in x is: 6 - 10  [offset by "8 - PLAYER_COLLISION_WIDTH/2"]
+; - assuming PLAYER_COLLISION_WIDTH == 4: 0 - 4
+; 000000001111111122222222
+; xxxx....
+;  xxxx...
+;   xxxx..
+;    xxxx.
+;     xxxx
+;      xxxx
+;       xxxx
+;        xxxx
+; - if pixel_x = 0  ->  tile_x
+; - if pixel_x = 1  ->  tile_x
+; - if pixel_x = 2  ->  tile_x
+; - if pixel_x = 3  ->  tile_x
+; - if pixel_x = 4  ->  tile_x
+; - if pixel_x = 5  ->  tile_x, tile_x + 1
+; - if pixel_x = 6  ->  tile_x, tile_x + 1
+; - if pixel_x = 7  ->  tile_x, tile_x + 1
 ; output:
 ; - z: collision
 ; - nz: no collision
 player_check_collision_idle:
-	ld de, #02022  ; wall, wall
+	ld de, #0202  ; wall, wall
 player_check_collision_idle_with_de:
-	ld a, (player_y + 1)
+	ld a, (player_y + 1)  ; tile y
 	ld b, a
-	ld a, (player_x + 1)
+	ld a, (player_x + 1)  ; tile x
 	ld c, a
+; 	cp #ff
+; 	jp z, player_exit_room_left
 	; collision with the feet:
 	inc b
 	ld a, (player_y)
@@ -58,9 +81,6 @@ player_check_collision_idle_with_de:
 	jr z, player_check_collision_idle_continue
 	inc b
 player_check_collision_idle_continue:
-	ld a, c
-	cp #ff
-	jp z, player_exit_room_left
 	push bc
 	push de
 		call get_room_tile_type
@@ -70,43 +90,102 @@ player_check_collision_idle_continue:
 	ret z
 	cp d
 	ret z
+	ld a, (player_x)
+	cp 5
+	jr c, player_check_collision_idle_head
+	inc hl
+	ld a, (hl)
+	or a
+	call nz, get_collision_tile_type_of_a  ; 0 is directly no collision (we exit early, as the tile type table starts at 32)
+	cp e
+	ret z
+	cp d
+	ret z
+player_check_collision_idle_head:
 	; collision with the head:
 	ld a, (player_y + 1)
 	ld b, a
 	ld a, (player_y)
 	cp PLAYER_COLLISION_UP_LEEWAY
-	jr c, player_check_collision_idle_continue2
+	jr c, player_check_collision_idle_continue3
 	inc b
-player_check_collision_idle_continue2:
+player_check_collision_idle_continue3:
 	push de
 		call get_room_tile_type
 	pop de
 	cp e
 	ret z
 	cp d
+	ld a, (player_x)
+	cp 5
+	jr c, player_check_collision_idle_no_collision
+	inc hl
+	ld a, (hl)
+	or a
+	call nz, get_collision_tile_type_of_a  ; 0 is directly no collision (we exit early, as the tile type table starts at 32)
+	cp e
+	ret z
+	cp d
+	ret
+player_check_collision_idle_no_collision:
+	or 1
 	ret
 
 
 ;-----------------------------------------------
+; - collision range in x is: 5 - 11  [offset by "8 - PLAYER_COLLISION_WIDTH/2"]
+; - assuming PLAYER_COLLISION_WIDTH == 4: -1 - 5
+; --------000000001111111122222222
+;        xxxxxx...
+;         xxxxxx..
+;          xxxxxx.
+;           xxxxxx
+;            xxxxxx
+;             xxxxxx
+;              xxxxxx
+;               xxxxxx
+; - if pixel_x = 0  ->  tile_x -1, tile_x
+; - if pixel_x = 1  ->  tile_x
+; - if pixel_x = 2  ->  tile_x
+; - if pixel_x = 3  ->  tile_x
+; - if pixel_x = 4  ->  tile_x, tile_x + 1
+; - if pixel_x = 5  ->  tile_x, tile_x + 1
+; - if pixel_x = 6  ->  tile_x, tile_x + 1
+; - if pixel_x = 7  ->  tile_x, tile_x + 1
+; However, to simplify (and to give the player a small advantage), we use the same
+; range as 'player_check_collision_idle'
+; output:
+; - z: collision
+; - nz: no collision
 player_check_collision_crouching_with_de:
 	ld a, (player_y + 1)
 	ld b, a
 	ld a, (player_x + 1)
 	ld c, a
+; 	cp #ff
+; 	jp z, player_exit_room_left
 	inc b
 	ld a, (player_y)
 	or a
 	jr z, player_check_collision_crouching_with_de_continue
 	inc b
 player_check_collision_crouching_with_de_continue:
-	ld a, c
-	cp #ff
-	jp z, player_exit_room_left
 	push de
 		call get_room_tile_type
 	pop de
 	cp e
-	ret	z
+	ret z
+	cp d
+	ret z
+	ld a, (player_x)
+	cp 5
+	jr c, player_check_collision_idle_no_collision
+	inc hl
+	ld a, (hl)
+	or a
+	call nz, get_collision_tile_type_of_a  ; 0 is directly no collision (we exit early, as the tile type table starts at 32)
+	cp e
+	ret z
 	cp d
 	ret
 

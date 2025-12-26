@@ -2,15 +2,11 @@ to do:
 
 ***- second boss: Camazotz, the Bat God
   ***- behavior 1: crouched (facing left or right):
-    ***- limit how far left/right boss can walk
-    ***- chance to keep walking (from walk)
-    ***- chance to walk backwards (from idle)
-    ***- dash all the way forward (from idle)
-    ***- tile type table for boss 2
-    ***- permanent animated red sprite in eyes
-    ***- sonic boom through mouth
+    ***- create sprites for the boss: eyes, sonic boom (left/right/down)
+    ***- permanent animated red sprite in eyes:
+    ***- sonic boom through mouth + SFX
     ***- bullets through eyes
-    ***- claw attack (with enough antitipation, swings its arm to claw you, with long reach)
+    ***- claw attack (with enough antitipation, swings its arm to claw you, with long reach) + SFX
     ***- hide behind wing if you shoot projectiles
   ***- behavior 2: takes flight
     - flies left and right (facing forward?)
