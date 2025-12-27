@@ -1,19 +1,17 @@
 to do:
 
 ***- second boss: Camazotz, the Bat God
-  ***- behavior 1: crouched (facing left or right):
-    ***- create sprites for the boss: eyes, sonic boom (left/right/down)
-    ***- permanent animated red sprite in eyes:
-    ***- sonic boom through mouth + SFX
+  ***- behavior 1:
     ***- bullets through eyes
+    ***- sonic boom through mouth + SFX (draw mouth open) + spawn bats
     ***- claw attack (with enough antitipation, swings its arm to claw you, with long reach) + SFX
     ***- hide behind wing if you shoot projectiles
   ***- behavior 2: takes flight
-    - flies left and right (facing forward?)
+    - flies left and right (facing forward)
     - spawns small bats (of the aggressive kind that fire bullets): up to 4 at most in the screen? (test)
     - sonic boom barrage from the sky, going from side to side firing them downwards every time it crosses your x coordinate
     - shoots spikes down, that remain in the floor (turns floor into spikes, so you need to go through the platforms)
-  ***- think of a 3rd behavior for when health is low and he's angry
+  ***- think of a 3rd behavior for when health is low or he's angry
   ***- visual sign when you hit the boss (e.g. sprite mark)
   ***- define the different difficulty levels
 

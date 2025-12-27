@@ -151,11 +151,11 @@ update_boss2_behavior_continue:
 	or a
 	jp z, update_boss2_behavior_0  ; before boss is spawned
 	dec a
-	jp z, update_boss2_behavior_1  ; walking on floor (right)
+	jp z, update_boss2_behavior_1  ; walking on floor
 	dec a
-	jp z, update_boss2_behavior_2  ; walking on floor (left)
+	jp z, update_boss2_behavior_2  ; flying
 	dec a
-	jp z, update_boss2_behavior_3  ; flying
+	jp z, update_boss2_behavior_3  ; ???
 	jp update_boss2_behavior_4  ; death
 
 
@@ -193,6 +193,13 @@ update_boss2_behavior_init_continue:
 	ld (boss__2_direction), a  ; facing left
 	inc a
 	ld (boss__state), a
+
+	; spawn object for sprite decorations
+	call ptr_to_new_sprite_object
+	ret nz
+	ld (hl), 0  ; ID
+	inc hl
+	ld (hl), SPRITE_OBJECT_TYPE_BOSS_EXTRAS
 	ret
 
 update_boss2_behavior_0_wait_for_player:
@@ -509,14 +516,14 @@ update_boss2_behavior_1_state_7:
 
 
 ;-----------------------------------------------
-; walking, facing right
+; flying
 update_boss2_behavior_2:
 	; ...
 	ret
 
 
 ;-----------------------------------------------
-; flying
+; ???
 update_boss2_behavior_3:
 	; ...
 	ret

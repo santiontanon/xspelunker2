@@ -1,28 +1,29 @@
 ;-----------------------------------------------
 enemy_update_fn_table:
+	dw update_enemy_bullet
+	dw update_enemy_poison_bullet
+	dw update_enemy_parabola_bullet
+	dw update_enemy_bullet_whirlwind  ; boss 1 attack
+	dw update_enemy_bullet_lightning  ; boss 1 attack
+	; enemies you can hit:
 	dw update_enemy_snake  ; left-to-right
 	dw update_enemy_snake_dasher  ; left-to-right + dash
 	dw update_enemy_snake_poison  ; left-to-right + poison bullet
-	dw update_enemy_poison_bullet
 	dw update_enemy_fish  ; swim left-to-right
 	dw update_enemy_fish_jumper  ; swim left-to-right + jump
 	dw update_enemy_bat
 	dw update_enemy_bat_aggressive
-	dw update_enemy_bullet
 	dw update_enemy_skeleton
 	dw update_enemy_skeleton_thrower1
 	dw update_enemy_skeleton_thrower2
 	dw update_enemy_bone_bullet
 	dw update_enemy_bone_parabola_bullet
-	dw update_enemy_parabola_bullet
 	dw update_enemy_frog
 	dw update_enemy_frog_jumping
 	dw update_enemy_frog_tongue
 	dw update_enemy_bee
 	dw update_enemy_monkey
 	dw update_enemy_monkey_thrower
-	dw update_enemy_bullet_whirlwind  ; boss 1 attack
-	dw update_enemy_bullet_lightning  ; boss 1 attack
 
 
 ;-----------------------------------------------
@@ -2849,16 +2850,18 @@ update_enemy_bullet_move_up_if_possible_move:
 ; - iyh: damage to deal
 enemy_hit:
 	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
-	cp ENEMY_POISON_BULLET
-	ret z  ; we cannot damage bullets
-	cp ENEMY_BULLET
-	ret z  ; we cannot damage bullets
-	cp ENEMY_PARABOLA_BULLET
-	ret z  ; we cannot damage bullets
-	cp ENEMY_BULLET_WHIRLWIND
-	ret z  ; we cannot damage bullets
-	cp ENEMY_BULLET_LIGHTNING
-	ret z  ; we cannot damage bullets
+	cp ENEMY_SNAKE  ; first enemy that can be hit
+	ret c
+; 	cp ENEMY_POISON_BULLET
+; 	ret z  ; we cannot damage bullets
+; 	cp ENEMY_BULLET
+; 	ret z  ; we cannot damage bullets
+; 	cp ENEMY_PARABOLA_BULLET
+; 	ret z  ; we cannot damage bullets
+; 	cp ENEMY_BULLET_WHIRLWIND
+; 	ret z  ; we cannot damage bullets
+; 	cp ENEMY_BULLET_LIGHTNING
+; 	ret z  ; we cannot damage bullets
 	ld a, iyl
 	ld (ix + ROOM_OBJECT_STRUCT_LAST_HIT_ID), a
 	ld a, (ix + ROOM_OBJECT_STRUCT_HEALTH)

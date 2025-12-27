@@ -189,13 +189,15 @@ update_sprite_objects_loop:
 	cp SPRITE_OBJECT_TYPE_EXPLOSION
 	jr z, update_sprite_objects_explosion
 	cp SPRITE_OBJECT_TYPE_BIG_EXPLOSION
-	jr z, update_sprite_objects_big_explosion
+	jp z, update_sprite_objects_big_explosion
 	cp SPRITE_OBJECT_TYPE_SHOPKEEPER
 	jp z, update_sprite_objects_shopkeeper
 	cp SPRITE_OBJECT_TYPE_LOST_VENDOR
 	jp z, update_sprite_objects_lost_vendor
 	cp SPRITE_OBJECT_TYPE_SHOPKEEPER2
 	jp z, update_sprite_objects_shopkeeper2
+	cp SPRITE_OBJECT_TYPE_BOSS_EXTRAS
+	jp z, update_sprite_objects_boss_extras
 update_sprite_objects_loop_next:
 	ld de, ROOM_OBJECT_STRUCT_SIZE
 	add ix, de
@@ -369,6 +371,64 @@ update_sprite_objects_shopkeeper2:
 	and #08
 	add a, (FIRST_ENEMY_SPRITE_PATTERN + 7) * 4
 	jr update_sprite_objects_shopkeeper2_entry_point
+
+
+;-----------------------------------------------
+update_sprite_objects_boss_extras:
+	ld a, (boss__active)
+	or a
+	jp z, update_sprite_objects_loop_next  ; boss is not active yet
+	ld a, (current_area__id)
+	cp 2  ; inverted pyramid
+	jr z, update_sprite_objects_boss_extras_boss_2
+	; ...
+
+	jp update_sprite_objects_loop_next
+
+update_sprite_objects_boss_extras_boss_2:
+	; boss 2, camazotz
+	ld a, (boss__behavior)
+	dec a
+	jr z, update_sprite_objects_boss_extras_boss_2_walking
+	jp update_sprite_objects_loop_next
+update_sprite_objects_boss_extras_boss_2_walking:
+	; boss 2, camazotz, walking
+	ld a, (boss__x)
+	ld hl, room_scroll_x
+	sub (hl)
+	jp c, update_sprite_objects_loop_next
+	cp 32
+	jp nc, update_sprite_objects_loop_next
+	add a, a
+	add a, a
+	add a, a
+	add a, 24 + 3
+	ld c, a  ; sprite x
+	ld a, (boss__2_direction)
+	or a
+	jr z, update_sprite_objects_boss_extras_boss_2_walking_continue
+	ld a, 5*8 + 4
+	add a, c
+	ld c, a
+update_sprite_objects_boss_extras_boss_2_walking_continue:
+	ld a, (boss__y)
+	ld hl, room_scroll_y
+	sub (hl)
+	add a, a
+	add a, a
+	add a, a
+	add a, 24 + 4
+	ld b, a
+
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 5) * 4
+	ld a, (interrupt_cycle)
+	and #08
+	jr nz, update_sprite_objects_boss_extras_boss_2_walking_continue2
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 6) * 4
+update_sprite_objects_boss_extras_boss_2_walking_continue2:
+	ld d, COLOR_RED
+	call add_sprite_to_this_frame
+	jp update_sprite_objects_loop_next
 
 
 ;-----------------------------------------------

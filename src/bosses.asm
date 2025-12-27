@@ -962,11 +962,10 @@ update_boss_behavior_bring_name_up_loop:
 ;-----------------------------------------------
 update_boss_behavior:
 	ld a, (current_area__id)
-	cp 1
+	cp 1  ; temple of inscriptions
 	jp z, update_boss1_behavior
-	cp 2
+	cp 2  ; hidden temple
 	jp z, update_boss2_behavior
-
 
 	; ...
 	ret
