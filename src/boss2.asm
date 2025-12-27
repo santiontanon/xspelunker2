@@ -10,12 +10,9 @@ BOSS2_NAMETABLE_WALK_LEFT_1: equ boss2_name_tables + 196  ; 12*5
 BOSS2_NAMETABLE_WALK_LEFT_2: equ boss2_name_tables + 256  ; 12*5
 BOSS2_NAMETABLE_WALK_LEFT_3: equ boss2_name_tables + 316  ; 11*5
 BOSS2_NAMETABLE_WALK_LEFT_4: equ boss2_name_tables + 371  ; 12*5
-
-BOSS2_NAMETABLE_IDLE_RIGHT: equ boss2_name_tables + 141  ; 11*5
-BOSS2_NAMETABLE_WALK_RIGHT_1: equ boss2_name_tables + 196  ; 12*5
-BOSS2_NAMETABLE_WALK_RIGHT_2: equ boss2_name_tables + 256  ; 12*5
-BOSS2_NAMETABLE_WALK_RIGHT_3: equ boss2_name_tables + 316  ; 11*5
-BOSS2_NAMETABLE_WALK_RIGHT_4: equ boss2_name_tables + 371  ; 12*5
+BOSS2_NAMETABLE_CLAW_1: equ boss2_name_tables + 431  ; 11*5
+BOSS2_NAMETABLE_CLAW_2: equ boss2_name_tables + 486  ; 13*5
+BOSS2_NAMETABLE_SONIC_WAVE: equ boss2_name_tables + 551  ; 11*5
 
 BOSS_2_HP_OFFSET: equ 0
 BOSS_2_WAIT_TIME_OFFSET: equ 2
@@ -23,6 +20,9 @@ BOSS_2_WALK_TIME_OFFSET: equ 3
 BOSS_2_WALK_TIME_MASK_OFFSET: equ 4
 BOSS_2_DASH_TIME_OFFSET: equ 5
 BOSS_2_DASH_TIME_MASK_OFFSET: equ 6
+BOSS_2_BULLET_TIME_OFFSET: equ 7
+BOSS_2_BULLET_FREQUENCY_OFFSET: equ 8
+BOSS_2_ATTACK_TIME_OFFSET: equ 9
 
 
 ;-----------------------------------------------
@@ -32,6 +32,7 @@ boss2_difficulty_setting__hard:
 boss2_difficulty_setting__hardest:
 	dw 16  ; boss hp
 	db 32, 16, #0f, 4, #03  ; wait, walk, walk-time-mask, dash, dash-time-mask
+	db 32, #07, 32  ; bullet time, bullet frequency, attack time
 
 
 ;-----------------------------------------------
@@ -44,6 +45,9 @@ boss2_frame_ptrs:
 	dw boss2_frame_5_walk_left_2
 	dw boss2_frame_6_walk_left_3
 	dw boss2_frame_7_walk_left_4
+	dw boss2_frame_8_claw_1
+	dw boss2_frame_9_claw_2
+	dw boss2_frame_10_sonic_wave
 
 boss2_frame_ptrs_flipped:
 	dw boss2_frame_0_appearing1
@@ -54,6 +58,9 @@ boss2_frame_ptrs_flipped:
 	dw boss2_frame_5_walk_left_2_flipped
 	dw boss2_frame_6_walk_left_3_flipped
 	dw boss2_frame_7_walk_left_4_flipped
+	dw boss2_frame_8_claw_1
+	dw boss2_frame_9_claw_2
+	dw boss2_frame_10_sonic_wave
 
 boss2_frame_0_appearing1:
 	db 1  ; number of parts
@@ -117,6 +124,22 @@ boss2_frame_7_walk_left_4_flipped:
 	dw #050c, BOSS2_NAMETABLE_WALK_LEFT_4  ; dimensions and nametable
 	dw 0, #050d  ; boss__clear_bbox
 
+boss2_frame_8_claw_1:
+	db 1  ; number of parts
+	db 1, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #050b, BOSS2_NAMETABLE_CLAW_1  ; dimensions and nametable
+	dw 0, #050c  ; boss__clear_bbox
+boss2_frame_9_claw_2:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #050d, BOSS2_NAMETABLE_CLAW_2  ; dimensions and nametable
+	dw 0, #050d  ; boss__clear_bbox
+boss2_frame_10_sonic_wave:
+	db 1  ; number of parts
+	db 2, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #050b, BOSS2_NAMETABLE_SONIC_WAVE  ; dimensions and nametable
+	dw 0, #050d  ; boss__clear_bbox
+
 
 ;-----------------------------------------------
 update_boss2_behavior:
@@ -178,7 +201,7 @@ update_boss2_behavior_init:
 	ld hl, boss2_difficulty_setting__hardest
 update_boss2_behavior_init_continue:
 	ld de, boss__2_settings
-	ld bc, 7
+	ld bc, 10
 	ldir
 
 	ld a, 49
@@ -258,10 +281,9 @@ update_boss2_behavior_0_wait_for_player:
 ; - 1: walking forward (left or right)
 ; - 2: walking backwards
 ; - 3: dash
-; - 4: claw attack
-; - 5: sonic boom through mouth
-; - 6: bullet attack through eyes
-; - 7: protecting itself with the wings
+; - 4: bullet attack through eyes
+; - 5: claw attack
+; - 6: sonic boom through mouth
 update_boss2_behavior_1:
 	ld a, (boss__state)
 	or a
@@ -276,9 +298,7 @@ update_boss2_behavior_1:
 	jp z, update_boss2_behavior_1_state_4
 	dec a
 	jp z, update_boss2_behavior_1_state_5
-	dec a
-	jp z, update_boss2_behavior_1_state_6
-	jp update_boss2_behavior_1_state_7
+	jp update_boss2_behavior_1_state_6
 
 update_boss2_behavior_1_state_0:
 	ld a, 3
@@ -291,16 +311,20 @@ update_boss2_behavior_1_state_0:
 	ret nz
 	xor a
 	ld (boss__state_timer), a
+	; DEBUG:
+; 	ld a, 6
+; 	ld (boss__state), a
+; 	ret
 	; chance of going to:
-	; - 1: walk forward: 4
+	; - 1: walk forward: 3
 	; - 2: walk backward: 1
 	; - 3: dash: 1
 	; - 4, 5, 6: attacks: 1, 1, 1
-	ld c, 9
-	call random_modulo
-	cp 4
+	call random_a
+	and #07
+	cp 3
 	jr c, update_boss2_behavior_1_state_0_go_walk
-	sub 2
+	dec a
 	ld (boss__state), a
 	ret
 update_boss2_behavior_1_state_0_go_walk:
@@ -319,27 +343,8 @@ update_boss2_behavior_1_state_1:
 	ld hl, boss__state_timer
 	ld a, (hl)
 	and e
-	jr nz, update_boss2_behavior_1_state_1_continue2
-	ld a, (boss__2_direction)
-	or a
-	ld a, (boss__x)
-	jr nz, update_boss2_behavior_1_state_1_move_right
-update_boss2_behavior_1_state_1_move_left:
-	dec a
-	; make sure the boss does not walk too to the left:
-	cp 1 - 1
-	jr nz, update_boss2_behavior_1_state_1_continue
-	ld a, 1
-	jr update_boss2_behavior_1_state_1_continue
-update_boss2_behavior_1_state_1_move_right:
-	inc a
-	; make sure the boss does not walk too to the left:
-	cp 50 + 1
-	jr nz, update_boss2_behavior_1_state_1_continue
-	ld a, 50
-update_boss2_behavior_1_state_1_continue:
-	ld (boss__x), a
-update_boss2_behavior_1_state_1_continue2:
+	call z, boss2_move_forward
+	ld hl, boss__state_timer
 	ld a, (hl)
 	inc (hl)
 update_boss2_behavior_1_state_1_loop:
@@ -414,27 +419,8 @@ update_boss2_behavior_1_state_2:
 	ld hl, boss__state_timer
 	ld a, (hl)
 	and e
-	jr nz, update_boss2_behavior_1_state_2_continue2
-	ld a, (boss__2_direction)
-	or a
-	ld a, (boss__x)
-	jr nz, update_boss2_behavior_1_state_2_move_right
-update_boss2_behavior_1_state_2_move_left:
-	inc a
-	; make sure the boss does not walk backwards too to the right:
-	cp 50 + 1
-	jr nz, update_boss2_behavior_1_state_2_continue
-	ld a, 50
-	jr update_boss2_behavior_1_state_2_continue
-update_boss2_behavior_1_state_2_move_right:
-	dec a
-	; make sure the boss does not walk backwrads too to the left:
-	cp 1 + 1
-	jr nz, update_boss2_behavior_1_state_2_continue
-	ld a, 1
-update_boss2_behavior_1_state_2_continue:
-	ld (boss__x), a
-update_boss2_behavior_1_state_2_continue2:
+	call z, boss2_move_backward
+	ld hl, boss__state_timer
 	ld a, (hl)
 	inc (hl)
 update_boss2_behavior_1_state_2_loop:
@@ -459,27 +445,8 @@ update_boss2_behavior_1_state_3:
 	ld hl, boss__state_timer
 	ld a, (hl)
 	and e
-	jr nz, update_boss2_behavior_1_state_3_continue2
-	ld a, (boss__2_direction)
-	or a
-	ld a, (boss__x)
-	jr nz, update_boss2_behavior_1_state_3_move_right
-update_boss2_behavior_1_state_3_move_left:
-	dec a
-	; make sure the boss does not walk too to the left:
-	cp 1 - 1
-	jr nz, update_boss2_behavior_1_state_3_continue
-	ld a, 1
-	jr update_boss2_behavior_1_state_3_continue
-update_boss2_behavior_1_state_3_move_right:
-	inc a
-	; make sure the boss does not walk too to the left:
-	cp 50 + 1
-	jr nz, update_boss2_behavior_1_state_3_continue
-	ld a, 50
-update_boss2_behavior_1_state_3_continue:
-	ld (boss__x), a
-update_boss2_behavior_1_state_3_continue2:
+	call z, boss2_move_forward
+	ld hl, boss__state_timer
 	ld a, (hl)
 	inc (hl)
 update_boss2_behavior_1_state_3_loop:
@@ -505,10 +472,109 @@ update_boss2_behavior_1_state_3_next_step:
 
 
 update_boss2_behavior_1_state_4:
+	; eye attack, fire bullets:
+	ld a, 3
+	call update_boss2_draw_boss_frame
+	ld hl, boss__state_timer
+	inc (hl)
+	ld a, (hl)
+	ld hl, boss__2_settings + BOSS_2_BULLET_FREQUENCY_OFFSET
+	and (hl)
+	jr nz, update_boss2_behavior_1_state_4_skip_bullet
+	ld a, (boss__x)
+	add a, 3
+	ld c, a
+	ld a, (boss__2_direction)
+	or a
+	jr z, update_boss2_behavior_1_state_4_continue
+	; facing right
+	ld a, 6
+	add a, c
+	ld c, a
+update_boss2_behavior_1_state_4_continue:
+	ld a, (boss__y)
+	add a, 2
+	ld b, a
+	ld ix, #0000	
+	call boss_fire_directional_bullet_towards_player_with_random_offset
+update_boss2_behavior_1_state_4_skip_bullet:
+	ld a, (boss__state_timer)
+	ld hl, boss__2_settings + BOSS_2_BULLET_TIME_OFFSET
+	cp (hl)
+	ret c
+	xor a
+	ld (boss__state_timer), a
+	ld (boss__state), a
+	ret	
+
+
 update_boss2_behavior_1_state_5:
+	; claw attack:
+	ld a, (boss__2_settings + BOSS_2_ATTACK_TIME_OFFSET)
+	ld c, a
+	add a, a
+	ld d, a
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	cp c
+	jr z, update_boss2_behavior_1_state_5_frame2_start
+	jr c, update_boss2_behavior_1_state_5_frame1
+	cp d
+	jr c, update_boss2_behavior_1_state_5_frame2
+	; done
+	xor a
+	ld (boss__state_timer), a
+	ld (boss__state), a
+	ret	
+update_boss2_behavior_1_state_5_frame1:
+	ld a, 8
+	jp update_boss2_draw_boss_frame
+update_boss2_behavior_1_state_5_frame2_start:
+	push af
+	push bc
+		ld hl, SFX_weapon_swing_slow
+		call play_SFX_with_high_priority
+	pop bc
+	pop af
+update_boss2_behavior_1_state_5_frame2:
+	sub c
+	cp 8
+	jr nc, update_boss2_behavior_1_state_5_frame2_continue
+	and #02
+	call z, boss2_move_forward
+update_boss2_behavior_1_state_5_frame2_continue:
+	ld a, 9
+	jp update_boss2_draw_boss_frame
+
+
 update_boss2_behavior_1_state_6:
-update_boss2_behavior_1_state_7:
+	ld a, (boss__2_settings + BOSS_2_ATTACK_TIME_OFFSET)
+	ld c, a
+	add a, a
+	ld d, a
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	or a
+	jr z, update_boss2_behavior_1_state_6_start
+	cp d
+	jr z, update_boss2_behavior_1_state_6_done
+	cp c 
+	jr nz, update_boss2_behavior_1_state_6_continue
+	; fire sonic boom:
 	; ...
+
+	; spawn bats:
+	; ...
+	jr update_boss2_behavior_1_state_6_done
+update_boss2_behavior_1_state_6_start:
+	call boss2_move_forward
+update_boss2_behavior_1_state_6_continue:
+	ld a, 10
+	jp update_boss2_draw_boss_frame
+update_boss2_behavior_1_state_6_done:
+	call boss2_move_backward
 	xor a
 	ld (boss__state_timer), a
 	ld (boss__state), a
@@ -668,3 +734,40 @@ player_weapon_hitbox_check_boss__boss2_hit_continue2:
 	ld a, iyl
 	ld (boss__last_collision_id), a
 	ret
+
+
+;-----------------------------------------------
+boss2_move_backward:
+	ld a, (boss__2_direction)
+	or a
+	jr z, boss2_move_right
+	; jr boss2_move_left
+
+
+;-----------------------------------------------
+boss2_move_left:
+	ld hl, boss__x
+	ld a, (hl)
+	cp 1
+	ret z
+	dec (hl)
+	ret
+
+
+;-----------------------------------------------
+boss2_move_forward:
+	ld a, (boss__2_direction)
+	or a
+	jr z, boss2_move_left
+	; jr boss2_move_right
+
+
+;-----------------------------------------------
+boss2_move_right:
+	ld hl, boss__x
+	ld a, (hl)
+	cp 50
+	ret z
+	inc (hl)
+	ret
+

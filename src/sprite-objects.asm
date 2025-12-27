@@ -378,6 +378,10 @@ update_sprite_objects_boss_extras:
 	ld a, (boss__active)
 	or a
 	jp z, update_sprite_objects_loop_next  ; boss is not active yet
+	ld hl, (boss__hp)
+	ld a, h
+	or l
+	jp z, update_sprite_objects_loop_next  ; boss is dead
 	ld a, (current_area__id)
 	cp 2  ; inverted pyramid
 	jr z, update_sprite_objects_boss_extras_boss_2
@@ -393,23 +397,36 @@ update_sprite_objects_boss_extras_boss_2:
 	jp update_sprite_objects_loop_next
 update_sprite_objects_boss_extras_boss_2_walking:
 	; boss 2, camazotz, walking
+	ld a, (boss__2_direction)
+	or a
+	jr z, update_sprite_objects_boss_extras_boss_2_walking_left
+	; right:
 	ld a, (boss__x)
 	ld hl, room_scroll_x
 	sub (hl)
-	jp c, update_sprite_objects_loop_next
+	add a, 8
 	cp 32
 	jp nc, update_sprite_objects_loop_next
 	add a, a
 	add a, a
 	add a, a
-	add a, 24 + 3
-	ld c, a  ; sprite x
-	ld a, (boss__2_direction)
-	or a
-	jr z, update_sprite_objects_boss_extras_boss_2_walking_continue
-	ld a, 5*8 + 4
-	add a, c
+	add a, 7
 	ld c, a
+	jr update_sprite_objects_boss_extras_boss_2_walking_continue
+update_sprite_objects_boss_extras_boss_2_walking_left:
+	; left:
+	ld a, (boss__x)
+	ld hl, room_scroll_x
+	sub (hl)
+	add a, 3
+	cp 32
+	jp nc, update_sprite_objects_loop_next
+	add a, a
+	add a, a
+	add a, a
+	add a, 3
+	ld c, a
+
 update_sprite_objects_boss_extras_boss_2_walking_continue:
 	ld a, (boss__y)
 	ld hl, room_scroll_y

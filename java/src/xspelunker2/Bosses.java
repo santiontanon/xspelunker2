@@ -144,8 +144,12 @@ public class Bosses {
             addNameTable(nameTable, 15, 19, 27, 24, nameTableData);  // walk left 1 (196 + 12*5)
             addNameTable(nameTable, 15, 24, 27, 29, nameTableData);  // walk left 2 (256 + 12*5)
             addNameTable(nameTable, 3, 19, 14, 24, nameTableData);  // walk left 3 (316 + 11*5)
-            addNameTable(nameTable, 2, 24, 14, 29, nameTableData);  // walk left 4 (371 + 12*5)            
-        }
+            addNameTable(nameTable, 2, 24, 14, 29, nameTableData);  // walk left 4 (371 + 12*5)
+            addNameTable(nameTable, 3, 14, 14, 19, nameTableData);  // claw attack 1 (431 + 11*5)
+            addNameTable(nameTable, 2, 9, 15, 14, nameTableData);  // claw attack 2 (486 + 13*5)
+            addNameTable(nameTable, 4, 4, 15, 9, nameTableData);  // sonic wave attack (551 + 11*5)
+    
+    }
 
         // facing right:
         {

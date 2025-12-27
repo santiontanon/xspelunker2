@@ -248,7 +248,7 @@ boss__2_direction:  ; 0: left, 1: right
 boss__1_has_staff: ds virtual 1
 boss__1_staff_hp: ds virtual 1
 boss__1_settings:
-boss__2_settings: ds virtual 8  ; difficulty parameters of the boss
+boss__2_settings: ds virtual 10  ; difficulty parameters of the boss
 
 RAM_to_zero_on_game_start_end:
 

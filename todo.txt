@@ -1,18 +1,16 @@
 to do:
 
 ***- second boss: Camazotz, the Bat God
-  ***- behavior 1:
-    ***- bullets through eyes
-    ***- sonic boom through mouth + SFX (draw mouth open) + spawn bats
-    ***- claw attack (with enough antitipation, swings its arm to claw you, with long reach) + SFX
-    ***- hide behind wing if you shoot projectiles
+  ***- behavior 1, state 6:
+    ***- fire sonic boom
+    ***- SFX
+    ***- bats appearing (1 or 2, depending on difficulty settings)
+    ***- limit to at most n bats (difficulty setting)
   ***- behavior 2: takes flight
-    - flies left and right (facing forward)
-    - spawns small bats (of the aggressive kind that fire bullets): up to 4 at most in the screen? (test)
-    - sonic boom barrage from the sky, going from side to side firing them downwards every time it crosses your x coordinate
+    - flies left and right
+    - sonic boom barrage from the sky, going from side to side firing them downwards every time it crosses your x coordinate (spawns small bats)
     - shoots spikes down, that remain in the floor (turns floor into spikes, so you need to go through the platforms)
-  ***- think of a 3rd behavior for when health is low or he's angry
-  ***- visual sign when you hit the boss (e.g. sprite mark)
+  ***- visual sign when you hit the boss (e.g. eye sprite changes)
   ***- define the different difficulty levels
 
 - music: intro, letters, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 25 have potential)
