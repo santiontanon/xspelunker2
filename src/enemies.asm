@@ -5,6 +5,7 @@ enemy_update_fn_table:
 	dw update_enemy_parabola_bullet
 	dw update_enemy_bullet_whirlwind  ; boss 1 attack
 	dw update_enemy_bullet_lightning  ; boss 1 attack
+	dw update_enemy_sonic_boom  ; boss 2 attack
 	; enemies you can hit:
 	dw update_enemy_snake  ; left-to-right
 	dw update_enemy_snake_dasher  ; left-to-right + dash
@@ -1834,6 +1835,32 @@ update_enemy_bullet_lightning_done:
 	pop hl
 	ld (rng_seed1), hl
 	jp update_sprite_enemies_loop_next
+
+
+;-----------------------------------------------
+update_enemy_sonic_boom:
+	ld iyh, 2  ; damage to deal
+	call update_enemy_hurt_player_2x2
+	jp z, update_enemy_delete
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	or a
+	jr nz, update_enemy_sonic_boom_left
+
+update_enemy_sonic_boom_right:
+	ld a, (current_world__difficulty_bullet_speed)
+	call update_enemy_bullet_move_right_if_possible_a_times
+	jp z, update_enemy_delete
+	ld d, COLOR_WHITE
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 9) * 4 
+	jp enemy_sprite_and_continue
+
+update_enemy_sonic_boom_left:
+	ld a, (current_world__difficulty_bullet_speed)
+	call update_enemy_bullet_move_left_if_possible_a_times
+	jp z, update_enemy_delete
+	ld d, COLOR_WHITE
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 7) * 4 
+	jp enemy_sprite_and_continue
 
 
 ;-----------------------------------------------

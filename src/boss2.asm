@@ -23,6 +23,8 @@ BOSS_2_DASH_TIME_MASK_OFFSET: equ 6
 BOSS_2_BULLET_TIME_OFFSET: equ 7
 BOSS_2_BULLET_FREQUENCY_OFFSET: equ 8
 BOSS_2_ATTACK_TIME_OFFSET: equ 9
+BOSS_2_MAX_BATS_OFFSET: equ 10
+BOSS_2_BAT_HP_OFFSET: equ 11
 
 
 ;-----------------------------------------------
@@ -33,6 +35,7 @@ boss2_difficulty_setting__hardest:
 	dw 16  ; boss hp
 	db 32, 16, #0f, 4, #03  ; wait, walk, walk-time-mask, dash, dash-time-mask
 	db 32, #07, 32  ; bullet time, bullet frequency, attack time
+	db 4, 2  ; max bats, bat hp
 
 
 ;-----------------------------------------------
@@ -60,7 +63,7 @@ boss2_frame_ptrs_flipped:
 	dw boss2_frame_7_walk_left_4_flipped
 	dw boss2_frame_8_claw_1
 	dw boss2_frame_9_claw_2
-	dw boss2_frame_10_sonic_wave
+	dw boss2_frame_10_sonic_wave_flipped
 
 boss2_frame_0_appearing1:
 	db 1  ; number of parts
@@ -139,6 +142,11 @@ boss2_frame_10_sonic_wave:
 	db 2, 0  ; offset wrt the draw ptr (x offset, y offset)
 	dw #050b, BOSS2_NAMETABLE_SONIC_WAVE  ; dimensions and nametable
 	dw 0, #050d  ; boss__clear_bbox
+boss2_frame_10_sonic_wave_flipped:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #050b, BOSS2_NAMETABLE_SONIC_WAVE  ; dimensions and nametable
+	dw 0, #050b  ; boss__clear_bbox
 
 
 ;-----------------------------------------------
@@ -201,7 +209,7 @@ update_boss2_behavior_init:
 	ld hl, boss2_difficulty_setting__hardest
 update_boss2_behavior_init_continue:
 	ld de, boss__2_settings
-	ld bc, 10
+	ld bc, 12
 	ldir
 
 	ld a, 49
@@ -324,6 +332,10 @@ update_boss2_behavior_1_state_0:
 	and #07
 	cp 3
 	jr c, update_boss2_behavior_1_state_0_go_walk
+	; DEBUG:
+	ld a, 6
+	ld (boss__state), a
+	ret
 	dec a
 	ld (boss__state), a
 	ret
@@ -562,11 +574,43 @@ update_boss2_behavior_1_state_6:
 	jr z, update_boss2_behavior_1_state_6_done
 	cp c 
 	jr nz, update_boss2_behavior_1_state_6_continue
-	; fire sonic boom:
-	; ...
 
-	; spawn bats:
-	; ...
+	; fire sonic boom:
+	call ptr_to_new_sprite_enemy
+	jr nz, update_boss2_behavior_1_state_6_continue2
+	ld (hl), 0  ; ID
+	inc hl
+	ld (hl), ENEMY_BULLET_SONIC_BOOM
+	inc hl
+	ld (hl), 0  ; pixel x
+	inc hl
+	ld a, (boss__2_direction)
+	or a
+	jr z, update_boss2_behavior_1_state_6_fire_left
+	; fire right:
+	ld a, (boss__x)
+	add a, 9
+	jr update_boss2_behavior_1_state_6_fire_right_continue
+update_boss2_behavior_1_state_6_fire_left:
+	ld a, (boss__x)
+	add a, 2
+update_boss2_behavior_1_state_6_fire_right_continue:
+	ld (hl), a
+	inc hl
+	ld (hl), 0  ; pixel y
+	inc hl
+	ld a, (boss__y)
+	add a, 2
+	ld (hl), a
+	inc hl
+	ld a, (boss__2_direction)
+	xor #01
+	ld (hl), a  ; direction
+
+; 	ld hl, SFX_enemy_bullet
+; 	call play_SFX_with_high_priority
+update_boss2_behavior_1_state_6_continue2:
+	call update_boss2_spawn_bat
 	jr update_boss2_behavior_1_state_6_done
 update_boss2_behavior_1_state_6_start:
 	call boss2_move_forward
@@ -701,6 +745,53 @@ update_boss2_draw_boss_frame_continue:
 
 	; we need to show the boss as being hit:
 	; ...
+	ret
+
+
+;-----------------------------------------------
+update_boss2_spawn_bat:
+	; find # of bats:
+	ld c, 0
+	ld ix, current_room__sprite_enemies
+	ld de, ROOM_OBJECT_STRUCT_SIZE
+update_boss2_spawn_bat_loop:
+	ld a, (ix)
+	inc a  ; cp #ff
+	jr z, update_boss2_spawn_bat_loop_end
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	add ix, de
+	cp ENEMY_BAT_AGGRESSIVE
+	jr nz, update_boss2_spawn_bat_loop
+	inc c
+	jr update_boss2_spawn_bat_loop
+update_boss2_spawn_bat_loop_end:
+	ld a, (boss__2_settings + BOSS_2_MAX_BATS_OFFSET)
+	cp c
+	ret z  ; if we have the max number of bats, do not spawn any new one
+
+	call ptr_to_new_sprite_enemy
+	ret nz
+	ld (hl), 0  ; ID
+	inc hl
+	ld (hl), ENEMY_BAT_AGGRESSIVE
+	inc hl
+	call random_a
+	and #0f
+	add a, 8
+	ld (hl), 0  ; pixel x
+	inc hl
+	ld (hl), a
+	inc hl
+	ld (hl), 0  ; pixel y
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), 6  ; direction
+	inc hl
+	inc hl
+	inc hl
+	ld a, (boss__2_settings + BOSS_2_BAT_HP_OFFSET)
+	ld (hl), a  ; hitpoints
 	ret
 
 

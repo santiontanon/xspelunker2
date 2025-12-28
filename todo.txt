@@ -1,11 +1,7 @@
 to do:
 
 ***- second boss: Camazotz, the Bat God
-  ***- behavior 1, state 6:
-    ***- fire sonic boom
-    ***- SFX
-    ***- bats appearing (1 or 2, depending on difficulty settings)
-    ***- limit to at most n bats (difficulty setting)
+  ***- sonic boom SFX
   ***- behavior 2: takes flight
     - flies left and right
     - sonic boom barrage from the sky, going from side to side firing them downwards every time it crosses your x coordinate (spawns small bats)

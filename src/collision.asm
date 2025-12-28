@@ -643,6 +643,9 @@ get_room_ids_current_room_ptr_continue:
 
 ;-----------------------------------------------
 player_exit_room_left:
+	ld a, (boss__in_boss_room)
+	xor #01  ; we do "xor 1" so that we exit with "z", and indicate collision
+	ret z
 	call check_for_interarea_exit_left
 	call check_collision_with_next_chunk_left
 	ret z  ; collision	
@@ -692,6 +695,9 @@ player_exit_room_left:
 
 ;-----------------------------------------------
 player_exit_room_right:
+	ld a, (boss__in_boss_room)
+	xor #01  ; we do "xor 1" so that we exit with "z", and indicate collision
+	ret z
 	call check_for_interarea_exit_right
 	call check_collision_with_next_chunk_right
 	ret z  ; collision
@@ -739,6 +745,9 @@ player_exit_room_right:
 
 ;-----------------------------------------------
 player_exit_room_up:
+	ld a, (boss__in_boss_room)
+	xor #01  ; we do "xor 1" so that we exit with "z", and indicate collision
+	ret z
 	call check_for_interarea_exit_up
 	call check_collision_with_next_chunk_up
 	ret z  ; collision		
@@ -793,6 +802,9 @@ player_exit_room_up:
 ; input:
 ; - c, b: player coordinates
 player_exit_room_down:
+	ld a, (boss__in_boss_room)
+	xor #01  ; we do "xor 1" so that we exit with "z", and indicate collision
+	ret z
 	call check_for_interarea_exit_down
 	call check_collision_with_next_chunk_down
 	ret z  ; collision		

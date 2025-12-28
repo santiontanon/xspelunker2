@@ -150,6 +150,9 @@ pcg_generate_room_reset_state:
 	ld a, PCG_PAGE
 	ld (in_game_event_fn_page), a
 
+	xor a
+	ld (boss__in_boss_room), a
+
 	ld hl, current_room__initial_enemy_ids
 	ld bc, (current_room__initial_enemy_ids_end - current_room__initial_enemy_ids) - 1
 	ld a, #ff

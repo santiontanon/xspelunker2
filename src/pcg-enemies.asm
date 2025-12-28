@@ -727,8 +727,6 @@ pcg_generate_room__spawn_bat_continue:
 	inc hl
 	ld (hl), d  ; tile y
 	inc hl
-	; call random_a  ; randomly face left or right
-	; and #01
 	ld (hl), 9  ; state (hanging)
 	inc hl
 	ld (hl), 0

@@ -232,6 +232,7 @@ enemy_tiles_to_upload_to_vdp_page: ds virtual 2
 
 config_keyboard_special_case: ds virtual 1
 
+boss__in_boss_room: ds virtual 1  ; 0: normal room, 1: boss room
 boss__active: ds virtual 1  ; 1 when we are fighting a boss (only when the boss is alive), 0 otherwise
 boss__room_bg_buffer: equ current_room__tile_map + 32*24*2  ; the room is copied here, so that background can be restored when the boss moves around
 boss__behavior: ds virtual 1  ; which boss behavior is being executed
@@ -248,7 +249,7 @@ boss__2_direction:  ; 0: left, 1: right
 boss__1_has_staff: ds virtual 1
 boss__1_staff_hp: ds virtual 1
 boss__1_settings:
-boss__2_settings: ds virtual 10  ; difficulty parameters of the boss
+boss__2_settings: ds virtual 12  ; difficulty parameters of the boss
 
 RAM_to_zero_on_game_start_end:
 

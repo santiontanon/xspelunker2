@@ -96,6 +96,8 @@ enter_boss_door_loop:
 		ld c, PCG_PAGE
 		ld hl, pcg_generate_room_reset_state
 		call call_hl_in_page_c_8000
+		ld a, 1
+		ld (boss__in_boss_room), a
 	pop bc
 	push bc
 		; setup boss area/room:
