@@ -122,7 +122,7 @@ public class Bosses {
     public static void boss2Tiles() throws Exception
     {
         String bossBaseTiles = "data/boss-pyramid-base-tiles.png";
-        String boss2Tiles = "data/boss2.png";        
+        String boss2Tiles = "data/boss2-land.png";        
         
         List<Integer> nameTableData = new ArrayList<>();
         
