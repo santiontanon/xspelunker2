@@ -1848,6 +1848,7 @@ update_enemy_sonic_boom:
 
 update_enemy_sonic_boom_right:
 	ld a, (current_world__difficulty_bullet_speed)
+	add a, a
 	call update_enemy_bullet_move_right_if_possible_a_times
 	jp z, update_enemy_delete
 	ld d, COLOR_WHITE
@@ -1856,6 +1857,7 @@ update_enemy_sonic_boom_right:
 
 update_enemy_sonic_boom_left:
 	ld a, (current_world__difficulty_bullet_speed)
+	add a, a
 	call update_enemy_bullet_move_left_if_possible_a_times
 	jp z, update_enemy_delete
 	ld d, COLOR_WHITE

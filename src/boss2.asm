@@ -332,10 +332,10 @@ update_boss2_behavior_1_state_0:
 	and #07
 	cp 3
 	jr c, update_boss2_behavior_1_state_0_go_walk
-	; DEBUG:
-	ld a, 6
-	ld (boss__state), a
-	ret
+; 	; DEBUG:
+; 	ld a, 6
+; 	ld (boss__state), a
+; 	ret
 	dec a
 	ld (boss__state), a
 	ret
@@ -607,8 +607,8 @@ update_boss2_behavior_1_state_6_fire_right_continue:
 	xor #01
 	ld (hl), a  ; direction
 
-; 	ld hl, SFX_enemy_bullet
-; 	call play_SFX_with_high_priority
+	ld hl, SFX_sonic_attack
+	call play_SFX_with_high_priority
 update_boss2_behavior_1_state_6_continue2:
 	call update_boss2_spawn_bat
 	jr update_boss2_behavior_1_state_6_done

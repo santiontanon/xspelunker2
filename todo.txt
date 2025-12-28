@@ -1,11 +1,14 @@
 to do:
 
 ***- second boss: Camazotz, the Bat God
-  ***- sonic boom SFX
   ***- behavior 2: takes flight
-    - flies left and right
-    - sonic boom barrage from the sky, going from side to side firing them downwards every time it crosses your x coordinate (spawns small bats)
-    - shoots spikes down, that remain in the floor (turns floor into spikes, so you need to go through the platforms)
+    ***- draw flying frames in gimp
+    ***- draw transition frames in gimp
+    ***- define the nametables
+    ***- switchiing to flight state (for now just take flight and stay there)
+    ***- flies left and right
+    ***- sonic boom barrage from the sky, going from side to side firing them downwards every time it crosses your x coordinate (spawns small bats)
+    ***- shoots spikes down, that remain in the floor (turns floor into spikes, so you need to go through the platforms)
   ***- visual sign when you hit the boss (e.g. eye sprite changes)
   ***- define the different difficulty levels
 
