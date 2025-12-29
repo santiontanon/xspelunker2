@@ -13,6 +13,12 @@ BOSS2_NAMETABLE_WALK_LEFT_4: equ boss2_name_tables + 371  ; 12*5
 BOSS2_NAMETABLE_CLAW_1: equ boss2_name_tables + 431  ; 11*5
 BOSS2_NAMETABLE_CLAW_2: equ boss2_name_tables + 486  ; 13*5
 BOSS2_NAMETABLE_SONIC_WAVE: equ boss2_name_tables + 551  ; 11*5
+BOSS2_NAMETABLE_FLY1: equ boss2_name_tables + 606  ; 13*8
+BOSS2_NAMETABLE_FLY2: equ boss2_name_tables + 710  ; 15*7
+BOSS2_NAMETABLE_FLY3: equ boss2_name_tables + 815  ; 17*7
+BOSS2_NAMETABLE_TAKE_OFF_LEFT: equ boss2_name_tables + 934  ; 10*8
+BOSS2_NAMETABLE_TAKE_OFF_RIGHT: equ boss2_name_tables + 1014  ; 10*8
+
 
 BOSS_2_HP_OFFSET: equ 0
 BOSS_2_WAIT_TIME_OFFSET: equ 2
@@ -51,6 +57,10 @@ boss2_frame_ptrs:
 	dw boss2_frame_8_claw_1
 	dw boss2_frame_9_claw_2
 	dw boss2_frame_10_sonic_wave
+	dw boss2_frame_11_fly1
+	dw boss2_frame_12_fly2
+	dw boss2_frame_13_fly3
+	dw boss2_frame_14_take_off_left
 
 boss2_frame_ptrs_flipped:
 	dw boss2_frame_0_appearing1
@@ -64,6 +74,10 @@ boss2_frame_ptrs_flipped:
 	dw boss2_frame_8_claw_1
 	dw boss2_frame_9_claw_2
 	dw boss2_frame_10_sonic_wave_flipped
+	dw boss2_frame_11_fly1
+	dw boss2_frame_12_fly2
+	dw boss2_frame_13_fly3
+	dw boss2_frame_14_take_off_right
 
 boss2_frame_0_appearing1:
 	db 1  ; number of parts
@@ -147,6 +161,32 @@ boss2_frame_10_sonic_wave_flipped:
 	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
 	dw #050b, BOSS2_NAMETABLE_SONIC_WAVE  ; dimensions and nametable
 	dw 0, #050b  ; boss__clear_bbox
+
+boss2_frame_11_fly1:
+	db 1  ; number of parts
+	db 2, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #080d, BOSS2_NAMETABLE_FLY1  ; dimensions and nametable
+	dw 0, #080d  ; boss__clear_bbox
+boss2_frame_12_fly2:
+	db 1  ; number of parts
+	db 1, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #070f, BOSS2_NAMETABLE_FLY2  ; dimensions and nametable
+	dw 0, #070f  ; boss__clear_bbox
+boss2_frame_13_fly3:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0711, BOSS2_NAMETABLE_FLY2  ; dimensions and nametable
+	dw 0, #0711  ; boss__clear_bbox
+boss2_frame_14_take_off_left:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #080a, BOSS2_NAMETABLE_TAKE_OFF_LEFT  ; dimensions and nametable
+	dw 0, #080a  ; boss__clear_bbox
+boss2_frame_14_take_off_right:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #080a, BOSS2_NAMETABLE_TAKE_OFF_RIGHT  ; dimensions and nametable
+	dw 0, #080a  ; boss__clear_bbox
 
 
 ;-----------------------------------------------
