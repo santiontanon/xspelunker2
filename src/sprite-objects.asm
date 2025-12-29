@@ -394,6 +394,8 @@ update_sprite_objects_boss_extras_boss_2:
 	ld a, (boss__behavior)
 	dec a
 	jr z, update_sprite_objects_boss_extras_boss_2_walking
+	dec a
+	jr z, update_sprite_objects_boss_extras_boss_2_flying
 	jp update_sprite_objects_loop_next
 update_sprite_objects_boss_extras_boss_2_walking:
 	; boss 2, camazotz, walking
@@ -437,6 +439,7 @@ update_sprite_objects_boss_extras_boss_2_walking_continue:
 	add a, 24 + 4
 	ld b, a
 
+update_sprite_objects_boss_extras_boss_2_walking_bc_set:
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 5) * 4
 	ld a, (interrupt_cycle)
 	and #08
@@ -446,6 +449,81 @@ update_sprite_objects_boss_extras_boss_2_walking_continue2:
 	ld d, COLOR_RED
 	call add_sprite_to_this_frame
 	jp update_sprite_objects_loop_next
+
+update_sprite_objects_boss_extras_boss_2_flying:
+	ld a, (boss__state)
+	or a
+	jr z, update_sprite_objects_boss_extras_boss_2_walking
+	dec a
+	jr z, update_sprite_objects_boss_extras_boss_2_flying_fakeoff
+	; flying:
+	ld a, (boss__x)
+	ld hl, room_scroll_x
+	sub (hl)
+	add a, a
+	add a, a
+	add a, a
+	add a, 6*8 + 4
+	ld c, a
+	ld a, (boss__y)
+	ld hl, room_scroll_y
+	sub (hl)
+	add a, a
+	add a, a
+	add a, a
+	add a, 16 + 7
+	; 0: +16, 1,3: +8, 2: +0
+	ld b, a
+	ld a, (boss__state_timer)
+	rrca
+	rrca
+	and #03
+	cp 3
+	jr nz, update_sprite_objects_boss_extras_boss_2_flying_continue
+	ld a, 1
+update_sprite_objects_boss_extras_boss_2_flying_continue:
+	add a, a
+	add a, a
+	add a, a
+	neg
+	add a, 16
+	add a, b
+	ld b, a
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 10) * 4
+	ld d, COLOR_RED
+	call add_sprite_to_this_frame
+	jp update_sprite_objects_loop_next
+update_sprite_objects_boss_extras_boss_2_flying_fakeoff:
+	ld a, (boss__2_direction)
+	or a
+	jr nz, update_sprite_objects_boss_extras_boss_2_flying_fakeoff_right
+	ld a, (boss__x)
+	ld hl, room_scroll_x
+	sub (hl)
+	add a, a
+	add a, a
+	add a, a
+	add a, 8 + 3
+update_sprite_objects_boss_extras_boss_2_flying_fakeoff_right_continue:
+	ld c, a
+	ld a, (boss__y)
+	ld hl, room_scroll_y
+	sub (hl)
+	add a, a
+	add a, a
+	add a, a
+	add a, 40 + 4
+	ld b, a
+	jr update_sprite_objects_boss_extras_boss_2_walking_bc_set
+update_sprite_objects_boss_extras_boss_2_flying_fakeoff_right:
+	ld a, (boss__x)
+	ld hl, room_scroll_x
+	sub (hl)
+	add a, a
+	add a, a
+	add a, a
+	add a, 6*10 + 3
+	jr update_sprite_objects_boss_extras_boss_2_flying_fakeoff_right_continue
 
 
 ;-----------------------------------------------

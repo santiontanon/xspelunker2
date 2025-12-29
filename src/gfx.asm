@@ -327,6 +327,8 @@ setup_game_tiles_only_biome_continue:
     pop bc
 
     ; bank 2:
+    halt  ; synchronize the last bank so that when we use this method for swapping tile sets
+          ; in bosses, we minimize the time with a glitch
     ld hl, buffer_4096
     push hl
     push bc

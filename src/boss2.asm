@@ -15,9 +15,9 @@ BOSS2_NAMETABLE_CLAW_2: equ boss2_name_tables + 486  ; 13*5
 BOSS2_NAMETABLE_SONIC_WAVE: equ boss2_name_tables + 551  ; 11*5
 BOSS2_NAMETABLE_FLY1: equ boss2_name_tables + 606  ; 13*8
 BOSS2_NAMETABLE_FLY2: equ boss2_name_tables + 710  ; 15*7
-BOSS2_NAMETABLE_FLY3: equ boss2_name_tables + 815  ; 17*7
-BOSS2_NAMETABLE_TAKE_OFF_LEFT: equ boss2_name_tables + 934  ; 10*8
-BOSS2_NAMETABLE_TAKE_OFF_RIGHT: equ boss2_name_tables + 1014  ; 10*8
+BOSS2_NAMETABLE_FLY3: equ boss2_name_tables + 815  ; 15*7
+BOSS2_NAMETABLE_TAKE_OFF_LEFT: equ boss2_name_tables + 920  ; 10*8
+BOSS2_NAMETABLE_TAKE_OFF_RIGHT: equ boss2_name_tables + 1000  ; 10*8
 
 
 BOSS_2_HP_OFFSET: equ 0
@@ -164,19 +164,19 @@ boss2_frame_10_sonic_wave_flipped:
 
 boss2_frame_11_fly1:
 	db 1  ; number of parts
-	db 2, 0  ; offset wrt the draw ptr (x offset, y offset)
+	db 1, 0  ; offset wrt the draw ptr (x offset, y offset)
 	dw #080d, BOSS2_NAMETABLE_FLY1  ; dimensions and nametable
-	dw 0, #080d  ; boss__clear_bbox
+	dw 0, #080e  ; boss__clear_bbox
 boss2_frame_12_fly2:
 	db 1  ; number of parts
-	db 1, 0  ; offset wrt the draw ptr (x offset, y offset)
+	db 0, 1  ; offset wrt the draw ptr (x offset, y offset)
 	dw #070f, BOSS2_NAMETABLE_FLY2  ; dimensions and nametable
-	dw 0, #070f  ; boss__clear_bbox
+	dw 0, #080f  ; boss__clear_bbox
 boss2_frame_13_fly3:
 	db 1  ; number of parts
 	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
-	dw #0711, BOSS2_NAMETABLE_FLY2  ; dimensions and nametable
-	dw 0, #0711  ; boss__clear_bbox
+	dw #070f, BOSS2_NAMETABLE_FLY3  ; dimensions and nametable
+	dw 0, #070f  ; boss__clear_bbox
 boss2_frame_14_take_off_left:
 	db 1  ; number of parts
 	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
@@ -359,6 +359,10 @@ update_boss2_behavior_1_state_0:
 	ret nz
 	xor a
 	ld (boss__state_timer), a
+	call random_a
+	and #07
+	jr z, update_boss2_behavior_1_state_0_take_flight
+	jr update_boss2_behavior_1_state_0_take_flight
 	; DEBUG:
 ; 	ld a, 6
 ; 	ld (boss__state), a
@@ -383,6 +387,13 @@ update_boss2_behavior_1_state_0_go_walk:
 	ld a, 1
 	ld (boss__state), a
 	ret
+update_boss2_behavior_1_state_0_take_flight:
+	xor a
+	ld (boss__state), a
+	ld a, 2
+	ld (boss__behavior), a
+	ret
+
 
 update_boss2_behavior_1_state_1:
 	; Walk forward:
@@ -437,7 +448,7 @@ update_boss2_behavior_1_state_1_done_player_right:
 	ld hl, boss_2_tiles_right_zx0
 	ld c, BOSS_PAGE
 	ld (current_room__tileset_ptr), hl
-	call setup_game_tiles
+	call setup_game_tiles_only_biome
 update_boss2_behavior_1_state_1_done_player_right_done:
 	ld a, 3
 	jp update_boss2_draw_boss_frame
@@ -451,7 +462,7 @@ update_boss2_behavior_1_state_1_done_player_left:
 	ld hl, boss_2_tiles_zx0
 	ld c, BOSS_PAGE
 	ld (current_room__tileset_ptr), hl
-	call setup_game_tiles
+	call setup_game_tiles_only_biome
 update_boss2_behavior_1_state_1_done_player_left_done:
 	ld a, 3
 	jp update_boss2_draw_boss_frame
@@ -668,8 +679,95 @@ update_boss2_behavior_1_state_6_done:
 ;-----------------------------------------------
 ; flying
 update_boss2_behavior_2:
+	ld a, (boss__state)
+	or a
+	jr z, update_boss2_behavior_2_state_0  ; first frame
+	dec a
+	jr z, update_boss2_behavior_2_state_1  ; taking off
+	dec a
+	jr z, update_boss2_behavior_2_state_2  ; rising up
+	dec a
+	jr z, update_boss2_behavior_2_state_3  ; flying still
 	; ...
 	ret
+
+
+update_boss2_behavior_2_state_0:
+	; load 'flight' tiles:
+	ld hl, boss_2_tiles_flight_zx0
+	ld c, BOSS_PAGE
+	ld (current_room__tileset_ptr), hl
+	call setup_game_tiles_only_biome
+	ld a, 1
+	ld (boss__state), a
+	ld hl, boss__y
+	dec (hl)
+	dec (hl)
+	dec (hl)
+	call boss2_move_right
+	ld a, (boss__2_direction)
+	or a
+	jr nz, update_boss2_behavior_2_state_1
+	call boss2_move_right
+
+
+update_boss2_behavior_2_state_1:
+	ld a, 14
+	call update_boss2_draw_boss_frame
+	ld hl, boss__state_timer
+	inc (hl)
+	ld a, (boss__2_settings + BOSS_2_WALK_TIME_OFFSET)
+	srl a
+	cp (hl)
+	ret nz
+	call boss2_move_left
+	call boss2_move_left
+	call boss2_move_left
+	ld a, 2
+	ld (boss__state), a
+	xor a
+	ld (boss__state_timer), a
+	ret
+
+
+update_boss2_behavior_2_state_2:
+	ld hl, boss__state_timer
+	inc (hl)
+	ld a, (hl)
+	and #07
+	jr nz, update_boss2_behavior_2_state_2_continue
+	ld a, (boss__y)
+	dec a
+	ld (boss__y), a
+	jr nz, update_boss2_behavior_2_state_2_continue
+	ld a, 3
+	ld (boss__state), a
+update_boss2_behavior_2_state_2_continue:
+	ld a, (hl)
+	rrca
+	rrca
+	and #03
+	cp 3
+	jr nz, update_boss2_behavior_2_state_2_continue2
+	ld a, 1
+update_boss2_behavior_2_state_2_continue2:
+	add a, 11
+	jp update_boss2_draw_boss_frame
+
+
+update_boss2_behavior_2_state_3:
+	ld hl, boss__state_timer
+	inc (hl)
+	ld a, (hl)
+	rrca
+	rrca
+	and #03
+	cp 3
+	jr nz, update_boss2_behavior_2_state_3_continue
+	ld a, 1
+update_boss2_behavior_2_state_3_continue:
+	add a, 11
+	jp update_boss2_draw_boss_frame
 
 
 ;-----------------------------------------------
@@ -767,14 +865,16 @@ update_boss2_draw_boss_frame_continue:
 		call get_room_tile_ptr
 		ex de, hl  ; hl = ptr where the boss is to be drawn
 	pop hl
+	ld a, (boss__behavior)
+	cp 2
+	jr z, update_boss2_draw_boss_frame_continue2
 	ld a, (boss__2_direction)
 	or a
-; 	push de
-		push af
-			call z, draw_boss_frame
-		pop af
-		call nz, draw_boss_frame_flipped
-; 	pop de  ; preserve the ptr of where to draw for the damage face
+update_boss2_draw_boss_frame_continue2:
+	push af
+		call z, draw_boss_frame
+	pop af
+	call nz, draw_boss_frame_flipped
 
 	; check if we need to draw an overlay of the "damage face" when the boss is hit:
 	ld a, (boss__hit_timer)

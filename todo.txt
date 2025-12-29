@@ -2,16 +2,12 @@ to do:
 
 ***- second boss: Camazotz, the Bat God
   ***- behavior 2: takes flight
-    OK - draw flying frames in gimp
-    OK - draw land-air transition frames in gimp
-    OK - reduce number of ued tiles: 172 -> 169
-    OK - define the nametables
-    ***- switching to flight state (for now just take flight and stay there)
-    ***- add red eyes
     ***- flies left and right
+    ***- chance to land
     ***- if hp <= 0 in the air, stops behavior and lands
     ***- sonic boom barrage from the sky, going from side to side firing them downwards every time it crosses your x coordinate (spawns small bats)
-    ***- shoots spikes down, that remain in the floor (turns floor into spikes, so you need to go through the platforms)
+    ***- fire bullets through eyes
+    ***- shoots spikes down, that remain in the floor (turns floor into spikes, so you need to go through the platforms). This behavior is only on on hard/angry modes
   ***- visual sign when you hit the boss (e.g. eye sprite changes)
   ***- define the different difficulty levels
 

@@ -179,10 +179,10 @@ public class Bosses {
             // flying:
             addNameTable(nameTable, 2, 0, 15, 8, nameTableData);  // appearing 1 (606 + 13*8)            
             addNameTable(nameTable, 1, 9, 16, 16, nameTableData);  // appearing 1 (710 + 15*7)            
-            addNameTable(nameTable, 0, 16, 17, 23, nameTableData);  // appearing 1 (815 + 17*7)            
+            addNameTable(nameTable, 1, 16, 16, 23, nameTableData);  // appearing 1 (815 + 15*7)            
             // taking off:
-            addNameTable(nameTable, 19, 0, 29, 8, nameTableData);  // appearing 1 (934 + 10*8)
-            addNameTable(nameTable, 19, 8, 29, 16, nameTableData);  // appearing 1 (1014 + 10*8)
+            addNameTable(nameTable, 19, 0, 29, 8, nameTableData);  // appearing 1 (920 + 10*8)
+            addNameTable(nameTable, 19, 8, 29, 16, nameTableData);  // appearing 1 (1000 + 10*8)
         }        
 
         System.out.println("name tables: " + nameTableData.size() + " bytes");
@@ -209,9 +209,11 @@ public class Bosses {
         data.addAll(GenerateSprites.extractSprite(sourceImage, 0, 48, 15));  // sonic boom
         data.addAll(GenerateSprites.extractSprite(sourceImage, 16, 48, 15));
         data.addAll(GenerateSprites.extractSprite(sourceImage, 32, 48, 15));
+
+        data.addAll(GenerateSprites.extractSprite(sourceImage, 48, 32, 15));  // eyes front
         
         // filler until reaching the bat sprite:
-        for(int i = 10;i<16;i++) {
+        for(int i = 11;i<16;i++) {
             for(int j = 0;j<32;j++) data.add(0);
         }
         
