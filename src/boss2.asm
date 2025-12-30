@@ -205,19 +205,6 @@ update_boss2_behavior:
 	ld a, (boss__active)
 	or a
 	ret z
-	ld a, (boss__y)
-	cp 17
-	jr nz, update_boss2_behavior_continue
-	; boss is in the floor, check if it is dead
-	ld hl, (boss__hp)
-	ld a, h
-	or l
-	jr nz, update_boss2_behavior_continue
-	; boss is dead!
-	ld a, 4
-	ld (boss__behavior), a
-update_boss2_behavior_continue:
-
 	ld a, (boss__behavior)
 	or a
 	jp z, update_boss2_behavior_0  ; before boss is spawned
@@ -332,7 +319,19 @@ update_boss2_behavior_0_wait_for_player:
 ; - 4: bullet attack through eyes
 ; - 5: claw attack
 ; - 6: sonic boom through mouth
+; - 7: just landed, needs to reload tiles
 update_boss2_behavior_1:
+	; boss is in the floor, check if it is dead
+	ld hl, (boss__hp)
+	ld a, h
+	or l
+	jr nz, update_boss2_behavior_1_continue
+	; boss is dead!
+	ld a, 4
+	ld (boss__behavior), a
+	jp update_boss2_behavior_4
+update_boss2_behavior_1_continue:
+
 	ld a, (boss__state)
 	or a
 	jr z, update_boss2_behavior_1_state_0
@@ -346,7 +345,16 @@ update_boss2_behavior_1:
 	jp z, update_boss2_behavior_1_state_4
 	dec a
 	jp z, update_boss2_behavior_1_state_5
-	jp update_boss2_behavior_1_state_6
+	dec a
+	jp z, update_boss2_behavior_1_state_6
+	; jp update_boss2_behavior_1_state_7
+
+update_boss2_behavior_1_state_7:
+	; just landed, needs to reload tiles
+	call boss2_update_facing_direction
+	call boss2_update_facing_direction_reload_tiles
+	xor a
+	ld (boss__state), a
 
 update_boss2_behavior_1_state_0:
 	ld a, 3
@@ -432,40 +440,9 @@ update_boss2_behavior_1_state_3_done:
 	ld (boss__state_timer), a
 	ld (boss__state), a
 	; check if player is left or right, to switch sides:
-	ld a, (boss__x)
-	add a, 6
-	ld c, a
-	ld a, (player_x + 1)
-	cp c
-	jr c, update_boss2_behavior_1_state_1_done_player_left
-update_boss2_behavior_1_state_1_done_player_right:
-	ld a, (boss__2_direction)
-	or a
-	jr nz, update_boss2_behavior_1_state_1_done_player_right_done
-	ld a, 1
-	ld (boss__2_direction), a
-	; load 'right' tiles:
-	ld hl, boss_2_tiles_right_zx0
-	ld c, BOSS_PAGE
-	ld (current_room__tileset_ptr), hl
-	call setup_game_tiles_only_biome
-update_boss2_behavior_1_state_1_done_player_right_done:
 	ld a, 3
 	jp update_boss2_draw_boss_frame
-update_boss2_behavior_1_state_1_done_player_left:
-	ld a, (boss__2_direction)
-	or a
-	jr z, update_boss2_behavior_1_state_1_done_player_left_done
-	xor a
-	ld (boss__2_direction), a
-	; load 'left' tiles:
-	ld hl, boss_2_tiles_zx0
-	ld c, BOSS_PAGE
-	ld (current_room__tileset_ptr), hl
-	call setup_game_tiles_only_biome
-update_boss2_behavior_1_state_1_done_player_left_done:
-	ld a, 3
-	jp update_boss2_draw_boss_frame
+	call boss2_update_facing_direction_reloading_tiles
 update_boss2_behavior_1_state_1_done_keep_walking:
 	xor a
 	ld (boss__state_timer), a
@@ -685,19 +662,51 @@ update_boss2_behavior_2:
 	dec a
 	jr z, update_boss2_behavior_2_state_1  ; taking off
 	dec a
-	jr z, update_boss2_behavior_2_state_2  ; rising up
+	jp z, update_boss2_behavior_2_state_2  ; rising up
 	dec a
-	jr z, update_boss2_behavior_2_state_3  ; flying still
-	; ...
-	ret
+	jp z, update_boss2_behavior_2_state_3  ; flying (follows player)
+	dec a
+	jp z, update_boss2_behavior_2_state_4  ; going down
+; 	jr update_boss2_behavior_2_state_5  ; landing
+
+update_boss2_behavior_2_state_5:
+	ld hl, boss__state_timer
+	inc (hl)
+	ld a, (hl)
+	cp 1
+	jr nz, update_boss2_behavior_2_state_5_continue
+	; first frame, adjust position:
+	call boss2_move_right
+	call boss2_move_right
+	call boss2_move_right
+update_boss2_behavior_2_state_5_continue:
+	ld a, 14
+	call update_boss2_draw_boss_frame
+	ld a, (boss__2_settings + BOSS_2_WALK_TIME_OFFSET)
+	srl a
+	ld hl, boss__state_timer
+	cp (hl)
+	ret nz
+	; switch to normal:
+	xor a
+	ld (boss__state_timer), a
+	inc a
+	ld (boss__behavior), a
+	ld a, 7
+	ld (boss__state), a  ; force reload tiles
+	ld hl, boss__y
+	inc (hl)
+	inc (hl)
+	inc (hl)
+	call boss2_move_left
+	ld a, (boss__2_direction)
+	or a
+	ret nz
+	jp boss2_move_left
 
 
 update_boss2_behavior_2_state_0:
 	; load 'flight' tiles:
-	ld hl, boss_2_tiles_flight_zx0
-	ld c, BOSS_PAGE
-	ld (current_room__tileset_ptr), hl
-	call setup_game_tiles_only_biome
 	ld a, 1
 	ld (boss__state), a
 	ld hl, boss__y
@@ -710,8 +719,19 @@ update_boss2_behavior_2_state_0:
 	jr nz, update_boss2_behavior_2_state_1
 	call boss2_move_right
 
+	; change tileset:
+	ld a, 14
+	call update_boss2_draw_boss_frame
+	ld hl, boss_2_tiles_flight_zx0
+	ld c, BOSS_PAGE
+	ld (current_room__tileset_ptr), hl
+	call setup_game_tiles_only_biome
+	ld hl, draw_room_with_hud
+	ld c, TILES_PAGE
+	call call_hl_in_page_c_8000
 
 update_boss2_behavior_2_state_1:
+	; taking off:
 	ld a, 14
 	call update_boss2_draw_boss_frame
 	ld hl, boss__state_timer
@@ -731,6 +751,7 @@ update_boss2_behavior_2_state_1:
 
 
 update_boss2_behavior_2_state_2:
+	; rising up:
 	ld hl, boss__state_timer
 	inc (hl)
 	ld a, (hl)
@@ -756,18 +777,61 @@ update_boss2_behavior_2_state_2_continue2:
 
 
 update_boss2_behavior_2_state_3:
+	; flying:
 	ld hl, boss__state_timer
 	inc (hl)
 	ld a, (hl)
-	rrca
-	rrca
-	and #03
-	cp 3
-	jr nz, update_boss2_behavior_2_state_3_continue
-	ld a, 1
-update_boss2_behavior_2_state_3_continue:
-	add a, 11
-	jp update_boss2_draw_boss_frame
+	and #0f
+	jr nz, update_boss2_behavior_2_state_3_no_land
+	ld hl, (boss__hp)  ; if hp == 0, land!
+	ld a, h
+	or l
+	jr z, update_boss2_behavior_2_state_3_land
+	call random_a
+	and #01f
+	jr nz, update_boss2_behavior_2_state_3_no_land
+update_boss2_behavior_2_state_3_land:
+	; start going down to land!
+	ld a, 4
+	ld (boss__state), a 
+update_boss2_behavior_2_state_3_no_land:
+	ld a, (boss__state_timer)
+	and #07
+	jr nz, update_boss2_behavior_2_state_2_continue
+	; follow player:
+	ld a, (boss__x)
+	add a, 7
+	ld c, a
+	ld a, (player_x + 1)  ; tile x
+	sub c
+	jr z, update_boss2_behavior_2_state_2_continue
+	jr c, update_boss2_behavior_2_state_3_move_left
+	call boss2_move_right
+	jr update_boss2_behavior_2_state_2_continue
+update_boss2_behavior_2_state_3_move_left:
+	call boss2_move_left
+	jr update_boss2_behavior_2_state_2_continue
+
+
+update_boss2_behavior_2_state_4:
+	; going down:
+	ld hl, boss__state_timer
+	inc (hl)
+	ld a, (hl)
+	cp 1
+	and #07
+	jr nz, update_boss2_behavior_2_state_2_continue
+	ld a, (boss__y)
+	inc a
+	ld (boss__y), a
+	cp 14
+	jr nz, update_boss2_behavior_2_state_2_continue
+	ld a, 5
+	ld (boss__state), a
+	xor a
+	ld (boss__state_timer), a
+	call boss2_update_facing_direction
+	jr update_boss2_behavior_2_state_2_continue
 
 
 ;-----------------------------------------------
@@ -836,6 +900,54 @@ update_boss2_behavior_4:
 	xor a
 	ld (boss__active), a
 	ret
+
+
+;-----------------------------------------------
+boss2_update_facing_direction:
+	ld a, (boss__x)
+	add a, 6
+	ld c, a
+	ld a, (player_x + 1)
+	cp c
+	jr c, boss2_update_facing_direction_left
+boss2_update_facing_direction_right:
+	ld a, 1
+	ld (boss__2_direction), a
+	ret
+boss2_update_facing_direction_left:
+	xor a
+	ld (boss__2_direction), a
+	ret
+
+
+;-----------------------------------------------
+boss2_update_facing_direction_reloading_tiles:
+	ld a, (boss__2_direction)
+	ld b, a
+	call boss2_update_facing_direction
+	cp b
+	ret z
+boss2_update_facing_direction_reload_tiles:
+	ld a, (boss__2_direction)
+	or a
+	jr z, boss2_update_facing_direction_reloading_tiles_left
+	; load 'right' tiles:
+	ld hl, boss_2_tiles_right_zx0
+	ld c, BOSS_PAGE
+	ld (current_room__tileset_ptr), hl
+	call setup_game_tiles_only_biome
+	ld hl, draw_room_with_hud
+	ld c, TILES_PAGE
+	jp call_hl_in_page_c_8000
+boss2_update_facing_direction_reloading_tiles_left:
+	; load 'left' tiles:
+	ld hl, boss_2_tiles_zx0
+	ld c, BOSS_PAGE
+	ld (current_room__tileset_ptr), hl
+	call setup_game_tiles_only_biome
+	ld hl, draw_room_with_hud
+	ld c, TILES_PAGE
+	jp call_hl_in_page_c_8000
 
 
 ;-----------------------------------------------

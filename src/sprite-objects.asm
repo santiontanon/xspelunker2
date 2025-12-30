@@ -453,9 +453,18 @@ update_sprite_objects_boss_extras_boss_2_walking_continue2:
 update_sprite_objects_boss_extras_boss_2_flying:
 	ld a, (boss__state)
 	or a
-	jr z, update_sprite_objects_boss_extras_boss_2_walking
+	jr z, update_sprite_objects_boss_extras_boss_2_walking  ; 0
 	dec a
-	jr z, update_sprite_objects_boss_extras_boss_2_flying_fakeoff
+	jr z, update_sprite_objects_boss_extras_boss_2_flying_fakeoff  ; 1
+	dec a
+	jr z, update_sprite_objects_boss_extras_boss_2_flying_air  ; 2
+	dec a
+	jr z, update_sprite_objects_boss_extras_boss_2_flying_air  ; 3
+	dec a
+	jr z, update_sprite_objects_boss_extras_boss_2_flying_air  ; 4
+	dec a
+	jr z, update_sprite_objects_boss_extras_boss_2_flying_fakeoff  ; 5
+update_sprite_objects_boss_extras_boss_2_flying_air:
 	; flying:
 	ld a, (boss__x)
 	ld hl, room_scroll_x
@@ -489,6 +498,7 @@ update_sprite_objects_boss_extras_boss_2_flying_continue:
 	add a, 16
 	add a, b
 	ld b, a
+update_sprite_objects_boss_extras_boss_2_flying_bc_set:
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 10) * 4
 	ld d, COLOR_RED
 	call add_sprite_to_this_frame
@@ -503,7 +513,7 @@ update_sprite_objects_boss_extras_boss_2_flying_fakeoff:
 	add a, a
 	add a, a
 	add a, a
-	add a, 8 + 3
+	add a, 4
 update_sprite_objects_boss_extras_boss_2_flying_fakeoff_right_continue:
 	ld c, a
 	ld a, (boss__y)
@@ -512,9 +522,9 @@ update_sprite_objects_boss_extras_boss_2_flying_fakeoff_right_continue:
 	add a, a
 	add a, a
 	add a, a
-	add a, 40 + 4
+	add a, 32 + 7
 	ld b, a
-	jr update_sprite_objects_boss_extras_boss_2_walking_bc_set
+	jr update_sprite_objects_boss_extras_boss_2_flying_bc_set
 update_sprite_objects_boss_extras_boss_2_flying_fakeoff_right:
 	ld a, (boss__x)
 	ld hl, room_scroll_x
@@ -522,7 +532,7 @@ update_sprite_objects_boss_extras_boss_2_flying_fakeoff_right:
 	add a, a
 	add a, a
 	add a, a
-	add a, 6*10 + 3
+	add a, 7*8 + 4
 	jr update_sprite_objects_boss_extras_boss_2_flying_fakeoff_right_continue
 
 
