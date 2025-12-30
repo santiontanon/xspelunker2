@@ -716,8 +716,9 @@ update_boss2_behavior_2_state_0:
 	call boss2_move_right
 	ld a, (boss__2_direction)
 	or a
-	jr nz, update_boss2_behavior_2_state_1
+	jr nz, update_boss2_behavior_2_state_0_continue
 	call boss2_move_right
+update_boss2_behavior_2_state_0_continue:
 
 	; change tileset:
 	ld a, 14
@@ -787,9 +788,53 @@ update_boss2_behavior_2_state_3:
 	ld a, h
 	or l
 	jr z, update_boss2_behavior_2_state_3_land
+
+	; chance of:
+	; - bullet: 4-31
+	; - sonic boom: 1-3
+	; - land: 0
 	call random_a
 	and #01f
+	jr z, update_boss2_behavior_2_state_3_land
+	and #1c
+	jr z, update_boss2_behavior_2_state_3_sonic_boom
+	; bullet:
+	ld a, (boss__x)
+	add a, 7
+	ld c, a
+	ld a, (boss__y)
+	add a, 3
+	ld b, a
+	ld ix, #0000	
+	call boss_fire_directional_bullet_towards_player_with_random_offset
+	call update_boss2_spawn_bat
+	jr update_boss2_behavior_2_state_3_no_land
+
+update_boss2_behavior_2_state_3_sonic_boom:
+	; sonic boom:
+	call ptr_to_new_sprite_enemy
 	jr nz, update_boss2_behavior_2_state_3_no_land
+	ld (hl), 0  ; ID
+	inc hl
+	ld (hl), ENEMY_BULLET_SONIC_BOOM
+	inc hl
+	ld (hl), 0  ; pixel x
+	inc hl
+	ld a, (boss__x)
+	add a, 7
+	ld (hl), a
+	inc hl
+	ld (hl), 0  ; pixel y
+	inc hl
+	ld a, (boss__y)
+	add a, 3
+	ld (hl), a
+	inc hl
+	ld (hl), 2  ; direction
+	ld hl, SFX_sonic_attack
+	call play_SFX_with_high_priority
+	jr update_boss2_behavior_2_state_3_no_land
+
 update_boss2_behavior_2_state_3_land:
 	; start going down to land!
 	ld a, 4
@@ -804,13 +849,13 @@ update_boss2_behavior_2_state_3_no_land:
 	ld c, a
 	ld a, (player_x + 1)  ; tile x
 	sub c
-	jr z, update_boss2_behavior_2_state_2_continue
+	jp z, update_boss2_behavior_2_state_2_continue
 	jr c, update_boss2_behavior_2_state_3_move_left
 	call boss2_move_right
-	jr update_boss2_behavior_2_state_2_continue
+	jp update_boss2_behavior_2_state_2_continue
 update_boss2_behavior_2_state_3_move_left:
 	call boss2_move_left
-	jr update_boss2_behavior_2_state_2_continue
+	jp update_boss2_behavior_2_state_2_continue
 
 
 update_boss2_behavior_2_state_4:
@@ -820,18 +865,18 @@ update_boss2_behavior_2_state_4:
 	ld a, (hl)
 	cp 1
 	and #07
-	jr nz, update_boss2_behavior_2_state_2_continue
+	jp nz, update_boss2_behavior_2_state_2_continue
 	ld a, (boss__y)
 	inc a
 	ld (boss__y), a
 	cp 14
-	jr nz, update_boss2_behavior_2_state_2_continue
+	jp nz, update_boss2_behavior_2_state_2_continue
 	ld a, 5
 	ld (boss__state), a
 	xor a
 	ld (boss__state_timer), a
 	call boss2_update_facing_direction
-	jr update_boss2_behavior_2_state_2_continue
+	jp update_boss2_behavior_2_state_2_continue
 
 
 ;-----------------------------------------------

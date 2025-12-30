@@ -1844,10 +1844,22 @@ update_enemy_sonic_boom:
 	jp z, update_enemy_delete
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
 	or a
-	jr nz, update_enemy_sonic_boom_left
+	jr z, update_enemy_sonic_boom_right
+	dec a
+	jr z, update_enemy_sonic_boom_left
+update_enemy_sonic_boom_down:
+	ld a, (current_world__difficulty_bullet_speed)
+	add a, a
+	add a, a
+	call update_enemy_bullet_move_down_if_possible_a_times
+	jp z, update_enemy_delete
+	ld d, COLOR_WHITE
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 8) * 4 
+	jp enemy_sprite_and_continue
 
 update_enemy_sonic_boom_right:
 	ld a, (current_world__difficulty_bullet_speed)
+	add a, a
 	add a, a
 	call update_enemy_bullet_move_right_if_possible_a_times
 	jp z, update_enemy_delete
@@ -1857,6 +1869,7 @@ update_enemy_sonic_boom_right:
 
 update_enemy_sonic_boom_left:
 	ld a, (current_world__difficulty_bullet_speed)
+	add a, a
 	add a, a
 	call update_enemy_bullet_move_left_if_possible_a_times
 	jp z, update_enemy_delete
