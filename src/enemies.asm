@@ -6,6 +6,7 @@ enemy_update_fn_table:
 	dw update_enemy_bullet_whirlwind  ; boss 1 attack
 	dw update_enemy_bullet_lightning  ; boss 1 attack
 	dw update_enemy_sonic_boom  ; boss 2 attack
+	dw update_enemy_boss2_spikes ; boss 2 attack
 	; enemies you can hit:
 	dw update_enemy_snake  ; left-to-right
 	dw update_enemy_snake_dasher  ; left-to-right + dash
@@ -1876,6 +1877,46 @@ update_enemy_sonic_boom_left:
 	ld d, COLOR_WHITE
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 7) * 4 
 	jp enemy_sprite_and_continue
+
+
+;-----------------------------------------------
+update_enemy_boss2_spikes:
+	ld iyh, 2  ; damage to deal
+	call update_enemy_hurt_player_2x2
+	ld a, (current_world__difficulty_bullet_speed)
+	add a, a
+	add a, a
+	call update_enemy_bullet_move_down_if_possible_a_times
+	jr z, update_enemy_boss2_spikes_bottom
+	ld d, COLOR_WHITE
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 11) * 4 
+	jp enemy_sprite_and_continue	
+update_enemy_boss2_spikes_bottom:
+	; leave the spikes in the floor:
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld hl, 22
+	call get_room_tile_ptr_hl_set
+	ld (hl), 15*16 + 12
+	inc hl
+	ld (hl), 8*16 + 13
+	ld bc, 32*2 - 1
+	add hl, bc
+	ld (hl), 8*16 + 4
+	inc hl
+	ld (hl), 8*16 + 5
+	ld bc, 32*24*2 - (32*2 + 1)
+	add hl, bc
+	ld (hl), 15*16 + 12
+	inc hl
+	ld (hl), 8*16 + 13
+	ld bc, 32*2 - 1
+	add hl, bc
+	ld (hl), 8*16 + 4
+	inc hl
+	ld (hl), 8*16 + 5
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)	
+	jp update_enemy_delete
 
 
 ;-----------------------------------------------

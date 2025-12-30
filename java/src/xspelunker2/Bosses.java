@@ -211,9 +211,11 @@ public class Bosses {
         data.addAll(GenerateSprites.extractSprite(sourceImage, 32, 48, 15));
 
         data.addAll(GenerateSprites.extractSprite(sourceImage, 48, 32, 15));  // eyes front
+
+        data.addAll(GenerateSprites.extractSprite(sourceImage, 48, 48, 15));  // spikes
         
         // filler until reaching the bat sprite:
-        for(int i = 11;i<16;i++) {
+        for(int i = 12;i<16;i++) {
             for(int j = 0;j<32;j++) data.add(0);
         }
         

@@ -1,13 +1,13 @@
 to do:
 
-***- second boss: Camazotz, the Bat God
-  ***- shoots spikes down from air, that remain in the floor (turns floor into spikes, so you need to go through the platforms). This behavior is only on on hard/angry modes
-  ***- visual sign when you hit the boss (e.g. eye sprite changes): boss__hit_timer
-  ***- define the different difficulty levels
+***- third boss: The Obsidian Golem: A hulking golem made of obsidian, with glowing cracks.
+  ***- sketch the boss in gimp
+  ***- design a room (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
+  ***- design behaivors
+  ***- implement behaviors
 
 - music: intro, letters, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 25 have potential)
   - boss music acts as a health bar (increases in speed as health goes down: 50%, 25%)
-- third boss: The Obsidian Golem: A hulking golem made of obsidian, with glowing cracks. (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
 - caves biome (remember to keep ladder tiles in place for down-door opening code). Implement ice cape effect for lava. Skeleton that spit fire (flamethrower through mouth), rockmen (that turn into an undestructible stone), caterpillars, worms, etc. Is the confluence a "caves biome area" (except the calendar room)?
     - ant colonies (tile enemy that spawns ants). ants/fire ants: just move around not too fast and can climb walls up/down, or even hang from the ceiling
 - xibalba biome (remember to keep ladder tiles in place for down-door opening code)

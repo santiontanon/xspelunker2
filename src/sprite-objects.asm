@@ -386,10 +386,15 @@ update_sprite_objects_boss_extras:
 	cp 2  ; inverted pyramid
 	jr z, update_sprite_objects_boss_extras_boss_2
 	; ...
-
 	jp update_sprite_objects_loop_next
 
 update_sprite_objects_boss_extras_boss_2:
+	ld a, (boss__hit_timer)
+	or a
+	ld d, COLOR_RED
+	jr z, update_sprite_objects_boss_extras_boss_2_continue
+	ld d, COLOR_DARK_YELLOW
+update_sprite_objects_boss_extras_boss_2_continue:
 	; boss 2, camazotz
 	ld a, (boss__behavior)
 	dec a
@@ -446,7 +451,7 @@ update_sprite_objects_boss_extras_boss_2_walking_bc_set:
 	jr nz, update_sprite_objects_boss_extras_boss_2_walking_continue2
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 6) * 4
 update_sprite_objects_boss_extras_boss_2_walking_continue2:
-	ld d, COLOR_RED
+	; ld d, COLOR_RED
 	call add_sprite_to_this_frame
 	jp update_sprite_objects_loop_next
 
@@ -500,7 +505,7 @@ update_sprite_objects_boss_extras_boss_2_flying_continue:
 	ld b, a
 update_sprite_objects_boss_extras_boss_2_flying_bc_set:
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 10) * 4
-	ld d, COLOR_RED
+	; ld d, COLOR_RED
 	call add_sprite_to_this_frame
 	jp update_sprite_objects_loop_next
 update_sprite_objects_boss_extras_boss_2_flying_fakeoff:

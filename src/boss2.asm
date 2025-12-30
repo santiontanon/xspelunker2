@@ -35,13 +35,34 @@ BOSS_2_BAT_HP_OFFSET: equ 11
 
 ;-----------------------------------------------
 boss2_difficulty_setting__easy:
-boss2_difficulty_setting__normal:
-boss2_difficulty_setting__hard:
-boss2_difficulty_setting__hardest:
-	dw 16  ; boss hp
+	dw 40  ; boss hp
 	db 32, 16, #0f, 4, #03  ; wait, walk, walk-time-mask, dash, dash-time-mask
+	db 24, #07, 40  ; bullet time, bullet frequency, attack time
+	db 2, 1  ; max bats, bat hp
+
+boss2_difficulty_setting__normal:
+	dw 60  ; boss hp
+	db 24, 16, #0f, 4, #03  ; wait, walk, walk-time-mask, dash, dash-time-mask
 	db 32, #07, 32  ; bullet time, bullet frequency, attack time
+	db 3, 1  ; max bats, bat hp
+
+boss2_difficulty_setting__hard:
+	dw 80  ; boss hp
+	db 20, 16, #0f, 4, #03  ; wait, walk, walk-time-mask, dash, dash-time-mask
+	db 24, #03, 28  ; bullet time, bullet frequency, attack time
+	db 4, 1  ; max bats, bat hp
+
+boss2_difficulty_setting__hardest:
+	dw 100  ; boss hp
+	db 16, 8, #07, 4, #03  ; wait, walk, walk-time-mask, dash, dash-time-mask
+	db 32, #03, 24  ; bullet time, bullet frequency, attack time
 	db 4, 2  ; max bats, bat hp
+
+; boss2_difficulty_setting__angry:
+; 	dw 120  ; boss hp
+; 	db 16, 8, #07, 4, #03  ; wait, walk, walk-time-mask, dash, dash-time-mask
+; 	db 40, #03, 20  ; bullet time, bullet frequency, attack time
+; 	db 4, 2  ; max bats, bat hp
 
 
 ;-----------------------------------------------
@@ -327,6 +348,13 @@ update_boss2_behavior_1:
 	or l
 	jr nz, update_boss2_behavior_1_continue
 	; boss is dead!
+	ld a, (boss__state)
+	cp 7
+	jr nz, update_boss2_behavior_1_dead_continue
+	; reload tiles:
+	call boss2_update_facing_direction
+	call boss2_update_facing_direction_reload_tiles
+update_boss2_behavior_1_dead_continue:
 	ld a, 4
 	ld (boss__behavior), a
 	jp update_boss2_behavior_4
@@ -370,7 +398,7 @@ update_boss2_behavior_1_state_0:
 	call random_a
 	and #07
 	jr z, update_boss2_behavior_1_state_0_take_flight
-	jr update_boss2_behavior_1_state_0_take_flight
+	; jr update_boss2_behavior_1_state_0_take_flight
 	; DEBUG:
 ; 	ld a, 6
 ; 	ld (boss__state), a
@@ -441,8 +469,8 @@ update_boss2_behavior_1_state_3_done:
 	ld (boss__state), a
 	; check if player is left or right, to switch sides:
 	ld a, 3
-	jp update_boss2_draw_boss_frame
-	call boss2_update_facing_direction_reloading_tiles
+	call update_boss2_draw_boss_frame
+	jp boss2_update_facing_direction_reloading_tiles
 update_boss2_behavior_1_state_1_done_keep_walking:
 	xor a
 	ld (boss__state_timer), a
@@ -790,13 +818,13 @@ update_boss2_behavior_2_state_3:
 	jr z, update_boss2_behavior_2_state_3_land
 
 	; chance of:
-	; - bullet: 4-31
-	; - sonic boom: 1-3
+	; - bullet: 8-31
+	; - sonic boom / spikes: 1-7
 	; - land: 0
 	call random_a
 	and #01f
 	jr z, update_boss2_behavior_2_state_3_land
-	and #1c
+	and #18
 	jr z, update_boss2_behavior_2_state_3_sonic_boom
 	; bullet:
 	ld a, (boss__x)
@@ -811,12 +839,21 @@ update_boss2_behavior_2_state_3:
 	jr update_boss2_behavior_2_state_3_no_land
 
 update_boss2_behavior_2_state_3_sonic_boom:
-	; sonic boom:
+	; sonic boom / pikes:
 	call ptr_to_new_sprite_enemy
 	jr nz, update_boss2_behavior_2_state_3_no_land
 	ld (hl), 0  ; ID
 	inc hl
-	ld (hl), ENEMY_BULLET_SONIC_BOOM
+	ld c, ENEMY_BULLET_SONIC_BOOM
+	ld a, (current_world__difficulty)  ; spikes only in hard/hardest/angry
+	cp 2
+	jr c, update_boss2_behavior_2_state_3_sonic_boom_boom
+	call random_a
+	and #01
+	jr z, update_boss2_behavior_2_state_3_sonic_boom_boom
+	ld c, ENEMY_BULLET_BOSS2_SPIKES
+update_boss2_behavior_2_state_3_sonic_boom_boom:	
+	ld (hl), c
 	inc hl
 	ld (hl), 0  ; pixel x
 	inc hl
@@ -835,6 +872,7 @@ update_boss2_behavior_2_state_3_sonic_boom:
 	call play_SFX_with_high_priority
 	jr update_boss2_behavior_2_state_3_no_land
 
+
 update_boss2_behavior_2_state_3_land:
 	; start going down to land!
 	ld a, 4
@@ -842,7 +880,7 @@ update_boss2_behavior_2_state_3_land:
 update_boss2_behavior_2_state_3_no_land:
 	ld a, (boss__state_timer)
 	and #07
-	jr nz, update_boss2_behavior_2_state_2_continue
+	jp nz, update_boss2_behavior_2_state_2_continue
 	; follow player:
 	ld a, (boss__x)
 	add a, 7
@@ -1039,9 +1077,6 @@ update_boss2_draw_boss_frame_continue2:
 	ret z
 	dec a
 	ld (boss__hit_timer), a
-
-	; we need to show the boss as being hit:
-	; ...
 	ret
 
 
@@ -1073,8 +1108,8 @@ update_boss2_spawn_bat_loop_end:
 	ld (hl), ENEMY_BAT_AGGRESSIVE
 	inc hl
 	call random_a
-	and #0f
-	add a, 8
+	and #1f
+	add a, 16
 	ld (hl), 0  ; pixel x
 	inc hl
 	ld (hl), a
