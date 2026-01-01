@@ -115,7 +115,12 @@ enter_boss_door_loop:
 		ld bc, tile_collision_types_boss2
 		ld iy, boss2_sprites_zx0
 		jr z, enter_boss_door__room_ptr_set
-
+		dec a
+		ld hl, boss_room_3_zx0
+		ld de, boss_3_tiles_walk_zx0
+		ld bc, tile_collision_types_boss3
+		ld iy, boss3_sprites_zx0
+		jr z, enter_boss_door__room_ptr_set
 		; ...
 
 enter_boss_door__room_ptr_set:
@@ -129,7 +134,7 @@ enter_boss_door__room_ptr_set:
 				ld hl, pcg_generate_room__prettify_pyramid
 				call call_hl_in_page_c_8000
 
-				ld a, BOSS_PAGE
+				ld a, BOSS_GFX_PAGE
 				ld (current_room__tileset_page), a
 			pop de
 			ld (current_room__tileset_ptr), de
@@ -968,6 +973,8 @@ update_boss_behavior:
 	jp z, update_boss1_behavior
 	cp 2  ; hidden temple
 	jp z, update_boss2_behavior
+	cp 4  ; inverted pyramid
+	jp z, update_boss3_behavior
 
 	; ...
 	ret
@@ -979,6 +986,7 @@ update_boss_behavior:
 ; - 9: parts of boss that you can hit (and also hit you)
 tile_collision_types_boss1:
 tile_collision_types_boss2:
+tile_collision_types_boss3:
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0

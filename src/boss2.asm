@@ -1071,7 +1071,7 @@ update_boss2_draw_boss_frame_continue2:
 	pop af
 	call nz, draw_boss_frame_flipped
 
-	; check if we need to draw an overlay of the "damage face" when the boss is hit:
+	; boss hit timer
 	ld a, (boss__hit_timer)
 	or a
 	ret z

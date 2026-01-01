@@ -57,12 +57,14 @@ boss1_difficulty_setting__hardest:
 	db -48   ; just to remove the sprites when the name disappears
 boss1_name_y_table:
 boss2_name_y_table:
+boss3_name_y_table:
 	db -32, -28, -24, -20, -16, -12, -9, -5
 	db  -2,   1,   4,   7,   9,  11, 13, 15
 	db  16,  17,  18,  19,  19,  19, 19, 20
 
 boss1_name_initial_sprite_attributes:
 boss2_name_initial_sprite_attributes:
+boss3_name_initial_sprite_attributes:
 	db -32, 112, (FIRST_ENEMY_SPRITE_PATTERN + 1)*4, COLOR_WHITE
 	db -32, 128, (FIRST_ENEMY_SPRITE_PATTERN + 2)*4, COLOR_WHITE
 	db -16, 112, (FIRST_ENEMY_SPRITE_PATTERN + 3)*4, COLOR_WHITE
