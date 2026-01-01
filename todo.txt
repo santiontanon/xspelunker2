@@ -2,7 +2,6 @@ to do:
 
 ***- third boss: Cabrakan: The Obsidian Golem
   ***- design a 32x24 room
-  ***- draw frames for punching the floor
   ***- add boss room to the game
   ***- make boss appear
     - draw sprite boss name
