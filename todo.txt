@@ -1,9 +1,9 @@
 to do:
 
 ***- third boss: The Obsidian Golem: A hulking golem made of obsidian, with glowing cracks.
-  ***- sketch the boss in gimp
+  ***- think of the different attacks the boss will have
   ***- design a room (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
-  ***- design behaivors
+  ***- draw all the frames: for walking, does it move arms? (fix the provisional frames I drew)
   ***- implement behaviors
 
 - music: intro, letters, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 25 have potential)
