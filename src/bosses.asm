@@ -177,7 +177,11 @@ enter_boss_door__room_ptr_set:
 		ld bc, 32*24*2
 		ldir
 		; clear the bbox:
-		ld hl, boss__clear_bbox + 2
+		ld hl, boss__clear_bbox_1 + 2
+		ld (hl), 0
+		inc hl
+		ld (hl), 0
+		ld hl, boss__clear_bbox_2 + 2
 		ld (hl), 0
 		inc hl
 		ld (hl), 0
@@ -452,74 +456,29 @@ boss_spawn_power_stone_item_set:
 ; input:
 ; - de: ptr to draw to
 ; - hl: ptr to frame struct
-draw_boss_frame:
+draw_boss_frame_1:
 	push hl
 	push de
-		call draw_boss_frame_clear_previous_frame
+		call draw_boss_frame_clear_previous_frame_1
 	pop de
 	pop hl
-
-	ld a, (hl)  ; number of frame parts
-	inc hl
-	or a
-	ret z
-	ld b, a
+draw_boss_frame_1_without_clearing:
 	push de
-draw_boss_frame_loop:
-		push bc
-			push de
-				ld c, (hl)  ; x offset
-				inc hl
-				; sign extend c to bc:
-				ld a, c
-			    rlca
-			    sbc a
-			    ld  b, a	
-				ex de, hl
-					add hl, bc  ; add x offset
-				ex de, hl
-				ld a, (current_room__width)
-				ld c, a
-				ld a, (hl)  ; y offset
-				inc hl
-				or a
-				jr z, draw_boss_frame_loop_continue
-				ex de, hl
-draw_boss_frame_loop_y_offset_loop:
-					add hl, bc
-					dec a
-					jr nz, draw_boss_frame_loop_y_offset_loop
-				ex de, hl
-draw_boss_frame_loop_continue:
-				ld c, (hl)  ; width
-				inc hl
-				ld b, (hl)  ; height
-				inc hl
-				push hl
-					ld a, (hl)
-					inc hl
-					ld h, (hl)
-					ld l, a
-					call draw_boss_frame_part
-				pop hl
-			pop de
-			inc hl
-			inc hl
-		pop bc
-		djnz draw_boss_frame_loop
+		call draw_boss_frame_internal
+
 		; set clear bbox:
 		ld c, (hl)
 		inc hl
 		ld b, (hl)  ; bc is the offset wrt original draw pointer
 		inc hl
-		ld de, boss__clear_bbox + 2
+		ld de, boss__clear_bbox_1 + 2
 		push bc
 			ldi
 			ldi
 		pop bc
 	pop hl
 	add hl, bc
-	ld (boss__clear_bbox), hl
+	ld (boss__clear_bbox_1), hl
 	ret
 
 
@@ -527,94 +486,200 @@ draw_boss_frame_loop_continue:
 ; input:
 ; - de: ptr to draw to
 ; - hl: ptr to frame struct
-draw_boss_frame_flipped:
+draw_boss_frame_2:
 	push hl
 	push de
-		call draw_boss_frame_clear_previous_frame
+		call draw_boss_frame_clear_previous_frame_2
 	pop de
 	pop hl
-
-	ld a, (hl)  ; number of frame parts
-	inc hl
-	or a
-	ret z
-	ld b, a
+draw_boss_frame_2_without_clearing:
 	push de
-draw_boss_frame_flipped_loop:
-		push bc
-			push de
-				ld c, (hl)  ; x offset
-				inc hl
-				; sign extend c to bc:
-				ld a, c
-			    rlca
-			    sbc a
-			    ld  b, a	
-				ex de, hl
-					add hl, bc  ; add x offset
-				ex de, hl
-				ld a, (current_room__width)
-				ld c, a
-				ld a, (hl)  ; y offset
-				inc hl
-				or a
-				jr z, draw_boss_frame_flipped_loop_continue
-				ex de, hl
-draw_boss_frame_flipped_loop_y_offset_loop:
-					add hl, bc
-					dec a
-					jr nz, draw_boss_frame_flipped_loop_y_offset_loop
-				ex de, hl
-draw_boss_frame_flipped_loop_continue:
-				ld c, (hl)  ; width
-				inc hl
-				ld b, (hl)  ; height
-				inc hl
-				push hl
-					ld a, (hl)
-					inc hl
-					ld h, (hl)
-					ld l, a
-					call draw_boss_frame_part_flipped
-				pop hl
-			pop de
-			inc hl
-			inc hl
-		pop bc
-		djnz draw_boss_frame_flipped_loop
+		call draw_boss_frame_internal
+
 		; set clear bbox:
 		ld c, (hl)
 		inc hl
 		ld b, (hl)  ; bc is the offset wrt original draw pointer
 		inc hl
-		ld de, boss__clear_bbox + 2
+		ld de, boss__clear_bbox_2 + 2
 		push bc
 			ldi
 			ldi
 		pop bc
 	pop hl
 	add hl, bc
-	ld (boss__clear_bbox), hl
+	ld (boss__clear_bbox_2), hl
 	ret
 
 
 ;-----------------------------------------------
-draw_boss_frame_clear_previous_frame:
-		; clear the previous frame
-		ld bc, (boss__clear_bbox + 2)
-		ld a, c
-		or b
-		ret z
-		ld hl, (boss__clear_bbox)
-		ld e, l
-		ld d, h
+; input:
+; - de: ptr to draw to
+; - hl: ptr to frame struct
+; output:
+; - hl: ptr to the boss__clear_bbox info
+draw_boss_frame_internal:
+	ld a, (hl)  ; number of frame parts
+	inc hl
+	or a
+	ret z
+	ld b, a
+draw_boss_frame_loop:
+	push bc
+		push de
+			ld c, (hl)  ; x offset
+			inc hl
+			; sign extend c to bc:
+			ld a, c
+		    rlca
+		    sbc a
+		    ld  b, a	
+			ex de, hl
+				add hl, bc  ; add x offset
+			ex de, hl
+			ld a, (current_room__width)
+			ld c, a
+			ld a, (hl)  ; y offset
+			inc hl
+			or a
+			jr z, draw_boss_frame_loop_continue
+			ex de, hl
+draw_boss_frame_loop_y_offset_loop:
+				add hl, bc
+				dec a
+				jr nz, draw_boss_frame_loop_y_offset_loop
+			ex de, hl
+draw_boss_frame_loop_continue:
+			ld c, (hl)  ; width
+			inc hl
+			ld b, (hl)  ; height
+			inc hl
+			push hl
+				ld a, (hl)
+				inc hl
+				ld h, (hl)
+				ld l, a
+				call draw_boss_frame_part
+			pop hl
+		pop de
+		inc hl
+		inc hl
+	pop bc
+	djnz draw_boss_frame_loop
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - de: ptr to draw to
+; - hl: ptr to frame struct
+draw_boss_frame_flipped_1:
+	push hl
+	push de
+		call draw_boss_frame_clear_previous_frame_1
+	pop de
+	pop hl
+	push de
+		call draw_boss_frame_flipped_internal
+
+		; set clear bbox:
+		ld c, (hl)
+		inc hl
+		ld b, (hl)  ; bc is the offset wrt original draw pointer
+		inc hl
+		ld de, boss__clear_bbox_1 + 2
 		push bc
-			ld bc, boss__room_bg_buffer - current_room__tile_map
-			add hl, bc
+			ldi
+			ldi
 		pop bc
-		; here:
-		; - hl: points to the bg buffer
-		; - de: points to the room part we want to clear
+	pop hl
+	add hl, bc
+	ld (boss__clear_bbox_1), hl
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - de: ptr to draw to
+; - hl: ptr to frame struct
+draw_boss_frame_flipped_internal:
+	ld a, (hl)  ; number of frame parts
+	inc hl
+	or a
+	ret z
+	ld b, a
+draw_boss_frame_flipped_loop:
+	push bc
+		push de
+			ld c, (hl)  ; x offset
+			inc hl
+			; sign extend c to bc:
+			ld a, c
+		    rlca
+		    sbc a
+		    ld  b, a	
+			ex de, hl
+				add hl, bc  ; add x offset
+			ex de, hl
+			ld a, (current_room__width)
+			ld c, a
+			ld a, (hl)  ; y offset
+			inc hl
+			or a
+			jr z, draw_boss_frame_flipped_loop_continue
+			ex de, hl
+draw_boss_frame_flipped_loop_y_offset_loop:
+				add hl, bc
+				dec a
+				jr nz, draw_boss_frame_flipped_loop_y_offset_loop
+			ex de, hl
+draw_boss_frame_flipped_loop_continue:
+			ld c, (hl)  ; width
+			inc hl
+			ld b, (hl)  ; height
+			inc hl
+			push hl
+				ld a, (hl)
+				inc hl
+				ld h, (hl)
+				ld l, a
+				call draw_boss_frame_part_flipped
+			pop hl
+		pop de
+		inc hl
+		inc hl
+	pop bc
+	djnz draw_boss_frame_flipped_loop
+	ret
+
+
+;-----------------------------------------------
+draw_boss_frame_clear_previous_frame_2:
+	; clear the previous frame
+	ld bc, (boss__clear_bbox_2 + 2)
+	ld a, c
+	or b
+	ret z
+	ld hl, (boss__clear_bbox_2)
+	jr draw_boss_frame_clear_previous_frame_1_continue
+
+draw_boss_frame_clear_previous_frame_1:
+	; clear the previous frame
+	ld bc, (boss__clear_bbox_1 + 2)
+	ld a, c
+	or b
+	ret z
+	ld hl, (boss__clear_bbox_1)
+draw_boss_frame_clear_previous_frame_1_continue:
+	ld e, l
+	ld d, h
+	push bc
+		ld bc, boss__room_bg_buffer - current_room__tile_map
+		add hl, bc
+	pop bc
+	; here:
+	; - hl: points to the bg buffer
+	; - de: points to the room part we want to clear
 draw_boss_frame_clear_previous_frame_y_loop:
 	push bc
 		ld b, 0

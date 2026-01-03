@@ -240,12 +240,16 @@ boss__state: ds virtual 1  ; state within the current boss behavior
 boss__state_timer: ds virtual 1
 boss__x: ds virtual 1
 boss__y: ds virtual 1
-boss__clear_bbox: ds virtual 4  ; ptr, w,h  (used to restore background)
+boss__x2: ds virtual 1  ; for bosses that have two parts
+boss__y2: ds virtual 1
+boss__clear_bbox_1: ds virtual 4  ; ptr, w, h  (used to restore boss background)
+boss__clear_bbox_2: ds virtual 4  ; ptr, w, h  (used to restore boss background, for bosses made out of two pieces)
 boss__hp: ds virtual 2  ; hit points, 16bit
 boss__last_collision_id: ds virtual 1
 boss__hit_fn: ds virtual 2  ; when the player hits a tile with collision type '9' this method is called
 boss__hit_timer: ds virtual 1  ; for displaying "boss hit" animations
 boss__2_direction:  ; 0: left, 1: right
+boss__3_head_attached:  ; 0: attached, 1: dettached
 boss__1_has_staff: ds virtual 1
 boss__1_staff_hp: ds virtual 1
 boss__1_settings:

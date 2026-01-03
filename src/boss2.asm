@@ -967,7 +967,7 @@ update_boss2_behavior_4:
 	ld b, 50
 	call wait_b_halts
 
-	call draw_boss_frame_clear_previous_frame
+	call draw_boss_frame_clear_previous_frame_1
 
 	ld a, (boss__x)
 	add a, 4
@@ -1067,9 +1067,9 @@ update_boss2_draw_boss_frame_continue:
 	or a
 update_boss2_draw_boss_frame_continue2:
 	push af
-		call z, draw_boss_frame
+		call z, draw_boss_frame_1
 	pop af
-	call nz, draw_boss_frame_flipped
+	call nz, draw_boss_frame_flipped_1
 
 	; boss hit timer
 	ld a, (boss__hit_timer)

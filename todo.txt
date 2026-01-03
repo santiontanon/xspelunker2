@@ -1,19 +1,15 @@
 to do:
 
 ***- third boss: Cabrakan: The Obsidian Golem
-  ***- design a 32x24 room
-  ***- add boss room to the game
-  ***- make boss appear
-    - draw sprite boss name
-    - upon entering the room, the body (without the head) is there. Upon approaching, the head falls from the top with a big boom, and boss starts
-  ***- implement behaviors
-    - walk left/right
-    - dash left/right (hitting side walls with the shoulder)
-    - head detaches and tries to land on top of you (with big boom) (high chance of detaching, since it's hard to hit the head while attached to the body)
-    - head fires bullets through eyes (both when it's on the body, and when it's flying around)
-    - you can only damage the head
-    - punch the floor making debris fall (debris are sprites)
-    - when the head is dettached, all the body behaviors keep going (walk/dash/punch floor)
+  ***- dash left/right
+  ***- red eye sprite (detacched head and attached head)
+  ***- punch the floor making debris fall (debris are sprites)
+  ***- head detaches and tries to land on top of you (with big boom) (high chance of detaching, since it's hard to hit the head while attached to the body)
+    ***- when the head is dettached, all the body behaviors keep going (walk/dash/punch floor)
+  ***- you can only damage the head
+  ***- damage animation
+  ***- head goes back to the main body
+  ***- head goes to some random spot and fires bullets through eyes (both when it's on the body, and when it's flying around)
 
 - music: intro, letters, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 25 have potential)
   - boss music acts as a health bar (increases in speed as health goes down: 50%, 25%)

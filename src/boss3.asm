@@ -4,18 +4,21 @@ boss3_name_tables:
 
 BOSS3_NAMETABLE_HEAD1: equ boss3_name_tables + 0  ; 3*4
 BOSS3_NAMETABLE_HEAD2: equ boss3_name_tables + 12  ; 3*4
-BOSS3_NAMETABLE_IDLE: equ boss3_name_tables + 24  ; 7*8
-BOSS3_NAMETABLE_WALK1: equ boss3_name_tables + 80  ; 10*8
-BOSS3_NAMETABLE_WALK2: equ boss3_name_tables + 160  ; 10*8
-BOSS3_NAMETABLE_WALK3: equ boss3_name_tables + 240  ; 8*8
-BOSS3_NAMETABLE_WALK4: equ boss3_name_tables + 304  ; 8*8
-BOSS3_NAMETABLE_STOMP1: equ boss3_name_tables + 368  ; 7*11
-BOSS3_NAMETABLE_STOMP2: equ boss3_name_tables + 445  ; 11*5
-BOSS3_NAMETABLE_STOMP2_HEAD: equ boss3_name_tables + 500  ; 11*6
-
+BOSS3_NAMETABLE_HEAD1_ON_BODY: equ boss3_name_tables + 24  ; 3*4
+BOSS3_NAMETABLE_HEAD2_ON_BODY: equ boss3_name_tables + 36  ; 3*4
+BOSS3_NAMETABLE_IDLE: equ boss3_name_tables + 48  ; 7*8
+BOSS3_NAMETABLE_WALK1: equ boss3_name_tables + 104  ; 10*8
+BOSS3_NAMETABLE_WALK2: equ boss3_name_tables + 184  ; 10*8
+BOSS3_NAMETABLE_WALK3: equ boss3_name_tables + 264  ; 8*8
+BOSS3_NAMETABLE_WALK4: equ boss3_name_tables + 328  ; 8*8
+BOSS3_NAMETABLE_STOMP1: equ boss3_name_tables + 392  ; 7*11
+BOSS3_NAMETABLE_STOMP2: equ boss3_name_tables + 469  ; 11*5
+BOSS3_NAMETABLE_STOMP2_HEAD: equ boss3_name_tables + 524  ; 11*6
 
 BOSS_3_HP_OFFSET: equ 0
 BOSS_3_WAIT_TIME_OFFSET: equ 2
+BOSS_3_WALK_TIME_OFFSET: equ 3
+BOSS_3_WALK_TIME_MASK_OFFSET: equ 4
 
 
 ;-----------------------------------------------
@@ -25,55 +28,111 @@ boss3_difficulty_setting__hard:
 boss3_difficulty_setting__hardest:
 ; boss3_difficulty_setting__angry:
 	dw 16  ; boss hp
-	db 32  ; wait
+	db 32, 16, #0f  ; wait, walk, walk-time-mask
 
 
 ;-----------------------------------------------
 boss3_frame_ptrs:
 	dw boss3_frame_0_idle
-; 	dw boss3_frame_1_walk1
-; 	dw boss3_frame_2_walk2
-; 	dw boss3_frame_3_walk3
-; 	dw boss3_frame_4_walk4
+	dw boss3_frame_1_walk1
+	dw boss3_frame_2_walk2
+	dw boss3_frame_3_walk3
+	dw boss3_frame_4_walk4
 ; 	dw boss3_frame_5_stomp1
 ; 	dw boss3_frame_6_stomp2
 
 boss3_frame_ptrs_head:
 	dw boss3_frame_0_idle_head
-; 	dw boss3_frame_1_walk1_head
-; 	dw boss3_frame_2_walk2_head
-; 	dw boss3_frame_3_walk3_head
-; 	dw boss3_frame_4_walk4_head
+	dw boss3_frame_1_walk1_head
+	dw boss3_frame_2_walk2_head
+	dw boss3_frame_3_walk3_head
+	dw boss3_frame_4_walk4_head
 ; 	dw boss3_frame_5_stomp1_head
 ; 	dw boss3_frame_6_stomp2_head
 
 
 boss3_frame_0_idle:
 	db 1  ; number of parts
-	db 0, 1  ; offset wrt the draw ptr (x offset, y offset)
+	db 2, 1  ; offset wrt the draw ptr (x offset, y offset)
 	dw #0807, BOSS3_NAMETABLE_IDLE  ; dimensions and nametable
-	dw 0, #0907  ; boss__clear_bbox
+	dw 0, #0909  ; boss__clear_bbox
 boss3_frame_0_idle_head:
 	db 2  ; number of parts
-	db 0, 1  ; offset wrt the draw ptr (x offset, y offset)
+	db 2, 1  ; offset wrt the draw ptr (x offset, y offset)
 	dw #0807, BOSS3_NAMETABLE_IDLE  ; dimensions and nametable
-	db 1, 0  ; offset wrt the draw ptr (x offset, y offset)
+	db 3, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0403, BOSS3_NAMETABLE_HEAD1_ON_BODY  ; dimensions and nametable
+	dw 0, #0909  ; boss__clear_bbox
+
+boss3_frame_1_walk1:
+	db 1  ; number of parts
+	db 0, 1  ; offset wrt the draw ptr (x offset, y offset)
+	dw #080a, BOSS3_NAMETABLE_WALK1  ; dimensions and nametable
+	dw 0, #090a  ; boss__clear_bbox
+boss3_frame_1_walk1_head:
+	db 2  ; number of parts
+	db 0, 1  ; offset wrt the draw ptr (x offset, y offset)
+	dw #080a, BOSS3_NAMETABLE_WALK1  ; dimensions and nametable
+	db 3, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0403, BOSS3_NAMETABLE_HEAD1_ON_BODY  ; dimensions and nametable
+	dw 0, #090a  ; boss__clear_bbox
+
+boss3_frame_2_walk2:
+	db 1  ; number of parts
+	db 0, 1  ; offset wrt the draw ptr (x offset, y offset)
+	dw #080a, BOSS3_NAMETABLE_WALK2  ; dimensions and nametable
+	dw 0, #090a  ; boss__clear_bbox
+boss3_frame_2_walk2_head:
+	db 2  ; number of parts
+	db 0, 1  ; offset wrt the draw ptr (x offset, y offset)
+	dw #080a, BOSS3_NAMETABLE_WALK2  ; dimensions and nametable
+	db 3, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0403, BOSS3_NAMETABLE_HEAD1_ON_BODY  ; dimensions and nametable
+	dw 0, #090a  ; boss__clear_bbox
+
+boss3_frame_3_walk3:
+	db 1  ; number of parts
+	db 1, 1  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0808, BOSS3_NAMETABLE_WALK3  ; dimensions and nametable
+	dw 0, #090a  ; boss__clear_bbox
+boss3_frame_3_walk3_head:
+	db 2  ; number of parts
+	db 1, 1  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0808, BOSS3_NAMETABLE_WALK3  ; dimensions and nametable
+	db 3, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0403, BOSS3_NAMETABLE_HEAD1_ON_BODY  ; dimensions and nametable
+	dw 0, #090a  ; boss__clear_bbox
+
+boss3_frame_4_walk4:
+	db 1  ; number of parts
+	db 1, 1  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0808, BOSS3_NAMETABLE_WALK4  ; dimensions and nametable
+	dw 0, #090a  ; boss__clear_bbox
+boss3_frame_4_walk4_head:
+	db 2  ; number of parts
+	db 1, 1  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0808, BOSS3_NAMETABLE_WALK4  ; dimensions and nametable
+	db 3, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0403, BOSS3_NAMETABLE_HEAD1_ON_BODY  ; dimensions and nametable
+	dw 0, #090a  ; boss__clear_bbox
+
+boss3_head_frame_0:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
 	dw #0403, BOSS3_NAMETABLE_HEAD1  ; dimensions and nametable
-	dw 0, #0907  ; boss__clear_bbox
+	dw 0, #0403  ; boss__clear_bbox
+
 
 
 ;-----------------------------------------------
 update_boss3_behavior:
-	; DEBUG:
-; 	ld a, 40
-; 	ld (boss__x), a
-; 	ld a, 17
-; 	ld (boss__y), a
-; ; 	ld a, 1
-; ; 	ld (boss__3_direction), a
-; 	ld a, 0
-; 	call update_boss3_draw_boss_frame
-; 	ret
+	; check if we need to draw an overlay of the "damage face" when the boss is hit:
+	ld hl, boss__hit_timer
+	ld a, (hl)
+	or a
+	jr z, update_boss3_behavior_continue
+	dec (hl)
+update_boss3_behavior_continue:
 
 	ld a, (boss__active)
 	or a
@@ -112,15 +171,20 @@ update_boss3_behavior_init_continue:
 	ld bc, 12
 	ldir
 
-	ld a, 23
+	ld a, 21
 	ld (boss__x), a
+	add a, 3
+	ld (boss__x2), a
 	ld a, 13
 	ld (boss__y), a
+	ld a, -4
+	ld (boss__y2), a
 	ld hl, (boss__3_settings + BOSS_2_HP_OFFSET)
 	ld (boss__hp), hl
 	ld hl, player_weapon_hitbox_check_boss__boss3_hit
 	ld (boss__hit_fn), hl
-	inc a
+	ld a, 1
+	ld (boss__3_head_attached), a
 	ld (boss__state), a
 
 ; 	; spawn object for sprite decorations
@@ -143,13 +207,35 @@ update_boss3_behavior_0_wait_for_player:
 	ld a, 1
 	ld (boss__behavior), a
 
-	; ...
+	; head comes crashing down:
+	ld b, 17
+update_boss3_behavior_0_head_drop_loop:
+	push bc
+		ld a, 14
+		sub b
+		ld (boss__y2), a
+		xor a
+		call update_boss3_draw_boss_frame
+		ld hl, draw_room_with_hud
+		ld c, TILES_PAGE
+		call call_hl_in_page_c_8000  ; just so that we do not lose the page we are at		
+		halt
+		halt
+	pop bc
+	djnz update_boss3_behavior_0_head_drop_loop
+	ld hl, SFX_explosion_low_pitch
+	call play_SFX_with_high_priority
+
+	xor a
+	ld (boss__3_head_attached), a	
+	call update_boss3_draw_boss_frame
+	ld hl, draw_room_with_hud
+	ld c, TILES_PAGE
+	call call_hl_in_page_c_8000  ; just so that we do not lose the page we are at		
 
 	ld hl, boss3_name_initial_sprite_attributes
 	ld de, boss3_name_y_table
 	call update_boss_behavior_bring_name_down	
-
-	; ...
 
 	ld b, 200
 	call wait_b_halts_skippable
@@ -160,6 +246,126 @@ update_boss3_behavior_0_wait_for_player:
 
 ;-----------------------------------------------
 update_boss3_behavior_1:
+	ld a, (boss__state)
+	or a
+	jr z, update_boss3_behavior_1_state_0  ; idle
+	dec a
+	jr z, update_boss3_behavior_1_state_1  ; walk left
+	dec a
+	jp z, update_boss3_behavior_1_state_2  ; walk right
+	; ...
+
+update_boss3_behavior_1_state_0:
+	; idle:
+	xor a
+	call update_boss3_draw_boss_frame
+
+	ld hl, boss__state_timer
+	inc (hl)
+	ld a, (boss__2_settings + BOSS_3_WAIT_TIME_OFFSET)
+	cp (hl)
+	ret nz
+
+update_boss3_behavior_1_state_1_done:
+update_boss3_behavior_1_state_2_done:
+	call random_a
+	and #01
+	jr z, update_boss3_behavior_1_state_1_to_idle
+	call random_a
+	and #03
+	jr z, update_boss3_behavior_1_state_1_walk_away
+	; walk to player
+	ld a, (boss__x)
+	add a, 4
+	ld c, a
+	ld a, (player_x + 1)
+	cp c
+	jr c, update_boss3_behavior_1_state_1_walk_left
+	jr update_boss3_behavior_1_state_1_walk_right
+
+update_boss3_behavior_1_state_1_walk_away:
+	; walk to player
+	ld a, (boss__x)
+	add a, 4
+	ld c, a
+	ld a, (player_x + 1)
+	cp c
+	jr nc, update_boss3_behavior_1_state_1_walk_left
+update_boss3_behavior_1_state_1_walk_right:
+	ld a, 2
+	ld (boss__state), a
+	xor a
+	ld (boss__state_timer), a
+	ret
+
+update_boss3_behavior_1_state_1_walk_left:
+	ld a, 1
+	ld (boss__state), a
+	xor a
+	ld (boss__state_timer), a
+	ret
+
+update_boss3_behavior_1_state_1_to_idle:
+	xor a
+	ld (boss__state), a
+	ld (boss__state_timer), a
+	ret
+
+
+update_boss3_behavior_1_state_1:
+	; Walk forward:
+	; walk frames loop: 1, 2, 3, 4
+	ld c, 1  ; frame
+	ld a, (boss__3_settings + BOSS_3_WALK_TIME_MASK_OFFSET)
+	ld e, a
+	ld a, (boss__3_settings + BOSS_3_WALK_TIME_OFFSET)
+	ld b, a
+	ld hl, boss__state_timer
+	ld a, (hl)
+	and e
+	call z, boss3_move_left
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+update_boss3_behavior_1_state_1_loop:
+	sub b
+	jr c, update_boss3_behavior_1_state_1_frame_set
+	inc c
+	jr update_boss3_behavior_1_state_1_loop
+update_boss3_behavior_1_state_1_frame_set:
+	ld a, c
+	cp 5
+	jr nc, update_boss3_behavior_1_state_1_done
+	jp update_boss3_draw_boss_frame
+
+update_boss3_behavior_1_state_2:
+	; Walk backwards:
+	; walk frames loop: 4, 3, 3, 1
+	ld c, 4  ; frame
+	ld a, (boss__3_settings + BOSS_3_WALK_TIME_MASK_OFFSET)
+	ld e, a
+	ld a, (boss__3_settings + BOSS_3_WALK_TIME_OFFSET)
+	ld b, a
+	ld hl, boss__state_timer
+	ld a, (hl)
+	and e
+	call z, boss3_move_right
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+update_boss3_behavior_1_state_2_loop:
+	sub b
+	jr c, update_boss3_behavior_1_state_2_frame_set
+	dec c
+	jr update_boss3_behavior_1_state_2_loop
+update_boss3_behavior_1_state_2_frame_set:
+	ld a, c
+	or a
+	jp z, update_boss3_behavior_1_state_2_done
+	jp update_boss3_draw_boss_frame
+
+
+;-----------------------------------------------
 update_boss3_behavior_2:
 update_boss3_behavior_3:
 update_boss3_behavior_4:
@@ -175,6 +381,13 @@ update_boss3_behavior_4:
 ; input:
 ; - a: frame to draw
 update_boss3_draw_boss_frame:
+	push af
+		ld a, (boss__3_head_attached)
+		or a
+		jr z, update_boss3_draw_boss_frame_head_attached
+		call draw_boss_frame_clear_previous_frame_1
+		call draw_boss_frame_clear_previous_frame_2
+	pop af
 	; ld iyl, a  ; save the frame we are drawing for later
 	ld hl, boss3_frame_ptrs
 	add a, a
@@ -192,15 +405,46 @@ update_boss3_draw_boss_frame:
 		call get_room_tile_ptr
 		ex de, hl  ; hl = ptr where the boss is to be drawn
 	pop hl
-	call draw_boss_frame
+	call draw_boss_frame_1_without_clearing
 
-	; check if we need to draw an overlay of the "damage face" when the boss is hit:
-	ld a, (boss__hit_timer)
-	or a
-	ret z
-	dec a
-	ld (boss__hit_timer), a
-	ret
+	ld bc, (boss__x2)
+	call get_room_tile_ptr
+	ex de, hl  ; hl = ptr where the boss is to be drawn
+	ld hl, boss3_head_frame_0
+	jp draw_boss_frame_2_without_clearing
+
+update_boss3_draw_boss_frame_head_attached:
+	pop af
+	; ld iyl, a  ; save the frame we are drawing for later
+	ld hl, boss3_frame_ptrs_head
+	add a, a
+	ADD_HL_A
+	ld a, (hl)
+	inc hl
+	ld h, (hl)
+	ld l, a
+	push hl
+		ld hl, redraw_flags
+		set ROOM_REDRAW_FLAG_BIT, (hl)
+
+		; compute draw pointer:
+		ld bc, (boss__x)
+		call get_room_tile_ptr
+		ex de, hl  ; hl = ptr where the boss is to be drawn
+	pop hl
+	jp draw_boss_frame_1
+
+
+;-----------------------------------------------
+; input:
+; - c, b: x, y, coordinates
+; - hl: frame ptr
+; update_boss3_draw_boss_frame_from_ptr:
+; 	push hl
+; 		call get_room_tile_ptr
+; 		ex de, hl
+; 	pop hl
+; 	jp draw_boss_frame_1
 
 
 ;-----------------------------------------------
@@ -236,3 +480,24 @@ player_weapon_hitbox_check_boss__boss3_hit_continue2:
 	ld a, iyl
 	ld (boss__last_collision_id), a
 	ret
+
+
+;-----------------------------------------------
+boss3_move_left:
+	ld hl, boss__x
+	ld a, (hl)
+	cp 2
+	ret z
+	dec (hl)
+	ret
+
+
+;-----------------------------------------------
+boss3_move_right:
+	ld hl, boss__x
+	ld a, (hl)
+	cp 21
+	ret z
+	inc (hl)
+	ret
+

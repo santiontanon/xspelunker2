@@ -280,9 +280,9 @@ update_boss1_behavior_0_continue:
 
 	; set the clear box:
 	ld hl, current_room__tile_map + 13*32 + 24
-	ld (boss__clear_bbox), hl
+	ld (boss__clear_bbox_1), hl
 	ld hl, #0906
-	ld (boss__clear_bbox + 2), hl
+	ld (boss__clear_bbox_1 + 2), hl
 	ld bc, #0106
 	ld de, current_room__tile_map + 21*32 + 24
 update_boss1_behavior_0_raise_loop:
@@ -310,7 +310,7 @@ update_boss1_behavior_0_raise_loop:
 			push de
 			push hl
 			push bc
-				call draw_boss_frame_clear_previous_frame
+				call draw_boss_frame_clear_previous_frame_1
 			pop bc
 			pop hl
 			pop de			
@@ -374,7 +374,7 @@ update_boss1_behavior_0_waking_loop:
 
 		ld de, current_room__tile_map + 13*32 + 24
 		ld hl, boss1_frame_0_stone
-		call draw_boss_frame
+		call draw_boss_frame_1
 
 		ld hl, draw_room_with_hud
 		ld c, TILES_PAGE
@@ -925,9 +925,9 @@ update_boss1_behavior_4_loop_1_continue:
 	ex de, hl  ; hl = ptr where the boss is to be drawn
 
 	; set the clear box:
-	ld (boss__clear_bbox), de
+	ld (boss__clear_bbox_1), de
 	ld hl, #0906
-	ld (boss__clear_bbox + 2), hl
+	ld (boss__clear_bbox_1 + 2), hl
 	ld hl, BOSS1_NAMETABLE_DEATH_WITH_STAFF
 	ld bc, #0906
 	ld a, (boss__1_has_staff)
@@ -961,7 +961,7 @@ update_boss1_behavior_4_sink_loop:
 			push de
 			push hl
 			push bc
-				call draw_boss_frame_clear_previous_frame
+				call draw_boss_frame_clear_previous_frame_1
 			pop bc
 			pop hl
 			pop de			
@@ -1043,7 +1043,7 @@ update_boss1_draw_boss_frame_continue:
 		ex de, hl  ; hl = ptr where the boss is to be drawn
 	pop hl
 	push de
-		call draw_boss_frame
+		call draw_boss_frame_1
 	pop de  ; preserve the ptr of where to draw for the damage face
 	; check if we need to draw an overlay of the "damage face" when the boss is hit:
 	ld a, (boss__hit_timer)
