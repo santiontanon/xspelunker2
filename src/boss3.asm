@@ -23,6 +23,8 @@ BOSS_3_DASH_TIME_OFFSET: equ 5
 BOSS_3_DASH_TIME_MASK_OFFSET: equ 6
 BOSS_3_STOMP_TIME_OFFSET: equ 7
 BOSS_3_N_DEBRIS_OFFSET: equ 8
+BOSS_3_HEAD_TIME_MASK_OFFSET: equ 9
+BOSS_3_BULLET_MASK_OFFSET: equ 10
 
 BOSS_3_MIN_X: equ 1
 
@@ -36,6 +38,7 @@ boss3_difficulty_setting__hardest:
 	dw 16  ; boss hp
 	db 32, 16, #0f  ; wait, walk, walk-time-mask
 	db 4, #03, 32, 2  ; dash, dash-time-mask, stomp, # debris
+	db #03, #0f  ; head-time-mask, bullet-time-mask
 
 
 ;-----------------------------------------------
@@ -164,10 +167,14 @@ update_boss3_behavior:
 	jr z, update_boss3_behavior_continue
 	dec (hl)
 update_boss3_behavior_continue:
-
 	ld a, (boss__active)
 	or a
 	ret z
+
+	ld a, (boss__3_head_attached)
+	or a
+	call nz, update_boss3_head_behavior  ; head dettached
+
 	ld a, (boss__behavior)
 	or a
 	jp z, update_boss3_behavior_0  ; before boss is spawned
@@ -284,7 +291,7 @@ update_boss3_behavior_1:
 	jp z, update_boss3_behavior_1_state_2  ; walk right
 	dec a
 	jp z, update_boss3_behavior_1_state_3  ; dash left
-	; ...
+	ret
 
 update_boss3_behavior_1_state_0:
 	; idle:
@@ -324,9 +331,9 @@ update_boss3_behavior_1_state_2_done:
 	; - walk: 1, 2
 	; - stomp: 3
 	; - dettach head (if attached, otherwise, walk): 4
-; 	ld a, 3  ; DEBUG
 	ld c, 5
 	call random_modulo
+; 	ld a, 4  ; DEBUG
 	or a
 	jr z, update_boss3_behavior_1_state_1_to_idle
 	cp 3
@@ -383,8 +390,21 @@ update_boss3_behavior_1_state_1_to_stomp:
 	ret
 
 update_boss3_behavior_1_state_1_to_dettach_head:
-	; ...
-	jr update_boss3_behavior_1_state_1_to_walk
+	ld a, (boss__3_head_attached)
+	or a
+	jr nz, update_boss3_behavior_1_state_1_to_walk  ; head is already dettached, keep walking
+	; dettach head:
+	ld a, (boss__x)
+	add a, 3
+	ld (boss__x2), a
+	ld a, (boss__y)
+	ld (boss__y2), a
+	xor a
+	ld (boss__3_head_state), a
+	ld (boss__3_head_state_timer), a
+	inc a
+	ld (boss__3_head_attached), a
+	jr update_boss3_behavior_1_state_1_to_idle
 
 
 update_boss3_behavior_1_state_1:
@@ -612,6 +632,162 @@ update_boss3_behavior_3:
 
 
 ;-----------------------------------------------
+update_boss3_head_behavior:
+	ld hl, boss__3_head_state_timer
+	inc (hl)
+	ld a, (boss__3_head_state)
+	or a
+	jr z, update_boss3_head_behavior_state_0  ; going up
+	dec a
+	jr z, update_boss3_head_behavior_state_1  ; patrol left
+	dec a
+	jr z, update_boss3_head_behavior_state_2  ; patrol right
+	dec a
+	jp z, update_boss3_head_behavior_state_3  ; going back to body
+	ret
+
+update_boss3_head_behavior_state_0:
+	ld a, (boss__3_settings + BOSS_3_HEAD_TIME_MASK_OFFSET)
+	ld c, a
+	ld a, (boss__3_head_state_timer)
+	and c
+	ret nz
+	ld hl, boss__y2
+	ld a, (hl)
+	or a
+	jr z, update_boss3_head_behavior_state_0_done
+	dec (hl)
+	ret
+update_boss3_head_behavior_state_0_done:
+	ld a, 1
+	call random_a
+	and #01
+	inc a
+	ld (boss__3_head_state), a  ; patrol left/right
+	ret
+
+update_boss3_head_behavior_state_1:
+	ld a, (boss__3_settings + BOSS_3_BULLET_MASK_OFFSET)
+	ld c, a
+	ld a, (boss__3_head_state_timer)
+	and c
+	call z, update_boss3_fire_head_bullet
+
+	ld a, (boss__3_settings + BOSS_3_HEAD_TIME_MASK_OFFSET)
+	ld c, a
+	ld a, (boss__3_head_state_timer)
+	and c
+	ret nz
+	ld a, (boss__x)
+	add a, 3
+	ld hl, boss__x2
+	cp (hl)
+	jr nz, update_boss3_head_behavior_state_1_continue
+	call random_a
+	and #03
+	jr nz, update_boss3_head_behavior_state_1_continue
+	ld a, 3
+	ld (boss__3_head_state), a  ; land the head back!
+	ret
+update_boss3_head_behavior_state_1_continue:	
+	ld a, (hl)
+	cp 2
+	jr z, update_boss3_head_behavior_state_1_done
+	dec (hl)
+	ret
+update_boss3_head_behavior_state_1_done:
+	ld a, 2
+	ld (boss__3_head_state), a  ; patrol right
+	ret
+
+update_boss3_head_behavior_state_2:
+	ld a, (boss__3_settings + BOSS_3_BULLET_MASK_OFFSET)
+	ld c, a
+	ld a, (boss__3_head_state_timer)
+	and c
+	call z, update_boss3_fire_head_bullet
+
+	ld a, (boss__3_settings + BOSS_3_HEAD_TIME_MASK_OFFSET)
+	ld c, a
+	ld a, (boss__3_head_state_timer)
+	and c
+	ret nz
+	ld a, (boss__x)
+	add a, 3
+	ld hl, boss__x2
+	cp (hl)
+	jr nz, update_boss3_head_behavior_state_2_continue
+	call random_a
+	and #03
+	jr nz, update_boss3_head_behavior_state_2_continue
+	ld a, 3
+	ld (boss__3_head_state), a  ; land the head back!
+	ret
+update_boss3_head_behavior_state_2_continue:
+	ld a, (hl)
+	cp 27
+	jr z, update_boss3_head_behavior_state_2_done
+	inc (hl)
+	ret
+update_boss3_head_behavior_state_2_done:
+	ld a, 1
+	ld (boss__3_head_state), a  ; patrol left
+	ret
+
+update_boss3_head_behavior_state_3:
+	; land back to the body:
+	ld a, (boss__3_settings + BOSS_3_HEAD_TIME_MASK_OFFSET)
+	ld c, a
+	ld a, (boss__3_head_state_timer)
+	and c
+	ret nz
+
+	ld a, (boss__x)
+	add a, 3  ; target x
+	ld hl, boss__x2
+	cp (hl)
+	jr z, update_boss3_head_behavior_state_3_x_done
+	jr c, update_boss3_head_behavior_state_3_left
+	inc (hl)
+	jr update_boss3_head_behavior_state_3_x_done
+update_boss3_head_behavior_state_3_left:
+	dec (hl)
+update_boss3_head_behavior_state_3_x_done:
+	ld a, 13  ; target y
+	ld hl, boss__y2
+	cp (hl)
+	jr z, update_boss3_head_behavior_state_3_y_done
+	inc (hl)
+	ret
+update_boss3_head_behavior_state_3_y_done:
+	ld a, (boss__x)
+	add a, 3  ; target x
+	ld hl, boss__x2
+	cp (hl)
+	ret nz
+	; see if we can land back:
+	ld a, (boss__behavior)
+	cp 1
+	ret nz
+	; land!
+	xor a
+	ld (boss__3_head_attached), a
+	ret
+
+
+;-----------------------------------------------
+update_boss3_fire_head_bullet:
+	ld a, (boss__x2)
+	inc a
+	ld c, a
+	ld a, (boss__y2)
+	inc a
+	ld b, a
+	ld ix, 0
+	jp boss_fire_directional_bullet_towards_player_with_random_offset
+
+
+;-----------------------------------------------
 ; input:
 ; - a: frame to draw
 update_boss3_draw_boss_frame:
@@ -667,18 +843,6 @@ update_boss3_draw_boss_frame_head_attached:
 		ex de, hl  ; hl = ptr where the boss is to be drawn
 	pop hl
 	jp draw_boss_frame_1
-
-
-;-----------------------------------------------
-; input:
-; - c, b: x, y, coordinates
-; - hl: frame ptr
-; update_boss3_draw_boss_frame_from_ptr:
-; 	push hl
-; 		call get_room_tile_ptr
-; 		ex de, hl
-; 	pop hl
-; 	jp draw_boss_frame_1
 
 
 ;-----------------------------------------------

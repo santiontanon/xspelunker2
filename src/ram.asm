@@ -251,7 +251,9 @@ boss__hit_timer: ds virtual 1  ; for displaying "boss hit" animations
 boss__2_direction:  ; 0: left, 1: right
 boss__3_head_attached:  ; 0: attached, 1: dettached
 boss__1_has_staff: ds virtual 1
+boss__3_head_state:
 boss__1_staff_hp: ds virtual 1
+boss__3_head_state_timer: ds virtual 1
 boss__1_settings:
 boss__2_settings: 
 boss__3_settings:

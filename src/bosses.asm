@@ -1199,6 +1199,9 @@ update_sprite_objects_boss_extras_boss_2_flying_fakeoff_right:
 	jr update_sprite_objects_boss_extras_boss_2_flying_fakeoff_right_continue
 
 update_sprite_objects_boss_extras_boss_3:
+	ld a, (boss__behavior)
+	or a
+	ret z
 	ld a, (boss__3_head_attached)
 	or a
 	jr z, update_sprite_objects_boss_extras_boss_3_attached
@@ -1210,7 +1213,7 @@ update_sprite_objects_boss_extras_boss_3:
 	add a, a
 	add a, a
 	add a, a
-	add a, 8
+	add a, 8 + 7
 	ld b, a
 	ld a, (boss__x2)
 	ld hl, room_scroll_x
@@ -1219,6 +1222,7 @@ update_sprite_objects_boss_extras_boss_3:
 	add a, a
 	add a, a
 	add a, 4
+	ld c, a
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 5) * 4
 	ld d, COLOR_RED
 	jp add_sprite_to_this_frame
