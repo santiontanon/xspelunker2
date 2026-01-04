@@ -22,6 +22,7 @@ BOSS_3_WALK_TIME_MASK_OFFSET: equ 4
 BOSS_3_DASH_TIME_OFFSET: equ 5
 BOSS_3_DASH_TIME_MASK_OFFSET: equ 6
 BOSS_3_STOMP_TIME_OFFSET: equ 7
+BOSS_3_N_DEBRIS_OFFSET: equ 8
 
 BOSS_3_MIN_X: equ 1
 
@@ -34,7 +35,7 @@ boss3_difficulty_setting__hardest:
 ; boss3_difficulty_setting__angry:
 	dw 16  ; boss hp
 	db 32, 16, #0f  ; wait, walk, walk-time-mask
-	db 4, #03, 32  ; dash, dash-time-mask, stomp
+	db 4, #03, 32, 2  ; dash, dash-time-mask, stomp, # debris
 
 
 ;-----------------------------------------------
@@ -323,10 +324,9 @@ update_boss3_behavior_1_state_2_done:
 	; - walk: 1, 2
 	; - stomp: 3
 	; - dettach head (if attached, otherwise, walk): 4
-	; DEBUG:
-	ld a, 3
-; 	ld c, 5
-; 	call random_modulo
+; 	ld a, 3  ; DEBUG
+	ld c, 5
+	call random_modulo
 	or a
 	jr z, update_boss3_behavior_1_state_1_to_idle
 	cp 3
@@ -547,7 +547,39 @@ update_boss3_behavior_2_state_1:
 	xor a
 	ld (boss__state_timer), a
 	ld hl, SFX_explosion_low_pitch
-	jp play_SFX_with_high_priority	
+	call play_SFX_with_high_priority
+	ld a, (boss__3_settings + BOSS_3_N_DEBRIS_OFFSET)
+	ld b, a
+update_boss3_behavior_2_state_1_debris_loop:
+	push bc
+	; spawn debris:
+		call ptr_to_new_sprite_enemy
+	pop bc
+	ret nz
+	ld (hl), 0  ; ID
+	inc hl
+	ld (hl), ENEMY_BULLET_BOSS3_DEBRIS
+	inc hl
+	ld (hl), 0  ; pixel x
+	inc hl
+	ld c, 28
+	call random_modulo
+	add a, 2
+	ld (hl), a  ; tile x
+	inc hl
+	ld (hl), 0  ; pixel y
+	inc hl
+	ld (hl), 0  ; tile y
+	inc hl
+	call random_a
+	ld c, (FIRST_ENEMY_SPRITE_PATTERN + 7) * 4
+	and #01
+	jr z, update_boss3_behavior_2_state_1_debris_sprite_set
+	ld c, (FIRST_ENEMY_SPRITE_PATTERN + 8) * 4
+update_boss3_behavior_2_state_1_debris_sprite_set:
+	ld (hl), c   ; state == sprite to use
+	djnz update_boss3_behavior_2_state_1_debris_loop
+	ret
 
 update_boss3_behavior_2_state_2:
 	ld a, 6

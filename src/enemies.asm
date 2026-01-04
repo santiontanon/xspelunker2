@@ -7,6 +7,7 @@ enemy_update_fn_table:
 	dw update_enemy_bullet_lightning  ; boss 1 attack
 	dw update_enemy_sonic_boom  ; boss 2 attack
 	dw update_enemy_boss2_spikes ; boss 2 attack
+	dw update_enemy_boss3_debris ; boss 3 attack
 	; enemies you can hit:
 	dw update_enemy_snake  ; left-to-right
 	dw update_enemy_snake_dasher  ; left-to-right + dash
@@ -1917,6 +1918,22 @@ update_enemy_boss2_spikes_bottom:
 	ld hl, redraw_flags
 	set ROOM_REDRAW_FLAG_BIT, (hl)	
 	jp update_enemy_delete
+
+
+;-----------------------------------------------
+update_enemy_boss3_debris:
+	ld iyh, 2  ; damage to deal
+	call update_enemy_hurt_player_shieldable_bullet
+	jp z, update_enemy_delete
+
+	ld a, (current_world__difficulty_bullet_speed)
+	add a, a
+	add a, a
+	call update_enemy_bullet_move_down_if_possible_a_times
+	jp z, update_enemy_delete
+	ld d, COLOR_WHITE
+	ld e, (ix + ROOM_OBJECT_STRUCT_STATE)  ; (FIRST_ENEMY_SPRITE_PATTERN + 7) * 4 
+	jp enemy_sprite_and_continue
 
 
 ;-----------------------------------------------
