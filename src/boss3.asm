@@ -19,6 +19,11 @@ BOSS_3_HP_OFFSET: equ 0
 BOSS_3_WAIT_TIME_OFFSET: equ 2
 BOSS_3_WALK_TIME_OFFSET: equ 3
 BOSS_3_WALK_TIME_MASK_OFFSET: equ 4
+BOSS_3_DASH_TIME_OFFSET: equ 5
+BOSS_3_DASH_TIME_MASK_OFFSET: equ 6
+BOSS_3_STOMP_TIME_OFFSET: equ 7
+
+BOSS_3_MIN_X: equ 1
 
 
 ;-----------------------------------------------
@@ -29,6 +34,7 @@ boss3_difficulty_setting__hardest:
 ; boss3_difficulty_setting__angry:
 	dw 16  ; boss hp
 	db 32, 16, #0f  ; wait, walk, walk-time-mask
+	db 4, #03, 32  ; dash, dash-time-mask, stomp
 
 
 ;-----------------------------------------------
@@ -38,8 +44,8 @@ boss3_frame_ptrs:
 	dw boss3_frame_2_walk2
 	dw boss3_frame_3_walk3
 	dw boss3_frame_4_walk4
-; 	dw boss3_frame_5_stomp1
-; 	dw boss3_frame_6_stomp2
+	dw boss3_frame_5_stomp1
+	dw boss3_frame_6_stomp2
 
 boss3_frame_ptrs_head:
 	dw boss3_frame_0_idle_head
@@ -47,8 +53,8 @@ boss3_frame_ptrs_head:
 	dw boss3_frame_2_walk2_head
 	dw boss3_frame_3_walk3_head
 	dw boss3_frame_4_walk4_head
-; 	dw boss3_frame_5_stomp1_head
-; 	dw boss3_frame_6_stomp2_head
+	dw boss3_frame_5_stomp1_head
+	dw boss3_frame_6_stomp2_head
 
 
 boss3_frame_0_idle:
@@ -116,6 +122,30 @@ boss3_frame_4_walk4_head:
 	dw #0403, BOSS3_NAMETABLE_HEAD1_ON_BODY  ; dimensions and nametable
 	dw 0, #090a  ; boss__clear_bbox
 
+boss3_frame_5_stomp1:
+	db 1  ; number of parts
+	db 2, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0b07, BOSS3_NAMETABLE_STOMP1  ; dimensions and nametable
+	dw 0, #0b09  ; boss__clear_bbox
+boss3_frame_5_stomp1_head:
+	db 2  ; number of parts
+	db 2, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0b07, BOSS3_NAMETABLE_STOMP1  ; dimensions and nametable
+	db 3, 2  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0403, BOSS3_NAMETABLE_HEAD1_ON_BODY  ; dimensions and nametable
+	dw 0, #0b09  ; boss__clear_bbox
+
+boss3_frame_6_stomp2:
+	db 1  ; number of parts
+	db 0, 4  ; offset wrt the draw ptr (x offset, y offset)
+	dw #050b, BOSS3_NAMETABLE_STOMP2  ; dimensions and nametable
+	dw 0, #090b  ; boss__clear_bbox
+boss3_frame_6_stomp2_head:
+	db 1  ; number of parts
+	db 0, 3  ; offset wrt the draw ptr (x offset, y offset)
+	dw #060b, BOSS3_NAMETABLE_STOMP2_HEAD  ; dimensions and nametable
+	dw 0, #090b  ; boss__clear_bbox
+
 boss3_head_frame_0:
 	db 1  ; number of parts
 	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
@@ -143,10 +173,8 @@ update_boss3_behavior_continue:
 	dec a
 	jp z, update_boss3_behavior_1  ; walking
 	dec a
-	jp z, update_boss3_behavior_2  ; dashing
-	dec a
-	jp z, update_boss3_behavior_3  ; stomping
-	jp update_boss3_behavior_4  ; death
+	jp z, update_boss3_behavior_2  ; stomping
+	jp update_boss3_behavior_3  ; death
 
 
 ;-----------------------------------------------
@@ -250,9 +278,11 @@ update_boss3_behavior_1:
 	or a
 	jr z, update_boss3_behavior_1_state_0  ; idle
 	dec a
-	jr z, update_boss3_behavior_1_state_1  ; walk left
+	jp z, update_boss3_behavior_1_state_1  ; walk left
 	dec a
 	jp z, update_boss3_behavior_1_state_2  ; walk right
+	dec a
+	jp z, update_boss3_behavior_1_state_3  ; dash left
 	; ...
 
 update_boss3_behavior_1_state_0:
@@ -266,11 +296,44 @@ update_boss3_behavior_1_state_0:
 	cp (hl)
 	ret nz
 
-update_boss3_behavior_1_state_1_done:
-update_boss3_behavior_1_state_2_done:
+	; chance of dashing (only if boss is towards the right, and player is towards the left and down):
+	ld a, (boss__x)
+	cp 16
+	jr c, update_boss3_behavior_1_state_1_done
+	ld a, (player_x + 1)
+	cp 20
+	jr nc, update_boss3_behavior_1_state_1_done
+	ld a, (player_y + 1)
+	cp 12
+	jr c, update_boss3_behavior_1_state_1_done
 	call random_a
 	and #01
+	jr z, update_boss3_behavior_1_state_1_done
+	; dash!
+	ld a, 3
+	ld (boss__state), a
+	xor a
+	ld (boss__state_timer), a
+	ret
+
+update_boss3_behavior_1_state_1_done:
+update_boss3_behavior_1_state_2_done:
+	; chance of:
+	; - idle: 0
+	; - walk: 1, 2
+	; - stomp: 3
+	; - dettach head (if attached, otherwise, walk): 4
+	; DEBUG:
+	ld a, 3
+; 	ld c, 5
+; 	call random_modulo
+	or a
 	jr z, update_boss3_behavior_1_state_1_to_idle
+	cp 3
+	jr z, update_boss3_behavior_1_state_1_to_stomp
+	cp 4
+	jr z, update_boss3_behavior_1_state_1_to_dettach_head
+update_boss3_behavior_1_state_1_to_walk:
 	call random_a
 	and #03
 	jr z, update_boss3_behavior_1_state_1_walk_away
@@ -311,6 +374,18 @@ update_boss3_behavior_1_state_1_to_idle:
 	ld (boss__state_timer), a
 	ret
 
+update_boss3_behavior_1_state_1_to_stomp:
+	ld a, 2
+	ld (boss__behavior), a
+	xor a
+	ld (boss__state), a
+	ld (boss__state_timer), a
+	ret
+
+update_boss3_behavior_1_state_1_to_dettach_head:
+	; ...
+	jr update_boss3_behavior_1_state_1_to_walk
+
 
 update_boss3_behavior_1_state_1:
 	; walk forward:
@@ -337,7 +412,7 @@ update_boss3_behavior_1_state_1_frame_set:
 	cp 5
 	jp c, update_boss3_draw_boss_frame
 	call boss3_move_right
-	jr update_boss3_behavior_1_state_1_done
+	jp update_boss3_behavior_1_state_1_done
 
 update_boss3_behavior_1_state_2:
 	; walk backwards:
@@ -366,11 +441,136 @@ update_boss3_behavior_1_state_2_frame_set:
 	call boss3_move_left
 	jp update_boss3_behavior_1_state_2_done
 
+update_boss3_behavior_1_state_3:
+	; dash:
+	; walk frames loop: 1, 2, 3, 4
+	ld c, 1  ; frame
+	ld a, (boss__3_settings + BOSS_3_DASH_TIME_MASK_OFFSET)
+	ld e, a
+	ld a, (boss__3_settings + BOSS_3_DASH_TIME_OFFSET)
+	ld b, a
+	ld hl, boss__state_timer
+	ld a, (hl)
+	and e
+	call z, boss3_move_left
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+update_boss3_behavior_1_state_3_loop:
+	sub b
+	jr c, update_boss3_behavior_1_state_3_frame_set
+	inc c
+	jr update_boss3_behavior_1_state_3_loop
+update_boss3_behavior_1_state_3_frame_set:
+	ld a, c
+	cp 5
+	jp c, update_boss3_draw_boss_frame
+	ld a, (boss__x)
+	cp BOSS_3_MIN_X
+	jp z, update_boss3_behavior_1_state_1_to_idle
+	call boss3_move_right
+	ld a, 1
+	ld (boss__state_timer), a
+	ret
+
 
 ;-----------------------------------------------
 update_boss3_behavior_2:
+	; stomp
+	ld a, (boss__state)
+	or a
+	jr z, update_boss3_behavior_2_state_0  ; start
+	dec a
+	jr z, update_boss3_behavior_2_state_1  ; arms up
+	dec a
+	jp z, update_boss3_behavior_2_state_2  ; arms down
+update_boss3_behavior_2_state_3:  ; end
+	xor a
+	call update_boss3_draw_boss_frame
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	or a
+	ret z  ; first frame, just draw the idle frame and done (to avoid glitches)
+	; switch to walk tileset:
+	xor a
+	call update_boss3_draw_boss_frame
+	ld hl, boss_3_tiles_walk_zx0
+	ld c, BOSS_GFX_PAGE
+	ld (current_room__tileset_ptr), hl
+	call setup_game_tiles_only_biome
+	ld hl, draw_room_with_hud
+	ld c, TILES_PAGE
+	call call_hl_in_page_c_8000
+	ld a, 1
+	ld (boss__behavior), a
+	ld (boss__state), a
+	xor a
+	ld (boss__state_timer), a
+	ret
+
+update_boss3_behavior_2_state_0:
+	; switch to stomp tileset:
+	xor a
+	call update_boss3_draw_boss_frame
+	ld hl, boss_3_tiles_stomp_zx0
+	ld c, BOSS_GFX_PAGE
+	ld (current_room__tileset_ptr), hl
+	call setup_game_tiles_only_biome
+	ld hl, draw_room_with_hud
+	ld c, TILES_PAGE
+	call call_hl_in_page_c_8000
+	ld a, 11
+	ld (boss__y), a
+	ld a, 1
+	ld (boss__state), a
+	ret
+
+update_boss3_behavior_2_state_1:
+	ld a, 5
+	call update_boss3_draw_boss_frame
+	ld hl, boss__state_timer
+	inc (hl)
+	ld a, (hl)
+	ld hl, boss__3_settings + BOSS_3_STOMP_TIME_OFFSET
+	cp (hl)
+	ret nz
+	call boss3_move_left
+	call boss3_move_left
+	call boss3_move_left
+	call boss3_move_left
+	ld a, 13
+	ld (boss__y), a
+	ld a, 1	
+	ld a, 2
+	ld (boss__state), a
+	xor a
+	ld (boss__state_timer), a
+	ld hl, SFX_explosion_low_pitch
+	jp play_SFX_with_high_priority	
+
+update_boss3_behavior_2_state_2:
+	ld a, 6
+	call update_boss3_draw_boss_frame
+	ld hl, boss__state_timer
+	inc (hl)
+	ld a, (hl)
+	ld hl, boss__3_settings + BOSS_3_STOMP_TIME_OFFSET
+	cp (hl)
+	ret nz
+	call boss3_move_right
+	call boss3_move_right
+	call boss3_move_right
+	call boss3_move_right
+	ld a, 3
+	ld (boss__state), a
+	xor a
+	ld (boss__state_timer), a
+	ret
+
+
+;-----------------------------------------------
 update_boss3_behavior_3:
-update_boss3_behavior_4:
 	xor a
 	call update_boss3_draw_boss_frame
 
@@ -488,7 +688,7 @@ player_weapon_hitbox_check_boss__boss3_hit_continue2:
 boss3_move_left:
 	ld hl, boss__x
 	ld a, (hl)
-	cp 2
+	cp BOSS_3_MIN_X
 	ret z
 	dec (hl)
 	ret

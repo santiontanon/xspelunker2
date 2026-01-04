@@ -1224,6 +1224,15 @@ update_sprite_objects_boss_extras_boss_3:
 	jp add_sprite_to_this_frame
 
 update_sprite_objects_boss_extras_boss_3_attached:
+	ld a, (boss__behavior)
+	cp 2  ; stomp
+	jr nz, update_sprite_objects_boss_extras_boss_3_attached_no_stomp
+	ld a, (boss__state)
+	cp 1
+	jr z, update_sprite_objects_boss_extras_boss_3_attached_stomp1
+	cp 2
+	jr z, update_sprite_objects_boss_extras_boss_3_attached_stomp2
+update_sprite_objects_boss_extras_boss_3_attached_no_stomp:
 	; head attached:
 	ld a, (boss__y)
 	ld hl, room_scroll_y
@@ -1232,6 +1241,7 @@ update_sprite_objects_boss_extras_boss_3_attached:
 	add a, a
 	add a, a
 	add a, 8 + 7
+update_sprite_objects_boss_extras_boss_3_attached_stomp1_continue:
 	ld b, a
 	ld a, (boss__x)
 	ld hl, room_scroll_x
@@ -1240,10 +1250,37 @@ update_sprite_objects_boss_extras_boss_3_attached:
 	add a, a
 	add a, a
 	add a, 3*8 + 4
+update_sprite_objects_boss_extras_boss_3_attached_stomp2_continue:	
 	ld c, a
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 5) * 4
 	ld d, COLOR_RED
 	jp add_sprite_to_this_frame
+update_sprite_objects_boss_extras_boss_3_attached_stomp1:
+	ld a, (boss__y)
+	ld hl, room_scroll_y
+	sub (hl)
+	add a, a
+	add a, a
+	add a, a
+	add a, 3*8 + 7
+	jr update_sprite_objects_boss_extras_boss_3_attached_stomp1_continue
+update_sprite_objects_boss_extras_boss_3_attached_stomp2:
+	ld a, (boss__y)
+	ld hl, room_scroll_y
+	sub (hl)
+	add a, a
+	add a, a
+	add a, a
+	add a, 4*8 + 7
+	ld b, a
+	ld a, (boss__x)
+	ld hl, room_scroll_x
+	sub (hl)
+	add a, a
+	add a, a
+	add a, a
+	add a, 5*8 + 4
+	jr update_sprite_objects_boss_extras_boss_3_attached_stomp2_continue
 
 
 ;-----------------------------------------------
