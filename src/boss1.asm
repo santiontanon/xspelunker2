@@ -29,6 +29,7 @@ BOSS_1_ATTACK_TIME_OFFSET: equ 5
 BOSS_1_BULLET_TIME_OFFSET: equ 6
 BOSS_1_BULLET_FREQUENCY_OFFSET: equ 7
 
+
 ;-----------------------------------------------
 boss1_difficulty_setting__easy:
 	db 16  ; staff hp

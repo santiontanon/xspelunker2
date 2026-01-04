@@ -35,7 +35,7 @@ boss3_difficulty_setting__normal:
 boss3_difficulty_setting__hard:
 boss3_difficulty_setting__hardest:
 ; boss3_difficulty_setting__angry:
-	dw 16  ; boss hp
+	dw 4  ; boss hp
 	db 32, 16, #0f  ; wait, walk, walk-time-mask
 	db 4, #03, 32, 2  ; dash, dash-time-mask, stomp, # debris
 	db #03, #0f  ; head-time-mask, bullet-time-mask
@@ -385,6 +385,10 @@ update_boss3_behavior_1_state_0:
 
 update_boss3_behavior_1_state_1_done:
 update_boss3_behavior_1_state_2_done:
+	ld hl, (boss__hp)
+	ld a, h
+	or l
+	jr z, update_boss3_behavior_1_state_1_to_death
 	; chance of:
 	; - idle: 0
 	; - walk: 1, 2
@@ -446,6 +450,14 @@ update_boss3_behavior_1_state_1_to_stomp:
 	xor a
 	ld (boss__state), a
 	ld (boss__state_timer), a
+	ret
+
+update_boss3_behavior_1_state_1_to_death:
+	xor a
+	ld (boss__state), a
+	ld (boss__state_timer), a
+	ld a, 3
+	ld (boss__behavior), a
 	ret
 
 update_boss3_behavior_1_state_1_to_dettach_head:
@@ -683,16 +695,97 @@ update_boss3_behavior_2_state_2:
 ;-----------------------------------------------
 ; death
 update_boss3_behavior_3:
+	ld a, (boss__state)
+	or a
+	jr z, update_boss3_behavior_3_state_0  ; remove head and spawn explosions
+	dec a
+	jp z, update_boss3_behavior_3_state_1  ; wait
+
+update_boss3_behavior_3_state_2:
+	ld b, 8
+update_boss3_behavior_3_state_2_loop:
+	push bc
+		ld hl, boss__y
+		inc (hl)
+		xor a
+		call update_boss3_draw_boss_frame
+		ld hl, current_room__tile_map + 22*32
+		ld bc, #0220
+		call draw_boss_frame_clear_previous_frame_1_continue
+		ld hl, draw_room_with_hud
+		ld c, TILES_PAGE
+		call call_hl_in_page_c_8000  ; just so that we do not lose the page we are at
+		ld hl, SFX_explosion_low_pitch
+		call play_SFX_with_high_priority
+		ld b, 20
+		call wait_b_halts
+		call draw_boss_frame_clear_previous_frame_1
+	pop bc
+	djnz update_boss3_behavior_3_state_2_loop
+
+	ld a, (boss__x)
+	add a, 4
+	ld e, a
+	ld d, 20  ; e, d: x, y coordinates
+	ld a, 2  ; boss number (boss 3)
+	call boss_spawn_power_stone
+
+	ld hl, draw_room_with_hud
+	ld c, TILES_PAGE
+	call call_hl_in_page_c_8000
+
+	xor a
+	ld (boss__active), a
+	ret
+
+update_boss3_behavior_3_state_0:
+	; remove head:
+	ld a, 1
+	ld (boss__state), a	
+	xor a
+	ld (boss__state_timer), a	
+	ld a, 24
+	ld (boss__y2), a
+	ld a, 1
+	ld (boss__3_head_attached), a
 	xor a
 	call update_boss3_draw_boss_frame
+	ld hl, draw_room_with_hud
+	ld c, TILES_PAGE
+	call call_hl_in_page_c_8000
 
-	; ...
+	; spawn explosion:
+	ld a, (boss__x)
+	add a, 2
+	ld c, a
+	ld b, 13
+	jp spawn_big_explosion
 
+update_boss3_behavior_3_state_1:
+	ld hl, boss__state_timer
+	inc (hl)
+	ld a, (hl)
+	cp 20
+	ret nz
+	ld (hl), 0
+	ld hl, boss__state
+	inc (hl)
 	ret
 
 
 ;-----------------------------------------------
 update_boss3_head_behavior:
+	ld a, (boss__behavior)
+	cp 3
+	ret z  ; do not move the head when boss is dead
+	ld hl, (boss__hp)
+	ld a, h
+	or l
+	jr nz, update_boss3_head_behavior_continue
+	; when HP == 0, go back to body
+	ld a, 3
+	ld (boss__3_head_state), a
+update_boss3_head_behavior_continue:
 	ld hl, boss__3_head_state_timer
 	inc (hl)
 	ld a, (boss__3_head_state)

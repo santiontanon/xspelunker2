@@ -1,7 +1,6 @@
 to do:
 
 ***- third boss: Cabrakan
-  ***- when dead, the head explodes (several regular enemy explosions), and then the body sinks into the floor, before the stone spawns.
   ***- create difficulty levels
     ***- head also has a chance of firing bullets when it's attached to the main body in higher difficulties
 

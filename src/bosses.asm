@@ -429,16 +429,24 @@ boss_spawn_power_stone:
 	jr z, boss_spawn_power_stone_item_set
 	ld b, TAG_PUZZLEBOX_MOON
 boss_spawn_power_stone_item_set:
-	ld iy, (tmp_pcg_room__next_tile_object_ptr)
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), a  ; ID is the boss number
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), b  ; type
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), e  ; x
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), d  ; y
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0  ; state (hitpoints)
-	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
-	add iy, bc
-	ld (tmp_pcg_room__next_tile_object_ptr), iy
-
+	push hl
+		push de
+		push bc
+		push af
+			ld hl, ptr_to_new_tile_object
+			ld c, TILES_PAGE
+			call call_hl_in_page_c_8000
+		pop af
+		pop bc
+		pop de
+		push hl
+		pop iy
+		ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), a  ; ID is the boss number
+		ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), b  ; type
+		ld (iy + ROOM_TILE_OBJECT_STRUCT_X), e  ; x
+		ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), d  ; y
+		ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0  ; state (hitpoints)
+	pop hl
 	; set which object gfx to up load vdp:
 	ld (item_object_to_upload_to_vdp), hl
 	call state_play_upload_object_tiles_to_vdp_if_necessary
@@ -671,6 +679,9 @@ draw_boss_frame_clear_previous_frame_1:
 	ret z
 	ld hl, (boss__clear_bbox_1)
 draw_boss_frame_clear_previous_frame_1_continue:
+	; here:
+	; - hl: ptr
+	; - bc: width, height
 	ld e, l
 	ld d, h
 	push bc
@@ -1310,7 +1321,7 @@ tile_collision_types_boss2:
 tile_collision_types_boss3:
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
     db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
     db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
