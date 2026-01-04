@@ -5,12 +5,14 @@ to do:
   ***- punch the floor making debris fall (debris are sprites)
   ***- head detaches and tries to land on top of you (with big boom) (high chance of detaching, since it's hard to hit the head while attached to the body)
     ***- when the head is dettached, all the body behaviors keep going (walk/dash/punch floor)
-  ***- you can only damage the head
-  ***- damage animation
+  ***- kill boss: 
+    ***- you can only damage the head
+    ***- damage animation
+    ***- when dead, the head explodes (several regular enemy explosions), and then the body sinks into the floor, before the stone spawns.
   ***- head goes back to the main body
   ***- head goes to some random spot and fires bullets through eyes (both when it's on the body, and when it's flying around)
 
-- music: intro, letters, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 25 have potential)
+- music: intro, letters, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)
   - boss music acts as a health bar (increases in speed as health goes down: 50%, 25%)
 - caves biome (remember to keep ladder tiles in place for down-door opening code). Implement ice cape effect for lava. Skeleton that spit fire (flamethrower through mouth), rockmen (that turn into an undestructible stone), caterpillars, worms, etc. Is the confluence a "caves biome area" (except the calendar room)?
     - ant colonies (tile enemy that spawns ants). ants/fire ants: just move around not too fast and can climb walls up/down, or even hang from the ceiling

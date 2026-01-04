@@ -313,7 +313,7 @@ update_boss3_behavior_1_state_1_to_idle:
 
 
 update_boss3_behavior_1_state_1:
-	; Walk forward:
+	; walk forward:
 	; walk frames loop: 1, 2, 3, 4
 	ld c, 1  ; frame
 	ld a, (boss__3_settings + BOSS_3_WALK_TIME_MASK_OFFSET)
@@ -340,7 +340,7 @@ update_boss3_behavior_1_state_1_frame_set:
 	jr update_boss3_behavior_1_state_1_done
 
 update_boss3_behavior_1_state_2:
-	; Walk backwards:
+	; walk backwards:
 	; walk frames loop: 4, 3, 3, 1
 	ld c, 4  ; frame
 	ld a, (boss__3_settings + BOSS_3_WALK_TIME_MASK_OFFSET)
