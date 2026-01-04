@@ -69,7 +69,7 @@ state_play:
 		ld a, 1
 ; 		ld (player_inventory_items), a  ; first boss key
 ; 		ld (player_inventory_items+1), a  ; second boss key
-		ld (player_inventory_items+2), a  ; third boss key
+; 		ld (player_inventory_items+2), a  ; third boss key
 ; 		ld (player_inventory_items+3), a
 ; 		ld (player_inventory_items+4), a
 ; 		ld (player_inventory_items+5), a  ; mars boss key
@@ -110,7 +110,7 @@ state_play:
 ; 		ld (player_inventory_weapons+1), a
 ; 		ld (player_inventory_weapons+2), a
 ; 		ld (player_inventory_weapons+3), a  ; shield
-		ld (player_inventory_weapons+4), a  ; sling
+; 		ld (player_inventory_weapons+4), a  ; sling
 ; 		ld (player_inventory_weapons+5), a  ; blowgun
 ; 		ld (player_inventory_weapons+6), a
 ; 		ld (player_inventory_weapons+7), a
@@ -119,8 +119,8 @@ state_play:
 ; 		ld (player_inventory_weapons+10), a
 ; 		ld a, 202
 ; 		ld (player_inventory_coins), a
-		ld a, 25
-		ld (player_inventory_weapon_ammo), a
+; 		ld a, 25
+; 		ld (player_inventory_weapon_ammo), a
 ; 		ld (player_inventory_weapon_ammo + 1), a
 ; 		ld (player_inventory_weapon_ammo + 2), a
 ; 		ld (player_inventory_weapon_ammo + 3), a
@@ -136,10 +136,10 @@ state_play:
 ; 		ld (global_state__objects + TAG_TELEPORTER5), a
 
 		; initial player position:
-; 		ld hl, #0100
+		ld hl, #0100
 ; 		ld hl, #0a00
 ; 		ld hl, #1000
-		ld hl, #1400
+; 		ld hl, #1400
 		ld (player_x), hl
 		ld hl, #0b00
 ; 		ld hl, #0a00
@@ -150,11 +150,11 @@ state_play:
 
 		; generate area:
 		ld hl, pcg_generate_area
-; 		ld e, 0  ; area to generate
+		ld e, 0  ; area to generate
 ; 		ld e, 1  ; area to generate <- first boss
 ; 		ld e, 2  ; area to generate <- second boss
 ; 		ld e, 3  ; area to generate
-		ld e, 4  ; area to generate <- third boss
+; 		ld e, 4  ; area to generate <- third boss
 ; 		ld e, 9  ; area to generate
 ; 		ld e, 2  ; area to generate
 ; 		ld e, 10  ; area to generate
@@ -162,11 +162,11 @@ state_play:
 		call call_hl_in_page_c_8000
 
 		; generate room:
-; 		ld e, START_ROOM_ID
+		ld e, START_ROOM_ID
 ; 		ld e, 20  ; <- first boss
 ; 		ld e, 16  ; <- second boss
 ; 		ld e, 26
-		ld e, 3  ; <- third boss
+; 		ld e, 3  ; <- third boss
 ; 		ld e, CALENDAR_ROOM_ID
 ; 		ld e, 31
 ; 		ld e, TELEPORTER_ROOM_ID

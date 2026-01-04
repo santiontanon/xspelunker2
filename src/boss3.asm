@@ -31,14 +31,34 @@ BOSS_3_MIN_X: equ 1
 
 ;-----------------------------------------------
 boss3_difficulty_setting__easy:
+	dw 24  ; boss hp
+	db 32, 16, #0f  ; wait, walk, walk-time-mask
+	db 8, #07, 48, 1  ; dash, dash-time-mask, stomp, # debris
+	db #03, #1f  ; head-time-mask, bullet-time-mask
+
 boss3_difficulty_setting__normal:
-boss3_difficulty_setting__hard:
-boss3_difficulty_setting__hardest:
-; boss3_difficulty_setting__angry:
-	dw 4  ; boss hp
+	dw 32  ; boss hp
 	db 32, 16, #0f  ; wait, walk, walk-time-mask
 	db 4, #03, 32, 2  ; dash, dash-time-mask, stomp, # debris
+	db #03, #1f  ; head-time-mask, bullet-time-mask
+
+boss3_difficulty_setting__hard:
+	dw 48  ; boss hp
+	db 28, 16, #0f  ; wait, walk, walk-time-mask
+	db 4, #03, 28, 3  ; dash, dash-time-mask, stomp, # debris
 	db #03, #0f  ; head-time-mask, bullet-time-mask
+
+boss3_difficulty_setting__hardest:
+	dw 64  ; boss hp
+	db 24, 8, #07  ; wait, walk, walk-time-mask
+	db 4, #03, 24, 4  ; dash, dash-time-mask, stomp, # debris
+	db #03, #0f  ; head-time-mask, bullet-time-mask
+
+; boss3_difficulty_setting__angry:
+; 	dw 80  ; boss hp
+; 	db 20, 8, #07  ; wait, walk, walk-time-mask
+; 	db 4, #03, 20, 4  ; dash, dash-time-mask, stomp, # debris
+; 	db #03, #0f  ; head-time-mask, bullet-time-mask
 
 
 ;-----------------------------------------------

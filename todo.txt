@@ -1,14 +1,24 @@
 to do:
 
-***- third boss: Cabrakan
-  ***- create difficulty levels
-    ***- head also has a chance of firing bullets when it's attached to the main body in higher difficulties
+***- caves biome:
+  ***- mock it up in tiled/gimp
+  ***- create some basic patterns (remember to keep ladder tiles in place for down-door opening code).
+  ***- lava patterns
+  ***- implement lava
+  ***- ice cape effect for lava
+  ***- rest of patterns
+  ***- enemies:
+    ***- Skeleton that spit fire (flamethrower through mouth)
+    ***- rockmen (that turn into an undestructible stone)
+    ***- caterpillars
+    ***- worms
+  ***- tile enemies:
+    ***- ant colonies (tile enemy that spawns ants). ants/fire ants: just move around not too fast and can climb walls up/down, or even hang from the ceiling
+  ***- confluence is a "caves biome area" (except the calendar room)
 
 - music: intro, letters, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)
   - boss music acts as a health bar (increases in speed as health goes down: 50%, 25%)
-- caves biome (remember to keep ladder tiles in place for down-door opening code). Implement ice cape effect for lava. Skeleton that spit fire (flamethrower through mouth), rockmen (that turn into an undestructible stone), caterpillars, worms, etc. Is the confluence a "caves biome area" (except the calendar room)?
-    - ant colonies (tile enemy that spawns ants). ants/fire ants: just move around not too fast and can climb walls up/down, or even hang from the ceiling
-- xibalba biome (remember to keep ladder tiles in place for down-door opening code)
+- xibalba biome (remember to keep ladder tiles in place for down-door opening code). tile enemies: volcano that spits lava, lava waterfalls (lava falls intermitently, blocking the path part of the time)
 - fourth boss (Xibalba): Xibalba Lords: Hun Camé (One Death) and Vucub Camé (Seven Death): Skeletal figures with ornate Mayan headdresses, representing the rulers of the underworld (summons skeletons or shadows). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
 - atlantis biome (do I need to move the possible set of up/down/left/right tags to 4 instead of just 2?): crocodiles as an additional water enemy?
 - fifth boss: Atlantean Guardian (Underwater Boss): A colossal robotic creature with bioluminescent features, resembling a deep-sea creature (laser beams from tentacles, summons robotic fish). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)

@@ -45,7 +45,7 @@ public class Text {
         HashMap<String,String> lines_with_constant_page3 = new LinkedHashMap<>();
         
         // Title:
-        addLineSafe(lines_with_constant_page1, "Brain Games (2025)", "CREDITS1", 11);
+        addLineSafe(lines_with_constant_page1, "Brain Games (2026)", "CREDITS1", 11);
         addLineSafe(lines_with_constant_page1, "Santiago Ontañón", "CREDITS2", 10);
         addLineSafe(lines_with_constant_page1, "SPACE to start", "START1", 10);
         addLineSafe(lines_with_constant_page1, " X for options", "START2", 10);
