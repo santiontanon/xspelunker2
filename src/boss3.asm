@@ -60,6 +60,15 @@ boss3_frame_ptrs_head:
 	dw boss3_frame_5_stomp1_head
 	dw boss3_frame_6_stomp2_head
 
+boss3_frame_ptrs_head_damage:
+	dw boss3_frame_0_idle_head_damage
+	dw boss3_frame_1_walk1_head_damage
+	dw boss3_frame_2_walk2_head_damage
+	dw boss3_frame_3_walk3_head_damage
+	dw boss3_frame_4_walk4_head_damage
+	dw boss3_frame_5_stomp1_head_damage
+	dw boss3_frame_6_stomp2_head
+
 
 boss3_frame_0_idle:
 	db 1  ; number of parts
@@ -150,12 +159,62 @@ boss3_frame_6_stomp2_head:
 	dw #060b, BOSS3_NAMETABLE_STOMP2_HEAD  ; dimensions and nametable
 	dw 0, #090b  ; boss__clear_bbox
 
+
+boss3_frame_0_idle_head_damage:
+	db 2  ; number of parts
+	db 2, 1  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0807, BOSS3_NAMETABLE_IDLE  ; dimensions and nametable
+	db 3, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0403, BOSS3_NAMETABLE_HEAD2_ON_BODY  ; dimensions and nametable
+	dw 0, #0909  ; boss__clear_bbox
+boss3_frame_1_walk1_head_damage:
+	db 2  ; number of parts
+	db 0, 1  ; offset wrt the draw ptr (x offset, y offset)
+	dw #080a, BOSS3_NAMETABLE_WALK1  ; dimensions and nametable
+	db 3, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0403, BOSS3_NAMETABLE_HEAD2_ON_BODY  ; dimensions and nametable
+	dw 0, #090a  ; boss__clear_bbox
+boss3_frame_2_walk2_head_damage:
+	db 2  ; number of parts
+	db 0, 1  ; offset wrt the draw ptr (x offset, y offset)
+	dw #080a, BOSS3_NAMETABLE_WALK2  ; dimensions and nametable
+	db 3, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0403, BOSS3_NAMETABLE_HEAD2_ON_BODY  ; dimensions and nametable
+	dw 0, #090a  ; boss__clear_bbox
+boss3_frame_3_walk3_head_damage:
+	db 2  ; number of parts
+	db 1, 1  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0808, BOSS3_NAMETABLE_WALK3  ; dimensions and nametable
+	db 3, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0403, BOSS3_NAMETABLE_HEAD2_ON_BODY  ; dimensions and nametable
+	dw 0, #090a  ; boss__clear_bbox
+boss3_frame_4_walk4_head_damage:
+	db 2  ; number of parts
+	db 1, 1  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0808, BOSS3_NAMETABLE_WALK4  ; dimensions and nametable
+	db 3, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0403, BOSS3_NAMETABLE_HEAD2_ON_BODY  ; dimensions and nametable
+	dw 0, #090a  ; boss__clear_bbox
+boss3_frame_5_stomp1_head_damage:
+	db 2  ; number of parts
+	db 2, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0b07, BOSS3_NAMETABLE_STOMP1  ; dimensions and nametable
+	db 3, 2  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0403, BOSS3_NAMETABLE_HEAD2_ON_BODY  ; dimensions and nametable
+	dw 0, #0b09  ; boss__clear_bbox
+
+
 boss3_head_frame_0:
 	db 1  ; number of parts
 	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
 	dw #0403, BOSS3_NAMETABLE_HEAD1  ; dimensions and nametable
 	dw 0, #0403  ; boss__clear_bbox
 
+boss3_head_frame_1:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0403, BOSS3_NAMETABLE_HEAD2  ; dimensions and nametable
+	dw 0, #0403  ; boss__clear_bbox
 
 
 ;-----------------------------------------------
@@ -592,10 +651,10 @@ update_boss3_behavior_2_state_1_debris_loop:
 	ld (hl), 0  ; tile y
 	inc hl
 	call random_a
-	ld c, (FIRST_ENEMY_SPRITE_PATTERN + 7) * 4
+	ld c, (FIRST_ENEMY_SPRITE_PATTERN + 6) * 4
 	and #01
 	jr z, update_boss3_behavior_2_state_1_debris_sprite_set
-	ld c, (FIRST_ENEMY_SPRITE_PATTERN + 8) * 4
+	ld c, (FIRST_ENEMY_SPRITE_PATTERN + 7) * 4
 update_boss3_behavior_2_state_1_debris_sprite_set:
 	ld (hl), c   ; state == sprite to use
 	djnz update_boss3_behavior_2_state_1_debris_loop
@@ -622,6 +681,7 @@ update_boss3_behavior_2_state_2:
 
 
 ;-----------------------------------------------
+; death
 update_boss3_behavior_3:
 	xor a
 	call update_boss3_draw_boss_frame
@@ -644,6 +704,8 @@ update_boss3_head_behavior:
 	jr z, update_boss3_head_behavior_state_2  ; patrol right
 	dec a
 	jp z, update_boss3_head_behavior_state_3  ; going back to body
+	dec a
+	jp z, update_boss3_head_behavior_state_4  ; stomp down
 	ret
 
 update_boss3_head_behavior_state_0:
@@ -690,6 +752,13 @@ update_boss3_head_behavior_state_1:
 	ld (boss__3_head_state), a  ; land the head back!
 	ret
 update_boss3_head_behavior_state_1_continue:	
+	ld a, (player_x + 1)
+	cp (hl)
+	jr nz, update_boss3_head_behavior_state_1_no_stomp
+	call random_a
+	and #01
+	call z, update_boss3_head_behavior_state_1_stomp
+update_boss3_head_behavior_state_1_no_stomp:
 	ld a, (hl)
 	cp 2
 	jr z, update_boss3_head_behavior_state_1_done
@@ -698,6 +767,10 @@ update_boss3_head_behavior_state_1_continue:
 update_boss3_head_behavior_state_1_done:
 	ld a, 2
 	ld (boss__3_head_state), a  ; patrol right
+	ret
+update_boss3_head_behavior_state_1_stomp:
+	ld a, 4
+	ld (boss__3_head_state), a  ; stomp
 	ret
 
 update_boss3_head_behavior_state_2:
@@ -724,6 +797,13 @@ update_boss3_head_behavior_state_2:
 	ld (boss__3_head_state), a  ; land the head back!
 	ret
 update_boss3_head_behavior_state_2_continue:
+	ld a, (player_x + 1)
+	cp (hl)
+	jr nz, update_boss3_head_behavior_state_2_no_stomp
+	call random_a
+	and #01
+	call z, update_boss3_head_behavior_state_1_stomp
+update_boss3_head_behavior_state_2_no_stomp:	
 	ld a, (hl)
 	cp 27
 	jr z, update_boss3_head_behavior_state_2_done
@@ -774,6 +854,26 @@ update_boss3_head_behavior_state_3_y_done:
 	ld (boss__3_head_attached), a
 	ret
 
+update_boss3_head_behavior_state_4:
+	; stomp down:
+	ld a, (boss__3_settings + BOSS_3_HEAD_TIME_MASK_OFFSET)
+	srl a
+	ld c, a
+	ld a, (boss__3_head_state_timer)
+	and c
+	ret nz
+	ld hl, boss__y2
+	ld a, (hl)
+	cp 18
+	jr z, update_boss3_head_behavior_state_4_done
+	inc (hl)
+	ret
+update_boss3_head_behavior_state_4_done:
+	xor a
+	ld (boss__3_head_state), a
+	ld (boss__3_head_state_timer), a
+	ret
+
 
 ;-----------------------------------------------
 update_boss3_fire_head_bullet:
@@ -821,12 +921,21 @@ update_boss3_draw_boss_frame:
 	call get_room_tile_ptr
 	ex de, hl  ; hl = ptr where the boss is to be drawn
 	ld hl, boss3_head_frame_0
+	ld a, (boss__hit_timer)
+	or a
+	jp z, draw_boss_frame_2_without_clearing
+	ld hl, boss3_head_frame_1
 	jp draw_boss_frame_2_without_clearing
 
 update_boss3_draw_boss_frame_head_attached:
+		ld hl, boss3_frame_ptrs_head
+		ld a, (boss__hit_timer)
+		or a
+		jr z, update_boss3_draw_boss_frame_head_attached_ptr_set
+		ld hl, boss3_frame_ptrs_head_damage
+update_boss3_draw_boss_frame_head_attached_ptr_set:
 	pop af
 	; ld iyl, a  ; save the frame we are drawing for later
-	ld hl, boss3_frame_ptrs_head
 	add a, a
 	ADD_HL_A
 	ld a, (hl)
@@ -849,10 +958,20 @@ update_boss3_draw_boss_frame_head_attached:
 ; input:
 ; - a: tile number that was hit
 ; - iyh: damage to deal
+; - iyl: collision ID
 player_weapon_hitbox_check_boss__boss3_hit:
-	; hit the main body:
-	; ...
+	push af
+		ld a, iyl
+		ld (boss__last_collision_id), a
+	pop af
 
+	; hit the main body:
+	cp 4 * 16 + 12  ; first non head tile
+	jr c, player_weapon_hitbox_check_boss__boss3_hit_head
+	ld hl, SFX_shield
+	jp play_SFX_with_high_priority
+
+player_weapon_hitbox_check_boss__boss3_hit_head:
 	; hit the head:
 	ld hl, (boss__hp)
 	ld a, h
@@ -868,15 +987,13 @@ player_weapon_hitbox_check_boss__boss3_hit_loop:
 	jr nz, player_weapon_hitbox_check_boss__boss3_hit_loop
 player_weapon_hitbox_check_boss__boss3_hit_continue2:
 	ld (boss__hp), hl
-	ld a, 4
+	ld a, 8
 	ld (boss__hit_timer), a
 
 	ld hl, SFX_enemy_hit
 	call play_SFX_with_high_priority
 	xor a
 	ld (player_weapon_hitbox_check_result), a  ; mark a hit
-	ld a, iyl
-	ld (boss__last_collision_id), a
 	ret
 
 
