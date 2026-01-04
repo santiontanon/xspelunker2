@@ -187,13 +187,13 @@ update_boss3_behavior_init_continue:
 	ld (boss__3_head_attached), a
 	ld (boss__state), a
 
-; 	; spawn object for sprite decorations
-; 	call ptr_to_new_sprite_object
-; 	ret nz
-; 	ld (hl), 0  ; ID
-; 	inc hl
-; 	ld (hl), SPRITE_OBJECT_TYPE_BOSS_EXTRAS
-; 	ret
+	; spawn object for sprite decorations
+	call ptr_to_new_sprite_object
+	ret nz
+	ld (hl), 0  ; ID
+	inc hl
+	ld (hl), SPRITE_OBJECT_TYPE_BOSS_EXTRAS
+	ret
 
 update_boss3_behavior_0_wait_for_player:
 	xor a
@@ -335,8 +335,9 @@ update_boss3_behavior_1_state_1_loop:
 update_boss3_behavior_1_state_1_frame_set:
 	ld a, c
 	cp 5
-	jr nc, update_boss3_behavior_1_state_1_done
-	jp update_boss3_draw_boss_frame
+	jp c, update_boss3_draw_boss_frame
+	call boss3_move_right
+	jr update_boss3_behavior_1_state_1_done
 
 update_boss3_behavior_1_state_2:
 	; Walk backwards:
@@ -361,8 +362,9 @@ update_boss3_behavior_1_state_2_loop:
 update_boss3_behavior_1_state_2_frame_set:
 	ld a, c
 	or a
-	jp z, update_boss3_behavior_1_state_2_done
-	jp update_boss3_draw_boss_frame
+	jp nz, update_boss3_draw_boss_frame
+	call boss3_move_left
+	jp update_boss3_behavior_1_state_2_done
 
 
 ;-----------------------------------------------

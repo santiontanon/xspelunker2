@@ -1,8 +1,7 @@
 to do:
 
 ***- third boss: Cabrakan: The Obsidian Golem
-  ***- dash left/right
-  ***- red eye sprite (detacched head and attached head)
+  ***- dash left (if it's on the right part of the screen, and player is in the lower part, 50% chance of dashing)
   ***- punch the floor making debris fall (debris are sprites)
   ***- head detaches and tries to land on top of you (with big boom) (high chance of detaching, since it's hard to hit the head while attached to the body)
     ***- when the head is dettached, all the body behaviors keep going (walk/dash/punch floor)

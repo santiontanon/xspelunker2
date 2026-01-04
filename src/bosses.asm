@@ -1032,6 +1032,221 @@ update_boss_behavior_bring_name_up_loop:
 
 
 ;-----------------------------------------------
+update_sprite_objects_boss_extras_internal:
+	ld a, (boss__active)
+	or a
+	ret z  ; boss is not active yet
+	ld hl, (boss__hp)
+	ld a, h
+	or l
+	ret z  ; boss is dead
+	ld a, (current_area__id)
+	cp 2  ; hidden temple
+	jr z, update_sprite_objects_boss_extras_boss_2
+	cp 4  ; inverted pyramid
+	jp z, update_sprite_objects_boss_extras_boss_3
+	; ...
+	ret
+
+update_sprite_objects_boss_extras_boss_2:
+	ld a, (boss__hit_timer)
+	or a
+	ld d, COLOR_RED
+	jr z, update_sprite_objects_boss_extras_boss_2_continue
+	ld d, COLOR_DARK_YELLOW
+update_sprite_objects_boss_extras_boss_2_continue:
+	; boss 2, camazotz
+	ld a, (boss__behavior)
+	dec a
+	jr z, update_sprite_objects_boss_extras_boss_2_walking
+	dec a
+	jr z, update_sprite_objects_boss_extras_boss_2_flying
+	ret
+update_sprite_objects_boss_extras_boss_2_walking:
+	; boss 2, camazotz, walking
+	ld a, (boss__2_direction)
+	or a
+	jr z, update_sprite_objects_boss_extras_boss_2_walking_left
+	; right:
+	ld a, (boss__x)
+	ld hl, room_scroll_x
+	sub (hl)
+	add a, 8
+	cp 32
+	ret nc
+	add a, a
+	add a, a
+	add a, a
+	add a, 7
+	ld c, a
+	jr update_sprite_objects_boss_extras_boss_2_walking_continue
+update_sprite_objects_boss_extras_boss_2_walking_left:
+	; left:
+	ld a, (boss__x)
+	ld hl, room_scroll_x
+	sub (hl)
+	add a, 3
+	cp 32
+	ret nc
+	add a, a
+	add a, a
+	add a, a
+	add a, 3
+	ld c, a
+
+update_sprite_objects_boss_extras_boss_2_walking_continue:
+	ld a, (boss__y)
+	ld hl, room_scroll_y
+	sub (hl)
+	add a, a
+	add a, a
+	add a, a
+	add a, 24 + 4
+	ld b, a
+
+update_sprite_objects_boss_extras_boss_2_walking_bc_set:
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 5) * 4
+	ld a, (interrupt_cycle)
+	and #08
+	jr nz, update_sprite_objects_boss_extras_boss_2_walking_continue2
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 6) * 4
+update_sprite_objects_boss_extras_boss_2_walking_continue2:
+	; ld d, COLOR_RED
+	jp add_sprite_to_this_frame
+
+update_sprite_objects_boss_extras_boss_2_flying:
+	ld a, (boss__state)
+	or a
+	jr z, update_sprite_objects_boss_extras_boss_2_walking  ; 0
+	dec a
+	jr z, update_sprite_objects_boss_extras_boss_2_flying_fakeoff  ; 1
+	dec a
+	jr z, update_sprite_objects_boss_extras_boss_2_flying_air  ; 2
+	dec a
+	jr z, update_sprite_objects_boss_extras_boss_2_flying_air  ; 3
+	dec a
+	jr z, update_sprite_objects_boss_extras_boss_2_flying_air  ; 4
+	dec a
+	jr z, update_sprite_objects_boss_extras_boss_2_flying_fakeoff  ; 5
+update_sprite_objects_boss_extras_boss_2_flying_air:
+	; flying:
+	ld a, (boss__x)
+	ld hl, room_scroll_x
+	sub (hl)
+	add a, a
+	add a, a
+	add a, a
+	add a, 6*8 + 4
+	ld c, a
+	ld a, (boss__y)
+	ld hl, room_scroll_y
+	sub (hl)
+	add a, a
+	add a, a
+	add a, a
+	add a, 16 + 7
+	; 0: +16, 1,3: +8, 2: +0
+	ld b, a
+	ld a, (boss__state_timer)
+	rrca
+	rrca
+	and #03
+	cp 3
+	jr nz, update_sprite_objects_boss_extras_boss_2_flying_continue
+	ld a, 1
+update_sprite_objects_boss_extras_boss_2_flying_continue:
+	add a, a
+	add a, a
+	add a, a
+	neg
+	add a, 16
+	add a, b
+	ld b, a
+update_sprite_objects_boss_extras_boss_2_flying_bc_set:
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 10) * 4
+	; ld d, COLOR_RED
+	jp add_sprite_to_this_frame
+update_sprite_objects_boss_extras_boss_2_flying_fakeoff:
+	ld a, (boss__2_direction)
+	or a
+	jr nz, update_sprite_objects_boss_extras_boss_2_flying_fakeoff_right
+	ld a, (boss__x)
+	ld hl, room_scroll_x
+	sub (hl)
+	add a, a
+	add a, a
+	add a, a
+	add a, 4
+update_sprite_objects_boss_extras_boss_2_flying_fakeoff_right_continue:
+	ld c, a
+	ld a, (boss__y)
+	ld hl, room_scroll_y
+	sub (hl)
+	add a, a
+	add a, a
+	add a, a
+	add a, 32 + 7
+	ld b, a
+	jr update_sprite_objects_boss_extras_boss_2_flying_bc_set
+update_sprite_objects_boss_extras_boss_2_flying_fakeoff_right:
+	ld a, (boss__x)
+	ld hl, room_scroll_x
+	sub (hl)
+	add a, a
+	add a, a
+	add a, a
+	add a, 7*8 + 4
+	jr update_sprite_objects_boss_extras_boss_2_flying_fakeoff_right_continue
+
+update_sprite_objects_boss_extras_boss_3:
+	ld a, (boss__3_head_attached)
+	or a
+	jr z, update_sprite_objects_boss_extras_boss_3_attached
+	; head dettached:
+	ld c, a
+	ld a, (boss__y2)
+	ld hl, room_scroll_y
+	sub (hl)
+	add a, a
+	add a, a
+	add a, a
+	add a, 8
+	ld b, a
+	ld a, (boss__x2)
+	ld hl, room_scroll_x
+	sub (hl)
+	add a, a
+	add a, a
+	add a, a
+	add a, 4
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 5) * 4
+	ld d, COLOR_RED
+	jp add_sprite_to_this_frame
+
+update_sprite_objects_boss_extras_boss_3_attached:
+	; head attached:
+	ld a, (boss__y)
+	ld hl, room_scroll_y
+	sub (hl)
+	add a, a
+	add a, a
+	add a, a
+	add a, 8 + 7
+	ld b, a
+	ld a, (boss__x)
+	ld hl, room_scroll_x
+	sub (hl)
+	add a, a
+	add a, a
+	add a, a
+	add a, 3*8 + 4
+	ld c, a
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 5) * 4
+	ld d, COLOR_RED
+	jp add_sprite_to_this_frame
+
+
+;-----------------------------------------------
 update_boss_behavior:
 	ld a, (current_area__id)
 	cp 1  ; temple of inscriptions
