@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="13">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="14">
  <properties>
   <property name="left" value="hole"/>
  </properties>
@@ -13,18 +13,18 @@
 1,165,1,1,1,1,1,1,1,152,144,1,1,1,122,1,
 1,181,1,1,1,1,1,1,1,1,1,1,1,1,122,1,
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,123,1,
-1,1,1,140,255,138,136,138,255,138,255,255,139,1,123,1,
-1,1,1,196,197,1,135,1,1,1,1,196,197,1,123,1,
-1,1,1,212,213,1,135,1,1,1,1,212,213,1,122,1,
-1,1,1,228,229,1,135,1,1,1,1,228,229,1,124,1,
-1,1,1,244,245,1,256,1,1,1,1,244,245,1,123,1,
+1,1,1,1,140,255,136,138,255,138,255,139,1,1,123,1,
+1,1,1,1,196,197,135,1,1,1,196,197,1,1,123,1,
+1,1,1,1,212,213,135,1,1,1,212,213,1,1,122,1,
+1,1,1,1,228,229,135,1,1,1,228,229,1,1,124,1,
+1,1,1,1,244,245,256,1,1,1,244,245,1,1,123,1,
 120,120,118,119,120,118,119,118,119,118,119,118,119,120,143,1,
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
 </data>
  </layer>
  <objectgroup name="objects">
   <object id="1" type="item" x="8" y="64" width="16" height="16"/>
-  <object id="2" type="big-item" x="32" y="16" width="32" height="24"/>
+  <object id="2" type="big-item" x="40" y="16" width="32" height="24"/>
   <object id="3" type="breakable-right" x="112" y="48" width="16" height="32"/>
   <object id="4" type="breakable-right" x="112" y="16" width="16" height="32"/>
   <object id="6" type="breakable-down" x="48" y="80" width="32" height="16"/>
@@ -33,5 +33,6 @@
   <object id="9" type="door-down" x="48" y="80" width="32" height="16"/>
   <object id="11" type="door-up" x="48" y="0" width="32" height="16"/>
   <object id="12" type="breakable-up" x="48" y="0" width="32" height="16"/>
+  <object id="13" type="4x4-item" x="0" y="48" width="32" height="32"/>
  </objectgroup>
 </map>

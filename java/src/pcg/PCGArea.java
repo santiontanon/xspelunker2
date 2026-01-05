@@ -747,6 +747,7 @@ public class PCGArea {
         fg_chunks.get(0x1).add(new RoomChunk("data/caves/room0001-1.tmx", 0x1, "caves"));
 
         fg_chunks.get(0x2).add(new RoomChunk("data/caves/room0010-1.tmx", 0x2, "caves"));
+        fg_chunks.get(0x2).add(new RoomChunk("data/caves/room0010-2.tmx", 0x2, "caves"));
 
         fg_chunks.get(0x3).add(new RoomChunk("data/caves/room0011-1.tmx", 0x3, "caves"));
         fg_chunks.get(0x3).add(new RoomChunk("data/caves/room0011-2.tmx", 0x3, "caves"));
@@ -762,6 +763,7 @@ public class PCGArea {
 
         fg_chunks.get(0x6).add(new RoomChunk("data/caves/room0110-1.tmx", 0x6, "caves"));
         fg_chunks.get(0x6).add(new RoomChunk("data/caves/room0110-2.tmx", 0x6, "caves"));
+        fg_chunks.get(0x6).add(new RoomChunk("data/caves/room0110-3.tmx", 0x6, "caves"));
 
         fg_chunks.get(0x7).add(new RoomChunk("data/caves/room0111-1.tmx", 0x7, "caves"));
         fg_chunks.get(0x7).add(new RoomChunk("data/caves/room0111-2.tmx", 0x7, "caves"));
@@ -815,8 +817,8 @@ public class PCGArea {
             l.add(new RoomChunk("data/caves/block0110-1.tmx", 0x6, "caves"));
             l.add(new RoomChunk("data/caves/block0110-2.tmx", 0x6, "caves"));
 //            l.add(new RoomChunk("data/caves/block0111-1.tmx", 0x7, "caves"));
-//            l.add(new RoomChunk("data/caves/block1001-1.tmx", 0x9, "caves"));
-//            l.add(new RoomChunk("data/caves/block1001-2.tmx", 0x9, "caves"));
+            l.add(new RoomChunk("data/caves/block1001-1.tmx", 0x9, "caves"));
+            l.add(new RoomChunk("data/caves/block1001-2.tmx", 0x9, "caves"));
             l.add(new RoomChunk("data/caves/block1010-1.tmx", 0xa, "caves"));
             l.add(new RoomChunk("data/caves/block1100-1.tmx", 0xc, "caves"));
             l.add(new RoomChunk("data/caves/block1100-2.tmx", 0xc, "caves"));

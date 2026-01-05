@@ -1,12 +1,13 @@
 to do:
 
 ***- caves biome:
-  ***- add patterns until I can generate all 1000 seeds in Java (24/1000)
+  ***- rest of block puzzles
   ***- background patterns
   ***- water + lava patterns
   ***- implement lava
   ***- ice cape effect for lava
   ***- rest of patterns + tiles + decorations
+  ***- fix "Adding combination2-lock to start room!"
   ***- enemies:
     ***- Skeleton that spit fire (flamethrower through mouth)
     ***- rockmen (that turn into an undestructible stone)
