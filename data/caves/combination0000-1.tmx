@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="26">
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="256" columns="16">
+  <image source="tiles.png" width="128" height="128"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="16" height="12">
+  <data encoding="csv">
+1,151,146,148,147,144,146,147,147,148,145,147,146,146,150,1,
+1,126,1,1,1,1,1,1,1,1,1,1,1,1,122,1,
+1,125,1,1,1,1,1,1,1,1,1,1,1,1,122,1,
+1,126,1,1,152,153,153,153,153,153,153,156,1,1,122,1,
+1,127,1,1,1,1,1,1,1,1,1,1,1,1,123,1,
+1,125,1,1,1,1,1,1,1,1,1,1,1,1,123,1,
+1,128,156,1,1,1,1,1,1,1,1,1,1,152,143,1,
+1,1,125,1,152,153,153,153,153,153,153,156,1,122,1,1,
+1,1,127,1,1,1,1,1,1,1,1,1,1,124,1,1,
+1,1,127,1,1,1,1,1,1,1,1,1,1,123,1,1,
+152,118,118,118,120,121,117,118,119,121,117,118,119,118,118,156,
+1,1,146,148,146,144,145,1,1,144,145,148,147,148,1,1
+</data>
+ </layer>
+ <objectgroup name="objects">
+  <object id="9" type="door-left" x="0" y="56" width="24" height="24"/>
+  <object id="11" type="door-right" x="104" y="56" width="24" height="24"/>
+  <object id="14" type="door-down" x="48" y="80" width="32" height="16"/>
+  <object id="15" type="door-up" x="48" y="0" width="32" height="8"/>
+  <object id="16" type="item" x="32" y="8" width="16" height="16"/>
+  <object id="19" type="item" x="48" y="8" width="16" height="16"/>
+  <object id="20" type="item" x="64" y="8" width="16" height="16"/>
+  <object id="21" type="item" x="80" y="8" width="16" height="16"/>
+  <object id="22" type="item" x="32" y="40" width="16" height="16"/>
+  <object id="23" type="item" x="48" y="40" width="16" height="16"/>
+  <object id="24" type="item" x="64" y="40" width="16" height="16"/>
+  <object id="25" type="item" x="80" y="40" width="16" height="16"/>
+ </objectgroup>
+</map>

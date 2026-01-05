@@ -47,7 +47,6 @@ public class PatternVerification {
                     }
                 }
 
-
 //                if (o == null) {
 //                    throw new Exception("No big item locations in " + c.path);
 //                }

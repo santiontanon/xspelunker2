@@ -1,15 +1,12 @@
 to do:
 
 ***- caves biome:
-  ***- try to generate levels in Java
-    ***- basic patterns: keep going from 1000
-    ***- background patterns
-    ***- combination patterns
-    ***- block patterns
+  ***- add patterns until I can generate all 1000 seeds in Java (24/1000)
+  ***- background patterns
   ***- water + lava patterns
   ***- implement lava
   ***- ice cape effect for lava
-  ***- rest of patterns + tiles
+  ***- rest of patterns + tiles + decorations
   ***- enemies:
     ***- Skeleton that spit fire (flamethrower through mouth)
     ***- rockmen (that turn into an undestructible stone)

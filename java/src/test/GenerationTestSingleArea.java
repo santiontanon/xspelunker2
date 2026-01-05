@@ -41,6 +41,7 @@ public class GenerationTestSingleArea {
         PCGWorld pcg1 = new PCGWorld();
         PCGArea pcg2_jungle = new PCGArea(true, "jungle");
         PCGArea pcg2_pyramid = new PCGArea(true, "pyramid");
+        PCGArea pcg2_caves = new PCGArea(true, "caves");
         
         int nPCGAreaErrors = 0;
         HashMap<String, Integer> chunkStats = new HashMap<>();
@@ -49,7 +50,7 @@ public class GenerationTestSingleArea {
             typeStats[i] = 0;
         }
         
-        int target_area_to_visualize = 0;
+        int target_area_to_visualize = 3;
 //        for(int i = 0;i<1;i++) {
         for(int i = 0;i<1000;i++) {
             r.setSeed1(i);
@@ -73,16 +74,18 @@ public class GenerationTestSingleArea {
                             break;
                         case 1:
                         case 2:
-                        case 3:
                         case 4:
                         case 5:
-                        case 6:
-                        case 7:
                         case 8:
                         case 9:
                         case 10:
                         case 11:
                             pcg2 = pcg2_pyramid;
+                            break;
+                        case 3:
+                        case 6:
+                        case 7:
+                            pcg2 = pcg2_caves;
                             break;
                     }                    
                     RenderedArea ra = pcg2.generate(w.areas.get(j), w, r);

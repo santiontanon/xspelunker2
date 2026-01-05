@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="13">
+ <properties>
+  <property name="down" value="stairs"/>
+  <property name="up" value="stairs"/>
+ </properties>
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="256" columns="16">
+  <image source="tiles.png" width="128" height="128"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="16" height="12">
+  <data encoding="csv">
+1,126,1,1,1,1,1,249,168,1,1,1,1,1,123,1,
+1,126,1,1,1,1,1,249,168,1,1,1,1,1,123,1,
+1,125,1,1,1,1,1,249,168,1,1,1,1,1,122,1,
+1,126,1,1,1,1,1,249,168,1,1,1,1,1,122,1,
+1,127,1,1,1,1,1,249,168,1,1,1,1,1,123,1,
+1,125,1,1,1,1,1,249,168,1,1,1,1,1,123,1,
+1,125,1,1,1,152,153,169,137,153,153,153,153,153,143,1,
+1,125,1,1,1,1,1,249,168,1,1,1,1,1,124,1,
+1,127,1,1,1,1,1,249,168,1,1,1,1,1,124,1,
+1,127,1,1,1,1,1,249,168,1,1,1,1,1,123,1,
+1,128,118,119,121,1,1,249,168,1,1,1,117,120,143,1,
+1,1,146,146,144,1,1,249,168,1,1,1,145,146,1,1
+</data>
+ </layer>
+ <objectgroup name="objects">
+  <object id="1" type="item" x="16" y="64" width="16" height="16"/>
+  <object id="2" type="item" x="96" y="64" width="16" height="16"/>
+  <object id="3" type="item" x="56" y="32" width="16" height="16"/>
+  <object id="4" type="big-item" x="48" y="24" width="32" height="24"/>
+  <object id="5" type="breakable-left" x="0" y="16" width="16" height="32"/>
+  <object id="6" type="breakable-left" x="0" y="48" width="16" height="32"/>
+  <object id="7" type="breakable-right" x="112" y="16" width="16" height="32"/>
+  <object id="8" type="breakable-right" x="112" y="48" width="16" height="32"/>
+  <object id="9" type="door-left" x="0" y="16" width="16" height="24"/>
+  <object id="10" type="door-left" x="0" y="48" width="16" height="24"/>
+  <object id="11" type="door-right" x="112" y="16" width="16" height="24"/>
+  <object id="12" type="door-right" x="112" y="48" width="16" height="24"/>
+ </objectgroup>
+</map>
