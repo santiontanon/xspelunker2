@@ -1,12 +1,15 @@
 to do:
 
 ***- caves biome:
-  ***- mock it up in tiled/gimp
-  ***- create some basic patterns (remember to keep ladder tiles in place for down-door opening code).
-  ***- lava patterns
+  ***- try to generate levels in Java
+    ***- basic patterns: keep going from 1000
+    ***- background patterns
+    ***- combination patterns
+    ***- block patterns
+  ***- water + lava patterns
   ***- implement lava
   ***- ice cape effect for lava
-  ***- rest of patterns
+  ***- rest of patterns + tiles
   ***- enemies:
     ***- Skeleton that spit fire (flamethrower through mouth)
     ***- rockmen (that turn into an undestructible stone)
@@ -14,10 +17,11 @@ to do:
     ***- worms
   ***- tile enemies:
     ***- ant colonies (tile enemy that spawns ants). ants/fire ants: just move around not too fast and can climb walls up/down, or even hang from the ceiling
-  ***- confluence is a "caves biome area" (except the calendar room)
+  ***- confluence is a "caves biome area" (except the calendar room), and update map to make it look this way
 
 - music: intro, letters, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)
   - boss music acts as a health bar (increases in speed as health goes down: 50%, 25%)
+- allow "continuing" if you die (respawn in the village), and mark it so that this is mentioned in the ending screen with the score.
 - xibalba biome (remember to keep ladder tiles in place for down-door opening code). tile enemies: volcano that spits lava, lava waterfalls (lava falls intermitently, blocking the path part of the time)
 - fourth boss (Xibalba): Xibalba Lords: Hun Camé (One Death) and Vucub Camé (Seven Death): Skeletal figures with ornate Mayan headdresses, representing the rulers of the underworld (summons skeletons or shadows). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
 - atlantis biome (do I need to move the possible set of up/down/left/right tags to 4 instead of just 2?): crocodiles as an additional water enemy?
@@ -34,7 +38,7 @@ to do:
 
 - 8th boss: after beating the combat against the aliens, you can teleport to their home planet, and fight against their leader (final final boss). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
 - final good ending: the stone opens a portal for you to travel to the alien world, and fight against their leader in a final final battle. When you defeat it and come back, Elaine is there waiting to save you, but you arrive having become the ruler of alien empire.
-- "speak" the animal names in the animal room to get their blessings (if you get all four, you do double damage): I already have the clue for this in the game, right? (TABLET_TRIVIA_CLUE1_1)
+- "speak" the animal names in the animal room to get their blessings (if you get all four, you do double damage, adjust angry/veryhard boss difficulty for this): I already have the clue for this in the game, right? (TABLET_TRIVIA_CLUE1_1)
 - Potential new secret/mechanic ideas:
   - special condition for triggering "angry bosses" (they change color). For each one you beat in this hard mode, you get something in the ending, and if you get them all, you get a special mention. The conditions might be things like: certain bit in the random seed to be "11" (so, not all seeds are good), dive into water X times in the same room without doing anything else, etc. Use the "random seed stela" (maybe give a clue about it)
   - have a chest/door locked with keys from ALL colors, and that can only be open in a world where all color keys spawn. Single lock that changes color, cycling through all.
