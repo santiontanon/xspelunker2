@@ -16,22 +16,22 @@
 1,1,1,1,1,1,1,249,168,1,1,1,1,1,122,1,
 1,1,1,1,1,1,1,249,168,1,1,1,1,1,123,1,
 1,1,1,1,1,1,1,249,168,1,1,1,1,152,153,153,
-1,1,1,1,117,120,118,169,137,120,120,121,1,1,123,1,
+1,1,1,1,117,120,118,169,137,120,120,121,1,1,145,148,
 1,1,1,1,145,146,146,249,168,148,148,144,1,1,122,1,
 1,1,1,1,1,1,1,249,168,1,1,1,1,1,124,1,
 1,1,1,1,1,1,1,249,168,1,1,1,1,1,123,1,
-118,118,118,121,1,1,1,249,168,1,1,1,117,120,143,1,
+118,118,118,121,1,1,1,249,168,1,1,1,117,120,119,118,
 1,1,146,144,1,1,1,249,168,1,1,1,145,146,1,1
 </data>
  </layer>
  <objectgroup name="objects">
   <object id="1" type="item" x="96" y="64" width="16" height="16"/>
-  <object id="2" type="item" x="56" y="0" width="16" height="16"/>
+  <object id="2" type="item" x="40" y="32" width="16" height="16"/>
   <object id="3" type="big-item" x="0" y="56" width="32" height="24"/>
   <object id="4" type="breakable-right" x="112" y="16" width="16" height="24"/>
-  <object id="5" type="breakable-right" x="112" y="48" width="16" height="32"/>
+  <object id="5" type="breakable-right" x="112" y="56" width="16" height="24"/>
   <object id="6" type="door-right" x="112" y="16" width="16" height="24"/>
-  <object id="7" type="door-right" x="112" y="48" width="16" height="24"/>
+  <object id="7" type="door-right" x="112" y="56" width="16" height="24"/>
   <object id="8" type="4x4-item" x="0" y="48" width="32" height="32"/>
  </objectgroup>
 </map>

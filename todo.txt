@@ -1,13 +1,10 @@
 to do:
 
 ***- caves biome:
-  ***- rest of block puzzles
-  ***- background patterns
-  ***- water + lava patterns
+  ***- fix "Adding combination2-lock to start room!"
+  ***- add to game
   ***- implement lava
   ***- ice cape effect for lava
-  ***- rest of patterns + tiles + decorations
-  ***- fix "Adding combination2-lock to start room!"
   ***- enemies:
     ***- Skeleton that spit fire (flamethrower through mouth)
     ***- rockmen (that turn into an undestructible stone)

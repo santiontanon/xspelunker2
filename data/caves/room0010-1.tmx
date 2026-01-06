@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="9">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="10">
  <properties>
   <property name="right" value="hole"/>
  </properties>
@@ -9,27 +9,26 @@
  <layer name="Tile Layer 1" width="16" height="12">
   <data encoding="csv">
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-1,151,146,148,147,148,146,147,147,148,148,147,146,146,146,147,
-1,125,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+1,151,146,149,147,148,181,147,147,149,149,147,181,146,181,147,
+1,125,1,181,1,1,1,1,1,181,181,1,1,1,1,1,
 1,126,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 1,127,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 1,125,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+148,144,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 1,125,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-1,125,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-1,127,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-1,127,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-1,128,118,119,120,118,119,118,119,118,119,118,119,120,118,118,
-1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+1,127,1,1,1,1,1,1,1,1,1,173,174,175,1,1,
+1,127,1,104,105,104,1,1,1,1,105,189,190,191,104,1,
+119,120,118,119,120,121,119,118,119,118,117,118,119,120,118,118,
+1,1,1,1,1,125,1,1,1,1,123,1,1,1,1,1
 </data>
  </layer>
  <objectgroup name="objects">
   <object id="1" type="item" x="16" y="64" width="16" height="16"/>
   <object id="2" type="big-item" x="16" y="56" width="32" height="24"/>
-  <object id="3" type="breakable-left" x="0" y="16" width="16" height="32"/>
-  <object id="4" type="breakable-left" x="0" y="48" width="16" height="32"/>
-  <object id="5" type="door-left" x="0" y="16" width="16" height="24"/>
+  <object id="4" type="breakable-left" x="0" y="56" width="16" height="24"/>
   <object id="6" type="4x4-item" x="16" y="48" width="32" height="32"/>
   <object id="7" type="door-down" x="48" y="80" width="32" height="16"/>
   <object id="8" type="breakable-down" x="48" y="80" width="32" height="16"/>
+  <object id="9" type="door-left" x="0" y="56" width="16" height="24"/>
  </objectgroup>
 </map>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="11">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="12">
  <properties>
-  <property name="down" value="stairs"/>
+  <property name="down" value="hole"/>
   <property name="right" value="hole"/>
  </properties>
  <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="256" columns="16">
@@ -9,24 +9,30 @@
  </tileset>
  <layer name="Tile Layer 1" width="16" height="12">
   <data encoding="csv">
-1,1,1,119,120,120,121,249,168,117,119,118,119,1,1,1,
-1,151,146,148,147,147,144,249,168,145,146,147,146,146,146,147,
-1,125,135,1,1,1,1,249,168,1,1,1,1,135,1,1,
-1,126,135,1,1,1,1,249,168,1,1,1,1,132,1,1,
-1,127,135,1,117,118,119,119,119,119,120,121,1,135,1,1,
-1,125,256,1,123,1,1,1,1,1,1,126,1,135,1,1,
-1,125,1,1,123,1,1,1,1,1,1,125,1,132,1,1,
-1,125,1,1,145,146,147,148,148,147,148,144,1,135,1,1,
-1,127,1,1,1,1,1,1,1,1,1,1,1,256,1,1,
-1,127,142,253,1,1,1,1,1,1,1,1,1,1,1,1,
-1,128,133,134,121,1,1,1,1,1,1,117,119,118,119,118,
+1,1,1,119,120,121,117,119,118,121,117,118,119,1,1,1,
+148,148,146,148,147,144,145,147,147,144,145,147,146,181,149,147,
+120,121,1,1,135,1,1,1,1,1,1,135,1,1,181,1,
+1,126,1,1,132,152,156,1,1,152,156,135,1,1,1,1,
+1,144,1,1,135,1,1,1,1,1,1,135,1,1,1,1,
+120,120,121,1,135,1,1,1,1,1,1,135,1,1,1,1,
+148,148,144,1,135,1,141,100,100,155,1,132,1,1,1,1,
+120,121,1,1,256,1,141,129,129,155,1,256,1,1,1,1,
+1,127,1,1,1,1,183,184,184,185,1,1,1,1,1,1,
+1,144,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+120,119,118,119,121,1,1,1,1,1,1,117,119,118,119,118,
 1,1,146,147,144,1,1,1,1,1,1,145,146,147,1,1
 </data>
  </layer>
  <objectgroup name="objects">
-  <object id="3" type="breakable-left" x="0" y="16" width="16" height="32"/>
+  <object id="1" type="item" x="16" y="64" width="16" height="16"/>
+  <object id="2" type="big-item" x="96" y="56" width="32" height="24"/>
+  <object id="3" type="breakable-left" x="0" y="16" width="16" height="24"/>
+  <object id="4" type="breakable-left" x="0" y="56" width="16" height="24"/>
   <object id="6" type="door-left" x="0" y="16" width="16" height="24"/>
+  <object id="7" type="door-left" x="0" y="56" width="16" height="24"/>
+  <object id="8" type="4x4-item" x="96" y="48" width="32" height="32"/>
   <object id="9" type="pushable-block" x="56" y="16" width="16" height="16"/>
   <object id="10" type="door-up" x="48" y="0" width="32" height="16"/>
+  <object id="11" type="breakable-up" x="48" y="0" width="32" height="16"/>
  </objectgroup>
 </map>
