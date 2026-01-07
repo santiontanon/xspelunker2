@@ -16,6 +16,12 @@ pcg_generate_room__prettify:
 	ld a, (current_area__id)
 	or a
 	jp z, pcg_generate_room__prettify_jungle
+	cp 3
+	jp z, pcg_generate_room__prettify_caves
+	cp 6
+	jp z, pcg_generate_room__prettify_caves
+	cp 7
+	jp z, pcg_generate_room__prettify_caves
 	; ...
 	jp pcg_generate_room__prettify_pyramid
 
@@ -499,3 +505,48 @@ pcg_generate_room__prettify_pyramid_dragon_head:
 		ld (hl), 13*16 + 15
 	pop hl
 	jp pcg_generate_room__prettify_pyramid_loop_x_continue
+
+
+;-----------------------------------------------
+; This method:
+; - completes ropes, ladders, face blocks
+; - randomizes cave tiles
+pcg_generate_room__prettify_caves:
+	; reconstruct ropes/ladders/faces:
+	ld hl, current_room__tile_map
+	ld bc, (current_room__width)
+	ld a, (current_room__width)
+	ld e, a
+	ld d, 0	
+pcg_generate_room__prettify_caves_loop_y:
+	push bc
+		ld b, c
+		ld c, 15*16 + 6
+pcg_generate_room__prettify_caves_loop_x:
+		ld a, (hl)
+		sub c
+		jr c, pcg_generate_room__prettify_caves_loop_x_continue
+		; ...
+		dec a
+		jr z, pcg_generate_room__prettify_caves_rubble_randomize
+		dec a
+		jp z, pcg_generate_room__prettify_caves_ladder
+		dec a
+		jp z, pcg_generate_room__prettify_caves_face1
+		dec a
+		; ...
+		dec a
+		; ...
+		dec a
+		jr z, pcg_generate_room__prettify_caves_spike_tip_randomize
+		dec a
+		; ...
+		dec a
+		jr z, pcg_generate_room__prettify_caves_platform_randomize
+		jp pcg_generate_room__prettify_caves_rope
+pcg_generate_room__prettify_caves_loop_x_continue:
+		inc hl
+		djnz pcg_generate_room__prettify_caves_loop_x
+	pop bc
+	djnz pcg_generate_room__prettify_caves_loop_y
+	ret

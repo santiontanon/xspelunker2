@@ -9,5 +9,5 @@ name_table:
     db #cb,#cc,#cd,#ce,#cf,#d0
     db #cb,#e8,#e9,#ea,#eb,#46
     db #1f,#20,#21,#22,#23,#24
-    db #44,#45,#46,#47,#48,#49
+    db #46,#47,#48,#49,#4a,#4b
 end_name_table:

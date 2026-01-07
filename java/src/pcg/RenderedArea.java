@@ -776,7 +776,7 @@ public class RenderedArea {
                                 }
                                 break;
                             }
-                        case 7*16+5:
+                        case 15*16+6:
                             // floor:
                             {   
                                 int a = r.nextInt(3);
@@ -785,7 +785,7 @@ public class RenderedArea {
                                 }
                                 break;
                             }
-                        case 9*16+1:
+                        case 15*16+13:
                             // ceiling:
                             {   
                                 int a = r.nextInt(3);
@@ -794,7 +794,7 @@ public class RenderedArea {
                                 }
                                 break;
                             }
-                        case 7*16+9:
+                        case 15*16+10:
                             // left wall:
                             {   
                                 int a = r.nextInt(3);
@@ -803,7 +803,7 @@ public class RenderedArea {
                                 }
                                 break;
                             }
-                        case 7*16+12:
+                        case 15*16+11:
                             // right wall:
                             {   
                                 int a = r.nextInt(3);

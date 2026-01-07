@@ -344,27 +344,27 @@ public class RoomChunk {
                         tile = 0;  // remove ropes, they will be reconstructed
                         break;
                     // floor:
-                    case 7*16+5:
+                    case 15*16+6:
                     case 7*16+6:
                     case 7*16+7:
-                        tile = 7*16+5;
+                        tile = 15*16+6;
                         break;
                     // ceiling:
-                    case 9*16+1:
+                    case 15*16+13:
                     case 9*16+2:
                     case 9*16+3:
-                        tile = 9*16+1;
+                        tile = 15*16+13;
                         break;
                     // walls:
-                    case 7*16+9:
+                    case 15*16+10:
                     case 7*16+10:
                     case 7*16+11:
-                        tile = 7*16+9;
+                        tile = 15*16+10;
                         break;
-                    case 7*16+12:
+                    case 15*16+11:
                     case 7*16+13:
                     case 7*16+14:
-                        tile = 7*16+12;
+                        tile = 15*16+11;
                         break;
                     // platforms:
                     case 15*16 + 14:

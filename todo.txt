@@ -1,14 +1,14 @@
 to do:
 
 ***- caves biome:
-  ***- add chunks to assembler and test they work on areas 3/6/7
-    ***- update_animations_in_vdp_caves
-    ***- prettify caves in assembler:
-      ***- ropes should end in ceiling
-    ***- use them in areas 3/6/7
-  ***- implement lava (and make sure that the "lava" left/right tags work)
+  ***- prettify caves in assembler:
+    OK - move floor/ceiling/left/right-wall to the end of the tileset
+    ***- update all chunks (done up to "room1100-1" backwards)
+    ***- pcg_generate_room__prettify_caves
+  ***- are left/right "lava" tags working in assembler?
+  ***- implement lava: like water, but you get damaged periodically (do you move slower?)
   ***- ice cape effect for lava
-  ***- confluence is a "caves biome area" (except the calendar room), update map to make it look this way
+  ***- confluence: make sure calendar room is still "pyramids" biome
   ***- fix "Adding combination2-lock to start room!"
   ***- enemies:
     ***- Skeleton that spit fire (flamethrower through mouth)
