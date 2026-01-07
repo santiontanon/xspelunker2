@@ -2,9 +2,11 @@ to do:
 
 ***- caves biome:
   ***- add chunks to assembler and test they work on areas 3/6/7
-    ***- collision type table
+    ***- pcg_generate_room_background_caves
+    ***- update_animations_in_vdp_caves
+    ***- prettify caves in assembler:
+      ***- ropes should end in ceiling
     ***- use them in areas 3/6/7
-    ***- prettify in assembler
   ***- implement lava
   ***- ice cape effect for lava
   ***- confluence is a "caves biome area" (except the calendar room), update map to make it look this way

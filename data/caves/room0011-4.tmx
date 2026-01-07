@@ -31,7 +31,6 @@
   <object id="6" type="door-left" x="0" y="16" width="16" height="24"/>
   <object id="7" type="door-left" x="0" y="56" width="16" height="24"/>
   <object id="8" type="4x4-item" x="96" y="48" width="32" height="32"/>
-  <object id="9" type="pushable-block" x="56" y="16" width="16" height="16"/>
   <object id="10" type="door-up" x="48" y="0" width="32" height="16"/>
   <object id="11" type="breakable-up" x="48" y="0" width="32" height="16"/>
  </objectgroup>

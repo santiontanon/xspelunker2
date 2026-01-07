@@ -75,7 +75,7 @@ state_title_draw_title_sprite_table:
 
 state_title_draw_title:
 	ld hl, title_tiles_zx0
-	ld c, TITLE_PAGE
+	ld c, TITLE_TILES_PAGE
 	call decompress_tiles_to_all_banks
 
 	; name table:

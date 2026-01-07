@@ -110,8 +110,17 @@ pcg_generate_area__initialize_ptrs:
 	ld a, (current_area__id)
 	or a
 	jr z, pcg_generate_area__initialize_ptrs_jungle
+	cp 3
+	jr z, pcg_generate_area__initialize_ptrs_caves
+	cp 6
+	jr z, pcg_generate_area__initialize_ptrs_caves
+	cp 7
+	jr z, pcg_generate_area__initialize_ptrs_caves
 pcg_generate_area__initialize_ptrs_pyramid:
 	ld hl, pyramid_chunk_ptrs_and_constants
+	jr pcg_generate_area__initialize_ptrs_continue
+pcg_generate_area__initialize_ptrs_caves:
+	ld hl, caves_chunk_ptrs_and_constants
 	jr pcg_generate_area__initialize_ptrs_continue
 pcg_generate_area__initialize_ptrs_jungle
 	ld hl, jungle_chunk_ptrs_and_constants
@@ -2272,3 +2281,18 @@ pyramid_chunk_ptrs_and_constants:
 	db PYRAMID_BOSS_CHUNK_POOL_SIZE, PYRAMID_BOSS_CHUNK_POOL_FIRST_ID
 	db PYRAMID_BLOCK_CHUNK_POOL_SIZE, PYRAMID_BLOCK_CHUNK_POOL_FIRST_ID
 	db PYRAMID_COMBINATION_CHUNK_POOL_SIZE, PYRAMID_COMBINATION_CHUNK_POOL_FIRST_ID
+
+caves_chunk_ptrs_and_constants:
+	db (caves_chunk_fg_bank_ptrs_end - caves_chunk_fg_bank_ptrs) / 2  ; number of banks
+	db CHUNKS_CAVES_PAGE
+	dw caves_chunk_fg_bank_ptrs
+	dw caves_standard_chunk_pool
+	dw caves_boss_chunk_pool
+	dw caves_block_chunk_pool
+	dw caves_combination_chunk_pool
+	dw caves_chunk_flags
+	dw chunk_edgecollisions_caves
+	db CAVES_STANDARD_CHUNK_POOL_SIZE, CAVES_STANDARD_CHUNK_FIRST_ID
+	db CAVES_BOSS_CHUNK_POOL_SIZE, CAVES_BOSS_CHUNK_POOL_FIRST_ID
+	db CAVES_BLOCK_CHUNK_POOL_SIZE, CAVES_BLOCK_CHUNK_POOL_FIRST_ID
+	db CAVES_COMBINATION_CHUNK_POOL_SIZE, CAVES_COMBINATION_CHUNK_POOL_FIRST_ID

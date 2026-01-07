@@ -70,7 +70,7 @@ public class GenerateChunkData {
         2, 2, 2, 2, 2, 0, 2, 2, 7, 2, 2, 2, 3, 2, 1, 5            
     };
     
-    public static int caves_tile_collision_types[] = {            
+    public static int caves_tile_collision_types[] = {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,

@@ -26,10 +26,10 @@ area_default_tileset_ptrs:
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_pyramid, pyramid_enemy_sprites_zx0  ; pyramid 2
 
-	db PYRAMID_TILES_PAGE
-	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
+	db CAVES_TILES_PAGE
+	dw tiles_caves_zx0, update_animations_in_vdp_caves
 	db AREA_COLLISION_TABLES_PAGE
-	dw tile_collision_types_pyramid, pyramid_enemy_sprites_zx0  ; confluence
+	dw tile_collision_types_caves, caves_enemy_sprites_zx0  ; confluence
 
 	db PYRAMID_TILES_PAGE
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
@@ -41,15 +41,15 @@ area_default_tileset_ptrs:
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_pyramid, pyramid_enemy_sprites_zx0  ; fire shaft
 
-	db PYRAMID_TILES_PAGE
-	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
+	db CAVES_TILES_PAGE
+	dw tiles_caves_zx0, update_animations_in_vdp_caves
 	db AREA_COLLISION_TABLES_PAGE
-	dw tile_collision_types_pyramid, pyramid_enemy_sprites_zx0  ; pacific caves
+	dw tile_collision_types_caves, caves_enemy_sprites_zx0  ; pacific caves
 
-	db PYRAMID_TILES_PAGE
-	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
+	db CAVES_TILES_PAGE
+	dw tiles_caves_zx0, update_animations_in_vdp_caves
 	db AREA_COLLISION_TABLES_PAGE
-	dw tile_collision_types_pyramid, pyramid_enemy_sprites_zx0  ; atlantic caves
+	dw tile_collision_types_caves, caves_enemy_sprites_zx0  ; atlantic caves
 
 	db PYRAMID_TILES_PAGE
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
@@ -1415,6 +1415,12 @@ pcg_generate_room_background:
 	ld a, (current_area__id)
 	or a
 	ret z  ; no background for jungle
+	cp 3
+	jp z, pcg_generate_room_background_caves
+	cp 6
+	jp z, pcg_generate_room_background_caves
+	cp 7
+	jp z, pcg_generate_room_background_caves
 	; jp pcg_generate_room_background_pyramid
 
 
@@ -1464,6 +1470,12 @@ pcg_generate_room__bg_loop_empty_chunk:
 	ld e, a
 	add hl, de
 	djnz pcg_generate_room__bg_loop_y
+	ret
+
+
+;-----------------------------------------------
+pcg_generate_room_background_caves:
+	; ...
 	ret
 
 

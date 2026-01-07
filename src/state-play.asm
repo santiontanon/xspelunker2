@@ -150,28 +150,22 @@ state_play:
 
 		; generate area:
 		ld hl, pcg_generate_area
-		ld e, 0  ; area to generate
+; 		ld e, 0  ; area to generate
 ; 		ld e, 1  ; area to generate <- first boss
 ; 		ld e, 2  ; area to generate <- second boss
+		ld e, 3  ; area to generate
 ; 		ld e, 3  ; area to generate
 ; 		ld e, 4  ; area to generate <- third boss
-; 		ld e, 9  ; area to generate
-; 		ld e, 2  ; area to generate
-; 		ld e, 10  ; area to generate
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
 
 		; generate room:
-		ld e, START_ROOM_ID
+; 		ld e, START_ROOM_ID
 ; 		ld e, 20  ; <- first boss
 ; 		ld e, 16  ; <- second boss
-; 		ld e, 26
-; 		ld e, 3  ; <- third boss
+		ld e, 0
 ; 		ld e, CALENDAR_ROOM_ID
-; 		ld e, 31
-; 		ld e, TELEPORTER_ROOM_ID
-; 		ld e, 24
-; 		ld e, 14  ; 18  ; boss
+; 		ld e, 3  ; <- third boss
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000

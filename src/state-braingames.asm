@@ -20,7 +20,7 @@ state_braingames:
 
 	; upload the tile data to vdp:
 	ld hl, braingames_tiles_zx0
-	ld c, BRAINGAMES_PAGE
+	ld c, BRAINGAMES_TILES_PAGE
 	call decompress_tiles_to_all_banks
 
 	; drop brain games logo:
