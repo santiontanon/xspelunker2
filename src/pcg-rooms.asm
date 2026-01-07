@@ -8,6 +8,8 @@ tmp_pcg_room__chunk_x: equ tmp_pcg_room__next_tile_object_ptr - 1
 tmp_pcg_room__chunk_y: equ tmp_pcg_room__chunk_x - 1
 tmp_pcg_room__is_midpoint_room: equ tmp_pcg_room__chunk_y - 1
 tmp_pcg_room__previous_seed: equ tmp_pcg_room__is_midpoint_room - 4
+tmp_pcg_room__current_chunk_bg_bank_ptrs: equ tmp_pcg_room__previous_seed - 2
+
 
 ;-----------------------------------------------
 area_default_tileset_ptrs:
@@ -1427,7 +1429,14 @@ pcg_generate_room_background:
 ;-----------------------------------------------
 ; input:
 ; - hl: ptr to the fg chunk types
+pcg_generate_room_background_caves:
+	ld de, caves_chunk_bg_bank_ptrs
+	ld (tmp_pcg_room__current_chunk_bg_bank_ptrs), de
+	jr pcg_generate_room_background_pyramid_continue
 pcg_generate_room_background_pyramid:
+	ld de, pyramid_chunk_bg_bank_ptrs
+	ld (tmp_pcg_room__current_chunk_bg_bank_ptrs), de
+pcg_generate_room_background_pyramid_continue:
 	xor a
 	ld (tmp_pcg_room__current_target_chunk_bank_id), a	
 	ld a, #ff
@@ -1452,7 +1461,7 @@ pcg_generate_room__bg_loop_x:
 		and #01
 
 		push bc
-			ld hl, pyramid_chunk_bg_bank_ptrs
+			ld hl, (tmp_pcg_room__current_chunk_bg_bank_ptrs)
 			call pcg_get_chunk_ptr  ; hl = ptr of the chunk to copy
 		pop bc
 		push bc
@@ -1470,12 +1479,6 @@ pcg_generate_room__bg_loop_empty_chunk:
 	ld e, a
 	add hl, de
 	djnz pcg_generate_room__bg_loop_y
-	ret
-
-
-;-----------------------------------------------
-pcg_generate_room_background_caves:
-	; ...
 	ret
 
 
