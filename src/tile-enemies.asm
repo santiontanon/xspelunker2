@@ -222,6 +222,9 @@ update_tile_objects_enemy_carnivore_plant_tongue_retract:
 	jp z, update_tile_objects_enemy_carnivore_plant_switch_to_idle
 	call room_undraw_tile_objects
 	ld hl, tile_enemy_work_memory
+	ld a, (hl)
+	or a
+	jr z, update_tile_objects_enemy_carnivore_plant_tongue_retract_continue
 	dec (hl)
 	ld a, (hl)
 	dec a
@@ -234,6 +237,7 @@ update_tile_objects_enemy_carnivore_plant_tongue_retract:
 	inc hl
 	call update_tile_objects_enemy_carnivore_plant_tongue_tip
 	ld (hl), a
+update_tile_objects_enemy_carnivore_plant_tongue_retract_continue:
 	call room_render_tile_objects
 	ld hl, redraw_flags
 	set ROOM_REDRAW_FLAG_BIT, (hl)

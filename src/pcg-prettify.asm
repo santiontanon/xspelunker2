@@ -584,31 +584,20 @@ pcg_generate_room__prettify_caves_ladder_loop:
 		ld a, (hl)
 		or a
 		jr z, pcg_generate_room__prettify_caves_ladder_keep_going
-; 		cp 8*16 + 8  ; ladder top-right
-; 		jr z, pcg_generate_room__prettify_caves_ladder_done
-; 		cp 10*16 + 8  ; ladder top-left
-; 		jr z, pcg_generate_room__prettify_caves_ladder_done
-; 		cp 8*16 + 1  ; torch
-; 		jr z, pcg_generate_room__prettify_caves_ladder_keep_going
-; 		cp 8*16 + 2  ; background
-; 		jr z, pcg_generate_room__prettify_caves_ladder_keep_going
-; 		cp 9*16 + 5  ; background
-; 		jr z, pcg_generate_room__prettify_caves_ladder_keep_going
-; 		cp 10*16 + 0  ; background
-; 		jr z, pcg_generate_room__prettify_caves_ladder_keep_going
-; 		cp 10*16 + 6  ; background
-; 		jr z, pcg_generate_room__prettify_caves_ladder_keep_going
-; 		cp 11*16 + 12  ; background
-; 		jr z, pcg_generate_room__prettify_caves_ladder_keep_going
-; 		cp 12*16 + 0  ; background
-; 		jr z, pcg_generate_room__prettify_caves_ladder_keep_going
-; 		cp 12*16 + 8  ; background
-; 		jr z, pcg_generate_room__prettify_caves_ladder_keep_going
-; 		cp 15*16 + 5  ; background
-; 		jr z, pcg_generate_room__prettify_caves_ladder_keep_going
-; 		and #f0
-; 		cp #60  ; row 6 contains tiles only present on background tiles
-; 		jr nz, pcg_generate_room__prettify_caves_ladder_done
+		cp 8*16 + 1  ; torch
+		jr z, pcg_generate_room__prettify_caves_ladder_keep_going
+		cp 7*16 + 1  ; background
+		jr z, pcg_generate_room__prettify_caves_ladder_keep_going
+		cp 6*16 + 0  ; background
+		jr z, pcg_generate_room__prettify_caves_ladder_keep_going
+		cp 6*16 + 1  ; background
+		jr z, pcg_generate_room__prettify_caves_ladder_keep_going
+		cp 6*16 + 2  ; background
+		jr z, pcg_generate_room__prettify_caves_ladder_keep_going
+		cp 6*16 + 5  ; background
+		jr z, pcg_generate_room__prettify_caves_ladder_keep_going
+		cp 6*16 + 6  ; background
+		jr z, pcg_generate_room__prettify_caves_ladder_keep_going
 		jr pcg_generate_room__prettify_caves_ladder_done
 pcg_generate_room__prettify_caves_ladder_keep_going:
 		ld (hl), 15*16 + 8  ; ladder-left
@@ -661,15 +650,22 @@ pcg_generate_room__prettify_caves_rope_loop:
 		add hl, bc
 		ld a, (hl)
 		or a
-		jr nz, pcg_generate_room__prettify_caves_rope_done
-; 		cp 8*16 + 7  ; top rope piece
-; 		jr z, pcg_generate_room__prettify_caves_rope_done
-; 		cp 14*16 + 9  ; foliage
-; 		jr z, pcg_generate_room__prettify_caves_rope_done
-; 		cp 14*16 + 10  ; foliage
-; 		jr z, pcg_generate_room__prettify_caves_rope_done
-; 		cp 14*16 + 11  ; foliage
-; 		jr z, pcg_generate_room__prettify_caves_rope_done
+		jr z, pcg_generate_room__prettify_caves_rope_keep_going
+		cp 8*16 + 1  ; torch
+		jr z, pcg_generate_room__prettify_caves_rope_keep_going
+		cp 7*16 + 1  ; background
+		jr z, pcg_generate_room__prettify_caves_rope_keep_going
+		cp 6*16 + 0  ; background
+		jr z, pcg_generate_room__prettify_caves_rope_keep_going
+		cp 6*16 + 1  ; background
+		jr z, pcg_generate_room__prettify_caves_rope_keep_going
+		cp 6*16 + 2  ; background
+		jr z, pcg_generate_room__prettify_caves_rope_keep_going
+		cp 6*16 + 5  ; background
+		jr z, pcg_generate_room__prettify_caves_rope_keep_going
+		cp 6*16 + 6  ; background
+		jr z, pcg_generate_room__prettify_caves_rope_keep_going
+		jr pcg_generate_room__prettify_caves_rope_done
 pcg_generate_room__prettify_caves_rope_keep_going:
 		PCG_PRETTIFY_RANDOM
 		and #03

@@ -1,7 +1,7 @@
 to do:
 
 ***- caves biome:
-  ***- are left/right "lava" tags working in assembler?
+  ***- left/right "lava" tags are not working in assembler: test with LXSPELUNKER2
   ***- BUG: why does carnivore plant not work on caves? (tongue leaves garbage)
   ***- implement lava: like water, but you get damaged periodically (do you move slower?)
   ***- ice cape effect for lava
