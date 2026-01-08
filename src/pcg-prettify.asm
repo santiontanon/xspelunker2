@@ -8,7 +8,7 @@ PCG_PRETTIFY_RANDOM: macro
 	rrca
 	rrca
 	rrca
-	rrca  ; 112000
+; 	rrca  ; 112000
 	endm
 
 ;-----------------------------------------------
@@ -526,7 +526,7 @@ pcg_generate_room__prettify_caves_loop_x:
 		ld a, (hl)
 		sub c
 		jr c, pcg_generate_room__prettify_caves_loop_x_continue
-		; ...
+		jp z, pcg_generate_room__prettify_caves_floor
 		dec a
 		jr z, pcg_generate_room__prettify_caves_rubble_randomize
 		dec a
@@ -534,15 +534,15 @@ pcg_generate_room__prettify_caves_loop_x:
 		dec a
 		jp z, pcg_generate_room__prettify_caves_face1
 		dec a
-		; ...
+		jp z, pcg_generate_room__prettify_caves_left_wall
 		dec a
-		; ...
+		jp z, pcg_generate_room__prettify_caves_right_wall
 		dec a
-		jr z, pcg_generate_room__prettify_caves_spike_tip_randomize
+		jp z, pcg_generate_room__prettify_caves_spike_tip_randomize
 		dec a
-		; ...
+		jp z, pcg_generate_room__prettify_caves_ceiling
 		dec a
-		jr z, pcg_generate_room__prettify_caves_platform_randomize
+		jp z, pcg_generate_room__prettify_caves_platform_randomize
 		jp pcg_generate_room__prettify_caves_rope
 pcg_generate_room__prettify_caves_loop_x_continue:
 		inc hl
@@ -550,3 +550,191 @@ pcg_generate_room__prettify_caves_loop_x_continue:
 	pop bc
 	djnz pcg_generate_room__prettify_caves_loop_y
 	ret
+
+pcg_generate_room__prettify_caves_floor:
+	PCG_PRETTIFY_RANDOM
+	and #07
+	cp 3
+	jp c, pcg_generate_room__prettify_caves_loop_x_continue
+	cp 6
+	ld (hl), 7*16 + 6
+	jr c, pcg_generate_room__prettify_caves_loop_x_continue
+	ld (hl), 7*16 + 7
+	jp pcg_generate_room__prettify_caves_loop_x_continue
+
+pcg_generate_room__prettify_caves_rubble_randomize:
+	PCG_PRETTIFY_RANDOM
+	and #03
+	jp z, pcg_generate_room__prettify_caves_loop_x_continue
+	add a, 10*16 + 0
+	ld (hl), a
+	jp pcg_generate_room__prettify_caves_loop_x_continue
+
+pcg_generate_room__prettify_caves_ladder:
+	push hl
+	push bc
+		ld bc, current_room__tile_map
+pcg_generate_room__prettify_caves_ladder_loop:
+		or a
+		sbc hl, de  ; go one row up
+		or a
+		sbc hl, bc  ; check if we are out of the map
+		jr c, pcg_generate_room__prettify_caves_ladder_done
+		add hl, bc
+		ld a, (hl)
+		or a
+		jr z, pcg_generate_room__prettify_caves_ladder_keep_going
+; 		cp 8*16 + 8  ; ladder top-right
+; 		jr z, pcg_generate_room__prettify_caves_ladder_done
+; 		cp 10*16 + 8  ; ladder top-left
+; 		jr z, pcg_generate_room__prettify_caves_ladder_done
+; 		cp 8*16 + 1  ; torch
+; 		jr z, pcg_generate_room__prettify_caves_ladder_keep_going
+; 		cp 8*16 + 2  ; background
+; 		jr z, pcg_generate_room__prettify_caves_ladder_keep_going
+; 		cp 9*16 + 5  ; background
+; 		jr z, pcg_generate_room__prettify_caves_ladder_keep_going
+; 		cp 10*16 + 0  ; background
+; 		jr z, pcg_generate_room__prettify_caves_ladder_keep_going
+; 		cp 10*16 + 6  ; background
+; 		jr z, pcg_generate_room__prettify_caves_ladder_keep_going
+; 		cp 11*16 + 12  ; background
+; 		jr z, pcg_generate_room__prettify_caves_ladder_keep_going
+; 		cp 12*16 + 0  ; background
+; 		jr z, pcg_generate_room__prettify_caves_ladder_keep_going
+; 		cp 12*16 + 8  ; background
+; 		jr z, pcg_generate_room__prettify_caves_ladder_keep_going
+; 		cp 15*16 + 5  ; background
+; 		jr z, pcg_generate_room__prettify_caves_ladder_keep_going
+; 		and #f0
+; 		cp #60  ; row 6 contains tiles only present on background tiles
+; 		jr nz, pcg_generate_room__prettify_caves_ladder_done
+		jr pcg_generate_room__prettify_caves_ladder_done
+pcg_generate_room__prettify_caves_ladder_keep_going:
+		ld (hl), 15*16 + 8  ; ladder-left
+		inc hl
+		ld (hl), 10*16 + 7  ; ladder-right
+		dec hl
+		jr pcg_generate_room__prettify_caves_ladder_loop
+pcg_generate_room__prettify_caves_ladder_done:
+	pop bc
+	pop hl
+	jp pcg_generate_room__prettify_caves_loop_x_continue
+
+pcg_generate_room__prettify_caves_face1:
+	push hl
+		inc hl
+		ld (hl), 12*16 + 1
+		inc hl
+		ld (hl), 12*16 + 2
+		add hl, de
+		ld (hl), 13*16 + 2
+		dec hl
+		ld (hl), 13*16 + 1
+		dec hl
+		ld (hl), 13*16 + 0
+		add hl, de
+		ld (hl), 14*16 + 0
+		inc hl
+		ld (hl), 14*16 + 1
+		inc hl
+		ld (hl), 14*16 + 2
+		add hl, de
+		ld (hl), 15*16 + 2
+		dec hl
+		ld (hl), 15*16 + 1
+		dec hl
+		ld (hl), 15*16 + 0
+	pop hl
+	jp pcg_generate_room__prettify_caves_loop_x_continue
+
+pcg_generate_room__prettify_caves_rope:
+	push hl
+	push bc
+		ld bc, current_room__tile_map
+pcg_generate_room__prettify_caves_rope_loop:
+		or a
+		sbc hl, de  ; go one row up
+; 		or a
+		sbc hl, bc  ; check if we are out of the map
+		jr c, pcg_generate_room__prettify_caves_rope_done
+		add hl, bc
+		ld a, (hl)
+		or a
+		jr nz, pcg_generate_room__prettify_caves_rope_done
+; 		cp 8*16 + 7  ; top rope piece
+; 		jr z, pcg_generate_room__prettify_caves_rope_done
+; 		cp 14*16 + 9  ; foliage
+; 		jr z, pcg_generate_room__prettify_caves_rope_done
+; 		cp 14*16 + 10  ; foliage
+; 		jr z, pcg_generate_room__prettify_caves_rope_done
+; 		cp 14*16 + 11  ; foliage
+; 		jr z, pcg_generate_room__prettify_caves_rope_done
+pcg_generate_room__prettify_caves_rope_keep_going:
+		PCG_PRETTIFY_RANDOM
+		and #03
+		jp nz, pcg_generate_room__prettify_caves_rope_keep_going2
+		ld (hl), 8*16 + 3  ; rope knot
+		jr pcg_generate_room__prettify_caves_rope_loop
+pcg_generate_room__prettify_caves_rope_keep_going2:
+		ld (hl), 8*16 + 6  ; rope
+		jr pcg_generate_room__prettify_caves_rope_loop
+pcg_generate_room__prettify_caves_rope_done:
+	pop bc
+	pop hl
+	jp pcg_generate_room__prettify_caves_loop_x_continue
+
+pcg_generate_room__prettify_caves_left_wall:
+	PCG_PRETTIFY_RANDOM
+	and #07
+	cp 3
+	jp c, pcg_generate_room__prettify_caves_loop_x_continue
+	cp 6
+	ld (hl), 7*16 + 10
+	jp c, pcg_generate_room__prettify_caves_loop_x_continue
+	ld (hl), 7*16 + 11
+	jp pcg_generate_room__prettify_caves_loop_x_continue
+
+pcg_generate_room__prettify_caves_right_wall:
+	PCG_PRETTIFY_RANDOM
+	and #07
+	cp 3
+	jp c, pcg_generate_room__prettify_caves_loop_x_continue
+	cp 6
+	ld (hl), 7*16 + 13
+	jp c, pcg_generate_room__prettify_caves_loop_x_continue
+	ld (hl), 7*16 + 14
+	jp pcg_generate_room__prettify_caves_loop_x_continue
+
+pcg_generate_room__prettify_caves_spike_tip_randomize:
+	PCG_PRETTIFY_RANDOM
+	and #01
+	jp z, pcg_generate_room__prettify_caves_spike_tip_randomize_continue
+	ld (hl), 8*16 + 13
+pcg_generate_room__prettify_caves_spike_tip_randomize_continue:
+	PCG_PRETTIFY_RANDOM
+	and #01
+	add a, 8*16 + 4
+	add hl, de
+	ld (hl), a
+	sbc hl, de
+	jp pcg_generate_room__prettify_caves_loop_x_continue
+
+pcg_generate_room__prettify_caves_ceiling:
+	PCG_PRETTIFY_RANDOM
+	and #07
+	cp 3
+	jp c, pcg_generate_room__prettify_caves_loop_x_continue
+	cp 6
+	ld (hl), 9*16 + 2
+	jp c, pcg_generate_room__prettify_caves_loop_x_continue
+	ld (hl), 9*16 + 3
+	jp pcg_generate_room__prettify_caves_loop_x_continue
+
+pcg_generate_room__prettify_caves_platform_randomize:
+	PCG_PRETTIFY_RANDOM
+	and #01
+	jp z, pcg_generate_room__prettify_caves_loop_x_continue
+	ld (hl), 8*16 + 9
+	jp pcg_generate_room__prettify_caves_loop_x_continue
+

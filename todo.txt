@@ -1,11 +1,8 @@
 to do:
 
 ***- caves biome:
-  ***- prettify caves in assembler:
-    OK - move floor/ceiling/left/right-wall to the end of the tileset
-    ***- update all chunks (done up to "room1100-1" backwards)
-    ***- pcg_generate_room__prettify_caves
   ***- are left/right "lava" tags working in assembler?
+  ***- BUG: why does carnivore plant not work on caves? (tongue leaves garbage)
   ***- implement lava: like water, but you get damaged periodically (do you move slower?)
   ***- ice cape effect for lava
   ***- confluence: make sure calendar room is still "pyramids" biome
