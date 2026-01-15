@@ -151,6 +151,7 @@ state_play:
 		; generate area:
 		ld hl, pcg_generate_area
 ; 		ld e, 0  ; area to generate
+; 		ld e, 1
 ; 		ld e, 1  ; area to generate <- first boss
 ; 		ld e, 2  ; area to generate <- second boss
 		ld e, 3  ; area to generate
@@ -161,6 +162,7 @@ state_play:
 
 		; generate room:
 ; 		ld e, START_ROOM_ID
+; 		ld e, 15
 ; 		ld e, 20  ; <- first boss
 ; 		ld e, 16  ; <- second boss
 		ld e, 0

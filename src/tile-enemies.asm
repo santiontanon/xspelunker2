@@ -1,7 +1,7 @@
 CARNIVORE_PLANT_MAX_TONGUE_LENGTH: equ 16
 CARNIVORE_PLANT_MAX_TONGUE_TIP_PTR: equ tile_enemy_work_memory + 1 + CARNIVORE_PLANT_MAX_TONGUE_LENGTH * 3
 ; workmemory usage:
-; - 1 byte for tongut length
+; - 1 byte for tongue length
 ; - each tongue segment has 3 bytes: background (to undraw), tile, direction of next
 ; - 2 bytes at the end for room tile ptr of the current tongue tip
 
@@ -88,7 +88,7 @@ update_tile_objects_enemy_carnivore_plant_switch_to_idle:
 	ld (tile_enemy_work_memory), a
 	jp update_tile_objects_loop_force_redraw_and_continue
 
-update_tile_objects_enemy_carnivore_plant_tongue
+update_tile_objects_enemy_carnivore_plant_tongue:
 	; elongate the tongue by one position:
 	ld hl, tile_enemy_work_memory
 	ld a, (hl)

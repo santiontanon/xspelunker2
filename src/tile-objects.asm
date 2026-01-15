@@ -2362,7 +2362,7 @@ ENDR
 	TILE_OBJECT_DATA 1, 4, 4, tile_object_4x4_object_gfx  ; TAG_TRIAL1_LOCK
 	TILE_OBJECT_DATA 1, 4, 4, tile_object_4x4_object_gfx  ; TAG_TRIAL2_LOCK
 	TILE_OBJECT_DATA 1, 4, 4, tile_object_4x4_object_gfx  ; TAG_TRIAL3_LOCK
-	TILE_OBJECT_DATA 1, 2, 2, tile_object_4x4_object_gfx  ; TAG_TRIAL4_LOCK
+	TILE_OBJECT_DATA 1, 4, 4, tile_object_4x4_object_gfx  ; TAG_TRIAL4_LOCK
 	TILE_OBJECT_DATA 1, 2, 2, tile_object_lever_up_object_gfx  ; TAG_COMBINATION1_LOCK
 	TILE_OBJECT_DATA 1, 2, 2, tile_object_lever_up_object_gfx  ; TAG_COMBINATION2_LOCK
 	TILE_OBJECT_DATA 1, 2, 2, tile_object_lever_up_object_gfx  ; TAG_COMBINATION3_LOCK

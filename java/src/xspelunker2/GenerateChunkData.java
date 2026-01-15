@@ -336,6 +336,7 @@ public class GenerateChunkData {
             if (c.tags.containsKey("left") && !c.tags.get("left").isEmpty()) {
                 if (c.tags.get("left").equals("hole")) edgeFlags |= 0x40;
                 if (c.tags.get("left").equals("water")) edgeFlags |= 0x80;
+                if (c.tags.get("left").equals("lava")) edgeFlags |= 0x80;
                 flagsString += "left: " + c.tags.get("left") + ", ";
             }
             if (c.tags.containsKey("up") && !c.tags.get("up").isEmpty()) {
@@ -346,6 +347,7 @@ public class GenerateChunkData {
             if (c.tags.containsKey("right") && !c.tags.get("right").isEmpty()) {
                 if (c.tags.get("right").equals("hole")) edgeFlags |= 0x04;
                 if (c.tags.get("right").equals("water")) edgeFlags |= 0x08;
+                if (c.tags.get("right").equals("lava")) edgeFlags |= 0x08;
                 flagsString += "right: " + c.tags.get("right") + ", ";
             }
             if (c.tags.containsKey("down") && !c.tags.get("down").isEmpty()) {

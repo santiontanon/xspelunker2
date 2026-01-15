@@ -15,7 +15,7 @@ tmp_pcg_area__next_area_object_ptr: equ tmp_pcg_area__chunk_candidates + 16
 tmp_pcg_area__next_area_object_id: equ tmp_pcg_area__next_area_object_ptr + 2
 tmp_pcg_area__tag_to_place: equ tmp_pcg_area__next_area_object_id + 1
 tmp_pcg_area__tag_extra: equ tmp_pcg_area__tag_to_place + 1  ; lock direction, chest content
-; tmp_pcg_area__calendar_room_offset: equ tmp_pcg_area__tag_extra + 1
+
 
 ;-----------------------------------------------
 ; Pseudocode for this method:
@@ -1846,7 +1846,50 @@ pcg_generate_area__choose_chunks_loop_x_next_set_previous_flags_continue:
 			ld (hl), a  ; store up
 			ld a, e
 			and #c0  ; keep the previous "right" in "left"
+			ld (tmp_pcg_area__left_tag), a			
+			ex de, hl  ; de = ptr to tmp_pcg_area__down_tags
+	 	pop hl  ; recover the ptr to 'tmp_pcg_area__piece_types'
+
+		; When connecting to a chunk in a special room (start/calendar/teleporter), connections
+		; are always "hole". Here:
+		; - hl: ptr to tmp_pcg_area__piece_types
+		; - de: ptr to tmp_pcg_area__down_tags
+		push hl
+		push bc
+			push de
+				ld c, (hl)  ; piece type
+				ld de, -tmp_pcg_area__piece_types
+				add hl, de
+				ld e, l  ; e = chunk offset
+				push bc
+					call covert_chunk_offset_to_room_offset
+				pop bc
+				ld d, 0
+				ld hl, current_area__room_ids
+				add hl, de
+				ld a, (hl)
+				cp #ff
+				jr z, pcg_generate_area__choose_chunks_loop_x_next_set_previous_flags_continue_no_special_room
+				cp CALENDAR_ROOM_ID  ; first special room
+				jr c, pcg_generate_area__choose_chunks_loop_x_next_set_previous_flags_continue_no_special_room
+pcg_generate_area__choose_chunks_loop_x_next_set_previous_flags_continue_special_room:
+				; we were coming from a special room, up/left tags should be "hole"
+				ld e, #40  ; left = hole
+				ld d, #10  ; up = hole
+			pop hl
+			bit PCG_DIRECTION_DOWN_BIT, c
+			jr z, pcg_generate_area__choose_chunks_loop_x_next_set_previous_flags_continue_special_room_no_down
+			ld (hl), d
+pcg_generate_area__choose_chunks_loop_x_next_set_previous_flags_continue_special_room_no_down:
+			bit PCG_DIRECTION_RIGHT_BIT, c
+			jr z, pcg_generate_area__choose_chunks_loop_x_next_set_previous_flags_continue_special_room_no_right
+			ld a, e
 			ld (tmp_pcg_area__left_tag), a
+pcg_generate_area__choose_chunks_loop_x_next_set_previous_flags_continue_special_room_no_right:
+			push hl
+pcg_generate_area__choose_chunks_loop_x_next_set_previous_flags_continue_no_special_room:
+			pop hl
+		pop bc
 		pop hl
 
 		; create objects:
@@ -1877,7 +1920,7 @@ pcg_generate_area__choose_chunks_loop_x_next_set_previous_flags_continue:
 		inc de
 		ld (tmp_pcg_area__next_area_object_ptr), de
 
-pcg_generate_area__no_objects
+pcg_generate_area__no_objects:
 
 pcg_generate_area__choose_chunks_loop_x_next:
 		inc hl

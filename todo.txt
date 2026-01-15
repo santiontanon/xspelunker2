@@ -1,8 +1,6 @@
 to do:
 
 ***- caves biome:
-  ***- left/right "lava" tags are not working in assembler: test with LXSPELUNKER2
-  ***- BUG: why does carnivore plant not work on caves? (tongue leaves garbage)
   ***- implement lava: like water, but you get damaged periodically (do you move slower?)
   ***- ice cape effect for lava
   ***- confluence: make sure calendar room is still "pyramids" biome

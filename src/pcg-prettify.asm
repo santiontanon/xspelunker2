@@ -24,6 +24,7 @@ pcg_generate_room__prettify:
 	jp z, pcg_generate_room__prettify_caves
 	; ...
 	jp pcg_generate_room__prettify_pyramid
+	ret
 
 
 ;-----------------------------------------------

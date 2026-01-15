@@ -1423,7 +1423,7 @@ pcg_generate_room_background:
 	jp z, pcg_generate_room_background_caves
 	cp 7
 	jp z, pcg_generate_room_background_caves
-	; jp pcg_generate_room_background_pyramid
+	jp pcg_generate_room_background_pyramid
 
 
 ;-----------------------------------------------
