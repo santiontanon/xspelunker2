@@ -31,6 +31,6 @@
   <object id="9" type="item" x="88" y="8" width="16" height="16"/>
   <object id="10" type="item" x="40" y="8" width="16" height="16"/>
   <object id="13" type="pushable-block" x="40" y="32" width="16" height="16"/>
-  <object id="14" type="pushable-block" x="0" y="72" width="16" height="16"/>
+  <object id="14" type="pushable-block" x="8" y="72" width="16" height="16"/>
  </objectgroup>
 </map>

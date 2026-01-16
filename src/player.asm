@@ -1400,12 +1400,20 @@ player_update_state_swimming_inertia_y_negative:
 player_update_state_swimming_inertia_y_done:
 
 	; check if we are exiting the water:
-	call player_in_water
-; 	call player_in_water_from_water  ; the difference from "player_in_water" is that
-									 ; this method considers that we are still in the water
-									 ; if we go through an "item"
+	call player_in_water  ; a = tile type
 	jp nz, player_update_switch_to_jumping_from_swimming
-
+	; are we in lava?
+	cp 10  ; a = tile type (so, we check if we are in lava)
+	jr nz, player_update_state_swimming_no_lava
+	ld a, (player_inventory_items + INVENTORY_ITEM_ICE_CAPE)
+	or a
+	jr nz, player_update_state_swimming_no_lava  ; ice cape protects from lava
+	; we are in lava, take damage periodically:
+	ld a, (interrupt_cycle)
+	and #0f
+	ld c, 1
+	call z, player_lose_health_non_reducible
+player_update_state_swimming_no_lava:
 	ld a, (interrupt_cycle)
 	rrca
 	rrca

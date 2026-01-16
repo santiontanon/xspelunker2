@@ -1,17 +1,12 @@
 to do:
 
-***- caves biome:
-  ***- implement lava: like water, but you get damaged periodically (do you move slower?)
-  ***- ice cape effect for lava
-  ***- confluence: make sure calendar room is still "pyramids" biome
-  ***- fix "Adding combination2-lock to start room!"
-  ***- enemies:
-    ***- Skeleton that spit fire (flamethrower through mouth)
-    ***- rockmen (that turn into an undestructible stone)
-    ***- caterpillars
-    ***- worms
-  ***- tile enemies:
-    ***- ant colonies (tile enemy that spawns ants). ants/fire ants: just move around not too fast and can climb walls up/down, or even hang from the ceiling
+***- caves enemies:
+  ***- Skeleton that spit fire (flamethrower through mouth)
+  ***- rockmen (that turn into an undestructible stone)
+  ***- caterpillars
+  ***- worms
+***- caves tile enemies:
+  ***- ant colonies (tile enemy that spawns ants). ants/fire ants: just move around not too fast and can climb walls up/down, or even hang from the ceiling
 
 - allow "continuing" if you die (respawn in the village), and mark it so that this is mentioned in the ending screen with the score.
 - music: intro, letters, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)

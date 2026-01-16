@@ -449,7 +449,7 @@ check_player_on_top_of_ladder_right:
 
 
 ;-----------------------------------------------
-; Check if tile type is 1/2/6/8 (if pixel coordinate is 0 only) (incrementing y by 1 pixel)
+; Check if tile type is 4 or 10 (water or lava).
 ; output:
 ; - z: in water
 ; - nz: not in water
@@ -461,7 +461,9 @@ player_in_water:
 	inc b
 	call get_room_tile_type_behind_item
 	cp 4  ; water
-	ret
+	ret z
+	cp 10  ; lava
+	ret 
 
 
 ;-----------------------------------------------

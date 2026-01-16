@@ -99,7 +99,7 @@ state_play:
 ; 		ld (player_inventory_items+29), a  ; chaac blessing
 ; 		ld (player_inventory_items+30), a  ; seashell
 ; 		ld (player_inventory_items+31), a  ; antigrav belt
-; 		ld (player_inventory_items+32), a
+; 		ld (player_inventory_items+32), a  ; ice cape
 ; 		ld (player_inventory_items+33), a  ; letter 1
 ; 		ld (player_inventory_items+34), a  ; letter 2
 		ld (player_inventory_items+35), a  ; map
