@@ -502,7 +502,7 @@ update_enemy_fireball_landed:
 	call update_enemy_hurt_player_bullet
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
-	or a
+	cp 160
 	jp z, update_enemy_delete  ; timeout
 	ld d, COLOR_RED
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 5) * 4 
@@ -1203,14 +1203,14 @@ update_enemy_skeleton_flame2:
 	ld iyh, 1  ; damage to deal
 	call update_enemy_hurt_player_2x2
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
-	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
-	and #01
-	call nz, update_enemy__patrol_left_right_platform
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
 	sub 2
 	jp z, update_enemy_skeleton_flame_spit_right
 	dec a
 	jp z, update_enemy_skeleton_flame_spit_left
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	and #01
+	call nz, update_enemy__patrol_left_right_platform
 
 update_enemy_skeleton_flame_walking:
 	call random_a
@@ -1248,7 +1248,6 @@ update_enemy_skeleton_flame_spit_right:
 	ld iyl, 1  ; x tile offset of bullet
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 1) * 4 
 update_enemy_skeleton_flame_spit_right_continue:
-	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	cp 24
 	jr z, update_enemy_skeleton_flame_spit_right_spit
@@ -1318,24 +1317,20 @@ update_enemy_rockman2:
 	ld iyh, 2  ; damage to deal
 	call update_enemy_hurt_player_2x2
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	cp 2
+	jp z, update_enemy_rockman_stone
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	and #03
 	call z, update_enemy__patrol_left_right_platform
-; 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
-; 	sub 2
-; 	jp z, update_enemy_skeleton_flame_spit_right
-; 	dec a
-; 	jp z, update_enemy_skeleton_flame_spit_left
 
 update_enemy_rockman_walking:
 	call random_a
-	and #7f
 	jr nz, update_enemy_rockman_walking_continue
 	; turn to stone:
-; 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
-; 	add a, 2
-; 	ld (ix + ROOM_OBJECT_STRUCT_STATE), a
-; 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 1
+	jr update_enemy_rockman_stone
 update_enemy_rockman_walking_continue:
  	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
  	and #01
@@ -1347,9 +1342,34 @@ update_enemy_rockman_walking_continue:
 	ld d, COLOR_GREY
 	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
 	cp ENEMY_ROCKMAN
-	jp z, enemy_sprite_and_continue_animated_slow
+	jp z, enemy_sprite_and_continue_animated
 	ld d, COLOR_LIGHT_BLUE
-	jp enemy_sprite_and_continue_animated_slow
+	jp enemy_sprite_and_continue_animated
+
+update_enemy_rockman_stone:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+ 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 35) * 4
+	or a
+	jr z, update_enemy_rockman_walk_again
+	cp 32
+	jr c, update_enemy_rockman_stone_continue
+	cp 224
+	jr nc, update_enemy_rockman_stone_continue
+ 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 7) * 4
+ update_enemy_rockman_stone_continue:
+	ld d, COLOR_GREY
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	cp ENEMY_ROCKMAN
+	jp z, enemy_sprite_and_continue
+	ld d, COLOR_LIGHT_BLUE
+	jp enemy_sprite_and_continue
+
+update_enemy_rockman_walk_again:
+	call random_a
+	and #01
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), a
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+	jr update_enemy_rockman_walking_continue
 
 
 ;-----------------------------------------------

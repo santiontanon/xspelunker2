@@ -1,10 +1,6 @@
 to do:
 
-***- caves enemies:
-  ***- rockmen (third flame sprite is not needed, reuse it) that turn into an undestructible stone
-    ***- chance to turn to stone (they are invincible when they are stone)
-  ***- add rockmen to pcg-enemy tables of all difficulties
-  ***- ant colonies (tile enemy that spawns ants). ants/fire ants: just move around not too fast and can climb walls up/down, or even hang from the ceiling
+***- ant colonies in caves (tile enemy that spawns ants). ants/fire ants: just move around not too fast and can climb walls up/down, or even hang from the ceiling
 
 - allow "continuing" if you die (respawn in the village), and mark it so that this is mentioned in the ending screen with the score.
 - music: intro, letters, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)

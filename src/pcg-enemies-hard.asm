@@ -60,12 +60,14 @@ pcg_enemy_generation_table_caves_east_hard:
 	db 2  ; 2 enemies per "screen" area
 	db 0
 ; 	db TAG_ENEMY_CARNIVORE_PLANT, 48  ; tile-based enemy type and chance (out of 256)
-	db 6  ; possible sprite enemy types to be spawned (weights below should add up to 32)
-	db ENEMY_FISH, 4
+	db 10  ; possible sprite enemy types to be spawned (weights below should add up to 32)
+	db ENEMY_FISH, 3
 	db ENEMY_FISH_JUMPER, 4
-	db ENEMY_BAT, 4
+	db ENEMY_BAT, 3
 	db ENEMY_BAT_AGGRESSIVE, 4
-	db ENEMY_SKELETON_THROWER1, 4
-	db ENEMY_SKELETON_THROWER2, 4
-	db ENEMY_SKELETON_FLAME1, 4
+	db ENEMY_SKELETON_THROWER1, 2
+	db ENEMY_SKELETON_THROWER2, 2
+	db ENEMY_SKELETON_FLAME1, 3
 	db ENEMY_SKELETON_FLAME2, 4
+	db ENEMY_ROCKMAN, 3
+	db ENEMY_ROCKMAN2, 4

@@ -799,11 +799,11 @@ pcg_generate_room__spawn_skeleton_flame2:
 pcg_generate_room__spawn_rockman:
 	ld ixl, ENEMY_ROCKMAN
 	ld ixh, 8  ; hitpoints
-	jr pcg_generate_room__spawn_skeleton_continue
+	jr pcg_generate_room__spawn_rockman_continue
 pcg_generate_room__spawn_rockman2:
 	ld ixl, ENEMY_ROCKMAN2
 	ld ixh, 16  ; hitpoints
-	jr pcg_generate_room__spawn_skeleton_continue
+	jr pcg_generate_room__spawn_rockman_continue
 pcg_generate_room__spawn_skeleton:
 	ld ixl, ENEMY_SKELETON
 	ld ixh, 2  ; hitpoints
@@ -826,6 +826,33 @@ pcg_generate_room__spawn_skeleton_continue:
 	ld (hl), a  ; state
 	inc hl
 	ld (hl), 0  ; state timer
+	inc hl
+	ld (hl), #ff  ; hit ID
+	inc hl
+	ld a, ixh
+	ld (hl), a  ; health
+	ret
+
+pcg_generate_room__spawn_rockman_continue:
+	call pcg_generate_room__spawn_enemy_get_new_ptr
+	ret nz
+	ld a, ixl
+	ld (hl), a
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), e  ; tile x
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), d  ; tile y
+	inc hl
+	ld (hl), 2  ; state (rock)
+	inc hl
+	call random_a
+	and #7f
+	add a, 32
+	ld (hl), a  ; state timer
 	inc hl
 	ld (hl), #ff  ; hit ID
 	inc hl
