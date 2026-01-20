@@ -2,7 +2,6 @@ to do:
 
 ***- caves enemies:
   ***- Skeleton that spit fire (flamethrower through mouth):
-  ***- make the fireball stop when landing on a platform/wall
     ***- make the flame stay in the floor like napalm for a while
     ***- skeleton-flame2: spit two flames at different angles each time
   ***- rockmen (that turn into an undestructible stone)

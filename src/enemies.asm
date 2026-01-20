@@ -482,7 +482,8 @@ update_enemy_fireball_continue2:
 	ld b, (hl)
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	ld c, (ix + ROOM_OBJECT_STRUCT_STATE)
-	call update_enemy_move_cb
+	call update_enemy_move_cb_colliding_down
+	jp z, update_enemy_delete  ; collision down
 	ld d, COLOR_RED
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 3) * 4 
 	jp enemy_sprite_and_continue_animated
@@ -2116,6 +2117,7 @@ update_enemy_move_cb_positive_x:
 update_enemy_move_cb_carry_x:
 	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_X), a
 
+update_enemy_move_cb_y:
 	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
 	add a, b
 	jp p, update_enemy_move_cb_positive_y
@@ -2128,6 +2130,45 @@ update_enemy_move_cb_positive_y:
 	add a, -8
 update_enemy_move_cb_carry_y:
 	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_Y), a
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - c, b: amount to move in x, y
+; output:
+; - z: collision
+; - nz: no collision
+update_enemy_move_cb_colliding_down:
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	add a, c
+	jp p, update_enemy_move_cb_colliding_down_positive_x
+	dec (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	add a, 8
+update_enemy_move_cb_colliding_down_positive_x:
+	cp 8
+	jr c, update_enemy_move_cb_colliding_down_carry_x
+	inc (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	add a, -8
+update_enemy_move_cb_colliding_down_carry_x:
+	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_X), a
+
+	ld a, b
+	or a
+	jr z, update_enemy_move_cb_colliding_down_no_vertical_move
+	jp p, update_enemy_move_cb_colliding_down_moving_down  ; moving down
+	call update_enemy_move_cb_y
+update_enemy_move_cb_colliding_down_no_vertical_move:
+	or 1  ; no collision
+	ret
+update_enemy_move_cb_colliding_down_moving_down:
+	; moving down:
+	push bc
+		call update_enemy_move_down_if_possible
+	pop bc
+	ret z
+	djnz update_enemy_move_cb_colliding_down_moving_down
+	or 1  ; no collision
 	ret
 
 
