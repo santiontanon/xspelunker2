@@ -451,6 +451,9 @@ update_enemy_parabola_bullet_continue2:
 
 ;-----------------------------------------------
 update_enemy_fireball:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)  ; if it's 0, flame has landed
+	or a
+	jr z, update_enemy_fireball_landed
 	ld iyh, 1  ; damage to deal
 	call update_enemy_hurt_player_shieldable_bullet
 	jp z, update_enemy_delete
@@ -483,9 +486,24 @@ update_enemy_fireball_continue2:
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	ld c, (ix + ROOM_OBJECT_STRUCT_STATE)
 	call update_enemy_move_cb_colliding_down
-	jp z, update_enemy_delete  ; collision down
+	jp z, update_enemy_fireball_land  ; collision down
 	ld d, COLOR_RED
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 3) * 4 
+	jp enemy_sprite_and_continue_animated
+
+update_enemy_fireball_land:
+	inc (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+update_enemy_fireball_landed:
+	ld iyh, 1  ; damage to deal
+	call update_enemy_hurt_player_bullet
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	or a
+	jp z, update_enemy_delete  ; timeout
+	ld d, COLOR_RED
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 5) * 4 
 	jp enemy_sprite_and_continue_animated
 
 

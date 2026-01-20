@@ -1,9 +1,7 @@
 to do:
 
 ***- caves enemies:
-  ***- Skeleton that spit fire (flamethrower through mouth):
-    ***- make the flame stay in the floor like napalm for a while
-    ***- skeleton-flame2: spit two flames at different angles each time
+  ***- skeleton-flame2: spit two flames at different angles each time
   ***- rockmen (that turn into an undestructible stone)
   ***- caterpillars / worms (make sure to leave enough sprites for the ants, do I need piranhas?)
 ***- caves tile enemies:
