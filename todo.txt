@@ -1,9 +1,8 @@
 to do:
 
 ***- caves enemies:
-  ***- skeleton-flame2: spit two flames at different angles each time
   ***- rockmen (that turn into an undestructible stone)
-  ***- caterpillars / worms (make sure to leave enough sprites for the ants, do I need piranhas?)
+  ***- caterpillars / worms (third flame sprite is not needed and make sure to leave enough sprites for the ants, do I need piranhas?)
 ***- caves tile enemies:
   ***- ant colonies (tile enemy that spawns ants). ants/fire ants: just move around not too fast and can climb walls up/down, or even hang from the ceiling
 

@@ -1290,10 +1290,24 @@ update_enemy_skeleton_flame_spit_right_spit:
 	inc hl
 	ld (hl), 0  ; state timer
 
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	cp ENEMY_SKELETON_FLAME1
+	jr z, update_enemy_skeleton_flame_spit_right_spit_continue
+	ld a, d
+	cp 2
+	jr z, update_enemy_skeleton_flame_spit_right_spit_second_right
+	cp -2
+	jr z, update_enemy_skeleton_flame_spit_right_spit_second_left
+update_enemy_skeleton_flame_spit_right_spit_continue:
 	ld hl, SFX_enemy_bullet
-	call play_SFX_with_high_priority	
+	call play_SFX_with_high_priority
 	jr update_enemy_skeleton_flame_walking_continue2
-
+update_enemy_skeleton_flame_spit_right_spit_second_right:
+	inc d
+	jr update_enemy_skeleton_flame_spit_right_spit
+update_enemy_skeleton_flame_spit_right_spit_second_left:
+	inc d
+	jr update_enemy_skeleton_flame_spit_right_spit
 
 
 ;-----------------------------------------------
