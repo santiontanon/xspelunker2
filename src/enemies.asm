@@ -8,6 +8,7 @@ enemy_update_fn_table:
 	dw update_enemy_sonic_boom  ; boss 2 attack
 	dw update_enemy_boss2_spikes ; boss 2 attack
 	dw update_enemy_boss3_debris ; boss 3 attack
+	dw update_enemy_fireball
 	; enemies you can hit:
 	dw update_enemy_snake  ; left-to-right
 	dw update_enemy_snake_dasher  ; left-to-right + dash
@@ -27,6 +28,8 @@ enemy_update_fn_table:
 	dw update_enemy_bee
 	dw update_enemy_monkey
 	dw update_enemy_monkey_thrower
+	dw update_enemy_skeleton_flame1
+	dw update_enemy_skeleton_flame2
 
 
 ;-----------------------------------------------
@@ -444,6 +447,45 @@ update_enemy_parabola_bullet_continue2:
 	ld d, COLOR_DARK_YELLOW
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 0) * 4 
 	jp enemy_sprite_and_continue
+
+
+;-----------------------------------------------
+update_enemy_fireball:
+	ld iyh, 1  ; damage to deal
+	call update_enemy_hurt_player_shieldable_bullet
+	jp z, update_enemy_delete
+	; out of bounds?
+	ld a, (current_room__width)
+	ld c, a
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	cp c
+	jp nc, update_enemy_delete
+	ld a, (current_room__height)
+	ld c, a
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	cp c
+	jp nc, update_enemy_delete
+	; parabola:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 128
+	jr nz, update_enemy_fireball_continue
+	jp update_enemy_delete
+	ld a, 64
+update_enemy_fireball_continue:
+	srl a
+	cp 14
+	jr c, update_enemy_fireball_continue2
+	ld a, 13
+update_enemy_fireball_continue2:
+	ld hl, update_enemy_bone_parabola_bullet_table + 2  ; "+2 to have less initial y speed"
+	ADD_HL_A
+	ld b, (hl)
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld c, (ix + ROOM_OBJECT_STRUCT_STATE)
+	call update_enemy_move_cb
+	ld d, COLOR_RED
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 3) * 4 
+	jp enemy_sprite_and_continue_animated
 
 
 ;-----------------------------------------------
@@ -1132,6 +1174,107 @@ update_enemy_skeleton_thrower_throw_left_continue3:
 	jp c, enemy_sprite_and_continue
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 28) * 4
 	jp enemy_sprite_and_continue
+
+
+;-----------------------------------------------
+update_enemy_skeleton_flame1:
+update_enemy_skeleton_flame2:
+	ld iyh, 1  ; damage to deal
+	call update_enemy_hurt_player_2x2
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	and #01
+	call nz, update_enemy__patrol_left_right_platform
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	sub 2
+	jp z, update_enemy_skeleton_flame_spit_right
+	dec a
+	jp z, update_enemy_skeleton_flame_spit_left
+
+update_enemy_skeleton_flame_walking:
+	call random_a
+	and #7f
+	jr nz, update_enemy_skeleton_flame_walking_continue
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	add a, 2
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), a
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+update_enemy_skeleton_flame_walking_continue:
+ 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+ 	and #01
+ 	add a, a
+ 	add a, a
+ 	add a, FIRST_ENEMY_SPRITE_PATTERN + 21
+ 	add a, a
+ 	add a, a
+ 	ld e, a
+	ld d, COLOR_LIGHT_RED
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	cp ENEMY_SKELETON_FLAME1
+	jp z, enemy_sprite_and_continue_animated
+	ld d, COLOR_RED
+	jp enemy_sprite_and_continue_animated
+ update_enemy_skeleton_flame_walking_continue2:
+	ld d, COLOR_LIGHT_RED
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	cp ENEMY_SKELETON_FLAME1
+	jp z, enemy_sprite_and_continue
+	ld d, COLOR_RED
+	jp enemy_sprite_and_continue
+
+update_enemy_skeleton_flame_spit_right:
+	ld d, 2  ; speed of the bullet
+	ld iyl, 1  ; x tile offset of bullet
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 1) * 4 
+update_enemy_skeleton_flame_spit_right_continue:
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 24
+	jr z, update_enemy_skeleton_flame_spit_right_spit
+	cp 48
+	jr nz, update_enemy_skeleton_flame_walking_continue2
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	add a, -2
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), a
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0	
+	jr update_enemy_skeleton_flame_walking_continue2
+
+update_enemy_skeleton_flame_spit_left:
+	ld d, -2  ; speed of the bullet
+	ld iyl, 0  ; x tile offset of bullet
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 2) * 4
+	jr update_enemy_skeleton_flame_spit_right_continue
+
+update_enemy_skeleton_flame_spit_right_spit:
+	; spit fire:
+	push de
+		call ptr_to_new_sprite_enemy
+	pop de
+	jr nz, update_enemy_skeleton_flame_walking_continue2
+	ld (hl), 0
+	inc hl
+	ld (hl), ENEMY_BULLET_FIREBALL
+	inc hl
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	ld (hl), a  ; pixel x
+	inc hl
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	add a, iyl
+	ld (hl), a
+	inc hl
+	ld (hl), 4  ; pixel y
+	inc hl
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	ld (hl), a
+	inc hl
+	ld (hl), d  ; x speed
+	inc hl
+	ld (hl), 0  ; state timer
+
+	ld hl, SFX_enemy_bullet
+	call play_SFX_with_high_priority	
+	jr update_enemy_skeleton_flame_walking_continue2
+
 
 
 ;-----------------------------------------------

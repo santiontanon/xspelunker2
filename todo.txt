@@ -1,10 +1,12 @@
 to do:
 
 ***- caves enemies:
-  ***- Skeleton that spit fire (flamethrower through mouth)
+  ***- Skeleton that spit fire (flamethrower through mouth):
+  ***- make the fireball stop when landing on a platform/wall
+    ***- make the flame stay in the floor like napalm for a while
+    ***- skeleton-flame2: spit two flames at different angles each time
   ***- rockmen (that turn into an undestructible stone)
-  ***- caterpillars
-  ***- worms
+  ***- caterpillars / worms (make sure to leave enough sprites for the ants, do I need piranhas?)
 ***- caves tile enemies:
   ***- ant colonies (tile enemy that spawns ants). ants/fire ants: just move around not too fast and can climb walls up/down, or even hang from the ceiling
 
