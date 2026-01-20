@@ -403,6 +403,10 @@ pcg_generate_room__spawn_one_enemy_chosen:
 	jp z, pcg_generate_room__spawn_monkey
 	cp ENEMY_MONKEY_THROWER
 	jp z, pcg_generate_room__spawn_monkey_thrower
+	cp ENEMY_ROCKMAN
+	jp z, pcg_generate_room__spawn_rockman
+	cp ENEMY_ROCKMAN2
+	jp z, pcg_generate_room__spawn_rockman2
 	ret
 
 
@@ -791,6 +795,14 @@ pcg_generate_room__spawn_skeleton_flame1:
 pcg_generate_room__spawn_skeleton_flame2:
 	ld ixl, ENEMY_SKELETON_FLAME2
 	ld ixh, 4  ; hitpoints
+	jr pcg_generate_room__spawn_skeleton_continue
+pcg_generate_room__spawn_rockman:
+	ld ixl, ENEMY_ROCKMAN
+	ld ixh, 8  ; hitpoints
+	jr pcg_generate_room__spawn_skeleton_continue
+pcg_generate_room__spawn_rockman2:
+	ld ixl, ENEMY_ROCKMAN2
+	ld ixh, 16  ; hitpoints
 	jr pcg_generate_room__spawn_skeleton_continue
 pcg_generate_room__spawn_skeleton:
 	ld ixl, ENEMY_SKELETON

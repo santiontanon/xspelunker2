@@ -75,5 +75,5 @@ pcg_enemy_generation_table_caves_east_normal:
 ; 	db ENEMY_SKELETON_FLAME1, 6
 ; 	db ENEMY_SKELETON_FLAME2, 2
 	db 2  ; possible sprite enemy types to be spawned (weights below should add up to 32)
-	db ENEMY_SKELETON_FLAME1, 16
-	db ENEMY_SKELETON_FLAME2, 16
+	db ENEMY_ROCKMAN, 16
+	db ENEMY_ROCKMAN2, 16

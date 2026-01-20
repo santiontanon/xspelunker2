@@ -341,7 +341,8 @@ public class GenerateSprites {
         data.addAll(extractSprite(sourceImage, 64, 112, 15));
         data.addAll(extractSprite(sourceImage, 80, 112, 15));  // fire in floor
         data.addAll(extractSprite(sourceImage, 96, 112, 15));
-        data.addAll(extractSprite(sourceImage, 112, 112, 15));
+        // rock men stone (7)
+        data.addAll(extractSprite(sourceImage, 64, 128, 15));  // stone
         // piranha (8):
         data.addAll(extractSprite(sourceImage, 0, 16, 15));  // fish right
         data.addAll(extractSprite(sourceImage, 16, 16, 15));
@@ -373,11 +374,12 @@ public class GenerateSprites {
         data.addAll(extractSprite(sourceImage, 80, 16, 15));
         data.addAll(extractSprite(sourceImage, 80, 32, 15));
         data.addAll(extractSprite(sourceImage, 80, 48, 15));
-        // lost vendor (35)
-//        data.addAll(extractSprite(sourceImage2, 144, 96, 10));  // dark yellow
-//        data.addAll(extractSprite(sourceImage2, 144, 96, 6));  // dark red
-//        data.addAll(extractSprite(sourceImage2, 160, 96, 10));  // dark yellow
-//        data.addAll(extractSprite(sourceImage2, 160, 96, 6));  // dark red
+        // rock men (35)
+        data.addAll(extractSprite(sourceImage, 80, 128, 15));  // stone opening
+        data.addAll(extractSprite(sourceImage, 96, 128, 15));  // walk right
+        data.addAll(extractSprite(sourceImage, 112, 128, 15));
+        data.addAll(extractSpriteFlipped(sourceImage, 96, 128, 15));  // walk left
+        data.addAll(extractSpriteFlipped(sourceImage, 112, 128, 15));
         
         if (data.size() > 40 * 32) {
             throw new Exception("More enemy sprites than the engine can handle!");

@@ -30,6 +30,8 @@ enemy_update_fn_table:
 	dw update_enemy_monkey_thrower
 	dw update_enemy_skeleton_flame1
 	dw update_enemy_skeleton_flame2
+	dw update_enemy_rockman
+	dw update_enemy_rockman2
 
 
 ;-----------------------------------------------
@@ -1308,6 +1310,46 @@ update_enemy_skeleton_flame_spit_right_spit_second_right:
 update_enemy_skeleton_flame_spit_right_spit_second_left:
 	inc d
 	jr update_enemy_skeleton_flame_spit_right_spit
+
+
+;-----------------------------------------------
+update_enemy_rockman:
+update_enemy_rockman2:
+	ld iyh, 2  ; damage to deal
+	call update_enemy_hurt_player_2x2
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	and #03
+	call z, update_enemy__patrol_left_right_platform
+; 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+; 	sub 2
+; 	jp z, update_enemy_skeleton_flame_spit_right
+; 	dec a
+; 	jp z, update_enemy_skeleton_flame_spit_left
+
+update_enemy_rockman_walking:
+	call random_a
+	and #7f
+	jr nz, update_enemy_rockman_walking_continue
+	; turn to stone:
+; 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+; 	add a, 2
+; 	ld (ix + ROOM_OBJECT_STRUCT_STATE), a
+; 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+update_enemy_rockman_walking_continue:
+ 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+ 	and #01
+ 	add a, a
+ 	add a, FIRST_ENEMY_SPRITE_PATTERN + 36
+ 	add a, a
+ 	add a, a
+ 	ld e, a
+	ld d, COLOR_GREY
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	cp ENEMY_ROCKMAN
+	jp z, enemy_sprite_and_continue_animated_slow
+	ld d, COLOR_LIGHT_BLUE
+	jp enemy_sprite_and_continue_animated_slow
 
 
 ;-----------------------------------------------
