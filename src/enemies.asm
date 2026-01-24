@@ -1886,23 +1886,19 @@ update_enemy_ant:
 	dec a
 	jr z, update_enemy_ant_left
 	dec a
-	jr z, update_enemy_ant_fall_right
+	jp z, update_enemy_ant_fall_right
 	dec a
-	jr z, update_enemy_ant_fall_left
+	jp z, update_enemy_ant_fall_left
 	dec a
-	jr z, update_enemy_ant_climb_right
+	jp z, update_enemy_ant_climb_right
 	dec a
-	jr z, update_enemy_ant_climb_left
+	jp z, update_enemy_ant_climb_left
 	; we can mever reach here
 
 update_enemy_ant_right:
  	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
  	and #03	
- 	jr nz, update_enemy_ant_right_continue
-	call update_enemy_move_right_if_possible_platform
-	jr nz, update_enemy_ant_right_continue
-	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1  ; switch to left
-update_enemy_ant_right_continue:
+	call z, update_enemy_ant_move_right
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 1) * 4
 	ld d, COLOR_PURPLE
 	jp enemy_sprite_and_continue_animated
@@ -1910,22 +1906,105 @@ update_enemy_ant_right_continue:
 update_enemy_ant_left:
  	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
  	and #03	
- 	jr nz, update_enemy_ant_left_continue
-	call update_enemy_move_left_if_possible_platform
-	jr nz, update_enemy_ant_left_continue
-	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0  ; switch to right
-update_enemy_ant_left_continue:
+ 	call z, update_enemy_ant_move_left
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 29) * 4
 	ld d, COLOR_PURPLE
 	jp enemy_sprite_and_continue_animated
 
+update_enemy_ant_move_right:
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	cp 4
+	jp nz, update_enemy_move_right
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc c
+	inc b
+	inc b
+	push bc
+		call get_room_tile_type
+	pop bc
+	cp 1  ; platform
+	jr nz, update_enemy_ant_move_right_no_fall
+	cp 2  ; wall
+	jr nz, update_enemy_ant_move_right_no_fall
+	; fall:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2  ; switch to fall
+	ret
+update_enemy_ant_move_right_no_fall:
+	dec b
+	inc c
+	call general_check_collision_with_wall
+	jr z, update_enemy_ant_move_right_collision
+	jp update_enemy_move_right
+update_enemy_ant_move_right_collision:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1  ; switch to left
+	ret
+
+update_enemy_ant_move_left:
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	cp 4
+	jp nz, update_enemy_move_left
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc c
+	inc b
+	inc b
+	push bc
+		call get_room_tile_type
+	pop bc
+	cp 1  ; platform
+	jr nz, update_enemy_ant_move_left_no_fall
+	cp 2  ; wall
+	jr nz, update_enemy_ant_move_left_no_fall
+	; fall:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 3  ; switch to fall
+	ret
+update_enemy_ant_move_left_no_fall:
+	dec b
+	dec c
+	call general_check_collision_with_wall
+	jr z, update_enemy_ant_move_left_collision
+	jp update_enemy_move_left
+update_enemy_ant_move_left_collision:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0  ; switch to right
+	ret
+
 update_enemy_ant_fall_right:
-update_enemy_ant_fall_left:
-update_enemy_ant_climb_right:
-update_enemy_ant_climb_left:
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 1) * 4
 	ld d, COLOR_PURPLE
 	jp enemy_sprite_and_continue
+
+update_enemy_ant_fall_left:
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 29) * 4
+	ld d, COLOR_PURPLE
+	jp enemy_sprite_and_continue
+
+update_enemy_ant_climb_right:
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 31) * 4
+	ld d, COLOR_PURPLE
+	jp enemy_sprite_and_continue
+
+update_enemy_ant_climb_left:
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 33) * 4
+	ld d, COLOR_PURPLE
+	jp enemy_sprite_and_continue
+
+
+;-----------------------------------------------
+; input:
+; - ix: enemy ptr
+; output:
+; - z: cannot
+; - nz: can
+update_enemy_ant_can_move_left:
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	cp 4
+	ret nz
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc b
+	jp general_check_collision_with_wall
+
 
 
 ;-----------------------------------------------
