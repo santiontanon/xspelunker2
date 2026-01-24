@@ -1964,9 +1964,9 @@ update_enemy_ant_move_right:
 		call get_room_tile_type
 	pop bc
 	cp 1  ; platform
-	jr nz, update_enemy_ant_move_right_no_fall
+	jr z, update_enemy_ant_move_right_no_fall
 	cp 2  ; wall
-	jr nz, update_enemy_ant_move_right_no_fall
+	jr z, update_enemy_ant_move_right_no_fall
 	; fall:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2  ; switch to fall
 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
@@ -2004,9 +2004,9 @@ update_enemy_ant_move_left:
 		call get_room_tile_type
 	pop bc
 	cp 1  ; platform
-	jr nz, update_enemy_ant_move_left_no_fall
+	jr z, update_enemy_ant_move_left_no_fall
 	cp 2  ; wall
-	jr nz, update_enemy_ant_move_left_no_fall
+	jr z, update_enemy_ant_move_left_no_fall
 	; fall:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 3  ; switch to fall
 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
@@ -2042,8 +2042,16 @@ update_enemy_ant_climb_right_move_up
 	push bc
 		call general_check_collision_with_wall
 	pop bc
-	jp nz, update_enemy_move_up
-	; fall:
+	jp z, update_enemy_ant_climb_right_move_up_fall
+	inc b
+	inc c
+	call general_check_collision_with_wall
+	jp z, update_enemy_move_up
+	; reached a ledge, go back to walking:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0  ; switch to walk right
+	ld bc, #fc01  ; 1, -4
+	jp update_enemy_move_cb
+update_enemy_ant_climb_right_move_up_fall:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 3  ; switch to fall left
 	ret
 
@@ -2058,8 +2066,16 @@ update_enemy_ant_climb_left_move_up:
 	push bc
 		call general_check_collision_with_wall
 	pop bc
-	jp nz, update_enemy_move_up
-	; fall:
+	jp z, update_enemy_ant_climb_left_move_up_fall
+	inc b
+	dec c
+	call general_check_collision_with_wall
+	jp z, update_enemy_move_up
+	; reached a ledge, go back to walking:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1  ; switch to walk left
+	ld bc, #fcff  ; -1, -4
+	jp update_enemy_move_cb
+update_enemy_ant_climb_left_move_up_fall:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2  ; switch to fall right
 	ret
 

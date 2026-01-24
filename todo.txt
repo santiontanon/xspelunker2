@@ -1,7 +1,6 @@
 to do:
 
 ***- ant colonies:
-  ***- when climbing, if reaching the corner when they can walk normally again, switch to walk 
   ***- disappear if they leave the room (left/right/up/down)
   ***- die if they fall in water/lava (same for jumping monkeys/frogs)
   ***- limit to 2 ants on the room, and spawn them alternating left/right initial direction
