@@ -1491,6 +1491,15 @@ update_enemy_frog_jumping_jump_right:
 	call update_enemy_frog_jumping_jump
 	jr z, update_enemy_frog_jumping_switch_to_state_right_reset_time
 	call update_enemy_move_right_if_possible
+	; water/lava?
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc c
+	call get_room_tile_type
+	cp 4
+	jp z, update_enemy_fall_to_water
+	cp 10
+	jp z, update_enemy_fall_to_lava	
 	ld d, iyl
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 17) * 4 
 	jp enemy_sprite_and_continue
@@ -1499,6 +1508,15 @@ update_enemy_frog_jumping_jump_left:
 	call update_enemy_frog_jumping_jump
 	jr z, update_enemy_frog_jumping_switch_to_state_left_reset_time
 	call update_enemy_move_left_if_possible
+	; water/lava?
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc c
+	call get_room_tile_type
+	cp 4
+	jp z, update_enemy_fall_to_water
+	cp 10
+	jp z, update_enemy_fall_to_lava	
 	ld d, iyl
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 20) * 4 
 	jp enemy_sprite_and_continue
@@ -1506,7 +1524,7 @@ update_enemy_frog_jumping_jump_left:
 update_enemy_frog_jumping_tongue_right:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	cp 32
-	jr z, update_enemy_frog_jumping_switch_to_state_right_reset_time
+	jp z, update_enemy_frog_jumping_switch_to_state_right_reset_time
 	cp 16
 	jp c, update_enemy_frog_jumping_tongue_right_done
 	cp 18
@@ -1828,6 +1846,15 @@ update_enemy_monkey_jump:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), a
 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
 update_enemy_monkey_jump_continue:
+	; water/lava?
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc c
+	call get_room_tile_type
+	cp 4
+	jp z, update_enemy_fall_to_water
+	cp 10
+	jp z, update_enemy_fall_to_lava
 	ld d, iyl
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
 	and #01

@@ -1,10 +1,8 @@
 to do:
 
-***- monkeys/frogs die if they fall in water/lava for jumping 
+***- game over screen shows play through stats: ending reached (or failed), continue or not, time taken, seed, difficulty level, number of weapons/items/maps found, bosses killed (and variant), secrets found, special achievements (no miss, + any others in the future, e.g. finding any special treasure)
+***- allow "continuing" if you die (respawn in the village), and mark it so that this is mentioned in the ending screen with the score.
 
-- add some "cheat codes" (special world names) where you start with all weapons, or with initial gold, or even with all non-key items (make sure items are registered as picked)
-- allow "continuing" if you die (respawn in the village), and mark it so that this is mentioned in the ending screen with the score.
-  - game over screen shows play through stats: ending reached (or failed), continue or not, time taken, seed, difficulty level, number of weapons/items/maps found, bosses killed (and variant), secrets found, special achievements (no miss, + any others in the future, e.g. finding any special treasure)
 - music: intro, letters, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)
   - boss music acts as a health bar (increases in speed as health goes down: 50%, 25%)
 - xibalba biome (remember to keep ladder tiles in place for down-door opening code). tile enemies: volcano that spits lava, lava waterfalls (lava falls intermitently, blocking the path part of the time)

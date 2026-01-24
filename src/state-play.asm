@@ -135,6 +135,17 @@ state_play:
 ; 		ld (global_state__objects + TAG_TELEPORTER4), a
 ; 		ld (global_state__objects + TAG_TELEPORTER5), a
 
+		ld a, PLAYER_INITIAL_MAX_HEALTH
+		ld hl, player_health
+		ld (hl), a
+; 		ld (hl), 6
+		inc hl
+		ld (hl), a  ; player_max_health
+		ld a, PLAYER_MAX_OXYGEN
+		ld (player_oxygen), a
+
+		call state_play_world_name_conditions
+
 		; initial player position:
 		ld hl, #0100
 ; 		ld hl, #0a00
@@ -171,15 +182,6 @@ state_play:
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
-
-		ld a, PLAYER_INITIAL_MAX_HEALTH
-		ld hl, player_health
-		ld (hl), a
-; 		ld (hl), 6
-		inc hl
-		ld (hl), a  ; player_max_health
-		ld a, PLAYER_MAX_OXYGEN
-		ld (player_oxygen), a
 
 state_play_from_loaded_room:
 		call clear_all_the_sprites
@@ -471,6 +473,115 @@ state_play_update_agenda_cycle_even_0_boss:  ; player + player bullets + tile ob
 	call maybe_recenter_scroll
 	call update_scroll
 	jp state_play_loop_continue
+
+
+;-----------------------------------------------
+name_condition_1:
+	db #0c, #12, #17, #ff
+name_condition_2:
+	db #13, #11, #00, #0d, #12, #01, #00, #0b, #0b, #ff
+name_condition_3:
+	db #01, #11, #00, #08, #0d, #06, #00, #0c, #04, #12, #ff
+name_condition_4:
+	db #16, #04, #12, #13, #04, #0d, #07, #0e, #14, #12, #04, #ff
+name_condition_5:
+	db #0c, #00, #19, #04, #0e, #05, #06, #00, #0b, #08, #0e, #14, #12, #ff
+state_play_world_name_conditions:
+	ld hl, current_world__name
+	ld de, name_condition_1
+	call state_play_world_name_conditions_match
+	jr z, state_play_world_name_conditions_match_1
+	ld hl, current_world__name
+	ld de, name_condition_2
+	call state_play_world_name_conditions_match
+	jr z, state_play_world_name_conditions_match_2
+	ld de, name_condition_3
+	call state_play_world_name_conditions_match
+	jr z, state_play_world_name_conditions_match_3
+	ld de, name_condition_4
+	call state_play_world_name_conditions_match
+	jr z, state_play_world_name_conditions_match_4
+	ld de, name_condition_5
+	call state_play_world_name_conditions_match
+	jp z, state_play_world_name_conditions_match_5
+	ret
+
+state_play_world_name_conditions_match:
+	ld b, 16
+state_play_world_name_conditions_match_loop:
+	ld a, (de)
+	inc a
+	ret z
+	dec a
+	cp (hl)
+	ret nz
+	inc hl
+	inc de
+	djnz state_play_world_name_conditions_match_loop
+	xor a  ; match
+	ret
+
+state_play_world_name_conditions_match_1:
+	ld a, 200
+	ld (player_inventory_coins), a
+	ret
+
+state_play_world_name_conditions_match_2:
+	ld a, 1
+	ld (player_inventory_weapons + 1), a
+	ld (player_inventory_weapons + 2), a
+	ld (player_inventory_weapons + 3), a
+	ld (player_inventory_weapons + 4), a
+	ld (player_inventory_weapons + 5), a
+	ld (player_inventory_weapons + 6), a
+	ld (player_inventory_weapons + 7), a
+	ld a, 25
+	ld (player_inventory_weapon_ammo), a
+	ld (player_inventory_weapon_ammo + 1), a
+	ld (player_inventory_weapon_ammo + 2), a
+	ld (player_inventory_weapon_ammo + 3), a
+	ret
+
+state_play_world_name_conditions_match_3:
+	ld a, 1
+	ld (player_inventory_items + 25), a
+	ld (player_inventory_items + 26), a
+	ld (player_inventory_items + 27), a
+	ld (player_inventory_items + 28), a
+	ld (player_inventory_items + 29), a
+	ld (player_inventory_items + 30), a
+	ld (player_inventory_items + 31), a
+	ld (player_inventory_items + 32), a
+	ld (global_state__objects + TAG_ITEM_SANDALS), a
+	ld (global_state__objects + TAG_ITEM_GLOVES), a
+	ld (global_state__objects + TAG_ITEM_WARRIOR_HAT), a
+	ld (global_state__objects + TAG_ITEM_ARMOR), a
+	ld (global_state__objects + TAG_ITEM_CHAAC), a
+	ld (global_state__objects + TAG_ITEM_SEASHELL), a
+	ld (global_state__objects + TAG_ITEM_BELT), a
+	ld (global_state__objects + TAG_ITEM_ICE_CAPE), a
+	ret
+
+state_play_world_name_conditions_match_4:
+	ld a, 1
+	ld (global_state__objects + TAG_MAP_PIECE1), a
+	ld (global_state__objects + TAG_MAP_PIECE2), a
+	ld (global_state__objects + TAG_MAP_PIECE3), a
+	ld (global_state__objects + TAG_MAP_PIECE4), a
+	ld (global_state__objects + TAG_MAP_PIECE5), a
+	ret
+
+state_play_world_name_conditions_match_5:
+	ld a, PLAYER_INITIAL_MAX_HEALTH + 4 * 5
+	ld (player_max_health), a
+	ld (player_health), a
+	ld a, 1
+	ld (global_state__objects + TAG_HEART1), a
+	ld (global_state__objects + TAG_HEART2), a
+	ld (global_state__objects + TAG_HEART3), a
+	ld (global_state__objects + TAG_HEART4), a
+	ld (global_state__objects + TAG_HEART5), a
+	ret
 
 
 ;-----------------------------------------------
