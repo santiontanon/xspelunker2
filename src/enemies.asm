@@ -1879,7 +1879,6 @@ update_enemy_ant:
 	ld iyh, 1  ; damage to deal
 	call update_enemy_hurt_player_2x2
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
-	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
 	or a
 	jr z, update_enemy_ant_right
@@ -1897,7 +1896,7 @@ update_enemy_ant:
 
 update_enemy_ant_right:
  	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
- 	and #03	
+ 	and #01	
 	call z, update_enemy_ant_move_right
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 1) * 4
 	ld d, COLOR_PURPLE
@@ -1905,9 +1904,50 @@ update_enemy_ant_right:
 
 update_enemy_ant_left:
  	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
- 	and #03	
+ 	and #01	
  	call z, update_enemy_ant_move_left
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 29) * 4
+	ld d, COLOR_PURPLE
+	jp enemy_sprite_and_continue_animated
+
+update_enemy_ant_fall_right:
+; 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld b, 2
+	call update_enemy_frog_jumping_jump_fall
+	jr nz, update_enemy_ant_fall_right_continue
+	; land:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+update_enemy_ant_fall_right_continue:
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 1) * 4
+	ld d, COLOR_PURPLE
+	jp enemy_sprite_and_continue
+
+update_enemy_ant_fall_left:
+	ld b, 2
+	call update_enemy_frog_jumping_jump_fall
+	jr nz, update_enemy_ant_fall_left_continue
+	; land:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+update_enemy_ant_fall_left_continue:
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 29) * 4
+	ld d, COLOR_PURPLE
+	jp enemy_sprite_and_continue
+
+update_enemy_ant_climb_right:
+ 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+ 	and #01	
+ 	call z, update_enemy_ant_climb_right_move_up
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 31) * 4
+	ld d, COLOR_PURPLE
+	jp enemy_sprite_and_continue_animated
+
+update_enemy_ant_climb_left:
+ 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+ 	and #01
+ 	call z, update_enemy_ant_climb_left_move_up
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 33) * 4
 	ld d, COLOR_PURPLE
 	jp enemy_sprite_and_continue_animated
 
@@ -1929,15 +1969,26 @@ update_enemy_ant_move_right:
 	jr nz, update_enemy_ant_move_right_no_fall
 	; fall:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2  ; switch to fall
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
 	ret
 update_enemy_ant_move_right_no_fall:
 	dec b
 	inc c
-	call general_check_collision_with_wall
+	push bc
+		call general_check_collision_with_wall
+	pop bc
 	jr z, update_enemy_ant_move_right_collision
 	jp update_enemy_move_right
 update_enemy_ant_move_right_collision:
+	; see if we can climb:
+	dec c
+	dec b
+	call general_check_collision_with_wall
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1  ; switch to left
+	ret z   
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 4  ; switch to climb
+; 	inc (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+; 	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_Y), 4
 	ret
 
 update_enemy_ant_move_left:
@@ -1958,36 +2009,59 @@ update_enemy_ant_move_left:
 	jr nz, update_enemy_ant_move_left_no_fall
 	; fall:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 3  ; switch to fall
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
 	ret
 update_enemy_ant_move_left_no_fall:
 	dec b
 	dec c
-	call general_check_collision_with_wall
+	push bc
+		call general_check_collision_with_wall
+	pop bc
 	jr z, update_enemy_ant_move_left_collision
 	jp update_enemy_move_left
 update_enemy_ant_move_left_collision:
+	; see if we can climb:
+	inc c
+	dec b
+	call general_check_collision_with_wall
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0  ; switch to right
+	ret z   
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 5  ; switch to climb
+; 	inc (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+; 	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_Y), 4
 	ret
 
-update_enemy_ant_fall_right:
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 1) * 4
-	ld d, COLOR_PURPLE
-	jp enemy_sprite_and_continue
+update_enemy_ant_climb_right_move_up
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
+	cp 4
+	jp nz, update_enemy_move_up
+	; check if we hit the ceiling
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc c
+	push bc
+		call general_check_collision_with_wall
+	pop bc
+	jp nz, update_enemy_move_up
+	; fall:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 3  ; switch to fall left
+	ret
 
-update_enemy_ant_fall_left:
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 29) * 4
-	ld d, COLOR_PURPLE
-	jp enemy_sprite_and_continue
-
-update_enemy_ant_climb_right:
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 31) * 4
-	ld d, COLOR_PURPLE
-	jp enemy_sprite_and_continue
-
-update_enemy_ant_climb_left:
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 33) * 4
-	ld d, COLOR_PURPLE
-	jp enemy_sprite_and_continue
+update_enemy_ant_climb_left_move_up:
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
+	cp 4
+	jp nz, update_enemy_move_up
+	; check if we hit the ceiling
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc c
+	push bc
+		call general_check_collision_with_wall
+	pop bc
+	jp nz, update_enemy_move_up
+	; fall:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2  ; switch to fall right
+	ret
 
 
 ;-----------------------------------------------
