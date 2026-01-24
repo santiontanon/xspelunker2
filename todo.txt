@@ -1,10 +1,6 @@
 to do:
 
-***- ant colonies:
-  ***- disappear if they leave the room (left/right/up/down)
-  ***- die if they fall in water/lava (same for jumping monkeys/frogs)
-  ***- limit to 2 ants on the room, and spawn them alternating left/right initial direction
-  ***- "ant2" (tougher, spawned by "TAG_ENEMY_ANT_COLONY2", used in higher difficulty modes with higher probability)
+***- monkeys/frogs die if they fall in water/lava for jumping 
 
 - add some "cheat codes" (special world names) where you start with all weapons, or with initial gold, or even with all non-key items (make sure items are registered as picked)
 - allow "continuing" if you die (respawn in the village), and mark it so that this is mentioned in the ending screen with the score.

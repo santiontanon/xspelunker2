@@ -617,20 +617,31 @@ update_tile_objects_enemy_ant_colony:
 
 	inc (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
-	and #3f
-	cp #3f
+	and #1f
+	cp #1f
 	jp nz, update_tile_objects_loop_continue
 
 	; spawn an ant:
+	ld iyl, ENEMY_ANT  
+	ld iyh, 2  ; hit points
+update_tile_objects_enemy_ant_colony_spawn:
+	; how many ants do we already have?
+	call update_tile_objects_enemy_ant_colony_count_ants
+	ld a, c
+	cp 2  ; max ants
+	jp nc, update_tile_objects_loop_continue  ; there are already too many
+
 	call ptr_to_new_sprite_enemy
 	jp nz, update_tile_objects_loop_continue
 	ld (hl), 0
 	inc hl
-	ld (hl), ENEMY_ANT
+	ld a, iyl
+	ld (hl), a  ; type
 	inc hl
 	ld (hl), 0
 	inc hl
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	inc a
 	ld (hl), a  ; tile x
 	inc hl
 	ld (hl), 0
@@ -638,14 +649,67 @@ update_tile_objects_enemy_ant_colony:
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_Y)	
 	ld (hl), a  ; tile y
 	inc hl
-	ld (hl), 0  ; state
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)
+	inc (ix + ROOM_TILE_OBJECT_STRUCT_STATE)  ; alternate between ants walking left/right
+	and #01
+	ld (hl), a  ; state (walk left/right)
 	inc hl
 	ld (hl), 0  ; state timer
 	inc hl
 	ld (hl), #ff  ; hit ID
 	inc hl
-	ld (hl), 0  ; health	
+	ld a, iyh
+	ld (hl), a  ; health
 	jp update_tile_objects_loop_continue
+
+
+;-----------------------------------------------
+update_tile_objects_enemy_ant_colony2:
+	dec hl
+	push hl
+	pop ix
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_HEALTH)
+	or a
+	jp z, update_tile_objects_2x2_enemy_killed	
+
+	inc (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	and #1f
+	cp #1f
+	jp nz, update_tile_objects_loop_continue
+
+	; spawn an ant:
+	ld iyl, ENEMY_ANT2
+	ld iyh, 4  ; hit points
+	jr update_tile_objects_enemy_ant_colony_spawn
+
+
+;-----------------------------------------------
+; return:
+; - c: number of ants currently in the screen
+update_tile_objects_enemy_ant_colony_count_ants:
+	ld hl, current_room__sprite_enemies
+	ld de, ROOM_OBJECT_STRUCT_SIZE
+	ld c, 0  ; number of ants
+update_tile_objects_enemy_ant_colony_count_ants_loop:
+	ld a, (hl)
+	cp #ff  ; empty spot
+	ret z
+	cp #fe  ; sentinel
+	ret z
+	inc hl
+	ld a, (hl)
+	dec hl
+	cp ENEMY_ANT
+	jr z, update_tile_objects_enemy_ant_colony_count_ants_ant
+	cp ENEMY_ANT2
+	jr z, update_tile_objects_enemy_ant_colony_count_ants_ant
+	add hl, de
+	jp update_tile_objects_enemy_ant_colony_count_ants_loop
+update_tile_objects_enemy_ant_colony_count_ants_ant:
+	inc c
+	add hl, de
+	jp update_tile_objects_enemy_ant_colony_count_ants_loop
 
 
 ;-----------------------------------------------
@@ -693,6 +757,8 @@ find_tile_enemy_ptr_loop:
 	cp TAG_ENEMY_BEE_HIVE
 	ret z
 	cp TAG_ENEMY_ANT_COLONY
+	ret z
+	cp TAG_ENEMY_ANT_COLONY2
 	ret z
 	add ix, bc
 	jr find_tile_enemy_ptr_loop

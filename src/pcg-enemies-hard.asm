@@ -58,8 +58,9 @@ pcg_enemy_generation_table_confluence_hard:
 pcg_enemy_generation_table_caves_west_hard:
 pcg_enemy_generation_table_caves_east_hard:
 	db 2  ; 2 enemies per "screen" area
-	db 1
-	db TAG_ENEMY_ANT_COLONY, 96  ; tile-based enemy type and chance (out of 256)
+	db 2
+	db TAG_ENEMY_ANT_COLONY, 48  ; tile-based enemy type and chance (out of 256)
+	db TAG_ENEMY_ANT_COLONY2, 96  ; tile-based enemy type and chance (out of 256)
 	db 8  ; possible sprite enemy types to be spawned (weights below should add up to 32)
 	db ENEMY_FISH, 3
 	db ENEMY_FISH_JUMPER, 5

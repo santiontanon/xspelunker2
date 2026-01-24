@@ -33,6 +33,7 @@ enemy_update_fn_table:
 	dw update_enemy_rockman
 	dw update_enemy_rockman2
 	dw update_enemy_ant
+	dw update_enemy_ant2
 
 
 ;-----------------------------------------------
@@ -1875,8 +1876,13 @@ update_enemy_monkey_throw_continue:
 
 
 ;-----------------------------------------------
+update_enemy_ant2:
+	ld iyh, 2  ; damage to deal
+	jr update_enemy_ant2_continue
+
 update_enemy_ant:
 	ld iyh, 1  ; damage to deal
+update_enemy_ant2_continue:
 	call update_enemy_hurt_player_2x2
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
@@ -1899,6 +1905,11 @@ update_enemy_ant_right:
  	and #01	
 	call z, update_enemy_ant_move_right
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 1) * 4
+update_enemy_ant_set_color_animated:
+	ld d, COLOR_GREY
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	cp ENEMY_ANT
+	jp z, enemy_sprite_and_continue_animated
 	ld d, COLOR_PURPLE
 	jp enemy_sprite_and_continue_animated
 
@@ -1907,19 +1918,37 @@ update_enemy_ant_left:
  	and #01	
  	call z, update_enemy_ant_move_left
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 29) * 4
-	ld d, COLOR_PURPLE
-	jp enemy_sprite_and_continue_animated
+	jr update_enemy_ant_set_color_animated
 
 update_enemy_ant_fall_right:
-; 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	ld b, 2
 	call update_enemy_frog_jumping_jump_fall
 	jr nz, update_enemy_ant_fall_right_continue
+	; check if we reached the bottom of the room:
+	ld a, (current_room__height)
+	dec a
+	dec a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	jp z, update_enemy_delete
 	; land:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
 update_enemy_ant_fall_right_continue:
+	; water/lava?
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc c
+	call get_room_tile_type
+	cp 4
+	jp z, update_enemy_fall_to_water
+	cp 10
+	jp z, update_enemy_fall_to_lava
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 1) * 4
+update_enemy_ant_set_color_no_animation:
+	ld d, COLOR_GREY
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	cp ENEMY_ANT
+	jp z, enemy_sprite_and_continue
 	ld d, COLOR_PURPLE
 	jp enemy_sprite_and_continue
 
@@ -1927,29 +1956,41 @@ update_enemy_ant_fall_left:
 	ld b, 2
 	call update_enemy_frog_jumping_jump_fall
 	jr nz, update_enemy_ant_fall_left_continue
+	; check if we reached the bottom of the room:
+	ld a, (current_room__height)
+	dec a
+	dec a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	jp z, update_enemy_delete
 	; land:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1
 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
 update_enemy_ant_fall_left_continue:
+	; water/lava?
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc c
+	call get_room_tile_type
+	cp 4
+	jp z, update_enemy_fall_to_water
+	cp 10
+	jp z, update_enemy_fall_to_lava	
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 29) * 4
-	ld d, COLOR_PURPLE
-	jp enemy_sprite_and_continue
+	jr update_enemy_ant_set_color_no_animation
 
 update_enemy_ant_climb_right:
  	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
  	and #01	
  	call z, update_enemy_ant_climb_right_move_up
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 31) * 4
-	ld d, COLOR_PURPLE
-	jp enemy_sprite_and_continue_animated
+	jp update_enemy_ant_set_color_animated
 
 update_enemy_ant_climb_left:
  	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
  	and #01
  	call z, update_enemy_ant_climb_left_move_up
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 33) * 4
-	ld d, COLOR_PURPLE
-	jp enemy_sprite_and_continue_animated
+	jp update_enemy_ant_set_color_animated
 
 update_enemy_ant_move_right:
 	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
@@ -1980,6 +2021,11 @@ update_enemy_ant_move_right_no_fall:
 	jr z, update_enemy_ant_move_right_collision
 	jp update_enemy_move_right
 update_enemy_ant_move_right_collision:
+	ld a, (current_room__width)
+	dec a
+	dec a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	jp z, update_enemy_delete
 	; see if we can climb:
 	dec c
 	dec b
@@ -1987,8 +2033,6 @@ update_enemy_ant_move_right_collision:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1  ; switch to left
 	ret z   
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 4  ; switch to climb
-; 	inc (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-; 	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_Y), 4
 	ret
 
 update_enemy_ant_move_left:
@@ -2020,6 +2064,9 @@ update_enemy_ant_move_left_no_fall:
 	jr z, update_enemy_ant_move_left_collision
 	jp update_enemy_move_left
 update_enemy_ant_move_left_collision:
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	or a
+	jp z, update_enemy_delete
 	; see if we can climb:
 	inc c
 	dec b
@@ -2027,8 +2074,6 @@ update_enemy_ant_move_left_collision:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0  ; switch to right
 	ret z   
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 5  ; switch to climb
-; 	inc (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-; 	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_Y), 4
 	ret
 
 update_enemy_ant_climb_right_move_up
@@ -2052,6 +2097,9 @@ update_enemy_ant_climb_right_move_up
 	ld bc, #fc01  ; 1, -4
 	jp update_enemy_move_cb
 update_enemy_ant_climb_right_move_up_fall:
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	or a
+	jp z, update_enemy_delete
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 3  ; switch to fall left
 	ret
 
@@ -2076,6 +2124,9 @@ update_enemy_ant_climb_left_move_up:
 	ld bc, #fcff  ; -1, -4
 	jp update_enemy_move_cb
 update_enemy_ant_climb_left_move_up_fall:
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	or a
+	jp z, update_enemy_delete	
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2  ; switch to fall right
 	ret
 
@@ -2401,6 +2452,18 @@ update_enemy_boss3_debris:
 	ld d, COLOR_WHITE
 	ld e, (ix + ROOM_OBJECT_STRUCT_STATE)  ; (FIRST_ENEMY_SPRITE_PATTERN + 7) * 4 
 	jp enemy_sprite_and_continue
+
+
+;-----------------------------------------------
+update_enemy_fall_to_water:
+update_enemy_fall_to_lava:
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc c
+	push ix
+		call spawn_water_splash
+	pop ix
+	jp update_enemy_delete
 
 
 ;-----------------------------------------------

@@ -343,6 +343,8 @@ pcg_generate_room__spawn_tile_enemies_loop_found:
 	jp z, pcg_generate_room__spawn_bee_hive
 	cp TAG_ENEMY_ANT_COLONY
 	jp z, pcg_generate_room__spawn_ant_colony
+	cp TAG_ENEMY_ANT_COLONY2
+	jp z, pcg_generate_room__spawn_ant_colony2
 	; ...
 	ret
 
@@ -1035,6 +1037,7 @@ pcg_generate_room__spawn_ant_colony:
 	ld (tmp_enemy_pcg_next_enemy_id), a
 	inc hl
 	ld (hl), TAG_ENEMY_ANT_COLONY  ; type
+pcg_generate_room__spawn_ant_colony2_continue:	
 	inc hl
 	ld (hl), c  ; tile x
 	inc hl
@@ -1053,6 +1056,29 @@ pcg_generate_room__spawn_ant_colony:
 	ld hl, enemy_ant_colony_hit
 	ld (tile_enemy_hit_fn_ptr), hl
 	ret
+
+
+;-----------------------------------------------
+; input:
+pcg_generate_room__spawn_ant_colony2:
+	call pcg_generate_room__find_4x4_enemy_spots
+	or a
+	ret z
+	; we found at leat one viable position, spawn the plant:
+	ld hl, ptr_to_new_tile_object
+	ld c, TILES_PAGE
+	call call_hl_in_page_c_8000
+	ret nz
+	ld c, ixl
+	dec c
+	ld b, ixh
+	ld a, (tmp_enemy_pcg_next_enemy_id)
+	ld (hl), a  ; ID
+	inc a
+	ld (tmp_enemy_pcg_next_enemy_id), a
+	inc hl
+	ld (hl), TAG_ENEMY_ANT_COLONY2  ; type
+	jr pcg_generate_room__spawn_ant_colony2_continue
 
 
 ;-----------------------------------------------

@@ -127,6 +127,8 @@ update_tile_objects_loop:
 		jp z, update_tile_objects_enemy_bee_hive
 		cp TAG_ENEMY_ANT_COLONY
 		jp z, update_tile_objects_enemy_ant_colony
+		cp TAG_ENEMY_ANT_COLONY2
+		jp z, update_tile_objects_enemy_ant_colony2
 		cp TAG_LOST_VENDOR
 		jp z, update_tile_objects_lost_vendor
 update_tile_objects_loop_continue:
@@ -1156,6 +1158,7 @@ ENDR
 	dw object_interaction_function_empty  ; TAG_ENEMY_CARNIVORE_PLANT
 	dw object_interaction_function_empty  ; TAG_ENEMY_BEE_HIVE
 	dw object_interaction_function_empty  ; TAG_ENEMY_ANT_COLONY
+	dw object_interaction_function_empty  ; TAG_ENEMY_ANT_COLONY2
 
 object_interaction_inventory_slot:
 	db #ff, #ff, #ff, #ff, #ff  ; none, block puzzles: 0
@@ -2516,6 +2519,7 @@ ENDR
 	TILE_OBJECT_DATA 1, 4, 4, tile_object_carnivore_plant  ; TAG_ENEMY_CARNIVORE_PLANT
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_bee_hive  ; TAG_ENEMY_BEE_HIVE
 	TILE_OBJECT_DATA 1, 3, 2, tile_object_ant_colony  ; TAG_ENEMY_ANT_COLONY
+	TILE_OBJECT_DATA 1, 3, 2, tile_object_ant_colony  ; TAG_ENEMY_ANT_COLONY2
 
 
 tile_object_regular_object_gfx:
