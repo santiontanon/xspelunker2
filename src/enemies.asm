@@ -32,6 +32,7 @@ enemy_update_fn_table:
 	dw update_enemy_skeleton_flame2
 	dw update_enemy_rockman
 	dw update_enemy_rockman2
+	dw update_enemy_ant
 
 
 ;-----------------------------------------------
@@ -1235,7 +1236,11 @@ update_enemy_skeleton_flame_walking_continue:
 	jp z, enemy_sprite_and_continue_animated
 	ld d, COLOR_RED
 	jp enemy_sprite_and_continue_animated
- update_enemy_skeleton_flame_walking_continue2:
+update_enemy_skeleton_flame_walking_continue2_second_frame:
+	ld a, 4
+	add a, e
+	ld e, a
+update_enemy_skeleton_flame_walking_continue2:
 	ld d, COLOR_LIGHT_RED
 	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
 	cp ENEMY_SKELETON_FLAME1
@@ -1246,13 +1251,14 @@ update_enemy_skeleton_flame_walking_continue:
 update_enemy_skeleton_flame_spit_right:
 	ld d, 2  ; speed of the bullet
 	ld iyl, 1  ; x tile offset of bullet
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 1) * 4 
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 23) * 4 
 update_enemy_skeleton_flame_spit_right_continue:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	cp 24
 	jr z, update_enemy_skeleton_flame_spit_right_spit
+	jr c, update_enemy_skeleton_flame_walking_continue2
 	cp 48
-	jr nz, update_enemy_skeleton_flame_walking_continue2
+	jr nz, update_enemy_skeleton_flame_walking_continue2_second_frame
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
 	add a, -2
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), a
@@ -1262,7 +1268,7 @@ update_enemy_skeleton_flame_spit_right_continue:
 update_enemy_skeleton_flame_spit_left:
 	ld d, -2  ; speed of the bullet
 	ld iyl, 0  ; x tile offset of bullet
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 2) * 4
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 27) * 4
 	jr update_enemy_skeleton_flame_spit_right_continue
 
 update_enemy_skeleton_flame_spit_right_spit:
@@ -1865,6 +1871,60 @@ update_enemy_monkey_throw_continue:
 	add a, a
 	add a, a
 	ld e, a
+	jp enemy_sprite_and_continue
+
+
+;-----------------------------------------------
+update_enemy_ant:
+	ld iyh, 1  ; damage to deal
+	call update_enemy_hurt_player_2x2
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	or a
+	jr z, update_enemy_ant_right
+	dec a
+	jr z, update_enemy_ant_left
+	dec a
+	jr z, update_enemy_ant_fall_right
+	dec a
+	jr z, update_enemy_ant_fall_left
+	dec a
+	jr z, update_enemy_ant_climb_right
+	dec a
+	jr z, update_enemy_ant_climb_left
+	; we can mever reach here
+
+update_enemy_ant_right:
+ 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+ 	and #03	
+ 	jr nz, update_enemy_ant_right_continue
+	call update_enemy_move_right_if_possible_platform
+	jr nz, update_enemy_ant_right_continue
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1  ; switch to left
+update_enemy_ant_right_continue:
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 1) * 4
+	ld d, COLOR_PURPLE
+	jp enemy_sprite_and_continue_animated
+
+update_enemy_ant_left:
+ 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+ 	and #03	
+ 	jr nz, update_enemy_ant_left_continue
+	call update_enemy_move_left_if_possible_platform
+	jr nz, update_enemy_ant_left_continue
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0  ; switch to right
+update_enemy_ant_left_continue:
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 29) * 4
+	ld d, COLOR_PURPLE
+	jp enemy_sprite_and_continue_animated
+
+update_enemy_ant_fall_right:
+update_enemy_ant_fall_left:
+update_enemy_ant_climb_right:
+update_enemy_ant_climb_left:
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 1) * 4
+	ld d, COLOR_PURPLE
 	jp enemy_sprite_and_continue
 
 
@@ -3230,16 +3290,11 @@ enemy_hit:
 	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
 	cp ENEMY_SNAKE  ; first enemy that can be hit
 	ret c
-; 	cp ENEMY_POISON_BULLET
-; 	ret z  ; we cannot damage bullets
-; 	cp ENEMY_BULLET
-; 	ret z  ; we cannot damage bullets
-; 	cp ENEMY_PARABOLA_BULLET
-; 	ret z  ; we cannot damage bullets
-; 	cp ENEMY_BULLET_WHIRLWIND
-; 	ret z  ; we cannot damage bullets
-; 	cp ENEMY_BULLET_LIGHTNING
-; 	ret z  ; we cannot damage bullets
+	cp ENEMY_ROCKMAN
+	jr z, enemy_hit_rockman
+	cp ENEMY_ROCKMAN2
+	jr z, enemy_hit_rockman
+enemy_hit_continue:
 	ld a, iyl
 	ld (ix + ROOM_OBJECT_STRUCT_LAST_HIT_ID), a
 	ld a, (ix + ROOM_OBJECT_STRUCT_HEALTH)
@@ -3249,6 +3304,17 @@ enemy_hit:
 	ld (ix + ROOM_OBJECT_STRUCT_HEALTH), a
 	ld hl, SFX_enemy_hit
 	jp play_SFX_with_high_priority
+
+enemy_hit_rockman:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	cp 2
+	jr nz, enemy_hit_continue
+	; hit rockman when it was in stone shape, shield hit:
+	ld a, iyl
+	ld (ix + ROOM_OBJECT_STRUCT_LAST_HIT_ID), a
+	ld hl, SFX_shield
+	jp play_SFX_with_high_priority
+
 enemy_hit_killed:
 	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
 	push af

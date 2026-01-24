@@ -613,9 +613,38 @@ update_tile_objects_enemy_ant_colony:
 	pop ix
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_HEALTH)
 	or a
-	jp z, update_tile_objects_2x2_enemy_killed
+	jp z, update_tile_objects_2x2_enemy_killed	
 
-	; ...
+	inc (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	and #3f
+	cp #3f
+	jp nz, update_tile_objects_loop_continue
+
+	; spawn an ant:
+	call ptr_to_new_sprite_enemy
+	jp nz, update_tile_objects_loop_continue
+	ld (hl), 0
+	inc hl
+	ld (hl), ENEMY_ANT
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	ld (hl), a  ; tile x
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_Y)	
+	ld (hl), a  ; tile y
+	inc hl
+	ld (hl), 0  ; state
+	inc hl
+	ld (hl), 0  ; state timer
+	inc hl
+	ld (hl), #ff  ; hit ID
+	inc hl
+	ld (hl), 0  ; health	
 	jp update_tile_objects_loop_continue
 
 

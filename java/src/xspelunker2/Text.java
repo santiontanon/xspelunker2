@@ -334,7 +334,7 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! If you are hurt, make sure to take a break and eat some of our delicious corn.", "SHOPKEEPER1_3", 112);
         addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! Sorry, I cannot read or write, so, I cannot help you translate those texts...", "SHOPKEEPER1_4", 112);
         addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! Make sure to collect all the coins you see! And spend them in my shop, of course...", "SHOPKEEPER1_5", 112);
-        addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! That stone tablet over there? It's a stella, but no one knows what it means!", "SHOPKEEPER1_6", 112);
+        addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! That stone tablet over there? It's a stela, but no one knows what it means!", "SHOPKEEPER1_6", 112);
         addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! Underground ruins? Yes, we found two entrances in the jungle, not sure if both are still open...", "SHOPKEEPER1_7", 112);
         addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! Sorry, I cannot accompany you this time. I have my shop to attend!", "SHOPKEEPER1_8", 112);
         

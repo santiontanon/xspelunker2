@@ -1,15 +1,28 @@
 to do:
 
-***- ant colonies in caves (tile enemy that spawns ants). ants/fire ants: just move around not too fast and can climb walls up/down, or even hang from the ceiling
+***- ant colonies:
+  ***- make them climb walls (up/down and ceiling):
+    OK - do not use the regular wandering behavior and have their own code
+    ***- when they reach a ledge, they move to a fall state
+    ***- fall and resume walking when landing
+    ***- disappear if they leave the room
+    ***- when reaching a wall, if it has clearing, switch to climb state
+    ***- when climbing, if they reach a wall, switch to fall state (and flip direction)
+    ***- when climbing, if reaching the corner when they can walk normally again, switch to walk behavior
+  ***- die if they fall in water/lava (same for jumping monkeys/frogs)
+  ***- limit to 2 ants on the room, and spawn them alternating left/right initial direction
+  ***- "ant2" (tougher, spawned by "TAG_ENEMY_ANT_COLONY2", used in higher difficulty modes with higher probability)
 
 - allow "continuing" if you die (respawn in the village), and mark it so that this is mentioned in the ending screen with the score.
+  - game over screen shows play through stats: ending reached (or failed), continue or not, time taken, seed, difficulty level, number of weapons/items/maps found, bosses killed (and variant), secrets found, special achievements (no miss, + any others in the future, e.g. finding any special treasure)
+- add some "cheat codes" (special world names) where you start with all weapons, or with initial gold, or even with all non-key items (make sure items are registered as picked)
 - music: intro, letters, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)
   - boss music acts as a health bar (increases in speed as health goes down: 50%, 25%)
 - xibalba biome (remember to keep ladder tiles in place for down-door opening code). tile enemies: volcano that spits lava, lava waterfalls (lava falls intermitently, blocking the path part of the time)
-- fourth boss (Xibalba): Xibalba Lords: Hun Camé (One Death) and Vucub Camé (Seven Death): Skeletal figures with ornate Mayan headdresses, representing the rulers of the underworld (summons skeletons or shadows). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
-- atlantis biome (do I need to move the possible set of up/down/left/right tags to 4 instead of just 2?): crocodiles as an additional water enemy?
-- fifth boss: Atlantean Guardian (Underwater Boss): A colossal robotic creature with bioluminescent features, resembling a deep-sea creature (laser beams from tentacles, summons robotic fish). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
-- confrontation with the aliens after activating the calendar stone
+- fourth boss, Xibalba Lords: Hun Camé (One Death) and Vucub Camé (Seven Death), or maybe there are many different Xibalba lords, and the boss room has a statue for each, you collect clues throughout Xibalba (mixed with part of the Maya lore for the twins that beat them) to wake up two of them (different for each seed), so that the confrontation is different for every seed: Skeletal figures with ornate Mayan headdresses, representing the rulers of the underworld (summons skeletons or shadows). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
+- atlantis biome (do I need to move the possible set of up/down/left/right tags to 4 instead of just 2?): crocodiles as an additional water enemy? what happens to the special animal/teleporter rooms in this biome? do I need to redraw them?
+- fifth boss, Atlantean Guardian (Underwater Boss): A colossal robotic creature with bioluminescent features, resembling a deep-sea creature (laser beams from tentacles, summons robotic fish). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
+- confrontation with the aliens after activating the calendar stone: are aliens sprites or tiles?
 - first ending sequence: Elaine drops from the ceiling on a rope and rescues you. The calendar stone machine activates and creates a defensive barrier around earth, the alien armada that was coming turns back, but promises revenge.
 
 - mars biome (remember to keep ladder tiles in place for down-door opening code)
@@ -23,11 +36,12 @@ to do:
 - final good ending: the stone opens a portal for you to travel to the alien world, and fight against their leader in a final final battle. When you defeat it and come back, Elaine is there waiting to save you, but you arrive having become the ruler of alien empire.
 - "speak" the animal names in the animal room to get their blessings (if you get all four, you do double damage, adjust angry/veryhard boss difficulty for this): I already have the clue for this in the game, right? (TABLET_TRIVIA_CLUE1_1)
 - Potential new secret/mechanic ideas:
-  - special condition for triggering "angry bosses" (they change color). For each one you beat in this hard mode, you get something in the ending, and if you get them all, you get a special mention. The conditions might be things like: certain bit in the random seed to be "11" (so, not all seeds are good), dive into water X times in the same room without doing anything else, etc. Use the "random seed stela" (maybe give a clue about it)
+  - special condition for triggering "angry bosses" (they change color). For each one you beat in this hard mode, you get something in the ending, and if you get them all, you get a special mention. The conditions might be things like: certain bit in the random seed to be "11" (so, not all seeds are good), dive into water X times in the same room without doing anything else, etc. Use the "random seed stela" (maybe give a clue about it), currently it displays the bottom 6 bits of the first random seed word, should I make it display a whole 8 bits of it?
   - have a chest/door locked with keys from ALL colors, and that can only be open in a world where all color keys spawn. Single lock that changes color, cycling through all.
-  - Special huge chest that has a lock with a number. Each time you use a small key, it reduces by one. But the number is larger than the keys in one world. the state of the chest should be saved to the ROM, and if you beat the game, it remains. It might give you access to a final alien weapon to really kill the final boss. If you play again on the same seed, the chest will be blocked somehow (so, you need a different seed)
+  - Special huge chest that has a lock with a number. Each time you use a small key, it reduces by one. But the number is larger than the keys in one world. the state of the chest should be saved to the ROM, and if you beat the game (can you beat the game having used small keys there?, it remains. It might give you access to a final alien weapon to really kill the final boss. If you play again on the same seed, the chest will be blocked somehow (so, you need a different seed)
   - room that has 4 locks (one from each cardinal directions), but in each world, it can only be reached from one direction. Upon opening all 4, it reveals a passage to a secret level (the "lost world", which is like jungle but with dinosaurs? is there an alternate ending here?, or the "underground cenote", where sacrifices were made)
   - when a player bullet does not hit an enemy, have a chance (or always) to remain in the map, so you can pick it up again (maybe some enemies will steal objects, and that can be used to bait them? or maybe some enemies wake up with noise and items dropping make noise? (as do dropping pushable blocks, or the player doing anything except crawling)).
+  - Mars/Moon: in the boss rooms, there might be something you can do before summoning the boss. This could lead to something like: (1) an underground cave where there is a brokne ancient robot that can talk to you (in a mix of English and Maya maybe?), and might give you a weapon upgrade (e.g. a better raygun). (2) a hidden room in Mars with one of those Mars faces, containing a great treasure (is there any mythical Mayan treasure?), that is only for bragging rights with something extra that will appear in the ending.
 
 
 --------------------

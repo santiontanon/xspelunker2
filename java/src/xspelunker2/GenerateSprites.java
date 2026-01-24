@@ -334,9 +334,10 @@ public class GenerateSprites {
         
         // bullet (0):
         data.addAll(extractSprite(sourceImage, 64, 0, 15));  // bullet
-        // fire skeleton (1):
-        data.addAll(extractSprite(sourceImage, 32, 112, 15));  // skeleton spitting right
-        data.addAll(extractSpriteFlipped(sourceImage, 32, 112, 15));  // skeleton spitting left
+        // ant (1):
+        data.addAll(extractSprite(sourceImage, 96, 0, 15));  // and right
+        data.addAll(extractSprite(sourceImage, 96, 16, 15));  //
+        // fire skeleton (3):
         data.addAll(extractSprite(sourceImage, 48, 112, 15));  // fireball
         data.addAll(extractSprite(sourceImage, 64, 112, 15));
         data.addAll(extractSprite(sourceImage, 80, 112, 15));  // fire in floor
@@ -366,14 +367,14 @@ public class GenerateSprites {
         data.addAll(extractSpriteFlipped(sourceImage, 0, 48, 15));  // left walk
         data.addAll(extractSpriteFlipped(sourceImage, 16, 48, 15));  // 
         data.addAll(extractSpriteFlipped(sourceImage, 32, 48, 15));  // left shoot
-        data.addAll(extractSpriteFlipped(sourceImage, 48, 48, 15));  // 
-        data.addAll(extractSprite(sourceImage, 64, 48, 15));  // right idle
-        data.addAll(extractSpriteFlipped(sourceImage, 64, 48, 15));  // left idle
-        // bone bullet (31)
-        data.addAll(extractSprite(sourceImage, 80, 0, 15));
-        data.addAll(extractSprite(sourceImage, 80, 16, 15));
-        data.addAll(extractSprite(sourceImage, 80, 32, 15));
-        data.addAll(extractSprite(sourceImage, 80, 48, 15));
+        data.addAll(extractSpriteFlipped(sourceImage, 48, 48, 15));  //
+        // ant (29):
+        data.addAll(extractSpriteFlipped(sourceImage, 96, 0, 15));  // ant left
+        data.addAll(extractSpriteFlipped(sourceImage, 96, 16, 15));  //
+        data.addAll(extractSprite(sourceImage, 112, 0, 15));  // ant climb right
+        data.addAll(extractSprite(sourceImage, 112, 16, 15));
+        data.addAll(extractSpriteFlipped(sourceImage, 112, 0, 15));  // and climb left
+        data.addAll(extractSpriteFlipped(sourceImage, 112, 16, 15));
         // rock men (35)
         data.addAll(extractSprite(sourceImage, 80, 128, 15));  // stone opening
         data.addAll(extractSprite(sourceImage, 96, 128, 15));  // walk right
