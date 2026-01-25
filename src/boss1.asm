@@ -988,7 +988,10 @@ update_boss1_behavior_4_sink_loop:
 
 	xor a
 	ld (boss__active), a
-	ret
+
+	; mark for stats:
+	ld c, 1  ; hurakan
+	jp add_killed_boss_to_stats
 
 
 ;-----------------------------------------------

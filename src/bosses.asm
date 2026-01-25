@@ -1299,6 +1299,22 @@ update_sprite_objects_boss_extras_boss_3_attached_stomp2:
 
 
 ;-----------------------------------------------
+; input:
+; - c: boss name ID for stats
+add_killed_boss_to_stats:
+	ld hl, stats__bosses
+add_killed_boss_to_stats_loop:
+	ld a, (hl)
+	or a
+	jr z, add_killed_boss_to_stats_spot_found
+	inc hl
+	jr add_killed_boss_to_stats_loop
+add_killed_boss_to_stats_spot_found:
+	ld (hl), c
+	ret
+
+
+;-----------------------------------------------
 update_boss_behavior:
 	ld a, (current_area__id)
 	cp 1  ; temple of inscriptions

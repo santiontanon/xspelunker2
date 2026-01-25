@@ -140,6 +140,10 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "B", "ENDING_B", 6);
         addLineSafe(lines_with_constant_page3, "A", "ENDING_A", 6);
         addLineSafe(lines_with_constant_page3, "max", "MAX_TIME", 6);
+        addLineSafe(lines_with_constant_page3, "no miss", "ACHIEVEMENT_NOMISS", 8);
+        addLineSafe(lines_with_constant_page3, "Hurakan", "BOSS_HURAKAN", 8);
+        addLineSafe(lines_with_constant_page3, "Camazotz", "BOSS_CAMAZOTZ", 8);
+        addLineSafe(lines_with_constant_page3, "Cabrakan", "BOSS_CABRAKAN", 8);
         
         addLineSafe(lines_with_constant_page1, "Entering", "ENTERING", 16);
         addLineSafe(lines_with_constant_page1, "Loading area...", "LOADING_AREA", 16);

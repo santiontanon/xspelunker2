@@ -349,15 +349,86 @@ state_game_over_print_time_add_digit_loop_done:
 
 
 ;-----------------------------------------------
+state_game_over_print_achievements_table:
+	dw TEXT_ACHIEVEMENT_NOMISS
+
 state_game_over_print_achievements:
-	; ...
+	ld hl, stats__achievements
+	ld b, 4  ; max achievements
+	ld de, CHRTBL2 + (17*32+19)*8
+state_game_over_print_achievements_loop:
+	ld a, (hl)
+	or a
+	ret z  ; no more achievements
+	push hl
+	push bc
+		push de
+			dec a
+			add a, a
+			ld hl, state_game_over_print_achievements_table
+			ADD_HL_A
+			ld e, (hl)
+			inc hl
+			ld d, (hl)
+			ld hl, copy_text_from_textpage3
+			ld c, TEXT_PAGE3
+			call call_hl_in_page_c_8000
+		pop de  ; vdp address
+		push de
+			ld hl, buffer_4096
+			ld iy, COLOR_DARK_YELLOW*16 + #80 * 256
+			ld b, 8
+			call draw_sentence_to_vdp_from_another_page
+		pop hl
+		ld bc, 32*8
+		add hl, bc
+		ex de, hl  ; next line
+	pop bc
+	pop hl
+	inc hl
+	djnz state_game_over_print_achievements_loop
 	ret
 
 
 ;-----------------------------------------------
+state_game_over_print_bosses_table:
+	dw TEXT_BOSS_HURAKAN
+	dw TEXT_BOSS_CAMAZOTZ
+	dw TEXT_BOSS_CABRAKAN
+
 state_game_over_print_bosses:
-	; ...
+	ld hl, stats__bosses
+	ld b, 8  ; max bosses
+	ld de, CHRTBL2 + (16*32+5)*8
+state_game_over_print_bosses_loop:
+	ld a, (hl)
+	or a
+	ret z  ; no more achievements
+	push hl
+	push bc
+		push de
+			dec a
+			add a, a
+			ld hl, state_game_over_print_bosses_table
+			ADD_HL_A
+			ld e, (hl)
+			inc hl
+			ld d, (hl)
+			ld hl, copy_text_from_textpage3
+			ld c, TEXT_PAGE3
+			call call_hl_in_page_c_8000
+		pop de  ; vdp address
+		push de
+			ld hl, buffer_4096
+			ld iy, COLOR_DARK_YELLOW*16 + #80 * 256
+			ld b, 8
+			call draw_sentence_to_vdp_from_another_page
+		pop hl
+		ld bc, 32*8
+		add hl, bc
+		ex de, hl  ; next line
+	pop bc
+	pop hl
+	inc hl
+	djnz state_game_over_print_bosses_loop
 	ret
-
-
-

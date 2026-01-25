@@ -982,7 +982,10 @@ update_boss2_behavior_4:
 
 	xor a
 	ld (boss__active), a
-	ret
+
+	; mark for stats:
+	ld c, 2  ; camazotz
+	jp add_killed_boss_to_stats
 
 
 ;-----------------------------------------------

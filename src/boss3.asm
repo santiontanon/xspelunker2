@@ -756,7 +756,11 @@ update_boss3_behavior_3_state_2_loop:
 
 	xor a
 	ld (boss__active), a
-	ret
+
+	; mark for stats:
+	ld c, 3  ; cabrakan
+	jp add_killed_boss_to_stats
+
 
 update_boss3_behavior_3_state_0:
 	; remove head:
