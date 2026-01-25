@@ -298,6 +298,7 @@ state_play_loop:
 	or a
 	call nz, state_play_loop_event_fn
 	; get the appropriate update function for this frame:
+	call state_play__update_time  ; updates how long has the player been playing
 	ld a, (game_cycle)
 	inc a
 	and #07
@@ -784,3 +785,40 @@ state_play_upload_enemy_tiles_to_vdp_if_necessary:
 	ld de, CLRTBL2 + FIRST_ENEMY_TILE*8 + 256*8*2
 	jp fast_LDIRVM
 
+
+;-----------------------------------------------
+state_play__update_time:
+	ld hl, stats__time
+	inc (hl)  ; increment frames
+	ld a, (isComputer50HzOr60Hz)
+	or a
+	jr z, state_play__update_time_50hz
+state_play__update_time_60hz:
+	ld a, (hl)
+	cp 60
+	ret nz
+	jr state_play__update_time_60hz_continue
+state_play__update_time_50hz:
+	ld a, (hl)
+	cp 50
+	ret nz
+state_play__update_time_60hz_continue
+	ld (hl), 0
+	inc hl
+	inc (hl)  ; increment seconds
+	ld a, (hl)
+	cp 60
+	ret nz
+	ld (hl), 0
+	inc hl
+	inc (hl)  ; increment minutes
+	ld a, (hl)
+	cp 60
+	ret nz
+	ld (hl), 0
+	inc hl
+	ld a, (hl)
+	inc a
+	ret z  ; we are already at the maximum 255 hours
+	inc (hl)  ; increment hours
+	ret

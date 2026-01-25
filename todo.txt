@@ -3,7 +3,6 @@ to do:
 ***- game over screen shows play through stats:
   ***- print special achievements: no miss (only if ending is reached)
   ***- print bosses killed (and variant) [bosses add themselves to a list here once dead]
-  ***- print time: count it in the main game loop, and detect if it's 50hz or 60hz. So that I can increment a "tenth of a second" each 5 or 6 cycles (and mark 50hz or 60hz in the stats screen)
 
 - music: intro, letters, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)
   - boss music acts as a health bar (increases in speed as health goes down: 50%, 25%)

@@ -139,6 +139,7 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "C", "ENDING_C", 6);
         addLineSafe(lines_with_constant_page3, "B", "ENDING_B", 6);
         addLineSafe(lines_with_constant_page3, "A", "ENDING_A", 6);
+        addLineSafe(lines_with_constant_page3, "max", "MAX_TIME", 6);
         
         addLineSafe(lines_with_constant_page1, "Entering", "ENTERING", 16);
         addLineSafe(lines_with_constant_page1, "Loading area...", "LOADING_AREA", 16);
@@ -550,6 +551,8 @@ public class Text {
         System.out.println("Numbers: " + numbers);
         List<Integer> letters = font.convertStringToAssembler("ABCDEFGHIJKLMNOPQRSTUVWXYZ ");
         System.out.println("Letters: " + letters);
+        List<Integer> hms = font.convertStringToAssembler("hms");
+        System.out.println("hms: " + hms);
 
         List<Integer> hexdigits = font.convertStringToAssembler("0123456789abcdef");
         System.out.println("Hex digits: " + hexdigits);

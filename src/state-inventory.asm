@@ -54,6 +54,7 @@ state_inventory_entry_point_from_item_inspection:
 	call enable_VDP_output
 
 state_inventory_loop:
+	call state_play__update_time  ; updates how long has the player been playing
 	halt
 	call draw_inventory_player
 	call draw_inventory_cursor

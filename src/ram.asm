@@ -269,6 +269,7 @@ stats__n_items_collected: ds virtual 1
 stats__n_maps_collected: ds virtual 1
 stats__continued: ds virtual 1
 stats__ending: ds virtual 2
+stats__time: ds virtual 4  ; frames, seconds, minutes, hours
 
 RAM_to_zero_on_game_start_end:
 

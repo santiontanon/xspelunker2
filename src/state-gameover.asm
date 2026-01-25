@@ -84,8 +84,9 @@ state_game_over_text_loop_page1_continue:
 	call state_game_over_print_n_coins
 	call state_game_over_print_continued
 	call state_game_over_print_ending
-
-	; ...
+	call state_game_over_print_time
+	call state_game_over_print_achievements
+	call state_game_over_print_bosses
 
 	; continue yes/no:
 	ld a, 8 * 8 - 1  ; y coordinate of the first option
@@ -275,3 +276,88 @@ state_game_over_print_ending:
 	call call_hl_in_page_c_8000
 	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO_OFFSET buffer_4096, CHRTBL2 + (12*32+13)*8, COLOR_DARK_YELLOW*16 + #80 * 256, 4
 	ret
+
+
+;-----------------------------------------------
+state_game_over_print_time:
+	ld a, (stats__time + 3)  ; hours
+	cp #ff
+	jp z, state_game_over_print_time_max
+	ld ix, buffer_4096 + 1
+	ld c, 0  ; number of characters
+	ld e, 100
+	call state_game_over_print_time_add_digit
+	ld e, 10
+	call state_game_over_print_time_add_digit
+	ld e, 1
+	call state_game_over_print_time_add_digit
+	ld (ix), 122  ; h
+	inc ix
+	inc c
+
+	ld a, (stats__time + 2)  ; minutes
+	ld e, 10
+	call state_game_over_print_time_add_digit
+	ld e, 1
+	call state_game_over_print_time_add_digit
+	ld (ix), 130  ; m
+	inc ix
+	inc c
+
+	ld a, (stats__time + 1)  ; seconds
+	ld e, 10
+	call state_game_over_print_time_add_digit
+	ld e, 1
+	call state_game_over_print_time_add_digit
+	ld (ix), 143  ; s
+	inc c
+
+	ld a, c
+	ld (buffer_4096), a  ; length
+	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO_OFFSET buffer_4096, CHRTBL2 + (15*32+21)*8, COLOR_DARK_YELLOW*16 + #10 * 256, 7
+	ret
+
+state_game_over_print_time_max:
+	; max
+	ld de, TEXT_MAX_TIME
+	ld hl, copy_text_from_textpage3
+	ld c, TEXT_PAGE3
+	call call_hl_in_page_c_8000
+	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO_OFFSET buffer_4096, CHRTBL2 + (15*32+21)*8, COLOR_DARK_YELLOW*16 + #10 * 256, 4
+	ret
+
+
+state_game_over_print_time_add_digit:
+	ld b, 0  ; new digit
+state_game_over_print_time_add_digit_loop:
+	cp e
+	jr c, state_game_over_print_time_add_digit_loop_done
+	sub e
+	inc b
+	jr state_game_over_print_time_add_digit_loop
+state_game_over_print_time_add_digit_loop_done:
+	push af
+		ld a, b
+		ld hl, text_numbers_gameover
+		ADD_HL_A
+		ld a, (hl)
+		ld (ix), a
+		inc ix
+		inc c  ; number of digits
+	pop af
+	ret
+
+
+;-----------------------------------------------
+state_game_over_print_achievements:
+	; ...
+	ret
+
+
+;-----------------------------------------------
+state_game_over_print_bosses:
+	; ...
+	ret
+
+
+
