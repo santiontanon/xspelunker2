@@ -117,6 +117,14 @@ DRAW_SENTENCE_TO_VDP_REMOTE_MACRO: MACRO TEXT, VRAM, ATTRIBUTE, LENGTH
 	call draw_sentence_to_vdp_from_another_page
 	ENDM
 
+DRAW_SENTENCE_TO_VDP_REMOTE_MACRO_OFFSET: MACRO TEXT, VRAM, ATTRIBUTE_OFFSET, LENGTH
+	ld hl, TEXT
+	ld de, VRAM
+	ld iy, ATTRIBUTE_OFFSET
+	ld b, LENGTH
+	call draw_sentence_to_vdp_from_another_page
+	ENDM
+
 
 
 draw_sentence_to_vdp_clearing_text_buffer:

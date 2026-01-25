@@ -16,6 +16,8 @@ state_yesno_dialog:
 			ld bc, dialog_sprites_bin_end - dialog_sprites_bin
 			call fast_LDIRVM_from_sprites_page
 		pop hl
+		ld a, 12 * 8 - 1
+		ld (tmp_dialog_options_position), a
 		call state_yesno_dialog_draw_text
 		call state_yesno_dialog_mainloop
 		call clear_screen_left_to_right
@@ -31,12 +33,14 @@ state_yesno_dialog_done:
 
 update_dialog_pointer_sprite:
 	ld hl, buffer_4096
+	ld a, (tmp_dialog_options_position)
+	ld c, a
 	ld a, (tmp_dialog_pointer_position)
 	; y = 13*8 - 1 + a*8
 	add a, a
 	add a, a
 	add a, a
-	add a, 12 * 8 - 1
+	add a, c
 	ld (hl), a  ; y
 	inc hl
 	ld (hl), 96
@@ -83,6 +87,8 @@ state_yesno_dialog_in_game:
 		ld b, 4
 		call draw_sentence_to_vdp_clearing_text_buffer
 
+		ld a, 12 * 8 - 1
+		ld (tmp_dialog_options_position), a
 		call state_yesno_dialog_mainloop
 
 		; clear arrow sprite:

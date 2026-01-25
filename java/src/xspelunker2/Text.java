@@ -118,10 +118,28 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "The gods do not like this name. Try another one!", "GAMESTART_CONSOLE_MSG5", 90);
         
         addLineSafe(lines_with_constant_page1, "Game Over", "GAME_OVER", 16);
+        addLineSafe(lines_with_constant_page1, "Continue?", "CONTINUE", 16);
         addLineSafe(lines_with_constant_page1, "Are you sure?", "ARE_YOU_SURE", 16);
-        addLineSafe(lines_with_constant_page1, "Yes", "YES", 4);
-        addLineSafe(lines_with_constant_page1, "No", "NO", 4);
-                
+        addLineSafe(lines_with_constant_page1, "yes", "YES", 4);
+        addLineSafe(lines_with_constant_page1, "no", "NO", 4);
+        
+        // game over stats:
+        addLineSafe(lines_with_constant_page3, "Ending Reached:", "GAMEOVER_STATS_0", 10);
+        addLineSafe(lines_with_constant_page3, "Continued:", "GAMEOVER_STATS_1", 8);
+        addLineSafe(lines_with_constant_page3, "World seed:", "GAMEOVER_STATS_2", 8);
+        addLineSafe(lines_with_constant_page3, "Difficulty:", "GAMEOVER_STATS_3", 8);
+        addLineSafe(lines_with_constant_page3, "Weapons:", "GAMEOVER_STATS_4", 8);
+        addLineSafe(lines_with_constant_page3, "Items:", "GAMEOVER_STATS_5", 8);
+        addLineSafe(lines_with_constant_page3, "Maps:", "GAMEOVER_STATS_6", 8);
+        addLineSafe(lines_with_constant_page3, "Coins:", "GAMEOVER_STATS_7", 8);
+        addLineSafe(lines_with_constant_page3, "Bosses defeated:", "GAMEOVER_STATS_8", 10);
+        addLineSafe(lines_with_constant_page3, "Time:", "GAMEOVER_STATS_9", 10);
+        addLineSafe(lines_with_constant_page3, "Achievements:", "GAMEOVER_STATS_10", 10);
+        addLineSafe(lines_with_constant_page3, "fail", "ENDING_FAIL", 6);
+        addLineSafe(lines_with_constant_page3, "C", "ENDING_C", 6);
+        addLineSafe(lines_with_constant_page3, "B", "ENDING_B", 6);
+        addLineSafe(lines_with_constant_page3, "A", "ENDING_A", 6);
+        
         addLineSafe(lines_with_constant_page1, "Entering", "ENTERING", 16);
         addLineSafe(lines_with_constant_page1, "Loading area...", "LOADING_AREA", 16);
         addLineSafe(lines_with_constant_page1, "the jungle", "AREA0_NAME", 16);

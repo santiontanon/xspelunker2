@@ -127,10 +127,13 @@ draw_gamestart_world_name_loop:
 	call gamestart_compute_random_seed
 	call gamestart_compute_difficulty
 	call gamestart_draw_difficulty
-	; jp gamestart_draw_random_seed
+	call gamestart_generate_random_seed_string
+	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096, CHRTBL2 + (256*2 + 128)*8, COLOR_WHITE*16, 4
+	ret
 
 
-gamestart_draw_random_seed:
+;-----------------------------------------------
+gamestart_generate_random_seed_string:
 	ld de, buffer_4096
 	ld a, 4
 	ld (de), a
@@ -156,13 +159,13 @@ gamestart_draw_random_seed:
 	call gamestart_draw_random_seed_add_digit
 	ld a, l
 	and #0f
-	call gamestart_draw_random_seed_add_digit
-
-	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096, CHRTBL2 + (256*2 + 128)*8, COLOR_WHITE*16, 4
-	ret
+	jp gamestart_draw_random_seed_add_digit
 
 
 ;-----------------------------------------------
+; input:
+; - a: digit
+; - de: ptr where to add
 gamestart_draw_random_seed_hex_digits:
 	db 22, 24, 26, 28, 30, 32, 35, 37, 39, 41, 108, 110, 112, 114, 116, 118
 

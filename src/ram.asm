@@ -154,6 +154,7 @@ global_state__n_power_stones_in_calendar: ds virtual 1  ; for convenience (it sh
 global_state__maya_riddle: ds virtual 1  ; 0: not solved, 1: solved first line, 2: solved
 global_state__solved_final_riddle: ds virtual 1
 
+RAM_to_zero_on_continue:
 player_x: ds virtual 2  ; 1st the pixel and 2nd byte is the tile coordinate
 player_y: ds virtual 2  ; 1st the pixel and 2nd byte is the tile coordinate
 player_state: ds virtual 1
@@ -172,6 +173,8 @@ player_jump_no_grab_timer: ds virtual 1  ; player can grab to ropes/ladders only
                                          ; This is used for when jumping off a ladder/rope, so that the player does not grab again immediately on the next frame.
 player_push_block_timer: ds virtual 1
 player_no_rope_or_ladder_this_frame: ds virtual 1  ; to prevent infinite loops in the player routine when holding to a ladder fails
+RAM_to_zero_on_continue_end:
+
 player_combination_levers_state: ds virtual 8  ; to simplify combination lever checking
 player_trial_completion_state: ds virtual 1
 
@@ -259,13 +262,22 @@ boss__2_settings:
 boss__3_settings:
     ds virtual 12  ; difficulty parameters of the boss
 
+; game stats:
+stats__n_coins_collected: ds virtual 2
+stats__n_weapons_collected: ds virtual 1
+stats__n_items_collected: ds virtual 1
+stats__n_maps_collected: ds virtual 1
+stats__continued: ds virtual 1
+stats__ending: ds virtual 2
+
 RAM_to_zero_on_game_start_end:
 
 ; temporary variables:
 temporary_variables: ds virtual 10
 tmp_hud_drawing_hl: equ temporary_variables
 tmp_hud_drawing_de: equ temporary_variables + 2
-tmp_dialog_pointer_position: equ tmp_hud_drawing_hl
+tmp_dialog_pointer_position: equ temporary_variables
+tmp_dialog_options_position: equ temporary_variables + 1
 tmp_map_pointer_position: equ tmp_hud_drawing_hl
 tmp_letter_line_width: equ tmp_hud_drawing_hl
 tmp_letter_line_color: equ tmp_hud_drawing_hl + 1

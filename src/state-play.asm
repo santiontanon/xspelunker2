@@ -34,6 +34,9 @@ state_play:
 		ld bc, (RAM_to_zero_on_game_start_end - RAM_to_zero_on_game_start) - 1
 		call clear_memory
 
+		ld hl, TEXT_ENDING_FAIL
+		ld (stats__ending), hl
+
 		ld hl, enemy_respawn_table
 		ld bc, (enemy_respawn_table_end - enemy_respawn_table) - 1
 		ld a, #ff
@@ -146,6 +149,7 @@ state_play:
 
 		call state_play_world_name_conditions
 
+state_play_from_continue:
 		; initial player position:
 		ld hl, #0100
 ; 		ld hl, #0a00

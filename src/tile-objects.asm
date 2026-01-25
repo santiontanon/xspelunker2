@@ -1202,6 +1202,10 @@ object_interaction_function_empty:
 
 ;-----------------------------------------------
 object_interaction_function_pickup_item:
+	; update stats:
+	ld hl, stats__n_items_collected
+	inc (hl)
+
 	; add to inventory:
 	ld hl, object_interaction_inventory_slot
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
@@ -1240,6 +1244,10 @@ object_interaction_function_delete_object:
 
 ;-----------------------------------------------
 object_interaction_function_pickup_weapon:
+	; update stats:
+	ld hl, stats__n_weapons_collected
+	inc (hl)
+
 	; add to inventory:
 	ld hl, object_interaction_inventory_slot
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
@@ -1270,6 +1278,10 @@ object_interaction_function_pickup_weapon:
 
 ;-----------------------------------------------
 object_interaction_function_pickup_small_key:
+	; update stats:
+	ld hl, stats__n_items_collected
+	inc (hl)
+
 	ld hl, player_inventory_n_small_keys
 	inc (hl)
 	ld hl, player_inventory_items + 20  ; small key
@@ -1279,6 +1291,10 @@ object_interaction_function_pickup_small_key:
 
 ;-----------------------------------------------
 object_interaction_function_pickup_map_piece:
+	; update stats:
+	ld hl, stats__n_maps_collected
+	inc (hl)
+
 	ld hl, SFX_item_pickup
 	call play_SFX_with_high_priority
 
@@ -1294,6 +1310,10 @@ object_interaction_function_pickup_map_piece:
 
 ;-----------------------------------------------
 object_interaction_function_pickup_heart:
+	; update stats:
+	ld hl, stats__n_items_collected
+	inc (hl)
+
 	ld hl, SFX_item_pickup
 	call play_SFX_with_high_priority
 
@@ -1789,11 +1809,19 @@ object_interaction_function_power_stone:
 
 
 object_interaction_function_pickup_puzzlebox_mars:
+	; update stats:
+	ld hl, stats__n_items_collected
+	inc (hl)
+
 	ld c, BOSS_PAGE
 	ld hl, pick_up_boss_puzzlebox_mars
 	jp call_hl_in_page_c_8000
 
 object_interaction_function_pickup_puzzlebox_moon:
+	; update stats:
+	ld hl, stats__n_items_collected
+	inc (hl)
+
 	ld c, BOSS_PAGE
 	ld hl, pick_up_boss_puzzlebox_moon
 	jp call_hl_in_page_c_8000
@@ -2142,6 +2170,11 @@ object_interaction_function_teleport_to_area_object_room_id_set:
 
 ;-----------------------------------------------
 object_interaction_function_pickup_coins:
+	; update stats:
+	ld hl, (stats__n_coins_collected)
+	inc hl
+	ld (stats__n_coins_collected), hl
+
 	; gain coins:
 	ld a, (player_inventory_coins)
 	add a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)  ; number of coins
