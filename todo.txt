@@ -1,19 +1,31 @@
 to do:
 
 ***- xibalba biome (remember to keep ladder tiles in place for down-door opening code).
-  ***- get popol vuh and read twins legend to get the name of all xibalba lords
-  ***- make a list of things I want added based on the legend above
-  ***- at least clues to awake each of the xibalba lords (spawn 2 - 4 at random in each playthrough)
-  ***- mock up
-  ***- create basic patterns in TILED
+  ***- mock up xibalba in GIMP
+  ***- create chunks patterns in TILED
+    ***- each Xibalba chunk must have at least 2 item positions, so that I can spawn 2 tablets in one room
+    ***- add them to the game
+    ***- create variations until satisfied
+  ***- Write a collection of Xibalba-specific tablets:
+    ***- How Hunahpú and Xbalanqué defeated the lords
+    ***- Some info on the lords themselves (names, pairs, curses)
+    ***- How to wake them up (something to do on their graves)
+  ***- we will pick four locations that have either no tag or a single tablet tag and add another tag with some of these tablets (pick at most 4 at random)
   ***- sprite enemies: think of a list at least one that sleeps and wakes up when you are closeby (how does it detect you? maybe only if you make noise?)
   ***- tile enemies:
     ***- volcano that spits lava (usual lava pit where fireballs jump up and maybe explode into bullets), cannot be killed
     ***- lava waterfalls (lava falls intermitently, blocking the path part of the time)
+    ***- large stone owls (they just fly up and down if they have space, rotate their heads, and spawn enemies/bullets/fire)
+  ***- boss room is a large ball game court (64 * 24 in size) with 12 tombs: 2 big ones and 10 small ones
+    ***- interacting tells you the name of the lord in each tomb
+    ***- player can wake up any 2 of the 12 xibalba lords in the boss room
+    ***- waking up proper pairs (e.g. the two main lords, or Ahalpuh+Ahalgana) gives you an extra item at the end: two main give you a key that can be used for a secret in moon/mars boss room, the other pairs give you benefits (figure them out)
+    ***- boss room has a tablet with a clue: "wake two xibalba lords and defeat them in the ball cours, choose wisely!" (or something like that)
+    ***- you can exit the boss room (stairs below) if you have not awaken any, but as soon as you awaken one of them, stairs lock and you are stuck inside until you defeat the boss
+  ***- create boss: draw skeletal figures with ornate Mayan headdresses, representing the rulers of the underworld, 12 of them, one for each, with small variations (summons skeletons or shadows).
 
 - music: intro, letters, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)
   - boss music acts as a health bar (increases in speed as health goes down: 50%, 25%)
-- fourth boss, Xibalba Lords: Hun Camé (One Death) and Vucub Camé (Seven Death), or maybe there are many different Xibalba lords, and the boss room has a statue for each, you collect clues throughout Xibalba (mixed with part of the Maya lore for the twins that beat them) to wake up two of them (different for each seed), so that the confrontation is different for every seed: Skeletal figures with ornate Mayan headdresses, representing the rulers of the underworld (summons skeletons or shadows). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
 - atlantis biome (do I need to move the possible set of up/down/left/right tags to 4 instead of just 2?): crocodiles as an additional water enemy? what happens to the special animal/teleporter rooms in this biome? do I need to redraw them?
 - fifth boss, Atlantean Guardian (Underwater Boss): A colossal robotic creature with bioluminescent features, resembling a deep-sea creature (laser beams from tentacles, summons robotic fish). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
 - confrontation with the aliens after activating the calendar stone: are aliens sprites or tiles?
@@ -51,10 +63,27 @@ X-Spelunker 2 (e-ki-se pe-lu-ne-ke-le):
     - the first attempt to create humans was from mud, but those were destroyed in the great flood 
     - the second attempt was from wood, but they could not worship and were destroyed (survivors are monkeys)
     - six creator deities: the Framer and the Shaper, Tepew and Quetzal Serpent, along with Xpiyacóc and Xmucané. These deities, helped Heart of Sky, also known as Hurakán, create the Earth.
-    - Hunajpu and Xbalanqué were two twins who deteated the gods of the underworld in a ball game, and then became the sun and moon
+    - Hunahpu and Xbalanqué were two twins who deteated the gods of the underworld in a ball game, and then became the sun and moon
     - After that, humans were created from white and yellow maize (Maize is sacred to Maya because of this)
     - 6 levels of maya underworld
     - 13 levels of maya upperworld
+
+- Notes from Popol Vuh (mostly from the twins legend):
+  - Twins: Hunahpú and Xbalanqué (went down to Xibalba to challenge the lords, who had killed their parents; the twins were born out of a virgin pregnancy of a woman from Xibalbá, who visited a tree where the head of one of the parents of Hunahpú and Xbalanqué was)
+  - Xibalba lords:
+    - lords: Hun Camé (One Death) and Vucub Camé (Seven Death)
+    - subordinates:
+      - Ahalpuh (Pus Maker), Ahalgana (Dropsy and Jaundice Causer): swelling, pus and jaundice
+      - Ahalmez (Sweeping Demon), Ahaltocob (Stabbing Demon): bring disaster to the home
+      - Chamiabac (Bone Staff), Chamiaholom (Skull Staff): turn people into skeletons
+      - Quicxic / Xic (Blood Wing, Hawk), Patán (Tumpline): sudden death (vomiting blood)
+      - Xiquiripat/Quicrixcac (Flying Scab), Cuchumaquic (Gathered Blood): hemorrages (sometimes  Quicré, Bloody Teeth, is listed here too, but that adds up to 13)
+    - messenger owls: Arrow Owl, Leg Owl, Macaw Owl and Skull Owl
+    - there is a ball court (maybe this is the boss room), and the ball is just a blade (maybe in the boss fight they keep throwing the ball at you)
+  - The names of the first 4 men (after the Hunahpú and Xbalanqué myth, as they were not human, but gods):
+    - Balam Quitze, Balam Acab, Mahucutah and Iqui Balam.
+  - They were too wise and all seeing, so the Gods limited their sight and knowledge, and gave them 4 wives:
+    - Cahá-Paluna, Chomihá, Tzununihá, Caquixahá
 
 - potential additional types of puzzles/challenges:
   - keep a button pressed to open a door
