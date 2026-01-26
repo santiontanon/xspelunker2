@@ -1,11 +1,21 @@
 to do:
 
 ***- xibalba biome (remember to keep ladder tiles in place for down-door opening code).
-  ***- mock up xibalba in GIMP
+  OK - mock up xibalba in GIMP
   ***- create chunks patterns in TILED
-    ***- each Xibalba chunk must have at least 2 item positions, so that I can spawn 2 tablets in one room
-    ***- add them to the game
-    ***- create variations until satisfied
+    OK - create base tileset in GIMP
+    OK - create the basic chunk types: one for each direction with "hole" in each side
+    OK - each Xibalba chunk must have at least 2 item positions, so that I can spawn 2 tablets in one room (start loading them in Java and have a condition in Java to verify this)
+      OK - fix "breakable located on non wall"
+    ***- can I have 3 up/down/left/right types without modifying my current code? 01/10/11? Then I can have "falling lava" (new tile type?) and "half-hole" on left/right
+      ***- If I can, see if I have space for some patterns with this (not too many, just a few) for pyramid and caves (move calendar/teleporter room somewhere else if needed, e.g. to page 13
+    ***- add ladder patterns up/down: ladders could be different this time? (made out of bone?)
+    ***- background patterns (torches, slaves)
+    ***- rest of patterns (combination, block, boss) as for being able to generate levels without errors for all seeds
+    ***- add lava patterns left/right (most patterns should have lava)
+    ***- simplifyTilesXibalba (RoomChunk.java)
+    ***- add them to the game (tile type table)
+    ***- animations: lava, torches and skeleton prisoners in background
   ***- Write a collection of Xibalba-specific tablets:
     ***- How Hunahpú and Xbalanqué defeated the lords
     ***- Some info on the lords themselves (names, pairs, curses)
@@ -51,7 +61,7 @@ to do:
   - Special huge chest that has a lock with a number. Each time you use a small key, it reduces by one. But the number is larger than the keys in one world. the state of the chest should be saved to the ROM, and if you beat the game (can you beat the game having used small keys there?, it remains. It might give you access to a final alien weapon to really kill the final boss. If you play again on the same seed, the chest will be blocked somehow (so, you need a different seed) (add as a special achievement for the gameover screen)
   - room that has 4 locks (one from each cardinal directions), but in each world, it can only be reached from one direction. Upon opening all 4, it reveals a passage to a secret level (the "lost world", which is like jungle but with dinosaurs? is there an alternate ending here?, or the "underground cenote", where sacrifices were made) (add as a special achievement for the gameover screen)
   - when a player bullet does not hit an enemy, have a chance (or always) to remain in the map, so you can pick it up again (maybe some enemies will steal objects, and that can be used to bait them? or maybe some enemies wake up with noise and items dropping make noise? (as do dropping pushable blocks, or the player doing anything except crawling)).
-  - Mars/Moon: in the boss rooms, there might be something you can do before summoning the boss. This could lead to something like: (1) an underground cave where there is a brokne ancient robot that can talk to you (in a mix of English and Maya maybe?), and might give you a weapon upgrade (e.g. a better raygun). (2) a hidden room in Mars with one of those Mars faces, containing a great treasure (is there any mythical Mayan treasure?), add as a special achievement for the gameover screen.
+  - Mars/Moon: in the boss rooms, there might be something you can do before summoning the boss. This could lead to something like: (1) an underground cave where there is a brokne ancient robot that can talk to you (in a mix of English and Maya maybe?), and might give you a weapon upgrade (e.g. a better raygun). (2) a hidden room in Mars with one of those Mars faces, containing a great treasure (e.g. a fifth (?) undiscovered Mayan codex), add as a special achievement for the gameover screen.
 
 
 --------------------
