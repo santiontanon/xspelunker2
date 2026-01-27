@@ -2,12 +2,7 @@ to do:
 
 ***- xibalba biome (remember to keep ladder tiles in place for down-door opening code).
   ***- create chunks patterns in TILED
-    ***- can I have 3 up/down/left/right types without modifying my current code? 01/10/11? Then I can have "falling lava/water" (new tile type?) and "half-hole" on left/right
-      OK - fix the assembler code around "; find the set of chunks from the pool that satisfy the requirements:"
-      OK - update Java code to have a "half-hole" tag for left/right
-      OK - Add some patterns for this to "caves" biome, test in Java until desired effect
-      ***- Make sure it works in assembler (try until I see a level with a half-hole)
-      ***- add some to xibalba
+    ***- add some half-hole chunks to xibalba
     ***- background patterns (torches, slaves)
     ***- add ladder patterns up/down: ladders could be different this time? (made out of bone?)
     ***- add lava patterns left/right (most patterns should have lava, add to previous patterns if needed)
