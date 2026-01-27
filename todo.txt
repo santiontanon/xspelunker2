@@ -1,18 +1,17 @@
 to do:
 
 ***- xibalba biome (remember to keep ladder tiles in place for down-door opening code).
-  OK - mock up xibalba in GIMP
   ***- create chunks patterns in TILED
-    OK - create base tileset in GIMP
-    OK - create the basic chunk types: one for each direction with "hole" in each side
-    OK - each Xibalba chunk must have at least 2 item positions, so that I can spawn 2 tablets in one room (start loading them in Java and have a condition in Java to verify this)
-      OK - fix "breakable located on non wall"
-    ***- can I have 3 up/down/left/right types without modifying my current code? 01/10/11? Then I can have "falling lava" (new tile type?) and "half-hole" on left/right
-      ***- If I can, see if I have space for some patterns with this (not too many, just a few) for pyramid and caves (move calendar/teleporter room somewhere else if needed, e.g. to page 13
-    ***- add ladder patterns up/down: ladders could be different this time? (made out of bone?)
+    ***- can I have 3 up/down/left/right types without modifying my current code? 01/10/11? Then I can have "falling lava/water" (new tile type?) and "half-hole" on left/right
+      OK - fix the assembler code around "; find the set of chunks from the pool that satisfy the requirements:"
+      OK - update Java code to have a "half-hole" tag for left/right
+      OK - Add some patterns for this to "caves" biome, test in Java until desired effect
+      ***- Make sure it works in assembler (try until I see a level with a half-hole)
+      ***- add some to xibalba
     ***- background patterns (torches, slaves)
+    ***- add ladder patterns up/down: ladders could be different this time? (made out of bone?)
+    ***- add lava patterns left/right (most patterns should have lava, add to previous patterns if needed)
     ***- rest of patterns (combination, block, boss) as for being able to generate levels without errors for all seeds
-    ***- add lava patterns left/right (most patterns should have lava)
     ***- simplifyTilesXibalba (RoomChunk.java)
     ***- add them to the game (tile type table)
     ***- animations: lava, torches and skeleton prisoners in background
@@ -36,7 +35,7 @@ to do:
 
 - music: intro, letters, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)
   - boss music acts as a health bar (increases in speed as health goes down: 50%, 25%)
-- atlantis biome (do I need to move the possible set of up/down/left/right tags to 4 instead of just 2?): crocodiles as an additional water enemy? what happens to the special animal/teleporter rooms in this biome? do I need to redraw them?
+- atlantis biome (exploit the fact that I can have now 3 tags for left/up/right/down tags): crocodiles as an additional water enemy? what happens to the special animal/teleporter rooms in this biome? do I need to redraw them?
 - fifth boss, Atlantean Guardian (Underwater Boss): A colossal robotic creature with bioluminescent features, resembling a deep-sea creature (laser beams from tentacles, summons robotic fish). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
 - confrontation with the aliens after activating the calendar stone: are aliens sprites or tiles?
 - first ending sequence (udpate "stats__ending"): Elaine drops from the ceiling on a rope and rescues you. The calendar stone machine activates and creates a defensive barrier around earth, the alien armada that was coming turns back, but promises revenge.

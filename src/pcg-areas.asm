@@ -1691,12 +1691,42 @@ pcg_generate_area__choose_chunks_loop_x_combination_lock_tag:
 
 pcg_generate_area__choose_chunks_loop_x_continue:
 pcg_generate_area__choose_chunks_loop_x_no_placed_tag:
+		; compute and mask for tags (00 for 00 and 11 for 01, 10 and 11 tags).
+		ld ixl, 0
+		ld a, iyh
+		and #c0
+		jr z, pcg_generate_area__choose_chunks_loop_x_continue_and_mask_continue
+		ld ixl, #c0
+pcg_generate_area__choose_chunks_loop_x_continue_and_mask_continue:
+		ld a, iyh
+		and #30
+		jr z, pcg_generate_area__choose_chunks_loop_x_continue_and_mask_continue2
+		ld a, ixl
+		or #30
+		ld ixl, a
+pcg_generate_area__choose_chunks_loop_x_continue_and_mask_continue2:
+		ld a, iyh
+		and #0c
+		jr z, pcg_generate_area__choose_chunks_loop_x_continue_and_mask_continue3
+		ld a, ixl
+		or #0c
+		ld ixl, a
+pcg_generate_area__choose_chunks_loop_x_continue_and_mask_continue3:
+		ld a, iyh
+		and #03
+		jr z, pcg_generate_area__choose_chunks_loop_x_continue_and_mask_continue4
+		ld a, ixl
+		or #03
+		ld ixl, a
+pcg_generate_area__choose_chunks_loop_x_continue_and_mask_continue4:
+
 		; here:
 		; - hl: ptr to piece type
 		; - de: ptr to chunk pool
 		; - ixh: number of chunks in the pool
 		; - iyl: first chunk ID in the pool
 		; - (tmp_pcg_area__necessary_object_types): necessaryObjectTypes
+		; - ixl: ams mask to compare the tags in a chunk with iyh
 		; - iyh: left/up/right/down tags
 
 		; find the set of chunks from the pool that satisfy the requirements:
@@ -1712,7 +1742,7 @@ pcg_generate_area__choose_chunks_loop_x_chunk_loop:
 				inc de  ; skip piece type
 				inc de  ; skip chunk flags
 				ld a, (de)  ; left/up/right/down tags
-				and iyh
+				and ixl
 				cp iyh
 				jp nz, pcg_generate_area__choose_chunks_loop_x_chunk_loop_next_inc3
 

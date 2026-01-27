@@ -240,36 +240,6 @@ public class GenerateChunkData {
             }
         }
         
-        // Tags: (tags are not necessary here, they will be stored as a separate table)
-//        int upTags = 0;
-//        int downTags = 0;
-//        if (chunk.tags.containsKey("up")) {
-//            switch(chunk.tags.get("up")) {
-//                case "hole":
-//                    upTags |= 1;
-//                    break;
-//                case "stairs":
-//                    upTags |= 2;
-//                    break;
-//                default:
-//                    throw new Exception("Unsupported up tag!" + chunk.tags.get("down"));
-//            }
-//        }
-//        if (chunk.tags.containsKey("down")) {
-//            switch(chunk.tags.get("down")) {
-//                case "hole":
-//                    downTags |= 1;
-//                    break;
-//                case "stairs":
-//                    downTags |= 2;
-//                    break;
-//                default:
-//                    throw new Exception("Unsupported down tag!" + chunk.tags.get("down"));
-//            }
-//        }
-//        data.add(upTags);
-//        data.add(downTags);
-        
         // objects:
         if (addObjects) {
             if (chunk.locations != null) {
@@ -359,6 +329,7 @@ public class GenerateChunkData {
                 if (c.tags.get("left").equals("hole")) edgeFlags |= 0x40;
                 if (c.tags.get("left").equals("water")) edgeFlags |= 0x80;
                 if (c.tags.get("left").equals("lava")) edgeFlags |= 0x80;
+                if (c.tags.get("left").equals("half-hole")) edgeFlags |= 0xc0;
                 flagsString += "left: " + c.tags.get("left") + ", ";
             }
             if (c.tags.containsKey("up") && !c.tags.get("up").isEmpty()) {
@@ -370,6 +341,7 @@ public class GenerateChunkData {
                 if (c.tags.get("right").equals("hole")) edgeFlags |= 0x04;
                 if (c.tags.get("right").equals("water")) edgeFlags |= 0x08;
                 if (c.tags.get("right").equals("lava")) edgeFlags |= 0x08;
+                if (c.tags.get("right").equals("half-hole")) edgeFlags |= 0x0c;
                 flagsString += "right: " + c.tags.get("right") + ", ";
             }
             if (c.tags.containsKey("down") && !c.tags.get("down").isEmpty()) {
@@ -534,7 +506,7 @@ public class GenerateChunkData {
         // Check left/right "contract" (bottom left/right are walkable and have a platform to stand on):
         if ((c.type & PCGWorld.DIRECTION_LEFT) != 0) {
             if (!c.tags.containsKey("left") || (
-                !c.tags.get("left").equals("water") && !c.tags.get("left").equals("lava"))) {
+                !c.tags.get("left").equals("water") && !c.tags.get("left").equals("lava") && !c.tags.get("left").equals("half-hole"))) {
                 for(int i = 8;i<10;i++) {
                     int tile = c.tiles[0][i];
                     if (collision_types[tile] != 0 && 
@@ -547,7 +519,8 @@ public class GenerateChunkData {
         if ((c.type & PCGWorld.DIRECTION_RIGHT) != 0) {
             if (!c.tags.containsKey("right") || 
                 (!c.tags.get("right").equals("water") && 
-                 !c.tags.get("right").equals("lava"))) {
+                 !c.tags.get("right").equals("lava") && 
+                 !c.tags.get("right").equals("half-hole"))) {
                 for(int i = 8;i<10;i++) {
                     int tile = c.tiles[15][i];
                     if (collision_types[tile] != 0 && 
