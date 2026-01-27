@@ -575,6 +575,9 @@ public class RoomChunk {
                 case "caves":
                     path = "data/caves/tiles.png";
                     break;
+                case "xibalba":
+                    path = "data/xibalba/tiles.png";
+                    break;
                 default:
                     throw new Exception("Unsupported biome: " + biome);
             }
