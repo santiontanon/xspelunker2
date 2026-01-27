@@ -54,7 +54,7 @@ public class PCGWorld {
         "Fire Shaft",
         "Pacific Caves",
         "Atlantic Caves",
-        "Temple of Fire",
+        "Xibalba",
         "Atlantis",  // 9
         "Mars Pyramid",  // 10
         "Moon Cave",  // 11
