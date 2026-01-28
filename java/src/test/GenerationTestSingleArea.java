@@ -101,7 +101,7 @@ public class GenerationTestSingleArea {
                             if (i < 50) {
                                 visualizeArea(ra, "tmp/area"+j+"-seed"+i+".png", pcg2);
                             }
-                            ra.stats(chunkStats, typeStats);
+                            ra.stats(chunkStats, typeStats, pcg2);
                             checkNumAnimations(ra, pcg2);
                         }
                     }

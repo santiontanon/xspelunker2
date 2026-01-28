@@ -2,16 +2,16 @@ to do:
 
 ***- xibalba biome (remember to keep ladder tiles in place for down-door opening code).
   ***- create chunks patterns in TILED
-    ***- rest of patterns (block, boss) as for being able to generate levels without errors for all seeds
+    ***- missing boss patterns: 0001, 0111, 1011, 1101, 1110, 1111
     ***- add lava patterns left/right:
       ***- on the right: 0010, 0110, 1010, 1110
       ***- on the left: 1000, 1001, 1010, 1011, 1100, 1101, 1110, 1111
       ***- on the both: 1010
-    ***- add lava to regular patterns, where possible
+    ***- add variety chunks
     ***- background patterns (torches, slaves)
     ***- simplifyTilesXibalba (RoomChunk.java)
     ***- prettifyRoomsXibalba (RenderedArea.java)
-    ***- add them to the game (tile type table)
+  ***- add xibalba biome to the game (tile type table)
     ***- animations: lava, torches and skeleton prisoners in background
   ***- Write a collection of Xibalba-specific tablets:
     ***- How Hunahpú and Xbalanqué defeated the lords

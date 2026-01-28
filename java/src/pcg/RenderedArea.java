@@ -222,8 +222,14 @@ public class RenderedArea {
     }
     
     
-    public void stats(HashMap<String, Integer> chunkStats, int typeStats[])
+    public void stats(HashMap<String, Integer> chunkStats, int typeStats[], PCGArea pcg)
     {
+        for(RoomChunk c:pcg.all_fg_chunks) {
+            if (!chunkStats.containsKey(c.path)) {
+                chunkStats.put(c.path, 0);
+            }
+        }
+        
         for(int i = 0;i<fg_chunks[0].length;i++) {
             for(int j = 0;j<fg_chunks.length;j++) {
                 if (fg_chunks[j][i] != null) {
