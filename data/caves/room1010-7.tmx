@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="8">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="10">
  <properties>
   <property name="left" value="half-hole"/>
   <property name="right" value="half-hole"/>
@@ -13,19 +13,21 @@
 149,165,254,254,149,149,254,150,106,106,106,106,106,149,181,254,
 181,181,1,1,181,181,1,123,1,1,1,1,1,165,1,1,
 1,1,1,1,1,1,1,145,149,150,1,1,149,181,1,1,
-1,1,1,1,1,1,1,1,181,145,149,149,181,1,1,1,
-104,105,117,119,119,121,1,1,1,1,181,165,1,1,1,1,
-119,119,143,1,1,252,1,1,1,1,1,181,1,1,117,119,
+1,1,1,1,1,1,1,1,165,145,149,149,181,1,1,1,
+104,105,117,119,119,121,1,1,181,149,181,181,1,1,1,1,
+119,119,143,1,1,252,1,1,1,165,1,1,1,1,117,119,
+1,1,1,1,1,252,1,1,1,181,1,1,1,1,123,1,
 1,1,1,1,1,252,1,1,1,1,1,1,1,1,123,1,
 1,1,1,1,1,252,104,105,1,1,1,104,105,1,123,1,
 1,1,1,1,1,128,119,119,119,119,119,119,119,119,143,1,
-1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 106,106,106,106,106,1,1,1,1,1,1,106,106,106,106,106
 </data>
  </layer>
  <objectgroup name="objects">
   <object id="1" type="item" x="24" y="24" width="16" height="16"/>
-  <object id="2" type="big-item" x="48" y="48" width="32" height="24"/>
-  <object id="7" type="4x4-item" x="48" y="40" width="32" height="32"/>
+  <object id="2" type="big-item" x="80" y="56" width="32" height="24"/>
+  <object id="7" type="4x4-item" x="80" y="48" width="32" height="32"/>
+  <object id="8" type="door-down" x="48" y="80" width="32" height="16"/>
+  <object id="9" type="breakable-down" x="48" y="80" width="32" height="16"/>
  </objectgroup>
 </map>
