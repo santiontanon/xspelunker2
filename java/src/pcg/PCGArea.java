@@ -888,6 +888,7 @@ public class PCGArea {
             l.add(new RoomChunk("data/caves/block1001-3.tmx", 0x9, "caves"));  // half-hole
             l.add(new RoomChunk("data/caves/block1010-1.tmx", 0xa, "caves"));
             l.add(new RoomChunk("data/caves/block1010-2.tmx", 0xa, "caves"));
+            l.add(new RoomChunk("data/caves/block1010-3.tmx", 0xa, "caves"));
             l.add(new RoomChunk("data/caves/block1100-1.tmx", 0xc, "caves"));
             l.add(new RoomChunk("data/caves/block1100-2.tmx", 0xc, "caves"));
             l.add(new RoomChunk("data/caves/block1100-3.tmx", 0xc, "caves"));  // half-hole
@@ -1189,7 +1190,7 @@ public class PCGArea {
 //            l.add(new RoomChunk("data/xibalba/block0111-1.tmx", 0x7, "xibalba"));
 //            l.add(new RoomChunk("data/xibalba/block1001-1.tmx", 0x9, "xibalba"));
 //            l.add(new RoomChunk("data/xibalba/block1001-2.tmx", 0x9, "xibalba"));
-//            l.add(new RoomChunk("data/xibalba/block1010-1.tmx", 0xa, "xibalba"));
+            l.add(new RoomChunk("data/xibalba/block1010-1.tmx", 0xa, "xibalba"));
 //            l.add(new RoomChunk("data/xibalba/block1100-1.tmx", 0xc, "xibalba"));
 //            l.add(new RoomChunk("data/xibalba/block1100-2.tmx", 0xc, "xibalba"));
 
