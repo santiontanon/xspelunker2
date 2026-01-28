@@ -27,7 +27,7 @@ to do:
     ***- interacting tells you the name of the lord in each tomb
     ***- player can wake up any 2 of the 12 xibalba lords in the boss room
     ***- waking up proper pairs (e.g. the two main lords, or Ahalpuh+Ahalgana) gives you an extra item at the end: two main give you a key that can be used for a secret in moon/mars boss room, the other pairs give you benefits (figure them out)
-    ***- boss room has a tablet with a clue: "wake two xibalba lords and defeat them in the ball cours, choose wisely!" (or something like that)
+    ***- boss room has a tablet with a clue: "wake two xibalba lords and defeat them in the ball courts, choose wisely!" (or something like that)
     ***- you can exit the boss room (stairs below) if you have not awaken any, but as soon as you awaken one of them, stairs lock and you are stuck inside until you defeat the boss
   ***- create boss: draw skeletal figures with ornate Mayan headdresses, representing the rulers of the underworld, 12 of them, one for each, with small variations (summons skeletons or shadows).
 

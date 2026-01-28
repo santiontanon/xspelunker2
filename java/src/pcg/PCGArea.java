@@ -1115,6 +1115,7 @@ public class PCGArea {
         fg_chunks.get(0xc).add(new RoomChunk("data/xibalba/room1100-2.tmx", 0xc, "xibalba"));
         fg_chunks.get(0xc).add(new RoomChunk("data/xibalba/room1100-3.tmx", 0xc, "xibalba"));
         fg_chunks.get(0xc).add(new RoomChunk("data/xibalba/room1100-4.tmx", 0xc, "xibalba"));
+        fg_chunks.get(0xc).add(new RoomChunk("data/xibalba/room1100-5.tmx", 0xc, "xibalba"));
 
         fg_chunks.get(0xd).add(new RoomChunk("data/xibalba/room1101-1.tmx", 0xd, "xibalba"));
         fg_chunks.get(0xd).add(new RoomChunk("data/xibalba/room1101-2.tmx", 0xd, "xibalba"));
@@ -1144,7 +1145,7 @@ public class PCGArea {
 //        boss_chunks.get(0x3).add(new RoomChunk("data/xibalba/boss0011-2.tmx", 0x3, "xibalba"));
         boss_chunks.get(0x4).add(new RoomChunk("data/xibalba/boss0100-1.tmx", 0x4, "xibalba"));
 //        boss_chunks.get(0x4).add(new RoomChunk("data/xibalba/boss0100-2.tmx", 0x4, "xibalba"));
-//        boss_chunks.get(0x5).add(new RoomChunk("data/xibalba/boss0101-1.tmx", 0x5, "xibalba"));
+        boss_chunks.get(0x5).add(new RoomChunk("data/xibalba/boss0101-1.tmx", 0x5, "xibalba"));
 //        boss_chunks.get(0x5).add(new RoomChunk("data/xibalba/boss0101-2.tmx", 0x5, "xibalba")); 
 //        boss_chunks.get(0x5).add(new RoomChunk("data/xibalba/boss0101-3.tmx", 0x5, "xibalba"));
 //        boss_chunks.get(0x5).add(new RoomChunk("data/xibalba/boss0101-4.tmx", 0x5, "xibalba"));
@@ -1157,11 +1158,11 @@ public class PCGArea {
         boss_chunks.get(0x8).add(new RoomChunk("data/xibalba/boss1000-1.tmx", 0x8, "xibalba"));
         boss_chunks.get(0x8).add(new RoomChunk("data/xibalba/boss1000-2.tmx", 0x8, "xibalba"));
         boss_chunks.get(0x9).add(new RoomChunk("data/xibalba/boss1001-1.tmx", 0x9, "xibalba"));
-//        boss_chunks.get(0x9).add(new RoomChunk("data/xibalba/boss1001-2.tmx", 0x9, "xibalba"));
+        boss_chunks.get(0x9).add(new RoomChunk("data/xibalba/boss1001-2.tmx", 0x9, "xibalba"));
         boss_chunks.get(0xa).add(new RoomChunk("data/xibalba/boss1010-1.tmx", 0xa, "xibalba"));
         boss_chunks.get(0xa).add(new RoomChunk("data/xibalba/boss1010-2.tmx", 0xa, "xibalba"));
 //        boss_chunks.get(0xb).add(new RoomChunk("data/xibalba/boss1011-1.tmx", 0xb, "xibalba"));
-//        boss_chunks.get(0xc).add(new RoomChunk("data/xibalba/boss1100-1.tmx", 0xc, "xibalba"));
+        boss_chunks.get(0xc).add(new RoomChunk("data/xibalba/boss1100-1.tmx", 0xc, "xibalba"));
 //        boss_chunks.get(0xc).add(new RoomChunk("data/xibalba/boss1100-2.tmx", 0xc, "xibalba"));
 //        boss_chunks.get(0xd).add(new RoomChunk("data/xibalba/boss1101-1.tmx", 0xd, "xibalba"));
 //        boss_chunks.get(0xd).add(new RoomChunk("data/xibalba/boss1101-2.tmx", 0xd, "xibalba"));
@@ -1181,10 +1182,10 @@ public class PCGArea {
             List<RoomChunk> l = new ArrayList<>();
 //            l.add(new RoomChunk("data/xibalba/block0011-1.tmx", 0x3, "xibalba"));
 //            l.add(new RoomChunk("data/xibalba/block0011-2.tmx", 0x3, "xibalba"));
-//            l.add(new RoomChunk("data/xibalba/block0101-1.tmx", 0x5, "xibalba"));
-//            l.add(new RoomChunk("data/xibalba/block0101-2.tmx", 0x5, "xibalba"));
-//            l.add(new RoomChunk("data/xibalba/block0101-3.tmx", 0x5, "xibalba"));
-//            l.add(new RoomChunk("data/xibalba/block0101-4.tmx", 0x5, "xibalba"));
+            l.add(new RoomChunk("data/xibalba/block0101-1.tmx", 0x5, "xibalba"));
+            l.add(new RoomChunk("data/xibalba/block0101-2.tmx", 0x5, "xibalba"));
+            l.add(new RoomChunk("data/xibalba/block0101-3.tmx", 0x5, "xibalba"));
+            l.add(new RoomChunk("data/xibalba/block0101-4.tmx", 0x5, "xibalba"));
 //            l.add(new RoomChunk("data/xibalba/block0110-1.tmx", 0x6, "xibalba"));
 //            l.add(new RoomChunk("data/xibalba/block0110-2.tmx", 0x6, "xibalba"));
 //            l.add(new RoomChunk("data/xibalba/block0111-1.tmx", 0x7, "xibalba"));
