@@ -2,12 +2,7 @@ to do:
 
 ***- xibalba biome (remember to keep ladder tiles in place for down-door opening code).
   ***- create chunks patterns in TILED
-    ***- missing boss patterns: 0001, 0111, 1011, 1101, 1110, 1111
-    ***- add lava patterns left/right:
-      ***- on the right: 0010, 0110, 1010, 1110
-      ***- on the left: 1000, 1001, 1010, 1011, 1100, 1101, 1110, 1111
-      ***- on the both: 1010
-    ***- add variety chunks
+    ***- add variety chunks + draw additional tiles as needed (maybe "bird cages" or prisoners in cages?)
     ***- background patterns (torches, slaves)
     ***- simplifyTilesXibalba (RoomChunk.java)
     ***- prettifyRoomsXibalba (RenderedArea.java)
