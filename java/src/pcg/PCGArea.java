@@ -1067,8 +1067,8 @@ public class PCGArea {
     {
         // background:
         bg_chunks.add(new RoomChunk("data/xibalba/bg-1.tmx", 0, "xibalba"));
-//        bg_chunks.add(new RoomChunk("data/xibalba/bg-2.tmx", 0, "xibalba"));
-//        bg_chunks.add(new RoomChunk("data/xibalba/bg-3.tmx", 0, "xibalba"));
+        bg_chunks.add(new RoomChunk("data/xibalba/bg-2.tmx", 0, "xibalba"));
+        bg_chunks.add(new RoomChunk("data/xibalba/bg-3.tmx", 0, "xibalba"));
 
         // foreground:
         for(int i = 0;i<16;i++) {
