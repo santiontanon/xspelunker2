@@ -604,8 +604,12 @@ pcg_generate_room__object_loop_end:
 	ld c, TILES_PAGE
 	call call_hl_in_page_c_8000
 ;     out (#2c),a  ; DEBUG
-	call pcg_generate_room__spawn_enemies
-	call pcg_generate_room__enemy_respawn_logic
+	ld c, PCG_PAGE_ENEMIES
+	ld hl, pcg_generate_room__spawn_enemies
+	call call_hl_in_page_c_8000
+	ld c, PCG_PAGE_ENEMIES
+	ld hl, pcg_generate_room__enemy_respawn_logic
+	call call_hl_in_page_c_8000
 ;     out (#2d),a	  ; DEBUG
 	ld hl, room_undraw_tile_objects
 	ld c, TILES_PAGE

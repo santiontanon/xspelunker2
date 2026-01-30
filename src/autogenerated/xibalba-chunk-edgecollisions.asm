@@ -1,23 +1,23 @@
   db #3f, #ff, #3f, #ff  ; data/xibalba/room0000-1.tmx
   db #3f, #ff, #3f, #c3  ; data/xibalba/room0001-1.tmx
   db #3f, #ff, #21, #ff  ; data/xibalba/room0010-1.tmx
-  db #3f, #ff, #09, #3f  ; data/xibalba/room0010-2.tmx
+  db #3f, #ff, #39, #ff  ; data/xibalba/room0010-2.tmx
   db #3f, #ff, #21, #ff  ; data/xibalba/room0010-3.tmx
   db #3f, #ff, #21, #c3  ; data/xibalba/room0011-1.tmx
-  db #3c, #fe, #39, #c3  ; data/xibalba/room0011-2.tmx
-  db #3c, #e0, #21, #c3  ; data/xibalba/room0011-3.tmx
+  db #3f, #ff, #39, #c3  ; data/xibalba/room0011-2.tmx
+  db #3f, #ff, #21, #c3  ; data/xibalba/room0011-3.tmx
   db #3f, #ff, #21, #c3  ; data/xibalba/room0011-4.tmx
   db #3f, #81, #3f, #ff  ; data/xibalba/room0100-1.tmx
   db #3f, #81, #3f, #ff  ; data/xibalba/room0100-2.tmx
   db #3f, #81, #3f, #ff  ; data/xibalba/room0100-3.tmx
-  db #0f, #81, #0f, #00  ; data/xibalba/room0100-4.tmx
+  db #3f, #81, #3f, #ff  ; data/xibalba/room0100-4.tmx
   db #3f, #81, #3f, #ff  ; data/xibalba/room0100-5.tmx
   db #3f, #81, #3f, #c3  ; data/xibalba/room0101-1.tmx
   db #3f, #81, #3f, #c3  ; data/xibalba/room0101-2.tmx
   db #3f, #81, #3f, #c3  ; data/xibalba/room0101-3.tmx
   db #3f, #81, #3f, #c3  ; data/xibalba/room0101-4.tmx
   db #3f, #01, #20, #ff  ; data/xibalba/room0110-1.tmx
-  db #3f, #01, #08, #3f  ; data/xibalba/room0110-2.tmx
+  db #3f, #01, #38, #ff  ; data/xibalba/room0110-2.tmx
   db #3f, #01, #20, #ff  ; data/xibalba/room0110-3.tmx
   db #3f, #01, #20, #ff  ; data/xibalba/room0110-4.tmx
   db #3f, #01, #20, #83  ; data/xibalba/room0111-1.tmx
@@ -27,70 +27,70 @@
   db #21, #ff, #3f, #ff  ; data/xibalba/room1000-1.tmx
   db #39, #ff, #3f, #ff  ; data/xibalba/room1000-2.tmx
   db #39, #ff, #3f, #ff  ; data/xibalba/room1000-3.tmx
-  db #21, #7f, #3c, #ff  ; data/xibalba/room1000-4.tmx
-  db #21, #7f, #3c, #ff  ; data/xibalba/room1000-5.tmx
+  db #21, #ff, #3f, #ff  ; data/xibalba/room1000-4.tmx
+  db #21, #ff, #3f, #ff  ; data/xibalba/room1000-5.tmx
   db #21, #ff, #3f, #c3  ; data/xibalba/room1001-1.tmx
-  db #29, #ff, #3f, #c3  ; data/xibalba/room1001-2.tmx
-  db #21, #7f, #3c, #c3  ; data/xibalba/room1001-3.tmx
-  db #21, #ff, #3e, #c3  ; data/xibalba/room1001-4.tmx
+  db #39, #ff, #3f, #c3  ; data/xibalba/room1001-2.tmx
+  db #21, #ff, #3f, #c3  ; data/xibalba/room1001-3.tmx
+  db #21, #ff, #3f, #c3  ; data/xibalba/room1001-4.tmx
   db #21, #ff, #21, #ff  ; data/xibalba/room1010-1.tmx
   db #21, #ff, #39, #ff  ; data/xibalba/room1010-2.tmx
-  db #09, #ff, #09, #00  ; data/xibalba/room1010-3.tmx
+  db #39, #ff, #39, #ff  ; data/xibalba/room1010-3.tmx
   db #39, #ff, #21, #ff  ; data/xibalba/room1010-4.tmx
   db #21, #ff, #21, #ff  ; data/xibalba/room1010-5.tmx
   db #21, #ff, #21, #ff  ; data/xibalba/room1010-6.tmx
   db #21, #ff, #21, #ff  ; data/xibalba/room1010-7.tmx
   db #21, #ff, #21, #ff  ; data/xibalba/room1010-8.tmx
   db #21, #ff, #21, #c3  ; data/xibalba/room1011-1.tmx
-  db #21, #ff, #29, #c3  ; data/xibalba/room1011-2.tmx
-  db #29, #ff, #21, #c3  ; data/xibalba/room1011-3.tmx
+  db #21, #ff, #39, #c3  ; data/xibalba/room1011-2.tmx
+  db #39, #ff, #21, #c3  ; data/xibalba/room1011-3.tmx
   db #21, #ff, #21, #c3  ; data/xibalba/room1011-4.tmx
   db #21, #81, #3f, #ff  ; data/xibalba/room1100-1.tmx
-  db #19, #81, #0f, #ff  ; data/xibalba/room1100-2.tmx
+  db #39, #81, #3f, #ff  ; data/xibalba/room1100-2.tmx
   db #21, #81, #3f, #ff  ; data/xibalba/room1100-3.tmx
-  db #19, #81, #0f, #ff  ; data/xibalba/room1100-4.tmx
+  db #39, #81, #3f, #ff  ; data/xibalba/room1100-4.tmx
   db #39, #81, #3f, #ff  ; data/xibalba/room1100-5.tmx
   db #21, #81, #3f, #ff  ; data/xibalba/room1100-6.tmx
   db #21, #81, #3f, #ff  ; data/xibalba/room1100-7.tmx
   db #20, #80, #3f, #c3  ; data/xibalba/room1101-1.tmx
-  db #28, #80, #3f, #c3  ; data/xibalba/room1101-2.tmx
+  db #38, #80, #3f, #c3  ; data/xibalba/room1101-2.tmx
   db #20, #80, #3f, #c3  ; data/xibalba/room1101-3.tmx
-  db #28, #80, #3f, #c3  ; data/xibalba/room1101-4.tmx
+  db #38, #80, #3f, #c3  ; data/xibalba/room1101-4.tmx
   db #20, #80, #3f, #c3  ; data/xibalba/room1101-5.tmx
   db #20, #80, #3f, #c3  ; data/xibalba/room1101-6.tmx
   db #20, #00, #20, #ff  ; data/xibalba/room1110-1.tmx
-  db #20, #00, #18, #7f  ; data/xibalba/room1110-2.tmx
-  db #08, #00, #20, #fc  ; data/xibalba/room1110-3.tmx
+  db #20, #00, #38, #ff  ; data/xibalba/room1110-2.tmx
+  db #38, #00, #20, #ff  ; data/xibalba/room1110-3.tmx
   db #20, #00, #20, #ff  ; data/xibalba/room1110-4.tmx
-  db #08, #00, #20, #fe  ; data/xibalba/room1110-5.tmx
+  db #38, #00, #20, #ff  ; data/xibalba/room1110-5.tmx
   db #20, #00, #20, #ff  ; data/xibalba/room1110-6.tmx
   db #20, #00, #20, #ff  ; data/xibalba/room1110-7.tmx
   db #20, #00, #20, #ff  ; data/xibalba/room1110-8.tmx
   db #20, #00, #20, #ff  ; data/xibalba/room1110-9.tmx
   db #20, #00, #20, #c3  ; data/xibalba/room1111-1.tmx
-  db #20, #00, #28, #c3  ; data/xibalba/room1111-2.tmx
-  db #28, #00, #20, #c3  ; data/xibalba/room1111-3.tmx
+  db #20, #00, #38, #c3  ; data/xibalba/room1111-2.tmx
+  db #38, #00, #20, #c3  ; data/xibalba/room1111-3.tmx
   db #20, #00, #20, #c3  ; data/xibalba/room1111-4.tmx
-  db #28, #00, #20, #c3  ; data/xibalba/room1111-5.tmx
+  db #38, #00, #20, #c3  ; data/xibalba/room1111-5.tmx
   db #20, #00, #20, #c3  ; data/xibalba/room1111-6.tmx
   db #20, #00, #20, #c3  ; data/xibalba/room1111-7.tmx
-  db #3e, #7e, #3e, #c3  ; data/xibalba/boss0001-1.tmx
-  db #3f, #ff, #21, #c7  ; data/xibalba/boss0010-1.tmx
+  db #3f, #ff, #3f, #c3  ; data/xibalba/boss0001-1.tmx
+  db #3f, #ff, #21, #ff  ; data/xibalba/boss0010-1.tmx
   db #3f, #ff, #21, #c3  ; data/xibalba/boss0011-1.tmx
   db #3f, #81, #3f, #ff  ; data/xibalba/boss0100-1.tmx
   db #3f, #81, #3f, #c3  ; data/xibalba/boss0101-1.tmx
-  db #3f, #01, #20, #c7  ; data/xibalba/boss0110-1.tmx
+  db #3f, #01, #20, #ff  ; data/xibalba/boss0110-1.tmx
   db #3f, #01, #20, #83  ; data/xibalba/boss0111-1.tmx
-  db #19, #ff, #1f, #00  ; data/xibalba/boss1000-1.tmx
-  db #21, #ff, #0f, #03  ; data/xibalba/boss1000-2.tmx
-  db #21, #7f, #3c, #ff  ; data/xibalba/boss1000-3.tmx
+  db #39, #ff, #3f, #ff  ; data/xibalba/boss1000-1.tmx
+  db #21, #ff, #3f, #ff  ; data/xibalba/boss1000-2.tmx
+  db #21, #ff, #3f, #ff  ; data/xibalba/boss1000-3.tmx
   db #21, #ff, #3f, #c3  ; data/xibalba/boss1001-1.tmx
-  db #29, #ff, #3f, #c3  ; data/xibalba/boss1001-2.tmx
+  db #39, #ff, #3f, #c3  ; data/xibalba/boss1001-2.tmx
   db #21, #ff, #21, #ff  ; data/xibalba/boss1010-1.tmx
-  db #09, #ff, #21, #c0  ; data/xibalba/boss1010-2.tmx
+  db #39, #ff, #21, #ff  ; data/xibalba/boss1010-2.tmx
   db #21, #ff, #21, #c3  ; data/xibalba/boss1011-1.tmx
   db #21, #81, #3f, #ff  ; data/xibalba/boss1100-1.tmx
-  db #09, #81, #0f, #7e  ; data/xibalba/boss1100-2.tmx
+  db #39, #81, #3f, #ff  ; data/xibalba/boss1100-2.tmx
   db #20, #80, #3f, #c3  ; data/xibalba/boss1101-1.tmx
   db #20, #00, #20, #ff  ; data/xibalba/boss1110-1.tmx
   db #20, #00, #20, #c3  ; data/xibalba/boss1111-1.tmx

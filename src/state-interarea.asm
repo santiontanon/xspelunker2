@@ -62,7 +62,7 @@ interarea_exit_down:
 	push hl
 		push de
 			ld hl, pcg_generate_room__enemy_respawn_logic_on_exit_room
-			ld c, PCG_PAGE
+			ld c, PCG_PAGE_ENEMIES
 			call call_hl_in_page_c_8000
 		pop de
 		ld hl, pcg_generate_room
@@ -99,7 +99,7 @@ interarea_exit_left:
 	push hl
 		push de
 			ld hl, pcg_generate_room__enemy_respawn_logic_on_exit_room
-			ld c, PCG_PAGE
+			ld c, PCG_PAGE_ENEMIES
 			call call_hl_in_page_c_8000
 		pop de
 		ld hl, pcg_generate_room
@@ -133,7 +133,7 @@ interarea_exit_up:
 	push hl
 		push de
 			ld hl, pcg_generate_room__enemy_respawn_logic_on_exit_room
-			ld c, PCG_PAGE
+			ld c, PCG_PAGE_ENEMIES
 			call call_hl_in_page_c_8000
 		pop de
 		ld hl, pcg_generate_room
@@ -168,7 +168,7 @@ interarea_exit_right:
 	push hl
 		push de
 			ld hl, pcg_generate_room__enemy_respawn_logic_on_exit_room
-			ld c, PCG_PAGE
+			ld c, PCG_PAGE_ENEMIES
 			call call_hl_in_page_c_8000
 		pop de
 		ld hl, pcg_generate_room

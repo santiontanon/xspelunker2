@@ -231,7 +231,7 @@ setup_game_tiles:
     ; hud tiles (includes generic in-game tiles too, like coins, etc.):
     ld hl, tiles_hud_zx0
     ld de, buffer_4096
-    ld c, TILES_PAGE
+    ld c, TILES_HUD_PAGE
     call dzx0_from_page_c
 
     ld hl, buffer_4096

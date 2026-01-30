@@ -429,6 +429,10 @@ pcg_generate_room__prettify_pyramid_ladder_done:
 	jp pcg_generate_room__prettify_pyramid_loop_x_continue
 
 pcg_generate_room__prettify_pyramid_face1:
+	call pcg_generate_room__prettify_face1
+	jp pcg_generate_room__prettify_pyramid_loop_x_continue
+
+pcg_generate_room__prettify_face1:
 	push hl
 		inc hl
 		ld (hl), 12*16 + 1
@@ -453,7 +457,7 @@ pcg_generate_room__prettify_pyramid_face1:
 		dec hl
 		ld (hl), 15*16 + 0
 	pop hl
-	jp pcg_generate_room__prettify_pyramid_loop_x_continue
+	ret
 
 pcg_generate_room__prettify_pyramid_face2:
 	push hl
@@ -614,30 +618,7 @@ pcg_generate_room__prettify_caves_ladder_done:
 	jp pcg_generate_room__prettify_caves_loop_x_continue
 
 pcg_generate_room__prettify_caves_face1:
-	push hl
-		inc hl
-		ld (hl), 12*16 + 1
-		inc hl
-		ld (hl), 12*16 + 2
-		add hl, de
-		ld (hl), 13*16 + 2
-		dec hl
-		ld (hl), 13*16 + 1
-		dec hl
-		ld (hl), 13*16 + 0
-		add hl, de
-		ld (hl), 14*16 + 0
-		inc hl
-		ld (hl), 14*16 + 1
-		inc hl
-		ld (hl), 14*16 + 2
-		add hl, de
-		ld (hl), 15*16 + 2
-		dec hl
-		ld (hl), 15*16 + 1
-		dec hl
-		ld (hl), 15*16 + 0
-	pop hl
+	call pcg_generate_room__prettify_face1
 	jp pcg_generate_room__prettify_caves_loop_x_continue
 
 pcg_generate_room__prettify_caves_rope:
@@ -744,6 +725,228 @@ pcg_generate_room__prettify_caves_platform_randomize:
 ; - completes ropes, ladders, face blocks
 ; - randomizes xibalba tiles
 pcg_generate_room__prettify_xibalba:
-	; ...
+	; reconstruct ropes/ladders/faces:
+	ld hl, current_room__tile_map
+	ld bc, (current_room__width)
+	ld a, (current_room__width)
+	ld e, a
+	ld d, 0	
+pcg_generate_room__prettify_xibalba_loop_y:
+	push bc
+		ld b, c
+		ld c, 15*16 + 5
+pcg_generate_room__prettify_xibalba_loop_x:
+		ld a, (hl)
+		cp 12*16 + 9
+		jp z,pcg_generate_room__prettify_xibalba_glyphs
+		sub c
+		jr c, pcg_generate_room__prettify_xibalba_loop_x_continue
+		jp z, pcg_generate_room__prettify_xibalba_platform2_randomize
+		dec a
+		jr z, pcg_generate_room__prettify_xibalba_left_wall
+		dec a
+		jp z, pcg_generate_room__prettify_xibalba_rubble_randomize
+		dec a
+		jp z, pcg_generate_room__prettify_xibalba_ladder
+		dec a
+		jp z, pcg_generate_room__prettify_xibalba_face1
+		dec a
+		jp z, pcg_generate_room__prettify_xibalba_right_wall
+		dec a
+		jp z, pcg_generate_room__prettify_xibalba_down_wall
+		dec a
+		jp z, pcg_generate_room__prettify_xibalba_spike_tip_randomize
+		dec a
+		jp z, pcg_generate_room__prettify_xibalba_up_wall
+		dec a
+		jp z, pcg_generate_room__prettify_xibalba_platform_randomize
+		jp pcg_generate_room__prettify_xibalba_rope
+pcg_generate_room__prettify_xibalba_loop_x_continue:
+		inc hl
+		djnz pcg_generate_room__prettify_xibalba_loop_x
+	pop bc
+	djnz pcg_generate_room__prettify_xibalba_loop_y
 	ret
 
+pcg_generate_room__prettify_xibalba_platform2_randomize:
+	PCG_PRETTIFY_RANDOM
+	and #01
+	jp z, pcg_generate_room__prettify_xibalba_loop_x_continue
+	ld (hl), 10*16 + 9
+	jp pcg_generate_room__prettify_xibalba_loop_x_continue
+
+pcg_generate_room__prettify_xibalba_platform_randomize:
+	PCG_PRETTIFY_RANDOM
+	and #01
+	jp z, pcg_generate_room__prettify_xibalba_loop_x_continue
+	ld (hl), 8*16 + 9
+	jp pcg_generate_room__prettify_xibalba_loop_x_continue
+
+pcg_generate_room__prettify_xibalba_left_wall:
+	PCG_PRETTIFY_RANDOM
+	and #07
+	cp 3
+	jp c, pcg_generate_room__prettify_xibalba_loop_x_continue
+	cp 6
+	ld (hl), 9*16 + 4
+	jp c, pcg_generate_room__prettify_xibalba_loop_x_continue
+	ld (hl), 9*16 + 5
+	jp pcg_generate_room__prettify_xibalba_loop_x_continue
+
+pcg_generate_room__prettify_xibalba_right_wall:
+	PCG_PRETTIFY_RANDOM
+	and #07
+	cp 3
+	jp c, pcg_generate_room__prettify_xibalba_loop_x_continue
+	cp 6
+	ld (hl), 9*16 + 2
+	jp c, pcg_generate_room__prettify_xibalba_loop_x_continue
+	ld (hl), 9*16 + 3
+	jp pcg_generate_room__prettify_xibalba_loop_x_continue
+
+pcg_generate_room__prettify_xibalba_down_wall:
+	PCG_PRETTIFY_RANDOM
+	and #07
+	cp 3
+	jp c, pcg_generate_room__prettify_xibalba_loop_x_continue
+	cp 6
+	ld (hl), 8*16 + 14
+	jp c, pcg_generate_room__prettify_xibalba_loop_x_continue
+	ld (hl), 8*16 + 15
+	jp pcg_generate_room__prettify_xibalba_loop_x_continue
+
+pcg_generate_room__prettify_xibalba_up_wall:
+	PCG_PRETTIFY_RANDOM
+	and #07
+	cp 3
+	jp c, pcg_generate_room__prettify_xibalba_loop_x_continue
+	cp 6
+	ld (hl), 8*16 + 12
+	jp c, pcg_generate_room__prettify_xibalba_loop_x_continue
+	ld (hl), 8*16 + 13
+	jp pcg_generate_room__prettify_xibalba_loop_x_continue
+
+pcg_generate_room__prettify_xibalba_rubble_randomize:
+	PCG_PRETTIFY_RANDOM
+	and #03
+	jp z, pcg_generate_room__prettify_xibalba_loop_x_continue
+	add a, 10*16 + 0
+	ld (hl), a
+	jp pcg_generate_room__prettify_xibalba_loop_x_continue
+
+pcg_generate_room__prettify_xibalba_ladder:
+	push hl
+	push bc
+		ld bc, current_room__tile_map
+pcg_generate_room__prettify_xibalba_ladder_loop:
+		or a
+		sbc hl, de  ; go one row up
+		or a
+		sbc hl, bc  ; check if we are out of the map
+		jr c, pcg_generate_room__prettify_xibalba_ladder_done
+		add hl, bc
+		ld a, (hl)
+		or a
+		jr z, pcg_generate_room__prettify_xibalba_ladder_keep_going
+		cp 6*16 + 0  ; torch
+		jr z, pcg_generate_room__prettify_xibalba_ladder_keep_going
+		cp 7*16 + 1  ; background
+		jr z, pcg_generate_room__prettify_xibalba_ladder_keep_going
+		cp 6*16 + 2  ; background
+		jr z, pcg_generate_room__prettify_xibalba_ladder_keep_going
+		cp 6*16 + 3  ; background
+		jr z, pcg_generate_room__prettify_xibalba_ladder_keep_going
+		cp 6*16 + 4  ; background
+		jr z, pcg_generate_room__prettify_xibalba_ladder_keep_going
+		cp 6*16 + 5  ; background
+		jr z, pcg_generate_room__prettify_xibalba_ladder_keep_going
+		jr pcg_generate_room__prettify_xibalba_ladder_done
+pcg_generate_room__prettify_xibalba_ladder_keep_going:
+		ld (hl), 15*16 + 8  ; ladder-left
+		inc hl
+		ld (hl), 10*16 + 7  ; ladder-right
+		dec hl
+		jr pcg_generate_room__prettify_xibalba_ladder_loop
+pcg_generate_room__prettify_xibalba_ladder_done:
+	pop bc
+	pop hl
+	jp pcg_generate_room__prettify_xibalba_loop_x_continue
+
+pcg_generate_room__prettify_xibalba_face1:
+	call pcg_generate_room__prettify_face1
+	jp pcg_generate_room__prettify_xibalba_loop_x_continue
+
+pcg_generate_room__prettify_xibalba_spike_tip_randomize:
+	PCG_PRETTIFY_RANDOM
+	and #01
+	jr z, pcg_generate_room__prettify_xibalba_spike_tip_randomize_continue
+	ld (hl), 8*16 + 2
+pcg_generate_room__prettify_xibalba_spike_tip_randomize_continue:
+	PCG_PRETTIFY_RANDOM
+	and #01
+	add a, 8*16 + 4
+	add hl, de
+	ld (hl), a
+	sbc hl, de
+	jp pcg_generate_room__prettify_xibalba_loop_x_continue
+
+pcg_generate_room__prettify_xibalba_glyphs:
+	PCG_PRETTIFY_RANDOM
+	and #0f  ; 3, 5, 8, 10, 13
+	cp 3
+	jp c, pcg_generate_room__prettify_xibalba_loop_x_continue
+	ld (hl), 12*16 + 10
+	cp 5
+	jp c, pcg_generate_room__prettify_xibalba_loop_x_continue
+	ld (hl), 13*16 + 9
+	cp 8
+	jp c, pcg_generate_room__prettify_xibalba_loop_x_continue
+	ld (hl), 13*16 + 10
+	cp 10
+	jp c, pcg_generate_room__prettify_xibalba_loop_x_continue
+	ld (hl), 14*16 + 9
+	cp 13
+	jp c, pcg_generate_room__prettify_xibalba_loop_x_continue
+	ld (hl), 14*16 + 10
+	jp pcg_generate_room__prettify_xibalba_loop_x_continue
+
+pcg_generate_room__prettify_xibalba_rope:
+	push hl
+	push bc
+		ld bc, current_room__tile_map
+pcg_generate_room__prettify_xibalba_rope_loop:
+		or a
+		sbc hl, de  ; go one row up
+; 		or a
+		sbc hl, bc  ; check if we are out of the map
+		jr c, pcg_generate_room__prettify_xibalba_rope_done
+		add hl, bc
+		ld a, (hl)
+		or a
+		jr z, pcg_generate_room__prettify_xibalba_rope_keep_going
+		cp 6*16 + 0  ; torch
+		jr z, pcg_generate_room__prettify_xibalba_rope_keep_going
+		cp 7*16 + 1  ; torch
+		jr z, pcg_generate_room__prettify_xibalba_rope_keep_going
+		cp 6*16 + 2  ; background
+		jr z, pcg_generate_room__prettify_xibalba_rope_keep_going
+		cp 6*16 + 3  ; background
+		jr z, pcg_generate_room__prettify_xibalba_rope_keep_going
+		cp 6*16 + 4  ; background
+		jr z, pcg_generate_room__prettify_xibalba_rope_keep_going
+		cp 6*16 + 5  ; background
+		jr z, pcg_generate_room__prettify_xibalba_rope_keep_going
+		jr pcg_generate_room__prettify_xibalba_rope_done
+pcg_generate_room__prettify_xibalba_rope_keep_going:
+		PCG_PRETTIFY_RANDOM
+		and #03
+		jp nz, pcg_generate_room__prettify_xibalba_rope_keep_going2
+		ld (hl), 8*16 + 3  ; rope knot
+		jr pcg_generate_room__prettify_xibalba_rope_loop
+pcg_generate_room__prettify_xibalba_rope_keep_going2:
+		ld (hl), 8*16 + 6  ; rope
+		jr pcg_generate_room__prettify_xibalba_rope_loop
+pcg_generate_room__prettify_xibalba_rope_done:
+	pop bc
+	pop hl
+	jp pcg_generate_room__prettify_xibalba_loop_x_continue
