@@ -53,10 +53,10 @@ area_default_tileset_ptrs:
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_caves, caves_enemy_sprites_zx0  ; atlantic caves
 
-	db PYRAMID_TILES_PAGE
-	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
+	db XIBALBA_TILES_PAGE
+	dw tiles_xibalba_zx0, update_animations_in_vdp_xibalba
 	db AREA_COLLISION_TABLES_PAGE
-	dw tile_collision_types_pyramid, pyramid_enemy_sprites_zx0  ; fire temple
+	dw tile_collision_types_xibalba, xibalba_enemy_sprites_zx0  ; xibalba
 
 	db PYRAMID_TILES_PAGE
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
@@ -1423,6 +1423,8 @@ pcg_generate_room_background:
 	jp z, pcg_generate_room_background_caves
 	cp 7
 	jp z, pcg_generate_room_background_caves
+	cp 8
+	jp z, pcg_generate_room_background_xibalba
 	jp pcg_generate_room_background_pyramid
 
 
@@ -1431,6 +1433,10 @@ pcg_generate_room_background:
 ; - hl: ptr to the fg chunk types
 pcg_generate_room_background_caves:
 	ld de, caves_chunk_bg_bank_ptrs
+	ld (tmp_pcg_room__current_chunk_bg_bank_ptrs), de
+	jr pcg_generate_room_background_pyramid_continue
+pcg_generate_room_background_xibalba:
+	ld de, xibalba_chunk_bg_bank_ptrs
 	ld (tmp_pcg_room__current_chunk_bg_bank_ptrs), de
 	jr pcg_generate_room_background_pyramid_continue
 pcg_generate_room_background_pyramid:

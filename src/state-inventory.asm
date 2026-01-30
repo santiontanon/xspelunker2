@@ -1287,6 +1287,98 @@ draw_inventory_map_have_map_loop_x_continue:
 	inc hl
 	djnz draw_inventory_map_have_map_loop_y
 
+	; mark interarea connections:
+	; each connection is 8 bytes: ; id1, id2, x1, y1, direction1, x2, y2, direction2 (coordinates are in chunks)
+	ld ix, current_world__interarea_connections
+draw_inventory_map_have_map_ia_loop:
+	ld a, (ix)
+	cp #ff
+	jp z, draw_inventory_map_have_map_ia_loop_done
+	ld a, (current_area__id)
+	cp (ix + 0)
+	jr z, draw_inventory_map_have_map_ia_loop_found_1
+	cp (ix + 1)
+	jr z, draw_inventory_map_have_map_ia_loop_found_2
+	jr draw_inventory_map_have_map_ia_loop_next
+draw_inventory_map_have_map_ia_loop_found_1:
+	ld c, (ix + 2)  ; x
+	ld b, (ix + 3)  ; y
+	ld e, (ix + 4)  ; direction
+	jr draw_inventory_map_have_map_ia_loop_found_continue
+draw_inventory_map_have_map_ia_loop_found_2:
+	ld c, (ix + 5)  ; x
+	ld b, (ix + 6)  ; y
+	ld e, (ix + 7)  ; direction
+draw_inventory_map_have_map_ia_loop_found_continue:
+	; draw marker:
+	sra c
+	sra b
+	ld a, b
+	add a, a
+	ld hl, draw_inventory_map_row_ptrs
+	ADD_HL_A
+	ld a, (hl)
+	inc hl
+	ld h, (hl)
+	ld l, a
+	ld a, c
+	add a, a
+	add a, a
+	add a, a
+	ADD_HL_A  ; hl = ptr to where to draw the marker
+	ld a, e
+	cp 8
+	jr z, draw_inventory_map_have_map_ia_loop_found_left
+	cp 4
+	jr z, draw_inventory_map_have_map_ia_loop_found_up
+	cp 2
+	jr z, draw_inventory_map_have_map_ia_loop_found_right
+draw_inventory_map_have_map_ia_loop_found_down:
+	ld bc, 5
+	add hl, bc
+	jr draw_inventory_map_have_map_ia_loop_found_up
+draw_inventory_map_have_map_ia_loop_found_left:
+	inc hl
+	inc hl
+	inc hl
+	call SETWRT
+	ld a, (VDP.DW)
+	ld c, a
+	ld a, #e0
+	jr draw_inventory_map_have_map_ia_loop_found_right_continue
+draw_inventory_map_have_map_ia_loop_found_up:
+	push hl
+		call RDVRM
+	pop hl
+	push af
+		call SETWRT
+		ld a, (VDP.DW)
+		ld c, a
+	pop af
+	or #10
+	out (c), a
+	push hl
+	pop hl
+	out (c), a
+	jr draw_inventory_map_have_map_ia_loop_next
+draw_inventory_map_have_map_ia_loop_found_right:
+	inc hl
+	inc hl
+	inc hl
+	call SETWRT
+	ld a, (VDP.DW)
+	ld c, a
+	ld a, #07
+draw_inventory_map_have_map_ia_loop_found_right_continue:
+	out (c), a
+	jr draw_inventory_map_have_map_ia_loop_next
+draw_inventory_map_have_map_ia_loop_next:
+	ld bc, 8
+	add ix, bc
+	jp draw_inventory_map_have_map_ia_loop
+draw_inventory_map_have_map_ia_loop_done:
+
+
 	; Loop 2, change the map colors to indicate where the player is:
 	ld a, (current_room__id)
 	ld iyl, a

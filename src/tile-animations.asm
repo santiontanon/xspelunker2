@@ -180,3 +180,11 @@ update_animations_in_vdp_caves_frame1:
 update_animations_in_vdp_caves_frame2:
 	ld hl, animations_caves_bin + 24*2
 	jr update_animations_in_vdp_caves_frame_continue
+
+
+
+;-----------------------------------------------
+update_animations_in_vdp_xibalba:
+	; ...
+	ret
+

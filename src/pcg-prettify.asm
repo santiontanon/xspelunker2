@@ -22,6 +22,8 @@ pcg_generate_room__prettify:
 	jp z, pcg_generate_room__prettify_caves
 	cp 7
 	jp z, pcg_generate_room__prettify_caves
+	cp 8
+	jp z, pcg_generate_room__prettify_xibalba
 	; ...
 	jp pcg_generate_room__prettify_pyramid
 	ret
@@ -734,4 +736,14 @@ pcg_generate_room__prettify_caves_platform_randomize:
 	jp z, pcg_generate_room__prettify_caves_loop_x_continue
 	ld (hl), 8*16 + 9
 	jp pcg_generate_room__prettify_caves_loop_x_continue
+
+
+
+;-----------------------------------------------
+; This method:
+; - completes ropes, ladders, face blocks
+; - randomizes xibalba tiles
+pcg_generate_room__prettify_xibalba:
+	; ...
+	ret
 

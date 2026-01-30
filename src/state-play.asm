@@ -129,11 +129,11 @@ state_play:
 ; 		ld (player_inventory_weapon_ammo + 3), a
 ; 		ld a, 1
 ; 		ld (player_inventory_n_small_keys), a
-; 		ld (global_state__objects + TAG_MAP_PIECE1), a
-; 		ld (global_state__objects + TAG_MAP_PIECE2), a
-; 		ld (global_state__objects + TAG_MAP_PIECE3), a
-; 		ld (global_state__objects + TAG_MAP_PIECE4), a
-; 		ld (global_state__objects + TAG_MAP_PIECE5), a
+		ld (global_state__objects + TAG_MAP_PIECE1), a
+		ld (global_state__objects + TAG_MAP_PIECE2), a
+		ld (global_state__objects + TAG_MAP_PIECE3), a
+		ld (global_state__objects + TAG_MAP_PIECE4), a
+		ld (global_state__objects + TAG_MAP_PIECE5), a
 ; 		ld (global_state__objects + TAG_TELEPORTER1), a
 ; 		ld (global_state__objects + TAG_TELEPORTER4), a
 ; 		ld (global_state__objects + TAG_TELEPORTER5), a
@@ -165,24 +165,26 @@ state_play_from_continue:
 
 		; generate area:
 		ld hl, pcg_generate_area
-; 		ld e, 0  ; area to generate
+		ld e, 0  ; area to generate
 ; 		ld e, 1
 ; 		ld e, 1  ; area to generate <- first boss
 ; 		ld e, 2  ; area to generate <- second boss
-		ld e, 3  ; area to generate
+; 		ld e, 3  ; area to generate
 ; 		ld e, 3  ; area to generate
 ; 		ld e, 4  ; area to generate <- third boss
+		ld e, 8  ; xibalba
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
 
 		; generate room:
-; 		ld e, START_ROOM_ID
+		ld e, START_ROOM_ID
 ; 		ld e, 15
 ; 		ld e, 20  ; <- first boss
 ; 		ld e, 16  ; <- second boss
-		ld e, 0
+; 		ld e, 4
 ; 		ld e, CALENDAR_ROOM_ID
 ; 		ld e, 3  ; <- third boss
+		ld e, 0
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000

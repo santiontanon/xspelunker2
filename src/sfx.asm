@@ -311,38 +311,38 @@ SFX_weapon_swing:
 
 SFX_weapon_swing_slow:
   db  7,#9c  ; noise in channel C, and tone in channels B and A
-  db 10,#0a  ; volume
+  db 10,#09  ; volume
   db  6,#24  ; noise frequency
   db MUSIC_CMD_SKIP
   db MUSIC_CMD_SKIP
-  db 10,#0c  ; volume
+  db 10,#0b  ; volume
   db  6,#22  ; noise frequency
   db MUSIC_CMD_SKIP
   db MUSIC_CMD_SKIP
-  db 10,#0f  ; volume
+  db 10,#0d  ; volume
   db  6,#20  ; noise frequency
   db MUSIC_CMD_SKIP
   db MUSIC_CMD_SKIP
   db  6,#18  ; noise frequency
   db MUSIC_CMD_SKIP
   db MUSIC_CMD_SKIP
-  db 10,#0c  ; volume
+  db 10,#0b  ; volume
   db  6,#16  ; noise frequency
   db MUSIC_CMD_SKIP
   db MUSIC_CMD_SKIP
-  db 10,#0a  ; volume
+  db 10,#09  ; volume
   db  6,#14  ; noise frequency
   db MUSIC_CMD_SKIP
   db MUSIC_CMD_SKIP
-  db 10,#08  ; volume
+  db 10,#07  ; volume
   db  6,#12  ; noise frequency
   db MUSIC_CMD_SKIP
   db MUSIC_CMD_SKIP
-  db 10,#06  ; volume
+  db 10,#05  ; volume
   db  6,#10  ; noise frequency
   db MUSIC_CMD_SKIP
   db MUSIC_CMD_SKIP
-  db 10,#04  ; volume
+  db 10,#03  ; volume
   db  6,#08  ; noise frequency
   db MUSIC_CMD_SKIP
   db 10,#02  ; volume

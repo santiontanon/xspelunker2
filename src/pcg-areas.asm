@@ -116,11 +116,16 @@ pcg_generate_area__initialize_ptrs:
 	jr z, pcg_generate_area__initialize_ptrs_caves
 	cp 7
 	jr z, pcg_generate_area__initialize_ptrs_caves
+	cp 8
+	jr z, pcg_generate_area__initialize_ptrs_xibalba
 pcg_generate_area__initialize_ptrs_pyramid:
 	ld hl, pyramid_chunk_ptrs_and_constants
 	jr pcg_generate_area__initialize_ptrs_continue
 pcg_generate_area__initialize_ptrs_caves:
 	ld hl, caves_chunk_ptrs_and_constants
+	jr pcg_generate_area__initialize_ptrs_continue
+pcg_generate_area__initialize_ptrs_xibalba:
+	ld hl, xibalba_chunk_ptrs_and_constants
 	jr pcg_generate_area__initialize_ptrs_continue
 pcg_generate_area__initialize_ptrs_jungle
 	ld hl, jungle_chunk_ptrs_and_constants
@@ -1691,46 +1696,59 @@ pcg_generate_area__choose_chunks_loop_x_combination_lock_tag:
 
 pcg_generate_area__choose_chunks_loop_x_continue:
 pcg_generate_area__choose_chunks_loop_x_no_placed_tag:
-		; compute and mask for tags (00 for 00 and 11 for 01, 10 and 11 tags).
-		ld ixl, 0
-		ld a, iyh
-		and #c0
-		jr z, pcg_generate_area__choose_chunks_loop_x_continue_and_mask_continue
-		ld ixl, #c0
-pcg_generate_area__choose_chunks_loop_x_continue_and_mask_continue:
-		ld a, iyh
-		and #30
-		jr z, pcg_generate_area__choose_chunks_loop_x_continue_and_mask_continue2
-		ld a, ixl
-		or #30
-		ld ixl, a
-pcg_generate_area__choose_chunks_loop_x_continue_and_mask_continue2:
-		ld a, iyh
-		and #0c
-		jr z, pcg_generate_area__choose_chunks_loop_x_continue_and_mask_continue3
-		ld a, ixl
-		or #0c
-		ld ixl, a
-pcg_generate_area__choose_chunks_loop_x_continue_and_mask_continue3:
-		ld a, iyh
-		and #03
-		jr z, pcg_generate_area__choose_chunks_loop_x_continue_and_mask_continue4
-		ld a, ixl
-		or #03
-		ld ixl, a
-pcg_generate_area__choose_chunks_loop_x_continue_and_mask_continue4:
-
-		; here:
-		; - hl: ptr to piece type
-		; - de: ptr to chunk pool
-		; - ixh: number of chunks in the pool
-		; - iyl: first chunk ID in the pool
-		; - (tmp_pcg_area__necessary_object_types): necessaryObjectTypes
-		; - ixl: ams mask to compare the tags in a chunk with iyh
-		; - iyh: left/up/right/down tags
-
-		; find the set of chunks from the pool that satisfy the requirements:
 		push bc
+			; compute and mask for tags (00 for 00; and 11 for 01, 10 and 11 tags).
+			ld c, (hl)  ; target piece type
+			ld ixl, 0
+			ld a, iyh
+			and #c0
+			jr z, pcg_generate_area__choose_chunks_loop_x_continue_and_mask_continue
+			bit 3, c
+			jr z, pcg_generate_area__choose_chunks_loop_x_continue_and_mask_continue
+			ld ixl, #c0
+pcg_generate_area__choose_chunks_loop_x_continue_and_mask_continue:
+			ld a, iyh
+			and #30
+			jr z, pcg_generate_area__choose_chunks_loop_x_continue_and_mask_continue2
+			bit 2, c
+			jr z, pcg_generate_area__choose_chunks_loop_x_continue_and_mask_continue2
+			ld a, ixl
+			or #30
+			ld ixl, a
+pcg_generate_area__choose_chunks_loop_x_continue_and_mask_continue2:
+			ld a, iyh
+			and #0c
+			jr z, pcg_generate_area__choose_chunks_loop_x_continue_and_mask_continue3
+			bit 1, c
+			jr z, pcg_generate_area__choose_chunks_loop_x_continue_and_mask_continue3
+			ld a, ixl
+			or #0c
+			ld ixl, a
+pcg_generate_area__choose_chunks_loop_x_continue_and_mask_continue3:
+			ld a, iyh
+			and #03
+			jr z, pcg_generate_area__choose_chunks_loop_x_continue_and_mask_continue4
+			bit 0, c
+			jr z, pcg_generate_area__choose_chunks_loop_x_continue_and_mask_continue4
+			ld a, ixl
+			or #03
+			ld ixl, a
+pcg_generate_area__choose_chunks_loop_x_continue_and_mask_continue4:
+			; make sure there are no tgs in iyl that cannot be matched given the and mask in ixl:
+			ld a, iyh
+			and ixl
+			ld iyh, a
+
+			; here:
+			; - hl: ptr to piece type
+			; - de: ptr to chunk pool
+			; - ixh: number of chunks in the pool
+			; - iyl: first chunk ID in the pool
+			; - (tmp_pcg_area__necessary_object_types): necessaryObjectTypes
+			; - ixl: and mask to compare the tags in a chunk with iyh
+			; - iyh: left/up/right/down tags
+
+			; find the set of chunks from the pool that satisfy the requirements:
 			push hl
 				ld c, (hl)  ; target piece type
 				ld hl, tmp_pcg_area__chunk_candidates
@@ -2369,3 +2387,18 @@ caves_chunk_ptrs_and_constants:
 	db CAVES_BOSS_CHUNK_POOL_SIZE, CAVES_BOSS_CHUNK_POOL_FIRST_ID
 	db CAVES_BLOCK_CHUNK_POOL_SIZE, CAVES_BLOCK_CHUNK_POOL_FIRST_ID
 	db CAVES_COMBINATION_CHUNK_POOL_SIZE, CAVES_COMBINATION_CHUNK_POOL_FIRST_ID
+
+xibalba_chunk_ptrs_and_constants:
+	db (xibalba_chunk_fg_bank_ptrs_end - xibalba_chunk_fg_bank_ptrs) / 2  ; number of banks
+	db CHUNKS_XIBALBA_PAGE
+	dw xibalba_chunk_fg_bank_ptrs
+	dw xibalba_standard_chunk_pool
+	dw xibalba_boss_chunk_pool
+	dw xibalba_block_chunk_pool
+	dw xibalba_combination_chunk_pool
+	dw xibalba_chunk_flags
+	dw chunk_edgecollisions_xibalba
+	db XIBALBA_STANDARD_CHUNK_POOL_SIZE, XIBALBA_STANDARD_CHUNK_FIRST_ID
+	db XIBALBA_BOSS_CHUNK_POOL_SIZE, XIBALBA_BOSS_CHUNK_POOL_FIRST_ID
+	db XIBALBA_BLOCK_CHUNK_POOL_SIZE, XIBALBA_BLOCK_CHUNK_POOL_FIRST_ID
+	db XIBALBA_COMBINATION_CHUNK_POOL_SIZE, XIBALBA_COMBINATION_CHUNK_POOL_FIRST_ID

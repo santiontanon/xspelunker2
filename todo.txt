@@ -2,8 +2,9 @@ to do:
 
 ***- xibalba biome (remember to keep ladder tiles in place for down-door opening code).
   ***- add xibalba biome to the game:
-    ***- prettify assembler function
+    ***- xibalba prettify assembler function
     ***- animations: lava, torches and skeleton prisoners in background
+    ***- play around and make sure it's playable
   ***- Write a collection of Xibalba-specific tablets:
     ***- How Hunahpú and Xbalanqué defeated the lords
     ***- Some info on the lords themselves (names, pairs, curses)
