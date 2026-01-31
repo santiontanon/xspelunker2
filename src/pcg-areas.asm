@@ -2273,6 +2273,18 @@ pcg_generate_area__item_tags:
     db TAG_SMALL_KEY_CHEST4
     db TAG_CALENDAR_NAME_CLUE
     db TAG_LOST_VENDOR
+    db TAG_XIBALBA_STORY1
+    db TAG_XIBALBA_STORY2
+    db TAG_XIBALBA_STORY3
+    db TAG_XIBALBA_STORY4
+    db TAG_XIBALBA_LORDS1
+    db TAG_XIBALBA_LORDS2
+    db TAG_XIBALBA_LORDS3
+    db TAG_XIBALBA_LORDS4
+    db TAG_XIBALBA_LORDS5
+    db TAG_XIBALBA_LORDS6
+    db TAG_XIBALBA_LORDS7
+    db TAG_XIBALBA_CLUE
     db 0
 
 pcg_generate_area__boss_tags:

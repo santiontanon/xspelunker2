@@ -549,7 +549,35 @@ public class Text {
         addLineSafe(lines_with_constant_page1, "I am not sure what this is, we find them scattered in the ruins. It can be yours for a small price!", "SHOP_BATTERY", 78);
         addLineSafe(lines_with_constant_page1, "If you ever need to blow something up. This is the thing for you.", "SHOP_DYNAMITE", 78);
         addLineSafe(lines_with_constant_page1, "This is a specialty item that was found by my son in the temple of inscriptions.", "SHOP_EXTRA_OBJECT", 78);
+
+        // Xibalba tablets:
+        addLineSafe(lines_with_constant_page3, "Twin brothers Hun-Hunahpu and Vucub-Hunahpu who lived before the birth of humanity were", "XIBALBA_STORY_TABLET_1_1", 18*3);
+        addLineSafe(lines_with_constant_page3, "once tricked to come down to Xibalba to play a ball game. Hun-Came and Vucub-Came killed them, and placed the head of Hun Hunahpu atop of a tree for display.", "XIBALBA_STORY_TABLET_1_2", 18*5);
+        addLineSafe(lines_with_constant_page3, "One day, Xquic, dauther of a lord of Xibalba found the tree where Hun Hunahpu's head was ", "XIBALBA_STORY_TABLET_2_1", 18*3);
+        addLineSafe(lines_with_constant_page3, "exhibited. The head spitted saliva in her hand, and Xquic became pregnant. She gave birth to the heroes Hunahpu and Xbalanque, sons of Hun Hunahpu.", "XIBALBA_STORY_TABLET_2_2", 18*5);
+        addLineSafe(lines_with_constant_page3, "It is said that, two heroes, Hunahpu and Xbalanque, visited Xibalba, and were the only ones to", "XIBALBA_STORY_TABLET_3_1", 18*3);
+        addLineSafe(lines_with_constant_page3, "ever defeat Hun-Came and Vucub-Came. They resurrected Vucub Hunahpu, and then ascended to the heavens, becomeing the Sun and the Moon.", "XIBALBA_STORY_TABLET_3_2", 18*5);
+        addLineSafe(lines_with_constant_page3, "Xbalanque performed a trick: he dismembered Hunahpu and then put him back together, bringing", "XIBALBA_STORY_TABLET_4_1", 18*3);
+        addLineSafe(lines_with_constant_page3, "him back to life. Hun-Hunahpu and Vucub-Hunahpu asked Xbalanque do the same trick on them, but Xbalanque never put them back together, leaving them dead...", "XIBALBA_STORY_TABLET_4_2", 18*5);
+
+        addLineSafe(lines_with_constant_page3, "This is Xibalba, the underworld. Ruled by Hun-Came and Vucub-Came. Go back, or face your death...", "XIBALBA_LORDS_TABLET_1_1", 18*3);
+        addLineSafe(lines_with_constant_page3, "Twelve lords rule Xibalba. Among them, Hun-Came and Vucub-Came are the two supreme lords.", "XIBALBA_LORDS_TABLET_2_1", 18*3);
+        addLineSafe(lines_with_constant_page3, "They despise humans, and are responsible for all human misfortune.", "XIBALBA_LORDS_TABLET_2_2", 18*5);
+        addLineSafe(lines_with_constant_page3, "Twelve lords rule Xibalba. Among them, Ahalpuh and Ahalgana are responsible for bringing pus and.", "XIBALBA_LORDS_TABLET_3_1", 18*3);
+        addLineSafe(lines_with_constant_page3, "swelling to humans.", "XIBALBA_LORDS_TABLET_3_2", 18*3);
+        addLineSafe(lines_with_constant_page3, "Twelve lords rule Xibalba. Among them, Ahalmez and Ahaltocob bring disasters to human homes.", "XIBALBA_LORDS_TABLET_4_1", 18*3);
+        addLineSafe(lines_with_constant_page3, "Twelve lords rule Xibalba. Among them, Chamiabac and Chamiaholom ensure people turn into", "XIBALBA_LORDS_TABLET_5_1", 18*3);
+        addLineSafe(lines_with_constant_page3, "skeletons as soon as possible.", "XIBALBA_LORDS_TABLET_5_2", 18*3);
+        addLineSafe(lines_with_constant_page3, "Twelve lords rule Xibalba. Among them, Quicxic and Patan make humans vomit blood,", "XIBALBA_LORDS_TABLET_6_1", 18*3);
+        addLineSafe(lines_with_constant_page3, "causing sudden death.", "XIBALBA_LORDS_TABLET_6_2", 18*3);
+        addLineSafe(lines_with_constant_page3, "Twelve lords rule Xibalba. Among them, Xiquiripat and Cuchumaquic cause hemorrages,", "XIBALBA_LORDS_TABLET_7_1", 18*3);
+        addLineSafe(lines_with_constant_page3, "slowly bringing humans to death.", "XIBALBA_LORDS_TABLET_7_2", 18*3);
+
+        addLineSafe(lines_with_constant_page3, "Hunahpu and Xbalanque killed the lords of Xibalba, but if one wanted to bring them back to life,", "XIBALBA_CLUE_TABLET_1_1", 18*3);
+        addLineSafe(lines_with_constant_page3, "the following dance in front of their grave would wake them up: crouch, jump, swing, crouch, jump, swing.", "XIBALBA_CLUE_TABLET_1_2", 18*5);
         
+//    OK - How to wake them up (something to do on their graves)
+//      -         
         
         List<Integer> numbers = font.convertStringToAssembler("0123456789 ");
         System.out.println("Numbers: " + numbers);

@@ -1,11 +1,7 @@
 to do:
 
 ***- xibalba biome (remember to keep ladder tiles in place for down-door opening code).
-  ***- Write a collection of Xibalba-specific tablets:
-    ***- How Hunahpú and Xbalanqué defeated the lords
-    ***- Some info on the lords themselves (names, pairs, curses)
-    ***- How to wake them up (something to do on their graves)
-  ***- we will pick four locations that have either no tag or a single tablet tag and add another tag with some of these tablets (pick at most 4 at random)
+  ***- draw the content of the Xibalba tablets: STORY2 - 4, LORDS1 - 7, CLUE
   ***- sprite enemies: think of a list at least one that sleeps and wakes up when you are closeby (how does it detect you? maybe only if you make noise?)
   ***- tile enemies:
     ***- volcano that spits lava (usual lava pit where fireballs jump up and maybe explode into bullets), cannot be killed
@@ -13,7 +9,7 @@ to do:
     ***- large stone owls (they just fly up and down if they have space, rotate their heads, and spawn enemies/bullets/fire)
   ***- boss room is a large ball game court (64 * 24 in size) with 12 tombs: 2 big ones and 10 small ones
     ***- interacting tells you the name of the lord in each tomb
-    ***- player can wake up any 2 of the 12 xibalba lords in the boss room
+    ***- player can wake up any 2 of the 12 xibalba lords in the boss room (tablet explains this)
     ***- waking up proper pairs (e.g. the two main lords, or Ahalpuh+Ahalgana) gives you an extra item at the end: two main give you a key that can be used for a secret in moon/mars boss room, the other pairs give you benefits (figure them out)
     ***- boss room has a tablet with a clue: "wake two xibalba lords and defeat them in the ball courts, choose wisely!" (or something like that)
     ***- you can exit the boss room (stairs below) if you have not awaken any, but as soon as you awaken one of them, stairs lock and you are stuck inside until you defeat the boss

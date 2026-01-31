@@ -1264,3 +1264,28 @@ story_trivia_tablet_fn_clue4:
 			ld hl, TEXT_TABLET_TRIVIA_CLUE4_1
 			jp story_trivia_tablet_fn_story3_entrypoint
 
+
+
+xibalba_tablet_fn:
+	; ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	ld hl, TEXT_XIBALBA_STORY_TABLET_1_1
+	ld de, TEXT_XIBALBA_STORY_TABLET_1_2
+	push de
+		push hl
+			ld hl, tablet_trivia_tiles_zx0
+			ld c, TABLET_LETTER_PAGE
+			call maya_puzzle_tablet_fn_load_extra_tiles_hl_set
+		pop iy
+		ld a, 18
+		ld (tmp_letter_line_width), a
+		ld a, COLOR_GREY
+		ld (tmp_letter_line_color), a
+		ld b, 48
+		ld de, NAMTBL2 + (7 + 5*32)
+		ld ix, CHRTBL2
+		call display_paragraph_text_page3
+	pop iy
+	ld b, 48
+	ld de, NAMTBL2 + (7 + 8*32)
+	ld ix, CHRTBL2 + 256*8
+	jp display_paragraph_text_page3

@@ -423,6 +423,19 @@ pcg_world__optional_object_table:
 	db TAG_STORY_TRIVIA8, #ff, 239, 0
 	; calendar name clue:
 	db TAG_CALENDAR_NAME_CLUE, #fd, 255, 0  ; #fd = areas 10, 11
+	; xibalba tablets:
+	db TAG_XIBALBA_CLUE, 8, 255, 0
+	db TAG_XIBALBA_STORY1, 8, 96, 0
+	db TAG_XIBALBA_STORY2, 8, 96, 0
+	db TAG_XIBALBA_STORY3, 8, 96, 0
+	db TAG_XIBALBA_STORY4, 8, 96, 0
+	db TAG_XIBALBA_LORDS1, 8, 96, 0
+	db TAG_XIBALBA_LORDS2, 8, 96, 0
+	db TAG_XIBALBA_LORDS3, 8, 96, 0
+	db TAG_XIBALBA_LORDS4, 8, 96, 0
+	db TAG_XIBALBA_LORDS5, 8, 96, 0
+	db TAG_XIBALBA_LORDS6, 8, 96, 0
+	db TAG_XIBALBA_LORDS7, 8, 96, 0
 pcg_world__optional_object_table_end:
 
 
@@ -4564,7 +4577,7 @@ pcg_generate_world__spawn_additional_objects_tagless_loop_next:
 	call pcg_generate_world__add_tag_to_point_in_mst_node_division
 	ret nz
 
-    ; spaen maya secret puzzle clues
+    ; spawn maya secret puzzle clues
     ld b, 4
 pcg_generate_world__spawn_additional_objects_maya_clues_loop:
 	push bc
@@ -4595,14 +4608,7 @@ pcg_generate_world__spawn_additional_objects_maya_clues_loop:
     ld ix, pcg_world__optional_object_table
 pcg_generate_world__spawn_additional_objects_other_object_loop:
 	push bc
-; 		DEBUG-start
-; 		push hl  ; mdl-watch: "pcg_generate_world__spawn_additional_objects_other_object_loop"
-; 			ld hl, (rng_seed1)  ; mdl-watch: "        seed1: ", hl
-; 			ld hl, (rng_seed2)  ; mdl-watch: "        seed2: ", hl
-; 		pop hl
-; 		DEBUG-end
-
-		ld a, (ix)  ; tag  ; mdl-watch2: "        tag", a
+		ld a, (ix)  ; tag
 		cp TAG_SMALL_KEY1
 		jr z, pcg_generate_world__spawn_additional_objects_other_object_loop_small_key1
 		cp TAG_SMALL_KEY2

@@ -23,6 +23,7 @@ stack_size: equ 128
 ; 11: #8000 - #bfff: pcg code (world), story, gamestart, game over
 ; 12: #8000 - #bfff: bosses gfx
 ; 13: #8000 - #bfff: caves chunks, jungle tiles xibalba tiles
+; 14: #8000 - #bfff: maya riddle tiles
 
 
 CORE_CODE_PAGE: equ 0

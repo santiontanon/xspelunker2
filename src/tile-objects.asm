@@ -1132,6 +1132,18 @@ ENDR
 	dw object_interaction_function_teleporter  ; TAG_TELEPORTER8
 	dw object_interaction_function_tablet  ; TAG_CALENDAR_NAME_CLUE
 	dw object_interaction_function_lost_vendor  ; TAG_LOST_VENDOR
+	dw object_interaction_function_tablet  ; TAG_XIBALBA_STORY1
+	dw object_interaction_function_tablet  ; TAG_XIBALBA_STORY2
+	dw object_interaction_function_tablet  ; TAG_XIBALBA_STORY3
+	dw object_interaction_function_tablet  ; TAG_XIBALBA_STORY4
+	dw object_interaction_function_tablet  ; TAG_XIBALBA_LORDS1
+	dw object_interaction_function_tablet  ; TAG_XIBALBA_LORDS2
+	dw object_interaction_function_tablet  ; TAG_XIBALBA_LORDS3
+	dw object_interaction_function_tablet  ; TAG_XIBALBA_LORDS4
+	dw object_interaction_function_tablet  ; TAG_XIBALBA_LORDS5
+	dw object_interaction_function_tablet  ; TAG_XIBALBA_LORDS6
+	dw object_interaction_function_tablet  ; TAG_XIBALBA_LORDS7
+	dw object_interaction_function_tablet  ; TAG_XIBALBA_CLUE
 	dw object_interaction_function_empty  ; TAG_PUSHABLE_BLOCK
 	dw object_interaction_function_empty  ; TAG_DOOR_VERTICAL
 	dw object_interaction_function_empty  ; TAG_DOOR_HORIZONTAL
@@ -1611,6 +1623,13 @@ object_interaction_function_tablet_not_calendar:
 	ld de, maya_puzzle_tablet_fn
 	jr object_interaction_function_tablet_ptr_set
 object_interaction_function_tablet_not_maya_puzzle:
+	cp TAG_XIBALBA_STORY1
+	jr c, object_interaction_function_tablet_not_xibalba_tablet
+	cp TAG_XIBALBA_CLUE + 1
+	jr nc, object_interaction_function_tablet_not_xibalba_tablet
+	ld de, xibalba_tablet_fn
+	jr object_interaction_function_tablet_ptr_set
+object_interaction_function_tablet_not_xibalba_tablet:
 	; Determine tablet content:
 	ld hl, current_world__tablet_content
 object_interaction_function_tablet_loop:
@@ -2525,6 +2544,18 @@ ENDR
 	TILE_OBJECT_DATA 1, 4, 3, tile_object_teleporter_gfx  ; TAG_TELEPORTER8
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_CALENDAR_NAME_CLUE
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_LOST_VENDOR
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_XIBALBA_STORY1
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_XIBALBA_STORY2
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_XIBALBA_STORY3
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_XIBALBA_STORY4
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_XIBALBA_LORDS1
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_XIBALBA_LORDS2
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_XIBALBA_LORDS3
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_XIBALBA_LORDS4
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_XIBALBA_LORDS5
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_XIBALBA_LORDS6
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_XIBALBA_LORDS7
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_XIBALBA_CLUE
 
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_pushable_block_gfx  ; TAG_PUSHABLE_BLOCK
 	TILE_OBJECT_DATA 1, 1, 3, tile_object_v_door_gfx  ; TAG_DOOR_VERTICAL
