@@ -395,6 +395,12 @@ pcg_generate_room__spawn_one_enemy_chosen:
 	jp z, pcg_generate_room__spawn_skeleton_flame1
 	cp ENEMY_SKELETON_FLAME2
 	jp z, pcg_generate_room__spawn_skeleton_flame2
+	cp ENEMY_SKELETON_SLEEPER
+	jp z, pcg_generate_room__spawn_skeleton_sleeper
+	cp ENEMY_FIRE_IMP
+	jp z, pcg_generate_room__spawn_fire_imp
+	cp ENEMY_FIRE_IMP2
+	jp z, pcg_generate_room__spawn_fire_imp2
 	cp ENEMY_FROG
 	jp z, pcg_generate_room__spawn_frog
 	cp ENEMY_FROG_JUMPER
@@ -753,19 +759,19 @@ pcg_generate_room__spawn_bat_continue:
 pcg_generate_room__spawn_snake_poison:
 	ld ixl, ENEMY_SNAKE_POISON
 	ld ixh, 2  ; hitpoints
-	jr pcg_generate_room__spawn_skeleton_continue
+	jp pcg_generate_room__spawn_skeleton_continue
 pcg_generate_room__spawn_snake_dasher:
 	ld ixl, ENEMY_SNAKE_DASHER
 	ld ixh, 2  ; hitpoints
-	jr pcg_generate_room__spawn_skeleton_continue
+	jp pcg_generate_room__spawn_skeleton_continue
 pcg_generate_room__spawn_snake:
 	ld ixl, ENEMY_SNAKE
 	ld ixh, 2  ; hitpoints
-	jr pcg_generate_room__spawn_skeleton_continue
+	jp pcg_generate_room__spawn_skeleton_continue
 pcg_generate_room__spawn_monkey_thrower:
 	ld ixl, ENEMY_MONKEY_THROWER
 	ld ixh, 2  ; hitpoints
-	jr pcg_generate_room__spawn_skeleton_continue		
+	jp pcg_generate_room__spawn_skeleton_continue		
 pcg_generate_room__spawn_monkey:
 	ld ixl, ENEMY_MONKEY
 	ld ixh, 2  ; hitpoints
@@ -798,6 +804,32 @@ pcg_generate_room__spawn_skeleton_flame2:
 	ld ixl, ENEMY_SKELETON_FLAME2
 	ld ixh, 4  ; hitpoints
 	jr pcg_generate_room__spawn_skeleton_continue
+pcg_generate_room__spawn_skeleton_sleeper:
+	ld ixl, ENEMY_SKELETON_SLEEPER
+	ld ixh, 4  ; hitpoints
+	call pcg_generate_room__spawn_skeleton_continue
+	dec hl
+	dec hl
+	dec hl
+	ld (hl), 2  ; start sleeping
+	ret
+pcg_generate_room__spawn_fire_imp2:
+	ld ixl, ENEMY_FIRE_IMP2
+	ld ixh, 8  ; hitpoints
+	jr pcg_generate_room__spawn_fire_imp_continue
+pcg_generate_room__spawn_fire_imp:
+	ld ixl, ENEMY_FIRE_IMP
+	ld ixh, 4  ; hitpoints
+pcg_generate_room__spawn_fire_imp_continue:
+	call pcg_generate_room__spawn_skeleton_continue
+	dec hl
+	dec hl
+	call random_a
+	and #1f
+	ld (hl), a  ; random state timer init, to dash at different times
+	dec hl
+	ld (hl), 0  ; start in fireball state
+	ret
 pcg_generate_room__spawn_rockman:
 	ld ixl, ENEMY_ROCKMAN
 	ld ixh, 8  ; hitpoints

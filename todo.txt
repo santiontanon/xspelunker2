@@ -1,11 +1,8 @@
 to do:
 
 ***- xibalba biome (remember to keep ladder tiles in place for down-door opening code).
-  ***- sprite enemies: 
-    ***- sleeping skeletons that wake up when you are closeby and move quite fast. When you are away, they might go back to sleep.
-    ***- fire imps (walk left/right) and can turn into a fireball that moves around the screen ignoring walls
-    ***- other enemies in xibalba are: fire spitting skeletons, bats (and if I have space for more, fill with maybe snakes?)
   ***- tile enemies:
+    ***- fire imp generators
     ***- volcano that spits lava (usual lava pit where fireballs jump up and maybe explode into bullets), cannot be killed
     ***- lava waterfalls (lava falls intermitently, blocking the path part of the time)
     ***- large stone owls (they just fly up and down if they have space, rotate their heads, and spawn enemies/bullets/fire)

@@ -34,6 +34,9 @@ enemy_update_fn_table:
 	dw update_enemy_rockman2
 	dw update_enemy_ant
 	dw update_enemy_ant2
+	dw update_enemy_skeleton_sleeper
+	dw update_enemy_fire_imp
+	dw update_enemy_fire_imp
 
 
 ;-----------------------------------------------
@@ -969,12 +972,12 @@ update_enemy_skeleton:
 	ld iyh, 1  ; damage to deal
 	call update_enemy_hurt_player_2x2
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
-	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
-	and #01
-	call nz, update_enemy__patrol_left_right_platform
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
 	cp 2
 	jr z, update_enemy_skeleton_idle
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	and #01
+	call nz, update_enemy__patrol_left_right_platform
 
 update_enemy_skeleton_walking:
 	call random_a
@@ -2159,20 +2162,325 @@ update_enemy_ant_climb_left_move_up_fall:
 
 
 ;-----------------------------------------------
-; input:
-; - ix: enemy ptr
-; output:
-; - z: cannot
-; - nz: can
-update_enemy_ant_can_move_left:
-	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+update_enemy_skeleton_sleeper:
+	ld iyh, 2  ; damage to deal
+	call update_enemy_hurt_player_2x2
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	cp 2
+	jr z, update_enemy_skeleton_sleeper_sleeping
+	cp 3
+	jp z, update_enemy_skeleton_sleeper_waking_up
 	cp 4
-	ret nz
-	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
-	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-	inc b
-	jp general_check_collision_with_wall
+	jp z, update_enemy_skeleton_sleeper_falling_asleep
+	cp 5
+	jp z, update_enemy_skeleton_sleeper_throw_right
+	cp 6
+	jp z, update_enemy_skeleton_sleeper_throw_left
+	call update_enemy__patrol_left_right_platform
 
+update_enemy_skeleton_sleeper_walking:
+	call random_a
+	or a
+	jp z, update_enemy_skeleton_sleeper_switch_to_falling_asleep
+	and #3f
+	jr nz, update_enemy_skeleton_sleeper_walking_continue
+	; shoot:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	add a, 5
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), a
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+	cp 5
+	jp z, update_enemy_skeleton_sleeper_throw_right
+	jp update_enemy_skeleton_sleeper_throw_left
+update_enemy_skeleton_sleeper_walking_continue:
+	ld d, COLOR_WHITE
+ 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+ 	add a, a
+ 	add a, a
+ 	add a, FIRST_ENEMY_SPRITE_PATTERN + 21
+ 	add a, a
+ 	add a, a
+ 	ld e, a
+	jp enemy_sprite_and_continue_animated
+
+update_enemy_skeleton_sleeper_sleeping:
+	; wake up if player makes noise nearby:
+	ld a, (player_x + 1)
+	sub (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	cp 8
+	jp p, update_enemy_skeleton_sleeper_idle_continue
+	cp -8
+	jp m, update_enemy_skeleton_sleeper_idle_continue
+	ld a, (player_y + 1)
+	sub (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	cp 6 
+	jp p, update_enemy_skeleton_sleeper_idle_continue
+	cp -6
+	jp m, update_enemy_skeleton_sleeper_idle_continue
+	; player is close by:
+	ld a, (player_state)
+	and #fe
+	or a  ; cp PLAYER_STATE_IDLE
+	jr z, update_enemy_skeleton_sleeper_idle_continue
+	cp PLAYER_STATE_CROUCHING
+	jr z, update_enemy_skeleton_sleeper_idle_continue
+	cp PLAYER_STATE_CRAWLING
+	jr z, update_enemy_skeleton_sleeper_idle_continue
+	; player was noisy, wake up:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 3
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+update_enemy_skeleton_sleeper_idle_continue:
+	ld d, COLOR_WHITE
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 1) * 4 
+	jp enemy_sprite_and_continue_animated_slow
+
+update_enemy_skeleton_sleeper_waking_up:
+	ld a, (current_world__difficulty_attack_warn_time)
+	cp (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	jr nz, update_enemy_skeleton_sleeper_waking_up_continue
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
+	ld a, (player_x + 1)
+	sub (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	jr nc, update_enemy_skeleton_sleeper_waking_up_continue
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1
+update_enemy_skeleton_sleeper_waking_up_continue:
+	ld d, COLOR_WHITE
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 29) * 4 
+	jp enemy_sprite_and_continue_animated_slow
+
+update_enemy_skeleton_sleeper_switch_to_falling_asleep:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 4
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+update_enemy_skeleton_sleeper_falling_asleep:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 64
+	jr nz, update_enemy_skeleton_sleeper_falling_asleep_continue
+	; sleep:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2
+update_enemy_skeleton_sleeper_falling_asleep_continue:
+	ld d, COLOR_WHITE
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 29) * 4 
+	jp enemy_sprite_and_continue_animated_slow
+
+update_enemy_skeleton_sleeper_throw_right:
+	ld a, (current_world__difficulty_attack_warn_time)
+	cp (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	jr z, update_enemy_skeleton_sleeper_throw_right_done
+	srl a
+	cp (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	push af
+		call z, update_enemy_skeleton_sleeper_throw_shoot
+	pop af
+	jr c, update_enemy_skeleton_sleeper_throw_right_continue2
+update_enemy_skeleton_sleeper_throw_right_continue:
+	ld d, COLOR_WHITE
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 23) * 4 
+	jp enemy_sprite_and_continue
+update_enemy_skeleton_sleeper_throw_right_done:
+	; done:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
+update_enemy_skeleton_sleeper_throw_right_continue2:
+	ld d, COLOR_WHITE
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 24) * 4 
+	jp enemy_sprite_and_continue
+
+update_enemy_skeleton_sleeper_throw_left:
+	ld a, (current_world__difficulty_attack_warn_time)
+	cp (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	jr z, update_enemy_skeleton_sleeper_throw_left_done
+	srl a
+	cp (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	push af
+		call z, update_enemy_skeleton_sleeper_throw_shoot
+	pop af
+	jr c, update_enemy_skeleton_sleeper_throw_left_continue2
+update_enemy_skeleton_sleeper_throw_left_continue:
+	ld d, COLOR_WHITE
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 27) * 4 
+	jp enemy_sprite_and_continue
+update_enemy_skeleton_sleeper_throw_left_done:
+	; done:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1
+update_enemy_skeleton_sleeper_throw_left_continue2:
+	ld d, COLOR_WHITE
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 28) * 4 
+	jp enemy_sprite_and_continue
+
+update_enemy_skeleton_sleeper_throw_shoot:
+	call update_enemy_fire_directional_bullet_towards_player
+	ld hl, SFX_enemy_bullet
+	jp play_SFX_with_high_priority
+
+
+;-----------------------------------------------
+update_enemy_fire_imp:
+	ld iyh, 2  ; damage to deal
+	call update_enemy_hurt_player_2x2
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	ld iyh, COLOR_LIGHT_RED  ; imp 1
+	cp ENEMY_FIRE_IMP2
+	jr nz, update_enemy_fire_imp_continue
+	ld iyh, COLOR_PURPLE  ; imp 2
+update_enemy_fire_imp_continue:
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	; 0: fireball:
+	; 1: dash preparation
+	; 2: dash
+	; 3: dash cool-down
+	or a
+	jp z, update_enemy_fire_imp_fireball
+	dec a
+	jr z, update_enemy_fire_imp_dash_prepare
+	dec a
+	jr z, update_enemy_fire_imp_dash
+update_enemy_fire_imp_dash_cooldown:
+	ld a, (current_world__difficulty_attack_warn_time)
+	cp (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	jp nz, update_enemy_fire_imp_dash_continue
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+	jp update_enemy_fire_imp_dash_continue
+
+update_enemy_fire_imp_to_dash_cooldown:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 3
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+	jr update_enemy_fire_imp_dash_cooldown
+
+update_enemy_fire_imp_switch_to_dash_prepare:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+	; set dash direction:
+	ld a, (player_x + 1)
+	sub (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld (ix + ROOM_OBJECT_STRUCT_EXTRA1), a
+	ld a, (player_y + 1)
+	sub (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	ld (ix + ROOM_OBJECT_STRUCT_EXTRA2), a
+
+update_enemy_fire_imp_dash_prepare:
+	ld a, (current_world__difficulty_attack_warn_time)
+	cp (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	jr nz, update_enemy_fire_imp_dash_continue
+	; dash:
+	ld hl, SFX_enemy_bullet
+	call play_SFX_with_high_priority
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+	ld (ix + ROOM_OBJECT_STRUCT_BRESENHAM_STATE), 0
+
+update_enemy_fire_imp_dash:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 48
+	jr z, update_enemy_fire_imp_to_dash_cooldown
+	; shift data in the struct temporarily, so we can reuse 'update_enemy_bullet_bresenham_iyl_steps':
+	ld e, (ix + ROOM_OBJECT_STRUCT_SPEED_X)
+	ld d, (ix + ROOM_OBJECT_STRUCT_SPEED_Y)
+	ld c, (ix + ROOM_OBJECT_STRUCT_EXTRA1)
+	ld b, (ix + ROOM_OBJECT_STRUCT_EXTRA2)
+	ld (ix + ROOM_OBJECT_STRUCT_SPEED_X), c
+	ld (ix + ROOM_OBJECT_STRUCT_SPEED_Y), b
+	push de
+		ld a, (current_world__difficulty_bullet_speed)
+		ld iyl, a
+		call update_enemy_bullet_bresenham_iyl_steps
+	pop de
+	ld (ix + ROOM_OBJECT_STRUCT_SPEED_X), e
+	ld (ix + ROOM_OBJECT_STRUCT_SPEED_Y), d
+	; - b: amount to move in y
+	; - c: amount to move in x
+	call update_enemy_move_cb
+	ld bc, (current_room__width)
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	cp #ff
+	jr z, update_enemy_fire_imp_dash_left_edge
+	cp c
+	jr z, update_enemy_fire_imp_dash_right_edge
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	cp #ff
+	jr z, update_enemy_fire_imp_dash_top_edge
+	cp b
+	jr z, update_enemy_fire_imp_dash_bottom_edge
+
+update_enemy_fire_imp_dash_continue:
+	ld d, iyh
+	ld a, (player_x + 1)
+	dec a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	jr c, update_enemy_fire_imp_body_left
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 8) * 4 
+	jp enemy_sprite_and_continue_animated
+update_enemy_fire_imp_body_left:
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 10) * 4 
+	jp enemy_sprite_and_continue_animated
+
+update_enemy_fire_imp_dash_left_edge:
+	ld (ix + ROOM_OBJECT_STRUCT_TILE_X), 0
+	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_X), 0
+	jp update_enemy_fire_imp_to_dash_cooldown
+update_enemy_fire_imp_dash_top_edge:
+	ld (ix + ROOM_OBJECT_STRUCT_TILE_Y), 0
+	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_Y), 0
+	jp update_enemy_fire_imp_to_dash_cooldown
+update_enemy_fire_imp_dash_right_edge:
+	dec c
+	ld (ix + ROOM_OBJECT_STRUCT_TILE_X), c
+	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_X), 0
+	jp update_enemy_fire_imp_to_dash_cooldown
+update_enemy_fire_imp_dash_bottom_edge:
+	dec b
+	ld (ix + ROOM_OBJECT_STRUCT_TILE_Y), b
+	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_Y), 0
+	jp update_enemy_fire_imp_to_dash_cooldown
+
+update_enemy_fire_imp_fireball:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 200
+	jp z, update_enemy_fire_imp_switch_to_dash_prepare
+	and #03
+	jr nz, update_enemy_fire_imp_movement_done
+
+	; move towards player:
+	ld a, (player_x + 1)
+	dec a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	jr c, update_enemy_fire_imp_left
+	jr nz, update_enemy_fire_imp_right
+	; same tile:
+	ld a, (player_x)
+	cp (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	jr c, update_enemy_fire_imp_left
+	jr z, update_enemy_fire_imp_y
+update_enemy_fire_imp_right:
+	; right:
+	call update_enemy_move_right
+	jr update_enemy_fire_imp_y
+update_enemy_fire_imp_left:
+	call update_enemy_move_left
+
+update_enemy_fire_imp_y:
+	ld a, (player_y + 1)
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	jr c, update_enemy_fire_imp_up
+	jr nz, update_enemy_fire_imp_down
+	; same tile:
+	ld a, (player_y)
+	cp (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
+	jr c, update_enemy_fire_imp_up
+	jr z, update_enemy_fire_imp_movement_done
+update_enemy_fire_imp_down:
+	; down:
+	call update_enemy_move_down
+	jr update_enemy_fire_imp_movement_done
+update_enemy_fire_imp_up:
+	call update_enemy_move_up
+
+update_enemy_fire_imp_movement_done:
+	ld d, iyh
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 12) * 4 
+	jp enemy_sprite_and_continue_animated4
 
 
 ;-----------------------------------------------
@@ -3815,7 +4123,7 @@ update_enemy_bullet_bresenham_no_xspeed_flip:
     ; Bresenham for when the |speed x| > |speed y|
 update_enemy_bullet_bresenham_x_is_bigger:
 	ld bc, 0
-    ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+    ld a, (ix + ROOM_OBJECT_STRUCT_BRESENHAM_STATE)
 update_enemy_bullet_bresenham_x_is_bigger_loop:
     sub d  ; we subtract y difference from the error term 
     jp p, update_enemy_bullet_bresenham_x_is_bigger_no_error_overflow
@@ -3825,13 +4133,13 @@ update_enemy_bullet_bresenham_x_is_bigger_no_error_overflow:
     inc c
     dec iyl
     jr nz, update_enemy_bullet_bresenham_x_is_bigger_loop
-    ld (ix + ROOM_OBJECT_STRUCT_STATE), a
+    ld (ix + ROOM_OBJECT_STRUCT_BRESENHAM_STATE), a
     jp update_enemy_bullet_bresenham_choose_quadrant
 
     ; Bresenham for when the |speed x| < |speed y|
 update_enemy_bullet_bresenham_y_is_bigger:
 	ld bc, 0
-    ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+    ld a, (ix + ROOM_OBJECT_STRUCT_BRESENHAM_STATE)
 update_enemy_bullet_bresenham_y_is_bigger_loop:
     sub e  ; we subtract x difference from the error term 
     jp p,update_enemy_bullet_bresenham_y_is_bigger_no_error_overflow
@@ -3841,7 +4149,7 @@ update_enemy_bullet_bresenham_y_is_bigger_no_error_overflow:
     inc b
     dec iyl
     jr nz, update_enemy_bullet_bresenham_y_is_bigger_loop
-    ld (ix + ROOM_OBJECT_STRUCT_STATE), a
+    ld (ix + ROOM_OBJECT_STRUCT_BRESENHAM_STATE), a
 
 update_enemy_bullet_bresenham_choose_quadrant:
 	; here:

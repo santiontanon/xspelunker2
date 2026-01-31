@@ -120,7 +120,7 @@ SPRITE_OBJECT_TYPE_LOST_VENDOR: equ 11
 SPRITE_OBJECT_TYPE_SHOPKEEPER2: equ 12
 SPRITE_OBJECT_TYPE_BOSS_EXTRAS: equ 13  ; additional decorational sprites for bosses
 
-ROOM_OBJECT_STRUCT_SIZE: equ 10
+ROOM_OBJECT_STRUCT_SIZE: equ 13
 ROOM_OBJECT_STRUCT_ID: equ 0
 ROOM_OBJECT_STRUCT_TYPE: equ 1
 ROOM_OBJECT_STRUCT_PIXEL_X: equ 2
@@ -135,6 +135,9 @@ ROOM_OBJECT_STRUCT_LAST_HIT_ID: equ 8  ; used by enemies (instead of SPEED_Y)
 ROOM_OBJECT_STRUCT_HIT_ID: equ 9  ; used by player bullets only, to avoid multi-hit
 ROOM_OBJECT_STRUCT_HEALTH: equ 9  ; used by enemies only
 ROOM_OBJECT_STRUCT_BULLET_STATE: equ 9  ; used by some bullets only
+ROOM_OBJECT_STRUCT_BRESENHAM_STATE: equ 10
+ROOM_OBJECT_STRUCT_EXTRA1: equ 11  ; used by some enemies that need extra state (e.g. fire imps)
+ROOM_OBJECT_STRUCT_EXTRA2: equ 12  ; used by some enemies that need extra state (e.g. fire imps)
 
 ROOM_TILE_OBJECT_STRUCT_SIZE: equ 12
 ROOM_TILE_OBJECT_STRUCT_ID: equ 0
@@ -240,6 +243,9 @@ ENEMY_ROCKMAN: equ ENEMY_SNAKE + 20
 ENEMY_ROCKMAN2: equ ENEMY_SNAKE + 21
 ENEMY_ANT: equ ENEMY_SNAKE + 22
 ENEMY_ANT2: equ ENEMY_SNAKE + 23
+ENEMY_SKELETON_SLEEPER: equ ENEMY_SNAKE + 24
+ENEMY_FIRE_IMP: equ ENEMY_SNAKE + 25
+ENEMY_FIRE_IMP2: equ ENEMY_SNAKE + 26
 
 
 ; - 7 boss keys

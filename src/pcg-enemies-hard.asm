@@ -35,7 +35,6 @@ pcg_enemy_generation_table_pyramid1_hard:
 pcg_enemy_generation_table_pyramid2_hard:
 pcg_enemy_generation_table_pyramid3_hard:
 pcg_enemy_generation_table_fire_shaft_hard:
-pcg_enemy_generation_table_xibalba_hard:
 pcg_enemy_generation_table_atlantis_hard:
 pcg_enemy_generation_table_mars_hard:
 pcg_enemy_generation_table_moon_hard:
@@ -70,3 +69,15 @@ pcg_enemy_generation_table_caves_east_hard:
 	db ENEMY_SKELETON_FLAME2, 5
 	db ENEMY_ROCKMAN, 3
 	db ENEMY_ROCKMAN2, 5
+
+pcg_enemy_generation_table_xibalba_hard:
+	db 2  ; 2 enemies per "screen" area
+	db 0
+	db 7  ; possible sprite enemy types to be spawned (weights below should add up to 32)
+	db ENEMY_BAT, 3
+	db ENEMY_BAT_AGGRESSIVE, 5
+	db ENEMY_SKELETON_FLAME1, 3
+	db ENEMY_SKELETON_FLAME2, 5
+	db ENEMY_SKELETON_SLEEPER, 8
+	db ENEMY_FIRE_IMP, 3
+	db ENEMY_FIRE_IMP2, 5
