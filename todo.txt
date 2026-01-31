@@ -1,15 +1,17 @@
 to do:
 
 ***- xibalba biome (remember to keep ladder tiles in place for down-door opening code).
-  ***- draw the content of the Xibalba tablets: STORY2 - 4, LORDS1 - 7, CLUE
-  ***- sprite enemies: think of a list at least one that sleeps and wakes up when you are closeby (how does it detect you? maybe only if you make noise?)
+  ***- sprite enemies: 
+    ***- sleeping skeletons that wake up when you are closeby and move quite fast. When you are away, they might go back to sleep.
+    ***- fire imps (walk left/right) and can turn into a fireball that moves around the screen ignoring walls
+    ***- other enemies in xibalba are: fire spitting skeletons, bats (and if I have space for more, fill with maybe snakes?)
   ***- tile enemies:
     ***- volcano that spits lava (usual lava pit where fireballs jump up and maybe explode into bullets), cannot be killed
     ***- lava waterfalls (lava falls intermitently, blocking the path part of the time)
     ***- large stone owls (they just fly up and down if they have space, rotate their heads, and spawn enemies/bullets/fire)
   ***- boss room is a large ball game court (64 * 24 in size) with 12 tombs: 2 big ones and 10 small ones
     ***- interacting tells you the name of the lord in each tomb
-    ***- player can wake up any 2 of the 12 xibalba lords in the boss room (tablet explains this)
+    ***- player can wake up any 2 of the 12 xibalba lords in the boss room (crouch, jump, swing, crouch, jump, swing)
     ***- waking up proper pairs (e.g. the two main lords, or Ahalpuh+Ahalgana) gives you an extra item at the end: two main give you a key that can be used for a secret in moon/mars boss room, the other pairs give you benefits (figure them out)
     ***- boss room has a tablet with a clue: "wake two xibalba lords and defeat them in the ball courts, choose wisely!" (or something like that)
     ***- you can exit the boss room (stairs below) if you have not awaken any, but as soon as you awaken one of them, stairs lock and you are stuck inside until you defeat the boss
@@ -18,6 +20,7 @@ to do:
 - music: intro, letters, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)
   - boss music acts as a health bar (increases in speed as health goes down: 50%, 25%)
 - atlantis biome (exploit the fact that I can have now 3 tags for left/up/right/down tags): crocodiles as an additional water enemy? what happens to the special animal/teleporter rooms in this biome? do I need to redraw them?
+  - sprite enemies: ghosts/spirits
 - fifth boss, Atlantean Guardian (Underwater Boss): A colossal robotic creature with bioluminescent features, resembling a deep-sea creature (laser beams from tentacles, summons robotic fish). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
 - confrontation with the aliens after activating the calendar stone: are aliens sprites or tiles?
 - first ending sequence (udpate "stats__ending"): Elaine drops from the ceiling on a rope and rescues you. The calendar stone machine activates and creates a defensive barrier around earth, the alien armada that was coming turns back, but promises revenge.

@@ -1266,12 +1266,38 @@ story_trivia_tablet_fn_clue4:
 
 
 
+;-----------------------------------------------
+xibalba_tablet_fn_tbl:
+	dw TEXT_XIBALBA_STORY_TABLET_1_1, TEXT_XIBALBA_STORY_TABLET_1_2
+	dw TEXT_XIBALBA_STORY_TABLET_2_1, TEXT_XIBALBA_STORY_TABLET_2_2
+	dw TEXT_XIBALBA_STORY_TABLET_3_1, TEXT_XIBALBA_STORY_TABLET_3_2
+	dw TEXT_XIBALBA_STORY_TABLET_4_1, TEXT_XIBALBA_STORY_TABLET_4_2
+	dw TEXT_XIBALBA_LORDS_TABLET_1_1, TEXT_XIBALBA_LORDS_TABLET_1_2
+	dw TEXT_XIBALBA_LORDS_TABLET_2_1, TEXT_XIBALBA_LORDS_TABLET_2_2
+	dw TEXT_XIBALBA_LORDS_TABLET_3_1, TEXT_XIBALBA_LORDS_TABLET_3_2
+	dw TEXT_XIBALBA_LORDS_TABLET_4_1, TEXT_XIBALBA_LORDS_TABLET_4_2
+	dw TEXT_XIBALBA_LORDS_TABLET_5_1, TEXT_XIBALBA_LORDS_TABLET_5_2
+	dw TEXT_XIBALBA_LORDS_TABLET_6_1, TEXT_XIBALBA_LORDS_TABLET_6_2
+	dw TEXT_XIBALBA_LORDS_TABLET_7_1, TEXT_XIBALBA_LORDS_TABLET_7_2
+	dw TEXT_XIBALBA_CLUE_TABLET_1_1, TEXT_XIBALBA_CLUE_TABLET_1_2
+
 xibalba_tablet_fn:
-	; ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
-	ld hl, TEXT_XIBALBA_STORY_TABLET_1_1
-	ld de, TEXT_XIBALBA_STORY_TABLET_1_2
-	push de
-		push hl
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	sub TAG_XIBALBA_STORY1
+	add a, a
+	add a, a
+	ld hl, xibalba_tablet_fn_tbl
+	ADD_HL_A
+	ld e, (hl)
+	inc hl
+	ld d, (hl)
+	inc hl
+	ld a, (hl)
+	inc hl
+	ld h, (hl)
+	ld l, a
+	push hl
+		push de
 			ld hl, tablet_trivia_tiles_zx0
 			ld c, TABLET_LETTER_PAGE
 			call maya_puzzle_tablet_fn_load_extra_tiles_hl_set
@@ -1285,6 +1311,9 @@ xibalba_tablet_fn:
 		ld ix, CHRTBL2
 		call display_paragraph_text_page3
 	pop iy
+	ld a, iyl
+	or iyh
+	ret z
 	ld b, 48
 	ld de, NAMTBL2 + (7 + 8*32)
 	ld ix, CHRTBL2 + 256*8
