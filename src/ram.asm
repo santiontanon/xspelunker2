@@ -276,7 +276,7 @@ stats__achievements: ds virtual 4  ; maximum of 4 achievements
 RAM_to_zero_on_game_start_end:
 
 ; temporary variables:
-temporary_variables: ds virtual 10
+temporary_variables: ds virtual 13
 tmp_hud_drawing_hl: equ temporary_variables
 tmp_hud_drawing_de: equ temporary_variables + 2
 tmp_dialog_pointer_position: equ temporary_variables
@@ -289,10 +289,12 @@ tmp_puzzlebox_pointer: equ tmp_hud_drawing_hl + 4
 tmp_enemy_pcg_platform_loc_ptr: equ temporary_variables
 tmp_enemy_pcg_water_loc_ptr: equ temporary_variables + 2
 tmp_enemy_pcg_ceiling_loc_ptr: equ temporary_variables + 4
-tmp_enemy_pcg_n_platform_locs: equ temporary_variables + 6
-tmp_enemy_pcg_n_water_locs: equ temporary_variables + 7
-tmp_enemy_pcg_n_ceiling_locs: equ temporary_variables + 8
-tmp_enemy_pcg_next_enemy_id: equ temporary_variables + 9
+tmp_enemy_pcg_lava_loc_ptr: equ temporary_variables + 6
+tmp_enemy_pcg_n_platform_locs: equ temporary_variables + 8
+tmp_enemy_pcg_n_water_locs: equ temporary_variables + 9
+tmp_enemy_pcg_n_ceiling_locs: equ temporary_variables + 10
+tmp_enemy_pcg_n_lava_locs: equ temporary_variables + 11
+tmp_enemy_pcg_next_enemy_id: equ temporary_variables + 12
 tmp_get_tile_object_behind_player_ptr: equ temporary_variables
 tmp_shop_cursor_position: equ temporary_variables
 tmp_gamestart_cursor_position1: equ temporary_variables  ; world name, start, back or help

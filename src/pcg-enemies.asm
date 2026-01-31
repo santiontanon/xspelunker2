@@ -345,6 +345,10 @@ pcg_generate_room__spawn_tile_enemies_loop_found:
 	jp z, pcg_generate_room__spawn_ant_colony
 	cp TAG_ENEMY_ANT_COLONY2
 	jp z, pcg_generate_room__spawn_ant_colony2
+	cp TAG_ENEMY_IMP_GENERATOR
+	jp z, pcg_generate_room__spawn_imp_generator
+	cp TAG_ENEMY_IMP_GENERATOR2
+	jp z, pcg_generate_room__spawn_imp_generator2
 	; ...
 	ret
 
@@ -544,6 +548,7 @@ pcg_generate_room__spawn_enemy_get_new_position_continue:
 	ret
 pcg_generate_room__spawn_enemy_get_new_ceiling_position_not_found:
 pcg_generate_room__spawn_enemy_get_new_water_position_not_found:
+pcg_generate_room__spawn_enemy_get_new_lava_position_not_found:
 pcg_generate_room__spawn_enemy_get_new_position_not_found:
 	or 1
 	ret
@@ -641,6 +646,57 @@ pcg_generate_room__spawn_enemy_get_new_ceiling_position_continue:
 	ld a, (tmp_enemy_pcg_n_ceiling_locs)
 	dec a
 	ld (tmp_enemy_pcg_n_ceiling_locs), a
+	xor a
+	ret
+
+
+;-----------------------------------------------
+; input:
+; output:
+; - e, d: position
+; - z: ptr found
+; - nz: no ptr found
+pcg_generate_room__spawn_enemy_get_new_lava_position:
+	ld a, (tmp_enemy_pcg_n_lava_locs)
+	ld e, a
+	or a
+	jr z, pcg_generate_room__spawn_enemy_get_new_lava_position_not_found  ; no positions available
+	ld c, a
+	call random_modulo
+	ld hl, buffer_4096 + 1536
+; 	push bc
+		push de
+			ld e, a
+			ld d, 0
+			add hl, de
+			add hl, de
+			ld e, (hl)
+			inc hl
+			ld d, (hl)
+		pop bc
+		; remove the position (shift all the positions left):
+		sub c
+		neg
+		dec a  ; a = number of positions we need to copy to the left
+		push de
+			ld e, l
+			ld d, h
+			dec de
+			inc hl
+			or a
+			jr z, pcg_generate_room__spawn_enemy_get_new_lava_position_continue
+			ld c, a
+			ld b, 0
+			sla c
+			rl b
+			ldir
+pcg_generate_room__spawn_enemy_get_new_lava_position_continue:
+		pop de
+; 	pop bc
+; 	dec c
+	ld a, (tmp_enemy_pcg_n_lava_locs)
+	dec a
+	ld (tmp_enemy_pcg_n_lava_locs), a
 	xor a
 	ret
 
@@ -1117,7 +1173,7 @@ pcg_generate_room__spawn_ant_colony2:
 pcg_generate_room__spawn_bee_hive:
 	call pcg_generate_room__spawn_enemy_get_new_ceiling_position
 	ret nz
-	; we found at leat one viable position, spawn the plant:
+	; we found at leat one viable position, spawn the hive:
 	push de
 	push bc
 		; undraw the current tile objects:
@@ -1164,6 +1220,67 @@ pcg_generate_room__spawn_bee_hive:
 	ret
 
 
+;-----------------------------------------------
+pcg_generate_room__spawn_imp_generator:
+	call pcg_generate_room__spawn_enemy_get_new_lava_position
+	ret nz
+	; we found at leat one viable position, spawn the generator:
+	push de
+	push bc
+		ld hl, ptr_to_new_tile_object
+		ld c, TILES_PAGE
+		call call_hl_in_page_c_8000
+	pop bc
+	pop de
+	ret nz
+	ld a, (tmp_enemy_pcg_next_enemy_id)
+	ld (hl), a  ; ID
+	inc a
+	ld (tmp_enemy_pcg_next_enemy_id), a
+	inc hl
+	ld (hl), TAG_ENEMY_IMP_GENERATOR  ; type
+	inc hl
+	ld (hl), e  ; tile x
+	inc hl
+	ld (hl), d  ; tile y
+	inc hl
+	ld (hl), 0  ; state
+	inc hl
+	ld (hl), 0  ; state timer
+	inc hl
+	ld (hl), 0  ; hit points
+	ret
+
+pcg_generate_room__spawn_imp_generator2:
+	call pcg_generate_room__spawn_enemy_get_new_lava_position
+	ret nz
+	; we found at leat one viable position, spawn the generator:
+	push de
+	push bc
+		ld hl, ptr_to_new_tile_object
+		ld c, TILES_PAGE
+		call call_hl_in_page_c_8000
+	pop bc
+	pop de
+	ret nz
+	ld a, (tmp_enemy_pcg_next_enemy_id)
+	ld (hl), a  ; ID
+	inc a
+	ld (tmp_enemy_pcg_next_enemy_id), a
+	inc hl
+	ld (hl), TAG_ENEMY_IMP_GENERATOR2  ; type
+	inc hl
+	ld (hl), e  ; tile x
+	inc hl
+	ld (hl), d  ; tile y
+	inc hl
+	ld (hl), 0  ; state
+	inc hl
+	ld (hl), 0  ; state timer
+	inc hl
+	ld (hl), 0  ; hit points
+	ret
+
 
 ;-----------------------------------------------
 ; This version iterates over all positions accumulates all that match enemy spawn positions in a list
@@ -1171,6 +1288,7 @@ pcg_generate_room__spawn_bee_hive:
 ; - (tmp_enemy_pcg_n_platform_locs): number of positions found over platforms (stored starting at buffer_4096)
 ; - (tmp_enemy_pcg_n_water_locs): number of positions found in the water (stored starting at buffer_4096 + 512)
 ; - (tmp_enemy_pcg_n_ceiling_locs): number of positions found in the ceiling (stored starting at buffer_4096 + 1024)
+; - (tmp_enemy_pcg_n_lavalocs): number of positions found in the lava durface (stored starting at buffer_4096 + 1536)
 pcg__find_enemy_spawn_locations:
 	ld hl, buffer_4096
 	ld (tmp_enemy_pcg_platform_loc_ptr), hl
@@ -1178,6 +1296,8 @@ pcg__find_enemy_spawn_locations:
 	ld (tmp_enemy_pcg_water_loc_ptr), hl
 	ld hl, buffer_4096 + 1024
 	ld (tmp_enemy_pcg_ceiling_loc_ptr), hl
+	ld hl, buffer_4096 + 1536
+	ld (tmp_enemy_pcg_lava_loc_ptr), hl
 	ld a, (current_room__width)
 	ld b, 0
 	ld c, a
@@ -1279,17 +1399,53 @@ pcg__find_enemy_spawn_locations_x_loop_skip_post_pop:
 			jr nz, pcg__find_enemy_spawn_locations_x_loop_skip_water
 
 			; add a water position:
-			push hl
-				ld hl, (tmp_enemy_pcg_water_loc_ptr)
-				ld (hl), c
-				inc hl
-				ld (hl), b
-				inc hl
-				ld (tmp_enemy_pcg_water_loc_ptr), hl
-			pop hl
+			ld hl, (tmp_enemy_pcg_water_loc_ptr)
+			ld (hl), c
+			inc hl
+			ld (hl), b
+			inc hl
+			ld (tmp_enemy_pcg_water_loc_ptr), hl
 pcg__find_enemy_spawn_locations_x_loop_skip_water:
 		pop hl
 pcg__find_enemy_spawn_locations_x_loop_skip_water_post_pop:
+
+		; See if the position matches a "lava location":
+		ld a, (hl)  ; we want lava with 3 empty tiles above
+		or a
+		jp nz, pcg__find_enemy_spawn_locations_x_loop_skip_lava_post_pop
+		push hl
+			ld a, (current_room__width)
+			ADD_HL_A
+			pcg__find_enemy_spawn_location_lava_p_macro
+			jr nz, pcg__find_enemy_spawn_locations_x_loop_skip_lava
+			ld a, (current_room__width)
+			ld d, 0
+			ld e, a
+			or a
+			sbc hl, de
+			or a
+			sbc hl, de
+			ld a, (hl)
+			or a
+			jr nz, pcg__find_enemy_spawn_locations_x_loop_skip_lava
+			or a
+			sbc hl, de
+			ld a, (hl)
+			or a
+			jr nz, pcg__find_enemy_spawn_locations_x_loop_skip_lava
+
+			; add a lava position:
+pcg__find_enemy_spawn_locations_x_loop_add_lava_position:
+			ld hl, (tmp_enemy_pcg_lava_loc_ptr)
+			ld (hl), c
+			inc hl
+			ld (hl), b
+			inc hl
+			ld (tmp_enemy_pcg_lava_loc_ptr), hl
+pcg__find_enemy_spawn_locations_x_loop_skip_lava:
+		pop hl
+pcg__find_enemy_spawn_locations_x_loop_skip_lava_post_pop:
+
 
 		inc hl
 		inc hl
@@ -1337,6 +1493,16 @@ pcg__find_enemy_spawn_locations_x_loop_skip_water_post_pop:
 	rr l
 	ld a, l
 	ld (tmp_enemy_pcg_n_ceiling_locs), a
+
+	; number of lava locations:
+	ld hl, (tmp_enemy_pcg_lava_loc_ptr)
+	ld de, -(buffer_4096 + 1536)
+	add hl, de
+	sra h
+	rr l
+	ld a, l
+	ld (tmp_enemy_pcg_n_lava_locs), a
+
 	ret
 
 
@@ -1395,4 +1561,16 @@ pcg__find_enemy_spawn_location_water_p_macro: macro
 		ld a, (hl)		
 	ex de, hl
 	cp 4
+	endm
+
+
+;-----------------------------------------------
+pcg__find_enemy_spawn_location_lava_p_macro: macro
+	ld a, (hl)
+	ex de, hl
+		ld hl, current_room__collision_table
+		ADD_HL_A
+		ld a, (hl)		
+	ex de, hl
+	cp 10
 	endm

@@ -221,6 +221,8 @@ public class AssemblerTags {
         "TAG_ENEMY_BEE_HIVE",
         "TAG_ENEMY_ANT_COLONY",
         "TAG_ENEMY_ANT_COLONY2",
+        "TAG_ENEMY_IMP_GENERATOR",
+        "TAG_ENEMY_IMP_GENERATOR2",
     };
     
 

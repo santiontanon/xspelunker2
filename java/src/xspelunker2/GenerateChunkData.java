@@ -548,6 +548,17 @@ public class GenerateChunkData {
             if (n_item_locations == 1) {
                 throw new Exception("In Xibalba, if there is an item location, there must be at least two!");
             }
+            
+//            // check lava top is in the correct positions:
+//            for(int i = 1;i<RoomChunk.CHUNK_HEIGHT;i++) {
+//                for(int j = 0;j<RoomChunk.CHUNK_WIDTH;j++) {
+//                    int type_up = collision_types[c.tiles[j][i - 1]];
+//                    int type_down = collision_types[c.tiles[j][i]];
+//                    if (type_down == 10 && type_up == 0 && i != 7) {
+//                        throw new Exception("lava ends at a position != 7 in " + c.path);
+//                    }
+//                }
+//            }
         }
     }
 }

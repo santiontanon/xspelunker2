@@ -75,7 +75,8 @@ pcg_enemy_generation_table_caves_east_normal:
 
 pcg_enemy_generation_table_xibalba_normal:
 	db 2  ; 2 enemies per "screen" area
-	db 0
+	db 1
+	db TAG_ENEMY_IMP_GENERATOR, 255
 	db 7  ; possible sprite enemy types to be spawned (weights below should add up to 32)
 	db ENEMY_BAT, 5
 	db ENEMY_BAT_AGGRESSIVE, 3

@@ -738,6 +738,73 @@ enemy_ant_colony_hit_continue:
 
 
 ;-----------------------------------------------
+update_tile_objects_enemy_imp_generator:
+	dec hl
+	push hl
+	pop ix
+
+	inc (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	and #7f
+	cp #7f
+	jp nz, update_tile_objects_loop_continue
+
+	; spawn an imp:
+	ld iyl, ENEMY_FIRE_IMP
+	ld iyh, 4  ; hit points
+update_tile_objects_enemy_imp_generator_spawn:
+	; how many ants do we already have?
+	call update_tile_objects_enemy_ant_colony_count_ants
+	ld a, c
+	cp 2  ; max ants
+	jp nc, update_tile_objects_loop_continue  ; there are already too many
+
+	call ptr_to_new_sprite_enemy
+	jp nz, update_tile_objects_loop_continue
+	ld (hl), 0
+	inc hl
+	ld a, iyl
+	ld (hl), a  ; type
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	inc a
+	ld (hl), a  ; tile x
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_Y)	
+	ld (hl), a  ; tile y
+	inc hl
+	ld (hl), 0  ; state
+	inc hl
+	ld (hl), 0  ; state timer
+	inc hl
+	ld (hl), #ff  ; hit ID
+	inc hl
+	ld a, iyh
+	ld (hl), a  ; health
+	jp update_tile_objects_loop_continue
+
+update_tile_objects_enemy_imp_generator2:
+	dec hl
+	push hl
+	pop ix
+
+	inc (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	and #7f
+	cp #7f
+	jp nz, update_tile_objects_loop_continue
+
+	; spawn an imp:
+	ld iyl, ENEMY_FIRE_IMP2
+	ld iyh, 8  ; hit points
+	jr update_tile_objects_enemy_imp_generator_spawn
+
+
+;-----------------------------------------------
 ; output:
 ; - ix: ptr
 ; - z: found
@@ -759,6 +826,10 @@ find_tile_enemy_ptr_loop:
 	cp TAG_ENEMY_ANT_COLONY
 	ret z
 	cp TAG_ENEMY_ANT_COLONY2
+	ret z
+	cp TAG_ENEMY_IMP_GENERATOR
+	ret z
+	cp TAG_ENEMY_IMP_GENERATOR2
 	ret z
 	add ix, bc
 	jr find_tile_enemy_ptr_loop

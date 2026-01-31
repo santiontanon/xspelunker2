@@ -2,11 +2,23 @@ to do:
 
 ***- xibalba biome (remember to keep ladder tiles in place for down-door opening code).
   ***- tile enemies:
-    ***- fire imp generators
-    ***- volcano that spits lava (usual lava pit where fireballs jump up and maybe explode into bullets), cannot be killed
+    ***- volcano that spits lava (usual lava pit where fireballs jump up and maybe explode into bullets)
+      ***- spawn in the same places where imp generators
+      ***- create sprite enemy that is a fireball that rises and explodes into several bullets upon arrival at the top
     ***- lava waterfalls (lava falls intermitently, blocking the path part of the time)
-    ***- large stone owls (they just fly up and down if they have space, rotate their heads, and spawn enemies/bullets/fire)
+      ***- spawn in the same positions as imp generators
+      ***- draw a "lava opening", from where lava will fall (clear the tiles below?)
+      ***- spawn/draw in game
+      ***- make lava fall intermitently
+      ***- do I need a new tile type for "falling lava"?
+    ***- large stone owls (they just fly up and down if they have space, rotate their heads, and spawn enemies/bullets/fire):
+      ***- draw them in gimp (are they 3x3? 4x4?)
+      ***- add basic owl to game (without movement). Spawn in appropriate places where there is space for them
+      ***- make them rotate their head
+      ***- make them fly up and land
+      ***- make them fire bullets
   ***- boss room is a large ball game court (64 * 24 in size) with 12 tombs: 2 big ones and 10 small ones
+    ***- draw it in gimp/tiled
     ***- interacting tells you the name of the lord in each tomb
     ***- player can wake up any 2 of the 12 xibalba lords in the boss room (crouch, jump, swing, crouch, jump, swing)
     ***- waking up proper pairs (e.g. the two main lords, or Ahalpuh+Ahalgana) gives you an extra item at the end: two main give you a key that can be used for a secret in moon/mars boss room, the other pairs give you benefits (figure them out)
