@@ -63,11 +63,10 @@ general_check_collision_with_wall:
 ; - if pixel_x = 6  ->  tile_x, tile_x + 1
 ; - if pixel_x = 7  ->  tile_x, tile_x + 1
 ; output:
+; - a: tile type (if there is collision)
 ; - z: collision
 ; - nz: no collision
 player_check_collision_idle:
-	ld de, #0202  ; wall, wall
-player_check_collision_idle_with_de:
 	ld a, (player_y + 1)  ; tile y
 	ld b, a
 	ld a, (player_x + 1)  ; tile x
@@ -82,13 +81,9 @@ player_check_collision_idle_with_de:
 	inc b
 player_check_collision_idle_continue:
 	push bc
-	push de
 		call get_room_tile_type
-	pop de
 	pop bc
-	cp e
-	ret z
-	cp d
+	cp 2
 	ret z
 	ld a, (player_x)
 	cp 5
@@ -97,9 +92,7 @@ player_check_collision_idle_continue:
 	ld a, (hl)
 	or a
 	call nz, get_collision_tile_type_of_a  ; 0 is directly no collision (we exit early, as the tile type table starts at 32)
-	cp e
-	ret z
-	cp d
+	cp 2
 	ret z
 player_check_collision_idle_head:
 	; collision with the head:
@@ -110,12 +103,9 @@ player_check_collision_idle_head:
 	jr c, player_check_collision_idle_continue3
 	inc b
 player_check_collision_idle_continue3:
-	push de
-		call get_room_tile_type
-	pop de
-	cp e
+	call get_room_tile_type
+	cp 2
 	ret z
-	cp d
 	ld a, (player_x)
 	cp 5
 	jr c, player_check_collision_idle_no_collision
@@ -123,12 +113,87 @@ player_check_collision_idle_continue3:
 	ld a, (hl)
 	or a
 	call nz, get_collision_tile_type_of_a  ; 0 is directly no collision (we exit early, as the tile type table starts at 32)
-	cp e
-	ret z
-	cp d
+	cp 2
 	ret
 player_check_collision_idle_no_collision:
 	or 1
+	ret
+
+
+;-----------------------------------------------
+; Same as 'player_check_collision_idle' but checks collision with types: 3, 9, 11, 12
+player_check_collision_idle_with_hazard_or_waterfalls:
+	ld a, (player_y + 1)  ; tile y
+	ld b, a
+	ld a, (player_x + 1)  ; tile x
+	ld c, a
+; 	cp #ff
+; 	jp z, player_exit_room_left
+	; collision with the feet:
+	inc b
+	ld a, (player_y)
+	or a
+	jr z, player_check_collision_idle_with_hazard_or_waterfalls_continue
+	inc b
+player_check_collision_idle_with_hazard_or_waterfalls_continue:
+	push bc
+		call get_room_tile_type
+	pop bc
+	cp 3
+	ret z
+	cp 9
+	ret z
+	cp 11
+	ret z
+	cp 12
+	ret z
+	ld a, (player_x)
+	cp 5
+	jr c, player_check_collision_idle_with_hazard_or_waterfalls_head
+	inc hl
+	ld a, (hl)
+	or a
+	call nz, get_collision_tile_type_of_a  ; 0 is directly no collision (we exit early, as the tile type table starts at 32)
+	cp 3
+	ret z
+	cp 9
+	ret z
+	cp 11
+	ret z
+	cp 12
+	ret z
+player_check_collision_idle_with_hazard_or_waterfalls_head:
+	; collision with the head:
+	ld a, (player_y + 1)
+	ld b, a
+	ld a, (player_y)
+	cp PLAYER_COLLISION_UP_LEEWAY
+	jr c, player_check_collision_idle_with_hazard_or_waterfalls_continue3
+	inc b
+player_check_collision_idle_with_hazard_or_waterfalls_continue3:
+	call get_room_tile_type
+	cp 3
+	ret z
+	cp 9
+	ret z
+	cp 11
+	ret z
+	cp 12
+	ret z
+	ld a, (player_x)
+	cp 5
+	jr c, player_check_collision_idle_no_collision
+	inc hl
+	ld a, (hl)
+	or a
+	call nz, get_collision_tile_type_of_a  ; 0 is directly no collision (we exit early, as the tile type table starts at 32)
+	cp 3
+	ret z
+	cp 9
+	ret z
+	cp 11
+	ret z
+	cp 12
 	ret
 
 
@@ -154,10 +219,12 @@ player_check_collision_idle_no_collision:
 ; - if pixel_x = 7  ->  tile_x, tile_x + 1
 ; However, to simplify (and to give the player a small advantage), we use the same
 ; range as 'player_check_collision_idle'
+; - We check collision with hazards, falling water/lava: 3, 9, 11, 12
 ; output:
+; - a: tile type (if there is collision)
 ; - z: collision
 ; - nz: no collision
-player_check_collision_crouching_with_de:
+player_check_collision_crouching_with_hazard_or_waterfalls:
 	ld a, (player_y + 1)
 	ld b, a
 	ld a, (player_x + 1)
@@ -173,20 +240,28 @@ player_check_collision_crouching_with_de_continue:
 	push de
 		call get_room_tile_type
 	pop de
-	cp e
+	cp 3
 	ret z
-	cp d
+	cp 9
+	ret z
+	cp 11
+	ret z
+	cp 12
 	ret z
 	ld a, (player_x)
 	cp 5
-	jr c, player_check_collision_idle_no_collision
+	jp c, player_check_collision_idle_no_collision
 	inc hl
 	ld a, (hl)
 	or a
 	call nz, get_collision_tile_type_of_a  ; 0 is directly no collision (we exit early, as the tile type table starts at 32)
-	cp e
+	cp 3
 	ret z
-	cp d
+	cp 9
+	ret z
+	cp 11
+	ret z
+	cp 12
 	ret
 
 

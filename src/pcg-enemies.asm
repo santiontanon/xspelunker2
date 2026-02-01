@@ -1338,15 +1338,28 @@ pcg_generate_room__spawn_fireball_generator:
 ; input:
 ; - de: ptr to foreground chunk "lava-generator" object
 pcg_generate_room__spawn_lava_generator:
-  ex de, hl
+  	ex de, hl
 	ld a, (tmp_enemy_pcg_tile_enemy_workmemory_usage)
 	add LAVA_GENERATOR_WORKMEMORY_USAGE
 	cp (tile_enemy_work_memory_end - tile_enemy_work_memory) + 1  ; + 1 so that we can use "nc" as the condition
 	ret nc  ; if we do not have enough work memory, do not spawn
 
 	; probability of spawning, depending on the difficulty level:
-	; call random_a
-	; ...
+	ld c, 64  ; easy
+	ld a, (current_world__difficulty)
+	or a
+	jr z, pcg_generate_room__spawn_lava_generator_difficulty_set
+	ld c, 128  ; normal
+	dec a
+	jr z, pcg_generate_room__spawn_lava_generator_difficulty_set
+	ld c, 196  ; hard
+	dec a
+	jr z, pcg_generate_room__spawn_lava_generator_difficulty_set
+	ld c, 255  ; very hard
+pcg_generate_room__spawn_lava_generator_difficulty_set:
+	call random_a
+	cp c
+	ret nc
 
 	ld de, (tmp_pcg_room__next_tile_object_ptr)
 	push de

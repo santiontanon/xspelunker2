@@ -101,8 +101,8 @@ public class GenerateChunkData {
         2, 2, 3, 5, 2, 2, 5, 6, 8, 1, 1, 1, 2, 2, 2, 2,
         2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2,
         2, 2, 2, 2, 2, 6, 2, 7, 8, 1, 1, 1, 2, 2, 2, 0,
-        0, 0, 0, 0, 0, 2, 2, 0, 2, 2, 0, 2, 2, 2, 2, 0,
-        0, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 2, 2, 12, 2, 2, 12, 2, 2, 2, 2, 0,
+        12, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0,
         2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0,
         2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0,
         2, 2, 2, 2, 2, 1, 2, 2, 7, 2, 2, 2, 3, 2, 1, 5            
@@ -440,6 +440,8 @@ public class GenerateChunkData {
     
     public static void verifyChunk(RoomChunk c, int[] collision_types, String biome) throws Exception {
         int n_item_locations = 0;
+        int n_pushable_blocks = 0;
+        int n_lava_generators = 0;
 
         if (c.locations == null) {
             throw new Exception("null locations in " + c.path);
@@ -448,6 +450,17 @@ public class GenerateChunkData {
             for(TMXObject o:c.locations) {
                 if (o.type.equals("item")) {
                     n_item_locations++;
+                }
+                if (o.type.equals("pushable-block")) {
+                    n_pushable_blocks++;
+                }
+                if (o.type.equals("lava-generator")) {
+                    n_lava_generators++;
+                    int type1 = collision_types[c.tiles[o.x/8 + 1][o.y/8 + 8]];
+                    int type2 = collision_types[c.tiles[o.x/8 + 2][o.y/8 + 8]];
+                    if (type1 != 10 || type2 != 10) {
+                        throw new Exception("There is no lava 8 tiles below lava generator in " + c.path);
+                    }
                 }
                 if (o.type.equals("4x4-item")) {
                     for(TMXObject o2:c.locations) {
@@ -503,6 +516,11 @@ public class GenerateChunkData {
                     }
                 }
             }
+        }
+        
+        if (n_lava_generators > 0 &&  // to make sure it's not a block puzzle
+            n_pushable_blocks + n_lava_generators > 3) {
+            throw new Exception("more than 3 spawneable tile objects (pushable blocks, lava generators, etc.) in chunk " + c.path);
         }
         
         // Check left/right "contract" (bottom left/right are walkable and have a platform to stand on):

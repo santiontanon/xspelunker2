@@ -13,6 +13,8 @@
 ; 8: ladder-platform-top
 ; 9: boss potential hit-spot (if player hits this, the function for hitting a boss is called)
 ; 10: lava
+; 11: falling water
+; 12: falling lava
 
 tile_collision_types_jungle:
 	db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
@@ -102,8 +104,8 @@ tile_collision_types_xibalba:
     db 2, 2, 3, 5, 2, 2, 5, 6, 8, 1, 1, 1, 2, 2, 2, 2
     db 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2
     db 2, 2, 2, 2, 2, 6, 2, 7, 8, 1, 1, 1, 2, 2, 2, 0
-    db 0, 0, 0, 0, 0, 2, 2, 0, 2, 2, 0, 2, 2, 2, 2, 0
-    db 0, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0
+    db 0, 0, 0, 0, 0, 2, 2, 12, 2, 2, 12, 2, 2, 2, 2, 0
+    db 12, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0
     db 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0
     db 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0
     db 2, 2, 2, 2, 2, 1, 2, 2, 7, 2, 2, 2, 3, 2, 1, 5

@@ -49,14 +49,32 @@ player_update_no_trial_fn:
 	jr z, player_update_immune_check_hazard_short
 	cp PLAYER_STATE_DIRECTIONAL_WEAPON_CROUCHING
 	jr z, player_update_immune_check_hazard_short
-	ld de, #0903  ; hazard or boss
-	call player_check_collision_idle_with_de
-	call z, player_hit_hazard
-	jr player_update_continue
+	call player_check_collision_idle_with_hazard_or_waterfalls
+	jr nz, player_update_continue
+	jr player_update_immune_check_hazard_continue
 player_update_immune_check_hazard_short:
-	ld de, #0903  ; hazard or boss
-	call player_check_collision_crouching_with_de
-	call z, player_hit_hazard
+	call player_check_collision_crouching_with_hazard_or_waterfalls
+	jr nz, player_update_continue
+player_update_immune_check_hazard_continue:
+	; a = 3, 9 -> player_hit_hazard
+	; a = 11 -> player unter falling water
+	; a = 12 -> player under falling lava
+	cp 3
+	jr nz, player_update_immune_check_hazard_continue2
+	call player_hit_hazard
+	jr player_update_continue
+player_update_immune_check_hazard_continue2:
+	cp 9
+	jr nz, player_update_immune_check_hazard_continue3
+	call player_hit_hazard
+	jr player_update_continue
+player_update_immune_check_hazard_continue3:
+	cp 11
+	jr nz, player_update_immune_check_hazard_continue4
+	call player_under_waterfall
+	jr player_update_continue
+player_update_immune_check_hazard_continue4:
+	call player_under_lavafall
 	jr player_update_continue
 
 player_update_immune:
@@ -87,6 +105,26 @@ ENDIF
 	ld d, (hl)
 	ex hl, de
 	jp hl
+
+
+;-----------------------------------------------
+player_under_lavafall:
+	ld a, (player_inventory_items + INVENTORY_ITEM_ICE_CAPE)
+	or a
+	jr nz, player_under_waterfall  ; ice cape protects from lava
+	; we are in lava, take damage periodically:
+	ld a, (interrupt_cycle)
+	and #0f
+	ld c, 1
+	call z, player_lose_health_non_reducible
+	; jr player_under_waterfall
+
+
+;-----------------------------------------------
+player_under_waterfall:
+	; push down:
+	call player_update_move_one_pixel_down_considering_collisions
+	jp player_update_move_one_pixel_down_considering_collisions
 
 
 ;-----------------------------------------------

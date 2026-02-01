@@ -589,6 +589,29 @@ SFX_enemy_bullet:
   db SFX_CMD_END
 
 
+SFX_waterfall:
+  db  7,#9c  ; noise in channel C, and tone in channels B and A
+  db 10,#0a  ; volume
+  db  6+MUSIC_CMD_TIME_STEP_FLAG,#04  ; noise frequency
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP
+  db 10+MUSIC_CMD_TIME_STEP_FLAG,#08  ; volume
+  db MUSIC_CMD_SKIP
+  db 10+MUSIC_CMD_TIME_STEP_FLAG,#06  ; volume
+  db MUSIC_CMD_SKIP
+  db 10+MUSIC_CMD_TIME_STEP_FLAG,#04  ; volume
+  db MUSIC_CMD_SKIP
+  db 10+MUSIC_CMD_TIME_STEP_FLAG,#02  ; volume
+  db MUSIC_CMD_SKIP
+  db 10,#00  ; silence
+  db 7, #b8  ; tone in all three channels
+  db SFX_CMD_END
+
 ; SFX_spell:
 ;   db 7, #b8  ; tone in all three channels
 ;   db 10,#1f  ; volume set to modulation

@@ -2,21 +2,12 @@ to do:
 
 ***- xibalba biome (remember to keep ladder tiles in place for down-door opening code).
   ***- tile enemies:
-    ***- lava waterfalls (lava falls intermitently, blocking the path part of the time)
-      ***- new tile types for: falling lava & falling water
-        ***- assign them in the tile type tables
-        ***- affect player accordingly: push player down if possible, and if lava and no ice cape, do damage periodically
-      ***- lava fall SFX
-      ***- define a probability for spawning lava waterfalls, depending on the difficulty level
-      ***- chunk verification:
-        ***- at most 3 pushableblock+lava generators per chunk
-        ***- 8 tiles below lava generation should be lava
     ***- when the tile enemies do not require tiles, allow spawning more than one (give each an ID, and those that do not require tiles have ID 0, if ID != 0 and any spawned before with ID different than the current, do not spawn)
     ***- large stone owls (they just fly up and down if they have space, rotate their heads, and spawn enemies/bullets/fire):
       ***- draw them in gimp (are they 3x3? 4x4?)
       ***- add basic owl to game (without movement). Spawn in appropriate places where there is space for them
       ***- make them rotate their head
-      ***- make them fly up and land
+      ***- make them move (do they walk? fly?)
       ***- make them fire bullets
   ***- boss room is a large ball game court (64 * 24 in size) with 12 tombs: 2 big ones and 10 small ones
     ***- draw it in gimp/tiled
