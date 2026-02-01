@@ -12,6 +12,7 @@ current_world__difficulty: ds virtual 1  ; 0: easy, 1: normal, 2: hard, 3: harde
 ; difficulty settings (derived from 'current_world__difficulty'):
 current_world__difficulty_attack_warn_time: ds virtual 1
 current_world__difficulty_bullet_speed: ds virtual 1
+current_world__difficulty_n_cluster_bullets: ds virtual 1  ; e.g. for xibalba fireballs
 
 
 current_world__seed: ds virtual 4

@@ -436,11 +436,11 @@ public class GenerateSprites {
         data.addAll(extractSpriteFlipped(sourceImage, 48, 48, 15));  //
         data.addAll(extractSprite(sourceImage, 64, 48, 15));  // right idle
         data.addAll(extractSpriteFlipped(sourceImage, 64, 48, 15));  // left idle
-        // filler (31):
-        data.addAll(extractSprite(sourceImage, 64, 0, 15));
-        data.addAll(extractSprite(sourceImage, 64, 0, 15));
-        data.addAll(extractSprite(sourceImage, 64, 0, 15));
-        data.addAll(extractSprite(sourceImage, 64, 0, 15));
+        // big fireball (31):
+        data.addAll(extractSprite(sourceImage, 0, 144, 15));  // big fireball
+        data.addAll(extractSprite(sourceImage, 16, 144, 15));
+        data.addAll(extractSprite(sourceImage, 32, 144, 15));
+        data.addAll(extractSprite(sourceImage, 48, 144, 15));
         // rock men (35)
         data.addAll(extractSprite(sourceImage, 80, 128, 15));  // stone opening
         data.addAll(extractSprite(sourceImage, 96, 128, 15));  // walk right

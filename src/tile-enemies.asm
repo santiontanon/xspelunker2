@@ -803,6 +803,22 @@ update_tile_objects_enemy_imp_generator2:
 	ld iyh, 8  ; hit points
 	jr update_tile_objects_enemy_imp_generator_spawn
 
+update_tile_objects_enemy_fireball_generator:
+	dec hl
+	push hl
+	pop ix
+
+	inc (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	and #3f
+	cp #3f
+	jp nz, update_tile_objects_loop_continue
+
+	; spawn an imp:
+	ld iyl, ENEMY_FIREBALL
+	ld iyh, 8  ; hit points
+	jr update_tile_objects_enemy_imp_generator_spawn
+
 
 ;-----------------------------------------------
 ; output:
@@ -830,6 +846,8 @@ find_tile_enemy_ptr_loop:
 	cp TAG_ENEMY_IMP_GENERATOR
 	ret z
 	cp TAG_ENEMY_IMP_GENERATOR2
+	ret z
+	cp TAG_ENEMY_FIREBALL_GENERATOR
 	ret z
 	add ix, bc
 	jr find_tile_enemy_ptr_loop

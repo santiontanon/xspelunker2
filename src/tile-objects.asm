@@ -133,6 +133,8 @@ update_tile_objects_loop:
 		jp z, update_tile_objects_enemy_imp_generator
 		cp TAG_ENEMY_IMP_GENERATOR2
 		jp z, update_tile_objects_enemy_imp_generator2
+		cp TAG_ENEMY_FIREBALL_GENERATOR
+		jp z, update_tile_objects_enemy_fireball_generator
 		cp TAG_LOST_VENDOR
 		jp z, update_tile_objects_lost_vendor
 update_tile_objects_loop_continue:
@@ -1177,6 +1179,7 @@ ENDR
 	dw object_interaction_function_empty  ; TAG_ENEMY_ANT_COLONY2
 	dw object_interaction_function_empty  ; TAG_ENEMY_IMP_GENERATOR
 	dw object_interaction_function_empty  ; TAG_ENEMY_IMP_GENERATOR2
+	dw object_interaction_function_empty  ; TAG_ENEMY_FIREBALL_GENERATOR
 
 object_interaction_inventory_slot:
 	db #ff, #ff, #ff, #ff, #ff  ; none, block puzzles: 0
@@ -2592,6 +2595,7 @@ ENDR
 	TILE_OBJECT_DATA 1, 3, 2, tile_object_ant_colony  ; TAG_ENEMY_ANT_COLONY2
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_ENEMY_IMP_GENERATOR
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_ENEMY_IMP_GENERATOR2
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_ENEMY_FIREBALL_GENERATOR
 
 
 tile_object_regular_object_gfx:

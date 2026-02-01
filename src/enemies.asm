@@ -8,7 +8,7 @@ enemy_update_fn_table:
 	dw update_enemy_sonic_boom  ; boss 2 attack
 	dw update_enemy_boss2_spikes ; boss 2 attack
 	dw update_enemy_boss3_debris ; boss 3 attack
-	dw update_enemy_fireball
+	dw update_enemy_bullet_fireball
 	; enemies you can hit:
 	dw update_enemy_snake  ; left-to-right
 	dw update_enemy_snake_dasher  ; left-to-right + dash
@@ -37,6 +37,7 @@ enemy_update_fn_table:
 	dw update_enemy_skeleton_sleeper
 	dw update_enemy_fire_imp
 	dw update_enemy_fire_imp
+	dw update_enemy_fireball
 
 
 ;-----------------------------------------------
@@ -457,10 +458,10 @@ update_enemy_parabola_bullet_continue2:
 
 
 ;-----------------------------------------------
-update_enemy_fireball:
+update_enemy_bullet_fireball:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)  ; if it's 0, flame has landed
 	or a
-	jr z, update_enemy_fireball_landed
+	jr z, update_enemy_bullet_fireball_landed
 	ld iyh, 1  ; damage to deal
 	call update_enemy_hurt_player_shieldable_bullet
 	jp z, update_enemy_delete
@@ -478,31 +479,31 @@ update_enemy_fireball:
 	; parabola:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	cp 128
-	jr nz, update_enemy_fireball_continue
+	jr nz, update_enemy_bullet_fireball_continue
 	jp update_enemy_delete
 	ld a, 64
-update_enemy_fireball_continue:
+update_enemy_bullet_fireball_continue:
 	srl a
 	cp 14
-	jr c, update_enemy_fireball_continue2
+	jr c, update_enemy_bullet_fireball_continue2
 	ld a, 13
-update_enemy_fireball_continue2:
+update_enemy_bullet_fireball_continue2:
 	ld hl, update_enemy_bone_parabola_bullet_table + 2  ; "+2 to have less initial y speed"
 	ADD_HL_A
 	ld b, (hl)
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	ld c, (ix + ROOM_OBJECT_STRUCT_STATE)
 	call update_enemy_move_cb_colliding_down
-	jp z, update_enemy_fireball_land  ; collision down
+	jp z, update_enemy_bullet_fireball_land  ; collision down
 	ld d, COLOR_RED
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 3) * 4 
 	jp enemy_sprite_and_continue_animated
 
-update_enemy_fireball_land:
+update_enemy_bullet_fireball_land:
 	inc (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
-update_enemy_fireball_landed:
+update_enemy_bullet_fireball_landed:
 	ld iyh, 1  ; damage to deal
 	call update_enemy_hurt_player_bullet
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
@@ -2481,6 +2482,85 @@ update_enemy_fire_imp_movement_done:
 	ld d, iyh
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 12) * 4 
 	jp enemy_sprite_and_continue_animated4
+
+
+;-----------------------------------------------
+update_enemy_fireball_color_cycle:
+	db COLOR_LIGHT_RED, COLOR_RED, COLOR_LIGHT_RED, COLOR_DARK_YELLOW
+	db COLOR_WHITE, COLOR_DARK_YELLOW, COLOR_LIGHT_RED, COLOR_DARK_YELLOW
+
+update_enemy_fireball:
+	ld iyh, 2  ; damage to deal
+	call update_enemy_hurt_player_2x2
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 80
+	jr z, update_enemy_fireball_explode
+	cp 15
+	jr nc, update_enemy_fireball_continue
+
+	; rise:
+	ld hl, frog_jump_table + 3
+	ADD_HL_A
+	ld a, (hl)  ; amount to move
+	or a
+	jr z, update_enemy_fireball_continue
+	neg
+	ld b, a
+update_enemy_fireball_rise_loop:
+	push bc
+		call update_enemy_move_up
+	pop bc
+	djnz update_enemy_fireball_rise_loop
+
+update_enemy_fireball_continue:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	and #07
+	ld hl, update_enemy_fireball_color_cycle
+	ADD_HL_A
+	ld d, (hl)
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 31) * 4 
+	jp enemy_sprite_and_continue_animated4
+
+update_enemy_fireball_explode:
+	ld a, (current_world__difficulty_n_cluster_bullets)
+	ld b, a
+update_enemy_fireball_explode_loop:
+	push bc
+		; fire a bullet:
+		call ptr_to_new_sprite_enemy
+		jr nz, update_enemy_fireball_explode_loop_continue
+		ld (hl), 0  ; ID
+		inc hl
+		ld (hl), ENEMY_BULLET
+		inc hl
+		ld (hl), 0  ; pixel X
+		ld a, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+		inc hl
+		ld (hl), a
+		inc hl
+		ld (hl), 4  ; pixel Y
+		inc hl
+		ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+		ld (hl), a
+		inc hl
+		ld (hl), 0  ; state
+		inc hl
+		call random_a
+		and #1f
+		sub 16
+		ld (hl), a  ; speed x
+		inc hl
+		call random_a
+		and #1f
+		sub 16
+		ld (hl), a  ; speed y
+update_enemy_fireball_explode_loop_continue:
+	pop bc
+	djnz update_enemy_fireball_explode_loop
+	ld hl, SFX_enemy_bullet
+	call play_SFX_with_high_priority
+	jp update_enemy_delete
 
 
 ;-----------------------------------------------

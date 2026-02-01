@@ -349,6 +349,8 @@ pcg_generate_room__spawn_tile_enemies_loop_found:
 	jp z, pcg_generate_room__spawn_imp_generator
 	cp TAG_ENEMY_IMP_GENERATOR2
 	jp z, pcg_generate_room__spawn_imp_generator2
+	cp TAG_ENEMY_FIREBALL_GENERATOR
+	jp z, pcg_generate_room__spawn_fireball_generator
 	; ...
 	ret
 
@@ -1281,6 +1283,36 @@ pcg_generate_room__spawn_imp_generator2:
 	ld (hl), 0  ; hit points
 	ret
 
+
+pcg_generate_room__spawn_fireball_generator:
+	call pcg_generate_room__spawn_enemy_get_new_lava_position
+	ret nz
+	; we found at leat one viable position, spawn the generator:
+	push de
+	push bc
+		ld hl, ptr_to_new_tile_object
+		ld c, TILES_PAGE
+		call call_hl_in_page_c_8000
+	pop bc
+	pop de
+	ret nz
+	ld a, (tmp_enemy_pcg_next_enemy_id)
+	ld (hl), a  ; ID
+	inc a
+	ld (tmp_enemy_pcg_next_enemy_id), a
+	inc hl
+	ld (hl), TAG_ENEMY_FIREBALL_GENERATOR  ; type
+	inc hl
+	ld (hl), e  ; tile x
+	inc hl
+	ld (hl), d  ; tile y
+	inc hl
+	ld (hl), 0  ; state
+	inc hl
+	ld (hl), 0  ; state timer
+	inc hl
+	ld (hl), 0  ; hit points
+	ret
 
 ;-----------------------------------------------
 ; This version iterates over all positions accumulates all that match enemy spawn positions in a list

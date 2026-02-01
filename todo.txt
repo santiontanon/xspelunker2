@@ -2,9 +2,6 @@ to do:
 
 ***- xibalba biome (remember to keep ladder tiles in place for down-door opening code).
   ***- tile enemies:
-    ***- volcano that spits lava (usual lava pit where fireballs jump up and maybe explode into bullets)
-      ***- spawn in the same places where imp generators
-      ***- create sprite enemy that is a fireball that rises and explodes into several bullets upon arrival at the top
     ***- lava waterfalls (lava falls intermitently, blocking the path part of the time)
       ***- spawn in the same positions as imp generators
       ***- draw a "lava opening", from where lava will fall (clear the tiles below?)
