@@ -245,6 +245,8 @@ pcg_generate_room__enemy_respawn_logic__find_tile_enemy_by_id_not_found:
 
 ;-----------------------------------------------
 pcg_generate_room__spawn_enemies:
+	xor a
+	ld (tmp_enemy_pcg_tile_enemy_workmemory_usage), a
 	ld a, #7f  ; first enemy ID (enemy IDs are only used to track which one was already killed, for respawn)
 	ld (tmp_enemy_pcg_next_enemy_id), a
 	ld a, (current_world__difficulty)
@@ -1067,6 +1069,10 @@ pcg_generate_room__find_4x4_enemy_spots_loop_next:
 ;-----------------------------------------------
 ; input:
 pcg_generate_room__spawn_carnivore_plant:
+	ld a, (tmp_enemy_pcg_tile_enemy_workmemory_usage)
+	add CARNIVORE_PLANT_WORKMEMORY_USAGE
+	cp (tile_enemy_work_memory_end - tile_enemy_work_memory) + 1  ; + 1 so that we can use "nc" as the condition
+	ret nc  ; if we do not have enough work memory, do not spawn
 	call pcg_generate_room__find_4x4_enemy_spots
 	or a
 	ret z
@@ -1096,9 +1102,19 @@ pcg_generate_room__spawn_carnivore_plant:
 	ld (hl), 0  ; state timer
 	inc hl
 	ld (hl), 16  ; hit points
+	inc hl
 
-	ld hl, tile_enemy_work_memory
-	ld (hl), 0  ; tongue length = 0
+	ld de, tile_enemy_work_memory
+	ld a, (tmp_enemy_pcg_tile_enemy_workmemory_usage)
+	ADD_DE_A
+	ld (hl), e  ; work memory ptr
+	inc hl
+	ld (hl), d
+	xor a
+	ld (de), a  ; tongue length = 0
+	ld a, (tmp_enemy_pcg_tile_enemy_workmemory_usage)
+	add a, CARNIVORE_PLANT_WORKMEMORY_USAGE
+	ld (tmp_enemy_pcg_tile_enemy_workmemory_usage), a
 
 	ld hl, enemy_carnivoreplant_tiles_zx0
 	ld (enemy_tiles_to_upload_to_vdp), hl
@@ -1286,6 +1302,7 @@ pcg_generate_room__spawn_imp_generator2:
 	ret
 
 
+;-----------------------------------------------
 pcg_generate_room__spawn_fireball_generator:
 	call pcg_generate_room__spawn_enemy_get_new_lava_position
 	ret nz
@@ -1319,40 +1336,58 @@ pcg_generate_room__spawn_fireball_generator:
 
 ;-----------------------------------------------
 ; input:
-; pcg_generate_room__spawn_lava_generator:
-; 	call pcg_generate_room__find_lava_generator_enemy_spots
-; 	or a
-; 	ret z
-; 	; we found at leat one viable position, spawn the plant:
-; 	ld hl, ptr_to_new_tile_object
-; 	ld c, TILES_PAGE
-; 	call call_hl_in_page_c_8000
-; 	ret nz
-; 	ld c, ixl
-; 	dec c
-; 	ld b, ixh
-; 	dec b
-; 	dec b
-; 	ld a, (tmp_enemy_pcg_next_enemy_id)
-; 	ld (hl), a  ; ID
-; 	inc a
-; 	ld (tmp_enemy_pcg_next_enemy_id), a
-; 	inc hl
-; 	ld (hl), TAG_ENEMY_LAVA_GENERATOR  ; type
-; 	inc hl
-; 	ld (hl), c  ; tile x
-; 	inc hl
-; 	ld (hl), b  ; tile y
-; 	inc hl
-; 	ld (hl), 0  ; state
-; 	inc hl
-; 	ld (hl), 0  ; state timer
-; 	inc hl
-; 	ld (hl), 0  ; hit points
+; - de: ptr to foreground chunk "lava-generator" object
+pcg_generate_room__spawn_lava_generator:
+  ex de, hl
+	ld a, (tmp_enemy_pcg_tile_enemy_workmemory_usage)
+	add LAVA_GENERATOR_WORKMEMORY_USAGE
+	cp (tile_enemy_work_memory_end - tile_enemy_work_memory) + 1  ; + 1 so that we can use "nc" as the condition
+	ret nc  ; if we do not have enough work memory, do not spawn
 
-; ; 	ld hl, tile_enemy_work_memory
-; ; 	ld (hl), 0  ; tongue length = 0
-; 	ret
+	; probability of spawning, depending on the difficulty level:
+	; call random_a
+	; ...
+
+	ld de, (tmp_pcg_room__next_tile_object_ptr)
+	push de
+		xor a  ; lava generators have ID 0
+		ld (de), a  ; ID
+		inc de
+		ld a, TAG_ENEMY_LAVA_GENERATOR
+		ld (de), a  ; type
+		inc de
+		inc hl
+		ld a, (tmp_pcg_room__chunk_x)
+		add a, (hl)  ; x relative to this chunk
+		ld (de), a  ; x
+		inc de
+		inc hl
+		ld a, (tmp_pcg_room__chunk_y)
+		add a, (hl)  ; y relative to this chunk
+		ld (de), a  ; y
+		inc de
+		xor a
+		ld (de), a  ; state
+		inc de
+		ld (de), a  ; state timer
+		inc de
+		inc de
+		ex de, hl
+
+		ld de, tile_enemy_work_memory
+		ld a, (tmp_enemy_pcg_tile_enemy_workmemory_usage)
+		ADD_DE_A
+		ld (hl), e  ; work memory ptr
+		inc hl
+		ld (hl), d
+		ld a, (tmp_enemy_pcg_tile_enemy_workmemory_usage)
+		add a, CARNIVORE_PLANT_WORKMEMORY_USAGE
+		ld (tmp_enemy_pcg_tile_enemy_workmemory_usage), a
+	pop hl
+	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
+	add hl, bc
+	ld (tmp_pcg_room__next_tile_object_ptr), hl	
+	ret
 
 
 ;-----------------------------------------------

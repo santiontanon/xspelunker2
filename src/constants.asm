@@ -151,6 +151,7 @@ ROOM_TILE_OBJECT_STRUCT_BACKGROUND: equ 7  ; 4 bytes (only for 2x2 objects)
 ROOM_TILE_OBJECT_STRUCT_WIDTH: equ 9  ; only used by breakable walls
 ROOM_TILE_OBJECT_STRUCT_HEIGHT: equ 10  ; only used by breakable walls
 ROOM_TILE_OBJECT_STRUCT_LAST_HIT_ID: equ 11  ; only used by breakable walls / enemies
+ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR: equ 7  ; only used by tile enemies
 
 PLAYER_COLLISION_UP_LEEWAY: equ 3  ; collision box height will be 16 - (8 - PLAYER_COLLISION_UP_LEEWAY)
 PLAYER_COLLISION_WIDTH: equ 4

@@ -1,9 +1,13 @@
 CARNIVORE_PLANT_MAX_TONGUE_LENGTH: equ 16
-CARNIVORE_PLANT_MAX_TONGUE_TIP_PTR: equ tile_enemy_work_memory + 1 + CARNIVORE_PLANT_MAX_TONGUE_LENGTH * 3
+CARNIVORE_PLANT_MAX_TONGUE_TIP_PTR_OFFSET: equ 1 + CARNIVORE_PLANT_MAX_TONGUE_LENGTH * 3
+CARNIVORE_PLANT_WORKMEMORY_USAGE: equ 1 + CARNIVORE_PLANT_MAX_TONGUE_LENGTH * 3 + 2  ; 51 bytes
 ; workmemory usage:
 ; - 1 byte for tongue length
 ; - each tongue segment has 3 bytes: background (to undraw), tile, direction of next
 ; - 2 bytes at the end for room tile ptr of the current tongue tip
+
+LAVA_GENERATOR_MAX_LAVA_LENGTH: equ 8
+LAVA_GENERATOR_WORKMEMORY_USAGE: equ LAVA_GENERATOR_MAX_LAVA_LENGTH * 2  ; 16
 
 
 ;-----------------------------------------------
@@ -13,6 +17,10 @@ update_tile_objects_enemy_carnivore_plant:
 	dec hl
 	push hl
 	pop ix
+	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR)
+	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR + 1)
+	push bc
+	pop iy  ; iy points to the work memory
 
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_HEALTH)
 	or a
@@ -38,8 +46,7 @@ update_tile_objects_enemy_carnivore_plant_idle
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), a  ; fire spores or tongue
 ; 	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 2  ; tongue
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER), 0
-	ld hl, tile_enemy_work_memory
-	ld (hl), 0  ; tongue length = 0
+	ld (iy), 0  ; tongue length = 0
 	jp update_tile_objects_loop_force_redraw_and_continue
 
 update_tile_objects_enemy_carnivore_plant_fire_spores
@@ -85,34 +92,31 @@ update_tile_objects_enemy_carnivore_plant_switch_to_idle:
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 0  ; idle
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER), 0
 	xor a
-	ld (tile_enemy_work_memory), a
+	ld (iy), a
 	jp update_tile_objects_loop_force_redraw_and_continue
 
 update_tile_objects_enemy_carnivore_plant_tongue:
 	; elongate the tongue by one position:
-	ld hl, tile_enemy_work_memory
+	push iy
+	pop hl  ; hl = ptr to work memory
 	ld a, (hl)
 	or a
 	jr nz, update_tile_objects_enemy_carnivore_plant_tongue_not_first
 	; first:
-	ld (hl), 2  ; we start with tongue length of 2
-	inc hl
-	ld (hl), 0  ; background
-	inc hl
-	ld (hl), 68
-	inc hl
-	ld (hl), PCG_DIRECTION_UP_BIT
-	inc hl
-	ld (hl), 0  ; background
-	inc hl
-	ld (hl), 89
+	ld (iy), 2  ; we start with tongue length of 2
+	ld (iy + 1), 0  ; background
+	ld (iy + 2), 68
+	ld (iy + 3), PCG_DIRECTION_UP_BIT
+	ld (iy + 4), 0  ; background
+	ld (iy + 5), 89
 	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
 	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
 	call get_room_tile_ptr
 	inc hl
 	ld a, (current_room__width)
 	ADD_HL_A
-	ld (CARNIVORE_PLANT_MAX_TONGUE_TIP_PTR), hl
+	ld (iy + CARNIVORE_PLANT_MAX_TONGUE_TIP_PTR_OFFSET), l
+	ld (iy + CARNIVORE_PLANT_MAX_TONGUE_TIP_PTR_OFFSET + 1), h
 	jp update_tile_objects_loop_force_redraw_and_continue
 update_tile_objects_enemy_carnivore_plant_tongue_not_first:
 	cp CARNIVORE_PLANT_MAX_TONGUE_LENGTH
@@ -130,12 +134,13 @@ update_tile_objects_enemy_carnivore_plant_tongue_elongate:
 	add a, c
 	dec a
 	ADD_HL_A  ; hl now has the pointer to the last tile we wrote to the tongue
-	ld de, (CARNIVORE_PLANT_MAX_TONGUE_TIP_PTR)
+	ld e, (iy + CARNIVORE_PLANT_MAX_TONGUE_TIP_PTR_OFFSET)
+	ld d, (iy + CARNIVORE_PLANT_MAX_TONGUE_TIP_PTR_OFFSET + 1)
 	; pick a random direction that is empty and go there:
 	ld b, 4  ; max retries
 update_tile_objects_enemy_carnivore_plant_tongue_elongate_loop:
-	ld a, (tile_enemy_work_memory)
-	cp 3
+	ld a, (iy)
+	cp 2
 	jr nz, update_tile_objects_enemy_carnivore_plant_tongue_elongate_loop_continue
 	; the first time, it must go up:
 	ld a, PCG_DIRECTION_UP_BIT
@@ -144,10 +149,10 @@ update_tile_objects_enemy_carnivore_plant_tongue_elongate_loop_continue:
 	; chance of going towards player:
 	call random_a
 	and #03
-	jr z, update_tile_objects_enemy_carnivore_plant_tongue_elongate_loop_to_player_x
-	dec a
+	jr z, update_tile_objects_enemy_carnivore_plant_tongue_elongate_loop_continue2
+	call random_a
+	and #01
 	jr z, update_tile_objects_enemy_carnivore_plant_tongue_elongate_loop_to_player_y
-	jr update_tile_objects_enemy_carnivore_plant_tongue_elongate_loop_continue2
 update_tile_objects_enemy_carnivore_plant_tongue_elongate_loop_to_player_x:
 	; try to go towards the player in x:
 	ld a, (player_x + 1)
@@ -195,7 +200,8 @@ update_tile_objects_enemy_carnivore_plant_tongue_elongate_loop_end:
 	; - hl: ptr to the tongue list pointing a the last tile we wrote
 	; - c: direction we want to go
 	; - de: next ptr to the tip
-	ld (CARNIVORE_PLANT_MAX_TONGUE_TIP_PTR), de
+	ld (iy + CARNIVORE_PLANT_MAX_TONGUE_TIP_PTR_OFFSET), e
+	ld (iy + CARNIVORE_PLANT_MAX_TONGUE_TIP_PTR_OFFSET + 1), d
 	dec hl
 	dec hl
 	ld b, (hl)  ; previous direction
@@ -211,22 +217,24 @@ update_tile_objects_enemy_carnivore_plant_tongue_elongate_loop_end:
 	inc hl
 	call update_tile_objects_enemy_carnivore_plant_tongue_tip
 	ld (hl), a  ; new last tile
-	ld hl, tile_enemy_work_memory
-	inc (hl)
+	inc (iy)
 	jp update_tile_objects_loop_force_redraw_and_continue
 
 update_tile_objects_enemy_carnivore_plant_tongue_retract:
 	; we need to undraw first
-	ld a, (tile_enemy_work_memory)
+	ld a, (iy)
 	cp 2
 	jp z, update_tile_objects_enemy_carnivore_plant_switch_to_idle
-	call room_undraw_tile_objects
-	ld hl, tile_enemy_work_memory
-	ld a, (hl)
+	push iy
+		call room_undraw_tile_objects
+	pop iy
+	ld a, (iy)
 	or a
 	jr z, update_tile_objects_enemy_carnivore_plant_tongue_retract_continue
-	dec (hl)
-	ld a, (hl)
+	dec (iy)
+	ld a, (iy)
+	push iy
+	pop hl
 	dec a
 	ld c, a
 	add a, a
@@ -348,14 +356,15 @@ update_tile_objects_4x4_enemy_killed:
 
 
 ;-----------------------------------------------
+; input:
+; - hl: object ptr + 1
 room_render_tile_objects_render_enemy_carnivore_plant:
-	inc hl
-	ld c, (hl)  ; x
-	ld ixl, c
-	inc hl
-	ld b, (hl)  ; y
-	inc hl
-	ld a, (hl)  ; state
+	dec hl
+	push hl
+	pop ix
+	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)  ; state
 	push af
 		call get_room_tile_ptr
 		ld bc, #0404
@@ -392,7 +401,8 @@ room_render_tile_objects_render_enemy_carnivore_plant_loop_x:
 	ex de, hl
 
 	; draw tongue:
-	ld hl, tile_enemy_work_memory
+	ld l, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR)
+	ld h, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR + 1)
 	ld a, (hl)
 	or a
 	jp z, room_render_tile_objects_loop_continue
@@ -469,10 +479,11 @@ tile_object_carnivore_plant_open:
 ;-----------------------------------------------
 room_render_tile_objects_undraw_enemy_carnivore_plant:
 	; undraw tongue:
-	inc hl
-	ld c, (hl)  ; x
-	inc hl
-	ld b, (hl)  ; y
+	dec hl
+	push hl
+	pop ix
+	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
 	push bc
 		; ptr to tongue start:
 		inc c
@@ -481,7 +492,8 @@ room_render_tile_objects_undraw_enemy_carnivore_plant:
 		call get_room_tile_ptr
 		ex de, hl
 
-		ld hl, tile_enemy_work_memory
+		ld l, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR)
+		ld h, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR + 1)
 		ld a, (hl)
 		or a
 		jp z, room_render_tile_objects_undraw_enemy_carnivore_plant_continue
@@ -821,19 +833,240 @@ update_tile_objects_enemy_fireball_generator:
 
 
 ;-----------------------------------------------
+; input:
+; - hl: object ptr + 1
 update_tile_objects_enemy_lava_generator:
 	dec hl
 	push hl
 	pop ix
 
-; 	inc (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
-; 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
-; 	and #3f
-; 	cp #3f
-; 	jp nz, update_tile_objects_loop_continue
-;   ...
+	inc (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
 
+	; state timer:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	and #3f
+	cp 64 - 25
+	call nc, room_render_tile_objects_render_enemy_lava_generator_internal
 	jp update_tile_objects_loop_continue
+
+
+;-----------------------------------------------
+; input:
+; - hl: object ptr + 1
+room_render_tile_objects_undraw_enemy_lava_generator:
+	dec hl
+	push hl
+	pop ix
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)
+	or a
+	call nz, room_render_tile_objects_undraw_enemy_lava_generator_internal
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 0  ; mark that we have to regrab the background
+	jp room_undraw_tile_objects_loop_continue
+
+room_render_tile_objects_undraw_enemy_lava_generator_internal:
+	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	ld e, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR)
+	ld d, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR + 1)
+	inc c
+	inc b
+	call get_room_tile_ptr
+	ld iyl, 8
+	ld a, (current_room__width)
+	dec a
+	ld b, 0
+	ld c, a
+room_render_tile_objects_undraw_enemy_lava_generator_internal_loop_y:
+	ld a, (de)
+	ld (hl), a
+	inc hl
+	inc de
+	ld a, (de)
+	ld (hl), a
+	inc de
+	add hl, bc
+	dec iyl
+	jr nz, room_render_tile_objects_undraw_enemy_lava_generator_internal_loop_y
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - hl: object ptr + 1
+room_render_tile_objects_render_enemy_lava_generator:
+	dec hl
+	push hl
+	pop ix
+
+	call room_render_tile_objects_render_enemy_lava_generator_internal
+	jp room_render_tile_objects_loop_continue
+
+
+
+tile_object_lava_generator_gfx:
+	db 176, 177, 177, 178
+	db 179, 177, 177, 180
+
+tile_object_lava_gfx:
+	db 0, 0
+	db 0, 0
+	db 0, 0
+	db 0, 0
+	db 0, 0
+	db 0, 0
+	db 0, 0
+	db 0, 0
+	db 183, 183
+
+	db 192, 192
+	db 186, 192
+	db 192, 192
+	db 192, 192
+	db 192, 186
+	db 192, 192
+	db 192, 192
+	db 186, 186
+
+	db 192, 192
+	db 186, 192
+	db 192, 192
+	db 192, 192
+	db 192, 186
+	db 186, 192
+	db 192, 192
+	db 186, 186
+
+	db #ff
+
+
+room_render_tile_objects_render_enemy_lava_generator_internal:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)
+	or a
+	jr nz, room_render_tile_objects_render_enemy_lava_generator_continue
+	; the first time, draw the mouth and store the background in the work memory:
+	call room_render_tile_objects_render_enemy_lava_generator_draw_mouth
+	call room_render_tile_objects_render_enemy_lava_generator_save_bg
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 1  ; mark that we have already saved the background
+room_render_tile_objects_render_enemy_lava_generator_continue:
+	; start by restoring the background:
+	call room_render_tile_objects_undraw_enemy_lava_generator_internal
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	; 0 - 128-25: nothing
+	; 128-25 - 128: lava starts falling
+	and #3f
+	cp 64 - 25
+	ret c  ; nothing to draw:
+
+	; compute the start of the lava gfx table to use:
+	sub 63
+	neg
+	add a, a
+	ld de, tile_object_lava_gfx
+	ADD_DE_A
+
+	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	exx
+		ld l, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR)
+		ld h, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR + 1)
+	exx
+	inc c
+	inc b
+	call get_room_tile_ptr
+	ld iyl, 8
+	ld a, (current_room__width)
+	dec a
+	ld b, 0
+	ld c, a
+room_render_tile_objects_render_enemy_lava_generator_loop_y:
+	ld a, (de)
+	cp #ff
+	jr z, room_render_tile_objects_render_enemy_lava_generator_loop_y_done
+	or a
+	jr nz, room_render_tile_objects_render_enemy_lava_generator_loop_y_continue
+	; get from background:
+	exx
+		ld a, (hl)
+		inc hl
+	exx
+	ld (hl), a
+	inc hl
+	inc de
+	exx
+		ld a, (hl)
+		inc hl
+	exx
+	ld (hl), a
+	jr room_render_tile_objects_render_enemy_lava_generator_loop_y_continue2
+
+room_render_tile_objects_render_enemy_lava_generator_loop_y_continue:
+	ld (hl), a
+	inc de
+	inc hl
+	ld a, (de)
+	ld (hl), a
+	exx
+		inc hl
+		inc hl
+	exx
+room_render_tile_objects_render_enemy_lava_generator_loop_y_continue2:
+	inc de
+	add hl, bc
+	dec iyl
+	jr nz, room_render_tile_objects_render_enemy_lava_generator_loop_y
+room_render_tile_objects_render_enemy_lava_generator_loop_y_done:
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)
+	ret
+
+room_render_tile_objects_render_enemy_lava_generator_draw_mouth:
+	ld de, tile_object_lava_generator_gfx
+	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	call get_room_tile_ptr
+	ld bc, #0204
+room_render_tile_objects_render_enemy_lava_generator_draw_mouth_loop_y:
+	push bc
+	push hl
+room_render_tile_objects_render_enemy_lava_generator_draw_mouth_loop_x:
+		ld a, (de)
+		ld (hl), a
+		inc de
+		inc hl
+		dec c
+		jr nz, room_render_tile_objects_render_enemy_lava_generator_draw_mouth_loop_x
+	pop hl
+	pop bc
+	ld a, (current_room__width)
+	ADD_HL_A
+	djnz room_render_tile_objects_render_enemy_lava_generator_draw_mouth_loop_y
+	ret	
+
+room_render_tile_objects_render_enemy_lava_generator_save_bg:
+	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	ld e, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR)
+	ld d, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR + 1)
+	inc c
+	inc b
+	call get_room_tile_ptr
+	ld iyl, 8
+	ld a, (current_room__width)
+	dec a
+	ld b, 0
+	ld c, a
+room_render_tile_objects_render_enemy_lava_generator_save_bg_loop_y:
+	ld a, (hl)
+	ld (de), a
+	inc hl
+	inc de
+	ld a, (hl)
+	ld (de), a
+	inc de
+	add hl, bc
+	dec iyl
+	jr nz, room_render_tile_objects_render_enemy_lava_generator_save_bg_loop_y
+	ret
 
 
 ;-----------------------------------------------

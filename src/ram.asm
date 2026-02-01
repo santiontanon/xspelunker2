@@ -201,6 +201,7 @@ tile_enemy_last_collision_id: ds virtual 1
 tile_enemy_work_memory: ds virtual 64  ; - some large tile-based enemies need extra memory
                                        ; - only one is spawned per room at most. So, they can safely 
                                        ;   use this space without more than one enemy competing for it.
+tile_enemy_work_memory_end:
 
 redraw_flags: ds virtual 1  ; bits:
                             ; - 0: room
@@ -277,7 +278,7 @@ stats__achievements: ds virtual 4  ; maximum of 4 achievements
 RAM_to_zero_on_game_start_end:
 
 ; temporary variables:
-temporary_variables: ds virtual 13
+temporary_variables: ds virtual 14
 tmp_hud_drawing_hl: equ temporary_variables
 tmp_hud_drawing_de: equ temporary_variables + 2
 tmp_dialog_pointer_position: equ temporary_variables
@@ -296,6 +297,7 @@ tmp_enemy_pcg_n_water_locs: equ temporary_variables + 9
 tmp_enemy_pcg_n_ceiling_locs: equ temporary_variables + 10
 tmp_enemy_pcg_n_lava_locs: equ temporary_variables + 11
 tmp_enemy_pcg_next_enemy_id: equ temporary_variables + 12
+tmp_enemy_pcg_tile_enemy_workmemory_usage: equ temporary_variables + 13
 tmp_get_tile_object_behind_player_ptr: equ temporary_variables
 tmp_shop_cursor_position: equ temporary_variables
 tmp_gamestart_cursor_position1: equ temporary_variables  ; world name, start, back or help

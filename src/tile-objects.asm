@@ -448,6 +448,8 @@ room_render_tile_objects_loop:
 		jp z, room_render_tile_objects_render_calendar_stone_center
 		cp TAG_ENEMY_CARNIVORE_PLANT
 		jp z, room_render_tile_objects_render_enemy_carnivore_plant
+		cp TAG_ENEMY_LAVA_GENERATOR
+		jp z, room_render_tile_objects_render_enemy_lava_generator
 		inc hl
 		ld c, (hl)  ; x
 		ld ixl, c
@@ -722,6 +724,8 @@ room_undraw_tile_objects_loop:
 		jr z, room_undraw_tile_objects_loop_continue		
 		cp TAG_ENEMY_CARNIVORE_PLANT
 		jp z, room_render_tile_objects_undraw_enemy_carnivore_plant		
+		cp TAG_ENEMY_LAVA_GENERATOR
+		jp z, room_render_tile_objects_undraw_enemy_lava_generator
 		inc hl
 		ld c, (hl)  ; x
 		ld ixl, c
@@ -2599,7 +2603,7 @@ ENDR
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_ENEMY_IMP_GENERATOR
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_ENEMY_IMP_GENERATOR2
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_ENEMY_FIREBALL_GENERATOR
-	TILE_OBJECT_DATA 1, 4, 2, tile_object_lava_generator_gfx  ; TAG_ENEMY_LAVA_GENERATOR
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_ENEMY_LAVA_GENERATOR
 
 
 tile_object_regular_object_gfx:
@@ -2662,7 +2666,3 @@ tile_object_bee_hive:
 tile_object_ant_colony:
 	db 0, 68, 0
 	db 69, 70, 71
-
-tile_object_lava_generator_gfx:
-	db 176, 177, 177, 178
-	db 179, 177, 177, 180

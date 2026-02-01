@@ -433,44 +433,20 @@ pcg_generate_room__fg_chunk_object_loop_spawn_pushable_block:
 						xor a
 						ld (de), a  ; state
 						ex de, hl
-							ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE - 4  ; "- 4", since we already did 4 "inc de"
-							add hl, bc
-						ex de, hl
-						ld (tmp_pcg_room__next_tile_object_ptr), de
+						ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE - 4  ; "- 4", since we already did 4 "inc de"
+						add hl, bc
+						ld (tmp_pcg_room__next_tile_object_ptr), hl
 					pop de
 					pop hl
 					jr pcg_generate_room__fg_chunk_object_loop_next
 pcg_generate_room__fg_chunk_object_loop_spawn_lava_generator:
-					; it's a lava generator, spawn it (with some probability, depending on the difficulty level):
-					; call random_a
-					; ...
-
+					; it's a lava generator, spawn it:
 					push hl
 					push de
-						ld de, (tmp_pcg_room__next_tile_object_ptr)
-						xor a  ; lava generators have ID 0
-						ld (de), a  ; ID
-						inc de
-						ld a, TAG_ENEMY_LAVA_GENERATOR
-						ld (de), a  ; type
-						inc de
-						inc hl
-						ld a, (tmp_pcg_room__chunk_x)
-						add a, (hl)  ; x relative to this chunk
-						ld (de), a  ; x
-						inc de
-						inc hl
-						ld a, (tmp_pcg_room__chunk_y)
-						add a, (hl)  ; y relative to this chunk
-						ld (de), a  ; y
-						inc de
-						xor a
-						ld (de), a  ; state
 						ex de, hl
-							ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE - 4  ; "- 4", since we already did 4 "inc de"
-							add hl, bc
-						ex de, hl
-						ld (tmp_pcg_room__next_tile_object_ptr), de
+						ld c, PCG_PAGE_ENEMIES
+						ld hl, pcg_generate_room__spawn_lava_generator
+						call call_hl_in_page_c_8000
 					pop de
 					pop hl
 ; 					jr pcg_generate_room__fg_chunk_object_loop_next
