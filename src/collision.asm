@@ -237,9 +237,7 @@ player_check_collision_crouching_with_hazard_or_waterfalls:
 	jr z, player_check_collision_crouching_with_de_continue
 	inc b
 player_check_collision_crouching_with_de_continue:
-	push de
-		call get_room_tile_type
-	pop de
+	call get_room_tile_type
 	cp 3
 	ret z
 	cp 9
@@ -402,7 +400,7 @@ player_check_collision_down_inc:
 	ret z
 	cp 6  ; rope-platform
 	jr z, player_check_collision_down_inc_platform
-	cp 6  ; ladder-platform
+	cp 8  ; ladder-platform
 	jr z, player_check_collision_down_inc_platform
 	dec a  ; platform
 	jr nz, player_check_collision_down_inc_right
