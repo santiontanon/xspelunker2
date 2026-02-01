@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="13">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="14">
  <properties>
   <property name="left" value="half-hole"/>
   <property name="up" value="hole"/>
@@ -28,5 +28,6 @@
   <object id="3" type="breakable-right" x="112" y="16" width="16" height="32"/>
   <object id="7" type="door-right" x="112" y="16" width="16" height="24"/>
   <object id="12" type="item" x="80" y="0" width="16" height="16"/>
+  <object id="13" type="lava-generator" x="48" y="0" width="32" height="16"/>
  </objectgroup>
 </map>

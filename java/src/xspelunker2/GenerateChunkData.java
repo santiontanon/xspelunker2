@@ -294,6 +294,8 @@ public class GenerateChunkData {
                 return 11;
             case "pushable-block":
                 return 12;
+            case "lava-generator":
+                return 13;
             default:
                 throw new Exception("unsuported chunk location type: " + type);
         }

@@ -135,6 +135,8 @@ update_tile_objects_loop:
 		jp z, update_tile_objects_enemy_imp_generator2
 		cp TAG_ENEMY_FIREBALL_GENERATOR
 		jp z, update_tile_objects_enemy_fireball_generator
+		cp TAG_ENEMY_LAVA_GENERATOR
+		jp z, update_tile_objects_enemy_lava_generator
 		cp TAG_LOST_VENDOR
 		jp z, update_tile_objects_lost_vendor
 update_tile_objects_loop_continue:
@@ -1180,6 +1182,7 @@ ENDR
 	dw object_interaction_function_empty  ; TAG_ENEMY_IMP_GENERATOR
 	dw object_interaction_function_empty  ; TAG_ENEMY_IMP_GENERATOR2
 	dw object_interaction_function_empty  ; TAG_ENEMY_FIREBALL_GENERATOR
+	dw object_interaction_function_empty  ; TAG_ENEMY_LAVA_GENERATOR
 
 object_interaction_inventory_slot:
 	db #ff, #ff, #ff, #ff, #ff  ; none, block puzzles: 0
@@ -2596,6 +2599,7 @@ ENDR
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_ENEMY_IMP_GENERATOR
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_ENEMY_IMP_GENERATOR2
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_ENEMY_FIREBALL_GENERATOR
+	TILE_OBJECT_DATA 1, 4, 2, tile_object_lava_generator_gfx  ; TAG_ENEMY_LAVA_GENERATOR
 
 
 tile_object_regular_object_gfx:
@@ -2658,3 +2662,7 @@ tile_object_bee_hive:
 tile_object_ant_colony:
 	db 0, 68, 0
 	db 69, 70, 71
+
+tile_object_lava_generator_gfx:
+	db 176, 177, 177, 178
+	db 179, 177, 177, 180

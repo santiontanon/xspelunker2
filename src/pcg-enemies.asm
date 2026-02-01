@@ -351,6 +351,8 @@ pcg_generate_room__spawn_tile_enemies_loop_found:
 	jp z, pcg_generate_room__spawn_imp_generator2
 	cp TAG_ENEMY_FIREBALL_GENERATOR
 	jp z, pcg_generate_room__spawn_fireball_generator
+; 	cp TAG_ENEMY_LAVA_GENERATOR  ; these are spawned else where (like pushable-blocks)
+; 	jp z, pcg_generate_room__spawn_lava_generator
 	; ...
 	ret
 
@@ -965,7 +967,7 @@ pcg_generate_room__find_4x4_enemy_spots:
 	ld hl, buffer_4096
 	ld a, (tmp_enemy_pcg_n_platform_locs)
 	ld b, a
-pcg_generate_room__spawn_carnivore_plant_loop:
+pcg_generate_room__find_4x4_enemy_spots_loop:
 	push bc
 		ld c, (hl)
 		inc hl
@@ -984,80 +986,80 @@ pcg_generate_room__spawn_carnivore_plant_loop:
 			; first row:
 			ld a, (hl)
 			or a
-			jr nz, pcg_generate_room__spawn_carnivore_plant_loop_skip
+			jr nz, pcg_generate_room__find_4x4_enemy_spots_loop_skip
 			inc hl
 			ld a, (hl)
 			or a
-			jr nz, pcg_generate_room__spawn_carnivore_plant_loop_skip
+			jr nz, pcg_generate_room__find_4x4_enemy_spots_loop_skip
 			inc hl
 			ld a, (hl)
 			or a
-			jr nz, pcg_generate_room__spawn_carnivore_plant_loop_skip
+			jr nz, pcg_generate_room__find_4x4_enemy_spots_loop_skip
 			inc hl
 			ld a, (hl)
 			or a
-			jr nz, pcg_generate_room__spawn_carnivore_plant_loop_skip
+			jr nz, pcg_generate_room__find_4x4_enemy_spots_loop_skip
 			; second row:
 			add hl, bc
 			ld a, (hl)
 			or a
-			jr nz, pcg_generate_room__spawn_carnivore_plant_loop_skip
+			jr nz, pcg_generate_room__find_4x4_enemy_spots_loop_skip
 			dec hl
 			ld a, (hl)
 			or a
-			jr nz, pcg_generate_room__spawn_carnivore_plant_loop_skip
+			jr nz, pcg_generate_room__find_4x4_enemy_spots_loop_skip
 			dec hl
 			ld a, (hl)
 			or a
-			jr nz, pcg_generate_room__spawn_carnivore_plant_loop_skip
+			jr nz, pcg_generate_room__find_4x4_enemy_spots_loop_skip
 			dec hl
 			ld a, (hl)
 			or a
-			jr nz, pcg_generate_room__spawn_carnivore_plant_loop_skip
+			jr nz, pcg_generate_room__find_4x4_enemy_spots_loop_skip
 			; third row:
 			add hl, bc
 			ld a, (hl)
 			or a
-			jr nz, pcg_generate_room__spawn_carnivore_plant_loop_skip
+			jr nz, pcg_generate_room__find_4x4_enemy_spots_loop_skip
 			inc hl
 			inc hl
 			inc hl
 			ld a, (hl)
 			or a
-			jr nz, pcg_generate_room__spawn_carnivore_plant_loop_skip
+			jr nz, pcg_generate_room__find_4x4_enemy_spots_loop_skip
 			; fourth row:
 			add hl, bc
 			ld a, (hl)
 			or a
-			jr nz, pcg_generate_room__spawn_carnivore_plant_loop_skip
+			jr nz, pcg_generate_room__find_4x4_enemy_spots_loop_skip
 			dec hl
 			dec hl
 			dec hl
 			ld a, (hl)
 			or a
-			jr nz, pcg_generate_room__spawn_carnivore_plant_loop_skip
+			jr nz, pcg_generate_room__find_4x4_enemy_spots_loop_skip
 			; viable position!
 			ld a, iyl
 			or a
-			jr z, pcg_generate_room__spawn_carnivore_plant_loop_replace
+			jr z, pcg_generate_room__find_4x4_enemy_spots_loop_replace
 			; reservoir sampling:
 			ld c, a
 			call random_modulo
 			or a
-			jr nz, pcg_generate_room__spawn_carnivore_plant_loop_skip
-pcg_generate_room__spawn_carnivore_plant_loop_replace:
+			jr nz, pcg_generate_room__find_4x4_enemy_spots_loop_skip
+pcg_generate_room__find_4x4_enemy_spots_loop_replace:
 		pop bc
 		pop hl
 		ld ixl, c
 		ld ixh, b
 		inc iyl
-		jr pcg_generate_room__spawn_carnivore_plant_loop_next
-pcg_generate_room__spawn_carnivore_plant_loop_skip:
+		jr pcg_generate_room__find_4x4_enemy_spots_loop_next
+pcg_generate_room__find_4x4_enemy_spots_loop_skip:
 		pop bc
 		pop hl
-pcg_generate_room__spawn_carnivore_plant_loop_next:
+pcg_generate_room__find_4x4_enemy_spots_loop_next:
 	pop bc
-	djnz pcg_generate_room__spawn_carnivore_plant_loop
+	djnz pcg_generate_room__find_4x4_enemy_spots_loop
 	ld a, iyl
 	ret
 
@@ -1313,6 +1315,45 @@ pcg_generate_room__spawn_fireball_generator:
 	inc hl
 	ld (hl), 0  ; hit points
 	ret
+
+
+;-----------------------------------------------
+; input:
+; pcg_generate_room__spawn_lava_generator:
+; 	call pcg_generate_room__find_lava_generator_enemy_spots
+; 	or a
+; 	ret z
+; 	; we found at leat one viable position, spawn the plant:
+; 	ld hl, ptr_to_new_tile_object
+; 	ld c, TILES_PAGE
+; 	call call_hl_in_page_c_8000
+; 	ret nz
+; 	ld c, ixl
+; 	dec c
+; 	ld b, ixh
+; 	dec b
+; 	dec b
+; 	ld a, (tmp_enemy_pcg_next_enemy_id)
+; 	ld (hl), a  ; ID
+; 	inc a
+; 	ld (tmp_enemy_pcg_next_enemy_id), a
+; 	inc hl
+; 	ld (hl), TAG_ENEMY_LAVA_GENERATOR  ; type
+; 	inc hl
+; 	ld (hl), c  ; tile x
+; 	inc hl
+; 	ld (hl), b  ; tile y
+; 	inc hl
+; 	ld (hl), 0  ; state
+; 	inc hl
+; 	ld (hl), 0  ; state timer
+; 	inc hl
+; 	ld (hl), 0  ; hit points
+
+; ; 	ld hl, tile_enemy_work_memory
+; ; 	ld (hl), 0  ; tongue length = 0
+; 	ret
+
 
 ;-----------------------------------------------
 ; This version iterates over all positions accumulates all that match enemy spawn positions in a list

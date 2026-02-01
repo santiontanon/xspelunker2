@@ -3,11 +3,23 @@ to do:
 ***- xibalba biome (remember to keep ladder tiles in place for down-door opening code).
   ***- tile enemies:
     ***- lava waterfalls (lava falls intermitently, blocking the path part of the time)
-      ***- spawn in the same positions as imp generators
-      ***- draw a "lava opening", from where lava will fall (clear the tiles below?)
-      ***- spawn/draw in game
-      ***- make lava fall intermitently
-      ***- do I need a new tile type for "falling lava"?
+      OK - draw in GIMP (a "lava opening", from where lava will fall (clear the tiles below?))
+      OK - spawn/draw in game
+        OK - mark "lava-generator" locations in TILED
+        OK - save those locations to assembler
+        OK - spawn lava-generators (on "lava-generator" positions) and draw them:
+          OK - in "pcg_generate_room__fg_chunk_object_loop"
+      ***- assign them some "work memory" (if not enough left, do not spawn)
+        ***- each tile enemy requires some amount of work memory: add ptr to struct
+        ***- use this ptr, rather than directly 'tile_enemy_work_memory'
+        ***- if there is not enough work memory left, do not spawn
+      ***- drop animated lava periodically, and restore background afterwards (stop when reaching lava tile, draw over platforms/walls/etc.)
+      ***- new tile types for: falling lava & falling water
+        ***- assign them in the tile type tables
+        ***- affect player accordingly: push player down if possible, and if lava and no ice cape, do damage periodically
+      ***- define a probability for spawning them, depending on the difficulty level
+      ***- chunk verification: at most 3 pushableblock+lava generators per chunk
+    ***- when the tile enemies do not require tiles, allow spawning more than one (give each an ID, and those that do not require tiles have ID 0, if ID != 0 and any spawned before with ID different than the current, do not spawn)
     ***- large stone owls (they just fly up and down if they have space, rotate their heads, and spawn enemies/bullets/fire):
       ***- draw them in gimp (are they 3x3? 4x4?)
       ***- add basic owl to game (without movement). Spawn in appropriate places where there is space for them

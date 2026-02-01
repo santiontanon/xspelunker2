@@ -405,7 +405,11 @@ pcg_generate_room__fg_chunk_object_loop:
 					or a
 					jr z, pcg_generate_room__fg_chunk_object_loop_done
 					cp CHUNK_LOCATION_PUSHABLE_BLOCK
-					jr nz, pcg_generate_room__fg_chunk_object_loop_next
+					jr z, pcg_generate_room__fg_chunk_object_loop_spawn_pushable_block
+					cp CHUNK_LOCATION_LAVA_GENERATOR
+					jr z, pcg_generate_room__fg_chunk_object_loop_spawn_lava_generator
+					jr pcg_generate_room__fg_chunk_object_loop_next
+pcg_generate_room__fg_chunk_object_loop_spawn_pushable_block:
 					; it's a pushable block, spawn it:
 					push hl
 					push de
@@ -435,6 +439,41 @@ pcg_generate_room__fg_chunk_object_loop:
 						ld (tmp_pcg_room__next_tile_object_ptr), de
 					pop de
 					pop hl
+					jr pcg_generate_room__fg_chunk_object_loop_next
+pcg_generate_room__fg_chunk_object_loop_spawn_lava_generator:
+					; it's a lava generator, spawn it (with some probability, depending on the difficulty level):
+					; call random_a
+					; ...
+
+					push hl
+					push de
+						ld de, (tmp_pcg_room__next_tile_object_ptr)
+						xor a  ; lava generators have ID 0
+						ld (de), a  ; ID
+						inc de
+						ld a, TAG_ENEMY_LAVA_GENERATOR
+						ld (de), a  ; type
+						inc de
+						inc hl
+						ld a, (tmp_pcg_room__chunk_x)
+						add a, (hl)  ; x relative to this chunk
+						ld (de), a  ; x
+						inc de
+						inc hl
+						ld a, (tmp_pcg_room__chunk_y)
+						add a, (hl)  ; y relative to this chunk
+						ld (de), a  ; y
+						inc de
+						xor a
+						ld (de), a  ; state
+						ex de, hl
+							ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE - 4  ; "- 4", since we already did 4 "inc de"
+							add hl, bc
+						ex de, hl
+						ld (tmp_pcg_room__next_tile_object_ptr), de
+					pop de
+					pop hl
+; 					jr pcg_generate_room__fg_chunk_object_loop_next
 pcg_generate_room__fg_chunk_object_loop_next:
 					ld bc, 5
 					add hl, bc
@@ -447,7 +486,7 @@ pcg_generate_room__fg_chunk_object_loop_done:
 pcg_generate_room__fg_loop_x_skip:
 			inc hl
 			dec c
-			jr nz, pcg_generate_room__fg_loop_x
+			jp nz, pcg_generate_room__fg_loop_x
 		pop hl
 		ld a, (current_area__width)
 		add a, a  ; next row

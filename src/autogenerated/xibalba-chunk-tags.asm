@@ -10,7 +10,7 @@ xibalba_standard_chunk_pool:
   db 2, #00, #0c  ; data/xibalba/room0010-2.tmx (3)  right: half-hole, 
   dw #04cf
   db 2, #00, #08  ; data/xibalba/room0010-3.tmx (4)  right: lava, 
-  dw #04cf
+  dw #14cf
   db 3, #00, #05  ; data/xibalba/room0011-1.tmx (5)  right: hole, down: hole, 
   dw #099f
   db 3, #00, #0d  ; data/xibalba/room0011-2.tmx (6)  right: half-hole, down: hole, 
@@ -44,7 +44,7 @@ xibalba_standard_chunk_pool:
   db 6, #00, #24  ; data/xibalba/room0110-3.tmx (20)  up: stairs, right: hole, 
   dw #008f
   db 6, #00, #18  ; data/xibalba/room0110-4.tmx (21)  up: hole, right: lava, 
-  dw #008f
+  dw #108f
   db 7, #00, #15  ; data/xibalba/room0111-1.tmx (22)  up: hole, right: hole, down: hole, 
   dw #008f
   db 7, #00, #1d  ; data/xibalba/room0111-2.tmx (23)  up: hole, right: half-hole, down: hole, 
@@ -56,13 +56,13 @@ xibalba_standard_chunk_pool:
   db 8, #00, #40  ; data/xibalba/room1000-1.tmx (26)  left: hole, 
   dw #0667
   db 8, #00, #c0  ; data/xibalba/room1000-2.tmx (27)  left: half-hole, 
-  dw #0667
+  dw #1667
   db 8, #00, #c0  ; data/xibalba/room1000-3.tmx (28)  left: half-hole, 
-  dw #0777
+  dw #1777
   db 8, #00, #40  ; data/xibalba/room1000-4.tmx (29)  left: hole, 
   dw #0777
   db 8, #00, #80  ; data/xibalba/room1000-5.tmx (30)  left: lava, 
-  dw #0667
+  dw #1667
   db 9, #00, #41  ; data/xibalba/room1001-1.tmx (31)  left: hole, down: hole, 
   dw #0227
   db 9, #00, #c1  ; data/xibalba/room1001-2.tmx (32)  left: half-hole, down: hole, 
@@ -78,13 +78,13 @@ xibalba_standard_chunk_pool:
   db 10, #00, #cc  ; data/xibalba/room1010-3.tmx (37)  left: half-hole, right: half-hole, 
   dw #0117
   db 10, #00, #c4  ; data/xibalba/room1010-4.tmx (38)  left: half-hole, right: hole, 
-  dw #0447
+  dw #1447
   db 10, #00, #48  ; data/xibalba/room1010-5.tmx (39)  left: hole, right: lava, 
-  dw #0447
+  dw #1447
   db 10, #00, #84  ; data/xibalba/room1010-6.tmx (40)  left: lava, right: hole, 
   dw #0447
   db 10, #00, #88  ; data/xibalba/room1010-7.tmx (41)  left: lava, right: lava, 
-  dw #0007
+  dw #1007
   db 10, #00, #88  ; data/xibalba/room1010-8.tmx (42)  left: lava, right: lava, 
   dw #0447
   db 11, #00, #45  ; data/xibalba/room1011-1.tmx (43)  left: hole, right: hole, down: hole, 
@@ -98,17 +98,17 @@ xibalba_standard_chunk_pool:
   db 12, #00, #50  ; data/xibalba/room1100-1.tmx (47)  left: hole, up: hole, 
   dw #0667
   db 12, #00, #d0  ; data/xibalba/room1100-2.tmx (48)  left: half-hole, up: hole, 
-  dw #0221
+  dw #1221
   db 12, #00, #60  ; data/xibalba/room1100-3.tmx (49)  left: hole, up: stairs, 
   dw #0667
   db 12, #00, #e0  ; data/xibalba/room1100-4.tmx (50)  left: half-hole, up: stairs, 
-  dw #0221
+  dw #1221
   db 12, #00, #d0  ; data/xibalba/room1100-5.tmx (51)  left: half-hole, up: hole, 
   dw #0667
   db 12, #00, #90  ; data/xibalba/room1100-6.tmx (52)  left: lava, up: hole, 
-  dw #0667
+  dw #1667
   db 12, #00, #a0  ; data/xibalba/room1100-7.tmx (53)  left: lava, up: stairs, 
-  dw #0667
+  dw #1667
   db 13, #00, #51  ; data/xibalba/room1101-1.tmx (54)  left: hole, up: hole, down: hole, 
   dw #0227
   db 13, #00, #d1  ; data/xibalba/room1101-2.tmx (55)  left: half-hole, up: hole, down: hole, 
@@ -118,9 +118,9 @@ xibalba_standard_chunk_pool:
   db 13, #00, #e1  ; data/xibalba/room1101-4.tmx (57)  left: half-hole, up: stairs, down: hole, 
   dw #0227
   db 13, #00, #91  ; data/xibalba/room1101-5.tmx (58)  left: lava, up: hole, down: hole, 
-  dw #0227
+  dw #1227
   db 13, #00, #a1  ; data/xibalba/room1101-6.tmx (59)  left: lava, up: stairs, down: hole, 
-  dw #0227
+  dw #1227
   db 14, #00, #54  ; data/xibalba/room1110-1.tmx (60)  left: hole, up: hole, right: hole, 
   dw #0447
   db 14, #00, #5c  ; data/xibalba/room1110-2.tmx (61)  left: hole, up: hole, right: half-hole, 
@@ -132,13 +132,13 @@ xibalba_standard_chunk_pool:
   db 14, #00, #e4  ; data/xibalba/room1110-5.tmx (64)  left: half-hole, up: stairs, right: hole, 
   dw #0007
   db 14, #00, #58  ; data/xibalba/room1110-6.tmx (65)  left: hole, up: hole, right: lava, 
-  dw #0447
+  dw #1447
   db 14, #00, #98  ; data/xibalba/room1110-7.tmx (66)  left: lava, up: hole, right: lava, 
-  dw #0001
+  dw #1001
   db 14, #00, #94  ; data/xibalba/room1110-8.tmx (67)  left: lava, up: hole, right: hole, 
-  dw #0441
+  dw #1441
   db 14, #00, #a4  ; data/xibalba/room1110-9.tmx (68)  left: lava, up: stairs, right: hole, 
-  dw #0447
+  dw #1447
   db 15, #00, #55  ; data/xibalba/room1111-1.tmx (69)  left: hole, up: hole, right: hole, down: hole, 
   dw #0007
   db 15, #00, #5d  ; data/xibalba/room1111-2.tmx (70)  left: hole, up: hole, right: half-hole, down: hole, 

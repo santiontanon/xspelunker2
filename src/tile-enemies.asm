@@ -821,6 +821,24 @@ update_tile_objects_enemy_fireball_generator:
 
 
 ;-----------------------------------------------
+update_tile_objects_enemy_lava_generator:
+	dec hl
+	push hl
+	pop ix
+
+; 	inc (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+; 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+; 	and #3f
+; 	cp #3f
+; 	jp nz, update_tile_objects_loop_continue
+;   ...
+
+	jp update_tile_objects_loop_continue
+
+
+;-----------------------------------------------
+; Used for when the player hits a tile enemy, sssumes there is a single tile enemy
+; that can be hit in the whole screen.
 ; output:
 ; - ix: ptr
 ; - z: found
@@ -843,12 +861,15 @@ find_tile_enemy_ptr_loop:
 	ret z
 	cp TAG_ENEMY_ANT_COLONY2
 	ret z
-	cp TAG_ENEMY_IMP_GENERATOR
-	ret z
-	cp TAG_ENEMY_IMP_GENERATOR2
-	ret z
-	cp TAG_ENEMY_FIREBALL_GENERATOR
-	ret z
+	; these cannot be hit:
+; 	cp TAG_ENEMY_IMP_GENERATOR
+; 	ret z
+; 	cp TAG_ENEMY_IMP_GENERATOR2
+; 	ret z
+; 	cp TAG_ENEMY_FIREBALL_GENERATOR
+; 	ret z
+;   cp TAG_ENEMY_LAVA_GENERATOR
+;   ret z
 	add ix, bc
 	jr find_tile_enemy_ptr_loop
 find_tile_enemy_ptr_not_found:

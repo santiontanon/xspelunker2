@@ -63,7 +63,7 @@
   db #38, #00, #20, #ff  ; data/xibalba/room1110-3.tmx
   db #20, #00, #20, #ff  ; data/xibalba/room1110-4.tmx
   db #38, #00, #20, #ff  ; data/xibalba/room1110-5.tmx
-  db #20, #00, #20, #ff  ; data/xibalba/room1110-6.tmx
+  db #20, #00, #24, #ff  ; data/xibalba/room1110-6.tmx
   db #20, #00, #20, #ff  ; data/xibalba/room1110-7.tmx
   db #20, #00, #20, #ff  ; data/xibalba/room1110-8.tmx
   db #20, #00, #20, #ff  ; data/xibalba/room1110-9.tmx
