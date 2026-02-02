@@ -247,6 +247,7 @@ pcg_generate_room__enemy_respawn_logic__find_tile_enemy_by_id_not_found:
 pcg_generate_room__spawn_enemies:
 	xor a
 	ld (tmp_enemy_pcg_tile_enemy_workmemory_usage), a
+	ld (tmp_enemy_pcg_tile_enemy_spawned_type), a
 	ld a, #7f  ; first enemy ID (enemy IDs are only used to track which one was already killed, for respawn)
 	ld (tmp_enemy_pcg_next_enemy_id), a
 	ld a, (current_world__difficulty)
@@ -291,50 +292,61 @@ pcg_generate_room__spawn_enemies_loop1:
 	jr pcg_generate_room__spawn_enemies_loop1
 pcg_generate_room__spawn_enemies_loop1_done:
 
-	ld c, (hl)   ; number of enemies per screen
-	xor a   ; number of enemies in this room
+	; b = number of screen
+	push bc
+		ld c, (hl)   ; number of enemies per screen
+		xor a   ; number of enemies in this room
 pcg_generate_room__spawn_enemies_loop2:
-	add a, c
-	djnz pcg_generate_room__spawn_enemies_loop2
+		add a, c
+		djnz pcg_generate_room__spawn_enemies_loop2
 
-	push hl
-	push af
-		call pcg__find_enemy_spawn_locations
-	pop af
-	pop hl
-
-	; here 'a' has the target number of enemies we want to spawn:
-	inc hl
-	push hl
-		ld c, (hl)  ; number of different tile-based enemies
-		ld b, 0
-		inc hl
-		add hl, bc
-		add hl, bc  ; we skip the tile-based enemy info, and
-					; point to the number of options for sprite enemies.
-pcg_generate_room__spawn_enemies_loop3:
-		push af
 		push hl
-			; spawn enemy:
-			call pcg_generate_room__spawn_one_enemy
-		pop hl
+		push af
+			call pcg__find_enemy_spawn_locations
 		pop af
-		dec a
-		jr nz, pcg_generate_room__spawn_enemies_loop3
-	pop hl
+		pop hl
 
-	; chance of spawning a tile-based enemy:
-	ld b, (hl)  ; number of different tile-based enemy types to choose from
-	inc hl
-	call random_a
+		; here 'a' has the target number of enemies we want to spawn:
+		inc hl
+		push hl
+			ld c, (hl)  ; number of different tile-based enemies
+			ld b, 0
+			inc hl
+			add hl, bc
+			add hl, bc  ; we skip the tile-based enemy info, and
+						; point to the number of options for sprite enemies.
+pcg_generate_room__spawn_enemies_loop3:
+			push af
+			push hl
+				; spawn enemy:
+				call pcg_generate_room__spawn_one_enemy
+			pop hl
+			pop af
+			dec a
+			jr nz, pcg_generate_room__spawn_enemies_loop3
+		pop hl
+	pop bc  ; b = number of screens (we will use this as the target number of tile enemies)
+pcg_generate_room__spawn_tile_enemies_outer_loop:
+	push bc
+	push hl
+		; chance of spawning a tile-based enemy:
+		ld b, (hl)  ; number of different tile-based enemy types to choose from
+		inc hl
+		call random_a
 pcg_generate_room__spawn_tile_enemies_loop:
-	ld c, (hl)  ; potential enemy type
-	inc hl
-	cp (hl)  ; chance
-	jr c, pcg_generate_room__spawn_tile_enemies_loop_found
-	inc hl
-	djnz  pcg_generate_room__spawn_tile_enemies_loop
-	; no tile enemy to spawn
+		ld c, (hl)  ; potential enemy type
+		inc hl
+		cp (hl)  ; chance
+		jr nc, pcg_generate_room__spawn_tile_enemies_loop_next
+		call pcg_generate_room__spawn_tile_enemies_loop_found
+		jr pcg_generate_room__spawn_tile_enemies_loop_done
+pcg_generate_room__spawn_tile_enemies_loop_next:
+		inc hl
+		djnz pcg_generate_room__spawn_tile_enemies_loop
+pcg_generate_room__spawn_tile_enemies_loop_done:
+	pop hl
+	pop bc
+	djnz pcg_generate_room__spawn_tile_enemies_outer_loop
 	ret
 
 pcg_generate_room__spawn_tile_enemies_loop_found:
@@ -1067,6 +1079,44 @@ pcg_generate_room__find_4x4_enemy_spots_loop_next:
 
 
 ;-----------------------------------------------
+; We can only have a single "hittable" tile enemy per room, because of the logic
+; for hitting tile enemies (which does not distinguishes which was hit).
+; input:
+; - c: tile enemy type
+; output:
+; - z: we can spawn it
+; - nz: we cannot spawn it
+pcg_spawn_enemies__tile_enemy_type_check_hittable:
+	ld a, (tmp_enemy_pcg_tile_enemy_spawned_type)
+	or a
+	ret nz  ; there is already another "hittable" tile nemy
+pcg_spawn_enemies__tile_enemy_type_check_hittable_check_ok:
+	ld a, c
+	ld (tmp_enemy_pcg_tile_enemy_spawned_type), a  ; mark that we spawned a carnivore plant
+	xor a  ; z
+	ret 
+
+
+;-----------------------------------------------
+; input:
+; - c: tile enemy type
+; output:
+; - z: we can spawn it
+; - nz: we cannot spawn it
+pcg_spawn_enemies__tile_enemy_type_check:
+	ld a, (tmp_enemy_pcg_tile_enemy_spawned_type)
+	or a
+	jr z, pcg_spawn_enemies__tile_enemy_type_check_ok
+	cp c
+	ret nz  ; if we have enemies of a different type, fail
+pcg_spawn_enemies__tile_enemy_type_check_ok:
+	ld a, c
+	ld (tmp_enemy_pcg_tile_enemy_spawned_type), a  ; mark that we spawned a carnivore plant
+	xor a  ; z
+	ret 
+
+
+;-----------------------------------------------
 ; input:
 pcg_generate_room__spawn_carnivore_plant:
 	ld a, (tmp_enemy_pcg_tile_enemy_workmemory_usage)
@@ -1080,6 +1130,9 @@ pcg_generate_room__spawn_carnivore_plant:
 	ld hl, ptr_to_new_tile_object
 	ld c, TILES_PAGE
 	call call_hl_in_page_c_8000
+	ret nz
+	ld c, TAG_ENEMY_CARNIVORE_PLANT
+	call pcg_spawn_enemies__tile_enemy_type_check_hittable
 	ret nz
 	ld c, ixl
 	dec c
@@ -1136,6 +1189,8 @@ pcg_generate_room__spawn_ant_colony:
 	ld c, TILES_PAGE
 	call call_hl_in_page_c_8000
 	ret nz
+	ld c, TAG_ENEMY_ANT_COLONY
+	call pcg_spawn_enemies__tile_enemy_type_check_hittable	
 	ld c, ixl
 	dec c
 	ld b, ixh
@@ -1177,6 +1232,9 @@ pcg_generate_room__spawn_ant_colony2:
 	ld c, TILES_PAGE
 	call call_hl_in_page_c_8000
 	ret nz
+	ld c, TAG_ENEMY_ANT_COLONY  ; since it uses the same tiles as ant colony, we use the same type
+	call pcg_spawn_enemies__tile_enemy_type_check_hittable	
+
 	ld c, ixl
 	dec c
 	ld b, ixh
@@ -1206,7 +1264,9 @@ pcg_generate_room__spawn_bee_hive:
 		call call_hl_in_page_c_8000
 	pop bc
 	pop de
-	ret nz
+	ret nz	
+	ld c, TAG_ENEMY_BEE_HIVE  ; since it uses the same tiles as ant colony, we use the same type
+	call pcg_spawn_enemies__tile_enemy_type_check_hittable		
 	ld a, (tmp_enemy_pcg_next_enemy_id)
 	ld (hl), a  ; ID
 	inc a

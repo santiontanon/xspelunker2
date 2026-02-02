@@ -1,14 +1,12 @@
 to do:
 
 ***- xibalba biome (remember to keep ladder tiles in place for down-door opening code).
-  ***- tile enemies:
-    ***- when the tile enemies do not require tiles, allow spawning more than one (give each an ID, and those that do not require tiles have ID 0, if ID != 0 and any spawned before with ID different than the current, do not spawn)
-    ***- large stone owls (they just fly up and down if they have space, rotate their heads, and spawn enemies/bullets/fire):
-      ***- draw them in gimp (are they 3x3? 4x4?)
-      ***- add basic owl to game (without movement). Spawn in appropriate places where there is space for them
-      ***- make them rotate their head
-      ***- make them move (do they walk? fly?)
-      ***- make them fire bullets
+  ***- large stone owls tile enemy (they just fly up and down if they have space, rotate their heads, and spawn enemies/bullets/fire):
+    ***- draw them in gimp (are they 3x3? 4x4?)
+    ***- add basic owl to game (without movement). Spawn in appropriate places where there is space for them
+    ***- make them rotate their head
+    ***- make them move (do they walk? fly?)
+    ***- make them fire bullets
   ***- boss room is a large ball game court (64 * 24 in size) with 12 tombs: 2 big ones and 10 small ones
     ***- draw it in gimp/tiled
     ***- interacting tells you the name of the lord in each tomb
@@ -22,7 +20,7 @@ to do:
   - boss music acts as a health bar (increases in speed as health goes down: 50%, 25%)
 - atlantis biome (exploit the fact that I can have now 3 tags for left/up/right/down tags): crocodiles as an additional water enemy? what happens to the special animal/teleporter rooms in this biome? do I need to redraw them?
   - sprite enemies: ghosts/spirits
-  - tile enemies: water generators (like the lava ones for xibalba)
+  - tile enemies: water generators (like the lava ones for xibalba), and at least one that actually moves
 - fifth boss, Atlantean Guardian (Underwater Boss): A colossal robotic creature with bioluminescent features, resembling a deep-sea creature (laser beams from tentacles, summons robotic fish). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
 - confrontation with the aliens after activating the calendar stone: are aliens sprites or tiles?
 - first ending sequence (udpate "stats__ending"): Elaine drops from the ceiling on a rope and rescues you. The calendar stone machine activates and creates a defensive barrier around earth, the alien armada that was coming turns back, but promises revenge.

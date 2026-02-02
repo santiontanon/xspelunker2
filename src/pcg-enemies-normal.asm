@@ -18,7 +18,6 @@ pcg_enemy_generation_table_jungle_normal:
 	db 2  ; possible tile enemy types to be spawned
 	db TAG_ENEMY_CARNIVORE_PLANT, 48  ; tile-based enemy type and chance (out of 256)
 	db TAG_ENEMY_BEE_HIVE, 96  ; tile-based enemy type and chance (out of 256)
-; 	db TAG_ENEMY_ANT_COLONY, 128  ; tile-based enemy type and chance (out of 256)
 	db 10  ; possible sprite enemy types to be spawned (weights below should add up to 32)
 	db ENEMY_SNAKE, 5  ; enemy type and weight
 	db ENEMY_SNAKE_DASHER, 2
@@ -30,9 +29,6 @@ pcg_enemy_generation_table_jungle_normal:
 	db ENEMY_MONKEY_THROWER, 2
 	db ENEMY_FISH, 4
 	db ENEMY_FISH_JUMPER, 2
-; 	db 2
-; 	db ENEMY_MONKEY, 16  ; enemy type and weight
-; 	db ENEMY_MONKEY_THROWER, 16  ; enemy type and weight
 
 pcg_enemy_generation_table_pyramid1_normal:
 pcg_enemy_generation_table_pyramid2_normal:
