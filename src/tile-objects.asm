@@ -137,6 +137,8 @@ update_tile_objects_loop:
 		jp z, update_tile_objects_enemy_fireball_generator
 		cp TAG_ENEMY_LAVA_GENERATOR
 		jp z, update_tile_objects_enemy_lava_generator
+		cp TAG_ENEMY_STONE_OWL
+		jp z, update_tile_objects_enemy_stone_owl
 		cp TAG_LOST_VENDOR
 		jp z, update_tile_objects_lost_vendor
 update_tile_objects_loop_continue:
@@ -450,12 +452,14 @@ room_render_tile_objects_loop:
 		jp z, room_render_tile_objects_render_enemy_carnivore_plant
 		cp TAG_ENEMY_LAVA_GENERATOR
 		jp z, room_render_tile_objects_render_enemy_lava_generator
+		cp TAG_ENEMY_STONE_OWL
+		jp z, room_render_tile_objects_render_enemy_stone_owl
 		inc hl
 		ld c, (hl)  ; x
-		ld ixl, c
+		ld iyl, c
 		inc hl
 		ld b, (hl)  ; y
-		ld ixh, b
+		ld iyh, b
 
 		ld l, a
 		ld h, 0
@@ -466,9 +470,17 @@ room_render_tile_objects_loop:
 		add hl, bc
 		ld a, (hl)
 		or a
-		jr z, room_render_tile_objects_render_saving_background  ; type 0: saving background
+		jr nz, room_render_tile_objects_loop_continue2
+	pop ix  ; recover the ptr to the object
+	push ix
+		ld bc, ROOM_TILE_OBJECT_STRUCT_BACKGROUND
+		add ix, bc  ; ix = ptr to background buffer
+		call room_render_tile_objects_render_saving_background  ; type 0: saving background
+		jp room_render_tile_objects_loop_continue
+room_render_tile_objects_loop_continue2:
 		dec a
-		jr z, room_render_tile_objects_render  ; type 1: rendering directly
+		jr nz, room_render_tile_objects_loop_continue
+		call room_render_tile_objects_render  ; type 1: rendering directly
 room_render_tile_objects_loop_continue:
 	pop hl
 	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
@@ -476,119 +488,124 @@ room_render_tile_objects_loop_continue:
 	jp room_render_tile_objects_loop
 
 
+;-----------------------------------------------
+; input:
+; - ix: ptr to the background buffer
+; - hl: ptr to tile_object_gfx_table: type, width, height, ptr to gfx
+; - iyl, iyh: x, y of the object
 room_render_tile_objects_render_saving_background:
-		; - hl: ptr to tile_object_gfx_table
-		; - ixl, ixh: x, y of the object
-		inc hl
-		ld c, (hl)  ; width
-		inc hl
-		ld b, (hl)  ; height
-		inc hl
-		ld e, (hl)
-		inc hl
-		ld d, (hl)  ; de = ptr to the graphics
-		; compute ptr where to draw:
-	pop iy  ; recover the ptr to the object in iy
+	; - hl: ptr to tile_object_gfx_table
+	; - ixl, ixh: x, y of the object
+	inc hl
+	ld c, (hl)  ; width
+	inc hl
+	ld b, (hl)  ; height
+	inc hl
+	ld e, (hl)
+	inc hl
+	ld d, (hl)  ; de = ptr to the graphics
+	; compute ptr where to draw:
+	push bc
+		ld c, iyl
+		ld b, iyh
+		call get_room_tile_ptr
+	pop bc
 	push iy
-		push bc
-			ld c, ixl
-			ld b, ixh
-			call get_room_tile_ptr
-		pop bc
-		push ix
 room_render_tile_objects_render_saving_background_loop_y:
-			push ix
-			push bc
-			push hl
-room_render_tile_objects_render_saving_background_loop_x:
-				; check that:
-				; - ixl < current_room__width
-				; - ixl >= 0
-				; - ixh < current_room__height
-				ld a, (current_room__width)
-				cp ixl
-				jr z, room_render_tile_objects_render_saving_background_loop_x_continue
-				jr c, room_render_tile_objects_render_saving_background_loop_x_continue
-				ld a, ixl
-				or a
-				jp m, room_render_tile_objects_render_saving_background_loop_x_continue
-				ld a, (current_room__height)
-				cp ixh
-				jr z, room_render_tile_objects_render_saving_background_loop_x_continue
-				jr c, room_render_tile_objects_render_saving_background_loop_x_continue
-
-				; save background:
-				ld a, (hl)
-				ld (iy + ROOM_TILE_OBJECT_STRUCT_BACKGROUND), a
-				ld a, (de)
-				or a
-				jr z, room_render_tile_objects_render_saving_background_loop_x_continue
-				ld (hl), a
-room_render_tile_objects_render_saving_background_loop_x_continue:
-				inc de
-				inc hl
-				inc iy
-				inc ixl
-				ld a, ixl
-				or a
-				jr nz, room_render_tile_objects_render_saving_background_loop_x_continue2
-				; if ixl turned 0, it means the previous pointer was probably bad, so, we need to recompute it:
-				push bc
-					ld c, ixl
-					ld b, ixh
-					call get_room_tile_ptr					
-				pop bc
-room_render_tile_objects_render_saving_background_loop_x_continue2:
-				dec c
-				jr nz, room_render_tile_objects_render_saving_background_loop_x
-			pop hl
-			pop bc
-			pop ix
-			inc ixh
-			ld a, (current_room__width)
-			ADD_HL_A
-			djnz room_render_tile_objects_render_saving_background_loop_y
-		pop ix
-		jp room_render_tile_objects_loop_continue
-
-
-room_render_tile_objects_render:
-		; Note, we do not need to take into account room bounds here, since this method
-		; is for objects that are static, and hence will always be within screen bounds.
-		; - hl: ptr to tile_object_gfx_table
-		; - ixl, ixh: x, y of the object
-		inc hl
-		ld c, (hl)  ; width
-		inc hl
-		ld b, (hl)  ; height
-		inc hl
-		ld e, (hl)
-		inc hl
-		ld d, (hl)  ; de = ptr to the graphics
-room_render_tile_objects_render_entry_point:
-		; compute ptr where to draw:
-		push bc
-			ld c, ixl
-			ld b, ixh
-			call get_room_tile_ptr
-		pop bc
-room_render_tile_objects_render_loop_y:
-
+		push iy
 		push bc
 		push hl
-room_render_tile_objects_render_loop_x:
+room_render_tile_objects_render_saving_background_loop_x:
+			; check that:
+			; - iyl < current_room__width
+			; - iyl >= 0
+			; - iyh < current_room__height
+			ld a, (current_room__width)
+			cp iyl
+			jr z, room_render_tile_objects_render_saving_background_loop_x_continue
+			jr c, room_render_tile_objects_render_saving_background_loop_x_continue
+			ld a, iyl
+			or a
+			jp m, room_render_tile_objects_render_saving_background_loop_x_continue
+			ld a, (current_room__height)
+			cp iyh
+			jr z, room_render_tile_objects_render_saving_background_loop_x_continue
+			jr c, room_render_tile_objects_render_saving_background_loop_x_continue
+
+			; save background:
+			ld a, (hl)
+			ld (ix), a
 			ld a, (de)
+			or a
+			jr z, room_render_tile_objects_render_saving_background_loop_x_continue
 			ld (hl), a
+room_render_tile_objects_render_saving_background_loop_x_continue:
 			inc de
 			inc hl
+			inc ix
+			inc iyl
+			ld a, iyl
+			or a
+			jr nz, room_render_tile_objects_render_saving_background_loop_x_continue2
+			; if ixl turned 0, it means the previous pointer was probably bad, so, we need to recompute it:
+			push bc
+				ld c, iyl
+				ld b, iyh
+				call get_room_tile_ptr					
+			pop bc
+room_render_tile_objects_render_saving_background_loop_x_continue2:
 			dec c
-			jr nz, room_render_tile_objects_render_loop_x
+			jr nz, room_render_tile_objects_render_saving_background_loop_x
 		pop hl
 		pop bc
+		pop iy
+		inc iyh
 		ld a, (current_room__width)
 		ADD_HL_A
-		djnz room_render_tile_objects_render_loop_y
-		jp room_render_tile_objects_loop_continue
+		djnz room_render_tile_objects_render_saving_background_loop_y
+	pop iy
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - hl: ptr to tile_object_gfx_table
+; - iyl, iyh: x, y of the object
+room_render_tile_objects_render:
+	; Note, we do not need to take into account room bounds here, since this method
+	; is for objects that are static, and hence will always be within screen bounds.
+	inc hl
+	ld c, (hl)  ; width
+	inc hl
+	ld b, (hl)  ; height
+	inc hl
+	ld e, (hl)
+	inc hl
+	ld d, (hl)  ; de = ptr to the graphics
+room_render_tile_objects_render_entry_point:
+	; compute ptr where to draw:
+	push bc
+		ld c, iyl
+		ld b, iyh
+		call get_room_tile_ptr
+	pop bc
+room_render_tile_objects_render_loop_y:
+
+	push bc
+	push hl
+room_render_tile_objects_render_loop_x:
+		ld a, (de)
+		ld (hl), a
+		inc de
+		inc hl
+		dec c
+		jr nz, room_render_tile_objects_render_loop_x
+	pop hl
+	pop bc
+	ld a, (current_room__width)
+	ADD_HL_A
+	djnz room_render_tile_objects_render_loop_y
+	ret
 
 
 ;-----------------------------------------------
@@ -726,6 +743,8 @@ room_undraw_tile_objects_loop:
 		jp z, room_render_tile_objects_undraw_enemy_carnivore_plant		
 		cp TAG_ENEMY_LAVA_GENERATOR
 		jp z, room_render_tile_objects_undraw_enemy_lava_generator
+		cp TAG_ENEMY_STONE_OWL
+		jp z, room_render_tile_objects_undraw_enemy_stone_owl
 		inc hl
 		ld c, (hl)  ; x
 		ld ixl, c
@@ -742,7 +761,13 @@ room_undraw_tile_objects_loop:
 		add hl, bc
 		ld a, (hl)
 		or a
-		jr z, room_undraw_tile_objects_restore_background  ; type 0: we had saved the background
+		jr nz, room_undraw_tile_objects_loop_continue2
+	pop iy
+	push iy
+		ld bc, ROOM_TILE_OBJECT_STRUCT_BACKGROUND
+		add iy, bc
+		call room_undraw_tile_objects_restore_background  ; type 0: we had saved the background
+	room_undraw_tile_objects_loop_continue2:
 		dec a
 		jr z, room_undraw_tile_objects_delete_object  ; type 1: we just replace with 0s
 room_undraw_tile_objects_loop_continue:
@@ -755,72 +780,73 @@ room_undraw_tile_objects_loop_continue_no_pop:
 	ret
 
 
+;-----------------------------------------------
+; input:
+; - iy: ptr to background buffer
+; - hl: ptr to tile_object_gfx_table: type, width, height
+; - ixl, ixh: x, y of the object
 room_undraw_tile_objects_restore_background:
-		; - hl: ptr to tile_object_gfx_table
-		; - ixl, ixh: x, y of the object
-		inc hl
-		ld c, (hl)  ; width
-		inc hl
-		ld b, (hl)  ; height
-		; compute ptr where to draw:
-	pop iy  ; recover the ptr to the object in iy
-	push iy
-		push bc
-			ld c, ixl
-			ld b, ixh
-			call get_room_tile_ptr
-		pop bc
-		push ix
+	inc hl
+	ld c, (hl)  ; width
+	inc hl
+	ld b, (hl)  ; height
+	; compute ptr where to draw:
+	push bc
+		ld c, ixl
+		ld b, ixh
+		call get_room_tile_ptr
+	pop bc
+	push ix
 room_undraw_tile_objects_restore_background_loop_y:
-			push ix
-			push bc
-			push hl
+		push ix
+		push bc
+		push hl
 room_undraw_tile_objects_restore_background_loop_x:
-				; check that:
-				; - ixl < current_room__width
-				; - ixl >= 0
-				; - ixh < current_room__height
-				ld a, (current_room__width)
-				cp ixl
-				jr z, room_undraw_tile_objects_restore_background_loop_x_continue
-				jr c, room_undraw_tile_objects_restore_background_loop_x_continue
-				ld a, ixl
-				or a
-				jp m, room_undraw_tile_objects_restore_background_loop_x_continue
-				ld a, (current_room__height)
-				cp ixh
-				jr z, room_undraw_tile_objects_restore_background_loop_x_continue
-				jr c, room_undraw_tile_objects_restore_background_loop_x_continue
+			; check that:
+			; - ixl < current_room__width
+			; - ixl >= 0
+			; - ixh < current_room__height
+			ld a, (current_room__width)
+			cp ixl
+			jr z, room_undraw_tile_objects_restore_background_loop_x_continue
+			jr c, room_undraw_tile_objects_restore_background_loop_x_continue
+			ld a, ixl
+			or a
+			jp m, room_undraw_tile_objects_restore_background_loop_x_continue
+			ld a, (current_room__height)
+			cp ixh
+			jr z, room_undraw_tile_objects_restore_background_loop_x_continue
+			jr c, room_undraw_tile_objects_restore_background_loop_x_continue
 
-				; restore background:
-				ld a, (iy + ROOM_TILE_OBJECT_STRUCT_BACKGROUND)
-				ld (hl), a
+			; restore background:
+			ld a, (iy)
+			ld (hl), a
 room_undraw_tile_objects_restore_background_loop_x_continue
-				inc hl
-				inc iy
-				inc ixl
-				ld a, ixl
-				or a
-				jr nz, room_undraw_tile_objects_restore_background_loop_x_continue2
-				; if ixl turned 0, it means the previous pointer was probably bad, so, we need to recompute it:
-				push bc
-					ld c, ixl
-					ld b, ixh
-					call get_room_tile_ptr					
-				pop bc
+			inc hl
+			inc iy
+			inc ixl
+			ld a, ixl
+			or a
+			jr nz, room_undraw_tile_objects_restore_background_loop_x_continue2
+			; if ixl turned 0, it means the previous pointer was probably bad, so, we need to recompute it:
+			push bc
+				ld c, ixl
+				ld b, ixh
+				call get_room_tile_ptr					
+			pop bc
 room_undraw_tile_objects_restore_background_loop_x_continue2:
 
-				dec c
-				jr nz, room_undraw_tile_objects_restore_background_loop_x
-			pop hl
-			pop bc
-			pop ix
-			inc ixh
-			ld a, (current_room__width)
-			ADD_HL_A
-			djnz room_undraw_tile_objects_restore_background_loop_y
+			dec c
+			jr nz, room_undraw_tile_objects_restore_background_loop_x
+		pop hl
+		pop bc
 		pop ix
-		jp room_undraw_tile_objects_loop_continue
+		inc ixh
+		ld a, (current_room__width)
+		ADD_HL_A
+		djnz room_undraw_tile_objects_restore_background_loop_y
+	pop ix
+	ret
 
 
 room_undraw_tile_objects_delete_object:
@@ -1187,6 +1213,7 @@ ENDR
 	dw object_interaction_function_empty  ; TAG_ENEMY_IMP_GENERATOR2
 	dw object_interaction_function_empty  ; TAG_ENEMY_FIREBALL_GENERATOR
 	dw object_interaction_function_empty  ; TAG_ENEMY_LAVA_GENERATOR
+	dw object_interaction_function_empty  ; TAG_ENEMY_STONE_OWL
 
 object_interaction_inventory_slot:
 	db #ff, #ff, #ff, #ff, #ff  ; none, block puzzles: 0
@@ -2598,12 +2625,13 @@ ENDR
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOPLEEPER2
 	TILE_OBJECT_DATA 1, 4, 4, tile_object_carnivore_plant  ; TAG_ENEMY_CARNIVORE_PLANT
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_bee_hive  ; TAG_ENEMY_BEE_HIVE
-	TILE_OBJECT_DATA 1, 3, 2, tile_object_ant_colony  ; TAG_ENEMY_ANT_COLONY
-	TILE_OBJECT_DATA 1, 3, 2, tile_object_ant_colony  ; TAG_ENEMY_ANT_COLONY2
+	TILE_OBJECT_DATA 0, 3, 2, tile_object_ant_colony  ; TAG_ENEMY_ANT_COLONY
+	TILE_OBJECT_DATA 0, 3, 2, tile_object_ant_colony  ; TAG_ENEMY_ANT_COLONY2
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_ENEMY_IMP_GENERATOR
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_ENEMY_IMP_GENERATOR2
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_ENEMY_FIREBALL_GENERATOR
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_ENEMY_LAVA_GENERATOR
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_ENEMY_STONE_OWL
 
 
 tile_object_regular_object_gfx:
@@ -2666,3 +2694,5 @@ tile_object_bee_hive:
 tile_object_ant_colony:
 	db 0, 68, 0
 	db 69, 70, 71
+
+

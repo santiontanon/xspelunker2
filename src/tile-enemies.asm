@@ -9,6 +9,8 @@ CARNIVORE_PLANT_WORKMEMORY_USAGE: equ 1 + CARNIVORE_PLANT_MAX_TONGUE_LENGTH * 3 
 LAVA_GENERATOR_MAX_LAVA_LENGTH: equ 8
 LAVA_GENERATOR_WORKMEMORY_USAGE: equ LAVA_GENERATOR_MAX_LAVA_LENGTH * 2  ; 16
 
+STONE_OWL_WORKMEMORY_USAGE: equ 15
+
 
 ;-----------------------------------------------
 ; input:
@@ -729,6 +731,7 @@ update_tile_objects_enemy_ant_colony_count_ants_ant:
 ; - e: tile idx that was hit
 ; - iyl: collision ID
 ; - iyh: weapon damage
+enemy_stone_owl_hit:
 enemy_ant_colony_hit:
 enemy_bee_hive_hit:
 	call find_tile_enemy_ptr
@@ -1073,6 +1076,160 @@ room_render_tile_objects_render_enemy_lava_generator_save_bg_loop_y:
 
 
 ;-----------------------------------------------
+; input:
+; - hl: object ptr + 1
+update_tile_objects_enemy_stone_owl:
+	dec hl
+	push hl
+	pop ix
+
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_HEALTH)
+	or a
+	jp z, update_tile_objects_4x4_enemy_killed
+	; state 0: still
+	; state 1: left 45 degrees
+	; state 2: left 90 degrees
+	; state 3: right 45 degrees
+	; state 4: right 90 degrees
+	; state 5: flying wings open
+	; state 6: flying wings closed
+
+	inc (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	cp 16
+	jr nz, update_tile_objects_enemy_stone_owl_continue2
+	xor a
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER), a
+	inc (ix + ROOM_TILE_OBJECT_STRUCT_STATE)
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)
+	cp 7
+	jr nz, update_tile_objects_enemy_stone_owl_continue
+	xor a
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), a
+update_tile_objects_enemy_stone_owl_continue:
+	; redraw tile objects:
+	jp update_tile_objects_loop_force_redraw_and_continue
+update_tile_objects_enemy_stone_owl_continue2:
+	jp update_tile_objects_loop_continue
+
+
+;-----------------------------------------------
+; input:
+; - hl: object ptr + 1
+room_render_tile_objects_render_enemy_stone_owl:
+	dec hl
+	push hl
+	pop ix
+
+	; get frame to draw:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)
+	ld hl, tile_object_stone_owl_frames
+	add a, a
+	ADD_HL_A
+	ld a, (hl)
+	inc hl
+	ld h, (hl)
+	ld l, a
+
+	; draw saving bg to work memory:
+	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	dec c  ; owl is 5x3, but we are treating it as 4x4
+	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	inc b  ; owl is 5x3, but we are treating it as 4x4
+	ld e, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR)
+	ld d, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR + 1)
+	ld ixl, e
+	ld ixh, d
+	ld iyl, c
+	ld iyh, b
+; 	ld hl, tile_object_stone_owl_frame1_gfx - 1
+	call room_render_tile_objects_render_saving_background
+	jp room_render_tile_objects_loop_continue
+
+tile_object_stone_owl_frames:
+	dw tile_object_stone_owl_frame1_gfx - 1  ; idle
+	dw tile_object_stone_owl_frame2_gfx - 1  ; 45 degrees left
+	dw tile_object_stone_owl_frame3_gfx - 1  ; 90 degrees left
+	dw tile_object_stone_owl_frame4_gfx - 1  ; 45 degrees right
+	dw tile_object_stone_owl_frame5_gfx - 1  ; 90 degrees right
+	dw tile_object_stone_owl_frame6_gfx - 1  ; wings open (flying)
+	dw tile_object_stone_owl_frame1_gfx - 1  ; wings closed (flying)
+
+tile_object_stone_owl_frame1_gfx:
+	db 5, 3
+	dw tile_object_stone_owl_frame1_gfx_tiles
+tile_object_stone_owl_frame1_gfx_tiles:
+	db 0, 64, 65, 66, 0
+	db 0, 67, 175, 68, 0
+	db 0, 69, 70, 71, 0
+
+tile_object_stone_owl_frame2_gfx:
+	db 5, 3
+	dw tile_object_stone_owl_frame2_gfx_tiles
+tile_object_stone_owl_frame2_gfx_tiles:
+	db 0, 80, 81, 82, 0
+	db 0, 83, 84, 85, 0
+	db 0, 69, 70, 71, 0
+
+tile_object_stone_owl_frame3_gfx:
+	db 5, 3
+	dw tile_object_stone_owl_frame3_gfx_tiles
+tile_object_stone_owl_frame3_gfx_tiles:
+	db 0, 86, 87, 82, 0
+	db 0, 88, 89, 85, 0
+	db 0, 69, 70, 71, 0
+
+tile_object_stone_owl_frame4_gfx:
+	db 5, 3
+	dw tile_object_stone_owl_frame4_gfx_tiles
+tile_object_stone_owl_frame4_gfx_tiles:
+	db 0, 76, 77, 78, 0
+	db 0, 92, 93, 94, 0
+	db 0, 69, 70, 71, 0
+
+tile_object_stone_owl_frame5_gfx:
+	db 5, 3
+	dw tile_object_stone_owl_frame5_gfx_tiles
+tile_object_stone_owl_frame5_gfx_tiles:
+	db 0, 76, 87, 79, 0
+	db 0, 92, 89, 95, 0
+	db 0, 69, 70, 71, 0
+
+tile_object_stone_owl_frame6_gfx:
+	db 5, 3
+	dw tile_object_stone_owl_frame6_gfx_tiles
+tile_object_stone_owl_frame6_gfx_tiles:
+	db 0, 64, 65, 66, 0
+	db 72, 73, 175, 74, 75
+	db 0, 90, 70, 91, 0
+
+
+;-----------------------------------------------
+; input:
+; - hl: object ptr + 1
+room_render_tile_objects_undraw_enemy_stone_owl:
+	dec hl
+	push hl
+	pop ix
+
+	; ...
+
+	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	dec c  ; owl is 5x3, but we are treating it as 4x4
+	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	inc b  ; owl is 5x3, but we are treating it as 4x4
+	ld e, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR)
+	ld d, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR + 1)
+	ld iyl, e
+	ld iyh, d
+	ld ixl, c
+	ld ixh, b
+	ld hl, tile_object_stone_owl_frame1_gfx - 1
+	call room_undraw_tile_objects_restore_background
+	jp room_undraw_tile_objects_loop_continue
+
+
+;-----------------------------------------------
 ; Used for when the player hits a tile enemy, sssumes there is a single tile enemy
 ; that can be hit in the whole screen.
 ; output:
@@ -1106,6 +1263,8 @@ find_tile_enemy_ptr_loop:
 ; 	ret z
 ;   cp TAG_ENEMY_LAVA_GENERATOR
 ;   ret z
+	cp TAG_ENEMY_STONE_OWL
+	ret z
 	add ix, bc
 	jr find_tile_enemy_ptr_loop
 find_tile_enemy_ptr_not_found:

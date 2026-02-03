@@ -172,7 +172,7 @@ state_play_from_continue:
 ; 		ld e, 3  ; area to generate
 ; 		ld e, 3  ; area to generate
 ; 		ld e, 4  ; area to generate <- third boss
-; 		ld e, 8  ; xibalba
+		ld e, 8  ; xibalba
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
 
@@ -184,7 +184,7 @@ state_play_from_continue:
 ; 		ld e, 4
 ; 		ld e, CALENDAR_ROOM_ID
 ; 		ld e, 3  ; <- third boss
-; 		ld e, 0
+		ld e, 0
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000

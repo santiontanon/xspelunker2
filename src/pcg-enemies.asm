@@ -367,6 +367,8 @@ pcg_generate_room__spawn_tile_enemies_loop_found:
 	jp z, pcg_generate_room__spawn_fireball_generator
 ; 	cp TAG_ENEMY_LAVA_GENERATOR  ; these are spawned else where (like pushable-blocks)
 ; 	jp z, pcg_generate_room__spawn_lava_generator
+	cp TAG_ENEMY_STONE_OWL
+	jp z, pcg_generate_room__spawn_stone_owl
 	; ...
 	ret
 
@@ -1117,7 +1119,6 @@ pcg_spawn_enemies__tile_enemy_type_check_ok:
 
 
 ;-----------------------------------------------
-; input:
 pcg_generate_room__spawn_carnivore_plant:
 	ld a, (tmp_enemy_pcg_tile_enemy_workmemory_usage)
 	add CARNIVORE_PLANT_WORKMEMORY_USAGE
@@ -1460,6 +1461,66 @@ pcg_generate_room__spawn_lava_generator_difficulty_set:
 	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
 	add hl, bc
 	ld (tmp_pcg_room__next_tile_object_ptr), hl	
+	ret
+
+
+
+;-----------------------------------------------
+pcg_generate_room__spawn_stone_owl:
+	ld a, (tmp_enemy_pcg_tile_enemy_workmemory_usage)
+	add STONE_OWL_WORKMEMORY_USAGE
+	cp (tile_enemy_work_memory_end - tile_enemy_work_memory) + 1  ; + 1 so that we can use "nc" as the condition
+	ret nc  ; if we do not have enough work memory, do not spawn
+	call pcg_generate_room__find_4x4_enemy_spots
+	or a
+	ret z
+	; we found at leat one viable position, spawn the plant:
+	ld hl, ptr_to_new_tile_object
+	ld c, TILES_PAGE
+	call call_hl_in_page_c_8000
+	ret nz
+	ld c, TAG_ENEMY_STONE_OWL
+	call pcg_spawn_enemies__tile_enemy_type_check_hittable
+	ret nz
+	ld c, ixl
+	dec c
+	ld b, ixh
+	dec b
+	dec b  ; we will treat it as a 4x4 enemy (even if it's not)
+	ld a, (tmp_enemy_pcg_next_enemy_id)
+	ld (hl), a  ; ID
+	inc a
+	ld (tmp_enemy_pcg_next_enemy_id), a
+	inc hl
+	ld (hl), TAG_ENEMY_STONE_OWL  ; type
+	inc hl
+	ld (hl), c  ; tile x
+	inc hl
+	ld (hl), b  ; tile y
+	inc hl
+	ld (hl), 0  ; state
+	inc hl
+	ld (hl), 0  ; state timer
+	inc hl
+	ld (hl), 16  ; hit points
+	inc hl
+
+	ld de, tile_enemy_work_memory
+	ld a, (tmp_enemy_pcg_tile_enemy_workmemory_usage)
+	ADD_DE_A
+	ld (hl), e  ; work memory ptr
+	inc hl
+	ld (hl), d
+	ld a, (tmp_enemy_pcg_tile_enemy_workmemory_usage)
+	add a, STONE_OWL_WORKMEMORY_USAGE
+	ld (tmp_enemy_pcg_tile_enemy_workmemory_usage), a
+
+	ld hl, enemy_stone_owl_tiles_zx0
+	ld (enemy_tiles_to_upload_to_vdp), hl
+	ld a, ENEMY_TILES_PAGE
+	ld (enemy_tiles_to_upload_to_vdp_page), a
+	ld hl, enemy_stone_owl_hit
+	ld (tile_enemy_hit_fn_ptr), hl
 	ret
 
 
