@@ -1511,6 +1511,8 @@ pcg_generate_room__spawn_stone_owl:
 	ld (hl), e  ; work memory ptr
 	inc hl
 	ld (hl), d
+	xor a
+	ld (de), a  ; mark that we have not yet saved the background
 	ld a, (tmp_enemy_pcg_tile_enemy_workmemory_usage)
 	add a, STONE_OWL_WORKMEMORY_USAGE
 	ld (tmp_enemy_pcg_tile_enemy_workmemory_usage), a

@@ -71,7 +71,8 @@ pcg_enemy_generation_table_caves_east_hardest:
 
 pcg_enemy_generation_table_xibalba_hardest:
 	db 2  ; 2 enemies per "screen" area
-	db 3
+	db 4
+	db TAG_ENEMY_STONE_OWL, 80
 	db TAG_ENEMY_FIREBALL_GENERATOR, 64
 	db TAG_ENEMY_IMP_GENERATOR, 64
 	db TAG_ENEMY_IMP_GENERATOR2, 255

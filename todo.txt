@@ -1,9 +1,5 @@
 to do:
 
-***- large stone owls tile enemy:
-    ***- bullet firing (if player is on the side where the owl is facing, fire a few bullets depending on difficulty level)
-    ***- flying (make it relatively fast, so that it's annoying to get close by):
-      ***- only 3x3 core collides with walls for movement
 ***- xibalba boss room is a large ball game court (64 * 24 in size) with 12 tombs: 2 big ones and 10 small ones
   ***- draw it in gimp/tiled
   ***- interacting tells you the name of the lord in each tomb

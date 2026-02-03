@@ -2975,16 +2975,19 @@ update_enemy_move_cb_colliding_down_moving_down:
 
 ;-----------------------------------------------
 update_enemy_fire_directional_bullet_towards_player:
+	ld e, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld d, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+update_enemy_fire_directional_bullet_towards_player_at_e_d:
 	; see if player is close enough:
 	ld a, (player_x + 1)
-	sub (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	sub e
 	cp 16 
 	ret p
 	cp -16
 	ret m
 	ld c, a
 	ld a, (player_y + 1)
-	sub (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	sub d
 	cp 16 
 	ret p
 	cp -16
@@ -2992,7 +2995,9 @@ update_enemy_fire_directional_bullet_towards_player:
 	ld b, a
 	; fire a bullet:
 	push bc
+	push de
 		call ptr_to_new_sprite_enemy
+	pop de
 	pop bc
 	ret nz
 	ld (hl), 0  ; ID
@@ -3000,14 +3005,12 @@ update_enemy_fire_directional_bullet_towards_player:
 	ld (hl), ENEMY_BULLET
 	inc hl
 	ld (hl), 0  ; pixel X
-	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	inc hl
-	ld (hl), a
+	ld (hl), e  ; tile X
 	inc hl
 	ld (hl), 4  ; pixel Y
 	inc hl
-	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-	ld (hl), a
+	ld (hl), d  ; tile Y
 	inc hl
 	ld (hl), 0  ; state
 	inc hl

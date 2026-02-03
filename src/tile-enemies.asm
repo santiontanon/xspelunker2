@@ -9,7 +9,7 @@ CARNIVORE_PLANT_WORKMEMORY_USAGE: equ 1 + CARNIVORE_PLANT_MAX_TONGUE_LENGTH * 3 
 LAVA_GENERATOR_MAX_LAVA_LENGTH: equ 8
 LAVA_GENERATOR_WORKMEMORY_USAGE: equ LAVA_GENERATOR_MAX_LAVA_LENGTH * 2  ; 16
 
-STONE_OWL_WORKMEMORY_USAGE: equ 15
+STONE_OWL_WORKMEMORY_USAGE: equ 16
 
 
 ;-----------------------------------------------
@@ -1099,13 +1099,13 @@ update_tile_objects_enemy_stone_owl:
 	inc (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)
 	or a
-	jr z, update_tile_objects_enemy_stone_owl_state_0
+	jp z, update_tile_objects_enemy_stone_owl_state_0
 	dec a
-	jr z, update_tile_objects_enemy_stone_owl_state_1
+	jp z, update_tile_objects_enemy_stone_owl_state_1
 	dec a
-	jr z, update_tile_objects_enemy_stone_owl_state_2
+	jp z, update_tile_objects_enemy_stone_owl_state_2
 	dec a
-	jr z, update_tile_objects_enemy_stone_owl_state_3
+	jp z, update_tile_objects_enemy_stone_owl_state_3
 	dec a
 	jp z, update_tile_objects_enemy_stone_owl_state_4
 	dec a
@@ -1117,23 +1117,108 @@ update_tile_objects_enemy_stone_owl:
 	dec a
 update_tile_objects_enemy_stone_owl_state_8:
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
-	cp 4
+	cp 2
 	jp nz, update_tile_objects_enemy_stone_owl_continue2
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER), 0
-	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 0
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 7
 	jp update_tile_objects_enemy_stone_owl_continue
 update_tile_objects_enemy_stone_owl_state_7:
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
-	cp 4
+	cp 2
 	jp nz, update_tile_objects_enemy_stone_owl_continue2
+	; move to an adjacent tile if possible:
+	; - determine available directions
+	; - choose a random available direction (or down)
+	; - if moving down but it's not available, go to state 0 (landing)
+	ld iyl, 0  ; will store the available directions
+	call update_tile_objects_enemy_stone_owl_can_move_left
+	jr z, update_tile_objects_enemy_stone_owl_state_7_continue1
+	ld a, iyl
+	OR PCG_DIRECTION_LEFT
+	ld iyl, a
+update_tile_objects_enemy_stone_owl_state_7_continue1:
+	call update_tile_objects_enemy_stone_owl_can_move_up
+	jr z, update_tile_objects_enemy_stone_owl_state_7_continue2
+	ld a, iyl
+	OR PCG_DIRECTION_UP
+	ld iyl, a
+update_tile_objects_enemy_stone_owl_state_7_continue2:
+	call update_tile_objects_enemy_stone_owl_can_move_right
+	jr z, update_tile_objects_enemy_stone_owl_state_7_continue3
+	ld a, iyl
+	OR PCG_DIRECTION_RIGHT
+	ld iyl, a
+update_tile_objects_enemy_stone_owl_state_7_continue3:
+	call update_tile_objects_enemy_stone_owl_can_move_down
+	jr z, update_tile_objects_enemy_stone_owl_state_7_continue4
+	ld a, iyl
+	OR PCG_DIRECTION_DOWN
+	ld iyl, a
+update_tile_objects_enemy_stone_owl_state_7_continue4:
+	ld a, iyl
+	or a
+	ld c, PCG_DIRECTION_DOWN_BIT
+	jr z, update_tile_objects_enemy_stone_owl_state_7_loop_done
+update_tile_objects_enemy_stone_owl_state_7_loop:
+	call random_a
+	and #03
+	ld c, 1
+	or a
+	jr z, update_tile_objects_enemy_stone_owl_state_7_inner_loop_done
+update_tile_objects_enemy_stone_owl_state_7_inner_loop:
+	sla c
+	dec a
+	jr nz, update_tile_objects_enemy_stone_owl_state_7_inner_loop
+update_tile_objects_enemy_stone_owl_state_7_inner_loop_done:
+	ld a, c  ; chosen direction
+	cp PCG_DIRECTION_DOWN
+	jr z, update_tile_objects_enemy_stone_owl_state_7_loop_done  ; we can always go down
+	and iyl
+	jr nz, update_tile_objects_enemy_stone_owl_state_7_loop_done  ; direction available
+
+	jr update_tile_objects_enemy_stone_owl_state_7_loop
+update_tile_objects_enemy_stone_owl_state_7_loop_done:
+	ld a, c  ; chosen direction
+	and iyl
+	jr z, update_tile_objects_enemy_stone_owl_state_7_to_state_0  ; not available, which means it's 'down', so, we need to land
+	; undraw the tile objects:
+	push bc
+	push ix
+		call room_undraw_tile_objects
+	pop ix
+	pop bc	
+	ld a, c
+	cp PCG_DIRECTION_LEFT
+	jr z, update_tile_objects_enemy_stone_owl_state_7_left
+	cp PCG_DIRECTION_UP
+	jr z, update_tile_objects_enemy_stone_owl_state_7_up
+	cp PCG_DIRECTION_RIGHT
+	jr z, update_tile_objects_enemy_stone_owl_state_7_right
+update_tile_objects_enemy_stone_owl_state_7_down:
+	inc (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	jr update_tile_objects_enemy_stone_owl_state_7_movement_done
+update_tile_objects_enemy_stone_owl_state_7_left:
+	dec (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	jr update_tile_objects_enemy_stone_owl_state_7_movement_done
+update_tile_objects_enemy_stone_owl_state_7_up:
+	dec (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	jr update_tile_objects_enemy_stone_owl_state_7_movement_done
+update_tile_objects_enemy_stone_owl_state_7_right:
+	inc (ix + ROOM_TILE_OBJECT_STRUCT_X)
+update_tile_objects_enemy_stone_owl_state_7_movement_done:
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER), 0
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 8
-	jr update_tile_objects_enemy_stone_owl_continue
+	call room_render_tile_objects
+	jp update_tile_objects_enemy_stone_owl_continue
+update_tile_objects_enemy_stone_owl_state_7_to_state_0:
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER), 0
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 0
+	jp update_tile_objects_enemy_stone_owl_continue
 
 update_tile_objects_enemy_stone_owl_state_0:
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
 	cp 8
-	jr nz, update_tile_objects_enemy_stone_owl_continue2
+	jp nz, update_tile_objects_enemy_stone_owl_continue2
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER), 0
 	; switch state:
 	call random_a
@@ -1143,28 +1228,45 @@ update_tile_objects_enemy_stone_owl_state_0:
 	jr z, update_tile_objects_enemy_stone_owl_state_0_to_1
 update_tile_objects_enemy_stone_owl_state_0_to_4:
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 4
-	jr update_tile_objects_enemy_stone_owl_continue
+	jp update_tile_objects_enemy_stone_owl_continue
 update_tile_objects_enemy_stone_owl_state_0_to_1:
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 1
-	jr update_tile_objects_enemy_stone_owl_continue
+	jp update_tile_objects_enemy_stone_owl_continue
 update_tile_objects_enemy_stone_owl_state_0_to_7:
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 7
-	jr update_tile_objects_enemy_stone_owl_continue
+	jp update_tile_objects_enemy_stone_owl_continue
 
 update_tile_objects_enemy_stone_owl_state_1:
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
 	cp 2
-	jr nz, update_tile_objects_enemy_stone_owl_continue2
-	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER), 0
+	jp nz, update_tile_objects_enemy_stone_owl_continue2
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER), #ff
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 2
-	jr update_tile_objects_enemy_stone_owl_continue
+	jp update_tile_objects_enemy_stone_owl_continue
+
 update_tile_objects_enemy_stone_owl_state_2:
+	; fire bullets:
+	ld a, (player_x + 1)
+	cp (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	jr nc, update_tile_objects_enemy_stone_owl_state_2_skip_bullets
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	and #03
+	jr nz, update_tile_objects_enemy_stone_owl_state_2_skip_bullets
+	ld e, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	inc e
+	ld d, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	inc d
+	ld hl, update_enemy_fire_directional_bullet_towards_player_at_e_d
+	ld c, ENEMIES_PAGE
+	call call_hl_in_page_c_8000
+update_tile_objects_enemy_stone_owl_state_2_skip_bullets:
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
 	cp 8
 	jr nz, update_tile_objects_enemy_stone_owl_continue2
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER), 0
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 3
 	jr update_tile_objects_enemy_stone_owl_continue
+
 update_tile_objects_enemy_stone_owl_state_3:
 update_tile_objects_enemy_stone_owl_state_6:
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
@@ -1178,10 +1280,27 @@ update_tile_objects_enemy_stone_owl_state_4:
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
 	cp 2
 	jr nz, update_tile_objects_enemy_stone_owl_continue2
-	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER), 0
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER), #ff
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 5
 	jr update_tile_objects_enemy_stone_owl_continue
+
 update_tile_objects_enemy_stone_owl_state_5:
+	; fire bullets:
+	ld a, (player_x + 1)
+	cp (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	jr c, update_tile_objects_enemy_stone_owl_state_5_skip_bullets
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	and #03
+	jr nz, update_tile_objects_enemy_stone_owl_state_5_skip_bullets
+	ld e, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	inc e
+	ld d, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	inc d
+	ld hl, update_enemy_fire_directional_bullet_towards_player_at_e_d
+	ld c, ENEMIES_PAGE
+	call call_hl_in_page_c_8000
+update_tile_objects_enemy_stone_owl_state_5_skip_bullets:
+
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
 	cp 8
 	jr nz, update_tile_objects_enemy_stone_owl_continue2
@@ -1194,6 +1313,73 @@ update_tile_objects_enemy_stone_owl_continue:
 	jp update_tile_objects_loop_force_redraw_and_continue
 update_tile_objects_enemy_stone_owl_continue2:
 	jp update_tile_objects_loop_continue
+
+
+update_tile_objects_enemy_stone_owl_can_move_left:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	or a
+	ret z  ; no moving left of the room
+	ld c, a
+	dec c
+update_tile_objects_enemy_stone_owl_can_move_right_entry_point:
+	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	inc b
+	push bc
+		call general_check_collision_only_walls
+	pop bc
+	ret z
+	inc b
+	push bc
+		call general_check_collision_only_walls
+	pop bc
+	ret z
+	inc b
+	call general_check_collision_only_walls
+	ret
+
+update_tile_objects_enemy_stone_owl_can_move_up:
+	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	or a
+	ret z  ; no moving up of the room
+	ld b, a	
+update_tile_objects_enemy_stone_owl_can_move_down_entry_point:
+	push bc
+		call general_check_collision_only_walls
+	pop bc
+	ret z
+	inc c
+	push bc
+		call general_check_collision_only_walls
+	pop bc
+	ret z
+	inc c
+	call general_check_collision_only_walls
+	ret
+
+update_tile_objects_enemy_stone_owl_can_move_right:
+	ld a, (current_room__width)
+	sub 4
+	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	cp c
+	ret z  ; not exiting the room to the right
+	inc c
+	inc c
+	inc c
+	jr update_tile_objects_enemy_stone_owl_can_move_right_entry_point
+
+update_tile_objects_enemy_stone_owl_can_move_down:
+	ld a, (current_room__height)
+	sub 4	
+	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	cp b
+	ret z  ; not exiting the room down
+	inc b
+	inc b
+	inc b
+	inc b
+	jr update_tile_objects_enemy_stone_owl_can_move_down_entry_point
 
 
 ;-----------------------------------------------
@@ -1221,6 +1407,9 @@ room_render_tile_objects_render_enemy_stone_owl:
 	inc b  ; owl is 5x3, but we are treating it as 4x4
 	ld e, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR)
 	ld d, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR + 1)
+	ld a, 1
+	ld (de), a  ; mark that we have saved background
+	inc de
 	ld ixl, e
 	ld ixh, d
 	ld iyl, c
@@ -1302,6 +1491,10 @@ room_render_tile_objects_undraw_enemy_stone_owl:
 	inc b  ; owl is 5x3, but we are treating it as 4x4
 	ld e, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR)
 	ld d, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR + 1)
+	ld a, (de)
+	or a
+	jp z, room_undraw_tile_objects_loop_continue  ; if we have not yet saved background, do not undraw
+	inc de
 	ld iyl, e
 	ld iyh, d
 	ld ixl, c
