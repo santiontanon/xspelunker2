@@ -1085,27 +1085,110 @@ update_tile_objects_enemy_stone_owl:
 
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_HEALTH)
 	or a
-	jp z, update_tile_objects_4x4_enemy_killed
-	; state 0: still
-	; state 1: left 45 degrees
-	; state 2: left 90 degrees
-	; state 3: right 45 degrees
-	; state 4: right 90 degrees
-	; state 5: flying wings open
-	; state 6: flying wings closed
-
+	jp z, update_tile_objects_4x4_enemy_killed	
+	; behavior is:
+	; state 0: still -> chance to go to "turn head left/right" (state 1/3), or fly (state 7)
+	; state 1: left 45 degrees -> go to 2
+	; state 2: left 90 degrees -> fire a bullet if player is in this direction and go to 3
+	; state 3: left 45 degrees -> go to 0
+	; state 4: right 45 degrees -> go to 5
+	; state 5: right 90 degrees -> fire a bullet if player is in this direction and go to 6
+	; state 6: right 45 degrees -> go to 0
+	; state 7: flying wings open -> go to 8
+	; state 8: flying wings closed -> move in a random direction that is available (if we end up landing, go to 0)
 	inc (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
-	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
-	cp 16
-	jr nz, update_tile_objects_enemy_stone_owl_continue2
-	xor a
-	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER), a
-	inc (ix + ROOM_TILE_OBJECT_STRUCT_STATE)
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)
-	cp 7
-	jr nz, update_tile_objects_enemy_stone_owl_continue
-	xor a
-	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), a
+	or a
+	jr z, update_tile_objects_enemy_stone_owl_state_0
+	dec a
+	jr z, update_tile_objects_enemy_stone_owl_state_1
+	dec a
+	jr z, update_tile_objects_enemy_stone_owl_state_2
+	dec a
+	jr z, update_tile_objects_enemy_stone_owl_state_3
+	dec a
+	jp z, update_tile_objects_enemy_stone_owl_state_4
+	dec a
+	jp z, update_tile_objects_enemy_stone_owl_state_5
+	dec a
+	jp z, update_tile_objects_enemy_stone_owl_state_6
+	dec a
+	jr z, update_tile_objects_enemy_stone_owl_state_7
+	dec a
+update_tile_objects_enemy_stone_owl_state_8:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	cp 4
+	jp nz, update_tile_objects_enemy_stone_owl_continue2
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER), 0
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 0
+	jp update_tile_objects_enemy_stone_owl_continue
+update_tile_objects_enemy_stone_owl_state_7:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	cp 4
+	jp nz, update_tile_objects_enemy_stone_owl_continue2
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER), 0
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 8
+	jr update_tile_objects_enemy_stone_owl_continue
+
+update_tile_objects_enemy_stone_owl_state_0:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	cp 8
+	jr nz, update_tile_objects_enemy_stone_owl_continue2
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER), 0
+	; switch state:
+	call random_a
+	cp 192
+	jr nc, update_tile_objects_enemy_stone_owl_state_0_to_7
+	and #01
+	jr z, update_tile_objects_enemy_stone_owl_state_0_to_1
+update_tile_objects_enemy_stone_owl_state_0_to_4:
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 4
+	jr update_tile_objects_enemy_stone_owl_continue
+update_tile_objects_enemy_stone_owl_state_0_to_1:
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 1
+	jr update_tile_objects_enemy_stone_owl_continue
+update_tile_objects_enemy_stone_owl_state_0_to_7:
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 7
+	jr update_tile_objects_enemy_stone_owl_continue
+
+update_tile_objects_enemy_stone_owl_state_1:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	cp 2
+	jr nz, update_tile_objects_enemy_stone_owl_continue2
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER), 0
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 2
+	jr update_tile_objects_enemy_stone_owl_continue
+update_tile_objects_enemy_stone_owl_state_2:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	cp 8
+	jr nz, update_tile_objects_enemy_stone_owl_continue2
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER), 0
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 3
+	jr update_tile_objects_enemy_stone_owl_continue
+update_tile_objects_enemy_stone_owl_state_3:
+update_tile_objects_enemy_stone_owl_state_6:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	cp 2
+	jr nz, update_tile_objects_enemy_stone_owl_continue2
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER), 0
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 0
+	jr update_tile_objects_enemy_stone_owl_continue
+
+update_tile_objects_enemy_stone_owl_state_4:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	cp 2
+	jr nz, update_tile_objects_enemy_stone_owl_continue2
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER), 0
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 5
+	jr update_tile_objects_enemy_stone_owl_continue
+update_tile_objects_enemy_stone_owl_state_5:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	cp 8
+	jr nz, update_tile_objects_enemy_stone_owl_continue2
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER), 0
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 6
+	; jr update_tile_objects_enemy_stone_owl_continue
+
 update_tile_objects_enemy_stone_owl_continue:
 	; redraw tile objects:
 	jp update_tile_objects_loop_force_redraw_and_continue
@@ -1150,8 +1233,10 @@ tile_object_stone_owl_frames:
 	dw tile_object_stone_owl_frame1_gfx - 1  ; idle
 	dw tile_object_stone_owl_frame2_gfx - 1  ; 45 degrees left
 	dw tile_object_stone_owl_frame3_gfx - 1  ; 90 degrees left
+	dw tile_object_stone_owl_frame2_gfx - 1  ; 45 degrees left
 	dw tile_object_stone_owl_frame4_gfx - 1  ; 45 degrees right
 	dw tile_object_stone_owl_frame5_gfx - 1  ; 90 degrees right
+	dw tile_object_stone_owl_frame4_gfx - 1  ; 45 degrees right
 	dw tile_object_stone_owl_frame6_gfx - 1  ; wings open (flying)
 	dw tile_object_stone_owl_frame1_gfx - 1  ; wings closed (flying)
 
@@ -1211,9 +1296,6 @@ room_render_tile_objects_undraw_enemy_stone_owl:
 	dec hl
 	push hl
 	pop ix
-
-	; ...
-
 	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
 	dec c  ; owl is 5x3, but we are treating it as 4x4
 	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)

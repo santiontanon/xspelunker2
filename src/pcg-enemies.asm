@@ -1502,7 +1502,7 @@ pcg_generate_room__spawn_stone_owl:
 	inc hl
 	ld (hl), 0  ; state timer
 	inc hl
-	ld (hl), 16  ; hit points
+	ld (hl), 32  ; hit points
 	inc hl
 
 	ld de, tile_enemy_work_memory
