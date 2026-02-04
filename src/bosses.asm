@@ -184,6 +184,11 @@ enter_boss_door__room_spawn_coordinates_set:
 		inc hl
 		ld (hl), b
 
+		; spawn any boss-specific objects:
+		ld a, (boss__current_boss_number)
+		cp 3
+		call enter_boss_door__spawn_xibalba_lords_objects
+
 		; make a copy of the boss room so that we can restore the background as the boss moves:
 		ld hl, current_room__tile_map
 		ld de, current_room__tile_map + 32*24*2
@@ -200,6 +205,49 @@ enter_boss_door__room_spawn_coordinates_set:
 		ld (hl), 0
 	pop bc
 	jp state_play_from_loaded_room
+
+
+enter_boss_door__spawn_xibalba_lords_objects_tbl:
+	db TAG_XIBALBA_BOSS_TABLET, 11, 4
+	db TAG_XIBALBA_BOSS_GRAVE, 4, 11
+	db TAG_XIBALBA_BOSS_GRAVE, 58, 11
+	db TAG_XIBALBA_BOSS_GRAVE, 17, 19
+	db TAG_XIBALBA_BOSS_GRAVE, 20, 19
+	db TAG_XIBALBA_BOSS_GRAVE, 23, 19
+	db TAG_XIBALBA_BOSS_GRAVE, 26, 19
+	db TAG_XIBALBA_BOSS_GRAVE, 29, 19
+	db TAG_XIBALBA_BOSS_GRAVE, 33, 19
+	db TAG_XIBALBA_BOSS_GRAVE, 36, 19
+	db TAG_XIBALBA_BOSS_GRAVE, 39, 19
+	db TAG_XIBALBA_BOSS_GRAVE, 42, 19
+	db TAG_XIBALBA_BOSS_GRAVE, 45, 19
+enter_boss_door__spawn_xibalba_lords_objects_tbl_end:
+
+enter_boss_door__spawn_xibalba_lords_objects:
+	; tablet gfx:
+	ld hl, buffer_4096 + 60 * 64
+	ld (item_object_to_upload_to_vdp), hl
+
+	ld b, (enter_boss_door__spawn_xibalba_lords_objects_tbl_end - enter_boss_door__spawn_xibalba_lords_objects_tbl) / 3
+	ld de, ROOM_TILE_OBJECT_STRUCT_SIZE
+	ld hl, enter_boss_door__spawn_xibalba_lords_objects_tbl
+	ld iy, current_room__tile_objects
+	ld c, 0  ; id
+enter_boss_door__spawn_xibalba_lords_objects_loop:
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), c  ; id
+	inc c
+	ld a, (hl)
+	inc hl
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), a
+	ld a, (hl)
+	inc hl
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), a  ; tile x
+	ld a, (hl)
+	inc hl
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), a  ; tile y
+	add iy, de
+	djnz enter_boss_door__spawn_xibalba_lords_objects_loop	
+	ret
 
 
 ;-----------------------------------------------

@@ -30,7 +30,7 @@ do
 done
 
 
-FREE=$((12*16*1024 - TOTALUSED))
+FREE=$((15*16*1024 - TOTALUSED))
 echo "total used: ${TOTALUSED} (free: ${FREE})"
 
 END_OF_RAM="$(grep end_of_ram xspelunker2.sym | cut -d ' ' -f3- | cut -c3-)"

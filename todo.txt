@@ -1,10 +1,9 @@
 to do:
 
 ***- xibalba boss room:
-  ***- boss room has a tablet with a clue: "wake two xibalba lords and defeat them in the ball courts, choose wisely!" (or something like that)
-  ***- interacting tells you the name of the lord in each tomb (so, maybe tombs are blue so that they look like background and you can walk through them? and maybe they are NOT tiles, but objects?)
-  ***- player can wake up any 2 of the 12 xibalba lords in the boss room (crouch, jump, swing, crouch, jump, swing): wake up spawns a ghost that floats over the tomb
-  ***- as soon as you awaken one of them, stairs lock
+  ***- player can wake up any 2 of the 12 xibalba lords in the boss room (crouch, jump, swing, crouch, jump, swing):
+    ***- wake up spawns a ghost that floats over the tomb, and the tomb gets destroyed
+    ***- as soon as you awaken one of them, stairs lock
 ***- create xibalba boss: draw skeletal figures with ornate Mayan headdresses, representing the rulers of the underworld, 12 of them, one for each, with small variations (summons skeletons or shadows).
   ***- waking up proper pairs (e.g. the two main lords, or Ahalpuh+Ahalgana) gives you an extra item at the end: two main give you a key that can be used for a secret in moon/mars boss room, the other pairs give you benefits (figure them out)
 
@@ -37,8 +36,7 @@ to do:
   - have a chest/door locked with keys from ALL colors, and that can only be open in a world where all color keys spawn. Single lock that changes color, cycling through all. (add as a special achievement for the gameover screen)
   - Special huge chest that has a lock with a number. Each time you use a small key, it reduces by one. But the number is larger than the keys in one world. the state of the chest should be saved to the ROM, and if you beat the game (can you beat the game having used small keys there?, it remains. It might give you access to a final alien weapon to really kill the final boss. If you play again on the same seed, the chest will be blocked somehow (so, you need a different seed) (add as a special achievement for the gameover screen)
   - room that has 4 locks (one from each cardinal directions), but in each world, it can only be reached from one direction. Upon opening all 4, it reveals a passage to a secret level (the "lost world", which is like jungle but with dinosaurs? is there an alternate ending here?, or the "underground cenote", where sacrifices were made) (add as a special achievement for the gameover screen)
-  - when a player bullet does not hit an enemy, have a chance (or always) to remain in the map, so you can pick it up again (maybe some enemies will steal objects, and that can be used to bait them? or maybe some enemies wake up with noise and items dropping make noise? (as do dropping pushable blocks, or the player doing anything except crawling)).
-  - Mars/Moon: in the boss rooms, there might be something you can do before summoning the boss. This could lead to something like: (1) an underground cave where there is a brokne ancient robot that can talk to you (in a mix of English and Maya maybe?), and might give you a weapon upgrade (e.g. a better raygun). (2) a hidden room in Mars with one of those Mars faces, containing a great treasure (e.g. a fifth (?) undiscovered Mayan codex), add as a special achievement for the gameover screen.
+  - Mars/Moon: in the boss rooms, there might be something you can do before summoning the boss. This could lead to something like: (1) an underground cave where there is a broken ancient robot that can talk to you (in a mix of English and Maya maybe?), and might give you a weapon upgrade (e.g. a better raygun). (2) a hidden room in Mars with one of those Mars faces, containing a great treasure (e.g. a fifth (?) undiscovered Mayan codex), add as a special achievement for the gameover screen.
 
 
 --------------------

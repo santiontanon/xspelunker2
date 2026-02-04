@@ -1202,6 +1202,8 @@ ENDR
 	dw object_interaction_function_pickup_darts  ; TAG_DARTS
 	dw object_interaction_function_pickup_spears  ; TAG_SPEARS
 	dw object_interaction_function_pickup_battery  ; TAG_BATTERY
+	dw object_interaction_function_tablet  ; TAG_XIBALBA_BOSS_TABLET
+	dw object_interaction_function_tablet  ; TAG_XIBALBA_BOSS_GRAVE
 	dw object_interaction_function_shopkeeper  ; TAG_NPC_SHOPKEEPER
 	dw object_interaction_function_shop  ; TAG_NPC_SHOP
 	dw object_interaction_function_empty  ; TAG_DYNAMITE
@@ -1674,6 +1676,16 @@ object_interaction_function_tablet_not_maya_puzzle:
 	ld de, xibalba_tablet_fn
 	jr object_interaction_function_tablet_ptr_set
 object_interaction_function_tablet_not_xibalba_tablet:
+	cp TAG_XIBALBA_BOSS_TABLET
+	jr nz, object_interaction_function_tablet_not_xibalba_boss_tablet
+	ld de, xibalba_boss_tablet_fn
+	jr object_interaction_function_tablet_ptr_set
+object_interaction_function_tablet_not_xibalba_boss_tablet
+	cp TAG_XIBALBA_BOSS_GRAVE
+	jr nz, object_interaction_function_tablet_not_xibalba_boss_grave
+	ld de, xibalba_boss_grave_fn
+	jr object_interaction_function_tablet_ptr_set
+object_interaction_function_tablet_not_xibalba_boss_grave
 	; Determine tablet content:
 	ld hl, current_world__tablet_content
 object_interaction_function_tablet_loop:
@@ -2621,6 +2633,8 @@ ENDR
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_darts_gfx  ; TAG_DARTS
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_spears_gfx  ; TAG_SPEARS
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_battery_gfx  ; TAG_BATTERY
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_XIBALBA_BOSS_TABLET
+	TILE_OBJECT_DATA 1, 2, 3, tile_object_xibalba_boss_graves_gfx  ; TAG_XIBALBA_BOSS_GRAVE
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOPKEEPER
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOP
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_DYNAMITE
@@ -2697,4 +2711,8 @@ tile_object_ant_colony:
 	db 0, 68, 0
 	db 69, 70, 71
 
+tile_object_xibalba_boss_graves_gfx:
+	db 203, 204
+	db 219, 220
+	db 235, 236
 

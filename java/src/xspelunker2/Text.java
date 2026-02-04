@@ -580,9 +580,23 @@ public class Text {
 
         addLineSafe(lines_with_constant_page3, "Hunahpu and Xbalanque killed the lords of Xibalba. But if one wanted to bring them back to", "XIBALBA_CLUE_TABLET_1_1", 18*3);
         addLineSafe(lines_with_constant_page3, "life, the following dance in front of their grave would wake them up: crouch, jump, swing, crouch, jump, swing.", "XIBALBA_CLUE_TABLET_1_2", 18*5);
+
+        addLineSafe(lines_with_constant_page3, "This is the ball court where Hunahpu and Xbalanque defeated the Xibalba lords!", "XIBALBA_BOSS_TABLET_1", 18*3);
+        addLineSafe(lines_with_constant_page3, "Their spirits remain trapped here. If you desire what they possess, wake any two of them and challenge them in this court!", "XIBALBA_BOSS_TABLET_2", 18*5);
+
+        addLineSafe(lines_with_constant_page3, "Hun-Came", "XIBALBA_BOSS_NAME_1", 18);
+        addLineSafe(lines_with_constant_page3, "Vucub-Came", "XIBALBA_BOSS_NAME_2", 18);
+        addLineSafe(lines_with_constant_page3, "Ahalpuh", "XIBALBA_BOSS_NAME_3", 18);
+        addLineSafe(lines_with_constant_page3, "Ahalgana", "XIBALBA_BOSS_NAME_4", 18);
+        addLineSafe(lines_with_constant_page3, "Ahalmez", "XIBALBA_BOSS_NAME_5", 18);
+        addLineSafe(lines_with_constant_page3, "Ahaltocob", "XIBALBA_BOSS_NAME_6", 18);
+        addLineSafe(lines_with_constant_page3, "Chamiabac", "XIBALBA_BOSS_NAME_7", 18);
+        addLineSafe(lines_with_constant_page3, "Chamiaholom", "XIBALBA_BOSS_NAME_8", 18);
+        addLineSafe(lines_with_constant_page3, "Quicxic", "XIBALBA_BOSS_NAME_9", 18);
+        addLineSafe(lines_with_constant_page3, "Patan", "XIBALBA_BOSS_NAME_10", 18);
+        addLineSafe(lines_with_constant_page3, "Xiquiripat", "XIBALBA_BOSS_NAME_11", 18);
+        addLineSafe(lines_with_constant_page3, "Cuchumaquic", "XIBALBA_BOSS_NAME_12", 18);
         
-//    OK - How to wake them up (something to do on their graves)
-//      -         
         
         List<Integer> numbers = font.convertStringToAssembler("0123456789 ");
         System.out.println("Numbers: " + numbers);

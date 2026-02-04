@@ -1265,6 +1265,39 @@ story_trivia_tablet_fn_clue4:
 			jp story_trivia_tablet_fn_story3_entrypoint
 
 
+;-----------------------------------------------
+xibalba_boss_grave_fn_tbl:
+	dw TEXT_XIBALBA_BOSS_NAME_1
+	dw TEXT_XIBALBA_BOSS_NAME_2
+	dw TEXT_XIBALBA_BOSS_NAME_3
+	dw TEXT_XIBALBA_BOSS_NAME_4
+	dw TEXT_XIBALBA_BOSS_NAME_5
+	dw TEXT_XIBALBA_BOSS_NAME_6
+	dw TEXT_XIBALBA_BOSS_NAME_7
+	dw TEXT_XIBALBA_BOSS_NAME_8
+	dw TEXT_XIBALBA_BOSS_NAME_9
+	dw TEXT_XIBALBA_BOSS_NAME_10
+	dw TEXT_XIBALBA_BOSS_NAME_11
+	dw TEXT_XIBALBA_BOSS_NAME_12
+
+xibalba_boss_grave_fn:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
+	add a, a
+	ld hl, xibalba_boss_grave_fn_tbl - 2  ; "-2" as "a" starts at 1
+	ADD_HL_A
+	ld e, (hl)
+	inc hl
+	ld d, (hl)
+	ld hl, 0
+	jr xibalba_tablet_fn_continue
+
+
+;-----------------------------------------------
+xibalba_boss_tablet_fn:
+	ld de, TEXT_XIBALBA_BOSS_TABLET_1
+	ld hl, TEXT_XIBALBA_BOSS_TABLET_2
+	jr xibalba_tablet_fn_continue
+
 
 ;-----------------------------------------------
 xibalba_tablet_fn_tbl:
@@ -1272,6 +1305,7 @@ xibalba_tablet_fn_tbl:
 	dw TEXT_XIBALBA_STORY_TABLET_2_1, TEXT_XIBALBA_STORY_TABLET_2_2
 	dw TEXT_XIBALBA_STORY_TABLET_3_1, TEXT_XIBALBA_STORY_TABLET_3_2
 	dw TEXT_XIBALBA_STORY_TABLET_4_1, TEXT_XIBALBA_STORY_TABLET_4_2
+	dw TEXT_XIBALBA_STORY_TABLET_5_1, TEXT_XIBALBA_STORY_TABLET_5_2
 	dw TEXT_XIBALBA_LORDS_TABLET_1_1, TEXT_XIBALBA_LORDS_TABLET_1_2
 	dw TEXT_XIBALBA_LORDS_TABLET_2_1, TEXT_XIBALBA_LORDS_TABLET_2_2
 	dw TEXT_XIBALBA_LORDS_TABLET_3_1, TEXT_XIBALBA_LORDS_TABLET_3_2
@@ -1279,6 +1313,7 @@ xibalba_tablet_fn_tbl:
 	dw TEXT_XIBALBA_LORDS_TABLET_5_1, TEXT_XIBALBA_LORDS_TABLET_5_2
 	dw TEXT_XIBALBA_LORDS_TABLET_6_1, TEXT_XIBALBA_LORDS_TABLET_6_2
 	dw TEXT_XIBALBA_LORDS_TABLET_7_1, TEXT_XIBALBA_LORDS_TABLET_7_2
+	dw TEXT_XIBALBA_CLUE_TABLET_1_1, TEXT_XIBALBA_CLUE_TABLET_1_2
 	dw TEXT_XIBALBA_CLUE_TABLET_1_1, TEXT_XIBALBA_CLUE_TABLET_1_2
 
 xibalba_tablet_fn:
@@ -1296,6 +1331,7 @@ xibalba_tablet_fn:
 	inc hl
 	ld h, (hl)
 	ld l, a
+xibalba_tablet_fn_continue:
 	push hl
 		push de
 			ld hl, tablet_trivia_tiles_zx0

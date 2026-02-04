@@ -11,12 +11,12 @@ display_puzzlebox_closeup:
 			call fast_FILVRM
 
 			ld hl, puzzlebox_tiles_zx0
-			ld c, TABLET_LETTER_PAGE
+			ld c, TILES_PUZZLEBOX_PAGE
 			call decompress_tiles_to_all_banks
 
 			ld hl, puzzlebox_nametable_zx0
 			ld de, buffer_4096
-			ld c, TABLET_LETTER_PAGE
+			ld c, TILES_PUZZLEBOX_PAGE
 			call dzx0_from_page_c
 
 			; draw the background:

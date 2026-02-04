@@ -212,6 +212,8 @@ public class AssemblerTags {
         "TAG_DARTS",
         "TAG_SPEARS",
         "TAG_BATTERY",
+        "TAG_XIBALBA_BOSS_TABLET",
+        "TAG_XIBALBA_BOSS_GRAVE",
         // npcs:
         "TAG_NPC_SHOPKEEPER",
         "TAG_NPC_SHOP",
