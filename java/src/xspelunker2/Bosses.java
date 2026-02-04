@@ -19,24 +19,8 @@ import util.ZX0Wrapper;
  * @author santi
  */
 public class Bosses {
-    static int pyramid_collision[] = {
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-        3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-        0, 0, 0, 4, 0, 0, 0, 0, 8, 8, 2, 2, 2, 2, 2, 2,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2,
-        4, 0, 0, 5, 2, 2, 5, 6, 8, 1, 1, 1, 2, 3, 2, 2,
-        2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-        0, 2, 2, 2, 2, 2, 0, 7, 8, 2, 2, 2, 2, 2, 2, 2,
-        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2,
-        0, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 2,
-        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-        2, 2, 2, 2, 2, 0, 2, 2, 7, 2, 2, 2, 3, 2, 1, 5,
-    };
+    static int pyramid_collision[] = GenerateChunkData.pyramid_tile_collision_types;
+    static int xibalba_collision[] = GenerateChunkData.xibalba_tile_collision_types;
     
     
     public static void main(String args[]) throws Exception
@@ -49,6 +33,9 @@ public class Bosses {
 
         boss3Tiles();
         boss3Sprites();
+
+        boss4Tiles();
+        boss4Sprites();
     }
     
     
@@ -59,7 +46,7 @@ public class Bosses {
                 
         boolean availableTiles[] = new boolean[256];
         int collision[] = new int[256];
-        findAvailableBossTiles(boss1BaseTiles, availableTiles, collision);
+        findAvailableBossTiles(boss1BaseTiles, availableTiles, collision, pyramid_collision);
         BufferedImage baseImage = ImageIO.read(new File(boss1BaseTiles));        
         int nameTable[][] = addBossTilesInGaps(baseImage, boss1Tiles, availableTiles, collision, false);
         ImageIO.write(baseImage, "png", new File("data/boss1-tiles.png"));
@@ -133,7 +120,7 @@ public class Bosses {
             String boss2Tiles = "data/boss2-land.png";
             boolean availableTiles[] = new boolean[256];
             int collision[] = new int[256];
-            findAvailableBossTiles(bossBaseTiles, availableTiles, collision);
+            findAvailableBossTiles(bossBaseTiles, availableTiles, collision, pyramid_collision);
             BufferedImage baseImage = ImageIO.read(new File(bossBaseTiles));        
             int nameTable[][] = addBossTilesInGaps(baseImage, boss2Tiles, availableTiles, collision, false);
             ImageIO.write(baseImage, "png", new File("data/boss2-tiles.png"));
@@ -159,7 +146,7 @@ public class Bosses {
             String boss2Tiles = "data/boss2-land.png";
             boolean availableTiles[] = new boolean[256];
             int collision[] = new int[256];
-            findAvailableBossTiles(bossBaseTiles, availableTiles, collision);        
+            findAvailableBossTiles(bossBaseTiles, availableTiles, collision, pyramid_collision);        
             BufferedImage baseImage = ImageIO.read(new File(bossBaseTiles));        
             addBossTilesInGaps(baseImage, boss2Tiles, availableTiles, collision, true);
             ImageIO.write(baseImage, "png", new File("data/boss2-tiles-right.png"));
@@ -172,7 +159,7 @@ public class Bosses {
             String boss2Tiles = "data/boss2-air.png";
             boolean availableTiles[] = new boolean[256];
             int collision[] = new int[256];
-            findAvailableBossTiles(bossBaseTiles, availableTiles, collision);        
+            findAvailableBossTiles(bossBaseTiles, availableTiles, collision, pyramid_collision);        
             BufferedImage baseImage = ImageIO.read(new File(bossBaseTiles));        
             int nameTable[][] = addBossTilesInGaps(baseImage, boss2Tiles, availableTiles, collision, false);
             ImageIO.write(baseImage, "png", new File("data/boss2-tiles-air.png"));
@@ -247,7 +234,7 @@ public class Bosses {
             String boss3Tiles = "data/boss3-walk.png";
             boolean availableTiles[] = new boolean[256];
             int collision[] = new int[256];
-            findAvailableBossTiles(bossBaseTiles, availableTiles, collision);
+            findAvailableBossTiles(bossBaseTiles, availableTiles, collision, pyramid_collision);
             BufferedImage baseImage = ImageIO.read(new File(bossBaseTiles));        
             int nameTable[][] = addBossTilesInGaps(baseImage, boss3Tiles, availableTiles, collision, false);
             ImageIO.write(baseImage, "png", new File("data/boss3-tiles-walk.png"));
@@ -272,7 +259,7 @@ public class Bosses {
             String boss3Tiles = "data/boss3-stomp.png";
             boolean availableTiles[] = new boolean[256];
             int collision[] = new int[256];
-            findAvailableBossTiles(bossBaseTiles, availableTiles, collision);        
+            findAvailableBossTiles(bossBaseTiles, availableTiles, collision, pyramid_collision);        
             BufferedImage baseImage = ImageIO.read(new File(bossBaseTiles));        
             int nameTable[][] = addBossTilesInGaps(baseImage, boss3Tiles, availableTiles, collision, false);
             ImageIO.write(baseImage, "png", new File("data/boss3-tiles-stomp.png"));
@@ -314,6 +301,52 @@ public class Bosses {
     }
     
     
+    public static void boss4Tiles() throws Exception
+    {
+        String bossBaseTiles = "data/boss4-tiles-base.png";
+        
+        List<Integer> nameTableData = new ArrayList<>();
+        
+        {
+            String boss4Tiles = "data/boss4.png";
+            boolean availableTiles[] = new boolean[256];
+            int collision[] = new int[256];
+            findAvailableBossTiles(bossBaseTiles, availableTiles, collision, xibalba_collision);
+            BufferedImage baseImage = ImageIO.read(new File(bossBaseTiles));        
+            int nameTable[][] = addBossTilesInGaps(baseImage, boss4Tiles, availableTiles, collision, false);
+            ImageIO.write(baseImage, "png", new File("data/boss4-tiles.png"));
+
+            GenerateTiles.extractTiles("data/boss4-tiles.png", "src/autogenerated/boss4-tiles", 24, 128);
+            
+            // name tables:
+            // ...
+        }
+        
+        System.out.println("name tables: " + nameTableData.size() + " bytes");
+        Z80Assembler.dataToBinary(nameTableData, "src/autogenerated/boss4-nametables.bin");        
+    }
+
+    
+    public static void boss4Sprites() throws Exception
+    {
+        BufferedImage sourceImage = ImageIO.read(new File("data/boss-sprites.png"));
+        List<Integer> data = new ArrayList<>();
+
+        // bullet must be the first sprite:
+        data.addAll(GenerateSprites.extractSprite(sourceImage, 48, 0, 15));  // bullet
+
+        data.addAll(GenerateSprites.extractSprite(sourceImage, 80, 96, 15));  // boss name
+        data.addAll(GenerateSprites.extractSprite(sourceImage, 96, 96, 15));
+        data.addAll(GenerateSprites.extractSprite(sourceImage, 80, 112, 15));
+        data.addAll(GenerateSprites.extractSprite(sourceImage, 96, 112, 15));
+
+        System.out.println("boss4Sprites: " + data.size());
+        String outputPath = "src/autogenerated/boss4-sprites";
+        Z80Assembler.dataToBinary(data, outputPath + ".bin");
+        ZX0Wrapper.main(outputPath + ".bin", outputPath + ".zx0", true, false);
+    }
+
+    
     public static void addNameTable(int nameTable[][], int x1, int y1, int x2, int y2, List<Integer> data)
     {
         for(int i = y1;i<y2;i++) {
@@ -344,7 +377,7 @@ public class Bosses {
     }
     
     
-    public static void findAvailableBossTiles(String bossBaseTiles, boolean availableTiles[], int collision[]) throws Exception
+    public static void findAvailableBossTiles(String bossBaseTiles, boolean availableTiles[], int collision[], int base_collision[]) throws Exception
     {
         BufferedImage baseImage = ImageIO.read(new File(bossBaseTiles));        
         int n_availableTiles = 0;
@@ -357,9 +390,9 @@ public class Bosses {
                 availableTiles[j + i*16] = empty;
                 if (empty) {
                     n_availableTiles++;
-                    collision[j + i*16] = 3;
+                    collision[j + i*16] = 9;
                 } else {
-                    collision[j + i*16] = pyramid_collision[j + i*16];
+                    collision[j + i*16] = base_collision[j + i*16];
                 }
                 line += collision[j + i*16] + ", ";
             }

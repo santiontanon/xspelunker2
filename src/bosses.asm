@@ -29,7 +29,8 @@ enter_boss_door_divide_by_3_loop:
 	sub 3
 	jr enter_boss_door_divide_by_3_loop
 enter_boss_door_divide_by_3_loop_done:
-
+	ld a, c
+	ld (boss__current_boss_number), a
 	push bc
 		; place player at the center of the door
 		ld a, 4
@@ -121,6 +122,12 @@ enter_boss_door_loop:
 		ld bc, tile_collision_types_boss3
 		ld iy, boss3_sprites_zx0
 		jr z, enter_boss_door__room_ptr_set
+		dec a
+		ld hl, boss_room_4_zx0
+		ld de, boss_4_tiles_zx0
+		ld bc, tile_collision_types_boss4
+		ld iy, boss4_sprites_zx0
+		; jr z, enter_boss_door__room_ptr_set
 		; ...
 
 enter_boss_door__room_ptr_set:
@@ -162,14 +169,20 @@ enter_boss_door__room_ptr_set:
 		ld (state_play_update_agenda_tbl_ptr), hl
 
 		; player position:
+		ld bc, #1420  ; 32, 20  ; xibalba lords start coordinates
+		ld a, (boss__current_boss_number)
+		cp 3  ; is it the xibalba lords boss?
+		jr z, enter_boss_door__room_spawn_coordinates_set
+		ld bc, #1404  ; 4, 20
+enter_boss_door__room_spawn_coordinates_set:
 		ld hl, player_x
 		ld (hl), 0
 		inc hl
-		ld (hl), 4
+		ld (hl), c
 		inc hl
 		ld (hl), 0
 		inc hl
-		ld (hl), 20
+		ld (hl), b
 
 		; make a copy of the boss room so that we can restore the background as the boss moves:
 		ld hl, current_room__tile_map
@@ -1351,3 +1364,21 @@ tile_collision_types_boss3:
     db 9, 9, 9, 2, 2, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
     db 9, 9, 9, 2, 2, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
     db 9, 9, 9, 2, 2, 9, 2, 9, 9, 9, 9, 9, 3, 2, 1, 5
+
+tile_collision_types_boss4:
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 2, 2, 2, 2, 9, 9, 9, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 8, 1, 1, 1, 9, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 0, 0, 0, 0, 9, 9, 9, 2, 2, 9
+    db 9, 9, 9, 9, 2, 9, 9, 7, 8, 1, 1, 1, 9, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 0
+    db 9, 9, 9, 2, 2, 2, 9, 9, 0, 0, 0, 0, 0, 2, 2, 2
+    db 9, 9, 9, 2, 2, 9, 9, 9, 0, 0, 0, 0, 0, 2, 2, 2
+    db 9, 9, 9, 2, 2, 9, 9, 9, 0, 0, 0, 0, 0, 2, 2, 2
+    db 9, 9, 9, 2, 2, 1, 9, 9, 7, 9, 9, 9, 9, 9, 1, 9

@@ -239,6 +239,7 @@ config_keyboard_special_case: ds virtual 1
 
 boss__in_boss_room: ds virtual 1  ; 0: normal room, 1: boss room
 boss__active: ds virtual 1  ; 1 when we are fighting a boss (only when the boss is alive), 0 otherwise
+boss__current_boss_number: ds virtual 1
 boss__room_bg_buffer: equ current_room__tile_map + 32*24*2  ; the room is copied here, so that background can be restored when the boss moves around
 boss__behavior: ds virtual 1  ; which boss behavior is being executed
 boss__state: ds virtual 1  ; state within the current boss behavior

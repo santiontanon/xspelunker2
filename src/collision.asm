@@ -717,6 +717,9 @@ get_room_ids_current_room_ptr_continue:
 
 
 ;-----------------------------------------------
+; returns:
+; - z: collision
+; - nz: no collision
 player_exit_room_left:
 	ld a, (boss__in_boss_room)
 	xor #01  ; we do "xor 1" so that we exit with "z", and indicate collision
@@ -769,6 +772,9 @@ player_exit_room_left:
 
 
 ;-----------------------------------------------
+; returns:
+; - z: collision
+; - nz: no collision
 player_exit_room_right:
 	ld a, (boss__in_boss_room)
 	xor #01  ; we do "xor 1" so that we exit with "z", and indicate collision
@@ -819,6 +825,9 @@ player_exit_room_right:
 
 
 ;-----------------------------------------------
+; returns:
+; - z: collision
+; - nz: no collision
 player_exit_room_up:
 	ld a, (boss__in_boss_room)
 	xor #01  ; we do "xor 1" so that we exit with "z", and indicate collision
@@ -876,10 +885,13 @@ player_exit_room_up:
 ;-----------------------------------------------
 ; input:
 ; - c, b: player coordinates
+; returns:
+; - z: collision
+; - nz: no collision
 player_exit_room_down:
 	ld a, (boss__in_boss_room)
-	xor #01  ; we do "xor 1" so that we exit with "z", and indicate collision
-	ret z
+	or a
+	jr nz, player_exit_room_down__in_boss
 	call check_for_interarea_exit_down
 	call check_collision_with_next_chunk_down
 	ret z  ; collision		
@@ -926,6 +938,28 @@ player_exit_room_down:
 	ld (player_y), a
 	jp state_play_from_loaded_room
 
+player_exit_room_down__in_boss:
+	ld a, (boss__current_boss_number)
+	cp 3  ; xibalba lords
+	jr z, player_exit_room_down__in_boss_xibalba_lords
+	xor a  ; no exit
+	ret
+player_exit_room_down__in_boss_xibalba_lords:
+	call disable_VDP_output
+
+	; teleport outside (store room/position before entering boss room):
+	ld a, (boss_door_exit_to_room)
+	ld e, a
+	ld hl, pcg_generate_room
+	ld c, PCG_PAGE
+	call call_hl_in_page_c_8000
+
+	ld a, (boss_door_exit_to_x)
+	ld (player_x + 1), a
+	ld a, (boss_door_exit_to_y)
+	ld (player_y + 1), a
+
+	jp state_play_from_loaded_room
 
 ;-----------------------------------------------
 ; input:

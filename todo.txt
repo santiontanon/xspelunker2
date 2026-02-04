@@ -1,10 +1,8 @@
 to do:
 
-***- xibalba boss room is a large ball game court (64 * 24 in size) with 12 tombs: 2 big ones and 10 small ones
-  OK - draw it in gimp/tiled: draw tombs and ball court rings in gimp, and use them to create a map in TILED
-  ***- add to game, being able to enter and exit
+***- xibalba boss room:
   ***- boss room has a tablet with a clue: "wake two xibalba lords and defeat them in the ball courts, choose wisely!" (or something like that)
-  ***- interacting tells you the name of the lord in each tomb
+  ***- interacting tells you the name of the lord in each tomb (so, maybe tombs are blue so that they look like background and you can walk through them? and maybe they are NOT tiles, but objects?)
   ***- player can wake up any 2 of the 12 xibalba lords in the boss room (crouch, jump, swing, crouch, jump, swing): wake up spawns a ghost that floats over the tomb
   ***- as soon as you awaken one of them, stairs lock
 ***- create xibalba boss: draw skeletal figures with ornate Mayan headdresses, representing the rulers of the underworld, 12 of them, one for each, with small variations (summons skeletons or shadows).

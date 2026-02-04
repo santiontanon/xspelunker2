@@ -1174,6 +1174,7 @@ ENDR
 	dw object_interaction_function_tablet  ; TAG_XIBALBA_STORY2
 	dw object_interaction_function_tablet  ; TAG_XIBALBA_STORY3
 	dw object_interaction_function_tablet  ; TAG_XIBALBA_STORY4
+	dw object_interaction_function_tablet  ; TAG_XIBALBA_STORY5
 	dw object_interaction_function_tablet  ; TAG_XIBALBA_LORDS1
 	dw object_interaction_function_tablet  ; TAG_XIBALBA_LORDS2
 	dw object_interaction_function_tablet  ; TAG_XIBALBA_LORDS3
@@ -2591,6 +2592,7 @@ ENDR
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_XIBALBA_STORY2
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_XIBALBA_STORY3
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_XIBALBA_STORY4
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_XIBALBA_STORY5
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_XIBALBA_LORDS1
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_XIBALBA_LORDS2
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_XIBALBA_LORDS3

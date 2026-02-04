@@ -2022,6 +2022,7 @@ ENDR
 	dw buffer_4096 + 60 * 64  ; TAG_XIBALBA_STORY2
 	dw buffer_4096 + 60 * 64  ; TAG_XIBALBA_STORY3
 	dw buffer_4096 + 60 * 64  ; TAG_XIBALBA_STORY4
+	dw buffer_4096 + 60 * 64  ; TAG_XIBALBA_STORY5
 	dw buffer_4096 + 60 * 64  ; TAG_XIBALBA_LORDS1
 	dw buffer_4096 + 60 * 64  ; TAG_XIBALBA_LORDS2
 	dw buffer_4096 + 60 * 64  ; TAG_XIBALBA_LORDS3

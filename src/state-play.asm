@@ -73,7 +73,7 @@ state_play:
 ; 		ld (player_inventory_items), a  ; first boss key
 ; 		ld (player_inventory_items+1), a  ; second boss key
 ; 		ld (player_inventory_items+2), a  ; third boss key
-; 		ld (player_inventory_items+3), a
+		ld (player_inventory_items+3), a  ; fourth boss key
 ; 		ld (player_inventory_items+4), a
 ; 		ld (player_inventory_items+5), a  ; mars boss key
 ; 		ld (player_inventory_items+6), a  ; moon boss key
@@ -184,7 +184,7 @@ state_play_from_continue:
 ; 		ld e, 4
 ; 		ld e, CALENDAR_ROOM_ID
 ; 		ld e, 3  ; <- third boss
-		ld e, 0
+		ld e, 17  ; <- fourth boss
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000

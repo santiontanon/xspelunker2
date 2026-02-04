@@ -183,6 +183,7 @@ public class AssemblerTags {
         "TAG_XIBALBA_STORY2",
         "TAG_XIBALBA_STORY3",
         "TAG_XIBALBA_STORY4",
+        "TAG_XIBALBA_STORY5",
         "TAG_XIBALBA_LORDS1",
         "TAG_XIBALBA_LORDS2",
         "TAG_XIBALBA_LORDS3",
