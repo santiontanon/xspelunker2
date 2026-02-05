@@ -178,6 +178,7 @@ RAM_to_zero_on_continue_end:
 
 player_combination_levers_state: ds virtual 8  ; to simplify combination lever checking
 player_trial_completion_state: ds virtual 1
+player_trial_player_x: ds virtual 2
 
 player_health: ds virtual 1
 player_max_health: ds virtual 1

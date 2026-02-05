@@ -246,7 +246,11 @@ enter_boss_door__spawn_xibalba_lords_objects_loop:
 	inc hl
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), a  ; tile y
 	add iy, de
-	djnz enter_boss_door__spawn_xibalba_lords_objects_loop	
+	djnz enter_boss_door__spawn_xibalba_lords_objects_loop
+
+	; set the trial fn:
+	ld hl, trial_fn_wake_up_xibalba_lord
+	ld (current_room__trial_fn), hl
 	ret
 
 
@@ -1384,8 +1388,16 @@ update_boss_behavior:
 	jp z, update_boss2_behavior
 	cp 4  ; inverted pyramid
 	jp z, update_boss3_behavior
-
-	; ...
+	cp 8  ; xibalba
+	jp z, update_boss4_behavior
+; 	cp 9  ; atlantis
+; 	jp z, update_boss5_behavior
+; 	cp 10  ; mars
+; 	jp z, update_boss6_behavior
+; 	cp 11  ; moon
+; 	jp z, update_boss7_behavior
+; 	cp 12  ; alien world
+; 	jp z, update_boss8_behavior
 	ret
 
 

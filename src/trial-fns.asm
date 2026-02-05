@@ -685,3 +685,114 @@ maya_puzzle_trial_fn_location_below_ladder:
 	ld a, (player_x + 1)
 	sub 14
 	jr maya_puzzle_trial_fn_location_entry_point
+
+
+
+;-----------------------------------------------
+; states:
+; - 0: waiting to be in front of a grave
+; - 1: waiting for crouch
+; - 2: waiting for jump
+; - 3: waiting for swing
+; - 4: wait for idle
+; - 5: waiting for crouch
+; - 6: waiting for jump
+; - 7: waiting for swing
+; - 8: success
+trial_fn_wake_up_xibalba_lord:
+	ld a, (player_trial_completion_state)
+	or a
+	jr z, trial_fn_wake_up_xibalba_lord_0
+	dec a
+	jr z, trial_fn_wake_up_xibalba_lord_1
+	dec a
+	jr z, trial_fn_wake_up_xibalba_lord_2
+	dec a
+	jr z, trial_fn_wake_up_xibalba_lord_3
+	dec a
+	jr z, trial_fn_wake_up_xibalba_lord_4
+	dec a
+	jr z, trial_fn_wake_up_xibalba_lord_5
+	dec a
+	jr z, trial_fn_wake_up_xibalba_lord_6
+	dec a
+	jr z, trial_fn_wake_up_xibalba_lord_7
+	ld hl, (player_trial_player_x)
+	ld bc, (player_x)
+	or a
+	sbc hl, bc
+	jp nz, trial_fn_reset  ; player moved!
+	call trial_fn_wake_up_xibalba_lord_in_front_of_grave_p
+	jp nz, trial_fn_reset
+	; wake up xibalba lord:
+	ld hl, SFX_secret
+	call play_SFX_with_high_priority
+
+	; ...
+
+	jp trial_fn_reset
+trial_fn_wake_up_xibalba_lord_0:
+	call trial_fn_wake_up_xibalba_lord_in_front_of_grave_p
+	ret nz
+	; save the current player x (player should not move:
+	ld hl, (player_x)
+	ld (player_trial_player_x), hl
+trial_fn_wake_up_xibalba_lord_next_state:
+	ld hl, player_trial_completion_state
+	inc (hl)
+	ret
+
+trial_fn_wake_up_xibalba_lord_1:
+trial_fn_wake_up_xibalba_lord_5:
+	ld a, (player_state)
+	and #fe
+	cp PLAYER_STATE_CROUCHING
+	jr z, trial_fn_wake_up_xibalba_lord_next_state
+	cp PLAYER_STATE_IDLE
+	ret z
+	jp trial_fn_reset
+
+trial_fn_wake_up_xibalba_lord_2:
+trial_fn_wake_up_xibalba_lord_6:
+	ld a, (player_state)
+	and #fe
+	cp PLAYER_STATE_JUMPING
+	jr z, trial_fn_wake_up_xibalba_lord_next_state
+	cp PLAYER_STATE_CROUCHING
+	ret z
+	cp PLAYER_STATE_IDLE
+	ret z
+	jp trial_fn_reset
+
+trial_fn_wake_up_xibalba_lord_3:
+trial_fn_wake_up_xibalba_lord_7:
+	ld a, (player_state)
+	and #fe
+	cp PLAYER_STATE_WEAPON_SWING
+	jr z, trial_fn_wake_up_xibalba_lord_next_state
+	cp PLAYER_STATE_JUMPING
+	ret z
+	cp PLAYER_STATE_FALLING
+	ret z
+	cp PLAYER_STATE_IDLE
+	ret z
+	jp trial_fn_reset
+
+trial_fn_wake_up_xibalba_lord_4:
+	ld a, (player_state)
+	and #fe
+	cp PLAYER_STATE_IDLE
+	jr z, trial_fn_wake_up_xibalba_lord_next_state
+	cp PLAYER_STATE_WEAPON_SWING
+	ret z
+	jp trial_fn_reset
+
+trial_fn_wake_up_xibalba_lord_in_front_of_grave_p:
+	call get_tile_object_behind_player
+	jr z, trial_fn_wake_up_xibalba_lord_in_front_of_grave_p_no_grave
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	cp TAG_XIBALBA_BOSS_GRAVE
+	ret
+trial_fn_wake_up_xibalba_lord_in_front_of_grave_p_no_grave:
+	or 1
+	ret	

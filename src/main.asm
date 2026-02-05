@@ -648,6 +648,7 @@ boss_room_4_zx0:
     include "boss1.asm"
     include "boss2.asm"
     include "boss3.asm"
+    include "boss4.asm"
 
     include "calendar-room-events.asm"
     include "state-ending.asm"
