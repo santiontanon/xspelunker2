@@ -724,11 +724,11 @@ trial_fn_wake_up_xibalba_lord:
 	jp nz, trial_fn_reset  ; player moved!
 	call trial_fn_wake_up_xibalba_lord_in_front_of_grave_p
 	jp nz, trial_fn_reset
-	; wake up xibalba lord:
-	ld hl, SFX_secret
-	call play_SFX_with_high_priority
 
-	; ...
+	; wake up xibalba lord:
+	ld hl, boss4_awake_xibalba_lord_event
+	ld c, BOSS_PAGE
+	call call_hl_in_page_c_8000
 
 	jp trial_fn_reset
 trial_fn_wake_up_xibalba_lord_0:

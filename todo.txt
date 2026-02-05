@@ -1,10 +1,7 @@
 to do:
 
 ***- xibalba boss room:
-  ***- wake up event spawns a ghost that floats over the tomb, and the tomb gets destroyed:
-    ***- spawn ghost object (it's a sprite object, like a water splash)
-    ***- turn it into a cutsceen (player cannot move): ghost floats up, and then grave disappears down (similar effect as for first boss1)
-  ***- as soon as you awaken one of them, stairs lock
+  ***- turn ghost awakening into a cutscene (player cannot move): ghost floats up, and then grave disappears down (similar effect as for first boss1)
   ***- when you awake the second, both ghosts fly down into the floor, the graves sink into the floor, tablet disappears and boss starts (for now just create an empty boss loop)
 ***- create xibalba boss: draw skeletal figures with ornate Mayan headdresses, representing the rulers of the underworld, 12 of them, one for each, with small variations (summons skeletons or shadows).
   ***- bosses appear from the floor, maybe a hand comes out, like a skeleton rising from its grave

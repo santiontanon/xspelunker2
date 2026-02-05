@@ -112,6 +112,28 @@ spawn_4tile_appart_dust:
 
 ;-----------------------------------------------
 ; input:
+; - c, b: tile coordinates of the dust
+spawn_xibalba_lord_ghost:
+	call ptr_to_new_sprite_object
+	ret nz
+	ld (hl), 0  ; ID
+	inc hl
+	ld (hl), SPRITE_OBJECT_TYPE_XIBALBA_LORD_GHOST
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), c  ; tile x
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), b  ; tile y
+	inc hl
+	ld (hl), 0  ; state (frames left)
+	ret
+
+
+;-----------------------------------------------
+; input:
 ; - c, b: tile coordinates where to spawn
 spawn_big_explosion:
 	ld e, SPRITE_OBJECT_TYPE_BIG_EXPLOSION
@@ -198,6 +220,8 @@ update_sprite_objects_loop:
 	jp z, update_sprite_objects_shopkeeper2
 	cp SPRITE_OBJECT_TYPE_BOSS_EXTRAS
 	jp z, update_sprite_objects_boss_extras
+	cp SPRITE_OBJECT_TYPE_XIBALBA_LORD_GHOST
+	jp z, update_sprite_objects_xibalba_lord_ghost
 update_sprite_objects_loop_next:
 	ld de, ROOM_OBJECT_STRUCT_SIZE
 	add ix, de
@@ -378,6 +402,34 @@ update_sprite_objects_boss_extras:
 	ld hl, update_sprite_objects_boss_extras_internal
 	ld c, BOSS_PAGE
 	call call_hl_in_page_c_8000
+	jp update_sprite_objects_loop_next
+
+
+;-----------------------------------------------
+update_sprite_objects_xibalba_lord_ghost:
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 5) * 4
+	ld d, COLOR_GREY
+	ld c, 0
+	call get_sprite_object_sprite_coordinates
+	call z, add_sprite_to_this_frame
+	inc (ix + ROOM_OBJECT_STRUCT_STATE)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	rrca
+	rrca
+	and #3f
+	call a_mod_3
+	add a, a
+	add a, a
+	add a, (FIRST_ENEMY_SPRITE_PATTERN + 6) * 4
+	ld e, a
+	ld d, COLOR_GREY
+	ld c, 0
+	call get_sprite_object_sprite_coordinates
+	jp nz, update_sprite_objects_loop_next
+	ld a, 16
+	add a, b
+	ld b, a
+	call add_sprite_to_this_frame
 	jp update_sprite_objects_loop_next
 
 

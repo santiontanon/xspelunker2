@@ -251,6 +251,10 @@ enter_boss_door__spawn_xibalba_lords_objects_loop:
 	; set the trial fn:
 	ld hl, trial_fn_wake_up_xibalba_lord
 	ld (current_room__trial_fn), hl
+
+	xor a
+	ld (boss__4_first_lord), a
+	ld (boss__4_second_lord), a
 	ret
 
 

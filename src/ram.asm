@@ -107,7 +107,7 @@ state_play_update_agenda_tbl_ptr: ds virtual 2
 RAM_to_zero_on_game_start:
 
 ; initialized to #ff
-enemy_respawn_table: ds ENEMY_RESPAWN_TABLE_SIZE * (1 + 1 + 1 + MAX_ROOM_SPRITE_ENEMIES + 1 + 1)
+enemy_respawn_table: ds virtual ENEMY_RESPAWN_TABLE_SIZE * (1 + 1 + 1 + MAX_ROOM_SPRITE_ENEMIES + 1 + 1)
     ; - time: 1 byte (how long has this been entry stored, incremented by 1 each time the player changes rooms)
     ; - area_id, room_id: 1 + 1 bytes
     ; - already_killed_enemy_ids: MAX_ROOM_SPRITE_ENEMIES + 1 + 1 bytes
@@ -257,8 +257,10 @@ boss__hit_fn: ds virtual 2  ; when the player hits a tile with collision type '9
 boss__hit_timer: ds virtual 1  ; for displaying "boss hit" animations
 boss__2_direction:  ; 0: left, 1: right
 boss__3_head_attached:  ; 0: attached, 1: dettached
+boss__4_first_lord:
 boss__1_has_staff: ds virtual 1
 boss__3_head_state:
+boss__4_second_lord:
 boss__1_staff_hp: ds virtual 1
 boss__3_head_state_timer: ds virtual 1
 boss__1_settings:
