@@ -165,6 +165,12 @@ enter_boss_door__room_ptr_set:
 		ld (boss__active), a
 		ld (current_room__tileset_overrides_item_tiles), a
 
+		; make a copy of the boss room so that we can restore the background as the boss moves:
+		ld hl, current_room__tile_map
+		ld de, current_room__tile_map + 32*24*2
+		ld bc, 32*24*2
+		ldir
+
 		ld hl, state_play_update_agenda_boss
 		ld (state_play_update_agenda_tbl_ptr), hl
 
@@ -189,11 +195,6 @@ enter_boss_door__room_spawn_coordinates_set:
 		cp 3
 		call enter_boss_door__spawn_xibalba_lords_objects
 
-		; make a copy of the boss room so that we can restore the background as the boss moves:
-		ld hl, current_room__tile_map
-		ld de, current_room__tile_map + 32*24*2
-		ld bc, 32*24*2
-		ldir
 		; clear the bbox:
 		ld hl, boss__clear_bbox_1 + 2
 		ld (hl), 0
