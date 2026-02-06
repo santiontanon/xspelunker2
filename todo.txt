@@ -1,10 +1,9 @@
 to do:
 
-***- xibalba boss room:
-  ***- when you awake the second:
-    ***- make tablets disappear in the floor better (maybe same as previous function but with a smaller delay, and iterate all tombs, keep the sfx)
-    ***- both ghosts fly down into the floor and boss starts (for now just create an empty boss loop)
 ***- create xibalba boss: draw skeletal figures with ornate Mayan headdresses, representing the rulers of the underworld, 12 of them, one for each, with small variations (summons skeletons or shadows).
+  ***- draw them in gimp
+  ***- design their behaviors
+  ***- draw all the necessary frames
   ***- bosses appear from the floor, maybe a hand comes out, like a skeleton rising from its grave
   ***- waking up proper pairs (e.g. the two main lords, or Ahalpuh+Ahalgana) gives you an extra item at the end: two main give you a key that can be used for a secret in moon/mars boss room, the other pairs give you benefits (figure them out)
 

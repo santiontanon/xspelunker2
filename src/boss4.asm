@@ -11,10 +11,82 @@ update_boss4_behavior_continue:
 	or a
 	ret z
 
-	; ...
+	; check if it is dead:
+	ld hl, (boss__hp)
+	ld a, h
+	or l
+	jr nz, update_boss4_behavior_continue2
+	; boss is dead!
+	ld a, 2
+	ld (boss__behavior), a
+update_boss4_behavior_continue2:
+	ld a, (boss__behavior)
+	or a
+	jp z, update_boss4_behavior_0  ; boss has not yet appeared, waiting for player to wake two ghosts
+	dec a
+	jp z, update_boss4_behavior_1  ; boss is active
+; 	dec a
+	jp update_boss4_behavior_2  ; death
 
+
+;-----------------------------------------------
+update_boss4_behavior_0:
+	ld a, (boss__4_second_lord)
+	or a
+	ret z
+
+	; two lords awakened, boss appears!
+
+	; ghosts go down:
+	ld ix, current_room__sprite_objects
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc a
+	cp 8
+	jr nz, update_boss4_behavior_0_continue
+	xor a
+	inc b
+update_boss4_behavior_0_continue:
+	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_Y), a
+	ld (ix + ROOM_OBJECT_STRUCT_TILE_Y), b
+	ld ix, current_room__sprite_objects + ROOM_OBJECT_STRUCT_SIZE
+	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_Y), a
+	ld (ix + ROOM_OBJECT_STRUCT_TILE_Y), b
+	ld a, b
+	cp 24
+	ret nz
+	; remove the ghosts:
+	ld a, #ff
+	ld (current_room__sprite_objects), a
+	ld (current_room__sprite_objects + ROOM_OBJECT_STRUCT_SIZE), a
+
+	; Bring boss name (using sprites)
+	ld hl, boss4_name_initial_sprite_attributes
+	ld de, boss4_name_y_table
+	call update_boss_behavior_bring_name_down
+	ld b, 100
+	call wait_b_halts_skippable
+	; Remove boss name (using sprites)
+	ld hl, boss4_name_initial_sprite_attributes
+	ld de, boss4_name_y_table + 23
+	call update_boss_behavior_bring_name_up
+
+	; boss starts attacking!
+	ld a, 1
+	ld (boss__behavior), a
 	ret
 
+
+;-----------------------------------------------
+update_boss4_behavior_1:
+	; ...
+	ret
+
+
+;-----------------------------------------------
+update_boss4_behavior_2:
+	; ...
+	ret
 
 
 ;-----------------------------------------------
@@ -52,25 +124,15 @@ boss4_awake_xibalba_lord_event_second:
 	ld hl, 0
 	ld (current_room__trial_fn), hl
 
-	; clear all the tile objects:
-	ld hl, current_room__tile_map + 32*24*2
-	ld de, current_room__tile_map
-	ld bc, 32*24*2
-	ldir
-	ld hl, current_room__tile_objects
-	ld bc, MAX_ROOM_TILE_OBJECTS * ROOM_TILE_OBJECT_STRUCT_SIZE - 1
-	ld a, #ff
-	call clear_memory_a
-
-	ld b, 25
-	call wait_b_halts
-
-	ld hl, draw_room_with_hud
-	ld c, TILES_PAGE
-	call call_hl_in_page_c_8000  ; just so that we do not lose the page we are at
-
-	ld hl, SFX_explosion_low_pitch
-	call play_SFX_with_high_priority
+	; lower all the tombs:
+boss4_awake_xibalba_lord_event_second_loop:
+	ld ix, current_room__tile_objects
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	cp TAG_XIBALBA_BOSS_GRAVE
+	jr nz, boss4_awake_xibalba_lord_event_second_loop_done
+	call boss4_awake_xibalba_lord_event_lower_tomb_quick
+	jr boss4_awake_xibalba_lord_event_second_loop
+boss4_awake_xibalba_lord_event_second_loop_done:
 
 	; ...
 
@@ -94,76 +156,83 @@ boss4_awake_xibalba_lord_event_first:
 	jp play_SFX_with_high_priority
 
 
+boss4_awake_xibalba_lord_event_lower_tomb_quick:
+	ld b, 5
+	jr boss4_awake_xibalba_lord_event_lower_tomb_continue
 boss4_awake_xibalba_lord_event_lower_tomb:
+	ld b, 25
+boss4_awake_xibalba_lord_event_lower_tomb_continue:
 	; - ix: ptr to object
-	; lower first step:
-	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
-	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
-	inc b
-	inc b
-	call get_room_tile_ptr
-	ld d, h
-	ld e, l
-	ld bc, -64
-	add hl, bc
-	ldi
-	ldi
-	ld bc, -66
-	add hl, bc
-	ex de, hl
+	push bc
+		; lower first step:
+		ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+		ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+		inc b
+		inc b
+		call get_room_tile_ptr
+		ld d, h
+		ld e, l
+		ld bc, -64
 		add hl, bc
-	ex de, hl
-	ldi
-	ldi
-	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
-	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
-	call get_room_tile_ptr
-	ld d, h
-	ld e, l
-	ld bc, 64*24
-	add hl, bc
-	ldi
-	ldi
-	push ix
-		ld hl, draw_room_with_hud
-		ld c, TILES_PAGE
-		call call_hl_in_page_c_8000  ; just so that we do not lose the page we are at
-	pop ix
-	ld hl, SFX_explosion_low_pitch
-	call play_SFX_with_high_priority
-	ld b, 25
-	call wait_b_halts
+		ldi
+		ldi
+		ld bc, -66
+		add hl, bc
+		ex de, hl
+			add hl, bc
+		ex de, hl
+		ldi
+		ldi
+		ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+		ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+		call get_room_tile_ptr
+		ld d, h
+		ld e, l
+		ld bc, 64*24
+		add hl, bc
+		ldi
+		ldi
+		push ix
+			ld hl, draw_room_with_hud
+			ld c, TILES_PAGE
+			call call_hl_in_page_c_8000  ; just so that we do not lose the page we are at
+		pop ix
+		ld hl, SFX_explosion_low_pitch
+		call play_SFX_with_high_priority
+	pop bc
+	push bc
+		call wait_b_halts
 
-	; lower second step:
-	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
-	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
-	inc b
-	inc b
-	call get_room_tile_ptr
-	ld d, h
-	ld e, l
-	ld bc, -64
-	add hl, bc
-	ldi
-	ldi
-	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
-	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
-	inc b
-	call get_room_tile_ptr
-	ld d, h
-	ld e, l
-	ld bc, 64*24
-	add hl, bc
-	ldi
-	ldi
-	push ix
-		ld hl, draw_room_with_hud
-		ld c, TILES_PAGE
-		call call_hl_in_page_c_8000  ; just so that we do not lose the page we are at
-	pop ix	
-	ld hl, SFX_explosion_low_pitch
-	call play_SFX_with_high_priority	
-	ld b, 25
+		; lower second step:
+		ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+		ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+		inc b
+		inc b
+		call get_room_tile_ptr
+		ld d, h
+		ld e, l
+		ld bc, -64
+		add hl, bc
+		ldi
+		ldi
+		ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+		ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+		inc b
+		call get_room_tile_ptr
+		ld d, h
+		ld e, l
+		ld bc, 64*24
+		add hl, bc
+		ldi
+		ldi
+		push ix
+			ld hl, draw_room_with_hud
+			ld c, TILES_PAGE
+			call call_hl_in_page_c_8000  ; just so that we do not lose the page we are at
+		pop ix	
+		ld hl, SFX_explosion_low_pitch
+		call play_SFX_with_high_priority	
+	pop bc
 	call wait_b_halts
 
 	; lower third step:

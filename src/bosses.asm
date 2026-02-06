@@ -155,6 +155,8 @@ enter_boss_door__room_ptr_set:
 		ld (current_room__enemy_sprites_ptr), iy
 		ld hl, 0
 		ld (large_object_to_upload_to_vdp), hl
+		inc hl
+		ld (boss__hp), hl  ; make sure boss is not dead at the start
 		xor a
 		ld (boss__behavior), a
 		ld (boss__state), a
@@ -209,7 +211,6 @@ enter_boss_door__room_spawn_coordinates_set:
 
 
 enter_boss_door__spawn_xibalba_lords_objects_tbl:
-	db TAG_XIBALBA_BOSS_TABLET, 11, 4
 	db TAG_XIBALBA_BOSS_GRAVE, 4, 11
 	db TAG_XIBALBA_BOSS_GRAVE, 58, 11
 	db TAG_XIBALBA_BOSS_GRAVE, 17, 19
@@ -222,6 +223,7 @@ enter_boss_door__spawn_xibalba_lords_objects_tbl:
 	db TAG_XIBALBA_BOSS_GRAVE, 39, 19
 	db TAG_XIBALBA_BOSS_GRAVE, 42, 19
 	db TAG_XIBALBA_BOSS_GRAVE, 45, 19
+	db TAG_XIBALBA_BOSS_TABLET, 11, 4
 enter_boss_door__spawn_xibalba_lords_objects_tbl_end:
 
 enter_boss_door__spawn_xibalba_lords_objects:
