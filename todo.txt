@@ -1,18 +1,15 @@
 to do:
 
 ***- create xibalba boss: draw skeletal figures with ornate Mayan headdresses, representing the rulers of the underworld, 12 of them, one for each, with small variations (summons skeletons or shadows).
-  ***- draw them in gimp:
-    OK - Hun-Came and Vucub-Came: biggest head dresses, one green, one blue, with owls in the head dress
-    OK - Ahalpuh and Ahalgana (pus and swelling): head swollen, corroded with pus
-    ***- Ahalmez and Ahaltocob (home disasters): have weapons (knives, or scythes)
-    OK - Chamiabac and Chamiaholom (skeletons): have bone scepters
-    OK - Quicxic and Patan (vomit blood, sudden death): skull headdress / spikes
-    ***- Xiquiripat and Cuchumaquic (hemorrages): carry blood containers
-    ***- any additional decorations? e.g. wrist bracelets?
+  ***- draw additional decorations in GIMP (e.g. wrist bracelets, leg decorations, etc.)
+  ***- draw appearing animation (appearing from the floor)
+  ***- figure out a way to store all the tiles: maybe have a set of "base tiles" (those that are used in most of them), and then have the lord-specific ones saved separately.
+    ***- the name tables will have to be adapted when loading them or copying maybe? or maybe just have separate name tables for when they appear as lord1 and when they appear as lord2
   ***- implement behaviors
     ***- appear from the floor: stick one hand out, then another, and then just pull themselves up (this can be one tile set, and when done, switch to the regular one from the regular/shared frame)
     ***- fly around opening/closing mouth:
-      ***- need facing left, facing right, and facing front frames
+      ***- sprite decorations, e.g.: Xiquiripat and Cuchumaquic drip blood
+
     ***- stretch one arm (pointing for hun-came/vucub-came, and pointing weapon for the others), for their special attack
     ***- try to land on top of you (they get knocked down a bit when they do, and you can attack them)
     ***- if a matching pair was summoned, they get together in the middle and do a barrage of attacks (specific to whatever pair the player chose)
