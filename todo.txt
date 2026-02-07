@@ -6,8 +6,9 @@ to do:
     ***- Ahalpuh and Ahalgana (pus and swelling): head swollen, corroded with pus
     ***- Ahalmez and Ahaltocob (home disasters): have weapns (knives, or scythes)
     ***- Chamiabac and Chamiaholom (skeletons): have bone scepters
-    ***- Quicxic and Patan (vomit blood, sudden death): skull headdress / spikes
+    OK - Quicxic and Patan (vomit blood, sudden death): skull headdress / spikes
     ***- Xiquiripat and Cuchumaquic (hemorrages): carry blood containers
+    ***- any additional decorations? e.g. wrist bracelets?
   ***- implement behaviors
     ***- appear from the floor: stick one hand out, then another, and then just pull themselves up (this can be one tile set, and when done, switch to the regular one from the regular/shared frame)
     ***- fly around opening/closing mouth:
@@ -18,6 +19,7 @@ to do:
   ***- waking up proper pairs (e.g. the two main lords, or Ahalpuh+Ahalgana) gives you an extra item at the end:
     ***- two main give you a key that can be used for a secret in moon/mars boss room, the other pairs give you benefits (figure them out)
     ***- any of the other pairs, gives you a charm that halves the ammo you use for your weapons (do I have space for it in the inventory?)
+  ***- add boss name to the stats for game over screen (specify which lords you killed)
 
 - music: intro, letters, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)
   - boss music acts as a health bar (increases in speed as health goes down: 50%, 25%)

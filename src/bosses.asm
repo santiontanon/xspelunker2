@@ -137,9 +137,15 @@ enter_boss_door__room_ptr_set:
 				ld de, current_room__id
 				call dzx0
 
+				ld a, (boss__current_boss_number)
+				cp 3  ; is it the xibalba lords boss?
+				jr z, enter_boss_door__room_prettified
+
+				; bosses 0, 1, 2 have pyramid biome:
 				ld c, PCG_PAGE
 				ld hl, pcg_generate_room__prettify_pyramid
 				call call_hl_in_page_c_8000
+enter_boss_door__room_prettified:
 
 				ld a, BOSS_GFX_PAGE
 				ld (current_room__tileset_page), a
