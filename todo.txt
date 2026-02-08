@@ -1,8 +1,6 @@
 to do:
 
 ***- create xibalba boss: draw skeletal figures with ornate Mayan headdresses, representing the rulers of the underworld, 12 of them, one for each, with small variations (summons skeletons or shadows).
-  ***- draw additional decorations in GIMP (e.g. wrist bracelets, leg decorations, etc.)
-  ***- draw appearing animation (appearing from the floor)
   ***- figure out a way to store all the tiles: maybe have a set of "base tiles" (those that are used in most of them), and then have the lord-specific ones saved separately.
     ***- the name tables will have to be adapted when loading them or copying maybe? or maybe just have separate name tables for when they appear as lord1 and when they appear as lord2
   ***- implement behaviors
