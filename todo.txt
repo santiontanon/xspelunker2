@@ -1,16 +1,28 @@
 to do:
 
-***- create xibalba boss: draw skeletal figures with ornate Mayan headdresses, representing the rulers of the underworld, 12 of them, one for each, with small variations (summons skeletons or shadows).
-  ***- figure out a way to store all the tiles: maybe have a set of "base tiles" (those that are used in most of them), and then have the lord-specific ones saved separately.
-    ***- the name tables will have to be adapted when loading them or copying maybe? or maybe just have separate name tables for when they appear as lord1 and when they appear as lord2
+***- Xibalba lords boss:
+  ***- write a java piece of code that:
+    ***- extracts ALL frames for ALL 12:
+      ***- I need each variant of the animation for each of the 12 (draw it)
+      ***- define coordinates for each frame and part (all frames + mouth closed variants)
+    ***- identify the set of tiles needed for each
+    ***- find the set of common tiles (common to at least 6 of them)
+    ***- define a tiles set with the common ones
+    ***- define tilesets with the custom ones
+    ***- compute the size of the maximum custom (sum of the two largest), call it N
+    ***- final base tile set starts at tile N (as the first N are contiguous and it's easier to customize)
+    ***- define tilesets (as patches) for each of the 12 that can be loaded at the beginning
+    ***- the name tables assume that the lord tiles are loaded at the very beginning (we will adjust that later via code)
+  ***- does it all fit within one tileset? or do I need to separate, e.g. the "coming out from the floor one")
   ***- implement behaviors
-    ***- appear from the floor: stick one hand out, then another, and then just pull themselves up (this can be one tile set, and when done, switch to the regular one from the regular/shared frame)
+    ***- load the base tileset + the custom ones for the two lords that have been awakened
+    ***- custom boss frame drawing routine that takes into account the custom tiles for each lord, and adjusts the name tables on the fly (tiles < N need to be added to the start of the custom tiles for this lord)
+    ***- appear from the floor: stick one hand out, then another, and then just pull themselves up 
     ***- fly around opening/closing mouth:
-      ***- sprite decorations, e.g.: Xiquiripat and Cuchumaquic drip blood
-
-    ***- stretch one arm (pointing for hun-came/vucub-came, and pointing weapon for the others), for their special attack
-    ***- try to land on top of you (they get knocked down a bit when they do, and you can attack them)
-    ***- if a matching pair was summoned, they get together in the middle and do a barrage of attacks (specific to whatever pair the player chose)
+      ***- sprite decorations: eyes
+    ***- behavior of each of the 12:
+      ***- decide on the behaviors each of them have, and also the joint ones if you pick a pair (create action items here), include "stomp" attack (they get knocked out for a bit)
+      ***- implement them, summoning attacks: they might summon skeletons, shadows, worms, bats, spikes, etc.
   ***- waking up proper pairs (e.g. the two main lords, or Ahalpuh+Ahalgana) gives you an extra item at the end:
     ***- two main give you a key that can be used for a secret in moon/mars boss room, the other pairs give you benefits (figure them out)
     ***- any of the other pairs, gives you a charm that halves the ammo you use for your weapons (do I have space for it in the inventory?)
@@ -46,6 +58,7 @@ to do:
   - Special huge chest that has a lock with a number. Each time you use a small key, it reduces by one. But the number is larger than the keys in one world. the state of the chest should be saved to the ROM, and if you beat the game (can you beat the game having used small keys there?, it remains. It might give you access to a final alien weapon to really kill the final boss. If you play again on the same seed, the chest will be blocked somehow (so, you need a different seed) (add as a special achievement for the gameover screen)
   - room that has 4 locks (one from each cardinal directions), but in each world, it can only be reached from one direction. Upon opening all 4, it reveals a passage to a secret level (the "lost world", which is like jungle but with dinosaurs? is there an alternate ending here?, or the "underground cenote", where sacrifices were made) (add as a special achievement for the gameover screen)
   - Mars/Moon: in the boss rooms, there might be something you can do before summoning the boss. This could lead to something like: (1) an underground cave where there is a broken ancient robot that can talk to you (in a mix of English and Maya maybe?), and might give you a weapon upgrade (e.g. a better raygun). (2) a hidden room in Mars with one of those Mars faces, containing a great treasure (e.g. a fifth (?) undiscovered Mayan codex), add as a special achievement for the gameover screen.
+  - special rooms, with some large statue that only appears when certain bits of the random seed are on (maybe this is the meaning of the stella, if it's not that of the angry bosses). If you figure out a seed that has all 6 bits on, all 6 statues appear, and you can collect all the items they give, unlocking a secret (which?)
 
 
 --------------------
