@@ -2,9 +2,7 @@ to do:
 
 ***- Xibalba lords boss:
   ***- write a java piece of code that:
-    ***- extracts ALL frames for ALL 12:
-      ***- I need each variant of the animation for each of the 12 (draw it)
-      ***- define coordinates for each frame and part (all frames + mouth closed variants)
+    ***- extracts ALL frames for ALL 12: define coordinates for each frame and part (all frames + mouth closed variants)
     ***- identify the set of tiles needed for each
     ***- find the set of common tiles (common to at least 6 of them)
     ***- define a tiles set with the common ones
