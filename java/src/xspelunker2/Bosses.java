@@ -20,8 +20,24 @@ import util.ZX0Wrapper;
  */
 public class Bosses {
     static int pyramid_collision[] = GenerateChunkData.pyramid_tile_collision_types;
-    static int xibalba_collision[] = GenerateChunkData.xibalba_tile_collision_types;
-    
+    public static int xibalba_collision[] = {  // modified as the boss tiles are a bit different
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 8, 0, 0, 0, 0, 0,
+        0, 10, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+        10, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+        2, 2, 3, 5, 2, 2, 5, 6, 8, 1, 1, 1, 2, 2, 2, 2,
+        2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2,
+        2, 2, 2, 2, 2, 6, 2, 7, 8, 1, 1, 1, 2, 2, 2, 0,
+        0, 0, 0, 0, 0, 2, 2, 12, 2, 2, 12, 2, 2, 2, 2, 3,
+        12, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 2, 2, 2,
+        2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 2, 2, 2,
+        2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 2, 2, 2,
+        2, 2, 2, 2, 2, 1, 2, 2, 7, 2, 2, 2, 2, 2, 2, 2            
+    };     
     
     public static void main(String args[]) throws Exception
     {
@@ -34,7 +50,7 @@ public class Bosses {
         boss3Tiles();
         boss3Sprites();
 
-        boss4Tiles();
+        Boss4.main(args);
         boss4Sprites();
     }
     
@@ -46,7 +62,7 @@ public class Bosses {
                 
         boolean availableTiles[] = new boolean[256];
         int collision[] = new int[256];
-        findAvailableBossTiles(boss1BaseTiles, availableTiles, collision, pyramid_collision);
+        findAvailableBossTiles(boss1BaseTiles, availableTiles, collision, pyramid_collision, true);
         BufferedImage baseImage = ImageIO.read(new File(boss1BaseTiles));        
         int nameTable[][] = addBossTilesInGaps(baseImage, boss1Tiles, availableTiles, collision, false);
         ImageIO.write(baseImage, "png", new File("data/boss1-tiles.png"));
@@ -120,7 +136,7 @@ public class Bosses {
             String boss2Tiles = "data/boss2-land.png";
             boolean availableTiles[] = new boolean[256];
             int collision[] = new int[256];
-            findAvailableBossTiles(bossBaseTiles, availableTiles, collision, pyramid_collision);
+            findAvailableBossTiles(bossBaseTiles, availableTiles, collision, pyramid_collision, true);
             BufferedImage baseImage = ImageIO.read(new File(bossBaseTiles));        
             int nameTable[][] = addBossTilesInGaps(baseImage, boss2Tiles, availableTiles, collision, false);
             ImageIO.write(baseImage, "png", new File("data/boss2-tiles.png"));
@@ -146,7 +162,7 @@ public class Bosses {
             String boss2Tiles = "data/boss2-land.png";
             boolean availableTiles[] = new boolean[256];
             int collision[] = new int[256];
-            findAvailableBossTiles(bossBaseTiles, availableTiles, collision, pyramid_collision);        
+            findAvailableBossTiles(bossBaseTiles, availableTiles, collision, pyramid_collision, false);        
             BufferedImage baseImage = ImageIO.read(new File(bossBaseTiles));        
             addBossTilesInGaps(baseImage, boss2Tiles, availableTiles, collision, true);
             ImageIO.write(baseImage, "png", new File("data/boss2-tiles-right.png"));
@@ -159,7 +175,7 @@ public class Bosses {
             String boss2Tiles = "data/boss2-air.png";
             boolean availableTiles[] = new boolean[256];
             int collision[] = new int[256];
-            findAvailableBossTiles(bossBaseTiles, availableTiles, collision, pyramid_collision);        
+            findAvailableBossTiles(bossBaseTiles, availableTiles, collision, pyramid_collision, false);        
             BufferedImage baseImage = ImageIO.read(new File(bossBaseTiles));        
             int nameTable[][] = addBossTilesInGaps(baseImage, boss2Tiles, availableTiles, collision, false);
             ImageIO.write(baseImage, "png", new File("data/boss2-tiles-air.png"));
@@ -234,7 +250,7 @@ public class Bosses {
             String boss3Tiles = "data/boss3-walk.png";
             boolean availableTiles[] = new boolean[256];
             int collision[] = new int[256];
-            findAvailableBossTiles(bossBaseTiles, availableTiles, collision, pyramid_collision);
+            findAvailableBossTiles(bossBaseTiles, availableTiles, collision, pyramid_collision, true);
             BufferedImage baseImage = ImageIO.read(new File(bossBaseTiles));        
             int nameTable[][] = addBossTilesInGaps(baseImage, boss3Tiles, availableTiles, collision, false);
             ImageIO.write(baseImage, "png", new File("data/boss3-tiles-walk.png"));
@@ -259,7 +275,7 @@ public class Bosses {
             String boss3Tiles = "data/boss3-stomp.png";
             boolean availableTiles[] = new boolean[256];
             int collision[] = new int[256];
-            findAvailableBossTiles(bossBaseTiles, availableTiles, collision, pyramid_collision);        
+            findAvailableBossTiles(bossBaseTiles, availableTiles, collision, pyramid_collision, false);        
             BufferedImage baseImage = ImageIO.read(new File(bossBaseTiles));        
             int nameTable[][] = addBossTilesInGaps(baseImage, boss3Tiles, availableTiles, collision, false);
             ImageIO.write(baseImage, "png", new File("data/boss3-tiles-stomp.png"));
@@ -300,32 +316,6 @@ public class Bosses {
         ZX0Wrapper.main(outputPath + ".bin", outputPath + ".zx0", true, false);
     }
     
-    
-    public static void boss4Tiles() throws Exception
-    {
-        String bossBaseTiles = "data/boss4-tiles-base.png";
-        
-        List<Integer> nameTableData = new ArrayList<>();
-        
-        {
-            String boss4Tiles = "data/boss4.png";
-            boolean availableTiles[] = new boolean[256];
-            int collision[] = new int[256];
-            findAvailableBossTiles(bossBaseTiles, availableTiles, collision, xibalba_collision);
-            BufferedImage baseImage = ImageIO.read(new File(bossBaseTiles));        
-            int nameTable[][] = addBossTilesInGaps(baseImage, boss4Tiles, availableTiles, collision, false);
-            ImageIO.write(baseImage, "png", new File("data/boss4-tiles.png"));
-
-            GenerateTiles.extractTiles("data/boss4-tiles.png", "src/autogenerated/boss4-tiles", 24, 128);
-            
-            // name tables:
-            // ...
-        }
-        
-        System.out.println("name tables: " + nameTableData.size() + " bytes");
-        Z80Assembler.dataToBinary(nameTableData, "src/autogenerated/boss4-nametables.bin");        
-    }
-
     
     public static void boss4Sprites() throws Exception
     {
@@ -382,11 +372,11 @@ public class Bosses {
     }
     
     
-    public static void findAvailableBossTiles(String bossBaseTiles, boolean availableTiles[], int collision[], int base_collision[]) throws Exception
+    public static void findAvailableBossTiles(String bossBaseTiles, boolean availableTiles[], int collision[], int base_collision[], boolean print) throws Exception
     {
         BufferedImage baseImage = ImageIO.read(new File(bossBaseTiles));        
         int n_availableTiles = 0;
-        System.out.println("Collision table:");
+        if (print) System.out.println("Collision table:");
         for(int i = 0;i<16;i++) {
             String line = "    db ";
             for(int j = 0;j<16;j++) {
@@ -401,7 +391,7 @@ public class Bosses {
                 }
                 line += collision[j + i*16] + ", ";
             }
-            System.out.println(line.substring(0, line.length() - 2));
+            if (print) System.out.println(line.substring(0, line.length() - 2));
         }
         System.out.println("boss: available tiles " + n_availableTiles);
     }
@@ -409,46 +399,53 @@ public class Bosses {
 
     public static int[][] addBossTilesInGaps(BufferedImage baseImage, String bossTiles, boolean availableTiles[], int collision[], boolean flipTiles) throws Exception
     {
+        BufferedImage sourceImage = ImageIO.read(new File(bossTiles));
+        List<int[]> nameTableBoxes = new ArrayList<>();
+        nameTableBoxes.add(new int[]{0, 0, sourceImage.getWidth(), sourceImage.getHeight()});
+        List<int[][]> nameTables = addBossTilesInGapsForBoxes(nameTableBoxes, baseImage, bossTiles, availableTiles, collision, flipTiles);
+        return nameTables.get(0);
+    }   
+    
+    
+    public static List<int[][]> addBossTilesInGapsForBoxes(List<int[]> nameTableBoxes, BufferedImage baseImage, String bossTiles, boolean availableTiles[], int collision[], boolean flipTiles) throws Exception
+    {
         // Extract all tiles from the boss file and add in the gaps:
         BufferedImage sourceImage = ImageIO.read(new File(bossTiles));
         List<List<Integer>> tiles = new ArrayList<>();
         List<Integer> tile = new ArrayList<>();
-        int nameTable[][] = new int[sourceImage.getWidth()/8][sourceImage.getHeight()/8];
+        List<int[][]> nameTables = new ArrayList<>();
         for(int i = 0;i<8*8;i++) tile.add(0);
-        tiles.add(tile);            
-        for(int i = 0;i<sourceImage.getHeight();i+=8) {
-            for(int j = 0;j<sourceImage.getWidth();j+=8) {
-                tile = new ArrayList<>();
-                for(int ii = 0;ii<8;ii++) {
-                    for(int jj = 0;jj<8;jj++) {
-                        int color = ConvertPatternsToAssembler.findMSXColor(j+jj, i+ii, sourceImage, 0);
-                        if (color == -1) throw new Exception("Unknown color at " + (j+jj) + ", " + (i+ii));
-                        tile.add(color);
+        tiles.add(tile);
+        for(int box[]:nameTableBoxes) {
+            int nameTable[][] = new int[(box[2] - box[0])/8][(box[3] - box[1])/8];
+            for(int i = box[1];i<box[3];i+=8) {
+                for(int j = box[0];j<box[2];j+=8) {
+                    tile = new ArrayList<>();
+                    for(int ii = 0;ii<8;ii++) {
+                        for(int jj = 0;jj<8;jj++) {
+                            int color = ConvertPatternsToAssembler.findMSXColor(j+jj, i+ii, sourceImage, 0);
+                            if (color == -1) throw new Exception("Unknown color at " + (j+jj) + ", " + (i+ii));
+                            tile.add(color);
+                        }
                     }
-                }
 
-                int found = -1;
-                for(int tileIndex = 0;tileIndex<tiles.size();tileIndex++) {
-                    List<Integer> tile2 = tiles.get(tileIndex);
-                    boolean match = true;
-                    for(int k = 0;k<8*8;k++) {
-                        if (!tile.get(k).equals(tile2.get(k))) {
-                            match = false;
+                    int found = -1;
+                    for(int tileIndex = 0;tileIndex<tiles.size();tileIndex++) {
+                        List<Integer> tile2 = tiles.get(tileIndex);
+                        if (tilesMatch(tile, tile2)) {
+                            found = tileIndex;
                             break;
                         }
                     }
-                    if (match) {
-                        found = tileIndex;
-                        break;
-                    }
+                    if (found == -1) {
+                        nameTable[(j - box[0])/8][(i - box[1])/8] = tiles.size();
+                        tiles.add(tile);
+                    } else {
+                        nameTable[(j - box[0])/8][(i - box[1])/8] = found;
+                    }                    
                 }
-                if (found == -1) {
-                    nameTable[j/8][i/8] = tiles.size();
-                    tiles.add(tile);
-                } else {
-                    nameTable[j/8][i/8] = found;
-                }                    
             }
+            nameTables.add(nameTable);
         }
         System.out.println("number of tiles of the boss: " + tiles.size());            
 //            for(int i = 0;i<nameTable[0].length;i++) {
@@ -461,12 +458,84 @@ public class Bosses {
         // Add all the new tiles:
         HashMap<Integer, Integer> map = new HashMap<>();
         map.put(0, 0);
-        for(int tileID = 1;tileID<tiles.size();tileID++) {
+        addTilesInGapsInternal(tiles, null, map, baseImage, availableTiles, flipTiles, 0);
+
+        // Generate the name tables:
+        for(int[][] nameTable:nameTables) {
+            for(int i = 0;i<nameTable[0].length;i++) {
+                for(int j = 0;j<nameTable.length;j++) {
+                    nameTable[j][i] = map.get(nameTable[j][i]);
+                }
+            }
+        }
+        
+        return nameTables;
+    }
+    
+    
+    public static boolean tilesMatch(List<Integer> tile, List<Integer> tile2)
+    {
+        for(int k = 0;k<8*8;k++) {
+            if (!tile.get(k).equals(tile2.get(k))) {
+                return false;
+            }
+        }        
+        return true;
+    }
+    
+    
+    public static void addTilesInGapsInternal(List<List<Integer>> tiles, List<Integer> tileIndexesToAdd, HashMap<Integer, Integer> map, BufferedImage baseImage, boolean availableTiles[], boolean flipTiles, int firstUseableGap) throws Exception
+    {
+        if (tileIndexesToAdd == null) {
+            // Add them all:
+            tileIndexesToAdd = new ArrayList<>();
+            for(int i = 1;i<tiles.size();i++) {
+                tileIndexesToAdd.add(i);
+            }
+        }
+
+        int indexOfFirstUseableGap = 0;
+        for(int i = 0;i<16;i++) {
+            for(int j = 0;j<16;j++) {
+                if (firstUseableGap <= 0) break;
+                if (availableTiles[j+i*16]) {
+                    firstUseableGap--;
+                }
+                indexOfFirstUseableGap++;
+            }
+            if (firstUseableGap <= 0) break;
+        }
+        
+        for(int tileID:tileIndexesToAdd) {
             List<Integer> tile2 = tiles.get(tileID);
+            // first check if the tile already exists:
+//            System.out.println("Checking if " + tileID + " is already there...");
+            boolean alreadyThere = false;
+            for(int i = 3;i<16;i++) {
+                for(int j = 0;j<16;j++) {
+                    List<Integer> tile = new ArrayList<>();
+                    for(int ii = 0;ii<8;ii++) {
+                        for(int jj = 0;jj<8;jj++) {
+                            int color = ConvertPatternsToAssembler.findMSXColor(j*8+jj, i*8+ii, baseImage, 0);
+                            if (color == -1) throw new Exception("Unknown color at " + (j*8+jj) + ", " + (i*8+ii));
+                            tile.add(color);
+                        }
+                    }
+                    if (tilesMatch(tile, tile2)) {
+                        map.put(tileID, j + i*16);
+//                        System.out.println("    already there!!!!");
+                        alreadyThere = true;
+                        break;
+                    }
+                }
+                if (alreadyThere) break;
+            }
+            if (alreadyThere) continue;
             boolean found = false;
-            for(int i = 0;i<16;i++) {
+            for(int i = 3;i<16;i++) {
                 for(int j = 0;j<16;j++) {
                     if (availableTiles[j+i*16]) {
+                        if (j+i*16 < indexOfFirstUseableGap) continue;
                         for(int ii = 0;ii<8;ii++) {
                             for(int jj = 0;jj<8;jj++) {
                                 if (flipTiles) {
@@ -484,15 +553,6 @@ public class Bosses {
                 }
                 if (found) break;
             }
-        }
-        
-        // Generate the name tables:
-        for(int i = 0;i<nameTable[0].length;i++) {
-            for(int j = 0;j<nameTable.length;j++) {
-                nameTable[j][i] = map.get(nameTable[j][i]);
-            }
-        }
-        
-        return nameTable;
+        }        
     }
 }

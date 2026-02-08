@@ -1,18 +1,9 @@
 to do:
 
 ***- Xibalba lords boss:
-  ***- write a java piece of code that:
-    ***- extracts ALL frames for ALL 12: define coordinates for each frame and part (all frames + mouth closed variants)
-    ***- identify the set of tiles needed for each
-    ***- find the set of common tiles (common to at least 6 of them)
-    ***- define a tiles set with the common ones
-    ***- define tilesets with the custom ones
-    ***- compute the size of the maximum custom (sum of the two largest), call it N
-    ***- final base tile set starts at tile N (as the first N are contiguous and it's easier to customize)
-    ***- define tilesets (as patches) for each of the 12 that can be loaded at the beginning
-    ***- the name tables assume that the lord tiles are loaded at the very beginning (we will adjust that later via code)
-  ***- does it all fit within one tileset? or do I need to separate, e.g. the "coming out from the floor one")
   ***- implement behaviors
+    ***- add tilesets to assembler (find a page where they fit)
+    ***- add nametables to assembler (find a page where they fit)
     ***- load the base tileset + the custom ones for the two lords that have been awakened
     ***- custom boss frame drawing routine that takes into account the custom tiles for each lord, and adjusts the name tables on the fly (tiles < N need to be added to the start of the custom tiles for this lord)
     ***- appear from the floor: stick one hand out, then another, and then just pull themselves up 

@@ -146,11 +146,15 @@ boss4_awake_xibalba_lord_event_first:
 
 	; block stairs:
 	ld a, 6*16 + 6  ; wall
-	ld (current_room__tile_map + 22*64 + 31), a
-	ld (current_room__tile_map + 22*64 + 31 + 64*24), a
+	ld (current_room__tile_map + 23*64 + 31), a
+	ld (current_room__tile_map + 23*64 + 31 + 64*24), a
 	inc a
-	ld (current_room__tile_map + 22*64 + 32), a
-	ld (current_room__tile_map + 22*64 + 32 + 64*24), a
+	ld (current_room__tile_map + 23*64 + 32), a
+	ld (current_room__tile_map + 23*64 + 32 + 64*24), a
+
+	ld hl, draw_room_with_hud
+	ld c, TILES_PAGE
+	call call_hl_in_page_c_8000  ; just so that we do not lose the page we are at
 
 	ld hl, SFX_explosion_low_pitch
 	jp play_SFX_with_high_priority
