@@ -727,7 +727,7 @@ trial_fn_wake_up_xibalba_lord:
 
 	; wake up xibalba lord:
 	ld hl, boss4_awake_xibalba_lord_event
-	ld c, BOSS_PAGE
+	ld c, BOSS_4_PAGE
 	call call_hl_in_page_c_8000
 
 	jp trial_fn_reset

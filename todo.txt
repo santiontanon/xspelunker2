@@ -1,17 +1,19 @@
 to do:
 
 ***- Xibalba lords boss:
-  ***- implement behaviors
-    ***- add tilesets to assembler (find a page where they fit)
-    ***- add nametables to assembler (find a page where they fit)
+  ***- appear from the floor (the player can already move here and the hands can maybe be hit?): 
+    ***- patch the "rise" tileset
+    ***- stick one hand out, then another, and then flatten hands, and retreat them.
     ***- load the base tileset + the custom ones for the two lords that have been awakened
-    ***- custom boss frame drawing routine that takes into account the custom tiles for each lord, and adjusts the name tables on the fly (tiles < N need to be added to the start of the custom tiles for this lord)
-    ***- appear from the floor: stick one hand out, then another, and then just pull themselves up 
-    ***- fly around opening/closing mouth:
-      ***- sprite decorations: eyes
-    ***- behavior of each of the 12:
-      ***- decide on the behaviors each of them have, and also the joint ones if you pick a pair (create action items here), include "stomp" attack (they get knocked out for a bit)
-      ***- implement them, summoning attacks: they might summon skeletons, shadows, worms, bats, spikes, etc.
+    ***- lords rise from the floor
+      ***- custom boss frame drawing routine that takes into account the custom tiles for each lord, and adjusts the name tables on the fly (tiles < N need to be added to the start of the custom tiles for this lord)
+  ***- fly around opening/closing mouth:
+    ***- do it for hun-came (both are drawn as hun-came)
+    ***- do it for each of the 12, and loading the correct ones
+  ***- sprite decorations: eyes (yellow, and flash red when hit, except the one with a bandage over the eyes)
+  ***- behavior of each of the 12:
+    ***- decide on the behaviors each of them have, and also the joint ones if you pick a pair (create action items here), include "stomp" attack (they get knocked out for a bit)
+    ***- implement them, summoning attacks: they might summon skeletons, shadows, worms, bats, spikes, etc.
   ***- waking up proper pairs (e.g. the two main lords, or Ahalpuh+Ahalgana) gives you an extra item at the end:
     ***- two main give you a key that can be used for a secret in moon/mars boss room, the other pairs give you benefits (figure them out)
     ***- any of the other pairs, gives you a charm that halves the ammo you use for your weapons (do I have space for it in the inventory?)

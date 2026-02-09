@@ -183,7 +183,7 @@ enter_boss_door__room_prettified:
 		ld (state_play_update_agenda_tbl_ptr), hl
 
 		; player position:
-		ld bc, #1420  ; 32, 20  ; xibalba lords start coordinates
+		ld bc, #1520  ; 32, 21  ; xibalba lords start coordinates
 		ld a, (boss__current_boss_number)
 		cp 3  ; is it the xibalba lords boss?
 		jr z, enter_boss_door__room_spawn_coordinates_set
@@ -1050,6 +1050,9 @@ player_weapon_hitbox_check_boss_loop_x_skip
 ; input:
 ; - hl: initial sprite attributes
 ; - de: y_table
+update_boss_behavior_bring_name_down_ix:
+	push ix
+	pop hl
 update_boss_behavior_bring_name_down:
 	push de
 		ld de, buffer_4096
@@ -1087,6 +1090,9 @@ update_boss_behavior_bring_name_down_loop:
 ; input:
 ; - hl: initial sprite attributes
 ; - de: y_table
+update_boss_behavior_bring_name_up_ix:
+	push ix
+	pop hl
 update_boss_behavior_bring_name_up:
 	push de
 		ld de, buffer_4096
@@ -1402,7 +1408,9 @@ update_boss_behavior:
 	cp 4  ; inverted pyramid
 	jp z, update_boss3_behavior
 	cp 8  ; xibalba
-	jp z, update_boss4_behavior
+	ld hl, update_boss4_behavior
+	ld c, BOSS_4_PAGE
+	jp z, jp_to_hl_in_page_c_8000
 ; 	cp 9  ; atlantis
 ; 	jp z, update_boss5_behavior
 ; 	cp 10  ; mars
@@ -1445,13 +1453,13 @@ tile_collision_types_boss4:
     db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
     db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
     db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
-    db 9, 9, 9, 9, 9, 9, 2, 2, 2, 2, 9, 9, 9, 9, 9, 9
     db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
-    db 9, 9, 9, 9, 9, 9, 9, 9, 8, 1, 1, 1, 9, 9, 9, 9
-    db 9, 9, 9, 9, 9, 9, 0, 0, 0, 0, 9, 9, 9, 2, 2, 9
-    db 9, 9, 9, 9, 2, 9, 9, 7, 8, 1, 1, 1, 9, 9, 9, 9
-    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 0
-    db 9, 9, 9, 2, 2, 2, 9, 9, 0, 0, 0, 0, 0, 2, 2, 2
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 8, 9, 9, 9, 9, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 0, 0, 0, 0, 9, 9, 9, 9, 9, 9
+    db 9, 9, 9, 9, 2, 9, 9, 9, 8, 1, 1, 1, 9, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
     db 9, 9, 9, 2, 2, 9, 9, 9, 0, 0, 0, 0, 0, 2, 2, 2
     db 9, 9, 9, 2, 2, 9, 9, 9, 0, 0, 0, 0, 0, 2, 2, 2
-    db 9, 9, 9, 2, 2, 1, 9, 9, 7, 9, 9, 9, 9, 9, 1, 9
+    db 9, 9, 9, 2, 2, 9, 9, 9, 0, 0, 0, 0, 0, 2, 2, 2
+    db 9, 9, 9, 2, 2, 1, 9, 9, 9, 9, 2, 2, 2, 2, 2, 2
