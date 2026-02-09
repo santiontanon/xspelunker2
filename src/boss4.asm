@@ -64,27 +64,24 @@ update_boss4_behavior_0:
 	or a
 	ret z
 
-	; two lords awakened, boss appears!
-
+	; two lords awakened, boss appearing sequence starts!
 	; ghosts go down:
 	ld ix, current_room__sprite_objects
-	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
-	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
-	inc a
-	cp 8
-	jr nz, update_boss4_behavior_0_continue
-	xor a
-	inc b
-update_boss4_behavior_0_continue:
-	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_Y), a
-	ld (ix + ROOM_OBJECT_STRUCT_TILE_Y), b
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	cp 24
+	call nz, update_boss4_behavior_0_lower_ghost
 	ld ix, current_room__sprite_objects + ROOM_OBJECT_STRUCT_SIZE
-	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_Y), a
-	ld (ix + ROOM_OBJECT_STRUCT_TILE_Y), b
-	ld a, b
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	cp 24
+	call nz, update_boss4_behavior_0_lower_ghost
+	ld a, (current_room__sprite_objects + ROOM_OBJECT_STRUCT_TILE_Y)
 	cp 24
 	ret nz
-	; remove the ghosts:
+	ld a, (current_room__sprite_objects + ROOM_OBJECT_STRUCT_SIZE + ROOM_OBJECT_STRUCT_TILE_Y)
+	cp 24
+	ret nz
+
+	; both ghosts down, remove them:
 	ld a, #ff
 	ld (current_room__sprite_objects), a
 	ld (current_room__sprite_objects + ROOM_OBJECT_STRUCT_SIZE), a
@@ -107,6 +104,20 @@ update_boss4_behavior_0_continue:
 	; boss starts attacking!
 	ld a, 1
 	ld (boss__behavior), a
+	ret
+
+
+update_boss4_behavior_0_lower_ghost:
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc a
+	cp 8
+	jr nz, update_boss4_behavior_0_continue
+	xor a
+	inc b
+update_boss4_behavior_0_continue:
+	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_Y), a
+	ld (ix + ROOM_OBJECT_STRUCT_TILE_Y), b
 	ret
 
 
@@ -167,9 +178,20 @@ boss4_awake_xibalba_lord_event_second_loop:
 	jr boss4_awake_xibalba_lord_event_second_loop
 boss4_awake_xibalba_lord_event_second_loop_done:
 
-	; ...
+	ld ix, current_room__tile_objects  ; this has to be the tablet
+	ld hl, delete_tile_object_in_ix
+	ld c, TILES_PAGE
+	call call_hl_in_page_c_8000
 
-	ret
+	; reset the room, so, we do not need to "undraw":
+	ld hl, current_room__tile_map + 32*24*2
+	ld de, current_room__tile_map
+	ld bc, 32*24*2
+	ldir
+	
+	ld hl, draw_room_with_hud
+	ld c, TILES_PAGE
+	jp call_hl_in_page_c_8000
 
 boss4_awake_xibalba_lord_event_first:
 	ld (boss__4_first_lord), a
@@ -187,7 +209,7 @@ boss4_awake_xibalba_lord_event_first:
 
 	ld hl, draw_room_with_hud
 	ld c, TILES_PAGE
-	call call_hl_in_page_c_8000  ; just so that we do not lose the page we are at
+	call call_hl_in_page_c_8000
 
 	ld hl, SFX_explosion_low_pitch
 	jp play_SFX_with_high_priority
@@ -232,7 +254,7 @@ boss4_awake_xibalba_lord_event_lower_tomb_continue:
 		push ix
 			ld hl, draw_room_with_hud
 			ld c, TILES_PAGE
-			call call_hl_in_page_c_8000  ; just so that we do not lose the page we are at
+			call call_hl_in_page_c_8000
 		pop ix
 		ld hl, SFX_explosion_low_pitch
 		call play_SFX_with_high_priority
@@ -265,7 +287,7 @@ boss4_awake_xibalba_lord_event_lower_tomb_continue:
 		push ix
 			ld hl, draw_room_with_hud
 			ld c, TILES_PAGE
-			call call_hl_in_page_c_8000  ; just so that we do not lose the page we are at
+			call call_hl_in_page_c_8000
 		pop ix	
 		ld hl, SFX_explosion_low_pitch
 		call play_SFX_with_high_priority	
@@ -287,7 +309,7 @@ boss4_awake_xibalba_lord_event_lower_tomb_continue:
 	push ix
 		ld hl, draw_room_with_hud
 		ld c, TILES_PAGE
-		call call_hl_in_page_c_8000  ; just so that we do not lose the page we are at
+		call call_hl_in_page_c_8000
 	pop ix	
 	ld hl, SFX_explosion_low_pitch
 	call play_SFX_with_high_priority	

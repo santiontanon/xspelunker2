@@ -402,10 +402,13 @@ delete_tile_object_in_hl:
 		ld c, l
 		ld b, h
 	pop hl
-; 	ld a, b  ; not needed, as we will always at least copy 1 byte
-; 	or c
-; 	ret z
+	ld a, b  ; not needed, as we will always at least copy 1 byte
+	or c
+	ret z
 	ldir
+	; delete the last object:
+	ld hl, current_room__tile_objects + ((MAX_ROOM_TILE_OBJECTS - 1) * ROOM_TILE_OBJECT_STRUCT_SIZE)
+	ld (hl), #ff
 	ret
 
 
