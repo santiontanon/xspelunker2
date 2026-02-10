@@ -30,43 +30,65 @@ boss4_name_tables_lord12:
 BOSS4_NAMETABLE_RISE_RHAND1: equ boss4_name_tables_rise + 0  ; 1*1
 BOSS4_NAMETABLE_RISE_RHAND2: equ boss4_name_tables_rise + 1  ; 1*2
 BOSS4_NAMETABLE_RISE_RHAND3: equ boss4_name_tables_rise + 3  ; 1*3
-
 BOSS4_NAMETABLE_RISE_LHAND1: equ boss4_name_tables_rise + 6  ; 1*1
 BOSS4_NAMETABLE_RISE_LHAND2: equ boss4_name_tables_rise + 7  ; 1*2
 BOSS4_NAMETABLE_RISE_LHAND3: equ boss4_name_tables_rise + 9  ; 1*3
+BOSS4_NAMETABLE_RISE_RHAND4: equ boss4_name_tables_rise + 12  ; 3*1
+BOSS4_NAMETABLE_RISE_LHAND4: equ boss4_name_tables_rise + 15  ; 3*1
+BOSS4_NAMETABLE_RISE_RHAND5: equ boss4_name_tables_rise + 18  ; 2*1
+BOSS4_NAMETABLE_RISE_LHAND5: equ boss4_name_tables_rise + 20  ; 2*1
 
 
-boss4_frame_rise_rhand1:
+boss4_frame_rise_hand1:
 	db 1  ; number of parts
-	db 0, 2  ; offset wrt the draw ptr (x offset, y offset)
+	db 7, 2  ; offset wrt the draw ptr (x offset, y offset)
 	dw #0101, BOSS4_NAMETABLE_RISE_RHAND1  ; dimensions and nametable
-	dw 0, #0301  ; offset and boss__clear_bbox
-boss4_frame_rise_rhand2:
+	dw 0, #030a  ; offset and boss__clear_bbox
+boss4_frame_rise_hand2:
 	db 1  ; number of parts
-	db 0, 1  ; offset wrt the draw ptr (x offset, y offset)
+	db 7, 1  ; offset wrt the draw ptr (x offset, y offset)
 	dw #0201, BOSS4_NAMETABLE_RISE_RHAND2  ; dimensions and nametable
-	dw 0, #0301  ; offset and boss__clear_bbox
-boss4_frame_rise_rhand3:
+	dw 0, #030a  ; offset and boss__clear_bbox
+boss4_frame_rise_hand3:
 	db 1  ; number of parts
-	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	db 7, 0  ; offset wrt the draw ptr (x offset, y offset)
 	dw #0301, BOSS4_NAMETABLE_RISE_RHAND3  ; dimensions and nametable
-	dw 0, #0301  ; offset and boss__clear_bbox
-
-boss4_frame_rise_lhand1:
-	db 1  ; number of parts
-	db 0, 2  ; offset wrt the draw ptr (x offset, y offset)
+	dw 0, #030a  ; offset and boss__clear_bbox
+boss4_frame_rise_hand4:
+	db 2  ; number of parts
+	db 7, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0301, BOSS4_NAMETABLE_RISE_RHAND3  ; dimensions and nametable
+	db 2, 2  ; offset wrt the draw ptr (x offset, y offset)
 	dw #0101, BOSS4_NAMETABLE_RISE_LHAND1  ; dimensions and nametable
-	dw 0, #0301  ; offset and boss__clear_bbox
-boss4_frame_rise_lhand2:
-	db 1  ; number of parts
-	db 0, 1  ; offset wrt the draw ptr (x offset, y offset)
+	dw 0, #030a  ; offset and boss__clear_bbox
+boss4_frame_rise_hand5:
+	db 2  ; number of parts
+	db 7, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0301, BOSS4_NAMETABLE_RISE_RHAND3  ; dimensions and nametable
+	db 2, 1  ; offset wrt the draw ptr (x offset, y offset)
 	dw #0201, BOSS4_NAMETABLE_RISE_LHAND2  ; dimensions and nametable
-	dw 0, #0301  ; offset and boss__clear_bbox
-boss4_frame_rise_lhand3:
-	db 1  ; number of parts
-	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw 0, #030a  ; offset and boss__clear_bbox
+boss4_frame_rise_hand6:
+	db 2  ; number of parts
+	db 7, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0301, BOSS4_NAMETABLE_RISE_RHAND3  ; dimensions and nametable
+	db 2, 0  ; offset wrt the draw ptr (x offset, y offset)
 	dw #0301, BOSS4_NAMETABLE_RISE_LHAND3  ; dimensions and nametable
-	dw 0, #0301  ; offset and boss__clear_bbox
+	dw 0, #030a  ; offset and boss__clear_bbox
+boss4_frame_rise_hand7:
+	db 2  ; number of parts
+	db 7, 2  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0103, BOSS4_NAMETABLE_RISE_RHAND4  ; dimensions and nametable
+	db 0, 2  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0103, BOSS4_NAMETABLE_RISE_LHAND4  ; dimensions and nametable
+	dw 0, #030a  ; offset and boss__clear_bbox
+boss4_frame_rise_hand8:
+	db 2  ; number of parts
+	db 7, 2  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0102, BOSS4_NAMETABLE_RISE_RHAND5  ; dimensions and nametable
+	db 1, 2  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0102, BOSS4_NAMETABLE_RISE_LHAND5  ; dimensions and nametable
+	dw 0, #030a  ; offset and boss__clear_bbox
 
 
 ;-----------------------------------------------
@@ -169,31 +191,24 @@ update_boss4_behavior_0_continue:
 ; Boss rises from the floor
 
 update_boss4_behavior_1_state_1_table:
-	db 32
-	dw current_room__tile_map + 20*64 + 26, boss4_frame_rise_rhand1, 0, 0
-	db 64
-	dw current_room__tile_map + 20*64 + 26, boss4_frame_rise_rhand2, 0, 0
-	db 96
-	dw current_room__tile_map + 20*64 + 26, boss4_frame_rise_rhand3, 0, 0
-	db 128
-	dw current_room__tile_map + 20*64 + 26, boss4_frame_rise_rhand3, current_room__tile_map + 20*64 + 21, boss4_frame_rise_lhand1
-	db 160
-	dw current_room__tile_map + 20*64 + 26, boss4_frame_rise_rhand3, current_room__tile_map + 20*64 + 21, boss4_frame_rise_lhand2
-	db 192
-	dw current_room__tile_map + 20*64 + 26, boss4_frame_rise_rhand3, current_room__tile_map + 20*64 + 21, boss4_frame_rise_lhand3
-	db 0
+	dw boss4_frame_rise_hand1
+	dw boss4_frame_rise_hand2
+	dw boss4_frame_rise_hand3
+	dw boss4_frame_rise_hand4
+	dw boss4_frame_rise_hand5
+	dw boss4_frame_rise_hand6
+	dw boss4_frame_rise_hand7
+	dw boss4_frame_rise_hand8
+	dw 0
 
 
 update_boss4_behavior_1:
 	ld a, (boss__state)
 	or a
-	jr z, update_boss4_behavior_1_state_0  ; load tileset
-	dec a
-	jr z, update_boss4_behavior_1_state_1  ; hands coming out
-	dec a
-	jr z, update_boss4_behavior_1_state_2  ; both hands at the same time, and then they retract
-; 	dec a
-; 	jr z, update_boss4_behavior_1_state_3  ; boss rises from the floor
+	jr z, update_boss4_behavior_1_state_0  ; (0) load tileset
+	cp 10
+	jr c, update_boss4_behavior_1_state_1  ; (1 - 9) hands coming out
+	jr z, update_boss4_behavior_1_state_2  ; (10) boss rises from the floor
 	; ...
 	ret
 
@@ -205,7 +220,7 @@ update_boss4_behavior_1_state_0:
 	call dzx0_from_page_c
 
 	ld de, CHRTBL2 + 3*16*8
-	ld bc, 16*8
+	ld bc, 14*8
 	call upload_tile_patch_to_all_banks
 
 	ld a, 1
@@ -218,46 +233,50 @@ update_boss4_behavior_1_state_1:
 	ld hl, boss__state_timer
 	ld a, (hl)
 	inc (hl)
-	cp 224
-	jr z, update_boss4_behavior_1_state_1_done
-	ld c, a
-	ld hl, update_boss4_behavior_1_state_1_table
-update_boss4_behavior_1_state_1_loop:
-	ld a, (hl)
 	or a
-	ret z
-	cp c
-	jr z, update_boss4_behavior_1_state_1_found
-	ld de, 9
-	add hl, de
-	jr update_boss4_behavior_1_state_1_loop
-update_boss4_behavior_1_state_1_done:
-	ld a, 2
-	ld (boss__state), a
+	jr z, update_boss4_behavior_1_state_1_draw
+	cp 24
+	jr z, update_boss4_behavior_1_state_1_next
+	ret
+update_boss4_behavior_1_state_1_next:
+	ld hl, boss__state
+	inc (hl)
 	xor a
 	ld (boss__state_timer), a
 	ret
-update_boss4_behavior_1_state_1_found:
+update_boss4_behavior_1_state_1_draw:
+	ld a, (boss__state)
+	dec a
+	add a, a
+	ld hl, update_boss4_behavior_1_state_1_table
+	ADD_HL_A
+	ld a, (hl)
+	inc hl
+	ld h, (hl)
+	ld l, a
+	or h
+	jr z, update_boss4_behavior_1_state_1_draw_empty
+	ld de, current_room__tile_map + 20*64 + 19
 	push hl
-		ld hl, SFX_explosion_low_pitch
-		call z, play_SFX_with_high_priority
-	pop ix
-	ld e, (ix + 1)
-	ld d, (ix + 2)
-	ld l, (ix + 3)
-	ld h, (ix + 4)
-	call draw_boss4_frame_1
-	ld e, (ix + 5)
-	ld d, (ix + 6)
-	ld l, (ix + 7)
-	ld h, (ix + 8)
-	ld a, e
-	or d
-	call nz, draw_boss4_frame_2
+		call draw_boss4_frame_1
+	pop hl
+	ld de, current_room__tile_map + 20*64 + 35
+	call draw_boss4_frame_2
+update_boss4_behavior_1_state_1_draw_continue:
+	ld hl, SFX_explosion_low_pitch
+	call play_SFX_with_high_priority
 
 	ld hl, redraw_flags
 	set ROOM_REDRAW_FLAG_BIT, (hl)
 	ret
+update_boss4_behavior_1_state_1_draw_empty:
+	ld hl, draw_boss_frame_clear_previous_frame_1
+	ld c, BOSS_PAGE
+	call call_hl_in_page_c_8000
+	ld hl, draw_boss_frame_clear_previous_frame_2
+	ld c, BOSS_PAGE
+	call call_hl_in_page_c_8000
+	jr update_boss4_behavior_1_state_1_draw_continue
 
 update_boss4_behavior_1_state_2:
 	; ...
