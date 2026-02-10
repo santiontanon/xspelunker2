@@ -2,8 +2,10 @@ to do:
 
 ***- Xibalba lords boss:
   ***- appear from the floor (the player can already move here and the hands can maybe be hit?): 
-    ***- patch the "rise" tileset
-    ***- stick one hand out, then another, and then flatten hands, and retreat them.
+    OK - patch the "rise" tileset
+    OK - stick one hand out, then another
+    ***- and then flatten hands, and retreat them: do it all in one state, rather than having the first byte of the table in increments of 32, make it the state
+    ***- do it for both lords at once (will require defining the frames with both hands together as 2 parts)
     ***- load the base tileset + the custom ones for the two lords that have been awakened
     ***- lords rise from the floor
       ***- custom boss frame drawing routine that takes into account the custom tiles for each lord, and adjusts the name tables on the fly (tiles < N need to be added to the start of the custom tiles for this lord)

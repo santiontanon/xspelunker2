@@ -234,35 +234,67 @@ setup_game_tiles:
     ld c, TILES_HUD_PAGE
     call dzx0_from_page_c
 
-    ld hl, buffer_4096
     ld de, CHRTBL2
     ld bc, 48*8
-    call fast_LDIRVM
+    jp upload_tile_patch_to_all_banks
 
-    ld hl, buffer_4096 + 48*8
-    ld de, CLRTBL2
-    ld bc, 48*8
-    call fast_LDIRVM
 
+;-----------------------------------------------
+; Uploads a a subset of tiles from buffer_4096 to the VDP
+; input:
+; - de: destination in the CHRTBL2 table
+; - bc: size (number of tiles * 8)
+upload_tile_patch_to_all_banks:
+    ld a, 3
+upload_tile_patch_to_all_banks_loop:
     ld hl, buffer_4096
-    ld de, CHRTBL2 + 256*8
-    ld bc, 48*8
-    call fast_LDIRVM
+    push af
+        push de
+            push bc
+                push de
+                    push bc
+                        call fast_LDIRVM
+                    pop bc
+                    ; ld hl, buffer_4096 + 48*8
+                    ld hl, buffer_4096
+                    add hl, bc
+                    ex de, hl  ; de = buffer_4096 + bc
+                pop hl
+                ld bc, CLRTBL2 - CHRTBL2
+                add hl, bc
+                ex de, hl  ; hl = buffer_4096 + bc, de = start in CLRTBL2
+            pop bc
+            push bc
+                call fast_LDIRVM
+            pop bc  ; restore bc for next loop
+        pop hl
+        ld de, 256*8
+        add hl, de
+        ex de, hl  ; restore de for next loop
+    pop af
+    dec a
+    jr nz, upload_tile_patch_to_all_banks_loop
+    ret
 
-    ld hl, buffer_4096 + 48*8
-    ld de, CLRTBL2 + 256*8
-    ld bc, 48*8
-    call fast_LDIRVM
+;     ld hl, buffer_4096
+;     ld de, CHRTBL2 + 256*8
+;     ld bc, 48*8
+;     call fast_LDIRVM
 
-    ld hl, buffer_4096
-    ld de, CHRTBL2 + 256*8*2
-    ld bc, 48*8
-    call fast_LDIRVM
+;     ld hl, buffer_4096 + 48*8
+;     ld de, CLRTBL2 + 256*8
+;     ld bc, 48*8
+;     call fast_LDIRVM
 
-    ld hl, buffer_4096 + 48*8
-    ld de, CLRTBL2 + 256*8*2
-    ld bc, 48*8
-    jp fast_LDIRVM
+;     ld hl, buffer_4096
+;     ld de, CHRTBL2 + 256*8*2
+;     ld bc, 48*8
+;     call fast_LDIRVM
+
+;     ld hl, buffer_4096 + 48*8
+;     ld de, CLRTBL2 + 256*8*2
+;     ld bc, 48*8
+;     jp fast_LDIRVM
 
 
 ;-----------------------------------------------

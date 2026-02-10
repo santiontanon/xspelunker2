@@ -40,7 +40,10 @@ public class Music {
     {        
 //        playTSVMusic("data/music/jungle1.tsv", 6, 12);  // Variation on the original Jungle XSpelunker song
 //        playTSVMusic("data/music/jungle1a.tsv", 6, 12);  // variation on the bass line
-        playTSVMusic("data/music/jungle1b.tsv", 6, 12);  // like jungle1a but simplifying the bass line
+//        playTSVMusic("data/music/jungle1b.tsv", 6, 12);  // like jungle1a but simplifying the bass line
+
+        playTSVMusic("data/music/caves1.tsv", 12, 12);  // chords test
+
         /*
         to do:
         - the second part of jungle1/jungle1a is terrible. Find a better second part.
