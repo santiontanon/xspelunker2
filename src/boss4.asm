@@ -279,7 +279,27 @@ update_boss4_behavior_1_state_1_draw_empty:
 	jr update_boss4_behavior_1_state_1_draw_continue
 
 update_boss4_behavior_1_state_2:
+	ld a, (boss__state_timer)
+	or a
+	jr nz, update_boss4_behavior_1_state_2_continue
+	call update_boss4_load_xibalba_lord_tile_patches
+update_boss4_behavior_1_state_2_continue:
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+
+	; draw the lord:
 	; ...
+
+	ld a, (boss__state_timer)
+	cp 144
+	ret nz
+	; done!
+	ld a, 2
+	ld (boss__behavior), a
+	xor a
+	ld (boss__state), a
+	ld (boss__state_timer), a
 	ret
 
 
@@ -293,6 +313,72 @@ update_boss4_behavior_2:
 update_boss4_behavior_3:
 	; ...
 	ret
+
+
+;-----------------------------------------------
+; Load the tile patches corresponding to the two Xibalba Lords
+; the player has awakened.
+update_boss4_load_xibalba_lord_tile_patches_table:
+	dw boss4_tiles_lord1_zx0, 34 * 8
+	dw boss4_tiles_lord2_zx0, 34 * 8
+	dw boss4_tiles_lord3_zx0, 31 * 8
+	dw boss4_tiles_lord4_zx0, 25 * 8
+	dw boss4_tiles_lord5_zx0, 27 * 8
+	dw boss4_tiles_lord6_zx0, 27 * 8
+	dw boss4_tiles_lord7_zx0, 14 * 8
+	dw boss4_tiles_lord8_zx0, 16 * 8
+	dw boss4_tiles_lord9_zx0, 28 * 8
+	dw boss4_tiles_lord10_zx0, 28 * 8
+	dw boss4_tiles_lord11_zx0, 31 * 8
+	dw boss4_tiles_lord12_zx0, 33 * 8
+
+
+update_boss4_load_xibalba_lord_tile_patches:
+	ld a, (boss__4_first_lord)
+	ld hl, update_boss4_load_xibalba_lord_tile_patches_table - 4  ; "- 4" since the lord IDs start at 1
+	add a, a
+	add a, a  ; a * = 4
+	ADD_HL_A
+	ld e, (hl)
+	inc hl
+	ld d, (hl)  ; de ptr to the tileset
+	inc hl
+	ld c, (hl)
+	inc hl
+	ld b, (hl)  ; tileset size
+	push bc
+		push bc
+			ex de, hl
+			ld de, buffer_4096
+			ld c, BOSS_GFX_PAGE
+			call dzx0_from_page_c
+			ld de, CHRTBL2 + 3*16*8
+		pop bc
+		call upload_tile_patch_to_all_banks
+
+		ld a, (boss__4_second_lord)
+		ld hl, update_boss4_load_xibalba_lord_tile_patches_table - 4  ; "- 4" since the lord IDs start at 1
+		add a, a
+		add a, a  ; a * = 4
+		ADD_HL_A
+		ld e, (hl)
+		inc hl
+		ld d, (hl)  ; de ptr to the tileset
+		inc hl
+		ld c, (hl)
+		inc hl
+		ld b, (hl)  ; tileset size
+		push bc
+			ex de, hl
+			ld de, buffer_4096
+			ld c, BOSS_GFX_PAGE
+			call dzx0_from_page_c
+		pop bc
+		ld hl, CHRTBL2 + 3*16*8
+	pop de
+	add hl, de
+	ex de, hl
+	jp upload_tile_patch_to_all_banks
 
 
 ;-----------------------------------------------
@@ -314,17 +400,19 @@ boss4_awake_xibalba_lord_event:
 
 	ld hl, redraw_flags
 	set ROOM_REDRAW_FLAG_BIT, (hl)
-
-	; tomb disappears:
-	ld b, 25
-	call wait_b_halts
-	call boss4_awake_xibalba_lord_event_lower_tomb
-
-	ld a, (boss__4_first_lord)
-	or a
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
-	jr z, boss4_awake_xibalba_lord_event_first
+	push af
+
+		; tomb disappears:
+		ld b, 25
+		call wait_b_halts
+		call boss4_awake_xibalba_lord_event_lower_tomb
+
+		ld a, (boss__4_first_lord)
+		or a
+		jr z, boss4_awake_xibalba_lord_event_first
 boss4_awake_xibalba_lord_event_second:
+	pop af
 	ld (boss__4_second_lord), a
 	; two ghosts spawned, awaking boss:
 	ld hl, 0
@@ -356,6 +444,7 @@ boss4_awake_xibalba_lord_event_second_loop_done:
 	jp call_hl_in_page_c_8000
 
 boss4_awake_xibalba_lord_event_first:
+	pop af
 	ld (boss__4_first_lord), a
 
 	ld b, 25

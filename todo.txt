@@ -1,14 +1,14 @@
 to do:
 
 ***- Xibalba lords boss:
-  ***- appear from the floor: 
-    ***- load the base tileset + the custom ones for the two lords that have been awakened
-    ***- lords rise from the floor
-      ***- custom boss frame drawing routine that takes into account the custom tiles for each lord, and adjusts the name tables on the fly (tiles < N need to be added to the start of the custom tiles for this lord)
-      ***- as soon as they are out, you can already hit them, before this, you should get a "shield" sound
-  ***- fly around opening/closing mouth:
-    ***- do it for hun-came (both are drawn as hun-came)
-    ***- do it for each of the 12, and loading the correct ones
+  ***- lords rise from the floor after the hands have disappeared (update_boss4_behavior_1_state_2_continue):
+    ***- custom boss frame drawing routine that:
+      ***- takes into account the custom tiles for each lord, and adjusts the name tables on the fly (tiles < N need to be added to the start of the custom tiles for this lord)
+      ***- draws them behind "wall tiles"
+      ***- do it for hun-came (both are drawn as hun-came)
+      ***- do it for each of the 12, and loading the correct ones
+    ***- as soon as they are out, you can already hit them, before this, you should get a "shield" sound
+  ***- fly around opening/closing mouth. Each boss should fly independently (think of what flying pattern makes sense for them to have)
   ***- sprite decorations: eyes (yellow, and flash red when hit, except the one with a bandage over the eyes)
   ***- behavior of each of the 12:
     ***- decide on the behaviors each of them have, and also the joint ones if you pick a pair (create action items here), include "stomp" attack (they get knocked out for a bit)

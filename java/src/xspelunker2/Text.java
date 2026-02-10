@@ -586,16 +586,16 @@ public class Text {
 
         addLineSafe(lines_with_constant_page3, "Hun-Came", "XIBALBA_BOSS_NAME_1", 18);
         addLineSafe(lines_with_constant_page3, "Vucub-Came", "XIBALBA_BOSS_NAME_2", 18);
-        addLineSafe(lines_with_constant_page3, "Ahalpuh", "XIBALBA_BOSS_NAME_3", 18);
-        addLineSafe(lines_with_constant_page3, "Ahalgana", "XIBALBA_BOSS_NAME_4", 18);
-        addLineSafe(lines_with_constant_page3, "Ahalmez", "XIBALBA_BOSS_NAME_5", 18);
-        addLineSafe(lines_with_constant_page3, "Ahaltocob", "XIBALBA_BOSS_NAME_6", 18);
-        addLineSafe(lines_with_constant_page3, "Chamiabac", "XIBALBA_BOSS_NAME_7", 18);
-        addLineSafe(lines_with_constant_page3, "Chamiaholom", "XIBALBA_BOSS_NAME_8", 18);
-        addLineSafe(lines_with_constant_page3, "Quicxic", "XIBALBA_BOSS_NAME_9", 18);
-        addLineSafe(lines_with_constant_page3, "Patan", "XIBALBA_BOSS_NAME_10", 18);
-        addLineSafe(lines_with_constant_page3, "Xiquiripat", "XIBALBA_BOSS_NAME_11", 18);
-        addLineSafe(lines_with_constant_page3, "Cuchumaquic", "XIBALBA_BOSS_NAME_12", 18);
+        addLineSafe(lines_with_constant_page3, "Xiquiripat", "XIBALBA_BOSS_NAME_3", 18);
+        addLineSafe(lines_with_constant_page3, "Cuchumaquic", "XIBALBA_BOSS_NAME_4", 18);
+        addLineSafe(lines_with_constant_page3, "Chamiabac", "XIBALBA_BOSS_NAME_5", 18);
+        addLineSafe(lines_with_constant_page3, "Chamiaholom", "XIBALBA_BOSS_NAME_6", 18);
+        addLineSafe(lines_with_constant_page3, "Ahalgana", "XIBALBA_BOSS_NAME_7", 18);
+        addLineSafe(lines_with_constant_page3, "Ahalpuh", "XIBALBA_BOSS_NAME_8", 18);
+        addLineSafe(lines_with_constant_page3, "Ahalmez", "XIBALBA_BOSS_NAME_9", 18);
+        addLineSafe(lines_with_constant_page3, "Ahaltocob", "XIBALBA_BOSS_NAME_10", 18);
+        addLineSafe(lines_with_constant_page3, "Quicxic", "XIBALBA_BOSS_NAME_11", 18);
+        addLineSafe(lines_with_constant_page3, "Patan", "XIBALBA_BOSS_NAME_12", 18);
         
         
         List<Integer> numbers = font.convertStringToAssembler("0123456789 ");

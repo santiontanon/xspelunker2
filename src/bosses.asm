@@ -241,7 +241,7 @@ enter_boss_door__spawn_xibalba_lords_objects:
 	ld de, ROOM_TILE_OBJECT_STRUCT_SIZE
 	ld hl, enter_boss_door__spawn_xibalba_lords_objects_tbl
 	ld iy, current_room__tile_objects
-	ld c, 0  ; id
+	ld c, 1  ; id
 enter_boss_door__spawn_xibalba_lords_objects_loop:
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), c  ; id
 	inc c
