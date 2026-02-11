@@ -15,6 +15,12 @@ to do:
   ***- add boss name to the stats for game over screen (specify which lords you killed)
 
 - music: intro, letters, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)
+  - jungle: the original xspelunker song is much better than the new one, take it as a starting point and improve it
+  - add to the game (specify a music in each area, and if 0, no music)
+  - option to turn on/off the music from the config
+  - caves: finish the current draft: I need a longer melody part, better instruments, and some part where there is a rest of the repeating bass, which might be too much (maybe I need a softer instrument)
+  - story: I like the original song, and I should keep the same style, take the original and compose a variation
+  - boss music
   - boss music acts as a health bar (increases in speed as health goes down: 50%, 25%)
 - atlantis biome (exploit the fact that I can have now 3 tags for left/up/right/down tags): crocodiles as an additional water enemy? what happens to the special animal/teleporter rooms in this biome? do I need to redraw them?
   - look at "prayer of the warrior" spectrum game for tile ideas
