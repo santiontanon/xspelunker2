@@ -268,6 +268,8 @@ update_boss2_behavior_init_continue:
 	ld (boss__hp), hl
 	ld hl, player_weapon_hitbox_check_boss__boss2_hit
 	ld (boss__hit_fn), hl
+	ld a, BOSS_PAGE
+	ld (boss__hit_fn_page), a
 	xor a
 	ld (boss__2_direction), a  ; facing left
 	inc a
@@ -1132,8 +1134,9 @@ update_boss2_spawn_bat_loop_end:
 
 ;-----------------------------------------------
 ; input:
-; - a: tile number that was hit
+; - e: tile number that was hit
 ; - iyh: damage to deal
+; - iyl: collision ID
 player_weapon_hitbox_check_boss__boss2_hit:
 	; hit the main body:
 	ld hl, (boss__hp)

@@ -1,13 +1,9 @@
 to do:
 
 ***- Xibalba lords boss:
-  ***- lords rise from the floor after the hands have disappeared (update_boss4_behavior_1_state_2_continue):
-    ***- custom boss frame drawing routine that:
-      ***- takes into account the custom tiles for each lord, and adjusts the name tables on the fly (tiles < N need to be added to the start of the custom tiles for this lord)
-      ***- draws them behind "wall tiles"
-      ***- do it for hun-came (both are drawn as hun-came)
-      ***- do it for each of the 12, and loading the correct ones
-    ***- as soon as they are out, you can already hit them, before this, you should get a "shield" sound
+  ***- BUG: when crouching, players does not hit tile objects right in front of him
+  ***- define frames for all 12: 2/12
+  ***- when drawing the lords coming out, choose the frame based on which lord was selected
   ***- fly around opening/closing mouth. Each boss should fly independently (think of what flying pattern makes sense for them to have)
   ***- sprite decorations: eyes (yellow, and flash red when hit, except the one with a bandage over the eyes)
   ***- behavior of each of the 12:
@@ -48,7 +44,10 @@ to do:
   - Special huge chest that has a lock with a number. Each time you use a small key, it reduces by one. But the number is larger than the keys in one world. the state of the chest should be saved to the ROM, and if you beat the game (can you beat the game having used small keys there?, it remains. It might give you access to a final alien weapon to really kill the final boss. If you play again on the same seed, the chest will be blocked somehow (so, you need a different seed) (add as a special achievement for the gameover screen)
   - room that has 4 locks (one from each cardinal directions), but in each world, it can only be reached from one direction. Upon opening all 4, it reveals a passage to a secret level (the "lost world", which is like jungle but with dinosaurs? is there an alternate ending here?, or the "underground cenote", where sacrifices were made) (add as a special achievement for the gameover screen)
   - Mars/Moon: in the boss rooms, there might be something you can do before summoning the boss. This could lead to something like: (1) an underground cave where there is a broken ancient robot that can talk to you (in a mix of English and Maya maybe?), and might give you a weapon upgrade (e.g. a better raygun). (2) a hidden room in Mars with one of those Mars faces, containing a great treasure (e.g. a fifth (?) undiscovered Mayan codex), add as a special achievement for the gameover screen.
-  - special rooms, with some large statue that only appears when certain bits of the random seed are on (maybe this is the meaning of the stella, if it's not that of the angry bosses). If you figure out a seed that has all 6 bits on, all 6 statues appear, and you can collect all the items they give, unlocking a secret (which?)
+  - special rooms, with some large statue that only appears when certain bits of the random seed are on (maybe this is the meaning of the stella, if it's not that of the angry bosses). If you figure out a seed that has all 6 bits on, all 6 statues appear, and you can collect all the items they give, unlocking a secret (which?) (maybe related to blood sacrifices?)
+  - The Maya were obsessed with sacrificing blood to their gods (the highest being extracting a beating heart from a person while still alive), then it was often burned so that the smoke will bring it to the gods. Can I add some puzzle/item/riddle about this? (maybe in the stella puzzle above, or maybe some blood meter that accumulates when you receive damage/die/kill-an-enemy and when full, things happen)
+  - another random seed puzzle idea: a rooom with n(=8?) pillars. Whether they are raised or lowered depends on the random seed. The player must search for the seed where these are all lowered to cross and get to the other side to find a key/item that is either the goal itself, or that opens the path to a longer secret.
+  - world name entering screen: theme as a "maya astronomy", where the random seed determines the position of the stars: which celestial alignment ad version of reality the player will play in.
 
 
 --------------------

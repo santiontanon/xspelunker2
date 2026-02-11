@@ -254,6 +254,7 @@ boss__clear_bbox_2: ds virtual 4  ; ptr, w, h  (used to restore boss background,
 boss__hp: ds virtual 2  ; hit points, 16bit
 boss__last_collision_id: ds virtual 1
 boss__hit_fn: ds virtual 2  ; when the player hits a tile with collision type '9' this method is called
+boss__hit_fn_page: ds virtual 1
 boss__hit_timer: ds virtual 1  ; for displaying "boss hit" animations
 boss__2_direction:  ; 0: left, 1: right
 boss__3_head_attached:  ; 0: attached, 1: dettached
@@ -262,10 +263,12 @@ boss__1_has_staff: ds virtual 1
 boss__3_head_state:
 boss__4_second_lord:
 boss__1_staff_hp: ds virtual 1
+boss__4_second_lord_first_tile:
 boss__3_head_state_timer: ds virtual 1
 boss__1_settings:
 boss__2_settings: 
 boss__3_settings:
+boss__4_settings:
     ds virtual 12  ; difficulty parameters of the boss
 
 ; game stats:

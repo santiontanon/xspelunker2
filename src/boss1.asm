@@ -278,6 +278,8 @@ update_boss1_behavior_0_continue:
 	ld (boss__hp), hl
 	ld hl, player_weapon_hitbox_check_boss__boss1_hit
 	ld (boss__hit_fn), hl
+	ld a, BOSS_PAGE
+	ld (boss__hit_fn_page), a
 	xor a
 	ld (boss__hit_timer), a
 
@@ -1187,9 +1189,11 @@ boss1_draw_dust_loop_continue:
 
 ;-----------------------------------------------
 ; input:
-; - a: tile number that was hit
+; - e: tile number that was hit
 ; - iyh: damage to deal
+; - iyl: collision ID
 player_weapon_hitbox_check_boss__boss1_hit:
+	ld a, e
 	; did the player hit the staff or the boss?
 	; staff tiles: 3*16+6, 3*16+13, 5*16+8, 6*16+6, 7*16+8, 8*16+8
 	cp 3*16+6

@@ -298,6 +298,8 @@ update_boss3_behavior_init_continue:
 	ld (boss__hp), hl
 	ld hl, player_weapon_hitbox_check_boss__boss3_hit
 	ld (boss__hit_fn), hl
+	ld a, BOSS_PAGE
+	ld (boss__hit_fn_page), a
 	ld a, 1
 	ld (boss__3_head_attached), a
 	ld (boss__state), a
@@ -1073,16 +1075,15 @@ update_boss3_draw_boss_frame_head_attached_ptr_set:
 
 ;-----------------------------------------------
 ; input:
-; - a: tile number that was hit
+; - e: tile number that was hit
 ; - iyh: damage to deal
 ; - iyl: collision ID
 player_weapon_hitbox_check_boss__boss3_hit:
-	push af
-		ld a, iyl
-		ld (boss__last_collision_id), a
-	pop af
+	ld a, iyl
+	ld (boss__last_collision_id), a
 
 	; hit the main body:
+	ld a, e
 	cp 4 * 16 + 12  ; first non head tile
 	jr c, player_weapon_hitbox_check_boss__boss3_hit_head
 	ld hl, SFX_shield

@@ -1025,9 +1025,11 @@ player_weapon_hitbox_check_boss_loop_x:
 				jr nz, player_weapon_hitbox_check_boss_loop_x_skip
 
 				; hit!
-				ld a, e
+				; e: tile we hit
 				ld hl, (boss__hit_fn)
-				call jp_to_hl
+				ld a, (boss__hit_fn_page)
+				ld c, a
+				call call_hl_in_page_c_8000
 			pop bc
 		pop hl
 	pop bc
@@ -1457,9 +1459,9 @@ tile_collision_types_boss4:
     db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
     db 9, 9, 9, 9, 9, 9, 9, 9, 8, 9, 9, 9, 9, 9, 9, 9
     db 9, 9, 9, 9, 9, 9, 0, 0, 0, 0, 9, 9, 9, 9, 9, 9
-    db 9, 9, 9, 9, 2, 9, 9, 9, 8, 1, 1, 1, 9, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 8, 1, 1, 1, 9, 9, 9, 9
     db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
     db 9, 9, 9, 2, 2, 9, 9, 9, 0, 0, 0, 0, 0, 2, 2, 2
     db 9, 9, 9, 2, 2, 9, 9, 9, 0, 0, 0, 0, 0, 2, 2, 2
     db 9, 9, 9, 2, 2, 9, 9, 9, 0, 0, 0, 0, 0, 2, 2, 2
-    db 9, 9, 9, 2, 2, 1, 9, 9, 9, 9, 2, 2, 2, 2, 2, 2
+    db 9, 9, 9, 2, 2, 1, 9, 9, 9, 2, 2, 2, 2, 2, 2, 2
