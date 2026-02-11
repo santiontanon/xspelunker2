@@ -1,67 +1,3 @@
-Piano,Re1	pad,Re4	sfx(sfx_drum_shorter_re)
-		
-Re2		
-		
-Re1		sfx(sfx_short_hihat)
-		
-Re2	Mi4	sfx(sfx_drum_shorter_re)
-		
-Re1	Fa4	sfx(sfx_drum_shorter_re)
-		
-Re2		
-		
-Re1	Mi4	sfx(sfx_short_hihat)
-		
-Re2	Re4	
-		
-Fa1	Lab4	sfx(sfx_drum_shorter_re)
-		
-Fa2		
-		
-Fa1		sfx(sfx_short_hihat)
-		
-Fa2		sfx(sfx_drum_shorter_re)
-		
-Fa1		sfx(sfx_drum_shorter_re)
-		
-Fa2		
-		
-Fa1		sfx(sfx_short_hihat)
-		
-Fa2		
-		
-Re1	Re4	sfx(sfx_drum_shorter_re)
-		
-Re2		
-		
-Re1		sfx(sfx_short_hihat)
-		
-Re2	Mi4	sfx(sfx_drum_shorter_re)
-		
-Re1	Fa4	sfx(sfx_drum_shorter_re)
-		
-Re2		
-		
-Re1	Mi4	sfx(sfx_short_hihat)
-		
-Re2	Re4	
-		
-Sib1	Reb4	sfx(sfx_drum_shorter_re)
-		
-Sib2		
-		
-Sib1		sfx(sfx_short_hihat)
-		
-Sib2		sfx(sfx_drum_shorter_re)
-		
-Sib1	Sib3	sfx(sfx_drum_shorter_re)
-		
-Sib2		
-		
-Sib1		sfx(sfx_short_hihat)
-		
-Sib2		
-		
 Piano,Re1	pianosoft,Re4	sfx(sfx_drum_shorter_re)
 	Fa3	
 Re2	La3	sfx(sfx_short_hihat)
@@ -119,6 +55,70 @@ Sib1	Sib3	sfx(sfx_drum_shorter_re)
 Sib2	Fa3	sfx(sfx_short_hihat)
 	Reb3	
 Sib1	Reb4	sfx(sfx_drum_shorter_re)
+	Reb3	
+Sib2	Fa3	sfx(sfx_short_hihat)
+	Reb3	sfx(sfx_drum_shorter_re)
+Sib1	Sib3	sfx(sfx_drum_shorter_re)
+	Reb3	
+Sib2	Fa3	sfx(sfx_short_hihat)
+	Reb3	
+Piano,Re1	pianosoft,Re4	pad,Re4
+	Fa3	
+Re2	La3	sfx(sfx_short_hihat)
+	Fa3	sfx(sfx_drum_shorter_re)
+Re1	Fa4	sfx(sfx_drum_shorter_re)
+	Fa3	
+Re2	La3	Mi4
+	Fa3	
+Re1	Re4	Fa4
+	Fa3	
+Re2	La3	sfx(sfx_short_hihat)
+	Fa3	sfx(sfx_drum_shorter_re)
+Re1	Fa4	La4
+	Fa3	
+Re2	La3	sfx(sfx_short_hihat)
+	Fa3	
+Fa1	Do4	Lab4
+	Fa3	
+Fa2	Lab3	sfx(sfx_short_hihat)
+	Fa3	sfx(sfx_drum_shorter_re)
+Fa1	Fa4	sfx(sfx_drum_shorter_re)
+	Fa3	
+Fa2	Lab3	sfx(sfx_short_hihat)
+	Fa3	
+Fa1	Do4	Fa4
+	Fa3	
+Fa2	Lab3	sfx(sfx_short_hihat)
+	Fa3	sfx(sfx_drum_shorter_re)
+Fa1	Fa4	sfx(sfx_drum_shorter_re)
+	Fa3	
+Fa2	Lab3	sfx(sfx_short_hihat)
+	Fa3	
+Re1	Re4	Re4
+	Fa3	
+Re2	La3	sfx(sfx_short_hihat)
+	Fa3	sfx(sfx_drum_shorter_re)
+Re1	Fa4	sfx(sfx_drum_shorter_re)
+	Fa3	
+Re2	La3	Mi4
+	Fa3	
+Re1	Re4	Fa4
+	Fa3	
+Re2	La3	sfx(sfx_short_hihat)
+	Fa3	sfx(sfx_drum_shorter_re)
+Re1	Fa4	Mi4
+	Fa3	
+Re2	La3	Re4
+	Fa3	
+Sib1	Reb4	Reb4
+	Reb3	
+Sib2	Fa3	sfx(sfx_short_hihat)
+	Reb3	sfx(sfx_drum_shorter_re)
+Sib1	Sib3	sfx(sfx_drum_shorter_re)
+	Reb3	
+Sib2	Fa3	sfx(sfx_short_hihat)
+	Reb3	
+Sib1	Reb4	Sib3
 	Reb3	
 Sib2	Fa3	sfx(sfx_short_hihat)
 	Reb3	sfx(sfx_drum_shorter_re)
