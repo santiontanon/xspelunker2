@@ -1,9 +1,7 @@
 to do:
 
+***- BUG: when crouching, players does not hit tile objects right in front of him
 ***- Xibalba lords boss:
-  ***- BUG: when crouching, players does not hit tile objects right in front of him
-  ***- define frames for all 12: 2/12
-  ***- when drawing the lords coming out, choose the frame based on which lord was selected
   ***- fly around opening/closing mouth. Each boss should fly independently (think of what flying pattern makes sense for them to have)
   ***- sprite decorations: eyes (yellow, and flash red when hit, except the one with a bandage over the eyes)
   ***- behavior of each of the 12:

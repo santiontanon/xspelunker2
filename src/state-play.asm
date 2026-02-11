@@ -154,11 +154,11 @@ state_play_from_continue:
 ; 		ld hl, #0100
 ; 		ld hl, #0a00
 ; 		ld hl, #1000
-		ld hl, #1400
+		ld hl, #1800
 		ld (player_x), hl
 ; 		ld hl, #0b00
 ; 		ld hl, #0a00
-		ld hl, #0800
+		ld hl, #0600
 		ld (player_y), hl
 		ld a, #ff
 		ld (player_requested_weapon_sprite), a
