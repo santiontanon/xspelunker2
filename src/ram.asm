@@ -243,10 +243,14 @@ boss__active: ds virtual 1  ; 1 when we are fighting a boss (only when the boss 
 boss__current_boss_number: ds virtual 1
 boss__room_bg_buffer: equ current_room__tile_map + 32*24*2  ; the room is copied here, so that background can be restored when the boss moves around
 boss__behavior: ds virtual 1  ; which boss behavior is being executed
+
 boss__state: ds virtual 1  ; state within the current boss behavior
 boss__state_timer: ds virtual 1
 boss__x: ds virtual 1
 boss__y: ds virtual 1
+
+boss__state2: ds virtual 1  ; for bosses that have two parts
+boss__state2_timer: ds virtual 1
 boss__x2: ds virtual 1  ; for bosses that have two parts
 boss__y2: ds virtual 1
 boss__clear_bbox_1: ds virtual 4  ; ptr, w, h  (used to restore boss background)
@@ -256,20 +260,28 @@ boss__last_collision_id: ds virtual 1
 boss__hit_fn: ds virtual 2  ; when the player hits a tile with collision type '9' this method is called
 boss__hit_fn_page: ds virtual 1
 boss__hit_timer: ds virtual 1  ; for displaying "boss hit" animations
-boss__2_direction:  ; 0: left, 1: right
-boss__3_head_attached:  ; 0: attached, 1: dettached
-boss__4_first_lord:
-boss__1_has_staff: ds virtual 1
-boss__3_head_state:
-boss__4_second_lord:
-boss__1_staff_hp: ds virtual 1
-boss__4_second_lord_first_tile:
-boss__3_head_state_timer: ds virtual 1
 boss__1_settings:
 boss__2_settings: 
 boss__3_settings:
 boss__4_settings:
     ds virtual 12  ; difficulty parameters of the boss
+boss__tmp_space: ds virtual 10
+boss__1_has_staff: equ boss__tmp_space
+boss__1_staff_hp: equ boss__tmp_space + 1
+boss__2_direction: equ boss__tmp_space ; 0: left, 1: right
+boss__3_head_attached: equ boss__tmp_space  ; 0: attached, 1: dettached
+boss__3_head_state:  equ boss__tmp_space + 1
+boss__3_head_state_timer:  equ boss__tmp_space + 2
+boss__4_first_lord: equ boss__tmp_space
+boss__4_second_lord: equ boss__tmp_space + 1
+boss__4_second_lord_first_tile: equ boss__tmp_space + 2
+boss__4_lord1_frame: equ boss__tmp_space + 3
+boss__4_lord1_target_x: equ boss__tmp_space + 4
+boss__4_lord1_target_y: equ boss__tmp_space + 5
+boss__4_lord2_frame: equ boss__tmp_space + 6
+boss__4_lord2_target_x: equ boss__tmp_space + 7
+boss__4_lord2_target_y: equ boss__tmp_space + 8
+boss__4_redraw: equ boss__tmp_space + 9
 
 ; game stats:
 stats__n_coins_collected: ds virtual 2

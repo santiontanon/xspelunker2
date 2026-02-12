@@ -389,55 +389,55 @@ boss4_frame_lord6_hands_open_left:
 	dw 0, #0808  ; offset and boss__clear_bbox
 
 ; Lord 7: Ahalgana
-BOSS4_NAMETABLE_LORD7_IDLE_RIGHT: equ boss4_name_tables_lord8  ; 4*8
-BOSS4_NAMETABLE_LORD7_IDLE_LEFT: equ boss4_name_tables_lord8 + 32  ; 4*8
-BOSS4_NAMETABLE_LORD7_POINT_UP_RIGHT: equ boss4_name_tables_lord8 + 64  ; 6*8
-BOSS4_NAMETABLE_LORD7_POINT_UP_LEFT: equ boss4_name_tables_lord8 + 112  ; 6*8
-BOSS4_NAMETABLE_LORD7_POINT_FW_RIGHT: equ boss4_name_tables_lord8 + 160  ; 4*8
-BOSS4_NAMETABLE_LORD7_POINT_FW_LEFT: equ boss4_name_tables_lord8 + 192  ; 7*8
-BOSS4_NAMETABLE_LORD7_HANDS_OPEN_RIGHT: equ boss4_name_tables_lord8 + 248  ; 8*8
-BOSS4_NAMETABLE_LORD7_HANDS_OPEN_LEFT: equ boss4_name_tables_lord8 + 312  ; 8*8
+BOSS4_NAMETABLE_LORD7_IDLE_RIGHT: equ boss4_name_tables_lord7  ; 4*7
+BOSS4_NAMETABLE_LORD7_IDLE_LEFT: equ boss4_name_tables_lord7 + 28  ; 4*7
+BOSS4_NAMETABLE_LORD7_POINT_UP_RIGHT: equ boss4_name_tables_lord7 + 56  ; 6*7
+BOSS4_NAMETABLE_LORD7_POINT_UP_LEFT: equ boss4_name_tables_lord7 + 98  ; 6*7
+BOSS4_NAMETABLE_LORD7_POINT_FW_RIGHT: equ boss4_name_tables_lord7 + 140  ; 4*7
+BOSS4_NAMETABLE_LORD7_POINT_FW_LEFT: equ boss4_name_tables_lord7 + 168  ; 7*7
+BOSS4_NAMETABLE_LORD7_HANDS_OPEN_RIGHT: equ boss4_name_tables_lord7 + 217  ; 8*7
+BOSS4_NAMETABLE_LORD7_HANDS_OPEN_LEFT: equ boss4_name_tables_lord7 + 273  ; 8*7
 
 boss4_frame_lord7_idle_right:
 	db 1  ; number of parts
 	db 3, 0  ; offset wrt the draw ptr (x offset, y offset)
-	dw #0804, BOSS4_NAMETABLE_LORD7_IDLE_RIGHT  ; dimensions and nametable
-	dw 0, #0809  ; offset and boss__clear_bbox
+	dw #0704, BOSS4_NAMETABLE_LORD7_IDLE_RIGHT  ; dimensions and nametable
+	dw 0, #0709  ; offset and boss__clear_bbox
 boss4_frame_lord7_idle_left:
 	db 1  ; number of parts
 	db 3, 0  ; offset wrt the draw ptr (x offset, y offset)
-	dw #0804, BOSS4_NAMETABLE_LORD7_IDLE_LEFT  ; dimensions and nametable
-	dw 0, #0809  ; offset and boss__clear_bbox
+	dw #0704, BOSS4_NAMETABLE_LORD7_IDLE_LEFT  ; dimensions and nametable
+	dw 0, #0709  ; offset and boss__clear_bbox
 boss4_frame_lord7_point_up_right:
 	db 1  ; number of parts
 	db 1, 0  ; offset wrt the draw ptr (x offset, y offset)
-	dw #0806, BOSS4_NAMETABLE_LORD7_POINT_UP_RIGHT  ; dimensions and nametable
-	dw 0, #0809  ; offset and boss__clear_bbox
+	dw #0706, BOSS4_NAMETABLE_LORD7_POINT_UP_RIGHT  ; dimensions and nametable
+	dw 0, #0709  ; offset and boss__clear_bbox
 boss4_frame_lord7_point_up_left:
 	db 1  ; number of parts
 	db 1, 0  ; offset wrt the draw ptr (x offset, y offset)
-	dw #0806, BOSS4_NAMETABLE_LORD7_POINT_UP_LEFT  ; dimensions and nametable
-	dw 0, #0809  ; offset and boss__clear_bbox
+	dw #0706, BOSS4_NAMETABLE_LORD7_POINT_UP_LEFT  ; dimensions and nametable
+	dw 0, #0709  ; offset and boss__clear_bbox
 boss4_frame_lord7_point_fw_right:
 	db 1  ; number of parts
 	db 3, 0  ; offset wrt the draw ptr (x offset, y offset)
-	dw #0804, BOSS4_NAMETABLE_LORD7_POINT_FW_RIGHT  ; dimensions and nametable
-	dw 0, #0809  ; offset and boss__clear_bbox
+	dw #0704, BOSS4_NAMETABLE_LORD7_POINT_FW_RIGHT  ; dimensions and nametable
+	dw 0, #0709  ; offset and boss__clear_bbox
 boss4_frame_lord7_point_fw_left:
 	db 1  ; number of parts
 	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
-	dw #0807, BOSS4_NAMETABLE_LORD7_POINT_FW_LEFT  ; dimensions and nametable
-	dw 0, #0809  ; offset and boss__clear_bbox
+	dw #0707, BOSS4_NAMETABLE_LORD7_POINT_FW_LEFT  ; dimensions and nametable
+	dw 0, #0709  ; offset and boss__clear_bbox
 boss4_frame_lord7_hands_open_right:
 	db 1  ; number of parts
 	db 1, 0  ; offset wrt the draw ptr (x offset, y offset)
-	dw #0808, BOSS4_NAMETABLE_LORD7_HANDS_OPEN_RIGHT  ; dimensions and nametable
-	dw 0, #0809  ; offset and boss__clear_bbox
+	dw #0708, BOSS4_NAMETABLE_LORD7_HANDS_OPEN_RIGHT  ; dimensions and nametable
+	dw 0, #0709  ; offset and boss__clear_bbox
 boss4_frame_lord7_hands_open_left:
 	db 1  ; number of parts
 	db 1, 0  ; offset wrt the draw ptr (x offset, y offset)
-	dw #0808, BOSS4_NAMETABLE_LORD7_HANDS_OPEN_LEFT  ; dimensions and nametable
-	dw 0, #0809  ; offset and boss__clear_bbox
+	dw #0708, BOSS4_NAMETABLE_LORD7_HANDS_OPEN_LEFT  ; dimensions and nametable
+	dw 0, #0709  ; offset and boss__clear_bbox
 
 ; Lord 8: Ahalpuh
 BOSS4_NAMETABLE_LORD8_IDLE_RIGHT: equ boss4_name_tables_lord8  ; 4*8
@@ -688,13 +688,13 @@ boss4_lord_frames_tbl:
 	dw boss4_lord6_frames_tbl
 	db -2, -8
 	dw boss4_lord7_frames_tbl
-	db -3, -8
+	db -3, -7
 	dw boss4_lord8_frames_tbl
 	db -3, -8
 	dw boss4_lord9_frames_tbl
-	db -3, -8
+	db -2, -8
 	dw boss4_lord10_frames_tbl
-	db -3, -8
+	db -2, -8
 	dw boss4_lord11_frames_tbl
 	db -3, -7
 	dw boss4_lord12_frames_tbl
@@ -849,7 +849,7 @@ update_boss4_behavior_continue2:
 	dec a
 	jp z, update_boss4_behavior_1  ; boss rises from the floor
 	dec a
-	jp z, update_boss4_behavior_2  ; boss is active
+	jp z, update_boss4_behavior_2  ; boss flying around
 ; 	dec a
 	jp update_boss4_behavior_3  ; death
 
@@ -919,7 +919,6 @@ update_boss4_behavior_0_continue:
 
 ;-----------------------------------------------
 ; Boss rises from the floor
-
 update_boss4_behavior_1_state_1_table:
 	dw boss4_frame_rise_hand1
 	dw boss4_frame_rise_hand2
@@ -937,7 +936,7 @@ update_boss4_behavior_1:
 	or a
 	jr z, update_boss4_behavior_1_state_0  ; (0) load tileset
 	cp 10
-	jr c, update_boss4_behavior_1_state_1  ; (1 - 9) hands coming out
+	jp c, update_boss4_behavior_1_state_1  ; (1 - 9) hands coming out
 	jp z, update_boss4_behavior_1_state_2  ; (10) boss rises from the floor
 	; ...
 	ret
@@ -970,6 +969,10 @@ update_boss4_behavior_1_state_0_continue:
 	ld bc, boss4_difficulty_setting__normal - boss4_difficulty_setting__easy
 	ldir
 
+	ld a, BOSS4_FRAME_IDLE_RIGHT
+	ld (boss__4_lord1_frame), a
+	ld a, BOSS4_FRAME_IDLE_LEFT
+	ld (boss__4_lord2_frame), a
 	ld a, 22
 	ld (boss__x), a
 	ld a, 38
@@ -1059,13 +1062,10 @@ update_boss4_behavior_1_state_2_continue:
 	ld a, (hl)
 	inc (hl)
 
-	; draw the lord:
 	and #0f
 	jr nz, update_boss4_behavior_1_state_2_continue2
-
-	ld a, BOSS4_FRAME_IDLE_RIGHT
+	; draw the lord:
 	call draw_boss4_lord1
-	ld a, BOSS4_FRAME_IDLE_LEFT
 	call draw_boss4_lord2
 
 	ld hl, boss__y
@@ -1073,35 +1073,6 @@ update_boss4_behavior_1_state_2_continue:
 	ld hl, boss__y2
 	dec (hl)
 
-; 	; draw lord1 coming up: y coordinate should be 22 - state_timer/16
-; 	ld a, (hl)
-; 	rrca
-; 	rrca
-; 	rrca
-; 	rrca
-; 	and #0f  ; state_timer/16
-; 	sub 22
-; 	neg
-; 	ld l, a
-; 	ld h, 0
-; 	add hl, hl
-; 	add hl, hl
-; 	add hl, hl
-; 	add hl, hl
-; 	add hl, hl
-; 	add hl, hl
-; 	ld bc, current_room__tile_map + 19
-; 	add hl, bc
-; 	ex de, hl
-; 	push de
-; 		ld hl, boss4_frame_lord1_idle_right
-; 		call draw_boss4_frame_lord1
-; 	pop hl
-; 	ld bc, 15
-; 	add hl, bc
-; 	ex de, hl
-; 	ld hl, boss4_frame_lord1_idle_left
-; 	call draw_boss4_frame_lord2
 	ld hl, redraw_flags
 	set ROOM_REDRAW_FLAG_BIT, (hl)	
 
@@ -1115,12 +1086,223 @@ update_boss4_behavior_1_state_2_continue2:
 	xor a
 	ld (boss__state), a
 	ld (boss__state_timer), a
+	ld (boss__state2), a
+	ld (boss__state2_timer), a
 	ret
 
 
 ;-----------------------------------------------
 update_boss4_behavior_2:
-	; ...
+	xor a
+	ld (boss__4_redraw), a
+	ld ix, boss__state
+	ld iy, boss__4_lord1_frame
+	call update_boss4_behavior_2_internal  ; lord1
+
+	ld ix, boss__state2
+	ld iy, boss__4_lord2_frame
+	call update_boss4_behavior_2_internal  ; lord2
+
+	ld a, (boss__4_redraw)
+	or a
+	ret z
+
+	ld hl, draw_boss_frame_clear_previous_frame_1
+	ld c, BOSS_PAGE
+	call call_hl_in_page_c_8000
+	ld hl, draw_boss_frame_clear_previous_frame_2
+	ld c, BOSS_PAGE
+	call call_hl_in_page_c_8000
+
+	call draw_boss4_lord1_without_clearing
+	call draw_boss4_lord2_without_clearing
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)
+	ret
+
+
+;-----------------------------------------------
+; Update behavior for just one lord
+; input:
+; - ix: ptr to state, state_timer, x, y
+; - iy: ptr to lord frame, target x, target y
+; output:
+; - z: redraw lord
+; - nz: do not redraw
+; states:
+; - 0: choose what to do next
+; - 1: go to player left (then 12)
+; - 2: go to player right (then 13)
+; - 3: go left-most (1-tile over the high ground), and stay there for a second or two, and then hover right until edge
+; - 4: go right-most (1-tile over the high ground), and stay there for a second or two, and then hover left until edge
+; - 5: 1-tile over the ground hover left-to-right
+; - 6: 1-tile over the ground hover right-to-left
+; - 7: go to a center position (center-left if lord1, and center-right if lord2)
+; - 8: wait for a couple of seconds
+; - 9: stomp-down (then go to 8)
+; - 10: lord-specific attack
+; - 11: joint-attack (only if there is a compatible pair)
+; ---
+; - 12: move right
+; - 13: move left
+update_boss4_behavior_2_internal:
+	ld a, (ix + 0)  ; state
+	or a
+	jr z, update_boss4_behavior_2_state_0
+	dec a
+	jr z, update_boss4_behavior_2_state_1
+	dec a
+	jr z, update_boss4_behavior_2_state_2
+	dec a
+	jr z, update_boss4_behavior_2_state_3
+	dec a
+	jr z, update_boss4_behavior_2_state_4
+	dec a
+	jr z, update_boss4_behavior_2_state_5
+	dec a
+	jr z, update_boss4_behavior_2_state_6
+	dec a
+	jr z, update_boss4_behavior_2_state_7
+	dec a
+	jr z, update_boss4_behavior_2_state_8
+	dec a
+	jr z, update_boss4_behavior_2_state_9
+	dec a
+	jr z, update_boss4_behavior_2_state_10
+	dec a
+	jr z, update_boss4_behavior_2_state_11
+	dec a
+	jr z, update_boss4_behavior_2_state_12
+	dec a
+	jp z, update_boss4_behavior_2_state_13
+	ret
+
+update_boss4_behavior_2_state_3:
+update_boss4_behavior_2_state_4:
+update_boss4_behavior_2_state_5:
+update_boss4_behavior_2_state_6:
+update_boss4_behavior_2_state_7:
+update_boss4_behavior_2_state_8:
+update_boss4_behavior_2_state_9:
+update_boss4_behavior_2_state_10:
+update_boss4_behavior_2_state_11:
+update_boss4_behavior_2_state_0:
+	ld c, 11
+	call random_modulo
+	inc a
+	ld (ix + 0), a  ; state
+	ld (ix + 1), 0  ; state_timer
+	ret
+
+update_boss4_behavior_2_state_1:
+	ld a, (ix + 1)  ; state_timer
+	inc (ix + 1)
+	or a
+	jr nz, update_boss4_behavior_2_state_1_continue
+	; set target destination:player position + (-4, -4)
+	ld a, (player_x + 1)
+	sub 4
+	ld (iy + 1), a  ; target x
+	ld a, (player_y + 1)
+	sub 4
+	ld (iy + 2), a  ; target y
+update_boss4_behavior_2_state_1_continue:
+	call update_boss4_behavior_2_move_to_destination
+	ret nz
+	ld (ix + 0), 11  ; state
+	ld (ix + 1), 0  ; state_timer
+	ret
+
+
+update_boss4_behavior_2_state_2:
+	ld a, (ix + 1)  ; state_timer
+	inc (ix + 1)
+	or a
+	jr nz, update_boss4_behavior_2_state_2_continue
+	; set target destination:player position + (-4, -4)
+	ld a, (player_x + 1)
+	sub 4
+	ld (iy + 1), a  ; target x
+	ld a, (player_y + 1)
+	sub 4
+	ld (iy + 2), a  ; target y
+update_boss4_behavior_2_state_2_continue:
+	call update_boss4_behavior_2_move_to_destination
+	ret nz
+	ld (ix + 0), 12  ; state
+	ld (ix + 1), 0  ; state_timer
+	ret
+
+
+update_boss4_behavior_2_state_12:
+	ld a, (ix + 1)  ; state_timer
+	inc (ix + 1)
+	or a
+	jr nz, update_boss4_behavior_2_state_12_continue
+	; set target destination:player position + (-4, -4)
+	ld a, (ix + 2)
+	add a, 6
+	ld (iy + 1), a  ; target x
+update_boss4_behavior_2_state_12_continue:
+	call update_boss4_behavior_2_move_to_destination
+	ret nz
+	ld (ix + 0), 0  ; state
+	ld (ix + 1), 0  ; state_timer
+	ret
+
+update_boss4_behavior_2_state_13:
+	ld a, (ix + 1)  ; state_timer
+	inc (ix + 1)
+	or a
+	jr nz, update_boss4_behavior_2_state_12_continue
+	; set target destination:player position + (-4, -4)
+	ld a, (ix + 2)
+	add a, -6
+	ld (iy + 1), a  ; target x
+	jr update_boss4_behavior_2_state_12_continue
+
+
+;-----------------------------------------------
+; input:
+; - ix: ptr to state, state_timer
+; - iy: ptr to lord frame, target x, target y
+; output:
+; - z: reached
+; - nz: not yet reached
+update_boss4_behavior_2_move_to_destination:
+	ld a, (ix + 1)
+	and #07
+	ret nz
+	; move to destination:
+	ld a, 1
+	ld (boss__4_redraw), a
+	ld a, (ix + 2)  ; x
+	cp (iy + 1)  ; target x
+	jr z, update_boss4_behavior_2_state_1_destination_check
+	jr c, update_boss4_behavior_2_state_1_move_right
+	; move left:
+	dec (ix + 2)
+	jr update_boss4_behavior_2_state_1_continue_x
+update_boss4_behavior_2_state_1_destination_check:
+	ld a, (ix + 3)  ; y
+	cp (iy + 2)  ; target y
+	ret z
+	jr update_boss4_behavior_2_state_1_continue_x2
+update_boss4_behavior_2_state_1_move_right:
+	inc (ix + 2)
+update_boss4_behavior_2_state_1_continue_x:
+	ld a, (ix + 3)  ; y
+	cp (iy + 2)  ; target y
+update_boss4_behavior_2_state_1_continue_x2:
+	jr z, update_boss4_behavior_2_state_1_continue_y
+	jr c, update_boss4_behavior_2_state_1_move_down
+	; move up:
+	dec (ix + 3)
+	jr update_boss4_behavior_2_state_1_continue_y
+update_boss4_behavior_2_state_1_move_down:
+	inc (ix + 3)
+update_boss4_behavior_2_state_1_continue_y:
+	or 1  ; not yet reached the destination
 	ret
 
 
@@ -1396,23 +1578,26 @@ boss4_awake_xibalba_lord_event_lower_tomb_continue:
 
 ;-----------------------------------------------
 ; input:
-; - a: frame index to draw
+; - (draw_boss4_lord1) frame
 ; - (boss__x), (boss__y): coordinates
 draw_boss4_lord1:
-	push af
-		ld a, (boss__4_first_lord)
-		ld hl, boss4_lord_frames_tbl - 4  ; "-4" as first lord has a = 1
-		add a, a
-		add a, a
-		ADD_HL_A
-		ld e, (hl)
-		inc hl
-		ld d, (hl)
-		inc hl
-		ld c, (hl)
-		inc hl
-		ld b, (hl)
-	pop af
+	ld hl, draw_boss_frame_clear_previous_frame_1
+	ld c, BOSS_PAGE
+	call call_hl_in_page_c_8000
+draw_boss4_lord1_without_clearing:
+	ld a, (boss__4_first_lord)
+	ld hl, boss4_lord_frames_tbl - 4  ; "-4" as first lord has a = 1
+	add a, a
+	add a, a
+	ADD_HL_A
+	ld e, (hl)
+	inc hl
+	ld d, (hl)
+	inc hl
+	ld c, (hl)
+	inc hl
+	ld b, (hl)
+	ld a, (boss__4_lord1_frame)
 	ex de, hl
 	add a, a
 	ADD_HL_A
@@ -1432,28 +1617,31 @@ draw_boss4_lord1:
 		call get_room_tile_ptr
 		ex de, hl
 	pop hl
-	jp draw_boss4_frame_lord1
+	jp draw_boss4_frame_lord1_without_clearing
 
 
 ;-----------------------------------------------
 ; input:
-; - a: frame index to draw
+; - (boss__4_lord2_frame) frame
 ; - (boss__x2), (boss__y2): coordinates
 draw_boss4_lord2:
-	push af
-		ld a, (boss__4_second_lord)
-		ld hl, boss4_lord_frames_tbl - 4  ; "-4" as first lord has a = 1
-		add a, a
-		add a, a
-		ADD_HL_A
-		ld e, (hl)
-		inc hl
-		ld d, (hl)
-		inc hl
-		ld c, (hl)
-		inc hl
-		ld b, (hl)
-	pop af
+	ld hl, draw_boss_frame_clear_previous_frame_2
+	ld c, BOSS_PAGE
+	call call_hl_in_page_c_8000
+draw_boss4_lord2_without_clearing:
+	ld a, (boss__4_second_lord)
+	ld hl, boss4_lord_frames_tbl - 4  ; "-4" as first lord has a = 1
+	add a, a
+	add a, a
+	ADD_HL_A
+	ld e, (hl)
+	inc hl
+	ld d, (hl)
+	inc hl
+	ld c, (hl)
+	inc hl
+	ld b, (hl)
+	ld a, (boss__4_lord2_frame)
 	ex de, hl
 	add a, a
 	ADD_HL_A
@@ -1473,7 +1661,7 @@ draw_boss4_lord2:
 		call get_room_tile_ptr
 		ex de, hl
 	pop hl
-	jp draw_boss4_frame_lord2
+	jp draw_boss4_frame_lord2_without_clearing
 
 
 ;-----------------------------------------------
@@ -1486,7 +1674,6 @@ draw_boss4_lord2:
 ; - de: ptr to draw to
 ; - hl: ptr to frame struct
 draw_boss4_frame_lord1:
-	ld iyl, 0  ; lord 1 tiles start at the very beginning of the boss tile area, so, no offset
 	push hl
 	push de
 		ld hl, draw_boss_frame_clear_previous_frame_1
@@ -1495,6 +1682,7 @@ draw_boss4_frame_lord1:
 	pop de
 	pop hl
 draw_boss4_frame_lord1_without_clearing:
+	ld iyl, 0  ; lord 1 tiles start at the very beginning of the boss tile area, so, no offset
 	push de
 		call draw_boss4_frame_internal
 
@@ -1520,8 +1708,6 @@ draw_boss4_frame_lord1_without_clearing:
 ; - de: ptr to draw to
 ; - hl: ptr to frame struct
 draw_boss4_frame_lord2:
-	ld a, (boss__4_second_lord_first_tile)
-	ld iyl, a
 	push hl
 	push de
 		ld hl, draw_boss_frame_clear_previous_frame_2
@@ -1530,6 +1716,8 @@ draw_boss4_frame_lord2:
 	pop de
 	pop hl
 draw_boss4_frame_lord2_without_clearing:
+	ld a, (boss__4_second_lord_first_tile)
+	ld iyl, a
 	push de
 		call draw_boss4_frame_internal
 
