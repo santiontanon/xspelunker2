@@ -785,6 +785,21 @@ draw_boss_frame_clear_previous_frame_y_loop:
 		ex de, hl
 		jr c, draw_boss_frame_clear_previous_frame_y_loop_skip
 
+		; if "de" >= boss__room_bg_buffer, we are done drawing
+		ex de, hl
+		push bc
+		push hl
+			ld bc, boss__room_bg_buffer
+			or a  ; clear carry flag
+			sbc hl, bc
+		pop hl
+		pop bc
+		ex de, hl
+		jr c, draw_boss_frame_clear_previous_frame_y_loop_continue
+		; outside of the room, we are done restoring background
+	pop bc
+	ret
+draw_boss_frame_clear_previous_frame_y_loop_continue:
 		push hl
 		push de
 			ldir

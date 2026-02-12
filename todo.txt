@@ -2,11 +2,10 @@ to do:
 
 ***- BUG: when crouching, players does not hit tile objects right in front of him
 ***- Xibalba lords boss:
-  ***- BUG: when bosses get above the platforms, there is corruption!
+  ***- implement states 3 - 8 of behavior 2
   ***- decorations:
     ***- sprite eyes (yellow, and flash red when hit, except the one with a bandage over the eyes)
     ***- open/close mouth periodically (for some of them, each time mouth opens there is a chance for a bullet, increasing chance with difficulty level)
-  ***- implement states 3 - 8 of behavior 2
   ***- "stomp" attack (state 9): if above the player, and at least 3/4 tiles clear, rise a bit, stop and then stomp.
   ***- lord-specific attack (state 10):
     ***- hun-came / vucub-came have lightning attacks (pointing with their fingers)

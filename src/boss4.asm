@@ -1205,6 +1205,10 @@ update_boss4_behavior_2_state_1:
 	ld (iy + 1), a  ; target x
 	ld a, (player_y + 1)
 	sub 4
+	cp 22
+	jp c, update_boss4_behavior_2_state_1_positive_y
+	xor a
+update_boss4_behavior_2_state_1_positive_y:
 	ld (iy + 2), a  ; target y
 update_boss4_behavior_2_state_1_continue:
 	call update_boss4_behavior_2_move_to_destination
@@ -1225,6 +1229,10 @@ update_boss4_behavior_2_state_2:
 	ld (iy + 1), a  ; target x
 	ld a, (player_y + 1)
 	sub 4
+	cp 22
+	jp c, update_boss4_behavior_2_state_2_positive_y
+	xor a
+update_boss4_behavior_2_state_2_positive_y:
 	ld (iy + 2), a  ; target y
 update_boss4_behavior_2_state_2_continue:
 	call update_boss4_behavior_2_move_to_destination
@@ -1814,10 +1822,15 @@ draw_boss4_frame_part_loop_y:
 				ld bc, current_room__tile_map
 				or a  ; clear carry flag
 				sbc hl, bc
+				jr c, draw_boss4_frame_part_loop_y_skip
+				add hl, bc
+				ld bc, boss__room_bg_buffer
+				or a  ; clear carry flag
+				sbc hl, bc
+				jr nc, draw_boss4_frame_part_loop_y_done
 			pop hl
 			pop bc
 			ex de, hl
-			jr c, draw_boss4_frame_part_loop_y_skip
 
 			ld b, c
 draw_boss4_frame_part_loop_x:
@@ -1849,11 +1862,18 @@ draw_boss4_frame_part_loop_y_skip2:
 	ret
 draw_boss4_frame_part_loop_y_skip:
 			; advance 'hl':
+			pop hl
+			pop bc
+			ex de, hl
 			ld b, 0
 			add hl, bc
 			jr draw_boss4_frame_part_loop_y_skip2
-
-
+draw_boss4_frame_part_loop_y_done:
+			pop hl
+			pop bc
+		pop de
+	pop bc
+	ret
 
 
 ;-----------------------------------------------
