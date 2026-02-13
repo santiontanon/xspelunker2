@@ -215,8 +215,8 @@ get_room_tile_ptr_width32:
 	jp get_room_tile_ptr_width32_entry_point
 get_room_tile_ptr_width96:
 	ld a, c  ; preserve c
-	ld c, b
-	ld b, 0
+	ld c, l
+	ld b, h
 	add hl, hl
 	add hl, bc  ; hl = y * 3
 	ld c, a
@@ -233,7 +233,11 @@ get_room_tile_ptr_width96_entry_point:
 	add hl, hl
 	add hl, hl  ; hl = y * 128
 get_room_tile_ptr_continue:
-	ld b, 0
+	; sign extend b to bc:
+	ld a, c
+    rlca
+    sbc a
+    ld  b, a
 	add hl, bc
 	ld bc, current_room__tile_map
 	add hl, bc

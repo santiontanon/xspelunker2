@@ -676,29 +676,29 @@ BOSS4_FRAME_HANDS_OPEN_LEFT: equ 7
 ; (as boss coordinates are based on the bottom-left part of the body)
 boss4_lord_frames_tbl:
 	dw boss4_lord1_frames_tbl
-	db -3, -9
+	db -3, -8
 	dw boss4_lord2_frames_tbl
-	db -3, -9
+	db -3, -8
 	dw boss4_lord3_frames_tbl
-	db -3, -8
+	db -3, -7
 	dw boss4_lord4_frames_tbl
-	db -3, -8
+	db -3, -7
 	dw boss4_lord5_frames_tbl
-	db -2, -8
+	db -2, -7
 	dw boss4_lord6_frames_tbl
-	db -2, -8
+	db -2, -7
 	dw boss4_lord7_frames_tbl
-	db -3, -7
+	db -3, -6
 	dw boss4_lord8_frames_tbl
-	db -3, -8
+	db -3, -7
 	dw boss4_lord9_frames_tbl
-	db -2, -8
+	db -2, -7
 	dw boss4_lord10_frames_tbl
-	db -2, -8
+	db -2, -7
 	dw boss4_lord11_frames_tbl
-	db -3, -7
+	db -3, -6
 	dw boss4_lord12_frames_tbl
-	db -3, -7
+	db -3, -6
 
 boss4_lord1_frames_tbl:
 	dw boss4_frame_lord1_idle_right
@@ -977,7 +977,7 @@ update_boss4_behavior_1_state_0_continue:
 	ld (boss__x), a
 	ld a, 38
 	ld (boss__x2), a
-	ld a, 31
+	ld a, 30
 	ld (boss__y), a
 	ld (boss__y2), a
 	ld hl, (boss__4_settings + BOSS_4_HP_OFFSET)
@@ -1122,6 +1122,26 @@ update_boss4_behavior_2:
 
 
 ;-----------------------------------------------
+update_boss4_behavior_2_table:
+	dw update_boss4_behavior_2_state_0
+	dw update_boss4_behavior_2_state_1
+	dw update_boss4_behavior_2_state_2
+	dw update_boss4_behavior_2_state_3
+	dw update_boss4_behavior_2_state_4
+	dw update_boss4_behavior_2_state_5
+	dw update_boss4_behavior_2_state_6
+	dw update_boss4_behavior_2_state_7
+	dw update_boss4_behavior_2_state_8
+	dw update_boss4_behavior_2_state_9
+	dw update_boss4_behavior_2_state_10
+	dw update_boss4_behavior_2_state_11
+	dw update_boss4_behavior_2_state_12
+	dw update_boss4_behavior_2_state_13
+	dw update_boss4_behavior_2_state_14
+	dw update_boss4_behavior_2_state_15
+	dw update_boss4_behavior_2_state_16
+	dw update_boss4_behavior_2_state_17
+
 ; Update behavior for just one lord
 ; input:
 ; - ix: ptr to state, state_timer, x, y
@@ -1133,8 +1153,8 @@ update_boss4_behavior_2:
 ; - 0: choose what to do next
 ; - 1: go to player left (then 12)
 ; - 2: go to player right (then 13)
-; - 3: go left-most (1-tile over the high ground), and stay there for a second or two, and then hover right until edge
-; - 4: go right-most (1-tile over the high ground), and stay there for a second or two, and then hover left until edge
+; - 3: go left-most (1-tile over the high ground): (1, 13) (then 14)
+; - 4: go right-most (1-tile over the high ground): (59, 13) (then 16)
 ; - 5: 1-tile over the ground hover left-to-right
 ; - 6: 1-tile over the ground hover right-to-left
 ; - 7: go to a center position (center-left if lord1, and center-right if lord2)
@@ -1145,40 +1165,22 @@ update_boss4_behavior_2:
 ; ---
 ; - 12: move right
 ; - 13: move left
+; - 14: wait for 100 frames -> go to 15
+; - 15: move right to (10, 13)
+; - 16: wait for 100 frames -> go to 17
+; - 17: move right to (50, 13)
 update_boss4_behavior_2_internal:
 	ld a, (ix + 0)  ; state
-	or a
-	jr z, update_boss4_behavior_2_state_0
-	dec a
-	jr z, update_boss4_behavior_2_state_1
-	dec a
-	jr z, update_boss4_behavior_2_state_2
-	dec a
-	jr z, update_boss4_behavior_2_state_3
-	dec a
-	jr z, update_boss4_behavior_2_state_4
-	dec a
-	jr z, update_boss4_behavior_2_state_5
-	dec a
-	jr z, update_boss4_behavior_2_state_6
-	dec a
-	jr z, update_boss4_behavior_2_state_7
-	dec a
-	jr z, update_boss4_behavior_2_state_8
-	dec a
-	jr z, update_boss4_behavior_2_state_9
-	dec a
-	jr z, update_boss4_behavior_2_state_10
-	dec a
-	jr z, update_boss4_behavior_2_state_11
-	dec a
-	jr z, update_boss4_behavior_2_state_12
-	dec a
-	jp z, update_boss4_behavior_2_state_13
-	ret
+	ld hl, update_boss4_behavior_2_table
+	add a, a
+	ADD_HL_A
+	ld a, (hl)
+	inc hl
+	ld h, (hl)
+	ld l, a
+	jp hl
 
-update_boss4_behavior_2_state_3:
-update_boss4_behavior_2_state_4:
+update_boss4_behavior_2_state_0:
 update_boss4_behavior_2_state_5:
 update_boss4_behavior_2_state_6:
 update_boss4_behavior_2_state_7:
@@ -1186,10 +1188,10 @@ update_boss4_behavior_2_state_8:
 update_boss4_behavior_2_state_9:
 update_boss4_behavior_2_state_10:
 update_boss4_behavior_2_state_11:
-update_boss4_behavior_2_state_0:
 	ld c, 11
 	call random_modulo
 	inc a
+	; ld a, 1  ; DEBUG
 	ld (ix + 0), a  ; state
 	ld (ix + 1), 0  ; state_timer
 	ret
@@ -1205,15 +1207,12 @@ update_boss4_behavior_2_state_1:
 	ld (iy + 1), a  ; target x
 	ld a, (player_y + 1)
 	sub 4
-	cp 22
-	jp c, update_boss4_behavior_2_state_1_positive_y
-	xor a
-update_boss4_behavior_2_state_1_positive_y:
 	ld (iy + 2), a  ; target y
+	call update_boss4_safe_lord_destination
 update_boss4_behavior_2_state_1_continue:
 	call update_boss4_behavior_2_move_to_destination
 	ret nz
-	ld (ix + 0), 11  ; state
+	ld (ix + 0), 12  ; state
 	ld (ix + 1), 0  ; state_timer
 	ret
 
@@ -1229,15 +1228,12 @@ update_boss4_behavior_2_state_2:
 	ld (iy + 1), a  ; target x
 	ld a, (player_y + 1)
 	sub 4
-	cp 22
-	jp c, update_boss4_behavior_2_state_2_positive_y
-	xor a
-update_boss4_behavior_2_state_2_positive_y:
 	ld (iy + 2), a  ; target y
+	call update_boss4_safe_lord_destination
 update_boss4_behavior_2_state_2_continue:
 	call update_boss4_behavior_2_move_to_destination
 	ret nz
-	ld (ix + 0), 12  ; state
+	ld (ix + 0), 13  ; state
 	ld (ix + 1), 0  ; state_timer
 	ret
 
@@ -1251,7 +1247,10 @@ update_boss4_behavior_2_state_12:
 	ld a, (ix + 2)
 	add a, 6
 	ld (iy + 1), a  ; target x
+	call update_boss4_safe_lord_destination
 update_boss4_behavior_2_state_12_continue:
+update_boss4_behavior_2_state_15_continue:
+update_boss4_behavior_2_state_17_continue:	
 	call update_boss4_behavior_2_move_to_destination
 	ret nz
 	ld (ix + 0), 0  ; state
@@ -1267,7 +1266,63 @@ update_boss4_behavior_2_state_13:
 	ld a, (ix + 2)
 	add a, -6
 	ld (iy + 1), a  ; target x
+	call update_boss4_safe_lord_destination
 	jr update_boss4_behavior_2_state_12_continue
+
+
+update_boss4_behavior_2_state_3:
+	ld a, (ix + 1)  ; state_timer
+	inc (ix + 1)
+	or a
+	jr nz, update_boss4_behavior_2_state_3_continue
+	ld (iy + 1), 1  ; target x
+	ld (iy + 2), 13  ; target y
+update_boss4_behavior_2_state_3_continue:
+	call update_boss4_behavior_2_move_to_destination
+	ret nz
+	ld (ix + 0), 14  ; state
+	ld (ix + 1), 0  ; state_timer
+	ret
+
+update_boss4_behavior_2_state_4:
+	ld a, (ix + 1)  ; state_timer
+	inc (ix + 1)
+	or a
+	jr nz, update_boss4_behavior_2_state_4_continue
+	ld (iy + 1), 59  ; target x
+	ld (iy + 2), 13  ; target y
+update_boss4_behavior_2_state_4_continue:
+	call update_boss4_behavior_2_move_to_destination
+	ret nz
+	ld (ix + 0), 16  ; state
+	ld (ix + 1), 0  ; state_timer
+	ret
+
+update_boss4_behavior_2_state_14:
+update_boss4_behavior_2_state_16:
+	ld a, (ix + 1)  ; state_timer
+	inc (ix + 1)
+	cp 100
+	ret nz
+	inc (ix + 0)  ; state
+	ld (ix + 1), 0  ; state_timer
+	ret	
+
+update_boss4_behavior_2_state_15:
+	ld a, (ix + 1)  ; state_timer
+	inc (ix + 1)
+	or a
+	jr nz, update_boss4_behavior_2_state_15_continue
+	ld (iy + 1), 10 ; target x
+	jr update_boss4_behavior_2_state_15_continue
+
+update_boss4_behavior_2_state_17:
+	ld a, (ix + 1)  ; state_timer
+	inc (ix + 1)
+	or a
+	jp nz, update_boss4_behavior_2_state_17_continue
+	ld (iy + 1), 50 ; target x
+	jp update_boss4_behavior_2_state_17_continue
 
 
 ;-----------------------------------------------
@@ -1311,6 +1366,34 @@ update_boss4_behavior_2_state_1_move_down:
 	inc (ix + 3)
 update_boss4_behavior_2_state_1_continue_y:
 	or 1  ; not yet reached the destination
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - iy: ptr to lord frame, target x, target y
+update_boss4_safe_lord_destination:
+	ld a, (iy + 1)
+	cp 60
+	jr c, update_boss4_safe_lord_destination_safe_x
+	cp 128
+	jr c, update_boss4_safe_lord_destination_right_edge
+	; left edge:
+	ld (iy + 1), 1
+	jr update_boss4_safe_lord_destination_safe_x
+update_boss4_safe_lord_destination_right_edge:
+	ld (iy + 1), 59
+update_boss4_safe_lord_destination_safe_x:
+	ld a, (iy + 2)
+	cp 23
+	ret c  ; safe
+	cp 128
+	jr c, update_boss4_safe_lord_destination_bottom_edge
+	; top edge:
+	ld (iy + 2), 0
+	ret
+update_boss4_safe_lord_destination_bottom_edge:
+	ld (iy + 2), 22
 	ret
 
 
