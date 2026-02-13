@@ -208,6 +208,14 @@ DART_DAMAGE: equ 1
 SPEAR_DAMAGE: equ 2
 RAYGUN_DAMAGE: equ 2
 
+MACHETE_COOLDOWN: equ 8
+MACUAHUITL_COOLDOWN: equ 12
+HAMMER_COOLDOWN: equ 18
+
+MACUAHUITL_SWING_TIME: equ 8  ; 4 frames after animation start
+HAMMER_ANIMATION_TIME1: equ 12 ; 6 frames after animation start
+HAMMER_ANIMATION_TIME2: equ 8
+
 
 ; Types of sprite enemies (tile-based enemies are with the other tags below):
 ; enemies you cannot hit:

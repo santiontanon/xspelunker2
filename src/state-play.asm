@@ -110,8 +110,8 @@ state_play:
 ; 		ld (player_inventory_items+INVENTORY_ITEM_PUZZLEBOX_MARS), a
 ; 		ld (player_inventory_items+INVENTORY_ITEM_PUZZLEBOX_MOON), a
 		ld (player_inventory_weapons), a  ; machete
-; 		ld (player_inventory_weapons+1), a
-; 		ld (player_inventory_weapons+2), a
+		ld (player_inventory_weapons+1), a
+		ld (player_inventory_weapons+2), a
 ; 		ld (player_inventory_weapons+3), a  ; shield
 ; 		ld (player_inventory_weapons+4), a  ; sling
 ; 		ld (player_inventory_weapons+5), a  ; blowgun

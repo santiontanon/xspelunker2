@@ -2450,19 +2450,19 @@ player_update_determine_weapon_swing_type_directional:
 	or 1
 	ret
 player_update_determine_weapon_swing_type_macuahuitl:
-	ld a, 18
+	ld a, MACUAHUITL_COOLDOWN
 	ld (player_weapon_state_timer), a
 	ld a, PLAYER_WEAPON_SWING_MACUAHUITL1
 	jr player_update_determine_weapon_swing_type_determined
 player_update_determine_weapon_swing_type_hammer:
-	ld a, 32
+	ld a, HAMMER_COOLDOWN
 	ld (player_weapon_state_timer), a
 	ld a, PLAYER_WEAPON_SWING_HAMMER1
 	jr player_update_determine_weapon_swing_type_determined
 player_update_determine_weapon_swing_type_machete:
 	ld hl, SFX_weapon_swing
 	call play_SFX_with_high_priority
-	ld a, 8
+	ld a, MACHETE_COOLDOWN
 	ld (player_weapon_state_timer), a
 	ld a, (keyboard_state)
 	bit KEY_UP_BIT, a  ; up
@@ -2511,19 +2511,19 @@ player_update_determine_weapon_swing_type_jumping_directional:
 	or 1
 	ret
 player_update_determine_weapon_swing_type_jumping_macuahuitl:
-	ld a, 18
+	ld a, MACUAHUITL_COOLDOWN
 	ld (player_weapon_state_timer), a
 	ld a, PLAYER_WEAPON_SWING_MACUAHUITL1
 	jr player_update_determine_weapon_swing_type_jumping_determined
 player_update_determine_weapon_swing_type_jumping_hammer:
-	ld a, 32
+	ld a, HAMMER_COOLDOWN
 	ld (player_weapon_state_timer), a
 	ld a, PLAYER_WEAPON_SWING_HAMMER1
 	jr player_update_determine_weapon_swing_type_jumping_determined
 player_update_determine_weapon_swing_type_jumping_machete:
 	ld hl, SFX_weapon_swing
 	call play_SFX_with_high_priority
-	ld a, 8
+	ld a, MACHETE_COOLDOWN
 	ld (player_weapon_state_timer), a
 	ld a, (keyboard_state)
 	bit KEY_UP_BIT, a  ; up
@@ -2576,19 +2576,19 @@ player_update_determine_weapon_swing_type_crouching_directional:
 	or 1
 	ret
 player_update_determine_weapon_swing_type_crouhcing_macuahuitl:
-	ld a, 18
+	ld a, MACUAHUITL_COOLDOWN
 	ld (player_weapon_state_timer), a
 	ld a, PLAYER_WEAPON_SWING_MACUAHUITL1
 	jr player_update_determine_weapon_swing_type_crouching_determined
 player_update_determine_weapon_swing_type_crouhcing_hammer:
-	ld a, 32
+	ld a, HAMMER_COOLDOWN
 	ld (player_weapon_state_timer), a
 	ld a, PLAYER_WEAPON_SWING_HAMMER1
 	jr player_update_determine_weapon_swing_type_crouching_determined
 player_update_determine_weapon_swing_type_crouching_machete:
 	ld hl, SFX_weapon_swing
 	call play_SFX_with_high_priority
-	ld a, 8
+	ld a, MACHETE_COOLDOWN
 	ld (player_weapon_state_timer), a
 	ld a, PLAYER_WEAPON_SWING_MACHETE_CROUCHING
 player_update_determine_weapon_swing_type_crouching_determined:
@@ -2702,7 +2702,7 @@ player_update_update_sprite_position_pop_af:
 
 player_update_weapon_sprite_request_hammer1:
 	ld a, (player_weapon_state_timer)
-	cp 18
+	cp HAMMER_ANIMATION_TIME1
 	jp nz, player_update_weapon_sprite_request_continue
 	ld hl, SFX_weapon_swing_slow
 	call play_SFX_with_high_priority
@@ -2711,14 +2711,14 @@ player_update_weapon_sprite_request_hammer1:
 	jp player_update_weapon_sprite_request_continue
 player_update_weapon_sprite_request_hammer2:
 	ld a, (player_weapon_state_timer)
-	cp 10
+	cp HAMMER_ANIMATION_TIME2
 	jp nz, player_update_weapon_sprite_request_continue
 	ld a, PLAYER_WEAPON_SWING_HAMMER3
 	ld (player_weapon_swing_type), a
 	jp player_update_weapon_sprite_request_continue
 player_update_weapon_sprite_request_macuahuitl1:
 	ld a, (player_weapon_state_timer)
-	cp 10
+	cp MACUAHUITL_SWING_TIME
 	jp nz, player_update_weapon_sprite_request_continue
 	ld hl, SFX_weapon_swing
 	call play_SFX_with_high_priority
@@ -2742,7 +2742,11 @@ weapon_sprite_swing_table:
 player_weapon_damages:
 	db 1, 3, 2, 0   ; machete, hammer, macuahuitl, shield
 	db 0, 0, 0, 0   ; throwing weapons
-	db 2, 5, 3      ; upgraded machete, hammer, macuahuitl
+	db 2, 6, 4      ; upgraded machete, hammer, macuahuitl
+
+; machete DPS: 1 / 8  ->  0.1250
+; macuahuitl DPS: 2 / 12  ->  0.1666
+; hammer DPS: 3 / 18  ->  0.1666
 
 
 ;-----------------------------------------------
