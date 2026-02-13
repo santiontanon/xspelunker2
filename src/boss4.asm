@@ -977,7 +977,7 @@ update_boss4_behavior_1_state_0_continue:
 	ld (boss__x), a
 	ld a, 38
 	ld (boss__x2), a
-	ld a, 30
+	ld a, 29
 	ld (boss__y), a
 	ld (boss__y2), a
 	ld hl, (boss__4_settings + BOSS_4_HP_OFFSET)
@@ -1078,7 +1078,7 @@ update_boss4_behavior_1_state_2_continue:
 
 update_boss4_behavior_1_state_2_continue2:
 	ld a, (boss__state_timer)
-	cp 144
+	cp 128
 	ret nz
 	; done!
 	ld a, 2
@@ -1141,6 +1141,8 @@ update_boss4_behavior_2_table:
 	dw update_boss4_behavior_2_state_15
 	dw update_boss4_behavior_2_state_16
 	dw update_boss4_behavior_2_state_17
+	dw update_boss4_behavior_2_state_18
+	dw update_boss4_behavior_2_state_19
 
 ; Update behavior for just one lord
 ; input:
@@ -1155,8 +1157,8 @@ update_boss4_behavior_2_table:
 ; - 2: go to player right (then 13)
 ; - 3: go left-most (1-tile over the high ground): (1, 13) (then 14)
 ; - 4: go right-most (1-tile over the high ground): (59, 13) (then 16)
-; - 5: 1-tile over the ground hover left-to-right
-; - 6: 1-tile over the ground hover right-to-left
+; - 5: 1-tile over the ground hover left-to-right (state 5 then 18)
+; - 6: 1-tile over the ground hover right-to-left (state 6 then 19)
 ; - 7: go to a center position (center-left if lord1, and center-right if lord2)
 ; - 8: wait for a couple of seconds
 ; - 9: stomp-down (then go to 8)
@@ -1169,6 +1171,8 @@ update_boss4_behavior_2_table:
 ; - 15: move right to (10, 13)
 ; - 16: wait for 100 frames -> go to 17
 ; - 17: move right to (50, 13)
+; - 18: (from 5)
+; - 19: (from 6)
 update_boss4_behavior_2_internal:
 	ld a, (ix + 0)  ; state
 	ld hl, update_boss4_behavior_2_table
@@ -1181,17 +1185,13 @@ update_boss4_behavior_2_internal:
 	jp hl
 
 update_boss4_behavior_2_state_0:
-update_boss4_behavior_2_state_5:
-update_boss4_behavior_2_state_6:
-update_boss4_behavior_2_state_7:
-update_boss4_behavior_2_state_8:
 update_boss4_behavior_2_state_9:
 update_boss4_behavior_2_state_10:
 update_boss4_behavior_2_state_11:
 	ld c, 11
 	call random_modulo
 	inc a
-	; ld a, 1  ; DEBUG
+; 	ld a, 8  ; DEBUG
 	ld (ix + 0), a  ; state
 	ld (ix + 1), 0  ; state_timer
 	ret
@@ -1248,9 +1248,12 @@ update_boss4_behavior_2_state_12:
 	add a, 6
 	ld (iy + 1), a  ; target x
 	call update_boss4_safe_lord_destination
+update_boss4_behavior_2_state_7_continue:
 update_boss4_behavior_2_state_12_continue:
 update_boss4_behavior_2_state_15_continue:
 update_boss4_behavior_2_state_17_continue:	
+update_boss4_behavior_2_state_18_continue:	
+update_boss4_behavior_2_state_19_continue:	
 	call update_boss4_behavior_2_move_to_destination
 	ret nz
 	ld (ix + 0), 0  ; state
@@ -1323,6 +1326,79 @@ update_boss4_behavior_2_state_17:
 	jp nz, update_boss4_behavior_2_state_17_continue
 	ld (iy + 1), 50 ; target x
 	jp update_boss4_behavior_2_state_17_continue
+
+
+update_boss4_behavior_2_state_5:
+	ld a, (ix + 1)  ; state_timer
+	inc (ix + 1)
+	or a
+	jr nz, update_boss4_behavior_2_state_5_continue
+	ld (iy + 1), 16  ; target x
+	ld (iy + 2), 21  ; target y
+update_boss4_behavior_2_state_5_continue:
+	call update_boss4_behavior_2_move_to_destination
+	ret nz
+	ld (ix + 0), 18  ; state
+	ld (ix + 1), 0  ; state_timer
+	ret
+
+update_boss4_behavior_2_state_6:
+	ld a, (ix + 1)  ; state_timer
+	inc (ix + 1)
+	or a
+	jr nz, update_boss4_behavior_2_state_6_continue
+	ld (iy + 1), 44  ; target x
+	ld (iy + 2), 21  ; target y
+update_boss4_behavior_2_state_6_continue:
+	call update_boss4_behavior_2_move_to_destination
+	ret nz
+	ld (ix + 0), 19  ; state
+	ld (ix + 1), 0  ; state_timer
+	ret
+
+update_boss4_behavior_2_state_18:
+	ld a, (ix + 1)  ; state_timer
+	inc (ix + 1)
+	or a
+	jp nz, update_boss4_behavior_2_state_18_continue
+	ld (iy + 1), 44 ; target x
+	jp update_boss4_behavior_2_state_18_continue
+
+update_boss4_behavior_2_state_19:
+	ld a, (ix + 1)  ; state_timer
+	inc (ix + 1)
+	or a
+	jp nz, update_boss4_behavior_2_state_19_continue
+	ld (iy + 1), 16 ; target x
+	jp update_boss4_behavior_2_state_19_continue
+
+update_boss4_behavior_2_state_7:
+	ld a, (ix + 1)  ; state_timer
+	inc (ix + 1)
+	or a
+	jp nz, update_boss4_behavior_2_state_7_continue
+	; are we updating lord 1 or 2?
+	push ix
+	pop hl
+	ld bc, boss__state
+	or a
+	sbc hl, bc
+	ld (iy + 1), 22  ; target x for lord 1
+	jr z, update_boss4_behavior_2_state_7_lord1
+	ld (iy + 1), 38  ; target x for lord 2
+update_boss4_behavior_2_state_7_lord1:
+	ld (iy + 2), 18  ; target y
+	jp update_boss4_behavior_2_state_7_continue
+
+
+update_boss4_behavior_2_state_8:
+	ld a, (ix + 1)  ; state_timer
+	inc (ix + 1)
+	cp 100
+	ret nz
+	ld (ix + 0), 0  ; state
+	ld (ix + 1), 0  ; state_timer
+	ret	
 
 
 ;-----------------------------------------------

@@ -1,7 +1,6 @@
 to do:
 
 ***- Xibalba lords boss:
-  ***- implement states 5 - 8 of behavior 2
   ***- decorations:
     ***- turn towards the player
     ***- sprite eyes (yellow, and flash red when hit, except the one with a bandage over the eyes)

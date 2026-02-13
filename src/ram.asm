@@ -243,12 +243,10 @@ boss__active: ds virtual 1  ; 1 when we are fighting a boss (only when the boss 
 boss__current_boss_number: ds virtual 1
 boss__room_bg_buffer: equ current_room__tile_map + 32*24*2  ; the room is copied here, so that background can be restored when the boss moves around
 boss__behavior: ds virtual 1  ; which boss behavior is being executed
-
 boss__state: ds virtual 1  ; state within the current boss behavior
 boss__state_timer: ds virtual 1
 boss__x: ds virtual 1
 boss__y: ds virtual 1
-
 boss__state2: ds virtual 1  ; for bosses that have two parts
 boss__state2_timer: ds virtual 1
 boss__x2: ds virtual 1  ; for bosses that have two parts
