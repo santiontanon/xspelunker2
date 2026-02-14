@@ -1,7 +1,6 @@
 to do:
 
 ***- Xibalba lords boss:
-  ***- BUG: some times bullets appear from the left side of the screen when lords are on the right?!
   ***- lord-specific attack (state 10):
     ***- hun-came / vucub-came have lightning attacks (pointing with their fingers)
     ***- Xiquiripat / Cuchumaquic: spawn enemies (bats)

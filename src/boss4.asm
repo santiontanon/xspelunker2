@@ -1297,7 +1297,7 @@ update_boss4_behavior_2_internal_mouth:
 		dec b
 		dec b
 		dec b
-		ld ix, #0008
+		ld ix, #0004
 		ld hl, boss_fire_directional_bullet_towards_player_e_b
 		ld c, BOSS_PAGE
 		call call_hl_in_page_c_8000
