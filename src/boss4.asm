@@ -938,19 +938,10 @@ update_boss4_behavior_1:
 	cp 10
 	jp c, update_boss4_behavior_1_state_1  ; (1 - 9) hands coming out
 	jp z, update_boss4_behavior_1_state_2  ; (10) boss rises from the floor
-	; ...
 	ret
 
 update_boss4_behavior_1_state_0:
-	; patch 'rise' tileset:
-	ld hl, boss4_tiles_rise_zx0
-	ld de, buffer_4096
-	ld c, BOSS_GFX_PAGE
-	call dzx0_from_page_c
-
-	ld de, CHRTBL2 + 3*16*8
-	ld bc, 14*8
-	call upload_tile_patch_to_all_banks
+	call update_boss4_load_xibalba_lord_rise_patch
 
 	; initialize all the boss variables:
 	ld a, (current_world__difficulty)
@@ -1001,6 +992,13 @@ update_boss4_behavior_1_state_0_continue:
 	ld (boss__state), a
 	xor a
 	ld (boss__state_timer), a
+
+	; spawn object for sprite decorations
+	call ptr_to_new_sprite_object
+	ret nz
+	ld (hl), 0  ; ID
+	inc hl
+	ld (hl), SPRITE_OBJECT_TYPE_BOSS_EXTRAS	
 	ret
 
 update_boss4_behavior_1_state_1:
@@ -1065,13 +1063,13 @@ update_boss4_behavior_1_state_2_continue:
 	and #0f
 	jr nz, update_boss4_behavior_1_state_2_continue2
 	; draw the lord:
-	call draw_boss4_lord1
-	call draw_boss4_lord2
-
 	ld hl, boss__y
 	dec (hl)
 	ld hl, boss__y2
 	dec (hl)
+
+	call draw_boss4_lord1
+	call draw_boss4_lord2
 
 	ld hl, redraw_flags
 	set ROOM_REDRAW_FLAG_BIT, (hl)	
@@ -1113,6 +1111,39 @@ update_boss4_behavior_2:
 	ld hl, draw_boss_frame_clear_previous_frame_2
 	ld c, BOSS_PAGE
 	call call_hl_in_page_c_8000
+
+	; decide whether to draw facing left or right:
+	; lord 1:
+	ld hl, boss__x
+	ld a, (player_x + 1)
+	inc a
+	cp (hl)
+	jr c, update_boss4_behavior_2_player_left_of_lord1
+	ld a, (boss__4_lord1_frame)
+	and #fe  ; lord faces right
+	ld (boss__4_lord1_frame), a
+	jr update_boss4_behavior_2_lord1_direction_set
+update_boss4_behavior_2_player_left_of_lord1:
+	ld a, (boss__4_lord1_frame)
+	or #01  ; lord faces left
+	ld (boss__4_lord1_frame), a
+update_boss4_behavior_2_lord1_direction_set:
+
+	; lord 2:
+	ld hl, boss__x2
+	ld a, (player_x + 1)
+	inc a
+	cp (hl)
+	jr c, update_boss4_behavior_2_player_left_of_lord2
+	ld a, (boss__4_lord2_frame)
+	and #fe  ; lord faces right
+	ld (boss__4_lord2_frame), a
+	jr update_boss4_behavior_2_lord2_direction_set
+update_boss4_behavior_2_player_left_of_lord2:
+	ld a, (boss__4_lord2_frame)
+	or #01  ; lord faces left
+	ld (boss__4_lord2_frame), a
+update_boss4_behavior_2_lord2_direction_set:
 
 	call draw_boss4_lord1_without_clearing
 	call draw_boss4_lord2_without_clearing
@@ -1309,6 +1340,7 @@ update_boss4_behavior_2_state_16:
 	ret nz
 	inc (ix + 0)  ; state
 	ld (ix + 1), 0  ; state_timer
+	xor a  ; z (redraw)
 	ret	
 
 update_boss4_behavior_2_state_15:
@@ -1477,6 +1509,19 @@ update_boss4_safe_lord_destination_bottom_edge:
 update_boss4_behavior_3:
 	; ...
 	ret
+
+
+;-----------------------------------------------
+update_boss4_load_xibalba_lord_rise_patch:
+	; patch 'rise' tileset:
+	ld hl, boss4_tiles_rise_zx0
+	ld de, buffer_4096
+	ld c, BOSS_GFX_PAGE
+	call dzx0_from_page_c
+
+	ld de, CHRTBL2 + 3*16*8
+	ld bc, 14*8
+	jp upload_tile_patch_to_all_banks
 
 
 ;-----------------------------------------------

@@ -244,6 +244,35 @@ state_play_from_inventory__no_full_hud:
 		call setup_game_tiles
 		call state_play_upload_object_tiles_to_vdp_if_necessary
 
+		; special case for boss 4:
+		ld a, (boss__active)
+		or a
+		jr z, state_play_from_inventory__no_boss_4
+		ld a, (boss__current_boss_number)
+		cp 3  ; xibalba lords
+		jr nz, state_play_from_inventory__no_boss_4
+		; load lord specific tiles:
+		ld a, (boss__behavior)
+		or a
+		jr z, state_play_from_inventory__no_boss_4
+		cp 2
+		jr z, state_play_from_inventory__load_boss_4_tile_patches
+		cp 3
+		jr z, state_play_from_inventory__load_boss_4_tile_patches
+		; behavior 1, only load them in state 2
+		ld a, (boss__state)
+		cp 10
+		jr z, state_play_from_inventory__load_boss_4_tile_patches
+		ld hl, update_boss4_load_xibalba_lord_rise_patch
+		ld c, BOSS_4_PAGE
+		call call_hl_in_page_c_8000
+		jr state_play_from_inventory__no_boss_4
+state_play_from_inventory__load_boss_4_tile_patches:
+		ld hl, update_boss4_load_xibalba_lord_tile_patches
+		ld c, BOSS_4_PAGE
+		call call_hl_in_page_c_8000
+state_play_from_inventory__no_boss_4:
+
 		; init sprite attribute table:
 		ld hl, sprite_attribute_table + 2
 		ld (hl), 0

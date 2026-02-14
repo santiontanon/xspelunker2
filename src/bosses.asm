@@ -1157,6 +1157,8 @@ update_sprite_objects_boss_extras_internal:
 	jr z, update_sprite_objects_boss_extras_boss_2
 	cp 4  ; inverted pyramid
 	jp z, update_sprite_objects_boss_extras_boss_3
+	cp 8  ; xibalba
+	jp z, update_sprite_objects_boss_extras_boss_4
 	; ...
 	ret
 
@@ -1397,6 +1399,76 @@ update_sprite_objects_boss_extras_boss_3_attached_stomp2:
 	add a, a
 	add a, 5*8 + 4
 	jr update_sprite_objects_boss_extras_boss_3_attached_stomp2_continue
+
+
+update_sprite_objects_boss_extras_boss_4:
+	ld a, (boss__behavior)
+	cp 2
+	ret nz  ; only behavior 2 should show eyes
+	ld a, (boss__hit_timer)
+	or a
+	ret nz  ; no eyes when hit	
+	ld a, (boss__4_first_lord)
+	cp 12
+	jr z, update_sprite_objects_boss_extras_boss_4_skip_lord1
+	ld bc, (boss__x)
+	ld a, (boss__4_lord1_frame)
+	call update_sprite_objects_boss_extras_boss_4_lord
+update_sprite_objects_boss_extras_boss_4_skip_lord1:
+	ld a, (boss__4_second_lord)
+	cp 12
+	ret z
+	ld a, (boss__4_lord2_frame)
+	ld bc, (boss__x2)
+	
+update_sprite_objects_boss_extras_boss_4_lord:
+	and #01
+	jr nz, update_sprite_objects_boss_extras_boss_4_lord_left
+	inc c
+	jr update_sprite_objects_boss_extras_boss_4_lord_continue
+update_sprite_objects_boss_extras_boss_4_lord_left:
+	dec c
+update_sprite_objects_boss_extras_boss_4_lord_continue:
+	ld d, COLOR_RED
+
+	ld a, b
+	ld hl, room_scroll_y
+	sub (hl)
+	add a, a
+	add a, a
+	add a, a
+	add a, 7 - 32
+	ld b, a
+	ld a, c
+	ld hl, room_scroll_x
+	sub (hl)
+	; #ff: -> use early clock bit, draw
+	; 0 - 31 -> draw
+	; 32 - #fe -> skip
+	cp 31
+	jr c, update_sprite_objects_boss_extras_boss_4_lord_x_ok
+	cp #ff
+	ret nz  ; skip
+	; early clock bit:
+	add a, 4
+	set 7, d
+update_sprite_objects_boss_extras_boss_4_lord_x_ok:
+	add a, a
+	add a, a
+	add a, a
+	add a, 8
+	ld c, a
+	ld a, (interrupt_cycle)
+	rrca
+	rrca
+	rrca
+	and #1f
+	call a_mod_3
+	add a, a
+	add a, a
+	add a, (FIRST_ENEMY_SPRITE_PATTERN + 9) * 4
+	ld e, a
+	jp add_sprite_to_this_frame
 
 
 ;-----------------------------------------------

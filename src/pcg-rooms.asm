@@ -117,6 +117,7 @@ pcg_generate_room_reset_state:
 ; 	ld hl, current_room__sprite_objects
 ; 	ld bc, MAX_ROOM_SPRITE_OBJECTS * ROOM_OBJECT_STRUCT_SIZE - 1
 	xor a
+	ld (boss__active), a
 	ld (player_trial_completion_state), a
 	ld (tmp_pcg_room__is_midpoint_room), a
 ; 	call clear_memory_a
