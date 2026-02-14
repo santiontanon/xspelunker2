@@ -951,6 +951,8 @@ boss_fire_directional_bullet_towards_player_with_random_offset:
 ; - ixl, ixh: pixel offset
 ; output:
 ; - ix: bullet ptr
+boss_fire_directional_bullet_towards_player_e_b:  ; for when we call it from a different page
+	ld c, e
 boss_fire_directional_bullet_towards_player:
 	; see if player is close enough:
 	ld a, (player_x + 1)

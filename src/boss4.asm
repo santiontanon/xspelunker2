@@ -1,17 +1,22 @@
 ;-----------------------------------------------
 BOSS_4_HP_OFFSET: equ 0
+BOSS_4_MOUTH_TIMER_MASK: equ 2
 
 boss4_difficulty_setting__easy:
 	dw 128  ; boss hp
+	db #3e  ; mouth timer mask
 	; db 16, 32, 32, 32, #07  ; walk, crouch, staff/hand attack duration, bullet duration, bullet frequency
 boss4_difficulty_setting__normal:
 	dw 192  ; boss hp
+	db #1e  ; mouth timer mask
 	; db 14, 28, 28, 32, #07  ; walk, crouch, staff/hand attack duration, bullet duration, bullet frequency
 boss4_difficulty_setting__hard:
 	dw 256  ; boss hp
+	db #0e  ; mouth timer mask
 	; db 12, 24, 24, 32, #07  ; walk, crouch, staff/hand attack duration, bullet duration, bullet frequency
 boss4_difficulty_setting__hardest:
 	dw 320  ; boss hp
+	db #0e  ; mouth timer mask
 	; db 8, 16, 16, 20, #03  ; walk, crouch, staff/hand attack duration, bullet duration, bullet frequency
 
 
@@ -887,10 +892,12 @@ update_boss4_behavior_0:
 	ld ix, current_room__sprite_objects
 	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	cp 24
+	ld c, 23  ; target x
 	call nz, update_boss4_behavior_0_lower_ghost
 	ld ix, current_room__sprite_objects + ROOM_OBJECT_STRUCT_SIZE
 	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	cp 24
+	ld c, 39  ; target x
 	call nz, update_boss4_behavior_0_lower_ghost
 	ld a, (current_room__sprite_objects + ROOM_OBJECT_STRUCT_TILE_Y)
 	cp 24
@@ -904,21 +911,6 @@ update_boss4_behavior_0:
 	ld (current_room__sprite_objects), a
 	ld (current_room__sprite_objects + ROOM_OBJECT_STRUCT_SIZE), a
 
-	; Bring boss name (using sprites)
-	ld ix, boss4_name_initial_sprite_attributes
-	ld de, boss4_name_y_table
-	ld hl, update_boss_behavior_bring_name_down_ix
-	ld c, BOSS_PAGE
-	call call_hl_in_page_c_8000
-	ld b, 100
-	call wait_b_halts_skippable
-	; Remove boss name (using sprites)
-	ld ix, boss4_name_initial_sprite_attributes
-	ld de, boss4_name_y_table + 23
-	ld hl, update_boss_behavior_bring_name_up_ix
-	ld c, BOSS_PAGE
-	call call_hl_in_page_c_8000
-
 	; boss starts rising from the ground!
 	ld a, 1
 	ld (boss__behavior), a
@@ -926,6 +918,28 @@ update_boss4_behavior_0:
 
 
 update_boss4_behavior_0_lower_ghost:
+
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	cp c  ; target x
+	jr z, update_boss4_behavior_0_lower_ghost_x_tile_set
+	; move left/right to target position:
+	ld hl, update_enemy_move_left
+	jr nc, update_boss4_behavior_0_lower_ghost_move_in_x
+	ld hl, update_enemy_move_right
+update_boss4_behavior_0_lower_ghost_move_in_x:
+	ld c, ENEMIES_PAGE
+	call call_hl_in_page_c_8000
+	ret
+
+update_boss4_behavior_0_lower_ghost_x_tile_set:
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	or a
+	jr z, update_boss4_behavior_0_lower_ghost_x_set
+	dec (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	ret
+
+update_boss4_behavior_0_lower_ghost_x_set:
+
 	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	inc a
@@ -1102,6 +1116,22 @@ update_boss4_behavior_1_state_2_continue2:
 	ld a, (boss__state_timer)
 	cp 128
 	ret nz
+
+	; Bring boss name (using sprites)
+	ld ix, boss4_name_initial_sprite_attributes
+	ld de, boss4_name_y_table
+	ld hl, update_boss_behavior_bring_name_down_ix
+	ld c, BOSS_PAGE
+	call call_hl_in_page_c_8000
+	ld b, 100
+	call wait_b_halts_skippable
+	; Remove boss name (using sprites)
+	ld ix, boss4_name_initial_sprite_attributes
+	ld de, boss4_name_y_table + 23
+	ld hl, update_boss_behavior_bring_name_up_ix
+	ld c, BOSS_PAGE
+	call call_hl_in_page_c_8000
+
 	; done!
 	ld a, 2
 	ld (boss__behavior), a
@@ -1239,14 +1269,34 @@ update_boss4_behavior_2_internal:
 	dec a
 	jr z, update_boss4_behavior_2_internal_no_mouth
 	; update mouth state:
+	ld a, (boss__4_settings + BOSS_4_MOUTH_TIMER_MASK)
+	ld c, a
 	ld a, (interrupt_cycle)
-	and #1e
+	and c
 	jr nz, update_boss4_behavior_2_internal_no_mouth
+	ld a, 1
+	ld (boss__4_redraw), a
 	ld a, (iy + 3)  ; mouth_state
 	xor #01
 	ld (iy + 3), a
-	ld a, 1
-	ld (boss__4_redraw), a
+	jr nz, update_boss4_behavior_2_internal_no_mouth
+	; mouth just opened, chance of firing a bullet:
+	call random_a
+	and #03
+	jr nz, update_boss4_behavior_2_internal_no_bullet
+	push ix
+		ld e, (ix + 2)  ; x
+		inc e
+		ld b, (ix + 3)  ; y
+		dec b
+		dec b
+		dec b
+		ld ix, #0008
+		ld hl, boss_fire_directional_bullet_towards_player_e_b
+		ld c, BOSS_PAGE
+		call call_hl_in_page_c_8000
+	pop ix
+update_boss4_behavior_2_internal_no_bullet:
 update_boss4_behavior_2_internal_no_mouth:
 
 	ld a, (ix + 0)  ; state
