@@ -1,23 +1,23 @@
 ;-----------------------------------------------
 BOSS_4_HP_OFFSET: equ 0
 BOSS_4_MOUTH_TIMER_MASK: equ 2
+BOSS_4_WAIT_TIME: equ 3
+BOSS_4_STOMP_WAIT_TIME: equ 4
+BOSS_4_STOMP_MASK: equ 5
+BOSS_4_MOVE_SPEED: equ 6
 
 boss4_difficulty_setting__easy:
 	dw 128  ; boss hp
-	db #3e  ; mouth timer mask
-	; db 16, 32, 32, 32, #07  ; walk, crouch, staff/hand attack duration, bullet duration, bullet frequency
+	db #3e, 75, 50, #07, #0f  ; mouth timer mask, wait, stomp wait, stomp mask, move speed
 boss4_difficulty_setting__normal:
 	dw 192  ; boss hp
-	db #1e  ; mouth timer mask
-	; db 14, 28, 28, 32, #07  ; walk, crouch, staff/hand attack duration, bullet duration, bullet frequency
+	db #1e, 60, 40, #03, #07  ; mouth timer mask, wait, stomp wait, stomp mask, move speed
 boss4_difficulty_setting__hard:
 	dw 256  ; boss hp
-	db #0e  ; mouth timer mask
-	; db 12, 24, 24, 32, #07  ; walk, crouch, staff/hand attack duration, bullet duration, bullet frequency
+	db #0e, 50, 30, #03, #07 ; mouth timer mask, wait, stomp wait, stomp mask, move speed
 boss4_difficulty_setting__hardest:
 	dw 320  ; boss hp
-	db #0e  ; mouth timer mask
-	; db 8, 16, 16, 20, #03  ; walk, crouch, staff/hand attack duration, bullet duration, bullet frequency
+	db #0e, 40, 20, #01, #07  ; mouth timer mask, wait, stomp wait, stomp mask, move speed
 
 
 ;-----------------------------------------------
@@ -1228,6 +1228,8 @@ update_boss4_behavior_2_table:
 	dw update_boss4_behavior_2_state_17
 	dw update_boss4_behavior_2_state_18
 	dw update_boss4_behavior_2_state_19
+	dw update_boss4_behavior_2_state_20
+	dw update_boss4_behavior_2_state_21
 
 ; Update behavior for just one lord
 ; input:
@@ -1246,10 +1248,10 @@ update_boss4_behavior_2_table:
 ; - 6: 1-tile over the ground hover right-to-left (state 6 then 19)
 ; - 7: go to a center position (center-left if lord1, and center-right if lord2)
 ; - 8: wait for a couple of seconds
-; - 9: stomp-down (then go to 8)
-; - 10: lord-specific attack
-; - 11: joint-attack (only if there is a compatible pair)
+; - 9: lord-specific attack
+; - 10: joint-attack (only if there is a compatible pair)
 ; ---
+; - 11: stomp-down (then go to 8)
 ; - 12: move right
 ; - 13: move left
 ; - 14: wait for 100 frames -> go to 15
@@ -1258,16 +1260,20 @@ update_boss4_behavior_2_table:
 ; - 17: move right to (50, 13)
 ; - 18: (from 5)
 ; - 19: (from 6)
+; - 20: stomp 1: wait
+; - 21: stomp 2: drop and then go to 8
 update_boss4_behavior_2_internal:
 
-	; update mouth state in all states except: 9, 10, 11
+	; update mouth state in all states except: 8, 9, 10, 11, 20, 21
 	ld a, (ix + 0)  ; state
-	sub 9
+	cp 20
+	jr nc, update_boss4_behavior_2_internal_no_mouth
 	jr z, update_boss4_behavior_2_internal_no_mouth
-	dec a
-	jr z, update_boss4_behavior_2_internal_no_mouth
-	dec a
-	jr z, update_boss4_behavior_2_internal_no_mouth
+	cp 8
+	jr c, update_boss4_behavior_2_internal_mouth
+	cp 12
+	jr c, update_boss4_behavior_2_internal_no_mouth
+update_boss4_behavior_2_internal_mouth:
 	; update mouth state:
 	ld a, (boss__4_settings + BOSS_4_MOUTH_TIMER_MASK)
 	ld c, a
@@ -1312,7 +1318,6 @@ update_boss4_behavior_2_internal_no_mouth:
 update_boss4_behavior_2_state_0:
 update_boss4_behavior_2_state_9:
 update_boss4_behavior_2_state_10:
-update_boss4_behavior_2_state_11:
 	ld c, 11
 	call random_modulo
 	inc a
@@ -1518,26 +1523,115 @@ update_boss4_behavior_2_state_7_lord1:
 
 
 update_boss4_behavior_2_state_8:
+	ld a, (boss__4_settings + BOSS_4_WAIT_TIME)
+	ld c, a
 	ld a, (ix + 1)  ; state_timer
 	inc (ix + 1)
-	cp 100
+	cp c
 	ret nz
 	ld (ix + 0), 0  ; state
 	ld (ix + 1), 0  ; state_timer
 	ret	
 
 
+update_boss4_behavior_2_state_11:
+	; stomp 1, raise one step (unless at y == 0), then go to 20
+	ld a, (ix + 3)
+	or a
+	jr z, update_boss4_behavior_2_state_11_continue
+	dec (ix + 3)  ; go up one step
+	ld a, 1
+	ld (boss__4_redraw), a
+update_boss4_behavior_2_state_11_continue:
+	ld (ix + 0), 20  ; next state
+	ret
+
+update_boss4_behavior_2_state_20:
+	; stomp 2: wait
+	ld a, (boss__4_settings + BOSS_4_STOMP_WAIT_TIME)
+	ld c, a
+	ld a, (ix + 1)  ; state_timer
+	inc (ix + 1)
+	cp c
+	ret nz
+	ld (ix + 0), 21  ; state
+	ld (ix + 1), 0  ; state_timer
+	ret
+
+update_boss4_behavior_2_state_21:
+	; stomp 3: go down quickly, then go to 8
+	ld a, (ix + 1)
+	inc (ix + 1)
+	and #01
+	ret nz
+	ld c, (ix + 2)
+	ld l, (ix + 3)
+	inc c
+	inc l
+	ld h, 0
+	call get_room_tile_ptr_hl_set
+	ld a, (hl)
+	or a
+	jr z, update_boss4_behavior_2_state_21_continue
+	call get_collision_tile_type_of_a
+	cp 2
+	jr z, update_boss4_behavior_2_state_21_collision
+update_boss4_behavior_2_state_21_continue:
+	inc hl
+	ld a, (hl)
+	or a
+	jr z, update_boss4_behavior_2_state_21_continue2
+	call get_collision_tile_type_of_a
+	cp 2
+	jr z, update_boss4_behavior_2_state_21_collision
+update_boss4_behavior_2_state_21_continue2:
+	; go down:
+	ld a, 1
+	ld (boss__4_redraw), a
+	inc (ix + 3)
+	ret
+update_boss4_behavior_2_state_21_collision:
+	ld hl, SFX_explosion_low_pitch
+	call play_SFX_with_high_priority
+	ld (ix + 0), 8  ; state
+	ld (ix + 1), 0  ; state_timer	
+	ret
+
+
 ;-----------------------------------------------
 ; input:
-; - ix: ptr to state, state_timer
+; - ix: ptr to state, state_timer, x, y
 ; - iy: ptr to lord frame, target x, target y, mouth state
 ; output:
 ; - z: reached
 ; - nz: not yet reached
 update_boss4_behavior_2_move_to_destination:
+	ld a, (boss__4_settings + BOSS_4_MOVE_SPEED)
+	ld c, a
 	ld a, (ix + 1)
-	and #07
+	and c
 	ret nz
+	; stomp?
+	ld a, (player_x + 1)
+	dec a
+	cp (ix + 2)
+	jr nz, update_boss4_behavior_2_move_to_destination_no_stomp
+	ld a, (player_y + 1)
+	sub 3
+	cp (ix + 3)
+	jr c, update_boss4_behavior_2_move_to_destination_no_stomp
+	; chance of stomping!
+	ld a, (boss__4_settings + BOSS_4_STOMP_MASK)
+	ld c, a
+	call random_a
+	and c
+	jr nz, update_boss4_behavior_2_move_to_destination_no_stomp
+	; stomp!
+	ld (ix + 0), 11  ; stomp state
+	ld (ix + 1), 0
+	or 1  ; return nz
+	ret
+update_boss4_behavior_2_move_to_destination_no_stomp:
 	; move to destination:
 	ld a, 1
 	ld (boss__4_redraw), a

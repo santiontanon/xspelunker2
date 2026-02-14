@@ -1,7 +1,7 @@
 to do:
 
 ***- Xibalba lords boss:
-  ***- "stomp" attack (state 9): if above the player, and at least 3/4 tiles clear, rise a bit, stop and then stomp. Do not turn left/right but keep mouth open during stomping
+  ***- BUG: some times bullets appear from the left side of the screen when lords are on the right?!
   ***- lord-specific attack (state 10):
     ***- hun-came / vucub-came have lightning attacks (pointing with their fingers)
     ***- Xiquiripat / Cuchumaquic: spawn enemies (bats)
