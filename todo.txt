@@ -1,10 +1,8 @@
 to do:
 
 ***- Xibalba lords boss:
-  ***- open/close mouth periodically (for some of them, each time mouth opens there is a chance for a bullet, increasing chance with difficulty level):
-    ***- have a mouth state RAM variable for each lord (init to 0)
-    ***- in the appropriate states, flip it periodically (with interrupt cycle)
-    ***- in "draw_boss4_frame_lord1/2" if this variable is set to 1, patch the new mouth (patch the correct mouth for lord 12)
+  ***- chance of firing bullets when mouth opens
+  ***- ghosts should first move (horizontally) to the positions where the bosses come out from (and player should be able to move while this happens)
   ***- "stomp" attack (state 9): if above the player, and at least 3/4 tiles clear, rise a bit, stop and then stomp. Do not turn left/right but keep mouth open during stomping
   ***- lord-specific attack (state 10):
     ***- hun-came / vucub-came have lightning attacks (pointing with their fingers)

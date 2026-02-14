@@ -186,6 +186,10 @@ public class Boss4 {
                     boxes.add(new int[]{224, 24, 280, 96});
                     boxes.add(new int[]{280, 24, 344, 96});  // hands-open
                     boxes.add(new int[]{344, 24, 408, 96});
+                    
+                    boxes.add(new int[]{96, 8, 120, 16});  // mouth closed (here, but shared with all other lords)
+                    boxes.add(new int[]{120, 8, 144, 16});  
+                    
                     break;
                 case 1:  // vucub-came
                     boxes.add(new int[]{0, 96, 40, 168});  // idle

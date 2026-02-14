@@ -263,7 +263,7 @@ boss__2_settings:
 boss__3_settings:
 boss__4_settings:
     ds virtual 12  ; difficulty parameters of the boss
-boss__tmp_space: ds virtual 10
+boss__tmp_space: ds virtual 12
 boss__1_has_staff: equ boss__tmp_space
 boss__1_staff_hp: equ boss__tmp_space + 1
 boss__2_direction: equ boss__tmp_space ; 0: left, 1: right
@@ -276,10 +276,12 @@ boss__4_second_lord_first_tile: equ boss__tmp_space + 2
 boss__4_lord1_frame: equ boss__tmp_space + 3
 boss__4_lord1_target_x: equ boss__tmp_space + 4
 boss__4_lord1_target_y: equ boss__tmp_space + 5
-boss__4_lord2_frame: equ boss__tmp_space + 6
-boss__4_lord2_target_x: equ boss__tmp_space + 7
-boss__4_lord2_target_y: equ boss__tmp_space + 8
-boss__4_redraw: equ boss__tmp_space + 9
+boss__4_lord1_mouth_state: equ boss__tmp_space + 6
+boss__4_lord2_frame: equ boss__tmp_space + 7
+boss__4_lord2_target_x: equ boss__tmp_space + 8
+boss__4_lord2_target_y: equ boss__tmp_space + 9
+boss__4_lord2_mouth_state: equ boss__tmp_space + 10
+boss__4_redraw: equ boss__tmp_space + 11
 
 ; game stats:
 stats__n_coins_collected: ds virtual 2

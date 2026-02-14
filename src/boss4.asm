@@ -616,8 +616,6 @@ BOSS4_NAMETABLE_LORD12_POINT_FW_RIGHT: equ boss4_name_tables_lord12 + 140  ; 4*7
 BOSS4_NAMETABLE_LORD12_POINT_FW_LEFT: equ boss4_name_tables_lord12 + 168  ; 7*7
 BOSS4_NAMETABLE_LORD12_HANDS_OPEN_RIGHT: equ boss4_name_tables_lord12 + 217  ; 8*7
 BOSS4_NAMETABLE_LORD12_HANDS_OPEN_LEFT: equ boss4_name_tables_lord12 + 273  ; 8*7
-BOSS4_NAMETABLE_LORD12_MOUTH_RIGHT: equ boss4_name_tables_lord12 + 329  ; 3*1
-BOSS4_NAMETABLE_LORD12_MOUTH_LEFT: equ boss4_name_tables_lord12 + 332  ; 3*1
 
 boss4_frame_lord12_idle_right:
 	db 1  ; number of parts
@@ -659,6 +657,30 @@ boss4_frame_lord12_hands_open_left:
 	db 1, 0  ; offset wrt the draw ptr (x offset, y offset)
 	dw #0708, BOSS4_NAMETABLE_LORD12_HANDS_OPEN_LEFT  ; dimensions and nametable
 	dw 0, #0709  ; offset and boss__clear_bbox
+
+
+BOSS4_NAMETABLE_MOUTH_RIGHT: equ boss4_name_tables_lord1 + 459  ; 3*1
+BOSS4_NAMETABLE_MOUTH_LEFT: equ boss4_name_tables_lord1 + 462  ; 3*1
+BOSS4_NAMETABLE_LORD12_MOUTH_RIGHT: equ boss4_name_tables_lord12 + 329  ; 3*1
+BOSS4_NAMETABLE_LORD12_MOUTH_LEFT: equ boss4_name_tables_lord12 + 332  ; 3*1
+
+boss4_frame_mouth_closed_right:
+	db 1  ; number of parts
+	db 1, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0103, BOSS4_NAMETABLE_MOUTH_RIGHT  ; dimensions and nametable
+boss4_frame_mouth_closed_left:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0103, BOSS4_NAMETABLE_MOUTH_LEFT  ; dimensions and nametable
+boss4_frame_lord12_mouth_closed_right:
+	db 1  ; number of parts
+	db 1, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0103, BOSS4_NAMETABLE_LORD12_MOUTH_RIGHT  ; dimensions and nametable
+boss4_frame_lord12_mouth_closed_left:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0103, BOSS4_NAMETABLE_LORD12_MOUTH_LEFT  ; dimensions and nametable
+
 
 
 ;-----------------------------------------------
@@ -992,6 +1014,8 @@ update_boss4_behavior_1_state_0_continue:
 	ld (boss__state), a
 	xor a
 	ld (boss__state_timer), a
+	ld (boss__4_lord1_mouth_state), a
+	ld (boss__4_lord2_mouth_state), a
 
 	; spawn object for sprite decorations
 	call ptr_to_new_sprite_object
@@ -1178,7 +1202,7 @@ update_boss4_behavior_2_table:
 ; Update behavior for just one lord
 ; input:
 ; - ix: ptr to state, state_timer, x, y
-; - iy: ptr to lord frame, target x, target y
+; - iy: ptr to lord frame, target x, target y, mouth state
 ; output:
 ; - z: redraw lord
 ; - nz: do not redraw
@@ -1205,6 +1229,26 @@ update_boss4_behavior_2_table:
 ; - 18: (from 5)
 ; - 19: (from 6)
 update_boss4_behavior_2_internal:
+
+	; update mouth state in all states except: 9, 10, 11
+	ld a, (ix + 0)  ; state
+	sub 9
+	jr z, update_boss4_behavior_2_internal_no_mouth
+	dec a
+	jr z, update_boss4_behavior_2_internal_no_mouth
+	dec a
+	jr z, update_boss4_behavior_2_internal_no_mouth
+	; update mouth state:
+	ld a, (interrupt_cycle)
+	and #1e
+	jr nz, update_boss4_behavior_2_internal_no_mouth
+	ld a, (iy + 3)  ; mouth_state
+	xor #01
+	ld (iy + 3), a
+	ld a, 1
+	ld (boss__4_redraw), a
+update_boss4_behavior_2_internal_no_mouth:
+
 	ld a, (ix + 0)  ; state
 	ld hl, update_boss4_behavior_2_table
 	add a, a
@@ -1436,7 +1480,7 @@ update_boss4_behavior_2_state_8:
 ;-----------------------------------------------
 ; input:
 ; - ix: ptr to state, state_timer
-; - iy: ptr to lord frame, target x, target y
+; - iy: ptr to lord frame, target x, target y, mouth state
 ; output:
 ; - z: reached
 ; - nz: not yet reached
@@ -1479,7 +1523,7 @@ update_boss4_behavior_2_state_1_continue_y:
 
 ;-----------------------------------------------
 ; input:
-; - iy: ptr to lord frame, target x, target y
+; - iy: ptr to lord frame, target x, target y, mouth state
 update_boss4_safe_lord_destination:
 	ld a, (iy + 1)
 	cp 60
@@ -1829,7 +1873,17 @@ draw_boss4_lord1_without_clearing:
 		call get_room_tile_ptr
 		ex de, hl
 	pop hl
-	jp draw_boss4_frame_lord1_without_clearing
+	call draw_boss4_frame_lord1_without_clearing
+
+	ld a, (boss__4_lord1_mouth_state)  ; mouth_state
+	or a
+	ret z
+	ld a, (boss__4_lord1_frame)
+	ld e, a
+	ld a, (boss__4_first_lord)
+	ld iyl, 0
+	ld bc, (boss__x)
+	jp draw_boss4_frame_lord_mouth_closed
 
 
 ;-----------------------------------------------
@@ -1873,7 +1927,50 @@ draw_boss4_lord2_without_clearing:
 		call get_room_tile_ptr
 		ex de, hl
 	pop hl
-	jp draw_boss4_frame_lord2_without_clearing
+	call draw_boss4_frame_lord2_without_clearing
+
+	ld a, (boss__4_lord2_mouth_state)  ; mouth_state
+	or a
+	ret z
+	ld a, (boss__4_second_lord_first_tile)
+	ld iyl, a
+	ld a, (boss__4_lord2_frame)
+	ld e, a
+	ld a, (boss__4_second_lord)
+	ld bc, (boss__x2)
+	jp draw_boss4_frame_lord_mouth_closed
+
+
+;-----------------------------------------------
+; input
+; - a: lord number
+; - e: lord frame
+; - iyl: offset at which the tiles for the specific lord we are drawing start
+; - c, b: lord x, y
+draw_boss4_frame_lord_mouth_closed:
+	bit 0, e
+	jr z, draw_boss4_frame_lord_mouth_closed_right
+	; left:
+	ld hl, boss4_frame_mouth_closed_left
+	cp 12
+	jr nz, draw_boss4_frame_lord_mouth_closed_frame_set
+	ld hl, boss4_frame_lord12_mouth_closed_left
+	jr draw_boss4_frame_lord_mouth_closed_frame_set
+draw_boss4_frame_lord_mouth_closed_right:
+	ld hl, boss4_frame_mouth_closed_right
+	cp 12
+	jr nz, draw_boss4_frame_lord_mouth_closed_frame_set
+	ld hl, boss4_frame_lord12_mouth_closed_right
+draw_boss4_frame_lord_mouth_closed_frame_set:
+	; compute ptr to draw to:
+	push hl
+		dec b
+		dec b
+		dec b
+		call get_room_tile_ptr
+		ex de, hl
+	pop hl
+	jp draw_boss4_frame_internal
 
 
 ;-----------------------------------------------
