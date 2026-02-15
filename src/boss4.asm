@@ -1613,7 +1613,14 @@ update_boss4_behavior_2_state_9:
 	jp z, update_boss4_behavior_2_state_9_ahalgana  ; 7: ahalgana
 	dec a
 	jp z, update_boss4_behavior_2_state_9_ahalpuh  ; 8: ahalpuh
-	; ...
+	dec a
+	jp z, update_boss4_behavior_2_state_9_blades  ; 9: ahalmez
+	dec a
+	jp z, update_boss4_behavior_2_state_9_blades  ; 10: ahaltocob
+; 	dec a
+; 	jp z, update_boss4_behavior_2_state_9_quicxic  ; 11: quicxic
+; 	dec a
+; 	jp z, update_boss4_behavior_2_state_9_patan  ; 12: patan
 
 	; we should never get here:
 	ld (ix + 0), 0  ; state
@@ -1718,6 +1725,9 @@ update_boss4_behavior_2_state_9_bats:
 	ld (boss__4_redraw), a
 	ret
 update_boss4_behavior_2_state_9_bats_hand_up:
+update_boss4_behavior_2_state_9_skeletons_wand_up:
+update_boss4_behavior_2_state_9_ahalgana_hand_up:
+update_boss4_behavior_2_state_9_blades_wand_up:
 	ld (iy + 0), BOSS4_FRAME_POINT_UP_RIGHT  ; frame
 	ld a, 1
 	ld (boss__4_redraw), a
@@ -1739,11 +1749,6 @@ update_boss4_behavior_2_state_9_skeletons:
 	ld (iy + 0), BOSS4_FRAME_IDLE_RIGHT  ; frame
 	ld (ix + 0), 0  ; state
 	ld (ix + 1), 0  ; state_timer	
-	ld a, 1
-	ld (boss__4_redraw), a
-	ret
-update_boss4_behavior_2_state_9_skeletons_wand_up:
-	ld (iy + 0), BOSS4_FRAME_POINT_UP_RIGHT  ; frame
 	ld a, 1
 	ld (boss__4_redraw), a
 	ret
@@ -1769,11 +1774,6 @@ update_boss4_behavior_2_state_9_ahalpuh:
 	ld (iy + 0), BOSS4_FRAME_IDLE_RIGHT  ; frame
 	ld (ix + 0), 0  ; state
 	ld (ix + 1), 0  ; state_timer	
-	ld a, 1
-	ld (boss__4_redraw), a
-	ret
-update_boss4_behavior_2_state_9_ahalgana_hand_up:
-	ld (iy + 0), BOSS4_FRAME_POINT_UP_RIGHT  ; frame
 	ld a, 1
 	ld (boss__4_redraw), a
 	ret
@@ -1809,6 +1809,26 @@ update_boss4_behavior_2_state_9_ahalgana_spawn_ball_x_set:
 update_boss4_behavior_2_state_9_ahalpuh_spawn_ball:
 		ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_PUS_BALL
 	pop ix
+	ret
+
+
+update_boss4_behavior_2_state_9_blades:
+	ld a, (boss__4_settings + BOSS_4_ATTACK_WAIT_TIME)
+	ld c, a
+	ld a, (ix + 1)  ; state_timer
+	inc (ix + 1)
+	or a
+	jp z, update_boss4_behavior_2_state_9_blades_wand_up
+	cp c
+	jp z, update_boss4_spawn_blades
+	sla c
+	cp c
+	ret nz
+	ld (iy + 0), BOSS4_FRAME_IDLE_RIGHT  ; frame
+	ld (ix + 0), 0  ; state
+	ld (ix + 1), 0  ; state_timer	
+	ld a, 1
+	ld (boss__4_redraw), a
 	ret
 
 
@@ -1905,6 +1925,54 @@ update_boss4_spawn_bat_continue:
 update_boss4_spawn_skeleton:
 	ld de, ENEMY_SKELETON_SLEEPER + 7 * 256  ; state: fall sleeping
 	jp update_boss4_spawn_skeleton_entry_point
+
+
+update_boss4_spawn_blades:
+	ld a, (ix + 3)  ; boss y
+	cp 2
+	ret c  ; if the boss is too high up, do not spawn anything
+	call ptr_to_new_sprite_enemy
+	ret nz
+	call update_boss4_spawn_blades_internal
+	call ptr_to_new_sprite_enemy
+	ret nz
+	call update_boss4_spawn_blades_internal
+	inc (hl)  ; up
+	call ptr_to_new_sprite_enemy
+	ret nz
+	call update_boss4_spawn_blades_internal
+	inc (hl)
+	inc (hl)  ; down
+	ret
+
+update_boss4_spawn_blades_internal:
+	ld (hl), 0  ; ID
+	inc hl
+	ld (hl), ENEMY_BOSS4_BLADES  ; enemy type
+	inc hl
+	ld (hl), 0  ; pixel x
+	inc hl
+	ld a, e
+	ld a, (ix + 2)  ; boss x
+	add a, -2
+	ld (hl), a  ; tile x
+	inc hl
+	ld (hl), 0  ; pixel y
+	inc hl
+	ld a, (ix + 3)  ; boss y
+	add a, -7
+	ld (hl), a  ; tile y
+	inc hl
+	ld a, (iy + 0)  ; frame
+	and #01
+	jr z, update_boss4_spawn_blades_internal_right
+	; 1: left-up, 0: left, 2: left-down
+	; 5: right-up, 0: right, 6: left-down
+	ld (hl), 0  ; state
+	ret
+update_boss4_spawn_blades_internal_right:
+	ld (hl), 4  ; state
+	ret
 
 
 ;-----------------------------------------------

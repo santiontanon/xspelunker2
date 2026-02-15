@@ -12,6 +12,7 @@ enemy_update_fn_table:
 	dw update_enemy_pus_drop  ; boss 4 attack
 	dw update_enemy_pus_ball  ; boss 4 attack
 	dw update_enemy_blood_ball  ; boss 4 attack
+	dw update_enemy_boss4_blades  ; boss 4 attack
 	; enemies you can hit:
 	dw update_enemy_snake  ; left-to-right
 	dw update_enemy_snake_dasher  ; left-to-right + dash
@@ -2906,7 +2907,6 @@ update_enemy_pus_drop:
 
 	ld a, (current_world__difficulty_bullet_speed)
 	add a, a
-	add a, a
 	call update_enemy_bullet_move_down_if_possible_a_times
 	jp z, update_enemy_delete
 	ld d, COLOR_YELLOW
@@ -2967,6 +2967,53 @@ update_enemy_pus_ball_blood:
 	ld d, COLOR_RED
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 34) * 4 
 	jp enemy_sprite_and_continue_animated_fast
+
+
+;-----------------------------------------------
+update_enemy_boss4_blades:
+	ld iyh, 2  ; damage to deal
+	call update_enemy_hurt_player_shieldable_bullet
+	jp z, update_enemy_delete
+
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	and #04
+	jr z, update_enemy_boss4_blades_left
+update_enemy_boss4_blades_right:
+	ld a, (current_world__difficulty_bullet_speed)
+	add a, a
+	call update_enemy_bullet_move_right_if_possible_a_times
+	jp z, update_enemy_delete
+	jr update_enemy_boss4_blades_continue
+update_enemy_boss4_blades_left:
+	ld a, (current_world__difficulty_bullet_speed)
+	add a, a
+	call update_enemy_bullet_move_left_if_possible_a_times
+	jp z, update_enemy_delete
+update_enemy_boss4_blades_continue:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	and #03
+	jr z, update_enemy_boss4_blades_movement_done
+	dec a
+	jp nz, update_enemy_boss4_blades_down
+update_enemy_boss4_blades_up:
+	ld a, (current_world__difficulty_bullet_speed)
+	call update_enemy_bullet_move_up_if_possible_a_times
+	jp z, update_enemy_delete	
+	jr update_enemy_boss4_blades_movement_done
+update_enemy_boss4_blades_down:
+	ld a, (current_world__difficulty_bullet_speed)
+	call update_enemy_bullet_move_down_if_possible_a_times
+	jp z, update_enemy_delete	
+update_enemy_boss4_blades_movement_done:
+	ld d, COLOR_LIGHT_BLUE
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	call a_mod_3
+	add a, FIRST_ENEMY_SPRITE_PATTERN + 31
+	add a, a
+	add a, a
+	ld e, a  ; e = (FIRST_ENEMY_SPRITE_PATTERN + 31 + (state % 3)) * 4 
+	jp enemy_sprite_and_continue
 
 
 ;-----------------------------------------------
@@ -3955,7 +4002,7 @@ update_enemy_bullet_move_right_if_possible:
 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	; inc c
 	inc c
-	inc b
+; 	inc b
 	call general_check_collision_only_walls
 	ret z
 update_enemy_bullet_move_right_if_possible_move:
@@ -3980,7 +4027,7 @@ update_enemy_bullet_move_left_if_possible:
 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	dec c
-	inc b
+; 	inc b
 	call general_check_collision_only_walls
 	ret z
 update_enemy_bullet_move_left_if_possible_move:

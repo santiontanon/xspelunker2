@@ -1,10 +1,9 @@
 to do:
 
 ***- Xibalba lords boss:
-  ***- Ahalmez / Ahaltocob: bullet barrage (blades) from their utensils, maybe 3 at a time in a pattern?
   ***- Quicxic: pass dripping a lot of blood (like a napalm drop)
     ***- redraw gfx, so that utensil rised has the pot leaning over
-  ***- Patan: trows blood splatter (2/3 blood drops directed at you or around you)
+  ***- Patan: throws blood splatter (2/3 blood drops directed at you or around you)
     ***- redraw gfx so that it has its hand inside the pot of blood, and when hand is out, it's all red
   ***- if they are a pair, chance of a joint attack (state 10), where they go to the center with the hands-open frame and do a big barrage of bullets/blood/blades/enemies, whatever is that they spawn
   ***- when bosses are killed:
