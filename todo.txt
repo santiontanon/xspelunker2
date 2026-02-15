@@ -3,8 +3,6 @@ to do:
 ***- Xibalba lords boss:
   ***- increase chance of lord-speciffic attacks (maybe have a 1 in 4 of directly setting to a lord attack by default)
   ***- lord-specific attack (state 9):
-    ***- Xiquiripat / Cuchumaquic: spawn enemies (bats)
-    ***- Chamiabac / Chamiaholom: spawn enemies (skeletons: maybe they create a lightning or fire a bone and in the place it hits the floor, a skeleton appears)
     ***- Ahalgana / Ahalpuh: fire blood/pus faster/bigger bullets through their fingers
       ***- constantly drip blood/pus that damages you rather than fire bullets
     ***- Ahalmez / Ahaltocob: bullet barrage (blades) from their utensils, maybe 3 at a time in a pattern?

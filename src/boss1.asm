@@ -67,9 +67,14 @@ boss4_name_y_table:
 boss1_name_initial_sprite_attributes:
 boss2_name_initial_sprite_attributes:
 boss3_name_initial_sprite_attributes:
-boss4_name_initial_sprite_attributes:
 	db -32, 112, (FIRST_ENEMY_SPRITE_PATTERN + 1)*4, COLOR_WHITE
 	db -32, 128, (FIRST_ENEMY_SPRITE_PATTERN + 2)*4, COLOR_WHITE
+	db -16, 112, (FIRST_ENEMY_SPRITE_PATTERN + 3)*4, COLOR_WHITE
+	db -16, 128, (FIRST_ENEMY_SPRITE_PATTERN + 4)*4, COLOR_WHITE
+
+boss4_name_initial_sprite_attributes:
+	db -32, 112, (FIRST_ENEMY_SPRITE_PATTERN + 36)*4, COLOR_WHITE
+	db -32, 128, (FIRST_ENEMY_SPRITE_PATTERN + 37)*4, COLOR_WHITE
 	db -16, 112, (FIRST_ENEMY_SPRITE_PATTERN + 3)*4, COLOR_WHITE
 	db -16, 128, (FIRST_ENEMY_SPRITE_PATTERN + 4)*4, COLOR_WHITE
 

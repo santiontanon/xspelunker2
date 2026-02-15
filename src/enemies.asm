@@ -2168,6 +2168,7 @@ update_enemy_skeleton_sleeper:
 	call update_enemy_hurt_player_2x2
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	; 0, 1: walk right/left
 	cp 2
 	jr z, update_enemy_skeleton_sleeper_sleeping
 	cp 3
@@ -2178,6 +2179,8 @@ update_enemy_skeleton_sleeper:
 	jp z, update_enemy_skeleton_sleeper_throw_right
 	cp 6
 	jp z, update_enemy_skeleton_sleeper_throw_left
+	cp 7
+	jp z, update_enemy_skeleton_sleeper_falling  ; boss 4 spawns them in the air
 	call update_enemy__patrol_left_right_platform
 
 update_enemy_skeleton_sleeper_walking:
@@ -2313,6 +2316,17 @@ update_enemy_skeleton_sleeper_throw_shoot:
 	call update_enemy_fire_directional_bullet_towards_player
 	ld hl, SFX_enemy_bullet
 	jp play_SFX_with_high_priority
+
+update_enemy_skeleton_sleeper_falling:
+	call update_enemy_move_down_if_possible
+	call update_enemy_move_down_if_possible
+	jr nz, update_enemy_skeleton_sleeper_falling_continue	
+	; reached a floor:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2
+update_enemy_skeleton_sleeper_falling_continue:
+	ld d, COLOR_WHITE
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 1) * 4 
+	jp enemy_sprite_and_continue_animated_slow
 
 
 ;-----------------------------------------------

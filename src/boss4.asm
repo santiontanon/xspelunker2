@@ -5,19 +5,25 @@ BOSS_4_WAIT_TIME: equ 3
 BOSS_4_ATTACK_WAIT_TIME: equ 4
 BOSS_4_STOMP_MASK: equ 5
 BOSS_4_MOVE_SPEED: equ 6
+BOSS_4_MAX_ENEMIES_OFFSET: equ 7
+BOSS_4_ENEMIES_HP_OFFSET: equ 8
 
 boss4_difficulty_setting__easy:
 	dw 128  ; boss hp
 	db #3e, 75, 40, #07, #0f  ; mouth timer mask, wait, attack wait, stomp mask, move speed
+	db 2, 1  ; max enemies, enemies hp
 boss4_difficulty_setting__normal:
 	dw 192  ; boss hp
 	db #1e, 60, 32, #03, #07  ; mouth timer mask, wait, attack wait, stomp mask, move speed
+	db 3, 1
 boss4_difficulty_setting__hard:
 	dw 256  ; boss hp
 	db #0e, 50, 28, #03, #07 ; mouth timer mask, wait, attack wait, stomp mask, move speed
+	db 4, 2
 boss4_difficulty_setting__hardest:
 	dw 320  ; boss hp
 	db #0e, 40, 24, #01, #07  ; mouth timer mask, wait, attack wait, stomp mask, move speed
+	db 5, 3
 
 
 ;-----------------------------------------------
@@ -1320,7 +1326,7 @@ update_boss4_behavior_2_state_10:
 	ld c, 11
 	call random_modulo
 	inc a
-; 	ld a, 9  ; DEBUG
+	; ld a, 9  ; DEBUG
 	ld (ix + 0), a  ; state
 	ld (ix + 1), 0  ; state_timer
 	ret
@@ -1603,6 +1609,14 @@ update_boss4_behavior_2_state_9:
 	jr z, update_boss4_behavior_2_state_9_lightning  ; hun-came
 	dec a
 	jr z, update_boss4_behavior_2_state_9_lightning  ; vucub-came
+	dec a
+	jp z, update_boss4_behavior_2_state_9_bats  ; xiquiripat
+	dec a
+	jp z, update_boss4_behavior_2_state_9_bats  ; cuchumaquic
+	dec a
+	jp z, update_boss4_behavior_2_state_9_skeletons  ; chamiabac
+	dec a
+	jp z, update_boss4_behavior_2_state_9_skeletons  ; chamiaholom
 	; ...
 	ret
 
@@ -1677,6 +1691,161 @@ update_boss4_behavior_2_state_9_lightning_hand_forward:
 	ld a, 1
 	ld (boss__4_redraw), a
 	ret	
+
+
+update_boss4_behavior_2_state_9_bats:
+	ld a, (boss__4_settings + BOSS_4_ATTACK_WAIT_TIME)
+	ld c, a
+	ld a, (ix + 1)  ; state_timer
+	inc (ix + 1)
+	or a
+	jr z, update_boss4_behavior_2_state_9_bats_hand_up
+	cp c
+	jr z, update_boss4_behavior_2_state_9_bats_hand_forward
+	inc c
+	cp c
+	jr z, update_boss4_spawn_bat  ; we spawn a bat in the frame afterwards, so that we know if the boss is facing left or right when spawning (which is determined in the drawing routine)
+	dec c
+	sla c
+	cp c
+	ret nz
+	ld (iy + 0), BOSS4_FRAME_IDLE_RIGHT  ; frame
+	ld (ix + 0), 0  ; state
+	ld (ix + 1), 0  ; state_timer	
+	ld a, 1
+	ld (boss__4_redraw), a
+	ret
+update_boss4_behavior_2_state_9_bats_hand_up:
+	ld (iy + 0), BOSS4_FRAME_POINT_UP_RIGHT  ; frame
+	ld a, 1
+	ld (boss__4_redraw), a
+	ret
+
+update_boss4_behavior_2_state_9_bats_hand_forward:
+	ld (iy + 0), BOSS4_FRAME_POINT_FW_RIGHT  ; frame
+	ld a, 1
+	ld (boss__4_redraw), a
+	ret
+
+
+update_boss4_behavior_2_state_9_skeletons:
+	ld a, (boss__4_settings + BOSS_4_ATTACK_WAIT_TIME)
+	ld c, a
+	ld a, (ix + 1)  ; state_timer
+	inc (ix + 1)
+	or a
+	jr z, update_boss4_behavior_2_state_9_skeletons_wand_up
+	cp c
+	jp z, update_boss4_spawn_skeleton
+	sla c
+	cp c
+	ret nz
+	ld (iy + 0), BOSS4_FRAME_IDLE_RIGHT  ; frame
+	ld (ix + 0), 0  ; state
+	ld (ix + 1), 0  ; state_timer	
+	ld a, 1
+	ld (boss__4_redraw), a
+	ret
+update_boss4_behavior_2_state_9_skeletons_wand_up:
+	ld (iy + 0), BOSS4_FRAME_POINT_UP_RIGHT  ; frame
+	ld a, 1
+	ld (boss__4_redraw), a
+	ret
+
+
+;-----------------------------------------------
+update_boss4_spawn_bat:
+	ld de, ENEMY_BAT_AGGRESSIVE + 0 * 256  ; direction (fly still)
+update_boss4_spawn_skeleton_entry_point:
+	ld a, (ix + 3)  ; boss y
+	cp 2
+	ret c  ; if the boss is too high up, do not spawn anything
+	; find # of bats or skeletons:
+	ld c, 0
+	push ix
+	push de
+		ld ix, current_room__sprite_enemies
+		ld de, ROOM_OBJECT_STRUCT_SIZE
+update_boss4_spawn_bat_loop:
+		ld a, (ix)
+		inc a  ; cp #ff
+		jr z, update_boss4_spawn_bat_loop_end
+		ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+		add ix, de
+		cp ENEMY_BAT_AGGRESSIVE
+		jr z, update_boss4_spawn_bat_loop_bat
+		cp ENEMY_SKELETON_SLEEPER
+		jr nz, update_boss4_spawn_bat_loop
+update_boss4_spawn_bat_loop_bat:
+		inc c
+		jr update_boss4_spawn_bat_loop
+update_boss4_spawn_bat_loop_end:
+	pop de
+	pop ix
+	ld a, (boss__4_settings + BOSS_4_MAX_ENEMIES_OFFSET)
+	cp c
+	ret z  ; if we have the max number of bats, do not spawn any new one
+
+	push de
+		call ptr_to_new_sprite_enemy
+	pop de
+	ret nz
+	ld (hl), 0  ; ID
+	inc hl
+	ld (hl), e  ; enemy type
+	inc hl
+	ld (hl), 0  ; pixel x
+	inc hl
+	ld a, e
+	cp ENEMY_SKELETON_SLEEPER
+	jr z, update_boss4_spawn_bat_skeleton
+	; spawn bat:
+	ld a, (iy + 0)  ; frame
+	and #01
+	jr z, update_boss4_spawn_bat_right
+	; spawn left:
+	ld a, (ix + 2)  ; boss x
+	add a, -5
+	jr update_boss4_spawn_bat_x_set
+update_boss4_spawn_bat_right:
+	ld a, (ix + 2)  ; boss x
+	add a, 4
+update_boss4_spawn_bat_x_set:
+	ld (hl), a  ; tile x
+	inc hl
+	ld (hl), 0  ; pixel y
+	inc hl
+	ld a, (ix + 3)  ; boss y
+	dec a
+	dec a
+	ld (hl), a  ; tile y
+	jr update_boss4_spawn_bat_continue
+update_boss4_spawn_bat_skeleton:
+	; spawn skeleton:	
+	ld a, (ix + 2)  ; boss x
+	add a, -3
+	ld (hl), a  ; tile x
+	inc hl
+	ld (hl), 0  ; pixel y
+	inc hl
+	ld a, (ix + 3)  ; boss y
+	add a, -7
+	ld (hl), a  ; tile y
+update_boss4_spawn_bat_continue:
+	inc hl
+	ld (hl), d  ; state
+	inc hl
+	inc hl
+	inc hl
+	ld a, (boss__4_settings + BOSS_4_ENEMIES_HP_OFFSET)
+	ld (hl), a  ; hitpoints
+	ret
+
+
+;-----------------------------------------------
+update_boss4_spawn_skeleton:
+	ld de, ENEMY_SKELETON_SLEEPER + 7 * 256  ; state: fall sleeping
+	jp update_boss4_spawn_skeleton_entry_point
 
 
 ;-----------------------------------------------
@@ -1775,6 +1944,7 @@ update_boss4_safe_lord_destination_bottom_edge:
 
 
 ;-----------------------------------------------
+; boss is dead.
 update_boss4_behavior_3:
 	; ...
 	ret
