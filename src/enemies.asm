@@ -9,6 +9,9 @@ enemy_update_fn_table:
 	dw update_enemy_boss2_spikes ; boss 2 attack
 	dw update_enemy_boss3_debris ; boss 3 attack
 	dw update_enemy_bullet_fireball
+	dw update_enemy_pus_drop  ; boss 4 attack
+	dw update_enemy_pus_ball  ; boss 4 attack
+	dw update_enemy_blood_ball  ; boss 4 attack
 	; enemies you can hit:
 	dw update_enemy_snake  ; left-to-right
 	dw update_enemy_snake_dasher  ; left-to-right + dash
@@ -2896,6 +2899,77 @@ update_enemy_boss3_debris:
 
 
 ;-----------------------------------------------
+update_enemy_pus_drop:
+	ld iyh, 2  ; damage to deal
+	call update_enemy_hurt_player_shieldable_bullet
+	jp z, update_enemy_delete
+
+	ld a, (current_world__difficulty_bullet_speed)
+	add a, a
+	add a, a
+	call update_enemy_bullet_move_down_if_possible_a_times
+	jp z, update_enemy_delete
+	ld d, COLOR_YELLOW
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 39) * 4 
+	jp enemy_sprite_and_continue
+
+
+;-----------------------------------------------
+update_enemy_pus_ball:
+update_enemy_blood_ball:
+	ld iyh, 2  ; damage to deal
+	call update_enemy_hurt_player_2x2
+	jp z, update_enemy_delete
+	
+	ld a, (current_world__difficulty_bullet_speed)
+	inc a  ; a bit faster than a normal bullet
+	ld iyl, a
+	call update_enemy_bullet_bresenham_iyl_steps
+	; - b: amount to move in y
+	; - c: amount to move in x
+	ld a, c
+	add a, a
+	jr z, update_enemy_pus_ball_x_done
+	jp m, update_enemy_pus_ball_x_negative
+	push bc
+		call update_enemy_bullet_move_right_if_possible_a_times
+	pop bc
+	jp z, update_enemy_delete
+	jr update_enemy_pus_ball_x_done
+update_enemy_pus_ball_x_negative:
+	neg
+	push bc
+		call update_enemy_bullet_move_left_if_possible_a_times
+	pop bc
+	jp z, update_enemy_delete
+update_enemy_pus_ball_x_done:
+
+	ld a, b
+	add a, a
+	jr z, update_enemy_pus_ball_y_done
+	jp m, update_enemy_pus_ball_y_negative
+	call update_enemy_bullet_move_down_if_possible_a_times
+	jp z, update_enemy_delete
+	jr update_enemy_pus_ball_y_done
+update_enemy_pus_ball_y_negative:
+	neg
+	call update_enemy_bullet_move_up_if_possible_a_times
+	jp z, update_enemy_delete
+update_enemy_pus_ball_y_done:
+
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	cp ENEMY_BLOOD_BALL
+	jr z, update_enemy_pus_ball_blood
+	ld d, COLOR_YELLOW
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 34) * 4 
+	jp enemy_sprite_and_continue_animated_fast
+update_enemy_pus_ball_blood:
+	ld d, COLOR_RED
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 34) * 4 
+	jp enemy_sprite_and_continue_animated_fast
+
+
+;-----------------------------------------------
 update_enemy_fall_to_water:
 update_enemy_fall_to_lava:
 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
@@ -3052,7 +3126,8 @@ update_enemy_fire_directional_bullet_towards_player_at_e_d:
 ; - d: sprite color
 ; - e: sprite frame
 enemy_sprite_and_continue_animated_slow:
-	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+; 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (interrupt_cycle)
 	rrca
 	rrca
 	and #04
@@ -3066,8 +3141,9 @@ enemy_sprite_and_continue_animated_slow:
 ; - d: sprite color
 ; - e: sprite frame
 enemy_sprite_and_continue_animated4:
-	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
-	rlca
+; 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+; 	rlca
+	ld a, (interrupt_cycle)
 	and #0c
 	add a, e
 	ld e, a
@@ -3079,7 +3155,9 @@ enemy_sprite_and_continue_animated4:
 ; - d: sprite color
 ; - e: sprite frame
 enemy_sprite_and_continue_animated_fast:
-	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+; 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (interrupt_cycle)
+	rrca
 	and #01
 	add a, a
 	add a, a
@@ -3093,7 +3171,10 @@ enemy_sprite_and_continue_animated_fast:
 ; - d: sprite color
 ; - e: sprite frame
 enemy_sprite_and_continue_animated:
-	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+; 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+; 	rrca
+	ld a, (interrupt_cycle)
+	rrca
 	rrca
 	and #04
 	add a, e

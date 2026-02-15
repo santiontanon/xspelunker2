@@ -1293,22 +1293,7 @@ update_boss4_behavior_2_internal_mouth:
 	ld (iy + 3), a
 	jr nz, update_boss4_behavior_2_internal_no_mouth
 	; mouth just opened, chance of firing a bullet:
-	call random_a
-	and #03
-	jr nz, update_boss4_behavior_2_internal_no_bullet
-	push ix
-		ld e, (ix + 2)  ; x
-		inc e
-		ld b, (ix + 3)  ; y
-		dec b
-		dec b
-		dec b
-		ld ix, #0004
-		ld hl, boss_fire_directional_bullet_towards_player_e_b
-		ld c, BOSS_PAGE
-		call call_hl_in_page_c_8000
-	pop ix
-update_boss4_behavior_2_internal_no_bullet:
+	call update_boss4_behavior_2_internal_fire_bullet	
 update_boss4_behavior_2_internal_no_mouth:
 
 	ld a, (ix + 0)  ; state
@@ -1323,11 +1308,18 @@ update_boss4_behavior_2_internal_no_mouth:
 
 update_boss4_behavior_2_state_0:
 update_boss4_behavior_2_state_10:
-	ld c, 11
+	call random_a  ; have a 1-in-4 chance ot doing the lord-specific attack
+	and #3
+	jr z, update_boss4_behavior_2_state_0_specific_attack
+	ld c, 10
 	call random_modulo
 	inc a
 	; ld a, 9  ; DEBUG
 	ld (ix + 0), a  ; state
+	ld (ix + 1), 0  ; state_timer
+	ret
+update_boss4_behavior_2_state_0_specific_attack:
+	ld (ix + 0), 9  ; state
 	ld (ix + 1), 0  ; state_timer
 	ret
 
@@ -1606,18 +1598,26 @@ update_boss4_behavior_2_state_9:
 	; lord-speciffic attack
 	ld a, (iy + 4)  ; which lord
 	dec a
-	jr z, update_boss4_behavior_2_state_9_lightning  ; hun-came
+	jr z, update_boss4_behavior_2_state_9_lightning  ; 1: hun-came
 	dec a
-	jr z, update_boss4_behavior_2_state_9_lightning  ; vucub-came
+	jr z, update_boss4_behavior_2_state_9_lightning  ; 2: vucub-came
 	dec a
-	jp z, update_boss4_behavior_2_state_9_bats  ; xiquiripat
+	jp z, update_boss4_behavior_2_state_9_bats  ; 3: xiquiripat
 	dec a
-	jp z, update_boss4_behavior_2_state_9_bats  ; cuchumaquic
+	jp z, update_boss4_behavior_2_state_9_bats  ; 4: cuchumaquic
 	dec a
-	jp z, update_boss4_behavior_2_state_9_skeletons  ; chamiabac
+	jp z, update_boss4_behavior_2_state_9_skeletons  ; 5: chamiabac
 	dec a
-	jp z, update_boss4_behavior_2_state_9_skeletons  ; chamiaholom
+	jp z, update_boss4_behavior_2_state_9_skeletons  ; 6: chamiaholom
+	dec a
+	jp z, update_boss4_behavior_2_state_9_ahalgana  ; 7: ahalgana
+	dec a
+	jp z, update_boss4_behavior_2_state_9_ahalpuh  ; 8: ahalpuh
 	; ...
+
+	; we should never get here:
+	ld (ix + 0), 0  ; state
+	ld (ix + 1), 0  ; state_timer
 	ret
 
 update_boss4_behavior_2_state_9_lightning:
@@ -1687,10 +1687,12 @@ update_boss4_behavior_2_state_9_lightning_hand_forward_ground_found:
 	ret
 
 update_boss4_behavior_2_state_9_lightning_hand_forward:
+update_boss4_behavior_2_state_9_bats_hand_forward:
+update_boss4_behavior_2_state_9_ahalgana_hand_forward:
 	ld (iy + 0), BOSS4_FRAME_POINT_FW_RIGHT  ; frame
 	ld a, 1
 	ld (boss__4_redraw), a
-	ret	
+	ret
 
 
 update_boss4_behavior_2_state_9_bats:
@@ -1704,7 +1706,7 @@ update_boss4_behavior_2_state_9_bats:
 	jr z, update_boss4_behavior_2_state_9_bats_hand_forward
 	inc c
 	cp c
-	jr z, update_boss4_spawn_bat  ; we spawn a bat in the frame afterwards, so that we know if the boss is facing left or right when spawning (which is determined in the drawing routine)
+	jp z, update_boss4_spawn_bat  ; we spawn a bat in the frame afterwards, so that we know if the boss is facing left or right when spawning (which is determined in the drawing routine)
 	dec c
 	sla c
 	cp c
@@ -1717,12 +1719,6 @@ update_boss4_behavior_2_state_9_bats:
 	ret
 update_boss4_behavior_2_state_9_bats_hand_up:
 	ld (iy + 0), BOSS4_FRAME_POINT_UP_RIGHT  ; frame
-	ld a, 1
-	ld (boss__4_redraw), a
-	ret
-
-update_boss4_behavior_2_state_9_bats_hand_forward:
-	ld (iy + 0), BOSS4_FRAME_POINT_FW_RIGHT  ; frame
 	ld a, 1
 	ld (boss__4_redraw), a
 	ret
@@ -1750,6 +1746,69 @@ update_boss4_behavior_2_state_9_skeletons_wand_up:
 	ld (iy + 0), BOSS4_FRAME_POINT_UP_RIGHT  ; frame
 	ld a, 1
 	ld (boss__4_redraw), a
+	ret
+
+
+update_boss4_behavior_2_state_9_ahalgana:
+update_boss4_behavior_2_state_9_ahalpuh:
+	ld a, (boss__4_settings + BOSS_4_ATTACK_WAIT_TIME)
+	ld c, a
+	ld a, (ix + 1)  ; state_timer
+	inc (ix + 1)
+	or a
+	jr z, update_boss4_behavior_2_state_9_ahalgana_hand_up
+	cp c
+	jp z, update_boss4_behavior_2_state_9_ahalgana_hand_forward
+	inc c
+	cp c
+	jr z, update_boss4_behavior_2_state_9_ahalgana_spawn_ball  ; we spawn in the frame afterwards, so that we know if the boss is facing left or right when spawning (which is determined in the drawing routine)
+	dec c
+	sla c
+	cp c
+	ret nz
+	ld (iy + 0), BOSS4_FRAME_IDLE_RIGHT  ; frame
+	ld (ix + 0), 0  ; state
+	ld (ix + 1), 0  ; state_timer	
+	ld a, 1
+	ld (boss__4_redraw), a
+	ret
+update_boss4_behavior_2_state_9_ahalgana_hand_up:
+	ld (iy + 0), BOSS4_FRAME_POINT_UP_RIGHT  ; frame
+	ld a, 1
+	ld (boss__4_redraw), a
+	ret
+
+update_boss4_behavior_2_state_9_ahalgana_spawn_ball:
+	push ix
+		ld a, (iy + 0)  ; frame
+		and #01
+		jr z, update_boss4_behavior_2_state_9_ahalgana_spawn_ball_right
+		; spawn left:
+		ld a, (ix + 2)  ; boss x
+		add a, -4
+		ld e, a
+		jr update_boss4_behavior_2_state_9_ahalgana_spawn_ball_x_set
+update_boss4_behavior_2_state_9_ahalgana_spawn_ball_right:
+		ld a, (ix + 2)  ; boss x
+		add a, 3
+		ld e, a
+update_boss4_behavior_2_state_9_ahalgana_spawn_ball_x_set:
+		ld b, (ix + 3)  ; y
+		dec b
+		dec b
+		ld ix, 0
+		ld hl, boss_fire_directional_bullet_towards_player_e_b
+		ld c, BOSS_PAGE
+		call call_hl_in_page_c_8000
+		ld a, (iy + 4)  ; which lord		
+		cp 8
+		jr z, update_boss4_behavior_2_state_9_ahalpuh_spawn_ball
+		ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BLOOD_BALL
+	pop ix
+	ret
+update_boss4_behavior_2_state_9_ahalpuh_spawn_ball:
+		ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_PUS_BALL
+	pop ix
 	ret
 
 
@@ -1846,6 +1905,51 @@ update_boss4_spawn_bat_continue:
 update_boss4_spawn_skeleton:
 	ld de, ENEMY_SKELETON_SLEEPER + 7 * 256  ; state: fall sleeping
 	jp update_boss4_spawn_skeleton_entry_point
+
+
+;-----------------------------------------------
+update_boss4_behavior_2_internal_fire_bullet:
+	ld a, (iy + 4)  ; which lord?
+	cp 8  ; ahalpuh
+	jr z, update_boss4_behavior_2_internal_fire_bullet_ahalpuh
+	call random_a
+	and #03  ; bullet probability
+	ret nz	
+	push ix
+		ld e, (ix + 2)  ; x
+		inc e
+		ld b, (ix + 3)  ; y
+		dec b
+		dec b
+		dec b
+		ld ix, #0004
+		ld hl, boss_fire_directional_bullet_towards_player_e_b
+		ld c, BOSS_PAGE
+		call call_hl_in_page_c_8000
+	pop ix
+	ret
+update_boss4_behavior_2_internal_fire_bullet_ahalpuh:
+	; drip pus from head (constantly drop)
+	call ptr_to_new_sprite_enemy
+	ret nz
+	ld (hl), 0  ; ID
+	inc hl
+	ld (hl), ENEMY_PUS_DROP  ; enemy type
+	inc hl
+	ld (hl), 0  ; pixel x
+	inc hl
+	call random_a
+	and #01
+	add a, (ix + 2)  ; boss x
+	inc a
+	ld (hl), a  ; tile x
+	inc hl
+	ld (hl), 0  ; pixel y
+	inc hl
+	ld a, (ix + 3)  ; boss y
+	add a, -5
+	ld (hl), a  ; tile y
+	ret
 
 
 ;-----------------------------------------------
