@@ -1,8 +1,8 @@
 to do:
 
 ***- Xibalba lords boss:
-  ***- lord-specific attack (state 10):
-    ***- hun-came / vucub-came have lightning attacks (pointing with their fingers)
+  ***- increase chance of lord-speciffic attacks (maybe have a 1 in 4 of directly setting to a lord attack by default)
+  ***- lord-specific attack (state 9):
     ***- Xiquiripat / Cuchumaquic: spawn enemies (bats)
     ***- Chamiabac / Chamiaholom: spawn enemies (skeletons: maybe they create a lightning or fire a bone and in the place it hits the floor, a skeleton appears)
     ***- Ahalgana / Ahalpuh: fire blood/pus faster/bigger bullets through their fingers
@@ -12,14 +12,15 @@ to do:
       ***- redraw gfx, so that utensil rised has the pot leaning over
     ***- Patan: trows blood splatter (2/3 blood drops directed at you or around you)
       ***- redraw gfx so that it has its hand inside the pot of blood, and when hand is out, it's all red
-  ***- if they are a pair, chance of a joint attack (state 11), where they go to the center with the hands-open frame and do a big barrage of bullets/blood/blades/enemies, whatever is that they spawn
+  ***- if they are a pair, chance of a joint attack (state 10), where they go to the center with the hands-open frame and do a big barrage of bullets/blood/blades/enemies, whatever is that they spawn
   ***- when bosses are killed:
-    ***- the ghosts appear again and go up, while the boss bodies explode with several repeated explosions.
+    ***- the ghosts appear from their bodies and go up, while the boss bodies explode with several repeated explosions.
     ***- spawn power stone
+    ***- add boss name to the stats for game over screen (specify which lords you killed)
     ***- waking up proper pairs (e.g. the two main lords, or Ahalpuh+Ahalgana) gives you an extra item at the end (maybe it spawns first, and when you pick it up, the power stone spawns, and then you exit the room):
+      ***- reorganize the boss keys / power stones, need to update 'inventory_item_positions' and 'state_inventory_update_cursor_interact')
       ***- two main give you a key that can be used for a secret in moon/mars boss room, the other pairs give you benefits (figure them out)
-      ***- any of the other pairs, gives you a charm that halves the ammo you use for your weapons (do I have space for it in the inventory? -> yes, I need to reorganize the boss keys / power stones, need to update 'inventory_item_positions' and 'state_inventory_update_cursor_interact')
-  ***- add boss name to the stats for game over screen (specify which lords you killed)
+      ***- any of the other pairs, gives you a charm that halves the ammo you use for your weapons (do I have space for it in the inventory?
 
 - music: intro, letters/map, tablets/puzzles, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)
   - jungle: the original xspelunker song is much better than the new one, take it as a starting point and improve it

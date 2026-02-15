@@ -1468,7 +1468,7 @@ update_sprite_objects_boss_extras_boss_4_lord_x_ok:
 	call a_mod_3
 	add a, a
 	add a, a
-	add a, (FIRST_ENEMY_SPRITE_PATTERN + 9) * 4
+	add a, (FIRST_ENEMY_SPRITE_PATTERN + 5) * 4
 	ld e, a
 	jp add_sprite_to_this_frame
 

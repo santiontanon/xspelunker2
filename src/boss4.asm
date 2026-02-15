@@ -2,22 +2,22 @@
 BOSS_4_HP_OFFSET: equ 0
 BOSS_4_MOUTH_TIMER_MASK: equ 2
 BOSS_4_WAIT_TIME: equ 3
-BOSS_4_STOMP_WAIT_TIME: equ 4
+BOSS_4_ATTACK_WAIT_TIME: equ 4
 BOSS_4_STOMP_MASK: equ 5
 BOSS_4_MOVE_SPEED: equ 6
 
 boss4_difficulty_setting__easy:
 	dw 128  ; boss hp
-	db #3e, 75, 50, #07, #0f  ; mouth timer mask, wait, stomp wait, stomp mask, move speed
+	db #3e, 75, 40, #07, #0f  ; mouth timer mask, wait, attack wait, stomp mask, move speed
 boss4_difficulty_setting__normal:
 	dw 192  ; boss hp
-	db #1e, 60, 40, #03, #07  ; mouth timer mask, wait, stomp wait, stomp mask, move speed
+	db #1e, 60, 32, #03, #07  ; mouth timer mask, wait, attack wait, stomp mask, move speed
 boss4_difficulty_setting__hard:
 	dw 256  ; boss hp
-	db #0e, 50, 30, #03, #07 ; mouth timer mask, wait, stomp wait, stomp mask, move speed
+	db #0e, 50, 28, #03, #07 ; mouth timer mask, wait, attack wait, stomp mask, move speed
 boss4_difficulty_setting__hardest:
 	dw 320  ; boss hp
-	db #0e, 40, 20, #01, #07  ; mouth timer mask, wait, stomp wait, stomp mask, move speed
+	db #0e, 40, 24, #01, #07  ; mouth timer mask, wait, attack wait, stomp mask, move speed
 
 
 ;-----------------------------------------------
@@ -1316,12 +1316,11 @@ update_boss4_behavior_2_internal_no_mouth:
 	jp hl
 
 update_boss4_behavior_2_state_0:
-update_boss4_behavior_2_state_9:
 update_boss4_behavior_2_state_10:
 	ld c, 11
 	call random_modulo
 	inc a
-; 	ld a, 8  ; DEBUG
+; 	ld a, 9  ; DEBUG
 	ld (ix + 0), a  ; state
 	ld (ix + 1), 0  ; state_timer
 	ret
@@ -1548,7 +1547,7 @@ update_boss4_behavior_2_state_11_continue:
 
 update_boss4_behavior_2_state_20:
 	; stomp 2: wait
-	ld a, (boss__4_settings + BOSS_4_STOMP_WAIT_TIME)
+	ld a, (boss__4_settings + BOSS_4_ATTACK_WAIT_TIME)
 	ld c, a
 	ld a, (ix + 1)  ; state_timer
 	inc (ix + 1)
@@ -1597,11 +1596,93 @@ update_boss4_behavior_2_state_21_collision:
 	ld (ix + 1), 0  ; state_timer	
 	ret
 
+update_boss4_behavior_2_state_9:
+	; lord-speciffic attack
+	ld a, (iy + 4)  ; which lord
+	dec a
+	jr z, update_boss4_behavior_2_state_9_lightning  ; hun-came
+	dec a
+	jr z, update_boss4_behavior_2_state_9_lightning  ; vucub-came
+	; ...
+	ret
+
+update_boss4_behavior_2_state_9_lightning:
+	ld a, (boss__4_settings + BOSS_4_ATTACK_WAIT_TIME)
+	ld c, a
+	ld a, (ix + 1)  ; state_timer
+	inc (ix + 1)
+	or a
+	jr z, update_boss4_behavior_2_state_9_lightning_hand_up
+	cp c
+	jr z, update_boss4_behavior_2_state_9_lightning_hand_forward
+	sla c
+	cp c
+	ret nz
+	ld (iy + 0), BOSS4_FRAME_IDLE_RIGHT  ; frame
+	ld (ix + 0), 0  ; state
+	ld (ix + 1), 0  ; state_timer	
+	ld a, 1
+	ld (boss__4_redraw), a
+	ret
+update_boss4_behavior_2_state_9_lightning_hand_up:
+	ld (iy + 0), BOSS4_FRAME_POINT_UP_RIGHT  ; frame
+	ld a, 1
+	ld (boss__4_redraw), a
+
+	; spawn lighning;
+	call ptr_to_new_sprite_enemy
+	ret nz
+	push ix
+		push hl
+		pop ix
+		ld (ix + ROOM_OBJECT_STRUCT_ID), 0  ; ID
+		ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BULLET_LIGHTNING
+		ld (ix + ROOM_OBJECT_STRUCT_PIXEL_Y), 0
+		; find the ground position under the player:
+		ld a, (player_x + 1)
+		ld c, a
+		ld a, (player_y + 1)
+		ld b, a
+		ld a, (current_room__width)
+		ld e, a
+		ld d, 0
+		push bc
+		push de
+			call get_room_tile_ptr
+		pop de
+		pop bc
+update_boss4_behavior_2_state_9_lightning_hand_forward_ground_loop:
+		ld a, (hl)
+		call get_collision_tile_type_of_a
+		cp 2
+		jr z, update_boss4_behavior_2_state_9_lightning_hand_forward_ground_found
+		inc b
+		add hl, de
+		jr update_boss4_behavior_2_state_9_lightning_hand_forward_ground_loop
+update_boss4_behavior_2_state_9_lightning_hand_forward_ground_found:
+		ld (ix + ROOM_OBJECT_STRUCT_TILE_X), c
+		ld a, (player_x)
+		ld (ix + ROOM_OBJECT_STRUCT_PIXEL_X), a
+		dec b
+		dec b
+		ld (ix + ROOM_OBJECT_STRUCT_TILE_Y), b  ; ground height
+		ld (ix + ROOM_OBJECT_STRUCT_STATE), 3
+		ld a, (boss__4_settings + BOSS_4_ATTACK_WAIT_TIME)
+		ld (ix + ROOM_OBJECT_STRUCT_BULLET_STATE), a
+	pop ix	
+	ret
+
+update_boss4_behavior_2_state_9_lightning_hand_forward:
+	ld (iy + 0), BOSS4_FRAME_POINT_FW_RIGHT  ; frame
+	ld a, 1
+	ld (boss__4_redraw), a
+	ret	
+
 
 ;-----------------------------------------------
 ; input:
 ; - ix: ptr to state, state_timer, x, y
-; - iy: ptr to lord frame, target x, target y, mouth state
+; - iy: ptr to lord frame, target x, target y, mouth state, lord
 ; output:
 ; - z: reached
 ; - nz: not yet reached

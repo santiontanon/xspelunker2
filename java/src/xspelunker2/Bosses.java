@@ -107,10 +107,12 @@ public class Bosses {
 
 //        data.addAll(GenerateSprites.extractSprite(sourceImage, 0, 32, 15));  // danger mark
 
+        // 5
         data.addAll(GenerateSprites.extractSprite(sourceImage, 0, 0, 15));  // whirlwind
         data.addAll(GenerateSprites.extractSprite(sourceImage, 16, 0, 15));
         data.addAll(GenerateSprites.extractSprite(sourceImage, 32, 0, 15));
 
+        // 8
         data.addAll(GenerateSprites.extractSprite(sourceImage, 0, 16, 15));  // lightning
         data.addAll(GenerateSprites.extractSprite(sourceImage, 16, 16, 15));
         data.addAll(GenerateSprites.extractSprite(sourceImage, 32, 16, 15));

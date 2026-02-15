@@ -4,7 +4,7 @@ enemy_update_fn_table:
 	dw update_enemy_poison_bullet
 	dw update_enemy_parabola_bullet
 	dw update_enemy_bullet_whirlwind  ; boss 1 attack
-	dw update_enemy_bullet_lightning  ; boss 1 attack
+	dw update_enemy_bullet_lightning  ; boss 1/4 attack
 	dw update_enemy_sonic_boom  ; boss 2 attack
 	dw update_enemy_boss2_spikes ; boss 2 attack
 	dw update_enemy_boss3_debris ; boss 3 attack
@@ -2657,6 +2657,18 @@ update_enemy_bullet_lightning:
 	jr z, update_enemy_bullet_lightning_state_0
 	dec a
 	jr z, update_enemy_bullet_lightning_state_1
+	dec a
+	jr z, update_enemy_bullet_lightning_state_2
+update_enemy_bullet_lightning_state_3:
+	; just wait a certain amount of time
+	ld a, (ix + ROOM_OBJECT_STRUCT_BULLET_STATE)
+	dec (ix + ROOM_OBJECT_STRUCT_BULLET_STATE)
+	or a
+	ret nz
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2  ; next state
+	ld (ix + ROOM_OBJECT_STRUCT_BULLET_STATE), 0
+	ret
+
 update_enemy_bullet_lightning_state_2:
 	inc (ix + ROOM_OBJECT_STRUCT_BULLET_STATE)
 	ld a, (ix + ROOM_OBJECT_STRUCT_BULLET_STATE)
@@ -2668,7 +2680,7 @@ update_enemy_bullet_lightning_state_1:
 	inc (ix + ROOM_OBJECT_STRUCT_BULLET_STATE)
 	ld a, (ix + ROOM_OBJECT_STRUCT_BULLET_STATE)
 	cp 16
-	ret nz
+	ret c
 	; move to where the player is:
 	ld b, (ix + ROOM_OBJECT_STRUCT_SPEED_Y)  ; player tile x
 	ld a, (ix + ROOM_OBJECT_STRUCT_SPEED_X)  ; player pixel x

@@ -407,7 +407,7 @@ update_sprite_objects_boss_extras:
 
 ;-----------------------------------------------
 update_sprite_objects_xibalba_lord_ghost:
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 5) * 4
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 29) * 4
 	ld d, COLOR_GREY
 	ld c, 0
 	call get_sprite_object_sprite_coordinates
@@ -420,7 +420,7 @@ update_sprite_objects_xibalba_lord_ghost:
 	call a_mod_3
 	add a, a
 	add a, a
-	add a, (FIRST_ENEMY_SPRITE_PATTERN + 6) * 4
+	add a, (FIRST_ENEMY_SPRITE_PATTERN + 13) * 4
 	ld e, a
 	ld d, COLOR_GREY
 	ld c, 0
