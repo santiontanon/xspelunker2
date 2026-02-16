@@ -952,6 +952,8 @@ boss_fire_directional_bullet_towards_player_with_random_offset:
 ; - c, b: tile coordinate from where the bullet is fired
 ; - ixl, ixh: pixel offset
 ; output:
+; - z: success
+; - nz: failure
 ; - ix: bullet ptr
 boss_fire_directional_bullet_towards_player_e_b:  ; for when we call it from a different page
 	ld c, e
@@ -993,6 +995,7 @@ boss_fire_directional_bullet_towards_player_continue:
 		ld hl, SFX_enemy_bullet
 		call play_SFX_with_high_priority
 	pop ix
+	xor a  ; success
 	ret
 
 

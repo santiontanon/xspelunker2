@@ -1,11 +1,6 @@
 to do:
 
 ***- Xibalba lords boss:
-  ***- joint attack bats: spawn a large number of bats (like 8) at random places within the lords
-  ***- joint attack skeletons: spawn a row of skeletons (like 8) and drop them oneby one
-  ***- joint attack pus: throw alternated pus/blood balls from each of the lords
-  ***- joint attack blades: 6 at a time from the center, with a slight random vertical offset
-  ***- joint attack blood: throw blood balls from each of the lords
   ***- when bosses are killed:
     ***- the ghosts appear from their bodies and go up, while the boss bodies explode with several repeated explosions.
     ***- spawn power stone

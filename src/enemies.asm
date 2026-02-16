@@ -4153,6 +4153,9 @@ enemy_hit_killed:
 	ret z  ; bones do not have drops
 	cp ENEMY_BONE_PARABOLA_BULLET
 	ret z  ; bones do not have drops
+	ld a, (boss__active)
+	or a
+	ret nz  ; no drops for enemies spawned by bosses
 	; jp enemy_maybe_spawn_drop
 
 

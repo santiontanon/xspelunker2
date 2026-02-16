@@ -1814,10 +1814,12 @@ update_boss4_behavior_2_state_9_ahalgana_spawn_ball_x_set:
 		ld hl, boss_fire_directional_bullet_towards_player_e_b
 		ld c, BOSS_PAGE
 		call call_hl_in_page_c_8000
+		jr z, update_boss4_behavior_2_state_9_ahalpuh_spawn_ball_fail
 		ld a, (iy + 4)  ; which lord		
 		cp 8
 		jr z, update_boss4_behavior_2_state_9_ahalpuh_spawn_ball
 		ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BLOOD_BALL
+update_boss4_behavior_2_state_9_ahalpuh_spawn_ball_fail:
 	pop ix
 	ret
 update_boss4_behavior_2_state_9_ahalpuh_spawn_ball:
@@ -1954,17 +1956,22 @@ update_boss4_behavior_2_state_9_patan_spawn_blood_x_set:
 			ld hl, boss_fire_directional_bullet_towards_player_with_random_offset_e_b
 			ld c, BOSS_PAGE
 			call call_hl_in_page_c_8000
+			jr z, update_boss4_behavior_2_state_9_patan_spawn_blood_fail
 			ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BLOOD_BALL
 		pop de
 		ld ix, 0
 		ld hl, boss_fire_directional_bullet_towards_player_with_random_offset_e_b
 		ld c, BOSS_PAGE
 		call call_hl_in_page_c_8000
+			jr z, update_boss4_behavior_2_state_9_patan_spawn_blood_fail2
 		ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BLOOD_BALL
 	pop ix
 	ret
-
-
+update_boss4_behavior_2_state_9_patan_spawn_blood_fail:
+		pop de
+update_boss4_behavior_2_state_9_patan_spawn_blood_fail2:
+	pop ix
+	ret
 update_boss4_behavior_2_state_10:
 	; check if they are a pair:
 	ld a, (boss__4_first_lord)
@@ -2063,9 +2070,9 @@ update_boss4_behavior_2_state_24:
 	dec a
 	jr z, update_boss4_behavior_2_state_24_pus
 	dec a
-	jr z, update_boss4_behavior_2_state_24_blades
+	jp z, update_boss4_behavior_2_state_24_blades
 	dec a
-	jr z, update_boss4_behavior_2_state_24_blood
+	jp z, update_boss4_behavior_2_state_24_blood
 update_boss4_behavior_2_state_24_continue:
 	ld a, (boss__4_settings + BOSS_4_BARRAGE_TIME)
 	ld c, a
@@ -2073,18 +2080,17 @@ update_boss4_behavior_2_state_24_continue:
 	inc (ix + 1)
 	cp c
 	ret nz
+	ld a, BOSS4_FRAME_IDLE_RIGHT
+	ld (boss__4_lord1_frame), a
+	ld (boss__4_lord2_frame), a
+	ld a, 1
+	ld (boss__4_redraw), a
+	xor a	
 	; DEBUG:
-; 	ld a, BOSS4_FRAME_IDLE_RIGHT
-; 	ld (boss__4_lord1_frame), a
-; 	ld (boss__4_lord2_frame), a
-; 	ld a, 1
-; 	ld (boss__4_redraw), a
-; 	xor a
 ; 	ld (boss__state_timer), a
 ; 	ld (boss__state2_timer), a
 ; 	ld a, 8
 	; END DEBUG
-	xor a	
 	ld (boss__state), a  ; state
 	ld (boss__state2), a  ; state
 	ret	
@@ -2100,21 +2106,167 @@ update_boss4_behavior_2_state_24_lightnings:
 	add hl, bc
 	ld (hl), a
 	jp update_boss4_behavior_2_state_24_continue
+
 update_boss4_behavior_2_state_24_bats:
-	; ...
+	ld a, (ix + 1)  ; state_timer
+	and #07
+	jr nz, update_boss4_behavior_2_state_24_continue
+	call update_boss4_spawn_bat_joint_attack
 	jp update_boss4_behavior_2_state_24_continue
+
 update_boss4_behavior_2_state_24_skeletons:
-	; ...
+	ld a, (ix + 1)  ; state_timer
+	and #07
+	jr nz, update_boss4_behavior_2_state_24_continue
+	call update_boss4_spawn_skeleton_joint_attack
 	jp update_boss4_behavior_2_state_24_continue
+
 update_boss4_behavior_2_state_24_pus:
-	; ...
+	ld a, (ix + 1)  ; state_timer
+	and #07
+	jr nz, update_boss4_behavior_2_state_24_continue
+	push ix
+		call random_a
+		and #03
+		add a, 30
+		ld e, a  ; x
+		call random_a
+		and #03
+		add a, 12
+		ld b, a  ; y
+		ld ix, 0
+		ld hl, boss_fire_directional_bullet_towards_player_e_b
+		ld c, BOSS_PAGE
+		call call_hl_in_page_c_8000
+		jr nz, update_boss4_behavior_2_state_24_pus_spawned
+		ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_PUS_BALL
+		call random_a
+		and #01
+		jr z, update_boss4_behavior_2_state_24_pus_spawned
+		ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BLOOD_BALL
+update_boss4_behavior_2_state_24_pus_spawned:
+	pop ix
 	jp update_boss4_behavior_2_state_24_continue
+
 update_boss4_behavior_2_state_24_blades:
-	; ...
+	ld a, (ix + 1)  ; state_timer
+	and #07
+	jp nz, update_boss4_behavior_2_state_24_continue
+
+	call ptr_to_new_sprite_enemy
+	jp nz, update_boss4_behavior_2_state_24_continue
+	call update_boss4_spawn_blades_joint_attack_internal
+	call ptr_to_new_sprite_enemy
+	jp nz, update_boss4_behavior_2_state_24_continue
+	call update_boss4_spawn_blades_joint_attack_internal
+	call ptr_to_new_sprite_enemy
+	jp nz, update_boss4_behavior_2_state_24_continue
+	call update_boss4_spawn_blades_joint_attack_internal
+	call ptr_to_new_sprite_enemy
+	jp nz, update_boss4_behavior_2_state_24_continue
+	call update_boss4_spawn_blades_joint_attack_internal
 	jp update_boss4_behavior_2_state_24_continue
+
 update_boss4_behavior_2_state_24_blood:
-	; ...
+	ld a, (ix + 1)  ; state_timer
+	and #07
+	jp nz, update_boss4_behavior_2_state_24_continue
+	push ix
+		call random_a
+		and #03
+		add a, 30
+		ld e, a  ; x
+		call random_a
+		and #03
+		add a, 12
+		ld b, a  ; y
+		ld ix, 0
+		ld hl, boss_fire_directional_bullet_towards_player_e_b
+		ld c, BOSS_PAGE
+		call call_hl_in_page_c_8000
+		jr nz, update_boss4_behavior_2_state_24_pus_spawned
+		ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BLOOD_BALL
+	pop ix
 	jp update_boss4_behavior_2_state_24_continue
+
+
+;-----------------------------------------------
+update_boss4_spawn_blades_joint_attack_internal:
+	ld (hl), 0  ; ID
+	inc hl
+	ld (hl), ENEMY_BOSS4_BLADES  ; enemy type
+	inc hl
+	ld (hl), 0  ; pixel x
+	inc hl
+	call random_a
+	and #03
+	add a, 30
+	ld (hl), a  ; tile x
+	inc hl
+	ld (hl), 0  ; pixel y
+	inc hl
+	call random_a
+	and #03
+	add a, 12
+	ld (hl), a  ; tile y
+	inc hl
+	; 1: left-up, 0: left, 2: left-down
+	; 5: right-up, 0: right, 6: left-down
+	ld c, 6
+	call random_modulo
+	ld (hl), a  ; state
+	cp 3
+	ret nz
+	ld (hl), 6
+	ret
+
+
+;-----------------------------------------------
+update_boss4_spawn_skeleton_joint_attack:
+	ld de, ENEMY_SKELETON_SLEEPER + 7 * 256  ; state: fall sleeping
+	jp update_boss4_spawn_skeleton_joint_attack_entry_point
+update_boss4_spawn_bat_joint_attack:
+	ld de, ENEMY_BAT_AGGRESSIVE + 0 * 256  ; direction (fly still)
+update_boss4_spawn_skeleton_joint_attack_entry_point:
+	push ix
+	push de
+		call count_number_of_bats_and_skeletons
+	pop de
+	pop ix
+	ld a, (boss__4_settings + BOSS_4_MAX_ENEMIES_OFFSET)
+	add a, a  ; double the number of max enemies than usual
+	cp c
+	ret z  ; if we have the max number of bats, do not spawn any new one
+
+	push de
+		call ptr_to_new_sprite_enemy
+	pop de
+	ret nz
+	ld (hl), 0  ; ID
+	inc hl
+	ld (hl), e  ; enemy type
+	inc hl
+	ld (hl), 0  ; pixel x
+	inc hl
+	call random_a
+	and #07
+	add a, 28
+	ld (hl), a  ; tile x
+	inc hl
+	ld (hl), 0  ; pixel y
+	inc hl
+	call random_a
+	and #03
+	add a, 12
+	ld (hl), a  ; tile y
+	inc hl
+	ld (hl), d  ; state
+	inc hl
+	inc hl
+	inc hl
+	ld a, (boss__4_settings + BOSS_4_ENEMIES_HP_OFFSET)
+	ld (hl), a  ; hitpoints
+	ret
 
 
 ;-----------------------------------------------
@@ -2124,26 +2276,9 @@ update_boss4_spawn_skeleton_entry_point:
 	ld a, (ix + 3)  ; boss y
 	cp 2
 	ret c  ; if the boss is too high up, do not spawn anything
-	; find # of bats or skeletons:
-	ld c, 0
 	push ix
 	push de
-		ld ix, current_room__sprite_enemies
-		ld de, ROOM_OBJECT_STRUCT_SIZE
-update_boss4_spawn_bat_loop:
-		ld a, (ix)
-		inc a  ; cp #ff
-		jr z, update_boss4_spawn_bat_loop_end
-		ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
-		add ix, de
-		cp ENEMY_BAT_AGGRESSIVE
-		jr z, update_boss4_spawn_bat_loop_bat
-		cp ENEMY_SKELETON_SLEEPER
-		jr nz, update_boss4_spawn_bat_loop
-update_boss4_spawn_bat_loop_bat:
-		inc c
-		jr update_boss4_spawn_bat_loop
-update_boss4_spawn_bat_loop_end:
+		call count_number_of_bats_and_skeletons
 	pop de
 	pop ix
 	ld a, (boss__4_settings + BOSS_4_MAX_ENEMIES_OFFSET)
@@ -2204,6 +2339,28 @@ update_boss4_spawn_bat_continue:
 	ld a, (boss__4_settings + BOSS_4_ENEMIES_HP_OFFSET)
 	ld (hl), a  ; hitpoints
 	ret
+
+
+;-----------------------------------------------
+; output:
+; - c: number of bats + skeletons
+count_number_of_bats_and_skeletons:
+	ld c, 0
+	ld ix, current_room__sprite_enemies
+	ld de, ROOM_OBJECT_STRUCT_SIZE
+update_boss4_spawn_bat_loop:
+	ld a, (ix)
+	inc a  ; cp #ff
+	ret z
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	add ix, de
+	cp ENEMY_BAT_AGGRESSIVE
+	jr z, update_boss4_spawn_bat_loop_bat
+	cp ENEMY_SKELETON_SLEEPER
+	jr nz, update_boss4_spawn_bat_loop
+update_boss4_spawn_bat_loop_bat:
+	inc c
+	jr update_boss4_spawn_bat_loop
 
 
 ;-----------------------------------------------
