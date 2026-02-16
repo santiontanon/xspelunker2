@@ -7,23 +7,25 @@ BOSS_4_STOMP_MASK: equ 5
 BOSS_4_MOVE_SPEED: equ 6
 BOSS_4_MAX_ENEMIES_OFFSET: equ 7
 BOSS_4_ENEMIES_HP_OFFSET: equ 8
+BOSS_4_BARRAGE_TIME: equ 9
+BOSS_4_BARRAGE_ATTACK_WAIT_TIME: equ 10
 
 boss4_difficulty_setting__easy:
 	dw 128  ; boss hp
 	db #3e, 75, 40, #07, #0f  ; mouth timer mask, wait, attack wait, stomp mask, move speed
-	db 2, 1  ; max enemies, enemies hp
+	db 2, 1, 64, 20  ; max enemies, enemies hp, barrage time
 boss4_difficulty_setting__normal:
 	dw 192  ; boss hp
 	db #1e, 60, 32, #03, #07  ; mouth timer mask, wait, attack wait, stomp mask, move speed
-	db 3, 1
+	db 3, 1, 80, 16
 boss4_difficulty_setting__hard:
 	dw 256  ; boss hp
 	db #0e, 50, 28, #03, #07 ; mouth timer mask, wait, attack wait, stomp mask, move speed
-	db 4, 2
+	db 4, 2, 96, 14
 boss4_difficulty_setting__hardest:
 	dw 320  ; boss hp
 	db #0e, 40, 24, #01, #07  ; mouth timer mask, wait, attack wait, stomp mask, move speed
-	db 5, 3
+	db 5, 3, 96, 12
 
 
 ;-----------------------------------------------
@@ -1236,6 +1238,9 @@ update_boss4_behavior_2_table:
 	dw update_boss4_behavior_2_state_19
 	dw update_boss4_behavior_2_state_20
 	dw update_boss4_behavior_2_state_21
+	dw update_boss4_behavior_2_state_22
+	dw update_boss4_behavior_2_state_23
+	dw update_boss4_behavior_2_state_24
 
 ; Update behavior for just one lord
 ; input:
@@ -1268,6 +1273,9 @@ update_boss4_behavior_2_table:
 ; - 19: (from 6)
 ; - 20: stomp 1: wait
 ; - 21: stomp 2: drop and then go to 8
+; - 22: joint-attack: get to position
+; - 23: joint-attack: wait for both to arrive
+; - 24: joint-attack: barrage
 update_boss4_behavior_2_internal:
 
 	; update mouth state in all states except: 8, 9, 10, 11, 20, 21
@@ -1307,14 +1315,13 @@ update_boss4_behavior_2_internal_no_mouth:
 	jp hl
 
 update_boss4_behavior_2_state_0:
-update_boss4_behavior_2_state_10:
 	call random_a  ; have a 1-in-4 chance ot doing the lord-specific attack
 	and #3
 	jr z, update_boss4_behavior_2_state_0_specific_attack
 	ld c, 10
 	call random_modulo
 	inc a
-	; ld a, 9  ; DEBUG
+; 	ld a, 10  ; DEBUG
 	ld (ix + 0), a  ; state
 	ld (ix + 1), 0  ; state_timer
 	ret
@@ -1650,6 +1657,7 @@ update_boss4_behavior_2_state_9_lightning_hand_up:
 	ld a, 1
 	ld (boss__4_redraw), a
 
+update_boss4_behavior_2_state_9_lightning_spawn:
 	; spawn lighning;
 	call ptr_to_new_sprite_enemy
 	ret nz
@@ -1684,13 +1692,17 @@ update_boss4_behavior_2_state_9_lightning_hand_forward_ground_found:
 		ld (ix + ROOM_OBJECT_STRUCT_TILE_X), c
 		ld a, (player_x)
 		ld (ix + ROOM_OBJECT_STRUCT_PIXEL_X), a
+		ld (ix + ROOM_OBJECT_STRUCT_PIXEL_Y), 0
 		dec b
 		dec b
 		ld (ix + ROOM_OBJECT_STRUCT_TILE_Y), b  ; ground height
 		ld (ix + ROOM_OBJECT_STRUCT_STATE), 3
 		ld a, (boss__4_settings + BOSS_4_ATTACK_WAIT_TIME)
 		ld (ix + ROOM_OBJECT_STRUCT_BULLET_STATE), a
+		push ix
+		pop hl  ; return the ptr to ix, so the caller can overwrite the delay if eneded
 	pop ix	
+	xor a  ; to return "z"
 	ret
 
 update_boss4_behavior_2_state_9_lightning_hand_forward:
@@ -1951,6 +1963,158 @@ update_boss4_behavior_2_state_9_patan_spawn_blood_x_set:
 		ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BLOOD_BALL
 	pop ix
 	ret
+
+
+update_boss4_behavior_2_state_10:
+	; check if they are a pair:
+	ld a, (boss__4_first_lord)
+	dec a
+	and #fe
+	ld c, a
+	ld a, (boss__4_second_lord)
+	dec a
+	and #fe
+	cp c
+	jr z, update_boss4_behavior_2_state_10_pair
+update_boss4_behavior_2_state_10_abort:
+	; they are not a pair, abort
+	ld (ix + 0), 0  ; state
+	ld (ix + 1), 0  ; state_timer	
+	ret	
+update_boss4_behavior_2_state_10_pair:
+	; make sure that both lords are in states that they can come out of:
+	; - ok: 0, 1, 2, 3, 4, 5, 6, 7, 8, 12, 13, 14, 15, 16, 17, 18, 19
+	; - not ok: 9, 10, 11, 20, 21
+	ld a, (boss__state)
+	call update_boss4_behavior_2_state_10_abord_p
+	jr z, update_boss4_behavior_2_state_10_abort
+	ld a, (boss__state2)
+	call update_boss4_behavior_2_state_10_abord_p
+	jr z, update_boss4_behavior_2_state_10_abort
+	; start the joint behavior!
+	ld a, 22
+	ld (boss__state), a  ; state
+	ld (boss__state2), a  ; state
+	xor a
+	ld (boss__state_timer), a  ; state
+	ld (boss__state2_timer), a  ; state
+	ld a, 26
+	ld (boss__4_lord1_target_x), a
+	ld a, 35
+	ld (boss__4_lord2_target_x), a
+	ld a, 16
+	ld (boss__4_lord1_target_y), a
+	ld (boss__4_lord2_target_y), a
+	ret
+update_boss4_behavior_2_state_10_abord_p:
+	cp 9
+	jr z, update_boss4_behavior_2_state_10_abort
+	cp 11
+	jr z, update_boss4_behavior_2_state_10_abort
+	cp 20
+	jr z, update_boss4_behavior_2_state_10_abort
+	cp 21
+	jr z, update_boss4_behavior_2_state_10_abort
+	ret
+
+update_boss4_behavior_2_state_22:
+	; joint attack, get to position:
+	inc (ix + 1)  ; state_timer
+	call update_boss4_behavior_2_move_to_destination
+	ret nz
+	ld (ix + 0), 23  ; state
+	ld (ix + 1), 0  ; state_timer
+	ret
+
+update_boss4_behavior_2_state_23:
+	; joint attack, waiting for both lords to be in position:
+	ld a, (boss__state)
+	cp 23
+	ret nz
+	ld a, (boss__state2)
+	cp 23
+	ret nz
+	ld a, BOSS4_FRAME_HANDS_OPEN_RIGHT
+	ld (boss__4_lord1_frame), a
+	ld (boss__4_lord2_frame), a
+	ld a, 1
+	ld (boss__4_redraw), a
+	ld a, 24
+	ld (boss__state), a  ; state
+	ld (boss__state2), a  ; state
+	xor a
+	ld (boss__state_timer), a
+	ld (boss__state2_timer), a
+	ret
+
+update_boss4_behavior_2_state_24:
+	; joint attack, barrage:
+	ld a, (boss__4_first_lord)
+	cp (iy + 4)
+	ret nz  ; only update lord 1
+	dec a
+	rrca
+	and #7f
+	jr z, update_boss4_behavior_2_state_24_lightnings
+	dec a
+	jr z, update_boss4_behavior_2_state_24_bats
+	dec a
+	jr z, update_boss4_behavior_2_state_24_skeletons
+	dec a
+	jr z, update_boss4_behavior_2_state_24_pus
+	dec a
+	jr z, update_boss4_behavior_2_state_24_blades
+	dec a
+	jr z, update_boss4_behavior_2_state_24_blood
+update_boss4_behavior_2_state_24_continue:
+	ld a, (boss__4_settings + BOSS_4_BARRAGE_TIME)
+	ld c, a
+	ld a, (ix + 1)  ; state_timer
+	inc (ix + 1)
+	cp c
+	ret nz
+	; DEBUG:
+; 	ld a, BOSS4_FRAME_IDLE_RIGHT
+; 	ld (boss__4_lord1_frame), a
+; 	ld (boss__4_lord2_frame), a
+; 	ld a, 1
+; 	ld (boss__4_redraw), a
+; 	xor a
+; 	ld (boss__state_timer), a
+; 	ld (boss__state2_timer), a
+; 	ld a, 8
+	; END DEBUG
+	xor a	
+	ld (boss__state), a  ; state
+	ld (boss__state2), a  ; state
+	ret	
+
+update_boss4_behavior_2_state_24_lightnings:
+	ld a, (ix + 1)  ; state_timer
+	and #07
+	jr nz, update_boss4_behavior_2_state_24_continue
+	call update_boss4_behavior_2_state_9_lightning_spawn
+	jp nz, update_boss4_behavior_2_state_24_continue
+	ld a, (boss__4_settings + BOSS_4_BARRAGE_ATTACK_WAIT_TIME)
+	ld bc, ROOM_OBJECT_STRUCT_BULLET_STATE
+	add hl, bc
+	ld (hl), a
+	jp update_boss4_behavior_2_state_24_continue
+update_boss4_behavior_2_state_24_bats:
+	; ...
+	jp update_boss4_behavior_2_state_24_continue
+update_boss4_behavior_2_state_24_skeletons:
+	; ...
+	jp update_boss4_behavior_2_state_24_continue
+update_boss4_behavior_2_state_24_pus:
+	; ...
+	jp update_boss4_behavior_2_state_24_continue
+update_boss4_behavior_2_state_24_blades:
+	; ...
+	jp update_boss4_behavior_2_state_24_continue
+update_boss4_behavior_2_state_24_blood:
+	; ...
+	jp update_boss4_behavior_2_state_24_continue
 
 
 ;-----------------------------------------------

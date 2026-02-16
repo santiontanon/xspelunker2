@@ -1,7 +1,11 @@
 to do:
 
 ***- Xibalba lords boss:
-  ***- if they are a pair, chance of a joint attack (state 10), where they go to the center with the hands-open frame and do a big barrage of bullets/blood/blades/enemies, whatever is that they spawn
+  ***- joint attack bats: spawn a large number of bats (like 8) at random places within the lords
+  ***- joint attack skeletons: spawn a row of skeletons (like 8) and drop them oneby one
+  ***- joint attack pus: throw alternated pus/blood balls from each of the lords
+  ***- joint attack blades: 6 at a time from the center, with a slight random vertical offset
+  ***- joint attack blood: throw blood balls from each of the lords
   ***- when bosses are killed:
     ***- the ghosts appear from their bodies and go up, while the boss bodies explode with several repeated explosions.
     ***- spawn power stone
@@ -10,6 +14,7 @@ to do:
       ***- reorganize the boss keys / power stones, need to update 'inventory_item_positions' and 'state_inventory_update_cursor_interact')
       ***- two main give you a key that can be used for a secret in moon/mars boss room, the other pairs give you benefits (figure them out)
       ***- any of the other pairs, gives you a charm that halves the ammo you use for your weapons (do I have space for it in the inventory?
+  ***- randomize the rows in enter_boss_door__spawn_xibalba_lords_objects_tbl
 
 - music: intro, letters/map, tablets/puzzles, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)
   - jungle: the original xspelunker song is much better than the new one, take it as a starting point and improve it

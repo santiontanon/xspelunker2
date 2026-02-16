@@ -2683,10 +2683,10 @@ update_enemy_bullet_lightning_state_3:
 	ld a, (ix + ROOM_OBJECT_STRUCT_BULLET_STATE)
 	dec (ix + ROOM_OBJECT_STRUCT_BULLET_STATE)
 	or a
-	ret nz
+	jp nz, update_sprite_enemies_loop_next
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2  ; next state
 	ld (ix + ROOM_OBJECT_STRUCT_BULLET_STATE), 0
-	ret
+	jp update_sprite_enemies_loop_next
 
 update_enemy_bullet_lightning_state_2:
 	inc (ix + ROOM_OBJECT_STRUCT_BULLET_STATE)
@@ -2699,7 +2699,7 @@ update_enemy_bullet_lightning_state_1:
 	inc (ix + ROOM_OBJECT_STRUCT_BULLET_STATE)
 	ld a, (ix + ROOM_OBJECT_STRUCT_BULLET_STATE)
 	cp 16
-	ret c
+	jp c, update_sprite_enemies_loop_next
 	; move to where the player is:
 	ld b, (ix + ROOM_OBJECT_STRUCT_SPEED_Y)  ; player tile x
 	ld a, (ix + ROOM_OBJECT_STRUCT_SPEED_X)  ; player pixel x
@@ -2713,7 +2713,7 @@ update_enemy_bullet_lightning_state_1_continue:
 	ld (ix + ROOM_OBJECT_STRUCT_TILE_Y), 20  ; ground height
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2  ; next state
 	ld (ix + ROOM_OBJECT_STRUCT_BULLET_STATE), 0
-	ret
+	jp update_sprite_enemies_loop_next
 
 update_enemy_bullet_lightning_state_0:
 	inc (ix + ROOM_OBJECT_STRUCT_BULLET_STATE)
@@ -2722,7 +2722,7 @@ update_enemy_bullet_lightning_state_0:
 	jr nz, update_enemy_bullet_lightning_state_0_continue
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1  ; next state
 	ld (ix + ROOM_OBJECT_STRUCT_BULLET_STATE), 0
-	ret
+	jp update_sprite_enemies_loop_next
 update_enemy_bullet_lightning_state_0_continue:
 	ld hl, SFX_explosion
 	cp 3
@@ -2739,8 +2739,10 @@ update_enemy_bullet_lightning_state_0_continue:
 	call add_sprite_to_this_frame
 
 	push bc
+	push de
 		ld iyh, 4  ; damage to deal
 		call update_enemy_hurt_player_2x2
+	pop de
 	pop bc
 
 	; pick the next piece, fixing the random seed:
