@@ -1617,10 +1617,10 @@ update_boss4_behavior_2_state_9:
 	jp z, update_boss4_behavior_2_state_9_blades  ; 9: ahalmez
 	dec a
 	jp z, update_boss4_behavior_2_state_9_blades  ; 10: ahaltocob
-; 	dec a
-; 	jp z, update_boss4_behavior_2_state_9_quicxic  ; 11: quicxic
-; 	dec a
-; 	jp z, update_boss4_behavior_2_state_9_patan  ; 12: patan
+	dec a
+	jp z, update_boss4_behavior_2_state_9_quicxic  ; 11: quicxic
+	dec a
+	jp z, update_boss4_behavior_2_state_9_patan  ; 12: patan
 
 	; we should never get here:
 	ld (ix + 0), 0  ; state
@@ -1696,6 +1696,7 @@ update_boss4_behavior_2_state_9_lightning_hand_forward_ground_found:
 update_boss4_behavior_2_state_9_lightning_hand_forward:
 update_boss4_behavior_2_state_9_bats_hand_forward:
 update_boss4_behavior_2_state_9_ahalgana_hand_forward:
+update_boss4_behavior_2_state_9_patan_hand_forward:
 	ld (iy + 0), BOSS4_FRAME_POINT_FW_RIGHT  ; frame
 	ld a, 1
 	ld (boss__4_redraw), a
@@ -1728,6 +1729,7 @@ update_boss4_behavior_2_state_9_bats_hand_up:
 update_boss4_behavior_2_state_9_skeletons_wand_up:
 update_boss4_behavior_2_state_9_ahalgana_hand_up:
 update_boss4_behavior_2_state_9_blades_wand_up:
+update_boss4_behavior_2_state_9_patan_hand_up:
 	ld (iy + 0), BOSS4_FRAME_POINT_UP_RIGHT  ; frame
 	ld a, 1
 	ld (boss__4_redraw), a
@@ -1829,6 +1831,125 @@ update_boss4_behavior_2_state_9_blades:
 	ld (ix + 1), 0  ; state_timer	
 	ld a, 1
 	ld (boss__4_redraw), a
+	ret
+
+update_boss4_behavior_2_state_9_quicxic:
+	ld a, (boss__4_settings + BOSS_4_ATTACK_WAIT_TIME)
+	ld c, a
+	ld a, (ix + 1)  ; state_timer
+	inc (ix + 1)
+	or a
+	jp z, update_boss4_behavior_2_state_9_blades_wand_up
+	cp c
+	ret c
+	push bc
+		; advance if possible:
+		and #03
+		jr nz, update_boss4_behavior_2_state_9_quicxic_no_drop
+		ld a, 1
+		ld (boss__4_redraw), a		
+		call update_boss4_behavior_2_state_9_drop_blood
+		ld a, (iy)
+		and #01
+		jr z, update_boss4_behavior_2_state_9_quicxic_drop_right
+		ld a, (ix + 2)
+		cp 1
+		jr z, update_boss4_behavior_2_state_9_quicxic_no_drop
+		dec (ix + 2)
+		jr update_boss4_behavior_2_state_9_quicxic_no_drop
+update_boss4_behavior_2_state_9_quicxic_drop_right:
+		ld a, (ix + 2)
+		cp 59
+		jr z, update_boss4_behavior_2_state_9_quicxic_no_drop
+		inc (ix + 2)
+update_boss4_behavior_2_state_9_quicxic_no_drop:
+	pop bc
+	sla c
+	ld a, (ix + 1)  ; state_timer
+	cp c
+	ret nz
+	ld (iy + 0), BOSS4_FRAME_IDLE_RIGHT  ; frame
+	ld (ix + 0), 0  ; state
+	ld (ix + 1), 0  ; state_timer	
+	ld a, 1
+	ld (boss__4_redraw), a
+	ret
+
+update_boss4_behavior_2_state_9_drop_blood:
+	; drip pus from pot:
+	call ptr_to_new_sprite_enemy
+	ret nz
+	ld (hl), 0  ; ID
+	inc hl
+	ld (hl), ENEMY_BLOOD_DROP  ; enemy type
+	inc hl
+	ld (hl), 4  ; pixel x
+	inc hl
+	ld a, (ix + 2)  ; boss x
+	add a, -3
+	ld (hl), a  ; tile x
+	inc hl
+	ld (hl), 0  ; pixel y
+	inc hl
+	ld a, (ix + 3)  ; boss y
+	dec a
+	ld (hl), a  ; tile y
+	ret
+
+update_boss4_behavior_2_state_9_patan:
+	ld a, (boss__4_settings + BOSS_4_ATTACK_WAIT_TIME)
+	ld c, a
+	ld a, (ix + 1)  ; state_timer
+	inc (ix + 1)
+	or a
+	jp z, update_boss4_behavior_2_state_9_patan_hand_up
+	cp c
+	jp z, update_boss4_behavior_2_state_9_patan_hand_forward
+	inc c
+	cp c
+	jr z, update_boss4_behavior_2_state_9_patan_spawn_blood  ; we spawn in the frame afterwards, so that we know if the boss is facing left or right when spawning (which is determined in the drawing routine)
+	dec c
+	sla c
+	cp c
+	ret nz
+	ld (iy + 0), BOSS4_FRAME_IDLE_RIGHT  ; frame
+	ld (ix + 0), 0  ; state
+	ld (ix + 1), 0  ; state_timer	
+	ld a, 1
+	ld (boss__4_redraw), a
+	ret
+
+update_boss4_behavior_2_state_9_patan_spawn_blood:
+	push ix
+		ld a, (iy + 0)  ; frame
+		and #01
+		jr z, update_boss4_behavior_2_state_9_patan_spawn_blood_right
+		; spawn left:
+		ld a, (ix + 2)  ; boss x
+		add a, -4
+		ld e, a
+		jr update_boss4_behavior_2_state_9_patan_spawn_blood_x_set
+update_boss4_behavior_2_state_9_patan_spawn_blood_right:
+		ld a, (ix + 2)  ; boss x
+		add a, 3
+		ld e, a
+update_boss4_behavior_2_state_9_patan_spawn_blood_x_set:
+		ld b, (ix + 3)  ; y
+		dec b
+		; fire two balls:
+		push de
+			ld ix, 0
+			ld hl, boss_fire_directional_bullet_towards_player_with_random_offset_e_b
+			ld c, BOSS_PAGE
+			call call_hl_in_page_c_8000
+			ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BLOOD_BALL
+		pop de
+		ld ix, 0
+		ld hl, boss_fire_directional_bullet_towards_player_with_random_offset_e_b
+		ld c, BOSS_PAGE
+		call call_hl_in_page_c_8000
+		ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BLOOD_BALL
+	pop ix
 	ret
 
 
@@ -2143,14 +2264,14 @@ update_boss4_load_xibalba_lord_tile_patches_table:
 	dw boss4_tiles_lord2_zx0, 34 * 8
 	dw boss4_tiles_lord3_zx0, 31 * 8
 	dw boss4_tiles_lord4_zx0, 25 * 8
-	dw boss4_tiles_lord5_zx0, 27 * 8
-	dw boss4_tiles_lord6_zx0, 27 * 8
+	dw boss4_tiles_lord5_zx0, 26 * 8
+	dw boss4_tiles_lord6_zx0, 26 * 8
 	dw boss4_tiles_lord7_zx0, 14 * 8
 	dw boss4_tiles_lord8_zx0, 16 * 8
-	dw boss4_tiles_lord9_zx0, 28 * 8
-	dw boss4_tiles_lord10_zx0, 28 * 8
-	dw boss4_tiles_lord11_zx0, 31 * 8
-	dw boss4_tiles_lord12_zx0, 33 * 8
+	dw boss4_tiles_lord9_zx0, 27 * 8
+	dw boss4_tiles_lord10_zx0, 27 * 8
+	dw boss4_tiles_lord11_zx0, 35 * 8
+	dw boss4_tiles_lord12_zx0, 40 * 8
 
 
 update_boss4_load_xibalba_lord_tile_patches:

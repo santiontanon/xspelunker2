@@ -923,6 +923,8 @@ draw_boss_frame_part_flipped_loop_y_skip:
 ; input:
 ; - c, b: tile coordinate from where the bullet is fired
 ; - ixl, ixh: pixel offset
+boss_fire_directional_bullet_towards_player_with_random_offset_e_b:  ; for when we call it from a different page
+	ld c, e	
 boss_fire_directional_bullet_towards_player_with_random_offset:
 	; see if player is close enough:
 	ld a, (player_x + 1)

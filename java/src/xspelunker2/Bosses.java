@@ -529,6 +529,7 @@ public class Bosses {
                 }
                 if (found) break;
             }
+            if (!found) throw new Exception("Cannot find a gap for tile!");
         }        
     }
 }

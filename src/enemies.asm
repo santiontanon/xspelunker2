@@ -10,6 +10,7 @@ enemy_update_fn_table:
 	dw update_enemy_boss3_debris ; boss 3 attack
 	dw update_enemy_bullet_fireball
 	dw update_enemy_pus_drop  ; boss 4 attack
+	dw update_enemy_blood_drop  ; boss 4 attack
 	dw update_enemy_pus_ball  ; boss 4 attack
 	dw update_enemy_blood_ball  ; boss 4 attack
 	dw update_enemy_boss4_blades  ; boss 4 attack
@@ -2910,6 +2911,21 @@ update_enemy_pus_drop:
 	call update_enemy_bullet_move_down_if_possible_a_times
 	jp z, update_enemy_delete
 	ld d, COLOR_YELLOW
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 39) * 4 
+	jp enemy_sprite_and_continue
+
+
+;-----------------------------------------------
+update_enemy_blood_drop:
+	ld iyh, 2  ; damage to deal
+	call update_enemy_hurt_player_shieldable_bullet
+	jp z, update_enemy_delete
+
+	ld a, (current_world__difficulty_bullet_speed)
+	add a, a
+	call update_enemy_bullet_move_down_if_possible_a_times
+	jp z, update_enemy_delete
+	ld d, COLOR_RED
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 39) * 4 
 	jp enemy_sprite_and_continue
 
