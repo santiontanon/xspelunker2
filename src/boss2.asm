@@ -986,7 +986,7 @@ update_boss2_behavior_4:
 	ld (boss__active), a
 
 	; mark for stats:
-	ld c, 2  ; camazotz
+	ld b, 2  ; camazotz
 	jp add_killed_boss_to_stats
 
 
@@ -1137,32 +1137,7 @@ update_boss2_spawn_bat_loop_end:
 ; - e: tile number that was hit
 ; - iyh: damage to deal
 ; - iyl: collision ID
-player_weapon_hitbox_check_boss__boss2_hit:
-	; hit the main body:
-	ld hl, (boss__hp)
-	ld a, h
-	or l
-	ret z  ; boss HP are already 0
-	ld a, iyh
-	or a
-	jr z, player_weapon_hitbox_check_boss__boss2_hit_continue2
-player_weapon_hitbox_check_boss__boss2_hit_loop:
-	dec hl
-	jr z, player_weapon_hitbox_check_boss__boss2_hit_continue2
-	dec a
-	jr nz, player_weapon_hitbox_check_boss__boss2_hit_loop
-player_weapon_hitbox_check_boss__boss2_hit_continue2:
-	ld (boss__hp), hl
-	ld a, 4
-	ld (boss__hit_timer), a
-
-	ld hl, SFX_enemy_hit
-	call play_SFX_with_high_priority
-	xor a
-	ld (player_weapon_hitbox_check_result), a  ; mark a hit
-	ld a, iyl
-	ld (boss__last_collision_id), a
-	ret
+player_weapon_hitbox_check_boss__boss2_hit: equ player_weapon_hitbox_check_boss__lose_hp
 
 
 ;-----------------------------------------------

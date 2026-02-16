@@ -295,7 +295,7 @@ stats__n_maps_collected: ds virtual 1
 stats__continued: ds virtual 1
 stats__ending: ds virtual 2
 stats__time: ds virtual 4  ; frames, seconds, minutes, hours
-stats__bosses: ds virtual 8  ; maximum of 8 bosses
+stats__bosses: ds virtual 9  ; maximum of 8 bosses, but Xibalba lords uses 2 slots
 stats__achievements: ds virtual 4  ; maximum of 4 achievements
 
 RAM_to_zero_on_game_start_end:

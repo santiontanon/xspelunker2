@@ -760,7 +760,7 @@ update_boss3_behavior_3_state_2_loop:
 	ld (boss__active), a
 
 	; mark for stats:
-	ld c, 3  ; cabrakan
+	ld b, 3  ; cabrakan
 	jp add_killed_boss_to_stats
 
 
@@ -1085,34 +1085,9 @@ player_weapon_hitbox_check_boss__boss3_hit:
 	; hit the main body:
 	ld a, e
 	cp 4 * 16 + 12  ; first non head tile
-	jr c, player_weapon_hitbox_check_boss__boss3_hit_head
+	jp c, player_weapon_hitbox_check_boss__lose_hp  ; hit the head
 	ld hl, SFX_shield
 	jp play_SFX_with_high_priority
-
-player_weapon_hitbox_check_boss__boss3_hit_head:
-	; hit the head:
-	ld hl, (boss__hp)
-	ld a, h
-	or l
-	ret z  ; boss HP are already 0
-	ld a, iyh
-	or a
-	jr z, player_weapon_hitbox_check_boss__boss3_hit_continue2
-player_weapon_hitbox_check_boss__boss3_hit_loop:
-	dec hl
-	jr z, player_weapon_hitbox_check_boss__boss3_hit_continue2
-	dec a
-	jr nz, player_weapon_hitbox_check_boss__boss3_hit_loop
-player_weapon_hitbox_check_boss__boss3_hit_continue2:
-	ld (boss__hp), hl
-	ld a, 8
-	ld (boss__hit_timer), a
-
-	ld hl, SFX_enemy_hit
-	call play_SFX_with_high_priority
-	xor a
-	ld (player_weapon_hitbox_check_result), a  ; mark a hit
-	ret
 
 
 ;-----------------------------------------------

@@ -16,6 +16,7 @@ boss4_difficulty_setting__easy:
 	db 2, 1, 64, 20  ; max enemies, enemies hp, barrage time
 boss4_difficulty_setting__normal:
 	dw 192  ; boss hp
+; 	dw 8  ; boss hp (DEBUG)
 	db #1e, 60, 32, #03, #07  ; mouth timer mask, wait, attack wait, stomp mask, move speed
 	db 3, 1, 80, 16
 boss4_difficulty_setting__hard:
@@ -875,8 +876,14 @@ update_boss4_behavior_continue:
 	or l
 	jr nz, update_boss4_behavior_continue2
 	; boss is dead!
-	ld a, 2
-	ld (boss__behavior), a
+	ld hl, boss__behavior
+	ld a, (hl)
+	cp 3
+	jp z, update_boss4_behavior_3  ; we already were in behavior 3
+	ld (hl), 3
+	xor a
+	ld (boss__state), a
+	ld (boss__state_timer), a
 update_boss4_behavior_continue2:
 	ld a, (boss__behavior)
 	or a
@@ -926,7 +933,6 @@ update_boss4_behavior_0:
 
 
 update_boss4_behavior_0_lower_ghost:
-
 	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	cp c  ; target x
 	jr z, update_boss4_behavior_0_lower_ghost_x_tile_set
@@ -2558,9 +2564,178 @@ update_boss4_safe_lord_destination_bottom_edge:
 
 
 ;-----------------------------------------------
-; boss is dead.
+; boss is dead:
+; - state 0: spawn explosions periodically (non-drop-spawning)
+; - state 1: spawn ghosts (explosions still spawn)
+; - state 2: bosses bodies disappear, and ghosts remain there
+; - state 3: ghosts fly up
+; - state 4: reward spawns
 update_boss4_behavior_3:
-	; ...
+	ld a, (boss__state)
+	or a
+	jr z, update_boss4_behavior_3_state_0
+	dec a
+	jr z, update_boss4_behavior_3_state_1
+	dec a
+	jr z, update_boss4_behavior_3_state_2
+	dec a
+	jp z, update_boss4_behavior_3_state_3
+	dec a
+	jp z, update_boss4_behavior_3_state_4
+	; if we are here, it's that death sequence is over
+	ret
+
+update_boss4_behavior_3_state_0:
+	ld hl, boss__state_timer
+	ld a, (hl)
+	cp 128
+	jr z, update_boss4_behavior_3_state_0_done
+	inc (hl)
+	and #03
+	ret nz
+
+	ld de, (boss__x)
+	ld c, 5
+	call random_modulo
+	add a, e
+	dec a
+	ld e, a  ; explosion x
+	ld c, 7
+	call random_modulo
+	neg
+	add a, d
+	ld b, a
+	ld c, e
+	call spawn_explosion	
+
+	ld de, (boss__x2)
+	ld c, 5
+	call random_modulo
+	add a, e
+	dec a
+	ld e, a  ; explosion x
+	ld c, 7
+	call random_modulo
+	neg
+	add a, d
+	ld b, a
+	ld c, e
+	jp spawn_explosion
+update_boss4_behavior_3_state_0_done:
+	ld hl, boss__state
+	inc (hl)
+	xor a
+	ld (boss__state_timer), a
+	ret
+
+
+update_boss4_behavior_3_state_1:
+	ld hl, boss__state_timer
+	ld a, (hl)
+	or a
+	jr nz, 	update_boss4_behavior_3_state_0
+	; spawn ghosts:
+	ld bc, (boss__x)
+	inc c
+	dec b
+	dec b
+	dec b
+	dec b
+	call spawn_xibalba_lord_ghost
+	ld bc, (boss__x2)
+	inc c
+	dec b
+	dec b
+	dec b
+	dec b
+	call spawn_xibalba_lord_ghost
+	jr update_boss4_behavior_3_state_0
+
+
+update_boss4_behavior_3_state_2:
+	; wait:
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	or a
+	jr nz, update_boss4_behavior_3_state_2_continue
+	; remove the boss:
+	ld hl, draw_boss_frame_clear_previous_frame_1
+	ld c, BOSS_PAGE
+	call call_hl_in_page_c_8000
+	ld hl, draw_boss_frame_clear_previous_frame_2
+	ld c, BOSS_PAGE
+	call call_hl_in_page_c_8000
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)
+update_boss4_behavior_3_state_2_continue:
+	ld a, (boss__state_timer)
+	cp 128
+	ret nz
+	ld hl, boss__state
+	inc (hl)
+	xor a
+	ld (boss__state_timer), a
+	ret
+
+update_boss4_behavior_3_state_3:
+	; ghosts go up:
+	ld ix, current_room__sprite_objects + ROOM_OBJECT_STRUCT_SIZE  ; first ghost (it's the second sprite object, as the first is the boss extras)
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	cp 24
+	ld c, 23  ; target x
+	call nz, update_boss4_behavior_0_lower_ghost
+	ld ix, current_room__sprite_objects + ROOM_OBJECT_STRUCT_SIZE*2  ; second ghost (it's the third sprite object, as the first is the boss extras)
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	cp 24
+	ld c, 39  ; target x
+	call nz, update_boss4_behavior_0_lower_ghost
+	ld a, (current_room__sprite_objects + ROOM_OBJECT_STRUCT_TILE_Y)
+	cp 24
+	ret nz
+	ld a, (current_room__sprite_objects + ROOM_OBJECT_STRUCT_SIZE + ROOM_OBJECT_STRUCT_TILE_Y)
+	cp 24
+	ret nz
+	; both ghosts down, remove them:
+	ld a, #ff
+	ld (current_room__sprite_objects + ROOM_OBJECT_STRUCT_SIZE), a
+	ld (current_room__sprite_objects + ROOM_OBJECT_STRUCT_SIZE*2), a
+	ld hl, boss__state
+	inc (hl)
+	xor a
+	ld (boss__state_timer), a
+
+update_boss4_behavior_3_state_4:
+	; spawn rewards:
+	ld b, 3  ; boss number (boss 4)
+	ld de, 31 + 21*256  ; - e, d: x, y coordinates to spawn the stone
+	ld hl, boss_spawn_power_stone_b
+	call call_hl_in_page_c_8000
+
+	ld hl, draw_room_with_hud
+	ld c, TILES_PAGE
+	call call_hl_in_page_c_8000
+
+	xor a
+	ld (boss__active), a
+
+	; mark for stats:
+	ld a, (boss__4_first_lord)
+	add a, 3
+	ld b, a
+	ld c, BOSS_PAGE
+	ld hl, add_killed_boss_to_stats
+	call call_hl_in_page_c_8000
+
+	ld a, (boss__4_second_lord)
+	add a, 3
+	ld b, a
+	ld c, BOSS_PAGE
+	ld hl, add_killed_boss_to_stats
+	call call_hl_in_page_c_8000
+
+	ld hl, boss__state
+	inc (hl)
 	ret
 
 
@@ -2659,7 +2834,7 @@ boss4_awake_xibalba_lord_event:
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
 	sub 4
 	ld b, a
-	call spawn_xibalba_lord_ghost	
+	call spawn_xibalba_lord_ghost
 
 	push ix
 		call update_sprite_objects
@@ -3194,31 +3369,11 @@ draw_boss4_frame_part_loop_y_done:
 player_weapon_hitbox_check_boss__boss4_hit:
 	ld a, (boss__behavior)
 	cp 2
-	jr c, player_weapon_hitbox_check_boss__boss4_hit_appearing
+	jr nz, player_weapon_hitbox_check_boss__boss4_hit_appearing
 	; hit the main body:
-	ld hl, (boss__hp)
-	ld a, h
-	or l
-	ret z  ; boss HP are already 0
-	ld a, iyh
-	or a
-	jr z, player_weapon_hitbox_check_boss__boss4_hit_continue2
-player_weapon_hitbox_check_boss__boss4_hit_loop:
-	dec hl
-	jr z, player_weapon_hitbox_check_boss__boss4_hit_continue2
-	dec a
-	jr nz, player_weapon_hitbox_check_boss__boss4_hit_loop
-player_weapon_hitbox_check_boss__boss4_hit_continue2:
-	ld (boss__hp), hl
-	ld a, 4
-	ld (boss__hit_timer), a
-
-	ld hl, SFX_enemy_hit
-	call play_SFX_with_high_priority
-	xor a
-	ld (player_weapon_hitbox_check_result), a  ; mark a hit
-	ld a, iyl
-	ld (boss__last_collision_id), a
+	ld hl, player_weapon_hitbox_check_boss__lose_hp
+	ld c, BOSS_PAGE
+	call call_hl_in_page_c_8000
 	ret
 
 player_weapon_hitbox_check_boss__boss4_hit_appearing:

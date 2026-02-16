@@ -496,6 +496,8 @@ shift_boss_door_down:
 ; input:
 ; - a: boss number
 ; - e, d: x, y coordinates to spawn the stone
+boss_spawn_power_stone_b:
+	ld a, b
 boss_spawn_power_stone:
 	ld b, TAG_POWER_STONE
 	ld hl, buffer_4096 + 47 * 64  ; power stone
@@ -1480,7 +1482,7 @@ update_sprite_objects_boss_extras_boss_4_lord_x_ok:
 
 ;-----------------------------------------------
 ; input:
-; - c: boss name ID for stats
+; - b: boss name ID for stats
 add_killed_boss_to_stats:
 	ld hl, stats__bosses
 add_killed_boss_to_stats_loop:
@@ -1490,7 +1492,40 @@ add_killed_boss_to_stats_loop:
 	inc hl
 	jr add_killed_boss_to_stats_loop
 add_killed_boss_to_stats_spot_found:
-	ld (hl), c
+	ld (hl), b
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - iyh: damage to deal
+; - iyl: collision ID
+player_weapon_hitbox_check_boss__lose_hp:
+	ld hl, (boss__hp)
+	ld a, h
+	or l
+	ret z  ; boss HP are already 0
+	ld a, iyh
+	or a
+	jr z, player_weapon_hitbox_check_boss__lose_hp_continue
+player_weapon_hitbox_check_boss__lose_hp_loop:
+	dec hl
+	ld a, h
+	or l
+	jr z, player_weapon_hitbox_check_boss__lose_hp_continue
+	dec iyh
+	jr nz, player_weapon_hitbox_check_boss__lose_hp_loop
+player_weapon_hitbox_check_boss__lose_hp_continue:
+	ld (boss__hp), hl
+	ld a, 8
+	ld (boss__hit_timer), a
+
+	ld hl, SFX_enemy_hit
+	call play_SFX_with_high_priority
+	xor a
+	ld (player_weapon_hitbox_check_result), a  ; mark a hit
+	ld a, iyl
+	ld (boss__last_collision_id), a
 	ret
 
 

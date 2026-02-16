@@ -999,7 +999,7 @@ update_boss1_behavior_4_sink_loop:
 	ld (boss__active), a
 
 	; mark for stats:
-	ld c, 1  ; hurakan
+	ld b, 1  ; hurakan
 	jp add_killed_boss_to_stats
 
 
@@ -1214,32 +1214,33 @@ player_weapon_hitbox_check_boss__boss1_hit:
 	cp 8*16+8
 	jr z, player_weapon_hitbox_check_boss__boss1_hit_staff
 
-	; hit the main body:
-	ld hl, (boss__hp)
-	ld a, h
-	or l
-	ret z  ; boss HP are already 0
-	ld a, iyh
-	or a
-	jr z, player_weapon_hitbox_check_boss__boss1_hit_continue2
-player_weapon_hitbox_check_boss__boss1_hit_loop:
-	dec hl
-	jr z, player_weapon_hitbox_check_boss__boss1_hit_continue2
-	dec a
-	jr nz, player_weapon_hitbox_check_boss__boss1_hit_loop
-player_weapon_hitbox_check_boss__boss1_hit_continue2:
-	ld (boss__hp), hl
-	ld a, 4
-	ld (boss__hit_timer), a
+	jp player_weapon_hitbox_check_boss__lose_hp
+; 	; hit the main body:
+; 	ld hl, (boss__hp)
+; 	ld a, h
+; 	or l
+; 	ret z  ; boss HP are already 0
+; 	ld a, iyh
+; 	or a
+; 	jr z, player_weapon_hitbox_check_boss__boss1_hit_continue2
+; player_weapon_hitbox_check_boss__boss1_hit_loop:
+; 	dec hl
+; 	jr z, player_weapon_hitbox_check_boss__boss1_hit_continue2
+; 	dec a
+; 	jr nz, player_weapon_hitbox_check_boss__boss1_hit_loop
+; player_weapon_hitbox_check_boss__boss1_hit_continue2:
+; 	ld (boss__hp), hl
+; 	ld a, 4
+; 	ld (boss__hit_timer), a
 
-player_weapon_hitbox_check_boss__boss1_hit_continue:
-	ld hl, SFX_enemy_hit
-	call play_SFX_with_high_priority
-	xor a
-	ld (player_weapon_hitbox_check_result), a  ; mark a hit
-	ld a, iyl
-	ld (boss__last_collision_id), a
-	ret
+; player_weapon_hitbox_check_boss__boss1_hit_continue:
+; 	ld hl, SFX_enemy_hit
+; 	call play_SFX_with_high_priority
+; 	xor a
+; 	ld (player_weapon_hitbox_check_result), a  ; mark a hit
+; 	ld a, iyl
+; 	ld (boss__last_collision_id), a
+; 	ret
 
 player_weapon_hitbox_check_boss__boss1_hit_staff:
 	ld a, (boss__1_staff_hp)
@@ -1250,8 +1251,13 @@ player_weapon_hitbox_check_boss__boss1_hit_staff:
 	xor a
 player_weapon_hitbox_check_boss__boss1_hit_staff_continue:
 	ld (boss__1_staff_hp), a
-	jr player_weapon_hitbox_check_boss__boss1_hit_continue
-
+	ld hl, SFX_enemy_hit
+	call play_SFX_with_high_priority
+	xor a
+	ld (player_weapon_hitbox_check_result), a  ; mark a hit
+	ld a, iyl
+	ld (boss__last_collision_id), a
+	ret
 
 
 ;-----------------------------------------------

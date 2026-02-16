@@ -1,14 +1,11 @@
 to do:
 
 ***- Xibalba lords boss:
-  ***- when bosses are killed:
-    ***- the ghosts appear from their bodies and go up, while the boss bodies explode with several repeated explosions.
-    ***- spawn power stone
-    ***- add boss name to the stats for game over screen (specify which lords you killed)
-    ***- waking up proper pairs (e.g. the two main lords, or Ahalpuh+Ahalgana) gives you an extra item at the end (maybe it spawns first, and when you pick it up, the power stone spawns, and then you exit the room):
-      ***- reorganize the boss keys / power stones, need to update 'inventory_item_positions' and 'state_inventory_update_cursor_interact')
-      ***- two main give you a key that can be used for a secret in moon/mars boss room, the other pairs give you benefits (figure them out)
-      ***- any of the other pairs, gives you a charm that halves the ammo you use for your weapons (do I have space for it in the inventory?
+  ***- in game over screen: xibalba lord boss names should appear horizontally next to each other (separated by a '/')
+  ***- waking up proper pairs gives you an extra item at the end (maybe it spawns first, and when you pick it up, the power stone spawns, and then you exit the room):
+    ***- reorganize the boss keys / power stones, need to update 'inventory_item_positions' and 'state_inventory_update_cursor_interact')
+    ***- two main give you a key that can be used for a secret in moon/mars boss room, the other pairs give you benefits (figure them out)
+    ***- any of the other pairs, gives you a charm that halves the ammo you use for your weapons (do I have space for it in the inventory?
   ***- randomize the rows in enter_boss_door__spawn_xibalba_lords_objects_tbl
 
 - music: intro, letters/map, tablets/puzzles, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)
@@ -17,8 +14,7 @@ to do:
   - option to turn on/off the music from the config
   - caves: finish the current draft: I need a longer melody part, better instruments, and some part where there is a rest of the repeating bass, which might be too much (maybe I need a softer instrument)
   - story: I like the original song, and I should keep the same style, take the original and compose a variation
-  - boss music
-  - boss music acts as a health bar (increases in speed as health goes down: 50%, 25%)
+  - boss music (boss music increases in speed as health goes down: 50%, 25%)
 - atlantis biome (exploit the fact that I can have now 3 tags for left/up/right/down tags): crocodiles as an additional water enemy? what happens to the special animal/teleporter rooms in this biome? do I need to redraw them?
   - look at "prayer of the warrior" spectrum game for tile ideas
   - sprite enemies: ghosts/spirits

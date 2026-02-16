@@ -112,7 +112,7 @@ spawn_4tile_appart_dust:
 
 ;-----------------------------------------------
 ; input:
-; - c, b: tile coordinates of the dust
+; - c, b: tile coordinates of the ghost
 spawn_xibalba_lord_ghost:
 	call ptr_to_new_sprite_object
 	ret nz
@@ -779,7 +779,6 @@ add_sprite_to_this_frame:
 ; - ix: ptr to the object to remove
 sprite_object_remove_object:
 	; shift all the objects one position left:
-	ld (ix + ROOM_OBJECT_STRUCT_ID), #ff  ; clear the current object ID (only needed if this is the last object, but just in case).
 	ld d, ixh
 	ld e, ixl
 	ld h, d
@@ -797,8 +796,11 @@ sprite_object_remove_object:
 	pop hl
 	ld a, c
 	or b
-	ret z  ; nothing to copy
+	jr z, sprite_object_remove_object_continue  ; nothing to copy
 	ldir  ; shift all the objects left
+sprite_object_remove_object_continue:
+	ld a, #ff
+	ld (current_room__sprite_objects + (MAX_ROOM_SPRITE_OBJECTS-1) * ROOM_OBJECT_STRUCT_SIZE), a  ; clear the very last object
 	ret
 
 
@@ -807,7 +809,6 @@ sprite_object_remove_object:
 ; - ix: ptr to the object to remove
 sprite_object_remove_object_player_bullet:
 	; shift all the objects one position left:
-	ld (ix + ROOM_OBJECT_STRUCT_ID), #ff  ; clear the current object type (only needed if this is the last object, but just in case).
 	ld d, ixh
 	ld e, ixl
 	ld h, d
@@ -825,8 +826,11 @@ sprite_object_remove_object_player_bullet:
 	pop hl
 	ld a, c
 	or b
-	ret z  ; nothing to copy
+	jr z, sprite_object_remove_object_player_bullet_continue  ; nothing to copy
 	ldir  ; shift all the objects left
+sprite_object_remove_object_player_bullet_continue:
+	ld a, #ff
+	ld (current_room__player_bullets + (MAX_ROOM_PLAYER_BULLETS-1) * ROOM_OBJECT_STRUCT_SIZE), a  ; clear the very last object
 	ret
 
 
@@ -835,7 +839,6 @@ sprite_object_remove_object_player_bullet:
 ; - ix: ptr to the object to remove
 sprite_object_remove_object_enemy:
 	; shift all the objects one position left:
-	ld (ix + ROOM_OBJECT_STRUCT_ID), #ff  ; clear the current object type (only needed if this is the last object, but just in case).
 	ld d, ixh
 	ld e, ixl
 	ld h, d
@@ -853,6 +856,9 @@ sprite_object_remove_object_enemy:
 	pop hl
 	ld a, c
 	or b
-	ret z  ; nothing to copy
+	jr z, sprite_object_remove_object_enemy_continue  ; nothing to copy
 	ldir  ; shift all the objects left
+sprite_object_remove_object_enemy_continue:
+	ld a, #ff
+	ld (current_room__sprite_enemies + (MAX_ROOM_SPRITE_ENEMIES-1) * ROOM_OBJECT_STRUCT_SIZE), a  ; clear the very last object
 	ret
