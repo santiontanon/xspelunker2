@@ -843,8 +843,13 @@ title_nametable:
 ;-----------------------------------------------
 ; input:
 ; - de: ptr to text to copy
-copy_text_from_textpage3:
+copy_text_from_another_page_to_ix:
+    push ix
+    pop hl
+    jr copy_text_from_another_page_to_hl
+copy_text_from_another_page:
     ld hl, buffer_4096
+copy_text_from_another_page_to_hl:
     ex de, hl
     ld c, (hl)
     inc c

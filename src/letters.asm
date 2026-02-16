@@ -300,7 +300,7 @@ display_paragraph_text_page3:
 		push iy
 		pop de
 		ld c, TEXT_PAGE3
-		ld hl, copy_text_from_textpage3
+		ld hl, copy_text_from_another_page
 		jr display_paragraph_continue
 display_paragraph_page7:
 	push af

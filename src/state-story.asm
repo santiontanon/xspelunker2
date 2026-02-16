@@ -848,7 +848,7 @@ state_story_draw_text_zoom_in_nametable:
 state_story_draw_text_zoom_in:
 	call state_story_clear_text_tiles
 
-	ld hl, copy_text_from_textpage3
+	ld hl, copy_text_from_another_page
 	ld c, TEXT_PAGE3
 	call call_hl_in_page_c_8000
 	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096, CHRTBL2 + 256*8*2 + 128*8, COLOR_WHITE*16, 16
@@ -862,7 +862,7 @@ state_story_draw_text_zoom_in:
 state_story_draw_text_zoom_in_24:
 	call state_story_clear_text_tiles
 
-	ld hl, copy_text_from_textpage3
+	ld hl, copy_text_from_another_page
 	ld c, TEXT_PAGE3
 	call call_hl_in_page_c_8000
 	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096, CHRTBL2 + 256*8*2 + 128*8, COLOR_WHITE*16, 24
@@ -919,12 +919,12 @@ state_story_render_text_two_lines:
 		push hl
 			call state_story_clear_text_tiles
 		pop de
-		ld hl, copy_text_from_textpage3
+		ld hl, copy_text_from_another_page
 		ld c, TEXT_PAGE3
 		call call_hl_in_page_c_8000
 		DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096, CHRTBL2 + 256*8 + 128*8, COLOR_WHITE, 10
 	pop de
-	ld hl, copy_text_from_textpage3
+	ld hl, copy_text_from_another_page
 	ld c, TEXT_PAGE3
 	call call_hl_in_page_c_8000
 	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096, CHRTBL2 + 256*8 + (128+10)*8, COLOR_WHITE, 10
@@ -938,7 +938,7 @@ state_story_render_text_one_line:
 	push hl
 		call state_story_clear_text_tiles
 	pop de
-	ld hl, copy_text_from_textpage3
+	ld hl, copy_text_from_another_page
 	ld c, TEXT_PAGE3
 	call call_hl_in_page_c_8000
 	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096, CHRTBL2 + 256*8 + 128*8, COLOR_WHITE, 10

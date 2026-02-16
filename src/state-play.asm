@@ -149,6 +149,20 @@ state_play:
 
 		call state_play_world_name_conditions
 
+		; DEBUG:
+; 		ld hl, stats__bosses		
+; 		ld (hl), 1  ; boss 1
+; 		inc hl
+; 		ld (hl), 7
+; 		inc hl
+; 		ld (hl), 9
+; 		inc hl
+; 		ld (hl), 2  ; boss 2
+; 		call enable_VDP_output		
+; 		ld hl, state_game_over
+; 		ld a, GAME_OVER_PAGE
+; 		jp jp_to_hl_in_page_a_8000
+
 state_play_from_continue:
 		; initial player position:
 ; 		ld hl, #0100

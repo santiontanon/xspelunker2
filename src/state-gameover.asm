@@ -10,25 +10,25 @@ state_game_over_text_table:
 	db 4, TEXT_PAGE
 	dw TEXT_GAMEOVER_STATS_0, CHRTBL2 + (12*32+4)*8, #8050
 	db 10, TEXT_PAGE3
-	dw TEXT_GAMEOVER_STATS_1, CHRTBL2 + (12*32+18)*8, #8050
+	dw TEXT_GAMEOVER_STATS_1, CHRTBL2 + (12*32+19)*8, #8050
 	db 10, TEXT_PAGE3
 	dw TEXT_GAMEOVER_STATS_2, CHRTBL2 + (13*32+4)*8, #8050
 	db 10, TEXT_PAGE3
-	dw TEXT_GAMEOVER_STATS_3, CHRTBL2 + (13*32+18)*8, #8050
+	dw TEXT_GAMEOVER_STATS_3, CHRTBL2 + (13*32+19)*8, #8050
 	db 10, TEXT_PAGE3
 	dw TEXT_GAMEOVER_STATS_4, CHRTBL2 + (14*32+2)*8, #8050
 	db 8, TEXT_PAGE3
 	dw TEXT_GAMEOVER_STATS_5, CHRTBL2 + (14*32+10)*8, #8050
 	db 8, TEXT_PAGE3
-	dw TEXT_GAMEOVER_STATS_6, CHRTBL2 + (14*32+17)*8, #8050
+	dw TEXT_GAMEOVER_STATS_6, CHRTBL2 + (14*32+18)*8, #8050
 	db 8, TEXT_PAGE3
-	dw TEXT_GAMEOVER_STATS_7, CHRTBL2 + (14*32+24)*8, #8050
+	dw TEXT_GAMEOVER_STATS_7, CHRTBL2 + (14*32+25)*8, #8050
 	db 8, TEXT_PAGE3
 	dw TEXT_GAMEOVER_STATS_8, CHRTBL2 + (15*32+4)*8, #8050
 	db 10, TEXT_PAGE3
-	dw TEXT_GAMEOVER_STATS_9, CHRTBL2 + (15*32+18)*8, #8050
+	dw TEXT_GAMEOVER_STATS_9, CHRTBL2 + (15*32+19)*8, #8050
 	db 10, TEXT_PAGE3
-	dw TEXT_GAMEOVER_STATS_10, CHRTBL2 + (16*32+18)*8, #8050
+	dw TEXT_GAMEOVER_STATS_10, CHRTBL2 + (16*32+19)*8, #8050
 	db 10, TEXT_PAGE3
 state_game_over_text_table_end:
 
@@ -55,7 +55,7 @@ state_game_over_text_loop_page1:
 		ex de, hl
 		jr state_game_over_text_loop_page1_continue
 state_game_over_text_loop_page3:
-		ld hl, copy_text_from_textpage3
+		ld hl, copy_text_from_another_page
 		call call_hl_in_page_c_8000
 		ld hl, buffer_4096
 state_game_over_text_loop_page1_continue:
@@ -153,10 +153,10 @@ state_game_over_print_difficulty:
 	jr z, state_game_over_print_difficulty_set
 	ld de, TEXT_DIFFICULTY_HARDEST
 state_game_over_print_difficulty_set:
-	ld hl, copy_text_from_textpage3
+	ld hl, copy_text_from_another_page
 	ld c, TEXT_PAGE3
 	call call_hl_in_page_c_8000
-	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO_OFFSET buffer_4096, CHRTBL2 + (13*32+24)*8, COLOR_DARK_YELLOW*16 + #80 * 256, 6
+	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO_OFFSET buffer_4096, CHRTBL2 + (13*32+25)*8, COLOR_DARK_YELLOW*16 + #80 * 256, 6
 	ret
 
 
@@ -189,7 +189,7 @@ state_game_over_print_n_maps:
 	ld a, (stats__n_maps_collected)
 	ld ixl, a
 	ld b, 2
-	ld de, CHRTBL2 + (14*32+20)*8
+	ld de, CHRTBL2 + (14*32+21)*8
 	ld iy, COLOR_DARK_YELLOW*16 + #10 * 256
 	ld hl, draw_inventory_number_ixl
 	ld c, TEXT_PAGE
@@ -223,7 +223,7 @@ state_game_over_print_n_coins:
 state_game_over_print_n_coins_continue:
 	ld a, c
 	ld (buffer_4096), a  ; length
-	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO_OFFSET buffer_4096, CHRTBL2 + (14*32+27)*8, COLOR_DARK_YELLOW*16 + #08 * 256, 4
+	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO_OFFSET buffer_4096, CHRTBL2 + (14*32+28)*8, COLOR_DARK_YELLOW*16 + #08 * 256, 4
 	ret
 
 
@@ -262,7 +262,7 @@ state_game_over_print_continued:
 	jr z, state_game_over_print_continued_continue
 	ld hl, TEXT_YES
 state_game_over_print_continued_continue:
-	ld de, CHRTBL2 + (12*32+24)*8
+	ld de, CHRTBL2 + (12*32+25)*8
 	ld iy, COLOR_DARK_YELLOW*16 + #80 * 256
 	ld b, 4
 	jp draw_sentence_to_vdp_from_another_page	
@@ -271,7 +271,7 @@ state_game_over_print_continued_continue:
 ;-----------------------------------------------
 state_game_over_print_ending:
 	ld de, (stats__ending)
-	ld hl, copy_text_from_textpage3
+	ld hl, copy_text_from_another_page
 	ld c, TEXT_PAGE3
 	call call_hl_in_page_c_8000
 	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO_OFFSET buffer_4096, CHRTBL2 + (12*32+13)*8, COLOR_DARK_YELLOW*16 + #80 * 256, 4
@@ -314,16 +314,16 @@ state_game_over_print_time:
 
 	ld a, c
 	ld (buffer_4096), a  ; length
-	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO_OFFSET buffer_4096, CHRTBL2 + (15*32+21)*8, COLOR_DARK_YELLOW*16 + #10 * 256, 7
+	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO_OFFSET buffer_4096, CHRTBL2 + (15*32+22)*8, COLOR_DARK_YELLOW*16 + #10 * 256, 7
 	ret
 
 state_game_over_print_time_max:
 	; max
 	ld de, TEXT_MAX_TIME
-	ld hl, copy_text_from_textpage3
+	ld hl, copy_text_from_another_page
 	ld c, TEXT_PAGE3
 	call call_hl_in_page_c_8000
-	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO_OFFSET buffer_4096, CHRTBL2 + (15*32+21)*8, COLOR_DARK_YELLOW*16 + #10 * 256, 4
+	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO_OFFSET buffer_4096, CHRTBL2 + (15*32+22)*8, COLOR_DARK_YELLOW*16 + #10 * 256, 4
 	ret
 
 
@@ -355,7 +355,7 @@ state_game_over_print_achievements_table:
 state_game_over_print_achievements:
 	ld hl, stats__achievements
 	ld b, 4  ; max achievements
-	ld de, CHRTBL2 + (17*32+19)*8
+	ld de, CHRTBL2 + (17*32+20)*8
 state_game_over_print_achievements_loop:
 	ld a, (hl)
 	or a
@@ -370,7 +370,7 @@ state_game_over_print_achievements_loop:
 			ld e, (hl)
 			inc hl
 			ld d, (hl)
-			ld hl, copy_text_from_textpage3
+			ld hl, copy_text_from_another_page
 			ld c, TEXT_PAGE3
 			call call_hl_in_page_c_8000
 		pop de  ; vdp address
@@ -392,10 +392,10 @@ state_game_over_print_achievements_loop:
 
 ;-----------------------------------------------
 state_game_over_print_bosses_table:
-	dw TEXT_BOSS_HURAKAN
+	dw TEXT_BOSS_HURAKAN  ; 1
 	dw TEXT_BOSS_CAMAZOTZ
 	dw TEXT_BOSS_CABRAKAN
-	dw TEXT_XIBALBA_BOSS_NAME_1
+	dw TEXT_XIBALBA_BOSS_NAME_1  ; 4
 	dw TEXT_XIBALBA_BOSS_NAME_2
 	dw TEXT_XIBALBA_BOSS_NAME_3
 	dw TEXT_XIBALBA_BOSS_NAME_4
@@ -406,7 +406,7 @@ state_game_over_print_bosses_table:
 	dw TEXT_XIBALBA_BOSS_NAME_9
 	dw TEXT_XIBALBA_BOSS_NAME_10
 	dw TEXT_XIBALBA_BOSS_NAME_11
-	dw TEXT_XIBALBA_BOSS_NAME_12
+	dw TEXT_XIBALBA_BOSS_NAME_12  ; 15
 
 state_game_over_print_bosses:
 	ld hl, stats__bosses
@@ -415,9 +415,15 @@ state_game_over_print_bosses:
 state_game_over_print_bosses_loop:
 	ld a, (hl)
 	or a
-	ret z  ; no more achievements
-	push hl
+	ret z  ; no more boss names
+	; check if it's boss 4, which will have a composite name:
+	cp 3
+	jr c, state_game_over_print_bosses_loop_not_boss4
+	cp 16
+	jr nc, state_game_over_print_bosses_loop_not_boss4
+	; boss 4: we need to concatenate the next 2 names:
 	push bc
+	push hl
 		push de
 			dec a
 			add a, a
@@ -426,21 +432,63 @@ state_game_over_print_bosses_loop:
 			ld e, (hl)
 			inc hl
 			ld d, (hl)
-			ld hl, copy_text_from_textpage3
+			ld hl, copy_text_from_another_page
+			ld c, TEXT_PAGE3
+			call call_hl_in_page_c_8000  ; copy the first name fo buffer_4096
+			; de: ptr to after the name that was copied
+			push de
+			pop ix
+		pop de
+	pop hl
+	inc hl
+	push hl
+		push de
+			ld a, (hl)
+			dec a
+			add a, a
+			ld hl, state_game_over_print_bosses_table
+			ADD_HL_A
+			ld e, (hl)
+			inc hl
+			ld d, (hl)
+			ld hl, copy_text_from_another_page_to_ix
+			ld c, TEXT_PAGE3
+			call call_hl_in_page_c_8000  ; copy the first name fo buffer_4096
+			ld a, (ix)  ; length of the second name
+			ld hl, buffer_4096
+			add a, (hl)
+			ld (hl), a
+			inc (hl)
+			ld (ix), 179  ; '/'
+			jr state_game_over_print_bosses_loop_not_boss4_continue
+state_game_over_print_bosses_loop_not_boss4:
+	push bc
+	push hl
+		push de
+			dec a
+			add a, a
+			ld hl, state_game_over_print_bosses_table
+			ADD_HL_A
+			ld e, (hl)
+			inc hl
+			ld d, (hl)
+			ld hl, copy_text_from_another_page
 			ld c, TEXT_PAGE3
 			call call_hl_in_page_c_8000
+state_game_over_print_bosses_loop_not_boss4_continue:
 		pop de  ; vdp address
 		push de
 			ld hl, buffer_4096
 			ld iy, COLOR_DARK_YELLOW*16 + #80 * 256
-			ld b, 8
+			ld b, 14
 			call draw_sentence_to_vdp_from_another_page
 		pop hl
 		ld bc, 32*8
 		add hl, bc
 		ex de, hl  ; next line
-	pop bc
 	pop hl
+	pop bc
 	inc hl
-	djnz state_game_over_print_bosses_loop
+	dec b
+	jp nz, state_game_over_print_bosses_loop
 	ret

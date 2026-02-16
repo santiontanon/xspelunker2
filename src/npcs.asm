@@ -240,7 +240,7 @@ object_interaction_function_shop_internal_price_loop:
 object_interaction_function_shop_internal_price_loop_300:
 				push de
 					ld de, TEXT_300
-					ld hl, copy_text_from_textpage3
+					ld hl, copy_text_from_another_page
 					ld c, TEXT_PAGE3
 					call call_hl_in_page_c_8000
 					ld hl, buffer_4096

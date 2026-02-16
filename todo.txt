@@ -1,7 +1,6 @@
 to do:
 
 ***- Xibalba lords boss:
-  ***- in game over screen: xibalba lord boss names should appear horizontally next to each other (separated by a '/')
   ***- waking up proper pairs gives you an extra item at the end (maybe it spawns first, and when you pick it up, the power stone spawns, and then you exit the room):
     ***- reorganize the boss keys / power stones, need to update 'inventory_item_positions' and 'state_inventory_update_cursor_interact')
     ***- two main give you a key that can be used for a secret in moon/mars boss room, the other pairs give you benefits (figure them out)
@@ -13,17 +12,17 @@ to do:
   - add to the game (specify a music in each area, and if 0, no music)
   - option to turn on/off the music from the config
   - caves: finish the current draft: I need a longer melody part, better instruments, and some part where there is a rest of the repeating bass, which might be too much (maybe I need a softer instrument)
-  - story: I like the original song, and I should keep the same style, take the original and compose a variation
+  - story: I like the original song: keep the same style and compose a variation
   - boss music (boss music increases in speed as health goes down: 50%, 25%)
 - atlantis biome (exploit the fact that I can have now 3 tags for left/up/right/down tags): crocodiles as an additional water enemy? what happens to the special animal/teleporter rooms in this biome? do I need to redraw them?
   - look at "prayer of the warrior" spectrum game for tile ideas
   - sprite enemies: ghosts/spirits
   - tile enemies: water generators (like the lava ones for xibalba), and at least one that actually moves
-- fifth boss, Atlantean Guardian (Underwater Boss): A colossal robotic creature with bioluminescent features, resembling a deep-sea creature (laser beams from tentacles, summons robotic fish). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
+- fifth boss, Atlantean Guardian (Underwater Boss): A colossal robotic creature with bioluminescent features, resembling a deep-sea creature (laser beams from tentacles, summons robotic fish).
   - add boss name to the stats for game over screen
 - confrontation with the aliens after activating the calendar stone: are aliens sprites or tiles?
 - first ending sequence (udpate "stats__ending"): Elaine drops from the ceiling on a rope and rescues you. The calendar stone machine activates and creates a defensive barrier around earth, the alien armada that was coming turns back, but promises revenge.
-  - add "no miss" achievement for this (and any other ending) if there is no damage (Track it)
+  - add "no miss" achievement for this: if there is no damage (Track it)
 
 - mars biome (remember to keep ladder tiles in place for down-door opening code)
   - can you jump higher in the moon/mars? fall slower?

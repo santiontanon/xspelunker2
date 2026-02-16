@@ -31,19 +31,19 @@ state_gamestart:
 		call fast_LDIRVM
 
 		ld de, TEXT_GAMESTART1
-		ld hl, copy_text_from_textpage3
+		ld hl, copy_text_from_another_page
 		ld c, TEXT_PAGE3
 		call call_hl_in_page_c_8000
 		DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096, CHRTBL2 + (256*0 + 128)*8, COLOR_BLUE*16, 10
 
 		ld de, TEXT_GAMESTART2
-		ld hl, copy_text_from_textpage3
+		ld hl, copy_text_from_another_page
 		ld c, TEXT_PAGE3
 		call call_hl_in_page_c_8000
 		DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096, CHRTBL2 + (256*1 + 128)*8, COLOR_BLUE*16, 6
 
 		ld de, TEXT_GAMESTART3
-		ld hl, copy_text_from_textpage3
+		ld hl, copy_text_from_another_page
 		ld c, TEXT_PAGE3
 		call call_hl_in_page_c_8000
 		DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096, CHRTBL2 + (256*2 + 134)*8, COLOR_BLUE*16, 6
@@ -269,7 +269,7 @@ gamestart_draw_difficulty_set:
 
 ;-----------------------------------------------
 gamestart_draw_difficulty:
-	ld hl, copy_text_from_textpage3
+	ld hl, copy_text_from_another_page
 	ld c, TEXT_PAGE3
 	call call_hl_in_page_c_8000
 	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096, CHRTBL2 + (256*2 + 140)*8, COLOR_WHITE*16, 6
