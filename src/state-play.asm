@@ -110,7 +110,7 @@ state_play:
 ; 		ld (player_inventory_items+INVENTORY_ITEM_PUZZLEBOX_MARS), a
 ; 		ld (player_inventory_items+INVENTORY_ITEM_PUZZLEBOX_MOON), a
 ; 		ld (player_inventory_items+INVENTORY_ITEM_GOLDEN_KEY), a
-		ld (player_inventory_items+INVENTORY_ITEM_SKULL_CHARM), a
+; 		ld (player_inventory_items+INVENTORY_ITEM_SKULL_CHARM), a
 		ld (player_inventory_weapons), a  ; machete
 		ld (player_inventory_weapons+1), a
 		ld (player_inventory_weapons+2), a
@@ -167,14 +167,14 @@ state_play:
 
 state_play_from_continue:
 		; initial player position:
-; 		ld hl, #0100
+		ld hl, #0100
 ; 		ld hl, #0a00
 ; 		ld hl, #1000
-		ld hl, #1800
+; 		ld hl, #1800
 		ld (player_x), hl
-; 		ld hl, #0b00
+		ld hl, #0b00
 ; 		ld hl, #0a00
-		ld hl, #0600
+; 		ld hl, #0600
 		ld (player_y), hl
 		ld a, #ff
 		ld (player_requested_weapon_sprite), a
@@ -188,7 +188,7 @@ state_play_from_continue:
 ; 		ld e, 3  ; area to generate
 ; 		ld e, 3  ; area to generate
 ; 		ld e, 4  ; area to generate <- third boss
-		ld e, 8  ; xibalba
+; 		ld e, 8  ; xibalba
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
 
@@ -200,7 +200,7 @@ state_play_from_continue:
 ; 		ld e, 4
 ; 		ld e, CALENDAR_ROOM_ID
 ; 		ld e, 3  ; <- third boss
-		ld e, 17  ; <- fourth boss
+; 		ld e, 17  ; <- fourth boss
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000

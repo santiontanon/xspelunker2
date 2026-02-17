@@ -217,18 +217,18 @@ enter_boss_door__room_spawn_coordinates_set:
 
 
 enter_boss_door__spawn_xibalba_lords_objects_tbl:
-	db TAG_XIBALBA_BOSS_GRAVE, 4, 12
-	db TAG_XIBALBA_BOSS_GRAVE, 58, 12
-	db TAG_XIBALBA_BOSS_GRAVE, 17, 20
-	db TAG_XIBALBA_BOSS_GRAVE, 20, 20
 	db TAG_XIBALBA_BOSS_GRAVE, 23, 20
-	db TAG_XIBALBA_BOSS_GRAVE, 26, 20
-	db TAG_XIBALBA_BOSS_GRAVE, 29, 20
-	db TAG_XIBALBA_BOSS_GRAVE, 33, 20
+	db TAG_XIBALBA_BOSS_GRAVE, 4, 12
 	db TAG_XIBALBA_BOSS_GRAVE, 36, 20
-	db TAG_XIBALBA_BOSS_GRAVE, 39, 20
+	db TAG_XIBALBA_BOSS_GRAVE, 58, 12
+	db TAG_XIBALBA_BOSS_GRAVE, 26, 20
 	db TAG_XIBALBA_BOSS_GRAVE, 42, 20
+	db TAG_XIBALBA_BOSS_GRAVE, 20, 20
+	db TAG_XIBALBA_BOSS_GRAVE, 33, 20
 	db TAG_XIBALBA_BOSS_GRAVE, 45, 20
+	db TAG_XIBALBA_BOSS_GRAVE, 29, 20
+	db TAG_XIBALBA_BOSS_GRAVE, 17, 20
+	db TAG_XIBALBA_BOSS_GRAVE, 39, 20
 	db TAG_XIBALBA_BOSS_TABLET, 11, 5
 enter_boss_door__spawn_xibalba_lords_objects_tbl_end:
 
@@ -518,6 +518,9 @@ boss_spawn_power_stone_item_set:
 	; set which object gfx to up load vdp:
 	ld (item_object_to_upload_to_vdp), hl
 	call state_play_upload_object_tiles_to_vdp_if_necessary
+
+	ld hl, SFX_secret
+	call play_SFX_with_high_priority
 
 	; refresh the current tile objects:
 	ld hl, room_undraw_tile_objects

@@ -2588,7 +2588,7 @@ update_boss4_behavior_3:
 update_boss4_behavior_3_state_0:
 	ld hl, boss__state_timer
 	ld a, (hl)
-	cp 128
+	cp 80
 	jr z, update_boss4_behavior_3_state_0_done
 	inc (hl)
 	and #03
@@ -2670,7 +2670,7 @@ update_boss4_behavior_3_state_2:
 	set ROOM_REDRAW_FLAG_BIT, (hl)
 update_boss4_behavior_3_state_2_continue:
 	ld a, (boss__state_timer)
-	cp 128
+	cp 80
 	ret nz
 	ld hl, boss__state
 	inc (hl)
@@ -2679,7 +2679,7 @@ update_boss4_behavior_3_state_2_continue:
 	ret
 
 update_boss4_behavior_3_state_3:
-	; ghosts go up:
+	; ghosts go down:
 	ld ix, current_room__sprite_objects + ROOM_OBJECT_STRUCT_SIZE  ; first ghost (it's the second sprite object, as the first is the boss extras)
 	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	cp 24
@@ -2690,10 +2690,10 @@ update_boss4_behavior_3_state_3:
 	cp 24
 	ld c, 39  ; target x
 	call nz, update_boss4_behavior_0_lower_ghost
-	ld a, (current_room__sprite_objects + ROOM_OBJECT_STRUCT_TILE_Y)
+	ld a, (current_room__sprite_objects + ROOM_OBJECT_STRUCT_SIZE + ROOM_OBJECT_STRUCT_TILE_Y)
 	cp 24
 	ret nz
-	ld a, (current_room__sprite_objects + ROOM_OBJECT_STRUCT_SIZE + ROOM_OBJECT_STRUCT_TILE_Y)
+	ld a, (current_room__sprite_objects + ROOM_OBJECT_STRUCT_SIZE*2 + ROOM_OBJECT_STRUCT_TILE_Y)
 	cp 24
 	ret nz
 	; both ghosts down, remove them:
@@ -2706,16 +2706,7 @@ update_boss4_behavior_3_state_3:
 	ld (boss__state_timer), a
 
 update_boss4_behavior_3_state_4:
-	; spawn rewards:
-	ld b, 3  ; boss number (boss 4)
-	ld de, 31 + 21*256  ; - e, d: x, y coordinates to spawn the stone
-	ld hl, boss_spawn_power_stone_b
-	call call_hl_in_page_c_8000
-
-	ld hl, draw_room_with_hud
-	ld c, TILES_PAGE
-	call call_hl_in_page_c_8000
-
+	; mark the boss as defeated and spawn rewards:
 	xor a
 	ld (boss__active), a
 
@@ -2736,7 +2727,68 @@ update_boss4_behavior_3_state_4:
 
 	ld hl, boss__state
 	inc (hl)
-	ret
+
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)	
+
+	; check if the lord pairs were a proper pair:
+	ld a, (boss__4_first_lord)
+	dec a
+	and #fe
+	ld c, a
+	ld a, (boss__4_second_lord)
+	dec a
+	and #fe
+	cp c
+	jr nz, update_boss4_behavior_3_state_4_not_pair
+	; they are a pair, spawn a different reward:
+	or a  ; hun-came / vucub-came
+	jr z, update_boss4_behavior_3_state_4_spawn_golden_key
+	jr update_boss4_behavior_3_state_4_spawn_skull_charm
+update_boss4_behavior_3_state_4_not_pair:
+	ld b, 3  ; boss number (boss 4)
+	ld de, 31 + 21*256  ; - e, d: x, y coordinates to spawn the stone
+	ld hl, boss_spawn_power_stone_b
+	ld c, BOSS_PAGE
+	jp call_hl_in_page_c_8000
+
+update_boss4_behavior_3_state_4_spawn_golden_key:
+	ld b, TAG_GOLDEN_KEY
+	ld hl, buffer_4096 + 62 * 64  ; golden key
+	jr update_boss4_behavior_3_state_4_spawn_golden_key_entry_point
+update_boss4_behavior_3_state_4_spawn_skull_charm:
+	ld b, TAG_SKULL_CHARM
+	ld hl, buffer_4096 + 63 * 64  ; skull charm
+update_boss4_behavior_3_state_4_spawn_golden_key_entry_point:
+	push hl
+	push bc
+		ld hl, ptr_to_new_tile_object
+		ld c, TILES_PAGE
+		call call_hl_in_page_c_8000
+		push hl
+		pop iy
+	pop bc
+	pop hl
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 0
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), b  ; type
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 31  ; x
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 21  ; y
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0  ; state (hitpoints)
+
+	; set which object gfx to up load vdp:
+	ld (item_object_to_upload_to_vdp), hl
+	call state_play_upload_object_tiles_to_vdp_if_necessary
+
+	ld hl, SFX_secret
+	call play_SFX_with_high_priority
+
+	; refresh the current tile objects:
+	ld hl, room_undraw_tile_objects
+	ld c, TILES_PAGE
+	call call_hl_in_page_c_8000
+	ld hl, room_render_tile_objects
+	ld c, TILES_PAGE
+	jp call_hl_in_page_c_8000	
 
 
 ;-----------------------------------------------

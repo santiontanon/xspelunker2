@@ -1207,6 +1207,8 @@ ENDR
 	dw object_interaction_function_pickup_battery  ; TAG_BATTERY
 	dw object_interaction_function_tablet  ; TAG_XIBALBA_BOSS_TABLET
 	dw object_interaction_function_tablet  ; TAG_XIBALBA_BOSS_GRAVE
+	dw object_interaction_function_pickup_item_boss4  ; TAG_GOLDEN_KEY
+	dw object_interaction_function_pickup_item_boss4  ; TAG_SKULL_CHARM
 	dw object_interaction_function_shopkeeper  ; TAG_NPC_SHOPKEEPER
 	dw object_interaction_function_shop  ; TAG_NPC_SHOP
 	dw object_interaction_function_empty  ; TAG_DYNAMITE
@@ -1250,10 +1252,21 @@ object_interaction_inventory_slot:
 	db #ff, #ff, #ff, #ff, #ff  ; hearts: 103
 	db #ff, #ff, #ff, #ff  ; riddle clues: 108
 	db #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff  ; story trivia: 112
-	db 25, 26, 27, 28, 29, 30  ; maya upgrade items: 120
-	db 31, 32  ; alien upgrade items: 126
-	db 20, 20, 20, 20  ; small keys: 128
+	db INVENTORY_ITEM_SANDALS, INVENTORY_ITEM_GLOVES, INVENTORY_ITEM_WARRIOR_HAT, INVENTORY_ITEM_COTTON_ARMOR, INVENTORY_ITEM_CHAAC_BLESSING, INVENTORY_ITEM_SEASHELL  ; maya upgrade items: 120
+	db INVENTORY_ITEM_ANTIGRAV_BELT, INVENTORY_ITEM_ICE_CAPE  ; alien upgrade items: 126
+	db INVENTORY_ITEM_SMALL_KEY, INVENTORY_ITEM_SMALL_KEY, INVENTORY_ITEM_SMALL_KEY, INVENTORY_ITEM_SMALL_KEY  ; small keys: 128
 	db #ff, #ff, #ff, #ff  ; small key chests: 132
+	db #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff  ; teleporters: 136
+	db #ff  ; calendar name clue: 144
+	db #ff  ; lost vendor: 145
+	db #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff  ; xibalba tablets: 146
+	db #ff  ; pushable block: 159
+	db #ff, #ff , #ff ; doors: 160
+	db #ff  ; power stone: 163
+	db #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff  ; calendar tablet: 164, up to puxxlebox moon: 171
+	db #ff, #ff, #ff, #ff, #ff, #ff  ; consumables: 172
+	db #ff, #ff  ; xibalba boss tablet/grave: 178
+	db INVENTORY_ITEM_GOLDEN_KEY, INVENTORY_ITEM_SKULL_CHARM  ; golden key / skull charm: 180, 181
 
 
 ;-----------------------------------------------
@@ -1262,6 +1275,13 @@ object_interaction_function_empty:
 
 
 ;-----------------------------------------------
+object_interaction_function_pickup_item_boss4:
+	call object_interaction_function_pickup_item
+	ld hl, update_boss4_behavior_3_state_4_not_pair
+	ld c, BOSS_4_PAGE
+	jp call_hl_in_page_c_8000
+
+
 object_interaction_function_pickup_item:
 	; update stats:
 	ld hl, stats__n_items_collected
@@ -2638,6 +2658,8 @@ ENDR
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_battery_gfx  ; TAG_BATTERY
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_XIBALBA_BOSS_TABLET
 	TILE_OBJECT_DATA 1, 2, 3, tile_object_xibalba_boss_graves_gfx  ; TAG_XIBALBA_BOSS_GRAVE
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_GOLDEN_KEY
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_SKULL_CHARM	
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOPKEEPER
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOP
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_DYNAMITE

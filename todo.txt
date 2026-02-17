@@ -1,10 +1,5 @@
 to do:
 
-***- Xibalba lords boss:
-  ***- when defeating first-pair, drop key first, and when picking it up: message, and drop power stone
-  ***- when defeating any other pair, drop charm first, and when picking it up: message, and drop power stone
-  ***- randomize the rows in enter_boss_door__spawn_xibalba_lords_objects_tbl
-
 - music: intro, letters/map, tablets/puzzles, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)
   - jungle: the original xspelunker song is much better than the new one, take it as a starting point and improve it
   - add to the game (specify a music in each area, and if 0, no music)

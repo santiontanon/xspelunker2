@@ -214,6 +214,8 @@ public class AssemblerTags {
         "TAG_BATTERY",
         "TAG_XIBALBA_BOSS_TABLET",
         "TAG_XIBALBA_BOSS_GRAVE",
+        "TAG_GOLDEN_KEY",
+        "TAG_SKULL_CHARM",
         // npcs:
         "TAG_NPC_SHOPKEEPER",
         "TAG_NPC_SHOP",
