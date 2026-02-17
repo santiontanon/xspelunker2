@@ -325,6 +325,8 @@ public class Text {
 //        addLineSafe(lines_with_constant, "The third letter from Elaine. Press INTERACT to read it.", "ITEM_LETTER3", 80);
         addLineSafe(lines_with_constant_page1, "Map: a map of the ruins that I have been composing as I find pieces of it. Press INTERACT to examine it.", "ITEM_MAP", 80);
         addLineSafe(lines_with_constant_page1, "Puzzle box: it looks like a puzzlebox made out of very finely worked stone. Press INTERACT to inspect it.", "ITEM_PUZZLEBOX", 80);
+        addLineSafe(lines_with_constant_page1, "Golden key: a mysterious golden key I got after defeating Hun-Came and Vucub-Came.", "ITEM_GOLDEN_KEY", 80);
+        addLineSafe(lines_with_constant_page1, "Skull charm: I feel like I can better use my projectyles with this charm.", "ITEM_SKULL_CHARM", 80);
        
         // In-game messages:
         addLineSafe(lines_with_constant_page1, "As you consume the still beating heart, you feel your strength increasing!", "HEART_PICKUP", 112);

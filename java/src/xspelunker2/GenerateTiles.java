@@ -178,6 +178,10 @@ public class GenerateTiles {
         extratTilesOneObject(sourceImage, 96, 48, 16, 16, data);
         // puzzle box (61)
         extratTilesOneObject(sourceImage, 64, 48, 16, 16, data);
+        // hun-came/vucub-came key (62)
+        extratTilesOneObject(sourceImage, 16, 32, 16, 16, data);
+        // skull charm (63)
+        extratTilesOneObject(sourceImage, 32, 32, 16, 16, data);
 
         Z80Assembler.dataToBinary(data, outputPath + ".bin");
         ZX0Wrapper.main(outputPath+".bin", outputPath+".zx0", true, false);

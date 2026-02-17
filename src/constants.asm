@@ -274,6 +274,8 @@ ENEMY_FIREBALL: equ ENEMY_SNAKE + 27
 ; - 1 map
 ; - 2 half stones
 ; - 2 puzzle boxes
+; - 1 golden key
+; - 1 skull charm
 N_INVENTORY_ITEM_TYPES: equ 7 + 6 + 6 + 1 + 4 + 6 + 2 + 2 + 1 + 2 + 2  ; 39
 N_INVENTORY_WEAPON_TYPES: equ 4 + 4 + 3  ; 4 base, 4 ranged, 3 upgrades
 INVENTORY_ITEM_POWER_STONE1: equ 7
@@ -297,7 +299,8 @@ INVENTORY_ITEM_HALF_POWER_STONE1: equ 7 + 6 + 6 + 1 + 4 + 6 + 2 + 2 + 1
 INVENTORY_ITEM_HALF_POWER_STONE2: equ 7 + 6 + 6 + 1 + 4 + 6 + 2 + 2 + 1 + 1
 INVENTORY_ITEM_PUZZLEBOX_MARS: equ 7 + 6 + 6 + 1 + 4 + 6 + 2 + 2 + 1 + 2
 INVENTORY_ITEM_PUZZLEBOX_MOON: equ 7 + 6 + 6 + 1 + 4 + 6 + 2 + 2 + 1 + 2 + 1
-
+INVENTORY_ITEM_GOLDEN_KEY: equ 7 + 6 + 6 + 1 + 4 + 6 + 2 + 2 + 1 + 2 + 2
+INVENTORY_ITEM_SKULL_CHARM: equ 7 + 6 + 6 + 1 + 4 + 6 + 2 + 2 + 1 + 2 + 2 + 1
 ; - initial piece just has: jungle + first pyramid, then one piece for each of the rest
 ; N_MAP_PIECES: equ 9
 

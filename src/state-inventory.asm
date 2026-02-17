@@ -1527,5 +1527,7 @@ inventory_table:
 	INVENTORY_ITEM_FN 47,   4, 2,  0,  0, 0, 142, 143,  0, TEXT_ITEM_HALF_POWER_STONE,  0
 	INVENTORY_ITEM_FN 48,   9, 1,  0,  174, 175, 176, 177,  0, TEXT_ITEM_PUZZLEBOX,  state_inventory_update_cursor_interact_puzzlebox1
 	INVENTORY_ITEM_FN 49,   4, 2,  0,  174, 175, 140, 141,  0, TEXT_ITEM_PUZZLEBOX,  state_inventory_update_cursor_interact_puzzlebox2
+	INVENTORY_ITEM_FN 50,   5, 2,  3,  178, 179, 142, 143,  0, TEXT_ITEM_GOLDEN_KEY,  0
+	INVENTORY_ITEM_FN 51,   5, 2,  0,  180, 181, 144, 145,  0, TEXT_ITEM_SKULL_CHARM,  0
 	db #ff  ; sentinel
 
