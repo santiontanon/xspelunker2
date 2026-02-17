@@ -174,6 +174,8 @@ player_jump_no_grab_timer: ds virtual 1  ; player can grab to ropes/ladders only
                                          ; This is used for when jumping off a ladder/rope, so that the player does not grab again immediately on the next frame.
 player_push_block_timer: ds virtual 1
 player_no_rope_or_ladder_this_frame: ds virtual 1  ; to prevent infinite loops in the player routine when holding to a ladder fails
+
+skull_charm_state: ds virtual 1  ; even: save ammo, odd: use ammo
 RAM_to_zero_on_continue_end:
 
 player_combination_levers_state: ds virtual 8  ; to simplify combination lever checking

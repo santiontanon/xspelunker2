@@ -2241,7 +2241,21 @@ player_update_fire_directional_bullet:
 	ld a, (hl)  ; a = number of bullets left
 	or a
 	jp z, player_update_fire_directional_bullet_no_bullets
+
+	; skull-charm effect:
+	ld a, (player_inventory_items + INVENTORY_ITEM_SKULL_CHARM)
+	or a
+	jr z, player_update_fire_directional_bullet_no_skull_charm
+	push hl
+		ld hl, skull_charm_state
+		ld a, (hl)
+		inc (hl)
+	pop hl
+	and #01
+	jr nz, player_update_fire_directional_bullet_dont_use_ammo
+player_update_fire_directional_bullet_no_skull_charm:
 	dec (hl)
+player_update_fire_directional_bullet_dont_use_ammo:
 
 	ld a, HUD_MAX_TIME
 	ld (hud_redraw_timer), a

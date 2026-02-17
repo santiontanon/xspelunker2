@@ -115,7 +115,7 @@ state_play:
 		ld (player_inventory_weapons+1), a
 		ld (player_inventory_weapons+2), a
 ; 		ld (player_inventory_weapons+3), a  ; shield
-; 		ld (player_inventory_weapons+4), a  ; sling
+		ld (player_inventory_weapons+4), a  ; sling
 ; 		ld (player_inventory_weapons+5), a  ; blowgun
 ; 		ld (player_inventory_weapons+6), a
 ; 		ld (player_inventory_weapons+7), a
@@ -124,8 +124,8 @@ state_play:
 ; 		ld (player_inventory_weapons+10), a
 ; 		ld a, 202
 ; 		ld (player_inventory_coins), a
-; 		ld a, 25
-; 		ld (player_inventory_weapon_ammo), a
+		ld a, 25
+		ld (player_inventory_weapon_ammo), a
 ; 		ld (player_inventory_weapon_ammo + 1), a
 ; 		ld (player_inventory_weapon_ammo + 2), a
 ; 		ld (player_inventory_weapon_ammo + 3), a
