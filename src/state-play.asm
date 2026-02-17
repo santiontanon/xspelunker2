@@ -83,30 +83,30 @@ state_play:
 ; 		ld (player_inventory_items+10), a
 ; 		ld (player_inventory_items+11), a  ; 5th stone
 ; 		ld (player_inventory_items+12), a  ; sixth stone
-; 		ld (player_inventory_items+13), a  ; [UNUSED]
+; 		ld (player_inventory_items+13), a
 ; 		ld (player_inventory_items+14), a
 ; 		ld (player_inventory_items+15), a
 ; 		ld (player_inventory_items+16), a
 ; 		ld (player_inventory_items+17), a
 ; 		ld (player_inventory_items+18), a
-; 		ld (player_inventory_items+19), a
-; 		ld (player_inventory_items+20), a  ; small keys
+; 		ld (player_inventory_items+19), a  ; small keys
+; 		ld (player_inventory_items+20), a
 ; 		ld (player_inventory_items+21), a
 ; 		ld (player_inventory_items+22), a
-; 		ld (player_inventory_items+23), a
-; 		ld (player_inventory_items+24), a  ; clay suit (last key item)
-; 		ld (player_inventory_items+25), a  ; sandals
-; 		ld (player_inventory_items+26), a  ; gloves
-; 		ld (player_inventory_items+27), a  ; warrior hat
-; 		ld (player_inventory_items+28), a  ; cotton armor
-; 		ld (player_inventory_items+29), a  ; chaac blessing
-; 		ld (player_inventory_items+30), a  ; seashell
-; 		ld (player_inventory_items+31), a  ; antigrav belt
-; 		ld (player_inventory_items+32), a  ; ice cape
-; 		ld (player_inventory_items+33), a  ; letter 1
-; 		ld (player_inventory_items+34), a  ; letter 2
-		ld (player_inventory_items+35), a  ; map
-; 		ld (player_inventory_items+36), a  ; half power stone
+; 		ld (player_inventory_items+23), a  ; clay suit (last key item)
+; 		ld (player_inventory_items+24), a  ; sandals
+; 		ld (player_inventory_items+25), a  ; gloves
+; 		ld (player_inventory_items+26), a  ; warrior hat
+; 		ld (player_inventory_items+27), a  ; cotton armor
+; 		ld (player_inventory_items+28), a  ; chaac blessing
+; 		ld (player_inventory_items+29), a  ; seashell
+; 		ld (player_inventory_items+30), a  ; antigrav belt
+; 		ld (player_inventory_items+31), a  ; ice cape
+; 		ld (player_inventory_items+32), a  ; letter 1
+; 		ld (player_inventory_items+33), a  ; letter 2
+		ld (player_inventory_items+34), a  ; map
+; 		ld (player_inventory_items+35), a  ; half power stone 1
+; 		ld (player_inventory_items+36), a  ; half power stone 2
 ; 		ld (player_inventory_items+INVENTORY_ITEM_PUZZLEBOX_MARS), a
 ; 		ld (player_inventory_items+INVENTORY_ITEM_PUZZLEBOX_MOON), a
 		ld (player_inventory_weapons), a  ; machete
@@ -127,13 +127,13 @@ state_play:
 ; 		ld (player_inventory_weapon_ammo + 1), a
 ; 		ld (player_inventory_weapon_ammo + 2), a
 ; 		ld (player_inventory_weapon_ammo + 3), a
-; 		ld a, 1
+; 		ld a, 2
 ; 		ld (player_inventory_n_small_keys), a
-		ld (global_state__objects + TAG_MAP_PIECE1), a
-		ld (global_state__objects + TAG_MAP_PIECE2), a
-		ld (global_state__objects + TAG_MAP_PIECE3), a
-		ld (global_state__objects + TAG_MAP_PIECE4), a
-		ld (global_state__objects + TAG_MAP_PIECE5), a
+; 		ld (global_state__objects + TAG_MAP_PIECE1), a
+; 		ld (global_state__objects + TAG_MAP_PIECE2), a
+; 		ld (global_state__objects + TAG_MAP_PIECE3), a
+; 		ld (global_state__objects + TAG_MAP_PIECE4), a
+; 		ld (global_state__objects + TAG_MAP_PIECE5), a
 ; 		ld (global_state__objects + TAG_TELEPORTER1), a
 ; 		ld (global_state__objects + TAG_TELEPORTER4), a
 ; 		ld (global_state__objects + TAG_TELEPORTER5), a
@@ -594,14 +594,14 @@ state_play_world_name_conditions_match_2:
 
 state_play_world_name_conditions_match_3:
 	ld a, 1
-	ld (player_inventory_items + 25), a
-	ld (player_inventory_items + 26), a
-	ld (player_inventory_items + 27), a
-	ld (player_inventory_items + 28), a
-	ld (player_inventory_items + 29), a
-	ld (player_inventory_items + 30), a
-	ld (player_inventory_items + 31), a
-	ld (player_inventory_items + 32), a
+	ld (player_inventory_items + INVENTORY_ITEM_SANDALS), a
+	ld (player_inventory_items + INVENTORY_ITEM_GLOVES), a
+	ld (player_inventory_items + INVENTORY_ITEM_WARRIOR_HAT), a
+	ld (player_inventory_items + INVENTORY_ITEM_COTTON_ARMOR), a
+	ld (player_inventory_items + INVENTORY_ITEM_CHAAC_BLESSING), a
+	ld (player_inventory_items + INVENTORY_ITEM_SEASHELL), a
+	ld (player_inventory_items + INVENTORY_ITEM_ANTIGRAV_BELT), a
+	ld (player_inventory_items + INVENTORY_ITEM_ICE_CAPE), a
 	ld (global_state__objects + TAG_ITEM_SANDALS), a
 	ld (global_state__objects + TAG_ITEM_GLOVES), a
 	ld (global_state__objects + TAG_ITEM_WARRIOR_HAT), a
@@ -650,29 +650,29 @@ state_play_upload_object_tiles_to_vdp_if_necessary:
 	ld a, (player_current_item)
 	; 0 - 10: a + 26  ; weapons
 	; 11 - 17: a - 11 ; boss keys
-	; 18 - 24: 47  ; idols
-	; 25 - 30: a - 17  ; color keys,
-	; 31: a = 37  ; small key
-	; 32 - 35: a - 17  ; color keys, key items
+	; 18 - 23: 47  ; power stones
+	; 24 - 29: a - 16  ; color keys,
+	; 30: a = 37  ; small key
+	; 31 - 34: a - 16  ; key items
 	cp 11
 	jr c, state_play_upload_object_tiles_to_vdp_if_necessary_weapon
 	cp 18
 	jr c, state_play_upload_object_tiles_to_vdp_if_necessary_boss_key
-	cp 25
-	jr c, state_play_upload_object_tiles_to_vdp_if_necessary_idol
-	cp 31
+	cp 24
+	jr c, state_play_upload_object_tiles_to_vdp_if_necessary_power_stone
+	cp 30
 	jr c, state_play_upload_object_tiles_to_vdp_if_necessary_color_keys
 	jr z, state_play_upload_object_tiles_to_vdp_if_necessary_small_key
 	; key items
-	add a, -18
+	add a, -17
 	jr state_play_upload_object_tiles_to_vdp_if_necessary_selected_item_set
 state_play_upload_object_tiles_to_vdp_if_necessary_color_keys:
-	add a, -17
+	add a, -16
 	jr state_play_upload_object_tiles_to_vdp_if_necessary_selected_item_set
 state_play_upload_object_tiles_to_vdp_if_necessary_small_key:
 	ld a, 37
 	jr state_play_upload_object_tiles_to_vdp_if_necessary_selected_item_set
-state_play_upload_object_tiles_to_vdp_if_necessary_idol:
+state_play_upload_object_tiles_to_vdp_if_necessary_power_stone:
 	ld a, 47
 	jr state_play_upload_object_tiles_to_vdp_if_necessary_selected_item_set
 state_play_upload_object_tiles_to_vdp_if_necessary_boss_key:

@@ -184,8 +184,8 @@ player_health: ds virtual 1
 player_max_health: ds virtual 1
 player_oxygen: ds virtual 1
 player_inventory_weapons: ds virtual N_INVENTORY_WEAPON_TYPES
-player_inventory_weapon_ammo: ds virtual 4
 player_inventory_items: ds virtual N_INVENTORY_ITEM_TYPES
+player_inventory_weapon_ammo: ds virtual 4
 player_inventory_coins: ds virtual 1
 player_inventory_n_small_keys: ds virtual 1
 ; player_inventory_map_pieces: ds virtual N_MAP_PIECES

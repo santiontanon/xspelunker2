@@ -383,18 +383,6 @@ pick_up_boss_puzzlebox_continue:
 		ld de, TEXT_FOUND_PUZZLEBOX
 		jr pick_up_boss_power_stone_continue
 
-	; message:
-; 	ld de, TEXT_FOUND_HALF_POWER_STONE  ; TEXT_FOUND_SECOND_HALF_POWER_STONE
-; 	jr pick_up_boss_power_stone_continue
-
-; pick_up_boss_second_half_power_stone:
-; 	ld (hl), 0  ; remove the half stone
-; 	ld hl, player_inventory_items + 7 + 5
-; 	ld (hl), 1  ; gain a full power stone
-; 	; message:
-; 	ld de, TEXT_FOUND_SECOND_HALF_POWER_STONE
-; 	jr pick_up_boss_power_stone_continue
-
 
 ;-----------------------------------------------
 event__exit_boss_door:

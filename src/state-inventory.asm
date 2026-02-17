@@ -39,10 +39,9 @@ state_inventory_entry_point_from_item_inspection:
 	call disable_VDP_output
 		call clear_all_the_sprites
 		call setup_inventory_gfx
-		call draw_inventory_items
-		call draw_inventory_weapons
+		call draw_inventory_items_weapons
+		call draw_inventory_weapon_bullets
 		call draw_inventory_player_health
-		call draw_inventory_small_keys
 		ld a, (player_inventory_coins)
 		ld de, CHRTBL2 + (2*32+19)*8
 		ld iy, #8000 + COLOR_WHITE*16
@@ -110,77 +109,34 @@ state_inventory_update_cursor_continue:
 	ret
 
 state_inventory_update_cursor_interact:
-	; interact with power stones:
-	ld a, (inventory_cursor_position_y)
-	dec a
-	jr z, state_inventory_update_cursor_interact_row1
-	dec a
-	jr z, state_inventory_update_cursor_interact_row2
-	cp 3
-	jr z, state_inventory_update_cursor_interact_row5
-	ret
-state_inventory_update_cursor_interact_row1:
-	ld a, (inventory_cursor_position_x)
-	cp 6
-	jp z, state_inventory_update_cursor_interact_maybe_puzzlebox1
-	cp 7
-	jp z, state_inventory_update_cursor_interact_maybe_puzzlebox2
-	cp 8
-	jp z, state_inventory_update_cursor_interact_power_stone1
-	cp 9
-	jp z, state_inventory_update_cursor_interact_power_stone2
-	ret
-state_inventory_update_cursor_interact_row2:
-	ld a, (inventory_cursor_position_x)
-	cp 4
-	jp z, state_inventory_update_cursor_interact_power_stone3
-	cp 5
-	jp z, state_inventory_update_cursor_interact_power_stone4
-	ret
-state_inventory_update_cursor_interact_row5:
-	ld a, (inventory_cursor_position_x)
-	cp 7
-	jp z, state_inventory_update_cursor_interact_letter1
-	cp 8
-	jp z, state_inventory_update_cursor_interact_letter2
-	cp 9
-	jp z, state_inventory_update_cursor_interact_map
-	ret
+	; interact with items:
+	call state_inventory_item_under_cursor
+	ret z
+	ld l, (iy + 12)
+	ld h, (iy + 13)
+	ld a, l
+	or h
+	ret z  ; no interact function
+	jp (hl)
 
 
 state_inventory_update_cursor_button:
 	ld a, (inventory_cursor_position_y)
 	or a
 	jr z, state_inventory_update_cursor_button_row0
-	; pressed over an item/weapon:
-	ld b, a
-	ld a, (inventory_cursor_position_x)
-	ld c, a
-	ld hl, inventory_weapon_item_fns
-state_inventory_update_cursor_button_loop:
-	ld a, (hl)
-	cp #ff  ; sentinel
+
+	call state_inventory_item_under_cursor
 	ret z
-	cp c
-	jr nz, state_inventory_update_cursor_button_loop_next
-	inc hl
-	ld a, (hl)
-	cp b
-	jr nz, state_inventory_update_cursor_button_loop_next1
-	; found!
-	inc hl
-	ld e, (hl)
-	inc hl
-	ld h, (hl)
-	ld l, e
-	jp (hl)
-state_inventory_update_cursor_button_loop_next:
-	inc hl
-state_inventory_update_cursor_button_loop_next1:
-	inc hl
-	inc hl
-	inc hl
-	jr state_inventory_update_cursor_button_loop
+
+	ld a, (iy + 3)  ; selectable?
+	or a
+	ret z
+
+	ld a, (iy)
+	ld (player_current_item), a
+	ld hl, SFX_ui_select
+	jp play_SFX_with_high_priority	
+
 
 state_inventory_update_cursor_button_row0:
 	ld a, (inventory_cursor_position_x)
@@ -188,7 +144,6 @@ state_inventory_update_cursor_button_row0:
 	jr z, state_inventory_update_cursor_button_back
 	cp 4
 	jr z, state_inventory_update_cursor_button_options
-
 state_inventory_update_cursor_button_quit:
 	ld ix, TEXT_ARE_YOU_SURE
 	ld hl, state_game_over_from_quit  ; yes
@@ -350,40 +305,83 @@ state_inventory_update_cursor_up_row2_left:
 
 
 ;-----------------------------------------------
+; output:
+; - z: no item underneath
+; - nz: item underneath
+; - iy: ptr to item (if nz)
+state_inventory_item_under_cursor:
+	ld a, (inventory_cursor_position_y)
+	ld b, a
+	ld a, (inventory_cursor_position_x)
+	ld c, a
+	; pressed over an item/weapon:
+	ld ix, inventory_table
+	ld iy, 0
+state_inventory_item_under_cursor_loop:
+	ld a, (ix)
+	cp #ff  ; sentinel
+	jr z, state_inventory_item_under_cursor_loop_done
+	ld hl, player_inventory_weapons
+	ADD_HL_A
+	ld a, (hl)
+	or a
+	jr z, state_inventory_item_under_cursor_loop_next
+; 	ld a, (ix + 3)  ; selectable?
+; 	or a
+; 	jr z, state_inventory_item_under_cursor_loop_next
+	ld a, (ix + 1)
+	cp c
+	jr nz, state_inventory_item_under_cursor_loop_next
+	ld a, (ix + 2)
+	cp b
+	jr nz, state_inventory_item_under_cursor_loop_next
+	push ix
+	pop iy
+state_inventory_item_under_cursor_loop_next:
+	ld de, 14
+	add ix, de
+	jr state_inventory_item_under_cursor_loop
+state_inventory_item_under_cursor_loop_done:
+	ld a, iyl
+	or iyh
+	ret
+
+
+;-----------------------------------------------
 state_inventory_update_cursor_interact_power_stone1:
-	ld a, (player_inventory_items + 7)
+	ld a, (player_inventory_items + INVENTORY_ITEM_POWER_STONE1)
 	or a
 	ld e, 0
 	jr nz, state_inventory_update_cursor_interact_power_stone
-	ld a, (player_inventory_items + 7 + 3)
+	ret
+state_inventory_update_cursor_interact_power_stone2:
+	ld a, (player_inventory_items + INVENTORY_ITEM_POWER_STONE1 + 1)
+	or a
+	ld e, 1
+	jr nz, state_inventory_update_cursor_interact_power_stone
+	ret
+state_inventory_update_cursor_interact_power_stone3:
+	ld a, (player_inventory_items + INVENTORY_ITEM_POWER_STONE1 + 2)
+	or a
+	ld e, 2
+	jr nz, state_inventory_update_cursor_interact_power_stone
+	ret
+state_inventory_update_cursor_interact_power_stone4:
+	ld a, (player_inventory_items + INVENTORY_ITEM_POWER_STONE1 + 3)
 	or a
 	ld e, 3
 	jr nz, state_inventory_update_cursor_interact_power_stone
 	ret
-state_inventory_update_cursor_interact_power_stone2:
-	ld a, (player_inventory_items + 7 + 1)
-	or a
-	ld e, 1
-	jr nz, state_inventory_update_cursor_interact_power_stone
-	ld a, (player_inventory_items + 7 + 4)
+state_inventory_update_cursor_interact_power_stone5:
+	ld a, (player_inventory_items + INVENTORY_ITEM_POWER_STONE1 + 4)
 	or a
 	ld e, 4
 	jr nz, state_inventory_update_cursor_interact_power_stone
 	ret
-state_inventory_update_cursor_interact_power_stone3:
-	ld a, (player_inventory_items + 7 + 2)
-	or a
-	ld e, 2
-	jr nz, state_inventory_update_cursor_interact_power_stone
-	ld a, (player_inventory_items + 7 + 5)
+state_inventory_update_cursor_interact_power_stone6:
+	ld a, (player_inventory_items + INVENTORY_ITEM_POWER_STONE1 + 5)
 	or a
 	ld e, 5
-	jr nz, state_inventory_update_cursor_interact_power_stone
-	ret
-state_inventory_update_cursor_interact_power_stone4:
-	ld a, (player_inventory_items + 7 + 6)
-	or a
-	ld e, 6
 	ret z
 state_inventory_update_cursor_interact_power_stone:
 	ld ix, TEXT_INSPECT_POWER_STONE
@@ -391,21 +389,15 @@ state_inventory_update_cursor_interact_power_stone:
 	jp state_inventory_entry_point_from_item_inspection
 
 
-;-----------------------------------------------
-state_inventory_update_cursor_interact_maybe_puzzlebox1:
-	ld a, (player_inventory_items + INVENTORY_ITEM_PUZZLEBOX_MARS)
-	or a
-	ret z
+; ;-----------------------------------------------
+state_inventory_update_cursor_interact_puzzlebox1:
 	ld ix, current_world__maya_puzzle2_combination1
 	ld hl, display_puzzlebox_closeup
 	ld c, TABLET_LETTER_PAGE
 	call call_hl_in_page_c_8000
 	jp state_inventory_entry_point_from_item_inspection
 
-state_inventory_update_cursor_interact_maybe_puzzlebox2:
-	ld a, (player_inventory_items + INVENTORY_ITEM_PUZZLEBOX_MOON)
-	or a
-	ret z
+state_inventory_update_cursor_interact_puzzlebox2:
 	ld ix, current_world__maya_puzzle2_combination2
 	ld hl, display_puzzlebox_closeup
 	ld c, TABLET_LETTER_PAGE
@@ -439,7 +431,7 @@ display_power_stone_closeup:
 
 			; draw the appropriate number
 			ld a, e
-			cp 6
+			cp 5
 			jr nc, display_power_stone_closeup_no_number
 			ld d, 0
 			ld hl, current_world__power_stone_numbers
@@ -531,88 +523,40 @@ state_inventory_update_item_text:
 	ld a, (inventory_cursor_position_y)
 	or a
 	ret z
-
-	ld a, (inventory_cursor_position_x)
-	cp 4
-	jr c, state_inventory_update_item_text_weapon
-state_inventory_update_item_text_item:
-	sub 4
-	ld c, a
-	ld a, (inventory_cursor_position_y)
-	dec a
-	add a, a
 	ld b, a
-	add a, a
-	add a, b
-	add a, c
-	ld c, a  ; c = position the cursor is over now
-	ld hl, inventory_item_positions
-	ld de, player_inventory_items
-	ld b, 0  ; index in the item inventory
-state_inventory_update_item_text_item_loop:
-	ld a, (hl)
-	cp c
-	jr nz, state_inventory_update_item_text_item_loop_next
-	; position matches, does the player have this weapon?
-	ld a, (de)
-	or a
-	jr z, state_inventory_update_item_text_item_loop_next
-	; found it! We need to print the text for this weapon:
-	ld hl, inventory_item_texts
-	ld a, b
-	add a, a
-	ADD_HL_A
-	ld e, (hl)
-	inc hl
-	ld d, (hl)
-	ex de, hl
-	jr state_inventory_update_item_text_print
-state_inventory_update_item_text_item_loop_next:
-	inc b
-	inc hl
-	inc de
-	ld a, b
-	cp N_INVENTORY_ITEM_TYPES
-	ret z
-	jp state_inventory_update_item_text_item_loop
-
-state_inventory_update_item_text_weapon:
+	ld a, (inventory_cursor_position_x)
 	ld c, a
-	ld a, (inventory_cursor_position_y)
-	sub 2
-	add a, a
-	add a, a
-	add a, c
-	ld c, a  ; c = position the cursor is over now
-	ld hl, inventory_weapon_positions
-	ld de, player_inventory_weapons
-	ld b, 0  ; index in the weapon inventory
-state_inventory_update_item_text_weapon_loop:
-	ld a, (hl)
-	cp c
-	jr nz, state_inventory_update_item_text_weapon_loop_next
-	; position matches, does the player have this weapon?
-	ld a, (de)
-	or a
-	jr z, state_inventory_update_item_text_weapon_loop_next
-	; found it! We need to print the text for this weapon:
-	ld hl, inventory_weapon_texts
-	ld a, b
-	add a, a
+
+	ld ix, inventory_table
+	ld iy, 0
+state_inventory_update_item_text_loop:
+	ld a, (ix)
+	cp #ff  ; sentinel
+	jr z, state_inventory_update_item_text_loop_done
+	ld hl, player_inventory_weapons
 	ADD_HL_A
-	ld e, (hl)
-	inc hl
-	ld d, (hl)
-	ex de, hl
-	jr state_inventory_update_item_text_print
-state_inventory_update_item_text_weapon_loop_next:
-	inc b
-	inc hl
-	inc de
-	ld a, b
-	cp N_INVENTORY_WEAPON_TYPES
+	ld a, (hl)
+	or a
+	jr z, state_inventory_update_item_text_loop_next
+	ld a, (ix + 1)
+	cp c
+	jr nz, state_inventory_update_item_text_loop_next
+	ld a, (ix + 2)
+	cp b
+	jr nz, state_inventory_update_item_text_loop_next
+	push ix
+	pop iy
+state_inventory_update_item_text_loop_next:
+	ld de, 14
+	add ix, de
+	jr state_inventory_update_item_text_loop
+state_inventory_update_item_text_loop_done:
+	ld a, iyl
+	or iyh
 	ret z
-	jp state_inventory_update_item_text_weapon_loop
+	; found a match, write:
+	ld l, (iy + 10)
+	ld h, (iy + 11)
 
 state_inventory_update_item_text_print:
 	; hl = text to print, copy it to buffer_4096
@@ -860,73 +804,75 @@ draw_inventory_small_keys:
 	ld b, 1
 	jp draw_inventory_number
 
-; 	ld hl, NAMTBL2 + 4*32+7
-; 	ld b, 0
-; 	ld c, a
-; 	ld a, 24  ; small key tile
-; 	jp fast_FILVRM
-
 
 ;-----------------------------------------------
-draw_inventory_items:
-	ld hl, player_inventory_items
-	ld de, inventory_item_gfx
-	ld b, N_INVENTORY_ITEM_TYPES
-draw_inventory_items_loop:
-	push bc
-		ld a, (hl)
-		or a
-		jr z, draw_inventory_items_loop_next
-		; draw item
-		ld bc, inventory_item_positions - player_inventory_items
-		add hl, bc
-		ld a, (hl)  ; position of this item in the inventory screen
-		or a
-		sbc hl, bc
-		; position to draw is:
-		; NAMTBL2 + (14 + (a%6) * 3) + 32 * (4 + (a/6) * 3)
-		push hl
+draw_inventory_items_weapons:
+	ld ix, inventory_table
+draw_inventory_items_weapons_loop:
+	ld a, (ix)
+	cp #ff  ; sentinel
+	ret z
+	ld hl, player_inventory_weapons
+	ADD_HL_A
+	ld a, (hl)
+	or a
+	jr z, draw_inventory_items_weapons_loop_next
+	; draw weapon/item:
+	; draw ptr (name table) is: NAMTBL2 + (1 + y*3) * 32 + (1 + x*3) [+1 if x >= 4]
+	ld a, (ix + 1)  ; x
+	add a, a
+	cp 8
+	jr c, draw_inventory_items_weapons_loop_continue
+	inc a
+draw_inventory_items_weapons_loop_continue:
+	add a, (ix + 1)
+	inc a
+	ld e, a
+	ld d, 0
+	ld a, (ix + 2)  ; y
+	add a, a
+	add a, (ix + 2)  ; * 3
+	inc a
+	ld l, a
+	ld h, 0
+	add hl, hl
+	add hl, hl
+	add hl, hl
+	add hl, hl
+	add hl, hl  ; * 32
+	add hl, de
+	ld de, NAMTBL2
+	add hl, de
+	ex hl, de
+	push ix
+	pop hl
+	inc hl
+	inc hl
+	inc hl
+	inc hl
+	push hl
 		push de
-			ld hl, NAMTBL2 + 14 + 32*4
-draw_inventory_items_position_loop:
-			cp 6
-			jr c, draw_inventory_items_position_loop_done
-			sub 6
-			ld bc, 3 * 32
-			add hl, bc
-			jr draw_inventory_items_position_loop
-draw_inventory_items_position_loop_done:
-			ld c, a
-			add a, a
-			add a, c  ; a *= 3
-			ADD_HL_A
-			; hl = ptr to draw!
-			ex de, hl
-			push hl
-			push de
-				ld b, 2
-				call fast_small_LDIRVM
-			pop de
-			pop hl
-			ex de, hl
-			inc de
-			inc de
-			ld bc, 32
-			add hl, bc
-			ex de, hl
 			ld b, 2
 			call fast_small_LDIRVM
-		pop de
 		pop hl
-draw_inventory_items_loop_next:
+		ld bc, 32
+		add hl, bc
 		ex de, hl
-			ld bc, 4
-			add hl, bc
-		ex de, hl
-		inc hl
-	pop bc
-	djnz draw_inventory_items_loop
-	ret
+	pop hl
+	inc hl
+	inc hl
+	ld b, 2
+	call fast_small_LDIRVM
+
+	ld l, (ix + 8)
+	ld h, (ix + 9)
+	ld a, l
+	or h
+	call nz, jp_to_hl
+draw_inventory_items_weapons_loop_next:
+	ld de, 14
+	add ix, de
+	jr draw_inventory_items_weapons_loop
 
 
 ;-----------------------------------------------
@@ -935,10 +881,73 @@ draw_inventory_selected_item_highlight:
 	bit 4, a
 	jr z, draw_inventory_selected_item_highlight_erase
 	ld a, (player_current_item)
-	ld hl, inventory_selected_weapon_sprites
+	; a * 14:
+	ld c, a
+	ld b, 0
+	ld l, a
+	ld h, 0
+	add hl, hl
+	add hl, hl
+	add hl, hl
+	or a
+	sbc hl, bc  ; a * 7
+	add hl, hl
+	ld bc, inventory_table
+	add hl, bc
+	push hl
+	pop ix
+
+	; items: (sprite 28)
+	; x = 8 + x*24  (+8 if x >= 4)
+	; y = 23 + y*24
+	; weapons:
+	; y = 71 (sprite 28), or y = 72 (sprite 32)
+	ld iy, buffer_4096
+	; compute sprite x:
+	ld c, 8
+	ld a, (ix + 1)  ; x
+	cp 4
+	jr c, draw_inventory_selected_item_highlight_continue
+	ld c, 16
+draw_inventory_selected_item_highlight_continue:
 	add a, a
 	add a, a
-	ADD_HL_A
+	add a, a
+	ld d, a
+	add a, a
+	add a, d
+	add a, c
+	ld (iy + 1), a  ; x = 8 + x*24  (+8 if x >= 4)
+
+	ld a, (ix + 3)  ; highlight type
+	dec a
+	jr z, draw_inventory_selected_item_highlight_weapon1
+	dec a
+	jr z, draw_inventory_selected_item_highlight_weapon2
+draw_inventory_selected_item_highlight_item:
+	ld (iy + 2), 28
+	ld b, 23
+	ld a, (ix + 2)  ; y
+	add a, a
+	add a, a
+	add a, a
+	ld d, a
+	add a, a
+	add a, d
+	add a, b
+	ld (iy + 0), a  ; y = 23 + y*24
+	jr draw_inventory_selected_item_highlight_continue2
+draw_inventory_selected_item_highlight_weapon1:
+	ld (iy + 0), 71
+	ld (iy + 2), 28
+	jr draw_inventory_selected_item_highlight_continue2
+draw_inventory_selected_item_highlight_weapon2:
+	ld (iy + 0), 72
+	ld (iy + 2), 32
+draw_inventory_selected_item_highlight_continue2:
+	ld (iy + 3), COLOR_WHITE
+
+	ld hl, buffer_4096
 	ld de, SPRATR2 + 7*4
 	ld b, 4
 	jp fast_small_LDIRVM
@@ -949,83 +958,7 @@ draw_inventory_selected_item_highlight_erase:
 	jp fast_FILVRM
 
 
-;-----------------------------------------------
-draw_inventory_weapons:
-	ld hl, player_inventory_weapons
-	ld de, inventory_weapon_gfx
-	ld b, 4 + 4 + 3  ; 4 base weapons, 4 ranged and 3 upgraded base
-draw_inventory_weapons_loop:
-	push bc
-		ld a, (hl)
-		or a
-		jr z, draw_inventory_weapons_loop_next
-		; draw weapon
-		ld bc, inventory_weapon_positions - player_inventory_weapons
-		add hl, bc
-		ld a, (hl)  ; position of this weapon in the inventory screen
-		or a
-		sbc hl, bc
-		; position to draw is:
-		; NAMTBL2 + (1 + (a%4) * 3) + 32 * (7 + (a/4) * 3)
-		push hl
-		push de
-			ld hl, NAMTBL2 + 1 + 32*7
-draw_inventory_weapons_position_loop:
-			cp 4
-			jr c, draw_inventory_weapons_position_loop_done
-			sub 4
-			ld bc, 3 * 32
-			add hl, bc
-			jr draw_inventory_weapons_position_loop
-draw_inventory_weapons_position_loop_done:
-			ld c, a
-			add a, a
-			add a, c  ; a *= 3
-			ADD_HL_A
-			; hl = ptr to draw!
-			ex de, hl
-			push hl
-			push de
-				ld b, 2
-				call fast_small_LDIRVM
-			pop de
-			pop hl
-			ex de, hl
-			inc de
-			inc de
-			ld bc, 32
-			add hl, bc
-			ex de, hl
-			ld b, 2
-			call fast_small_LDIRVM
-		pop de
-		pop hl
-draw_inventory_weapons_loop_next:
-		ex de, hl
-			ld bc, 4
-			add hl, bc
-		ex de, hl
-		inc hl
-	pop bc
-	djnz draw_inventory_weapons_loop
-
-	; add sprite highlights:
-	ld a, (player_inventory_weapons + 1)  ; hammer
-	or a
-	call nz, draw_inventory_weapons_hammer_sprite
-	ld a, (player_inventory_weapons + 2)  ; macuahuitl
-	or a
-	call nz, draw_inventory_weapons_macuahuitl_sprite
-	ld a, (player_inventory_weapons + 5)  ; blowgun
-	or a
-	call nz, draw_inventory_weapons_blowgun_sprite
-	ld a, (player_inventory_weapons + 9)  ; fire hammer
-	or a
-	call nz, draw_inventory_weapons_fire_hammer_sprite
-	ld a, (player_inventory_weapons + 10)  ; ice macuahuitl
-	or a
-	call nz, draw_inventory_weapons_ice_macuahuitl_sprite
-
+draw_inventory_weapon_bullets:
 	; weapon bullets:
 	ld a, (player_inventory_weapon_ammo)
 	ld de, CHRTBL2 + (256 + 16)*8
@@ -1514,373 +1447,85 @@ setup_inventory_gfx:
 	jp fast_LDIRVM	
 
 
-;-----------------------------------------------
-WEAPON_ITEM_FN: macro x, y, fn
-	db x, y
-	dw fn
-	endm
-inventory_weapon_item_fns:
-	; weapons:
-	WEAPON_ITEM_FN 0, 2, select_weapon0
-	WEAPON_ITEM_FN 1, 2, select_weapon1
-	WEAPON_ITEM_FN 2, 2, select_weapon2
-	WEAPON_ITEM_FN 3, 2, select_weapon3
-	WEAPON_ITEM_FN 0, 3, select_weapon4
-	WEAPON_ITEM_FN 1, 3, select_weapon5
-	WEAPON_ITEM_FN 2, 3, select_weapon6
-	WEAPON_ITEM_FN 3, 3, select_weapon7
-	; boss keys
-	WEAPON_ITEM_FN 4, 1, select_boss_key1
-	WEAPON_ITEM_FN 5, 1, select_boss_key2
-	WEAPON_ITEM_FN 6, 1, select_boss_key3
-	WEAPON_ITEM_FN 7, 1, select_boss_key4
-	; idols
-	WEAPON_ITEM_FN 8, 1, select_power_stone1
-	WEAPON_ITEM_FN 9, 1, select_power_stone2
-	WEAPON_ITEM_FN 4, 2, select_power_stone3
-	WEAPON_ITEM_FN 5, 2, select_power_stone4
-	; color keys
-	WEAPON_ITEM_FN 6, 2, select_color_key1
-	WEAPON_ITEM_FN 7, 2, select_color_key2
-	WEAPON_ITEM_FN 8, 2, select_color_key3
-	WEAPON_ITEM_FN 9, 2, select_color_key4
-	WEAPON_ITEM_FN 4, 3, select_color_key5
-	WEAPON_ITEM_FN 5, 3, select_color_key6
-	; small keys
-	WEAPON_ITEM_FN 6, 3, select_key_small_key
-	; key items
-	WEAPON_ITEM_FN 7, 3, select_key_item1
-	WEAPON_ITEM_FN 8, 3, select_key_item2
-	WEAPON_ITEM_FN 9, 3, select_key_item3
-	WEAPON_ITEM_FN 4, 4, select_key_item4
-	db #ff
-
-select_weapon0:
-	ld a, (player_inventory_weapons + 8)
-	or a
-	jr nz, select_weapon0_upgraded
-	ld c, 0
-select_weapon_generic:  ; c = weapon to select
-	ld a, c
-	ld hl, player_inventory_weapons
-	ADD_HL_A
-	ld a, (hl)
-	or a
-	ret z
-	ld a, c
-	ld (player_current_item), a
-	ld hl, SFX_ui_select
-	jp play_SFX_with_high_priority	
-select_weapon0_upgraded:
-	ld c, 8
-	jr select_weapon_generic
-
-select_weapon1:
-	ld a, (player_inventory_weapons + 9)
-	or a
-	jr nz, select_weapon1_upgraded
-	ld c, 1
-	jr select_weapon_generic
-select_weapon1_upgraded:
-	ld c, 9
-	jr select_weapon_generic
-
-select_weapon2:
-	ld a, (player_inventory_weapons + 10)
-	or a
-	jr nz, select_weapon2_upgraded
-	ld c, 2
-	jr select_weapon_generic
-select_weapon2_upgraded:
-	ld c, 10
-	jr select_weapon_generic
-
-select_weapon3:
-	ld c, 3
-	jr select_weapon_generic
-select_weapon4:
-	ld c, 4
-	jr select_weapon_generic
-select_weapon5:
-	ld c, 5
-	jr select_weapon_generic
-select_weapon6:
-	ld c, 6
-	jr select_weapon_generic
-select_weapon7:
-	ld c, 7
-	jr select_weapon_generic
-
-select_boss_key1:
-	ld hl, player_inventory_items  ; boss key 1
-	ld de, player_inventory_items + 3
-	ld bc, #0e0b  ; 11 and 14 (boss key 1 and 4)
-select_power_stone_generic:
-select_boss_key_generic:
-	ld a, (hl)
-	or a
-	ld a, c
-	jr nz, select_boss_key_generic_continue2
-select_boss_key_generic_continue1:
-	ld a, (de)
-	or a
-	ret z
-	ld a, b
-select_boss_key_generic_continue2:
-	ld (player_current_item), a
-	ld hl, SFX_ui_select
-	jp play_SFX_with_high_priority	
-
-select_boss_key2:
-	ld hl, player_inventory_items + 1
-	ld de, player_inventory_items + 4
-	ld bc, #0f0c  ; 12 and 15 (boss key 2 and 5)
-	jr select_boss_key_generic
-
-select_boss_key3:
-	ld hl, player_inventory_items + 2
-	ld de, player_inventory_items + 5
-	ld bc, #100d  ; 13 and 16 (boss key 3 and 6)
-	jr select_boss_key_generic
-
-select_boss_key4:
-	ld de, player_inventory_items + 6
-	ld b, 17  ; boss key 7
-	jr select_boss_key_generic_continue1
-
-select_power_stone1:
-	ld hl, player_inventory_items + 7 ; power stone 1
-	ld de, player_inventory_items + 10
-	ld bc, #1512  ; 18 and 21 (power stone 1 and 4)
-	jr select_power_stone_generic
-
-select_power_stone2:
-	ld hl, player_inventory_items + 8
-	ld de, player_inventory_items + 11
-	ld bc, #1613  ; 19 and 22 (power stone 2 and 5)
-	jr select_power_stone_generic
-
-select_power_stone3:
-	ld hl, player_inventory_items + 9
-	ld de, player_inventory_items + 12
-	ld bc, #1714  ; 20 and 23 (power stone 3 and 6)
-	jr select_power_stone_generic
-
-select_power_stone4:
-	ld de, player_inventory_items + 13
-	ld b, 24  ; power stone 7 (prism)
-	jr select_boss_key_generic_continue1
-
-select_color_key1:
-	ld de, player_inventory_items + 14
-	ld b, 25
-	jr select_boss_key_generic_continue1
-
-select_color_key2:
-	ld de, player_inventory_items + 15
-	ld b, 26
-	jr select_boss_key_generic_continue1
-
-select_color_key3:
-	ld de, player_inventory_items + 16
-	ld b, 27
-	jr select_boss_key_generic_continue1
-
-select_color_key4:
-	ld de, player_inventory_items + 17
-	ld b, 28
-	jr select_boss_key_generic_continue1
-
-select_color_key5:
-	ld de, player_inventory_items + 18
-	ld b, 29
-	jr select_boss_key_generic_continue1
-
-select_color_key6:
-	ld de, player_inventory_items + 19
-	ld b, 30
-	jr select_boss_key_generic_continue1
-
-select_key_small_key:
-	ld de, player_inventory_items + 20
-	ld b, 31
-	jp select_boss_key_generic_continue1
-
-select_key_item1:
-	ld de, player_inventory_items + 21
-	ld b, 32
-	jp select_boss_key_generic_continue1
-
-select_key_item2:
-	ld de, player_inventory_items + 22
-	ld b, 33
-	jp select_boss_key_generic_continue1
-
-select_key_item3:
-	ld de, player_inventory_items + 23
-	ld b, 34
-	jp select_boss_key_generic_continue1
-
-select_key_item4:
-	ld de, player_inventory_items + 24
-	ld b, 35
-	jp select_boss_key_generic_continue1
-
-
-;-----------------------------------------------
-inventory_item_positions:
-	db 0, 1, 2  ; first 3 boss keys
-	db 0, 1, 2, 3  ; last 4 boss keys
-	db 4, 5, 6  ; first 3 power stones
-	db 4, 5, 6, 7  ; last 3 boss power stones + place holder for something
-	db 8, 9, 10, 11, 12, 13  ; color keys
-	db 14  ; small keys
-	db 15, 16, 17, 18  ; key items (21 - 24)
-	db 19, 20, 21, 22, 23, 24  ; maya upgrade items (25 - 30)
-	db 25, 26  ; alien upgrade items (31, 32)
-	db 27, 28  ; elaine letters (33, 34, 35)
-	db 29  ; map (36)
-	db 6  ; half stone (turns into 6th power stone when picking up the second half)
-	db 2, 3  ; puzzle boxes
-inventory_item_positions_end:
-
-inventory_item_gfx:
-	db 96, 97, 128, 129  ; boss key 1
-	db 98, 99, 130, 131  ; boss key 2
-	db 100, 101, 132, 133  ; boss key 3
-	db 102, 103, 134, 135  ; boss key 4
-	db 104, 105, 136, 137  ; boss key 5
-	db 106, 107, 138, 139  ; boss key 6
-	db 108, 109, 140, 141  ; boss key 7
-	db 110, 111, 142, 143  ; boss power stone 1
-	db 110, 111, 142, 143  ; boss power stone 2
-	db 110, 111, 160, 161  ; boss power stone 3
-	db 110, 111, 142, 143  ; boss power stone 4
-	db 110, 111, 142, 143  ; boss power stone 5
-	db 110, 111, 160, 161  ; boss power stone 6
-	db 110, 111, 160, 161  ; boss power stone 7
-	db 112, 113, 80, 81  ; red key
-	db 114, 115, 82, 83  ; green key
-	db 116, 117, 84, 85  ; blue key
-	db 118, 119, 86, 87  ; yellow key
-	db 56, 57, 88, 89  ; purple key
-	db 58, 59, 90, 91  ; white key
-	db 138, 139, 170, 171  ; small keys
-	db 36, 37, 68, 69  ; ball
-	db 38, 39, 70, 71  ; idol
-	db 34, 35, 66, 67  ; gear	
-	db 32, 33, 64, 65  ; clay suit
-	db 40, 41, 72, 73  ; sandals
-	db 42, 43, 74, 75  ; gloves
-	db 44, 45, 76, 77  ; hurakán blessing
-	db 46, 47, 78, 79  ; cotton armor
-	db 60, 61, 92, 93  ; chaac blessing
-	db 18, 19, 50, 51  ; seashell
-	db 20, 21, 52, 53  ; antigrav-belt
-	db 22, 23, 54, 55  ; ice cape
-	db 24, 25, 56, 57  ; letter 1
-	db 26, 27, 58, 59  ; letter 2
-	; db 28, 29, 60, 61  ; letter 3
-	db 30, 31, 62, 63  ; map
-	db 0, 0, 160, 161  ; half power stone
-	db 174, 175, 176, 177  ; puzzlebox
-	db 174, 175, 176, 177  ; puzzlebox
-inventory_item_gfx_end:
-
-inventory_weapon_positions:
-	db 0, 1, 2, 3  ; base weapons
-	db 4, 5, 6, 7  ; ranged
-	db 0, 1, 2, 3  ; base upgraded
-
-inventory_weapon_gfx:
-	db 160, 161, 24, 25  ; machete
-	db 162, 163, 26, 27  ; hammer
-	db 164, 165, 28, 29  ; macuahuitl
-	db 166, 167, 30, 31  ; shield
-	db 130, 131, 162, 163  ; sling
-	db 132, 133, 164, 165  ; blowgun
-	db 134, 135, 166, 167  ; atlatl
-	db 136, 137, 168, 169  ; raygun
-	db 168, 169, 192, 193  ; obsidian machete
-	db 170, 171, 194, 195  ; fire hammer
-	db 172, 173, 196, 197  ; ice macuahuitl
-
 inventory_sprites:
 	incbin "autogenerated/inventory-sprites.bin"
 inventory_sprites_end:
 
 
-inventory_selected_weapon_sprites:
+; IF (inventory_item_positions_end - inventory_item_positions) != N_INVENTORY_ITEM_TYPES
+; 	ERROR "number of entries in inventory_item_positions is not N_INVENTORY_ITEM_TYPES"
+; ENDIF
+
+; IF (inventory_item_gfx_end - inventory_item_gfx)/4 != N_INVENTORY_ITEM_TYPES
+; 	ERROR "number of entries in inventory_item_gfx is not N_INVENTORY_ITEM_TYPES"
+; ENDIF
+
+
+; equipable: 
+; - 0: no
+; - 1: weapon first row
+; - 2: weapon second row
+; - 3: item
+INVENTORY_ITEM_FN: macro index, x, y, equipable, gfx1, gfx2, gfx3, gfx4, highlightptr, textptr, fnptr
+	db index, x, y, equipable, gfx1, gfx2, gfx3, gfx4
+	dw highlightptr, textptr, fnptr
+	endm
+inventory_table:
 	; weapons:
-	db 71, 8, 28, COLOR_WHITE
-	db 71, 32, 28, COLOR_WHITE
-	db 71, 56, 28, COLOR_WHITE
-	db 71, 80, 28, COLOR_WHITE
-	db 72, 8, 32, COLOR_WHITE
-	db 72, 32, 32, COLOR_WHITE
-	db 72, 56, 32, COLOR_WHITE
-	db 72, 80, 32, COLOR_WHITE
-	db 71, 8, 28, COLOR_WHITE
-	db 71, 32, 28, COLOR_WHITE
-	db 71, 56, 28, COLOR_WHITE
+	INVENTORY_ITEM_FN  0,  0, 2,  1,  160, 161, 24, 25,  0, TEXT_WEAPON_MACHETE,  0
+	INVENTORY_ITEM_FN  1,  1, 2,  1,  162, 163, 26, 27,  draw_inventory_weapons_hammer_sprite, TEXT_WEAPON_HAMMER,  0
+	INVENTORY_ITEM_FN  2,  2, 2,  1,  164, 165, 28, 29,  draw_inventory_weapons_ice_macuahuitl_sprite, TEXT_WEAPON_MACUAHUITL,  0
+	INVENTORY_ITEM_FN  3,  3, 2,  1,  166, 167, 30, 31,  0, TEXT_WEAPON_SHIELD,  0
+	INVENTORY_ITEM_FN  4,  0, 3,  2,  130, 131, 162, 163,  0, TEXT_WEAPON_SLING,  0
+	INVENTORY_ITEM_FN  5,  1, 3,  2,  132, 133, 164, 165,  draw_inventory_weapons_blowgun_sprite, TEXT_WEAPON_BLOWGUN,  0
+	INVENTORY_ITEM_FN  6,  2, 3,  2,  134, 135, 166, 167,  0, TEXT_WEAPON_ATLATL,  0
+	INVENTORY_ITEM_FN  7,  3, 3,  2,  136, 137, 168, 169,  0, TEXT_WEAPON_RAYGUN,  0
+	INVENTORY_ITEM_FN  8,  0, 2,  1,  168, 169, 192, 193,  0, TEXT_WEAPON_OBSIDIAN_KNIVE,  0
+	INVENTORY_ITEM_FN  9,  1, 2,  1,  170, 171, 194, 195,  draw_inventory_weapons_fire_hammer_sprite, TEXT_WEAPON_FIRE_HAMMER,  0
+	INVENTORY_ITEM_FN 10,  2, 2,  1,  172, 173, 196, 197,  draw_inventory_weapons_ice_macuahuitl_sprite, TEXT_WEAPON_ICE_MACUAHUITL,  0
 	; boss keys:
-	db 47, 112, 28, COLOR_WHITE
-	db 47, 136, 28, COLOR_WHITE
-	db 47, 160, 28, COLOR_WHITE
-	db 47, 112, 28, COLOR_WHITE
-	db 47, 136, 28, COLOR_WHITE
-	db 47, 160, 28, COLOR_WHITE
-	db 47, 184, 28, COLOR_WHITE
+	INVENTORY_ITEM_FN 11,   4, 1,  3,  96, 97, 128, 129,  0, TEXT_ITEM_BOSS_KEY,  0
+	INVENTORY_ITEM_FN 12,   5, 1,  3,  98, 99, 130, 131,  0, TEXT_ITEM_BOSS_KEY,  0
+	INVENTORY_ITEM_FN 13,   6, 1,  3,  100, 101, 132, 133,  0, TEXT_ITEM_BOSS_KEY,  0
+	INVENTORY_ITEM_FN 14,   7, 1,  3,  102, 103, 134, 135,  0, TEXT_ITEM_BOSS_KEY,  0
+	INVENTORY_ITEM_FN 15,   8, 1,  3,  104, 105, 136, 137,  0, TEXT_ITEM_BOSS_KEY,  0
+	INVENTORY_ITEM_FN 16,   9, 1,  3,  106, 107, 138, 139,  0, TEXT_ITEM_BOSS_KEY,  0
+	INVENTORY_ITEM_FN 17,   4, 2,  3,  108, 109, 172, 173,  0, TEXT_ITEM_BOSS_KEY,  0
 	; power stones:
-	db 47, 208, 28, COLOR_WHITE
-	db 47, 232, 28, COLOR_WHITE
-	db 71, 112, 28, COLOR_WHITE
-	db 47, 208, 28, COLOR_WHITE
-	db 48, 232, 28, COLOR_WHITE
-	db 71, 112, 28, COLOR_WHITE
-	db 71, 136, 28, COLOR_WHITE
-	; color keys:
-	db 71, 160, 28, COLOR_WHITE
-	db 71, 184, 28, COLOR_WHITE
-	db 71, 208, 28, COLOR_WHITE
-	db 71, 232, 28, COLOR_WHITE
-	db 95, 112, 28, COLOR_WHITE
-	db 95, 136, 28, COLOR_WHITE
-	; small keys:
-	db 95, 160, 28, COLOR_WHITE
-	; key items:
-	db 95, 184, 28, COLOR_WHITE
-	db 95, 208, 28, COLOR_WHITE
-	db 95, 232, 28, COLOR_WHITE
-	db 119, 112, 28, COLOR_WHITE
-
-
-inventory_weapon_texts:
-	dw TEXT_WEAPON_MACHETE, TEXT_WEAPON_HAMMER, TEXT_WEAPON_MACUAHUITL, TEXT_WEAPON_SHIELD
-	dw TEXT_WEAPON_SLING, TEXT_WEAPON_BLOWGUN, TEXT_WEAPON_ATLATL, TEXT_WEAPON_RAYGUN
-	dw TEXT_WEAPON_OBSIDIAN_KNIVE, TEXT_WEAPON_FIRE_HAMMER, TEXT_WEAPON_ICE_MACUAHUITL
-
-inventory_item_texts:
-	dw TEXT_ITEM_BOSS_KEY, TEXT_ITEM_BOSS_KEY, TEXT_ITEM_BOSS_KEY, TEXT_ITEM_BOSS_KEY
-	dw TEXT_ITEM_BOSS_KEY, TEXT_ITEM_BOSS_KEY, TEXT_ITEM_BOSS_KEY
-	dw TEXT_ITEM_BOSS_POWER_STONE, TEXT_ITEM_BOSS_POWER_STONE, TEXT_ITEM_BOSS_POWER_STONE, TEXT_ITEM_BOSS_POWER_STONE
-	dw TEXT_ITEM_BOSS_POWER_STONE, TEXT_ITEM_BOSS_POWER_STONE, TEXT_ITEM_BOSS_POWER_STONE
-	dw TEXT_ITEM_RED_KEY, TEXT_ITEM_GREEN_KEY, TEXT_ITEM_BLUE_KEY, TEXT_ITEM_YELLOW_KEY
-	dw TEXT_ITEM_WHITE_KEY, TEXT_ITEM_PURPLE_KEY, TEXT_ITEM_SMALL_KEYS
-	dw TEXT_ITEM_BALL, TEXT_ITEM_IDOL, TEXT_ITEM_GEAR, TEXT_ITEM_CLAY_SUIT
-	dw TEXT_ITEM_SANDALS, TEXT_ITEM_GLOVES, TEXT_ITEM_WARRIOR_HAT, TEXT_ITEM_COTTON_ARMOR
-	dw TEXT_ITEM_CHAAC_BLESSING, TEXT_ITEM_SEASHELL, TEXT_ITEM_BELT, TEXT_ITEM_ICE_CAPE
-	dw TEXT_ITEM_LETTER1, TEXT_ITEM_LETTER2
-	dw TEXT_ITEM_MAP
-	dw TEXT_ITEM_HALF_POWER_STONE
-	dw TEXT_ITEM_PUZZLEBOX, TEXT_ITEM_PUZZLEBOX
-
-
-IF (inventory_item_positions_end - inventory_item_positions) != N_INVENTORY_ITEM_TYPES
-	ERROR "number of entries in inventory_item_positions is not N_INVENTORY_ITEM_TYPES"
-ENDIF
-
-IF (inventory_item_gfx_end - inventory_item_gfx)/4 != N_INVENTORY_ITEM_TYPES
-	ERROR "number of entries in inventory_item_gfx is not N_INVENTORY_ITEM_TYPES"
-ENDIF
+	INVENTORY_ITEM_FN 18,   4, 1,  3,  110, 111, 142, 143,  0, TEXT_ITEM_BOSS_POWER_STONE,  state_inventory_update_cursor_interact_power_stone1
+	INVENTORY_ITEM_FN 19,   5, 1,  3,  110, 111, 142, 143,  0, TEXT_ITEM_BOSS_POWER_STONE,  state_inventory_update_cursor_interact_power_stone2
+	INVENTORY_ITEM_FN 20,   6, 1,  3,  110, 111, 142, 143,  0, TEXT_ITEM_BOSS_POWER_STONE,  state_inventory_update_cursor_interact_power_stone3
+	INVENTORY_ITEM_FN 21,   7, 1,  3,  110, 111, 142, 143,  0, TEXT_ITEM_BOSS_POWER_STONE,  state_inventory_update_cursor_interact_power_stone4
+	INVENTORY_ITEM_FN 22,   8, 1,  3,  110, 111, 142, 143,  0, TEXT_ITEM_BOSS_POWER_STONE,  state_inventory_update_cursor_interact_power_stone5
+	INVENTORY_ITEM_FN 23,   9, 1,  3,  110, 111, 142, 143,  0, TEXT_ITEM_BOSS_POWER_STONE,  state_inventory_update_cursor_interact_power_stone6
+	; color keys, small keys, key items:
+	INVENTORY_ITEM_FN 24,   6, 2,  3,  112, 113, 80, 81,  0, TEXT_ITEM_RED_KEY,  0
+	INVENTORY_ITEM_FN 25,   7, 2,  3,  114, 115, 82, 83,  0, TEXT_ITEM_GREEN_KEY,  0
+	INVENTORY_ITEM_FN 26,   8, 2,  3,  116, 117, 84, 85,  0, TEXT_ITEM_BLUE_KEY,  0
+	INVENTORY_ITEM_FN 27,   9, 2,  3,  118, 119, 86, 87,  0, TEXT_ITEM_YELLOW_KEY,  0
+	INVENTORY_ITEM_FN 28,   4, 3,  3,  56, 57, 88, 89,  0, TEXT_ITEM_WHITE_KEY,  0
+	INVENTORY_ITEM_FN 29,   5, 3,  3,  58, 59, 90, 91,  0, TEXT_ITEM_PURPLE_KEY,  0
+	INVENTORY_ITEM_FN 30,   6, 3,  3,  138, 139, 170, 171,  draw_inventory_small_keys, TEXT_ITEM_SMALL_KEYS,  0
+	INVENTORY_ITEM_FN 31,   7, 3,  3,  36, 37, 68, 69,  0, TEXT_ITEM_BALL,  0
+	INVENTORY_ITEM_FN 32,   8, 3,  3,  38, 39, 70, 71,  0, TEXT_ITEM_IDOL,  0
+	INVENTORY_ITEM_FN 33,   9, 3,  3,  34, 35, 66, 67,  0, TEXT_ITEM_GEAR,  0
+	INVENTORY_ITEM_FN 34,   4, 4,  3,  32, 33, 64, 65,  0, TEXT_ITEM_CLAY_SUIT,  0
+	; upgrade items
+	INVENTORY_ITEM_FN 35,   5, 4,  0,  40, 41, 72, 73,  0, TEXT_ITEM_SANDALS,  0
+	INVENTORY_ITEM_FN 36,   6, 4,  0,  42, 43, 74, 75,  0, TEXT_ITEM_GLOVES,  0
+	INVENTORY_ITEM_FN 37,   7, 4,  0,  44, 45, 76, 77,  0, TEXT_ITEM_WARRIOR_HAT,  0
+	INVENTORY_ITEM_FN 38,   8, 4,  0,  46, 47, 78, 79,  0, TEXT_ITEM_COTTON_ARMOR,  0
+	INVENTORY_ITEM_FN 39,   9, 4,  0,  60, 61, 92, 93,  0, TEXT_ITEM_CHAAC_BLESSING,  0
+	INVENTORY_ITEM_FN 40,   4, 5,  0,  18, 19, 50, 51,  0, TEXT_ITEM_SEASHELL,  0
+	INVENTORY_ITEM_FN 41,   5, 5,  0,  20, 21, 52, 53,  0, TEXT_ITEM_BELT,  0
+	INVENTORY_ITEM_FN 42,   6, 5,  0,  22, 23, 54, 55,  0, TEXT_ITEM_ICE_CAPE,  0
+	; special items
+	INVENTORY_ITEM_FN 43,   7, 5,  0,  24, 25, 56, 57,  0, TEXT_ITEM_LETTER1,  state_inventory_update_cursor_interact_letter1
+	INVENTORY_ITEM_FN 44,   8, 5,  0,  26, 27, 58, 59,  0, TEXT_ITEM_LETTER2,  state_inventory_update_cursor_interact_letter2
+	INVENTORY_ITEM_FN 45,   9, 5,  0,  30, 31, 62, 63,  0, TEXT_ITEM_MAP,  state_inventory_update_cursor_interact_map
+	INVENTORY_ITEM_FN 46,   9, 1,  0,  0, 0, 142, 143,  0, TEXT_ITEM_HALF_POWER_STONE,  0
+	INVENTORY_ITEM_FN 47,   4, 2,  0,  0, 0, 142, 143,  0, TEXT_ITEM_HALF_POWER_STONE,  0
+	INVENTORY_ITEM_FN 48,   9, 1,  0,  174, 175, 176, 177,  0, TEXT_ITEM_PUZZLEBOX,  state_inventory_update_cursor_interact_puzzlebox1
+	INVENTORY_ITEM_FN 49,   4, 2,  0,  174, 175, 140, 141,  0, TEXT_ITEM_PUZZLEBOX,  state_inventory_update_cursor_interact_puzzlebox2
+	db #ff  ; sentinel
 

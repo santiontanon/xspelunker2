@@ -264,7 +264,7 @@ ENEMY_FIRE_IMP2: equ ENEMY_SNAKE + 26
 ENEMY_FIREBALL: equ ENEMY_SNAKE + 27
 
 ; - 7 boss keys
-; - 7 boss power stones (6 power stones + central prism)
+; - 6 boss power stones
 ; - 6 color keys
 ; - 1 small key
 ; - 4 key items (ball, idol, gear, clay doll)
@@ -272,11 +272,18 @@ ENEMY_FIREBALL: equ ENEMY_SNAKE + 27
 ; - 2 alien upgrade items
 ; - 2 elaine letters
 ; - 1 map
-; - 1 half stone
+; - 2 half stones
 ; - 2 puzzle boxes
-N_INVENTORY_ITEM_TYPES: equ 7 + 7 + 6 + 1 + 4 + 6 + 2 + 2 + 1 + 1 + 2  ; 39
+N_INVENTORY_ITEM_TYPES: equ 7 + 6 + 6 + 1 + 4 + 6 + 2 + 2 + 1 + 2 + 2  ; 39
 N_INVENTORY_WEAPON_TYPES: equ 4 + 4 + 3  ; 4 base, 4 ranged, 3 upgrades
-INVENTORY_ITEM_SANDALS: equ 7 + 7 + 6 + 1 + 4
+INVENTORY_ITEM_POWER_STONE1: equ 7
+INVENTORY_ITEM_COLOR_KEY1: equ 7 + 6
+INVENTORY_ITEM_SMALL_KEY: equ 7 + 6 + 6
+INVENTORY_ITEM_BALL: equ 7 + 6 + 6 + 1
+INVENTORY_ITEM_IDOL: equ 7 + 6 + 6 + 1 + 1
+INVENTORY_ITEM_GEAR: equ 7 + 6 + 6 + 1 + 2
+INVENTORY_ITEM_CLAY_DOLL: equ 7 + 6 + 6 + 1 + 3
+INVENTORY_ITEM_SANDALS: equ 7 + 6 + 6 + 1 + 4
 INVENTORY_ITEM_GLOVES: equ INVENTORY_ITEM_SANDALS + 1
 INVENTORY_ITEM_WARRIOR_HAT: equ INVENTORY_ITEM_SANDALS + 2
 INVENTORY_ITEM_COTTON_ARMOR: equ INVENTORY_ITEM_SANDALS + 3
@@ -284,9 +291,12 @@ INVENTORY_ITEM_CHAAC_BLESSING: equ INVENTORY_ITEM_SANDALS + 4
 INVENTORY_ITEM_SEASHELL: equ INVENTORY_ITEM_SANDALS + 5
 INVENTORY_ITEM_ANTIGRAV_BELT: equ INVENTORY_ITEM_SANDALS + 6
 INVENTORY_ITEM_ICE_CAPE: equ INVENTORY_ITEM_SANDALS + 7
-INVENTORY_ITEM_HALF_POWER_STONE: equ 7 + 7 + 6 + 1 + 4 + 6 + 2 + 2 + 1
-INVENTORY_ITEM_PUZZLEBOX_MARS: equ 7 + 7 + 6 + 1 + 4 + 6 + 2 + 2 + 1 + 1
-INVENTORY_ITEM_PUZZLEBOX_MOON: equ 7 + 7 + 6 + 1 + 4 + 6 + 2 + 2 + 1 + 1 + 1
+INVENTORY_ITEM_LETTER1: equ 7 + 6 + 6 + 1 + 4 + 6 + 2  ; 32
+INVENTORY_ITEM_LETTER2: equ 7 + 6 + 6 + 1 + 4 + 6 + 2 + 1  ; 33
+INVENTORY_ITEM_HALF_POWER_STONE1: equ 7 + 6 + 6 + 1 + 4 + 6 + 2 + 2 + 1
+INVENTORY_ITEM_HALF_POWER_STONE2: equ 7 + 6 + 6 + 1 + 4 + 6 + 2 + 2 + 1 + 1
+INVENTORY_ITEM_PUZZLEBOX_MARS: equ 7 + 6 + 6 + 1 + 4 + 6 + 2 + 2 + 1 + 2
+INVENTORY_ITEM_PUZZLEBOX_MOON: equ 7 + 6 + 6 + 1 + 4 + 6 + 2 + 2 + 1 + 2 + 1
 
 ; - initial piece just has: jungle + first pyramid, then one piece for each of the rest
 ; N_MAP_PIECES: equ 9

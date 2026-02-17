@@ -66,7 +66,7 @@ object_interaction_function_shopkeeper_internal_letter1:
 	call state_play_upload_object_tiles_to_vdp_if_necessary
 	; gain letter:
 	ld a, 1
-	ld (player_inventory_items+33), a
+	ld (player_inventory_items + INVENTORY_ITEM_LETTER1), a
 	ld a, STORY_STATE__GOT_LETTER1
 	ld (global_state__story), a
 
@@ -129,7 +129,7 @@ object_interaction_function_shopkeeper_internal_letter2:
 	call state_play_upload_object_tiles_to_vdp_if_necessary
 	; gain letter:
 	ld a, 1
-	ld (player_inventory_items + 34), a
+	ld (player_inventory_items + INVENTORY_ITEM_LETTER2), a
 	ld a, STORY_STATE__GOT_LETTER2
 	ld (global_state__story), a
 
@@ -607,7 +607,7 @@ shop_update_cursor_select_extra_object:
 
 shop_update_cursor_select_extra_object_not_weapon:
 	sub TAG_ITEM_SANDALS
-	ld hl, player_inventory_items + 25
+	ld hl, player_inventory_items + INVENTORY_ITEM_SANDALS
 	ADD_HL_A
 	ld a, (hl)
 	or a

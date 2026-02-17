@@ -1345,7 +1345,7 @@ object_interaction_function_pickup_small_key:
 
 	ld hl, player_inventory_n_small_keys
 	inc (hl)
-	ld hl, player_inventory_items + 20  ; small key
+	ld hl, player_inventory_items + INVENTORY_ITEM_SMALL_KEY  ; small key
 	ld (hl), 1
 	jr object_interaction_function_pickup_small_key_continue
 
@@ -1412,7 +1412,7 @@ object_interaction_function_chest:
 	sub 25  ; position of the first color key
 	ld b, 0
 	ld c, a
-	ld hl, player_inventory_items + 14
+	ld hl, player_inventory_items + INVENTORY_ITEM_COLOR_KEY1
 	add hl, bc  ; key location
 	ld (hl), 0
 	jp object_interaction_function_small_chest_continue
@@ -1433,7 +1433,7 @@ object_interaction_function_small_chest:
 	ld a, (hl)
 	or a
 	jr nz, object_interaction_function_small_chest_continue
-	ld hl, player_inventory_items + 20  ; small key location
+	ld hl, player_inventory_items + INVENTORY_ITEM_SMALL_KEY  ; small key location
 	ld (hl), 0
 object_interaction_function_small_chest_continue:
 	; update chest state:
@@ -1511,7 +1511,7 @@ object_interaction_function_open_small_lock:
 	sub 25  ; position of the first color key
 	ld b, 0
 	ld c, a
-	ld hl, player_inventory_items + 14
+	ld hl, player_inventory_items + INVENTORY_ITEM_COLOR_KEY1
 	add hl, bc  ; key location
 	ld (hl), 0
 
@@ -1619,42 +1619,42 @@ room_maybe_spawn_ladder_after_opening_door_or_wall__inter_area_connection:
 
 ;-----------------------------------------------
 object_interaction_function_open_ball_lock:
-	ld a, 11 + 21  ; ball
+	ld a, N_INVENTORY_WEAPON_TYPES + INVENTORY_ITEM_BALL  ; ball
 	ld hl, player_current_item
 	cp (hl)
 	jp nz, object_interaction_function_item_use_fail
 	ld (hl), 0  ; machete
-	ld hl, player_inventory_items + 21  ; ball
+	ld hl, player_inventory_items + INVENTORY_ITEM_BALL  ; ball
 	ld (hl), 0
 	jp object_interaction_function_open_small_lock_entry_point
 
 object_interaction_function_open_idol_lock:
-	ld a, 11 + 22  ; idol
+	ld a, N_INVENTORY_WEAPON_TYPES + INVENTORY_ITEM_IDOL  ; idol
 	ld hl, player_current_item
 	cp (hl)
 	jp nz, object_interaction_function_item_use_fail
 	ld (hl), 0  ; machete
-	ld hl, player_inventory_items + 22  ; idol
+	ld hl, player_inventory_items + INVENTORY_ITEM_IDOL  ; idol
 	ld (hl), 0
 	jp object_interaction_function_open_small_lock_entry_point
 
 object_interaction_function_open_gear_lock:
-	ld a, 11 + 23  ; gear
+	ld a, N_INVENTORY_WEAPON_TYPES + INVENTORY_ITEM_GEAR  ; gear
 	ld hl, player_current_item
 	cp (hl)
 	jp nz, object_interaction_function_item_use_fail
 	ld (hl), 0  ; machete
-	ld hl, player_inventory_items + 23  ; gear
+	ld hl, player_inventory_items + INVENTORY_ITEM_GEAR  ; gear
 	ld (hl), 0
 	jp object_interaction_function_open_small_lock_entry_point
 
 object_interaction_function_open_astronaut_lock:
-	ld a, 11 + 24  ; astronaut
+	ld a, N_INVENTORY_WEAPON_TYPES + INVENTORY_ITEM_CLAY_DOLL  ; astronaut
 	ld hl, player_current_item
 	cp (hl)
 	jp nz, object_interaction_function_item_use_fail
 	ld (hl), 0  ; machete
-	ld hl, player_inventory_items + 24  ; astronaut
+	ld hl, player_inventory_items + INVENTORY_ITEM_CLAY_DOLL  ; astronaut
 	ld (hl), 0
 	jp object_interaction_function_open_small_lock_entry_point
 
@@ -1945,7 +1945,7 @@ object_interaction_function_calendar_socket_empty:
 object_interaction_function_calendar_socket_try_to_place:
 	; try to place stone:
 	ld a, (player_current_item)
-	sub 11 + 7  ; first power stone (11 weapons + 7 boss keys)
+	sub N_INVENTORY_WEAPON_TYPES + 7  ; first power stone (11 weapons + 7 boss keys)
 	jr c, object_interaction_function_calendar_socket_incorrect_item
 	cp 6
 	jr nc, object_interaction_function_calendar_socket_incorrect_item
@@ -1962,7 +1962,7 @@ object_interaction_function_calendar_socket_try_to_place:
 	ld hl, player_current_item
 	ld a, (player_current_item)
 	ld (hl), 0  ; machete
-	sub 11
+	sub N_INVENTORY_WEAPON_TYPES
 	ld c, a
 	ld b, 0
 	ld hl, player_inventory_items

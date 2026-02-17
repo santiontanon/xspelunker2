@@ -67,7 +67,9 @@ state_yesno_dialog_in_game:
 			ld de, SPRTBL2
 			ld bc, dialog_sprites_bin_end - dialog_sprites_bin
 			call fast_LDIRVM_from_sprites_page		
-			call display_in_game_message_draw_box
+			ld c, TEXT_PAGE
+			ld hl, display_in_game_message_draw_box
+			call call_hl_in_page_c_8000
 		pop hl
 
 		ld de, CHRTBL2 + (12*32+8)*8

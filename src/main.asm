@@ -11,7 +11,7 @@ stack_size: equ 128
 ; pages:
 ; 0: #4000 - #7fff: core code
 ; 1: #8000 - #bfff: pcg code (area, room)
-; 2: #8000 - #bfff: tile gfx, pyramid tiles
+; 2: #8000 - #bfff: tile gfx, pyramid tiles, in-game message
 ; 3: #8000 - #bfff: sprites, map, additional tiles, enemy tiles
 ; 4: #8000 - #bfff: jungle, pyramid chunks
 ; 5: #8000 - #bfff: text, additional states code (gameover, options, dialog, etc.)
@@ -277,6 +277,16 @@ draw_sentence_to_vdp_from_another_page:
     include "state-play.asm"
 
 end_of_code:
+
+
+in_game_message_tiles:
+    ds 32, 97
+    ds 32, 96
+REPT 4*32, V
+    db V+128
+ENDR
+    ds 32, 96
+    ds 32, 97
 
 
 current_world__name_rom:

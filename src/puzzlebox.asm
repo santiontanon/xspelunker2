@@ -276,26 +276,32 @@ puzzlebox_state2_fire_solved:
 	call wait_for_click
 
 	; check if it's the first or second half stone:
-	ld a, (player_inventory_items+36)  ; do we have a half stone?
+	ld a, (player_inventory_items + INVENTORY_ITEM_HALF_POWER_STONE1)  ; do we have a half stone?
+	or a
+	jr nz, puzzlebox_state2_fire_solved_second
+	ld a, (player_inventory_items + INVENTORY_ITEM_HALF_POWER_STONE2)  ; do we have a half stone?
 	or a
 	jr z, puzzlebox_state2_fire_solved_first
+puzzlebox_state2_fire_solved_second:
 	; second half stone:
 	ld de, TEXT_FOUND_SECOND_HALF_POWER_STONE
 	ld hl, display_in_game_message_internal
 	ld c, TEXT_PAGE
 	call call_hl_in_page_c_8000
 
-	; drop puzzlebox, and half-power stone, and gain 6th power stone:
+	; drop puzzlebox, and half-power stones, and gain 6th power stone:
 	xor a
+	ld (player_inventory_items+INVENTORY_ITEM_HALF_POWER_STONE1), a
+	ld (player_inventory_items+INVENTORY_ITEM_HALF_POWER_STONE2), a
 	ld (player_inventory_items+INVENTORY_ITEM_PUZZLEBOX_MARS), a
 	ld (player_inventory_items+INVENTORY_ITEM_PUZZLEBOX_MOON), a
-	ld (player_inventory_items+36), a
 	inc a
-	ld (player_inventory_items+12), a  ; sixth stone
+	ld (player_inventory_items + INVENTORY_ITEM_POWER_STONE1 + 5), a  ; sixth stone
 	jp puzzlebox_return
 
 puzzlebox_state2_fire_solved_first:
 	; first half stone:
+	; drop puzzlebox, and gain half-power stone:
 	push ix
 		ld de, TEXT_FOUND_HALF_POWER_STONE
 		ld hl, display_in_game_message_internal
@@ -310,15 +316,15 @@ puzzlebox_state2_fire_solved_first:
 	; moon:
 	xor a
 	ld (player_inventory_items+INVENTORY_ITEM_PUZZLEBOX_MOON), a
+	inc a
+	ld (player_inventory_items+INVENTORY_ITEM_HALF_POWER_STONE2), a	
 	jr puzzlebox_state2_fire_solved_first_continue
 puzzlebox_state2_fire_solved_first_mars:
 	xor a
-	ld (player_inventory_items+INVENTORY_ITEM_PUZZLEBOX_MARS), a
-puzzlebox_state2_fire_solved_first_continue:
-
-	; drop puzzlebox, and gain half-power stone:
+	ld (player_inventory_items + INVENTORY_ITEM_PUZZLEBOX_MARS), a
 	inc a
-	ld (player_inventory_items+36), a
+	ld (player_inventory_items + INVENTORY_ITEM_HALF_POWER_STONE1), a	
+puzzlebox_state2_fire_solved_first_continue:
 	jp puzzlebox_return
 
 

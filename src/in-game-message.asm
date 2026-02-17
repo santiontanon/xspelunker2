@@ -1,15 +1,6 @@
 in_game_message_border_tile_attributes:
 	db #00, #00, #00, #ff, #ff, #00, #00, #00
 
-in_game_message_tiles:
-	ds 32, 97
-	ds 32, 96
-REPT 4*32, V
-	db V+128
-ENDR
-	ds 32, 96
-	ds 32, 97
-
 
 ;-----------------------------------------------
 ; input:
