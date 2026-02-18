@@ -73,7 +73,7 @@ state_play:
 ; 		ld (player_inventory_items), a  ; first boss key
 ; 		ld (player_inventory_items+1), a  ; second boss key
 ; 		ld (player_inventory_items+2), a  ; third boss key
-		ld (player_inventory_items+3), a  ; fourth boss key
+; 		ld (player_inventory_items+3), a  ; fourth boss key
 ; 		ld (player_inventory_items+4), a
 ; 		ld (player_inventory_items+5), a  ; mars boss key
 ; 		ld (player_inventory_items+6), a  ; moon boss key
@@ -194,10 +194,10 @@ state_play_from_continue:
 
 		; generate room:
 		ld e, START_ROOM_ID
-; 		ld e, 15
+; 		ld e, 5
 ; 		ld e, 20  ; <- first boss
 ; 		ld e, 16  ; <- second boss
-; 		ld e, 4
+; 		ld e, 0
 ; 		ld e, CALENDAR_ROOM_ID
 ; 		ld e, 3  ; <- third boss
 ; 		ld e, 17  ; <- fourth boss

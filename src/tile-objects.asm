@@ -771,6 +771,7 @@ room_undraw_tile_objects_loop:
 		ld bc, ROOM_TILE_OBJECT_STRUCT_BACKGROUND
 		add iy, bc
 		call room_undraw_tile_objects_restore_background  ; type 0: we had saved the background
+		jr room_undraw_tile_objects_loop_continue
 room_undraw_tile_objects_loop_continue2:
 		dec a
 		jr z, room_undraw_tile_objects_delete_object  ; type 1: we just replace with 0s
@@ -1233,7 +1234,7 @@ object_interaction_inventory_slot:
 	db #ff, #ff, #ff, #ff  ; special locks: 27
 	db #ff, #ff, #ff, #ff, #ff, #ff  ; start, ending, midpoint, teleporters: 31
 	db #ff, #ff, #ff, #ff  ; buttons: 37
-	db 14, 15, 16, 17, 18, 19  ; color keys: 41
+	db 13, 14, 15, 16, 17, 18  ; color keys: 41
 	db #ff, #ff, #ff, #ff, #ff, #ff  ; color chests: 47
 	db #ff, #ff, #ff, #ff  ; trial clues: 53
 	db #ff, #ff, #ff, #ff  ; combination clues: 57
