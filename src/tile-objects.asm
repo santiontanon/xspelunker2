@@ -615,43 +615,45 @@ room_render_tile_objects_render_loop_x:
 room_render_tile_objects_render_v_door:
 	inc hl
 	ld c, (hl)  ; x
-	ld ixl, c
+	ld iyl, c
 	inc hl
 	ld b, (hl)  ; y
-	ld ixh, b
+	ld iyh, b
 	ld bc, #0301
 	inc hl
 	inc hl
 	inc hl
 	inc hl
 	ld de, tile_object_v_door_gfx
-	jp room_render_tile_objects_render_entry_point
+room_render_tile_objects_render_entry_point_jp:
+	call room_render_tile_objects_render_entry_point
+	jp room_render_tile_objects_loop_continue
 
 
 room_render_tile_objects_render_h_door:
 	inc hl
 	ld c, (hl)  ; x
-	ld ixl, c
+	ld iyl, c
 	inc hl
 	ld b, (hl)  ; y
-	ld ixh, b
+	ld iyh, b
 	ld bc, #0104
 	inc hl
 	inc hl
 	inc hl
 	inc hl
 	ld de, tile_object_h_door_gfx
-	jp room_render_tile_objects_render_entry_point
+	jp room_render_tile_objects_render_entry_point_jp
 
 
 room_render_tile_objects_render_combination_lever:
 	inc hl
 	ld c, (hl)  ; x
-	ld ixl, c
+	ld iyl, c
 	inc hl
 	ld b, (hl)  ; y
 	inc hl
-	ld ixh, b
+	ld iyh, b
 	ld bc, #0202
 	ld a, (hl)
 	add a, a
@@ -661,17 +663,17 @@ room_render_tile_objects_render_combination_lever:
 	inc hl
 	inc hl
 	inc hl
-	jp room_render_tile_objects_render_entry_point
+	jp room_render_tile_objects_render_entry_point_jp
 
 
 room_render_tile_objects_render_calendar_socket:
 	inc hl
 	ld c, (hl)  ; x
-	ld ixl, c
+	ld iyl, c
 	inc hl
 	ld b, (hl)  ; y
 	inc hl
-	ld ixh, b
+	ld iyh, b
 	ld bc, #0202
 	ld a, (hl)  ; state
 	cp 2
@@ -685,17 +687,17 @@ room_render_tile_objects_render_calendar_socket_continue:
 	inc hl
 	inc hl
 	inc hl
-	jp room_render_tile_objects_render_entry_point
+	jp room_render_tile_objects_render_entry_point_jp
 
 
 room_render_tile_objects_render_calendar_stone_center:
 	inc hl
 	ld c, (hl)  ; x
-	ld ixl, c
+	ld iyl, c
 	inc hl
 	ld b, (hl)  ; y
 	inc hl
-	ld ixh, b
+	ld iyh, b
 	ld bc, #0202
 	inc hl
 	inc hl
@@ -703,19 +705,19 @@ room_render_tile_objects_render_calendar_stone_center:
 	ld de, tile_object_calendar_stone_center_gfx
 	ld a, (global_state__n_power_stones_in_calendar)
 	cp 5
-	jp c, room_render_tile_objects_render_entry_point
+	jp c, room_render_tile_objects_render_entry_point_jp
 	ld a, (interrupt_cycle)
 	rrca
 	rrca
 	rrca
 	rrca
 	and #03
-	jp z, room_render_tile_objects_render_entry_point
+	jp z, room_render_tile_objects_render_entry_point_jp
 	ld de, tile_object_calendar_stone_center_frame3_gfx
 	cp 2
-	jp z, room_render_tile_objects_render_entry_point
+	jp z, room_render_tile_objects_render_entry_point_jp
 	ld de, tile_object_calendar_stone_center_frame2_gfx
-	jp room_render_tile_objects_render_entry_point
+	jp room_render_tile_objects_render_entry_point_jp
 
 
 ;-----------------------------------------------

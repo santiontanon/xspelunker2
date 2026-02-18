@@ -1,10 +1,13 @@
 to do:
 
-***- BUG: door up does not spawn well in jungle now (probably IDs have moved and things are messed up now)
+***- BUG: carnivore plants pause the game for a second when firing bullets, why?
 ***- option to turn on/off the music from the config screen
+***- caves: finish the current draft:
+  ***- longer melody part
+  ***- better instruments
+  ***- the final current part is horrible, replace with maybe some part where there is a rest of the repeating bass, which might be too much (maybe I need a softer instrument)
 
-- music: intro, letters/map, tablets/puzzles, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)
-  - caves: finish the current draft: I need a longer melody part, better instruments, and some part where there is a rest of the repeating bass, which might be too much (maybe I need a softer instrument)
+- music: intro, letters/map, tablets/puzzles, game over, pyramid, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)
   - story: I like the original song: keep the same style and compose a variation
   - boss music (boss music increases in speed as health goes down: 50%, 25%)
 - atlantis biome (exploit the fact that I can have now 3 tags for left/up/right/down tags): crocodiles as an additional water enemy? what happens to the special animal/teleporter rooms in this biome? do I need to redraw them?

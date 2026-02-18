@@ -38,13 +38,13 @@ public class Music {
     
     public static void main(String args[]) throws Exception
     {        
-//        playTSVMusic("data/music/jungle1.tsv", 6, 12);  // Variation on the original Jungle XSpelunker song
-//        playTSVMusic("data/music/jungle1a.tsv", 6, 12);  // variation on the bass line
-//        playTSVMusic("data/music/jungle1b.tsv", 6, 12);  // like jungle1a but simplifying the bass line
-//        playTSVMusic("data/music/jungle1c.tsv", 6, 12);  // like jungle1a but simplifying the bass line
-//        playTSVMusic("data/music/caves1.tsv", 12, 12);  // chords test
+//        playTSVMusic("data/music/jungle1.tsv", 6, 0);  // Variation on the original Jungle XSpelunker song
+//        playTSVMusic("data/music/jungle1a.tsv", 6, 0);  // variation on the bass line
+//        playTSVMusic("data/music/jungle1b.tsv", 6, 0);  // like jungle1a but simplifying the bass line
+//        playTSVMusic("data/music/jungle1c.tsv", 6, 0);  // like jungle1a but simplifying the bass line
+        playTSVMusic("data/music/caves1.tsv", 12, 0);  // chords test
         
-        generateInGamesongData();
+//        generateInGamesongData();
     }
     
     
