@@ -1,9 +1,9 @@
 to do:
 
+***- BUG: door up does not spawn well in jungle now (probably IDs have moved and things are messed up now)
+***- option to turn on/off the music from the config screen
+
 - music: intro, letters/map, tablets/puzzles, jungle, pyramid, caves, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)
-  - jungle: the original xspelunker song is much better than the new one, take it as a starting point and improve it
-  - add to the game (specify a music in each area, and if 0, no music)
-  - option to turn on/off the music from the config
   - caves: finish the current draft: I need a longer melody part, better instruments, and some part where there is a rest of the repeating bass, which might be too much (maybe I need a softer instrument)
   - story: I like the original song: keep the same style and compose a variation
   - boss music (boss music increases in speed as health goes down: 50%, 25%)
@@ -21,6 +21,7 @@ to do:
   - can you jump higher in the moon/mars? fall slower?
 - moon biome (similar to mars, but different color scheme, it could even be the same with palette changed)
 - 6th boss: (ideas: "The Solar Stone Jaguar", "The Martian Terracotta Warrior", "The Dust Stone Golem"). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
+  - remember that in either mars or moon, there should be something to be done with the golden key you get from hun-came/vucub-came
   - add boss name to the stats for game over screen
 - 7th boss (ideas: "The Lunar Obsidian Sentinel" (tall, slender, smooth black, reflective surfaces), "The Lunar Crystal Serpent", "The Moon Stone Monolith"). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
   - add boss name to the stats for game over screen

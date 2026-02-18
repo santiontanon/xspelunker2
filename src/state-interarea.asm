@@ -19,9 +19,9 @@ area_names:
 ; - e: target area ID
 ; - hl: ptr to room x, room y, direction of entrance
 interarea_exit:
-	call interarea_exit_screen
-
 	ld sp, stack  ; reset the stack, so we can jump here from wherever we want
+
+	call interarea_exit_screen
 
 	; get room ID we are teleporting to:
 	ld c, (hl)  ; x (in chunks)
@@ -207,6 +207,8 @@ interarea_exit_screen:
 		ld a, e
 		push hl
 			push af
+				call stop_music
+
 				; clear the screen:
 				call clear_screen_left_to_right
 				call set_bitmap_mode

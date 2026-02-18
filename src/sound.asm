@@ -11,15 +11,11 @@ Pad_instrument_profile:
 
     ; make sure it's 2-aligned: 
     ds (((($-1)/#0002)+1)*#0002-$)
+; 12 13 14 17 20 21 24 26 29 32 33 36 38 40 41 43 45 48 50 52 53 
 note_period_table:
-  db 12,156,  11,231,  11,60,  10,155,  10,2,  9,115,  8,235,  8,107
-  db 7,242,  7,128,  7,20,  6,174,  6,78,  5,244,  5,158,  5,77
-  db 5,1,  4,185,  4,117,  4,53,  3,249,  3,138,  3,87,  3,39
-  db 2,250,  2,207,  2,167,  2,129,  2,93,  2,59,  2,27,  1,252
-  db 1,224,  1,197,  1,172,  1,148,  1,125,  1,104,  1,83,  1,64
-  db 1,46,  1,29,  1,13,  0,254,  0,240,  0,226,  0,214,  0,202
-  db 0,180,  0,170,  0,160,  0,151,  0,143,  0,135,  0,90,  0,85
-  db 0,76,  0,71
+  db 6,174,  6,78,  5,244,  5,1,  4,53,  3,249,  3,87,  2,250
+  db 2,129,  2,27,  1,252,  1,172,  1,125,  1,83,  1,64,  1,29
+  db 0,254,  0,214,  0,190,  0,170,  0,160
 
 
 ;-----------------------------------------------
@@ -35,26 +31,26 @@ play_music_adjusting_tempo:
     or a
     ld a, e
     jr z, play_music_adjusting_tempo_continue
-    cp 16
-    jr z, play_music_adjusting_tempo_16
+;     cp 16
+;     jr z, play_music_adjusting_tempo_16
     cp 12
     jr z, play_music_adjusting_tempo_12
-    cp 10
-    jr z, play_music_adjusting_tempo_10
-    cp 5
-    jr z, play_music_adjusting_tempo_5
+;     cp 10
+;     jr z, play_music_adjusting_tempo_10
+;     cp 5
+;     jr z, play_music_adjusting_tempo_5
     jr play_music_adjusting_tempo_continue
-play_music_adjusting_tempo_16:
-    ld e, 19
-    jr play_music_adjusting_tempo_continue
+; play_music_adjusting_tempo_16:
+;     ld e, 19
+;     jr play_music_adjusting_tempo_continue
 play_music_adjusting_tempo_12:
     ld e, 14
-    jr play_music_adjusting_tempo_continue
-play_music_adjusting_tempo_10:
-    ld e, 12
-    jr play_music_adjusting_tempo_continue
-play_music_adjusting_tempo_5:
-    ld e, 6
+;     jr play_music_adjusting_tempo_continue
+; play_music_adjusting_tempo_10:
+;     ld e, 12
+;     jr play_music_adjusting_tempo_continue
+; play_music_adjusting_tempo_5:
+;     ld e, 6
 play_music_adjusting_tempo_continue:
     ld a, e
     ld (MUSIC_tempo), a
@@ -63,7 +59,7 @@ play_music_adjusting_tempo_continue:
     pop hl
     ld a, 1
     di
-        ld (current_music_ptr), hl
+        ld (MUSIC_currently_playing_music_ptr), hl
         ld (MUSIC_play), a
         ld (MUSIC_pointer), hl
         ld (MUSIC_start_pointer), hl
@@ -90,7 +86,7 @@ stop_music_loop:
 
 ;-----------------------------------------------
 ResumeMusic:
-    ld a, (current_music_ptr)
+    ld a, (MUSIC_currently_playing_music_ptr)
     or a
     ret z  ; there was no music playing anyway
     ld a, 1

@@ -89,12 +89,16 @@ current_room__sprite_objects_sentinel: ds virtual 1  ; set to #ff
 current_room__tile_objects: ds virtual MAX_ROOM_TILE_OBJECTS * ROOM_TILE_OBJECT_STRUCT_SIZE
 current_room__tile_objects_sentinel: ds virtual 1  ; set to #fe
 current_room__trial_fn: ds virtual 2
+; The following variables are set in pcg-rooms, depending on the current area:
 current_room__tileset_page: ds virtual 1
 current_room__tileset_ptr: ds virtual 2
 current_room__animation_fn_ptr: ds virtual 2
 current_room__collision_ptr_page: ds virtual 1
 current_room__collision_ptr: ds virtual 2  ; 256 bytes of this ptr will be copied to 'current_room__collision_table'.
 current_room__enemy_sprites_ptr: ds virtual 2
+current_room__music_ptr: ds virtual 2
+current_room__music_tempo: ds virtual 1
+
 current_room__tileset_overrides_item_tiles: ds virtual 1
 current_room__collision_table: ds virtual 256
 ; Variables to remember which enemies have already been killed,
@@ -345,12 +349,12 @@ options_called_from: ds virtual 1  ; 0: options called from inventory, 1: called
 MUSIC_tempo:                        ds virtual 1
 MUSIC_original_tempo:               ds virtual 1  ; tempo that was requested before adjusting it for 50/60Hz.
 beginning_of_sound_variables_except_tempo:
-current_music_ptr:                  ds virtual 2  ; ptr to the compressed song currently playing
+MUSIC_currently_playing_music_ptr:  ds virtual 2  ; ptr to the song currently playing (could be 0 if no music is playing)
 MUSIC_play:                         ds virtual 1
 MUSIC_tempo_counter:                ds virtual 1
 MUSIC_instruments:                  ds virtual 3
 MUSIC_channel3_instrument_buffer:   ds virtual 1  ; this stores the instrument of channel 3, which is special, since SFX might overwrite it
-MUSIC_start_pointer:                ds virtual 2  
+MUSIC_start_pointer:                ds virtual 2  ; ptr to the beginning of the song
 SFX_pointer:                        ds virtual 2
 MUSIC_pointer:                      ds virtual 2
 MUSIC_repeat_stack_ptr:             ds virtual 2

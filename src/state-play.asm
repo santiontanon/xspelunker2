@@ -317,6 +317,8 @@ state_play_from_inventory__no_boss_4:
 		ld c, SPRITES_PAGE
 		call call_hl_in_page_c_8000
 
+		call play_current_room_music_if_needed
+
 	call enable_VDP_output
 
 	ld a, #ff
@@ -875,3 +877,26 @@ state_play__update_time_60hz_continue
 	ret z  ; we are already at the maximum 255 hours
 	inc (hl)  ; increment hours
 	ret
+
+
+;-----------------------------------------------
+play_current_room_music_if_needed:
+	ld hl, (current_room__music_ptr)
+	ld a, l
+	or h
+	jp z, stop_music
+	ld bc, (MUSIC_currently_playing_music_ptr)
+	or a
+	sbc hl, bc
+	jr nz, play_current_room_music_if_needed_start_song
+	ld a, (current_room__music_tempo)
+	ld c, a
+	ld a, (MUSIC_original_tempo)
+	jr nz, play_current_room_music_if_needed_start_song
+	; we are already playing the song we want!
+	ret
+play_current_room_music_if_needed_start_song:
+	ld hl, (current_room__music_ptr)
+	ld a, (current_room__music_tempo)
+	jp play_music_adjusting_tempo
+

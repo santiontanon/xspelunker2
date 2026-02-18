@@ -37,6 +37,8 @@ state_game_over_text_table_end:
 state_game_over:
 	ld sp, stack  ; reset the stack, so we can jump here from wherever we want
 
+	call stop_music
+
 	call clear_screen_left_to_right
 
 	call set_bitmap_mode
