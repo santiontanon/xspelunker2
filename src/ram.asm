@@ -340,6 +340,7 @@ config_hud_type: ds virtual 1  ; 0: minimal, 1: minimal always visible, 2: full
 config_inventory_key_combo: ds virtual 1  ; 0: down+jump, 1: none
 config_interact_with_down: ds virtual 1  ; 0: yes, 1: no
 config_interact_with_up: ds virtual 1  ; 0: yes, 1: no
+config_music_on: ds virtual 1  ; 0: yes, 1: no
 ; each key is matrix row + bit mask
 config_keyboard: ds virtual 2 * 8  ; RIGHT, DOWN, UP, LEFT, INTERACT, INVENTORY, JUMP, SPACE
 

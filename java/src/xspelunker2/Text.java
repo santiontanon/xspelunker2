@@ -172,6 +172,8 @@ public class Text {
         addLineSafe(lines_with_constant_page1, "Interact with 'down': no", "OPTIONS4B", 16);
         addLineSafe(lines_with_constant_page1, "Interact with 'up': yes", "OPTIONS5A", 16);
         addLineSafe(lines_with_constant_page1, "Interact with 'up': no", "OPTIONS5B", 16);
+        addLineSafe(lines_with_constant_page1, "Music: on", "OPTIONS6A", 16);
+        addLineSafe(lines_with_constant_page1, "Music: off", "OPTIONS6B", 16);
         addLineSafe(lines_with_constant_page1, "Right:", "KEYBOARD1", 9);
         addLineSafe(lines_with_constant_page1, "Up:", "KEYBOARD3", 9);
         addLineSafe(lines_with_constant_page1, "Down:", "KEYBOARD2", 9);

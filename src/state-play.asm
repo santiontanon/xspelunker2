@@ -881,6 +881,9 @@ state_play__update_time_60hz_continue
 
 ;-----------------------------------------------
 play_current_room_music_if_needed:
+	ld a, (config_music_on)
+	or a
+	ret nz
 	ld hl, (current_room__music_ptr)
 	ld a, l
 	or h

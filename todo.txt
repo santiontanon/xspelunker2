@@ -1,7 +1,7 @@
 to do:
 
-***- option to turn on/off the music from the config screen
-***- caves: finish the current draft:
+***- jungle music: bring the second part of the melody from XSpelunker 1
+***- caves music: finish the current draft:
   ***- longer melody part
   ***- better instruments
   ***- the final current part is horrible, replace with maybe some part where there is a rest of the repeating bass, which might be too much (maybe I need a softer instrument)

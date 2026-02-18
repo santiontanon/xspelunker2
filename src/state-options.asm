@@ -2,7 +2,7 @@
 state_options_reset:
 	ld hl, config_options_rom
 	ld de, config_hud_type
-	ld bc, 4 + 8 * 2
+	ld bc, 5 + 8 * 2
 	ldir
 	ret
 
@@ -57,7 +57,7 @@ state_options_loop_up:
 	ld (hl), a
 	cp #ff
 	jr nz, state_options_loop
-	ld (hl), 12
+	ld (hl), 13
 	jr state_options_loop
 
 state_options_loop_down:
@@ -67,7 +67,7 @@ state_options_loop_down:
 	ld a, (hl)
 	inc a
 	ld (hl), a
-	cp 13
+	cp 14
 	jr nz, state_options_loop
 	ld (hl), 0
 	jr state_options_loop
@@ -86,6 +86,8 @@ state_options_loop_space:
 	jr z, state_options_loop_space_interact
 	dec a
 	jr z, state_options_loop_space_interact_up
+	dec a
+	jr z, state_options_loop_space_music
 
 	; redefine key
 	dec a
@@ -125,6 +127,20 @@ state_options_loop_space_interact_up:
 	ld a, (config_interact_with_up)
 	xor #01
 	ld (config_interact_with_up), a
+	call state_options_draw_text
+	jp state_options_loop
+
+state_options_loop_space_music:
+	ld a, (config_music_on)
+	xor #01
+	ld (config_music_on), a
+	jr z, state_options_loop_space_music_on
+state_options_loop_space_music_off:
+	call stop_music
+	jr state_options_loop_space_music_continue
+state_options_loop_space_music_on:
+	call play_current_room_music_if_needed
+state_options_loop_space_music_continue:
 	call state_options_draw_text
 	jp state_options_loop
 
@@ -223,7 +239,7 @@ update_options_pointer_sprite:
 	ld hl, buffer_4096
 	ld a, (tmp_dialog_pointer_position)
 
-	cp 5
+	cp 6
 	jr c, update_options_pointer_sprite_continue
 	inc a
 update_options_pointer_sprite_continue:
@@ -337,10 +353,25 @@ state_options_draw_text_interact_up_set:
 	ld b, 20
 	call draw_sentence_to_vdp_clearing_text_buffer
 
+	; music option:
+	ld de, CHRTBL2 + (9*32 + 8) * 8
+	ld a, (config_music_on)
+	or a
+	jr z, state_options_draw_text_music_on0
+state_options_draw_text_music_on1:
+	ld hl, TEXT_OPTIONS6B
+	jr state_options_draw_text_music_on_set
+state_options_draw_text_music_on0:
+	ld hl, TEXT_OPTIONS6A
+state_options_draw_text_music_on_set:
+	ld iy, #80f0
+	ld b, 20
+	call draw_sentence_to_vdp_clearing_text_buffer
+
 	; print keys:
 	ld b, 8
 	ld hl, config_keyboard
-	ld de, CHRTBL2 + (10*32 + 16) * 8
+	ld de, CHRTBL2 + (11*32 + 16) * 8
 state_options_draw_text_loop2:
 	push bc
 		ld c, (hl)
@@ -416,19 +447,19 @@ check_redefined_keys_special_case_table:
 ;-----------------------------------------------
 state_options_text_table:
 	dw CHRTBL2 + (3*32 + 8) * 8, TEXT_OPTIONS1
-	dw CHRTBL2 + (10*32 + 8) * 8, TEXT_KEYBOARD1
-	dw CHRTBL2 + (11*32 + 8) * 8, TEXT_KEYBOARD2
-	dw CHRTBL2 + (12*32 + 8) * 8, TEXT_KEYBOARD3
-	dw CHRTBL2 + (13*32 + 8) * 8, TEXT_KEYBOARD4
-	dw CHRTBL2 + (14*32 + 8) * 8, TEXT_KEYBOARD5
-	dw CHRTBL2 + (15*32 + 8) * 8, TEXT_KEYBOARD6
-	dw CHRTBL2 + (16*32 + 8) * 8, TEXT_KEYBOARD7
-	dw CHRTBL2 + (17*32 + 8) * 8, TEXT_KEYBOARD8
+	dw CHRTBL2 + (11*32 + 8) * 8, TEXT_KEYBOARD1
+	dw CHRTBL2 + (12*32 + 8) * 8, TEXT_KEYBOARD2
+	dw CHRTBL2 + (13*32 + 8) * 8, TEXT_KEYBOARD3
+	dw CHRTBL2 + (14*32 + 8) * 8, TEXT_KEYBOARD4
+	dw CHRTBL2 + (15*32 + 8) * 8, TEXT_KEYBOARD5
+	dw CHRTBL2 + (16*32 + 8) * 8, TEXT_KEYBOARD6
+	dw CHRTBL2 + (17*32 + 8) * 8, TEXT_KEYBOARD7
+	dw CHRTBL2 + (18*32 + 8) * 8, TEXT_KEYBOARD8
 
 
 ;-----------------------------------------------
 config_options_rom:
-	db 2, 0, 1, 0
+	db 2, 0, 1, 0, 0
 config_keyboard_rom:
 	db 8, #80  ; right: right
 	db 8, #40  ; down: down
