@@ -593,7 +593,6 @@ room_render_tile_objects_render_entry_point:
 		call get_room_tile_ptr
 	pop bc
 room_render_tile_objects_render_loop_y:
-
 	push bc
 	push hl
 room_render_tile_objects_render_loop_x:
@@ -729,9 +728,9 @@ room_undraw_tile_objects_loop:
 	ld a, (hl)  ; ID
 	cp #ff  ; no object in this spot
 	jr z, room_undraw_tile_objects_loop_continue_no_pop
-	cp #fe  ; sentinel
-	jr z, room_undraw_tile_objects_loop_continue_no_pop
-	; render the object:
+; 	cp #fe  ; sentinel
+; 	jr z, room_undraw_tile_objects_loop_continue_no_pop
+	; undraw the object:
 	push bc
 	push hl
 		inc hl
@@ -772,7 +771,7 @@ room_undraw_tile_objects_loop:
 		ld bc, ROOM_TILE_OBJECT_STRUCT_BACKGROUND
 		add iy, bc
 		call room_undraw_tile_objects_restore_background  ; type 0: we had saved the background
-	room_undraw_tile_objects_loop_continue2:
+room_undraw_tile_objects_loop_continue2:
 		dec a
 		jr z, room_undraw_tile_objects_delete_object  ; type 1: we just replace with 0s
 room_undraw_tile_objects_loop_continue:
@@ -870,7 +869,6 @@ room_undraw_tile_objects_delete_object:
 			call get_room_tile_ptr
 		pop bc
 room_undraw_tile_objects_delete_object_loop_y:
-
 		push bc
 		push hl
 room_undraw_tile_objects_delete_object_loop_x:

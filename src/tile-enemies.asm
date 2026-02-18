@@ -373,7 +373,10 @@ room_render_tile_objects_render_enemy_carnivore_plant:
 		ld de, tile_object_carnivore_plant
 	pop af
 	or a
-	jp z, room_render_tile_objects_render_loop_y
+	jr nz, room_render_tile_objects_render_enemy_carnivore_plant_continue
+	call room_render_tile_objects_render_loop_y
+	jp room_render_tile_objects_loop_continue
+room_render_tile_objects_render_enemy_carnivore_plant_continue:
 	ld de, tile_object_carnivore_plant_open
 room_render_tile_objects_render_enemy_carnivore_plant_loop_y:
 	push bc
@@ -501,7 +504,7 @@ room_render_tile_objects_undraw_enemy_carnivore_plant:
 		jp z, room_render_tile_objects_undraw_enemy_carnivore_plant_continue
 		ld b, a
 		inc hl
-	room_render_tile_objects_undraw_enemy_carnivore_plant_loop_tongue:
+room_render_tile_objects_undraw_enemy_carnivore_plant_loop_tongue:
 		ld a, (hl)
 		ld (de), a  ; restore background
 		inc hl

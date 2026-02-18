@@ -1,6 +1,5 @@
 to do:
 
-***- BUG: carnivore plants pause the game for a second when firing bullets, why?
 ***- option to turn on/off the music from the config screen
 ***- caves: finish the current draft:
   ***- longer melody part
