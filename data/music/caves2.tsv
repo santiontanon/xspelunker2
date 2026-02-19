@@ -166,7 +166,7 @@ Re1	Fa4	sfx(sfx_drum_shorter_re)
 	Fa3	
 pad,Mi4	La3	Re2
 	Fa3	
-piano,Fa4	Re4	Re1
+pad,Fa4	Re4	Re1
 	Fa3	
 Piano,Re2	La3	sfx(sfx_short_hihat)
 Re1	Fa3	sfx(sfx_drum_shorter_re)

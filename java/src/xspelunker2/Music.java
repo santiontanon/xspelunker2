@@ -42,12 +42,11 @@ public class Music {
 //        playTSVMusic("data/music/jungle1a.tsv", 6, 0);  // variation on the bass line
 //        playTSVMusic("data/music/jungle1b.tsv", 6, 0);  // like jungle1a but simplifying the bass line
 //        playTSVMusic("data/music/jungle1c.tsv", 6, 0);  // like jungle1a but simplifying the bass line
-//        playTSVMusic("data/music/jungle-test.tsv", 6, 0);  // like jungle1a but simplifying the bass line
 
 //        playTSVMusic("data/music/caves1.tsv", 12, 0);  // chords test
-//        playTSVMusic("data/music/caves2.tsv", 12, 0);  // chords test
+        playTSVMusic("data/music/caves2.tsv", 12, 0);  // chords test
         
-        generateInGamesongData();
+//        generateInGamesongData();
     }
     
     

@@ -1,23 +1,44 @@
 to do:
 
+***- atlantis biome: crocodiles as an additional water enemy? what happens to the special animal/teleporter rooms in this biome? do I need to redraw them?
+  ***- mock-up in gimp (look at "prayer of the warrior" spectrum game for tile ideas)
+  ***- think of the 3 tags that I'll use, and mock some of those connections:
+    ***- vertical: hole/stairs/??? (something with water? water pipe? waterfall?)
+    ***- horizontal: hole/water/???
+  ***- create basic tileset
+  ***- basic chunks to see how things look (and iterate on tileset)
+  ***- try to generate levels with the new chunks, and add as many chunks as necessary
+  ***- add boss/block/combination chunks
+  ***- adapt teleporter room to this tileset 
+  ***- tablets with the story about the "firestones" and also with some background on the fall of atlantis.
+  ***- sprite enemies: ghosts/spirits
+  ***- tile enemies:
+    ***- water generators (like the lava ones for xibalba)
+    ***- robot maya statue guardians (slowly walk back and forth, they should be large, like the owls)
+
+- fifth boss, Atlantean Guardian (Underwater Boss): A colossal robotic creature with bioluminescent features, resembling a deep-sea creature (laser beams from tentacles, summons robotic fish).
+  - add boss name to the stats for game over screen
 - music: intro, letters/map, tablets/puzzles, game over, pyramid, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)
   - story: I like the original song: keep the same style and compose a variation
   - boss music (boss music increases in speed as health goes down: 50%, 25%)
-- atlantis biome (exploit the fact that I can have now 3 tags for left/up/right/down tags): crocodiles as an additional water enemy? what happens to the special animal/teleporter rooms in this biome? do I need to redraw them?
-  - look at "prayer of the warrior" spectrum game for tile ideas
-  - sprite enemies: ghosts/spirits
-  - tile enemies: water generators (like the lava ones for xibalba), and at least one that actually moves
-- fifth boss, Atlantean Guardian (Underwater Boss): A colossal robotic creature with bioluminescent features, resembling a deep-sea creature (laser beams from tentacles, summons robotic fish).
-  - add boss name to the stats for game over screen
 - confrontation with the aliens after activating the calendar stone: are aliens sprites or tiles?
 - first ending sequence (udpate "stats__ending"): Elaine drops from the ceiling on a rope and rescues you. The calendar stone machine activates and creates a defensive barrier around earth, the alien armada that was coming turns back, but promises revenge.
   - add "no miss" achievement for this: if there is no damage (Track it)
 
-- mars biome (remember to keep ladder tiles in place for down-door opening code)
+- random seed puzzle (all happens without going to moon/mars):
+  - world name entering screen: theme as a "maya astronomy", where the random seed determines the position of the stars: which celestial alignment ad version of reality the player will play in.
+  - In the starting screen there should be 3 Stellas, each showing different bits of the random seed: each of them has a condition on the random seed bits that they display (they display 5, 6 and 5 bits respectively). If the condition is not satisfied, the stella is broken. The conditions must be so that it's impossible to have all 3 on at the same time.
+    - Aapo gives some clues about this
+  - in each of the 3 pyramids, if the condition of the given stella is satisfied, a room with a giant statue is spawned, with a tablet that says something like: "I do not remember my name, but I was the first/second/third".
+  - 8 bridge room in atlantis: each bridge depends on each of the bits of the first byte of the random seed. All 0s will lower all bridges.
+  - this leads to the astronomy room: clues about the constellation relation with the seed, and also a tablet with the three names of the three statues (in Maya), and also the "world teleporter" where you go back to the world name room, and can travel across worlds.
+  - speaking the names in front of each statue unlocks a chest/cabinet with a fragment of a codex. You need all 3 for it to be intelligible (I need to refactor the inventory to make space for this)
+  
+- mars biome (maybe moon/mars maps are smaller as most puzzles are not there? and they are just so that you can get the final stone) (remember to keep ladder tiles in place for down-door opening code)
   - can you jump higher in the moon/mars? fall slower?
 - moon biome (similar to mars, but different color scheme, it could even be the same with palette changed)
-- 6th boss: (ideas: "The Solar Stone Jaguar", "The Martian Terracotta Warrior", "The Dust Stone Golem"). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
-  - remember that in either mars or moon, there should be something to be done with the golden key you get from hun-came/vucub-came
+- 6th boss: (ideas: "The Solar Stone Jaguar", "The Martian Terracotta Warrior", "The Dust Stone Golem"). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer). Another idea: https://en.wikipedia.org/wiki/Human_sacrifice_in_Maya_culture#/media/File:MA_D293_Maya_stone_carving_from_Copan.jpg
+  - remember that in either mars or moon, there should be something to be done with the golden key you get from hun-came/vucub-came (e.g. to get the raygun upgrade I describe below)
   - add boss name to the stats for game over screen
 - 7th boss (ideas: "The Lunar Obsidian Sentinel" (tall, slender, smooth black, reflective surfaces), "The Lunar Crystal Serpent", "The Moon Stone Monolith"). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
   - add boss name to the stats for game over screen
@@ -25,21 +46,17 @@ to do:
 
 - 8th boss: after beating the combat against the aliens, you can teleport to their home planet, and fight against their leader (final final boss). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
   - add boss name to the stats for game over screen
-- final good ending (udpate "stats__ending"): the stone opens a portal for you to travel to the alien world, and fight against their leader in a final final battle. When you defeat it and come back, Elaine is there waiting to save you, but you arrive having become the ruler of alien empire.
+- final good ending 1 (udpate "stats__ending"): the stone opens a portal for you to travel to the alien world, and fight against their leader in a final final battle. When you defeat it and come back, Elaine is there waiting to save you, but you arrive having defeated the alien empire (although there is doubt if other empires will show up again, and the calendar stone depletes, and cannot be used again)
 - "speak" the animal names in the animal room to get their blessings (if you get all four, you do double damage, adjust angry/veryhard boss difficulty for this): I already have the clue for this in the game, right? (TABLET_TRIVIA_CLUE1_1)
   - add as a special achievement for the gameover screen
+- Final good ending 2: if you have the codex (from the 3 statues), it explains how to manufactore the powestones/firestones. So, you can keep using the calendar stone and be prepared for the future. This is the true final ending.
 
 - Potential new ideas if I have the energy
   - special condition for triggering "angry bosses" (they change color). For each one you beat in this hard mode, you get something in the ending, and if you get them all, you get a special mention. The conditions might be things like: certain bit in the random seed to be "11" (so, not all seeds are good), dive into water X times in the same room without doing anything else, etc. Use the "random seed stela" (maybe give a clue about it), currently it displays the bottom 6 bits of the first random seed word, should I make it display a whole 8 bits of it?
     - add as a special achievement for the gameover screen (at least one angry, and all 8 angry)
-  - have a chest/door locked with keys from ALL colors, and that can only be open in a world where all color keys spawn. Single lock that changes color, cycling through all. (add as a special achievement for the gameover screen)
-  - Special huge chest that has a lock with a number. Each time you use a small key, it reduces by one. But the number is larger than the keys in one world. the state of the chest should be saved to the ROM, and if you beat the game (can you beat the game having used small keys there?, it remains. It might give you access to a final alien weapon to really kill the final boss. If you play again on the same seed, the chest will be blocked somehow (so, you need a different seed) (add as a special achievement for the gameover screen)
-  - room that has 4 locks (one from each cardinal directions), but in each world, it can only be reached from one direction. Upon opening all 4, it reveals a passage to a secret level (the "lost world", which is like jungle but with dinosaurs? is there an alternate ending here?, or the "underground cenote", where sacrifices were made) (add as a special achievement for the gameover screen)
-  - Mars/Moon: in the boss rooms, there might be something you can do before summoning the boss. This could lead to something like: (1) an underground cave where there is a broken ancient robot that can talk to you (in a mix of English and Maya maybe?), and might give you a weapon upgrade (e.g. a better raygun). (2) a hidden room in Mars with one of those Mars faces, containing a great treasure (e.g. a fifth (?) undiscovered Mayan codex), add as a special achievement for the gameover screen.
-  - special rooms, with some large statue that only appears when certain bits of the random seed are on (maybe this is the meaning of the stella, if it's not that of the angry bosses). If you figure out a seed that has all 6 bits on, all 6 statues appear, and you can collect all the items they give, unlocking a secret (which?) (maybe related to blood sacrifices?)
+  - Mars/Moon: in the boss rooms, there might be something you can do before summoning the boss. This could lead to something like: (1) an underground cave where there is a broken ancient robot that can talk to you (in a mix of English and Maya maybe?), and might give you a weapon upgrade (e.g. a better raygun, which might be esential for fighting the final alien boss), add as a special achievement for the gameover screen.
   - The Maya were obsessed with sacrificing blood to their gods (the highest being extracting a beating heart from a person while still alive), then it was often burned so that the smoke will bring it to the gods. Can I add some puzzle/item/riddle about this? (maybe in the stella puzzle above, or maybe some blood meter that accumulates when you receive damage/die/kill-an-enemy and when full, things happen)
-  - another random seed puzzle idea: a rooom with n(=8?) pillars. Whether they are raised or lowered depends on the random seed. The player must search for the seed where these are all lowered to cross and get to the other side to find a key/item that is either the goal itself, or that opens the path to a longer secret.
-  - world name entering screen: theme as a "maya astronomy", where the random seed determines the position of the stars: which celestial alignment ad version of reality the player will play in.
+  - If the player enters a world name related to these theories (like "MU", "AZTLAN", or "COH"), it could trigger a world where the Atlantean ruins are "active"—meaning the tech still works, or different paths are open, or just some animations are played, and it's just a gimmic. (There should be a clue for this)
 
 
 --------------------
