@@ -38,8 +38,8 @@ area_default_tileset_ptrs:
 	dw tiles_caves_zx0, update_animations_in_vdp_caves
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_caves, caves_enemy_sprites_zx0  ; confluence
-	dw 0
-	db 0
+	dw music_caves_bin
+	db 12
 
 	db PYRAMID_TILES_PAGE
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
@@ -59,15 +59,15 @@ area_default_tileset_ptrs:
 	dw tiles_caves_zx0, update_animations_in_vdp_caves
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_caves, caves_enemy_sprites_zx0  ; pacific caves
-	dw 0
-	db 0
+	dw music_caves_bin
+	db 12
 
 	db CAVES_TILES_PAGE
 	dw tiles_caves_zx0, update_animations_in_vdp_caves
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_caves, caves_enemy_sprites_zx0  ; atlantic caves
-	dw 0
-	db 0
+	dw music_caves_bin
+	db 12
 
 	db XIBALBA_TILES_PAGE
 	dw tiles_xibalba_zx0, update_animations_in_vdp_xibalba
