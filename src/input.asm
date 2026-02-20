@@ -92,7 +92,6 @@ read_joystick:
     dec a
     call RDPSG  ; a = -, -, B, A, right, left, down, up
     ei
-    ret
 
     ; convert the joystick input to keyboard input
     ld c, a
@@ -131,15 +130,6 @@ read_joystick_noA:
 read_joystick_noB:
 
     ld (hl), a   ; we add the joystick input to the keyboard input
-;     ; m (button 2):
-;     inc hl
-;     inc hl  ; hl = keyboard_line_state+2
-;     ld a, (hl)
-;     rr c
-;     jr c,read_joystick_noB
-;     and #fb
-; read_joystick_noB:
-;     ld (hl), a   ; we add the joystick input to the keyboard input
     ret
 
 

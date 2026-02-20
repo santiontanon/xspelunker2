@@ -1,14 +1,18 @@
 to do:
 
+***- test to see if joystick works
 ***- atlantis biome: crocodiles as an additional water enemy? what happens to the special animal/teleporter rooms in this biome? do I need to redraw them?
-  ***- mock-up in gimp (look at "prayer of the warrior" spectrum game for tile ideas)
+  ***- mock-up in gimp/TILED:
+    ***- something with orichalcum / golden finish, see: https://vocal.media/history/atlantis-the-lost-city-of-wealth-and-splendor
+    ***- water ways: horizontal? fountains? pipes? think about it.
   ***- think of the 3 tags that I'll use, and mock some of those connections:
     ***- vertical: hole/stairs/??? (something with water? water pipe? waterfall?)
     ***- horizontal: hole/water/???
   ***- create basic tileset
   ***- basic chunks to see how things look (and iterate on tileset)
-  ***- try to generate levels with the new chunks, and add as many chunks as necessary
-  ***- add boss/block/combination chunks
+  ***- try to generate levels with the new chunks, and add as many chunks as necessary:
+  ***- add block/combination chunks
+    ***- do NOT create boss chunks, instead, I should have a special "Temple of Poseidon" room, maybe at the very top (as you enter Atlantis from the bottom), which is hand-authored, and the boss is inside.
   ***- adapt teleporter room to this tileset 
   ***- tablets with the story about the "firestones" and also with some background on the fall of atlantis.
   ***- sprite enemies: ghosts/spirits
