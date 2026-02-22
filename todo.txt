@@ -1,13 +1,12 @@
 to do:
 
 ***- atlantis biome: crocodiles as an additional water enemy? what happens to the special animal/teleporter rooms in this biome? do I need to redraw them?
-  ***- add ladder chunks (and still be able to generate all 64k maps)
   ***- waterfall chunks (up/down tag is "waterfall")
-  ***- iterate on the tileset as needed
   ***- "middle-platform" chunks (left/right tag is "middle-platform"). Is this brick or gold?
+  ***- add variety in the chunks
+  ***- iterate on the tileset as needed
   ***- adapt teleporter room to this tileset 
   ***- special "Temple of Poseidon" room (where the boss should be). Adapt to suit the chunk connections, and make sure it's on its own (like the teleporter room, how did I do it?)
-  ***- add variety in the chunks
   ***- simplifyTilesAtlantis / prettify in Java
   ***- prettify in assembler
   ***- tablets with the story about the "firestones" and also with some background on the fall of atlantis.

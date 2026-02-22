@@ -1403,36 +1403,51 @@ public class PCGArea {
         fg_chunks.get(0x0).add(new RoomChunk("data/atlantis/room0000-1.tmx", 0x0, "atlantis"));
         
         fg_chunks.get(0x1).add(new RoomChunk("data/atlantis/room0001-1.tmx", 0x1, "atlantis"));
+        fg_chunks.get(0x1).add(new RoomChunk("data/atlantis/room0001-2.tmx", 0x1, "atlantis"));
         
         fg_chunks.get(0x2).add(new RoomChunk("data/atlantis/room0010-1.tmx", 0x2, "atlantis"));
         
         fg_chunks.get(0x3).add(new RoomChunk("data/atlantis/room0011-1.tmx", 0x3, "atlantis"));
+        fg_chunks.get(0x3).add(new RoomChunk("data/atlantis/room0011-2.tmx", 0x3, "atlantis"));
         
         fg_chunks.get(0x4).add(new RoomChunk("data/atlantis/room0100-1.tmx", 0x4, "atlantis"));
+        fg_chunks.get(0x4).add(new RoomChunk("data/atlantis/room0100-2.tmx", 0x4, "atlantis"));
+        fg_chunks.get(0x4).add(new RoomChunk("data/atlantis/room0100-3.tmx", 0x4, "atlantis"));
         
         fg_chunks.get(0x5).add(new RoomChunk("data/atlantis/room0101-1.tmx", 0x5, "atlantis"));
+        fg_chunks.get(0x5).add(new RoomChunk("data/atlantis/room0101-2.tmx", 0x5, "atlantis"));
         
         fg_chunks.get(0x6).add(new RoomChunk("data/atlantis/room0110-1.tmx", 0x6, "atlantis"));
         fg_chunks.get(0x6).add(new RoomChunk("data/atlantis/room0110-2.tmx", 0x6, "atlantis"));
+        fg_chunks.get(0x6).add(new RoomChunk("data/atlantis/room0110-3.tmx", 0x6, "atlantis"));
         
         fg_chunks.get(0x7).add(new RoomChunk("data/atlantis/room0111-1.tmx", 0x7, "atlantis"));
+        fg_chunks.get(0x7).add(new RoomChunk("data/atlantis/room0111-2.tmx", 0x7, "atlantis"));
+        fg_chunks.get(0x7).add(new RoomChunk("data/atlantis/room0111-3.tmx", 0x7, "atlantis"));
 
         fg_chunks.get(0x8).add(new RoomChunk("data/atlantis/room1000-1.tmx", 0x8, "atlantis"));
 
         fg_chunks.get(0x9).add(new RoomChunk("data/atlantis/room1001-1.tmx", 0x9, "atlantis"));
+        fg_chunks.get(0x9).add(new RoomChunk("data/atlantis/room1001-2.tmx", 0x9, "atlantis"));
 
         fg_chunks.get(0xa).add(new RoomChunk("data/atlantis/room1010-1.tmx", 0xa, "atlantis"));
         fg_chunks.get(0xa).add(new RoomChunk("data/atlantis/room1010-2.tmx", 0xa, "atlantis"));
 
         fg_chunks.get(0xb).add(new RoomChunk("data/atlantis/room1011-1.tmx", 0xb, "atlantis"));
+        fg_chunks.get(0xb).add(new RoomChunk("data/atlantis/room1011-2.tmx", 0xb, "atlantis"));
         
         fg_chunks.get(0xc).add(new RoomChunk("data/atlantis/room1100-1.tmx", 0xc, "atlantis"));
+        fg_chunks.get(0xc).add(new RoomChunk("data/atlantis/room1100-2.tmx", 0xc, "atlantis"));
 
         fg_chunks.get(0xd).add(new RoomChunk("data/atlantis/room1101-1.tmx", 0xd, "atlantis"));
+        fg_chunks.get(0xd).add(new RoomChunk("data/atlantis/room1101-2.tmx", 0xd, "atlantis"));
+        fg_chunks.get(0xd).add(new RoomChunk("data/atlantis/room1101-3.tmx", 0xd, "atlantis"));
 
         fg_chunks.get(0xe).add(new RoomChunk("data/atlantis/room1110-1.tmx", 0xe, "atlantis"));
+        fg_chunks.get(0xe).add(new RoomChunk("data/atlantis/room1110-2.tmx", 0xe, "atlantis"));
 
         fg_chunks.get(0xf).add(new RoomChunk("data/atlantis/room1111-1.tmx", 0xf, "atlantis"));
+        fg_chunks.get(0xf).add(new RoomChunk("data/atlantis/room1111-2.tmx", 0xf, "atlantis"));
         
         // boss:
         for(int i = 0;i<16;i++) {
@@ -1448,9 +1463,11 @@ public class PCGArea {
             l.add(new RoomChunk("data/atlantis/block0011-1.tmx", 0x3, "atlantis"));
             l.add(new RoomChunk("data/atlantis/block0101-1.tmx", 0x5, "atlantis"));
             l.add(new RoomChunk("data/atlantis/block0110-1.tmx", 0x6, "atlantis"));
+            l.add(new RoomChunk("data/atlantis/block0110-2.tmx", 0x6, "atlantis"));
             l.add(new RoomChunk("data/atlantis/block1001-1.tmx", 0x9, "atlantis"));
             l.add(new RoomChunk("data/atlantis/block1010-1.tmx", 0xa, "atlantis"));
             l.add(new RoomChunk("data/atlantis/block1100-1.tmx", 0xc, "atlantis"));
+            l.add(new RoomChunk("data/atlantis/block1100-2.tmx", 0xc, "atlantis"));
             for(RoomChunk c2:l) {
                 block_chunks.get(c2.type).add(c2);
                 List<RoomChunk> current = new ArrayList<>();
