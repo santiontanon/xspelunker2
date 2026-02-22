@@ -1445,23 +1445,12 @@ public class PCGArea {
         }
         {
             List<RoomChunk> l = new ArrayList<>();
-//            l.add(new RoomChunk("data/atlantis/block0011-1.tmx", 0x3, "atlantis"));
-//            l.add(new RoomChunk("data/atlantis/block0011-2.tmx", 0x3, "atlantis"));
-//            l.add(new RoomChunk("data/atlantis/block0101-1.tmx", 0x5, "atlantis"));
-//            l.add(new RoomChunk("data/atlantis/block0101-2.tmx", 0x5, "atlantis"));
-//            l.add(new RoomChunk("data/atlantis/block0101-3.tmx", 0x5, "atlantis"));
-//            l.add(new RoomChunk("data/atlantis/block0101-4.tmx", 0x5, "atlantis"));
-//            l.add(new RoomChunk("data/atlantis/block0110-1.tmx", 0x6, "atlantis"));
-//            l.add(new RoomChunk("data/atlantis/block1001-1.tmx", 0x9, "atlantis"));
-//            l.add(new RoomChunk("data/atlantis/block1010-1.tmx", 0xa, "atlantis"));
-//            l.add(new RoomChunk("data/atlantis/block1010-2.tmx", 0xa, "atlantis"));
-//            l.add(new RoomChunk("data/atlantis/block1100-1.tmx", 0xc, "atlantis"));
-//            l.add(new RoomChunk("data/atlantis/block1100-2.tmx", 0xc, "atlantis"));
-//            l.add(new RoomChunk("data/atlantis/block1100-3.tmx", 0xc, "atlantis"));
-//            l.add(new RoomChunk("data/atlantis/block1100-4.tmx", 0xc, "atlantis"));
-//            l.add(new RoomChunk("data/atlantis/block1100-5.tmx", 0xc, "atlantis"));
-//            l.add(new RoomChunk("data/atlantis/block1100-6.tmx", 0xc, "atlantis"));
-
+            l.add(new RoomChunk("data/atlantis/block0011-1.tmx", 0x3, "atlantis"));
+            l.add(new RoomChunk("data/atlantis/block0101-1.tmx", 0x5, "atlantis"));
+            l.add(new RoomChunk("data/atlantis/block0110-1.tmx", 0x6, "atlantis"));
+            l.add(new RoomChunk("data/atlantis/block1001-1.tmx", 0x9, "atlantis"));
+            l.add(new RoomChunk("data/atlantis/block1010-1.tmx", 0xa, "atlantis"));
+            l.add(new RoomChunk("data/atlantis/block1100-1.tmx", 0xc, "atlantis"));
             for(RoomChunk c2:l) {
                 block_chunks.get(c2.type).add(c2);
                 List<RoomChunk> current = new ArrayList<>();
@@ -1562,12 +1551,9 @@ public class PCGArea {
         }
         
         List<RoomChunk> combination_raw_chunks = new ArrayList<>();
-//        combination_raw_chunks.add(new RoomChunk("data/atlantis/combination0000-1.tmx", 0, "atlantis"));
-//        combination_raw_chunks.add(new RoomChunk("data/atlantis/combination0001-1.tmx", 0x1, "atlantis"));
-//        combination_raw_chunks.add(new RoomChunk("data/atlantis/combination0100-1.tmx", 0x4, "atlantis"));
-//        combination_raw_chunks.add(new RoomChunk("data/atlantis/combination0101-1.tmx", 0x5, "atlantis"));
-//        combination_raw_chunks.add(new RoomChunk("data/atlantis/combination1000-1.tmx", 0x8, "atlantis"));
-//        combination_raw_chunks.add(new RoomChunk("data/atlantis/combination1000-2.tmx", 0x8, "atlantis"));
+        combination_raw_chunks.add(new RoomChunk("data/atlantis/combination0000-1.tmx", 0, "atlantis"));
+        combination_raw_chunks.add(new RoomChunk("data/atlantis/combination1000-1.tmx", 0x8, "atlantis"));
+        combination_raw_chunks.add(new RoomChunk("data/atlantis/combination1000-2.tmx", 0x8, "atlantis"));
         for(int type = 0;type<16;type++) {
             for(RoomChunk chunk:combination_raw_chunks) {
                 if ((type & PCGWorld.DIRECTION_LEFT) == 0 && (chunk.type & PCGWorld.DIRECTION_LEFT) != 0) continue;

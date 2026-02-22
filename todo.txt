@@ -1,15 +1,13 @@
 to do:
 
 ***- atlantis biome: crocodiles as an additional water enemy? what happens to the special animal/teleporter rooms in this biome? do I need to redraw them?
-  ***- Add enough chunks to generate all 64k maps
-    ***- add combination chunks
-    ***- add block chunks
-  ***- add ladder chunks (and still be able to generate all 64, maps)
+  ***- add ladder chunks (and still be able to generate all 64k maps)
   ***- waterfall chunks (up/down tag is "waterfall")
   ***- iterate on the tileset as needed
   ***- "middle-platform" chunks (left/right tag is "middle-platform"). Is this brick or gold?
   ***- adapt teleporter room to this tileset 
   ***- special "Temple of Poseidon" room (where the boss should be). Adapt to suit the chunk connections, and make sure it's on its own (like the teleporter room, how did I do it?)
+  ***- add variety in the chunks
   ***- simplifyTilesAtlantis / prettify in Java
   ***- prettify in assembler
   ***- tablets with the story about the "firestones" and also with some background on the fall of atlantis.
@@ -18,6 +16,7 @@ to do:
     ***- water generators (like the lava ones for xibalba)
     ***- robot maya statue guardians (slowly walk back and forth, they should be large, like the owls)
 
+- What is the error I see in Java of "Adding xxx to start room!"? Is it important?
 - fifth boss, Atlantean Guardian (Underwater Boss): A colossal robotic creature with bioluminescent features, resembling a deep-sea creature (laser beams from tentacles, summons robotic fish).
   - add boss name to the stats for game over screen
 - music: intro, letters/map, tablets/puzzles, game over, pyramid, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)
