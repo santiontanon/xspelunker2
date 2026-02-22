@@ -56,6 +56,9 @@ public class PCGArea {
             case "xibalba":
                 loadXibalbaChunks(simplifyChunks);
                 break;
+            case "atlantis":
+                loadAtlantisChunks(simplifyChunks);
+                break;
             default:
                 throw new Exception("Unsupported biome: " + biome);
         }
@@ -1381,6 +1384,250 @@ public class PCGArea {
                 combination_chunks.get(type).add(chunk2);
             }
         }
+    }        
+    
+    
+    public void loadAtlantisChunks(boolean simplifyChunks) throws Exception
+    {
+        // background:
+        bg_chunks.add(new RoomChunk("data/atlantis/bg-1.tmx", 0, "atlantis"));
+        bg_chunks.add(new RoomChunk("data/atlantis/bg-2.tmx", 0, "atlantis"));
+        bg_chunks.add(new RoomChunk("data/atlantis/bg-3.tmx", 0, "atlantis"));
+        bg_chunks.add(new RoomChunk("data/atlantis/bg-4.tmx", 0, "atlantis"));
+        bg_chunks.add(new RoomChunk("data/atlantis/bg-5.tmx", 0, "atlantis"));
+
+        // foreground:
+        for(int i = 0;i<16;i++) {
+            fg_chunks.put(i, new ArrayList<>());
+        }
+        fg_chunks.get(0x0).add(new RoomChunk("data/atlantis/room0000-1.tmx", 0x0, "atlantis"));
+        
+        fg_chunks.get(0x1).add(new RoomChunk("data/atlantis/room0001-1.tmx", 0x1, "atlantis"));
+        
+        fg_chunks.get(0x2).add(new RoomChunk("data/atlantis/room0010-1.tmx", 0x2, "atlantis"));
+        
+        fg_chunks.get(0x3).add(new RoomChunk("data/atlantis/room0011-1.tmx", 0x3, "atlantis"));
+        
+        fg_chunks.get(0x4).add(new RoomChunk("data/atlantis/room0100-1.tmx", 0x4, "atlantis"));
+        
+        fg_chunks.get(0x5).add(new RoomChunk("data/atlantis/room0101-1.tmx", 0x5, "atlantis"));
+        
+        fg_chunks.get(0x6).add(new RoomChunk("data/atlantis/room0110-1.tmx", 0x6, "atlantis"));
+        fg_chunks.get(0x6).add(new RoomChunk("data/atlantis/room0110-2.tmx", 0x6, "atlantis"));
+        
+        fg_chunks.get(0x7).add(new RoomChunk("data/atlantis/room0111-1.tmx", 0x7, "atlantis"));
+
+        fg_chunks.get(0x8).add(new RoomChunk("data/atlantis/room1000-1.tmx", 0x8, "atlantis"));
+
+        fg_chunks.get(0x9).add(new RoomChunk("data/atlantis/room1001-1.tmx", 0x9, "atlantis"));
+
+        fg_chunks.get(0xa).add(new RoomChunk("data/atlantis/room1010-1.tmx", 0xa, "atlantis"));
+
+        fg_chunks.get(0xb).add(new RoomChunk("data/atlantis/room1011-1.tmx", 0xb, "atlantis"));
+        
+        fg_chunks.get(0xc).add(new RoomChunk("data/atlantis/room1100-1.tmx", 0xc, "atlantis"));
+
+        fg_chunks.get(0xd).add(new RoomChunk("data/atlantis/room1101-1.tmx", 0xd, "atlantis"));
+
+        fg_chunks.get(0xe).add(new RoomChunk("data/atlantis/room1110-1.tmx", 0xe, "atlantis"));
+
+        fg_chunks.get(0xf).add(new RoomChunk("data/atlantis/room1111-1.tmx", 0xf, "atlantis"));
+        
+        // boss:
+        for(int i = 0;i<16;i++) {
+            boss_chunks.put(i, new ArrayList<>());
+        }
+        
+        // block puzzles:
+        for(int i = 0;i<16;i++) {
+            block_chunks.put(i, new ArrayList<>());
+        }
+        {
+            List<RoomChunk> l = new ArrayList<>();
+//            l.add(new RoomChunk("data/atlantis/block0011-1.tmx", 0x3, "atlantis"));
+//            l.add(new RoomChunk("data/atlantis/block0011-2.tmx", 0x3, "atlantis"));
+//            l.add(new RoomChunk("data/atlantis/block0101-1.tmx", 0x5, "atlantis"));
+//            l.add(new RoomChunk("data/atlantis/block0101-2.tmx", 0x5, "atlantis"));
+//            l.add(new RoomChunk("data/atlantis/block0101-3.tmx", 0x5, "atlantis"));
+//            l.add(new RoomChunk("data/atlantis/block0101-4.tmx", 0x5, "atlantis"));
+//            l.add(new RoomChunk("data/atlantis/block0110-1.tmx", 0x6, "atlantis"));
+//            l.add(new RoomChunk("data/atlantis/block1001-1.tmx", 0x9, "atlantis"));
+//            l.add(new RoomChunk("data/atlantis/block1010-1.tmx", 0xa, "atlantis"));
+//            l.add(new RoomChunk("data/atlantis/block1010-2.tmx", 0xa, "atlantis"));
+//            l.add(new RoomChunk("data/atlantis/block1100-1.tmx", 0xc, "atlantis"));
+//            l.add(new RoomChunk("data/atlantis/block1100-2.tmx", 0xc, "atlantis"));
+//            l.add(new RoomChunk("data/atlantis/block1100-3.tmx", 0xc, "atlantis"));
+//            l.add(new RoomChunk("data/atlantis/block1100-4.tmx", 0xc, "atlantis"));
+//            l.add(new RoomChunk("data/atlantis/block1100-5.tmx", 0xc, "atlantis"));
+//            l.add(new RoomChunk("data/atlantis/block1100-6.tmx", 0xc, "atlantis"));
+
+            for(RoomChunk c2:l) {
+                block_chunks.get(c2.type).add(c2);
+                List<RoomChunk> current = new ArrayList<>();
+                List<RoomChunk> current2 = new ArrayList<>();
+                current.add(c2);
+                current2.add(c2);
+                for(RoomChunk c:current) {
+                    if ((c.type & PCGWorld.DIRECTION_LEFT) == 0) {
+                        TMXObject o = c.firstObject("breakable-left");
+                        if (o != null) {
+                            RoomChunk chunk2 = c.clone();
+                            chunk2.type |= PCGWorld.DIRECTION_LEFT;
+                            for(int i = 0;i<o.dy/8;i++) {
+                                for(int j = 0;j<o.dx/8;j++) {
+                                    chunk2.tiles[(o.x/8) + j][(o.y/8) + i] = 0;
+                                }
+                            }
+                            chunk2.removeObjectTypes("breakable-left");
+                            chunk2.removeObjectTypes("door-left");
+                            chunk2.path += " + left";
+                            chunk2.tags.put("left", "hole");
+                            block_chunks.get(chunk2.type).add(chunk2);
+                            current2.add(chunk2);
+                        }
+                    }
+                }
+                current.clear();
+                current.addAll(current2);
+                for(RoomChunk c:current) {
+                    if ((c.type & PCGWorld.DIRECTION_UP) == 0) {
+                        TMXObject o = c.firstObject("breakable-up");
+                        if (o != null) {
+                            RoomChunk chunk2 = c.clone();
+                            chunk2.type |= PCGWorld.DIRECTION_UP;
+                            for(int i = 0;i<o.dy/8;i++) {
+                                for(int j = 0;j<o.dx/8;j++) {
+                                    chunk2.tiles[(o.x/8) + j][(o.y/8) + i] = 0;
+                                }
+                            }
+                            chunk2.removeObjectTypes("breakable-up");
+                            chunk2.removeObjectTypes("door-up");
+                            chunk2.path += " + up";
+                            chunk2.tags.put("up", "hole");
+                            block_chunks.get(chunk2.type).add(chunk2);
+                            current2.add(chunk2);
+                        }
+                    }
+                }
+                current.clear();
+                current.addAll(current2);
+                for(RoomChunk c:current) {
+                    if ((c.type & PCGWorld.DIRECTION_RIGHT) == 0) {
+                        TMXObject o = c.firstObject("breakable-right");
+                        if (o != null) {
+                            RoomChunk chunk2 = c.clone();
+                            chunk2.type |= PCGWorld.DIRECTION_RIGHT;
+                            for(int i = 0;i<o.dy/8;i++) {
+                                for(int j = 0;j<o.dx/8;j++) {
+                                    chunk2.tiles[(o.x/8) + j][(o.y/8) + i] = 0;
+                                }
+                            }
+                            chunk2.removeObjectTypes("breakable-right");
+                            chunk2.removeObjectTypes("door-right");
+                            chunk2.path += " + right";
+                            chunk2.tags.put("right", "hole");
+                            block_chunks.get(chunk2.type).add(chunk2);
+                            current2.add(chunk2);
+                        }
+                    }
+                }   
+                current.clear();
+                current.addAll(current2);
+                for(RoomChunk c:current) {
+                    if ((c.type & PCGWorld.DIRECTION_DOWN) == 0) {
+                        TMXObject o = c.firstObject("breakable-down");
+                        if (o != null) {
+                            RoomChunk chunk2 = c.clone();
+                            chunk2.type |= PCGWorld.DIRECTION_DOWN;
+                            for(int i = 0;i<o.dy/8;i++) {
+                                for(int j = 0;j<o.dx/8;j++) {
+                                    chunk2.tiles[(o.x/8) + j][(o.y/8) + i] = 0;
+                                }
+                            }
+                            chunk2.removeObjectTypes("breakable-down");
+                            chunk2.removeObjectTypes("door-down");
+                            chunk2.path += " + down";
+                            chunk2.tags.put("down", "hole");
+                            block_chunks.get(chunk2.type).add(chunk2);
+                        }
+                    }
+                }
+            }
+        }
+        
+        // combination locks:
+        for(int i = 0;i<16;i++) {
+            combination_chunks.put(i, new ArrayList<>());
+        }
+        
+        List<RoomChunk> combination_raw_chunks = new ArrayList<>();
+//        combination_raw_chunks.add(new RoomChunk("data/atlantis/combination0000-1.tmx", 0, "atlantis"));
+//        combination_raw_chunks.add(new RoomChunk("data/atlantis/combination0001-1.tmx", 0x1, "atlantis"));
+//        combination_raw_chunks.add(new RoomChunk("data/atlantis/combination0100-1.tmx", 0x4, "atlantis"));
+//        combination_raw_chunks.add(new RoomChunk("data/atlantis/combination0101-1.tmx", 0x5, "atlantis"));
+//        combination_raw_chunks.add(new RoomChunk("data/atlantis/combination1000-1.tmx", 0x8, "atlantis"));
+//        combination_raw_chunks.add(new RoomChunk("data/atlantis/combination1000-2.tmx", 0x8, "atlantis"));
+        for(int type = 0;type<16;type++) {
+            for(RoomChunk chunk:combination_raw_chunks) {
+                if ((type & PCGWorld.DIRECTION_LEFT) == 0 && (chunk.type & PCGWorld.DIRECTION_LEFT) != 0) continue;
+                if ((type & PCGWorld.DIRECTION_UP) == 0 && (chunk.type & PCGWorld.DIRECTION_UP) != 0) continue;
+                if ((type & PCGWorld.DIRECTION_RIGHT) == 0 && (chunk.type & PCGWorld.DIRECTION_RIGHT) != 0) continue;
+                if ((type & PCGWorld.DIRECTION_DOWN) == 0 && (chunk.type & PCGWorld.DIRECTION_DOWN) != 0) continue;
+
+                RoomChunk chunk2 = chunk.clone();
+                chunk2.type = type;
+
+                if ((type & PCGWorld.DIRECTION_LEFT) != 0 && (chunk.type & PCGWorld.DIRECTION_LEFT) == 0) {
+                    // open a path to the left:
+                    for(int i = 7;i<10;i++) {
+                        for(int j = 0;j<3;j++) {
+                            chunk2.tiles[j][i] = 0;
+                        }
+                    }
+                    chunk2.removeObjectTypes("door-left");
+                    chunk2.removeObjectTypes("breakable-left");
+                    chunk2.path += " + left";
+                    chunk2.tags.put("left", "hole");
+                }
+                if ((type & PCGWorld.DIRECTION_UP) != 0 && (chunk.type & PCGWorld.DIRECTION_UP) == 0) {
+                    // open a path up:
+                    for(int i = 0;i<1;i++) {
+                        for(int j = 6;j<10;j++) {
+                            chunk2.tiles[j][i] = 0;
+                        }
+                    }
+                    chunk2.removeObjectTypes("door-up");
+                    chunk2.removeObjectTypes("breakable-up");
+                    chunk2.tags.put("up", "hole");
+                    chunk2.path += " + up";
+                }
+                if ((type & PCGWorld.DIRECTION_RIGHT) != 0 && (chunk.type & PCGWorld.DIRECTION_RIGHT) == 0) {
+                    // open a path right:
+                    for(int i = 7;i<10;i++) {
+                        for(int j = 13;j<16;j++) {
+                            chunk2.tiles[j][i] = 0;
+                        }
+                    }
+                    chunk2.removeObjectTypes("door-right");
+                    chunk2.removeObjectTypes("breakable-right");
+                    chunk2.path += " + right";
+                    chunk2.tags.put("right", "hole");
+                }
+                if ((type & PCGWorld.DIRECTION_DOWN) != 0 && (chunk.type & PCGWorld.DIRECTION_DOWN) == 0) {
+                    // open a path down:
+                    for(int i = 10;i<12;i++) {
+                        for(int j = 6;j<10;j++) {
+                            chunk2.tiles[j][i] = 0;
+                        }
+                    }
+                    chunk2.removeObjectTypes("door-down");
+                    chunk2.removeObjectTypes("breakable-down");
+                    chunk2.tags.put("down", "hole");
+                    chunk2.path += " + down";
+                }
+                combination_chunks.get(type).add(chunk2);
+            }
+        }
     }    
     
 
@@ -2028,8 +2275,11 @@ public class PCGArea {
                             case "boss5-chestlock":
                             case "boss6-chestlock":
                             case "boss7-chestlock":
-                                chunkPoolName = "boss";
-                                chunkPool = boss_chunks;
+                                // In atlantis, there are no boss chunks, as the boss room is special.
+                                if (!biome.equals("atlantis")) {
+                                    chunkPoolName = "boss";
+                                    chunkPool = boss_chunks;
+                                }
                                 break;
                                 
                             case "block-puzzle1":

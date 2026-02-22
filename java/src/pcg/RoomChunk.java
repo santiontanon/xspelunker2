@@ -86,6 +86,7 @@ public class RoomChunk {
             case "pyramid": return simplifyTilesPyramid(biome);
             case "caves": return simplifyTilesCaves(biome);
             case "xibalba": return simplifyTilesXibalba(biome);
+            case "atlantis": return simplifyTilesAtlantis(biome);
             default:
                 throw new Exception("Undefined biome " + biome);
         }
@@ -520,6 +521,112 @@ public class RoomChunk {
     }
 
     
+    public RoomChunk simplifyTilesAtlantis(String biome) throws Exception
+    {
+        RoomChunk chunk = this.clone();
+        for(int i = 0;i<chunk.tiles[0].length;i++) {
+            for(int j = 0;j<chunk.tiles.length;j++) {
+                int tile = tiles[j][i];
+//                switch(tile) {
+//                    // spikes:
+//                    case 15*16 + 12:
+//                    case 8*16 + 2:
+//                        tile = 15*16 + 12;
+//                        break;
+//                    case 8*16 + 4:
+//                    case 8*16 + 5:
+//                        tile = 0;
+//                        break;
+//                    // ropes:
+//                    case 8*16 + 3:
+//                    case 8*16 + 6:
+//                        tile = 0;  // remove ropes, they will be reconstructed
+//                        break;
+//                    // platforms 1:
+//                    case 15*16 + 14:
+//                    case 8*16 + 9:
+//                        tile = 15*16 + 14;
+//                        break;
+//                    // platforms 2:
+//                    case 15*16 + 5:
+//                    case 10*16 + 9:
+//                        tile = 15*16 + 5;
+//                        break;
+//                    // glyphs:
+//                    case 12*16+9:
+//                    case 12*16+10:
+//                    case 13*16+9:
+//                    case 13*16+10:
+//                    case 14*16+9:
+//                    case 14*16+10:
+//                        tile = 12*16+9;
+//                        break;
+//                    // left wall:
+//                    case 15*16 + 6:
+//                    case 9*16 + 4:
+//                    case 9*16 + 5:
+//                        tile = 15*16 + 6;
+//                        break;
+//                    // right wall:
+//                    case 15*16 + 10:
+//                    case 9*16 + 2:
+//                    case 9*16 + 3:
+//                        tile = 15*16 + 10;
+//                        break;
+//                    // up wall:
+//                    case 15*16 + 13:
+//                    case 8*16 + 12:
+//                    case 8*16 + 13:
+//                        tile = 15*16 + 13;
+//                        break;
+//                    // down wall:
+//                    case 15*16 + 11:
+//                    case 8*16 + 14:
+//                    case 8*16 + 15:
+//                        tile = 15*16 + 11;
+//                        break;
+//                    // rubble:
+//                    case 15*16 + 7:
+//                    case 10*16 + 1:
+//                    case 10*16 + 2:
+//                    case 10*16 + 3:
+//                        tile = 15*16 + 7;
+//                        break;
+//                    // stairs (leave only the bottom piece):
+//                    case 15*16 + 8:
+//                        if (i<CHUNK_HEIGHT-1 && tiles[j][i+1] == 15*16 + 8) {
+//                            tile = 0;
+//                        }
+//                        break;
+//                    case 10*16 + 7:
+//                        if (i<CHUNK_HEIGHT-1 && tiles[j][i+1] == 10*16+7) {
+//                            tile = 0;
+//                        }
+//                        break;
+//                    // face 1 pattern:
+//                    case 12*16 + 1:
+//                    case 12*16 + 2:
+//                    case 13*16 + 0:
+//                    case 13*16 + 1:
+//                    case 13*16 + 2:
+//                    case 14*16 + 0:
+//                    case 14*16 + 1:
+//                    case 14*16 + 2:
+//                    case 15*16 + 0:
+//                    case 15*16 + 1:
+//                    case 15*16 + 2:
+//                        tile = 0;
+//                        break;
+//                    default:
+//                }
+                chunk.tiles[j][i] = tile;
+            }
+        }
+        
+        return chunk;
+    }
+    
+    
     public TMXObject randomObject(String type, MSXRandom r)
     {
         List<TMXObject> candidates = new ArrayList<>();
@@ -592,6 +699,9 @@ public class RoomChunk {
                     break;
                 case "xibalba":
                     path = "data/xibalba/tiles.png";
+                    break;
+                case "atlantis":
+                    path = "data/atlantis/tiles.png";
                     break;
                 default:
                     throw new Exception("Unsupported biome: " + biome);
