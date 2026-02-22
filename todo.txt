@@ -2,7 +2,8 @@ to do:
 
 ***- atlantis biome: crocodiles as an additional water enemy? what happens to the special animal/teleporter rooms in this biome? do I need to redraw them?
   ***- Add enough chunks to generate all 64k maps
-    ***- add block/combination chunks
+    ***- add combination chunks
+    ***- add block chunks
   ***- add ladder chunks (and still be able to generate all 64, maps)
   ***- waterfall chunks (up/down tag is "waterfall")
   ***- iterate on the tileset as needed

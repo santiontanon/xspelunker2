@@ -1422,6 +1422,7 @@ public class PCGArea {
         fg_chunks.get(0x9).add(new RoomChunk("data/atlantis/room1001-1.tmx", 0x9, "atlantis"));
 
         fg_chunks.get(0xa).add(new RoomChunk("data/atlantis/room1010-1.tmx", 0xa, "atlantis"));
+        fg_chunks.get(0xa).add(new RoomChunk("data/atlantis/room1010-2.tmx", 0xa, "atlantis"));
 
         fg_chunks.get(0xb).add(new RoomChunk("data/atlantis/room1011-1.tmx", 0xb, "atlantis"));
         
