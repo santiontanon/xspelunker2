@@ -13,7 +13,7 @@
 171,171,100,1,1,1,1,1,1,1,1,1,1,1,1,1,
 254,254,146,1,140,255,255,255,255,139,1,1,1,1,1,1,
 252,251,146,1,1,1,1,1,1,1,1,1,1,1,1,1,
-251,118,178,99,99,99,99,99,99,99,99,99,254,159,139,1,
+251,118,178,99,99,99,99,99,99,99,99,99,254,119,255,139,
 252,251,130,130,130,130,130,130,130,130,130,130,118,119,1,1,
 254,254,130,130,130,130,130,130,130,130,130,130,252,251,1,1,
 252,251,130,130,130,130,130,130,130,130,130,130,118,119,139,1,
@@ -23,12 +23,10 @@
 118,120,121,121,126,121,121,121,121,127,121,121,122,251,119,251
 </data>
  </layer>
- <objectgroup name="objects" visible="0">
-  <object id="1" type="item" x="16" y="16" width="16" height="16"/>
-  <object id="2" type="big-item" x="88" y="16" width="32" height="24"/>
-  <object id="4" type="breakable-left" x="0" y="48" width="16" height="32"/>
-  <object id="6" type="door-left" x="0" y="48" width="16" height="24"/>
-  <object id="8" type="4x4-item" x="32" y="0" width="32" height="32"/>
-  <object id="9" type="item" x="64" y="16" width="16" height="16"/>
+ <objectgroup name="objects">
+  <object id="1" type="item" x="48" y="0" width="16" height="16"/>
+  <object id="2" type="big-item" x="96" y="8" width="32" height="24"/>
+  <object id="8" type="4x4-item" x="96" y="0" width="32" height="32"/>
+  <object id="9" type="item" x="40" y="64" width="16" height="16"/>
  </objectgroup>
 </map>

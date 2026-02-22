@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="35">
+ <properties>
+  <property name="up" value="water"/>
+ </properties>
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="256" columns="16">
+  <image source="tiles.png" width="128" height="128"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="16" height="12">
+  <data encoding="csv">
+251,118,1,1,1,1,146,146,146,146,1,1,1,1,160,160,
+119,118,1,1,1,1,146,146,146,146,1,1,1,1,119,251,
+104,106,1,140,251,99,146,146,146,146,99,119,139,1,251,118,
+120,122,1,1,159,146,146,146,146,146,170,171,100,1,119,251,
+251,118,1,1,119,146,146,146,146,146,146,119,146,1,104,106,
+119,118,1,1,119,251,119,251,119,251,119,251,146,1,120,122,
+251,118,139,1,1,1,1,1,1,1,1,1,146,140,119,118,
+147,148,1,1,1,1,1,1,1,1,1,1,146,1,147,148,
+163,164,1,1,1,1,1,1,1,1,1,1,146,1,163,164,
+179,180,107,108,1,1,1,1,1,1,1,1,146,1,179,180,
+251,118,123,124,1,141,142,141,141,141,142,1,146,142,251,118,
+252,251,120,121,122,120,121,122,119,251,118,254,143,160,119,251
+</data>
+ </layer>
+ <objectgroup name="objects">
+  <object id="16" type="item" x="80" y="72" width="16" height="16"/>
+  <object id="25" type="item" x="32" y="72" width="16" height="16"/>
+  <object id="28" type="big-item" x="48" y="64" width="32" height="24"/>
+  <object id="29" type="4x4-item" x="48" y="56" width="32" height="32"/>
+  <object id="30" type="breakable-left" x="0" y="56" width="16" height="24"/>
+  <object id="31" type="door-left" x="0" y="56" width="16" height="24"/>
+  <object id="32" type="door-right" x="112" y="56" width="16" height="24"/>
+  <object id="33" type="breakable-right" x="112" y="56" width="16" height="24"/>
+ </objectgroup>
+</map>
