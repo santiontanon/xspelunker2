@@ -1,8 +1,6 @@
 to do:
 
 ***- atlantis biome: crocodiles as an additional water enemy? what happens to the special animal/teleporter rooms in this biome? do I need to redraw them?
-  ***- waterfall chunks (up/down tag is "waterfall")
-  ***- "middle-platform" chunks (left/right tag is "middle-platform"). Is this brick or gold?
   ***- add variety in the chunks
   ***- iterate on the tileset as needed
   ***- adapt teleporter room to this tileset 

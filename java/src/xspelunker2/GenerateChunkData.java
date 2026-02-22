@@ -338,6 +338,7 @@ public class GenerateChunkData {
             if (c.tags.containsKey("up") && !c.tags.get("up").isEmpty()) {
                 if (c.tags.get("up").equals("hole")) edgeFlags |= 0x10;
                 if (c.tags.get("up").equals("stairs")) edgeFlags |= 0x20;
+                if (c.tags.get("up").equals("water")) edgeFlags |= 0x30;
                 flagsString += "up: " + c.tags.get("up") + ", ";
             }
             if (c.tags.containsKey("right") && !c.tags.get("right").isEmpty()) {
@@ -350,6 +351,7 @@ public class GenerateChunkData {
             if (c.tags.containsKey("down") && !c.tags.get("down").isEmpty()) {
                 if (c.tags.get("down").equals("hole")) edgeFlags |= 0x01;
                 if (c.tags.get("down").equals("stairs")) edgeFlags |= 0x02;
+                if (c.tags.get("down").equals("water")) edgeFlags |= 0x03;
                 flagsString += "down: " + c.tags.get("down") + ", ";
             }
             // location type flags:

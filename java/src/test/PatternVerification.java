@@ -25,6 +25,10 @@ public class PatternVerification {
         
         for(int i = 0;i<16;i++) {
             for(RoomChunk c:pcg2.fg_chunks.get(i)) {
+                if ((c.tags.containsKey("left") && c.tags.get("left").equals("half-hole")) ||
+                    (c.tags.containsKey("right") && c.tags.get("right").equals("half-hole"))) {
+                    System.err.println("half-hole in " + c.path);
+                }
                 TMXObject o = c.randomObject("item", r);
                 if (o == null) {
                     throw new Exception("No item locations! in " + c.path);

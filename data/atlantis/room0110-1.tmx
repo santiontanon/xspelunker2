@@ -24,11 +24,11 @@
 </data>
  </layer>
  <objectgroup name="objects">
-  <object id="1" type="item" x="16" y="16" width="16" height="16"/>
+  <object id="1" type="item" x="96" y="24" width="16" height="16"/>
   <object id="2" type="big-item" x="88" y="16" width="32" height="24"/>
   <object id="4" type="breakable-left" x="0" y="48" width="16" height="32"/>
   <object id="6" type="door-left" x="0" y="48" width="16" height="24"/>
-  <object id="8" type="4x4-item" x="32" y="0" width="32" height="32"/>
-  <object id="9" type="item" x="64" y="16" width="16" height="16"/>
+  <object id="8" type="4x4-item" x="88" y="8" width="32" height="32"/>
+  <object id="9" type="pushable-block" x="56" y="16" width="16" height="16"/>
  </objectgroup>
 </map>
