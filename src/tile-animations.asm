@@ -240,3 +240,11 @@ update_animations_in_vdp_xibalba_frame1:
 update_animations_in_vdp_xibalba_frame2:
 	ld hl, animations_xibalba_bin + 32*2
 	jr update_animations_in_vdp_xibalba_frame_continue
+
+
+
+;-----------------------------------------------
+update_animations_in_vdp_atlantis:
+	; ....
+	ret
+

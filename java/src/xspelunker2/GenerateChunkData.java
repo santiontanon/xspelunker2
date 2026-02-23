@@ -31,7 +31,9 @@ public class GenerateChunkData {
     // 8: ladder-platform-top
     // 9: boss
     // 10: lava
-    
+    // 11: falling water
+    // 12: falling lava    
+            
     public static int jungle_tile_collision_types[] = {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -106,8 +108,26 @@ public class GenerateChunkData {
         2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 2, 2, 2,
         2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 2, 2, 2,
         2, 2, 2, 2, 2, 1, 2, 2, 7, 2, 2, 2, 3, 2, 1, 5            
-    };    
+    };         
     
+    public static int atlantis_tile_collision_types[] = {
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 8, 0, 0, 0, 0, 0,
+        0, 10, 4, 11, 4, 4, 11, 2, 2, 2, 0, 0, 0, 2, 2, 0,
+        0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 2, 2, 2, 2,
+        10, 4, 3, 5, 2, 2, 5, 6, 8, 1, 1, 1, 0, 0, 2, 2,
+        12, 11, 2, 2, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 2, 2,
+        12, 11, 2, 2, 0, 0, 2, 7, 8, 4, 2, 1, 1, 1, 2, 2,
+        12, 11, 2, 2, 0, 0, 2, 0, 8, 8, 0, 0, 0, 0, 0, 0,
+        2, 2, 2, 2, 2, 2, 2, 2, 7, 7, 0, 0, 0, 0, 0, 0,
+        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0,
+        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0,
+        2, 2, 2, 2, 2, 2, 2, 2, 7, 0, 2, 2, 3, 2, 1, 5            
+    };        
 //    public static int totalObjects = 0;
     
     
@@ -118,6 +138,7 @@ public class GenerateChunkData {
         fw.write(generateChunkData("pyramid"));
         fw.write(generateChunkData("caves"));
         fw.write(generateChunkData("xibalba"));
+        fw.write(generateChunkData("atlantis"));
         fw.flush();
         fw.close();
         
@@ -147,6 +168,8 @@ public class GenerateChunkData {
             case "caves": collision_types = caves_tile_collision_types;
                           break;
             case "xibalba": collision_types = xibalba_tile_collision_types;
+                          break;
+            case "atlantis": collision_types = atlantis_tile_collision_types;
                           break;
         }
         

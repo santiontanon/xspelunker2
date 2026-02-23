@@ -72,7 +72,7 @@ caves_standard_chunk_pool:
   db 7, #00, #26  ; data/caves/room0111-4.tmx (34)  up: stairs, right: hole, down: stairs, 
   dw #008f
   db 7, #00, #25  ; data/caves/room0111-5.tmx (35)  up: stairs, right: hole, down: hole, 
-  dw #0088
+  dw #0089
   db 7, #00, #1e  ; data/caves/room0111-6.tmx (36)  up: hole, right: half-hole, down: stairs, 
   dw #008f
   db 8, #00, #40  ; data/caves/room1000-1.tmx (37)  left: hole, 

@@ -118,6 +118,8 @@ pcg_generate_area__initialize_ptrs:
 	jr z, pcg_generate_area__initialize_ptrs_caves
 	cp 8
 	jr z, pcg_generate_area__initialize_ptrs_xibalba
+	cp 9
+	jr z, pcg_generate_area__initialize_ptrs_atlantis
 pcg_generate_area__initialize_ptrs_pyramid:
 	ld hl, pyramid_chunk_ptrs_and_constants
 	jr pcg_generate_area__initialize_ptrs_continue
@@ -126,6 +128,9 @@ pcg_generate_area__initialize_ptrs_caves:
 	jr pcg_generate_area__initialize_ptrs_continue
 pcg_generate_area__initialize_ptrs_xibalba:
 	ld hl, xibalba_chunk_ptrs_and_constants
+	jr pcg_generate_area__initialize_ptrs_continue
+pcg_generate_area__initialize_ptrs_atlantis:
+	ld hl, atlantis_chunk_ptrs_and_constants
 	jr pcg_generate_area__initialize_ptrs_continue
 pcg_generate_area__initialize_ptrs_jungle
 	ld hl, jungle_chunk_ptrs_and_constants
@@ -2415,3 +2420,19 @@ xibalba_chunk_ptrs_and_constants:
 	db XIBALBA_BOSS_CHUNK_POOL_SIZE, XIBALBA_BOSS_CHUNK_POOL_FIRST_ID
 	db XIBALBA_BLOCK_CHUNK_POOL_SIZE, XIBALBA_BLOCK_CHUNK_POOL_FIRST_ID
 	db XIBALBA_COMBINATION_CHUNK_POOL_SIZE, XIBALBA_COMBINATION_CHUNK_POOL_FIRST_ID
+
+
+atlantis_chunk_ptrs_and_constants:
+	db (atlantis_chunk_fg_bank_ptrs_end - atlantis_chunk_fg_bank_ptrs) / 2  ; number of banks
+	db CHUNKS_ATLANTIS_PAGE
+	dw atlantis_chunk_fg_bank_ptrs
+	dw atlantis_standard_chunk_pool
+	dw atlantis_boss_chunk_pool
+	dw atlantis_block_chunk_pool
+	dw atlantis_combination_chunk_pool
+	dw atlantis_chunk_flags
+	dw chunk_edgecollisions_atlantis
+	db ATLANTIS_STANDARD_CHUNK_POOL_SIZE, ATLANTIS_STANDARD_CHUNK_FIRST_ID
+	db ATLANTIS_BOSS_CHUNK_POOL_SIZE, ATLANTIS_BOSS_CHUNK_POOL_FIRST_ID
+	db ATLANTIS_BLOCK_CHUNK_POOL_SIZE, ATLANTIS_BLOCK_CHUNK_POOL_FIRST_ID
+	db XIBALBA_COMBINATION_CHUNK_POOL_SIZE, ATLANTIS_COMBINATION_CHUNK_POOL_FIRST_ID

@@ -1,13 +1,15 @@
 to do:
 
-***- atlantis biome: crocodiles as an additional water enemy? what happens to the special animal/teleporter rooms in this biome? do I need to redraw them?
-  ***- adapt teleporter room to this tileset 
-  ***- special "Temple of Poseidon" room (where the boss should be). Adapt to suit the chunk connections, and make sure it's on its own (like the teleporter room, how did I do it?)
-  ***- simplifyTilesAtlantis / prettify in Java
-  ***- prettify in assembler
-  ***- background tiles should be equiprobable in Atlantis
+***- atlantis biome:
+  ***- pcg_generate_room__prettify_atlantis
+  ***- update_animations_in_vdp_atlantis
+  ***- background tiles should be equiprobable in Atlantis:
+    ***- pcg_generate_room_background_atlantis
+  ***- special "Temple of Poseidon" room (where the boss should be). Adapt to suit the chunk connections, and make sure it's on its own (like the teleporter room, how did I do it?):
+    ***- add it in java
+    ***- add it in MSX
   ***- tablets with the story about the "firestones" and also with some background on the fall of atlantis.
-  ***- sprite enemies: ghosts/spirits
+  ***- sprite enemies: ghosts/spirits/crocodiles in water (atlantis_enemy_sprites_zx0)
   ***- tile enemies:
     ***- water generators (like the lava ones for xibalba)
     ***- robot maya statue guardians (slowly walk back and forth, they should be large, like the owls)

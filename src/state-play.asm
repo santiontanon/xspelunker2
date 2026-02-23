@@ -185,10 +185,11 @@ state_play_from_continue:
 ; 		ld e, 1
 ; 		ld e, 1  ; area to generate <- first boss
 ; 		ld e, 2  ; area to generate <- second boss
-		ld e, 3  ; area to generate
+; 		ld e, 3  ; area to generate
 ; 		ld e, 3  ; area to generate
 ; 		ld e, 4  ; area to generate <- third boss
 ; 		ld e, 8  ; xibalba
+		ld e, 9  ; atlantis
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
 
@@ -197,10 +198,11 @@ state_play_from_continue:
 ; 		ld e, 5
 ; 		ld e, 20  ; <- first boss
 ; 		ld e, 16  ; <- second boss
-		ld e, 0
+; 		ld e, 0
 ; 		ld e, CALENDAR_ROOM_ID
 ; 		ld e, 3  ; <- third boss
 ; 		ld e, 17  ; <- fourth boss
+		ld e, 0
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
