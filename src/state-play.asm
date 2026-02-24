@@ -188,8 +188,9 @@ state_play_from_continue:
 ; 		ld e, 3  ; area to generate
 ; 		ld e, 3  ; area to generate
 ; 		ld e, 4  ; area to generate <- third boss
+		ld e, 6  ; area to generate
 ; 		ld e, 8  ; xibalba
-		ld e, 9  ; atlantis
+; 		ld e, 9  ; atlantis
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
 

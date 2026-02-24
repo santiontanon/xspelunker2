@@ -1135,6 +1135,9 @@ update_enemy_skeleton_thrower_throw_right_continue:
 	ld (hl), 0  ; right
 	inc hl
 	ld (hl), 0  ; state timer
+	inc hl
+	inc hl
+	ld (hl), 1  ; hitpoints
 
 	ld hl, SFX_enemy_bullet
 	call play_SFX_with_high_priority	
@@ -1190,6 +1193,9 @@ update_enemy_skeleton_thrower_throw_left_continue:
 	ld (hl), 1  ; left
 	inc hl
 	ld (hl), 0  ; state timer
+	inc hl
+	inc hl
+	ld (hl), 1  ; hitpoints
 
 	ld hl, SFX_enemy_bullet
 	call play_SFX_with_high_priority
