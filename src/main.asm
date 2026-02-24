@@ -74,6 +74,7 @@ CHUNKS_PYRAMID_PAGE: equ 4
 CHUNKS_CAVES_PAGE: equ 13
 CHUNKS_XIBALBA_PAGE: equ 9
 CHUNKS_ATLANTIS_PAGE: equ 16
+TELEPORTER_ROOM_PAGE: equ 4
 
 
 ;-----------------------------------------------

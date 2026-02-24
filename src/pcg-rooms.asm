@@ -2568,7 +2568,7 @@ pcg_generate_room__teleporter:
 	; name table:
 	ld hl, teleporter_room_zx0
 	ld de, current_room__tile_map
-	ld c, CHUNKS_PYRAMID_PAGE
+	ld c, TELEPORTER_ROOM_PAGE
 	call dzx0_from_page_c
 
 	; tile sets, collisions, and animation ptrs:
@@ -2576,7 +2576,7 @@ pcg_generate_room__teleporter:
 	ld (current_room__tileset_ptr), bc
 	ld a, AREA_COLLISION_TABLES_PAGE
 	ld (current_room__collision_ptr_page), a
-	ld bc, tile_collision_types_pyramid
+	ld bc, tile_collision_types_atlantis
 	ld (current_room__collision_ptr), bc
 	ld a, TILES_PAGE
 	ld (current_room__tileset_page), a
