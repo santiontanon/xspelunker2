@@ -34,7 +34,6 @@ pcg_enemy_generation_table_pyramid1_normal:
 pcg_enemy_generation_table_pyramid2_normal:
 pcg_enemy_generation_table_pyramid3_normal:
 pcg_enemy_generation_table_fire_shaft_normal:
-pcg_enemy_generation_table_atlantis_normal:
 pcg_enemy_generation_table_mars_normal:
 pcg_enemy_generation_table_moon_normal:
 	db 2  ; 2 enemies per "screen" area
@@ -83,3 +82,18 @@ pcg_enemy_generation_table_xibalba_normal:
 	db ENEMY_SKELETON_SLEEPER, 8
 	db ENEMY_FIRE_IMP, 5
 	db ENEMY_FIRE_IMP2, 3
+
+pcg_enemy_generation_table_atlantis_normal:
+	db 2  ; 2 enemies per "screen" area
+	db 0
+	db 11  ; possible sprite enemy types to be spawned (weights below should add up to 32)
+	db ENEMY_SNAKE, 5  ; enemy type and weight
+	db ENEMY_SNAKE_DASHER, 2
+	db ENEMY_SNAKE_POISON, 2
+	db ENEMY_FISH, 5
+	db ENEMY_FISH_JUMPER, 2
+	db ENEMY_BAT, 5
+	db ENEMY_BAT_AGGRESSIVE, 2
+	db ENEMY_SKELETON, 5
+	db ENEMY_SKELETON_THROWER1, 2
+	db ENEMY_SKELETON_THROWER2, 2

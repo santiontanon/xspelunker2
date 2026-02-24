@@ -34,7 +34,6 @@ pcg_enemy_generation_table_pyramid1_hardest:
 pcg_enemy_generation_table_pyramid2_hardest:
 pcg_enemy_generation_table_pyramid3_hardest:
 pcg_enemy_generation_table_fire_shaft_hardest:
-pcg_enemy_generation_table_atlantis_hardest:
 pcg_enemy_generation_table_mars_hardest:
 pcg_enemy_generation_table_moon_hardest:
 	db 2  ; 2 enemies per "screen" area
@@ -84,3 +83,19 @@ pcg_enemy_generation_table_xibalba_hardest:
 	db ENEMY_SKELETON_SLEEPER, 8
 	db ENEMY_FIRE_IMP, 1
 	db ENEMY_FIRE_IMP2, 7
+
+pcg_enemy_generation_table_atlantis_hardest:
+	db 2  ; 2 enemies per "screen" area
+	db 0
+; 	db TAG_ENEMY_CARNIVORE_PLANT, 96  ; tile-based enemy type and chance (out of 256)
+	db 11  ; possible sprite enemy types to be spawned (weights below should add up to 32)
+	db ENEMY_SNAKE, 2  ; enemy type and weight
+	db ENEMY_SNAKE_DASHER, 3
+	db ENEMY_SNAKE_POISON, 4
+	db ENEMY_FISH, 2
+	db ENEMY_FISH_JUMPER, 5
+	db ENEMY_BAT, 2
+	db ENEMY_BAT_AGGRESSIVE, 5
+	db ENEMY_SKELETON, 2
+	db ENEMY_SKELETON_THROWER1, 3
+	db ENEMY_SKELETON_THROWER2, 4

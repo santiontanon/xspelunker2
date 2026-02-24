@@ -117,15 +117,15 @@ public class GenerateChunkData {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 8, 0, 0, 0, 0, 0,
-        0, 10, 4, 11, 4, 4, 11, 2, 2, 2, 0, 0, 0, 2, 2, 0,
+        0, 10, 4, 11, 4, 4, 11, 2, 2, 2, 2, 2, 2, 2, 2, 2,
         0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 2, 2, 2, 2,
         10, 4, 3, 5, 2, 2, 5, 6, 8, 1, 1, 1, 0, 0, 2, 2,
-        12, 11, 2, 2, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 2, 2,
-        12, 11, 2, 2, 0, 0, 2, 7, 8, 4, 2, 1, 1, 1, 2, 2,
-        12, 11, 2, 2, 0, 0, 2, 0, 8, 8, 0, 0, 0, 0, 0, 0,
+        12, 11, 2, 2, 0, 0, 0, 2, 8, 0, 0, 0, 0, 0, 2, 2,
+        12, 11, 2, 2, 0, 0, 8, 7, 8, 4, 2, 1, 1, 1, 2, 2,
+        12, 11, 2, 2, 0, 0, 2, 0, 2, 2, 0, 2, 2, 0, 0, 0,
         2, 2, 2, 2, 2, 2, 2, 2, 7, 7, 0, 0, 0, 0, 0, 0,
         2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0,
-        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0,
+        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 2, 2, 0,
         2, 2, 2, 2, 2, 2, 2, 2, 7, 0, 2, 2, 3, 2, 1, 5            
     };        
 //    public static int totalObjects = 0;
@@ -202,6 +202,7 @@ public class GenerateChunkData {
         constants += biome.toUpperCase() + "_BLOCK_CHUNK_POOL_FIRST_ID: equ " + pcg.first_block_chunk + "\n";
         constants += biome.toUpperCase() + "_COMBINATION_CHUNK_POOL_SIZE: equ " + (pcg.all_fg_chunks.size() - pcg.first_combination_chunk) + "\n";
         constants += biome.toUpperCase() + "_COMBINATION_CHUNK_POOL_FIRST_ID: equ " + pcg.first_combination_chunk + "\n";
+        constants += biome.toUpperCase() + "_N_BG_CHUNKS: equ " + pcg.bg_chunks.size() + "\n";
         return constants;        
     }
 
@@ -478,6 +479,12 @@ public class GenerateChunkData {
                     n_item_locations++;
                 }
                 if (o.type.equals("pushable-block")) {
+                    if (collision_types[c.tiles[o.x/8 + 0][o.y/8 + 0]] != 0 ||
+                        collision_types[c.tiles[o.x/8 + 1][o.y/8 + 0]] != 0 ||
+                        collision_types[c.tiles[o.x/8 + 0][o.y/8 + 1]] != 0 ||
+                        collision_types[c.tiles[o.x/8 + 1][o.y/8 + 1]] != 0) {
+                        throw new Exception("Pushable block on top of something in " + c.path);
+                    }
                     n_pushable_blocks++;
                 }
                 if (o.type.equals("lava-generator")) {

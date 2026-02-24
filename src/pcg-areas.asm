@@ -136,7 +136,7 @@ pcg_generate_area__initialize_ptrs_jungle
 	ld hl, jungle_chunk_ptrs_and_constants
 pcg_generate_area__initialize_ptrs_continue:
 	ld de, current_area__n_chunk_banks
-	ld bc, (current_area__combination_chunk_pool_first_id + 1) - current_area__n_chunk_banks
+	ld bc, (current_area__p_of_first_bg_chunk + 1) - current_area__n_chunk_banks
 	ldir
 	ret
 
@@ -1576,6 +1576,8 @@ pcg_generate_area__choose_chunks_loop_x_no_connection_down:
 		jp z, pcg_generate_area__choose_chunks_loop_x_small_lock_tag
 		call pcg_generate_area__choose_chunks_is_item_tag_p
 		jp z, pcg_generate_area__choose_chunks_loop_x_item_tag
+		call pcg_generate_area__choose_chunks_is_big_item_tag_p
+		jp z, pcg_generate_area__choose_chunks_loop_x_big_item_tag
 		call pcg_generate_area__choose_chunks_is_4x4_item_tag_p
 		jp z, pcg_generate_area__choose_chunks_loop_x_4x4_item_tag
 		call pcg_generate_area__choose_chunks_is_combination_lock_tag_p
@@ -1687,9 +1689,13 @@ pcg_generate_area__choose_chunks_loop_x_item_tag:
 		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_ITEM_MASK
 		jp pcg_generate_area__choose_chunks_loop_x_continue
 
+pcg_generate_area__choose_chunks_loop_x_big_item_tag:
+		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_BIG_ITEM_MASK
+		jp pcg_generate_area__choose_chunks_loop_x_continue
+
 pcg_generate_area__choose_chunks_loop_x_4x4_item_tag:
 		PCG_GENERATE_AREA_NECESSARY_ITEM CHUNK_LOCATION_4X4_ITEM_MASK
-		jp pcg_generate_area__choose_chunks_loop_x_button_door_tag
+		jp pcg_generate_area__choose_chunks_loop_x_button_door_tag  ; we jump here, since 4x4 tags are all locks
 
 pcg_generate_area__choose_chunks_loop_x_combination_lock_tag:
 		ld de, (current_area__combination_chunk_pool_ptr)
@@ -2037,6 +2043,13 @@ pcg_generate_area__choose_chunks_is_item_tag_p:
 	pop hl
 	ret
 
+pcg_generate_area__choose_chunks_is_big_item_tag_p:
+	push hl
+		ld hl, pcg_generate_area__big_item_tags
+		call pcg_generate_area__tag_in_list
+	pop hl
+	ret
+
 pcg_generate_area__choose_chunks_is_4x4_item_tag_p:
 	push hl
 		ld hl, pcg_generate_area__4x4_item_tags
@@ -2171,6 +2184,19 @@ pcg_generate_area__directional_tags:
     db TAG_COMBINATION4_LOCK
     db TAG_MIDPOINT
     db 0
+
+pcg_generate_area__big_item_tags:
+	db TAG_TELEPORTER1
+	db TAG_TELEPORTER2
+	db TAG_TELEPORTER3
+	db TAG_TELEPORTER4
+	db TAG_TELEPORTER5
+	db TAG_TELEPORTER6
+	db TAG_TELEPORTER7
+	db TAG_TELEPORTER8
+	db TAG_TELEPORTER_MARS
+	db TAG_TELEPORTER_MOON
+	db 0
 
 pcg_generate_area__normal_tags:
 	db TAG_TELEPORTER1
@@ -2375,6 +2401,7 @@ jungle_chunk_ptrs_and_constants:
 	db JUNGLE_BOSS_CHUNK_POOL_SIZE, JUNGLE_BOSS_CHUNK_POOL_FIRST_ID
 	db JUNGLE_BLOCK_CHUNK_POOL_SIZE, JUNGLE_BLOCK_CHUNK_POOL_FIRST_ID
 	db JUNGLE_COMBINATION_CHUNK_POOL_SIZE, JUNGLE_COMBINATION_CHUNK_POOL_FIRST_ID
+	db JUNGLE_N_BG_CHUNKS, 0  ; always first bg chunk
 
 pyramid_chunk_ptrs_and_constants:
 	db (pyramid_chunk_fg_bank_ptrs_end - pyramid_chunk_fg_bank_ptrs) / 2  ; number of banks
@@ -2390,6 +2417,7 @@ pyramid_chunk_ptrs_and_constants:
 	db PYRAMID_BOSS_CHUNK_POOL_SIZE, PYRAMID_BOSS_CHUNK_POOL_FIRST_ID
 	db PYRAMID_BLOCK_CHUNK_POOL_SIZE, PYRAMID_BLOCK_CHUNK_POOL_FIRST_ID
 	db PYRAMID_COMBINATION_CHUNK_POOL_SIZE, PYRAMID_COMBINATION_CHUNK_POOL_FIRST_ID
+	db PYRAMID_N_BG_CHUNKS, 192
 
 caves_chunk_ptrs_and_constants:
 	db (caves_chunk_fg_bank_ptrs_end - caves_chunk_fg_bank_ptrs) / 2  ; number of banks
@@ -2405,6 +2433,7 @@ caves_chunk_ptrs_and_constants:
 	db CAVES_BOSS_CHUNK_POOL_SIZE, CAVES_BOSS_CHUNK_POOL_FIRST_ID
 	db CAVES_BLOCK_CHUNK_POOL_SIZE, CAVES_BLOCK_CHUNK_POOL_FIRST_ID
 	db CAVES_COMBINATION_CHUNK_POOL_SIZE, CAVES_COMBINATION_CHUNK_POOL_FIRST_ID
+	db PYRAMID_N_BG_CHUNKS, 192
 
 xibalba_chunk_ptrs_and_constants:
 	db (xibalba_chunk_fg_bank_ptrs_end - xibalba_chunk_fg_bank_ptrs) / 2  ; number of banks
@@ -2420,6 +2449,7 @@ xibalba_chunk_ptrs_and_constants:
 	db XIBALBA_BOSS_CHUNK_POOL_SIZE, XIBALBA_BOSS_CHUNK_POOL_FIRST_ID
 	db XIBALBA_BLOCK_CHUNK_POOL_SIZE, XIBALBA_BLOCK_CHUNK_POOL_FIRST_ID
 	db XIBALBA_COMBINATION_CHUNK_POOL_SIZE, XIBALBA_COMBINATION_CHUNK_POOL_FIRST_ID
+	db PYRAMID_N_BG_CHUNKS, 192
 
 
 atlantis_chunk_ptrs_and_constants:
@@ -2436,3 +2466,4 @@ atlantis_chunk_ptrs_and_constants:
 	db ATLANTIS_BOSS_CHUNK_POOL_SIZE, ATLANTIS_BOSS_CHUNK_POOL_FIRST_ID
 	db ATLANTIS_BLOCK_CHUNK_POOL_SIZE, ATLANTIS_BLOCK_CHUNK_POOL_FIRST_ID
 	db XIBALBA_COMBINATION_CHUNK_POOL_SIZE, ATLANTIS_COMBINATION_CHUNK_POOL_FIRST_ID
+	db PYRAMID_N_BG_CHUNKS, 50

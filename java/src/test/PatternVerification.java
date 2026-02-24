@@ -25,6 +25,19 @@ public class PatternVerification {
         
         for(int i = 0;i<16;i++) {
             for(RoomChunk c:pcg2.fg_chunks.get(i)) {
+                // Check for when I moved tiles around:
+//                for(int y = 0;y<RoomChunk.CHUNK_HEIGHT;y++) {
+//                    for(int x = 0;x<RoomChunk.CHUNK_WIDTH;x++) {
+//                        if (c.tiles[x][y] == 9*16 + 8 ||
+//                            c.tiles[x][y] == 10*16 + 6 ||
+//                            c.tiles[x][y] == 11*16 + 6 ||
+//                            c.tiles[x][y] == 11*16 + 8 ||
+//                            c.tiles[x][y] == 11*16 + 9 ||
+//                            c.tiles[x][y] == 11*16 + 11) {
+//                            System.err.println("Changed tile in " + c.path);
+//                        }
+//                    }
+//                }
                 if ((c.tags.containsKey("left") && c.tags.get("left").equals("half-hole")) ||
                     (c.tags.containsKey("right") && c.tags.get("right").equals("half-hole"))) {
                     System.err.println("half-hole in " + c.path);
@@ -40,6 +53,11 @@ public class PatternVerification {
                     System.out.println(c.path + ": " + true);
                 }
                 for(TMXObject o2:c.locations) {
+                    if (o2.x<0 || o2.y<0 ||
+                        o2.x+o2.dx>RoomChunk.CHUNK_WIDTH*8 ||
+                        o2.y+o2.dy>RoomChunk.CHUNK_HEIGHT*8) {
+                        System.err.println("Object outside the margins in " + c.path);
+                    }
                     if (o2.type.equals("breakable-down") && (o2.y + o2.dy) != 96) {
                         System.err.println("Wrong breakable-down in " + c.path);
                     }

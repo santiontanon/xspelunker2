@@ -1514,13 +1514,26 @@ pcg_generate_room__bg_loop_x:
 		and CHUNK_FLAG_BOSS_MASK
 		jr nz, pcg_generate_room__bg_loop_empty_chunk
 		; pick a background chunk:
-		call random_a
-		and #03
-		jr nz, pcg_generate_room__bg_loop_empty_chunk
-		; 0.25 chance of having a non-emtpy chunk:
-		call random_a
-		and #01
 
+; current_area__n_bg_chunks: ds virtual 1
+; current_area__p_of_first_bg_chunk: ds virtual 1
+
+		ld a, (current_area__p_of_first_bg_chunk)
+		or a
+		jr z, pcg_generate_room__bg_loop_empty_chunk
+		push bc
+			ld c, a
+			call random_a
+			cp c
+		pop bc
+		jr c, pcg_generate_room__bg_loop_empty_chunk
+		ld a, (current_area__n_bg_chunks)
+		dec a
+		jr z, pcg_generate_room__bg_loop_empty_chunk
+		push bc
+			ld c, a
+			call random_modulo
+		pop bc
 		push bc
 			ld hl, (tmp_pcg_room__current_chunk_bg_bank_ptrs)
 			call pcg_get_chunk_ptr  ; hl = ptr of the chunk to copy

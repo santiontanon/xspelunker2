@@ -67,6 +67,8 @@ current_area__block_chunk_pool_size: ds virtual 1
 current_area__block_chunk_pool_first_id: ds virtual 1
 current_area__combination_chunk_pool_size: ds virtual 1
 current_area__combination_chunk_pool_first_id: ds virtual 1
+current_area__n_bg_chunks: ds virtual 1
+current_area__p_of_first_bg_chunk: ds virtual 1
 
 
 current_room__id: ds virtual 1

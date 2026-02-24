@@ -2351,7 +2351,6 @@ public class PCGArea {
 
                             case "gear-lock":
                             case "idol-lock":
-                            case "astronaut-lock":
                             {
                                 necessaryObjectTypes.add("big-item");
                                 int lockDirection = w.lockDirections.get(placedTags[j][i]);
@@ -2386,6 +2385,7 @@ public class PCGArea {
                             case "purple-lock":
                             case "white-lock":
                             case "ball-lock":
+                            case "astronaut-lock":
                             {
                                 necessaryObjectTypes.add("item");
                                 int lockDirection = w.lockDirections.get(placedTags[j][i]);

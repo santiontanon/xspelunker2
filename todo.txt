@@ -1,10 +1,7 @@
 to do:
 
 ***- atlantis biome:
-  ***- pcg_generate_room__prettify_atlantis
   ***- update_animations_in_vdp_atlantis
-  ***- background tiles should be equiprobable in Atlantis:
-    ***- pcg_generate_room_background_atlantis
   ***- special "Temple of Poseidon" room (where the boss should be). Adapt to suit the chunk connections, and make sure it's on its own (like the teleporter room, how did I do it?):
     ***- add it in java
     ***- add it in MSX

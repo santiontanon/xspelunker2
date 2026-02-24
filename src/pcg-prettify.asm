@@ -958,7 +958,173 @@ pcg_generate_room__prettify_xibalba_rope_done:
 ;-----------------------------------------------
 ; This method:
 ; - completes ropes, ladders, face blocks
-; - randomizes xibalba tiles
+; - randomizes atlantis tiles
 pcg_generate_room__prettify_atlantis:
-	; ...
+	; reconstruct ropes/ladders/faces:
+	ld hl, current_room__tile_map
+	ld bc, (current_room__width)
+	ld a, (current_room__width)
+	ld e, a
+	ld d, 0	
+pcg_generate_room__prettify_atlantis_loop_y:
+	push bc
+		ld b, c
+		ld c, 15*16 + 8
+pcg_generate_room__prettify_atlantis_loop_x:
+		ld a, (hl)
+		cp 12*16 + 5
+		jp z,pcg_generate_room__prettify_atlantis_gold_bricks
+		sub c
+		jr c, pcg_generate_room__prettify_atlantis_loop_x_continue
+		jp z, pcg_generate_room__prettify_atlantis_ladder
+		dec a
+		jp z, pcg_generate_room__prettify_atlantis_loop_x_continue
+		dec a
+		jp z, pcg_generate_room__prettify_atlantis_medium_bricks1_randomize
+		dec a
+		jr z, pcg_generate_room__prettify_atlantis_medium_bricks2_randomize
+		dec a
+		jp z, pcg_generate_room__prettify_atlantis_spike_tip_randomize
+		dec a
+		jr z, pcg_generate_room__prettify_atlantis_small_bricks_randomize
+		dec a
+		jp z, pcg_generate_room__prettify_atlantis_platform1
+		jp pcg_generate_room__prettify_atlantis_rope
+pcg_generate_room__prettify_atlantis_loop_x_continue:
+		inc hl
+		djnz pcg_generate_room__prettify_atlantis_loop_x
+	pop bc
+	djnz pcg_generate_room__prettify_atlantis_loop_y
 	ret
+
+pcg_generate_room__prettify_atlantis_gold_bricks:
+	PCG_PRETTIFY_RANDOM
+	and #01
+	jp z, pcg_generate_room__prettify_atlantis_loop_x_continue
+	ld (hl), 12*16 + 6
+	jp pcg_generate_room__prettify_atlantis_loop_x_continue	
+
+pcg_generate_room__prettify_atlantis_medium_bricks1_randomize:
+	PCG_PRETTIFY_RANDOM
+	and #01
+	jp z, pcg_generate_room__prettify_atlantis_loop_x_continue
+	ld (hl), 7*16 + 5
+	jp pcg_generate_room__prettify_atlantis_loop_x_continue	
+
+pcg_generate_room__prettify_atlantis_medium_bricks2_randomize:
+	PCG_PRETTIFY_RANDOM
+	and #01
+	jp z, pcg_generate_room__prettify_atlantis_loop_x_continue
+	ld (hl), 7*16 + 6
+	jp pcg_generate_room__prettify_atlantis_loop_x_continue	
+	
+pcg_generate_room__prettify_atlantis_spike_tip_randomize:
+	PCG_PRETTIFY_RANDOM
+	and #01
+	jr z, pcg_generate_room__prettify_atlantis_spike_tip_randomize_continue
+	ld (hl), 8*16 + 2
+pcg_generate_room__prettify_atlantis_spike_tip_randomize_continue:
+	PCG_PRETTIFY_RANDOM
+	and #01
+	add a, 8*16 + 4
+	add hl, de
+	ld (hl), a
+	sbc hl, de
+	jp pcg_generate_room__prettify_atlantis_loop_x_continue
+
+pcg_generate_room__prettify_atlantis_small_bricks_randomize:
+	PCG_PRETTIFY_RANDOM
+	and #07
+	cp 3
+	jp c, pcg_generate_room__prettify_atlantis_loop_x_continue
+	cp 6
+	ld (hl), 9*16 + 14
+	jp c, pcg_generate_room__prettify_atlantis_loop_x_continue
+	ld (hl), 9*16 + 15
+	jp pcg_generate_room__prettify_atlantis_loop_x_continue
+
+pcg_generate_room__prettify_atlantis_platform1:
+	PCG_PRETTIFY_RANDOM
+	and #01
+	jp z, pcg_generate_room__prettify_atlantis_loop_x_continue
+	ld (hl), 8*16 + 9
+	jp pcg_generate_room__prettify_atlantis_loop_x_continue	
+
+pcg_generate_room__prettify_atlantis_rope:
+	push hl
+	push bc
+		ld bc, current_room__tile_map
+pcg_generate_room__prettify_atlantis_rope_loop:
+		or a
+		sbc hl, de  ; go one row up
+; 		or a
+		sbc hl, bc  ; check if we are out of the map
+		jr c, pcg_generate_room__prettify_atlantis_rope_done
+		add hl, bc
+		ld a, (hl)
+		or a
+		jr z, pcg_generate_room__prettify_atlantis_rope_keep_going
+		cp 6*16 + 0  ; torch
+		jr z, pcg_generate_room__prettify_atlantis_rope_keep_going
+		cp 7*16 + 1  ; torch
+		jr z, pcg_generate_room__prettify_atlantis_rope_keep_going
+		cp 7*16 + 2  ; background
+		jr z, pcg_generate_room__prettify_atlantis_rope_keep_going
+		cp 7*16 + 3  ; background
+		jr z, pcg_generate_room__prettify_atlantis_rope_keep_going
+		cp 7*16 + 4  ; background
+		jr z, pcg_generate_room__prettify_atlantis_rope_keep_going
+		cp 7*16 + 5  ; background
+		jr z, pcg_generate_room__prettify_atlantis_rope_keep_going
+		jr pcg_generate_room__prettify_atlantis_rope_done
+pcg_generate_room__prettify_atlantis_rope_keep_going:
+		PCG_PRETTIFY_RANDOM
+		and #03
+		jp nz, pcg_generate_room__prettify_atlantis_rope_keep_going2
+		ld (hl), 8*16 + 3  ; rope knot
+		jr pcg_generate_room__prettify_atlantis_rope_loop
+pcg_generate_room__prettify_atlantis_rope_keep_going2:
+		ld (hl), 8*16 + 6  ; rope
+		jr pcg_generate_room__prettify_atlantis_rope_loop
+pcg_generate_room__prettify_atlantis_rope_done:
+	pop bc
+	pop hl
+	jp pcg_generate_room__prettify_atlantis_loop_x_continue
+
+pcg_generate_room__prettify_atlantis_ladder:
+	push hl
+	push bc
+		ld bc, current_room__tile_map
+pcg_generate_room__prettify_atlantis_ladder_loop:
+		or a
+		sbc hl, de  ; go one row up
+		or a
+		sbc hl, bc  ; check if we are out of the map
+		jr c, pcg_generate_room__prettify_atlantis_ladder_done
+		add hl, bc
+		ld a, (hl)
+		or a
+		jr z, pcg_generate_room__prettify_atlantis_ladder_keep_going
+		cp 6*16 + 0  ; torch
+		jr z, pcg_generate_room__prettify_atlantis_ladder_keep_going
+		cp 7*16 + 1  ; torch
+		jr z, pcg_generate_room__prettify_atlantis_ladder_keep_going
+		cp 7*16 + 2  ; background
+		jr z, pcg_generate_room__prettify_atlantis_ladder_keep_going
+		cp 7*16 + 3  ; background
+		jr z, pcg_generate_room__prettify_atlantis_ladder_keep_going
+		cp 7*16 + 4  ; background
+		jr z, pcg_generate_room__prettify_atlantis_ladder_keep_going
+		cp 7*16 + 5  ; background
+		jr z, pcg_generate_room__prettify_atlantis_ladder_keep_going
+		jr pcg_generate_room__prettify_atlantis_ladder_done
+pcg_generate_room__prettify_atlantis_ladder_keep_going:
+		ld (hl), 15*16 + 8  ; ladder-left
+		inc hl
+		ld (hl), 10*16 + 7  ; ladder-right
+		dec hl
+		jr pcg_generate_room__prettify_atlantis_ladder_loop
+pcg_generate_room__prettify_atlantis_ladder_done:
+	pop bc
+	pop hl
+	jp pcg_generate_room__prettify_atlantis_loop_x_continue
