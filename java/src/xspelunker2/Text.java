@@ -533,7 +533,7 @@ public class Text {
 
         addLineSafe(lines_with_constant_page2, "Before going on a hunt, warriors prayed in the animal altars to receive their blessing.", "TABLET_TRIVIA_CLUE1_1", 18*3);
 
-        addLineSafe(lines_with_constant_page2, "Five colossi guard the these lands. Insult their pride, and they will transform.", "TABLET_TRIVIA_CLUE2_1", 18*3);
+        addLineSafe(lines_with_constant_page2, "Five colossi guard these lands. Insult their pride, and they will transform.", "TABLET_TRIVIA_CLUE2_1", 18*3);
         addLineSafe(lines_with_constant_page2, "Huracan, for example, prides itself on the purity of Palenque's underground water. So, do not litter it!", "TABLET_TRIVIA_CLUE2_2", 18*4);
 
         addLineSafe(lines_with_constant_page2, "The star people insisted that we live in one of many possible worlds.", "TABLET_TRIVIA_CLUE3_1", 18*3);
@@ -601,7 +601,22 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "Quicxic", "XIBALBA_BOSS_NAME_11", 18);
         addLineSafe(lines_with_constant_page3, "Patan", "XIBALBA_BOSS_NAME_12", 18);
         
+        // Atlantis tablets:
+        addLineSafe(lines_with_constant_page3, "This is the Temple of Poseidon. But what you will find inside might not be as merciful as he was...", "ATLANTIS_TABLET_1_1", 18*3);
+
+        addLineSafe(lines_with_constant_page3, "Four statues and four watching faces. Only one of them is surprised.", "ATLANTIS_TABLET_2_1", 18*3);
+        addLineSafe(lines_with_constant_page3, "Surprised that no one can see the hidden lock on top the statue it watches over.", "ATLANTIS_TABLET_2_2", 18*5);
         
+        addLineSafe(lines_with_constant_page3, "Firestones powered Atlantean machines. But creating firestones was too dangerous to be", "ATLANTIS_TABLET_3_1", 18*3);
+        addLineSafe(lines_with_constant_page3, "done in the city itself. That's why the forge, our ultimate creation, was moved. Not to another city... but outside of this planet!", "ATLANTIS_TABLET_3_2", 18*5);
+        
+        addLineSafe(lines_with_constant_page3, "When 'they' made us come back to Atlantis to build their gate, they needed firestones.", "ATLANTIS_TABLET_4_1", 18*3);
+        addLineSafe(lines_with_constant_page3, "But the forge was not here, so, we had to collect the few firestones that had been left behind...", "ATLANTIS_TABLET_4_2", 18*5);
+
+        addLineSafe(lines_with_constant_page3, "The firestone forge was too dangerous. So, a compromise was reached. It would only ", "ATLANTIS_TABLET_5_1", 18*3);
+        addLineSafe(lines_with_constant_page3, "operate in the Atlantis world. That world had to pay the price for all others to be safe.", "ATLANTIS_TABLET_5_2", 18*5);
+
+
         List<Integer> numbers = font.convertStringToAssembler("0123456789 ");
         System.out.println("Numbers: " + numbers);
         List<Integer> letters = font.convertStringToAssembler("ABCDEFGHIJKLMNOPQRSTUVWXYZ ");

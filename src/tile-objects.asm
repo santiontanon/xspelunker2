@@ -1187,6 +1187,11 @@ ENDR
 	dw object_interaction_function_tablet  ; TAG_XIBALBA_LORDS6
 	dw object_interaction_function_tablet  ; TAG_XIBALBA_LORDS7
 	dw object_interaction_function_tablet  ; TAG_XIBALBA_CLUE
+	dw object_interaction_function_tablet  ; TAG_ATLANTIS_TABLET1
+	dw object_interaction_function_tablet  ; TAG_ATLANTIS_TABLET2
+	dw object_interaction_function_tablet  ; TAG_ATLANTIS_TABLET3
+	dw object_interaction_function_tablet  ; TAG_ATLANTIS_TABLET4
+	dw object_interaction_function_tablet  ; TAG_ATLANTIS_TABLET5
 	dw object_interaction_function_empty  ; TAG_PUSHABLE_BLOCK
 	dw object_interaction_function_empty  ; TAG_DOOR_VERTICAL
 	dw object_interaction_function_empty  ; TAG_DOOR_HORIZONTAL
@@ -1700,6 +1705,13 @@ object_interaction_function_tablet_not_maya_puzzle:
 	ld de, xibalba_tablet_fn
 	jr object_interaction_function_tablet_ptr_set
 object_interaction_function_tablet_not_xibalba_tablet:
+	cp TAG_ATLANTIS_TABLET1
+	jr c, object_interaction_function_tablet_not_atlantis_tablet
+	cp TAG_ATLANTIS_TABLET5 + 1
+	jr nc, object_interaction_function_tablet_not_atlantis_tablet
+	ld de, atlantis_tablet_fn
+	jr object_interaction_function_tablet_ptr_set
+object_interaction_function_tablet_not_atlantis_tablet:
 	cp TAG_XIBALBA_BOSS_TABLET
 	jr nz, object_interaction_function_tablet_not_xibalba_boss_tablet
 	ld de, xibalba_boss_tablet_fn
@@ -2637,6 +2649,11 @@ ENDR
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_XIBALBA_LORDS6
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_XIBALBA_LORDS7
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_XIBALBA_CLUE
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ATLANTIS_TABLET1
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ATLANTIS_TABLET2
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ATLANTIS_TABLET3
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ATLANTIS_TABLET4
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ATLANTIS_TABLET5
 
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_pushable_block_gfx  ; TAG_PUSHABLE_BLOCK
 	TILE_OBJECT_DATA 1, 1, 3, tile_object_v_door_gfx  ; TAG_DOOR_VERTICAL

@@ -1354,3 +1354,50 @@ xibalba_tablet_fn_continue:
 	ld de, NAMTBL2 + (7 + 8*32)
 	ld ix, CHRTBL2 + 256*8
 	jp display_paragraph_text_page3
+
+
+;-----------------------------------------------
+atlantis_tablet_fn_tbl:
+	dw TEXT_ATLANTIS_TABLET_1_1, 0
+	dw TEXT_ATLANTIS_TABLET_2_1, TEXT_ATLANTIS_TABLET_2_2
+	dw TEXT_ATLANTIS_TABLET_3_1, TEXT_ATLANTIS_TABLET_3_2
+	dw TEXT_ATLANTIS_TABLET_4_1, TEXT_ATLANTIS_TABLET_4_2
+	dw TEXT_ATLANTIS_TABLET_5_1, TEXT_ATLANTIS_TABLET_5_2
+
+atlantis_tablet_fn:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	sub TAG_ATLANTIS_TABLET1
+	add a, a
+	add a, a
+	ld hl, atlantis_tablet_fn_tbl
+	ADD_HL_A
+	ld e, (hl)
+	inc hl
+	ld d, (hl)
+	inc hl
+	ld a, (hl)
+	inc hl
+	ld h, (hl)
+	ld l, a
+	push hl
+		push de
+			ld hl, tablet_trivia_tiles_zx0
+			ld c, TABLET_LETTER_PAGE
+			call maya_puzzle_tablet_fn_load_extra_tiles_hl_set
+		pop iy
+		ld a, 18
+		ld (tmp_letter_line_width), a
+		ld a, COLOR_GREY
+		ld (tmp_letter_line_color), a
+		ld b, 48
+		ld de, NAMTBL2 + (7 + 5*32)
+		ld ix, CHRTBL2
+		call display_paragraph_text_page3
+	pop iy
+	ld a, iyl
+	or iyh
+	ret z
+	ld b, 48
+	ld de, NAMTBL2 + (7 + 8*32)
+	ld ix, CHRTBL2 + 256*8
+	jp display_paragraph_text_page3

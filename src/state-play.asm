@@ -112,10 +112,10 @@ state_play:
 ; 		ld (player_inventory_items+INVENTORY_ITEM_GOLDEN_KEY), a
 ; 		ld (player_inventory_items+INVENTORY_ITEM_SKULL_CHARM), a
 		ld (player_inventory_weapons), a  ; machete
-		ld (player_inventory_weapons+1), a
-		ld (player_inventory_weapons+2), a
+; 		ld (player_inventory_weapons+1), a
+; 		ld (player_inventory_weapons+2), a
 ; 		ld (player_inventory_weapons+3), a  ; shield
-		ld (player_inventory_weapons+4), a  ; sling
+; 		ld (player_inventory_weapons+4), a  ; sling
 ; 		ld (player_inventory_weapons+5), a  ; blowgun
 ; 		ld (player_inventory_weapons+6), a
 ; 		ld (player_inventory_weapons+7), a
@@ -124,8 +124,8 @@ state_play:
 ; 		ld (player_inventory_weapons+10), a
 ; 		ld a, 202
 ; 		ld (player_inventory_coins), a
-		ld a, 25
-		ld (player_inventory_weapon_ammo), a
+; 		ld a, 25
+; 		ld (player_inventory_weapon_ammo), a
 ; 		ld (player_inventory_weapon_ammo + 1), a
 ; 		ld (player_inventory_weapon_ammo + 2), a
 ; 		ld (player_inventory_weapon_ammo + 3), a
@@ -181,7 +181,7 @@ state_play_from_continue:
 
 		; generate area:
 		ld hl, pcg_generate_area
-		ld e, 0  ; area to generate
+; 		ld e, 0  ; area to generate
 ; 		ld e, 1
 ; 		ld e, 1  ; area to generate <- first boss
 ; 		ld e, 2  ; area to generate <- second boss
@@ -189,7 +189,7 @@ state_play_from_continue:
 ; 		ld e, 4  ; area to generate <- third boss
 ; 		ld e, 6  ; area to generate
 ; 		ld e, 8  ; xibalba
-; 		ld e, 9  ; atlantis
+		ld e, 9  ; atlantis
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
 
@@ -201,7 +201,7 @@ state_play_from_continue:
 ; 		ld e, CALENDAR_ROOM_ID
 ; 		ld e, 3  ; <- third boss
 ; 		ld e, 17  ; <- fourth boss
-; 		ld e, 0
+		ld e, 0
 ; 		ld e, TELEPORTER_ROOM_ID
 ; 		ld e, TEMPLE_OF_POSEIDON_ID
 		ld hl, pcg_generate_room

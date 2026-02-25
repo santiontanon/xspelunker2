@@ -2334,6 +2334,11 @@ pcg_generate_area__item_tags:
     db TAG_XIBALBA_LORDS6
     db TAG_XIBALBA_LORDS7
     db TAG_XIBALBA_CLUE
+    db TAG_ATLANTIS_TABLET1
+    db TAG_ATLANTIS_TABLET2
+    db TAG_ATLANTIS_TABLET3
+    db TAG_ATLANTIS_TABLET4
+    db TAG_ATLANTIS_TABLET5
     db 0
 
 pcg_generate_area__boss_tags:

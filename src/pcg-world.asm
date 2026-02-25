@@ -437,6 +437,11 @@ pcg_world__optional_object_table:
 	db TAG_XIBALBA_LORDS5, 8, 80, 0
 	db TAG_XIBALBA_LORDS6, 8, 80, 0
 	db TAG_XIBALBA_LORDS7, 8, 80, 0
+	; atlantis tablets:
+	db TAG_ATLANTIS_TABLET2, 9, 255, 0
+	db TAG_ATLANTIS_TABLET3, 9, 192, 0
+	db TAG_ATLANTIS_TABLET4, 9, 192, 0
+	db TAG_ATLANTIS_TABLET5, 9, 192, 0
 pcg_world__optional_object_table_end:
 
 
