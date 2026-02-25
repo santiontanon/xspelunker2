@@ -47,8 +47,9 @@ current_area__height: ds virtual 1  ; in rooms
 current_area__room_ids: ds virtual MAX_AREA_SIZE
 current_area__chunks_ids: ds virtual MAX_AREA_SIZE * 2 * 2
 current_area__objects: ds virtual MAX_AREA_N_OBJECTS * AREA_OBJECT_STRUCT_SIZE
-current_area__special_room_room_id_offset: ds virtual 1  ; used to identify the location of the calendar/teleporter room, for collisions
-current_area__special_room_chunk_id_offset: ds virtual 1  ; used to identify the location of the calendar/teleporter room, for collisions
+; We support up to 2 special rooms per area:
+current_area__special_room_room_id_offsets: ds virtual MAX_SPECIAL_ROOMS_PER_AREA  ; used to identify the location of the calendar/teleporter/etc. special rooms, for room generation
+current_area__special_room_chunk_id_offsets: ds virtual MAX_SPECIAL_ROOMS_PER_AREA  ; used to identify the location of the calendar/teleporter/etc. special rooms, for collisions
 
 current_area__n_chunk_banks: ds virtual 1
 current_area__chunks_page: ds virtual 1

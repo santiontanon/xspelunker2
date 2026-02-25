@@ -1222,7 +1222,8 @@ check_collision_with_next_chunk_check_if_its_special_room_atlantis:
 		ld a, (current_area__width)
 		add a, a
 		ld d, a  ; d = width in chunks
-		ld a, (current_area__special_room_chunk_id_offset)
+REPT MAX_SPECIAL_ROOMS_PER_AREA, ?index
+		ld a, (current_area__special_room_chunk_id_offsets + ?index)
 check_collision_with_next_chunk_check_if_its_special_room_atlantis_entry_point:
 		cp l
 		jr z, check_collision_with_next_chunk_check_if_its_special_room_confluence_done
@@ -1234,6 +1235,7 @@ check_collision_with_next_chunk_check_if_its_special_room_atlantis_entry_point:
 		jr z, check_collision_with_next_chunk_check_if_its_special_room_confluence_done
 		dec a
 		cp l
+ENDR
 check_collision_with_next_chunk_check_if_its_special_room_confluence_done:
 	pop bc
 	pop hl

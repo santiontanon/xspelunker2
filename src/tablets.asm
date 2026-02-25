@@ -697,7 +697,7 @@ maya_puzzle_tablet_fn_draw_glyph_loop_x:
 ;-----------------------------------------------
 maya_puzzle_tablet_fn_load_extra_tiles:
 	ld hl, tablet_maya_riddle_tiles_zx0
-	ld c, TILES_PAGE
+	ld c, TILES_MAYA_RIDDLE_PAGE
 maya_puzzle_tablet_fn_load_extra_tiles_hl_set:
 	ld de, buffer_4096
 	call dzx0_from_page_c

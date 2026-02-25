@@ -323,6 +323,8 @@ pcg_generate_room__seed_generated:
 	jp z, pcg_generate_room__calendar
 	cp TELEPORTER_ROOM_ID
 	jp z, pcg_generate_room__teleporter
+	cp TEMPLE_OF_POSEIDON_ID
+	jp z, pcg_generate_room__temple_of_poseidon
 
 	; Add background chunks randomly:
 	; here:
@@ -2504,16 +2506,36 @@ pcg_generate_room__calendar_ptr_loop_end:
 		call room_remove_breakable_wall_restore_background
 pcg_generate_room__calendar_continue1:
 	pop hl
+	ld a, (hl)  ; top-left chunk ID
+	push hl
+		ld b, PCG_DIRECTION_UP
+		call pcg_generate_room__chunk_direction_open
+		jr z, pcg_generate_room__calendar_continue2
+		ld bc, #0004
+		ld de, #0208
+		call room_remove_breakable_wall_restore_background
+pcg_generate_room__calendar_continue2:
+	pop hl
 	inc hl
 	ld a, (hl)  ; top-right chunk ID
 	push hl
 		ld b, PCG_DIRECTION_RIGHT
 		call pcg_generate_room__chunk_direction_open
-		jr z, pcg_generate_room__calendar_continue2
+		jr z, pcg_generate_room__calendar_continue3
 		ld bc, #041e
 		ld de, #0402
 		call room_remove_breakable_wall_restore_background
-pcg_generate_room__calendar_continue2:
+pcg_generate_room__calendar_continue3:
+	pop hl
+	ld a, (hl)  ; top-right chunk ID
+	push hl
+		ld b, PCG_DIRECTION_UP
+		call pcg_generate_room__chunk_direction_open
+		jr z, pcg_generate_room__calendar_continue4
+		ld bc, #0014
+		ld de, #0208
+		call room_remove_breakable_wall_restore_background
+pcg_generate_room__calendar_continue4:
 	pop hl
 	ld a, (current_area__width)
 	add a, a  ; width in chunks
@@ -2525,41 +2547,41 @@ pcg_generate_room__calendar_continue2:
 	push hl
 		ld b, PCG_DIRECTION_LEFT
 		call pcg_generate_room__chunk_direction_open
-		jr z, pcg_generate_room__calendar_continue3
+		jr z, pcg_generate_room__calendar_continue5
 		ld bc, #1000
 		ld de, #0402
 		call room_remove_breakable_wall_restore_background
-pcg_generate_room__calendar_continue3:
+pcg_generate_room__calendar_continue5:
 	pop hl
 	ld a, (hl)  ; bottom-left chunk ID
 	push hl
 		ld b, PCG_DIRECTION_DOWN
 		call pcg_generate_room__chunk_direction_open
-		jr z, pcg_generate_room__calendar_continue4
+		jr z, pcg_generate_room__calendar_continue6
 		ld bc, #1604
 		ld de, #0208
 		call room_remove_breakable_wall_restore_background
-pcg_generate_room__calendar_continue4:
+pcg_generate_room__calendar_continue6:
 	pop hl
 	inc hl
 	ld a, (hl)  ; bottom-right chunk ID
 	push hl
 		ld b, PCG_DIRECTION_DOWN
 		call pcg_generate_room__chunk_direction_open
-		jr z, pcg_generate_room__calendar_continue5
+		jr z, pcg_generate_room__calendar_continue7
 		ld bc, #1614
 		ld de, #0208
 		call room_remove_breakable_wall_restore_background
-pcg_generate_room__calendar_continue5:
+pcg_generate_room__calendar_continue7:
 	pop hl
 	ld a, (hl)  ; bottom-right chunk ID
 	ld b, PCG_DIRECTION_RIGHT
 	call pcg_generate_room__chunk_direction_open
-	jr z, pcg_generate_room__calendar_continue6
+	jr z, pcg_generate_room__calendar_continue8
 	ld bc, #101e
 	ld de, #0402
 	call room_remove_breakable_wall_restore_background
-pcg_generate_room__calendar_continue6:
+pcg_generate_room__calendar_continue8:
 	ret
 
 
@@ -2630,6 +2652,37 @@ pcg_generate_room__teleporter_objects:
 	db 0, TAG_MAYA_PUZZLE_TABLET, 15, 9
 	db 0, TAG_TELEPORTER_ATLANTIS, 12, 19
 	db 1, TAG_TELEPORTER_ATLANTIS_TO_MOON, 16, 19
+
+
+;-----------------------------------------------
+pcg_generate_room__temple_of_poseidon:
+	; name table:
+	ld hl, temple_of_poseidon_room_zx0
+	ld de, current_room__tile_map
+	ld c, TEMPLE_OF_POSEIDON_PAGE
+	call dzx0_from_page_c
+
+	; tile sets, collisions, and animation ptrs:
+	ld bc, tiles_atlantis_zx0
+	ld (current_room__tileset_ptr), bc
+	ld a, AREA_COLLISION_TABLES_PAGE
+	ld (current_room__collision_ptr_page), a
+	ld bc, tile_collision_types_atlantis
+	ld (current_room__collision_ptr), bc
+	ld a, ATLANTIS_TILES_PAGE
+	ld (current_room__tileset_page), a
+	ld a, 0
+	ld (current_room__tileset_overrides_item_tiles), a
+
+	call pcg_generate_room__calendar_open_walls
+
+	; spawn the tablet / boss:
+	; ...
+
+	; tablet gfx:	
+	ld hl, buffer_4096 + 60 * 64
+	ld (item_object_to_upload_to_vdp), hl
+	ret
 
 
 ;-----------------------------------------------

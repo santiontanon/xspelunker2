@@ -1,14 +1,10 @@
 to do:
 
-***- atlantis biome:
-  ***- special "Temple of Poseidon" room (where the boss should be). Adapt to suit the chunk connections, and make sure it's on its own (like the teleporter room, how did I do it?):
-    ***- add it in java
-    ***- add it in MSX
-  ***- tablets with the story about the "firestones" and also with some background on the fall of atlantis.
-  ***- sprite enemies: ghosts/spirits/crocodiles in water (atlantis_enemy_sprites_zx0)
-  ***- tile enemies:
-    ***- water generators (like the lava ones for xibalba)
-    ***- robot maya statue guardians (walk back and forth, they should be large like the owls).
+***- atlantis: tablets with the story about the "firestones" and also with some background on the fall of atlantis.
+  ***- puzzle to open the temple of poseidon: think about it (and spawn the appropriate objects in pcg_generate_room__temple_of_poseidon)
+***- atlantis sprite enemies: ghosts/spirits/crocodiles in water (atlantis_enemy_sprites_zx0)
+***- atlantis tile enemies:
+  ***- robot maya statue guardians (walk back and forth, they should be large like the owls).
 
 - What is the error I see in Java of "Adding xxx to start room!"? Is it important?
 - fifth boss, Atlantean Guardian (Underwater Boss): A colossal robotic creature with bioluminescent features, resembling a deep-sea creature (laser beams from tentacles, summons robotic fish).

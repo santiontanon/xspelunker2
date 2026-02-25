@@ -23,6 +23,7 @@ public class PCGArea {
     public static final int CALENDAR_ROOM_ID = 100;  // some ID that is impossible to arise naturally
     public static final int TELEPORTER_ROOM_ID = 101;  // some ID that is impossible to arise naturally
     public static final int START_ROOM_ID = 102;  // some ID that is impossible to arise naturally
+    public static final int TEMPLE_OF_POSEIDON_ROOM_ID = 103;  // some ID that is impossible to arise naturally
     public static final int n_connections_per_type[] = {
         0, 1, 1, 2, 1, 2, 2, 3,
         1, 2, 2, 3, 2, 3, 3, 4,
@@ -1716,6 +1717,13 @@ public class PCGArea {
                             return false;
                         }
                         a.rooms[j][i] = TELEPORTER_ROOM_ID;
+                    }
+                    if (a.tags[j][i] != null && a.tags[j][i].contains("boss5-chestlock")) {
+                        if (a.tags[j][i].size() > 1) {
+                            System.err.println("More than one tag on boss 5 room! " + a.tags[j][i]);
+                            return false;
+                        }
+                        a.rooms[j][i] = TEMPLE_OF_POSEIDON_ROOM_ID;
                     }
                 }
             }

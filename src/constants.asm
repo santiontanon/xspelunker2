@@ -48,6 +48,7 @@ MAX_ROOM_SIZE: equ 32*24*4
 MAX_INTERAREA_CONNECTIONS: equ 12
 MAX_CHESTS: equ 10
 MAX_TABLETS: equ 21
+MAX_SPECIAL_ROOMS_PER_AREA: equ 2
 
 ROOM_REDRAW_FLAG_BIT: equ 0
 HUD_REDRAW_FLAG_BIT: equ 1
@@ -88,6 +89,7 @@ INTERAREA_CONNECTION_SIZE: equ 8  ; id1, id2, x1, y1, direction1, x2, y2, direct
 CALENDAR_ROOM_ID: equ 100  ; areas are at most 8 * 8 rooms in size, so this ID is impossible to generate naturally
 TELEPORTER_ROOM_ID: equ 101  ; areas are at most 8 * 8 rooms in size, so this ID is impossible to generate naturally
 START_ROOM_ID: equ 102
+TEMPLE_OF_POSEIDON_ID: equ 103
 
 MAX_WORLD_AREAS: equ 12
 MAX_AREA_WIDTH: equ 16  

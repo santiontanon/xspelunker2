@@ -180,7 +180,11 @@ pcg_generate_area__initialize_room_ids_loop_x_continue:
 ;-----------------------------------------------
 pcg_generate_area__mark_special_rooms:
 	ld a, #ff
-	ld (current_area__special_room_room_id_offset), a
+REPT MAX_SPECIAL_ROOMS_PER_AREA, ?index
+	ld (current_area__special_room_room_id_offsets + ?index), a
+	ld (current_area__special_room_chunk_id_offsets + ?index), a
+ENDR
+	ld ix, current_area__special_room_room_id_offsets
 
 	; Ensure that the "calendar stone" and "teleporter" rooms are not merged with anything:
 	ld hl, current_world__area_data + WORLD_AREA__TAGS_OFFSET
@@ -204,16 +208,21 @@ pcg_generate_area__mark_special_rooms_loop:
 pcg_generate_area__mark_special_rooms_loop_found:
 	; special room found!
 	inc hl
-	ld a, (hl)
-	ld (current_area__special_room_room_id_offset), a
-	ld hl, current_area__room_ids
-	ADD_HL_A
-	ld (hl), e
-	; convert it to chunk offset
-	ld a, (current_area__special_room_room_id_offset)
-	call room_offset_to_chunk_offset
-	ld (current_area__special_room_chunk_id_offset), a
-	ret
+	push hl
+		ld a, (hl)
+		ld (ix), a  ; current_area__special_room_room_id_offsets
+		ld hl, current_area__room_ids
+		ADD_HL_A
+		ld (hl), e
+		; convert it to chunk offset
+		ld a, (ix)  ; current_area__special_room_room_id_offsets
+		call room_offset_to_chunk_offset
+		ld (ix + MAX_SPECIAL_ROOMS_PER_AREA), a  ; current_area__special_room_chunk_id_offsets
+		inc ix
+	pop hl
+	inc hl
+	inc hl
+	jr pcg_generate_area__mark_special_rooms_loop
 pcg_generate_area__mark_special_rooms_loop_next:
 	cp TAG_TELEPORTER_ATLANTIS
 	jr nz, pcg_generate_area__mark_special_rooms_loop_next2
@@ -227,6 +236,12 @@ pcg_generate_area__mark_special_rooms_loop_next2:
 	ld e, START_ROOM_ID
 	jr pcg_generate_area__mark_special_rooms_loop_found
 pcg_generate_area__mark_special_rooms_loop_next3:
+	cp TAG_BOSS5_CHESTLOCK
+	jr nz, pcg_generate_area__mark_special_rooms_loop_next4
+	; temple of poseidon room found!
+	ld e, TEMPLE_OF_POSEIDON_ID
+	jr pcg_generate_area__mark_special_rooms_loop_found
+pcg_generate_area__mark_special_rooms_loop_next4:
 	inc hl
 	inc hl
 	inc hl
@@ -246,13 +261,15 @@ pcg_generate_area__merge_rooms:
 	ldir
 
 	call pcg_generate_area__mark_special_rooms
-	ld a, (current_area__special_room_room_id_offset)
+REPT MAX_SPECIAL_ROOMS_PER_AREA, ?index
+	ld a, (current_area__special_room_room_id_offsets + ?index)
 	cp #ff
 	jr z, pcg_generate_area__merge_rooms_no_special_room
 	ld hl, tmp_pcg_area__division_ids_tmp
 	ADD_HL_A
 	ld (hl), #ff  ; mark the special room as processed, so that we do not merge it
 pcg_generate_area__merge_rooms_no_special_room:
+ENDR
 
 	ld hl, tmp_pcg_area__division_ids_tmp
 	ld bc, (current_area__width)
