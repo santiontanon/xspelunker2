@@ -470,10 +470,31 @@ public class GenerateChunkData {
         int n_item_locations = 0;
         int n_pushable_blocks = 0;
         int n_lava_generators = 0;
+        
+        for(int i = 0;i<RoomChunk.CHUNK_HEIGHT;i++) {
+            for(int j = 0;j<RoomChunk.CHUNK_WIDTH;j++) {
+                if (c.tiles[j][i] > 255) {
+                    throw new Exception("tile out of range in " + j + ", " + i + " for " + c.path);
+                }
+            }
+        }
 
         if (c.locations == null) {
             throw new Exception("null locations in " + c.path);
         } else {
+            // Check that if patter has ladder up/down the two tiles next to the ladder are free
+            if (c.tags.containsKey("up") && c.tags.get("up").equals("stairs")) {
+                if (collision_types[c.tiles[6][0]] == 2 ||
+                    collision_types[c.tiles[9][0]] == 2) {
+                    throw new Exception("up ladder needs to have the two tiles next to the ladder clear in " + c.path);
+                }
+            }
+            if (c.tags.containsKey("down") && c.tags.get("down").equals("stairs")) {
+                if (collision_types[c.tiles[6][RoomChunk.CHUNK_HEIGHT-1]] == 2 ||
+                    collision_types[c.tiles[9][RoomChunk.CHUNK_HEIGHT-1]] == 2) {
+                    throw new Exception("down ladder needs to have the two tiles next to the ladder clear in " + c.path);
+                }
+            }
             // Check that breakable wall or doors going up/down are centered:
             for(TMXObject o:c.locations) {
                 if (o.type.equals("item")) {

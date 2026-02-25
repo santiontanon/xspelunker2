@@ -1,6 +1,5 @@
 to do:
 
-***- BUG: chunks that have "ladder" up or down must have the tiles immediately next to the ladder be non-collidable.
 ***- BUG: the poseidon temple clue was not spawned, right?
 ***- draw a "firestone" in the firestone atlantis tablets
 ***- temple of poseidon puzzle:
