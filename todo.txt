@@ -1,7 +1,5 @@
 to do:
 
-***- interact function for temple of poseidon hidden locks: if the player uses the key in the wrong one, or the wrong key in any, spikes appear and damage you (and disappear shortly after) + SFX of secret
-
 ***- BUG: a door to the left (in confluence in world "ATLANTIS") connected to a chunk with type "half-hole" on the right, and hence was blocked! left-right door/breakablewall connections should ensure "hole" as the connection.
   ***- Try to reproduce this in Java: bring back the java PCG and the msx PCG in sync, so that if I generate a level with a seed in Java, I can predict exactly what gets generated in MSX (I will need to add all the new tablets in Xibalba and Atlantis to Java)
   ***- Fix it in Java

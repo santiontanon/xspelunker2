@@ -283,6 +283,7 @@ ENEMY_FIREBALL: equ ENEMY_SNAKE + 27
 ; - 1 skull charm
 N_INVENTORY_ITEM_TYPES: equ 7 + 6 + 6 + 1 + 4 + 6 + 2 + 2 + 1 + 2 + 2 + 1 + 1  ; 41
 N_INVENTORY_WEAPON_TYPES: equ 4 + 4 + 3  ; 4 base, 4 ranged, 3 upgrades
+INVENTORY_ITEM_BOSS5_KEY: equ 4
 INVENTORY_ITEM_POWER_STONE1: equ 7
 INVENTORY_ITEM_COLOR_KEY1: equ 7 + 6
 INVENTORY_ITEM_SMALL_KEY: equ 7 + 6 + 6

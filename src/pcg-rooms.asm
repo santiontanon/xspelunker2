@@ -2735,15 +2735,26 @@ pcg_generate_room__temple_of_poseidon_object_loop:
 	ld hl, buffer_4096 + 60 * 64
 	ld (item_object_to_upload_to_vdp), hl
 	ld e, TAG_DOOR_BOSS
-	jp set_large_object_to_upload_to_vdp
+	call set_large_object_to_upload_to_vdp
+
+	; check if the lock has already been open
+	ld a, (global_state__objects + TAG_BOSS5_CHESTLOCK)
+	or a
+	ret z  ; door was already open
+
+	; change door image to open:
+	ld hl, buffer_4096 + (202 + 32) * 16  ; boss door frame 2
+	ld (large_object_to_upload_to_vdp), hl
+	ret
+
 
 pcg_generate_room__poseidon_objects:
 	db 0, TAG_ATLANTIS_TABLET1, 2, 20
 	db TAG_BOSS5_CHESTLOCK, TAG_DOOR_BOSS, 14, 12
-	db 1, TAG_BOSS5_CHESTLOCK, 6, 11
-	db 2, TAG_BOSS5_CHESTLOCK, 11, 11
-	db 3, TAG_BOSS5_CHESTLOCK, 19, 11
-	db 4, TAG_BOSS5_CHESTLOCK, 24, 11
+	db 0, TAG_BOSS5_CHESTLOCK, 6, 11
+	db 1, TAG_BOSS5_CHESTLOCK, 11, 11
+	db 2, TAG_BOSS5_CHESTLOCK, 19, 11
+	db 3, TAG_BOSS5_CHESTLOCK, 24, 11
 
 
 ;-----------------------------------------------

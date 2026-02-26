@@ -2427,15 +2427,98 @@ object_interaction_function_shop:
 
 ;-----------------------------------------------
 object_interaction_function_atlantis_hidden_lock:
-	ld hl, SFX_secret
-	call play_SFX_with_high_priority
+	; check if we are using boss 5 key:
+	ld a, (player_current_item)
+	cp N_INVENTORY_WEAPON_TYPES + INVENTORY_ITEM_BOSS5_KEY
+	jr nz, object_interaction_function_atlantis_hidden_lock_fail
 
-	; current_world__atlantis_boss_statue
-	; ...
+	; check that we are interacting with the correct hidden lock:
+	ld a, (current_world__atlantis_boss_statue)
+	cp (ix + ROOM_TILE_OBJECT_STRUCT_ID)
+	jr nz, object_interaction_function_atlantis_hidden_lock_fail
 
+	; correct key, correct lock:
 	ld c, 11
 	ld a, TAG_BOSS5_CHESTLOCK - TAG_BOSS1_CHESTLOCK
 	jp object_interaction_function_open_boss_lock_key_id_loop
+
+object_interaction_function_atlantis_hidden_lock_fail:
+	; spawn spikes (and add function to remove them):
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
+	add a, a
+	ld hl, object_interaction_function_atlantis_hidden_lock_tbl2
+	ADD_HL_A
+	ld e, (hl)
+	inc hl
+	ld d, (hl)
+	ld hl, object_interaction_function_atlantis_hidden_lock_tbl1
+	ld bc, 2
+	ldir
+
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)
+
+	ld hl, atlantis_hidden_lock_spikes_event_fn
+	ld (in_game_event_fn_ptr), hl
+	ld a, TILES_PAGE
+	ld (in_game_event_fn_page), a
+	ld a, 15  ; time for spikes to be displayed
+	ld (in_game_event_fn_arg), a
+
+	ld hl, SFX_ui_wrong
+	jp play_SFX_with_high_priority
+
+; spikes gfx
+object_interaction_function_atlantis_hidden_lock_tbl1:
+	db 8*16 + 2, 252
+
+; spike location
+object_interaction_function_atlantis_hidden_lock_tbl2:
+	dw current_room__tile_map + 6 + 11*32
+	dw current_room__tile_map + 11 + 11*32
+	dw current_room__tile_map + 19 + 11*32
+	dw current_room__tile_map + 24 + 11*32
+
+; tiles to restore when removing spikes:
+object_interaction_function_atlantis_hidden_lock_tbl3:
+	db 0, 202
+	db 0, 202
+	db 203, 0
+	db 203, 0
+
+atlantis_hidden_lock_spikes_event_fn:
+	ld hl, in_game_event_fn_arg
+	ld a, (hl)
+	dec (hl)
+	or a
+	jr z, atlantis_hidden_lock_spikes_event_fn_continue
+	; keep the spikes in the screen:
+	ld hl, atlantis_hidden_lock_spikes_event_fn
+	ld (in_game_event_fn_ptr), hl
+	ret
+atlantis_hidden_lock_spikes_event_fn_continue:
+	; undraw the spikes:
+	ld b, 4
+	ld hl, object_interaction_function_atlantis_hidden_lock_tbl3
+atlantis_hidden_lock_spikes_event_fn_loop:
+	push bc
+		ld a, 4
+		sub b
+		add a, a
+		push hl
+			ld hl, object_interaction_function_atlantis_hidden_lock_tbl2
+			ADD_HL_A
+			ld e, (hl)
+			inc hl
+			ld d, (hl)
+			ld bc, 2
+		pop hl
+		ldir
+	pop bc
+	djnz atlantis_hidden_lock_spikes_event_fn_loop
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)	
+	ret
 
 
 ;-----------------------------------------------
