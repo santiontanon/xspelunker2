@@ -1107,7 +1107,7 @@ ENDR
 	dw object_interaction_function_open_boss_lock  ; TAG_BOSS4_CHESTLOCK
 	dw object_interaction_function_empty  ; TAG_BOSS5
 	dw object_interaction_function_pickup_item  ; TAG_BOSS5_KEY
-	dw object_interaction_function_open_boss_lock  ; TAG_BOSS5_CHESTLOCK
+	dw object_interaction_function_atlantis_hidden_lock  ; TAG_BOSS5_CHESTLOCK
 	dw object_interaction_function_empty  ; TAG_BOSS6
 	dw object_interaction_function_pickup_item  ; TAG_BOSS6_KEY
 	dw object_interaction_function_open_boss_lock  ; TAG_BOSS6_CHESTLOCK
@@ -1215,7 +1215,6 @@ ENDR
 	dw object_interaction_function_tablet  ; TAG_XIBALBA_BOSS_GRAVE
 	dw object_interaction_function_pickup_item_boss4  ; TAG_GOLDEN_KEY
 	dw object_interaction_function_pickup_item_boss4  ; TAG_SKULL_CHARM
-	dw object_interaction_function_atlantis_hidden_lock  ; TAG_ATLANTIS_HIDDEN_LOCK
 	dw object_interaction_function_shopkeeper  ; TAG_NPC_SHOPKEEPER
 	dw object_interaction_function_shop  ; TAG_NPC_SHOP
 	dw object_interaction_function_empty  ; TAG_DYNAMITE
@@ -1875,9 +1874,14 @@ object_interaction_function_open_boss_lock_key_id_computed_done:
 	ld b, 30
 	call wait_b_halts
 
-	ld a, 16*8
 	ld hl, buffer_4096 + (48 + 16) * 16  ; boss door frame 1
+	ld a, (current_area__id)
+	cp 9  ; atlantis
+	jr nz, object_interaction_function_open_boss_lock_continue1
+	ld hl, buffer_4096 + (202 + 16) * 16  ; boss door frame 1 atlantis
+object_interaction_function_open_boss_lock_continue1:
 	ld (large_object_to_upload_to_vdp), hl
+	ld a, 16*8
 	ld (large_object_to_upload_to_vdp_size), a
 	call state_play_upload_object_tiles_to_vdp_if_necessary
 	ld hl, SFX_explosion
@@ -1886,9 +1890,14 @@ object_interaction_function_open_boss_lock_key_id_computed_done:
 	ld b, 30
 	call wait_b_halts
 
-	ld a, 16*8
 	ld hl, buffer_4096 + (48 + 32) * 16  ; boss door frame 2
+	ld a, (current_area__id)
+	cp 9  ; atlantis
+	jr nz, object_interaction_function_open_boss_lock_continue2
+	ld hl, buffer_4096 + (202 + 32) * 16  ; boss door frame 2 atlantis
+object_interaction_function_open_boss_lock_continue2:
 	ld (large_object_to_upload_to_vdp), hl
+	ld a, 16*8
 	ld (large_object_to_upload_to_vdp_size), a
 	call state_play_upload_object_tiles_to_vdp_if_necessary
 	ld hl, SFX_explosion
@@ -2424,7 +2433,9 @@ object_interaction_function_atlantis_hidden_lock:
 	; current_world__atlantis_boss_statue
 	; ...
 
-	ret
+	ld c, 11
+	ld a, TAG_BOSS5_CHESTLOCK - TAG_BOSS1_CHESTLOCK
+	jp object_interaction_function_open_boss_lock_key_id_loop
 
 
 ;-----------------------------------------------
@@ -2581,7 +2592,7 @@ ENDR
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_BOSS4_CHESTLOCK
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_BOSS5
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_BOSS5_KEY
-	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_BOSS5_CHESTLOCK
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_BOSS5_CHESTLOCK  ; the atlantis ones are hidden
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_BOSS6
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_BOSS6_KEY
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_BOSS6_CHESTLOCK
@@ -2690,7 +2701,6 @@ ENDR
 	TILE_OBJECT_DATA 1, 2, 3, tile_object_xibalba_boss_graves_gfx  ; TAG_XIBALBA_BOSS_GRAVE
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_GOLDEN_KEY
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_SKULL_CHARM	
-	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_ATLANTIS_HIDDEN_LOCK	
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOPKEEPER
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOP
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_DYNAMITE

@@ -74,7 +74,7 @@ state_play:
 ; 		ld (player_inventory_items+1), a  ; second boss key
 ; 		ld (player_inventory_items+2), a  ; third boss key
 ; 		ld (player_inventory_items+3), a  ; fourth boss key
-; 		ld (player_inventory_items+4), a
+		ld (player_inventory_items+4), a  ; fifth boss key
 ; 		ld (player_inventory_items+5), a  ; mars boss key
 ; 		ld (player_inventory_items+6), a  ; moon boss key
 ; 		ld (player_inventory_items+7), a  ; first stone

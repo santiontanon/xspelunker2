@@ -224,7 +224,6 @@ public class AssemblerTags {
         "TAG_XIBALBA_BOSS_GRAVE",
         "TAG_GOLDEN_KEY",
         "TAG_SKULL_CHARM",
-        "TAG_ATLANTIS_HIDDEN_LOCK",
         // npcs:
         "TAG_NPC_SHOPKEEPER",
         "TAG_NPC_SHOP",
