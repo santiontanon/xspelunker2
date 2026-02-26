@@ -1,15 +1,11 @@
 to do:
 
-***- BUG: the poseidon temple clue was not spawned, right?
-***- draw a "firestone" in the firestone atlantis tablets
 ***- temple of poseidon puzzle:
-  ***- spawn a tablet that says "This used to be the Temple of Poseidon. But what you will find inside might not be as merciful as he was..."
-  ***- a hidden lock (no gfx) is spawned on top of one statue (low, so you can only interact if directly on top, not jumping)
-  ***- randomize which is the face with the open mouth (indicates which statue to use)
-  ***- you need to use the key there
-  ***- spawn the appropriate objects in pcg_generate_room__temple_of_poseidon (one lock on each statue)
-  ***- if the player uses the key in the wrong one, spikes appear and damage you
-  ***- the correct one, opens the door to the boss
+  ***- randomize which is the face with the open mouth (indicates which statue to use): pcg-riddles.asm
+  ***- spawn hidden locks (no gfx) on top of each statue (low, so you can only interact if directly on top, not jumping), with IDs to identify them
+  ***- interact function for those idems:
+    ***- if the player uses the key in the wrong one, or the wrong key in any, spikes appear and damage you (and disappear shortly after) + SFX of secret
+    ***- the correct one, opens the door to the boss
   ***- door should remain open when you leave the room and come back
 
 ***- BUG: a door to the left (in confluence in world "ATLANTIS") connected to a chunk with type "half-hole" on the right, and hence was blocked! left-right door/breakablewall connections should ensure "hole" as the connection.

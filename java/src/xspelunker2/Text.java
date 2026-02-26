@@ -602,7 +602,8 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "Patan", "XIBALBA_BOSS_NAME_12", 18);
         
         // Atlantis tablets:
-        addLineSafe(lines_with_constant_page3, "This is the Temple of Poseidon. But what you will find inside might not be as merciful as he was...", "ATLANTIS_TABLET_1_1", 18*3);
+        addLineSafe(lines_with_constant_page3, "This is the Temple of Poseidon. But what you will find inside might not be as merciful as he", "ATLANTIS_TABLET_1_1", 18*3);
+        addLineSafe(lines_with_constant_page3, "was...", "ATLANTIS_TABLET_1_2", 18*3);
 
         addLineSafe(lines_with_constant_page3, "Four statues and four watching faces. Only one of them is surprised.", "ATLANTIS_TABLET_2_1", 18*3);
         addLineSafe(lines_with_constant_page3, "Surprised that no one can see the hidden lock on top the statue it watches over.", "ATLANTIS_TABLET_2_2", 18*5);

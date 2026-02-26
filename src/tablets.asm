@@ -1358,14 +1358,32 @@ xibalba_tablet_fn_continue:
 
 ;-----------------------------------------------
 atlantis_tablet_fn_tbl:
-	dw TEXT_ATLANTIS_TABLET_1_1, 0
+	dw TEXT_ATLANTIS_TABLET_1_1, TEXT_ATLANTIS_TABLET_1_2
 	dw TEXT_ATLANTIS_TABLET_2_1, TEXT_ATLANTIS_TABLET_2_2
 	dw TEXT_ATLANTIS_TABLET_3_1, TEXT_ATLANTIS_TABLET_3_2
 	dw TEXT_ATLANTIS_TABLET_4_1, TEXT_ATLANTIS_TABLET_4_2
 	dw TEXT_ATLANTIS_TABLET_5_1, TEXT_ATLANTIS_TABLET_5_2
 
+atlantis_tablet_fn_tbl2:
+	db 24, 25, 23, 24, 25, 23, 24, 25
+	db 26, 27, 23, 26, 27, 23, 26, 27
+
+
 atlantis_tablet_fn:
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	push af
+		cp TAG_ATLANTIS_TABLET3
+		jr c, atlantis_tablet_fn_do_not_draw_firestone
+		ld hl, atlantis_tablet_fn_tbl2
+		ld de, NAMTBL2 + 256*2 + 12
+		ld b, 8
+		call fast_small_LDIRVM
+		ld hl, atlantis_tablet_fn_tbl2 + 8
+		ld de, NAMTBL2 + 256*2 + 12 + 32
+		ld b, 8
+		call fast_small_LDIRVM
+atlantis_tablet_fn_do_not_draw_firestone:
+	pop af
 	sub TAG_ATLANTIS_TABLET1
 	add a, a
 	add a, a

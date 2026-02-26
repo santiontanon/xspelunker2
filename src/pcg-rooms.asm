@@ -1849,7 +1849,7 @@ set_large_object_to_upload_to_vdp:
 	cp TAG_IDOL_LOCK
 	jr z, set_large_object_to_upload_to_vdp_idol_lock
 	cp TAG_GEAR_LOCK
-	jr z, set_large_object_to_upload_to_vdp_gear_lock
+	jp z, set_large_object_to_upload_to_vdp_gear_lock
 	cp TAG_TRIAL1_LOCK
 	jr z, set_large_object_to_upload_to_vdp_trial1_lock
 	cp TAG_TRIAL2_LOCK
@@ -1889,6 +1889,10 @@ set_large_object_to_upload_to_vdp__teleporter_off:
 set_large_object_to_upload_to_vdp_boss_door:
 	ld e, 16*8
 	ld hl, buffer_4096 + 48 * 16  ; boss door
+	ld a, (current_area__id)
+	cp 9  ; atlantis
+	jr nz, set_large_object_to_upload_to_vdp_ptr_set
+	ld hl, buffer_4096 + 202 * 16  ; boss door golden
 	jr set_large_object_to_upload_to_vdp_ptr_set
 set_large_object_to_upload_to_vdp_trial1_lock:
 	ld e, 16*8
@@ -2681,13 +2685,39 @@ pcg_generate_room__temple_of_poseidon:
 
 	call pcg_generate_room__calendar_open_walls
 
-	; spawn the tablet / boss:
-	; ...
+	; spawn the objects:
+	ld hl, pcg_generate_room__poseidon_objects
+	ld b, 2
+	ld iy, (tmp_pcg_room__next_tile_object_ptr)
+pcg_generate_room__temple_of_poseidon_object_loop:
+	ld a, (hl)
+	inc hl
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), a  ; id
+	ld a, (hl)
+	inc hl
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), a  ; type
+	ld a, (hl)
+	inc hl
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), a  ; x
+	ld a, (hl)
+	inc hl
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), a  ; y
+	xor a
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), a  ; state
+	ld de, ROOM_TILE_OBJECT_STRUCT_SIZE
+	add iy, de
+	djnz pcg_generate_room__temple_of_poseidon_object_loop
+	ld (tmp_pcg_room__next_tile_object_ptr), iy
 
 	; tablet gfx:	
 	ld hl, buffer_4096 + 60 * 64
 	ld (item_object_to_upload_to_vdp), hl
-	ret
+	ld e, TAG_DOOR_BOSS
+	jp set_large_object_to_upload_to_vdp
+
+pcg_generate_room__poseidon_objects:
+	db 0, TAG_ATLANTIS_TABLET1, 2, 20
+	db 0, TAG_DOOR_BOSS, 14, 12
 
 
 ;-----------------------------------------------

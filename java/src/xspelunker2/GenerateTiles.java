@@ -216,6 +216,10 @@ public class GenerateTiles {
         extratTilesOneObject(sourceImage, 224, 48, 32, 24, data);  // teleporter off
         extratTilesOneObject(sourceImage, 224, 72, 32, 24, data);  // teleporter on
         extratTilesOneObject(sourceImage, 224, 96, 32, 24, data);  // teleporter interacted
+        // boss door golden (202)
+        extratTilesOneObject(sourceImage, 160, 176, 32, 32, data);  // closed
+        extratTilesOneObject(sourceImage, 192, 176, 32, 32, data);  // opening
+        extratTilesOneObject(sourceImage, 224, 176, 32, 32, data);  // open
 
         Z80Assembler.dataToBinary(data, outputPath + ".bin");
         ZX0Wrapper.main(outputPath+".bin", outputPath+".zx0", true, false);
