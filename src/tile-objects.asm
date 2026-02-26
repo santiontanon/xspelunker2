@@ -1215,6 +1215,7 @@ ENDR
 	dw object_interaction_function_tablet  ; TAG_XIBALBA_BOSS_GRAVE
 	dw object_interaction_function_pickup_item_boss4  ; TAG_GOLDEN_KEY
 	dw object_interaction_function_pickup_item_boss4  ; TAG_SKULL_CHARM
+	dw object_interaction_function_atlantis_hidden_lock  ; TAG_ATLANTIS_HIDDEN_LOCK
 	dw object_interaction_function_shopkeeper  ; TAG_NPC_SHOPKEEPER
 	dw object_interaction_function_shop  ; TAG_NPC_SHOP
 	dw object_interaction_function_empty  ; TAG_DYNAMITE
@@ -2416,6 +2417,17 @@ object_interaction_function_shop:
 
 
 ;-----------------------------------------------
+object_interaction_function_atlantis_hidden_lock:
+	ld hl, SFX_secret
+	call play_SFX_with_high_priority
+
+	; current_world__atlantis_boss_statue
+	; ...
+
+	ret
+
+
+;-----------------------------------------------
 ; output:
 ; - z: door found
 ; - nz: door not found
@@ -2678,6 +2690,7 @@ ENDR
 	TILE_OBJECT_DATA 1, 2, 3, tile_object_xibalba_boss_graves_gfx  ; TAG_XIBALBA_BOSS_GRAVE
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_GOLDEN_KEY
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_SKULL_CHARM	
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_ATLANTIS_HIDDEN_LOCK	
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOPKEEPER
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOP
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_DYNAMITE

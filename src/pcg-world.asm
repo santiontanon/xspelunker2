@@ -5792,7 +5792,8 @@ pcg_generate_world__puzzles_power_numbers_loop:
 	djnz pcg_generate_world__puzzles_power_numbers_loop
 
 	call pcg_generate_maya_puzzle_riddles
-	jp pcg_generate_syllable_riddle
+	call pcg_generate_syllable_riddle
+	jp pcg_generate_atlantis_boss_riddle
 
 
 ;-----------------------------------------------

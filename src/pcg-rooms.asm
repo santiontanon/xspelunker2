@@ -2687,7 +2687,7 @@ pcg_generate_room__temple_of_poseidon:
 
 	; spawn the objects:
 	ld hl, pcg_generate_room__poseidon_objects
-	ld b, 2
+	ld b, 6
 	ld iy, (tmp_pcg_room__next_tile_object_ptr)
 pcg_generate_room__temple_of_poseidon_object_loop:
 	ld a, (hl)
@@ -2709,6 +2709,28 @@ pcg_generate_room__temple_of_poseidon_object_loop:
 	djnz pcg_generate_room__temple_of_poseidon_object_loop
 	ld (tmp_pcg_room__next_tile_object_ptr), iy
 
+	; set the corresponding face to mouth open:
+	ld a, (current_world__atlantis_boss_statue)
+	; coordinates = (9 + a * 4, 7)
+	ld b, 7
+	add a, a
+	add a, a
+	add a, 9
+	ld c, a
+	call get_room_tile_ptr
+	inc (hl)
+	inc (hl)
+	inc hl
+	inc (hl)
+	inc (hl)
+	ld bc, 31  ; poseidon room is width 32
+	add hl, bc
+	inc (hl)
+	inc (hl)
+	inc hl
+	inc (hl)
+	inc (hl)
+
 	; tablet gfx:	
 	ld hl, buffer_4096 + 60 * 64
 	ld (item_object_to_upload_to_vdp), hl
@@ -2718,6 +2740,10 @@ pcg_generate_room__temple_of_poseidon_object_loop:
 pcg_generate_room__poseidon_objects:
 	db 0, TAG_ATLANTIS_TABLET1, 2, 20
 	db 0, TAG_DOOR_BOSS, 14, 12
+	db 1, TAG_ATLANTIS_HIDDEN_LOCK, 6, 11
+	db 2, TAG_ATLANTIS_HIDDEN_LOCK, 11, 11
+	db 3, TAG_ATLANTIS_HIDDEN_LOCK, 19, 11
+	db 4, TAG_ATLANTIS_HIDDEN_LOCK, 24, 11
 
 
 ;-----------------------------------------------

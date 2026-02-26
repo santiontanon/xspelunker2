@@ -4,6 +4,8 @@
  */
 package pcg;
 
+import java.io.FileWriter;
+
 /**
  *
  * @author santi
@@ -222,6 +224,7 @@ public class AssemblerTags {
         "TAG_XIBALBA_BOSS_GRAVE",
         "TAG_GOLDEN_KEY",
         "TAG_SKULL_CHARM",
+        "TAG_ATLANTIS_HIDDEN_LOCK",
         // npcs:
         "TAG_NPC_SHOPKEEPER",
         "TAG_NPC_SHOP",
@@ -265,23 +268,25 @@ public class AssemblerTags {
     }
     
     
-    public static void generateAssemblerEnum()
+    public static void generateAssemblerEnum(String path) throws Exception
     {
+        FileWriter fw = new FileWriter(path);
+        
         for(int i = 0;i<tags.length;i++) {
             if (tags[i].equals("TAG_PUSHABLE_BLOCK")) {
-                System.out.println("; tags above can ONLY appear once in the whole game");
-                System.out.println("N_UNIQUE_TAGS: equ " + i);
-                System.out.println("; tags below can appear multiple times (and do not have state, they are reset every time you enter in a room):");
+                fw.write("; tags above can ONLY appear once in the whole game\n");
+                fw.write("N_UNIQUE_TAGS: equ " + i + "\n");
+                fw.write("; tags below can appear multiple times (and do not have state, they are reset every time you enter in a room):\n");
             }
-            System.out.println(tags[i] + ": equ " + i);
+            fw.write(tags[i] + ": equ " + i + "\n");
         }
-        
-        
+        fw.write("\n");
+        fw.close();        
     }
     
     
     public static void main(String args[]) throws Exception
     {
-        generateAssemblerEnum();
+        generateAssemblerEnum("src/constants-tags.asm");
     }
 }

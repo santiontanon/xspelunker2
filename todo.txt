@@ -1,8 +1,6 @@
 to do:
 
 ***- temple of poseidon puzzle:
-  ***- randomize which is the face with the open mouth (indicates which statue to use): pcg-riddles.asm
-  ***- spawn hidden locks (no gfx) on top of each statue (low, so you can only interact if directly on top, not jumping), with IDs to identify them
   ***- interact function for those idems:
     ***- if the player uses the key in the wrong one, or the wrong key in any, spikes appear and damage you (and disappear shortly after) + SFX of secret
     ***- the correct one, opens the door to the boss

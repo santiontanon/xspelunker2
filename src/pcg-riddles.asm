@@ -469,3 +469,11 @@ maya_syllable_mu
 	db #13, #08, 89, 105, 121, "mu", 0
 maya_syllable_bu
 	db #13, #08, 93, 109, 125, "bu", 0
+
+
+;-----------------------------------------------
+pcg_generate_atlantis_boss_riddle:
+	call random_a
+	and #03
+	ld (current_world__atlantis_boss_statue), a
+	ret
