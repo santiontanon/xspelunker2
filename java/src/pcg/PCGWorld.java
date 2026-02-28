@@ -417,6 +417,7 @@ public class PCGWorld {
             }
             
             // generate tablet contents:
+//            System.out.println("Tablet contents seeds: " + r.rng_seed1 + ", " + r.rng_seed2);
             for(int j = 0;j<4;j++) {
                 int type = r.nextInt(4);
                 w.addTabletContent("combination"+(j + 1)+"-clue", "combination_tablet_type_"+(type+1)+"_fn");
@@ -510,6 +511,7 @@ public class PCGWorld {
 //        System.out.println("generateAreaLayouts seed: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
         
         for(int i = 0;i<n_areas;i++) {
+//            System.out.println("generateAreaLayouts " + i + " seed: " + r.rng_seed1 + ", " + r.rng_seed2);
             Area a;
             if (predefinedAreaLayouts[i] == null) {
                 a = generateArea(i, areaSizes[i][0], areaSizes[i][1]);
@@ -545,6 +547,7 @@ public class PCGWorld {
         List<AreaPoint> divisionSeeds = new ArrayList<>();
         // Generate the minimum # of divisions requested in each area:
         for(int i = 0;i<n_areas;i++) {
+//            System.out.println("generateDivisions area " + i + ", seed: " + r.rng_seed1 + ", " + r.rng_seed2);
             while(w.areas.get(i).nDivisions < min_divisions_per_area[i]) {
                 AreaPoint seed = randomAreaPoint(w.areas.get(i), true);
                 while (seed.a.divisionIDs[seed.x][seed.y] != 0) {
@@ -554,7 +557,6 @@ public class PCGWorld {
                 addTag(seed, "seed", null);  // we mark them, so that we do not repeat any
                 seed.a.divisionIDs[seed.x][seed.y] = getNextDivisionID();
 //                System.out.println("  division: " + (seed.x + seed.y*seed.a.width) + ", " + seed.a.divisionIDs[seed.x][seed.y]);
-//                System.out.println("  saving division: " + seed.a.divisionIDs[seed.x][seed.y]);
                 seed.a.nDivisions++;
 //                n_divisions_left--;
             }
@@ -1083,6 +1085,29 @@ public class PCGWorld {
           "item-ice-cape",
         };
         
+        String optionalArea8ItemsTags[] = {
+            "XIBALBA_CLUE",
+            "XIBALBA_STORY1",
+            "XIBALBA_STORY2",
+            "XIBALBA_STORY3",
+            "XIBALBA_STORY4",
+            "XIBALBA_STORY5",
+            "XIBALBA_LORDS1",
+            "XIBALBA_LORDS2",
+            "XIBALBA_LORDS3",
+            "XIBALBA_LORDS4",
+            "XIBALBA_LORDS5",
+            "XIBALBA_LORDS6",
+            "XIBALBA_LORDS7",
+        };
+        
+        String optionalArea9ItemsTags[] = {
+            "ATLANTIS_TABLET2",
+            "ATLANTIS_TABLET3",
+            "ATLANTIS_TABLET4",
+            "ATLANTIS_TABLET5",
+        };
+        
         List<AreaDivision> tagLess = new ArrayList<>();
         for(AreaDivision d: allAreas) {
             if (d.tags.isEmpty()) {
@@ -1153,6 +1178,7 @@ public class PCGWorld {
         // Spawn weapons (1/16th chance that one is not there):
         for(int i = 0;i<10;i++) {
 //            System.out.println("weapon seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+//            System.out.println("weapon seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
             List<AreaDivision> candidates = new ArrayList<>();
             for(AreaDivision d:tagLess) {
                 if (d.root.a.ID == weaponAreas[i]) {
@@ -1185,7 +1211,8 @@ public class PCGWorld {
                 tagLess.remove(d);
             }
         }
-
+//        System.out.println("tagLess divisions (after weapons): " + tagLess.size() + " / " + allAreas.size());
+        
         // Spawn map pieces: (all are always there)
         for(int i = 0;i<mapPieceAreas.length;i++) {
 //            System.out.println("map piece seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
@@ -1205,6 +1232,8 @@ public class PCGWorld {
                 tagLess.remove(d);
             }
         }
+        
+//        System.out.println("tagLess divisions (after mappieces): " + tagLess.size() + " / " + allAreas.size());
         
         // Spawn hearts: (1/16th chance that one is not there)
         for(int i = 0;i<5;i++) {
@@ -1229,6 +1258,8 @@ public class PCGWorld {
             }            
         }
         
+//        System.out.println("tagLess divisions (after hearts): " + tagLess.size() + " / " + allAreas.size());
+        
         // Spawn teleporters (1/16th chance that one is not there):
         for(int i = 0;i<8;i++) {
 //            System.out.println("teleporter seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
@@ -1248,6 +1279,8 @@ public class PCGWorld {
                 tagLess.remove(d);
             }
         }
+        
+//        System.out.println("tagLess divisions (after teleporters): " + tagLess.size() + " / " + allAreas.size());
         
         // Spawn optional items: (1/16th chance that one is not there)
         for(int i = 0;i<optionalItemTags.length;i++) {
@@ -1288,6 +1321,8 @@ public class PCGWorld {
             }
         }
         
+//        System.out.println("tagLess divisions (after optional): " + tagLess.size() + " / " + allAreas.size());
+        
         // spawn small keys:
         for(int i = 0;i<n_small_keys;i++) {
 //            System.out.println("small key seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
@@ -1303,6 +1338,8 @@ public class PCGWorld {
             }            
         }
         
+//        System.out.println("tagLess divisions (after small keys): " + tagLess.size() + " / " + allAreas.size());
+        
         // spawn random trivia:
         for(int i = 0;i<8;i++) {
 //            System.out.println("trivia seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
@@ -1316,6 +1353,8 @@ public class PCGWorld {
                 tagLess.remove(d);
             }            
         }
+        
+//        System.out.println("tagLess divisions (after trivia): " + tagLess.size() + " / " + allAreas.size());
         
         // Spawn calendar name clue (in mars/moon):
         {
@@ -1337,6 +1376,49 @@ public class PCGWorld {
             }
         }
         
+//        System.out.println("tagLess divisions (after calendar clue): " + tagLess.size() + " / " + allAreas.size());
+        
+        // spawn xibalba objects:
+        for(int i = 0;i<optionalArea8ItemsTags.length;i++) {
+            List<AreaDivision> candidates = new ArrayList<>();
+            for(AreaDivision d: tagLess) {
+                if (d.root.a.ID == 8) {
+                    candidates.add(d);
+                }
+            }
+            if (i==0 || r.nextInt(256) <= 80) {
+                if (!candidates.isEmpty()) {
+                    int idx = r.nextInt(candidates.size());
+                    AreaDivision d = candidates.get(idx);
+                    AreaPoint p = randomDivisionPoint(d, true);
+                    addTag(p, optionalArea8ItemsTags[i], d);
+                    tagLess.remove(d);
+                }
+            }            
+        }
+
+//        System.out.println("tagLess divisions (after xibalba): " + tagLess.size() + " / " + allAreas.size());
+        
+        // spawn atlantis objects:
+        for(int i = 0;i<optionalArea9ItemsTags.length;i++) {
+//            System.out.println("Atlantis objects seeds: " + r.rng_seed1 + ", " + r.rng_seed2);
+            List<AreaDivision> candidates = new ArrayList<>();
+            for(AreaDivision d: tagLess) {
+                if (d.root.a.ID == 9) {
+                    candidates.add(d);
+                }
+            }
+//            System.out.println("  candidates: " + candidates.size());
+            if (i==0 || r.nextInt(256) <= 192) {
+                if (!candidates.isEmpty()) {
+                    int idx = r.nextInt(candidates.size());
+                    AreaDivision d = candidates.get(idx);
+                    AreaPoint p = randomDivisionPoint(d, true);
+                    addTag(p, optionalArea9ItemsTags[i], d);
+                    tagLess.remove(d);
+                }
+            }            
+        }        
 //        System.out.println("tagLess divisions (after): " + tagLess.size());
             
         return true;
@@ -1834,9 +1916,9 @@ public class PCGWorld {
     public Area generateArea(int ID, int w, int h, String layout[], double layoutAdherence) throws Exception
     {
         Area a = new Area(ID, w, h, r.rng_seed1, r.rng_seed2);
-//        System.out.println("generateArea: " + ID);
         
         if (layout != null && layoutAdherence == 1.0) {
+//            System.out.println("generateArea: " + ID + " exact layout");
             // use layout:
             if (layout.length != h || layout[0].length() != w) {
                 System.err.println("Area layout does not match expected size!");
@@ -1852,6 +1934,7 @@ public class PCGWorld {
                 }
             }
         } else {
+//            System.out.println("generateArea: " + ID + " approximate layout");
             // use the layout as a guideline:
             // Grow the area from the center, with a chance of rejecting if the
             // dows not follow the layout:
@@ -1859,8 +1942,9 @@ public class PCGWorld {
 //            System.out.println("seed: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
             a.nRooms = 1;
             a.rooms[w/2][h/2] = 0;
-//            System.out.println("Starting area layout generation (approximate):");
-            while(a.nRooms < w * h * 0.5) {
+            int target_n_rooms = (w * (h/2));
+//            System.out.println("Target number of rooms: " + target_n_rooms);
+            while(a.nRooms < target_n_rooms) {
                 // pick a random spot in the map:
 //                System.out.println("seed: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
                 int y = r.nextInt(h);

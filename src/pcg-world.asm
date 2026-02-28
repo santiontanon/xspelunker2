@@ -180,7 +180,7 @@ pcg__area_layout_fidelity:
 	db 1
 	db 1
 	db 1
-	db 0
+	db 0  ; confluence
 	db 1
 	db 0
 	db 1
@@ -311,9 +311,9 @@ pcg__full_layout:  ; for those areas for which we do not want to have a predefin
 	db 1, 1, 1, 1, 1, 1, 1, 1
 
 pgc__n_divisions_per_area:
-	db  6, 15, 15,  6
-	db 15,  3, 12, 12
-	db 13, 13, 12, 12  ; 132 + 2 divisions (+ 2 since there are 2 hardcoded divisions in the confluence)
+	db  6, 15, 15,  4  ; 40 + 2
+	db 15,  3, 12, 12  ; 42
+	db 13, 13, 12, 12  ; 50 -> 42+42+50 = 134 + 2 divisions (+ 2 since there are 2 hardcoded divisions in the confluence)
 MAX_N_DIVISIONS: equ 136
 
 pcg_world__available_lock_keys_init_rom:
@@ -559,14 +559,6 @@ pcg_generate_world__init:
 ; - seed, id, width, height
 ; - uses the connections space to store the layout (which will later be overwritten).
 pcg_generate_world__generate_area_layouts:
-
-	; DEBUG-start
-; 	push hl  ; mdl-watch: "pcg_generate_world__generate_area_layouts"
-; 		ld hl, (rng_seed1)  ; mdl-watch: "        seed1: ", hl
-; 		ld hl, (rng_seed2)  ; mdl-watch: "        seed2: ", hl
-; 	pop hl
-	; DEBUG-end
-
 	ld b, MAX_WORLD_AREAS
 	ld de, current_world__area_data
 pcg_generate_world__generate_area_layouts_loop:
@@ -875,6 +867,10 @@ pcg_generate_world__generate_divisions_init_loop2_a_set:
 	ld hl, pgc__n_divisions_per_area
 	ld ix, current_world__area_data
 pcg_generate_world__generate_divisions_loop:
+; 	push hl  ; mdl-watch: "test__generate_divisions area ----------------------- ", b
+; 		ld hl, (rng_seed1)  ; mdl-watch: "test__seed1", hl
+; 		ld hl, (rng_seed2)  ; mdl-watch: "test__seed2", hl
+; 	pop hl
 	push bc
 	push hl
 		ld c, (ix + 4 + 1)  ; width
@@ -2322,7 +2318,7 @@ pcg_generate_world__generate_spanning_tree_neighbor_loop_neighbor_selected:
 		; check that the division ID it would hadd is not yet on the tree:
 		ld a, (hl)  ; division ID
 		push hl
-			ld hl, tmp_pcg_world__mst_divisions
+			ld hl, tmp_pcg_world__mst_divisions - 1  ; -1 since the firs division is 0
 			ADD_HL_A
 			ld a, (hl)
 			or a
@@ -2748,7 +2744,7 @@ pcg_generate_world__push_mst_node_ptr_loop_done:
 		ld hl, (tmp_pcg_world__minimum_spanning_tree_top)
 		ld (hl), a  ; division ID
 		push hl
-			ld hl, tmp_pcg_world__mst_divisions
+			ld hl, tmp_pcg_world__mst_divisions - 1  ; -1 since the firs division is 0
 			ADD_HL_A
 			ld (hl), 1  ; mark the division as already being in the tree
 		pop hl
@@ -2802,7 +2798,7 @@ pcg_generate_world__push_mst_node_n_descendants_loop:
 	ld hl, MST_N_DESCENDANTS
 	add hl, de
 	inc (hl)
-	ld de, 4
+	ld de, MST_PARENT_PTR - MST_N_DESCENDANTS
 	add hl, de
 	ld e, (hl)  ; get the next parent
 	inc hl
@@ -2816,7 +2812,7 @@ pcg_generate_world__push_mst_node_n_descendants_loop:
 ; - nz: some error happened
 pcg_generate_world__generate_mission:
 	; DEBUG-start
-; 	push hl  ; mdl-watch2: "pcg_generate_world__generate_mission"
+; 	push hl  
 ; 		ld hl, (rng_seed1)  ; mdl-watch: "        seed1: ", hl
 ; 		ld hl, (rng_seed2)  ; mdl-watch: "        seed2: ", hl
 ; 	pop hl
@@ -2924,6 +2920,7 @@ pcg_generate_world__generate_mission:
 	ld c, 10  ; mars
 	call pcg_generate_world__random_area_mst_node_only_leaves
 	ret nz
+
 	ld (tmp_pcg_world__mission_boss6_node), hl
 	ld b, TAG_BOSS6_CHESTLOCK
 	ex de, hl  ; mst node
@@ -4531,9 +4528,9 @@ pcg_generate_world__spawn_additional_objects:
 	; get the list of all the tagless nodes:
 
 	; DEBUG-start
-; 	push hl  ; mdl-watch: "pcg_generate_world__spawn_additional_objects"
-; 		ld hl, (rng_seed1)  ; mdl-watch: "        seed1: ", hl
-; 		ld hl, (rng_seed2)  ; mdl-watch: "        seed2: ", hl
+; 	push hl
+; 		ld hl, (rng_seed1)  ; mdl-watch: "test__pcg_generate_world__spawn_additional_objects seed1", hl
+; 		ld hl, (rng_seed2)  ; mdl-watch: "test__pcg_generate_world__spawn_additional_objects seed2", hl
 ; 	pop hl
 	; DEBUG-end
 
@@ -4613,6 +4610,12 @@ pcg_generate_world__spawn_additional_objects_maya_clues_loop:
     ld b, (pcg_world__optional_object_table_end - pcg_world__optional_object_table) / 4
     ld ix, pcg_world__optional_object_table
 pcg_generate_world__spawn_additional_objects_other_object_loop:
+	; DEBUG START
+; 	push hl
+; 		ld hl, (rng_seed1)  ; mdl-watch: "test__optional_objects seed1", hl
+; 		ld hl, (rng_seed2)  ; mdl-watch: "test__optional_objects seed2", hl
+; 	pop hl
+	; DEBUG END
 	push bc
 		ld a, (ix)  ; tag
 		cp TAG_SMALL_KEY1
@@ -5619,6 +5622,12 @@ pcg_generate_world__tablet_trivia_content_table_end:
 
 pcg_generate_world__puzzles:
 	; generate tablet contents:
+	; DEBUG-start
+; 	push hl  
+; 		ld hl, (rng_seed1)  ; mdl-watch: "test__pcg_generate_world__puzzles seed1: ", hl
+; 		ld hl, (rng_seed2)  ; mdl-watch: "test__pcg_generate_world__puzzles seed2: ", hl
+; 	pop hl
+	; DEBUG-end
 	ld hl, current_world__tablet_content
 	ld bc, MAX_TABLETS * 3 + 1 - 1
 	ld a, #ff

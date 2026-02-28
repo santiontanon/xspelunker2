@@ -75,6 +75,9 @@ ENDIF
 IF PCG_WORLD_SEED1 = 22
 	include "hardcoded-world-seed22.asm"
 ENDIF
+IF PCG_WORLD_SEED1 = 23
+	include "hardcoded-world-seed23.asm"
+ENDIF
 hardcoded_world_data_end:
 	include "../pcg-world.asm"
 	include "../pcg-riddles.asm"
@@ -89,7 +92,7 @@ test_start:
 	ld hl, PCG_WORLD_SEED2
 	ld (current_world__seed + 2), hl
 
-	ld a, 3
+	ld a, 2
 	ld (current_world__difficulty), a
 
 	; generate world:
@@ -112,6 +115,9 @@ test_end:
 ; - hl, de: arrays to compare
 ; - bc: length
 test__arrays_equal:
+	push bc  ; we save BC in IX, so that we can print a debug statement with the offset.
+	pop ix  ; mdl-watch2: "test__arrays_equal: hl,de,bc", hl, de, bc
+test__arrays_equal_loop:
 	ld a, (de)
 	cp (hl)
 	jr nz, test__arrays_equal_fail
@@ -121,14 +127,27 @@ test__arrays_equal:
 	ld a, c
 	or b
 	ret z
-	jr test__arrays_equal
+	jr test__arrays_equal_loop
 
 
 ;-----------------------------------------------
 test__arrays_equal_fail:
 	ld a, (hl)  ; mdl-watch: "test__arrays_equal_fail: (hl)", hl, a
+	inc hl
+	ld a, (hl)  ; mdl-watch: "test__arrays_equal_fail: (hl+1)", a
+	inc hl
+	ld a, (hl)  ; mdl-watch: "test__arrays_equal_fail: (hl+2)", a
 	ld a, (de)  ; mdl-watch: "test__arrays_equal_fail: (de)", de, a
-	or 1 ; mdl-watch: "test__arrays_equal_fail", bc
+	inc de
+	ld a, (de)  ; mdl-watch: "test__arrays_equal_fail: (de+1)", a
+	inc de
+	ld a, (de)  ; mdl-watch: "test__arrays_equal_fail: (de+2)", a
+	push ix
+	pop hl
+	or a
+	sbc hl, bc
+	nop  ; mdl-watch: "test__arrays_equal_fail: offset", hl
+	or 1
 	ret
 
 

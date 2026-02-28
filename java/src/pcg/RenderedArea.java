@@ -99,27 +99,27 @@ public class RenderedArea {
         {
             for(int i = 0;i<a.height;i++) {
                 for(int j = 0;j<a.width;j++) {
-                    int special_room_x = 0;
-                    int special_room_y = 0;
+//                    int special_room_x = 0;
+//                    int special_room_y = 0;
                     RoomChunk c = null;
                     if (a.rooms[j][i] == PCGArea.START_ROOM_ID) {
-                        special_room_x = j;
-                        special_room_y = i;
+//                        special_room_x = j;
+//                        special_room_y = i;
                         c = new RoomChunk("data/start-room.tmx", 0, "jungle");
                         c.loadGfx("data/jungle/tiles.png");
                     } else if (a.rooms[j][i] == PCGArea.CALENDAR_ROOM_ID) {
-                        special_room_x = j;
-                        special_room_y = i;
+//                        special_room_x = j;
+//                        special_room_y = i;
                         c = new RoomChunk("data/calendar-room.tmx", 0, "pyramid");
                         c.loadGfx("data/calendar-tiles.png");
                     } else if (a.rooms[j][i] == PCGArea.TELEPORTER_ROOM_ID) {
-                        special_room_x = j;
-                        special_room_y = i;
+//                        special_room_x = j;
+//                        special_room_y = i;
                         c = new RoomChunk("data/teleporter-room.tmx", 0, "pyramid");
                         c.loadGfx("data/teleporter-room-tiles.png");
                     } else if (a.rooms[j][i] == PCGArea.TEMPLE_OF_POSEIDON_ROOM_ID) {
-                        special_room_x = j;
-                        special_room_y = i;
+//                        special_room_x = j;
+//                        special_room_y = i;
                         c = new RoomChunk("data/temple-of-poseidon.tmx", 0, "atlantis");
                         c.loadGfx("data/atlantis/tiles.png");
                     }
@@ -127,15 +127,15 @@ public class RenderedArea {
                     if (c != null) {     
                         if (a.ID == 0) {
                             // Adapt the start room:
-                            if ((pieceTypes[special_room_x*2][special_room_y*2] & PCGWorld.DIRECTION_UP) != 0) {
+                            if ((pieceTypes[j*2][i*2] & PCGWorld.DIRECTION_UP) != 0) {
                                 // open path up on the top-left:
                                 c.clearTiles(2, 0, 14, 1);
                             }
-                            if ((pieceTypes[special_room_x*2 + 1][special_room_y*2] & PCGWorld.DIRECTION_UP) != 0) {
+                            if ((pieceTypes[j*2 + 1][i*2] & PCGWorld.DIRECTION_UP) != 0) {
                                 // open path up on the top-right:
                                 c.clearTiles(18, 0, 30, 1);
                             }
-                            if ((pieceTypes[special_room_x*2 + 1][special_room_y*2] & PCGWorld.DIRECTION_RIGHT) != 0) {
+                            if ((pieceTypes[j*2 + 1][i*2] & PCGWorld.DIRECTION_RIGHT) != 0) {
                                 // open path right on the top-right:
                                 c.clearTiles(30, 2, 32, 10);
                                 c.tiles[30][1] = 229;
@@ -143,7 +143,7 @@ public class RenderedArea {
                                 c.tiles[30][10] = 197;
                                 c.tiles[31][10] = 198;
                             }
-                            if ((pieceTypes[special_room_x*2 + 1][special_room_y*2 + 1] & PCGWorld.DIRECTION_RIGHT) != 0) {
+                            if ((pieceTypes[j*2 + 1][i*2 + 1] & PCGWorld.DIRECTION_RIGHT) != 0) {
                                 // open path right on the bottom-right:
                                 c.clearTiles(30, 14, 32, 21);
                                 c.tiles[30][13] = 229;
@@ -153,7 +153,7 @@ public class RenderedArea {
                                 c.tiles[30][22] = 197;
                                 c.tiles[31][22] = 198;
                             }
-                            if ((pieceTypes[special_room_x*2][special_room_y*2 + 1] & PCGWorld.DIRECTION_DOWN) == 0) {
+                            if ((pieceTypes[j*2][i*2 + 1] & PCGWorld.DIRECTION_DOWN) == 0) {
                                 // close path down on the bottom-left:
                                 c.tiles[4][21] = c.tiles[5][21];
                                 c.tiles[4][22] = 0;
@@ -162,7 +162,7 @@ public class RenderedArea {
                                 c.tiles[10][22] = 0;
                                 c.tiles[10][23] = 0;
                             }
-                            if ((pieceTypes[special_room_x*2][special_room_y*2 + 1] & PCGWorld.DIRECTION_DOWN) == 0) {
+                            if ((pieceTypes[j*2][i*2 + 1] & PCGWorld.DIRECTION_DOWN) == 0) {
                                 // close path down on the bottom-right:
                                 c.tiles[21][21] = c.tiles[22][21];
                                 c.tiles[21][22] = 0;
@@ -174,27 +174,27 @@ public class RenderedArea {
 
                         } else {
                             // Adapt it:
-                            if ((pieceTypes[special_room_x*2][special_room_y*2] & PCGWorld.DIRECTION_LEFT) != 0) {
+                            if ((pieceTypes[j*2][i*2] & PCGWorld.DIRECTION_LEFT) != 0) {
                                 // open path left on the top-left:
                                 c.clearTiles(0, 4, 2, 8);
                             }
-                            if ((pieceTypes[special_room_x*2][special_room_y*2 + 1] & PCGWorld.DIRECTION_LEFT) != 0) {
+                            if ((pieceTypes[j*2][i*2 + 1] & PCGWorld.DIRECTION_LEFT) != 0) {
                                 // open path left on the bottom-left:
                                 c.clearTiles(0, 16, 2, 20);
                             }
-                            if ((pieceTypes[special_room_x*2][special_room_y*2 + 1] & PCGWorld.DIRECTION_DOWN) != 0) {
+                            if ((pieceTypes[j*2][i*2 + 1] & PCGWorld.DIRECTION_DOWN) != 0) {
                                 // open path down on the bottom-left:
                                 c.clearTiles(4, 22, 12, 24);
                             }
-                            if ((pieceTypes[special_room_x*2 + 1][special_room_y*2 + 1] & PCGWorld.DIRECTION_DOWN) != 0) {
+                            if ((pieceTypes[j*2 + 1][i*2 + 1] & PCGWorld.DIRECTION_DOWN) != 0) {
                                 // open path down on the bottom-right:
                                 c.clearTiles(20, 22, 28, 24);
                             }
-                            if ((pieceTypes[special_room_x*2 + 1][special_room_y*2] & PCGWorld.DIRECTION_RIGHT) != 0) {
+                            if ((pieceTypes[j*2 + 1][i*2] & PCGWorld.DIRECTION_RIGHT) != 0) {
                                 // open path right on the top-right:
                                 c.clearTiles(30, 4, 32, 8);
                             }
-                            if ((pieceTypes[special_room_x*2 + 1][special_room_y*2 + 1] & PCGWorld.DIRECTION_RIGHT) != 0) {
+                            if ((pieceTypes[j*2 + 1][i*2 + 1] & PCGWorld.DIRECTION_RIGHT) != 0) {
                                 // open path right on the bottom-right:
                                 c.clearTiles(30, 16, 32, 20);
                             }
@@ -202,26 +202,29 @@ public class RenderedArea {
 
                         // draw it:
                         g.setColor(Color.black);
-                        g.fillRect(RoomChunk.start_x + special_room_x * 32 * 8,
-                                   RoomChunk.start_y + special_room_y * 24 * 8, 32*8, 24*8);
-                        c.draw(special_room_x * 32 * 8,
-                               special_room_y * 24 * 8, g);
+                        g.fillRect(RoomChunk.start_x + j * 32 * 8,
+                                   RoomChunk.start_y + i * 24 * 8, 32*8, 24*8);
+                        c.draw(j * 32 * 8,
+                               i * 24 * 8, g);
 
                         if (a.ID == 0) {
                             // start room:
                             // ...
                         } else if (a.ID == 3) {
                             // calendar room:
-                            GameObject o = new GameObject((special_room_x * 32 + 7) * 8,
-                                                          (special_room_y * 24 + 15) * 8, "story-trivia1");
+                            GameObject o = new GameObject((j * 32 + 7) * 8,
+                                                          (i * 24 + 15) * 8, "story-trivia1");
                             o.draw(g);
-                            o.x = (special_room_x * 32 + 23) * 8;
+                            o.x = (j * 32 + 23) * 8;
                             o.draw(g);
-                        } else if (a.ID == 9) {
+                        } else if (a.rooms[j][i] == PCGArea.TELEPORTER_ROOM_ID) {
                             // teleporter room:
-                            GameObject o = new GameObject((special_room_x * 32 + 15) * 8,
-                                                          (special_room_y * 24 + 9) * 8, "story-trivia1");
+                            GameObject o = new GameObject((j * 32 + 15) * 8,
+                                                          (i * 24 + 9) * 8, "story-trivia1");
                             o.draw(g);
+                        } else if (a.rooms[j][i] == PCGArea.TEMPLE_OF_POSEIDON_ROOM_ID) {
+                            // temple of poseidon room:
+                            // ...
                         }
                     }
                 }

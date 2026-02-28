@@ -13,7 +13,7 @@ set -e
 
 run_equivalency_test () {
 	echo "Equivalency test with random seed $1, 0x5555 ..."	
-	# java -jar java/mdl.jar src/unittests/pcg-world-java-equivalency-test.asm -equ PCG_WORLD_SEED1="$1" -equ PCG_WORLD_SEED2="0x5555" -asm+:html debug-pcg.html
+	java -jar java/mdl.jar src/unittests/pcg-world-java-equivalency-test.asm -equ PCG_WORLD_SEED1="$1" -equ PCG_WORLD_SEED2="0x5555" -asm+:html debug-pcg.html
 
 	# print_lines=true
 	print_lines=false
@@ -47,6 +47,6 @@ run_equivalency_test "14"
 run_equivalency_test "15"
 run_equivalency_test "17"
 run_equivalency_test "18"
-run_equivalency_test "19"
 run_equivalency_test "21"
 run_equivalency_test "22"
+run_equivalency_test "23"
