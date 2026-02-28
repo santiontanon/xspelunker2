@@ -368,7 +368,7 @@ public class PCGWorld {
 
     public World generate(MSXRandom a_r) throws Exception
     {
-        return generate(a_r, 2, false);
+        return generate(a_r, 2, true);
     }
     
     
@@ -2290,6 +2290,10 @@ public class PCGWorld {
         }
         if (!tag.equals("start") && l.contains("start")) {
             System.err.println("Adding " + tag + " to start room! (WorldPCG failed)");
+            return false;
+        }
+        if (!tag.equals("teleporter-atlantis") && l.contains("teleporter-atlantis")) {
+            System.err.println("Adding " + tag + " to teleporter-atlantis room! (WorldPCG failed)");
             return false;
         }
                 

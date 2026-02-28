@@ -56,11 +56,11 @@ public class GenerationTestSingleArea {
 //        for(int i = 0;i<1;i++) {
         for(int i = 0;i<1000;i++) {
 //        for(int i = 0;i<65536;i++) {
-            r.setSeed1(i);
-            World w = pcg1.generate(r);
+            r.setSeed(i, 0x5555);
+//            World w = pcg1.generate(r);
+            World w = pcg1.generate(r, 1, false);          
             if (w == null) {
                 System.out.println("Cannot generate with seed " + i);
-                break;
             } else {
                 System.out.println("PCG success with seed " + i);
 //                if (!Solver.solveGame(w)) {
@@ -107,8 +107,8 @@ public class GenerationTestSingleArea {
                                 visualizeArea(ra, "tmp/area"+j+"-seed"+i+".png", pcg2);
                             }
                             ra.stats(chunkStats, typeStats, pcg2);
-                            checkNumAnimations(ra, pcg2);
                         }
+                        ra.verify();
                     }
                 }
             }
@@ -175,27 +175,5 @@ public class GenerationTestSingleArea {
 //        w.setVisible(true);
 //        w.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }    
-    
-    
-    public static void checkNumAnimations(RenderedArea ra, PCGArea pcg) throws Exception
-    {
-        Area a = ra.a;
-        List<Integer> roomIDs = new ArrayList<>();
-        for(int i = 0;i<a.height;i++) {
-            for(int j = 0;j<a.width;j++) {
-                if (a.rooms[j][i] > 0 && !roomIDs.contains(a.rooms[j][i])) {
-                    roomIDs.add(a.rooms[j][i]);
-                }
-            }
-        }
         
-        // System.out.println("RoomIDs for area " + a.ID + ": " + roomIDs);
-//        for(int roomID:roomIDs) {
-//            int n_animations = ra.getRoomAnimations(roomID, pcg).size();
-//            max_n_animations = Math.max(max_n_animations, n_animations);
-//            if (n_animations > RenderedArea.MAX_ANIMATIONS) {
-//                throw new Exception("Room has more than " + RenderedArea.MAX_ANIMATIONS + " animations! -> " + n_animations);
-//            }
-//        }
-    }   
 }

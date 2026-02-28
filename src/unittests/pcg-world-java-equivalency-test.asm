@@ -34,7 +34,7 @@ IF PCG_WORLD_SEED1 = 8
 	include "hardcoded-world-seed8.asm"
 ENDIF
 IF PCG_WORLD_SEED1 = 9
-	include "hardcoded-world-seed9.asm"
+	; This one is expected to fail
 ENDIF
 IF PCG_WORLD_SEED1 = 10
 	include "hardcoded-world-seed10.asm"
@@ -43,7 +43,7 @@ IF PCG_WORLD_SEED1 = 11
 	include "hardcoded-world-seed11.asm"
 ENDIF
 IF PCG_WORLD_SEED1 = 12
-	include "hardcoded-world-seed12.asm"
+	; This one is expected to fail
 ENDIF
 IF PCG_WORLD_SEED1 = 13
 	include "hardcoded-world-seed13.asm"

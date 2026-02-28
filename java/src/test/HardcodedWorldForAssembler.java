@@ -32,8 +32,8 @@ public class HardcodedWorldForAssembler {
     
     public static void main(String args[]) throws Exception
     {
-//        int seeds[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 17, 18, 21, 22, 23};
-        int seeds[] = {31, 33};  // these seeds should fail
+        int seeds[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 13, 14, 15, 17, 18, 21, 22, 23};
+//        int seeds[] = {9, 12, 31, 33};  // these seeds should fail
         for(int seed: seeds) {
             String worldStr = generateWorldStr(seed);
             if (worldStr != null) {
@@ -55,6 +55,9 @@ public class HardcodedWorldForAssembler {
         PCGWorld pcg1 = new PCGWorld();
         PCGArea pcg2_jungle = new PCGArea(true, "jungle");
         PCGArea pcg2_pyramid = new PCGArea(true, "pyramid");
+        PCGArea pcg2_caves = new PCGArea(true, "caves");
+        PCGArea pcg2_xibalba = new PCGArea(true, "xibalba");
+        PCGArea pcg2_atlantis = new PCGArea(true, "atlantis");
         
         String worldStr = "";
         World w = pcg1.generate(r, 1, false);
@@ -67,15 +70,23 @@ public class HardcodedWorldForAssembler {
                     break;
                 case 1:
                 case 2:
-                case 3:
                 case 4:
                 case 5:
+                    pcg2 = pcg2_pyramid;
+                    break;
+                case 3:
                 case 6:
                 case 7:
+                    pcg2 = pcg2_caves;
+                    break;
                 case 8:
+                    pcg2 = pcg2_xibalba;
+                    break;
                 case 9:
-                case 10:
-                case 11:
+                    pcg2 = pcg2_atlantis;
+                    break;
+                case 10:  // mars
+                case 11:  // moon
                     pcg2 = pcg2_pyramid;
                     break;
             }                    

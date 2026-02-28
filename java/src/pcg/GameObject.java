@@ -190,6 +190,24 @@ public class GameObject {
             case "story-trivia7":
             case "story-trivia8":       
             case "calendar-name-clue":
+            case "XIBALBA_CLUE":
+            case "XIBALBA_STORY1":
+            case "XIBALBA_STORY2":
+            case "XIBALBA_STORY3":
+            case "XIBALBA_STORY4":
+            case "XIBALBA_STORY5":
+            case "XIBALBA_LORDS1":
+            case "XIBALBA_LORDS2":
+            case "XIBALBA_LORDS3":
+            case "XIBALBA_LORDS4":
+            case "XIBALBA_LORDS5":
+            case "XIBALBA_LORDS6":
+            case "XIBALBA_LORDS7":
+            case "ATLANTIS_TABLET1":
+            case "ATLANTIS_TABLET2":
+            case "ATLANTIS_TABLET3":
+            case "ATLANTIS_TABLET4":
+            case "ATLANTIS_TABLET5":                
                 tx = 96; ty = 48;
                 break;
                 

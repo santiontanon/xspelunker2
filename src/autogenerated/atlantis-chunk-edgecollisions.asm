@@ -27,6 +27,7 @@
   db #3f, #01, #20, #ff  ; data/atlantis/room0110-3.tmx
   db #3f, #01, #20, #ff  ; data/atlantis/room0110-4.tmx
   db #3f, #01, #20, #ff  ; data/atlantis/room0110-5.tmx
+  db #3f, #01, #20, #ff  ; data/atlantis/room0110-6.tmx
   db #3f, #81, #21, #c3  ; data/atlantis/room0111-1.tmx
   db #3f, #81, #21, #c3  ; data/atlantis/room0111-2.tmx
   db #3f, #81, #21, #c3  ; data/atlantis/room0111-3.tmx

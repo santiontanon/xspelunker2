@@ -1,7 +1,8 @@
 to do:
 
+OK - "More than one tag on the teleporter room! [teleporter-atlantis, block-puzzle2]": make sure PCG fails both in Java and MSX
 ***- BUG: a door to the left (in confluence in world "ATLANTIS": #f8aa) connected to a chunk with type "half-hole" on the right, and hence was blocked! left-right door/breakablewall connections should ensure "hole" as the connection.
-  ***- Write a detector for when a door or breakable-wall left/right lead to a non-hole connector.
+  OK - Write a detector for when a door or breakable-wall left/right lead to a non-hole connector.
   ***- Fix it in Java: ensure that this happens for seed #f8aa (as it happens in assembler?())
     ***- In Java the problem is that in PCGArea.java, there isn't an equivalent of line 2592 ("// breakable wall/door, we need a hole:") for the right-tag.
     ***- do I need any additional fixes like this for up/down too?

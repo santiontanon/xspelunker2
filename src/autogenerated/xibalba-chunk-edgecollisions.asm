@@ -33,6 +33,7 @@
   db #39, #ff, #3f, #c3  ; data/xibalba/room1001-2.tmx
   db #21, #ff, #3f, #c3  ; data/xibalba/room1001-3.tmx
   db #21, #ff, #3f, #c3  ; data/xibalba/room1001-4.tmx
+  db #39, #ff, #3f, #e3  ; data/xibalba/room1001-5.tmx
   db #21, #ff, #21, #ff  ; data/xibalba/room1010-1.tmx
   db #21, #ff, #39, #ff  ; data/xibalba/room1010-2.tmx
   db #39, #ff, #39, #ff  ; data/xibalba/room1010-3.tmx
@@ -91,6 +92,7 @@
   db #21, #ff, #21, #c3  ; data/xibalba/boss1011-1.tmx
   db #21, #81, #3f, #ff  ; data/xibalba/boss1100-1.tmx
   db #39, #81, #3f, #ff  ; data/xibalba/boss1100-2.tmx
+  db #21, #81, #3f, #ff  ; data/xibalba/boss1100-3.tmx
   db #20, #80, #3f, #c3  ; data/xibalba/boss1101-1.tmx
   db #20, #00, #20, #ff  ; data/xibalba/boss1110-1.tmx
   db #20, #00, #20, #c3  ; data/xibalba/boss1111-1.tmx
