@@ -1160,8 +1160,8 @@ public class RenderedArea {
     {
         // Check that we do not have certain wrong structures, like:
         // - a door/breakable wall going to a left/right tag tht is not "hole"
-        for(int i = 0;i<a.height;i++) {
-            for(int j = 0;j<a.width;j++) {
+        for(int i = 0;i<a.height*2;i++) {
+            for(int j = 0;j<a.width*2;j++) {
                 if (fg_chunks[j][i] == null) continue;
                 // left:
                 if (j > 0 &&
@@ -1178,7 +1178,7 @@ public class RenderedArea {
                 }
 
                 // right:
-                if (j < a.width - 1 &&
+                if (j < (a.width * 2) - 1 &&
                     fg_chunks[j + 1][i] != null &&
                     (pieceTypes[j][i] & PCGWorld.DIRECTION_RIGHT) == 0 &&
                     (pieceTypes[j + 1][i] & PCGWorld.DIRECTION_LEFT) != 0) {
@@ -1206,7 +1206,7 @@ public class RenderedArea {
                 }
 
                 // down:
-                if (j < a.height - 1 &&
+                if (i < (a.height * 2) - 1 &&
                     fg_chunks[j][i + 1] != null &&
                     (pieceTypes[j][i] & PCGWorld.DIRECTION_DOWN) == 0 &&
                     (pieceTypes[j][i + 1] & PCGWorld.DIRECTION_UP) != 0) {

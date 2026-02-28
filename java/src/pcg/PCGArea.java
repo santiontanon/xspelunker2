@@ -820,6 +820,7 @@ public class PCGArea {
         fg_chunks.get(0xa).add(new RoomChunk("data/caves/room1010-5.tmx", 0xa, "caves"));
         fg_chunks.get(0xa).add(new RoomChunk("data/caves/room1010-6.tmx", 0xa, "caves"));  // half-hole
         fg_chunks.get(0xa).add(new RoomChunk("data/caves/room1010-7.tmx", 0xa, "caves"));  // half-hole
+        fg_chunks.get(0xa).add(new RoomChunk("data/caves/room1010-8.tmx", 0xa, "caves"));  // half-hole
 
         fg_chunks.get(0xb).add(new RoomChunk("data/caves/room1011-1.tmx", 0xb, "caves"));
         fg_chunks.get(0xb).add(new RoomChunk("data/caves/room1011-2.tmx", 0xb, "caves"));
@@ -2622,6 +2623,26 @@ public class PCGArea {
                         }
                     } else {
                         leftTag = null;
+                    }
+                    if (j < (a.width * 2 - 1)) {
+                            if ((ra.pieceTypes[j][i] & PCGWorld.DIRECTION_RIGHT) != 0) {
+                                if ((ra.pieceTypes[j + 1][i] & PCGWorld.DIRECTION_LEFT) == 0) {
+                                    // breakable wall/door, we need a hole:
+                                    rightTag = "hole";
+                                }
+                            }
+                    } else {
+                        rightTag = null;
+                    }
+                    if (i < (a.height * 2 - 1)) {
+                            if ((ra.pieceTypes[j][i] & PCGWorld.DIRECTION_DOWN) != 0) {
+                                if ((ra.pieceTypes[j][i + 1] & PCGWorld.DIRECTION_UP) == 0) {
+                                    // breakable wall/door, we need a hole:
+                                    downTag = "hole";
+                                }
+                            }
+                    } else {
+                        downTag = null;
                     }
                     if ((ra.pieceTypes[j][i] & PCGWorld.DIRECTION_DOWN) != 0) {
                         if (i == a.height * ROOM_HEIGHT - 1 || ra.pieceTypes[j][i+1] < 0) {
