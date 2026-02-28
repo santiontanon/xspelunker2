@@ -1,25 +1,7 @@
 to do:
 
 ***- BUG: a door to the left (in confluence in world "ATLANTIS": #f8aa) connected to a chunk with type "half-hole" on the right, and hence was blocked! left-right door/breakablewall connections should ensure "hole" as the connection.
-  ***- bring back the java PCG and the msx PCG in sync, so that if I generate a level with a seed in Java, I can predict exactly what gets generated in MSX (I will need to add all the new tablets in Xibalba and Atlantis to Java):
-    ***- hardcoded_area_data_0__tags does not match
-      ***- what is happening is that there are more divisions than the MAX and the "tmp_pcg_world__mst_divisions" array is overflowing!
-      0: 3-8
-      1: 9-23
-      2: 24-38
-      3: 1, 2, 39-42
-      4: 43-57
-      5: 58-60
-      6: 61-72
-      7: 73-84
-      8: 85-97
-      9: 98-110
-      10: 111-122
-      11: 123-134
-      #cf00
-    ***- what is the "Adding breakable-wall4 to start room!" error? do I ned to fix?
-    ***- make them identical in assembler (What is wrong? Java or assembler?)
-    ***- remove the seeds that fail (e.g. 20 right now)
+  ***- what is the "Adding breakable-wall4 to start room!" error? do I need to fix? (seeds 31, 33)
   ***- Write a detector for when a door or breakable-wall left/right lead to a non-hole connector.
   ***- Fix it in Java: ensure that this happens for seed #f8aa (as it happens in assembler?())
     ***- In Java the problem is that in PCGArea.java, there isn't an equivalent of line 2592 ("// breakable wall/door, we need a hole:") for the right-tag.
