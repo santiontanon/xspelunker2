@@ -42,7 +42,7 @@ caves_standard_chunk_pool:
   db 4, #00, #10  ; data/caves/room0100-6.tmx (19)  up: hole, 
   dw #06ef
   db 5, #00, #11  ; data/caves/room0101-1.tmx (20)  up: hole, down: hole, 
-  dw #02ab
+  dw #02af
   db 5, #00, #22  ; data/caves/room0101-2.tmx (21)  up: stairs, down: stairs, 
   dw #02ab
   db 5, #00, #12  ; data/caves/room0101-3.tmx (22)  up: hole, down: stairs, 
@@ -119,346 +119,348 @@ caves_standard_chunk_pool:
   dw #0117
   db 10, #00, #cc  ; data/caves/room1010-7.tmx (58)  left: half-hole, right: half-hole, 
   dw #0447
-  db 11, #00, #45  ; data/caves/room1011-1.tmx (59)  left: hole, right: hole, down: hole, 
+  db 10, #00, #c4  ; data/caves/room1010-8.tmx (59)  left: half-hole, right: hole, 
+  dw #0117
+  db 11, #00, #45  ; data/caves/room1011-1.tmx (60)  left: hole, right: hole, down: hole, 
   dw #0007
-  db 11, #00, #45  ; data/caves/room1011-2.tmx (60)  left: hole, right: hole, down: hole, 
+  db 11, #00, #45  ; data/caves/room1011-2.tmx (61)  left: hole, right: hole, down: hole, 
   dw #0117
-  db 11, #00, #85  ; data/caves/room1011-3.tmx (61)  left: lava, right: hole, down: hole, 
+  db 11, #00, #85  ; data/caves/room1011-3.tmx (62)  left: lava, right: hole, down: hole, 
   dw #0917
-  db 11, #00, #46  ; data/caves/room1011-4.tmx (62)  left: hole, right: hole, down: stairs, 
+  db 11, #00, #46  ; data/caves/room1011-4.tmx (63)  left: hole, right: hole, down: stairs, 
   dw #0117
-  db 11, #00, #c5  ; data/caves/room1011-5.tmx (63)  left: half-hole, right: hole, down: hole, 
+  db 11, #00, #c5  ; data/caves/room1011-5.tmx (64)  left: half-hole, right: hole, down: hole, 
   dw #0117
-  db 11, #00, #c6  ; data/caves/room1011-6.tmx (64)  left: half-hole, right: hole, down: stairs, 
+  db 11, #00, #c6  ; data/caves/room1011-6.tmx (65)  left: half-hole, right: hole, down: stairs, 
   dw #0917
-  db 11, #00, #86  ; data/caves/room1011-7.tmx (65)  left: lava, right: hole, down: stairs, 
+  db 11, #00, #86  ; data/caves/room1011-7.tmx (66)  left: lava, right: hole, down: stairs, 
   dw #0917
-  db 12, #00, #50  ; data/caves/room1100-1.tmx (66)  left: hole, up: hole, 
+  db 12, #00, #50  ; data/caves/room1100-1.tmx (67)  left: hole, up: hole, 
   dw #0667
-  db 12, #00, #60  ; data/caves/room1100-2.tmx (67)  left: hole, up: stairs, 
+  db 12, #00, #60  ; data/caves/room1100-2.tmx (68)  left: hole, up: stairs, 
   dw #0667
-  db 12, #00, #a0  ; data/caves/room1100-3.tmx (68)  left: lava, up: stairs, 
+  db 12, #00, #a0  ; data/caves/room1100-3.tmx (69)  left: lava, up: stairs, 
   dw #0227
-  db 12, #00, #90  ; data/caves/room1100-4.tmx (69)  left: lava, up: hole, 
+  db 12, #00, #90  ; data/caves/room1100-4.tmx (70)  left: lava, up: hole, 
   dw #0227
-  db 12, #00, #50  ; data/caves/room1100-5.tmx (70)  left: hole, up: hole, 
+  db 12, #00, #50  ; data/caves/room1100-5.tmx (71)  left: hole, up: hole, 
   dw #0221
-  db 12, #00, #e0  ; data/caves/room1100-6.tmx (71)  left: half-hole, up: stairs, 
+  db 12, #00, #e0  ; data/caves/room1100-6.tmx (72)  left: half-hole, up: stairs, 
   dw #0227
-  db 12, #00, #d0  ; data/caves/room1100-7.tmx (72)  left: half-hole, up: hole, 
+  db 12, #00, #d0  ; data/caves/room1100-7.tmx (73)  left: half-hole, up: hole, 
   dw #0227
-  db 13, #00, #51  ; data/caves/room1101-1.tmx (73)  left: hole, up: hole, down: hole, 
+  db 13, #00, #51  ; data/caves/room1101-1.tmx (74)  left: hole, up: hole, down: hole, 
   dw #0227
-  db 13, #00, #52  ; data/caves/room1101-2.tmx (74)  left: hole, up: hole, down: stairs, 
+  db 13, #00, #52  ; data/caves/room1101-2.tmx (75)  left: hole, up: hole, down: stairs, 
   dw #0227
-  db 13, #00, #61  ; data/caves/room1101-3.tmx (75)  left: hole, up: stairs, down: hole, 
+  db 13, #00, #61  ; data/caves/room1101-3.tmx (76)  left: hole, up: stairs, down: hole, 
   dw #0227
-  db 13, #00, #62  ; data/caves/room1101-4.tmx (76)  left: hole, up: stairs, down: stairs, 
+  db 13, #00, #62  ; data/caves/room1101-4.tmx (77)  left: hole, up: stairs, down: stairs, 
   dw #0227
-  db 13, #00, #a2  ; data/caves/room1101-5.tmx (77)  left: lava, up: stairs, down: stairs, 
+  db 13, #00, #a2  ; data/caves/room1101-5.tmx (78)  left: lava, up: stairs, down: stairs, 
   dw #0227
-  db 13, #00, #92  ; data/caves/room1101-6.tmx (78)  left: lava, up: hole, down: stairs, 
+  db 13, #00, #92  ; data/caves/room1101-6.tmx (79)  left: lava, up: hole, down: stairs, 
   dw #0223
-  db 13, #00, #91  ; data/caves/room1101-7.tmx (79)  left: lava, up: hole, down: hole, 
+  db 13, #00, #91  ; data/caves/room1101-7.tmx (80)  left: lava, up: hole, down: hole, 
   dw #0223
-  db 13, #00, #d1  ; data/caves/room1101-8.tmx (80)  left: half-hole, up: hole, down: hole, 
+  db 13, #00, #d1  ; data/caves/room1101-8.tmx (81)  left: half-hole, up: hole, down: hole, 
   dw #0227
-  db 13, #00, #e1  ; data/caves/room1101-9.tmx (81)  left: half-hole, up: stairs, down: hole, 
+  db 13, #00, #e1  ; data/caves/room1101-9.tmx (82)  left: half-hole, up: stairs, down: hole, 
   dw #0227
-  db 13, #00, #d2  ; data/caves/room1101-10.tmx (82)  left: half-hole, up: hole, down: stairs, 
+  db 13, #00, #d2  ; data/caves/room1101-10.tmx (83)  left: half-hole, up: hole, down: stairs, 
   dw #0227
-  db 13, #00, #e2  ; data/caves/room1101-11.tmx (83)  left: half-hole, up: stairs, down: stairs, 
+  db 13, #00, #e2  ; data/caves/room1101-11.tmx (84)  left: half-hole, up: stairs, down: stairs, 
   dw #0227
-  db 13, #00, #a1  ; data/caves/room1101-12.tmx (84)  left: lava, up: stairs, down: hole, 
+  db 13, #00, #a1  ; data/caves/room1101-12.tmx (85)  left: lava, up: stairs, down: hole, 
   dw #0227
-  db 14, #00, #54  ; data/caves/room1110-1.tmx (85)  left: hole, up: hole, right: hole, 
+  db 14, #00, #54  ; data/caves/room1110-1.tmx (86)  left: hole, up: hole, right: hole, 
   dw #0447
-  db 14, #00, #64  ; data/caves/room1110-2.tmx (86)  left: hole, up: stairs, right: hole, 
+  db 14, #00, #64  ; data/caves/room1110-2.tmx (87)  left: hole, up: stairs, right: hole, 
   dw #0447
-  db 14, #00, #94  ; data/caves/room1110-3.tmx (87)  left: lava, up: hole, right: hole, 
+  db 14, #00, #94  ; data/caves/room1110-3.tmx (88)  left: lava, up: hole, right: hole, 
   dw #0441
-  db 14, #00, #98  ; data/caves/room1110-4.tmx (88)  left: lava, up: hole, right: lava, 
+  db 14, #00, #98  ; data/caves/room1110-4.tmx (89)  left: lava, up: hole, right: lava, 
   dw #0001
-  db 14, #00, #a4  ; data/caves/room1110-5.tmx (89)  left: lava, up: stairs, right: hole, 
+  db 14, #00, #a4  ; data/caves/room1110-5.tmx (90)  left: lava, up: stairs, right: hole, 
   dw #0447
-  db 14, #00, #e4  ; data/caves/room1110-6.tmx (90)  left: half-hole, up: stairs, right: hole, 
+  db 14, #00, #e4  ; data/caves/room1110-6.tmx (91)  left: half-hole, up: stairs, right: hole, 
   dw #0447
-  db 14, #00, #d4  ; data/caves/room1110-7.tmx (91)  left: half-hole, up: hole, right: hole, 
+  db 14, #00, #d4  ; data/caves/room1110-7.tmx (92)  left: half-hole, up: hole, right: hole, 
   dw #0447
-  db 15, #00, #55  ; data/caves/room1111-1.tmx (92)  left: hole, up: hole, right: hole, down: hole, 
+  db 15, #00, #55  ; data/caves/room1111-1.tmx (93)  left: hole, up: hole, right: hole, down: hole, 
   dw #0007
-  db 15, #00, #65  ; data/caves/room1111-2.tmx (93)  left: hole, up: stairs, right: hole, down: hole, 
+  db 15, #00, #65  ; data/caves/room1111-2.tmx (94)  left: hole, up: stairs, right: hole, down: hole, 
   dw #0007
-  db 15, #00, #a5  ; data/caves/room1111-3.tmx (94)  left: lava, up: stairs, right: hole, down: hole, 
+  db 15, #00, #a5  ; data/caves/room1111-3.tmx (95)  left: lava, up: stairs, right: hole, down: hole, 
   dw #0007
-  db 15, #00, #95  ; data/caves/room1111-4.tmx (95)  left: lava, up: hole, right: hole, down: hole, 
+  db 15, #00, #95  ; data/caves/room1111-4.tmx (96)  left: lava, up: hole, right: hole, down: hole, 
   dw #0007
-  db 15, #00, #56  ; data/caves/room1111-5.tmx (96)  left: hole, up: hole, right: hole, down: stairs, 
+  db 15, #00, #56  ; data/caves/room1111-5.tmx (97)  left: hole, up: hole, right: hole, down: stairs, 
   dw #0007
-  db 15, #00, #66  ; data/caves/room1111-6.tmx (97)  left: hole, up: stairs, right: hole, down: stairs, 
+  db 15, #00, #66  ; data/caves/room1111-6.tmx (98)  left: hole, up: stairs, right: hole, down: stairs, 
   dw #0007
-  db 15, #00, #96  ; data/caves/room1111-7.tmx (98)  left: lava, up: hole, right: hole, down: stairs, 
+  db 15, #00, #96  ; data/caves/room1111-7.tmx (99)  left: lava, up: hole, right: hole, down: stairs, 
   dw #0007
-  db 15, #00, #e5  ; data/caves/room1111-8.tmx (99)  left: half-hole, up: stairs, right: hole, down: hole, 
+  db 15, #00, #e5  ; data/caves/room1111-8.tmx (100)  left: half-hole, up: stairs, right: hole, down: hole, 
   dw #0007
-  db 15, #00, #d5  ; data/caves/room1111-9.tmx (100)  left: half-hole, up: hole, right: hole, down: hole, 
+  db 15, #00, #d5  ; data/caves/room1111-9.tmx (101)  left: half-hole, up: hole, right: hole, down: hole, 
   dw #0007
-  db 15, #00, #d6  ; data/caves/room1111-10.tmx (101)  left: half-hole, up: hole, right: hole, down: stairs, 
+  db 15, #00, #d6  ; data/caves/room1111-10.tmx (102)  left: half-hole, up: hole, right: hole, down: stairs, 
   dw #0007
-  db 15, #00, #a6  ; data/caves/room1111-11.tmx (102)  left: lava, up: stairs, right: hole, down: stairs, 
+  db 15, #00, #a6  ; data/caves/room1111-11.tmx (103)  left: lava, up: stairs, right: hole, down: stairs, 
   dw #0007
 caves_boss_chunk_pool:
 caves_block_chunk_pool:
-  db 3, #00, #05  ; data/caves/block0011-1.tmx (103)  right: hole, down: hole, 
+  db 3, #00, #05  ; data/caves/block0011-1.tmx (104)  right: hole, down: hole, 
   dw #099f
-  db 3, #00, #06  ; data/caves/block0011-2.tmx (104)  right: hole, down: stairs, 
+  db 3, #00, #06  ; data/caves/block0011-2.tmx (105)  right: hole, down: stairs, 
   dw #099f
-  db 5, #00, #11  ; data/caves/block0101-1.tmx (105)  up: hole, down: hole, 
+  db 5, #00, #11  ; data/caves/block0101-1.tmx (106)  up: hole, down: hole, 
   dw #0829
-  db 5, #00, #21  ; data/caves/block0101-2.tmx (106)  up: stairs, down: hole, 
+  db 5, #00, #21  ; data/caves/block0101-2.tmx (107)  up: stairs, down: hole, 
   dw #0829
-  db 5, #00, #12  ; data/caves/block0101-3.tmx (107)  up: hole, down: stairs, 
+  db 5, #00, #12  ; data/caves/block0101-3.tmx (108)  up: hole, down: stairs, 
   dw #0aa9
-  db 5, #00, #22  ; data/caves/block0101-4.tmx (108)  up: stairs, down: stairs, 
+  db 5, #00, #22  ; data/caves/block0101-4.tmx (109)  up: stairs, down: stairs, 
   dw #0aa9
-  db 6, #00, #14  ; data/caves/block0110-1.tmx (109)  up: hole, right: hole, 
+  db 6, #00, #14  ; data/caves/block0110-1.tmx (110)  up: hole, right: hole, 
   dw #0849
-  db 6, #00, #24  ; data/caves/block0110-2.tmx (110)  up: stairs, right: hole, 
+  db 6, #00, #24  ; data/caves/block0110-2.tmx (111)  up: stairs, right: hole, 
   dw #0849
-  db 7, #00, #15  ; data/caves/block0011-1.tmx + up (111)  up: hole, right: hole, down: hole, 
+  db 7, #00, #15  ; data/caves/block0011-1.tmx + up (112)  up: hole, right: hole, down: hole, 
   dw #088f
-  db 7, #00, #16  ; data/caves/block0011-2.tmx + up (112)  up: hole, right: hole, down: stairs, 
+  db 7, #00, #16  ; data/caves/block0011-2.tmx + up (113)  up: hole, right: hole, down: stairs, 
   dw #088f
-  db 7, #00, #15  ; data/caves/block0101-1.tmx + right (113)  up: hole, right: hole, down: hole, 
+  db 7, #00, #15  ; data/caves/block0101-1.tmx + right (114)  up: hole, right: hole, down: hole, 
   dw #0809
-  db 7, #00, #25  ; data/caves/block0101-2.tmx + right (114)  up: stairs, right: hole, down: hole, 
+  db 7, #00, #25  ; data/caves/block0101-2.tmx + right (115)  up: stairs, right: hole, down: hole, 
   dw #0809
-  db 7, #00, #16  ; data/caves/block0101-3.tmx + right (115)  up: hole, right: hole, down: stairs, 
+  db 7, #00, #16  ; data/caves/block0101-3.tmx + right (116)  up: hole, right: hole, down: stairs, 
   dw #0889
-  db 7, #00, #26  ; data/caves/block0101-4.tmx + right (116)  up: stairs, right: hole, down: stairs, 
+  db 7, #00, #26  ; data/caves/block0101-4.tmx + right (117)  up: stairs, right: hole, down: stairs, 
   dw #0889
-  db 7, #00, #15  ; data/caves/block0110-1.tmx + down (117)  up: hole, right: hole, down: hole, 
+  db 7, #00, #15  ; data/caves/block0110-1.tmx + down (118)  up: hole, right: hole, down: hole, 
   dw #0809
-  db 7, #00, #25  ; data/caves/block0110-2.tmx + down (118)  up: stairs, right: hole, down: hole, 
+  db 7, #00, #25  ; data/caves/block0110-2.tmx + down (119)  up: stairs, right: hole, down: hole, 
   dw #0809
-  db 7, #00, #16  ; data/caves/block0111-1.tmx (119)  up: hole, right: hole, down: stairs, 
+  db 7, #00, #16  ; data/caves/block0111-1.tmx (120)  up: hole, right: hole, down: stairs, 
   dw #0809
-  db 9, #00, #41  ; data/caves/block1001-1.tmx (120)  left: hole, down: hole, 
+  db 9, #00, #41  ; data/caves/block1001-1.tmx (121)  left: hole, down: hole, 
   dw #0a31
-  db 9, #00, #42  ; data/caves/block1001-2.tmx (121)  left: hole, down: stairs, 
+  db 9, #00, #42  ; data/caves/block1001-2.tmx (122)  left: hole, down: stairs, 
   dw #0a31
-  db 9, #00, #c1  ; data/caves/block1001-3.tmx (122)  left: half-hole, down: hole, 
+  db 9, #00, #c1  ; data/caves/block1001-3.tmx (123)  left: half-hole, down: hole, 
   dw #0a31
-  db 10, #00, #44  ; data/caves/block1010-1.tmx (123)  left: hole, right: hole, 
+  db 10, #00, #44  ; data/caves/block1010-1.tmx (124)  left: hole, right: hole, 
   dw #0d51
-  db 10, #00, #84  ; data/caves/block1010-2.tmx (124)  left: lava, right: hole, 
+  db 10, #00, #84  ; data/caves/block1010-2.tmx (125)  left: lava, right: hole, 
   dw #0d51
-  db 10, #00, #c4  ; data/caves/block1010-3.tmx (125)  left: half-hole, right: hole, 
+  db 10, #00, #c4  ; data/caves/block1010-3.tmx (126)  left: half-hole, right: hole, 
   dw #0d51
-  db 11, #00, #45  ; data/caves/block0011-1.tmx + left (126)  left: hole, right: hole, down: hole, 
+  db 11, #00, #45  ; data/caves/block0011-1.tmx + left (127)  left: hole, right: hole, down: hole, 
   dw #0917
-  db 11, #00, #46  ; data/caves/block0011-2.tmx + left (127)  left: hole, right: hole, down: stairs, 
+  db 11, #00, #46  ; data/caves/block0011-2.tmx + left (128)  left: hole, right: hole, down: stairs, 
   dw #0917
-  db 11, #00, #45  ; data/caves/block1001-1.tmx + right (128)  left: hole, right: hole, down: hole, 
+  db 11, #00, #45  ; data/caves/block1001-1.tmx + right (129)  left: hole, right: hole, down: hole, 
   dw #0811
-  db 11, #00, #46  ; data/caves/block1001-2.tmx + right (129)  left: hole, right: hole, down: stairs, 
+  db 11, #00, #46  ; data/caves/block1001-2.tmx + right (130)  left: hole, right: hole, down: stairs, 
   dw #0811
-  db 11, #00, #c5  ; data/caves/block1001-3.tmx + right (130)  left: half-hole, right: hole, down: hole, 
+  db 11, #00, #c5  ; data/caves/block1001-3.tmx + right (131)  left: half-hole, right: hole, down: hole, 
   dw #0811
-  db 11, #00, #45  ; data/caves/block1010-1.tmx + down (131)  left: hole, right: hole, down: hole, 
+  db 11, #00, #45  ; data/caves/block1010-1.tmx + down (132)  left: hole, right: hole, down: hole, 
   dw #0911
-  db 11, #00, #85  ; data/caves/block1010-2.tmx + down (132)  left: lava, right: hole, down: hole, 
+  db 11, #00, #85  ; data/caves/block1010-2.tmx + down (133)  left: lava, right: hole, down: hole, 
   dw #0911
-  db 11, #00, #c5  ; data/caves/block1010-3.tmx + down (133)  left: half-hole, right: hole, down: hole, 
+  db 11, #00, #c5  ; data/caves/block1010-3.tmx + down (134)  left: half-hole, right: hole, down: hole, 
   dw #0911
-  db 12, #00, #50  ; data/caves/block1100-1.tmx (134)  left: hole, up: hole, 
+  db 12, #00, #50  ; data/caves/block1100-1.tmx (135)  left: hole, up: hole, 
   dw #0a60
-  db 12, #00, #60  ; data/caves/block1100-2.tmx (135)  left: hole, up: stairs, 
+  db 12, #00, #60  ; data/caves/block1100-2.tmx (136)  left: hole, up: stairs, 
   dw #0a60
-  db 12, #00, #d0  ; data/caves/block1100-3.tmx (136)  left: half-hole, up: hole, 
+  db 12, #00, #d0  ; data/caves/block1100-3.tmx (137)  left: half-hole, up: hole, 
   dw #0a60
-  db 13, #00, #51  ; data/caves/block0101-1.tmx + left (137)  left: hole, up: hole, down: hole, 
+  db 13, #00, #51  ; data/caves/block0101-1.tmx + left (138)  left: hole, up: hole, down: hole, 
   dw #0821
-  db 13, #00, #61  ; data/caves/block0101-2.tmx + left (138)  left: hole, up: stairs, down: hole, 
+  db 13, #00, #61  ; data/caves/block0101-2.tmx + left (139)  left: hole, up: stairs, down: hole, 
   dw #0821
-  db 13, #00, #52  ; data/caves/block0101-3.tmx + left (139)  left: hole, up: hole, down: stairs, 
+  db 13, #00, #52  ; data/caves/block0101-3.tmx + left (140)  left: hole, up: hole, down: stairs, 
   dw #0a21
-  db 13, #00, #62  ; data/caves/block0101-4.tmx + left (140)  left: hole, up: stairs, down: stairs, 
+  db 13, #00, #62  ; data/caves/block0101-4.tmx + left (141)  left: hole, up: stairs, down: stairs, 
   dw #0a21
-  db 13, #00, #51  ; data/caves/block1001-1.tmx + up (141)  left: hole, up: hole, down: hole, 
+  db 13, #00, #51  ; data/caves/block1001-1.tmx + up (142)  left: hole, up: hole, down: hole, 
   dw #0a21
-  db 13, #00, #52  ; data/caves/block1001-2.tmx + up (142)  left: hole, up: hole, down: stairs, 
+  db 13, #00, #52  ; data/caves/block1001-2.tmx + up (143)  left: hole, up: hole, down: stairs, 
   dw #0a21
-  db 13, #00, #d1  ; data/caves/block1001-3.tmx + up (143)  left: half-hole, up: hole, down: hole, 
+  db 13, #00, #d1  ; data/caves/block1001-3.tmx + up (144)  left: half-hole, up: hole, down: hole, 
   dw #0a21
-  db 13, #00, #51  ; data/caves/block1100-1.tmx + down (144)  left: hole, up: hole, down: hole, 
+  db 13, #00, #51  ; data/caves/block1100-1.tmx + down (145)  left: hole, up: hole, down: hole, 
   dw #0a20
-  db 13, #00, #61  ; data/caves/block1100-2.tmx + down (145)  left: hole, up: stairs, down: hole, 
+  db 13, #00, #61  ; data/caves/block1100-2.tmx + down (146)  left: hole, up: stairs, down: hole, 
   dw #0a20
-  db 13, #00, #d1  ; data/caves/block1100-3.tmx + down (146)  left: half-hole, up: hole, down: hole, 
+  db 13, #00, #d1  ; data/caves/block1100-3.tmx + down (147)  left: half-hole, up: hole, down: hole, 
   dw #0a20
-  db 14, #00, #54  ; data/caves/block0110-1.tmx + left (147)  left: hole, up: hole, right: hole, 
+  db 14, #00, #54  ; data/caves/block0110-1.tmx + left (148)  left: hole, up: hole, right: hole, 
   dw #0841
-  db 14, #00, #64  ; data/caves/block0110-2.tmx + left (148)  left: hole, up: stairs, right: hole, 
+  db 14, #00, #64  ; data/caves/block0110-2.tmx + left (149)  left: hole, up: stairs, right: hole, 
   dw #0841
-  db 14, #00, #54  ; data/caves/block1010-1.tmx + up (149)  left: hole, up: hole, right: hole, 
+  db 14, #00, #54  ; data/caves/block1010-1.tmx + up (150)  left: hole, up: hole, right: hole, 
   dw #0c41
-  db 14, #00, #94  ; data/caves/block1010-2.tmx + up (150)  left: lava, up: hole, right: hole, 
+  db 14, #00, #94  ; data/caves/block1010-2.tmx + up (151)  left: lava, up: hole, right: hole, 
   dw #0c41
-  db 14, #00, #d4  ; data/caves/block1010-3.tmx + up (151)  left: half-hole, up: hole, right: hole, 
+  db 14, #00, #d4  ; data/caves/block1010-3.tmx + up (152)  left: half-hole, up: hole, right: hole, 
   dw #0c41
-  db 14, #00, #54  ; data/caves/block1100-1.tmx + right (152)  left: hole, up: hole, right: hole, 
+  db 14, #00, #54  ; data/caves/block1100-1.tmx + right (153)  left: hole, up: hole, right: hole, 
   dw #0840
-  db 14, #00, #64  ; data/caves/block1100-2.tmx + right (153)  left: hole, up: stairs, right: hole, 
+  db 14, #00, #64  ; data/caves/block1100-2.tmx + right (154)  left: hole, up: stairs, right: hole, 
   dw #0840
-  db 14, #00, #d4  ; data/caves/block1100-3.tmx + right (154)  left: half-hole, up: hole, right: hole, 
+  db 14, #00, #d4  ; data/caves/block1100-3.tmx + right (155)  left: half-hole, up: hole, right: hole, 
   dw #0840
-  db 15, #00, #55  ; data/caves/block0011-1.tmx + left + up (155)  left: hole, up: hole, right: hole, down: hole, 
+  db 15, #00, #55  ; data/caves/block0011-1.tmx + left + up (156)  left: hole, up: hole, right: hole, down: hole, 
   dw #0807
-  db 15, #00, #56  ; data/caves/block0011-2.tmx + left + up (156)  left: hole, up: hole, right: hole, down: stairs, 
+  db 15, #00, #56  ; data/caves/block0011-2.tmx + left + up (157)  left: hole, up: hole, right: hole, down: stairs, 
   dw #0807
-  db 15, #00, #55  ; data/caves/block0101-1.tmx + left + right (157)  left: hole, up: hole, right: hole, down: hole, 
+  db 15, #00, #55  ; data/caves/block0101-1.tmx + left + right (158)  left: hole, up: hole, right: hole, down: hole, 
   dw #0801
-  db 15, #00, #65  ; data/caves/block0101-2.tmx + left + right (158)  left: hole, up: stairs, right: hole, down: hole, 
+  db 15, #00, #65  ; data/caves/block0101-2.tmx + left + right (159)  left: hole, up: stairs, right: hole, down: hole, 
   dw #0801
-  db 15, #00, #56  ; data/caves/block0101-3.tmx + left + right (159)  left: hole, up: hole, right: hole, down: stairs, 
+  db 15, #00, #56  ; data/caves/block0101-3.tmx + left + right (160)  left: hole, up: hole, right: hole, down: stairs, 
   dw #0801
-  db 15, #00, #66  ; data/caves/block0101-4.tmx + left + right (160)  left: hole, up: stairs, right: hole, down: stairs, 
+  db 15, #00, #66  ; data/caves/block0101-4.tmx + left + right (161)  left: hole, up: stairs, right: hole, down: stairs, 
   dw #0801
-  db 15, #00, #55  ; data/caves/block0110-1.tmx + left + down (161)  left: hole, up: hole, right: hole, down: hole, 
+  db 15, #00, #55  ; data/caves/block0110-1.tmx + left + down (162)  left: hole, up: hole, right: hole, down: hole, 
   dw #0801
-  db 15, #00, #65  ; data/caves/block0110-2.tmx + left + down (162)  left: hole, up: stairs, right: hole, down: hole, 
+  db 15, #00, #65  ; data/caves/block0110-2.tmx + left + down (163)  left: hole, up: stairs, right: hole, down: hole, 
   dw #0801
-  db 15, #00, #56  ; data/caves/block0111-1.tmx + left (163)  left: hole, up: hole, right: hole, down: stairs, 
+  db 15, #00, #56  ; data/caves/block0111-1.tmx + left (164)  left: hole, up: hole, right: hole, down: stairs, 
   dw #0801
-  db 15, #00, #55  ; data/caves/block1001-1.tmx + up + right (164)  left: hole, up: hole, right: hole, down: hole, 
+  db 15, #00, #55  ; data/caves/block1001-1.tmx + up + right (165)  left: hole, up: hole, right: hole, down: hole, 
   dw #0801
-  db 15, #00, #56  ; data/caves/block1001-2.tmx + up + right (165)  left: hole, up: hole, right: hole, down: stairs, 
+  db 15, #00, #56  ; data/caves/block1001-2.tmx + up + right (166)  left: hole, up: hole, right: hole, down: stairs, 
   dw #0801
-  db 15, #00, #d5  ; data/caves/block1001-3.tmx + up + right (166)  left: half-hole, up: hole, right: hole, down: hole, 
+  db 15, #00, #d5  ; data/caves/block1001-3.tmx + up + right (167)  left: half-hole, up: hole, right: hole, down: hole, 
   dw #0801
-  db 15, #00, #55  ; data/caves/block1010-1.tmx + up + down (167)  left: hole, up: hole, right: hole, down: hole, 
+  db 15, #00, #55  ; data/caves/block1010-1.tmx + up + down (168)  left: hole, up: hole, right: hole, down: hole, 
   dw #0801
-  db 15, #00, #95  ; data/caves/block1010-2.tmx + up + down (168)  left: lava, up: hole, right: hole, down: hole, 
+  db 15, #00, #95  ; data/caves/block1010-2.tmx + up + down (169)  left: lava, up: hole, right: hole, down: hole, 
   dw #0801
-  db 15, #00, #d5  ; data/caves/block1010-3.tmx + up + down (169)  left: half-hole, up: hole, right: hole, down: hole, 
+  db 15, #00, #d5  ; data/caves/block1010-3.tmx + up + down (170)  left: half-hole, up: hole, right: hole, down: hole, 
   dw #0801
-  db 15, #00, #55  ; data/caves/block1100-1.tmx + right + down (170)  left: hole, up: hole, right: hole, down: hole, 
+  db 15, #00, #55  ; data/caves/block1100-1.tmx + right + down (171)  left: hole, up: hole, right: hole, down: hole, 
   dw #0800
-  db 15, #00, #65  ; data/caves/block1100-2.tmx + right + down (171)  left: hole, up: stairs, right: hole, down: hole, 
+  db 15, #00, #65  ; data/caves/block1100-2.tmx + right + down (172)  left: hole, up: stairs, right: hole, down: hole, 
   dw #0800
-  db 15, #00, #d5  ; data/caves/block1100-3.tmx + right + down (172)  left: half-hole, up: hole, right: hole, down: hole, 
+  db 15, #00, #d5  ; data/caves/block1100-3.tmx + right + down (173)  left: half-hole, up: hole, right: hole, down: hole, 
   dw #0800
 caves_combination_chunk_pool:
-  db 0, #00, #00  ; data/caves/combination0000-1.tmx (173)  
+  db 0, #00, #00  ; data/caves/combination0000-1.tmx (174)  
   dw #0781
-  db 1, #00, #01  ; data/caves/combination0000-1.tmx + down (174)  down: hole, 
+  db 1, #00, #01  ; data/caves/combination0000-1.tmx + down (175)  down: hole, 
   dw #0381
-  db 1, #00, #02  ; data/caves/combination0001-1.tmx (175)  down: stairs, 
+  db 1, #00, #02  ; data/caves/combination0001-1.tmx (176)  down: stairs, 
   dw #0381
-  db 2, #00, #04  ; data/caves/combination0000-1.tmx + right (176)  right: hole, 
+  db 2, #00, #04  ; data/caves/combination0000-1.tmx + right (177)  right: hole, 
   dw #0581
-  db 3, #00, #05  ; data/caves/combination0000-1.tmx + right + down (177)  right: hole, down: hole, 
+  db 3, #00, #05  ; data/caves/combination0000-1.tmx + right + down (178)  right: hole, down: hole, 
   dw #0181
-  db 3, #00, #06  ; data/caves/combination0001-1.tmx + right (178)  right: hole, down: stairs, 
+  db 3, #00, #06  ; data/caves/combination0001-1.tmx + right (179)  right: hole, down: stairs, 
   dw #0181
-  db 4, #00, #10  ; data/caves/combination0000-1.tmx + up (179)  up: hole, 
+  db 4, #00, #10  ; data/caves/combination0000-1.tmx + up (180)  up: hole, 
   dw #0681
-  db 4, #00, #20  ; data/caves/combination0100-1.tmx (180)  up: stairs, 
+  db 4, #00, #20  ; data/caves/combination0100-1.tmx (181)  up: stairs, 
   dw #0681
-  db 5, #00, #11  ; data/caves/combination0000-1.tmx + up + down (181)  up: hole, down: hole, 
+  db 5, #00, #11  ; data/caves/combination0000-1.tmx + up + down (182)  up: hole, down: hole, 
   dw #0281
-  db 5, #00, #12  ; data/caves/combination0001-1.tmx + up (182)  up: hole, down: stairs, 
+  db 5, #00, #12  ; data/caves/combination0001-1.tmx + up (183)  up: hole, down: stairs, 
   dw #0281
-  db 5, #00, #21  ; data/caves/combination0100-1.tmx + down (183)  up: stairs, down: hole, 
+  db 5, #00, #21  ; data/caves/combination0100-1.tmx + down (184)  up: stairs, down: hole, 
   dw #0281
-  db 5, #00, #22  ; data/caves/combination0101-1.tmx (184)  up: stairs, down: stairs, 
+  db 5, #00, #22  ; data/caves/combination0101-1.tmx (185)  up: stairs, down: stairs, 
   dw #0281
-  db 6, #00, #14  ; data/caves/combination0000-1.tmx + up + right (185)  up: hole, right: hole, 
+  db 6, #00, #14  ; data/caves/combination0000-1.tmx + up + right (186)  up: hole, right: hole, 
   dw #0481
-  db 6, #00, #24  ; data/caves/combination0100-1.tmx + right (186)  up: stairs, right: hole, 
+  db 6, #00, #24  ; data/caves/combination0100-1.tmx + right (187)  up: stairs, right: hole, 
   dw #0481
-  db 7, #00, #15  ; data/caves/combination0000-1.tmx + up + right + down (187)  up: hole, right: hole, down: hole, 
+  db 7, #00, #15  ; data/caves/combination0000-1.tmx + up + right + down (188)  up: hole, right: hole, down: hole, 
   dw #0081
-  db 7, #00, #16  ; data/caves/combination0001-1.tmx + up + right (188)  up: hole, right: hole, down: stairs, 
+  db 7, #00, #16  ; data/caves/combination0001-1.tmx + up + right (189)  up: hole, right: hole, down: stairs, 
   dw #0081
-  db 7, #00, #25  ; data/caves/combination0100-1.tmx + right + down (189)  up: stairs, right: hole, down: hole, 
+  db 7, #00, #25  ; data/caves/combination0100-1.tmx + right + down (190)  up: stairs, right: hole, down: hole, 
   dw #0081
-  db 7, #00, #26  ; data/caves/combination0101-1.tmx + right (190)  up: stairs, right: hole, down: stairs, 
+  db 7, #00, #26  ; data/caves/combination0101-1.tmx + right (191)  up: stairs, right: hole, down: stairs, 
   dw #0081
-  db 8, #00, #40  ; data/caves/combination0000-1.tmx + left (191)  left: hole, 
+  db 8, #00, #40  ; data/caves/combination0000-1.tmx + left (192)  left: hole, 
   dw #0701
-  db 8, #00, #c0  ; data/caves/combination1000-1.tmx (192)  left: half-hole, 
+  db 8, #00, #c0  ; data/caves/combination1000-1.tmx (193)  left: half-hole, 
   dw #0701
-  db 8, #00, #80  ; data/caves/combination1000-2.tmx (193)  left: lava, 
+  db 8, #00, #80  ; data/caves/combination1000-2.tmx (194)  left: lava, 
   dw #0701
-  db 9, #00, #41  ; data/caves/combination0000-1.tmx + left + down (194)  left: hole, down: hole, 
+  db 9, #00, #41  ; data/caves/combination0000-1.tmx + left + down (195)  left: hole, down: hole, 
   dw #0301
-  db 9, #00, #42  ; data/caves/combination0001-1.tmx + left (195)  left: hole, down: stairs, 
+  db 9, #00, #42  ; data/caves/combination0001-1.tmx + left (196)  left: hole, down: stairs, 
   dw #0301
-  db 9, #00, #c1  ; data/caves/combination1000-1.tmx + down (196)  left: half-hole, down: hole, 
+  db 9, #00, #c1  ; data/caves/combination1000-1.tmx + down (197)  left: half-hole, down: hole, 
   dw #0301
-  db 9, #00, #81  ; data/caves/combination1000-2.tmx + down (197)  left: lava, down: hole, 
+  db 9, #00, #81  ; data/caves/combination1000-2.tmx + down (198)  left: lava, down: hole, 
   dw #0301
-  db 10, #00, #44  ; data/caves/combination0000-1.tmx + left + right (198)  left: hole, right: hole, 
+  db 10, #00, #44  ; data/caves/combination0000-1.tmx + left + right (199)  left: hole, right: hole, 
   dw #0501
-  db 10, #00, #c4  ; data/caves/combination1000-1.tmx + right (199)  left: half-hole, right: hole, 
+  db 10, #00, #c4  ; data/caves/combination1000-1.tmx + right (200)  left: half-hole, right: hole, 
   dw #0501
-  db 10, #00, #84  ; data/caves/combination1000-2.tmx + right (200)  left: lava, right: hole, 
+  db 10, #00, #84  ; data/caves/combination1000-2.tmx + right (201)  left: lava, right: hole, 
   dw #0501
-  db 11, #00, #45  ; data/caves/combination0000-1.tmx + left + right + down (201)  left: hole, right: hole, down: hole, 
+  db 11, #00, #45  ; data/caves/combination0000-1.tmx + left + right + down (202)  left: hole, right: hole, down: hole, 
   dw #0101
-  db 11, #00, #46  ; data/caves/combination0001-1.tmx + left + right (202)  left: hole, right: hole, down: stairs, 
+  db 11, #00, #46  ; data/caves/combination0001-1.tmx + left + right (203)  left: hole, right: hole, down: stairs, 
   dw #0101
-  db 11, #00, #c5  ; data/caves/combination1000-1.tmx + right + down (203)  left: half-hole, right: hole, down: hole, 
+  db 11, #00, #c5  ; data/caves/combination1000-1.tmx + right + down (204)  left: half-hole, right: hole, down: hole, 
   dw #0101
-  db 11, #00, #85  ; data/caves/combination1000-2.tmx + right + down (204)  left: lava, right: hole, down: hole, 
+  db 11, #00, #85  ; data/caves/combination1000-2.tmx + right + down (205)  left: lava, right: hole, down: hole, 
   dw #0101
-  db 12, #00, #50  ; data/caves/combination0000-1.tmx + left + up (205)  left: hole, up: hole, 
+  db 12, #00, #50  ; data/caves/combination0000-1.tmx + left + up (206)  left: hole, up: hole, 
   dw #0601
-  db 12, #00, #60  ; data/caves/combination0100-1.tmx + left (206)  left: hole, up: stairs, 
+  db 12, #00, #60  ; data/caves/combination0100-1.tmx + left (207)  left: hole, up: stairs, 
   dw #0601
-  db 12, #00, #d0  ; data/caves/combination1000-1.tmx + up (207)  left: half-hole, up: hole, 
+  db 12, #00, #d0  ; data/caves/combination1000-1.tmx + up (208)  left: half-hole, up: hole, 
   dw #0601
-  db 12, #00, #90  ; data/caves/combination1000-2.tmx + up (208)  left: lava, up: hole, 
+  db 12, #00, #90  ; data/caves/combination1000-2.tmx + up (209)  left: lava, up: hole, 
   dw #0601
-  db 12, #00, #e0  ; data/caves/combination1100-1.tmx (209)  left: half-hole, up: stairs, 
+  db 12, #00, #e0  ; data/caves/combination1100-1.tmx (210)  left: half-hole, up: stairs, 
   dw #0601
-  db 13, #00, #51  ; data/caves/combination0000-1.tmx + left + up + down (210)  left: hole, up: hole, down: hole, 
+  db 13, #00, #51  ; data/caves/combination0000-1.tmx + left + up + down (211)  left: hole, up: hole, down: hole, 
   dw #0201
-  db 13, #00, #52  ; data/caves/combination0001-1.tmx + left + up (211)  left: hole, up: hole, down: stairs, 
+  db 13, #00, #52  ; data/caves/combination0001-1.tmx + left + up (212)  left: hole, up: hole, down: stairs, 
   dw #0201
-  db 13, #00, #61  ; data/caves/combination0100-1.tmx + left + down (212)  left: hole, up: stairs, down: hole, 
+  db 13, #00, #61  ; data/caves/combination0100-1.tmx + left + down (213)  left: hole, up: stairs, down: hole, 
   dw #0201
-  db 13, #00, #62  ; data/caves/combination0101-1.tmx + left (213)  left: hole, up: stairs, down: stairs, 
+  db 13, #00, #62  ; data/caves/combination0101-1.tmx + left (214)  left: hole, up: stairs, down: stairs, 
   dw #0201
-  db 13, #00, #d1  ; data/caves/combination1000-1.tmx + up + down (214)  left: half-hole, up: hole, down: hole, 
+  db 13, #00, #d1  ; data/caves/combination1000-1.tmx + up + down (215)  left: half-hole, up: hole, down: hole, 
   dw #0201
-  db 13, #00, #91  ; data/caves/combination1000-2.tmx + up + down (215)  left: lava, up: hole, down: hole, 
+  db 13, #00, #91  ; data/caves/combination1000-2.tmx + up + down (216)  left: lava, up: hole, down: hole, 
   dw #0201
-  db 13, #00, #e1  ; data/caves/combination1100-1.tmx + down (216)  left: half-hole, up: stairs, down: hole, 
+  db 13, #00, #e1  ; data/caves/combination1100-1.tmx + down (217)  left: half-hole, up: stairs, down: hole, 
   dw #0201
-  db 14, #00, #54  ; data/caves/combination0000-1.tmx + left + up + right (217)  left: hole, up: hole, right: hole, 
+  db 14, #00, #54  ; data/caves/combination0000-1.tmx + left + up + right (218)  left: hole, up: hole, right: hole, 
   dw #0401
-  db 14, #00, #64  ; data/caves/combination0100-1.tmx + left + right (218)  left: hole, up: stairs, right: hole, 
+  db 14, #00, #64  ; data/caves/combination0100-1.tmx + left + right (219)  left: hole, up: stairs, right: hole, 
   dw #0401
-  db 14, #00, #d4  ; data/caves/combination1000-1.tmx + up + right (219)  left: half-hole, up: hole, right: hole, 
+  db 14, #00, #d4  ; data/caves/combination1000-1.tmx + up + right (220)  left: half-hole, up: hole, right: hole, 
   dw #0401
-  db 14, #00, #94  ; data/caves/combination1000-2.tmx + up + right (220)  left: lava, up: hole, right: hole, 
+  db 14, #00, #94  ; data/caves/combination1000-2.tmx + up + right (221)  left: lava, up: hole, right: hole, 
   dw #0401
-  db 14, #00, #e4  ; data/caves/combination1100-1.tmx + right (221)  left: half-hole, up: stairs, right: hole, 
+  db 14, #00, #e4  ; data/caves/combination1100-1.tmx + right (222)  left: half-hole, up: stairs, right: hole, 
   dw #0401
-  db 15, #00, #55  ; data/caves/combination0000-1.tmx + left + up + right + down (222)  left: hole, up: hole, right: hole, down: hole, 
+  db 15, #00, #55  ; data/caves/combination0000-1.tmx + left + up + right + down (223)  left: hole, up: hole, right: hole, down: hole, 
   dw #0001
-  db 15, #00, #56  ; data/caves/combination0001-1.tmx + left + up + right (223)  left: hole, up: hole, right: hole, down: stairs, 
+  db 15, #00, #56  ; data/caves/combination0001-1.tmx + left + up + right (224)  left: hole, up: hole, right: hole, down: stairs, 
   dw #0001
-  db 15, #00, #65  ; data/caves/combination0100-1.tmx + left + right + down (224)  left: hole, up: stairs, right: hole, down: hole, 
+  db 15, #00, #65  ; data/caves/combination0100-1.tmx + left + right + down (225)  left: hole, up: stairs, right: hole, down: hole, 
   dw #0001
-  db 15, #00, #66  ; data/caves/combination0101-1.tmx + left + right (225)  left: hole, up: stairs, right: hole, down: stairs, 
+  db 15, #00, #66  ; data/caves/combination0101-1.tmx + left + right (226)  left: hole, up: stairs, right: hole, down: stairs, 
   dw #0001
-  db 15, #00, #d5  ; data/caves/combination1000-1.tmx + up + right + down (226)  left: half-hole, up: hole, right: hole, down: hole, 
+  db 15, #00, #d5  ; data/caves/combination1000-1.tmx + up + right + down (227)  left: half-hole, up: hole, right: hole, down: hole, 
   dw #0001
-  db 15, #00, #95  ; data/caves/combination1000-2.tmx + up + right + down (227)  left: lava, up: hole, right: hole, down: hole, 
+  db 15, #00, #95  ; data/caves/combination1000-2.tmx + up + right + down (228)  left: lava, up: hole, right: hole, down: hole, 
   dw #0001
-  db 15, #00, #e5  ; data/caves/combination1100-1.tmx + right + down (228)  left: half-hole, up: stairs, right: hole, down: hole, 
+  db 15, #00, #e5  ; data/caves/combination1100-1.tmx + right + down (229)  left: half-hole, up: stairs, right: hole, down: hole, 
   dw #0001

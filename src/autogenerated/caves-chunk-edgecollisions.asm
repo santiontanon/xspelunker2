@@ -57,6 +57,7 @@
   db #21, #ff, #21, #ff  ; data/caves/room1010-5.tmx
   db #3b, #ff, #3b, #ff  ; data/caves/room1010-6.tmx
   db #3b, #ff, #39, #ff  ; data/caves/room1010-7.tmx
+  db #3b, #ff, #23, #ff  ; data/caves/room1010-8.tmx
   db #21, #ff, #21, #e7  ; data/caves/room1011-1.tmx
   db #21, #ff, #21, #e7  ; data/caves/room1011-2.tmx
   db #21, #ff, #21, #e3  ; data/caves/room1011-3.tmx

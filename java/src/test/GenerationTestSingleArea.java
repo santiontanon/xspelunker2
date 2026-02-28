@@ -52,7 +52,7 @@ public class GenerationTestSingleArea {
             typeStats[i] = 0;
         }
         
-        int target_area_to_visualize = 9;
+        int target_area_to_visualize = 3;
 //        for(int i = 0;i<1;i++) {
         for(int i = 0;i<1000;i++) {
 //        for(int i = 0;i<65536;i++) {

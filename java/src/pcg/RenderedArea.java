@@ -1170,11 +1170,11 @@ public class RenderedArea {
                     (pieceTypes[j - 1][i] & PCGWorld.DIRECTION_RIGHT) != 0) {
                     // Here, we have a breakable wall / door connection:
                     RoomChunk c = fg_chunks[j - 1][i];
+                    System.out.println("[Area "+a.ID+"] breakable/door left to " + c.tags.get("right") + "  " + a.tags[j/2][i/2]);
                     if (!c.tags.containsKey("right")) throw new Exception("Chunk should have a right tag, but does not! " + c.path);
                     if (!c.tags.get("right").equals("hole")) {
                         throw new Exception("Chunk with right connection to a door/breakable wall should be hole, but is " + c.tags.get("right") + ", in area " + a.ID);
                     }
-//                    System.out.println("[Area "+a.ID+"] breakable/door left to " + c.tags.get("right") + "  " + a.tags[j/2][i/2]);
                 }
 
                 // right:
@@ -1184,11 +1184,11 @@ public class RenderedArea {
                     (pieceTypes[j + 1][i] & PCGWorld.DIRECTION_LEFT) != 0) {
                     // Here, we have a breakable wall / door connection:
                     RoomChunk c = fg_chunks[j + 1][i];
+                    System.out.println("[Area "+a.ID+"] breakable/door right to " + c.tags.get("left") + "  " + a.tags[j/2][i/2]);
                     if (!c.tags.containsKey("left")) throw new Exception("Chunk should have a left tag, but does not! " + c.path);
                     if (!c.tags.get("left").equals("hole")) {
                         throw new Exception("Chunk with left connection to a door/breakable wall should be hole, but is " + c.tags.get("left") + ", in area " + a.ID);
                     }
-//                    System.out.println("[Area "+a.ID+"] breakable/door right to " + c.tags.get("left") + "  " + a.tags[j/2][i/2]);
                 }
 
                 // up:
@@ -1198,11 +1198,11 @@ public class RenderedArea {
                     (pieceTypes[j][i - 1] & PCGWorld.DIRECTION_DOWN) != 0) {
                     // Here, we have a breakable wall / door connection:
                     RoomChunk c = fg_chunks[j][i - 1];
+//                    System.out.println("[Area "+a.ID+"] breakable/door up to " + c.tags.get("down") + "  " + a.tags[j/2][i/2]);
                     if (!c.tags.containsKey("down")) throw new Exception("Chunk should have a down tag, but does not! " + c.path);
                     if (!c.tags.get("down").equals("hole")) {
                         throw new Exception("Chunk with down connection to a door/breakable wall should be hole, but is " + c.tags.get("down") + ", in area " + a.ID);
                     }
-//                    System.out.println("[Area "+a.ID+"] breakable/door up to " + c.tags.get("down") + "  " + a.tags[j/2][i/2]);
                 }
 
                 // down:
@@ -1212,11 +1212,11 @@ public class RenderedArea {
                     (pieceTypes[j][i + 1] & PCGWorld.DIRECTION_UP) != 0) {
                     // Here, we have a breakable wall / door connection:
                     RoomChunk c = fg_chunks[j][i + 1];
+//                    System.out.println("[Area "+a.ID+"] breakable/door down to " + c.tags.get("up") + "  " + a.tags[j/2][i/2]);
                     if (!c.tags.containsKey("up")) throw new Exception("Chunk should have a up tag, but does not! " + c.path);
                     if (!c.tags.get("up").equals("hole")) {
                         throw new Exception("Chunk with left connection to a door/breakable wall should be hole, but is " + c.tags.get("up") + ", in area " + a.ID);
                     }
-//                    System.out.println("[Area "+a.ID+"] breakable/door down to " + c.tags.get("up") + "  " + a.tags[j/2][i/2]);
                 }
                 
             }

@@ -1426,7 +1426,7 @@ object_interaction_function_pickup_map_piece_continue:
 object_interaction_function_chest:
 	; check if the player has the proper key selected
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
-	add 25 - TAG_RED_CHEST
+	add (N_INVENTORY_WEAPON_TYPES + INVENTORY_ITEM_COLOR_KEY1) - TAG_RED_CHEST
 	ld c, a  ; c = desired key
 	ld hl, player_current_item
 	cp (hl)
@@ -1435,7 +1435,7 @@ object_interaction_function_chest:
 	; lose key:
 	ld (hl), 0  ; machete
 	ld a, c
-	sub 25  ; position of the first color key
+	sub N_INVENTORY_WEAPON_TYPES + INVENTORY_ITEM_COLOR_KEY1  ; position of the first color key
 	ld b, 0
 	ld c, a
 	ld hl, player_inventory_items + INVENTORY_ITEM_COLOR_KEY1
@@ -1525,7 +1525,7 @@ object_interaction_function_item_use_fail:
 object_interaction_function_open_small_lock:
 	; check if the player has the proper key selected
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
-	add 25 - TAG_RED_LOCK
+	add (N_INVENTORY_WEAPON_TYPES + INVENTORY_ITEM_COLOR_KEY1) - TAG_RED_LOCK
 	ld c, a  ; c = desired key
 	ld hl, player_current_item
 	cp (hl)
@@ -1534,7 +1534,7 @@ object_interaction_function_open_small_lock:
 	; lose key:
 	ld (hl), 0  ; machete
 	ld a, c
-	sub 25  ; position of the first color key
+	sub N_INVENTORY_WEAPON_TYPES + INVENTORY_ITEM_COLOR_KEY1  ; position of the first color key
 	ld b, 0
 	ld c, a
 	ld hl, player_inventory_items + INVENTORY_ITEM_COLOR_KEY1

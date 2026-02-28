@@ -135,7 +135,7 @@ public class GameObject {
                 tx = 48; ty = 16;
                 break;
             case "gear-lock":
-                tx = 0; ty = 48;
+                tx = 64; ty = 176;
                 tdy = 24;
                 tdx = 32;
                 break;

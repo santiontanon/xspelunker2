@@ -108,9 +108,9 @@ pyramid_standard_chunk_pool:
   db 10, #00, #44  ; data/pyramid/room1010-6.tmx (52)  left: hole, right: hole, 
   dw #0443
   db 11, #00, #45  ; data/pyramid/room1011-1.tmx (53)  left: hole, right: hole, down: hole, 
-  dw #0007
+  dw #0117
   db 11, #00, #45  ; data/pyramid/room1011-2.tmx (54)  left: hole, right: hole, down: hole, 
-  dw #0017
+  dw #0817
   db 11, #00, #46  ; data/pyramid/room1011-3.tmx (55)  left: hole, right: hole, down: stairs, 
   dw #0917
   db 11, #00, #46  ; data/pyramid/room1011-4.tmx (56)  left: hole, right: hole, down: stairs, 

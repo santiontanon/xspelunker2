@@ -2622,28 +2622,50 @@ public class PCGArea {
                             }
                         }
                     } else {
-                        leftTag = null;
+                        if ((ra.pieceTypes[j][i] & PCGWorld.DIRECTION_LEFT) != 0) {
+                            leftTag = "hole";
+                        } else {
+                            leftTag = null;
+                        }
                     }
+                    
                     if (j < (a.width * 2 - 1)) {
                             if ((ra.pieceTypes[j][i] & PCGWorld.DIRECTION_RIGHT) != 0) {
-                                if ((ra.pieceTypes[j + 1][i] & PCGWorld.DIRECTION_LEFT) == 0) {
-                                    // breakable wall/door, we need a hole:
-                                    rightTag = "hole";
+                                if (ra.fg_chunks[j + 1][i] != null) {
+                                    if ((ra.pieceTypes[j + 1][i] & PCGWorld.DIRECTION_LEFT) == 0) {
+                                        // breakable wall/door, we need a hole:
+                                        rightTag = "hole";
+                                    }
+                                } else {
+                                    rightTag = "hole";  // inter area connection
                                 }
                             }
                     } else {
-                        rightTag = null;
+                        if ((ra.pieceTypes[j][i] & PCGWorld.DIRECTION_RIGHT) != 0) {
+                            rightTag = "hole";  // inter area connection
+                        } else {
+                            rightTag = null;
+                        }
                     }
                     if (i < (a.height * 2 - 1)) {
                             if ((ra.pieceTypes[j][i] & PCGWorld.DIRECTION_DOWN) != 0) {
-                                if ((ra.pieceTypes[j][i + 1] & PCGWorld.DIRECTION_UP) == 0) {
-                                    // breakable wall/door, we need a hole:
-                                    downTag = "hole";
+                                if (ra.fg_chunks[j][i + 1] != null) {
+                                    if ((ra.pieceTypes[j][i + 1] & PCGWorld.DIRECTION_UP) == 0) {
+                                        // breakable wall/door, we need a hole:
+                                        downTag = "hole";
+                                    }
+                                } else {
+                                    downTag = "hole";  // inter area connection
                                 }
                             }
                     } else {
-                        downTag = null;
+                        if ((ra.pieceTypes[j][i] & PCGWorld.DIRECTION_DOWN) != 0) {
+                            downTag = "hole";  // inter area connection
+                        } else {
+                            downTag = null;
+                        }
                     }
+
                     if ((ra.pieceTypes[j][i] & PCGWorld.DIRECTION_DOWN) != 0) {
                         if (i == a.height * ROOM_HEIGHT - 1 || ra.pieceTypes[j][i+1] < 0) {
                             downTag = "stairs";  // up/down connections from outside the map always via stairs

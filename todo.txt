@@ -1,11 +1,11 @@
 to do:
 
 ***- BUG: a door to the left (in confluence in world "ATLANTIS": #f8aa) connected to a chunk with type "half-hole" on the right, and hence was blocked! left-right door/breakablewall connections should ensure "hole" as the connection.
-  ***- Fix it in Java: ensure that this happens for seed #f8aa (as it happens in assembler?())
-    ***- In Java the problem is that in PCGArea.java, there isn't an equivalent of line 2592 ("// breakable wall/door, we need a hole:") for the right-tag.
-    ***- do I need any additional fixes like this for up/down too?
-  ***- Bring the fix to assembler
-  ***- re-run the 64k generations for all maps, to make sure I have enough chunks
+  ***- Bring the fix to assembler:
+    OK - find a seed where it happens: seed 29, start in 3, 6
+    ***- fix the breakablewall/door problem: pcg-areas.asm:pcg_generate_area__choose_chunks_loop_x
+    ***- restore state-gamestart.asm to use the proper seed
+  ***- regenerate PCG world unit test references, and make sure test passes
 
 ***- atlantis sprite enemies: ghosts/spirits/crocodiles in water (atlantis_enemy_sprites_zx0)
 ***- atlantis tile enemies:

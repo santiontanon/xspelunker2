@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="11">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="13">
  <properties>
   <property name="down" value="hole"/>
   <property name="left" value="hole"/>
@@ -15,7 +15,7 @@
 1,1,1,1,1,1,251,202,203,204,1,1,1,1,1,1,
 1,1,1,1,1,1,217,218,219,220,1,1,1,1,1,1,
 1,1,1,1,1,1,233,234,235,236,1,1,1,1,1,1,
-1,1,140,255,255,136,255,138,255,255,136,255,255,139,1,1,
+1,140,255,255,255,136,255,138,255,255,136,255,255,255,139,1,
 1,1,1,1,1,135,1,1,1,1,135,1,1,1,1,1,
 1,1,1,1,1,135,1,1,1,1,132,1,1,1,1,1,
 1,1,1,1,1,135,1,1,1,1,135,1,1,1,1,1,
@@ -25,12 +25,11 @@
 </data>
  </layer>
  <objectgroup name="objects">
-  <object id="1" type="item" x="96" y="24" width="16" height="16"/>
-  <object id="2" type="item" x="16" y="24" width="16" height="16"/>
+  <object id="1" type="item" x="104" y="64" width="16" height="16"/>
+  <object id="2" type="item" x="8" y="64" width="16" height="16"/>
   <object id="3" type="big-item" x="96" y="56" width="32" height="24"/>
-  <object id="4" type="big-item" x="0" y="56" width="32" height="24"/>
   <object id="6" type="breakable-up" x="48" y="0" width="32" height="40"/>
-  <object id="9" type="4x4-item" x="96" y="48" width="32" height="32"/>
   <object id="10" type="4x4-item" x="0" y="48" width="32" height="32"/>
+  <object id="11" type="pushable-block" x="96" y="24" width="16" height="16"/>
  </objectgroup>
 </map>

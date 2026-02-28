@@ -2050,6 +2050,10 @@ update_enemy_ant_move_right:
 	jr z, update_enemy_ant_move_right_no_fall
 	cp 2  ; wall
 	jr z, update_enemy_ant_move_right_no_fall
+	cp 6  ; rope-platform-top
+	jr z, update_enemy_ant_move_right_no_fall
+	cp 7  ; ladder-platform-top
+	jr z, update_enemy_ant_move_right_no_fall
 	; fall:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2  ; switch to fall
 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
@@ -2092,6 +2096,10 @@ update_enemy_ant_move_left:
 	cp 1  ; platform
 	jr z, update_enemy_ant_move_left_no_fall
 	cp 2  ; wall
+	jr z, update_enemy_ant_move_left_no_fall
+	cp 6  ; rope-platform-top
+	jr z, update_enemy_ant_move_left_no_fall
+	cp 7  ; ladder-platform-top
 	jr z, update_enemy_ant_move_left_no_fall
 	; fall:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 3  ; switch to fall

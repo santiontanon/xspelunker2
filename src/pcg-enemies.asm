@@ -1192,6 +1192,7 @@ pcg_generate_room__spawn_ant_colony:
 	ret nz
 	ld c, TAG_ENEMY_ANT_COLONY
 	call pcg_spawn_enemies__tile_enemy_type_check_hittable	
+	ret nz
 	ld c, ixl
 	dec c
 	ld b, ixh
@@ -1235,6 +1236,7 @@ pcg_generate_room__spawn_ant_colony2:
 	ret nz
 	ld c, TAG_ENEMY_ANT_COLONY  ; since it uses the same tiles as ant colony, we use the same type
 	call pcg_spawn_enemies__tile_enemy_type_check_hittable	
+	ret nz
 
 	ld c, ixl
 	dec c
@@ -1268,6 +1270,7 @@ pcg_generate_room__spawn_bee_hive:
 	ret nz	
 	ld c, TAG_ENEMY_BEE_HIVE  ; since it uses the same tiles as ant colony, we use the same type
 	call pcg_spawn_enemies__tile_enemy_type_check_hittable		
+	ret nz
 	ld a, (tmp_enemy_pcg_next_enemy_id)
 	ld (hl), a  ; ID
 	inc a

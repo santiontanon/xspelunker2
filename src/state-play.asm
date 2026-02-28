@@ -1,5 +1,5 @@
 ;-----------------------------------------------
-; NOTE: this code is never execute, only used for debugging/profiling PCG
+; NOTE: this code is never executed, only used for debugging/profiling PCG
 IF DEBUG_PCG = 1
 pcg_debug_start:
 	; set random seed:
@@ -83,12 +83,12 @@ state_play:
 ; 		ld (player_inventory_items+10), a
 ; 		ld (player_inventory_items+11), a  ; 5th stone
 ; 		ld (player_inventory_items+12), a  ; sixth stone
-; 		ld (player_inventory_items+13), a
-; 		ld (player_inventory_items+14), a
-; 		ld (player_inventory_items+15), a
-; 		ld (player_inventory_items+16), a
-; 		ld (player_inventory_items+17), a
-; 		ld (player_inventory_items+18), a
+		ld (player_inventory_items+13), a
+		ld (player_inventory_items+14), a
+		ld (player_inventory_items+15), a
+		ld (player_inventory_items+16), a
+		ld (player_inventory_items+17), a
+		ld (player_inventory_items+18), a
 ; 		ld (player_inventory_items+19), a  ; small keys
 ; 		ld (player_inventory_items+20), a
 ; 		ld (player_inventory_items+21), a
@@ -185,17 +185,18 @@ state_play_from_continue:
 ; 		ld e, 1
 ; 		ld e, 1  ; area to generate <- first boss
 ; 		ld e, 2  ; area to generate <- second boss
-; 		ld e, 3  ; area to generate
+		ld e, 3  ; area to generate
 ; 		ld e, 4  ; area to generate <- third boss
 ; 		ld e, 6  ; area to generate
+; 		ld e, 7  ; area to generate
 ; 		ld e, 8  ; xibalba
-		ld e, 9  ; atlantis
+; 		ld e, 9  ; atlantis
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
 
 		; generate room:
-		ld e, START_ROOM_ID
-; 		ld e, 5
+; 		ld e, START_ROOM_ID
+		ld e, 6
 ; 		ld e, 20  ; <- first boss
 ; 		ld e, 16  ; <- second boss
 ; 		ld e, CALENDAR_ROOM_ID
@@ -203,7 +204,7 @@ state_play_from_continue:
 ; 		ld e, 17  ; <- fourth boss
 ; 		ld e, 0
 ; 		ld e, TELEPORTER_ROOM_ID
-		ld e, TEMPLE_OF_POSEIDON_ID
+; 		ld e, TEMPLE_OF_POSEIDON_ID
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
