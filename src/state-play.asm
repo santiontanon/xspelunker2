@@ -83,12 +83,12 @@ state_play:
 ; 		ld (player_inventory_items+10), a
 ; 		ld (player_inventory_items+11), a  ; 5th stone
 ; 		ld (player_inventory_items+12), a  ; sixth stone
-		ld (player_inventory_items+13), a
-		ld (player_inventory_items+14), a
-		ld (player_inventory_items+15), a
-		ld (player_inventory_items+16), a
-		ld (player_inventory_items+17), a
-		ld (player_inventory_items+18), a
+; 		ld (player_inventory_items+13), a
+; 		ld (player_inventory_items+14), a
+; 		ld (player_inventory_items+15), a
+; 		ld (player_inventory_items+16), a
+; 		ld (player_inventory_items+17), a
+; 		ld (player_inventory_items+18), a
 ; 		ld (player_inventory_items+19), a  ; small keys
 ; 		ld (player_inventory_items+20), a
 ; 		ld (player_inventory_items+21), a

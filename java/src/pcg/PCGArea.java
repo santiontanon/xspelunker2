@@ -2585,26 +2585,6 @@ public class PCGArea {
                      
                     if (i > 0) above = ra.fg_chunks[j][i-1];
                     if (j > 0) left = ra.fg_chunks[j-1][i];
-                    if (above == null) {
-                        // top of the map:
-                        if ((ra.pieceTypes[j][i] & PCGWorld.DIRECTION_UP) != 0) {
-                            upTag = "stairs";  // up/down connections from outside the map always via stairs
-                        }
-                    } else if (a.rooms[j/2][(i-1)/2] >= SPECIAL_ROOM_IDS_START && (ra.pieceTypes[j][i] & PCGWorld.DIRECTION_UP) != 0) {
-                        upTag = "hole";
-                    } else {
-                        if ((ra.pieceTypes[j][i] & PCGWorld.DIRECTION_UP) != 0) {
-                            if ((ra.pieceTypes[j][i - 1] & PCGWorld.DIRECTION_DOWN) != 0) {
-                                if (above.tags.containsKey("down")) {
-                                    upTag = above.tags.get("down");
-                                }
-                            } else {
-                                upTag = "hole";
-                            }
-                        } else {
-                            // ignore the above tag, as we have a breakable wall/door above here
-                        }
-                    }
                     if (left != null) {
                         if (a.rooms[(j-1)/2][i/2] >= SPECIAL_ROOM_IDS_START && (ra.pieceTypes[j][i] & PCGWorld.DIRECTION_LEFT) != 0) {
                             leftTag = "hole";
@@ -2628,6 +2608,27 @@ public class PCGArea {
                             leftTag = null;
                         }
                     }
+
+                    if (above == null) {
+                        // top of the map:
+                        if ((ra.pieceTypes[j][i] & PCGWorld.DIRECTION_UP) != 0) {
+                            upTag = "stairs";  // up/down connections from outside the map always via stairs
+                        }
+                    } else if (a.rooms[j/2][(i-1)/2] >= SPECIAL_ROOM_IDS_START && (ra.pieceTypes[j][i] & PCGWorld.DIRECTION_UP) != 0) {
+                        upTag = "hole";
+                    } else {
+                        if ((ra.pieceTypes[j][i] & PCGWorld.DIRECTION_UP) != 0) {
+                            if ((ra.pieceTypes[j][i - 1] & PCGWorld.DIRECTION_DOWN) != 0) {
+                                if (above.tags.containsKey("down")) {
+                                    upTag = above.tags.get("down");
+                                }
+                            } else {
+                                upTag = "hole";
+                            }
+                        } else {
+                            // ignore the above tag, as we have a breakable wall/door above here
+                        }
+                    }
                     
                     if (j < (a.width * 2 - 1)) {
                             if ((ra.pieceTypes[j][i] & PCGWorld.DIRECTION_RIGHT) != 0) {
@@ -2647,6 +2648,7 @@ public class PCGArea {
                             rightTag = null;
                         }
                     }
+                    
                     if (i < (a.height * 2 - 1)) {
                             if ((ra.pieceTypes[j][i] & PCGWorld.DIRECTION_DOWN) != 0) {
                                 if (ra.fg_chunks[j][i + 1] != null) {

@@ -202,7 +202,7 @@ gamestart_compute_random_seed_loop:
    	rl  e
 	djnz gamestart_compute_random_seed_loop
 
-	ld de, 29  ; DEBUG
+; 	ld de, 29  ; DEBUG
 	ld (current_world__seed), de
 	ld hl, #5555
 	ld (current_world__seed + 2), hl

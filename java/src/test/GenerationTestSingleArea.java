@@ -52,10 +52,12 @@ public class GenerationTestSingleArea {
             typeStats[i] = 0;
         }
         
-        int target_area_to_visualize = 3;
+//        int target_area_to_visualize = 3;
+        int target_area_to_visualize = -1;  // ALL areas
+        int save_area_image_up_to = 50;
 //        for(int i = 0;i<1;i++) {
-        for(int i = 0;i<1000;i++) {
-//        for(int i = 0;i<65536;i++) {
+//        for(int i = 0;i<1000;i++) {
+        for(int i = 0;i<65536;i++) {
             r.setSeed(i, 0x5555);
 //            World w = pcg1.generate(r);
             World w = pcg1.generate(r, 1, false);          
@@ -68,8 +70,8 @@ public class GenerationTestSingleArea {
 //                } else {
 //                    System.out.println("Solver success with seed " + i);
 //                }
-                
-                for(int j = 0;j<w.areas.size() && j<target_area_to_visualize + 1;j++) {
+                int limit = (target_area_to_visualize == -1 ? w.areas.size():target_area_to_visualize + 1);
+                for(int j = 0;j<limit;j++) {
                     PCGArea pcg2 = null;
                     switch(j) {
                         case 0:
@@ -102,8 +104,8 @@ public class GenerationTestSingleArea {
                         System.out.println("PCGArea error with seed " + i + ", area " + j);
                         nPCGAreaErrors++;
                     } else {
-                        if (j == target_area_to_visualize) {
-                            if (i < 50) {
+                        if (target_area_to_visualize == -1 || j == target_area_to_visualize) {
+                            if (i < save_area_image_up_to) {
                                 visualizeArea(ra, "tmp/area"+j+"-seed"+i+".png", pcg2);
                             }
                             ra.stats(chunkStats, typeStats, pcg2);

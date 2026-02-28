@@ -1,12 +1,5 @@
 to do:
 
-***- BUG: a door to the left (in confluence in world "ATLANTIS": #f8aa) connected to a chunk with type "half-hole" on the right, and hence was blocked! left-right door/breakablewall connections should ensure "hole" as the connection.
-  ***- Bring the fix to assembler:
-    OK - find a seed where it happens: seed 29, start in 3, 6
-    ***- fix the breakablewall/door problem: pcg-areas.asm:pcg_generate_area__choose_chunks_loop_x
-    ***- restore state-gamestart.asm to use the proper seed
-  ***- regenerate PCG world unit test references, and make sure test passes
-
 ***- atlantis sprite enemies: ghosts/spirits/crocodiles in water (atlantis_enemy_sprites_zx0)
 ***- atlantis tile enemies:
   ***- robot maya statue guardians (walk back and forth, they should be large like the owls).

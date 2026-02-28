@@ -1466,8 +1466,8 @@ pcg_generate_area__choose_chunks_loop_x:
 		ld iyl, 0  ; ID if first chunk in pool
 		ld a, (tmp_pcg_area__left_tag)
 		ld iyh, a  ; up/down/left/right tags  ; ll-uu-rr-dd
-		ld a, (hl)  ; recover the piece type again
 
+		ld a, (hl)  ; recover the piece type again
 		and PCG_DIRECTION_LEFT
 		jp z, pcg_generate_area__choose_chunks_loop_x_no_connection_left
 		; if there is a connection left but the left tag is 00, it means there was a
@@ -1480,6 +1480,37 @@ pcg_generate_area__choose_chunks_loop_x:
 		ld iyh, a
 
 pcg_generate_area__choose_chunks_loop_x_no_connection_left:
+		ld a, (hl)  ; recover the piece type again
+		and PCG_DIRECTION_RIGHT
+		jp z, pcg_generate_area__choose_chunks_loop_x_no_connection_right
+		ld a, c  ; check if we are at the right edge of the map:
+		cp 1
+		jr z, pcg_generate_area__choose_chunks_loop_x_no_chunk_right
+		push hl
+			inc hl
+			ld a, (hl)  ; piece type right
+			cp #ff
+			jp z, pcg_generate_area__choose_chunks_loop_x_no_chunk_right_pop
+			and PCG_DIRECTION_LEFT
+			jr nz, pcg_generate_area__choose_chunks_loop_x_no_connection_right_pop
+			; set down tag as "hole", since below we must have a door or breakable wall:
+			ld a, iyh
+			and #f3
+			or #04
+			ld iyh, a
+pcg_generate_area__choose_chunks_loop_x_no_connection_right_pop:
+		pop hl
+		jp pcg_generate_area__choose_chunks_loop_x_no_connection_right
+pcg_generate_area__choose_chunks_loop_x_no_chunk_right_pop:
+		pop hl
+pcg_generate_area__choose_chunks_loop_x_no_chunk_right:
+		; set right tag as "hole":
+		ld a, iyh
+		and #f3
+		or #04
+		ld iyh, a
+
+pcg_generate_area__choose_chunks_loop_x_no_connection_right:
 		ld a, (hl)  ; recover the piece type again
 		and PCG_DIRECTION_UP
 		jp z, pcg_generate_area__choose_chunks_loop_x_no_connection_up
@@ -1543,7 +1574,7 @@ pcg_generate_area__choose_chunks_loop_x_no_connection_up:
 			jp z, pcg_generate_area__choose_chunks_loop_x_no_chunk_below_pop
 			and PCG_DIRECTION_UP
 			jr nz, pcg_generate_area__choose_chunks_loop_x_no_connection_down_pop
-			; set down tag as "hole":
+			; set down tag as "hole", since below we must have a door or breakable wall:
 			ld a, iyh
 			and #fc
 			or #01
