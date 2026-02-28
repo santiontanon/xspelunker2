@@ -1999,6 +1999,11 @@ pcg_generate_world__add_tag_loop_done:
 	ld a, (hl)
 	cp b
 	ret z  ; tag is already there
+	; make sure we are not adding a tag to the start/end rooms:
+	cp TAG_START
+	jr z, pcg_generate_world__add_tag_fail
+	cp TAG_ENDING
+	jr z, pcg_generate_world__add_tag_fail
 	or a
 	jr z, pcg_generate_world__add_tag_found_spot
 	call pcg_generate_world__tags_collide

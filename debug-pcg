@@ -30,6 +30,7 @@ run_equivalency_test () {
 	done < <( java -jar java/mdl.jar src/unittests/pcg-world-java-equivalency-test.asm -equ PCG_WORLD_SEED1="$1" -equ PCG_WORLD_SEED2="0x5555" -e:u test_start test_end -e:watch "mdl-watch:" )
 }
 
+# Seeds where the PCG is expected to succeed:
 run_equivalency_test "0"
 run_equivalency_test "1"
 run_equivalency_test "2"
@@ -50,3 +51,6 @@ run_equivalency_test "18"
 run_equivalency_test "21"
 run_equivalency_test "22"
 run_equivalency_test "23"
+# Seeds where the PCG is expected to fail:
+run_equivalency_test "31"
+run_equivalency_test "33"

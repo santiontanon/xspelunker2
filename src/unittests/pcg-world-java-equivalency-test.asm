@@ -78,6 +78,12 @@ ENDIF
 IF PCG_WORLD_SEED1 = 23
 	include "hardcoded-world-seed23.asm"
 ENDIF
+IF PCG_WORLD_SEED1 = 31
+	; This one is expected to fail
+ENDIF
+IF PCG_WORLD_SEED1 = 33
+	; This one is expected to fail
+ENDIF
 hardcoded_world_data_end:
 	include "../pcg-world.asm"
 	include "../pcg-riddles.asm"
@@ -97,6 +103,16 @@ test_start:
 
 	; generate world:
 	call pcg_generate_world
+
+IF hardcoded_world_data == hardcoded_world_data_end
+	; PCG is expected to fail:
+	jr z, pcg_generate_world_call_succeeded
+	; nop  ; mdl-watch: "test__pcg_generate_world call failed, as expected."
+	jr test_end
+pcg_generate_world_call_succeeded:
+	nop  ; mdl-watch: "test__pcg_generate_world call succeeded, but it was expected to fail!"
+ELSE
+	; PCG is expected to succeed:
 	jr z, pcg_generate_world_call_succeeded
 	nop  ; mdl-watch: "test__pcg_generate_world call failed!"
 pcg_generate_world_call_succeeded:
@@ -105,6 +121,7 @@ pcg_generate_world_call_succeeded:
 	ld de, current_world__area_data
 	ld bc, hardcoded_world_data_end - hardcoded_world_data
 	call test__arrays_equal
+ENDIF
 
 test_end:
 	jr test_end

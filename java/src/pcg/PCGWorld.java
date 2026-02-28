@@ -366,19 +366,22 @@ public class PCGWorld {
         remainingTriviaTabletFns.add("story_trivia_tablet_fn_clue4");
     }
 
-
     public World generate(MSXRandom a_r) throws Exception
+    {
+        return generate(a_r, 2, false);
+    }
+    
+    
+    public World generate(MSXRandom a_r, int n_retries, boolean use_0_seed_on_last_try) throws Exception
     {
         r = a_r;
         World w;
                 
-        // 1 retry:
-        int n_retries = 2;
         for(int i = 0; i<n_retries; i++) {
             this.initKeysAndLocks();
             List<String> usedKeysAndLocks = new ArrayList<>();
 
-            if (i == n_retries - 1) {
+            if (i == n_retries - 1 && use_0_seed_on_last_try) {
                 r.setSeed(0, 0x5555);  // we know this seed works
                 n_times_defaulting_to_safe_seed++;
             }
@@ -2282,10 +2285,11 @@ public class PCGWorld {
         
 //        a.tags[j][i].contains("ending")
         if (!tag.equals("ending") && l.contains("ending")) {
-            throw new Exception("Adding " + tag + " to ending room!");
+            System.err.println("Adding " + tag + " to ending room! (WorldPCG failed)");
+            return false;
         }
         if (!tag.equals("start") && l.contains("start")) {
-            System.err.println("Adding " + tag + " to start room!");
+            System.err.println("Adding " + tag + " to start room! (WorldPCG failed)");
             return false;
         }
                 
