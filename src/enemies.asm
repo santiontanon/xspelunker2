@@ -2415,23 +2415,9 @@ update_enemy_fire_imp_dash:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	cp 48
 	jr z, update_enemy_fire_imp_to_dash_cooldown
-	; shift data in the struct temporarily, so we can reuse 'update_enemy_bullet_bresenham_iyl_steps':
-	ld e, (ix + ROOM_OBJECT_STRUCT_SPEED_X)
-	ld d, (ix + ROOM_OBJECT_STRUCT_SPEED_Y)
-	ld c, (ix + ROOM_OBJECT_STRUCT_EXTRA1)
-	ld b, (ix + ROOM_OBJECT_STRUCT_EXTRA2)
-	ld (ix + ROOM_OBJECT_STRUCT_SPEED_X), c
-	ld (ix + ROOM_OBJECT_STRUCT_SPEED_Y), b
-	push de
-		ld a, (current_world__difficulty_bullet_speed)
-		ld iyl, a
-		call update_enemy_bullet_bresenham_iyl_steps
-	pop de
-	ld (ix + ROOM_OBJECT_STRUCT_SPEED_X), e
-	ld (ix + ROOM_OBJECT_STRUCT_SPEED_Y), d
-	; - b: amount to move in y
-	; - c: amount to move in x
-	call update_enemy_move_cb
+	ld a, (current_world__difficulty_bullet_speed)
+	ld iyl, a
+	call update_enemy_dash_step_internal
 	ld bc, (current_room__width)
 	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	cp #ff
@@ -2608,30 +2594,285 @@ ghost_wave_table:
 
 
 update_enemy_ghost:
+	; states:
+	; - 0: choose behavior
+	; - 1: left
+	; - 2: right
+	; - 3: pause left (high probability of going to 7)
+	; - 4: pause right (high probability of going to 7)
+	; - 5: move to player slow
+	; - 6: blink out (left)
+	; - 7: blink out (right)
+	; - 8: dash to player
 	ld iyl, COLOR_GREY
 	jr update_enemy_ghost_continue
 update_enemy_ghost2:
 	ld iyl, COLOR_WHITE
 update_enemy_ghost_continue:
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+
+	; no damage when blinking:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	cp 6
+	jr z, update_enemy_ghost_state_switch
+	cp 7
+	jr z, update_enemy_ghost_state_switch
 	ld iyh, 2  ; damage to deal
 	call update_enemy_hurt_player_2x2
 
+update_enemy_ghost_state_switch:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	or a
+	jr z, update_enemy_ghost_state_0
+	dec a
+	jr z, update_enemy_ghost_state_1
+	dec a
+	jr z, update_enemy_ghost_state_2
+	dec a
+	jp z, update_enemy_ghost_state_3
+	dec a
+	jp z, update_enemy_ghost_state_4
+	dec a
+	jp z, update_enemy_ghost_state_5
+	dec a
+	jp z, update_enemy_ghost_state_6
+	dec a
+	jp z, update_enemy_ghost_state_7
+	dec a
+	jp z, update_enemy_ghost_state_8
+	; we should never get here
+update_enemy_ghost_continue2_right:
+	call update_enemy_ghost_wave
+	ld d, iyl
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 2) * 4  ; 2: right, 5: left
+	jp enemy_sprite_and_continue_animated_slow
+
+update_enemy_ghost_continue2_left:
+	call update_enemy_ghost_wave
+	ld d, iyl
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 5) * 4  ; 2: right, 5: left
+	jp enemy_sprite_and_continue_animated_slow
+
+update_enemy_ghost_continue2_right_dash:
+	call update_enemy_ghost_wave
+	ld d, iyl
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 4) * 4
+	jp enemy_sprite_and_continue
+
+update_enemy_ghost_continue2_left_dash:
+	call update_enemy_ghost_wave
+	ld d, iyl
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 7) * 4
+	jp enemy_sprite_and_continue
+
+update_enemy_ghost_continue2_invisible:
+	call update_enemy_ghost_wave
+	jp update_sprite_enemies_loop_next
+
+update_enemy_ghost_state_0:
+	; choose state:
+	ld c, 7  ; we cannot randomly go to dash (goes after 3/4)
+	call random_modulo
+	inc a
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), a
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+	jr update_enemy_ghost_state_switch
+
+update_enemy_ghost_state_1:
+	; left:
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	cp 2  ; ghosts do not reach the left-most of the screen
+	jr c, update_enemy_ghost_state_0
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
-	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
-	bit 0, a
-	jr z, update_enemy_ghost_continue2
+	and #03
+	jr nz, update_enemy_ghost_continue2_left
+	call update_enemy_move_left
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 128
+	jr z, update_enemy_ghost_state_0
+	jr update_enemy_ghost_continue2_left
+
+update_enemy_ghost_state_2:
+	; right:
+	ld a, (current_room__width)
+	sub 3
+	ld c, a
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	cp c  ; ghosts do not reach the right-most of the screen
+	jr nc, update_enemy_ghost_state_0
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	and #03
+	jr nz, update_enemy_ghost_continue2_right
+	call update_enemy_move_right
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 128
+	jr z, update_enemy_ghost_state_0
+	jr update_enemy_ghost_continue2_right
+
+update_enemy_ghost_state_3:
+	; pause left:
+	ld a, (current_world__difficulty_attack_warn_time)
+	add a, a
+	cp (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	jr nz, update_enemy_ghost_continue2_left
+	call random_a
+	and #03
+	jr z, update_enemy_ghost_state_0
+	; dash:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 8
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+	jp update_enemy_ghost_state_8
+
+update_enemy_ghost_state_4:
+	; pause right:
+	ld a, (current_world__difficulty_attack_warn_time)
+	add a, a
+	cp (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	jp nz, update_enemy_ghost_continue2_right
+	call random_a
+	and #03
+	jr z, update_enemy_ghost_state_0
+	; dash:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 8
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+	jp update_enemy_ghost_state_8
+
+update_enemy_ghost_state_5:
+	; move to player slow:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	and #03
+	jp nz, update_enemy_ghost_state_8_continue3
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	or a
+	jr nz, update_enemy_ghost_state_5_continue
+	call update_enemy_ghost_get_player_position
+update_enemy_ghost_state_5_continue:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 64
+	jr z, update_enemy_ghost_state_8_done
+	push iy
+		ld iyl, 1
+		call update_enemy_dash_step_internal
+	pop iy
+	jp update_enemy_ghost_state_8_continue3
+
+update_enemy_ghost_state_6:
+update_enemy_ghost_state_7:
+	; blink out (appear in another random position):
+	; 0 -> warn time: blink
+	; 64: teleport
+	; (128 - watn time) -> 128: blink
+	ld a, (current_world__difficulty_attack_warn_time)
+	ld c, a
+	ld a, 128
+	sub c
+	ld b, a
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 128
+	jp z, update_enemy_ghost_state_0
+	cp 64
+	jr z, update_enemy_ghost_state_6_teleport
+	cp c
+	jr c, update_enemy_ghost_state_6_blink
+	cp b
+	jp c, update_enemy_ghost_continue2_invisible
+update_enemy_ghost_state_6_blink:
+	; blink:
+	and #02
+	jp z, update_enemy_ghost_continue2_invisible
+update_enemy_ghost_state_6_show:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	cp 6
+	jp z, update_enemy_ghost_continue2_left
+	jp update_enemy_ghost_continue2_right
+update_enemy_ghost_state_6_teleport:
+	ld a, (current_room__width)
+	sub 4
+	ld c, a
+	call random_modulo
+	add a, 2
+	ld (ix + ROOM_OBJECT_STRUCT_TILE_X), a
+	ld a, (current_room__height)
+	sub 4
+	ld c, a
+	call random_modulo
+	add a, 2
+	ld (ix + ROOM_OBJECT_STRUCT_TILE_Y), a
+	jp update_enemy_ghost_continue2_invisible
+
+update_enemy_ghost_state_8:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	or a
+	jr nz, update_enemy_ghost_state_8_continue
+	; set target destination:
+	call update_enemy_ghost_get_player_position
+	ld hl, SFX_enemy_bullet
+	call play_SFX_with_high_priority
+update_enemy_ghost_state_8_continue:
+
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 64
+	jr nz, update_enemy_ghost_state_8_continue2
+update_enemy_ghost_state_8_done:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 3  ; pause left
+	ld a, (ix + ROOM_OBJECT_STRUCT_EXTRA1)  ; x direction of movement
+	or a
+	jp m, update_enemy_ghost_continue2_left
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 4  ; pause right
+	jp update_enemy_ghost_continue2_right
+update_enemy_ghost_state_8_continue2:
+	push iy
+		ld iyl, 2
+		call update_enemy_dash_step_internal
+	pop iy
+update_enemy_ghost_state_8_continue3:
+	ld de, (current_room__width)
+	dec e
+	dec e
+	dec d
+	dec d
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	or a
+	jr z, update_enemy_ghost_state_8_done
+	cp e
+	jr z, update_enemy_ghost_state_8_done
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	or a
+	jr z, update_enemy_ghost_state_8_done
+	cp d
+	jr z, update_enemy_ghost_state_8_done
+	ld a, (ix + ROOM_OBJECT_STRUCT_EXTRA1)  ; x direction of movement
+	or a
+	jp p, update_enemy_ghost_continue2_right_dash
+	jp update_enemy_ghost_continue2_left_dash
+
+update_enemy_ghost_get_player_position:
+	ld a, (player_x + 1)
+	sub (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld (ix + ROOM_OBJECT_STRUCT_EXTRA1), a
+	ld a, (player_y + 1)
+	sub (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	ld (ix + ROOM_OBJECT_STRUCT_EXTRA2), a
+	ld (ix + ROOM_OBJECT_STRUCT_BRESENHAM_STATE), 0
+	ret
+
+update_enemy_ghost_wave:
+	; waving motion:
+	ld a, (interrupt_cycle)
+	and #06
+	ret nz
+	ld a, (interrupt_cycle)
 	rrca
+	rrca
+	rrca
+	add a, (ix + ROOM_OBJECT_STRUCT_ID)  ; offset, so that not all ghosts wave in sync
 	and #0f
 	ld hl, ghost_wave_table
 	ADD_HL_A
 	ld b, (hl)
 	ld c, 0
-	call update_enemy_move_cb
-update_enemy_ghost_continue2:
-
-	ld d, iyl
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 2) * 4  ; 2: right, 5: left
-	jp enemy_sprite_and_continue_animated_slow
+	jp update_enemy_move_cb
 
 
 ;-----------------------------------------------
@@ -3099,6 +3340,27 @@ update_enemy_boss4_blades_movement_done:
 	add a, a
 	ld e, a  ; e = (FIRST_ENEMY_SPRITE_PATTERN + 31 + (state % 3)) * 4 
 	jp enemy_sprite_and_continue
+
+
+;-----------------------------------------------
+; Used by fire imps and ghosts
+; - iyl: movement speed
+update_enemy_dash_step_internal:
+	; shift data in the struct temporarily, so we can reuse 'update_enemy_bullet_bresenham_iyl_steps':
+	ld e, (ix + ROOM_OBJECT_STRUCT_SPEED_X)
+	ld d, (ix + ROOM_OBJECT_STRUCT_SPEED_Y)
+	ld c, (ix + ROOM_OBJECT_STRUCT_EXTRA1)
+	ld b, (ix + ROOM_OBJECT_STRUCT_EXTRA2)
+	ld (ix + ROOM_OBJECT_STRUCT_SPEED_X), c
+	ld (ix + ROOM_OBJECT_STRUCT_SPEED_Y), b
+	push de
+		call update_enemy_bullet_bresenham_iyl_steps
+	pop de
+	ld (ix + ROOM_OBJECT_STRUCT_SPEED_X), e
+	ld (ix + ROOM_OBJECT_STRUCT_SPEED_Y), d
+	; - b: amount to move in y
+	; - c: amount to move in x
+	jp update_enemy_move_cb
 
 
 ;-----------------------------------------------

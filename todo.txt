@@ -1,11 +1,5 @@
 to do:
 
-***- ghosts/spirits (6 sprites):
-  ***- spawn anywhere in the screen (even inside walls)
-  ***- they go in cycles of 16 - 32 cycles where they randomly move: left/right or towards player
-  ***- they randomly blink out (but keep moving), and then blink back (they flash when blinking in and out)
-  ***- they do not hurt you when blinking
-  ***- chance of stopping for a bit, and then doing a faster dash towards you (only if visible, and they cannot blink out in the middle of this)
 ***- mermen (11 sprites):
   ***- patrol left/right
   ***- if player is closeby and they are on top of some stairs that could get them closer to the player, they take them

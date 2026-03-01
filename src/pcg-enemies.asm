@@ -903,11 +903,11 @@ pcg_generate_room__spawn_skeleton_flame2:
 pcg_generate_room__spawn_ghost:
 	ld ixl, ENEMY_GHOST
 	ld ixh, 4  ; hitpoints
-	jr pcg_generate_room__spawn_skeleton_continue
+	jp pcg_generate_room__spawn_ghost_continue
 pcg_generate_room__spawn_ghost2:
 	ld ixl, ENEMY_GHOST2
 	ld ixh, 6  ; hitpoints
-	jr pcg_generate_room__spawn_skeleton_continue
+	jp pcg_generate_room__spawn_ghost_continue
 pcg_generate_room__spawn_fishman:
 	ld ixl, ENEMY_FISHMAN
 	ld ixh, 4  ; hitpoints
@@ -954,7 +954,7 @@ pcg_generate_room__spawn_skeleton:
 	ld ixl, ENEMY_SKELETON
 	ld ixh, 2  ; hitpoints
 pcg_generate_room__spawn_skeleton_continue:
-	call pcg_generate_room__spawn_enemy_get_new_ptr
+	call pcg_generate_room__spawn_enemy_get_new_ptr  ; hl: ptr, e, d: x, y
 	ret nz
 	ld a, ixl
 	ld (hl), a
@@ -980,7 +980,7 @@ pcg_generate_room__spawn_skeleton_continue:
 	ret
 
 pcg_generate_room__spawn_rockman_continue:
-	call pcg_generate_room__spawn_enemy_get_new_ptr
+	call pcg_generate_room__spawn_enemy_get_new_ptr  ; hl: ptr, e, d: x, y
 	ret nz
 	ld a, ixl
 	ld (hl), a
@@ -999,6 +999,51 @@ pcg_generate_room__spawn_rockman_continue:
 	and #7f
 	add a, 32
 	ld (hl), a  ; state timer
+	inc hl
+	ld (hl), #ff  ; hit ID
+	inc hl
+	ld a, ixh
+	ld (hl), a  ; health
+	ret
+
+pcg_generate_room__spawn_ghost_continue:
+	; call pcg_generate_room__spawn_enemy_get_new_ptr  ; hl: ptr, e, d: x, y
+	; ret nz
+	ld a, (current_room__width)
+	sub 4
+	ld c, a
+	call random_modulo
+	add a, 2
+	ld e, a
+	ld a, (current_room__height)
+	sub 4
+	ld c, a
+	call random_modulo
+	add a, 2
+	ld d, a
+	push de
+		call ptr_to_new_sprite_enemy
+	pop de
+	ret nz
+	ld a, (tmp_enemy_pcg_next_enemy_id)
+	ld (hl), a  ; ID
+	inc a
+	ld (tmp_enemy_pcg_next_enemy_id), a
+	inc hl
+	ld a, ixl
+	ld (hl), a
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), e  ; tile x
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), d  ; tile y
+	inc hl
+	ld (hl), 0  ; state
+	inc hl
+	ld (hl), 0  ; state timer
 	inc hl
 	ld (hl), #ff  ; hit ID
 	inc hl
