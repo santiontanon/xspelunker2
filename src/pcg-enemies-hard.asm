@@ -87,15 +87,13 @@ pcg_enemy_generation_table_xibalba_hard:
 pcg_enemy_generation_table_atlantis_hard:
 	db 2  ; 2 enemies per "screen" area
 	db 0
-; 	db TAG_ENEMY_CARNIVORE_PLANT, 96  ; tile-based enemy type and chance (out of 256)
-	db 11  ; possible sprite enemy types to be spawned (weights below should add up to 32)
-	db ENEMY_SNAKE, 3  ; enemy type and weight
-	db ENEMY_SNAKE_DASHER, 3
-	db ENEMY_SNAKE_POISON, 3
-	db ENEMY_FISH, 4
-	db ENEMY_FISH_JUMPER, 3
-	db ENEMY_BAT, 4
-	db ENEMY_BAT_AGGRESSIVE, 3
-	db ENEMY_SKELETON, 3
-	db ENEMY_SKELETON_THROWER1, 3
-	db ENEMY_SKELETON_THROWER2, 3
+; 	db TAG_ENEMY_CARNIVORE_PLANT, 48  ; tile-based enemy type and chance (out of 256)
+	db 4  ; possible sprite enemy types to be spawned (weights below should add up to 32)
+	db ENEMY_GHOST, 8
+	db ENEMY_GHOST2, 8
+	db ENEMY_FISHMAN, 8
+	db ENEMY_FISHMAN2, 8
+; 	db ENEMY_FISH, 6
+; 	db ENEMY_FISH_JUMPER, 2
+; 	db ENEMY_SKELETON_THROWER1, 2
+; 	db ENEMY_SKELETON_THROWER2, 6

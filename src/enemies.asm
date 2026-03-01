@@ -43,6 +43,12 @@ enemy_update_fn_table:
 	dw update_enemy_fire_imp
 	dw update_enemy_fire_imp
 	dw update_enemy_fireball
+	dw update_enemy_skeleton_thrower1
+	dw update_enemy_skeleton_thrower2
+	dw update_enemy_ghost
+	dw update_enemy_ghost2
+	dw update_enemy_fishman
+	dw update_enemy_fishman2
 
 
 ;-----------------------------------------------
@@ -2052,7 +2058,7 @@ update_enemy_ant_move_right:
 	jr z, update_enemy_ant_move_right_no_fall
 	cp 6  ; rope-platform-top
 	jr z, update_enemy_ant_move_right_no_fall
-	cp 7  ; ladder-platform-top
+	cp 8  ; ladder-platform-top
 	jr z, update_enemy_ant_move_right_no_fall
 	; fall:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2  ; switch to fall
@@ -2099,7 +2105,7 @@ update_enemy_ant_move_left:
 	jr z, update_enemy_ant_move_left_no_fall
 	cp 6  ; rope-platform-top
 	jr z, update_enemy_ant_move_left_no_fall
-	cp 7  ; ladder-platform-top
+	cp 8  ; ladder-platform-top
 	jr z, update_enemy_ant_move_left_no_fall
 	; fall:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 3  ; switch to fall
@@ -2594,6 +2600,53 @@ update_enemy_fireball_explode_loop_continue:
 	ld hl, SFX_enemy_bullet
 	call play_SFX_with_high_priority
 	jp update_enemy_delete
+
+
+;-----------------------------------------------
+ghost_wave_table:
+	db 0, 0, 0, 1, 1, 2, 1, 1, 0, 0, 0, -1, -1, -2, -1, -1
+
+
+update_enemy_ghost:
+	ld iyl, COLOR_GREY
+	jr update_enemy_ghost_continue
+update_enemy_ghost2:
+	ld iyl, COLOR_WHITE
+update_enemy_ghost_continue:
+	ld iyh, 2  ; damage to deal
+	call update_enemy_hurt_player_2x2
+
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	bit 0, a
+	jr z, update_enemy_ghost_continue2
+	rrca
+	and #0f
+	ld hl, ghost_wave_table
+	ADD_HL_A
+	ld b, (hl)
+	ld c, 0
+	call update_enemy_move_cb
+update_enemy_ghost_continue2:
+
+	ld d, iyl
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 2) * 4  ; 2: right, 5: left
+	jp enemy_sprite_and_continue_animated_slow
+
+
+;-----------------------------------------------
+update_enemy_fishman:
+	ld iyl, COLOR_GREEN
+	jr update_enemy_fishman_continue
+update_enemy_fishman2:
+	ld iyl, COLOR_LIGHT_RED
+update_enemy_fishman_continue:
+	ld iyh, 2  ; damage to deal
+	call update_enemy_hurt_player_2x2
+
+	ld d, iyl
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 16) * 4  ; 16: right, 35: left, 19: stairs
+	jp enemy_sprite_and_continue_animated
 
 
 ;-----------------------------------------------
@@ -3207,6 +3260,7 @@ update_enemy_fire_directional_bullet_towards_player_at_e_d:
 enemy_sprite_and_continue_animated_slow:
 ; 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	ld a, (interrupt_cycle)
+	rrca
 	rrca
 	rrca
 	and #04

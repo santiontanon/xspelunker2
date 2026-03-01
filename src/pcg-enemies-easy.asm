@@ -87,14 +87,12 @@ pcg_enemy_generation_table_atlantis_easy:
 	db 2  ; 2 enemies per "screen" area
 	db 0
 ; 	db TAG_ENEMY_CARNIVORE_PLANT, 48  ; tile-based enemy type and chance (out of 256)
-	db 10  ; possible sprite enemy types to be spawned (weights below should add up to 32)
-	db ENEMY_SNAKE, 7  ; enemy type and weight
-	db ENEMY_SNAKE_DASHER, 1
-	db ENEMY_SNAKE_POISON, 1
-	db ENEMY_FISH, 6
-	db ENEMY_FISH_JUMPER, 1
-	db ENEMY_BAT, 6
-	db ENEMY_BAT_AGGRESSIVE, 1
-	db ENEMY_SKELETON, 7
-	db ENEMY_SKELETON_THROWER1, 1
-	db ENEMY_SKELETON_THROWER2, 1
+	db 4  ; possible sprite enemy types to be spawned (weights below should add up to 32)
+	db ENEMY_GHOST, 8
+	db ENEMY_GHOST2, 8
+	db ENEMY_FISHMAN, 8
+	db ENEMY_FISHMAN2, 8
+; 	db ENEMY_FISH, 6
+; 	db ENEMY_FISH_JUMPER, 2
+; 	db ENEMY_SKELETON_THROWER1, 6
+; 	db ENEMY_SKELETON_THROWER2, 2

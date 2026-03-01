@@ -415,6 +415,10 @@ pcg_generate_room__spawn_one_enemy_chosen:
 	jp z, pcg_generate_room__spawn_skeleton_thrower1
 	cp ENEMY_SKELETON_THROWER2
 	jp z, pcg_generate_room__spawn_skeleton_thrower2
+	cp ENEMY_SKELETON_THROWER3
+	jp z, pcg_generate_room__spawn_skeleton_thrower3
+	cp ENEMY_SKELETON_THROWER4
+	jp z, pcg_generate_room__spawn_skeleton_thrower4
 	cp ENEMY_SKELETON_FLAME1
 	jp z, pcg_generate_room__spawn_skeleton_flame1
 	cp ENEMY_SKELETON_FLAME2
@@ -439,6 +443,14 @@ pcg_generate_room__spawn_one_enemy_chosen:
 	jp z, pcg_generate_room__spawn_rockman
 	cp ENEMY_ROCKMAN2
 	jp z, pcg_generate_room__spawn_rockman2
+	cp ENEMY_GHOST
+	jp z, pcg_generate_room__spawn_ghost
+	cp ENEMY_GHOST2
+	jp z, pcg_generate_room__spawn_ghost2
+	cp ENEMY_FISHMAN
+	jp z, pcg_generate_room__spawn_fishman
+	cp ENEMY_FISHMAN2
+	jp z, pcg_generate_room__spawn_fishman2
 	ret
 
 
@@ -851,26 +863,34 @@ pcg_generate_room__spawn_monkey_thrower:
 pcg_generate_room__spawn_monkey:
 	ld ixl, ENEMY_MONKEY
 	ld ixh, 2  ; hitpoints
-	jr pcg_generate_room__spawn_skeleton_continue		
+	jp pcg_generate_room__spawn_skeleton_continue		
 pcg_generate_room__spawn_frog:
 	ld ixl, ENEMY_FROG
 	ld ixh, 1  ; hitpoints
-	jr pcg_generate_room__spawn_skeleton_continue	
+	jp pcg_generate_room__spawn_skeleton_continue	
 pcg_generate_room__spawn_frog_jumper:
 	ld ixl, ENEMY_FROG_JUMPER
 	ld ixh, 2  ; hitpoints
-	jr pcg_generate_room__spawn_skeleton_continue	
+	jp pcg_generate_room__spawn_skeleton_continue	
 pcg_generate_room__spawn_frog_tongue:
 	ld ixl, ENEMY_FROG_TONGUE
 	ld ixh, 2  ; hitpoints
-	jr pcg_generate_room__spawn_skeleton_continue	
+	jp pcg_generate_room__spawn_skeleton_continue	
 pcg_generate_room__spawn_skeleton_thrower1:
 	ld ixl, ENEMY_SKELETON_THROWER1
 	ld ixh, 2  ; hitpoints
-	jr pcg_generate_room__spawn_skeleton_continue
+	jp pcg_generate_room__spawn_skeleton_continue
 pcg_generate_room__spawn_skeleton_thrower2:
 	ld ixl, ENEMY_SKELETON_THROWER2
 	ld ixh, 2  ; hitpoints
+	jp pcg_generate_room__spawn_skeleton_continue
+pcg_generate_room__spawn_skeleton_thrower3:
+	ld ixl, ENEMY_SKELETON_THROWER3
+	ld ixh, 4  ; hitpoints
+	jr pcg_generate_room__spawn_skeleton_continue
+pcg_generate_room__spawn_skeleton_thrower4:
+	ld ixl, ENEMY_SKELETON_THROWER4
+	ld ixh, 4  ; hitpoints
 	jr pcg_generate_room__spawn_skeleton_continue
 pcg_generate_room__spawn_skeleton_flame1:
 	ld ixl, ENEMY_SKELETON_FLAME1
@@ -879,6 +899,22 @@ pcg_generate_room__spawn_skeleton_flame1:
 pcg_generate_room__spawn_skeleton_flame2:
 	ld ixl, ENEMY_SKELETON_FLAME2
 	ld ixh, 4  ; hitpoints
+	jr pcg_generate_room__spawn_skeleton_continue
+pcg_generate_room__spawn_ghost:
+	ld ixl, ENEMY_GHOST
+	ld ixh, 4  ; hitpoints
+	jr pcg_generate_room__spawn_skeleton_continue
+pcg_generate_room__spawn_ghost2:
+	ld ixl, ENEMY_GHOST2
+	ld ixh, 6  ; hitpoints
+	jr pcg_generate_room__spawn_skeleton_continue
+pcg_generate_room__spawn_fishman:
+	ld ixl, ENEMY_FISHMAN
+	ld ixh, 4  ; hitpoints
+	jr pcg_generate_room__spawn_skeleton_continue
+pcg_generate_room__spawn_fishman2:
+	ld ixl, ENEMY_FISHMAN2
+	ld ixh, 8  ; hitpoints
 	jr pcg_generate_room__spawn_skeleton_continue
 pcg_generate_room__spawn_skeleton_sleeper:
 	ld ixl, ENEMY_SKELETON_SLEEPER
