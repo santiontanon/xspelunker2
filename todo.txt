@@ -1,13 +1,7 @@
 to do:
 
-***- mermen (11 sprites):
-  ***- patrol left/right
-  ***- if player is closeby and they are on top of some stairs that could get them closer to the player, they take them
-  ***- if player is close by and in the same direction they are facing, they spit a parabolic water proyectile, which does not collide up, but collides down (or left/right) and pops
-  ***- merman2 fires more aggressively (smaller cooldown)
 ***- atlantis tile enemies:
   ***- robot maya statue guardians (walk back and forth, they should be large like the owls, move slow and maybe throw rocks at the player).
-***- set probabilities for atlantis enemy spawning for all difficulty levels
 
 - fifth boss, Atlantean Guardian (Underwater Boss): A colossal robotic creature with bioluminescent features, resembling a deep-sea creature (laser beams from tentacles, summons robotic fish).
   - add boss name to the stats for game over screen
@@ -18,6 +12,7 @@ to do:
 - confrontation with the aliens after activating the calendar stone: are aliens sprites or tiles?
 - first ending sequence (udpate "stats__ending"): Elaine drops from the ceiling on a rope and rescues you. The calendar stone machine activates and creates a defensive barrier around earth, the alien armada that was coming turns back, but promises revenge.
   - add "no miss" achievement for this: if there is no damage (Track it)
+  - clue to check the rom in Maya in the ending credits, maybe something like "Luku ata de romo faili" (or some parts with actual verbs)
 - test to see if joystick works
 
 - random seed puzzle (all happens without going to moon/mars):

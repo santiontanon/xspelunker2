@@ -1328,16 +1328,16 @@ update_tile_objects_enemy_stone_owl_can_move_right_entry_point:
 	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
 	inc b
 	push bc
-		call general_check_collision_only_walls
+		call general_check_collision_with_wall
 	pop bc
 	ret z
 	inc b
 	push bc
-		call general_check_collision_only_walls
+		call general_check_collision_with_wall
 	pop bc
 	ret z
 	inc b
-	call general_check_collision_only_walls
+	call general_check_collision_with_wall
 	ret
 
 update_tile_objects_enemy_stone_owl_can_move_up:
@@ -1348,16 +1348,16 @@ update_tile_objects_enemy_stone_owl_can_move_up:
 	ld b, a	
 update_tile_objects_enemy_stone_owl_can_move_down_entry_point:
 	push bc
-		call general_check_collision_only_walls
+		call general_check_collision_with_wall
 	pop bc
 	ret z
 	inc c
 	push bc
-		call general_check_collision_only_walls
+		call general_check_collision_with_wall
 	pop bc
 	ret z
 	inc c
-	call general_check_collision_only_walls
+	call general_check_collision_with_wall
 	ret
 
 update_tile_objects_enemy_stone_owl_can_move_right:

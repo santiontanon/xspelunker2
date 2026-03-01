@@ -14,6 +14,7 @@ enemy_update_fn_table:
 	dw update_enemy_pus_ball  ; boss 4 attack
 	dw update_enemy_blood_ball  ; boss 4 attack
 	dw update_enemy_boss4_blades  ; boss 4 attack
+	dw update_enemy_bullet_waterball
 	; enemies you can hit:
 	dw update_enemy_snake  ; left-to-right
 	dw update_enemy_snake_dasher  ; left-to-right + dash
@@ -473,7 +474,7 @@ update_enemy_bullet_fireball:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)  ; if it's 0, flame has landed
 	or a
 	jr z, update_enemy_bullet_fireball_landed
-	ld iyh, 1  ; damage to deal
+	ld iyh, 2  ; damage to deal
 	call update_enemy_hurt_player_shieldable_bullet
 	jp z, update_enemy_delete
 	; out of bounds?
@@ -515,7 +516,7 @@ update_enemy_bullet_fireball_land:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
 update_enemy_bullet_fireball_landed:
-	ld iyh, 1  ; damage to deal
+	ld iyh, 2  ; damage to deal
 	call update_enemy_hurt_player_bullet
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
@@ -524,6 +525,64 @@ update_enemy_bullet_fireball_landed:
 	ld d, COLOR_RED
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 5) * 4 
 	jp enemy_sprite_and_continue_animated
+
+
+;-----------------------------------------------
+update_enemy_bullet_waterball:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)  ; if it's 0, water has landed
+	or a
+	jr z, update_enemy_bullet_waterball_landed
+	ld iyh, 2  ; damage to deal
+	call update_enemy_hurt_player_shieldable_bullet
+	jp z, update_enemy_delete
+	; out of bounds?
+	ld a, (current_room__width)
+	ld c, a
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	cp c
+	jp nc, update_enemy_delete
+	ld a, (current_room__height)
+	ld c, a
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	cp c
+	jp nc, update_enemy_delete
+	; parabola:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 128
+	jr nz, update_enemy_bullet_waterball_continue
+	jp update_enemy_delete
+	ld a, 64
+update_enemy_bullet_waterball_continue:
+	srl a
+	cp 14
+	jr c, update_enemy_bullet_waterball_continue2
+	ld a, 13
+update_enemy_bullet_waterball_continue2:
+	ld hl, update_enemy_bone_parabola_bullet_table + 2  ; "+2 to have less initial y speed"
+	ADD_HL_A
+	ld b, (hl)
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld c, (ix + ROOM_OBJECT_STRUCT_STATE)
+	call update_enemy_move_cb_colliding_down
+	jp z, update_enemy_bullet_waterball_land  ; collision down
+	ld d, COLOR_LIGHT_BLUE
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 38) * 4 
+	jp enemy_sprite_and_continue_animated
+
+update_enemy_bullet_waterball_land:
+	inc (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+update_enemy_bullet_waterball_landed:
+	ld iyh, 2  ; damage to deal
+	call update_enemy_hurt_player_bullet
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 32
+	jp z, update_enemy_delete  ; timeout
+	ld d, COLOR_LIGHT_BLUE
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 1) * 4 
+	jp enemy_sprite_and_continue
 
 
 ;-----------------------------------------------
@@ -2885,9 +2944,231 @@ update_enemy_fishman_continue:
 	ld iyh, 2  ; damage to deal
 	call update_enemy_hurt_player_2x2
 
-	ld d, iyl
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 16) * 4  ; 16: right, 35: left, 19: stairs
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	call update_enemy__patrol_left_right_platform
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	cp 2
+	jp z, update_enemy_fishman_stairs_up
+	cp 3
+	jp z, update_enemy_fishman_stairs_down
+	cp 4
+	jp z, update_enemy_fishman_fire_right
+	cp 5
+	jp z, update_enemy_fishman_fire_left
+	; it's patroling, check if we need stairs, or fire a bullet:
+	call update_enemy_player_close_enough_16
+	jr nz, 	update_enemy_fishman_continue2
+
+	; check if the fishman needs to fire a bullet:
+	; if (state == 0 && c > 0) || (state == 1 && c < 0)
+	push bc
+		xor a
+		sub (ix + ROOM_OBJECT_STRUCT_STATE)  ; a = (state == 0 ? 0:#ff)
+		xor c
+	pop bc
+	jp m, update_enemy_fishman_no_fire
+	call random_a
+	and #1f
+	jr nz, update_enemy_fishman_no_fire
+	; fire a bullet!
+	ld a, 4
+	add a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), a
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+	jr update_enemy_fishman_continue2
+update_enemy_fishman_no_fire:
+	ld a, b
+	or a
+	jr z, update_enemy_fishman_no_stairs
+	jp p, update_enemy_fishman_check_stairs_down
+	; stairs up check:
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	call get_room_tile_type
+	cp 7  ; ladder
+	jr nz, update_enemy_fishman_no_stairs
+	inc hl
+	ld a, (hl)
+	call get_collision_tile_type_of_a
+	cp 7  ; ladder
+	jr nz, update_enemy_fishman_no_stairs
+	jp update_enemy_fishman_switch_to_stairs_up
+	jr update_enemy_fishman_continue2
+
+update_enemy_fishman_check_stairs_down:
+	; stairs down check:
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc b
+	inc b
+	call get_room_tile_type
+	cp 8  ; ladder top
+	jr nz, update_enemy_fishman_no_stairs
+	inc hl
+	ld a, (hl)
+	call get_collision_tile_type_of_a
+	cp 8  ; ladder top
+	jr nz, update_enemy_fishman_no_stairs
+	jp update_enemy_fishman_switch_to_stairs_down
+update_enemy_fishman_no_stairs:
+update_enemy_fishman_continue2:
+	ld d, iyl  ; color
+ 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+ 	or a
+ 	jr z, update_enemy_fishman_sprite_right
+ 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 35) * 4  ; 16: right, 35: left, 19: stairs
+ 	jp enemy_sprite_and_continue_animated
+ update_enemy_fishman_sprite_right:
+ 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 16) * 4  ; 16: right, 35: left, 19: stairs
 	jp enemy_sprite_and_continue_animated
+
+update_enemy_fishman_switch_to_stairs_up:
+	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_X), 0  ; center around the stairs
+update_enemy_fishman_switch_to_stairs_up_from_stairs:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+	jr update_enemy_fishman_stairs_up_continue
+update_enemy_fishman_stairs_up:
+	; go up one flight of stairs:
+	; - until colliding (and then go down)
+	; - or until reaching a platform (and then switch to patrol)
+	call update_enemy_move_up_if_possible_stairs
+	jr z, update_enemy_fishman_switch_to_stairs_down_from_stairs
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
+	or a
+	jr nz, update_enemy_fishman_stairs_up_continue
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc b
+	inc b
+	call get_room_tile_type
+	cp 8  ; top of stairs
+	jr nz, update_enemy_fishman_stairs_up_continue
+	; reached a floor, stop
+	call random_a
+	and #01
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), a  ; random left/right
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+update_enemy_fishman_stairs_up_continue:
+	ld d, iyl  ; color
+ 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 19) * 4  ; 16: right, 35: left, 19: stairs
+ 	jp enemy_sprite_and_continue_animated
+
+update_enemy_fishman_switch_to_stairs_down:
+	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_X), 0  ; center around the stairs
+	inc (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+update_enemy_fishman_switch_to_stairs_down_from_stairs:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 3
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+	jr update_enemy_fishman_stairs_down_continue
+update_enemy_fishman_stairs_down:
+	; go down one flight of stairs:
+	; - until colliding or reaching the end of the stairs (and then go down)
+	; - or until reaching a platform (and then switch to patrol)
+	call update_enemy_move_down_if_possible_stairs
+	jr z, update_enemy_fishman_switch_to_stairs_up_from_stairs
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
+	or a
+	jr nz, update_enemy_fishman_stairs_down_continue
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc b
+	inc b
+	call get_room_tile_type
+	; 1, 2, 8 -> done!
+	cp 1
+	jr z, update_enemy_fishman_stairs_down_done
+	cp 2
+	jr z, update_enemy_fishman_stairs_down_done
+	cp 8  ; top of stairs
+	jr nz, update_enemy_fishman_stairs_down_continue
+update_enemy_fishman_stairs_down_done:
+	; reached a floor, stop
+	call random_a
+	and #01
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), a  ; random left/right
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+update_enemy_fishman_stairs_down_continue:
+	ld d, iyl  ; color
+ 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 19) * 4  ; 16: right, 35: left, 19: stairs
+ 	jp enemy_sprite_and_continue_animated
+
+update_enemy_fishman_fire_right:
+	ld d, 2  ; speed of the bullet
+	ld iyh, 1  ; x tile offset of bullet
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 18) * 4 
+update_enemy_fishman_fire_right_continue:
+	ld a, (current_world__difficulty_attack_warn_time)
+	ld c, a
+	add a, a
+	ld b, a
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp c
+	jr z, update_enemy_fishman_fire_right_spit
+	cp b
+	jr nz, update_enemy_fishman_fire_right_continue2
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	add a, -4
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), a
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0	
+update_enemy_fishman_fire_right_continue2:
+	ld d, iyl  ; color
+ 	jp enemy_sprite_and_continue
+
+update_enemy_fishman_fire_left:
+	ld d, -2  ; speed of the bullet
+	ld iyh, 0  ; x tile offset of bullet
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 37) * 4
+	jr update_enemy_fishman_fire_right_continue
+
+update_enemy_fishman_fire_right_spit:
+	; spit water:
+	push de
+		call ptr_to_new_sprite_enemy
+	pop de
+	jr nz, update_enemy_fishman_fire_right_continue2
+	ld (hl), 0
+	inc hl
+	ld (hl), ENEMY_BULLET_WATERBALL
+	inc hl
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	ld (hl), a  ; pixel x
+	inc hl
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	add a, iyh
+	ld (hl), a
+	inc hl
+	ld (hl), 4  ; pixel y
+	inc hl
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	ld (hl), a
+	inc hl
+	ld (hl), d  ; x speed
+	inc hl
+	ld (hl), 0  ; state timer
+
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	cp ENEMY_FISHMAN
+	jr z, update_enemy_fishman_fire_right_spit_continue
+	ld a, d
+	cp 2
+	jr z, update_enemy_fishman_fire_right_spit_second_right
+	cp -2
+	jr z, update_enemy_fishman_fire_right_spit_second_left
+update_enemy_fishman_fire_right_spit_continue:
+	ld hl, SFX_enemy_bullet
+	call play_SFX_with_high_priority
+	jr update_enemy_fishman_fire_right_continue2
+update_enemy_fishman_fire_right_spit_second_right:
+	inc d
+	jr update_enemy_fishman_fire_right_spit
+update_enemy_fishman_fire_right_spit_second_left:
+	inc d
+	jr update_enemy_fishman_fire_right_spit
+
+
+
+
 
 
 ;-----------------------------------------------
@@ -3343,6 +3624,36 @@ update_enemy_boss4_blades_movement_done:
 
 
 ;-----------------------------------------------
+; output:
+; - z: close (c, b: diff in x and y in tiles)
+; - nz: far
+update_enemy_player_close_enough_16:
+	ld e, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld d, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+update_enemy_player_close_enough_16_ed:
+	; see if player is close enough:
+	ld a, (player_x + 1)
+	sub e
+	ld c, a
+	cp 16 
+	jp p, update_enemy_player_close_enough_16_fail
+	cp -16
+	jp m, update_enemy_player_close_enough_16_fail
+	ld a, (player_y + 1)
+	sub d
+	ld b, a
+	cp 16 
+	jp p, update_enemy_player_close_enough_16_fail
+	cp -16
+	jp m, update_enemy_player_close_enough_16_fail
+	xor a  ; success
+	ret
+update_enemy_player_close_enough_16_fail:
+	or 1
+	ret
+
+
+;-----------------------------------------------
 ; Used by fire imps and ghosts
 ; - iyl: movement speed
 update_enemy_dash_step_internal:
@@ -3472,21 +3783,8 @@ update_enemy_fire_directional_bullet_towards_player:
 	ld e, (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	ld d, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 update_enemy_fire_directional_bullet_towards_player_at_e_d:
-	; see if player is close enough:
-	ld a, (player_x + 1)
-	sub e
-	cp 16 
-	ret p
-	cp -16
-	ret m
-	ld c, a
-	ld a, (player_y + 1)
-	sub d
-	cp 16 
-	ret p
-	cp -16
-	ret m
-	ld b, a
+	call update_enemy_player_close_enough_16_ed  ; and put difference in c, b
+	ret nz
 	; fire a bullet:
 	push bc
 	push de
@@ -4064,6 +4362,19 @@ update_enemy_move_left_continue:
 ; output:
 ; - z: cannot
 ; - nz: can
+update_enemy_move_up_if_possible_stairs:
+	call update_enemy_can_move_up_stairs
+	ret z
+	jp update_enemy_move_up
+
+
+
+;-----------------------------------------------
+; input:
+; - ix: enemy ptr
+; output:
+; - z: cannot
+; - nz: can
 update_enemy_move_up_if_possible:
 	call update_enemy_can_move_up
 	ret z
@@ -4083,6 +4394,18 @@ update_enemy_move_up:
 update_enemy_move_up_continue:
 	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_Y), a
 	ret
+
+
+;-----------------------------------------------
+; input:
+; - ix: enemy ptr
+; output:
+; - z: cannot
+; - nz: can
+update_enemy_move_down_if_possible_stairs:
+	call update_enemy_can_move_down_stairs
+	ret z
+	jp update_enemy_move_down
 
 
 ;-----------------------------------------------
@@ -4295,6 +4618,58 @@ update_enemy_can_move_down_continue;
 ; output:
 ; - z: cannot
 ; - nz: can
+update_enemy_can_move_up_stairs:
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
+	or a
+	ret nz
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	cp 4
+	jr nc, update_enemy_can_move_up_stairs_continue
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	call general_check_collision_with_wall
+	ret z
+update_enemy_can_move_up_stairs_continue:
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc c
+	jp general_check_collision_with_wall
+
+
+;-----------------------------------------------
+; input:
+; - ix: enemy ptr
+; output:
+; - z: cannot
+; - nz: can
+update_enemy_can_move_down_stairs:
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
+	or a
+	ret nz
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	cp 4
+	jr nc, update_enemy_can_move_down_stairs_continue
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc b
+	inc b
+	call general_check_collision_with_wall
+	ret z
+update_enemy_can_move_down_stairs_continue;
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc c
+	inc b
+	inc b
+	jp general_check_collision_with_wall
+
+
+;-----------------------------------------------
+; input:
+; - ix: enemy ptr
+; output:
+; - z: cannot
+; - nz: can
 update_enemy_water_move_right_if_possible:
 	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
 	or a
@@ -4351,7 +4726,7 @@ update_enemy_bullet_move_right_if_possible:
 	; inc c
 	inc c
 ; 	inc b
-	call general_check_collision_only_walls
+	call general_check_collision_with_wall
 	ret z
 update_enemy_bullet_move_right_if_possible_move:
 	call update_enemy_move_right
@@ -4376,7 +4751,7 @@ update_enemy_bullet_move_left_if_possible:
 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	dec c
 ; 	inc b
-	call general_check_collision_only_walls
+	call general_check_collision_with_wall
 	ret z
 update_enemy_bullet_move_left_if_possible_move:
 	call update_enemy_move_left
@@ -4401,7 +4776,7 @@ update_enemy_bullet_move_down_if_possible:
 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	inc b
-	call general_check_collision_only_walls
+	call general_check_collision_with_wall
 	ret z
 update_enemy_bullet_move_down_if_possible_move:
 	call update_enemy_move_down
@@ -4425,7 +4800,7 @@ update_enemy_bullet_move_up_if_possible:
 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	dec b
-	call general_check_collision_only_walls
+	call general_check_collision_with_wall
 	ret z
 update_enemy_bullet_move_up_if_possible_move:
 	call update_enemy_move_up

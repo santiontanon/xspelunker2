@@ -4,18 +4,6 @@
 ; output:
 ; - z: collision
 ; - nz: no collision
-general_check_collision_only_walls:
-	call get_room_tile_type
-	cp 2
-	ret  ; ladder-platform-top
-
-
-;-----------------------------------------------
-; input:
-; - c, b: tile x, y
-; output:
-; - z: collision
-; - nz: no collision
 general_check_collision:
 	call get_room_tile_type
 	dec a
