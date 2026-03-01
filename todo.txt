@@ -1,8 +1,8 @@
 to do:
 
 ***- atlantis sprite enemies: I have 19 sprites left for them
-  ***- ghosts/spirits: fly around, and might blink/disappear, some fire bullets, some dash (like fire imps)
-  ***- mermen: walk around and can jump up/down platforms or go up/down stairs if the player is above/below them, fire bulelts (spears? regular bullets?)
+  ***- ghosts/spirits (6 sprites): fly around, and might blink/disappear, some fire bullets, some dash (like fire imps)
+  ***- mermen (11 sprites): walk around and can jump up/down platforms or go up/down stairs if the player is above/below them, fire bulelts (spears? regular bullets?)
 ***- atlantis tile enemies:
   ***- robot maya statue guardians (walk back and forth, they should be large like the owls, move slow and maybe throw rocks at the player).
 

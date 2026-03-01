@@ -467,9 +467,14 @@ public class GenerateSprites {
         
         // bullet (0):
         data.addAll(extractSprite(sourceImage, 64, 0, 15));  // bullet
-        for(int i = 1;i<8;i++)  {
-            for(int j = 0;j<32;j++) data.add(0);
-        }
+        data.addAll(extractSprite(sourceImage, 112, 192, 15));  // water bullet pop
+        // ghost (2):
+        data.addAll(extractSprite(sourceImage, 0, 176, 15));  // right ghost idle
+        data.addAll(extractSprite(sourceImage, 16, 176, 15));  // 
+        data.addAll(extractSprite(sourceImage, 32, 176, 15));  // right ghost attack
+        data.addAll(extractSpriteFlipped(sourceImage, 0, 176, 15));  // left ghost idle
+        data.addAll(extractSpriteFlipped(sourceImage, 16, 176, 15));  // 
+        data.addAll(extractSpriteFlipped(sourceImage, 32, 176, 15));  // left ghost attack        
         // piranha (8):
         data.addAll(extractSprite(sourceImage, 0, 16, 15));  // fish right
         data.addAll(extractSprite(sourceImage, 16, 16, 15));
@@ -479,9 +484,12 @@ public class GenerateSprites {
         data.addAll(extractSpriteFlipped(sourceImage, 16, 16, 15));
         data.addAll(extractSpriteFlipped(sourceImage, 32, 16, 15));  // fish jump left
         data.addAll(extractSpriteFlipped(sourceImage, 48, 16, 15));
-        for(int i = 16;i<21;i++)  {
-            for(int j = 0;j<32;j++) data.add(0);
-        }
+        // fish man (16):
+        data.addAll(extractSprite(sourceImage, 0, 192, 15));  // fishman right
+        data.addAll(extractSprite(sourceImage, 16, 192, 15));
+        data.addAll(extractSprite(sourceImage, 32, 192, 15));  // fishman attack right
+        data.addAll(extractSprite(sourceImage, 48, 192, 15));  // fishman stairs
+        data.addAll(extractSprite(sourceImage, 64, 192, 15));        
         // skeletons (21):
         data.addAll(extractSprite(sourceImage, 0, 48, 15));  // right walk
         data.addAll(extractSprite(sourceImage, 16, 48, 15));  // 
@@ -491,16 +499,20 @@ public class GenerateSprites {
         data.addAll(extractSpriteFlipped(sourceImage, 16, 48, 15));  // 
         data.addAll(extractSpriteFlipped(sourceImage, 32, 48, 15));  // left shoot
         data.addAll(extractSpriteFlipped(sourceImage, 48, 48, 15));  // 
-//        data.addAll(extractSprite(sourceImage, 64, 48, 15));  // right idle
-//        data.addAll(extractSpriteFlipped(sourceImage, 64, 48, 15));  // left idle
-        for(int i = 29;i<31;i++)  {
-            for(int j = 0;j<32;j++) data.add(0);
-        }
+        data.addAll(extractSprite(sourceImage, 64, 48, 15));  // right idle
+        data.addAll(extractSpriteFlipped(sourceImage, 64, 48, 15));  // left idle
         // bone bullet (31)
         data.addAll(extractSprite(sourceImage, 80, 0, 15));
         data.addAll(extractSprite(sourceImage, 80, 16, 15));
         data.addAll(extractSprite(sourceImage, 80, 32, 15));
         data.addAll(extractSprite(sourceImage, 80, 48, 15));
+        // fish man left (35):
+        data.addAll(extractSpriteFlipped(sourceImage, 0, 192, 15));  // fishman left
+        data.addAll(extractSpriteFlipped(sourceImage, 16, 192, 15));
+        data.addAll(extractSpriteFlipped(sourceImage, 32, 192, 15));  // fishman attack left
+        // water bullet (38)
+        data.addAll(extractSprite(sourceImage, 80, 192, 15));  // water bullet
+        data.addAll(extractSprite(sourceImage, 96, 192, 15));
         
         if (data.size() > 40 * 32) {
             throw new Exception("More enemy sprites than the engine can handle!");
