@@ -2,8 +2,10 @@ to do:
 
 ***- atlantis sentinel:
   ***- create tile enemy type: ("enemy_sentinel_tiles_zx0")
-    ***- spawn it on an appropriate place, mark them in the chunks, like lava generators in xibalba
-    ***- For now just draw idle, turning towards the player (idle behavior):
+    ***- spawn it on an appropriate place: mark them in the chunks, like lava generators in xibalba
+    ***- call the spawn function and actually spawn them
+    ***- For now just draw them idle, turning towards the player (idle behavior):
+      ***- update/draw/undraw functions
       ***- I need to make space in page 2 for this. Move some things out as needed (e.g., pyramid tiles, temple of poseidon)
   ***- create additional decoration sprite (use a single sprite for the stone, and the second, keep redefining it for whatever is needed for the current frame)
   ***- behavior:
@@ -12,6 +14,7 @@ to do:
     ***- throw stone (if player in front, throw a directional stone that can be destroyed, but has 4 hitpoints, and is not shieldable)
       ***- add stone bullet sprite and enemy type
     ***- fire lasers either forward, or diagonal down/up depending on where the player is
+  ***- have a probability of spawning them depending on the difficulty level
 
 - fifth boss, Atlantean Guardian (Underwater Boss): A colossal robotic creature with bioluminescent features, resembling a deep-sea creature (laser beams from tentacles, summons robotic fish).
   - add boss name to the stats for game over screen
