@@ -139,6 +139,8 @@ update_tile_objects_loop:
 		jp z, update_tile_objects_enemy_lava_generator
 		cp TAG_ENEMY_STONE_OWL
 		jp z, update_tile_objects_enemy_stone_owl
+		cp TAG_ENEMY_SENTINEL
+		jp z, update_tile_objects_enemy_sentinel
 		cp TAG_LOST_VENDOR
 		jp z, update_tile_objects_lost_vendor
 update_tile_objects_loop_continue:
@@ -457,6 +459,8 @@ room_render_tile_objects_loop:
 		jp z, room_render_tile_objects_render_enemy_lava_generator
 		cp TAG_ENEMY_STONE_OWL
 		jp z, room_render_tile_objects_render_enemy_stone_owl
+		cp TAG_ENEMY_SENTINEL
+		jp z, room_render_tile_objects_render_enemy_sentinel
 		inc hl
 		ld c, (hl)  ; x
 		ld iyl, c
@@ -749,6 +753,8 @@ room_undraw_tile_objects_loop:
 		jp z, room_render_tile_objects_undraw_enemy_lava_generator
 		cp TAG_ENEMY_STONE_OWL
 		jp z, room_render_tile_objects_undraw_enemy_stone_owl
+		cp TAG_ENEMY_SENTINEL
+		jp z, room_render_tile_objects_undraw_enemy_sentinel
 		inc hl
 		ld c, (hl)  ; x
 		ld ixl, c
@@ -1228,6 +1234,7 @@ ENDR
 	dw object_interaction_function_empty  ; TAG_ENEMY_FIREBALL_GENERATOR
 	dw object_interaction_function_empty  ; TAG_ENEMY_LAVA_GENERATOR
 	dw object_interaction_function_empty  ; TAG_ENEMY_STONE_OWL
+	dw object_interaction_function_empty  ; TAG_ENEMY_SENTINEL
 
 object_interaction_inventory_slot:
 	db #ff, #ff, #ff, #ff, #ff  ; none, block puzzles: 0
@@ -2797,6 +2804,7 @@ ENDR
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_ENEMY_FIREBALL_GENERATOR
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_ENEMY_LAVA_GENERATOR
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_ENEMY_STONE_OWL
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_ENEMY_SENTINEL
 
 
 tile_object_regular_object_gfx:

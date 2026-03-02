@@ -86,8 +86,8 @@ pcg_enemy_generation_table_xibalba_hard:
 
 pcg_enemy_generation_table_atlantis_hard:
 	db 2  ; 2 enemies per "screen" area
-	db 0
-; 	db TAG_ENEMY_CARNIVORE_PLANT, 48  ; tile-based enemy type and chance (out of 256)
+	db 1
+	db TAG_ENEMY_SENTINEL, 80  ; tile-based enemy type and chance (out of 256)
 	db 8  ; possible sprite enemy types to be spawned (weights below should add up to 32)
 	db ENEMY_FISHMAN, 2
 	db ENEMY_FISHMAN2, 6

@@ -239,6 +239,7 @@ public class AssemblerTags {
         "TAG_ENEMY_FIREBALL_GENERATOR",
         "TAG_ENEMY_LAVA_GENERATOR",
         "TAG_ENEMY_STONE_OWL",
+        "TAG_ENEMY_SENTINEL",
     };
     
 

@@ -896,7 +896,7 @@ room_render_tile_objects_undraw_enemy_lava_generator_internal_loop_y:
 	add hl, bc
 	dec iyl
 	jr nz, room_render_tile_objects_undraw_enemy_lava_generator_internal_loop_y
-	ret
+	jp room_undraw_tile_objects_loop_continue
 
 
 ;-----------------------------------------------
@@ -1508,6 +1508,105 @@ room_render_tile_objects_undraw_enemy_stone_owl:
 
 
 ;-----------------------------------------------
+atlantis_centinel_frame_right_0:
+  db 0, 64
+  db 65, 66
+  db 67, 68
+  db 69, 70
+atlantis_centinel_frame_right_1:
+  db 0, 64
+  db 65, 66
+  db 67, 71
+  db 69, 72
+atlantis_centinel_frame_right_2:
+  db 0, 0, 64
+  db 0, 65, 66
+  db 0, 73, 68
+  db 74, 75, 70
+atlantis_centinel_frame_right_3:
+  db 0, 64
+  db 65, 66
+  db 67, 76
+  db 77, 78
+atlantis_centinel_frame_right_4:
+  db 0, 64
+  db 65, 66
+  db 79, 80
+  db 81, 0
+atlantis_centinel_frame_right_attack_0:
+  db 82, 0
+  db 83, 64
+  db 84, 66
+  db 85, 68
+  db 69, 70
+atlantis_centinel_frame_right_attack_1:
+  db 0, 64, 0
+  db 86, 87, 88
+  db 85, 68, 0
+  db 69, 70, 0
+atlantis_centinel_frame_left_0:
+  db 190, 0
+  db 169, 189
+  db 176, 177
+  db 145, 160
+atlantis_centinel_frame_left_1:
+  db 190, 0
+  db 169, 189
+  db 144, 177
+  db 128, 160
+atlantis_centinel_frame_left_2:
+  db 190, 0, 0
+  db 169, 189, 0
+  db 176, 95, 0
+  db 145, 93, 94
+atlantis_centinel_frame_left_3:
+  db 190, 0
+  db 169, 189
+  db 92, 177
+  db 90, 91
+atlantis_centinel_frame_left_4:
+  db 190, 0
+  db 169, 189
+  db 223, 177
+  db 0, 222
+atlantis_centinel_frame_left_attack_0:
+  db 0, 221
+  db 190, 220
+  db 169, 207
+  db 176, 206
+  db 145, 160
+atlantis_centinel_frame_left_attack_1:
+  db 0, 190, 0
+  db 191, 204, 205
+  db 0, 176, 206
+  db 0, 145, 160
+
+
+;-----------------------------------------------
+; input:
+; - hl: object ptr + 1
+update_tile_objects_enemy_sentinel:
+	; ...
+	jp update_tile_objects_loop_continue
+
+
+;-----------------------------------------------
+; input:
+; - hl: object ptr + 1
+room_render_tile_objects_render_enemy_sentinel:
+	; ...
+	jp room_render_tile_objects_loop_continue
+
+
+;-----------------------------------------------
+; input:
+; - hl: object ptr + 1
+room_render_tile_objects_undraw_enemy_sentinel:
+	; ...
+	jp room_undraw_tile_objects_loop_continue
+
+
+;-----------------------------------------------
 ; Used for when the player hits a tile enemy, sssumes there is a single tile enemy
 ; that can be hit in the whole screen.
 ; output:
@@ -1542,6 +1641,8 @@ find_tile_enemy_ptr_loop:
 ;   cp TAG_ENEMY_LAVA_GENERATOR
 ;   ret z
 	cp TAG_ENEMY_STONE_OWL
+	ret z
+	cp TAG_ENEMY_SENTINEL
 	ret z
 	add ix, bc
 	jr find_tile_enemy_ptr_loop

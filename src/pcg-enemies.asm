@@ -365,10 +365,12 @@ pcg_generate_room__spawn_tile_enemies_loop_found:
 	jp z, pcg_generate_room__spawn_imp_generator2
 	cp TAG_ENEMY_FIREBALL_GENERATOR
 	jp z, pcg_generate_room__spawn_fireball_generator
-; 	cp TAG_ENEMY_LAVA_GENERATOR  ; these are spawned else where (like pushable-blocks)
+; 	cp TAG_ENEMY_LAVA_GENERATOR  ; these are spawned elsewhere (like pushable-blocks)
 ; 	jp z, pcg_generate_room__spawn_lava_generator
 	cp TAG_ENEMY_STONE_OWL
 	jp z, pcg_generate_room__spawn_stone_owl
+; 	cp TAG_ENEMY_SENTINEL
+; 	jp z, pcg_generate_room__spawn_sentinel  ; these are spawned elsewhere (like pushable-blocks)
 	; ...
 	ret
 
