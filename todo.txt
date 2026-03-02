@@ -1,7 +1,16 @@
 to do:
 
-***- atlantis tile enemies:
-  ***- robot maya statue guardians (walk back and forth, they should be large like the owls, move slow and maybe throw rocks at the player).
+***- atlantis tile enemies: robot maya statue guardians (walk back and forth, they should be large like the owls, move slow and maybe throw rocks at the player).
+  ***- add tiles to the game
+  ***- create tile enemy type:
+    ***- spawn it on an appropriate place (how did I do it with carnivore plants?)
+    ***- extract the frame nametables and add them to the game. For now just draw idle, turning towards the player (idle behavior)
+  ***- behavior:
+    ***- idle: just wait 32-64 frames (turn towards player)
+    ***- walk left/right: walk two steps (or until hitting collison or reachiing a ledge). Always face player and walk forwards or backwards.
+    ***- throw stone (if player in front, throw a directional stone that can be destroyed, but has 4 hitpoints, and is not shieldable)
+      ***- add stone bullet sprite and enemy type
+    ***- fire lasers either forward, or diagonal down/up depending on where the player is
 
 - fifth boss, Atlantean Guardian (Underwater Boss): A colossal robotic creature with bioluminescent features, resembling a deep-sea creature (laser beams from tentacles, summons robotic fish).
   - add boss name to the stats for game over screen
@@ -13,7 +22,7 @@ to do:
 - first ending sequence (udpate "stats__ending"): Elaine drops from the ceiling on a rope and rescues you. The calendar stone machine activates and creates a defensive barrier around earth, the alien armada that was coming turns back, but promises revenge.
   - add "no miss" achievement for this: if there is no damage (Track it)
   - clue to check the rom in Maya in the ending credits, maybe something like "Luku ata de romo faili" (or some parts with actual verbs)
-- test to see if joystick works
+- test to see if joystick works (can I play in the Nintendo Switch?)
 
 - random seed puzzle (all happens without going to moon/mars):
   - Revisit "TABLET_TRIVIA_CLUE1", "TABLET_TRIVIA_CLUE2", etc.
