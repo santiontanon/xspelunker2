@@ -1668,6 +1668,8 @@ pcg_generate_room__spawn_sentinel:
 		inc de
 		ld (de), a  ; state timer
 		inc de
+		ld a, 32
+		ld (de), a  ; hit points
 		inc de
 		ex de, hl
 
@@ -1677,6 +1679,10 @@ pcg_generate_room__spawn_sentinel:
 		ld (hl), e  ; work memory ptr
 		inc hl
 		ld (hl), d
+		inc hl
+		ld (hl), 0  ; extra 1: current frame
+		inc hl
+		ld (hl), 0  ; extra 2: previous frame
 		ld a, (tmp_enemy_pcg_tile_enemy_workmemory_usage)
 		add a, SENTINEL_WORKMEMORY_USAGE
 		ld (tmp_enemy_pcg_tile_enemy_workmemory_usage), a

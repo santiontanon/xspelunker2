@@ -1518,8 +1518,64 @@ update_tile_objects_enemy_sentinel:
 	push hl
 	pop ix
 
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_HEALTH)
+	or a
+	jr z, update_tile_objects_enemy_sentinel_killed	
+
+	; state switch:
 	; ...
+
+update_tile_objects_enemy_sentinel_state_0:
+	; idle, just turn towards player:
+	ld a, (player_x + 1)
+	cp (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	jr c, update_tile_objects_enemy_sentinel_state_0_left
+	; right:
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1), 0
+	jr update_tile_objects_enemy_sentinel_continue
+update_tile_objects_enemy_sentinel_state_0_left:
+	; left:
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1), 7
+; 	jr update_tile_objects_enemy_sentinel_continue
+
+update_tile_objects_enemy_sentinel_continue:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1)
+	cp (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA2)
+	jp z, update_tile_objects_loop_continue
+	; we need to redraw as the frame has changed:
+	call room_undraw_tile_objects
+	call room_render_tile_objects
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)
 	jp update_tile_objects_loop_continue
+
+update_tile_objects_enemy_sentinel_killed:
+	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	dec c
+	push bc
+		push ix
+			call spawn_big_explosion
+			call room_undraw_tile_objects
+		pop hl
+		push hl
+			call delete_tile_object_in_hl
+			call room_render_tile_objects
+			; force redraw:
+			ld hl, redraw_flags
+			set ROOM_REDRAW_FLAG_BIT, (hl)
+		pop hl
+	pop bc
+	push hl
+		inc c
+		inc b
+		inc b
+		ld hl, enemy_maybe_spawn_drop
+		ld e, ENEMIES_PAGE
+		call call_hl_in_page_e_8000
+	pop hl
+	pop af  ; we do an extra pop, since we are skipping the one at update_tile_objects_loop_continue
+	jp update_tile_objects_loop
 
 
 ;-----------------------------------------------
@@ -1531,7 +1587,8 @@ room_render_tile_objects_render_enemy_sentinel:
 	pop ix
 
 	; get frame to draw:
-	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1)
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA2), a  ; store that this is the frame we just drew
 	ld hl, tile_object_sentinel_frames
 	add a, a
 	ADD_HL_A
@@ -1558,6 +1615,7 @@ room_render_tile_objects_render_enemy_sentinel:
 
 
 tile_object_sentinel_frames:
+	; 0
 	dw tile_object_sentinel_frame_right0_gfx - 1  ; right 0
 	dw tile_object_sentinel_frame_right1_gfx - 1  ; right 1
 	dw tile_object_sentinel_frame_right2_gfx - 1  ; right 2
@@ -1565,6 +1623,7 @@ tile_object_sentinel_frames:
 	dw tile_object_sentinel_frame_right4_gfx - 1  ; right 4
 	dw tile_object_sentinel_frame_attack_right0_gfx - 1  ; attack right 0
 	dw tile_object_sentinel_frame_attack_right1_gfx - 1  ; attack right 1
+	; 7
 	dw tile_object_sentinel_frame_left0_gfx - 1  ; left 0
 	dw tile_object_sentinel_frame_left1_gfx - 1  ; left 1
 	dw tile_object_sentinel_frame_left2_gfx - 1  ; left 2

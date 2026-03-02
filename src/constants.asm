@@ -158,6 +158,8 @@ ROOM_TILE_OBJECT_STRUCT_WIDTH: equ 9  ; only used by breakable walls
 ROOM_TILE_OBJECT_STRUCT_HEIGHT: equ 10  ; only used by breakable walls
 ROOM_TILE_OBJECT_STRUCT_LAST_HIT_ID: equ 11  ; only used by breakable walls / enemies
 ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR: equ 7  ; only used by tile enemies
+ROOM_TILE_OBJECT_STRUCT_EXTRA1: equ 9  ; used by objects that do not store width/height (e.g. atlantis sentinel)
+ROOM_TILE_OBJECT_STRUCT_EXTRA2: equ 10  ; used by objects that do not store width/height (e.g. atlantis sentinel)
 
 PLAYER_COLLISION_UP_LEEWAY: equ 3  ; collision box height will be 16 - (8 - PLAYER_COLLISION_UP_LEEWAY)
 PLAYER_COLLISION_WIDTH: equ 4

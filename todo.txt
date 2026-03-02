@@ -2,8 +2,6 @@ to do:
 
 ***- atlantis sentinel:
   ***- behavior:
-    ***- idle: just wait 32-64 frames (turn towards player)
-    ***- being able to kill it (set proper HP, etc. how did I do it with the OWL?)
     ***- create additional decoration sprite (use a single sprite for the stone, and the second, keep redefining it for whatever is needed for the current frame)
     ***- walk left/right: walk two steps (or until hitting collison or reachiing a ledge). Always face player and walk forwards or backwards.
     ***- throw stone (if player in front, throw a directional stone that can be destroyed, but has 4 hitpoints, and is not shieldable)
