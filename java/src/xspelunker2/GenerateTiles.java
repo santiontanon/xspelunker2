@@ -288,29 +288,34 @@ public class GenerateTiles {
     {
         int tiles[][] = Tiled.loadTMXtileData(tmxfileName);
         // right frames:
-        extractNameTableData(tiles, 0, 1, 2, 5, "atlantis_centinel_frame_right_0");
-        extractNameTableData(tiles, 2, 1, 4, 5, "atlantis_centinel_frame_right_1");
-        extractNameTableData(tiles, 4, 1, 7, 5, "atlantis_centinel_frame_right_2");
-        extractNameTableData(tiles, 7, 1, 9, 5, "atlantis_centinel_frame_right_3");
-        extractNameTableData(tiles, 9, 1, 11, 5, "atlantis_centinel_frame_right_4");
-        extractNameTableData(tiles, 11, 0, 13, 5, "atlantis_centinel_frame_right_attack_0");
-        extractNameTableData(tiles, 13, 1, 16, 5, "atlantis_centinel_frame_right_attack_1");
-
+        extractSentinelNameTableData(tiles, 0, 1, 2, 5, "tile_object_sentinel_frame_right0_gfx");
+        extractSentinelNameTableData(tiles, 2, 1, 4, 5, "tile_object_sentinel_frame_right1_gfx");
+        extractSentinelNameTableData(tiles, 4, 1, 7, 5, "tile_object_sentinel_frame_right2_gfx");
+        extractSentinelNameTableData(tiles, 7, 1, 9, 5, "tile_object_sentinel_frame_right3_gfx");
+        extractSentinelNameTableData(tiles, 9, 1, 11, 5, "tile_object_sentinel_frame_right4_gfx");
+        extractSentinelNameTableData(tiles, 11, 0, 13, 5, "tile_object_sentinel_frame_attack_right0_gfx");
+        extractSentinelNameTableData(tiles, 13, 1, 16, 5, "tile_object_sentinel_frame_attack_right1_gfx");
         // left frames:
-        extractNameTableData(tiles, 14, 6, 16, 10, "atlantis_centinel_frame_left_0");
-        extractNameTableData(tiles, 12, 6, 14, 10, "atlantis_centinel_frame_left_1");
-        extractNameTableData(tiles, 9, 6, 12, 10, "atlantis_centinel_frame_left_2");
-        extractNameTableData(tiles, 7, 6, 9, 10, "atlantis_centinel_frame_left_3");
-        extractNameTableData(tiles, 5, 6, 7, 10, "atlantis_centinel_frame_left_4");
-        extractNameTableData(tiles, 3, 5, 5, 10, "atlantis_centinel_frame_left_attack_0");
-        extractNameTableData(tiles, 0, 6, 3, 10, "atlantis_centinel_frame_left_attack_1");
+        extractSentinelNameTableData(tiles, 14, 6, 16, 10, "tile_object_sentinel_frame_left0_gfx");
+        extractSentinelNameTableData(tiles, 12, 6, 14, 10, "tile_object_sentinel_frame_left1_gfx");
+        extractSentinelNameTableData(tiles, 9, 6, 12, 10, "tile_object_sentinel_frame_left2_gfx");
+        extractSentinelNameTableData(tiles, 7, 6, 9, 10, "tile_object_sentinel_frame_left3_gfx");
+        extractSentinelNameTableData(tiles, 5, 6, 7, 10, "tile_object_sentinel_frame_left4_gfx");
+        extractSentinelNameTableData(tiles, 3, 5, 5, 10, "tile_object_sentinel_frame_attack_left0_gfx");
+        extractSentinelNameTableData(tiles, 0, 6, 3, 10, "tile_object_sentinel_frame_attack_left1_gfx");
 
     }
     
     
-    public static void extractNameTableData(int tiles[][], int x0, int y0, int x1, int y1, String tag)
+    public static void extractSentinelNameTableData(int tiles[][], int x0, int y0, int x1, int y1, String tag)
     {
         System.out.println(tag + ":");
+        System.out.println("  db 3, 5");
+        System.out.println("  dw " + tag + "_tiles");        
+        System.out.println(tag + "_tiles:");
+        if (y1 - y0 < 5) {
+            System.out.println("  db 0, 0, 0");
+        }
         for(int i = y0;i<y1;i++) {
             String line = "";
             for(int j = x0;j<x1;j++) {
@@ -320,6 +325,7 @@ public class GenerateTiles {
                     line += ", " + tiles[j][i];
                 }
             }
+            if (x1 - x0 < 3) line += ", 0";
             System.out.println(line);
         }
     }

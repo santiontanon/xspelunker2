@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="23">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="24">
  <properties>
   <property name="down" value="hole"/>
   <property name="left" value="hole"/>
@@ -34,5 +34,6 @@
   <object id="19" type="item" x="80" y="24" width="16" height="16"/>
   <object id="20" type="4x4-item" x="0" y="48" width="32" height="32"/>
   <object id="21" type="big-item" x="0" y="56" width="32" height="24"/>
+  <object id="23" type="sentinel" x="56" y="8" width="16" height="32"/>
  </objectgroup>
 </map>

@@ -184,11 +184,15 @@ pcg_generate_room_reset_state:
 
 	xor a
 	ld (boss__in_boss_room), a
+	ld (tmp_enemy_pcg_tile_enemy_workmemory_usage), a
+	ld (tmp_enemy_pcg_tile_enemy_spawned_type), a
+	ld a, #7f  ; first enemy ID (enemy IDs are only used to track which one was already killed, for respawn)
+	ld (tmp_enemy_pcg_next_enemy_id), a
 
 	ld hl, current_room__initial_enemy_ids
 	ld bc, (current_room__initial_enemy_ids_end - current_room__initial_enemy_ids) - 1
 	ld a, #ff
-	jp clear_memory_a	
+	jp clear_memory_a
 
 
 ;-----------------------------------------------
@@ -440,6 +444,8 @@ pcg_generate_room__fg_chunk_object_loop:
 					jr z, pcg_generate_room__fg_chunk_object_loop_spawn_pushable_block
 					cp CHUNK_LOCATION_LAVA_GENERATOR
 					jr z, pcg_generate_room__fg_chunk_object_loop_spawn_lava_generator
+					cp CHUNK_LOCATION_SENTINEL
+					jr z, pcg_generate_room__fg_chunk_object_loop_spawn_sentinel
 					jr pcg_generate_room__fg_chunk_object_loop_next
 pcg_generate_room__fg_chunk_object_loop_spawn_pushable_block:
 					; it's a pushable block, spawn it:
@@ -478,6 +484,17 @@ pcg_generate_room__fg_chunk_object_loop_spawn_lava_generator:
 						ex de, hl
 						ld c, PCG_PAGE_ENEMIES
 						ld hl, pcg_generate_room__spawn_lava_generator
+						call call_hl_in_page_c_8000
+					pop de
+					pop hl
+					jr pcg_generate_room__fg_chunk_object_loop_next
+pcg_generate_room__fg_chunk_object_loop_spawn_sentinel:
+					; it's an atlantis sentinel robot, spawn it:
+					push hl
+					push de
+						ex de, hl
+						ld c, PCG_PAGE_ENEMIES
+						ld hl, pcg_generate_room__spawn_sentinel
 						call call_hl_in_page_c_8000
 					pop de
 					pop hl

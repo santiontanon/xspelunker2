@@ -245,11 +245,13 @@ pcg_generate_room__enemy_respawn_logic__find_tile_enemy_by_id_not_found:
 
 ;-----------------------------------------------
 pcg_generate_room__spawn_enemies:
-	xor a
-	ld (tmp_enemy_pcg_tile_enemy_workmemory_usage), a
-	ld (tmp_enemy_pcg_tile_enemy_spawned_type), a
-	ld a, #7f  ; first enemy ID (enemy IDs are only used to track which one was already killed, for respawn)
-	ld (tmp_enemy_pcg_next_enemy_id), a
+	; this is already initialized in 'pcg_generate_room_reset_state'
+; 	xor a
+; 	ld (tmp_enemy_pcg_tile_enemy_workmemory_usage), a
+; 	ld (tmp_enemy_pcg_tile_enemy_spawned_type), a
+; 	ld a, #7f  ; first enemy ID (enemy IDs are only used to track which one was already killed, for respawn)
+; 	ld (tmp_enemy_pcg_next_enemy_id), a
+
 	ld a, (current_world__difficulty)
 	ld hl, pcg_enemy_generation_table_easy
 	or a
@@ -1541,14 +1543,13 @@ pcg_generate_room__spawn_lava_generator_difficulty_set:
 		inc hl
 		ld (hl), d
 		ld a, (tmp_enemy_pcg_tile_enemy_workmemory_usage)
-		add a, CARNIVORE_PLANT_WORKMEMORY_USAGE
+		add a, LAVA_GENERATOR_WORKMEMORY_USAGE
 		ld (tmp_enemy_pcg_tile_enemy_workmemory_usage), a
 	pop hl
 	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
 	add hl, bc
 	ld (tmp_pcg_room__next_tile_object_ptr), hl	
 	ret
-
 
 
 ;-----------------------------------------------
@@ -1560,7 +1561,7 @@ pcg_generate_room__spawn_stone_owl:
 	call pcg_generate_room__find_4x4_enemy_spots
 	or a
 	ret z
-	; we found at leat one viable position, spawn the plant:
+	; we found at leat one viable position, spawn the owl:
 	ld hl, ptr_to_new_tile_object
 	ld c, TILES_PAGE
 	call call_hl_in_page_c_8000
@@ -1608,6 +1609,87 @@ pcg_generate_room__spawn_stone_owl:
 	ld a, ENEMY_TILES_PAGE
 	ld (enemy_tiles_to_upload_to_vdp_page), a
 	ld hl, enemy_stone_owl_hit
+	ld (tile_enemy_hit_fn_ptr), hl
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - de: ptr to the room chunk object where we will spawn the sentinel
+pcg_generate_room__spawn_sentinel:
+  	ex de, hl  ; hl: ptr to room chunk object
+	ld a, (tmp_enemy_pcg_tile_enemy_workmemory_usage)
+	add SENTINEL_WORKMEMORY_USAGE
+	cp (tile_enemy_work_memory_end - tile_enemy_work_memory) + 1  ; + 1 so that we can use "nc" as the condition
+	ret nc  ; if we do not have enough work memory, do not spawn
+
+	; probability of spawning, depending on the difficulty level:
+; 	ld c, 64  ; easy
+; 	ld a, (current_world__difficulty)
+; 	or a
+; 	jr z, pcg_generate_room__spawn_lava_generator_difficulty_set
+; 	ld c, 128  ; normal
+; 	dec a
+; 	jr z, pcg_generate_room__spawn_lava_generator_difficulty_set
+; 	ld c, 196  ; hard
+; 	dec a
+; 	jr z, pcg_generate_room__spawn_lava_generator_difficulty_set
+; 	ld c, 255  ; very hard
+; pcg_generate_room__spawn_lava_generator_difficulty_set:
+; 	call random_a
+; 	cp c
+; 	ret nc
+
+	ld c, TAG_ENEMY_SENTINEL
+	call pcg_spawn_enemies__tile_enemy_type_check_hittable
+	ret nz
+	ld de, (tmp_pcg_room__next_tile_object_ptr)
+	push de
+		ld a, (tmp_enemy_pcg_next_enemy_id)
+		ld (de), a  ; ID
+		inc a
+		ld (tmp_enemy_pcg_next_enemy_id), a
+		inc de
+		ld a, TAG_ENEMY_SENTINEL
+		ld (de), a  ; type
+		inc de
+		inc hl
+		ld a, (tmp_pcg_room__chunk_x)
+		add a, (hl)  ; x relative to this chunk
+		ld (de), a  ; x
+		inc de
+		inc hl
+		ld a, (tmp_pcg_room__chunk_y)
+		add a, (hl)  ; y relative to this chunk
+		ld (de), a  ; y
+		inc de
+		xor a
+		ld (de), a  ; state
+		inc de
+		ld (de), a  ; state timer
+		inc de
+		inc de
+		ex de, hl
+
+		ld de, tile_enemy_work_memory
+		ld a, (tmp_enemy_pcg_tile_enemy_workmemory_usage)
+		ADD_DE_A
+		ld (hl), e  ; work memory ptr
+		inc hl
+		ld (hl), d
+		ld a, (tmp_enemy_pcg_tile_enemy_workmemory_usage)
+		add a, SENTINEL_WORKMEMORY_USAGE
+		ld (tmp_enemy_pcg_tile_enemy_workmemory_usage), a
+	pop hl
+	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
+	add hl, bc
+	ld (tmp_pcg_room__next_tile_object_ptr), hl	
+
+	ld hl, enemy_sentinel_tiles_zx0
+	ld (enemy_tiles_to_upload_to_vdp), hl
+	ld a, ENEMY_TILES_PAGE
+	ld (enemy_tiles_to_upload_to_vdp_page), a
+	ld hl, enemy_sentinel_hit
 	ld (tile_enemy_hit_fn_ptr), hl
 	ret
 

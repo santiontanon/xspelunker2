@@ -11,6 +11,8 @@ LAVA_GENERATOR_WORKMEMORY_USAGE: equ LAVA_GENERATOR_MAX_LAVA_LENGTH * 2  ; 16
 
 STONE_OWL_WORKMEMORY_USAGE: equ 16
 
+SENTINEL_WORKMEMORY_USAGE: equ 15
+
 
 ;-----------------------------------------------
 ; input:
@@ -734,6 +736,7 @@ update_tile_objects_enemy_ant_colony_count_ants_ant:
 ; - e: tile idx that was hit
 ; - iyl: collision ID
 ; - iyh: weapon damage
+enemy_sentinel_hit:
 enemy_stone_owl_hit:
 enemy_ant_colony_hit:
 enemy_bee_hive_hit:
@@ -1508,74 +1511,190 @@ room_render_tile_objects_undraw_enemy_stone_owl:
 
 
 ;-----------------------------------------------
-atlantis_centinel_frame_right_0:
-  db 0, 64
-  db 65, 66
-  db 67, 68
-  db 69, 70
-atlantis_centinel_frame_right_1:
-  db 0, 64
-  db 65, 66
-  db 67, 71
-  db 69, 72
-atlantis_centinel_frame_right_2:
+; input:
+; - hl: object ptr + 1
+update_tile_objects_enemy_sentinel:
+	dec hl
+	push hl
+	pop ix
+
+	; ...
+	jp update_tile_objects_loop_continue
+
+
+;-----------------------------------------------
+; input:
+; - hl: object ptr + 1
+room_render_tile_objects_render_enemy_sentinel:
+	dec hl
+	push hl
+	pop ix
+
+	; get frame to draw:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)
+	ld hl, tile_object_sentinel_frames
+	add a, a
+	ADD_HL_A
+	ld a, (hl)
+	inc hl
+	ld h, (hl)
+	ld l, a
+
+	; draw saving bg to work memory:
+	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	dec b  ; sentinel is 3x5, but we are treating it as 2x4
+	ld e, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR)
+	ld d, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR + 1)
+	ld a, 1
+	ld (de), a  ; mark that we have saved background
+	inc de
+	ld ixl, e
+	ld ixh, d
+	ld iyl, c
+	ld iyh, b
+	call room_render_tile_objects_render_saving_background
+	jp room_render_tile_objects_loop_continue
+
+
+tile_object_sentinel_frames:
+	dw tile_object_sentinel_frame_right0_gfx - 1  ; right 0
+	dw tile_object_sentinel_frame_right1_gfx - 1  ; right 1
+	dw tile_object_sentinel_frame_right2_gfx - 1  ; right 2
+	dw tile_object_sentinel_frame_right3_gfx - 1  ; right 3
+	dw tile_object_sentinel_frame_right4_gfx - 1  ; right 4
+	dw tile_object_sentinel_frame_attack_right0_gfx - 1  ; attack right 0
+	dw tile_object_sentinel_frame_attack_right1_gfx - 1  ; attack right 1
+	dw tile_object_sentinel_frame_left0_gfx - 1  ; left 0
+	dw tile_object_sentinel_frame_left1_gfx - 1  ; left 1
+	dw tile_object_sentinel_frame_left2_gfx - 1  ; left 2
+	dw tile_object_sentinel_frame_left3_gfx - 1  ; left 3
+	dw tile_object_sentinel_frame_left4_gfx - 1  ; left 4
+	dw tile_object_sentinel_frame_attack_left0_gfx - 1  ; attack left 0
+	dw tile_object_sentinel_frame_attack_left1_gfx - 1  ; attack left 1
+
+tile_object_sentinel_frame_right0_gfx:
+  db 3, 5
+  dw tile_object_sentinel_frame_right0_gfx_tiles
+tile_object_sentinel_frame_right0_gfx_tiles:
+  db 0, 0, 0
+  db 0, 64, 0
+  db 65, 66, 0
+  db 67, 68, 0
+  db 69, 70, 0
+tile_object_sentinel_frame_right1_gfx:
+  db 3, 5
+  dw tile_object_sentinel_frame_right1_gfx_tiles
+tile_object_sentinel_frame_right1_gfx_tiles:
+  db 0, 0, 0
+  db 0, 64, 0
+  db 65, 66, 0
+  db 67, 71, 0
+  db 69, 72, 0
+tile_object_sentinel_frame_right2_gfx:
+  db 3, 5
+  dw tile_object_sentinel_frame_right2_gfx_tiles
+tile_object_sentinel_frame_right2_gfx_tiles:
+  db 0, 0, 0
   db 0, 0, 64
   db 0, 65, 66
   db 0, 73, 68
   db 74, 75, 70
-atlantis_centinel_frame_right_3:
-  db 0, 64
-  db 65, 66
-  db 67, 76
-  db 77, 78
-atlantis_centinel_frame_right_4:
-  db 0, 64
-  db 65, 66
-  db 79, 80
-  db 81, 0
-atlantis_centinel_frame_right_attack_0:
-  db 82, 0
-  db 83, 64
-  db 84, 66
-  db 85, 68
-  db 69, 70
-atlantis_centinel_frame_right_attack_1:
+tile_object_sentinel_frame_right3_gfx:
+  db 3, 5
+  dw tile_object_sentinel_frame_right3_gfx_tiles
+tile_object_sentinel_frame_right3_gfx_tiles:
+  db 0, 0, 0
+  db 0, 64, 0
+  db 65, 66, 0
+  db 67, 76, 0
+  db 77, 78, 0
+tile_object_sentinel_frame_right4_gfx:
+  db 3, 5
+  dw tile_object_sentinel_frame_right4_gfx_tiles
+tile_object_sentinel_frame_right4_gfx_tiles:
+  db 0, 0, 0
+  db 0, 64, 0
+  db 65, 66, 0
+  db 79, 80, 0
+  db 81, 0, 0
+tile_object_sentinel_frame_attack_right0_gfx:
+  db 3, 5
+  dw tile_object_sentinel_frame_attack_right0_gfx_tiles
+tile_object_sentinel_frame_attack_right0_gfx_tiles:
+  db 82, 0, 0
+  db 83, 64, 0
+  db 84, 66, 0
+  db 85, 68, 0
+  db 69, 70, 0
+tile_object_sentinel_frame_attack_right1_gfx:
+  db 3, 5
+  dw tile_object_sentinel_frame_attack_right1_gfx_tiles
+tile_object_sentinel_frame_attack_right1_gfx_tiles:
+  db 0, 0, 0
   db 0, 64, 0
   db 86, 87, 88
   db 85, 68, 0
   db 69, 70, 0
-atlantis_centinel_frame_left_0:
-  db 190, 0
-  db 169, 189
-  db 176, 177
-  db 145, 160
-atlantis_centinel_frame_left_1:
-  db 190, 0
-  db 169, 189
-  db 144, 177
-  db 128, 160
-atlantis_centinel_frame_left_2:
+tile_object_sentinel_frame_left0_gfx:
+  db 3, 5
+  dw tile_object_sentinel_frame_left0_gfx_tiles
+tile_object_sentinel_frame_left0_gfx_tiles:
+  db 0, 0, 0
+  db 190, 0, 0
+  db 169, 189, 0
+  db 176, 177, 0
+  db 145, 160, 0
+tile_object_sentinel_frame_left1_gfx:
+  db 3, 5
+  dw tile_object_sentinel_frame_left1_gfx_tiles
+tile_object_sentinel_frame_left1_gfx_tiles:
+  db 0, 0, 0
+  db 190, 0, 0
+  db 169, 189, 0
+  db 144, 177, 0
+  db 128, 160, 0
+tile_object_sentinel_frame_left2_gfx:
+  db 3, 5
+  dw tile_object_sentinel_frame_left2_gfx_tiles
+tile_object_sentinel_frame_left2_gfx_tiles:
+  db 0, 0, 0
   db 190, 0, 0
   db 169, 189, 0
   db 176, 95, 0
   db 145, 93, 94
-atlantis_centinel_frame_left_3:
-  db 190, 0
-  db 169, 189
-  db 92, 177
-  db 90, 91
-atlantis_centinel_frame_left_4:
-  db 190, 0
-  db 169, 189
-  db 223, 177
-  db 0, 222
-atlantis_centinel_frame_left_attack_0:
-  db 0, 221
-  db 190, 220
-  db 169, 207
-  db 176, 206
-  db 145, 160
-atlantis_centinel_frame_left_attack_1:
+tile_object_sentinel_frame_left3_gfx:
+  db 3, 5
+  dw tile_object_sentinel_frame_left3_gfx_tiles
+tile_object_sentinel_frame_left3_gfx_tiles:
+  db 0, 0, 0
+  db 190, 0, 0
+  db 169, 189, 0
+  db 92, 177, 0
+  db 90, 91, 0
+tile_object_sentinel_frame_left4_gfx:
+  db 3, 5
+  dw tile_object_sentinel_frame_left4_gfx_tiles
+tile_object_sentinel_frame_left4_gfx_tiles:
+  db 0, 0, 0
+  db 190, 0, 0
+  db 169, 189, 0
+  db 223, 177, 0
+  db 0, 222, 0
+tile_object_sentinel_frame_attack_left0_gfx:
+  db 3, 5
+  dw tile_object_sentinel_frame_attack_left0_gfx_tiles
+tile_object_sentinel_frame_attack_left0_gfx_tiles:
+  db 0, 221, 0
+  db 190, 220, 0
+  db 169, 207, 0
+  db 176, 206, 0
+  db 145, 160, 0
+tile_object_sentinel_frame_attack_left1_gfx:
+  db 3, 5
+  dw tile_object_sentinel_frame_attack_left1_gfx_tiles
+tile_object_sentinel_frame_attack_left1_gfx_tiles:
+  db 0, 0, 0
   db 0, 190, 0
   db 191, 204, 205
   db 0, 176, 206
@@ -1585,24 +1704,25 @@ atlantis_centinel_frame_left_attack_1:
 ;-----------------------------------------------
 ; input:
 ; - hl: object ptr + 1
-update_tile_objects_enemy_sentinel:
-	; ...
-	jp update_tile_objects_loop_continue
-
-
-;-----------------------------------------------
-; input:
-; - hl: object ptr + 1
-room_render_tile_objects_render_enemy_sentinel:
-	; ...
-	jp room_render_tile_objects_loop_continue
-
-
-;-----------------------------------------------
-; input:
-; - hl: object ptr + 1
 room_render_tile_objects_undraw_enemy_sentinel:
-	; ...
+	dec hl
+	push hl
+	pop ix
+	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+    dec b  ; sentinel is 3x5, but we are treating it as 2x4
+	ld e, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR)
+	ld d, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR + 1)
+	ld a, (de)
+	or a
+	jp z, room_undraw_tile_objects_loop_continue  ; if we have not yet saved background, do not undraw
+	inc de
+	ld iyl, e
+	ld iyh, d
+	ld ixl, c
+	ld ixh, b
+	ld hl, tile_object_sentinel_frame_right0_gfx - 1
+	call room_undraw_tile_objects_restore_background
 	jp room_undraw_tile_objects_loop_continue
 
 

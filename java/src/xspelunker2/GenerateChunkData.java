@@ -322,6 +322,8 @@ public class GenerateChunkData {
                 return 12;
             case "lava-generator":
                 return 13;
+            case "sentinel":
+                return 14;
             default:
                 throw new Exception("unsuported chunk location type: " + type);
         }
