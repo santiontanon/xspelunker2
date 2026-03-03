@@ -1,9 +1,6 @@
 to do:
 
 ***- atlantis sentinel:
-  ***- throw stone (if player in front, throw a directional stone that can be destroyed, but has 2 hitpoints, and is not shieldable)
-    ***- add stone bullet sprite and enemy type (if I need 2 sprites, remove one from the ghosts)
-    ***- if player is in the correct direction, fire directionally, otherwise, just fire at a predefined direction (e.g. forward)
   ***- create additional decoration sprite (use a single sprite and keep redefining it for whatever is needed for the current frame)
   ***- fire lasers either forward, or diagonal down/up depending on where the player is
 

@@ -499,8 +499,12 @@ public class GenerateSprites {
         data.addAll(extractSpriteFlipped(sourceImage, 16, 48, 15));  // 
         data.addAll(extractSpriteFlipped(sourceImage, 32, 48, 15));  // left shoot
         data.addAll(extractSpriteFlipped(sourceImage, 48, 48, 15));  // 
-        data.addAll(extractSprite(sourceImage, 64, 48, 15));  // right idle
-        data.addAll(extractSpriteFlipped(sourceImage, 64, 48, 15));  // left idle
+        // atlantis sentinel rock (29):
+        data.addAll(extractSprite(sourceImage, 64, 224, 15));
+        // atlantis sentinel decoration:
+        for(int i = 0;i<32;i++) {
+            data.add(0);
+        }
         // bone bullet (31)
         data.addAll(extractSprite(sourceImage, 80, 0, 15));
         data.addAll(extractSprite(sourceImage, 80, 16, 15));

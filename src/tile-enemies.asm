@@ -1679,7 +1679,7 @@ update_tile_objects_enemy_sentinel_state_2_continue2:
 	jp z, update_tile_objects_enemy_sentinel_state_0
 	cp 7
 	jp z, update_tile_objects_enemy_sentinel_state_0
-	jr update_tile_objects_enemy_sentinel_continue
+	jp update_tile_objects_enemy_sentinel_continue
 update_tile_objects_enemy_sentinel_state_2_wall:
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1)
 	cp 7
@@ -1722,9 +1722,6 @@ update_tile_objects_enemy_sentinel_state_4_done_right:
 	ld  (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1), 0
 	jp update_tile_objects_enemy_sentinel_state_0
 update_tile_objects_enemy_sentinel_state_4_shoot:
-	; spawn projectile:
-	; ...
-
 	; frame 6 (right) or 13 (left):
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1)
 	cp 7
@@ -1732,9 +1729,48 @@ update_tile_objects_enemy_sentinel_state_4_shoot:
 update_tile_objects_enemy_sentinel_state_4_shoot_left:
 	ld  (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1), 13
 	dec (ix + ROOM_TILE_OBJECT_STRUCT_X)
-	jr update_tile_objects_enemy_sentinel_continue
+	ld e, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	jr update_tile_objects_enemy_sentinel_state_4_shoot_spawn_projectyle
 update_tile_objects_enemy_sentinel_state_4_shoot_right:
 	ld  (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1), 6
+	ld e, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	inc e
+	inc e
+update_tile_objects_enemy_sentinel_state_4_shoot_spawn_projectyle:
+	; spawn projectile:
+	ld a, (player_x + 1)
+	sub e
+	ld c, a
+	ld d, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	inc d
+	ld a, (player_y + 1)
+	sub d
+	ld b, a
+	push bc
+	push de
+		call ptr_to_new_sprite_enemy
+	pop de
+	pop bc
+	jr nz, update_tile_objects_enemy_sentinel_continue
+	ld (hl), 0  ; ID
+	inc hl
+	ld (hl), ENEMY_SENTINEL_ROCK
+	inc hl
+	ld (hl), 0  ; pixel X
+	inc hl
+	ld (hl), e  ; tile X
+	inc hl
+	ld (hl), 4  ; pixel Y
+	inc hl
+	ld (hl), d  ; tile Y
+	inc hl
+	ld (hl), 0  ; state
+	inc hl
+	ld (hl), c  ; speed x
+	inc hl
+	ld (hl), b  ; speed y
+	ld hl, SFX_enemy_bullet
+	call play_SFX_with_high_priority
 	jr update_tile_objects_enemy_sentinel_continue
 
 update_tile_objects_enemy_sentinel_state_4_prepare:

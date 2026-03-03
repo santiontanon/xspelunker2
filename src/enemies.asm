@@ -50,6 +50,7 @@ enemy_update_fn_table:
 	dw update_enemy_ghost2
 	dw update_enemy_fishman
 	dw update_enemy_fishman2
+	dw update_enemy_sentinel_rock
 
 
 ;-----------------------------------------------
@@ -3167,9 +3168,54 @@ update_enemy_fishman_fire_right_spit_second_left:
 	jr update_enemy_fishman_fire_right_spit
 
 
+;-----------------------------------------------
+update_enemy_sentinel_rock:
+	ld iyh, 2  ; damage to deal
+	call update_enemy_hurt_player_bullet
+	
+	ld a, (current_world__difficulty_bullet_speed)
+	ld iyl, a
+	call update_enemy_bullet_bresenham_iyl_steps
+	; - b: amount to move in y
+	; - c: amount to move in x
+	ld a, c
+	add a, a
+	jr z, update_enemy_sentinel_rock_x_done
+	jp m, update_enemy_sentinel_rock_x_negative
+	push bc
+		call update_enemy_bullet_move_right_if_possible_a_times
+	pop bc
+	jp z, update_enemy_sentinel_rock_collision
+	jr update_enemy_sentinel_rock_x_done
+update_enemy_sentinel_rock_x_negative:
+	neg
+	push bc
+		call update_enemy_bullet_move_left_if_possible_a_times
+	pop bc
+	jp z, update_enemy_sentinel_rock_collision
+update_enemy_sentinel_rock_x_done:
 
+	ld a, b
+	add a, a
+	jr z, update_enemy_sentinel_rock_y_done
+	jp m, update_enemy_sentinel_rock_y_negative
+	call update_enemy_bullet_move_down_if_possible_a_times
+	jp z, update_enemy_sentinel_rock_collision
+	jr update_enemy_sentinel_rock_y_done
+update_enemy_sentinel_rock_y_negative:
+	neg
+	call update_enemy_bullet_move_up_if_possible_a_times
+	jp z, update_enemy_sentinel_rock_collision
+update_enemy_sentinel_rock_y_done:
 
-
+	ld d, COLOR_BLUE
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 29) * 4 
+	jp enemy_sprite_and_continue
+update_enemy_sentinel_rock_collision:
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	call spawn_explosion
+	jp update_enemy_delete
 
 ;-----------------------------------------------
 update_enemy_bullet_whirlwind:
@@ -3795,6 +3841,7 @@ update_enemy_fire_directional_bullet_towards_player_at_e_d:
 	ld (hl), 0  ; ID
 	inc hl
 	ld (hl), ENEMY_BULLET
+update_enemy_fire_directional_bullet_towards_player_continue:
 	inc hl
 	ld (hl), 0  ; pixel X
 	inc hl
