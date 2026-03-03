@@ -1624,21 +1624,21 @@ pcg_generate_room__spawn_sentinel:
 	ret nc  ; if we do not have enough work memory, do not spawn
 
 	; probability of spawning, depending on the difficulty level:
-; 	ld c, 64  ; easy
-; 	ld a, (current_world__difficulty)
-; 	or a
-; 	jr z, pcg_generate_room__spawn_lava_generator_difficulty_set
-; 	ld c, 128  ; normal
-; 	dec a
-; 	jr z, pcg_generate_room__spawn_lava_generator_difficulty_set
-; 	ld c, 196  ; hard
-; 	dec a
-; 	jr z, pcg_generate_room__spawn_lava_generator_difficulty_set
-; 	ld c, 255  ; very hard
-; pcg_generate_room__spawn_lava_generator_difficulty_set:
-; 	call random_a
-; 	cp c
-; 	ret nc
+	ld c, 64  ; easy
+	ld a, (current_world__difficulty)
+	or a
+	jr z, pcg_generate_room__spawn_sentinel_difficulty_set
+	ld c, 128  ; normal
+	dec a
+	jr z, pcg_generate_room__spawn_sentinel_difficulty_set
+	ld c, 196  ; hard
+	dec a
+	jr z, pcg_generate_room__spawn_sentinel_difficulty_set
+	ld c, 255  ; very hard
+pcg_generate_room__spawn_sentinel_difficulty_set:
+	call random_a
+	cp c
+	ret nc
 
 	ld c, TAG_ENEMY_SENTINEL
 	call pcg_spawn_enemies__tile_enemy_type_check_hittable

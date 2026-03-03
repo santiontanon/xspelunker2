@@ -6,7 +6,6 @@ to do:
     ***- if player is in the correct direction, fire directionally, otherwise, just fire at a predefined direction (e.g. forward)
   ***- create additional decoration sprite (use a single sprite and keep redefining it for whatever is needed for the current frame)
   ***- fire lasers either forward, or diagonal down/up depending on where the player is
-  ***- set back the probability of spawning depending on the difficulty level (in "pcg_generate_room__spawn_sentinel")
 
 - fifth boss, Atlantean Guardian (Underwater Boss?): A colossal robotic creature with bioluminescent features, resembling a deep-sea creature (laser beams from tentacles, summons robotic fish).
   - add boss name to the stats for game over screen
