@@ -3287,16 +3287,13 @@ player_weapon_hitbox_check_tile_enemy_loop_y:
 				ld b, c
 player_weapon_hitbox_check_tile_enemy_loop_x:
 				push bc
-					ld a, (hl)
-					cp 64
-					jr c, player_weapon_hitbox_check_tile_enemy_loop_x_skip
-					cp 96
-					jr nc, player_weapon_hitbox_check_tile_enemy_loop_x_skip
-					; hit!
-					ld e, a
-					ld hl, (tile_enemy_hit_fn_ptr)
-					ld c, TILES_PAGE
-					call call_hl_in_page_c_8000
+					ld e, (hl)
+					push hl
+						ld hl, (tile_enemy_hit_fn_ptr)
+						ld c, TILES_PAGE
+						call call_hl_in_page_c_8000
+					pop hl
+					jr nz, player_weapon_hitbox_check_tile_enemy_loop_x_skip
 				pop bc
 			pop hl
 		pop bc

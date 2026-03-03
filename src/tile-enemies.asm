@@ -533,10 +533,18 @@ room_render_tile_objects_undraw_enemy_carnivore_plant_continue:
 ; - e: tile idx that was hit
 ; - iyl: collision ID
 ; - iyh: weapon damage
+; output:
+; - z: hit
+; - nz: no hit
 enemy_carnivore_plant_hit:
 	call find_tile_enemy_ptr
 	ret nz
 	ld a, e
+	; only if hit was for tiles 64 - 96
+	cp 64
+	ret c
+	cp 96
+	jr nc, enemy_carnivore_plant_hit_no_hit
 	; these are tongue tiles, just retract the tongue: 68, 69, 70, 71, 72, 79, 87, 88, 89, 90
 	cp 68
 	jr c, enemy_carnivore_plant_hit_body
@@ -570,7 +578,12 @@ enemy_carnivore_plant_hit_continue:
 	ld (tile_enemy_last_collision_id), a
 
 	ld hl, SFX_enemy_hit
-	jp play_SFX_with_high_priority
+	call play_SFX_with_high_priority
+	xor a
+	ret
+enemy_carnivore_plant_hit_no_hit:
+	or 1
+	ret
 
 
 ;-----------------------------------------------
@@ -739,12 +752,21 @@ update_tile_objects_enemy_ant_colony_count_ants_ant:
 ; - e: tile idx that was hit
 ; - iyl: collision ID
 ; - iyh: weapon damage
-enemy_sentinel_hit:
+; output:
+; - z: hit
+; - nz: no hit
 enemy_stone_owl_hit:
 enemy_ant_colony_hit:
 enemy_bee_hive_hit:
 	call find_tile_enemy_ptr
 	ret nz
+	; only if hit was for tiles 64 - 96
+	ld a, e
+	cp 64
+	ret c
+	cp 96
+	jr nc, enemy_stone_owl_hit_no_hit
+enemy_sentinel_hit_entry_point:
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_HEALTH)
 	sub iyh
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_HEALTH), a
@@ -758,7 +780,33 @@ enemy_ant_colony_hit_continue:
 	ld (tile_enemy_last_collision_id), a
 
 	ld hl, SFX_enemy_hit
-	jp play_SFX_with_high_priority
+	call play_SFX_with_high_priority
+	xor a  ; z
+	ret
+enemy_stone_owl_hit_no_hit:
+	or 1
+	ret
+
+
+
+;-----------------------------------------------
+; input:
+; - e: tile idx that was hit
+; - iyl: collision ID
+; - iyh: weapon damage
+enemy_sentinel_hit:
+	; hits can happen in many different tiles, it's easier
+	; to get the tile type, check it was a "hazzard", and discard if it
+	; was tile 130 or 252 (spike tips)
+	ld a, e
+	cp 130
+	jr z, enemy_stone_owl_hit_no_hit
+	cp 252
+	jr z, enemy_stone_owl_hit_no_hit
+	call get_collision_tile_type_of_a
+	cp 3
+	ret nz
+	jr enemy_sentinel_hit_entry_point
 
 
 ;-----------------------------------------------

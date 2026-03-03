@@ -100,7 +100,7 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "read Maya?!", "STORY48", 10);
         addLineSafe(lines_with_constant_page3, "Michael! It's too", "STORY49", 10);
         addLineSafe(lines_with_constant_page3, "dangerous!", "STORY50", 10);
-        addLineSafe(lines_with_constant_page3, "I've been there!", "STORY51", 10);
+        addLineSafe(lines_with_constant_page3, "I've been there", "STORY51", 10);
         addLineSafe(lines_with_constant_page3, "before...", "STORY52", 10);
         addLineSafe(lines_with_constant_page3, "I am ready!", "STORY53", 10);
         
