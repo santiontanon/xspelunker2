@@ -11,7 +11,10 @@ LAVA_GENERATOR_WORKMEMORY_USAGE: equ LAVA_GENERATOR_MAX_LAVA_LENGTH * 2  ; 16
 
 STONE_OWL_WORKMEMORY_USAGE: equ 16
 
-SENTINEL_WORKMEMORY_USAGE: equ 15
+SENTINEL_WORKMEMORY_USAGE: equ 17
+; - 1 byte: background saved?
+; - 1 byte: original x when rendered
+; - 15 bytes: background buffer
 
 
 ;-----------------------------------------------
@@ -1520,23 +1523,183 @@ update_tile_objects_enemy_sentinel:
 
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_HEALTH)
 	or a
-	jr z, update_tile_objects_enemy_sentinel_killed	
+	jp z, update_tile_objects_enemy_sentinel_killed	
 
+	inc (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
 	; state switch:
-	; ...
-
+	; - 0: state switch
+	; - 1: idle (might fire a laser)
+	; - 2: walk right (might fire a laser)
+	; - 3: walk left (might fire a laser)
+	; - 4: throw stone
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)
+	or a
+	jr z, update_tile_objects_enemy_sentinel_state_0
+	dec a
+	jr z, update_tile_objects_enemy_sentinel_state_1
+	dec a
+	jp z, update_tile_objects_enemy_sentinel_state_2
+	dec a
+	jp z, update_tile_objects_enemy_sentinel_state_3
+	dec a
+	jp z, update_tile_objects_enemy_sentinel_state_4
+	; we should never get here
 update_tile_objects_enemy_sentinel_state_0:
+	ld c, 4
+	call random_modulo
+	inc a
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), a
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER), 0
+	jp update_tile_objects_enemy_sentinel_state_1_continue  ; so that it switches direction
+
+update_tile_objects_enemy_sentinel_state_1:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	cp 16
+	jr z, update_tile_objects_enemy_sentinel_state_0  ; change state!
+update_tile_objects_enemy_sentinel_state_1_continue:
 	; idle, just turn towards player:
 	ld a, (player_x + 1)
 	cp (ix + ROOM_TILE_OBJECT_STRUCT_X)
 	jr c, update_tile_objects_enemy_sentinel_state_0_left
 	; right:
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1), 0
-	jr update_tile_objects_enemy_sentinel_continue
+	jp update_tile_objects_enemy_sentinel_continue
 update_tile_objects_enemy_sentinel_state_0_left:
 	; left:
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1), 7
-; 	jr update_tile_objects_enemy_sentinel_continue
+	jp update_tile_objects_enemy_sentinel_continue
+
+update_tile_objects_enemy_sentinel_state_2:
+	; walk right:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1)
+	cp 7
+	jr c, update_tile_objects_enemy_sentinel_state_2_rfw
+update_tile_objects_enemy_sentinel_state_2_rbw:
+	ld hl, update_tile_objects_enemy_sentinel_walk_table_right_bw
+	jr update_tile_objects_enemy_sentinel_state_2_continue
+update_tile_objects_enemy_sentinel_state_2_rfw:
+	ld hl, update_tile_objects_enemy_sentinel_walk_table_right_fw
+update_tile_objects_enemy_sentinel_state_2_continue:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	and #03
+	jp nz, update_tile_objects_enemy_sentinel_continue
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	rrca
+	rrca
+	and #0f
+	ld c, a
+	add a, a
+	add a, c
+	ADD_HL_A  ; hl = pointer to the walk frame we want: collision check, target frame, x movement
+	ld a, (hl)
+	or a
+	jr z, update_tile_objects_enemy_sentinel_state_2_continue2
+	; collision check:
+	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	add a, c
+	ld c, a
+	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	inc b
+	inc b
+	inc b
+	; - there should be no wall at (x + offset, y + 3)
+	; - there should be wall/platform/laddertop/ropetop (x + offset, y + 4)
+	push hl
+	push bc
+		call get_room_tile_type
+	pop bc
+	pop hl
+	cp 2  ; wall
+	jp z, update_tile_objects_enemy_sentinel_state_2_wall
+	push hl
+		inc b
+		call general_check_collision
+	pop hl
+	jp nz, update_tile_objects_enemy_sentinel_state_2_wall
+update_tile_objects_enemy_sentinel_state_2_continue2:
+	inc hl
+	ld a, (hl)
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1), a
+	ld c, a
+	inc hl
+	ld a, (hl)
+	add a, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_X), a
+	; if we went back to frame 0 or 7, is that we are done with the step:
+	ld a, c
+	or a
+	jp z, update_tile_objects_enemy_sentinel_state_0
+	cp 7
+	jp z, update_tile_objects_enemy_sentinel_state_0
+	jr update_tile_objects_enemy_sentinel_continue
+update_tile_objects_enemy_sentinel_state_2_wall:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1)
+	cp 7
+	jr c, update_tile_objects_enemy_sentinel_state_2_wall_right
+update_tile_objects_enemy_sentinel_state_2_wall_left:
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1), 7
+	jp update_tile_objects_enemy_sentinel_state_0
+update_tile_objects_enemy_sentinel_state_2_wall_right:
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1), 0
+	jp update_tile_objects_enemy_sentinel_state_0
+
+update_tile_objects_enemy_sentinel_state_3:
+	; walk left:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1)
+	cp 7
+	jr c, update_tile_objects_enemy_sentinel_state_3_lbw
+update_tile_objects_enemy_sentinel_state_3_lfw:
+	ld hl, update_tile_objects_enemy_sentinel_walk_table_left_fw
+	jr update_tile_objects_enemy_sentinel_state_2_continue
+update_tile_objects_enemy_sentinel_state_3_lbw:
+	ld hl, update_tile_objects_enemy_sentinel_walk_table_left_bw
+	jr update_tile_objects_enemy_sentinel_state_2_continue
+
+update_tile_objects_enemy_sentinel_state_4:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	cp 16
+	jp z, update_tile_objects_enemy_sentinel_state_4_done
+	cp 8
+	jp c, update_tile_objects_enemy_sentinel_state_4_prepare
+	jp z, update_tile_objects_enemy_sentinel_state_4_shoot
+	jr update_tile_objects_enemy_sentinel_continue
+update_tile_objects_enemy_sentinel_state_4_done:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1)
+	cp 7
+	jp c, update_tile_objects_enemy_sentinel_state_4_done_right
+	ld  (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1), 7
+	inc (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	jp update_tile_objects_enemy_sentinel_state_0
+update_tile_objects_enemy_sentinel_state_4_done_right:
+	ld  (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1), 0
+	jp update_tile_objects_enemy_sentinel_state_0
+update_tile_objects_enemy_sentinel_state_4_shoot:
+	; spawn projectile:
+	; ...
+
+	; frame 6 (right) or 13 (left):
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1)
+	cp 7
+	jr c, update_tile_objects_enemy_sentinel_state_4_shoot_right
+update_tile_objects_enemy_sentinel_state_4_shoot_left:
+	ld  (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1), 13
+	dec (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	jr update_tile_objects_enemy_sentinel_continue
+update_tile_objects_enemy_sentinel_state_4_shoot_right:
+	ld  (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1), 6
+	jr update_tile_objects_enemy_sentinel_continue
+
+update_tile_objects_enemy_sentinel_state_4_prepare:
+	; frame 5 (right) or 12 (left):
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1)
+	cp 7
+	jr c, update_tile_objects_enemy_sentinel_state_4_prepare_right
+update_tile_objects_enemy_sentinel_state_4_prepare_left:
+	ld  (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1), 12
+	jr update_tile_objects_enemy_sentinel_continue
+update_tile_objects_enemy_sentinel_state_4_prepare_right:
+	ld  (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1), 5
+	; jr update_tile_objects_enemy_sentinel_continue
 
 update_tile_objects_enemy_sentinel_continue:
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1)
@@ -1578,6 +1741,39 @@ update_tile_objects_enemy_sentinel_killed:
 	jp update_tile_objects_loop
 
 
+update_tile_objects_enemy_sentinel_walk_table_right_fw:
+	; - if looking right: 1, 2, 3[x++], 4[x++], 0[done]
+	db   0, 1, 0  ; go to frame 1, no need for collision check
+	db   2, 2, 0  ; go to frame 2 if collision check at [x+2] succeeds
+	db   0, 3, 1  ; go to frame 3, no need for collision check (x++)
+	db   2, 4, 1  ; go to frame 4 if collision check at [x+2] succeeds (x++)
+	db   0, 0, 0  ; go to frame 0, no need for collision check
+
+update_tile_objects_enemy_sentinel_walk_table_right_bw:
+	; - if looking left: 10, 9, 8[x++], 11, 0[x++, done]
+	db   0, 10, 0  ; go to frame 10, no need for collision check
+	db   2,  9, 0  ; go to frame 9 if collision check at [x+2] succeeds
+	db   0,  8, 1  ; go to frame 8, no need for collision check (x++)
+	db   0, 11, 0  ; go to frame 11, no need for collision check
+	db   2,  7, 1  ; go to frame 7 if collision check at [x+2] succeeds (x++)
+
+update_tile_objects_enemy_sentinel_walk_table_left_fw:
+	; - if looking left: 8, 9[x--], 10, 11[x--], 7[done]
+	db   0,  8,  0  ; go to frame 10, no need for collision check
+	db  -2,  9, -1  ; go to frame 9 if collision check at [x+2] succeeds
+	db   0, 10,  0  ; go to frame 8, no need for collision check (x++)
+	db  -2, 11, -1  ; go to frame 11, no need for collision check
+	db   0,  7,  0  ; go to frame 7 if collision check at [x+2] succeeds (x++)
+
+update_tile_objects_enemy_sentinel_walk_table_left_bw:
+	; - if looking right: 3, 2[x--], 1, 4, 0[x--, done]
+	db   0, 3,  0  ; go to frame 1, no need for collision check
+	db  -2, 2, -1  ; go to frame 2 if collision check at [x+2] succeeds
+	db   0, 1,  0  ; go to frame 3, no need for collision check (x++)
+	db  -2, 4,  0  ; go to frame 4 if collision check at [x+2] succeeds (x++)
+	db   0, 0, -1  ; go to frame 0, no need for collision check
+
+
 ;-----------------------------------------------
 ; input:
 ; - hl: object ptr + 1
@@ -1605,6 +1801,9 @@ room_render_tile_objects_render_enemy_sentinel:
 	ld d, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR + 1)
 	ld a, 1
 	ld (de), a  ; mark that we have saved background
+	inc de
+	ld a, c
+	ld (de), a  ; x when rendering
 	inc de
 	ld ixl, e
 	ld ixh, d
@@ -1767,7 +1966,6 @@ room_render_tile_objects_undraw_enemy_sentinel:
 	dec hl
 	push hl
 	pop ix
-	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
 	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
     dec b  ; sentinel is 3x5, but we are treating it as 2x4
 	ld e, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR)
@@ -1775,6 +1973,9 @@ room_render_tile_objects_undraw_enemy_sentinel:
 	ld a, (de)
 	or a
 	jp z, room_undraw_tile_objects_loop_continue  ; if we have not yet saved background, do not undraw
+	inc de
+	ld a, (de)  ; x when we rendered
+	ld c, a
 	inc de
 	ld iyl, e
 	ld iyh, d

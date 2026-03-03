@@ -1676,13 +1676,15 @@ pcg_generate_room__spawn_sentinel:
 		ld de, tile_enemy_work_memory
 		ld a, (tmp_enemy_pcg_tile_enemy_workmemory_usage)
 		ADD_DE_A
+		xor a
+		ld (de), a  ; mark background as not saved
 		ld (hl), e  ; work memory ptr
 		inc hl
 		ld (hl), d
 		inc hl
-		ld (hl), 0  ; extra 1: current frame
+		ld (hl), a  ; extra 1: current frame
 		inc hl
-		ld (hl), 0  ; extra 2: previous frame
+		ld (hl), a  ; extra 2: previous frame
 		ld a, (tmp_enemy_pcg_tile_enemy_workmemory_usage)
 		add a, SENTINEL_WORKMEMORY_USAGE
 		ld (tmp_enemy_pcg_tile_enemy_workmemory_usage), a
