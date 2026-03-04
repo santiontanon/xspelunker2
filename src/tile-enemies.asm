@@ -806,6 +806,8 @@ enemy_sentinel_hit:
 	call get_collision_tile_type_of_a
 	cp 3
 	ret nz
+	call find_tile_enemy_ptr
+	ret nz	
 	jr enemy_sentinel_hit_entry_point
 
 
@@ -1580,6 +1582,7 @@ update_tile_objects_enemy_sentinel:
 	; - 2: walk right (might fire a laser)
 	; - 3: walk left (might fire a laser)
 	; - 4: throw stone
+	; - 5: initial state (spawn the sprite object)
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)
 	or a
 	jr z, update_tile_objects_enemy_sentinel_state_0
@@ -1591,6 +1594,8 @@ update_tile_objects_enemy_sentinel:
 	jp z, update_tile_objects_enemy_sentinel_state_3
 	dec a
 	jp z, update_tile_objects_enemy_sentinel_state_4
+	dec a
+	jp z, update_tile_objects_enemy_sentinel_state_5
 	; we should never get here
 update_tile_objects_enemy_sentinel_state_0:
 	ld c, 4
@@ -1602,9 +1607,13 @@ update_tile_objects_enemy_sentinel_state_0:
 
 update_tile_objects_enemy_sentinel_state_1:
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
-	cp 16
+	cp 4
 	jr z, update_tile_objects_enemy_sentinel_state_0  ; change state!
 update_tile_objects_enemy_sentinel_state_1_continue:
+	; chance of firing
+	call random_a
+	and #03
+	call z, update_tile_objects_enemy_sentinel_fire_laser
 	; idle, just turn towards player:
 	ld a, (player_x + 1)
 	cp (ix + ROOM_TILE_OBJECT_STRUCT_X)
@@ -1769,6 +1778,8 @@ update_tile_objects_enemy_sentinel_state_4_shoot_spawn_projectyle:
 	ld (hl), c  ; speed x
 	inc hl
 	ld (hl), b  ; speed y
+	inc hl
+	ld (hl), 1  ; health  ; must be 1, as otherwiise, the hitting logic would mess up speed y
 	ld hl, SFX_enemy_bullet
 	call play_SFX_with_high_priority
 	jr update_tile_objects_enemy_sentinel_continue
@@ -1795,6 +1806,67 @@ update_tile_objects_enemy_sentinel_continue:
 	ld hl, redraw_flags
 	set ROOM_REDRAW_FLAG_BIT, (hl)
 	jp update_tile_objects_loop_continue
+
+update_tile_objects_enemy_sentinel_state_5:
+	; spawn the extras object:
+	; spawn object for sprite decorations
+	call ptr_to_new_sprite_object
+	jp nz, update_tile_objects_enemy_sentinel_state_0
+	ld (hl), 0  ; ID
+	inc hl
+	ld (hl), SPRITE_OBJECT_TYPE_ATLANTIS_SENTINEL_EXTRAS
+	inc hl
+	inc hl
+	inc hl
+	inc hl
+	inc hl
+	ld (hl), #ff  ; we use 'state' to store the sprite we currently have uploaded
+; 	; store the work enemy ptr
+; 	ld bc, ROOM_OBJECT_STRUCT_EXTRA1 - 1
+; 	add hl, bc
+; 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR)
+; 	ld (hl), c
+; 	inc hl
+; 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR+ 1)
+; 	ld (hl), b 
+	jp update_tile_objects_enemy_sentinel_state_0
+
+update_tile_objects_enemy_sentinel_fire_laser:
+	call ptr_to_new_sprite_enemy
+	ret nz
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1)
+	cp 7
+	jr c, update_tile_objects_enemy_sentinel_fire_laser_right
+update_tile_objects_enemy_sentinel_fire_laser_left:
+	ld c, 0  ; x offset
+	ld b, 0  ; direction
+	jr update_tile_objects_enemy_sentinel_fire_laser_continue
+update_tile_objects_enemy_sentinel_fire_laser_right:
+	ld c, 2  ; x offset
+	ld b, 4  ; direction
+update_tile_objects_enemy_sentinel_fire_laser_continue:
+	ld (hl), 0  ; ID
+	inc hl
+	ld (hl), ENEMY_BULLET_LASER  ; enemy type
+	inc hl
+	ld (hl), 0  ; pixel x
+	inc hl
+	ld a, e
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_X)  ; sentinel x
+	add a, c  ; x offset
+	ld (hl), a  ; tile x
+	inc hl
+	ld (hl), 0  ; pixel y
+	inc hl
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_Y)  ; boss y
+	ld (hl), a  ; tile y
+	inc hl
+	; although only 0 and 4 are implemented:
+	; 1: left-up, 0: left, 2: left-down
+	; 5: right-up, 4: right, 6: left-down
+	ld (hl), b  ; state / direction
+	ld hl, SFX_raygun
+	jp play_SFX_with_high_priority	
 
 update_tile_objects_enemy_sentinel_killed:
 	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)

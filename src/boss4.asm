@@ -2415,7 +2415,7 @@ update_boss4_spawn_blades_internal:
 	and #01
 	jr z, update_boss4_spawn_blades_internal_right
 	; 1: left-up, 0: left, 2: left-down
-	; 5: right-up, 0: right, 6: left-down
+	; 5: right-up, 4: right, 6: left-down
 	ld (hl), 0  ; state
 	ret
 update_boss4_spawn_blades_internal_right:

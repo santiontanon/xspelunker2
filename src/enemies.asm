@@ -15,6 +15,7 @@ enemy_update_fn_table:
 	dw update_enemy_blood_ball  ; boss 4 attack
 	dw update_enemy_boss4_blades  ; boss 4 attack
 	dw update_enemy_bullet_waterball
+	dw update_enemy_laser  ; atlantis sentinel attack
 	; enemies you can hit:
 	dw update_enemy_snake  ; left-to-right
 	dw update_enemy_snake_dasher  ; left-to-right + dash
@@ -3217,6 +3218,96 @@ update_enemy_sentinel_rock_collision:
 	call spawn_explosion
 	jp update_enemy_delete
 
+
+;-----------------------------------------------
+; return:
+; - nz: delete
+; - z: enemy still exists
+update_sprite_objects_atlantis_sentinel_extras_internal:
+	push ix
+	pop iy
+	ld hl, find_tile_enemy_ptr
+	ld c, TILES_PAGE
+	call call_hl_in_page_c_8000  ; ix: ptr to sentinel
+	ret nz
+
+	; get desired x, y:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	ld (iy + ROOM_OBJECT_STRUCT_TILE_X), a
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	ld (iy + ROOM_OBJECT_STRUCT_TILE_Y), a
+	ld (iy + ROOM_OBJECT_STRUCT_PIXEL_Y), 6
+
+	; get the requested frame (and upload only if it's different from the current one):
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA2)  ; the frame we have
+	add a, a
+	ld hl, update_sprite_objects_atlantis_sentinel_extras_internal_tbl
+	ADD_HL_A
+	ld a, (hl)  ; desired x offset
+	ld (iy + ROOM_OBJECT_STRUCT_PIXEL_X), a
+	inc hl
+	ld a, (hl)  ; desired sprite
+	cp (iy + ROOM_OBJECT_STRUCT_STATE)
+	jr z, update_sprite_objects_atlantis_sentinel_extras_internal_continue
+	ld (iy + ROOM_OBJECT_STRUCT_STATE), a
+	ld l, a
+	ld h, 0
+	add hl, hl
+	add hl, hl
+	add hl, hl
+	add hl, hl
+	add hl, hl
+	ld bc, atlantis_sentinel_sprites_bin
+	add hl, bc
+	ld de, SPRTBL2 + (FIRST_ENEMY_SPRITE_PATTERN + SENTINEL_DECORATION_SPRITE) * 32
+	ld bc, 32
+	call fast_LDIRVM_from_sprites_page
+update_sprite_objects_atlantis_sentinel_extras_internal_continue:
+
+	push iy
+	pop ix
+	ld d, COLOR_RED
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + SENTINEL_DECORATION_SPRITE) * 4
+	ld c, 0
+	call get_sprite_object_sprite_coordinates
+	call z, add_sprite_to_this_frame
+	xor a
+	ret
+
+
+; frame | sprite | x offset
+; -------------------------
+;     0        0          1
+;     1        0          1
+;     2        0          9
+;     3        0          1
+;     4        0          1
+;     5        1          1
+;     6        2          1
+; -------------------------
+;     7        3         -1
+;     8        3         -1
+;     9        3         -1
+;    10        3         -1
+;    11        3         -1
+;    12        4         -1
+;    13        5          7
+update_sprite_objects_atlantis_sentinel_extras_internal_tbl:
+	db 1, 0
+	db 1, 0
+	db 9, 0
+	db 1, 0
+	db 1, 0
+	db 1, 1
+	db 1, 2
+	db -1, 3
+	db -1, 3
+	db -1, 3
+	db -1, 3
+	db -1, 3
+	db -1, 4
+	db 7, 5
+
 ;-----------------------------------------------
 update_enemy_bullet_whirlwind:
 	ld iyh, 2  ; damage to deal
@@ -3666,6 +3757,50 @@ update_enemy_boss4_blades_movement_done:
 	add a, a
 	add a, a
 	ld e, a  ; e = (FIRST_ENEMY_SPRITE_PATTERN + 31 + (state % 3)) * 4 
+	jp enemy_sprite_and_continue
+
+
+;-----------------------------------------------
+update_enemy_laser:
+	ld iyh, 2  ; damage to deal
+	call update_enemy_hurt_player_shieldable_bullet
+	jp z, update_enemy_delete
+
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	and #04
+	jr z, update_enemy_laser_left
+update_enemy_laser_right:
+	ld a, (current_world__difficulty_bullet_speed)
+	add a, a
+	call update_enemy_bullet_move_right_if_possible_a_times
+	jp z, update_enemy_delete
+	jr update_enemy_laser_continue
+update_enemy_laser_left:
+	ld a, (current_world__difficulty_bullet_speed)
+	add a, a
+	call update_enemy_bullet_move_left_if_possible_a_times
+	jp z, update_enemy_delete
+update_enemy_laser_continue:
+; 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+; 	and #03
+; 	jr z, update_enemy_laser_movement_done
+; 	dec a
+; 	jp nz, update_enemy_laser_down
+; update_enemy_laser_up:
+; 	ld a, (current_world__difficulty_bullet_speed)
+; 	call update_enemy_bullet_move_up_if_possible_a_times
+; 	jp z, update_enemy_delete	
+; 	jr update_enemy_laser_movement_done
+; update_enemy_laser_down:
+; 	ld a, (current_world__difficulty_bullet_speed)
+; 	call update_enemy_bullet_move_down_if_possible_a_times
+; 	jp z, update_enemy_delete	
+; update_enemy_laser_movement_done:
+	ld d, COLOR_RED
+	ld e, 60  ; laser '-'
+; 	ld e, 72  ; \ 
+; 	ld e, 68  ; /
+; 	ld e, 64  ; |
 	jp enemy_sprite_and_continue
 
 

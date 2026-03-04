@@ -1663,9 +1663,10 @@ pcg_generate_room__spawn_sentinel_difficulty_set:
 		add a, (hl)  ; y relative to this chunk
 		ld (de), a  ; y
 		inc de
-		xor a
+		ld a, 5  ; initial state to spawn the sprite object		
 		ld (de), a  ; state
 		inc de
+		xor a
 		ld (de), a  ; state timer
 		inc de
 		ld a, 32

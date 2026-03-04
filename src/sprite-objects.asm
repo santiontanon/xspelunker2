@@ -209,7 +209,7 @@ update_sprite_objects_loop:
 	cp SPRITE_OBJECT_TYPE_4TILE_APPART_DUST
 	jr z, update_sprite_objects_4tile_appart_dust
 	cp SPRITE_OBJECT_TYPE_EXPLOSION
-	jr z, update_sprite_objects_explosion
+	jp z, update_sprite_objects_explosion
 	cp SPRITE_OBJECT_TYPE_BIG_EXPLOSION
 	jp z, update_sprite_objects_big_explosion
 	cp SPRITE_OBJECT_TYPE_SHOPKEEPER
@@ -222,6 +222,8 @@ update_sprite_objects_loop:
 	jp z, update_sprite_objects_boss_extras
 	cp SPRITE_OBJECT_TYPE_XIBALBA_LORD_GHOST
 	jp z, update_sprite_objects_xibalba_lord_ghost
+	cp SPRITE_OBJECT_TYPE_ATLANTIS_SENTINEL_EXTRAS
+	jp z, update_sprite_objects_atlantis_sentinel_extras
 update_sprite_objects_loop_next:
 	ld de, ROOM_OBJECT_STRUCT_SIZE
 	add ix, de
@@ -433,6 +435,19 @@ update_sprite_objects_xibalba_lord_ghost:
 	jp update_sprite_objects_loop_next
 
 
+
+;-----------------------------------------------
+update_sprite_objects_atlantis_sentinel_extras:
+	ld hl, update_sprite_objects_atlantis_sentinel_extras_internal
+	ld c, ENEMIES_PAGE
+	push ix
+		call call_hl_in_page_c_8000
+	pop ix
+	jp z, update_sprite_objects_loop_next
+	call sprite_object_remove_object
+	jp update_sprite_objects_loop_next_after_deletion
+
+
 ;-----------------------------------------------
 ; input:
 ; - ix: ptr to the bullet sprite object
@@ -510,16 +525,16 @@ update_sprite_objects_player_bullet_straight_ray:
 	or a
 	jr z, update_sprite_objects_player_bullet_straight_ray_up
 	jp p, update_sprite_objects_player_bullet_straight_ray_up_right
-	ld e, 72
+	ld e, 72  ; \ 
 	jr update_sprite_objects_player_bullet_straight_dart_sprite_set
 update_sprite_objects_player_bullet_straight_ray_up_right:
-	ld e, 68
+	ld e, 68  ; /
 	jr update_sprite_objects_player_bullet_straight_dart_sprite_set
 update_sprite_objects_player_bullet_straight_ray_up:
-	ld e, 64
+	ld e, 64  ; up
 	jr update_sprite_objects_player_bullet_straight_dart_sprite_set
 update_sprite_objects_player_bullet_straight_ray_fw:
-	ld e, 60
+	ld e, 60  ; right
 	jr update_sprite_objects_player_bullet_straight_dart_sprite_set
 
 update_sprite_objects_player_bullet_straight_dart:

@@ -1,11 +1,16 @@
 to do:
 
-***- atlantis sentinel:
-  ***- create additional decoration sprite (use a single sprite and keep redefining it for whatever is needed for the current frame)
-  ***- fire lasers either forward, or diagonal down/up depending on where the player is
+***- fifth boss, Atlantean Guardian (Underwater Boss?): A colossal robotic creature with bioluminescent features, resembling a deep-sea creature (laser beams from tentacles, summons robotic fish).
+  ***- mock up in gimp
+  ***- design the behaviors (is there any secret puzzle?)
+  ***- draw all the frames in gimp
+  ***- create boss room in TILED
+  ***- being able to enter the boss room in MSX
+  ***- spawn the boss, and draw it still
+  ***- implement all the behaviors
+  ***- being able to kill the boss and collect the reward
+  ***- add boss name to the stats for game over screen
 
-- fifth boss, Atlantean Guardian (Underwater Boss?): A colossal robotic creature with bioluminescent features, resembling a deep-sea creature (laser beams from tentacles, summons robotic fish).
-  - add boss name to the stats for game over screen
 - music: intro, letters/map, tablets/puzzles, game over, pyramid, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)
   - story: I like the original song: keep the same style and compose a variation
   - boss music (boss music increases in speed as health goes down: 50%, 25%)
