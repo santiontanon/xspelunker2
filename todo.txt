@@ -3,8 +3,10 @@ to do:
 ***- fifth boss, Atlantean Guardian (Underwater Boss?): A colossal robotic creature with bioluminescent features, resembling a deep-sea creature (laser beams from tentacles, summons robotic fish).
   ***- mock up in gimp
   ***- design the behaviors (is there any secret puzzle?)
+    ***- undodgeable attack unless you know the sequence (e.g. maybe the boss has a very big trident that it throws at you very fast always after a certain sequence, so, you need to memorize it and do the coreography)
   ***- draw all the frames in gimp
-  ***- create boss room in TILED
+  ***- create boss room in TILED:
+    ***- idea: bottom of the room is water (where the boss is), there are platforms you can jump on, and you can fall into the water. There are intermitent waterfalls that might push you onto the water if active.
   ***- being able to enter the boss room in MSX
   ***- spawn the boss, and draw it still
   ***- implement all the behaviors
@@ -55,7 +57,9 @@ to do:
   - The Maya were obsessed with sacrificing blood to their gods (the highest being extracting a beating heart from a person while still alive), then it was often burned so that the smoke will bring it to the gods. Can I add some puzzle/item/riddle about this? (maybe in the stella puzzle above, or maybe some blood meter that accumulates when you receive damage/die/kill-an-enemy and when full, things happen)
   - If the player enters a world name related to these theories (like "MU", "AZTLAN", or "COH"), it could trigger a world where the Atlantean ruins are "active"—meaning the tech still works, or different paths are open, or just some animations are played, and it's just a gimmic. (There should be a clue for this)
   - The "Firestone forge", which is in the Moon, and only active if you are in a world with the word "ATLANTIS" (or some variant) in it (add a clue).
-
+  - item that lets you fight a boss for a second time
+  - grave of the person who wrote all the story tablets, with a riddle you can only solve if you have seen all tablets
+  - gigantic maya statue monument that looks decoration, but it's actually a secret boss (to have a maya-themed final boss)
 
 --------------------
 
