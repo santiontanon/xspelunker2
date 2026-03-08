@@ -202,9 +202,9 @@ state_play_from_continue:
 ; 		ld e, CALENDAR_ROOM_ID
 ; 		ld e, 3  ; <- third boss
 ; 		ld e, 17  ; <- fourth boss
-		ld e, 0
+; 		ld e, 0
 ; 		ld e, TELEPORTER_ROOM_ID
-; 		ld e, TEMPLE_OF_POSEIDON_ID
+		ld e, TEMPLE_OF_POSEIDON_ID
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000

@@ -1,16 +1,17 @@
 to do:
 
-***- fifth boss, Atlantean Guardian (Underwater Boss?): A colossal robotic creature with bioluminescent features, resembling a deep-sea creature (laser beams from tentacles, summons robotic fish).
-  OK - create boss room in TILED:
-    OK - idea: bottom of the room is water (where the boss is), there are platforms you can jump on, and you can fall into the water. There are intermitent waterfalls that might push you onto the water if active (remember that at the beginning there is less water, and island is at the bottom)
-  ***- being able to enter the boss room in MSX
+***- fifth boss: 
+  ***- being able to enter the boss room in MSX:
+    ***- spawn lever: enter_boss_door__spawn_atlantis_boss_objects
+    ***- spawn tile that shows which boss will spawn (init based on a bit of the random seed)
+    ***- hitting it makes the hit sound
+    ***- hitting it swaps charybdis/scylla (and every 8, the skull, and every 32 the twin bosses sign)
+    ***- lever does nothing for now
   ***- draw all the frames in gimp for charybdis (crab). Make sure I can fit the tiles.
   ***- draw all the frames in gimp for scylla (octopus). Make sure I can fit the tiles.
   ***- spawn the boss, and draw it still:
-    ***- island with poseidon is at the bottom sticking out of a bit of water
-    ***- there is a pillar with a drawing of either charybdis or scylla (depending on seed) when you enter and a lever.
-      ***- if you hit the pillar, it rotates to the image of the other
-      ***- if you hit it anumber multiple of 32 times, it rotates to the image of both
+    ***- update "tile_collision_types_boss5"
+    ***- update "update_sprite_objects_boss_extras_boss_5"
     ***- when you activate the lever, water starts pouring in, water level rises and island starts to float, revealing that it is sitting on top of the boss
     ***- if the image was of both bosses, when you kill one, the other rises from the floor (already in the brain in a vat state)
   ***- Charybdis: implement all the behaviors

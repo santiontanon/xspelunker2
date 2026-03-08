@@ -127,6 +127,12 @@ enter_boss_door_loop:
 		ld de, boss_4_tiles_zx0
 		ld bc, tile_collision_types_boss4
 		ld iy, boss4_sprites_zx0
+		jr z, enter_boss_door__room_ptr_set
+		dec a
+		ld hl, boss_room_5_zx0
+		ld de, boss_5_tiles_zx0
+		ld bc, tile_collision_types_boss5
+		ld iy, boss5_sprites_zx0
 		; jr z, enter_boss_door__room_ptr_set
 		; ...
 
@@ -139,6 +145,8 @@ enter_boss_door__room_ptr_set:
 
 				ld a, (boss__current_boss_number)
 				cp 3  ; is it the xibalba lords boss?
+				jr z, enter_boss_door__room_prettified
+				cp 4  ; is it the atlantis boss?
 				jr z, enter_boss_door__room_prettified
 
 				; bosses 0, 1, 2 have pyramid biome:
@@ -187,6 +195,9 @@ enter_boss_door__room_prettified:
 		ld a, (boss__current_boss_number)
 		cp 3  ; is it the xibalba lords boss?
 		jr z, enter_boss_door__room_spawn_coordinates_set
+		ld bc, #0c02  ; 2, 12  ; atlantis boss start coordinates
+		cp 4  ; is it the atlantis boss?
+		jr z, enter_boss_door__room_spawn_coordinates_set
 		ld bc, #1404  ; 4, 20
 enter_boss_door__room_spawn_coordinates_set:
 		ld hl, player_x
@@ -201,7 +212,11 @@ enter_boss_door__room_spawn_coordinates_set:
 		; spawn any boss-specific objects:
 		ld a, (boss__current_boss_number)
 		cp 3
-		call enter_boss_door__spawn_xibalba_lords_objects
+		push af
+			call z, enter_boss_door__spawn_xibalba_lords_objects
+		pop af
+		cp 4
+		call z, enter_boss_door__spawn_atlantis_boss_objects
 
 		; clear the bbox:
 		ld hl, boss__clear_bbox_1 + 2
@@ -264,6 +279,11 @@ enter_boss_door__spawn_xibalba_lords_objects_loop:
 	xor a
 	ld (boss__4_first_lord), a
 	ld (boss__4_second_lord), a
+	ret
+
+
+enter_boss_door__spawn_atlantis_boss_objects:
+	; ...
 	ret
 
 
@@ -1159,6 +1179,8 @@ update_sprite_objects_boss_extras_internal:
 	jp z, update_sprite_objects_boss_extras_boss_3
 	cp 8  ; xibalba
 	jp z, update_sprite_objects_boss_extras_boss_4
+	cp 9  ; atlantis
+	jp z, update_sprite_objects_boss_extras_boss_5
 	; ...
 	ret
 
@@ -1471,6 +1493,11 @@ update_sprite_objects_boss_extras_boss_4_lord_x_ok:
 	jp add_sprite_to_this_frame
 
 
+update_sprite_objects_boss_extras_boss_5:
+	; ...
+	ret
+
+
 ;-----------------------------------------------
 ; input:
 ; - b: boss name ID for stats
@@ -1533,8 +1560,8 @@ update_boss_behavior:
 	ld hl, update_boss4_behavior
 	ld c, BOSS_4_PAGE
 	jp z, jp_to_hl_in_page_c_8000
-; 	cp 9  ; atlantis
-; 	jp z, update_boss5_behavior
+	cp 9  ; atlantis
+	jp z, update_boss5_behavior
 ; 	cp 10  ; mars
 ; 	jp z, update_boss6_behavior
 ; 	cp 11  ; moon
@@ -1585,3 +1612,21 @@ tile_collision_types_boss4:
     db 9, 9, 9, 2, 2, 9, 9, 9, 0, 0, 0, 0, 0, 2, 2, 2
     db 9, 9, 9, 2, 2, 9, 9, 9, 0, 0, 0, 0, 0, 2, 2, 2
     db 9, 9, 9, 2, 2, 1, 9, 9, 9, 2, 2, 2, 2, 2, 2, 2
+
+tile_collision_types_boss5:
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+    db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0
+    db 9, 11, 4, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
+    db 9, 0, 0, 0, 0, 2, 2, 9, 9, 9, 9, 9, 9, 9, 9, 9
+    db 9, 4, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 0, 0, 0, 0, 0, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 1, 1, 1, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
