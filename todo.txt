@@ -1,17 +1,47 @@
 to do:
 
 ***- fifth boss, Atlantean Guardian (Underwater Boss?): A colossal robotic creature with bioluminescent features, resembling a deep-sea creature (laser beams from tentacles, summons robotic fish).
-  ***- mock up in gimp
-  ***- design the behaviors (is there any secret puzzle?)
-    ***- undodgeable attack unless you know the sequence (e.g. maybe the boss has a very big trident that it throws at you very fast always after a certain sequence, so, you need to memorize it and do the coreography)
-  ***- draw all the frames in gimp
-  ***- create boss room in TILED:
-    ***- idea: bottom of the room is water (where the boss is), there are platforms you can jump on, and you can fall into the water. There are intermitent waterfalls that might push you onto the water if active.
+  OK - create boss room in TILED:
+    OK - idea: bottom of the room is water (where the boss is), there are platforms you can jump on, and you can fall into the water. There are intermitent waterfalls that might push you onto the water if active (remember that at the beginning there is less water, and island is at the bottom)
   ***- being able to enter the boss room in MSX
-  ***- spawn the boss, and draw it still
-  ***- implement all the behaviors
-  ***- being able to kill the boss and collect the reward
-  ***- add boss name to the stats for game over screen
+  ***- draw all the frames in gimp for charybdis (crab). Make sure I can fit the tiles.
+  ***- draw all the frames in gimp for scylla (octopus). Make sure I can fit the tiles.
+  ***- spawn the boss, and draw it still:
+    ***- island with poseidon is at the bottom sticking out of a bit of water
+    ***- there is a pillar with a drawing of either charybdis or scylla (depending on seed) when you enter and a lever.
+      ***- if you hit the pillar, it rotates to the image of the other
+      ***- if you hit it anumber multiple of 32 times, it rotates to the image of both
+    ***- when you activate the lever, water starts pouring in, water level rises and island starts to float, revealing that it is sitting on top of the boss
+    ***- if the image was of both bosses, when you kill one, the other rises from the floor (already in the brain in a vat state)
+  ***- Charybdis: implement all the behaviors
+    - idle: mouth animation + maybe claw animation (open/close). Chance of firing bullets through the eyes
+    - move left/right:
+      - Chance of firing bullets through the eyes
+      - If player is above any of its claws, chance of claw attack, it raises the claw, and closes it, trying to catch the player
+    - jump attack (only when island is on top): triggered if player is on top of the island
+      - crouches for a bit, and then jumps up until island crashes with the ceiling
+      - island shows damage after two hits, and gets destroyed after 4 hits, revealing the brain in a vat. At this point, boss accelerates a bit (to the next level of difficulty maybe?)
+    - flying claw: one of the claws (one at random of the ones that remain) detaches and flies up independently (with some rocket showing behind it), it flies up to the player height (minimum just above water) and then goes horizontally fast, to try to hit you. After each time, chance of going back.
+      - the dash should be so fast that it is udodgeable unless you are ready, go to the opposide side, and know it's coming. If you know it's coming, it should be easy to dodge.
+      - claws can be destroyed
+    - when claws are dettached, it can fire lasers from the arm stumps (only vertically or diagonally)
+  ***- Scylla: implement all the behaviors
+    - idle: just animate the arms: Chance of firing bullets through the eyes
+      - each arm has a fixed set of possible frames, e.g. 8 - 10. Animating them is just rotating through sequences of those poses. There are 5 arms (8?) being animated, the front 3 are red color, which it uses for attack, and the back three are darker color, which are decoration initially, and only attack as the front ones get destroyed.
+    - swim left/right: Chance of firing bullets through the eyes
+      - if player is on top of a tentacle, chance of going to tentacle attack
+    - jump attack (like Charybdis)
+    - tentacle attacks: one tentacle bends up, and then the top parts separate (showing thin cables connecting the parts). Several options:
+      - stretching all the way to the top, and trying to hit you.
+      - rising up to player level, and then stretching horizontally, trying to hit you
+      - these attacks are fast, you need to recognize them, or are hard to avoid (maybe there is a choreography, where it first attacks the ceiling, and then has a chance of doing the horizontal one, very fast afterwards)
+    - double tentacle attack: the same, but two tentacles (one of each side) do it at the same time (and at slightly offset vertical height, so it's even harder to dodge)
+  ***- being able to kill the boss and collect the reward:
+    ***- water drains and the power stone is there
+    ***- if you only kill 1, there will be an eye (of the one you killed)
+    ***- if you kill both, there will be an eye of each
+    ***- think of a puzzle where you actually need both eyes to open something
+  ***- add boss name to the stats for game over screen (one or both)
 
 - music: intro, letters/map, tablets/puzzles, game over, pyramid, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)
   - story: I like the original song: keep the same style and compose a variation
