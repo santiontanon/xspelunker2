@@ -1246,7 +1246,7 @@ ENDR
 	dw object_interaction_function_pickup_item_boss4  ; TAG_GOLDEN_KEY
 	dw object_interaction_function_pickup_item_boss4  ; TAG_SKULL_CHARM
 	dw object_interaction_function_empty  ; TAG_POSEIDON_LEVER
-	dw object_interaction_function_empty  ; TAG_POSEIDON_BOSS_DISPLAY
+	dw object_interaction_function_poseidon_boss_display  ; TAG_POSEIDON_BOSS_DISPLAY
 	dw object_interaction_function_shopkeeper  ; TAG_NPC_SHOPKEEPER
 	dw object_interaction_function_shop  ; TAG_NPC_SHOP
 	dw object_interaction_function_empty  ; TAG_DYNAMITE
@@ -1311,6 +1311,13 @@ object_interaction_inventory_slot:
 ;-----------------------------------------------
 object_interaction_function_empty:
 	ret
+
+
+;-----------------------------------------------
+object_interaction_function_poseidon_boss_display:
+	ld hl, object_interaction_function_poseidon_boss_display_internal
+	ld c, BOSS_5_PAGE
+	jp call_hl_in_page_c_8000
 
 
 ;-----------------------------------------------
@@ -2817,8 +2824,8 @@ ENDR
 	TILE_OBJECT_DATA 1, 2, 3, tile_object_xibalba_boss_graves_gfx  ; TAG_XIBALBA_BOSS_GRAVE
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_GOLDEN_KEY
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_SKULL_CHARM	
-	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_POSEIDON_LEVER	
-	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_POSEIDON_BOSS_DISPLAY
+	TILE_OBJECT_DATA 2, 2, 2, 0  ; TAG_POSEIDON_LEVER	
+	TILE_OBJECT_DATA 2, 2, 2, 0  ; TAG_POSEIDON_BOSS_DISPLAY
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOPKEEPER
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOP
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_DYNAMITE

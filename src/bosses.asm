@@ -298,6 +298,7 @@ enter_boss_door__spawn_atlantis_boss_objects:
 	ld a, (current_world__seed + 1)
 	and #01
 	ld (iy + (ROOM_TILE_OBJECT_STRUCT_STATE - ROOM_TILE_OBJECT_STRUCT_SIZE)), a  ; display state
+	ld (iy + (ROOM_TILE_OBJECT_STRUCT_STATE_TIMER - ROOM_TILE_OBJECT_STRUCT_SIZE)), a  ; display state
 	ld (iy + (ROOM_TILE_OBJECT_STRUCT_STATE - 2 * ROOM_TILE_OBJECT_STRUCT_SIZE)), 0  ; lever state
 	ret
 

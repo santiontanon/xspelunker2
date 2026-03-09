@@ -1,10 +1,6 @@
 to do:
 
 ***- fifth boss: 
-  ***- being able to enter the boss room in MSX:
-    ***- hitting it makes the hit sound
-    ***- hitting it swaps charybdis/scylla (and every 8, the skull, and every 32 the twin bosses sign)
-    ***- lever does nothing for now
   ***- draw all the frames in gimp for charybdis (crab). Make sure I can fit the tiles.
   ***- draw all the frames in gimp for scylla (octopus). Make sure I can fit the tiles.
   ***- spawn the boss, and draw it still:
