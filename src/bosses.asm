@@ -252,6 +252,14 @@ enter_boss_door__spawn_xibalba_lords_objects:
 	ld hl, buffer_4096 + 60 * 64
 	ld (item_object_to_upload_to_vdp), hl
 
+	; set the trial fn:
+	ld hl, trial_fn_wake_up_xibalba_lord
+	ld (current_room__trial_fn), hl
+
+	xor a
+	ld (boss__4_first_lord), a
+	ld (boss__4_second_lord), a
+
 	ld b, (enter_boss_door__spawn_xibalba_lords_objects_tbl_end - enter_boss_door__spawn_xibalba_lords_objects_tbl) / 3
 	ld de, ROOM_TILE_OBJECT_STRUCT_SIZE
 	ld hl, enter_boss_door__spawn_xibalba_lords_objects_tbl
@@ -271,19 +279,26 @@ enter_boss_door__spawn_xibalba_lords_objects_loop:
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), a  ; tile y
 	add iy, de
 	djnz enter_boss_door__spawn_xibalba_lords_objects_loop
-
-	; set the trial fn:
-	ld hl, trial_fn_wake_up_xibalba_lord
-	ld (current_room__trial_fn), hl
-
-	xor a
-	ld (boss__4_first_lord), a
-	ld (boss__4_second_lord), a
 	ret
 
 
+enter_boss_door__spawn_atlantis_boss_objects_tbl:
+	db TAG_POSEIDON_LEVER, 15, 8
+	db TAG_POSEIDON_BOSS_DISPLAY, 15, 4
+enter_boss_door__spawn_atlantis_boss_objects_tbl_end:
+
 enter_boss_door__spawn_atlantis_boss_objects:
-	; ...
+	ld b, (enter_boss_door__spawn_atlantis_boss_objects_tbl_end - enter_boss_door__spawn_atlantis_boss_objects_tbl) / 3
+	ld de, ROOM_TILE_OBJECT_STRUCT_SIZE
+	ld hl, enter_boss_door__spawn_atlantis_boss_objects_tbl
+	ld iy, current_room__tile_objects
+	ld c, 1  ; id
+	call enter_boss_door__spawn_xibalba_lords_objects_loop
+	; state of the objects:
+	ld a, (current_world__seed + 1)
+	and #01
+	ld (iy + (ROOM_TILE_OBJECT_STRUCT_STATE - ROOM_TILE_OBJECT_STRUCT_SIZE)), a  ; display state
+	ld (iy + (ROOM_TILE_OBJECT_STRUCT_STATE - 2 * ROOM_TILE_OBJECT_STRUCT_SIZE)), 0  ; lever state
 	ret
 
 
@@ -1620,7 +1635,7 @@ tile_collision_types_boss5:
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
     db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0
-    db 9, 11, 4, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
+    db 9, 11, 4, 0, 0, 0, 0, 9, 9, 9, 9, 9, 9, 9, 9, 9
     db 9, 0, 0, 0, 0, 2, 2, 9, 9, 9, 9, 9, 9, 9, 9, 9
     db 9, 4, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
     db 9, 9, 9, 9, 9, 9, 9, 9, 9, 0, 0, 0, 0, 0, 9, 9

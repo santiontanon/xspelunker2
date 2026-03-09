@@ -2,8 +2,6 @@ to do:
 
 ***- fifth boss: 
   ***- being able to enter the boss room in MSX:
-    ***- spawn lever: enter_boss_door__spawn_atlantis_boss_objects
-    ***- spawn tile that shows which boss will spawn (init based on a bit of the random seed)
     ***- hitting it makes the hit sound
     ***- hitting it swaps charybdis/scylla (and every 8, the skull, and every 32 the twin bosses sign)
     ***- lever does nothing for now

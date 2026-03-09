@@ -224,6 +224,8 @@ public class AssemblerTags {
         "TAG_XIBALBA_BOSS_GRAVE",
         "TAG_GOLDEN_KEY",
         "TAG_SKULL_CHARM",
+        "TAG_POSEIDON_LEVER",
+        "TAG_POSEIDON_BOSS_DISPLAY",
         // npcs:
         "TAG_NPC_SHOPKEEPER",
         "TAG_NPC_SHOP",

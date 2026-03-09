@@ -430,7 +430,7 @@ room_render_tile_objects_loop:
 		inc hl
 		ld a, (hl)  ; type
 		cp TAG_BREAKABLE_WALL1
-		jr z, room_render_tile_objects_loop_continue
+		jp z, room_render_tile_objects_loop_continue
 		cp TAG_BREAKABLE_WALL2
 		jr z, room_render_tile_objects_loop_continue
 		cp TAG_BREAKABLE_WALL3
@@ -461,6 +461,10 @@ room_render_tile_objects_loop:
 		jp z, room_render_tile_objects_render_enemy_stone_owl
 		cp TAG_ENEMY_SENTINEL
 		jp z, room_render_tile_objects_render_enemy_sentinel
+		cp TAG_POSEIDON_LEVER
+		jp z, room_render_tile_objects_render_combination_lever
+		cp TAG_POSEIDON_BOSS_DISPLAY
+		jp z, room_render_tile_objects_render_poseidon_boss_display
 		inc hl
 		ld c, (hl)  ; x
 		ld iyl, c
@@ -720,6 +724,26 @@ room_render_tile_objects_render_calendar_stone_center:
 	cp 2
 	jp z, room_render_tile_objects_render_entry_point_jp
 	ld de, tile_object_calendar_stone_center_frame2_gfx
+	jp room_render_tile_objects_render_entry_point_jp
+
+
+room_render_tile_objects_render_poseidon_boss_display:
+	inc hl
+	ld c, (hl)  ; x
+	ld iyl, c
+	inc hl
+	ld b, (hl)  ; y
+	inc hl
+	ld iyh, b
+	ld bc, #0202
+	ld a, (hl)
+	add a, a
+	add a, a
+	ld de, tile_object_poseidon_boss_display_object_gfx
+	ADD_DE_A
+	inc hl
+	inc hl
+	inc hl
 	jp room_render_tile_objects_render_entry_point_jp
 
 
@@ -1221,6 +1245,8 @@ ENDR
 	dw object_interaction_function_tablet  ; TAG_XIBALBA_BOSS_GRAVE
 	dw object_interaction_function_pickup_item_boss4  ; TAG_GOLDEN_KEY
 	dw object_interaction_function_pickup_item_boss4  ; TAG_SKULL_CHARM
+	dw object_interaction_function_empty  ; TAG_POSEIDON_LEVER
+	dw object_interaction_function_empty  ; TAG_POSEIDON_BOSS_DISPLAY
 	dw object_interaction_function_shopkeeper  ; TAG_NPC_SHOPKEEPER
 	dw object_interaction_function_shop  ; TAG_NPC_SHOP
 	dw object_interaction_function_empty  ; TAG_DYNAMITE
@@ -2791,6 +2817,8 @@ ENDR
 	TILE_OBJECT_DATA 1, 2, 3, tile_object_xibalba_boss_graves_gfx  ; TAG_XIBALBA_BOSS_GRAVE
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_GOLDEN_KEY
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_SKULL_CHARM	
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_POSEIDON_LEVER	
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_POSEIDON_BOSS_DISPLAY
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOPKEEPER
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOP
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_DYNAMITE
@@ -2822,11 +2850,11 @@ tile_object_gear_lock_locked_gfx:
 	db 52, 53, 54, 55
 	db 56, 57, 58, 59
 tile_object_lever_left_object_gfx:
-	db 48, 53, 51, 52
+	db 48, 0, 51, 52
 tile_object_lever_up_object_gfx:
-	db 50, 53, 51, 52
+	db 50, 0, 51, 52
 tile_object_lever_right_object_gfx:
-	db 53, 49, 51, 52
+	db 0, 49, 51, 52
 tile_object_4x4_object_gfx:
 	db 48, 49, 50, 51
 	db 52, 53, 54, 55
@@ -2872,4 +2900,11 @@ tile_object_xibalba_boss_graves_gfx:
 	db 203, 204
 	db 219, 220
 	db 235, 236
+
+tile_object_poseidon_boss_display_object_gfx:
+	db 61, 62, 63, 95  ; charybdis
+	db 99, 100, 101, 102  ; scylla
+	db 53, 54, 55, 56  ; death
+	db 57, 58, 59, 60  ; both
+
 
