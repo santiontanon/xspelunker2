@@ -130,7 +130,7 @@ enter_boss_door_loop:
 		jr z, enter_boss_door__room_ptr_set
 		dec a
 		ld hl, boss_room_5_zx0
-		ld de, boss_5_tiles_zx0
+		ld de, boss_5_tiles_charybdis1_zx0
 		ld bc, tile_collision_types_boss5
 		ld iy, boss5_sprites_zx0
 		; jr z, enter_boss_door__room_ptr_set
@@ -288,6 +288,8 @@ enter_boss_door__spawn_atlantis_boss_objects_tbl:
 enter_boss_door__spawn_atlantis_boss_objects_tbl_end:
 
 enter_boss_door__spawn_atlantis_boss_objects:
+	ld hl, update_animations_in_vdp_boss5
+	ld (current_room__animation_fn_ptr), hl	
 	ld b, (enter_boss_door__spawn_atlantis_boss_objects_tbl_end - enter_boss_door__spawn_atlantis_boss_objects_tbl) / 3
 	ld de, ROOM_TILE_OBJECT_STRUCT_SIZE
 	ld hl, enter_boss_door__spawn_atlantis_boss_objects_tbl
@@ -300,6 +302,11 @@ enter_boss_door__spawn_atlantis_boss_objects:
 	ld (iy + (ROOM_TILE_OBJECT_STRUCT_STATE - ROOM_TILE_OBJECT_STRUCT_SIZE)), a  ; display state
 	ld (iy + (ROOM_TILE_OBJECT_STRUCT_STATE_TIMER - ROOM_TILE_OBJECT_STRUCT_SIZE)), a  ; display state
 	ld (iy + (ROOM_TILE_OBJECT_STRUCT_STATE - 2 * ROOM_TILE_OBJECT_STRUCT_SIZE)), 0  ; lever state
+
+	ld hl, buffer_4096 + (256 + 0)*16
+	ld (large_object_to_upload_to_vdp), hl
+	ld a, 16*8
+	ld (large_object_to_upload_to_vdp_size), a	
 	ret
 
 

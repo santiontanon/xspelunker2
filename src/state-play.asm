@@ -754,13 +754,34 @@ state_play_upload_object_tiles_to_vdp_if_necessary_continue:
 	or a
 	jr z, state_play_upload_enemy_tiles_to_vdp_if_necessary
 
+	; check if we need to load object_large_tiles_zx0 or object_large_tiles2_zx0:
+	; The way to indicate this is that the ptr set in "large_object_to_upload_to_vdp"
+	; overflows the buffer_4096 space.
+	ld hl, (large_object_to_upload_to_vdp)
+	ld a, h
+	cp #d0
+	jr nc, state_play_upload_object_tiles_to_vdp_if_necessary_second_tilebank
+
+state_play_upload_object_tiles_to_vdp_if_necessary_first_tilebank:
 	ld hl, object_large_tiles_zx0
 	ld de, buffer_4096
 	ld c, TILES_PAGE
 	call dzx0_from_page_c
-
-	; update in-game large object tiles:
 	ld hl, (large_object_to_upload_to_vdp)
+	jr state_play_upload_object_tiles_to_vdp_if_necessary_continue2
+
+state_play_upload_object_tiles_to_vdp_if_necessary_second_tilebank:
+	ld hl, object_large_tiles2_zx0
+	ld de, buffer_4096
+	ld c, TILES_PAGE
+	call dzx0_from_page_c
+	ld hl, (large_object_to_upload_to_vdp)
+	ld a, h
+	sub #10
+	ld h, a
+
+state_play_upload_object_tiles_to_vdp_if_necessary_continue2:
+	; update in-game large object tiles:
 	ld a, (large_object_to_upload_to_vdp_size)
 	ld b, a
 	push hl

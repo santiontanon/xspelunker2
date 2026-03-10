@@ -3,16 +3,15 @@ to do:
 ***- fifth boss: 
   ***- draw all the frames in gimp for charybdis (crab):
     ***- for the boss room tiles before the boss appears:
-      ***- remove the island
-      ***- use the charybdis1 tileset, and just overwrite the lever/display tiles with a large-object block
-      ***- draw the island in the boss code using the island nametable
-      ***- once this is stable, send CL to github
+      OK - remove the island
+      OK - use the charybdis1 tileset, and just overwrite the lever/display tiles with a large-object block
     ***- claw attack
     ***- claw flying
     ***- arm laser attack
     ***- leg walking animation
   ***- draw all the frames in gimp for scylla (octopus). Make sure I can fit the tiles.
   ***- spawn the boss, and draw it still:
+    ***- draw the island in the boss code using the island nametable before boss appears
     ***- update "tile_collision_types_boss5"
     ***- update "update_sprite_objects_boss_extras_boss_5"
     ***- when you activate the lever, water starts pouring in, water level rises and island starts to float, revealing that it is sitting on top of the boss

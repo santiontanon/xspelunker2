@@ -2909,9 +2909,9 @@ tile_object_xibalba_boss_graves_gfx:
 	db 235, 236
 
 tile_object_poseidon_boss_display_object_gfx:
-	db 61, 62, 63, 95  ; charybdis
-	db 99, 100, 101, 102  ; scylla
+	db 60, 61, 62, 63  ; charybdis
+	db 53, 57, 62, 63  ; scylla
 	db 53, 54, 55, 56  ; death
-	db 57, 58, 59, 60  ; both
+	db 53, 57, 58, 59  ; both
 
 
