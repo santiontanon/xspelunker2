@@ -356,7 +356,7 @@ public static int atlantis_boss_collision[] = {
 //            int nameTable[][] = addBossTilesInGaps(baseImage, boss5Tiles, availableTiles, collision, false);
 
             List<int[]> nameTableBoxes = new ArrayList<>();
-            nameTableBoxes.add(new int[]{0, 320, 192, 472});  // crab
+            nameTableBoxes.add(new int[]{0, 320, 192, 512});  // crab
             addBossTilesInGapsForBoxes(nameTableBoxes, baseImage, boss5Tiles, availableTiles, collision, false);
 
             ImageIO.write(baseImage, "png", new File("data/boss5-base-tiles-charybdis.png"));        
