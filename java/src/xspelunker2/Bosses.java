@@ -62,19 +62,19 @@ public static int atlantis_boss_collision[] = {
     
     public static void main(String args[]) throws Exception
     {
-        boss1Tiles();
-        boss1Sprites();
-
-        boss2Tiles();
-        boss2Sprites();
-
-        boss3Tiles();
-        boss3Sprites();
-
-        Boss4.main(args);
-        
+//        boss1Tiles();
+//        boss1Sprites();
+//
+//        boss2Tiles();
+//        boss2Sprites();
+//
+//        boss3Tiles();
+//        boss3Sprites();
+//
+//        Boss4.main(args);
+//        
         boss5TilesCharybdis();
-        boss5Sprites();
+//        boss5Sprites();
     }
     
     
@@ -346,7 +346,7 @@ public static int atlantis_boss_collision[] = {
     {
         // Step 1: create a base image that just has the crab tiles:
         {
-            // Charybdis + island:
+            // Charybdis body:
             String bossBaseTiles = "data/boss5-base-tiles.png";
             String boss5Tiles = "data/boss5.png";
             boolean availableTiles[] = new boolean[256];
