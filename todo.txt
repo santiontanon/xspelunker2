@@ -1,7 +1,16 @@
 to do:
 
 ***- fifth boss: 
-  ***- draw all the frames in gimp for charybdis (crab). Make sure I can fit the tiles.
+  ***- draw all the frames in gimp for charybdis (crab):
+    ***- for the boss room tiles before the boss appears:
+      ***- remove the island
+      ***- use the charybdis1 tileset, and just overwrite the lever/display tiles with a large-object block
+      ***- draw the island in the boss code using the island nametable
+      ***- once this is stable, send CL to github
+    ***- claw attack
+    ***- claw flying
+    ***- arm laser attack
+    ***- leg walking animation
   ***- draw all the frames in gimp for scylla (octopus). Make sure I can fit the tiles.
   ***- spawn the boss, and draw it still:
     ***- update "tile_collision_types_boss5"
@@ -15,7 +24,7 @@ to do:
       - If player is above any of its claws, chance of claw attack, it raises the claw, and closes it, trying to catch the player
     - jump attack (only when island is on top): triggered if player is on top of the island
       - crouches for a bit, and then jumps up until island crashes with the ceiling
-      - island shows damage after two hits, and gets destroyed after 4 hits, revealing the brain in a vat. At this point, boss accelerates a bit (to the next level of difficulty maybe?)
+      - island shows damage after two hits (first hit destroys the statue), and gets destroyed after 4 hits, revealing the brain in a vat. At this point, boss accelerates a bit (to the next level of difficulty maybe?)
     - flying claw: one of the claws (one at random of the ones that remain) detaches and flies up independently (with some rocket showing behind it), it flies up to the player height (minimum just above water) and then goes horizontally fast, to try to hit you. After each time, chance of going back.
       - the dash should be so fast that it is udodgeable unless you are ready, go to the opposide side, and know it's coming. If you know it's coming, it should be easy to dodge.
       - claws can be destroyed
