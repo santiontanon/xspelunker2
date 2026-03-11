@@ -1,10 +1,6 @@
 to do:
 
 ***- fifth boss: 
-  ***- draw all the frames in gimp for charybdis (crab):
-    ***- leg walking animation:
-      ***- what goes to the island? claw attack or leg walking?
-    ***- arm laser attack: if I cannot fit it, I'll replace with parabolic bullets/bombs/goo firing out of the arm pointing up
   ***- draw all the frames in gimp for scylla (octopus). Make sure I can fit the tiles.
   ***- spawn the boss, and draw it still:
     ***- draw the island in the boss code using the island nametable before boss appears
