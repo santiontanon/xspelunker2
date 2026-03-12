@@ -1,11 +1,7 @@
 to do:
 
 ***- fifth boss: 
-  OK - charybdis: crouch + jump animation (might need tile optimization)
   ***- draw all the frames in gimp for scylla (octopus):
-    OK - beak
-    ***- eye blink animation
-    Ok - front tentacle positions: 9 ranging from swinging left to right
     ***- side tentacle positions: 7 - 9 positions from swinging left to right, and including reaching up on both sides
     ***- backtentacle positions: just a few positions, just for filler, maybe 2 - 3 on each side
     ***- tentacle stretch attack:
@@ -41,6 +37,7 @@ to do:
       - rising up to player level, and then stretching horizontally, trying to hit you
       - these attacks are fast, you need to recognize them, or are hard to avoid (maybe there is a choreography, where it first attacks the ceiling, and then has a chance of doing the horizontal one, very fast afterwards)
     - double tentacle attack: the same, but two tentacles (one of each side) do it at the same time (and at slightly offset vertical height, so it's even harder to dodge)
+    - bubbles fired from the beak?
   ***- being able to kill the boss and collect the reward:
     ***- water drains and the power stone is there
     ***- if you only kill 1, there will be an eye (of the one you killed)
