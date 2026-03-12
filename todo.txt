@@ -2,12 +2,10 @@ to do:
 
 ***- fifth boss: 
   ***- draw all the frames in gimp for scylla (octopus):
-    ***- side tentacle positions: 7 - 9 positions from swinging left to right, and including reaching up on both sides
-    ***- backtentacle positions: just a few positions, just for filler, maybe 2 - 3 on each side
     ***- tentacle stretch attack:
       ***- tip of tentacle dettaches and goes up
       ***- half way split to reach height, and then tip dettaches left/right
-    *** - base head + island + brain (should be reused from charybdis): do they all fit in a single tileset?
+  ***- get all the nametables for charybdis and scylla (maybe some are shared) and add all the data to assembler
   ***- spawn the boss, and draw it still:
     ***- draw the island in the boss code using the island nametable before boss appears
     ***- update "tile_collision_types_boss5"
