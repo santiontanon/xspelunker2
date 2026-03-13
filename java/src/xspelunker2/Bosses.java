@@ -73,7 +73,7 @@ public static int atlantis_boss_collision[] = {
 //
 //        Boss4.main(args);
         
-        boss5TilesCharybdis();
+        boss5Tiles();
         boss5Sprites();
     }
     
@@ -342,7 +342,7 @@ public static int atlantis_boss_collision[] = {
     }
 
     
-    public static void boss5TilesCharybdis() throws Exception
+    public static void boss5Tiles() throws Exception
     {
         {
             // Create a base image that just has the crab tiles:
@@ -449,7 +449,7 @@ public static int atlantis_boss_collision[] = {
             BufferedImage baseImage = ImageIO.read(new File(bossBaseTiles));        
 
             List<int[]> nameTableBoxes = new ArrayList<>();
-            nameTableBoxes.add(new int[]{256, 320, 560, 608});  // octopus body and tentacles
+            nameTableBoxes.add(new int[]{256, 320, 560, 584});  // octopus body and tentacles
             addBossTilesInGapsForBoxes(nameTableBoxes, baseImage, boss5Tiles, availableTiles, collision, false, false);
 
             ImageIO.write(baseImage, "png", new File("data/boss5-base-tiles-scylla.png"));        
@@ -487,6 +487,7 @@ public static int atlantis_boss_collision[] = {
             BufferedImage baseImage = ImageIO.read(new File(bossBaseTiles));        
 
             List<int[]> nameTableBoxes = new ArrayList<>();
+            nameTableBoxes.add(new int[]{264, 584, 320, 608});  // dettaching tentacle attack
             nameTableBoxes.add(new int[]{192, 448, 256, 512});  // brain
             List<int[][]> nametables = addBossTilesInGapsForBoxes(nameTableBoxes, baseImage, boss5Tiles, availableTiles, collision, false, true);
 

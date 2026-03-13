@@ -1,16 +1,13 @@
 to do:
 
 ***- fifth boss: 
-  ***- draw all the frames in gimp for scylla (octopus):
-    ***- tentacle stretch attack:
-      ***- tip of tentacle dettaches and goes up
-      ***- half way split to reach height, and then tip dettaches left/right
   ***- get all the nametables for charybdis and scylla (maybe some are shared) and add all the data to assembler
   ***- spawn the boss, and draw it still:
     ***- draw the island in the boss code using the island nametable before boss appears
     ***- update "tile_collision_types_boss5"
     ***- update "update_sprite_objects_boss_extras_boss_5"
     ***- when you activate the lever, water starts pouring in, water level rises and island starts to float, revealing that it is sitting on top of the boss
+      ***- have in mind that charybdis needs floor to walk, but scylla does not, how does that work
     ***- if the image was of both bosses, when you kill one, the other rises from the floor (already in the brain in a vat state)
   ***- Charybdis: implement all the behaviors
     - idle: mouth animation + maybe claw animation (open/close). Chance of firing bullets through the eyes
