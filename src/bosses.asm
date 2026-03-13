@@ -574,6 +574,20 @@ boss_spawn_power_stone_item_set:
 	jp call_hl_in_page_c_8000
 
 
+
+;-----------------------------------------------
+; So that we can call it from another page
+draw_boss_frame_1_without_clearing_ix:
+	push ix
+	pop hl
+	jr draw_boss_frame_1_without_clearing
+
+draw_boss_frame_1_ix:
+	push ix
+	pop hl
+	; jr draw_boss_frame_1
+
+
 ;-----------------------------------------------
 ; input:
 ; - de: ptr to draw to

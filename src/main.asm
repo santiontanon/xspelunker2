@@ -679,6 +679,8 @@ boss_room_5_zx0:
     include "boss2.asm"
     include "boss3.asm"
 
+    include "boss5-nametables.asm"  ; here since the drawing routines are in this page
+
     include "calendar-room-events.asm"
     include "state-ending.asm"
 

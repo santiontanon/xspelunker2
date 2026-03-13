@@ -2,12 +2,10 @@ to do:
 
 ***- fifth boss: 
   ***- spawn the boss, and draw it still:
-    ***- draw the island in the boss code using the island nametable before boss appears
-    ***- update "tile_collision_types_boss5"
-    ***- update "update_sprite_objects_boss_extras_boss_5"
+    ***- update "tile_collision_types_boss5": 2 versions: island and no island
     ***- when you activate the lever, water starts pouring in, water level rises and island starts to float, revealing that it is sitting on top of the boss
-      ***- have in mind that charybdis needs floor to walk, but scylla does not, how does that work
-    ***- if the image was of both bosses, when you kill one, the other rises from the floor (already in the brain in a vat state)
+    ***- update "update_sprite_objects_boss_extras_boss_5"
+    ***- if the image was of both bosses, when you kill one, the other rises from the floor (already in the brain in a vat state) (store this, and add to-dos to do it later)
   ***- Charybdis: implement all the behaviors
     - idle: mouth animation + maybe claw animation (open/close). Chance of firing bullets through the eyes
     - move left/right:
@@ -39,6 +37,7 @@ to do:
     ***- think of a puzzle where you actually need both eyes to open something
   ***- add boss name to the stats for game over screen (one or both)
 
+- BUG: "up" to interact does not work while jumping
 - music: intro, letters/map, tablets/puzzles, game over, pyramid, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)
   - story: I like the original song: keep the same style and compose a variation
   - boss music (boss music increases in speed as health goes down: 50%, 25%)
