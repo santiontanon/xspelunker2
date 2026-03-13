@@ -1,7 +1,6 @@
 to do:
 
 ***- fifth boss: 
-  ***- get all the nametables for charybdis and scylla (maybe some are shared) and add all the data to assembler
   ***- spawn the boss, and draw it still:
     ***- draw the island in the boss code using the island nametable before boss appears
     ***- update "tile_collision_types_boss5"

@@ -1584,7 +1584,9 @@ update_boss_behavior:
 	ld c, BOSS_4_PAGE
 	jp z, jp_to_hl_in_page_c_8000
 	cp 9  ; atlantis
-	jp z, update_boss5_behavior
+	ld hl, update_boss5_behavior
+	ld c, BOSS_5_PAGE
+	jp z, jp_to_hl_in_page_c_8000
 ; 	cp 10  ; mars
 ; 	jp z, update_boss6_behavior
 ; 	cp 11  ; moon
