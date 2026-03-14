@@ -271,6 +271,7 @@ boss__1_settings:
 boss__2_settings: 
 boss__3_settings:
 boss__4_settings:
+boss__5_settings:
     ds virtual 12  ; difficulty parameters of the boss
 boss__tmp_space: ds virtual 12
 ;
@@ -295,6 +296,8 @@ boss__4_lord2_target_y: equ boss__tmp_space + 8
 boss__4_lord2_mouth_state: equ boss__tmp_space + 9
 boss__4_second_lord: equ boss__tmp_space + 10
 boss__4_redraw: equ boss__tmp_space + 11
+;
+boss__5_variant: equ boss__tmp_space + 1  ; 0: charybdis, 1: scylla, 2: death, 3: both
 
 ; game stats:
 stats__n_coins_collected: ds virtual 2
