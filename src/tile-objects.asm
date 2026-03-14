@@ -1245,7 +1245,7 @@ ENDR
 	dw object_interaction_function_tablet  ; TAG_XIBALBA_BOSS_GRAVE
 	dw object_interaction_function_pickup_item_boss4  ; TAG_GOLDEN_KEY
 	dw object_interaction_function_pickup_item_boss4  ; TAG_SKULL_CHARM
-	dw object_interaction_function_empty  ; TAG_POSEIDON_LEVER
+	dw object_interaction_function_poseidon_lever  ; TAG_POSEIDON_LEVER
 	dw object_interaction_function_poseidon_boss_display  ; TAG_POSEIDON_BOSS_DISPLAY
 	dw object_interaction_function_shopkeeper  ; TAG_NPC_SHOPKEEPER
 	dw object_interaction_function_shop  ; TAG_NPC_SHOP
@@ -1318,6 +1318,14 @@ object_interaction_function_poseidon_boss_display:
 	ld hl, object_interaction_function_poseidon_boss_display_internal
 	ld c, BOSS_5_PAGE
 	jp call_hl_in_page_c_8000
+
+
+;-----------------------------------------------
+object_interaction_function_poseidon_lever:
+	; just change the boss state, which will trigger the rest of the events
+	ld a, 2
+	ld (boss__state), a
+	ret
 
 
 ;-----------------------------------------------

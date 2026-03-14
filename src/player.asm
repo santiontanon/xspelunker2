@@ -586,6 +586,14 @@ player_update_switch_to_falling:
 	ld (player_state), a
 
 player_update_state_falling:
+	; check for interact with "up":
+	ld a, (config_interact_with_up)
+	or a
+	jr nz, player_update_state_falling_no_interact_with_up
+	ld a, (keyboard_clicks)
+	bit KEY_UP_BIT, a
+	call nz, player_update_interact
+player_update_state_falling_no_interact_with_up:	
 	; check for interact:
 	ld a, (keyboard_clicks)
 	bit KEY_INTERACT_BIT, a
@@ -723,6 +731,15 @@ player_update_state_jumping_check_rope_or_ladder:
 	call check_player_on_rope_or_ladder
 	jp z, player_update_switch_to_rope_or_ladder
 player_update_state_jumping_no_rope:
+
+	; check for interact with "up":
+	ld a, (config_interact_with_up)
+	or a
+	jr nz, player_update_state_jumping_no_interact_with_up
+	ld a, (keyboard_clicks)
+	bit KEY_UP_BIT, a
+	call nz, player_update_interact
+player_update_state_jumping_no_interact_with_up:	
 
 	; check for interact:
 	ld a, (keyboard_clicks)
