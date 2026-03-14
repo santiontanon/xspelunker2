@@ -298,6 +298,7 @@ boss__4_second_lord: equ boss__tmp_space + 10
 boss__4_redraw: equ boss__tmp_space + 11
 ;
 boss__5_variant: equ boss__tmp_space + 1  ; 0: charybdis, 1: scylla, 2: death, 3: both
+boss__5_current_variant: equ boss__tmp_space + 2  ; 0: charybdis, 1: scylla
 
 ; game stats:
 stats__n_coins_collected: ds virtual 2

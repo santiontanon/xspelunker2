@@ -619,6 +619,18 @@ draw_boss_frame_1_without_clearing:
 
 
 ;-----------------------------------------------
+; So that we can call it from another page
+draw_boss_frame_2_without_clearing_ix:
+	push ix
+	pop hl
+	jr draw_boss_frame_2_without_clearing
+
+draw_boss_frame_2_ix:
+	push ix
+	pop hl
+	; jr draw_boss_frame_2
+
+;-----------------------------------------------
 ; input:
 ; - de: ptr to draw to
 ; - hl: ptr to frame struct

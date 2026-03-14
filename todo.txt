@@ -1,19 +1,13 @@
 to do:
 
-OK - in the last step, replace the bottom of the water with wall if it's charybdis
-***- routine to draw the boss from its different parts:
-  ***- charybdis: body + claws/arms + top: for now, draw in idle one
-  ***- scylla: body + arms + top: for now, draw all arms pointing down
-***- draw the boss rising under the island (replace island drawing with routine above)
-***- in update_boss5_behavior_0_state_5 bring the boss name down (the appropriate one, depending on which boss is appearing, even if for now, it's always charybdis)
-***- spawn Scylla if the display is set to scylla instead (it's a separate set of boss behaviors, but in the same source file)
+***- change the background of some of the charybdis/scylla tiles to dark blue in the bottom bank
 
 ***- Charybdis:
   ***- idle: mouth animation + maybe claw animation (open/close)
   - move left/right
   - Chance of firing bullets through the eyes in both idle and move
   - If player is above any of its claws (in idle or walk when it reaches the base leg position), chance of claw attack, it raises the claw, and closes it, trying to catch the player
-  - create the usual boss difficulty settings for boss 5
+  - create the usual boss difficulty settings for boss 5 (in update_boss5_behavior_0_state_3)
   - jump attack (only when island is on top): triggered if player is on top of the island
     - crouches for a bit, and then jumps up until island crashes with the ceiling
     - island shows damage after two hits (first hit destroys the statue), and gets destroyed after 4 hits, revealing the brain in a vat. At this point, boss accelerates a bit (to the next level of difficulty maybe?)

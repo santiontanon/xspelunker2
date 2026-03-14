@@ -60,6 +60,7 @@ boss1_name_y_table:
 boss2_name_y_table:
 boss3_name_y_table:
 boss4_name_y_table:
+boss5_name_y_table:
 	db -32, -28, -24, -20, -16, -12, -9, -5
 	db  -2,   1,   4,   7,   9,  11, 13, 15
 	db  16,  17,  18,  19,  19,  19, 19, 20
@@ -67,6 +68,7 @@ boss4_name_y_table:
 boss1_name_initial_sprite_attributes:
 boss2_name_initial_sprite_attributes:
 boss3_name_initial_sprite_attributes:
+boss5_name_initial_sprite_attributes:
 	db -32, 112, (FIRST_ENEMY_SPRITE_PATTERN + 1)*4, COLOR_WHITE
 	db -32, 128, (FIRST_ENEMY_SPRITE_PATTERN + 2)*4, COLOR_WHITE
 	db -16, 112, (FIRST_ENEMY_SPRITE_PATTERN + 3)*4, COLOR_WHITE
@@ -77,6 +79,12 @@ boss4_name_initial_sprite_attributes:
 	db -32, 128, (FIRST_ENEMY_SPRITE_PATTERN + 37)*4, COLOR_WHITE
 	db -16, 112, (FIRST_ENEMY_SPRITE_PATTERN + 3)*4, COLOR_WHITE
 	db -16, 128, (FIRST_ENEMY_SPRITE_PATTERN + 4)*4, COLOR_WHITE
+
+boss5_name_initial_sprite_attributes_scylla:
+	db -32, 112, (FIRST_ENEMY_SPRITE_PATTERN + 5)*4, COLOR_WHITE
+	db -32, 128, (FIRST_ENEMY_SPRITE_PATTERN + 6)*4, COLOR_WHITE
+	db -16, 112, (FIRST_ENEMY_SPRITE_PATTERN + 7)*4, COLOR_WHITE
+	db -16, 128, (FIRST_ENEMY_SPRITE_PATTERN + 8)*4, COLOR_WHITE
 
 
 ;-----------------------------------------------

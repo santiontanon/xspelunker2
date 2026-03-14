@@ -130,30 +130,64 @@ update_boss5_behavior_0_state_3:
 	ld hl, boss__state_timer
 	ld a, (hl)
 	cp 17
-	jr nz, update_boss5_behavior_0_state_3_continue
+	jp nz, update_boss5_behavior_0_state_3_continue
 	xor a
 	ld (boss__state_timer), a
 	ld a, (boss__5_variant)
+	or a
+	jr z, update_boss5_behavior_0_state_3_charybdis
 	dec a  ; cp 1
-	; switch to the scylla tileset if needed:
-	jr nz, update_boss5_behavior_0_state_3_not_scylla
-	; switch to the scylla tileset:
-	push af
-		ld hl, boss_5_tiles_scylla1_zx0
-		ld (current_room__tileset_ptr), hl
-		ld c, BOSS_5_PAGE
-		call setup_game_tiles_only_biome
-	pop af
-update_boss5_behavior_0_state_3_not_scylla:
+	jr z, update_boss5_behavior_0_state_3_scylla
 	dec a  ; cp 2
 	jr z, update_boss5_behavior_0_state_3_death
+	; both bosses, initialize charybdis first
+update_boss5_behavior_0_state_3_charybdis:
+	; tileset:
+	ld hl, 0
+	ld (large_object_to_upload_to_vdp), hl
+	ld hl, boss_5_tiles_charybdis1_zx0
+	ld c, BOSS_GFX_PAGE
+	call setup_game_tiles_only_biome
+	ld bc, #1708  ; (8, 23), initial coordinates of charybdis
+	ld (boss__x), bc
+	xor a
+	ld (boss__5_current_variant), a  ; charybdis
+	ld hl, 0
+	ld (boss__clear_bbox_1 + 2), hl
+	ld (boss__clear_bbox_2 + 2), hl
+	; ...
+
+	jr update_boss5_behavior_0_state_3_done
+update_boss5_behavior_0_state_3_scylla
+	; switch to the scylla tileset:
+	ld hl, 0
+	ld (large_object_to_upload_to_vdp), hl
+	ld hl, boss_5_tiles_scylla1_zx0
+	ld (current_room__tileset_ptr), hl
+	ld c, BOSS_5_PAGE
+	call setup_game_tiles_only_biome
+	ld bc, #180d  ; (13, 24), initial coordinates of scylla
+	ld (boss__x), bc
+	ld a, 1
+	ld (boss__5_current_variant), a  ; scylla
+	ld hl, 0
+	ld (boss__clear_bbox_1 + 2), hl
+	ld hl, current_room__tile_map + 23*32 + 12  ; clear the bottom of the island
+	ld (boss__clear_bbox_2), hl
+	ld hl, #0108
+	ld (boss__clear_bbox_2 + 2), hl
+	; ...
+
+update_boss5_behavior_0_state_3_done:
 	ld a, 4
 	ld (boss__state), a
 	ret
+
 update_boss5_behavior_0_state_3_death:
 	ld a, 7
 	ld (boss__state), a
 	ret
+
 update_boss5_behavior_0_state_3_continue:
 	inc (hl)
 	; hl = current_room__tile_map + (5 + a) * 32 + 6
@@ -193,27 +227,6 @@ update_boss5_behavior_0_state_4:
 	ld a, (hl)
 	cp 16 * 7
 	jr nz, update_boss5_behavior_0_state_4_continue
-	; if it's charybdis, close the floor below with bricks: (118, 117)
-	ld a, (boss__5_variant)
-	cp 1
-	jr z, update_boss5_behavior_0_state_4_not_charybdis
-	ld hl, current_room__tile_map + 64*24 + 23*32+2
-	ld b, 28
-update_boss5_behavior_0_state_4_charybdis_loop:
-	ld a, b
-	and #01
-	xor #01
-	add a, 117
-	ld (hl), a
-	inc hl
-	djnz update_boss5_behavior_0_state_4_charybdis_loop
-	ld hl, current_room__tile_map + 64*24 + 23*32+2
-	ld de, current_room__tile_map + 23*32+2
-	ld bc, 28
-	ldir
-	ld hl, redraw_flags
-	set ROOM_REDRAW_FLAG_BIT, (hl)
-update_boss5_behavior_0_state_4_not_charybdis:
 	ld a, 5
 	ld (boss__state), a
 	xor a
@@ -221,6 +234,10 @@ update_boss5_behavior_0_state_4_not_charybdis:
 	ret
 update_boss5_behavior_0_state_4_continue:
 	inc (hl)
+	ld c, a
+	and #0f
+	ret nz
+	ld a, c
 	rrca
 	rrca
 	rrca
@@ -238,42 +255,38 @@ update_boss5_behavior_0_state_4_continue:
 	add hl, hl
 	ld bc, current_room__tile_map + 2 + 64*24
 	add hl, bc
-	push hl
-		ld d, h
-		ld e, l
-		inc de
-		ld (hl), 98  ; water top
-		ld bc, 27
-		ldir
+	ld d, h
+	ld e, l
+	inc de
+	ld (hl), 98  ; water top
+	ld bc, 27
+	ldir
 REPT 5
-		inc hl
-		inc de
+	inc hl
+	inc de
 ENDR
-		ld (hl), 129  ; water
-		ld bc, 27
-		ldir
+	ld (hl), 129  ; water
+	ld bc, 27
+	ldir
 
-		ld bc, - (64*24 + 32 + 27)
-		add hl, bc
-		ld d, h
-		ld e, l
-		ld bc, 64*24
-		add hl, bc
-		ld bc, 32 + 28
-		ldir
-	pop hl
-
-	; compute pointer where to draw the island:
-	ld bc, 10 - (4*32 + 64*24)
+	ld bc, - (64*24 + 32 + 27)
 	add hl, bc
-	ex de, hl
-	ld ix, boss5_frame_island_0
-	ld c, BOSS_PAGE
-	ld hl, draw_boss_frame_1_without_clearing_ix
-	call call_hl_in_page_c_8000
+	ld d, h
+	ld e, l
+	ld bc, 64*24
+	add hl, bc
+	ld bc, 32 + 28
+	ldir
 
 	; draw the boss below:
-	; ...
+	ld hl, boss__y
+	dec (hl)
+	ld a, (boss__5_current_variant)
+	or a
+	push af
+		call z, update_boss5_draw_charybdis
+	pop af
+	call nz, update_boss5_draw_scylla
 
 	; push the player up if on the island:
 	call player_check_collision_idle
@@ -283,13 +296,69 @@ ENDR
 	dec (hl)
 update_boss5_behavior_0_state_4_continue2:
 
+	; if it's charybdis, close the floor below with bricks: (118, 117)
+	ld a, (boss__5_variant)
+	cp 1
+	jr z, update_boss5_behavior_0_state_4_not_charybdis
+	ld b, 29
+	ld a, (boss__state_timer)
+	ld hl, current_room__tile_map + 64*24 + 23*32+1
+	cp 16 * 4 + 1  ; 16 * 4 -> bottom row
+	jr z, update_boss5_behavior_0_state_4_charybdis_preloop
+	ld hl, current_room__tile_map + 64*24 + 22*32+2
+	cp 16 * 5 + 1  ; 16 * 4 -> bottom row
+	jr z, update_boss5_behavior_0_state_4_charybdis_preloop
+	ld hl, current_room__tile_map + 64*24 + 21*32+1
+	cp 16 * 6 + 1  ; 16 * 4 -> bottom row
+	jr nz, update_boss5_behavior_0_state_4_not_charybdis
+update_boss5_behavior_0_state_4_charybdis_preloop:
+	push hl
+update_boss5_behavior_0_state_4_charybdis_loop:
+		ld a, b
+		and #01
+		xor #01
+		add a, 117
+		ld (hl), a
+		inc hl
+		djnz update_boss5_behavior_0_state_4_charybdis_loop
+	pop hl
+	ld d, h
+	ld e, l
+	ld bc, -64*24
+	add hl, bc
+	ex de, hl
+	ld bc, 29
+	ldir
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)
+update_boss5_behavior_0_state_4_not_charybdis:
+
 	ld hl, redraw_flags
 	set ROOM_REDRAW_FLAG_BIT, (hl)
 	ret
 
 update_boss5_behavior_0_state_5:
-	; boss name:
-	; ...
+	; Bring boss name (using sprites)
+	ld ix, boss5_name_initial_sprite_attributes
+	ld a, (boss__5_current_variant)
+	or a
+	jr z, update_boss5_behavior_0_state_5_continue
+	ld ix, boss5_name_initial_sprite_attributes_scylla
+update_boss5_behavior_0_state_5_continue:
+	push ix
+		ld de, boss5_name_y_table
+		ld hl, update_boss_behavior_bring_name_down_ix
+		ld c, BOSS_PAGE
+		call call_hl_in_page_c_8000
+		ld b, 100
+		call wait_b_halts_skippable
+	pop ix
+	; Remove boss name (using sprites)
+	ld de, boss5_name_y_table + 23
+	ld hl, update_boss_behavior_bring_name_up_ix
+	ld c, BOSS_PAGE
+	call call_hl_in_page_c_8000
+
 	ld a, 6
 	ld (boss__state), a
 	xor a

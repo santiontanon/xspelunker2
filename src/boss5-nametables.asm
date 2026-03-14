@@ -8,10 +8,28 @@ boss5_name_tables_scylla:
 
 BOSS5_NAMETABLE_ISLAND1: equ boss5_name_tables + 0  ; 8*7
 
+BOSS5_NAMETABLE_CHARYBDIS_BODY0: equ boss5_name_tables_charybdis + 0  ; 16*5
+
+BOSS5_NAMETABLE_SCYLLA_BODY0: equ boss5_name_tables_scylla + 0  ; 6*6
+
 
 boss5_frame_island_0:
 	db 1  ; number of parts
 	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
 	dw #0708, BOSS5_NAMETABLE_ISLAND1  ; dimensions and nametable
 	dw 0, #0708  ; boss__clear_bbox
+
+
+boss5_frame_charybdis_body_0:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0510, BOSS5_NAMETABLE_CHARYBDIS_BODY0  ; dimensions and nametable
+	dw 0, #0510  ; boss__clear_bbox
+
+
+boss5_frame_scylla_body_0:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0606, BOSS5_NAMETABLE_SCYLLA_BODY0  ; dimensions and nametable
+	dw 0, #0606  ; boss__clear_bbox
 
