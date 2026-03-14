@@ -1,14 +1,18 @@
 to do:
 
-***- Charybdis: implement all the behaviors
-  ***- routine to draw the boss from its different parts: body + claws/arms: for now, draw in idle
-  ***- draw the boss rising under the island
-  ***- in the last step, replace the bottom of the water with wall
-  ***- in update_boss5_behavior_0_state_5 bring the boss name down (the appropriate one, depending on which boss is appearing, even if for now, it's always charybdis)
-  ***- idle: mouth animation + maybe claw animation (open/close). Chance of firing bullets through the eyes
-  - move left/right:
-    - Chance of firing bullets through the eyes
-    - If player is above any of its claws, chance of claw attack, it raises the claw, and closes it, trying to catch the player
+OK - in the last step, replace the bottom of the water with wall if it's charybdis
+***- routine to draw the boss from its different parts:
+  ***- charybdis: body + claws/arms + top: for now, draw in idle one
+  ***- scylla: body + arms + top: for now, draw all arms pointing down
+***- draw the boss rising under the island (replace island drawing with routine above)
+***- in update_boss5_behavior_0_state_5 bring the boss name down (the appropriate one, depending on which boss is appearing, even if for now, it's always charybdis)
+***- spawn Scylla if the display is set to scylla instead (it's a separate set of boss behaviors, but in the same source file)
+
+***- Charybdis:
+  ***- idle: mouth animation + maybe claw animation (open/close)
+  - move left/right
+  - Chance of firing bullets through the eyes in both idle and move
+  - If player is above any of its claws (in idle or walk when it reaches the base leg position), chance of claw attack, it raises the claw, and closes it, trying to catch the player
   - create the usual boss difficulty settings for boss 5
   - jump attack (only when island is on top): triggered if player is on top of the island
     - crouches for a bit, and then jumps up until island crashes with the ceiling
@@ -17,13 +21,13 @@ to do:
     - the dash should be so fast that it is udodgeable unless you are ready, go to the opposide side, and know it's coming. If you know it's coming, it should be easy to dodge.
     - claws can be destroyed
   - when claws are dettached, it can fire lasers from the arm stumps (only vertically or diagonally)
-***- Scylla: implement all the behaviors
-  - spawn Scylla if the display is set to scylla instead (it's a separate set of boss behaviors, but in the same source file)
+***- Scylla:
   - update "update_sprite_objects_boss_extras_boss_5" for the eye
-  - idle: just animate the arms: Chance of firing bullets through the eyes
-    - each arm has a fixed set of possible frames, e.g. 8 - 10. Animating them is just rotating through sequences of those poses. There are 5 arms (8?) being animated, the front 3 are red color, which it uses for attack, and the back three are darker color, which are decoration initially, and only attack as the front ones get destroyed.
-  - swim left/right: Chance of firing bullets through the eyes
+  - idle: just animate the arms and blink
+    - each arm has a fixed set of possible frames, e.g. 8 - 10. Animating them is just rotating through sequences of those poses. There are 5 arms being animated, the front 3 are red color, which it uses for attack, and the back three are darker color, which are decoration only.
+  - swim left/right
     - if player is on top of a tentacle, chance of going to tentacle attack
+  - Chance of firing bullets through the eyes when idle/swimming
   - jump attack (like Charybdis)
   - tentacle attacks: one tentacle bends up, and then the top parts separate (showing thin cables connecting the parts). Several options:
     - stretching all the way to the top, and trying to hit you.

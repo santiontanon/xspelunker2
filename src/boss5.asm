@@ -193,6 +193,27 @@ update_boss5_behavior_0_state_4:
 	ld a, (hl)
 	cp 16 * 7
 	jr nz, update_boss5_behavior_0_state_4_continue
+	; if it's charybdis, close the floor below with bricks: (118, 117)
+	ld a, (boss__5_variant)
+	cp 1
+	jr z, update_boss5_behavior_0_state_4_not_charybdis
+	ld hl, current_room__tile_map + 64*24 + 23*32+2
+	ld b, 28
+update_boss5_behavior_0_state_4_charybdis_loop:
+	ld a, b
+	and #01
+	xor #01
+	add a, 117
+	ld (hl), a
+	inc hl
+	djnz update_boss5_behavior_0_state_4_charybdis_loop
+	ld hl, current_room__tile_map + 64*24 + 23*32+2
+	ld de, current_room__tile_map + 23*32+2
+	ld bc, 28
+	ldir
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)
+update_boss5_behavior_0_state_4_not_charybdis:
 	ld a, 5
 	ld (boss__state), a
 	xor a
