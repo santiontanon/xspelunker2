@@ -23,22 +23,37 @@ update_boss5_draw_charybdis:
 	ld bc, #0510
 	ld (boss__clear_bbox_1 + 2), bc
 
-	; draw top:
+	; draw claws:
 	push hl
-		ld bc, 4 - 32 * 6
+		ld bc, 3 + 2*32
 		add hl, bc
 		push hl
 			ex de, hl
-			ld ix, boss5_frame_island_0
+			ld ix, boss5_frame_left_claw1
 			ld c, BOSS_PAGE
 			ld hl, draw_boss_frame_2_without_clearing_ix
 			call call_hl_in_page_c_8000
 		pop hl
-		ld (boss__clear_bbox_2), hl
-		ld bc, #0708
-		ld (boss__clear_bbox_2 + 2), bc
+		ld bc, 6
+		add hl, bc
+		ex de, hl
+		ld ix, boss5_frame_right_claw1
+		ld c, BOSS_PAGE
+		ld hl, draw_boss_frame_2_without_clearing_ix
+		call call_hl_in_page_c_8000
 	pop hl
 
-	; draw claws:
-	; ...
+	; draw top:
+	ld bc, 4 - 32 * 6
+	add hl, bc
+	push hl
+		ex de, hl
+		ld ix, boss5_frame_island_0
+		ld c, BOSS_PAGE
+		ld hl, draw_boss_frame_2_without_clearing_ix
+		call call_hl_in_page_c_8000
+	pop hl
+	ld (boss__clear_bbox_2), hl
+	ld bc, #0708
+	ld (boss__clear_bbox_2 + 2), bc
 	ret

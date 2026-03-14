@@ -113,6 +113,14 @@ update_boss5_behavior_0_state_2:
 	ld a, #ff
 	call clear_memory_a
 
+	; update the collision table:
+	ld hl, tile_collision_types_boss5_island
+	ld (current_room__collision_ptr), hl
+	ld a, (current_room__collision_ptr_page)
+	ld de, current_room__collision_table
+	ld bc, 256
+	call ldir_from_page_a
+
 	ld hl, SFX_secret
 	call play_SFX_with_high_priority
 
@@ -164,6 +172,8 @@ update_boss5_behavior_0_state_3_scylla
 	ld (large_object_to_upload_to_vdp), hl
 	ld hl, boss_5_tiles_scylla1_zx0
 	ld (current_room__tileset_ptr), hl
+	ld a, BOSS_5_PAGE
+	ld (current_room__tileset_page), a
 	ld c, BOSS_5_PAGE
 	call setup_game_tiles_only_biome
 	ld bc, #180d  ; (13, 24), initial coordinates of scylla
@@ -501,3 +511,85 @@ update_boss5_behavior_0_state_7_continue2:
 	ld hl, redraw_flags
 	set ROOM_REDRAW_FLAG_BIT, (hl)
 	ret
+
+
+;-----------------------------------------------
+boss5_tile_attributes_patch:
+	ld hl, (current_room__tileset_ptr)
+	ld bc, boss_5_tiles_charybdis1_zx0
+	or a
+	sbc hl, bc
+	jr z, boss5_tile_attributes_patch_charybdis1
+	ld hl, (current_room__tileset_ptr)
+	ld bc, boss_5_tiles_charybdis1_zx0
+	or a
+	sbc hl, bc
+	jr z, boss5_tile_attributes_patch_charybdis2
+	ld hl, (current_room__tileset_ptr)
+	ld bc, boss_5_tiles_charybdis1_zx0
+	or a
+	sbc hl, bc
+	jr z, boss5_tile_attributes_patch_charybdis3
+boss5_tile_attributes_patch_scylla:
+    // scylla1/2: [48, 205] those that are boss	
+	ld ixl, 205 - 48
+boss5_tile_attributes_patch_scylla_continue:
+	; we assume the tileset is already decompressed in buffer_4096
+	ld iy, current_room__collision_table + 48
+	ld hl, buffer_4096 + 208*8
+boss5_tile_attributes_patch_loop:
+	ld a, (iy)
+	cp 9
+	jr nz, boss5_tile_attributes_patch_loop_skip
+	; process tile:
+	push hl
+		ld b, 8
+boss5_tile_attributes_patch_loop2:
+		ld a, (hl)
+		and #0f
+		jr nz, boss5_tile_attributes_patch_loop2_continue
+		; black, replace by blue:
+		ld a, (hl)
+		and #f0
+		or COLOR_DARK_BLUE
+		ld (hl), a
+boss5_tile_attributes_patch_loop2_continue:
+		ld a, (hl)
+		and #f0
+		jr nz, boss5_tile_attributes_patch_loop2_continue2
+		; black, replace by blue:
+		ld a, (hl)
+		and #0f
+		or COLOR_DARK_BLUE * 16
+		ld (hl), a
+boss5_tile_attributes_patch_loop2_continue2:
+		inc hl
+		djnz boss5_tile_attributes_patch_loop2
+	pop hl
+boss5_tile_attributes_patch_loop_skip:
+	inc iy
+	ld bc, 8
+	add hl, bc
+	dec ixl
+	jr nz, boss5_tile_attributes_patch_loop
+
+	; upload to VDP:
+	ld de, CLRTBL2 + 256*8*2 + 48*8
+	ld hl, buffer_4096 + 208*8
+	ld bc, 208*8
+	jp fast_LDIRVM
+
+boss5_tile_attributes_patch_charybdis1:
+    // charybdis1/2: [48, 214] those that are boss
+	ld ixl, 214 - 48
+	jr boss5_tile_attributes_patch_scylla_continue
+boss5_tile_attributes_patch_charybdis2:
+    // charybdis1/2: [48, 214] those that are boss
+	ld ixl, 214 - 48
+	jr boss5_tile_attributes_patch_scylla_continue
+
+boss5_tile_attributes_patch_charybdis3:
+    // charybdis3: [48, 161] those that are boss
+	ld ixl, 161 - 48
+	jr boss5_tile_attributes_patch_scylla_continue
+

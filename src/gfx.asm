@@ -375,10 +375,18 @@ setup_game_tiles_only_biome_continue:
     add hl, bc
     call fast_LDIRVM
 
-    ; tileset modifications in calendar room:
+    ; tileset modifications:
+    ; in calendar room:
     ld a, (current_area__id)
     cp 3
-    ret nz
+    jr z, setup_game_tiles_only_biome_area_3
+    ld a, (current_area__id)
+    cp 9
+    jr z, setup_game_tiles_only_biome_area_9
+    ; ...
+    ret
+
+setup_game_tiles_only_biome_area_3:
     ld a, (current_room__id)
     cp CALENDAR_ROOM_ID
     ret nz
@@ -397,6 +405,16 @@ setup_game_tiles_only_biome_continue:
     ret c
     ld hl, pcg_generate_room__calendar_turn_on_phase2
     ld c, PCG_PAGE
+    jp call_hl_in_page_c_8000
+
+setup_game_tiles_only_biome_area_9:
+    ld a, (boss__active)
+    or a
+    ret z
+
+    ; boss 5 room, make bg of boss tiles dark blue (they are in water):
+    ld hl, boss5_tile_attributes_patch
+    ld c, BOSS_5_PAGE
     jp call_hl_in_page_c_8000
 
 
