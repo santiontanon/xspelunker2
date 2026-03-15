@@ -354,12 +354,7 @@ ENDR
 	call nz, update_boss5_draw_scylla
 
 	; push the player up if on the island:
-	call player_check_collision_idle
-	jr nz, update_boss5_behavior_0_state_4_continue2
-	cp 2  ; if it's with a wall, push player up
-	ld hl, player_y + 1
-	dec (hl)
-update_boss5_behavior_0_state_4_continue2:
+	call boss5_maybe_push_player_up
 
 	; if it's charybdis, close the floor below with bricks: (118, 117)
 	ld a, (boss__5_variant)
@@ -648,3 +643,32 @@ boss5_tile_attributes_patch_charybdis3:
 	ld ixl, 161 - 48
 	jr boss5_tile_attributes_patch_scylla_continue
 
+
+;-----------------------------------------------
+boss5_maybe_push_player_up:
+	call player_check_collision_idle
+	ret nz
+	cp 2  ; if it's with a wall, push player up
+	ld hl, player_y + 1
+	dec (hl)
+	ret
+
+
+;-----------------------------------------------
+boss5_maybe_push_player_left:
+	call player_check_collision_idle
+	ret nz
+	cp 2  ; if it's with a wall, push player up
+	ld hl, player_x + 1
+	dec (hl)
+	ret
+
+
+;-----------------------------------------------
+boss5_maybe_push_player_right:
+	call player_check_collision_idle
+	ret nz
+	cp 2  ; if it's with a wall, push player up
+	ld hl, player_x + 1
+	inc (hl)
+	ret

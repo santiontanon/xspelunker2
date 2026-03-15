@@ -10,10 +10,23 @@ BOSS5_NAMETABLE_ISLAND1: equ boss5_name_tables + 0  ; 8*7
 
 BOSS5_NAMETABLE_CHARYBDIS_BODY0: equ boss5_name_tables_charybdis + 0  ; 16*5
 BOSS5_NAMETABLE_CHARYBDIS_MOUTH: equ boss5_name_tables_charybdis + 80  ; 2*1
+
 BOSS5_NAMETABLE_CHARYBDIS_LEFT_CLAW1: equ boss5_name_tables_charybdis + 82  ; 4*3
 BOSS5_NAMETABLE_CHARYBDIS_RIGHT_CLAW1: equ boss5_name_tables_charybdis + 94  ; 4*3
 BOSS5_NAMETABLE_CHARYBDIS_LEFT_CLAW2: equ boss5_name_tables_charybdis + 106  ; 4*3
 BOSS5_NAMETABLE_CHARYBDIS_RIGHT_CLAW2: equ boss5_name_tables_charybdis + 118  ; 4*3
+
+BOSS5_NAMETABLE_CHARYBDIS_LEFT_STUMP: equ boss5_name_tables_charybdis + 130  ; 2*3
+BOSS5_NAMETABLE_CHARYBDIS_RIGHT_STUMP: equ boss5_name_tables_charybdis + 136  ; 2*3
+BOSS5_NAMETABLE_CHARYBDIS_LEFT_STUMP_RISING: equ boss5_name_tables_charybdis + 142  ; 2*2
+BOSS5_NAMETABLE_CHARYBDIS_RIGHT_STUMP_RISING: equ boss5_name_tables_charybdis + 146  ; 2*2
+BOSS5_NAMETABLE_CHARYBDIS_LEFT_STUMP_UP: equ boss5_name_tables_charybdis + 150  ; 2*3
+BOSS5_NAMETABLE_CHARYBDIS_RIGHT_STUMP_UP: equ boss5_name_tables_charybdis + 156  ; 2*3
+
+BOSS5_NAMETABLE_CHARYBDIS_BODY_JUMP: equ boss5_name_tables_charybdis + 162  ; 14*6
+BOSS5_NAMETABLE_CHARYBDIS_BODY1: equ boss5_name_tables_charybdis + 246  ; 16*5
+BOSS5_NAMETABLE_CHARYBDIS_BODY2: equ boss5_name_tables_charybdis + 326  ; 16*5
+
 
 BOSS5_NAMETABLE_SCYLLA_BODY0: equ boss5_name_tables_scylla + 0  ; 6*6
 
@@ -32,6 +45,24 @@ boss5_frame_charybdis_body_0:
 	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
 	dw #0510, BOSS5_NAMETABLE_CHARYBDIS_BODY0  ; dimensions and nametable
 	dw 0, #0510  ; boss__clear_bbox
+
+boss5_frame_charybdis_body_1:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0510, BOSS5_NAMETABLE_CHARYBDIS_BODY1  ; dimensions and nametable
+	dw 0, #0510  ; boss__clear_bbox
+
+boss5_frame_charybdis_body_2:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0510, BOSS5_NAMETABLE_CHARYBDIS_BODY2  ; dimensions and nametable
+	dw 0, #0510  ; boss__clear_bbox
+
+boss5_frame_charybdis_body_jump:
+	db 1  ; number of parts
+	db 1, 2  ; offset wrt the draw ptr (x offset, y offset)
+	dw #060e, BOSS5_NAMETABLE_CHARYBDIS_BODY_JUMP  ; dimensions and nametable
+	dw 33, #060e  ; boss__clear_bbox
 
 boss5_frame_mouth:
 	db 1  ; number of parts

@@ -1,7 +1,6 @@
 to do:
 
 ***- Charybdis:
-  ***- move left/right
   ***- Chance of firing bullets through the eyes in both idle and move
   - jump attack (only when island is on top): triggered if player is on top of the island
     - crouches for a bit, and then jumps up until island crashes with the ceiling
@@ -80,9 +79,9 @@ to do:
   - The Maya were obsessed with sacrificing blood to their gods (the highest being extracting a beating heart from a person while still alive), then it was often burned so that the smoke will bring it to the gods. Can I add some puzzle/item/riddle about this? (maybe in the stella puzzle above, or maybe some blood meter that accumulates when you receive damage/die/kill-an-enemy and when full, things happen)
   - If the player enters a world name related to these theories (like "MU", "AZTLAN", or "COH"), it could trigger a world where the Atlantean ruins are "active"—meaning the tech still works, or different paths are open, or just some animations are played, and it's just a gimmic. (There should be a clue for this)
   - The "Firestone forge", which is in the Moon, and only active if you are in a world with the word "ATLANTIS" (or some variant) in it (add a clue).
-  - item that lets you fight a boss for a second time
-  - grave of the person who wrote all the story tablets, with a riddle you can only solve if you have seen all tablets
+  - item that lets you fight a boss for a second time (the idea was to get both items in boss 4, but not sure if worth it)
   - gigantic maya statue monument that looks decoration, but it's actually a secret boss (to have a maya-themed final boss)
+  - maybe that boss leads to the grave of the person who wrote all the story tablets (Yatzil), with a riddle you can only solve if you have seen all tablets
 
 --------------------
 

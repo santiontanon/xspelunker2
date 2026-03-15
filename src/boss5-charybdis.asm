@@ -1,18 +1,19 @@
 boss5_charybdis_difficulty_setting__easy:
 	dw 32  ; boss hp
-	db 64  ; idle time
+	db 64, #0f  ; idle time, walk mask
 boss5_charybdis_difficulty_setting__normal:
 	dw 48  ; boss hp
-	db 64  ; idle time
+	db 64, #07  ; idle time, walk mask
 boss5_charybdis_difficulty_setting__hard:
 	dw 64  ; boss hp
-	db 64  ; idle time
+	db 64, #07  ; idle time, walk mask
 boss5_charybdis_difficulty_setting__hardest:
 	dw 80  ; boss hp
-	db 64  ; idle time
+	db 64, #03  ; idle time, walk mask
 
 BOSS_5_CHARYBDIS_HP_OFFSET: equ 0
 BOSS_5_CHARYBDIS_IDLE_TIME_OFFSET: equ 2
+BOSS_5_CHARYBDIS_WALK_MASK: equ 3
 
 
 ;-----------------------------------------------
@@ -25,7 +26,7 @@ update_boss5_behavior_1:
 	dec a
 	jr z, update_boss5_behavior_1_state_2
 	dec a
-	jr z, update_boss5_behavior_1_state_3
+	jp z, update_boss5_behavior_1_state_3
 	; ...
 	ret
 
@@ -83,16 +84,88 @@ update_boss5_behavior_1_state_1_no_claw_movement:
 
 update_boss5_behavior_1_state_2:
 	; walk left:
-	; ...
-	jr update_boss5_behavior_1_state_0
+	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_WALK_MASK)
+	ld c, a
+	inc a
+	add a, a
+	add a, c
+	inc a
+	ld b, a  ; end of step time (mask + 1) * 3
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	cp b
+	jr z, update_boss5_behavior_1_state_0
+	and c
+	ret nz
+	ld hl, boss__x
+	ld a, (hl)
+	cp 2  ; minimum boss x
+	jr z, update_boss5_behavior_1_state_2_change_direction
+update_boss5_behavior_1_state_2_step:
+	dec (hl)
+	ld hl, boss__5_charybdis_leg_state
+	ld a, (hl)
+	dec a
+	cp #ff
+	jr nz, update_boss5_behavior_1_state_2_continue
+	ld a, 2
+update_boss5_behavior_1_state_2_continue:
+	ld (hl), a
+	call update_boss5_draw_charybdis
+	jp boss5_maybe_push_player_left
+update_boss5_behavior_1_state_2_change_direction:
+	ld a, 3
+	ld (boss__state), a
+	jr update_boss5_behavior_1_state_3_step
+
 
 update_boss5_behavior_1_state_3:
 	; walk right:
-	; ...
-	jr update_boss5_behavior_1_state_0
+	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_WALK_MASK)
+	ld c, a
+	inc a
+	add a, a
+	add a, c
+	inc a
+	ld b, a  ; end of step time (mask + 1) * 3
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	cp b
+	jp z, update_boss5_behavior_1_state_0
+	and c
+	ret nz
+	ld hl, boss__x
+	ld a, (hl)
+	cp 14  ; maximum boss x
+	jr z, update_boss5_behavior_1_state_3_change_direction
+update_boss5_behavior_1_state_3_step:
+	inc (hl)
+	ld hl, boss__5_charybdis_leg_state
+	ld a, (hl)
+	inc a
+	cp 3
+	jr nz, update_boss5_behavior_1_state_3_continue
+	xor a
+update_boss5_behavior_1_state_3_continue:
+	ld (hl), a
+	call update_boss5_draw_charybdis
+	jp boss5_maybe_push_player_right
+update_boss5_behavior_1_state_3_change_direction:
+	ld a, 2
+	ld (boss__state), a
+	jr update_boss5_behavior_1_state_2_step
 
 
 ;-----------------------------------------------
+; 0, 1, 2: walk, 3: jump
+update_boss5_draw_charybdis_body_table:
+	dw boss5_frame_charybdis_body_0
+	dw boss5_frame_charybdis_body_1
+	dw boss5_frame_charybdis_body_2
+	dw boss5_frame_charybdis_body_jump
+
 ; 0: base, 1: closed, 2: rising, 3: up, 4: stump base, 5: stump: rising, 6: stump up
 update_boss5_draw_charybdis_left_claw_table:
 	dw boss5_frame_left_claw1
@@ -123,7 +196,15 @@ update_boss5_draw_charybdis:
 	ex de, hl  ; hl = ptr where the boss is to be drawn	
 	; draw body:
 	push de
-		ld ix, boss5_frame_charybdis_body_0
+		ld a, (boss__5_charybdis_leg_state)
+		add a, a
+		ld hl, update_boss5_draw_charybdis_body_table
+		ADD_HL_A
+		ld c, (hl)
+		inc hl
+		ld b, (hl)
+		ld ixl, c
+		ld ixh, b
 		ld c, BOSS_PAGE
 		ld hl, draw_boss_frame_1_without_clearing_ix
 		call call_hl_in_page_c_8000
