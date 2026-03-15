@@ -1,12 +1,13 @@
 to do:
 
 ***- Charybdis:
-  ***- jump attack (only when island is on top): triggered if player is on top of the island
-    ***- stops for a bit, and then jumps up until island crashes with the ceiling
-    ***- first hit destroys statue
-    ***- from this point on jump is taller
-    ***- second hit damages island
-    ***- third hit replaces island with brain vat
+  ***- charybdis battle: lock scroll so that the blue background on the last bank aligns with the water:
+    ***- make sure it works with all the different hud types
+  ***- jump attack: do not push player beyond the top of the room, and if trapped, do damage (significant damage)
+  ***- jump attack: first hit destroys statue
+  ***- jump attack: from this point on jump is taller
+  ***- jump attack: second hit damages island
+  ***- jump attack: third hit replaces island with brain vat
   ***- being able to hit the vat/brain, inflicting damage: rest of the body should give "shield" noise
   ***- after a certain damage (define in difficulty settings), vat breaks revealing the brain
   - after island destroyed: If player is above any of its claws (in idle or walk when it reaches the base leg position), chance of claw attack, it raises the claw, and closes it, trying to catch the player

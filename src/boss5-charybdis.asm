@@ -1,20 +1,21 @@
 boss5_charybdis_difficulty_setting__easy:
 	dw 32  ; boss hp
-	db 64, #0f, #1f  ; idle time, walk mask, bullet-time-mask
+	db 64, #0f, #1f, 32  ; idle time, walk mask, bullet-time-mask, attack-delay
 boss5_charybdis_difficulty_setting__normal:
 	dw 48  ; boss hp
-	db 64, #07, #1f  ; idle time, walk mask, bullet-time-mask
+	db 64, #07, #1f, 28  ; idle time, walk mask, bullet-time-mask, attack-delay
 boss5_charybdis_difficulty_setting__hard:
 	dw 64  ; boss hp
-	db 64, #07, #0f  ; idle time, walk mask, bullet-time-mask
+	db 64, #07, #0f, 24  ; idle time, walk mask, bullet-time-mask, attack-delay
 boss5_charybdis_difficulty_setting__hardest:
 	dw 80  ; boss hp
-	db 64, #03, #0f  ; idle time, walk mask, bullet-time-mask
+	db 64, #03, #0f, 20  ; idle time, walk mask, bullet-time-mask, attack-delay
 
 BOSS_5_CHARYBDIS_HP_OFFSET: equ 0
 BOSS_5_CHARYBDIS_IDLE_TIME_OFFSET: equ 2
 BOSS_5_CHARYBDIS_WALK_MASK: equ 3
 BOSS_5_CHARYBDIS_BULLET_TIME_MASK: equ 4
+BOSS_5_CHARYBDIS_ATTACK_DELAY: equ 5
 
 
 ;-----------------------------------------------
@@ -23,16 +24,47 @@ update_boss5_behavior_1:
 	or a
 	jr z, update_boss5_behavior_1_state_0
 	dec a
-	jr z, update_boss5_behavior_1_state_1
+	jr z, update_boss5_behavior_1_state_1  ; idle
 	dec a
-	jr z, update_boss5_behavior_1_state_2
+	jp z, update_boss5_behavior_1_state_2  ; left
 	dec a
-	jp z, update_boss5_behavior_1_state_3
+	jp z, update_boss5_behavior_1_state_3  ; right
+	dec a
+	jp z, update_boss5_behavior_1_state_4  ; jump (waiting)
+	dec a
+	jp z, update_boss5_behavior_1_state_5  ; jump (going up)
+	dec a
+	jp z, update_boss5_behavior_1_state_6  ; jump (hit the top)
+	dec a
+	jp z, update_boss5_behavior_1_state_7  ; jump (goind down)
 	; ...
 	ret
 
 update_boss5_behavior_1_state_0:
 	; switch:
+	; if player is on top of the island, chance of jump attack:
+	ld a, (player_y + 1)
+	cp 14
+	jr nc, update_boss5_behavior_1_state_0_no_jump
+	ld a, (player_x + 1)
+	ld c, a
+	ld a, (boss__x)
+	add a, 3
+	cp c
+	jr nc, update_boss5_behavior_1_state_0_no_jump
+	add a, 9
+	cp c
+	jr c, update_boss5_behavior_1_state_0_no_jump
+	; player is on top of the island, chance of jumping
+	call random_a
+	and #01
+	jr z, update_boss5_behavior_1_state_0_no_jump
+	ld a, 4
+	ld (boss__state), a
+	xor a
+	ld (boss__state_timer), a
+	jr update_boss5_behavior_1
+update_boss5_behavior_1_state_0_no_jump:
 	ld c, 3
 	call random_modulo
 	inc a
@@ -100,7 +132,7 @@ update_boss5_behavior_1_state_2:
 	ld a, (hl)
 	inc (hl)
 	cp b
-	jr z, update_boss5_behavior_1_state_0
+	jp z, update_boss5_behavior_1_state_0
 	and c
 	ret nz
 	ld hl, boss__x
@@ -165,6 +197,82 @@ update_boss5_behavior_1_state_3_change_direction:
 	jr update_boss5_behavior_1_state_2_step
 
 
+update_boss5_behavior_1_state_4:
+	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_ATTACK_DELAY)
+	ld c, a
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	cp c
+	ret nz
+	ld (hl), 0
+	ld a, 5
+	ld (boss__state), a
+	ret
+
+update_boss5_behavior_1_state_5:
+	; jump:
+	ld a, 3
+	ld (boss__5_charybdis_leg_state), a
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	and #03
+	ret nz
+	ld hl, boss__y
+	ld a, (hl)
+	cp 7  ; max height of the jump
+	jr z, update_boss5_behavior_1_state_5_done
+	dec (hl)
+	call update_boss5_draw_charybdis
+	jp boss5_maybe_push_player_up
+update_boss5_behavior_1_state_5_done:
+	xor a
+	ld (boss__state_timer), a
+	ld a, 6
+	ld (boss__state), a
+	ld hl, SFX_explosion_low_pitch
+	jp play_SFX_with_high_priority
+
+
+update_boss5_behavior_1_state_6:
+	; jump hit the ceiling:
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	cp 16
+	ret nz
+	xor a
+	ld (boss__state_timer), a
+	ld a, 7
+	ld (boss__state), a
+	ret
+
+update_boss5_behavior_1_state_7:
+	; fall back down:
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	and #07
+	ret nz
+	ld hl, boss__y
+	ld a, (hl)
+	cp 15  ; landing position
+	jr z, update_boss5_behavior_1_state_7_done
+	inc (hl)
+	jp update_boss5_draw_charybdis
+update_boss5_behavior_1_state_7_done:
+	inc (hl)
+	xor a
+	ld (boss__5_charybdis_leg_state), a
+	ld (boss__state_timer), a
+	ld a, 0
+	ld (boss__state), a
+	ld hl, SFX_watersplash_soft
+	call play_SFX_with_high_priority
+	jp update_boss5_draw_charybdis
+
+
 ;-----------------------------------------------
 ; 0, 1, 2: walk, 3: jump
 update_boss5_draw_charybdis_body_table:
@@ -216,9 +324,9 @@ update_boss5_draw_charybdis:
 		ld hl, draw_boss_frame_1_without_clearing_ix
 		call call_hl_in_page_c_8000
 	pop hl
-	ld (boss__clear_bbox_1), hl
-	ld bc, #0510
-	ld (boss__clear_bbox_1 + 2), bc
+; 	ld (boss__clear_bbox_1), hl
+; 	ld bc, #0510
+; 	ld (boss__clear_bbox_1 + 2), bc
 
 	; mouth:
 	ld a, (boss__5_charybdis_mouth_state)

@@ -60,7 +60,7 @@ boss5_frame_charybdis_body_2:
 
 boss5_frame_charybdis_body_jump:
 	db 1  ; number of parts
-	db 1, 2  ; offset wrt the draw ptr (x offset, y offset)
+	db 1, 1  ; offset wrt the draw ptr (x offset, y offset)
 	dw #060e, BOSS5_NAMETABLE_CHARYBDIS_BODY_JUMP  ; dimensions and nametable
 	dw 33, #060e  ; boss__clear_bbox
 
