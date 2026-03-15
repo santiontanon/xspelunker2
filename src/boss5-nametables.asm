@@ -33,6 +33,12 @@ boss5_frame_charybdis_body_0:
 	dw #0510, BOSS5_NAMETABLE_CHARYBDIS_BODY0  ; dimensions and nametable
 	dw 0, #0510  ; boss__clear_bbox
 
+boss5_frame_mouth:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0102, BOSS5_NAMETABLE_CHARYBDIS_MOUTH  ; dimensions and nametable
+	dw 0, #0102  ; boss__clear_bbox
+
 boss5_frame_left_claw1:
 	db 1  ; number of parts
 	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)

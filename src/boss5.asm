@@ -15,11 +15,11 @@ update_boss5_behavior_continue:
 	ld a, (boss__behavior)
 	or a
 	jp z, update_boss5_behavior_0  ; before boss is spawned (we don't even know if it's charybdis or scylla here)
+	dec a
+	jp z, update_boss5_behavior_1  ; charybdis with island on top
 ; 	dec a
-; 	jp z, update_boss5_behavior_1  ; walking
-; 	dec a
-; 	jp z, update_boss5_behavior_2  ; stomping
-; 	jp update_boss5_behavior_3  ; death
+; 	jp z, update_boss5_behavior_2  ; ...
+; 	jp update_boss5_behavior_3  ; ...
 	ret
 
 
@@ -147,7 +147,7 @@ update_boss5_behavior_0_state_3:
 	dec a  ; cp 1
 	jr z, update_boss5_behavior_0_state_3_scylla
 	dec a  ; cp 2
-	jr z, update_boss5_behavior_0_state_3_death
+	jp z, update_boss5_behavior_0_state_3_death
 	; both bosses, initialize charybdis first
 update_boss5_behavior_0_state_3_charybdis:
 	; tileset:
@@ -163,6 +163,36 @@ update_boss5_behavior_0_state_3_charybdis:
 	ld hl, 0
 	ld (boss__clear_bbox_1 + 2), hl
 	ld (boss__clear_bbox_2 + 2), hl
+
+	ld hl, (boss__5_settings + BOSS_5_CHARYBDIS_HP_OFFSET)
+	ld (boss__hp), hl
+	ld hl, player_weapon_hitbox_check_boss__boss5_charybdis_hit
+	ld (boss__hit_fn), hl
+	ld a, BOSS_5_PAGE
+	ld (boss__hit_fn_page), a
+	xor a
+	ld (boss__hit_timer), a
+
+	ld a, (current_world__difficulty)
+	ld hl, boss5_charybdis_difficulty_setting__easy
+	or a
+	jr z, update_boss5_behavior_0_state_3_charybdis_continue
+	ld hl, boss5_charybdis_difficulty_setting__normal
+	dec a
+	jr z, update_boss5_behavior_0_state_3_charybdis_continue
+	dec a
+	ld hl, boss5_charybdis_difficulty_setting__hard
+	jr z, update_boss5_behavior_0_state_3_charybdis_continue
+	ld hl, boss5_charybdis_difficulty_setting__hardest
+update_boss5_behavior_0_state_3_charybdis_continue:
+	ld de, boss__5_settings
+	ld bc, boss5_charybdis_difficulty_setting__normal - boss5_charybdis_difficulty_setting__easy
+	ldir
+
+	xor a
+	ld (boss__5_charybdis_mouth_state), a
+	ld (boss__5_charybdis_left_claw_state), a
+	ld (boss__5_charybdis_right_claw_state), a	
 	; ...
 
 	jr update_boss5_behavior_0_state_3_done
@@ -186,6 +216,31 @@ update_boss5_behavior_0_state_3_scylla
 	ld (boss__clear_bbox_2), hl
 	ld hl, #0108
 	ld (boss__clear_bbox_2 + 2), hl
+
+	ld hl, (boss__5_settings + BOSS_5_SCYLLA_HP_OFFSET)
+	ld (boss__hp), hl
+	ld hl, player_weapon_hitbox_check_boss__boss5_scylla_hit
+	ld (boss__hit_fn), hl
+	ld a, BOSS_5_PAGE
+	ld (boss__hit_fn_page), a
+	xor a
+	ld (boss__hit_timer), a
+
+	ld a, (current_world__difficulty)
+	ld hl, boss5_scylla_difficulty_setting__easy
+	or a
+	jr z, update_boss5_behavior_0_state_3_scylla_continue
+	ld hl, boss5_scylla_difficulty_setting__normal
+	dec a
+	jr z, update_boss5_behavior_0_state_3_scylla_continue
+	dec a
+	ld hl, boss5_scylla_difficulty_setting__hard
+	jr z, update_boss5_behavior_0_state_3_scylla_continue
+	ld hl, boss5_scylla_difficulty_setting__hardest
+update_boss5_behavior_0_state_3_scylla_continue:
+	ld de, boss__5_settings
+	ld bc, boss5_scylla_difficulty_setting__normal - boss5_scylla_difficulty_setting__easy
+	ldir	
 	; ...
 
 update_boss5_behavior_0_state_3_done:

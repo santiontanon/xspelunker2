@@ -1,3 +1,19 @@
+boss5_scylla_difficulty_setting__easy:
+	dw 32  ; boss hp
+	db 64  ; idle time
+boss5_scylla_difficulty_setting__normal:
+	dw 48  ; boss hp
+	db 64  ; idle time
+boss5_scylla_difficulty_setting__hard:
+	dw 64  ; boss hp
+	db 64  ; idle time
+boss5_scylla_difficulty_setting__hardest:
+	dw 80  ; boss hp
+	db 64  ; idle time
+
+BOSS_5_SCYLLA_HP_OFFSET: equ 0
+
+
 ;-----------------------------------------------
 ; coordinate is the top-left of the 6x6 body 
 update_boss5_draw_scylla:
@@ -42,3 +58,21 @@ update_boss5_draw_scylla:
 	; draw arms:
 	; ...
 	ret
+
+
+;-----------------------------------------------
+; input:
+; - e: tile number that was hit
+; - iyh: damage to deal
+; - iyl: collision ID
+player_weapon_hitbox_check_boss__boss5_scylla_hit:
+	ld a, (boss__behavior)
+	cp 0
+	jp nz, player_weapon_hitbox_check_boss__boss5_hit_shield
+	; ...
+	; hit the main body:
+; 	ld hl, player_weapon_hitbox_check_boss__lose_hp
+; 	ld c, BOSS_PAGE
+; 	call call_hl_in_page_c_8000	
+	jp player_weapon_hitbox_check_boss__boss5_hit_shield
+

@@ -1,17 +1,8 @@
 to do:
 
 ***- Charybdis:
-  ***- idle: mouth animation + claw animation (open/close)
-    ***- create behavior code block: behavior 1 is charybdis with island on top
-    ***- add variables for mouth and claw state
-    ***- when those variables change, call the drawing function again
-    ***- make the drawing function respect those variables
-  ***- move left/right:
-    ***- behavior 1, state 0: switch
-    ***- behavior 1, state 1: idle
-    ***- behavior 1, state 2: walk left
-    ***- behavior 1, state 3: walk right
-  ***- create the usual boss difficulty settings for boss 5 (in update_boss5_behavior_0_state_3)
+  ***- make the drawing function respect "claw state" (have a table, for now with just open/closed)
+  ***- move left/right
   ***- Chance of firing bullets through the eyes in both idle and move
   - jump attack (only when island is on top): triggered if player is on top of the island
     - crouches for a bit, and then jumps up until island crashes with the ceiling
