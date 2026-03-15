@@ -16,6 +16,7 @@ enemy_update_fn_table:
 	dw update_enemy_boss4_blades  ; boss 4 attack
 	dw update_enemy_bullet_waterball
 	dw update_enemy_laser  ; atlantis sentinel attack
+	dw update_enemy_bullet_ignoring_walls  ; ignores wall collisions
 	; enemies you can hit:
 	dw update_enemy_snake  ; left-to-right
 	dw update_enemy_snake_dasher  ; left-to-right + dash
@@ -1034,6 +1035,37 @@ update_enemy_bullet_y_negative:
 	call update_enemy_bullet_move_up_if_possible_a_times
 	jp z, update_enemy_delete
 update_enemy_bullet_y_done:
+
+	ld d, COLOR_YELLOW
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 0) * 4 
+	jp enemy_sprite_and_continue
+
+
+;-----------------------------------------------
+update_enemy_bullet_ignoring_walls:
+	ld iyh, 1  ; damage to deal
+	call update_enemy_hurt_player_shieldable_bullet
+	jp z, update_enemy_delete
+	
+	ld a, (current_world__difficulty_bullet_speed)
+	ld iyl, a
+	call update_enemy_bullet_bresenham_iyl_steps
+	; - b: amount to move in y
+	; - c: amount to move in x
+	call update_enemy_move_cb
+
+	; out of the screen?
+	ld a, (current_room__width)
+	dec a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	jp z, update_enemy_delete
+	jp c, update_enemy_delete
+
+	ld a, (current_room__height)
+	dec a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	jp z, update_enemy_delete
+	jp c, update_enemy_delete
 
 	ld d, COLOR_YELLOW
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 0) * 4 

@@ -1,17 +1,19 @@
 to do:
 
 ***- Charybdis:
-  ***- Chance of firing bullets through the eyes in both idle and move
-  - jump attack (only when island is on top): triggered if player is on top of the island
-    - crouches for a bit, and then jumps up until island crashes with the ceiling
-    - island shows damage after two hits (first hit destroys the statue), and gets destroyed after 4 hits, revealing the brain in a vat. At this point, boss accelerates a bit (to the next level of difficulty maybe?)
-  - being able to hit the vat/brain, inflicting damage
-  - after a certain damage (define in difficulty settings), vat breaks revealing the brain
-  - If player is above any of its claws (in idle or walk when it reaches the base leg position), chance of claw attack, it raises the claw, and closes it, trying to catch the player
-  - flying claw: one of the claws (one at random of the ones that remain) detaches and flies up independently (with some rocket showing behind it), it flies up to the player height (minimum just above water) and then goes horizontally fast, to try to hit you. After each time, chance of going back.
-    - the dash should be so fast that it is udodgeable unless you are ready, go to the opposide side, and know it's coming. If you know it's coming, it should be easy to dodge.
-    - claws can be destroyed
-  - when claws are dettached, it can fire lasers from the arm stumps (only vertically or diagonally)
+  ***- jump attack (only when island is on top): triggered if player is on top of the island
+    ***- stops for a bit, and then jumps up until island crashes with the ceiling
+    ***- first hit destroys statue
+    ***- from this point on jump is taller
+    ***- second hit damages island
+    ***- third hit replaces island with brain vat
+  ***- being able to hit the vat/brain, inflicting damage: rest of the body should give "shield" noise
+  ***- after a certain damage (define in difficulty settings), vat breaks revealing the brain
+  - after island destroyed: If player is above any of its claws (in idle or walk when it reaches the base leg position), chance of claw attack, it raises the claw, and closes it, trying to catch the player
+  - after island destroyed: flying claw: one of the claws (one at random of the ones that remain) detaches and flies up independently (with some rocket showing behind it), it flies up to the player height (minimum just above water) and then goes horizontally fast, to try to hit you. After each time, chance of going back.
+    - the dash should be so fast that it is undodgeable unless you are ready, go to the opposide side, and know it's coming. If you know it's coming, it should be easy to dodge.
+    - claws can be destroyed (??? decide)
+  - when claws are dettached, it can fire lasers from the arm stumps (only vertically or diagonally): do not aim, just randomly fire
   - when HP get to zero, boss dies (lots of explosions, like for boss 4), and then disappear; if there is any flying claw, it also pops with an explosion
 ***- Scylla:
   - update "update_sprite_objects_boss_extras_boss_5" for the eye

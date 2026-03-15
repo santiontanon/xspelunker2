@@ -1,19 +1,20 @@
 boss5_charybdis_difficulty_setting__easy:
 	dw 32  ; boss hp
-	db 64, #0f  ; idle time, walk mask
+	db 64, #0f, #1f  ; idle time, walk mask, bullet-time-mask
 boss5_charybdis_difficulty_setting__normal:
 	dw 48  ; boss hp
-	db 64, #07  ; idle time, walk mask
+	db 64, #07, #1f  ; idle time, walk mask, bullet-time-mask
 boss5_charybdis_difficulty_setting__hard:
 	dw 64  ; boss hp
-	db 64, #07  ; idle time, walk mask
+	db 64, #07, #0f  ; idle time, walk mask, bullet-time-mask
 boss5_charybdis_difficulty_setting__hardest:
 	dw 80  ; boss hp
-	db 64, #03  ; idle time, walk mask
+	db 64, #03, #0f  ; idle time, walk mask, bullet-time-mask
 
 BOSS_5_CHARYBDIS_HP_OFFSET: equ 0
 BOSS_5_CHARYBDIS_IDLE_TIME_OFFSET: equ 2
 BOSS_5_CHARYBDIS_WALK_MASK: equ 3
+BOSS_5_CHARYBDIS_BULLET_TIME_MASK: equ 4
 
 
 ;-----------------------------------------------
@@ -77,6 +78,8 @@ update_boss5_behavior_1_state_1_no_mouth_movement:
 	ld a, 1
 	ld (boss__5_needs_redraw), a	
 update_boss5_behavior_1_state_1_no_claw_movement:
+
+	call update_boss5_charybdis_maybe_fire_eye_bullet
 	ld a, (boss__5_needs_redraw)
 	or a
 	ret z
@@ -84,6 +87,8 @@ update_boss5_behavior_1_state_1_no_claw_movement:
 
 update_boss5_behavior_1_state_2:
 	; walk left:
+	call update_boss5_charybdis_maybe_fire_eye_bullet
+
 	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_WALK_MASK)
 	ld c, a
 	inc a
@@ -122,6 +127,8 @@ update_boss5_behavior_1_state_2_change_direction:
 
 update_boss5_behavior_1_state_3:
 	; walk right:
+	call update_boss5_charybdis_maybe_fire_eye_bullet
+
 	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_WALK_MASK)
 	ld c, a
 	inc a
@@ -280,6 +287,35 @@ update_boss5_draw_charybdis_no_mouth:
 
 	ld hl, redraw_flags
 	set ROOM_REDRAW_FLAG_BIT, (hl)	
+	ret
+
+
+;-----------------------------------------------
+update_boss5_charybdis_maybe_fire_eye_bullet:
+	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_BULLET_TIME_MASK)
+	ld c, a
+	call random_a
+	and c
+	ret nz
+	ld bc, (boss__x)
+	inc b
+	ld a, 5
+	add a, c
+	ld e, a  ; left eye
+	call random_a
+	and #01
+	jr z, update_boss5_charybdis_maybe_fire_eye_bullet_left_eye
+	inc e
+	inc e
+	inc e
+update_boss5_charybdis_maybe_fire_eye_bullet_left_eye:
+	ld ix, #0004
+	; - c, b: tile coordinate from where the bullet is fired
+	; - ixl, ixh: pixel offset	
+	ld hl, boss_fire_directional_bullet_towards_player_e_b
+	ld c, BOSS_PAGE
+	call call_hl_in_page_c_8000
+	ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BULLET_IGNORING_WALLS
 	ret
 
 
