@@ -307,6 +307,9 @@ enter_boss_door__spawn_atlantis_boss_objects:
 	ld (large_object_to_upload_to_vdp), hl
 	ld a, 16*8
 	ld (large_object_to_upload_to_vdp_size), a	
+
+	ld a, 1
+	ld (room_locked_scroll), a
 	ret
 
 

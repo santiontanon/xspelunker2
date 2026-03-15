@@ -87,6 +87,10 @@ maybe_recenter_scroll_recenter_y_continue2:
 
 ;-----------------------------------------------
 update_scroll:
+	ld a, (room_locked_scroll)
+	or a
+	jr nz, update_scroll_lock
+
 	ld bc, (room_desired_scroll_x)
 	ld de, (room_scroll_x)
 	ld a, e
@@ -116,3 +120,15 @@ update_scroll_done:
 	ld (room_scroll_x), de
 	ret
 
+update_scroll_lock:
+	; boss 5 scroll lock:
+	ld a, (config_hud_type)
+	cp 2  ; full hud
+	jr z, update_scroll_lock_full_hud
+	ld hl, 0
+	ld (room_scroll_x), hl
+	ret
+update_scroll_lock_full_hud:
+	ld hl, #0200
+	ld (room_scroll_x), hl
+	ret

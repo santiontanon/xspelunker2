@@ -132,6 +132,7 @@ room_desired_scroll_x: ds virtual 1
 room_desired_scroll_y: ds virtual 1
 room_scroll_x: ds virtual 1
 room_scroll_y: ds virtual 1
+room_locked_scroll: ds virtual 1  ; 0: not locked, 1: boss 5
 
 ; game state variables:
 

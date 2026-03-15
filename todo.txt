@@ -1,8 +1,6 @@
 to do:
 
 ***- Charybdis:
-  ***- charybdis battle: lock scroll so that the blue background on the last bank aligns with the water:
-    ***- make sure it works with all the different hud types
   ***- jump attack: do not push player beyond the top of the room, and if trapped, do damage (significant damage)
   ***- jump attack: first hit destroys statue
   ***- jump attack: from this point on jump is taller

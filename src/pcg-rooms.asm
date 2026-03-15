@@ -184,6 +184,7 @@ pcg_generate_room_reset_state:
 
 	xor a
 	ld (boss__in_boss_room), a
+	ld (room_locked_scroll), a
 	ld (tmp_enemy_pcg_tile_enemy_workmemory_usage), a
 	ld (tmp_enemy_pcg_tile_enemy_spawned_type), a
 	ld a, #7f  ; first enemy ID (enemy IDs are only used to track which one was already killed, for respawn)
