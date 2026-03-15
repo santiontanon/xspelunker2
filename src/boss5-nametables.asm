@@ -45,10 +45,22 @@ boss5_frame_left_claw1:
 	dw #0304, BOSS5_NAMETABLE_CHARYBDIS_LEFT_CLAW1  ; dimensions and nametable
 	dw 0, #0304  ; boss__clear_bbox
 
+boss5_frame_left_claw2:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0304, BOSS5_NAMETABLE_CHARYBDIS_LEFT_CLAW2  ; dimensions and nametable
+	dw 0, #0304  ; boss__clear_bbox
+
 boss5_frame_right_claw1:
 	db 1  ; number of parts
 	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
 	dw #0304, BOSS5_NAMETABLE_CHARYBDIS_RIGHT_CLAW1  ; dimensions and nametable
+	dw 0, #0304  ; boss__clear_bbox
+
+boss5_frame_right_claw2:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0304, BOSS5_NAMETABLE_CHARYBDIS_RIGHT_CLAW2  ; dimensions and nametable
 	dw 0, #0304  ; boss__clear_bbox
 
 

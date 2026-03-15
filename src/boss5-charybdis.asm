@@ -59,8 +59,11 @@ update_boss5_behavior_1_state_1:
 	ld (boss__5_needs_redraw), a
 update_boss5_behavior_1_state_1_no_mouth_movement:
 
+	ld a, (boss__state_timer)
+	and #03
+	jr nz, update_boss5_behavior_1_state_1_no_claw_movement
 	call random_a
-	and #07
+	and #03
 	jr nz, update_boss5_behavior_1_state_1_no_claw_movement
 	ld hl, boss__5_charybdis_left_claw_state
 	ld a, (hl)
@@ -88,6 +91,19 @@ update_boss5_behavior_1_state_3:
 	; ...
 	jr update_boss5_behavior_1_state_0
 
+
+;-----------------------------------------------
+; 0: base, 1: closed, 2: rising, 3: up, 4: stump base, 5: stump: rising, 6: stump up
+update_boss5_draw_charybdis_left_claw_table:
+	dw boss5_frame_left_claw1
+	dw boss5_frame_left_claw2
+	; ...
+
+; 0: base, 1: closed, 2: rising, 3: up, 4: stump base, 5: stump: rising, 6: stump up
+update_boss5_draw_charybdis_right_claw_table:
+	dw boss5_frame_right_claw1
+	dw boss5_frame_right_claw2
+	; ...
 
 ;-----------------------------------------------
 ; coordinate is the top-left of the 16x5 body 
@@ -137,7 +153,15 @@ update_boss5_draw_charybdis_no_mouth:
 		add hl, bc
 		push hl
 			ex de, hl
-			ld ix, boss5_frame_left_claw1
+			ld a, (boss__5_charybdis_left_claw_state)
+			add a, a
+			ld hl, update_boss5_draw_charybdis_left_claw_table
+			ADD_HL_A
+			ld c, (hl)
+			inc hl
+			ld b, (hl)
+			ld ixl, c
+			ld ixh, b
 			ld c, BOSS_PAGE
 			ld hl, draw_boss_frame_2_without_clearing_ix
 			call call_hl_in_page_c_8000
@@ -145,7 +169,15 @@ update_boss5_draw_charybdis_no_mouth:
 		ld bc, 6
 		add hl, bc
 		ex de, hl
-		ld ix, boss5_frame_right_claw1
+		ld a, (boss__5_charybdis_right_claw_state)
+		add a, a
+		ld hl, update_boss5_draw_charybdis_right_claw_table
+		ADD_HL_A
+		ld c, (hl)
+		inc hl
+		ld b, (hl)
+		ld ixl, c
+		ld ixh, b
 		ld c, BOSS_PAGE
 		ld hl, draw_boss_frame_2_without_clearing_ix
 		call call_hl_in_page_c_8000
