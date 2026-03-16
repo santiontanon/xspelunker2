@@ -1,14 +1,14 @@
 boss5_scylla_difficulty_setting__easy:
-	dw 32  ; boss hp
+	db 32, 16  ; boss hp, vat hp
 	db 64  ; idle time
 boss5_scylla_difficulty_setting__normal:
-	dw 48  ; boss hp
+	db 48, 16  ; boss hp, vat hp
 	db 64  ; idle time
 boss5_scylla_difficulty_setting__hard:
-	dw 64  ; boss hp
+	db 64, 24  ; boss hp, vat hp
 	db 64  ; idle time
 boss5_scylla_difficulty_setting__hardest:
-	dw 80  ; boss hp
+	db 80, 32  ; boss hp, vat hp
 	db 64  ; idle time
 
 BOSS_5_SCYLLA_HP_OFFSET: equ 0

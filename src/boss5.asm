@@ -17,8 +17,8 @@ update_boss5_behavior_continue:
 	jp z, update_boss5_behavior_0  ; before boss is spawned (we don't even know if it's charybdis or scylla here)
 	dec a
 	jp z, update_boss5_behavior_1  ; charybdis with island on top
-; 	dec a
-; 	jp z, update_boss5_behavior_2  ; ...
+	dec a
+	jp z, update_boss5_behavior_2  ; charybdis vat/brain on top
 ; 	jp update_boss5_behavior_3  ; ...
 	ret
 
@@ -164,16 +164,6 @@ update_boss5_behavior_0_state_3_charybdis:
 	ld (boss__clear_bbox_1 + 2), hl
 	ld (boss__clear_bbox_2 + 2), hl
 
-	ld hl, (boss__5_settings + BOSS_5_CHARYBDIS_HP_OFFSET)
-	ld (boss__hp), hl
-	ld hl, player_weapon_hitbox_check_boss__boss5_charybdis_hit
-	ld (boss__hit_fn), hl
-	ld a, BOSS_5_PAGE
-	ld (boss__hit_fn_page), a
-	xor a
-	ld (boss__hit_timer), a
-	ld (boss__5_top_state), a
-
 	ld a, (current_world__difficulty)
 	ld hl, boss5_charybdis_difficulty_setting__easy
 	or a
@@ -189,6 +179,18 @@ update_boss5_behavior_0_state_3_charybdis_continue:
 	ld de, boss__5_settings
 	ld bc, boss5_charybdis_difficulty_setting__normal - boss5_charybdis_difficulty_setting__easy
 	ldir
+
+	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_HP_OFFSET + 1)  ; vat HP
+	ld h, 0
+	ld l, a
+	ld (boss__hp), hl
+	ld hl, player_weapon_hitbox_check_boss__boss5_charybdis_hit
+	ld (boss__hit_fn), hl
+	ld a, BOSS_5_PAGE
+	ld (boss__hit_fn_page), a
+	xor a
+	ld (boss__hit_timer), a
+	ld (boss__5_top_state), a
 
 	xor a
 	ld (boss__5_charybdis_mouth_state), a
@@ -218,16 +220,6 @@ update_boss5_behavior_0_state_3_scylla
 	ld hl, #0108
 	ld (boss__clear_bbox_2 + 2), hl
 
-	ld hl, (boss__5_settings + BOSS_5_SCYLLA_HP_OFFSET)
-	ld (boss__hp), hl
-	ld hl, player_weapon_hitbox_check_boss__boss5_scylla_hit
-	ld (boss__hit_fn), hl
-	ld a, BOSS_5_PAGE
-	ld (boss__hit_fn_page), a
-	xor a
-	ld (boss__hit_timer), a
-	ld (boss__5_top_state), a
-
 	ld a, (current_world__difficulty)
 	ld hl, boss5_scylla_difficulty_setting__easy
 	or a
@@ -243,6 +235,19 @@ update_boss5_behavior_0_state_3_scylla_continue:
 	ld de, boss__5_settings
 	ld bc, boss5_scylla_difficulty_setting__normal - boss5_scylla_difficulty_setting__easy
 	ldir	
+
+	ld a, (boss__5_settings + BOSS_5_SCYLLA_HP_OFFSET + 1)  ; vat HP
+	ld h, 0
+	ld l, a
+	ld (boss__hp), hl
+	ld hl, player_weapon_hitbox_check_boss__boss5_scylla_hit
+	ld (boss__hit_fn), hl
+	ld a, BOSS_5_PAGE
+	ld (boss__hit_fn_page), a
+	xor a
+	ld (boss__hit_timer), a
+	ld (boss__5_top_state), a
+
 	; ...
 
 update_boss5_behavior_0_state_3_done:

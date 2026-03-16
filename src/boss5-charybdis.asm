@@ -1,14 +1,14 @@
 boss5_charybdis_difficulty_setting__easy:
-	dw 32  ; boss hp
+	db 32, 16  ; boss hp, vat hp
 	db 64, #0f, #1f, 32  ; idle time, walk mask, bullet-time-mask, attack-delay
 boss5_charybdis_difficulty_setting__normal:
-	dw 48  ; boss hp
+	db 48, 16  ; boss hp, vat hp
 	db 64, #07, #1f, 28  ; idle time, walk mask, bullet-time-mask, attack-delay
 boss5_charybdis_difficulty_setting__hard:
-	dw 64  ; boss hp
+	db 64, 24  ; boss hp, vat hp
 	db 64, #07, #0f, 24  ; idle time, walk mask, bullet-time-mask, attack-delay
 boss5_charybdis_difficulty_setting__hardest:
-	dw 80  ; boss hp
+	db 80, 32  ; boss hp, vat hp
 	db 64, #03, #0f, 20  ; idle time, walk mask, bullet-time-mask, attack-delay
 
 BOSS_5_CHARYBDIS_HP_OFFSET: equ 0
@@ -37,7 +37,6 @@ update_boss5_behavior_1:
 	jp z, update_boss5_behavior_1_state_6  ; jump (hit the top)
 	dec a
 	jp z, update_boss5_behavior_1_state_7  ; jump (going down)
-	; ...
 	ret
 
 update_boss5_behavior_1_state_0:
@@ -81,8 +80,11 @@ update_boss5_behavior_1_state_1:
 	ld a, (hl)
 	inc (hl)
 	cp c
-	jr z, update_boss5_behavior_1_state_0
-
+	jr nz, update_boss5_behavior_1_state_1_continue
+	xor a
+	ld (boss__state), a
+	ret
+update_boss5_behavior_1_state_1_continue:
 	and #07
 	jr nz, update_boss5_behavior_1_state_1_no_mouth_movement
 	ld hl, boss__5_charybdis_mouth_state
@@ -132,7 +134,11 @@ update_boss5_behavior_1_state_2:
 	ld a, (hl)
 	inc (hl)
 	cp b
-	jp z, update_boss5_behavior_1_state_0
+	jr nz, update_boss5_behavior_1_state_2_not_done
+	xor a
+	ld (boss__state), a
+	ret
+update_boss5_behavior_1_state_2_not_done:
 	and c
 	ret nz
 	ld hl, boss__x
@@ -172,7 +178,11 @@ update_boss5_behavior_1_state_3:
 	ld a, (hl)
 	inc (hl)
 	cp b
-	jp z, update_boss5_behavior_1_state_0
+	jr nz, update_boss5_behavior_1_state_3_not_done
+	xor a
+	ld (boss__state), a
+	ret
+update_boss5_behavior_1_state_3_not_done:
 	and c
 	ret nz
 	ld hl, boss__x
@@ -265,7 +275,29 @@ update_boss5_behavior_1_state_6_continue:
 		dec a
 		jr z, update_boss5_behavior_1_state_6_second_jump
 update_boss5_behavior_1_state_6_third_jump
-		; ...
+		; switch to charybdis2 tileset, and to behavior 2 as soon as boss lands
+		ld (hl), 3  ; vat
+		; minimize the transition glitch:
+		halt
+		call update_boss5_draw_charybdis
+		ld hl, draw_room_with_hud
+		ld c, TILES_PAGE
+		call call_hl_in_page_c_8000
+		ld hl, boss_5_tiles_charybdis2_zx0
+		ld (current_room__tileset_ptr), hl
+		ld a, BOSS_5_PAGE
+		ld (current_room__tileset_page), a
+		ld c, BOSS_5_PAGE
+		call setup_game_tiles_only_biome
+
+		; update the collision table:
+		ld hl, tile_collision_types_boss5
+		ld (current_room__collision_ptr), hl
+		ld a, (current_room__collision_ptr_page)
+		ld de, current_room__collision_table
+		ld bc, 256
+		call ldir_from_page_a
+
 		jr update_boss5_behavior_1_state_6_jump_effect_set
 update_boss5_behavior_1_state_6_second_jump:
 		ld (hl), 2  ; crack the island
@@ -312,10 +344,44 @@ update_boss5_behavior_1_state_7_done:
 	ld (boss__5_charybdis_leg_state), a
 	ld (boss__state_timer), a
 	ld a, 0
-	ld (boss__state), a
+	ld (boss__state), a	
 	ld hl, SFX_watersplash_soft
 	call play_SFX_with_high_priority
-	jp update_boss5_draw_charybdis
+	call update_boss5_draw_charybdis
+	ld a, (boss__5_top_state)
+	cp 3  ; vat
+	ret nz
+	; if the boss is showing the "vat", switch to behavior 2
+	dec a
+	ld (boss__behavior), a
+	ret
+
+
+
+
+;-----------------------------------------------
+update_boss5_behavior_2:
+	ld a, (boss__state)
+	or a
+	jr z, update_boss5_behavior_2_state_0
+	dec a
+	jp z, update_boss5_behavior_1_state_1  ; idle
+	dec a
+	jp z, update_boss5_behavior_1_state_2  ; left
+	dec a
+	jp z, update_boss5_behavior_1_state_3  ; right
+	; ...
+	ret
+
+update_boss5_behavior_2_state_0:
+	; switch:
+	ld c, 3
+	call random_modulo
+	inc a
+	ld (boss__state), a
+	xor a
+	ld (boss__state_timer), a
+	jr update_boss5_behavior_2
 
 
 ;-----------------------------------------------
@@ -494,15 +560,41 @@ update_boss5_charybdis_maybe_fire_eye_bullet_left_eye:
 ; - iyh: damage to deal
 ; - iyl: collision ID
 player_weapon_hitbox_check_boss__boss5_charybdis_hit:
-	ld a, (boss__behavior)
-	cp 0
-	jr nz, player_weapon_hitbox_check_boss__boss5_hit_shield
-	; ...
-	; hit the main body:
-; 	ld hl, player_weapon_hitbox_check_boss__lose_hp
-; 	ld c, BOSS_PAGE
-; 	call call_hl_in_page_c_8000	
-; 	ret
+	ld a, (boss__5_top_state)
+	cp 3
+	jr c, player_weapon_hitbox_check_boss__boss5_hit_shield
+
+	ld a, e
+	cp 14*16+5  ; first brain/vat tile
+	jr c, player_weapon_hitbox_check_boss__boss5_hit_shield
+	; hit the brain/vat:
+	ld hl, player_weapon_hitbox_check_boss__lose_hp
+	ld c, BOSS_PAGE
+	call call_hl_in_page_c_8000	
+	ld hl, (boss__hp)
+	ld a, h
+	or l
+	ret nz
+	; HP reached 0:
+	ld a, (boss__5_top_state)
+	cp 3
+	jr z, player_weapon_hitbox_check_boss__boss5_charybdis_hit_break_vat
+	; boss is dead:
+	ld a, 3
+	ld (boss__behavior), a
+	ret
+player_weapon_hitbox_check_boss__boss5_charybdis_hit_break_vat:
+	inc a
+	ld (boss__5_top_state), a
+	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_HP_OFFSET)  ; brain HP
+	ld h, 0
+	ld l, a
+	ld (boss__hp), hl
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)	
+	call update_boss5_draw_charybdis
+	ld hl, SFX_explosion_low_pitch
+	jp play_SFX_with_high_priority
 
 player_weapon_hitbox_check_boss__boss5_hit_shield:
 	ld hl, SFX_shield
