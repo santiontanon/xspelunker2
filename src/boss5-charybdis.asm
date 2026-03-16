@@ -219,9 +219,15 @@ update_boss5_behavior_1_state_5:
 	inc (hl)
 	and #03
 	ret nz
+	ld a, (boss__5_top_state)
+	ld c, 7  ; max height with island 0
+	or a
+	jr z, update_boss5_behavior_1_state_5_limit_set
+	ld c, 4
+update_boss5_behavior_1_state_5_limit_set:
 	ld hl, boss__y
 	ld a, (hl)
-	cp 7  ; max height of the jump
+	cp c  ; max height of the jump
 	jr z, update_boss5_behavior_1_state_5_done
 	dec (hl)
 	call update_boss5_draw_charybdis
@@ -253,7 +259,20 @@ update_boss5_behavior_1_state_6_continue:
 	; first cycle, change the island type:
 	push af
 		ld hl, boss__5_top_state
+		ld a, (hl)
+		or a
+		jr z, update_boss5_behavior_1_state_6_first_jump
+		dec a
+		jr z, update_boss5_behavior_1_state_6_second_jump
+update_boss5_behavior_1_state_6_third_jump
+		; ...
+		jr update_boss5_behavior_1_state_6_jump_effect_set
+update_boss5_behavior_1_state_6_second_jump:
+		ld (hl), 2  ; crack the island
+		jr update_boss5_behavior_1_state_6_jump_effect_set
+update_boss5_behavior_1_state_6_first_jump:
 		ld (hl), 1  ; remove poseidon statue
+update_boss5_behavior_1_state_6_jump_effect_set:
 		call update_boss5_draw_charybdis
 	pop af
 update_boss5_behavior_1_state_6_continue2:
