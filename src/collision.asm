@@ -29,7 +29,7 @@ general_check_collision_with_wall:
 
 
 ;-----------------------------------------------
-; This is what is used to check collisions with hazzards, and also
+; This is what is used to check collisions with walls, and also
 ; to see if we can get up when the player is crouching.
 ; - collision range in x is: 6 - 10  [offset by "8 - PLAYER_COLLISION_WIDTH/2"]
 ; - assuming PLAYER_COLLISION_WIDTH == 4: 0 - 4

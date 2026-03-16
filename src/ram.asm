@@ -298,9 +298,10 @@ boss__4_lord2_mouth_state: equ boss__tmp_space + 9
 boss__4_second_lord: equ boss__tmp_space + 10
 boss__4_redraw: equ boss__tmp_space + 11
 ;
-boss__5_variant: equ boss__tmp_space + 1  ; 0: charybdis, 1: scylla, 2: death, 3: both
-boss__5_current_variant: equ boss__tmp_space + 2  ; 0: charybdis, 1: scylla
-boss__5_needs_redraw: equ boss__tmp_space + 3
+boss__5_variant: equ boss__tmp_space + 0  ; 0: charybdis, 1: scylla, 2: death, 3: both
+boss__5_current_variant: equ boss__tmp_space + 1  ; 0: charybdis, 1: scylla
+boss__5_needs_redraw: equ boss__tmp_space + 2
+boss__5_top_state: equ boss__tmp_space + 3  ; 0, 1, 2: island, 3: vat, 4: brain
 boss__5_charybdis_leg_state: equ boss__tmp_space + 4  ; 0 (base), 1, 2: walk, 3: jump
 boss__5_charybdis_mouth_state: equ boss__tmp_space + 5  ; 0: base, 1: additional frame
 boss__5_charybdis_left_claw_state: equ boss__tmp_space + 6  ; 0: base, 1: closed, 2: rising, 3: up, 4: stump base, 5: stump: rising, 6: stump up

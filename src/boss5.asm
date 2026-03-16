@@ -172,6 +172,7 @@ update_boss5_behavior_0_state_3_charybdis:
 	ld (boss__hit_fn_page), a
 	xor a
 	ld (boss__hit_timer), a
+	ld (boss__5_top_state), a
 
 	ld a, (current_world__difficulty)
 	ld hl, boss5_charybdis_difficulty_setting__easy
@@ -225,6 +226,7 @@ update_boss5_behavior_0_state_3_scylla
 	ld (boss__hit_fn_page), a
 	xor a
 	ld (boss__hit_timer), a
+	ld (boss__5_top_state), a
 
 	ld a, (current_world__difficulty)
 	ld hl, boss5_scylla_difficulty_setting__easy
@@ -647,28 +649,46 @@ boss5_tile_attributes_patch_charybdis3:
 ;-----------------------------------------------
 boss5_maybe_push_player_up:
 	call player_check_collision_idle
-	ret nz
-	cp 2  ; if it's with a wall, push player up
+	ret nz  ; if it's a collision with a wall, push player up
 	ld hl, player_y + 1
 	dec (hl)
-	ret
+	call player_check_collision_idle
+	ret nz  ; moving the player, resolved the collision
+	; the player was pushed against a wall! bring th eplayer back to the initial position and take damage!
+	ld hl, player_y + 1
+	inc (hl)
+boss5_maybe_push_player_up_continue:
+	ld hl, player_immunity_timer
+	ld a, (hl)
+	or a
+	ret nz
+	ld c, 4
+	jp player_hit_damage_c
 
 
 ;-----------------------------------------------
 boss5_maybe_push_player_left:
 	call player_check_collision_idle
-	ret nz
-	cp 2  ; if it's with a wall, push player up
+	ret nz  ; if it's a collision with a wall, push player up
 	ld hl, player_x + 1
 	dec (hl)
-	ret
+	call player_check_collision_idle
+	ret nz  ; moving the player, resolved the collision
+	; the player was pushed against a wall! bring th eplayer back to the initial position and take damage!
+	ld hl, player_x + 1
+	inc (hl)
+	jr boss5_maybe_push_player_up_continue
 
 
 ;-----------------------------------------------
 boss5_maybe_push_player_right:
 	call player_check_collision_idle
-	ret nz
-	cp 2  ; if it's with a wall, push player up
+	ret nz  ; if it's a collision with a wall, push player up
 	ld hl, player_x + 1
 	inc (hl)
-	ret
+	call player_check_collision_idle
+	ret nz  ; moving the player, resolved the collision
+	; the player was pushed against a wall! bring th eplayer back to the initial position and take damage!
+	ld hl, player_x + 1
+	dec (hl)
+	jr boss5_maybe_push_player_up_continue

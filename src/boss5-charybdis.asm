@@ -36,7 +36,7 @@ update_boss5_behavior_1:
 	dec a
 	jp z, update_boss5_behavior_1_state_6  ; jump (hit the top)
 	dec a
-	jp z, update_boss5_behavior_1_state_7  ; jump (goind down)
+	jp z, update_boss5_behavior_1_state_7  ; jump (going down)
 	; ...
 	ret
 
@@ -241,12 +241,38 @@ update_boss5_behavior_1_state_6:
 	ld a, (hl)
 	inc (hl)
 	cp 16
-	ret nz
+	jr nz, update_boss5_behavior_1_state_6_continue
 	xor a
 	ld (boss__state_timer), a
 	ld a, 7
 	ld (boss__state), a
 	ret
+update_boss5_behavior_1_state_6_continue:
+	or a
+	jr nz, update_boss5_behavior_1_state_6_continue2
+	; first cycle, change the island type:
+	push af
+		ld hl, boss__5_top_state
+		ld (hl), 1  ; remove poseidon statue
+		call update_boss5_draw_charybdis
+	pop af
+update_boss5_behavior_1_state_6_continue2:
+	and #03
+	ret nz
+
+	; spawn an explosion:
+	ld c, 3
+	call random_modulo
+	ld c, a
+	ld a, (boss__x)
+	add a, c
+	add a, 6
+	ld c, a
+	call random_a
+	and #01
+	inc a
+	ld b, a
+	jp spawn_explosion
 
 update_boss5_behavior_1_state_7:
 	; fall back down:
@@ -292,6 +318,14 @@ update_boss5_draw_charybdis_right_claw_table:
 	dw boss5_frame_right_claw1
 	dw boss5_frame_right_claw2
 	; ...
+
+update_boss5_draw_charybdis_top_table
+	dw boss5_frame_island_0
+	dw boss5_frame_island_1
+	dw boss5_frame_island_2
+	dw boss5_frame_charybdis_vat
+	dw boss5_frame_charybdis_brain
+
 
 ;-----------------------------------------------
 ; coordinate is the top-left of the 16x5 body 
@@ -379,12 +413,20 @@ update_boss5_draw_charybdis_no_mouth:
 		call call_hl_in_page_c_8000
 	pop hl
 
-	; draw top:
+	; draw top (island / vat / brain):
 	ld bc, 4 - 32 * 6
 	add hl, bc
 	push hl
 		ex de, hl
-		ld ix, boss5_frame_island_0
+		ld a, (boss__5_top_state)
+		add a, a
+		ld hl, update_boss5_draw_charybdis_top_table
+		ADD_HL_A
+		ld c, (hl)
+		inc hl
+		ld b, (hl)
+		ld ixl, c
+		ld ixh, b
 		ld c, BOSS_PAGE
 		ld hl, draw_boss_frame_2_without_clearing_ix
 		call call_hl_in_page_c_8000
