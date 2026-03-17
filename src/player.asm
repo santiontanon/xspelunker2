@@ -515,6 +515,9 @@ player_update_state_walking_no_weapon_swing:
 	jp player_update_switch_to_idle
 
 player_update_state_walking_right:
+	call player_in_water
+	jp z, player_update_switch_to_swimming
+
 	; check for crawling:
 	ld a, (keyboard_state)
 	bit KEY_DOWN_BIT, a
@@ -531,6 +534,9 @@ player_update_state_walking_right:
 	jr player_update_state_walking_continue
 
 player_update_state_walking_left:
+	call player_in_water
+	jp z, player_update_switch_to_swimming
+
 	; check for crawling:
 	ld a, (keyboard_state)
 	bit KEY_DOWN_BIT, a
@@ -984,6 +990,10 @@ player_update_state_crawling_no_weapon_swing:
 	SETMEGAROMPAGE_8000 TEXT_PAGE
 	jp state_inventory
 player_update_state_crawling_no_inventory:
+
+	; check for water:
+	call player_in_water
+	jp z, player_update_switch_to_swimming
 	
 	; check for interact:
 	ld a, (keyboard_clicks)
@@ -1222,6 +1232,28 @@ player_update_switch_to_ladder_failed:
 
 
 ;-----------------------------------------------
+player_update_switch_to_swimming:
+	ld a, #ff
+	ld (player_requested_weapon_sprite), a
+	ld a, (player_state)
+	and #01
+	add a, PLAYER_STATE_SWIMMING
+	ld (player_state), a
+
+	xor a
+	ld (player_water_inertia_x), a
+	ld (player_water_inertia_x_timer), a
+	ld (player_water_inertia_y_timer), a
+	ld (player_water_inertia_y), a
+
+	ld a, PLAYER_MAX_OXYGEN
+	ld (player_oxygen), a
+	ld a, HUD_MAX_TIME
+	ld (hud_redraw_timer), a
+	ld hl, redraw_flags
+	set HUD_REDRAW_FLAG_BIT, (hl)
+	jr player_update_state_swimming
+
 player_update_switch_to_swimming_from_falling:
 	ld a, #ff
 	ld (player_requested_weapon_sprite), a

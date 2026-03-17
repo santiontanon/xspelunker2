@@ -71,7 +71,7 @@ public class GenerateTiles {
     }
 
     
-    public static void extractTiles(String pngPath, String outputPath, int y1, int y2) throws Exception
+    public static List<Integer> extractTiles(String pngPath, String outputPath, int y1, int y2) throws Exception
     {
         List<Integer> bitmap_data = new ArrayList<>();
         List<Integer> color_data = new ArrayList<>();
@@ -95,6 +95,7 @@ public class GenerateTiles {
         data.addAll(color_data);
         Z80Assembler.dataToBinary(data, outputPath + ".bin");
         ZX0Wrapper.main(outputPath+".bin", outputPath+".zx0", true, false);
+        return data;
     }
 
     

@@ -1,21 +1,22 @@
 boss5_charybdis_difficulty_setting__easy:
 	db 32, 16  ; boss hp, vat hp
-	db 64, #0f, #1f, 32  ; idle time, walk mask, bullet-time-mask, attack-delay
+	db 64, #0f, #1f, 32, 16  ; idle time, walk mask, bullet-time-mask, attack-delay, claw-attack-speed
 boss5_charybdis_difficulty_setting__normal:
 	db 48, 16  ; boss hp, vat hp
-	db 64, #07, #1f, 28  ; idle time, walk mask, bullet-time-mask, attack-delay
+	db 64, #07, #1f, 28, 14  ; idle time, walk mask, bullet-time-mask, attack-delay
 boss5_charybdis_difficulty_setting__hard:
 	db 64, 24  ; boss hp, vat hp
-	db 64, #07, #0f, 24  ; idle time, walk mask, bullet-time-mask, attack-delay
+	db 64, #07, #0f, 24, 12  ; idle time, walk mask, bullet-time-mask, attack-delay
 boss5_charybdis_difficulty_setting__hardest:
 	db 80, 32  ; boss hp, vat hp
-	db 64, #03, #0f, 20  ; idle time, walk mask, bullet-time-mask, attack-delay
+	db 64, #03, #0f, 20, 10  ; idle time, walk mask, bullet-time-mask, attack-delay
 
 BOSS_5_CHARYBDIS_HP_OFFSET: equ 0
 BOSS_5_CHARYBDIS_IDLE_TIME_OFFSET: equ 2
 BOSS_5_CHARYBDIS_WALK_MASK: equ 3
 BOSS_5_CHARYBDIS_BULLET_TIME_MASK: equ 4
 BOSS_5_CHARYBDIS_ATTACK_DELAY: equ 5
+BOSS_5_CHARYBDIS_CLAW_ATTACK_SPEED: equ 6
 
 
 ;-----------------------------------------------
@@ -271,9 +272,9 @@ update_boss5_behavior_1_state_6_continue:
 		ld hl, boss__5_top_state
 		ld a, (hl)
 		or a
-		jr z, update_boss5_behavior_1_state_6_first_jump
-		dec a
-		jr z, update_boss5_behavior_1_state_6_second_jump
+; 		jr z, update_boss5_behavior_1_state_6_first_jump
+; 		dec a
+; 		jr z, update_boss5_behavior_1_state_6_second_jump
 update_boss5_behavior_1_state_6_third_jump
 		; switch to charybdis2 tileset, and to behavior 2 as soon as boss lands
 		ld (hl), 3  ; vat
@@ -370,10 +371,48 @@ update_boss5_behavior_2:
 	jp z, update_boss5_behavior_1_state_2  ; left
 	dec a
 	jp z, update_boss5_behavior_1_state_3  ; right
+	dec a
+	jp z, update_boss5_behavior_2_state_4  ; left-claw-attack
+	dec a
+	jp z, update_boss5_behavior_2_state_5  ; right-claw-attack
 	; ...
 	ret
 
 update_boss5_behavior_2_state_0:
+	; check for claw attack:
+	; if player is on top of the island, chance of jump attack:
+	ld a, (player_y + 1)
+	cp 14
+	jr nc, update_boss5_behavior_2_state_0_no_claw_attack
+	ld a, (player_x + 1)
+	ld c, a
+	ld a, (boss__x)
+	inc a
+	cp c
+	jr nc, update_boss5_behavior_2_state_0_no_claw_attack
+	add a, 4
+	cp c
+	jr c, update_boss5_behavior_2_state_0_no_left_claw_attack
+	; left-claw attack
+	xor a
+	ld (boss__state_timer), a
+	ld a, 4
+	ld (boss__state), a
+	jp update_boss5_behavior_2_state_4
+update_boss5_behavior_2_state_0_no_left_claw_attack:
+	add a, 5
+	cp c
+	jr nc, update_boss5_behavior_2_state_0_no_claw_attack
+	add a, 4
+	cp c
+	jr c, update_boss5_behavior_2_state_0_no_claw_attack
+	; right-claw attack:
+	xor a
+	ld (boss__state_timer), a
+	ld a, 5
+	ld (boss__state), a
+	jp update_boss5_behavior_2_state_5
+update_boss5_behavior_2_state_0_no_claw_attack:
 	; switch:
 	ld c, 3
 	call random_modulo
@@ -383,6 +422,90 @@ update_boss5_behavior_2_state_0:
 	ld (boss__state_timer), a
 	jr update_boss5_behavior_2
 
+update_boss5_behavior_2_state_4:
+	call update_boss5_charybdis_maybe_fire_eye_bullet
+	; left-claw attack:
+	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_CLAW_ATTACK_SPEED)
+	ld c, a
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	or a
+	jp z, boss5_tile_attributes_patch_from_charybdis2_to_3
+	sub c
+	ret c
+	jr z, update_boss5_behavior_2_state_4_frame1
+	sub c
+	ret c
+	jr z, update_boss5_behavior_2_state_4_frame2
+	sub c
+	ret c
+	sub c
+	ret c
+	sub c
+	ret c
+	jr z, update_boss5_behavior_2_state_4_frame1
+	sub c
+	ret c
+	; done:
+	xor a
+	ld (boss__state), a
+	ld (boss__state_timer), a
+	ld (boss__5_charybdis_left_claw_state), a
+update_boss5_behavior_2_state_4_walk_tileset:
+	call update_boss5_draw_charybdis
+	ld hl, draw_room_with_hud
+	ld c, TILES_PAGE
+	call call_hl_in_page_c_8000
+	jp boss5_tile_attributes_patch_from_charybdis3_to_2
+update_boss5_behavior_2_state_4_frame1:
+	ld a, 2
+	ld (boss__5_charybdis_left_claw_state), a
+	jp update_boss5_draw_charybdis
+update_boss5_behavior_2_state_4_frame2:
+	ld a, 3
+	ld (boss__5_charybdis_left_claw_state), a
+	jp update_boss5_draw_charybdis
+
+update_boss5_behavior_2_state_5:
+	call update_boss5_charybdis_maybe_fire_eye_bullet
+	; right-claw attack:
+	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_CLAW_ATTACK_SPEED)
+	ld c, a
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	or a
+	jp z, boss5_tile_attributes_patch_from_charybdis2_to_3
+	sub c
+	ret c
+	jr z, update_boss5_behavior_2_state_5_frame1
+	sub c
+	ret c
+	jr z, update_boss5_behavior_2_state_5_frame2
+	sub c
+	ret c
+	sub c
+	ret c
+	sub c
+	ret c
+	jr z, update_boss5_behavior_2_state_5_frame1
+	sub c
+	ret c
+	; done:
+	xor a
+	ld (boss__state), a
+	ld (boss__state_timer), a
+	ld (boss__5_charybdis_right_claw_state), a
+	jr update_boss5_behavior_2_state_4_walk_tileset
+update_boss5_behavior_2_state_5_frame1:
+	ld a, 2
+	ld (boss__5_charybdis_right_claw_state), a
+	jp update_boss5_draw_charybdis
+update_boss5_behavior_2_state_5_frame2:
+	ld a, 3
+	ld (boss__5_charybdis_right_claw_state), a
+	jp update_boss5_draw_charybdis
 
 ;-----------------------------------------------
 ; 0, 1, 2: walk, 3: jump
@@ -396,12 +519,16 @@ update_boss5_draw_charybdis_body_table:
 update_boss5_draw_charybdis_left_claw_table:
 	dw boss5_frame_left_claw1
 	dw boss5_frame_left_claw2
+	dw boss5_frame_left_claw_rising
+	dw boss5_frame_left_claw_up
 	; ...
 
 ; 0: base, 1: closed, 2: rising, 3: up, 4: stump base, 5: stump: rising, 6: stump up
 update_boss5_draw_charybdis_right_claw_table:
 	dw boss5_frame_right_claw1
 	dw boss5_frame_right_claw2
+	dw boss5_frame_right_claw_rising
+	dw boss5_frame_right_claw_up
 	; ...
 
 update_boss5_draw_charybdis_top_table
@@ -462,44 +589,8 @@ update_boss5_draw_charybdis:
 	pop hl
 update_boss5_draw_charybdis_no_mouth:
 
-	; draw claws:
-	push hl
-		ld bc, 3 + 2*32
-		add hl, bc
-		push hl
-			ex de, hl
-			ld a, (boss__5_charybdis_left_claw_state)
-			add a, a
-			ld hl, update_boss5_draw_charybdis_left_claw_table
-			ADD_HL_A
-			ld c, (hl)
-			inc hl
-			ld b, (hl)
-			ld ixl, c
-			ld ixh, b
-			ld c, BOSS_PAGE
-			ld hl, draw_boss_frame_2_without_clearing_ix
-			call call_hl_in_page_c_8000
-		pop hl
-		ld bc, 6
-		add hl, bc
-		ex de, hl
-		ld a, (boss__5_charybdis_right_claw_state)
-		add a, a
-		ld hl, update_boss5_draw_charybdis_right_claw_table
-		ADD_HL_A
-		ld c, (hl)
-		inc hl
-		ld b, (hl)
-		ld ixl, c
-		ld ixh, b
-		ld c, BOSS_PAGE
-		ld hl, draw_boss_frame_2_without_clearing_ix
-		call call_hl_in_page_c_8000
-	pop hl
-
 	; draw top (island / vat / brain):
-	ld bc, 4 - 32 * 6
+	ld bc, 4 - 6 * 32
 	add hl, bc
 	push hl
 		ex de, hl
@@ -516,8 +607,49 @@ update_boss5_draw_charybdis_no_mouth:
 		ld hl, draw_boss_frame_2_without_clearing_ix
 		call call_hl_in_page_c_8000
 	pop hl
+
+	; draw claws:
+	push hl
+		ld bc, 3 * 32 - 2
+		add hl, bc
+		push hl
+			ex de, hl
+			ld a, (boss__5_charybdis_left_claw_state)
+			add a, a
+			ld hl, update_boss5_draw_charybdis_left_claw_table
+			ADD_HL_A
+			ld c, (hl)
+			inc hl
+			ld b, (hl)
+			ld ixl, c
+			ld ixh, b
+			ld c, BOSS_PAGE
+			ld hl, draw_boss_frame_2_without_clearing_ix
+			call call_hl_in_page_c_8000
+		pop hl
+; 		ld bc, 6
+		ld bc, 7
+		add hl, bc
+		ex de, hl
+		ld a, (boss__5_charybdis_right_claw_state)
+		add a, a
+		ld hl, update_boss5_draw_charybdis_right_claw_table
+		ADD_HL_A
+		ld c, (hl)
+		inc hl
+		ld b, (hl)
+		ld ixl, c
+		ld ixh, b
+		ld c, BOSS_PAGE
+		ld hl, draw_boss_frame_2_without_clearing_ix
+		call call_hl_in_page_c_8000
+	pop hl
+
+	; make it big enough to clear the claws:
+	dec hl
+	dec hl
 	ld (boss__clear_bbox_2), hl
-	ld bc, #0708
+	ld bc, #070c
 	ld (boss__clear_bbox_2 + 2), bc
 
 	ld hl, redraw_flags

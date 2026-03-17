@@ -358,9 +358,17 @@ setup_game_tiles_only_biome_continue:
         ex de, hl
     pop bc
 
+    ; tileset modifications:
+    ; in boss 5 room:
+    ld a, (current_area__id)
+    cp 9
+    jr z, setup_game_tiles_only_biome_area_9
+    ; ...
+
     ; bank 2:
     halt  ; synchronize the last bank so that when we use this method for swapping tile sets
           ; in bosses, we minimize the time with a glitch
+setup_game_tiles_only_biome_last_bank:
     ld hl, buffer_4096
     push hl
     push bc
@@ -380,9 +388,6 @@ setup_game_tiles_only_biome_continue:
     ld a, (current_area__id)
     cp 3
     jr z, setup_game_tiles_only_biome_area_3
-    ld a, (current_area__id)
-    cp 9
-    jr z, setup_game_tiles_only_biome_area_9
     ; ...
     ret
 
@@ -410,10 +415,10 @@ setup_game_tiles_only_biome_area_3:
 setup_game_tiles_only_biome_area_9:
     ld a, (boss__active)
     or a
-    ret z
+    jp z, setup_game_tiles_only_biome_last_bank
 
     ; boss 5 room, make bg of boss tiles dark blue (they are in water):
-    ld hl, boss5_tile_attributes_patch
+    ld hl, boss5_tile_attributes_patch_from_scratch
     ld c, BOSS_5_PAGE
     jp call_hl_in_page_c_8000
 

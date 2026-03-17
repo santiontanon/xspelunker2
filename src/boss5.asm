@@ -571,19 +571,20 @@ update_boss5_behavior_0_state_7_continue2:
 
 
 ;-----------------------------------------------
-boss5_tile_attributes_patch:
+boss5_tile_attributes_patch_from_scratch:
+;     out (#2c),a  ; DEBUG
 	ld hl, (current_room__tileset_ptr)
 	ld bc, boss_5_tiles_charybdis1_zx0
 	or a
 	sbc hl, bc
 	jr z, boss5_tile_attributes_patch_charybdis1
 	ld hl, (current_room__tileset_ptr)
-	ld bc, boss_5_tiles_charybdis1_zx0
+	ld bc, boss_5_tiles_charybdis2_zx0
 	or a
 	sbc hl, bc
 	jr z, boss5_tile_attributes_patch_charybdis2
 	ld hl, (current_room__tileset_ptr)
-	ld bc, boss_5_tiles_charybdis1_zx0
+	ld bc, boss_5_tiles_charybdis3_zx0
 	or a
 	sbc hl, bc
 	jr z, boss5_tile_attributes_patch_charybdis3
@@ -591,46 +592,22 @@ boss5_tile_attributes_patch_scylla:
     // scylla1/2: [48, 205] those that are boss	
 	ld ixl, 205 - 48
 boss5_tile_attributes_patch_scylla_continue:
-	; we assume the tileset is already decompressed in buffer_4096
-	ld iy, current_room__collision_table + 48
-	ld hl, buffer_4096 + 208*8
-boss5_tile_attributes_patch_loop:
-	ld a, (iy)
-	cp 9
-	jr nz, boss5_tile_attributes_patch_loop_skip
-	; process tile:
-	push hl
-		ld b, 8
-boss5_tile_attributes_patch_loop2:
-		ld a, (hl)
-		and #0f
-		jr nz, boss5_tile_attributes_patch_loop2_continue
-		; black, replace by blue:
-		ld a, (hl)
-		and #f0
-		or COLOR_DARK_BLUE
-		ld (hl), a
-boss5_tile_attributes_patch_loop2_continue:
-		ld a, (hl)
-		and #f0
-		jr nz, boss5_tile_attributes_patch_loop2_continue2
-		; black, replace by blue:
-		ld a, (hl)
-		and #0f
-		or COLOR_DARK_BLUE * 16
-		ld (hl), a
-boss5_tile_attributes_patch_loop2_continue2:
-		inc hl
-		djnz boss5_tile_attributes_patch_loop2
-	pop hl
-boss5_tile_attributes_patch_loop_skip:
-	inc iy
-	ld bc, 8
-	add hl, bc
-	dec ixl
-	jr nz, boss5_tile_attributes_patch_loop
 
-	; upload to VDP:
+	; we assume the tileset is already decompressed in buffer_4096
+	ld de, current_room__collision_table + 48
+	ld hl, buffer_4096 + 208*8
+	call boss5_tile_attributes_patch_change_attributes
+;     out (#2d),a  ; DEBUG
+
+;     out (#2c),a  ; DEBUG
+	; upload tiles to VDP:
+	ld de, CHRTBL2 + 256*8*2 + 48*8
+	ld hl, buffer_4096
+	ld bc, 208*8
+	call fast_LDIRVM
+;     out (#2d),a  ; DEBUG
+
+	; upload attributes to VDP:
 	ld de, CLRTBL2 + 256*8*2 + 48*8
 	ld hl, buffer_4096 + 208*8
 	ld bc, 208*8
@@ -649,6 +626,139 @@ boss5_tile_attributes_patch_charybdis3:
     // charybdis3: [48, 161] those that are boss
 	ld ixl, 161 - 48
 	jr boss5_tile_attributes_patch_scylla_continue
+
+
+;-----------------------------------------------
+; input:
+; - de: ptr to the collision type table
+; - ixl: number of tiles
+; - hl: ptr to the attributes data
+boss5_tile_attributes_patch_change_attributes:
+boss5_tile_attributes_patch_change_attributes_loop:
+	ld a, (de)
+	cp 9
+	jr nz, boss5_tile_attributes_patch_change_attributes_loop_skip
+	; process tile:
+	ld b, 8
+boss5_tile_attributes_patch_change_attributes_loop2:
+	ld a, (hl)
+	and #0f
+	jr nz, boss5_tile_attributes_patch_change_attributes_loop2_continue
+	; black, replace by blue:
+	ld a, (hl)
+	or COLOR_DARK_BLUE
+	ld (hl), a
+boss5_tile_attributes_patch_change_attributes_loop2_continue:
+	inc hl
+	djnz boss5_tile_attributes_patch_change_attributes_loop2
+	jp boss5_tile_attributes_patch_change_attributes_loop_skip2
+boss5_tile_attributes_patch_change_attributes_loop_skip:
+	ld bc, 8
+	add hl, bc
+boss5_tile_attributes_patch_change_attributes_loop_skip2:
+	inc de
+	dec ixl
+	jr nz, boss5_tile_attributes_patch_change_attributes_loop
+	ret
+
+
+;-----------------------------------------------
+; This is a fast version of "setup_game_tiles_only_biome" that can be called
+; during gameplay.
+boss5_tile_attributes_patch_from_charybdis2_to_3:
+	ld hl, boss_5_tiles_charybdis3_zx0
+	ld (current_room__tileset_ptr), hl
+	ld a, BOSS_5_PAGE
+	ld (current_room__tileset_page), a
+
+	ld hl, boss_5_tiles_charybdis3_patch_zx0
+    ld de, buffer_4096
+    ld c, BOSS_5_PAGE
+    call dzx0_from_page_c
+
+    ; bank 1:
+	ld de, CHRTBL2 + (9*16 + 2)*8
+	ld hl, buffer_4096
+	ld bc, 66*8
+	call fast_LDIRVM
+	ld de, CLRTBL2 + (9*16 + 2)*8
+	ld hl, buffer_4096 + 66*8
+	ld bc, 66*8
+	call fast_LDIRVM
+
+    ; bank 2:
+	ld de, CHRTBL2 + 256*8 + (9*16 + 2)*8
+	ld hl, buffer_4096
+	ld bc, 66*8
+	call fast_LDIRVM
+	ld de, CLRTBL2 + 256*8 + (9*16 + 2)*8
+	ld hl, buffer_4096 + 66*8
+	ld bc, 66*8
+	call fast_LDIRVM
+
+	ld de, current_room__collision_table + 9*16 + 2
+	ld hl, buffer_4096 + 66*8
+	ld ixl, 66
+	call boss5_tile_attributes_patch_change_attributes
+
+    ; bank 3:
+	ld de, CHRTBL2 + 2*256*8 + (9*16 + 2)*8
+	ld hl, buffer_4096
+	ld bc, 66*8
+	call fast_LDIRVM
+	ld de, CLRTBL2 + 2*256*8 + (9*16 + 2)*8
+	ld hl, buffer_4096 + 66*8
+	ld bc, 66*8
+	jp fast_LDIRVM
+
+
+;-----------------------------------------------
+boss5_tile_attributes_patch_from_charybdis3_to_2:
+	; boss_5_tiles_charybdis2_patch_zx0
+	ld hl, boss_5_tiles_charybdis2_zx0
+	ld (current_room__tileset_ptr), hl
+	ld a, BOSS_5_PAGE
+	ld (current_room__tileset_page), a
+
+	ld hl, boss_5_tiles_charybdis2_patch_zx0
+    ld de, buffer_4096
+    ld c, BOSS_5_PAGE
+    call dzx0_from_page_c
+
+    ; bank 1:
+	ld de, CHRTBL2 + (9*16 + 2)*8
+	ld hl, buffer_4096
+	ld bc, 50*8
+	call fast_LDIRVM
+	ld de, CLRTBL2 + (9*16 + 2)*8
+	ld hl, buffer_4096 + 50*8
+	ld bc, 50*8
+	call fast_LDIRVM
+
+    ; bank 2:
+	ld de, CHRTBL2 + 256*8 + (9*16 + 2)*8
+	ld hl, buffer_4096
+	ld bc, 50*8
+	call fast_LDIRVM
+	ld de, CLRTBL2 + 256*8 + (9*16 + 2)*8
+	ld hl, buffer_4096 + 50*8
+	ld bc, 50*8
+	call fast_LDIRVM
+
+	ld de, current_room__collision_table + 9*16 + 2
+	ld hl, buffer_4096 + 50*8
+	ld ixl, 50
+	call boss5_tile_attributes_patch_change_attributes
+
+    ; bank 3:
+	ld de, CHRTBL2 + 2*256*8 + (9*16 + 2)*8
+	ld hl, buffer_4096
+	ld bc, 50*8
+	call fast_LDIRVM
+	ld de, CLRTBL2 + 2*256*8 + (9*16 + 2)*8
+	ld hl, buffer_4096 + 50*8
+	ld bc, 50*8
+	jp fast_LDIRVM
 
 
 ;-----------------------------------------------

@@ -1,11 +1,11 @@
 to do:
 
 ***- Charybdis:
-  ***- behavior 2: If player is above any of its claws (in idle or walk when it reaches the base leg position), chance of claw attack, it raises the claw, and closes it, trying to catch the player
   ***- behavior 2: flying claw: one of the claws (one at random of the ones that remain) detaches and flies up independently (with some rocket showing behind it), it flies up to the player height (minimum just above water) and then goes horizontally fast, to try to hit you. After each time, chance of going back.
     ***- the dash should be so fast that it is undodgeable unless you are ready, go to the opposide side, and know it's coming. If you know it's coming, it should be easy to dodge.
     ***- claws can be destroyed (??? decide, you should be able to also hit them when not dettached then)
   ***- when claws are dettached, it can fire lasers from the arm stumps (only vertically or diagonally): do not aim, just randomly fire
+  ***- restore the proper jump sequence in update_boss5_behavior_1_state_6_continue
   ***- when HP get to zero, boss dies (lots of explosions, like for boss 4), and then disappear; if there is any flying claw, it also pops with an explosion
 ***- Scylla:
   - update "update_sprite_objects_boss_extras_boss_5" for the eye

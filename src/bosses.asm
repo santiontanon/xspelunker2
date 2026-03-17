@@ -805,6 +805,11 @@ draw_boss_frame_flipped_loop_continue:
 
 
 ;-----------------------------------------------
+draw_boss_frame_clear_previous_frame_ix_bc:
+	push ix
+	pop hl
+	jr draw_boss_frame_clear_previous_frame_1_continue
+
 draw_boss_frame_clear_previous_frame_2:
 	; clear the previous frame
 	ld bc, (boss__clear_bbox_2 + 2)
