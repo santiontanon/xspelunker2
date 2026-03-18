@@ -1,19 +1,19 @@
 boss5_charybdis_difficulty_setting__easy:
 	db 32, 16  ; boss hp, vat hp
 	db 64, #0f, #1f, 32, 16  ; idle time, walk mask, bullet-time-mask, attack-delay, claw-attack-speed
-	db #07  ; flying claw speed mask
+	db #03  ; flying claw speed mask
 boss5_charybdis_difficulty_setting__normal:
 	db 48, 16  ; boss hp, vat hp
 	db 64, #07, #1f, 28, 14  ; idle time, walk mask, bullet-time-mask, attack-delay
-	db #03  ; flying claw speed mask
+	db #01  ; flying claw speed mask
 boss5_charybdis_difficulty_setting__hard:
 	db 64, 24  ; boss hp, vat hp
 	db 64, #07, #0f, 24, 12  ; idle time, walk mask, bullet-time-mask, attack-delay
-	db #03  ; flying claw speed mask
+	db #01  ; flying claw speed mask
 boss5_charybdis_difficulty_setting__hardest:
 	db 80, 32  ; boss hp, vat hp
 	db 64, #03, #0f, 20, 10  ; idle time, walk mask, bullet-time-mask, attack-delay
-	db #01  ; flying claw speed mask
+	db #00  ; flying claw speed mask
 
 BOSS_5_CHARYBDIS_HP_OFFSET: equ 0
 BOSS_5_CHARYBDIS_IDLE_TIME_OFFSET: equ 2
@@ -668,6 +668,8 @@ update_boss5_behavior_2_state_9_continue:
 	inc (hl)
 	and c
 	ret nz
+	ld a, 28
+	ld (boss__5_charybdis_flying_claw_x), a  ; make the claw be in the right most
 	ld a, 1
 	ld (boss__5_charybdis_flying_claw_state), a		
 	ld a, (boss__5_charybdis_flying_claw_y)
@@ -675,6 +677,8 @@ update_boss5_behavior_2_state_9_continue:
 	ld (boss__5_charybdis_flying_claw_y), a
 	cp 11
 	jp nz, update_boss5_draw_charybdis
+	ld a, 27
+	ld (boss__5_charybdis_flying_claw_x), a  ; move it back a bit
 	ld hl, boss__state
 	inc (hl)
 	xor a

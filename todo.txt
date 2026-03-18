@@ -1,9 +1,10 @@
 to do:
 
 ***- Charybdis:
-  ***- when claw reaches right-most, and goes down, push it all the way to the right, so you cannot hide on the bottom-right corner
-  ***- during this time, the stump calternates between vertical and diagonal position, firing lasers
-  ***- make flying claws move faster, it's kind of easy to dodge now (maybe this is the speed for easy/normal, but in hard/vh make it twice as fast)
+  OK - when claw reaches right-most, and goes down, push it all the way to the right, so you cannot hide on the bottom-right corner
+  OK - make flying claws move faster, it's kind of easy to dodge now (maybe this is the speed for easy/normal, but in hard/vh make it twice as fast)
+  ***- during flying claws, the stump calternates between vertical and diagonal position, firing lasers
+  ***- during flying claws, it keeps firing bullets through eyes
   ***- restore the proper jump sequence in update_boss5_behavior_1_state_6_continue
   ***- when HP get to zero, boss dies (lots of explosions, like for boss 4), and then disappear; if there is any flying claw, it also pops with an explosion
 ***- Scylla:
