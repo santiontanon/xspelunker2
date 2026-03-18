@@ -805,9 +805,11 @@ draw_boss_frame_flipped_loop_continue:
 
 
 ;-----------------------------------------------
-draw_boss_frame_clear_previous_frame_ix_bc:
+draw_boss_frame_clear_previous_frame_ix_de:
 	push ix
 	pop hl
+	ld c, e
+	ld b, d
 	jr draw_boss_frame_clear_previous_frame_1_continue
 
 draw_boss_frame_clear_previous_frame_2:

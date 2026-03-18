@@ -1,10 +1,9 @@
 to do:
 
 ***- Charybdis:
-  ***- behavior 2: flying claw: one of the claws (one at random of the ones that remain) detaches and flies up independently (with some rocket showing behind it), it flies up to the player height (minimum just above water) and then goes horizontally fast, to try to hit you. After each time, chance of going back.
-    ***- the dash should be so fast that it is undodgeable unless you are ready, go to the opposide side, and know it's coming. If you know it's coming, it should be easy to dodge.
-    ***- claws can be destroyed (??? decide, you should be able to also hit them when not dettached then)
-  ***- when claws are dettached, it can fire lasers from the arm stumps (only vertically or diagonally): do not aim, just randomly fire
+  ***- when claw reaches right-most, and goes down, push it all the way to the right, so you cannot hide on the bottom-right corner
+  ***- during this time, the stump calternates between vertical and diagonal position, firing lasers
+  ***- make flying claws move faster, it's kind of easy to dodge now (maybe this is the speed for easy/normal, but in hard/vh make it twice as fast)
   ***- restore the proper jump sequence in update_boss5_behavior_1_state_6_continue
   ***- when HP get to zero, boss dies (lots of explosions, like for boss 4), and then disappear; if there is any flying claw, it also pops with an explosion
 ***- Scylla:
@@ -22,7 +21,7 @@ to do:
   - double tentacle attack: the same, but two tentacles (one of each side) do it at the same time (and at slightly offset vertical height, so it's even harder to dodge)
   - bubbles fired from the beak?
 ***- being able to kill the boss and collect the reward:
-  ***- water drains and the power stone is there
+  ***- power stone spawns where the switch was
   ***- if you only kill 1, there will be an eye (of the one you killed)
   ***- if you kill both, there will be an eye of each
   ***- think of a puzzle where you actually need both eyes to open something

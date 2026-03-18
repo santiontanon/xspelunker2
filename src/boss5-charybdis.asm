@@ -1,15 +1,19 @@
 boss5_charybdis_difficulty_setting__easy:
 	db 32, 16  ; boss hp, vat hp
 	db 64, #0f, #1f, 32, 16  ; idle time, walk mask, bullet-time-mask, attack-delay, claw-attack-speed
+	db #07  ; flying claw speed mask
 boss5_charybdis_difficulty_setting__normal:
 	db 48, 16  ; boss hp, vat hp
 	db 64, #07, #1f, 28, 14  ; idle time, walk mask, bullet-time-mask, attack-delay
+	db #03  ; flying claw speed mask
 boss5_charybdis_difficulty_setting__hard:
 	db 64, 24  ; boss hp, vat hp
 	db 64, #07, #0f, 24, 12  ; idle time, walk mask, bullet-time-mask, attack-delay
+	db #03  ; flying claw speed mask
 boss5_charybdis_difficulty_setting__hardest:
 	db 80, 32  ; boss hp, vat hp
 	db 64, #03, #0f, 20, 10  ; idle time, walk mask, bullet-time-mask, attack-delay
+	db #01  ; flying claw speed mask
 
 BOSS_5_CHARYBDIS_HP_OFFSET: equ 0
 BOSS_5_CHARYBDIS_IDLE_TIME_OFFSET: equ 2
@@ -17,6 +21,7 @@ BOSS_5_CHARYBDIS_WALK_MASK: equ 3
 BOSS_5_CHARYBDIS_BULLET_TIME_MASK: equ 4
 BOSS_5_CHARYBDIS_ATTACK_DELAY: equ 5
 BOSS_5_CHARYBDIS_CLAW_ATTACK_SPEED: equ 6
+BOSS_5_CHARYBDIS_FLYING_CLAW_SPEED_MASK: equ 7
 
 
 ;-----------------------------------------------
@@ -375,6 +380,34 @@ update_boss5_behavior_2:
 	jp z, update_boss5_behavior_2_state_4  ; left-claw-attack
 	dec a
 	jp z, update_boss5_behavior_2_state_5  ; right-claw-attack
+	dec a
+	jp z, update_boss5_behavior_2_state_6  ; left-flying-claw rising
+	dec a
+	jp z, update_boss5_behavior_2_state_7  ; left-flying-claw left1
+	dec a
+	jp z, update_boss5_behavior_2_state_8  ; left-flying-claw right1
+	dec a
+	jp z, update_boss5_behavior_2_state_9  ; left-flying-claw lowering1
+	dec a
+	jp z, update_boss5_behavior_2_state_10  ; left-flying-claw left2
+	dec a
+	jp z, update_boss5_behavior_2_state_11  ; left-flying-claw right2
+	dec a
+	jp z, update_boss5_behavior_2_state_12  ; left-flying-claw lowering2
+	dec a
+	jp z, update_boss5_behavior_2_state_13  ; right-flying-claw rising
+	dec a
+	jp z, update_boss5_behavior_2_state_14  ; right-flying-claw left1
+	dec a
+	jp z, update_boss5_behavior_2_state_15  ; right-flying-claw right1
+	dec a
+	jp z, update_boss5_behavior_2_state_16  ; right-flying-claw lowering1
+	dec a
+	jp z, update_boss5_behavior_2_state_17  ; right-flying-claw left2
+	dec a
+	jp z, update_boss5_behavior_2_state_18  ; right-flying-claw right2
+	dec a
+	jp z, update_boss5_behavior_2_state_19  ; right-flying-claw lowering2
 	; ...
 	ret
 
@@ -414,13 +447,13 @@ update_boss5_behavior_2_state_0_no_left_claw_attack:
 	jp update_boss5_behavior_2_state_5
 update_boss5_behavior_2_state_0_no_claw_attack:
 	; switch:
-	ld c, 3
+	ld c, 5
 	call random_modulo
 	inc a
 	ld (boss__state), a
 	xor a
 	ld (boss__state_timer), a
-	jr update_boss5_behavior_2
+	jp update_boss5_behavior_2
 
 update_boss5_behavior_2_state_4:
 	call update_boss5_charybdis_maybe_fire_eye_bullet
@@ -440,8 +473,7 @@ update_boss5_behavior_2_state_4:
 	jr z, update_boss5_behavior_2_state_4_frame2
 	sub c
 	ret c
-	sub c
-	ret c
+	jr z, update_boss5_behavior_2_state_4_maybe_dettach
 	sub c
 	ret c
 	jr z, update_boss5_behavior_2_state_4_frame1
@@ -466,6 +498,25 @@ update_boss5_behavior_2_state_4_frame2:
 	ld a, 3
 	ld (boss__5_charybdis_left_claw_state), a
 	jp update_boss5_draw_charybdis
+update_boss5_behavior_2_state_4_maybe_dettach:
+	call random_a
+	and #03
+	ret nz
+	; dettach left claw!
+	ld a, 6
+	ld (boss__state), a
+	xor a
+	ld (boss__state_timer), a
+	inc a
+	ld (boss__5_charybdis_flying_claw_state), a
+	ld a, (boss__x)
+	add a, 2
+	ld (boss__5_charybdis_flying_claw_x), a
+	ld a, 12
+	ld (boss__5_charybdis_flying_claw_y), a
+	ld a, 6  ; stump up
+	ld (boss__5_charybdis_left_claw_state), a
+	jp update_boss5_draw_charybdis
 
 update_boss5_behavior_2_state_5:
 	call update_boss5_charybdis_maybe_fire_eye_bullet
@@ -485,8 +536,7 @@ update_boss5_behavior_2_state_5:
 	jr z, update_boss5_behavior_2_state_5_frame2
 	sub c
 	ret c
-	sub c
-	ret c
+	jr z, update_boss5_behavior_2_state_5_maybe_dettach
 	sub c
 	ret c
 	jr z, update_boss5_behavior_2_state_5_frame1
@@ -506,6 +556,297 @@ update_boss5_behavior_2_state_5_frame2:
 	ld a, 3
 	ld (boss__5_charybdis_right_claw_state), a
 	jp update_boss5_draw_charybdis
+update_boss5_behavior_2_state_5_maybe_dettach:
+	; dettach the right claw!
+	ld a, 13
+	ld (boss__state), a
+	xor a
+	ld (boss__state_timer), a
+	inc a
+	ld (boss__5_charybdis_flying_claw_state), a
+	ld a, (boss__x)
+	add a, 11
+	ld (boss__5_charybdis_flying_claw_x), a
+	ld a, 12
+	ld (boss__5_charybdis_flying_claw_y), a
+	ld a, 6  ; stump up
+	ld (boss__5_charybdis_right_claw_state), a
+	jp update_boss5_draw_charybdis
+
+update_boss5_behavior_2_state_6:
+	; control the stump:
+	; ...
+
+update_boss5_behavior_2_state_6_continue:
+	; left flying claw (rising):
+	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_FLYING_CLAW_SPEED_MASK)
+	ld c, a
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	and c
+	ret nz
+	ld a, (boss__5_charybdis_flying_claw_y)
+	dec a
+	ld (boss__5_charybdis_flying_claw_y), a
+	cp 7
+	jp nz, update_boss5_draw_charybdis
+	ld hl, boss__state
+	inc (hl)
+	xor a
+	ld (boss__state_timer), a
+	jp update_boss5_draw_charybdis
+
+update_boss5_behavior_2_state_7:
+	; control the stump:
+	; ...
+
+update_boss5_behavior_2_state_7_continue:
+	; left flying claw (left1):
+	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_FLYING_CLAW_SPEED_MASK)
+	ld c, a
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	and c
+	ret nz
+	ld a, (boss__5_charybdis_flying_claw_state)
+	inc a
+	and #01
+	add a, 2
+	ld (boss__5_charybdis_flying_claw_state), a	
+	ld a, (boss__5_charybdis_flying_claw_x)
+	dec a
+	ld (boss__5_charybdis_flying_claw_x), a
+	cp 1
+	jp nz, update_boss5_draw_charybdis
+	ld hl, boss__state
+	inc (hl)
+	xor a
+	ld (boss__state_timer), a
+	jp update_boss5_draw_charybdis
+
+update_boss5_behavior_2_state_8:
+	; control the stump:
+	; ...
+
+update_boss5_behavior_2_state_8_continue:
+	; left flying claw (right1):
+	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_FLYING_CLAW_SPEED_MASK)
+	ld c, a
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	and c
+	ret nz
+	ld a, (boss__5_charybdis_flying_claw_state)
+	inc a
+	and #01
+	add a, 4
+	ld (boss__5_charybdis_flying_claw_state), a		
+	ld a, (boss__5_charybdis_flying_claw_x)
+	inc a
+	ld (boss__5_charybdis_flying_claw_x), a
+	cp 26
+	jp nz, update_boss5_draw_charybdis
+	ld hl, boss__state
+	inc (hl)
+	xor a
+	ld (boss__state_timer), a
+	jp update_boss5_draw_charybdis
+
+update_boss5_behavior_2_state_9:
+	; control the stump:
+	; ...
+
+update_boss5_behavior_2_state_9_continue:
+	; left flying claw (down1):
+	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_FLYING_CLAW_SPEED_MASK)
+	ld c, a
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	and c
+	ret nz
+	ld a, 1
+	ld (boss__5_charybdis_flying_claw_state), a		
+	ld a, (boss__5_charybdis_flying_claw_y)
+	inc a
+	ld (boss__5_charybdis_flying_claw_y), a
+	cp 11
+	jp nz, update_boss5_draw_charybdis
+	ld hl, boss__state
+	inc (hl)
+	xor a
+	ld (boss__state_timer), a
+	jp update_boss5_draw_charybdis
+
+update_boss5_behavior_2_state_10:
+	; control the stump:
+	; ...
+
+	; left flying claw (left2):
+	jp update_boss5_behavior_2_state_7_continue
+
+update_boss5_behavior_2_state_11:
+	; control the stump:
+	; ...
+
+	; left flying claw (right2):
+	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_FLYING_CLAW_SPEED_MASK)
+	ld c, a
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	and c
+	ret nz
+	ld a, (boss__5_charybdis_flying_claw_state)
+	inc a
+	and #01
+	add a, 4
+	ld (boss__5_charybdis_flying_claw_state), a		
+	ld a, (boss__x)
+	add a, 2
+	ld c, a
+	ld a, (boss__5_charybdis_flying_claw_x)
+	inc a
+	ld (boss__5_charybdis_flying_claw_x), a
+	cp c
+	jp nz, update_boss5_draw_charybdis
+	ld hl, boss__state
+	inc (hl)
+	xor a
+	ld (boss__state_timer), a
+	jp update_boss5_draw_charybdis
+
+update_boss5_behavior_2_state_12:
+	; control the stump:
+	; ...
+
+	; left flying claw (down2):
+	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_FLYING_CLAW_SPEED_MASK)
+	ld c, a
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	and c
+	ret nz
+	ld a, 1
+	ld (boss__5_charybdis_flying_claw_state), a
+	ld a, (boss__5_charybdis_flying_claw_y)
+	inc a
+	ld (boss__5_charybdis_flying_claw_y), a
+	cp 13
+	jp nz, update_boss5_draw_charybdis
+	ld hl, boss__state
+	ld (hl), 4  ; back to left claw attack, to retract the claw
+	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_CLAW_ATTACK_SPEED)
+	add a, a
+	add a, a
+	ld (boss__state_timer), a
+	xor a
+	ld (boss__5_charybdis_flying_claw_state), a
+	ld a, 3
+	ld (boss__5_charybdis_left_claw_state), a
+	jp update_boss5_draw_charybdis
+
+update_boss5_behavior_2_state_13:
+	; control the stump:
+	; ...
+
+	; right flying claw (up):
+	jp update_boss5_behavior_2_state_6_continue
+
+update_boss5_behavior_2_state_14:
+	; control the stump:
+	; ...
+
+	; right flying claw (left1):
+	jp update_boss5_behavior_2_state_7_continue
+
+update_boss5_behavior_2_state_15:
+	; control the stump:
+	; ...
+
+	; right flying claw (right1):
+	jp update_boss5_behavior_2_state_8_continue
+
+update_boss5_behavior_2_state_16:
+	; control the stump:
+	; ...
+
+	; right flying claw (down1):
+	jp update_boss5_behavior_2_state_9_continue
+
+update_boss5_behavior_2_state_17:
+	; control the stump:
+	; ...
+
+	; right flying claw (left2):
+	jp update_boss5_behavior_2_state_7_continue
+
+update_boss5_behavior_2_state_18:
+	; control the stump:
+	; ...
+
+	; right flying claw (right2):
+	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_FLYING_CLAW_SPEED_MASK)
+	ld c, a
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	and c
+	ret nz
+	ld a, (boss__5_charybdis_flying_claw_state)
+	inc a
+	and #01
+	add a, 4
+	ld (boss__5_charybdis_flying_claw_state), a	
+	ld a, (boss__x)
+	add a, 11
+	ld c, a
+	ld a, (boss__5_charybdis_flying_claw_x)
+	inc a
+	ld (boss__5_charybdis_flying_claw_x), a
+	cp c
+	jp nz, update_boss5_draw_charybdis
+	ld hl, boss__state
+	inc (hl)
+	xor a
+	ld (boss__state_timer), a
+	jp update_boss5_draw_charybdis
+
+update_boss5_behavior_2_state_19:
+	; control the stump:
+	; ...
+
+	; right flying claw (down2):
+	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_FLYING_CLAW_SPEED_MASK)
+	ld c, a
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	and c
+	ret nz
+	ld a, 1
+	ld (boss__5_charybdis_flying_claw_state), a	
+	ld a, (boss__5_charybdis_flying_claw_y)
+	inc a
+	ld (boss__5_charybdis_flying_claw_y), a
+	cp 13
+	jp nz, update_boss5_draw_charybdis
+	ld hl, boss__state
+	ld (hl), 5  ; back to right claw attack, to retract the claw
+	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_CLAW_ATTACK_SPEED)
+	add a, a
+	add a, a
+	ld (boss__state_timer), a
+	xor a
+	ld (boss__5_charybdis_flying_claw_state), a
+	ld a, 3
+	ld (boss__5_charybdis_right_claw_state), a	
+	jp update_boss5_draw_charybdis
+
 
 ;-----------------------------------------------
 ; 0, 1, 2: walk, 3: jump
@@ -521,7 +862,9 @@ update_boss5_draw_charybdis_left_claw_table:
 	dw boss5_frame_left_claw2
 	dw boss5_frame_left_claw_rising
 	dw boss5_frame_left_claw_up
-	; ...
+	dw boss5_frame_left_stump
+	dw boss5_frame_left_stump_rising
+	dw boss5_frame_left_stump_up
 
 ; 0: base, 1: closed, 2: rising, 3: up, 4: stump base, 5: stump: rising, 6: stump up
 update_boss5_draw_charybdis_right_claw_table:
@@ -529,7 +872,9 @@ update_boss5_draw_charybdis_right_claw_table:
 	dw boss5_frame_right_claw2
 	dw boss5_frame_right_claw_rising
 	dw boss5_frame_right_claw_up
-	; ...
+	dw boss5_frame_right_stump
+	dw boss5_frame_right_stump_rising
+	dw boss5_frame_right_stump_up
 
 update_boss5_draw_charybdis_top_table
 	dw boss5_frame_island_0
@@ -538,12 +883,22 @@ update_boss5_draw_charybdis_top_table
 	dw boss5_frame_charybdis_vat
 	dw boss5_frame_charybdis_brain
 
+update_boss5_draw_charybdis_flying_claw_table:
+	dw boss5_frame_flying_claw_up
+	dw boss5_frame_flying_claw_left1
+	dw boss5_frame_flying_claw_left2
+	dw boss5_frame_flying_claw_right1
+	dw boss5_frame_flying_claw_right2
+
 
 ;-----------------------------------------------
 ; coordinate is the top-left of the 16x5 body 
 update_boss5_draw_charybdis:
 	xor a
 	ld (boss__5_needs_redraw), a
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)	
+
 	; clear previous frame:
 	ld hl, draw_boss_frame_clear_previous_frame_1
 	ld c, BOSS_PAGE
@@ -551,6 +906,19 @@ update_boss5_draw_charybdis:
 	ld hl, draw_boss_frame_clear_previous_frame_2
 	ld c, BOSS_PAGE
 	call call_hl_in_page_c_8000
+
+	; previous flying claw?
+	ld hl, (boss__5_charybdis_flying_claw_clear_ptr)
+	ld a, h
+	or l
+	jr z, update_boss5_draw_charybdis_no_flying_claw_clear
+	push hl
+	pop ix
+	ld hl, draw_boss_frame_clear_previous_frame_ix_de
+	ld de, #0405  ; large enough for all flying claw frames
+	ld c, BOSS_PAGE
+	call call_hl_in_page_c_8000
+update_boss5_draw_charybdis_no_flying_claw_clear:
 
 	ld bc, (boss__x)
 	call get_room_tile_ptr
@@ -643,17 +1011,35 @@ update_boss5_draw_charybdis_no_mouth:
 		ld c, BOSS_PAGE
 		ld hl, draw_boss_frame_2_without_clearing_ix
 		call call_hl_in_page_c_8000
-	pop hl
 
+		; draw flying claws:
+		ld a, (boss__5_charybdis_flying_claw_state)
+		or a
+		jr z, update_boss5_draw_charybdis_no_flying_claws
+		dec a
+		add a, a
+		ld hl, update_boss5_draw_charybdis_flying_claw_table
+		ADD_HL_A
+		ld c, (hl)
+		inc hl
+		ld b, (hl)
+		ld ixl, c
+		ld ixh, b
+		ld bc, (boss__5_charybdis_flying_claw_x)
+		call get_room_tile_ptr
+		ld (boss__5_charybdis_flying_claw_clear_ptr), hl	
+		ex de, hl  ; hl = ptr where the boss is to be drawn	
+		ld c, BOSS_PAGE
+		ld hl, draw_boss_frame_2_without_clearing_ix
+		call call_hl_in_page_c_8000
+update_boss5_draw_charybdis_no_flying_claws:
+	pop hl
 	; make it big enough to clear the claws:
 	dec hl
 	dec hl
 	ld (boss__clear_bbox_2), hl
 	ld bc, #070c
 	ld (boss__clear_bbox_2 + 2), bc
-
-	ld hl, redraw_flags
-	set ROOM_REDRAW_FLAG_BIT, (hl)	
 	ret
 
 

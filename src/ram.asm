@@ -274,7 +274,7 @@ boss__3_settings:
 boss__4_settings:
 boss__5_settings:
     ds virtual 12  ; difficulty parameters of the boss
-boss__tmp_space: ds virtual 12
+boss__tmp_space: ds virtual 13
 ;
 boss__1_has_staff: equ boss__tmp_space
 boss__1_staff_hp: equ boss__tmp_space + 1
@@ -306,6 +306,10 @@ boss__5_charybdis_leg_state: equ boss__tmp_space + 4  ; 0 (base), 1, 2: walk, 3:
 boss__5_charybdis_mouth_state: equ boss__tmp_space + 5  ; 0: base, 1: additional frame
 boss__5_charybdis_left_claw_state: equ boss__tmp_space + 6  ; 0: base, 1: closed, 2: rising, 3: up, 4: stump base, 5: stump: rising, 6: stump up
 boss__5_charybdis_right_claw_state: equ boss__tmp_space + 7  ; 0: base, 1: closed, 2: rising, 3: up, 4: stump base, 5: stump: rising, 6: stump up
+boss__5_charybdis_flying_claw_state: equ boss__tmp_space + 8  ; 0: no flying claw, 1: up, 2/3: left, 3/4: right
+boss__5_charybdis_flying_claw_x: equ boss__tmp_space + 9
+boss__5_charybdis_flying_claw_y: equ boss__tmp_space + 10
+boss__5_charybdis_flying_claw_clear_ptr: equ boss__tmp_space + 11  ; 2 bytes
 
 ; game stats:
 stats__n_coins_collected: ds virtual 2

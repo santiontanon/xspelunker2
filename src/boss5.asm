@@ -163,6 +163,7 @@ update_boss5_behavior_0_state_3_charybdis:
 	ld hl, 0
 	ld (boss__clear_bbox_1 + 2), hl
 	ld (boss__clear_bbox_2 + 2), hl
+	ld (boss__5_charybdis_flying_claw_clear_ptr), hl
 
 	ld a, (current_world__difficulty)
 	ld hl, boss5_charybdis_difficulty_setting__easy
@@ -677,36 +678,36 @@ boss5_tile_attributes_patch_from_charybdis2_to_3:
     call dzx0_from_page_c
 
     ; bank 1:
-	ld de, CHRTBL2 + (9*16 + 2)*8
+	ld de, CHRTBL2 + (10*16 + 2)*8
 	ld hl, buffer_4096
 	ld bc, 66*8
 	call fast_LDIRVM
-	ld de, CLRTBL2 + (9*16 + 2)*8
+	ld de, CLRTBL2 + (10*16 + 2)*8
 	ld hl, buffer_4096 + 66*8
 	ld bc, 66*8
 	call fast_LDIRVM
 
     ; bank 2:
-	ld de, CHRTBL2 + 256*8 + (9*16 + 2)*8
+	ld de, CHRTBL2 + 256*8 + (10*16 + 2)*8
 	ld hl, buffer_4096
 	ld bc, 66*8
 	call fast_LDIRVM
-	ld de, CLRTBL2 + 256*8 + (9*16 + 2)*8
+	ld de, CLRTBL2 + 256*8 + (10*16 + 2)*8
 	ld hl, buffer_4096 + 66*8
 	ld bc, 66*8
 	call fast_LDIRVM
 
-	ld de, current_room__collision_table + 9*16 + 2
+	ld de, current_room__collision_table + 10*16 + 2
 	ld hl, buffer_4096 + 66*8
 	ld ixl, 66
 	call boss5_tile_attributes_patch_change_attributes
 
     ; bank 3:
-	ld de, CHRTBL2 + 2*256*8 + (9*16 + 2)*8
+	ld de, CHRTBL2 + 2*256*8 + (10*16 + 2)*8
 	ld hl, buffer_4096
 	ld bc, 66*8
 	call fast_LDIRVM
-	ld de, CLRTBL2 + 2*256*8 + (9*16 + 2)*8
+	ld de, CLRTBL2 + 2*256*8 + (10*16 + 2)*8
 	ld hl, buffer_4096 + 66*8
 	ld bc, 66*8
 	jp fast_LDIRVM
@@ -726,36 +727,36 @@ boss5_tile_attributes_patch_from_charybdis3_to_2:
     call dzx0_from_page_c
 
     ; bank 1:
-	ld de, CHRTBL2 + (9*16 + 2)*8
+	ld de, CHRTBL2 + (10*16 + 2)*8
 	ld hl, buffer_4096
 	ld bc, 50*8
 	call fast_LDIRVM
-	ld de, CLRTBL2 + (9*16 + 2)*8
+	ld de, CLRTBL2 + (10*16 + 2)*8
 	ld hl, buffer_4096 + 50*8
 	ld bc, 50*8
 	call fast_LDIRVM
 
     ; bank 2:
-	ld de, CHRTBL2 + 256*8 + (9*16 + 2)*8
+	ld de, CHRTBL2 + 256*8 + (10*16 + 2)*8
 	ld hl, buffer_4096
 	ld bc, 50*8
 	call fast_LDIRVM
-	ld de, CLRTBL2 + 256*8 + (9*16 + 2)*8
+	ld de, CLRTBL2 + 256*8 + (10*16 + 2)*8
 	ld hl, buffer_4096 + 50*8
 	ld bc, 50*8
 	call fast_LDIRVM
 
-	ld de, current_room__collision_table + 9*16 + 2
+	ld de, current_room__collision_table + 10*16 + 2
 	ld hl, buffer_4096 + 50*8
 	ld ixl, 50
 	call boss5_tile_attributes_patch_change_attributes
 
     ; bank 3:
-	ld de, CHRTBL2 + 2*256*8 + (9*16 + 2)*8
+	ld de, CHRTBL2 + 2*256*8 + (10*16 + 2)*8
 	ld hl, buffer_4096
 	ld bc, 50*8
 	call fast_LDIRVM
-	ld de, CLRTBL2 + 2*256*8 + (9*16 + 2)*8
+	ld de, CLRTBL2 + 2*256*8 + (10*16 + 2)*8
 	ld hl, buffer_4096 + 50*8
 	ld bc, 50*8
 	jp fast_LDIRVM
