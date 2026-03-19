@@ -15,7 +15,7 @@ enemy_update_fn_table:
 	dw update_enemy_blood_ball  ; boss 4 attack
 	dw update_enemy_boss4_blades  ; boss 4 attack
 	dw update_enemy_bullet_waterball
-	dw update_enemy_laser  ; atlantis sentinel attack
+	dw update_enemy_laser  ; atlantis sentinel, and boss 5 attack
 	dw update_enemy_bullet_ignoring_walls  ; ignores wall collisions
 	; enemies you can hit:
 	dw update_enemy_snake  ; left-to-right
@@ -3799,40 +3799,63 @@ update_enemy_laser:
 	jp z, update_enemy_delete
 
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
-	and #04
+	or a
 	jr z, update_enemy_laser_left
+	cp 1
+	jr z, update_enemy_laser_left_up
+	cp 4
+	jr z, update_enemy_laser_right
+	cp 5
+	jr z, update_enemy_laser_right_up
+	cp 7
+update_enemy_laser_up:
+	ld a, (current_world__difficulty_bullet_speed)
+	add a, a
+	call update_enemy_bullet_move_up_if_possible_a_times
+	jp z, update_enemy_delete
+	ld e, 64  ; |
+	jr update_enemy_laser_continue
 update_enemy_laser_right:
 	ld a, (current_world__difficulty_bullet_speed)
 	add a, a
 	call update_enemy_bullet_move_right_if_possible_a_times
 	jp z, update_enemy_delete
+	ld e, 60  ; laser '-'
+	jr update_enemy_laser_continue
+update_enemy_laser_right_up:
+	ld a, (current_world__difficulty_bullet_speed)
+	add a, a
+	dec a
+	call update_enemy_bullet_move_right_if_possible_a_times
+	jp z, update_enemy_delete
+	ld a, (current_world__difficulty_bullet_speed)
+	add a, a
+	dec a
+	call update_enemy_bullet_move_up_if_possible_a_times
+	jp z, update_enemy_delete
+	ld e, 68  ; /
+	jr update_enemy_laser_continue
+update_enemy_laser_left_up:
+	ld a, (current_world__difficulty_bullet_speed)
+	add a, a
+	dec a
+	call update_enemy_bullet_move_left_if_possible_a_times
+	jp z, update_enemy_delete
+	ld a, (current_world__difficulty_bullet_speed)
+	add a, a
+	dec a
+	call update_enemy_bullet_move_up_if_possible_a_times
+	jp z, update_enemy_delete
+	ld e, 72  ; \ 
 	jr update_enemy_laser_continue
 update_enemy_laser_left:
 	ld a, (current_world__difficulty_bullet_speed)
 	add a, a
 	call update_enemy_bullet_move_left_if_possible_a_times
 	jp z, update_enemy_delete
-update_enemy_laser_continue:
-; 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
-; 	and #03
-; 	jr z, update_enemy_laser_movement_done
-; 	dec a
-; 	jp nz, update_enemy_laser_down
-; update_enemy_laser_up:
-; 	ld a, (current_world__difficulty_bullet_speed)
-; 	call update_enemy_bullet_move_up_if_possible_a_times
-; 	jp z, update_enemy_delete	
-; 	jr update_enemy_laser_movement_done
-; update_enemy_laser_down:
-; 	ld a, (current_world__difficulty_bullet_speed)
-; 	call update_enemy_bullet_move_down_if_possible_a_times
-; 	jp z, update_enemy_delete	
-; update_enemy_laser_movement_done:
-	ld d, COLOR_RED
 	ld e, 60  ; laser '-'
-; 	ld e, 72  ; \ 
-; 	ld e, 68  ; /
-; 	ld e, 64  ; |
+update_enemy_laser_continue:
+	ld d, COLOR_RED
 	jp enemy_sprite_and_continue
 
 

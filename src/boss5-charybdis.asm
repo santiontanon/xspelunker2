@@ -277,9 +277,9 @@ update_boss5_behavior_1_state_6_continue:
 		ld hl, boss__5_top_state
 		ld a, (hl)
 		or a
-; 		jr z, update_boss5_behavior_1_state_6_first_jump
-; 		dec a
-; 		jr z, update_boss5_behavior_1_state_6_second_jump
+		jr z, update_boss5_behavior_1_state_6_first_jump
+		dec a
+		jr z, update_boss5_behavior_1_state_6_second_jump
 update_boss5_behavior_1_state_6_third_jump
 		; switch to charybdis2 tileset, and to behavior 2 as soon as boss lands
 		ld (hl), 3  ; vat
@@ -408,7 +408,6 @@ update_boss5_behavior_2:
 	jp z, update_boss5_behavior_2_state_18  ; right-flying-claw right2
 	dec a
 	jp z, update_boss5_behavior_2_state_19  ; right-flying-claw lowering2
-	; ...
 	ret
 
 update_boss5_behavior_2_state_0:
@@ -574,8 +573,8 @@ update_boss5_behavior_2_state_5_maybe_dettach:
 	jp update_boss5_draw_charybdis
 
 update_boss5_behavior_2_state_6:
-	; control the stump:
-	; ...
+	call update_boss5_charybdis_maybe_fire_eye_bullet
+	call update_boss5_behavior_2_left_stump_control
 
 update_boss5_behavior_2_state_6_continue:
 	; left flying claw (rising):
@@ -598,8 +597,8 @@ update_boss5_behavior_2_state_6_continue:
 	jp update_boss5_draw_charybdis
 
 update_boss5_behavior_2_state_7:
-	; control the stump:
-	; ...
+	call update_boss5_charybdis_maybe_fire_eye_bullet
+	call update_boss5_behavior_2_left_stump_control
 
 update_boss5_behavior_2_state_7_continue:
 	; left flying claw (left1):
@@ -627,8 +626,8 @@ update_boss5_behavior_2_state_7_continue:
 	jp update_boss5_draw_charybdis
 
 update_boss5_behavior_2_state_8:
-	; control the stump:
-	; ...
+	call update_boss5_charybdis_maybe_fire_eye_bullet
+	call update_boss5_behavior_2_left_stump_control
 
 update_boss5_behavior_2_state_8_continue:
 	; left flying claw (right1):
@@ -656,8 +655,8 @@ update_boss5_behavior_2_state_8_continue:
 	jp update_boss5_draw_charybdis
 
 update_boss5_behavior_2_state_9:
-	; control the stump:
-	; ...
+	call update_boss5_charybdis_maybe_fire_eye_bullet
+	call update_boss5_behavior_2_left_stump_control
 
 update_boss5_behavior_2_state_9_continue:
 	; left flying claw (down1):
@@ -686,15 +685,15 @@ update_boss5_behavior_2_state_9_continue:
 	jp update_boss5_draw_charybdis
 
 update_boss5_behavior_2_state_10:
-	; control the stump:
-	; ...
+	call update_boss5_charybdis_maybe_fire_eye_bullet
+	call update_boss5_behavior_2_left_stump_control
 
 	; left flying claw (left2):
 	jp update_boss5_behavior_2_state_7_continue
 
 update_boss5_behavior_2_state_11:
-	; control the stump:
-	; ...
+	call update_boss5_charybdis_maybe_fire_eye_bullet
+	call update_boss5_behavior_2_left_stump_control
 
 	; left flying claw (right2):
 	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_FLYING_CLAW_SPEED_MASK)
@@ -724,8 +723,9 @@ update_boss5_behavior_2_state_11:
 	jp update_boss5_draw_charybdis
 
 update_boss5_behavior_2_state_12:
-	; control the stump:
-	; ...
+	call update_boss5_charybdis_maybe_fire_eye_bullet
+	ld a, 6
+	ld (boss__5_charybdis_left_claw_state), a
 
 	; left flying claw (down2):
 	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_FLYING_CLAW_SPEED_MASK)
@@ -755,43 +755,43 @@ update_boss5_behavior_2_state_12:
 	jp update_boss5_draw_charybdis
 
 update_boss5_behavior_2_state_13:
-	; control the stump:
-	; ...
+	call update_boss5_charybdis_maybe_fire_eye_bullet
+	call update_boss5_behavior_2_right_stump_control
 
 	; right flying claw (up):
 	jp update_boss5_behavior_2_state_6_continue
 
 update_boss5_behavior_2_state_14:
-	; control the stump:
-	; ...
+	call update_boss5_charybdis_maybe_fire_eye_bullet
+	call update_boss5_behavior_2_right_stump_control
 
 	; right flying claw (left1):
 	jp update_boss5_behavior_2_state_7_continue
 
 update_boss5_behavior_2_state_15:
-	; control the stump:
-	; ...
+	call update_boss5_charybdis_maybe_fire_eye_bullet
+	call update_boss5_behavior_2_right_stump_control
 
 	; right flying claw (right1):
 	jp update_boss5_behavior_2_state_8_continue
 
 update_boss5_behavior_2_state_16:
-	; control the stump:
-	; ...
+	call update_boss5_charybdis_maybe_fire_eye_bullet
+	call update_boss5_behavior_2_right_stump_control
 
 	; right flying claw (down1):
 	jp update_boss5_behavior_2_state_9_continue
 
 update_boss5_behavior_2_state_17:
-	; control the stump:
-	; ...
+	call update_boss5_charybdis_maybe_fire_eye_bullet
+	call update_boss5_behavior_2_right_stump_control
 
 	; right flying claw (left2):
 	jp update_boss5_behavior_2_state_7_continue
 
 update_boss5_behavior_2_state_18:
-	; control the stump:
-	; ...
+	call update_boss5_charybdis_maybe_fire_eye_bullet
+	call update_boss5_behavior_2_right_stump_control
 
 	; right flying claw (right2):
 	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_FLYING_CLAW_SPEED_MASK)
@@ -821,8 +821,9 @@ update_boss5_behavior_2_state_18:
 	jp update_boss5_draw_charybdis
 
 update_boss5_behavior_2_state_19:
-	; control the stump:
-	; ...
+	call update_boss5_charybdis_maybe_fire_eye_bullet
+	ld a, 6
+	ld (boss__5_charybdis_right_claw_state), a
 
 	; right flying claw (down2):
 	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_FLYING_CLAW_SPEED_MASK)
@@ -850,6 +851,95 @@ update_boss5_behavior_2_state_19:
 	ld a, 3
 	ld (boss__5_charybdis_right_claw_state), a	
 	jp update_boss5_draw_charybdis
+
+update_boss5_behavior_2_left_stump_control:
+	; alternate between states 5 and 6
+	ld a, (boss__state_timer)
+	and #0f
+	ret nz
+	ld a, (boss__5_charybdis_left_claw_state)
+	and #01
+	add a, 5
+	ld (boss__5_charybdis_left_claw_state), a
+
+	; chance of firing a laser:
+	call random_a
+	and #01
+	ret nz
+	ld a, (boss__x)
+	add a, 5
+	ld c, a
+	ld a, (boss__y)
+	inc a
+	ld b, a
+	ld a, (boss__5_charybdis_left_claw_state)
+	ld e, a  ; maybe 5 (right up)
+	cp 5
+	jp z, update_boss5_behavior_2_fire_laser
+	inc e  ; 7 (up)
+	dec c
+	dec c
+	jp update_boss5_behavior_2_fire_laser
+
+update_boss5_behavior_2_right_stump_control:
+	ld a, (boss__state_timer)
+	and #0f
+	ret nz
+	ld a, (boss__5_charybdis_right_claw_state)
+	and #01
+	add a, 5
+	ld (boss__5_charybdis_right_claw_state), a
+
+	; chance of firing a laser:
+	; chance of firing a laser:
+	call random_a
+	and #01
+	ret nz
+	ld a, (boss__x)
+	add a, 10
+	ld c, a
+	ld a, (boss__y)
+	inc a
+	ld b, a
+	ld a, (boss__5_charybdis_right_claw_state)
+	ld e, 1  ; (left-up)
+	cp 5
+	jp z, update_boss5_behavior_2_fire_laser
+	ld e, 7  ; (up)
+	inc c
+	inc c
+	jp update_boss5_behavior_2_fire_laser
+
+
+;-----------------------------------------------
+; input:
+; - c, b: x, y
+; - e: direction
+update_boss5_behavior_2_fire_laser:
+	push bc
+	push de
+		call ptr_to_new_sprite_enemy
+	pop de
+	pop bc
+	ret nz
+	ld (hl), 0  ; ID
+	inc hl
+	ld (hl), ENEMY_BULLET_LASER  ; enemy type
+	inc hl
+	ld (hl), 0  ; pixel x
+	inc hl
+	ld (hl), c  ; tile x
+	inc hl
+	ld (hl), 0  ; pixel y
+	inc hl
+	ld (hl), b  ; tile y
+	inc hl
+	; 1: left-up, 0: left, 2: left-down
+	; 5: right-up, 4: right, 6: left-down
+	; 7: up
+	ld (hl), e  ; state / direction
+	ld hl, SFX_raygun
+	jp play_SFX_with_high_priority
 
 
 ;-----------------------------------------------
