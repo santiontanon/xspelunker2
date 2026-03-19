@@ -1205,6 +1205,14 @@ player_weapon_hitbox_check_boss__boss5_charybdis_hit_break_vat:
 	ld hl, redraw_flags
 	set ROOM_REDRAW_FLAG_BIT, (hl)	
 	call update_boss5_draw_charybdis
+	ld bc, (boss__x)
+	dec b
+	dec b
+	dec b
+	ld a, 6
+	add a, c
+	ld c, a
+	call spawn_big_explosion
 	ld hl, SFX_explosion_low_pitch
 	jp play_SFX_with_high_priority
 

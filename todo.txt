@@ -1,9 +1,6 @@
 to do:
 
-***- Charybdis:
-  ***- explosions when destroying the vat
-  ***- when invulnerable (After damage) tiles of type 3/9 should be walls
-  ***- when HP get to zero, boss dies (lots of explosions, like for boss 4), and then disappear; if there is any flying claw, it also pops with an explosion
+***- Charybdis: when HP get to zero, boss dies (lots of explosions, like for boss 4), and then disappear; if there is any flying claw, it also pops with an explosion
 ***- Scylla:
   - update "update_sprite_objects_boss_extras_boss_5" for the eye
   - idle: just animate the arms and blink
@@ -29,7 +26,7 @@ to do:
 - music: intro, letters/map, tablets/puzzles, game over, pyramid, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)
   - story: I like the original song: keep the same style and compose a variation
   - boss music (boss music increases in speed as health goes down: 50%, 25%)
-  - find arcade/MSX games with music I like, and transcribe/figure out the chords: Thexder, MoG, Knightmare, Terra Cresta, Apolon (anime)
+  - find arcade/MSX games with music I like, and transcribe/figure out the chords: MoG, Knightmare, Terra Cresta, Apolon (anime)
 - confrontation with the aliens after activating the calendar stone: are aliens sprites or tiles? (a mix, small aliens with sprites, and large ones with tiles)
 - first ending sequence (udpate "stats__ending"): Elaine drops from the ceiling on a rope and rescues you. The calendar stone machine activates and creates a defensive barrier around earth, the alien armada that was coming turns back, but promises revenge.
   - add "no miss" achievement for this: if there is no damage (Track it)
@@ -62,6 +59,7 @@ to do:
 - "speak" the animal names in the animal room to get their blessings (if you get all four, you do double damage, adjust angry/veryhard boss difficulty for this): I already have the clue for this in the game, right? (TABLET_TRIVIA_CLUE1_1, etc.)
   - add as a special achievement for the gameover screen
 - Final good ending 2: if you have the codex (from the 3 statues), it explains how to manufactore the powestones/firestones. So, you can keep using the calendar stone and be prepared for the future. This is the true final ending.
+- save game to rom / password
 
 - Potential new ideas if I have the energy
   - special condition for triggering "angry bosses" (they change color). For each one you beat in this hard mode, you get something in the ending, and if you get them all, you get a special mention. The conditions might be things like: certain bit in the random seed to be "11" (so, not all seeds are good), dive into water X times in the same room without doing anything else, etc. Use the "random seed stela" (maybe give a clue about it), currently it displays the bottom 6 bits of the first random seed word, should I make it display a whole 8 bits of it?

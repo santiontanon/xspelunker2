@@ -515,7 +515,7 @@ player_update_state_walking_no_weapon_swing:
 	jp player_update_switch_to_idle
 
 player_update_state_walking_right:
-	call player_in_water
+	call check_player_in_water
 	jp z, player_update_switch_to_swimming
 
 	; check for crawling:
@@ -534,7 +534,7 @@ player_update_state_walking_right:
 	jr player_update_state_walking_continue
 
 player_update_state_walking_left:
-	call player_in_water
+	call check_player_in_water
 	jp z, player_update_switch_to_swimming
 
 	; check for crawling:
@@ -647,7 +647,7 @@ player_update_state_falling_no_rope:
 	jp z, player_update_switch_to_idle
 
 	; check if we need to swicth to swimming:
-	call player_in_water
+	call check_player_in_water
 	jp z, player_update_switch_to_swimming_from_falling
 
 	; move down:
@@ -992,7 +992,7 @@ player_update_state_crawling_no_weapon_swing:
 player_update_state_crawling_no_inventory:
 
 	; check for water:
-	call player_in_water
+	call check_player_in_water
 	jp z, player_update_switch_to_swimming
 	
 	; check for interact:
@@ -1487,7 +1487,7 @@ player_update_state_swimming_inertia_y_negative:
 player_update_state_swimming_inertia_y_done:
 
 	; check if we are exiting the water:
-	call player_in_water  ; a = tile type
+	call check_player_in_water  ; a = tile type
 	jp nz, player_update_switch_to_jumping_from_swimming
 	; are we in lava?
 	cp 10  ; a = tile type (so, we check if we are in lava)
@@ -1652,7 +1652,7 @@ player_update_state_weapon_swing_falling_continue:
 	jp z, player_update_switch_to_idle_keep_weapon
 
 	; check if we need to swicth to swimming:
-	call player_in_water
+	call check_player_in_water
 	jp z, player_update_switch_to_swimming_from_falling
 
 	; move down:
@@ -1969,7 +1969,7 @@ player_update_state_directional_weapon_falling_no_right:
 	jp z, player_update_switch_to_directional_weapon
 
 	; check if we need to swicth to swimming:
-	call player_in_water
+	call check_player_in_water
 	jp z, player_update_switch_to_swimming_from_falling
 
 	; move down:

@@ -69,7 +69,7 @@ player_check_collision_idle:
 	inc b
 player_check_collision_idle_continue:
 	push bc
-		call get_room_tile_type
+		call get_room_tile_type_player
 	pop bc
 	cp 2
 	ret z
@@ -91,7 +91,7 @@ player_check_collision_idle_head:
 	jr c, player_check_collision_idle_continue3
 	inc b
 player_check_collision_idle_continue3:
-	call get_room_tile_type
+	call get_room_tile_type_player
 	cp 2
 	ret z
 	ld a, (player_x)
@@ -125,7 +125,7 @@ player_check_collision_idle_with_hazard_or_waterfalls:
 	inc b
 player_check_collision_idle_with_hazard_or_waterfalls_continue:
 	push bc
-		call get_room_tile_type
+		call get_room_tile_type_player
 	pop bc
 	cp 3
 	ret z
@@ -159,7 +159,7 @@ player_check_collision_idle_with_hazard_or_waterfalls_head:
 	jr c, player_check_collision_idle_with_hazard_or_waterfalls_continue3
 	inc b
 player_check_collision_idle_with_hazard_or_waterfalls_continue3:
-	call get_room_tile_type
+	call get_room_tile_type_player
 	cp 3
 	ret z
 	cp 9
@@ -225,7 +225,7 @@ player_check_collision_crouching_with_hazard_or_waterfalls:
 	jr z, player_check_collision_crouching_with_de_continue
 	inc b
 player_check_collision_crouching_with_de_continue:
-	call get_room_tile_type
+	call get_room_tile_type_player
 	cp 3
 	ret z
 	cp 9
@@ -271,7 +271,7 @@ player_check_collision_left_continue:
 	cp #ff
 	jp z, player_exit_room_left
 	push bc
-		call get_room_tile_type
+		call get_room_tile_type_player
 	pop bc
 	cp 2  ; wall
 	ret z
@@ -293,13 +293,13 @@ player_check_collision_left_continue2:
 	jr z, player_check_collision_left_continue3
 	; need to do an intermediate check:
 	push bc
-		call get_room_tile_type
+		call get_room_tile_type_player
 	pop bc
 	cp 2  ; wall
 	ret z
 	dec b
 player_check_collision_left_continue3:
-	call get_room_tile_type
+	call get_room_tile_type_player
 	cp 2
 	ret
 player_check_collision_left_no_collision:
@@ -329,7 +329,7 @@ player_check_collision_right_continue:
 	cp c
 	jp z, player_exit_room_right
 	push bc
-		call get_room_tile_type
+		call get_room_tile_type_player
 	pop bc
 	cp 2  ; wall
 	ret z
@@ -351,13 +351,13 @@ player_check_collision_right_continue2:
 	jr z, player_check_collision_right_continue3
 	; need to do an intermediate check:
 	push bc
-		call get_room_tile_type
+		call get_room_tile_type_player
 	pop bc
 	cp 2  ; wall
 	ret z
 	dec b
 player_check_collision_right_continue3:
-	call get_room_tile_type
+	call get_room_tile_type_player
 	cp 2
 	ret
 player_check_collision_right_no_collision:
@@ -382,7 +382,7 @@ player_check_collision_down_inc:
 	cp b
 	jp z, player_exit_room_down
 	push bc
-		call get_room_tile_type
+		call get_room_tile_type_player
 	pop bc
 	cp 2  ; wall
 	ret z
@@ -404,7 +404,7 @@ player_check_collision_down_inc_right:
 	jr c, player_check_collision_down_inc_continue2
 	inc c  ; if < PLAYER_COLLISION_BOX_WIDTH, c+=1
 player_check_collision_down_inc_continue2:
-	call get_room_tile_type
+	call get_room_tile_type_player
 	cp 2
 	ret z
 	cp 6  ; rope-platform
@@ -430,7 +430,7 @@ player_check_collision_up:
 	cp #ff
 	jp z, player_exit_room_up
 	push bc
-		call get_room_tile_type
+		call get_room_tile_type_player
 	pop bc
 	cp 2
 	ret z
@@ -440,7 +440,7 @@ player_check_collision_up:
 	jr c, player_check_collision_up_continue2
 	inc c  ; if < PLAYER_COLLISION_BOX_WIDTH, c+=1
 player_check_collision_up_continue2:
-	call get_room_tile_type
+	call get_room_tile_type_player
 	cp 2
 	ret
 
@@ -474,7 +474,7 @@ check_player_on_top_of_rope_continue:
 check_player_on_top_of_rope_continue2:
 	inc b
 	push bc
-		call get_room_tile_type
+		call get_room_tile_type_player
 	pop bc
 	cp 5
 	jr z, check_player_on_top_of_rope
@@ -491,7 +491,7 @@ check_player_on_top_of_rope:
 check_player_maybe_on_top_of_ladder:
 	inc c
 	push bc
-		call get_room_tile_type
+		call get_room_tile_type_player
 	pop bc
 	dec c
 	cp 7
@@ -514,13 +514,13 @@ check_player_on_top_of_ladder_right:
 ; output:
 ; - z: in water
 ; - nz: not in water
-player_in_water:
+check_player_in_water:
 	ld a, (player_x + 1)
 	ld c, a
 	ld a, (player_y + 1)
 	ld b, a
 	inc b
-	call get_room_tile_type_behind_item
+	call get_room_tile_type_player_behind_item
 	cp 4  ; water
 	ret z
 	cp 10  ; lava
@@ -554,6 +554,47 @@ get_collision_tile_type_of_a:
 
 
 ;-----------------------------------------------
+; same as "get_room_tile_type", but if we are in a boss room, and 
+; player_immunity_timer > 0, it checks the background copy of the room (without the
+; boss drawn) for collision if collision type is "9"
+get_room_tile_type_player:
+	ld l, b  ; assume b is positive
+	ld h, 0
+	call get_room_tile_ptr_hl_set
+	ld a, (hl)
+	or a
+	ret z  ; 0 is directly no collision (we exit early, as the table below starts at 32)
+	; get collision type:
+	push bc
+		ld bc, current_room__collision_table
+		ADD_BC_A
+		ld a, (bc)
+	pop bc
+	cp 9
+	ret nz
+	ex af, af'
+		ld a, (player_immunity_timer)
+		or a
+		jr z, get_room_tile_type_player_no_immunity
+	ex af, af'
+	; We are in a boss room, collided with the boss, and are immune:
+	; - we will check the background copy of the boss room, to collide with whatever
+	;   is behind the boss instead.
+	push bc
+		ld bc, 64*24
+		add hl, bc
+	pop bc
+	ld a, (hl)
+	ld c, a
+	or a
+	ret z
+	jp get_collision_tile_type_of_a
+get_room_tile_type_player_no_immunity
+	ex af, af'
+	ret
+
+
+;-----------------------------------------------
 ; Some times the player walks over an item, but we want to know the tile type
 ; of the tile that was behind that item. For example, when the player is swimming,
 ; and we want to know if the player is still in the water.
@@ -562,27 +603,27 @@ get_collision_tile_type_of_a:
 ; - b: tile y
 ; output:
 ; - a: tile collision type
-get_room_tile_type_behind_item:
+get_room_tile_type_player_behind_item:
 	push bc
-		call get_room_tile_type
+		call get_room_tile_type_player
 	pop bc  ; coordinates are in e, d now
 	or a
 	ret nz  ; items are collision type == 0
 	ld a, (hl)  ; recover again the actual tile
 	cp FIRST_REGULAR_ITEM_TILE
-	jr c, get_room_tile_type_behind_item_non_item
+	jr c, get_room_tile_type_player_behind_item_non_item
 	cp LAST_REGULAR_ITEM_TILE
-	jr nc, get_room_tile_type_behind_item_non_item
+	jr nc, get_room_tile_type_player_behind_item_non_item
 	; it's an item, we need to locate it, and get its background:
 	ld hl, get_tile_behind_tile_object
 	ld e, TILES_PAGE
 	call call_hl_in_page_e_8000
-	jr z, get_room_tile_type_behind_item_non_item
+	jr z, get_room_tile_type_player_behind_item_non_item
 	ld bc, current_room__collision_table
 	ADD_BC_A
 	ld a, (bc)
 	ret	
-get_room_tile_type_behind_item_non_item:
+get_room_tile_type_player_behind_item_non_item:
 	xor a
 	ret
 
