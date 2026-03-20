@@ -10,8 +10,6 @@ update_boss5_behavior_continue:
 	or a
 	ret z
 
-	; ...
-
 	ld a, (boss__behavior)
 	or a
 	jp z, update_boss5_behavior_0  ; before boss is spawned (we don't even know if it's charybdis or scylla here)
@@ -19,7 +17,15 @@ update_boss5_behavior_continue:
 	jp z, update_boss5_behavior_1  ; charybdis with island on top
 	dec a
 	jp z, update_boss5_behavior_2  ; charybdis vat/brain on top
-; 	jp update_boss5_behavior_3  ; ...
+	dec a
+	jp z, update_boss5_behavior_3  ; charybdis dying
+
+	dec a
+	jp z, update_boss5_behavior_4  ; scylla with island on top
+	dec a
+	jp z, update_boss5_behavior_5  ; scylla vat/brain on top
+	dec a
+	jp z, update_boss5_behavior_6  ; scylla dying
 	ret
 
 
@@ -77,7 +83,7 @@ update_boss5_behavior_0:
 	jp z, update_boss5_behavior_0_state_5  ; boss name comes down and combat starts
 	dec a
 	jp z, update_boss5_behavior_0_state_6  ; water stops pouring, and behavior 0 ends
-
+	; death state:
 	dec a
 	jp z, update_boss5_behavior_0_state_7  ; water level rises (without the island), all the way to the top
 	ret
@@ -197,9 +203,8 @@ update_boss5_behavior_0_state_3_charybdis_continue:
 	ld (boss__5_charybdis_mouth_state), a
 	ld (boss__5_charybdis_left_claw_state), a
 	ld (boss__5_charybdis_right_claw_state), a	
-	; ...
 
-	jr update_boss5_behavior_0_state_3_done
+	jp update_boss5_behavior_0_state_3_done
 update_boss5_behavior_0_state_3_scylla
 	; switch to the scylla tileset:
 	ld hl, 0
@@ -248,7 +253,12 @@ update_boss5_behavior_0_state_3_scylla_continue:
 	xor a
 	ld (boss__hit_timer), a
 	ld (boss__5_top_state), a
-
+	ld (boss__5_scylla_eye_mouth_state), a
+	ld (boss__5_scylla_arms_state), a
+	ld (boss__5_scylla_arms_state + 1), a
+	ld (boss__5_scylla_arms_state + 2), a
+	ld (boss__5_scylla_arms_state + 3), a
+	ld (boss__5_scylla_arms_state + 4), a
 	; ...
 
 update_boss5_behavior_0_state_3_done:
@@ -439,11 +449,19 @@ update_boss5_behavior_0_state_6:
 	ld a, (hl)
 	cp 10
 	jr nz, update_boss5_behavior_0_state_6_continue
-	ld a, 1
-	ld (boss__behavior), a
 	xor a
 	ld (boss__state), a
 	ld (boss__state_timer), a
+	ld a, (boss__5_current_variant)
+	or a
+	jr z, update_boss5_behavior_0_state_6_charybdis
+update_boss5_behavior_0_state_6_scylla:
+	ld a, 4
+	ld (boss__behavior), a
+	ret
+update_boss5_behavior_0_state_6_charybdis:
+	ld a, 1
+	ld (boss__behavior), a
 	ret
 update_boss5_behavior_0_state_6_continue:
 	inc (hl)

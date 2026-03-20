@@ -363,8 +363,6 @@ update_boss5_behavior_1_state_7_done:
 	ret
 
 
-
-
 ;-----------------------------------------------
 update_boss5_behavior_2:
 	ld a, (boss__state)
@@ -943,6 +941,85 @@ update_boss5_behavior_2_fire_laser:
 
 
 ;-----------------------------------------------
+update_boss5_behavior_3:
+	ld a, (boss__state)
+	or a
+	jr z, update_boss5_behavior_3_state_0  ; explosions
+	dec a
+	jp z, update_boss5_behavior_3_state_1  ; boss dead, spawn next boss, or rewards
+	ret
+
+update_boss5_behavior_3_state_0:
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	or a
+	jr nz, update_boss5_behavior_3_state_0_continue
+	; first frame, check if there is a flying claw:
+	ld a, (boss__5_charybdis_flying_claw_state)
+	or a
+	jr z, update_boss5_behavior_3_state_0_continue
+	; spawn explosion for flying claw:
+	ld bc, (boss__5_charybdis_flying_claw_x)
+	inc c
+	call spawn_explosion
+	xor a
+	ld (boss__5_charybdis_flying_claw_state), a
+	call update_boss5_draw_charybdis
+	xor a
+update_boss5_behavior_3_state_0_continue:
+	cp 64
+	jr z, update_boss5_behavior_3_state_0_done
+	and #03
+	ret nz
+	; spawn explosions at a random place:
+	ld de, (boss__x)
+	ld c, 14
+	call random_modulo
+	add a, e
+	dec a
+	ld e, a  ; explosion x
+	ld c, 3
+	call random_modulo
+	neg
+	add a, d
+	ld b, a
+	ld c, e
+	call spawn_explosion	
+
+	ld de, (boss__x2)
+	ld c, 14
+	call random_modulo
+	add a, e
+	dec a
+	ld e, a  ; explosion x
+	ld c, 3
+	call random_modulo
+	neg
+	add a, d
+	ld b, a
+	ld c, e
+	jp spawn_explosion
+
+update_boss5_behavior_3_state_0_done:
+	ld a, 1
+	ld (boss__state), a
+	ld hl, current_room__tile_map + 64*24
+	ld de, current_room__tile_map
+	ld bc, 32*24
+	ldir
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)	
+	ret
+
+
+update_boss5_behavior_3_state_1:
+	; ...
+	ret
+
+
+
+;-----------------------------------------------
 ; 0, 1, 2: walk, 3: jump
 update_boss5_draw_charybdis_body_table:
 	dw boss5_frame_charybdis_body_0
@@ -1172,6 +1249,9 @@ update_boss5_charybdis_maybe_fire_eye_bullet_left_eye:
 ; - iyh: damage to deal
 ; - iyl: collision ID
 player_weapon_hitbox_check_boss__boss5_charybdis_hit:
+	ld a, (boss__behavior)
+	cp 3
+	ret z
 	ld a, (boss__5_top_state)
 	cp 3
 	jr c, player_weapon_hitbox_check_boss__boss5_hit_shield
@@ -1194,6 +1274,9 @@ player_weapon_hitbox_check_boss__boss5_charybdis_hit:
 	; boss is dead:
 	ld a, 3
 	ld (boss__behavior), a
+	xor a
+	ld (boss__state), a
+	ld (boss__state_timer), a
 	ret
 player_weapon_hitbox_check_boss__boss5_charybdis_hit_break_vat:
 	inc a

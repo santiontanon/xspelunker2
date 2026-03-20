@@ -541,10 +541,10 @@ public static int atlantis_boss_collision[] = {
             addNameTable(nameTable, 26, 10, 32, 15, nameTableDataScylla);  // front arm  3 (6x5)
             addNameTable(nameTable, 33, 9, 38, 18, nameTableDataScylla);  // front arm  4 (5x9)
 
-            addNameTable(nameTable, 0, 12, 2, 10, nameTableDataScylla);  // right arm  0 (2x10)
+            addNameTable(nameTable, 0, 12, 2, 22, nameTableDataScylla);  // right arm  0 (2x10)
             addNameTable(nameTable, 6, 12, 11, 19, nameTableDataScylla);   // right arm  1 (5x7)
             addNameTable(nameTable, 11, 16, 19, 21, nameTableDataScylla);  // right arm  2 (8x5)
-            addNameTable(nameTable, 12, 27, 32, 15, nameTableDataScylla);  // right arm  3 (6x5)
+            addNameTable(nameTable, 12, 27, 18, 32, nameTableDataScylla);  // right arm  3 (6x5)
             addNameTable(nameTable, 6, 22, 11, 30, nameTableDataScylla);  // right arm  4 (5x8)
 
             addNameTable(nameTable, 0, 22, 6, 30, nameTableDataScylla);  // left arm  -4 (6x8)
