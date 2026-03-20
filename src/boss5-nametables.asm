@@ -278,6 +278,63 @@ boss5_frame_scylla_body_2:
 	dw #0606, BOSS5_NAMETABLE_SCYLLA_BODY2  ; dimensions and nametable
 	dw 0, #0606  ; boss__clear_bbox
 
+
+boss5_frame_scylla_l_arm_0:
+	db 1  ; number of parts
+	db 2, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0806, BOSS5_NAMETABLE_SCYLLA_L_ARM_0  ; dimensions and nametable
+	dw 2, #0806  ; boss__clear_bbox
+
+boss5_frame_scylla_l_arm_1:
+	db 1  ; number of parts
+	db 2, 5  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0506, BOSS5_NAMETABLE_SCYLLA_L_ARM_1  ; dimensions and nametable
+	dw 2, #0506  ; boss__clear_bbox
+
+boss5_frame_scylla_l_arm_2:
+	db 1  ; number of parts
+	db 0, 6  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0508, BOSS5_NAMETABLE_SCYLLA_L_ARM_2  ; dimensions and nametable
+	dw 0, #0508  ; boss__clear_bbox
+
+boss5_frame_scylla_l_arm_3:
+	db 1  ; number of parts
+	db 4, 6  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0704, BOSS5_NAMETABLE_SCYLLA_L_ARM_3  ; dimensions and nametable
+	dw 0, #0704  ; boss__clear_bbox
+
+boss5_frame_scylla_l_arm_4:
+	db 1  ; number of parts
+	db 6, 6  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0a02, BOSS5_NAMETABLE_SCYLLA_L_ARM_4  ; dimensions and nametable
+	dw 0, #0a02  ; boss__clear_bbox
+
+
+boss5_frame_scylla_rb_arm_0:
+	db 1  ; number of parts
+	db 0, 1  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0a02, BOSS5_NAMETABLE_SCYLLA_RB_ARM_0  ; dimensions and nametable
+	dw 0, #0a02  ; boss__clear_bbox
+
+boss5_frame_scylla_rb_arm_1:
+	db 1  ; number of parts
+	db 0, 1  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0706, BOSS5_NAMETABLE_SCYLLA_RB_ARM_1  ; dimensions and nametable
+	dw 0, #0706  ; boss__clear_bbox
+
+boss5_frame_scylla_rb_arm_2:
+	db 1  ; number of parts
+	db 0, 1  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0409, BOSS5_NAMETABLE_SCYLLA_RB_ARM_2  ; dimensions and nametable
+	dw 0, #0409  ; boss__clear_bbox
+
+boss5_frame_scylla_rb_arm_3:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0506, BOSS5_NAMETABLE_SCYLLA_RB_ARM_3  ; dimensions and nametable
+	dw 0, #0506  ; boss__clear_bbox
+
+
 boss5_frame_scylla_lb_arm_0:
 	db 1  ; number of parts
 	db 3, 0  ; offset wrt the draw ptr (x offset, y offset)

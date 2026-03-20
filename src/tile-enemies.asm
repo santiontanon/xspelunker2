@@ -1866,7 +1866,7 @@ update_tile_objects_enemy_sentinel_fire_laser_continue:
 	; 5: right-up, 4: right, 6: left-down
 	ld (hl), b  ; state / direction
 	ld hl, SFX_raygun
-	jp play_SFX_with_high_priority	
+	jp play_SFX_with_high_priority
 
 update_tile_objects_enemy_sentinel_killed:
 	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)

@@ -2,18 +2,15 @@ to do:
 
 ***- Scylla:
   ***- idle: just animate the arms and blink
-    ***- get nametables for right-back arm
-    ***- draw it
-    ***- animate right-back arm (random +1 / 0 / -1 of the position and that's it)
-    ***- left arm (higher chance of going in the direction where the player is)
-    ***- right arm (higher chance of going in the direction where the player is)
-    ***- center arm (higher chance of going in the direction where the player is)
+    ***- scylla need to be one tile higher than it is
+    ***- right arm
+    ***- center arm
+    ***- higher chance of moving the left/right/center arms in the direction of the player
   ***- swim left/right
-    ***- if player is on top of a tentacle, chance of going to tentacle attack
   ***- Chance of firing bullets through the eyes when idle/swimming
-  ***- update "update_sprite_objects_boss_extras_boss_5" for the eye
   ***- jump attack (like Charybdis)
-  - tentacle attacks: one tentacle bends up, and then the top parts separate (showing thin cables connecting the parts). Several options:
+  - update "update_sprite_objects_boss_extras_boss_5" for the eye
+  - tentacle attacks (only after island is gone): one tentacle bends up, and then the top parts separate (showing thin cables connecting the parts). Several options:
     - stretching all the way to the top, and trying to hit you.
     - rising up to player level, and then stretching horizontally, trying to hit you
     - these attacks are fast, you need to recognize them, or are hard to avoid (maybe there is a choreography, where it first attacks the ceiling, and then has a chance of doing the horizontal one, very fast afterwards)

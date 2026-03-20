@@ -258,6 +258,7 @@ update_boss5_behavior_0_state_3_scylla_continue:
 	ld (boss__5_scylla_arms_state + 1), a
 	ld (boss__5_scylla_arms_state + 2), a
 	ld (boss__5_scylla_arms_state + 3), a
+	ld a, 3
 	ld (boss__5_scylla_arms_state + 4), a
 	; ...
 
