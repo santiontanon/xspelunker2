@@ -2,9 +2,11 @@ to do:
 
 ***- Scylla:
   ***- idle: just animate the arms and blink
-    ***- scylla need to be one tile higher than it is
-    ***- right arm
-    ***- center arm
+    ***- redo the arm frames:
+      ***- make transitions smoother (the top tile looks a bit weird some times)
+      ***- replace the frames where the arms are fully extended horizontally by another angle (to make the boss narrower)
+      ***- make the position that l/r reaches up, reach one tile higher
+    ***- random +1/0/-1 does not look nice, make it so that it has a trend, e.g.: "-1/1" and it keeps going until it can, and then have a chance of switching
     ***- higher chance of moving the left/right/center arms in the direction of the player
   ***- swim left/right
   ***- Chance of firing bullets through the eyes when idle/swimming

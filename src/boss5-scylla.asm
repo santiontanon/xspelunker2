@@ -71,6 +71,8 @@ update_boss5_behavior_4_state_1:
 	; ...
 	call update_boss5_scylla_control_back_arms
 	call update_boss5_scylla_control_left_arm
+	call update_boss5_scylla_control_right_arm
+	call update_boss5_scylla_control_forward_arm
 	; ...
 	ld a, (boss__5_needs_redraw)
 	or a
@@ -125,6 +127,43 @@ update_boss5_scylla_control_left_arm:
 	ld (boss__5_needs_redraw), a
 	ret
 
+update_boss5_scylla_control_right_arm:
+	ld a, (boss__state_timer)
+	and #07
+	ret nz
+
+	ld c, 3
+	call random_modulo
+	dec a
+	ld c, a
+	ld a, (boss__5_scylla_arms_state + 3)
+	add a, c
+	ld c, 5
+	call update_boss5_scylla_arm_state_limit
+	ld (boss__5_scylla_arms_state + 3), a
+
+	ld a, 1
+	ld (boss__5_needs_redraw), a
+	ret
+
+update_boss5_scylla_control_forward_arm:
+	ld a, (boss__state_timer)
+	and #07
+	ret nz
+
+	ld c, 3
+	call random_modulo
+	dec a
+	ld c, a
+	ld a, (boss__5_scylla_arms_state + 2)
+	add a, c
+	ld c, 9
+	call update_boss5_scylla_arm_state_limit
+	ld (boss__5_scylla_arms_state + 2), a
+
+	ld a, 1
+	ld (boss__5_needs_redraw), a
+	ret
 
 update_boss5_scylla_arm_state_limit:
 	; c: limit
@@ -154,6 +193,13 @@ update_boss5_behavior_6:
 
 
 ;-----------------------------------------------
+update_boss5_draw_scylla_top_table
+	dw boss5_frame_island_0
+	dw boss5_frame_island_1
+	dw boss5_frame_island_2
+	dw boss5_frame_scylla_vat
+	dw boss5_frame_scylla_brain
+
 update_boss5_draw_scylla_lb_arm_table:
 	dw boss5_frame_scylla_lb_arm_0
 	dw boss5_frame_scylla_lb_arm_1
@@ -172,6 +218,24 @@ update_boss5_draw_scylla_l_arm_table:
 	dw boss5_frame_scylla_l_arm_2
 	dw boss5_frame_scylla_l_arm_3
 	dw boss5_frame_scylla_l_arm_4
+
+update_boss5_draw_scylla_r_arm_table:
+	dw boss5_frame_scylla_r_arm_0
+	dw boss5_frame_scylla_r_arm_1
+	dw boss5_frame_scylla_r_arm_2
+	dw boss5_frame_scylla_r_arm_3
+	dw boss5_frame_scylla_r_arm_4
+
+update_boss5_draw_scylla_f_arm_table:
+	dw boss5_frame_scylla_f_arm_0
+	dw boss5_frame_scylla_f_arm_1
+	dw boss5_frame_scylla_f_arm_2
+	dw boss5_frame_scylla_f_arm_3
+	dw boss5_frame_scylla_f_arm_4
+	dw boss5_frame_scylla_f_arm_5
+	dw boss5_frame_scylla_f_arm_6
+	dw boss5_frame_scylla_f_arm_7
+	dw boss5_frame_scylla_f_arm_8
 
 
 ;-----------------------------------------------
@@ -207,7 +271,15 @@ update_boss5_draw_scylla:
 			add hl, bc
 			push hl
 				ex de, hl
-				ld ix, boss5_frame_island_0
+				ld a, (boss__5_top_state)
+				add a, a
+				ld hl, update_boss5_draw_scylla_top_table
+				ADD_HL_A
+				ld c, (hl)
+				inc hl
+				ld b, (hl)
+				ld ixl, c
+				ld ixh, b
 				ld c, BOSS_PAGE
 				ld hl, draw_boss_frame_2_without_clearing_ix
 				call call_hl_in_page_c_8000
@@ -272,7 +344,42 @@ update_boss5_draw_scylla:
 			ld hl, draw_boss_frame_1_without_clearing_ix
 			call call_hl_in_page_c_8000
 		pop hl
-		; ...
+		push hl
+			; right arm:
+			ld bc, - (3 * 32 - 4)
+			add hl, bc
+			ex de, hl
+			ld a, (boss__5_scylla_arms_state + 3)
+			add a, a
+			ld hl, update_boss5_draw_scylla_r_arm_table
+			ADD_HL_A
+			ld c, (hl)
+			inc hl
+			ld b, (hl)
+			ld ixl, c
+			ld ixh, b
+			ld c, BOSS_PAGE
+			ld hl, draw_boss_frame_1_without_clearing_ix
+			call call_hl_in_page_c_8000
+		pop hl
+		push hl
+			; forward arm:
+			ld bc, - (4 * 32 + 5)
+			add hl, bc
+			ex de, hl
+			ld a, (boss__5_scylla_arms_state + 2)
+			add a, a
+			ld hl, update_boss5_draw_scylla_f_arm_table
+			ADD_HL_A
+			ld c, (hl)
+			inc hl
+			ld b, (hl)
+			ld ixl, c
+			ld ixh, b
+			ld c, BOSS_PAGE
+			ld hl, draw_boss_frame_1_without_clearing_ix
+			call call_hl_in_page_c_8000
+		pop hl
 	pop hl
 	; bl arm: -8 in x and +7 down
 	; br arm: +9 in x

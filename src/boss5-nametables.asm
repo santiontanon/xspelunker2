@@ -27,12 +27,14 @@ boss5_frame_island_2:
 	dw #0408, BOSS5_NAMETABLE_ISLAND2  ; dimensions and nametable
 	dw 0, #0408  ; boss__clear_bbox
 
+boss5_frame_scylla_vat:
 boss5_frame_charybdis_vat:
 	db 1  ; number of parts
 	db 1, 3  ; offset wrt the draw ptr (x offset, y offset)
 	dw #0406, BOSS5_NAMETABLE_CHARYBDIS_VAT  ; dimensions and nametable
 	dw 0, #0406  ; boss__clear_bbox
 
+boss5_frame_scylla_brain:
 boss5_frame_charybdis_brain:
 	db 1  ; number of parts
 	db 1, 4  ; offset wrt the draw ptr (x offset, y offset)
@@ -277,6 +279,92 @@ boss5_frame_scylla_body_2:
 	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
 	dw #0606, BOSS5_NAMETABLE_SCYLLA_BODY2  ; dimensions and nametable
 	dw 0, #0606  ; boss__clear_bbox
+
+
+boss5_frame_scylla_f_arm_0:
+	db 1  ; number of parts
+	db 3, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0906, BOSS5_NAMETABLE_SCYLLA_F_ARM_0  ; dimensions and nametable
+	dw 2, #0906  ; boss__clear_bbox
+
+boss5_frame_scylla_f_arm_1:
+	db 1  ; number of parts
+	db 3, 7  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0506, BOSS5_NAMETABLE_SCYLLA_F_ARM_1  ; dimensions and nametable
+	dw 2, #0506  ; boss__clear_bbox
+
+boss5_frame_scylla_f_arm_2:
+	db 1  ; number of parts
+	db 0, 7  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0509, BOSS5_NAMETABLE_SCYLLA_F_ARM_2  ; dimensions and nametable
+	dw 2, #0509  ; boss__clear_bbox
+
+boss5_frame_scylla_f_arm_3:
+	db 1  ; number of parts
+	db 5, 7  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0804, BOSS5_NAMETABLE_SCYLLA_F_ARM_3  ; dimensions and nametable
+	dw 2, #0804  ; boss__clear_bbox
+
+boss5_frame_scylla_f_arm_4:
+	db 1  ; number of parts
+	db 7, 7  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0b02, BOSS5_NAMETABLE_SCYLLA_F_ARM_4  ; dimensions and nametable
+	dw 2, #0b02  ; boss__clear_bbox
+
+boss5_frame_scylla_f_arm_5:
+	db 1  ; number of parts
+	db 7, 7  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0805, BOSS5_NAMETABLE_SCYLLA_F_ARM_5  ; dimensions and nametable
+	dw 2, #0805  ; boss__clear_bbox
+
+boss5_frame_scylla_f_arm_6:
+	db 1  ; number of parts
+	db 7, 7  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0509, BOSS5_NAMETABLE_SCYLLA_F_ARM_6  ; dimensions and nametable
+	dw 2, #0509  ; boss__clear_bbox
+
+boss5_frame_scylla_f_arm_7:
+	db 1  ; number of parts
+	db 7, 7  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0506, BOSS5_NAMETABLE_SCYLLA_F_ARM_7  ; dimensions and nametable
+	dw 2, #0506  ; boss__clear_bbox
+
+boss5_frame_scylla_f_arm_8:
+	db 1  ; number of parts
+	db 7, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0905, BOSS5_NAMETABLE_SCYLLA_F_ARM_8  ; dimensions and nametable
+	dw 2, #0905  ; boss__clear_bbox
+
+
+boss5_frame_scylla_r_arm_0:
+	db 1  ; number of parts
+	db 0, 6  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0a02, BOSS5_NAMETABLE_SCYLLA_R_ARM_0  ; dimensions and nametable
+	dw 2, #0a02  ; boss__clear_bbox
+
+boss5_frame_scylla_r_arm_1:
+	db 1  ; number of parts
+	db 0, 6  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0705, BOSS5_NAMETABLE_SCYLLA_R_ARM_1  ; dimensions and nametable
+	dw 2, #0705  ; boss__clear_bbox
+
+boss5_frame_scylla_r_arm_2:
+	db 1  ; number of parts
+	db 0, 6  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0508, BOSS5_NAMETABLE_SCYLLA_R_ARM_2  ; dimensions and nametable
+	dw 0, #0508  ; boss__clear_bbox
+
+boss5_frame_scylla_r_arm_3:
+	db 1  ; number of parts
+	db 0, 5  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0506, BOSS5_NAMETABLE_SCYLLA_R_ARM_3  ; dimensions and nametable
+	dw 0, #0506  ; boss__clear_bbox
+
+boss5_frame_scylla_r_arm_4:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0805, BOSS5_NAMETABLE_SCYLLA_R_ARM_4  ; dimensions and nametable
+	dw 0, #0805  ; boss__clear_bbox
 
 
 boss5_frame_scylla_l_arm_0:
