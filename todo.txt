@@ -1,9 +1,5 @@
 to do:
-
 ***- Scylla:
-  ***- jump attack (like Charybdis)
-    ***- when jumping, all tentacles animate to go down
-    ***- after destroying island, change tileset, and change to behavior 5
   ***- bubbles fired from the mouth (maybe only in higher difficulties): open mouth to do it (when idle/swimming after island)
   ***- being able to destroy tentacles (explosions when destroyed)
   - tentacle attacks (only after island is gone): one tentacle bends up, and then the top parts separate (showing thin cables connecting the parts). Several options:
@@ -15,7 +11,7 @@ to do:
 ***- being able to kill the boss and collect the reward:
   ***- power stone spawns where the switch was
   ***- if you only kill 1, there will be an eye (of the one you killed)
-  ***- if you kill both, there will be an eye of each
+  ***- if you kill both, there will be an eye of each (refactor inventory, and make a list of addiitonal objects I have noted down below, to see if I can fit them all)
   ***- think of a puzzle where you actually need both eyes to open something
 ***- add boss name to the stats for game over screen (one or both)
 

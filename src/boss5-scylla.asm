@@ -1,20 +1,21 @@
 boss5_scylla_difficulty_setting__easy:
 	db 32, 16  ; boss hp, vat hp
-	db 64, #0f, #3f  ; idle time, swim speed mask, bullet-time-mask
+	db 64, #0f, #3f, 32  ; idle time, swim speed mask, bullet-time-mask
 boss5_scylla_difficulty_setting__normal:
 	db 48, 16  ; boss hp, vat hp
-	db 64, #07, #1f  ; idle time, swim speed mask, bullet-time-mask
+	db 64, #07, #1f, 28  ; idle time, swim speed mask, bullet-time-mask
 boss5_scylla_difficulty_setting__hard:
 	db 64, 24  ; boss hp, vat hp
-	db 64, #07, #0f  ; idle time, swim speed mask, bullet-time-mask
+	db 64, #07, #0f, 24  ; idle time, swim speed mask, bullet-time-mask
 boss5_scylla_difficulty_setting__hardest:
 	db 80, 32  ; boss hp, vat hp
-	db 64, #03, #0f  ; idle time, swim speed mask, bullet-time-mask
+	db 64, #03, #0f, 20  ; idle time, swim speed mask, bullet-time-mask
 
 BOSS_5_SCYLLA_HP_OFFSET: equ 0
 BOSS_5_SCYLLA_IDLE_TIME_OFFSET: equ 2
 BOSS_5_SCYLLA_SWIM_MASK: equ 3
 BOSS_5_SCYLLA_BULLET_TIME_MASK: equ 4
+BOSS_5_SCYLLA_ATTACK_DELAY: equ 5
 
 
 ;-----------------------------------------------
@@ -29,34 +30,41 @@ update_boss5_behavior_4:
 	jp z, update_boss5_behavior_4_state_2  ; swim left
 	dec a
 	jp z, update_boss5_behavior_4_state_3  ; swim right
-	; ...
+	dec a
+	jp z, update_boss5_behavior_4_state_4  ; jump (waiting)
+	dec a
+	jp z, update_boss5_behavior_4_state_5  ; jump (going up)
+	dec a
+	jp z, update_boss5_behavior_4_state_6  ; jump (hit the top)
+	dec a
+	jp z, update_boss5_behavior_4_state_7  ; jump (going down)
 	ret
 
 update_boss5_behavior_4_state_0:
-; 	; switch:
-; 	; if player is on top of the island, chance of jump attack:
-; 	ld a, (player_y + 1)
-; 	cp 14
-; 	jr nc, update_boss5_behavior_4_state_0_no_jump
-; 	ld a, (player_x + 1)
-; 	ld c, a
-; 	ld a, (boss__x)
-; 	add a, 3
-; 	cp c
-; 	jr nc, update_boss5_behavior_4_state_0_no_jump
-; 	add a, 9
-; 	cp c
-; 	jr c, update_boss5_behavior_4_state_0_no_jump
-; 	; player is on top of the island, chance of jumping
-; 	call random_a
-; 	and #01
-; 	jr z, update_boss5_behavior_4_state_0_no_jump
-; 	ld a, 4
-; 	ld (boss__state), a
-; 	xor a
-; 	ld (boss__state_timer), a
-; 	jr update_boss5_behavior_4
-; update_boss5_behavior_4_state_0_no_jump:
+	; switch:
+	; if player is on top of the island, chance of jump attack:
+	ld a, (player_y + 1)
+	cp 14
+	jr nc, update_boss5_behavior_4_state_0_no_jump
+	ld a, (player_x + 1)
+	ld c, a
+	ld a, (boss__x)
+	dec a
+	cp c
+	jr nc, update_boss5_behavior_4_state_0_no_jump
+	add a, 9
+	cp c
+	jr c, update_boss5_behavior_4_state_0_no_jump
+	; player is on top of the island, chance of jumping
+	call random_a
+	and #01
+	jr z, update_boss5_behavior_4_state_0_no_jump
+	ld a, 4
+	ld (boss__state), a
+	xor a
+	ld (boss__state_timer), a
+	jr update_boss5_behavior_4
+update_boss5_behavior_4_state_0_no_jump:
 	ld c, 3
 	call random_modulo
 	inc a
@@ -131,7 +139,8 @@ update_boss5_behavior_4_state_2:
 	jp z, update_boss5_behavior_4_state_1_done
 	dec a
 	ld (boss__x), a
-	ld (boss__5_needs_redraw), a  ; a is != 0
+	call update_boss5_draw_scylla
+	call boss5_maybe_push_player_left
 	jp update_boss5_behavior_4_state_1_entry_point2  ; the rest of behavior is like "idle"
 
 
@@ -154,8 +163,193 @@ update_boss5_behavior_4_state_3:
 	jp z, update_boss5_behavior_4_state_1_done
 	inc a
 	ld (boss__x), a
-	ld (boss__5_needs_redraw), a  ; a is != 0
+	call update_boss5_draw_scylla
+	call boss5_maybe_push_player_right
 	jp update_boss5_behavior_4_state_1_entry_point2  ; the rest of behavior is like "idle"
+
+
+update_boss5_behavior_4_state_4:
+	ld a, (boss__5_settings + BOSS_5_SCYLLA_ATTACK_DELAY)
+	ld c, a
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	cp c
+	ret nz
+	ld (hl), 0
+	ld a, 5
+	ld (boss__state), a
+	ret
+
+update_boss5_behavior_4_state_5:
+	; jump:
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	and #03
+	ret nz
+	; stretch the arms:
+	; arms should go to positions:
+	; - 3, 5, 5, 0, 0
+	ld hl, boss__5_scylla_arms_state
+	ld a, (hl)
+	cp 3
+	jr z, update_boss5_behavior_4_state_5_lb_arm_ok
+	inc (hl)
+update_boss5_behavior_4_state_5_lb_arm_ok:
+	inc hl
+	ld a, (hl)
+	cp 5
+	jr z, update_boss5_behavior_4_state_5_l_arm_ok
+	inc (hl)
+update_boss5_behavior_4_state_5_l_arm_ok:
+	inc hl
+	ld a, (hl)
+	cp 5
+	jr z, update_boss5_behavior_4_state_5_f_arm_ok
+	jr c, update_boss5_behavior_4_state_5_f_arm_left
+	dec (hl)
+	jr update_boss5_behavior_4_state_5_f_arm_ok
+update_boss5_behavior_4_state_5_f_arm_left:
+	inc (hl)
+update_boss5_behavior_4_state_5_f_arm_ok:
+	inc hl
+	ld a, (hl)
+	or a
+	jr z, update_boss5_behavior_4_state_5_r_arm_ok
+	dec (hl)
+update_boss5_behavior_4_state_5_r_arm_ok:
+	inc hl
+	ld a, (hl)
+	or a
+	jr z, update_boss5_behavior_4_state_5_rb_arm_ok
+	dec (hl)
+update_boss5_behavior_4_state_5_rb_arm_ok:
+
+	ld a, (boss__5_top_state)
+	ld c, 7  ; max height with island 0
+	or a
+	jr z, update_boss5_behavior_4_state_5_limit_set
+	ld c, 4
+update_boss5_behavior_4_state_5_limit_set:
+	ld hl, boss__y
+	ld a, (hl)
+	cp c  ; max height of the jump
+	jr z, update_boss5_behavior_4_state_5_done
+	dec (hl)
+	call update_boss5_draw_scylla
+	jp boss5_maybe_push_player_up
+update_boss5_behavior_4_state_5_done:
+	xor a
+	ld (boss__state_timer), a
+	ld a, 6
+	ld (boss__state), a
+	ld hl, SFX_explosion_low_pitch
+	jp play_SFX_with_high_priority
+
+
+update_boss5_behavior_4_state_6:
+	; jump hit the ceiling:
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	cp 16
+	jr nz, update_boss5_behavior_4_state_6_continue
+	xor a
+	ld (boss__state_timer), a
+	ld a, 7
+	ld (boss__state), a
+	ret
+update_boss5_behavior_4_state_6_continue:
+	or a
+	jr nz, update_boss5_behavior_4_state_6_continue2
+	; first cycle, change the island type:
+	push af
+		ld hl, boss__5_top_state
+		ld a, (hl)
+		or a
+		jr z, update_boss5_behavior_4_state_6_first_jump
+		dec a
+		jr z, update_boss5_behavior_4_state_6_second_jump
+update_boss5_behavior_4_state_6_third_jump
+		; switch to scylla2 tileset, and to behavior 5 as soon as boss lands
+		ld (hl), 3  ; vat
+		; minimize the transition glitch:
+		halt
+		call update_boss5_draw_scylla
+		ld hl, draw_room_with_hud
+		ld c, TILES_PAGE
+		call call_hl_in_page_c_8000
+		ld hl, boss_5_tiles_scylla2_zx0
+		ld (current_room__tileset_ptr), hl
+		ld a, BOSS_5_PAGE
+		ld (current_room__tileset_page), a
+		ld c, BOSS_5_PAGE
+		call setup_game_tiles_only_biome
+
+		; update the collision table:
+		ld hl, tile_collision_types_boss5
+		ld (current_room__collision_ptr), hl
+		ld a, (current_room__collision_ptr_page)
+		ld de, current_room__collision_table
+		ld bc, 256
+		call ldir_from_page_a
+
+		jr update_boss5_behavior_4_state_6_jump_effect_set
+update_boss5_behavior_4_state_6_second_jump:
+		ld (hl), 2  ; crack the island
+		jr update_boss5_behavior_4_state_6_jump_effect_set
+update_boss5_behavior_4_state_6_first_jump:
+		ld (hl), 1  ; remove poseidon statue
+update_boss5_behavior_4_state_6_jump_effect_set:
+		call update_boss5_draw_scylla
+	pop af
+update_boss5_behavior_4_state_6_continue2:
+	and #03
+	ret nz
+
+	; spawn an explosion:
+	ld c, 3
+	call random_modulo
+	ld c, a
+	ld a, (boss__x)
+	add a, c
+	add a, 6
+	ld c, a
+	call random_a
+	and #01
+	inc a
+	ld b, a
+	jp spawn_explosion
+
+update_boss5_behavior_4_state_7:
+	; fall back down:
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	and #07
+	ret nz
+	ld hl, boss__y
+	ld a, (hl)
+	cp 15  ; landing position
+	jr z, update_boss5_behavior_4_state_7_done
+	inc (hl)
+	jp update_boss5_draw_scylla
+update_boss5_behavior_4_state_7_done:
+	inc (hl)
+	ld (boss__state_timer), a
+	ld a, 0
+	ld (boss__state), a	
+	ld hl, SFX_watersplash_soft
+	call play_SFX_with_high_priority
+	call update_boss5_draw_scylla
+	ld a, (boss__5_top_state)
+	cp 3  ; vat
+	ret nz
+	; if the boss is showing the "vat", switch to behavior 5
+	ld a, 5
+	ld (boss__behavior), a
+	ret
 
 
 ;-----------------------------------------------
@@ -292,8 +486,27 @@ update_boss5_scylla_arm_state_limit_down:
 ;-----------------------------------------------
 ; Scylla with vat/brain
 update_boss5_behavior_5:
+	ld a, (boss__state)
+	or a
+	jr z, update_boss5_behavior_5_state_0
+	dec a
+	jp z, update_boss5_behavior_4_state_1  ; idle
+	dec a
+	jp z, update_boss5_behavior_4_state_2  ; swim left
+	dec a
+	jp z, update_boss5_behavior_4_state_3  ; swim right
 	; ...
 	ret
+
+update_boss5_behavior_5_state_0:
+	; switch:
+	ld c, 3
+	call random_modulo
+	inc a
+	ld (boss__state), a
+	xor a
+	ld (boss__state_timer), a
+	jr update_boss5_behavior_5
 
 
 ;-----------------------------------------------
@@ -550,7 +763,7 @@ update_boss5_draw_scylla:
 	ld bc, - (5*32 + 5)
 	add hl, bc
 	ld (boss__clear_bbox_1), hl
-	ld bc, #1210
+	ld bc, #1310
 	ld (boss__clear_bbox_1 + 2), bc
 	ret
 update_boss5_draw_scylla_appearing:

@@ -474,7 +474,9 @@ update_boss5_behavior_0_state_6_no_sprites_left:
 update_boss5_behavior_0_state_6_scylla:
 	ld a, 4
 	ld (boss__behavior), a
-	ret
+	xor a
+	ld (boss__5_scylla_body_state), a
+	jp update_boss5_draw_scylla
 update_boss5_behavior_0_state_6_charybdis:
 	ld a, 1
 	ld (boss__behavior), a
