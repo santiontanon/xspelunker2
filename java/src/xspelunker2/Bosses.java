@@ -62,16 +62,16 @@ public static int atlantis_boss_collision[] = {
     
     public static void main(String args[]) throws Exception
     {
-//        boss1Tiles();
-//        boss1Sprites();
-//
-//        boss2Tiles();
-//        boss2Sprites();
-//
-//        boss3Tiles();
-//        boss3Sprites();
-//
-//        Boss4.main(args);
+        boss1Tiles();
+        boss1Sprites();
+
+        boss2Tiles();
+        boss2Sprites();
+
+        boss3Tiles();
+        boss3Sprites();
+
+        Boss4.main(args);
         
         boss5Tiles();
         boss5Sprites();
@@ -633,6 +633,9 @@ public static int atlantis_boss_collision[] = {
         data.addAll(GenerateSprites.extractSprite(sourceImage, 128, 32, 15));
         data.addAll(GenerateSprites.extractSprite(sourceImage, 112, 48, 15));
         data.addAll(GenerateSprites.extractSprite(sourceImage, 128, 48, 15));
+
+        data.addAll(GenerateSprites.extractSprite(sourceImage, 0, 136, 15));  // eyes
+        data.addAll(GenerateSprites.extractSprite(sourceImage, 16, 136, 15));
         
 
         System.out.println("boss5Sprites: " + data.size());

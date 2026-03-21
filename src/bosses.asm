@@ -1553,8 +1553,39 @@ update_sprite_objects_boss_extras_boss_4_lord_x_ok:
 
 
 update_sprite_objects_boss_extras_boss_5:
-	; ...
-	ret
+	ld a, (boss__5_current_variant)
+	or a
+	ret z  ; only needed for scylla (variant == 1)
+
+	; when boss__5_scylla_body_state == 0 or 2, draw eyes:
+	ld a, (boss__5_scylla_body_state)
+	cp 1
+	ret z
+
+	; draw eyes:
+	ld a, (boss__x)
+	add a, a
+	add a, a
+	add a, a
+	ld c, a
+	ld a, (boss__y)
+	add a, a
+	add a, a
+	add a, a
+	ld b, a
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 9) * 4
+; 	ld d, COLOR_LIGHT_GREEN
+	ld d, COLOR_DARK_YELLOW
+	push bc
+		call add_sprite_to_this_frame
+	pop bc
+	ld a, 32
+	add a, c
+	ld c, a
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 10) * 4
+; 	ld d, COLOR_LIGHT_GREEN
+	ld d, COLOR_DARK_YELLOW
+	jp add_sprite_to_this_frame
 
 
 ;-----------------------------------------------

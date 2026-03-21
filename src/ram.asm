@@ -310,7 +310,7 @@ boss__5_charybdis_flying_claw_state: equ boss__tmp_space + 8  ; 0: no flying cla
 boss__5_charybdis_flying_claw_x: equ boss__tmp_space + 9
 boss__5_charybdis_flying_claw_y: equ boss__tmp_space + 10
 boss__5_charybdis_flying_claw_clear_ptr: equ boss__tmp_space + 11  ; 2 bytes
-boss__5_scylla_eye_mouth_state: equ boss__tmp_space + 4
+boss__5_scylla_body_state: equ boss__tmp_space + 4  ; 0: base, 1: eyes closed, 2: mouth open
 boss__5_scylla_arms_state: equ boss__tmp_space + 5  ; 5 bytes: back-left, left, front, right, back-right arms
                                                     ; back-left: 0 - 3
                                                     ; left: 0 - 4

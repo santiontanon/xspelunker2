@@ -1,16 +1,12 @@
 to do:
 
 ***- Scylla:
-  ***- idle:
-    ***- make charybdis appear with eyes closed
-    ***- blink and move mouth
-    ***- update "update_sprite_objects_boss_extras_boss_5" for the eye (draw only when not blinking)
   ***- swim left/right
   ***- Chance of firing bullets through the eyes when idle/swimming
   ***- jump attack (like Charybdis)
     ***- when jumping, all tentacles animate to go down
     ***- after destroying island, change tileset, and change to behavior 5
-  ***- bubbles fired from the mouth (maybe only in higher difficulties)
+  ***- bubbles fired from the mouth (maybe only in higher difficulties): open mouth to do it (when idle/swimming after island)
   ***- being able to destroy tentacles (explosions when destroyed)
   - tentacle attacks (only after island is gone): one tentacle bends up, and then the top parts separate (showing thin cables connecting the parts). Several options:
     - stretching all the way to the top, and trying to hit you.

@@ -253,12 +253,12 @@ update_boss5_behavior_0_state_3_scylla_continue:
 	xor a
 	ld (boss__hit_timer), a
 	ld (boss__5_top_state), a
-	ld (boss__5_scylla_eye_mouth_state), a
 	ld (boss__5_scylla_arms_inertia), a
 	ld (boss__5_scylla_arms_inertia + 1), a
 	ld (boss__5_scylla_arms_inertia + 2), a
 	ld (boss__5_scylla_arms_state), a
 	inc a
+	ld (boss__5_scylla_body_state), a  ; 1: eyes closed
 	inc a
 	ld (boss__5_scylla_arms_state + 1), a
 	ld a, 5
@@ -460,6 +460,14 @@ update_boss5_behavior_0_state_6:
 	xor a
 	ld (boss__state), a
 	ld (boss__state_timer), a
+
+	; spawn object for sprite decorations
+	call ptr_to_new_sprite_object
+	jr nz, update_boss5_behavior_0_state_6_no_sprites_left  ; should never happen
+	ld (hl), 0  ; ID
+	inc hl
+	ld (hl), SPRITE_OBJECT_TYPE_BOSS_EXTRAS	
+update_boss5_behavior_0_state_6_no_sprites_left:
 	ld a, (boss__5_current_variant)
 	or a
 	jr z, update_boss5_behavior_0_state_6_charybdis

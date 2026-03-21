@@ -73,8 +73,24 @@ update_boss5_behavior_4_state_1:
 	call update_boss5_scylla_control_right_arm
 	call update_boss5_scylla_control_forward_arm
 
-	; ...
-
+	; blink:
+	ld a, (boss__state_timer)
+	and #1f
+	jr nz, update_boss5_behavior_4_state_1_continue
+	call random_a
+	and #03
+	ld c, 0
+	jr nz, update_boss5_behavior_4_state_1_eyes_open
+	inc c
+update_boss5_behavior_4_state_1_eyes_open:
+	ld a, (boss__5_scylla_body_state)
+	cp c
+	jr z, update_boss5_behavior_4_state_1_continue
+	ld a, c
+	ld (boss__5_scylla_body_state), a
+	ld a, 1
+	ld (boss__5_needs_redraw), a
+update_boss5_behavior_4_state_1_continue:
 	ld a, (boss__5_needs_redraw)
 	or a
 	ret z
@@ -213,6 +229,11 @@ update_boss5_draw_scylla_top_table
 	dw boss5_frame_scylla_vat
 	dw boss5_frame_scylla_brain
 
+update_boss5_draw_scylla_body_table:
+	dw boss5_frame_scylla_body_0  ; base
+	dw boss5_frame_scylla_body_1  ; eyes closed
+	dw boss5_frame_scylla_body_2  ; mouth open
+
 update_boss5_draw_scylla_lb_arm_table:
 	dw boss5_frame_scylla_lb_arm_0
 	dw boss5_frame_scylla_lb_arm_1
@@ -276,7 +297,15 @@ update_boss5_draw_scylla:
 	ex de, hl  ; hl = ptr where the boss is to be drawn	
 	; draw body:
 	push de
-		ld ix, boss5_frame_scylla_body_0
+		ld a, (boss__5_scylla_body_state)
+		add a, a
+		ld hl, update_boss5_draw_scylla_body_table
+		ADD_HL_A
+		ld c, (hl)
+		inc hl
+		ld b, (hl)
+		ld ixl, c
+		ld ixh, b
 		ld c, BOSS_PAGE
 		ld hl, draw_boss_frame_1_without_clearing_ix
 		call call_hl_in_page_c_8000
