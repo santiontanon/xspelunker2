@@ -1,21 +1,26 @@
 boss5_scylla_difficulty_setting__easy:
 	db 32, 16  ; boss hp, vat hp
 	db 64, #0f, #3f, 32  ; idle time, swim speed mask, bullet-time-mask
+	db #03  ; bubble firing mask
 boss5_scylla_difficulty_setting__normal:
 	db 48, 16  ; boss hp, vat hp
 	db 64, #07, #1f, 28  ; idle time, swim speed mask, bullet-time-mask
+	db #01  ; bubble firing mask
 boss5_scylla_difficulty_setting__hard:
 	db 64, 24  ; boss hp, vat hp
 	db 64, #07, #0f, 24  ; idle time, swim speed mask, bullet-time-mask
+	db #01  ; bubble firing mask
 boss5_scylla_difficulty_setting__hardest:
 	db 80, 32  ; boss hp, vat hp
 	db 64, #03, #0f, 20  ; idle time, swim speed mask, bullet-time-mask
+	db #01  ; bubble firing mask
 
 BOSS_5_SCYLLA_HP_OFFSET: equ 0
 BOSS_5_SCYLLA_IDLE_TIME_OFFSET: equ 2
 BOSS_5_SCYLLA_SWIM_MASK: equ 3
 BOSS_5_SCYLLA_BULLET_TIME_MASK: equ 4
 BOSS_5_SCYLLA_ATTACK_DELAY: equ 5
+BOSS_5_SCYLLA_BUBBLE_MASK: equ 6
 
 
 ;-----------------------------------------------
@@ -96,10 +101,24 @@ update_boss5_behavior_4_state_1_entry_point2:
 	call update_boss5_scylla_control_forward_arm
 	call update_boss5_scylla_maybe_fire_eye_bullet
 
-	; blink:
+	; blink/mouth:
 	ld a, (boss__state_timer)
-	and #1f
+	and #0f
 	jr nz, update_boss5_behavior_4_state_1_continue
+	ld a, (boss__5_scylla_body_state)
+	cp 2  ; mouth open already?
+	jr z, update_boss5_behavior_4_state_1_ignore_mouth  ; if mouth was open, we will close it next time, so, just ignore
+	; chance of opening the mouth
+	ld a, (boss__5_settings + BOSS_5_SCYLLA_BUBBLE_MASK)
+	ld c, a
+	call random_a
+	and c
+	jr nz, update_boss5_behavior_4_state_1_ignore_mouth
+	; open mouth
+	call update_boss5_scylla_fire_mouth_bubbles
+	ld c, 2
+	jr update_boss5_behavior_4_state_1_eyes_open
+update_boss5_behavior_4_state_1_ignore_mouth:
 	call random_a
 	and #03
 	ld c, 0
@@ -114,6 +133,7 @@ update_boss5_behavior_4_state_1_eyes_open:
 	ld a, 1
 	ld (boss__5_needs_redraw), a
 update_boss5_behavior_4_state_1_continue:
+
 	ld a, (boss__5_needs_redraw)
 	or a
 	ret z
@@ -544,6 +564,43 @@ update_boss5_scylla_maybe_fire_eye_bullet_left_eye:
 	ld c, BOSS_PAGE
 	call call_hl_in_page_c_8000
 	ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BULLET_IGNORING_WALLS
+	ret
+
+
+;-----------------------------------------------
+update_boss5_scylla_fire_mouth_bubbles:
+	; fire two bubbles
+	call update_boss5_scylla_fire_mouth_bubble
+update_boss5_scylla_fire_mouth_bubble:
+	ld bc, (boss__x)
+	inc b
+	inc b
+	inc b
+	inc b
+	inc c
+	; - c, b: tile coordinate from where the bullet is fired
+	push bc
+		call ptr_to_new_sprite_enemy
+	pop bc
+	ret nz
+	ld (hl), 0
+	inc hl
+	ld (hl), ENEMY_BULLET_BUBBLE
+	inc hl
+	ld (hl), 4  ; pixel x
+	inc hl
+	ld (hl), c  ; tile x
+	inc hl
+	ld (hl), 0  ; pixel y
+	inc hl
+	ld (hl), b  ; tile y
+	inc hl
+	ld c, 5
+	call random_modulo
+	sub 2
+	ld (hl), a  ; x speed
+	inc hl
+	ld (hl), 0  ; state timer
 	ret
 
 

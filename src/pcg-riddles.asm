@@ -418,7 +418,7 @@ maya_syllable_table:
 maya_syllable_table_end:
 
 	; size (wwwwhhhh), connections, ...tiles..., ascii, 0
-	; connection bits: 0000LURD
+	; connections bits: 0000LURD (left, up, right, down)
 maya_syllable_ke:
 	db #33, #0c, 38, 39, 40, 54, 55, 56, 70, 71, 72, "ke", 0
 maya_syllable_ja:

@@ -17,6 +17,7 @@ enemy_update_fn_table:
 	dw update_enemy_bullet_waterball
 	dw update_enemy_laser  ; atlantis sentinel, and boss 5 attack
 	dw update_enemy_bullet_ignoring_walls  ; ignores wall collisions
+	dw update_enemy_bullet_bubble  ; boss 5 attack
 	; enemies you can hit:
 	dw update_enemy_snake  ; left-to-right
 	dw update_enemy_snake_dasher  ; left-to-right + dash
@@ -585,6 +586,64 @@ update_enemy_bullet_waterball_landed:
 	jp z, update_enemy_delete  ; timeout
 	ld d, COLOR_LIGHT_BLUE
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 1) * 4 
+	jp enemy_sprite_and_continue
+
+
+;-----------------------------------------------
+update_enemy_bullet_bubble:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)  ; if it's 128, water has hit the player
+	cp 128
+	jr z, update_enemy_bullet_bubble_hit_state
+	ld iyh, 2  ; damage to deal
+	call update_enemy_hurt_player_shieldable_bullet
+	jp z, update_enemy_bullet_bubble_hit
+	; out of bounds?
+	ld a, (current_room__width)
+	ld c, a
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	cp c
+	jp nc, update_enemy_delete
+	ld a, (current_room__height)
+	ld c, a
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	or a
+	jp z, update_enemy_delete
+	; parabola:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 128
+	jr nz, update_enemy_bullet_bubble_continue
+	jp update_enemy_delete
+	ld a, 64
+update_enemy_bullet_bubble_continue:
+	srl a
+	cp 14
+	jr c, update_enemy_bullet_bubble_continue2
+	ld a, 13
+update_enemy_bullet_bubble_continue2:
+	ld hl, update_enemy_bone_parabola_bullet_table + 2  ; "+2 to have less initial y speed"
+	ADD_HL_A
+	ld b, (hl)
+	ld a, b
+	neg
+	ld b, a  ; inverted parabolla
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld c, (ix + ROOM_OBJECT_STRUCT_STATE)
+	call update_enemy_move_cb
+	ld d, COLOR_LIGHT_BLUE
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 11) * 4 
+	jp enemy_sprite_and_continue_animated
+
+update_enemy_bullet_bubble_hit:
+	inc (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 128
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+update_enemy_bullet_bubble_hit_state:
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 32
+	jp z, update_enemy_delete  ; timeout
+	ld d, COLOR_LIGHT_BLUE
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 13) * 4 
 	jp enemy_sprite_and_continue
 
 

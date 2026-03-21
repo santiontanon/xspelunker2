@@ -1,7 +1,13 @@
 to do:
 ***- Scylla:
-  ***- bubbles fired from the mouth (maybe only in higher difficulties): open mouth to do it (when idle/swimming after island)
-  ***- being able to destroy tentacles (explosions when destroyed)
+  ***- scylla hit function:
+    ***- detect hit with vat/brain, and switch to brain or death state, like charybdis does
+    ***- detect hit in a body/tentacle tile:
+      ***- check with the nametables of the current left/front/right-tentacle
+      ***- add HP to each tentacle (difficulty setting)
+      ***- decrease HP of each tentacle when hit
+      ***- delete tentacle when HP 0 (and do not draw it anymore)
+      ***- explosions when tentacle is destroyed
   - tentacle attacks (only after island is gone): one tentacle bends up, and then the top parts separate (showing thin cables connecting the parts). Several options:
     - stretching all the way to the top, and trying to hit you.
     - rising up to player level, and then stretching horizontally, trying to hit you
