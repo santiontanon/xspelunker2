@@ -1,23 +1,21 @@
 to do:
 
 ***- Scylla:
-  ***- idle: just animate the arms and blink
-    ***- redo the arm frames:
-      ***- make transitions smoother (the top tile looks a bit weird some times)
-      ***- replace the frames where the arms are fully extended horizontally by another angle (to make the boss narrower)
-      ***- make the position that l/r reaches up, reach one tile higher
-    ***- random +1/0/-1 does not look nice, make it so that it has a trend, e.g.: "-1/1" and it keeps going until it can, and then have a chance of switching
-    ***- higher chance of moving the left/right/center arms in the direction of the player
+  ***- idle:
+    ***- make charybdis appear with eyes closed
+    ***- blink and move mouth
+    ***- update "update_sprite_objects_boss_extras_boss_5" for the eye (draw only when not blinking)
   ***- swim left/right
   ***- Chance of firing bullets through the eyes when idle/swimming
   ***- jump attack (like Charybdis)
-  - update "update_sprite_objects_boss_extras_boss_5" for the eye
+    ***- when jumping, all tentacles animate to go down
+    ***- after destroying island, change tileset, and change to behavior 5
+  ***- bubbles fired from the mouth (maybe only in higher difficulties)
+  ***- being able to destroy tentacles (explosions when destroyed)
   - tentacle attacks (only after island is gone): one tentacle bends up, and then the top parts separate (showing thin cables connecting the parts). Several options:
     - stretching all the way to the top, and trying to hit you.
     - rising up to player level, and then stretching horizontally, trying to hit you
     - these attacks are fast, you need to recognize them, or are hard to avoid (maybe there is a choreography, where it first attacks the ceiling, and then has a chance of doing the horizontal one, very fast afterwards)
-  - double tentacle attack: the same, but two tentacles (one of each side) do it at the same time (and at slightly offset vertical height, so it's even harder to dodge)
-  - bubbles fired from the beak?
 ***- if we had both charybdis and scylla, after killing charybdis, scylla should appear: the floor where charybdis was standing turns into water, for scylla to rise (behavior 0, state 8?)
 ***- being able to kill the boss and collect the reward:
   ***- power stone spawns where the switch was

@@ -254,12 +254,18 @@ update_boss5_behavior_0_state_3_scylla_continue:
 	ld (boss__hit_timer), a
 	ld (boss__5_top_state), a
 	ld (boss__5_scylla_eye_mouth_state), a
+	ld (boss__5_scylla_arms_inertia), a
+	ld (boss__5_scylla_arms_inertia + 1), a
+	ld (boss__5_scylla_arms_inertia + 2), a
 	ld (boss__5_scylla_arms_state), a
+	inc a
+	inc a
 	ld (boss__5_scylla_arms_state + 1), a
-	ld a, 4
+	ld a, 5
 	ld (boss__5_scylla_arms_state + 2), a
-	ld (boss__5_scylla_arms_state + 3), a
 	dec a
+	dec a
+	ld (boss__5_scylla_arms_state + 3), a
 	ld (boss__5_scylla_arms_state + 4), a
 	; ...
 
@@ -610,8 +616,8 @@ boss5_tile_attributes_patch_from_scratch:
 	sbc hl, bc
 	jr z, boss5_tile_attributes_patch_charybdis3
 boss5_tile_attributes_patch_scylla:
-    // scylla1/2: [48, 205] those that are boss	
-	ld ixl, 205 - 48
+    // scylla1/2: [48, 210] those that are boss	
+	ld ixl, 210 - 48
 boss5_tile_attributes_patch_scylla_continue:
 
 	; we assume the tileset is already decompressed in buffer_4096
