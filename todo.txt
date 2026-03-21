@@ -1,8 +1,6 @@
 to do:
 
 ***- Scylla:
-  ***- swim left/right
-  ***- Chance of firing bullets through the eyes when idle/swimming
   ***- jump attack (like Charybdis)
     ***- when jumping, all tentacles animate to go down
     ***- after destroying island, change tileset, and change to behavior 5
@@ -12,6 +10,7 @@ to do:
     - stretching all the way to the top, and trying to hit you.
     - rising up to player level, and then stretching horizontally, trying to hit you
     - these attacks are fast, you need to recognize them, or are hard to avoid (maybe there is a choreography, where it first attacks the ceiling, and then has a chance of doing the horizontal one, very fast afterwards)
+  - being able to kill scylla
 ***- if we had both charybdis and scylla, after killing charybdis, scylla should appear: the floor where charybdis was standing turns into water, for scylla to rise (behavior 0, state 8?)
 ***- being able to kill the boss and collect the reward:
   ***- power stone spawns where the switch was
@@ -59,7 +58,7 @@ to do:
 - save game to rom / password
 
 - Potential new ideas if I have the energy
-  - special condition for triggering "angry bosses" (they change color). For each one you beat in this hard mode, you get something in the ending, and if you get them all, you get a special mention. The conditions might be things like: certain bit in the random seed to be "11" (so, not all seeds are good), dive into water X times in the same room without doing anything else, etc. Use the "random seed stela" (maybe give a clue about it), currently it displays the bottom 6 bits of the first random seed word, should I make it display a whole 8 bits of it?
+  - [did I already add any clue for this? remove if I don't use it] special condition for triggering "angry bosses" (they change color). For each one you beat in this hard mode, you get something in the ending, and if you get them all, you get a special mention. The conditions might be things like: certain bit in the random seed to be "11" (so, not all seeds are good), dive into water X times in the same room without doing anything else, etc. Use the "random seed stela" (maybe give a clue about it), currently it displays the bottom 6 bits of the first random seed word, should I make it display a whole 8 bits of it?
     - add as a special achievement for the gameover screen (at least one angry, and all 8 angry)
   - Mars/Moon: in the boss rooms, there might be something you can do before summoning the boss. This could lead to something like: (1) an underground cave where there is a broken ancient robot that can talk to you (in a mix of English and Maya maybe?), and might give you a weapon upgrade (e.g. a better raygun, which might be esential for fighting the final alien boss), add as a special achievement for the gameover screen.
   - The Maya were obsessed with sacrificing blood to their gods (the highest being extracting a beating heart from a person while still alive), then it was often burned so that the smoke will bring it to the gods. Can I add some puzzle/item/riddle about this? (maybe in the stella puzzle above, or maybe some blood meter that accumulates when you receive damage/die/kill-an-enemy and when full, things happen)
@@ -67,7 +66,7 @@ to do:
   - The "Firestone forge", which is in the Moon, and only active if you are in a world with the word "ATLANTIS" (or some variant) in it (add a clue).
   - item that lets you fight a boss for a second time (the idea was to get both items in boss 4, but not sure if worth it)
   - gigantic maya statue monument that looks decoration, but it's actually a secret boss (to have a maya-themed final boss)
-  - maybe that boss leads to the grave of the person who wrote all the story tablets (Yatzil), with a riddle you can only solve if you have seen all tablets
+    - maybe that boss leads to the grave of the person who wrote all the story tablets (Yatzil), with a riddle you can only solve if you have seen all tablets
 
 --------------------
 

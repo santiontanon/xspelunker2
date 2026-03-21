@@ -1,6 +1,6 @@
 boss5_charybdis_difficulty_setting__easy:
 	db 32, 16  ; boss hp, vat hp
-	db 64, #0f, #1f, 32, 16  ; idle time, walk mask, bullet-time-mask, attack-delay, claw-attack-speed
+	db 64, #0f, #3f, 32, 16  ; idle time, walk mask, bullet-time-mask, attack-delay, claw-attack-speed
 	db #03  ; flying claw speed mask
 boss5_charybdis_difficulty_setting__normal:
 	db 48, 16  ; boss hp, vat hp

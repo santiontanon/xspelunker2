@@ -1,17 +1,20 @@
 boss5_scylla_difficulty_setting__easy:
 	db 32, 16  ; boss hp, vat hp
-	db 64  ; idle time
+	db 64, #0f, #3f  ; idle time, swim speed mask, bullet-time-mask
 boss5_scylla_difficulty_setting__normal:
 	db 48, 16  ; boss hp, vat hp
-	db 64  ; idle time
+	db 64, #07, #1f  ; idle time, swim speed mask, bullet-time-mask
 boss5_scylla_difficulty_setting__hard:
 	db 64, 24  ; boss hp, vat hp
-	db 64  ; idle time
+	db 64, #07, #0f  ; idle time, swim speed mask, bullet-time-mask
 boss5_scylla_difficulty_setting__hardest:
 	db 80, 32  ; boss hp, vat hp
-	db 64  ; idle time
+	db 64, #03, #0f  ; idle time, swim speed mask, bullet-time-mask
 
 BOSS_5_SCYLLA_HP_OFFSET: equ 0
+BOSS_5_SCYLLA_IDLE_TIME_OFFSET: equ 2
+BOSS_5_SCYLLA_SWIM_MASK: equ 3
+BOSS_5_SCYLLA_BULLET_TIME_MASK: equ 4
 
 
 ;-----------------------------------------------
@@ -22,7 +25,10 @@ update_boss5_behavior_4:
 	jr z, update_boss5_behavior_4_state_0
 	dec a
 	jr z, update_boss5_behavior_4_state_1  ; idle
-	dec a	
+	dec a
+	jp z, update_boss5_behavior_4_state_2  ; swim left
+	dec a
+	jp z, update_boss5_behavior_4_state_3  ; swim right
 	; ...
 	ret
 
@@ -51,10 +57,9 @@ update_boss5_behavior_4_state_0:
 ; 	ld (boss__state_timer), a
 ; 	jr update_boss5_behavior_4
 ; update_boss5_behavior_4_state_0_no_jump:
-; 	ld c, 3
-; 	call random_modulo
-; 	inc a
-	ld a, 1
+	ld c, 3
+	call random_modulo
+	inc a
 	ld (boss__state), a
 	xor a
 	ld (boss__state_timer), a
@@ -62,16 +67,26 @@ update_boss5_behavior_4_state_0:
 
 update_boss5_behavior_4_state_1:
 	; idle:
-	xor a
-	ld (boss__5_needs_redraw), a
+	ld a, (boss__5_settings + BOSS_5_SCYLLA_IDLE_TIME_OFFSET)
+	ld c, a
 	ld hl, boss__state_timer
 	ld a, (hl)
 	inc (hl)
-
+	cp c
+	jr nz, update_boss5_behavior_4_state_1_entry_point
+update_boss5_behavior_4_state_1_done:
+	xor a
+	ld (boss__state), a
+	ret
+update_boss5_behavior_4_state_1_entry_point:
+	xor a
+	ld (boss__5_needs_redraw), a
+update_boss5_behavior_4_state_1_entry_point2:
 	call update_boss5_scylla_control_back_arms
 	call update_boss5_scylla_control_left_arm
 	call update_boss5_scylla_control_right_arm
 	call update_boss5_scylla_control_forward_arm
+	call update_boss5_scylla_maybe_fire_eye_bullet
 
 	; blink:
 	ld a, (boss__state_timer)
@@ -96,6 +111,54 @@ update_boss5_behavior_4_state_1_continue:
 	ret z
 	jp update_boss5_draw_scylla
 
+
+update_boss5_behavior_4_state_2:
+	; swim left:
+	ld a, (boss__5_settings + BOSS_5_SCYLLA_SWIM_MASK)	
+	ld c, a
+	add a, a
+	add a, a
+	ld b, a
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	cp b
+	jp z, update_boss5_behavior_4_state_1_done
+	and c
+	jp nz, update_boss5_behavior_4_state_1_entry_point
+	ld a, (boss__x)
+	cp 5  ; minimum x coordinate
+	jp z, update_boss5_behavior_4_state_1_done
+	dec a
+	ld (boss__x), a
+	ld (boss__5_needs_redraw), a  ; a is != 0
+	jp update_boss5_behavior_4_state_1_entry_point2  ; the rest of behavior is like "idle"
+
+
+update_boss5_behavior_4_state_3:
+	; swim right:
+	ld a, (boss__5_settings + BOSS_5_SCYLLA_SWIM_MASK)	
+	ld c, a
+	add a, a
+	add a, a
+	ld b, a
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	cp b
+	jp z, update_boss5_behavior_4_state_1_done
+	and c
+	jp nz, update_boss5_behavior_4_state_1_entry_point
+	ld a, (boss__x)
+	cp 21  ; maximum x coordinate
+	jp z, update_boss5_behavior_4_state_1_done
+	inc a
+	ld (boss__x), a
+	ld (boss__5_needs_redraw), a  ; a is != 0
+	jp update_boss5_behavior_4_state_1_entry_point2  ; the rest of behavior is like "idle"
+
+
+;-----------------------------------------------
 update_boss5_scylla_control_back_arms:
 	ld a, (boss__state_timer)
 	and #07
@@ -125,23 +188,35 @@ update_boss5_scylla_control_back_arms:
 	ld (boss__5_needs_redraw), a
 	ret
 
+
+;-----------------------------------------------
 update_boss5_scylla_control_left_arm:
 	ld hl, boss__5_scylla_arms_inertia + 0
 	ld de, boss__5_scylla_arms_state + 1
 	ld c, 6
 	jr update_boss5_scylla_control_arm_generic
 
+
+;-----------------------------------------------
 update_boss5_scylla_control_right_arm:
 	ld hl, boss__5_scylla_arms_inertia + 2
 	ld de, boss__5_scylla_arms_state + 3
 	ld c, 6
 	jr update_boss5_scylla_control_arm_generic
 
+
+;-----------------------------------------------
 update_boss5_scylla_control_forward_arm:
 	ld hl, boss__5_scylla_arms_inertia + 1
 	ld de, boss__5_scylla_arms_state + 2
 	ld c, 11
 
+
+;-----------------------------------------------
+; input:
+; - hl: ptr to inertia
+; - de: ptr to arm state
+; - c: limit
 update_boss5_scylla_control_arm_generic:
 	ld a, (boss__state_timer)
 	and #07
@@ -194,8 +269,14 @@ update_boss5_scylla_control_arm_generic_inertia_set:
 	ld (boss__5_needs_redraw), a
 	ret
 
+
+;-----------------------------------------------
+; input:
+; - a: desired arm position
+; - c: limit
+; output:
+; - a: arm position within the limt 
 update_boss5_scylla_arm_state_limit:
-	; c: limit
 	cp c
 	ret c
 	cp 128
@@ -206,6 +287,7 @@ update_boss5_scylla_arm_state_limit_down:
 	ld a, c
 	dec a
 	ret
+
 
 ;-----------------------------------------------
 ; Scylla with vat/brain
@@ -218,6 +300,37 @@ update_boss5_behavior_5:
 ; Scylla dying
 update_boss5_behavior_6:
 	; ...
+	ret
+
+
+;-----------------------------------------------
+update_boss5_scylla_maybe_fire_eye_bullet:
+	ld a, (boss__5_scylla_body_state)
+	cp 1
+	ret z  ; no firing when eyes are closed
+	ld a, (boss__5_settings + BOSS_5_SCYLLA_BULLET_TIME_MASK)
+	ld c, a
+	call random_a
+	and c
+	ret nz
+	ld bc, (boss__x)
+	inc b
+	ld e, c  ; left eye
+	call random_a
+	and #01
+	jr z, update_boss5_scylla_maybe_fire_eye_bullet_left_eye
+	inc e
+	inc e
+	inc e
+	inc e
+update_boss5_scylla_maybe_fire_eye_bullet_left_eye:
+	ld ix, #0004
+	; - c, b: tile coordinate from where the bullet is fired
+	; - ixl, ixh: pixel offset	
+	ld hl, boss_fire_directional_bullet_towards_player_e_b
+	ld c, BOSS_PAGE
+	call call_hl_in_page_c_8000
+	ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BULLET_IGNORING_WALLS
 	ret
 
 
