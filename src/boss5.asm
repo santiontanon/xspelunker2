@@ -267,6 +267,11 @@ update_boss5_behavior_0_state_3_scylla_continue:
 	dec a
 	ld (boss__5_scylla_arms_state + 3), a
 	ld (boss__5_scylla_arms_state + 4), a
+
+	ld a, (boss__5_settings + BOSS_5_SCYLLA_TENTACLE_HP_OFFSET)
+	ld (boss__5_scylla_arms_hp), a
+	ld (boss__5_scylla_arms_hp + 1), a
+	ld (boss__5_scylla_arms_hp + 2), a
 	; ...
 
 update_boss5_behavior_0_state_3_done:

@@ -1248,6 +1248,7 @@ update_boss5_charybdis_maybe_fire_eye_bullet_left_eye:
 ; - e: tile number that was hit
 ; - iyh: damage to deal
 ; - iyl: collision ID
+; - ix: ptr of the tile we hit
 player_weapon_hitbox_check_boss__boss5_charybdis_hit:
 	ld a, (boss__behavior)
 	cp 3

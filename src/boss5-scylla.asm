@@ -1,26 +1,27 @@
 boss5_scylla_difficulty_setting__easy:
-	db 32, 16  ; boss hp, vat hp
+	db 32, 16, 32  ; boss hp, vat hp, tentacle hp
 	db 64, #0f, #3f, 32  ; idle time, swim speed mask, bullet-time-mask
 	db #03  ; bubble firing mask
 boss5_scylla_difficulty_setting__normal:
-	db 48, 16  ; boss hp, vat hp
+	db 48, 16, 48  ; boss hp, vat hp, tentacle hp
 	db 64, #07, #1f, 28  ; idle time, swim speed mask, bullet-time-mask
 	db #01  ; bubble firing mask
 boss5_scylla_difficulty_setting__hard:
-	db 64, 24  ; boss hp, vat hp
+	db 64, 24, 64  ; boss hp, vat hp, tentacle hp
 	db 64, #07, #0f, 24  ; idle time, swim speed mask, bullet-time-mask
 	db #01  ; bubble firing mask
 boss5_scylla_difficulty_setting__hardest:
-	db 80, 32  ; boss hp, vat hp
+	db 80, 32, 80  ; boss hp, vat hp, tentacle hp
 	db 64, #03, #0f, 20  ; idle time, swim speed mask, bullet-time-mask
 	db #01  ; bubble firing mask
 
 BOSS_5_SCYLLA_HP_OFFSET: equ 0
-BOSS_5_SCYLLA_IDLE_TIME_OFFSET: equ 2
-BOSS_5_SCYLLA_SWIM_MASK: equ 3
-BOSS_5_SCYLLA_BULLET_TIME_MASK: equ 4
-BOSS_5_SCYLLA_ATTACK_DELAY: equ 5
-BOSS_5_SCYLLA_BUBBLE_MASK: equ 6
+BOSS_5_SCYLLA_TENTACLE_HP_OFFSET: equ 2
+BOSS_5_SCYLLA_IDLE_TIME_OFFSET: equ 3
+BOSS_5_SCYLLA_SWIM_MASK: equ 4
+BOSS_5_SCYLLA_BULLET_TIME_MASK: equ 5
+BOSS_5_SCYLLA_ATTACK_DELAY: equ 6
+BOSS_5_SCYLLA_BUBBLE_MASK: equ 7
 
 
 ;-----------------------------------------------
@@ -329,12 +330,11 @@ update_boss5_behavior_4_state_6_continue2:
 	ret nz
 
 	; spawn an explosion:
-	ld c, 3
+	ld c, 5
 	call random_modulo
 	ld c, a
 	ld a, (boss__x)
 	add a, c
-	add a, 6
 	ld c, a
 	call random_a
 	and #01
@@ -755,6 +755,9 @@ update_boss5_draw_scylla:
 			ld hl, draw_boss_frame_1_without_clearing_ix
 			call call_hl_in_page_c_8000
 		pop hl
+		ld a, (boss__5_scylla_arms_hp)
+		or a
+		jr z, update_boss5_draw_scylla_left_arm_done
 		push hl
 			; left arm:
 			ld bc, - (5 * 32 + 4)
@@ -773,6 +776,10 @@ update_boss5_draw_scylla:
 			ld hl, draw_boss_frame_1_without_clearing_ix
 			call call_hl_in_page_c_8000
 		pop hl
+update_boss5_draw_scylla_left_arm_done:
+		ld a, (boss__5_scylla_arms_hp + 2)
+		or a
+		jr z, update_boss5_draw_scylla_right_arm_done
 		push hl
 			; right arm:
 			ld bc, - (5 * 32 - 4)
@@ -791,6 +798,10 @@ update_boss5_draw_scylla:
 			ld hl, draw_boss_frame_1_without_clearing_ix
 			call call_hl_in_page_c_8000
 		pop hl
+update_boss5_draw_scylla_right_arm_done:
+		ld a, (boss__5_scylla_arms_hp + 1)
+		or a
+		jr z, update_boss5_draw_scylla_front_arm_done
 		push hl
 			; forward arm:
 			ld bc, - (4 * 32 + 5)
@@ -809,6 +820,7 @@ update_boss5_draw_scylla:
 			ld hl, draw_boss_frame_1_without_clearing_ix
 			call call_hl_in_page_c_8000
 		pop hl
+update_boss5_draw_scylla_front_arm_done:
 	pop hl
 	; bl arm: -5 left and +7 down
 	; br arm: +9 in x
@@ -837,14 +849,228 @@ update_boss5_draw_scylla_appearing:
 ; - e: tile number that was hit
 ; - iyh: damage to deal
 ; - iyl: collision ID
+; - ix: ptr of the tile we hit
 player_weapon_hitbox_check_boss__boss5_scylla_hit:
 	ld a, (boss__behavior)
-	cp 0
-	jp nz, player_weapon_hitbox_check_boss__boss5_hit_shield
-	; ...
-	; hit the main body:
-; 	ld hl, player_weapon_hitbox_check_boss__lose_hp
-; 	ld c, BOSS_PAGE
-; 	call call_hl_in_page_c_8000	
+	cp 6
+	ret z
+
+	ld a, e
+	cp 14*16+5  ; first brain/vat tile
+	jr c, player_weapon_hitbox_check_boss__boss5_scylla_hit_not_brain
+	ld a, (boss__5_top_state)
+	cp 3
+	jp c, player_weapon_hitbox_check_boss__boss5_hit_shield
+	; hit the brain/vat:
+	ld hl, player_weapon_hitbox_check_boss__lose_hp
+	ld c, BOSS_PAGE
+	call call_hl_in_page_c_8000	
+	ld hl, (boss__hp)
+	ld a, h
+	or l
+	ret nz
+	; HP reached 0:
+	ld a, (boss__5_top_state)
+	cp 3
+	jr z, player_weapon_hitbox_check_boss__boss5_scylla_hit_break_vat
+	; boss is dead:
+	ld a, 6
+	ld (boss__behavior), a
+	xor a
+	ld (boss__state), a
+	ld (boss__state_timer), a
+	ret
+player_weapon_hitbox_check_boss__boss5_scylla_hit_break_vat:
+	inc a
+	ld (boss__5_top_state), a
+	ld a, (boss__5_settings + BOSS_5_SCYLLA_HP_OFFSET)  ; brain HP
+	ld h, 0
+	ld l, a
+	ld (boss__hp), hl
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)	
+	call update_boss5_draw_scylla
+	ld bc, (boss__x)
+	dec b
+	dec b
+	dec b
+	inc a
+	add a, c
+	ld c, a
+	call spawn_big_explosion
+	ld hl, SFX_explosion_low_pitch
+	jp play_SFX_with_high_priority
+
+player_weapon_hitbox_check_boss__boss5_scylla_hit_not_brain:
+	; check if a tentacle was hit:
+	; - ix: ptr of the tile we hit
+	push ix
+	pop hl
+	ld bc, current_room__tile_map
+	or a
+	sbc hl, bc
+	; - obtain screen coordinates (in (e, d):
+	ld a, l
+	and #1f
+	ld e, a  ; x coordinate
+	add hl, hl
+	add hl, hl
+	add hl, hl
+	ld d, h  ; y coordinate
+	; here (e, d) has the coordinates of the tile that was hit
+
+	; left tentacle: drawn at (-4, -5) from the main body
+	push de
+		ld a, (boss__x)
+		add a, -4
+		sub e
+		neg
+		ld e, a  ; coordinate relative to this tentacle
+		ld a, (boss__y)
+		add a, -5
+		sub d
+		neg
+		ld d, a  ; coordinate relative to this tentacle
+		ld a, (boss__5_scylla_arms_state + 1)
+		ld hl, update_boss5_draw_scylla_l_arm_table
+		add a, a
+		ADD_HL_A
+		ld a, (hl)
+		ld ixl, a
+		inc hl
+		ld a, (hl)
+		ld ixh, a  ; ix: ptr to the name table 
+		ld hl, player_weapon_hitbox_check_boss__boss5_scylla_hit_tentacle
+		ld c, BOSS_PAGE
+		call call_hl_in_page_c_8000
+	pop de
+	jr z, player_weapon_hitbox_check_boss__boss5_scylla_hit__left_tentacle_hit
+
+	; front tentacle:
+	push de
+		ld a, (boss__x)
+		add a, -5
+		sub e
+		neg
+		ld e, a  ; coordinate relative to this tentacle
+		ld a, (boss__y)
+		add a, -4
+		sub d
+		neg
+		ld d, a  ; coordinate relative to this tentacle
+		ld a, (boss__5_scylla_arms_state + 2)
+		ld hl, update_boss5_draw_scylla_f_arm_table
+		add a, a
+		ADD_HL_A
+		ld a, (hl)
+		ld ixl, a
+		inc hl
+		ld a, (hl)
+		ld ixh, a  ; ix: ptr to the name table 
+		ld hl, player_weapon_hitbox_check_boss__boss5_scylla_hit_tentacle
+		ld c, BOSS_PAGE
+		call call_hl_in_page_c_8000
+	pop de
+	jp z, player_weapon_hitbox_check_boss__boss5_scylla_hit__front_tentacle_hit
+
+	; right tentacle:
+	ld a, (boss__x)
+	add a, 4
+	sub e
+	neg
+	ld e, a  ; coordinate relative to this tentacle
+	ld a, (boss__y)
+	add a, -5
+	sub d
+	neg
+	ld d, a  ; coordinate relative to this tentacle
+	ld a, (boss__5_scylla_arms_state + 3)
+	ld hl, update_boss5_draw_scylla_r_arm_table
+	add a, a
+	ADD_HL_A
+	ld a, (hl)
+	ld ixl, a
+	inc hl
+	ld a, (hl)
+	ld ixh, a  ; ix: ptr to the name table 
+	ld hl, player_weapon_hitbox_check_boss__boss5_scylla_hit_tentacle
+	ld c, BOSS_PAGE
+	call call_hl_in_page_c_8000
+	jr z, player_weapon_hitbox_check_boss__boss5_scylla_hit__right_tentacle_hit
 	jp player_weapon_hitbox_check_boss__boss5_hit_shield
+
+player_weapon_hitbox_check_boss__boss5_scylla_hit__left_tentacle_hit:
+	ld hl, boss__5_scylla_arms_hp
+	ld a, (hl)
+	or a
+	jp z, player_weapon_hitbox_check_boss__boss5_hit_shield  ; arm already destroyed
+	dec (hl)
+	ld a, (hl)
+	or a
+	jr nz, player_weapon_hitbox_check_boss__boss5_scylla_hit__left_tentacle_hit_entry_point
+	; arm destroyed!
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)	
+	call update_boss5_draw_scylla
+	ld bc, (boss__x)
+	inc b
+	inc b
+	call spawn_big_explosion
+	ld hl, SFX_explosion_low_pitch
+	call play_SFX_with_high_priority
+	jr player_weapon_hitbox_check_boss__boss5_scylla_hit__left_tentacle_hit_entry_point2
+player_weapon_hitbox_check_boss__boss5_scylla_hit__left_tentacle_hit_entry_point:
+	ld hl, SFX_enemy_hit
+	call play_SFX_with_high_priority
+player_weapon_hitbox_check_boss__boss5_scylla_hit__left_tentacle_hit_entry_point2:
+	xor a
+	ld (player_weapon_hitbox_check_result), a  ; mark a hit
+	ld a, iyl
+	ld (boss__last_collision_id), a
+	ret
+
+player_weapon_hitbox_check_boss__boss5_scylla_hit__right_tentacle_hit:
+	ld hl, boss__5_scylla_arms_hp + 2
+	ld a, (hl)
+	or a
+	jp z, player_weapon_hitbox_check_boss__boss5_hit_shield  ; arm already destroyed
+	dec (hl)
+	ld a, (hl)
+	or a
+	jr nz, player_weapon_hitbox_check_boss__boss5_scylla_hit__left_tentacle_hit_entry_point
+	; arm destroyed!
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)	
+	call update_boss5_draw_scylla
+	ld bc, (boss__x)
+	inc b
+	inc b
+	inc c
+	inc c
+	call spawn_big_explosion
+	ld hl, SFX_explosion_low_pitch
+	call play_SFX_with_high_priority
+	jp player_weapon_hitbox_check_boss__boss5_scylla_hit__left_tentacle_hit_entry_point2
+
+player_weapon_hitbox_check_boss__boss5_scylla_hit__front_tentacle_hit:
+	ld hl, boss__5_scylla_arms_hp + 1
+	ld a, (hl)
+	or a
+	jp z, player_weapon_hitbox_check_boss__boss5_hit_shield  ; arm already destroyed
+	dec (hl)
+	ld a, (hl)
+	or a
+	jr nz, player_weapon_hitbox_check_boss__boss5_scylla_hit__left_tentacle_hit_entry_point
+	; arm destroyed!
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)	
+	call update_boss5_draw_scylla
+	ld bc, (boss__x)
+	inc b
+	inc b
+	inc c
+	call spawn_big_explosion
+	ld hl, SFX_explosion_low_pitch
+	call play_SFX_with_high_priority
+	jp player_weapon_hitbox_check_boss__boss5_scylla_hit__left_tentacle_hit_entry_point2
 

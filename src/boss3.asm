@@ -1078,6 +1078,7 @@ update_boss3_draw_boss_frame_head_attached_ptr_set:
 ; - e: tile number that was hit
 ; - iyh: damage to deal
 ; - iyl: collision ID
+; - ix: ptr of the tile we hit
 player_weapon_hitbox_check_boss__boss3_hit:
 	ld a, iyl
 	ld (boss__last_collision_id), a

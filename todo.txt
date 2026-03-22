@@ -1,18 +1,10 @@
 to do:
 ***- Scylla:
-  ***- scylla hit function:
-    ***- detect hit with vat/brain, and switch to brain or death state, like charybdis does
-    ***- detect hit in a body/tentacle tile:
-      ***- check with the nametables of the current left/front/right-tentacle
-      ***- add HP to each tentacle (difficulty setting)
-      ***- decrease HP of each tentacle when hit
-      ***- delete tentacle when HP 0 (and do not draw it anymore)
-      ***- explosions when tentacle is destroyed
-  - tentacle attacks (only after island is gone): one tentacle bends up, and then the top parts separate (showing thin cables connecting the parts). Several options:
-    - stretching all the way to the top, and trying to hit you.
-    - rising up to player level, and then stretching horizontally, trying to hit you
-    - these attacks are fast, you need to recognize them, or are hard to avoid (maybe there is a choreography, where it first attacks the ceiling, and then has a chance of doing the horizontal one, very fast afterwards)
-  - being able to kill scylla
+  ***- tentacle attacks (only after island is gone): one tentacle bends up, and then the top parts separate (showing thin cables connecting the parts). Several options:
+    ***- stretching all the way to the top, and trying to hit you.
+    ***- rising up to player level, and then stretching horizontally, trying to hit you
+    ***- these attacks are fast, you need to recognize them, or are hard to avoid (maybe there is a choreography, where it first attacks the ceiling, and then has a chance of doing the horizontal one, very fast afterwards)
+  ***- being able to kill scylla (behavior 6)
 ***- if we had both charybdis and scylla, after killing charybdis, scylla should appear: the floor where charybdis was standing turns into water, for scylla to rise (behavior 0, state 8?)
 ***- being able to kill the boss and collect the reward:
   ***- power stone spawns where the switch was

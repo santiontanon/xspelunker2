@@ -1120,6 +1120,9 @@ player_weapon_hitbox_check_boss_loop_x:
 
 				; hit!
 				; e: tile we hit
+				; ix: ptr of the tile we hit
+				push hl
+				pop ix
 				ld hl, (boss__hit_fn)
 				ld a, (boss__hit_fn_page)
 				ld c, a
@@ -1634,6 +1637,51 @@ player_weapon_hitbox_check_boss__lose_hp_continue:
 	ld (player_weapon_hitbox_check_result), a  ; mark a hit
 	ld a, iyl
 	ld (boss__last_collision_id), a
+	ret
+
+
+;-----------------------------------------------
+; Note: this is here, as it needs to be in the same page where the scylla nametables are
+player_weapon_hitbox_check_boss__boss5_scylla_hit_tentacle:
+	; Check if a tentacle was hit:
+	; - e, d: coordinates the player hit relative to this tentacle
+	; - ix: ptr to the tentacle name table
+
+	; 1) get coordinates within the name table:
+	;    x = e - (nametable_offset_x)
+	;    y = d - (nametable_offset_y)
+	ld a, e
+	sub (ix + 1)  ; nametable offset x
+	; 2.x) if outside the name table: no hit
+	cp (ix + 3)
+	jr nc, player_weapon_hitbox_check_boss__boss5_scylla_hit_tentacle_no_hit
+	ld c, a  ; x coordinate within the name table
+	ld a, d
+	sub (ix + 2)  ; nametable offset y
+	; 2.y) if outside the name table: no hit
+	cp (ix + 4)
+	jr nc, player_weapon_hitbox_check_boss__boss5_scylla_hit_tentacle_no_hit
+	ld b, a  ; y coordinate within the name table
+
+	; 3) if tile in the coordinate is != 0: hit!
+	ld a, b
+	or a
+	ld a, c
+	jr z, player_weapon_hitbox_check_boss__boss5_scylla_hit_tentacle_ptr_done
+player_weapon_hitbox_check_boss__boss5_scylla_hit_tentacle_ptr_loop:
+	add a, (ix + 3)  ; nametable width
+	djnz player_weapon_hitbox_check_boss__boss5_scylla_hit_tentacle_ptr_loop
+player_weapon_hitbox_check_boss__boss5_scylla_hit_tentacle_ptr_done:
+	ld l, (ix + 5)
+	ld h, (ix + 6)
+	ADD_HL_A
+	ld a, (hl)
+	or a
+	jr z, player_weapon_hitbox_check_boss__boss5_scylla_hit_tentacle_no_hit
+	xor a  ; hit!
+	ret
+player_weapon_hitbox_check_boss__boss5_scylla_hit_tentacle_no_hit:
+	or 1  ; no hit
 	ret
 
 

@@ -3258,6 +3258,9 @@ player_weapon_hitbox_check_enemy_loop:
 		jr z, player_weapon_hitbox_check_enemy_loop_done
 		cp #fe  ; sentinel
 		jr z, player_weapon_hitbox_check_enemy_loop_done
+		ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+		cp ENEMY_SNAKE  ; first hittable enemy
+		jr c, player_weapon_hitbox_check_enemy_continue
 		; enemy, check for collision: (in tile coordinates: from [e, d] to [l, h])
 		; assume enemies are 2x2 in size
 		ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)

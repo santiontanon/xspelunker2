@@ -1205,6 +1205,7 @@ boss1_draw_dust_loop_continue:
 ; - e: tile number that was hit
 ; - iyh: damage to deal
 ; - iyl: collision ID
+; - ix: ptr of the tile we hit
 player_weapon_hitbox_check_boss__boss1_hit:
 	ld a, e
 	; did the player hit the staff or the boss?

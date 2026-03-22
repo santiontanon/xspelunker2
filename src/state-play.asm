@@ -124,7 +124,7 @@ state_play:
 ; 		ld (player_inventory_weapons+10), a
 ; 		ld a, 202
 ; 		ld (player_inventory_coins), a
-		ld a, 25
+		ld a, 80
 		ld (player_inventory_weapon_ammo), a
 		ld (player_inventory_weapon_ammo + 1), a
 		ld (player_inventory_weapon_ammo + 2), a

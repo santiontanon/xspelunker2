@@ -3418,6 +3418,7 @@ draw_boss4_frame_part_loop_y_done:
 ; - e: tile number that was hit
 ; - iyh: damage to deal
 ; - iyl: collision ID
+; - ix: ptr of the tile we hit
 player_weapon_hitbox_check_boss__boss4_hit:
 	ld a, (boss__behavior)
 	cp 2

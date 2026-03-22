@@ -265,7 +265,7 @@ boss__clear_bbox_1: ds virtual 4  ; ptr, w, h  (used to restore boss background)
 boss__clear_bbox_2: ds virtual 4  ; ptr, w, h  (used to restore boss background, for bosses made out of two pieces)
 boss__hp: ds virtual 2  ; hit points, 16bit
 boss__last_collision_id: ds virtual 1
-boss__hit_fn: ds virtual 2  ; when the player hits a tile with collision type '9' this method is called
+boss__hit_fn: ds virtual 2  ; when the player hits a tile with collision type '9' this method is called.
 boss__hit_fn_page: ds virtual 1
 boss__hit_timer: ds virtual 1  ; for displaying "boss hit" animations
 boss__1_settings:
@@ -274,7 +274,7 @@ boss__3_settings:
 boss__4_settings:
 boss__5_settings:
     ds virtual 12  ; difficulty parameters of the boss
-boss__tmp_space: ds virtual 15
+boss__tmp_space: ds virtual 16
 ;
 boss__1_has_staff: equ boss__tmp_space
 boss__1_staff_hp: equ boss__tmp_space + 1
@@ -318,6 +318,7 @@ boss__5_scylla_arms_state: equ boss__tmp_space + 5  ; 5 bytes: back-left, left, 
                                                     ; right: 0 - 4
                                                     ; back-right: 0 - 3
 boss__5_scylla_arms_inertia: equ boss__tmp_space + 10  ; 3 bytes (only for the front 3 arms)
+boss__5_scylla_arms_hp: equ boss__tmp_space + 13  ; 3 bytes (left, front, right)
 
 ; game stats:
 stats__n_coins_collected: ds virtual 2
