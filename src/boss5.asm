@@ -257,6 +257,8 @@ update_boss5_behavior_0_state_3_scylla_continue:
 	ld (boss__5_scylla_arms_inertia + 1), a
 	ld (boss__5_scylla_arms_inertia + 2), a
 	ld (boss__5_scylla_arms_state), a
+	ld (boss__5_scylla_arms_attack_state), a
+	ld (boss__5_scylla_arms_attack_clear), a
 	inc a
 	ld (boss__5_scylla_body_state), a  ; 1: eyes closed
 	inc a

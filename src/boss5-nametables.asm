@@ -265,6 +265,8 @@ BOSS5_NAMETABLE_SCYLLA_LB_ARM_1: equ BOSS5_NAMETABLE_SCYLLA_LB_ARM_0 + 5*4  ; 6*
 BOSS5_NAMETABLE_SCYLLA_LB_ARM_2: equ BOSS5_NAMETABLE_SCYLLA_LB_ARM_1 + 6*5  ; 3*6
 BOSS5_NAMETABLE_SCYLLA_LB_ARM_3: equ BOSS5_NAMETABLE_SCYLLA_LB_ARM_2 + 3*6  ; 2*10
 
+BOSS5_NAMETABLE_SCYLLA_DETTACHED_TIP_UP: equ BOSS5_NAMETABLE_SCYLLA_LB_ARM_3 + 2*10  ; 1*3
+
 
 boss5_frame_scylla_body_0:
 	db 1  ; number of parts
@@ -474,4 +476,12 @@ boss5_frame_scylla_lb_arm_3:
 	db 4, 1  ; offset wrt the draw ptr (x offset, y offset)
 	dw #0a02, BOSS5_NAMETABLE_SCYLLA_LB_ARM_3  ; dimensions and nametable
 	dw 0, #0a02  ; boss__clear_bbox
+
+
+boss5_frame_scylla_dettached_tip_up:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0301, BOSS5_NAMETABLE_SCYLLA_DETTACHED_TIP_UP  ; dimensions and nametable
+	dw 0, #0301  ; boss__clear_bbox
+
 
