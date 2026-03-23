@@ -528,9 +528,9 @@ update_boss5_behavior_5:
 	dec a
 	jp z, update_boss5_behavior_5_state_5  ; left-arm vertical attack lowering
 	dec a
-; 	jp z, update_boss5_behavior_5_state_6  ; front-arm vertical attack rising
+	jp z, update_boss5_behavior_5_state_6  ; front-arm vertical attack rising
 	dec a
-; 	jp z, update_boss5_behavior_5_state_7  ; front-arm vertical attack lowering
+	jp z, update_boss5_behavior_5_state_7  ; front-arm vertical attack lowering
 	dec a
 	jp z, update_boss5_behavior_5_state_8  ; right-arm vertical attack rising
 	dec a
@@ -556,6 +556,9 @@ update_boss5_behavior_5_state_1_check_arm_attack:
 	ret nc  ; player is too low in the screen
 
 	; check for left-arm vertical attack:
+	ld a, (boss__5_scylla_arms_hp)  ; left arm
+	or a
+	jr z, update_boss5_behavior_5_state_1_check_arm_attack_not_left
 	ld a, (boss__5_scylla_arms_state + 1)  ; left arm
 	or a  ; most rised position
 	jr nz, update_boss5_behavior_5_state_1_check_arm_attack_not_left
@@ -566,11 +569,7 @@ update_boss5_behavior_5_state_1_check_arm_attack:
 	ld a, (player_x + 1)
 	cp c
 	jr c, update_boss5_behavior_5_state_1_check_arm_attack_not_left
-	inc c
-	inc c
-	inc c
-	inc c
-	inc c
+	add a, -5
 	cp c
 	jr nc, update_boss5_behavior_5_state_1_check_arm_attack_not_left
 	; player is in position, chance of attacking:
@@ -586,9 +585,41 @@ update_boss5_behavior_5_state_1_check_arm_attack:
 update_boss5_behavior_5_state_1_check_arm_attack_not_left:
 
 	; Check for front-arm vertical attack:
-	; ...
+	ld a, (boss__5_scylla_arms_hp + 1)  ; front arm
+	or a
+	jr z, update_boss5_behavior_5_state_1_check_arm_attack_not_front
+	ld a, (boss__5_scylla_arms_state + 2)  ; front arm
+	or a  ; most rised position left
+	jr z, update_boss5_behavior_5_state_1_check_arm_attack_maybe_front
+	cp 10  ; most rised position right
+	jr nz, update_boss5_behavior_5_state_1_check_arm_attack_not_front
+update_boss5_behavior_5_state_1_check_arm_attack_maybe_front:
+	; front-arm is in position:
+	ld a, (boss__x)
+	add a, -3
+	ld c, a
+	ld a, (player_x + 1)
+	cp c
+	jr c, update_boss5_behavior_5_state_1_check_arm_attack_not_front
+	add a, -12
+	cp c
+	jr nc, update_boss5_behavior_5_state_1_check_arm_attack_not_front
+	; player is in position, chance of attacking:
+	call random_a
+	and #1f  ; lower chance for the front arm, as it has a wide area
+	jr nz, update_boss5_behavior_5_state_1_check_arm_attack_not_front
+	; front arm vertical attack!!!
+	ld a, 6
+	ld (boss__state), a
+	xor a
+	ld (boss__state_timer), a
+	ret
+update_boss5_behavior_5_state_1_check_arm_attack_not_front:
 
 	; check for right-arm vertical attack:
+	ld a, (boss__5_scylla_arms_hp + 2)  ; right arm
+	or a
+	jr z, update_boss5_behavior_5_state_1_check_arm_attack_not_right
 	ld a, (boss__5_scylla_arms_state + 3)  ; right arm
 	cp 5  ; most rised position
 	jr nz, update_boss5_behavior_5_state_1_check_arm_attack_not_right
@@ -599,11 +630,7 @@ update_boss5_behavior_5_state_1_check_arm_attack_not_left:
 	ld a, (player_x + 1)
 	cp c
 	jr c, update_boss5_behavior_5_state_1_check_arm_attack_not_right
-	inc c
-	inc c
-	inc c
-	inc c
-	inc c
+	add a, -5
 	cp c
 	jr nc, update_boss5_behavior_5_state_1_check_arm_attack_not_right
 	; player is in position, chance of attacking:
@@ -615,7 +642,7 @@ update_boss5_behavior_5_state_1_check_arm_attack_not_left:
 	ld (boss__state), a
 	xor a
 	ld (boss__state_timer), a
-	ret
+	; ret
 update_boss5_behavior_5_state_1_check_arm_attack_not_right:
 	ret
 
@@ -678,6 +705,20 @@ update_boss5_behavior_5_state_5_entry_point:
 	ld (boss__state), a
 	ld (boss__state_timer), a
 	ret
+
+update_boss5_behavior_5_state_6:
+	call update_boss5_scylla_control_back_arms
+	call update_boss5_scylla_control_left_arm
+	call update_boss5_scylla_control_right_arm
+	call update_boss5_behavior_4_state_1_entry_point3  ; firing
+	jp update_boss5_behavior_5_state_4_entry_point
+
+update_boss5_behavior_5_state_7:
+	call update_boss5_scylla_control_back_arms
+	call update_boss5_scylla_control_left_arm
+	call update_boss5_scylla_control_right_arm
+	call update_boss5_behavior_4_state_1_entry_point3  ; firing
+	jp update_boss5_behavior_5_state_5_entry_point	
 
 update_boss5_behavior_5_state_8:
 	call update_boss5_scylla_control_left_arm
@@ -1020,14 +1061,18 @@ update_boss5_draw_scylla_front_arm_done:
 		ld a, (boss__state)
 		cp 6  ; left-arm
 		jr c, update_boss5_draw_scylla_arm_attack_left_arm  ; states: 4, 5
-; 		cp 8  ; front-arm
-; 		jr c, update_boss5_draw_scylla_arm_attack_front_arm  ; states: 6, 7
+		cp 8  ; front-arm
+		jr c, update_boss5_draw_scylla_arm_attack_front_arm  ; states: 6, 7
 		cp 10  ; right-arm
 		jr c, update_boss5_draw_scylla_arm_attack_right_arm  ; states: 8, 9
 		; ...
 		jr update_boss5_draw_scylla_arm_attack_done
 
 update_boss5_draw_scylla_arm_attack_left_arm:
+		ld a, (boss__5_scylla_arms_hp)  ; left arm
+		or a
+		jr z, update_boss5_draw_scylla_arm_attack_done
+
 		; draw tip:
 		; determine x, y position: boss x, y + (-2, -5)
 		ld bc, (boss__x)
@@ -1039,6 +1084,7 @@ update_boss5_draw_scylla_arm_attack_left_arm_entry_point:
 		add a, b
 		add a, -5
 		ld b, a
+update_boss5_draw_scylla_arm_attack_left_arm_entry_point2:
 		ld a, c
 		ld (boss__5_scylla_arms_attack_clear), a  ; which column to clear
 		call get_room_tile_ptr
@@ -1063,9 +1109,36 @@ update_boss5_draw_scylla_arm_attack_left_arm_loop_done:
 		ld (hl), BOSS_5_SCYLLA_THREAD_V_TILE_START
 		jr update_boss5_draw_scylla_arm_attack_done
 
-		; ...
+update_boss5_draw_scylla_arm_attack_front_arm:
+		ld a, (boss__5_scylla_arms_hp + 1)  ; front arm
+		or a
+		jr z, update_boss5_draw_scylla_arm_attack_done
+
+		; draw tip:
+		; determine x, y position: boss x, y + (-2, -5)
+		ld bc, (boss__x)
+		ld a, (boss__5_scylla_arms_state + 2)
+		or a  ; boss_x - 1 or boss_x + 6
+		jr z, update_boss5_draw_scylla_arm_attack_front_arm_left
+		ld a, c
+		add a, 6
+		ld c, a
+		jr update_boss5_draw_scylla_arm_attack_front_arm_x_set
+update_boss5_draw_scylla_arm_attack_front_arm_left:
+		dec c
+update_boss5_draw_scylla_arm_attack_front_arm_x_set:
+		ld a, (boss__5_scylla_arms_attack_state)
+		neg
+		add a, b
+		add a, -4
+		ld b, a
+		jr update_boss5_draw_scylla_arm_attack_left_arm_entry_point2
 
 update_boss5_draw_scylla_arm_attack_right_arm:
+		ld a, (boss__5_scylla_arms_hp + 2)  ; right arm
+		or a
+		jr z, update_boss5_draw_scylla_arm_attack_done
+
 		; draw tip:
 		; determine x, y position: boss x, y + (-2, -5)
 		ld bc, (boss__x)
