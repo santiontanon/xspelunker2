@@ -597,7 +597,7 @@ update_boss5_behavior_5_state_1_check_arm_attack:
 	jr nc, update_boss5_behavior_5_state_1_check_arm_attack_not_left
 	; player is in position, chance of attacking:
 	call random_a
-	and #07
+	and #0f
 	jr nz, update_boss5_behavior_5_state_1_check_arm_attack_not_left
 	; left arm vertical attack!!!
 	ld a, 4
@@ -652,7 +652,7 @@ update_boss5_behavior_5_state_1_check_arm_attack_not_front_up:
 	jr nc, update_boss5_behavior_5_state_1_check_arm_attack_not_front  ; player is not on the left
 	; player is in position, chance of attacking:
 	call random_a
-	and #1f
+	and #3f
 	jr nz, update_boss5_behavior_5_state_1_check_arm_attack_not_front
 	; front arm horizontal-left attack!!!
 	ld a, 10
@@ -671,7 +671,7 @@ update_boss5_behavior_5_state_1_check_arm_attack_maybe_right:
 	jr c, update_boss5_behavior_5_state_1_check_arm_attack_not_front  ; player is not on the left
 	; player is in position, chance of attacking:
 	call random_a
-	and #1f
+	and #3f
 	jr nz, update_boss5_behavior_5_state_1_check_arm_attack_not_front
 	; front arm horizontal-right attack!!!
 	ld a, 14
@@ -701,7 +701,7 @@ update_boss5_behavior_5_state_1_check_arm_attack_not_front:
 	jr nc, update_boss5_behavior_5_state_1_check_arm_attack_not_right
 	; player is in position, chance of attacking:
 	call random_a
-	and #07
+	and #0f
 	jr nz, update_boss5_behavior_5_state_1_check_arm_attack_not_right
 	; right arm vertical attack!!!
 	ld a, 8
