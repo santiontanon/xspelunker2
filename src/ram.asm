@@ -274,7 +274,7 @@ boss__3_settings:
 boss__4_settings:
 boss__5_settings:
     ds virtual 12  ; difficulty parameters of the boss
-boss__tmp_space: ds virtual 18
+boss__tmp_space: ds virtual 20
 ;
 boss__1_has_staff: equ boss__tmp_space
 boss__1_staff_hp: equ boss__tmp_space + 1
@@ -321,6 +321,8 @@ boss__5_scylla_arms_inertia: equ boss__tmp_space + 10  ; 3 bytes (only for the f
 boss__5_scylla_arms_hp: equ boss__tmp_space + 13  ; 3 bytes (left, front, right)
 boss__5_scylla_arms_attack_state: equ boss__tmp_space + 16  ; 0: no attack, 1+ length of the cable
 boss__5_scylla_arms_attack_clear: equ boss__tmp_space + 17  ; 0: no clear, 1 - 31: clear this column
+boss__5_scylla_arms_attack_state2: equ boss__tmp_space + 18  ; 0: no attack, 1+ length of the horizontal cable
+boss__5_scylla_arms_attack_clear2: equ boss__tmp_space + 19  ; 0: no clear, 1 - 23: clear this row
 
 ; game stats:
 stats__n_coins_collected: ds virtual 2

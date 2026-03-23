@@ -1,6 +1,10 @@
 ;-----------------------------------------------
 BOSS_5_SCYLLA_THREAD_V_TILE: equ 211
-BOSS_5_SCYLLA_THREAD_V_TILE_START: equ 218
+BOSS_5_SCYLLA_THREAD_V_TILE_START: equ 217
+BOSS_5_SCYLLA_THREAD_V_WIDE_TILE_START: equ 218
+BOSS_5_SCYLLA_THREAD_H_TILE: equ 213
+BOSS_5_SCYLLA_THREAD_L_HINGE: equ 223
+BOSS_5_SCYLLA_THREAD_R_HINGE: equ 212
 
 
 ;-----------------------------------------------
@@ -523,6 +527,8 @@ update_boss5_behavior_5:
 	jp z, update_boss5_behavior_5_state_2  ; swim left
 	dec a
 	jp z, update_boss5_behavior_5_state_3  ; swim right
+
+	; vertical dettachable tip attack:
 	dec a
 	jp z, update_boss5_behavior_5_state_4  ; left-arm vertical attack rising
 	dec a
@@ -535,7 +541,24 @@ update_boss5_behavior_5:
 	jp z, update_boss5_behavior_5_state_8  ; right-arm vertical attack rising
 	dec a
 	jp z, update_boss5_behavior_5_state_9  ; right-arm vertical attack lowering
-	; ...
+
+	; horizontal dettachable tip attack:
+	dec a
+	jp z, update_boss5_behavior_5_state_10  ; front-arm left attack rising
+	dec a
+	jp z, update_boss5_behavior_5_state_11  ; front-arm left attack advancing horizontally
+	dec a
+	jp z, update_boss5_behavior_5_state_12  ; front-arm left attack reeling-back horizontally
+	dec a
+	jp z, update_boss5_behavior_5_state_13  ; front-arm left attack lowering
+	dec a
+	jp z, update_boss5_behavior_5_state_14  ; front-arm right attack rising
+	dec a
+	jp z, update_boss5_behavior_5_state_15  ; front-arm right attack advancing horizontally
+	dec a
+	jp z, update_boss5_behavior_5_state_16  ; front-arm right attack reeling-back horizontally
+	dec a
+	jp z, update_boss5_behavior_5_state_17  ; front-arm right attack lowering
 	ret
 
 update_boss5_behavior_5_state_0:
@@ -584,7 +607,7 @@ update_boss5_behavior_5_state_1_check_arm_attack:
 	ret
 update_boss5_behavior_5_state_1_check_arm_attack_not_left:
 
-	; Check for front-arm vertical attack:
+	; Check for front-arm vertical or horizontal attack:
 	ld a, (boss__5_scylla_arms_hp + 1)  ; front arm
 	or a
 	jr z, update_boss5_behavior_5_state_1_check_arm_attack_not_front
@@ -600,10 +623,10 @@ update_boss5_behavior_5_state_1_check_arm_attack_maybe_front:
 	ld c, a
 	ld a, (player_x + 1)
 	cp c
-	jr c, update_boss5_behavior_5_state_1_check_arm_attack_not_front
+	jr c, update_boss5_behavior_5_state_1_check_arm_attack_not_front_up
 	add a, -12
 	cp c
-	jr nc, update_boss5_behavior_5_state_1_check_arm_attack_not_front
+	jr nc, update_boss5_behavior_5_state_1_check_arm_attack_not_front_up
 	; player is in position, chance of attacking:
 	call random_a
 	and #1f  ; lower chance for the front arm, as it has a wide area
@@ -614,6 +637,49 @@ update_boss5_behavior_5_state_1_check_arm_attack_maybe_front:
 	xor a
 	ld (boss__state_timer), a
 	ret
+update_boss5_behavior_5_state_1_check_arm_attack_not_front_up:
+	; check for a horizontal attack:
+	ld a, (boss__5_scylla_arms_state + 2)  ; front arm
+	or a
+	jr nz, update_boss5_behavior_5_state_1_check_arm_attack_maybe_right
+	; check if player is sufficiently to the left:
+	ld a, (boss__x)
+	cp 9
+	jr c, update_boss5_behavior_5_state_1_check_arm_attack_not_front  ; boss is too to the left
+	ld c, a
+	ld a, (player_x + 1)
+	cp c
+	jr nc, update_boss5_behavior_5_state_1_check_arm_attack_not_front  ; player is not on the left
+	; player is in position, chance of attacking:
+	call random_a
+	and #1f
+	jr nz, update_boss5_behavior_5_state_1_check_arm_attack_not_front
+	; front arm horizontal-left attack!!!
+	ld a, 10
+	ld (boss__state), a
+	xor a
+	ld (boss__state_timer), a
+	ret
+update_boss5_behavior_5_state_1_check_arm_attack_maybe_right:
+	; check if player is sufficiently to the right:
+	ld a, (boss__x)
+	cp 17
+	jr nc, update_boss5_behavior_5_state_1_check_arm_attack_not_front  ; boss is too to the right
+	ld c, a
+	ld a, (player_x + 1)
+	cp c
+	jr c, update_boss5_behavior_5_state_1_check_arm_attack_not_front  ; player is not on the left
+	; player is in position, chance of attacking:
+	call random_a
+	and #1f
+	jr nz, update_boss5_behavior_5_state_1_check_arm_attack_not_front
+	; front arm horizontal-right attack!!!
+	ld a, 14
+	ld (boss__state), a
+	xor a
+	ld (boss__state_timer), a
+	ret
+
 update_boss5_behavior_5_state_1_check_arm_attack_not_front:
 
 	; check for right-arm vertical attack:
@@ -733,6 +799,148 @@ update_boss5_behavior_5_state_9:
 	call update_boss5_scylla_control_forward_arm
 	call update_boss5_behavior_4_state_1_entry_point3  ; firing
 	jp update_boss5_behavior_5_state_5_entry_point
+
+
+update_boss5_behavior_5_state_10:
+update_boss5_behavior_5_state_14:
+	; front-arm left attack rising
+	call update_boss5_scylla_control_back_arms
+	call update_boss5_scylla_control_left_arm
+	call update_boss5_scylla_control_right_arm
+	call update_boss5_behavior_4_state_1_entry_point3  ; firing
+update_boss5_behavior_5_state_10_entry_point:
+	ld a, (boss__5_settings + BOSS_5_SCYLLA_DETTACHED_SPEED_MASK)
+	ld c, a
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	and c
+	ret nz
+	ld a, (boss__5_scylla_arms_attack_state)
+	cp 3
+	jr nz, update_boss5_behavior_5_state_10_continue
+	ld hl, boss__state
+	inc (hl)
+	xor a
+	ld (boss__state_timer), a
+	jp update_boss5_draw_scylla
+update_boss5_behavior_5_state_10_continue:
+	inc a
+	ld (boss__5_scylla_arms_attack_state), a
+	jp update_boss5_draw_scylla
+
+update_boss5_behavior_5_state_11:
+	call update_boss5_scylla_control_back_arms
+	call update_boss5_scylla_control_left_arm
+	call update_boss5_scylla_control_right_arm
+	call update_boss5_behavior_4_state_1_entry_point3  ; firing	
+	; front-arm left attack advancing horizontally
+	ld a, (boss__5_settings + BOSS_5_SCYLLA_DETTACHED_SPEED_MASK)
+	ld c, a
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	and c
+	ret nz
+	ld a, (boss__x)
+	sub 4
+	ld c, a  ; reach until the left wall
+	ld a, (boss__5_scylla_arms_attack_state2)
+	cp c
+	jr nz, update_boss5_behavior_5_state_11_continue
+	ld hl, boss__state
+	inc (hl)
+	xor a
+	ld (boss__state_timer), a
+	jp update_boss5_draw_scylla
+update_boss5_behavior_5_state_11_continue:
+	inc a
+	ld (boss__5_scylla_arms_attack_state2), a
+	jp update_boss5_draw_scylla
+
+update_boss5_behavior_5_state_12:
+update_boss5_behavior_5_state_16:
+	call update_boss5_scylla_control_back_arms
+	call update_boss5_scylla_control_left_arm
+	call update_boss5_scylla_control_right_arm
+	call update_boss5_behavior_4_state_1_entry_point3  ; firing	
+	; front-arm left attack reeling-back horizontally
+	ld a, (boss__5_settings + BOSS_5_SCYLLA_DETTACHED_SPEED_MASK)
+	ld c, a
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	and c
+	ret nz
+	ld a, (boss__5_scylla_arms_attack_state2)
+	or a
+	jr nz, update_boss5_behavior_5_state_12_continue
+	ld hl, boss__state
+	inc (hl)
+	xor a
+	ld (boss__state_timer), a
+	ret
+update_boss5_behavior_5_state_12_continue:
+	dec a
+	ld (boss__5_scylla_arms_attack_state2), a
+	jp update_boss5_draw_scylla
+
+update_boss5_behavior_5_state_13:
+update_boss5_behavior_5_state_17:
+	call update_boss5_scylla_control_back_arms
+	call update_boss5_scylla_control_left_arm
+	call update_boss5_scylla_control_right_arm
+	call update_boss5_behavior_4_state_1_entry_point3  ; firing	
+	; front-arm left attack lowering
+	ld a, (boss__5_settings + BOSS_5_SCYLLA_DETTACHED_SPEED_MASK)
+	ld c, a
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	and c
+	ret nz
+	ld a, (boss__5_scylla_arms_attack_state)
+	or a
+	jr nz, update_boss5_behavior_5_state_13_continue
+	xor a
+	ld (boss__state), a
+	ld (boss__state_timer), a
+	ret
+update_boss5_behavior_5_state_13_continue:
+	dec a
+	ld (boss__5_scylla_arms_attack_state), a
+	jp update_boss5_draw_scylla
+
+
+update_boss5_behavior_5_state_15:
+	call update_boss5_scylla_control_back_arms
+	call update_boss5_scylla_control_left_arm
+	call update_boss5_scylla_control_right_arm
+	call update_boss5_behavior_4_state_1_entry_point3  ; firing	
+	; front-arm right attack advancing horizontally
+	ld a, (boss__5_settings + BOSS_5_SCYLLA_DETTACHED_SPEED_MASK)
+	ld c, a
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	and c
+	ret nz
+	ld a, (boss__x)
+	sub 22
+	neg
+	ld c, a  ; reach until the right wall
+	ld a, (boss__5_scylla_arms_attack_state2)
+	cp c
+	jr nz, update_boss5_behavior_5_state_15_continue
+	ld hl, boss__state
+	inc (hl)
+	xor a
+	ld (boss__state_timer), a
+	ret
+update_boss5_behavior_5_state_15_continue:
+	inc a
+	ld (boss__5_scylla_arms_attack_state2), a
+	jp update_boss5_draw_scylla
 
 
 ;-----------------------------------------------
@@ -904,6 +1112,21 @@ update_boss5_draw_scylla_clear_column_loop:
 	jr nz, update_boss5_draw_scylla_clear_column_loop
 	xor a
 	ld (boss__5_scylla_arms_attack_clear), a
+	ld a, (boss__5_scylla_arms_attack_clear2)
+	or a
+	jr z, update_boss5_draw_scylla_clear_done
+	ld c, 0
+	ld b, a
+	call get_room_tile_ptr
+	ld e, l
+	ld d, h
+	ld bc, 64*24
+	add hl, bc
+	ld bc, 32
+	ldir
+	xor a
+	ld (boss__5_scylla_arms_attack_clear), a	
+
 update_boss5_draw_scylla_clear_done:
 
 	ld bc, (boss__x)
@@ -1056,7 +1279,7 @@ update_boss5_draw_scylla_front_arm_done:
 		; draw arm attack:
 		ld a, (boss__5_scylla_arms_attack_state)
 		or a
-		jr z, update_boss5_draw_scylla_arm_attack_done
+		jp z, update_boss5_draw_scylla_arm_attack_done
 		; we have an extending arm attack, draw it:
 		ld a, (boss__state)
 		cp 6  ; left-arm
@@ -1065,13 +1288,16 @@ update_boss5_draw_scylla_front_arm_done:
 		jr c, update_boss5_draw_scylla_arm_attack_front_arm  ; states: 6, 7
 		cp 10  ; right-arm
 		jr c, update_boss5_draw_scylla_arm_attack_right_arm  ; states: 8, 9
-		; ...
-		jr update_boss5_draw_scylla_arm_attack_done
+		cp 14  ; front-arm left attack
+		jp c, update_boss5_draw_scylla_arm_attack_front_arm_h_left  ; states: 10, 11, 12, 13
+		cp 18  ; front-arm right attack
+		jp c, update_boss5_draw_scylla_arm_attack_front_arm_h_right  ; states: 14, 15, 16, 17
+		jp update_boss5_draw_scylla_arm_attack_done
 
 update_boss5_draw_scylla_arm_attack_left_arm:
 		ld a, (boss__5_scylla_arms_hp)  ; left arm
 		or a
-		jr z, update_boss5_draw_scylla_arm_attack_done
+		jp z, update_boss5_draw_scylla_arm_attack_done
 
 		; draw tip:
 		; determine x, y position: boss x, y + (-2, -5)
@@ -1107,12 +1333,12 @@ update_boss5_draw_scylla_arm_attack_left_arm_loop:
 		jr update_boss5_draw_scylla_arm_attack_left_arm_loop
 update_boss5_draw_scylla_arm_attack_left_arm_loop_done:
 		ld (hl), BOSS_5_SCYLLA_THREAD_V_TILE_START
-		jr update_boss5_draw_scylla_arm_attack_done
+		jp update_boss5_draw_scylla_arm_attack_done
 
 update_boss5_draw_scylla_arm_attack_front_arm:
 		ld a, (boss__5_scylla_arms_hp + 1)  ; front arm
 		or a
-		jr z, update_boss5_draw_scylla_arm_attack_done
+		jp z, update_boss5_draw_scylla_arm_attack_done
 
 		; draw tip:
 		; determine x, y position: boss x, y + (-2, -5)
@@ -1137,7 +1363,7 @@ update_boss5_draw_scylla_arm_attack_front_arm_x_set:
 update_boss5_draw_scylla_arm_attack_right_arm:
 		ld a, (boss__5_scylla_arms_hp + 2)  ; right arm
 		or a
-		jr z, update_boss5_draw_scylla_arm_attack_done
+		jp z, update_boss5_draw_scylla_arm_attack_done
 
 		; draw tip:
 		; determine x, y position: boss x, y + (-2, -5)
@@ -1146,6 +1372,169 @@ update_boss5_draw_scylla_arm_attack_right_arm:
 		add a, 7
 		ld c, a
 		jr update_boss5_draw_scylla_arm_attack_left_arm_entry_point
+
+update_boss5_draw_scylla_arm_attack_front_arm_h_left:
+		; front arm, horizontal attack
+		ld a, (boss__5_scylla_arms_hp + 1)  ; front arm
+		or a
+		jp z, update_boss5_draw_scylla_arm_attack_done
+
+		ld a, (boss__state)
+		cp 11
+		jr z, update_boss5_draw_scylla_arm_attack_front_arm_h_left_bent
+		cp 12
+		jr z, update_boss5_draw_scylla_arm_attack_front_arm_h_left_bent
+		; states 10, 13:
+		ld bc, (boss__x)
+		dec c
+		ld a, (boss__5_scylla_arms_attack_state)
+		neg
+		add a, b
+		add a, -4
+		ld b, a
+update_boss5_draw_scylla_arm_attack_front_arm_h_left_entry_point:
+		ld a, c
+		ld (boss__5_scylla_arms_attack_clear), a  ; which column to clear
+		call get_room_tile_ptr
+		ex de, hl  ; hl = ptr where the boss is to be drawn	
+		ld ix, boss5_frame_scylla_dettached_big_tip_up
+		ld c, BOSS_PAGE
+		ld hl, draw_boss_frame_1_without_clearing_ix
+		push de
+			call call_hl_in_page_c_8000
+		pop hl
+		ld bc, 32*4
+		add hl, bc
+		ld a, (boss__5_scylla_arms_attack_state)
+		ld bc, 32
+update_boss5_draw_scylla_arm_attack_front_arm_h_left_loop:
+		ld (hl), BOSS_5_SCYLLA_THREAD_V_TILE
+		dec a
+		jr z, update_boss5_draw_scylla_arm_attack_front_arm_h_left_loop_done
+		add hl, bc
+		jr update_boss5_draw_scylla_arm_attack_front_arm_h_left_loop
+update_boss5_draw_scylla_arm_attack_front_arm_h_left_loop_done:
+		ld (hl), BOSS_5_SCYLLA_THREAD_V_WIDE_TILE_START
+		jp update_boss5_draw_scylla_arm_attack_done
+
+update_boss5_draw_scylla_arm_attack_front_arm_h_left_bent:
+		; states 11, 12:
+		; compute coordinate of the tip:
+		ld bc, (boss__x)
+		dec c
+		ld a, c
+		ld (boss__5_scylla_arms_attack_clear), a  ; which column to clear
+		ld a, (boss__5_scylla_arms_attack_state2)
+		neg
+		add a, c
+		add a, -3
+		ld c, a
+		dec b
+		dec b
+		dec b
+		dec b
+		ld a, b
+		ld (boss__5_scylla_arms_attack_clear2), a  ; which row to clear
+		call get_room_tile_ptr
+		ex de, hl  ; hl = ptr where the boss is to be drawn	
+		ld ix, boss5_frame_scylla_dettached_tip_left
+		ld c, BOSS_PAGE
+		ld hl, draw_boss_frame_1_without_clearing_ix
+		push de
+			call call_hl_in_page_c_8000
+		pop hl
+		inc hl
+		inc hl
+		inc hl
+		ld a, (boss__5_scylla_arms_attack_state2)
+		or a
+		jr z, update_boss5_draw_scylla_arm_attack_front_arm_h_left_bent_loop_done
+update_boss5_draw_scylla_arm_attack_front_arm_h_left_bent_loop:
+		ld (hl), BOSS_5_SCYLLA_THREAD_H_TILE
+		dec a
+		inc hl
+		jr z, update_boss5_draw_scylla_arm_attack_front_arm_h_left_bent_loop_done
+		jr update_boss5_draw_scylla_arm_attack_front_arm_h_left_bent_loop
+update_boss5_draw_scylla_arm_attack_front_arm_h_left_bent_loop_done:
+		ld (hl), BOSS_5_SCYLLA_THREAD_L_HINGE
+		ld bc, 32
+		add hl, bc
+		ld (hl), BOSS_5_SCYLLA_THREAD_V_TILE
+		add hl, bc
+		ld (hl), BOSS_5_SCYLLA_THREAD_V_TILE
+		add hl, bc
+		ld (hl), BOSS_5_SCYLLA_THREAD_V_WIDE_TILE_START
+		jr update_boss5_draw_scylla_arm_attack_done
+
+update_boss5_draw_scylla_arm_attack_front_arm_h_right:
+		; front arm, horizontal attack right
+		ld a, (boss__5_scylla_arms_hp + 1)  ; front arm
+		or a
+		jp z, update_boss5_draw_scylla_arm_attack_done
+
+		ld a, (boss__state)
+		cp 15
+		jr z, update_boss5_draw_scylla_arm_attack_front_arm_h_right_bent
+		cp 16
+		jr z, update_boss5_draw_scylla_arm_attack_front_arm_h_right_bent
+		; states 14, 17:
+		ld bc, (boss__x)
+		ld a, 6
+		add a, c
+		ld c, a
+		ld a, (boss__5_scylla_arms_attack_state)
+		neg
+		add a, b
+		add a, -4
+		ld b, a
+		jp update_boss5_draw_scylla_arm_attack_front_arm_h_left_entry_point
+
+update_boss5_draw_scylla_arm_attack_front_arm_h_right_bent:
+		; states 15, 16:
+		; compute coordinate of the tip:
+		ld bc, (boss__x)
+		ld a, 6
+		add a, c
+		ld c, a
+		ld (boss__5_scylla_arms_attack_clear), a  ; which column to clear
+		ld a, (boss__5_scylla_arms_attack_state2)
+		add a, c
+		inc a
+		ld c, a
+		dec b
+		dec b
+		dec b
+		dec b
+		ld a, b
+		ld (boss__5_scylla_arms_attack_clear2), a  ; which row to clear
+		call get_room_tile_ptr
+		ex de, hl  ; hl = ptr where the boss is to be drawn	
+		ld ix, boss5_frame_scylla_dettached_tip_right
+		ld c, BOSS_PAGE
+		ld hl, draw_boss_frame_1_without_clearing_ix
+		push de
+			call call_hl_in_page_c_8000
+		pop hl
+		dec hl
+		ld a, (boss__5_scylla_arms_attack_state2)
+		or a
+		jr z, update_boss5_draw_scylla_arm_attack_front_arm_h_right_bent_loop_done
+update_boss5_draw_scylla_arm_attack_front_arm_h_right_bent_loop:
+		ld (hl), BOSS_5_SCYLLA_THREAD_H_TILE
+		dec a
+		dec hl
+		jr z, update_boss5_draw_scylla_arm_attack_front_arm_h_right_bent_loop_done
+		jr update_boss5_draw_scylla_arm_attack_front_arm_h_right_bent_loop
+update_boss5_draw_scylla_arm_attack_front_arm_h_right_bent_loop_done:
+		ld (hl), BOSS_5_SCYLLA_THREAD_R_HINGE
+		ld bc, 32
+		add hl, bc
+		ld (hl), BOSS_5_SCYLLA_THREAD_V_TILE
+		add hl, bc
+		ld (hl), BOSS_5_SCYLLA_THREAD_V_TILE
+		add hl, bc
+		ld (hl), BOSS_5_SCYLLA_THREAD_V_WIDE_TILE_START
+		; jr update_boss5_draw_scylla_arm_attack_done
 
 update_boss5_draw_scylla_arm_attack_done:
 	pop hl

@@ -266,6 +266,9 @@ BOSS5_NAMETABLE_SCYLLA_LB_ARM_2: equ BOSS5_NAMETABLE_SCYLLA_LB_ARM_1 + 6*5  ; 3*
 BOSS5_NAMETABLE_SCYLLA_LB_ARM_3: equ BOSS5_NAMETABLE_SCYLLA_LB_ARM_2 + 3*6  ; 2*10
 
 BOSS5_NAMETABLE_SCYLLA_DETTACHED_TIP_UP: equ BOSS5_NAMETABLE_SCYLLA_LB_ARM_3 + 2*10  ; 1*3
+BOSS5_NAMETABLE_SCYLLA_DETTACHED_BIG_TIP_UP: equ BOSS5_NAMETABLE_SCYLLA_DETTACHED_TIP_UP + 1*3  ; 1*4
+BOSS5_NAMETABLE_SCYLLA_DETTACHED_TIP_RIGHT: equ BOSS5_NAMETABLE_SCYLLA_DETTACHED_BIG_TIP_UP + 1*4  ; 3*1
+BOSS5_NAMETABLE_SCYLLA_DETTACHED_TIP_LEFT: equ BOSS5_NAMETABLE_SCYLLA_DETTACHED_TIP_RIGHT + 3*1  ; 3*1
 
 
 boss5_frame_scylla_body_0:
@@ -484,4 +487,21 @@ boss5_frame_scylla_dettached_tip_up:
 	dw #0301, BOSS5_NAMETABLE_SCYLLA_DETTACHED_TIP_UP  ; dimensions and nametable
 	dw 0, #0301  ; boss__clear_bbox
 
+boss5_frame_scylla_dettached_big_tip_up:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0401, BOSS5_NAMETABLE_SCYLLA_DETTACHED_BIG_TIP_UP  ; dimensions and nametable
+	dw 0, #0401  ; boss__clear_bbox
+
+boss5_frame_scylla_dettached_tip_left:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0103, BOSS5_NAMETABLE_SCYLLA_DETTACHED_TIP_LEFT  ; dimensions and nametable
+	dw 0, #0103  ; boss__clear_bbox
+
+boss5_frame_scylla_dettached_tip_right:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0103, BOSS5_NAMETABLE_SCYLLA_DETTACHED_TIP_RIGHT  ; dimensions and nametable
+	dw 0, #0103  ; boss__clear_bbox
 

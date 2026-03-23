@@ -1,21 +1,6 @@
 to do:
-***- Scylla:
-  ***- detect side dettachaable tentacle attack for front arm (left or right): go to states 10/11/12/13 (left) or 14/15/16/17 (right)
-    ***- player has to be to the left, and scylla sufficiently to the right (e.g. x > 10)
-  ***- state 10: dettach a 4-tile top
-    ***- create nametable for the 4-tile top
-    ***- constant for cable start (wider version)
-    ***- draw 4-tile top + cable
-    ***- clear using the basic column mechanism
-  ***- state 11:
-    ***- draw left dettached tip + hinge + horizontal cable + vertical cable
-      ***- nametable for 3-tile tips (left and right)
-      ***- constants for horizontal cable and hinges (left and right)
-      ***- draw it
-      ***- add a row mechanism for clearing, and combine both to clear this (just one row)
-  ***- states 12/13 just reverse the same thing
-  ***- do it for the right-side
-  ***- being able to kill scylla (behavior 6)
+***- BUG: when opening the boss 5 door, often the trap triggers afterwards (I think I am not clearning the keyboard clicks correctly)
+***- being able to kill scylla (behavior 6)
 ***- if we had both charybdis and scylla, after killing charybdis, scylla should appear: the floor where charybdis was standing turns into water, for scylla to rise (behavior 0, state 8?)
 ***- being able to kill the boss and collect the reward:
   ***- power stone spawns where the switch was
