@@ -1,7 +1,4 @@
 to do:
-***- BUG: when opening the boss 5 door, often the trap triggers afterwards (I think I am not clearning the keyboard clicks correctly)
-***- being able to kill scylla (behavior 6)
-***- if we had both charybdis and scylla, after killing charybdis, scylla should appear: the floor where charybdis was standing turns into water, for scylla to rise (behavior 0, state 8?)
 ***- being able to kill the boss and collect the reward:
   ***- power stone spawns where the switch was
   ***- if you only kill 1, there will be an eye (of the one you killed)
@@ -9,13 +6,13 @@ to do:
   ***- think of a puzzle where you actually need both eyes to open something
 ***- add boss name to the stats for game over screen (one or both)
 
-- music: intro, letters/map, tablets/puzzles, game over, pyramid, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)
-  - story: I like the original song: keep the same style and compose a variation
-  - boss music (boss music increases in speed as health goes down: 50%, 25%)
 - confrontation with the aliens after activating the calendar stone: are aliens sprites or tiles? (a mix, small aliens with sprites, and large ones with tiles)
 - first ending sequence (udpate "stats__ending"): Elaine drops from the ceiling on a rope and rescues you. The calendar stone machine activates and creates a defensive barrier around earth, the alien armada that was coming turns back, but promises revenge.
   - add "no miss" achievement for this: if there is no damage (Track it)
   - clue to check the rom in Maya in the ending credits, maybe something like "Luku ata de romu failu" (or some parts with actual verbs)
+- music: intro, letters/map, tablets/puzzles, game over, pyramid, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)
+  - story: I like the original song: keep the same style and compose a variation
+  - boss music (boss music increases in speed as health goes down: 50%, 25%)
 - test to see if joystick works (can I play in the Nintendo Switch?)
 
 - random seed puzzle (all happens without going to moon/mars):

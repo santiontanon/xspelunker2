@@ -946,7 +946,9 @@ update_boss5_behavior_3:
 	or a
 	jr z, update_boss5_behavior_3_state_0  ; explosions
 	dec a
-	jp z, update_boss5_behavior_3_state_1  ; boss dead, spawn next boss, or rewards
+	jp z, update_boss5_behavior_3_state_1  ; boss dead, spawn next boss
+	dec a
+	jp z, update_boss5_behavior_3_state_2  ; scylla rising
 	ret
 
 update_boss5_behavior_3_state_0:
@@ -987,7 +989,7 @@ update_boss5_behavior_3_state_0_continue:
 	ld c, e
 	call spawn_explosion	
 
-	ld de, (boss__x2)
+	ld de, (boss__x)
 	ld c, 14
 	call random_modulo
 	add a, e
@@ -1014,9 +1016,86 @@ update_boss5_behavior_3_state_0_done:
 
 
 update_boss5_behavior_3_state_1:
-	; ...
+	; do we need to spawn scylla?
+	ld a, (boss__5_variant)
+	cp 3
+	jr z, update_boss5_behavior_3_state_1_spawn_scylla
+	ld a, 6
+	ld (boss__behavior), a
+	ret
+update_boss5_behavior_3_state_1_spawn_scylla:
+	; clear the wall underneath
+	ld hl, current_room__tile_map + 64*24 + 21*32 + 2
+	ld bc, 28-1
+	ld a, 129  ; water
+	call clear_memory_a
+	ld hl, current_room__tile_map + 64*24 + 22*32 + 2
+	ld bc, 28-1
+	ld a, 129  ; water
+	call clear_memory_a
+	ld hl, current_room__tile_map + 64*24 + 23*32 + 2
+	ld bc, 28-1
+	ld a, 129  ; water
+	call clear_memory_a
+	ld de, current_room__tile_map
+	ld hl, current_room__tile_map + 64*24
+	ld bc, 32*24
+	ldir
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)	
+	call update_boss5_behavior_init_scylla
+	ld bc, #1e0d  ; (13, 30), initial coordinates of scylla (with the island appearing from below too)
+	ld (boss__x), bc
+
+	; update the collision table:
+	ld hl, tile_collision_types_boss5_island
+	ld (current_room__collision_ptr), hl
+	ld a, (current_room__collision_ptr_page)
+	ld de, current_room__collision_table
+	ld bc, 256
+	call ldir_from_page_a
+
+	ld a, 2
+	ld (boss__state), a
 	ret
 
+update_boss5_behavior_3_state_2:
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	and #0f
+	ret nz
+	; scylla rising:
+	ld hl, boss__y
+	dec (hl)
+	call update_boss5_draw_scylla
+	; push the player up if on the island:
+	call boss5_maybe_push_player_up
+	ld a, (boss__y)
+	cp 16
+	ret nz
+
+	; Bring boss name (using sprites)
+	ld ix, boss5_name_initial_sprite_attributes_scylla
+	push ix
+		ld de, boss5_name_y_table
+		ld hl, update_boss_behavior_bring_name_down_ix
+		ld c, BOSS_PAGE
+		call call_hl_in_page_c_8000
+		ld b, 100
+		call wait_b_halts_skippable
+	pop ix
+	; Remove boss name (using sprites)
+	ld de, boss5_name_y_table + 23
+	ld hl, update_boss_behavior_bring_name_up_ix
+	ld c, BOSS_PAGE
+	call call_hl_in_page_c_8000
+	ld a, 4
+	ld (boss__behavior), a
+	xor a
+	ld (boss__state), a
+	ld (boss__state_timer), a
+	ret
 
 
 ;-----------------------------------------------

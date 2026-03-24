@@ -1951,9 +1951,12 @@ object_interaction_function_open_boss_lock_continue2:
 	ld hl, SFX_explosion
 	call play_SFX_with_high_priority
 
+	xor a
+	ld (keyboard_clicks), a
+
 	ld hl, redraw_flags
 	ld (hl), #ff
-	call room_undraw_tile_objects
+	call room_undraw_tile_objects	
 	jp room_render_tile_objects  ; no door
 
 

@@ -18,14 +18,14 @@ update_boss5_behavior_continue:
 	dec a
 	jp z, update_boss5_behavior_2  ; charybdis vat/brain on top
 	dec a
-	jp z, update_boss5_behavior_3  ; charybdis dying
+	jp z, update_boss5_behavior_3  ; charybdis dying + maybe spawn scylla
 
 	dec a
 	jp z, update_boss5_behavior_4  ; scylla with island on top
 	dec a
 	jp z, update_boss5_behavior_5  ; scylla vat/brain on top
 	dec a
-	jp z, update_boss5_behavior_6  ; scylla dying
+	jp z, update_boss5_behavior_6  ; scylla dying + spawn rewards
 	ret
 
 
@@ -206,77 +206,7 @@ update_boss5_behavior_0_state_3_charybdis_continue:
 
 	jp update_boss5_behavior_0_state_3_done
 update_boss5_behavior_0_state_3_scylla
-	; switch to the scylla tileset:
-	ld hl, 0
-	ld (large_object_to_upload_to_vdp), hl
-	ld hl, boss_5_tiles_scylla1_zx0
-	ld (current_room__tileset_ptr), hl
-	ld a, BOSS_5_PAGE
-	ld (current_room__tileset_page), a
-	ld c, BOSS_5_PAGE
-	call setup_game_tiles_only_biome
-	ld bc, #180d  ; (13, 24), initial coordinates of scylla
-	ld (boss__x), bc
-	ld a, 1
-	ld (boss__5_current_variant), a  ; scylla
-	ld hl, 0
-	ld (boss__clear_bbox_1 + 2), hl
-	ld hl, current_room__tile_map + 23*32 + 12  ; clear the bottom of the island
-	ld (boss__clear_bbox_2), hl
-	ld hl, #0108
-	ld (boss__clear_bbox_2 + 2), hl
-
-	ld a, (current_world__difficulty)
-	ld hl, boss5_scylla_difficulty_setting__easy
-	or a
-	jr z, update_boss5_behavior_0_state_3_scylla_continue
-	ld hl, boss5_scylla_difficulty_setting__normal
-	dec a
-	jr z, update_boss5_behavior_0_state_3_scylla_continue
-	dec a
-	ld hl, boss5_scylla_difficulty_setting__hard
-	jr z, update_boss5_behavior_0_state_3_scylla_continue
-	ld hl, boss5_scylla_difficulty_setting__hardest
-update_boss5_behavior_0_state_3_scylla_continue:
-	ld de, boss__5_settings
-	ld bc, boss5_scylla_difficulty_setting__normal - boss5_scylla_difficulty_setting__easy
-	ldir	
-
-	ld a, (boss__5_settings + BOSS_5_SCYLLA_HP_OFFSET + 1)  ; vat HP
-	ld h, 0
-	ld l, a
-	ld (boss__hp), hl
-	ld hl, player_weapon_hitbox_check_boss__boss5_scylla_hit
-	ld (boss__hit_fn), hl
-	ld a, BOSS_5_PAGE
-	ld (boss__hit_fn_page), a
-	xor a
-	ld (boss__hit_timer), a
-	ld (boss__5_top_state), a
-	ld (boss__5_scylla_arms_inertia), a
-	ld (boss__5_scylla_arms_inertia + 1), a
-	ld (boss__5_scylla_arms_inertia + 2), a
-	ld (boss__5_scylla_arms_state), a
-	ld (boss__5_scylla_arms_attack_state), a
-	ld (boss__5_scylla_arms_attack_state2), a
-	ld (boss__5_scylla_arms_attack_clear), a
-	ld (boss__5_scylla_arms_attack_clear2), a
-	inc a
-	ld (boss__5_scylla_body_state), a  ; 1: eyes closed
-	inc a
-	ld (boss__5_scylla_arms_state + 1), a
-	ld a, 5
-	ld (boss__5_scylla_arms_state + 2), a
-	dec a
-	dec a
-	ld (boss__5_scylla_arms_state + 3), a
-	ld (boss__5_scylla_arms_state + 4), a
-
-	ld a, (boss__5_settings + BOSS_5_SCYLLA_TENTACLE_HP_OFFSET)
-	ld (boss__5_scylla_arms_hp), a
-	ld (boss__5_scylla_arms_hp + 1), a
-	ld (boss__5_scylla_arms_hp + 2), a
-	; ...
+	call update_boss5_behavior_init_scylla
 
 update_boss5_behavior_0_state_3_done:
 	ld a, 4
@@ -613,6 +543,81 @@ update_boss5_behavior_0_state_7_continue2:
 
 	ld hl, redraw_flags
 	set ROOM_REDRAW_FLAG_BIT, (hl)
+	ret
+
+
+;-----------------------------------------------
+update_boss5_behavior_init_scylla:
+	; switch to the scylla tileset:
+	ld hl, 0
+	ld (large_object_to_upload_to_vdp), hl
+	ld hl, boss_5_tiles_scylla1_zx0
+	ld (current_room__tileset_ptr), hl
+	ld a, BOSS_5_PAGE
+	ld (current_room__tileset_page), a
+	ld c, BOSS_5_PAGE
+	call setup_game_tiles_only_biome
+	ld bc, #180d  ; (13, 24), initial coordinates of scylla
+	ld (boss__x), bc
+	ld a, 1
+	ld (boss__5_current_variant), a  ; scylla
+	ld hl, 0
+	ld (boss__clear_bbox_1 + 2), hl
+	ld hl, current_room__tile_map + 23*32 + 12  ; clear the bottom of the island
+	ld (boss__clear_bbox_2), hl
+	ld hl, #0108
+	ld (boss__clear_bbox_2 + 2), hl
+
+	ld a, (current_world__difficulty)
+	ld hl, boss5_scylla_difficulty_setting__easy
+	or a
+	jr z, update_boss5_behavior_init_scylla_continue
+	ld hl, boss5_scylla_difficulty_setting__normal
+	dec a
+	jr z, update_boss5_behavior_init_scylla_continue
+	dec a
+	ld hl, boss5_scylla_difficulty_setting__hard
+	jr z, update_boss5_behavior_init_scylla_continue
+	ld hl, boss5_scylla_difficulty_setting__hardest
+update_boss5_behavior_init_scylla_continue:
+	ld de, boss__5_settings
+	ld bc, boss5_scylla_difficulty_setting__normal - boss5_scylla_difficulty_setting__easy
+	ldir	
+
+	ld a, (boss__5_settings + BOSS_5_SCYLLA_HP_OFFSET + 1)  ; vat HP
+	ld h, 0
+	ld l, a
+	ld (boss__hp), hl
+	ld hl, player_weapon_hitbox_check_boss__boss5_scylla_hit
+	ld (boss__hit_fn), hl
+	ld a, BOSS_5_PAGE
+	ld (boss__hit_fn_page), a
+	xor a
+	ld (boss__hit_timer), a
+	ld (boss__5_top_state), a
+	ld (boss__5_scylla_arms_inertia), a
+	ld (boss__5_scylla_arms_inertia + 1), a
+	ld (boss__5_scylla_arms_inertia + 2), a
+	ld (boss__5_scylla_arms_state), a
+	ld (boss__5_scylla_arms_attack_state), a
+	ld (boss__5_scylla_arms_attack_state2), a
+	ld (boss__5_scylla_arms_attack_clear), a
+	ld (boss__5_scylla_arms_attack_clear2), a
+	inc a
+	ld (boss__5_scylla_body_state), a  ; 1: eyes closed
+	inc a
+	ld (boss__5_scylla_arms_state + 1), a
+	ld a, 5
+	ld (boss__5_scylla_arms_state + 2), a
+	dec a
+	dec a
+	ld (boss__5_scylla_arms_state + 3), a
+	ld (boss__5_scylla_arms_state + 4), a
+
+	ld a, (boss__5_settings + BOSS_5_SCYLLA_TENTACLE_HP_OFFSET)
+	ld (boss__5_scylla_arms_hp), a
+	ld (boss__5_scylla_arms_hp + 1), a
+	ld (boss__5_scylla_arms_hp + 2), a
 	ret
 
 

@@ -113,39 +113,7 @@ update_boss5_behavior_4_state_1_entry_point2:  ; arm control and firing
 	call update_boss5_scylla_control_forward_arm
 update_boss5_behavior_4_state_1_entry_point3:  ; firing
 	call update_boss5_scylla_maybe_fire_eye_bullet
-
-	; blink/mouth:
-	ld a, (boss__state_timer)
-	and #0f
-	jr nz, update_boss5_behavior_4_state_1_continue
-	ld a, (boss__5_scylla_body_state)
-	cp 2  ; mouth open already?
-	jr z, update_boss5_behavior_4_state_1_ignore_mouth  ; if mouth was open, we will close it next time, so, just ignore
-	; chance of opening the mouth
-	ld a, (boss__5_settings + BOSS_5_SCYLLA_BUBBLE_MASK)
-	ld c, a
-	call random_a
-	and c
-	jr nz, update_boss5_behavior_4_state_1_ignore_mouth
-	; open mouth
-	call update_boss5_scylla_fire_mouth_bubbles
-	ld c, 2
-	jr update_boss5_behavior_4_state_1_eyes_open
-update_boss5_behavior_4_state_1_ignore_mouth:
-	call random_a
-	and #03
-	ld c, 0
-	jr nz, update_boss5_behavior_4_state_1_eyes_open
-	inc c
-update_boss5_behavior_4_state_1_eyes_open:
-	ld a, (boss__5_scylla_body_state)
-	cp c
-	jr z, update_boss5_behavior_4_state_1_continue
-	ld a, c
-	ld (boss__5_scylla_body_state), a
-	ld a, 1
-	ld (boss__5_needs_redraw), a
-update_boss5_behavior_4_state_1_continue:
+	call update_boss5_scylla_eye_mouth_control
 
 	ld a, (boss__5_needs_redraw)
 	or a
@@ -381,6 +349,42 @@ update_boss5_behavior_4_state_7_done:
 	; if the boss is showing the "vat", switch to behavior 5
 	ld a, 5
 	ld (boss__behavior), a
+	ret
+
+
+;-----------------------------------------------
+update_boss5_scylla_eye_mouth_control:
+	; blink/mouth:
+	ld a, (boss__state_timer)
+	and #0f
+	ret nz
+	ld a, (boss__5_scylla_body_state)
+	cp 2  ; mouth open already?
+	jr z, update_boss5_scylla_eye_mouth_control_ignore_mouth  ; if mouth was open, we will close it next time, so, just ignore
+	; chance of opening the mouth
+	ld a, (boss__5_settings + BOSS_5_SCYLLA_BUBBLE_MASK)
+	ld c, a
+	call random_a
+	and c
+	jr nz, update_boss5_scylla_eye_mouth_control_ignore_mouth
+	; open mouth
+	call update_boss5_scylla_fire_mouth_bubbles
+	ld c, 2
+	jr update_boss5_scylla_eye_mouth_control_eyes_open
+update_boss5_scylla_eye_mouth_control_ignore_mouth:
+	call random_a
+	and #03
+	ld c, 0
+	jr nz, update_boss5_scylla_eye_mouth_control_eyes_open
+	inc c
+update_boss5_scylla_eye_mouth_control_eyes_open:
+	ld a, (boss__5_scylla_body_state)
+	cp c
+	ret z
+	ld a, c
+	ld (boss__5_scylla_body_state), a
+	ld a, 1
+	ld (boss__5_needs_redraw), a
 	ret
 
 
@@ -724,7 +728,8 @@ update_boss5_behavior_5_state_4:
 	call update_boss5_scylla_control_back_arms
 	call update_boss5_scylla_control_right_arm
 	call update_boss5_scylla_control_forward_arm
-	call update_boss5_behavior_4_state_1_entry_point3  ; firing
+	call update_boss5_scylla_maybe_fire_eye_bullet
+	call update_boss5_scylla_eye_mouth_control
 update_boss5_behavior_5_state_4_entry_point:
 	ld a, (boss__5_settings + BOSS_5_SCYLLA_DETTACHED_SPEED_MASK)
 	ld c, a
@@ -751,7 +756,8 @@ update_boss5_behavior_5_state_5:
 	call update_boss5_scylla_control_back_arms
 	call update_boss5_scylla_control_right_arm
 	call update_boss5_scylla_control_forward_arm
-	call update_boss5_behavior_4_state_1_entry_point3  ; firing
+	call update_boss5_scylla_maybe_fire_eye_bullet
+	call update_boss5_scylla_eye_mouth_control
 update_boss5_behavior_5_state_5_entry_point:
 	ld a, (boss__5_settings + BOSS_5_SCYLLA_DETTACHED_SPEED_MASK)
 	ld c, a
@@ -776,28 +782,32 @@ update_boss5_behavior_5_state_6:
 	call update_boss5_scylla_control_back_arms
 	call update_boss5_scylla_control_left_arm
 	call update_boss5_scylla_control_right_arm
-	call update_boss5_behavior_4_state_1_entry_point3  ; firing
+	call update_boss5_scylla_maybe_fire_eye_bullet
+	call update_boss5_scylla_eye_mouth_control
 	jp update_boss5_behavior_5_state_4_entry_point
 
 update_boss5_behavior_5_state_7:
 	call update_boss5_scylla_control_back_arms
 	call update_boss5_scylla_control_left_arm
 	call update_boss5_scylla_control_right_arm
-	call update_boss5_behavior_4_state_1_entry_point3  ; firing
+	call update_boss5_scylla_maybe_fire_eye_bullet
+	call update_boss5_scylla_eye_mouth_control
 	jp update_boss5_behavior_5_state_5_entry_point	
 
 update_boss5_behavior_5_state_8:
 	call update_boss5_scylla_control_left_arm
 	call update_boss5_scylla_control_back_arms
 	call update_boss5_scylla_control_forward_arm
-	call update_boss5_behavior_4_state_1_entry_point3  ; firing
+	call update_boss5_scylla_maybe_fire_eye_bullet
+	call update_boss5_scylla_eye_mouth_control
 	jp update_boss5_behavior_5_state_4_entry_point
 
 update_boss5_behavior_5_state_9:
 	call update_boss5_scylla_control_left_arm
 	call update_boss5_scylla_control_back_arms
 	call update_boss5_scylla_control_forward_arm
-	call update_boss5_behavior_4_state_1_entry_point3  ; firing
+	call update_boss5_scylla_maybe_fire_eye_bullet
+	call update_boss5_scylla_eye_mouth_control
 	jp update_boss5_behavior_5_state_5_entry_point
 
 
@@ -807,7 +817,8 @@ update_boss5_behavior_5_state_14:
 	call update_boss5_scylla_control_back_arms
 	call update_boss5_scylla_control_left_arm
 	call update_boss5_scylla_control_right_arm
-	call update_boss5_behavior_4_state_1_entry_point3  ; firing
+	call update_boss5_scylla_maybe_fire_eye_bullet
+	call update_boss5_scylla_eye_mouth_control
 update_boss5_behavior_5_state_10_entry_point:
 	ld a, (boss__5_settings + BOSS_5_SCYLLA_DETTACHED_SPEED_MASK)
 	ld c, a
@@ -833,7 +844,8 @@ update_boss5_behavior_5_state_11:
 	call update_boss5_scylla_control_back_arms
 	call update_boss5_scylla_control_left_arm
 	call update_boss5_scylla_control_right_arm
-	call update_boss5_behavior_4_state_1_entry_point3  ; firing	
+	call update_boss5_scylla_maybe_fire_eye_bullet
+	call update_boss5_scylla_eye_mouth_control
 	; front-arm left attack advancing horizontally
 	ld a, (boss__5_settings + BOSS_5_SCYLLA_DETTACHED_SPEED_MASK)
 	ld c, a
@@ -863,7 +875,8 @@ update_boss5_behavior_5_state_16:
 	call update_boss5_scylla_control_back_arms
 	call update_boss5_scylla_control_left_arm
 	call update_boss5_scylla_control_right_arm
-	call update_boss5_behavior_4_state_1_entry_point3  ; firing	
+	call update_boss5_scylla_maybe_fire_eye_bullet
+	call update_boss5_scylla_eye_mouth_control
 	; front-arm left attack reeling-back horizontally
 	ld a, (boss__5_settings + BOSS_5_SCYLLA_DETTACHED_SPEED_MASK)
 	ld c, a
@@ -890,7 +903,8 @@ update_boss5_behavior_5_state_17:
 	call update_boss5_scylla_control_back_arms
 	call update_boss5_scylla_control_left_arm
 	call update_boss5_scylla_control_right_arm
-	call update_boss5_behavior_4_state_1_entry_point3  ; firing	
+	call update_boss5_scylla_maybe_fire_eye_bullet
+	call update_boss5_scylla_eye_mouth_control
 	; front-arm left attack lowering
 	ld a, (boss__5_settings + BOSS_5_SCYLLA_DETTACHED_SPEED_MASK)
 	ld c, a
@@ -916,7 +930,8 @@ update_boss5_behavior_5_state_15:
 	call update_boss5_scylla_control_back_arms
 	call update_boss5_scylla_control_left_arm
 	call update_boss5_scylla_control_right_arm
-	call update_boss5_behavior_4_state_1_entry_point3  ; firing	
+	call update_boss5_scylla_maybe_fire_eye_bullet
+	call update_boss5_scylla_eye_mouth_control
 	; front-arm right attack advancing horizontally
 	ld a, (boss__5_settings + BOSS_5_SCYLLA_DETTACHED_SPEED_MASK)
 	ld c, a
@@ -946,6 +961,69 @@ update_boss5_behavior_5_state_15_continue:
 ;-----------------------------------------------
 ; Scylla dying
 update_boss5_behavior_6:
+	ld a, (boss__state)
+	or a
+	jr z, update_boss5_behavior_6_state_0  ; explosions
+	dec a
+	jp z, update_boss5_behavior_6_state_1  ; boss dead, spawn rewards
+	ret
+
+update_boss5_behavior_6_state_0:
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	or a
+	jr nz, update_boss5_behavior_6_state_0_continue
+	; first frame, remove any dettached attacks
+	ld (boss__5_scylla_arms_attack_state), a
+	ld (boss__5_scylla_arms_attack_state2), a
+update_boss5_behavior_6_state_0_continue:
+	cp 64
+	jr z, update_boss5_behavior_6_state_0_done
+	and #03
+	ret nz
+	; spawn explosions at a random place:
+	ld de, (boss__x)
+	ld c, 6
+	call random_modulo
+	add a, e
+	dec a
+	ld e, a  ; explosion x
+	ld c, 6
+	call random_modulo
+	add a, d
+	add a, -3
+	ld b, a
+	ld c, e
+	call spawn_explosion	
+
+	ld de, (boss__x)
+	ld c, 6
+	call random_modulo
+	add a, e
+	dec a
+	ld e, a  ; explosion x
+	ld c, 6
+	call random_modulo
+	add a, d
+	add a, -3
+	ld b, a
+	ld c, e
+	jp spawn_explosion
+
+update_boss5_behavior_6_state_0_done:
+	ld a, 1
+	ld (boss__state), a
+	ld hl, current_room__tile_map + 64*24
+	ld de, current_room__tile_map
+	ld bc, 32*24
+	ldir
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)	
+	ret
+
+
+update_boss5_behavior_6_state_1:
 	; ...
 	ret
 
