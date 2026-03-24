@@ -1,10 +1,16 @@
 to do:
-***- being able to kill the boss and collect the reward:
+***- reorganize inventory to have one extra row:
+  ***- move back / options / quite buttons to the left-side, to make space for the larger inventory
+  ***- shift all items up by one
+  ***- draw the eyes, and put them in the 4 free tiles in the charybdis/scylla last tilesets
+  ***- those eyes go to the new row of items: add items/descriptions to inventory (in the inventory they look a bit different, so you can tell them appart)
+***- boss 5 reward:
+  ***- if you only kill 1, there will be an eye (of the one you killed) (in the lower platforms)
+  ***- if you kill both, there will be an eye of each (in the lower platforms)
   ***- power stone spawns where the switch was
-  ***- if you only kill 1, there will be an eye (of the one you killed)
-  ***- if you kill both, there will be an eye of each (refactor inventory, and make a list of addiitonal objects I have noted down below, to see if I can fit them all)
-  ***- think of a puzzle where you actually need both eyes to open something
-***- add boss name to the stats for game over screen (one or both)
+  ***- once you have picked up ALL items, you leave the room, and the boss room door disappears
+  ***- add boss name to the stats for game over screen (one or both)
+***- think of a puzzle where you actually need both eyes to open something
 
 - confrontation with the aliens after activating the calendar stone: are aliens sprites or tiles? (a mix, small aliens with sprites, and large ones with tiles)
 - first ending sequence (udpate "stats__ending"): Elaine drops from the ceiling on a rope and rescues you. The calendar stone machine activates and creates a defensive barrier around earth, the alien armada that was coming turns back, but promises revenge.
