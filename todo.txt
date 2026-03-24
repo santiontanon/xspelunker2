@@ -1,9 +1,7 @@
 to do:
-***- reorganize inventory to have one extra row:
-  ***- move back / options / quite buttons to the left-side, to make space for the larger inventory
-  ***- shift all items up by one
-  ***- draw the eyes, and put them in the 4 free tiles in the charybdis/scylla last tilesets
-  ***- those eyes go to the new row of items: add items/descriptions to inventory (in the inventory they look a bit different, so you can tell them appart)
+***- Create eye items:
+  ***- they go to the new top row of items
+  ***- add descriptions to inventory (in the inventory they look a bit different, so you can tell them appart): "One of the eyes of Scylla." / "One of the eyes of Charybdis".
 ***- boss 5 reward:
   ***- if you only kill 1, there will be an eye (of the one you killed) (in the lower platforms)
   ***- if you kill both, there will be an eye of each (in the lower platforms)

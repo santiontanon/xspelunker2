@@ -1,6 +1,6 @@
 ;-----------------------------------------------
 state_inventory_from_quit:
-	ld a, 7
+	ld a, 2
 	ld (inventory_cursor_position_x), a
 	jr state_inventory_entry_point
 
@@ -14,7 +14,7 @@ state_game_over_from_quit:
 
 ;-----------------------------------------------
 state_inventory_from_options:
-	ld a, 4
+	ld a, 1
 	ld (inventory_cursor_position_x), a
 	jr state_inventory_entry_point
 
@@ -142,7 +142,7 @@ state_inventory_update_cursor_button_row0:
 	ld a, (inventory_cursor_position_x)
 	or a
 	jr z, state_inventory_update_cursor_button_back
-	cp 4
+	cp 1
 	jr z, state_inventory_update_cursor_button_options
 state_inventory_update_cursor_button_quit:
 	ld ix, TEXT_ARE_YOU_SURE
@@ -165,6 +165,7 @@ state_inventory_update_cursor_right:
 	ld a, (inventory_cursor_position_y)
 	or a
 	jr z, state_inventory_update_cursor_right_row0
+state_inventory_update_cursor_right_normal:
 	ld a, (inventory_cursor_position_x)
 	cp 9
 	ret z
@@ -174,27 +175,19 @@ state_inventory_update_cursor_right:
 
 state_inventory_update_cursor_right_row0:
 	ld a, (inventory_cursor_position_x)
-	or a
-	jr z, state_inventory_update_cursor_right_row0_0
-	cp 4
-	jr z, state_inventory_update_cursor_right_row0_4
-	; right-most button:
-	ret
-state_inventory_update_cursor_right_row0_4:
-	ld a, 7
-	ld (inventory_cursor_position_x), a
-	ret
-
-state_inventory_update_cursor_right_row0_0:
+	cp 2
+	jr z, state_inventory_update_cursor_right_row0_2
+	jr state_inventory_update_cursor_right_normal
+state_inventory_update_cursor_right_row0_2:
 	ld a, 4
 	ld (inventory_cursor_position_x), a
 	ret
-
 
 state_inventory_update_cursor_left:
 	ld a, (inventory_cursor_position_y)
 	or a
 	jr z, state_inventory_update_cursor_left_row0
+state_inventory_update_cursor_left_normal:
 	cp 2
 	jr z, state_inventory_update_cursor_left_wide
 	cp 3
@@ -216,16 +209,11 @@ state_inventory_update_cursor_left_wide:
 
 state_inventory_update_cursor_left_row0:
 	ld a, (inventory_cursor_position_x)
-	or a
-	ret z
 	cp 4
 	jr z, state_inventory_update_cursor_left_row0_4
-	; right-most button:
-	ld a, 4
-	ld (inventory_cursor_position_x), a
-	ret
+	jp state_inventory_update_cursor_left_normal
 state_inventory_update_cursor_left_row0_4:
-	xor a
+	ld a, 2
 	ld (inventory_cursor_position_x), a
 	ret
 
@@ -244,14 +232,12 @@ state_inventory_update_cursor_down:
 state_inventory_update_cursor_down_row0:
 	ld a, (inventory_cursor_position_x)
 	cp 4
-	jr c, state_inventory_update_cursor_down_row0_left
-	ld a, 1
+	jr nc, state_inventory_update_cursor_down_row0_right
+	ld a, 2
 	ld (inventory_cursor_position_y), a
 	ret
-state_inventory_update_cursor_down_row0_left:
-	xor a
-	ld (inventory_cursor_position_x), a
-	ld a, 2
+state_inventory_update_cursor_down_row0_right:
+	ld a, 1
 	ld (inventory_cursor_position_y), a
 	ret
 state_inventory_update_cursor_down_row3:
@@ -267,40 +253,29 @@ state_inventory_update_cursor_up:
 	ld a, (inventory_cursor_position_y)
 	or a
 	ret z
-	cp 1
-	jr z, state_inventory_update_cursor_up_row1
 	cp 2
 	jr z, state_inventory_update_cursor_up_row2
 	dec a
-	ld (inventory_cursor_position_y), a
-	ret
-state_inventory_update_cursor_up_row1:
-	ld a, (inventory_cursor_position_x)
-	cp 7
-	jr c, state_inventory_update_cursor_up_row1_middle
-	ld a, 7
-	ld (inventory_cursor_position_x), a
-	xor a
-	ld (inventory_cursor_position_y), a
-	ret
-state_inventory_update_cursor_up_row1_middle:
-	ld a, 4
-	ld (inventory_cursor_position_x), a
-	xor a
 	ld (inventory_cursor_position_y), a
 	ret
 state_inventory_update_cursor_up_row2:
 	ld a, (inventory_cursor_position_x)
 	cp 4
 	jr c, state_inventory_update_cursor_up_row2_left
-	ld a, (inventory_cursor_position_y)
-	dec a
+	ld a, 1
 	ld (inventory_cursor_position_y), a
 	ret
 state_inventory_update_cursor_up_row2_left:
+	cp 3
+	jr z, state_inventory_update_cursor_up_row2_left_3
 	xor a
-	ld (inventory_cursor_position_x), a
 	ld (inventory_cursor_position_y), a
+	ret
+state_inventory_update_cursor_up_row2_left_3:
+	xor a
+	ld (inventory_cursor_position_y), a
+	ld a, 2
+	ld (inventory_cursor_position_x), a
 	ret
 
 
@@ -684,6 +659,7 @@ draw_inventory_cursor:
 	add a, b
 	add a, 7
 	ld b, a  ; y
+draw_inventory_cursor_regular_rows_b_set:
 	ld a, (inventory_cursor_position_x)
 	add a, a
 	add a, a
@@ -709,19 +685,23 @@ draw_inventory_cursor_row0:
 	ld a, (inventory_cursor_position_x)
 	or a
 	jr z, draw_inventory_cursor_row0_0
-	cp 4
-	jr z, draw_inventory_cursor_row0_4
-	; right most:
-	ld c, 171
-	ld e, 209
+	cp 1
+	jr z, draw_inventory_cursor_row0_1
+	cp 2
+	jr z, draw_inventory_cursor_row0_2
+	jp draw_inventory_cursor_regular_rows_b_set
+draw_inventory_cursor_row0_2:
+	; right most button:
+	ld c, 70
+	ld e, 94
 	jr draw_inventory_cursor_coordinates_set
 draw_inventory_cursor_row0_0:
-	ld c, 43
-	ld e, 81
+	ld c, 6
+	ld e, 30
 	jr draw_inventory_cursor_coordinates_set
-draw_inventory_cursor_row0_4:
-	ld c, 107
-	ld e, 145
+draw_inventory_cursor_row0_1:
+	ld c, 38
+	ld e, 62
 
 draw_inventory_cursor_coordinates_set:
 	ld a, (interrupt_cycle)
