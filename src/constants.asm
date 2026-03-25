@@ -297,7 +297,8 @@ ENEMY_SENTINEL_ROCK: equ ENEMY_SNAKE + 34
 ; - 2 puzzle boxes
 ; - 1 golden key
 ; - 1 skull charm
-N_INVENTORY_ITEM_TYPES: equ 7 + 6 + 6 + 1 + 4 + 6 + 2 + 2 + 1 + 2 + 2 + 1 + 1  ; 41
+; - 2 charybdis / scylla eyes
+N_INVENTORY_ITEM_TYPES: equ 7 + 6 + 6 + 1 + 4 + 6 + 2 + 2 + 1 + 2 + 2 + 1 + 1 + 2  ; 43
 N_INVENTORY_WEAPON_TYPES: equ 4 + 4 + 3  ; 4 base, 4 ranged, 3 upgrades
 INVENTORY_ITEM_BOSS5_KEY: equ 4
 INVENTORY_ITEM_POWER_STONE1: equ 7
@@ -322,7 +323,9 @@ INVENTORY_ITEM_HALF_POWER_STONE2: equ 7 + 6 + 6 + 1 + 4 + 6 + 2 + 2 + 1 + 1
 INVENTORY_ITEM_PUZZLEBOX_MARS: equ 7 + 6 + 6 + 1 + 4 + 6 + 2 + 2 + 1 + 2
 INVENTORY_ITEM_PUZZLEBOX_MOON: equ 7 + 6 + 6 + 1 + 4 + 6 + 2 + 2 + 1 + 2 + 1
 INVENTORY_ITEM_GOLDEN_KEY: equ 7 + 6 + 6 + 1 + 4 + 6 + 2 + 2 + 1 + 2 + 2
-INVENTORY_ITEM_SKULL_CHARM: equ 7 + 6 + 6 + 1 + 4 + 6 + 2 + 2 + 1 + 2 + 2 + 1
+INVENTORY_ITEM_SKULL_CHARM: equ 7 + 6 + 6 + 1 + 4 + 6 + 2 + 2 + 1 + 2 + 2 + 1  ; 40
+INVENTORY_ITEM_CHARYBDIS_EYE: equ INVENTORY_ITEM_SKULL_CHARM + 1  ; 41
+INVENTORY_ITEM_SCYLLA_EYE: equ INVENTORY_ITEM_CHARYBDIS_EYE + 1   ; 42
 ; - initial piece just has: jungle + first pyramid, then one piece for each of the rest
 ; N_MAP_PIECES: equ 9
 

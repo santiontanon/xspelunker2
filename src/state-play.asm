@@ -111,14 +111,16 @@ state_play:
 ; 		ld (player_inventory_items+INVENTORY_ITEM_PUZZLEBOX_MOON), a
 ; 		ld (player_inventory_items+INVENTORY_ITEM_GOLDEN_KEY), a
 ; 		ld (player_inventory_items+INVENTORY_ITEM_SKULL_CHARM), a
+; 		ld (player_inventory_items+INVENTORY_ITEM_CHARYBDIS_EYE), a
+; 		ld (player_inventory_items+INVENTORY_ITEM_SCYLLA_EYE), a
 		ld (player_inventory_weapons), a  ; machete
-		ld (player_inventory_weapons+1), a
-		ld (player_inventory_weapons+2), a
+; 		ld (player_inventory_weapons+1), a
+; 		ld (player_inventory_weapons+2), a
 ; 		ld (player_inventory_weapons+3), a  ; shield
 		ld (player_inventory_weapons+4), a  ; sling
-		ld (player_inventory_weapons+5), a  ; blowgun
-		ld (player_inventory_weapons+6), a
-		ld (player_inventory_weapons+7), a
+; 		ld (player_inventory_weapons+5), a  ; blowgun
+; 		ld (player_inventory_weapons+6), a
+; 		ld (player_inventory_weapons+7), a
 ; 		ld (player_inventory_weapons+8), a
 ; 		ld (player_inventory_weapons+9), a
 ; 		ld (player_inventory_weapons+10), a
@@ -126,8 +128,8 @@ state_play:
 ; 		ld (player_inventory_coins), a
 		ld a, 80
 		ld (player_inventory_weapon_ammo), a
-		ld (player_inventory_weapon_ammo + 1), a
-		ld (player_inventory_weapon_ammo + 2), a
+; 		ld (player_inventory_weapon_ammo + 1), a
+; 		ld (player_inventory_weapon_ammo + 2), a
 ; 		ld (play/er_inventory_weapon_ammo + 3), a
 ; 		ld a, 2
 ; 		ld (player_inventory_n_small_keys), a

@@ -124,7 +124,7 @@ state_inventory_update_cursor_button:
 	ld a, (inventory_cursor_position_y)
 	or a
 	jr z, state_inventory_update_cursor_button_row0
-
+state_inventory_update_cursor_button_not_a_button:
 	call state_inventory_item_under_cursor
 	ret z
 
@@ -144,6 +144,8 @@ state_inventory_update_cursor_button_row0:
 	jr z, state_inventory_update_cursor_button_back
 	cp 1
 	jr z, state_inventory_update_cursor_button_options
+	cp 2
+	jr nz, state_inventory_update_cursor_button_not_a_button
 state_inventory_update_cursor_button_quit:
 	ld ix, TEXT_ARE_YOU_SURE
 	ld hl, state_game_over_from_quit  ; yes
@@ -496,8 +498,6 @@ state_inventory_update_cursor_interact_map:
 state_inventory_update_item_text:
 	call state_inventory_update_item_text_clear_text
 	ld a, (inventory_cursor_position_y)
-	or a
-	ret z
 	ld b, a
 	ld a, (inventory_cursor_position_x)
 	ld c, a
@@ -651,6 +651,7 @@ draw_inventory_cursor:
 	; other rows:
 	; x = 4 + (inventory_cursor_position_x) * 24
 	; y = 7 + (inventory_cursor_position_y) * 24
+draw_inventory_cursor_regular_rows:
 	add a, a
 	add a, a
 	add a, a
@@ -659,7 +660,6 @@ draw_inventory_cursor:
 	add a, b
 	add a, 7
 	ld b, a  ; y
-draw_inventory_cursor_regular_rows_b_set:
 	ld a, (inventory_cursor_position_x)
 	add a, a
 	add a, a
@@ -689,7 +689,8 @@ draw_inventory_cursor_row0:
 	jr z, draw_inventory_cursor_row0_1
 	cp 2
 	jr z, draw_inventory_cursor_row0_2
-	jp draw_inventory_cursor_regular_rows_b_set
+	ld a, (inventory_cursor_position_y)
+	jp draw_inventory_cursor_regular_rows
 draw_inventory_cursor_row0_2:
 	; right most button:
 	ld c, 70
@@ -1509,5 +1510,7 @@ inventory_table:
 	INVENTORY_ITEM_FN 49,   4, 2,  0,  174, 175, 140, 141,  0, TEXT_ITEM_PUZZLEBOX,  state_inventory_update_cursor_interact_puzzlebox2
 	INVENTORY_ITEM_FN 50,   5, 2,  3,  178, 179, 142, 143,  0, TEXT_ITEM_GOLDEN_KEY,  0
 	INVENTORY_ITEM_FN 51,   5, 2,  0,  180, 181, 144, 145,  0, TEXT_ITEM_SKULL_CHARM,  0
+	INVENTORY_ITEM_FN 52,   4, 0,  0,  124, 125, 156, 157,  0, TEXT_ITEM_CHARYBDIS_EYE,  0
+	INVENTORY_ITEM_FN 53,   5, 0,  0,  126, 127, 158, 159,  0, TEXT_ITEM_SCYLLA_EYE,  0
 	db #ff  ; sentinel
 

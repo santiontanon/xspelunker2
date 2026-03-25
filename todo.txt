@@ -1,7 +1,4 @@
 to do:
-***- Create eye items:
-  ***- they go to the new top row of items
-  ***- add descriptions to inventory (in the inventory they look a bit different, so you can tell them appart): "One of the eyes of Scylla." / "One of the eyes of Charybdis".
 ***- boss 5 reward:
   ***- if you only kill 1, there will be an eye (of the one you killed) (in the lower platforms)
   ***- if you kill both, there will be an eye of each (in the lower platforms)
