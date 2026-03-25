@@ -1024,7 +1024,73 @@ update_boss5_behavior_6_state_0_done:
 
 
 update_boss5_behavior_6_state_1:
-	; ...
+	; mark the boss as defeated and spawn rewards:
+	xor a
+	ld (boss__active), a
+
+	; mark for stats:
+	ld a, (boss__5_variant)
+	add a, 16
+	ld b, a
+	ld c, BOSS_PAGE
+	ld hl, add_killed_boss_to_stats
+	call call_hl_in_page_c_8000
+
+	ld hl, boss__state
+	inc (hl)
+
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)	
+
+	; 0: charybdis, 1: scylla, 2: death, 3: both
+	ld a, (boss__5_variant)
+	or a
+	jr z, update_boss5_behavior_6_state_1_charybdis_eye
+	dec a
+	jr z, update_boss5_behavior_6_state_1_scylla_eye
+update_boss5_behavior_6_state_1_both_eyes:
+	ld b, TAG_CHARYBDIS_EYE
+	ld hl, 11 + 12*256
+	call update_boss5_behavior_6_state_1_spawn_item
+	ld b, TAG_SCYLLA_EYE
+	ld hl, 19 + 12*256
+	call update_boss5_behavior_6_state_1_spawn_item
+
+update_boss5_behavior_6_state_1_continue:
+	; spawn rewards:
+	ld b, 4  ; boss number (boss 5)
+	ld de, 15 + 8*256  ; - e, d: x, y coordinates to spawn the stone
+	ld hl, boss_spawn_power_stone_b
+	ld c, BOSS_PAGE
+	jp call_hl_in_page_c_8000
+
+update_boss5_behavior_6_state_1_charybdis_eye:
+	ld b, TAG_CHARYBDIS_EYE
+	ld hl, 11 + 12*256
+	call update_boss5_behavior_6_state_1_spawn_item
+	jr update_boss5_behavior_6_state_1_continue
+
+update_boss5_behavior_6_state_1_scylla_eye:
+	ld b, TAG_SCYLLA_EYE
+	ld hl, 19 + 12*256
+	call update_boss5_behavior_6_state_1_spawn_item
+	jr update_boss5_behavior_6_state_1_continue
+
+update_boss5_behavior_6_state_1_spawn_item:
+	push hl
+	push bc
+		ld hl, ptr_to_new_tile_object
+		ld c, TILES_PAGE
+		call call_hl_in_page_c_8000
+		push hl
+		pop iy
+	pop bc
+	pop hl
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 0
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), b  ; type
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), l  ; x
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), h  ; y
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0  ; state (hitpoints)
 	ret
 
 

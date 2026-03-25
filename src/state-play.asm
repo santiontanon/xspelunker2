@@ -94,14 +94,14 @@ state_play:
 ; 		ld (player_inventory_items+21), a
 ; 		ld (player_inventory_items+22), a
 ; 		ld (player_inventory_items+23), a  ; clay suit (last key item)
-		ld (player_inventory_items+24), a  ; sandals
-		ld (player_inventory_items+25), a  ; gloves
-		ld (player_inventory_items+26), a  ; warrior hat
-		ld (player_inventory_items+27), a  ; cotton armor
-		ld (player_inventory_items+28), a  ; chaac blessing
-		ld (player_inventory_items+29), a  ; seashell
-		ld (player_inventory_items+30), a  ; antigrav belt
-		ld (player_inventory_items+31), a  ; ice cape
+; 		ld (player_inventory_items+24), a  ; sandals
+; 		ld (player_inventory_items+25), a  ; gloves
+; 		ld (player_inventory_items+26), a  ; warrior hat
+; 		ld (player_inventory_items+27), a  ; cotton armor
+; 		ld (player_inventory_items+28), a  ; chaac blessing
+; 		ld (player_inventory_items+29), a  ; seashell
+; 		ld (player_inventory_items+30), a  ; antigrav belt
+; 		ld (player_inventory_items+31), a  ; ice cape
 ; 		ld (player_inventory_items+32), a  ; letter 1
 ; 		ld (player_inventory_items+33), a  ; letter 2
 		ld (player_inventory_items+34), a  ; map
@@ -117,7 +117,7 @@ state_play:
 ; 		ld (player_inventory_weapons+1), a
 ; 		ld (player_inventory_weapons+2), a
 ; 		ld (player_inventory_weapons+3), a  ; shield
-		ld (player_inventory_weapons+4), a  ; sling
+; 		ld (player_inventory_weapons+4), a  ; sling
 ; 		ld (player_inventory_weapons+5), a  ; blowgun
 ; 		ld (player_inventory_weapons+6), a
 ; 		ld (player_inventory_weapons+7), a
@@ -126,8 +126,8 @@ state_play:
 ; 		ld (player_inventory_weapons+10), a
 ; 		ld a, 202
 ; 		ld (player_inventory_coins), a
-		ld a, 80
-		ld (player_inventory_weapon_ammo), a
+; 		ld a, 80
+; 		ld (player_inventory_weapon_ammo), a
 ; 		ld (player_inventory_weapon_ammo + 1), a
 ; 		ld (player_inventory_weapon_ammo + 2), a
 ; 		ld (play/er_inventory_weapon_ammo + 3), a
@@ -142,8 +142,8 @@ state_play:
 ; 		ld (global_state__objects + TAG_TELEPORTER4), a
 ; 		ld (global_state__objects + TAG_TELEPORTER5), a
 
-		; ld a, PLAYER_INITIAL_MAX_HEALTH
-		ld a, 6*4  ; debug
+		ld a, PLAYER_INITIAL_MAX_HEALTH
+; 		ld a, 6*4  ; debug
 		ld hl, player_health
 		ld (hl), a
 		inc hl
@@ -183,7 +183,7 @@ state_play_from_continue:
 
 		; generate area:
 		ld hl, pcg_generate_area
-; 		ld e, 0  ; area to generate
+		ld e, 0  ; area to generate
 ; 		ld e, 1
 ; 		ld e, 1  ; area to generate <- first boss
 ; 		ld e, 2  ; area to generate <- second boss
@@ -192,12 +192,12 @@ state_play_from_continue:
 ; 		ld e, 6  ; area to generate
 ; 		ld e, 7  ; area to generate
 ; 		ld e, 8  ; xibalba
-		ld e, 9  ; atlantis
+; 		ld e, 9  ; atlantis
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
 
 		; generate room:
-; 		ld e, START_ROOM_ID
+		ld e, START_ROOM_ID
 ; 		ld e, 6
 ; 		ld e, 20  ; <- first boss
 ; 		ld e, 16  ; <- second boss
@@ -206,7 +206,7 @@ state_play_from_continue:
 ; 		ld e, 17  ; <- fourth boss
 ; 		ld e, 0
 ; 		ld e, TELEPORTER_ROOM_ID
-		ld e, TEMPLE_OF_POSEIDON_ID
+; 		ld e, TEMPLE_OF_POSEIDON_ID
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000

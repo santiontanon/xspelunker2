@@ -214,6 +214,8 @@ public class AssemblerTags {
         "TAG_TELEPORTER_ATLANTIS_TO_MOON",
         "TAG_PUZZLEBOX_MARS",
         "TAG_PUZZLEBOX_MOON",
+        "TAG_CHARYBDIS_EYE",
+        "TAG_SCYLLA_EYE",
         "TAG_COIN",
         "TAG_CORN",
         "TAG_STONES",

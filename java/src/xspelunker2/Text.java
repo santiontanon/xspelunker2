@@ -144,6 +144,9 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "Hurakan", "BOSS_HURAKAN", 8);
         addLineSafe(lines_with_constant_page3, "Camazotz", "BOSS_CAMAZOTZ", 8);
         addLineSafe(lines_with_constant_page3, "Cabrakan", "BOSS_CABRAKAN", 8);
+        addLineSafe(lines_with_constant_page3, "Charybdis", "BOSS_CHARYBDIS", 8);
+        addLineSafe(lines_with_constant_page3, "Scylla", "BOSS_SCYLLA", 8);
+        addLineSafe(lines_with_constant_page3, "Charybdis/Scylla", "BOSS_CHARYBDIS_SCYLLA", 12);
         
         addLineSafe(lines_with_constant_page1, "Entering", "ENTERING", 16);
         addLineSafe(lines_with_constant_page1, "Loading area...", "LOADING_AREA", 16);
@@ -338,7 +341,7 @@ public class Text {
         addLineSafe(lines_with_constant_page1, "That does not seem to be the correct key for this lock!", "WRONG_KEY", 112);
         addLineSafe(lines_with_constant_page1, "That does not seem to be the correct item to use here!", "WRONG_ITEM", 112);
         addLineSafe(lines_with_constant_page1, "What is this? A small polished stone, but it seems fully charged with static electricity! Why was that beast guarding this so fiercely?", "FIRST_POWER_STONE", 112);
-        addLineSafe(lines_with_constant_page1, "You found another power stone!", "OTHER_POWER_STONES", 112);
+        addLineSafe(lines_with_constant_page1, "I found another power stone!", "OTHER_POWER_STONES", 112);
         addLineSafe(lines_with_constant_page1, "A puzzle box!", "FOUND_PUZZLEBOX", 112);
         addLineSafe(lines_with_constant_page1, "There is a stone occupying this socket.", "CALENDAR_SOCKET_INACTIVE_STONE", 112);
         addLineSafe(lines_with_constant_page1, "You replace the inactive stone by your final power stone.", "PLACE_SIXTH_POWER_STONE", 112);

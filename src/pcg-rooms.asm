@@ -2109,19 +2109,6 @@ ENDR
 	dw buffer_4096 + 60 * 64  ; TAG_ATLANTIS_TABLET3
 	dw buffer_4096 + 60 * 64  ; TAG_ATLANTIS_TABLET4
 	dw buffer_4096 + 60 * 64  ; TAG_ATLANTIS_TABLET5
-; TAG_PUSHABLE_BLOCK: equ 144
-; TAG_DOOR_VERTICAL: equ 145
-; TAG_DOOR_HORIZONTAL: equ 146
-; TAG_DOOR_BOSS: equ 147
-; TAG_POWER_STONE: equ 148
-; TAG_CALENDAR_TABLET: equ 149
-; TAG_CALENDAR_SOCKET: equ 150
-; TAG_HALF_POWER_STONE: equ 151
-; TAG_CALENDAR_STONE_CENTER: equ 152
-; TAG_MAYA_PUZZLE_TABLET: equ 153
-; TAG_TELEPORTER_ATLANTIS_TO_MOON: equ 154
-; TAG_PUZZLEBOX_MARS: equ 155
-; TAG_PUZZLEBOX_MOON: equ 156
 
 
 ;-----------------------------------------------
@@ -2704,9 +2691,13 @@ pcg_generate_room__temple_of_poseidon:
 	call pcg_generate_room__calendar_open_walls
 
 	; spawn the objects:
-	ld hl, pcg_generate_room__poseidon_objects
+	ld hl, pcg_generate_room__poseidon_objects + 4  ; skip the boss door, if boss already defeated
 	ld b, 6
 	ld iy, (tmp_pcg_room__next_tile_object_ptr)
+	ld a, (global_state__objects + TAG_BOSS5_CHESTLOCK)
+	cp 2
+	jr z, pcg_generate_room__temple_of_poseidon_object_loop
+	ld hl, pcg_generate_room__poseidon_objects
 pcg_generate_room__temple_of_poseidon_object_loop:
 	ld a, (hl)
 	inc hl
@@ -2767,8 +2758,8 @@ pcg_generate_room__temple_of_poseidon_object_loop:
 
 
 pcg_generate_room__poseidon_objects:
-	db 0, TAG_ATLANTIS_TABLET1, 2, 20
 	db TAG_BOSS5_CHESTLOCK, TAG_DOOR_BOSS, 14, 12
+	db 0, TAG_ATLANTIS_TABLET1, 2, 20
 	db 0, TAG_BOSS5_CHESTLOCK, 6, 11
 	db 1, TAG_BOSS5_CHESTLOCK, 11, 11
 	db 2, TAG_BOSS5_CHESTLOCK, 19, 11

@@ -1235,6 +1235,8 @@ ENDR
 	dw object_interaction_function_teleporter_atlantis  ; TAG_TELEPORTER_ATLANTIS_TO_MOON
 	dw object_interaction_function_pickup_puzzlebox_mars  ; TAG_PUZZLEBOX_MARS
 	dw object_interaction_function_pickup_puzzlebox_moon  ; TAG_PUZZLEBOX_MOON
+	dw object_interaction_function_pickup_charybdis_eye  ; TAG_CHARYBDIS_EYE
+	dw object_interaction_function_pickup_scylla_eye  ; TAG_SCYLLA_EYE
 	dw object_interaction_function_pickup_coins  ; TAG_COIN
 	dw object_interaction_function_pickup_corn  ; TAG_CORN
 	dw object_interaction_function_pickup_stones  ; TAG_STONES
@@ -1363,6 +1365,8 @@ object_interaction_function_pickup_heart_continue:
 	; mark as taken:
 	ld hl, global_state__objects
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	cp TAG_PUSHABLE_BLOCK
+	jr nc, object_interaction_function_delete_object  ; objects after this tag do not have state
 	ADD_HL_A
 	ld (hl), 1
 
@@ -1996,6 +2000,25 @@ object_interaction_function_pickup_puzzlebox_moon:
 
 	ld c, BOSS_PAGE
 	ld hl, pick_up_boss_puzzlebox_moon
+	jp call_hl_in_page_c_8000
+
+
+object_interaction_function_pickup_charybdis_eye:
+	; update stats:
+	ld hl, stats__n_items_collected
+	inc (hl)
+
+	ld c, BOSS_PAGE
+	ld hl, pick_up_boss_charybdis_eye
+	jp call_hl_in_page_c_8000
+
+object_interaction_function_pickup_scylla_eye:
+	; update stats:
+	ld hl, stats__n_items_collected
+	inc (hl)
+
+	ld c, BOSS_PAGE
+	ld hl, pick_up_boss_scylla_eye
 	jp call_hl_in_page_c_8000
 
 
@@ -2825,6 +2848,8 @@ ENDR
 	TILE_OBJECT_DATA 1, 4, 3, tile_object_teleporter_gfx  ; TAG_TELEPORTER_ATLANTIS_TO_MOON
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_PUZZLEBOX_MARS
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_PUZZLEBOX_MOON
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_charybdis_eye_gfx  ; TAG_CHARYBDIS_EYE
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_scylla_eye_gfx  ; TAG_SCYLLA_EYE
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_coin_gfx  ; TAG_COIN
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_corn_gfx  ; TAG_CORN
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_stones_gfx  ; TAG_STONES
@@ -2925,4 +2950,8 @@ tile_object_poseidon_boss_display_object_gfx:
 	db 53, 54, 55, 56  ; death
 	db 53, 57, 58, 59  ; both
 
+tile_object_charybdis_eye_gfx:
+tile_object_scylla_eye_gfx:
+	db 228, 227
+	db 226, 225
 

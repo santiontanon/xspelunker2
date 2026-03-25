@@ -1,14 +1,11 @@
 to do:
-***- boss 5 reward:
-  ***- if you only kill 1, there will be an eye (of the one you killed) (in the lower platforms)
-  ***- if you kill both, there will be an eye of each (in the lower platforms)
-  ***- power stone spawns where the switch was
-  ***- once you have picked up ALL items, you leave the room, and the boss room door disappears
-  ***- add boss name to the stats for game over screen (one or both)
-***- think of a puzzle where you actually need both eyes to open something
+***- confrontation with the aliens after activating the calendar stone:
+  ***- draw the sprite aliens (have some variants)
+  ***- draw the tile aliens (larger)
+  ***- plan how the battle should be: events, when is it triggered, how it ends, etc. (maybe the scene triggers as you enter the room if you have all the stones, before you even place it, and ends after a sufficient number of aliens has been killed, and then it triggers the event that Elaine drops and rescues you (maybe throws dynamite to lock the hole from where aliens are coming? you then have some time to do what you need to do and if you don't do it, the aliens break the blockade and start coming again, Elaine leaves to get another dynamite, and the event restarts).
+  ***- implement it
 
-- confrontation with the aliens after activating the calendar stone: are aliens sprites or tiles? (a mix, small aliens with sprites, and large ones with tiles)
-- first ending sequence (udpate "stats__ending"): Elaine drops from the ceiling on a rope and rescues you. The calendar stone machine activates and creates a defensive barrier around earth, the alien armada that was coming turns back, but promises revenge.
+- first ending sequence (udpate "stats__ending"): The calendar stone machine activates and creates a defensive barrier around earth, the alien armada that was coming turns back, but promises revenge.
   - add "no miss" achievement for this: if there is no damage (Track it)
   - clue to check the rom in Maya in the ending credits, maybe something like "Luku ata de romu failu" (or some parts with actual verbs)
 - music: intro, letters/map, tablets/puzzles, game over, pyramid, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)
@@ -24,7 +21,7 @@ to do:
   - in each of the 3 pyramids, if the condition of the given stella is satisfied, a room with a giant statue is spawned, with a tablet that says something like: "I do not remember my name, but I was the first/second/third".
   - 8 bridge room in one of the caves: each bridge depends on each of the bits of the first byte of the random seed. All 0s will lower all bridges.
   - this leads to the astronomy room: clues about the constellation relation with the seed, and also a tablet with the three names of the three statues (in Maya), and also the "world teleporter" where you go back to the world name room, and can travel across worlds.
-  - speaking the names in front of each statue unlocks a chest/cabinet with a fragment of a codex. You need all 3 for it to be intelligible (I need to refactor the inventory to make space for this)
+  - speaking the names in front of each statue unlocks a chest/cabinet with a fragment of a codex. You need all 3 for it to be intelligible
  
 - mars biome (maybe moon/mars maps are smaller as most puzzles are not there? and they are just so that you can get the final stone) (remember to keep ladder tiles in place for down-door opening code)
   - can you jump higher in the moon/mars? fall slower?
@@ -44,16 +41,16 @@ to do:
 - Final good ending 2: if you have the codex (from the 3 statues), it explains how to manufactore the powestones/firestones. So, you can keep using the calendar stone and be prepared for the future. This is the true final ending.
 - save game to rom / password
 
-- Potential new ideas if I have the energy
+- Potential new ideas if I have the energy:
   - [did I already add any clue for this? remove if I don't use it] special condition for triggering "angry bosses" (they change color). For each one you beat in this hard mode, you get something in the ending, and if you get them all, you get a special mention. The conditions might be things like: certain bit in the random seed to be "11" (so, not all seeds are good), dive into water X times in the same room without doing anything else, etc. Use the "random seed stela" (maybe give a clue about it), currently it displays the bottom 6 bits of the first random seed word, should I make it display a whole 8 bits of it?
     - add as a special achievement for the gameover screen (at least one angry, and all 8 angry)
   - Mars/Moon: in the boss rooms, there might be something you can do before summoning the boss. This could lead to something like: (1) an underground cave where there is a broken ancient robot that can talk to you (in a mix of English and Maya maybe?), and might give you a weapon upgrade (e.g. a better raygun, which might be esential for fighting the final alien boss), add as a special achievement for the gameover screen.
   - The Maya were obsessed with sacrificing blood to their gods (the highest being extracting a beating heart from a person while still alive), then it was often burned so that the smoke will bring it to the gods. Can I add some puzzle/item/riddle about this? (maybe in the stella puzzle above, or maybe some blood meter that accumulates when you receive damage/die/kill-an-enemy and when full, things happen)
-  - If the player enters a world name related to these theories (like "MU", "AZTLAN", or "COH"), it could trigger a world where the Atlantean ruins are "active"—meaning the tech still works, or different paths are open, or just some animations are played, and it's just a gimmic. (There should be a clue for this)
-  - The "Firestone forge", which is in the Moon, and only active if you are in a world with the word "ATLANTIS" (or some variant) in it (add a clue).
+  - If the player enters a world name related to these theories (like "ATLANTIS", "MU", "AZTLAN", or "COH", or something like that), it could trigger a world where the the "Firestone forge", which is in the Moon, is active if you are in a world with the word (add a clue).
   - item that lets you fight a boss for a second time (the idea was to get both items in boss 4, but not sure if worth it)
   - gigantic maya statue monument that looks decoration, but it's actually a secret boss (to have a maya-themed final boss)
-    - maybe that boss leads to the grave of the person who wrote all the story tablets (Yatzil), with a riddle you can only solve if you have seen all tablets
+    - maybe that boss leads to the grave of the person who wrote all the story tablets (Yatzil), with a riddle you can only solve if you have seen all tablets.
+    - Solving the riddle reveals the head of the statue (which was hidden), and two gigantic empy eye sockets. If you place the eyes of charybdis and scylla, the statue comes alive, and you have your boss fight!
 
 --------------------
 

@@ -409,6 +409,9 @@ state_game_over_print_bosses_table:
 	dw TEXT_XIBALBA_BOSS_NAME_10
 	dw TEXT_XIBALBA_BOSS_NAME_11
 	dw TEXT_XIBALBA_BOSS_NAME_12  ; 15
+	dw TEXT_BOSS_CHARYBDIS  ; 16
+	dw TEXT_BOSS_SCYLLA  ; 17
+	dw TEXT_BOSS_CHARYBDIS_SCYLLA  ; 18
 
 state_game_over_print_bosses:
 	ld hl, stats__bosses

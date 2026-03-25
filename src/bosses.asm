@@ -371,41 +371,57 @@ pick_up_boss_power_stone:
 	call play_SFX_with_high_priority
 
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
-	push af
-
-		; message:
-		ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
-		ld de, TEXT_FIRST_POWER_STONE
-		or a
-		jr z, pick_up_boss_power_stone_continue
-		ld de, TEXT_OTHER_POWER_STONES
+	ld (in_game_event_fn_arg), a
+	; message:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
+	ld de, TEXT_FIRST_POWER_STONE
+	or a
+	jr z, pick_up_boss_power_stone_continue
+	ld de, TEXT_OTHER_POWER_STONES
 pick_up_boss_power_stone_continue:
+	push ix
 		ld c, TEXT_PAGE
 		ld hl, display_in_game_message
 		call call_hl_in_page_c_8000
 
-		call disable_VDP_output
-
-		; teleport outside (store room/position before entering boss room):
-		ld a, (boss_door_exit_to_room)
-		ld e, a
-		ld hl, pcg_generate_room
-		ld c, PCG_PAGE
+		ld hl, redraw_flags
+		ld (hl), #ff
+		ld c, TILES_PAGE
+		ld hl, room_undraw_tile_objects
 		call call_hl_in_page_c_8000
+	pop ix
+	ld c, TILES_PAGE
+	ld hl, delete_tile_object_in_ix
+	call call_hl_in_page_c_8000
+	ld c, TILES_PAGE
+	ld hl, room_render_tile_objects
+	call call_hl_in_page_c_8000
 
-		ld a, (boss_door_exit_to_x)
-		ld (player_x + 1), a
-		ld a, (boss_door_exit_to_y)
-		ld (player_y + 1), a
+	; if we have picked up all the items, set event to close the door:
+	ld a, (current_room__tile_objects)
+	cp #ff
+	ret nz
 
-	; set event to close the door:
-	pop af
-	ld (in_game_event_fn_arg), a
+pick_up_boss_power_stone_continue2:
+	call disable_VDP_output
+
+	; teleport outside (stored room/position before entering boss room):
+	ld a, (boss_door_exit_to_room)
+	ld e, a
+	ld hl, pcg_generate_room
+	ld c, PCG_PAGE
+	call call_hl_in_page_c_8000
+
+	ld a, (boss_door_exit_to_x)
+	ld (player_x + 1), a
+	ld a, (boss_door_exit_to_y)
+	ld (player_y + 1), a
+
+	; ld (in_game_event_fn_arg), a  ; it was set above already
 	ld hl, event__exit_boss_door
 	ld (in_game_event_fn_ptr), hl
 	ld a, BOSS_PAGE
 	ld (in_game_event_fn_page), a
-
 	jp state_play_from_loaded_room
 
 
@@ -413,12 +429,11 @@ pick_up_boss_power_stone_continue:
 ; pick_up_boss_half_power_stone:
 pick_up_boss_puzzlebox_mars:
 	ld hl, player_inventory_items + INVENTORY_ITEM_PUZZLEBOX_MARS
-	ld (hl), 1
 	jr pick_up_boss_puzzlebox_continue
 pick_up_boss_puzzlebox_moon:
 	ld hl, player_inventory_items + INVENTORY_ITEM_PUZZLEBOX_MOON
-	ld (hl), 1
 pick_up_boss_puzzlebox_continue:
+	ld (hl), 1
 	; set event to close the door:
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
 	push af
@@ -428,6 +443,38 @@ pick_up_boss_puzzlebox_continue:
 
 		ld de, TEXT_FOUND_PUZZLEBOX
 		jr pick_up_boss_power_stone_continue
+
+
+;-----------------------------------------------
+pick_up_boss_scylla_eye:
+	ld hl, player_inventory_items + INVENTORY_ITEM_SCYLLA_EYE
+	jr pick_up_boss_charybdis_eye_continue
+pick_up_boss_charybdis_eye:
+	ld hl, player_inventory_items + INVENTORY_ITEM_CHARYBDIS_EYE
+pick_up_boss_charybdis_eye_continue:
+	ld (hl), 1
+	ld hl, SFX_item_pickup
+	call play_SFX_with_high_priority
+
+	ld hl, redraw_flags
+	ld (hl), #ff
+	push ix
+		ld c, TILES_PAGE
+		ld hl, room_undraw_tile_objects
+		call call_hl_in_page_c_8000
+	pop ix
+	ld c, TILES_PAGE
+	ld hl, delete_tile_object_in_ix
+	call call_hl_in_page_c_8000
+	ld c, TILES_PAGE
+	ld hl, room_render_tile_objects
+	call call_hl_in_page_c_8000
+
+	; test if it's the last thing we picked up:
+	ld a, (current_room__tile_objects)
+	cp #ff
+	ret nz  ; there are still things to pick up
+	jp pick_up_boss_power_stone_continue2
 
 
 ;-----------------------------------------------
@@ -569,9 +616,9 @@ boss_spawn_power_stone_item_set:
 	call play_SFX_with_high_priority
 
 	; refresh the current tile objects:
-	ld hl, room_undraw_tile_objects
-	ld c, TILES_PAGE
-	call call_hl_in_page_c_8000
+; 	ld hl, room_undraw_tile_objects
+; 	ld c, TILES_PAGE
+; 	call call_hl_in_page_c_8000
 	ld hl, room_render_tile_objects
 	ld c, TILES_PAGE
 	jp call_hl_in_page_c_8000
@@ -1804,5 +1851,5 @@ tile_collision_types_boss5:
     db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
     db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
     db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
-    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
+    db 9, 0, 0, 0, 0, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
     db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
