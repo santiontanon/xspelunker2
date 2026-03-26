@@ -1,12 +1,27 @@
 to do:
 ***- confrontation with the aliens after activating the calendar stone:
-  ***- draw the sprite aliens (have some variants)
-  ***- draw the tile aliens (larger)
-  ***- plan how the battle should be: events, when is it triggered, how it ends, etc. (maybe the scene triggers as you enter the room if you have all the stones, before you even place it, and ends after a sufficient number of aliens has been killed, and then it triggers the event that Elaine drops and rescues you (maybe throws dynamite to lock the hole from where aliens are coming? you then have some time to do what you need to do and if you don't do it, the aliens break the blockade and start coming again, Elaine leaves to get another dynamite, and the event restarts).
-  ***- implement it
+  ***- The first time you visit: 2 aliens (update message when you enter to acknowledge them)
+    ***- add variable for how many times have you visited the calendar room
+    ***- have a different set of enemy sprites for the calendar room (with aliens)
+      ***- draw sprites for aliens going up/down stairs
+    ***- add alien enemy type (for now just immobile)
+    ***- if it's 0, spawn two aliens
+    ***- aliens walk left/right and have 2 sprites
+    ***- aliens randomly go up and down stairs
+    ***- randomly aliens fire towards you (8 directions)
+  ***- if you try to interact with the stones when there are aliens, it does not let you (message)
+  ***- if you kill any alien, increment the count of aliens for next time
+  ***- spawn 3 aliens the second time
+  ***- Then 4 aliens (maybe the first time you get here with 4 have a message like "Where are they coming from? I do not see them anywhere else in the ruins!")
+  ***- When you approach place the fifth stone, have the final alien battle (it turns out they had a secret passage that is now open, and aliens keep pouring in)
+    ***- it's an ambush, so, lock the entry ways somehow, so you are locked here until the combat ends
+    ***- design and implement the alien UFO behavior (maybe when you destroy them, an alien falls down)
+  ***- After killing enough, Elaine shows up with dynamite and closes the passage
+  ***- They both walk to the calendar stone, and there is a small dialogue where Elaine states that the calendar stone seems ready to be activated, and whether you want to activate it already. If you say yes, the game ends. If you say no, Elaine says something like: "Ok, I will stay here to close that passage if they try to open it again; I have plenty of dynamite on me, so, don't worry. But do not take too long! Let's get out of here as soon as possible!"
+  ***- From that point on, Elaine will be there in the room. I should craft a few random messages, like those for Aapo that are trivia/story/hints/jokes.
 
 - first ending sequence (udpate "stats__ending"): The calendar stone machine activates and creates a defensive barrier around earth, the alien armada that was coming turns back, but promises revenge.
-  - add "no miss" achievement for this: if there is no damage (Track it)
+  - add "no miss" achievement for this: if there is no damage (Track it) (or maybe jost, no damage during alien fight?)
   - clue to check the rom in Maya in the ending credits, maybe something like "Luku ata de romu failu" (or some parts with actual verbs)
 - music: intro, letters/map, tablets/puzzles, game over, pyramid, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)
   - story: I like the original song: keep the same style and compose a variation
