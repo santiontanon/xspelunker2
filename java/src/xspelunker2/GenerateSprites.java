@@ -349,9 +349,9 @@ public class GenerateSprites {
         data.addAll(extractSpriteFlipped(sourceImage, 0, 244, 2));
         data.addAll(extractSpriteFlipped(sourceImage, 16, 244, 2));
         // alien stairs (9)
-        data.addAll(extractSprite(sourceImage, 112, 248, 13));  // alien stairs 1
+        data.addAll(extractSprite(sourceImage, 112, 248, 13));  // alien stairs
+        data.addAll(extractSpriteFlipped(sourceImage, 112, 248, 13));
         data.addAll(extractSprite(sourceImage, 112, 244, 2));
-        data.addAll(extractSpriteFlipped(sourceImage, 112, 248, 13));  // alien stairs 2
         data.addAll(extractSpriteFlipped(sourceImage, 112, 244, 2));
         // alien firing (13)
         data.addAll(extractSprite(sourceImage, 32, 248, 13));  // right: down

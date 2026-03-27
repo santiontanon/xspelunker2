@@ -3316,15 +3316,57 @@ update_enemy_alien:
 	ld iyh, 4  ; damage to deal
 	call update_enemy_hurt_player_2x2
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
-	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
-	and #01
-	call nz, update_enemy__patrol_left_right_platform
+	call update_enemy__patrol_left_right_platform
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	cp 2
+	jp z, update_enemy_alien_stairs_up
+	cp 3
+	jp z, update_enemy_alien_stairs_down
+	; it's patroling, check if we need stairs, or fire a bullet:
+
+	; check if the alien needs to fire a bullet:
+  	; ...
+
+update_enemy_alien_no_fire:
+	; stairs up check:
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	call get_room_tile_type
+	cp 7  ; ladder
+	jr nz, update_enemy_alien_check_stairs_down
+	inc hl
+	ld a, (hl)
+	call get_collision_tile_type_of_a
+	cp 7  ; ladder
+	jr nz, update_enemy_alien_check_stairs_down
+	call random_a
+	and #0f
+	jp z, update_enemy_alien_switch_to_stairs_up
+
+update_enemy_alien_check_stairs_down:
+	; stairs down check:
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc b
+	inc b
+	call get_room_tile_type
+	cp 8  ; ladder top
+	jr nz, update_enemy_alien_no_stairs
+	inc hl
+	ld a, (hl)
+	call get_collision_tile_type_of_a
+	cp 8  ; ladder top
+	jr nz, update_enemy_alien_no_stairs
+	call random_a
+	and #0f
+	jp z, update_enemy_alien_switch_to_stairs_down
+update_enemy_alien_no_stairs:
 	; sprites: walk right: 1+2, 3+4, walk left: 5+6, 7+8
-	ld d, COLOR_PURPLE
  	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
  	add a, a
  	add a, a
  	add a, FIRST_ENEMY_SPRITE_PATTERN + 1  ; 1 or 5 depending on the state
+update_enemy_alien_draw_sprites:
  	add a, a
  	add a, a
  	ld e, a
@@ -3335,6 +3377,7 @@ update_enemy_alien:
 	add a, e
 	ld e, a
 	ld c, 0
+	ld d, COLOR_PURPLE
 	call get_sprite_object_sprite_coordinates
 	call z, add_sprite_to_this_frame
 	ld a, -4
@@ -3350,6 +3393,75 @@ update_enemy_alien:
 	ld d, a
 	call add_sprite_to_this_frame
 	jp update_sprite_enemies_loop_next
+
+update_enemy_alien_switch_to_stairs_up:
+	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_X), 0  ; center around the stairs
+update_enemy_alien_switch_to_stairs_up_from_stairs:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+	jr update_enemy_alien_stairs_up_continue
+update_enemy_alien_stairs_up:
+	; go up one flight of stairs:
+	; - until colliding (and then go down)
+	; - or until reaching a platform (and then switch to patrol)
+	call update_enemy_move_up_if_possible_stairs
+	jr z, update_enemy_alien_switch_to_stairs_down_from_stairs
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
+	or a
+	jr nz, update_enemy_alien_stairs_up_continue
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc b
+	inc b
+	call get_room_tile_type
+	cp 8  ; top of stairs
+	jr nz, update_enemy_alien_stairs_up_continue
+	; reached a floor, stop
+	call random_a
+	and #01
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), a  ; random left/right
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+update_enemy_alien_stairs_up_continue:
+	; sprites: stairs: 9+10, 11+12
+	ld a, FIRST_ENEMY_SPRITE_PATTERN + 9
+	jr update_enemy_alien_draw_sprites
+
+update_enemy_alien_switch_to_stairs_down:
+	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_X), 0  ; center around the stairs
+	inc (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+update_enemy_alien_switch_to_stairs_down_from_stairs:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 3
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+	jr update_enemy_alien_stairs_down_continue
+update_enemy_alien_stairs_down:
+	; go down one flight of stairs:
+	; - until colliding or reaching the end of the stairs (and then go down)
+	; - or until reaching a platform (and then switch to patrol)
+	call update_enemy_move_down_if_possible_stairs
+	jr z, update_enemy_alien_switch_to_stairs_up_from_stairs
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
+	or a
+	jr nz, update_enemy_alien_stairs_down_continue
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc b
+	inc b
+	call get_room_tile_type
+	; 1, 2, 8 -> done!
+	cp 1
+	jr z, update_enemy_alien_stairs_down_done
+	cp 2
+	jr z, update_enemy_alien_stairs_down_done
+	cp 8  ; top of stairs
+	jr nz, update_enemy_alien_stairs_down_continue
+update_enemy_alien_stairs_down_done:
+	; reached a floor, stop
+	call random_a
+	and #01
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), a  ; random left/right
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+update_enemy_alien_stairs_down_continue:
+	jr update_enemy_alien_stairs_up_continue
 
 
 ;-----------------------------------------------

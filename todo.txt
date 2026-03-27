@@ -1,8 +1,6 @@
 to do:
 ***- confrontation with the aliens after activating the calendar stone:
-  ***- Alien sprite enemies:
-    ***- aliens randomly go up and down stairs
-    ***- randomly aliens fire towards you (8 directions)
+  ***- Alien sprite enemies randomly aliens fire towards you (8 directions)
   ***- if you try to interact with the stones when there are aliens, it does not let you (message)
   ***- if you kill any alien, increment the count of aliens for next time: global_state__n_alien_controntations
   ***- spawn 3 aliens the second time (based on global_state__n_alien_controntations)
