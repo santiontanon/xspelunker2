@@ -54,6 +54,7 @@ enemy_update_fn_table:
 	dw update_enemy_fishman
 	dw update_enemy_fishman2
 	dw update_enemy_sentinel_rock
+	dw update_enemy_alien
 
 
 ;-----------------------------------------------
@@ -3308,6 +3309,47 @@ update_enemy_sentinel_rock_collision:
 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	call spawn_explosion
 	jp update_enemy_delete
+
+
+;-----------------------------------------------
+update_enemy_alien:
+	ld iyh, 4  ; damage to deal
+	call update_enemy_hurt_player_2x2
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	and #01
+	call nz, update_enemy__patrol_left_right_platform
+	; sprites: walk right: 1+2, 3+4, walk left: 5+6, 7+8
+	ld d, COLOR_PURPLE
+ 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+ 	add a, a
+ 	add a, a
+ 	add a, FIRST_ENEMY_SPRITE_PATTERN + 1  ; 1 or 5 depending on the state
+ 	add a, a
+ 	add a, a
+ 	ld e, a
+	ld a, (interrupt_cycle)
+	rrca
+	rrca
+	and #04
+	add a, e
+	ld e, a
+	ld c, 0
+	call get_sprite_object_sprite_coordinates
+	call z, add_sprite_to_this_frame
+	ld a, -4
+	add a, b
+	ld b, a
+
+	ld a, 8
+	add a, e
+	ld e, a
+	ld a, d
+	and #80
+	add a, COLOR_GREEN
+	ld d, a
+	call add_sprite_to_this_frame
+	jp update_sprite_enemies_loop_next
 
 
 ;-----------------------------------------------

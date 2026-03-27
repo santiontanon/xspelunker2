@@ -2422,6 +2422,8 @@ pcg_generate_room__calendar:
 	ld (current_room__tileset_page), a
 	ld a, 1
 	ld (current_room__tileset_overrides_item_tiles), a
+	ld hl, calendar_enemy_sprites_zx0
+	ld (current_room__enemy_sprites_ptr), hl
 
 	call pcg_generate_room__calendar_open_walls
 
@@ -2453,6 +2455,15 @@ pcg_generate_room__calendar_object_loop:
 	djnz pcg_generate_room__calendar_object_loop
 	ld (tmp_pcg_room__next_tile_object_ptr), iy
 
+	; spawn aliens:
+	; - when 2 aliens: 9, 15; 21, 15
+	; - when 3 aliens: add one at 15, 20
+	; - when 4 aliens: the original two plus 5, 9; 25, 9
+	ld de, 9 + 15*256
+	call pcg_generate_room__calendar_alien
+	ld de, 21 + 15*256
+	call pcg_generate_room__calendar_alien
+
 	; tablet gfx:
 	ld hl, buffer_4096 + 60 * 64
 	ld (item_object_to_upload_to_vdp), hl
@@ -2473,6 +2484,39 @@ pcg_generate_room__calendar_objects:
 	db 4, TAG_CALENDAR_SOCKET, 14, 9
 	db 5, TAG_CALENDAR_SOCKET, 16, 9
 	db 0, TAG_CALENDAR_STONE_CENTER, 15, 12
+
+
+pcg_generate_room__calendar_alien:
+	push de
+		call ptr_to_new_sprite_enemy
+	pop de
+	ret nz
+	; add enemy IDs, even if these are ignored for this room, they always respawn
+	ld a, (tmp_enemy_pcg_next_enemy_id)
+	ld (hl), a  ; ID
+	inc a
+	ld (tmp_enemy_pcg_next_enemy_id), a
+	inc hl
+	ld (hl), ENEMY_ALIEN
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), e  ; tile x
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), d  ; tile y
+	inc hl
+	call random_a  ; randomly face left or right
+	and #01
+	ld (hl), a  ; state
+	inc hl
+	ld (hl), 0  ; state timer
+	inc hl
+	ld (hl), #ff  ; hit ID
+	inc hl
+	ld (hl), 4  ; health
+	ret
 
 
 ;-----------------------------------------------

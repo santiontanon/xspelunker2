@@ -201,7 +201,8 @@ state_play_from_continue:
 ; 		ld e, 6
 ; 		ld e, 20  ; <- first boss
 ; 		ld e, 16  ; <- second boss
-		ld e, CALENDAR_ROOM_ID
+; 		ld e, CALENDAR_ROOM_ID
+		ld e, 2
 ; 		ld e, 3  ; <- third boss
 ; 		ld e, 17  ; <- fourth boss
 ; 		ld e, 0

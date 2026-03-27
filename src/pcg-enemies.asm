@@ -246,6 +246,13 @@ pcg_generate_room__enemy_respawn_logic__find_tile_enemy_by_id_not_found:
 ;-----------------------------------------------
 pcg_generate_room__spawn_enemies:
 	; this is already initialized in 'pcg_generate_room_reset_state'
+; 	ld a, (current_area__id)
+; 	cp 3
+; 	jr nz, pcg_generate_room__spawn_enemies_continue
+; 	ld a, (current_area__id)
+; 	cp CALENDAR_ROOM_ID
+; 	ret z  ; calendar room enemy spawning is handled separately
+; pcg_generate_room__spawn_enemies_continue:
 ; 	xor a
 ; 	ld (tmp_enemy_pcg_tile_enemy_workmemory_usage), a
 ; 	ld (tmp_enemy_pcg_tile_enemy_spawned_type), a

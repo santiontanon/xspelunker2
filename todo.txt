@@ -1,18 +1,14 @@
 to do:
 ***- confrontation with the aliens after activating the calendar stone:
-  ***- The first time you visit: 2 aliens (update message when you enter to acknowledge them)
-    ***- add variable for how many times have you visited the calendar room
-    ***- have a different set of enemy sprites for the calendar room (with aliens)
-      ***- draw sprites for aliens going up/down stairs
-    ***- add alien enemy type (for now just immobile)
-    ***- if it's 0, spawn two aliens
-    ***- aliens walk left/right and have 2 sprites
+  ***- the side-holes created to enter the calendar room are not big enough
+  ***- Alien sprite enemies:
     ***- aliens randomly go up and down stairs
     ***- randomly aliens fire towards you (8 directions)
   ***- if you try to interact with the stones when there are aliens, it does not let you (message)
-  ***- if you kill any alien, increment the count of aliens for next time
-  ***- spawn 3 aliens the second time
-  ***- Then 4 aliens (maybe the first time you get here with 4 have a message like "Where are they coming from? I do not see them anywhere else in the ruins!")
+  ***- if you kill any alien, increment the count of aliens for next time: global_state__n_alien_controntations
+  ***- spawn 3 aliens the second time (based on global_state__n_alien_controntations)
+  ***- Then 4 aliens
+  ***- add messages every time you enter the room stating something about the aliens
   ***- When you approach place the fifth stone, have the final alien battle (it turns out they had a secret passage that is now open, and aliens keep pouring in)
     ***- it's an ambush, so, lock the entry ways somehow, so you are locked here until the combat ends
     ***- design and implement the alien UFO behavior (maybe when you destroy them, an alien falls down)
