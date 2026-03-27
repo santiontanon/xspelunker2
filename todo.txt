@@ -1,6 +1,5 @@
 to do:
 ***- confrontation with the aliens after activating the calendar stone:
-  ***- the side-holes created to enter the calendar room are not big enough
   ***- Alien sprite enemies:
     ***- aliens randomly go up and down stairs
     ***- randomly aliens fire towards you (8 directions)

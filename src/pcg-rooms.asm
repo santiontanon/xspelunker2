@@ -2560,7 +2560,7 @@ pcg_generate_room__calendar_ptr_loop_end:
 		call pcg_generate_room__chunk_direction_open
 		jr z, pcg_generate_room__calendar_continue1
 		ld bc, #0400
-		ld de, #0402
+		ld de, #0602
 		call room_remove_breakable_wall_restore_background
 pcg_generate_room__calendar_continue1:
 	pop hl
@@ -2581,7 +2581,7 @@ pcg_generate_room__calendar_continue2:
 		call pcg_generate_room__chunk_direction_open
 		jr z, pcg_generate_room__calendar_continue3
 		ld bc, #041e
-		ld de, #0402
+		ld de, #0602
 		call room_remove_breakable_wall_restore_background
 pcg_generate_room__calendar_continue3:
 	pop hl
@@ -2607,7 +2607,7 @@ pcg_generate_room__calendar_continue4:
 		call pcg_generate_room__chunk_direction_open
 		jr z, pcg_generate_room__calendar_continue5
 		ld bc, #1000
-		ld de, #0402
+		ld de, #0602
 		call room_remove_breakable_wall_restore_background
 pcg_generate_room__calendar_continue5:
 	pop hl
@@ -2637,7 +2637,7 @@ pcg_generate_room__calendar_continue7:
 	call pcg_generate_room__chunk_direction_open
 	jr z, pcg_generate_room__calendar_continue8
 	ld bc, #101e
-	ld de, #0402
+	ld de, #0602
 	call room_remove_breakable_wall_restore_background
 pcg_generate_room__calendar_continue8:
 	ret

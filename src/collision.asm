@@ -1229,7 +1229,7 @@ check_collision_with_next_chunk_down_bit_found:
 ; - z: it is a special room
 ; - nz: it is not
 check_collision_with_next_chunk_check_if_its_special_room_left_right:
-	ld e, #33
+	ld e, #23
 	jr check_collision_with_next_chunk_check_if_its_special_room_continue
 check_collision_with_next_chunk_check_if_its_special_room_up_down:
 	ld e, #c3
