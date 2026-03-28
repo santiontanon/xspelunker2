@@ -245,17 +245,46 @@ calendar_stone_center_trigger_battle_event_fn_open_ceiling_hole_loop:
 
 ;-----------------------------------------------
 calendar_stone_center_battle_event_fn:
-	; spawn aliens:
-	; ...
+	ld a, (game_cycle)
+	and #1f
+	jp nz, calendar_stone_center_battle_event_fn__keep_battle_going  ; only update every 16 cycles
 
-	; end battle message:
-; 	ld de, TEXT_CALENDAR_CENTER_MSG2
-; 	ld hl, display_in_game_message
-; 	ld c, TEXT_PAGE
-; 	call call_hl_in_page_c_8000
+	; If there are less than 4 sprite aliens, spawn one:
+	ld c, 0
+	ld ix, current_room__sprite_enemies
+	ld de, ROOM_OBJECT_STRUCT_SIZE
+calendar_stone_center_battle_event_fn_loop:
+	ld a, (ix)
+	inc a  ; cp #ff
+	jr z, calendar_stone_center_battle_event_fn_loop_end
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	add ix, de
+	cp ENEMY_ALIEN
+	jr nz, calendar_stone_center_battle_event_fn_loop
+	inc c
+	jr calendar_stone_center_battle_event_fn_loop
+calendar_stone_center_battle_event_fn_loop_end:
+	ld a, c
+	cp 4
+	jr nc, calendar_stone_center_battle_event_fn__keep_battle_going  ; we already have enough aliens
+
+	; spawn an alien:
+	call random_a
+	ld de, #0005
+	and #01
+	or a
+	jr z, calendar_stone_center_battle_event_fn_alien_coordinates_set
+	ld de, #0019
+calendar_stone_center_battle_event_fn_alien_coordinates_set:
+	call calendar_stone_center_battle_event_fn__spawn_alien
 
 ; 	ld a, STORY_STATE__DEFEATED_ALIENS
 ; 	ld (global_state__story), a
+
+calendar_stone_center_battle_event_fn__keep_battle_going:
+	; set the function to keep executing:
+	ld hl, calendar_stone_center_battle_event_fn
+	ld (in_game_event_fn_ptr), hl
 	ret
 
 
@@ -282,7 +311,7 @@ calendar_stone_center_trigger_ending_event_fn2:
 	ld bc, 32*24
 	ldir
 
-	; remove the brick platforms:
+	; remove the platforms:
 	ld hl, buffer_4096 + 14 + 11*32
 	ld de, buffer_4096 + 32*24
 	call calendar_stone__remove_bricks
@@ -508,6 +537,37 @@ calendar_stone_center_battle_event_fn__spawn_ufo:
 
 	ld hl, enemy_ufo_hit
 	ld (tile_enemy_hit_fn_ptr), hl
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - e, d: x, y of the alien
+calendar_stone_center_battle_event_fn__spawn_alien:
+	push de
+		call ptr_to_new_sprite_enemy
+	pop de
+	ret nz
+	; add enemy IDs, even if these are ignored for this room, they always respawn
+	ld (hl), 0  ; ID
+	inc hl
+	ld (hl), ENEMY_ALIEN
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), e  ; tile x
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), d  ; tile y
+	inc hl
+	ld (hl), 14  ; state (falling)
+	inc hl
+	ld (hl), 0  ; state timer
+	inc hl
+	ld (hl), #ff  ; hit ID
+	inc hl
+	ld (hl), 4  ; health
 	ret
 
 

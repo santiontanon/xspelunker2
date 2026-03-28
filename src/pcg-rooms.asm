@@ -2507,10 +2507,7 @@ pcg_generate_room__calendar_alien:
 	pop de
 	ret nz
 	; add enemy IDs, even if these are ignored for this room, they always respawn
-	ld a, (tmp_enemy_pcg_next_enemy_id)
-	ld (hl), a  ; ID
-	inc a
-	ld (tmp_enemy_pcg_next_enemy_id), a
+	ld (hl), 0  ; ID
 	inc hl
 	ld (hl), ENEMY_ALIEN
 	inc hl

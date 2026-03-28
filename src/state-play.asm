@@ -358,8 +358,8 @@ state_play_loop:
 	call state_play__update_time  ; updates how long has the player been playing
 	ld a, (game_cycle)
 	inc a
-	and #07
 	ld (game_cycle), a
+	and #07
 	add a, a
 	add a, a
 	ld hl, (state_play_update_agenda_tbl_ptr)
@@ -417,6 +417,8 @@ state_play_loop_hud_redraw:
 
 
 ;-----------------------------------------------
+; input:
+; - hl: previous value of (in_game_event_fn_ptr)
 state_play_loop_event_fn:
 	ld de, 0
 	ld (in_game_event_fn_ptr), de

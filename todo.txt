@@ -1,15 +1,14 @@
 to do:
 ***- confrontation with the aliens after activating the calendar stone:
-  ***- add a "falling" state to the alien behavior (new sprite? or can I reuse any?)
-  ***- spawn aliens to maintain always 4 in the screen + 1 UFO (spawn at most 20 aliens and 4 UFOs?)
-  ***- design and implement the alien UFO behavior:
-    ***- fly down to a predefined height
-    ***- fly left and right, firing bullets targetted to the player
-    ***- randomly change altitude, between 2 and 4
+  ***- alien UFO behavior:
+    ***- 0: idle (just fire, and randomly change height within the 2-4 range)
+    ***- 1: fly left until X 3 and go to idle
+    ***- 2: fly right until X 25 and go to idle
     ***- when killed, an alien drops from the cabin
-  ***- keep a counter of how many aliens have you killed
-  ***- after you kill all of them, trigger final event (for now just stop spawning): story state to "STORY_STATE__DEFEATED_ALIENS"
-  ***- Elaine shows up with dynamite and bombs the alien entrance
+  ***- spawn another UFO when the current one is killed
+  ***- keep a counter of how many aliens have spawned, and only spawn up to 16 aliens and 4 UFOs
+  ***- after no more spawns and all enemies in the screen are cleared, trigger final event (for now just stop spawning): story state to "STORY_STATE__DEFEATED_ALIENS"
+  ***- Elaine shows up:
     ***- explosions from the alien entrances (replace UFO gfx with explosion GFX)
     ***- then a rope drops, and elaine comes down
     ***- screen goes to black, entrances restored, ceiling closed, and Elaine and Michael are in the center
@@ -27,6 +26,7 @@ to do:
 ***- reset "global_state__story" in state-play.asm to its default value
 
 - first ending sequence (udpate "stats__ending"): The calendar stone machine activates and creates a defensive barrier around earth, the alien armada that was coming turns back, but promises revenge.
+  - update "calendar_stone_center_trigger_ending_event_fn"
   - add "no miss" achievement for this: if there is no damage (Track it) (or maybe just no damage during alien fight?)
   - clue to check the rom in Maya in the ending credits, maybe something like "Luku ata de romu failu" (or some parts with actual verbs)
 - music: intro, letters/map, tablets/puzzles, game over, pyramid, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)

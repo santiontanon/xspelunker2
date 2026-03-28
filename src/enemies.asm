@@ -3318,6 +3318,8 @@ update_enemy_alien:
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	call update_enemy__patrol_left_right_platform
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	cp 14
+	jr z, update_enemy_alien_falling
 	or a
 	jr z, update_enemy_alien_patroling
 	dec a
@@ -3326,8 +3328,19 @@ update_enemy_alien:
 	jp z, update_enemy_alien_stairs_up
 	dec a
 	jp z, update_enemy_alien_stairs_down
-	; shooting
+	; shooting states: 4 - 13
 	jp update_enemy_alien_shooting
+update_enemy_alien_falling:
+	call update_enemy_move_down_if_possible
+	call update_enemy_move_down_if_possible
+	jr nz, update_enemy_alien_falling_continue
+	; reached a floor:
+	call random_a
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), a
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+update_enemy_alien_falling_continue:
+	ld a, FIRST_ENEMY_SPRITE_PATTERN + 13  ; shooting right:down sprite, reused for falling
+	jp update_enemy_alien_shooting_continue3
 
 update_enemy_alien_patroling:
 	; it's patroling, check if we need stairs, or fire a bullet:
@@ -3576,6 +3589,7 @@ update_enemy_alien_shooting_continue:
  	add a, -4
  	add a, a
  	add a, FIRST_ENEMY_SPRITE_PATTERN + 13
+ update_enemy_alien_shooting_continue3:
  	add a, a
  	add a, a
  	ld e, a
