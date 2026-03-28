@@ -355,12 +355,15 @@ public class Text {
         addLineSafe(lines_with_constant_page1, "I think I heard some door open deep into the ruins!", "PLACE_THIRD_POWER_STONE", 112);
         addLineSafe(lines_with_constant_page1, "Is the calendar stone fully powered up?! The center started pulsating!", "PLACE_FIFTH_POWER_STONE", 112);
         addLineSafe(lines_with_constant_page1, "Touch the calendar stone?", "TOUCH_STONE_QUESTION", 112);
-        addLineSafe(lines_with_constant_page1, "You move your hand towards the calendar stone, but before you touch it, the room starts shaking!", "CALENDAR_CENTER_MSG1", 112);
+        // addLineSafe(lines_with_constant_page1, "You move your hand towards the calendar stone, but before you touch it, the room starts shaking!", "CALENDAR_CENTER_MSG1", 112);
         // addLineSafe(lines_with_constant_page1, "That was the last of them! Ok, I can now continue with what I was doing!", "CALENDAR_CENTER_MSG2", 112);
+        
+        addLineSafe(lines_with_constant_page1, "Wait! They had not given up... This is an ambush!!!", "CALENDAR_AMBUSH", 112);     
         addLineSafe(lines_with_constant_page1, "You place your hand in the center, and the stone starts shaking...", "CALENDAR_CENTER_MSG3", 112);
         addLineSafe(lines_with_constant_page1, "Type what you want to say:", "TALK", 112);     
         addLineSafe(lines_with_constant_page1, "No one listened...", "TALK_FAIL", 112);     
         addLineSafe(lines_with_constant_page1, "After you speak, the room rumbles, and you hear a voice in an unknown language. It seems your words were heard!", "TALK_SUCCESS1", 112);
+        addLineSafe(lines_with_constant_page1, "Where are the aliens? Have they finally given up?!", "CALENDAR_NO_ALIENS", 112);     
         // Aapo's random sentences:
         addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! I am Aapo! Please check my shop! I am also the postman in Palenke. If you have any mail to send or receive, talk to me.", "SHOPKEEPER1_1", 112);
         addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! I have heard reports of hunters finding new paths by breaking through walls, even the floor!", "SHOPKEEPER1_2", 112);

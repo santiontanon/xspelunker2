@@ -5,6 +5,8 @@ calendar_stone_room_enter_event_fn:
 	jr z, calendar_stone_room_enter_event_fn_first_time
 	cp STORY_STATE__GOT_LETTER1
 	jr z, calendar_stone_room_enter_event_fn_after_letter1
+	cp STORY_STATE__GOT_LETTER2
+	jr z, calendar_stone_room_enter_event_fn_after_letter2
 	ret
 
 calendar_stone_room_enter_event_fn_first_time:
@@ -33,32 +35,101 @@ calendar_stone_room_enter_event_fn_after_letter1:
 	ld (global_state__story), a
 	ret
 
+calendar_stone_room_enter_event_fn_after_letter2:
+	; check if we have enough power stones:
+	ld a, (global_state__n_power_stones_in_calendar)
+	ld c, a
+	ld hl, player_inventory_items + INVENTORY_ITEM_POWER_STONE1
+	ld b, 6
+calendar_stone_room_enter_event_fn_after_letter2_loop:
+	ld a, (hl)
+	or a
+	jr z, calendar_stone_room_enter_event_fn_after_letter2_loop_next
+	inc c
+calendar_stone_room_enter_event_fn_after_letter2_loop_next:
+	inc hl
+	djnz calendar_stone_room_enter_event_fn_after_letter2_loop
+	ld a, c
+	cp 5
+	ret c
+  	; The player has collected at least 5 power stones:
+  	; remove all the aliens:
+  	ld hl, current_room__sprite_enemies
+  	ld bc, MAX_ROOM_SPRITE_ENEMIES * ROOM_OBJECT_STRUCT_SIZE - 1
+  	ld a, #ff
+  	call clear_memory_a
 
-;-----------------------------------------------
-calendar_stone_center_trigger_battle_event_fn:
-	ld de, TEXT_CALENDAR_CENTER_MSG1
+	ld de, TEXT_CALENDAR_NO_ALIENS
 	ld hl, display_in_game_message
 	ld c, TEXT_PAGE
 	call call_hl_in_page_c_8000
 
+	ld hl, trial_fn_approach_calendar
+	ld (current_room__trial_fn), hl
+
+	; set trial fn:
+; 	ld hl, calendar_stone_center_trigger_battle_event_fn
+; 	ld (in_game_event_fn_ptr), hl
+; 	ld a, CALENDAR_EVENTS_PAGE
+; 	ld (in_game_event_fn_page), a
+	ret
+ 
+
+;-----------------------------------------------
+calendar_stone_center_trigger_battle_event_fn:
 	; block the walls around:
-	ld hl, calendar_room_zx0
-	ld c, CHUNKS_PYRAMID_PAGE
-	ld de, buffer_4096
-	call dzx0_from_page_c
+; 	ld hl, calendar_room_zx0
+; 	ld c, CHUNKS_PYRAMID_PAGE
+; 	ld de, buffer_4096
+; 	call dzx0_from_page_c
 
-	ld hl, buffer_4096
-	ld de, current_room__tile_map
-	call calendar_stone_center_trigger_battle_event_fn_copy_room_column
+; 	ld hl, buffer_4096
+; 	ld de, current_room__tile_map
+; 	call calendar_stone_center_trigger_battle_event_fn_copy_room_column
 
-	ld hl, buffer_4096 + 28
-	ld de, current_room__tile_map + 28
-	call calendar_stone_center_trigger_battle_event_fn_copy_room_column
+; 	ld hl, buffer_4096 + 28
+; 	ld de, current_room__tile_map + 28
+; 	call calendar_stone_center_trigger_battle_event_fn_copy_room_column
 
-	ld hl, buffer_4096 + 32*22
-	ld de, current_room__tile_map + +32*22
-	ld bc, 32*2
-	ldir
+; 	ld hl, buffer_4096 + 32*22
+; 	ld de, current_room__tile_map + +32*22
+; 	ld bc, 32*2
+; 	ldir
+
+	ld b, 24
+	ld hl, current_room__tile_map
+	ld de, current_room__tile_map + 31
+calendar_stone_center_trigger_battle_event_fn_loop_v:
+	ld a, (hl)
+	or a
+	jr nz, calendar_stone_center_trigger_battle_event_fn_loop_v_continue
+	ld (hl), 232  ; rubble
+calendar_stone_center_trigger_battle_event_fn_loop_v_continue:
+	ld a, (de)
+	or a
+	jr nz, calendar_stone_center_trigger_battle_event_fn_loop_v_continue2
+	ld a, 232
+	ld (de), a  ; rubble
+calendar_stone_center_trigger_battle_event_fn_loop_v_continue2:
+	push bc
+		ld bc, 32
+		add hl, bc
+		ex de, hl
+			add hl, bc
+		ex de, hl
+	pop bc
+	djnz calendar_stone_center_trigger_battle_event_fn_loop_v
+
+	ld b, 32
+	ld hl, current_room__tile_map + 23*32
+calendar_stone_center_trigger_battle_event_fn_loop_h:
+	ld a, (hl)
+	or a
+	jr nz, calendar_stone_center_trigger_battle_event_fn_loop_h_continue
+	ld (hl), 232  ; rubble
+calendar_stone_center_trigger_battle_event_fn_loop_h_continue:
+	inc hl
+	djnz calendar_stone_center_trigger_battle_event_fn_loop_h
 
 	ld hl, draw_room_with_hud
 	ld c, TILES_PAGE
@@ -87,6 +158,14 @@ calendar_stone_center_trigger_battle_event_fn:
 	ld b, 25
 	call wait_b_halts
 
+	; UFO enters from the ceiling:
+	; ...
+
+
+	ld de, TEXT_CALENDAR_AMBUSH
+	ld hl, display_in_game_message
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000
 
 	; set 'in_game_event_fn_ptr' and 'in_game_event_fn_page' for ending battle:
 	; ...

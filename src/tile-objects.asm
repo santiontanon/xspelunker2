@@ -2153,8 +2153,12 @@ object_interaction_function_calendar_socket_continue:
 	ret
 
 object_interaction_function_calendar_socket_1st_stone:
+	ld a, (global_state__story)
+	cp STORY_STATE__PLACED_FIRST_POWER_STONE
+	jr nc, object_interaction_function_calendar_socket_1st_stone_continue
 	ld a, STORY_STATE__PLACED_FIRST_POWER_STONE
 	ld (global_state__story), a
+object_interaction_function_calendar_socket_1st_stone_continue:
 	push ix
 		ld de, TEXT_PLACE_FIRST_POWER_STONE
 		ld hl, display_in_game_message
@@ -2200,22 +2204,9 @@ object_interaction_function_calendar_center:
 	ld a, (global_state__n_power_stones_in_calendar)
 	cp 5
 	ret c
-; 	ld a, (global_state__story)
-; 	cp STORY_STATE__FIGHTING_ALIENS
-; 	ret z
-; 	cp STORY_STATE__DEFEATED_ALIENS
-; 	jr z, object_interaction_function_calendar_center_continue2
 	ld hl, object_interaction_function_calendar_center_in_text_page
 	ld a, TEXT_PAGE
 	jp jp_to_hl_in_page_a_8000
-
-; object_interaction_function_calendar_center_continue2:
-; 	; trigger ending:
-; 	ld hl, calendar_stone_center_trigger_ending_event_fn
-; 	ld (in_game_event_fn_ptr), hl
-; 	ld a, CALENDAR_EVENTS_PAGE
-; 	ld (in_game_event_fn_page), a
-; 	ret
 
 
 ;-----------------------------------------------

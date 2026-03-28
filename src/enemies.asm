@@ -3541,6 +3541,15 @@ update_enemy_alien_shooting_shoot:
 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	ld d, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	ld a, e
+	; when firing diagonal up, start the laser one tile lower to align the sprites
+	cp 1
+	jr z, update_enemy_alien_shooting_shoot_diagonal_up
+	cp 5
+	jr nz, update_enemy_alien_shooting_shoot_all_set
+update_enemy_alien_shooting_shoot_diagonal_up:
+	inc b
+update_enemy_alien_shooting_shoot_all_set:
 	call update_enemy_alien_fire_laser
 
 	call random_a

@@ -796,3 +796,24 @@ trial_fn_wake_up_xibalba_lord_in_front_of_grave_p:
 trial_fn_wake_up_xibalba_lord_in_front_of_grave_p_no_grave:
 	or 1
 	ret	
+
+
+;-----------------------------------------------
+trial_fn_approach_calendar:
+	ld a, (player_x + 1)
+	cp 8
+	ret c
+	cp 24
+	ret nc
+	ld a, (player_y + 1)
+	cp 12
+	ret nz
+
+	; trial completed, trigger alien battle:
+	ld hl, 0
+	ld (current_room__trial_fn), hl
+	ld hl, calendar_stone_center_trigger_battle_event_fn
+	ld (in_game_event_fn_ptr), hl
+	ld a, CALENDAR_EVENTS_PAGE
+	ld (in_game_event_fn_page), a
+	ret

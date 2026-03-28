@@ -63,8 +63,8 @@ state_play:
 ; 		ld a, STORY_STATE__GOT_LETTER1
 ; 		ld a, STORY_STATE__PLACED_FIRST_POWER_STONE
 ; 		ld a, STORY_STATE__FOUND_LOST_VENDOR
-; 		ld a, STORY_STATE__GOT_LETTER2
-; 		ld (global_state__story), a
+		ld a, STORY_STATE__GOT_LETTER2
+		ld (global_state__story), a
 ; 		ld a, 2  ; maya riddle solved
 ; 		ld (global_state__maya_riddle), a
 
@@ -74,14 +74,14 @@ state_play:
 ; 		ld (player_inventory_items+1), a  ; second boss key
 ; 		ld (player_inventory_items+2), a  ; third boss key
 ; 		ld (player_inventory_items+3), a  ; fourth boss key
-		ld (player_inventory_items+4), a  ; fifth boss key
+; 		ld (player_inventory_items+4), a  ; fifth boss key
 ; 		ld (player_inventory_items+5), a  ; mars boss key
 ; 		ld (player_inventory_items+6), a  ; moon boss key
-; 		ld (player_inventory_items+7), a  ; first stone
-; 		ld (player_inventory_items+8), a  ; second stone
-; 		ld (player_inventory_items+9), a  ; third stone
-; 		ld (player_inventory_items+10), a
-; 		ld (player_inventory_items+11), a  ; 5th stone
+		ld (player_inventory_items+7), a  ; first stone
+		ld (player_inventory_items+8), a  ; second stone
+		ld (player_inventory_items+9), a  ; third stone
+		ld (player_inventory_items+10), a
+		ld (player_inventory_items+11), a  ; 5th stone
 ; 		ld (player_inventory_items+12), a  ; sixth stone
 ; 		ld (player_inventory_items+13), a
 ; 		ld (player_inventory_items+14), a
