@@ -344,6 +344,7 @@ public class Text {
         addLineSafe(lines_with_constant_page1, "I found another power stone!", "OTHER_POWER_STONES", 112);
         addLineSafe(lines_with_constant_page1, "A puzzle box!", "FOUND_PUZZLEBOX", 112);
         addLineSafe(lines_with_constant_page1, "There is a stone occupying this socket.", "CALENDAR_SOCKET_INACTIVE_STONE", 112);
+        addLineSafe(lines_with_constant_page1, "I cannot look at that while there are aliens around!", "CALENDAR_INTERACT_WITH_ALIENS", 112);
         addLineSafe(lines_with_constant_page1, "You replace the inactive stone by your final power stone.", "PLACE_SIXTH_POWER_STONE", 112);
         addLineSafe(lines_with_constant_page1, "Nothing has visually changed, but I can feel that NOW the calendar stone is fully powered up.", "PLACE_SIXTH_POWER_STONE2", 112);
         addLineSafe(lines_with_constant_page1, "It looks like an empty socket to place something inside.", "CALENDAR_SOCKET_EMPTY", 112);
@@ -372,7 +373,7 @@ public class Text {
         
         addLineSafe(lines_with_constant_page1, "Ok, I made it to the ruins! I need a way to sabotage the Alien operation! Let's find out where are they coming from, and how to stop them!", "STORY_ENTER_RUINS", 112);
         addLineSafe(lines_with_constant_page3, "Look at that! That is a gigantic Mayan Tzolk'in calendar stone! Although it seems to be half-buried, it's in perfect condition!", "FIND_CALENDAR_STONE1", 112);     
-        addLineSafe(lines_with_constant_page3, "But there is something strange in the middle, it has some empty sockets, like if something was taken out.", "FIND_CALENDAR_STONE2", 112);
+        addLineSafe(lines_with_constant_page3, "But wait! There are aliens guarding it! So, this is where they were... I'll have to be careful around here...", "FIND_CALENDAR_STONE2", 112);
         addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! I have a letter for you!", "LETTER1_ARRIVED1", 112);
         addLineSafe(lines_with_constant_page3, "The calendar stone! So, that's what it is!", "LETTER1_ARRIVED2", 112);
         addLineSafe(lines_with_constant_page3, "Aapo! I want to reply to that letter, give me one second while I write it... ", "LETTER1_ARRIVED3", 112);

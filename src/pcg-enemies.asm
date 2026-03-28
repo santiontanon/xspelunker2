@@ -116,6 +116,20 @@ pcg_generate_room__enemy_respawn_logic_loop4_next:
 ;-----------------------------------------------
 ; This is called when leaving a room, just before calling "pcg_generate_room".
 pcg_generate_room__enemy_respawn_logic_on_exit_room:
+	; Check if we are exiting the calendar room, and we had killed all the aliens:
+	ld a, (current_room__id)
+	cp CALENDAR_ROOM_ID
+	jr nz, pcg_generate_room__enemy_respawn_logic_on_exit_room_not_calendar
+	ld a, (current_room__sprite_enemies)
+	cp #ff
+	jr nz, pcg_generate_room__enemy_respawn_logic_on_exit_room_not_calendar
+	; player killed all the aliens, increment the alien counter:
+	ld a, (global_state__n_alien_controntations)
+	cp 2
+	jr z, pcg_generate_room__enemy_respawn_logic_on_exit_room_not_calendar
+	inc a
+	ld (global_state__n_alien_controntations), a
+pcg_generate_room__enemy_respawn_logic_on_exit_room_not_calendar:
 	; find a spot in enemy_respawn_table:
 	ld ix, enemy_respawn_table
 	ld hl, enemy_respawn_table  ; current candidate

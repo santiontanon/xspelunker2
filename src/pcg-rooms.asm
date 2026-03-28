@@ -2458,11 +2458,26 @@ pcg_generate_room__calendar_object_loop:
 	; spawn aliens:
 	; - when 2 aliens: 9, 15; 21, 15
 	; - when 3 aliens: add one at 15, 20
-	; - when 4 aliens: the original two plus 5, 9; 25, 9
+	; - when 4 aliens: the original two plus 5, 9; 25, 9	
 	ld de, 9 + 15*256
 	call pcg_generate_room__calendar_alien
 	ld de, 21 + 15*256
 	call pcg_generate_room__calendar_alien
+	ld a, (global_state__n_alien_controntations)
+	or a
+	jr z, pcg_generate_room__calendar_aliens_done
+	dec a
+	jr z, pcg_generate_room__calendar_3_aliens
+pcg_generate_room__calendar_4_aliens:
+	ld de, 5 + 9*256
+	call pcg_generate_room__calendar_alien
+	ld de, 25 + 9*256
+	call pcg_generate_room__calendar_alien
+	jr pcg_generate_room__calendar_aliens_done
+pcg_generate_room__calendar_3_aliens:
+	ld de, 15 + 20*256
+	call pcg_generate_room__calendar_alien
+pcg_generate_room__calendar_aliens_done:
 
 	; tablet gfx:
 	ld hl, buffer_4096 + 60 * 64

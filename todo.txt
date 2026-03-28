@@ -1,11 +1,5 @@
 to do:
 ***- confrontation with the aliens after activating the calendar stone:
-  ***- can I shave 3 more tiles form the calendar room to add platforms? so that lasers go through?
-  ***- if you try to interact with the stones when there are aliens, it does not let you (message)
-  ***- if you kill any alien, increment the count of aliens for next time: global_state__n_alien_controntations
-  ***- spawn 3 aliens the second time (based on global_state__n_alien_controntations)
-  ***- Then 4 aliens
-  ***- add messages every time you enter the room stating something about the aliens
   ***- When you approach place the fifth stone, have the final alien battle (it turns out they had a secret passage that is now open, and aliens keep pouring in)
     ***- it's an ambush, so, lock the entry ways somehow, so you are locked here until the combat ends
     ***- design and implement the alien UFO behavior (maybe when you destroy them, an alien falls down)
@@ -14,7 +8,7 @@ to do:
   ***- From that point on, Elaine will be there in the room. I should craft a few random messages, like those for Aapo that are trivia/story/hints/jokes.
 
 - first ending sequence (udpate "stats__ending"): The calendar stone machine activates and creates a defensive barrier around earth, the alien armada that was coming turns back, but promises revenge.
-  - add "no miss" achievement for this: if there is no damage (Track it) (or maybe jost, no damage during alien fight?)
+  - add "no miss" achievement for this: if there is no damage (Track it) (or maybe just no damage during alien fight?)
   - clue to check the rom in Maya in the ending credits, maybe something like "Luku ata de romu failu" (or some parts with actual verbs)
 - music: intro, letters/map, tablets/puzzles, game over, pyramid, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)
   - story: I like the original song: keep the same style and compose a variation

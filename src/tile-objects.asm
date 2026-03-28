@@ -1742,8 +1742,14 @@ object_interaction_function_tablet:
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
 	cp TAG_CALENDAR_TABLET
 	jr nz, object_interaction_function_tablet_not_calendar
+	; if there are aliens around:
+	ld a, (current_room__sprite_enemies)
+	cp #ff
 	ld de, calendar_tablet_fn
-	jr object_interaction_function_tablet_ptr_set
+	jr z, object_interaction_function_tablet_ptr_set
+	; there are aliens
+	ld de, TEXT_CALENDAR_INTERACT_WITH_ALIENS
+	jp object_interaction_function_calendar_socket_continue
 object_interaction_function_tablet_not_calendar:
 	cp TAG_MAYA_PUZZLE_TABLET
 	jr nz, object_interaction_function_tablet_not_maya_puzzle
@@ -2024,6 +2030,15 @@ object_interaction_function_pickup_scylla_eye:
 
 ;-----------------------------------------------
 object_interaction_function_calendar_socket:
+	; if there are aliens in the room, do not let you interact:
+	ld a, (current_room__sprite_enemies)
+	cp #ff
+	jr z, object_interaction_function_calendar_socket_no_aliens
+	; there are still aliens:
+	ld de, TEXT_CALENDAR_INTERACT_WITH_ALIENS
+	jp object_interaction_function_calendar_socket_continue
+
+object_interaction_function_calendar_socket_no_aliens:
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)
 	or a
 	jr z, object_interaction_function_calendar_socket_empty
