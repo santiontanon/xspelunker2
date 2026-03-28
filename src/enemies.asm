@@ -3318,16 +3318,24 @@ update_enemy_alien:
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	call update_enemy__patrol_left_right_platform
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
-	cp 2
+	or a
+	jr z, update_enemy_alien_patroling
+	dec a
+	jr z, update_enemy_alien_patroling
+	dec a
 	jp z, update_enemy_alien_stairs_up
-	cp 3
+	dec a
 	jp z, update_enemy_alien_stairs_down
+	; shooting
+	jp update_enemy_alien_shooting
+
+update_enemy_alien_patroling:
 	; it's patroling, check if we need stairs, or fire a bullet:
-
 	; check if the alien needs to fire a bullet:
-  	; ...
+  	call random_a
+  	and #1f
+  	jp z, update_enemy_alien_switch_to_shoot
 
-update_enemy_alien_no_fire:
 	; stairs up check:
 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
@@ -3462,6 +3470,179 @@ update_enemy_alien_stairs_down_done:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
 update_enemy_alien_stairs_down_continue:
 	jr update_enemy_alien_stairs_up_continue
+
+update_enemy_alien_switch_to_shoot:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+	ld a, (player_x + 1)
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	jr c, update_enemy_alien_switch_to_shoot_left
+update_enemy_alien_switch_to_shoot_right:
+	ld a, (player_y + 1)
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	jr z, update_enemy_alien_switch_to_shoot_right_straight
+	jr c, update_enemy_alien_switch_to_shoot_right_up
+update_enemy_alien_switch_to_shoot_right_down:
+	call update_enemy_alien_player_in_vertical_line
+	jr z, update_enemy_alien_switch_to_shoot_right_down_down
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 5
+	jr update_enemy_alien_shooting
+update_enemy_alien_switch_to_shoot_right_down_down:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 4
+	jr update_enemy_alien_shooting
+update_enemy_alien_switch_to_shoot_right_straight:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 6
+	jr update_enemy_alien_shooting
+update_enemy_alien_switch_to_shoot_right_up:
+	call update_enemy_alien_player_in_vertical_line
+	jr z, update_enemy_alien_switch_to_shoot_right_up_up
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 7
+	jr update_enemy_alien_shooting
+update_enemy_alien_switch_to_shoot_right_up_up:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 8
+	jr update_enemy_alien_shooting
+
+update_enemy_alien_switch_to_shoot_left:
+	ld a, (player_y + 1)
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	jr z, update_enemy_alien_switch_to_shoot_left_straight
+	jr c, update_enemy_alien_switch_to_shoot_left_up
+update_enemy_alien_switch_to_shoot_left_down:
+	call update_enemy_alien_player_in_vertical_line
+	jr z, update_enemy_alien_switch_to_shoot_left_down_down
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 10
+	jr update_enemy_alien_shooting
+update_enemy_alien_switch_to_shoot_left_down_down:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 9
+	jr update_enemy_alien_shooting
+update_enemy_alien_switch_to_shoot_left_straight:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 11
+	jr update_enemy_alien_shooting
+update_enemy_alien_switch_to_shoot_left_up:
+	call update_enemy_alien_player_in_vertical_line
+	jr z, update_enemy_alien_switch_to_shoot_left_up_up
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 12
+	jr update_enemy_alien_shooting
+update_enemy_alien_switch_to_shoot_left_up_up:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 13
+	; jr update_enemy_alien_shooting
+
+update_enemy_alien_shooting:
+	ld a, (current_world__difficulty_attack_warn_time)
+	sra a  ; half the wait time
+	cp (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	jr nz, update_enemy_alien_shooting_continue
+update_enemy_alien_shooting_shoot:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	ld c, a
+	sub 4
+	ld hl, update_enemy_alien_shoot_state_to_direction_table
+	ADD_HL_A
+	ld e, (hl)
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	ld d, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	call update_enemy_alien_fire_laser
+
+	call random_a
+	and #01
+	ld c, (ix + ROOM_OBJECT_STRUCT_STATE)
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), a  ; random left/right
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+	ld a, c
+	jr update_enemy_alien_shooting_continue2
+update_enemy_alien_shooting_continue:
+	; states: sprite = 13 + (state - 4) * 2
+	; - 4: right:down
+	; - 5: right:right-down
+	; - 6: right:right
+	; - 7: right:right-up
+	; - 8: right:up
+	; - 9: left:down
+	; - 10: left:left-down
+	; - 11: left:left
+	; - 12: left:left-up
+	; - 13: left:up
+ 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+ update_enemy_alien_shooting_continue2:
+ 	add a, -4
+ 	add a, a
+ 	add a, FIRST_ENEMY_SPRITE_PATTERN + 13
+ 	add a, a
+ 	add a, a
+ 	ld e, a
+	ld c, 0
+	ld d, COLOR_PURPLE
+	call get_sprite_object_sprite_coordinates
+	call z, add_sprite_to_this_frame
+	ld a, -4
+	add a, b
+	ld b, a
+
+	ld a, 4
+	add a, e
+	ld e, a
+	ld a, d
+	and #80
+	add a, COLOR_GREEN
+	ld d, a
+	call add_sprite_to_this_frame
+	jp update_sprite_enemies_loop_next	
+
+update_enemy_alien_player_in_vertical_line:
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld a, (player_x + 1)
+	dec a
+	cp c
+	ret z
+	inc a
+	cp c
+	ret z
+	inc a
+	cp c
+	ret
+
+
+update_enemy_alien_shoot_state_to_direction_table:
+	db 8  ; down
+	db 6  ; right down
+	db 4  ; right
+	db 5  ; right up
+	db 7  ; up
+	db 8  ; down
+	db 2  ; left down
+	db 0  ; left
+	db 1  ; left up
+	db 7  ; up
+
+
+update_enemy_alien_fire_laser:
+	; - c, b: x, y
+	; - d: pixel x
+	; - e: direction
+	push bc
+	push de
+		call ptr_to_new_sprite_enemy
+	pop de
+	pop bc
+	ret nz
+	ld (hl), 0  ; ID
+	inc hl
+	ld (hl), ENEMY_BULLET_LASER  ; enemy type
+	inc hl
+	ld (hl), d  ; pixel x
+	inc hl
+	ld (hl), c  ; tile x
+	inc hl
+	ld (hl), 0  ; pixel y
+	inc hl
+	ld (hl), b  ; tile y
+	inc hl
+	; 1: left-up, 0: left, 2: left-down
+	; 5: right-up, 4: right, 6: right-down
+	; 7: up, 8: down
+	ld (hl), e  ; state / direction
+	ld hl, SFX_raygun
+	jp play_SFX_with_high_priority
 
 
 ;-----------------------------------------------
@@ -4021,6 +4202,14 @@ update_enemy_laser:
 	cp 5
 	jr z, update_enemy_laser_right_up
 	cp 7
+	jr z, update_enemy_laser_up
+update_enemy_laser_down:
+	ld a, (current_world__difficulty_bullet_speed)
+	add a, a
+	call update_enemy_bullet_move_down_if_possible_a_times
+	jp z, update_enemy_delete
+	ld e, 64  ; |
+	jr update_enemy_laser_continue
 update_enemy_laser_up:
 	ld a, (current_world__difficulty_bullet_speed)
 	add a, a

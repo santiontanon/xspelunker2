@@ -1,6 +1,5 @@
 to do:
 ***- confrontation with the aliens after activating the calendar stone:
-  ***- Alien sprite enemies randomly aliens fire towards you (8 directions)
   ***- if you try to interact with the stones when there are aliens, it does not let you (message)
   ***- if you kill any alien, increment the count of aliens for next time: global_state__n_alien_controntations
   ***- spawn 3 aliens the second time (based on global_state__n_alien_controntations)
@@ -50,6 +49,7 @@ to do:
 - save game to rom / password
 
 - Potential new ideas if I have the energy:
+  - There should be another shop. Otherwise, collecting money feels a bit useless if there is just one shop
   - [did I already add any clue for this? remove if I don't use it] special condition for triggering "angry bosses" (they change color). For each one you beat in this hard mode, you get something in the ending, and if you get them all, you get a special mention. The conditions might be things like: certain bit in the random seed to be "11" (so, not all seeds are good), dive into water X times in the same room without doing anything else, etc. Use the "random seed stela" (maybe give a clue about it), currently it displays the bottom 6 bits of the first random seed word, should I make it display a whole 8 bits of it?
     - add as a special achievement for the gameover screen (at least one angry, and all 8 angry)
   - Mars/Moon: in the boss rooms, there might be something you can do before summoning the boss. This could lead to something like: (1) an underground cave where there is a broken ancient robot that can talk to you (in a mix of English and Maya maybe?), and might give you a weapon upgrade (e.g. a better raygun, which might be esential for fighting the final alien boss), add as a special achievement for the gameover screen.
