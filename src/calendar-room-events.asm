@@ -159,8 +159,33 @@ calendar_stone_center_trigger_battle_event_fn_loop_h_continue:
 	call wait_b_halts
 
 	; UFO enters from the ceiling:
-	; ...
+	ld ix, #fd0e  ; 14, -3
+	call calendar_stone_center_battle_event_fn__spawn_ufo
+	call calendar_stone_center_battle_event_fn__redraw_tile_objects
+	ld b, 25
+	call wait_b_halts
 
+	ld hl, find_tile_enemy_ptr
+	ld c, TILES_PAGE
+	call call_hl_in_page_c_8000
+	inc (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	push ix
+		call calendar_stone_center_battle_event_fn__redraw_tile_objects
+	pop ix
+	ld b, 25
+	call wait_b_halts
+	inc (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	push ix
+		call calendar_stone_center_battle_event_fn__redraw_tile_objects
+	pop ix
+	ld b, 25
+	call wait_b_halts
+	inc (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	push ix
+		call calendar_stone_center_battle_event_fn__redraw_tile_objects
+	pop ix
+	ld b, 25
+	call wait_b_halts
 
 	ld de, TEXT_CALENDAR_AMBUSH
 	ld hl, display_in_game_message
@@ -183,23 +208,23 @@ calendar_stone_center_trigger_battle_event_fn_loop_h_continue:
 
 
 ;-----------------------------------------------
-calendar_stone_center_trigger_battle_event_fn_copy_room_column:
-	ld b, 24
-calendar_stone_center_trigger_battle_event_fn_copy_room_column_loop:
-	push bc
-		push hl
-			push de
-				ld bc, 4
-				ldir
-			pop hl
-			ld bc, 32
-			add hl, bc
-			ex de, hl
-		pop hl
-		add hl, bc
-	pop bc
-	djnz calendar_stone_center_trigger_battle_event_fn_copy_room_column_loop
-	ret
+; calendar_stone_center_trigger_battle_event_fn_copy_room_column:
+; 	ld b, 24
+; calendar_stone_center_trigger_battle_event_fn_copy_room_column_loop:
+; 	push bc
+; 		push hl
+; 			push de
+; 				ld bc, 4
+; 				ldir
+; 			pop hl
+; 			ld bc, 32
+; 			add hl, bc
+; 			ex de, hl
+; 		pop hl
+; 		add hl, bc
+; 	pop bc
+; 	djnz calendar_stone_center_trigger_battle_event_fn_copy_room_column_loop
+; 	ret
 
 
 ;-----------------------------------------------
@@ -438,3 +463,62 @@ draw_lowered_calendar_stone_loop2_done:
 	ld bc, 4
 	ldir
 	ret
+
+
+;-----------------------------------------------
+; input:
+; - ixl, ixh: x, y of the UFO
+calendar_stone_center_battle_event_fn__spawn_ufo:
+	ld a, (tmp_enemy_pcg_tile_enemy_workmemory_usage)
+	add UFO_WORKMEMORY_USAGE
+	cp (tile_enemy_work_memory_end - tile_enemy_work_memory) + 1  ; + 1 so that we can use "nc" as the condition
+	ret nc  ; if we do not have enough work memory, do not spawn
+	ld hl, ptr_to_new_tile_object
+	ld c, TILES_PAGE
+	call call_hl_in_page_c_8000
+	ret nz
+	ld c, ixl
+	ld b, ixh
+	ld (hl), 0  ; ID
+	inc hl
+	ld (hl), TAG_ENEMY_UFO  ; type
+	inc hl
+	ld (hl), c  ; tile x
+	inc hl
+	ld (hl), b  ; tile y
+	inc hl
+	ld (hl), 0  ; state
+	inc hl
+	ld (hl), 0  ; state timer
+	inc hl
+	ld (hl), 16  ; hit points
+	inc hl
+
+	ld de, tile_enemy_work_memory
+	ld a, (tmp_enemy_pcg_tile_enemy_workmemory_usage)
+	ADD_DE_A
+	ld (hl), e  ; work memory ptr
+	inc hl
+	ld (hl), d
+	xor a
+	ld (de), a  ; mark that we have not yet saved the background
+	ld a, (tmp_enemy_pcg_tile_enemy_workmemory_usage)
+	add a, UFO_WORKMEMORY_USAGE
+	ld (tmp_enemy_pcg_tile_enemy_workmemory_usage), a
+
+	ld hl, enemy_ufo_hit
+	ld (tile_enemy_hit_fn_ptr), hl
+	ret
+
+
+;-----------------------------------------------
+calendar_stone_center_battle_event_fn__redraw_tile_objects:
+	ld c, TILES_PAGE
+	ld hl, room_undraw_tile_objects
+	call call_hl_in_page_c_8000
+	ld c, TILES_PAGE
+	ld hl, room_render_tile_objects
+	call call_hl_in_page_c_8000
+	ld hl, draw_room_with_hud
+	ld c, TILES_PAGE
+	jp call_hl_in_page_c_8000

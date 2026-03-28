@@ -141,6 +141,8 @@ update_tile_objects_loop:
 		jp z, update_tile_objects_enemy_stone_owl
 		cp TAG_ENEMY_SENTINEL
 		jp z, update_tile_objects_enemy_sentinel
+		cp TAG_ENEMY_UFO
+		jp z, update_tile_objects_enemy_ufo
 		cp TAG_LOST_VENDOR
 		jp z, update_tile_objects_lost_vendor
 update_tile_objects_loop_continue:
@@ -432,7 +434,7 @@ room_render_tile_objects_loop:
 		cp TAG_BREAKABLE_WALL1
 		jp z, room_render_tile_objects_loop_continue
 		cp TAG_BREAKABLE_WALL2
-		jr z, room_render_tile_objects_loop_continue
+		jp z, room_render_tile_objects_loop_continue
 		cp TAG_BREAKABLE_WALL3
 		jr z, room_render_tile_objects_loop_continue
 		cp TAG_BREAKABLE_WALL4
@@ -461,6 +463,8 @@ room_render_tile_objects_loop:
 		jp z, room_render_tile_objects_render_enemy_stone_owl
 		cp TAG_ENEMY_SENTINEL
 		jp z, room_render_tile_objects_render_enemy_sentinel
+		cp TAG_ENEMY_UFO
+		jp z, room_render_tile_objects_render_enemy_ufo
 		cp TAG_POSEIDON_LEVER
 		jp z, room_render_tile_objects_render_combination_lever
 		cp TAG_POSEIDON_BOSS_DISPLAY
@@ -779,6 +783,8 @@ room_undraw_tile_objects_loop:
 		jp z, room_render_tile_objects_undraw_enemy_stone_owl
 		cp TAG_ENEMY_SENTINEL
 		jp z, room_render_tile_objects_undraw_enemy_sentinel
+		cp TAG_ENEMY_UFO
+		jp z, room_render_tile_objects_undraw_enemy_ufo
 		inc hl
 		ld c, (hl)  ; x
 		ld ixl, c
@@ -1263,6 +1269,7 @@ ENDR
 	dw object_interaction_function_empty  ; TAG_ENEMY_LAVA_GENERATOR
 	dw object_interaction_function_empty  ; TAG_ENEMY_STONE_OWL
 	dw object_interaction_function_empty  ; TAG_ENEMY_SENTINEL
+	dw object_interaction_function_empty  ; TAG_ENEMY_UFO
 
 object_interaction_inventory_slot:
 	db #ff, #ff, #ff, #ff, #ff  ; none, block puzzles: 0
@@ -2881,6 +2888,7 @@ ENDR
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_ENEMY_LAVA_GENERATOR
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_ENEMY_STONE_OWL
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_ENEMY_SENTINEL
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_ENEMY_UFO
 
 
 tile_object_regular_object_gfx:

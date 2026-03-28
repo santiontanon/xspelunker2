@@ -806,7 +806,7 @@ trial_fn_approach_calendar:
 	cp 24
 	ret nc
 	ld a, (player_y + 1)
-	cp 12
+	cp 15
 	ret nz
 
 	; trial completed, trigger alien battle:

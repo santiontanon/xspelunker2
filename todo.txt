@@ -1,13 +1,18 @@
 to do:
 ***- confrontation with the aliens after activating the calendar stone:
-  ***- create UFO tile object: for now just draw/undraw routines and empty behavior
-  ***- then an alien UFO flies in (before the ambush text message)
-  ***- design and implement the alien UFO behavior (maybe when you destroy them, an alien falls down)
   ***- add a "falling" state to the alien behavior (new sprite? or can I reuse any?)
-  ***- spawn aliens to maintain always 4 in the screen + 1 UFO, and keep a counter of how many have you killed
-  ***- after you kill 16 (?), trigger final event (for now just stop spawning): story state to "STORY_STATE__DEFEATED_ALIENS"
+  ***- spawn aliens to maintain always 4 in the screen + 1 UFO (spawn at most 20 aliens and 4 UFOs?)
+  ***- design and implement the alien UFO behavior:
+    ***- fly down to a predefined height
+    ***- fly left and right, firing bullets targetted to the player
+    ***- randomly change altitude, between 2 and 4
+    ***- when killed, an alien drops from the cabin
+  ***- keep a counter of how many aliens have you killed
+  ***- after you kill all of them, trigger final event (for now just stop spawning): story state to "STORY_STATE__DEFEATED_ALIENS"
   ***- Elaine shows up with dynamite and bombs the alien entrance
-    ***- screen goes to black for 1 second, and comes back with you and Elaine next to calendar stone, all the entrances restored
+    ***- explosions from the alien entrances (replace UFO gfx with explosion GFX)
+    ***- then a rope drops, and elaine comes down
+    ***- screen goes to black, entrances restored, ceiling closed, and Elaine and Michael are in the center
   ***- dialogue:
     - "Michael: Elaine! What are you doing here!"
     - "Elaine: Well... saving your ass?"

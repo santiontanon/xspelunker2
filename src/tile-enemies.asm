@@ -16,6 +16,11 @@ SENTINEL_WORKMEMORY_USAGE: equ 17
 ; - 1 byte: original x when rendered
 ; - 15 bytes: background buffer
 
+UFO_WORKMEMORY_USAGE: equ 19
+; - 1 byte: background saved?
+; - 2 byte: original x, y when rendered
+; - 16 bytes: background buffer
+
 
 ;-----------------------------------------------
 ; input:
@@ -788,7 +793,6 @@ enemy_stone_owl_hit_no_hit:
 	ret
 
 
-
 ;-----------------------------------------------
 ; input:
 ; - e: tile idx that was hit
@@ -808,6 +812,25 @@ enemy_sentinel_hit:
 	ret nz
 	call find_tile_enemy_ptr
 	ret nz	
+	jr enemy_sentinel_hit_entry_point
+
+
+;-----------------------------------------------
+; input:
+; - e: tile idx that was hit
+; - iyl: collision ID
+; - iyh: weapon damage
+; output:
+; - z: hit
+; - nz: no hit
+enemy_ufo_hit:
+	; is it a ufo tile?
+	ld a, e
+	call get_collision_tile_type_of_a
+	cp 3
+	ret nz
+	call find_tile_enemy_ptr
+	ret nz
 	jr enemy_sentinel_hit_entry_point
 
 
@@ -2143,6 +2166,126 @@ room_render_tile_objects_undraw_enemy_sentinel:
 
 
 ;-----------------------------------------------
+; input:
+; - hl: object ptr + 1
+update_tile_objects_enemy_ufo:
+	dec hl
+	push hl
+	pop ix
+
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_HEALTH)
+	or a
+	jp z, update_tile_objects_enemy_sentinel_killed	
+
+	inc (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+
+	; ...
+
+	; we need to redraw as the frame has changed:
+; 	call room_undraw_tile_objects
+; 	call room_render_tile_objects
+; 	ld hl, redraw_flags
+; 	set ROOM_REDRAW_FLAG_BIT, (hl)
+	jp update_tile_objects_loop_continue
+
+
+;-----------------------------------------------
+; input:
+; - hl: object ptr + 1
+room_render_tile_objects_render_enemy_ufo:
+	dec hl
+	push hl
+	pop ix
+
+	; get frame to draw:
+	ld hl, tile_object_ufo_frame_right1_gfx - 1
+
+	; draw saving bg to work memory:
+	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	ld e, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR)
+	ld d, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR + 1)
+	ld a, 1
+	ld (de), a  ; mark that we have saved background
+	inc de
+	ld a, c
+	ld (de), a  ; x when rendering
+	inc de
+	ld a, b
+	ld (de), a  ; y when rendering
+	inc de
+	ld ixl, e
+	ld ixh, d
+	ld iyl, c
+	ld iyh, b
+	call room_render_tile_objects_render_saving_background
+	jp room_render_tile_objects_loop_continue
+
+
+tile_object_ufo_frame_right1_gfx:
+  db 4, 4
+  dw tile_object_ufo_frame_right1_gfx_tiles
+tile_object_ufo_frame_right1_gfx_tiles:
+  db 192, 193, 194, 208
+  db 209, 210, 224, 225
+  db 226, 240, 241, 242
+  db 0, 211, 211, 0
+
+tile_object_ufo_frame_right2_gfx:
+  db 4, 4
+  dw tile_object_ufo_frame_right2_gfx_tiles
+tile_object_ufo_frame_right2_gfx_tiles:
+  db 192, 193, 194, 208
+  db 209, 210, 224, 225
+  db 226, 240, 241, 242
+  db 0, 212, 212, 0
+
+tile_object_ufo_frame_left1_gfx:
+  db 4, 4
+  dw tile_object_ufo_frame_left1_gfx_tiles
+tile_object_ufo_frame_left1_gfx_tiles:
+  db 192, 99, 100, 208
+  db 209, 95, 168, 225
+  db 226, 245, 247, 242
+  db 0, 211, 211, 0
+
+tile_object_ufo_frame_left2_gfx:
+  db 4, 4
+  dw tile_object_ufo_frame_left2_gfx_tiles
+tile_object_ufo_frame_left2_gfx_tiles:
+  db 192, 99, 100, 208
+  db 209, 95, 168, 225
+  db 226, 245, 247, 242
+  db 0, 212, 212, 0
+
+
+;-----------------------------------------------
+; input:
+; - hl: object ptr + 1
+room_render_tile_objects_undraw_enemy_ufo:
+	dec hl
+	push hl
+	pop ix
+	ld e, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR)
+	ld d, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR + 1)
+	ld a, (de)
+	or a
+	jp z, room_undraw_tile_objects_loop_continue  ; if we have not yet saved background, do not undraw
+	inc de
+	ld a, (de)  ; x when we rendered
+	ld ixl, a
+	inc de
+	ld a, (de)  ; y when we rendered
+	ld ixh, a
+	inc de
+	ld iyl, e
+	ld iyh, d
+	ld hl, tile_object_ufo_frame_right1_gfx - 1
+	call room_undraw_tile_objects_restore_background
+	jp room_undraw_tile_objects_loop_continue
+
+
+;-----------------------------------------------
 ; Used for when the player hits a tile enemy, sssumes there is a single tile enemy
 ; that can be hit in the whole screen.
 ; output:
@@ -2179,6 +2322,8 @@ find_tile_enemy_ptr_loop:
 	cp TAG_ENEMY_STONE_OWL
 	ret z
 	cp TAG_ENEMY_SENTINEL
+	ret z
+	cp TAG_ENEMY_UFO
 	ret z
 	add ix, bc
 	jr find_tile_enemy_ptr_loop
