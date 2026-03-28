@@ -145,13 +145,13 @@ calendar_stone_center_battle_event_fn:
 	; ...
 
 	; end battle message:
-	ld de, TEXT_CALENDAR_CENTER_MSG2
-	ld hl, display_in_game_message
-	ld c, TEXT_PAGE
-	call call_hl_in_page_c_8000
+; 	ld de, TEXT_CALENDAR_CENTER_MSG2
+; 	ld hl, display_in_game_message
+; 	ld c, TEXT_PAGE
+; 	call call_hl_in_page_c_8000
 
-	ld a, STORY_STATE__DEFEATED_ALIENS
-	ld (global_state__story), a
+; 	ld a, STORY_STATE__DEFEATED_ALIENS
+; 	ld (global_state__story), a
 	ret
 
 

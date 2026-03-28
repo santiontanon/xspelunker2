@@ -189,7 +189,11 @@ object_interaction_function_calendar_center_in_text_page:
 
 object_interaction_function_calendar_center_yes:
 	; trigger ending:
-	ld hl, calendar_stone_center_trigger_battle_event_fn
+; 	ld hl, calendar_stone_center_trigger_battle_event_fn
+; 	ld (in_game_event_fn_ptr), hl
+; 	ld a, CALENDAR_EVENTS_PAGE
+; 	ld (in_game_event_fn_page), a
+	ld hl, calendar_stone_center_trigger_ending_event_fn
 	ld (in_game_event_fn_ptr), hl
 	ld a, CALENDAR_EVENTS_PAGE
 	ld (in_game_event_fn_page), a

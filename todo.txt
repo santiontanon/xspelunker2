@@ -1,10 +1,27 @@
 to do:
 ***- confrontation with the aliens after activating the calendar stone:
-  ***- When you approach place the fifth stone, have the final alien battle (it turns out they had a secret passage that is now open, and aliens keep pouring in)
-    ***- it's an ambush, so, lock the entry ways somehow, so you are locked here until the combat ends
+  ***- if you enter the calendar room with the first 5 stones (or more):
+    ***- ambush, trigger: calendar_stone_center_trigger_battle_event_fn
+      ***- add text: "Where are the aliens? Have they finally given up?!"
+      ***- then an alien UFO flies in
+        ***- create UFO tile object: for now just draw/undraw routines and empty behavior
+      ***- text: "Wait! They had not given up... This is an ambush!!!"
     ***- design and implement the alien UFO behavior (maybe when you destroy them, an alien falls down)
-  ***- After killing enough, Elaine shows up with dynamite and closes the passage
-  ***- They both walk to the calendar stone, and there is a small dialogue where Elaine states that the calendar stone seems ready to be activated, and whether you want to activate it already. If you say yes, the game ends. If you say no, Elaine says something like: "Ok, I will stay here to close that passage if they try to open it again; I have plenty of dynamite on me, so, don't worry. But do not take too long! Let's get out of here as soon as possible!"
+    ***- add a "falling" state to the alien behavior (new sprite? or can I reuse any?)
+    ***- spawn aliens to maintain always 4 in the screen + 1 UFO, and keep a counter of how many have you killed
+    ***- after you kill 16 (?), trigger final event (for now just stop spawning): story state to "STORY_STATE__DEFEATED_ALIENS"
+  ***- Elaine shows up with dynamite and bombs the alien entrance
+    ***- screen goes to black for 1 second, and comes back with you and Elaine next to calendar stone, all the entrances restored
+  ***- dialogue:
+    - "Michael: Elaine! What are you doing here!"
+    - "Elaine: Well... saving your ass?"
+    - "Michael: ..."
+    - "Elaine: Ok, you can thank me later... Do you have the celestial stones?"
+    - "Michael: Yes! I do!"
+    - "Elaine: You do?! Hmm... I wish you were this efficient when you are home..."
+    - "Michael: Yes! I do!"
+    - "Elaine: Ok, then are we ready to activate the calendar stone? More aliens will be coming soon!"
+    - "Elaine: When you are ready, go ahead! I'll be guarding the calendar stone in the meantime."
   ***- From that point on, Elaine will be there in the room. I should craft a few random messages, like those for Aapo that are trivia/story/hints/jokes.
 
 - first ending sequence (udpate "stats__ending"): The calendar stone machine activates and creates a defensive barrier around earth, the alien armada that was coming turns back, but promises revenge.

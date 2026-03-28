@@ -2200,23 +2200,22 @@ object_interaction_function_calendar_center:
 	ld a, (global_state__n_power_stones_in_calendar)
 	cp 5
 	ret c
-	ld a, (global_state__story)
-	cp STORY_STATE__FIGHTING_ALIENS
-	ret z
-	cp STORY_STATE__DEFEATED_ALIENS
-	jr z, object_interaction_function_calendar_center_continue2
+; 	ld a, (global_state__story)
+; 	cp STORY_STATE__FIGHTING_ALIENS
+; 	ret z
+; 	cp STORY_STATE__DEFEATED_ALIENS
+; 	jr z, object_interaction_function_calendar_center_continue2
 	ld hl, object_interaction_function_calendar_center_in_text_page
-object_interaction_function_calendar_center_continue:
 	ld a, TEXT_PAGE
 	jp jp_to_hl_in_page_a_8000
 
-object_interaction_function_calendar_center_continue2:
-	; trigger ending:
-	ld hl, calendar_stone_center_trigger_ending_event_fn
-	ld (in_game_event_fn_ptr), hl
-	ld a, CALENDAR_EVENTS_PAGE
-	ld (in_game_event_fn_page), a
-	ret
+; object_interaction_function_calendar_center_continue2:
+; 	; trigger ending:
+; 	ld hl, calendar_stone_center_trigger_ending_event_fn
+; 	ld (in_game_event_fn_ptr), hl
+; 	ld a, CALENDAR_EVENTS_PAGE
+; 	ld (in_game_event_fn_page), a
+; 	ret
 
 
 ;-----------------------------------------------
