@@ -325,7 +325,14 @@ update_tile_objects_2x2_enemy_killed:
 
 
 ;-----------------------------------------------
-update_tile_objects_4x4_enemy_killed:
+update_tile_objects_ufo_killed:
+	call update_tile_objects_4x4_enemy_killed_internal
+	pop af  ; we do an extra pop, since we are skipping the one at update_tile_objects_loop_continue
+	jp update_tile_objects_loop
+
+
+;-----------------------------------------------
+update_tile_objects_4x4_enemy_killed_internal:
 	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
 	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
 	push bc
@@ -341,6 +348,12 @@ update_tile_objects_4x4_enemy_killed:
 			set ROOM_REDRAW_FLAG_BIT, (hl)
 		pop hl
 	pop bc
+	ret
+
+
+;-----------------------------------------------
+update_tile_objects_4x4_enemy_killed:
+	call update_tile_objects_4x4_enemy_killed_internal
 	push hl
 		; chance of 3 drops:
 		inc c
@@ -809,9 +822,9 @@ enemy_sentinel_hit:
 	jr z, enemy_stone_owl_hit_no_hit
 	call get_collision_tile_type_of_a
 	cp 3
-	ret nz
+	jr nz, enemy_stone_owl_hit_no_hit
 	call find_tile_enemy_ptr
-	ret nz	
+	jr nz, enemy_stone_owl_hit_no_hit
 	jr enemy_sentinel_hit_entry_point
 
 
@@ -828,10 +841,25 @@ enemy_ufo_hit:
 	ld a, e
 	call get_collision_tile_type_of_a
 	cp 3
-	ret nz
+	jp nz, enemy_stone_owl_hit_no_hit
 	call find_tile_enemy_ptr
-	ret nz
-	jr enemy_sentinel_hit_entry_point
+	jp nz, enemy_stone_owl_hit_no_hit
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_HEALTH)
+	sub iyh
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_HEALTH), a
+	jr z, enemy_ufo_hit_dead
+	jr nc, enemy_ant_colony_hit_continue
+enemy_ufo_hit_dead:
+	; UFO killed, spawn an alien!
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_HEALTH), 0
+
+	ld e, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	inc e
+	ld d, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	ld c, CALENDAR_EVENTS_PAGE
+	ld hl, calendar_stone_center_battle_event_fn__spawn_alien
+	call call_hl_in_page_c_8000
+	jp enemy_ant_colony_hit_continue
 
 
 ;-----------------------------------------------
@@ -2175,17 +2203,88 @@ update_tile_objects_enemy_ufo:
 
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_HEALTH)
 	or a
-	jp z, update_tile_objects_enemy_sentinel_killed	
+	jp z, update_tile_objects_ufo_killed
 
 	inc (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	and #01
+	jp nz, update_tile_objects_loop_continue
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)
+	or a
+	jr z, update_tile_objects_enemy_ufo_idle  ; idle-left
+	dec a
+	jr z, update_tile_objects_enemy_ufo_idle  ; idle-right
+	dec a
+	jr z, update_tile_objects_enemy_ufo_left
+update_tile_objects_enemy_ufo_right:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	cp 25
+	jr z, update_tile_objects_enemy_ufo_to_idle
+	inc (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	jr update_tile_objects_enemy_ufo_shoot_and_draw
+update_tile_objects_enemy_ufo_left:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	cp 3
+	jr z, update_tile_objects_enemy_ufo_to_idle
+	dec (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	jr update_tile_objects_enemy_ufo_shoot_and_draw
+update_tile_objects_enemy_ufo_to_idle:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)
+	and #01
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), a
 
-	; ...
+update_tile_objects_enemy_ufo_idle:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	or a
+	jp m, update_tile_objects_enemy_ufo_idle_down
+	cp 3
+	jr c, update_tile_objects_enemy_ufo_idle_down
+	jr z, update_tile_objects_enemy_ufo_idle_random
+update_tile_objects_enemy_ufo_idle_up:
+	dec (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	jr update_tile_objects_enemy_ufo_idle_continue
+update_tile_objects_enemy_ufo_idle_down:
+	inc (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	jr update_tile_objects_enemy_ufo_idle_continue
+update_tile_objects_enemy_ufo_idle_random:
+	ld c, 3
+	call random_modulo
+	dec a
+	add a, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_Y), a
+update_tile_objects_enemy_ufo_idle_continue:
+	call random_a
+	and #07
+	jr nz, update_tile_objects_enemy_ufo_shoot_and_draw
+	; start moving
+	call random_a
+	and #03
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), a
 
+update_tile_objects_enemy_ufo_shoot_and_draw:
+	call random_a
+	and #03
+	jr nz, update_tile_objects_enemy_ufo_draw
+
+	ld e, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	inc e
+	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	inc b
+	inc b
+	ld hl, boss_fire_directional_bullet_towards_player_e_b
+	ld c, BOSS_PAGE
+	push ix
+		ld ix, 0
+		call call_hl_in_page_c_8000
+		ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BULLET_IGNORING_WALLS
+	pop ix
+
+update_tile_objects_enemy_ufo_draw:
 	; we need to redraw as the frame has changed:
-; 	call room_undraw_tile_objects
-; 	call room_render_tile_objects
-; 	ld hl, redraw_flags
-; 	set ROOM_REDRAW_FLAG_BIT, (hl)
+	call room_undraw_tile_objects
+	call room_render_tile_objects
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)
 	jp update_tile_objects_loop_continue
 
 
@@ -2197,8 +2296,23 @@ room_render_tile_objects_render_enemy_ufo:
 	push hl
 	pop ix
 
-	; get frame to draw:
-	ld hl, tile_object_ufo_frame_right1_gfx - 1
+	; get frame to draw: 2 * (state % 2) + (timer >> 2)
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	rrca
+	rrca
+	and #01
+	ld c, a
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)
+	and #01
+	add a, a
+	add a, c
+	add a, a
+	ld hl, tile_object_ufo_frame_table
+	ADD_HL_A
+	ld a, (hl)
+	inc hl
+	ld h, (hl)
+	ld l, a
 
 	; draw saving bg to work memory:
 	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
@@ -2221,6 +2335,11 @@ room_render_tile_objects_render_enemy_ufo:
 	call room_render_tile_objects_render_saving_background
 	jp room_render_tile_objects_loop_continue
 
+tile_object_ufo_frame_table:
+	dw tile_object_ufo_frame_left1_gfx - 1
+	dw tile_object_ufo_frame_left2_gfx - 1
+	dw tile_object_ufo_frame_right1_gfx - 1
+	dw tile_object_ufo_frame_right2_gfx - 1
 
 tile_object_ufo_frame_right1_gfx:
   db 4, 4
@@ -2244,7 +2363,7 @@ tile_object_ufo_frame_left1_gfx:
   db 4, 4
   dw tile_object_ufo_frame_left1_gfx_tiles
 tile_object_ufo_frame_left1_gfx_tiles:
-  db 192, 99, 100, 208
+  db 192, 128, 100, 208
   db 209, 95, 168, 225
   db 226, 245, 247, 242
   db 0, 211, 211, 0
@@ -2253,7 +2372,7 @@ tile_object_ufo_frame_left2_gfx:
   db 4, 4
   dw tile_object_ufo_frame_left2_gfx_tiles
 tile_object_ufo_frame_left2_gfx_tiles:
-  db 192, 99, 100, 208
+  db 192, 128, 100, 208
   db 209, 95, 168, 225
   db 226, 245, 247, 242
   db 0, 212, 212, 0

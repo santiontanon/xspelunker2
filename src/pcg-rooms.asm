@@ -2424,6 +2424,8 @@ pcg_generate_room__calendar:
 	ld (current_room__tileset_overrides_item_tiles), a
 	ld hl, calendar_enemy_sprites_zx0
 	ld (current_room__enemy_sprites_ptr), hl
+	ld hl, update_animations_in_vdp_pyramid
+	ld (current_room__animation_fn_ptr), hl
 
 	call pcg_generate_room__calendar_open_walls
 

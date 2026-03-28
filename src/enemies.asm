@@ -3336,6 +3336,7 @@ update_enemy_alien_falling:
 	jr nz, update_enemy_alien_falling_continue
 	; reached a floor:
 	call random_a
+	and #01
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), a
 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
 update_enemy_alien_falling_continue:
@@ -5520,6 +5521,8 @@ enemy_hit_killed:
 	ret z  ; bones do not have drops
 	cp ENEMY_BONE_PARABOLA_BULLET
 	ret z  ; bones do not have drops
+	cp ENEMY_ALIEN
+	ret z  ; aliens do not have drops
 	ld a, (boss__active)
 	or a
 	ret nz  ; no drops for enemies spawned by bosses

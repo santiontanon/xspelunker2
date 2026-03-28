@@ -1,11 +1,5 @@
 to do:
 ***- confrontation with the aliens after activating the calendar stone:
-  ***- alien UFO behavior:
-    ***- 0: idle (just fire, and randomly change height within the 2-4 range)
-    ***- 1: fly left until X 3 and go to idle
-    ***- 2: fly right until X 25 and go to idle
-    ***- when killed, an alien drops from the cabin
-  ***- spawn another UFO when the current one is killed
   ***- keep a counter of how many aliens have spawned, and only spawn up to 16 aliens and 4 UFOs
   ***- after no more spawns and all enemies in the screen are cleared, trigger final event (for now just stop spawning): story state to "STORY_STATE__DEFEATED_ALIENS"
   ***- Elaine shows up:

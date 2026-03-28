@@ -266,7 +266,7 @@ calendar_stone_center_battle_event_fn_loop:
 calendar_stone_center_battle_event_fn_loop_end:
 	ld a, c
 	cp 4
-	jr nc, calendar_stone_center_battle_event_fn__keep_battle_going  ; we already have enough aliens
+	jr nc, calendar_stone_center_battle_event_fn__do_not_spawn_alien  ; we already have enough aliens
 
 	; spawn an alien:
 	call random_a
@@ -277,6 +277,15 @@ calendar_stone_center_battle_event_fn_loop_end:
 	ld de, #0019
 calendar_stone_center_battle_event_fn_alien_coordinates_set:
 	call calendar_stone_center_battle_event_fn__spawn_alien
+
+calendar_stone_center_battle_event_fn__do_not_spawn_alien:
+
+	; if there is no UFO, spawn another one:
+	ld hl, find_tile_enemy_ptr
+	ld c, TILES_PAGE
+	call call_hl_in_page_c_8000
+	ld ix, #fd0e  ; 14, -3
+	call nz, calendar_stone_center_battle_event_fn__spawn_ufo
 
 ; 	ld a, STORY_STATE__DEFEATED_ALIENS
 ; 	ld (global_state__story), a
@@ -498,10 +507,11 @@ draw_lowered_calendar_stone_loop2_done:
 ; input:
 ; - ixl, ixh: x, y of the UFO
 calendar_stone_center_battle_event_fn__spawn_ufo:
-	ld a, (tmp_enemy_pcg_tile_enemy_workmemory_usage)
-	add UFO_WORKMEMORY_USAGE
-	cp (tile_enemy_work_memory_end - tile_enemy_work_memory) + 1  ; + 1 so that we can use "nc" as the condition
-	ret nc  ; if we do not have enough work memory, do not spawn
+	; since it'll be the only enemy in the room, just do not track work memory usage:
+; 	ld a, (tmp_enemy_pcg_tile_enemy_workmemory_usage)
+; 	add UFO_WORKMEMORY_USAGE
+; 	cp (tile_enemy_work_memory_end - tile_enemy_work_memory) + 1  ; + 1 so that we can use "nc" as the condition
+; 	ret nc  ; if we do not have enough work memory, do not spawn
 	ld hl, ptr_to_new_tile_object
 	ld c, TILES_PAGE
 	call call_hl_in_page_c_8000
@@ -524,8 +534,8 @@ calendar_stone_center_battle_event_fn__spawn_ufo:
 	inc hl
 
 	ld de, tile_enemy_work_memory
-	ld a, (tmp_enemy_pcg_tile_enemy_workmemory_usage)
-	ADD_DE_A
+; 	ld a, (tmp_enemy_pcg_tile_enemy_workmemory_usage)
+; 	ADD_DE_A
 	ld (hl), e  ; work memory ptr
 	inc hl
 	ld (hl), d
