@@ -1,11 +1,10 @@
 to do:
-***- confrontation with the aliens after activating the calendar stone:
-  ***- keep a counter of how many aliens have spawned, and only spawn up to 16 aliens and 4 UFOs
-  ***- after no more spawns and all enemies in the screen are cleared, trigger final event (for now just stop spawning): story state to "STORY_STATE__DEFEATED_ALIENS"
-  ***- Elaine shows up:
-    ***- explosions from the alien entrances (replace UFO gfx with explosion GFX)
-    ***- then a rope drops, and elaine comes down
-    ***- screen goes to black, entrances restored, ceiling closed, and Elaine and Michael are in the center
+***- calendar_stone_center_battle_event_fn__victory:
+  ***- explosions from the alien entrances (replace UFO gfx with explosion GFX):
+    ***- draw explosion GFX
+    ***- replace ufo tiles with explosion + rope tiles when this event happens
+  ***- then a rope drops, and elaine comes down
+  ***- screen goes to black, entrances restored, ceiling closed, and Elaine and Michael are in the center
   ***- dialogue:
     - "Michael: Elaine! What are you doing here!"
     - "Elaine: Well... saving your ass?"
@@ -16,7 +15,7 @@ to do:
     - "Michael: Yes! I do!"
     - "Elaine: Ok, then are we ready to activate the calendar stone? More aliens will be coming soon!"
     - "Elaine: When you are ready, go ahead! I'll be guarding the calendar stone in the meantime."
-  ***- From that point on, Elaine will be there in the room. I should craft a few random messages, like those for Aapo that are trivia/story/hints/jokes.
+***- From that point on, Elaine will be there in the room. I should craft a few random messages, like those for Aapo that are trivia/story/hints/jokes.
 ***- reset "global_state__story" in state-play.asm to its default value
 
 - first ending sequence (udpate "stats__ending"): The calendar stone machine activates and creates a defensive barrier around earth, the alien armada that was coming turns back, but promises revenge.

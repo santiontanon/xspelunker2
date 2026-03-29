@@ -192,8 +192,10 @@ calendar_stone_center_trigger_battle_event_fn_loop_h_continue:
 	ld c, TEXT_PAGE
 	call call_hl_in_page_c_8000
 
-	; set 'in_game_event_fn_ptr' and 'in_game_event_fn_page' for ending battle:
-	; ...
+	xor a
+	ld (alien_ambush__n_aliens_spawned), a
+	inc a
+	ld (alien_ambush__n_ufos_spawned), a
 
 	ld a, STORY_STATE__FIGHTING_ALIENS
 	ld (global_state__story), a
@@ -244,6 +246,8 @@ calendar_stone_center_trigger_battle_event_fn_open_ceiling_hole_loop:
 
 
 ;-----------------------------------------------
+MAX_N_ALIENS_TO_SPAWN: equ 16
+MAX_N_UFOS_TO_SPAWN: equ 4
 calendar_stone_center_battle_event_fn:
 	ld a, (game_cycle)
 	and #1f
@@ -265,10 +269,17 @@ calendar_stone_center_battle_event_fn_loop:
 	jr calendar_stone_center_battle_event_fn_loop
 calendar_stone_center_battle_event_fn_loop_end:
 	ld a, c
+	ld (alien_ambush__n_aliens_currently_on_screen), a
 	cp 4
 	jr nc, calendar_stone_center_battle_event_fn__do_not_spawn_alien  ; we already have enough aliens
 
+	ld a, (alien_ambush__n_aliens_spawned)
+	cp MAX_N_ALIENS_TO_SPAWN  ; max aliens
+	jr nc, calendar_stone_center_battle_event_fn__do_not_spawn_alien
+
 	; spawn an alien:
+	ld hl, alien_ambush__n_aliens_spawned
+	inc (hl)
 	call random_a
 	ld de, #0005
 	and #01
@@ -277,23 +288,57 @@ calendar_stone_center_battle_event_fn_loop_end:
 	ld de, #0019
 calendar_stone_center_battle_event_fn_alien_coordinates_set:
 	call calendar_stone_center_battle_event_fn__spawn_alien
-
 calendar_stone_center_battle_event_fn__do_not_spawn_alien:
 
 	; if there is no UFO, spawn another one:
+	xor a
+	ld (alien_ambush__ufo_currently_on_screen), a
+
+	ld a, (alien_ambush__n_ufos_spawned)
+	cp MAX_N_UFOS_TO_SPAWN
+	jr nc, calendar_stone_center_battle_event_fn__do_not_spawn_ufo
+
 	ld hl, find_tile_enemy_ptr
 	ld c, TILES_PAGE
 	call call_hl_in_page_c_8000
+	jr z, calendar_stone_center_battle_event_fn__do_not_spawn_ufo
+	ld hl, alien_ambush__n_ufos_spawned
+	inc (hl)	
 	ld ix, #fd0e  ; 14, -3
-	call nz, calendar_stone_center_battle_event_fn__spawn_ufo
+	call calendar_stone_center_battle_event_fn__spawn_ufo
+	ld a, 1
+	ld (alien_ambush__ufo_currently_on_screen), a
+calendar_stone_center_battle_event_fn__do_not_spawn_ufo:
 
-; 	ld a, STORY_STATE__DEFEATED_ALIENS
-; 	ld (global_state__story), a
+	ld a, (alien_ambush__n_aliens_currently_on_screen)
+	or a
+	jr nz, calendar_stone_center_battle_event_fn__keep_battle_going
+	ld a, (alien_ambush__ufo_currently_on_screen)
+	or a
+	jr nz, calendar_stone_center_battle_event_fn__keep_battle_going
+	ld a, (alien_ambush__n_aliens_spawned)
+	cp MAX_N_ALIENS_TO_SPAWN
+	jr nz, calendar_stone_center_battle_event_fn__keep_battle_going
+	ld a, (alien_ambush__n_ufos_spawned)
+	cp MAX_N_UFOS_TO_SPAWN
+	jr nz, calendar_stone_center_battle_event_fn__keep_battle_going
+
+	; battle is over, trigger Elaine event!
+	ld a, STORY_STATE__DEFEATED_ALIENS
+	ld (global_state__story), a
+	jr calendar_stone_center_battle_event_fn__victory
 
 calendar_stone_center_battle_event_fn__keep_battle_going:
 	; set the function to keep executing:
 	ld hl, calendar_stone_center_battle_event_fn
 	ld (in_game_event_fn_ptr), hl
+	ret
+
+
+;-----------------------------------------------
+calendar_stone_center_battle_event_fn__victory:
+	; Elaine shows up and ends the battle:
+	; ...
 	ret
 
 

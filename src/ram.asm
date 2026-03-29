@@ -327,6 +327,11 @@ boss__5_scylla_arms_attack_clear: equ boss__tmp_space + 17  ; 0: no clear, 1 - 3
 boss__5_scylla_arms_attack_state2: equ boss__tmp_space + 18  ; 0: no attack, 1+ length of the horizontal cable
 boss__5_scylla_arms_attack_clear2: equ boss__tmp_space + 19  ; 0: no clear, 1 - 23: clear this row
 
+alien_ambush__n_aliens_spawned: equ boss__tmp_space
+alien_ambush__n_ufos_spawned: equ boss__tmp_space + 1
+alien_ambush__n_aliens_currently_on_screen: equ boss__tmp_space + 2
+alien_ambush__ufo_currently_on_screen: equ boss__tmp_space + 3
+
 ; game stats:
 stats__n_coins_collected: ds virtual 2
 stats__n_weapons_collected: ds virtual 1
