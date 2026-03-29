@@ -224,6 +224,8 @@ update_sprite_objects_loop:
 	jp z, update_sprite_objects_xibalba_lord_ghost
 	cp SPRITE_OBJECT_TYPE_ATLANTIS_SENTINEL_EXTRAS
 	jp z, update_sprite_objects_atlantis_sentinel_extras
+	cp SPRITE_OBJECT_TYPE_ELAINE
+	jp z, update_sprite_objects_elaine
 update_sprite_objects_loop_next:
 	ld de, ROOM_OBJECT_STRUCT_SIZE
 	add ix, de
@@ -397,6 +399,45 @@ update_sprite_objects_shopkeeper2:
 	and #08
 	add a, (FIRST_ENEMY_SPRITE_PATTERN + 7) * 4
 	jr update_sprite_objects_shopkeeper2_entry_point
+
+
+;-----------------------------------------------
+update_sprite_objects_elaine:
+	; states:
+	; - 0: idle
+	; - 1: rope 1
+	; - 2: rope 2
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	or a
+	jr z, update_sprite_objects_elaine_idle
+	dec a
+	jr z, update_sprite_objects_elaine_rope1
+update_sprite_objects_elaine_rope2:
+	ld a, (FIRST_ENEMY_SPRITE_PATTERN + 37) * 4
+	jr update_sprite_objects_elaine_draw
+update_sprite_objects_elaine_rope1:
+	ld a, (FIRST_ENEMY_SPRITE_PATTERN + 35) * 4
+	jr update_sprite_objects_elaine_draw
+update_sprite_objects_elaine_idle:
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	and #08
+	add a, (FIRST_ENEMY_SPRITE_PATTERN + 31) * 4
+update_sprite_objects_elaine_draw:
+	ld e, a 
+	ld d, COLOR_DARK_YELLOW
+	ld c, 0
+	push af
+		call get_sprite_object_sprite_coordinates
+		call z, add_sprite_to_this_frame
+	pop af
+	add a, 4
+	ld e, a
+	ld d, COLOR_LIGHT_RED
+	ld c, 0
+	call get_sprite_object_sprite_coordinates
+	call z, add_sprite_to_this_frame
+	jp update_sprite_objects_loop_next
 
 
 ;-----------------------------------------------

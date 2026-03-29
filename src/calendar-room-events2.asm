@@ -160,20 +160,127 @@ calendar_stone_center_battle_event_fn2__explosions_loop_continue:
 	call play_SFX_with_high_priority
 
 	; Elaine goes down the rope:
-	; ...
+	; spawn Elaine:
+	call ptr_to_new_sprite_object
+	push hl
+		ld (hl), 0  ; id
+		inc hl
+		ld (hl), SPRITE_OBJECT_TYPE_ELAINE
+		inc hl
+		ld (hl), 0
+		inc hl
+		ld (hl), 5  ; tile x
+		inc hl
+		ld (hl), 0
+		inc hl
+		ld (hl), -1  ; tile y
+		inc hl
+		ld (hl), 1  ; state (rope)
+		inc hl
+		ld (hl), 0  ; state timer
+	pop ix
 
-	; Fade to black
-	; ...
+	ld b, 32
+calendar_stone_center_battle_event_fn2__elaine_rope_loop:
+	push bc
+		; Elaine goes down the rope
+		push ix
+			call update_sprite_objects
+			ld hl, upload_sprites_to_vdp
+			ld c, SPRITES_PAGE
+			call call_hl_in_page_c_8000
+		pop ix
 
-	; Restore the openings and the ceiling to the room:
-	; ...
+		ld bc, #0100
+		ld hl, update_enemy_move_cb
+		ld e, ENEMIES_PAGE
+		call call_hl_in_page_e_8000
+	pop bc
+	ld a, b
+	and #03
+	jr nz, calendar_stone_center_battle_event_fn2__elaine_rope_loop_continue
+	; alternate between states 2 and 1:
+	ld a, 3
+	sub (ix + ROOM_OBJECT_STRUCT_STATE)
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), a
+calendar_stone_center_battle_event_fn2__elaine_rope_loop_continue:
+	halt
+	halt
+	djnz calendar_stone_center_battle_event_fn2__elaine_rope_loop
+	ld b, 100
+	call wait_b_halts_skippable
 
-	; move the player and Elaine to the center:
-	; ...
+	; Restore the room to its original state
+	call disable_VDP_output
 
-	; Dialogue:
-	; ...
+	ld e, CALENDAR_ROOM_ID
+	ld hl, pcg_generate_room
+	ld c, PCG_PAGE
+	call call_hl_in_page_c_8000
+	ld hl, #1300
+	ld (player_x), hl
+	ld hl, #0f00
+	ld (player_y), hl
+	xor a
+	ld (player_state_timer), a
+	inc a
+	ld (player_state), a
 
+	; set event for when room is loaded:
+	ld hl, calendar_stone_center_battle_event_fn3_a
+	ld (in_game_event_fn_ptr), hl
+	ld a, CALENDAR_EVENTS_PAGE2
+	ld (in_game_event_fn_page), a
+
+	jp state_play_from_loaded_room
+
+
+;-----------------------------------------------
+calendar_stone_center_battle_event_fn3_a:
+	; we have this "fn3_a/b" so that at least one whole cycle is executed before 
+	; 'calendar_stone_center_battle_event_fn3', and the sprites are rendered to see Elaine.
+	ld hl, calendar_stone_center_battle_event_fn3_b
+	ld (in_game_event_fn_ptr), hl
+	ret
+
+calendar_stone_center_battle_event_fn3_b:
+	ld hl, calendar_stone_center_battle_event_fn3
+	ld (in_game_event_fn_ptr), hl
+	ret
+
+calendar_stone_center_battle_event_fn3_tbl:
+	dw TEXT_AMBUSH_ELAINE_1
+	dw TEXT_AMBUSH_ELAINE_2
+	dw TEXT_AMBUSH_ELAINE_3
+	dw TEXT_AMBUSH_ELAINE_4
+	dw TEXT_AMBUSH_ELAINE_4B
+	dw TEXT_AMBUSH_ELAINE_5
+	dw TEXT_AMBUSH_ELAINE_6
+	dw TEXT_AMBUSH_ELAINE_7
+	dw TEXT_AMBUSH_ELAINE_8
+	dw TEXT_AMBUSH_ELAINE_3
+	dw TEXT_AMBUSH_ELAINE_10
+	dw TEXT_ELAINE_CALENDAR_5
+
+calendar_stone_center_battle_event_fn3:
+	ld b, 12
+	ld hl, calendar_stone_center_battle_event_fn3_tbl
+calendar_stone_center_battle_event_fn3_loop:
+	push bc
+	push hl
+		ld e, (hl)
+		inc hl
+		ld d, (hl)
+		ld hl, display_in_game_message_textpage3
+		ld c, TEXT_PAGE
+		call call_hl_in_page_c_8000
+; 		ld b, 25
+; 		call wait_b_halts_skippable
+	pop hl
+	pop bc
+	inc hl
+	inc hl
+	djnz calendar_stone_center_battle_event_fn3_loop
 	ret
 
 

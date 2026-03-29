@@ -364,13 +364,34 @@ public class Text {
         addLineSafe(lines_with_constant_page1, "No one listened...", "TALK_FAIL", 112);     
         addLineSafe(lines_with_constant_page1, "After you speak, the room rumbles, and you hear a voice in an unknown language. It seems your words were heard!", "TALK_SUCCESS1", 112);
         addLineSafe(lines_with_constant_page1, "Where are the aliens? Have they finally given up?!", "CALENDAR_NO_ALIENS", 112);     
+        addLineSafe(lines_with_constant_page3, "Xavier: Elaine! What are you doing here?!", "AMBUSH_ELAINE_1", 112);
+        addLineSafe(lines_with_constant_page3, "Elaine: Well... Saving your ass?", "AMBUSH_ELAINE_2", 112);
+        addLineSafe(lines_with_constant_page3, "Xavier: ...", "AMBUSH_ELAINE_3", 112);
+        addLineSafe(lines_with_constant_page3, "Elaine: I came to see if I could help, and saw aliens sneaking into a cave. So, I decided to follow them. Saw them fighting you...", "AMBUSH_ELAINE_4", 112);
+        addLineSafe(lines_with_constant_page3, "Elaine: and decided to surprise them with some good old dynamite...", "AMBUSH_ELAINE_4B", 112);
+        addLineSafe(lines_with_constant_page3, "Xavier: You saw them?! And wait, where did you get the dynamite? But why did you come?! it's dangerous here!", "AMBUSH_ELAINE_5", 112);
+        addLineSafe(lines_with_constant_page3, "Elaine: Long story... and anyway, you can thank me later... Do you have the celestial stones?", "AMBUSH_ELAINE_6", 112);
+        addLineSafe(lines_with_constant_page3, "Xavier: Yes! I do!", "AMBUSH_ELAINE_7", 112);
+        addLineSafe(lines_with_constant_page3, "Elaine: You do?! Hmm... I wish you were this efficient when you are home...", "AMBUSH_ELAINE_8", 112);
+//        addLineSafe(lines_with_constant_page3, "Xavier: ...", "AMBUSH_ELAINE_9", 112);
+        addLineSafe(lines_with_constant_page3, "Elaine: Ok, then are we ready to activate the calendar stone? More aliens will be coming soon for sure!", "AMBUSH_ELAINE_10", 112);
+
+        addLineSafe(lines_with_constant_page3, "Elaine: We must hurry, I blocked the cave the Aliens were using, but I doubt that'll stop them for very long...", "ELAINE_CALENDAR_1", 112);
+        addLineSafe(lines_with_constant_page3, "Elaine: Why did I come? Well, I was of no more use back home anymore!", "ELAINE_CALENDAR_2", 112);
+        addLineSafe(lines_with_constant_page3, "Elaine: Btw, dynamite in Palenque is crazy expensive. Almost went broke to get what I used!", "ELAINE_CALENDAR_3", 112);
+        addLineSafe(lines_with_constant_page3, "Elaine: What is taking you so long?", "ELAINE_CALENDAR_4", 112);
+        addLineSafe(lines_with_constant_page3, "Elaine: When you are ready, go ahead! I'll be guarding the calendar stone in the meantime.", "ELAINE_CALENDAR_5", 112);
+        addLineSafe(lines_with_constant_page3, "Elaine: Did you see that beautiful Stela in town? I want to study it in more detail when we get out.", "ELAINE_CALENDAR_6", 112);
+        addLineSafe(lines_with_constant_page3, "Elaine: What?! You found Atlantis! Look, I have seen the aliens myself, but Atlantis? You are bluffing!", "ELAINE_CALENDAR_7", 112);
+        addLineSafe(lines_with_constant_page3, "Elaine: This calendar stone is beautiful! Let's activate it and stop the aliens once and for all!", "ELAINE_CALENDAR_8", 112);
+        
         // Aapo's random sentences:
         addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! I am Aapo! Please check my shop! I am also the postman in Palenke. If you have any mail to send or receive, talk to me.", "SHOPKEEPER1_1", 112);
         addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! I have heard reports of hunters finding new paths by breaking through walls, even the floor!", "SHOPKEEPER1_2", 112);
         addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! If you are hurt, make sure to take a break and eat some of our delicious corn.", "SHOPKEEPER1_3", 112);
         addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! Sorry, I cannot read or write, so, I cannot help you translate those texts...", "SHOPKEEPER1_4", 112);
         addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! Make sure to collect all the coins you see! And spend them in my shop, of course...", "SHOPKEEPER1_5", 112);
-        addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! That stone tablet over there? It's a stela, but no one knows what it means!", "SHOPKEEPER1_6", 112);
+        addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! That stone tablet over there? It's a Stela, but no one knows what it means!", "SHOPKEEPER1_6", 112);
         addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! Underground ruins? Yes, we found two entrances in the jungle, not sure if both are still open...", "SHOPKEEPER1_7", 112);
         addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! Sorry, I cannot accompany you this time. I have my shop to attend!", "SHOPKEEPER1_8", 112);
         

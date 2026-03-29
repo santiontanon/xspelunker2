@@ -1263,6 +1263,7 @@ ENDR
 	dw object_interaction_function_shop  ; TAG_NPC_SHOP
 	dw object_interaction_function_empty  ; TAG_DYNAMITE
 	dw object_interaction_function_shopkeeper2  ; TAG_NPC_SHOPKEEPER2
+	dw object_interaction_function_elaine  ; TAG_NPC_ELAINE
 	dw object_interaction_function_empty  ; TAG_ENEMY_CARNIVORE_PLANT
 	dw object_interaction_function_empty  ; TAG_ENEMY_BEE_HIVE
 	dw object_interaction_function_empty  ; TAG_ENEMY_ANT_COLONY
@@ -2486,6 +2487,16 @@ object_interaction_function_shopkeeper:
 
 
 ;-----------------------------------------------
+object_interaction_function_elaine:
+	ld hl, object_interaction_function_elaine_internal
+	ld c, NPCS_PAGE
+	push ix
+		call call_hl_in_page_c_8000
+	pop ix
+	ret
+
+
+;-----------------------------------------------
 object_interaction_function_lost_vendor:
 	ld hl, object_interaction_function_lost_vendor_internal
 	ld c, NPCS_PAGE
@@ -2881,7 +2892,8 @@ ENDR
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOPKEEPER
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOP
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_DYNAMITE
-	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOPLEEPER2
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOPKEEPER2
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_ELAINE
 	TILE_OBJECT_DATA 1, 4, 4, tile_object_carnivore_plant  ; TAG_ENEMY_CARNIVORE_PLANT
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_bee_hive  ; TAG_ENEMY_BEE_HIVE
 	TILE_OBJECT_DATA 1, 3, 2, tile_object_ant_colony  ; TAG_ENEMY_ANT_COLONY

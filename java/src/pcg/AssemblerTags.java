@@ -233,6 +233,7 @@ public class AssemblerTags {
         "TAG_NPC_SHOP",
         "TAG_DYNAMITE",
         "TAG_NPC_SHOPKEEPER2",
+        "TAG_NPC_ELAINE",
         // enemies: (important to keep ONLY enemies after this point, as the code assumes this)
         "TAG_ENEMY_CARNIVORE_PLANT",
         "TAG_ENEMY_BEE_HIVE",

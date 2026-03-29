@@ -4416,6 +4416,9 @@ update_enemy__patrol_left_right_platform_left:
 
 
 ;-----------------------------------------------
+; input:
+; - ix: object ptr
+; - c, b: offset in x and y to move
 update_enemy_move_cb:
 	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
 	add a, c

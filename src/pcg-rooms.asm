@@ -2431,9 +2431,13 @@ pcg_generate_room__calendar:
 
 	; spawn the tablets:
 	ld hl, pcg_generate_room__calendar_objects
-	ld b, 9
+	ld b, 9	
 	ld iy, (tmp_pcg_room__next_tile_object_ptr)
 	ld de, global_state__power_calendar - 2  ; -2, since we only have the state for the sockets (state of tablets does not matter)
+	ld a, (global_state__story)
+	cp STORY_STATE__DEFEATED_ALIENS
+	jr c, pcg_generate_room__calendar_object_loop
+	inc b  ; also spawn elaine tile object (so that she is interactable)
 pcg_generate_room__calendar_object_loop:
 	ld a, (hl)
 	inc hl
@@ -2458,6 +2462,29 @@ pcg_generate_room__calendar_object_loop:
 	ld (tmp_pcg_room__next_tile_object_ptr), iy
 
 	; spawn aliens:
+	ld a, (global_state__story)
+	cp STORY_STATE__DEFEATED_ALIENS
+	jr c, pcg_generate_room__calendar_aliens
+pcg_generate_room__calendar_elaine:
+	; spawn elaine at 11, 15
+	call ptr_to_new_sprite_object
+	ld (hl), 0  ; id
+	inc hl
+	ld (hl), SPRITE_OBJECT_TYPE_ELAINE
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), 11  ; tile x
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), 15  ; tile y
+	inc hl
+	ld (hl), 0  ; state (idle)
+	inc hl
+	ld (hl), 0  ; state timer
+	jr pcg_generate_room__calendar_aliens_done
+pcg_generate_room__calendar_aliens:
 	; - when 2 aliens: 9, 15; 21, 15
 	; - when 3 aliens: add one at 15, 20
 	; - when 4 aliens: the original two plus 5, 9; 25, 9	
@@ -2501,6 +2528,7 @@ pcg_generate_room__calendar_objects:
 	db 4, TAG_CALENDAR_SOCKET, 14, 9
 	db 5, TAG_CALENDAR_SOCKET, 16, 9
 	db 0, TAG_CALENDAR_STONE_CENTER, 15, 12
+	db 0, TAG_NPC_ELAINE, 11, 15
 
 
 pcg_generate_room__calendar_alien:

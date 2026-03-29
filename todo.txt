@@ -1,25 +1,13 @@
 to do:
-***- calendar_stone_center_battle_event_fn__victory:
-  ***- create a new object like Aapo for Elaine
-  ***- spawn Elaine object and make it climb down the rope
-  ***- screen goes to black, entrances restored, ceiling closed, and Elaine and Michael are in the center
-  ***- dialogue:
-    - "Michael: Elaine! What are you doing here!"
-    - "Elaine: Well... saving your ass?"
-    - "Michael: ..."
-    - "Elaine: Ok, you can thank me later... Do you have the celestial stones?"
-    - "Michael: Yes! I do!"
-    - "Elaine: You do?! Hmm... I wish you were this efficient when you are home..."
-    - "Michael: ..."
-    - "Elaine: Ok, then are we ready to activate the calendar stone? More aliens will be coming soon for sure!"
-    - "Elaine: When you are ready, go ahead! I'll be guarding the calendar stone in the meantime."
-***- From that point on, Elaine will be there in the room. I should craft a few random messages, like those for Aapo that are trivia/story/hints/jokes.
-***- reset "global_state__story" in state-play.asm to its default value, and the number of max aliens in calendar-room-events.asm
+***- Ending C:
+  ***- when finishing the game, do not display the "continue yes/no" dialogue
+  ***- update "stats__ending" 
+  ***- decide a set of gfx scenes and write the text. Summary: The calendar stone machine activates and creates a defensive barrier around earth, the alien armada that was coming turns back, but promises revenge.
+    ***- clue to check the rom in Maya in the ending credits, maybe something like "Luku ata de romu failu" (or some parts with actual verbs)
+  ***- update "calendar_stone_center_trigger_ending_event_fn"
+  ***- add "no miss" achievement for this: if there is no damage (Track it) (or maybe just no damage during alien fight?)
+  ***- reset "global_state__story" in state-play.asm to its default value when all finished
 
-- first ending sequence (udpate "stats__ending"): The calendar stone machine activates and creates a defensive barrier around earth, the alien armada that was coming turns back, but promises revenge.
-  - update "calendar_stone_center_trigger_ending_event_fn"
-  - add "no miss" achievement for this: if there is no damage (Track it) (or maybe just no damage during alien fight?)
-  - clue to check the rom in Maya in the ending credits, maybe something like "Luku ata de romu failu" (or some parts with actual verbs)
 - music: intro, letters/map, tablets/puzzles, game over, pyramid, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)
   - story: I like the original song: keep the same style and compose a variation
   - boss music (boss music increases in speed as health goes down: 50%, 25%)
@@ -43,21 +31,21 @@ to do:
   - add boss name to the stats for game over screen
 - 7th boss (ideas: "The Lunar Obsidian Sentinel" (tall, slender, smooth black, reflective surfaces), "The Lunar Crystal Serpent", "The Moon Stone Monolith"). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
   - add boss name to the stats for game over screen
-- second ending (udpate "stats__ending"): the calendar stone machine not only creates a defensive barrier, but also activates its offensive mechanism and destroys the alien armada that was coming. You hope that will deterr them from coming again.
+- second ending (udpate "stats__ending"): the calendar stone machine not only creates a defensive barrier, but also activates its offensive mechanism and destroys the alien armada that was coming. You hope that will deter them from coming again.
 
 - 8th boss: after beating the combat against the aliens, you can teleport to their home planet, and fight against their leader (final final boss). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
   - add boss name to the stats for game over screen
-- final good ending 1 (udpate "stats__ending"): the stone opens a portal for you to travel to the alien world, and fight against their leader in a final final battle. When you defeat it and come back, Elaine is there waiting to save you, but you arrive having defeated the alien empire (although there is doubt if other empires will show up again, and the calendar stone depletes, and cannot be used again)
+- final good ending 1 (update "stats__ending"): the stone opens a portal for you to travel to the alien world, and fight against their leader in a final final battle. When you defeat it and come back, Elaine is there waiting to save you, but you arrive having defeated the alien empire (although there is doubt if other empires will show up again, and the calendar stone depletes, and cannot be used again)
 - "speak" the animal names in the animal room to get their blessings (if you get all four, you do double damage, adjust angry/veryhard boss difficulty for this): I already have the clue for this in the game, right? (TABLET_TRIVIA_CLUE1_1, etc.)
   - add as a special achievement for the gameover screen
-- Final good ending 2: if you have the codex (from the 3 statues), it explains how to manufactore the powestones/firestones. So, you can keep using the calendar stone and be prepared for the future. This is the true final ending.
+- Final good ending 2: if you have the codex (from the 3 statues), it explains how to manufacture the powestones/firestones. So, you can keep using the calendar stone and be prepared for the future. This is the true final ending.
 - save game to rom / password
 
 - Potential new ideas if I have the energy:
   - There should be another shop. Otherwise, collecting money feels a bit useless if there is just one shop
-  - [did I already add any clue for this? remove if I don't use it] special condition for triggering "angry bosses" (they change color). For each one you beat in this hard mode, you get something in the ending, and if you get them all, you get a special mention. The conditions might be things like: certain bit in the random seed to be "11" (so, not all seeds are good), dive into water X times in the same room without doing anything else, etc. Use the "random seed stela" (maybe give a clue about it), currently it displays the bottom 6 bits of the first random seed word, should I make it display a whole 8 bits of it?
+  - [did I already add any clue for this? remove if I don't use it] special condition for triggering "angry bosses" (they change color). For each one you beat in this hard mode, you get something in the ending, and if you get them all, you get a special mention. The conditions might be things like: certain bit in the random seed to be "11" (so, not all seeds are good), dive into water X times in the same room without doing anything else, etc. Use the "random seed stella" (maybe give a clue about it), currently it displays the bottom 6 bits of the first random seed word, should I make it display a whole 8 bits of it?
     - add as a special achievement for the gameover screen (at least one angry, and all 8 angry)
-  - Mars/Moon: in the boss rooms, there might be something you can do before summoning the boss. This could lead to something like: (1) an underground cave where there is a broken ancient robot that can talk to you (in a mix of English and Maya maybe?), and might give you a weapon upgrade (e.g. a better raygun, which might be esential for fighting the final alien boss), add as a special achievement for the gameover screen.
+  - Mars/Moon: in the boss rooms, there might be something you can do before summoning the boss. This could lead to something like: (1) an underground cave where there is a broken ancient robot that can talk to you (in a mix of English and Maya maybe?), and might give you a weapon upgrade (e.g. a better raygun, which might be essential for fighting the final alien boss), add as a special achievement for the gameover screen.
   - The Maya were obsessed with sacrificing blood to their gods (the highest being extracting a beating heart from a person while still alive), then it was often burned so that the smoke will bring it to the gods. Can I add some puzzle/item/riddle about this? (maybe in the stella puzzle above, or maybe some blood meter that accumulates when you receive damage/die/kill-an-enemy and when full, things happen)
   - If the player enters a world name related to these theories (like "ATLANTIS", "MU", "AZTLAN", or "COH", or something like that), it could trigger a world where the the "Firestone forge", which is in the Moon, is active if you are in a world with the word (add a clue).
   - item that lets you fight a boss for a second time (the idea was to get both items in boss 4, but not sure if worth it)
@@ -74,7 +62,7 @@ X-Spelunker 2 (e-ki-se pe-lu-ne-ke-le):
     - the first attempt to create humans was from mud, but those were destroyed in the great flood 
     - the second attempt was from wood, but they could not worship and were destroyed (survivors are monkeys)
     - six creator deities: the Framer and the Shaper, Tepew and Quetzal Serpent, along with Xpiyacóc and Xmucané. These deities, helped Heart of Sky, also known as Hurakán, create the Earth.
-    - Hunahpu and Xbalanqué were two twins who deteated the gods of the underworld in a ball game, and then became the sun and moon
+    - Hunahpu and Xbalanqué were two twins who defeated the gods of the underworld in a ball game, and then became the sun and moon
     - After that, humans were created from white and yellow maize (Maize is sacred to Maya because of this)
     - 6 levels of maya underworld
     - 13 levels of maya upperworld
@@ -88,7 +76,7 @@ X-Spelunker 2 (e-ki-se pe-lu-ne-ke-le):
       - Ahalmez (Sweeping Demon), Ahaltocob (Stabbing Demon): bring disaster to the home
       - Chamiabac (Bone Staff), Chamiaholom (Skull Staff): turn people into skeletons
       - Quicxic / Xic (Blood Wing, Hawk), Patán (Tumpline): sudden death (vomiting blood)
-      - Xiquiripat/Quicrixcac (Flying Scab), Cuchumaquic (Gathered Blood): hemorrages (sometimes  Quicré, Bloody Teeth, is listed here too, but that adds up to 13)
+      - Xiquiripat/Quicrixcac (Flying Scab), Cuchumaquic (Gathered Blood): hemorrhages (sometimes  Quicré, Bloody Teeth, is listed here too, but that adds up to 13)
     - messenger owls: Arrow Owl, Leg Owl, Macaw Owl and Skull Owl
     - there is a ball court (maybe this is the boss room), and the ball is just a blade (maybe in the boss fight they keep throwing the ball at you)
   - The names of the first 4 men (after the Hunahpú and Xbalanqué myth, as they were not human, but gods):
@@ -104,14 +92,14 @@ X-Spelunker 2 (e-ki-se pe-lu-ne-ke-le):
   - "walk the correct path" (e.g. climb some ladders in the correct order)
   - maze
   - challenging section (e.g. an area with lots of enemies, or spikes, etc.)
-  - timed chellenges (e.g. completing something before a door closes, or the "destroying all the vases before the time lamp expires")
-  - any of the above but where the clue requires decyphering a language
+  - timed challenges (e.g. completing something before a door closes, or the "destroying all the vases before the time lamp expires")
+  - any of the above but where the clue requires deciphering a language
 - maya text:
   https://www.mayaarchaeologist.co.uk/public-resources/maya-world/maya-writing-system/
   https://mayaglyphs.org/
 - eagle is sky, snake is earth, and jaguar the underworld. Jaguar and Eagle are the warriors
-- ball game: two gods from the sky played ball near the underworld, went down and played with the underworld gods (who wanted to kill humans, since they were only worshipping the sky gods). The two won, and one knel and cut his head, which went up the sky and formed the sun, the other did the same and formed the moon. they protect humans from the underworld gods.
-  - in my game, I could make it so that the story is wrong, and they are mars and moon instead of sun and moon, and those are the palces you visit.
+- ball game: two gods from the sky played ball near the underworld, went down and played with the underworld gods (who wanted to kill humans, since they were only worshiping the sky gods). The two won, and one knelt and cut his head, which went up the sky and formed the sun, the other did the same and formed the moon. they protect humans from the underworld gods.
+  - in my game, I could make it so that the story is wrong, and they are mars and moon instead of sun and moon, and those are the places you visit.
 - cenote under chichen itza could be a level (perhaps some sacrifices there)
 - list of important deities for clues/story: https://www.villapalmarcancun.com/discover-cancun/heritage/most-important-mayan-gods
 
@@ -151,7 +139,7 @@ PCGWorld:
         - ...
       - addTags: if there is a tag there that is incompatible, FAIL!
   - generate quest specs for boss 4, 5
-  - generateSubquests (same as before, but with different reachable/useable area)
+  - generateSubquests (same as before, but with different reachable/usable area)
   - set "lockKeys" to all the used locks and keys (not needed in assembler, only used for debugging)
 6.- spawnAdditionalObjects
 7.- remove "none" tags

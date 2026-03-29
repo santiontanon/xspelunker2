@@ -870,3 +870,29 @@ shop_extra_item_gfx:
 	db TAG_ITEM_ICE_CAPE, 76, 77, 92, 93
 	db 0  ; sentinel
 
+
+;-----------------------------------------------
+elaine_default_messages:
+	dw TEXT_ELAINE_CALENDAR_1
+	dw TEXT_ELAINE_CALENDAR_2
+	dw TEXT_ELAINE_CALENDAR_3
+	dw TEXT_ELAINE_CALENDAR_4
+	dw TEXT_ELAINE_CALENDAR_5
+	dw TEXT_ELAINE_CALENDAR_6
+	dw TEXT_ELAINE_CALENDAR_7
+	dw TEXT_ELAINE_CALENDAR_8
+
+object_interaction_function_elaine_internal:
+	; pick one out of the 8 random messages:
+	call random_a
+	and #07
+	add a, a
+	ld hl, elaine_default_messages
+	ADD_HL_A
+	ld e, (hl)
+	inc hl
+	ld d, (hl)
+	ld hl, display_in_game_message_textpage3
+	ld c, TEXT_PAGE
+	jp call_hl_in_page_c_8000
+

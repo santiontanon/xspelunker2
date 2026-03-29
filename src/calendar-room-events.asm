@@ -214,10 +214,10 @@ calendar_stone_center_trigger_battle_event_fn_open_ceiling_hole_loop:
 
 
 ;-----------------------------------------------
-; MAX_N_ALIENS_TO_SPAWN: equ 16
-; MAX_N_UFOS_TO_SPAWN: equ 4
-MAX_N_ALIENS_TO_SPAWN: equ 4
-MAX_N_UFOS_TO_SPAWN: equ 1
+MAX_N_ALIENS_TO_SPAWN: equ 16
+MAX_N_UFOS_TO_SPAWN: equ 4
+; MAX_N_ALIENS_TO_SPAWN: equ 4
+; MAX_N_UFOS_TO_SPAWN: equ 1
 calendar_stone_center_battle_event_fn:
 	ld a, (game_cycle)
 	and #1f
