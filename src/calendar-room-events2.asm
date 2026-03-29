@@ -135,8 +135,29 @@ calendar_stone_center_battle_event_fn2__explosions_loop_continue:
 	dec b
 	jp nz, calendar_stone_center_battle_event_fn2__explosions_loop
 
+	ld b, 50
+	call wait_b_halts
+
 	; drop rope:
-	; ...
+	ld hl, current_room__tile_map + 6
+	ld bc, 32
+	ld (hl), 100
+	add hl, bc
+	ld (hl), 100
+	add hl, bc
+	ld (hl), 128
+	add hl, bc
+	ld (hl), 100
+	add hl, bc
+	ld (hl), 100
+	add hl, bc
+	ld (hl), 168
+	add hl, bc
+	ld hl, draw_room_with_hud
+	ld c, TILES_PAGE
+	call call_hl_in_page_c_8000
+	ld hl, SFX_enemy_bullet
+	call play_SFX_with_high_priority
 
 	; Elaine goes down the rope:
 	; ...

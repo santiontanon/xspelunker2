@@ -1,9 +1,7 @@
 to do:
 ***- calendar_stone_center_battle_event_fn__victory:
-  ***- then a rope drops, and elaine comes down:
-    ***- create a new object like Aapo for Elaine
-    ***- drop rope
-    ***- spawn Elaine object and make it climb down the rope
+  ***- create a new object like Aapo for Elaine
+  ***- spawn Elaine object and make it climb down the rope
   ***- screen goes to black, entrances restored, ceiling closed, and Elaine and Michael are in the center
   ***- dialogue:
     - "Michael: Elaine! What are you doing here!"
