@@ -1,8 +1,7 @@
 to do:
 ***- calendar_stone_center_battle_event_fn__victory:
-  ***- explosions from the alien entrances (replace UFO gfx with explosion GFX):
-    ***- draw explosion GFX
-    ***- replace ufo tiles with explosion + rope tiles when this event happens
+  ***- replace ufo tiles with explosion + rope tiles when this event happens
+  ***- explosions coming from all three top holes
   ***- then a rope drops, and elaine comes down
   ***- screen goes to black, entrances restored, ceiling closed, and Elaine and Michael are in the center
   ***- dialogue:
