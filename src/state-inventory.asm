@@ -1377,7 +1377,7 @@ setup_inventory_gfx:
 
 	ld hl, inventory_tiles_nametable_zx0
 	ld de, buffer_4096
-	ld c, TILES_INVENTORY_AGE
+	ld c, TILES_INVENTORY_PAGE
 	call dzx0_from_page_c
 
 	; Draw inventory screen:
@@ -1389,7 +1389,7 @@ setup_inventory_gfx:
 	; tiles
 	ld hl, inventory_tiles_bank0_zx0
 	ld de, buffer_4096
-	ld c, TILES_INVENTORY_AGE
+	ld c, TILES_INVENTORY_PAGE
 	call dzx0_from_page_c
 
 	ld hl, buffer_4096
@@ -1403,7 +1403,7 @@ setup_inventory_gfx:
 
 	ld hl, inventory_tiles_bank1_zx0
 	ld de, buffer_4096
-	ld c, TILES_INVENTORY_AGE
+	ld c, TILES_INVENTORY_PAGE
 	call dzx0_from_page_c
 	ld hl, buffer_4096
 	ld de, CHRTBL2 + 256*8
@@ -1416,7 +1416,7 @@ setup_inventory_gfx:
 
 	ld hl, inventory_tiles_bank2_zx0
 	ld de, buffer_4096
-	ld c, TILES_INVENTORY_AGE
+	ld c, TILES_INVENTORY_PAGE
 	call dzx0_from_page_c
 	ld hl, buffer_4096
 	ld de, CHRTBL2 + 256*8*2

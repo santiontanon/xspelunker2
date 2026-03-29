@@ -508,6 +508,8 @@ room_render_tile_objects_loop_continue:
 ; - ix: ptr to the background buffer
 ; - hl: ptr to tile_object_gfx_table: type, width, height, ptr to gfx
 ; - iyl, iyh: x, y of the object
+room_render_tile_objects_render_saving_background_de:  ; for calling it form another page
+	ex de, hl
 room_render_tile_objects_render_saving_background:
 	; - hl: ptr to tile_object_gfx_table
 	; - ixl, ixh: x, y of the object
@@ -586,6 +588,8 @@ room_render_tile_objects_render_saving_background_loop_x_continue2:
 ; input:
 ; - hl: ptr to tile_object_gfx_table
 ; - iyl, iyh: x, y of the object
+room_render_tile_objects_render_de:
+	ex de, hl
 room_render_tile_objects_render:
 	; Note, we do not need to take into account room bounds here, since this method
 	; is for objects that are static, and hence will always be within screen bounds.

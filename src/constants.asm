@@ -1,4 +1,4 @@
-    include "msx-constants.asm"
+    include "constants-msx.asm"
     include "sound-constants.asm"
 
 COLLISION_DEBUG: equ 0
