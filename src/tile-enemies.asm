@@ -845,6 +845,8 @@ enemy_ufo_hit:
 	call find_tile_enemy_ptr
 	jp nz, enemy_stone_owl_hit_no_hit
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_HEALTH)
+	or a
+	jp z, enemy_stone_owl_hit_no_hit  ; it was already dead
 	sub iyh
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_HEALTH), a
 	jr z, enemy_ufo_hit_dead

@@ -3312,6 +3312,8 @@ update_enemy_sentinel_rock_collision:
 
 
 ;-----------------------------------------------
+; ALIENS_FIRE_LASERS: equ 1  ; aliens fire lasers, which looks better, but causes more flickering
+ALIENS_FIRE_LASERS: equ 0  ; aliens fire regular bullets, which causes less flickering
 update_enemy_alien:
 	ld iyh, 4  ; damage to deal
 	call update_enemy_hurt_player_2x2
@@ -3383,31 +3385,30 @@ update_enemy_alien_check_stairs_down:
 	and #0f
 	jp z, update_enemy_alien_switch_to_stairs_down
 update_enemy_alien_no_stairs:
-	; sprites: walk right: 1+2, 3+4, walk left: 5+6, 7+8
+	; sprites: walk right: 1+3, 2+3, walk left: 4+6, 5+6
  	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
  	add a, a
- 	add a, a
- 	add a, FIRST_ENEMY_SPRITE_PATTERN + 1  ; 1 or 5 depending on the state
-update_enemy_alien_draw_sprites:
+ 	add a, (ix + ROOM_OBJECT_STRUCT_STATE)
+ 	add a, FIRST_ENEMY_SPRITE_PATTERN + 1  ; 1 or 4 depending on the state
  	add a, a
  	add a, a
  	ld e, a
-	ld a, (interrupt_cycle)
-	rrca
-	rrca
-	and #04
-	add a, e
-	ld e, a
-	ld c, 0
-	ld d, COLOR_PURPLE
-	call get_sprite_object_sprite_coordinates
-	call z, add_sprite_to_this_frame
-	ld a, -4
-	add a, b
-	ld b, a
-
-	ld a, 8
-	add a, e
+ 	push af
+		ld a, (interrupt_cycle)
+		rrca
+		rrca
+		and #04
+		add a, e
+		ld e, a
+		ld c, 0
+		ld d, COLOR_PURPLE
+		call get_sprite_object_sprite_coordinates
+		call z, add_sprite_to_this_frame
+		ld a, -4
+		add a, b
+		ld b, a
+	pop af
+	add a, 8
 	ld e, a
 	ld a, d
 	and #80
@@ -3444,9 +3445,34 @@ update_enemy_alien_stairs_up:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), a  ; random left/right
 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
 update_enemy_alien_stairs_up_continue:
-	; sprites: stairs: 9+10, 11+12
-	ld a, FIRST_ENEMY_SPRITE_PATTERN + 9
-	jr update_enemy_alien_draw_sprites
+	; sprites: stairs: 7+8, 9+10
+	ld a, FIRST_ENEMY_SPRITE_PATTERN + 7
+ 	add a, a
+ 	add a, a
+ 	ld e, a
+	ld a, (interrupt_cycle)
+	rrca
+	rrca
+	and #04
+	add a, e
+	ld e, a
+	ld c, 0
+	ld d, COLOR_PURPLE
+	call get_sprite_object_sprite_coordinates
+	call z, add_sprite_to_this_frame
+	ld a, -4
+	add a, b
+	ld b, a
+
+	ld a, 8
+	add a, e
+	ld e, a
+	ld a, d
+	and #80
+	add a, COLOR_GREEN
+	ld d, a
+	call add_sprite_to_this_frame
+	jp update_sprite_enemies_loop_next
 
 update_enemy_alien_switch_to_stairs_down:
 	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_X), 0  ; center around the stairs
@@ -3545,16 +3571,18 @@ update_enemy_alien_shooting:
 	sra a  ; half the wait time
 	cp (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	jr nz, update_enemy_alien_shooting_continue
-update_enemy_alien_shooting_shoot:
+IF ALIENS_FIRE_LASERS = 1
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
 	ld c, a
 	sub 4
 	ld hl, update_enemy_alien_shoot_state_to_direction_table
 	ADD_HL_A
 	ld e, (hl)
+ENDIF
 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	ld d, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+IF ALIENS_FIRE_LASERS = 1
 	ld a, e
 	; when firing diagonal up, start the laser one tile lower to align the sprites
 	cp 1
@@ -3564,6 +3592,7 @@ update_enemy_alien_shooting_shoot:
 update_enemy_alien_shooting_shoot_diagonal_up:
 	inc b
 update_enemy_alien_shooting_shoot_all_set:
+ENDIF
 	call update_enemy_alien_fire_laser
 
 	call random_a
@@ -3589,7 +3618,7 @@ update_enemy_alien_shooting_continue:
  update_enemy_alien_shooting_continue2:
  	add a, -4
  	add a, a
- 	add a, FIRST_ENEMY_SPRITE_PATTERN + 13
+ 	add a, FIRST_ENEMY_SPRITE_PATTERN + 11
  update_enemy_alien_shooting_continue3:
  	add a, a
  	add a, a
@@ -3625,7 +3654,7 @@ update_enemy_alien_player_in_vertical_line:
 	cp c
 	ret
 
-
+IF ALIENS_FIRE_LASERS = 1
 update_enemy_alien_shoot_state_to_direction_table:
 	db 8  ; down
 	db 6  ; right down
@@ -3637,12 +3666,14 @@ update_enemy_alien_shoot_state_to_direction_table:
 	db 0  ; left
 	db 1  ; left up
 	db 7  ; up
+ENDIF
 
 
 update_enemy_alien_fire_laser:
 	; - c, b: x, y
 	; - d: pixel x
 	; - e: direction
+IF ALIENS_FIRE_LASERS = 1
 	push bc
 	push de
 		call ptr_to_new_sprite_enemy
@@ -3667,6 +3698,20 @@ update_enemy_alien_fire_laser:
 	ld (hl), e  ; state / direction
 	ld hl, SFX_raygun
 	jp play_SFX_with_high_priority
+ELSE
+	ld e, c
+	ld hl, boss_fire_directional_bullet_towards_player_e_b
+	ld c, BOSS_PAGE
+	push de
+	push ix
+		ld ix, 0
+		call call_hl_in_page_c_8000
+		ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BULLET_IGNORING_WALLS
+	pop ix
+	pop de
+	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_X), d
+	ret
+ENDIF
 
 
 ;-----------------------------------------------

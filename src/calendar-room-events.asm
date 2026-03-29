@@ -78,24 +78,6 @@ calendar_stone_room_enter_event_fn_after_letter2_loop_next:
 ;-----------------------------------------------
 calendar_stone_center_trigger_battle_event_fn:
 	; block the walls around:
-; 	ld hl, calendar_room_zx0
-; 	ld c, CHUNKS_PYRAMID_PAGE
-; 	ld de, buffer_4096
-; 	call dzx0_from_page_c
-
-; 	ld hl, buffer_4096
-; 	ld de, current_room__tile_map
-; 	call calendar_stone_center_trigger_battle_event_fn_copy_room_column
-
-; 	ld hl, buffer_4096 + 28
-; 	ld de, current_room__tile_map + 28
-; 	call calendar_stone_center_trigger_battle_event_fn_copy_room_column
-
-; 	ld hl, buffer_4096 + 32*22
-; 	ld de, current_room__tile_map + +32*22
-; 	ld bc, 32*2
-; 	ldir
-
 	ld b, 24
 	ld hl, current_room__tile_map
 	ld de, current_room__tile_map + 31
@@ -158,6 +140,12 @@ calendar_stone_center_trigger_battle_event_fn_loop_h_continue:
 	ld b, 25
 	call wait_b_halts
 
+	; remove the tablet/stone items (without erasing them):
+	ld hl, current_room__tile_objects
+	ld bc, MAX_ROOM_TILE_OBJECTS * ROOM_TILE_OBJECT_STRUCT_SIZE - 1
+	ld a, #ff
+	call clear_memory_a
+
 	; UFO enters from the ceiling:
 	ld ix, #fd0e  ; 14, -3
 	call calendar_stone_center_battle_event_fn__spawn_ufo
@@ -207,26 +195,6 @@ calendar_stone_center_trigger_battle_event_fn_loop_h_continue:
 	xor a
 	ld (keyboard_clicks), a
 	ret
-
-
-;-----------------------------------------------
-; calendar_stone_center_trigger_battle_event_fn_copy_room_column:
-; 	ld b, 24
-; calendar_stone_center_trigger_battle_event_fn_copy_room_column_loop:
-; 	push bc
-; 		push hl
-; 			push de
-; 				ld bc, 4
-; 				ldir
-; 			pop hl
-; 			ld bc, 32
-; 			add hl, bc
-; 			ex de, hl
-; 		pop hl
-; 		add hl, bc
-; 	pop bc
-; 	djnz calendar_stone_center_trigger_battle_event_fn_copy_room_column_loop
-; 	ret
 
 
 ;-----------------------------------------------
@@ -328,6 +296,45 @@ calendar_stone_center_battle_event_fn__do_not_spawn_ufo:
 	ld a, (alien_ambush__n_ufos_spawned)
 	cp MAX_N_UFOS_TO_SPAWN
 	jr nz, calendar_stone_center_battle_event_fn__keep_battle_going
+	; if player is in the air, wait:
+	ld a, (player_state)
+	and #fe
+	cp PLAYER_STATE_FALLING
+	jr z, calendar_stone_center_battle_event_fn__keep_battle_going
+	cp PLAYER_STATE_JUMPING
+	jr z, calendar_stone_center_battle_event_fn__keep_battle_going
+	cp PLAYER_STATE_WEAPON_SWING_JUMPING
+	jr z, calendar_stone_center_battle_event_fn__keep_battle_going
+	cp PLAYER_STATE_WEAPON_SWING_FALLING
+	jr z, calendar_stone_center_battle_event_fn__keep_battle_going
+	cp PLAYER_STATE_HURT
+	jr z, calendar_stone_center_battle_event_fn__keep_battle_going
+
+	; make the player be in idle state:
+	ld a, (player_state)
+	and #01
+	ld (player_state), a
+	; remove all player/enemy bullets and other sprite objects:
+	ld hl, current_room__player_bullets
+	ld bc, MAX_ROOM_PLAYER_BULLETS * ROOM_OBJECT_STRUCT_SIZE + 1 + MAX_ROOM_SPRITE_ENEMIES * ROOM_OBJECT_STRUCT_SIZE + 1 + MAX_ROOM_SPRITE_OBJECTS * ROOM_OBJECT_STRUCT_SIZE + 1 - 1
+	ld a, #ff
+	call clear_memory_a
+
+	; refresh the screen to reflect the changes:
+	ld hl, 0
+	ld (room_scroll_x), hl
+	call update_keyboard_buffers
+	call player_update
+	call update_sprite_objects
+	ld a, (n_displayed_object_sprites)
+	ld (n_displayed_object_sprites_without_player_bullets), a
+	call update_sprite_objects_player_bullets
+	ld hl, upload_sprites_to_vdp
+	ld c, SPRITES_PAGE
+	call call_hl_in_page_c_8000
+	ld hl, draw_room_with_hud
+	ld c, TILES_PAGE
+	call call_hl_in_page_c_8000  ; just so that we do not lose the page we are at
 
 	; battle is over, trigger Elaine event!
 	ld a, STORY_STATE__DEFEATED_ALIENS

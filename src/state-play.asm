@@ -482,25 +482,27 @@ state_play_update_agenda_boss:
 
 state_play_update_agenda_cycle_even:  ; player + player bullets
 	call update_keyboard_buffers
-	call player_update
-	call update_sprite_objects_player_bullets
 	call maybe_recenter_scroll
 	call update_scroll
+	call player_update
+	call update_sprite_objects_player_bullets
 	jp state_play_loop_continue
 
 state_play_update_agenda_cycle_even_0:  ; player + player bullets + tile objects
 	call update_keyboard_buffers
+	call maybe_recenter_scroll
+	call update_scroll
 	call player_update
 	call update_sprite_objects_player_bullets
 	ld c, TILES_PAGE
 	ld hl, update_tile_objects
 	call call_hl_in_page_c_8000
-	call maybe_recenter_scroll
-	call update_scroll
 	jp state_play_loop_continue
 
 state_play_update_agenda_cycle_odd:  ; player + player bullets + sprite objects
 	call update_keyboard_buffers
+	call maybe_recenter_scroll
+	call update_scroll
 	call player_update
 	call update_sprite_objects
 	ld hl, update_sprite_enemies
@@ -509,23 +511,23 @@ state_play_update_agenda_cycle_odd:  ; player + player bullets + sprite objects
 	ld a, (n_displayed_object_sprites)
 	ld (n_displayed_object_sprites_without_player_bullets), a
 	call update_sprite_objects_player_bullets
-	call maybe_recenter_scroll
-	call update_scroll
 	jp state_play_loop_continue
 
 state_play_update_agenda_cycle_even_boss:  ; player + player bullets + boss
 	call update_keyboard_buffers
+	call maybe_recenter_scroll
+	call update_scroll
 	call player_update
 	call update_sprite_objects_player_bullets
 	ld c, BOSS_PAGE
 	ld hl, update_boss_behavior
 	call call_hl_in_page_c_8000
-	call maybe_recenter_scroll
-	call update_scroll
 	jp state_play_loop_continue
 
 state_play_update_agenda_cycle_even_0_boss:  ; player + player bullets + tile objects + boss
 	call update_keyboard_buffers
+	call maybe_recenter_scroll
+	call update_scroll
 	call player_update
 	call update_sprite_objects_player_bullets
 	ld c, BOSS_PAGE
@@ -534,8 +536,6 @@ state_play_update_agenda_cycle_even_0_boss:  ; player + player bullets + tile ob
 	ld c, TILES_PAGE
 	ld hl, update_tile_objects
 	call call_hl_in_page_c_8000
-	call maybe_recenter_scroll
-	call update_scroll
 	jp state_play_loop_continue
 
 

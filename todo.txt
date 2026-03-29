@@ -1,9 +1,9 @@
 to do:
 ***- calendar_stone_center_battle_event_fn__victory:
-  ***- BUG: sometimes two aliens are dropped from a UFO! (probably when multihit?)
-  ***- if the player is jumping, wait for him to land before the elaine event is triggerd
-  ***- force the scroll at the top (what happens if the player is at the bottom?)
-  ***- then a rope drops, and elaine comes down
+  ***- then a rope drops, and elaine comes down:
+    ***- create a new object like Aapo for Elaine
+    ***- drop rope
+    ***- spawn Elaine object and make it climb down the rope
   ***- screen goes to black, entrances restored, ceiling closed, and Elaine and Michael are in the center
   ***- dialogue:
     - "Michael: Elaine! What are you doing here!"
@@ -16,7 +16,7 @@ to do:
     - "Elaine: Ok, then are we ready to activate the calendar stone? More aliens will be coming soon for sure!"
     - "Elaine: When you are ready, go ahead! I'll be guarding the calendar stone in the meantime."
 ***- From that point on, Elaine will be there in the room. I should craft a few random messages, like those for Aapo that are trivia/story/hints/jokes.
-***- reset "global_state__story" in state-play.asm to its default value
+***- reset "global_state__story" in state-play.asm to its default value, and the number of max aliens in calendar-room-events.asm
 
 - first ending sequence (udpate "stats__ending"): The calendar stone machine activates and creates a defensive barrier around earth, the alien armada that was coming turns back, but promises revenge.
   - update "calendar_stone_center_trigger_ending_event_fn"

@@ -343,17 +343,17 @@ public class GenerateSprites {
         data.addAll(extractSprite(sourceImage, 0, 248, 13));  // alien walking right
         data.addAll(extractSprite(sourceImage, 16, 248, 13));
         data.addAll(extractSprite(sourceImage, 0, 244, 2));
-        data.addAll(extractSprite(sourceImage, 16, 244, 2));
+//        data.addAll(extractSprite(sourceImage, 16, 244, 2));
         data.addAll(extractSpriteFlipped(sourceImage, 0, 248, 13));  // alien walking left
         data.addAll(extractSpriteFlipped(sourceImage, 16, 248, 13));
         data.addAll(extractSpriteFlipped(sourceImage, 0, 244, 2));
-        data.addAll(extractSpriteFlipped(sourceImage, 16, 244, 2));
-        // alien stairs (9)
+//        data.addAll(extractSpriteFlipped(sourceImage, 16, 244, 2));
+        // alien stairs (7)
         data.addAll(extractSprite(sourceImage, 112, 248, 13));  // alien stairs
         data.addAll(extractSpriteFlipped(sourceImage, 112, 248, 13));
         data.addAll(extractSprite(sourceImage, 112, 244, 2));
         data.addAll(extractSpriteFlipped(sourceImage, 112, 244, 2));
-        // alien firing (13)
+        // alien firing (11)
         data.addAll(extractSprite(sourceImage, 32, 248, 13));  // right: down
         data.addAll(extractSprite(sourceImage, 32, 244, 2));
         data.addAll(extractSprite(sourceImage, 48, 248, 13));  // right: down-right
@@ -374,7 +374,15 @@ public class GenerateSprites {
         data.addAll(extractSpriteFlipped(sourceImage, 80, 244, 2));
         data.addAll(extractSpriteFlipped(sourceImage, 96, 248, 13));  // left: up
         data.addAll(extractSpriteFlipped(sourceImage, 96, 244, 2));
-
+        // Elaine (31)
+        data.addAll(extractSprite(sourceImage2, 192, 80, 10));  // idle 1
+        data.addAll(extractSprite(sourceImage2, 192, 80, 9));
+        data.addAll(extractSprite(sourceImage2, 208, 80, 10));  // idle 2
+        data.addAll(extractSprite(sourceImage2, 208, 80, 9));
+        data.addAll(extractSprite(sourceImage2, 192, 96, 10));  // rope 1
+        data.addAll(extractSprite(sourceImage2, 192, 96, 9));
+        data.addAll(extractSprite(sourceImage2, 208, 96, 10));  // rope 2
+        data.addAll(extractSprite(sourceImage2, 208, 96, 9));
         
         if (data.size() > 40 * 32) {
             throw new Exception("More enemy sprites than the engine can handle!");
