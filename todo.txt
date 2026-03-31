@@ -1,7 +1,6 @@
 to do:
 ***- Ending C:
   ***- Scene 1:
-    ***- generate sprites for the aliens
     ***- display UFO image (without earth) (only load tiles to banks 0 and 1, leave 2 for text)
     ***- add Alien captain sprites
     ***- slowly make Earth appear
