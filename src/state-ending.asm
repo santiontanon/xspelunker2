@@ -1,6 +1,8 @@
 ;-----------------------------------------------
 ending_C:
     ld sp, stack
+	ld hl, TEXT_ENDING_C
+	ld (stats__ending), hl
 	
 	; ...
 
@@ -12,6 +14,8 @@ ending_C:
 ;-----------------------------------------------
 ending_B:
     ld sp, stack
+	ld hl, TEXT_ENDING_B
+	ld (stats__ending), hl
 	
 	; ...
 
@@ -23,6 +27,8 @@ ending_B:
 ;-----------------------------------------------
 ending_A:
     ld sp, stack
+	ld hl, TEXT_ENDING_A
+	ld (stats__ending), hl
 	
 	; ...
 

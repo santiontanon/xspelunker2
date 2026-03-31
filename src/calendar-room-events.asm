@@ -456,9 +456,6 @@ calendar_stone_center_trigger_ending_event_fn_loop2:
 	pop bc
 	djnz calendar_stone_center_trigger_ending_event_fn_loop2
 
-	; Continue ending sequence:
-	; ...
-
 	ld a, (global_state__n_power_stones_in_calendar)
 	cp 5
 	ld hl, ending_C

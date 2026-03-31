@@ -1,10 +1,38 @@
 to do:
 ***- Ending C:
-  ***- when finishing the game, do not display the "continue yes/no" dialogue
-  ***- update "stats__ending" 
-  ***- decide a set of gfx scenes and write the text. Summary: The calendar stone machine activates and creates a defensive barrier around earth, the alien armada that was coming turns back, but promises revenge.
-    ***- clue to check the rom in Maya in the ending credits, maybe something like "Luku ata de romu failu" (or some parts with actual verbs)
-  ***- update "calendar_stone_center_trigger_ending_event_fn"
+  - Scene 1: on the bridge of an Alien UFO (with earth seeable through the window), and with Aliens looking like the sprites in the ambush
+    The commander is watching throught the window, and planet earth comes into view
+    B: Attention all units! We have entered the orbit of Sol-3. Calibrate the incinerators and ready the harvest-drones. The subjugation of this mud-ball begins now!
+    A small alien walks from the left:
+    A: Excellency! An urgent transmission from the vanguard. Our infiltration unit has... encountered a terminal error. The Nexus remains uncaptured.
+    B: Incompetence! Did the primitive war-castes detect our presence? Did their crude ballistic weapons penetrate our shields?
+    B: Negative, Great One. The entire unit was neutralized by only two indigenous specimens... acting without hive-mind coordination.
+    B: ...
+    B: A minor setback. With or without the conduit, these primates shall kneel! Commencing planetary sterilization!
+    A: A thousand pardons, Excellency... but there is a further complication.
+    B: What now? Speak before I have your antennae harvested!
+    A: The specimens have triggered the Nexus. The force field around Earth is starting to form...
+    B: By the Black Holes of Orion! It was a mere hunk of stone! How could elite warriors be outwitted by soft-shelled bipeds?
+    B: Tactical assessment! What are our contingencies?
+    A: Our current kinetic ordinance is useless against such a resonance, Sir. We would require a World-Eater class beam to puncture a barrier of this magnitude.
+    B: Curses upon their primitive luck! The High Council will have my crest for this! No matter. I concede this cycle. We shall retreat to the Void and return with the World-Eater. Let the humans enjoy their fleeting reprieve... we shall return!
+
+  - Scene 2: on the beach, Michael and Elaine having a sunbath.
+    - X: ...and then, when the two giant skeletons appeared, I told them: "Michael S. Xavier is here! You do not scare me!", and then...
+    - E: Stop!!! Michael! I have heard that story 5 times! And every time there seems to be one extra skeleton! Can you just admit that I saved you ass at the end when the aliens ambushed you?
+    - X: ...
+    - E: Just relax! Enjoy the vacation! And think about what are we having for dinner today! No more stories about Yucatan for the day ok?
+    - X: ... darn it...
+    - X: I don't know! I keep talking about it because I keep having the feeling that maybe what we did was not enough... what if they come back?
+  - Scene 3: just text (scrolling?), with some Maya character decorations around (and with a hidden clue: "Luku ata de romu failu" (or some parts with actual verbs))
+    Thanks for playing 2XSpelunker by Santiago Ontañón (2026)
+    You reached ending C. Not bad, but maybe there are puzzles you didn't solve, or rooms you didn't visit. I encourage you to play again, and try to reach at least ending B. Pay close attention for any hidden clues!
+    You might have noticed that the game features writing in some hidden script. When creating this game I was very inspired by games like Tunic or La Mulana, which contain many hidden puzzles, and a secret language that you can decypher to get more out of the game. When starting to plan the game, I thought that it would be very cool if instead of a made up language, I could use actual Maya script in the game. And that's what I did! All the text in ancient hidden you have seen in the game is actual Maya script. So, if you have tried to decypher some of it, you have actually been learning actual Maya language! I apologize in advance for any mistakes I might have done when writing in Maya, as I am just starting to learn the language myself. But I tried my best to write actually correct Maya sentences.
+    Moreover, many of the names, enemies and places you visit in the game as inspirte by Maya mythology. I took lots of liberties though, of course, and the game is very very inaccurate when it comes to Maya mythology. I just took enough out of the Maya myths to craft a game world that would make sense, and not more. For example, the twelve Xibalba lords actually correspond to the ones described in the Popol Vuh, but my rendering of Xibalba has nothing to do with the way Xibalba is described in Mayan texts.
+    In any case, I hope you enjoyed playing the game, and if you have not yet reached the best ending, maybe you have missed some clues. So, look closer :) (hint: there are 5 possible endings, starting from the worst possible ending: C).
+    Acknowledgements (TO DO)
+    Thanks for Playing 2XSpelunker
+    Santiago Ontañón, Brain Games, 2026
   ***- add "no miss" achievement for this: if there is no damage (Track it) (or maybe just no damage during alien fight?)
   ***- reset "global_state__story" in state-play.asm to its default value when all finished
 
@@ -23,6 +51,7 @@ to do:
   - this leads to the astronomy room: clues about the constellation relation with the seed, and also a tablet with the three names of the three statues (in Maya), and also the "world teleporter" where you go back to the world name room, and can travel across worlds.
   - speaking the names in front of each statue unlocks a chest/cabinet with a fragment of a codex. You need all 3 for it to be intelligible
  
+- in the minimap, show room connections
 - mars biome (maybe moon/mars maps are smaller as most puzzles are not there? and they are just so that you can get the final stone) (remember to keep ladder tiles in place for down-door opening code)
   - can you jump higher in the moon/mars? fall slower?
 - moon biome (similar to mars, but different color scheme, it could even be the same with palette changed)
@@ -31,7 +60,7 @@ to do:
   - add boss name to the stats for game over screen
 - 7th boss (ideas: "The Lunar Obsidian Sentinel" (tall, slender, smooth black, reflective surfaces), "The Lunar Crystal Serpent", "The Moon Stone Monolith"). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
   - add boss name to the stats for game over screen
-- second ending (udpate "stats__ending"): the calendar stone machine not only creates a defensive barrier, but also activates its offensive mechanism and destroys the alien armada that was coming. You hope that will deter them from coming again.
+- ending B: the calendar stone machine not only creates a defensive barrier, but also activates its offensive mechanism and destroys the alien armada that was coming. You hope that will deter them from coming again.
 
 - 8th boss: after beating the combat against the aliens, you can teleport to their home planet, and fight against their leader (final final boss). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
   - add boss name to the stats for game over screen

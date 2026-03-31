@@ -2,12 +2,6 @@
 state_game_over_text_table:
 	dw TEXT_GAME_OVER, CHRTBL2 + (3*32+13)*8, #80f0
 	db 6, TEXT_PAGE
-	dw TEXT_CONTINUE, CHRTBL2 + (7*32+13)*8, #80f0
-	db 6, TEXT_PAGE
-	dw TEXT_YES, CHRTBL2 + (8*32+14)*8, #80f0
-	db 4, TEXT_PAGE
-	dw TEXT_NO, CHRTBL2 + (9*32+14)*8, #80f0
-	db 4, TEXT_PAGE
 	dw TEXT_GAMEOVER_STATS_0, CHRTBL2 + (12*32+4)*8, #8050
 	db 10, TEXT_PAGE3
 	dw TEXT_GAMEOVER_STATS_1, CHRTBL2 + (12*32+19)*8, #8050
@@ -30,6 +24,13 @@ state_game_over_text_table:
 	db 10, TEXT_PAGE3
 	dw TEXT_GAMEOVER_STATS_10, CHRTBL2 + (16*32+19)*8, #8050
 	db 10, TEXT_PAGE3
+state_game_over_text_table_end_no_continue:
+	dw TEXT_CONTINUE, CHRTBL2 + (7*32+13)*8, #80f0
+	db 6, TEXT_PAGE
+	dw TEXT_YES, CHRTBL2 + (8*32+14)*8, #80f0
+	db 4, TEXT_PAGE
+	dw TEXT_NO, CHRTBL2 + (9*32+14)*8, #80f0
+	db 4, TEXT_PAGE
 state_game_over_text_table_end:
 
 
@@ -43,8 +44,15 @@ state_game_over:
 
 	call set_bitmap_mode
 
+	ld hl, (stats__ending)
+	ld bc, TEXT_ENDING_FAIL
+	or a
+	sbc hl, bc
+
 	ld ix, state_game_over_text_table
 	ld b, (state_game_over_text_table_end - state_game_over_text_table) / 8
+	jr z, state_game_over_text_loop  ; player failed
+	ld b, (state_game_over_text_table_end_no_continue - state_game_over_text_table) / 8
 state_game_over_text_loop:
 	push bc
 		ld e, (ix)
@@ -84,12 +92,26 @@ state_game_over_text_loop_page1_continue:
 	call state_game_over_print_n_items
 	call state_game_over_print_n_maps
 	call state_game_over_print_n_coins
-	call state_game_over_print_continued
+	call state_game_over_print_continued  ; whether the player continued or not
 	call state_game_over_print_ending
 	call state_game_over_print_time
 	call state_game_over_print_achievements
 	call state_game_over_print_bosses
 
+	ld hl, (stats__ending)
+	ld bc, TEXT_ENDING_FAIL
+	or a
+	sbc hl, bc
+	jr z, state_game_over_ask_for_continue
+	; player reached a good ending:
+	ld b, 50
+	call wait_b_halts
+	xor a
+	ld (keyboard_clicks), a
+	call wait_for_click
+	jr state_game_over_quit
+
+state_game_over_ask_for_continue:
 	; continue yes/no:
 	ld a, 8 * 8 - 1  ; y coordinate of the first option
 	ld (tmp_dialog_options_position), a
