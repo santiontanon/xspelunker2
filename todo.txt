@@ -1,21 +1,26 @@
 to do:
 ***- Ending C:
-  - Scene 1: on the bridge of an Alien UFO (with earth seeable through the window), and with Aliens looking like the sprites in the ambush
-    The commander is watching throught the window, and planet earth comes into view
-    B: Attention all units! We have entered the orbit of Sol-3. Calibrate the incinerators and ready the harvest-drones. The subjugation of this mud-ball begins now!
-    A small alien walks from the left:
-    A: Excellency! An urgent transmission from the vanguard. Our infiltration unit has... encountered a terminal error. The Nexus remains uncaptured.
-    B: Incompetence! Did the primitive war-castes detect our presence? Did their crude ballistic weapons penetrate our shields?
-    B: Negative, Great One. The entire unit was neutralized by only two indigenous specimens... acting without hive-mind coordination.
-    B: ...
-    B: A minor setback. With or without the conduit, these primates shall kneel! Commencing planetary sterilization!
-    A: A thousand pardons, Excellency... but there is a further complication.
-    B: What now? Speak before I have your antennae harvested!
-    A: The specimens have triggered the Nexus. The force field around Earth is starting to form...
-    B: By the Black Holes of Orion! It was a mere hunk of stone! How could elite warriors be outwitted by soft-shelled bipeds?
-    B: Tactical assessment! What are our contingencies?
-    A: Our current kinetic ordinance is useless against such a resonance, Sir. We would require a World-Eater class beam to puncture a barrier of this magnitude.
-    B: Curses upon their primitive luck! The High Council will have my crest for this! No matter. I concede this cycle. We shall retreat to the Void and return with the World-Eater. Let the humans enjoy their fleeting reprieve... we shall return!
+  ***- Scene 1:
+    ***- generate tiles + nametable data (bg, earth and moon separately)
+    ***- generate sprites for the aliens
+    ***- display UFO image (without earth) (only load tiles to banks 0 and 1, leave 2 for text)
+    ***- add Alien captain sprites
+    ***- slowly make Earth appear
+    ***- then first dialogue (appears in the 3rd bank of the screen):
+      ***- (in white color) "Attention all units! We have entered the orbit of Sol-3. Calibrate the incinerators and ready the harvest-drones. The subjugation of this mud-ball begins now!"
+    ***- A small alien walks from the left
+      ***- (in purple color): "Excellency! An urgent transmission from the vanguard. Our infiltration unit has... encountered a terminal error. The Nexus remains uncaptured."
+      ***- (in white color) "Incompetence! Did the primitive war-castes detect our presence? Did their crude ballistic weapons penetrate our shields?"
+      B: Negative, Great One. The entire unit was neutralized by only two indigenous specimens... acting without hive-mind coordination.
+      B: ...
+      B: A minor setback. With or without the conduit, these primates shall kneel! Commencing planetary sterilization!
+      A: A thousand pardons, Excellency... but there is a further complication.
+      B: What now? Speak before I have your antennae harvested!
+      A: The specimens have triggered the Nexus. The force field around Earth is starting to form...
+      B: By the Black Holes of Orion! It was a mere hunk of stone! How could elite warriors be outwitted by soft-shelled bipeds?
+      B: Tactical assessment! What are our contingencies?
+      A: Our current kinetic ordinance is useless against such a resonance, Sir. We would require a World-Eater class beam to puncture a barrier of this magnitude.
+      B: Curses upon their primitive luck! The High Council will have my crest for this! No matter. I concede this cycle. We shall retreat to the Void and return with the World-Eater. Let the humans enjoy their fleeting reprieve... we shall return!
 
   - Scene 2: on the beach, Michael and Elaine having a sunbath.
     - X: ...and then, when the two giant skeletons appeared, I told them: "Michael S. Xavier is here! You do not scare me!", and then...
