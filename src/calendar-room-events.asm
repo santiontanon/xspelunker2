@@ -352,6 +352,8 @@ calendar_stone_center_battle_event_fn__keep_battle_going:
 
 ;-----------------------------------------------
 calendar_stone_center_trigger_ending_event_fn:
+	call stop_music
+
 	; player interacted with the calendar stone after the alien battle:
 	ld de, TEXT_CALENDAR_CENTER_MSG3
 	ld hl, display_in_game_message
@@ -403,7 +405,7 @@ calendar_stone_center_trigger_ending_event_fn_loop:
 		; redraw the room:
 		ld hl, draw_room_with_hud
 		ld c, TILES_PAGE
-		call call_hl_in_page_c_8000  ; just so that we do not lose the page we are at
+		call call_hl_in_page_c_8000
 		ld hl, SFX_explosion
 		call play_SFX_with_high_priority
 		ld b, 12
@@ -413,7 +415,7 @@ calendar_stone_center_trigger_ending_event_fn_loop:
 		; redraw the room:
 		ld hl, draw_room_with_hud
 		ld c, TILES_PAGE
-		call call_hl_in_page_c_8000  ; just so that we do not lose the page we are at
+		call call_hl_in_page_c_8000
 		ld b, 12
 		call wait_b_halts
 	pop bc
@@ -426,7 +428,7 @@ calendar_stone_center_trigger_ending_event_fn_loop:
 	; redraw the room:
 	ld hl, draw_room_with_hud
 	ld c, TILES_PAGE
-	call call_hl_in_page_c_8000  ; just so that we do not lose the page we are at
+	call call_hl_in_page_c_8000
 	ld b, 25
 	call wait_b_halts
 
