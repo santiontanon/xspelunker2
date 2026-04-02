@@ -2,9 +2,7 @@ to do:
 ***- Ending C:
   ***- Scene 2: on the beach, Michael and Elaine having a sunbath.
     ***- draw the scene in gimp:
-      OK - overall composition
-      ***- detail on the towels (maybe some bags/shoes/umbrella)
-      ***- detail on the vegetation (this will be hard)
+      ***- detail on the vegetation
       ***- water animation
     ***- extract tiles
     ***- extract sprites
@@ -16,6 +14,7 @@ to do:
     ***- E: Just relax! Enjoy the vacation! And think about what are we having for dinner today! No more stories about Yucatan for the day ok?
     ***- X: ... darn it...
     ***- X: I don't know! I keep talking about it because I keep having the feeling that maybe what we did was not enough... what if they come back?
+  ***- When touching the center: text that says something like: "As you touch the calendar stone, a deep voice comes out of it", "Calendar: [some text in maya]", then Elaine says "I understand some words of that! I think it is saying something about a planetary shield being activated! I think we did it!"
   - Scene 3: just text (scrolling?), with some Maya character decorations around (and with a hidden clue: "Luku ata de romu failu" (or some parts with actual verbs))
     Thanks for playing 2XSpelunker by Santiago Ontañón (2026)
     You reached ending C. Not bad, but maybe there are puzzles you didn't solve, or rooms you didn't visit. I encourage you to play again, and try to reach at least ending B. Pay close attention for any hidden clues!
