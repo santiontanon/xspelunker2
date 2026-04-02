@@ -1,7 +1,11 @@
 to do:
 ***- Ending C:
   ***- Scene 2: on the beach, Michael and Elaine having a sunbath.
-    ***- draw the scene in gimp
+    ***- draw the scene in gimp:
+      OK - overall composition
+      ***- detail on the towels (maybe some bags/shoes/umbrella)
+      ***- detail on the vegetation (this will be hard)
+      ***- water animation
     ***- extract tiles
     ***- extract sprites
     ***- bring the data to the assembler side
