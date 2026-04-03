@@ -1,13 +1,9 @@
 to do:
 ***- Ending C:
   ***- Scene 2: on the beach, Michael and Elaine having a sunbath.
-    ***- draw the scene in gimp:
-      ***- detail on the vegetation
-      ***- water animation
-    ***- extract tiles
     ***- extract sprites
-    ***- bring the data to the assembler side
-    ***- draw the scene in msx
+    ***- draw the scene in msx (tiles + sprites)
+    ***- animations (characters drift, sun reflection animates)
     ***- X: ...and then, when the two giant skeletons appeared, I told them: "Michael S. Xavier is here! You do not scare me!", and then...
     ***- E: Stop!!! Michael! I have heard that story 5 times! And every time there seems to be one extra skeleton! Can you just admit that I saved you ass at the end when the aliens ambushed you?
     ***- X: ...
@@ -40,7 +36,7 @@ to do:
   - in each of the 3 pyramids, if the condition of the given stella is satisfied, a room with a giant statue is spawned, with a tablet that says something like: "I do not remember my name, but I was the first/second/third".
   - 8 bridge room in one of the caves: each bridge depends on each of the bits of the first byte of the random seed. All 0s will lower all bridges.
   - this leads to the astronomy room: clues about the constellation relation with the seed, and also a tablet with the three names of the three statues (in Maya), and also the "world teleporter" where you go back to the world name room, and can travel across worlds.
-  - speaking the names in front of each statue unlocks a chest/cabinet with a fragment of a codex. You need all 3 for it to be intelligible
+  - speaking the names in front of each statue unlocks a chest/cabinet with a fragment of a codex. You need all 3 for it to be intelligible (this will later unlock the "A+" ending)
  
 - in the minimap, show room connections
 - mars biome (maybe moon/mars maps are smaller as most puzzles are not there? and they are just so that you can get the final stone) (remember to keep ladder tiles in place for down-door opening code)
@@ -55,10 +51,10 @@ to do:
 
 - 8th boss: after beating the combat against the aliens, you can teleport to their home planet, and fight against their leader (final final boss). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
   - add boss name to the stats for game over screen
-- final good ending 1 (update "stats__ending"): the stone opens a portal for you to travel to the alien world, and fight against their leader in a final final battle. When you defeat it and come back, Elaine is there waiting to save you, but you arrive having defeated the alien empire (although there is doubt if other empires will show up again, and the calendar stone depletes, and cannot be used again)
+- final good ending 1 (A) (update "stats__ending"): the stone opens a portal for you to travel to the alien world, and fight against their leader in a final final battle. When you defeat it and come back, Elaine is there waiting to save you, but you arrive having defeated the alien empire (although there is doubt if other empires will show up again, and the calendar stone depletes, and cannot be used again)
 - "speak" the animal names in the animal room to get their blessings (if you get all four, you do double damage, adjust angry/veryhard boss difficulty for this): I already have the clue for this in the game, right? (TABLET_TRIVIA_CLUE1_1, etc.)
   - add as a special achievement for the gameover screen
-- Final good ending 2: if you have the codex (from the 3 statues), it explains how to manufacture the powestones/firestones. So, you can keep using the calendar stone and be prepared for the future. This is the true final ending.
+- Final good ending 2 (A+) if you have the codex (from the 3 statues), it explains how to manufacture the powestones/firestones. So, you can keep using the calendar stone and be prepared for the future. This is the true final ending.
 - save game to rom / password
 
 - Potential new ideas if I have the energy:
@@ -71,7 +67,7 @@ to do:
   - item that lets you fight a boss for a second time (the idea was to get both items in boss 4, but not sure if worth it)
   - gigantic maya statue monument that looks decoration, but it's actually a secret boss (to have a maya-themed final boss)
     - maybe that boss leads to the grave of the person who wrote all the story tablets (Yatzil), with a riddle you can only solve if you have seen all tablets.
-    - Solving the riddle reveals the head of the statue (which was hidden), and two gigantic empy eye sockets. If you place the eyes of charybdis and scylla, the statue comes alive, and you have your boss fight!
+    - Solving the riddle reveals the head of the statue (which was hidden), and two gigantic empty eye sockets. If you place the eyes of charybdis and scylla, the statue comes alive, and you have your boss fight!
 
 --------------------
 
