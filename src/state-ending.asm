@@ -29,6 +29,16 @@ ending_C_UFO_minion_talking:
 	db 77 + 5, 88, 60, COLOR_PURPLE
 
 
+ending_C_beach_unbrealla_sprites:
+	db 63, 57, 0, COLOR_RED
+	db 63, 57, 4, COLOR_BLACK
+ending_C_beach_elaine_michael_sprites:
+	db 79, 140, 8, COLOR_LIGHT_RED
+	db 79, 143, 12, COLOR_DARK_YELLOW
+	db 79, 170, 16, COLOR_DARK_YELLOW
+	db 79, 173, 20, COLOR_DARK_RED
+
+
 ;-----------------------------------------------
 ending_C:
     ld sp, stack
@@ -64,6 +74,8 @@ ending_C:
 	call wait_b_halts_skippable
 
 	call clear_screen_left_to_right
+
+	call ending_beach_scene  ; elaine and michael relax in the beach
 
 	ld hl, state_game_over	
 	ld a, GAME_OVER_PAGE
@@ -406,6 +418,38 @@ ending_UFO_scene_minion_talks_loop_skip:
 	ld bc, 256*8
 	xor a
 	jp fast_FILVRM
+
+
+;-----------------------------------------------
+ending_beach_scene:
+	call disable_VDP_output
+		ld hl, ending_beach_tiles_zx0
+		ld c, ENDING_PAGE
+		call decompress_tiles_to_all_banks
+
+		ld hl, ending_beach_nametables
+		ld de, NAMTBL2 + 4*32+6
+		ld bc, #0814
+		call state_ending_copy_nametable
+
+		ld hl, ending_beach_sprites_zx0
+		ld de, buffer_4096
+		call dzx0
+
+		ld hl, buffer_4096
+		ld de, SPRTBL2
+		ld bc, 192
+		call fast_LDIRVM
+
+		ld hl, ending_C_beach_unbrealla_sprites
+		ld de, SPRATR2
+		ld b, 6*4
+		call fast_small_LDIRVM 
+	call enable_VDP_output
+
+	call wait_for_click
+
+	ret	
 
 
 ;-----------------------------------------------

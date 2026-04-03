@@ -1,8 +1,6 @@
 to do:
 ***- Ending C:
   ***- Scene 2: on the beach, Michael and Elaine having a sunbath.
-    ***- extract sprites
-    ***- draw the scene in msx (tiles + sprites)
     ***- animations (characters drift, sun reflection animates)
     ***- X: ...and then, when the two giant skeletons appeared, I told them: "Michael S. Xavier is here! You do not scare me!", and then...
     ***- E: Stop!!! Michael! I have heard that story 5 times! And every time there seems to be one extra skeleton! Can you just admit that I saved you ass at the end when the aliens ambushed you?
@@ -11,6 +9,7 @@ to do:
     ***- X: ... darn it...
     ***- X: I don't know! I keep talking about it because I keep having the feeling that maybe what we did was not enough... what if they come back?
   ***- When touching the center: text that says something like: "As you touch the calendar stone, a deep voice comes out of it", "Calendar: [some text in maya]", then Elaine says "I understand some words of that! I think it is saying something about a planetary shield being activated! I think we did it!"
+  ***- add texts preceding the cutscenes like: "Meanwhile..." and "A few days later..."
   - Scene 3: just text (scrolling?), with some Maya character decorations around (and with a hidden clue: "Luku ata de romu failu" (or some parts with actual verbs))
     Thanks for playing 2XSpelunker by Santiago Ontañón (2026)
     You reached ending C. Not bad, but maybe there are puzzles you didn't solve, or rooms you didn't visit. I encourage you to play again, and try to reach at least ending B. Pay close attention for any hidden clues!
