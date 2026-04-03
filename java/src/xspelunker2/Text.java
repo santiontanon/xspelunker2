@@ -647,20 +647,31 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "operate in the Atlantis world. That world had to pay the price for all others to be safe.", "ATLANTIS_TABLET_5_2", 18*5);
 
         // Ending C:
+        // First shared part:
         addLineSafe(lines_with_constant_page3, "Attention all units! We have entered the orbit of Sol-3. Calibrate the incinerators and ready the harvest-drones. The subjugation of this mud-ball begins!", "ENDING_C_UFO_1", 22*4);
         addLineSafe(lines_with_constant_page3, "Excellency! An urgent transmission from the vanguard. Our infiltration unit has... encountered a terminal error. The Nexus remains uncaptured.", "ENDING_C_UFO_2", 22*4);
         addLineSafe(lines_with_constant_page3, "Incompetence! Did the primitive war-castes detect our presence? Did their crude ballistic weapons penetrate our shields?", "ENDING_C_UFO_3", 22*4);
         addLineSafe(lines_with_constant_page3, "Negative, Great One. The entire unit was neutralized by only two indigenous specimens... acting without hive-mind coordination.", "ENDING_C_UFO_4", 22*4);
-//        addLineSafe(lines_with_constant_page3, "...", "ENDING_C_UFO_4", 22*4);
         addLineSafe(lines_with_constant_page3, "A minor setback. With or without the nexus, these primates shall kneel! Commencing planetary sterilization!", "ENDING_C_UFO_5", 22*4);
         addLineSafe(lines_with_constant_page3, "A thousand pardons, Excellency... but there is a further complication.", "ENDING_C_UFO_6", 22*4);
         addLineSafe(lines_with_constant_page3, "What now? Speak before I have your antennae harvested!", "ENDING_C_UFO_7", 22*4);
-        
+        // Ending C specific part:
         addLineSafe(lines_with_constant_page3, "The specimens have triggered the Nexus. The force field around Earth is starting to form...", "ENDING_C_UFO_8", 22*4);
         addLineSafe(lines_with_constant_page3, "By the Black Holes of Orion! It was a mere hunk of stone! How could elite warriors be outwitted by soft-shelled bipeds?", "ENDING_C_UFO_9", 22*4);
         addLineSafe(lines_with_constant_page3, "Tactical assessment! What are our contingencies?", "ENDING_C_UFO_10", 22*4);
         addLineSafe(lines_with_constant_page3, "Our current kinetic ordinance is useless against such a resonance, Sir. We would require a World-Eater class beam to puncture a barrier of this magnitude.", "ENDING_C_UFO_11", 22*4);
         addLineSafe(lines_with_constant_page3, "Curses upon their primitive luck! The High Council will have my crest for this! No matter. I concede this cycle. We shall retreat to the Void and return with the World-Eater. Let the humans enjoy their fleeting reprieve... we shall return!", "ENDING_C_UFO_12", 22*6);
+        // Beach scene C:
+        addLineSafe(lines_with_constant_page3, "Elaine: See! I told you I'd be a great idea to stay a few more days! Where can you find a beach like this back home?!", "ENDING_C_BEACH_1", 22*6);
+        addLineSafe(lines_with_constant_page3, "Xavier: I know, I know...", "ENDING_C_BEACH_2", 22*6);
+        addLineSafe(lines_with_constant_page3, "Xavier: btw, did I tell you about the part where I fought a giant beast in Atlantis? I was exploring the Temple of Poseidon when...", "ENDING_C_BEACH_3", 22*6);
+        addLineSafe(lines_with_constant_page3, "Elaine: Michael!!! Stop!!! I have heard that story 5 times! And every time the monster seems to grow a few meters larger!", "ENDING_C_BEACH_4", 22*6);
+        addLineSafe(lines_with_constant_page3, "Elaine: Can you just admit that I saved you ass at the end when the aliens ambushed you and move on?", "ENDING_C_BEACH_5", 22*6);
+//        addLineSafe(lines_with_constant_page3, "Xavier: ...", "ENDING_C_BEACH_6", 22*6);  // AMBUSH_ELAINE_3
+        addLineSafe(lines_with_constant_page3, "Elaine: Just relax! Enjoy the vacation! And think about what are we having for dinner today! No more stories about fighting mosters for the day ok?", "ENDING_C_BEACH_7", 22*6);
+        addLineSafe(lines_with_constant_page3, "Xavier: ... darn it...", "ENDING_C_BEACH_8", 22*6);
+        addLineSafe(lines_with_constant_page3, "Xavier: I don't know... I keep thinking about it because I keep having the feeling that maybe what we did was not enough... what if they find a way around the shield and come back?", "ENDING_C_BEACH_9", 22*6);
+
 
         List<Integer> numbers = font.convertStringToAssembler("0123456789 ");
         System.out.println("Numbers: " + numbers);

@@ -38,6 +38,12 @@ ending_C_beach_elaine_michael_sprites:
 	db 79, 170, 16, COLOR_DARK_YELLOW
 	db 79, 173, 20, COLOR_DARK_RED
 
+ending_C_beach_elaine_michael_sprites2:
+	db 80, 140, 8, COLOR_LIGHT_RED
+	db 80, 143, 12, COLOR_DARK_YELLOW
+	db 80, 170, 16, COLOR_DARK_YELLOW
+	db 80, 173, 20, COLOR_DARK_RED
+
 
 ;-----------------------------------------------
 ending_C:
@@ -372,7 +378,7 @@ ending_UFO_scene_captain_talks_agitated_loop_skip:
 ; input:
 ; - hl: text
 ; - b: speech cycles to wait
-ending_UFO_scene_minion_talks
+ending_UFO_scene_minion_talks:
 	push bc
 		push hl
 		pop iy
@@ -447,9 +453,148 @@ ending_beach_scene:
 		call fast_small_LDIRVM 
 	call enable_VDP_output
 
-	call wait_for_click
+	ld b, 2
+	call ending_beach_scene_wait_skippable
 
-	ret	
+	ld hl, TEXT_ENDING_C_BEACH_1
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	call ending_beach_scene_dialogue_line
+
+	ld hl, TEXT_ENDING_C_BEACH_2
+	ld a, COLOR_WHITE * 16
+	ld b, 4
+	call ending_beach_scene_dialogue_line
+
+	ld hl, TEXT_ENDING_C_BEACH_3
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	call ending_beach_scene_dialogue_line
+
+	ld hl, TEXT_ENDING_C_BEACH_4
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	call ending_beach_scene_dialogue_line
+
+	ld hl, TEXT_ENDING_C_BEACH_5
+	ld a, COLOR_WHITE * 16
+	ld b, 7
+	call ending_beach_scene_dialogue_line
+
+	ld hl, TEXT_AMBUSH_ELAINE_3
+	ld a, COLOR_WHITE * 16
+	ld b, 3
+	call ending_beach_scene_dialogue_line
+
+	ld hl, TEXT_ENDING_C_BEACH_7
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	call ending_beach_scene_dialogue_line
+
+	ld hl, TEXT_ENDING_C_BEACH_8
+	ld a, COLOR_WHITE * 16
+	ld b, 3
+	call ending_beach_scene_dialogue_line
+
+	ld hl, TEXT_ENDING_C_BEACH_9
+	ld a, COLOR_WHITE * 16
+	ld b, 10
+	call ending_beach_scene_dialogue_line
+
+	jp clear_screen_left_to_right
+
+
+;-----------------------------------------------
+; input:
+; - b: wait animation cycles
+ending_beach_scene_dialogue_line:
+	ld (tmp_letter_line_color), a
+	push bc
+		push hl
+		pop iy
+		ld b, 1  ; first tile to use
+		ld de, NAMTBL2 + 32*16 + 5
+		ld ix, CHRTBL2 + 2*256*8
+		ld a, 24
+		ld (tmp_letter_line_width), a
+		ld hl, display_paragraph_text_page3
+		ld c, TABLET_LETTER_PAGE
+		call call_hl_in_page_c_8000
+	pop bc
+	call ending_beach_scene_wait_skippable	
+	ld hl, CLRTBL2 + 2*256*8
+	ld bc, 256*8
+	xor a
+	call fast_FILVRM
+	ld b, 25
+	jp wait_b_halts_skippable
+
+
+;-----------------------------------------------
+; input:
+; - b: number of animation cycles
+ending_beach_scene_wait_skippable:
+	push bc
+		call ending_beach_scene_frame2
+		ld b, 50
+		call wait_b_halts_skippable
+		jr nz, ending_beach_scene_wait_skippable_skip
+		call ending_beach_scene_frame1
+		ld b, 50
+		call wait_b_halts_skippable
+		jr nz, ending_beach_scene_wait_skippable_skip
+	pop bc
+	djnz ending_beach_scene_wait_skippable
+	ret
+ending_beach_scene_wait_skippable_skip:
+	pop bc
+	jp ending_beach_scene_frame1  ; always end in frame 1
+
+
+;-----------------------------------------------
+ending_beach_scene_frame1:
+	ld hl, ending_beach_nametables + 4*20+14
+	ld de, NAMTBL2 + (4+4)*32 + (6+14)
+	ld bc, #0103
+	call state_ending_copy_nametable
+
+	ld hl, ending_beach_nametables + 5*20+14
+	ld de, NAMTBL2 + (4+5)*32 + (6+14)
+	ld bc, #0103
+	call state_ending_copy_nametable
+
+	ld hl, ending_beach_nametables + 6*20+11
+	ld de, NAMTBL2 + (4+6)*32 + (6+11)
+	ld bc, #0107
+	call state_ending_copy_nametable
+
+	ld hl, ending_beach_nametables + 7*20+11
+	ld de, NAMTBL2 + (4+7)*32 + (6+11)
+	ld bc, #0107
+	call state_ending_copy_nametable
+
+	ld hl, ending_C_beach_elaine_michael_sprites
+	ld de, SPRATR2 + 4*2
+	ld b, 4*4
+	jp fast_small_LDIRVM 
+
+
+;-----------------------------------------------
+ending_beach_scene_frame2:
+	ld hl, ending_beach_nametables + 20*8
+	ld de, NAMTBL2 + (4+4)*32 + (6+14)
+	ld bc, #0203
+	call state_ending_copy_nametable
+
+	ld hl, ending_beach_nametables + 20*8 + 2*3
+	ld de, NAMTBL2 + (4+6)*32 + (6+11)
+	ld bc, #0207
+	call state_ending_copy_nametable
+
+	ld hl, ending_C_beach_elaine_michael_sprites2
+	ld de, SPRATR2 + 4*2
+	ld b, 4*4
+	jp fast_small_LDIRVM 
 
 
 ;-----------------------------------------------
