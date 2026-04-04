@@ -51,6 +51,26 @@ ending_C:
 	ld hl, TEXT_ENDING_C
 	ld (stats__ending), hl
 
+	ld de, TEXT_CALENDAR_ACTIVATED_C_2
+	ld hl, display_in_game_message_textpage3
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000	
+
+	ld de, TEXT_CALENDAR_ACTIVATED_C_3
+	ld hl, display_in_game_message_textpage3
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000	
+
+	ld de, TEXT_CALENDAR_ACTIVATED_C_4
+	ld hl, display_in_game_message_textpage3
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000	
+
+	ld de, TEXT_CALENDAR_ACTIVATED_C_5
+	ld hl, display_in_game_message_textpage3
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000	
+
 	call clear_screen_left_to_right
 
 	call ending_UFO_scene_approach_earth  ; aliens approach Earth, and captain calls for the invasion
@@ -116,6 +136,22 @@ ending_A:
 
 ;-----------------------------------------------
 ending_UFO_scene_approach_earth:
+
+	ld iy, TEXT_ENDING_C_UFO_0
+	ld b, 1  ; first tile to use
+	ld de, NAMTBL2 + 12*32 + 8
+	ld ix, CHRTBL2 + 1*256*8
+	ld a, 16
+	ld (tmp_letter_line_width), a
+	ld a, COLOR_WHITE * 16
+	ld (tmp_letter_line_color), a
+	ld hl, display_paragraph_text_page3
+	ld c, TABLET_LETTER_PAGE
+	call call_hl_in_page_c_8000
+	ld b, 200
+	call wait_b_halts_skippable
+	call clear_screen_left_to_right
+
 	call disable_VDP_output
 		ld hl, ending_ufo_tiles_zx0
 		ld c, ENDING_PAGE
@@ -428,6 +464,21 @@ ending_UFO_scene_minion_talks_loop_skip:
 
 ;-----------------------------------------------
 ending_beach_scene:
+	ld iy, TEXT_ENDING_C_BEACH_0
+	ld b, 1  ; first tile to use
+	ld de, NAMTBL2 + 12*32 + 10
+	ld ix, CHRTBL2 + 1*256*8
+	ld a, 16
+	ld (tmp_letter_line_width), a
+	ld a, COLOR_WHITE * 16
+	ld (tmp_letter_line_color), a
+	ld hl, display_paragraph_text_page3
+	ld c, TABLET_LETTER_PAGE
+	call call_hl_in_page_c_8000
+	ld b, 200
+	call wait_b_halts_skippable
+	call clear_screen_left_to_right
+
 	call disable_VDP_output
 		ld hl, ending_beach_tiles_zx0
 		ld c, ENDING_PAGE

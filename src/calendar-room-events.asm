@@ -360,6 +360,11 @@ calendar_stone_center_trigger_ending_event_fn:
 	ld c, TEXT_PAGE
 	call call_hl_in_page_c_8000
 
+	ld de, TEXT_CALENDAR_ACTIVATED_C_1
+	ld hl, display_in_game_message_textpage3
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000
+
 	ld hl, calendar_stone_center_trigger_ending_event_fn2
 	ld (in_game_event_fn_ptr), hl
 	ld a, CALENDAR_EVENTS_PAGE

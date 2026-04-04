@@ -1,20 +1,22 @@
 to do:
 ***- Ending C:
-  ***- When touching the center: text that says something like: "As you touch the calendar stone, a deep voice comes out of it", "Calendar: [some text in maya]", then Elaine says "I understand some words of that! I think it is saying something about a planetary shield being activated! I think we did it!"
-  ***- add texts preceding the cutscenes like: "Meanwhile..." and "A few days later..."
   ***- Scene 3: 
     ***- design how is it going to be visually (maybe text appearing animated like what I did in Westen House?)
       ***- add some Maya character decorations around (and with a hidden clue: "Luku ata de romu failu" (or some parts with actual verbs))
       ***- do I show enemies and give them names? (not the bosses)
-    ***- write the final text I want to show
-      Thanks for playing 2XSpelunker by Santiago Ontañón (2026)
-      You reached ending C. Not bad, but maybe there are puzzles you didn't solve, or rooms you didn't visit. I encourage you to play again, and try to reach at least ending B. Pay close attention for any hidden clues!
-      You might have noticed that the game features writing in some hidden script. When creating this game I was very inspired by games like Tunic or La Mulana, which contain many hidden puzzles, and a secret language that you can decypher to get more out of the game. When starting to plan the game, I thought that it would be very cool if instead of a made up language, I could use actual Maya script in the game. And that's what I did! All the text in ancient hidden you have seen in the game is actual Maya script. So, if you have tried to decypher some of it, you have actually been learning actual Maya language! I apologize in advance for any mistakes I might have done when writing in Maya, as I am just starting to learn the language myself. But I tried my best to write actually correct Maya sentences.
-      Moreover, many of the names, enemies and places you visit in the game as inspirte by Maya mythology. I took lots of liberties though, of course, and the game is very very inaccurate when it comes to Maya mythology. I just took enough out of the Maya myths to craft a game world that would make sense, and not more. For example, the twelve Xibalba lords actually correspond to the ones described in the Popol Vuh, but my rendering of Xibalba has nothing to do with the way Xibalba is described in Mayan texts.
-      In any case, I hope you enjoyed playing the game, and if you have not yet reached the best ending, maybe you have missed some clues. So, look closer :) (hint: there are 5 possible endings, starting from the worst possible ending: C).
-      Acknowledgements (TO DO)
-      Thanks for Playing 2XSpelunker
-      Santiago Ontañón, Brain Games, 2026
+      ***- I need more space in page 10 for text, move pcg enemies code somewhere else
+      ***- text:
+        Thanks for Playing 2XSpelunker!
+        Brain Games, 2026
+
+        Congratulations on finishing the game, and reaching Ending C! You managed to stop the alien invasion... for now...
+
+        But there is more to this game. If you have not gotten enough of exploring Mayan ruins, play again and try to reach at least ending B!
+
+        How to get ending B? You want clues? Well... pay attention to everything when you play and take careful notes. You never know when you can get a hint! Here, I will just give you one: there are 6 possible endings, the worst of which is C, and the best A++.
+
+        Design / Code / Graphics / Music: Santiago Ontañón
+        Betatesting: [TBD]
   ***- add "no miss" achievement for this: if there is no damage (Track it) (or maybe just no damage during alien fight?)
   ***- reset "global_state__story" in state-play.asm to its default value when all finished
 

@@ -355,11 +355,9 @@ public class Text {
         addLineSafe(lines_with_constant_page1, "I think I heard some door open deep into the ruins!", "PLACE_THIRD_POWER_STONE", 112);
         addLineSafe(lines_with_constant_page1, "Is the calendar stone fully powered up?! The center started pulsating!", "PLACE_FIFTH_POWER_STONE", 112);
         addLineSafe(lines_with_constant_page1, "Touch the calendar stone?", "TOUCH_STONE_QUESTION", 112);
-        // addLineSafe(lines_with_constant_page1, "You move your hand towards the calendar stone, but before you touch it, the room starts shaking!", "CALENDAR_CENTER_MSG1", 112);
-        // addLineSafe(lines_with_constant_page1, "That was the last of them! Ok, I can now continue with what I was doing!", "CALENDAR_CENTER_MSG2", 112);
         
         addLineSafe(lines_with_constant_page1, "Wait! They had not given up... This is an ambush!!!", "CALENDAR_AMBUSH", 112);     
-        addLineSafe(lines_with_constant_page1, "You place your hand in the center, and the stone starts shaking...", "CALENDAR_CENTER_MSG3", 112);
+        addLineSafe(lines_with_constant_page1, "You place your hand in the center and, as the stone starts shaking, you hear a deep voice...", "CALENDAR_CENTER_MSG3", 112);
         addLineSafe(lines_with_constant_page1, "Type what you want to say:", "TALK", 112);     
         addLineSafe(lines_with_constant_page1, "No one listened...", "TALK_FAIL", 112);     
         addLineSafe(lines_with_constant_page1, "After you speak, the room rumbles, and you hear a voice in an unknown language. It seems your words were heard!", "TALK_SUCCESS1", 112);
@@ -376,6 +374,12 @@ public class Text {
 //        addLineSafe(lines_with_constant_page3, "Xavier: ...", "AMBUSH_ELAINE_9", 112);
         addLineSafe(lines_with_constant_page3, "Elaine: Ok, then are we ready to activate the calendar stone? More aliens will be coming soon for sure!", "AMBUSH_ELAINE_10", 112);
 
+        addLineSafe(lines_with_constant_page3, "PA-PAT-TZA-JA CHANAL PAKAL", "CALENDAR_ACTIVATED_C_1", 112);
+        addLineSafe(lines_with_constant_page3, "Xavier: What happened?! What did we do?!", "CALENDAR_ACTIVATED_C_2", 112);
+        addLineSafe(lines_with_constant_page3, "Elaine: Did you hear that voice? It spoke in Maya! I did not fully understand, but it said something about... creating a shield?", "CALENDAR_ACTIVATED_C_3", 112);
+        addLineSafe(lines_with_constant_page3, "Elaine: I think this is it! I think the Nexus is creating a shield to prevent the aliens from coming!", "CALENDAR_ACTIVATED_C_4", 112);
+        addLineSafe(lines_with_constant_page3, "Xavier: Well, I hope you are right! The calendar seems to have crumbled after that! I am not sure this room is safe anymore, let's get out of here!", "CALENDAR_ACTIVATED_C_5", 112);
+                
         addLineSafe(lines_with_constant_page3, "Elaine: We must hurry, I blocked the cave the Aliens were using, but I doubt that'll stop them for very long...", "ELAINE_CALENDAR_1", 112);
         addLineSafe(lines_with_constant_page3, "Elaine: Why did I come? Well, I was of no more use back home anymore!", "ELAINE_CALENDAR_2", 112);
         addLineSafe(lines_with_constant_page3, "Elaine: Btw, dynamite in Palenque is crazy expensive. Almost went broke to get what I used!", "ELAINE_CALENDAR_3", 112);
@@ -648,6 +652,7 @@ public class Text {
 
         // Ending C:
         // First shared part:
+        addLineSafe(lines_with_constant_page3, "Meanwhile, in Earth orbit...", "ENDING_C_UFO_0", 12*4);
         addLineSafe(lines_with_constant_page3, "Attention all units! We have entered the orbit of Sol-3. Calibrate the incinerators and ready the harvest-drones. The subjugation of this mud-ball begins!", "ENDING_C_UFO_1", 22*4);
         addLineSafe(lines_with_constant_page3, "Excellency! An urgent transmission from the vanguard. Our infiltration unit has... encountered a terminal error. The Nexus remains uncaptured.", "ENDING_C_UFO_2", 22*4);
         addLineSafe(lines_with_constant_page3, "Incompetence! Did the primitive war-castes detect our presence? Did their crude ballistic weapons penetrate our shields?", "ENDING_C_UFO_3", 22*4);
@@ -662,11 +667,12 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "Our current kinetic ordinance is useless against such a resonance, Sir. We would require a World-Eater class beam to puncture a barrier of this magnitude.", "ENDING_C_UFO_11", 22*4);
         addLineSafe(lines_with_constant_page3, "Curses upon their primitive luck! The High Council will have my crest for this! No matter. I concede this cycle. We shall retreat to the Void and return with the World-Eater. Let the humans enjoy their fleeting reprieve... we shall return!", "ENDING_C_UFO_12", 22*6);
         // Beach scene C:
+        addLineSafe(lines_with_constant_page3, "A few days later...", "ENDING_C_BEACH_0", 12*4);
         addLineSafe(lines_with_constant_page3, "Elaine: See! I told you I'd be a great idea to stay a few more days! Where can you find a beach like this back home?!", "ENDING_C_BEACH_1", 22*6);
         addLineSafe(lines_with_constant_page3, "Xavier: I know, I know...", "ENDING_C_BEACH_2", 22*6);
         addLineSafe(lines_with_constant_page3, "Xavier: btw, did I tell you about the part where I fought a giant beast in Atlantis? I was exploring the Temple of Poseidon when...", "ENDING_C_BEACH_3", 22*6);
         addLineSafe(lines_with_constant_page3, "Elaine: Michael!!! Stop!!! I have heard that story 5 times! And every time the monster seems to grow a few meters larger!", "ENDING_C_BEACH_4", 22*6);
-        addLineSafe(lines_with_constant_page3, "Elaine: Can you just admit that I saved you ass at the end when the aliens ambushed you and move on?", "ENDING_C_BEACH_5", 22*6);
+        addLineSafe(lines_with_constant_page3, "Elaine: Can you just admit that I saved your ass at the end when the aliens ambushed you and move on?", "ENDING_C_BEACH_5", 22*6);
 //        addLineSafe(lines_with_constant_page3, "Xavier: ...", "ENDING_C_BEACH_6", 22*6);  // AMBUSH_ELAINE_3
         addLineSafe(lines_with_constant_page3, "Elaine: Just relax! Enjoy the vacation! And think about what are we having for dinner today! No more stories about fighting mosters for the day ok?", "ENDING_C_BEACH_7", 22*6);
         addLineSafe(lines_with_constant_page3, "Xavier: ... darn it...", "ENDING_C_BEACH_8", 22*6);
