@@ -51,57 +51,63 @@ ending_C:
 	ld hl, TEXT_ENDING_C
 	ld (stats__ending), hl
 
-	ld de, TEXT_CALENDAR_ACTIVATED_C_2
-	ld hl, display_in_game_message_textpage3
-	ld c, TEXT_PAGE
-	call call_hl_in_page_c_8000	
+; 	ld de, TEXT_CALENDAR_ACTIVATED_C_2
+; 	ld hl, display_in_game_message_textpage3
+; 	ld c, TEXT_PAGE
+; 	call call_hl_in_page_c_8000	
 
-	ld de, TEXT_CALENDAR_ACTIVATED_C_3
-	ld hl, display_in_game_message_textpage3
-	ld c, TEXT_PAGE
-	call call_hl_in_page_c_8000	
+; 	ld de, TEXT_CALENDAR_ACTIVATED_C_3
+; 	ld hl, display_in_game_message_textpage3
+; 	ld c, TEXT_PAGE
+; 	call call_hl_in_page_c_8000	
 
-	ld de, TEXT_CALENDAR_ACTIVATED_C_4
-	ld hl, display_in_game_message_textpage3
-	ld c, TEXT_PAGE
-	call call_hl_in_page_c_8000	
+; 	ld de, TEXT_CALENDAR_ACTIVATED_C_4
+; 	ld hl, display_in_game_message_textpage3
+; 	ld c, TEXT_PAGE
+; 	call call_hl_in_page_c_8000	
 
-	ld de, TEXT_CALENDAR_ACTIVATED_C_5
-	ld hl, display_in_game_message_textpage3
-	ld c, TEXT_PAGE
-	call call_hl_in_page_c_8000	
+; 	ld de, TEXT_CALENDAR_ACTIVATED_C_5
+; 	ld hl, display_in_game_message_textpage3
+; 	ld c, TEXT_PAGE
+; 	call call_hl_in_page_c_8000	
+
+; 	call clear_screen_left_to_right
+
+; 	call ending_UFO_scene_approach_earth  ; aliens approach Earth, and captain calls for the invasion
+
+; 	; Custom Ending C part of the UFO scene:	
+; 	call ending_UFO_scene_minion_interrupts  ; alien minion approaches and tells the captain something is wrong
+; 	ld hl, TEXT_ENDING_C_UFO_8
+; 	ld b, 32
+; 	call ending_UFO_scene_minion_talks
+        
+; 	ld hl, TEXT_ENDING_C_UFO_9
+; 	ld b, 32
+; 	call ending_UFO_scene_captain_talks_agitated
+
+; 	ld hl, TEXT_ENDING_C_UFO_10
+; 	ld b, 32
+; 	call ending_UFO_scene_captain_talks
+
+; 	ld hl, TEXT_ENDING_C_UFO_11
+; 	ld b, 32
+; 	call ending_UFO_scene_minion_talks
+        
+; 	ld hl, TEXT_ENDING_C_UFO_12
+; 	ld b, 64
+; 	call ending_UFO_scene_captain_talks_agitated
+
+; 	ld b, 100
+; 	call wait_b_halts_skippable
+; 	call clear_screen_left_to_right
+
+; 	call ending_beach_scene_C  ; elaine and michael relax in the beach
 
 	call clear_screen_left_to_right
 
-	call ending_UFO_scene_approach_earth  ; aliens approach Earth, and captain calls for the invasion
-	call ending_UFO_scene_minion_interrupts  ; alien minion approaches and tells the captain something is wrong
-
-	ld hl, TEXT_ENDING_C_UFO_8
-	ld b, 32
-	call ending_UFO_scene_minion_talks
-        
-	ld hl, TEXT_ENDING_C_UFO_9
-	ld b, 32
-	call ending_UFO_scene_captain_talks_agitated
-
-	ld hl, TEXT_ENDING_C_UFO_10
-	ld b, 32
-	call ending_UFO_scene_captain_talks
-
-	ld hl, TEXT_ENDING_C_UFO_11
-	ld b, 32
-	call ending_UFO_scene_minion_talks
-        
-	ld hl, TEXT_ENDING_C_UFO_12
-	ld b, 64
-	call ending_UFO_scene_captain_talks_agitated
-
-	ld b, 100
-	call wait_b_halts_skippable
-
-	call clear_screen_left_to_right
-
-	call ending_beach_scene  ; elaine and michael relax in the beach
+	ld ix, ending_C_text_page_ptrs
+	ld b, 1  ; # number of pages
+	call ending_final_text_scene
 
 	ld hl, state_game_over	
 	ld a, GAME_OVER_PAGE
@@ -463,7 +469,7 @@ ending_UFO_scene_minion_talks_loop_skip:
 
 
 ;-----------------------------------------------
-ending_beach_scene:
+ending_beach_scene_C:
 	ld iy, TEXT_ENDING_C_BEACH_0
 	ld b, 1  ; first tile to use
 	ld de, NAMTBL2 + 12*32 + 10
@@ -505,60 +511,58 @@ ending_beach_scene:
 	call enable_VDP_output
 
 	ld b, 2
-	call ending_beach_scene_wait_skippable
+	call ending_beach_scene_C_wait_skippable
 
 	ld hl, TEXT_ENDING_C_BEACH_1
 	ld a, COLOR_WHITE * 16
 	ld b, 8
-	call ending_beach_scene_dialogue_line
+	call ending_beach_scene_C_dialogue_line
 
 	ld hl, TEXT_ENDING_C_BEACH_2
 	ld a, COLOR_WHITE * 16
 	ld b, 4
-	call ending_beach_scene_dialogue_line
+	call ending_beach_scene_C_dialogue_line
 
 	ld hl, TEXT_ENDING_C_BEACH_3
 	ld a, COLOR_WHITE * 16
 	ld b, 8
-	call ending_beach_scene_dialogue_line
+	call ending_beach_scene_C_dialogue_line
 
 	ld hl, TEXT_ENDING_C_BEACH_4
 	ld a, COLOR_WHITE * 16
 	ld b, 8
-	call ending_beach_scene_dialogue_line
+	call ending_beach_scene_C_dialogue_line
 
 	ld hl, TEXT_ENDING_C_BEACH_5
 	ld a, COLOR_WHITE * 16
 	ld b, 7
-	call ending_beach_scene_dialogue_line
+	call ending_beach_scene_C_dialogue_line
 
 	ld hl, TEXT_AMBUSH_ELAINE_3
 	ld a, COLOR_WHITE * 16
 	ld b, 3
-	call ending_beach_scene_dialogue_line
+	call ending_beach_scene_C_dialogue_line
 
 	ld hl, TEXT_ENDING_C_BEACH_7
 	ld a, COLOR_WHITE * 16
 	ld b, 8
-	call ending_beach_scene_dialogue_line
+	call ending_beach_scene_C_dialogue_line
 
 	ld hl, TEXT_ENDING_C_BEACH_8
 	ld a, COLOR_WHITE * 16
 	ld b, 3
-	call ending_beach_scene_dialogue_line
+	call ending_beach_scene_C_dialogue_line
 
 	ld hl, TEXT_ENDING_C_BEACH_9
 	ld a, COLOR_WHITE * 16
 	ld b, 10
-	call ending_beach_scene_dialogue_line
-
-	jp clear_screen_left_to_right
+	jp ending_beach_scene_C_dialogue_line
 
 
 ;-----------------------------------------------
 ; input:
 ; - b: wait animation cycles
-ending_beach_scene_dialogue_line:
+ending_beach_scene_C_dialogue_line:
 	ld (tmp_letter_line_color), a
 	push bc
 		push hl
@@ -572,7 +576,7 @@ ending_beach_scene_dialogue_line:
 		ld c, TABLET_LETTER_PAGE
 		call call_hl_in_page_c_8000
 	pop bc
-	call ending_beach_scene_wait_skippable	
+	call ending_beach_scene_C_wait_skippable	
 	ld hl, CLRTBL2 + 2*256*8
 	ld bc, 256*8
 	xor a
@@ -584,26 +588,26 @@ ending_beach_scene_dialogue_line:
 ;-----------------------------------------------
 ; input:
 ; - b: number of animation cycles
-ending_beach_scene_wait_skippable:
+ending_beach_scene_C_wait_skippable:
 	push bc
-		call ending_beach_scene_frame2
+		call ending_beach_scene_C_frame2
 		ld b, 50
 		call wait_b_halts_skippable
-		jr nz, ending_beach_scene_wait_skippable_skip
-		call ending_beach_scene_frame1
+		jr nz, ending_beach_scene_C_wait_skippable_skip
+		call ending_beach_scene_C_frame1
 		ld b, 50
 		call wait_b_halts_skippable
-		jr nz, ending_beach_scene_wait_skippable_skip
+		jr nz, ending_beach_scene_C_wait_skippable_skip
 	pop bc
-	djnz ending_beach_scene_wait_skippable
+	djnz ending_beach_scene_C_wait_skippable
 	ret
-ending_beach_scene_wait_skippable_skip:
+ending_beach_scene_C_wait_skippable_skip:
 	pop bc
-	jp ending_beach_scene_frame1  ; always end in frame 1
+	jp ending_beach_scene_C_frame1  ; always end in frame 1
 
 
 ;-----------------------------------------------
-ending_beach_scene_frame1:
+ending_beach_scene_C_frame1:
 	ld hl, ending_beach_nametables + 4*20+14
 	ld de, NAMTBL2 + (4+4)*32 + (6+14)
 	ld bc, #0103
@@ -631,7 +635,7 @@ ending_beach_scene_frame1:
 
 
 ;-----------------------------------------------
-ending_beach_scene_frame2:
+ending_beach_scene_C_frame2:
 	ld hl, ending_beach_nametables + 20*8
 	ld de, NAMTBL2 + (4+4)*32 + (6+14)
 	ld bc, #0203
@@ -672,3 +676,178 @@ state_ending_copy_nametable_loop_y:
 	pop bc
 	djnz state_ending_copy_nametable_loop_y
 	ret
+
+
+;-----------------------------------------------
+ending_C_text_page_ptrs:
+	dw ending_C_text_page_1
+	; dw ending_C_text_page_2
+	; dw ending_C_text_page_3
+
+
+ending_C_text_page_1:
+	db 16
+	dw TEXT_ENDING_C_PAGE_1_1
+	dw TEXT_ENDING_C_PAGE_1_2
+	dw TEXT_ENDING_C_PAGE_1_3
+	dw TEXT_ENDING_C_PAGE_1_4
+	dw TEXT_ENDING_C_PAGE_1_5
+	dw TEXT_ENDING_C_PAGE_1_6
+	dw TEXT_ENDING_C_PAGE_1_7
+	dw TEXT_ENDING_C_PAGE_1_8
+	dw TEXT_ENDING_C_PAGE_1_9
+	dw TEXT_ENDING_C_PAGE_1_10
+	dw TEXT_ENDING_C_PAGE_1_11
+	dw TEXT_ENDING_C_PAGE_1_12
+	dw TEXT_ENDING_C_PAGE_1_13
+	dw TEXT_ENDING_C_PAGE_1_14
+	dw TEXT_ENDING_C_PAGE_1_15
+	dw TEXT_ENDING_C_PAGE_1_16
+
+
+;-----------------------------------------------
+; input:
+; - ix: ptr to page ptrs
+; - b: number of pages
+ending_final_text_scene:
+	push bc
+		call set_bitmap_mode
+	pop bc
+ending_final_text_scene_loop:
+	push ix
+	push bc
+ending_final_text_scene_pages_loop:
+		push bc
+		push ix
+			; clear the text area:
+			ld b, 16
+			ld hl, CHRTBL2 + 8 * (4*32 + 12)
+ending_final_text_scene_clear_text_area_loop1:
+			push bc
+				push hl
+					ld bc, 20*8
+					xor a
+					call fast_FILVRM
+				pop hl
+				ld bc, 32*8
+				add hl, bc
+			pop bc
+			djnz ending_final_text_scene_clear_text_area_loop1
+			ld b, 16
+			ld hl, CLRTBL2 + 8 * (4*32 + 12)
+ending_final_text_scene_clear_text_area_loop2:
+			push bc
+				push hl
+					ld bc, 20*8
+					xor a
+					call fast_FILVRM
+				pop hl
+				ld bc, 32*8
+				add hl, bc
+			pop bc
+			djnz ending_final_text_scene_clear_text_area_loop2
+
+			; Draw the text:
+			ld a, (ix)
+			ld b, (ix + 1)
+			ld ixl, a
+			ld ixh, b
+			ld b, (ix)  ; number of sentences
+			inc ix
+			ld de, CHRTBL2 + 8 * (4*32 + 12)
+ending_final_text_scene_sentences_loop:
+			push bc
+			push ix
+				push de
+					push de
+						ld e, (ix)
+						ld d, (ix + 1)
+						ld hl, copy_text_from_another_page
+						ld c, TEXT_PAGE3
+						call call_hl_in_page_c_8000
+
+						ld hl, clear_text_rendering_buffer
+						ld c, TEXT_PAGE
+						call call_hl_in_page_c_8000
+
+						ld iyh, #80
+						ld hl, draw_sentence_to_vdp_internal_from_buffer_4096
+						ld c, TEXT_PAGE
+						call call_hl_in_page_c_8000
+					pop de  ; target VRAM address
+
+					; Render character by character:
+					ld b, 20
+					ld hl, text_draw_buffer
+ending_final_text_scene_character_loop:
+					push bc
+						push hl
+							push de
+								push de
+									ld b, 8
+									call fast_small_LDIRVM
+								pop hl
+								ld bc, CLRTBL2 - CHRTBL2
+								add hl, bc
+
+								; fade in:
+								push hl
+									ld a, COLOR_DARK_BLUE*16
+									ld b, 8
+									call fast_small_FILVRM
+								pop hl
+								halt
+								halt
+								push hl
+									ld a, COLOR_BLUE*16
+									ld b, 8
+									call fast_small_FILVRM
+								pop hl
+								halt
+								halt
+								push hl
+									ld a, COLOR_LIGHT_BLUE*16
+									ld b, 8
+									call fast_small_FILVRM
+								pop hl
+								halt
+								halt
+								push hl
+									ld a, COLOR_WHITE*16
+									ld b, 8
+									call fast_small_FILVRM
+								pop hl
+								halt
+								halt
+							pop hl
+							ld c, 8  ; b == 0 here
+							add hl, bc
+							ex de, hl
+						pop hl
+						ld c, 8  ; b == 0 here already
+						add hl, bc
+					pop bc
+					djnz ending_final_text_scene_character_loop
+				pop hl
+				ld bc, 32*8
+				add hl, bc
+				ex hl, de
+			pop ix
+			pop bc
+			inc ix  ; next line
+			inc ix
+			dec b
+			jp nz, ending_final_text_scene_sentences_loop
+		pop ix
+		pop bc
+		inc ix  ; next page
+		inc ix
+		dec b
+		jp nz, ending_final_text_scene_pages_loop
+		ld b, 200
+		call wait_b_halts_skippable
+	pop bc
+	pop ix
+	jp ending_final_text_scene_loop
+
+

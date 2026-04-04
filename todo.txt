@@ -1,27 +1,24 @@
 to do:
 ***- Ending C:
   ***- Scene 3: 
-    ***- text renderer similar to the ending of Westen House ex, that cycles through the following pages:
-      ***- basic renderer that draws one sentence at a time from a table
-      ***- make each sentence appear one tile at a time with a small fade in
-      ***- add the other pages of text:
-        - page 2:
-          Thanks for Playing 2XSpelunker! Please play again and try to reach ending B! How to get ending B? Well... pay attention to everything when you play and take careful notes. Here, I will just give you one: hint there are 6 possible endings, the worst of which is C, and the best is A++.
+    ***- add the other pages of text:
+      - page 2:
+        Thanks for Playing 2XSpelunker! Please play again and try to reach ending B! How to get ending B? Well... pay attention to everything when you play and take careful notes. Here, I will just give you one: hint there are 6 possible endings, the worst of which is C, and the best is A++.
 
-          2XSpelunker
-          Brain Games, 2026
-          Design / Code / Graphics / Music: Santiago Ontañón
-          Betatesting: [TBD]      
+        2XSpelunker
+        Brain Games, 2026
+        Design / Code / Graphics / Music: Santiago Ontañón
+        Betatesting: [TBD]      
 
-        - page 3: (I do not like this page, maybe remove and leave just 2 pages?)
-          About 2XSpelunker
+      - page 3: (I do not like this page, maybe remove and leave just 2 pages?)
+        About 2XSpelunker
 
-          2XSpelunker is a sequel to XSpelunker (2017), and with inspiration from Spelunky, La Mulana and Tunic. It was created to run on standard MSX machines with at least 16KB of RAM. The game is open source (https://github.com/santiontanon/xspelunker2), and was created with the following tools:
-          - Code assembled with MDL
-          - Tested with the OpenMSX emulator
-          - Text editor: Sublime Text
-          - Graphics authored with GIMP and Tiled
-          - Utilities build in Java using NetBeans
+        2XSpelunker is a sequel to XSpelunker (2017), and with inspiration from Spelunky, La Mulana and Tunic. It was created to run on standard MSX machines with at least 16KB of RAM. The game is open source (https://github.com/santiontanon/xspelunker2), and was created with the following tools:
+        - Code assembled with MDL
+        - Tested with the OpenMSX emulator
+        - Text editor: Sublime Text
+        - Graphics authored with GIMP and Tiled
+        - Utilities build in Java using NetBeans
     ***- write "Luku ata de romu failu" (or equivalent) in Maya
     ***- write some other distractor text (e.g. 2ekisipelunekele), and create a "x * 2" name table with the two texts concatenated, with some decoration in between
     ***- make it constantly scroll at the top and bottom (slowly, depending on interrupt tick, so that I can do other things at the same time, and it keeps going at the same speed)
