@@ -695,6 +695,24 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "and there was more you could have", "ENDING_C_PAGE_1_15", 20);
         addLineSafe(lines_with_constant_page3, "done with the nexus?", "ENDING_C_PAGE_1_16", 20);
 
+        addLineSafe(lines_with_constant_page3, "Thanks for Playing 2XSpelunker!", "ENDING_C_PAGE_2_1", 20);
+        //
+        addLineSafe(lines_with_constant_page3, "Please try again to reach ending B!", "ENDING_C_PAGE_2_2", 20);
+        addLineSafe(lines_with_constant_page3, "How to get ending B? Well...", "ENDING_C_PAGE_2_3", 20);
+        addLineSafe(lines_with_constant_page3, "Pay attention to everything when", "ENDING_C_PAGE_2_4", 20);
+        addLineSafe(lines_with_constant_page3, "you play and take careful notes.", "ENDING_C_PAGE_2_5", 20);
+        //
+        addLineSafe(lines_with_constant_page3, "Here, I will just give you one hint:", "ENDING_C_PAGE_2_6", 20);
+        addLineSafe(lines_with_constant_page3, "there are 6 possible endings,", "ENDING_C_PAGE_2_7", 20);
+        addLineSafe(lines_with_constant_page3, "from C, all the way to A++.", "ENDING_C_PAGE_2_8", 20);
+        //
+        addLineSafe(lines_with_constant_page3, "2XSpelunker", "ENDING_C_PAGE_2_9", 20);
+        addLineSafe(lines_with_constant_page3, "Brain Games, 2026", "ENDING_C_PAGE_2_10", 20);
+        addLineSafe(lines_with_constant_page3, "code/gfx/music: Santiago Ontañón", "ENDING_C_PAGE_2_11", 20);
+        addLineSafe(lines_with_constant_page3, "betatesting: [TBD]", "ENDING_C_PAGE_2_12", 20);
+
+        addLineSafe(lines_with_constant_page3, "Thank you again!", "ENDING_C_PAGE_3_1", 20);
+        
 
         List<Integer> numbers = font.convertStringToAssembler("0123456789 ");
         System.out.println("Numbers: " + numbers);

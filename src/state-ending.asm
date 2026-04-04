@@ -106,7 +106,7 @@ ending_C:
 	call clear_screen_left_to_right
 
 	ld ix, ending_C_text_page_ptrs
-	ld b, 1  ; # number of pages
+	ld b, 3  ; # number of pages
 	call ending_final_text_scene
 
 	ld hl, state_game_over	
@@ -681,8 +681,8 @@ state_ending_copy_nametable_loop_y:
 ;-----------------------------------------------
 ending_C_text_page_ptrs:
 	dw ending_C_text_page_1
-	; dw ending_C_text_page_2
-	; dw ending_C_text_page_3
+	dw ending_C_text_page_2
+	dw ending_C_text_page_3
 
 
 ending_C_text_page_1:
@@ -703,6 +703,28 @@ ending_C_text_page_1:
 	dw TEXT_ENDING_C_PAGE_1_14
 	dw TEXT_ENDING_C_PAGE_1_15
 	dw TEXT_ENDING_C_PAGE_1_16
+
+ending_C_text_page_2:
+	db 15
+	dw TEXT_ENDING_C_PAGE_2_1
+	dw 0
+	dw TEXT_ENDING_C_PAGE_2_2
+	dw TEXT_ENDING_C_PAGE_2_3
+	dw TEXT_ENDING_C_PAGE_2_4
+	dw TEXT_ENDING_C_PAGE_2_5
+	dw 0
+	dw TEXT_ENDING_C_PAGE_2_6
+	dw TEXT_ENDING_C_PAGE_2_7
+	dw TEXT_ENDING_C_PAGE_2_8
+	dw 0
+	dw TEXT_ENDING_C_PAGE_2_9
+	dw TEXT_ENDING_C_PAGE_2_10
+	dw TEXT_ENDING_C_PAGE_2_11
+	dw TEXT_ENDING_C_PAGE_2_12
+
+ending_C_text_page_3:
+	db 1
+	dw TEXT_ENDING_C_PAGE_3_1
 
 
 ;-----------------------------------------------
@@ -760,8 +782,14 @@ ending_final_text_scene_sentences_loop:
 			push ix
 				push de
 					push de
-						ld e, (ix)
-						ld d, (ix + 1)
+						ld l, (ix)
+						ld h, (ix + 1)
+						ld a, l
+						or h
+					pop de
+					jr z, ending_final_text_scene_sentences_loop_skip
+					push de
+						ex de, hl
 						ld hl, copy_text_from_another_page
 						ld c, TEXT_PAGE3
 						call call_hl_in_page_c_8000
@@ -797,28 +825,28 @@ ending_final_text_scene_character_loop:
 									call fast_small_FILVRM
 								pop hl
 								halt
-								halt
+; 								halt
 								push hl
 									ld a, COLOR_BLUE*16
 									ld b, 8
 									call fast_small_FILVRM
 								pop hl
 								halt
-								halt
+; 								halt
 								push hl
 									ld a, COLOR_LIGHT_BLUE*16
 									ld b, 8
 									call fast_small_FILVRM
 								pop hl
 								halt
-								halt
+; 								halt
 								push hl
 									ld a, COLOR_WHITE*16
 									ld b, 8
 									call fast_small_FILVRM
 								pop hl
 								halt
-								halt
+; 								halt
 							pop hl
 							ld c, 8  ; b == 0 here
 							add hl, bc
@@ -828,6 +856,7 @@ ending_final_text_scene_character_loop:
 						add hl, bc
 					pop bc
 					djnz ending_final_text_scene_character_loop
+ending_final_text_scene_sentences_loop_skip:
 				pop hl
 				ld bc, 32*8
 				add hl, bc
@@ -844,6 +873,7 @@ ending_final_text_scene_character_loop:
 		inc ix
 		dec b
 		jp nz, ending_final_text_scene_pages_loop
+
 		ld b, 200
 		call wait_b_halts_skippable
 	pop bc
