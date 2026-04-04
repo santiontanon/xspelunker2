@@ -1,22 +1,34 @@
 to do:
 ***- Ending C:
   ***- Scene 3: 
-    ***- design how is it going to be visually (maybe text appearing animated like what I did in Westen House?)
-      ***- add some Maya character decorations around (and with a hidden clue: "Luku ata de romu failu" (or some parts with actual verbs))
-      ***- do I show enemies and give them names? (not the bosses)
-      ***- I need more space in page 10 for text, move pcg enemies code somewhere else
-      ***- text:
-        Thanks for Playing 2XSpelunker!
+    ***- text renderer similar to the ending of Westen House ex, that cycles through the following pages:
+      - page 1:
+        Ending C: Congratulations! You stopped the Alien invasion! For now...
+
+        You managed to gather five power stones and activate the nexus. Before crumbling, the nexus created a shield around earth, preventing the alien invasion. Somehow, you feel disappointed though. The texts Elaine deciphered spoke of the nexus as a weapon, not merely as a shield. Could there have been a way to deal a more definitive blow to the alien fleet? What if they come back? Maybe you rushed too much and there was more you could have done with the nexus?
+
+      - page 2:
+        Thanks for Playing 2XSpelunker! Please play again and try to reach ending B! How to get ending B? Well... pay attention to everything when you play and take careful notes. Here, I will just give you one: hint there are 6 possible endings, the worst of which is C, and the best is A++.
+
+        2XSpelunker
         Brain Games, 2026
-
-        Congratulations on finishing the game, and reaching Ending C! You managed to stop the alien invasion... for now...
-
-        But there is more to this game. If you have not gotten enough of exploring Mayan ruins, play again and try to reach at least ending B!
-
-        How to get ending B? You want clues? Well... pay attention to everything when you play and take careful notes. You never know when you can get a hint! Here, I will just give you one: there are 6 possible endings, the worst of which is C, and the best A++.
-
         Design / Code / Graphics / Music: Santiago Ontañón
-        Betatesting: [TBD]
+        Betatesting: [TBD]      
+
+      - page 3:
+        About 2XSpelunker
+
+        2XSpelunker is a sequel to XSpelunker (2017), and with inspiration from Spelunky, La Mulana and Tunic. It was created to run on standard MSX machines with at least 16KB of RAM. The game is open source (https://github.com/santiontanon/xspelunker2), and was created with the following tools:
+        - Code assembled with MDL
+        - Tested with the OpenMSX emulator
+        - Text editor: Sublime Text
+        - Graphics authored with GIMP and Tiled
+        - Utilities build in Java using NetBeans
+    ***- write "Luku ata de romu failu" (or equivalent) in Maya
+    ***- write some other distractor text (e.g. 2ekisipelunekele), and create a "x * 2" name table with the two texts concatenated, with some decoration in between
+    ***- make it constantly scroll at the top and bottom (slowly, depending on interrupt tick, so that I can do other things at the same time, and it keeps going at the same speed)
+    ***- Create vignettes with groups of enemies (e.g. various snakes, various skeletons, etc.). Try to cover all the enemies, and give them names. Ideally all with tiles.
+    ***- cycle through them (if you reached ending C, only show enemies you could have found)
   ***- add "no miss" achievement for this: if there is no damage (Track it) (or maybe just no damage during alien fight?)
   ***- reset "global_state__story" in state-play.asm to its default value when all finished
 
@@ -60,7 +72,7 @@ to do:
     - add as a special achievement for the gameover screen (at least one angry, and all 8 angry)
   - Mars/Moon: in the boss rooms, there might be something you can do before summoning the boss. This could lead to something like: (1) an underground cave where there is a broken ancient robot that can talk to you (in a mix of English and Maya maybe?), and might give you a weapon upgrade (e.g. a better raygun, which might be essential for fighting the final alien boss), add as a special achievement for the gameover screen.
   - The Maya were obsessed with sacrificing blood to their gods (the highest being extracting a beating heart from a person while still alive), then it was often burned so that the smoke will bring it to the gods. Can I add some puzzle/item/riddle about this? (maybe in the stella puzzle above, or maybe some blood meter that accumulates when you receive damage/die/kill-an-enemy and when full, things happen)
-  - If the player enters a world name related to these theories (like "ATLANTIS", "MU", "AZTLAN", or "COH", or something like that), it could trigger a world where the the "Firestone forge", which is in the Moon, is active if you are in a world with the word (add a clue).
+  - If the player enters a world name related to these theories (like "ATLANTIS", "MU", "AZTLAN", or "COH", or something like that), it could trigger a world where the the "Firestone forge", which is in the Moon, is active if you are in a world with the word (clue is in ATLANTIS_TABLET_5_1).
   - item that lets you fight a boss for a second time (the idea was to get both items in boss 4, but not sure if worth it)
   - gigantic maya statue monument that looks decoration, but it's actually a secret boss (to have a maya-themed final boss)
     - maybe that boss leads to the grave of the person who wrote all the story tablets (Yatzil), with a riddle you can only solve if you have seen all tablets.
