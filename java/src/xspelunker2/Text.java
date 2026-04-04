@@ -677,6 +677,24 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "Elaine: Just relax! Enjoy the vacation! And think about what are we having for dinner today! No more stories about fighting mosters for the day ok?", "ENDING_C_BEACH_7", 22*6);
         addLineSafe(lines_with_constant_page3, "Xavier: ... darn it...", "ENDING_C_BEACH_8", 22*6);
         addLineSafe(lines_with_constant_page3, "Xavier: I don't know... I keep thinking about it because I keep having the feeling that maybe what we did was not enough... what if they find a way around the shield and come back?", "ENDING_C_BEACH_9", 22*6);
+        // Ending credits and text, page 1:
+        addLineSafe(lines_with_constant_page3, "Ending C: Congratulations! You stopped", "ENDING_C_PAGE_1_1", 22);
+        addLineSafe(lines_with_constant_page3, "the Alien invasion! For now...", "ENDING_C_PAGE_1_2", 22);
+        addLineSafe(lines_with_constant_page3, "You managed to gather five power", "ENDING_C_PAGE_1_3", 20);
+        addLineSafe(lines_with_constant_page3, "stones and activate the nexus.", "ENDING_C_PAGE_1_4", 20);
+        addLineSafe(lines_with_constant_page3, "Before crumbling, the nexus lifted", "ENDING_C_PAGE_1_5", 20);
+        addLineSafe(lines_with_constant_page3, "a shield around earth, preventing", "ENDING_C_PAGE_1_6", 20);
+        addLineSafe(lines_with_constant_page3, "the alien invasion.", "ENDING_C_PAGE_1_7", 20);
+        addLineSafe(lines_with_constant_page3, "However, you have the feeling that", "ENDING_C_PAGE_1_8", 20);
+        addLineSafe(lines_with_constant_page3, "you could have done more... The", "ENDING_C_PAGE_1_9", 20);
+        addLineSafe(lines_with_constant_page3, "texts Elaine deciphered spoke of", "ENDING_C_PAGE_1_10", 20);
+        addLineSafe(lines_with_constant_page3, "the nexus as a weapon, not merely", "ENDING_C_PAGE_1_11", 20);
+        addLineSafe(lines_with_constant_page3, "as a shield. Could there have been a", "ENDING_C_PAGE_1_12", 20);
+        addLineSafe(lines_with_constant_page3, "way to deal a more definitive blow to", "ENDING_C_PAGE_1_13", 20);
+        addLineSafe(lines_with_constant_page3, "the alien fleet? What if they come", "ENDING_C_PAGE_1_14", 20);
+        addLineSafe(lines_with_constant_page3, "back? Maybe you rushed too much", "ENDING_C_PAGE_1_15", 20);
+        addLineSafe(lines_with_constant_page3, "and there was more you could have", "ENDING_C_PAGE_1_16", 20);
+        addLineSafe(lines_with_constant_page3, "done with the nexus?", "ENDING_C_PAGE_1_17", 20);
 
 
         List<Integer> numbers = font.convertStringToAssembler("0123456789 ");
