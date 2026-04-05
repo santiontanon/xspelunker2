@@ -245,5 +245,5 @@ public class Map {
         ImageIO.write(outputImage, "png", new File(outputPath));
         
         return nameTable;
-    }    
+    }
 }

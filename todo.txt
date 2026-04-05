@@ -1,16 +1,20 @@
 to do:
 ***- Ending C:
-  ***- Scene 3: 
-    ***- Create vignettes with groups of enemies (e.g. various snakes, various skeletons, etc.). Try to cover all the enemies, and give them names. All with just tiles (vignettes can be at most 10x8)
-      ***- ENEMY_SNAKE, ENEMY_SNAKE_DASHER, ENEMY_SNAKE_POISON
-      ***- ENEMY_FISH, ENEMY_FISH_JUMPER
-      ***- ENEMY_FROG, ENEMY_FROG_JUMPER, ENEMY_FROG_TONGUE
-      ***- ENEMY_BAT, ENEMY_BAT_AGGRESSIVE
+  ***- Scene 3 enemy vignettes:
+    OK - snakes (normal, dasher, poison): Chan, Strike Chan, Spitter Chan
+    OK - ENEMY_FISH, ENEMY_FISH_JUMPER: Kay, Jump Kay
+    OK - ENEMY_BEE, HIVE: Paper wasp
+    OK - capture the tiles (block by block, and their name tables, always 10x6)
+    ***- create a list of possible ones (for ending C, in an appropriate order) in assembler
+    ***- function to display one
+    ***- display all the ones in the list in order, and cycle
+    ***- add rest of enemies:
+      ***- ENEMY_FROG, ENEMY_FROG_JUMPER, ENEMY_FROG_TONGUE: Mooch, Jump Mooch, Strike Mooch
+      ***- ENEMY_BAT, ENEMY_BAT_AGGRESSIVE: Sotz, Zotzil
       ***- CARNOVIRE PLANT: "Audrey I"
       ***- ENEMY_SKELETON, ENEMY_SKELETON_THROWER1 ENEMY_SKELETON_THROWER2
       ***- ENEMY_SKELETON_FLAME1, ENEMY_SKELETON_FLAME2
       ***- ENEMY_SKELETON_SLEEPER
-      ***- ENEMY_BEE, HIVE
       ***- ENEMY_MONKEY, ENEMY_MONKEY_THROWER
       ***- ENEMY_ROCKMAN, ENEMY_ROCKMAN2
       ***- ENEMY_ANT, ENEMY_ANT2, ANTHILL
@@ -21,7 +25,6 @@ to do:
       ***- OWL "Chabi Tucur"
       ***- SENTINEL: "Atlantis sentinel"
       ***- ENEMY_ALIEN, TAG_ENEMY_UFO "Alien invaders"
-    ***- Cycle through them (if you reached ending C, only show enemies you could have found) (only one scene at a time, in the center bank)
   ***- add "no miss" achievement for this: if there is no damage (Track it) (or maybe just no damage during alien fight?)
   ***- reset "global_state__story" in state-play.asm to its default value when all finished
 
@@ -49,10 +52,12 @@ to do:
 - 7th boss (ideas: "The Lunar Obsidian Sentinel" (tall, slender, smooth black, reflective surfaces), "The Lunar Crystal Serpent", "The Moon Stone Monolith"). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
   - add boss name to the stats for game over screen
 - ending B: the calendar stone machine not only creates a defensive barrier, but also activates its offensive mechanism and destroys the alien armada that was coming. You hope that will deter them from coming again.
+- update the list of enemy types and names to display in ending B to include new enemies in moon/mars
 
 - 8th boss: after beating the combat against the aliens, you can teleport to their home planet, and fight against their leader (final final boss). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
   - add boss name to the stats for game over screen
 - final good ending 1 (A) (update "stats__ending"): the stone opens a portal for you to travel to the alien world, and fight against their leader in a final final battle. When you defeat it and come back, Elaine is there waiting to save you, but you arrive having defeated the alien empire (although there is doubt if other empires will show up again, and the calendar stone depletes, and cannot be used again)
+- update the list of enemy types and names to display in ending A to include any potential enemies you find in the alien planet
 - "speak" the animal names in the animal room to get their blessings (if you get all four, you do double damage, adjust angry/veryhard boss difficulty for this): I already have the clue for this in the game, right? (TABLET_TRIVIA_CLUE1_1, etc.)
   - add as a special achievement for the gameover screen
 - Final good ending 2 (A+) if you have the codex (from the 3 statues), it explains how to manufacture the powestones/firestones. So, you can keep using the calendar stone and be prepared for the future. This is the true final ending.
