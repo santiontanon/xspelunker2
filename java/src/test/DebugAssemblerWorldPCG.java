@@ -27,7 +27,7 @@ public class DebugAssemblerWorldPCG {
     public static final int MAX_N_TAGS = 32;
     public static final int MAX_CONNECTIONS = 12;
     public static final int MAX_CHESTS = 10;
-    public static final int MAX_TABLETS = 21;
+    public static final int MAX_TABLETS = 22;
     
     public static void main(String args[]) throws Exception
     {

@@ -1180,6 +1180,7 @@ ENDR
 	dw object_interaction_function_tablet  ; TAG_MAYA_RIDDLE_CLUE2
 	dw object_interaction_function_tablet  ; TAG_MAYA_RIDDLE_CLUE3
 	dw object_interaction_function_tablet  ; TAG_MAYA_RIDDLE_CLUE4
+	dw object_interaction_function_tablet  ; TAG_MAYA_RIDDLE_CLUE5
 	dw object_interaction_function_tablet  ; TAG_STORY_TRIVIA1
 	dw object_interaction_function_tablet  ; TAG_STORY_TRIVIA2
 	dw object_interaction_function_tablet  ; TAG_STORY_TRIVIA3
@@ -2809,6 +2810,7 @@ ENDR
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_MAYA_RIDDLE_CLUE2
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_MAYA_RIDDLE_CLUE3
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_MAYA_RIDDLE_CLUE4
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_MAYA_RIDDLE_CLUE5
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_STORY_TRIVIA1
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_STORY_TRIVIA2
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_STORY_TRIVIA3

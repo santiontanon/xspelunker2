@@ -495,6 +495,10 @@ public class Text {
         addLineSafe(lines_with_constant_page1, "suspected something... I prefer words related to my occupation, like 'ladder' (E-BU) or 'ascend' (T'A-BA).", "TABLET_MAYA3_LINE2", 18*4);
 
         addLineSafe(lines_with_constant_page1, "My favorite part about writing is being able to write sounds, like", "TABLET_MAYA4_LINE1", 18*2);
+
+        addLineSafe(lines_with_constant_page2, "I once tried the writing were taught with my father's dialect.", "TABLET_MAYA5_LINE1", 18*2);
+        addLineSafe(lines_with_constant_page2, "This showed me the limitations of their writing. How to write TAL or LOL, for example? They could not write individual consontants.", "TABLET_MAYA5_LINE2", 18*6);
+        addLineSafe(lines_with_constant_page2, "So, I had to get creative and write TA-LA and LO-LO.", "TABLET_MAYA5_LINE3", 18*6);
         
         addLineSafe(lines_with_constant_page1, "The nexus will listen to its name when fully powered up. Speak its secret name in the center", "TABLET_CALENDAR_NAME_CLUE", 18*3);
         

@@ -8,6 +8,8 @@ maya_clue3_tablet_fn:
 	db 0
 maya_clue4_tablet_fn:
 	db 0
+maya_clue5_tablet_fn:
+	db 0
 story_trivia_tablet_fn_clue1:
 	db 0
 story_trivia_tablet_fn_clue2:

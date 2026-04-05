@@ -925,6 +925,50 @@ maya_clue4_tablet_fn:
 
 
 ;-----------------------------------------------
+maya_clue5_tablet_fn:
+	ld hl, tablet_maya5_tiles_zx0
+	ld c, TABLET_LETTER_PAGE
+	call maya_puzzle_tablet_fn_load_extra_tiles_hl_set
+
+	ld hl, tablet_maya5_nametable_zx0
+	ld de, buffer_4096
+	ld c, TABLET_LETTER_PAGE
+	call dzx0_from_page_c
+
+	ld hl, buffer_4096
+	ld de, NAMTBL2
+	ld bc, 768
+	call fast_LDIRVM
+
+	ld a, 18
+	ld (tmp_letter_line_width), a
+	ld a, COLOR_GREY
+	ld (tmp_letter_line_color), a
+
+	ld hl, TEXT_TABLET_MAYA5_LINE1
+	ld a, 60  ; first tile to use
+	ld de, NAMTBL2 + (7 + 6*32)
+	ld ix, CHRTBL2
+	call display_paragraph_page7
+
+	ld hl, TEXT_TABLET_MAYA5_LINE2
+	ld a, 60
+	ld de, NAMTBL2 + (7 + 9*32)
+	ld ix, CHRTBL2 + 256*8
+	call display_paragraph_page7
+
+	ld hl, TEXT_TABLET_MAYA5_LINE3
+	ld a, 150
+	ld de, NAMTBL2 + (7 + 14*32)
+	ld ix, CHRTBL2 + 256*8
+	call display_paragraph_page7
+
+	; ...
+
+	ret
+
+
+;-----------------------------------------------
 calendar_name_clue_tablet_fn:
 	ld hl, tablet_maya_syllable_tiles_zx0
 	ld c, TABLET_LETTER_PAGE

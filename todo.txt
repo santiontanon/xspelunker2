@@ -1,9 +1,27 @@
 to do:
 ***- Ending C:
   ***- Scene 3: 
-    ***- Add "TA", "LO" syllables to the syllabary that the game teaches you
-    ***- Create vignettes with groups of enemies (e.g. various snakes, various skeletons, etc.). Try to cover all the enemies, and give them names. Ideally all with tiles.
-    ***- Cycle through them (if you reached ending C, only show enemies you could have found)
+    ***- Create vignettes with groups of enemies (e.g. various snakes, various skeletons, etc.). Try to cover all the enemies, and give them names. All with just tiles (vignettes can be at most 10x8)
+      ***- ENEMY_SNAKE, ENEMY_SNAKE_DASHER, ENEMY_SNAKE_POISON
+      ***- ENEMY_FISH, ENEMY_FISH_JUMPER
+      ***- ENEMY_FROG, ENEMY_FROG_JUMPER, ENEMY_FROG_TONGUE
+      ***- ENEMY_BAT, ENEMY_BAT_AGGRESSIVE
+      ***- CARNOVIRE PLANT: "Audrey I"
+      ***- ENEMY_SKELETON, ENEMY_SKELETON_THROWER1 ENEMY_SKELETON_THROWER2
+      ***- ENEMY_SKELETON_FLAME1, ENEMY_SKELETON_FLAME2
+      ***- ENEMY_SKELETON_SLEEPER
+      ***- ENEMY_BEE, HIVE
+      ***- ENEMY_MONKEY, ENEMY_MONKEY_THROWER
+      ***- ENEMY_ROCKMAN, ENEMY_ROCKMAN2
+      ***- ENEMY_ANT, ENEMY_ANT2, ANTHILL
+      ***- ENEMY_FIRE_IMP, ENEMY_FIRE_IMP2
+      ***- ENEMY_FIREBALL
+      ***- ENEMY_GHOST, ENEMY_GHOST2
+      ***- ENEMY_FISHMAN, ENEMY_FISHMAN2
+      ***- OWL "Chabi Tucur"
+      ***- SENTINEL: "Atlantis sentinel"
+      ***- ENEMY_ALIEN, TAG_ENEMY_UFO "Alien invaders"
+    ***- Cycle through them (if you reached ending C, only show enemies you could have found) (only one scene at a time, in the center bank)
   ***- add "no miss" achievement for this: if there is no damage (Track it) (or maybe just no damage during alien fight?)
   ***- reset "global_state__story" in state-play.asm to its default value when all finished
 
@@ -12,6 +30,7 @@ to do:
   - boss music (boss music increases in speed as health goes down: 50%, 25%)
 - test to see if joystick works (can I play in the Nintendo Switch?)
 
+- in the minimap, show room connections
 - random seed puzzle (all happens without going to moon/mars):
   - Revisit "TABLET_TRIVIA_CLUE1", "TABLET_TRIVIA_CLUE2", etc.
   - world name entering screen: theme as a "maya astronomy", where the random seed determines the position of the stars: which celestial alignment ad version of reality the player will play in.
@@ -21,8 +40,6 @@ to do:
   - 8 bridge room in one of the caves: each bridge depends on each of the bits of the first byte of the random seed. All 0s will lower all bridges.
   - this leads to the astronomy room: clues about the constellation relation with the seed, and also a tablet with the three names of the three statues (in Maya), and also the "world teleporter" where you go back to the world name room, and can travel across worlds.
   - speaking the names in front of each statue unlocks a chest/cabinet with a fragment of a codex. You need all 3 for it to be intelligible (this will later unlock the "A+" ending)
- 
-- in the minimap, show room connections
 - mars biome (maybe moon/mars maps are smaller as most puzzles are not there? and they are just so that you can get the final stone) (remember to keep ladder tiles in place for down-door opening code)
   - can you jump higher in the moon/mars? fall slower?
 - moon biome (similar to mars, but different color scheme, it could even be the same with palette changed)

@@ -28,12 +28,13 @@ public class HardcodedWorldForAssembler {
     public static final int MAX_N_TAGS = 32;
     public static final int MAX_CONNECTIONS = 12;
     public static final int MAX_CHESTS = 10;
-    public static final int MAX_TABLETS = 21;
+    public static final int MAX_TABLETS = 22;
     
     public static void main(String args[]) throws Exception
     {
-        int seeds[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 13, 14, 15, 17, 18, 21, 22, 23};
-//        int seeds[] = {9, 12, 31, 33};  // these seeds should fail
+        int seeds[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 13, 14, 15, 16, 17, 18, 20, 21, 22, 23};
+//        int seeds[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 13, 14, 15, 17, 18, 21, 22, 23};
+//        int seeds[] = {9, 12, 19, 31, 33};  // these seeds should fail
         for(int seed: seeds) {
             String worldStr = generateWorldStr(seed);
             if (worldStr != null) {

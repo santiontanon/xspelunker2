@@ -2057,6 +2057,7 @@ ENDR
 	dw buffer_4096 + 60 * 64  ; TAG_MAYA_RIDDLE_CLUE2
 	dw buffer_4096 + 60 * 64  ; TAG_MAYA_RIDDLE_CLUE3
 	dw buffer_4096 + 60 * 64  ; TAG_MAYA_RIDDLE_CLUE4
+	dw buffer_4096 + 60 * 64  ; TAG_MAYA_RIDDLE_CLUE5
 	dw buffer_4096 + 60 * 64  ; TAG_STORY_TRIVIA1
 	dw buffer_4096 + 60 * 64  ; TAG_STORY_TRIVIA2
 	dw buffer_4096 + 60 * 64  ; TAG_STORY_TRIVIA3
