@@ -109,7 +109,8 @@ ending_C:
 	ld b, 3  ; # number of pages
 	call ending_final_text_scene
 
-	ld hl, state_game_over	
+ending_C_done:
+	ld hl, state_game_over
 	ld a, GAME_OVER_PAGE
 	jp jp_to_hl_in_page_a_8000
 
@@ -733,8 +734,58 @@ ending_C_text_page_3:
 ; - b: number of pages
 ending_final_text_scene:
 	push bc
-		call set_bitmap_mode
+		call disable_VDP_output
+			call set_bitmap_mode
+
+			; Tiles will be organized like this:
+			; bank 1:
+			; - 0 - 76: banner tiles
+			; - 128 - 256: parts used by text
+			; bank 2:
+			; - ...
+			; bank 3:
+			; - 0 - 128: parts used by text
+			; - 128 - 204: banner tiles
+
+			ld hl, ending_mayabanner_tiles_zx0
+			ld de, buffer_4096
+			call dzx0
+
+			; bank 1:
+			ld hl, buffer_4096
+			ld de, CHRTBL2
+			ld bc, 76*8
+			call fast_LDIRVM
+			ld hl, buffer_4096 + 256*8
+			ld de, CLRTBL2
+			ld bc, 76*8
+			call fast_LDIRVM
+			ld hl, ending_mayabanner_nametable
+			ld de, NAMTBL2
+			ld bc, 32*4
+			call fast_LDIRVM
+
+			; bank 3:
+			ld hl, buffer_4096
+			ld de, CHRTBL2 + 8 * (2*256+128)
+			ld bc, 76*8
+			call fast_LDIRVM
+			ld hl, buffer_4096 + 256*8
+			ld de, CLRTBL2 + 8 * (2*256+128)
+			ld bc, 76*8
+			call fast_LDIRVM
+			ld hl, ending_mayabanner_nametable + 32*4
+			ld de, NAMTBL2 + 32*20
+			ld bc, 32*4
+			call fast_LDIRVM
+
+			xor a
+			ld (ending__tmp_banner_state), a
+			ld (ending__tmp_banner_top_offset), a
+			ld (ending__tmp_banner_bottom_offset), a
+		call enable_VDP_output
 	pop bc
+
 ending_final_text_scene_loop:
 	push ix
 	push bc
@@ -823,36 +874,32 @@ ending_final_text_scene_character_loop:
 									ld a, COLOR_DARK_BLUE*16
 									ld b, 8
 									call fast_small_FILVRM
+									call ending_final_text_scene_banner_scroll_cycle
 								pop hl
-								halt
-; 								halt
 								push hl
 									ld a, COLOR_BLUE*16
 									ld b, 8
 									call fast_small_FILVRM
+									call ending_final_text_scene_banner_scroll_cycle
 								pop hl
-								halt
-; 								halt
 								push hl
 									ld a, COLOR_LIGHT_BLUE*16
 									ld b, 8
 									call fast_small_FILVRM
+									call ending_final_text_scene_banner_scroll_cycle
 								pop hl
-								halt
-; 								halt
 								push hl
 									ld a, COLOR_WHITE*16
 									ld b, 8
 									call fast_small_FILVRM
+									call ending_final_text_scene_banner_scroll_cycle
 								pop hl
-								halt
-; 								halt
 							pop hl
-							ld c, 8  ; b == 0 here
+							ld bc, 8
 							add hl, bc
 							ex de, hl
 						pop hl
-						ld c, 8  ; b == 0 here already
+						ld bc, 8
 						add hl, bc
 					pop bc
 					djnz ending_final_text_scene_character_loop
@@ -867,17 +914,91 @@ ending_final_text_scene_sentences_loop_skip:
 			inc ix
 			dec b
 			jp nz, ending_final_text_scene_sentences_loop
+
+			ld bc, 50*5  ; wait 5 seconds
+ending_final_text_scene_wait_loop:
+			push bc
+				call ending_final_text_scene_banner_scroll_cycle
+			pop bc
+			dec bc
+			ld a, b
+			or c
+			jr nz, ending_final_text_scene_wait_loop
 		pop ix
 		pop bc
 		inc ix  ; next page
 		inc ix
 		dec b
 		jp nz, ending_final_text_scene_pages_loop
-
-		ld b, 200
-		call wait_b_halts_skippable
 	pop bc
 	pop ix
 	jp ending_final_text_scene_loop
 
+
+ending_final_text_scene_banner_scroll_cycle:
+    call update_keyboard_buffers
+    ld a, (keyboard_clicks)
+    bit KEY_WEAPON_BIT, a
+    jp nz, ending_C_done
+
+	halt
+	ld hl, ending__tmp_banner_state
+	inc (hl)
+	ld a, (hl)
+	cp 24
+	ret c
+	ld (hl), 0
+
+	; scroll top banner to the left and bottom banner to the right:
+	ld hl, ending__tmp_banner_top_offset
+	inc (hl)
+	ld hl, ending__tmp_banner_bottom_offset
+	dec (hl)
+
+	ld a, (ending__tmp_banner_top_offset)
+	and #1f
+	ld hl, ending_mayabanner_nametable
+	call ending_final_text_scene_banner_scroll_synthesize_nametable
+	ld hl, buffer_4096
+	ld de, NAMTBL2
+	ld bc, 32*4
+	call fast_LDIRVM
+
+	ld a, (ending__tmp_banner_bottom_offset)
+	and #1f
+	ld hl, ending_mayabanner_nametable + 4*32
+	call ending_final_text_scene_banner_scroll_synthesize_nametable
+	ld hl, buffer_4096
+	ld de, NAMTBL2 + 32*20
+	ld bc, 32*4
+	jp fast_LDIRVM
+
+
+ending_final_text_scene_banner_scroll_synthesize_nametable:
+	ld de, buffer_4096
+	ld b, 4
+ending_final_text_scene_banner_scroll_synthesize_nametable_loop_y:
+	push bc
+		push hl
+		push af
+			ld b, 32
+ending_final_text_scene_banner_scroll_synthesize_nametable_loop_x:
+			push af
+			push hl
+				and #1f
+				ADD_HL_A
+				ld a, (hl)
+				ld (de), a
+				inc de
+			pop hl
+			pop af
+			inc a		
+			djnz ending_final_text_scene_banner_scroll_synthesize_nametable_loop_x
+		pop af
+		pop hl
+		ld bc, 32
+		add hl, bc
+	pop bc
+	djnz ending_final_text_scene_banner_scroll_synthesize_nametable_loop_y
+	ret
 

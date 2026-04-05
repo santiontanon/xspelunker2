@@ -332,6 +332,11 @@ alien_ambush__n_ufos_spawned: equ boss__tmp_space + 1
 alien_ambush__n_aliens_currently_on_screen: equ boss__tmp_space + 2
 alien_ambush__ufo_currently_on_screen: equ boss__tmp_space + 3
 
+ending__tmp_space: equ boss__tmp_space
+ending__tmp_banner_state: equ ending__tmp_space + 0
+ending__tmp_banner_top_offset: equ ending__tmp_space + 1
+ending__tmp_banner_bottom_offset: equ ending__tmp_space + 2
+
 ; game stats:
 stats__n_coins_collected: ds virtual 2
 stats__n_weapons_collected: ds virtual 1

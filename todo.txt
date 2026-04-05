@@ -1,7 +1,6 @@
 to do:
 ***- Ending C:
   ***- Scene 3: 
-    ***- make maya text constantly scroll at the top and bottom (slowly, depending on interrupt tick, so that I can do other things at the same time, and it keeps going at the same speed)
     ***- Add "TA", "LO" syllables to the syllabary that the game teaches you
     ***- Create vignettes with groups of enemies (e.g. various snakes, various skeletons, etc.). Try to cover all the enemies, and give them names. Ideally all with tiles.
     ***- Cycle through them (if you reached ending C, only show enemies you could have found)
