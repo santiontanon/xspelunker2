@@ -2,9 +2,6 @@ to do:
 ***- Ending C:
   ***- Scene 3 enemy vignettes:
     ***- add rest of enemies:
-      ***- ENEMY_FROG, ENEMY_FROG_JUMPER, ENEMY_FROG_TONGUE: Mooch, Jump Mooch, Strike Mooch
-      ***- ENEMY_BAT, ENEMY_BAT_AGGRESSIVE: Sotz, Zotzil
-      ***- CARNOVIRE PLANT: "Audrey I"
       ***- ENEMY_SKELETON, ENEMY_SKELETON_THROWER1 ENEMY_SKELETON_THROWER2
       ***- ENEMY_SKELETON_FLAME1, ENEMY_SKELETON_FLAME2
       ***- ENEMY_SKELETON_SLEEPER
@@ -15,7 +12,7 @@ to do:
       ***- ENEMY_FIREBALL: 
       ***- ENEMY_GHOST, ENEMY_GHOST2: "lost soul, ???"
       ***- ENEMY_FISHMAN, ENEMY_FISHMAN2: 
-      ***- OWL "Chabi Tucur"
+      ***- OWL "Chabi Tucur"? "Messenger owl"?
       ***- SENTINEL: "Atlantis sentinel"
       ***- ENEMY_ALIEN, TAG_ENEMY_UFO "Alien invaders"
   ***- add "no miss" achievement for this: if there is no damage (Track it) (or maybe just no damage during alien fight?)

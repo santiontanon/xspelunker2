@@ -730,9 +730,12 @@ ending_C_text_page_3:
 
 
 ending_C_enemy_intro_ptr_table:
-	dw ending_enemy_intro_data0
-	dw ending_enemy_intro_data1
-	dw ending_enemy_intro_data2
+	dw ending_enemy_intro_data0  ; snakes
+	dw ending_enemy_intro_data1  ; fish
+	dw ending_enemy_intro_data2  ; bees
+	dw ending_enemy_intro_data3  ; frogs
+	dw ending_enemy_intro_data4  ; carnivore plant
+	dw ending_enemy_intro_data5  ; bats
 	dw 0  ; sentinel
 
 
@@ -1142,6 +1145,11 @@ ending_final_text_scene_enemy_intro_cycle_state_1_loop:
 	ret nz
 ending_final_text_scene_enemy_intro_cycle_state_1_done:
 	; when done, write the text:
+	; temporarily save the text buffer, just in case we were in the middle of writing on the right:
+	ld hl, text_draw_buffer
+	ld de, buffer_4096 + 3*1024
+	ld bc, 32*8
+	ldir
 	; line 1:
 	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096 + 2048 + 6*10, CHRTBL2 + 8*(256 + 7*32), COLOR_WHITE*16, 12
 	; line 2:
@@ -1158,6 +1166,12 @@ ending_final_text_scene_enemy_intro_cycle_state_1_done:
 	call draw_sentence_to_vdp_from_another_page
 ending_final_text_scene_enemy_intro_cycle_state_1_done_no_second_sentence:
 
+	; restore text_draw_buffer:
+	ld hl, buffer_4096 + 3*1024
+	ld de, text_draw_buffer
+	ld bc, 32*8
+	ldir
+
 	ld hl, ending__tmp_enemy_intro_state
 	inc (hl)
 	xor a
@@ -1169,7 +1183,7 @@ ending_final_text_scene_enemy_intro_cycle_state_2:
 	ld hl, ending__tmp_enemy_intro_state_timer
 	inc (hl)
 	ld a, (hl)
-	cp 100
+	cp 200
 	ret nz
 	ld hl, ending__tmp_enemy_intro_state
 	inc (hl)
