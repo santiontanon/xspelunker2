@@ -336,6 +336,10 @@ ending__tmp_space: equ boss__tmp_space
 ending__tmp_banner_state: equ ending__tmp_space + 0
 ending__tmp_banner_top_offset: equ ending__tmp_space + 1
 ending__tmp_banner_bottom_offset: equ ending__tmp_space + 2
+ending__tmp_enemy_intro_table_ptr: equ ending__tmp_space + 3  ; 2 bytes
+ending__tmp_enemy_intro_table_next: equ ending__tmp_space + 5  ; which enemy to show next
+ending__tmp_enemy_intro_state: equ ending__tmp_space + 6  ; 0: load data, 1: appearing, 2: showing, 3: disappearing
+ending__tmp_enemy_intro_state_timer: equ ending__tmp_space + 7
 
 ; game stats:
 stats__n_coins_collected: ds virtual 2

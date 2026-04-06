@@ -1,13 +1,6 @@
 to do:
 ***- Ending C:
   ***- Scene 3 enemy vignettes:
-    OK - snakes (normal, dasher, poison): Chan, Strike Chan, Spitter Chan
-    OK - ENEMY_FISH, ENEMY_FISH_JUMPER: Kay, Jump Kay
-    OK - ENEMY_BEE, HIVE: Paper wasp
-    OK - capture the tiles (block by block, and their name tables, always 10x6)
-    ***- create a list of possible ones (for ending C, in an appropriate order) in assembler
-    ***- function to display one
-    ***- display all the ones in the list in order, and cycle
     ***- add rest of enemies:
       ***- ENEMY_FROG, ENEMY_FROG_JUMPER, ENEMY_FROG_TONGUE: Mooch, Jump Mooch, Strike Mooch
       ***- ENEMY_BAT, ENEMY_BAT_AGGRESSIVE: Sotz, Zotzil
@@ -19,13 +12,14 @@ to do:
       ***- ENEMY_ROCKMAN, ENEMY_ROCKMAN2
       ***- ENEMY_ANT, ENEMY_ANT2, ANTHILL
       ***- ENEMY_FIRE_IMP, ENEMY_FIRE_IMP2
-      ***- ENEMY_FIREBALL
-      ***- ENEMY_GHOST, ENEMY_GHOST2
-      ***- ENEMY_FISHMAN, ENEMY_FISHMAN2
+      ***- ENEMY_FIREBALL: 
+      ***- ENEMY_GHOST, ENEMY_GHOST2: "lost soul, ???"
+      ***- ENEMY_FISHMAN, ENEMY_FISHMAN2: 
       ***- OWL "Chabi Tucur"
       ***- SENTINEL: "Atlantis sentinel"
       ***- ENEMY_ALIEN, TAG_ENEMY_UFO "Alien invaders"
   ***- add "no miss" achievement for this: if there is no damage (Track it) (or maybe just no damage during alien fight?)
+  ***- restore the ending to show the UFO / beach scenes again
   ***- reset "global_state__story" in state-play.asm to its default value when all finished
 
 - music: intro, letters/map, tablets/puzzles, game over, pyramid, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)

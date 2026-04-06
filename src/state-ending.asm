@@ -107,6 +107,7 @@ ending_C:
 
 	ld ix, ending_C_text_page_ptrs
 	ld b, 3  ; # number of pages
+	ld iy, ending_C_enemy_intro_ptr_table
 	call ending_final_text_scene
 
 ending_C_done:
@@ -728,21 +729,46 @@ ending_C_text_page_3:
 	dw TEXT_ENDING_C_PAGE_3_1
 
 
+ending_C_enemy_intro_ptr_table:
+	dw ending_enemy_intro_data0
+	dw ending_enemy_intro_data1
+	dw ending_enemy_intro_data2
+	dw 0  ; sentinel
+
+
 ;-----------------------------------------------
 ; input:
 ; - ix: ptr to page ptrs
 ; - b: number of pages
+; - iy: ptr to enemy intro ptrs
 ending_final_text_scene:
 	push bc
 		call disable_VDP_output
 			call set_bitmap_mode
+
+			; set the 12 tiles of each row in the middle bank to 0
+			ld hl, NAMTBL2 + 8*32
+			ld b, 6
+ending_final_text_scene_nametable_init_loop:
+			push bc
+				push hl
+					ld bc, 12
+					xor a
+					call fast_FILVRM
+				pop hl
+				ld bc, 32
+				add hl, bc
+			pop bc
+			djnz ending_final_text_scene_nametable_init_loop
 
 			; Tiles will be organized like this:
 			; bank 1:
 			; - 0 - 76: banner tiles
 			; - 128 - 256: parts used by text
 			; bank 2:
-			; - ...
+			; - for every row of 32:
+			;   - 0 - 12 are used by the enemy intro code
+			;   - text uses tiles 12 - 32
 			; bank 3:
 			; - 0 - 128: parts used by text
 			; - 128 - 204: banner tiles
@@ -783,6 +809,12 @@ ending_final_text_scene:
 			ld (ending__tmp_banner_state), a
 			ld (ending__tmp_banner_top_offset), a
 			ld (ending__tmp_banner_bottom_offset), a
+
+			ld (ending__tmp_enemy_intro_table_ptr), iy
+			xor a
+			ld (ending__tmp_enemy_intro_table_next), a
+			ld (ending__tmp_enemy_intro_state), a
+			ld (ending__tmp_enemy_intro_state_timer), a
 		call enable_VDP_output
 	pop bc
 
@@ -874,25 +906,25 @@ ending_final_text_scene_character_loop:
 									ld a, COLOR_DARK_BLUE*16
 									ld b, 8
 									call fast_small_FILVRM
-									call ending_final_text_scene_banner_scroll_cycle
+									call ending_final_text_scene_decoration_update_cycle
 								pop hl
 								push hl
 									ld a, COLOR_BLUE*16
 									ld b, 8
 									call fast_small_FILVRM
-									call ending_final_text_scene_banner_scroll_cycle
+									call ending_final_text_scene_decoration_update_cycle
 								pop hl
 								push hl
 									ld a, COLOR_LIGHT_BLUE*16
 									ld b, 8
 									call fast_small_FILVRM
-									call ending_final_text_scene_banner_scroll_cycle
+									call ending_final_text_scene_decoration_update_cycle
 								pop hl
 								push hl
 									ld a, COLOR_WHITE*16
 									ld b, 8
 									call fast_small_FILVRM
-									call ending_final_text_scene_banner_scroll_cycle
+									call ending_final_text_scene_decoration_update_cycle
 								pop hl
 							pop hl
 							ld bc, 8
@@ -918,7 +950,7 @@ ending_final_text_scene_sentences_loop_skip:
 			ld bc, 50*5  ; wait 5 seconds
 ending_final_text_scene_wait_loop:
 			push bc
-				call ending_final_text_scene_banner_scroll_cycle
+				call ending_final_text_scene_decoration_update_cycle
 			pop bc
 			dec bc
 			ld a, b
@@ -935,6 +967,7 @@ ending_final_text_scene_wait_loop:
 	jp ending_final_text_scene_loop
 
 
+;-----------------------------------------------
 ending_final_text_scene_banner_scroll_cycle:
     call update_keyboard_buffers
     ld a, (keyboard_clicks)
@@ -1001,4 +1034,237 @@ ending_final_text_scene_banner_scroll_synthesize_nametable_loop_x:
 	pop bc
 	djnz ending_final_text_scene_banner_scroll_synthesize_nametable_loop_y
 	ret
+
+
+;-----------------------------------------------
+ending_final_text_scene_decoration_update_cycle:
+	call ending_final_text_scene_banner_scroll_cycle
+	; jp ending_final_text_scene_enemy_intro_cycle
+
+
+;-----------------------------------------------
+ending_final_text_scene_enemy_intro_cycle:
+	ld a, (ending__tmp_enemy_intro_state)
+	or a
+	jp z, ending_final_text_scene_enemy_intro_cycle_load_data
+	dec a
+	jr z, ending_final_text_scene_enemy_intro_cycle_state_1  ; appearing
+	dec a
+	jp z, ending_final_text_scene_enemy_intro_cycle_state_2  ; showing
+	dec a
+	; jr z, ending_final_text_scene_enemy_intro_cycle_state_3  ; disappearing
+	; ret
+ending_final_text_scene_enemy_intro_cycle_state_3:
+	; remove the text, and scroll the name table to the left:
+	ld a, (ending__tmp_enemy_intro_state_timer)
+	or a
+	jr nz, ending_final_text_scene_enemy_intro_cycle_state_3_continue
+	; clear text:
+	ld hl, CLRTBL2 + 15*32*8
+	ld bc, 12*8
+	xor a
+	call fast_FILVRM
+	ld hl, CLRTBL2 + 16*32*8
+	ld bc, 12*8
+	xor a
+	call fast_FILVRM
+ending_final_text_scene_enemy_intro_cycle_state_3_continue:
+	ld hl, ending__tmp_enemy_intro_state_timer
+	ld a, (hl)
+	inc (hl)
+	rrca
+	rrca
+	rrca
+	and #1f
+	ld hl, NAMTBL2 + 8*32
+	ADD_HL_A
+	ld b, 6
+ending_final_text_scene_enemy_intro_cycle_state_3_loop:
+	push bc
+		push hl
+			xor a
+			ld b, 1
+			call fast_small_FILVRM
+		pop hl
+		ld bc, 32
+		add hl, bc
+	pop bc
+	djnz ending_final_text_scene_enemy_intro_cycle_state_3_loop
+
+	; when done, move to the next ptr in the enemy intro ptrs table:
+	ld a, (ending__tmp_enemy_intro_state_timer)
+	cp 80
+	ret nz
+	ld hl, ending__tmp_enemy_intro_table_next
+	inc (hl)
+	xor a
+	ld (ending__tmp_enemy_intro_state), a
+	ld (ending__tmp_enemy_intro_state_timer), a
+	ret
+
+ending_final_text_scene_enemy_intro_cycle_state_1:
+	; scroll name table to the right:
+	ld hl, ending__tmp_enemy_intro_state_timer
+	inc (hl)
+	ld a, (hl)
+	rrca
+	rrca
+	rrca
+	and #1f  ; a = x coordinate of the name table
+	ret z
+	ld c, a
+
+	ld a, 10
+	sub c
+	ld hl, buffer_4096 + 2048
+	ADD_HL_A
+	ld de, NAMTBL2 + 8*32
+	ld b, 6
+ending_final_text_scene_enemy_intro_cycle_state_1_loop:
+	push bc
+		; copy "c" bytes to "de" from "hl"
+		push hl
+			push de
+				ld b, c
+				call fast_small_LDIRVM
+			pop hl
+			ld bc, 32
+			add hl, bc
+			ex de, hl
+		pop hl
+		ld bc, 10
+		add hl, bc
+	pop bc
+	djnz ending_final_text_scene_enemy_intro_cycle_state_1_loop
+
+	ld a, (ending__tmp_enemy_intro_state_timer)
+	cp 80
+	ret nz
+ending_final_text_scene_enemy_intro_cycle_state_1_done:
+	; when done, write the text:
+	; line 1:
+	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096 + 2048 + 6*10, CHRTBL2 + 8*(256 + 7*32), COLOR_WHITE*16, 12
+	; line 2:
+	ld hl, buffer_4096 + 2048 + 6*10
+	ld a, (hl)
+	inc a
+	ADD_HL_A
+	ld a, (hl)
+	or a
+	jr z, ending_final_text_scene_enemy_intro_cycle_state_1_done_no_second_sentence
+	ld de, CHRTBL2 + 8*(256 + 8*32)
+	ld iy, #8000 + COLOR_WHITE*16
+	ld b, 12
+	call draw_sentence_to_vdp_from_another_page
+ending_final_text_scene_enemy_intro_cycle_state_1_done_no_second_sentence:
+
+	ld hl, ending__tmp_enemy_intro_state
+	inc (hl)
+	xor a
+	ld (ending__tmp_enemy_intro_state_timer), a
+	ret
+
+ending_final_text_scene_enemy_intro_cycle_state_2:
+	; wait a bit:
+	ld hl, ending__tmp_enemy_intro_state_timer
+	inc (hl)
+	ld a, (hl)
+	cp 100
+	ret nz
+	ld hl, ending__tmp_enemy_intro_state
+	inc (hl)
+	xor a
+	ld (ending__tmp_enemy_intro_state_timer), a
+	ret
+
+ending_final_text_scene_enemy_intro_cycle_load_data:
+	xor a
+	ld (ending__tmp_enemy_intro_state_timer), a
+	inc a
+	ld (ending__tmp_enemy_intro_state), a
+	; get the next ptr (and see if we need to cycle the table)
+	ld a, (ending__tmp_enemy_intro_table_next)
+	add a, a
+	ld hl, (ending__tmp_enemy_intro_table_ptr)
+	ADD_HL_A
+	ld e, (hl)
+	inc hl
+	ld d, (hl)
+	ld a, e
+	or d
+	jr nz, ending_final_text_scene_enemy_intro_cycle_load_data_ptr_set
+	; we have reached the end of the table, loop back;
+	xor a
+	ld (ending__tmp_enemy_intro_table_next), a
+	jr ending_final_text_scene_enemy_intro_cycle_load_data
+ending_final_text_scene_enemy_intro_cycle_load_data_ptr_set:
+	ld hl, buffer_4096
+	ex de, hl
+	call dzx0
+
+	; decompressed data is:
+    ; - name table: 10*6
+    ; - text line 1 (length + data)
+    ; - text line 2 (length + data)
+    ; - number of tiles 1 * 8: n*8
+    ; - VDP ptr 1 (2 bytes)
+    ; - pattern data 1: n*8
+    ; - color data 1: n*8
+    ; - number of tiles 2: n*8
+    ; - VDP ptr 2 (2 bytes)
+    ; - pattern data 2: n*8
+    ; - color data 2: n*8
+    ; ...
+    ; - 0
+
+	; Upload the tiles to VDP, and nametable and text somewhere in buffer_4096 that will not be overwritten
+	ld a, (buffer_4096 + 10*6)  ; text length
+	add a, 60 + 1
+	ld c, a
+	ld b, 0
+	ld hl, buffer_4096
+	push hl
+		add hl, bc
+		ld a, (hl)  ; length of the second text
+		inc a
+		ADD_BC_A
+	pop hl
+	push hl
+	push bc
+		ld de, buffer_4096 + 2048  ; we copy the name table and text to buffer_4096 + 2048
+		ldir
+	pop bc
+	pop ix
+	add ix, bc
+ending_final_text_scene_enemy_intro_cycle_load_data_tile_upload_loop:
+	ld a, (ix)  ; n tiles
+	or a
+	ret z  ; we are done
+	ld e, (ix + 1)
+	ld d, (ix + 2)
+	inc ix
+	inc ix
+	inc ix
+	push ix
+	pop hl
+	; upload "a" tiles from "hl" to "de":
+	ld b, 0
+	ld c, a
+	push bc
+	push hl
+		push de
+			call fast_LDIRVM
+		pop hl
+		ld bc, CLRTBL2 - CHRTBL2
+		add hl, bc
+		ex de, hl
+	pop hl
+	pop bc
+	add hl, bc
+	push bc
+		call fast_LDIRVM
+	pop bc
+	add ix, bc
+	add ix, bc
+	jr ending_final_text_scene_enemy_intro_cycle_load_data_tile_upload_loop
 
