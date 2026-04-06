@@ -736,6 +736,8 @@ ending_C_enemy_intro_ptr_table:
 	dw ending_enemy_intro_data3  ; frogs
 	dw ending_enemy_intro_data4  ; carnivore plant
 	dw ending_enemy_intro_data5  ; bats
+	dw ending_enemy_intro_data6  ; skeletons
+	dw ending_enemy_intro_data7  ; monkeys
 	dw 0  ; sentinel
 
 
