@@ -64,8 +64,8 @@ state_play:
 ; 		ld a, STORY_STATE__PLACED_FIRST_POWER_STONE
 ; 		ld a, STORY_STATE__FOUND_LOST_VENDOR
 ; 		ld a, STORY_STATE__GOT_LETTER2
-		ld a, STORY_STATE__DEFEATED_ALIENS
-		ld (global_state__story), a
+; 		ld a, STORY_STATE__DEFEATED_ALIENS
+; 		ld (global_state__story), a
 ; 		ld a, 2  ; maya riddle solved
 ; 		ld (global_state__maya_riddle), a
 

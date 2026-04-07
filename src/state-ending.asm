@@ -51,57 +51,57 @@ ending_C:
 	ld hl, TEXT_ENDING_C
 	ld (stats__ending), hl
 
-; 	ld de, TEXT_CALENDAR_ACTIVATED_C_2
-; 	ld hl, display_in_game_message_textpage3
-; 	ld c, TEXT_PAGE
-; 	call call_hl_in_page_c_8000	
+	ld de, TEXT_CALENDAR_ACTIVATED_C_2
+	ld hl, display_in_game_message_textpage3
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000	
 
-; 	ld de, TEXT_CALENDAR_ACTIVATED_C_3
-; 	ld hl, display_in_game_message_textpage3
-; 	ld c, TEXT_PAGE
-; 	call call_hl_in_page_c_8000	
+	ld de, TEXT_CALENDAR_ACTIVATED_C_3
+	ld hl, display_in_game_message_textpage3
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000	
 
-; 	ld de, TEXT_CALENDAR_ACTIVATED_C_4
-; 	ld hl, display_in_game_message_textpage3
-; 	ld c, TEXT_PAGE
-; 	call call_hl_in_page_c_8000	
+	ld de, TEXT_CALENDAR_ACTIVATED_C_4
+	ld hl, display_in_game_message_textpage3
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000	
 
-; 	ld de, TEXT_CALENDAR_ACTIVATED_C_5
-; 	ld hl, display_in_game_message_textpage3
-; 	ld c, TEXT_PAGE
-; 	call call_hl_in_page_c_8000	
+	ld de, TEXT_CALENDAR_ACTIVATED_C_5
+	ld hl, display_in_game_message_textpage3
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000	
 
-; 	call clear_screen_left_to_right
+	call clear_screen_left_to_right
 
-; 	call ending_UFO_scene_approach_earth  ; aliens approach Earth, and captain calls for the invasion
+	call ending_UFO_scene_approach_earth  ; aliens approach Earth, and captain calls for the invasion
 
-; 	; Custom Ending C part of the UFO scene:	
-; 	call ending_UFO_scene_minion_interrupts  ; alien minion approaches and tells the captain something is wrong
-; 	ld hl, TEXT_ENDING_C_UFO_8
-; 	ld b, 32
-; 	call ending_UFO_scene_minion_talks
+	; Custom Ending C part of the UFO scene:	
+	call ending_UFO_scene_minion_interrupts  ; alien minion approaches and tells the captain something is wrong
+	ld hl, TEXT_ENDING_C_UFO_8
+	ld b, 32
+	call ending_UFO_scene_minion_talks
         
-; 	ld hl, TEXT_ENDING_C_UFO_9
-; 	ld b, 32
-; 	call ending_UFO_scene_captain_talks_agitated
+	ld hl, TEXT_ENDING_C_UFO_9
+	ld b, 32
+	call ending_UFO_scene_captain_talks_agitated
 
-; 	ld hl, TEXT_ENDING_C_UFO_10
-; 	ld b, 32
-; 	call ending_UFO_scene_captain_talks
+	ld hl, TEXT_ENDING_C_UFO_10
+	ld b, 32
+	call ending_UFO_scene_captain_talks
 
-; 	ld hl, TEXT_ENDING_C_UFO_11
-; 	ld b, 32
-; 	call ending_UFO_scene_minion_talks
+	ld hl, TEXT_ENDING_C_UFO_11
+	ld b, 32
+	call ending_UFO_scene_minion_talks
         
-; 	ld hl, TEXT_ENDING_C_UFO_12
-; 	ld b, 64
-; 	call ending_UFO_scene_captain_talks_agitated
+	ld hl, TEXT_ENDING_C_UFO_12
+	ld b, 64
+	call ending_UFO_scene_captain_talks_agitated
 
-; 	ld b, 100
-; 	call wait_b_halts_skippable
-; 	call clear_screen_left_to_right
+	ld b, 100
+	call wait_b_halts_skippable
+	call clear_screen_left_to_right
 
-; 	call ending_beach_scene_C  ; elaine and michael relax in the beach
+	call ending_beach_scene_C  ; elaine and michael relax in the beach
 
 	call clear_screen_left_to_right
 
@@ -743,6 +743,9 @@ ending_C_enemy_intro_ptr_table:
 	dw ending_enemy_intro_data10  ; ants
 	dw ending_enemy_intro_data11  ; fire imps
 	dw ending_enemy_intro_data12  ; owl
+	dw ending_enemy_intro_data13  ; fishmen
+	dw ending_enemy_intro_data14  ; ghosts
+	dw ending_enemy_intro_data15  ; sentinel
 	dw 0  ; sentinel
 
 

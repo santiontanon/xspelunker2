@@ -1,16 +1,7 @@
 to do:
-***- Ending C:
-  ***- Scene 3 enemy vignettes:
-    ***- ENEMY_GHOST, ENEMY_GHOST2: "atlantis lost souls"
-    ***- ENEMY_FISHMAN, ENEMY_FISHMAN2: 
-    ***- SENTINEL: "Atlantis sentinel"
-  ***- add "no miss" achievement for this: if there is no damage (Track it) (or maybe just no damage during alien fight?)
-  ***- restore the ending to show the UFO / beach scenes again
-  ***- reset "global_state__story" in state-play.asm to its default value when all finished
-
-- music: intro, letters/map, tablets/puzzles, game over, pyramid, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)
-  - story: I like the original song: keep the same style and compose a variation
-  - boss music (boss music increases in speed as health goes down: 50%, 25%)
+***- music: intro, letters/map, tablets/puzzles, game over, pyramid, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)
+  ***- story: I like the original song: keep the same style and compose a variation
+  ***- boss music (boss music increases in speed as health goes down: 50%, 25%)
 - test to see if joystick works (can I play in the Nintendo Switch?)
 
 - in the minimap, show room connections
@@ -42,6 +33,7 @@ to do:
   - add as a special achievement for the gameover screen
 - Final good ending 2 (A+) if you have the codex (from the 3 statues), it explains how to manufacture the powestones/firestones. So, you can keep using the calendar stone and be prepared for the future. This is the true final ending.
 - save game to rom / password
+- come up with a list of "achievements" for the achievements list in the game over screen and implement them
 
 - Potential new ideas if I have the energy:
   - There should be another shop. Otherwise, collecting money feels a bit useless if there is just one shop
