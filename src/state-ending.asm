@@ -738,6 +738,11 @@ ending_C_enemy_intro_ptr_table:
 	dw ending_enemy_intro_data5  ; bats
 	dw ending_enemy_intro_data6  ; skeletons
 	dw ending_enemy_intro_data7  ; monkeys
+	dw ending_enemy_intro_data8  ; caves skeletons
+	dw ending_enemy_intro_data9  ; rockmen
+	dw ending_enemy_intro_data10  ; ants
+	dw ending_enemy_intro_data11  ; fire imps
+	dw ending_enemy_intro_data12  ; owl
 	dw 0  ; sentinel
 
 

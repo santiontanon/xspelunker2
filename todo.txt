@@ -1,15 +1,9 @@
 to do:
 ***- Ending C:
   ***- Scene 3 enemy vignettes:
-    ***- add rest of enemies:
-      ***- ENEMY_SKELETON_FLAME1, ENEMY_SKELETON_SLEEPER: K'ak'baak, Waybaak
-      ***- ENEMY_ROCKMAN, ENEMY_ROCKMAN2
-      ***- ENEMY_ANT, ENEMY_ANT2, ANTHILL
-      ***- ENEMY_FIRE_IMP, ENEMY_FIRE_IMP2
-      ***- ENEMY_GHOST, ENEMY_GHOST2: "lost soul, ???"
-      ***- ENEMY_FISHMAN, ENEMY_FISHMAN2: 
-      ***- OWL "Chabi Tucur"? "Messenger owl"?
-      ***- SENTINEL: "Atlantis sentinel"
+    ***- ENEMY_GHOST, ENEMY_GHOST2: "atlantis lost souls"
+    ***- ENEMY_FISHMAN, ENEMY_FISHMAN2: 
+    ***- SENTINEL: "Atlantis sentinel"
   ***- add "no miss" achievement for this: if there is no damage (Track it) (or maybe just no damage during alien fight?)
   ***- restore the ending to show the UFO / beach scenes again
   ***- reset "global_state__story" in state-play.asm to its default value when all finished
