@@ -1,4 +1,4 @@
-volume(13),pianostaccato,La1	Piano,Mi4	sfx(sfx_drum_shorter_re)
+volume(13),,pianostaccato,La1	Piano,Mi4	sfx(sfx_drum_shorter_re)
 La2	pianostaccato,Re#4	
 La1	Re4	sfx(sfx_short_hihat)
 La2	Piano,Do4	sfx(sfx_drum_shorter_re)
@@ -63,19 +63,19 @@ Mi2		sfx(sfx_drum_shorter_re)
 Mi1		sfx(sfx_short_hihat)
 Mi2		
 pianostaccato,La1	Piano,La3	sfx(sfx_drum_shorter_re)
-La2		
+La2	-	
 La1	Do4	sfx(sfx_short_hihat)
-La2		sfx(sfx_drum_shorter_re)
+La2	-	sfx(sfx_drum_shorter_re)
 La1	Re4	
-La2		sfx(sfx_drum_shorter_re)
+La2	-	sfx(sfx_drum_shorter_re)
 La1	Re#4	sfx(sfx_short_hihat)
 La2	Mi4	
 La1	La3	sfx(sfx_drum_shorter_re)
-La2		
+La2	-	
 La1	Do4	sfx(sfx_short_hihat)
-La2		sfx(sfx_drum_shorter_re)
+La2	-	sfx(sfx_drum_shorter_re)
 La1	Re4	
-La2		sfx(sfx_drum_shorter_re)
+La2	-	sfx(sfx_drum_shorter_re)
 La1	Re#4	sfx(sfx_short_hihat)
 La2	Mi4	
 Fa#1	pianostaccato,La4	sfx(sfx_drum_shorter_re)
@@ -118,11 +118,139 @@ Mi1	Si4
 Mi2		sfx(sfx_drum_shorter_re)
 Mi1	Re5	sfx(sfx_short_hihat)
 Mi2		
+Mi1	Mi5	sfx(sfx_short_hihat)
+Mi2		
+Mi1		sfx(sfx_short_hihat)
+Mi2		
+Mi1	-	sfx(sfx_short_hihat)
+Mi2		sfx(sfx_short_hihat)
+Mi1		sfx(sfx_short_hihat)
+Mi2		sfx(sfx_short_hihat)
+pianostaccato,La1	Piano,La4	sfx(sfx_drum_shorter_re)
+La2		
+La1		sfx(sfx_short_hihat)
+La2		
+La1		sfx(sfx_short_hihat)
+La2		
+La1	Mi4	sfx(sfx_drum_shorter_re)
+La2		
+La1	Do5	sfx(sfx_drum_shorter_re)
+La2		
+La1		sfx(sfx_short_hihat)
+La2		
+La1		sfx(sfx_short_hihat)
+La2		
+La1	Si4	sfx(sfx_drum_shorter_re)
+La2	La4	
+Sol1	Si4	sfx(sfx_drum_shorter_re)
+Sol2		
+Sol1		sfx(sfx_short_hihat)
+Sol2		
+Sol1		sfx(sfx_short_hihat)
+Sol2		
+Sol1		sfx(sfx_drum_shorter_re)
+Sol2		
+Sol1	Mi5	sfx(sfx_drum_shorter_re)
+Sol2		
+Sol1		sfx(sfx_short_hihat)
+Sol2		
+Sol1		sfx(sfx_short_hihat)
+Sol2		
+Sol1		sfx(sfx_drum_shorter_re)
+Sol2		
+Fa1	La4	sfx(sfx_drum_shorter_re)
+Fa2		
+Fa1		sfx(sfx_short_hihat)
+Fa2		
+Fa1	Si4	sfx(sfx_short_hihat)
+Fa2		
+Fa1		sfx(sfx_drum_shorter_re)
+Fa2		
+Fa1	Do5	sfx(sfx_drum_shorter_re)
+Fa2		
+Fa1		sfx(sfx_short_hihat)
+Fa2		
+Fa1	Re5	sfx(sfx_short_hihat)
+Fa2		
+Fa1		sfx(sfx_drum_shorter_re)
+Fa2		
 Mi1	Mi5	sfx(sfx_drum_shorter_re)
 Mi2		
 Mi1		sfx(sfx_short_hihat)
-Mi2		sfx(sfx_drum_shorter_re)
-Mi1	-	
-Mi2		sfx(sfx_drum_shorter_re)
-Mi1		sfx(sfx_short_hihat)
 Mi2		
+Mi1	Fa5	sfx(sfx_short_hihat)
+Mi2		
+Mi1		sfx(sfx_drum_shorter_re)
+Mi2		
+Mi1	Sol5	sfx(sfx_short_hihat)
+Mi2		sfx(sfx_short_hihat)
+Mi1		sfx(sfx_short_hihat)
+Mi2		sfx(sfx_short_hihat)
+Mi1	Sol#5	sfx(sfx_short_hihat)
+Mi2		sfx(sfx_short_hihat)
+Mi1		sfx(sfx_short_hihat)
+Mi2		sfx(sfx_short_hihat)
+pianostaccato,La1	minorarpeggio,La4	sfx(sfx_drum_shorter_re)
+La2	La4	
+La1	-	sfx(sfx_short_hihat)
+La2	La4	
+La1	-	sfx(sfx_short_hihat)
+La2	La4	
+La1	La4	sfx(sfx_drum_shorter_re)
+La2	La4	
+La1	La4	sfx(sfx_drum_shorter_re)
+La2	La4	
+La1	-	sfx(sfx_short_hihat)
+La2	La4	
+La1	-	sfx(sfx_short_hihat)
+La2	La4	
+La1	La4	sfx(sfx_drum_shorter_re)
+La2	La4	
+Fa#1	Fa#4	sfx(sfx_drum_shorter_re)
+Fa#2	Fa#4	
+Fa#1	-	sfx(sfx_short_hihat)
+Fa#2	Fa#4	
+Fa#1	-	sfx(sfx_short_hihat)
+Fa#2	Fa#4	
+Fa#1	Fa#4	sfx(sfx_drum_shorter_re)
+Fa#2	Fa#4	
+Fa#1	Fa#4	sfx(sfx_drum_shorter_re)
+Fa#2	Fa#4	
+Fa#1	-	sfx(sfx_short_hihat)
+Fa#2	Fa#4	
+Fa#1	-	sfx(sfx_short_hihat)
+Fa#2	Fa#4	
+Fa#1	Fa#4	sfx(sfx_drum_shorter_re)
+Fa#2	Fa#4	
+Fa1	majorarpeggio,Fa4	sfx(sfx_drum_shorter_re)
+Fa2	Fa4	
+Fa1	-	sfx(sfx_short_hihat)
+Fa2	Fa4	
+Fa1	-	sfx(sfx_short_hihat)
+Fa2	Fa4	
+Fa1	Fa4	sfx(sfx_drum_shorter_re)
+Fa2	Fa4	
+Fa1	Fa4	sfx(sfx_drum_shorter_re)
+Fa2	Fa4	
+Fa1	-	sfx(sfx_short_hihat)
+Fa2	Fa4	
+Fa1	-	sfx(sfx_short_hihat)
+Fa2	Fa4	
+Fa1	Fa4	sfx(sfx_drum_shorter_re)
+Fa2	Fa4	
+Mi1	majorarpeggio,Mi4	sfx(sfx_drum_shorter_re)
+Mi2	-	
+Mi1	Mi4	sfx(sfx_short_hihat)
+Mi2	-	
+Mi1	Mi4	sfx(sfx_short_hihat)
+Mi2	-	
+Mi1	Mi4	sfx(sfx_drum_shorter_re)
+Mi2	-	
+Mi1	Mi3	sfx(sfx_short_hihat)
+Mi2	-	sfx(sfx_short_hihat)
+Mi1	Mi3	sfx(sfx_short_hihat)
+Mi2	-	sfx(sfx_short_hihat)
+Mi1	Mi3	sfx(sfx_short_hihat)
+Mi2	-	sfx(sfx_short_hihat)
+Mi1	Mi3	sfx(sfx_short_hihat)
+Mi2	-	sfx(sfx_short_hihat)

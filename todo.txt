@@ -1,10 +1,15 @@
 to do:
+***- bug: picking up the ice cape had no effect
+***- bug: I can press left in the "back" button in the inventory
+***- joystick issue: how to press the interact button in the inventory? (use button 2 for this)
 ***- music: (brain 12, 15, 23, 25 have potential)
-  ***- snare drum: start high frequency and drop quickly
   ***- pyramid: a, F, D, E
     OK - first crack at the core loop: A1 (11.5 seconds)
     OK - think of a variation of the core loop for: A2 (A1 + A2: 23 seconds)
-    ***- think of a B part, so I can do: A1, A2, B, and back to the start (if B is same length of A1+A2, it'll be a 46 second loop: too short, I might need a C part...)
+    ***- complete the second part of the B part
+    ***- play with the drums, I have many other variants that could help
+      ***- snare drum: start high frequency and drop quickly
+    ***- have a C part with a break of the bass, to give the listener a break, and then restart: ABAC
   ***- story:
     ***- I like the original jazzy song: keep the same style and compose a variation
     ***- short song for when the map is being displayed (reused in the game for letters/map/tablets/puzzles)
@@ -17,7 +22,6 @@ to do:
   ***- ending aliens
   ***- ending beach (reuse the story jazzy song)
   ***- ending credits
-***- test to see if joystick works (can I play in the Nintendo Switch?)
 
 - in the minimap, show room connections
 - random seed puzzle (all happens without going to moon/mars):

@@ -126,7 +126,7 @@ read_joystick_noA:
 
     rr c
     jr c, read_joystick_noB
-    and #fb
+    and #fd
 read_joystick_noB:
 
     ld (hl), a   ; we add the joystick input to the keyboard input
