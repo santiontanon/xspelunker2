@@ -54,15 +54,20 @@ public class MSXNote {
     public static final int INSTRUMENT_SHORTWIND = 10;
     public static final int INSTRUMENT_SHORTWIND_ECHO = 11;
     public static final int INSTRUMENT_MAJOR_ARPEGGIO = 12;
-    public static final int INSTRUMENT_MINOR_ARPEGGIO = 13;
-    public static final int INSTRUMENT_DIMINISHED_ARPEGGIO = 14;
-    public static final int INSTRUMENT_MINOR_ARPEGGIO_FADEIN = 15;
-    public static final int INSTRUMENT_SLIDER = 16;
-    public static final int INSTRUMENT_PIANO_OFFTUNE = 17;
-    public static final int INSTRUMENT_SNAP_BASS = 18;
-    public static final int INSTRUMENT_DIRTY_BASS = 19;
-    public static final int INSTRUMENT_REPEATING = 20;
-    public static final int INSTRUMENT_LOADED = 21;
+    public static final int INSTRUMENT_MAJOR_1STINV_ARPEGGIO = 13;
+    public static final int INSTRUMENT_MAJOR_2NDINV_ARPEGGIO = 14;
+    public static final int INSTRUMENT_MINOR_ARPEGGIO = 15;
+    public static final int INSTRUMENT_MINOR_1STINV_ARPEGGIO = 16;
+    public static final int INSTRUMENT_MINOR_2NDINV_ARPEGGIO = 17;
+    public static final int INSTRUMENT_DIMINISHED_ARPEGGIO = 18;
+    public static final int INSTRUMENT_MAJOR_ARPEGGIO_FADEIN = 19;
+    public static final int INSTRUMENT_MINOR_ARPEGGIO_FADEIN = 20;
+    public static final int INSTRUMENT_SLIDER = 21;
+    public static final int INSTRUMENT_PIANO_OFFTUNE = 22;
+    public static final int INSTRUMENT_SNAP_BASS = 23;
+    public static final int INSTRUMENT_DIRTY_BASS = 24;
+    public static final int INSTRUMENT_REPEATING = 25;
+    public static final int INSTRUMENT_LOADED = 26;
     
     public static final String instrumentNames[] = {
                             "MUSIC_INSTRUMENT_SQUARE_WAVE",

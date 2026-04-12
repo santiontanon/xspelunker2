@@ -46,8 +46,9 @@ public class Music {
 //        playTSVMusic("data/music/caves1.tsv", 12, 0);  // chords test
 //        playTSVMusic("data/music/caves2.tsv", 12, 0);
 
+        playTSVMusic("data/music/pyramid1.tsv", 10, 0);
 
-        playTSVMusic("data/music/test.tsv", 10, 0);  // to test new instruments
+//        playTSVMusic("data/music/test.tsv", 10, 0);  // to test new instruments
 
 //        generateInGamesongData();
     }
@@ -182,11 +183,26 @@ public class Music {
                         case "majorarpeggio":
                             ch_instrument[channel] = MSXNote.INSTRUMENT_MAJOR_ARPEGGIO;
                             break;
+                        case "major-1stinv-arpeggio":
+                            ch_instrument[channel] = MSXNote.INSTRUMENT_MAJOR_1STINV_ARPEGGIO;
+                            break;
+                        case "major-2ndinv-arpeggio":
+                            ch_instrument[channel] = MSXNote.INSTRUMENT_MAJOR_2NDINV_ARPEGGIO;
+                            break;
                         case "minorarpeggio":
                             ch_instrument[channel] = MSXNote.INSTRUMENT_MINOR_ARPEGGIO;
                             break;
+                        case "minor-1stinv-arpeggio":
+                            ch_instrument[channel] = MSXNote.INSTRUMENT_MINOR_1STINV_ARPEGGIO;
+                            break;
+                        case "minor-2ndinv-arpeggio":
+                            ch_instrument[channel] = MSXNote.INSTRUMENT_MINOR_2NDINV_ARPEGGIO;
+                            break;
                         case "diminishedarpeggio":
                             ch_instrument[channel] = MSXNote.INSTRUMENT_DIMINISHED_ARPEGGIO;
+                            break;
+                        case "majorarpeggio-fadein":
+                            ch_instrument[channel] = MSXNote.INSTRUMENT_MAJOR_ARPEGGIO_FADEIN;
                             break;
                         case "minorarpeggio-fadein":
                             ch_instrument[channel] = MSXNote.INSTRUMENT_MINOR_ARPEGGIO_FADEIN;

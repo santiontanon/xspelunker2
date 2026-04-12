@@ -39,9 +39,13 @@ public class MSXSongWavGenerator {
         {6,8,12,12,12,12,10,8,6,8,8,6,4,2,0}, // shortwind
         {6,9,14,14,13,13,12,12,11,10,9,8,7,6,5,4,4,3,6,10,8,6,5,4,3,2,2,2,4,8,6,5,4,3,2,2,2,2,2,1,1,1,1,0}, // shortwindecho
         {12,11,10,10,9,9,8,7},  // major arpeggio
+        {12,11,10,10,9,9,8,7},  // major arpeggio 1st inversion
+        {12,11,10,10,9,9,8,7},  // major arpeggio 2nd inversion
         {12,11,10,10,9,9,8,7},  // minor arpeggio
-//        {12,8,8,6,0,0,0},  // minor arpeggio
+        {12,11,10,10,9,9,8,7},  // minor arpeggio 1st inversion
+        {12,11,10,10,9,9,8,7},  // minor arpeggio 2nd inversion
         {12,11,10,10,9,9,8,7},  // diminished arpeggio
+        {2,2,3,3,4,4,5,5,6,6,7,7,8,8,8,8,9,9,9,9,9,9,10,10,10,10,10,10,10,10,9,9,9,9,9,9,8,8,8,8,8,8,7,7,7,7,7,7,7,7,7,7,6,6,6,6,6,6,6,6,6,6,5,5,5,5,4,4,4,4,3,3,2,2,1},  // major arpeggio fadein
         {2,2,3,3,4,4,5,5,6,6,7,7,8,8,8,8,9,9,9,9,9,9,10,10,10,10,10,10,10,10,9,9,9,9,9,9,8,8,8,8,8,8,7,7,7,7,7,7,7,7,7,7,6,6,6,6,6,6,6,6,6,6,5,5,5,5,4,4,4,4,3,3,2,2,1},  // minor arpeggio fadein
         {4,6,8,10,11,11,11,10,10,9,9,8,8,7,7,6,6},    // slider
         {12,11,10,10,9,9,8,8,7,7,6},  // Piano offtune
@@ -437,11 +441,22 @@ public class MSXSongWavGenerator {
                     if (channel_volume[channel] > 0) {
                         for(int j = 0;j<tempo;j++) {
 //                            if (channel == 2) System.out.println("" + j);
-                            if (instrument == MSXNote.INSTRUMENT_MAJOR_ARPEGGIO) {
+                            if (instrument == MSXNote.INSTRUMENT_MAJOR_ARPEGGIO ||
+                                instrument == MSXNote.INSTRUMENT_MAJOR_ARPEGGIO_FADEIN) {
                                 // arpeggiate the note:
                                 int t = instrument_timer2[channel] % 4;
                                 int arpeggioTable[] = {0, 7, 4, 7};
 //                                int arpeggioTable[] = {0, 2, 4, 2};  // experimental
+                                period = MSXNote.PSGNotePeriod(notes[channel] + arpeggioTable[t]);
+                            } else if (instrument == MSXNote.INSTRUMENT_MAJOR_1STINV_ARPEGGIO) {
+                                // arpeggiate the note:
+                                int t = instrument_timer2[channel] % 4;
+                                int arpeggioTable[] = {0, 8, 3, 8};
+                                period = MSXNote.PSGNotePeriod(notes[channel] + arpeggioTable[t]);
+                            } else if (instrument == MSXNote.INSTRUMENT_MAJOR_2NDINV_ARPEGGIO) {
+                                // arpeggiate the note:
+                                int t = instrument_timer2[channel] % 4;
+                                int arpeggioTable[] = {0, 9, 5, 9};
                                 period = MSXNote.PSGNotePeriod(notes[channel] + arpeggioTable[t]);
                             } else if (instrument == MSXNote.INSTRUMENT_MINOR_ARPEGGIO ||
                                        instrument == MSXNote.INSTRUMENT_MINOR_ARPEGGIO_FADEIN) {
@@ -449,6 +464,16 @@ public class MSXSongWavGenerator {
                                 int t = instrument_timer2[channel] % 4;
 //                                int arpeggioTable[] = {0, 3, 7, 3};
                                 int arpeggioTable[] = {0, 7, 3, 7};
+                                period = MSXNote.PSGNotePeriod(notes[channel] + arpeggioTable[t]);
+                            } else if (instrument == MSXNote.INSTRUMENT_MINOR_1STINV_ARPEGGIO) {
+                                // arpeggiate the note:
+                                int t = instrument_timer2[channel] % 4;
+                                int arpeggioTable[] = {0, 9, 4, 9};
+                                period = MSXNote.PSGNotePeriod(notes[channel] + arpeggioTable[t]);
+                            } else if (instrument == MSXNote.INSTRUMENT_MINOR_2NDINV_ARPEGGIO) {
+                                // arpeggiate the note:
+                                int t = instrument_timer2[channel] % 4;
+                                int arpeggioTable[] = {0, 8, 5, 8};
                                 period = MSXNote.PSGNotePeriod(notes[channel] + arpeggioTable[t]);
                             } else if (instrument == MSXNote.INSTRUMENT_DIMINISHED_ARPEGGIO) {
                                 // arpeggiate the note:

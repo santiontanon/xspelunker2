@@ -4,12 +4,9 @@ to do:
 ***- joystick issue: how to press the interact button in the inventory? (use button 2 for this)
 ***- music: (brain 12, 15, 23, 25 have potential)
   ***- pyramid: a, F, D, E
-    OK - first crack at the core loop: A1 (11.5 seconds)
-    OK - think of a variation of the core loop for: A2 (A1 + A2: 23 seconds)
-    ***- complete the second part of the B part
+    ***- snare drum: start high frequency and drop quickly
     ***- play with the drums, I have many other variants that could help
-      ***- snare drum: start high frequency and drop quickly
-    ***- have a C part with a break of the bass, to give the listener a break, and then restart: ABAC
+  ***- play with the envelope register
   ***- story:
     ***- I like the original jazzy song: keep the same style and compose a variation
     ***- short song for when the map is being displayed (reused in the game for letters/map/tablets/puzzles)
