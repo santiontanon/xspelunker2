@@ -70,7 +70,7 @@ state_play:
 ; 		ld (global_state__maya_riddle), a
 
 		; debug:
-		ld a, 1
+; 		ld a, 1
 ; 		ld (player_inventory_items), a  ; first boss key
 ; 		ld (player_inventory_items+1), a  ; second boss key
 ; 		ld (player_inventory_items+2), a  ; third boss key
@@ -78,11 +78,11 @@ state_play:
 ; 		ld (player_inventory_items+4), a  ; fifth boss key
 ; 		ld (player_inventory_items+5), a  ; mars boss key
 ; 		ld (player_inventory_items+6), a  ; moon boss key
-		ld (player_inventory_items+7), a  ; first stone
-		ld (player_inventory_items+8), a  ; second stone
-		ld (player_inventory_items+9), a  ; third stone
-		ld (player_inventory_items+10), a
-		ld (player_inventory_items+11), a  ; 5th stone
+; 		ld (player_inventory_items+7), a  ; first stone
+; 		ld (player_inventory_items+8), a  ; second stone
+; 		ld (player_inventory_items+9), a  ; third stone
+; 		ld (player_inventory_items+10), a
+; 		ld (player_inventory_items+11), a  ; 5th stone
 ; 		ld (player_inventory_items+12), a  ; sixth stone
 ; 		ld (player_inventory_items+13), a
 ; 		ld (player_inventory_items+14), a
@@ -184,11 +184,11 @@ state_play_from_continue:
 
 		; generate area:
 		ld hl, pcg_generate_area
-; 		ld e, 0  ; area to generate
+		ld e, 0  ; area to generate
 ; 		ld e, 1
 ; 		ld e, 1  ; area to generate <- first boss
 ; 		ld e, 2  ; area to generate <- second boss
-		ld e, 3  ; area to generate
+; 		ld e, 3  ; area to generate
 ; 		ld e, 4  ; area to generate <- third boss
 ; 		ld e, 6  ; area to generate
 ; 		ld e, 7  ; area to generate
@@ -198,12 +198,12 @@ state_play_from_continue:
 		call call_hl_in_page_c_8000
 
 		; generate room:
-; 		ld e, START_ROOM_ID
+		ld e, START_ROOM_ID
 ; 		ld e, 6
 ; 		ld e, 20  ; <- first boss
 ; 		ld e, 16  ; <- second boss
 ; 		ld e, CALENDAR_ROOM_ID
-		ld e, 2
+; 		ld e, 2
 ; 		ld e, 3  ; <- third boss
 ; 		ld e, 17  ; <- fourth boss
 ; 		ld e, 0

@@ -44,8 +44,11 @@ public class Music {
 //        playTSVMusic("data/music/jungle1c.tsv", 6, 0);  // like jungle1a but simplifying the bass line
 
 //        playTSVMusic("data/music/caves1.tsv", 12, 0);  // chords test
-        playTSVMusic("data/music/caves2.tsv", 12, 0);  // chords test
-        
+//        playTSVMusic("data/music/caves2.tsv", 12, 0);
+
+
+        playTSVMusic("data/music/test.tsv", 10, 0);  // to test new instruments
+
 //        generateInGamesongData();
     }
     
@@ -175,6 +178,33 @@ public class Music {
                             break;
                         case "shortwindecho":
                             ch_instrument[channel] = MSXNote.INSTRUMENT_SHORTWIND_ECHO;
+                            break;
+                        case "majorarpeggio":
+                            ch_instrument[channel] = MSXNote.INSTRUMENT_MAJOR_ARPEGGIO;
+                            break;
+                        case "minorarpeggio":
+                            ch_instrument[channel] = MSXNote.INSTRUMENT_MINOR_ARPEGGIO;
+                            break;
+                        case "diminishedarpeggio":
+                            ch_instrument[channel] = MSXNote.INSTRUMENT_DIMINISHED_ARPEGGIO;
+                            break;
+                        case "minorarpeggio-fadein":
+                            ch_instrument[channel] = MSXNote.INSTRUMENT_MINOR_ARPEGGIO_FADEIN;
+                            break;
+                        case "slider":
+                            ch_instrument[channel] = MSXNote.INSTRUMENT_SLIDER;
+                            break;
+                        case "piano-offtune":
+                            ch_instrument[channel] = MSXNote.INSTRUMENT_PIANO_OFFTUNE;
+                            break;
+                        case "snap-bass":
+                            ch_instrument[channel] = MSXNote.INSTRUMENT_SNAP_BASS;
+                            break;
+                        case "dirty-bass":
+                            ch_instrument[channel] = MSXNote.INSTRUMENT_DIRTY_BASS;
+                            break;
+                        case "piano-repeating":
+                            ch_instrument[channel] = MSXNote.INSTRUMENT_REPEATING;
                             break;
                         case "repeat":
                             {
@@ -366,7 +396,7 @@ public class Music {
     public static List<Integer> playTSVMusic(String fileName, int tempo, int transpose) throws Exception
     {
         MSXSong song = loadTSVMusic(fileName, false);
-        song.transpose(transpose);
+        song.transpose(transpose);        
         return playTSVMusic(song, tempo);
     }    
 

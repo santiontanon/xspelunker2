@@ -340,6 +340,7 @@ ending__tmp_enemy_intro_table_ptr: equ ending__tmp_space + 3  ; 2 bytes
 ending__tmp_enemy_intro_table_next: equ ending__tmp_space + 5  ; which enemy to show next
 ending__tmp_enemy_intro_state: equ ending__tmp_space + 6  ; 0: load data, 1: appearing, 2: showing, 3: disappearing
 ending__tmp_enemy_intro_state_timer: equ ending__tmp_space + 7
+ending__tmp_text_page_number: equ ending__tmp_space + 8  ; 0: first page, 1: second page, 2: third page or later
 
 ; game stats:
 stats__n_coins_collected: ds virtual 2

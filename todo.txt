@@ -1,8 +1,23 @@
 to do:
-***- music: intro, letters/map, tablets/puzzles, game over, pyramid, xibalba, atlantis, mars, moon, boss, ending (brain 12, 15, 23, 25 have potential)
-  ***- story: I like the original song: keep the same style and compose a variation
+***- music: (brain 12, 15, 23, 25 have potential)
+  ***- snare drum: start high frequency and drop quickly
+  ***- pyramid: a, F, D, E
+    OK - first crack at the core loop: A1 (11.5 seconds)
+    OK - think of a variation of the core loop for: A2 (A1 + A2: 23 seconds)
+    ***- think of a B part, so I can do: A1, A2, B, and back to the start (if B is same length of A1+A2, it'll be a 46 second loop: too short, I might need a C part...)
+  ***- story:
+    ***- I like the original jazzy song: keep the same style and compose a variation
+    ***- short song for when the map is being displayed (reused in the game for letters/map/tablets/puzzles)
+  ***- short "game over" tune
   ***- boss music (boss music increases in speed as health goes down: 50%, 25%)
-- test to see if joystick works (can I play in the Nintendo Switch?)
+  ***- xibalba
+  ***- atlantis
+  ***- mars
+  ***- moon
+  ***- ending aliens
+  ***- ending beach (reuse the story jazzy song)
+  ***- ending credits
+***- test to see if joystick works (can I play in the Nintendo Switch?)
 
 - in the minimap, show room connections
 - random seed puzzle (all happens without going to moon/mars):

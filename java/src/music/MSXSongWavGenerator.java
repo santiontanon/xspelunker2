@@ -10,6 +10,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -26,19 +27,29 @@ public class MSXSongWavGenerator {
     static int instrumentVolumeProfiles[][] = {
         {12},   // square wave
         {12,11,10,10,9,9,8,8,7,7,6},     // Piano
-//        {3,6,8,10,11,12},    // wind
         {6,8,12},    // wind
         {10,9,7,7,6,6,5,5,4,4,3},     // Piano soft
-//        {1,3,5,6},    // wind soft
         {2,4,6,8},    // wind soft
-        {12,12,12,12,11,11,11,10,10,10,9,9,9,8,8,8,7,7,7,6,6,6,5,5,5,4,4,4,3,3,3,2,2,2,1,1,1,0},     // Piano + frequency vibration
-        {6,12,11,9,8,7,6,5,4,3,2,1,0},     // Piano Staccato
+        {12,12,12,12,11,11,11,10,10,10,9,9,9,8,8,8,7},     // Piano + frequency vibration
+//        {12,12,12,12,11,11,11,10,10,10,9,9,9,8,8,8,7,7,7,6,6,6,5,5,5,4,4,4,3,3,3,2,2,2,1,1,1,0},     // Piano + frequency vibration
+        {12,11,9,8,7,6,5,4,3,2,1,0},     // Piano Staccato
         {3,6,8,10,11,12,12,12,12,12,11,11,11,10,10,10,8,8,6,6,4},    // wind fading
         {2,6,8,12,12,12,12,12,12,11,10,9,8,7,7,6,6,6,6,5,5,5,5,5,5,5,5,4,4,4,4,4,4,4,4,3}, // pad
         {12,10,8,6,8,8,6,4,2,0}, // fade
         {6,8,12,12,12,12,10,8,6,8,8,6,4,2,0}, // shortwind
         {6,9,14,14,13,13,12,12,11,10,9,8,7,6,5,4,4,3,6,10,8,6,5,4,3,2,2,2,4,8,6,5,4,3,2,2,2,2,2,1,1,1,1,0}, // shortwindecho
-        {12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11},     // ???
+        {12,11,10,10,9,9,8,7},  // major arpeggio
+//        {12,11,10,10,9,9,8,7},  // minor arpeggio
+        {12,8,8,6,0,0,0},  // minor arpeggio
+        {12,11,10,10,9,9,8,7},  // diminished arpeggio
+        {2,2,3,3,4,4,5,5,6,6,7,7,8,8,8,8,9,9,9,9,9,9,10,10,10,10,10,10,10,10,9,9,9,9,9,9,8,8,8,8,8,8,7,7,7,7,7,7,7,7,7,7,6,6,6,6,6,6,6,6,6,6,5,5,5,5,4,4,4,4,3,3,2,2,1},  // minor arpeggio fadein
+        {4,6,8,10,11,11,11,10,10,9,9,8,8,7,7,6,6},    // slider
+        {12,11,10,10,9,9,8,8,7,7,6},  // Piano offtune
+        {12,11,10,10,9,9,8,8,7,7,6},  // snap bass
+        {12,11,10,10,9,9,8,8,7,7,6},  // dirty bass
+//        {12,8,8,6,0,0,0},  // repeating
+        {10,8,6,4,0,0,0},  // repeating
+        {12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11,12,11},     // LOADED
         };
     public static HashMap<String, PSGInstrument> loadedInstruments = new HashMap<>();
     
@@ -46,6 +57,7 @@ public class MSXSongWavGenerator {
     static int bits = 16;
     static double sampleRate = 22050.0;
 //    static int volume_multiplier = 728;
+    static Random r = new Random();
     
     public static void generateWavFile(String fileName, int tempo, MSXSong song) throws Exception
     {
@@ -67,7 +79,7 @@ public class MSXSongWavGenerator {
             MSXSFX.renderSFX(new String[] 
             {   "7", "#1c",
                 "10", "#0a",
-                "6" , "#01",
+                "6" , "#01",  // noise frequency (highest possible freq: ~111.860 Hz)
                 "MUSIC_CMD_SKIP",
                 "MUSIC_CMD_SKIP",
                 "10", "#08",
@@ -90,7 +102,7 @@ public class MSXSongWavGenerator {
             MSXSFX.renderSFX(new String[] 
             {   "7", "#1c",
                 "10", "#08",
-                "6" , "#01",
+                "6" , "#01",  // noise frequency (highest possible freq: ~111.860 Hz)
                 "MUSIC_CMD_SKIP",
 //                "MUSIC_CMD_SKIP",
                 "10", "#06",
@@ -112,7 +124,7 @@ public class MSXSongWavGenerator {
         sfx_waves.put("sfx_pedal_hihat", MSXSFX.renderSFX(new String[] 
             {   "7", "#1c",
                 "10", "#05",
-                "6" , "#04",
+                "6" , "#04",  // noise frequency (~27.9 Hz)
                 "MUSIC_CMD_SKIP",
                 "10", "#08",
                 "MUSIC_CMD_SKIP",
@@ -316,12 +328,17 @@ public class MSXSongWavGenerator {
         // play the song to fill the buffer:
         int instruments[] = new int[MSXSong.N_CHANNELS];
         String instrument_name[] = new String[MSXSong.N_CHANNELS];
-        int instrument_timer[] = new int[MSXSong.N_CHANNELS];
+        int instrument_timer[] = new int[MSXSong.N_CHANNELS];  // index of the volume table
+        int instrument_timer2[] = new int[MSXSong.N_CHANNELS];  // keeps increasing even after reaching the end of the volume table
         int notes[] = new int[MSXSong.N_CHANNELS];
         int channel_volume[] = {15, 15, 15};
-        int volume[] = new int[MSXSong.N_CHANNELS];
+        int volume[] = new int[MSXSong.N_CHANNELS];  // volume of the instrument (will be combined with "channel_volume" for final volume)
         int index[] = new int[MSXSong.N_CHANNELS];
+        int sliderstate[] = new int[MSXSong.N_CHANNELS];
         int channelTime[] = new int[MSXSong.N_CHANNELS];
+        boolean noise[] = new boolean[MSXSong.N_CHANNELS];
+        boolean tone[] =  new boolean[MSXSong.N_CHANNELS];
+        int noisePeriod = 1;
         String SFX = null;
         int SFX_timer = 0;
         int currentTime = 0;
@@ -331,10 +348,13 @@ public class MSXSongWavGenerator {
         for(int i = 0;i<MSXSong.N_CHANNELS;i++) {
             instruments[i] = MSXNote.INSTRUMENT_SQUARE_WAVE;
             instrument_timer[i] = 0;
+            instrument_timer2[i] = 0;
             notes[i] = 0;
             volume[i] = 0;
             index[i] = 0;
             channelTime[i] = 0;
+            noise[i] = false;
+            tone[i] = false;
         }
         currentTime = 0;       
         while(true) {
@@ -356,6 +376,8 @@ public class MSXSongWavGenerator {
                             instruments[i] = MSXNote.INSTRUMENT_SQUARE_WAVE;
                             volume[i] = 0;
                             channelTime[i] += note.duration;
+                            tone[i] = false;
+                            noise[i] = false;
                         } else if (note.absoluteNote == MSXNote.SFX) {
                             // play SFX:
                             SFX = note.sfx;
@@ -384,12 +406,15 @@ public class MSXSongWavGenerator {
                         } else if (note.absoluteNote == MSXNote.SET_VOLUME) {
                             channel_volume[i] = note.volume;
                         } else {
+//                            System.out.println("play note in channel " + i + " at " + currentTime + " with duration " + note.duration);
                             instruments[i] = note.instrument;
                             instrument_name[i] = note.loadedInstrument;
                             instrument_timer[i] = 0;
+                            instrument_timer2[i] = 0;
                             notes[i] = note.absoluteNote + transpose;
                             volume[i] = 15;
                             channelTime[i] += note.duration;
+                            tone[i] = true;
                         }
                         
                         // we restart the "i" loop each time we find a note (channel 1 has priority)
@@ -409,8 +434,38 @@ public class MSXSongWavGenerator {
 //                for(int channel = 0;channel<1;channel++) {
                     int instrument = instruments[channel];
                     int period = MSXNote.PSGNotePeriod(notes[channel]);
-                    if (volume[channel]>0) {
+                    if (channel_volume[channel] > 0) {
                         for(int j = 0;j<tempo;j++) {
+//                            if (channel == 2) System.out.println("" + j);
+                            if (instrument == MSXNote.INSTRUMENT_MAJOR_ARPEGGIO) {
+                                // arpeggiate the note:
+                                int t = instrument_timer2[channel] % 4;
+                                int arpeggioTable[] = {0, 7, 4, 7};
+//                                int arpeggioTable[] = {0, 2, 4, 2};  // experimental
+                                period = MSXNote.PSGNotePeriod(notes[channel] + arpeggioTable[t]);
+                            } else if (instrument == MSXNote.INSTRUMENT_MINOR_ARPEGGIO ||
+                                       instrument == MSXNote.INSTRUMENT_MINOR_ARPEGGIO_FADEIN) {
+                                // arpeggiate the note:
+                                int t = instrument_timer2[channel] % 4;
+//                                int arpeggioTable[] = {0, 3, 7, 3};
+                                int arpeggioTable[] = {0, 7, 3, 7};
+                                period = MSXNote.PSGNotePeriod(notes[channel] + arpeggioTable[t]);
+                            } else if (instrument == MSXNote.INSTRUMENT_DIMINISHED_ARPEGGIO) {
+                                // arpeggiate the note:
+                                int t = instrument_timer2[channel] % 4;
+                                int arpeggioTable[] = {0, 6, 3, 6};
+                                period = MSXNote.PSGNotePeriod(notes[channel] + arpeggioTable[t]);
+                            }
+                            if (instrument == MSXNote.INSTRUMENT_SLIDER) {
+                                // move slowly to the desired period:
+                                int desired = MSXNote.PSGNotePeriod(notes[channel]);
+                                period = (2 * desired + sliderstate[channel]) / 3;
+//                                System.out.println("slider: " + period + "\t" + sliderstate[channel] + "\t" + desired);
+                            }
+                            sliderstate[channel] = period;
+                            if (instrument == MSXNote.INSTRUMENT_PIANO_OFFTUNE) {
+                                period = MSXNote.PSGNotePeriod(notes[channel]) + 3;
+                            }
                             // instrument envelope:
                             if (instrument == MSXNote.INSTRUMENT_LOADED) {
                                 // Loaded instrument:
@@ -422,36 +477,83 @@ public class MSXSongWavGenerator {
                                 volume[channel] = psgi.volume.get(instrument_index);
                                 instrument_timer[channel]++;
                             } else {
+                                if (instrument == MSXNote.INSTRUMENT_SNAP_BASS) {
+                                    if (instrument_timer[channel] == 0) {
+                                        noise[channel] = true;
+                                        tone[channel] = false;
+                                        noisePeriod = 1;
+                                    } else {
+                                        noise[channel] = false;
+                                        tone[channel] = true;
+                                    }
+                                }
+                                if (instrument == MSXNote.INSTRUMENT_DIRTY_BASS) {
+//                                    System.out.println("dirty bass " + j + ", " + instrument_timer[channel]);
+                                    if (instrument_timer2[channel] % 2 != 0) {
+                                        noise[channel] = true;
+                                        tone[channel] = false;
+                                        noisePeriod = 16;
+                                    } else {
+                                        noise[channel] = false;
+                                        tone[channel] = true;
+                                    }
+                                }                                 
+                                if (instrument == MSXNote.INSTRUMENT_PIANO_FREQUENCY_VIBRATION) {
+//                                    period = MSXNote.PSGNotePeriod(notes[channel] + 12*((currentTime*tempo+j)%2));
+                                    int vibratoTable[] = {0,1,1,2,2,2,1,1,
+                                                          0,-1,-1,-2,-2,-2,-1,-1};  // period 16
+//                                    int vibratoTable[] = {0,0,0,1,1,1,1,1,
+//                                                          0,0,0,-1,-1,-1,-1,-1};  // period 16
+                                    period = MSXNote.PSGNotePeriod(notes[channel] + vibratoTable[(currentTime*tempo+j)%16]);
+//                                    int vibratoTable[] = {0,0,1,1, 1,2,2,2, 2,2,2,2, 2,1,1,1,
+//                                                          0,0,-1,-1, -1,-2,-2,-2, -2,-2,-2,-2, -2,-1,-1,-1};
+//                                    period = MSXNote.PSGNotePeriod(notes[channel] + vibratoTable[(currentTime*tempo+j)%32]);
+                                }
                                 if (instrumentVolumeProfiles[instrument].length > instrument_timer[channel]) {
                                     volume[channel] = instrumentVolumeProfiles[instrument][instrument_timer[channel]];
                                     instrument_timer[channel]++;
-                                }
-                                if (instruments[channel] == MSXNote.INSTRUMENT_PIANO_FREQUENCY_VIBRATION) {
-                                    period = MSXNote.PSGNotePeriod(notes[channel] + 12*((currentTime*tempo+j)%2));
+                                    if (instrument == MSXNote.INSTRUMENT_REPEATING) {
+                                        instrument_timer[channel] = instrument_timer[channel] % 6;
+//                                        System.out.println("repeating: " + instrument_timer[channel]);
+                                    }
                                 }
                             }
-//                            System.out.println((currentTime*tempo+j) + " - CH"+channel+": play " + instrument + ", " + volume[channel] + " at " + period);
                             
-                            //double frequency = MSXNote.PSG_Master_Frequency / period;
+                            instrument_timer2[channel]++;
+                            
+                            // Generate the wave for this channel:
                             double factor = MSXNote.PSG_Master_Frequency/sampleRate;
                             int adjusted_volume = volume[channel] - (15 - channel_volume[channel]);
                             if (adjusted_volume < 0) adjusted_volume = 0;
-//                            System.out.println("" + volume[channel] + " -> " + adjusted_volume);
-//                            
+                            boolean val = r.nextBoolean();
+                            int lastCycle = -1;
+//                            System.out.println("" + noise[channel] + ", " + tone[channel]);
+//                            System.out.println("channel " + channel + ", volume: " + adjusted_volume);
                             for(int k = 0;k<samplesPerMinorTick;k++) {
                                 int position = startSample + j*samplesPerMinorTick + k;
-                                int position_corrected = (int)(position*factor);
+                                int position_corrected = (int)(position * factor);
                                 int offset = position_corrected % period;
-                                int v;
-                                if (offset < period/2) {
-                                    v = volumeToSample(adjusted_volume);
-//                                    v = volume[channel] * volume_multiplier;
-                                } else {
-                                    v = - volumeToSample(adjusted_volume);
-//                                    v = - volume[channel] * volume_multiplier;
+                                int v = 0;
+                                int cycle = position_corrected / noisePeriod;
+                                if (noise[channel]) {
+                                    if (cycle > lastCycle) val = r.nextBoolean();
+                                    if (val) {
+                                        v += volumeToSample(Math.max(0, adjusted_volume - 1));
+                                    } else {
+                                        v -= volumeToSample(Math.max(0, adjusted_volume - 1));
+                                    }
+                                }
+                                
+                                if (tone[channel]) {
+                                    if (offset < period/2) {
+                                        v += volumeToSample(adjusted_volume);
+                                    } else {
+                                        v -= volumeToSample(adjusted_volume);
+                                    }
                                 }
                                 while(buffer.size()<=position) buffer.add(zero);
                                 buffer.set(position, buffer.get(position) + v);
+                                lastCycle = cycle;
                             }
                         }
                     }

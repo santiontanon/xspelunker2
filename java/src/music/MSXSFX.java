@@ -532,7 +532,7 @@ public class MSXSFX {
                         }
                     }
                     if (tone) {
-                        int offset = position_corrected % tonePeriod;
+                       int offset = position_corrected % tonePeriod;
                        if (offset < tonePeriod/2) {
                             v += MSXSongWavGenerator.volumeToSample(volume);
 //                            v = volume * MSXSongWavGenerator.volume_multiplier;

@@ -160,13 +160,13 @@ Execute:
     ld a, BRAINGAMES_PAGE
     jp jp_to_hl_in_page_a_8000
 
-;     ld hl, state_story
-;     ld a, STORY_PAGE
-;     jp jp_to_hl_in_page_a_8000
+    ld hl, state_story
+    ld a, STORY_PAGE
+    jp jp_to_hl_in_page_a_8000
 
-;     ld hl, ending_C
-;     ld a, ENDING_PAGE
-;     jp jp_to_hl_in_page_a_8000
+    ld hl, ending_C
+    ld a, ENDING_PAGE
+    jp jp_to_hl_in_page_a_8000
 
 
 ;-----------------------------------------------

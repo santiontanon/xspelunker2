@@ -302,35 +302,35 @@ La1		sfx(sfx_drum_shorter_re)
 	pianosoft,Mi4	
 La2		sfx(sfx_short_hihat)
 	pianosoft,Fa4	
-pad,Re2	pianosoft,Fa5	Re1
+piano,Re2	pianosoft,Fa4	Piano,Re1
 		
 		sfx(sfx_drum_shorter_re)
 		
-	pianosoft,La5	
+	pianosoft,La4	
 		
 		
 		
-pad,Sib2	pianosoft,Reb6	Sib1
+Sib2	pianosoft,Reb5	Sib1
 		
 		
 		
-	pianosoft,Sib5	
+	pianosoft,Sib4	
 		
 		sfx(sfx_short_hihat)
 		
-pad,Sol2	pianosoft,Sib5	Sol1
+Sol2	pianosoft,Sib4	Sol1
 		
 		sfx(sfx_drum_shorter_re)
 		
-	pianosoft,Sol5	
+	pianosoft,Sol4	
 		
 		
 		
-pad,La2	pianosoft,Mi5	piano,La1
+La2	pianosoft,Mi4	piano,La1
 		
 		sfx(sfx_short_hihat)
 		
-	pianosoft,Do5	sfx(sfx_drum_shorter_re)
+	pianosoft,Do4	sfx(sfx_drum_shorter_re)
 		
 		sfx(sfx_drum_shorter_re)
 		sfx(sfx_short_hihat)

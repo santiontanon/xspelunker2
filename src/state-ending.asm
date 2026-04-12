@@ -831,6 +831,9 @@ ending_final_text_scene_nametable_init_loop:
 		call enable_VDP_output
 	pop bc
 
+	xor a
+	ld (ending__tmp_text_page_number), a
+
 ending_final_text_scene_loop:
 	push ix
 	push bc
@@ -920,24 +923,28 @@ ending_final_text_scene_character_loop:
 									ld b, 8
 									call fast_small_FILVRM
 									call ending_final_text_scene_decoration_update_cycle
+									jp z, ending_final_text_scene_skip_request
 								pop hl
 								push hl
 									ld a, COLOR_BLUE*16
 									ld b, 8
 									call fast_small_FILVRM
 									call ending_final_text_scene_decoration_update_cycle
+									jp z, ending_final_text_scene_skip_request
 								pop hl
 								push hl
 									ld a, COLOR_LIGHT_BLUE*16
 									ld b, 8
 									call fast_small_FILVRM
 									call ending_final_text_scene_decoration_update_cycle
+									jp z, ending_final_text_scene_skip_request
 								pop hl
 								push hl
 									ld a, COLOR_WHITE*16
 									ld b, 8
 									call fast_small_FILVRM
 									call ending_final_text_scene_decoration_update_cycle
+									jp z, ending_final_text_scene_skip_request
 								pop hl
 							pop hl
 							ld bc, 8
@@ -964,6 +971,7 @@ ending_final_text_scene_sentences_loop_skip:
 ending_final_text_scene_wait_loop:
 			push bc
 				call ending_final_text_scene_decoration_update_cycle
+				jp z, ending_final_text_scene_skip_request2
 			pop bc
 			dec bc
 			ld a, b
@@ -971,13 +979,33 @@ ending_final_text_scene_wait_loop:
 			jr nz, ending_final_text_scene_wait_loop
 		pop ix
 		pop bc
+ending_final_text_scene_pages_loop_next_page_request:
 		inc ix  ; next page
 		inc ix
+		ld a, (ending__tmp_text_page_number)
+		cp 2
+		jr z, ending_final_text_scene_pages_loop_already_last_page
+		inc a
+ending_final_text_scene_pages_loop_already_last_page:
+		ld (ending__tmp_text_page_number), a
 		dec b
 		jp nz, ending_final_text_scene_pages_loop
 	pop bc
 	pop ix
 	jp ending_final_text_scene_loop
+
+ending_final_text_scene_skip_request:
+								pop hl
+							pop de
+						pop hl
+					pop bc
+				pop de
+			pop ix
+			pop bc
+ending_final_text_scene_skip_request2
+		pop ix
+		pop bc
+		jr ending_final_text_scene_pages_loop_next_page_request
 
 
 ;-----------------------------------------------
@@ -985,7 +1013,7 @@ ending_final_text_scene_banner_scroll_cycle:
     call update_keyboard_buffers
     ld a, (keyboard_clicks)
     bit KEY_WEAPON_BIT, a
-    jp nz, ending_C_done
+    jp nz, ending_final_text_scene_banner_scroll_cycle_skip_request
 
 	halt
 	ld hl, ending__tmp_banner_state
@@ -1017,8 +1045,16 @@ ending_final_text_scene_banner_scroll_cycle:
 	ld hl, buffer_4096
 	ld de, NAMTBL2 + 32*20
 	ld bc, 32*4
-	jp fast_LDIRVM
+	call fast_LDIRVM
+	or 1  ; no skip request
+	ret
 
+ending_final_text_scene_banner_scroll_cycle_skip_request:
+	ld a, (ending__tmp_text_page_number)
+	cp 2
+	jp z, ending_C_done
+	xor a  ; if we have not yet shown the last page, just request skip to the next page
+	ret
 
 ending_final_text_scene_banner_scroll_synthesize_nametable:
 	ld de, buffer_4096
@@ -1050,9 +1086,15 @@ ending_final_text_scene_banner_scroll_synthesize_nametable_loop_x:
 
 
 ;-----------------------------------------------
+; returns:
+; - z: player requested skip
+; - nz: no skip request
 ending_final_text_scene_decoration_update_cycle:
 	call ending_final_text_scene_banner_scroll_cycle
-	; jp ending_final_text_scene_enemy_intro_cycle
+	ret z  ; player requested skip
+	call ending_final_text_scene_enemy_intro_cycle
+	or 1  ; no skip request
+	ret
 
 
 ;-----------------------------------------------
