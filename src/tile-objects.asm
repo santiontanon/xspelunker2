@@ -1304,23 +1304,24 @@ object_interaction_inventory_slot:
 	db 8, 9, 10  ; upgraded weapons: 93
 	db #ff, #ff, #ff, #ff, #ff, #ff, #ff  ; map pieces: 96
 	db #ff, #ff, #ff, #ff, #ff  ; hearts: 103
-	db #ff, #ff, #ff, #ff  ; riddle clues: 108
-	db #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff  ; story trivia: 112
-	db INVENTORY_ITEM_SANDALS, INVENTORY_ITEM_GLOVES, INVENTORY_ITEM_WARRIOR_HAT, INVENTORY_ITEM_COTTON_ARMOR, INVENTORY_ITEM_CHAAC_BLESSING, INVENTORY_ITEM_SEASHELL  ; maya upgrade items: 120
-	db INVENTORY_ITEM_ANTIGRAV_BELT, INVENTORY_ITEM_ICE_CAPE  ; alien upgrade items: 126
-	db INVENTORY_ITEM_SMALL_KEY, INVENTORY_ITEM_SMALL_KEY, INVENTORY_ITEM_SMALL_KEY, INVENTORY_ITEM_SMALL_KEY  ; small keys: 128
-	db #ff, #ff, #ff, #ff  ; small key chests: 132
-	db #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff  ; teleporters: 136
-	db #ff  ; calendar name clue: 144
-	db #ff  ; lost vendor: 145
-	db #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff  ; xibalba tablets: 146
-	db #ff  ; pushable block: 159
-	db #ff, #ff , #ff ; doors: 160
-	db #ff  ; power stone: 163
-	db #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff  ; calendar tablet: 164, up to puxxlebox moon: 171
-	db #ff, #ff, #ff, #ff, #ff, #ff  ; consumables: 172
-	db #ff, #ff  ; xibalba boss tablet/grave: 178
-	db INVENTORY_ITEM_GOLDEN_KEY, INVENTORY_ITEM_SKULL_CHARM  ; golden key / skull charm: 180, 181
+	db #ff, #ff, #ff, #ff, #ff  ; riddle clues: 108
+	db #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff  ; story trivia: 113
+	db INVENTORY_ITEM_SANDALS, INVENTORY_ITEM_GLOVES, INVENTORY_ITEM_WARRIOR_HAT, INVENTORY_ITEM_COTTON_ARMOR, INVENTORY_ITEM_CHAAC_BLESSING, INVENTORY_ITEM_SEASHELL  ; maya upgrade items: 121
+	db INVENTORY_ITEM_ANTIGRAV_BELT, INVENTORY_ITEM_ICE_CAPE  ; alien upgrade items: 127
+	db INVENTORY_ITEM_SMALL_KEY, INVENTORY_ITEM_SMALL_KEY, INVENTORY_ITEM_SMALL_KEY, INVENTORY_ITEM_SMALL_KEY  ; small keys: 129
+	db #ff, #ff, #ff, #ff  ; small key chests: 133
+	db #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff  ; teleporters: 137
+	db #ff  ; calendar name clue: 145
+	db #ff  ; lost vendor: 146
+	db #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff  ; xibalba tablets: 147
+	db #ff, #ff, #ff, #ff, #ff  ; atlantis tablets: 160
+	db #ff  ; pushable block: 165
+	db #ff, #ff , #ff ; doors: 166
+	db #ff  ; power stone: 169
+	db #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff, #ff  ; calendar tablet: 170, up to scylla eye: 179
+	db #ff, #ff, #ff, #ff, #ff, #ff  ; consumables: 180
+	db #ff, #ff  ; xibalba boss tablet/grave: 186
+	db INVENTORY_ITEM_GOLDEN_KEY, INVENTORY_ITEM_SKULL_CHARM  ; golden key / skull charm: 188, 189
 
 
 ;-----------------------------------------------

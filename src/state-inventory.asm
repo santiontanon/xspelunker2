@@ -197,6 +197,8 @@ state_inventory_update_cursor_left_normal:
 	ld a, (inventory_cursor_position_x)
 	cp 4
 	ret z
+	or a
+	ret z
 	dec a
 	ld (inventory_cursor_position_x), a
 	ret
@@ -213,7 +215,7 @@ state_inventory_update_cursor_left_row0:
 	ld a, (inventory_cursor_position_x)
 	cp 4
 	jr z, state_inventory_update_cursor_left_row0_4
-	jp state_inventory_update_cursor_left_normal
+	jr state_inventory_update_cursor_left_normal
 state_inventory_update_cursor_left_row0_4:
 	ld a, 2
 	ld (inventory_cursor_position_x), a

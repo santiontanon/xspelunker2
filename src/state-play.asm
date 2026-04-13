@@ -70,7 +70,7 @@ state_play:
 ; 		ld (global_state__maya_riddle), a
 
 		; debug:
-; 		ld a, 1
+		ld a, 1
 ; 		ld (player_inventory_items), a  ; first boss key
 ; 		ld (player_inventory_items+1), a  ; second boss key
 ; 		ld (player_inventory_items+2), a  ; third boss key

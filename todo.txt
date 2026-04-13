@@ -1,12 +1,12 @@
 to do:
-***- bug: picking up the ice cape had no effect
-***- bug: I can press left in the "back" button in the inventory
 ***- joystick issue: how to press the interact button in the inventory? (use button 2 for this)
+***- in the minimap, show room connections
 ***- music: (brain 12, 15, 23, 25 have potential)
   ***- pyramid: a, F, D, E
     ***- snare drum: start high frequency and drop quickly
     ***- play with the drums, I have many other variants that could help
   ***- play with the envelope register
+  ***- bring the "volume" and "arpeggio" commands to assembler
   ***- story:
     ***- I like the original jazzy song: keep the same style and compose a variation
     ***- short song for when the map is being displayed (reused in the game for letters/map/tablets/puzzles)
@@ -20,7 +20,6 @@ to do:
   ***- ending beach (reuse the story jazzy song)
   ***- ending credits
 
-- in the minimap, show room connections
 - random seed puzzle (all happens without going to moon/mars):
   - Revisit "TABLET_TRIVIA_CLUE1", "TABLET_TRIVIA_CLUE2", etc.
   - world name entering screen: theme as a "maya astronomy", where the random seed determines the position of the stars: which celestial alignment ad version of reality the player will play in.
