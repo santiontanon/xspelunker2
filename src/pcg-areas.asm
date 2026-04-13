@@ -146,6 +146,11 @@ pcg_generate_area__initialize_ptrs_continue:
 ; - #ff for positions in which there is no room
 ; - to a room ID (>=0) if there should be a room, and it makes all the rooms 1x1 in size.
 pcg_generate_area__initialize_room_ids:
+	ld hl, current_area__room_ids
+	ld bc, MAX_AREA_SIZE - 1
+	ld a, #ff
+	call clear_memory_a
+
 	ld hl, (tmp_pcg_area__ptr_to_world_area)
 	ld bc, WORLD_AREA__DIVISION_IDS_OFFSET
 	add hl, bc
@@ -2176,6 +2181,77 @@ covert_chunk_offset_to_room_offset_loop_2_done:
 	ld e, a  ; e = x/2 + y/2 * width
 	ret
 
+
+;-----------------------------------------------
+; input:
+; - ix: ptr to this room's chunk ids
+; output:
+; - z: wall
+; - nz: connection
+check_if_right_room_edge_has_connection_right:
+	call check_if_right_room_edge_has_connection_right_get_chunk_type
+	and PCG_DIRECTION_RIGHT
+	ret nz
+	ld a, (current_area__width)
+	add a, a
+	ld c, a
+	ld b, 0
+	push ix
+		add ix, bc
+		call check_if_right_room_edge_has_connection_right_get_chunk_type
+		and PCG_DIRECTION_RIGHT
+	pop ix
+	ret
+
+check_if_right_room_edge_has_connection_right_get_chunk_type:
+	ld c, (ix + 1)
+	ld h, 0
+	ld l, c
+	add hl, hl
+	add hl, hl
+	ld b, 0
+	add hl, bc
+	ld bc, (current_area__chunk_flags_ptr)
+	add hl, bc
+	ld a, (hl)  ; chunk type
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - ix: ptr to this room's chunk ids
+; output:
+; - z: wall
+; - nz: connection
+check_if_right_room_edge_has_connection_down:
+	call check_if_right_room_edge_has_connection_down_get_chunk_type
+	and PCG_DIRECTION_DOWN
+	ret nz
+	inc ix
+	call check_if_right_room_edge_has_connection_down_get_chunk_type
+	dec ix
+	and PCG_DIRECTION_DOWN
+	ret
+
+check_if_right_room_edge_has_connection_down_get_chunk_type:
+	push ix
+		ld a, (current_area__width)
+		add a, a
+		ld c, a
+		ld b, 0
+		add ix, bc
+		ld c, (ix)
+	pop ix
+	ld h, 0
+	ld l, c
+	add hl, hl
+	add hl, hl
+	ld b, 0
+	add hl, bc
+	ld bc, (current_area__chunk_flags_ptr)
+	add hl, bc
+	ld a, (hl)  ; chunk type
+	ret
 
 ;-----------------------------------------------
 ; input:

@@ -104,6 +104,8 @@ state_inventory_update_cursor_continue:
 	jp nz, state_inventory_update_cursor_button
 	bit KEY_INTERACT_BIT, a  ; interact
 	jp nz, state_inventory_update_cursor_interact
+	bit KEY_JUMP_BIT, a  ; jump acts as interact in the inventory screen
+	jp nz, state_inventory_update_cursor_interact
 	bit KEY_INVENTORY_BIT, a
 	jp nz, state_inventory_update_cursor_button_back
 	ret
@@ -371,13 +373,11 @@ state_inventory_update_cursor_interact_power_stone:
 ; ;-----------------------------------------------
 state_inventory_update_cursor_interact_puzzlebox1:
 	ld ix, current_world__maya_puzzle2_combination1
-	ld hl, display_puzzlebox_closeup
-	ld c, TABLET_LETTER_PAGE
-	call call_hl_in_page_c_8000
-	jp state_inventory_entry_point_from_item_inspection
+	jr state_inventory_update_cursor_interact_puzzlebox2_entry_point
 
 state_inventory_update_cursor_interact_puzzlebox2:
 	ld ix, current_world__maya_puzzle2_combination2
+state_inventory_update_cursor_interact_puzzlebox2_entry_point:
 	ld hl, display_puzzlebox_closeup
 	ld c, TABLET_LETTER_PAGE
 	call call_hl_in_page_c_8000
@@ -1132,6 +1132,7 @@ draw_inventory_map_have_map:
 	ld c, a
 	ld hl, draw_inventory_map_row_ptrs
 	ld de, current_area__room_ids
+	ld ix, current_area__chunks_ids
 draw_inventory_map_have_map_loop_y:
 	push bc
 	push hl
@@ -1158,50 +1159,118 @@ draw_inventory_map_have_map_loop_x:
 		ld a, (de)
 		dec de
 		cp l
-		ld a, 1
-		jr nz, draw_inventory_map_have_map_loop_x_room_no_right_connection
 		ld a, 0
-draw_inventory_map_have_map_loop_x_room_no_right_connection:
-REPT 7
+		jr z, draw_inventory_map_have_map_loop_x_room_right_connection_set
+		; the right is a different room:
+		; check if there is a path that connects the two rooms:
+		push hl
+		push bc
+			ld hl, check_if_right_room_edge_has_connection_right
+			ld c, PCG_PAGE
+			call call_hl_in_page_c_8000
+		pop bc
+		pop hl
+		ld a, 1
+		jr z, draw_inventory_map_have_map_loop_x_room_right_connection_set
+		; connection with the room to the right:
+	    out (c), a  ; 1
+	    nop
+	    out (c), a  ; 1
+	    nop
+	    out (c), a  ; 1
+	    xor a
+	    out (c), a  ; 0
+	    inc a
+	    jr draw_inventory_map_have_map_loop_x_room_right_connection_set_3_outs_left
+draw_inventory_map_have_map_loop_x_room_right_connection_set:
 	    out (c), a
 	    nop
-ENDR
+	    out (c), a
+	    nop
+	    out (c), a
+	    nop
+	    out (c), a
+	    nop
+draw_inventory_map_have_map_loop_x_room_right_connection_set_3_outs_left:
+	    out (c), a
+	    nop
+	    out (c), a
+	    nop
+	    out (c), a
+draw_inventory_map_have_map_loop_x_room_tile_drawn:
 		; check if we need to connect down:
 		push af
-			ld a, (de)
-			push af
-				ld a, (current_area__width)
-				ld l, a
-				ld h, 0
-				add hl, de
-				ld l, (hl)  ; this might overflow outside of the map, but it's ok.
-			pop af
-			cp l
+			ld a, (current_area__width)
+			ld l, a
+			ld h, 0
+			add hl, de
+			; if "hl >= current_area__chunks_ids", we should jump to 'draw_inventory_map_have_map_loop_x_room_no_down_interroom_connection_pop'
+			push hl
+			push bc
+				ld bc, current_area__chunks_ids
+				or a
+				sbc hl, bc
+			pop bc
+			pop hl
+			jr nc, draw_inventory_map_have_map_loop_x_room_no_down_interroom_connection_pop
+			ld a, (de)  ; current
+			cp (hl)
+			jr z, draw_inventory_map_have_map_loop_x_room_down_connection
+			ld a, (hl)  ; next
+			cp #ff
 			jr nz, draw_inventory_map_have_map_loop_x_room_no_down_connection
+			jr draw_inventory_map_have_map_loop_x_room_no_down_interroom_connection_pop
+draw_inventory_map_have_map_loop_x_room_down_connection:
 		pop af
 	    out (c), a
 	    jr draw_inventory_map_have_map_loop_x_continue
 draw_inventory_map_have_map_loop_x_room_no_down_connection:
 		pop af
+
+		; check if there is a path that connects the two rooms:
+		push hl
+		push bc
+			ld hl, check_if_right_room_edge_has_connection_down
+			ld c, PCG_PAGE
+			call call_hl_in_page_c_8000
+		pop bc
+		pop hl
+		jr z, draw_inventory_map_have_map_loop_x_room_no_down_interroom_connection
+		ld a, #ef
+	    out (c), a
+		jr draw_inventory_map_have_map_loop_x_continue
+draw_inventory_map_have_map_loop_x_room_no_down_interroom_connection_pop:
+		pop af
+draw_inventory_map_have_map_loop_x_room_no_down_interroom_connection:
 		ld a, #ff
 	    out (c), a
 		jr draw_inventory_map_have_map_loop_x_continue
 draw_inventory_map_have_map_loop_x_skip:
 		; no room:
 		ld a, #ff
-REPT 8
+REPT 7
 	    out (c), a
 	    nop
 ENDR
+	    out (c), a
 
 draw_inventory_map_have_map_loop_x_continue:
-		inc de
-		djnz draw_inventory_map_have_map_loop_x
+		inc de  ; increment ptr to current_area__room_ids
+		inc ix  ; increment ptr to current_area__chunks_ids
+		inc ix
+		dec b
+		jp nz, draw_inventory_map_have_map_loop_x
+		ld a, (current_area__width)
+		add a, a
+		ld b, 0
+		ld c, a
+		add ix, bc  ; asjust ptr to current_area__chunks_ids to the next row (as each room is two chunks in height)
 	pop hl
 	pop bc
 	inc hl
 	inc hl
-	djnz draw_inventory_map_have_map_loop_y
+	dec b
+	jp nz, draw_inventory_map_have_map_loop_y
 
 	; mark interarea connections:
 	; each connection is 8 bytes: ; id1, id2, x1, y1, direction1, x2, y2, direction2 (coordinates are in chunks)
@@ -1273,8 +1342,7 @@ draw_inventory_map_have_map_ia_loop_found_up:
 	pop af
 	or #10
 	out (c), a
-	push hl
-	pop hl
+	nop
 	out (c), a
 	jr draw_inventory_map_have_map_ia_loop_next
 draw_inventory_map_have_map_ia_loop_found_right:
@@ -1362,7 +1430,7 @@ draw_inventory_map_row_ptrs:
 
 
 draw_inventory_map_to_piece_table:
-	db #ff, #ff  ; junle, inscriptions
+	db #ff, #ff  ; jungle, inscriptions
 	db 0  ; hidden
 	db 1, 1  ; confluence, inverted
 	db 2, 2, 2  ; caves, fire shaft, caves

@@ -1,6 +1,4 @@
 to do:
-***- joystick issue: how to press the interact button in the inventory? (use button 2 for this)
-***- in the minimap, show room connections
 ***- music: (brain 12, 15, 23, 25 have potential)
   ***- pyramid: a, F, D, E
     ***- snare drum: start high frequency and drop quickly
@@ -61,6 +59,13 @@ to do:
   - gigantic maya statue monument that looks decoration, but it's actually a secret boss (to have a maya-themed final boss)
     - maybe that boss leads to the grave of the person who wrote all the story tablets (Yatzil), with a riddle you can only solve if you have seen all tablets.
     - Solving the riddle reveals the head of the statue (which was hidden), and two gigantic empty eye sockets. If you place the eyes of charybdis and scylla, the statue comes alive, and you have your boss fight!
+
+
+--------------------
+
+For instructions:
+- "jump" acts as "interact" in the inventory screen (so that it works with joystick
+)
 
 --------------------
 
