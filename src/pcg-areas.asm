@@ -2184,6 +2184,7 @@ covert_chunk_offset_to_room_offset_loop_2_done:
 
 ;-----------------------------------------------
 ; input:
+; - de: ptr to room ids
 ; - ix: ptr to this room's chunk ids
 ; output:
 ; - z: wall
@@ -2252,6 +2253,7 @@ check_if_right_room_edge_has_connection_down_get_chunk_type:
 	add hl, bc
 	ld a, (hl)  ; chunk type
 	ret
+
 
 ;-----------------------------------------------
 ; input:

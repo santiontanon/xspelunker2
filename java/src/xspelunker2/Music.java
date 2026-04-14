@@ -46,9 +46,9 @@ public class Music {
 //        playTSVMusic("data/music/caves1.tsv", 12, 0);  // chords test
 //        playTSVMusic("data/music/caves2.tsv", 12, 0);
 
-        playTSVMusic("data/music/pyramid1.tsv", 10, 0);
+//        playTSVMusic("data/music/pyramid1.tsv", 10, 0);
 
-//        playTSVMusic("data/music/test.tsv", 10, 0);  // to test new instruments
+        playTSVMusic("data/music/test.tsv", 10, 0);  // to test new instruments
 
 //        generateInGamesongData();
     }

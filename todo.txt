@@ -1,9 +1,12 @@
 to do:
+***- inventory minimap: the room connections right now are computed from the room to the left/up. but if there is a door there, no connection is shown:
+  ***- move the whole check to "check_if_right_room_edge_has_connection_right", so that it returns: 0, 1, 2 if "same room", "different room, no connection" or "interroom connection", to save space in tne inventory page.
+  ***- Update "check_if_right_room_edge_has_connection_right/down" so that it looks both directions.
+  ***- check if we are in the border of the map
 ***- music: (brain 12, 15, 23, 25 have potential)
-  ***- pyramid: a, F, D, E
-    ***- snare drum: start high frequency and drop quickly
+  ***- pyramid:
     ***- play with the drums, I have many other variants that could help
-  ***- play with the envelope register
+  ***- play with the envelope register for new instruments
   ***- bring the "volume" and "arpeggio" commands to assembler
   ***- story:
     ***- I like the original jazzy song: keep the same style and compose a variation

@@ -315,6 +315,48 @@ public class MSXSongWavGenerator {
                 "SFX_CMD_END"
             }, 22050.0));
 
+
+        sfx_waves.put("sfx_snare_drum", 
+            MSXSFX.renderSFX(new String[] 
+            {   // we will change a whole octave, from 10,2 (F1) to 20,5 (F0)
+                "7", "#98",         // A: tone, B: tone, C: tone+noise
+                "10", "#0b",        // C volume
+                "6" , "#18",        // noise freq
+                "4" , "#80", "5" , "#01",        // C freq (f)  10, 2
+                "MUSIC_CMD_SKIP",
+                "7", "#b8",
+                "10", "#0a",
+                "4" , "#00", "5" , "#02", 
+                "MUSIC_CMD_SKIP",
+                "10", "#09",
+                "4" , "#80", 
+                "MUSIC_CMD_SKIP",
+                "4" , "#00", "5" , "#03", 
+                "MUSIC_CMD_SKIP",
+                "10", "#08",
+                "4" , "#80", 
+                "MUSIC_CMD_SKIP",
+                "4" , "#00", "5" , "#04", 
+                "MUSIC_CMD_SKIP",
+                "10", "#07",
+                "4" , "#80", 
+                "MUSIC_CMD_SKIP",
+                "4" , "#00", "5" , "#05", 
+                "MUSIC_CMD_SKIP",
+                "10", "#06",
+                "4" , "#80", 
+                "MUSIC_CMD_SKIP",
+                "4" , "#00", "5" , "#06", 
+                "MUSIC_CMD_SKIP",
+                "10", "#05",
+                "4" , "#80", 
+                "MUSIC_CMD_SKIP",
+                "5" , "#14", 
+                "4" , "#00", "5" , "#07", 
+                "MUSIC_CMD_SKIP",
+                "SFX_CMD_END"
+            }, 22050.0));         
+        
 /*
         // step 1, get the song duration:
         int l1 = song.channelLength(0);
