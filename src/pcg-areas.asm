@@ -2184,28 +2184,81 @@ covert_chunk_offset_to_room_offset_loop_2_done:
 
 ;-----------------------------------------------
 ; input:
-; - de: ptr to room ids
-; - ix: ptr to this room's chunk ids
+; - de: ptr to room ids (current_area__room_ids)
+; - ix: ptr to this room's chunk ids (current_area__chunks_ids)
 ; output:
-; - z: wall
-; - nz: connection
+; - a: 0 -> same room
+;      1 -> different room (no connection)
+;      2 -> different room (connection)
 check_if_right_room_edge_has_connection_right:
+	ld a, (de)
+	ld l, a
+	inc de
+	; make sure we do not overflow:
+	ld a, d
+	cp current_area__chunks_ids / 256
+	jr nz, check_if_right_room_edge_has_connection_right_continue
+	ld a, e
+	cp current_area__chunks_ids % 256
+	jr nz, check_if_right_room_edge_has_connection_right_continue
+	; overflow
+check_if_right_room_edge_has_connection_right_diff_room_no_connection:
+	ld a, 1  ; different room (no connection)
+	ret
+check_if_right_room_edge_has_connection_right_diff_room_connection:
+	ld a, 2  ; different room (connection)
+	ret
+check_if_right_room_edge_has_connection_right_same_room:
+	xor a
+	ret
+check_if_right_room_edge_has_connection_right_continue:
+	ld a, (de)
+	cp l
+	jr z, check_if_right_room_edge_has_connection_right_same_room
+	; different room, is there connection?
+	cp #ff
+	jr z, check_if_right_room_edge_has_connection_right_diff_room_no_connection
+	; different room, check if there might be a connection:
+	inc ix
 	call check_if_right_room_edge_has_connection_right_get_chunk_type
+	dec ix
 	and PCG_DIRECTION_RIGHT
-	ret nz
+	jr nz, check_if_right_room_edge_has_connection_right_diff_room_connection
 	ld a, (current_area__width)
 	add a, a
 	ld c, a
 	ld b, 0
 	push ix
 		add ix, bc
+		inc ix
 		call check_if_right_room_edge_has_connection_right_get_chunk_type
 		and PCG_DIRECTION_RIGHT
 	pop ix
-	ret
+	jr nz, check_if_right_room_edge_has_connection_right_diff_room_connection
+	; check if there is a connection from the room to the right, going left
+	inc ix
+	inc ix
+	call check_if_right_room_edge_has_connection_right_get_chunk_type
+	dec ix
+	dec ix
+	and PCG_DIRECTION_LEFT
+	jr nz, check_if_right_room_edge_has_connection_right_diff_room_connection
+	ld a, (current_area__width)
+	add a, a
+	ld c, a
+	ld b, 0
+	push ix
+		add ix, bc
+		inc ix
+		inc ix
+		call check_if_right_room_edge_has_connection_right_get_chunk_type
+		and PCG_DIRECTION_LEFT
+	pop ix	
+	jr nz, check_if_right_room_edge_has_connection_right_diff_room_connection
+	jr check_if_right_room_edge_has_connection_right_diff_room_no_connection
 
 check_if_right_room_edge_has_connection_right_get_chunk_type:
-	ld c, (ix + 1)
+	ld c, (ix)
 	ld h, 0
 	ld l, c
 	add hl, hl
@@ -2219,20 +2272,51 @@ check_if_right_room_edge_has_connection_right_get_chunk_type:
 
 
 ;-----------------------------------------------
-; input:
-; - ix: ptr to this room's chunk ids
+; - de: ptr to room ids (current_area__room_ids)
+; - ix: ptr to this room's chunk ids (current_area__chunks_ids)
 ; output:
-; - z: wall
-; - nz: connection
+; - a: 0 -> same room
+;      1 -> different room (no connection)
+;      2 -> different room (connection)
 check_if_right_room_edge_has_connection_down:
+	ld a, (current_area__width)
+	ld l, a
+	ld h, 0
+	add hl, de
+	; if "hl >= current_area__chunks_ids", we should jump to 'draw_inventory_map_have_map_loop_x_room_no_down_interroom_connection_pop'
+	push hl
+	push bc
+		ld bc, current_area__chunks_ids
+		or a
+		sbc hl, bc
+	pop bc
+	pop hl
+	jr nc, check_if_right_room_edge_has_connection_right_diff_room_no_connection
+	ld a, (de)  ; current
+	cp (hl)
+	jr z, check_if_right_room_edge_has_connection_right_same_room
+	ld a, (hl)  ; next
+	cp #ff
+	jp z, check_if_right_room_edge_has_connection_right_diff_room_no_connection
+	; different room, check if there might be a connection:
 	call check_if_right_room_edge_has_connection_down_get_chunk_type
 	and PCG_DIRECTION_DOWN
-	ret nz
+	jp nz, check_if_right_room_edge_has_connection_right_diff_room_connection
 	inc ix
 	call check_if_right_room_edge_has_connection_down_get_chunk_type
 	dec ix
 	and PCG_DIRECTION_DOWN
-	ret
+	jp nz, check_if_right_room_edge_has_connection_right_diff_room_connection
+	; check if there is a connection from the room below, going up
+	call check_if_right_room_edge_has_connection_down_get_chunk_type_2down
+	and PCG_DIRECTION_UP
+	jp nz, check_if_right_room_edge_has_connection_right_diff_room_connection
+	inc ix
+	call check_if_right_room_edge_has_connection_down_get_chunk_type_2down
+	dec ix
+	and PCG_DIRECTION_UP
+	jp nz, check_if_right_room_edge_has_connection_right_diff_room_connection	
+	jp check_if_right_room_edge_has_connection_right_diff_room_no_connection
 
 check_if_right_room_edge_has_connection_down_get_chunk_type:
 	push ix
@@ -2240,6 +2324,27 @@ check_if_right_room_edge_has_connection_down_get_chunk_type:
 		add a, a
 		ld c, a
 		ld b, 0
+		add ix, bc
+		ld c, (ix)
+	pop ix
+	ld h, 0
+	ld l, c
+	add hl, hl
+	add hl, hl
+	ld b, 0
+	add hl, bc
+	ld bc, (current_area__chunk_flags_ptr)
+	add hl, bc
+	ld a, (hl)  ; chunk type
+	ret
+
+check_if_right_room_edge_has_connection_down_get_chunk_type_2down:
+	push ix
+		ld a, (current_area__width)
+		add a, a
+		ld c, a
+		ld b, 0
+		add ix, bc
 		add ix, bc
 		ld c, (ix)
 	pop ix
