@@ -38,19 +38,19 @@ public class Music {
     
     public static void main(String args[]) throws Exception
     {        
-//        playTSVMusic("data/music/jungle1.tsv", 6, 0);  // Variation on the original Jungle XSpelunker song
-//        playTSVMusic("data/music/jungle1a.tsv", 6, 0);  // variation on the bass line
-//        playTSVMusic("data/music/jungle1b.tsv", 6, 0);  // like jungle1a but simplifying the bass line
-//        playTSVMusic("data/music/jungle1c.tsv", 6, 0);  // like jungle1a but simplifying the bass line
+//        playTSVMusic("data/music/jungle1.tsv", 6, 0, null);  // Variation on the original Jungle XSpelunker song
+//        playTSVMusic("data/music/jungle1a.tsv", 6, 0, null);  // variation on the bass line
+//        playTSVMusic("data/music/jungle1b.tsv", 6, 0, null);  // like jungle1a but simplifying the bass line
+//        playTSVMusic("data/music/jungle1c.tsv", 6, 0, null);  // like jungle1a but simplifying the bass line
 
-//        playTSVMusic("data/music/caves1.tsv", 12, 0);  // chords test
-//        playTSVMusic("data/music/caves2.tsv", 12, 0);
+//        playTSVMusic("data/music/caves1.tsv", 12, 0, null);  // chords test
+//        playTSVMusic("data/music/caves2.tsv", 12, 0, null);
 
-//        playTSVMusic("data/music/pyramid1.tsv", 10, 0);
+        playTSVMusic("data/music/pyramid1.tsv", 10, 0, "tmp/pyramid1.wav");
 
-        playTSVMusic("data/music/test.tsv", 10, 0);  // to test new instruments
+//        playTSVMusic("data/music/test.tsv", 10, 0, null);  // to test new instruments
 
-//        generateInGamesongData();
+        generateInGamesongData();
     }
     
     
@@ -402,23 +402,27 @@ public class Music {
         return true;
     }
     
-    public static List<Integer> playTSVMusic(MSXSong song, int tempo) throws Exception
+    public static List<Integer> playTSVMusic(MSXSong song, int tempo, String saveAsFileName) throws Exception
     {
         List<Integer> buffer = MSXSongWavGenerator.generateBuffer(tempo, song);
-        MSXSongWavGenerator.playBuffer(buffer);        
+        if (saveAsFileName != null) {
+            MSXSongWavGenerator.generateWavFile(saveAsFileName, buffer);
+        }
+        MSXSongWavGenerator.playBuffer(buffer);       
+        
         return buffer;
     }
     
-    public static List<Integer> playTSVMusic(String fileName, int tempo, int transpose) throws Exception
+    public static List<Integer> playTSVMusic(String fileName, int tempo, int transpose, String saveAsFileName) throws Exception
     {
         MSXSong song = loadTSVMusic(fileName, false);
         song.transpose(transpose);        
-        return playTSVMusic(song, tempo);
+        return playTSVMusic(song, tempo, saveAsFileName);
     }    
 
     public static List<Integer> playTSVMusic(String fileName, int tempo, boolean hasPAKETheader) throws Exception
     {
-        return playTSVMusic(loadTSVMusic(fileName, hasPAKETheader), tempo);
+        return playTSVMusic(loadTSVMusic(fileName, hasPAKETheader), tempo, null);
     }    
     
 }

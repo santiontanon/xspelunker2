@@ -1,9 +1,9 @@
 to do:
 ***- music: (brain 12, 15, 23, 25 have potential)
-  ***- pyramid:
-    ***- play with the drums, I have many other variants that could help
-  ***- play with the envelope register for new instruments
-  ***- bring the "volume" and "arpeggio" commands to assembler
+  ***- get the pyramid song into the game:
+    ***- bring the new sfx
+    ***- volume commands (not sure if it was there)
+    ***- arpeggios
   ***- story:
     ***- I like the original jazzy song: keep the same style and compose a variation
     ***- short song for when the map is being displayed (reused in the game for letters/map/tablets/puzzles)
