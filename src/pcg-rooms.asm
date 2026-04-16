@@ -24,15 +24,15 @@ area_default_tileset_ptrs:
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_pyramid, pyramid_enemy_sprites_zx0  ; pyramid 1
-	dw 0
-	db 0
+	dw music_pyramid_bin
+	db 10
 
 	db PYRAMID_TILES_PAGE
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_pyramid, pyramid_enemy_sprites_zx0  ; pyramid 2
-	dw 0
-	db 0
+	dw music_pyramid_bin
+	db 10
 
 	db CAVES_TILES_PAGE
 	dw tiles_caves_zx0, update_animations_in_vdp_caves
@@ -45,15 +45,15 @@ area_default_tileset_ptrs:
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_pyramid, pyramid_enemy_sprites_zx0  ; pyramid 3
-	dw 0
-	db 0
+	dw music_pyramid_bin
+	db 10
 
 	db PYRAMID_TILES_PAGE
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_pyramid, pyramid_enemy_sprites_zx0  ; fire shaft
-	dw 0
-	db 0
+	dw music_pyramid_bin
+	db 10
 
 	db CAVES_TILES_PAGE
 	dw tiles_caves_zx0, update_animations_in_vdp_caves

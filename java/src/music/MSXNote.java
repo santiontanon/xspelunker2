@@ -76,7 +76,7 @@ public class MSXNote {
                             "MUSIC_INSTRUMENT_PIANO_SOFT",
                             "MUSIC_INSTRUMENT_WIND_SOFT",
                             "",
-                            "",
+                            "MUSIC_INSTRUMENT_PIANO_STACCATO",
                             "",
                             "MUSIC_INSTRUMENT_PAD",
                         };

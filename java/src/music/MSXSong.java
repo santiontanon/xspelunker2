@@ -142,8 +142,10 @@ public class MSXSong {
                                 
                             } else if (note.sfx.equals("sfx_short_hihat")) {
                                 lines.add("  db MUSIC_CMD_PLAY_SFX_SHORT_HIHAT");
-                            } else if (note.sfx.equals("sfx_shorter_hihat")) {
-                                lines.add("  db MUSIC_CMD_PLAY_SFX_SHORTER_HIHAT");
+//                            } else if (note.sfx.equals("sfx_shorter_hihat")) {
+//                                lines.add("  db MUSIC_CMD_PLAY_SFX_SHORTER_HIHAT");
+                            } else if (note.sfx.equals("sfx_short_hihat_louder")) {
+                                lines.add("  db MUSIC_CMD_PLAY_SFX_SHORT_HIHAT_LOUDER");
                             } else {
                                 throw new Exception("Unsupported SFX!:" + note.sfx);
                             }
@@ -169,7 +171,11 @@ public class MSXSong {
                                 if (note.instrument>=MSXNote.instrumentNames.length) {
                                     System.out.println("WFT?!");
                                 }
-                                lines.add("  db MUSIC_CMD_SET_INSTRUMENT, " + MSXNote.instrumentNames[note.instrument] + ", " + i);
+                                String instrumentName = MSXNote.instrumentNames[note.instrument];
+                                if (instrumentName == null || instrumentName.isBlank()) {
+                                    throw new Exception("Cannot translate instrument " + note.instrument + " to assembler!");
+                                }
+                                lines.add("  db MUSIC_CMD_SET_INSTRUMENT, " + instrumentName + ", " + i);
                                 instrument[i] = note.instrument;
                             }  
 //                            int period = MSXNote.PSGNotePeriod(note.absoluteNote); 

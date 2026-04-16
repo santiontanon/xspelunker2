@@ -1,8 +1,8 @@
 to do:
 ***- music: (brain 12, 15, 23, 25 have potential)
   ***- get the pyramid song into the game:
-    ***- bring the new sfx
-    ***- volume commands (not sure if it was there)
+    OK - bring the new sfx
+    ***- volume command (bring from the key engine)
     ***- arpeggios
   ***- story:
     ***- I like the original jazzy song: keep the same style and compose a variation

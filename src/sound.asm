@@ -1,25 +1,35 @@
 ;-----------------------------------------------
 instrument_profiles:
 SquareWave_instrument_profile:
-    db 12
+    db 12  ; 1 byte
 Piano_instrument_profile:
-    db 13,13,12,11,10,10,9,9,8,8,7,7,6,#ff
+    db 13, 13, 12, 11, 10, 10, 9, 9
+    db 8, 8, 7, 7, 6, #ff  ; start at 1, 14 bytes
 Soft_Piano_instrument_profile:
-    db 12,11,10,9,8,8,7,7,6,6,5,5,4,#ff
+    db 12, 11, 10, 9, 8, 8, 7, 7
+    db 6, 6, 5, 5, 4, #ff  ; start at 15, 14 bytes
 Pad_instrument_profile:
-    db 2,6,8,12,12,12,12,12,12,11,10,9,8,7,7,6,6,6,6,5,5,5,5,5,5,5,5,4,4,4,4,4,4,4,4,3, #ff
+    db  2,  6,  8, 12, 12, 12, 12, 12
+    db 12, 11, 10,  9,  8,  7,  7,  6
+    db  6,  6,  6,  5,  5,  5,  5,  5
+    db  5,  5,  5,  4,  4,  4,  4,  4
+    db  4,  4,  4,  3, #ff  ; start at 29, 37 bytes
+piano_staccato_instrument_profile:
+    db 12, 11, 9, 8, 7, 6, 5, 4
+    db 3, 2, 1, 0, #ff  ; stat at 66, 13 bytes
 
     ; make sure it's 2-aligned: 
     ds (((($-1)/#0002)+1)*#0002-$)
 
-; 12 13 14 17 19 20 21 22 24 26 29 31 32 33 34 36 37 38 40 41 43 44 45 46 47 48 49 50 52 53 55 56 57 58 60 64 65 67 69 70 73 
+; 12 13 14 16 17 18 19 20 21 22 23 24 26 27 28 29 30 31 32 33 34 36 37 38 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 64 65 67 68 
 note_period_table:
-  db 6,174,  6,78,  5,244,  5,1,  4,117,  4,53,  3,249,  3,192
-  db 3,87,  2,250,  2,129,  2,59,  2,27,  1,252,  1,224,  1,172
-  db 1,148,  1,125,  1,83,  1,64,  1,29,  1,13,  0,254,  0,240
-  db 0,226,  0,214,  0,202,  0,190,  0,170,  0,160,  0,143,  0,135
-  db 0,127,  0,120,  0,107,  0,85,  0,80,  0,71,  0,64,  0,60
-  db 0,50
+  db 6,174,  6,78,  5,244,  5,77,  5,1,  4,185,  4,117,  4,53
+  db 3,249,  3,192,  3,138,  3,87,  2,250,  2,207,  2,167,  2,129
+  db 2,93,  2,59,  2,27,  1,252,  1,224,  1,172,  1,148,  1,125
+  db 1,83,  1,64,  1,46,  1,29,  1,13,  0,254,  0,240,  0,226
+  db 0,214,  0,202,  0,190,  0,180,  0,170,  0,160,  0,151,  0,143
+  db 0,135,  0,127,  0,120,  0,113,  0,107,  0,101,  0,95,  0,85
+  db 0,80,  0,71,  0,67
 
 ;-----------------------------------------------
 ; Note: this code assumes music is in page 1 of the cartridge.
@@ -351,10 +361,12 @@ update_sound_internal_no_time_step:
     jr z, update_sound_PLAY_SFX_OPEN_HIHAT
     dec a   ; MUSIC_CMD_PLAY_SFX_SHORT_HIHAT
     jr z, update_sound_PLAY_SFX_SHORT_HIHAT
-    dec a   ; MUSIC_CMD_PLAY_SFX_DRUM_SHORT_RE
-    jr z, update_sound_PLAY_SFX_DRUM_SHORT_RE
+;     dec a   ; MUSIC_CMD_PLAY_SFX_DRUM_SHORT_RE
+;     jr z, update_sound_PLAY_SFX_DRUM_SHORT_RE
     dec a   ; MUSIC_CMD_PLAY_SFX_DRUM_SHORTER_RE
     jr z, update_sound_PLAY_SFX_DRUM_SHORTER_RE
+    dec a   ; MUSIC_CMD_PLAY_SFX_SHORT_HIHAT_LOUDER
+    jr z, update_sound_PLAY_SFX_SHORT_HIHAT_LOUDER
     dec a   ; MUSIC_CMD_GOTO
     jp z, update_sound_GOTO
     dec a   ; MUSIC_CMD_REPEAT
@@ -397,14 +409,19 @@ update_sound_PLAY_SFX_SHORT_HIHAT:
 ;     ld hl, SFX_pedal_hi_hat
 ;     jp update_sound_PLAY_SFX_OPEN_HIHAT_entry
 
-update_sound_PLAY_SFX_DRUM_SHORT_RE:
-    push hl
-        ld hl, SFX_drum_short_re
-        jp update_sound_PLAY_SFX_OPEN_HIHAT_entry
+; update_sound_PLAY_SFX_DRUM_SHORT_RE:
+;     push hl
+;         ld hl, SFX_drum_short_re
+;         jp update_sound_PLAY_SFX_OPEN_HIHAT_entry
 
 update_sound_PLAY_SFX_DRUM_SHORTER_RE:
     push hl
         ld hl, SFX_drum_shorter_re
+        jp update_sound_PLAY_SFX_OPEN_HIHAT_entry
+
+update_sound_PLAY_SFX_SHORT_HIHAT_LOUDER:
+    push hl
+        ld hl, SFX_short_hi_hat_louder
         jp update_sound_PLAY_SFX_OPEN_HIHAT_entry
 
 
