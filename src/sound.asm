@@ -48,22 +48,22 @@ play_music_adjusting_tempo:
 ;     jr z, play_music_adjusting_tempo_16
     cp 12
     jr z, play_music_adjusting_tempo_12
-;     cp 10
-;     jr z, play_music_adjusting_tempo_10
-;     cp 5
-;     jr z, play_music_adjusting_tempo_5
+    cp 10
+    jr z, play_music_adjusting_tempo_10
+    cp 6
+    jr z, play_music_adjusting_tempo_6
     jr play_music_adjusting_tempo_continue
 ; play_music_adjusting_tempo_16:
 ;     ld e, 19
 ;     jr play_music_adjusting_tempo_continue
 play_music_adjusting_tempo_12:
     ld e, 14
-;     jr play_music_adjusting_tempo_continue
-; play_music_adjusting_tempo_10:
-;     ld e, 12
-;     jr play_music_adjusting_tempo_continue
-; play_music_adjusting_tempo_5:
-;     ld e, 6
+    jr play_music_adjusting_tempo_continue
+play_music_adjusting_tempo_10:
+    ld e, 12
+    jr play_music_adjusting_tempo_continue
+play_music_adjusting_tempo_6:
+    ld e, 7
 play_music_adjusting_tempo_continue:
     ld a, e
     ld (MUSIC_tempo), a

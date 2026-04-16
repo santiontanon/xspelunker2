@@ -1,9 +1,8 @@
 to do:
 ***- music: (brain 12, 15, 23, 25 have potential)
   ***- get the pyramid song into the game:
-    OK - bring the new sfx
-    ***- volume command (bring from the key engine)
-    ***- arpeggios
+    ***- volume command (bring from PAKET engine)
+    ***- arpeggio instruments
   ***- story:
     ***- I like the original jazzy song: keep the same style and compose a variation
     ***- short song for when the map is being displayed (reused in the game for letters/map/tablets/puzzles)
@@ -16,6 +15,7 @@ to do:
   ***- ending aliens
   ***- ending beach (reuse the story jazzy song)
   ***- ending credits
+  ***- make sure that "play_music_adjusting_tempo" has cases for all the tempos I use
 
 - random seed puzzle (all happens without going to moon/mars):
   - Revisit "TABLET_TRIVIA_CLUE1", "TABLET_TRIVIA_CLUE2", etc.
