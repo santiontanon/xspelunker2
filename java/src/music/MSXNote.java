@@ -79,6 +79,18 @@ public class MSXNote {
                             "MUSIC_INSTRUMENT_PIANO_STACCATO",
                             "",
                             "MUSIC_INSTRUMENT_PAD",
+                            "",
+                            "",
+                            "",
+                            "MUSIC_INSTRUMENT_ARPEGGIO_MAJOR",
+                            "MUSIC_INSTRUMENT_ARPEGGIO_MAJOR_1STINV",
+                            "MUSIC_INSTRUMENT_ARPEGGIO_MAJOR_2NDINV",
+                            "MUSIC_INSTRUMENT_ARPEGGIO_MINOR",
+                            "MUSIC_INSTRUMENT_ARPEGGIO_MINOR_1STINV",
+                            "MUSIC_INSTRUMENT_ARPEGGIO_MINOR_2NDINV",
+                            "MUSIC_INSTRUMENT_ARPEGGIO_DIMINISHED",
+                            "MUSIC_INSTRUMENT_ARPEGGIO_MAJOR_FADEIN",
+                            "MUSIC_INSTRUMENT_ARPEGGIO_MINOR_FADEIN",
                         };
     
     public static double PSG_Master_Frequency = 111861; // Hz (in MSX)

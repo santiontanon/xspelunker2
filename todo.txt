@@ -1,8 +1,5 @@
 to do:
 ***- music: (brain 12, 15, 23, 25 have potential)
-  ***- get the pyramid song into the game:
-    ***- volume command (bring from PAKET engine)
-    ***- arpeggio instruments
   ***- story:
     ***- I like the original jazzy song: keep the same style and compose a variation
     ***- short song for when the map is being displayed (reused in the game for letters/map/tablets/puzzles)

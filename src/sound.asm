@@ -1,37 +1,4 @@
 ;-----------------------------------------------
-instrument_profiles:
-SquareWave_instrument_profile:
-    db 12  ; 1 byte
-Piano_instrument_profile:
-    db 13, 13, 12, 11, 10, 10, 9, 9
-    db 8, 8, 7, 7, 6, #ff  ; start at 1, 14 bytes
-Soft_Piano_instrument_profile:
-    db 12, 11, 10, 9, 8, 8, 7, 7
-    db 6, 6, 5, 5, 4, #ff  ; start at 15, 14 bytes
-Pad_instrument_profile:
-    db  2,  6,  8, 12, 12, 12, 12, 12
-    db 12, 11, 10,  9,  8,  7,  7,  6
-    db  6,  6,  6,  5,  5,  5,  5,  5
-    db  5,  5,  5,  4,  4,  4,  4,  4
-    db  4,  4,  4,  3, #ff  ; start at 29, 37 bytes
-piano_staccato_instrument_profile:
-    db 12, 11, 9, 8, 7, 6, 5, 4
-    db 3, 2, 1, 0, #ff  ; stat at 66, 13 bytes
-
-    ; make sure it's 2-aligned: 
-    ds (((($-1)/#0002)+1)*#0002-$)
-
-; 12 13 14 16 17 18 19 20 21 22 23 24 26 27 28 29 30 31 32 33 34 36 37 38 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 64 65 67 68 
-note_period_table:
-  db 6,174,  6,78,  5,244,  5,77,  5,1,  4,185,  4,117,  4,53
-  db 3,249,  3,192,  3,138,  3,87,  2,250,  2,207,  2,167,  2,129
-  db 2,93,  2,59,  2,27,  1,252,  1,224,  1,172,  1,148,  1,125
-  db 1,83,  1,64,  1,46,  1,29,  1,13,  0,254,  0,240,  0,226
-  db 0,214,  0,202,  0,190,  0,180,  0,170,  0,160,  0,151,  0,143
-  db 0,135,  0,127,  0,120,  0,113,  0,107,  0,101,  0,95,  0,85
-  db 0,80,  0,71,  0,67
-
-;-----------------------------------------------
 ; Note: this code assumes music is in page 1 of the cartridge.
 ; input:
 ; - hl: ptr to compressed song
@@ -44,8 +11,6 @@ play_music_adjusting_tempo:
     or a
     ld a, e
     jr z, play_music_adjusting_tempo_continue
-;     cp 16
-;     jr z, play_music_adjusting_tempo_16
     cp 12
     jr z, play_music_adjusting_tempo_12
     cp 10
@@ -53,9 +18,6 @@ play_music_adjusting_tempo:
     cp 6
     jr z, play_music_adjusting_tempo_6
     jr play_music_adjusting_tempo_continue
-; play_music_adjusting_tempo_16:
-;     ld e, 19
-;     jr play_music_adjusting_tempo_continue
 play_music_adjusting_tempo_12:
     ld e, 14
     jr play_music_adjusting_tempo_continue
@@ -85,14 +47,10 @@ play_music_adjusting_tempo_continue:
 ;-----------------------------------------------
 stop_music:
     ld hl, beginning_of_sound_variables_except_tempo
-    ld b, end_of_sound_variables - beginning_of_sound_variables_except_tempo
-    xor a
+    ld bc, (end_of_sound_variables - beginning_of_sound_variables_except_tempo) - 1
     di
-stop_music_loop:
-        ld (hl), a
-        inc hl
-        djnz stop_music_loop
-        call clear_PSG_volume
+    call clear_memory
+    call clear_PSG_volume
     ei
     ret
 
@@ -121,10 +79,8 @@ clear_PSG_volume:
     ld e, 0
     fast_WRTPSG_macro
     ld a, 9
-;     ld e, 0
     fast_WRTPSG_macro
     ld a, 10
-;     ld e, 0
     fast_WRTPSG_macro
     ret
 
@@ -173,7 +129,6 @@ update_sound:     ; This routine sould be called 50 or 60 times / sec
     ld a, (MUSIC_play)
     or a
     jr z, update_sound_no_music
-;     call update_sound_handle_instruments
     update_sound_handle_instruments_macro
     ld a, (MUSIC_tempo_counter)
     or a
@@ -196,17 +151,52 @@ update_sound:     ; This routine sould be called 50 or 60 times / sec
 
 
 ;-----------------------------------------------
-; handle the different curves of the music instruments
+; handle the volume curves of the music instruments, and the arpeggiator
 update_sound_handle_instruments_macro: macro
     ld a, (MUSIC_instruments)
     or a  ; MUSIC_INSTRUMENT_SQUARE_WAVE
     jr z, update_sound_handle_instruments_CH2
+IF MUSIC_USE_ARPEGGIOS = 1
+    ; handle arpeggios, channel 1:
+    ld a, (MUSIC_intrument_arpeggio)
+    inc a  ; cp #ff
+    jr z, update_sound_handle_instruments_not_arpeggio_CH1
+    push hl
+        ld hl, MUSIC_intrument_arpeggio
+        ld a, (interrupt_cycle)
+        and #03
+        ADD_HL_A
+        ld a, (MUSIC_instrument_base_note)
+        add a, (hl)
+
+        ld hl, note_period_table
+        ADD_HL_A
+        ld e, (hl)  ; MSB of the period    
+        inc l  ; note_period_table is 2-aligned
+        ld a, 1
+        fast_WRTPSG_macro
+        ld e, (hl)  ; LSB of the period    
+        xor a
+        fast_WRTPSG_macro
+    pop hl
+update_sound_handle_instruments_not_arpeggio_CH1:        
+ENDIF
     ld de, (MUSIC_instrument_envelope_ptr)
     ld a, (de)
     cp #ff
     jr z, update_sound_handle_instruments_CH2
     inc de
     ld (MUSIC_instrument_envelope_ptr), de
+IF MUSIC_USE_SET_VOLUME = 1
+    ; a -= (MUSIC_volumes)
+    ex de, hl
+        ld hl, MUSIC_volumes
+        sub (hl)
+    ex de, hl
+    jr nc, sound_update_handle_instruments_CH1_continue2
+    xor a
+sound_update_handle_instruments_CH1_continue2:
+ENDIF
     ld e, a
     ld a, 8
     fast_WRTPSG_macro
@@ -214,12 +204,47 @@ update_sound_handle_instruments_CH2:
     ld a, (MUSIC_instruments + 1)
     or a  ; MUSIC_INSTRUMENT_SQUARE_WAVE
     jr z, update_sound_handle_instruments_CH3
+IF MUSIC_USE_ARPEGGIOS = 1
+    ; handle arpeggios, channel 2:
+    ld a, (MUSIC_intrument_arpeggio + 4)
+    inc a  ; cp #ff
+    jr z, update_sound_handle_instruments_not_arpeggio_CH2
+    push hl
+        ld a, (interrupt_cycle)
+        and #03
+        ld hl, MUSIC_intrument_arpeggio + 4
+        ADD_HL_A
+        ld a, (MUSIC_instrument_base_note + 1)
+        add a, (hl)
+
+        ld hl, note_period_table
+        ADD_HL_A
+        ld e, (hl)  ; MSB of the period    
+        inc l  ; note_period_table is 2-aligned
+        ld a, 3
+        fast_WRTPSG_macro
+        ld e, (hl)  ; LSB of the period    
+        ld a, 2
+        fast_WRTPSG_macro
+    pop hl
+update_sound_handle_instruments_not_arpeggio_CH2
+ENDIF
     ld de, (MUSIC_instrument_envelope_ptr + 2)
     ld a, (de)
     cp #ff
     jr z, update_sound_handle_instruments_CH3
     inc de
     ld (MUSIC_instrument_envelope_ptr + 2), de
+IF MUSIC_USE_SET_VOLUME = 1
+    ; a -= (MUSIC_volumes + 1)
+    ex de, hl
+        ld hl, MUSIC_volumes + 1
+        sub (hl)
+    ex de, hl
+    jr nc, sound_update_handle_instruments_CH2_continue2
+    xor a
+sound_update_handle_instruments_CH2_continue2:
+ENDIF    
     ld e, a
     ld a, 9
     fast_WRTPSG_macro
@@ -230,12 +255,47 @@ update_sound_handle_instruments_CH3:
     ld a, (MUSIC_instruments + 2)
     or a  ; MUSIC_INSTRUMENT_SQUARE_WAVE 
     jr z, update_sound_handle_instruments_macro_end
+IF MUSIC_USE_ARPEGGIOS = 1
+    ; handle arpeggios, channel 3:
+    ld a, (MUSIC_intrument_arpeggio + 8)
+    inc a  ; cp #ff
+    jr z, update_sound_handle_instruments_not_arpeggio_CH3
+    push hl
+        ld a, (interrupt_cycle)
+        and #03
+        ld hl, MUSIC_intrument_arpeggio + 8
+        ADD_HL_A
+        ld a, (MUSIC_instrument_base_note + 2)
+        add a, (hl)
+
+        ld hl, note_period_table
+        ADD_HL_A
+        ld e, (hl)  ; MSB of the period    
+        inc l  ; note_period_table is 2-aligned
+        ld a, 5
+        fast_WRTPSG_macro
+        ld e, (hl)  ; LSB of the period    
+        ld a, 4
+        fast_WRTPSG_macro
+    pop hl
+update_sound_handle_instruments_not_arpeggio_CH3:
+ENDIF
     ld de, (MUSIC_instrument_envelope_ptr + 4)
     ld a, (de)
     cp #ff
     jr z, update_sound_handle_instruments_macro_end
     inc de
     ld (MUSIC_instrument_envelope_ptr + 4), de
+IF MUSIC_USE_SET_VOLUME = 1
+    ; a -= (MUSIC_volumes + 2)
+    ex de, hl
+        ld hl, MUSIC_volumes + 2
+        sub (hl)
+    ex de, hl
+    jr nc, sound_update_handle_instruments_CH3_continue2
+    xor a
+sound_update_handle_instruments_CH3_continue2:
+ENDIF    
     ld e, a
     ld a, 10
     fast_WRTPSG_macro
@@ -255,11 +315,50 @@ update_sound_SET_INSTRUMENT:
         ld (hl), d
 update_sound_SET_INSTRUMENT_not_third_channel:
         ld hl, MUSIC_instruments
+IF MUSIC_USE_ARPEGGIOS = 1
+        push af
+        ADD_HL_A
+        ld (hl), d
+        pop af
+        ld hl, MUSIC_intrument_arpeggio
+        add a, a
+        add a, a
+        ADD_HL_A  ; hl: ptr to the corresponding 'MUSIC_intrument_arpeggio'
+        ld a, d
+        ex de, hl
+        cp MUSIC_INSTRUMENT_ARPEGGIO_MAJOR
+        jr c, update_sound_SET_INSTRUMENT_not_an_arpeggio
+        ld hl, major_arpeggio_pattern
+        jr z, update_sound_SET_INSTRUMENT_arpeggio
+        cp MUSIC_INSTRUMENT_ARPEGGIO_MAJOR_FADEIN
+        jr z, update_sound_SET_INSTRUMENT_arpeggio
+        ld hl, major_arpeggio_2ndinv_pattern
+        cp MUSIC_INSTRUMENT_ARPEGGIO_MAJOR_2NDINV
+        jr z, update_sound_SET_INSTRUMENT_arpeggio
+        ld hl, minor_arpeggio_pattern
+        cp MUSIC_INSTRUMENT_ARPEGGIO_MINOR
+        jr z, update_sound_SET_INSTRUMENT_arpeggio
+        cp MUSIC_INSTRUMENT_ARPEGGIO_MINOR_FADEIN
+        jr z, update_sound_SET_INSTRUMENT_arpeggio
+        ld hl, minor_arpeggio_2ndinv_pattern
+update_sound_SET_INSTRUMENT_arpeggio:
+        ldi
+        ldi
+        ldi
+        ldi
+    pop hl
+    jp update_sound_internal_loop
+update_sound_SET_INSTRUMENT_not_an_arpeggio:
+        ld a, #ff
+        ld (de), a  ; mark that it's not an arpeggio
+    pop hl
+    jp update_sound_internal_loop
+ELSE
         ADD_HL_A
         ld (hl), d
     pop hl
     jp update_sound_internal_loop
-
+ENDIF
 
 update_sound_GOTO:
     ld e, (hl)
@@ -272,7 +371,6 @@ update_sound_GOTO:
     ld e, 0
     fast_WRTPSG_macro
     ld a, 9
-;     ld e, 0
     fast_WRTPSG_macro
     ; xor a  ; not needed, as it's 0 after 'fast_WRTPSG_macro' with e = 0.
     ld (MUSIC_instruments), a
@@ -373,6 +471,15 @@ update_sound_internal_no_time_step:
     jp z, update_sound_REPEAT
     dec a   ; MUSIC_CMD_END_REPEAT
     jr z, update_sound_END_REPEAT
+IF MUSIC_USE_SET_VOLUME = 1
+    dec a  ; MUSIC_CMD_SET_VOLUME1
+    jr z, sound_update_set_volume1
+    dec a  ; MUSIC_CMD_SET_VOLUME2
+    jr z, sound_update_set_volume2
+    dec a  ; MUSIC_CMD_SET_VOLUME3
+    jr z, sound_update_set_volume3
+ENDIF
+
 ;    dec a   ; MUSIC_CMD_TRANSPOSE_UP
 ;    jr z, update_sound_TRANSPOSE_UP
 ;    dec a   ; MUSIC_CMD_CLEAR_TRANSPOSE
@@ -425,6 +532,25 @@ update_sound_PLAY_SFX_SHORT_HIHAT_LOUDER:
         jp update_sound_PLAY_SFX_OPEN_HIHAT_entry
 
 
+IF MUSIC_USE_SET_VOLUME = 1
+sound_update_set_volume1:
+    ld a, (hl)  ; new volume
+    ld (MUSIC_volumes), a
+    inc hl
+    jp update_sound_internal_loop
+sound_update_set_volume2:
+    ld a, (hl)  ; new volume
+    ld (MUSIC_volumes + 1), a
+    inc hl
+    jp update_sound_internal_loop
+sound_update_set_volume3:
+    ld a, (hl)  ; new volume
+    ld (MUSIC_volumes + 2), a
+    inc hl
+    jp update_sound_internal_loop
+ENDIF
+
+
 ;update_sound_TRANSPOSE_UP:
 ;    ld a, (MUSIC_transpose)
 ;    inc a
@@ -440,9 +566,15 @@ update_sound_PLAY_SFX_SHORT_HIHAT_LOUDER:
 
 update_sound_PLAY_INSTRUMENT_CH1:
     inc a  ; a = 1
+IF MUSIC_USE_ARPEGGIOS = 1
+    ld de, MUSIC_instrument_base_note
+ENDIF
     jp update_sound_PLAY_INSTRUMENT
 update_sound_PLAY_INSTRUMENT_CH2:
     ld a, 3
+IF MUSIC_USE_ARPEGGIOS = 1
+    ld de, MUSIC_instrument_base_note + 1
+ENDIF
     jp update_sound_PLAY_INSTRUMENT
 update_sound_PLAY_INSTRUMENT_CH3:
     ld a, (SFX_priority)
@@ -451,11 +583,19 @@ update_sound_PLAY_INSTRUMENT_CH3:
     ld a, (MUSIC_channel3_instrument_buffer)
     ld (MUSIC_instruments + 2), a
     ld a, 5
+IF MUSIC_USE_ARPEGGIOS = 1
+    ld de, MUSIC_instrument_base_note + 2
+ENDIF
 update_sound_PLAY_INSTRUMENT:
     push hl
         ld b, 0  ; for later use
         ld c, (hl)  ; note to play
         sla c
+IF MUSIC_USE_ARPEGGIOS = 1
+        ex hl, de
+            ld (hl), c  ; store the base note * 2
+        ex hl, de
+ENDIF
         ld hl, note_period_table
         add hl, bc
         ld e, (hl)  ; MSB of the period    
@@ -480,12 +620,26 @@ update_sound_PLAY_INSTRUMENT:
         ld (hl), e
         inc l
         ld (hl), d
+
+        sra c  ; calculate the volume port: (c/2)+8
+        ld a, c
+IF MUSIC_USE_SET_VOLUME = 1
+        ld hl, MUSIC_volumes
+        add hl, bc
+        ld b, (hl)  ; b = current channel volume
+ENDIF
     pop hl
-    ld a, (de)
-    ld e, a
-    ld a, c  ; calculate the volume port: (c / 2) + 8
-    sra a
     add a, 8
+    ld c, a
+    ld a, (de)
+IF MUSIC_USE_SET_VOLUME = 1
+    sub a, b
+    jr nc, sound_update_PLAY_INSTRUMENT_continue
+    xor a
+sound_update_PLAY_INSTRUMENT_continue:
+ENDIF
+    ld e, a
+    ld a, c
     fast_WRTPSG_macro
 update_sound_PLAY_INSTRUMENT_IGNORE:
     inc hl

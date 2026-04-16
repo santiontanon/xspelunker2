@@ -413,6 +413,13 @@ MUSIC_instrument_envelope_ptr:      ds virtual 3*2
 SFX_priority:                       ds virtual 1  ; the SFX from the game have more priority than those triggered by music
 MUSIC_transpose:                    ds virtual 1
 MUSIC_time_step_required:           ds virtual 1
+IF MUSIC_USE_SET_VOLUME = 1
+MUSIC_volumes:                      ds virtual 3
+ENDIF
+IF MUSIC_USE_ARPEGGIOS = 1
+MUSIC_instrument_base_note:         ds virtual 3
+MUSIC_intrument_arpeggio:           ds virtual 3*4  ; each arpeggio is a pattern of 4 notes
+ENDIF
 end_of_sound_variables:
 
 

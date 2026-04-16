@@ -165,6 +165,9 @@ public class MSXSong {
                         } else if (note.absoluteNote == MSXNote.TRANSPOSE_UP) {
                             lines.add("  db MUSIC_CMD_TRANSPOSE_UP");
                             advanceTime = false;
+                        } else if (note.absoluteNote == MSXNote.SET_VOLUME) {
+                            lines.add("  db MUSIC_CMD_SET_VOLUME" + (i+1) + ", " + (15 - note.volume));
+                            advanceTime = false;
                         } else {
                             // We also include the instruments in repeat starts, just in case:
                             if (instrument[i] != note.instrument || repeatStart) {

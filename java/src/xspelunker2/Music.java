@@ -46,7 +46,7 @@ public class Music {
 //        playTSVMusic("data/music/caves1.tsv", 12, 0, null);  // chords test
 //        playTSVMusic("data/music/caves2.tsv", 12, 0, null);
 
-//        playTSVMusic("data/music/pyramid1.tsv", 10, 0, "tmp/pyramid1.wav");  // basic version without arpeggios or volume commands
+//        playTSVMusic("data/music/pyramid1.tsv", 10, 0, "tmp/pyramid1.wav");  // basic version without arpeggios
 //        playTSVMusic("data/music/pyramid2.tsv", 10, 0, "tmp/pyramid2.wav");
 
 //        playTSVMusic("data/music/test.tsv", 10, 0, null);  // to test new instruments
@@ -60,7 +60,7 @@ public class Music {
         List<MSXSong> songs = new ArrayList<>();
         MSXSong jungle = loadTSVMusic("data/music/jungle1c.tsv", false);
         MSXSong caves = loadTSVMusic("data/music/caves2.tsv", false);
-        MSXSong pyramid = loadTSVMusic("data/music/pyramid1.tsv", false);
+        MSXSong pyramid = loadTSVMusic("data/music/pyramid2.tsv", false);
         jungle.loopBackTime = 0;
         caves.loopBackTime = 0;
         pyramid.loopBackTime = 0;
@@ -69,6 +69,11 @@ public class Music {
         songs.add(pyramid);
         
         List<Integer> notesUsed = new ArrayList<>();
+        // force all notes:
+        for(int i = 0;i<85;i++) {
+            notesUsed.add(i);
+        }
+        
         for(MSXSong song:songs) {
             song.findNotesUsedBySong(0, notesUsed);
         }
