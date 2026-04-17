@@ -62,12 +62,13 @@ public class MSXNote {
     public static final int INSTRUMENT_DIMINISHED_ARPEGGIO = 18;
     public static final int INSTRUMENT_MAJOR_ARPEGGIO_FADEIN = 19;
     public static final int INSTRUMENT_MINOR_ARPEGGIO_FADEIN = 20;
-    public static final int INSTRUMENT_SLIDER = 21;
-    public static final int INSTRUMENT_PIANO_OFFTUNE = 22;
-    public static final int INSTRUMENT_SNAP_BASS = 23;
-    public static final int INSTRUMENT_DIRTY_BASS = 24;
-    public static final int INSTRUMENT_REPEATING = 25;
-    public static final int INSTRUMENT_LOADED = 26;
+    public static final int INSTRUMENT_DIMINISHED_ARPEGGIO_FADEIN = 21;
+    public static final int INSTRUMENT_SLIDER = 22;
+    public static final int INSTRUMENT_PIANO_OFFTUNE = 23;
+    public static final int INSTRUMENT_SNAP_BASS = 24;
+    public static final int INSTRUMENT_DIRTY_BASS = 25;
+    public static final int INSTRUMENT_REPEATING = 26;
+    public static final int INSTRUMENT_LOADED = 27;
     
     public static final String instrumentNames[] = {
                             "MUSIC_INSTRUMENT_SQUARE_WAVE",

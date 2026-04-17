@@ -1,224 +1,224 @@
-pianosoft,do2	piano,-
-Mib2	
-Sol2	
-Mib2	
-Do3	
-Mib2	
-Sol2	
-Mib2	
-do2	-
-Mib2	
-Sol2	
-Mib2	
-Do3	Sol4
-Mib2	
-Sol2	
-Mib2	Sol4
-do2	Sol4
-Mib2	
-Sol2	
-Mib2	
-Do3	
-Mib2	
-Sol2	
-Mib2	
-do2	-
-Mib2	
-Sol2	
-Mib2	
-Do3	Sol4
-Mib2	
-Sol2	
-Mib2	Sol4
-Re2	Sib4
-Sol2	
-Sib2	Lab4
-Sol2	
-Re3	Sol4
-Sol2	
-Sib2	Fa4
-Sol2	
-do2	Mib4
-Mib2	
-Sol2	
-Mib2	
-Do3	-
-Mib2	
-Sol2	
-Mib2	
-do2	-
-Mib2	
-Sol2	
-Mib2	
-Do3	Sol4
-Mib2	
-Sol2	
-Mib2	Sol4
-Sib1	Re4
-Re2	
-Sol2	
-Re2	
-Sib2	
-Re2	
-Sol2	
-Re2	
-Sib1	-
-Re2	
-Sol2	
-Re2	
-Sib2	Sol4
-Re2	
-Sol2	
-Re2	Sol4
-Lab1	Do4
-Do2	
-Fa2	
-Do2	
-Lab2	
-Do2	
-Fa2	
-Do2	
-Lab1	Mib4
-Do2	
-Fa2	
-Do2	
-Lab2	
-Do2	
-Fa2	
-Do2	
-Sib1	Re4
-Re2	
-Sol2	
-Re2	
-Sib2	
-Re2	
-Sol2	
-Re2	
-Sib1	-
-Re2	
-Sol2	
-Re2	
-Sib2	
-Re2	
-Sol2	
-Re2	
-pianosoft,do2	piano,-
-Mib2	
-Sol2	
-Mib2	
-Do3	
-Mib2	
-Sol2	
-Mib2	
-do2	-
-Mib2	
-Sol2	
-Mib2	
-Do3	Sol4
-Mib2	
-Sol2	
-Mib2	Sol4
-do2	Sol4
-Mib2	
-Sol2	
-Mib2	
-Do3	
-Mib2	
-Sol2	
-Mib2	
-do2	-
-Mib2	
-Sol2	
-Mib2	
-Do3	Sol4
-Mib2	
-Sol2	
-Mib2	Sol4
-Lab2	Si4
-Si2	
-Re3	Lab4
-Si2	
-Fa3	Sol4
-Si2	
-Re2	Fa4
-Si2	
-do2	Mib4
-Mib2	
-Sol2	
-Mib2	
-Do3	-
-Mib2	
-Sol2	
-Mib2	
-do2	-
-Mib2	
-Sol2	
-Mib2	
-Do3	Sol4
-Mib2	
-Sol2	
-Mib2	Sol4
-Sib1	Re4
-Re2	
-Sol2	
-Re2	
-Sib2	
-Re2	
-Sol2	
-Re2	
-Sib1	-
-Re2	
-Sol2	
-Re2	
-Sib2	Sol4
-Re2	
-Sol2	
-Re2	Sol4
-Lab1	Do4
-Do2	
-Fa2	
-Do2	
-Lab2	
-Do2	
-Fa2	
-Do2	
-Lab1	
-Do2	
-Fa2	Re4
-Do2	
-Lab2	Mib4
-Do2	
-Fa2	Fa4
-Do2	
-Re2	Fa#4
-Fa#2	
-La2	
-Fa#2	
-Do3	Re4
-Fa#2	
-La2	
-Fa#2	
-Re2	
-Fa#2	
-La2	
-Fa#2	
-Do3	
-Fa#2	
-La2	
-Fa#2	
-Sib1	La4
-Re2	
-Sol2	
-Re2	
-Sib2	Sol4
-Re2	
-Sol2	
-Re2	
-Sib1	-
-Re2	
-Sol2	
-Re2	
-Sib2	
-Re2	
-Sol2	
-Re2	
+pianosoft,do2	piano,-	sfx(sfx_drum_shorter_c)
+Mib2		
+Sol2		sfx(sfx_short_hihat)
+Mib2		sfx(sfx_drum_shorter_c)
+Do3		
+Mib2		sfx(sfx_drum_shorter_c)
+Sol2		sfx(sfx_short_hihat)
+Mib2		
+do2	-	sfx(sfx_drum_shorter_c)
+Mib2		
+Sol2		sfx(sfx_short_hihat)
+Mib2		sfx(sfx_drum_shorter_c)
+Do3	Sol4	
+Mib2		sfx(sfx_drum_shorter_c)
+Sol2		sfx(sfx_short_hihat)
+Mib2	Sol4	
+do2	Sol4	sfx(sfx_drum_shorter_c)
+Mib2		
+Sol2		sfx(sfx_short_hihat)
+Mib2		sfx(sfx_drum_shorter_c)
+Do3		
+Mib2		sfx(sfx_drum_shorter_c)
+Sol2		sfx(sfx_short_hihat)
+Mib2		
+do2	-	sfx(sfx_drum_shorter_c)
+Mib2		
+Sol2		sfx(sfx_short_hihat)
+Mib2		sfx(sfx_drum_shorter_c)
+Do3	Sol4	
+Mib2		sfx(sfx_drum_shorter_c)
+Sol2		sfx(sfx_short_hihat)
+Mib2	Sol4	
+Re2	Sib4	sfx(sfx_drum_shorter_re)
+Sol2		
+Sib2	Lab4	sfx(sfx_short_hihat)
+Sol2		sfx(sfx_drum_shorter_re)
+Re3	Sol4	
+Sol2		sfx(sfx_drum_shorter_re)
+Sib2	Fa4	sfx(sfx_short_hihat)
+Sol2		
+do2	Mib4	sfx(sfx_drum_shorter_c)
+Mib2		
+Sol2		sfx(sfx_short_hihat)
+Mib2		sfx(sfx_drum_shorter_c)
+Do3	-	
+Mib2		sfx(sfx_drum_shorter_c)
+Sol2		sfx(sfx_short_hihat)
+Mib2		
+do2	-	sfx(sfx_drum_shorter_c)
+Mib2		
+Sol2		sfx(sfx_short_hihat)
+Mib2		sfx(sfx_drum_shorter_c)
+Do3	Sol4	
+Mib2		sfx(sfx_drum_shorter_c)
+Sol2		sfx(sfx_short_hihat)
+Mib2	Sol4	
+Sib1	Re4	sfx(sfx_drum_shorter_re)
+Re2		
+Sol2		sfx(sfx_short_hihat)
+Re2		sfx(sfx_drum_shorter_re)
+Sib2		
+Re2		sfx(sfx_drum_shorter_re)
+Sol2		sfx(sfx_short_hihat)
+Re2		
+Sib1	-	sfx(sfx_drum_shorter_re)
+Re2		
+Sol2		sfx(sfx_short_hihat)
+Re2		sfx(sfx_drum_shorter_re)
+Sib2	Sol4	
+Re2		sfx(sfx_drum_shorter_re)
+Sol2		sfx(sfx_short_hihat)
+Re2	Sol4	
+Lab1	Do4	sfx(sfx_drum_shorter_c)
+Do2		
+Fa2		sfx(sfx_short_hihat)
+Do2		sfx(sfx_drum_shorter_c)
+Lab2		
+Do2		sfx(sfx_drum_shorter_c)
+Fa2		sfx(sfx_short_hihat)
+Do2		
+Lab1	Mib4	sfx(sfx_drum_shorter_c)
+Do2		
+Fa2		sfx(sfx_short_hihat)
+Do2		sfx(sfx_drum_shorter_c)
+Lab2		
+Do2		sfx(sfx_drum_shorter_c)
+Fa2		sfx(sfx_short_hihat)
+Do2		
+Sib1	Re4	sfx(sfx_drum_shorter_re)
+Re2		
+Sol2		sfx(sfx_short_hihat)
+Re2		sfx(sfx_drum_shorter_re)
+Sib2		
+Re2		sfx(sfx_drum_shorter_re)
+Sol2		sfx(sfx_short_hihat)
+Re2		
+Sib1	-	sfx(sfx_drum_shorter_re)
+Re2		
+Sol2		sfx(sfx_short_hihat)
+Re2		sfx(sfx_drum_shorter_re)
+Sib2		
+Re2		sfx(sfx_drum_shorter_re)
+Sol2		sfx(sfx_short_hihat)
+Re2		
+do2	-	sfx(sfx_drum_shorter_c)
+Mib2		
+Sol2		sfx(sfx_short_hihat)
+Mib2		sfx(sfx_drum_shorter_c)
+Do3		
+Mib2		sfx(sfx_drum_shorter_c)
+Sol2		sfx(sfx_short_hihat)
+Mib2		
+do2	-	sfx(sfx_drum_shorter_c)
+Mib2		
+Sol2		sfx(sfx_short_hihat)
+Mib2		sfx(sfx_drum_shorter_c)
+Do3	Sol4	
+Mib2		sfx(sfx_drum_shorter_c)
+Sol2		sfx(sfx_short_hihat)
+Mib2	Sol4	
+do2	Sol4	sfx(sfx_drum_shorter_c)
+Mib2		
+Sol2		sfx(sfx_short_hihat)
+Mib2		sfx(sfx_drum_shorter_c)
+Do3		
+Mib2		sfx(sfx_drum_shorter_c)
+Sol2		sfx(sfx_short_hihat)
+Mib2		
+do2	-	sfx(sfx_drum_shorter_c)
+Mib2		
+Sol2		sfx(sfx_short_hihat)
+Mib2		sfx(sfx_drum_shorter_c)
+Do3	Sol4	
+Mib2		sfx(sfx_drum_shorter_c)
+Sol2		sfx(sfx_short_hihat)
+Mib2	Sol4	
+Lab2	Si4	sfx(sfx_drum_shorter_re)
+Si2		
+Re3	Lab4	sfx(sfx_short_hihat)
+Si2		sfx(sfx_drum_shorter_re)
+Fa3	Sol4	
+Si2		sfx(sfx_drum_shorter_re)
+Re2	Fa4	sfx(sfx_short_hihat)
+Si2		
+do2	Mib4	sfx(sfx_drum_shorter_c)
+Mib2		
+Sol2		sfx(sfx_short_hihat)
+Mib2		sfx(sfx_drum_shorter_c)
+Do3	-	
+Mib2		sfx(sfx_drum_shorter_c)
+Sol2		sfx(sfx_short_hihat)
+Mib2		
+do2	-	sfx(sfx_drum_shorter_c)
+Mib2		
+Sol2		sfx(sfx_short_hihat)
+Mib2		sfx(sfx_drum_shorter_c)
+Do3	Sol4	
+Mib2		sfx(sfx_drum_shorter_c)
+Sol2		sfx(sfx_short_hihat)
+Mib2	Sol4	
+Sib1	Re4	sfx(sfx_drum_shorter_re)
+Re2		
+Sol2		sfx(sfx_short_hihat)
+Re2		sfx(sfx_drum_shorter_re)
+Sib2		
+Re2		sfx(sfx_drum_shorter_re)
+Sol2		sfx(sfx_short_hihat)
+Re2		
+Sib1	-	sfx(sfx_drum_shorter_re)
+Re2		
+Sol2		sfx(sfx_short_hihat)
+Re2		sfx(sfx_drum_shorter_re)
+Sib2	Sol4	
+Re2		sfx(sfx_drum_shorter_re)
+Sol2		sfx(sfx_short_hihat)
+Re2	Sol4	
+Lab1	Do4	sfx(sfx_drum_shorter_c)
+Do2		
+Fa2		sfx(sfx_short_hihat)
+Do2		sfx(sfx_drum_shorter_c)
+Lab2		
+Do2		sfx(sfx_drum_shorter_c)
+Fa2		sfx(sfx_short_hihat)
+Do2		
+Lab1		sfx(sfx_drum_shorter_c)
+Do2		
+Fa2	Re4	sfx(sfx_short_hihat)
+Do2		sfx(sfx_drum_shorter_c)
+Lab2	Mib4	
+Do2		sfx(sfx_drum_shorter_c)
+Fa2	Fa4	sfx(sfx_short_hihat)
+Do2		
+Re2	Fa#4	sfx(sfx_drum_shorter_re)
+Fa#2		
+La2		sfx(sfx_short_hihat)
+Fa#2		sfx(sfx_drum_shorter_re)
+Re3	Re4	
+Fa#2		sfx(sfx_drum_shorter_re)
+La2		sfx(sfx_short_hihat)
+Fa#2		
+Re2		sfx(sfx_drum_shorter_re)
+Fa#2		
+La2		sfx(sfx_short_hihat)
+Fa#2		sfx(sfx_drum_shorter_re)
+Do3		
+Fa#2		sfx(sfx_drum_shorter_re)
+La2		sfx(sfx_short_hihat)
+Fa#2		
+Sib1	La4	sfx(sfx_drum_shorter_re)
+Re2		
+Sol2		sfx(sfx_short_hihat)
+Re2		sfx(sfx_drum_shorter_re)
+Sib2		
+Re2		sfx(sfx_drum_shorter_re)
+Sol2		sfx(sfx_short_hihat)
+Re2		
+Sib1	Sol4	sfx(sfx_drum_shorter_re)
+Re2		
+Sol2		sfx(sfx_short_hihat)
+Re2		sfx(sfx_drum_shorter_re)
+Sib2		
+Re2		sfx(sfx_drum_shorter_re)
+Sol2		sfx(sfx_short_hihat)
+Re2		

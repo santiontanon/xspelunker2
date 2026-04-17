@@ -219,6 +219,9 @@ public class Music {
                         case "minorarpeggio-fadein":
                             ch_instrument[channel] = MSXNote.INSTRUMENT_MINOR_ARPEGGIO_FADEIN;
                             break;
+                        case "diminishedarpeggio-fadein":
+                            ch_instrument[channel] = MSXNote.INSTRUMENT_DIMINISHED_ARPEGGIO_FADEIN;
+                            break;
                         case "slider":
                             ch_instrument[channel] = MSXNote.INSTRUMENT_SLIDER;
                             break;

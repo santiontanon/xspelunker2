@@ -1,8 +1,8 @@
 to do:
 ***- music: (brain 12, 15, 23, 25 have potential)
   ***- tomb (not sure what will I use this for, maybe for Yatzil's grave):
-    ***- play with the instruments
-    ***- add a third voice to fill it up (maybe a low bass, or some drums, or even a second melody that is higher pitch?)
+    OK - play with the instruments
+    ***- try a different type of third voice, maybe with a different melody
   ***- story:
     ***- I like the original jazzy song: keep the same style and compose a variation
     ***- short song for when the map is being displayed (reused in the game for letters/map/tablets/puzzles)

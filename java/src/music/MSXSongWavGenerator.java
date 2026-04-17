@@ -47,6 +47,7 @@ public class MSXSongWavGenerator {
         {12,11,10,10,9,9,8,7},  // diminished arpeggio
         {2,2,3,3,4,4,5,5,6,6,7,7,8,8,8,8,9,9,9,9,9,9,10,10,10,10,10,10,10,10,9,9,9,9,9,9,8,8,8,8,8,8,7,7,7,7,7,7,7,7,7,7,6,6,6,6,6,6,6,6,6,6,5,5,5,5,4,4,4,4,3,3,2,2,1},  // major arpeggio fadein
         {2,2,3,3,4,4,5,5,6,6,7,7,8,8,8,8,9,9,9,9,9,9,10,10,10,10,10,10,10,10,9,9,9,9,9,9,8,8,8,8,8,8,7,7,7,7,7,7,7,7,7,7,6,6,6,6,6,6,6,6,6,6,5,5,5,5,4,4,4,4,3,3,2,2,1},  // minor arpeggio fadein
+        {2,2,3,3,4,4,5,5,6,6,7,7,8,8,8,8,9,9,9,9,9,9,10,10,10,10,10,10,10,10,9,9,9,9,9,9,8,8,8,8,8,8,7,7,7,7,7,7,7,7,7,7,6,6,6,6,6,6,6,6,6,6,5,5,5,5,4,4,4,4,3,3,2,2,1},  // diminished arpeggio fadein
         {4,6,8,10,11,11,11,10,10,9,9,8,8,7,7,6,6},    // slider
         {12,11,10,10,9,9,8,8,7,7,6},  // Piano offtune
         {12,11,10,10,9,9,8,8,7,7,6},  // snap bass
@@ -151,7 +152,7 @@ public class MSXSongWavGenerator {
                 "6" , "#18",        // noise freq
                 "4" , "#fa", "5" , "#02",        // C freq (RE)
                 "MUSIC_CMD_SKIP",
-                "4" , "#20", "5" , "#03",
+//                "4" , "#20", "5" , "#03",
                 "7", "#b8",
                 "MUSIC_CMD_SKIP",
                 "10", "#06",
@@ -195,7 +196,7 @@ public class MSXSongWavGenerator {
                 "6" , "#18",        // noise freq
                 "4" , "#fa", "5" , "#02",        // C freq (RE)
                 "MUSIC_CMD_SKIP",
-                "4" , "#20", "5" , "#03",
+//                "4" , "#20", "5" , "#03",
                 "7", "#b8",
                 "MUSIC_CMD_SKIP",
                 "10", "#08",
@@ -239,22 +240,43 @@ public class MSXSongWavGenerator {
         
         sfx_waves.put("sfx_drum_shorter_c", MSXSFX.renderSFX(new String[] 
             {   
+//                "7", "#98",         // A: tone, B: tone, C: tone+noise
+//                "10", "#0b",        // C volume
+//                "6" , "#18",        // noise freq
+//                "4" , "#ae", "5" , "#06",        // C freq (C2): 6, 174
+//                "MUSIC_CMD_SKIP",
+//                "7", "#b8",
+//                "MUSIC_CMD_SKIP",
+//                "MUSIC_CMD_SKIP",
+//                "MUSIC_CMD_SKIP",
+//                "10", "#08",
+//                "MUSIC_CMD_SKIP",
+//                "MUSIC_CMD_SKIP",
+//                "10", "#00",
+//                "7", "#b8",
+//                "SFX_CMD_END"
                 "7", "#98",         // A: tone, B: tone, C: tone+noise
-                "10", "#0b",        // C volume
+                "10", "#08",        // C volume
                 "6" , "#18",        // noise freq
                 "4" , "#ae", "5" , "#06",        // C freq (C2): 6, 174
                 "MUSIC_CMD_SKIP",
+//                "4" , "#20", "5" , "#03",
                 "7", "#b8",
                 "MUSIC_CMD_SKIP",
+                "10", "#06",
+                "4" , "#40", 
                 "MUSIC_CMD_SKIP",
+                "4" , "#60", 
                 "MUSIC_CMD_SKIP",
-                "10", "#08",
+                "10", "#04",
+                "4" , "#80", 
                 "MUSIC_CMD_SKIP",
+                "4" , "#a0", 
                 "MUSIC_CMD_SKIP",
                 "10", "#00",
                 "7", "#b8",
-                "SFX_CMD_END"
-            }, 22050.0));   
+                "SFX_CMD_END"  
+        }, 22050.0));   
 
         sfx_waves.put("sfx_drum_shorter_g", MSXSFX.renderSFX(new String[] 
             {   
@@ -521,7 +543,8 @@ public class MSXSongWavGenerator {
                                 int t = instrument_timer2[channel] % 4;
                                 int arpeggioTable[] = {0, 8, 5, 8};
                                 period = MSXNote.PSGNotePeriod(notes[channel] + arpeggioTable[t]);
-                            } else if (instrument == MSXNote.INSTRUMENT_DIMINISHED_ARPEGGIO) {
+                            } else if (instrument == MSXNote.INSTRUMENT_DIMINISHED_ARPEGGIO ||
+                                       instrument == MSXNote.INSTRUMENT_DIMINISHED_ARPEGGIO_FADEIN) {
                                 // arpeggiate the note:
                                 int t = instrument_timer2[channel] % 4;
                                 int arpeggioTable[] = {0, 6, 3, 6};
@@ -571,10 +594,10 @@ public class MSXSongWavGenerator {
                                 }                                 
                                 if (instrument == MSXNote.INSTRUMENT_PIANO_FREQUENCY_VIBRATION) {
 //                                    period = MSXNote.PSGNotePeriod(notes[channel] + 12*((currentTime*tempo+j)%2));
-                                    int vibratoTable[] = {0,1,1,2,2,2,1,1,
-                                                          0,-1,-1,-2,-2,-2,-1,-1};  // period 16
-//                                    int vibratoTable[] = {0,0,0,1,1,1,1,1,
-//                                                          0,0,0,-1,-1,-1,-1,-1};  // period 16
+//                                    int vibratoTable[] = {0,1,1,2,2,2,1,1,
+//                                                          0,-1,-1,-2,-2,-2,-1,-1};  // period 16
+                                    int vibratoTable[] = {0,0,0,1,1,1,1,1,
+                                                          0,0,0,-1,-1,-1,-1,-1};  // period 16
                                     period = MSXNote.PSGNotePeriod(notes[channel] + vibratoTable[(currentTime*tempo+j)%16]);
 //                                    int vibratoTable[] = {0,0,1,1, 1,2,2,2, 2,2,2,2, 2,1,1,1,
 //                                                          0,0,-1,-1, -1,-2,-2,-2, -2,-2,-2,-2, -2,-1,-1,-1};
