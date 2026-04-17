@@ -49,9 +49,11 @@ public class Music {
 //        playTSVMusic("data/music/pyramid1.tsv", 10, 0, "tmp/pyramid1.wav");  // basic version without arpeggios
 //        playTSVMusic("data/music/pyramid2.tsv", 10, 0, "tmp/pyramid2.wav");
 
+            playTSVMusic("data/music/tomb.tsv", 16, 0, null);
+
 //        playTSVMusic("data/music/test.tsv", 10, 0, null);  // to test new instruments
 
-        generateInGamesongData();
+//        generateInGamesongData();
     }
     
     
