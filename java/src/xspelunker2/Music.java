@@ -53,9 +53,9 @@ public class Music {
 
 //        playTSVMusic("data/music/intro1.tsv", 6, 0, null);
         
-//        playTSVMusic("data/music/test.tsv", 6, 0, null);  // to test new instruments
+        playTSVMusic("data/music/test.tsv", 14, 0, null);  // to test new instruments
 
-        generateInGamesongData();
+//        generateInGamesongData();
     }
     
     

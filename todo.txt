@@ -1,8 +1,7 @@
 to do:
 ***- Can I make the animation of the characters in the intro sync with the music?
 ***- music: (brain 12, 15, 23, 25 have potential)
-  ***- story2:
-    ***- a bit more dramatic song for when they realize there is a world domination plan
+  ***- add "intro2.tsv" to the game (with proper looping)
   ***- short "game over" tune
   ***- boss music (boss music increases in speed as health goes down: 50%, 25%)
   ***- xibalba (look at "story" from Triton, can I do something liek that?)

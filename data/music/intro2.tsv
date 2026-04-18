@@ -1,0 +1,104 @@
+piano,Mib1		
+		
+Do1		
+		
+La0		
+		
+Fa#0		
+		
+Mib0		
+		
+		
+		
+	diminishedarpeggio-fadein,Fa#3	
+		
+		
+		
+		
+		
+	diminishedarpeggio-fadein,La3	
+		
+		
+		
+		
+		
+Do1	diminishedarpeggio-fadein,Do4	volume(13),pianostaccato,do5
+		si4
+		do5
+		reb5
+Si0		do5
+		si4
+		do5
+		reb5
+Do1		do5
+		si4
+		do5
+		reb5
+Reb1		do5
+		si4
+		do5
+		reb5
+Do1		pianostaccato,do5
+		si4
+		do5
+		reb5
+Si0		do5
+		si4
+		do5
+		reb5
+Do1		do5
+		si4
+		do5
+		reb5
+Reb1		do5
+		si4
+		do5
+		reb5
+La0	diminishedarpeggio-fadein,La3	la4
+		lab4
+		la4
+		sib4
+Lab0		la4
+		lab4
+		la4
+		sib4
+La0		la4
+		lab4
+		la4
+		sib4
+Sib0		la4
+		lab4
+		la4
+		sib4
+La0		la4
+		lab4
+		la4
+		sib4
+Lab0		la4
+		lab4
+		la4
+		sib4
+La0		la4
+		lab4
+		la4
+		sib4
+Sib0		la4
+		lab4
+		la4
+		sib4
+Do1		la5
+		fa#5
+do1		Mib5
+		do5
+do1		La4
+		Fa#4
+do1		La4
+		do5
+mib1	diminishedarpeggio-fadein,mib4	piano,mib5
+		
+		
+		
+		
+		
+		
+		
