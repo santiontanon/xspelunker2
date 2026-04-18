@@ -15,6 +15,11 @@ state_story:
     ld sp, stack
 	call clear_screen_left_to_right
 
+	call stop_music
+	ld hl, music_intro1_bin
+	ld a, 6
+	call play_music_adjusting_tempo
+
 	call state_story_setup_gfx
 
 	ld hl, story_nametable

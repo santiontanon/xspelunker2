@@ -6,7 +6,7 @@ Do3
 Mib2		sfx(sfx_drum_shorter_c)
 Sol2		sfx(sfx_short_hihat)
 Mib2		
-do2	-	sfx(sfx_drum_shorter_c)
+do2		sfx(sfx_drum_shorter_c)
 Mib2		
 Sol2		sfx(sfx_short_hihat)
 Mib2		sfx(sfx_drum_shorter_c)
@@ -18,15 +18,15 @@ do2	Sol4	sfx(sfx_drum_shorter_c)
 Mib2		
 Sol2		sfx(sfx_short_hihat)
 Mib2		sfx(sfx_drum_shorter_c)
-Do3		
+Do3	piano-end,Sol4	
 Mib2		sfx(sfx_drum_shorter_c)
-Sol2		sfx(sfx_short_hihat)
+Sol2	-	sfx(sfx_short_hihat)
 Mib2		
-do2	-	sfx(sfx_drum_shorter_c)
+do2		sfx(sfx_drum_shorter_c)
 Mib2		
 Sol2		sfx(sfx_short_hihat)
 Mib2		sfx(sfx_drum_shorter_c)
-Do3	Sol4	
+Do3	piano,Sol4	
 Mib2		sfx(sfx_drum_shorter_c)
 Sol2		sfx(sfx_short_hihat)
 Mib2	Sol4	
@@ -42,15 +42,15 @@ do2	Mib4	sfx(sfx_drum_shorter_c)
 Mib2		
 Sol2		sfx(sfx_short_hihat)
 Mib2		sfx(sfx_drum_shorter_c)
-Do3	-	
+Do3	piano-end,mib4	
 Mib2		sfx(sfx_drum_shorter_c)
-Sol2		sfx(sfx_short_hihat)
+Sol2	-	sfx(sfx_short_hihat)
 Mib2		
-do2	-	sfx(sfx_drum_shorter_c)
+do2		sfx(sfx_drum_shorter_c)
 Mib2		
 Sol2		sfx(sfx_short_hihat)
 Mib2		sfx(sfx_drum_shorter_c)
-Do3	Sol4	
+Do3	piano,Sol4	
 Mib2		sfx(sfx_drum_shorter_c)
 Sol2		sfx(sfx_short_hihat)
 Mib2	Sol4	
@@ -58,15 +58,15 @@ Sib1	Re4	sfx(sfx_drum_shorter_re)
 Re2		
 Sol2		sfx(sfx_short_hihat)
 Re2		sfx(sfx_drum_shorter_re)
-Sib2		
+Sib2	piano-end,re4	
 Re2		sfx(sfx_drum_shorter_re)
-Sol2		sfx(sfx_short_hihat)
+Sol2	-	sfx(sfx_short_hihat)
 Re2		
-Sib1	-	sfx(sfx_drum_shorter_re)
+Sib1		sfx(sfx_drum_shorter_re)
 Re2		
 Sol2		sfx(sfx_short_hihat)
 Re2		sfx(sfx_drum_shorter_re)
-Sib2	Sol4	
+Sib2	piano,Sol4	
 Re2		sfx(sfx_drum_shorter_re)
 Sol2		sfx(sfx_short_hihat)
 Re2	Sol4	
@@ -74,27 +74,27 @@ Lab1	Do4	sfx(sfx_drum_shorter_c)
 Do2		
 Fa2		sfx(sfx_short_hihat)
 Do2		sfx(sfx_drum_shorter_c)
-Lab2		
+Lab2	piano-end,do4	
 Do2		sfx(sfx_drum_shorter_c)
-Fa2		sfx(sfx_short_hihat)
+Fa2	-	sfx(sfx_short_hihat)
 Do2		
-Lab1	Mib4	sfx(sfx_drum_shorter_c)
+Lab1	piano,Mib4	sfx(sfx_drum_shorter_c)
 Do2		
 Fa2		sfx(sfx_short_hihat)
 Do2		sfx(sfx_drum_shorter_c)
-Lab2		
+Lab2	piano-end,mib4	
 Do2		sfx(sfx_drum_shorter_c)
-Fa2		sfx(sfx_short_hihat)
+Fa2	-	sfx(sfx_short_hihat)
 Do2		
-Sib1	Re4	sfx(sfx_drum_shorter_re)
+Sib1	piano,Re4	sfx(sfx_drum_shorter_re)
 Re2		
 Sol2		sfx(sfx_short_hihat)
 Re2		sfx(sfx_drum_shorter_re)
-Sib2		
+Sib2	piano-end,re4	
 Re2		sfx(sfx_drum_shorter_re)
-Sol2		sfx(sfx_short_hihat)
+Sol2	-	sfx(sfx_short_hihat)
 Re2		
-Sib1	-	sfx(sfx_drum_shorter_re)
+Sib1		sfx(sfx_drum_shorter_re)
 Re2		
 Sol2		sfx(sfx_short_hihat)
 Re2		sfx(sfx_drum_shorter_re)
@@ -114,7 +114,7 @@ do2	-	sfx(sfx_drum_shorter_c)
 Mib2		
 Sol2		sfx(sfx_short_hihat)
 Mib2		sfx(sfx_drum_shorter_c)
-Do3	Sol4	
+Do3	piano,Sol4	
 Mib2		sfx(sfx_drum_shorter_c)
 Sol2		sfx(sfx_short_hihat)
 Mib2	Sol4	
@@ -122,15 +122,15 @@ do2	Sol4	sfx(sfx_drum_shorter_c)
 Mib2		
 Sol2		sfx(sfx_short_hihat)
 Mib2		sfx(sfx_drum_shorter_c)
-Do3		
+Do3	piano-end,Sol4	
 Mib2		sfx(sfx_drum_shorter_c)
-Sol2		sfx(sfx_short_hihat)
+Sol2	-	sfx(sfx_short_hihat)
 Mib2		
-do2	-	sfx(sfx_drum_shorter_c)
+do2		sfx(sfx_drum_shorter_c)
 Mib2		
 Sol2		sfx(sfx_short_hihat)
 Mib2		sfx(sfx_drum_shorter_c)
-Do3	Sol4	
+Do3	piano,Sol4	
 Mib2		sfx(sfx_drum_shorter_c)
 Sol2		sfx(sfx_short_hihat)
 Mib2	Sol4	
@@ -146,15 +146,15 @@ do2	Mib4	sfx(sfx_drum_shorter_c)
 Mib2		
 Sol2		sfx(sfx_short_hihat)
 Mib2		sfx(sfx_drum_shorter_c)
-Do3	-	
+Do3	piano-end,mib4	
 Mib2		sfx(sfx_drum_shorter_c)
-Sol2		sfx(sfx_short_hihat)
+Sol2	-	sfx(sfx_short_hihat)
 Mib2		
-do2	-	sfx(sfx_drum_shorter_c)
+do2		sfx(sfx_drum_shorter_c)
 Mib2		
 Sol2		sfx(sfx_short_hihat)
 Mib2		sfx(sfx_drum_shorter_c)
-Do3	Sol4	
+Do3	piano,Sol4	
 Mib2		sfx(sfx_drum_shorter_c)
 Sol2		sfx(sfx_short_hihat)
 Mib2	Sol4	
@@ -162,15 +162,15 @@ Sib1	Re4	sfx(sfx_drum_shorter_re)
 Re2		
 Sol2		sfx(sfx_short_hihat)
 Re2		sfx(sfx_drum_shorter_re)
-Sib2		
+Sib2	piano-end,re4	
 Re2		sfx(sfx_drum_shorter_re)
-Sol2		sfx(sfx_short_hihat)
+Sol2	-	sfx(sfx_short_hihat)
 Re2		
-Sib1	-	sfx(sfx_drum_shorter_re)
+Sib1		sfx(sfx_drum_shorter_re)
 Re2		
 Sol2		sfx(sfx_short_hihat)
 Re2		sfx(sfx_drum_shorter_re)
-Sib2	Sol4	
+Sib2	piano,Sol4	
 Re2		sfx(sfx_drum_shorter_re)
 Sol2		sfx(sfx_short_hihat)
 Re2	Sol4	
@@ -178,13 +178,13 @@ Lab1	Do4	sfx(sfx_drum_shorter_c)
 Do2		
 Fa2		sfx(sfx_short_hihat)
 Do2		sfx(sfx_drum_shorter_c)
-Lab2		
+Lab2	piano-end,do4	
 Do2		sfx(sfx_drum_shorter_c)
-Fa2		sfx(sfx_short_hihat)
+Fa2	-	sfx(sfx_short_hihat)
 Do2		
 Lab1		sfx(sfx_drum_shorter_c)
 Do2		
-Fa2	Re4	sfx(sfx_short_hihat)
+Fa2	piano,Re4	sfx(sfx_short_hihat)
 Do2		sfx(sfx_drum_shorter_c)
 Lab2	Mib4	
 Do2		sfx(sfx_drum_shorter_c)
@@ -198,27 +198,27 @@ Re3	Re4
 Fa#2		sfx(sfx_drum_shorter_re)
 La2		sfx(sfx_short_hihat)
 Fa#2		
-Re2		sfx(sfx_drum_shorter_re)
+Re2	piano-end,re4	sfx(sfx_drum_shorter_re)
 Fa#2		
-La2		sfx(sfx_short_hihat)
+La2	-	sfx(sfx_short_hihat)
 Fa#2		sfx(sfx_drum_shorter_re)
 Do3		
 Fa#2		sfx(sfx_drum_shorter_re)
 La2		sfx(sfx_short_hihat)
 Fa#2		
-Sib1	La4	sfx(sfx_drum_shorter_re)
+Sib1	piano,La4	sfx(sfx_drum_shorter_re)
 Re2		
 Sol2		sfx(sfx_short_hihat)
 Re2		sfx(sfx_drum_shorter_re)
-Sib2		
+Sib2	piano-end,la4	
 Re2		sfx(sfx_drum_shorter_re)
-Sol2		sfx(sfx_short_hihat)
+Sol2	-	sfx(sfx_short_hihat)
 Re2		
-Sib1	Sol4	sfx(sfx_drum_shorter_re)
+Sib1	piano,Sol4	sfx(sfx_drum_shorter_re)
 Re2		
 Sol2		sfx(sfx_short_hihat)
 Re2		sfx(sfx_drum_shorter_re)
-Sib2		
+Sib2	piano-end,sol4	
 Re2		sfx(sfx_drum_shorter_re)
-Sol2		sfx(sfx_short_hihat)
+Sol2	-	sfx(sfx_short_hihat)
 Re2		

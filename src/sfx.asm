@@ -905,12 +905,12 @@ SFX_secret:
 
 ;-----------------------------------------------
 ; Sound effects used for the percussion in the songs
-SFX_drum_shorter_re:
+SFX_drum_shorter_c:
   db  7,#98  ; noise in channel C, and tone in channels C, B and A
   db 10,#0a  ; volume
-  db 5, 2, 4, #fa ; RE3
+  db 5, 6, 4, #ae ; C2
   db  6+MUSIC_CMD_TIME_STEP_FLAG,#18  ; noise frequency
-  db 5, #03, 4, #20
+;   db 5, #03, 4, #20
   db  7+MUSIC_CMD_TIME_STEP_FLAG,#b8
   db 10,#06
   db 4+MUSIC_CMD_TIME_STEP_FLAG,#40
@@ -921,6 +921,27 @@ SFX_drum_shorter_re:
   db 10,#00  ; channel 3 volume to silence
   db 7,#b8  ; SFX all channels to tone
   db SFX_CMD_END  
+ 
+
+;-----------------------------------------------
+; Sound effects used for the percussion in the songs
+SFX_drum_shorter_re:
+  db  7,#98  ; noise in channel C, and tone in channels C, B and A
+  db 10,#0a  ; volume
+  db 5, 2, 4, #fa ; RE3
+  db  6+MUSIC_CMD_TIME_STEP_FLAG,#18  ; noise frequency
+;   db 5, #03, 4, #20
+  db  7+MUSIC_CMD_TIME_STEP_FLAG,#b8
+  db 10,#06
+  db 4+MUSIC_CMD_TIME_STEP_FLAG,#40
+  db 4+MUSIC_CMD_TIME_STEP_FLAG,#60
+  db 10,#04
+  db 4+MUSIC_CMD_TIME_STEP_FLAG,#80
+  db 4+MUSIC_CMD_TIME_STEP_FLAG,#a0
+  db 10,#00  ; channel 3 volume to silence
+  db 7,#b8  ; SFX all channels to tone
+  db SFX_CMD_END  
+
 
 ;-----------------------------------------------
 ; Sound effects used for the percussion in the songs

@@ -16,6 +16,8 @@ braingames_logo_with_dust_nametable:
 ;-----------------------------------------------
 state_braingames:
     ld sp, stack
+
+    call stop_music
 	call clear_screen_left_to_right
 
 	; upload the tile data to vdp:

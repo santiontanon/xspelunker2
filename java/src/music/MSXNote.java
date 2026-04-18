@@ -48,7 +48,7 @@ public class MSXNote {
     public static final int INSTRUMENT_WIND_SOFT = 4;
     public static final int INSTRUMENT_PIANO_FREQUENCY_VIBRATION = 5;
     public static final int INSTRUMENT_PIANO_STACCATO = 6;
-    public static final int INSTRUMENT_WIND_FADING = 7;
+    public static final int INSTRUMENT_PIANO_END = 7;  // this is to be played after a PIANO note, to represent the note dying
     public static final int INSTRUMENT_PAD = 8;
     public static final int INSTRUMENT_FADE = 9;
     public static final int INSTRUMENT_SHORTWIND = 10;
@@ -92,6 +92,7 @@ public class MSXNote {
                             "MUSIC_INSTRUMENT_ARPEGGIO_DIMINISHED",
                             "MUSIC_INSTRUMENT_ARPEGGIO_MAJOR_FADEIN",
                             "MUSIC_INSTRUMENT_ARPEGGIO_MINOR_FADEIN",
+                            "MUSIC_INSTRUMENT_ARPEGGIO_DIMINISHED_FADEIN",
                         };
     
     public static double PSG_Master_Frequency = 111861; // Hz (in MSX)

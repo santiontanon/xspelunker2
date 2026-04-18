@@ -1,27 +1,224 @@
-sfx(sfx_snare_drum)
-
-sfx(sfx_open_hihat)
-sfx(sfx_snare_drum)
-
-sfx(sfx_snare_drum)
-sfx(sfx_open_hihat)
-
-sfx(sfx_snare_drum)
-
-sfx(sfx_open_hihat)
-sfx(sfx_snare_drum)
-
-sfx(sfx_snare_drum)
-sfx(sfx_open_hihat)
-
-sfx(sfx_snare_drum)
-sfx(sfx_snare_drum)
-
-sfx(sfx_snare_drum)
-
-sfx(sfx_snare_drum)
-sfx(sfx_snare_drum)
-sfx(sfx_snare_drum)
-sfx(sfx_snare_drum)
-
-
+piano,La0		
+		
+		
+		
+-		
+		
+		
+La0		
+Do1		
+		
+		
+		
+-		
+		
+		
+La0		
+Do1		
+		
+		
+Re1		
+		
+		
+Mib1		
+		
+		
+		
+		
+Mib1		
+Re1		
+		
+		
+Do1		
+La0		
+		
+		
+		
+-		
+		
+		
+La0		
+Do1		
+		
+		
+		
+-		
+		
+		
+La0		
+Do1		
+		
+		
+Fa0		
+		
+		
+Mi0		
+		
+		
+		
+-		
+		sfx(sfx_short_hihat)
+		sfx(sfx_short_hihat)
+		
+		
+		sfx(sfx_short_hihat)
+piano,La0		sfx(sfx_drum_shorter_c)
+		
+		
+		
+-		sfx(sfx_short_hihat)
+		
+		
+La0		sfx(sfx_short_hihat)
+Do1		sfx(sfx_drum_shorter_c)
+		
+		
+		
+-		sfx(sfx_short_hihat)
+		
+		
+La0		sfx(sfx_short_hihat)
+Do1		sfx(sfx_drum_shorter_c)
+		
+		
+Re1		
+		sfx(sfx_short_hihat)
+		
+Mib1	diminishedarpeggio-fadein,La2	
+		
+		sfx(sfx_short_hihat)
+		
+		
+Mib1		sfx(sfx_short_hihat)
+Re1		sfx(sfx_short_hihat)
+		
+		
+Do1		sfx(sfx_short_hihat)
+La0	-	sfx(sfx_drum_shorter_c)
+		
+		
+		
+-		sfx(sfx_short_hihat)
+		
+		
+La0		sfx(sfx_short_hihat)
+Do1		sfx(sfx_drum_shorter_c)
+		
+		
+		
+-		sfx(sfx_short_hihat)
+		
+		
+La0		sfx(sfx_short_hihat)
+Do1		sfx(sfx_drum_shorter_c)
+		
+		
+Fa0		
+		sfx(sfx_short_hihat)
+		
+Mi0	majorarpeggio-fadein,Mi2	
+		
+		sfx(sfx_short_hihat)
+		
+-		
+		sfx(sfx_short_hihat)
+		sfx(sfx_short_hihat)
+		
+		
+		sfx(sfx_short_hihat)
+piano,La0	-	sfx(sfx_drum_shorter_c)
+		
+		
+		
+-		sfx(sfx_short_hihat)
+		
+		
+La0		sfx(sfx_short_hihat)
+Do1		sfx(sfx_drum_shorter_c)
+		
+		
+		
+-		sfx(sfx_short_hihat)
+		
+		
+La0		sfx(sfx_short_hihat)
+Do1		sfx(sfx_drum_shorter_c)
+		
+		
+Re1		
+		sfx(sfx_short_hihat)
+		
+Mib1	diminishedarpeggio-fadein,La2	
+		
+		sfx(sfx_short_hihat)
+		
+-		
+		sfx(sfx_short_hihat)
+		sfx(sfx_short_hihat)
+		
+		
+Mib1		sfx(sfx_short_hihat)
+Mi1	-	sfx(sfx_drum_shorter_c)
+		
+		
+		
+la1		sfx(sfx_short_hihat)
+		
+		
+Mi1		sfx(sfx_short_hihat)
+Mib1		sfx(sfx_drum_shorter_c)
+		
+		
+		
+La0		sfx(sfx_short_hihat)
+		
+		
+Mi1		sfx(sfx_short_hihat)
+		sfx(sfx_drum_shorter_c)
+		
+		
+Mi1		
+La1	-	sfx(sfx_short_hihat)
+		
+		
+Mi1		sfx(sfx_short_hihat)
+Mib1	diminishedarpeggio-fadein,La2	sfx(sfx_drum_shorter_c)
+		
+		
+		
+La0		sfx(sfx_short_hihat)
+		
+		
+Mi1		sfx(sfx_short_hihat)
+Do2	-	sfx(sfx_drum_shorter_c)
+		
+		
+Do2		
+La1		sfx(sfx_short_hihat)
+		
+		
+		sfx(sfx_short_hihat)
+Sol1		sfx(sfx_drum_shorter_c)
+		
+		
+		
+Fa1		sfx(sfx_short_hihat)
+		
+		
+		sfx(sfx_short_hihat)
+Mi1		sfx(sfx_drum_shorter_c)
+		
+		
+		
+Mib1	majorarpeggio-fadein,Mi2	sfx(sfx_short_hihat)
+		
+Mi1		
+		
+		sfx(sfx_short_hihat)
+		
+-		
+		sfx(sfx_short_hihat)
+		sfx(sfx_short_hihat)
+		
+		
+	-	sfx(sfx_short_hihat)

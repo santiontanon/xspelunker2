@@ -328,6 +328,9 @@ IF MUSIC_USE_ARPEGGIOS = 1
         ex de, hl
         cp MUSIC_INSTRUMENT_ARPEGGIO_MAJOR
         jr c, update_sound_SET_INSTRUMENT_not_an_arpeggio
+        ld hl, diminished_arpeggio_pattern
+        cp MUSIC_INSTRUMENT_ARPEGGIO_DIMINISHED_FADEIN
+        jr z, update_sound_SET_INSTRUMENT_arpeggio
         ld hl, major_arpeggio_pattern
         jr z, update_sound_SET_INSTRUMENT_arpeggio
         cp MUSIC_INSTRUMENT_ARPEGGIO_MAJOR_FADEIN
@@ -454,7 +457,7 @@ update_sound_internal_no_time_step:
     dec a   ; MUSIC_CMD_PLAY_INSTRUMENT_CH2
     jr z, update_sound_PLAY_INSTRUMENT_CH2
     dec a   ; MUSIC_CMD_PLAY_INSTRUMENT_CH3
-    jr z, update_sound_PLAY_INSTRUMENT_CH3
+    jp z, update_sound_PLAY_INSTRUMENT_CH3
     dec a   ; MUSIC_CMD_PLAY_SFX_OPEN_HIHAT
     jr z, update_sound_PLAY_SFX_OPEN_HIHAT
     dec a   ; MUSIC_CMD_PLAY_SFX_SHORT_HIHAT
@@ -463,6 +466,8 @@ update_sound_internal_no_time_step:
 ;     jr z, update_sound_PLAY_SFX_DRUM_SHORT_RE
     dec a   ; MUSIC_CMD_PLAY_SFX_DRUM_SHORTER_RE
     jr z, update_sound_PLAY_SFX_DRUM_SHORTER_RE
+    dec a   ; MUSIC_CMD_PLAY_SFX_DRUM_SHORTER_C
+    jr z, update_sound_PLAY_SFX_DRUM_SHORTER_C
     dec a   ; MUSIC_CMD_PLAY_SFX_SHORT_HIHAT_LOUDER
     jr z, update_sound_PLAY_SFX_SHORT_HIHAT_LOUDER
     dec a   ; MUSIC_CMD_GOTO
@@ -520,6 +525,11 @@ update_sound_PLAY_SFX_SHORT_HIHAT:
 ;     push hl
 ;         ld hl, SFX_drum_short_re
 ;         jp update_sound_PLAY_SFX_OPEN_HIHAT_entry
+
+update_sound_PLAY_SFX_DRUM_SHORTER_C:
+    push hl
+        ld hl, SFX_drum_shorter_c
+        jp update_sound_PLAY_SFX_OPEN_HIHAT_entry
 
 update_sound_PLAY_SFX_DRUM_SHORTER_RE:
     push hl
@@ -613,8 +623,13 @@ ENDIF
         srl a  ; divide by 2
         ADD_HL_A  ; HL = MUSIC_instruments + channel
         ld a, (hl)  ; we get the instrument
-        ld de, instrument_profiles
-        ADD_DE_A  ; we calculate pointer to the instrument envelope
+        ; we calculate pointer to the instrument envelope
+        ld hl, instrument_profile_table
+        add a, a
+        ADD_HL_A
+        ld e, (hl)
+        inc hl
+        ld d, (hl)
         ld hl, MUSIC_instrument_envelope_ptr
         add hl, bc  ; b should still be 0 here, so, we are just adding c
         ld (hl), e

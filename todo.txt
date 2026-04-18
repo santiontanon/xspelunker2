@@ -1,11 +1,8 @@
 to do:
+***- Can I make the animation of the characters in the intro sync with the music?
 ***- music: (brain 12, 15, 23, 25 have potential)
-  ***- tomb (not sure what will I use this for, maybe for Yatzil's grave):
-    OK - play with the instruments
-    ***- try a different type of third voice, maybe with a different melody
-  ***- story:
-    ***- I like the original jazzy song: keep the same style and compose a variation
-    ***- short song for when the map is being displayed (reused in the game for letters/map/tablets/puzzles)
+  ***- story2:
+    ***- a bit more dramatic song for when they realize there is a world domination plan
   ***- short "game over" tune
   ***- boss music (boss music increases in speed as health goes down: 50%, 25%)
   ***- xibalba (look at "story" from Triton, can I do something liek that?)

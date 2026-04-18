@@ -1,35 +1,44 @@
 ;-----------------------------------------------
+
+instrument_profile_table:
+    dw square_wave_instrument_profile
+    dw piano_instrument_profile
+    dw soft_piano_instrument_profile
+    dw pad_instrument_profile
+    dw piano_staccato_instrument_profile
+    dw major_arpeggio_instrument_profile
+    dw major_arpeggio_2ndinv_instrument_profile
+    dw minor_arpeggio_instrument_profile
+    dw minor_arpeggio_2ndinv_instrument_profile
+    dw major_arpeggio_fadein_instrument_profile
+    dw minor_arpeggio_fadein_instrument_profile
+    dw diminished_arpeggio_fadein_instrument_profile
+
 instrument_profiles:
 square_wave_instrument_profile:
-    db 12  ; 1 byte
+    db 12, #ff
 piano_instrument_profile:
+major_arpeggio_instrument_profile:
+major_arpeggio_2ndinv_instrument_profile:
+minor_arpeggio_instrument_profile:
+minor_arpeggio_2ndinv_instrument_profile:
     db 13, 13, 12, 11, 10, 10, 9, 9
-    db 8, 8, 7, 7, 6, #ff  ; start at 1, 14 bytes
+    db 8, 8, 7, 7, 6, #ff
 soft_piano_instrument_profile:
     db 12, 11, 10, 9, 8, 8, 7, 7
-    db 6, 6, 5, 5, 4, #ff  ; start at 15, 14 bytes
+    db 6, 6, 5, 5, 4, #ff
 pad_instrument_profile:
     db  2,  6,  8, 12, 12, 12, 12, 12
     db 12, 11, 10,  9,  8,  7,  7,  6
     db  6,  6,  6,  5,  5,  5,  5,  5
     db  5,  5,  5,  4,  4,  4,  4,  4
-    db  4,  4,  4,  3, #ff  ; start at 29, 37 bytes
+    db  4,  4,  4,  3, #ff
 piano_staccato_instrument_profile:
     db 12, 11, 9, 8, 7, 6, 5, 4
-    db 3, 2, 1, 0, #ff  ; stat at 66, 13 bytes
-major_arpeggio_instrument_profile:
-    db 13, 13, 12, 11, 10, 10, 9, 9
-    db 8, 8, 7, 7, 6, #ff  ; start at 79 14 bytes
-major_arpeggio_2ndinv_instrument_profile:
-    db 13, 13, 12, 11, 10, 10, 9, 9
-    db 8, 8, 7, 7, 6, #ff  ; start at 94 14 bytes
-minor_arpeggio_instrument_profile:
-    db 13, 13, 12, 11, 10, 10, 9, 9
-    db 8, 8, 7, 7, 6, #ff  ; start at 107 14 bytes
-minor_arpeggio_2ndinv_instrument_profile:
-    db 13, 13, 12, 11, 10, 10, 9, 9
-    db 8, 8, 7, 7, 6, #ff  ; start at 121 14 bytes
+    db 3, 2, 1, 0, #ff
 major_arpeggio_fadein_instrument_profile:
+minor_arpeggio_fadein_instrument_profile
+diminished_arpeggio_fadein_instrument_profile
     db 2, 2, 3, 3, 4, 4, 5, 5
     db 6, 6, 7, 7, 8, 8, 8, 8
     db 9, 9, 9, 9, 9, 9, 10, 10
@@ -39,18 +48,7 @@ major_arpeggio_fadein_instrument_profile:
     db 7, 7, 7, 7, 6, 6, 6, 6
     db 6, 6, 6, 6, 6, 6, 5, 5
     db 5, 5, 4, 4, 4, 4, 3, 3
-    db 2, 2, 1, #ff  ; start at 135, 76 bytes
-minor_arpeggio_fadein_instrument_profile:
-    db 2, 2, 3, 3, 4, 4, 5, 5
-    db 6, 6, 7, 7, 8, 8, 8, 8
-    db 9, 9, 9, 9, 9, 9, 10, 10
-    db 10, 10, 10, 10, 10, 10, 9, 9
-    db 9, 9, 9, 9, 8, 8, 8, 8
-    db 8, 8, 7, 7, 7, 7, 7, 7
-    db 7, 7, 7, 7, 6, 6, 6, 6
-    db 6, 6, 6, 6, 6, 6, 5, 5
-    db 5, 5, 4, 4, 4, 4, 3, 3
-    db 2, 2, 1, #ff  ; start at 211 76 bytes
+    db 2, 2, 1, #ff
 
 
 ;-----------------------------------------------
@@ -64,6 +62,8 @@ minor_arpeggio_fadein_pattern:
     db 0, 7*2, 3*2, 7*2
 minor_arpeggio_2ndinv_pattern:
     db 0, 8*2, 5*2, 8*2
+diminished_arpeggio_pattern:
+    db 0, 6*2, 3*2, 6*2
 
 
 ;-----------------------------------------------
