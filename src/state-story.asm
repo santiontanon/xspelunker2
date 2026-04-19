@@ -15,7 +15,6 @@ state_story:
     ld sp, stack
 	call clear_screen_left_to_right
 
-	call stop_music
 	ld hl, music_intro1_bin
 	ld a, 6
 	call play_music_adjusting_tempo
@@ -421,6 +420,8 @@ state_story_scene17_loop:
 	call wait_b_halts_skippable
 	jp nz, state_story_skip
 
+	call stop_music
+
 	ld hl, SFX_explosion
 	call play_SFX_with_high_priority
 
@@ -476,6 +477,11 @@ state_story_scene19_loop:
 	ld b, 15
 	call state_story_pause_state_removing_bubble
 	jp nz, state_story_skip
+
+	; change to mystery music
+	ld hl, music_intro2_bin
+	ld a, 14
+	call play_music_adjusting_tempo
 
 	; scene 20: Xavier realizes there is something inside
 	ld hl, TEXT_STORY25

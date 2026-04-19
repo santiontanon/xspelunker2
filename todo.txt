@@ -1,7 +1,6 @@
 to do:
 ***- Can I make the animation of the characters in the intro sync with the music?
 ***- music: (brain 12, 15, 23, 25 have potential)
-  ***- add "intro2.tsv" to the game (with proper looping)
   ***- short "game over" tune
   ***- boss music (boss music increases in speed as health goes down: 50%, 25%)
   ***- xibalba (look at "story" from Triton, can I do something liek that?)
