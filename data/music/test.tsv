@@ -1,328 +1,53 @@
-pianosoft,Fa2	pianosoft,-	piano,-
-	do3	
-	fa3	
-	do3	
-	sol3	
-	do3	
-	fa3	
-	do3	
-Fa2		
-	do3	
-	fa3	
-	do3	
-	sol3	
-	do3	
-	fa3	
-	do3	
-re2	-	
-	la2	
-	re3	
-	la2	
-	mi3	
-	la2	
-	re3	
-	la2	
-re2		
-	la2	
-	re3	
-	la2	
-	mi3	
-	la2	
-	re3	
-	la2	
-Fa2	-	sib3
-	do3	
-	fa3	
-	do3	
-	sol3	la3
-	do3	
-	fa3	
-	do3	
-Fa2		
-	do3	
-	fa3	
-	do3	
-	sol3	sol3
-	do3	
-	fa3	fa3
-	do3	
-re2	-	sib3
-	la2	
-	re3	
-	la2	
-	mi3	la3
-	la2	
-	re3	
-	la2	
-re2		
-	la2	
-	re3	
-	la2	
-	mi3	sol3
-	la2	
-	re3	fa3
-	la2	
-Fa2	-	sib3
-	do3	
-	fa3	
-	do3	
-	sol3	la3
-	do3	
-	fa3	
-	do3	
-Fa2		
-	do3	
-	fa3	
-	do3	
-	sol3	sol3
-	do3	
-	fa3	la3
-	do3	
-re2	-	fa3
-	la2	
-	re3	
-	la2	
-	mi3	
-	la2	
-	re3	
-	la2	
-re2		
-	la2	
-	re3	
-	la2	
-	mi3	
-	la2	
-	re3	
-	la2	
-sib1		re3
-	fa2	
-	sib2	
-	fa2	
-	do3	mi3
-	fa2	
-	Sib2	fa3
-	fa2	
-do2		mi3
-	sol2	
-	do3	
-	sol2	
-	re3	fa3
-	sol2	
-	do3	sol3
-	sol2	
-re2		fa3
-	la2	
-	re3	
-	la2	
-	mi3	sol3
-	la2	
-	re3	la3
-	la2	
-do2		sol3
-	sol2	
-	do3	la3
-	sol2	
-	re3	sib3
-	sol2	
-	do3	do4
-	sol2	
-do2		re4
-	sol2	
-	do3	mi4
-	sol2	
-	re3	fa4
-	sol2	
-	do3	sol4
-	sol2	
-pianosoft,Fa2	pianosoft,sol4	piano,sib4
-	do3	
-	fa3	
-	do3	
-fa4	sol3	la4
-	do3	
-	fa3	
-	do3	
-Fa2		
-	do3	
-	fa3	
-	do3	
-mi3	sol3	sol4
-	do3	
-re4	fa3	fa4
-	do3	
-re2	sol4	sib4
-	la2	
-	re3	
-	la2	
-fa4	mi3	la4
-	la2	
-	re3	
-	la2	
-re2		
-	la2	
-	re3	
-	la2	
-mi4	mi3	sol4
-	la2	
-re4	re3	fa4
-	la2	
-Fa2	sol4	sib4
-	do3	
-	fa3	
-	do3	
-fa4	sol3	la4
-	do3	
-	fa3	
-	do3	
-Fa2		
-	do3	
-	fa3	
-	do3	
-mi4	sol3	sol4
-	do3	
-fa4	fa3	la4
-	do3	
-re2	re4	fa4
-	la2	
-	re3	
-	la2	
-	mi3	
-	la2	
-	re3	
-	la2	
-re2		
-	la2	
-	re3	
-	la2	
-	mi3	
-	la2	
-	re3	
-	la2	
-sib1		re4
-	fa2	
-	sib2	
-	fa2	
-	do3	mi4
-	fa2	
-	Sib2	fa4
-	fa2	
-do2		mi4
-	sol2	
-	do3	
-	sol2	
-	re3	fa4
-	sol2	
-	do3	sol4
-	sol2	
-re2		fa4
-	la2	
-	re3	
-	la2	
-	mi3	sol4
-	la2	
-	re3	la4
-	la2	
-do2		sol4
-	sol2	
-	do3	fa4
-	sol2	
-	re3	mi4
-	sol2	
-	do3	re4
-	sol2	
-do2		do4
-	sol2	
-	do3	sib3
-	sol2	
-	re3	la3
-	sol2	
-	do3	sol3
-	sol2	
-pianosoft,Fa2	pianosoft,-	piano,la3
-	do3	
-	fa3	
-	do3	
-	sol3	
-	do3	
-	fa3	
-	do3	
-Fa2		
-	do3	
-	fa3	
-	do3	
-	sol3	sol3
-	do3	
-	fa3	la3
-	do3	
-re2	-	fa3
-	la2	
-	re3	
-	la2	
-	mi3	
-	la2	
-	re3	
-	la2	
-re2		
-	la2	
-	re3	
-	la2	
-	mi3	
-	la2	
-	re3	
-	la2	
-sib1		re3
-	fa2	
-	sib2	
-	fa2	
-	do3	mi3
-	fa2	
-	Sib2	fa3
-	fa2	
-do2		mi3
-	sol2	
-	do3	
-	sol2	
-	re3	do3
-	sol2	
-	do3	
-	sol2	
-Fa2		la3
-	do3	
-	fa3	
-	do3	
-	sol3	
-	do3	
-	fa3	
-	do3	
-Fa2		la3
-	do3	
-	fa3	
-	do3	
-	sol3	do4
-	do3	
-	fa3	fa4
-	do3	
-do2		mi4
-	sol2	
-	do3	
-	sol2	
-	re3	do4
-	sol2	
-	do3	
-	sol2	
-Fa2		re4
-	do3	
-	fa3	do4
-	do3	
-	sol3	sib3
-	do3	
-	fa3	la3
-	do3	
-do2		sol3
-	sol2	
-	do3	
-	sol2	
-	re3	
-	sol2	
-	do3	
-	sol2	
+piano,la3	piano,-	piano,-
+		
+		
+sol3		
+		
+		
+fa3	re2	la2
+		
+		
+sol3		
+		
+		
+mi3		
+		
+		
+fa3		
+		
+		
+mi3	do2	la2
+		
+		
+		
+fa3		
+		
+		
+		
+re3		
+		
+		
+		
+		
+do3		
+		
+		
+		
+		
+		
+		
+re3	fa2	la2
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+piano-end,re3	piano-end,fa2	piano-end,la2
+		
+-	-	-

@@ -24,14 +24,16 @@ state_game_over_text_table:
 	db 10, TEXT_PAGE3
 	dw TEXT_GAMEOVER_STATS_10, CHRTBL2 + (16*32+19)*8, #8050
 	db 10, TEXT_PAGE3
-state_game_over_text_table_end_no_continue:
+state_game_over_text_table_end:
+
+state_game_over_text_table_continue:
 	dw TEXT_CONTINUE, CHRTBL2 + (7*32+13)*8, #80f0
 	db 6, TEXT_PAGE
 	dw TEXT_YES, CHRTBL2 + (8*32+14)*8, #80f0
 	db 4, TEXT_PAGE
 	dw TEXT_NO, CHRTBL2 + (9*32+14)*8, #80f0
 	db 4, TEXT_PAGE
-state_game_over_text_table_end:
+state_game_over_text_table_continue_end
 
 
 ;-----------------------------------------------
@@ -44,46 +46,9 @@ state_game_over:
 
 	call set_bitmap_mode
 
-	ld hl, (stats__ending)
-	ld bc, TEXT_ENDING_FAIL
-	or a
-	sbc hl, bc
-
 	ld ix, state_game_over_text_table
 	ld b, (state_game_over_text_table_end - state_game_over_text_table) / 8
-	jr z, state_game_over_text_loop  ; player failed
-	ld b, (state_game_over_text_table_end_no_continue - state_game_over_text_table) / 8
-state_game_over_text_loop:
-	push bc
-		ld e, (ix)
-		ld d, (ix + 1)
-		ld c, (ix + 7)
-		ld a, c
-		cp TEXT_PAGE
-		jr nz, state_game_over_text_loop_page3
-state_game_over_text_loop_page1:
-		ex de, hl
-		jr state_game_over_text_loop_page1_continue
-state_game_over_text_loop_page3:
-		ld hl, copy_text_from_another_page
-		call call_hl_in_page_c_8000
-		ld hl, buffer_4096
-state_game_over_text_loop_page1_continue:
-		ld e, (ix + 2)
-		ld d, (ix + 3)
-		ld a, (ix + 4)
-		ld iyl, a
-		ld a, (ix + 5)
-		ld iyh, a
-		ld b, (ix + 6)  ; text width
-		push ix
-			call draw_sentence_to_vdp_from_another_page	
-		pop ix
-
-		ld bc, 8
-		add ix, bc
-	pop bc
-	djnz state_game_over_text_loop
+	call state_game_over_print_text_table
 
 	; print stats:
 	call state_game_over_print_seed
@@ -104,7 +69,7 @@ state_game_over_text_loop_page1_continue:
 	sbc hl, bc
 	jr z, state_game_over_ask_for_continue
 	; player reached a good ending:
-	ld b, 50
+	ld b, 100
 	call wait_b_halts
 	xor a
 	ld (keyboard_clicks), a
@@ -112,6 +77,17 @@ state_game_over_text_loop_page1_continue:
 	jr state_game_over_quit
 
 state_game_over_ask_for_continue:
+	ld hl, music_gameover_bin
+	ld a, 5
+	call play_music_adjusting_tempo
+
+	ld b, 100
+	call wait_b_halts
+
+	ld ix, state_game_over_text_table_continue
+	ld b, (state_game_over_text_table_continue_end - state_game_over_text_table_continue) / 8
+	call state_game_over_print_text_table
+	
 	; continue yes/no:
 	ld a, 8 * 8 - 1  ; y coordinate of the first option
 	ld (tmp_dialog_options_position), a
@@ -518,4 +494,39 @@ state_game_over_print_bosses_loop_not_boss4_continue:
 	inc hl
 	dec b
 	jp nz, state_game_over_print_bosses_loop
+	ret
+
+
+;-----------------------------------------------
+state_game_over_print_text_table:
+	push bc
+		ld e, (ix)
+		ld d, (ix + 1)
+		ld c, (ix + 7)
+		ld a, c
+		cp TEXT_PAGE
+		jr nz, state_game_over_print_text_table_page3
+state_game_over_print_text_table_page1:
+		ex de, hl
+		jr state_game_over_print_text_table_page1_continue
+state_game_over_print_text_table_page3:
+		ld hl, copy_text_from_another_page
+		call call_hl_in_page_c_8000
+		ld hl, buffer_4096
+state_game_over_print_text_table_page1_continue:
+		ld e, (ix + 2)
+		ld d, (ix + 3)
+		ld a, (ix + 4)
+		ld iyl, a
+		ld a, (ix + 5)
+		ld iyh, a
+		ld b, (ix + 6)  ; text width
+		push ix
+			call draw_sentence_to_vdp_from_another_page	
+		pop ix
+
+		ld bc, 8
+		add ix, bc
+	pop bc
+	djnz state_game_over_print_text_table
 	ret

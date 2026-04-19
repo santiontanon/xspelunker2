@@ -305,9 +305,9 @@ update_sound_internal_no_time_step:
     dec a   ; MUSIC_CMD_SET_INSTRUMENT
     jp z, update_sound_SET_INSTRUMENT
     dec a   ; MUSIC_CMD_PLAY_INSTRUMENT_CH1
-    jr z, update_sound_PLAY_INSTRUMENT_CH1
+    jp z, update_sound_PLAY_INSTRUMENT_CH1
     dec a   ; MUSIC_CMD_PLAY_INSTRUMENT_CH2
-    jr z, update_sound_PLAY_INSTRUMENT_CH2
+    jp z, update_sound_PLAY_INSTRUMENT_CH2
     dec a   ; MUSIC_CMD_PLAY_INSTRUMENT_CH3
     jp z, update_sound_PLAY_INSTRUMENT_CH3
     dec a   ; MUSIC_CMD_PLAY_SFX_OPEN_HIHAT
@@ -341,8 +341,10 @@ ENDIF
 ;    jr z, update_sound_TRANSPOSE_UP
 ;    dec a   ; MUSIC_CMD_CLEAR_TRANSPOSE
 ;    jr z, update_sound_CLEAR_TRANSPOSE
-    ; SFX_CMD_END
-;    jp update_sound_SFX_END  ; if the SFX sound is over, we are done
+   dec a   ; SFX_CMD_END
+   jr z, update_sound_SFX_END  ; if the SFX sound is over, we are done
+   ; MUSIC_CMD_END
+   jp stop_music
 
 
 update_sound_SFX_END:

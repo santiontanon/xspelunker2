@@ -59,8 +59,8 @@ MUSIC_CMD_SET_VOLUME3:			equ #0f + MUSIC_CMD_FLAG
 ENDIF
 ; MUSIC_CMD_TRANSPOSE_UP:			equ #0c + MUSIC_CMD_FLAG
 ; MUSIC_CMD_CLEAR_TRANSPOSE:		equ #0d + MUSIC_CMD_FLAG
-; MUSIC_CMD_END:                	equ #0e + MUSIC_CMD_FLAG
 SFX_CMD_END:                	equ #10 + MUSIC_CMD_FLAG
+MUSIC_CMD_END:                	equ #11 + MUSIC_CMD_FLAG
 
 
 
