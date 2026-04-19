@@ -302,6 +302,9 @@ upload_tile_patch_to_all_banks_loop:
 ; - hl: ptr to tiles
 ; - c: megarom page where the tiles are
 setup_game_tiles_only_biome:
+    ld a, h
+    or l
+    ret z  ; if the ptr is zero, don't do anything
     ld de, buffer_4096
     call dzx0_from_page_c
 

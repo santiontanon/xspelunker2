@@ -9,7 +9,6 @@ to do:
   ***- moon
   ***- ending aliens
   ***- ending beach (reuse the story jazzy song)
-  ***- ending credits
   ***- make sure that "play_music_adjusting_tempo" has cases for all the tempos I use
 
 - random seed puzzle (all happens without going to moon/mars):

@@ -25,7 +25,7 @@ minor_arpeggio_2ndinv_instrument_profile:
     db 13, 13, 12, 11, 10, 10, 9, 9
     db 8, 8, 7, 7, 6, #ff
 soft_piano_instrument_profile:
-    db 12, 11, 10, 9, 8, 8, 7, 7
+    db 11, 10, 9, 8, 8, 7, 7
     db 6, 6, 5, 5, 4, #ff
 pad_instrument_profile:
     db  2,  6,  8, 12, 12, 12, 12, 12

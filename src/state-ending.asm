@@ -757,6 +757,11 @@ ending_C_enemy_intro_ptr_table:
 ending_final_text_scene:
 	push bc
 		call disable_VDP_output
+
+			ld hl, music_credits_bin
+			ld a, 14
+			call play_music_adjusting_tempo
+
 			call set_bitmap_mode
 
 			; set the 12 tiles of each row in the middle bank to 0

@@ -176,21 +176,25 @@ IF MUSIC_USE_ARPEGGIOS = 1
         ex de, hl
         cp MUSIC_INSTRUMENT_ARPEGGIO_MAJOR
         jr c, update_sound_SET_INSTRUMENT_not_an_arpeggio
-        ld hl, diminished_arpeggio_pattern
-        cp MUSIC_INSTRUMENT_ARPEGGIO_DIMINISHED_FADEIN
-        jr z, update_sound_SET_INSTRUMENT_arpeggio
         ld hl, major_arpeggio_pattern
         jr z, update_sound_SET_INSTRUMENT_arpeggio
         cp MUSIC_INSTRUMENT_ARPEGGIO_MAJOR_FADEIN
         jr z, update_sound_SET_INSTRUMENT_arpeggio
+
         ld hl, major_arpeggio_2ndinv_pattern
         cp MUSIC_INSTRUMENT_ARPEGGIO_MAJOR_2NDINV
         jr z, update_sound_SET_INSTRUMENT_arpeggio
+
         ld hl, minor_arpeggio_pattern
         cp MUSIC_INSTRUMENT_ARPEGGIO_MINOR
         jr z, update_sound_SET_INSTRUMENT_arpeggio
         cp MUSIC_INSTRUMENT_ARPEGGIO_MINOR_FADEIN
         jr z, update_sound_SET_INSTRUMENT_arpeggio
+
+        ld hl, diminished_arpeggio_pattern
+        cp MUSIC_INSTRUMENT_ARPEGGIO_DIMINISHED_FADEIN
+        jr z, update_sound_SET_INSTRUMENT_arpeggio
+
         ld hl, minor_arpeggio_2ndinv_pattern
 update_sound_SET_INSTRUMENT_arpeggio:
         ldi
