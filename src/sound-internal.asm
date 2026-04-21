@@ -328,6 +328,10 @@ update_sound_internal_no_time_step:
     jp z, update_sound_REPEAT
     dec a   ; MUSIC_CMD_END_REPEAT
     jr z, update_sound_END_REPEAT
+    dec a   ; SFX_CMD_END
+    jr z, update_sound_SFX_END  ; if the SFX sound is over, we are done
+    dec a   ; MUSIC_CMD_END
+    jp z, stop_music
 IF MUSIC_USE_SET_VOLUME = 1
     dec a  ; MUSIC_CMD_SET_VOLUME1
     jr z, sound_update_set_volume1
@@ -336,15 +340,15 @@ IF MUSIC_USE_SET_VOLUME = 1
     dec a  ; MUSIC_CMD_SET_VOLUME3
     jr z, sound_update_set_volume3
 ENDIF
-
-;    dec a   ; MUSIC_CMD_TRANSPOSE_UP
-;    jr z, update_sound_TRANSPOSE_UP
-;    dec a   ; MUSIC_CMD_CLEAR_TRANSPOSE
-;    jr z, update_sound_CLEAR_TRANSPOSE
-   dec a   ; SFX_CMD_END
-   jr z, update_sound_SFX_END  ; if the SFX sound is over, we are done
-   ; MUSIC_CMD_END
-   jp stop_music
+IF MUSIC_USE_TRANSPOSE = 1
+   dec a   ; MUSIC_CMD_TRANSPOSE_UP
+   jr z, update_sound_TRANSPOSE_UP
+   dec a   ; MUSIC_CMD_CLEAR_TRANSPOSE
+   jr z, update_sound_CLEAR_TRANSPOSE
+ENDIF
+    ; we should never get here
+    ; ...
+    jp stop_music
 
 
 update_sound_SFX_END:
@@ -415,17 +419,18 @@ sound_update_set_volume3:
 ENDIF
 
 
-;update_sound_TRANSPOSE_UP:
-;    ld a, (MUSIC_transpose)
-;    inc a
-;update_sound_TRANSPOSE_UP_entry:
-;    ld (MUSIC_transpose), a
-;    jp update_sound_internal_loop
+IF MUSIC_USE_TRANSPOSE = 1
+update_sound_TRANSPOSE_UP:
+   ld a, (MUSIC_transpose)
+   add a, 2  ; each semi-tone corresponds to adding 2 bytes to the note offset.
+update_sound_TRANSPOSE_UP_entry:
+   ld (MUSIC_transpose), a
+   jp update_sound_internal_loop
 
-
-;update_sound_CLEAR_TRANSPOSE:
-;    xor a
-;    jp update_sound_TRANSPOSE_UP_entry
+update_sound_CLEAR_TRANSPOSE:
+   xor a
+   jp update_sound_TRANSPOSE_UP_entry
+ENDIF
 
 
 update_sound_PLAY_INSTRUMENT_CH1:
@@ -460,11 +465,18 @@ IF MUSIC_USE_ARPEGGIOS = 1
             ld (hl), c  ; store the base note * 2
         ex hl, de
 ENDIF
+        ld d, a  ; PSG register
+IF MUSIC_USE_TRANSPOSE = 1
+        ld hl, MUSIC_transpose
+        ld a, c
+        add a, (hl)
+        ld c, a
+        ld a, d
+ENDIF
         ld hl, note_period_table
         add hl, bc
         ld e, (hl)  ; MSB of the period    
         inc l  ; note_period_table is 2-aligned
-        ld d, a
         fast_WRTPSG_macro
         ld a, d
         ld e, (hl)  ; LSB of the period    

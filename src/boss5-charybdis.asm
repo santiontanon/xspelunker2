@@ -80,7 +80,7 @@ update_boss5_behavior_1_state_0_no_jump:
 
 update_boss5_behavior_1_state_1:
 	; idle:
-	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_IDLE_TIME_OFFSET)
+	ld a, (boss__settings + BOSS_5_CHARYBDIS_IDLE_TIME_OFFSET)
 	ld c, a
 	ld hl, boss__state_timer
 	ld a, (hl)
@@ -129,7 +129,7 @@ update_boss5_behavior_1_state_2:
 	; walk left:
 	call update_boss5_charybdis_maybe_fire_eye_bullet
 
-	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_WALK_MASK)
+	ld a, (boss__settings + BOSS_5_CHARYBDIS_WALK_MASK)
 	ld c, a
 	inc a
 	add a, a
@@ -173,7 +173,7 @@ update_boss5_behavior_1_state_3:
 	; walk right:
 	call update_boss5_charybdis_maybe_fire_eye_bullet
 
-	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_WALK_MASK)
+	ld a, (boss__settings + BOSS_5_CHARYBDIS_WALK_MASK)
 	ld c, a
 	inc a
 	add a, a
@@ -214,7 +214,7 @@ update_boss5_behavior_1_state_3_change_direction:
 
 
 update_boss5_behavior_1_state_4:
-	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_ATTACK_DELAY)
+	ld a, (boss__settings + BOSS_5_CHARYBDIS_ATTACK_DELAY)
 	ld c, a
 	ld hl, boss__state_timer
 	ld a, (hl)
@@ -455,7 +455,7 @@ update_boss5_behavior_2_state_0_no_claw_attack:
 update_boss5_behavior_2_state_4:
 	call update_boss5_charybdis_maybe_fire_eye_bullet
 	; left-claw attack:
-	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_CLAW_ATTACK_SPEED)
+	ld a, (boss__settings + BOSS_5_CHARYBDIS_CLAW_ATTACK_SPEED)
 	ld c, a
 	ld hl, boss__state_timer
 	ld a, (hl)
@@ -518,7 +518,7 @@ update_boss5_behavior_2_state_4_maybe_dettach:
 update_boss5_behavior_2_state_5:
 	call update_boss5_charybdis_maybe_fire_eye_bullet
 	; right-claw attack:
-	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_CLAW_ATTACK_SPEED)
+	ld a, (boss__settings + BOSS_5_CHARYBDIS_CLAW_ATTACK_SPEED)
 	ld c, a
 	ld hl, boss__state_timer
 	ld a, (hl)
@@ -576,7 +576,7 @@ update_boss5_behavior_2_state_6:
 
 update_boss5_behavior_2_state_6_continue:
 	; left flying claw (rising):
-	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_FLYING_CLAW_SPEED_MASK)
+	ld a, (boss__settings + BOSS_5_CHARYBDIS_FLYING_CLAW_SPEED_MASK)
 	ld c, a
 	ld hl, boss__state_timer
 	ld a, (hl)
@@ -600,7 +600,7 @@ update_boss5_behavior_2_state_7:
 
 update_boss5_behavior_2_state_7_continue:
 	; left flying claw (left1):
-	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_FLYING_CLAW_SPEED_MASK)
+	ld a, (boss__settings + BOSS_5_CHARYBDIS_FLYING_CLAW_SPEED_MASK)
 	ld c, a
 	ld hl, boss__state_timer
 	ld a, (hl)
@@ -629,7 +629,7 @@ update_boss5_behavior_2_state_8:
 
 update_boss5_behavior_2_state_8_continue:
 	; left flying claw (right1):
-	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_FLYING_CLAW_SPEED_MASK)
+	ld a, (boss__settings + BOSS_5_CHARYBDIS_FLYING_CLAW_SPEED_MASK)
 	ld c, a
 	ld hl, boss__state_timer
 	ld a, (hl)
@@ -658,7 +658,7 @@ update_boss5_behavior_2_state_9:
 
 update_boss5_behavior_2_state_9_continue:
 	; left flying claw (down1):
-	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_FLYING_CLAW_SPEED_MASK)
+	ld a, (boss__settings + BOSS_5_CHARYBDIS_FLYING_CLAW_SPEED_MASK)
 	ld c, a
 	ld hl, boss__state_timer
 	ld a, (hl)
@@ -694,7 +694,7 @@ update_boss5_behavior_2_state_11:
 	call update_boss5_behavior_2_left_stump_control
 
 	; left flying claw (right2):
-	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_FLYING_CLAW_SPEED_MASK)
+	ld a, (boss__settings + BOSS_5_CHARYBDIS_FLYING_CLAW_SPEED_MASK)
 	ld c, a
 	ld hl, boss__state_timer
 	ld a, (hl)
@@ -726,7 +726,7 @@ update_boss5_behavior_2_state_12:
 	ld (boss__5_charybdis_left_claw_state), a
 
 	; left flying claw (down2):
-	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_FLYING_CLAW_SPEED_MASK)
+	ld a, (boss__settings + BOSS_5_CHARYBDIS_FLYING_CLAW_SPEED_MASK)
 	ld c, a
 	ld hl, boss__state_timer
 	ld a, (hl)
@@ -742,7 +742,7 @@ update_boss5_behavior_2_state_12:
 	jp nz, update_boss5_draw_charybdis
 	ld hl, boss__state
 	ld (hl), 4  ; back to left claw attack, to retract the claw
-	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_CLAW_ATTACK_SPEED)
+	ld a, (boss__settings + BOSS_5_CHARYBDIS_CLAW_ATTACK_SPEED)
 	add a, a
 	add a, a
 	ld (boss__state_timer), a
@@ -792,7 +792,7 @@ update_boss5_behavior_2_state_18:
 	call update_boss5_behavior_2_right_stump_control
 
 	; right flying claw (right2):
-	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_FLYING_CLAW_SPEED_MASK)
+	ld a, (boss__settings + BOSS_5_CHARYBDIS_FLYING_CLAW_SPEED_MASK)
 	ld c, a
 	ld hl, boss__state_timer
 	ld a, (hl)
@@ -824,7 +824,7 @@ update_boss5_behavior_2_state_19:
 	ld (boss__5_charybdis_right_claw_state), a
 
 	; right flying claw (down2):
-	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_FLYING_CLAW_SPEED_MASK)
+	ld a, (boss__settings + BOSS_5_CHARYBDIS_FLYING_CLAW_SPEED_MASK)
 	ld c, a
 	ld hl, boss__state_timer
 	ld a, (hl)
@@ -840,7 +840,7 @@ update_boss5_behavior_2_state_19:
 	jp nz, update_boss5_draw_charybdis
 	ld hl, boss__state
 	ld (hl), 5  ; back to right claw attack, to retract the claw
-	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_CLAW_ATTACK_SPEED)
+	ld a, (boss__settings + BOSS_5_CHARYBDIS_CLAW_ATTACK_SPEED)
 	add a, a
 	add a, a
 	ld (boss__state_timer), a
@@ -1295,7 +1295,7 @@ update_boss5_draw_charybdis_no_flying_claws:
 
 ;-----------------------------------------------
 update_boss5_charybdis_maybe_fire_eye_bullet:
-	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_BULLET_TIME_MASK)
+	ld a, (boss__settings + BOSS_5_CHARYBDIS_BULLET_TIME_MASK)
 	ld c, a
 	call random_a
 	and c
@@ -1352,6 +1352,7 @@ player_weapon_hitbox_check_boss__boss5_charybdis_hit:
 	cp 3
 	jr z, player_weapon_hitbox_check_boss__boss5_charybdis_hit_break_vat
 	; boss is dead:
+	call stop_music
 	ld a, 3
 	ld (boss__behavior), a
 	xor a
@@ -1361,7 +1362,7 @@ player_weapon_hitbox_check_boss__boss5_charybdis_hit:
 player_weapon_hitbox_check_boss__boss5_charybdis_hit_break_vat:
 	inc a
 	ld (boss__5_top_state), a
-	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_HP_OFFSET)  ; brain HP
+	ld a, (boss__settings + BOSS_5_CHARYBDIS_HP_OFFSET)  ; brain HP
 	ld h, 0
 	ld l, a
 	ld (boss__hp), hl

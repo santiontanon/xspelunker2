@@ -183,11 +183,11 @@ update_boss5_behavior_0_state_3_charybdis:
 	jr z, update_boss5_behavior_0_state_3_charybdis_continue
 	ld hl, boss5_charybdis_difficulty_setting__hardest
 update_boss5_behavior_0_state_3_charybdis_continue:
-	ld de, boss__5_settings
+	ld de, boss__settings
 	ld bc, boss5_charybdis_difficulty_setting__normal - boss5_charybdis_difficulty_setting__easy
 	ldir
 
-	ld a, (boss__5_settings + BOSS_5_CHARYBDIS_HP_OFFSET + 1)  ; vat HP
+	ld a, (boss__settings + BOSS_5_CHARYBDIS_HP_OFFSET + 1)  ; vat HP
 	ld h, 0
 	ld l, a
 	ld (boss__hp), hl
@@ -580,11 +580,11 @@ update_boss5_behavior_init_scylla:
 	jr z, update_boss5_behavior_init_scylla_continue
 	ld hl, boss5_scylla_difficulty_setting__hardest
 update_boss5_behavior_init_scylla_continue:
-	ld de, boss__5_settings
+	ld de, boss__settings
 	ld bc, boss5_scylla_difficulty_setting__normal - boss5_scylla_difficulty_setting__easy
 	ldir	
 
-	ld a, (boss__5_settings + BOSS_5_SCYLLA_HP_OFFSET + 1)  ; vat HP
+	ld a, (boss__settings + BOSS_5_SCYLLA_HP_OFFSET + 1)  ; vat HP
 	ld h, 0
 	ld l, a
 	ld (boss__hp), hl
@@ -614,7 +614,7 @@ update_boss5_behavior_init_scylla_continue:
 	ld (boss__5_scylla_arms_state + 3), a
 	ld (boss__5_scylla_arms_state + 4), a
 
-	ld a, (boss__5_settings + BOSS_5_SCYLLA_TENTACLE_HP_OFFSET)
+	ld a, (boss__settings + BOSS_5_SCYLLA_TENTACLE_HP_OFFSET)
 	ld (boss__5_scylla_arms_hp), a
 	ld (boss__5_scylla_arms_hp + 1), a
 	ld (boss__5_scylla_arms_hp + 2), a

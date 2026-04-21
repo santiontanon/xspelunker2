@@ -875,6 +875,7 @@ update_boss4_behavior_continue:
 	ld a, h
 	or l
 	jr nz, update_boss4_behavior_continue2
+	call stop_music
 	; boss is dead!
 	ld hl, boss__behavior
 	ld a, (hl)
@@ -1006,7 +1007,7 @@ update_boss4_behavior_1_state_0:
 	jr z, update_boss4_behavior_1_state_0_continue
 	ld hl, boss4_difficulty_setting__hardest
 update_boss4_behavior_1_state_0_continue:
-	ld de, boss__4_settings
+	ld de, boss__settings
 	ld bc, boss4_difficulty_setting__normal - boss4_difficulty_setting__easy
 	ldir
 
@@ -1021,7 +1022,7 @@ update_boss4_behavior_1_state_0_continue:
 	ld a, 29
 	ld (boss__y), a
 	ld (boss__y2), a
-	ld hl, (boss__4_settings + BOSS_4_HP_OFFSET)
+	ld hl, (boss__settings + BOSS_4_HP_OFFSET)
 	ld (boss__hp), hl
 	ld hl, player_weapon_hitbox_check_boss__boss4_hit
 	ld (boss__hit_fn), hl
@@ -1295,7 +1296,7 @@ update_boss4_behavior_2_internal:
 	jr c, update_boss4_behavior_2_internal_no_mouth
 update_boss4_behavior_2_internal_mouth:
 	; update mouth state:
-	ld a, (boss__4_settings + BOSS_4_MOUTH_TIMER_MASK)
+	ld a, (boss__settings + BOSS_4_MOUTH_TIMER_MASK)
 	ld c, a
 	ld a, (interrupt_cycle)
 	and c
@@ -1533,7 +1534,7 @@ update_boss4_behavior_2_state_7_lord1:
 
 
 update_boss4_behavior_2_state_8:
-	ld a, (boss__4_settings + BOSS_4_WAIT_TIME)
+	ld a, (boss__settings + BOSS_4_WAIT_TIME)
 	ld c, a
 	ld a, (ix + 1)  ; state_timer
 	inc (ix + 1)
@@ -1558,7 +1559,7 @@ update_boss4_behavior_2_state_11_continue:
 
 update_boss4_behavior_2_state_20:
 	; stomp 2: wait
-	ld a, (boss__4_settings + BOSS_4_ATTACK_WAIT_TIME)
+	ld a, (boss__settings + BOSS_4_ATTACK_WAIT_TIME)
 	ld c, a
 	ld a, (ix + 1)  ; state_timer
 	inc (ix + 1)
@@ -1641,7 +1642,7 @@ update_boss4_behavior_2_state_9:
 	ret
 
 update_boss4_behavior_2_state_9_lightning:
-	ld a, (boss__4_settings + BOSS_4_ATTACK_WAIT_TIME)
+	ld a, (boss__settings + BOSS_4_ATTACK_WAIT_TIME)
 	ld c, a
 	ld a, (ix + 1)  ; state_timer
 	inc (ix + 1)
@@ -1703,7 +1704,7 @@ update_boss4_behavior_2_state_9_lightning_hand_forward_ground_found:
 		dec b
 		ld (ix + ROOM_OBJECT_STRUCT_TILE_Y), b  ; ground height
 		ld (ix + ROOM_OBJECT_STRUCT_STATE), 3
-		ld a, (boss__4_settings + BOSS_4_ATTACK_WAIT_TIME)
+		ld a, (boss__settings + BOSS_4_ATTACK_WAIT_TIME)
 		ld (ix + ROOM_OBJECT_STRUCT_BULLET_STATE), a
 		push ix
 		pop hl  ; return the ptr to ix, so the caller can overwrite the delay if eneded
@@ -1722,7 +1723,7 @@ update_boss4_behavior_2_state_9_patan_hand_forward:
 
 
 update_boss4_behavior_2_state_9_bats:
-	ld a, (boss__4_settings + BOSS_4_ATTACK_WAIT_TIME)
+	ld a, (boss__settings + BOSS_4_ATTACK_WAIT_TIME)
 	ld c, a
 	ld a, (ix + 1)  ; state_timer
 	inc (ix + 1)
@@ -1755,7 +1756,7 @@ update_boss4_behavior_2_state_9_patan_hand_up:
 
 
 update_boss4_behavior_2_state_9_skeletons:
-	ld a, (boss__4_settings + BOSS_4_ATTACK_WAIT_TIME)
+	ld a, (boss__settings + BOSS_4_ATTACK_WAIT_TIME)
 	ld c, a
 	ld a, (ix + 1)  ; state_timer
 	inc (ix + 1)
@@ -1776,7 +1777,7 @@ update_boss4_behavior_2_state_9_skeletons:
 
 update_boss4_behavior_2_state_9_ahalgana:
 update_boss4_behavior_2_state_9_ahalpuh:
-	ld a, (boss__4_settings + BOSS_4_ATTACK_WAIT_TIME)
+	ld a, (boss__settings + BOSS_4_ATTACK_WAIT_TIME)
 	ld c, a
 	ld a, (ix + 1)  ; state_timer
 	inc (ix + 1)
@@ -1835,7 +1836,7 @@ update_boss4_behavior_2_state_9_ahalpuh_spawn_ball:
 
 
 update_boss4_behavior_2_state_9_blades:
-	ld a, (boss__4_settings + BOSS_4_ATTACK_WAIT_TIME)
+	ld a, (boss__settings + BOSS_4_ATTACK_WAIT_TIME)
 	ld c, a
 	ld a, (ix + 1)  ; state_timer
 	inc (ix + 1)
@@ -1854,7 +1855,7 @@ update_boss4_behavior_2_state_9_blades:
 	ret
 
 update_boss4_behavior_2_state_9_quicxic:
-	ld a, (boss__4_settings + BOSS_4_ATTACK_WAIT_TIME)
+	ld a, (boss__settings + BOSS_4_ATTACK_WAIT_TIME)
 	ld c, a
 	ld a, (ix + 1)  ; state_timer
 	inc (ix + 1)
@@ -1917,7 +1918,7 @@ update_boss4_behavior_2_state_9_drop_blood:
 	ret
 
 update_boss4_behavior_2_state_9_patan:
-	ld a, (boss__4_settings + BOSS_4_ATTACK_WAIT_TIME)
+	ld a, (boss__settings + BOSS_4_ATTACK_WAIT_TIME)
 	ld c, a
 	ld a, (ix + 1)  ; state_timer
 	inc (ix + 1)
@@ -2080,7 +2081,7 @@ update_boss4_behavior_2_state_24:
 	dec a
 	jp z, update_boss4_behavior_2_state_24_blood
 update_boss4_behavior_2_state_24_continue:
-	ld a, (boss__4_settings + BOSS_4_BARRAGE_TIME)
+	ld a, (boss__settings + BOSS_4_BARRAGE_TIME)
 	ld c, a
 	ld a, (ix + 1)  ; state_timer
 	inc (ix + 1)
@@ -2107,7 +2108,7 @@ update_boss4_behavior_2_state_24_lightnings:
 	jr nz, update_boss4_behavior_2_state_24_continue
 	call update_boss4_behavior_2_state_9_lightning_spawn
 	jp nz, update_boss4_behavior_2_state_24_continue
-	ld a, (boss__4_settings + BOSS_4_BARRAGE_ATTACK_WAIT_TIME)
+	ld a, (boss__settings + BOSS_4_BARRAGE_ATTACK_WAIT_TIME)
 	ld bc, ROOM_OBJECT_STRUCT_BULLET_STATE
 	add hl, bc
 	ld (hl), a
@@ -2239,7 +2240,7 @@ update_boss4_spawn_skeleton_joint_attack_entry_point:
 		call count_number_of_bats_and_skeletons
 	pop de
 	pop ix
-	ld a, (boss__4_settings + BOSS_4_MAX_ENEMIES_OFFSET)
+	ld a, (boss__settings + BOSS_4_MAX_ENEMIES_OFFSET)
 	add a, a  ; double the number of max enemies than usual
 	cp c
 	ret z  ; if we have the max number of bats, do not spawn any new one
@@ -2270,7 +2271,7 @@ update_boss4_spawn_skeleton_joint_attack_entry_point:
 	inc hl
 	inc hl
 	inc hl
-	ld a, (boss__4_settings + BOSS_4_ENEMIES_HP_OFFSET)
+	ld a, (boss__settings + BOSS_4_ENEMIES_HP_OFFSET)
 	ld (hl), a  ; hitpoints
 	ret
 
@@ -2287,7 +2288,7 @@ update_boss4_spawn_skeleton_entry_point:
 		call count_number_of_bats_and_skeletons
 	pop de
 	pop ix
-	ld a, (boss__4_settings + BOSS_4_MAX_ENEMIES_OFFSET)
+	ld a, (boss__settings + BOSS_4_MAX_ENEMIES_OFFSET)
 	cp c
 	ret z  ; if we have the max number of bats, do not spawn any new one
 
@@ -2342,7 +2343,7 @@ update_boss4_spawn_bat_continue:
 	inc hl
 	inc hl
 	inc hl
-	ld a, (boss__4_settings + BOSS_4_ENEMIES_HP_OFFSET)
+	ld a, (boss__settings + BOSS_4_ENEMIES_HP_OFFSET)
 	ld (hl), a  ; hitpoints
 	ret
 
@@ -2476,7 +2477,7 @@ update_boss4_behavior_2_internal_fire_bullet_ahalpuh:
 ; - z: reached
 ; - nz: not yet reached
 update_boss4_behavior_2_move_to_destination:
-	ld a, (boss__4_settings + BOSS_4_MOVE_SPEED)
+	ld a, (boss__settings + BOSS_4_MOVE_SPEED)
 	ld c, a
 	ld a, (ix + 1)
 	and c
@@ -2491,7 +2492,7 @@ update_boss4_behavior_2_move_to_destination:
 	cp (ix + 3)
 	jr c, update_boss4_behavior_2_move_to_destination_no_stomp
 	; chance of stomping!
-	ld a, (boss__4_settings + BOSS_4_STOMP_MASK)
+	ld a, (boss__settings + BOSS_4_STOMP_MASK)
 	ld c, a
 	call random_a
 	and c

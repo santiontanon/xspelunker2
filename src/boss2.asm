@@ -256,7 +256,7 @@ update_boss2_behavior_init:
 	jr z, update_boss2_behavior_init_continue
 	ld hl, boss2_difficulty_setting__hardest
 update_boss2_behavior_init_continue:
-	ld de, boss__2_settings
+	ld de, boss__settings
 	ld bc, 12
 	ldir
 
@@ -264,7 +264,7 @@ update_boss2_behavior_init_continue:
 	ld (boss__x), a
 	ld a, 17
 	ld (boss__y), a
-	ld hl, (boss__2_settings + BOSS_2_HP_OFFSET)
+	ld hl, (boss__settings + BOSS_2_HP_OFFSET)
 	ld (boss__hp), hl
 	ld hl, player_weapon_hitbox_check_boss__boss2_hit
 	ld (boss__hit_fn), hl
@@ -349,6 +349,7 @@ update_boss2_behavior_1:
 	ld a, h
 	or l
 	jr nz, update_boss2_behavior_1_continue
+	call stop_music
 	; boss is dead!
 	ld a, (boss__state)
 	cp 7
@@ -392,7 +393,7 @@ update_boss2_behavior_1_state_0:
 
 	ld hl, boss__state_timer
 	inc (hl)
-	ld a, (boss__2_settings + BOSS_2_WAIT_TIME_OFFSET)
+	ld a, (boss__settings + BOSS_2_WAIT_TIME_OFFSET)
 	cp (hl)
 	ret nz
 	xor a
@@ -437,9 +438,9 @@ update_boss2_behavior_1_state_1:
 	; Walk forward:
 	; walk frames loop: 4, 5, 6, 7
 	ld c, 4  ; frame
-	ld a, (boss__2_settings + BOSS_2_WALK_TIME_MASK_OFFSET)
+	ld a, (boss__settings + BOSS_2_WALK_TIME_MASK_OFFSET)
 	ld e, a
-	ld a, (boss__2_settings + BOSS_2_WALK_TIME_OFFSET)
+	ld a, (boss__settings + BOSS_2_WALK_TIME_OFFSET)
 	ld b, a
 	ld hl, boss__state_timer
 	ld a, (hl)
@@ -482,9 +483,9 @@ update_boss2_behavior_1_state_2:
 	; Walk backward:
 	; walk frames loop: 7, 6, 5, 4
 	ld c, 7  ; frame
-	ld a, (boss__2_settings + BOSS_2_WALK_TIME_MASK_OFFSET)
+	ld a, (boss__settings + BOSS_2_WALK_TIME_MASK_OFFSET)
 	ld e, a
-	ld a, (boss__2_settings + BOSS_2_WALK_TIME_OFFSET)
+	ld a, (boss__settings + BOSS_2_WALK_TIME_OFFSET)
 	ld b, a
 	ld hl, boss__state_timer
 	ld a, (hl)
@@ -508,9 +509,9 @@ update_boss2_behavior_1_state_3:
 	; Dash forward:
 	; walk frames loop: 4, 5, 6, 7
 	ld c, 4  ; frame
-	ld a, (boss__2_settings + BOSS_2_DASH_TIME_MASK_OFFSET)
+	ld a, (boss__settings + BOSS_2_DASH_TIME_MASK_OFFSET)
 	ld e, a
-	ld a, (boss__2_settings + BOSS_2_DASH_TIME_OFFSET)
+	ld a, (boss__settings + BOSS_2_DASH_TIME_OFFSET)
 	ld b, a
 	ld hl, boss__state_timer
 	ld a, (hl)
@@ -548,7 +549,7 @@ update_boss2_behavior_1_state_4:
 	ld hl, boss__state_timer
 	inc (hl)
 	ld a, (hl)
-	ld hl, boss__2_settings + BOSS_2_BULLET_FREQUENCY_OFFSET
+	ld hl, boss__settings + BOSS_2_BULLET_FREQUENCY_OFFSET
 	and (hl)
 	jr nz, update_boss2_behavior_1_state_4_skip_bullet
 	ld a, (boss__x)
@@ -569,7 +570,7 @@ update_boss2_behavior_1_state_4_continue:
 	call boss_fire_directional_bullet_towards_player_with_random_offset
 update_boss2_behavior_1_state_4_skip_bullet:
 	ld a, (boss__state_timer)
-	ld hl, boss__2_settings + BOSS_2_BULLET_TIME_OFFSET
+	ld hl, boss__settings + BOSS_2_BULLET_TIME_OFFSET
 	cp (hl)
 	ret c
 	xor a
@@ -580,7 +581,7 @@ update_boss2_behavior_1_state_4_skip_bullet:
 
 update_boss2_behavior_1_state_5:
 	; claw attack:
-	ld a, (boss__2_settings + BOSS_2_ATTACK_TIME_OFFSET)
+	ld a, (boss__settings + BOSS_2_ATTACK_TIME_OFFSET)
 	ld c, a
 	add a, a
 	ld d, a
@@ -619,7 +620,7 @@ update_boss2_behavior_1_state_5_frame2_continue:
 
 
 update_boss2_behavior_1_state_6:
-	ld a, (boss__2_settings + BOSS_2_ATTACK_TIME_OFFSET)
+	ld a, (boss__settings + BOSS_2_ATTACK_TIME_OFFSET)
 	ld c, a
 	add a, a
 	ld d, a
@@ -712,7 +713,7 @@ update_boss2_behavior_2_state_5:
 update_boss2_behavior_2_state_5_continue:
 	ld a, 14
 	call update_boss2_draw_boss_frame
-	ld a, (boss__2_settings + BOSS_2_WALK_TIME_OFFSET)
+	ld a, (boss__settings + BOSS_2_WALK_TIME_OFFSET)
 	srl a
 	ld hl, boss__state_timer
 	cp (hl)
@@ -767,7 +768,7 @@ update_boss2_behavior_2_state_1:
 	call update_boss2_draw_boss_frame
 	ld hl, boss__state_timer
 	inc (hl)
-	ld a, (boss__2_settings + BOSS_2_WALK_TIME_OFFSET)
+	ld a, (boss__settings + BOSS_2_WALK_TIME_OFFSET)
 	srl a
 	cp (hl)
 	ret nz
@@ -1102,7 +1103,7 @@ update_boss2_spawn_bat_loop:
 	inc c
 	jr update_boss2_spawn_bat_loop
 update_boss2_spawn_bat_loop_end:
-	ld a, (boss__2_settings + BOSS_2_MAX_BATS_OFFSET)
+	ld a, (boss__settings + BOSS_2_MAX_BATS_OFFSET)
 	cp c
 	ret z  ; if we have the max number of bats, do not spawn any new one
 
@@ -1127,7 +1128,7 @@ update_boss2_spawn_bat_loop_end:
 	inc hl
 	inc hl
 	inc hl
-	ld a, (boss__2_settings + BOSS_2_BAT_HP_OFFSET)
+	ld a, (boss__settings + BOSS_2_BAT_HP_OFFSET)
 	ld (hl), a  ; hitpoints
 	ret
 

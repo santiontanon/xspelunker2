@@ -282,7 +282,7 @@ update_boss3_behavior_init:
 	jr z, update_boss3_behavior_init_continue
 	ld hl, boss3_difficulty_setting__hardest
 update_boss3_behavior_init_continue:
-	ld de, boss__3_settings
+	ld de, boss__settings
 	ld bc, 12
 	ldir
 
@@ -294,7 +294,7 @@ update_boss3_behavior_init_continue:
 	ld (boss__y), a
 	ld a, -4
 	ld (boss__y2), a
-	ld hl, (boss__3_settings + BOSS_2_HP_OFFSET)
+	ld hl, (boss__settings + BOSS_2_HP_OFFSET)
 	ld (boss__hp), hl
 	ld hl, player_weapon_hitbox_check_boss__boss3_hit
 	ld (boss__hit_fn), hl
@@ -381,7 +381,7 @@ update_boss3_behavior_1_state_0:
 
 	ld hl, boss__state_timer
 	inc (hl)
-	ld a, (boss__2_settings + BOSS_3_WAIT_TIME_OFFSET)
+	ld a, (boss__settings + BOSS_3_WAIT_TIME_OFFSET)
 	cp (hl)
 	ret nz
 
@@ -475,6 +475,7 @@ update_boss3_behavior_1_state_1_to_stomp:
 	ret
 
 update_boss3_behavior_1_state_1_to_death:
+	call stop_music
 	xor a
 	ld (boss__state), a
 	ld (boss__state_timer), a
@@ -504,9 +505,9 @@ update_boss3_behavior_1_state_1:
 	; walk forward:
 	; walk frames loop: 1, 2, 3, 4
 	ld c, 1  ; frame
-	ld a, (boss__3_settings + BOSS_3_WALK_TIME_MASK_OFFSET)
+	ld a, (boss__settings + BOSS_3_WALK_TIME_MASK_OFFSET)
 	ld e, a
-	ld a, (boss__3_settings + BOSS_3_WALK_TIME_OFFSET)
+	ld a, (boss__settings + BOSS_3_WALK_TIME_OFFSET)
 	ld b, a
 	ld hl, boss__state_timer
 	ld a, (hl)
@@ -531,9 +532,9 @@ update_boss3_behavior_1_state_2:
 	; walk backwards:
 	; walk frames loop: 4, 3, 3, 1
 	ld c, 4  ; frame
-	ld a, (boss__3_settings + BOSS_3_WALK_TIME_MASK_OFFSET)
+	ld a, (boss__settings + BOSS_3_WALK_TIME_MASK_OFFSET)
 	ld e, a
-	ld a, (boss__3_settings + BOSS_3_WALK_TIME_OFFSET)
+	ld a, (boss__settings + BOSS_3_WALK_TIME_OFFSET)
 	ld b, a
 	ld hl, boss__state_timer
 	ld a, (hl)
@@ -558,9 +559,9 @@ update_boss3_behavior_1_state_3:
 	; dash:
 	; walk frames loop: 1, 2, 3, 4
 	ld c, 1  ; frame
-	ld a, (boss__3_settings + BOSS_3_DASH_TIME_MASK_OFFSET)
+	ld a, (boss__settings + BOSS_3_DASH_TIME_MASK_OFFSET)
 	ld e, a
-	ld a, (boss__3_settings + BOSS_3_DASH_TIME_OFFSET)
+	ld a, (boss__settings + BOSS_3_DASH_TIME_OFFSET)
 	ld b, a
 	ld hl, boss__state_timer
 	ld a, (hl)
@@ -645,7 +646,7 @@ update_boss3_behavior_2_state_1:
 	ld hl, boss__state_timer
 	inc (hl)
 	ld a, (hl)
-	ld hl, boss__3_settings + BOSS_3_STOMP_TIME_OFFSET
+	ld hl, boss__settings + BOSS_3_STOMP_TIME_OFFSET
 	cp (hl)
 	ret nz
 	call boss3_move_left
@@ -661,7 +662,7 @@ update_boss3_behavior_2_state_1:
 	ld (boss__state_timer), a
 	ld hl, SFX_explosion_low_pitch
 	call play_SFX_with_high_priority
-	ld a, (boss__3_settings + BOSS_3_N_DEBRIS_OFFSET)
+	ld a, (boss__settings + BOSS_3_N_DEBRIS_OFFSET)
 	ld b, a
 update_boss3_behavior_2_state_1_debris_loop:
 	push bc
@@ -700,7 +701,7 @@ update_boss3_behavior_2_state_2:
 	ld hl, boss__state_timer
 	inc (hl)
 	ld a, (hl)
-	ld hl, boss__3_settings + BOSS_3_STOMP_TIME_OFFSET
+	ld hl, boss__settings + BOSS_3_STOMP_TIME_OFFSET
 	cp (hl)
 	ret nz
 	call boss3_move_right
@@ -828,7 +829,7 @@ update_boss3_head_behavior_continue:
 	ret
 
 update_boss3_head_behavior_state_0:
-	ld a, (boss__3_settings + BOSS_3_HEAD_TIME_MASK_OFFSET)
+	ld a, (boss__settings + BOSS_3_HEAD_TIME_MASK_OFFSET)
 	ld c, a
 	ld a, (boss__3_head_state_timer)
 	and c
@@ -848,13 +849,13 @@ update_boss3_head_behavior_state_0_done:
 	ret
 
 update_boss3_head_behavior_state_1:
-	ld a, (boss__3_settings + BOSS_3_BULLET_MASK_OFFSET)
+	ld a, (boss__settings + BOSS_3_BULLET_MASK_OFFSET)
 	ld c, a
 	ld a, (boss__3_head_state_timer)
 	and c
 	call z, update_boss3_fire_head_bullet
 
-	ld a, (boss__3_settings + BOSS_3_HEAD_TIME_MASK_OFFSET)
+	ld a, (boss__settings + BOSS_3_HEAD_TIME_MASK_OFFSET)
 	ld c, a
 	ld a, (boss__3_head_state_timer)
 	and c
@@ -893,13 +894,13 @@ update_boss3_head_behavior_state_1_stomp:
 	ret
 
 update_boss3_head_behavior_state_2:
-	ld a, (boss__3_settings + BOSS_3_BULLET_MASK_OFFSET)
+	ld a, (boss__settings + BOSS_3_BULLET_MASK_OFFSET)
 	ld c, a
 	ld a, (boss__3_head_state_timer)
 	and c
 	call z, update_boss3_fire_head_bullet
 
-	ld a, (boss__3_settings + BOSS_3_HEAD_TIME_MASK_OFFSET)
+	ld a, (boss__settings + BOSS_3_HEAD_TIME_MASK_OFFSET)
 	ld c, a
 	ld a, (boss__3_head_state_timer)
 	and c
@@ -935,7 +936,7 @@ update_boss3_head_behavior_state_2_done:
 
 update_boss3_head_behavior_state_3:
 	; land back to the body:
-	ld a, (boss__3_settings + BOSS_3_HEAD_TIME_MASK_OFFSET)
+	ld a, (boss__settings + BOSS_3_HEAD_TIME_MASK_OFFSET)
 	ld c, a
 	ld a, (boss__3_head_state_timer)
 	and c
@@ -975,7 +976,7 @@ update_boss3_head_behavior_state_3_y_done:
 
 update_boss3_head_behavior_state_4:
 	; stomp down:
-	ld a, (boss__3_settings + BOSS_3_HEAD_TIME_MASK_OFFSET)
+	ld a, (boss__settings + BOSS_3_HEAD_TIME_MASK_OFFSET)
 	srl a
 	ld c, a
 	ld a, (boss__3_head_state_timer)

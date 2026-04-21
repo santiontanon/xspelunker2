@@ -271,11 +271,7 @@ boss__last_collision_id: ds virtual 1
 boss__hit_fn: ds virtual 2  ; when the player hits a tile with collision type '9' this method is called.
 boss__hit_fn_page: ds virtual 1
 boss__hit_timer: ds virtual 1  ; for displaying "boss hit" animations
-boss__1_settings:
-boss__2_settings: 
-boss__3_settings:
-boss__4_settings:
-boss__5_settings:
+boss__settings:
     ds virtual 12  ; difficulty parameters of the boss
 boss__tmp_space: ds virtual 20
 ;
@@ -411,10 +407,12 @@ MUSIC_repeat_stack_ptr:             ds virtual 2
 MUSIC_repeat_stack:                 ds virtual 4*3
 MUSIC_instrument_envelope_ptr:      ds virtual 3*2
 SFX_priority:                       ds virtual 1  ; the SFX from the game have more priority than those triggered by music
-MUSIC_transpose:                    ds virtual 1
 MUSIC_time_step_required:           ds virtual 1
 IF MUSIC_USE_SET_VOLUME = 1
 MUSIC_volumes:                      ds virtual 3
+ENDIF
+IF MUSIC_USE_TRANSPOSE = 1
+MUSIC_transpose:                    ds virtual 1
 ENDIF
 IF MUSIC_USE_ARPEGGIOS = 1
 MUSIC_instrument_base_note:         ds virtual 3

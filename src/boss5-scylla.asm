@@ -92,7 +92,7 @@ update_boss5_behavior_4_state_0_no_jump:
 
 update_boss5_behavior_4_state_1:
 	; idle:
-	ld a, (boss__5_settings + BOSS_5_SCYLLA_IDLE_TIME_OFFSET)
+	ld a, (boss__settings + BOSS_5_SCYLLA_IDLE_TIME_OFFSET)
 	ld c, a
 	ld hl, boss__state_timer
 	ld a, (hl)
@@ -123,7 +123,7 @@ update_boss5_behavior_4_state_1_entry_point3:  ; firing
 
 update_boss5_behavior_4_state_2:
 	; swim left:
-	ld a, (boss__5_settings + BOSS_5_SCYLLA_SWIM_MASK)	
+	ld a, (boss__settings + BOSS_5_SCYLLA_SWIM_MASK)	
 	ld c, a
 	add a, a
 	add a, a
@@ -147,7 +147,7 @@ update_boss5_behavior_4_state_2:
 
 update_boss5_behavior_4_state_3:
 	; swim right:
-	ld a, (boss__5_settings + BOSS_5_SCYLLA_SWIM_MASK)	
+	ld a, (boss__settings + BOSS_5_SCYLLA_SWIM_MASK)	
 	ld c, a
 	add a, a
 	add a, a
@@ -170,7 +170,7 @@ update_boss5_behavior_4_state_3:
 
 
 update_boss5_behavior_4_state_4:
-	ld a, (boss__5_settings + BOSS_5_SCYLLA_ATTACK_DELAY)
+	ld a, (boss__settings + BOSS_5_SCYLLA_ATTACK_DELAY)
 	ld c, a
 	ld hl, boss__state_timer
 	ld a, (hl)
@@ -362,7 +362,7 @@ update_boss5_scylla_eye_mouth_control:
 	cp 2  ; mouth open already?
 	jr z, update_boss5_scylla_eye_mouth_control_ignore_mouth  ; if mouth was open, we will close it next time, so, just ignore
 	; chance of opening the mouth
-	ld a, (boss__5_settings + BOSS_5_SCYLLA_BUBBLE_MASK)
+	ld a, (boss__settings + BOSS_5_SCYLLA_BUBBLE_MASK)
 	ld c, a
 	call random_a
 	and c
@@ -731,7 +731,7 @@ update_boss5_behavior_5_state_4:
 	call update_boss5_scylla_maybe_fire_eye_bullet
 	call update_boss5_scylla_eye_mouth_control
 update_boss5_behavior_5_state_4_entry_point:
-	ld a, (boss__5_settings + BOSS_5_SCYLLA_DETTACHED_SPEED_MASK)
+	ld a, (boss__settings + BOSS_5_SCYLLA_DETTACHED_SPEED_MASK)
 	ld c, a
 	ld hl, boss__state_timer
 	ld a, (hl)
@@ -759,7 +759,7 @@ update_boss5_behavior_5_state_5:
 	call update_boss5_scylla_maybe_fire_eye_bullet
 	call update_boss5_scylla_eye_mouth_control
 update_boss5_behavior_5_state_5_entry_point:
-	ld a, (boss__5_settings + BOSS_5_SCYLLA_DETTACHED_SPEED_MASK)
+	ld a, (boss__settings + BOSS_5_SCYLLA_DETTACHED_SPEED_MASK)
 	ld c, a
 	ld hl, boss__state_timer
 	ld a, (hl)
@@ -820,7 +820,7 @@ update_boss5_behavior_5_state_14:
 	call update_boss5_scylla_maybe_fire_eye_bullet
 	call update_boss5_scylla_eye_mouth_control
 update_boss5_behavior_5_state_10_entry_point:
-	ld a, (boss__5_settings + BOSS_5_SCYLLA_DETTACHED_SPEED_MASK)
+	ld a, (boss__settings + BOSS_5_SCYLLA_DETTACHED_SPEED_MASK)
 	ld c, a
 	ld hl, boss__state_timer
 	ld a, (hl)
@@ -847,7 +847,7 @@ update_boss5_behavior_5_state_11:
 	call update_boss5_scylla_maybe_fire_eye_bullet
 	call update_boss5_scylla_eye_mouth_control
 	; front-arm left attack advancing horizontally
-	ld a, (boss__5_settings + BOSS_5_SCYLLA_DETTACHED_SPEED_MASK)
+	ld a, (boss__settings + BOSS_5_SCYLLA_DETTACHED_SPEED_MASK)
 	ld c, a
 	ld hl, boss__state_timer
 	ld a, (hl)
@@ -878,7 +878,7 @@ update_boss5_behavior_5_state_16:
 	call update_boss5_scylla_maybe_fire_eye_bullet
 	call update_boss5_scylla_eye_mouth_control
 	; front-arm left attack reeling-back horizontally
-	ld a, (boss__5_settings + BOSS_5_SCYLLA_DETTACHED_SPEED_MASK)
+	ld a, (boss__settings + BOSS_5_SCYLLA_DETTACHED_SPEED_MASK)
 	ld c, a
 	ld hl, boss__state_timer
 	ld a, (hl)
@@ -906,7 +906,7 @@ update_boss5_behavior_5_state_17:
 	call update_boss5_scylla_maybe_fire_eye_bullet
 	call update_boss5_scylla_eye_mouth_control
 	; front-arm left attack lowering
-	ld a, (boss__5_settings + BOSS_5_SCYLLA_DETTACHED_SPEED_MASK)
+	ld a, (boss__settings + BOSS_5_SCYLLA_DETTACHED_SPEED_MASK)
 	ld c, a
 	ld hl, boss__state_timer
 	ld a, (hl)
@@ -933,7 +933,7 @@ update_boss5_behavior_5_state_15:
 	call update_boss5_scylla_maybe_fire_eye_bullet
 	call update_boss5_scylla_eye_mouth_control
 	; front-arm right attack advancing horizontally
-	ld a, (boss__5_settings + BOSS_5_SCYLLA_DETTACHED_SPEED_MASK)
+	ld a, (boss__settings + BOSS_5_SCYLLA_DETTACHED_SPEED_MASK)
 	ld c, a
 	ld hl, boss__state_timer
 	ld a, (hl)
@@ -1099,7 +1099,7 @@ update_boss5_scylla_maybe_fire_eye_bullet:
 	ld a, (boss__5_scylla_body_state)
 	cp 1
 	ret z  ; no firing when eyes are closed
-	ld a, (boss__5_settings + BOSS_5_SCYLLA_BULLET_TIME_MASK)
+	ld a, (boss__settings + BOSS_5_SCYLLA_BULLET_TIME_MASK)
 	ld c, a
 	call random_a
 	and c
@@ -1733,6 +1733,7 @@ player_weapon_hitbox_check_boss__boss5_scylla_hit:
 	ld a, (boss__5_top_state)
 	cp 3
 	jr z, player_weapon_hitbox_check_boss__boss5_scylla_hit_break_vat
+	call stop_music
 	; boss is dead:
 	ld a, 6
 	ld (boss__behavior), a
@@ -1743,7 +1744,7 @@ player_weapon_hitbox_check_boss__boss5_scylla_hit:
 player_weapon_hitbox_check_boss__boss5_scylla_hit_break_vat:
 	inc a
 	ld (boss__5_top_state), a
-	ld a, (boss__5_settings + BOSS_5_SCYLLA_HP_OFFSET)  ; brain HP
+	ld a, (boss__settings + BOSS_5_SCYLLA_HP_OFFSET)  ; brain HP
 	ld h, 0
 	ld l, a
 	ld (boss__hp), hl

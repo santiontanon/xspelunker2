@@ -21,8 +21,8 @@ BOSS1_NAMETABLE_DEATH_WITHOUT_STAFF: equ boss1_name_tables + 479  ; 5*9
 BOSS1_NAMETABLE_DUST: equ boss1_name_tables + 524  ; 2*1
 
 
-BOSS_1_STAFF_HP_OFFSET: equ 0
-BOSS_1_HP_OFFSET: equ 1
+BOSS_1_HP_OFFSET: equ 0
+BOSS_1_STAFF_HP_OFFSET: equ 2
 BOSS_1_WALK_TIME_OFFSET: equ 3
 BOSS_1_PAUSE_TIME_OFFSET: equ 4
 BOSS_1_ATTACK_TIME_OFFSET: equ 5
@@ -32,25 +32,25 @@ BOSS_1_BULLET_FREQUENCY_OFFSET: equ 7
 
 ;-----------------------------------------------
 boss1_difficulty_setting__easy:
-	db 16  ; staff hp
 	dw 32  ; boss hp
+	db 16  ; staff hp
 	db 16, 32, 32, 32, #07  ; walk, crouch, staff/hand attack duration, bullet duration, bullet frequency
 boss1_difficulty_setting__normal:
-	db 24  ; staff hp
 	dw 48  ; boss hp
+	db 24  ; staff hp
 	db 14, 28, 28, 32, #07  ; walk, crouch, staff/hand attack duration, bullet duration, bullet frequency
 boss1_difficulty_setting__hard:
-	db 32  ; staff hp
 	dw 64  ; boss hp
+	db 32  ; staff hp
 	db 12, 24, 24, 32, #07  ; walk, crouch, staff/hand attack duration, bullet duration, bullet frequency
 boss1_difficulty_setting__hardest:
-	db 32  ; staff hp
 	dw 80  ; boss hp
+	db 32  ; staff hp
 	db 8, 16, 16, 20, #03  ; walk, crouch, staff/hand attack duration, bullet duration, bullet frequency
 
 ; boss1_difficulty_setting__angry:
-; 	db 48  ; staff hp
 ; 	dw 128  ; boss hp
+; 	db 48  ; staff hp
 ; 	db 6, 12, 12, 24, #03  ; walk, crouch, staff/hand attack duration, bullet duration, bullet frequency
 
 
@@ -241,6 +241,7 @@ update_boss1_behavior:
 	; boss is dead!
 	ld a, 4
 	ld (boss__behavior), a
+	call stop_music
 update_boss1_behavior_continue:
 
 	ld a, (boss__behavior)
@@ -275,7 +276,7 @@ update_boss1_behavior_0:
 	jr z, update_boss1_behavior_0_continue
 	ld hl, boss1_difficulty_setting__hardest
 update_boss1_behavior_0_continue:
-	ld de, boss__1_settings
+	ld de, boss__settings
 	ld bc, 8
 	ldir
 
@@ -285,9 +286,9 @@ update_boss1_behavior_0_continue:
 	ld (boss__y), a
 	ld a, 1
 	ld (boss__1_has_staff), a
-	ld a, (boss__1_settings + BOSS_1_STAFF_HP_OFFSET)  ; staff hit points
+	ld a, (boss__settings + BOSS_1_STAFF_HP_OFFSET)  ; staff hit points
 	ld (boss__1_staff_hp), a
-	ld hl, (boss__1_settings + BOSS_1_HP_OFFSET)
+	ld hl, (boss__settings + BOSS_1_HP_OFFSET)
 	ld (boss__hp), hl
 	ld hl, player_weapon_hitbox_check_boss__boss1_hit
 	ld (boss__hit_fn), hl
@@ -443,7 +444,7 @@ update_boss1_behavior_3_state_0:
 	ld hl, boss__state_timer
 	inc (hl)
 	ld a, (hl)
-	ld hl, boss__1_settings + BOSS_1_PAUSE_TIME_OFFSET
+	ld hl, boss__settings + BOSS_1_PAUSE_TIME_OFFSET
 	cp (hl)
 	ret c
 	ld a, 1
@@ -456,7 +457,7 @@ update_boss1_behavior_1_state_1:
 	; walk left:
 	ld a, 2
 	call update_boss1_draw_boss_frame
-	ld a, (boss__1_settings + BOSS_1_WALK_TIME_OFFSET)
+	ld a, (boss__settings + BOSS_1_WALK_TIME_OFFSET)
 	ld c, a
 	add a, a
 	ld b, a  ; b = BOSS_1_WALK_TIME_OFFSET * 2 
@@ -519,7 +520,7 @@ update_boss1_behavior_1_state_2_continue:
 	ld hl, boss__state_timer
 	inc (hl)
 	ld a, (hl)
-	ld hl, boss__1_settings + BOSS_1_ATTACK_TIME_OFFSET
+	ld hl, boss__settings + BOSS_1_ATTACK_TIME_OFFSET
 	cp (hl)
 	ret nz
 	xor a
@@ -548,7 +549,7 @@ update_boss1_behavior_1_state_3:
 	ld (ix + ROOM_OBJECT_STRUCT_BULLET_STATE), 0
 update_boss1_behavior_1_state_3_skip_bullet:
 	ld a, (boss__state_timer)
-	ld hl, boss__1_settings + BOSS_1_ATTACK_TIME_OFFSET
+	ld hl, boss__settings + BOSS_1_ATTACK_TIME_OFFSET
 	cp (hl)
 	ret nz
 	xor a
@@ -567,7 +568,7 @@ update_boss1_behavior_2_state_7:
 	ld hl, boss__state_timer
 	inc (hl)
 	ld a, (hl)
-	ld hl, boss__1_settings + BOSS_1_PAUSE_TIME_OFFSET
+	ld hl, boss__settings + BOSS_1_PAUSE_TIME_OFFSET
 	cp (hl)
 	ret nz
 	xor a
@@ -627,7 +628,7 @@ update_boss1_behavior_1_state_6:
 	ld hl, boss__state_timer
 	inc (hl)
 	ld a, (hl)
-	ld hl, boss__1_settings + BOSS_1_PAUSE_TIME_OFFSET
+	ld hl, boss__settings + BOSS_1_PAUSE_TIME_OFFSET
 	cp (hl)
 	ret c
 	jp update_boss1_behavior_0_choose_behavior
@@ -734,7 +735,7 @@ update_boss1_behavior_2_state_9:
 	ld hl, boss__state_timer
 	inc (hl)
 	ld a, (hl)
-	ld hl, boss__1_settings + BOSS_1_PAUSE_TIME_OFFSET
+	ld hl, boss__settings + BOSS_1_PAUSE_TIME_OFFSET
 	cp (hl)
 	ret nz
 	jp update_boss1_behavior_0_choose_behavior
@@ -803,7 +804,7 @@ update_boss1_behavior_3_state_10:
 	ld hl, boss__state_timer
 	inc (hl)
 	ld a, (hl)
-	ld hl, boss__1_settings + BOSS_1_BULLET_FREQUENCY_OFFSET
+	ld hl, boss__settings + BOSS_1_BULLET_FREQUENCY_OFFSET
 	and (hl)
 	jr nz, update_boss1_behavior_3_state_1_skip_bullet
 	ld a, (boss__x)
@@ -817,7 +818,7 @@ update_boss1_behavior_3_state_10:
 update_boss1_behavior_3_state_1_skip_bullet:
 
 	ld a, (boss__state_timer)
-	ld hl, boss__1_settings + BOSS_1_BULLET_TIME_OFFSET
+	ld hl, boss__settings + BOSS_1_BULLET_TIME_OFFSET
 	cp (hl)
 	ret c
 	ld c, 3
@@ -855,7 +856,7 @@ update_boss1_behavior_3_state_2_continue:
 	ld hl, boss__state_timer
 	inc (hl)
 	ld a, (hl)
-	ld hl, boss__1_settings + BOSS_1_ATTACK_TIME_OFFSET
+	ld hl, boss__settings + BOSS_1_ATTACK_TIME_OFFSET
 	cp (hl)
 	ret c
 	ld c, 3
@@ -894,7 +895,7 @@ update_boss1_behavior_3_state_12:
 update_boss1_behavior_3_state_3_skip_bullet:
 
 	ld a, (boss__state_timer)
-	ld hl, boss__1_settings + BOSS_1_ATTACK_TIME_OFFSET
+	ld hl, boss__settings + BOSS_1_ATTACK_TIME_OFFSET
 	cp (hl)
 	ret c
 	ld c, 3
@@ -1101,7 +1102,7 @@ update_boss1_draw_boss_frame_1_no_staff:
 	jr update_boss1_draw_boss_frame_continue
 
 update_boss1_draw_boss_frame_2:  ; walk left frames
-	ld a, (boss__1_settings + BOSS_1_WALK_TIME_OFFSET)
+	ld a, (boss__settings + BOSS_1_WALK_TIME_OFFSET)
 	ld b, 0
 	ld c, a
 	ld a, (boss__state_timer)
@@ -1224,32 +1225,6 @@ player_weapon_hitbox_check_boss__boss1_hit:
 	jr z, player_weapon_hitbox_check_boss__boss1_hit_staff
 
 	jp player_weapon_hitbox_check_boss__lose_hp
-; 	; hit the main body:
-; 	ld hl, (boss__hp)
-; 	ld a, h
-; 	or l
-; 	ret z  ; boss HP are already 0
-; 	ld a, iyh
-; 	or a
-; 	jr z, player_weapon_hitbox_check_boss__boss1_hit_continue2
-; player_weapon_hitbox_check_boss__boss1_hit_loop:
-; 	dec hl
-; 	jr z, player_weapon_hitbox_check_boss__boss1_hit_continue2
-; 	dec a
-; 	jr nz, player_weapon_hitbox_check_boss__boss1_hit_loop
-; player_weapon_hitbox_check_boss__boss1_hit_continue2:
-; 	ld (boss__hp), hl
-; 	ld a, 4
-; 	ld (boss__hit_timer), a
-
-; player_weapon_hitbox_check_boss__boss1_hit_continue:
-; 	ld hl, SFX_enemy_hit
-; 	call play_SFX_with_high_priority
-; 	xor a
-; 	ld (player_weapon_hitbox_check_result), a  ; mark a hit
-; 	ld a, iyl
-; 	ld (boss__last_collision_id), a
-; 	ret
 
 player_weapon_hitbox_check_boss__boss1_hit_staff:
 	ld a, (boss__1_staff_hp)

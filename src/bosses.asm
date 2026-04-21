@@ -32,6 +32,8 @@ enter_boss_door_divide_by_3_loop_done:
 	ld a, c
 	ld (boss__current_boss_number), a
 	push bc
+		call stop_music
+
 		; place player at the center of the door
 		ld a, 4
 		ld (player_x), a
@@ -169,6 +171,7 @@ enter_boss_door__room_prettified:
 		ld (current_room__enemy_sprites_ptr), iy
 		ld hl, 0
 		ld (large_object_to_upload_to_vdp), hl
+		ld (current_room__music_ptr), hl  ; no music in the boss room until the boss appears
 		inc hl
 		ld (boss__hp), hl  ; make sure boss is not dead at the start
 		xor a
@@ -1204,8 +1207,15 @@ update_boss_behavior_bring_name_down:
 		ld de, buffer_4096
 		ld bc, 4*4
 		ldir
-		ld b, 24
+
+		; play boss music:
+		ld hl, music_boss_bin
+		ld (current_room__music_ptr), hl
+		ld a, 8
+		ld (current_room__music_tempo), a
+		call play_music_adjusting_tempo
 	pop hl
+	ld b, 24
 update_boss_behavior_bring_name_down_loop:
 	ld a, (hl)
 	push hl
@@ -1678,6 +1688,44 @@ player_weapon_hitbox_check_boss__lose_hp_continue:
 	ld a, 8
 	ld (boss__hit_timer), a
 
+	; check if we need to change the music speed:
+	ld a, (boss__current_boss_number)
+	cp 4
+	jr nz, player_weapon_hitbox_check_boss__lose_hp_not_boss5
+	; special case for boss 5:
+	ld a, (boss__5_top_state)
+	cp 4 
+	jr nz, player_weapon_hitbox_check_boss__lose_hp_continue2  ; brain not exposed yet
+player_weapon_hitbox_check_boss__lose_hp_not_boss5:
+	ld bc, (boss__settings)  ; the first 2 bytes always correspond to the HP
+	srl b
+	rr c  ; bc = max hitpoints / 2
+	push hl
+		or a
+		sbc hl, bc
+	pop hl
+	jr nc, player_weapon_hitbox_check_boss__lose_hp_continue2  ; boss has >= 50% hp
+
+	ld a, 2
+	ld (MUSIC_transpose), a
+	ld a, (current_room__music_tempo)
+	dec a
+	ld (MUSIC_tempo), a
+
+	srl b
+	rr c  ; bc = max hitpoints / 4
+	or a
+	sbc hl, bc
+	jr nc, player_weapon_hitbox_check_boss__lose_hp_continue2  ; boss has >= 25% hp
+
+	ld a, 4
+	ld (MUSIC_transpose), a
+	ld a, (current_room__music_tempo)
+	dec a
+	dec a
+	ld (MUSIC_tempo), a
+
+player_weapon_hitbox_check_boss__lose_hp_continue2:
 	ld hl, SFX_enemy_hit
 	call play_SFX_with_high_priority
 	xor a
