@@ -21,8 +21,12 @@ play_music_adjusting_tempo:
     jr z, play_music_adjusting_tempo_12
     cp 10
     jr z, play_music_adjusting_tempo_10
+    cp 8
+    jr z, play_music_adjusting_tempo_8
     cp 6
     jr z, play_music_adjusting_tempo_6
+    cp 5
+    jr z, play_music_adjusting_tempo_5
     jr play_music_adjusting_tempo_continue
 play_music_adjusting_tempo_14:
     ld e, 17
@@ -33,8 +37,14 @@ play_music_adjusting_tempo_12:
 play_music_adjusting_tempo_10:
     ld e, 12
     jr play_music_adjusting_tempo_continue
+play_music_adjusting_tempo_8:
+    ld e, 10
+    jr play_music_adjusting_tempo_continue
 play_music_adjusting_tempo_6:
     ld e, 7
+    jr play_music_adjusting_tempo_continue
+play_music_adjusting_tempo_5:
+    ld e, 6
 play_music_adjusting_tempo_continue:
     ld a, e
     ld (MUSIC_tempo), a

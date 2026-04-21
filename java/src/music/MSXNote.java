@@ -196,6 +196,7 @@ public class MSXNote {
     {
         System.out.println(Z80Assembler.toHex16bit(PSGNotePeriod(4*12), true));  // Do
         System.out.println(Z80Assembler.toHex16bit(PSGNotePeriod(4*12 + 3), true));  // Mib
+        System.out.println(Z80Assembler.toHex16bit(PSGNotePeriod(4*12 + 5), true));  // Sol
         System.out.println(Z80Assembler.toHex16bit(PSGNotePeriod(4*12 + 7), true));  // Sol
         System.out.println(Z80Assembler.toHex16bit(PSGNotePeriod(4*12 + 11), true));  // Si
     }

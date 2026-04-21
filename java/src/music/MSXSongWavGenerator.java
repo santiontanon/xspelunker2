@@ -277,7 +277,31 @@ public class MSXSongWavGenerator {
                 "10", "#00",
                 "7", "#b8",
                 "SFX_CMD_END"  
-        }, 22050.0));   
+        }, 22050.0));
+        
+        sfx_waves.put("sfx_drum_shorter_f", MSXSFX.renderSFX(new String[] 
+            {   
+                "7", "#98",         // A: tone, B: tone, C: tone+noise
+                "10", "#08",        // C volume
+                "6" , "#18",        // noise freq
+                "4" , "#01", "5" , "#05",        // C freq (F2):  5, 1
+                "MUSIC_CMD_SKIP",
+                "7", "#b8",
+                "MUSIC_CMD_SKIP",
+                "10", "#06",
+                "4" , "#40", 
+                "MUSIC_CMD_SKIP",
+                "4" , "#60", 
+                "MUSIC_CMD_SKIP",
+                "10", "#04",
+                "4" , "#80", 
+                "MUSIC_CMD_SKIP",
+                "4" , "#a0", 
+                "MUSIC_CMD_SKIP",
+                "10", "#00",
+                "7", "#b8",
+                "SFX_CMD_END"  
+        }, 22050.0));           
 
         sfx_waves.put("sfx_drum_shorter_g", MSXSFX.renderSFX(new String[] 
             {   

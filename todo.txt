@@ -1,14 +1,17 @@
 to do:
-***- Can I make the animation of the characters in the intro sync with the music?
 ***- music: (brain 12, 15, 23, 25 have potential)
-  ***- boss music (boss music increases in speed as health goes down: 50%, 25%)
-  ***- xibalba (look at "story" from Triton, can I do something liek that?)
+  ***- boss music:
+    ***- silence when entering a boss room
+    ***- play it during the boss, as soon as its name comes down
+    ***- bring back the "transpose up/down commands"
+    ***- when health reaches 50%, transpose up 1 semitone, and decrease tempo by 1
+    ***- when health reaches 25%, transpose up another semitone, and decrease tempo by another 1
+  ***- xibalba (look at "story" from Triton, can I do something like that?)
   ***- atlantis
   ***- mars
   ***- moon
   ***- ending aliens
   ***- ending beach (reuse the story jazzy song)
-  ***- make sure that "play_music_adjusting_tempo" has cases for all the tempos I use
 
 - random seed puzzle (all happens without going to moon/mars):
   - Revisit "TABLET_TRIVIA_CLUE1", "TABLET_TRIVIA_CLUE2", etc.
@@ -39,6 +42,7 @@ to do:
 - Final good ending 2 (A+) if you have the codex (from the 3 statues), it explains how to manufacture the powestones/firestones. So, you can keep using the calendar stone and be prepared for the future. This is the true final ending.
 - save game to rom / password
 - come up with a list of "achievements" for the achievements list in the game over screen and implement them
+- pick a good seed (for seed2) so that with the default seed, the map is good (at least Jungle)
 
 - Potential new ideas if I have the energy:
   - There should be another shop. Otherwise, collecting money feels a bit useless if there is just one shop
