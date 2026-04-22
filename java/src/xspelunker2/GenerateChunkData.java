@@ -63,7 +63,7 @@ public class GenerateChunkData {
         0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2,
         4, 0, 0, 5, 2, 2, 5, 6, 8, 1, 1, 1, 2, 3, 2, 2,
-        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+        2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
         0, 2, 2, 2, 2, 2, 0, 7, 8, 2, 2, 2, 2, 2, 2, 2,
         2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2,
         0, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 2,
@@ -512,6 +512,12 @@ public class GenerateChunkData {
                     }
                     n_pushable_blocks++;
                 }
+                if (o.type.equals("door-right") || o.type.equals("door-left")) {
+                    if (o.dy != 24) {
+                        throw new Exception("Left/right door is not of heigth 24 in " + c.path);
+                    }
+                    n_pushable_blocks++;
+                }
                 if (o.type.equals("lava-generator")) {
                     n_lava_generators++;
                     int type1 = collision_types[c.tiles[o.x/8 + 1][o.y/8 + 8]];
@@ -620,6 +626,28 @@ public class GenerateChunkData {
         }
         if ((c.type & PCGWorld.DIRECTION_DOWN) != 0 && !c.tags.containsKey("down")) {
             throw new Exception("down path tag is unspecified in " + c.path);
+        }
+        
+        // Make sure that if there is a path "up", there is enough space for the
+        // player to land (at least 2 tiles of empty space at the top):
+        if ((c.type & PCGWorld.DIRECTION_UP) != 0) {
+            for(int j = 0;j<RoomChunk.CHUNK_WIDTH;j++) {
+                int tile1 = c.tiles[j][0];
+                int tile2 = c.tiles[j][1];
+                if (collision_types[tile1] == 0 || 
+                    collision_types[tile1] == 5 || 
+                    collision_types[tile1] == 7 || 
+                    collision_types[tile1] == 11 || 
+                    collision_types[tile1] == 12) {
+                    if (collision_types[tile2] != 0 && 
+                        collision_types[tile2] != 5 && 
+                        collision_types[tile2] != 7 && 
+                        collision_types[tile2] != 11 && 
+                        collision_types[tile2] != 12) {
+                        throw new Exception("too narrow space at the top in " + c.path);
+                    }
+                }
+            }            
         }
         
         if (biome.equals("xibalba")) {

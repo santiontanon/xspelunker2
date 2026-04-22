@@ -86,17 +86,15 @@
   db #2f, #ff, #21, #f3  ; data/atlantis/block0011-1.tmx + left
   db #2f, #ff, #2f, #cf  ; data/atlantis/block1001-1.tmx + right
   db #23, #ff, #21, #e7  ; data/atlantis/block1010-1.tmx + down
-  db #21, #81, #3f, #ff  ; data/atlantis/block1100-1.tmx
+  db #21, #83, #3f, #ff  ; data/atlantis/block1100-1.tmx
   db #21, #81, #3f, #ff  ; data/atlantis/block1100-2.tmx
   db #27, #81, #3f, #f7  ; data/atlantis/block0101-1.tmx + left
   db #27, #81, #3f, #f7  ; data/atlantis/block0101-2.tmx + left
   db #2f, #e7, #3f, #cf  ; data/atlantis/block1001-1.tmx + up
-  db #21, #81, #3f, #e7  ; data/atlantis/block1100-1.tmx + down
-  db #21, #81, #3f, #e7  ; data/atlantis/block1100-2.tmx + down
   db #27, #f9, #21, #ff  ; data/atlantis/block0110-1.tmx + left
   db #27, #e1, #21, #ff  ; data/atlantis/block0110-2.tmx + left
   db #23, #e7, #21, #ff  ; data/atlantis/block1010-1.tmx + up
-  db #21, #81, #27, #ff  ; data/atlantis/block1100-1.tmx + right
+  db #21, #83, #27, #ff  ; data/atlantis/block1100-1.tmx + right
   db #21, #81, #27, #ff  ; data/atlantis/block1100-2.tmx + right
   db #2f, #e7, #21, #f3  ; data/atlantis/block0011-1.tmx + left + up
   db #27, #81, #27, #f7  ; data/atlantis/block0101-1.tmx + left + right
@@ -105,8 +103,6 @@
   db #27, #e1, #21, #e7  ; data/atlantis/block0110-2.tmx + left + down
   db #2f, #e7, #2f, #cf  ; data/atlantis/block1001-1.tmx + up + right
   db #23, #e7, #21, #e7  ; data/atlantis/block1010-1.tmx + up + down
-  db #21, #81, #27, #e7  ; data/atlantis/block1100-1.tmx + right + down
-  db #21, #81, #27, #e7  ; data/atlantis/block1100-2.tmx + right + down
   db #3f, #ff, #3f, #ff  ; data/atlantis/combination0000-1.tmx
   db #3f, #ff, #3f, #e7  ; data/atlantis/combination0000-1.tmx + down
   db #3f, #ff, #2f, #ff  ; data/atlantis/combination0000-1.tmx + right

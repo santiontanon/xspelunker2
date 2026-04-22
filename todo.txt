@@ -1,5 +1,4 @@
 to do:
-***- BUG: I cannot have chunks with just one tile of space at the top! (player falls right through it!). Write a Java verification condition
 ***- with music there are now slow downs in boss 1 when there are too many bullets. Optimize
 ***- music: (brain 12, 15, 23, 25 have potential)
   ***- ending aliens

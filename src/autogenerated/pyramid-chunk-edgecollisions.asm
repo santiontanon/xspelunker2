@@ -60,7 +60,7 @@
   db #21, #81, #3f, #ff  ; data/pyramid/room1100-1.tmx
   db #21, #81, #3f, #ff  ; data/pyramid/room1100-2.tmx
   db #21, #81, #3f, #ff  ; data/pyramid/room1100-3.tmx
-  db #20, #e0, #3f, #ff  ; data/pyramid/room1100-4.tmx
+  db #20, #c0, #3f, #ff  ; data/pyramid/room1100-4.tmx
   db #21, #81, #3f, #ff  ; data/pyramid/room1100-5.tmx
   db #21, #81, #3f, #ff  ; data/pyramid/room1100-6.tmx
   db #20, #80, #3f, #c3  ; data/pyramid/room1101-1.tmx
