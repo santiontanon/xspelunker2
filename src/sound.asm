@@ -94,6 +94,7 @@ PauseMusic:
 ;-----------------------------------------------
 ; silences all 3 channels of the PSG
 clear_PSG_volume:
+    di
     ld a, 8
     ld e, 0
     fast_WRTPSG_macro
@@ -101,6 +102,7 @@ clear_PSG_volume:
     fast_WRTPSG_macro
     ld a, 10
     fast_WRTPSG_macro
+    ei
     ret
 
 
@@ -148,13 +150,17 @@ update_sound:     ; This routine sould be called 50 or 60 times / sec
     ld a, (MUSIC_play)
     or a
     jr z, update_sound_no_music
+;     out (#2c),a  ; DEBUG
     update_sound_handle_instruments_macro
+;     out (#2d),a  ; DEBUG
     ld a, (MUSIC_tempo_counter)
     or a
     jp nz, update_music_skip
     ld (MUSIC_time_step_required), a  ; a == 0 here
-    ld hl, (MUSIC_pointer)
+    ld hl, (MUSIC_pointer)    
+;     out (#2c),a  ; DEBUG
     call update_sound_internal
+;     out (#2d),a  ; DEBUG
     ld (MUSIC_pointer), hl
     ld a, (MUSIC_tempo)
     ld (MUSIC_tempo_counter), a
@@ -164,7 +170,9 @@ update_sound:     ; This routine sould be called 50 or 60 times / sec
     xor a
     ld (MUSIC_time_step_required), a
     ld hl, (SFX_pointer)
+;     out (#2c),a  ; DEBUG
     call update_sound_internal
+;     out (#2d),a  ; DEBUG
     ld (SFX_pointer), hl
     ret
 

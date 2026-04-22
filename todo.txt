@@ -1,5 +1,14 @@
 to do:
-***- with music there are now slow downs in boss 1 when there are too many bullets. Optimize
+***- with music there are now slow downs in boss 1 when there are too many bullets:
+  ***- optimize sound routines:
+    ***- music "sound_internal":
+      original: 770 - 3107
+      new: 666 - 2818
+    ***- update_sound_handle_instruments_macro:
+      original: 123 - 495
+      new: 123 - 475
+    ***- sfx "sound_internal": 488 - 776
+  ***- optimize boss bullets
 ***- music: (brain 12, 15, 23, 25 have potential)
   ***- ending aliens
   ***- ending beach (reuse the story jazzy song? just some wave sfx in the background?)

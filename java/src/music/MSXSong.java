@@ -183,7 +183,7 @@ public class MSXSong {
                             }  
 //                            int period = MSXNote.PSGNotePeriod(note.absoluteNote); 
 //                            lines.add("  db MUSIC_CMD_PLAY_INSTRUMENT_CH" + (i+1) + ", " + (period/256) + ", " + (period%256));
-                            lines.add("  db MUSIC_CMD_PLAY_INSTRUMENT_CH" + (i+1) + ", " + notesUsed.indexOf(note.absoluteNote));
+                            lines.add("  db MUSIC_CMD_PLAY_INSTRUMENT_CH" + (i+1) + ", " + (notesUsed.indexOf(note.absoluteNote) * 2));
                             channelTime[i] += note.duration;
                         }
                     }

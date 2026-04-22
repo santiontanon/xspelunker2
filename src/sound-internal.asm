@@ -9,7 +9,7 @@ IF MUSIC_USE_ARPEGGIOS = 1
     ld a, (MUSIC_intrument_arpeggio)
     inc a  ; cp #ff
     jr z, update_sound_handle_instruments_not_arpeggio_CH1
-    push hl
+;     push hl
         ld hl, MUSIC_intrument_arpeggio
         ld a, (interrupt_cycle)
         and #03
@@ -26,7 +26,7 @@ IF MUSIC_USE_ARPEGGIOS = 1
         ld e, (hl)  ; LSB of the period    
         xor a
         fast_WRTPSG_macro
-    pop hl
+;     pop hl
 update_sound_handle_instruments_not_arpeggio_CH1:        
 ENDIF
     ld de, (MUSIC_instrument_envelope_ptr)
@@ -37,10 +37,10 @@ ENDIF
     ld (MUSIC_instrument_envelope_ptr), de
 IF MUSIC_USE_SET_VOLUME = 1
     ; a -= (MUSIC_volumes)
-    ex de, hl
+;     ex de, hl
         ld hl, MUSIC_volumes
         sub (hl)
-    ex de, hl
+;     ex de, hl
     jr nc, sound_update_handle_instruments_CH1_continue2
     xor a
 sound_update_handle_instruments_CH1_continue2:
@@ -57,7 +57,7 @@ IF MUSIC_USE_ARPEGGIOS = 1
     ld a, (MUSIC_intrument_arpeggio + 4)
     inc a  ; cp #ff
     jr z, update_sound_handle_instruments_not_arpeggio_CH2
-    push hl
+;     push hl
         ld a, (interrupt_cycle)
         and #03
         ld hl, MUSIC_intrument_arpeggio + 4
@@ -74,7 +74,7 @@ IF MUSIC_USE_ARPEGGIOS = 1
         ld e, (hl)  ; LSB of the period    
         ld a, 2
         fast_WRTPSG_macro
-    pop hl
+;     pop hl
 update_sound_handle_instruments_not_arpeggio_CH2
 ENDIF
     ld de, (MUSIC_instrument_envelope_ptr + 2)
@@ -85,10 +85,10 @@ ENDIF
     ld (MUSIC_instrument_envelope_ptr + 2), de
 IF MUSIC_USE_SET_VOLUME = 1
     ; a -= (MUSIC_volumes + 1)
-    ex de, hl
+;     ex de, hl
         ld hl, MUSIC_volumes + 1
         sub (hl)
-    ex de, hl
+;     ex de, hl
     jr nc, sound_update_handle_instruments_CH2_continue2
     xor a
 sound_update_handle_instruments_CH2_continue2:
@@ -108,7 +108,7 @@ IF MUSIC_USE_ARPEGGIOS = 1
     ld a, (MUSIC_intrument_arpeggio + 8)
     inc a  ; cp #ff
     jr z, update_sound_handle_instruments_not_arpeggio_CH3
-    push hl
+;     push hl
         ld a, (interrupt_cycle)
         and #03
         ld hl, MUSIC_intrument_arpeggio + 8
@@ -125,7 +125,7 @@ IF MUSIC_USE_ARPEGGIOS = 1
         ld e, (hl)  ; LSB of the period    
         ld a, 4
         fast_WRTPSG_macro
-    pop hl
+;     pop hl
 update_sound_handle_instruments_not_arpeggio_CH3:
 ENDIF
     ld de, (MUSIC_instrument_envelope_ptr + 4)
@@ -136,10 +136,10 @@ ENDIF
     ld (MUSIC_instrument_envelope_ptr + 4), de
 IF MUSIC_USE_SET_VOLUME = 1
     ; a -= (MUSIC_volumes + 2)
-    ex de, hl
+;     ex de, hl
         ld hl, MUSIC_volumes + 2
         sub (hl)
-    ex de, hl
+;     ex de, hl
     jr nc, sound_update_handle_instruments_CH3_continue2
     xor a
 sound_update_handle_instruments_CH3_continue2:
@@ -293,13 +293,10 @@ update_sound_internal:
     ; check if it's a special command:
     bit 6, a
     jp z, update_sound_internal_no_time_step
-    ex de, hl  ; 5
-        ld hl, MUSIC_time_step_required  ; 11
-        ld (hl), 1  ; 11
-    ex de, hl  ; 5
+    ld (MUSIC_time_step_required), a  ; we know a != 0
 update_sound_internal_no_time_step:    
-    bit 7, a
-    jp z, update_sound_WRTPSG
+    or a
+    jp p, update_sound_WRTPSG  ; if bit 7 is 0
     and #3f ; clear all the flags the command might have
     ret z   ; MUSIC_CMD_SKIP command
     dec a   ; MUSIC_CMD_SET_INSTRUMENT
@@ -314,8 +311,6 @@ update_sound_internal_no_time_step:
     jr z, update_sound_PLAY_SFX_OPEN_HIHAT
     dec a   ; MUSIC_CMD_PLAY_SFX_SHORT_HIHAT
     jr z, update_sound_PLAY_SFX_SHORT_HIHAT
-;     dec a   ; MUSIC_CMD_PLAY_SFX_DRUM_SHORT_RE
-;     jr z, update_sound_PLAY_SFX_DRUM_SHORT_RE
     dec a   ; MUSIC_CMD_PLAY_SFX_DRUM_SHORTER_RE
     jr z, update_sound_PLAY_SFX_DRUM_SHORTER_RE
     dec a   ; MUSIC_CMD_PLAY_SFX_DRUM_SHORTER_C
@@ -360,44 +355,34 @@ update_sound_SFX_END:
     ret
 
 
-update_sound_PLAY_SFX_OPEN_HIHAT:
-    push hl
-        ld hl, SFX_open_hi_hat
-update_sound_PLAY_SFX_OPEN_HIHAT_entry:
-        ld a, SFX_PRIORITY_MUSIC
-        call play_SFX_with_priority
-    pop hl
+update_sound_PLAY_SFX_SHORT_HIHAT:
+    ld bc, SFX_short_hi_hat
+update_sound_PLAY_SFX_SHORT_HIHAT_entry:
+    ld a, (SFX_priority)
+    cp SFX_PRIORITY_MUSIC + 1
+    jp nc, update_sound_internal_loop
+    xor a
+    ld (MUSIC_instruments + 2), a  ; reset the instrument in channel 3 to Square wave, so it does not interfere with the SFX
+    ld (SFX_pointer), bc
+    inc a  ; since SFX_PRIORITY_MUSIC == 1
+    ld (SFX_priority), a
     jp update_sound_internal_loop
 
-update_sound_PLAY_SFX_SHORT_HIHAT:
-    push hl
-        ld hl, SFX_short_hi_hat
-        jp update_sound_PLAY_SFX_OPEN_HIHAT_entry
-
-; update_sound_PLAY_SFX_PEDAL_HIHAT:
-;     push hl
-;     ld hl, SFX_pedal_hi_hat
-;     jp update_sound_PLAY_SFX_OPEN_HIHAT_entry
-
-; update_sound_PLAY_SFX_DRUM_SHORT_RE:
-;     push hl
-;         ld hl, SFX_drum_short_re
-;         jp update_sound_PLAY_SFX_OPEN_HIHAT_entry
+update_sound_PLAY_SFX_OPEN_HIHAT:
+    ld bc, SFX_open_hi_hat
+    jp update_sound_PLAY_SFX_SHORT_HIHAT_entry
 
 update_sound_PLAY_SFX_DRUM_SHORTER_C:
-    push hl
-        ld hl, SFX_drum_shorter_c
-        jp update_sound_PLAY_SFX_OPEN_HIHAT_entry
+    ld bc, SFX_drum_shorter_c
+    jp update_sound_PLAY_SFX_SHORT_HIHAT_entry
 
 update_sound_PLAY_SFX_DRUM_SHORTER_RE:
-    push hl
-        ld hl, SFX_drum_shorter_re
-        jp update_sound_PLAY_SFX_OPEN_HIHAT_entry
+    ld bc, SFX_drum_shorter_re
+    jp update_sound_PLAY_SFX_SHORT_HIHAT_entry
 
 update_sound_PLAY_SFX_SHORT_HIHAT_LOUDER:
-    push hl
-        ld hl, SFX_short_hi_hat_louder
-        jp update_sound_PLAY_SFX_OPEN_HIHAT_entry
+    ld bc, SFX_short_hi_hat_louder
+    jp update_sound_PLAY_SFX_SHORT_HIHAT_entry
 
 
 IF MUSIC_USE_SET_VOLUME = 1
@@ -433,55 +418,54 @@ update_sound_CLEAR_TRANSPOSE:
 ENDIF
 
 
-update_sound_PLAY_INSTRUMENT_CH1:
-    inc a  ; a = 1
-IF MUSIC_USE_ARPEGGIOS = 1
-    ld de, MUSIC_instrument_base_note
-ENDIF
-    jp update_sound_PLAY_INSTRUMENT
-update_sound_PLAY_INSTRUMENT_CH2:
-    ld a, 3
-IF MUSIC_USE_ARPEGGIOS = 1
-    ld de, MUSIC_instrument_base_note + 1
-ENDIF
-    jp update_sound_PLAY_INSTRUMENT
 update_sound_PLAY_INSTRUMENT_CH3:
     ld a, (SFX_priority)
     cp SFX_PRIORITY_LOW
     jp p, update_sound_PLAY_INSTRUMENT_IGNORE
     ld a, (MUSIC_channel3_instrument_buffer)
     ld (MUSIC_instruments + 2), a
-    ld a, 5
-IF MUSIC_USE_ARPEGGIOS = 1
-    ld de, MUSIC_instrument_base_note + 2
-ENDIF
-update_sound_PLAY_INSTRUMENT:
+    ld b, 0  ; for later use
+    ld d, 5
+    ld a, (hl)  ; note to play
     push hl
-        ld b, 0  ; for later use
-        ld c, (hl)  ; note to play
-        sla c
 IF MUSIC_USE_ARPEGGIOS = 1
-        ex hl, de
-            ld (hl), c  ; store the base note * 2
-        ex hl, de
+        ld (MUSIC_instrument_base_note + 2), a
 ENDIF
-        ld d, a  ; PSG register
-IF MUSIC_USE_TRANSPOSE = 1
-        ld hl, MUSIC_transpose
-        ld a, c
-        add a, (hl)
+    jp update_sound_PLAY_INSTRUMENT
+update_sound_PLAY_INSTRUMENT_CH2:
+    ld b, 0  ; for later use
+    ld d, 3
+    ld a, (hl)  ; note to play
+    push hl
+IF MUSIC_USE_ARPEGGIOS = 1
+        ld (MUSIC_instrument_base_note + 1), a
+ENDIF
+    jp update_sound_PLAY_INSTRUMENT
+update_sound_PLAY_INSTRUMENT_CH1:
+    ld b, a  ; for later use (here a == 0)
+    ld d, 1
+    ld a, (hl)  ; note to play
+    push hl
+IF MUSIC_USE_ARPEGGIOS = 1
+        ld (MUSIC_instrument_base_note), a
+ENDIF
+
+update_sound_PLAY_INSTRUMENT:
         ld c, a
-        ld a, d
+IF MUSIC_USE_TRANSPOSE = 1
+        ld a, (MUSIC_transpose)
+        add a, c
+        ld c, a  ; note to play, updated
 ENDIF
+        ld a, d  ; PSG register
         ld hl, note_period_table
         add hl, bc
         ld e, (hl)  ; MSB of the period    
         inc l  ; note_period_table is 2-aligned
         fast_WRTPSG_macro
+        dec d
         ld a, d
         ld e, (hl)  ; LSB of the period    
-        dec a
-        ld d, a
         fast_WRTPSG_macro
         ld a, d
         ld hl, MUSIC_instruments
@@ -491,7 +475,6 @@ ENDIF
         ld a, (hl)  ; we get the instrument
         ; we calculate pointer to the instrument envelope
         ld hl, instrument_profile_table
-        add a, a
         ADD_HL_A
         ld e, (hl)
         inc hl
@@ -538,9 +521,7 @@ update_sound_PLAY_INSTRUMENT_IGNORE:
 PSG_REGS: equ #A0  ; PSG register write port
 PSG_DATA: equ #A1  ; PSG value write port
 fast_WRTPSG_macro: macro
-    di
     out (PSG_REGS), a
     ld a, e
     out (PSG_DATA), a
-    ei
 endm
