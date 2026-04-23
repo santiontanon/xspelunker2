@@ -1062,39 +1062,29 @@ update_enemy_bullet:
 	jp z, update_enemy_delete
 	
 	ld a, (current_world__difficulty_bullet_speed)
-	ld iyl, a
-	call update_enemy_bullet_bresenham_iyl_steps
+	ld l, a
+	call update_enemy_bullet_bresenham_l_steps
 	; - b: amount to move in y
 	; - c: amount to move in x
-	ld a, c
-	add a, a
-	jr z, update_enemy_bullet_x_done
-	jp m, update_enemy_bullet_x_negative
-	push bc
-		call update_enemy_bullet_move_right_if_possible_a_times
-	pop bc
-	jp z, update_enemy_delete
-	jr update_enemy_bullet_x_done
-update_enemy_bullet_x_negative:
-	neg
-	push bc
-		call update_enemy_bullet_move_left_if_possible_a_times
-	pop bc
-	jp z, update_enemy_delete
-update_enemy_bullet_x_done:
+	call update_enemy_move_cb
 
-	ld a, b
-	add a, a
-	jr z, update_enemy_bullet_y_done
-	jp m, update_enemy_bullet_y_negative
-	call update_enemy_bullet_move_down_if_possible_a_times
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	call general_check_collision_with_wall
 	jp z, update_enemy_delete
-	jr update_enemy_bullet_y_done
-update_enemy_bullet_y_negative:
-	neg
-	call update_enemy_bullet_move_up_if_possible_a_times
+
+	; out of the screen?
+	ld a, (current_room__width)
+	dec a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	jp z, update_enemy_delete
-update_enemy_bullet_y_done:
+	jp c, update_enemy_delete
+
+	ld a, (current_room__height)
+	dec a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	jp z, update_enemy_delete
+	jp c, update_enemy_delete
 
 	ld d, COLOR_YELLOW
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 0) * 4 
@@ -1108,8 +1098,8 @@ update_enemy_bullet_ignoring_walls:
 	jp z, update_enemy_delete
 	
 	ld a, (current_world__difficulty_bullet_speed)
-	ld iyl, a
-	call update_enemy_bullet_bresenham_iyl_steps
+	ld l, a
+	call update_enemy_bullet_bresenham_l_steps
 	; - b: amount to move in y
 	; - c: amount to move in x
 	call update_enemy_move_cb
@@ -2569,7 +2559,7 @@ update_enemy_fire_imp_dash:
 	cp 48
 	jr z, update_enemy_fire_imp_to_dash_cooldown
 	ld a, (current_world__difficulty_bullet_speed)
-	ld iyl, a
+	ld l, a
 	call update_enemy_dash_step_internal
 	ld bc, (current_room__width)
 	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_X)
@@ -2903,10 +2893,8 @@ update_enemy_ghost_state_5_continue:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	cp 64
 	jr z, update_enemy_ghost_state_8_done
-	push iy
-		ld iyl, 1
-		call update_enemy_dash_step_internal
-	pop iy
+	ld l, 1
+	call update_enemy_dash_step_internal
 	jp update_enemy_ghost_state_8_continue3
 
 update_enemy_ghost_state_6:
@@ -2975,10 +2963,8 @@ update_enemy_ghost_state_8_done:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 4  ; pause right
 	jp update_enemy_ghost_continue2_right
 update_enemy_ghost_state_8_continue2:
-	push iy
-		ld iyl, 2
-		call update_enemy_dash_step_internal
-	pop iy
+	ld l, 2
+	call update_enemy_dash_step_internal
 update_enemy_ghost_state_8_continue3:
 	ld de, (current_room__width)
 	dec e
@@ -3267,39 +3253,29 @@ update_enemy_sentinel_rock:
 	call update_enemy_hurt_player_bullet
 	
 	ld a, (current_world__difficulty_bullet_speed)
-	ld iyl, a
-	call update_enemy_bullet_bresenham_iyl_steps
+	ld l, a
+	call update_enemy_bullet_bresenham_l_steps
 	; - b: amount to move in y
 	; - c: amount to move in x
-	ld a, c
-	add a, a
-	jr z, update_enemy_sentinel_rock_x_done
-	jp m, update_enemy_sentinel_rock_x_negative
-	push bc
-		call update_enemy_bullet_move_right_if_possible_a_times
-	pop bc
-	jp z, update_enemy_sentinel_rock_collision
-	jr update_enemy_sentinel_rock_x_done
-update_enemy_sentinel_rock_x_negative:
-	neg
-	push bc
-		call update_enemy_bullet_move_left_if_possible_a_times
-	pop bc
-	jp z, update_enemy_sentinel_rock_collision
-update_enemy_sentinel_rock_x_done:
+	call update_enemy_move_cb
 
-	ld a, b
-	add a, a
-	jr z, update_enemy_sentinel_rock_y_done
-	jp m, update_enemy_sentinel_rock_y_negative
-	call update_enemy_bullet_move_down_if_possible_a_times
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	call general_check_collision_with_wall
 	jp z, update_enemy_sentinel_rock_collision
-	jr update_enemy_sentinel_rock_y_done
-update_enemy_sentinel_rock_y_negative:
-	neg
-	call update_enemy_bullet_move_up_if_possible_a_times
+
+	; out of the screen?
+	ld a, (current_room__width)
+	dec a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	jp z, update_enemy_sentinel_rock_collision
-update_enemy_sentinel_rock_y_done:
+	jp c, update_enemy_sentinel_rock_collision
+
+	ld a, (current_room__height)
+	dec a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	jp z, update_enemy_sentinel_rock_collision
+	jp c, update_enemy_sentinel_rock_collision
 
 	ld d, COLOR_BLUE
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 29) * 4 
@@ -3816,53 +3792,45 @@ update_enemy_bullet_whirlwind:
 	; < 16: 2
 	; < 20: 3
 	; otherwise: 4
-	ld iyl, 0  ; speed of movement
+	ld l, 0  ; speed of movement
 	cp 8
-	jr c, update_enemy_bullet_whirlwind_y_done  ; no movement
-	ld iyl, 2
+	jr c, update_enemy_bullet_whirlwind_movement_done  ; no movement
+	ld l, 2
 	cp 12
 	jr c, update_enemy_bullet_whirlwind_speed_set
-	ld iyl, 4
+	ld l, 4
 	cp 16
 	jr c, update_enemy_bullet_whirlwind_speed_set
-	ld iyl, 6
+	ld l, 6
 	cp 20
 	jr c, update_enemy_bullet_whirlwind_speed_set
-	ld iyl, 8
+	ld l, 8
 update_enemy_bullet_whirlwind_speed_set:
 
-	call update_enemy_bullet_bresenham_iyl_steps
+	call update_enemy_bullet_bresenham_l_steps
 	; - b: amount to move in y
 	; - c: amount to move in x
-	ld a, c
-	add a, a
-	jr z, update_enemy_bullet_whirlwind_x_done
-	jp m, update_enemy_bullet_whirlwind_x_negative
-	push bc
-		call update_enemy_bullet_move_right_if_possible_a_times
-	pop bc
-	jp z, update_enemy_delete
-	jr update_enemy_bullet_whirlwind_x_done
-update_enemy_bullet_whirlwind_x_negative:
-	neg
-	push bc
-		call update_enemy_bullet_move_left_if_possible_a_times
-	pop bc
-	jp z, update_enemy_delete
-update_enemy_bullet_whirlwind_x_done:
+	call update_enemy_move_cb
 
-	ld a, b
-	add a, a
-	jr z, update_enemy_bullet_whirlwind_y_done
-	jp m, update_enemy_bullet_whirlwind_y_negative
-	call update_enemy_bullet_move_down_if_possible_a_times
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	call general_check_collision_with_wall
 	jp z, update_enemy_delete
-	jr update_enemy_bullet_whirlwind_y_done
-update_enemy_bullet_whirlwind_y_negative:
-	neg
-	call update_enemy_bullet_move_up_if_possible_a_times
+
+	; out of the screen?
+	ld a, (current_room__width)
+	dec a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	jp z, update_enemy_delete
-update_enemy_bullet_whirlwind_y_done:
+	jp c, update_enemy_delete
+
+	ld a, (current_room__height)
+	dec a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	jp z, update_enemy_delete
+	jp c, update_enemy_delete
+
+update_enemy_bullet_whirlwind_movement_done:
 
 	ld d, COLOR_WHITE
     ; animation of 6, 7, 8
@@ -4162,39 +4130,29 @@ update_enemy_blood_ball:
 	
 	ld a, (current_world__difficulty_bullet_speed)
 	inc a  ; a bit faster than a normal bullet
-	ld iyl, a
-	call update_enemy_bullet_bresenham_iyl_steps
+	ld l, a
+	call update_enemy_bullet_bresenham_l_steps
 	; - b: amount to move in y
 	; - c: amount to move in x
-	ld a, c
-	add a, a
-	jr z, update_enemy_pus_ball_x_done
-	jp m, update_enemy_pus_ball_x_negative
-	push bc
-		call update_enemy_bullet_move_right_if_possible_a_times
-	pop bc
-	jp z, update_enemy_delete
-	jr update_enemy_pus_ball_x_done
-update_enemy_pus_ball_x_negative:
-	neg
-	push bc
-		call update_enemy_bullet_move_left_if_possible_a_times
-	pop bc
-	jp z, update_enemy_delete
-update_enemy_pus_ball_x_done:
+	call update_enemy_move_cb
 
-	ld a, b
-	add a, a
-	jr z, update_enemy_pus_ball_y_done
-	jp m, update_enemy_pus_ball_y_negative
-	call update_enemy_bullet_move_down_if_possible_a_times
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	call general_check_collision_with_wall
 	jp z, update_enemy_delete
-	jr update_enemy_pus_ball_y_done
-update_enemy_pus_ball_y_negative:
-	neg
-	call update_enemy_bullet_move_up_if_possible_a_times
+
+	; out of the screen?
+	ld a, (current_room__width)
+	dec a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	jp z, update_enemy_delete
-update_enemy_pus_ball_y_done:
+	jp c, update_enemy_delete
+
+	ld a, (current_room__height)
+	dec a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	jp z, update_enemy_delete
+	jp c, update_enemy_delete
 
 	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
 	cp ENEMY_BLOOD_BALL
@@ -4362,7 +4320,7 @@ update_enemy_player_close_enough_16_fail:
 
 ;-----------------------------------------------
 ; Used by fire imps and ghosts
-; - iyl: movement speed
+; - l: movement speed
 update_enemy_dash_step_internal:
 	; shift data in the struct temporarily, so we can reuse 'update_enemy_bullet_bresenham_iyl_steps':
 	ld e, (ix + ROOM_OBJECT_STRUCT_SPEED_X)
@@ -4372,7 +4330,7 @@ update_enemy_dash_step_internal:
 	ld (ix + ROOM_OBJECT_STRUCT_SPEED_X), c
 	ld (ix + ROOM_OBJECT_STRUCT_SPEED_Y), b
 	push de
-		call update_enemy_bullet_bresenham_iyl_steps
+		call update_enemy_bullet_bresenham_l_steps
 	pop de
 	ld (ix + ROOM_OBJECT_STRUCT_SPEED_X), e
 	ld (ix + ROOM_OBJECT_STRUCT_SPEED_Y), d
@@ -5777,11 +5735,11 @@ update_enemy_bullet_move_up_if_possible_a_times_loop:
 ;-----------------------------------------------
 ; input:
 ; - ix: ptr to bullet object
-; - iyl: number of steps to apply
+; - l: number of steps to apply
 ; output:
 ; - c: number of times to move in x (..., -2, -1, 0, 1, 2, ...)
 ; - b: number of times to move in y (..., -2, -1, 0, 1, 2, ...)
-update_enemy_bullet_bresenham_iyl_steps:
+update_enemy_bullet_bresenham_l_steps:
 	ld a, (ix + ROOM_OBJECT_STRUCT_SPEED_Y)
 	or a
     jp p, update_enemy_bullet_bresenham_no_yspeed_flip
@@ -5790,7 +5748,7 @@ update_enemy_bullet_bresenham_no_yspeed_flip:
     ld d, a  ; d = |speed y|
     ld a, (ix + ROOM_OBJECT_STRUCT_SPEED_X)
     or a
-    jp p,update_enemy_bullet_bresenham_no_xspeed_flip
+    jp p, update_enemy_bullet_bresenham_no_xspeed_flip
     neg
 update_enemy_bullet_bresenham_no_xspeed_flip:
     ld e, a  ; e = |speed x|
@@ -5807,7 +5765,7 @@ update_enemy_bullet_bresenham_x_is_bigger_loop:
     add a, e
 update_enemy_bullet_bresenham_x_is_bigger_no_error_overflow:
     inc c
-    dec iyl
+    dec l
     jr nz, update_enemy_bullet_bresenham_x_is_bigger_loop
     ld (ix + ROOM_OBJECT_STRUCT_BRESENHAM_STATE), a
     jp update_enemy_bullet_bresenham_choose_quadrant
@@ -5823,7 +5781,7 @@ update_enemy_bullet_bresenham_y_is_bigger_loop:
     add a, d
 update_enemy_bullet_bresenham_y_is_bigger_no_error_overflow:
     inc b
-    dec iyl
+    dec l
     jr nz, update_enemy_bullet_bresenham_y_is_bigger_loop
     ld (ix + ROOM_OBJECT_STRUCT_BRESENHAM_STATE), a
 
@@ -5833,7 +5791,7 @@ update_enemy_bullet_bresenham_choose_quadrant:
 	; - c: number of steps we need to move in x
     ld a, (ix + ROOM_OBJECT_STRUCT_SPEED_Y)
     or a
-    jp p,update_enemy_bullet_bresenham_no_yspeed_flip2
+    jp p, update_enemy_bullet_bresenham_no_yspeed_flip2
     ld a, b
     neg
     ld b, a
