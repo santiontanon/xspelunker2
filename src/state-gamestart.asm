@@ -34,13 +34,13 @@ state_gamestart:
 		ld hl, copy_text_from_another_page
 		ld c, TEXT_PAGE3
 		call call_hl_in_page_c_8000
-		DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096, CHRTBL2 + (256*0 + 128)*8, COLOR_BLUE*16, 10
+		DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096, CHRTBL2 + (256*1 + 128)*8, COLOR_BLUE*16, 10
 
 		ld de, TEXT_GAMESTART2
 		ld hl, copy_text_from_another_page
 		ld c, TEXT_PAGE3
 		call call_hl_in_page_c_8000
-		DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096, CHRTBL2 + (256*1 + 128)*8, COLOR_BLUE*16, 6
+		DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096, CHRTBL2 + (256*1 + 138)*8, COLOR_BLUE*16, 6
 
 		ld de, TEXT_GAMESTART3
 		ld hl, copy_text_from_another_page
@@ -72,7 +72,7 @@ state_gamestart_init_loop_done_continue:
 
 		ld iy, TEXT_GAMESTART_CONSOLE_MSG1
 		ld b, 146
-		ld de, NAMTBL2 + 3 + 16*32
+		ld de, NAMTBL2 + 1 + 18*32
 		ld ix, CHRTBL2 + 256*2*8
 		call state_gamestart_console_paragraph
 
@@ -95,7 +95,7 @@ draw_gamestart_world_name_table:
 
 draw_gamestart_world_name:
 	ld hl, current_world__name
-	ld de, NAMTBL2 + 8 + 6*32
+	ld de, NAMTBL2 + 3 + 10*32
 	ld b, 16
 draw_gamestart_world_name_loop:
 	push bc
@@ -286,22 +286,21 @@ draw_gamestart_cursor:
 	jr z, draw_gamestart_cursor_world_name
 	dec a
 	jr z, draw_gamestart_cursor_start
-	dec a
-	jr z, draw_gamestart_cursor_back
-	; help:
-	ld c, 164
-	ld e, 200
-	ld b, 83
+	; back:
+	ld c, 24*8 + 4
+	ld e, 29*8
+	ld b, 11*8 + 3
+; 	ld c, 108
+; 	ld e, 144
+; 	ld b, 83
 	jr draw_gamestart_cursor_coordinates_set
 draw_gamestart_cursor_start:
-	ld c, 52
-	ld e, 88
-	ld b, 83
-	jr draw_gamestart_cursor_coordinates_set
-draw_gamestart_cursor_back:
-	ld c, 108
-	ld e, 144
-	ld b, 83
+	ld c, 24*8 + 4
+	ld e, 29*8
+	ld b, 8*8 + 3
+; 	ld c, 52
+; 	ld e, 88
+; 	ld b, 83
 draw_gamestart_cursor_coordinates_set:
 	ld a, (interrupt_cycle)
 	rrca
@@ -342,9 +341,9 @@ draw_gamestart_cursor_world_name:
 	add a, a
 	add a, a
 	add a, a
-	add a, 64
+	add a, 24
 	ld hl, buffer_4096
-	ld (hl), 47
+	ld (hl), 79
 	inc hl
 	ld (hl), a
 	inc hl
@@ -381,9 +380,13 @@ state_gamestart_update_cursor:
 	jr z, state_gamestart_update_cursor_world_name
 	call update_keyboard_buffers
 	ld a, (keyboard_clicks)
-	bit KEY_RIGHT_BIT, a  ; right
+; 	bit KEY_RIGHT_BIT, a  ; right
+; 	push af
+; 		call nz, state_gamestart_update_cursor_right
+; 	pop af
+	bit KEY_DOWN_BIT, a  ; down
 	push af
-		call nz, state_gamestart_update_cursor_right
+		call nz, state_gamestart_update_cursor_down
 	pop af
 	bit KEY_UP_BIT, a  ; up
 	push af
@@ -398,25 +401,33 @@ state_gamestart_update_cursor:
 		call nz, state_gamestart_update_cursor_button
 	pop af	
 	ret
-state_gamestart_update_cursor_right:
+; state_gamestart_update_cursor_right:
+; 	ld a, (tmp_gamestart_cursor_position1)
+; 	inc a
+; 	cp 4
+; 	ret z
+state_gamestart_update_cursor_down:
 	ld a, (tmp_gamestart_cursor_position1)
 	inc a
-	cp 4
-	ret z
+	cp 3
+	jr nz, state_gamestart_update_cursor_move_set
+	ld a, 1
 state_gamestart_update_cursor_move_set:
 	ld (tmp_gamestart_cursor_position1), a
 	ld hl, SFX_ui_move
 	jp play_SFX_with_high_priority
 
 state_gamestart_update_cursor_up:
-	call getcharacter_nonwaiting_reset  ; get ready to move into the world name
-	xor a
+	ld a, (tmp_gamestart_cursor_position1)
+	dec a
+	jr nz, state_gamestart_update_cursor_move_set
+	ld a, 2
 	jr state_gamestart_update_cursor_move_set
 
 state_gamestart_update_cursor_left:
-	ld a, (tmp_gamestart_cursor_position1)
-	dec a
-	ret z
+	call getcharacter_nonwaiting_reset  ; get ready to move into the world name
+	xor a
+	ld (tmp_gamestart_cursor_position1), a
 	jr state_gamestart_update_cursor_move_set
 
 state_gamestart_update_cursor_world_name:
@@ -424,14 +435,16 @@ state_gamestart_update_cursor_world_name:
 	call getcharacter_nonwaiting
 	or a
 	ret z
+	cp #1e
+	jr z, state_gamestart_update_cursor_world_name_up
 	cp #1f
 	jr z, state_gamestart_update_cursor_world_name_down
 	cp #0d
 	jr z, state_gamestart_update_cursor_world_name_down
 	cp #1d
-	jr z, state_gamestart_update_cursor_left_name
+	jp z, state_gamestart_update_cursor_left_name
 	cp #1c
-	jr z, state_gamestart_update_cursor_right_name
+	jp z, state_gamestart_update_cursor_right_name
 	cp #08
 	jr z, state_gamestart_update_cursor_name_delete
 	cp ' '
@@ -447,7 +460,17 @@ state_gamestart_update_cursor_world_name:
 	ret
 
 state_gamestart_update_cursor_world_name_down:
+	call update_keyboard_buffers
+	xor a
+	ld (keyboard_clicks), a
 	ld a, 1
+	jr state_gamestart_update_cursor_move_set
+
+state_gamestart_update_cursor_world_name_up:
+	call update_keyboard_buffers
+	xor a
+	ld (keyboard_clicks), a
+	ld a, 2
 	jr state_gamestart_update_cursor_move_set
 
 state_gamestart_update_cursor_enter_character_space:
@@ -494,7 +517,7 @@ state_gamestart_update_cursor_name_delete_continue:
 state_gamestart_update_cursor_right_name:
 	ld a, (tmp_gamestart_cursor_position2)
 	cp 15
-	ret z
+	jr z, state_gamestart_update_cursor_world_name_down
 	inc a
 state_gamestart_update_cursor_name_position_set:
 	ld (tmp_gamestart_cursor_position2), a
@@ -520,8 +543,8 @@ state_gamestart_update_cursor_button:
 	jr z, state_gamestart_update_cursor_start
 	dec a
 	jr z, state_gamestart_update_cursor_back
-	dec a
-	jr z, state_gamestart_update_cursor_help
+; 	dec a
+; 	jr z, state_gamestart_update_cursor_help
 	ret
 
 state_gamestart_update_cursor_start:
@@ -531,7 +554,7 @@ state_gamestart_update_cursor_start:
 	call play_SFX_with_high_priority
 	ld iy, TEXT_GAMESTART_CONSOLE_MSG4
 	ld b, 146
-	ld de, NAMTBL2 + 3 + 16*32
+	ld de, NAMTBL2 + 1 + 18*32
 	ld ix, CHRTBL2 + 256*2*8
 	call state_gamestart_console_paragraph
 
@@ -558,36 +581,36 @@ state_gamestart_update_cursor_back:
     ld a, BRAINGAMES_PAGE
     jp jp_to_hl_in_page_a_8000
 
-state_gamestart_update_cursor_help:
-	call clear_all_the_sprites
-	ld hl, SFX_ui_select
-	call play_SFX_with_high_priority
-	ld iy, TEXT_GAMESTART_CONSOLE_MSG2
-	ld b, 146
-	ld de, NAMTBL2 + 3 + 16*32
-	ld ix, CHRTBL2 + 256*2*8
-	call state_gamestart_console_paragraph
-state_gamestart_update_cursor_help_loop:
-	halt
-	call update_keyboard_buffers
-	ld a, (keyboard_clicks)
-	bit KEY_WEAPON_BIT, a
-	jr z, state_gamestart_update_cursor_help_loop
-	ld iy, TEXT_GAMESTART_CONSOLE_MSG3
-	ld b, 146
-	ld de, NAMTBL2 + 3 + 16*32
-	ld ix, CHRTBL2 + 256*2*8
-	jp state_gamestart_console_paragraph
+; state_gamestart_update_cursor_help:
+; 	call clear_all_the_sprites
+; 	ld hl, SFX_ui_select
+; 	call play_SFX_with_high_priority
+; 	ld iy, TEXT_GAMESTART_CONSOLE_MSG2
+; 	ld b, 146
+; 	ld de, NAMTBL2 + 3 + 16*32
+; 	ld ix, CHRTBL2 + 256*2*8
+; 	call state_gamestart_console_paragraph
+; state_gamestart_update_cursor_help_loop:
+; 	halt
+; 	call update_keyboard_buffers
+; 	ld a, (keyboard_clicks)
+; 	bit KEY_WEAPON_BIT, a
+; 	jr z, state_gamestart_update_cursor_help_loop
+; 	ld iy, TEXT_GAMESTART_CONSOLE_MSG3
+; 	ld b, 146
+; 	ld de, NAMTBL2 + 3 + 16*32
+; 	ld ix, CHRTBL2 + 256*2*8
+; 	jp state_gamestart_console_paragraph
 
 
 ;-----------------------------------------------
 gamestart_clear_console:
-	ld hl, NAMTBL2 + 3 + 16*32
-	ld b, 6
+	ld hl, NAMTBL2 + 1 + 18*32
+	ld b, 5
 gamestart_clear_console_loop:
 	push bc
 		push hl
-			ld b, 16
+			ld b, 20
 			xor a
 			call fast_small_FILVRM
 		pop hl
@@ -607,7 +630,7 @@ gamestart_clear_console_loop:
 state_gamestart_console_paragraph:
 	ld hl, (tmp_gamestart_cursor_position1)
 	push hl
-		ld a, 16
+		ld a, 20
 		ld (tmp_letter_line_width), a
 		ld a, #f0
 		ld (tmp_letter_line_color), a	

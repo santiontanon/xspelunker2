@@ -118,9 +118,9 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "normal", "DIFFICULTY_NORMAL", 6);
         addLineSafe(lines_with_constant_page3, "hard", "DIFFICULTY_HARD", 6);
         addLineSafe(lines_with_constant_page3, "hardest", "DIFFICULTY_HARDEST", 6);
-        addLineSafe(lines_with_constant_page3, "Name the world you will play in, to determine its characteristics.", "GAMESTART_CONSOLE_MSG1", 90);
-        addLineSafe(lines_with_constant_page3, "Each world is identified by its name. Choose wisely! The world name determines the random seed, and difficulty...", "GAMESTART_CONSOLE_MSG2", 90);
-        addLineSafe(lines_with_constant_page3, "Use the same name to play again on the same world. You can use letters, spaces and the numbers 0 - 4.", "GAMESTART_CONSOLE_MSG3", 90);
+        addLineSafe(lines_with_constant_page3, "I am Itzanma, ruler of the sky! I rule over many worlds with different skies, each with their own name. Which of my worlds do you want?", "GAMESTART_CONSOLE_MSG1", 120);
+//        addLineSafe(lines_with_constant_page3, "Each world is identified by its name. Choose wisely! The world name determines the random seed, and difficulty...", "GAMESTART_CONSOLE_MSG2", 90);
+//        addLineSafe(lines_with_constant_page3, "Use the same name to play again on the same world. You can use letters, spaces and the numbers 0 - 4.", "GAMESTART_CONSOLE_MSG3", 90);
         addLineSafe(lines_with_constant_page3, "Creating world...", "GAMESTART_CONSOLE_MSG4", 90);
         addLineSafe(lines_with_constant_page3, "The gods do not like this name. Try another one!", "GAMESTART_CONSOLE_MSG5", 90);
         
