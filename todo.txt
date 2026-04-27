@@ -2,9 +2,6 @@ to do:
 
 ***- random seed puzzle (all happens without going to moon/mars):
   ***- redo world name entering screen:
-    ***- display sprite part of the star map:
-      ***- generate sprite binary data
-      ***- draw sprites in base position
     ***- when changing the name, the star alignment map changes:
       ***- 5 bits determine a horizontal offset of the map
       ***- 2 bits determine the rotation of the center galaxy (sprite)
@@ -26,7 +23,7 @@ to do:
       ***- it has a representation of the sky (the same as in the title screen, depending on the random seed)
       ***- world teleporter machine: where you go back to the world name room, and can travel across worlds: maybe the first letter is fixed, so that you cannot change the difficulty?
       ***- tablets: clues about the world teleporter and constellation relation with the seed, and also a tablet with the three names of the three statues (in Maya)
-  ***- speaking the names in front of each statue unlocks a chest/cabinet with a fragment of a codex. You need all 3 for it to be intelligible (this will later unlock the "A+" ending, maybe the 3 codices together are instructions that can be placed in some forge to produce the final weapon required to defeat the final final boss)
+  ***- speaking the names in front of each statue unlocks a chest/cabinet with a fragment of a codex. You need all 3 for it to be intelligible (this will later unlock the "A+" ending, as explained below, the three of them allow yo to manufacture fire stones, or give you the clue to get to the forge)
   ***- update "TABLET_TRIVIA_CLUE1", "TABLET_TRIVIA_CLUE2", to have proper clues (remove the ones about angry bosses for now, as it's not clear I am doing it).
 
 - music: (brain 12, 15, 23, 25 have potential)

@@ -607,7 +607,7 @@ public class GenerateSprites {
         System.out.println("extractAtlantisSentinelSprites: " + data.size());
         Z80Assembler.dataToBinary(data, outputPath + ".bin");   
     }
-    
+        
     
     public static void extractDialogSprites(String outputPath) throws Exception
     {
