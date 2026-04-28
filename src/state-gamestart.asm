@@ -1,3 +1,6 @@
+GAMESTART_STARCHART_NAMETABLE: equ buffer_4096 + 2048
+
+
 ;-----------------------------------------------
 state_gamestart:
     ld sp, stack
@@ -7,8 +10,9 @@ state_gamestart:
 		; sprites:
 		ld hl, state_gamestart_sprites_zx0
 		ld de, buffer_4096
-		call dzx0
-		ld hl, buffer_4096
+		push de
+			call dzx0
+		pop hl
 		ld de, SPRTBL2
 		ld bc, 352
 		call fast_LDIRVM
@@ -18,11 +22,11 @@ state_gamestart:
 		call decompress_tiles_to_all_banks
 
 		ld hl, gamestart_nametable_zx0
-		ld de, buffer_4096
+		ld de, GAMESTART_STARCHART_NAMETABLE  ; offset by 1k so that we keep the copy
 		ld c, GAMESTART_PAGE
 		call dzx0_from_page_c
 
-		ld hl, buffer_4096
+		ld hl, GAMESTART_STARCHART_NAMETABLE
 		ld de, NAMTBL2
 		ld bc, 768
 		call fast_LDIRVM
@@ -35,12 +39,13 @@ state_gamestart:
 
 		ld de, TEXT_GAMESTART2
 		ld hl, copy_text_from_another_page
-		ld c, TEXT_PAGE3
-		call call_hl_in_page_c_8000
-		DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096, CHRTBL2 + (256*1 + 138)*8, COLOR_BLUE*16, 6
+		push hl
+			ld c, TEXT_PAGE3
+			call call_hl_in_page_c_8000
+			DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096, CHRTBL2 + (256*1 + 138)*8, COLOR_BLUE*16, 6
 
-		ld de, TEXT_GAMESTART3
-		ld hl, copy_text_from_another_page
+			ld de, TEXT_GAMESTART3
+		pop hl
 		ld c, TEXT_PAGE3
 		call call_hl_in_page_c_8000
 		DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096, CHRTBL2 + (256*2 + 134)*8, COLOR_BLUE*16, 6
@@ -80,7 +85,6 @@ state_gamestart_loop:
 	call draw_gamestart_cursor
 	call state_gamestart_update_cursor
 	jr state_gamestart_loop
-	; jp state_play
 
 
 ;-----------------------------------------------
@@ -132,21 +136,145 @@ draw_gamestart_world_name_loop:
 
 ;-----------------------------------------------
 gamestart_draw_starchart:
+	; random seed bits to starchart: abcdefgh ijklmnop
+	; - fg / hi / jk / lm: positions of the blue stars (4 possibilities per star)
+	; - abcde: red stars on/off
+	; - no: rotation of center galaxy
+	; - p: rotation of bottom-left galaxy
+
 	; draw the tiles:
-	; ...
+	; blue stars:
+	ld a, (current_world__seed)
+	ld de, 8
+	ld b, 4
+	ld ix, gamestart_draw_starchart_bluestar_table
+gamestart_draw_starchart_blue_star_loop:
+	ld l, (ix)
+	ld h, (ix + 1)
+	ld (hl), 0
+	ld l, (ix + 2)
+	ld h, (ix + 3)
+	ld (hl), 0
+	ld l, (ix + 4)
+	ld h, (ix + 5)
+	ld (hl), 0
+	ld l, (ix + 6)
+	ld h, (ix + 7)
+	ld (hl), 0
+	rrca
+	jr c, gamestart_draw_starchart_blue_star_loop_1
+	rrca
+	jr c, gamestart_draw_starchart_blue_star_loop_01
+	; 00:
+	ld l, (ix)
+	ld h, (ix + 1)
+	jr gamestart_draw_starchart_blue_star_loop_continue
+gamestart_draw_starchart_blue_star_loop_01:
+	; 01:
+	ld l, (ix + 2)
+	ld h, (ix + 3)
+	jr gamestart_draw_starchart_blue_star_loop_continue
+gamestart_draw_starchart_blue_star_loop_1:
+	rrca
+	jr c, gamestart_draw_starchart_blue_star_loop_11
+	; 10:
+	ld l, (ix + 4)
+	ld h, (ix + 5)
+	jr gamestart_draw_starchart_blue_star_loop_continue
+gamestart_draw_starchart_blue_star_loop_11:
+	; 11:
+	ld l, (ix + 6)
+	ld h, (ix + 7)
+gamestart_draw_starchart_blue_star_loop_continue:
+	ld (hl), 180
+	add ix, de
+	djnz gamestart_draw_starchart_blue_star_loop
+
+	; red stars:
+	ld a, (current_world__seed + 1)
+	ld c, a
+	ld e, 179
+	ld ix, gamestart_draw_starchart_redstar_table
+	ld b, 5
+gamestart_draw_starchart_red_star_loop:
+	xor a
+	rr c
+	jr nc, gamestart_draw_starchart_red_star_loop_next
+	ld a, e
+gamestart_draw_starchart_red_star_loop_next:
+	ld l, (ix)
+	ld h, (ix + 1)
+	ld (hl), a
+	inc ix
+	inc ix
+	djnz gamestart_draw_starchart_red_star_loop
+
+	; update the name table:
+	ld hl, GAMESTART_STARCHART_NAMETABLE
+	ld de, NAMTBL2
+	ld b, 32*7
+	call fast_small_LDIRVM 
 
 	; draw the sprites:
 	ld hl, gamestart_draw_starchart_sprite_table
+	ld de, buffer_4096
+	ld bc, 16
+	ldir
+
+	; galaxy rotation:
+	ld a, (current_world__seed + 1)
+	rlca
+	and #01
+	add a, a
+	add a, a
+	add a, 36
+	ld (buffer_4096 + 14), a
+
+	ld a, (current_world__seed + 1)
+	rlca
+	rlca
+	rlca
+	and #03
+	add a, a
+	add a, a
+	add a, 20
+	ld (buffer_4096 + 10), a
+
+	ld hl, buffer_4096
 	ld de, SPRATR2 + 8
 	ld b, 16
 	jp fast_small_LDIRVM
 
+gamestart_draw_starchart_redstar_table:
+	dw GAMESTART_STARCHART_NAMETABLE + 3 + 0*32
+	dw GAMESTART_STARCHART_NAMETABLE + 28 + 0*32
+	dw GAMESTART_STARCHART_NAMETABLE + 20 + 1*32
+	dw GAMESTART_STARCHART_NAMETABLE + 7 + 5*32
+	dw GAMESTART_STARCHART_NAMETABLE + 12 + 6*32
+
+gamestart_draw_starchart_bluestar_table:
+	dw GAMESTART_STARCHART_NAMETABLE + 2 + 0*32
+	dw GAMESTART_STARCHART_NAMETABLE + 8 + 0*32
+	dw GAMESTART_STARCHART_NAMETABLE + 18 + 0*32
+	dw GAMESTART_STARCHART_NAMETABLE + 26 + 0*32
+	dw GAMESTART_STARCHART_NAMETABLE + 3 + 2*32
+	dw GAMESTART_STARCHART_NAMETABLE + 8 + 2*32
+	dw GAMESTART_STARCHART_NAMETABLE + 21 + 2*32
+	dw GAMESTART_STARCHART_NAMETABLE + 29 + 2*32
+	dw GAMESTART_STARCHART_NAMETABLE + 4 + 4*32
+	dw GAMESTART_STARCHART_NAMETABLE + 10 + 4*32
+	dw GAMESTART_STARCHART_NAMETABLE + 23 + 4*32
+	dw GAMESTART_STARCHART_NAMETABLE + 30 + 4*32
+	dw GAMESTART_STARCHART_NAMETABLE + 5 + 6*32
+	dw GAMESTART_STARCHART_NAMETABLE + 14 + 6*32
+	dw GAMESTART_STARCHART_NAMETABLE + 23 + 6*32
+	dw GAMESTART_STARCHART_NAMETABLE + 28 + 6*32
 
 gamestart_draw_starchart_sprite_table:
 	db -1, 12*8, 12, #0f
 	db 5*8 - 1, 18*8, 16, #0f
 	db 3*8 - 3, 16*8, 20, #0f
-	db 4*8 - 1, 9*8, 36, #0f
+	db 4*8 + 1, 9*8, 36, #0f
 
 
 ;-----------------------------------------------
@@ -176,16 +304,13 @@ gamestart_generate_random_seed_string:
 	call gamestart_draw_random_seed_add_digit
 	ld a, l
 	and #0f
-	jp gamestart_draw_random_seed_add_digit
+	; jp gamestart_draw_random_seed_add_digit
 
 
 ;-----------------------------------------------
 ; input:
 ; - a: digit
 ; - de: ptr where to add
-gamestart_draw_random_seed_hex_digits:
-	db 22, 24, 26, 28, 30, 32, 35, 37, 39, 41, 108, 110, 112, 114, 116, 118
-
 gamestart_draw_random_seed_add_digit:
 	push hl
 		ld hl, gamestart_draw_random_seed_hex_digits
@@ -195,6 +320,9 @@ gamestart_draw_random_seed_add_digit:
 		inc de
 	pop hl
 	ret
+
+gamestart_draw_random_seed_hex_digits:
+	db 22, 24, 26, 28, 30, 32, 35, 37, 39, 41, 108, 110, 112, 114, 116, 118
 
 
 ;-----------------------------------------------

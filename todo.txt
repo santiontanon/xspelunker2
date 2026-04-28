@@ -1,12 +1,6 @@
 to do:
 
 ***- random seed puzzle (all happens without going to moon/mars):
-  ***- redo world name entering screen:
-    ***- when changing the name, the star alignment map changes:
-      ***- 5 bits determine a horizontal offset of the map
-      ***- 2 bits determine the rotation of the center galaxy (sprite)
-      ***- 1 bit determines the rotation of the bottom-left galaxy
-      ***- 4 * 2 bits determine the position of the blue stars (4 possible positions each)
   ***- update the start screen (village):
     ***- redraw the room in TILED (adding 3 stellas)
     ***- make each stella show 5, 6 and 5 bits respectively

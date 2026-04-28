@@ -380,6 +380,7 @@ tmp_get_tile_object_behind_player_ptr: equ temporary_variables
 tmp_shop_cursor_position: equ temporary_variables
 tmp_gamestart_cursor_position1: equ temporary_variables  ; world name, start, back or help
 tmp_gamestart_cursor_position2: equ temporary_variables + 1  ; position within the world name
+tmp_gamestart_starchart_x_offset: equ temporary_variables + 2
 
 config_hud_type: ds virtual 1  ; 0: minimal, 1: minimal always visible, 2: full
 config_inventory_key_combo: ds virtual 1  ; 0: down+jump, 1: none
