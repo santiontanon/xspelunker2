@@ -394,10 +394,14 @@ public class PCGWorld {
             n_times_reached_generation_stage[1]++;
             if (!generateInterAreaConnections(w)) continue;  // hardcoded connections
             n_times_reached_generation_stage[2]++;
+//            System.out.println("after generateInterAreaConnections seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));System.out.println("generateMission seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
             w.spanningTree = generateSpanningTree(w, 0);
             if (w.spanningTree == null) continue;
+//            System.out.println("after generateInterAreaConnections before mars seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));System.out.println("generateMission seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
             List<AreaDivision> marsSpanningTree = generateSpanningTree(w, 10);
+//            System.out.println("after generateInterAreaConnections before moon seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));System.out.println("generateMission seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
             List<AreaDivision> moonSpanningTree = generateSpanningTree(w, 11);
+//            System.out.println("after generateInterAreaConnections after moon seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));System.out.println("generateMission seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
             n_times_reached_generation_stage[3]++;
             if (!generateMission(w, w.spanningTree, marsSpanningTree, moonSpanningTree, usedKeysAndLocks)) {
 //                System.out.println("    generateMission failed");
@@ -533,6 +537,8 @@ public class PCGWorld {
     
     public boolean generateDivisions(World w) throws Exception
     {
+        System.out.println("---- generateDivisions seed: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+        
         // Step 2: Generate the divisions:
         next_divisionID = 1;
         
@@ -592,7 +598,7 @@ public class PCGWorld {
     
     public boolean generateInterAreaConnections(World w) throws Exception
     {
-//        System.out.println("seed: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+//        System.out.println("generateInterAreaConnections seed: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
         // Hardcoded area connections:
         AreaPoint a0p1 = randomAreaBottomMostPoint(w.areas.get(0), true);
         if (a0p1 == null) return false;
@@ -653,7 +659,7 @@ public class PCGWorld {
         addTag(a6p1, "connection", null);
         w.interAreaconnections.add(new InterAreaConnection(new AreaPoint(w.areas.get(5), 0, 1, DIRECTION_LEFT), a6p1, InterAreaConnection.BIDIRECTIONAL, r));
 
-        AreaPoint a7p1 = randomAreaLeftMostPoint(w.areas.get(7), true);
+        AreaPoint a7p1 = randomAreaLeftMostPoint(w.areas.get(7), true, false);
         if (a7p1 == null) return false;
         a7p1.direction = DIRECTION_LEFT;
         addTag(a7p1, "connection", null);        
@@ -727,7 +733,7 @@ public class PCGWorld {
         List<AreaDivision> tree = new ArrayList<>();
         List<Integer> IDsInTree = new ArrayList<>();
         
-        AreaPoint start = randomAreaLeftMostPoint(w.areas.get(startArea), true);
+        AreaPoint start = randomAreaLeftMostPoint(w.areas.get(startArea), true, startArea==0);
         AreaDivision div = new AreaDivision(start, start.a.divisionIDs[start.x][start.y], null);
         addDivisionToTree(tree, div);
         IDsInTree.add(div.divisionID);
@@ -736,16 +742,19 @@ public class PCGWorld {
         List<AreaDivision> open = new ArrayList<>();
         open.add(div);
         while(!open.isEmpty()) {
+//            System.out.println("---- generateSpanningTree loop seed: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+            
             if (open.size() == 1) {
                 div = open.get(0);
             } else {
+                
                 div = open.get(r.nextInt(open.size()));
             }
-//            System.out.println("---- pop: " + div.divisionID);
+//            System.out.println("---- pop: " + div.divisionID + " (list size: " + open.size() + ")");
             open.remove(div);
             List<AreaPoint> neighborPoints = getDivisionNeighborPoints(w, div);
             while(!neighborPoints.isEmpty()) {
-//                System.out.println("neighborPoints: " + neighborPoints.size());
+//                System.out.println("    neighborPoints: " + neighborPoints.size() + ", " + neighborPoints);
                 AreaPoint p;
                 if (neighborPoints.size() == 1) {
                     p = neighborPoints.remove(0);
@@ -1994,12 +2003,13 @@ public class PCGWorld {
     }
     
     
-    public AreaPoint randomAreaLeftMostPoint(Area a, boolean tagLess) throws Exception
+    public AreaPoint randomAreaLeftMostPoint(Area a, boolean tagLess, boolean topMost) throws Exception
     {
         List<AreaPoint> candidates = new ArrayList<>();
         for(int i = 0;i<a.height;i++) {
             for(int j = 0;j<a.width;j++) {
                 if (a.rooms[j][i] >= 0 && (j == 0 || a.rooms[j-1][i] < 0)) {
+                    if (topMost && i > 0 && a.rooms[j][i-1] >= 0) continue;
                     if (a.tags[j][i] == null || a.tags[j][i].isEmpty() || !tagLess) {
                         candidates.add(new AreaPoint(a, j, i));
                     }
@@ -2010,11 +2020,7 @@ public class PCGWorld {
         if (candidates.isEmpty()) {
             return null;
         }
-//        System.out.println("randomAreaLeftMostPoint: " + candidates);
-//        System.out.println("  seed: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
         int choice = r.nextInt(candidates.size());
-//        System.out.println("  choice: " + choice);
-//        System.out.println("  randomAreaLeftMostPoint: " + candidates.get(choice));
         return candidates.get(choice);
     }
     

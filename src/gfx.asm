@@ -25,9 +25,10 @@ enable_VDP_output:
 ;-----------------------------------------------
 ; clear sprites:
 clear_all_the_sprites:
-    ld hl,SPRATR2
-    ld a,224
-    ld bc,32*4
+    ld bc, 32*4
+clear_all_the_sprites_bc_set:
+    ld hl, SPRATR2
+    ld a, 224
     jp fast_FILVRM
 
 

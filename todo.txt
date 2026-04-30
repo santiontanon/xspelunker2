@@ -2,22 +2,24 @@ to do:
 
 ***- random seed puzzle (all happens without going to moon/mars):
   ***- update the start screen (village):
-    ***- redraw the room in TILED (adding 3 stellas)
-    ***- make each stella show 5, 6 and 5 bits respectively
+    ***- redraw the room in TILED:
+      ***- remove the trees that go all the way to the top, since they are not needed any more
+      ***- replace with 3 stellas
+    ***- make each stella show 6, 4 and 6 bits respectively
     ***- each stella has a condition: If the condition is not satisfied, the stella is broken. The conditions must be so that it's impossible to have all 3 on at the same time.
     ***- Aapo gives some clues about this
-  ***- giant statues:
-    ***- draft them in GIMP/TILED, they are special rooms (like poseidon, calendar, etc.)
-    ***- in each of the 3 pyramids, if the condition for the given stella is satisfied, a giant statue room is spawned
-    ***- tablet in these rooms that states: "I do not remember my name, but I was the first/second/third".
   ***- 8 bridge room in one of the caves: each bridge depends on each of the bits of the first byte of the random seed. All 0s will lower all bridges.
-    ***- draw it in TILED (special room, and always added to the left or right-side of the map, have a template for each side)
+    ***- draw it in TILED (special room, and always added to the left or right-side of the map)
   ***- astronomy room:
     ***- create it in GIMP/TILED (it can only be entered from the sides)
       ***- it has a representation of the sky (the same as in the title screen, depending on the random seed)
       ***- world teleporter machine: where you go back to the world name room, and can travel across worlds: maybe the first letter is fixed, so that you cannot change the difficulty?
       ***- tablets: clues about the world teleporter and constellation relation with the seed, and also a tablet with the three names of the three statues (in Maya)
-  ***- speaking the names in front of each statue unlocks a chest/cabinet with a fragment of a codex. You need all 3 for it to be intelligible (this will later unlock the "A+" ending, as explained below, the three of them allow yo to manufacture fire stones, or give you the clue to get to the forge)
+  ***- giant statues:
+    ***- draft them in GIMP/TILED, they are special rooms (like poseidon, calendar, etc.)
+    ***- in each of the 3 pyramids, if the condition for the given stella is satisfied, a giant statue room is spawned
+    ***- tablet in these rooms that states: "I do not remember my name, but I was the first/second/third".
+    ***- speaking the names in front of each statue unlocks a chest/cabinet with a fragment of a codex. You need all 3 for it to be intelligible (this will later unlock the "A+" ending, as explained below, the three of them allow you to manufacture fire stones, or give you the clue to get to the forge)
   ***- update "TABLET_TRIVIA_CLUE1", "TABLET_TRIVIA_CLUE2", to have proper clues (remove the ones about angry bosses for now, as it's not clear I am doing it).
 
 - music: (brain 12, 15, 23, 25 have potential)

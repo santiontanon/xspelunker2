@@ -35,6 +35,8 @@ tmp_pcg_world__mst_neighbors_list_top: ds virtual 2
 tmp_pcg_world__mst_neighbors_list_size: ds virtual 1
 tmp_pcg_world__mst_divisions: ds virtual MAX_N_DIVISIONS  ; one byte per division with 0 or 1, "1" meaning the division is in the tree already.
 
+tmp_pcg_world__also_check_top_most_in_left_most: ds virtual 1
+
 tmp_pcg_world__mst_mars_start: ds virtual 2
 tmp_pcg_world__mst_moon_start: ds virtual 2
 tmp_pcg_world__mst_main_n_nodes: ds virtual 1
@@ -871,6 +873,7 @@ pcg_generate_world__generate_divisions_loop:
 ; 		ld hl, (rng_seed1)  ; mdl-watch: "test__seed1", hl
 ; 		ld hl, (rng_seed2)  ; mdl-watch: "test__seed2", hl
 ; 	pop hl
+
 	push bc
 	push hl
 		ld c, (ix + 4 + 1)  ; width
@@ -1106,6 +1109,13 @@ pcg_generate_world__area_division_floodfill_push:
 ; - z: success
 ; - nz: failure
 pcg_generate_world__generate_area_connections:
+	; DEBUG-start
+; 	push hl
+; 		ld hl, (rng_seed1)  ; mdl-watch: "pcg_generate_world__generate_area_connections seed1", hl
+; 		ld hl, (rng_seed2)  ; mdl-watch: "pcg_generate_world__generate_area_connections seed2", hl
+; 	pop hl
+	; DEBUG-end		
+
 	; clear all the tags, as we will use them to prevent replication of inter-area connections:
 	ld hl, tmp_pcg_world__tags
 	ld bc, MAX_AREA_SIZE * MAX_WORLD_AREAS * 2 - 1
@@ -1274,6 +1284,8 @@ pcg_generate_world__generate_area_connections_no_a0p1_a0p2_swap:
 	call pcg_generate_world__generate_area_connections_add_connection
 
 	; a7p1:
+	xor a
+	ld (tmp_pcg_world__also_check_top_most_in_left_most), a
 	ld a, 7
 	call pcg_generate_world__random_left_most_point_tagless
 	ret nz
@@ -1768,13 +1780,33 @@ pcg_generate_world__random_left_most_point_tagless_candidates_loop_x:
 		ld a, c
 		cp ixl  ; are we at the left-most of the map?
 		jr z, pcg_generate_world__random_left_most_point_tagless_candidates_loop_x_continue
-		; is there a room to the left
+		; is there a room to the left?
 		dec hl
 		ld a, (hl)
 		inc hl
 		inc a  ; cp #ff
-		jr nz, pcg_generate_world__random_left_most_point_tagless_candidates_loop_x_next  ; not a top room
+		jr nz, pcg_generate_world__random_left_most_point_tagless_candidates_loop_x_next  ; not a left-most room
 pcg_generate_world__random_left_most_point_tagless_candidates_loop_x_continue:
+		ld a, (tmp_pcg_world__also_check_top_most_in_left_most)
+		or a
+		jr z, pcg_generate_world__random_left_most_point_tagless_candidates_loop_x_continue2
+		; we need to check if the room is also top-most:
+		ld a, b
+		cp ixh  ; are we at the top-most of the map?
+		jr z, pcg_generate_world__random_left_most_point_tagless_candidates_loop_x_continue2
+		; is there a room above?
+		push bc
+		push hl
+			ld b, 0
+			ld c, ixl
+			or a
+			sbc hl, bc
+			ld a, (hl)
+			inc a  ; cp #ff
+		pop hl
+		pop bc
+		jr nz, pcg_generate_world__random_left_most_point_tagless_candidates_loop_x_next  ; not a top-most room
+pcg_generate_world__random_left_most_point_tagless_candidates_loop_x_continue2:
 		; potential candidate, just check if it's tagless:
 		ld a, (de)
 		or a
@@ -2106,6 +2138,13 @@ pcg_generate_world__tags_collide_no_collision:
 
 ;-----------------------------------------------
 pcg_generate_world__generate_spanning_tree:
+	; DEBUG-start
+; 	push hl
+; 		ld hl, (rng_seed1)  ; mdl-watch: "pcg_generate_world__generate_spanning_tree seed1", hl
+; 		ld hl, (rng_seed2)  ; mdl-watch: "pcg_generate_world__generate_spanning_tree seed2", hl
+; 	pop hl
+	; DEBUG-end		
+
 	; clear all the connections:
 	ld hl, tmp_pcg_world__area_0_connections
 	ld b, MAX_WORLD_AREAS
@@ -2132,7 +2171,9 @@ pcg_generate_world__generate_spanning_tree_clear_loop:
 
 	; Minimum-Spanning Tree for the main map:
 	; Sample the root point (a random left-most point in jungle):
-	; xor a
+	inc a  ; a = 1
+	ld (tmp_pcg_world__also_check_top_most_in_left_most), a
+	xor a
 	call pcg_generate_world__random_left_most_point_tagless
 	ret nz
 	ld h, 0
@@ -2143,7 +2184,16 @@ pcg_generate_world__generate_spanning_tree_clear_loop:
 	ld hl, (tmp_pcg_world__minimum_spanning_tree_top)
 	ld (tmp_pcg_world__mst_mars_start), hl
 
+	; DEBUG-start
+; 	push hl
+; 		ld hl, (rng_seed1)  ; mdl-watch: "pcg_generate_world__generate_spanning_tree (before mars) seed1", hl
+; 		ld hl, (rng_seed2)  ; mdl-watch: "pcg_generate_world__generate_spanning_tree (before mars) seed2", hl
+; 	pop hl
+	; DEBUG-end		
+
 	; Minimum-Spanning Tree for Mars:
+	xor a
+	ld (tmp_pcg_world__also_check_top_most_in_left_most), a
 	ld a, 10
 	call pcg_generate_world__random_left_most_point_tagless
 	ret nz
@@ -2159,7 +2209,16 @@ pcg_generate_world__generate_spanning_tree_clear_loop:
 	ld hl, (tmp_pcg_world__minimum_spanning_tree_top)
 	ld (tmp_pcg_world__mst_moon_start), hl
 
+	; DEBUG-start
+; 	push hl
+; 		ld hl, (rng_seed1)  ; mdl-watch: "pcg_generate_world__generate_spanning_tree (before moon) seed1", hl
+; 		ld hl, (rng_seed2)  ; mdl-watch: "pcg_generate_world__generate_spanning_tree (before moon) seed2", hl
+; 	pop hl
+	; DEBUG-end		
+
 	; Minimum-Spanning Tree for Moon:
+	xor a
+	ld (tmp_pcg_world__also_check_top_most_in_left_most), a
 	ld a, 11
 	call pcg_generate_world__random_left_most_point_tagless
 	ret nz
@@ -2286,6 +2345,15 @@ pcg_generate_world__generate_spanning_tree_internal:
 	ld (tmp_pcg_world__mst_open_list_top), hl
 
 pcg_generate_world__generate_spanning_tree_loop:
+	; DEBUG-start
+; 	push hl
+; 	push de
+; 		ld hl, (rng_seed1)
+; 		ld de, (rng_seed2)  ; mdl-watch: "pcg_generate_world__generate_spanning_tree_loop seed", hl, de
+; 	pop de
+; 	pop hl
+	; DEBUG-end		
+
 	; pop one node from the open list at random:
 	call pcg_generate_world__mst_random_pop_from_open  ; de = ptr to an MST node
 
@@ -2322,8 +2390,8 @@ pcg_generate_world__generate_spanning_tree_neighbor_loop_neighbor_selected:
 		ld hl, tmp_pcg_world__mst_neighbors_list
 		ADD_HL_A  ; hl = ptr to the child we selected
 
-		; check that the division ID it would hadd is not yet on the tree:
-		ld a, (hl)  ; division ID
+		; check that the division ID it would had is not yet on the tree:
+		ld a, (hl)
 		push hl
 			ld hl, tmp_pcg_world__mst_divisions - 1  ; -1 since the firs division is 0
 			ADD_HL_A
@@ -2675,6 +2743,11 @@ pcg_generate_world__mst_get_division_connections_loop_done:
 ; output:
 ; - de: ptr to an mst node
 pcg_generate_world__mst_random_pop_from_open:
+	; DEBUG-start
+; 	ld hl, (rng_seed1)  ; mdl-watch: "pcg_generate_world__mst_random_pop_from_open        seed1: ", hl
+; 	ld hl, (rng_seed2)  ; mdl-watch: "pcg_generate_world__mst_random_pop_from_open        seed2: ", hl
+	; DEBUG-end
+
 	ld hl, tmp_pcg_world__mst_open_list_size
 	ld a, (hl)
 	dec (hl)
@@ -2820,8 +2893,8 @@ pcg_generate_world__push_mst_node_n_descendants_loop:
 pcg_generate_world__generate_mission:
 	; DEBUG-start
 ; 	push hl  
-; 		ld hl, (rng_seed1)  ; mdl-watch: "        seed1: ", hl
-; 		ld hl, (rng_seed2)  ; mdl-watch: "        seed2: ", hl
+; 		ld hl, (rng_seed1)  ; mdl-watch: "pcg_generate_world__generate_mission        seed1: ", hl
+; 		ld hl, (rng_seed2)  ; mdl-watch: "pcg_generate_world__generate_mission        seed2: ", hl
 ; 	pop hl
 	; DEBUG-end
 

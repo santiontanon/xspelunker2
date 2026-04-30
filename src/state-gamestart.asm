@@ -693,7 +693,8 @@ state_gamestart_update_cursor_button:
 	ret
 
 state_gamestart_update_cursor_start:
-	call clear_all_the_sprites
+	ld bc, 8  ; only clear the first 2 sprites
+	call clear_all_the_sprites_bc_set
 	call gamestart_clear_console
 	ld hl, SFX_ui_select
 	call play_SFX_with_high_priority

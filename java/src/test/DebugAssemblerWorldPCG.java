@@ -58,9 +58,9 @@ public class DebugAssemblerWorldPCG {
                     pcg2 = pcg2_pyramid;
                     break;
             }                    
-            generateAssemblerAreaData(w, i, pcg2);
+//            generateAssemblerAreaData(w, i, pcg2);
         }
-        generateAssemblerWorldData(w);
+//        generateAssemblerWorldData(w);
         
 //        pcg1.mergeAreaRooms(w.areas.get(0));
 //        pcg2.generate(w.areas.get(0), w, r);
