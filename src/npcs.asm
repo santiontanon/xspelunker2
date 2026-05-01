@@ -8,6 +8,8 @@ shopkeeper_default_messages:
 	dw TEXT_SHOPKEEPER1_6
 	dw TEXT_SHOPKEEPER1_7
 	dw TEXT_SHOPKEEPER1_8
+	dw TEXT_SHOPKEEPER1_9
+	dw TEXT_SHOPKEEPER1_10
 
 object_interaction_function_shopkeeper_internal:
 	ld a, (global_state__story)
@@ -28,8 +30,8 @@ object_interaction_function_shopkeeper_internal:
 
 object_interaction_function_shopkeeper_internal_default:
 	; pick one out of the 8 random messages:
-	call random_a
-	and #07
+	ld c, 10
+	call random_modulo
 	add a, a
 	ld hl, shopkeeper_default_messages
 	ADD_HL_A

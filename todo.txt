@@ -1,7 +1,6 @@
 to do:
 
 ***- random seed puzzle (all happens without going to moon/mars):
-  ***- Aapo gives some clues about the stelae
   ***- 8 bridge room in one of the caves: each bridge depends on each of the bits of the first byte of the random seed. All 0s will lower all bridges.
     ***- draw it in TILED (special room, and always added to the left or right-side of the map)
   ***- astronomy room:

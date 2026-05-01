@@ -398,13 +398,15 @@ public class Text {
         
         // Aapo's random sentences:
         addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! I am Aapo! Please check my shop! I am also the postman in Palenke. If you have any mail to send or receive, talk to me.", "SHOPKEEPER1_1", 112);
-        addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! I have heard reports of hunters finding new paths by breaking through walls, even the floor!", "SHOPKEEPER1_2", 112);
+        addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel! I have heard reports of hunters finding new paths by breaking through walls, even the floor!", "SHOPKEEPER1_2", 112);
         addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! If you are hurt, make sure to take a break and eat some of our delicious corn.", "SHOPKEEPER1_3", 112);
-        addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! Sorry, I cannot read or write, so, I cannot help you translate those texts...", "SHOPKEEPER1_4", 112);
+        addLineSafe(lines_with_constant_page3, "Aapo: Ba'ax ka wa'alik? Sorry, I cannot read or write, so, I cannot help you translate those texts...", "SHOPKEEPER1_4", 112);
         addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! Make sure to collect all the coins you see! And spend them in my shop, of course...", "SHOPKEEPER1_5", 112);
-        addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! That stone tablet over there? It's a Stela, but no one knows what it means!", "SHOPKEEPER1_6", 112);
+        addLineSafe(lines_with_constant_page3, "Aapo: Ba'ax ka wa'alik? Those stone tablets over there? They are Stelae, but no one knows much about them!", "SHOPKEEPER1_6", 112);
         addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! Underground ruins? Yes, we found two entrances in the jungle, not sure if both are still open...", "SHOPKEEPER1_7", 112);
-        addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! Sorry, I cannot accompany you this time. I have my shop to attend!", "SHOPKEEPER1_8", 112);
+        addLineSafe(lines_with_constant_page3, "Aapo: Mr. Xavier! Sorry, I cannot accompany you this time. I have my shop to attend!", "SHOPKEEPER1_8", 112);
+        addLineSafe(lines_with_constant_page3, "Aapo: Ba'ax ka wa'alik? The Stelae? Some say that they can bring understanding of the sky!", "SHOPKEEPER1_9", 112);
+        addLineSafe(lines_with_constant_page3, "Aapo: Ma'alob k'iin! The only other thing we know of the Stelae is that they are numbered, from one to three.", "SHOPKEEPER1_10", 112);
         
         addLineSafe(lines_with_constant_page1, "Ok, I made it to the ruins! I need a way to sabotage the Alien operation! Let's find out where are they coming from, and how to stop them!", "STORY_ENTER_RUINS", 112);
         addLineSafe(lines_with_constant_page3, "Look at that! That is a gigantic Mayan Tzolk'in calendar stone! Although it seems to be half-buried, it's in perfect condition!", "FIND_CALENDAR_STONE1", 112);     
