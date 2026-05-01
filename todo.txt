@@ -2,9 +2,11 @@ to do:
 
 ***- random seed puzzle (all happens without going to moon/mars):
   ***- update the start screen (village):
-    ***- redraw the room in TILED:
-      ***- remove the trees that go all the way to the top, since they are not needed any more
-      ***- replace with 3 stellas
+    ***- see if I need to remove the code that might open a connection up in the start room
+    OK - redraw the room in TILED:
+      OK - remove the trees that go all the way to the top, since they are not needed any more
+      OK - replace with 3 stellas
+      ***- improve the background "mountain" tiles
     ***- make each stella show 6, 4 and 6 bits respectively
     ***- each stella has a condition: If the condition is not satisfied, the stella is broken. The conditions must be so that it's impossible to have all 3 on at the same time.
     ***- Aapo gives some clues about this
