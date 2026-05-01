@@ -2236,7 +2236,7 @@ pcg_generate_room__start_continue6:
 	jr nz, pcg_generate_room__start_no_interarea_connection
 	ld a, (current_room__y)
 	add a, a
-	inc a  ; *2 + 1 t oconvert it to chunk coordinates
+	inc a  ; *2 + 1 t convert it to chunk coordinates
 	cp (ix + 3)
 	jr nz, pcg_generate_room__start_no_interarea_connection
 	ld a, (current_room__x)
@@ -2269,38 +2269,106 @@ pcg_generate_room__start_interarea_connection_bottom_left:
 	ld (hl), 167  ; ladder right
 pcg_generate_room__start_no_interarea_connection:
 
-	; random seed stela center:
+	; random seed stela left:
 	ld de, (current_world__seed)
-	bit 0, e
+	bit 7, d
 	jr z, pcg_generate_room__start_seed_stela_bit0_done
-	ld hl, current_room__tile_map + 13 + 5*32
+	ld hl, current_room__tile_map + 4 + 3*32
 	ld (hl), 223
 pcg_generate_room__start_seed_stela_bit0_done:
-	bit 1, e
+	bit 6, d
 	jr z, pcg_generate_room__start_seed_stela_bit1_done
-	ld hl, current_room__tile_map + 14 + 5*32
+	ld hl, current_room__tile_map + 4 + 2*32
 	ld (hl), 223
 pcg_generate_room__start_seed_stela_bit1_done:
-	bit 2, e
+	bit 5, d
 	jr z, pcg_generate_room__start_seed_stela_bit2_done
-	ld hl, current_room__tile_map + 15 + 5*32
+	ld hl, current_room__tile_map + 5 + 2*32
 	ld (hl), 223
 pcg_generate_room__start_seed_stela_bit2_done:
-	bit 3, e
+	bit 4, d
 	jr z, pcg_generate_room__start_seed_stela_bit3_done
-	ld hl, current_room__tile_map + 16 + 5*32
+	ld hl, current_room__tile_map + 6 + 2*32
 	ld (hl), 223
 pcg_generate_room__start_seed_stela_bit3_done:
-	bit 4, e
+	bit 3, d
 	jr z, pcg_generate_room__start_seed_stela_bit4_done
-	ld hl, current_room__tile_map + 13 + 6*32
+	ld hl, current_room__tile_map + 7 + 2*32
 	ld (hl), 223
 pcg_generate_room__start_seed_stela_bit4_done:
-	bit 5, e
+	bit 2, d
 	jr z, pcg_generate_room__start_seed_stela_bit5_done
-	ld hl, current_room__tile_map + 16 + 6*32
+	ld hl, current_room__tile_map + 7 + 3*32
 	ld (hl), 223
 pcg_generate_room__start_seed_stela_bit5_done:
+
+	; random seed stela center:
+	bit 1, d
+	jr z, pcg_generate_room__start_seed_stela_bit6_done
+	ld hl, current_room__tile_map + 12 + 6*32
+	ld (hl), 223
+pcg_generate_room__start_seed_stela_bit6_done:
+	bit 0, d
+	jr z, pcg_generate_room__start_seed_stela_bit7_done
+	ld hl, current_room__tile_map + 13 + 5*32
+	ld (hl), 223
+pcg_generate_room__start_seed_stela_bit7_done:
+	bit 7, e
+	jr z, pcg_generate_room__start_seed_stela_bit8_done
+	ld hl, current_room__tile_map + 14 + 5*32
+	ld (hl), 223
+pcg_generate_room__start_seed_stela_bit8_done:
+	bit 6, e
+	jr z, pcg_generate_room__start_seed_stela_bit9_done
+	ld hl, current_room__tile_map + 15 + 6*32
+	ld (hl), 223
+pcg_generate_room__start_seed_stela_bit9_done:
+
+	; random seed stela right:
+	bit 5, e
+	jr z, pcg_generate_room__start_seed_stela_bit10_done
+	ld hl, current_room__tile_map + 19 + 4*32
+	ld (hl), 223
+pcg_generate_room__start_seed_stela_bit10_done:
+	bit 4, e
+	jr z, pcg_generate_room__start_seed_stela_bit11_done
+	ld hl, current_room__tile_map + 19 + 3*32
+	ld (hl), 223
+pcg_generate_room__start_seed_stela_bit11_done:
+	bit 3, e
+	jr z, pcg_generate_room__start_seed_stela_bit12_done
+	ld hl, current_room__tile_map + 20 + 3*32
+	ld (hl), 223
+pcg_generate_room__start_seed_stela_bit12_done:
+	bit 2, e
+	jr z, pcg_generate_room__start_seed_stela_bit13_done
+	ld hl, current_room__tile_map + 21 + 3*32
+	ld (hl), 223
+pcg_generate_room__start_seed_stela_bit13_done:
+	bit 1, e
+	jr z, pcg_generate_room__start_seed_stela_bit14_done
+	ld hl, current_room__tile_map + 22 + 3*32
+	ld (hl), 223
+pcg_generate_room__start_seed_stela_bit14_done:
+	bit 0, e
+	jr z, pcg_generate_room__start_seed_stela_bit15_done
+	ld hl, current_room__tile_map + 22 + 4*32
+	ld (hl), 223
+pcg_generate_room__start_seed_stela_bit15_done:
+
+	; break each of the 3 stelae based on their condition:
+	ld a, (current_world__stela_status)
+	bit 0, a
+	ld hl, current_room__tile_map + 3 + 0*32
+	call z, pcg_generate_room__start_destroy_stella
+	ld a, (current_world__stela_status)
+	bit 1, a
+	ld hl, current_room__tile_map + 11 + 3*32
+	call z, pcg_generate_room__start_destroy_stella
+	ld a, (current_world__stela_status)
+	bit 2, a
+	ld hl, current_room__tile_map + 18 + 1*32
+	call z, pcg_generate_room__start_destroy_stella
 
 	; spawn the NPCs (each NPC has a sprite object to render it, and then an invisible tile object behind, to interact with it):
 	ld iy, (tmp_pcg_room__next_tile_object_ptr)
@@ -2401,6 +2469,46 @@ pcg_generate_room__start_remove_ropes_bottom_left:
 	xor a
 	ld hl, current_room__tile_map + 10 + 23*32
 	ld (hl), a
+	ret
+
+pcg_generate_room__start_destroy_stella:
+	ld (hl), 0
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), 0
+	ld bc, 32 - 5
+	add hl, bc
+	ld (hl), 0
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), 0
+	ld bc, 32 - 5
+	add hl, bc
+	ld (hl), 247
+	inc hl
+	ld (hl), 250
+	inc hl
+	ld (hl), 250
+	inc hl
+	ld (hl), 250
+	inc hl
+	ld (hl), 250
+	inc hl
+	ld (hl), 251
 	ret
 
 

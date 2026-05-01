@@ -5708,6 +5708,43 @@ pcg_generate_world__puzzles:
 ; 		ld hl, (rng_seed2)  ; mdl-watch: "test__pcg_generate_world__puzzles seed2: ", hl
 ; 	pop hl
 	; DEBUG-end
+
+	; stella condition bits, based on the random seed:
+	ld l, 0
+	ld de, (current_world__seed)
+	ld a, d
+	and #03
+	ld c, a
+	ld a, e
+	and #c0
+	or c
+	cp #c3
+	jr nz, pcg_generate_world__puzzles_stela_center_set
+	ld l, 2
+pcg_generate_world__puzzles_stela_center_set:
+	; count the number of 1 bits:
+	xor a
+	ld b, 8
+pcg_generate_world__puzzles_stela_loop1:
+	rrc e
+	adc a, 0
+	djnz pcg_generate_world__puzzles_stela_loop1
+	ld b, 8
+pcg_generate_world__puzzles_stela_loop2:
+	rrc d
+	adc a, 0
+	djnz pcg_generate_world__puzzles_stela_loop2
+	; if it's an even number, left stella is active, if it's an odd one, right stella is active:
+	and #01
+	jr z, pcg_generate_world__puzzles_stela_left_active
+	set 2, l
+	jr pcg_generate_world__puzzles_stela_set
+pcg_generate_world__puzzles_stela_left_active:
+	set 0, l
+pcg_generate_world__puzzles_stela_set:
+	ld a, l
+	ld (current_world__stela_status), a	
+
 	ld hl, current_world__tablet_content
 	ld bc, MAX_TABLETS * 3 + 1 - 1
 	ld a, #ff

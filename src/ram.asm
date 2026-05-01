@@ -39,6 +39,7 @@ current_world__maya_puzzle2_combination2: ds virtual 4
 current_world__maya_puzzle3_nametable: ds virtual 10*3
 current_world__maya_puzzle3_word: ds virtual 20
 current_world__atlantis_boss_statue: ds virtual 1
+current_world__stela_status: ds virtual 1  ; bits 0, 1, 2: left, center, right stelae
 
 
 current_area__seed: ds virtual 4
