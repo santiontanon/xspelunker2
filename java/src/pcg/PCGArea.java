@@ -21,9 +21,10 @@ public class PCGArea {
     public static final int ROOM_HEIGHT = 2;
     public static final int SPECIAL_ROOM_IDS_START = 100;
     public static final int CALENDAR_ROOM_ID = 100;  // some ID that is impossible to arise naturally
-    public static final int TELEPORTER_ROOM_ID = 101;  // some ID that is impossible to arise naturally
-    public static final int START_ROOM_ID = 102;  // some ID that is impossible to arise naturally
-    public static final int TEMPLE_OF_POSEIDON_ROOM_ID = 103;  // some ID that is impossible to arise naturally
+    public static final int TELEPORTER_ROOM_ID = 101;
+    public static final int START_ROOM_ID = 102;
+    public static final int TEMPLE_OF_POSEIDON_ROOM_ID = 103;
+    public static final int EIGHT_BRIDGE_ROOM_ID = 104; 
     public static final int n_connections_per_type[] = {
         0, 1, 1, 2, 1, 2, 2, 3,
         1, 2, 2, 3, 2, 3, 3, 4,
@@ -1717,6 +1718,19 @@ public class PCGArea {
                 }
             }
         }
+        if (a.ID == 6 || a.ID == 7) {  // caves:
+            for(int i = 0;i<h;i++) {
+                for(int j = 0;j<w;j++) {
+                    if (a.tags[j][i] != null && a.tags[j][i].contains("8-bridge-room")) {
+                        if (a.tags[j][i].size() > 1) {
+                            System.err.println("More than one tag on the 8-bridge-room room! " + a.tags[j][i]);
+                            return false;
+                        }
+                        a.rooms[j][i] = EIGHT_BRIDGE_ROOM_ID;
+                    }
+                }
+            }
+        }        
         if (a.ID == 9) {  // "atlantis"
             for(int i = 0;i<h;i++) {
                 for(int j = 0;j<w;j++) {
@@ -2190,6 +2204,7 @@ public class PCGArea {
                 case "ATLANTIS_TABLET3":
                 case "ATLANTIS_TABLET4":
                 case "ATLANTIS_TABLET5":
+                case "8-bridge-room":
                     tagToPlace = tag;
                     break;
 
@@ -3235,7 +3250,10 @@ public class PCGArea {
                         }
                     }
                     break;                                
-                }         
+                }
+                case "8-bridge-room":
+                    // ...
+                    break;
 
                 default:
                     System.err.println("Don't know how to draw object type: " + go.type);

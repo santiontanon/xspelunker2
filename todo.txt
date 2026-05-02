@@ -1,8 +1,15 @@
 to do:
-
+1AZ0NZN1L
 ***- random seed puzzle (all happens without going to moon/mars):
   ***- 8 bridge room in one of the caves: each bridge depends on each of the bits of the first byte of the random seed. All 0s will lower all bridges.
-    ***- draw it in TILED (special room, and always added to the left or right-side of the map)
+    ***- Java: generate 50 seeds and make sure it works in all
+    ***- assembler:
+      OK - TAG_8_BRIDGE_ROOM
+      ***- find a left-most room with no up/down connections in caves east or west
+      ***- if it exists, spawn the 8-bridge room there (separate from other rooms, like the calendar room)
+      ***- spawn and draw the 8-bridge room (open connections where necessary)
+      ***- color the stela according to some bits of the random seed
+      ***- open bridges according to the seed: first byte 01010101
   ***- astronomy room:
     ***- create it in GIMP/TILED (it can only be entered from the sides)
       ***- it has a representation of the sky (the same as in the title screen, depending on the random seed)

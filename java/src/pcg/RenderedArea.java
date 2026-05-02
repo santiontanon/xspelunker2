@@ -120,6 +120,11 @@ public class RenderedArea {
 //                        special_room_y = i;
                         c = new RoomChunk("data/temple-of-poseidon.tmx", 0, "atlantis");
                         c.loadGfx("data/atlantis/tiles.png");
+                    } else if (a.rooms[j][i] == PCGArea.EIGHT_BRIDGE_ROOM_ID) {
+//                        special_room_x = j;
+//                        special_room_y = i;
+                        c = new RoomChunk("data/8bridge-room.tmx", 0, "cave");
+                        c.loadGfx("data/caves/tiles.png");
                     }
 
                     if (c != null) {     
