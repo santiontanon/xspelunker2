@@ -1,8 +1,6 @@
 to do:
-1AZ0NZN1L
 ***- random seed puzzle (all happens without going to moon/mars):
-  ***- 8 bridge room in one of the caves: each bridge depends on each of the bits of the first byte of the random seed. All 0s will lower all bridges.
-    ***- Java: generate 50 seeds and make sure it works in all
+  ***- 8 bridge room in one of the caves: each bridge depends on each of the bits of the first byte of the random seed. All 0s will lower all bridges: 1AZD4ZD
     ***- assembler:
       OK - TAG_8_BRIDGE_ROOM
       ***- find a left-most room with no up/down connections in caves east or west

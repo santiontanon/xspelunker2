@@ -930,6 +930,9 @@ public class PCGWorld {
             // Spawn 8 bridge room:
             AreaDivision eightBridgeRoom = getDivisionByID(eightBridgeRoom_p.a.divisionIDs[eightBridgeRoom_p.x][eightBridgeRoom_p.y], tree);
             addTag(eightBridgeRoom_p, "8-bridge-room", eightBridgeRoom);
+            System.out.println("8-bridge-room placed at " + eightBridgeRoom_p);
+        } else {
+            System.out.println("Cannot place 8-bridge-room!");
         }
 
 //        System.out.println("Key division depths: " +

@@ -570,6 +570,8 @@ state_gamestart_update_cursor_up:
 	jr state_gamestart_update_cursor_move_set
 
 state_gamestart_update_cursor_left:
+	halt
+	call getcharacter_nonwaiting
 	call getcharacter_nonwaiting_reset  ; get ready to move into the world name
 	xor a
 	ld (tmp_gamestart_cursor_position1), a
