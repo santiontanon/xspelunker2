@@ -35,7 +35,7 @@ tmp_pcg_world__mst_neighbors_list_top: ds virtual 2
 tmp_pcg_world__mst_neighbors_list_size: ds virtual 1
 tmp_pcg_world__mst_divisions: ds virtual MAX_N_DIVISIONS  ; one byte per division with 0 or 1, "1" meaning the division is in the tree already.
 
-tmp_pcg_world__also_check_top_most_in_left_most: ds virtual 1
+tmp_pcg_world__vertical_check_in_left_most: ds virtual 1  ; 0: only check left-most, 1: also check top-most, 2: also check bottom-most, 3: no vertical connections
 
 tmp_pcg_world__mst_mars_start: ds virtual 2
 tmp_pcg_world__mst_moon_start: ds virtual 2
@@ -103,6 +103,8 @@ tmp_pcg_world__area_10_connections: equ tmp_pcg_world__area_0_connections + WORL
 tmp_pcg_world__area_11_connections: equ tmp_pcg_world__area_0_connections + WORLD_AREA__SIZE*11
 tmp_pcg_world__area_3_divisions: equ tmp_pcg_world__area_0_divisions + WORLD_AREA__SIZE*3
 tmp_pcg_world__area_5_divisions: equ tmp_pcg_world__area_0_divisions + WORLD_AREA__SIZE*5
+tmp_pcg_world__area_6_divisions: equ tmp_pcg_world__area_0_divisions + WORLD_AREA__SIZE*6
+tmp_pcg_world__area_7_divisions: equ tmp_pcg_world__area_0_divisions + WORLD_AREA__SIZE*7
 tmp_pcg_world__area_9_divisions: equ tmp_pcg_world__area_0_divisions + WORLD_AREA__SIZE*9
 tmp_pcg_world__area_10_divisions: equ tmp_pcg_world__area_0_divisions + WORLD_AREA__SIZE*10
 tmp_pcg_world__area_11_divisions: equ tmp_pcg_world__area_0_divisions + WORLD_AREA__SIZE*11
@@ -1285,7 +1287,7 @@ pcg_generate_world__generate_area_connections_no_a0p1_a0p2_swap:
 
 	; a7p1:
 	xor a
-	ld (tmp_pcg_world__also_check_top_most_in_left_most), a
+	ld (tmp_pcg_world__vertical_check_in_left_most), a
 	ld a, 7
 	call pcg_generate_world__random_left_most_point_tagless
 	ret nz
@@ -1787,8 +1789,8 @@ pcg_generate_world__random_left_most_point_tagless_candidates_loop_x:
 		inc a  ; cp #ff
 		jr nz, pcg_generate_world__random_left_most_point_tagless_candidates_loop_x_next  ; not a left-most room
 pcg_generate_world__random_left_most_point_tagless_candidates_loop_x_continue:
-		ld a, (tmp_pcg_world__also_check_top_most_in_left_most)
-		or a
+		ld a, (tmp_pcg_world__vertical_check_in_left_most)
+		bit 0, a
 		jr z, pcg_generate_world__random_left_most_point_tagless_candidates_loop_x_continue2
 		; we need to check if the room is also top-most:
 		ld a, b
@@ -1807,6 +1809,25 @@ pcg_generate_world__random_left_most_point_tagless_candidates_loop_x_continue:
 		pop bc
 		jr nz, pcg_generate_world__random_left_most_point_tagless_candidates_loop_x_next  ; not a top-most room
 pcg_generate_world__random_left_most_point_tagless_candidates_loop_x_continue2:
+		ld a, (tmp_pcg_world__vertical_check_in_left_most)
+		bit 1, a
+		jr z, pcg_generate_world__random_left_most_point_tagless_candidates_loop_x_continue3
+		; we need to check if the room is also top-most:
+		ld a, b
+		cp 1  ; are we at the bottom of the map?
+		jr z, pcg_generate_world__random_left_most_point_tagless_candidates_loop_x_continue3
+		; is there a room above?
+		push bc
+		push hl
+			ld b, 0
+			ld c, ixl
+			add hl, bc
+			ld a, (hl)
+			inc a  ; cp #ff
+		pop hl
+		pop bc
+		jr nz, pcg_generate_world__random_left_most_point_tagless_candidates_loop_x_next  ; not a bottom room
+pcg_generate_world__random_left_most_point_tagless_candidates_loop_x_continue3:
 		; potential candidate, just check if it's tagless:
 		ld a, (de)
 		or a
@@ -2171,8 +2192,8 @@ pcg_generate_world__generate_spanning_tree_clear_loop:
 
 	; Minimum-Spanning Tree for the main map:
 	; Sample the root point (a random left-most point in jungle):
-	inc a  ; a = 1
-	ld (tmp_pcg_world__also_check_top_most_in_left_most), a
+	inc a  ; a = 1  (also check top-most)
+	ld (tmp_pcg_world__vertical_check_in_left_most), a
 	xor a
 	call pcg_generate_world__random_left_most_point_tagless
 	ret nz
@@ -2193,7 +2214,7 @@ pcg_generate_world__generate_spanning_tree_clear_loop:
 
 	; Minimum-Spanning Tree for Mars:
 	xor a
-	ld (tmp_pcg_world__also_check_top_most_in_left_most), a
+	ld (tmp_pcg_world__vertical_check_in_left_most), a
 	ld a, 10
 	call pcg_generate_world__random_left_most_point_tagless
 	ret nz
@@ -2218,7 +2239,7 @@ pcg_generate_world__generate_spanning_tree_clear_loop:
 
 	; Minimum-Spanning Tree for Moon:
 	xor a
-	ld (tmp_pcg_world__also_check_top_most_in_left_most), a
+	ld (tmp_pcg_world__vertical_check_in_left_most), a
 	ld a, 11
 	call pcg_generate_world__random_left_most_point_tagless
 	ret nz
@@ -3033,6 +3054,41 @@ pcg_generate_world__generate_mission:
 	ld l, 3
 	call pcg_generate_world__add_tag_to_point_in_mst_node_division
 	ret nz
+
+	; 8-bridge room:
+	ld a, 3  ; no vertical connections
+	ld (tmp_pcg_world__vertical_check_in_left_most), a
+	ld de, tmp_pcg_world__area_6_divisions
+	ld a, 6  ; caves west
+	push de
+		call pcg_generate_world__random_left_most_point_tagless
+		jr z, pcg_generate_world__generate_mission_8_bridge_point_set
+	pop de
+	ld de, tmp_pcg_world__area_7_divisions
+	ld a, 7  ; caves east
+	push de
+		call pcg_generate_world__random_left_most_point_tagless
+		jr nz, pcg_generate_world__generate_mission_no_8_bridge_room_pop
+pcg_generate_world__generate_mission_8_bridge_point_set:
+	; place 8-bridge room:
+	pop de  ; recover the area where the 8 bridge is
+	ld b, 0
+	ld c, l  ; offset
+	push hl
+		ex de, hl  ; tmp_pcg_world__area_6_divisions / tmp_pcg_world__area_7_divisions
+		add hl, bc
+		ld a, (hl)  ; division ID
+		call pcg_generate_world__get_mst_node_by_division_id
+		ex de, hl  ; mst node
+	pop hl  ; recover the offset
+	ld b, TAG_8_BRIDGE_ROOM  ; just some random tag value
+	call pcg_generate_world__add_tag_to_point_in_mst_node_division
+	jr pcg_generate_world__generate_mission_no_8_bridge_room
+pcg_generate_world__generate_mission_no_8_bridge_room_pop:
+	pop de
+pcg_generate_world__generate_mission_no_8_bridge_room:
+	xor a
+	ld (tmp_pcg_world__vertical_check_in_left_most), a
 
 	; Generate quests:
 	ld ix, tmp_pcg_world__minimum_spanning_tree  ; root

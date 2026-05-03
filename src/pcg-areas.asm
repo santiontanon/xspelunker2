@@ -247,6 +247,12 @@ pcg_generate_area__mark_special_rooms_loop_next3:
 	ld e, TEMPLE_OF_POSEIDON_ID
 	jr pcg_generate_area__mark_special_rooms_loop_found
 pcg_generate_area__mark_special_rooms_loop_next4:
+	cp TAG_8_BRIDGE_ROOM
+	jr nz, pcg_generate_area__mark_special_rooms_loop_next5
+	; 8-bridge room found!
+	ld e, EIGHT_BRIDGE_ROOM_ID
+	jr pcg_generate_area__mark_special_rooms_loop_found
+pcg_generate_area__mark_special_rooms_loop_next5:
 	inc hl
 	inc hl
 	inc hl

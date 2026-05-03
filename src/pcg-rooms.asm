@@ -330,6 +330,8 @@ pcg_generate_room__seed_generated:
 	jp z, pcg_generate_room__teleporter
 	cp TEMPLE_OF_POSEIDON_ID
 	jp z, pcg_generate_room__temple_of_poseidon
+	cp EIGHT_BRIDGE_ROOM_ID
+	jp z, pcg_generate_room__8_bridge_room
 
 	; Add background chunks randomly:
 	; here:
@@ -2959,6 +2961,37 @@ pcg_generate_room__poseidon_objects:
 	db 1, TAG_BOSS5_CHESTLOCK, 11, 11
 	db 2, TAG_BOSS5_CHESTLOCK, 19, 11
 	db 3, TAG_BOSS5_CHESTLOCK, 24, 11
+
+
+;-----------------------------------------------
+pcg_generate_room__8_bridge_room:
+	; name table:
+	ld hl, eight_bridge_room_zx0
+	ld de, current_room__tile_map
+	ld c, EIGHT_BRIDGE_ROOM_PAGE
+	call dzx0_from_page_c
+
+	; tile sets, collisions, and animation ptrs:
+	ld bc, tiles_caves_zx0
+	ld (current_room__tileset_ptr), bc
+	ld a, AREA_COLLISION_TABLES_PAGE
+	ld (current_room__collision_ptr_page), a
+	ld bc, tile_collision_types_caves
+	ld (current_room__collision_ptr), bc
+	ld a, CAVES_TILES_PAGE
+	ld (current_room__tileset_page), a
+	ld a, 0
+	ld (current_room__tileset_overrides_item_tiles), a
+
+	call pcg_generate_room__calendar_open_walls
+
+	; stela:
+	; ...
+
+	; open bridge:
+	; ...
+
+	ret
 
 
 ;-----------------------------------------------
