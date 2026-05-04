@@ -25,6 +25,7 @@ public class PCGArea {
     public static final int START_ROOM_ID = 102;
     public static final int TEMPLE_OF_POSEIDON_ROOM_ID = 103;
     public static final int EIGHT_BRIDGE_ROOM_ID = 104; 
+    public static final int ASTRONOMY_ROOM_ID = 105;
     public static final int n_connections_per_type[] = {
         0, 1, 1, 2, 1, 2, 2, 3,
         1, 2, 2, 3, 2, 3, 3, 4,

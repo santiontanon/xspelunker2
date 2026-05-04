@@ -362,6 +362,7 @@ public class Text {
         addLineSafe(lines_with_constant_page1, "I think I heard some door open deep into the ruins!", "PLACE_THIRD_POWER_STONE", 112);
         addLineSafe(lines_with_constant_page1, "Is the calendar stone fully powered up?! The center started pulsating!", "PLACE_FIFTH_POWER_STONE", 112);
         addLineSafe(lines_with_constant_page1, "Touch the calendar stone?", "TOUCH_STONE_QUESTION", 112);
+        addLineSafe(lines_with_constant_page3, "How can it be! It seems like some light from the moon and the nightsky is reaching this room through a long hole in the ceiling!", "ASTRONOMY_ENTER", 112);
         
         addLineSafe(lines_with_constant_page1, "Wait! They had not given up... This is an ambush!!!", "CALENDAR_AMBUSH", 112);     
         addLineSafe(lines_with_constant_page1, "You place your hand in the center and, as the stone starts shaking, you hear a deep voice...", "CALENDAR_CENTER_MSG3", 112);

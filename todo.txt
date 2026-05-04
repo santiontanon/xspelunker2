@@ -1,16 +1,21 @@
 to do:
 ***- random seed puzzle (all happens without going to moon/mars):
-  ***- 8 bridge room in one of the caves: each bridge depends on each of the bits of the first byte of the random seed. All 0s will lower all bridges: 1AZD4ZD
-    ***- BUG: why is the scroll so low? it seems to think the room is taller
-    ***- color the stela according to some bits of the random seed
-    ***- open bridges according to the seed: first byte 00000000
-  ***- astronomy room:
-    ***- create it in GIMP/TILED (it can only be entered from the sides)
-      ***- it has a representation of the sky (the same as in the title screen, depending on the random seed)
-      ***- world teleporter machine: where you go back to the world name room, and can travel across worlds: maybe the first letter is fixed, so that you cannot change the difficulty?
-      ***- tablets: clues about the world teleporter and constellation relation with the seed, and also a tablet with the three names of the three statues (in Maya)
+  ***- astronomy room: (1E2Y4ZT: 0x003a)
+    ***- finish it in GIMP/TILED
+      ***- draw some light rays coming in from the top (maybe moonlight)
+      ***- mural at the top with calendar signs
+      ***- pedestal/table in the center with the "world teleporter machine": just some stone table with some glyphs that is interactuable
+    ***- teleporter (to travel to this room directly)
+    ***- tablets: clues about the world teleporter and constellation relation with the seed, and also a tablet with the three names of the three statues (in Maya)
+    ***- messages in tablets
+    ***- teleporter: make it work (make it appear left of the caves where the teleporter room is in)
+    ***- world teleporter machine working:
+      ***- go to the "world name screen" (and back)
+      ***- have a different message (and maybe remove Chaak's head, just add a message like "You approach the device and it seems to ask for you to rename the world)
+      ***- first letter is fixed (you cannot change the difficulty)
+      ***- try to generate the world, and if it succeeds, change, otherwise, stay in the current world (is it doable?)
   ***- giant statues:
-    ***- draft them in GIMP/TILED, they are special rooms (like poseidon, calendar, etc.)
+    ***- draft them in GIMP/TILED, are they special rooms (like poseidon, calendar, etc.) or just use the available tiles in caves to draw something like a 6x6 or 4x8 statue?
     ***- in each of the 3 pyramids, if the condition for the given stella is satisfied, a giant statue room is spawned
     ***- tablet in these rooms that states: "I do not remember my name, but I was the first/second/third".
     ***- speaking the names in front of each statue unlocks a chest/cabinet with a fragment of a codex. You need all 3 for it to be intelligible (this will later unlock the "A+" ending, as explained below, the three of them allow you to manufacture fire stones, or give you the clue to get to the forge)

@@ -151,7 +151,9 @@ global_state__objects: ds virtual N_UNIQUE_TAGS
 global_state__open_walls: ds virtual 6 * N_PATH_OPENING_TAGS
 
 global_state__story: ds virtual 1
-global_state__used_teleporter_before: ds virtual 1
+global_state__first_time_flags: ds virtual 1  ; bits:
+                                              ; - 0: used teleporter before
+                                              ; - 1: entered astronomy room before
 
 global_state__power_calendar: ds virtual 6  ; the value of each of these 6 bytes can be:
                                             ; - 0: empty
@@ -164,7 +166,7 @@ global_state__n_power_stones_in_calendar: ds virtual 1  ; for convenience (it sh
 
 global_state__maya_riddle: ds virtual 1  ; 0: not solved, 1: solved first line, 2: solved
 global_state__solved_final_riddle: ds virtual 1
-global_state__n_alien_controntations: ds virtual 1  ; Goes from 0 to 2, and increments each time you leave the calendar room having killed at least one alien.
+global_state__n_alien_confrontations: ds virtual 1  ; Goes from 0 to 2, and increments each time you leave the calendar room having killed at least one alien.
                                                     ; It determines how many aliens will spawn next time you enter the calendar room.
 
 RAM_to_zero_on_continue:

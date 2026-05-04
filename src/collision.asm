@@ -753,6 +753,14 @@ player_exit_room_left:
 	ld a, (boss__in_boss_room)
 	xor #01  ; we do "xor 1" so that we exit with "z", and indicate collision
 	ret z
+
+	; are we entering the astronomy room?
+	ld a, (current_room__id)
+	cp EIGHT_BRIDGE_ROOM_ID
+	ld a, ASTRONOMY_ROOM_PAGE
+	ld hl, astronomy_room__enter
+	jp z, jp_to_hl_in_page_a_8000
+
 	call check_for_interarea_exit_left
 	call check_collision_with_next_chunk_left
 	ret z  ; collision	
@@ -808,6 +816,14 @@ player_exit_room_right:
 	ld a, (boss__in_boss_room)
 	xor #01  ; we do "xor 1" so that we exit with "z", and indicate collision
 	ret z
+
+	; are we entering the astronomy room?
+	ld a, (current_room__id)
+	cp ASTRONOMY_ROOM_ID
+	ld a, ASTRONOMY_ROOM_PAGE
+	ld hl, astronomy_room__leave
+	jp z, jp_to_hl_in_page_a_8000
+
 	call check_for_interarea_exit_right
 	call check_collision_with_next_chunk_right
 	ret z  ; collision

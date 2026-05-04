@@ -2603,7 +2603,7 @@ pcg_generate_room__calendar_aliens:
 	call pcg_generate_room__calendar_alien
 	ld de, 21 + 15*256
 	call pcg_generate_room__calendar_alien
-	ld a, (global_state__n_alien_controntations)
+	ld a, (global_state__n_alien_confrontations)
 	or a
 	jr z, pcg_generate_room__calendar_aliens_done
 	dec a
@@ -2986,11 +2986,53 @@ pcg_generate_room__8_bridge_room:
 	call pcg_generate_room__calendar_open_walls
 
 	; stela:
-	; ...
-
+	ld de, (current_world__seed)
+	bit 7, d
+	jr z, pcg_generate_room__8_bridge_room_seed_stela_bit7_done
+	ld hl, current_room__tile_map + 13 + 7*32
+	ld (hl), 145
+pcg_generate_room__8_bridge_room_seed_stela_bit7_done:
+	bit 0, d
+	jr z, pcg_generate_room__8_bridge_room_seed_stela_bit0_done
+	ld hl, current_room__tile_map + 16 + 7*32
+	ld (hl), 145
+pcg_generate_room__8_bridge_room_seed_stela_bit0_done:
 	; open bridge:
-	; ...
+	ld hl, current_room__tile_map + 4 + 14*32
+	ld b, 8
+pcg_generate_room__8_bridge_room_loop:
+	rrc d
+	push bc
+	push de
+	push hl
+		call nc, pcg_generate_room__8_bridge_room__open_bridge
+	pop hl
+	pop de
+	pop bc
+	inc hl
+	inc hl
+	inc hl
+	djnz pcg_generate_room__8_bridge_room_loop
+	ret
 
+
+pcg_generate_room__8_bridge_room__open_bridge:
+	ld bc, -33
+	ld (hl), 0
+	inc hl
+	ld (hl), 0
+	add hl, bc
+	ld (hl), 0
+	inc hl
+	ld (hl), 0
+	add hl, bc
+	ld (hl), 0
+	inc hl
+	ld (hl), 0
+	add hl, bc
+	ld (hl), 144
+	inc hl
+	ld (hl), 143
 	ret
 
 

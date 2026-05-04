@@ -94,6 +94,7 @@ TELEPORTER_ROOM_ID: equ 101  ; areas are at most 8 * 8 rooms in size, so this ID
 START_ROOM_ID: equ 102
 TEMPLE_OF_POSEIDON_ID: equ 103
 EIGHT_BRIDGE_ROOM_ID: equ 104
+ASTRONOMY_ROOM_ID: equ 105
 
 MAX_WORLD_AREAS: equ 12
 MAX_AREA_WIDTH: equ 16  

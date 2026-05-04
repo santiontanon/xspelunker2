@@ -2238,9 +2238,8 @@ object_interaction_function_teleporter:
 	jr z, object_interaction_function_teleporter_was_off
 
 	; teleporter was already activated, teleport!
-	ld hl, global_state__used_teleporter_before
-	ld a, (hl)
-	or a
+	ld hl, global_state__first_time_flags
+	bit 0, (hl)
 	jr nz, object_interaction_function_teleporter_not_first_time
 	ld de, TEXT_FIRST_TELEPORTATION1
 	ld hl, display_in_game_message
@@ -2249,7 +2248,6 @@ object_interaction_function_teleporter:
 		call call_hl_in_page_c_8000
 	pop ix
 object_interaction_function_teleporter_not_first_time:
-
 	ld hl, display_map_from_teleporter
 	ld c, MAP_PAGE
 	call call_hl_in_page_c_8000

@@ -134,11 +134,11 @@ state_play:
 ; 		ld (player_inventory_weapon_ammo + 3), a
 ; 		ld a, 2
 ; 		ld (player_inventory_n_small_keys), a
-; 		ld (global_state__objects + TAG_MAP_PIECE1), a
-; 		ld (global_state__objects + TAG_MAP_PIECE2), a
-; 		ld (global_state__objects + TAG_MAP_PIECE3), a
-; 		ld (global_state__objects + TAG_MAP_PIECE4), a
-; 		ld (global_state__objects + TAG_MAP_PIECE5), a
+		ld (global_state__objects + TAG_MAP_PIECE1), a
+		ld (global_state__objects + TAG_MAP_PIECE2), a
+		ld (global_state__objects + TAG_MAP_PIECE3), a
+		ld (global_state__objects + TAG_MAP_PIECE4), a
+		ld (global_state__objects + TAG_MAP_PIECE5), a
 ; 		ld (global_state__objects + TAG_TELEPORTER1), a
 ; 		ld (global_state__objects + TAG_TELEPORTER4), a
 ; 		ld (global_state__objects + TAG_TELEPORTER5), a
@@ -190,8 +190,8 @@ state_play_from_continue:
 ; 		ld e, 2  ; area to generate <- second boss
 ; 		ld e, 3  ; area to generate
 ; 		ld e, 4  ; area to generate <- third boss
-		ld e, 6  ; area to generate
-; 		ld e, 7  ; area to generate
+; 		ld e, 6  ; area to generate
+		ld e, 7  ; area to generate
 ; 		ld e, 8  ; xibalba
 ; 		ld e, 9  ; atlantis
 		ld c, PCG_PAGE
@@ -225,6 +225,10 @@ state_play_from_loaded_room:
 		ld bc, 256
 		call ldir_from_page_a
 
+		ld hl, 0
+		ld (room_desired_scroll_x), hl
+		ld (room_scroll_x), hl
+
 state_play_from_inventory:
 		ld sp, stack  ; reset the stack, so we can jump here from wherever we want
 
@@ -236,7 +240,7 @@ state_play_from_inventory:
 		ld (current_room__max_scroll_y), a
 		ld a, (current_room__width)
 		sub 32
-		ld (current_room__max_scroll_x), a		
+		ld (current_room__max_scroll_x), a
 		ld a, (config_hud_type)
 		cp 2  ; full hud
 		jr nz, state_play_from_inventory__no_full_hud

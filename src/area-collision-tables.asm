@@ -54,6 +54,7 @@ tile_collision_types_pyramid:
     db 2, 2, 2, 2, 2, 0, 2, 2, 7, 2, 2, 2, 3, 2, 1, 5
 
 
+tile_collision_types_astronomy_room:
 tile_collision_types_caves:
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0

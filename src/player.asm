@@ -2203,11 +2203,10 @@ player_update_state_teleport_in:
 	jp player_update_update_sprite_weapon
 
 player_update_state_teleport_in_done:
-	ld hl, global_state__used_teleporter_before
-	ld a, (hl)
-	or a
+	ld hl, global_state__first_time_flags
+	bit 0, (hl)
 	jp nz, player_update_switch_to_idle
-	ld (hl), 1
+	set 0, (hl)
 
 	ld de, TEXT_FIRST_TELEPORTATION2
 	ld hl, display_in_game_message

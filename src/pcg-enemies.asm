@@ -124,11 +124,11 @@ pcg_generate_room__enemy_respawn_logic_on_exit_room:
 	cp #ff
 	jr nz, pcg_generate_room__enemy_respawn_logic_on_exit_room_not_calendar
 	; player killed all the aliens, increment the alien counter:
-	ld a, (global_state__n_alien_controntations)
+	ld a, (global_state__n_alien_confrontations)
 	cp 2
 	jr z, pcg_generate_room__enemy_respawn_logic_on_exit_room_not_calendar
 	inc a
-	ld (global_state__n_alien_controntations), a
+	ld (global_state__n_alien_confrontations), a
 pcg_generate_room__enemy_respawn_logic_on_exit_room_not_calendar:
 	; find a spot in enemy_respawn_table:
 	ld ix, enemy_respawn_table
