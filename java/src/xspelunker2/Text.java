@@ -122,7 +122,7 @@ public class Text {
 //        addLineSafe(lines_with_constant_page3, "Each world is identified by its name. Choose wisely! The world name determines the random seed, and difficulty...", "GAMESTART_CONSOLE_MSG2", 90);
 //        addLineSafe(lines_with_constant_page3, "Use the same name to play again on the same world. You can use letters, spaces and the numbers 0 - 4.", "GAMESTART_CONSOLE_MSG3", 90);
         addLineSafe(lines_with_constant_page3, "Creating world...", "GAMESTART_CONSOLE_MSG4", 90);
-        addLineSafe(lines_with_constant_page3, "The gods do not like this name. Try another one!", "GAMESTART_CONSOLE_MSG5", 90);
+        addLineSafe(lines_with_constant_page3, "Itzanma does not like this name. Try another one!", "GAMESTART_CONSOLE_MSG5", 90);
         
         addLineSafe(lines_with_constant_page1, "Game Over", "GAME_OVER", 16);
         addLineSafe(lines_with_constant_page1, "Continue?", "CONTINUE", 16);
@@ -718,7 +718,7 @@ public class Text {
         //
         addLineSafe(lines_with_constant_page3, "Here, I will just give you one hint:", "ENDING_C_PAGE_2_6", 20);
         addLineSafe(lines_with_constant_page3, "there are 6 possible endings,", "ENDING_C_PAGE_2_7", 20);
-        addLineSafe(lines_with_constant_page3, "from C, all the way to A++.", "ENDING_C_PAGE_2_8", 20);
+        addLineSafe(lines_with_constant_page3, "from C, all the way to A+.", "ENDING_C_PAGE_2_8", 20);
         //
         addLineSafe(lines_with_constant_page3, "2XSpelunker", "ENDING_C_PAGE_2_9", 20);
         addLineSafe(lines_with_constant_page3, "Brain Games, 2026", "ENDING_C_PAGE_2_10", 20);
