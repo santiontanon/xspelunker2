@@ -118,11 +118,11 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "normal", "DIFFICULTY_NORMAL", 6);
         addLineSafe(lines_with_constant_page3, "hard", "DIFFICULTY_HARD", 6);
         addLineSafe(lines_with_constant_page3, "hardest", "DIFFICULTY_HARDEST", 6);
-        addLineSafe(lines_with_constant_page3, "I am Itzanma, ruler of the sky! I rule over many worlds with different skies, each with their own name. Which of my worlds do you want?", "GAMESTART_CONSOLE_MSG1", 120);
+        addLineSafe(lines_with_constant_page3, "I am Itzamna, ruler of the sky! I rule over many worlds with different skies, each with their own name. Which of my worlds do you want?", "GAMESTART_CONSOLE_MSG1", 120);
 //        addLineSafe(lines_with_constant_page3, "Each world is identified by its name. Choose wisely! The world name determines the random seed, and difficulty...", "GAMESTART_CONSOLE_MSG2", 90);
 //        addLineSafe(lines_with_constant_page3, "Use the same name to play again on the same world. You can use letters, spaces and the numbers 0 - 4.", "GAMESTART_CONSOLE_MSG3", 90);
         addLineSafe(lines_with_constant_page3, "Creating world...", "GAMESTART_CONSOLE_MSG4", 90);
-        addLineSafe(lines_with_constant_page3, "Itzanma does not like this name. Try another one!", "GAMESTART_CONSOLE_MSG5", 90);
+        addLineSafe(lines_with_constant_page3, "Itzamna does not like this name. Try another one!", "GAMESTART_CONSOLE_MSG5", 90);
         
         addLineSafe(lines_with_constant_page1, "Game Over", "GAME_OVER", 16);
         addLineSafe(lines_with_constant_page1, "Continue?", "CONTINUE", 16);
@@ -362,7 +362,7 @@ public class Text {
         addLineSafe(lines_with_constant_page1, "I think I heard some door open deep into the ruins!", "PLACE_THIRD_POWER_STONE", 112);
         addLineSafe(lines_with_constant_page1, "Is the calendar stone fully powered up?! The center started pulsating!", "PLACE_FIFTH_POWER_STONE", 112);
         addLineSafe(lines_with_constant_page1, "Touch the calendar stone?", "TOUCH_STONE_QUESTION", 112);
-        addLineSafe(lines_with_constant_page3, "How can it be! It seems like some light from the moon and the nightsky is reaching this room through a long hole in the ceiling!", "ASTRONOMY_ENTER", 112);
+        addLineSafe(lines_with_constant_page3, "How can it be! It seems like some light from the moon and the nightsky is reaching this room through a tunnel in the ceiling!", "ASTRONOMY_ENTER", 112);
         
         addLineSafe(lines_with_constant_page1, "Wait! They had not given up... This is an ambush!!!", "CALENDAR_AMBUSH", 112);     
         addLineSafe(lines_with_constant_page1, "You place your hand in the center and, as the stone starts shaking, you hear a deep voice...", "CALENDAR_CENTER_MSG3", 112);
@@ -439,13 +439,13 @@ public class Text {
         addLineSafe(lines_with_constant_page1, "Face right", "COMBINATION_CLUE4", 8);
 
         // Trial god descriptions:
-        addLineSafe(lines_with_constant_page1, "A stone carving of the mayan god Itzanma.", "TRIAL_GOD1", 96);  // often regarded as the supreme creator god and the ruler of heaven, day, and night. He was also a culture hero, credited with giving humankind writing and the calendar, and was the patron god of medicine
+        addLineSafe(lines_with_constant_page1, "A stone carving of the mayan god Itzamna.", "TRIAL_GOD1", 96);  // often regarded as the supreme creator god and the ruler of heaven, day, and night. He was also a culture hero, credited with giving humankind writing and the calendar, and was the patron god of medicine
         addLineSafe(lines_with_constant_page1, "A stone carving of the mayan god Kukulkan.", "TRIAL_GOD2", 96);  // associated with wisdom, rain, wind, storms, and life
         addLineSafe(lines_with_constant_page1, "A stone carving of the mayan god Ixchel.", "TRIAL_GOD3", 96);  // primarily associated with fertility, pregnancy, childbirth, and midwifery
         addLineSafe(lines_with_constant_page1, "A stone carving of the mayan god Chaac.", "TRIAL_GOD4", 96);  // supreme Mayan god of rain, thunder, and lightning
         
         // Trial clues:
-        addLineSafe(lines_with_constant_page1, "Itzanma.", "TRIAL_CLUE_GODNAME1", 8);
+        addLineSafe(lines_with_constant_page1, "Itzamna.", "TRIAL_CLUE_GODNAME1", 8);
         addLineSafe(lines_with_constant_page1, "Kukulkan.", "TRIAL_CLUE_GODNAME2", 8);
         addLineSafe(lines_with_constant_page1, "Ixchel.", "TRIAL_CLUE_GODNAME3", 8);
         addLineSafe(lines_with_constant_page1, "Chaac.", "TRIAL_CLUE_GODNAME4", 8);

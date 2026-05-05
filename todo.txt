@@ -1,16 +1,14 @@
 to do:
 ***- random seed puzzle (all happens without going to moon/mars):
   ***- astronomy room: (1E2Y4ZT: 0x003a)
-    ***- finish it in GIMP/TILED
-      ***- mural at the top with calendar signs
-      ***- pedestal/table in the center with the "world teleporter machine": just some stone table with some glyphs that is interactuable
-      ***- teleporter (to travel to this room directly)
-      ***- tablets: clues about the world teleporter and constellation relation with the seed, and also a tablet with the three names of the three statues (in Maya)
-    ***- messages in tablets
+    ***- messages in tablets:
+      ***- spawn tablets
+      ***- world teleporter and constellation relation with the seed
+      ***- three names of the three statues (in Maya, randomly generated)
     ***- make the teleporter work (make it appear left of the caves where the teleporter room is in)
     ***- world teleporter machine working:
       ***- go to the "world name screen" (and back)
-      ***- have a different message (and maybe remove Itzanma's head, just add a message like "You approach the device and it seems to ask for you to rename the world)
+      ***- have a different message (and maybe remove Itzamna's head, just add a message like "You approach the device and it seems to ask for you to rename the world)
       ***- first letter is fixed (you cannot change the difficulty)
       ***- try to generate the world, and if it succeeds, change, otherwise, stay in the current world (is it doable?)
   ***- giant statues:
