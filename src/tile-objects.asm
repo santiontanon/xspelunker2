@@ -1263,7 +1263,7 @@ ENDR
 	dw object_interaction_function_poseidon_lever  ; TAG_POSEIDON_LEVER
 	dw object_interaction_function_poseidon_boss_display  ; TAG_POSEIDON_BOSS_DISPLAY
 	dw object_interaction_function_tablet  ; TAG_ASTRONOMY_TABLET1
-	dw object_interaction_function_empty  ; TAG_ASTRONOMY_TABLET2
+	dw object_interaction_function_tablet  ; TAG_ASTRONOMY_TABLET2
 	dw object_interaction_function_empty  ; TAG_WORLD_TELEPORTER
 	dw object_interaction_function_shopkeeper  ; TAG_NPC_SHOPKEEPER
 	dw object_interaction_function_shop  ; TAG_NPC_SHOP
@@ -1804,6 +1804,11 @@ object_interaction_function_tablet_not_xibalba_boss_grave
 	ld de, astronomy_tablet1_fn
 	jr object_interaction_function_tablet_ptr_set
 object_interaction_function_tablet_not_astronomy_tablet1
+	cp TAG_ASTRONOMY_TABLET2
+	jr nz, object_interaction_function_tablet_not_astronomy_tablet2
+	ld de, astronomy_tablet2_fn
+	jr object_interaction_function_tablet_ptr_set
+object_interaction_function_tablet_not_astronomy_tablet2
 	; Determine tablet content:
 	ld hl, current_world__tablet_content
 object_interaction_function_tablet_loop:

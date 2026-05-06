@@ -2,14 +2,9 @@ to do:
 ***- random seed puzzle (all happens without going to moon/mars):
   ***- astronomy room: (1E2Y4ZT: 0x003a)
     ***- messages in tablets:
-      ***- three names of the three statues (in Maya, randomly generated)
-
-        Three statues guard the final recipe:
-
-        [name1] [name2] [name3]
-
-        This is the recipe that the star people want so much. But they will never find all of them... Thanks to my new understanding of astronomy and of Itzamna's grand plan I hid them in different worlds! I marked each world with a stela so they can be found again. But only those who are one with Itzamna, and are worthy of the knowledge will be able to interpret them... If you find the statues, speak their names, and the recipe will be yours!
-
+      ***- tablet 2:
+        ***- generate the statue names in the riddle pcg code and store it in RAM
+        ***- draw the syllables in the tablet
     ***- world teleporter machine working:
       ***- go to the "world name screen" (and back)
       ***- have a different message (and maybe remove Itzamna's head, just add a message like "You approach the device and it seems to ask for you to rename the world)
@@ -21,6 +16,7 @@ to do:
     ***- tablet in these rooms that states: "I do not remember my name, but I was the first/second/third".
     ***- speaking the names in front of each statue unlocks a chest/cabinet with a fragment of a codex. You need all 3 for it to be intelligible (this will later unlock the "A+" ending, as explained below, the three of them allow you to manufacture fire stones, or give you the clue to get to the forge)
   ***- update "TABLET_TRIVIA_CLUE1", "TABLET_TRIVIA_CLUE2", to have proper clues (remove the ones about angry bosses for now, as I do not think I am doing it).
+  ***- make the PCG unit test work again (add the area of the astronomy room, the 3 statue names and locations)
 
 - music: (brain 12, 15, 23, 25 have potential)
   - ending aliens
