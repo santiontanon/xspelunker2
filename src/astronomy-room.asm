@@ -42,7 +42,43 @@ astronomy_room__enter:
 	ld a, ASTRONOMY_ROOM_PAGE
 	ld (in_game_event_fn_page), a
 
+	; spawn the tablet / teleporters:
+	; tablet gfx:
+	ld hl, buffer_4096 + 60 * 64
+	ld (item_object_to_upload_to_vdp), hl
+
+	ld a, 1
+	ld (global_state__objects + TAG_TELEPORTER9), a
+
+	ld b, (astronomy_room__enter_objects_start_end - astronomy_room__enter_objects_start) / 3
+	ld de, ROOM_TILE_OBJECT_STRUCT_SIZE
+	ld hl, astronomy_room__enter_objects_start
+	ld iy, current_room__tile_objects
+	ld c, 1  ; id
+astronomy_room__enter_objects_loop:
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), c  ; id
+	inc c
+	ld a, (hl)
+	inc hl
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), a
+	ld a, (hl)
+	inc hl
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), a  ; tile x
+	ld a, (hl)
+	inc hl
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), a  ; tile y
+	add iy, de
+	djnz astronomy_room__enter_objects_loop
 	jp state_play_from_loaded_room
+
+
+astronomy_room__enter_objects_start:
+	db TAG_ASTRONOMY_TABLET1, 10, 20
+	db TAG_ASTRONOMY_TABLET1, 18, 20
+	db TAG_ASTRONOMY_TABLET2, 22, 20
+	db TAG_TELEPORTER9, 4, 19
+	db TAG_WORLD_TELEPORTER, 13, 18
+astronomy_room__enter_objects_start_end:
 
 
 ;-----------------------------------------------

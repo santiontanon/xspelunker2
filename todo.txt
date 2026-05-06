@@ -1,11 +1,17 @@
 to do:
 ***- random seed puzzle (all happens without going to moon/mars):
   ***- astronomy room: (1E2Y4ZT: 0x003a)
+    ***- make the teleporter work:
+      OK - make it appear left of the caves where the teleporter room is in
+      OK - manually turn on some other teleporters, to try teleporting from another map
+      OK - arrow itentifying which teleporter we are on is not working
+      OK - move around teleporters fine
+      ***- when selecting the astronomy teleporter, it should go to a special function to load the astronomy room (and set the proper area)
+      ***- reset story state / etc. to proper values
     ***- messages in tablets:
-      ***- spawn tablets
-      ***- world teleporter and constellation relation with the seed
+      OK - spawn tablets
+      ***- world teleporter and constellation relation with the seed (itzamna altar)
       ***- three names of the three statues (in Maya, randomly generated)
-    ***- make the teleporter work (make it appear left of the caves where the teleporter room is in)
     ***- world teleporter machine working:
       ***- go to the "world name screen" (and back)
       ***- have a different message (and maybe remove Itzamna's head, just add a message like "You approach the device and it seems to ask for you to rename the world)

@@ -3056,22 +3056,29 @@ pcg_generate_world__generate_mission:
 	ret nz
 
 	; 8-bridge room:
+	xor a
+	ld (current_world__astronomy_room_area), a
 	ld a, 3  ; no vertical connections
 	ld (tmp_pcg_world__vertical_check_in_left_most), a
 	ld de, tmp_pcg_world__area_6_divisions
 	ld a, 6  ; caves west
+	push af
 	push de
 		call pcg_generate_world__random_left_most_point_tagless
 		jr z, pcg_generate_world__generate_mission_8_bridge_point_set
 	pop de
+	pop af
 	ld de, tmp_pcg_world__area_7_divisions
 	ld a, 7  ; caves east
+	push af
 	push de
 		call pcg_generate_world__random_left_most_point_tagless
 		jr nz, pcg_generate_world__generate_mission_no_8_bridge_room_pop
 pcg_generate_world__generate_mission_8_bridge_point_set:
 	; place 8-bridge room:
 	pop de  ; recover the area where the 8 bridge is
+	pop af  ; recover the area
+	ld (current_world__astronomy_room_area), a
 	ld b, 0
 	ld c, l  ; offset
 	push hl
@@ -3086,6 +3093,7 @@ pcg_generate_world__generate_mission_8_bridge_point_set:
 	jr pcg_generate_world__generate_mission_no_8_bridge_room
 pcg_generate_world__generate_mission_no_8_bridge_room_pop:
 	pop de
+	pop af
 pcg_generate_world__generate_mission_no_8_bridge_room:
 	xor a
 	ld (tmp_pcg_world__vertical_check_in_left_most), a

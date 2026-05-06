@@ -1213,6 +1213,7 @@ ENDR
 	dw object_interaction_function_teleporter  ; TAG_TELEPORTER6
 	dw object_interaction_function_teleporter  ; TAG_TELEPORTER7
 	dw object_interaction_function_teleporter  ; TAG_TELEPORTER8
+	dw object_interaction_function_teleporter  ; TAG_TELEPORTER9
 	dw object_interaction_function_tablet  ; TAG_CALENDAR_NAME_CLUE
 	dw object_interaction_function_lost_vendor  ; TAG_LOST_VENDOR
 	dw object_interaction_function_tablet  ; TAG_XIBALBA_STORY1
@@ -1261,6 +1262,9 @@ ENDR
 	dw object_interaction_function_pickup_item_boss4  ; TAG_SKULL_CHARM
 	dw object_interaction_function_poseidon_lever  ; TAG_POSEIDON_LEVER
 	dw object_interaction_function_poseidon_boss_display  ; TAG_POSEIDON_BOSS_DISPLAY
+	dw object_interaction_function_empty  ; TAG_ASTRONOMY_TABLET1
+	dw object_interaction_function_empty  ; TAG_ASTRONOMY_TABLET2
+	dw object_interaction_function_empty  ; TAG_WORLD_TELEPORTER
 	dw object_interaction_function_shopkeeper  ; TAG_NPC_SHOPKEEPER
 	dw object_interaction_function_shop  ; TAG_NPC_SHOP
 	dw object_interaction_function_empty  ; TAG_DYNAMITE
@@ -2843,6 +2847,7 @@ ENDR
 	TILE_OBJECT_DATA 1, 4, 3, tile_object_teleporter_gfx  ; TAG_TELEPORTER6
 	TILE_OBJECT_DATA 1, 4, 3, tile_object_teleporter_gfx  ; TAG_TELEPORTER7
 	TILE_OBJECT_DATA 1, 4, 3, tile_object_teleporter_gfx  ; TAG_TELEPORTER8
+	TILE_OBJECT_DATA 2, 4, 3, 0  ; TAG_TELEPORTER9
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_CALENDAR_NAME_CLUE
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_LOST_VENDOR
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_XIBALBA_STORY1
@@ -2892,6 +2897,10 @@ ENDR
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_SKULL_CHARM	
 	TILE_OBJECT_DATA 2, 2, 2, 0  ; TAG_POSEIDON_LEVER	
 	TILE_OBJECT_DATA 2, 2, 2, 0  ; TAG_POSEIDON_BOSS_DISPLAY
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ASTRONOMY_TABLET1
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ASTRONOMY_TABLET2
+	TILE_OBJECT_DATA 2, 4, 4, 0  ; TAG_WORLD_TELEPORTER
+
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOPKEEPER
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOP
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_DYNAMITE

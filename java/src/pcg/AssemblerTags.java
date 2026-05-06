@@ -179,6 +179,7 @@ public class AssemblerTags {
         "TAG_TELEPORTER6",
         "TAG_TELEPORTER7",
         "TAG_TELEPORTER8",
+        "TAG_TELEPORTER9",  // the one in the teleporter room
         "TAG_CALENDAR_NAME_CLUE",
         "TAG_LOST_VENDOR",
         // Xibalba tablets:
@@ -231,6 +232,9 @@ public class AssemblerTags {
         "TAG_SKULL_CHARM",
         "TAG_POSEIDON_LEVER",
         "TAG_POSEIDON_BOSS_DISPLAY",
+        "TAG_ASTRONOMY_TABLET1",
+        "TAG_ASTRONOMY_TABLET2",
+        "TAG_WORLD_TELEPORTER",
         // npcs:
         "TAG_NPC_SHOPKEEPER",
         "TAG_NPC_SHOP",

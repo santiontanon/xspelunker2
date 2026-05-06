@@ -17,13 +17,17 @@ map_teleporter_sprite_coordinates:
 	db 48, 112  ; hidden
 	db 96, 76  ; inverted
 	db 128, 46  ; caves left
-	db 132, 111  ; caves right
+	db 132, 120  ; caves right
 	db 172, 76  ; fire
 	db 152, 196  ; atlantis
+	db 128, 10  ; astronomy
 
 map_teleporter_areas:
 	db 0, 1, 2, 4, 6, 7, 8, 9
+	db 6  ; astronomy
 
+map_teleporter_sprite_coordinates_ram: equ buffer_4096 + 1024
+map_teleporter_areas_ram: equ buffer_4096 + 1024 + 9*2
 
 ;-----------------------------------------------
 display_map_from_teleporter:
@@ -34,10 +38,25 @@ display_map_from_teleporter:
 	ld bc, dialog_sprites_bin_end - dialog_sprites_bin
 	call fast_LDIRVM_from_sprites_page
 
-	; draw markers for already active teleporters:
+	; copy the coordinates to RAM, so that we can add the coordinate of the astronomy room one:
 	ld hl, map_teleporter_sprite_coordinates
+	ld de, map_teleporter_sprite_coordinates_ram
+	ld bc, 9 * 2 + 9
+	ldir
+
+	ld a, (current_world__astronomy_room_area)
+	cp 7
+	jr nz, display_map_from_teleporter_continue
+	ld a, 96
+	ld (map_teleporter_sprite_coordinates_ram + 8*2 + 1), a
+	ld a, 7
+	ld (map_teleporter_areas_ram + 8), a
+display_map_from_teleporter_continue:
+
+	; draw markers for already active teleporters:
+	ld hl, map_teleporter_sprite_coordinates_ram
 	ld de, buffer_4096
-	ld b, 8
+	ld bc, #09ff  ; b = 9, c = #ff (we set c = #ff, so that the "ldi" below do not affect b)
 	ld ix, global_state__objects + TAG_TELEPORTER1
 display_map_from_teleporter_sprite_position_loop:
 	ld a, (ix)
@@ -69,7 +88,12 @@ display_map_from_teleporter_sprite_position_loop_continue:
 	djnz display_map_from_teleporter_sprite_position_loop
 
 	; determine which teleporter are we on right now:
-	ld hl, map_teleporter_areas
+	ld a, (current_room__id)
+	cp ASTRONOMY_ROOM_ID
+	ld c, 8
+	jr z, display_map_from_teleporter_determine_teleporter_loop_end
+	; not the astronomy room teleporter:
+	ld hl, map_teleporter_areas_ram
 	ld a, (current_area__id)
 	ld c, 0
 display_map_from_teleporter_determine_teleporter_loop:
@@ -82,7 +106,7 @@ display_map_from_teleporter_determine_teleporter_loop_end:
 	ld a, c
 	ld (tmp_map_pointer_position), a
 	; set arrow sprite:
-	ld hl, map_teleporter_sprite_coordinates
+	ld hl, map_teleporter_sprite_coordinates_ram
 	ld b, 0
 	add hl, bc
 	add hl, bc
@@ -103,7 +127,7 @@ display_map_from_teleporter_determine_teleporter_loop_end:
 
 	ld hl, buffer_4096
 	ld de, SPRATR2
-	ld b, 4*9
+	ld b, 4*10
 	call fast_small_LDIRVM
 
 	; select an active teleporter:
@@ -139,7 +163,7 @@ display_map_from_teleporter_loop_end:
 	ld a, (tmp_map_pointer_position)
 	ld b, 0
 	ld c, a
-	ld hl, map_teleporter_areas
+	ld hl, map_teleporter_areas_ram
 	add hl, bc
 	ld b, (hl)  ; area ID
 	ld a, (tmp_map_pointer_position)
@@ -150,74 +174,6 @@ display_map_from_teleporter_loop_end:
 	ld a, TILES_PAGE
 	jp jp_to_hl_in_page_a_8000
 
-; 	; teleport:
-; 	call disable_VDP_output
-; 	ld a, (tmp_map_pointer_position)
-; 	; load the area:
-; 	push af
-; 		ld b, 0
-; 		ld c, a
-; 		ld hl, map_teleporter_areas
-; 		add hl, bc
-
-; 		ld e, (hl)
-; 		ld hl, pcg_generate_area
-; 		ld c, PCG_PAGE
-; 		call call_hl_in_page_c_8000
-; 	pop af
-
-; 	; get the room where the teleporter is:
-; 	ld hl, current_area__objects
-; 	add a, TAG_TELEPORTER1
-; 	push af
-; 		ld bc, AREA_OBJECT_STRUCT_SIZE
-; display_map_from_teleporter_find_room_loop:
-; 		cp (hl)
-; 		jr z, display_map_from_teleporter_find_room_loop_found
-; 		add hl, bc
-; 		jr display_map_from_teleporter_find_room_loop
-; display_map_from_teleporter_find_room_loop_found:
-; 		inc hl
-; 		ld a, (hl)  ; teleporter offset
-; 		; convert offset from chunk coordinates to room coordinates:
-; 		ld hl, covert_chunk_offset_to_room_offset
-;       ld c, PCG_PAGE
-;       ld e, a
-;       call call_hl_in_page_c_8000
-;       ld c, e
-; 		ld hl, current_area__room_ids
-; 		add hl, bc
-; 		ld e, (hl)  ; room ID
-; 		ld hl, pcg_generate_room
-; 		ld c, PCG_PAGE
-; 		call call_hl_in_page_c_8000
-; 	pop af
-
-; 	; find teleporter object, and set player in its position:
-; 	ld e, a
-; 	ld hl, find_tile_object_ptr
-; 	ld c, TILES_PAGE
-; 	call call_hl_in_page_c_8000
-; 	push hl
-; 	pop ix
-; 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_X)
-; 	inc a
-; 	ld (player_x + 1), a
-; 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
-; 	inc a
-; 	ld (player_y + 1), a
-; 	ld a, 6
-; 	ld (player_x), a
-; 	xor a
-; 	ld (player_y), a
-; 	ld (player_state_timer), a
-; 	ld a, PLAYER_STATE_TELEPORT_IN
-; 	ld (player_state), a
-; 	ld a, 31  ; immune while teleporting
-; 	ld (player_immunity_timer), a
-	
-; 	jp state_play_from_loaded_room
-
 
 display_map_from_teleporter_color_cycle:
 	db COLOR_WHITE, COLOR_LIGHT_BLUE, COLOR_BLUE, COLOR_DARK_BLUE
@@ -226,7 +182,7 @@ display_map_from_teleporter_color_cycle:
 display_map_from_teleporter_update_sprites:
 	; teleporter color animation:
 	ld hl, SPRATR2 + 3
-	ld b, 8
+	ld b, 9
 display_map_from_teleporter_update_sprites_loop:
 	push bc
 		push hl
@@ -258,7 +214,7 @@ display_map_from_teleporter_update_sprites_loop:
 display_map_from_teleporter_update_sprites_arrow_color_dark:
 	ld a, COLOR_BLUE
 display_map_from_teleporter_update_sprites_arrow_color_set:
-	ld hl, SPRATR2 + 8*4 + 3
+	ld hl, SPRATR2 + 9*4 + 3
 	ld bc, 1
 	call fast_FILVRM
 	ret
@@ -270,7 +226,10 @@ display_map_from_teleporter_loop_next:
 
 	ld a, (tmp_map_pointer_position)
 	inc a
-	and #07
+	cp 9
+	jr nz, display_map_from_teleporter_loop_next_continue
+	xor a
+display_map_from_teleporter_loop_next_continue:
 	ld c, a
 display_map_from_teleporter_loop_next_loop:
 	ld hl, global_state__objects + TAG_TELEPORTER1
@@ -281,24 +240,27 @@ display_map_from_teleporter_loop_next_loop:
 	jr nz, display_map_from_teleporter_loop_next_found
 	ld a, c
 	inc a
-	and #07
+	cp 9
+	jr nz, display_map_from_teleporter_loop_next_continue2
+	xor a
+display_map_from_teleporter_loop_next_continue2:
 	ld c, a
 	jp display_map_from_teleporter_loop_next_loop
 display_map_from_teleporter_loop_next_found:
 	ld a, c
 	ld (tmp_map_pointer_position), a
-	ld hl, map_teleporter_sprite_coordinates
+	ld hl, map_teleporter_sprite_coordinates_ram
 	add hl, bc
 	add hl, bc
 	ld a, (hl)  ; y
 	inc a
-	ld (buffer_4096 + 8*4), a
+	ld (buffer_4096 + 9*4), a
 	inc hl
 	ld a, (hl)  ; x
 	sub 10
-	ld (buffer_4096 + 8*4 + 1), a
-	ld hl, buffer_4096 + 8*4
-	ld de, SPRATR2 + 8*4
+	ld (buffer_4096 + 9*4 + 1), a
+	ld hl, buffer_4096 + 9*4
+	ld de, SPRATR2 + 9*4
 	ld b, 2
 	call fast_small_LDIRVM
 	jp display_map_from_teleporter_loop
@@ -310,7 +272,10 @@ display_map_from_teleporter_loop_prev:
 
 	ld a, (tmp_map_pointer_position)
 	dec a
-	and #07
+	cp #ff
+	jr nz, display_map_from_teleporter_loop_prev_continue
+	ld a, 8
+display_map_from_teleporter_loop_prev_continue:
 	ld c, a
 display_map_from_teleporter_loop_prev_loop:
 	ld hl, global_state__objects + TAG_TELEPORTER1
@@ -321,7 +286,10 @@ display_map_from_teleporter_loop_prev_loop:
 	jr nz, display_map_from_teleporter_loop_next_found
 	ld a, c
 	dec a
-	and #07
+	cp #ff
+	jr nz, display_map_from_teleporter_loop_prev_continue2
+	ld a, 8
+display_map_from_teleporter_loop_prev_continue2:
 	ld c, a
 	jp display_map_from_teleporter_loop_prev_loop
 
