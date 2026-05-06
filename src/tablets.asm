@@ -1463,3 +1463,33 @@ atlantis_tablet_fn_do_not_draw_firestone:
 	ld de, NAMTBL2 + (7 + 8*32)
 	ld ix, CHRTBL2 + 256*8
 	jp display_paragraph_text_page3
+
+
+
+;-----------------------------------------------
+astronomy_tablet1_fn:
+	ld hl, tablet_trivia_tiles_zx0
+	ld c, TABLET_LETTER_PAGE
+	call maya_puzzle_tablet_fn_load_extra_tiles_hl_set
+	ld iy, TEXT_ASTRONOMY_TABLET_1_1
+	ld a, 18
+	ld (tmp_letter_line_width), a
+	ld a, COLOR_GREY
+	ld (tmp_letter_line_color), a
+	ld b, 48
+	ld de, NAMTBL2 + (7 + 5*32)
+	ld ix, CHRTBL2
+	call display_paragraph_text_page3
+
+	ld iy, TEXT_ASTRONOMY_TABLET_1_2
+	ld b, 48
+	ld de, NAMTBL2 + (7 + 8*32)
+	ld ix, CHRTBL2 + 256*8
+	call display_paragraph_text_page3
+
+	ld iy, TEXT_ASTRONOMY_TABLET_1_3
+	ld b, 48
+	ld de, NAMTBL2 + (7 + 16*32)
+	ld ix, CHRTBL2 + 256*8*2
+	jp display_paragraph_text_page3
+

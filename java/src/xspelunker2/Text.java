@@ -664,6 +664,11 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "The firestone forge was too dangerous. So, a compromise was reached. It would only ", "ATLANTIS_TABLET_5_1", 18*3);
         addLineSafe(lines_with_constant_page3, "operate in the Atlantis world. That world had to pay the price for all others to be safe.", "ATLANTIS_TABLET_5_2", 18*5);
 
+        // Astronomy room tablets:
+        addLineSafe(lines_with_constant_page3, "I am the astronomer. If you have found this room, my secret room, you are starting to", "ASTRONOMY_TABLET_1_1", 18*4);
+        addLineSafe(lines_with_constant_page3, "understand this universe. You are now worthy of my knowledge: this world we live in is not the only one. There are countless parallel worlds. But each world is different, all according to Itzamna's grand plan.", "ASTRONOMY_TABLET_1_2", 18*7);
+        addLineSafe(lines_with_constant_page3, "Here, in this very room, I learned this secret, and found a way to travel across worlds! Pray in Itzamna's altar and if you are worthy, he might grant you the same power!", "ASTRONOMY_TABLET_1_3", 18*6);
+        
         // Ending C:
         // First shared part:
         addLineSafe(lines_with_constant_page3, "Meanwhile, in Earth orbit...", "ENDING_C_UFO_0", 12*4);
