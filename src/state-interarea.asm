@@ -202,65 +202,60 @@ interarea_exit_right:
 
 ;-----------------------------------------------
 interarea_exit_screen:
-; 	ld a, (current_megarom_page_in_8000)
-; 	push af
-		ld a, e
-		push hl
-			push af
-				call stop_music
+	ld a, e
+	push hl
+		push af
+			call stop_music
 
-				; clear the screen:
-				call clear_screen_left_to_right
-				call set_bitmap_mode
-			pop af
-			push af
-				ld hl, area_names
-				add a, a
-				add a, a
-				ADD_HL_A
-				ld e, (hl)
-				inc hl
-				ld d, (hl)  ; de: name of the area we are entering
-				inc hl
-				ld c, (hl)
-				inc hl
-				ld b, (hl)  ; bc: name table position where to render (since each require a different centering position)
-				push bc
-; 					SETMEGAROMPAGE_8000 TEXT_PAGE
-					; print "entering [area name]":
-					ld ix, TEXT_ENTERING
-					call text_concatenate_strings
-				pop de  ; position to render text
-
-				ld hl, buffer_4096
-				ld iy, #80f0
-				ld b, 20
-				call draw_sentence_to_vdp_clearing_text_buffer
-
-				ld hl, TEXT_LOADING_AREA
-				ld de, CHRTBL2 + (16*32 + 10)*8
-				ld iy, #80f0
-				ld b, 16
-				call draw_sentence_to_vdp_clearing_text_buffer
-			pop af
-		pop hl
-		push hl
-			; generate new area:
-			ld hl, pcg_generate_area
-			ld e, a  ; area to generate
-			ld c, PCG_PAGE
-			call call_hl_in_page_c_8000
-
-			xor a
-			ld hl, NAMTBL2 + 16*32 + 8
-			ld bc, 20
-			call fast_FILVRM		
-
-			ld b, 250
-			call wait_b_halts_skippable
-
+			; clear the screen:
 			call clear_screen_left_to_right
-		pop hl
-; 	pop af
-; 	SETMEGAROMPAGE_8000_A  ; restore the page
+			call set_bitmap_mode
+		pop af
+		push af
+			ld hl, area_names
+			add a, a
+			add a, a
+			ADD_HL_A
+			ld e, (hl)
+			inc hl
+			ld d, (hl)  ; de: name of the area we are entering
+			inc hl
+			ld c, (hl)
+			inc hl
+			ld b, (hl)  ; bc: name table position where to render (since each require a different centering position)
+			push bc
+				; print "entering [area name]":
+				ld ix, TEXT_ENTERING
+				call text_concatenate_strings
+			pop de  ; position to render text
+
+			ld hl, buffer_4096
+			ld iy, #80f0
+			ld b, 20
+			call draw_sentence_to_vdp_clearing_text_buffer
+
+			ld hl, TEXT_LOADING_AREA
+			ld de, CHRTBL2 + (16*32 + 10)*8
+			ld iy, #80f0
+			ld b, 16
+			call draw_sentence_to_vdp_clearing_text_buffer
+		pop af
+	pop hl
+	push hl
+		; generate new area:
+		ld hl, pcg_generate_area
+		ld e, a  ; area to generate
+		ld c, PCG_PAGE
+		call call_hl_in_page_c_8000
+
+		xor a
+		ld hl, NAMTBL2 + 16*32 + 8
+		ld bc, 20
+		call fast_FILVRM		
+
+		ld b, 250
+		call wait_b_halts_skippable
+
+		call clear_screen_left_to_right
+	pop hl
 	ret

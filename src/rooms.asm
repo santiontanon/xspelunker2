@@ -268,7 +268,7 @@ get_tile_object_behind_player_loop:
 	cp TAG_GEAR_LOCK
 	jp z, get_tile_object_behind_player_32x24_object
 	cp TAG_IDOL_LOCK
-	jr z, get_tile_object_behind_player_32x24_object
+	jp z, get_tile_object_behind_player_32x24_object
 	cp TAG_TRIAL1_LOCK
 	jp z, get_tile_object_behind_player_32x32_object
 	cp TAG_TRIAL2_LOCK
@@ -294,6 +294,8 @@ get_tile_object_behind_player_loop:
 	cp TAG_TELEPORTER7
 	jr z, get_tile_object_behind_player_32x24_object
 	cp TAG_TELEPORTER8
+	jr z, get_tile_object_behind_player_32x24_object
+	cp TAG_TELEPORTER9
 	jr z, get_tile_object_behind_player_32x24_object
 	cp TAG_TELEPORTER_ATLANTIS
 	jr z, get_tile_object_behind_player_32x24_object

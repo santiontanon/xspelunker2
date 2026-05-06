@@ -161,6 +161,9 @@ display_map_from_teleporter_loop_end:
 	ld (hl), #ff
 
 	ld a, (tmp_map_pointer_position)
+	cp 8
+	jp z, display_map_from_teleporter__teleport_to_astronomy_room
+
 	ld b, 0
 	ld c, a
 	ld hl, map_teleporter_areas_ram
@@ -292,6 +295,40 @@ display_map_from_teleporter_loop_prev_loop:
 display_map_from_teleporter_loop_prev_continue2:
 	ld c, a
 	jp display_map_from_teleporter_loop_prev_loop
+
+
+;-----------------------------------------------
+display_map_from_teleporter__teleport_to_astronomy_room:
+	ld a, (current_world__astronomy_room_area)
+	ld e, a
+	ld hl, interarea_exit_screen
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000
+
+	; clear the enemy respawn table:
+	ld hl, current_room__initial_enemy_ids_end
+	ld bc, (current_room__initial_enemy_ids_end - current_room__initial_enemy_ids) - 1
+	ld a, #ff
+	call clear_memory_a
+
+	ld hl, astronomy_room__generate
+	ld c, ASTRONOMY_ROOM_PAGE
+	call call_hl_in_page_c_8000
+
+	ld a, 5
+	ld (player_x + 1), a
+	ld a, 20
+	ld (player_y + 1), a
+	ld a, 6
+	ld (player_x), a
+	xor a
+	ld (player_y), a
+	ld (player_state_timer), a
+	ld a, PLAYER_STATE_TELEPORT_IN
+	ld (player_state), a
+	ld a, 31  ; immune while teleporting
+	ld (player_immunity_timer), a
+	jp state_play_from_loaded_room
 
 
 ;-----------------------------------------------

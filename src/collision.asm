@@ -817,7 +817,7 @@ player_exit_room_right:
 	xor #01  ; we do "xor 1" so that we exit with "z", and indicate collision
 	ret z
 
-	; are we entering the astronomy room?
+	; are we leaving the astronomy room?
 	ld a, (current_room__id)
 	cp ASTRONOMY_ROOM_ID
 	ld a, ASTRONOMY_ROOM_PAGE

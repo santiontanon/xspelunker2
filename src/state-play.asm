@@ -58,14 +58,14 @@ state_play:
 ; 		ld (global_state__power_calendar + 4), a
 ; 		inc a
 ; 		ld (global_state__power_calendar + 5), a
-		ld a, 2
-		ld (global_state__n_power_stones_in_calendar), a
+; 		ld a, 2
+; 		ld (global_state__n_power_stones_in_calendar), a
 ; 		ld a, STORY_STATE__GOT_LETTER1
-		ld a, STORY_STATE__PLACED_FIRST_POWER_STONE
+; 		ld a, STORY_STATE__PLACED_FIRST_POWER_STONE
 ; 		ld a, STORY_STATE__FOUND_LOST_VENDOR
 ; 		ld a, STORY_STATE__GOT_LETTER2
 ; 		ld a, STORY_STATE__DEFEATED_ALIENS
-		ld (global_state__story), a
+; 		ld (global_state__story), a
 ; 		ld a, 2  ; maya riddle solved
 ; 		ld (global_state__maya_riddle), a
 
@@ -140,7 +140,7 @@ state_play:
 ; 		ld (global_state__objects + TAG_MAP_PIECE4), a
 ; 		ld (global_state__objects + TAG_MAP_PIECE5), a
 ; 		ld (global_state__objects + TAG_TELEPORTER1), a
-		ld (global_state__objects + TAG_TELEPORTER2), a
+; 		ld (global_state__objects + TAG_TELEPORTER2), a
 ; 		ld (global_state__objects + TAG_TELEPORTER4), a
 ; 		ld (global_state__objects + TAG_TELEPORTER5), a
 

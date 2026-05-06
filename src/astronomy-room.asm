@@ -1,7 +1,10 @@
 ;-----------------------------------------------
-astronomy_room__enter:
-	; clear the screen:
-	call clear_screen_left_to_right
+astronomy_room__generate:
+	; clear the screen
+	ld c, PCG_PAGE
+	ld hl, pcg_generate_room_reset_state
+	call call_hl_in_page_c_8000
+
 	ld hl, astronomy_room_zx0
 	ld de, current_room__id
 	call dzx0
@@ -34,7 +37,7 @@ astronomy_room__enter:
 
 	ld hl, global_state__first_time_flags
 	bit 1, (hl)
-	jp nz, state_play_from_loaded_room
+	jr nz, astronomy_room__generate_continue
 	; first time:
 	set 1, (hl)
 	ld hl, event__astronomy_room_first_time_message
@@ -42,20 +45,24 @@ astronomy_room__enter:
 	ld a, ASTRONOMY_ROOM_PAGE
 	ld (in_game_event_fn_page), a
 
-	; spawn the tablet / teleporters:
-	; tablet gfx:
+astronomy_room__generate_continue:
+	; steup room ptrs:
 	ld hl, buffer_4096 + 60 * 64
 	ld (item_object_to_upload_to_vdp), hl
+	ld hl, state_play_update_agenda_normal_play
+	ld (state_play_update_agenda_tbl_ptr), hl
 
+	; activate the astronomy teleporter:
 	ld a, 1
 	ld (global_state__objects + TAG_TELEPORTER9), a
 
+	; spawn the tablet / teleporters:
 	ld b, (astronomy_room__enter_objects_start_end - astronomy_room__enter_objects_start) / 3
 	ld de, ROOM_TILE_OBJECT_STRUCT_SIZE
 	ld hl, astronomy_room__enter_objects_start
 	ld iy, current_room__tile_objects
 	ld c, 1  ; id
-astronomy_room__enter_objects_loop:
+astronomy_room__generate_objects_loop:
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), c  ; id
 	inc c
 	ld a, (hl)
@@ -68,7 +75,14 @@ astronomy_room__enter_objects_loop:
 	inc hl
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), a  ; tile y
 	add iy, de
-	djnz astronomy_room__enter_objects_loop
+	djnz astronomy_room__generate_objects_loop
+	ret
+
+
+;-----------------------------------------------
+astronomy_room__enter:
+	call clear_screen_left_to_right
+	call astronomy_room__generate
 	jp state_play_from_loaded_room
 
 
@@ -91,6 +105,7 @@ event__astronomy_room_first_time_message:
 
 ;-----------------------------------------------
 astronomy_room__leave:
+	call clear_screen_left_to_right
 	ld e, EIGHT_BRIDGE_ROOM_ID
 	ld hl, pcg_generate_room
 	ld c, PCG_PAGE
