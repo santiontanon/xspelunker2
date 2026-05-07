@@ -1,10 +1,5 @@
 to do:
 
-***- world teleporter machine: (1E2Y4ZT: 0x003a)
-  ***- first letter is fixed (you cannot change the difficulty)
-  ***- travel: save the current name
-  ***- travel: try to generate the world, and if it succeeds, change
-  ***- travel: if pressing "back" and generation had failed, restore the world name, regenerate and go back to astronomy room
 ***- giant statues:
   ***- draft them in GIMP/TILED, are they special rooms (like poseidon, calendar, etc.) or just use the available tiles in caves to draw something like a 6x6 or 4x8 statue?
   ***- in each of the 3 pyramids, if the condition for the given stela is satisfied, a giant statue room is spawned

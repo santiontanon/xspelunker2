@@ -398,6 +398,7 @@ config_keyboard: ds virtual 2 * 8  ; RIGHT, DOWN, UP, LEFT, INTERACT, INVENTORY,
 
 options_called_from: ds virtual 1  ; 0: options called from inventory, 1: called from title
 gamestart_called_from: ds virtual 1  ; 0: title screen, 1: astronomer's room
+current_world__name_copy: ds virtual 16  ; we will copy the world name here when we are in the world teleporter screen in the astronomy room
 
 ; sound variables:
 MUSIC_tempo:                        ds virtual 1

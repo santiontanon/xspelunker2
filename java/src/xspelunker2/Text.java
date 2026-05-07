@@ -121,7 +121,9 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "I am Itzamna, ruler of the sky! I rule over many worlds with different skies, each with their own name. Which of my worlds do you want?", "GAMESTART_CONSOLE_MSG1", 120);
         addLineSafe(lines_with_constant_page3, "I am Itzamna, ruler of the sky! Here I will let you travel to almost any other world! Which world do you want to travel to?", "GAMESTART_CONSOLE_MSG2", 120);
         addLineSafe(lines_with_constant_page3, "Creating world...", "GAMESTART_CONSOLE_MSG4", 90);
+        addLineSafe(lines_with_constant_page3, "Transiting to world...", "GAMESTART_CONSOLE_MSG4B", 90);
         addLineSafe(lines_with_constant_page3, "Itzamna does not like this name. Try another one!", "GAMESTART_CONSOLE_MSG5", 90);
+        addLineSafe(lines_with_constant_page3, "There is no path to such world from your current one!", "GAMESTART_CONSOLE_MSG5B", 90);
         
         addLineSafe(lines_with_constant_page1, "Game Over", "GAME_OVER", 16);
         addLineSafe(lines_with_constant_page1, "Continue?", "CONTINUE", 16);

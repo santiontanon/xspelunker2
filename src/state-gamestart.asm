@@ -9,6 +9,10 @@ state_gamestart_from_astronomer_room_travel_tbl:
 state_gamestart_from_astronomer_room:
 	ld a, 1
 	ld (gamestart_called_from), a
+	ld hl, current_world__name
+	ld de, current_world__name_copy
+	ld bc, 16
+	ldir
 	jr state_gamestart_continue
 state_gamestart:
 	xor a
@@ -665,6 +669,18 @@ state_gamestart_update_cursor_enter_character:
 	ret
 
 state_gamestart_update_cursor_name_delete:
+	ld a, (gamestart_called_from)
+	or a
+	jr z, state_gamestart_update_cursor_name_delete_from_title
+state_gamestart_update_cursor_name_delete_from_astronomy:
+	ld a, (tmp_gamestart_cursor_position2)
+	cp 1
+	jr z, state_gamestart_update_cursor_name_delete_continue
+	dec a
+	ld (tmp_gamestart_cursor_position2), a
+	jr state_gamestart_update_cursor_name_delete_continue
+
+state_gamestart_update_cursor_name_delete_from_title:
 	ld a, (tmp_gamestart_cursor_position2)
 	or a
 	jr z, state_gamestart_update_cursor_name_delete_continue
@@ -689,6 +705,16 @@ state_gamestart_update_cursor_name_position_set:
 	jp play_SFX_with_high_priority
 
 state_gamestart_update_cursor_left_name:
+	ld a, (gamestart_called_from)
+	or a
+	jr z, state_gamestart_update_cursor_left_name_from_title
+state_gamestart_update_cursor_left_name_from_astronomy:
+	; we cannot edit the first letter:
+	ld a, (tmp_gamestart_cursor_position2)
+	dec a
+	ret z
+	jr state_gamestart_update_cursor_name_position_set	
+state_gamestart_update_cursor_left_name_from_title:
 	ld a, (tmp_gamestart_cursor_position2)
 	or a
 	ret z
@@ -706,7 +732,7 @@ state_gamestart_update_cursor_button:
 	dec a
 	jr z, state_gamestart_update_cursor_start
 	dec a
-	jr z, state_gamestart_update_cursor_back
+	jp z, state_gamestart_update_cursor_back
 	ret
 
 
@@ -718,6 +744,11 @@ state_gamestart_update_cursor_start:
 	ld hl, SFX_ui_select
 	call play_SFX_with_high_priority
 	ld iy, TEXT_GAMESTART_CONSOLE_MSG4
+	ld a, (gamestart_called_from)
+	or a
+	jr z, state_gamestart_update_cursor_start_continue
+	ld iy, TEXT_GAMESTART_CONSOLE_MSG4B
+state_gamestart_update_cursor_start_continue:
 	ld b, 146
 	ld de, NAMTBL2 + 1 + 18*32
 	ld ix, CHRTBL2 + 256*2*8
@@ -726,21 +757,55 @@ state_gamestart_update_cursor_start:
 	ld hl, pcg_generate_world
 	ld c, PCG_PAGE_WORLD
 	call call_hl_in_page_c_8000
-	jp z, state_play
+	jr z, state_gamestart_update_cursor_start_succeeded
+
+	; restore the starchart, which would have been messed up by the failed attempt:
+	ld hl, gamestart_nametable_zx0
+	ld de, GAMESTART_STARCHART_NAMETABLE  ; offset by 1k so that we keep the copy
+	ld c, GAMESTART_PAGE
+	call dzx0_from_page_c
 
 	; Generation failed:
 	call gamestart_clear_console
 	ld hl, SFX_ui_wrong
 	call play_SFX_with_high_priority
 	ld iy, TEXT_GAMESTART_CONSOLE_MSG5
+	ld a, (gamestart_called_from)
+	or a
+	jr z, state_gamestart_update_cursor_start_continue2
+	ld iy, TEXT_GAMESTART_CONSOLE_MSG5B
+state_gamestart_update_cursor_start_continue2:
 	ld b, 146
-	ld de, NAMTBL2 + 3 + 16*32
+	ld de, NAMTBL2 + 1 + 18*32
 	ld ix, CHRTBL2 + 256*2*8
 	jp state_gamestart_console_paragraph
+
+state_gamestart_update_cursor_start_succeeded:
+	ld a, (gamestart_called_from)
+	or a
+	jp z, state_play
+
+	; generate area:
+	ld hl, pcg_generate_area
+	ld a, (current_world__astronomy_room_area)
+	ld e, a  ; area to generate
+	ld c, PCG_PAGE
+	call call_hl_in_page_c_8000
+
+	; clear the enemy respawn table:
+	ld hl, current_room__initial_enemy_ids_end
+	ld bc, (current_room__initial_enemy_ids_end - current_room__initial_enemy_ids) - 1
+	ld a, #ff
+	call clear_memory_a
+
+	ld hl, astronomy_room__enter_from_world_teleporter
+	ld a, ASTRONOMY_ROOM_PAGE
+	jp jp_to_hl_in_page_a_8000
 
 
 ;-----------------------------------------------
 state_gamestart_update_cursor_back:
+	call gamestart_clear_console
 	ld hl, SFX_ui_select
 	call play_SFX_with_high_priority
 	ld a, (gamestart_called_from)
@@ -750,6 +815,31 @@ state_gamestart_update_cursor_back:
     ld a, BRAINGAMES_PAGE
     jp jp_to_hl_in_page_a_8000
 state_gamestart_update_cursor_back_to_astronmers_room:
+	; if the world name is different, change it back:
+	ld hl, current_world__name_copy
+	ld de, current_world__name
+	ld b, 16
+state_gamestart_update_cursor_back_to_astronmers_room_loop:
+	ld a, (de)
+	cp (hl)
+	jr nz, state_gamestart_update_cursor_back_to_astronmers_room_regenerate
+	inc de
+	inc hl
+	djnz state_gamestart_update_cursor_back_to_astronmers_room_loop
+	jr state_gamestart_update_cursor_back_to_astronmers_room_regenerate_done
+state_gamestart_update_cursor_back_to_astronmers_room_regenerate:
+	ld hl, current_world__name_copy
+	ld de, current_world__name
+	ld bc, 16
+	ldir
+
+	call draw_gamestart_world_name
+
+	ld hl, pcg_generate_world
+	ld c, PCG_PAGE_WORLD
+	call call_hl_in_page_c_8000
+
+state_gamestart_update_cursor_back_to_astronmers_room_regenerate_done:
 	ld hl, astronomy_room__enter_from_world_teleporter
 	ld a, ASTRONOMY_ROOM_PAGE
 	jp jp_to_hl_in_page_a_8000
