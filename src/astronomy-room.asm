@@ -19,7 +19,6 @@ astronomy_room__generate:
 	ld a, AREA_COLLISION_TABLES_PAGE
 	ld (current_room__collision_ptr_page), a
 	ld hl, 0
-	ld (large_object_to_upload_to_vdp), hl
 	ld (current_room__music_ptr), hl  ; no music in the astronomy room for now
 	ld a, 1
 	ld (current_room__tileset_overrides_item_tiles), a
@@ -79,13 +78,6 @@ astronomy_room__generate_objects_loop:
 	ret
 
 
-;-----------------------------------------------
-astronomy_room__enter:
-	call clear_screen_left_to_right
-	call astronomy_room__generate
-	jp state_play_from_loaded_room
-
-
 astronomy_room__enter_objects_start:
 	db TAG_ASTRONOMY_TABLET1, 10, 20
 	db TAG_ASTRONOMY_TABLET1, 18, 20
@@ -93,6 +85,30 @@ astronomy_room__enter_objects_start:
 	db TAG_TELEPORTER9, 4, 19
 	db TAG_WORLD_TELEPORTER, 13, 18
 astronomy_room__enter_objects_start_end:
+
+
+;-----------------------------------------------
+astronomy_room__enter:
+	call clear_screen_left_to_right
+	call astronomy_room__generate
+	jp state_play_from_loaded_room
+
+
+;-----------------------------------------------
+astronomy_room__enter_from_world_teleporter:
+	call clear_screen_left_to_right
+	call astronomy_room__generate
+	; player position:
+	ld bc, #140f  ; 15, 20
+	ld hl, player_x
+	ld (hl), 0
+	inc hl
+	ld (hl), c
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld (hl), b
+	jp state_play_from_loaded_room
 
 
 ;-----------------------------------------------

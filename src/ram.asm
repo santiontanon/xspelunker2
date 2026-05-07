@@ -397,6 +397,7 @@ config_music_on: ds virtual 1  ; 0: yes, 1: no
 config_keyboard: ds virtual 2 * 8  ; RIGHT, DOWN, UP, LEFT, INTERACT, INVENTORY, JUMP, SPACE
 
 options_called_from: ds virtual 1  ; 0: options called from inventory, 1: called from title
+gamestart_called_from: ds virtual 1  ; 0: title screen, 1: astronomer's room
 
 ; sound variables:
 MUSIC_tempo:                        ds virtual 1

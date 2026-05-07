@@ -279,6 +279,8 @@ get_tile_object_behind_player_loop:
 	jp z, get_tile_object_behind_player_32x32_object
 	cp TAG_DOOR_BOSS
 	jp z, get_tile_object_behind_player_32x32_object
+	cp TAG_WORLD_TELEPORTER
+	jp z, get_tile_object_behind_player_32x32_object
 	cp TAG_TELEPORTER1
 	jr z, get_tile_object_behind_player_32x24_object
 	cp TAG_TELEPORTER2

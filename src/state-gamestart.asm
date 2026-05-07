@@ -1,8 +1,19 @@
 GAMESTART_STARCHART_NAMETABLE: equ buffer_4096 + 2048
 
+;-----------------------------------------------
+state_gamestart_from_astronomer_room_travel_tbl:
+	db 13, 14, 15, 30
+
 
 ;-----------------------------------------------
+state_gamestart_from_astronomer_room:
+	ld a, 1
+	ld (gamestart_called_from), a
+	jr state_gamestart_continue
 state_gamestart:
+	xor a
+	ld (gamestart_called_from), a
+state_gamestart_continue:
     ld sp, stack
 	call clear_screen_left_to_right
 
@@ -25,6 +36,16 @@ state_gamestart:
 		ld de, GAMESTART_STARCHART_NAMETABLE  ; offset by 1k so that we keep the copy
 		ld c, GAMESTART_PAGE
 		call dzx0_from_page_c
+
+		ld a, (gamestart_called_from)
+		or a
+		jr z, state_gamestart_continue2
+		; replace 'start' with 'travel':
+		ld hl, state_gamestart_from_astronomer_room_travel_tbl
+		ld de, GAMESTART_STARCHART_NAMETABLE + 9*32 + 25
+		ld bc, 4
+		ldir
+state_gamestart_continue2:
 
 		ld hl, GAMESTART_STARCHART_NAMETABLE
 		ld de, NAMTBL2
@@ -72,7 +93,12 @@ state_gamestart_init_loop_done_continue:
 
 		call draw_gamestart_world_name
 
+		ld a, (gamestart_called_from)
 		ld iy, TEXT_GAMESTART_CONSOLE_MSG1
+		or a
+		jr z, state_gamestart_init_loop_done_continue2
+		ld iy, TEXT_GAMESTART_CONSOLE_MSG2
+state_gamestart_init_loop_done_continue2:
 		ld b, 146
 		ld de, NAMTBL2 + 1 + 18*32
 		ld ix, CHRTBL2 + 256*2*8
@@ -525,10 +551,6 @@ state_gamestart_update_cursor:
 	jr z, state_gamestart_update_cursor_world_name
 	call update_keyboard_buffers
 	ld a, (keyboard_clicks)
-; 	bit KEY_RIGHT_BIT, a  ; right
-; 	push af
-; 		call nz, state_gamestart_update_cursor_right
-; 	pop af
 	bit KEY_DOWN_BIT, a  ; down
 	push af
 		call nz, state_gamestart_update_cursor_down
@@ -546,11 +568,6 @@ state_gamestart_update_cursor:
 		call nz, state_gamestart_update_cursor_button
 	pop af	
 	ret
-; state_gamestart_update_cursor_right:
-; 	ld a, (tmp_gamestart_cursor_position1)
-; 	inc a
-; 	cp 4
-; 	ret z
 state_gamestart_update_cursor_down:
 	ld a, (tmp_gamestart_cursor_position1)
 	inc a
@@ -690,10 +707,10 @@ state_gamestart_update_cursor_button:
 	jr z, state_gamestart_update_cursor_start
 	dec a
 	jr z, state_gamestart_update_cursor_back
-; 	dec a
-; 	jr z, state_gamestart_update_cursor_help
 	ret
 
+
+;-----------------------------------------------
 state_gamestart_update_cursor_start:
 	ld bc, 8  ; only clear the first 2 sprites
 	call clear_all_the_sprites_bc_set
@@ -722,33 +739,20 @@ state_gamestart_update_cursor_start:
 	jp state_gamestart_console_paragraph
 
 
+;-----------------------------------------------
 state_gamestart_update_cursor_back:
 	ld hl, SFX_ui_select
 	call play_SFX_with_high_priority
+	ld a, (gamestart_called_from)
+	or a
+	jr nz, state_gamestart_update_cursor_back_to_astronmers_room
     ld hl, state_braingames
     ld a, BRAINGAMES_PAGE
     jp jp_to_hl_in_page_a_8000
-
-; state_gamestart_update_cursor_help:
-; 	call clear_all_the_sprites
-; 	ld hl, SFX_ui_select
-; 	call play_SFX_with_high_priority
-; 	ld iy, TEXT_GAMESTART_CONSOLE_MSG2
-; 	ld b, 146
-; 	ld de, NAMTBL2 + 3 + 16*32
-; 	ld ix, CHRTBL2 + 256*2*8
-; 	call state_gamestart_console_paragraph
-; state_gamestart_update_cursor_help_loop:
-; 	halt
-; 	call update_keyboard_buffers
-; 	ld a, (keyboard_clicks)
-; 	bit KEY_WEAPON_BIT, a
-; 	jr z, state_gamestart_update_cursor_help_loop
-; 	ld iy, TEXT_GAMESTART_CONSOLE_MSG3
-; 	ld b, 146
-; 	ld de, NAMTBL2 + 3 + 16*32
-; 	ld ix, CHRTBL2 + 256*2*8
-; 	jp state_gamestart_console_paragraph
+state_gamestart_update_cursor_back_to_astronmers_room:
+	ld hl, astronomy_room__enter_from_world_teleporter
+	ld a, ASTRONOMY_ROOM_PAGE
+	jp jp_to_hl_in_page_a_8000
 
 
 ;-----------------------------------------------

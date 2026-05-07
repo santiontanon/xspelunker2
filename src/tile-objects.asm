@@ -1264,7 +1264,7 @@ ENDR
 	dw object_interaction_function_poseidon_boss_display  ; TAG_POSEIDON_BOSS_DISPLAY
 	dw object_interaction_function_tablet  ; TAG_ASTRONOMY_TABLET1
 	dw object_interaction_function_tablet  ; TAG_ASTRONOMY_TABLET2
-	dw object_interaction_function_empty  ; TAG_WORLD_TELEPORTER
+	dw object_interaction_function_world_teleporter  ; TAG_WORLD_TELEPORTER
 	dw object_interaction_function_shopkeeper  ; TAG_NPC_SHOPKEEPER
 	dw object_interaction_function_shop  ; TAG_NPC_SHOP
 	dw object_interaction_function_empty  ; TAG_DYNAMITE
@@ -2635,6 +2635,13 @@ atlantis_hidden_lock_spikes_event_fn_loop:
 	ld hl, redraw_flags
 	set ROOM_REDRAW_FLAG_BIT, (hl)	
 	ret
+
+
+;-----------------------------------------------
+object_interaction_function_world_teleporter:
+	ld c, GAMESTART_PAGE
+	ld hl, state_gamestart_from_astronomer_room
+	jp call_hl_in_page_c_8000
 
 
 ;-----------------------------------------------

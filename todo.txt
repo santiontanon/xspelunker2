@@ -1,18 +1,18 @@
 to do:
-***- random seed puzzle (all happens without going to moon/mars):
-  ***- world teleporter machine: (1E2Y4ZT: 0x003a)
-    ***- go to the "world name screen" (and back)
-    ***- have a different message from Itzamna
-    ***- first letter is fixed (you cannot change the difficulty)
-    ***- try to generate the world, and if it succeeds, change, otherwise, stay in the current world (is it doable?)
-  ***- giant statues:
-    ***- draft them in GIMP/TILED, are they special rooms (like poseidon, calendar, etc.) or just use the available tiles in caves to draw something like a 6x6 or 4x8 statue?
-    ***- in each of the 3 pyramids, if the condition for the given stela is satisfied, a giant statue room is spawned
-    ***- tablet in these rooms that states: "I do not remember my name, but I was the first/second/third".
-    ***- speaking the names in front of each statue unlocks a chest/cabinet with a fragment of a codex. You need all 3 for it to be intelligible (this will later unlock the "A+" ending, as explained below, the three of them allow you to manufacture fire stones, or give you the clue to get to the forge)
-  ***- make the PCG unit test work again:
-    ***- add to Java: area of astronomy room, (current_world__statue_names_nametables, current_world__statue_names_words, current_world__astronomy_room_area), statue locations
-    ***- verify tests pass
+
+***- world teleporter machine: (1E2Y4ZT: 0x003a)
+  ***- first letter is fixed (you cannot change the difficulty)
+  ***- travel: save the current name
+  ***- travel: try to generate the world, and if it succeeds, change
+  ***- travel: if pressing "back" and generation had failed, restore the world name, regenerate and go back to astronomy room
+***- giant statues:
+  ***- draft them in GIMP/TILED, are they special rooms (like poseidon, calendar, etc.) or just use the available tiles in caves to draw something like a 6x6 or 4x8 statue?
+  ***- in each of the 3 pyramids, if the condition for the given stela is satisfied, a giant statue room is spawned
+  ***- tablet in these rooms that states: "I do not remember my name, but I was the first/second/third".
+  ***- speaking the names in front of each statue unlocks a chest/cabinet with a fragment of a codex. You need all 3 for it to be intelligible (this will later unlock the "A+" ending, as explained below, the three of them allow you to manufacture fire stones, or give you the clue to get to the forge)
+***- make the PCG unit test work again:
+  ***- add to Java: area of astronomy room, (current_world__statue_names_nametables, current_world__statue_names_words, current_world__astronomy_room_area), statue locations
+  ***- verify tests pass
 
 - music: (brain 12, 15, 23, 25 have potential)
   - ending aliens
