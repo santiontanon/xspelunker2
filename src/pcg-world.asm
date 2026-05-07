@@ -60,6 +60,8 @@ tmp_pcg_world__mission_boss7_node: ds virtual 2
 tmp_pcg_world__mission_midpoint_node: ds virtual 2
 tmp_pcg_world__mission_ending_node: ds virtual 2
 
+tmp_pcg_world__riddle_syllable_word_width: ds virtual 2
+
 
 IF $ > #d000
 	ERROR "pcg-world.asm uses too much RAM in buffer_4096!"
@@ -5986,7 +5988,7 @@ pcg_generate_world__puzzles_power_numbers_loop:
 	djnz pcg_generate_world__puzzles_power_numbers_loop
 
 	call pcg_generate_maya_puzzle_riddles
-	call pcg_generate_syllable_riddle
+	call pcg_generate_syllable_riddles
 	jp pcg_generate_atlantis_boss_riddle
 
 

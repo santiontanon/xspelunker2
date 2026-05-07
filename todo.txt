@@ -1,22 +1,18 @@
 to do:
 ***- random seed puzzle (all happens without going to moon/mars):
-  ***- astronomy room: (1E2Y4ZT: 0x003a)
-    ***- messages in tablets:
-      ***- tablet 2:
-        ***- generate the statue names in the riddle pcg code and store it in RAM
-        ***- draw the syllables in the tablet
-    ***- world teleporter machine working:
-      ***- go to the "world name screen" (and back)
-      ***- have a different message (and maybe remove Itzamna's head, just add a message like "You approach the device and it seems to ask for you to rename the world)
-      ***- first letter is fixed (you cannot change the difficulty)
-      ***- try to generate the world, and if it succeeds, change, otherwise, stay in the current world (is it doable?)
+  ***- world teleporter machine: (1E2Y4ZT: 0x003a)
+    ***- go to the "world name screen" (and back)
+    ***- have a different message from Itzamna
+    ***- first letter is fixed (you cannot change the difficulty)
+    ***- try to generate the world, and if it succeeds, change, otherwise, stay in the current world (is it doable?)
   ***- giant statues:
     ***- draft them in GIMP/TILED, are they special rooms (like poseidon, calendar, etc.) or just use the available tiles in caves to draw something like a 6x6 or 4x8 statue?
     ***- in each of the 3 pyramids, if the condition for the given stela is satisfied, a giant statue room is spawned
     ***- tablet in these rooms that states: "I do not remember my name, but I was the first/second/third".
     ***- speaking the names in front of each statue unlocks a chest/cabinet with a fragment of a codex. You need all 3 for it to be intelligible (this will later unlock the "A+" ending, as explained below, the three of them allow you to manufacture fire stones, or give you the clue to get to the forge)
-  ***- update "TABLET_TRIVIA_CLUE1", "TABLET_TRIVIA_CLUE2", to have proper clues (remove the ones about angry bosses for now, as I do not think I am doing it).
-  ***- make the PCG unit test work again (add the area of the astronomy room, the 3 statue names and locations)
+  ***- make the PCG unit test work again:
+    ***- add to Java: area of astronomy room, (current_world__statue_names_nametables, current_world__statue_names_words, current_world__astronomy_room_area), statue locations
+    ***- verify tests pass
 
 - music: (brain 12, 15, 23, 25 have potential)
   - ending aliens
@@ -28,9 +24,9 @@ to do:
 - mars biome (maybe moon/mars maps are smaller as most puzzles are not there? and they are just so that you can get the final stone) (remember to keep ladder tiles in place for down-door opening code)
   - can you jump higher in the moon/mars? fall slower?
 - moon biome (similar to mars, but different color scheme, it could even be the same with palette changed)
+  - If the player enters a world name related to these theories (like "ATLANTIS", "AZTLAN", or "COH", or something like that), it could trigger a world where the the "Firestone forge", which is in the Moon, is active if you are in a world with the word (clue is in ATLANTIS_TABLET_5_1).
 - 6th boss: (ideas: "The Solar Stone Jaguar", "The Martian Terracotta Warrior", "The Dust Stone Golem"). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer). Another idea: https://en.wikipedia.org/wiki/Human_sacrifice_in_Maya_culture#/media/File:MA_D293_Maya_stone_carving_from_Copan.jpg
-  - remember that in either mars or moon, there should be something to be done with the golden key you get from hun-came/vucub-came:
-  - an underground cave where there is a broken ancient robot that can talk to you if you turn it on with the golden key (in a mix of English and Maya maybe?), and gives you a weapon upgrade (e.g. a better raygun, which might be useful for fighting the final alien boss), add as a special achievement for the gameover screen.  
+  - in the boss room, before the fight: an underground cave where there is a broken ancient robot that can talk to you if you turn it on with the golden key (in a mix of English and Maya maybe?), and gives you a weapon upgrade (e.g. a better raygun, which might be useful for fighting the final alien boss), add as a special achievement for the gameover screen.  
   - add boss name to the stats for game over screen
 - 7th boss (ideas: "The Lunar Obsidian Sentinel" (tall, slender, smooth black, reflective surfaces), "The Lunar Crystal Serpent", "The Moon Stone Monolith"). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
   - add boss name to the stats for game over screen
@@ -46,7 +42,6 @@ to do:
 - update the list of enemy types and names to display in ending A to include any potential enemies you find in the alien planet
 
 - Final good ending 2 (A+) if you have the codex (from the 3 statues), it explains how to manufacture the powestones/firestones. So, you can keep using the calendar stone and be prepared for the future. This is the true final ending.
-  - If the player enters a world name related to these theories (like "ATLANTIS", "AZTLAN", or "COH", or something like that), it could trigger a world where the the "Firestone forge", which is in the Moon, is active if you are in a world with the word (clue is in ATLANTIS_TABLET_5_1).
 - Ending B+ (got the firestone forge active with the codex, but did not defeat the final alien boss)
 - save game to rom / password
 - come up with a list of "achievements" for the achievements list in the game over screen and implement them

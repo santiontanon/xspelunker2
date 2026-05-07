@@ -580,8 +580,10 @@ public class Text {
 
         addLineSafe(lines_with_constant_page2, "Before going on a hunt, warriors prayed in the animal altars to receive their blessing.", "TABLET_TRIVIA_CLUE1_1", 18*3);
 
-        addLineSafe(lines_with_constant_page2, "Five colossi guard these lands. Insult their pride, and they will transform.", "TABLET_TRIVIA_CLUE2_1", 18*3);
-        addLineSafe(lines_with_constant_page2, "Huracan, for example, prides itself on the purity of Palenque's underground water. So, do not litter it!", "TABLET_TRIVIA_CLUE2_2", 18*4);
+//        addLineSafe(lines_with_constant_page2, "Five colossi guard these lands. Insult their pride, and they will transform.", "TABLET_TRIVIA_CLUE2_1", 18*3);
+//        addLineSafe(lines_with_constant_page2, "Huracan, for example, prides itself on the purity of Palenque's underground water. So, do not litter it!", "TABLET_TRIVIA_CLUE2_2", 18*4);
+        addLineSafe(lines_with_constant_page2, "Five colossi guard the remaining power.", "TABLET_TRIVIA_CLUE2_1", 18*3);
+        addLineSafe(lines_with_constant_page2, "If power you desire, you will have to take it from them!", "TABLET_TRIVIA_CLUE2_2", 18*4);
 
         addLineSafe(lines_with_constant_page2, "The star people insisted that we live in one of many possible worlds.", "TABLET_TRIVIA_CLUE3_1", 18*3);
         addLineSafe(lines_with_constant_page2, "That these worlds are entangled, and that there were contraptions that touched more than one such world, and operating it required action in all of them.", "TABLET_TRIVIA_CLUE3_2", 18*5);
@@ -669,8 +671,7 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "understand this universe. You are now worthy of my knowledge: this world we live in is not the only one. There are countless parallel worlds. But each world is different, all according to Itzamna's grand plan.", "ASTRONOMY_TABLET_1_2", 18*7);
         addLineSafe(lines_with_constant_page3, "Here, in this very room, I learned this secret, and found a way to travel across worlds! Pray in Itzamna's altar and if you are worthy, he might grant you the same power!", "ASTRONOMY_TABLET_1_3", 18*6);
 
-        addLineSafe(lines_with_constant_page3, "Three statues guard the final recipe:", "ASTRONOMY_TABLET_2_1", 18*3);
-        addLineSafe(lines_with_constant_page3, "This is the recipe that the star people want. But they will never find the statues... With my new understanding of astronomy I hid them in different worlds!", "ASTRONOMY_TABLET_2_2", 18*5);
+        addLineSafe(lines_with_constant_page3, "Three statues guard the recipe that the star people want. But they will never find the statues... With my new understanding of astronomy I hid them in different worlds!", "ASTRONOMY_TABLET_2_2", 18*6);
         addLineSafe(lines_with_constant_page3, "I marked each statue's world with a stela so they can be found again. But only those who understand astronomy will be able to read them... If you find the statues, speak their names, and the recipe will be yours!", "ASTRONOMY_TABLET_2_3", 18*7);
                 
         // Ending C:

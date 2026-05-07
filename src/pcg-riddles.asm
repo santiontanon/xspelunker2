@@ -27,6 +27,7 @@
 ;    10: ladder (can only go with ascend)
 ; - number of times (2 - 6)
 
+
 ;-----------------------------------------------
 pcg_generate_maya_puzzle_riddles:
 	; Generate the sentences for Maya puzzle 1:
@@ -74,20 +75,39 @@ pcg_generate_maya_puzzle_riddle_sentence_ascend:
 
 
 ;-----------------------------------------------
-pcg_generate_syllable_riddle:
+pcg_generate_syllable_riddles:
 	ld hl, current_world__maya_puzzle3_nametable
-	ld bc, 10*3 - 1
+	ld bc, (10*3 + 5*3*3) - 1
 	ld a, 23
 	call clear_memory_a
 
 	ld hl, current_world__maya_puzzle3_word
-	ld bc, 20 - 1
+	ld bc, (20 + 10*3) - 1
 	call clear_memory
 
+	ld bc, 10
+	ld (tmp_pcg_world__riddle_syllable_word_width), bc
 	ld ix, current_world__maya_puzzle3_nametable
 	ld iy, current_world__maya_puzzle3_word
 	; Sample from the grammar twice, to make for a longer word:
 	call syllable_riddle__sample_from_grammar
+	call syllable_riddle__sample_from_grammar
+
+	ld bc, 5
+	ld (tmp_pcg_world__riddle_syllable_word_width), bc
+	; statue 1:
+	ld ix, current_world__statue_names_nametables
+	ld iy, current_world__statue_names_words
+	call syllable_riddle__sample_from_grammar
+
+	; statue 2:
+	ld ix, current_world__statue_names_nametables + 5*3
+	ld iy, current_world__statue_names_words + 10
+	call syllable_riddle__sample_from_grammar
+
+	; statue 3:
+	ld ix, current_world__statue_names_nametables + 5*3*2
+	ld iy, current_world__statue_names_words + 10*2
 	jp syllable_riddle__sample_from_grammar
 
 
@@ -215,7 +235,7 @@ syllable_riddle__add_piece_loop_x:
 					dec c
 					jr nz, syllable_riddle__add_piece_loop_x
 				pop ix
-				ld bc, 10
+				ld bc, (tmp_pcg_world__riddle_syllable_word_width)
 				add ix, bc  ; next line 
 			pop bc
 			djnz syllable_riddle__add_piece_loop_y
@@ -279,14 +299,18 @@ syllable_riddle__sample_from_grammar_rule2:
 	inc hl
 	ld a, (hl)  ; constraint of last piece sampled
 	push af
-		ld bc, 20
-		add ix, bc
-		ld d, #31
-		ld e, PCG_DIRECTION_UP
-		call syllable_riddle__sample_piece
-		call syllable_riddle__add_piece
-		ld bc, 3 - 20
-		add ix, bc
+		push ix
+			ld bc, (tmp_pcg_world__riddle_syllable_word_width)
+			add ix, bc
+			add ix, bc
+			ld d, #31
+			ld e, PCG_DIRECTION_UP
+			call syllable_riddle__sample_piece
+			call syllable_riddle__add_piece
+		pop ix
+		inc ix
+		inc ix
+		inc ix
 	pop af
 	jp syllable_riddle__sample_from_grammar_rule1_tail_1x3
 
@@ -297,22 +321,25 @@ syllable_riddle__sample_from_grammar_rule2:
 ; - e: constraint for the 3x2 piece
 syllable_riddle__sample_from_grammar_rule3:
     ; 3x1 -D-> 3x2 [-R-> 1x3]
-    push de
-		ld d, #31
-		ld e, PCG_DIRECTION_DOWN
+    push ix
+	    push de
+			ld d, #31
+			ld e, PCG_DIRECTION_DOWN
+			call syllable_riddle__sample_piece
+			call syllable_riddle__add_piece
+			ld bc, (tmp_pcg_world__riddle_syllable_word_width)
+			add ix, bc
+	    pop de
+		ld d, #32
+		ld a, e
+		or PCG_DIRECTION_UP
+		ld e, a
 		call syllable_riddle__sample_piece
 		call syllable_riddle__add_piece
-		ld bc, 10
-		add ix, bc
-    pop de
-	ld d, #32
-	ld a, e
-	or PCG_DIRECTION_UP
-	ld e, a
-	call syllable_riddle__sample_piece
-	call syllable_riddle__add_piece
-	ld bc, 3 - 10
-	add ix, bc
+	pop ix
+	inc ix
+	inc ix
+	inc ix
 	inc hl
 	ld a, (hl)  ; constraint of last piece sampled	
 	jp syllable_riddle__sample_from_grammar_rule1_tail_1x3
@@ -331,7 +358,7 @@ syllable_riddle__sample_from_grammar_rule4:
 	inc ix
 	inc hl
 	ld a, (hl)  ; constraint of last piece sampled
-	jr syllable_riddle__sample_from_grammar_rule1_tail_1x3
+	jp syllable_riddle__sample_from_grammar_rule1_tail_1x3
 
 
 ;-----------------------------------------------
@@ -349,14 +376,17 @@ syllable_riddle__sample_from_grammar_rule5:
 	inc hl
 	ld a, (hl)  ; constraint of last piece sampled
 	push af
-		ld bc, 20
-		add ix, bc
-		ld d, #21
-		ld e, PCG_DIRECTION_UP
-		call syllable_riddle__sample_piece
-		call syllable_riddle__add_piece
-		ld bc, 2 - 20
-		add ix, bc
+		push ix
+			ld bc, (tmp_pcg_world__riddle_syllable_word_width)
+			add ix, bc
+			add ix, bc
+			ld d, #21
+			ld e, PCG_DIRECTION_UP
+			call syllable_riddle__sample_piece
+			call syllable_riddle__add_piece
+		pop ix
+		inc ix
+		inc ix
 	pop af
 	jp syllable_riddle__sample_from_grammar_rule1_tail_1x3
 
@@ -367,22 +397,24 @@ syllable_riddle__sample_from_grammar_rule5:
 ; - e: constraint for the 2x2 piece
 syllable_riddle__sample_from_grammar_rule6:
     ; 2x1 -D-> 2x2 [-R-> 3x1]
-    push de
-		ld d, #21
-		ld e, PCG_DIRECTION_DOWN
+    push ix
+	    push de
+			ld d, #21
+			ld e, PCG_DIRECTION_DOWN
+			call syllable_riddle__sample_piece
+			call syllable_riddle__add_piece
+			ld bc, (tmp_pcg_world__riddle_syllable_word_width)
+			add ix, bc
+	    pop de
+		ld d, #22
+		ld a, e
+		or PCG_DIRECTION_UP
+		ld e, a
 		call syllable_riddle__sample_piece
 		call syllable_riddle__add_piece
-		ld bc, 10
-		add ix, bc
-    pop de
-	ld d, #22
-	ld a, e
-	or PCG_DIRECTION_UP
-	ld e, a
-	call syllable_riddle__sample_piece
-	call syllable_riddle__add_piece
-	ld bc, 2 - 10
-	add ix, bc
+	pop ix
+	inc ix
+	inc ix
 	inc hl
 	ld a, (hl)  ; constraint of last piece sampled	
 	jp syllable_riddle__sample_from_grammar_rule1_tail_1x3

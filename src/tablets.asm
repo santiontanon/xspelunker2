@@ -961,11 +961,7 @@ maya_clue5_tablet_fn:
 	ld a, 150
 	ld de, NAMTBL2 + (7 + 14*32)
 	ld ix, CHRTBL2 + 256*8
-	call display_paragraph_page7
-
-	; ...
-
-	ret
+	jp display_paragraph_page7
 
 
 ;-----------------------------------------------
@@ -1495,22 +1491,22 @@ astronomy_tablet1_fn:
 
 ;-----------------------------------------------
 astronomy_tablet2_fn:
-	ld hl, tablet_trivia_tiles_zx0
+	ld hl, tablet_maya_syllable_tiles_zx0
 	ld c, TABLET_LETTER_PAGE
 	call maya_puzzle_tablet_fn_load_extra_tiles_hl_set
-	ld iy, TEXT_ASTRONOMY_TABLET_2_1
+; 	ld iy, TEXT_ASTRONOMY_TABLET_2_1
 	ld a, 18
 	ld (tmp_letter_line_width), a
 	ld a, COLOR_GREY
 	ld (tmp_letter_line_color), a
-	ld b, 48
-	ld de, NAMTBL2 + (7 + 5*32)
-	ld ix, CHRTBL2
-	call display_paragraph_text_page3
+; 	ld b, 11*16
+; 	ld de, NAMTBL2 + (7 + 4*32)
+; 	ld ix, CHRTBL2
+; 	call display_paragraph_text_page3
 
 	ld iy, TEXT_ASTRONOMY_TABLET_2_2
 	ld b, 48
-	ld de, NAMTBL2 + (7 + 11*32)
+	ld de, NAMTBL2 + (7 + 9*32)
 	ld ix, CHRTBL2 + 256*8
 	call display_paragraph_text_page3
 
@@ -1518,5 +1514,48 @@ astronomy_tablet2_fn:
 	ld b, 48
 	ld de, NAMTBL2 + (7 + 16*32)
 	ld ix, CHRTBL2 + 256*8*2
-	jp display_paragraph_text_page3
+	call display_paragraph_text_page3
+
+	; render the words:
+	ld de, NAMTBL2 + 5*32 + 8
+	ld hl, current_world__statue_names_nametables
+	ld b, 3
+astronomy_tablet2_fn_loop:
+	push bc
+		push hl
+			push de
+				push hl
+					push de
+						ld b, 5
+						call fast_small_LDIRVM
+					pop hl
+					ld bc, 32
+					add hl, bc
+					ex de, hl
+				pop hl
+				ld bc, 5
+				add hl, bc
+				push hl
+					push de
+						ld b, 5
+						call fast_small_LDIRVM
+					pop hl
+					ld bc, 32
+					add hl, bc
+					ex de, hl
+				pop hl
+				ld bc, 5
+				add hl, bc
+				ld b, 5
+				call fast_small_LDIRVM
+			pop hl
+			ld bc, 6
+			add hl, bc
+			ex de, hl
+		pop hl
+		ld bc, 15
+		add hl, bc
+	pop bc
+	djnz astronomy_tablet2_fn_loop
+	ret
 
