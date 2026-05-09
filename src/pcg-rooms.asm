@@ -2838,9 +2838,9 @@ pcg_generate_room__calendar_continue5:
 		jr pcg_generate_room__calendar_continue6
 pcg_generate_room__calendar_bottom_left_stairs:
 		ld hl, current_room__tile_map + 22*32 + 7
-		ld (hl), 104
+		ld (hl), 168
 		inc hl
-		ld (hl), 105
+		ld (hl), 136
 		ld hl, current_room__tile_map + 23*32 + 7
 		ld (hl), 248
 		inc hl
@@ -2866,9 +2866,9 @@ pcg_generate_room__calendar_continue6:
 		jr pcg_generate_room__calendar_continue7
 pcg_generate_room__calendar_bottom_right_stairs:
 		ld hl, current_room__tile_map + 22*32 + 23
-		ld (hl), 104
+		ld (hl), 168
 		inc hl
-		ld (hl), 105
+		ld (hl), 136
 		ld hl, current_room__tile_map + 23*32 + 23
 		ld (hl), 248
 		inc hl
