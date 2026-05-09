@@ -2728,9 +2728,34 @@ pcg_generate_room__calendar_continue1:
 		ld b, PCG_DIRECTION_UP
 		call pcg_generate_room__chunk_direction_open
 		jr z, pcg_generate_room__calendar_continue2
+		; check if it's via a ladder:
+		inc hl
+		inc hl
+		ld a, (hl)  ; left/up/right/down tags
+		and #30
+		cp #20  ; is it a ladder?
+		jr z, pcg_generate_room__calendar_top_left_stairs
 		ld bc, #0004
 		ld de, #0208
 		call room_remove_breakable_wall_restore_background
+		jr pcg_generate_room__calendar_continue2
+pcg_generate_room__calendar_top_left_stairs:
+		ld hl, current_room__tile_map + 7
+		ld (hl), 248
+		inc hl
+		ld (hl), 167
+		ld hl, current_room__tile_map + 32 + 7
+		ld (hl), 248
+		inc hl
+		ld (hl), 167
+		ld hl, current_room__tile_map + 2*32 + 7
+		ld (hl), 248
+		inc hl
+		ld (hl), 167
+		ld hl, current_room__tile_map + 3*32 + 7
+		ld (hl), 248
+		inc hl
+		ld (hl), 167
 pcg_generate_room__calendar_continue2:
 	pop hl
 	inc hl
@@ -2749,9 +2774,34 @@ pcg_generate_room__calendar_continue3:
 		ld b, PCG_DIRECTION_UP
 		call pcg_generate_room__chunk_direction_open
 		jr z, pcg_generate_room__calendar_continue4
+		; check if it's via a ladder:
+		inc hl
+		inc hl
+		ld a, (hl)  ; left/up/right/down tags
+		and #30
+		cp #20  ; is it a ladder?
+		jr z, pcg_generate_room__calendar_top_right_stairs		
 		ld bc, #0014
 		ld de, #0208
 		call room_remove_breakable_wall_restore_background
+		jr pcg_generate_room__calendar_continue4
+pcg_generate_room__calendar_top_right_stairs:
+		ld hl, current_room__tile_map + 23
+		ld (hl), 248
+		inc hl
+		ld (hl), 167
+		ld hl, current_room__tile_map + 32 + 23
+		ld (hl), 248
+		inc hl
+		ld (hl), 167
+		ld hl, current_room__tile_map + 2*32 + 23
+		ld (hl), 248
+		inc hl
+		ld (hl), 167
+		ld hl, current_room__tile_map + 3*32 + 23
+		ld (hl), 248
+		inc hl
+		ld (hl), 167
 pcg_generate_room__calendar_continue4:
 	pop hl
 	ld a, (current_area__width)
@@ -2775,9 +2825,26 @@ pcg_generate_room__calendar_continue5:
 		ld b, PCG_DIRECTION_DOWN
 		call pcg_generate_room__chunk_direction_open
 		jr z, pcg_generate_room__calendar_continue6
+		; check if it's via a ladder:
+		inc hl
+		inc hl
+		ld a, (hl)  ; left/up/right/down tags
+		and #03
+		cp #02  ; is it a ladder?
+		jr z, pcg_generate_room__calendar_bottom_left_stairs
 		ld bc, #1604
 		ld de, #0208
 		call room_remove_breakable_wall_restore_background
+		jr pcg_generate_room__calendar_continue6
+pcg_generate_room__calendar_bottom_left_stairs:
+		ld hl, current_room__tile_map + 22*32 + 7
+		ld (hl), 104
+		inc hl
+		ld (hl), 105
+		ld hl, current_room__tile_map + 23*32 + 7
+		ld (hl), 248
+		inc hl
+		ld (hl), 167
 pcg_generate_room__calendar_continue6:
 	pop hl
 	inc hl
@@ -2786,9 +2853,26 @@ pcg_generate_room__calendar_continue6:
 		ld b, PCG_DIRECTION_DOWN
 		call pcg_generate_room__chunk_direction_open
 		jr z, pcg_generate_room__calendar_continue7
+		; check if it's via a ladder:
+		inc hl
+		inc hl
+		ld a, (hl)  ; left/up/right/down tags
+		and #03
+		cp #02  ; is it a ladder?
+		jr z, pcg_generate_room__calendar_bottom_right_stairs
 		ld bc, #1614
 		ld de, #0208
 		call room_remove_breakable_wall_restore_background
+		jr pcg_generate_room__calendar_continue7
+pcg_generate_room__calendar_bottom_right_stairs:
+		ld hl, current_room__tile_map + 22*32 + 23
+		ld (hl), 104
+		inc hl
+		ld (hl), 105
+		ld hl, current_room__tile_map + 23*32 + 23
+		ld (hl), 248
+		inc hl
+		ld (hl), 167		
 pcg_generate_room__calendar_continue7:
 	pop hl
 	ld a, (hl)  ; bottom-right chunk ID
@@ -3131,64 +3215,99 @@ pcg_generate_room__guardian_caiman1_continue:
 
 	; Check if there is an inter-area connection up or down (and we need to spawn a ladder):
 	; each connection is 8 bytes: ; id1, id2, x1, y1, direction1, x2, y2, direction2 (coordinates are in chunks)
-	ld ix, current_world__interarea_connections
-	ld b, MAX_INTERAREA_CONNECTIONS
-pcg_generate_room__guardian_caiman1_interarea_connection_loop:
-	push bc
-		ld a, (current_area__id)  ; connections from the current area
-		cp (ix)
-		jr nz, pcg_generate_room__guardian_caiman1_no_interarea_connection
-		ld a, (ix)
-		cp (ix + 1)
-		jr nc, pcg_generate_room__guardian_caiman1_no_interarea_connection  ; connection is to a previous area, cannot go down
-		ld a, (current_room__y)
-		add a, a
-		inc a  ; *2 + 1 to convert it to chunk coordinates
-		cp (ix + 3)
-		jr nz, pcg_generate_room__guardian_caiman1_no_interarea_connection
-		ld a, (current_room__x)
-		add a, a
-		cp (ix + 2)
-		jr z, pcg_generate_room__guardian_caiman1_interarea_connection_bottom_left
-		inc a
-		cp (ix + 2)
-		jr nz, pcg_generate_room__guardian_caiman1_no_interarea_connection
-pcg_generate_room__guardian_caiman1_interarea_connection_bottom_right:
-		ld hl, current_room__tile_map + 22*32 + 20
-		ld b, 8
-pcg_generate_room__guardian_caiman1_interarea_connection_bottom_right_loop:
-		ld (hl), 250
-		inc hl
-		djnz pcg_generate_room__guardian_caiman1_interarea_connection_bottom_right_loop
-		ld hl, current_room__tile_map + 22*32 + 23
-		ld (hl), 231
-		inc hl
-		ld (hl), 235
-		ld hl, current_room__tile_map + 23*32 + 23
-		ld (hl), 248
-		inc hl
-		ld (hl), 249
-		jr pcg_generate_room__guardian_caiman1_no_interarea_connection
-pcg_generate_room__guardian_caiman1_interarea_connection_bottom_left:
-		ld hl, current_room__tile_map + 22*32 + 4
-		ld b, 8
-pcg_generate_room__guardian_caiman1_interarea_connection_bottom_left_loop:
-		ld (hl), 250
-		inc hl
-		djnz pcg_generate_room__guardian_caiman1_interarea_connection_bottom_left_loop
-		ld hl, current_room__tile_map + 22*32 + 7
-		ld (hl), 231
-		inc hl
-		ld (hl), 235
-		ld hl, current_room__tile_map + 23*32 + 7
-		ld (hl), 248
-		inc hl
-		ld (hl), 249
-pcg_generate_room__guardian_caiman1_no_interarea_connection:
-		ld bc, INTERAREA_CONNECTION_SIZE
-		add ix, bc
-	pop bc
-	djnz pcg_generate_room__guardian_caiman1_interarea_connection_loop
+; 	ld ix, current_world__interarea_connections
+; 	ld b, MAX_INTERAREA_CONNECTIONS
+; pcg_generate_room__guardian_caiman1_interarea_connection_loop:
+; 	push bc
+; 		ld a, (current_area__id)  ; connections from the current area
+; 		cp (ix)
+; 		jp nz, pcg_generate_room__guardian_caiman1_no_interarea_connection_down
+; 		ld a, (current_room__y)
+; 		add a, a
+; 		inc a  ; *2 + 1 to convert it to chunk coordinates
+; 		cp (ix + 3)
+; 		jp nz, pcg_generate_room__guardian_caiman1_no_interarea_connection
+; 		ld a, (current_room__x)
+; 		add a, a
+; 		cp (ix + 2)
+; 		jr z, pcg_generate_room__guardian_caiman1_interarea_connection_bottom_left
+; 		inc a
+; 		cp (ix + 2)
+; 		jp nz, pcg_generate_room__guardian_caiman1_no_interarea_connection
+; pcg_generate_room__guardian_caiman1_interarea_connection_bottom_right:
+; 		ld hl, current_room__tile_map + 22*32 + 20
+; 		ld b, 8
+; pcg_generate_room__guardian_caiman1_interarea_connection_bottom_right_loop:
+; 		ld (hl), 250
+; 		inc hl
+; 		djnz pcg_generate_room__guardian_caiman1_interarea_connection_bottom_right_loop
+; 		ld hl, current_room__tile_map + 22*32 + 23
+; 		ld (hl), 231
+; 		inc hl
+; 		ld (hl), 235
+; 		ld hl, current_room__tile_map + 23*32 + 23
+; 		ld (hl), 248
+; 		inc hl
+; 		ld (hl), 167
+; 		jr pcg_generate_room__guardian_caiman1_no_interarea_connection
+; pcg_generate_room__guardian_caiman1_interarea_connection_bottom_left:
+; 		ld hl, current_room__tile_map + 22*32 + 4
+; 		ld b, 8
+; pcg_generate_room__guardian_caiman1_interarea_connection_bottom_left_loop:
+; 		ld (hl), 250
+; 		inc hl
+; 		djnz pcg_generate_room__guardian_caiman1_interarea_connection_bottom_left_loop
+; 		ld hl, current_room__tile_map + 22*32 + 7
+; 		ld (hl), 231
+; 		inc hl
+; 		ld (hl), 235
+; 		ld hl, current_room__tile_map + 23*32 + 7
+; 		ld (hl), 248
+; 		inc hl
+; 		ld (hl), 167		
+; 		jr pcg_generate_room__guardian_caiman1_no_interarea_connection
+; pcg_generate_room__guardian_caiman1_no_interarea_connection_down:
+; 		; check to see if there is a connection up:
+; 		ld a, (current_area__id)  ; connections from the current area
+; 		cp (ix + 1)
+; 		jp nz, pcg_generate_room__guardian_caiman1_no_interarea_connection
+; 		ld a, (current_room__y)
+; 		add a, a  ; *2 to convert it to chunk coordinates
+; 		cp (ix + 6)
+; 		jr nz, pcg_generate_room__guardian_caiman1_no_interarea_connection
+; 		ld a, (current_room__x)
+; 		add a, a
+; 		cp (ix + 5)
+; 		jr z, pcg_generate_room__guardian_caiman1_interarea_connection_top_left
+; 		inc a
+; 		cp (ix + 5)
+; 		jr nz, pcg_generate_room__guardian_caiman1_no_interarea_connection
+; pcg_generate_room__guardian_caiman1_interarea_connection_top_right:
+; 		ld hl, current_room__tile_map + 0*32 + 23
+; 		ld (hl), 248
+; 		inc hl
+; 		ld (hl), 167
+; 		ld hl, current_room__tile_map + 1*32 + 23
+; 		ld (hl), 248
+; 		inc hl
+; 		ld (hl), 167
+; 		jr pcg_generate_room__guardian_caiman1_no_interarea_connection
+; pcg_generate_room__guardian_caiman1_interarea_connection_top_left:
+; 		ld hl, current_room__tile_map + 0*32 + 7
+; 		ld (hl), 248
+; 		inc hl
+; 		ld (hl), 167
+; 		ld hl, current_room__tile_map + 1*32 + 7
+; 		ld (hl), 248
+; 		inc hl
+; 		ld (hl), 167
+; 		jr pcg_generate_room__guardian_caiman1_no_interarea_connection
+; pcg_generate_room__guardian_caiman1_no_interarea_connection:
+; 		ld bc, INTERAREA_CONNECTION_SIZE
+; 		add ix, bc
+; 	pop bc
+; 	dec b
+; 	jp nz, pcg_generate_room__guardian_caiman1_interarea_connection_loop
 	ret
 
 

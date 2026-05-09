@@ -4750,7 +4750,7 @@ pcg_generate_world__spawn_additional_objects_no_guardian_statue2:
 		call pcg_generate_world__random_division_point_from_mst_node_tagless  ; c, b: x, y, l: offset
 	pop de
 	jr nz, pcg_generate_world__spawn_additional_objects_no_guardian_statue3
-	ld b, TAG_GUARDIAN_CAIMAN1
+	ld b, TAG_GUARDIAN_CAIMAN3
 	call pcg_generate_world__add_tag_to_point_in_mst_node_division
 pcg_generate_world__spawn_additional_objects_no_guardian_statue3:
 

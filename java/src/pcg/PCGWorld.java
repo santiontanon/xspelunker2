@@ -537,7 +537,7 @@ public class PCGWorld {
     
     public boolean generateDivisions(World w) throws Exception
     {
-        System.out.println("---- generateDivisions seed: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+//        System.out.println("---- generateDivisions seed: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
         
         // Step 2: Generate the divisions:
         next_divisionID = 1;
@@ -1155,7 +1155,7 @@ public class PCGWorld {
 //        System.out.println("tagLess divisions (before): " + tagLess.size() + " / " + allAreas.size());
      
         // Caiman statues:
-        System.out.println("Stelae: " + leftStelaCondition(w.seed1) + ", " + rightStelaCondition(w.seed1) + ", " + centerStelaCondition(w.seed1));
+//        System.out.println("Stelae: " + leftStelaCondition(w.seed1) + ", " + rightStelaCondition(w.seed1) + ", " + centerStelaCondition(w.seed1));
         {
             boolean spawn_statues[] = {
                 leftStelaCondition(w.seed1),
@@ -1178,6 +1178,9 @@ public class PCGWorld {
                     int idx = r.nextInt(candidates.size());
                     AreaDivision d = candidates.get(idx);
                     AreaPoint p = randomDivisionPoint(d, true);
+//                    if (p.y == 0) {
+//                        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!! " + statue_tags[i]);
+//                    }
                     addTag(p, statue_tags[i], d);
                     tagLess.remove(d);
                 }

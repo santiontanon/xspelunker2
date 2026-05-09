@@ -174,6 +174,14 @@ public class RenderedArea {
 
                         } else {
                             // Adapt it:
+                            if ((pieceTypes[j*2][i*2] & PCGWorld.DIRECTION_UP) != 0) {
+                                // open path up on the top-left:
+                                c.clearTiles(4, 0, 12, 2);
+                            }
+                            if ((pieceTypes[j*2 + 1][i*2] & PCGWorld.DIRECTION_UP) != 0) {
+                                // open path up on the top-right:
+                                c.clearTiles(20, 0, 28, 2);
+                            }                            
                             if ((pieceTypes[j*2][i*2] & PCGWorld.DIRECTION_LEFT) != 0) {
                                 // open path left on the top-left:
                                 c.clearTiles(0, 4, 2, 8);

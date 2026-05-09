@@ -17,12 +17,14 @@ hardcoded_area_data_0__divisionIDs:
   ; filler
   ds 50, #ff
 hardcoded_area_data_0__tags:
+  db TAG_ASTRONAUT_LOCK, 10, 2
   db TAG_START, 2, 0
-  db TAG_PURPLE_CHEST, 0, 0
-  db TAG_WEAPON_SLING, 8, 0
+  db TAG_BLUE_KEY, 11, 0
+  db TAG_MAYA_RIDDLE_CLUE5, 8, 0
+  db TAG_SMALL_KEY_CHEST2, 0, 0
   db TAG_TELEPORTER1, 9, 0
   ; filler
-  ds 84, 0
+  ds 78, 0
 hardcoded_area_data_1__seed:
   dw #1dc1, #9963
 hardcoded_area_data_1__id:
@@ -52,17 +54,20 @@ hardcoded_area_data_1__divisionIDs:
   ; filler
   ds 15, #ff
 hardcoded_area_data_1__tags:
-  db TAG_YELLOW_KEY, 44, 0
-  db TAG_WHITE_CHEST, 9, 0
+  db TAG_GEAR_LOCK, 37, 1
+  db TAG_RED_KEY, 30, 0
+  db TAG_TRIAL1_CLUE, 3, 0
+  db TAG_ASTRONAUT_KEY, 26, 0
   db TAG_BOSS1_CHESTLOCK, 11, 0
-  db TAG_WEAPON_HAMMER, 43, 0
-  db TAG_HEART5, 38, 0
-  db TAG_MAYA_RIDDLE_CLUE4, 22, 0
-  db TAG_MAYA_RIDDLE_CLUE5, 25, 0
-  db TAG_STORY_TRIVIA5, 16, 0
-  db TAG_TELEPORTER2, 3, 0
+  db TAG_BOSS2_KEY, 44, 0
+  db TAG_HEART2, 18, 0
+  db TAG_ITEM_SANDALS, 22, 0
+  db TAG_ITEM_ICE_CAPE, 16, 0
+  db TAG_SMALL_KEY_CHEST1, 9, 0
+  db TAG_TELEPORTER2, 24, 0
+  db TAG_GUARDIAN_CAIMAN1, 38, 0
   ; filler
-  ds 69, 0
+  ds 60, 0
 hardcoded_area_data_2__seed:
   dw #6568, #f937
 hardcoded_area_data_2__id:
@@ -92,22 +97,19 @@ hardcoded_area_data_2__divisionIDs:
   ; filler
   ds 15, #ff
 hardcoded_area_data_2__tags:
-  db TAG_BLUE_KEY, 33, 0
   db TAG_BLUE_CHEST, 46, 0
-  db TAG_YELLOW_CHEST, 45, 0
+  db TAG_TRIAL3_CLUE, 33, 0
   db TAG_BOSS2_CHESTLOCK, 44, 0
-  db TAG_WEAPON_MACUAHUITL, 24, 0
-  db TAG_MAP_PIECE1, 36, 0
-  db TAG_MAYA_RIDDLE_CLUE3, 17, 0
-  db TAG_STORY_TRIVIA3, 23, 0
-  db TAG_STORY_TRIVIA8, 25, 0
-  db TAG_ITEM_WARRIOR_HAT, 18, 0
-  db TAG_ITEM_ARMOR, 38, 0
-  db TAG_SMALL_KEY4, 30, 0
-  db TAG_TELEPORTER3, 37, 0
-  db TAG_LOST_VENDOR, 31, 0
+  db TAG_WEAPON_MACUAHUITL, 23, 0
+  db TAG_MAP_PIECE1, 11, 0
+  db TAG_HEART3, 45, 0
+  db TAG_STORY_TRIVIA4, 37, 0
+  db TAG_ITEM_SEASHELL, 17, 0
+  db TAG_SMALL_KEY4, 18, 0
+  db TAG_TELEPORTER3, 36, 0
+  db TAG_LOST_VENDOR, 24, 0
   ; filler
-  ds 54, 0
+  ds 63, 0
 hardcoded_area_data_3__seed:
   dw #78a4, #ce76
 hardcoded_area_data_3__id:
@@ -129,13 +131,14 @@ hardcoded_area_data_3__divisionIDs:
   ; filler
   ds 37, #ff
 hardcoded_area_data_3__tags:
-  db TAG_BUTTON_DOOR1, 11, 2
-  db TAG_BREAKABLE_WALL3, 14, 4
+  db TAG_BLOCK_PUZZLE4, 14, 4
+  db TAG_TRIAL1_LOCK, 11, 2
   db TAG_ENDING, 3, 0
-  db TAG_BUTTON1, 11, 0
-  db TAG_COMBINATION1_CLUE, 17, 0
+  db TAG_RED_CHEST, 17, 0
+  db TAG_ITEM_GLOVES, 0, 0
+  db TAG_ITEM_WARRIOR_HAT, 10, 0
   ; filler
-  ds 81, 0
+  ds 78, 0
 hardcoded_area_data_4__seed:
   dw #78a4, #ce76
 hardcoded_area_data_4__id:
@@ -165,21 +168,23 @@ hardcoded_area_data_4__divisionIDs:
   ; filler
   ds 15, #ff
 hardcoded_area_data_4__tags:
-  db TAG_BLOCK_PUZZLE3, 15, 1
-  db TAG_BUTTON_DOOR3, 17, 2
-  db TAG_COMBINATION1_LOCK, 16, 8
-  db TAG_COMBINATION4_LOCK, 25, 2
-  db TAG_BUTTON3, 17, 0
-  db TAG_PURPLE_KEY, 18, 0
-  db TAG_BOSS2_KEY, 26, 0
-  db TAG_BOSS3_CHESTLOCK, 38, 0
-  db TAG_WEAPON_SHIELD, 32, 0
-  db TAG_WEAPON_BLOWGUN, 3, 0
-  db TAG_MAP_PIECE2, 39, 0
-  db TAG_ITEM_SANDALS, 0, 0
-  db TAG_TELEPORTER4, 5, 0
+  db TAG_BUTTON_DOOR1, 4, 2
+  db TAG_BUTTON_DOOR2, 17, 2
+  db TAG_TRIAL3_LOCK, 3, 1
+  db TAG_COMBINATION4_LOCK, 15, 1
+  db TAG_BUTTON1, 4, 0
+  db TAG_BUTTON2, 17, 0
+  db TAG_COMBINATION4_CLUE, 5, 0
+  db TAG_BOSS3_KEY, 18, 0
+  db TAG_BOSS3_CHESTLOCK, 39, 0
+  db TAG_WEAPON_SHIELD, 26, 0
+  db TAG_MAP_PIECE2, 16, 0
+  db TAG_ITEM_BELT, 38, 0
+  db TAG_SMALL_KEY_CHEST3, 0, 0
+  db TAG_TELEPORTER4, 2, 0
+  db TAG_GUARDIAN_CAIMAN3, 1, 0
   ; filler
-  ds 57, 0
+  ds 51, 0
 hardcoded_area_data_5__seed:
   dw #7742, #afb7
 hardcoded_area_data_5__id:
@@ -202,9 +207,10 @@ hardcoded_area_data_5__divisionIDs:
   ds 55, #ff
 hardcoded_area_data_5__tags:
   db TAG_MIDPOINT, 1, 1
-  db TAG_HEART2, 4, 0
+  db TAG_HEART5, 7, 0
+  db TAG_STORY_TRIVIA6, 3, 0
   ; filler
-  ds 90, 0
+  ds 87, 0
 hardcoded_area_data_6__seed:
   dw #7742, #afb7
 hardcoded_area_data_6__id:
@@ -234,14 +240,14 @@ hardcoded_area_data_6__divisionIDs:
   ; filler
   ds 29, #ff
 hardcoded_area_data_6__tags:
-  db TAG_BUTTON_DOOR2, 26, 8
-  db TAG_BREAKABLE_WALL4, 27, 8
-  db TAG_BUTTON2, 26, 0
-  db TAG_BOSS5_KEY, 25, 0
-  db TAG_WEAPON_ATLATL, 17, 0
-  db TAG_MAP_PIECE3, 19, 0
-  db TAG_ITEM_SEASHELL, 16, 0
-  db TAG_TELEPORTER5, 13, 0
+  db TAG_BREAKABLE_WALL2, 22, 8
+  db TAG_PURPLE_KEY, 21, 0
+  db TAG_WEAPON_ATLATL, 13, 0
+  db TAG_MAP_PIECE3, 17, 0
+  db TAG_MAYA_RIDDLE_CLUE4, 31, 0
+  db TAG_STORY_TRIVIA5, 16, 0
+  db TAG_TELEPORTER5, 19, 0
+  db TAG_8_BRIDGE_ROOM, 25, 0
   ; filler
   ds 72, 0
 hardcoded_area_data_7__seed:
@@ -273,15 +279,16 @@ hardcoded_area_data_7__divisionIDs:
   ; filler
   ds 29, #ff
 hardcoded_area_data_7__tags:
-  db TAG_MAYA_RIDDLE_CLUE2, 14, 0
-  db TAG_STORY_TRIVIA2, 18, 0
-  db TAG_STORY_TRIVIA6, 17, 0
-  db TAG_ITEM_CHAAC, 23, 0
-  db TAG_SMALL_KEY_CHEST2, 11, 0
-  db TAG_SMALL_KEY_CHEST4, 7, 0
-  db TAG_TELEPORTER6, 19, 0
+  db TAG_BLOCK_PUZZLE1, 17, 4
+  db TAG_BUTTON_DOOR4, 22, 4
+  db TAG_BUTTON4, 22, 0
+  db TAG_PURPLE_CHEST, 23, 0
+  db TAG_BOSS5_KEY, 7, 0
+  db TAG_STORY_TRIVIA3, 10, 0
+  db TAG_ITEM_ARMOR, 24, 0
+  db TAG_TELEPORTER6, 14, 0
   ; filler
-  ds 75, 0
+  ds 72, 0
 hardcoded_area_data_8__seed:
   dw #5896, #2e1a
 hardcoded_area_data_8__id:
@@ -311,19 +318,19 @@ hardcoded_area_data_8__divisionIDs:
   ; filler
   ds 15, #ff
 hardcoded_area_data_8__tags:
-  db TAG_GREEN_LOCK, 24, 4
-  db TAG_BOSS4_KEY, 17, 0
   db TAG_BOSS4_CHESTLOCK, 34, 0
-  db TAG_WEAPON_FIRE_HAMMER, 18, 0
-  db TAG_MAP_PIECE4, 14, 0
-  db TAG_MAYA_RIDDLE_CLUE1, 22, 0
-  db TAG_ITEM_BELT, 21, 0
-  db TAG_ITEM_ICE_CAPE, 27, 0
-  db TAG_SMALL_KEY1, 30, 0
-  db TAG_TELEPORTER7, 42, 0
-  db TAG_XIBALBA_STORY3, 20, 0
-  db TAG_XIBALBA_LORDS6, 28, 0
-  db TAG_XIBALBA_CLUE, 26, 0
+  db TAG_WEAPON_FIRE_HAMMER, 27, 0
+  db TAG_MAP_PIECE4, 19, 0
+  db TAG_HEART4, 36, 0
+  db TAG_MAYA_RIDDLE_CLUE1, 14, 0
+  db TAG_MAYA_RIDDLE_CLUE2, 24, 0
+  db TAG_STORY_TRIVIA2, 20, 0
+  db TAG_STORY_TRIVIA8, 28, 0
+  db TAG_SMALL_KEY3, 21, 0
+  db TAG_TELEPORTER7, 17, 0
+  db TAG_XIBALBA_STORY2, 32, 0
+  db TAG_XIBALBA_STORY3, 23, 0
+  db TAG_XIBALBA_CLUE, 43, 0
   ; filler
   ds 57, 0
 hardcoded_area_data_9__seed:
@@ -355,20 +362,21 @@ hardcoded_area_data_9__divisionIDs:
   ; filler
   ds 15, #ff
 hardcoded_area_data_9__tags:
-  db TAG_TRIAL1_LOCK, 17, 2
-  db TAG_TELEPORTER_ATLANTIS, 22, 0
-  db TAG_GREEN_KEY, 18, 0
-  db TAG_TRIAL1_CLUE, 31, 0
+  db TAG_TELEPORTER_ATLANTIS, 29, 0
   db TAG_BOSS5_CHESTLOCK, 34, 0
-  db TAG_WEAPON_ICE_MACUAHUITL, 25, 0
-  db TAG_MAP_PIECE5, 36, 0
-  db TAG_SMALL_KEY_CHEST1, 24, 0
-  db TAG_TELEPORTER8, 19, 0
-  db TAG_ATLANTIS_TABLET2, 33, 0
-  db TAG_ATLANTIS_TABLET4, 30, 0
-  db TAG_ATLANTIS_TABLET5, 10, 0
+  db TAG_WEAPON_RAYGUN, 24, 0
+  db TAG_WEAPON_ICE_MACUAHUITL, 32, 0
+  db TAG_MAP_PIECE5, 30, 0
+  db TAG_MAYA_RIDDLE_CLUE3, 17, 0
+  db TAG_ITEM_CHAAC, 12, 0
+  db TAG_SMALL_KEY_CHEST4, 10, 0
+  db TAG_TELEPORTER8, 40, 0
+  db TAG_ATLANTIS_TABLET2, 18, 0
+  db TAG_ATLANTIS_TABLET3, 31, 0
+  db TAG_ATLANTIS_TABLET4, 19, 0
+  db TAG_ATLANTIS_TABLET5, 36, 0
   ; filler
-  ds 60, 0
+  ds 57, 0
 hardcoded_area_data_10__seed:
   dw #30a6, #2bbe
 hardcoded_area_data_10__id:
@@ -379,9 +387,9 @@ hardcoded_area_data_10__height:
   db 7
 hardcoded_area_data_10__connections:
   db 0, 0, 0, 0, 0, 0, 0
-  db 0, 0, 0, 0, 2, 11, 8
-  db 0, 0, 3, 8, 2, 13, 0
-  db 0, 2, 12, 2, 8, 4, 0
+  db 0, 0, 0, 0, 2, 10, 8
+  db 0, 0, 3, 10, 10, 8, 0
+  db 0, 2, 14, 8, 2, 8, 0
   db 2, 9, 0, 0, 0, 0, 0
   db 0, 4, 0, 0, 0, 0, 0
   db 0, 0, 0, 0, 0, 0, 0
@@ -398,14 +406,14 @@ hardcoded_area_data_10__divisionIDs:
   ; filler
   ds 15, #ff
 hardcoded_area_data_10__tags:
-  db TAG_BREAKABLE_WALL1, 12, 2
-  db TAG_TELEPORTER_MARS, 5, 0
-  db TAG_BOSS6_KEY, 13, 0
-  db TAG_BOSS6_CHESTLOCK, 36, 0
-  db TAG_MAP_PIECE6, 23, 0
-  db TAG_SMALL_KEY2, 21, 0
-  db TAG_SMALL_KEY_CHEST3, 17, 0
-  db TAG_CALENDAR_NAME_CLUE, 26, 0
+  db TAG_COMBINATION3_LOCK, 23, 2
+  db TAG_TELEPORTER_MARS, 29, 0
+  db TAG_COMBINATION3_CLUE, 36, 0
+  db TAG_BOSS6_KEY, 24, 0
+  db TAG_BOSS6_CHESTLOCK, 26, 0
+  db TAG_MAP_PIECE6, 11, 0
+  db TAG_SMALL_KEY2, 16, 0
+  db TAG_CALENDAR_NAME_CLUE, 28, 0
   ; filler
   ds 72, 0
 hardcoded_area_data_11__seed:
@@ -417,10 +425,10 @@ hardcoded_area_data_11__width:
 hardcoded_area_data_11__height:
   db 7
 hardcoded_area_data_11__connections:
-  db 0, 0, 1, 0, 0, 0, 0
-  db 0, 0, 4, 2, 8, 0, 0
-  db 1, 0, 0, 0, 1, 0, 0
-  db 7, 10, 10, 10, 12, 0, 0
+  db 0, 0, 0, 1, 0, 0, 0
+  db 0, 0, 0, 7, 8, 0, 0
+  db 1, 0, 0, 4, 0, 0, 0
+  db 7, 10, 10, 10, 8, 0, 0
   db 4, 0, 0, 0, 1, 0, 0
   db 0, 0, 0, 2, 12, 0, 0
   db 0, 0, 0, 0, 0, 0, 0
@@ -437,17 +445,16 @@ hardcoded_area_data_11__divisionIDs:
   ; filler
   ds 15, #ff
 hardcoded_area_data_11__tags:
-  db TAG_BLOCK_PUZZLE2, 21, 4
-  db TAG_TELEPORTER_MOON, 38, 0
-  db TAG_BOSS7_KEY, 14, 0
-  db TAG_BOSS7_CHESTLOCK, 28, 0
-  db TAG_MAP_PIECE7, 9, 0
-  db TAG_HEART3, 22, 0
-  db TAG_STORY_TRIVIA1, 17, 0
-  db TAG_STORY_TRIVIA7, 30, 0
-  db TAG_SMALL_KEY3, 18, 0
+  db TAG_COMBINATION2_LOCK, 39, 8
+  db TAG_TELEPORTER_MOON, 3, 0
+  db TAG_COMBINATION2_CLUE, 28, 0
+  db TAG_BOSS7_KEY, 38, 0
+  db TAG_BOSS7_CHESTLOCK, 14, 0
+  db TAG_MAP_PIECE7, 24, 0
+  db TAG_STORY_TRIVIA1, 22, 0
+  db TAG_SMALL_KEY1, 21, 0
   ; filler
-  ds 69, 0
+  ds 72, 0
 hardcoded_world_data__interarea_connections:
   ; each connection is 8 bytes: areaID1, areaID2, x1, y1, direction1, x2, y2, direction2 (coordinates are in chunks)
   db 0, 1, 3, 3, 1, 1, 10, 4
@@ -465,22 +472,21 @@ hardcoded_world_data__interarea_connections:
   db #ff  ; sentinel
 hardcoded_world_data__chest_content:
   ; each entry is 2 bytes: chest_id, content_id
-  db TAG_PURPLE_CHEST, TAG_BOSS1_KEY
-  db TAG_WHITE_CHEST, TAG_BOSS3_KEY
-  db TAG_YELLOW_CHEST, TAG_COMBINATION4_CLUE
-  db TAG_BLUE_CHEST, TAG_WHITE_KEY
-  db TAG_SMALL_KEY_CHEST1, TAG_WEAPON_RAYGUN
-  db TAG_SMALL_KEY_CHEST2, TAG_WEAPON_OBSIDIAN_KNIVE
-  db TAG_SMALL_KEY_CHEST3, TAG_HEART1
-  db TAG_SMALL_KEY_CHEST4, TAG_HEART4
-  ds 4, #ff
+  db TAG_BLUE_CHEST, TAG_BOSS1_KEY
+  db TAG_RED_CHEST, TAG_GEAR_KEY
+  db TAG_PURPLE_CHEST, TAG_BOSS4_KEY
+  db TAG_SMALL_KEY_CHEST1, TAG_WEAPON_HAMMER
+  db TAG_SMALL_KEY_CHEST2, TAG_WEAPON_SLING
+  db TAG_SMALL_KEY_CHEST3, TAG_WEAPON_BLOWGUN
+  db TAG_SMALL_KEY_CHEST4, TAG_HEART1
+  ds 6, #ff
   db #ff  ; sentinel
 hardcoded_world_data__tablet_content:
   ; each entry is 3 bytes: tablet_id, content_ptr
   db TAG_COMBINATION1_CLUE
-  dw combination_tablet_type_1_fn
+  dw combination_tablet_type_4_fn
   db TAG_COMBINATION2_CLUE
-  dw combination_tablet_type_3_fn
+  dw combination_tablet_type_4_fn
   db TAG_COMBINATION3_CLUE
   dw combination_tablet_type_3_fn
   db TAG_COMBINATION4_CLUE
@@ -504,33 +510,33 @@ hardcoded_world_data__tablet_content:
   db TAG_MAYA_RIDDLE_CLUE5
   dw maya_clue5_tablet_fn
   db TAG_STORY_TRIVIA1
-  dw story_trivia_tablet_fn_story1
+  dw story_trivia_tablet_fn_story9
   db TAG_STORY_TRIVIA2
   dw story_trivia_tablet_fn_story15
   db TAG_STORY_TRIVIA3
-  dw story_trivia_tablet_fn_clue1
-  db TAG_STORY_TRIVIA4
-  dw story_trivia_tablet_fn_story5
-  db TAG_STORY_TRIVIA5
-  dw story_trivia_tablet_fn_story14
-  db TAG_STORY_TRIVIA6
   dw story_trivia_tablet_fn_story13
+  db TAG_STORY_TRIVIA4
+  dw story_trivia_tablet_fn_story2
+  db TAG_STORY_TRIVIA5
+  dw story_trivia_tablet_fn_story10
+  db TAG_STORY_TRIVIA6
+  dw story_trivia_tablet_fn_story4
   db TAG_STORY_TRIVIA7
-  dw story_trivia_tablet_fn_story9
+  dw story_trivia_tablet_fn_clue4
   db TAG_STORY_TRIVIA8
-  dw story_trivia_tablet_fn_story3
+  dw story_trivia_tablet_fn_story11
   db TAG_CALENDAR_NAME_CLUE
   dw calendar_name_clue_tablet_fn
   db #ff  ; sentinel
 hardcoded_world_data__combination_solutions:
-  db 0, 2, 1, 2, 2, 1, 1, 2
-  db 2, 1, 2, 1, 0, 1, 2, 0
-  db 2, 0, 0, 2, 1, 2, 2, 2
-  db 1, 1, 0, 2, 0, 1, 0, 2
+  db 1, 2, 0, 2, 0, 0, 2, 1
+  db 2, 2, 2, 1, 1, 0, 2, 0
+  db 1, 0, 2, 1, 2, 0, 2, 0
+  db 1, 1, 2, 2, 1, 1, 0, 0
 hardcoded_world_data__trial_types:
-  db 6, 2, 6, 4
+  db 1, 0, 1, 5
 hardcoded_world_data__power_stone_numbers:
-  db 5, 3, 6, 7, 5
+  db 6, 8, 4, 6, 5
 hardcoded_world_data__shop_extra_items:
-  db TAG_ITEM_GLOVES
+  db TAG_WEAPON_OBSIDIAN_KNIVE
   db 0

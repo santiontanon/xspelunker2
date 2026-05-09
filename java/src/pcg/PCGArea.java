@@ -2831,7 +2831,9 @@ public class PCGArea {
         }
         
         int rng_seed1 = r.rng_seed1, rng_seed2 = r.rng_seed2;
-        if (!spawnObjects(ra, w, placedTags, r)) return null;
+        if (!spawnObjects(ra, w, placedTags, r)) {
+            return null;
+        }
         r.setSeed(rng_seed1, rng_seed2);
         
         return ra;
@@ -3015,6 +3017,7 @@ public class PCGArea {
                 {
                     TMXObject place = ra.fg_chunks[go.x][go.y].randomObject("item", r);
                     if (place == null) {
+                        System.err.println("Cannot find an 'item' place for " + go.type);
                         return false;
                     }
                     ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
@@ -3035,6 +3038,7 @@ public class PCGArea {
                 {
                     TMXObject place = ra.fg_chunks[go.x][go.y].randomObject("big-item", r);
                     if (place == null) {
+                        System.err.println("Cannot find an 'big-item' place for " + go.type);
                         return false;
                     }
                     ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
@@ -3050,11 +3054,17 @@ public class PCGArea {
                 case "boss7-chestlock":
                 {
                     TMXObject place = ra.fg_chunks[go.x][go.y].randomObject("item", r);
-                    if (place == null) return false;
+                    if (place == null) {
+                        System.err.println("Cannot find an 'item' place for " + go.type);
+                        return false;
+                    }
                     ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
                                                   go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "boss-lock"));
                     place = ra.fg_chunks[go.x][go.y].randomObject("4x4-item", r);
-                    if (place == null) return false;
+                    if (place == null) {
+                        System.err.println("Cannot find an '4x4-item' place for " + go.type);
+                        return false;
+                    }
                     ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
                                                   go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "boss-door"));
                     break;
@@ -3065,6 +3075,7 @@ public class PCGArea {
                 {
                     TMXObject place = ra.fg_chunks[go.x][go.y].randomObject("big-item", r);
                     if (place == null) {
+                        System.err.println("Cannot find an 'big-item' place for " + go.type);
                         return false;
                     }
                     ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
@@ -3073,25 +3084,37 @@ public class PCGArea {
                     switch(lockDirection) {
                         case PCGWorld.DIRECTION_LEFT:
                             place = ra.fg_chunks[go.x][go.y].randomObject("door-left", r);
-                            if (place == null) return false;
+                            if (place == null) {
+                                System.err.println("Cannot find an 'door-left' place for " + go.type);
+                                return false;
+                            }
                             ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
                                                           go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-left"));
                             break;
                         case PCGWorld.DIRECTION_UP:
                             place = ra.fg_chunks[go.x][go.y].randomObject("door-up", r);
-                            if (place == null) return false;
+                            if (place == null) {
+                                System.err.println("Cannot find an 'door-up' place for " + go.type);
+                                return false;
+                            }
                             ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
                                                           go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-up"));
                             break;
                         case PCGWorld.DIRECTION_RIGHT:
                             place = ra.fg_chunks[go.x][go.y].randomObject("door-right", r);
-                            if (place == null) return false;
+                            if (place == null) {
+                                System.err.println("Cannot find an 'door-right' place for " + go.type);
+                                return false;
+                            }
                             ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
                                                           go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-right"));
                             break;
                         case PCGWorld.DIRECTION_DOWN:
                             place = ra.fg_chunks[go.x][go.y].randomObject("door-down", r);
-                            if (place == null) return false;
+                            if (place == null) {
+                                System.err.println("Cannot find an 'door-down' place for " + go.type);
+                                return false;
+                            }
                             ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
                                                           go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-down"));
                             break;
@@ -3109,32 +3132,47 @@ public class PCGArea {
                 case "astronaut-lock":
                 {
                     TMXObject place = ra.fg_chunks[go.x][go.y].randomObject("item", r);
-                    if (place == null) return false;
+                    if (place == null) {
+                        System.err.println("Cannot find an 'item' place for " + go.type);
+                        return false;
+                    }
                     ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
                                                   go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, placedTags[go.x][go.y]));
                     int lockDirection = w.lockDirections.get(placedTags[go.x][go.y]);
                     switch(lockDirection) {
                         case PCGWorld.DIRECTION_LEFT:
                             place = ra.fg_chunks[go.x][go.y].randomObject("door-left", r);
-                            if (place == null) return false;
+                            if (place == null) {
+                                System.err.println("Cannot find an 'door-left' place for " + go.type);
+                                return false;
+                            }
                             ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
                                                           go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-left"));
                             break;
                         case PCGWorld.DIRECTION_UP:
                             place = ra.fg_chunks[go.x][go.y].randomObject("door-up", r);
-                            if (place == null) return false;
+                            if (place == null) {
+                                System.err.println("Cannot find an 'door-up' place for " + go.type);
+                                return false;
+                            }
                             ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
                                                           go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-up"));
                             break;
                         case PCGWorld.DIRECTION_RIGHT:
                             place = ra.fg_chunks[go.x][go.y].randomObject("door-right", r);
-                            if (place == null) return false;
+                            if (place == null) {
+                                System.err.println("Cannot find an 'door-right' place for " + go.type);
+                                return false;
+                            }
                             ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
                                                           go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-right"));
                             break;
                         case PCGWorld.DIRECTION_DOWN:
                             place = ra.fg_chunks[go.x][go.y].randomObject("door-down", r);
-                            if (place == null) return false;
+                            if (place == null) {
+                                System.err.println("Cannot find an 'door-down' place for " + go.type);
+                                return false;
+                            }
                             ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
                                                           go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-down"));
                             break;
@@ -3151,6 +3189,7 @@ public class PCGArea {
                     if (lockDirection == PCGWorld.DIRECTION_LEFT) {
                         TMXObject place = ra.fg_chunks[go.x][go.y].randomObject("breakable-left", r);
                         if (place == null) {
+                            System.err.println("Cannot find an 'breakable-left' place for " + go.type);
                             return false;
                         }
                         ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
@@ -3158,19 +3197,28 @@ public class PCGArea {
                                                       place.dx, place.dy, "breakable-left"));
                     } else if (lockDirection == PCGWorld.DIRECTION_UP) {
                         TMXObject place = ra.fg_chunks[go.x][go.y].randomObject("breakable-up", r);
-                        if (place == null) return false;
+                        if (place == null) {
+                            System.err.println("Cannot find an 'breakable-up' place for " + go.type);
+                            return false;
+                        }
                         ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
                                                       go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y,
                                                       place.dx, place.dy, "breakable-up"));
                     } else if (lockDirection == PCGWorld.DIRECTION_RIGHT) {
                         TMXObject place = ra.fg_chunks[go.x][go.y].randomObject("breakable-right", r);
-                        if (place == null) return false;
+                        if (place == null) {
+                            System.err.println("Cannot find an 'breakable-right' place for " + go.type);
+                            return false;
+                        }
                         ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
                                                       go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y,
                                                       place.dx, place.dy, "breakable-right"));
                     } else if (lockDirection == PCGWorld.DIRECTION_DOWN) {
                         TMXObject place = ra.fg_chunks[go.x][go.y].randomObject("breakable-down", r);
-                        if (place == null) return false;
+                        if (place == null) {
+                            System.err.println("Cannot find an 'breakable-down' place for " + go.type);
+                            return false;
+                        }
                         ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
                                                       go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y,
                                                       place.dx, place.dy, "breakable-down"));
@@ -3188,23 +3236,33 @@ public class PCGArea {
                     if (lockDirection == PCGWorld.DIRECTION_LEFT) {
                         TMXObject place = ra.fg_chunks[go.x][go.y].randomObject("door-left", r);
                         if (place == null) {
+                            System.err.println("Cannot find an 'door-left' place for " + go.type);
                             return false;
                         }
                         ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
                                                       go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-left"));
                     } else if (lockDirection == PCGWorld.DIRECTION_UP) {
                         TMXObject place = ra.fg_chunks[go.x][go.y].randomObject("door-up", r);
-                        if (place == null) return false;
+                        if (place == null) {
+                            System.err.println("Cannot find an 'door-up' place for " + go.type);
+                            return false;
+                        }
                         ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
                                                       go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-up"));
                     } else if (lockDirection == PCGWorld.DIRECTION_RIGHT) {
                         TMXObject place = ra.fg_chunks[go.x][go.y].randomObject("door-right", r);
-                        if (place == null) return false;
+                        if (place == null) {
+                            System.err.println("Cannot find an 'door-right' place for " + go.type);
+                            return false;
+                        }
                         ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
                                                       go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-right"));
                     } else if (lockDirection == PCGWorld.DIRECTION_DOWN) {
                         TMXObject place = ra.fg_chunks[go.x][go.y].randomObject("door-down", r);
-                        if (place == null) return false;
+                        if (place == null) {
+                            System.err.println("Cannot find an 'door-down' place for " + go.type);
+                            return false;
+                        }
                         ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
                                                       go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-down"));
                     }                            
@@ -3218,6 +3276,7 @@ public class PCGArea {
                 {
                     TMXObject place = ra.fg_chunks[go.x][go.y].randomObject("4x4-item", r);
                     if (place == null) {
+                        System.err.println("Cannot find an '4x4-item' place for " + go.type);
                         return false;
                     }
                     ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
@@ -3225,22 +3284,34 @@ public class PCGArea {
                     int lockDirection = w.lockDirections.get(placedTags[go.x][go.y]);
                     if (lockDirection == PCGWorld.DIRECTION_LEFT) {
                         place = ra.fg_chunks[go.x][go.y].randomObject("door-left", r);
-                        if (place == null) return false;
+                        if (place == null) {
+                            System.err.println("Cannot find an 'door-left' place for " + go.type);
+                            return false;
+                        }
                         ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
                                                       go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-left"));
                     } else if (lockDirection == PCGWorld.DIRECTION_UP) {
                         place = ra.fg_chunks[go.x][go.y].randomObject("door-up", r);
-                        if (place == null) return false;
+                        if (place == null) {
+                            System.err.println("Cannot find an 'door-up' place for " + go.type);
+                            return false;
+                        }
                         ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
                                                       go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-up"));
                     } else if (lockDirection == PCGWorld.DIRECTION_RIGHT) {
                         place = ra.fg_chunks[go.x][go.y].randomObject("door-right", r);
-                        if (place == null) return false;
+                        if (place == null) {
+                            System.err.println("Cannot find an 'door-right' place for " + go.type);
+                            return false;
+                        }
                         ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
                                                       go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-right"));
                     } else if (lockDirection == PCGWorld.DIRECTION_DOWN) {
                         place = ra.fg_chunks[go.x][go.y].randomObject("door-down", r);
-                        if (place == null) return false;
+                        if (place == null) {
+                            System.err.println("Cannot find an 'door-down' place for " + go.type);
+                            return false;
+                        }
                         ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
                                                       go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-down"));
                     }                            
@@ -3256,22 +3327,34 @@ public class PCGArea {
                     int lockDirection = w.lockDirections.get(placedTags[go.x][go.y]);
                     if (lockDirection == PCGWorld.DIRECTION_LEFT) {
                         place = ra.fg_chunks[go.x][go.y].randomObject("door-left", r);
-                        if (place == null) return false;
+                        if (place == null) {
+                            System.err.println("Cannot find an 'door-left' place for " + go.type);
+                            return false;
+                        }
                         ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
                                                       go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-left"));
                     } else if (lockDirection == PCGWorld.DIRECTION_UP) {
                         place = ra.fg_chunks[go.x][go.y].randomObject("door-up", r);
-                        if (place == null) return false;
+                        if (place == null) {
+                            System.err.println("Cannot find an 'door-up' place for " + go.type);
+                            return false;
+                        }
                         ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
                                                       go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-up"));
                     } else if (lockDirection == PCGWorld.DIRECTION_RIGHT) {
                         place = ra.fg_chunks[go.x][go.y].randomObject("door-right", r);
-                        if (place == null) return false;
+                        if (place == null) {
+                            System.err.println("Cannot find an 'door-right' place for " + go.type);
+                            return false;
+                        }
                         ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
                                                       go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-right"));
                     } else if (lockDirection == PCGWorld.DIRECTION_DOWN) {
                         place = ra.fg_chunks[go.x][go.y].randomObject("door-down", r);
-                        if (place == null) return false;
+                        if (place == null) {
+                            System.err.println("Cannot find an 'door-down' place for " + go.type);
+                            return false;
+                        }
                         ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
                                                       go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "door-down"));
                     }

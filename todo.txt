@@ -1,15 +1,6 @@
 to do:
 
-***- make the PCG unit test work again:
-  ***- add to Java: area of astronomy room, (current_world__statue_names_nametables, current_world__statue_names_words, current_world__astronomy_room_area), statue locations
-  ***- add a seed where the center stela is not active
-  ***- verify tests pass
 ***- giant statue rooms:
-  ***- for inter-area connections add a ladder rather than a hole up:
-    ***- find a seed in Java
-    ***- (statue 1) seed 43 for top-left && bottom-right  <--  differs from assembler!
-  ***- respect if there is a ladder connection up/down:
-    ***- find a seed in Java
   ***- spawn tablets that state: "I am one of the guardian caimans. I do not remember my name, but I remember I was the first/second/third".
   ***- draw the codex fragments, 3 variants: one piece, 2 pieces and full
   ***- add to inventory and add description
