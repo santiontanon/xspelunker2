@@ -120,5 +120,45 @@ public class Area {
             }
         });
         return tagList;
-    }                
+    }             
+    
+    
+    public boolean verifyRoomShapes()
+    {
+        for(int i = 0;i<height;i++) {
+            for(int j = 0;j<width;j++) {
+                if (rooms[j][i] < 0) continue;
+                if (!verifyRoomShape(rooms[j][i])) return false;
+            }
+        }
+        return true;
+    }
+    
+    
+    public boolean verifyRoomShape(int room)
+    {
+        int minx = width;
+        int maxx = 0;
+        int miny = height;
+        int maxy = 0;
+        for(int i = 0;i<height;i++) {
+            for(int j = 0;j<width;j++) {
+                if (rooms[j][i] == room) {
+                    minx = Math.min(minx, j);
+                    maxx = Math.max(maxx, j);
+                    miny = Math.min(miny, i);
+                    maxy = Math.max(maxy, i);
+                }
+            }
+        }
+        for(int i = miny;i<maxy+1;i++) {
+            for(int j = minx;j<maxx+1;j++) {
+                if (rooms[j][i] != room) {
+                    
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }

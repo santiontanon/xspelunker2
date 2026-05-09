@@ -19,6 +19,7 @@ import util.Pair;
  */
 public class World {
 
+    public int seed1, seed2;
     public List<Area> areas = new ArrayList<>();
     public List<InterAreaConnection> interAreaconnections = new ArrayList<>();
     public HashMap<String, Integer> lockDirections = new HashMap<>();
@@ -45,8 +46,10 @@ public class World {
     public List<Color> divisionColors = new ArrayList<>();
 
     
-    public World()
+    public World(int a_seed1, int a_seed2)
     {
+        seed1 = a_seed1;
+        seed2 = a_seed2;
         color_r.setSeed(0);
     }
     

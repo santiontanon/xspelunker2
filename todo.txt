@@ -1,12 +1,24 @@
 to do:
 
-***- giant statues:
-  ***- draft them in GIMP/TILED, are they special rooms (like poseidon, calendar, etc.) or just use the available tiles in caves to draw something like a 6x6 or 4x8 statue?
-  ***- in each of the 3 pyramids, if the condition for the given stela is satisfied, a giant statue room is spawned
-  ***- tablet in these rooms that states: "I do not remember my name, but I was the first/second/third".
-  ***- speaking the names in front of each statue unlocks a chest/cabinet with a fragment of a codex. You need all 3 for it to be intelligible (this will later unlock the "A+" ending, as explained below, the three of them allow you to manufacture fire stones, or give you the clue to get to the forge)
+***- giant statue rooms:
+  OK - draft them in GIMP/TILED with a variant of the pyramid tiles (whole room, like calendar)
+  OK - three variants of the room in TILED (for guards 1, 2, 3)
+  OK - java: in each of the 3 pyramids, if the stela condition is satisfied, a giant statue room is spawned: TAG_GUARDIAN_CAIMAN1, TAG_GUARDIAN_CAIMAN2, TAG_GUARDIAN_CAIMAN3:
+    OK - in java
+    OK - add test to verify that rooms are well formed (all have rectangular shapes)
+  ***- assembler:
+    OK - add the tile/room data for the statue rooms
+    ***- separate the stela conditions unto functions, so I can call them from multiple places
+    ***- place the room tags if the conditions are satisfied (do the same I did with 8-bridge room)
+    ***- generate the room
+    ***- open exits left/right/top/bottom in assembler
+  ***- spawn tablets that state: "I am one of the guardian caimans. I do not remember my name, but I remember I was the first/second/third".
+  ***- draw the codex fragments, 3 variants: one piece, 2 pieces and full
+  ***- add to inventory and add description
+  ***- speaking the names in front of each statue makes a fragment of a codex appear. You need all 3 for it to be intelligible (this will later unlock the "A+" ending, as explained below, the three of them allow you to manufacture fire stones, or give you the clue to get to the forge)
 ***- make the PCG unit test work again:
   ***- add to Java: area of astronomy room, (current_world__statue_names_nametables, current_world__statue_names_words, current_world__astronomy_room_area), statue locations
+  ***- add a seed where the center stela is not active
   ***- verify tests pass
 
 - music: (brain 12, 15, 23, 25 have potential)
@@ -29,7 +41,7 @@ to do:
 - update the list of enemy types and names to display in ending B to include new enemies in moon/mars
 - "speak" the animal names in the animal room to get their blessings (if you get all four, you do double damage, adjust angry/veryhard boss difficulty for this): I already have the clue for this in the game, right? (TABLET_TRIVIA_CLUE1_1, etc.)
   - add as a special achievement for the gameover screen
-- There should be another shop. Otherwise, collecting money feels a bit useless if there is just one shop (where? Atlantis? confluence? caves?)
+- There should be another shop. Otherwise, collecting money feels a bit useless if there is just one shop (where? Atlantis? confluence? caves? maybe an ammo shop)
 
 - 8th boss: after beating the combat against the aliens, you can teleport to their home planet, and fight against their leader (final final boss). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
   - add boss name to the stats for game over screen

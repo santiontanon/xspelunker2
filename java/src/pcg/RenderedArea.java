@@ -97,34 +97,31 @@ public class RenderedArea {
         {
             for(int i = 0;i<a.height;i++) {
                 for(int j = 0;j<a.width;j++) {
-//                    int special_room_x = 0;
-//                    int special_room_y = 0;
                     RoomChunk c = null;
                     if (a.rooms[j][i] == PCGArea.START_ROOM_ID) {
-//                        special_room_x = j;
-//                        special_room_y = i;
                         c = new RoomChunk("data/start-room.tmx", 0, "jungle");
                         c.loadGfx("data/jungle/tiles.png");
                     } else if (a.rooms[j][i] == PCGArea.CALENDAR_ROOM_ID) {
-//                        special_room_x = j;
-//                        special_room_y = i;
                         c = new RoomChunk("data/calendar-room.tmx", 0, "pyramid");
                         c.loadGfx("data/calendar-tiles.png");
                     } else if (a.rooms[j][i] == PCGArea.TELEPORTER_ROOM_ID) {
-//                        special_room_x = j;
-//                        special_room_y = i;
                         c = new RoomChunk("data/teleporter-room.tmx", 0, "pyramid");
                         c.loadGfx("data/teleporter-room-tiles.png");
                     } else if (a.rooms[j][i] == PCGArea.TEMPLE_OF_POSEIDON_ROOM_ID) {
-//                        special_room_x = j;
-//                        special_room_y = i;
                         c = new RoomChunk("data/temple-of-poseidon.tmx", 0, "atlantis");
                         c.loadGfx("data/atlantis/tiles.png");
                     } else if (a.rooms[j][i] == PCGArea.EIGHT_BRIDGE_ROOM_ID) {
-//                        special_room_x = j;
-//                        special_room_y = i;
                         c = new RoomChunk("data/8bridge-room.tmx", 0, "cave");
                         c.loadGfx("data/caves/tiles.png");
+                    } else if (a.rooms[j][i] == PCGArea.GUARDIAN_CAIMAN1_ROOM_ID) {
+                        c = new RoomChunk("data/guard-statue-room1.tmx", 0, "pyramid");
+                        c.loadGfx("data/guard-statue-room-tiles.png");
+                    } else if (a.rooms[j][i] == PCGArea.GUARDIAN_CAIMAN2_ROOM_ID) {
+                        c = new RoomChunk("data/guard-statue-room2.tmx", 0, "pyramid");
+                        c.loadGfx("data/guard-statue-room-tiles.png");
+                    } else if (a.rooms[j][i] == PCGArea.GUARDIAN_CAIMAN3_ROOM_ID) {
+                        c = new RoomChunk("data/guard-statue-room3.tmx", 0, "pyramid");
+                        c.loadGfx("data/guard-statue-room-tiles.png");
                     }
 
                     if (c != null) {     

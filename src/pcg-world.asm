@@ -5784,7 +5784,6 @@ pcg_generate_world__puzzles:
 	ld a, e
 	and #c0
 	or c
-	cp #c3
 	jr nz, pcg_generate_world__puzzles_stela_center_set
 	ld l, 2
 pcg_generate_world__puzzles_stela_center_set:

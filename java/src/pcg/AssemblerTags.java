@@ -204,6 +204,9 @@ public class AssemblerTags {
         "TAG_ATLANTIS_TABLET5",
         // Other:
         "TAG_8_BRIDGE_ROOM",
+        "TAG_GUARDIAN_CAIMAN1",
+        "TAG_GUARDIAN_CAIMAN2",
+        "TAG_GUARDIAN_CAIMAN3",
         // misc (not tags that will be placed, but used for tile-object types):
         "TAG_PUSHABLE_BLOCK",
         "TAG_DOOR_VERTICAL",

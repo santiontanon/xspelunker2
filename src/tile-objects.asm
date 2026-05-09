@@ -1235,6 +1235,9 @@ ENDR
 	dw object_interaction_function_tablet  ; TAG_ATLANTIS_TABLET4
 	dw object_interaction_function_tablet  ; TAG_ATLANTIS_TABLET5
 	dw object_interaction_function_empty  ; TAG_8_BRIDGE_ROOM
+	dw object_interaction_function_empty  ; TAG_GUARDIAN_CAIMAN1
+	dw object_interaction_function_empty  ; TAG_GUARDIAN_CAIMAN2
+	dw object_interaction_function_empty  ; TAG_GUARDIAN_CAIMAN3
 	dw object_interaction_function_empty  ; TAG_PUSHABLE_BLOCK
 	dw object_interaction_function_empty  ; TAG_DOOR_VERTICAL
 	dw object_interaction_function_empty  ; TAG_DOOR_HORIZONTAL
@@ -2886,7 +2889,9 @@ ENDR
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ATLANTIS_TABLET4
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ATLANTIS_TABLET5
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_8_BRIDGE_ROOM
-
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_GUARDIAN_CAIMAN1
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_GUARDIAN_CAIMAN2
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_GUARDIAN_CAIMAN3
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_pushable_block_gfx  ; TAG_PUSHABLE_BLOCK
 	TILE_OBJECT_DATA 1, 1, 3, tile_object_v_door_gfx  ; TAG_DOOR_VERTICAL
 	TILE_OBJECT_DATA 1, 4, 1, tile_object_h_door_gfx  ; TAG_DOOR_HORIZONTAL

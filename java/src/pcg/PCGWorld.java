@@ -73,7 +73,7 @@ public class PCGWorld {
         {500, 200},
     };
 
-    // Parameters for original level sizes (8*8): 1062 / 5000 fails
+    // Parameters for original level sizes (8*8)
 //    public int n_divisions = 134;
 //    public int min_divisions_per_area[] = {6, 15, 15, 6, 15, 3, 12, 12, 13, 13, 12, 12};
 //    public int areaSizes[][] = {
@@ -124,7 +124,7 @@ public class PCGWorld {
 //        };
 
 
-    // Slightly smaller sizes (7*7): 1031 / 5000 fails (hard / normal)
+    // Slightly smaller sizes (7*7) (hard / normal)
     public int n_divisions = 136;
     public int min_divisions_per_area[] = {6, 15, 15, 6, 15, 3, 12, 12, 13, 13, 12, 12};
     public int areaSizes[][] = {
@@ -172,7 +172,7 @@ public class PCGWorld {
         };
 
 
-//    // Smaller sizes (6*6): 913 / 5000 fails
+//    // Smaller sizes (6*6)
 //    public int n_divisions = 134;
 //    public int min_divisions_per_area[] = {6, 15, 15, 6, 15, 3, 12, 12, 13, 13, 12, 12};
 //    public int areaSizes[][] = {
@@ -365,6 +365,7 @@ public class PCGWorld {
         remainingTriviaTabletFns.add("story_trivia_tablet_fn_clue4");
     }
 
+
     public World generate(MSXRandom a_r) throws Exception
     {
         return generate(a_r, 2, true);
@@ -385,7 +386,7 @@ public class PCGWorld {
                 n_times_defaulting_to_safe_seed++;
             }
             System.out.println("PCG.generate: ---- attempt " + i + " (seed "+r.rng_seed1 +"/"+r.rng_seed2+") ----");
-            w = new World();
+            w = new World(r.rng_seed1, r.rng_seed2);
             if (!generateAreaLayouts(w)) continue;
             n_times_reached_generation_stage[0]++;
             if (!generateDivisions(w)) continue;
@@ -500,7 +501,13 @@ public class PCGWorld {
             if (!endingFound) {
                 throw new Exception("Ending tag not found!");
             }
-            
+
+            for(Area a:w.areas) {
+                if (!a.verifyRoomShapes()) {
+                    throw new Exception("Malformed rooms for area " + a.ID);
+                }
+            }
+                        
             return w;
         }        
         return null;
@@ -930,11 +937,11 @@ public class PCGWorld {
             // Spawn 8 bridge room:
             AreaDivision eightBridgeRoom = getDivisionByID(eightBridgeRoom_p.a.divisionIDs[eightBridgeRoom_p.x][eightBridgeRoom_p.y], tree);
             addTag(eightBridgeRoom_p, "8-bridge-room", eightBridgeRoom);
-            System.out.println("8-bridge-room placed at " + eightBridgeRoom_p);
+//            System.out.println("8-bridge-room placed at " + eightBridgeRoom_p);
         } else {
             System.out.println("Cannot place 8-bridge-room!");
         }
-
+        
 //        System.out.println("Key division depths: " +
 //                           divisionTreeDepth(boss1) + ", " + 
 //                           divisionTreeDepth(boss2) + ", " + 
@@ -1020,6 +1027,36 @@ public class PCGWorld {
                 List<String> keys = new ArrayList<>();
                 keys.addAll(q.keyTags);
                 w.lockKeys.put(q.lockTag, keys);
+            }
+        }
+        
+        // Caiman statues:
+        System.out.println("Stelae: " + leftStelaCondition(w.seed1) + ", " + rightStelaCondition(w.seed1) + ", " + centerStelaCondition(w.seed1));
+        if (leftStelaCondition(w.seed1)) {
+            AreaPoint statue_p = randomAreaPoint(w.areas.get(1), true);
+            if (statue_p != null) {
+                AreaDivision statue = getDivisionByID(statue_p.a.divisionIDs[statue_p.x][statue_p.y], tree);
+                addTag(statue_p, "GUARDIAN_CAIMAN1", statue);                
+            } else {
+                System.err.println("could not place GUARDIAN_CAIMAN1!");
+            }
+        }
+        if (rightStelaCondition(w.seed1)) {
+            AreaPoint statue_p = randomAreaPoint(w.areas.get(2), true);
+            if (statue_p != null) {
+                AreaDivision statue = getDivisionByID(statue_p.a.divisionIDs[statue_p.x][statue_p.y], tree);
+                addTag(statue_p, "GUARDIAN_CAIMAN2", statue);                
+            } else {
+                System.err.println("could not place GUARDIAN_CAIMAN2!");
+            }
+        }
+        if (centerStelaCondition(w.seed1)) {
+            AreaPoint statue_p = randomAreaPoint(w.areas.get(4), true);
+            if (statue_p != null) {
+                AreaDivision statue = getDivisionByID(statue_p.a.divisionIDs[statue_p.x][statue_p.y], tree);
+                addTag(statue_p, "GUARDIAN_CAIMAN3", statue);                
+            } else {
+                System.err.println("could not place GUARDIAN_CAIMAN3!");
             }
         }
         
@@ -2430,7 +2467,35 @@ public class PCGWorld {
             }
         }
     }
+    
+    
+    public boolean leftStelaCondition(int seed)
+    {
+        int n1s = 0;
+        for(int i = 0;i<16;i++) {
+            if ((seed % 2) == 1) n1s++;
+            seed >>= 1;
+        }
+        return (n1s % 2) == 0;
+    }
 
+    
+    public boolean rightStelaCondition(int seed)
+    {
+        int n1s = 0;
+        for(int i = 0;i<16;i++) {
+            if ((seed % 2) == 1) n1s++;
+            seed >>= 1;
+        }
+        return (n1s % 2) != 0;
+    }
+
+
+    public boolean centerStelaCondition(int seed)
+    {
+        return (seed & 0x03c0) == 0;
+    }
+    
     
 //    public List<AreaPoint> withinAreaPathfinding(Area a, int x1, int y1, int x2, int y2, AreaDivision d1, AreaDivision d2, boolean optimal)
 //    {

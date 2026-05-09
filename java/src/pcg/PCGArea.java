@@ -26,6 +26,9 @@ public class PCGArea {
     public static final int TEMPLE_OF_POSEIDON_ROOM_ID = 103;
     public static final int EIGHT_BRIDGE_ROOM_ID = 104; 
     public static final int ASTRONOMY_ROOM_ID = 105;
+    public static final int GUARDIAN_CAIMAN1_ROOM_ID = 106;
+    public static final int GUARDIAN_CAIMAN2_ROOM_ID = 107;
+    public static final int GUARDIAN_CAIMAN3_ROOM_ID = 108;
     public static final int n_connections_per_type[] = {
         0, 1, 1, 2, 1, 2, 2, 3,
         1, 2, 2, 3, 2, 3, 3, 4,
@@ -1705,7 +1708,36 @@ public class PCGArea {
                     }
                 }
             }
-        }        
+        }      
+        if (a.ID == 1 || a.ID == 2 || a.ID == 4) {  // any of the 3 pyramids
+            for(int i = 0;i<h;i++) {
+                for(int j = 0;j<w;j++) {
+                    if (a.tags[j][i] != null) {
+                        if (a.tags[j][i].contains("GUARDIAN_CAIMAN1")) {
+                            if (a.tags[j][i].size() > 1) {
+                                System.err.println("More than one tag on the a guardian caiman room! " + a.tags[j][i]);
+                                return false;
+                            }
+                            a.rooms[j][i] = GUARDIAN_CAIMAN1_ROOM_ID;
+                        }
+                        if (a.tags[j][i].contains("GUARDIAN_CAIMAN2")) {
+                            if (a.tags[j][i].size() > 1) {
+                                System.err.println("More than one tag on the a guardian caiman room! " + a.tags[j][i]);
+                                return false;
+                            }
+                            a.rooms[j][i] = GUARDIAN_CAIMAN2_ROOM_ID;
+                        }
+                        if (a.tags[j][i].contains("GUARDIAN_CAIMAN3")) {
+                            if (a.tags[j][i].size() > 1) {
+                                System.err.println("More than one tag on the a guardian caiman room! " + a.tags[j][i]);
+                                return false;
+                            }
+                            a.rooms[j][i] = GUARDIAN_CAIMAN3_ROOM_ID;
+                        }
+                    }
+                }
+            }
+        }
         if (a.ID == 3) {  // "the confluence"
             for(int i = 0;i<h;i++) {
                 for(int j = 0;j<w;j++) {
@@ -2206,6 +2238,9 @@ public class PCGArea {
                 case "ATLANTIS_TABLET4":
                 case "ATLANTIS_TABLET5":
                 case "8-bridge-room":
+                case "GUARDIAN_CAIMAN1":
+                case "GUARDIAN_CAIMAN2":
+                case "GUARDIAN_CAIMAN3":
                     tagToPlace = tag;
                     break;
 
@@ -3253,6 +3288,9 @@ public class PCGArea {
                     break;                                
                 }
                 case "8-bridge-room":
+                case "GUARDIAN_CAIMAN1":
+                case "GUARDIAN_CAIMAN2":
+                case "GUARDIAN_CAIMAN3":
                     // ...
                     break;
 
