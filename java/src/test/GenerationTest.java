@@ -105,8 +105,8 @@ public class GenerationTest {
 //        System.out.println("nPCGAreaErrors: " + nPCGAreaErrors);
 
 
-//        r.setSeed(0xe73b, 0x5555);
-        r.setSeed(0x003a, 0x5555);
+        r.setSeed(0xe73b, 0x5555);
+//        r.setSeed(0x003a, 0x5555);
         World w = pcg1.generate(r);
         if (w != null) {
 //            if (!Solver.solveGame(w)) {

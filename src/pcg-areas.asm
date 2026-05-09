@@ -253,6 +253,21 @@ pcg_generate_area__mark_special_rooms_loop_next4:
 	ld e, EIGHT_BRIDGE_ROOM_ID
 	jr pcg_generate_area__mark_special_rooms_loop_found
 pcg_generate_area__mark_special_rooms_loop_next5:
+	cp TAG_GUARDIAN_CAIMAN1
+	jr nz, pcg_generate_area__mark_special_rooms_loop_next6
+	ld e, GUARDIAN_CAIMAN1_ROOM_ID
+	jr pcg_generate_area__mark_special_rooms_loop_found
+pcg_generate_area__mark_special_rooms_loop_next6:
+	cp TAG_GUARDIAN_CAIMAN2
+	jr nz, pcg_generate_area__mark_special_rooms_loop_next7
+	ld e, GUARDIAN_CAIMAN2_ROOM_ID
+	jr pcg_generate_area__mark_special_rooms_loop_found
+pcg_generate_area__mark_special_rooms_loop_next7:
+	cp TAG_GUARDIAN_CAIMAN3
+	jr nz, pcg_generate_area__mark_special_rooms_loop_next8
+	ld e, GUARDIAN_CAIMAN3_ROOM_ID
+	jr pcg_generate_area__mark_special_rooms_loop_found
+pcg_generate_area__mark_special_rooms_loop_next8:
 	inc hl
 	inc hl
 	inc hl

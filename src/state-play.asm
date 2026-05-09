@@ -187,10 +187,10 @@ state_play_from_continue:
 		; generate area:
 		ld hl, pcg_generate_area
 		ld e, 0  ; area to generate
-; 		ld e, 1  ; area to generate <- first boss
-; 		ld e, 2  ; area to generate <- second boss
+; 		ld e, 1  ; area to generate
+; 		ld e, 2  ; area to generate
 ; 		ld e, 3  ; area to generate
-; 		ld e, 4  ; area to generate <- third boss
+; 		ld e, 4  ; area to generate
 ; 		ld e, 6  ; area to generate
 ; 		ld e, 7  ; area to generate
 ; 		ld e, 8  ; xibalba
@@ -200,8 +200,10 @@ state_play_from_continue:
 
 		; generate room:
 		ld e, START_ROOM_ID
-; 		ld e, 18  ; <- first boss
-; 		ld e, 16  ; <- second boss
+; 		ld e, GUARDIAN_CAIMAN1_ROOM_ID
+; 		ld e, GUARDIAN_CAIMAN2_ROOM_ID
+; 		ld e, 18
+; 		ld e, 16
 ; 		ld e, CALENDAR_ROOM_ID
 ; 		ld e, 2
 ; 		ld e, 3  ; <- third boss

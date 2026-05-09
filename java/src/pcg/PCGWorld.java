@@ -1028,38 +1028,7 @@ public class PCGWorld {
                 keys.addAll(q.keyTags);
                 w.lockKeys.put(q.lockTag, keys);
             }
-        }
-        
-        // Caiman statues:
-        System.out.println("Stelae: " + leftStelaCondition(w.seed1) + ", " + rightStelaCondition(w.seed1) + ", " + centerStelaCondition(w.seed1));
-        if (leftStelaCondition(w.seed1)) {
-            AreaPoint statue_p = randomAreaPoint(w.areas.get(1), true);
-            if (statue_p != null) {
-                AreaDivision statue = getDivisionByID(statue_p.a.divisionIDs[statue_p.x][statue_p.y], tree);
-                addTag(statue_p, "GUARDIAN_CAIMAN1", statue);                
-            } else {
-                System.err.println("could not place GUARDIAN_CAIMAN1!");
-            }
-        }
-        if (rightStelaCondition(w.seed1)) {
-            AreaPoint statue_p = randomAreaPoint(w.areas.get(2), true);
-            if (statue_p != null) {
-                AreaDivision statue = getDivisionByID(statue_p.a.divisionIDs[statue_p.x][statue_p.y], tree);
-                addTag(statue_p, "GUARDIAN_CAIMAN2", statue);                
-            } else {
-                System.err.println("could not place GUARDIAN_CAIMAN2!");
-            }
-        }
-        if (centerStelaCondition(w.seed1)) {
-            AreaPoint statue_p = randomAreaPoint(w.areas.get(4), true);
-            if (statue_p != null) {
-                AreaDivision statue = getDivisionByID(statue_p.a.divisionIDs[statue_p.x][statue_p.y], tree);
-                addTag(statue_p, "GUARDIAN_CAIMAN3", statue);                
-            } else {
-                System.err.println("could not place GUARDIAN_CAIMAN3!");
-            }
-        }
-        
+        }        
         // Delete unused connections:
 //        {
 //            List<AreaConnection> roDelete = new ArrayList<>();
@@ -1185,6 +1154,66 @@ public class PCGWorld {
 //        System.out.println("spawnAdditionalObjects seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
 //        System.out.println("tagLess divisions (before): " + tagLess.size() + " / " + allAreas.size());
      
+        // Caiman statues:
+        System.out.println("Stelae: " + leftStelaCondition(w.seed1) + ", " + rightStelaCondition(w.seed1) + ", " + centerStelaCondition(w.seed1));
+        {
+            boolean spawn_statues[] = {
+                leftStelaCondition(w.seed1),
+                rightStelaCondition(w.seed1),
+                centerStelaCondition(w.seed1),
+            };
+            int statue_areas[] = {1, 2, 4};
+            String statue_tags[] = {"GUARDIAN_CAIMAN1", "GUARDIAN_CAIMAN2", "GUARDIAN_CAIMAN3"};
+            for(int i = 0;i<3;i++) {
+                if (!spawn_statues[i]) continue;
+                List<AreaDivision> candidates = new ArrayList<>();
+                for(AreaDivision d:tagLess) {
+                    if (d.root.a.ID == statue_areas[i]) {  // hidden temple
+                        candidates.add(d);
+                    }
+                }
+                if (candidates.isEmpty()) {
+                    System.err.println("No division available for " + statue_tags[i]);
+                } else {
+                    int idx = r.nextInt(candidates.size());
+                    AreaDivision d = candidates.get(idx);
+                    AreaPoint p = randomDivisionPoint(d, true);
+                    addTag(p, statue_tags[i], d);
+                    tagLess.remove(d);
+                }
+            }
+        }
+        
+        
+        
+//        if (leftStelaCondition(w.seed1)) {
+//            AreaPoint statue_p = randomAreaPoint(w.areas.get(1), true);
+//            if (statue_p != null) {
+//                AreaDivision statue = getDivisionByID(statue_p.a.divisionIDs[statue_p.x][statue_p.y], tree);
+//                addTag(statue_p, "GUARDIAN_CAIMAN1", statue);                
+//            } else {
+//                System.err.println("could not place GUARDIAN_CAIMAN1!");
+//            }
+//        }
+//        if (rightStelaCondition(w.seed1)) {
+//            AreaPoint statue_p = randomAreaPoint(w.areas.get(2), true);
+//            if (statue_p != null) {
+//                AreaDivision statue = getDivisionByID(statue_p.a.divisionIDs[statue_p.x][statue_p.y], tree);
+//                addTag(statue_p, "GUARDIAN_CAIMAN2", statue);                
+//            } else {
+//                System.err.println("could not place GUARDIAN_CAIMAN2!");
+//            }
+//        }
+//        if (centerStelaCondition(w.seed1)) {
+//            AreaPoint statue_p = randomAreaPoint(w.areas.get(4), true);
+//            if (statue_p != null) {
+//                AreaDivision statue = getDivisionByID(statue_p.a.divisionIDs[statue_p.x][statue_p.y], tree);
+//                addTag(statue_p, "GUARDIAN_CAIMAN3", statue);                
+//            } else {
+//                System.err.println("could not place GUARDIAN_CAIMAN3!");
+//            }
+//        }
+
         // lost vendor:
         {
             List<AreaDivision> candidates = new ArrayList<>();

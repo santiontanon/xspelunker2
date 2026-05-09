@@ -3090,7 +3090,7 @@ pcg_generate_world__generate_mission_8_bridge_point_set:
 		call pcg_generate_world__get_mst_node_by_division_id
 		ex de, hl  ; mst node
 	pop hl  ; recover the offset
-	ld b, TAG_8_BRIDGE_ROOM  ; just some random tag value
+	ld b, TAG_8_BRIDGE_ROOM
 	call pcg_generate_world__add_tag_to_point_in_mst_node_division
 	jr pcg_generate_world__generate_mission_no_8_bridge_room
 pcg_generate_world__generate_mission_no_8_bridge_room_pop:
@@ -4710,6 +4710,50 @@ pcg_generate_world__spawn_additional_objects_tagless_loop_next:
 
 ; 	ld a, (tmp_pcg_world__tagless_list_size)  ; DEBUG  mdl-watch: "n tagless nodes:", a
 
+	; Guardian statues:
+	call pcg_generate_world__puzzles_stelae_status
+	ld a, (current_world__stela_status)
+	bit 0, a  ; left stela
+	jr z, pcg_generate_world__spawn_additional_objects_no_guardian_statue1
+	ld c, 1  ; temple of inscriptions
+	call pcg_generate_world__spawn_additional_objects_sample_node_from_area  ; hl = ptr to node
+	jr nz, pcg_generate_world__spawn_additional_objects_no_guardian_statue1
+	push hl
+		call pcg_generate_world__random_division_point_from_mst_node_tagless  ; c, b: x, y, l: offset
+	pop de
+	jr nz, pcg_generate_world__spawn_additional_objects_no_guardian_statue1
+	ld b, TAG_GUARDIAN_CAIMAN1
+	call pcg_generate_world__add_tag_to_point_in_mst_node_division
+pcg_generate_world__spawn_additional_objects_no_guardian_statue1:
+
+	ld a, (current_world__stela_status)
+	bit 1, a  ; right stela
+	jr z, pcg_generate_world__spawn_additional_objects_no_guardian_statue2
+	ld c, 2  ; lost temple
+	call pcg_generate_world__spawn_additional_objects_sample_node_from_area  ; hl = ptr to node
+	jr nz, pcg_generate_world__spawn_additional_objects_no_guardian_statue2
+	push hl
+		call pcg_generate_world__random_division_point_from_mst_node_tagless  ; c, b: x, y, l: offset
+	pop de
+	jr nz, pcg_generate_world__spawn_additional_objects_no_guardian_statue2
+	ld b, TAG_GUARDIAN_CAIMAN2
+	call pcg_generate_world__add_tag_to_point_in_mst_node_division
+pcg_generate_world__spawn_additional_objects_no_guardian_statue2:
+
+	ld a, (current_world__stela_status)
+	bit 2, a  ; middle stela
+	jr z, pcg_generate_world__spawn_additional_objects_no_guardian_statue3
+	ld c, 4  ; inverted pyramid
+	call pcg_generate_world__spawn_additional_objects_sample_node_from_area  ; hl = ptr to node
+	jr nz, pcg_generate_world__spawn_additional_objects_no_guardian_statue3
+	push hl
+		call pcg_generate_world__random_division_point_from_mst_node_tagless  ; c, b: x, y, l: offset
+	pop de
+	jr nz, pcg_generate_world__spawn_additional_objects_no_guardian_statue3
+	ld b, TAG_GUARDIAN_CAIMAN1
+	call pcg_generate_world__add_tag_to_point_in_mst_node_division
+pcg_generate_world__spawn_additional_objects_no_guardian_statue3:
+
     ; lost vendor: pick a random tagless division from area 2:
 	ld c, 2  ; lost temple
 	call pcg_generate_world__spawn_additional_objects_sample_node_from_area  ; hl = ptr to node
@@ -4718,10 +4762,6 @@ pcg_generate_world__spawn_additional_objects_tagless_loop_next:
 		call pcg_generate_world__random_division_point_from_mst_node_tagless  ; c, b: x, y, l: offset
 	pop de  ; mdl-watch2: "lost vendor:", c, b, l
 	ret nz
-	; DEBUG
-; 	ld a, (de)  ; mdl-watch: "    vendor area div: ", a
-	; DEBUG
-
 	ld b, TAG_LOST_VENDOR
 	call pcg_generate_world__add_tag_to_point_in_mst_node_division
 	ret nz
@@ -5035,7 +5075,7 @@ pcg_generate_world__spawn_additional_objects_sample_node_from_area_loop_next:
 		ld ixl, a  ; selected node, mdl-watch2: "additional objects candidates chosen/candidates:", a, c
 	pop bc
 
-	; second loop, copying the list to a new location, skipping the selected on (to
+	; second loop, copying the list to a new location, skipping the selected one (to
 	; remove it):
 	; - copy the list to "tmp_pcg_world__useable_nodes" (without the selected one)
 	; - then copy it back to "tmp_pcg_world__tagless_list"
@@ -5775,41 +5815,6 @@ pcg_generate_world__puzzles:
 ; 	pop hl
 	; DEBUG-end
 
-	; stella condition bits, based on the random seed:
-	ld l, 0
-	ld de, (current_world__seed)
-	ld a, d
-	and #03
-	ld c, a
-	ld a, e
-	and #c0
-	or c
-	jr nz, pcg_generate_world__puzzles_stela_center_set
-	ld l, 2
-pcg_generate_world__puzzles_stela_center_set:
-	; count the number of 1 bits:
-	xor a
-	ld b, 8
-pcg_generate_world__puzzles_stela_loop1:
-	rrc e
-	adc a, 0
-	djnz pcg_generate_world__puzzles_stela_loop1
-	ld b, 8
-pcg_generate_world__puzzles_stela_loop2:
-	rrc d
-	adc a, 0
-	djnz pcg_generate_world__puzzles_stela_loop2
-	; if it's an even number, left stella is active, if it's an odd one, right stella is active:
-	and #01
-	jr z, pcg_generate_world__puzzles_stela_left_active
-	set 2, l
-	jr pcg_generate_world__puzzles_stela_set
-pcg_generate_world__puzzles_stela_left_active:
-	set 0, l
-pcg_generate_world__puzzles_stela_set:
-	ld a, l
-	ld (current_world__stela_status), a	
-
 	ld hl, current_world__tablet_content
 	ld bc, MAX_TABLETS * 3 + 1 - 1
 	ld a, #ff
@@ -5989,6 +5994,45 @@ pcg_generate_world__puzzles_power_numbers_loop:
 	call pcg_generate_maya_puzzle_riddles
 	call pcg_generate_syllable_riddles
 	jp pcg_generate_atlantis_boss_riddle
+
+
+;-----------------------------------------------
+pcg_generate_world__puzzles_stelae_status:
+	; stella condition bits, based on the random seed:
+	ld l, 0
+	ld de, (current_world__seed)
+	ld a, d
+	and #03
+	ld c, a
+	ld a, e
+	and #c0
+	or c
+	jr nz, pcg_generate_world__puzzles_stela_center_set
+	ld l, 4
+pcg_generate_world__puzzles_stela_center_set:
+	; count the number of 1 bits:
+	xor a
+	ld b, 8
+pcg_generate_world__puzzles_stela_loop1:
+	rrc e
+	adc a, 0
+	djnz pcg_generate_world__puzzles_stela_loop1
+	ld b, 8
+pcg_generate_world__puzzles_stela_loop2:
+	rrc d
+	adc a, 0
+	djnz pcg_generate_world__puzzles_stela_loop2
+	; if it's an even number, left stella is active, if it's an odd one, right stella is active:
+	and #01
+	jr z, pcg_generate_world__puzzles_stela_left_active
+	set 1, l
+	jr pcg_generate_world__puzzles_stela_set
+pcg_generate_world__puzzles_stela_left_active:
+	set 0, l
+pcg_generate_world__puzzles_stela_set:
+	ld a, l
+	ld (current_world__stela_status), a	
+	ret
 
 
 ;-----------------------------------------------

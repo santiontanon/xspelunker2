@@ -332,6 +332,12 @@ pcg_generate_room__seed_generated:
 	jp z, pcg_generate_room__temple_of_poseidon
 	cp EIGHT_BRIDGE_ROOM_ID
 	jp z, pcg_generate_room__8_bridge_room
+	cp GUARDIAN_CAIMAN1_ROOM_ID
+	jp z, pcg_generate_room__guardian_caiman1
+	cp GUARDIAN_CAIMAN2_ROOM_ID
+	jp z, pcg_generate_room__guardian_caiman2
+	cp GUARDIAN_CAIMAN3_ROOM_ID
+	jp z, pcg_generate_room__guardian_caiman3
 
 	; Add background chunks randomly:
 	; here:
@@ -2238,7 +2244,7 @@ pcg_generate_room__start_continue6:
 	jr nz, pcg_generate_room__start_no_interarea_connection
 	ld a, (current_room__y)
 	add a, a
-	inc a  ; *2 + 1 t convert it to chunk coordinates
+	inc a  ; *2 + 1 to convert it to chunk coordinates
 	cp (ix + 3)
 	jr nz, pcg_generate_room__start_no_interarea_connection
 	ld a, (current_room__x)
@@ -2364,11 +2370,11 @@ pcg_generate_room__start_seed_stela_bit15_done:
 	ld hl, current_room__tile_map + 3 + 0*32
 	call z, pcg_generate_room__start_destroy_stella
 	ld a, (current_world__stela_status)
-	bit 1, a
+	bit 2, a
 	ld hl, current_room__tile_map + 11 + 3*32
 	call z, pcg_generate_room__start_destroy_stella
 	ld a, (current_world__stela_status)
-	bit 2, a
+	bit 1, a
 	ld hl, current_room__tile_map + 18 + 1*32
 	call z, pcg_generate_room__start_destroy_stella
 
@@ -3088,6 +3094,102 @@ pcg_generate_room__calendar_turn_on_phase2_loop:
 	ld de, CLRTBL2 + (256 + 84)*8
 	ld b, 8
 	jp fast_small_LDIRVM
+
+
+;-----------------------------------------------
+pcg_generate_room__guardian_caiman1:
+	ld hl, guard_statue_room1_zx0
+	jr pcg_generate_room__guardian_caiman1_continue
+pcg_generate_room__guardian_caiman2:
+	ld hl, guard_statue_room2_zx0
+	jr pcg_generate_room__guardian_caiman1_continue
+pcg_generate_room__guardian_caiman3:
+	ld hl, guard_statue_room3_zx0
+; 	jr pcg_generate_room__guardian_caiman1_continue
+
+pcg_generate_room__guardian_caiman1_continue:
+	; name table:
+	ld de, current_room__tile_map
+	ld c, GUARD_STATUE_ROOM_PAGE
+	call dzx0_from_page_c
+
+	; tile sets, collisions, and animation ptrs:
+	ld bc, guard_statue_tiles_zx0
+	ld (current_room__tileset_ptr), bc
+	ld a, AREA_COLLISION_TABLES_PAGE
+	ld (current_room__collision_ptr_page), a
+	ld bc, tile_collision_types_guard_statue
+	ld (current_room__collision_ptr), bc
+	ld a, GUARD_STATUE_ROOM_PAGE
+	ld (current_room__tileset_page), a
+	ld hl, update_animations_in_vdp_none
+	ld (current_room__animation_fn_ptr), hl
+	ld a, 1
+	ld (current_room__tileset_overrides_item_tiles), a
+
+	call pcg_generate_room__calendar_open_walls
+
+	; Check if there is an inter-area connection up or down (and we need to spawn a ladder):
+	; each connection is 8 bytes: ; id1, id2, x1, y1, direction1, x2, y2, direction2 (coordinates are in chunks)
+	ld ix, current_world__interarea_connections
+	ld b, MAX_INTERAREA_CONNECTIONS
+pcg_generate_room__guardian_caiman1_interarea_connection_loop:
+	push bc
+		ld a, (current_area__id)  ; connections from the current area
+		cp (ix)
+		jr nz, pcg_generate_room__guardian_caiman1_no_interarea_connection
+		ld a, (ix)
+		cp (ix + 1)
+		jr nc, pcg_generate_room__guardian_caiman1_no_interarea_connection  ; connection is to a previous area, cannot go down
+		ld a, (current_room__y)
+		add a, a
+		inc a  ; *2 + 1 to convert it to chunk coordinates
+		cp (ix + 3)
+		jr nz, pcg_generate_room__guardian_caiman1_no_interarea_connection
+		ld a, (current_room__x)
+		add a, a
+		cp (ix + 2)
+		jr z, pcg_generate_room__guardian_caiman1_interarea_connection_bottom_left
+		inc a
+		cp (ix + 2)
+		jr nz, pcg_generate_room__guardian_caiman1_no_interarea_connection
+pcg_generate_room__guardian_caiman1_interarea_connection_bottom_right:
+		ld hl, current_room__tile_map + 22*32 + 20
+		ld b, 8
+pcg_generate_room__guardian_caiman1_interarea_connection_bottom_right_loop:
+		ld (hl), 250
+		inc hl
+		djnz pcg_generate_room__guardian_caiman1_interarea_connection_bottom_right_loop
+		ld hl, current_room__tile_map + 22*32 + 23
+		ld (hl), 231
+		inc hl
+		ld (hl), 235
+		ld hl, current_room__tile_map + 23*32 + 23
+		ld (hl), 248
+		inc hl
+		ld (hl), 249
+		jr pcg_generate_room__guardian_caiman1_no_interarea_connection
+pcg_generate_room__guardian_caiman1_interarea_connection_bottom_left:
+		ld hl, current_room__tile_map + 22*32 + 4
+		ld b, 8
+pcg_generate_room__guardian_caiman1_interarea_connection_bottom_left_loop:
+		ld (hl), 250
+		inc hl
+		djnz pcg_generate_room__guardian_caiman1_interarea_connection_bottom_left_loop
+		ld hl, current_room__tile_map + 22*32 + 7
+		ld (hl), 231
+		inc hl
+		ld (hl), 235
+		ld hl, current_room__tile_map + 23*32 + 7
+		ld (hl), 248
+		inc hl
+		ld (hl), 249
+pcg_generate_room__guardian_caiman1_no_interarea_connection:
+		ld bc, INTERAREA_CONNECTION_SIZE
+		add ix, bc
+	pop bc
+	djnz pcg_generate_room__guardian_caiman1_interarea_connection_loop
+	ret
 
 
 ;-----------------------------------------------
