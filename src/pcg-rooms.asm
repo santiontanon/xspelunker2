@@ -2899,9 +2899,9 @@ pcg_generate_room__teleporter:
 	ld (current_room__tileset_ptr), bc
 	ld a, AREA_COLLISION_TABLES_PAGE
 	ld (current_room__collision_ptr_page), a
-	ld bc, tile_collision_types_atlantis
+	ld bc, tile_collision_types_teleporter
 	ld (current_room__collision_ptr), bc
-	ld a, TILES_PAGE
+	ld a, TELEPORTER_ROOM_PAGE
 	ld (current_room__tileset_page), a
 	ld a, 1
 	ld (current_room__tileset_overrides_item_tiles), a
@@ -2910,7 +2910,7 @@ pcg_generate_room__teleporter:
 
 	; spawn the tablet / teleporters:
 	ld hl, pcg_generate_room__teleporter_objects
-	ld b, 9
+	ld b, 3
 	ld iy, (tmp_pcg_room__next_tile_object_ptr)
 pcg_generate_room__teleporter_object_loop:
 	ld a, (hl)

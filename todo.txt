@@ -1,5 +1,10 @@
 to do:
 
+***- animal names: speak the names and maintain which ones have you spoken (SFX_secret)
+***- animal names: once you have spoken all four, in-game-message of success and gain charm
+***- animal names: add as a special achievement for the gameover screen
+***- second another shop in atlantis (ammo shop)
+
 - music: (brain 12, 15, 23, 25 have potential)
   - ending aliens
   - ending beach (reuse the story jazzy song? just some wave sfx in the background?)
@@ -18,9 +23,6 @@ to do:
   - add boss name to the stats for game over screen
 - ending B: the calendar stone machine not only creates a defensive barrier, but also activates its offensive mechanism and destroys the alien armada that was coming. You hope that will deter them from coming again.
 - update the list of enemy types to display in ending B to include new enemies in moon/mars
-- "speak" the animal names in animal room to get their blessings (if you get all four, you do double damage, adjust veryhard boss difficulty for this) (TABLET_TRIVIA_CLUE1_1, etc.)
-  - add as a special achievement for the gameover screen
-- There should be another shop. Otherwise, collecting money feels a bit useless if there is just one shop (where? Atlantis? confluence? caves? maybe an ammo shop)
 
 - 8th boss: after beating the combat against the aliens, you can teleport to their home planet, and fight against their leader (final final boss). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
   - add boss name to the stats for game over screen

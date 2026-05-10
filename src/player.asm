@@ -3174,6 +3174,15 @@ get_next_hit_id:
 ; - nz: no hit
 player_weapon_hitbox_check:
 	push ix
+		; animal charm effect:
+		ld a, (player_inventory_items + INVENTORY_ITEM_ANIMAL_CHARM)
+		or a
+		jr z, player_weapon_hitbox_check_continue
+		; double damage:
+		ld a, iyh
+		add a, a
+		ld iyh, a
+player_weapon_hitbox_check_continue:
 		ld a, 1
 		ld (player_weapon_hitbox_check_result), a
 

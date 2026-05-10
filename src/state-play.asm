@@ -117,6 +117,7 @@ state_play:
 ; 		ld (player_inventory_items+INVENTORY_ITEM_MAYA_CODEX1), a
 ; 		ld (player_inventory_items+INVENTORY_ITEM_MAYA_CODEX2), a
 ; 		ld (player_inventory_items+INVENTORY_ITEM_MAYA_CODEX3), a
+; 		ld (player_inventory_items+INVENTORY_ITEM_ANIMAL_CHARM), a
 		ld (player_inventory_weapons), a  ; machete
 ; 		ld (player_inventory_weapons+1), a
 ; 		ld (player_inventory_weapons+2), a
@@ -141,7 +142,7 @@ state_play:
 ; 		ld (global_state__objects + TAG_MAP_PIECE2), a
 ; 		ld (global_state__objects + TAG_MAP_PIECE3), a
 ; 		ld (global_state__objects + TAG_MAP_PIECE4), a
-; 		ld (global_state__objects + TAG_MAP_PIECE5), a
+		ld (global_state__objects + TAG_MAP_PIECE5), a
 ; 		ld (global_state__objects + TAG_TELEPORTER1), a
 ; 		ld (global_state__objects + TAG_TELEPORTER2), a
 ; 		ld (global_state__objects + TAG_TELEPORTER4), a
@@ -189,7 +190,7 @@ state_play_from_continue:
 
 		; generate area:
 		ld hl, pcg_generate_area
-		ld e, 0  ; area to generate
+; 		ld e, 0  ; area to generate
 ; 		ld e, 1  ; area to generate
 ; 		ld e, 2  ; area to generate
 ; 		ld e, 3  ; area to generate
@@ -197,12 +198,12 @@ state_play_from_continue:
 ; 		ld e, 6  ; area to generate
 ; 		ld e, 7  ; area to generate
 ; 		ld e, 8  ; xibalba
-; 		ld e, 9  ; atlantis
+		ld e, 9  ; atlantis
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
 
 		; generate room:
-		ld e, START_ROOM_ID
+; 		ld e, START_ROOM_ID
 ; 		ld e, GUARDIAN_CAIMAN1_ROOM_ID
 ; 		ld e, GUARDIAN_CAIMAN2_ROOM_ID
 ; 		ld e, 18
@@ -213,7 +214,7 @@ state_play_from_continue:
 ; 		ld e, 17  ; <- fourth boss
 ; 		ld e, 0
 ; 		ld e, EIGHT_BRIDGE_ROOM_ID
-; 		ld e, TELEPORTER_ROOM_ID
+		ld e, TELEPORTER_ROOM_ID
 ; 		ld e, TEMPLE_OF_POSEIDON_ID
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
