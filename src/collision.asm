@@ -1539,7 +1539,7 @@ check_for_interarea_exit_loop:
 		inc hl
 		inc hl
 		inc hl
-		SETMEGAROMPAGE_8000 TEXT_PAGE
+		SETMEGAROMPAGE_8000 INTERAREA_PAGE
 		jp interarea_exit  ; no need for "pop bc", since interarea_exit will reset the stack
 
 check_for_interarea_exit_no_direction1:
@@ -1584,7 +1584,7 @@ check_for_interarea_exit_no_area1:
 		ld e, (hl)  ; id1
 		inc hl
 		inc hl
-		SETMEGAROMPAGE_8000 TEXT_PAGE
+		SETMEGAROMPAGE_8000 INTERAREA_PAGE
 		jp interarea_exit  ; no need for "pop bc", since interarea_exit will reset the stack
 
 check_for_interarea_exit_no_area2:

@@ -114,6 +114,9 @@ state_play:
 ; 		ld (player_inventory_items+INVENTORY_ITEM_SKULL_CHARM), a
 ; 		ld (player_inventory_items+INVENTORY_ITEM_CHARYBDIS_EYE), a
 ; 		ld (player_inventory_items+INVENTORY_ITEM_SCYLLA_EYE), a
+; 		ld (player_inventory_items+INVENTORY_ITEM_MAYA_CODEX1), a
+; 		ld (player_inventory_items+INVENTORY_ITEM_MAYA_CODEX2), a
+; 		ld (player_inventory_items+INVENTORY_ITEM_MAYA_CODEX3), a
 		ld (player_inventory_weapons), a  ; machete
 ; 		ld (player_inventory_weapons+1), a
 ; 		ld (player_inventory_weapons+2), a
@@ -199,7 +202,7 @@ state_play_from_continue:
 		call call_hl_in_page_c_8000
 
 		; generate room:
-; 		ld e, START_ROOM_ID
+		ld e, START_ROOM_ID
 ; 		ld e, GUARDIAN_CAIMAN1_ROOM_ID
 ; 		ld e, GUARDIAN_CAIMAN2_ROOM_ID
 ; 		ld e, 18

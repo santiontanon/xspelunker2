@@ -342,6 +342,9 @@ public class Text {
         addLineSafe(lines_with_constant_page1, "Skull charm: I feel like I can better use my projectyles with this charm.", "ITEM_SKULL_CHARM", 80);
         addLineSafe(lines_with_constant_page1, "One of the eyes of Charybdis, which I obtained after defeating it.", "ITEM_CHARYBDIS_EYE", 80);
         addLineSafe(lines_with_constant_page1, "One of the eyes of Scylla, which I obtained after defeating it.", "ITEM_SCYLLA_EYE", 80);
+        addLineSafe(lines_with_constant_page1, "A piece of an undiscovered Maya codex! It's incomplete though.", "ITEM_CODEX1", 80);
+        addLineSafe(lines_with_constant_page1, "Two pieces of the undiscovered Maya codex! Still missing some parts, but I think it talks about the powerstones!", "ITEM_CODEX2", 80);
+        addLineSafe(lines_with_constant_page1, "Three pieces of the undiscovered Maya codex! I think it's complete, and definitively talks about powerstones!", "ITEM_CODEX3", 80);
        
         // In-game messages:
         addLineSafe(lines_with_constant_page1, "As you consume the still beating heart, you feel your strength increasing!", "HEART_PICKUP", 112);

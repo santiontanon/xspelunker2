@@ -302,7 +302,7 @@ display_map_from_teleporter__teleport_to_astronomy_room:
 	ld a, (current_world__astronomy_room_area)
 	ld e, a
 	ld hl, interarea_exit_screen
-	ld c, TEXT_PAGE
+	ld c, INTERAREA_PAGE
 	call call_hl_in_page_c_8000
 
 	; clear the enemy respawn table:

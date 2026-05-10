@@ -2329,7 +2329,7 @@ object_interaction_function_teleport_to_area_object:
 	push bc
 		ld e, b
 		ld hl, interarea_exit_screen
-		ld c, TEXT_PAGE
+		ld c, INTERAREA_PAGE
 		call call_hl_in_page_c_8000
 	pop bc
 
