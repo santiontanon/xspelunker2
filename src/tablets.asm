@@ -945,23 +945,23 @@ maya_clue5_tablet_fn:
 	ld a, COLOR_GREY
 	ld (tmp_letter_line_color), a
 
-	ld hl, TEXT_TABLET_MAYA5_LINE1
-	ld a, 60  ; first tile to use
+	ld iy, TEXT_TABLET_MAYA5_LINE1
+	ld b, 60  ; first tile to use
 	ld de, NAMTBL2 + (7 + 6*32)
 	ld ix, CHRTBL2
-	call display_paragraph_page7
+	call display_paragraph_text_page3
 
-	ld hl, TEXT_TABLET_MAYA5_LINE2
-	ld a, 60
+	ld iy, TEXT_TABLET_MAYA5_LINE2
+	ld b, 60
 	ld de, NAMTBL2 + (7 + 9*32)
 	ld ix, CHRTBL2 + 256*8
-	call display_paragraph_page7
+	call display_paragraph_text_page3
 
-	ld hl, TEXT_TABLET_MAYA5_LINE3
-	ld a, 150
+	ld iy, TEXT_TABLET_MAYA5_LINE3
+	ld b, 150
 	ld de, NAMTBL2 + (7 + 14*32)
 	ld ix, CHRTBL2 + 256*8
-	jp display_paragraph_page7
+	jp display_paragraph_text_page3
 
 
 ;-----------------------------------------------

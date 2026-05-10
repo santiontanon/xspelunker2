@@ -467,34 +467,36 @@ interact_special_case_loop_end:
 	jr z, interact_special_case_guardian2
 	cp GUARDIAN_CAIMAN3_ROOM_ID
 	jr z, interact_special_case_guardian3
-	jr interact_special_case_fail
+	cp TELEPORTER_ROOM_ID
+	jp z, interact_special_case_teleporter
+	jp interact_special_case_fail
 
 interact_special_case_calendar:
 	ld a, (global_state__solved_final_riddle)
 	or a
-	jr nz, interact_special_case_fail
+	jp nz, interact_special_case_fail
 	ld a, (global_state__n_power_stones_in_calendar)
 	cp 6
-	jr nz, interact_special_case_fail
+	jp nz, interact_special_case_fail
 
 	ld a, (player_x + 1)
 	cp 14
-	jr c, interact_special_case_fail
+	jp c, interact_special_case_fail
 	cp 18
-	jr nc, interact_special_case_fail
+	jp nc, interact_special_case_fail
 	ld a, (player_y + 1)
 	cp 12
-	jr nz, interact_special_case_fail
+	jp nz, interact_special_case_fail
 
 	; check word:
 	ld de, current_world__maya_puzzle3_word
 	call interact_special_case_check_word
-	jr nz, interact_special_case_fail
+	jp nz, interact_special_case_fail
 interact_special_case_calendar_success:
 	ld a, 1
 	ld (global_state__solved_final_riddle), a
 	ld de, TEXT_TALK_SUCCESS1
-	jr interact_special_case_success_continue
+	jp interact_special_case_success_continue
 
 interact_special_case_guardian2:
 	ld hl, global_state__objects + TAG_GUARDIAN_CAIMAN2
@@ -510,11 +512,11 @@ interact_special_case_guardian1:
 interact_special_case_guardian1_entrypoint:
 	ld a, (hl)
 	or a
-	jr nz, interact_special_case_fail
+	jp nz, interact_special_case_fail
 	push hl
 		call interact_special_case_check_word
 	pop hl
-	jr nz, interact_special_case_fail
+	jp nz, interact_special_case_fail
 	ld (hl), 1  ; mark as solved
 interact_special_case_guardian1_success:
 	ld hl, SFX_secret
@@ -529,7 +531,76 @@ interact_special_case_guardian1_success:
 	ld hl, room_render_tile_objects
 	call call_hl_in_page_c_8000
 	ld de, TEXT_STATUE_GIVES_CODEX
+	jp interact_special_case_success_continue
+
+interact_special_case_teleporter:
+	ld a, (player_x + 1)
+	cp 2
+	jp c, interact_special_case_fail
+	cp 6
+	jr c, interact_special_case_teleporter1
+	cp 10
+	jr c, interact_special_case_fail
+	cp 14
+	jr c, interact_special_case_teleporter2
+	cp 18
+	jr c, interact_special_case_fail
+	cp 22
+	jr c, interact_special_case_teleporter3
+	cp 26
+	jr c, interact_special_case_fail
+	cp 30
+	jr c, interact_special_case_teleporter4
+	jr interact_special_case_fail
+interact_special_case_teleporter2:
+	ld c, #02
+	ld de, interact_special_case_teleporter2_table
+	jr interact_special_case_teleporter1_entry_point
+interact_special_case_teleporter3:
+	ld c, #04
+	ld de, interact_special_case_teleporter3_table
+	jr interact_special_case_teleporter1_entry_point
+interact_special_case_teleporter4:
+	ld c, #08
+	ld de, interact_special_case_teleporter4_table
+	jr interact_special_case_teleporter1_entry_point
+interact_special_case_teleporter1:
+	ld c, #01
+	ld de, interact_special_case_teleporter1_table
+interact_special_case_teleporter1_entry_point:
+	ld a, (global_state__animal_charm)
+	and c
+	jr nz, interact_special_case_fail
+	push bc
+		call interact_special_case_check_word
+	pop bc
+	jr nz, interact_special_case_fail
+	ld de, TEXT_TALK_ANIMAL_LISTENED
+	ld a, (global_state__animal_charm)
+	or c
+	ld (global_state__animal_charm), a
+	cp #0f
+	jr nz, interact_special_case_teleporter1_continue
+	ld a, 1
+	ld (player_inventory_items + INVENTORY_ITEM_ANIMAL_CHARM), a
+	ld hl, add_achievement_to_stats
+	ld c, GAME_OVER_PAGE
+	ld b, 2  ; achievement id
+	call call_hl_in_page_c_8000
+	ld de, TEXT_TALK_GOT_CHARM
+interact_special_case_teleporter1_continue:
+	ld hl, SFX_secret
+	call play_SFX_with_high_priority
 	jr interact_special_case_success_continue
+
+interact_special_case_teleporter1_table:
+	db 99, 104, 97, 110, 97, 0
+interact_special_case_teleporter2_table:
+	db 98, 97, 108, 97, 109, 97, 0
+interact_special_case_teleporter3_table:
+	db 107, 111, 107, 97, 97, 106, 97, 0
+interact_special_case_teleporter4_table:
+	db 107, 97, 121, 97, 0
 
 
 interact_special_case_fail:

@@ -1,8 +1,5 @@
 to do:
 
-***- animal names: speak the names and maintain which ones have you spoken (SFX_secret)
-***- animal names: once you have spoken all four, in-game-message of success and gain charm
-***- animal names: add as a special achievement for the gameover screen
 ***- second another shop in atlantis (ammo shop)
 
 - music: (brain 12, 15, 23, 25 have potential)

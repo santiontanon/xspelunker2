@@ -171,6 +171,7 @@ global_state__maya_riddle: ds virtual 1  ; 0: not solved, 1: solved first line, 
 global_state__solved_final_riddle: ds virtual 1
 global_state__n_alien_confrontations: ds virtual 1  ; Goes from 0 to 2, and increments each time you leave the calendar room having killed at least one alien.
                                                     ; It determines how many aliens will spawn next time you enter the calendar room.
+global_state__animal_charm: ds virtual 1
 
 RAM_to_zero_on_continue:
 player_x: ds virtual 2  ; 1st the pixel and 2nd byte is the tile coordinate

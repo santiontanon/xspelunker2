@@ -52,10 +52,10 @@ public class Text {
         HashMap<String,String> lines_with_constant_page3 = new LinkedHashMap<>();
         
         // Title:
-        addLineSafe(lines_with_constant_page1, "Brain Games (2026)", "CREDITS1", 11);
-        addLineSafe(lines_with_constant_page1, "Santiago Ontañón", "CREDITS2", 10);
-        addLineSafe(lines_with_constant_page1, "SPACE to start", "START1", 10);
-        addLineSafe(lines_with_constant_page1, " X for options", "START2", 10);
+        addLineSafe(lines_with_constant_page3, "Brain Games (2026)", "CREDITS1", 11);
+        addLineSafe(lines_with_constant_page3, "Santiago Ontañón", "CREDITS2", 10);
+        addLineSafe(lines_with_constant_page3, "SPACE to start", "START1", 10);
+        addLineSafe(lines_with_constant_page3, " X for options", "START2", 10);
 
         addLineSafe(lines_with_constant_page3, "If it isn't Michael", "STORY1", 10);
         addLineSafe(lines_with_constant_page3, "S. Xavier himself!", "STORY2", 10);
@@ -149,6 +149,7 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "A", "ENDING_A", 6);
         addLineSafe(lines_with_constant_page3, "max", "MAX_TIME", 6);
         addLineSafe(lines_with_constant_page3, "no miss", "ACHIEVEMENT_NOMISS", 8);
+        addLineSafe(lines_with_constant_page3, "animal charm", "ACHIEVEMENT_ANIMALS", 8);
         addLineSafe(lines_with_constant_page3, "Hurakan", "BOSS_HURAKAN", 8);
         addLineSafe(lines_with_constant_page3, "Camazotz", "BOSS_CAMAZOTZ", 8);
         addLineSafe(lines_with_constant_page3, "Cabrakan", "BOSS_CABRAKAN", 8);
@@ -373,6 +374,8 @@ public class Text {
         addLineSafe(lines_with_constant_page1, "You place your hand in the center and, as the stone starts shaking, you hear a deep voice...", "CALENDAR_CENTER_MSG3", 112);
         addLineSafe(lines_with_constant_page1, "Type what you want to say:", "TALK", 112);     
         addLineSafe(lines_with_constant_page1, "No one listened...", "TALK_FAIL", 112);     
+        addLineSafe(lines_with_constant_page1, "The animal listened...", "TALK_ANIMAL_LISTENED", 112);     
+        addLineSafe(lines_with_constant_page1, "The animals granted you their blessing!", "TALK_GOT_CHARM", 112);     
         addLineSafe(lines_with_constant_page1, "After you speak, the room rumbles, and you hear a voice in an unknown language. It seems your words were heard!", "TALK_SUCCESS1", 112);
         addLineSafe(lines_with_constant_page1, "Where are the aliens? Have they finally given up?!", "CALENDAR_NO_ALIENS", 112);     
         addLineSafe(lines_with_constant_page3, "Xavier: Elaine! What are you doing here?!", "AMBUSH_ELAINE_1", 112);
@@ -511,9 +514,9 @@ public class Text {
 
         addLineSafe(lines_with_constant_page1, "My favorite part about writing is being able to write sounds, like", "TABLET_MAYA4_LINE1", 18*2);
 
-        addLineSafe(lines_with_constant_page2, "I once tried the writing were taught with my father's dialect.", "TABLET_MAYA5_LINE1", 18*2);
-        addLineSafe(lines_with_constant_page2, "This showed me the limitations of their writing. How to write TAL or LOL, for example? They could not write individual consontants.", "TABLET_MAYA5_LINE2", 18*6);
-        addLineSafe(lines_with_constant_page2, "So, I had to get creative and write TA-LA and LO-LO.", "TABLET_MAYA5_LINE3", 18*6);
+        addLineSafe(lines_with_constant_page3, "I once tried the writing were taught with my father's dialect.", "TABLET_MAYA5_LINE1", 18*2);
+        addLineSafe(lines_with_constant_page3, "This showed me the limitations of their writing. How to write TAL or LOL, for example? They could not write individual consontants.", "TABLET_MAYA5_LINE2", 18*6);
+        addLineSafe(lines_with_constant_page3, "So, I had to get creative and write TA-LA and LO-LO.", "TABLET_MAYA5_LINE3", 18*6);
         
         addLineSafe(lines_with_constant_page1, "The nexus will listen to its name when fully powered up. Speak its secret name in the center", "TABLET_CALENDAR_NAME_CLUE", 18*3);
         
