@@ -3217,10 +3217,27 @@ pcg_generate_room__guardian_caiman1_continue:
 
 	call pcg_generate_room__calendar_open_walls
 
+	ld a, (current_room__id)
+	ld hl, global_state__objects + TAG_GUARDIAN_CAIMAN1
+	cp GUARDIAN_CAIMAN1_ROOM_ID
+	jr z, pcg_generate_room__guardian_caiman1_continue2
+	ld hl, global_state__objects + TAG_GUARDIAN_CAIMAN2
+	cp GUARDIAN_CAIMAN2_ROOM_ID
+	jr z, pcg_generate_room__guardian_caiman1_continue2
+	ld hl, global_state__objects + TAG_GUARDIAN_CAIMAN3
+pcg_generate_room__guardian_caiman1_continue2:
+	ld c, TAG_GUARDIAN_CAIMAN_TABLET
+	ld a, (hl)
+	or a
+	jr z, pcg_generate_room__guardian_caiman1_continue3
+	ld c, TAG_MAYA_CODEX
+	dec a
+	ret nz  ; item already picked up
+pcg_generate_room__guardian_caiman1_continue3:
 	; spawn tablet:
 	ld iy, current_room__tile_objects
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 1  ; id
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_GUARDIAN_CAIMAN_TABLET
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), c
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 15  ; tile x
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 14  ; tile y
 	ld a, (current_room__id)

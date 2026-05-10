@@ -1,8 +1,5 @@
 to do:
 
-***- speaking the name in front of the guardian tablet turns it into a codex you can pick up
-***- once you have the codex, the guardian tablet does not spawn any more
-
 - music: (brain 12, 15, 23, 25 have potential)
   - ending aliens
   - ending beach (reuse the story jazzy song? just some wave sfx in the background?)

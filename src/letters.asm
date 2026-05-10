@@ -458,12 +458,18 @@ interact_special_case_loop_end:
 	ld hl, redraw_flags
 	ld (hl), #ff
 
-	ld a, (current_area__id)
-	cp 3
-	jr nz, interact_special_case_fail
 	ld a, (current_room__id)
 	cp CALENDAR_ROOM_ID
-	jr nz, interact_special_case_fail
+	jr z, interact_special_case_calendar
+	cp GUARDIAN_CAIMAN1_ROOM_ID
+	jr z, interact_special_case_guardian1
+	cp GUARDIAN_CAIMAN2_ROOM_ID
+	jr z, interact_special_case_guardian2
+	cp GUARDIAN_CAIMAN3_ROOM_ID
+	jr z, interact_special_case_guardian3
+	jr interact_special_case_fail
+
+interact_special_case_calendar:
 	ld a, (global_state__solved_final_riddle)
 	or a
 	jr nz, interact_special_case_fail
@@ -481,23 +487,50 @@ interact_special_case_loop_end:
 	jr nz, interact_special_case_fail
 
 	; check word:
-	ld hl, buffer_4096 + 2048
 	ld de, current_world__maya_puzzle3_word
-interact_special_case_check_loop:
-	ld a, (de)
-	cp (hl)
+	call interact_special_case_check_word
 	jr nz, interact_special_case_fail
-	or a
-	jr z, interact_special_case_success
-	inc hl
-	inc de
-	jr interact_special_case_check_loop
-
-interact_special_case_success:
+interact_special_case_calendar_success:
 	ld a, 1
 	ld (global_state__solved_final_riddle), a
 	ld de, TEXT_TALK_SUCCESS1
 	jr interact_special_case_success_continue
+
+interact_special_case_guardian2:
+	ld hl, global_state__objects + TAG_GUARDIAN_CAIMAN2
+	ld de, current_world__statue_names_words + 10
+	jr interact_special_case_guardian1_entrypoint
+interact_special_case_guardian3:
+	ld hl, global_state__objects + TAG_GUARDIAN_CAIMAN3
+	ld de, current_world__statue_names_words + 20
+	jr interact_special_case_guardian1_entrypoint
+interact_special_case_guardian1:
+	ld hl, global_state__objects + TAG_GUARDIAN_CAIMAN1
+	ld de, current_world__statue_names_words
+interact_special_case_guardian1_entrypoint:
+	ld a, (hl)
+	or a
+	jr nz, interact_special_case_fail
+	push hl
+		call interact_special_case_check_word
+	pop hl
+	jr nz, interact_special_case_fail
+	ld (hl), 1  ; mark as solved
+interact_special_case_guardian1_success:
+	ld hl, SFX_secret
+	call play_SFX_with_high_priority
+	; change item:
+	ld iy, current_room__tile_objects
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_MAYA_CODEX
+	ld c, TILES_PAGE
+	ld hl, room_undraw_tile_objects
+	call call_hl_in_page_c_8000
+	ld c, TILES_PAGE
+	ld hl, room_render_tile_objects
+	call call_hl_in_page_c_8000
+	ld de, TEXT_STATUE_GIVES_CODEX
+	jr interact_special_case_success_continue
+
 
 interact_special_case_fail:
 	ld de, TEXT_TALK_FAIL
@@ -546,6 +579,19 @@ interact_special_case_loop_general_in_continue:
 	pop af
 	ld (hl), a
 	jp interact_special_case_loop
+
+
+interact_special_case_check_word:
+	ld hl, buffer_4096 + 2048
+interact_special_case_check_loop:
+	ld a, (de)
+	cp (hl)
+	ret nz
+	or a
+	ret z
+	inc hl
+	inc de
+	jr interact_special_case_check_loop
 
 
 interact_special_case_draw:

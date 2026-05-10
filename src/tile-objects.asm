@@ -1263,6 +1263,7 @@ ENDR
 	dw object_interaction_function_tablet  ; TAG_XIBALBA_BOSS_GRAVE
 	dw object_interaction_function_pickup_item_boss4  ; TAG_GOLDEN_KEY
 	dw object_interaction_function_pickup_item_boss4  ; TAG_SKULL_CHARM
+	dw object_interaction_function_pickup_maya_codex  ; TAG_MAYA_CODEX
 	dw object_interaction_function_poseidon_lever  ; TAG_POSEIDON_LEVER
 	dw object_interaction_function_poseidon_boss_display  ; TAG_POSEIDON_BOSS_DISPLAY
 	dw object_interaction_function_tablet  ; TAG_ASTRONOMY_TABLET1
@@ -1351,6 +1352,34 @@ object_interaction_function_poseidon_lever:
 	ld a, 2
 	ld (boss__state), a
 	ret
+
+
+;-----------------------------------------------
+object_interaction_function_pickup_maya_codex:
+	; update stats:
+	ld hl, stats__n_items_collected
+	inc (hl)
+
+	ld hl, player_inventory_items + INVENTORY_ITEM_MAYA_CODEX2
+	ld a, (hl)
+	or a
+	jr nz, object_interaction_function_pickup_maya_codex_found
+	dec hl
+	ld a, (hl)
+	or a
+	jr nz, object_interaction_function_pickup_maya_codex_found
+	dec hl
+object_interaction_function_pickup_maya_codex_found:
+	inc hl
+	ld (hl), 1  ; add to inventory
+	ld a, (current_room__id)
+	sub GUARDIAN_CAIMAN1_ROOM_ID
+	ld hl, global_state__objects + TAG_GUARDIAN_CAIMAN1
+	ADD_HL_A
+	ld (hl), 2  ; mark as picked up
+	ld hl, SFX_item_pickup
+	call play_SFX_with_high_priority
+	jr object_interaction_function_delete_object
 
 
 ;-----------------------------------------------
@@ -2923,6 +2952,7 @@ ENDR
 	TILE_OBJECT_DATA 1, 2, 3, tile_object_xibalba_boss_graves_gfx  ; TAG_XIBALBA_BOSS_GRAVE
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_GOLDEN_KEY
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_SKULL_CHARM	
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_maya_codex_gfx  ; TAG_MAYA_CODEX
 	TILE_OBJECT_DATA 2, 2, 2, 0  ; TAG_POSEIDON_LEVER	
 	TILE_OBJECT_DATA 2, 2, 2, 0  ; TAG_POSEIDON_BOSS_DISPLAY
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ASTRONOMY_TABLET1
@@ -3024,3 +3054,6 @@ tile_object_scylla_eye_gfx:
 	db 228, 227
 	db 226, 225
 
+tile_object_maya_codex_gfx:
+	db 171, 172
+	db 187, 188

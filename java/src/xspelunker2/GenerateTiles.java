@@ -191,6 +191,14 @@ public class GenerateTiles {
         extratTilesOneObject(sourceImage, 16, 32, 16, 16, data);
         // skull charm (63)
         extratTilesOneObject(sourceImage, 32, 32, 16, 16, data);
+        
+        // beyond 4096 bytes we would get into "text_draw_buffer", avoid if possible
+//        // maya codex (64)
+//        extratTilesOneObject(sourceImage, 112, 48, 16, 16, data);
+//        
+//        if (data.size() > 4096 + 32*8) {
+//            throw new Exception("Object data grew too large for buffer_4096 + text_draw_buffer to hold!");
+//        }
 
         Z80Assembler.dataToBinary(data, outputPath + ".bin");
         ZX0Wrapper.main(outputPath+".bin", outputPath+".zx0", true, false);
