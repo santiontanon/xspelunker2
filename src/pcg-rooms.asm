@@ -3211,103 +3211,22 @@ pcg_generate_room__guardian_caiman1_continue:
 	ld a, 1
 	ld (current_room__tileset_overrides_item_tiles), a
 
+	; tablet gfx:
+	ld hl, buffer_4096 + 60 * 64
+	ld (item_object_to_upload_to_vdp), hl
+
 	call pcg_generate_room__calendar_open_walls
 
-	; Check if there is an inter-area connection up or down (and we need to spawn a ladder):
-	; each connection is 8 bytes: ; id1, id2, x1, y1, direction1, x2, y2, direction2 (coordinates are in chunks)
-; 	ld ix, current_world__interarea_connections
-; 	ld b, MAX_INTERAREA_CONNECTIONS
-; pcg_generate_room__guardian_caiman1_interarea_connection_loop:
-; 	push bc
-; 		ld a, (current_area__id)  ; connections from the current area
-; 		cp (ix)
-; 		jp nz, pcg_generate_room__guardian_caiman1_no_interarea_connection_down
-; 		ld a, (current_room__y)
-; 		add a, a
-; 		inc a  ; *2 + 1 to convert it to chunk coordinates
-; 		cp (ix + 3)
-; 		jp nz, pcg_generate_room__guardian_caiman1_no_interarea_connection
-; 		ld a, (current_room__x)
-; 		add a, a
-; 		cp (ix + 2)
-; 		jr z, pcg_generate_room__guardian_caiman1_interarea_connection_bottom_left
-; 		inc a
-; 		cp (ix + 2)
-; 		jp nz, pcg_generate_room__guardian_caiman1_no_interarea_connection
-; pcg_generate_room__guardian_caiman1_interarea_connection_bottom_right:
-; 		ld hl, current_room__tile_map + 22*32 + 20
-; 		ld b, 8
-; pcg_generate_room__guardian_caiman1_interarea_connection_bottom_right_loop:
-; 		ld (hl), 250
-; 		inc hl
-; 		djnz pcg_generate_room__guardian_caiman1_interarea_connection_bottom_right_loop
-; 		ld hl, current_room__tile_map + 22*32 + 23
-; 		ld (hl), 231
-; 		inc hl
-; 		ld (hl), 235
-; 		ld hl, current_room__tile_map + 23*32 + 23
-; 		ld (hl), 248
-; 		inc hl
-; 		ld (hl), 167
-; 		jr pcg_generate_room__guardian_caiman1_no_interarea_connection
-; pcg_generate_room__guardian_caiman1_interarea_connection_bottom_left:
-; 		ld hl, current_room__tile_map + 22*32 + 4
-; 		ld b, 8
-; pcg_generate_room__guardian_caiman1_interarea_connection_bottom_left_loop:
-; 		ld (hl), 250
-; 		inc hl
-; 		djnz pcg_generate_room__guardian_caiman1_interarea_connection_bottom_left_loop
-; 		ld hl, current_room__tile_map + 22*32 + 7
-; 		ld (hl), 231
-; 		inc hl
-; 		ld (hl), 235
-; 		ld hl, current_room__tile_map + 23*32 + 7
-; 		ld (hl), 248
-; 		inc hl
-; 		ld (hl), 167		
-; 		jr pcg_generate_room__guardian_caiman1_no_interarea_connection
-; pcg_generate_room__guardian_caiman1_no_interarea_connection_down:
-; 		; check to see if there is a connection up:
-; 		ld a, (current_area__id)  ; connections from the current area
-; 		cp (ix + 1)
-; 		jp nz, pcg_generate_room__guardian_caiman1_no_interarea_connection
-; 		ld a, (current_room__y)
-; 		add a, a  ; *2 to convert it to chunk coordinates
-; 		cp (ix + 6)
-; 		jr nz, pcg_generate_room__guardian_caiman1_no_interarea_connection
-; 		ld a, (current_room__x)
-; 		add a, a
-; 		cp (ix + 5)
-; 		jr z, pcg_generate_room__guardian_caiman1_interarea_connection_top_left
-; 		inc a
-; 		cp (ix + 5)
-; 		jr nz, pcg_generate_room__guardian_caiman1_no_interarea_connection
-; pcg_generate_room__guardian_caiman1_interarea_connection_top_right:
-; 		ld hl, current_room__tile_map + 0*32 + 23
-; 		ld (hl), 248
-; 		inc hl
-; 		ld (hl), 167
-; 		ld hl, current_room__tile_map + 1*32 + 23
-; 		ld (hl), 248
-; 		inc hl
-; 		ld (hl), 167
-; 		jr pcg_generate_room__guardian_caiman1_no_interarea_connection
-; pcg_generate_room__guardian_caiman1_interarea_connection_top_left:
-; 		ld hl, current_room__tile_map + 0*32 + 7
-; 		ld (hl), 248
-; 		inc hl
-; 		ld (hl), 167
-; 		ld hl, current_room__tile_map + 1*32 + 7
-; 		ld (hl), 248
-; 		inc hl
-; 		ld (hl), 167
-; 		jr pcg_generate_room__guardian_caiman1_no_interarea_connection
-; pcg_generate_room__guardian_caiman1_no_interarea_connection:
-; 		ld bc, INTERAREA_CONNECTION_SIZE
-; 		add ix, bc
-; 	pop bc
-; 	dec b
-; 	jp nz, pcg_generate_room__guardian_caiman1_interarea_connection_loop
+	; spawn tablet:
+	ld iy, current_room__tile_objects
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 1  ; id
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_GUARDIAN_CAIMAN_TABLET
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 15  ; tile x
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 14  ; tile y
+	ld a, (current_room__id)
+	cp GUARDIAN_CAIMAN2_ROOM_ID
+	ret nz
+	dec (iy + ROOM_TILE_OBJECT_STRUCT_Y)
 	ret
 
 

@@ -1559,3 +1559,26 @@ astronomy_tablet2_fn_loop:
 	djnz astronomy_tablet2_fn_loop
 	ret
 
+
+;-----------------------------------------------
+caiman_tablet_fn:
+	ld hl, tablet_trivia_tiles_zx0
+	ld c, TABLET_LETTER_PAGE
+	call maya_puzzle_tablet_fn_load_extra_tiles_hl_set
+	ld a, (current_room__id)
+	ld iy, TEXT_GUARDIAN_CAIMAN_TABLET_1
+	cp GUARDIAN_CAIMAN1_ROOM_ID
+	jr z, caiman_tablet_fn_continue
+	ld iy, TEXT_GUARDIAN_CAIMAN_TABLET_2
+	cp GUARDIAN_CAIMAN2_ROOM_ID
+	jr z, caiman_tablet_fn_continue
+	ld iy, TEXT_GUARDIAN_CAIMAN_TABLET_3
+caiman_tablet_fn_continue:
+	ld a, 18
+	ld (tmp_letter_line_width), a
+	ld a, COLOR_GREY
+	ld (tmp_letter_line_color), a
+	ld b, 48
+	ld de, NAMTBL2 + (7 + 8*32)
+	ld ix, CHRTBL2 + 256*8
+	jp display_paragraph_text_page3

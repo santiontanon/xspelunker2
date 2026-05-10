@@ -1268,6 +1268,7 @@ ENDR
 	dw object_interaction_function_tablet  ; TAG_ASTRONOMY_TABLET1
 	dw object_interaction_function_tablet  ; TAG_ASTRONOMY_TABLET2
 	dw object_interaction_function_world_teleporter  ; TAG_WORLD_TELEPORTER
+	dw object_interaction_function_tablet  ; TAG_GUARDIAN_CAIMAN_TABLET
 	dw object_interaction_function_shopkeeper  ; TAG_NPC_SHOPKEEPER
 	dw object_interaction_function_shop  ; TAG_NPC_SHOP
 	dw object_interaction_function_empty  ; TAG_DYNAMITE
@@ -1812,6 +1813,11 @@ object_interaction_function_tablet_not_astronomy_tablet1
 	ld de, astronomy_tablet2_fn
 	jr object_interaction_function_tablet_ptr_set
 object_interaction_function_tablet_not_astronomy_tablet2
+	cp TAG_GUARDIAN_CAIMAN_TABLET
+	jr nz, object_interaction_function_tablet_not_guardian_caiman_tablet
+	ld de, caiman_tablet_fn
+	jr object_interaction_function_tablet_ptr_set
+object_interaction_function_tablet_not_guardian_caiman_tablet
 	; Determine tablet content:
 	ld hl, current_world__tablet_content
 object_interaction_function_tablet_loop:
@@ -2922,7 +2928,7 @@ ENDR
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ASTRONOMY_TABLET1
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ASTRONOMY_TABLET2
 	TILE_OBJECT_DATA 2, 4, 4, 0  ; TAG_WORLD_TELEPORTER
-
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_GUARDIAN_CAIMAN_TABLET
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOPKEEPER
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOP
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_DYNAMITE

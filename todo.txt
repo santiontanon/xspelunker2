@@ -1,7 +1,6 @@
 to do:
 
 ***- giant statue rooms:
-  ***- spawn tablets that state: "I am one of the guardian caimans. I do not remember my name, but I remember I was the first/second/third".
   ***- draw the codex fragments, 3 variants: one piece, 2 pieces and full
   ***- add to inventory and add description
   ***- speaking the names in front of each statue makes a fragment of a codex appear. You need all 3 for it to be intelligible (this will later unlock the "A+" ending, as explained below, the three of them allow you to manufacture fire stones, or give you the clue to get to the forge)
@@ -18,12 +17,12 @@ to do:
 - moon biome (similar to mars, but different color scheme, it could even be the same with palette changed)
   - If the player enters a world name related to these theories (like "ATLANTIS", "AZTLAN", or "COH", or something like that), it could trigger a world where the the "Firestone forge", which is in the Moon, is active if you are in a world with the word (clue is in ATLANTIS_TABLET_5_1).
 - 6th boss: (ideas: "The Solar Stone Jaguar", "The Martian Terracotta Warrior", "The Dust Stone Golem"). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer). Another idea: https://en.wikipedia.org/wiki/Human_sacrifice_in_Maya_culture#/media/File:MA_D293_Maya_stone_carving_from_Copan.jpg
-  - in the boss room, before the fight: an underground cave where there is a broken ancient robot that can talk to you if you turn it on with the golden key (in a mix of English and Maya maybe?), and gives you a weapon upgrade (e.g. a better raygun, which might be useful for fighting the final alien boss), add as a special achievement for the gameover screen.  
+  - in the boss room, before the fight: an underground cave where there is a broken ancient robot that can talk if you turn it on with the golden key (in a mix of English and Maya maybe?), and gives you a weapon upgrade (e.g. a better raygun, which might be useful for fighting the final alien boss), add as a special achievement for the gameover screen.  
   - add boss name to the stats for game over screen
 - 7th boss (ideas: "The Lunar Obsidian Sentinel" (tall, slender, smooth black, reflective surfaces), "The Lunar Crystal Serpent", "The Moon Stone Monolith"). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
   - add boss name to the stats for game over screen
 - ending B: the calendar stone machine not only creates a defensive barrier, but also activates its offensive mechanism and destroys the alien armada that was coming. You hope that will deter them from coming again.
-- update the list of enemy types and names to display in ending B to include new enemies in moon/mars
+- update the list of enemy types to display in ending B to include new enemies in moon/mars
 - "speak" the animal names in the animal room to get their blessings (if you get all four, you do double damage, adjust angry/veryhard boss difficulty for this): I already have the clue for this in the game, right? (TABLET_TRIVIA_CLUE1_1, etc.)
   - add as a special achievement for the gameover screen
 - There should be another shop. Otherwise, collecting money feels a bit useless if there is just one shop (where? Atlantis? confluence? caves? maybe an ammo shop)
