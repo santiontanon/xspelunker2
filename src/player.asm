@@ -2226,7 +2226,7 @@ player_update_falling_logic_internal:
 	ld a, (keyboard_state)
 	bit KEY_UP_BIT, a
 	jr nz, player_update_falling_logic_internal_no_antigrav_belt  ; not using the antigrav belt
-	; player using the antigrav belt, limit to the first 6 frames of 'player_fall_speed_table':
+	; player using the antigrav belt, limit to the first 3 frames of 'player_fall_speed_table':
 	ld a, (player_state_timer)
 	cp 2
 	jr c, player_update_falling_logic_internal_no_antigrav_belt

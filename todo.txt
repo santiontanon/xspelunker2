@@ -1,6 +1,17 @@
 to do:
 
-***- second another shop in atlantis (ammo shop)
+***- mars biome (remember to keep ladder tiles in place for down-door opening code)
+  ***- Obsidian Circuitry: dark with golden lines like circuits (maybe I can have tile animations that make a pulse go through them?)
+  ***- Starmaps in Stone
+  ***- cables instead of ropes (some might spark, so, you need to time your climbing)
+  ***- steam/gas vents (that might push you up/sideways/down)
+  ***- lava (no water!)
+  ***- basic chunks
+    ***- you can jump higher here (7 tiles instead of 5)
+  ***- implement different jump tables per biome (everything at the top of player.asm)
+  ***- lava chunks
+  ***- combination/block chunks
+  ***- boss chunks
 
 - music: (brain 12, 15, 23, 25 have potential)
   - ending aliens
@@ -9,8 +20,6 @@ to do:
   - atlantis
   - mars
   - moon
-- mars biome (maybe moon/mars maps are smaller as most puzzles are not there? and they are just so that you can get the final stone) (remember to keep ladder tiles in place for down-door opening code)
-  - can you jump higher in the moon/mars? fall slower?
 - moon biome (similar to mars, it could even be the same with palette changed)
   - If the player enters a world name related to these theories (like "ATLANTIS", "AZTLAN", or "COH", or something like that), it could trigger a world where the the "Firestone forge", which is in the Moon, is active if you are in a world with the word (clue is in ATLANTIS_TABLET_5_1).
 - 6th boss: (ideas: "The Solar Stone Jaguar", "The Martian Terracotta Warrior", "The Dust Stone Golem"). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer). Another idea: https://en.wikipedia.org/wiki/Human_sacrifice_in_Maya_culture#/media/File:MA_D293_Maya_stone_carving_from_Copan.jpg
@@ -37,6 +46,7 @@ to do:
   - Solving the riddle reveals the head of the statue (which was hidden), and two gigantic empty eye sockets. If you place the eyes of charybdis and scylla, the statue comes alive, and you have your boss fight! (which gives you an achievement)
 
 - Potential new ideas if I have the energy:
+  - second shop (can I reuse 'object_interaction_function_shop_internal'?)
   - [did I already add any clue for this? remove if I don't use it] special condition for triggering "angry bosses" (they change color). For each one you beat in this hard mode, you get something in the ending, and if you get them all, you get a special mention. The conditions might be things like: certain bit in the random seed to be "11" (so, not all seeds are good), dive into water X times in the same room without doing anything else, etc. Use the "random seed stella" (maybe give a clue about it), currently it displays the bottom 6 bits of the first random seed word, should I make it display a whole 8 bits of it?
     - add as a special achievement for the gameover screen (at least one angry, and all 8 angry)
   - The Maya were obsessed with sacrificing blood to their gods (the highest being extracting a beating heart from a person while still alive), then it was often burned so that the smoke will bring it to the gods. Can I add some puzzle/item/riddle about this? (maybe in the stella puzzle above, or maybe some blood meter that accumulates when you receive damage/die/kill-an-enemy and when full, things happen)
