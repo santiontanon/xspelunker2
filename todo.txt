@@ -1,13 +1,10 @@
 to do:
 
 ***- mars biome (remember to keep ladder tiles in place for down-door opening code)
-  ***- Obsidian Circuitry: dark with golden lines like circuits (maybe I can have tile animations that make a pulse go through them?)
-  ***- Starmaps in Stone
-  ***- cables instead of ropes (some might spark, so, you need to time your climbing)
-  ***- steam/gas vents (that might push you up/sideways/down)
-  ***- lava (no water!)
   ***- basic chunks
     ***- you can jump higher here (7 tiles instead of 5)
+  ***- steam/gas vents (that might push you up/sideways/down)
+  ***- lava (no water!)
   ***- implement different jump tables per biome (everything at the top of player.asm)
   ***- lava chunks
   ***- combination/block chunks
