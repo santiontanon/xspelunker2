@@ -1,14 +1,19 @@
 to do:
 
 ***- mars biome (remember to keep ladder tiles in place for down-door opening code)
-  ***- basic chunks
-    ***- you can jump higher here (7 tiles instead of 5)
-  ***- steam/gas vents (that might push you up/sideways/down)
+  OK - statues:
+  ***- basic chunks: 5/16
+  ***- electrical equipment, incubation vats, etc. similar to xspelunker 1?
+  ***- ladder patterns
   ***- lava (no water!)
   ***- implement different jump tables per biome (everything at the top of player.asm)
   ***- lava chunks
   ***- combination/block chunks
   ***- boss chunks
+  ***- sprite enemies
+  ***- tile enemies
+    ***- steam/gas vents (that might push you up/sideways/down) (as tile enemies?)
+    ***- others
 
 - music: (brain 12, 15, 23, 25 have potential)
   - ending aliens
