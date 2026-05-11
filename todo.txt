@@ -2,7 +2,7 @@ to do:
 
 ***- mars biome (remember to keep ladder tiles in place for down-door opening code)
   OK - statues:
-  ***- basic chunks: 5/16
+  ***- basic chunks: 12/16
   ***- electrical equipment, incubation vats, etc. similar to xspelunker 1?
   ***- ladder patterns
   ***- lava (no water!)
