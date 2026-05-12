@@ -62,6 +62,7 @@ public class HardcodedWorldForAssembler {
         PCGArea pcg2_caves = new PCGArea(true, "caves");
         PCGArea pcg2_xibalba = new PCGArea(true, "xibalba");
         PCGArea pcg2_atlantis = new PCGArea(true, "atlantis");
+        PCGArea pcg2_mars = new PCGArea(true, "mars");
         
         String worldStr = "";
         World w = pcg1.generate(r, 1, false);
@@ -89,7 +90,9 @@ public class HardcodedWorldForAssembler {
                 case 9:
                     pcg2 = pcg2_atlantis;
                     break;
-                case 10:  // mars
+                case 10:
+                    pcg2 = pcg2_mars;
+                    break;
                 case 11:  // moon
                     pcg2 = pcg2_pyramid;
                     break;

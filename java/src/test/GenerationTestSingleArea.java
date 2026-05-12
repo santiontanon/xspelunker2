@@ -44,6 +44,7 @@ public class GenerationTestSingleArea {
         PCGArea pcg2_caves = new PCGArea(true, "caves");
         PCGArea pcg2_xibalba = new PCGArea(true, "xibalba");
         PCGArea pcg2_atlantis = new PCGArea(true, "atlantis");
+        PCGArea pcg2_mars = new PCGArea(true, "mars");
         
         int nPCGAreaErrors = 0;
         HashMap<String, Integer> chunkStats = new HashMap<>();
@@ -52,8 +53,8 @@ public class GenerationTestSingleArea {
             typeStats[i] = 0;
         }
         
-//        int target_area_to_visualize = 3;
-        int target_area_to_visualize = -1;  // ALL areas
+        int target_area_to_visualize = 10;  // mars
+//        int target_area_to_visualize = -1;  // ALL areas
         int save_area_image_up_to = 50;
 //        for(int i = 0;i<1;i++) {
         for(int i = 0;i<1000;i++) {
@@ -94,7 +95,9 @@ public class GenerationTestSingleArea {
                         case 9:
                             pcg2 = pcg2_atlantis;
                             break;
-                        case 10:  // mars
+                        case 10:
+                            pcg2 = pcg2_mars;
+                            break;
                         case 11:  // moon
                             pcg2 = pcg2_pyramid;
                             break;

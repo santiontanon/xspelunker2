@@ -87,6 +87,7 @@ public class RoomChunk {
             case "caves": return simplifyTilesCaves(biome);
             case "xibalba": return simplifyTilesXibalba(biome);
             case "atlantis": return simplifyTilesAtlantis(biome);
+            case "mars": return simplifyTilesMars(biome);
             default:
                 throw new Exception("Undefined biome " + biome);
         }
@@ -596,7 +597,84 @@ public class RoomChunk {
         
         return chunk;
     }
-    
+
+
+    public RoomChunk simplifyTilesMars(String biome) throws Exception
+    {
+        RoomChunk chunk = this.clone();
+        for(int i = 0;i<chunk.tiles[0].length;i++) {
+            for(int j = 0;j<chunk.tiles.length;j++) {
+                int tile = tiles[j][i];
+//                switch(tile) {
+//                    // spikes:
+//                    case 15*16 + 12:
+//                    case 8*16 + 2:
+//                        tile = 15*16 + 12;
+//                        break;
+//                    case 8*16 + 4:
+//                    case 8*16 + 5:
+//                        tile = 0;
+//                        break;
+//                    // ropes:
+//                    case 8*16 + 3:
+//                    case 8*16 + 6:
+//                        tile = 0;  // remove ropes, they will be reconstructed
+//                        break;
+//                    // platforms 1:
+//                    case 15*16 + 14:
+//                    case 8*16 + 9:
+//                        tile = 15*16 + 14;
+//                        break;
+//                    // small bricks:
+//                    case 15*16 + 13:
+//                    case 9*16 + 15:
+//                    case 9*16 + 14:
+//                        tile = 15*16 + 13;
+//                        break;
+//                    // medium bricks:
+//                    case 15*16 + 11:
+//                    case 7*16 + 6:
+//                        tile = 15*16 + 11;
+//                        break;
+//                    case 15*16 + 10:
+//                    case 7*16 + 5:
+//                        tile = 15*16 + 10;
+//                        break;
+//                    // gold bricks:
+//                    case 12*16 + 5:
+//                    case 12*16 + 6:
+//                        tile = 12*16 + 5;
+//                        break;
+//                    // stairs (leave only the bottom piece):
+//                    case 15*16 + 8:
+//                        if (i<CHUNK_HEIGHT-1 && tiles[j][i+1] == 15*16 + 8) {
+//                            tile = 0;
+//                        }
+//                        break;
+//                    case 10*16 + 7:
+//                        if (i<CHUNK_HEIGHT-1 && tiles[j][i+1] == 10*16+7) {
+//                            tile = 0;
+//                        }
+//                        break;
+////                    case 12*16 + 12:
+////                        if (i<CHUNK_HEIGHT-1 && tiles[j][i+1] == 12*16 + 12) {
+////                            tile = 0;
+////                        }
+////                        break;
+////                    case 12*16 + 13:
+////                        if (i<CHUNK_HEIGHT-1 && tiles[j][i+1] == 12*16+13) {
+////                            tile = 0;
+////                        }
+////                        break;
+//                    default:
+//                }
+                chunk.tiles[j][i] = tile;
+            }
+        }
+        
+        return chunk;
+    }
+
     
     public TMXObject randomObject(String type, MSXRandom r)
     {

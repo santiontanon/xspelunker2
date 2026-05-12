@@ -21,7 +21,8 @@ public class PatternVerification {
 //        PCGArea pcg2 = new PCGArea(true, "jungle");
 //        PCGArea pcg2 = new PCGArea(true, "caves");
 //        PCGArea pcg2 = new PCGArea(true, "xibalba");
-        PCGArea pcg2 = new PCGArea(true, "atlantis");
+//        PCGArea pcg2 = new PCGArea(true, "atlantis");
+        PCGArea pcg2 = new PCGArea(true, "mars");
         
         for(int i = 0;i<16;i++) {
             for(RoomChunk c:pcg2.fg_chunks.get(i)) {

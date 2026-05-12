@@ -2,14 +2,16 @@ to do:
 
 ***- mars biome (remember to keep ladder tiles in place for down-door opening code)
   OK - statues:
-  ***- basic chunks: 12/16
+  OK - basic chunks
+  ***- generate levels in Java
+    ***- boss chunks
+    ***- combination/block chunks
+    ***- ladder patterns
+  ***- background chunks
   ***- electrical equipment, incubation vats, etc. similar to xspelunker 1?
-  ***- ladder patterns
-  ***- lava (no water!)
+  ***- lava gfx + chunks (no water!)
   ***- implement different jump tables per biome (everything at the top of player.asm)
-  ***- lava chunks
-  ***- combination/block chunks
-  ***- boss chunks
+  ***- add to assembler
   ***- sprite enemies
   ***- tile enemies
     ***- steam/gas vents (that might push you up/sideways/down) (as tile enemies?)

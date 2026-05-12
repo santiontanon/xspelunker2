@@ -58,9 +58,9 @@ public class Music {
         
 //        playTSVMusic("data/music/boss.tsv", 8, 0, null);
 
-//        playTSVMusic("data/music/test.tsv", 8, 0, null);  // to test new instruments
+        playTSVMusic("data/music/test.tsv", 12, 0, null);
 
-        generateInGamesongData();
+//        generateInGamesongData();
     }
     
     

@@ -65,6 +65,9 @@ public class PCGArea {
             case "atlantis":
                 loadAtlantisChunks(simplifyChunks);
                 break;
+            case "mars":
+                loadMarsChunks(simplifyChunks);
+                break;
             default:
                 throw new Exception("Unsupported biome: " + biome);
         }
@@ -1688,6 +1691,274 @@ public class PCGArea {
             }
         }
     }    
+
+
+    public void loadMarsChunks(boolean simplifyChunks) throws Exception
+    {
+        // background:
+        bg_chunks.add(new RoomChunk("data/mars/bg-1.tmx", 0, "pyramid"));
+
+        // foreground:
+        for(int i = 0;i<16;i++) {
+            fg_chunks.put(i, new ArrayList<>());
+        }
+        fg_chunks.get(0x0).add(new RoomChunk("data/mars/room0000-1.tmx", 0x0, "pyramid"));
+        
+        fg_chunks.get(0x1).add(new RoomChunk("data/mars/room0001-1.tmx", 0x1, "pyramid"));
+        
+        fg_chunks.get(0x2).add(new RoomChunk("data/mars/room0010-1.tmx", 0x2, "pyramid"));
+        
+        fg_chunks.get(0x3).add(new RoomChunk("data/mars/room0011-1.tmx", 0x3, "pyramid"));
+        
+        fg_chunks.get(0x4).add(new RoomChunk("data/mars/room0100-1.tmx", 0x4, "pyramid"));
+        
+        fg_chunks.get(0x5).add(new RoomChunk("data/mars/room0101-1.tmx", 0x5, "pyramid"));
+        
+        fg_chunks.get(0x6).add(new RoomChunk("data/mars/room0110-1.tmx", 0x6, "pyramid"));
+        
+        fg_chunks.get(0x7).add(new RoomChunk("data/mars/room0111-1.tmx", 0x7, "pyramid"));
+
+        fg_chunks.get(0x8).add(new RoomChunk("data/mars/room1000-1.tmx", 0x8, "pyramid"));
+
+        fg_chunks.get(0x9).add(new RoomChunk("data/mars/room1001-1.tmx", 0x9, "pyramid"));
+
+        fg_chunks.get(0xa).add(new RoomChunk("data/mars/room1010-1.tmx", 0xa, "pyramid"));
+
+        fg_chunks.get(0xb).add(new RoomChunk("data/mars/room1011-1.tmx", 0xb, "pyramid"));
+        
+        fg_chunks.get(0xc).add(new RoomChunk("data/mars/room1100-1.tmx", 0xc, "pyramid"));
+
+        fg_chunks.get(0xd).add(new RoomChunk("data/mars/room1101-1.tmx", 0xd, "pyramid"));
+
+        fg_chunks.get(0xe).add(new RoomChunk("data/mars/room1110-1.tmx", 0xe, "pyramid"));
+
+        fg_chunks.get(0xf).add(new RoomChunk("data/mars/room1111-1.tmx", 0xf, "pyramid"));
+        
+        // boss:
+        for(int i = 0;i<16;i++) {
+            boss_chunks.put(i, new ArrayList<>());
+        }
+//        boss_chunks.get(0x1).add(new RoomChunk("data/mars/boss0001-1.tmx", 0x1, "pyramid"));
+//        boss_chunks.get(0x1).add(new RoomChunk("data/mars/boss0001-2.tmx", 0x1, "pyramid"));
+//        boss_chunks.get(0x2).add(new RoomChunk("data/mars/boss0010-1.tmx", 0x2, "pyramid"));
+//        boss_chunks.get(0x3).add(new RoomChunk("data/mars/boss0011-1.tmx", 0x3, "pyramid"));
+//        boss_chunks.get(0x3).add(new RoomChunk("data/mars/boss0011-2.tmx", 0x3, "pyramid"));
+//        boss_chunks.get(0x4).add(new RoomChunk("data/mars/boss0100-1.tmx", 0x4, "pyramid"));
+//        boss_chunks.get(0x4).add(new RoomChunk("data/mars/boss0100-2.tmx", 0x4, "pyramid"));
+//        boss_chunks.get(0x5).add(new RoomChunk("data/mars/boss0101-1.tmx", 0x5, "pyramid"));
+//        boss_chunks.get(0x5).add(new RoomChunk("data/mars/boss0101-2.tmx", 0x5, "pyramid")); 
+//        boss_chunks.get(0x5).add(new RoomChunk("data/mars/boss0101-3.tmx", 0x5, "pyramid"));
+//        boss_chunks.get(0x5).add(new RoomChunk("data/mars/boss0101-4.tmx", 0x5, "pyramid"));
+//        boss_chunks.get(0x6).add(new RoomChunk("data/mars/boss0110-1.tmx", 0x6, "pyramid"));
+//        boss_chunks.get(0x6).add(new RoomChunk("data/mars/boss0110-2.tmx", 0x6, "pyramid"));
+//        boss_chunks.get(0x7).add(new RoomChunk("data/mars/boss0111-1.tmx", 0x7, "pyramid"));
+//        boss_chunks.get(0x7).add(new RoomChunk("data/mars/boss0111-2.tmx", 0x7, "pyramid"));
+//        boss_chunks.get(0x7).add(new RoomChunk("data/mars/boss0111-3.tmx", 0x7, "pyramid"));
+//        boss_chunks.get(0x7).add(new RoomChunk("data/mars/boss0111-4.tmx", 0x7, "pyramid"));
+//        boss_chunks.get(0x8).add(new RoomChunk("data/mars/boss1000-1.tmx", 0x8, "pyramid"));
+//        boss_chunks.get(0x9).add(new RoomChunk("data/mars/boss1001-1.tmx", 0x9, "pyramid"));
+//        boss_chunks.get(0x9).add(new RoomChunk("data/mars/boss1001-2.tmx", 0x9, "pyramid"));
+//        boss_chunks.get(0xa).add(new RoomChunk("data/mars/boss1010-1.tmx", 0xa, "pyramid"));
+//        boss_chunks.get(0xb).add(new RoomChunk("data/mars/boss1011-1.tmx", 0xb, "pyramid"));
+//        boss_chunks.get(0xc).add(new RoomChunk("data/mars/boss1100-1.tmx", 0xc, "pyramid"));
+//        boss_chunks.get(0xc).add(new RoomChunk("data/mars/boss1100-2.tmx", 0xc, "pyramid"));
+//        boss_chunks.get(0xd).add(new RoomChunk("data/mars/boss1101-1.tmx", 0xd, "pyramid"));
+//        boss_chunks.get(0xd).add(new RoomChunk("data/mars/boss1101-2.tmx", 0xd, "pyramid"));
+//        boss_chunks.get(0xd).add(new RoomChunk("data/mars/boss1101-3.tmx", 0xd, "pyramid"));
+//        boss_chunks.get(0xe).add(new RoomChunk("data/mars/boss1110-1.tmx", 0xe, "pyramid"));
+//        boss_chunks.get(0xe).add(new RoomChunk("data/mars/boss1110-2.tmx", 0xe, "pyramid"));
+//        boss_chunks.get(0xf).add(new RoomChunk("data/mars/boss1111-1.tmx", 0xf, "pyramid"));
+//        boss_chunks.get(0xf).add(new RoomChunk("data/mars/boss1111-2.tmx", 0xf, "pyramid"));
+//        boss_chunks.get(0xf).add(new RoomChunk("data/mars/boss1111-3.tmx", 0xf, "pyramid"));
+//        boss_chunks.get(0xf).add(new RoomChunk("data/mars/boss1111-4.tmx", 0xf, "pyramid"));
+        
+        // block puzzles:
+        for(int i = 0;i<16;i++) {
+            block_chunks.put(i, new ArrayList<>());
+        }
+        {
+            List<RoomChunk> l = new ArrayList<>();
+//            l.add(new RoomChunk("data/mars/block0011-1.tmx", 0x3, "pyramid"));
+//            l.add(new RoomChunk("data/mars/block0011-2.tmx", 0x3, "pyramid"));
+//            l.add(new RoomChunk("data/mars/block0101-1.tmx", 0x5, "pyramid"));
+//            l.add(new RoomChunk("data/mars/block0101-2.tmx", 0x5, "pyramid"));
+//            l.add(new RoomChunk("data/mars/block0101-3.tmx", 0x5, "pyramid"));
+//            l.add(new RoomChunk("data/mars/block0101-4.tmx", 0x5, "pyramid"));
+//            l.add(new RoomChunk("data/mars/block0110-1.tmx", 0x6, "pyramid"));
+//            l.add(new RoomChunk("data/mars/block0110-2.tmx", 0x6, "pyramid"));
+//            l.add(new RoomChunk("data/mars/block0111-1.tmx", 0x7, "pyramid"));
+//            l.add(new RoomChunk("data/mars/block1001-1.tmx", 0x9, "pyramid"));
+//            l.add(new RoomChunk("data/mars/block1001-2.tmx", 0x9, "pyramid"));
+//            l.add(new RoomChunk("data/mars/block1010-1.tmx", 0xa, "pyramid"));
+//            l.add(new RoomChunk("data/mars/block1100-1.tmx", 0xc, "pyramid"));
+//            l.add(new RoomChunk("data/mars/block1100-2.tmx", 0xc, "pyramid"));
+
+            for(RoomChunk c2:l) {
+                block_chunks.get(c2.type).add(c2);
+                List<RoomChunk> current = new ArrayList<>();
+                List<RoomChunk> current2 = new ArrayList<>();
+                current.add(c2);
+                current2.add(c2);
+                for(RoomChunk c:current) {
+                    if ((c.type & PCGWorld.DIRECTION_LEFT) == 0) {
+                        TMXObject o = c.firstObject("breakable-left");
+                        if (o != null) {
+                            RoomChunk chunk2 = c.clone();
+                            chunk2.type |= PCGWorld.DIRECTION_LEFT;
+                            for(int i = 0;i<o.dy/8;i++) {
+                                for(int j = 0;j<o.dx/8;j++) {
+                                    chunk2.tiles[(o.x/8) + j][(o.y/8) + i] = 0;
+                                }
+                            }
+                            chunk2.removeObjectTypes("breakable-left");
+                            chunk2.removeObjectTypes("door-left");
+                            chunk2.path += " + left";
+                            chunk2.tags.put("left", "hole");
+                            block_chunks.get(chunk2.type).add(chunk2);
+                            current2.add(chunk2);
+                        }
+                    }
+                }
+                current.clear();
+                current.addAll(current2);
+                for(RoomChunk c:current) {
+                    if ((c.type & PCGWorld.DIRECTION_UP) == 0) {
+                        TMXObject o = c.firstObject("breakable-up");
+                        if (o != null) {
+                            RoomChunk chunk2 = c.clone();
+                            chunk2.type |= PCGWorld.DIRECTION_UP;
+                            for(int i = 0;i<o.dy/8;i++) {
+                                for(int j = 0;j<o.dx/8;j++) {
+                                    chunk2.tiles[(o.x/8) + j][(o.y/8) + i] = 0;
+                                }
+                            }
+                            chunk2.removeObjectTypes("breakable-up");
+                            chunk2.removeObjectTypes("door-up");
+                            chunk2.path += " + up";
+                            chunk2.tags.put("up", "hole");
+                            block_chunks.get(chunk2.type).add(chunk2);
+                            current2.add(chunk2);
+                        }
+                    }
+                }
+                current.clear();
+                current.addAll(current2);
+                for(RoomChunk c:current) {
+                    if ((c.type & PCGWorld.DIRECTION_RIGHT) == 0) {
+                        TMXObject o = c.firstObject("breakable-right");
+                        if (o != null) {
+                            RoomChunk chunk2 = c.clone();
+                            chunk2.type |= PCGWorld.DIRECTION_RIGHT;
+                            for(int i = 0;i<o.dy/8;i++) {
+                                for(int j = 0;j<o.dx/8;j++) {
+                                    chunk2.tiles[(o.x/8) + j][(o.y/8) + i] = 0;
+                                }
+                            }
+                            chunk2.removeObjectTypes("breakable-right");
+                            chunk2.removeObjectTypes("door-right");
+                            chunk2.path += " + right";
+                            chunk2.tags.put("right", "hole");
+                            block_chunks.get(chunk2.type).add(chunk2);
+                            current2.add(chunk2);
+                        }
+                    }
+                }   
+                current.clear();
+                current.addAll(current2);
+                for(RoomChunk c:current) {
+                    if ((c.type & PCGWorld.DIRECTION_DOWN) == 0) {
+                        TMXObject o = c.firstObject("breakable-down");
+                        if (o != null) {
+                            RoomChunk chunk2 = c.clone();
+                            chunk2.type |= PCGWorld.DIRECTION_DOWN;
+                            for(int i = 0;i<o.dy/8;i++) {
+                                for(int j = 0;j<o.dx/8;j++) {
+                                    chunk2.tiles[(o.x/8) + j][(o.y/8) + i] = 0;
+                                }
+                            }
+                            chunk2.removeObjectTypes("breakable-down");
+                            chunk2.removeObjectTypes("door-down");
+                            chunk2.path += " + down";
+                            chunk2.tags.put("down", "hole");
+                            block_chunks.get(chunk2.type).add(chunk2);
+                        }
+                    }
+                }
+            }
+        }
+        
+        // combination locks:
+        for(int i = 0;i<16;i++) {
+            combination_chunks.put(i, new ArrayList<>());
+        }
+        
+        List<RoomChunk> combination_raw_chunks = new ArrayList<>();
+//        combination_raw_chunks.add(new RoomChunk("data/mars/combination0000-1.tmx", 0, "pyramid"));
+//        combination_raw_chunks.add(new RoomChunk("data/mars/combination0001-1.tmx", 0x1, "pyramid"));
+//        combination_raw_chunks.add(new RoomChunk("data/mars/combination0100-1.tmx", 0x4, "pyramid"));
+//        combination_raw_chunks.add(new RoomChunk("data/mars/combination0101-1.tmx", 0x5, "pyramid"));
+        for(int type = 0;type<16;type++) {
+            for(RoomChunk chunk:combination_raw_chunks) {
+                if ((type & PCGWorld.DIRECTION_LEFT) == 0 && (chunk.type & PCGWorld.DIRECTION_LEFT) != 0) continue;
+                if ((type & PCGWorld.DIRECTION_UP) == 0 && (chunk.type & PCGWorld.DIRECTION_UP) != 0) continue;
+                if ((type & PCGWorld.DIRECTION_RIGHT) == 0 && (chunk.type & PCGWorld.DIRECTION_RIGHT) != 0) continue;
+                if ((type & PCGWorld.DIRECTION_DOWN) == 0 && (chunk.type & PCGWorld.DIRECTION_DOWN) != 0) continue;
+
+                RoomChunk chunk2 = chunk.clone();
+                chunk2.type = type;
+
+                if ((type & PCGWorld.DIRECTION_LEFT) != 0 && (chunk.type & PCGWorld.DIRECTION_LEFT) == 0) {
+                    // open a path to the left:
+                    for(int i = 7;i<10;i++) {
+                        for(int j = 0;j<3;j++) {
+                            chunk2.tiles[j][i] = 0;
+                        }
+                    }
+                    chunk2.removeObjectTypes("door-left");
+                    chunk2.removeObjectTypes("breakable-left");
+                    chunk2.path += " + left";
+                    chunk2.tags.put("left", "hole");
+                }
+                if ((type & PCGWorld.DIRECTION_UP) != 0 && (chunk.type & PCGWorld.DIRECTION_UP) == 0) {
+                    // open a path up:
+                    for(int i = 0;i<1;i++) {
+                        for(int j = 6;j<10;j++) {
+                            chunk2.tiles[j][i] = 0;
+                        }
+                    }
+                    chunk2.removeObjectTypes("door-up");
+                    chunk2.removeObjectTypes("breakable-up");
+                    chunk2.tags.put("up", "hole");
+                    chunk2.path += " + up";
+                }
+                if ((type & PCGWorld.DIRECTION_RIGHT) != 0 && (chunk.type & PCGWorld.DIRECTION_RIGHT) == 0) {
+                    // open a path right:
+                    for(int i = 7;i<10;i++) {
+                        for(int j = 13;j<16;j++) {
+                            chunk2.tiles[j][i] = 0;
+                        }
+                    }
+                    chunk2.removeObjectTypes("door-right");
+                    chunk2.removeObjectTypes("breakable-right");
+                    chunk2.path += " + right";
+                    chunk2.tags.put("right", "hole");
+                }
+                if ((type & PCGWorld.DIRECTION_DOWN) != 0 && (chunk.type & PCGWorld.DIRECTION_DOWN) == 0) {
+                    // open a path down:
+                    for(int i = 10;i<12;i++) {
+                        for(int j = 6;j<10;j++) {
+                            chunk2.tiles[j][i] = 0;
+                        }
+                    }
+                    chunk2.removeObjectTypes("door-down");
+                    chunk2.removeObjectTypes("breakable-down");
+                    chunk2.tags.put("down", "hole");
+                    chunk2.path += " + down";
+                }
+                combination_chunks.get(type).add(chunk2);
+            }
+        }
+    }
     
 
     public boolean mergeAreaRooms(Area a, MSXRandom r)
