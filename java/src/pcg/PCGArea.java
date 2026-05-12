@@ -1739,38 +1739,28 @@ public class PCGArea {
             boss_chunks.put(i, new ArrayList<>());
         }
 //        boss_chunks.get(0x1).add(new RoomChunk("data/mars/boss0001-1.tmx", 0x1, "mars"));
-//        boss_chunks.get(0x1).add(new RoomChunk("data/mars/boss0001-2.tmx", 0x1, "mars"));
-//        boss_chunks.get(0x2).add(new RoomChunk("data/mars/boss0010-1.tmx", 0x2, "mars"));
-//        boss_chunks.get(0x3).add(new RoomChunk("data/mars/boss0011-1.tmx", 0x3, "mars"));
-//        boss_chunks.get(0x3).add(new RoomChunk("data/mars/boss0011-2.tmx", 0x3, "mars"));
-//        boss_chunks.get(0x4).add(new RoomChunk("data/mars/boss0100-1.tmx", 0x4, "mars"));
+        boss_chunks.get(0x2).add(new RoomChunk("data/mars/boss0010-1.tmx", 0x2, "mars"));
+        boss_chunks.get(0x3).add(new RoomChunk("data/mars/boss0011-1.tmx", 0x3, "mars"));
+        boss_chunks.get(0x4).add(new RoomChunk("data/mars/boss0100-1.tmx", 0x4, "mars"));
 //        boss_chunks.get(0x4).add(new RoomChunk("data/mars/boss0100-2.tmx", 0x4, "mars"));
 //        boss_chunks.get(0x5).add(new RoomChunk("data/mars/boss0101-1.tmx", 0x5, "mars"));
 //        boss_chunks.get(0x5).add(new RoomChunk("data/mars/boss0101-2.tmx", 0x5, "mars")); 
-//        boss_chunks.get(0x5).add(new RoomChunk("data/mars/boss0101-3.tmx", 0x5, "mars"));
-//        boss_chunks.get(0x5).add(new RoomChunk("data/mars/boss0101-4.tmx", 0x5, "mars"));
-//        boss_chunks.get(0x6).add(new RoomChunk("data/mars/boss0110-1.tmx", 0x6, "mars"));
-//        boss_chunks.get(0x6).add(new RoomChunk("data/mars/boss0110-2.tmx", 0x6, "mars"));
+        boss_chunks.get(0x6).add(new RoomChunk("data/mars/boss0110-1.tmx", 0x6, "mars"));
+        boss_chunks.get(0x6).add(new RoomChunk("data/mars/boss0110-2.tmx", 0x6, "mars"));
 //        boss_chunks.get(0x7).add(new RoomChunk("data/mars/boss0111-1.tmx", 0x7, "mars"));
 //        boss_chunks.get(0x7).add(new RoomChunk("data/mars/boss0111-2.tmx", 0x7, "mars"));
-//        boss_chunks.get(0x7).add(new RoomChunk("data/mars/boss0111-3.tmx", 0x7, "mars"));
-//        boss_chunks.get(0x7).add(new RoomChunk("data/mars/boss0111-4.tmx", 0x7, "mars"));
         boss_chunks.get(0x8).add(new RoomChunk("data/mars/boss1000-1.tmx", 0x8, "mars"));
-//        boss_chunks.get(0x9).add(new RoomChunk("data/mars/boss1001-1.tmx", 0x9, "mars"));
-//        boss_chunks.get(0x9).add(new RoomChunk("data/mars/boss1001-2.tmx", 0x9, "mars"));
-//        boss_chunks.get(0xa).add(new RoomChunk("data/mars/boss1010-1.tmx", 0xa, "mars"));
+        boss_chunks.get(0x9).add(new RoomChunk("data/mars/boss1001-1.tmx", 0x9, "mars"));
+        boss_chunks.get(0xa).add(new RoomChunk("data/mars/boss1010-1.tmx", 0xa, "mars"));
 //        boss_chunks.get(0xb).add(new RoomChunk("data/mars/boss1011-1.tmx", 0xb, "mars"));
 //        boss_chunks.get(0xc).add(new RoomChunk("data/mars/boss1100-1.tmx", 0xc, "mars"));
 //        boss_chunks.get(0xc).add(new RoomChunk("data/mars/boss1100-2.tmx", 0xc, "mars"));
 //        boss_chunks.get(0xd).add(new RoomChunk("data/mars/boss1101-1.tmx", 0xd, "mars"));
 //        boss_chunks.get(0xd).add(new RoomChunk("data/mars/boss1101-2.tmx", 0xd, "mars"));
-//        boss_chunks.get(0xd).add(new RoomChunk("data/mars/boss1101-3.tmx", 0xd, "mars"));
 //        boss_chunks.get(0xe).add(new RoomChunk("data/mars/boss1110-1.tmx", 0xe, "mars"));
 //        boss_chunks.get(0xe).add(new RoomChunk("data/mars/boss1110-2.tmx", 0xe, "mars"));
 //        boss_chunks.get(0xf).add(new RoomChunk("data/mars/boss1111-1.tmx", 0xf, "mars"));
 //        boss_chunks.get(0xf).add(new RoomChunk("data/mars/boss1111-2.tmx", 0xf, "mars"));
-//        boss_chunks.get(0xf).add(new RoomChunk("data/mars/boss1111-3.tmx", 0xf, "mars"));
-//        boss_chunks.get(0xf).add(new RoomChunk("data/mars/boss1111-4.tmx", 0xf, "mars"));
         
         // block puzzles:
         for(int i = 0;i<16;i++) {
@@ -1778,18 +1768,15 @@ public class PCGArea {
         }
         {
             List<RoomChunk> l = new ArrayList<>();
-//            l.add(new RoomChunk("data/mars/block0011-1.tmx", 0x3, "mars"));
-//            l.add(new RoomChunk("data/mars/block0011-2.tmx", 0x3, "mars"));
-//            l.add(new RoomChunk("data/mars/block0101-1.tmx", 0x5, "mars"));
-//            l.add(new RoomChunk("data/mars/block0101-2.tmx", 0x5, "mars"));
-//            l.add(new RoomChunk("data/mars/block0101-3.tmx", 0x5, "mars"));
-//            l.add(new RoomChunk("data/mars/block0101-4.tmx", 0x5, "mars"));
-//            l.add(new RoomChunk("data/mars/block0110-1.tmx", 0x6, "mars"));
-//            l.add(new RoomChunk("data/mars/block0110-2.tmx", 0x6, "mars"));
+            l.add(new RoomChunk("data/mars/block0011-1.tmx", 0x3, "mars"));
+            l.add(new RoomChunk("data/mars/block0101-1.tmx", 0x5, "mars"));
+            l.add(new RoomChunk("data/mars/block0101-2.tmx", 0x5, "mars"));
+            l.add(new RoomChunk("data/mars/block0110-1.tmx", 0x6, "mars"));
+            l.add(new RoomChunk("data/mars/block0110-2.tmx", 0x6, "mars"));
 //            l.add(new RoomChunk("data/mars/block0111-1.tmx", 0x7, "mars"));
-//            l.add(new RoomChunk("data/mars/block1001-1.tmx", 0x9, "mars"));
-//            l.add(new RoomChunk("data/mars/block1001-2.tmx", 0x9, "mars"));
-//            l.add(new RoomChunk("data/mars/block1010-1.tmx", 0xa, "mars"));
+            l.add(new RoomChunk("data/mars/block1001-1.tmx", 0x9, "mars"));
+            l.add(new RoomChunk("data/mars/block1001-2.tmx", 0x9, "mars"));
+            l.add(new RoomChunk("data/mars/block1010-1.tmx", 0xa, "mars"));
 //            l.add(new RoomChunk("data/mars/block1100-1.tmx", 0xc, "mars"));
 //            l.add(new RoomChunk("data/mars/block1100-2.tmx", 0xc, "mars"));
 
@@ -1893,10 +1880,8 @@ public class PCGArea {
         }
         
         List<RoomChunk> combination_raw_chunks = new ArrayList<>();
-//        combination_raw_chunks.add(new RoomChunk("data/mars/combination0000-1.tmx", 0, "mars"));
-//        combination_raw_chunks.add(new RoomChunk("data/mars/combination0001-1.tmx", 0x1, "mars"));
-//        combination_raw_chunks.add(new RoomChunk("data/mars/combination0100-1.tmx", 0x4, "mars"));
-//        combination_raw_chunks.add(new RoomChunk("data/mars/combination0101-1.tmx", 0x5, "mars"));
+        combination_raw_chunks.add(new RoomChunk("data/mars/combination0000-1.tmx", 0, "mars"));
+        combination_raw_chunks.add(new RoomChunk("data/mars/combination0100-1.tmx", 0x4, "mars"));
         for(int type = 0;type<16;type++) {
             for(RoomChunk chunk:combination_raw_chunks) {
                 if ((type & PCGWorld.DIRECTION_LEFT) == 0 && (chunk.type & PCGWorld.DIRECTION_LEFT) != 0) continue;
@@ -3288,7 +3273,7 @@ public class PCGArea {
                 {
                     TMXObject place = ra.fg_chunks[go.x][go.y].randomObject("item", r);
                     if (place == null) {
-                        System.err.println("Cannot find an 'item' place for " + go.type);
+                        System.err.println("Cannot find an 'item' place for " + go.type + " in " + ra.fg_chunks[go.x][go.y].path);
                         return false;
                     }
                     ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
@@ -3309,7 +3294,7 @@ public class PCGArea {
                 {
                     TMXObject place = ra.fg_chunks[go.x][go.y].randomObject("big-item", r);
                     if (place == null) {
-                        System.err.println("Cannot find an 'big-item' place for " + go.type);
+                        System.err.println("Cannot find an 'big-item' place for " + go.type + " in " + ra.fg_chunks[go.x][go.y].path);
                         return false;
                     }
                     ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
@@ -3333,7 +3318,7 @@ public class PCGArea {
                                                   go.y*RoomChunk.CHUNK_HEIGHT*8 + place.y, "boss-lock"));
                     place = ra.fg_chunks[go.x][go.y].randomObject("4x4-item", r);
                     if (place == null) {
-                        System.err.println("Cannot find an '4x4-item' place for " + go.type);
+                        System.err.println("Cannot find an '4x4-item' place for " + go.type + " in " + ra.fg_chunks[go.x][go.y].path);
                         return false;
                     }
                     ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
@@ -3346,7 +3331,7 @@ public class PCGArea {
                 {
                     TMXObject place = ra.fg_chunks[go.x][go.y].randomObject("big-item", r);
                     if (place == null) {
-                        System.err.println("Cannot find an 'big-item' place for " + go.type);
+                        System.err.println("Cannot find an 'big-item' place for " + go.type + " in " + ra.fg_chunks[go.x][go.y].path);
                         return false;
                     }
                     ra.objects.add(new GameObject(go.x*RoomChunk.CHUNK_WIDTH*8 + place.x,
