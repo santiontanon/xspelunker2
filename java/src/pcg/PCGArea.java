@@ -1754,15 +1754,15 @@ public class PCGArea {
         boss_chunks.get(0x8).add(new RoomChunk("data/mars/boss1000-1.tmx", 0x8, "mars"));
         boss_chunks.get(0x9).add(new RoomChunk("data/mars/boss1001-1.tmx", 0x9, "mars"));
         boss_chunks.get(0xa).add(new RoomChunk("data/mars/boss1010-1.tmx", 0xa, "mars"));
-//        boss_chunks.get(0xb).add(new RoomChunk("data/mars/boss1011-1.tmx", 0xb, "mars"));
+        boss_chunks.get(0xb).add(new RoomChunk("data/mars/boss1011-1.tmx", 0xb, "mars"));
         boss_chunks.get(0xc).add(new RoomChunk("data/mars/boss1100-1.tmx", 0xc, "mars"));
         boss_chunks.get(0xc).add(new RoomChunk("data/mars/boss1100-2.tmx", 0xc, "mars"));
-//        boss_chunks.get(0xd).add(new RoomChunk("data/mars/boss1101-1.tmx", 0xd, "mars"));
-//        boss_chunks.get(0xd).add(new RoomChunk("data/mars/boss1101-2.tmx", 0xd, "mars"));
-//        boss_chunks.get(0xe).add(new RoomChunk("data/mars/boss1110-1.tmx", 0xe, "mars"));
-//        boss_chunks.get(0xe).add(new RoomChunk("data/mars/boss1110-2.tmx", 0xe, "mars"));
-//        boss_chunks.get(0xf).add(new RoomChunk("data/mars/boss1111-1.tmx", 0xf, "mars"));
-//        boss_chunks.get(0xf).add(new RoomChunk("data/mars/boss1111-2.tmx", 0xf, "mars"));
+        boss_chunks.get(0xd).add(new RoomChunk("data/mars/boss1101-1.tmx", 0xd, "mars"));
+        boss_chunks.get(0xd).add(new RoomChunk("data/mars/boss1101-2.tmx", 0xd, "mars"));
+        boss_chunks.get(0xe).add(new RoomChunk("data/mars/boss1110-1.tmx", 0xe, "mars"));
+        boss_chunks.get(0xe).add(new RoomChunk("data/mars/boss1110-2.tmx", 0xe, "mars"));
+        boss_chunks.get(0xf).add(new RoomChunk("data/mars/boss1111-1.tmx", 0xf, "mars"));
+        boss_chunks.get(0xf).add(new RoomChunk("data/mars/boss1111-2.tmx", 0xf, "mars"));
         
         // block puzzles:
         for(int i = 0;i<16;i++) {

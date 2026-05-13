@@ -1,20 +1,17 @@
 to do:
 
+***- fix the block0101 chunks for all biomes (not feasible right now depending on how they spawn)
 ***- mars biome (remember to keep ladder tiles in place for down-door opening code)
-  ***- generate levels in Java
-    ***- finish the boss chunks
-    ***- room ladder patterns
-    ***- simplify / prettify mars chunks in Java
+  ***- room ladder patterns
   ***- background chunks for decoration
   ***- electrical equipment, incubation vats, etc. similar to xspelunker 1 + add chunks that use them
   ***- lava gfx + chunks
   ***- add variety chunks
+  ***- simplify / prettify mars chunks in Java
   ***- implement different jump tables per biome (everything at the top of player.asm)
   ***- add to assembler
   ***- sprite enemies
-  ***- tile enemies
-    ***- steam/gas vents (that might push you up/sideways/down) (as tile enemies?)
-    ***- others
+  ***- tile enemies (one could be steam/gas vents that might push you up/sideways/down)
 
 - music: (brain 12, 15, 23, 25 have potential)
   - ending aliens
