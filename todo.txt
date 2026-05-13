@@ -1,9 +1,6 @@
 to do:
 
-***- fix the block0101 chunks for all biomes (not feasible right now depending on how they spawn)
 ***- mars biome (remember to keep ladder tiles in place for down-door opening code)
-  ***- room ladder patterns
-  ***- background chunks for decoration
   ***- electrical equipment, incubation vats, etc. similar to xspelunker 1 + add chunks that use them
   ***- lava gfx + chunks
   ***- add variety chunks
@@ -46,6 +43,7 @@ to do:
   - Solving the riddle reveals the head of the statue (which was hidden), and two gigantic empty eye sockets. If you place the eyes of charybdis and scylla, the statue comes alive, and you have your boss fight! (which gives you an achievement)
 
 - Potential new ideas if I have the energy:
+  - spanning tree generation within each division always starts in the top-left corner, biasing generation process: down and right dead-ends are like 8x more likely than left/up dead-ends. Maybe I can randomize if I start from the left/right or up/down for each area.
   - second shop (can I reuse 'object_interaction_function_shop_internal'?)
   - [did I already add any clue for this? remove if I don't use it] special condition for triggering "angry bosses" (they change color). For each one you beat in this hard mode, you get something in the ending, and if you get them all, you get a special mention. The conditions might be things like: certain bit in the random seed to be "11" (so, not all seeds are good), dive into water X times in the same room without doing anything else, etc. Use the "random seed stella" (maybe give a clue about it), currently it displays the bottom 6 bits of the first random seed word, should I make it display a whole 8 bits of it?
     - add as a special achievement for the gameover screen (at least one angry, and all 8 angry)

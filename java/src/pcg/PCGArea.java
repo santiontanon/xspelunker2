@@ -1224,6 +1224,7 @@ public class PCGArea {
             l.add(new RoomChunk("data/xibalba/block0101-4.tmx", 0x5, "xibalba"));
             l.add(new RoomChunk("data/xibalba/block0110-1.tmx", 0x6, "xibalba"));
             l.add(new RoomChunk("data/xibalba/block1001-1.tmx", 0x9, "xibalba"));
+            l.add(new RoomChunk("data/xibalba/block1001-2.tmx", 0x9, "xibalba"));
             l.add(new RoomChunk("data/xibalba/block1010-1.tmx", 0xa, "xibalba"));
             l.add(new RoomChunk("data/xibalba/block1010-2.tmx", 0xa, "xibalba"));
             l.add(new RoomChunk("data/xibalba/block1100-1.tmx", 0xc, "xibalba"));
@@ -1627,6 +1628,7 @@ public class PCGArea {
         List<RoomChunk> combination_raw_chunks = new ArrayList<>();
         combination_raw_chunks.add(new RoomChunk("data/atlantis/combination0000-1.tmx", 0, "atlantis"));
         combination_raw_chunks.add(new RoomChunk("data/atlantis/combination0100-1.tmx", 0x4, "atlantis"));
+        combination_raw_chunks.add(new RoomChunk("data/atlantis/combination0100-2.tmx", 0x4, "atlantis"));
         combination_raw_chunks.add(new RoomChunk("data/atlantis/combination1000-1.tmx", 0x8, "atlantis"));
         combination_raw_chunks.add(new RoomChunk("data/atlantis/combination1000-2.tmx", 0x8, "atlantis"));
         for(int type = 0;type<16;type++) {
@@ -1696,7 +1698,10 @@ public class PCGArea {
     public void loadMarsChunks(boolean simplifyChunks) throws Exception
     {
         // background:
-        bg_chunks.add(new RoomChunk("data/mars/bg-1.tmx", 0, "pyramid"));
+        bg_chunks.add(new RoomChunk("data/mars/bg-1.tmx", 0, "mars"));
+        bg_chunks.add(new RoomChunk("data/mars/bg-2.tmx", 0, "mars"));
+        bg_chunks.add(new RoomChunk("data/mars/bg-3.tmx", 0, "mars"));
+        bg_chunks.add(new RoomChunk("data/mars/bg-4.tmx", 0, "mars"));
 
         // foreground:
         for(int i = 0;i<16;i++) {
@@ -1705,36 +1710,49 @@ public class PCGArea {
         fg_chunks.get(0x0).add(new RoomChunk("data/mars/room0000-1.tmx", 0x0, "mars"));
         
         fg_chunks.get(0x1).add(new RoomChunk("data/mars/room0001-1.tmx", 0x1, "mars"));
+        fg_chunks.get(0x1).add(new RoomChunk("data/mars/room0001-2.tmx", 0x1, "mars"));
         
         fg_chunks.get(0x2).add(new RoomChunk("data/mars/room0010-1.tmx", 0x2, "mars"));
         
         fg_chunks.get(0x3).add(new RoomChunk("data/mars/room0011-1.tmx", 0x3, "mars"));
+        fg_chunks.get(0x3).add(new RoomChunk("data/mars/room0011-2.tmx", 0x3, "mars"));
         
         fg_chunks.get(0x4).add(new RoomChunk("data/mars/room0100-1.tmx", 0x4, "mars"));
         fg_chunks.get(0x4).add(new RoomChunk("data/mars/room0100-2.tmx", 0x4, "mars"));
+        fg_chunks.get(0x4).add(new RoomChunk("data/mars/room0100-3.tmx", 0x4, "mars"));
         
         fg_chunks.get(0x5).add(new RoomChunk("data/mars/room0101-1.tmx", 0x5, "mars"));
+        fg_chunks.get(0x5).add(new RoomChunk("data/mars/room0101-2.tmx", 0x5, "mars"));
+        fg_chunks.get(0x5).add(new RoomChunk("data/mars/room0101-3.tmx", 0x5, "mars"));
         
         fg_chunks.get(0x6).add(new RoomChunk("data/mars/room0110-1.tmx", 0x6, "mars"));
+        fg_chunks.get(0x6).add(new RoomChunk("data/mars/room0110-2.tmx", 0x6, "mars"));
         
         fg_chunks.get(0x7).add(new RoomChunk("data/mars/room0111-1.tmx", 0x7, "mars"));
+        fg_chunks.get(0x7).add(new RoomChunk("data/mars/room0111-2.tmx", 0x7, "mars"));
 
         fg_chunks.get(0x8).add(new RoomChunk("data/mars/room1000-1.tmx", 0x8, "mars"));
 
         fg_chunks.get(0x9).add(new RoomChunk("data/mars/room1001-1.tmx", 0x9, "mars"));
+        fg_chunks.get(0x9).add(new RoomChunk("data/mars/room1001-2.tmx", 0x9, "mars"));
 
         fg_chunks.get(0xa).add(new RoomChunk("data/mars/room1010-1.tmx", 0xa, "mars"));
         fg_chunks.get(0xa).add(new RoomChunk("data/mars/room1010-2.tmx", 0xa, "mars"));
 
         fg_chunks.get(0xb).add(new RoomChunk("data/mars/room1011-1.tmx", 0xb, "mars"));
+        fg_chunks.get(0xb).add(new RoomChunk("data/mars/room1011-2.tmx", 0xb, "mars"));
         
         fg_chunks.get(0xc).add(new RoomChunk("data/mars/room1100-1.tmx", 0xc, "mars"));
+        fg_chunks.get(0xc).add(new RoomChunk("data/mars/room1100-2.tmx", 0xc, "mars"));
 
         fg_chunks.get(0xd).add(new RoomChunk("data/mars/room1101-1.tmx", 0xd, "mars"));
+        fg_chunks.get(0xd).add(new RoomChunk("data/mars/room1101-2.tmx", 0xd, "mars"));
 
         fg_chunks.get(0xe).add(new RoomChunk("data/mars/room1110-1.tmx", 0xe, "mars"));
+        fg_chunks.get(0xe).add(new RoomChunk("data/mars/room1110-2.tmx", 0xe, "mars"));
 
         fg_chunks.get(0xf).add(new RoomChunk("data/mars/room1111-1.tmx", 0xf, "mars"));
+        fg_chunks.get(0xf).add(new RoomChunk("data/mars/room1111-2.tmx", 0xf, "mars"));
         
         // boss:
         for(int i = 0;i<16;i++) {
@@ -2942,16 +2960,16 @@ public class PCGArea {
                     }
                     
                     if (j < (a.width * 2 - 1)) {
-                            if ((ra.pieceTypes[j][i] & PCGWorld.DIRECTION_RIGHT) != 0) {
-                                if (ra.fg_chunks[j + 1][i] != null) {
-                                    if ((ra.pieceTypes[j + 1][i] & PCGWorld.DIRECTION_LEFT) == 0) {
-                                        // breakable wall/door, we need a hole:
-                                        rightTag = "hole";
-                                    }
-                                } else {
-                                    rightTag = "hole";  // inter area connection
+                        if ((ra.pieceTypes[j][i] & PCGWorld.DIRECTION_RIGHT) != 0) {
+                            if (ra.pieceTypes[j + 1][i] >= 0) {
+                                if ((ra.pieceTypes[j + 1][i] & PCGWorld.DIRECTION_LEFT) == 0) {
+                                    // breakable wall/door, we need a hole:
+                                    rightTag = "hole";
                                 }
+                            } else {
+                                rightTag = "hole";  // interarea connection
                             }
+                        }
                     } else {
                         if ((ra.pieceTypes[j][i] & PCGWorld.DIRECTION_RIGHT) != 0) {
                             rightTag = "hole";  // inter area connection
@@ -2961,16 +2979,16 @@ public class PCGArea {
                     }
                     
                     if (i < (a.height * 2 - 1)) {
-                            if ((ra.pieceTypes[j][i] & PCGWorld.DIRECTION_DOWN) != 0) {
-                                if (ra.fg_chunks[j][i + 1] != null) {
-                                    if ((ra.pieceTypes[j][i + 1] & PCGWorld.DIRECTION_UP) == 0) {
-                                        // breakable wall/door, we need a hole:
-                                        downTag = "hole";
-                                    }
-                                } else {
-                                    downTag = "hole";  // inter area connection
+                        if ((ra.pieceTypes[j][i] & PCGWorld.DIRECTION_DOWN) != 0) {
+                            if (ra.pieceTypes[j][i + 1] >= 0) {
+                                if ((ra.pieceTypes[j][i + 1] & PCGWorld.DIRECTION_UP) == 0) {
+                                    // breakable wall/door, we need a hole:
+                                    downTag = "hole";
                                 }
+                            } else {
+                                downTag = "stairs"; // inter area connection
                             }
+                        }
                     } else {
                         if ((ra.pieceTypes[j][i] & PCGWorld.DIRECTION_DOWN) != 0) {
                             downTag = "hole";  // inter area connection
@@ -3025,6 +3043,12 @@ public class PCGArea {
                             }
                             choicesWithTag.add(c);
                         }
+//                        if (ra.pieceTypes[j][i] == 1 && chunkPoolName.equals("standard") && biome.equals("mars")) {
+//                            System.out.println("Type " + chunkPoolName + " - " + ra.pieceTypes[j][i] + " tags: "+ leftTag + "/" + upTag + "/" + rightTag + "/" + downTag + ", choices: " + choicesWithTag.size() + " / " + choices.size());
+//                            for(RoomChunk r2:choices) {
+//                                System.out.println("        " + r2.path);
+//                            }
+//                        }
                         if (!choicesWithTag.isEmpty()) {
                             choices = choicesWithTag;
                         } else {
