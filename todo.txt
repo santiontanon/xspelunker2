@@ -1,15 +1,21 @@
 to do:
 
 ***- mars biome (remember to keep ladder tiles in place for down-door opening code)
-  ***- a few more electrical tiles for cables
+  OK - generate mars chunks data
   ***- add variety chunks (and make sure it all works generating all 64k seeds)
+    OK - data/mars/room1000-1.tmx: 5066
+    ***- data/mars/room0111-1.tmx: 3940
+    ***- data/mars/room1100-1.tmx: 3186
+    ***- data/mars/room0011-1.tmx: 3107
+    ***- data/mars/room0011-2.tmx: 3077
+    ***- data/mars/room1101-1.tmx: 2922
   ***- simplify / prettify mars chunks in Java
-  ***- implement different jump tables per biome (everything at the top of player.asm)
   ***- add to assembler
     ***- tile animations: electrical, lava and bubbles in vat
     ***- bring the spanning tree start position randomization to assembler:
     ***- hardcode division ID in midpoint (so that the room immediately below is different division)
     ***- create a area pcg unit test and verify that chunk IDs are selected the same in Java and assembler (maybe I can just add area test to my current world pcg test)  ***- sprite enemies
+  ***- implement different jump tables per biome (everything at the top of player.asm)
   ***- sprite enemies
   ***- tile enemies (one could be steam/gas vents that might push you up/sideways/down)
 

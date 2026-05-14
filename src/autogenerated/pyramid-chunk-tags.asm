@@ -2,7 +2,7 @@
 pyramid_chunk_flags:
 pyramid_standard_chunk_pool:
   db 0, #00, #00  ; data/pyramid/room0000-1.tmx (0)  
-  dw #02ef
+  dw #06ef
   db 0, #00, #00  ; data/pyramid/room0000-2.tmx (1)  
   dw #006f
   db 1, #00, #01  ; data/pyramid/room0001-1.tmx (2)  down: hole, 

@@ -20,9 +20,9 @@
 </data>
  </layer>
  <objectgroup name="objects">
-  <object id="14" type="big-item" x="48" y="56" width="32" height="24"/>
-  <object id="15" type="item" x="56" y="64" width="16" height="16"/>
-  <object id="16" type="4x4-item" x="48" y="48" width="32" height="32"/>
+  <object id="14" type="big-item" x="80" y="56" width="32" height="24"/>
+  <object id="15" type="item" x="88" y="64" width="16" height="16"/>
+  <object id="16" type="4x4-item" x="16" y="48" width="32" height="32"/>
   <object id="17" type="door-left" x="0" y="56" width="16" height="24"/>
   <object id="18" type="door-right" x="112" y="56" width="16" height="24"/>
   <object id="19" type="breakable-down" x="48" y="80" width="32" height="16"/>

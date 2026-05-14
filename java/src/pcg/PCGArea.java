@@ -1739,6 +1739,7 @@ public class PCGArea {
 
         fg_chunks.get(0x8).add(new RoomChunk("data/mars/room1000-1.tmx", 0x8, "mars"));
         fg_chunks.get(0x8).add(new RoomChunk("data/mars/room1000-2.tmx", 0x8, "mars"));
+        fg_chunks.get(0x8).add(new RoomChunk("data/mars/room1000-3.tmx", 0x8, "mars"));
 
         fg_chunks.get(0x9).add(new RoomChunk("data/mars/room1001-1.tmx", 0x9, "mars"));
         fg_chunks.get(0x9).add(new RoomChunk("data/mars/room1001-2.tmx", 0x9, "mars"));
@@ -1950,7 +1951,7 @@ public class PCGArea {
                 }
                 if ((type & PCGWorld.DIRECTION_UP) != 0 && (chunk.type & PCGWorld.DIRECTION_UP) == 0) {
                     // open a path up:
-                    for(int i = 0;i<1;i++) {
+                    for(int i = 0;i<2;i++) {
                         for(int j = 6;j<10;j++) {
                             chunk2.tiles[j][i] = 0;
                         }

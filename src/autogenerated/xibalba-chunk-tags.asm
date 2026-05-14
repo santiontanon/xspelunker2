@@ -6,7 +6,7 @@ xibalba_standard_chunk_pool:
   db 1, #00, #01  ; data/xibalba/room0001-1.tmx (1)  down: hole, 
   dw #03bf
   db 2, #00, #04  ; data/xibalba/room0010-1.tmx (2)  right: hole, 
-  dw #04cf
+  dw #05df
   db 2, #00, #0c  ; data/xibalba/room0010-2.tmx (3)  right: half-hole, 
   dw #04cf
   db 2, #00, #08  ; data/xibalba/room0010-3.tmx (4)  right: lava, 
@@ -84,7 +84,7 @@ xibalba_standard_chunk_pool:
   db 10, #00, #48  ; data/xibalba/room1010-5.tmx (40)  left: hole, right: lava, 
   dw #1447
   db 10, #00, #84  ; data/xibalba/room1010-6.tmx (41)  left: lava, right: hole, 
-  dw #0447
+  dw #0557
   db 10, #00, #88  ; data/xibalba/room1010-7.tmx (42)  left: lava, right: lava, 
   dw #1007
   db 10, #00, #88  ; data/xibalba/room1010-8.tmx (43)  left: lava, right: lava, 
@@ -104,7 +104,7 @@ xibalba_standard_chunk_pool:
   db 12, #00, #60  ; data/xibalba/room1100-3.tmx (50)  left: hole, up: stairs, 
   dw #0667
   db 12, #00, #e0  ; data/xibalba/room1100-4.tmx (51)  left: half-hole, up: stairs, 
-  dw #1221
+  dw #1223
   db 12, #00, #d0  ; data/xibalba/room1100-5.tmx (52)  left: half-hole, up: hole, 
   dw #0667
   db 12, #00, #90  ; data/xibalba/room1100-6.tmx (53)  left: lava, up: hole, 
@@ -138,7 +138,7 @@ xibalba_standard_chunk_pool:
   db 14, #00, #98  ; data/xibalba/room1110-7.tmx (67)  left: lava, up: hole, right: lava, 
   dw #1001
   db 14, #00, #94  ; data/xibalba/room1110-8.tmx (68)  left: lava, up: hole, right: hole, 
-  dw #1441
+  dw #1447
   db 14, #00, #a4  ; data/xibalba/room1110-9.tmx (69)  left: lava, up: stairs, right: hole, 
   dw #1447
   db 15, #00, #55  ; data/xibalba/room1111-1.tmx (70)  left: hole, up: hole, right: hole, down: hole, 
@@ -227,176 +227,188 @@ xibalba_block_chunk_pool:
   dw #0889
   db 9, #00, #41  ; data/xibalba/block1001-1.tmx (111)  left: hole, down: hole, 
   dw #0a21
-  db 10, #00, #44  ; data/xibalba/block1010-1.tmx (112)  left: hole, right: hole, 
+  db 9, #00, #c1  ; data/xibalba/block1001-2.tmx (112)  left: half-hole, down: hole, 
+  dw #0a21
+  db 10, #00, #44  ; data/xibalba/block1010-1.tmx (113)  left: hole, right: hole, 
   dw #0d51
-  db 10, #00, #c4  ; data/xibalba/block1010-2.tmx (113)  left: half-hole, right: hole, 
+  db 10, #00, #c4  ; data/xibalba/block1010-2.tmx (114)  left: half-hole, right: hole, 
   dw #0d51
-  db 11, #00, #45  ; data/xibalba/block0011-1.tmx + left (114)  left: hole, right: hole, down: hole, 
+  db 11, #00, #45  ; data/xibalba/block0011-1.tmx + left (115)  left: hole, right: hole, down: hole, 
   dw #0917
-  db 11, #00, #45  ; data/xibalba/block0011-2.tmx + left (115)  left: hole, right: hole, down: hole, 
+  db 11, #00, #45  ; data/xibalba/block0011-2.tmx + left (116)  left: hole, right: hole, down: hole, 
   dw #0917
-  db 11, #00, #45  ; data/xibalba/block1001-1.tmx + right (116)  left: hole, right: hole, down: hole, 
+  db 11, #00, #45  ; data/xibalba/block1001-1.tmx + right (117)  left: hole, right: hole, down: hole, 
   dw #0801
-  db 11, #00, #45  ; data/xibalba/block1010-1.tmx + down (117)  left: hole, right: hole, down: hole, 
+  db 11, #00, #c5  ; data/xibalba/block1001-2.tmx + right (118)  left: half-hole, right: hole, down: hole, 
+  dw #0801
+  db 11, #00, #45  ; data/xibalba/block1010-1.tmx + down (119)  left: hole, right: hole, down: hole, 
   dw #0911
-  db 11, #00, #c5  ; data/xibalba/block1010-2.tmx + down (118)  left: half-hole, right: hole, down: hole, 
+  db 11, #00, #c5  ; data/xibalba/block1010-2.tmx + down (120)  left: half-hole, right: hole, down: hole, 
   dw #0911
-  db 12, #00, #50  ; data/xibalba/block1100-1.tmx (119)  left: hole, up: hole, 
+  db 12, #00, #50  ; data/xibalba/block1100-1.tmx (121)  left: hole, up: hole, 
   dw #0a20
-  db 12, #00, #d0  ; data/xibalba/block1100-2.tmx (120)  left: half-hole, up: hole, 
+  db 12, #00, #d0  ; data/xibalba/block1100-2.tmx (122)  left: half-hole, up: hole, 
   dw #0a20
-  db 12, #00, #e0  ; data/xibalba/block1100-3.tmx (121)  left: half-hole, up: stairs, 
+  db 12, #00, #e0  ; data/xibalba/block1100-3.tmx (123)  left: half-hole, up: stairs, 
   dw #0a20
-  db 12, #00, #60  ; data/xibalba/block1100-4.tmx (122)  left: hole, up: stairs, 
+  db 12, #00, #60  ; data/xibalba/block1100-4.tmx (124)  left: hole, up: stairs, 
   dw #0a20
-  db 12, #00, #a0  ; data/xibalba/block1100-5.tmx (123)  left: lava, up: stairs, 
+  db 12, #00, #a0  ; data/xibalba/block1100-5.tmx (125)  left: lava, up: stairs, 
   dw #0a20
-  db 12, #00, #90  ; data/xibalba/block1100-6.tmx (124)  left: lava, up: hole, 
+  db 12, #00, #90  ; data/xibalba/block1100-6.tmx (126)  left: lava, up: hole, 
   dw #0a20
-  db 13, #00, #51  ; data/xibalba/block0101-1.tmx + left (125)  left: hole, up: hole, down: hole, 
+  db 13, #00, #51  ; data/xibalba/block0101-1.tmx + left (127)  left: hole, up: hole, down: hole, 
   dw #0a21
-  db 13, #00, #61  ; data/xibalba/block0101-2.tmx + left (126)  left: hole, up: stairs, down: hole, 
+  db 13, #00, #61  ; data/xibalba/block0101-2.tmx + left (128)  left: hole, up: stairs, down: hole, 
   dw #0a21
-  db 13, #00, #52  ; data/xibalba/block0101-3.tmx + left (127)  left: hole, up: hole, down: stairs, 
+  db 13, #00, #52  ; data/xibalba/block0101-3.tmx + left (129)  left: hole, up: hole, down: stairs, 
   dw #0a21
-  db 13, #00, #62  ; data/xibalba/block0101-4.tmx + left (128)  left: hole, up: stairs, down: stairs, 
+  db 13, #00, #62  ; data/xibalba/block0101-4.tmx + left (130)  left: hole, up: stairs, down: stairs, 
   dw #0a21
-  db 14, #00, #54  ; data/xibalba/block0110-1.tmx + left (129)  left: hole, up: hole, right: hole, 
+  db 14, #00, #54  ; data/xibalba/block0110-1.tmx + left (131)  left: hole, up: hole, right: hole, 
   dw #0801
-  db 14, #00, #54  ; data/xibalba/block1010-1.tmx + up (130)  left: hole, up: hole, right: hole, 
+  db 14, #00, #54  ; data/xibalba/block1010-1.tmx + up (132)  left: hole, up: hole, right: hole, 
   dw #0c41
-  db 14, #00, #d4  ; data/xibalba/block1010-2.tmx + up (131)  left: half-hole, up: hole, right: hole, 
+  db 14, #00, #d4  ; data/xibalba/block1010-2.tmx + up (133)  left: half-hole, up: hole, right: hole, 
   dw #0c41
-  db 14, #00, #54  ; data/xibalba/block1100-1.tmx + right (132)  left: hole, up: hole, right: hole, 
+  db 14, #00, #54  ; data/xibalba/block1100-1.tmx + right (134)  left: hole, up: hole, right: hole, 
   dw #0800
-  db 14, #00, #d4  ; data/xibalba/block1100-2.tmx + right (133)  left: half-hole, up: hole, right: hole, 
+  db 14, #00, #d4  ; data/xibalba/block1100-2.tmx + right (135)  left: half-hole, up: hole, right: hole, 
   dw #0800
-  db 14, #00, #e4  ; data/xibalba/block1100-3.tmx + right (134)  left: half-hole, up: stairs, right: hole, 
+  db 14, #00, #e4  ; data/xibalba/block1100-3.tmx + right (136)  left: half-hole, up: stairs, right: hole, 
   dw #0800
-  db 14, #00, #64  ; data/xibalba/block1100-4.tmx + right (135)  left: hole, up: stairs, right: hole, 
+  db 14, #00, #64  ; data/xibalba/block1100-4.tmx + right (137)  left: hole, up: stairs, right: hole, 
   dw #0800
-  db 14, #00, #a4  ; data/xibalba/block1100-5.tmx + right (136)  left: lava, up: stairs, right: hole, 
+  db 14, #00, #a4  ; data/xibalba/block1100-5.tmx + right (138)  left: lava, up: stairs, right: hole, 
   dw #0800
-  db 14, #00, #94  ; data/xibalba/block1100-6.tmx + right (137)  left: lava, up: hole, right: hole, 
+  db 14, #00, #94  ; data/xibalba/block1100-6.tmx + right (139)  left: lava, up: hole, right: hole, 
   dw #0800
-  db 15, #00, #55  ; data/xibalba/block0011-1.tmx + left + up (138)  left: hole, up: hole, right: hole, down: hole, 
+  db 15, #00, #55  ; data/xibalba/block0011-1.tmx + left + up (140)  left: hole, up: hole, right: hole, down: hole, 
   dw #0807
-  db 15, #00, #55  ; data/xibalba/block0011-2.tmx + left + up (139)  left: hole, up: hole, right: hole, down: hole, 
+  db 15, #00, #55  ; data/xibalba/block0011-2.tmx + left + up (141)  left: hole, up: hole, right: hole, down: hole, 
   dw #0807
-  db 15, #00, #55  ; data/xibalba/block0101-1.tmx + left + right (140)  left: hole, up: hole, right: hole, down: hole, 
+  db 15, #00, #55  ; data/xibalba/block0101-1.tmx + left + right (142)  left: hole, up: hole, right: hole, down: hole, 
   dw #0801
-  db 15, #00, #65  ; data/xibalba/block0101-2.tmx + left + right (141)  left: hole, up: stairs, right: hole, down: hole, 
+  db 15, #00, #65  ; data/xibalba/block0101-2.tmx + left + right (143)  left: hole, up: stairs, right: hole, down: hole, 
   dw #0801
-  db 15, #00, #56  ; data/xibalba/block0101-3.tmx + left + right (142)  left: hole, up: hole, right: hole, down: stairs, 
+  db 15, #00, #56  ; data/xibalba/block0101-3.tmx + left + right (144)  left: hole, up: hole, right: hole, down: stairs, 
   dw #0801
-  db 15, #00, #66  ; data/xibalba/block0101-4.tmx + left + right (143)  left: hole, up: stairs, right: hole, down: stairs, 
+  db 15, #00, #66  ; data/xibalba/block0101-4.tmx + left + right (145)  left: hole, up: stairs, right: hole, down: stairs, 
   dw #0801
-  db 15, #00, #55  ; data/xibalba/block1010-1.tmx + up + down (144)  left: hole, up: hole, right: hole, down: hole, 
+  db 15, #00, #55  ; data/xibalba/block1010-1.tmx + up + down (146)  left: hole, up: hole, right: hole, down: hole, 
   dw #0801
-  db 15, #00, #d5  ; data/xibalba/block1010-2.tmx + up + down (145)  left: half-hole, up: hole, right: hole, down: hole, 
+  db 15, #00, #d5  ; data/xibalba/block1010-2.tmx + up + down (147)  left: half-hole, up: hole, right: hole, down: hole, 
   dw #0801
 xibalba_combination_chunk_pool:
-  db 0, #00, #00  ; data/xibalba/combination0000-1.tmx (146)  
+  db 0, #00, #00  ; data/xibalba/combination0000-1.tmx (148)  
   dw #0781
-  db 1, #00, #01  ; data/xibalba/combination0000-1.tmx + down (147)  down: hole, 
+  db 1, #00, #01  ; data/xibalba/combination0000-1.tmx + down (149)  down: hole, 
   dw #0381
-  db 1, #00, #02  ; data/xibalba/combination0001-1.tmx (148)  down: stairs, 
+  db 1, #00, #02  ; data/xibalba/combination0001-1.tmx (150)  down: stairs, 
   dw #0381
-  db 2, #00, #04  ; data/xibalba/combination0000-1.tmx + right (149)  right: hole, 
+  db 2, #00, #04  ; data/xibalba/combination0000-1.tmx + right (151)  right: hole, 
   dw #0581
-  db 3, #00, #05  ; data/xibalba/combination0000-1.tmx + right + down (150)  right: hole, down: hole, 
+  db 3, #00, #05  ; data/xibalba/combination0000-1.tmx + right + down (152)  right: hole, down: hole, 
   dw #0181
-  db 3, #00, #06  ; data/xibalba/combination0001-1.tmx + right (151)  right: hole, down: stairs, 
+  db 3, #00, #06  ; data/xibalba/combination0001-1.tmx + right (153)  right: hole, down: stairs, 
   dw #0181
-  db 4, #00, #10  ; data/xibalba/combination0000-1.tmx + up (152)  up: hole, 
+  db 4, #00, #10  ; data/xibalba/combination0000-1.tmx + up (154)  up: hole, 
   dw #0681
-  db 4, #00, #20  ; data/xibalba/combination0100-1.tmx (153)  up: stairs, 
+  db 4, #00, #20  ; data/xibalba/combination0100-1.tmx (155)  up: stairs, 
   dw #0681
-  db 5, #00, #11  ; data/xibalba/combination0000-1.tmx + up + down (154)  up: hole, down: hole, 
+  db 5, #00, #11  ; data/xibalba/combination0000-1.tmx + up + down (156)  up: hole, down: hole, 
   dw #0281
-  db 5, #00, #12  ; data/xibalba/combination0001-1.tmx + up (155)  up: hole, down: stairs, 
+  db 5, #00, #12  ; data/xibalba/combination0001-1.tmx + up (157)  up: hole, down: stairs, 
   dw #0281
-  db 5, #00, #21  ; data/xibalba/combination0100-1.tmx + down (156)  up: stairs, down: hole, 
+  db 5, #00, #21  ; data/xibalba/combination0100-1.tmx + down (158)  up: stairs, down: hole, 
   dw #0281
-  db 5, #00, #22  ; data/xibalba/combination0101-1.tmx (157)  up: stairs, down: stairs, 
+  db 5, #00, #22  ; data/xibalba/combination0101-1.tmx (159)  up: stairs, down: stairs, 
   dw #0281
-  db 6, #00, #14  ; data/xibalba/combination0000-1.tmx + up + right (158)  up: hole, right: hole, 
+  db 6, #00, #14  ; data/xibalba/combination0000-1.tmx + up + right (160)  up: hole, right: hole, 
   dw #0481
-  db 6, #00, #24  ; data/xibalba/combination0100-1.tmx + right (159)  up: stairs, right: hole, 
+  db 6, #00, #24  ; data/xibalba/combination0100-1.tmx + right (161)  up: stairs, right: hole, 
   dw #0481
-  db 7, #00, #15  ; data/xibalba/combination0000-1.tmx + up + right + down (160)  up: hole, right: hole, down: hole, 
+  db 7, #00, #15  ; data/xibalba/combination0000-1.tmx + up + right + down (162)  up: hole, right: hole, down: hole, 
   dw #0081
-  db 7, #00, #16  ; data/xibalba/combination0001-1.tmx + up + right (161)  up: hole, right: hole, down: stairs, 
+  db 7, #00, #16  ; data/xibalba/combination0001-1.tmx + up + right (163)  up: hole, right: hole, down: stairs, 
   dw #0081
-  db 7, #00, #25  ; data/xibalba/combination0100-1.tmx + right + down (162)  up: stairs, right: hole, down: hole, 
+  db 7, #00, #25  ; data/xibalba/combination0100-1.tmx + right + down (164)  up: stairs, right: hole, down: hole, 
   dw #0081
-  db 7, #00, #26  ; data/xibalba/combination0101-1.tmx + right (163)  up: stairs, right: hole, down: stairs, 
+  db 7, #00, #26  ; data/xibalba/combination0101-1.tmx + right (165)  up: stairs, right: hole, down: stairs, 
   dw #0081
-  db 8, #00, #40  ; data/xibalba/combination0000-1.tmx + left (164)  left: hole, 
+  db 8, #00, #40  ; data/xibalba/combination0000-1.tmx + left (166)  left: hole, 
   dw #0701
-  db 8, #00, #c0  ; data/xibalba/combination1000-1.tmx (165)  left: half-hole, 
+  db 8, #00, #c0  ; data/xibalba/combination1000-1.tmx (167)  left: half-hole, 
   dw #0701
-  db 8, #00, #80  ; data/xibalba/combination1000-2.tmx (166)  left: lava, 
+  db 8, #00, #80  ; data/xibalba/combination1000-2.tmx (168)  left: lava, 
   dw #0701
-  db 9, #00, #41  ; data/xibalba/combination0000-1.tmx + left + down (167)  left: hole, down: hole, 
+  db 9, #00, #41  ; data/xibalba/combination0000-1.tmx + left + down (169)  left: hole, down: hole, 
   dw #0301
-  db 9, #00, #42  ; data/xibalba/combination0001-1.tmx + left (168)  left: hole, down: stairs, 
+  db 9, #00, #42  ; data/xibalba/combination0001-1.tmx + left (170)  left: hole, down: stairs, 
   dw #0301
-  db 9, #00, #c1  ; data/xibalba/combination1000-1.tmx + down (169)  left: half-hole, down: hole, 
+  db 9, #00, #c1  ; data/xibalba/combination1000-1.tmx + down (171)  left: half-hole, down: hole, 
   dw #0301
-  db 9, #00, #81  ; data/xibalba/combination1000-2.tmx + down (170)  left: lava, down: hole, 
+  db 9, #00, #81  ; data/xibalba/combination1000-2.tmx + down (172)  left: lava, down: hole, 
   dw #0301
-  db 10, #00, #44  ; data/xibalba/combination0000-1.tmx + left + right (171)  left: hole, right: hole, 
+  db 10, #00, #44  ; data/xibalba/combination0000-1.tmx + left + right (173)  left: hole, right: hole, 
   dw #0501
-  db 10, #00, #c4  ; data/xibalba/combination1000-1.tmx + right (172)  left: half-hole, right: hole, 
+  db 10, #00, #c4  ; data/xibalba/combination1000-1.tmx + right (174)  left: half-hole, right: hole, 
   dw #0501
-  db 10, #00, #84  ; data/xibalba/combination1000-2.tmx + right (173)  left: lava, right: hole, 
+  db 10, #00, #84  ; data/xibalba/combination1000-2.tmx + right (175)  left: lava, right: hole, 
   dw #0501
-  db 11, #00, #45  ; data/xibalba/combination0000-1.tmx + left + right + down (174)  left: hole, right: hole, down: hole, 
+  db 11, #00, #45  ; data/xibalba/combination0000-1.tmx + left + right + down (176)  left: hole, right: hole, down: hole, 
   dw #0101
-  db 11, #00, #46  ; data/xibalba/combination0001-1.tmx + left + right (175)  left: hole, right: hole, down: stairs, 
+  db 11, #00, #46  ; data/xibalba/combination0001-1.tmx + left + right (177)  left: hole, right: hole, down: stairs, 
   dw #0101
-  db 11, #00, #c5  ; data/xibalba/combination1000-1.tmx + right + down (176)  left: half-hole, right: hole, down: hole, 
+  db 11, #00, #c5  ; data/xibalba/combination1000-1.tmx + right + down (178)  left: half-hole, right: hole, down: hole, 
   dw #0101
-  db 11, #00, #85  ; data/xibalba/combination1000-2.tmx + right + down (177)  left: lava, right: hole, down: hole, 
+  db 11, #00, #85  ; data/xibalba/combination1000-2.tmx + right + down (179)  left: lava, right: hole, down: hole, 
   dw #0101
-  db 12, #00, #50  ; data/xibalba/combination0000-1.tmx + left + up (178)  left: hole, up: hole, 
+  db 12, #00, #50  ; data/xibalba/combination0000-1.tmx + left + up (180)  left: hole, up: hole, 
   dw #0601
-  db 12, #00, #60  ; data/xibalba/combination0100-1.tmx + left (179)  left: hole, up: stairs, 
+  db 12, #00, #60  ; data/xibalba/combination0100-1.tmx + left (181)  left: hole, up: stairs, 
   dw #0601
-  db 12, #00, #d0  ; data/xibalba/combination1000-1.tmx + up (180)  left: half-hole, up: hole, 
+  db 12, #00, #d0  ; data/xibalba/combination1000-1.tmx + up (182)  left: half-hole, up: hole, 
   dw #0601
-  db 12, #00, #90  ; data/xibalba/combination1000-2.tmx + up (181)  left: lava, up: hole, 
+  db 12, #00, #90  ; data/xibalba/combination1000-2.tmx + up (183)  left: lava, up: hole, 
   dw #0601
-  db 13, #00, #51  ; data/xibalba/combination0000-1.tmx + left + up + down (182)  left: hole, up: hole, down: hole, 
+  db 12, #00, #e0  ; data/xibalba/combination1100-1.tmx (184)  left: half-hole, up: stairs, 
+  dw #0601
+  db 13, #00, #51  ; data/xibalba/combination0000-1.tmx + left + up + down (185)  left: hole, up: hole, down: hole, 
   dw #0201
-  db 13, #00, #52  ; data/xibalba/combination0001-1.tmx + left + up (183)  left: hole, up: hole, down: stairs, 
+  db 13, #00, #52  ; data/xibalba/combination0001-1.tmx + left + up (186)  left: hole, up: hole, down: stairs, 
   dw #0201
-  db 13, #00, #61  ; data/xibalba/combination0100-1.tmx + left + down (184)  left: hole, up: stairs, down: hole, 
+  db 13, #00, #61  ; data/xibalba/combination0100-1.tmx + left + down (187)  left: hole, up: stairs, down: hole, 
   dw #0201
-  db 13, #00, #62  ; data/xibalba/combination0101-1.tmx + left (185)  left: hole, up: stairs, down: stairs, 
+  db 13, #00, #62  ; data/xibalba/combination0101-1.tmx + left (188)  left: hole, up: stairs, down: stairs, 
   dw #0201
-  db 13, #00, #d1  ; data/xibalba/combination1000-1.tmx + up + down (186)  left: half-hole, up: hole, down: hole, 
+  db 13, #00, #d1  ; data/xibalba/combination1000-1.tmx + up + down (189)  left: half-hole, up: hole, down: hole, 
   dw #0201
-  db 13, #00, #91  ; data/xibalba/combination1000-2.tmx + up + down (187)  left: lava, up: hole, down: hole, 
+  db 13, #00, #91  ; data/xibalba/combination1000-2.tmx + up + down (190)  left: lava, up: hole, down: hole, 
   dw #0201
-  db 14, #00, #54  ; data/xibalba/combination0000-1.tmx + left + up + right (188)  left: hole, up: hole, right: hole, 
+  db 13, #00, #e1  ; data/xibalba/combination1100-1.tmx + down (191)  left: half-hole, up: stairs, down: hole, 
+  dw #0201
+  db 14, #00, #54  ; data/xibalba/combination0000-1.tmx + left + up + right (192)  left: hole, up: hole, right: hole, 
   dw #0401
-  db 14, #00, #64  ; data/xibalba/combination0100-1.tmx + left + right (189)  left: hole, up: stairs, right: hole, 
+  db 14, #00, #64  ; data/xibalba/combination0100-1.tmx + left + right (193)  left: hole, up: stairs, right: hole, 
   dw #0401
-  db 14, #00, #d4  ; data/xibalba/combination1000-1.tmx + up + right (190)  left: half-hole, up: hole, right: hole, 
+  db 14, #00, #d4  ; data/xibalba/combination1000-1.tmx + up + right (194)  left: half-hole, up: hole, right: hole, 
   dw #0401
-  db 14, #00, #94  ; data/xibalba/combination1000-2.tmx + up + right (191)  left: lava, up: hole, right: hole, 
+  db 14, #00, #94  ; data/xibalba/combination1000-2.tmx + up + right (195)  left: lava, up: hole, right: hole, 
   dw #0401
-  db 15, #00, #55  ; data/xibalba/combination0000-1.tmx + left + up + right + down (192)  left: hole, up: hole, right: hole, down: hole, 
+  db 14, #00, #e4  ; data/xibalba/combination1100-1.tmx + right (196)  left: half-hole, up: stairs, right: hole, 
+  dw #0401
+  db 15, #00, #55  ; data/xibalba/combination0000-1.tmx + left + up + right + down (197)  left: hole, up: hole, right: hole, down: hole, 
   dw #0001
-  db 15, #00, #56  ; data/xibalba/combination0001-1.tmx + left + up + right (193)  left: hole, up: hole, right: hole, down: stairs, 
+  db 15, #00, #56  ; data/xibalba/combination0001-1.tmx + left + up + right (198)  left: hole, up: hole, right: hole, down: stairs, 
   dw #0001
-  db 15, #00, #65  ; data/xibalba/combination0100-1.tmx + left + right + down (194)  left: hole, up: stairs, right: hole, down: hole, 
+  db 15, #00, #65  ; data/xibalba/combination0100-1.tmx + left + right + down (199)  left: hole, up: stairs, right: hole, down: hole, 
   dw #0001
-  db 15, #00, #66  ; data/xibalba/combination0101-1.tmx + left + right (195)  left: hole, up: stairs, right: hole, down: stairs, 
+  db 15, #00, #66  ; data/xibalba/combination0101-1.tmx + left + right (200)  left: hole, up: stairs, right: hole, down: stairs, 
   dw #0001
-  db 15, #00, #d5  ; data/xibalba/combination1000-1.tmx + up + right + down (196)  left: half-hole, up: hole, right: hole, down: hole, 
+  db 15, #00, #d5  ; data/xibalba/combination1000-1.tmx + up + right + down (201)  left: half-hole, up: hole, right: hole, down: hole, 
   dw #0001
-  db 15, #00, #95  ; data/xibalba/combination1000-2.tmx + up + right + down (197)  left: lava, up: hole, right: hole, down: hole, 
+  db 15, #00, #95  ; data/xibalba/combination1000-2.tmx + up + right + down (202)  left: lava, up: hole, right: hole, down: hole, 
+  dw #0001
+  db 15, #00, #e5  ; data/xibalba/combination1100-1.tmx + right + down (203)  left: half-hole, up: stairs, right: hole, down: hole, 
   dw #0001

@@ -127,7 +127,26 @@ public class GenerateChunkData {
         2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 3, 3, 3, 3,
         2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 2, 2, 0,
         2, 2, 2, 2, 2, 2, 2, 2, 7, 0, 2, 2, 3, 2, 1, 5            
-    };        
+    };   
+    
+    public static int mars_tile_collision_types[] = {
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        2, 2, 2, 2, 2, 2, 2, 2, 8, 8, 2, 2, 2, 2, 2, 2,
+        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+        0, 0, 0, 5, 3, 3, 5, 6, 8, 1, 1, 1, 2, 3, 2, 2,
+        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 0, 2, 2, 2,
+        2, 2, 2, 2, 2, 2, 2, 7, 8, 2, 2, 2, 0, 0, 0, 0,
+        2, 2, 2, 2, 2, 2, 2, 10, 2, 2, 2, 2, 0, 2, 2, 2,
+        2, 2, 2, 0, 2, 2, 2, 2, 2, 10, 2, 0, 2, 2, 2, 2,
+        2, 2, 0, 2, 2, 2, 2, 2, 2, 0, 0, 2, 2, 2, 2, 2,
+        2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 2, 2, 2, 2, 2,
+        2, 2, 2, 2, 2, 2, 2, 2, 7, 2, 2, 2, 3, 2, 1, 5            
+    };       
 //    public static int totalObjects = 0;
     
     
@@ -139,6 +158,7 @@ public class GenerateChunkData {
         fw.write(generateChunkData("caves"));
         fw.write(generateChunkData("xibalba"));
         fw.write(generateChunkData("atlantis"));
+        fw.write(generateChunkData("mars"));
         fw.flush();
         fw.close();
         
@@ -177,6 +197,8 @@ public class GenerateChunkData {
             case "xibalba": collision_types = xibalba_tile_collision_types;
                           break;
             case "atlantis": collision_types = atlantis_tile_collision_types;
+                          break;
+            case "mars": collision_types = mars_tile_collision_types;
                           break;
         }
         
