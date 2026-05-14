@@ -1,14 +1,16 @@
 to do:
 
 ***- mars biome (remember to keep ladder tiles in place for down-door opening code)
-  OK - generate mars chunks data
   ***- add variety chunks (and make sure it all works generating all 64k seeds)
-    OK - data/mars/room1000-1.tmx: 5066
-    ***- data/mars/room0111-1.tmx: 3940
-    ***- data/mars/room1100-1.tmx: 3186
-    ***- data/mars/room0011-1.tmx: 3107
-    ***- data/mars/room0011-2.tmx: 3077
-    ***- data/mars/room1101-1.tmx: 2922
+    ***- data/mars/room1001-1.tmx: 2668
+    ***- data/mars/room1010-2.tmx: 2609
+    ***- data/mars/room1001-2.tmx: 2600
+    ***- data/mars/room1000-3.tmx: 2560
+    ***- data/mars/room1000-1.tmx: 2506
+    ***- data/mars/room1011-1.tmx: 2501
+    ***- data/mars/room1010-1.tmx: 2423
+    ***- data/mars/room1110-1.tmx: 2412
+    ***- data/mars/room1011-2.tmx: 2347
   ***- simplify / prettify mars chunks in Java
   ***- add to assembler
     ***- tile animations: electrical, lava and bubbles in vat

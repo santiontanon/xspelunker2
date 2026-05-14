@@ -1721,6 +1721,8 @@ public class PCGArea {
         
         fg_chunks.get(0x3).add(new RoomChunk("data/mars/room0011-1.tmx", 0x3, "mars"));
         fg_chunks.get(0x3).add(new RoomChunk("data/mars/room0011-2.tmx", 0x3, "mars"));
+        fg_chunks.get(0x3).add(new RoomChunk("data/mars/room0011-3.tmx", 0x3, "mars"));
+        fg_chunks.get(0x3).add(new RoomChunk("data/mars/room0011-4.tmx", 0x3, "mars"));
         
         fg_chunks.get(0x4).add(new RoomChunk("data/mars/room0100-1.tmx", 0x4, "mars"));
         fg_chunks.get(0x4).add(new RoomChunk("data/mars/room0100-2.tmx", 0x4, "mars"));
@@ -1736,6 +1738,7 @@ public class PCGArea {
         
         fg_chunks.get(0x7).add(new RoomChunk("data/mars/room0111-1.tmx", 0x7, "mars"));
         fg_chunks.get(0x7).add(new RoomChunk("data/mars/room0111-2.tmx", 0x7, "mars"));
+        fg_chunks.get(0x7).add(new RoomChunk("data/mars/room0111-3.tmx", 0x7, "mars"));
 
         fg_chunks.get(0x8).add(new RoomChunk("data/mars/room1000-1.tmx", 0x8, "mars"));
         fg_chunks.get(0x8).add(new RoomChunk("data/mars/room1000-2.tmx", 0x8, "mars"));
@@ -1758,11 +1761,13 @@ public class PCGArea {
         fg_chunks.get(0xc).add(new RoomChunk("data/mars/room1100-2.tmx", 0xc, "mars"));
         fg_chunks.get(0xc).add(new RoomChunk("data/mars/room1100-3.tmx", 0xc, "mars"));
         fg_chunks.get(0xc).add(new RoomChunk("data/mars/room1100-4.tmx", 0xc, "mars"));
+        fg_chunks.get(0xc).add(new RoomChunk("data/mars/room1100-5.tmx", 0xc, "mars"));
 
         fg_chunks.get(0xd).add(new RoomChunk("data/mars/room1101-1.tmx", 0xd, "mars"));
         fg_chunks.get(0xd).add(new RoomChunk("data/mars/room1101-2.tmx", 0xd, "mars"));
         fg_chunks.get(0xd).add(new RoomChunk("data/mars/room1101-3.tmx", 0xd, "mars"));
         fg_chunks.get(0xd).add(new RoomChunk("data/mars/room1101-4.tmx", 0xd, "mars"));
+        fg_chunks.get(0xd).add(new RoomChunk("data/mars/room1101-5.tmx", 0xd, "mars"));
 
         fg_chunks.get(0xe).add(new RoomChunk("data/mars/room1110-1.tmx", 0xe, "mars"));
         fg_chunks.get(0xe).add(new RoomChunk("data/mars/room1110-2.tmx", 0xe, "mars"));
