@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import util.Pair;
 import util.TMXObject;
+import util.Z80Assembler;
 
 /**
  *
@@ -902,6 +903,7 @@ public class PCGArea {
             l.add(new RoomChunk("data/caves/block1001-1.tmx", 0x9, "caves"));
             l.add(new RoomChunk("data/caves/block1001-2.tmx", 0x9, "caves"));
             l.add(new RoomChunk("data/caves/block1001-3.tmx", 0x9, "caves"));  // half-hole
+            l.add(new RoomChunk("data/caves/block1001-4.tmx", 0x9, "caves"));  // lava
             l.add(new RoomChunk("data/caves/block1010-1.tmx", 0xa, "caves"));
             l.add(new RoomChunk("data/caves/block1010-2.tmx", 0xa, "caves"));
             l.add(new RoomChunk("data/caves/block1010-3.tmx", 0xa, "caves"));
@@ -1340,6 +1342,7 @@ public class PCGArea {
         combination_raw_chunks.add(new RoomChunk("data/xibalba/combination0101-1.tmx", 0x5, "xibalba"));
         combination_raw_chunks.add(new RoomChunk("data/xibalba/combination1000-1.tmx", 0x8, "xibalba"));
         combination_raw_chunks.add(new RoomChunk("data/xibalba/combination1000-2.tmx", 0x8, "xibalba"));
+        combination_raw_chunks.add(new RoomChunk("data/xibalba/combination1100-1.tmx", 0xc, "xibalba"));
         for(int type = 0;type<16;type++) {
             for(RoomChunk chunk:combination_raw_chunks) {
                 if ((type & PCGWorld.DIRECTION_LEFT) == 0 && (chunk.type & PCGWorld.DIRECTION_LEFT) != 0) continue;
@@ -1522,6 +1525,7 @@ public class PCGArea {
             l.add(new RoomChunk("data/atlantis/block0101-2.tmx", 0x5, "atlantis"));
             l.add(new RoomChunk("data/atlantis/block0110-1.tmx", 0x6, "atlantis"));
             l.add(new RoomChunk("data/atlantis/block0110-2.tmx", 0x6, "atlantis"));
+            l.add(new RoomChunk("data/atlantis/block0110-3.tmx", 0x6, "atlantis"));
             l.add(new RoomChunk("data/atlantis/block1001-1.tmx", 0x9, "atlantis"));
             l.add(new RoomChunk("data/atlantis/block1010-1.tmx", 0xa, "atlantis"));
             l.add(new RoomChunk("data/atlantis/block1100-1.tmx", 0xc, "atlantis"));
@@ -1713,6 +1717,7 @@ public class PCGArea {
         fg_chunks.get(0x1).add(new RoomChunk("data/mars/room0001-2.tmx", 0x1, "mars"));
         
         fg_chunks.get(0x2).add(new RoomChunk("data/mars/room0010-1.tmx", 0x2, "mars"));
+//        fg_chunks.get(0x2).add(new RoomChunk("data/mars/room0010-2.tmx", 0x2, "mars"));
         
         fg_chunks.get(0x3).add(new RoomChunk("data/mars/room0011-1.tmx", 0x3, "mars"));
         fg_chunks.get(0x3).add(new RoomChunk("data/mars/room0011-2.tmx", 0x3, "mars"));
@@ -2198,7 +2203,23 @@ public class PCGArea {
                     !closed.contains(j + i * ra.pieceTypes.length)) {
                     int divisionID = a.divisionIDs[j/ROOM_WIDTH][i/ROOM_HEIGHT];
                     List<Integer> open = new ArrayList<>();
-                    open.add(j + i * ra.pieceTypes.length);
+                    
+                    // random walk for a few steps so that we do not always start at the top-left
+                    int start_point = j + i * ra.pieceTypes.length;
+                    for(int k = 0;k<8;k++) {
+                        int x = start_point % ra.pieceTypes.length;
+                        int y = start_point / ra.pieceTypes.length;
+                        int dir = r.nextInt(4);
+                        int x2 = x + dx[dir];
+                        int y2 = y + dy[dir];
+                        if (x2 >= 0 && x2 < a.width * ROOM_WIDTH &&
+                            y2 >= 0 && y2 < a.height * ROOM_HEIGHT &&
+                            a.divisionIDs[x2/ROOM_WIDTH][y2/ROOM_HEIGHT] == divisionID) {
+                            start_point = x2 + y2 * ra.pieceTypes.length;
+                        }
+                    }
+                    open.add(start_point);
+//                    open.add(j + i * ra.pieceTypes.length);
 //                    System.out.println("Starting to fill " +divisionID+ " at " + open.get(0) + ":");
                     while(!open.isEmpty()) {
 //                        System.out.println(open);
@@ -2230,15 +2251,17 @@ public class PCGArea {
         }
                 
         // Print the spanning trees to make sure it matches the MSX side:
-//        System.out.println("pieceTypes: area " + a.ID);
-//        for(int i = 0;i<a.height*2;i++) {
-//            String line = "";
-//            for(int j = 0;j<a.width*2;j++) {
-//                line +=  Z80Assembler.toHex8bit(ra.pieceTypes[j][i]) + "\t";
+//        if (a.ID == 5) {
+//            System.out.println("pieceTypes: area " + a.ID);
+//            for(int i = 0;i<a.height*2;i++) {
+//                String line = "";
+//                for(int j = 0;j<a.width*2;j++) {
+//                    line +=  Z80Assembler.toHex8bit(ra.pieceTypes[j][i]) + "\t";
+//                }
+//                System.out.println(line);
 //            }
-//            System.out.println(line);
+////            System.out.println("seed afterwards: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
 //        }
-//        System.out.println("seed afterwards: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
         
 
         // Ensure the marked paths exist:
@@ -2303,7 +2326,7 @@ public class PCGArea {
         }       
 //        System.out.println("seed afterwards 3: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
         
-        // Add connection directions: (not needed as this is already done in the a.connectinos above)
+        // Add connection directions: (not needed as this is already done in the a.connections above)
         for(InterAreaConnection c:w.interAreaconnections) {
             if (c.p1.a == a) {
                 ra.pieceTypes[c.p1.x * ROOM_WIDTH + c.p1_x_chunk_offs][c.p1.y * ROOM_WIDTH +  + c.p1_y_chunk_offs] |= c.p1.direction;
@@ -2332,15 +2355,17 @@ public class PCGArea {
         }
 
         // Print the spanning trees to make sure it matches the MSX side:
-//        System.out.println("pieceTypes: area " + a.ID + " (after interarea connections)");
-//        for(int i = 0;i<a.height*2;i++) {
-//            String line = "";
-//            for(int j = 0;j<a.width*2;j++) {
-//                line +=  Z80Assembler.toHex8bit(ra.pieceTypes[j][i]) + "\t";
+//        if (a.ID == 5) {
+//            System.out.println("pieceTypes: area " + a.ID + " (after interarea connections)");
+//            for(int i = 0;i<a.height*2;i++) {
+//                String line = "";
+//                for(int j = 0;j<a.width*2;j++) {
+//                    line +=  Z80Assembler.toHex8bit(ra.pieceTypes[j][i]) + "\t";
+//                }
+//                System.out.println(line);
 //            }
-//            System.out.println(line);
+////            System.out.println("seed afterwards 4: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
 //        }
-//        System.out.println("seed afterwards 4: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
         
         // Place tags into chunks:
         String placedTags[][] = new String[a.width * ROOM_WIDTH][a.height * ROOM_HEIGHT];
@@ -3012,6 +3037,15 @@ public class PCGArea {
                     if (necessaryObjectTypes.contains("breakable-up") ||
                         necessaryObjectTypes.contains("door-up")) {
                         upTag = null;  // should never happen though
+                    }
+                    if (ra.pieceTypes[j][i] == 0) {
+                        for(int ii = 0;ii<ra.pieceTypes[0].length;ii++) {
+                            for(int jj = 0;jj<ra.pieceTypes.length;jj++) {
+                                System.out.print(ra.pieceTypes[jj][ii] + "\t");
+                            }
+                            System.out.println("");
+                        }
+                        throw new Exception("A chunk got type 0!! (at " + j + ", " + i + " area " + a.ID + ", placed tags: "+placedTags[j][i]+")");
                     }
                     List<RoomChunk> choices = chunkPool.get(ra.pieceTypes[j][i]);
                     if (upTag != null || downTag != null || leftTag != null || rightTag != null || 

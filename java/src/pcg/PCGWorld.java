@@ -545,6 +545,8 @@ public class PCGWorld {
         // Hardcoded divisions:
         int confluenceId1 = getNextDivisionID();
         int confluenceId2 = getNextDivisionID();
+        int midpointId1 = getNextDivisionID();
+        int midpointId2 = getNextDivisionID();
         w.areas.get(3).divisionIDs[3][0] = confluenceId1;
         w.areas.get(3).divisionIDs[4][0] = confluenceId1;
         w.areas.get(3).divisionIDs[5][0] = confluenceId1;
@@ -552,6 +554,10 @@ public class PCGWorld {
         w.areas.get(3).divisionIDs[4][1] = confluenceId2;
         w.areas.get(3).divisionIDs[5][1] = confluenceId2;
         w.areas.get(3).nDivisions += 2;
+        w.areas.get(5).divisionIDs[1][0] = midpointId1;
+        w.areas.get(5).divisionIDs[1][1] = midpointId2;
+        w.areas.get(5).nDivisions += 2;
+        
 
 //        int n_divisions_left = n_divisions - 2;
         List<AreaPoint> divisionSeeds = new ArrayList<>();

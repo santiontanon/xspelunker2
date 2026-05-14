@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="10">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="12">
  <properties>
   <property name="right" value="hole"/>
  </properties>
@@ -8,12 +8,12 @@
  </tileset>
  <layer name="Tile Layer 1" width="16" height="12">
   <data encoding="csv">
-129,252,252,252,252,252,252,252,252,252,252,252,252,252,252,124,
-124,165,103,104,165,165,103,104,103,104,103,104,103,104,103,104,
+129,127,105,103,104,165,103,104,103,104,165,103,104,105,128,124,
+124,165,106,1,1,1,1,1,1,1,1,1,1,106,103,104,
 251,165,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-251,105,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+251,105,1,1,1,1,1,103,104,1,1,1,1,1,1,1,
 251,106,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-119,165,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+119,165,1,1,103,104,1,1,1,1,1,1,1,1,1,1,
 124,165,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 251,105,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 251,106,1,1,1,1,1,1,1,1,253,131,1,1,1,1,
@@ -32,5 +32,7 @@
   <object id="7" type="door-down" x="48" y="80" width="32" height="16"/>
   <object id="8" type="breakable-down" x="48" y="80" width="32" height="16"/>
   <object id="9" type="item" x="96" y="64" width="16" height="16"/>
+  <object id="10" type="breakable-up" x="48" y="0" width="32" height="8"/>
+  <object id="11" type="door-up" x="48" y="0" width="32" height="8"/>
  </objectgroup>
 </map>
