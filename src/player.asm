@@ -6,6 +6,7 @@ player_hurt_speed_table:
 
 ;-----------------------------------------------
 ; Jump tables for earth:
+player_fall_speed_table_mars:
 player_fall_speed_table_earth:
     db 1, 0, 1, 1, 2, 1
     db 2, 2, 3, 3, 4, #ff  ; good for 50Hz
@@ -22,10 +23,6 @@ PLAYER_JUMP_DOUBLE_JUMP_INDEX_RESTART_EARTH: equ 3  ; we reset the jump to this 
 
 ;-----------------------------------------------
 ; Jump tables for mars:
-player_fall_speed_table_mars:
-    db 1, 0, 1, 1, 2, 1
-    db 2, 2, 3, 3, 4, #ff  ; good for 50Hz
-
 player_jump_speed_table_mars:
 	db 8, 6, 6, 6, 4, 4, 3, 3, 2
 	db 2, 1, 2, 1, 1, 0, 1, 0, 0, 0, #ff  ; 1 / 3  ; 50 total jump height in 19 frames / good for 50Hz
