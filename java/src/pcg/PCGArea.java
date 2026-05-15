@@ -1715,9 +1715,13 @@ public class PCGArea {
         
         fg_chunks.get(0x1).add(new RoomChunk("data/mars/room0001-1.tmx", 0x1, "mars"));
         fg_chunks.get(0x1).add(new RoomChunk("data/mars/room0001-2.tmx", 0x1, "mars"));
+        fg_chunks.get(0x1).add(new RoomChunk("data/mars/room0001-3.tmx", 0x1, "mars"));
+        fg_chunks.get(0x1).add(new RoomChunk("data/mars/room0001-4.tmx", 0x1, "mars"));
         
         fg_chunks.get(0x2).add(new RoomChunk("data/mars/room0010-1.tmx", 0x2, "mars"));
         fg_chunks.get(0x2).add(new RoomChunk("data/mars/room0010-2.tmx", 0x2, "mars"));
+        fg_chunks.get(0x2).add(new RoomChunk("data/mars/room0010-3.tmx", 0x2, "mars"));
+        fg_chunks.get(0x2).add(new RoomChunk("data/mars/room0010-4.tmx", 0x2, "mars"));
         
         fg_chunks.get(0x3).add(new RoomChunk("data/mars/room0011-1.tmx", 0x3, "mars"));
         fg_chunks.get(0x3).add(new RoomChunk("data/mars/room0011-2.tmx", 0x3, "mars"));
@@ -1727,6 +1731,7 @@ public class PCGArea {
         fg_chunks.get(0x4).add(new RoomChunk("data/mars/room0100-1.tmx", 0x4, "mars"));
         fg_chunks.get(0x4).add(new RoomChunk("data/mars/room0100-2.tmx", 0x4, "mars"));
         fg_chunks.get(0x4).add(new RoomChunk("data/mars/room0100-3.tmx", 0x4, "mars"));
+        fg_chunks.get(0x4).add(new RoomChunk("data/mars/room0100-4.tmx", 0x4, "mars"));
         
         fg_chunks.get(0x5).add(new RoomChunk("data/mars/room0101-1.tmx", 0x5, "mars"));
         fg_chunks.get(0x5).add(new RoomChunk("data/mars/room0101-2.tmx", 0x5, "mars"));
@@ -1743,19 +1748,25 @@ public class PCGArea {
         fg_chunks.get(0x8).add(new RoomChunk("data/mars/room1000-1.tmx", 0x8, "mars"));
         fg_chunks.get(0x8).add(new RoomChunk("data/mars/room1000-2.tmx", 0x8, "mars"));
         fg_chunks.get(0x8).add(new RoomChunk("data/mars/room1000-3.tmx", 0x8, "mars"));
+        fg_chunks.get(0x8).add(new RoomChunk("data/mars/room1000-4.tmx", 0x8, "mars"));
+        fg_chunks.get(0x8).add(new RoomChunk("data/mars/room1000-5.tmx", 0x8, "mars"));
 
         fg_chunks.get(0x9).add(new RoomChunk("data/mars/room1001-1.tmx", 0x9, "mars"));
         fg_chunks.get(0x9).add(new RoomChunk("data/mars/room1001-2.tmx", 0x9, "mars"));
         fg_chunks.get(0x9).add(new RoomChunk("data/mars/room1001-3.tmx", 0x9, "mars"));
+        fg_chunks.get(0x9).add(new RoomChunk("data/mars/room1001-4.tmx", 0x9, "mars"));
+        fg_chunks.get(0x9).add(new RoomChunk("data/mars/room1001-5.tmx", 0x9, "mars"));
 
         fg_chunks.get(0xa).add(new RoomChunk("data/mars/room1010-1.tmx", 0xa, "mars"));
         fg_chunks.get(0xa).add(new RoomChunk("data/mars/room1010-2.tmx", 0xa, "mars"));
         fg_chunks.get(0xa).add(new RoomChunk("data/mars/room1010-3.tmx", 0xa, "mars"));
         fg_chunks.get(0xa).add(new RoomChunk("data/mars/room1010-4.tmx", 0xa, "mars"));
+        fg_chunks.get(0xa).add(new RoomChunk("data/mars/room1010-5.tmx", 0xa, "mars"));
 
         fg_chunks.get(0xb).add(new RoomChunk("data/mars/room1011-1.tmx", 0xb, "mars"));
         fg_chunks.get(0xb).add(new RoomChunk("data/mars/room1011-2.tmx", 0xb, "mars"));
         fg_chunks.get(0xb).add(new RoomChunk("data/mars/room1011-3.tmx", 0xb, "mars"));
+        fg_chunks.get(0xb).add(new RoomChunk("data/mars/room1011-4.tmx", 0xb, "mars"));
         
         fg_chunks.get(0xc).add(new RoomChunk("data/mars/room1100-1.tmx", 0xc, "mars"));
         fg_chunks.get(0xc).add(new RoomChunk("data/mars/room1100-2.tmx", 0xc, "mars"));
@@ -1773,6 +1784,7 @@ public class PCGArea {
         fg_chunks.get(0xe).add(new RoomChunk("data/mars/room1110-2.tmx", 0xe, "mars"));
         fg_chunks.get(0xe).add(new RoomChunk("data/mars/room1110-3.tmx", 0xe, "mars"));
         fg_chunks.get(0xe).add(new RoomChunk("data/mars/room1110-4.tmx", 0xe, "mars"));
+        fg_chunks.get(0xe).add(new RoomChunk("data/mars/room1110-5.tmx", 0xe, "mars"));
 
         fg_chunks.get(0xf).add(new RoomChunk("data/mars/room1111-1.tmx", 0xf, "mars"));
         fg_chunks.get(0xf).add(new RoomChunk("data/mars/room1111-2.tmx", 0xf, "mars"));
@@ -1932,6 +1944,7 @@ public class PCGArea {
         combination_raw_chunks.add(new RoomChunk("data/mars/combination0000-1.tmx", 0, "mars"));
         combination_raw_chunks.add(new RoomChunk("data/mars/combination0100-1.tmx", 0x4, "mars"));
         combination_raw_chunks.add(new RoomChunk("data/mars/combination1000-1.tmx", 0x8, "mars"));
+        combination_raw_chunks.add(new RoomChunk("data/mars/combination1100-1.tmx", 0xc, "mars"));
         for(int type = 0;type<16;type++) {
             for(RoomChunk chunk:combination_raw_chunks) {
                 if ((type & PCGWorld.DIRECTION_LEFT) == 0 && (chunk.type & PCGWorld.DIRECTION_LEFT) != 0) continue;
