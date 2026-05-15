@@ -11,6 +11,7 @@ PCG_PRETTIFY_RANDOM: macro
 ; 	rrca  ; 112000
 	endm
 
+
 ;-----------------------------------------------
 pcg_generate_room__prettify:
 	ld a, (current_area__id)
@@ -26,9 +27,11 @@ pcg_generate_room__prettify:
 	jp z, pcg_generate_room__prettify_xibalba
 	cp 9
 	jp z, pcg_generate_room__prettify_atlantis
-	; ...
+	cp 10
+	jp z, pcg_generate_room__prettify_mars
+	cp 11
+	jp z, pcg_generate_room__prettify_moon
 	jp pcg_generate_room__prettify_pyramid
-	ret
 
 
 ;-----------------------------------------------
@@ -1128,3 +1131,15 @@ pcg_generate_room__prettify_atlantis_ladder_done:
 	pop bc
 	pop hl
 	jp pcg_generate_room__prettify_atlantis_loop_x_continue
+
+
+;-----------------------------------------------
+pcg_generate_room__prettify_mars:
+	; ...
+	ret
+
+
+;-----------------------------------------------
+pcg_generate_room__prettify_moon:
+	; ...
+	ret

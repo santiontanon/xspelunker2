@@ -120,6 +120,8 @@ pcg_generate_area__initialize_ptrs:
 	jr z, pcg_generate_area__initialize_ptrs_xibalba
 	cp 9
 	jr z, pcg_generate_area__initialize_ptrs_atlantis
+	cp 10
+	jr z, pcg_generate_area__initialize_ptrs_mars
 pcg_generate_area__initialize_ptrs_pyramid:
 	ld hl, pyramid_chunk_ptrs_and_constants
 	jr pcg_generate_area__initialize_ptrs_continue
@@ -131,6 +133,9 @@ pcg_generate_area__initialize_ptrs_xibalba:
 	jr pcg_generate_area__initialize_ptrs_continue
 pcg_generate_area__initialize_ptrs_atlantis:
 	ld hl, atlantis_chunk_ptrs_and_constants
+	jr pcg_generate_area__initialize_ptrs_continue
+pcg_generate_area__initialize_ptrs_mars:
+	ld hl, mars_chunk_ptrs_and_constants
 	jr pcg_generate_area__initialize_ptrs_continue
 pcg_generate_area__initialize_ptrs_jungle
 	ld hl, jungle_chunk_ptrs_and_constants
@@ -2691,7 +2696,7 @@ caves_chunk_ptrs_and_constants:
 	db CAVES_BOSS_CHUNK_POOL_SIZE, CAVES_BOSS_CHUNK_POOL_FIRST_ID
 	db CAVES_BLOCK_CHUNK_POOL_SIZE, CAVES_BLOCK_CHUNK_POOL_FIRST_ID
 	db CAVES_COMBINATION_CHUNK_POOL_SIZE, CAVES_COMBINATION_CHUNK_POOL_FIRST_ID
-	db PYRAMID_N_BG_CHUNKS, 192
+	db CAVES_N_BG_CHUNKS, 192
 
 xibalba_chunk_ptrs_and_constants:
 	db (xibalba_chunk_fg_bank_ptrs_end - xibalba_chunk_fg_bank_ptrs) / 2  ; number of banks
@@ -2707,7 +2712,7 @@ xibalba_chunk_ptrs_and_constants:
 	db XIBALBA_BOSS_CHUNK_POOL_SIZE, XIBALBA_BOSS_CHUNK_POOL_FIRST_ID
 	db XIBALBA_BLOCK_CHUNK_POOL_SIZE, XIBALBA_BLOCK_CHUNK_POOL_FIRST_ID
 	db XIBALBA_COMBINATION_CHUNK_POOL_SIZE, XIBALBA_COMBINATION_CHUNK_POOL_FIRST_ID
-	db PYRAMID_N_BG_CHUNKS, 192
+	db XIBALBA_N_BG_CHUNKS, 192
 
 
 atlantis_chunk_ptrs_and_constants:
@@ -2723,5 +2728,22 @@ atlantis_chunk_ptrs_and_constants:
 	db ATLANTIS_STANDARD_CHUNK_POOL_SIZE, ATLANTIS_STANDARD_CHUNK_FIRST_ID
 	db ATLANTIS_BOSS_CHUNK_POOL_SIZE, ATLANTIS_BOSS_CHUNK_POOL_FIRST_ID
 	db ATLANTIS_BLOCK_CHUNK_POOL_SIZE, ATLANTIS_BLOCK_CHUNK_POOL_FIRST_ID
-	db XIBALBA_COMBINATION_CHUNK_POOL_SIZE, ATLANTIS_COMBINATION_CHUNK_POOL_FIRST_ID
-	db PYRAMID_N_BG_CHUNKS, 50
+	db ATLANTIS_COMBINATION_CHUNK_POOL_SIZE, ATLANTIS_COMBINATION_CHUNK_POOL_FIRST_ID
+	db ATLANTIS_N_BG_CHUNKS, 50
+
+
+mars_chunk_ptrs_and_constants:
+	db (mars_chunk_fg_bank_ptrs_end - mars_chunk_fg_bank_ptrs) / 2  ; number of banks
+	db CHUNKS_MARS_PAGE
+	dw mars_chunk_fg_bank_ptrs
+	dw mars_standard_chunk_pool
+	dw mars_boss_chunk_pool
+	dw mars_block_chunk_pool
+	dw mars_combination_chunk_pool
+	dw mars_chunk_flags
+	dw chunk_edgecollisions_mars
+	db MARS_STANDARD_CHUNK_POOL_SIZE, MARS_STANDARD_CHUNK_FIRST_ID
+	db MARS_BOSS_CHUNK_POOL_SIZE, MARS_BOSS_CHUNK_POOL_FIRST_ID
+	db MARS_BLOCK_CHUNK_POOL_SIZE, MARS_BLOCK_CHUNK_POOL_FIRST_ID
+	db MARS_COMBINATION_CHUNK_POOL_SIZE, MARS_COMBINATION_CHUNK_POOL_FIRST_ID
+	db MARS_N_BG_CHUNKS, 50

@@ -152,7 +152,7 @@ enter_boss_door__room_ptr_set:
 				jr z, enter_boss_door__room_prettified
 
 				; bosses 0, 1, 2 have pyramid biome:
-				ld c, PCG_PAGE
+				ld c, PCG_PAGE_PRETTIFY
 				ld hl, pcg_generate_room__prettify_pyramid
 				call call_hl_in_page_c_8000
 enter_boss_door__room_prettified:

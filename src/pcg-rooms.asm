@@ -83,10 +83,10 @@ area_default_tileset_ptrs:
 	dw 0
 	db 0
 
-	db PYRAMID_TILES_PAGE
-	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
+	db MARS_TILES_PAGE
+	dw tiles_mars_zx0, update_animations_in_vdp_mars
 	db AREA_COLLISION_TABLES_PAGE
-	dw tile_collision_types_pyramid, pyramid_enemy_sprites_zx0  ; mars
+	dw tile_collision_types_mars, mars_enemy_sprites_zx0  ; mars
 	dw 0
 	db 0
 
@@ -535,7 +535,9 @@ pcg_generate_room__fg_loop_x_skip:
 
 	; Auto-fill ladders/ropes/etc. and randomize tiles:
 ;     out (#2c),a  ; DEBUG
-	call pcg_generate_room__prettify
+	ld hl, pcg_generate_room__prettify
+	ld c, PCG_PAGE_PRETTIFY
+	call call_hl_in_page_c_8000
 ;     out (#2d),a  ; DEBUG
 
 	; Instantiate 'current_area__objects':
@@ -1504,6 +1506,8 @@ pcg_generate_room_background:
 	jp z, pcg_generate_room_background_xibalba
 	cp 9
 	jp z, pcg_generate_room_background_atlantis
+	cp 10
+	jp z, pcg_generate_room_background_mars
 	jp pcg_generate_room_background_pyramid
 
 
@@ -1520,6 +1524,10 @@ pcg_generate_room_background_xibalba:
 	jr pcg_generate_room_background_pyramid_continue
 pcg_generate_room_background_atlantis:
 	ld de, atlantis_chunk_bg_bank_ptrs
+	ld (tmp_pcg_room__current_chunk_bg_bank_ptrs), de
+	jr pcg_generate_room_background_pyramid_continue
+pcg_generate_room_background_mars:
+	ld de, mars_chunk_bg_bank_ptrs
 	ld (tmp_pcg_room__current_chunk_bg_bank_ptrs), de
 	jr pcg_generate_room_background_pyramid_continue
 pcg_generate_room_background_pyramid:

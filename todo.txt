@@ -1,7 +1,7 @@
 to do:
 
 ***- mars biome (remember to keep ladder tiles in place for down-door opening code)
-  ***- add to assembler
+  OK - add to assembler
   ***- prettify mars in assembler
   ***- tile animations: electrical, lava and bubbles in vat
   ***- bring the spanning tree start position randomization to assembler
