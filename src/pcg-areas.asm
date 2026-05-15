@@ -2664,7 +2664,7 @@ jungle_chunk_ptrs_and_constants:
 	db JUNGLE_BOSS_CHUNK_POOL_SIZE, JUNGLE_BOSS_CHUNK_POOL_FIRST_ID
 	db JUNGLE_BLOCK_CHUNK_POOL_SIZE, JUNGLE_BLOCK_CHUNK_POOL_FIRST_ID
 	db JUNGLE_COMBINATION_CHUNK_POOL_SIZE, JUNGLE_COMBINATION_CHUNK_POOL_FIRST_ID
-	db JUNGLE_N_BG_CHUNKS, 0  ; always first bg chunk
+	db JUNGLE_N_BG_CHUNKS, #ff  ; always empty bg
 
 pyramid_chunk_ptrs_and_constants:
 	db (pyramid_chunk_fg_bank_ptrs_end - pyramid_chunk_fg_bank_ptrs) / 2  ; number of banks
@@ -2746,4 +2746,4 @@ mars_chunk_ptrs_and_constants:
 	db MARS_BOSS_CHUNK_POOL_SIZE, MARS_BOSS_CHUNK_POOL_FIRST_ID
 	db MARS_BLOCK_CHUNK_POOL_SIZE, MARS_BLOCK_CHUNK_POOL_FIRST_ID
 	db MARS_COMBINATION_CHUNK_POOL_SIZE, MARS_COMBINATION_CHUNK_POOL_FIRST_ID
-	db MARS_N_BG_CHUNKS, 50
+	db MARS_N_BG_CHUNKS, 0

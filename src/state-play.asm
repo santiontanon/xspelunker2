@@ -175,8 +175,8 @@ state_play:
 
 state_play_from_continue:
 		; initial player position:
-		ld hl, #0100
-; 		ld hl, #0a00
+; 		ld hl, #0100
+		ld hl, #0a00
 ; 		ld hl, #1000
 ; 		ld hl, #1800
 ; 		ld hl, #1c00

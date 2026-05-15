@@ -1555,7 +1555,7 @@ pcg_generate_room__bg_loop_x:
 ; current_area__p_of_first_bg_chunk: ds virtual 1
 
 		ld a, (current_area__p_of_first_bg_chunk)
-		or a
+		cp #ff
 		jr z, pcg_generate_room__bg_loop_empty_chunk
 		push bc
 			ld c, a

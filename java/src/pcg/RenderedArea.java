@@ -1300,7 +1300,7 @@ public class RenderedArea {
                                 break;
                             }
                         case 15*16 + 7:
-                            // wall bottom:
+                            // rubble:
                             {   
                                 int choices[] = {15*16 + 7, 9*16 + 2, 9*16 + 3, 9*16 + 4};
                                 int a = r.nextInt(choices.length);
