@@ -614,6 +614,48 @@ pcg_generate_area__division_spanning_trees_loop_x_skip:
 ; input:
 ; - hl: ptr to 'tmp_pcg_area__division_ids_tmp' where to start the spanning tree
 pcg_generate_area__division_spanning_trees_generate:
+	; random walk for a few steps so that we do not always start at the top-left:
+	ld b, 8  ; maximum number of random walk steps	
+pcg_generate_area__division_spanning_trees_generate__random_walk_loop:
+	push bc
+		ld e, l
+		ld d, h  ; save the current position
+		call random_a
+		and #03
+		jr z, pcg_generate_area__division_spanning_trees_generate__random_walk_loop_left
+		dec a
+		jr z, pcg_generate_area__division_spanning_trees_generate__random_walk_loop_up
+		dec a
+		jr z, pcg_generate_area__division_spanning_trees_generate__random_walk_loop_right
+pcg_generate_area__division_spanning_trees_generate__random_walk_loop_down:
+		ld a, ixl  ; division width in chunks
+		ADD_HL_A
+		jr pcg_generate_area__division_spanning_trees_generate__random_walk_loop_continue
+pcg_generate_area__division_spanning_trees_generate__random_walk_loop_left:
+		dec hl
+		jr pcg_generate_area__division_spanning_trees_generate__random_walk_loop_continue
+pcg_generate_area__division_spanning_trees_generate__random_walk_loop_right:
+		inc hl
+		jr pcg_generate_area__division_spanning_trees_generate__random_walk_loop_continue
+pcg_generate_area__division_spanning_trees_generate__random_walk_loop_up:
+		ld b, 0
+		ld c, ixl  ; division width in chunks
+		or a
+		sbc hl, bc
+pcg_generate_area__division_spanning_trees_generate__random_walk_loop_continue:
+		ld a, h
+		cp d  ; the whole 'tmp_pcg_area__division_ids_tmp' is in a 256 byte block, so, if the most-significant byte changes, we are out of the map
+		jr nz, pcg_generate_area__division_spanning_trees_generate__random_walk_loop_out_of_bounds
+		ld a, (de)
+		cp (hl)  ; same division ID?
+		jr z, pcg_generate_area__division_spanning_trees_generate__random_walk_loop_continue2
+pcg_generate_area__division_spanning_trees_generate__random_walk_loop_out_of_bounds:
+		ld l, e  ; restore the previous position
+		ld h, d
+pcg_generate_area__division_spanning_trees_generate__random_walk_loop_continue2:
+	pop bc
+	djnz pcg_generate_area__division_spanning_trees_generate__random_walk_loop
+
 	ld a, (hl)
 	ld (hl), #ff  ; mark the position as "closed"
 	ld iyl, a  ; division ID we are filling

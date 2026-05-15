@@ -1,4 +1,4 @@
-; Unit tests run on MDL, and not on an MSX machine, so, we can use the whole 64k space.
+; Unit tests run on MDL, and not on an MSX machine, so, we can use the whole 64k smemory pace.
 	org #0000
 	ld sp, #ffff
 

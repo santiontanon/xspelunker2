@@ -21,13 +21,13 @@ import util.Z80Assembler;
 public class HardcodedAreaForAssembler {
     public static final int MAX_AREA_WIDTH = 8;
     public static final int MAX_AREA_HEIGHT = 8;
-    public static final int MAX_N_TAGS = 32;
+    public static final int MAX_AREA_N_TAGS = 32;
+    public static final int MAX_AREA_N_OBJECTS = 40;
     
     public static void main(String args[]) throws Exception
     {
-        boolean include_pcg_area__debug_data = true;
+        boolean include_pcg_area__debug_data = false;
         MSXRandom r = new MSXRandom(0, 0x5555);
-
 
         PCGWorld pcg1 = new PCGWorld();
         PCGArea pcg2_jungle = new PCGArea(true, "jungle");
@@ -45,7 +45,7 @@ public class HardcodedAreaForAssembler {
 //        RenderedArea ra8 = pcg2.generate(w.areas.get(8), w, r);
 //        RenderedArea ra9 = pcg2.generate(w.areas.get(9), w, r);
         generateAssemblerRenderedAreaData(ra0, w.areas.get(0), pcg2_jungle, include_pcg_area__debug_data);
-//        generateAssemblerRenderedAreaData(ra1, w.areas.get(1), pcg2_pyramid, include_pcg_area__debug_data);
+        generateAssemblerRenderedAreaData(ra1, w.areas.get(1), pcg2_pyramid, include_pcg_area__debug_data);
         GenerationTest.visualizeArea(ra0, "tmp/area"+0+".png", pcg2_jungle);
 //        GenerationTest.visualizeArea(ra1, "tmp/area"+1+".png", pcg2_pyramid);
 //        GenerationTest.visualizeArea(ra2, "tmp/area"+2+".png", pcg2);
@@ -61,16 +61,16 @@ public class HardcodedAreaForAssembler {
     
     public static void generateAssemblerRenderedAreaData(RenderedArea ra, Area a, PCGArea pcg, boolean include_pcg_area__debug_data) throws Exception
     {
-        System.out.println("hardcoded_area_data__seed:");
+        System.out.println("hardcoded_area_"+a.ID+"_data__seed:");
         System.out.println("  dw " + Z80Assembler.toHex16bit(a.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(a.rng_seed2, true));
-        System.out.println("hardcoded_area_data__id:");
+        System.out.println("hardcoded_area_"+a.ID+"_data__id:");
         System.out.println("  db " + a.ID);
-        System.out.println("hardcoded_area_data__width:");
+        System.out.println("hardcoded_area_"+a.ID+"_data__width:");
         System.out.println("  db " + a.width);
-        System.out.println("hardcoded_area_data__height:");
+        System.out.println("hardcoded_area_"+a.ID+"_data__height:");
         System.out.println("  db " + a.height);
 
-        System.out.println("hardcoded_area_data__room_ids:");
+        System.out.println("hardcoded_area_"+a.ID+"_data__room_ids:");
         for(int i = 0;i<a.height;i++) {
             String line = "  db ";
             for(int j = 0;j<a.width;j++) {
@@ -88,7 +88,7 @@ public class HardcodedAreaForAssembler {
             System.out.println("  ds " + (MAX_AREA_WIDTH * MAX_AREA_HEIGHT - a.height * a.width) + ", 0");
         }
 
-        System.out.println("hardcoded_area_data__chunk_ids:");
+        System.out.println("hardcoded_area_"+a.ID+"_data__chunk_ids:");
         for(int i = 0;i<a.height * 2;i++) {
             String line = "  db ";
             for(int j = 0;j<a.width * 2;j++) {
@@ -102,14 +102,19 @@ public class HardcodedAreaForAssembler {
             System.out.println(line);
         }
         
-        System.out.println("hardcoded_area_data__objects:");
+        System.out.println("hardcoded_area_"+a.ID+"_data__objects:");
         for(GameObjectPlaceholder go:ra.objectPlaceholders) {
             int offset = go.x + go.y * a.width*2;
             System.out.println("  db " + AssemblerTags.tagToAssembler(go.type) + ", " + offset + ", " + go.ID + ", " + go.extra);
         }
+        if (ra.objectPlaceholders.size() < MAX_AREA_N_OBJECTS) {
+            System.out.println("  ; filler");
+            System.out.println("  ds " + (MAX_AREA_N_OBJECTS - ra.objectPlaceholders.size())*4 + ", 0");
+        }
+        System.out.println("hardcoded_area_"+a.ID+"_data__end:\n\n");
         
         if (include_pcg_area__debug_data) {
-            System.out.println("hardcoded_area_data__tmp_pcg_area__piece_types:");
+            System.out.println("hardcoded_area_"+a.ID+"_data__tmp_pcg_area__piece_types:");
             for(int i = 0;i<a.height * 2;i++) {
                 String line = "  db ";
                 for(int j = 0;j<a.width * 2;j++) {
@@ -123,7 +128,7 @@ public class HardcodedAreaForAssembler {
                 System.out.println(line);
             }
             
-            System.out.println("hardcoded_area_data__tmp_pcg_area__piece_choose_rng_seeds:");
+            System.out.println("hardcoded_area_"+a.ID+"_data__tmp_pcg_area__piece_choose_rng_seeds:");
             for(int i = 0;i<a.height * 2;i++) {
                 String line = "  db ";
                 for(int j = 0;j<a.width * 2;j++) {
@@ -139,7 +144,7 @@ public class HardcodedAreaForAssembler {
                 System.out.println(line);
             }            
 
-            System.out.println("hardcoded_area_data__tmp_pcg_area__piece_choose_pool_size:");
+            System.out.println("hardcoded_area_"+a.ID+"_data__tmp_pcg_area__piece_choose_pool_size:");
             for(int i = 0;i<a.height * 2;i++) {
                 String line = "  db ";
                 for(int j = 0;j<a.width * 2;j++) {
