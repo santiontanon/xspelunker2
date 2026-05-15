@@ -1,6 +1,5 @@
 to do:
 
-OK - hardcode division ID in midpoint (so that the room immediately below is different division)
 ***- create a area pcg unit test and verify that chunk IDs are selected the same in Java and assembler
 ***- bring the spanning tree start position randomization to assembler
 ***- mars sprite enemies
