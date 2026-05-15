@@ -1,8 +1,8 @@
 to do:
 
+OK - hardcode division ID in midpoint (so that the room immediately below is different division)
+***- create a area pcg unit test and verify that chunk IDs are selected the same in Java and assembler
 ***- bring the spanning tree start position randomization to assembler
-***- hardcode division ID in midpoint (so that the room immediately below is different division)
-***- create a area pcg unit test and verify that chunk IDs are selected the same in Java and assembler (maybe I can just add area test to my current world pcg test)
 ***- mars sprite enemies
 ***- mars tile enemies (one could be steam/gas vents that might push you up/sideways/down)
 
@@ -14,19 +14,19 @@ to do:
   - mars
   - moon
 - moon biome (similar to mars, it could even be the same with palette changed)
-  - If the player enters a world name related to these theories (like "ATLANTIS", "AZTLAN", or "COH", or something like that), it could trigger a world where the the "Firestone forge", which is in the Moon, is active if you are in a world with the word (clue is in ATLANTIS_TABLET_5_1).
+  - If the player enters a world name related to these theories (like "ATLANTIS", "AZTLAN", or "COH"), trigger a world where the "Firestone forge" (in the Moon) is active (clue is in ATLANTIS_TABLET_5_1).
 - 6th boss: (ideas: "The Solar Stone Jaguar", "The Martian Terracotta Warrior", "The Dust Stone Golem"). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer). Another idea: https://en.wikipedia.org/wiki/Human_sacrifice_in_Maya_culture#/media/File:MA_D293_Maya_stone_carving_from_Copan.jpg
-  - in the boss room, before the fight: an underground cave where there is a broken ancient robot that can talk if you turn it on with the golden key (in a mix of English and Maya maybe?), and gives you a weapon upgrade (e.g. a better raygun, which might be useful for fighting the final alien boss), add as a special achievement for the gameover screen.  
+  - before the boss fight: underground cave with a broken ancient robot that talks if you turn it on with the golden key (in a mix of English and Maya). Gives you a better raygun (key for alien boss), add as an achievement for the gameover screen.  
   - add boss name to the stats for game over screen
 - 7th boss (ideas: "The Lunar Obsidian Sentinel" (tall, slender, smooth black, reflective surfaces), "The Lunar Crystal Serpent", "The Moon Stone Monolith"). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
   - add boss name to the stats for game over screen
-- ending B: the calendar stone machine not only creates a defensive barrier, but also activates its offensive mechanism and destroys the alien armada that was coming. You hope that will deter them from coming again.
+- ending B: the calendar stone machine also activates its offensive mechanism and destroys the alien armada that was coming. You hope that will deter them from coming again.
 - update the list of enemy types to display in ending B to include new enemies in moon/mars
 
-- 8th boss: after beating the combat against the aliens, you can teleport to their home planet, and fight against their leader (final final boss). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
+- 8th boss: after beating the combat against the aliens, you can teleport to their home planet, and fight against their leader. (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
   - add boss name to the stats for game over screen
-- final good ending 1 (A) (update "stats__ending"): the stone opens a portal for you to travel to the alien world, and fight against their leader in a final final battle. When you defeat it and come back, Elaine is there waiting to save you, but you arrive having defeated the alien empire (although there is doubt if other empires will show up again, and the calendar stone depletes, and cannot be used again)
-- update the list of enemy types and names to display in ending A to include any potential enemies you find in the alien planet
+- final good ending 1 (A) (update "stats__ending"): the stone opens a portal to travel to the alien world, and fight against their leader. When you defeat it and come back, Elaine is there waiting to save you, but you arrive having defeated the alien empire (although there is doubt if other empires will show up again, and the calendar stone depletes, and cannot be used again)
+- update the list of enemy types to display in ending A to include any enemies in the alien planet.
 
 - Final good ending 2 (A+) if you have the codex (from the 3 statues), you can use it in the forge to manufacture more powestones/firestones. So, you can keep using the calendar stone and be prepared for the future. This is the true final ending.
 - Ending B+ (got the firestone forge active with the codex, but did not defeat the final alien boss)

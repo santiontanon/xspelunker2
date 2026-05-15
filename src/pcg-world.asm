@@ -318,8 +318,8 @@ pcg__full_layout:  ; for those areas for which we do not want to have a predefin
 
 pgc__n_divisions_per_area:
 	db  6, 15, 15,  4  ; 40 + 2
-	db 15,  3, 12, 12  ; 42
-	db 13, 13, 12, 12  ; 50 -> 42+42+50 = 134 + 2 divisions (+ 2 since there are 2 hardcoded divisions in the confluence)
+	db 15,  1, 12, 12  ; 42 + 2
+	db 13, 13, 12, 12  ; 50 -> 42+42+50 = 134 + 4 divisions (+ 4 since there are 4 hardcoded divisions in the confluence)
 MAX_N_DIVISIONS: equ 136
 
 pcg_world__available_lock_keys_init_rom:
@@ -853,7 +853,7 @@ pcg_generate_world__generate_divisions_init_loop2_a_set:
 	pop bc
 	djnz pcg_generate_world__generate_divisions_init_loop
 
-	; Hardcoded divisions (confluence):
+	; Hardcoded divisions (confluence + midpoint):
 	ld hl, tmp_pcg_world__area_0_divisions + WORLD_AREA__SIZE * 3 + 3
 	ld (hl), 1
 	inc hl
@@ -866,8 +866,11 @@ pcg_generate_world__generate_divisions_init_loop2_a_set:
 	ld (hl), 2
 	inc hl
 	ld (hl), 2
-
-	ld iyl, 3  ; next division ID
+	ld hl, tmp_pcg_world__area_0_divisions + WORLD_AREA__SIZE * 5 + 1
+	ld (hl), 3
+	ld hl, tmp_pcg_world__area_0_divisions + WORLD_AREA__SIZE * 5 + 1 + 3
+	ld (hl), 4
+	ld iyl, 5  ; next division ID
 
 	ld b, MAX_WORLD_AREAS
 	ld hl, pgc__n_divisions_per_area
