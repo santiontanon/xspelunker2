@@ -1,21 +1,39 @@
 ;-----------------------------------------------
-; Jump tables
-player_fall_speed_table:
-    db 1, 0, 1, 1, 2, 1
-    db 2, 2, 3, 3, 4, #ff  ; good for 50Hz
-
-PLAYER_JUMP_STOP_INDEX: equ 12  ; when we release the jump key, we will move to this index in the
-								; jump speed table, if we are not already past that
-PLAYER_JUMP_DOUBLE_JUMP_INDEX: equ 8
-PLAYER_JUMP_DOUBLE_JUMP_INDEX_RESTART: equ 3
-
-player_jump_speed_table:
-	db 6, 6, 6, 4, 4, 3, 3, 2
-	db 2, 1, 2, 1, 1, 0, 1, 0, 0, 0, #ff  ; 1 / 3  ; 42 total jump height in 18 frames / good for 50Hz
-
 player_hurt_speed_table:
 	db 2, 2, 1, 1, 1, 0, 1, 0
 	db 0, 0, 0, 0, 0, 0, 0, 0, #ff
+
+
+;-----------------------------------------------
+; Jump tables for earth:
+player_fall_speed_table_earth:
+    db 1, 0, 1, 1, 2, 1
+    db 2, 2, 3, 3, 4, #ff  ; good for 50Hz
+
+player_jump_speed_table_earth:
+	db 6, 6, 6, 4, 4, 3, 3, 2
+	db 2, 1, 2, 1, 1, 0, 1, 0, 0, 0, #ff  ; 1 / 3  ; 42 total jump height in 18 frames / good for 50Hz
+
+PLAYER_JUMP_STOP_INDEX_EARTH: equ 12  ; when we release the jump key, we will move to this index in the
+								; jump speed table, if we are not already past that
+PLAYER_JUMP_DOUBLE_JUMP_INDEX_EARTH: equ 8  ; we can only double jump after this index
+PLAYER_JUMP_DOUBLE_JUMP_INDEX_RESTART_EARTH: equ 3  ; we reset the jump to this index when double jumping
+
+
+;-----------------------------------------------
+; Jump tables for mars:
+player_fall_speed_table_mars:
+    db 1, 0, 1, 1, 2, 1
+    db 2, 2, 3, 3, 4, #ff  ; good for 50Hz
+
+player_jump_speed_table_mars:
+	db 8, 6, 6, 6, 4, 4, 3, 3, 2
+	db 2, 1, 2, 1, 1, 0, 1, 0, 0, 0, #ff  ; 1 / 3  ; 50 total jump height in 19 frames / good for 50Hz
+
+PLAYER_JUMP_STOP_INDEX_MARS: equ 13  ; when we release the jump key, we will move to this index in the
+									   ; jump speed table, if we are not already past that
+PLAYER_JUMP_DOUBLE_JUMP_INDEX_MARS: equ 9  ; we can only double jump after this index
+PLAYER_JUMP_DOUBLE_JUMP_INDEX_RESTART_MARS: equ 4  ; we reset the jump to this index when double jumping
 
 
 ;-----------------------------------------------
@@ -785,7 +803,8 @@ player_update_state_jumping_cannot_cancel:
 	ld a, (player_state_timer)
 	inc a
 	ld (player_state_timer), a
-	ld hl, player_jump_speed_table - 1
+	dec a
+	ld hl, (current_area__jump_table_ptr)
 	ADD_HL_A
 	ld a, (hl)
 	cp #ff
@@ -810,10 +829,12 @@ player_update_state_jumping_speed_loop_done:
 
 
 player_update_stop_jumping:
+	ld a, (current_area__jump_stop_index)
+	ld c, a
 	ld a, (player_state_timer)
-	cp PLAYER_JUMP_STOP_INDEX
+	cp c
 	ret nc
-	ld a, PLAYER_JUMP_STOP_INDEX
+	ld a, c
 	ld (player_state_timer), a
 	ret
 
@@ -827,12 +848,14 @@ player_update_double_jump_check:
 	bit KEY_JUMP_BIT, a
 	ret z
 	; we can only double jump towards the end of the jump:
+	ld a, (current_area__double_jump_index)
+	ld c, a
 	ld a, (player_state_timer)
-	cp PLAYER_JUMP_DOUBLE_JUMP_INDEX
+	cp c
 	ret c
 	xor a
 	ld (player_can_double_jump), a
-	ld a, PLAYER_JUMP_DOUBLE_JUMP_INDEX_RESTART
+	ld a, (current_area__double_jump_index_restart)
 	ld (player_state_timer), a
 	ld hl, SFX_jump
 	jp play_SFX_with_high_priority
@@ -868,7 +891,7 @@ player_update_double_jump_check_falling_target_state_set:
 	and #01
 	add a, c
 	ld (player_state), a
-	ld a, PLAYER_JUMP_DOUBLE_JUMP_INDEX_RESTART
+	ld a, (current_area__double_jump_index_restart)
 	ld (player_state_timer), a
 	ld hl, SFX_jump
 	jp play_SFX_with_high_priority
@@ -1578,7 +1601,9 @@ player_update_state_weapon_swing_jumping_cannot_cancel:
 	ld a, (player_state_timer)
 	inc a
 	ld (player_state_timer), a
-	ld hl, player_jump_speed_table - 1
+	dec a
+	ld hl, (current_area__jump_table_ptr)
+; 	ld hl, player_jump_speed_table - 1
 	ADD_HL_A
 	ld a, (hl)
 	cp #ff
@@ -1850,7 +1875,9 @@ player_update_state_directional_weapon_jumping_cannot_cancel:
 	ld a, (player_state_timer)
 	inc a
 	ld (player_state_timer), a
-	ld hl, player_jump_speed_table - 1
+	dec a
+	ld hl, (current_area__jump_table_ptr)
+; 	ld hl, player_jump_speed_table - 1
 	ADD_HL_A
 	ld a, (hl)
 	cp #ff
@@ -2236,7 +2263,8 @@ player_update_falling_logic_internal_no_antigrav_belt:
 	ld a, (player_state_timer)
 	ld e, a
 	inc e
-	ld hl, player_fall_speed_table
+; 	ld hl, player_fall_speed_table
+	ld hl, (current_area__fall_table_ptr)
 	ADD_HL_A
 	ld a, (hl)
 	cp #ff

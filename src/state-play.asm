@@ -198,8 +198,8 @@ state_play_from_continue:
 ; 		ld e, 6  ; area to generate
 ; 		ld e, 7  ; area to generate
 ; 		ld e, 8  ; xibalba
-		ld e, 10  ; atlantis
-; 		ld e, 10  ; mars
+; 		ld e, 9  ; atlantis
+		ld e, 10  ; mars
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
 

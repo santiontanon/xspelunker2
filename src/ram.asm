@@ -74,6 +74,11 @@ current_area__combination_chunk_pool_size: ds virtual 1
 current_area__combination_chunk_pool_first_id: ds virtual 1
 current_area__n_bg_chunks: ds virtual 1
 current_area__p_of_first_bg_chunk: ds virtual 1
+current_area__fall_table_ptr: ds virtual 2
+current_area__jump_table_ptr: ds virtual 2
+current_area__jump_stop_index: ds virtual 1
+current_area__double_jump_index: ds virtual 1
+current_area__double_jump_index_restart: ds virtual 1
 
 
 current_room__id: ds virtual 1
@@ -157,6 +162,7 @@ global_state__story: ds virtual 1
 global_state__first_time_flags: ds virtual 1  ; bits:
                                               ; - 0: used teleporter before
                                               ; - 1: entered astronomy room before
+                                              ; - 2: entered mars for the first time
 
 global_state__power_calendar: ds virtual 6  ; the value of each of these 6 bytes can be:
                                             ; - 0: empty

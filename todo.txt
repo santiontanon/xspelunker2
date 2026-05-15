@@ -1,12 +1,10 @@
 to do:
 
-***- mars biome (remember to keep ladder tiles in place for down-door opening code)
-  ***- implement different jump tables per biome (everything at the top of player.asm)
-  ***- bring the spanning tree start position randomization to assembler
-  ***- hardcode division ID in midpoint (so that the room immediately below is different division)
-  ***- create a area pcg unit test and verify that chunk IDs are selected the same in Java and assembler (maybe I can just add area test to my current world pcg test)
-  ***- sprite enemies
-  ***- tile enemies (one could be steam/gas vents that might push you up/sideways/down)
+***- bring the spanning tree start position randomization to assembler
+***- hardcode division ID in midpoint (so that the room immediately below is different division)
+***- create a area pcg unit test and verify that chunk IDs are selected the same in Java and assembler (maybe I can just add area test to my current world pcg test)
+***- mars sprite enemies
+***- mars tile enemies (one could be steam/gas vents that might push you up/sideways/down)
 
 - music: (brain 12, 15, 23, 25 have potential)
   - ending aliens

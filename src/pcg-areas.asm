@@ -141,7 +141,7 @@ pcg_generate_area__initialize_ptrs_jungle
 	ld hl, jungle_chunk_ptrs_and_constants
 pcg_generate_area__initialize_ptrs_continue:
 	ld de, current_area__n_chunk_banks
-	ld bc, (current_area__p_of_first_bg_chunk + 1) - current_area__n_chunk_banks
+	ld bc, (current_area__double_jump_index_restart + 1) - current_area__n_chunk_banks
 	ldir
 	ret
 
@@ -2665,6 +2665,8 @@ jungle_chunk_ptrs_and_constants:
 	db JUNGLE_BLOCK_CHUNK_POOL_SIZE, JUNGLE_BLOCK_CHUNK_POOL_FIRST_ID
 	db JUNGLE_COMBINATION_CHUNK_POOL_SIZE, JUNGLE_COMBINATION_CHUNK_POOL_FIRST_ID
 	db JUNGLE_N_BG_CHUNKS, #ff  ; always empty bg
+    dw player_fall_speed_table_earth, player_jump_speed_table_earth
+    db PLAYER_JUMP_STOP_INDEX_EARTH, PLAYER_JUMP_DOUBLE_JUMP_INDEX_EARTH, PLAYER_JUMP_DOUBLE_JUMP_INDEX_RESTART_EARTH
 
 pyramid_chunk_ptrs_and_constants:
 	db (pyramid_chunk_fg_bank_ptrs_end - pyramid_chunk_fg_bank_ptrs) / 2  ; number of banks
@@ -2681,6 +2683,8 @@ pyramid_chunk_ptrs_and_constants:
 	db PYRAMID_BLOCK_CHUNK_POOL_SIZE, PYRAMID_BLOCK_CHUNK_POOL_FIRST_ID
 	db PYRAMID_COMBINATION_CHUNK_POOL_SIZE, PYRAMID_COMBINATION_CHUNK_POOL_FIRST_ID
 	db PYRAMID_N_BG_CHUNKS, 192
+    dw player_fall_speed_table_earth, player_jump_speed_table_earth
+    db PLAYER_JUMP_STOP_INDEX_EARTH, PLAYER_JUMP_DOUBLE_JUMP_INDEX_EARTH, PLAYER_JUMP_DOUBLE_JUMP_INDEX_RESTART_EARTH
 
 caves_chunk_ptrs_and_constants:
 	db (caves_chunk_fg_bank_ptrs_end - caves_chunk_fg_bank_ptrs) / 2  ; number of banks
@@ -2697,6 +2701,8 @@ caves_chunk_ptrs_and_constants:
 	db CAVES_BLOCK_CHUNK_POOL_SIZE, CAVES_BLOCK_CHUNK_POOL_FIRST_ID
 	db CAVES_COMBINATION_CHUNK_POOL_SIZE, CAVES_COMBINATION_CHUNK_POOL_FIRST_ID
 	db CAVES_N_BG_CHUNKS, 192
+    dw player_fall_speed_table_earth, player_jump_speed_table_earth
+    db PLAYER_JUMP_STOP_INDEX_EARTH, PLAYER_JUMP_DOUBLE_JUMP_INDEX_EARTH, PLAYER_JUMP_DOUBLE_JUMP_INDEX_RESTART_EARTH
 
 xibalba_chunk_ptrs_and_constants:
 	db (xibalba_chunk_fg_bank_ptrs_end - xibalba_chunk_fg_bank_ptrs) / 2  ; number of banks
@@ -2713,7 +2719,8 @@ xibalba_chunk_ptrs_and_constants:
 	db XIBALBA_BLOCK_CHUNK_POOL_SIZE, XIBALBA_BLOCK_CHUNK_POOL_FIRST_ID
 	db XIBALBA_COMBINATION_CHUNK_POOL_SIZE, XIBALBA_COMBINATION_CHUNK_POOL_FIRST_ID
 	db XIBALBA_N_BG_CHUNKS, 192
-
+    dw player_fall_speed_table_earth, player_jump_speed_table_earth
+    db PLAYER_JUMP_STOP_INDEX_EARTH, PLAYER_JUMP_DOUBLE_JUMP_INDEX_EARTH, PLAYER_JUMP_DOUBLE_JUMP_INDEX_RESTART_EARTH
 
 atlantis_chunk_ptrs_and_constants:
 	db (atlantis_chunk_fg_bank_ptrs_end - atlantis_chunk_fg_bank_ptrs) / 2  ; number of banks
@@ -2730,7 +2737,8 @@ atlantis_chunk_ptrs_and_constants:
 	db ATLANTIS_BLOCK_CHUNK_POOL_SIZE, ATLANTIS_BLOCK_CHUNK_POOL_FIRST_ID
 	db ATLANTIS_COMBINATION_CHUNK_POOL_SIZE, ATLANTIS_COMBINATION_CHUNK_POOL_FIRST_ID
 	db ATLANTIS_N_BG_CHUNKS, 50
-
+    dw player_fall_speed_table_earth, player_jump_speed_table_earth
+    db PLAYER_JUMP_STOP_INDEX_EARTH, PLAYER_JUMP_DOUBLE_JUMP_INDEX_EARTH, PLAYER_JUMP_DOUBLE_JUMP_INDEX_RESTART_EARTH
 
 mars_chunk_ptrs_and_constants:
 	db (mars_chunk_fg_bank_ptrs_end - mars_chunk_fg_bank_ptrs) / 2  ; number of banks
@@ -2747,3 +2755,5 @@ mars_chunk_ptrs_and_constants:
 	db MARS_BLOCK_CHUNK_POOL_SIZE, MARS_BLOCK_CHUNK_POOL_FIRST_ID
 	db MARS_COMBINATION_CHUNK_POOL_SIZE, MARS_COMBINATION_CHUNK_POOL_FIRST_ID
 	db MARS_N_BG_CHUNKS, 0
+    dw player_fall_speed_table_mars, player_jump_speed_table_mars
+    db PLAYER_JUMP_STOP_INDEX_MARS, PLAYER_JUMP_DOUBLE_JUMP_INDEX_MARS, PLAYER_JUMP_DOUBLE_JUMP_INDEX_RESTART_MARS
