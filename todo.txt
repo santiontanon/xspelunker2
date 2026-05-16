@@ -1,9 +1,6 @@
 to do:
 
 ***- mars sprite enemies:
-  ***- mars snail:
-    ***- can only be hit from the front (is it hard?)
-    ***- variant that spits bubbles (and has more HP)
   ***- roof-slime (can switch between ceiling and floor, and drop on top of you):
     ***- spawn
     ***- patrol left-right
@@ -15,8 +12,8 @@ to do:
     ***- spawn
     ***- walk left-right
     ***- pause some times
-    ***- they can jump small obstables up to keep moving forward
-    ***- they can jump small obstables down to keep moving forward (if they would be able to then come back up)
+    ***- they can jump small obstacles up to keep moving forward
+    ***- they can jump small obstacles down to keep moving forward (if they would be able to then come back up)
     ***- if player is in front, they fire a small barrage of bullets
   ***- guard drones (fly and shoot you directionally)
     ***- spawn in the air anywhere

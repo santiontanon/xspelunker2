@@ -56,6 +56,7 @@ enemy_update_fn_table:
 	dw update_enemy_sentinel_rock
 	dw update_enemy_alien
 	dw update_enemy_mars_snail1
+	dw update_enemy_mars_snail2
 
 
 ;-----------------------------------------------
@@ -3205,6 +3206,7 @@ update_enemy_fishman_fire_left:
 
 update_enemy_fishman_fire_right_spit:
 	; spit water:
+	; - d: speed of the bullet
 	push de
 		call ptr_to_new_sprite_enemy
 	pop de
@@ -3245,7 +3247,7 @@ update_enemy_fishman_fire_right_spit_second_right:
 	inc d
 	jr update_enemy_fishman_fire_right_spit
 update_enemy_fishman_fire_right_spit_second_left:
-	inc d
+	dec d
 	jr update_enemy_fishman_fire_right_spit
 
 
@@ -3693,15 +3695,21 @@ ENDIF
 
 
 ;-----------------------------------------------
+update_enemy_mars_snail2:
+	ld iyl, COLOR_GREEN
+	jr update_enemy_mars_snail1_continue
 update_enemy_mars_snail1:
+	ld iyl, COLOR_LIGHT_RED
+update_enemy_mars_snail1_continue:
 	ld iyh, 4  ; damage to deal
 	call update_enemy_hurt_player_2x2
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	and #fe  ; filter direction
 	cp 2
-	jr z, update_enemy_mars_snail1_hidden  ; right
-	cp 3
-	jr z, update_enemy_mars_snail1_hidden  ; left
+	jr z, update_enemy_mars_snail1_hidden
+	cp 4
+	jp z, update_enemy_mars_snail1_firing
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	and #03
 	call z, update_enemy__patrol_left_right_platform
@@ -3709,7 +3717,19 @@ update_enemy_mars_snail1:
 	call random_a
 	or a
 	jr z, update_enemy_mars_snail1_hide
-update_enemy_mars_snail1_walk:
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	cp ENEMY_MARS_SNAIL2
+	jr nz, update_enemy_mars_snail1_walk_sprites
+	; chance of firing:
+	call random_a
+	and #7f
+	jr nz, update_enemy_mars_snail1_walk_sprites
+	; switch to firing state:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	add a, 4
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), a
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+update_enemy_mars_snail1_walk_sprites:
 	; walk:
 	; 4: right: hidden, walk1, walk2 (first 3 carapace, second 3 body)
 	; 10: left: hidde, walk1, walk2
@@ -3719,12 +3739,14 @@ update_enemy_mars_snail1_walk:
 	rrca
 	and #01
 	ld e, a
+update_enemy_mars_snail1_walk_sprites_e_set:
  	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+ 	and #01
  	add a, a
  	ld d, a
  	add a, a
  	add a, d  ; a * 6
- 	add a, FIRST_ENEMY_SPRITE_PATTERN + 5
+ 	add a, FIRST_ENEMY_SPRITE_PATTERN + 3
  	add a, e
  	add a, a
  	add a, a
@@ -3740,10 +3762,11 @@ update_enemy_mars_render_sprite:
 	ld e, a
 	ld a, d
 	and #80
-	add a, COLOR_LIGHT_RED
+	add a, iyl
 	ld d, a
 	call add_sprite_to_this_frame
 	jp update_sprite_enemies_loop_next
+
 update_enemy_mars_snail1_hide:
 	inc (ix + ROOM_OBJECT_STRUCT_STATE)
 	inc (ix + ROOM_OBJECT_STRUCT_STATE)  ; hidden
@@ -3758,14 +3781,60 @@ update_enemy_mars_snail1_hidden:
  	ld d, a
  	add a, a
  	add a, d  ; a * 6
- 	add a, FIRST_ENEMY_SPRITE_PATTERN + 4
+ 	add a, FIRST_ENEMY_SPRITE_PATTERN + 2
  	add a, a
  	add a, a
  	jr update_enemy_mars_render_sprite
 update_enemy_mars_snail1_hide_end:
-	dec (ix + ROOM_OBJECT_STRUCT_STATE)
-	dec (ix + ROOM_OBJECT_STRUCT_STATE)
-	jr update_enemy_mars_snail1_walk
+update_enemy_mars_snail1_firing_end:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	and #01
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), a
+	jr update_enemy_mars_snail1_walk_sprites
+
+update_enemy_mars_snail1_firing:
+	ld a, (current_world__difficulty_attack_warn_time)
+	ld c, a
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp c  ; timer for coming out of the carapace
+	ld e, 0
+	jr nz, update_enemy_mars_snail1_walk_sprites_e_set
+	; spit a bubble:
+	call ptr_to_new_sprite_enemy  ; hl: ptr to the bullet
+	jr nz, update_enemy_mars_snail1_firing_end
+	ld d, 2
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	and #01
+	xor #01
+	ld iyh, a  ; x tile offset of bullet
+	xor #01
+	add a, a
+	add a, a
+	neg
+	add a, d
+	ld d, a  ; d: speed of the bullet
+	ld (hl), 0
+	inc hl
+	ld (hl), ENEMY_BULLET_WATERBALL
+	inc hl
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	ld (hl), a  ; pixel x
+	inc hl
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	add a, iyh
+	ld (hl), a
+	inc hl
+	ld (hl), 4  ; pixel y
+	inc hl
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	ld (hl), a
+	inc hl
+	ld (hl), d  ; x speed
+	inc hl
+	ld (hl), 0  ; state timer
+	ld hl, SFX_enemy_bullet
+	call play_SFX_with_high_priority
+	jr update_enemy_mars_snail1_firing_end
 
 
 ;-----------------------------------------------
@@ -5568,6 +5637,10 @@ enemy_hit:
 	jr z, enemy_hit_rockman
 	cp ENEMY_ROCKMAN2
 	jr z, enemy_hit_rockman
+	cp ENEMY_MARS_SNAIL1
+	jr z, enemy_hit_mars_snail
+	cp ENEMY_MARS_SNAIL2
+	jr z, enemy_hit_mars_snail
 enemy_hit_continue:
 	ld a, iyl
 	ld (ix + ROOM_OBJECT_STRUCT_LAST_HIT_ID), a
@@ -5583,11 +5656,32 @@ enemy_hit_rockman:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
 	cp 2
 	jr nz, enemy_hit_continue
+enemy_hit_rockman_stone:
 	; hit rockman when it was in stone shape, shield hit:
 	ld a, iyl
 	ld (ix + ROOM_OBJECT_STRUCT_LAST_HIT_ID), a
 	ld hl, SFX_shield
 	jp play_SFX_with_high_priority
+
+enemy_hit_mars_snail:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	sub 2
+	jr z, enemy_hit_rockman_stone
+	dec a
+	jr z, enemy_hit_rockman_stone
+	ld a, (player_x + 1)  ; tile x
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	jr z, enemy_hit_rockman_stone
+	jr nc, enemy_hit_mars_snail_from_right
+enemy_hit_mars_snail_left:
+	and #01
+	jr nz, enemy_hit_continue
+	jr enemy_hit_rockman_stone
+enemy_hit_mars_snail_from_right:
+	and #01
+	jr z, enemy_hit_continue
+	jr enemy_hit_rockman_stone
 
 enemy_hit_killed:
 	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)

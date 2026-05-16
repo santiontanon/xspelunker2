@@ -617,10 +617,8 @@ public class GenerateSprites {
         
         // bullet (0):
         data.addAll(extractSprite(sourceImage, 64, 0, 15));  // bullet
-        data.addAll(extractSprite(sourceImage, 80, 192, 15));  // water bullet
-        data.addAll(extractSprite(sourceImage, 96, 192, 15));
         data.addAll(extractSprite(sourceImage, 112, 192, 15));  // water bullet pop
-        // snail (4):
+        // snail (2):
         data.addAll(extractSprite(sourceImage, 0, 280, 5));  // right snail carapace hidden
         data.addAll(extractSprite(sourceImage, 16, 280, 5));  // right snail carapace
         data.addAll(extractSprite(sourceImage, 32, 280, 5));
@@ -633,14 +631,14 @@ public class GenerateSprites {
         data.addAll(extractSpriteFlipped(sourceImage, 0, 280, 2));  // left snail body hidden
         data.addAll(extractSpriteFlipped(sourceImage, 16, 280, 2));  // left snail body
         data.addAll(extractSpriteFlipped(sourceImage, 32, 280, 2));
-        // blob (16):
+        // blob (14):
         data.addAll(extractSprite(sourceImage, 0, 296, 15));  // blob down
         data.addAll(extractSprite(sourceImage, 16, 296, 15));
         data.addAll(extractSprite(sourceImage, 32, 296, 15));
         data.addAll(extractSprite(sourceImage, 0, 312, 15));  // blob up
         data.addAll(extractSprite(sourceImage, 16, 312, 15));
         data.addAll(extractSprite(sourceImage, 32, 312, 15));
-        // robot (22):
+        // robot (20):
         data.addAll(extractSprite(sourceImage, 96, 280, 15));  // robot idle
         data.addAll(extractSprite(sourceImage, 48, 280, 15));  // robot right
         data.addAll(extractSprite(sourceImage, 64, 280, 15));
@@ -648,10 +646,19 @@ public class GenerateSprites {
         data.addAll(extractSpriteFlipped(sourceImage, 48, 280, 15));  // robot left
         data.addAll(extractSpriteFlipped(sourceImage, 64, 280, 15));
         data.addAll(extractSpriteFlipped(sourceImage, 80, 280, 15));
-        // drone (29):
+        // drone (27):
         data.addAll(extractSprite(sourceImage, 48, 296, 15));  // drone
         data.addAll(extractSprite(sourceImage, 64, 280, 15));
         data.addAll(extractSpriteFlipped(sourceImage, 48, 296, 15));
+
+        // filler (30)
+        for(int i = 0;i<32 * 8;i++) {
+            data.add(0);
+        }
+        
+        // water bullet (38)
+        data.addAll(extractSprite(sourceImage, 80, 192, 15));  // water bullet
+        data.addAll(extractSprite(sourceImage, 96, 192, 15));
         
         if (data.size() > 40 * 32) {
             throw new Exception("More enemy sprites than the engine can handle!");
