@@ -184,8 +184,8 @@ state_play_from_continue:
 ; 		ld hl, #1c00
 		ld (player_x), hl
 ; 		ld hl, #0b00
-; 		ld hl, #0a00
-		ld hl, #0800
+		ld hl, #0a00
+; 		ld hl, #0800
 		ld (player_y), hl
 		ld a, #ff
 		ld (player_requested_weapon_sprite), a
@@ -268,7 +268,8 @@ state_play_from_inventory__no_full_hud:
 
 		ld hl, (current_room__enemy_sprites_ptr)
 		ld de, buffer_4096
-		ld c, ENEMIES_PAGE
+		ld a, (current_room__enemy_sprites_ptr_page)
+		ld c, a
 		call dzx0_from_page_c
 		ld hl, buffer_4096		
 		ld de, SPRTBL2 + 32 * FIRST_ENEMY_SPRITE_PATTERN

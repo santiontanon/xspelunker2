@@ -107,6 +107,7 @@ current_room__tileset_ptr: ds virtual 2
 current_room__animation_fn_ptr: ds virtual 2
 current_room__collision_ptr_page: ds virtual 1
 current_room__collision_ptr: ds virtual 2  ; 256 bytes of this ptr will be copied to 'current_room__collision_table'.
+current_room__enemy_sprites_ptr_page: ds virtual 1
 current_room__enemy_sprites_ptr: ds virtual 2
 current_room__music_ptr: ds virtual 2
 current_room__music_tempo: ds virtual 1

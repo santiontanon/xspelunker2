@@ -168,6 +168,8 @@ enter_boss_door__room_prettified:
 		ld (current_room__collision_ptr), bc  ; collision types
 		ld a, BOSS_PAGE
 		ld (current_room__collision_ptr_page), a
+		ld a, BOSS_SPRITES_PAGE
+		ld (current_room__enemy_sprites_ptr_page), a
 		ld (current_room__enemy_sprites_ptr), iy
 		ld hl, 0
 		ld (large_object_to_upload_to_vdp), hl

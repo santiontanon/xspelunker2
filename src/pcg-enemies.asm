@@ -476,6 +476,8 @@ pcg_generate_room__spawn_one_enemy_chosen:
 	jp z, pcg_generate_room__spawn_fishman
 	cp ENEMY_FISHMAN2
 	jp z, pcg_generate_room__spawn_fishman2
+	cp ENEMY_MARS_SNAIL1
+	jp z, pcg_generate_room__spawn_mars_snail1
 	ret
 
 
@@ -912,7 +914,7 @@ pcg_generate_room__spawn_skeleton_thrower2:
 pcg_generate_room__spawn_skeleton_thrower3:
 	ld ixl, ENEMY_SKELETON_THROWER3
 	ld ixh, 4  ; hitpoints
-	jr pcg_generate_room__spawn_skeleton_continue
+	jp pcg_generate_room__spawn_skeleton_continue
 pcg_generate_room__spawn_skeleton_thrower4:
 	ld ixl, ENEMY_SKELETON_THROWER4
 	ld ixh, 4  ; hitpoints
@@ -940,6 +942,10 @@ pcg_generate_room__spawn_fishman:
 pcg_generate_room__spawn_fishman2:
 	ld ixl, ENEMY_FISHMAN2
 	ld ixh, 8  ; hitpoints
+	jr pcg_generate_room__spawn_skeleton_continue
+pcg_generate_room__spawn_mars_snail1:
+	ld ixl, ENEMY_MARS_SNAIL1
+	ld ixh, 4  ; hitpoints
 	jr pcg_generate_room__spawn_skeleton_continue
 pcg_generate_room__spawn_skeleton_sleeper:
 	ld ixl, ENEMY_SKELETON_SLEEPER

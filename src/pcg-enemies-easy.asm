@@ -34,7 +34,6 @@ pcg_enemy_generation_table_pyramid1_easy:
 pcg_enemy_generation_table_pyramid2_easy:
 pcg_enemy_generation_table_pyramid3_easy:
 pcg_enemy_generation_table_fire_shaft_easy:
-pcg_enemy_generation_table_mars_easy:
 pcg_enemy_generation_table_moon_easy:
 	db 2  ; 2 enemies per "screen" area
 	db 1
@@ -96,3 +95,11 @@ pcg_enemy_generation_table_atlantis_easy:
 	db ENEMY_FISH_JUMPER, 2
 	db ENEMY_SKELETON_THROWER1, 6
 	db ENEMY_SKELETON_THROWER2, 2
+
+pcg_enemy_generation_table_mars_easy:
+	db 2  ; 2 enemies per "screen" area
+	db 0
+; 	db TAG_ENEMY_MARS_VENT, 48  ; tile-based enemy type and chance (out of 256)
+; 	db TAG_ENEMY_MARS_BIGMECH, 48  ; tile-based enemy type and chance (out of 256)
+	db 1  ; possible sprite enemy types to be spawned (weights below should add up to 32)
+	db ENEMY_MARS_SNAIL1, 32

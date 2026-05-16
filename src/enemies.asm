@@ -55,6 +55,7 @@ enemy_update_fn_table:
 	dw update_enemy_fishman2
 	dw update_enemy_sentinel_rock
 	dw update_enemy_alien
+	dw update_enemy_mars_snail1
 
 
 ;-----------------------------------------------
@@ -3688,6 +3689,29 @@ ELSE
 	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_X), d
 	ret
 ENDIF
+
+
+;-----------------------------------------------
+update_enemy_mars_snail1:
+	ld iyh, 4  ; damage to deal
+	call update_enemy_hurt_player_2x2
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	and #01
+	call nz, update_enemy__patrol_left_right_platform
+	; 4: right
+	; 10: left
+ 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+ 	add a, a
+ 	ld d, a
+ 	add a, a
+ 	add a, d  ; a * 6
+ 	add a, FIRST_ENEMY_SPRITE_PATTERN + 4
+ 	add a, a
+ 	add a, a
+	ld d, COLOR_BLUE
+ 	ld e, a
+	jp enemy_sprite_and_continue
 
 
 ;-----------------------------------------------

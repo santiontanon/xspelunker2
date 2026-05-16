@@ -16,84 +16,108 @@ area_default_tileset_ptrs:
 	db JUNGLE_TILES_PAGE
 	dw tiles_jungle_zx0, update_animations_in_vdp_jungle
 	db AREA_COLLISION_TABLES_PAGE
-	dw tile_collision_types_jungle, jungle_enemy_sprites_zx0  ; jungle
+	dw tile_collision_types_jungle
+	db ENEMY_SPRITES_PAGE
+	dw jungle_enemy_sprites_zx0  ; jungle
 	dw music_jungle_bin
 	db 6
 
 	db PYRAMID_TILES_PAGE
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
 	db AREA_COLLISION_TABLES_PAGE
-	dw tile_collision_types_pyramid, pyramid_enemy_sprites_zx0  ; pyramid 1
+	dw tile_collision_types_pyramid
+	db ENEMY_SPRITES_PAGE
+	dw pyramid_enemy_sprites_zx0  ; pyramid 1
 	dw music_pyramid_bin
 	db 10
 
 	db PYRAMID_TILES_PAGE
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
 	db AREA_COLLISION_TABLES_PAGE
-	dw tile_collision_types_pyramid, pyramid_enemy_sprites_zx0  ; pyramid 2
+	dw tile_collision_types_pyramid
+	db ENEMY_SPRITES_PAGE
+	dw pyramid_enemy_sprites_zx0  ; pyramid 2
 	dw music_pyramid_bin
 	db 10
 
 	db CAVES_TILES_PAGE
 	dw tiles_caves_zx0, update_animations_in_vdp_caves
 	db AREA_COLLISION_TABLES_PAGE
-	dw tile_collision_types_caves, caves_enemy_sprites_zx0  ; confluence
+	dw tile_collision_types_caves
+	db ENEMY_SPRITES_PAGE
+	dw caves_enemy_sprites_zx0  ; confluence
 	dw music_caves_bin
 	db 12
 
 	db PYRAMID_TILES_PAGE
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
 	db AREA_COLLISION_TABLES_PAGE
-	dw tile_collision_types_pyramid, pyramid_enemy_sprites_zx0  ; pyramid 3
+	dw tile_collision_types_pyramid
+	db ENEMY_SPRITES_PAGE
+	dw pyramid_enemy_sprites_zx0  ; pyramid 3
 	dw music_pyramid_bin
 	db 10
 
 	db PYRAMID_TILES_PAGE
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
 	db AREA_COLLISION_TABLES_PAGE
-	dw tile_collision_types_pyramid, pyramid_enemy_sprites_zx0  ; fire shaft
+	dw tile_collision_types_pyramid
+	db ENEMY_SPRITES_PAGE
+	dw pyramid_enemy_sprites_zx0  ; fire shaft
 	dw music_pyramid_bin
 	db 10
 
 	db CAVES_TILES_PAGE
 	dw tiles_caves_zx0, update_animations_in_vdp_caves
 	db AREA_COLLISION_TABLES_PAGE
-	dw tile_collision_types_caves, caves_enemy_sprites_zx0  ; pacific caves
+	dw tile_collision_types_caves
+	db ENEMY_SPRITES_PAGE
+	dw caves_enemy_sprites_zx0  ; pacific caves
 	dw music_caves_bin
 	db 12
 
 	db CAVES_TILES_PAGE
 	dw tiles_caves_zx0, update_animations_in_vdp_caves
 	db AREA_COLLISION_TABLES_PAGE
-	dw tile_collision_types_caves, caves_enemy_sprites_zx0  ; atlantic caves
+	dw tile_collision_types_caves
+	db ENEMY_SPRITES_PAGE
+	dw caves_enemy_sprites_zx0  ; atlantic caves
 	dw music_caves_bin
 	db 12
 
 	db XIBALBA_TILES_PAGE
 	dw tiles_xibalba_zx0, update_animations_in_vdp_xibalba
 	db AREA_COLLISION_TABLES_PAGE
-	dw tile_collision_types_xibalba, xibalba_enemy_sprites_zx0  ; xibalba
+	dw tile_collision_types_xibalba
+	db ENEMY_SPRITES_PAGE
+	dw xibalba_enemy_sprites_zx0  ; xibalba
 	dw 0
 	db 0
 
 	db ATLANTIS_TILES_PAGE
 	dw tiles_atlantis_zx0, update_animations_in_vdp_atlantis
 	db AREA_COLLISION_TABLES_PAGE
-	dw tile_collision_types_atlantis, atlantis_enemy_sprites_zx0  ; atlantis
+	dw tile_collision_types_atlantis
+	db ENEMY_SPRITES_PAGE
+	dw atlantis_enemy_sprites_zx0  ; atlantis
 	dw 0
 	db 0
 
 	db MARS_TILES_PAGE
 	dw tiles_mars_zx0, update_animations_in_vdp_mars
 	db AREA_COLLISION_TABLES_PAGE
-	dw tile_collision_types_mars, mars_enemy_sprites_zx0  ; mars
+	dw tile_collision_types_mars
+	db ENEMY_SPRITES_PAGE
+	dw mars_enemy_sprites_zx0  ; mars
 	dw 0
 	db 0
 
 	db PYRAMID_TILES_PAGE
 	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
 	db AREA_COLLISION_TABLES_PAGE
-	dw tile_collision_types_pyramid, pyramid_enemy_sprites_zx0  ; moon
+	dw tile_collision_types_pyramid
+	db ENEMY_SPRITES_PAGE
+	dw pyramid_enemy_sprites_zx0  ; moon
 	dw 0
 	db 0
 
@@ -102,13 +126,13 @@ area_default_tileset_ptrs:
 pcg_generate_room_reset_state:
 	ld hl, area_default_tileset_ptrs
 	ld a, (current_area__id)
+	add a, a  ; a * 2
 	ld b, a
-	add a, a
-	add a, a
+	add a, a  ; a * 4
 	ld c, a
-	add a, a
+	add a, a  ; a * 8
 	add a, c  ; a * 12
-	add a, b  ; a * 13
+	add a, b  ; a * 14
 	ADD_HL_A
 	ld de, current_room__tileset_page
 	ldi  ; current_room__tileset_page
@@ -119,6 +143,7 @@ pcg_generate_room_reset_state:
 	ldi  ; current_room__collision_ptr_page
 	ldi
 	ldi  ; current_room__collision_ptr
+	ldi  ; current_room__enemy_sprites_ptr_page
 	ldi
 	ldi  ; current_room__enemy_sprites_ptr
 	ldi
@@ -2147,7 +2172,9 @@ pcg_generate_room__start:
 	ld (current_room__tileset_page), a
 	xor a
 	ld (current_room__tileset_overrides_item_tiles), a
-		ld hl, jungle_start_npc_sprites_zx0
+	ld a, ENEMY_SPRITES_PAGE
+	ld (current_room__enemy_sprites_ptr_page), a
+	ld hl, jungle_start_npc_sprites_zx0
 	ld (current_room__enemy_sprites_ptr), hl
 
 	; open/close the appropriate walls:
@@ -2547,6 +2574,8 @@ pcg_generate_room__calendar:
 	ld (current_room__tileset_page), a
 	ld a, 1
 	ld (current_room__tileset_overrides_item_tiles), a
+	ld a, ENEMY_SPRITES_PAGE
+	ld (current_room__enemy_sprites_ptr_page), a
 	ld hl, calendar_enemy_sprites_zx0
 	ld (current_room__enemy_sprites_ptr), hl
 	ld hl, update_animations_in_vdp_pyramid

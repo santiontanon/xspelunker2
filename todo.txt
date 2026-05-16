@@ -1,10 +1,7 @@
 to do:
 
 ***- mars sprite enemies:
-  ***- extract sprites from Java to assembler and add data to game (leave room for bullets)
-  ***- create base enemy spawn tables for mars (for now just with the slug, and keep adding)
-  ***- spiked-carapace-slug (move slowly, and can only be hit when not hiding in the carapace):
-    ***- spawn
+  ***- spiked-carapace-snail (move slowly, and can only be hit when not hiding in the carapace):
     ***- patrol left-right (2 sprites per enemy): can only be hit from the front (is it hard?)
     ***- hide in carapace (invulnerable)
     ***- spit bubbles
