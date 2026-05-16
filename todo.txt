@@ -1,10 +1,9 @@
 to do:
 
 ***- mars sprite enemies:
-  ***- spiked-carapace-snail (move slowly, and can only be hit when not hiding in the carapace):
-    ***- patrol left-right (2 sprites per enemy): can only be hit from the front (is it hard?)
-    ***- hide in carapace (invulnerable)
-    ***- spit bubbles
+  ***- mars snail:
+    ***- can only be hit from the front (is it hard?)
+    ***- variant that spits bubbles (and has more HP)
   ***- roof-slime (can switch between ceiling and floor, and drop on top of you):
     ***- spawn
     ***- patrol left-right

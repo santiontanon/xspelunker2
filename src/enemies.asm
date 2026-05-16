@@ -1498,6 +1498,7 @@ update_enemy_rockman2:
 
 update_enemy_rockman_walking:
 	call random_a
+	or a
 	jr nz, update_enemy_rockman_walking_continue
 	; turn to stone:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2
@@ -3696,12 +3697,63 @@ update_enemy_mars_snail1:
 	ld iyh, 4  ; damage to deal
 	call update_enemy_hurt_player_2x2
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	cp 2
+	jr z, update_enemy_mars_snail1_hidden  ; right
+	cp 3
+	jr z, update_enemy_mars_snail1_hidden  ; left
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	and #03
+	call z, update_enemy__patrol_left_right_platform
+
+	call random_a
+	or a
+	jr z, update_enemy_mars_snail1_hide
+update_enemy_mars_snail1_walk:
+	; walk:
+	; 4: right: hidden, walk1, walk2 (first 3 carapace, second 3 body)
+	; 10: left: hidde, walk1, walk2
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	rrca
+	rrca
+	rrca
 	and #01
-	call nz, update_enemy__patrol_left_right_platform
-	; 4: right
-	; 10: left
+	ld e, a
  	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+ 	add a, a
+ 	ld d, a
+ 	add a, a
+ 	add a, d  ; a * 6
+ 	add a, FIRST_ENEMY_SPRITE_PATTERN + 5
+ 	add a, e
+ 	add a, a
+ 	add a, a
+update_enemy_mars_render_sprite:
+	ld d, COLOR_BLUE
+ 	ld e, a
+ 	ld c, 0
+	call get_sprite_object_sprite_coordinates
+	jp nz, update_sprite_enemies_loop_next
+	call add_sprite_to_this_frame
+	ld a, 12
+	add a, e
+	ld e, a
+	ld a, d
+	and #80
+	add a, COLOR_LIGHT_RED
+	ld d, a
+	call add_sprite_to_this_frame
+	jp update_sprite_enemies_loop_next
+update_enemy_mars_snail1_hide:
+	inc (ix + ROOM_OBJECT_STRUCT_STATE)
+	inc (ix + ROOM_OBJECT_STRUCT_STATE)  ; hidden
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+update_enemy_mars_snail1_hidden:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 200  ; timer for coming out of the carapace
+	jr z, update_enemy_mars_snail1_hide_end
+ 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+ 	and #01
  	add a, a
  	ld d, a
  	add a, a
@@ -3709,9 +3761,11 @@ update_enemy_mars_snail1:
  	add a, FIRST_ENEMY_SPRITE_PATTERN + 4
  	add a, a
  	add a, a
-	ld d, COLOR_BLUE
- 	ld e, a
-	jp enemy_sprite_and_continue
+ 	jr update_enemy_mars_render_sprite
+update_enemy_mars_snail1_hide_end:
+	dec (ix + ROOM_OBJECT_STRUCT_STATE)
+	dec (ix + ROOM_OBJECT_STRUCT_STATE)
+	jr update_enemy_mars_snail1_walk
 
 
 ;-----------------------------------------------
