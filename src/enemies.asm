@@ -57,6 +57,8 @@ enemy_update_fn_table:
 	dw update_enemy_alien
 	dw update_enemy_mars_snail1
 	dw update_enemy_mars_snail2
+	dw update_enemy_mars_blob1
+	dw update_enemy_mars_blob2
 
 
 ;-----------------------------------------------
@@ -3750,7 +3752,7 @@ update_enemy_mars_snail1_walk_sprites_e_set:
  	add a, e
  	add a, a
  	add a, a
-update_enemy_mars_render_sprite:
+update_enemy_mars_snail1_render_sprite:
 	ld d, COLOR_BLUE
  	ld e, a
  	ld c, 0
@@ -3784,7 +3786,7 @@ update_enemy_mars_snail1_hidden:
  	add a, FIRST_ENEMY_SPRITE_PATTERN + 2
  	add a, a
  	add a, a
- 	jr update_enemy_mars_render_sprite
+ 	jr update_enemy_mars_snail1_render_sprite
 update_enemy_mars_snail1_hide_end:
 update_enemy_mars_snail1_firing_end:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
@@ -3835,6 +3837,263 @@ update_enemy_mars_snail1_firing:
 	ld hl, SFX_enemy_bullet
 	call play_SFX_with_high_priority
 	jr update_enemy_mars_snail1_firing_end
+
+
+;-----------------------------------------------
+; states:
+; - 0, 1: walk on ground
+; - 2, 3: walk on ceiling
+; - 4: switching to ceiling
+; - 5: switching to ground
+update_enemy_mars_blob2:
+	ld iyl, COLOR_RED
+	ld iyh, 4  ; damage to deal
+	call update_enemy_hurt_player_2x2
+	ld iyh, #01  ; speed mask
+	jr update_enemy_mars_blob1_continue
+
+update_enemy_mars_blob1:
+	ld iyl, COLOR_GREEN	
+	ld iyh, 4  ; damage to deal
+	call update_enemy_hurt_player_2x2
+	ld iyh, #01  ; speed mask
+
+update_enemy_mars_blob1_continue:
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	cp 4
+	jr z, update_enemy_mars_blob1_rising
+	cp 5
+	jr z, update_enemy_mars_blob1_falling
+	and #fe
+	jr z, update_enemy_mars_blob1_walk_on_ground
+	cp 2
+	jr z, update_enemy_mars_blob1_walk_on_ceiling
+
+update_enemy_mars_blob1_walk_on_ground:
+	; walking on ground:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	and iyh
+	call z, update_enemy__patrol_left_right_platform
+
+	; chance to switch from ground to ceiling:
+	call random_a
+	or a
+	jr nz, update_enemy_mars_blob1_stay_on_ground
+	; switch to ceiling?
+	call update_enemy_mars_blob_can_switch_to_ceiling_p
+	jr nz, update_enemy_mars_blob1_stay_on_ground
+	; switch to ceiling!
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 4
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+	jr update_enemy_mars_blob1_rising
+update_enemy_mars_blob1_stay_on_ground:
+	; ground: 14, 15, 16
+	; ceiling: 17, 18, 19
+ 	ld d, iyl  ; color
+ 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 14) * 4
+ 	jp enemy_sprite_and_continue_animated
+
+update_enemy_mars_blob1_walk_on_ceiling:
+	; walking on ceiling:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	and iyh
+	call z, update_enemy__patrol_left_right_ceiling
+
+	; chance to switch from ceiling to ground:
+	call random_a
+	or a
+	jr nz, update_enemy_mars_blob1_stay_on_ceiling
+	; switch to ground?
+	call update_enemy_mars_blob_can_switch_to_ground_p
+	jr nz, update_enemy_mars_blob1_stay_on_ceiling
+	; switch to ceiling!
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 5
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+	jr update_enemy_mars_blob1_falling
+update_enemy_mars_blob1_stay_on_ceiling:
+ 	ld d, iyl  ; color
+ 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 17) * 4
+ 	jp enemy_sprite_and_continue_animated
+
+update_enemy_mars_blob1_rising:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 14) * 4
+ 	cp 16
+ 	jr c, update_enemy_mars_blob1_rising_draw
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 15) * 4
+ 	cp 18
+ 	jr c, update_enemy_mars_blob1_rising_draw
+ 	; rise:
+	call update_enemy_bullet_move_up_if_possible
+	call update_enemy_bullet_move_up_if_possible
+	jp nz, update_enemy_mars_blob1_rising_continue
+	; reached ceiling:
+	call random_a
+	and #01
+	add a, 2
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), a
+	jr update_enemy_mars_blob1_stay_on_ceiling
+update_enemy_mars_blob1_rising_continue:
+ 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 16) * 4
+update_enemy_mars_blob1_rising_draw:
+ 	ld d, iyl  ; color
+ 	jp enemy_sprite_and_continue
+
+update_enemy_mars_blob1_falling:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 17) * 4
+ 	cp 16
+ 	jr c, update_enemy_mars_blob1_falling_draw
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 18) * 4
+ 	cp 18
+ 	jr c, update_enemy_mars_blob1_falling_draw
+ 	; fall:
+	call update_enemy_move_down_if_possible
+	call update_enemy_move_down_if_possible
+	jp nz, update_enemy_mars_blob1_falling_continue
+	; reached ground:
+	call random_a
+	and #01
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), a
+	jr update_enemy_mars_blob1_stay_on_ground
+update_enemy_mars_blob1_falling_continue:
+ 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 19) * 4
+update_enemy_mars_blob1_falling_draw:
+ 	ld d, iyl  ; color
+ 	jp enemy_sprite_and_continue
+
+
+update_enemy_mars_blob_can_switch_to_ceiling_p:
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	ld a, b
+	or a
+	jr z, update_enemy_mars_blob_can_switch_to_ceiling_p_fail
+	push bc
+		call get_room_tile_ptr
+	pop bc
+	ld a, (current_room__width)
+	ld e, a
+	ld d, 0
+update_enemy_mars_blob_can_switch_to_ceiling_p_loop:
+	or a
+	sbc hl, de
+	ld a, (hl)
+	or a
+	jr z, update_enemy_mars_blob_can_switch_to_ceiling_p_loop_continue
+	call get_collision_tile_type_of_a
+	or a
+	jr z, update_enemy_mars_blob_can_switch_to_ceiling_p_loop_continue
+	cp 2  ; wall
+	ret z  ; wall found!
+	jr update_enemy_mars_blob_can_switch_to_ceiling_p_fail
+update_enemy_mars_blob_can_switch_to_ceiling_p_loop_continue:
+	djnz update_enemy_mars_blob_can_switch_to_ceiling_p_loop
+update_enemy_mars_blob_can_switch_to_ceiling_p_fail:
+	or 1  ; no ceiling above!
+	ret
+
+
+update_enemy_mars_blob_can_switch_to_ground_p:
+	ld a, (current_room__height)
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	cp b
+	jr z, update_enemy_mars_blob_can_switch_to_ground_p_fail
+	push bc
+		call get_room_tile_ptr
+	pop bc
+	ld a, (current_room__width)
+	ld e, a
+	ld d, 0
+update_enemy_mars_blob_can_switch_to_ground_p_loop:
+	add hl, de
+	ld a, (hl)
+	or a
+	jr z, update_enemy_mars_blob_can_switch_to_ground_p_loop_continue
+	call get_collision_tile_type_of_a
+	or a
+	jr z, update_enemy_mars_blob_can_switch_to_ground_p_loop_continue
+	cp 2  ; wall
+	ret z  ; wall found!
+	jr update_enemy_mars_blob_can_switch_to_ground_p_fail
+update_enemy_mars_blob_can_switch_to_ground_p_loop_continue:
+	djnz update_enemy_mars_blob_can_switch_to_ground_p_loop
+update_enemy_mars_blob_can_switch_to_ground_p_fail:
+	or 1  ; no ceiling above!
+	ret
+
+
+update_enemy__patrol_left_right_ceiling:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	and #01
+	jr z, update_enemy__patrol_left_right_ceiling_right
+	dec a
+	jr z, update_enemy__patrol_left_right_ceiling_left
+	ret
+
+update_enemy__patrol_left_right_ceiling_right:
+	call update_enemy_move_right_if_possible_ceiling
+	ret nz
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 3  ; left
+	ret
+
+update_enemy__patrol_left_right_ceiling_left:
+	call update_enemy_move_left_if_possible_ceiling
+	ret nz
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2  ; right
+	ret
+
+
+update_enemy_move_right_if_possible_ceiling:
+	call update_enemy_can_move_right_ceiling
+	ret z
+	jp update_enemy_move_right
+
+
+update_enemy_move_left_if_possible_ceiling:
+	call update_enemy_can_move_left_ceiling
+	ret z
+	jp update_enemy_move_left
+
+
+update_enemy_can_move_right_ceiling:
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	cp 4
+	ret nz
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc c
+	inc c
+	call general_check_collision_with_wall
+	ret z
+	; check if the ceiling ends:
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc c
+	inc c
+	dec b
+	call general_check_collision
+	jp nz, update_enemy_can_move_right_cannot
+	or 1
+	ret
+
+update_enemy_can_move_left_ceiling:
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	cp 4
+	ret nz
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	call general_check_collision_with_wall
+	ret z
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	dec b
+	call general_check_collision
+	jp nz, update_enemy_can_move_left_cannot
+	or 1
+	ret
 
 
 ;-----------------------------------------------
