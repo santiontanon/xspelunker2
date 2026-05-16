@@ -1,10 +1,7 @@
 to do:
 
 ***- mars sprite enemies:
-  ***- roof-slime (can switch between ceiling and floor, and drop on top of you):
-    ***- they can drop onto a platform (1), stairs top, or rope top
-    ***- variant that moves 2x the speed
-    ***- if player walks below/above them there is a higher chance to drop on top
+  ***- roof-slime: if player walks below/above them there is a higher chance to drop on top
   ***- guard mechs (robots that walk around and shoot forward):
     ***- spawn
     ***- walk left-right

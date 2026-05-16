@@ -3856,7 +3856,7 @@ update_enemy_mars_blob1:
 	ld iyl, COLOR_GREEN	
 	ld iyh, 4  ; damage to deal
 	call update_enemy_hurt_player_2x2
-	ld iyh, #01  ; speed mask
+	ld iyh, #03  ; speed mask
 
 update_enemy_mars_blob1_continue:
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
@@ -3985,6 +3985,8 @@ update_enemy_mars_blob_can_switch_to_ceiling_p_loop:
 	call get_collision_tile_type_of_a
 	or a
 	jr z, update_enemy_mars_blob_can_switch_to_ceiling_p_loop_continue
+	cp 1  ; we can skip platforms
+	jr z, update_enemy_mars_blob_can_switch_to_ceiling_p_loop_continue
 	cp 2  ; wall
 	ret z  ; wall found!
 	jr update_enemy_mars_blob_can_switch_to_ceiling_p_fail
@@ -4017,6 +4019,12 @@ update_enemy_mars_blob_can_switch_to_ground_p_loop:
 	jr z, update_enemy_mars_blob_can_switch_to_ground_p_loop_continue
 	cp 2  ; wall
 	ret z  ; wall found!
+	cp 1  ; platform
+	ret z
+	cp 6  ; rope top
+	ret z
+	cp 8  ; ladder top
+	ret z
 	jr update_enemy_mars_blob_can_switch_to_ground_p_fail
 update_enemy_mars_blob_can_switch_to_ground_p_loop_continue:
 	djnz update_enemy_mars_blob_can_switch_to_ground_p_loop
