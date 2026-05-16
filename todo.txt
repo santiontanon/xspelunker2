@@ -1,7 +1,36 @@
 to do:
 
-***- mars sprite enemies
-***- mars tile enemies (one could be steam/gas vents that might push you up/sideways/down)
+***- mars sprite enemies:
+  ***- extract sprites from Java to assembler and add data to game (leave room for bullets)
+  ***- create base enemy spawn tables for mars (for now just with the slug, and keep adding)
+  ***- spiked-carapace-slug (move slowly, and can only be hit when not hiding in the carapace):
+    ***- spawn
+    ***- patrol left-right (2 sprites per enemy): can only be hit from the front (is it hard?)
+    ***- hide in carapace (invulnerable)
+    ***- spit bubbles
+  ***- roof-slime (can switch between ceiling and floor, and drop on top of you):
+    ***- spawn
+    ***- patrol left-right
+    ***- chance of switching to ceiling if it's close enough
+    ***- patrol left-right in ceiling
+    ***- chance of switching to floor if it's close enough
+    ***- if player walks below/above them and there is a chance, drop on top
+  ***- guard mechs (robots that walk around and shoot forward):
+    ***- spawn
+    ***- walk left-right
+    ***- pause some times
+    ***- they can jump small obstables up to keep moving forward
+    ***- they can jump small obstables down to keep moving forward (if they would be able to then come back up)
+    ***- if player is in front, they fire a small barrage of bullets
+  ***- guard drones (fly and shoot you directionally)
+    ***- spawn in the air anywhere
+    ***- fly left-right
+    ***- chance of going up/down if there is a path
+    ***- if player is close-by, chance of moving in player's direction (follow)
+    ***- fire directional bullets
+***- mars tile enemies:
+  ***- gas vents that might push you up/sideways/down
+  ***- large walking mechs (large version of the sprite ones, can shoot directionally too)
 
 - music: (brain 12, 15, 23, 25 have potential)
   - ending aliens
