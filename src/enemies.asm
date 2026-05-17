@@ -61,6 +61,8 @@ enemy_update_fn_table:
 	dw update_enemy_mars_blob2
 	dw update_enemy_mars_drone1
 	dw update_enemy_mars_drone2
+	dw update_enemy_mars_robot1
+	dw update_enemy_mars_robot2
 
 
 ;-----------------------------------------------
@@ -4131,7 +4133,7 @@ update_enemy_can_move_left_ceiling:
 
 ;-----------------------------------------------
 ; states:
-; - 0: flyong left
+; - 0: flying left
 ; - 1: flying right
 ; - 2: flying up
 ; - 3: flying down
@@ -4253,6 +4255,31 @@ update_enemy_mars_drone1_sprites:
 	add a, a
 	add a, a
 	ld e, a
+	ld d, iyl  ; color
+ 	jp enemy_sprite_and_continue
+
+
+;-----------------------------------------------
+; states:
+; - 0, 1: walking right/left
+; - 2: stopped (loking around)
+; - 3, 4: jumping up right/left (2 tiles high)
+; - 5, 6: jumping down right/left
+; - 7, 8: firing right/left
+update_enemy_mars_robot2:
+	ld iyl, COLOR_DARK_RED
+	jr update_enemy_mars_robot1_continue
+
+update_enemy_mars_robot1:
+	ld iyl, COLOR_BLUE
+update_enemy_mars_robot1_continue:
+	ld iyh, 4  ; damage to deal
+	call update_enemy_hurt_player_2x2
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+
+	; ...
+
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 20) * 4
 	ld d, iyl  ; color
  	jp enemy_sprite_and_continue
 

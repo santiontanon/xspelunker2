@@ -488,6 +488,10 @@ pcg_generate_room__spawn_one_enemy_chosen:
 	jp z, pcg_generate_room__spawn_mars_drone1
 	cp ENEMY_MARS_DRONE2
 	jp z, pcg_generate_room__spawn_mars_drone2
+	cp ENEMY_MARS_ROBOT1
+	jp z, pcg_generate_room__spawn_mars_robot1
+	cp ENEMY_MARS_ROBOT2
+	jp z, pcg_generate_room__spawn_mars_robot2
 	ret
 
 
@@ -983,6 +987,14 @@ pcg_generate_room__spawn_mars_blob1:
 	jr pcg_generate_room__spawn_skeleton_continue
 pcg_generate_room__spawn_mars_blob2:
 	ld ixl, ENEMY_MARS_BLOB2
+	ld ixh, 8  ; hitpoints
+	jr pcg_generate_room__spawn_skeleton_continue
+pcg_generate_room__spawn_mars_robot1:
+	ld ixl, ENEMY_MARS_ROBOT1
+	ld ixh, 4  ; hitpoints
+	jr pcg_generate_room__spawn_skeleton_continue
+pcg_generate_room__spawn_mars_robot2:
+	ld ixl, ENEMY_MARS_ROBOT2
 	ld ixh, 8  ; hitpoints
 	jr pcg_generate_room__spawn_skeleton_continue
 pcg_generate_room__spawn_skeleton_sleeper:

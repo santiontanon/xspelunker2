@@ -2,13 +2,12 @@ to do:
 
 ***- mars sprite enemies:
   ***- guard mechs (robots that walk around and shoot forward):
-    ***- spawn
     ***- walk left-right
-    ***- pause some times
+    ***- pause sometimes, and look left-right
+    ***- they can jump small obstacles up to keep moving forward
+    ***- they can jump small obstacles down to keep moving forward (if they can come back up)
     ***- if player is in front, they fire a small barrage of bullets
       ***- mech1: one directional bullet, mech2: shoots 3 at a time (with random offsets)
-    ***- they can jump small obstacles up to keep moving forward
-    ***- they can jump small obstacles down to keep moving forward (if they would be able to then come back up)
   ***- set enemy spawn probabilities for all difficulties
 ***- mars tile enemies:
   ***- gas vents that might push you up/sideways/down (not sure if viable)
