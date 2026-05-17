@@ -484,6 +484,10 @@ pcg_generate_room__spawn_one_enemy_chosen:
 	jp z, pcg_generate_room__spawn_mars_blob1
 	cp ENEMY_MARS_BLOB2
 	jp z, pcg_generate_room__spawn_mars_blob2
+	cp ENEMY_MARS_DRONE1
+	jp z, pcg_generate_room__spawn_mars_drone1
+	cp ENEMY_MARS_DRONE2
+	jp z, pcg_generate_room__spawn_mars_drone2
 	ret
 
 
@@ -845,11 +849,25 @@ pcg_generate_room__spawn_fish_continue:
 ;-----------------------------------------------
 ; input:
 ; - b: number of positions available (in tmp_enemy_pcg_n_ceiling_locs)
+pcg_generate_room__spawn_mars_drone1:
+	ld ixl, ENEMY_MARS_DRONE1
+	ld ixh, 2  ; hitpoints
+	ld iyl, 0  ; state
+	jr pcg_generate_room__spawn_bat_continue
+pcg_generate_room__spawn_mars_drone2:
+	ld ixl, ENEMY_MARS_DRONE2
+	ld ixh, 4  ; hitpoints
+	ld iyl, 0  ; state
+	jr  pcg_generate_room__spawn_bat_continue
 pcg_generate_room__spawn_bat_aggressive:
 	ld ixl, ENEMY_BAT_AGGRESSIVE
+	ld ixh, 1
+	ld iyl, 9  ; state (hanging)
 	jr pcg_generate_room__spawn_bat_continue
 pcg_generate_room__spawn_bat:
 	ld ixl, ENEMY_BAT
+	ld ixh, 1
+	ld iyl, 9  ; state (hanging)
 pcg_generate_room__spawn_bat_continue:
 	call pcg_generate_room__spawn_ceiling_enemy_get_new_ptr
 	ret nz
@@ -864,13 +882,15 @@ pcg_generate_room__spawn_bat_continue:
 	inc hl
 	ld (hl), d  ; tile y
 	inc hl
-	ld (hl), 9  ; state (hanging)
+	ld a, iyl
+	ld (hl), a  ; state
 	inc hl
 	ld (hl), 0
 	inc hl
 	ld (hl), #ff  ; hit ID
 	inc hl
-	ld (hl), 1  ; health
+	ld a, ixh
+	ld (hl), a  ; health
 	ret
 
 
@@ -944,11 +964,11 @@ pcg_generate_room__spawn_ghost2:
 pcg_generate_room__spawn_fishman:
 	ld ixl, ENEMY_FISHMAN
 	ld ixh, 4  ; hitpoints
-	jr pcg_generate_room__spawn_skeleton_continue
+	jp pcg_generate_room__spawn_skeleton_continue
 pcg_generate_room__spawn_fishman2:
 	ld ixl, ENEMY_FISHMAN2
 	ld ixh, 8  ; hitpoints
-	jr pcg_generate_room__spawn_skeleton_continue
+	jp pcg_generate_room__spawn_skeleton_continue
 pcg_generate_room__spawn_mars_snail1:
 	ld ixl, ENEMY_MARS_SNAIL1
 	ld ixh, 6  ; hitpoints

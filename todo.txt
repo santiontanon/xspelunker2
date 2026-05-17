@@ -1,22 +1,17 @@
 to do:
 
 ***- mars sprite enemies:
-  ***- roof-slime: if player walks below/above them there is a higher chance to drop on top
   ***- guard mechs (robots that walk around and shoot forward):
     ***- spawn
     ***- walk left-right
     ***- pause some times
+    ***- if player is in front, they fire a small barrage of bullets
+      ***- mech1: one directional bullet, mech2: shoots 3 at a time (with random offsets)
     ***- they can jump small obstacles up to keep moving forward
     ***- they can jump small obstacles down to keep moving forward (if they would be able to then come back up)
-    ***- if player is in front, they fire a small barrage of bullets
-  ***- guard drones (fly and shoot you directionally)
-    ***- spawn in the air anywhere
-    ***- fly left-right
-    ***- chance of going up/down if there is a path
-    ***- if player is close-by, chance of moving in player's direction (follow)
-    ***- fire directional bullets
+  ***- set enemy spawn probabilities for all difficulties
 ***- mars tile enemies:
-  ***- gas vents that might push you up/sideways/down
+  ***- gas vents that might push you up/sideways/down (not sure if viable)
   ***- large walking mechs (large version of the sprite ones, can shoot directionally too)
 
 - music: (brain 12, 15, 23, 25 have potential)
@@ -27,7 +22,7 @@ to do:
   - mars
   - moon
 - moon biome (similar to mars, it could even be the same with palette changed)
-  - If the player enters a world name related to these theories (like "ATLANTIS", "AZTLAN", or "COH"), trigger a world where the "Firestone forge" (in the Moon) is active (clue is in ATLANTIS_TABLET_5_1).
+  - If the player enters a world name like "ATLANTIS", "AZTLAN", or "COH", trigger a world where the "Firestone forge" (in the Moon) is active (see if clue in ATLANTIS_TABLET_5_1 is enough).
 - 6th boss: (ideas: "The Solar Stone Jaguar", "The Martian Terracotta Warrior", "The Dust Stone Golem"). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer). Another idea: https://en.wikipedia.org/wiki/Human_sacrifice_in_Maya_culture#/media/File:MA_D293_Maya_stone_carving_from_Copan.jpg
   - before the boss fight: underground cave with a broken ancient robot that talks if you turn it on with the golden key (in a mix of English and Maya). Gives you a better raygun (key for alien boss), add as an achievement for the gameover screen.  
   - add boss name to the stats for game over screen

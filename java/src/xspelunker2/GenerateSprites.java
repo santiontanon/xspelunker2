@@ -648,11 +648,16 @@ public class GenerateSprites {
         data.addAll(extractSpriteFlipped(sourceImage, 80, 280, 15));
         // drone (27):
         data.addAll(extractSprite(sourceImage, 48, 296, 15));  // drone
-        data.addAll(extractSprite(sourceImage, 64, 280, 15));
-        data.addAll(extractSpriteFlipped(sourceImage, 48, 296, 15));
-
-        // filler (30)
-        for(int i = 0;i<32 * 8;i++) {
+        data.addAll(extractSprite(sourceImage, 64, 296, 15));
+        data.addAll(extractSprite(sourceImage, 80, 296, 15));
+        data.addAll(extractSprite(sourceImage, 96, 296, 15));
+        data.addAll(extractSprite(sourceImage, 112, 296, 15));
+        data.addAll(extractSprite(sourceImage, 48, 312, 15));
+        data.addAll(extractSprite(sourceImage, 64, 312, 15));
+        data.addAll(extractSprite(sourceImage, 80, 312, 15));
+        
+        // filler (35)
+        for(int i = 0;i<32 * 3;i++) {
             data.add(0);
         }
         

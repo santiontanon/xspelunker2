@@ -104,5 +104,7 @@ pcg_enemy_generation_table_mars_normal:
 	db 2  ; possible sprite enemy types to be spawned (weights below should add up to 32)
 ; 	db ENEMY_MARS_SNAIL1, 16
 ; 	db ENEMY_MARS_SNAIL2, 16
-	db ENEMY_MARS_BLOB1, 16
-	db ENEMY_MARS_BLOB2, 16
+; 	db ENEMY_MARS_BLOB1, 16
+; 	db ENEMY_MARS_BLOB2, 16
+	db ENEMY_MARS_DRONE1, 16
+	db ENEMY_MARS_DRONE2, 16

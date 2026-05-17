@@ -59,6 +59,8 @@ enemy_update_fn_table:
 	dw update_enemy_mars_snail2
 	dw update_enemy_mars_blob1
 	dw update_enemy_mars_blob2
+	dw update_enemy_mars_drone1
+	dw update_enemy_mars_drone2
 
 
 ;-----------------------------------------------
@@ -3864,7 +3866,7 @@ update_enemy_mars_blob1_continue:
 	cp 4
 	jr z, update_enemy_mars_blob1_rising
 	cp 5
-	jr z, update_enemy_mars_blob1_falling
+	jp z, update_enemy_mars_blob1_falling
 	and #fe
 	jr z, update_enemy_mars_blob1_walk_on_ground
 	cp 2
@@ -3876,10 +3878,20 @@ update_enemy_mars_blob1_walk_on_ground:
 	and iyh
 	call z, update_enemy__patrol_left_right_platform
 
+	; if player is in the same vertical, big chance to jump:
+	ld a, (player_x + 1)
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	jr nz, update_enemy_mars_blob1_walk_on_ground_no_player
+	call random_a
+	and #07
+	jr z, update_enemy_mars_blob1_walk_switch_to_ceiling
+
+update_enemy_mars_blob1_walk_on_ground_no_player:
 	; chance to switch from ground to ceiling:
 	call random_a
 	or a
 	jr nz, update_enemy_mars_blob1_stay_on_ground
+update_enemy_mars_blob1_walk_switch_to_ceiling:
 	; switch to ceiling?
 	call update_enemy_mars_blob_can_switch_to_ceiling_p
 	jr nz, update_enemy_mars_blob1_stay_on_ground
@@ -3900,10 +3912,20 @@ update_enemy_mars_blob1_walk_on_ceiling:
 	and iyh
 	call z, update_enemy__patrol_left_right_ceiling
 
+	; if player is in the same vertical, big chance to drop:
+	ld a, (player_x + 1)
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	jr nz, update_enemy_mars_blob1_walk_on_ceiling_no_player
+	call random_a
+	and #07
+	jr z, update_enemy_mars_blob1_walk_switch_to_ground
+
+update_enemy_mars_blob1_walk_on_ceiling_no_player:
 	; chance to switch from ceiling to ground:
 	call random_a
 	or a
 	jr nz, update_enemy_mars_blob1_stay_on_ceiling
+update_enemy_mars_blob1_walk_switch_to_ground:
 	; switch to ground?
 	call update_enemy_mars_blob_can_switch_to_ground_p
 	jr nz, update_enemy_mars_blob1_stay_on_ceiling
@@ -3956,7 +3978,7 @@ update_enemy_mars_blob1_falling:
 	call random_a
 	and #01
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), a
-	jr update_enemy_mars_blob1_stay_on_ground
+	jp update_enemy_mars_blob1_stay_on_ground
 update_enemy_mars_blob1_falling_continue:
  	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 19) * 4
 update_enemy_mars_blob1_falling_draw:
@@ -4009,6 +4031,9 @@ update_enemy_mars_blob_can_switch_to_ground_p:
 	ld a, (current_room__width)
 	ld e, a
 	ld d, 0
+	ld a, (current_room__height)
+	sub b
+	ld b, a
 update_enemy_mars_blob_can_switch_to_ground_p_loop:
 	add hl, de
 	ld a, (hl)
@@ -4102,6 +4127,134 @@ update_enemy_can_move_left_ceiling:
 	jp nz, update_enemy_can_move_left_cannot
 	or 1
 	ret
+
+
+;-----------------------------------------------
+; states:
+; - 0: flyong left
+; - 1: flying right
+; - 2: flying up
+; - 3: flying down
+update_enemy_mars_drone2:
+	ld iyl, COLOR_RED
+	jr update_enemy_mars_drone1_continue
+
+update_enemy_mars_drone1:
+	ld iyl, COLOR_LIGHT_BLUE
+update_enemy_mars_drone1_continue:
+	ld iyh, 4  ; damage to deal
+	call update_enemy_hurt_player_2x2
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	cp ENEMY_MARS_DRONE2
+	jr nz, update_enemy_mars_drone1_continue2
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)  ; drone2 is faster, and hence, we increase its timer twice
+update_enemy_mars_drone1_continue2:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	or a
+	jr z, update_enemy_mars_drone1_left
+	dec a
+	jr z, update_enemy_mars_drone1_right
+	dec a
+	jr z, update_enemy_mars_drone1_up
+update_enemy_mars_drone1_down:
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	cp ENEMY_MARS_DRONE2
+	call z, update_enemy_move_down_if_possible  ; drone2 is faster
+	call update_enemy_move_down_if_possible
+	jr nz, update_enemy_mars_drone1_continue3
+	jr update_enemy_mars_drone1_chance_direction
+
+update_enemy_mars_drone1_left:
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	cp ENEMY_MARS_DRONE2
+	call z, update_enemy_move_left_if_possible  ; drone2 is faster
+	call update_enemy_move_left_if_possible
+	jr nz, update_enemy_mars_drone1_continue3
+	jr update_enemy_mars_drone1_chance_direction
+
+update_enemy_mars_drone1_right:
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	cp ENEMY_MARS_DRONE2
+	call z, update_enemy_move_right_if_possible  ; drone2 is faster
+	call update_enemy_move_right_if_possible
+	jr nz, update_enemy_mars_drone1_continue3
+	jr update_enemy_mars_drone1_chance_direction
+
+update_enemy_mars_drone1_up:
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	cp ENEMY_MARS_DRONE2
+	call z, update_enemy_move_up_if_possible_tall  ; drone2 is faster
+	call update_enemy_move_up_if_possible_tall
+	jr nz, update_enemy_mars_drone1_continue3
+	jr update_enemy_mars_drone1_chance_direction
+
+update_enemy_mars_drone1_continue3:
+	; chance to change direction:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	and #1f
+	jr nz, update_enemy_mars_drone1_movement_done
+	call random_a
+	and #03
+	jr nz, update_enemy_mars_drone1_movement_done
+update_enemy_mars_drone1_chance_direction:
+	call random_a
+	and #01
+	jr z, update_enemy_mars_drone1_chance_direction_random
+	; go to player:
+	call random_a
+	and #01
+	jr z, update_enemy_mars_drone1_chance_direction_to_player_v
+update_enemy_mars_drone1_chance_direction_to_player_h:
+	ld a, (player_x + 1)
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	jr c, update_enemy_mars_drone1_chance_direction_to_player_h_left
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1
+	jr update_enemy_mars_drone1_movement_done
+update_enemy_mars_drone1_chance_direction_to_player_h_left:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
+	jr update_enemy_mars_drone1_movement_done
+update_enemy_mars_drone1_chance_direction_to_player_v:
+	ld a, (player_y + 1)
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	jr c, update_enemy_mars_drone1_chance_direction_to_player_v_up
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 3
+	jr update_enemy_mars_drone1_movement_done
+update_enemy_mars_drone1_chance_direction_to_player_v_up:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2
+	jr update_enemy_mars_drone1_movement_done
+
+update_enemy_mars_drone1_chance_direction_random:
+	call random_a
+	and #03
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), a
+
+update_enemy_mars_drone1_movement_done:
+	; chance of firing:
+	call update_enemy_player_close_enough_16
+	jr nz, update_enemy_mars_drone1_sprites
+	ld c, #1f
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	cp ENEMY_MARS_DRONE2
+	jr z, update_enemy_mars_drone1_fire_chance_set
+	ld c, #3f
+update_enemy_mars_drone1_fire_chance_set:
+	call random_a
+	and c
+	jr nz, update_enemy_mars_drone1_sprites
+	call update_enemy_fire_directional_bullet_towards_player
+update_enemy_mars_drone1_sprites:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	rrca
+	rrca
+	and #07
+	; sprites: 27 - 34
+	add a, FIRST_ENEMY_SPRITE_PATTERN + 27
+	add a, a
+	add a, a
+	ld e, a
+	ld d, iyl  ; color
+ 	jp enemy_sprite_and_continue
 
 
 ;-----------------------------------------------
@@ -5458,6 +5611,18 @@ update_enemy_move_up_if_possible_stairs:
 ; output:
 ; - z: cannot
 ; - nz: can
+update_enemy_move_up_if_possible_tall:
+	call update_enemy_can_move_up_tall
+	ret z
+	jp update_enemy_move_up
+
+
+;-----------------------------------------------
+; input:
+; - ix: enemy ptr
+; output:
+; - z: cannot
+; - nz: can
 update_enemy_move_up_if_possible:
 	call update_enemy_can_move_up
 	ret z
@@ -5529,6 +5694,10 @@ update_enemy_can_move_right:
 	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
 	cp 4
 	ret nz
+	ld a, (current_room__width)
+	add a, 2
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ret z  ; cannot
 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	inc c
@@ -5597,7 +5766,10 @@ update_enemy_can_move_left:
 	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
 	cp 4
 	ret nz
-	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	or a
+	ret z  ; cannot
+	ld c, a
 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 ; 	dec c
 	inc b
@@ -5653,6 +5825,9 @@ update_enemy_can_move_up:
 	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
 	or a
 	ret nz
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	or a
+	ret z  ; cannot
 	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
 	cp 4
 	jr nc, update_enemy_can_move_up_continue
@@ -5673,10 +5848,43 @@ update_enemy_can_move_up_continue:
 ; output:
 ; - z: cannot
 ; - nz: can
+update_enemy_can_move_up_tall:
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
+	or a
+	ret nz
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	or a
+	ret z  ; cannot
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	cp 4
+	jr nc, update_enemy_can_move_up_tall_continue
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	dec b
+	call general_check_collision_with_wall
+	ret z
+update_enemy_can_move_up_tall_continue:
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	dec b
+	inc c
+	jp general_check_collision_with_wall
+
+
+;-----------------------------------------------
+; input:
+; - ix: enemy ptr
+; output:
+; - z: cannot
+; - nz: can
 update_enemy_can_move_down:
 	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
 	or a
 	ret nz
+	ld a, (current_room__height)
+	add a, 2
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	ret z  ; cannot
 	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
 	cp 4
 	jr nc, update_enemy_can_move_down_continue
