@@ -101,12 +101,12 @@ pcg_enemy_generation_table_mars_normal:
 	db 0
 ; 	db TAG_ENEMY_MARS_VENT, 64  ; tile-based enemy type and chance (out of 256)
 ; 	db TAG_ENEMY_MARS_BIGMECH, 64  ; tile-based enemy type and chance (out of 256)
-	db 2  ; possible sprite enemy types to be spawned (weights below should add up to 32)
-; 	db ENEMY_MARS_SNAIL1, 16
-; 	db ENEMY_MARS_SNAIL2, 16
-; 	db ENEMY_MARS_BLOB1, 16
-; 	db ENEMY_MARS_BLOB2, 16
-; 	db ENEMY_MARS_DRONE1, 16
-; 	db ENEMY_MARS_DRONE2, 16
-	db ENEMY_MARS_ROBOT1, 16
-	db ENEMY_MARS_ROBOT2, 16
+	db 8  ; possible sprite enemy types to be spawned (weights below should add up to 32)
+	db ENEMY_MARS_SNAIL1, 4
+	db ENEMY_MARS_SNAIL2, 4
+	db ENEMY_MARS_BLOB1, 4
+	db ENEMY_MARS_BLOB2, 4
+	db ENEMY_MARS_DRONE1, 4
+	db ENEMY_MARS_DRONE2, 4
+	db ENEMY_MARS_ROBOT1, 4
+	db ENEMY_MARS_ROBOT2, 4

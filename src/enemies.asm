@@ -4264,8 +4264,9 @@ update_enemy_mars_drone1_sprites:
 ; - 0, 1: walking right/left
 ; - 2: stopped (loking around)
 ; - 3, 4: jumping up right/left (2 tiles high)
-; - 5, 6: jumping down right/left
-; - 7, 8: firing right/left
+; - 5, 6: falling right/left
+; - 7, 8: jumping down right/left
+; - 9, 10: firing right/left
 update_enemy_mars_robot2:
 	ld iyl, COLOR_DARK_RED
 	jr update_enemy_mars_robot1_continue
@@ -4278,36 +4279,96 @@ update_enemy_mars_robot1_continue:
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
 	or a
-	jr z, update_enemy_mars_robot1_right
+	jp z, update_enemy_mars_robot1_right
 	dec a
-	jr z, update_enemy_mars_robot1_left
+	jp z, update_enemy_mars_robot1_left
 	dec a
-	jr z, update_enemy_mars_robot1_stop
+	jp z, update_enemy_mars_robot1_stop
 	dec a
-	jr z, update_enemy_mars_robot1_jump_up_right
+	jp z, update_enemy_mars_robot1_jump_up_right
 	dec a
-	jr z, update_enemy_mars_robot1_jump_up_left
+	jp z, update_enemy_mars_robot1_jump_up_left
 	dec a
-	jr z, update_enemy_mars_robot1_jump_down_right
+	jp z, update_enemy_mars_robot1_fall_right
 	dec a
-	jr z, update_enemy_mars_robot1_jump_down_left
+	jp z, update_enemy_mars_robot1_fall_left
 	dec a
-	jr z, update_enemy_mars_robot1_shoot_right
+	jp z, update_enemy_mars_robot1_jump_down_right
+	dec a
+	jp z, update_enemy_mars_robot1_jump_down_left
+	dec a
+	jp z, update_enemy_mars_robot1_shoot_right
 
 update_enemy_mars_robot1_shoot_left:
-	; ...
+	ld a, (current_world__difficulty_attack_warn_time)
+	cp (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	jr nz, update_enemy_mars_robot1_shoot_left_continue
+	; fire bullet(s):
+	ld b, 3
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	cp ENEMY_MARS_ROBOT2
+	jr z, update_enemy_mars_robot1_shoot_left_n_bullets_set
+	ld b, 1
+update_enemy_mars_robot1_shoot_left_n_bullets_set:
+update_enemy_mars_robot1_shoot_left_loop:
+	push bc
+	push ix
+		ld e, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+		ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+		ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+		ld ixh, 0
+		ld ixl, a
+		ld hl, boss_fire_directional_bullet_towards_player_with_random_offset_e_b
+		ld c, BOSS_PAGE
+		call call_hl_in_page_c_8000
+	pop ix
+	pop bc
+	djnz update_enemy_mars_robot1_shoot_left_loop
+
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1
+update_enemy_mars_robot1_shoot_left_continue:
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 25) * 4
-	jr update_enemy_mars_robot1_sprite_e_set
+	jp update_enemy_mars_robot1_sprite_e_set
 
 update_enemy_mars_robot1_shoot_right:
-	; ...
+	ld a, (current_world__difficulty_attack_warn_time)
+	cp (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	jr nz, update_enemy_mars_robot1_shoot_right_continue
+	; fire bullet(s):
+	ld b, 3
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	cp ENEMY_MARS_ROBOT2
+	jr z, update_enemy_mars_robot1_shoot_right_n_bullets_set
+	ld b, 1
+update_enemy_mars_robot1_shoot_right_n_bullets_set:
+update_enemy_mars_robot1_shoot_right_loop:
+	push bc
+	push ix
+		ld e, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+		inc e
+		ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+		ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+		ld ixh, 0
+		ld ixl, a
+		ld hl, boss_fire_directional_bullet_towards_player_with_random_offset_e_b
+		ld c, BOSS_PAGE
+		call call_hl_in_page_c_8000
+	pop ix
+	pop bc
+	djnz update_enemy_mars_robot1_shoot_right_loop
+
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1
+update_enemy_mars_robot1_shoot_right_continue:
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 22) * 4
-	jr update_enemy_mars_robot1_sprite_e_set
+	jp update_enemy_mars_robot1_sprite_e_set
 
 update_enemy_mars_robot1_right:
 	call update_enemy_move_right_if_possible_platform
 	jr nz, update_enemy_mars_robot1_right_continue
-	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1  ; left
+	; check if the robot can jump up or down:
+	call update_enemy_mars_robot1_collision_right_decision  ; a = next state
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), a
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), #ff  ; since it will be "incremented" once before going to the next state
 update_enemy_mars_robot1_right_continue:
 	ld e, FIRST_ENEMY_SPRITE_PATTERN + 21
 update_enemy_mars_robot1_right_continue2:
@@ -4316,8 +4377,11 @@ update_enemy_mars_robot1_right_continue2:
 	jr nz, update_enemy_mars_robot1_right_continue3
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2  ; stop
 update_enemy_mars_robot1_right_continue3:
-	; sprite loop: 21, 22, 23, 22
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	push af
+		call update_enemy_mars_robot1_maybe_shoot
+	pop af
+	; sprite loop: 21, 22, 23, 22
 	rrca
 	rrca
 	and #03
@@ -4329,12 +4393,15 @@ update_enemy_mars_robot1_right_continue4:
 	add a, a
 	add a, a
 	ld e, a
-	jr update_enemy_mars_robot1_sprite_e_set
+	jp update_enemy_mars_robot1_sprite_e_set
 
 update_enemy_mars_robot1_left:
 	call update_enemy_move_left_if_possible_platform
 	jr nz, update_enemy_mars_robot1_left_continue
-	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0  ; right
+	; check if the robot can jump up or down:
+	call update_enemy_mars_robot1_collision_left_decision  ; a = next state
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), a
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), #ff  ; since it will be "incremented" once before going to the next state
 update_enemy_mars_robot1_left_continue:
 	ld e, FIRST_ENEMY_SPRITE_PATTERN + 24
 	jr update_enemy_mars_robot1_right_continue2
@@ -4365,18 +4432,270 @@ update_enemy_mars_robot1_stop_continue:
 	ld hl, update_enemy_mars_robot1_stop_table
 	ADD_HL_A
 	ld e, (hl)
+	jp update_enemy_mars_robot1_sprite_e_set
+
+update_enemy_mars_robot1_jump_arc_tbl:
+	db 4, 4, 3, 2, 1, 1, 1, 0, 0, 0, 0, #ff
+update_enemy_mars_robot1_jump_up_right:
+	ld hl, update_enemy_mars_robot1_jump_arc_tbl
+update_enemy_mars_robot1_jump_down_right_entry_point:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ADD_HL_A
+	ld a, (hl)  ; amount to jump up
+	cp #ff
+	jr nz, update_enemy_mars_robot1_jump_up_right_continue
+	; done with jumping:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 5  ; falling right
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 21) * 4
+	jr update_enemy_mars_robot1_sprite_e_set
+update_enemy_mars_robot1_jump_up_right_continue:
+	call update_enemy_move_up_if_possible_a_times
+	call update_enemy_move_right_if_possible
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 21) * 4
 	jr update_enemy_mars_robot1_sprite_e_set
 
-update_enemy_mars_robot1_jump_up_right:
 update_enemy_mars_robot1_jump_up_left:
+	ld hl, update_enemy_mars_robot1_jump_arc_tbl
+update_enemy_mars_robot1_jump_down_left_entry_point
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ADD_HL_A
+	ld a, (hl)  ; amount to jump up
+	cp #ff
+	jr nz, update_enemy_mars_robot1_jump_up_left_continue
+	; done with jumping:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 6  ; falling left
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 24) * 4
+	jr update_enemy_mars_robot1_sprite_e_set
+update_enemy_mars_robot1_jump_up_left_continue:
+	call update_enemy_move_up_if_possible_a_times
+	call update_enemy_move_left_if_possible
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 24) * 4
+	jr update_enemy_mars_robot1_sprite_e_set
+
+update_enemy_mars_robot1_fall_right:
+	call update_enemy_move_down_if_possible
+	call update_enemy_move_down_if_possible
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 21) * 4
+	jr nz, update_enemy_mars_robot1_sprite_e_set
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0  ; walking right
+	jr update_enemy_mars_robot1_sprite_e_set
+
+update_enemy_mars_robot1_fall_left:
+	call update_enemy_move_down_if_possible
+	call update_enemy_move_down_if_possible
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 24) * 4
+	jr nz, update_enemy_mars_robot1_sprite_e_set
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1  ; walking left
+	jr update_enemy_mars_robot1_sprite_e_set
+
+update_enemy_mars_robot1_jump_down_arc_tbl:
+	db 2, 2, 1, 1, 0, 0, 0, 0, 0, #ff
 update_enemy_mars_robot1_jump_down_right:
+	ld hl, update_enemy_mars_robot1_jump_down_arc_tbl
+	jr update_enemy_mars_robot1_jump_down_right_entry_point
+
 update_enemy_mars_robot1_jump_down_left:
-	; ...
+	ld hl, update_enemy_mars_robot1_jump_down_arc_tbl
+	jr update_enemy_mars_robot1_jump_down_left_entry_point
 
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 20) * 4  ; stopped
 update_enemy_mars_robot1_sprite_e_set:
 	ld d, iyl  ; color
  	jp enemy_sprite_and_continue
+
+
+;-----------------------------------------------
+update_enemy_mars_robot1_maybe_shoot
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	or a
+	jr z, update_enemy_mars_robot1_maybe_shoot_right
+	ld a, (player_x + 1)
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ret nc  ; player is in the wrong side
+	jr update_enemy_mars_robot1_maybe_shoot_continue
+
+update_enemy_mars_robot1_maybe_shoot_right:
+	ld a, (player_x + 1)
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ret c  ; player is in the wrong side
+
+update_enemy_mars_robot1_maybe_shoot_continue:
+	ld a, (player_y + 1)
+	sub (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	cp 5
+	ret p
+	cp -5
+	ret m
+	call random_a
+	and #1f
+	ret nz
+	; shoot!
+	ld a, 9
+	add a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), a
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+	ret
+
+
+;-----------------------------------------------
+; returns:
+; - a: state to transition to
+update_enemy_mars_robot1_collision_right_decision:
+	; jump up?
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc b
+	ld a, (current_room__width)
+	add a, -2
+	cp c
+	jr z, update_enemy_mars_robot1_collision_right_decision_no_jump
+	inc c
+	inc c
+	call get_room_tile_ptr
+	ld a, (hl)
+	call get_collision_tile_type_of_a
+	cp 2
+	jr nz, update_enemy_mars_robot1_collision_right_decision_no_jump_up
+	; see how tall is the wall:
+	ld d, 0
+	ld a, (current_room__width)
+	ld e, a
+	or a
+	sbc hl, de
+	ld a, (hl)
+	call get_collision_tile_type_of_a
+	or a  ; height 1
+	jr z, update_enemy_mars_robot1_collision_right_decision_jump_up
+	cp 2
+	jr nz, update_enemy_mars_robot1_collision_right_decision_no_jump_up
+	or a
+	sbc hl, de
+	ld a, (hl)
+	call get_collision_tile_type_of_a
+	or a  ; height 2
+	jr z, update_enemy_mars_robot1_collision_right_decision_jump_up
+
+update_enemy_mars_robot1_collision_right_decision_no_jump_up:
+	; maybe we can jump down?
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc b
+	inc c
+	inc c
+	call get_room_tile_ptr
+	ld a, (hl)
+	call get_collision_tile_type_of_a
+	or a
+	jr nz, update_enemy_mars_robot1_collision_right_decision_no_jump
+	ld d, 0
+	ld a, (current_room__width)
+	ld e, a
+	add hl, de
+	ld a, (hl)  ; one down
+	call get_collision_tile_type_of_a
+	or a
+	jr nz, update_enemy_mars_robot1_collision_right_decision_no_jump
+	add hl, de
+	ld a, (hl)  ; two down
+	call get_collision_tile_type_of_a
+	or a
+	jr nz, update_enemy_mars_robot1_collision_right_decision_no_jump
+	add hl, de
+	ld a, (hl)  ; three down
+	call get_collision_tile_type_of_a
+	or a
+	jr z, update_enemy_mars_robot1_collision_right_decision_no_jump
+	cp 2
+	jr z, update_enemy_mars_robot1_collision_right_decision_jump_down
+
+update_enemy_mars_robot1_collision_right_decision_no_jump:
+	; no jumps possible, just turn around and move left:	
+	ld a, 1  ; left
+	ret	
+update_enemy_mars_robot1_collision_right_decision_jump_up:
+	ld a, 3  ; jump up right
+	ret
+update_enemy_mars_robot1_collision_right_decision_jump_down:
+	ld a, 7  ; jump down right
+	ret
+
+
+;-----------------------------------------------
+; returns:
+; - a: state to transition to
+update_enemy_mars_robot1_collision_left_decision:
+	; jump up?
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	ld a, c
+	or a
+	jr z, update_enemy_mars_robot1_collision_left_decision_no_jump
+	inc b
+	call get_room_tile_ptr
+	ld a, (hl)
+	call get_collision_tile_type_of_a
+	cp 2
+	jr nz, update_enemy_mars_robot1_collision_left_decision_no_jump_up
+	; see how tall is the wall:
+	ld d, 0
+	ld a, (current_room__width)
+	ld e, a
+	or a
+	sbc hl, de
+	ld a, (hl)
+	call get_collision_tile_type_of_a
+	or a  ; height 1
+	jr z, update_enemy_mars_robot1_collision_left_decision_jump_up
+	cp 2
+	jr nz, update_enemy_mars_robot1_collision_left_decision_no_jump_up
+	or a
+	sbc hl, de
+	ld a, (hl)
+	call get_collision_tile_type_of_a
+	or a  ; height 2
+	jr z, update_enemy_mars_robot1_collision_left_decision_jump_up
+
+update_enemy_mars_robot1_collision_left_decision_no_jump_up:
+	; maybe we can jump down?
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc b
+	call get_room_tile_ptr
+	ld a, (hl)
+	call get_collision_tile_type_of_a
+	or a
+	jr nz, update_enemy_mars_robot1_collision_left_decision_no_jump
+	ld d, 0
+	ld a, (current_room__width)
+	ld e, a
+	add hl, de
+	ld a, (hl)  ; one down
+	call get_collision_tile_type_of_a
+	or a
+	jr nz, update_enemy_mars_robot1_collision_left_decision_no_jump
+	add hl, de
+	ld a, (hl)  ; two down
+	call get_collision_tile_type_of_a
+	or a
+	jr nz, update_enemy_mars_robot1_collision_left_decision_no_jump
+	add hl, de
+	ld a, (hl)  ; three down
+	call get_collision_tile_type_of_a
+	or a
+	jr z, update_enemy_mars_robot1_collision_left_decision_no_jump
+	cp 2
+	jr z, update_enemy_mars_robot1_collision_left_decision_jump_down
+
+update_enemy_mars_robot1_collision_left_decision_no_jump:
+	; no jumps possible, just turn around and move left:	
+	ld a, 0  ; right
+	ret	
+update_enemy_mars_robot1_collision_left_decision_jump_up:
+	ld a, 4  ; jump up left
+	ret
+update_enemy_mars_robot1_collision_left_decision_jump_down:
+	ld a, 8  ; jump down left
+	ret
 
 
 ;-----------------------------------------------
@@ -4467,6 +4786,7 @@ update_sprite_objects_atlantis_sentinel_extras_internal_tbl:
 	db -1, 3
 	db -1, 4
 	db 7, 5
+
 
 ;-----------------------------------------------
 update_enemy_bullet_whirlwind:
@@ -5854,6 +6174,10 @@ update_enemy_can_move_right_platform:
 	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
 	cp 4
 	ret nz
+	ld a, (current_room__width)
+	add a, -2
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ret z  ; cannot
 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	inc c
@@ -5919,7 +6243,10 @@ update_enemy_can_move_left_platform:
 	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
 	cp 4
 	ret nz
-	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	or a
+	ret z  ; cannot
+	ld c, a
 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 ; 	dec c
 	inc b
@@ -6471,6 +6798,26 @@ update_enemy_bullet_move_down_if_possible_a_times_loop:
 	pop bc
 	ret z
 	djnz update_enemy_bullet_move_down_if_possible_a_times_loop
+	or 1  ; nz
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - a: number of frames to move
+; output:
+; - z: collision
+; - nz: no collision
+update_enemy_move_up_if_possible_a_times:
+	or a
+	ret z
+	ld b, a
+update_enemy_move_up_if_possible_a_times_loop:
+	push bc
+		call update_enemy_move_up_if_possible
+	pop bc
+	ret z
+	djnz update_enemy_move_up_if_possible_a_times_loop
 	or 1  ; nz
 	ret
 

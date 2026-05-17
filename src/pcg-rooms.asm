@@ -107,7 +107,7 @@ area_default_tileset_ptrs:
 	dw tiles_mars_zx0, update_animations_in_vdp_mars
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_mars
-	db ENEMY_SPRITES_PAGE
+	db MARS_ENEMY_SPRITES_PAGE
 	dw mars_enemy_sprites_zx0  ; mars
 	dw 0
 	db 0

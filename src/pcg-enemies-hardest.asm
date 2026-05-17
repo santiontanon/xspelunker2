@@ -99,6 +99,8 @@ pcg_enemy_generation_table_mars_hardest:
 	db 0
 ; 	db TAG_ENEMY_MARS_VENT, 128  ; tile-based enemy type and chance (out of 256)
 ; 	db TAG_ENEMY_MARS_BIGMECH, 128  ; tile-based enemy type and chance (out of 256)
-	db 1  ; possible sprite enemy types to be spawned (weights below should add up to 32)
-; 	db ENEMY_MARS_SNAIL1, 32
-	db ENEMY_MARS_SNAIL2, 32
+	db 4  ; possible sprite enemy types to be spawned (weights below should add up to 32)
+	db ENEMY_MARS_SNAIL2, 8
+	db ENEMY_MARS_BLOB2, 8
+	db ENEMY_MARS_DRONE2, 8
+	db ENEMY_MARS_ROBOT2, 8
