@@ -4276,10 +4276,105 @@ update_enemy_mars_robot1_continue:
 	ld iyh, 4  ; damage to deal
 	call update_enemy_hurt_player_2x2
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	or a
+	jr z, update_enemy_mars_robot1_right
+	dec a
+	jr z, update_enemy_mars_robot1_left
+	dec a
+	jr z, update_enemy_mars_robot1_stop
+	dec a
+	jr z, update_enemy_mars_robot1_jump_up_right
+	dec a
+	jr z, update_enemy_mars_robot1_jump_up_left
+	dec a
+	jr z, update_enemy_mars_robot1_jump_down_right
+	dec a
+	jr z, update_enemy_mars_robot1_jump_down_left
+	dec a
+	jr z, update_enemy_mars_robot1_shoot_right
 
+update_enemy_mars_robot1_shoot_left:
+	; ...
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 25) * 4
+	jr update_enemy_mars_robot1_sprite_e_set
+
+update_enemy_mars_robot1_shoot_right:
+	; ...
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 22) * 4
+	jr update_enemy_mars_robot1_sprite_e_set
+
+update_enemy_mars_robot1_right:
+	call update_enemy_move_right_if_possible_platform
+	jr nz, update_enemy_mars_robot1_right_continue
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1  ; left
+update_enemy_mars_robot1_right_continue:
+	ld e, FIRST_ENEMY_SPRITE_PATTERN + 21
+update_enemy_mars_robot1_right_continue2:
+	call random_a
+	and #7f
+	jr nz, update_enemy_mars_robot1_right_continue3
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2  ; stop
+update_enemy_mars_robot1_right_continue3:
+	; sprite loop: 21, 22, 23, 22
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	rrca
+	rrca
+	and #03
+	cp 3
+	jr nz, update_enemy_mars_robot1_right_continue4
+	ld a, 1
+update_enemy_mars_robot1_right_continue4:
+	add a, e
+	add a, a
+	add a, a
+	ld e, a
+	jr update_enemy_mars_robot1_sprite_e_set
+
+update_enemy_mars_robot1_left:
+	call update_enemy_move_left_if_possible_platform
+	jr nz, update_enemy_mars_robot1_left_continue
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0  ; right
+update_enemy_mars_robot1_left_continue:
+	ld e, FIRST_ENEMY_SPRITE_PATTERN + 24
+	jr update_enemy_mars_robot1_right_continue2
+
+update_enemy_mars_robot1_stop_table:
+	db (FIRST_ENEMY_SPRITE_PATTERN + 20) * 4
+	db (FIRST_ENEMY_SPRITE_PATTERN + 22) * 4
+	db (FIRST_ENEMY_SPRITE_PATTERN + 20) * 4
+	db (FIRST_ENEMY_SPRITE_PATTERN + 25) * 4
+update_enemy_mars_robot1_stop:
+	; sprite loop: 20, 22, 20, 25
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	and #0f
+	jr nz, update_enemy_mars_robot1_stop_continue
+	call random_a
+	and #03
+	jr nz, update_enemy_mars_robot1_stop_continue
+	call random_a
+	and #01
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), a  ; back to walking
+update_enemy_mars_robot1_stop_continue:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	rrca
+	rrca
+	rrca
+	rrca
+	and #03
+	ld hl, update_enemy_mars_robot1_stop_table
+	ADD_HL_A
+	ld e, (hl)
+	jr update_enemy_mars_robot1_sprite_e_set
+
+update_enemy_mars_robot1_jump_up_right:
+update_enemy_mars_robot1_jump_up_left:
+update_enemy_mars_robot1_jump_down_right:
+update_enemy_mars_robot1_jump_down_left:
 	; ...
 
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 20) * 4
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 20) * 4  ; stopped
+update_enemy_mars_robot1_sprite_e_set:
 	ld d, iyl  ; color
  	jp enemy_sprite_and_continue
 

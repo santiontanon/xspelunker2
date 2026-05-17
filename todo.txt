@@ -2,8 +2,6 @@ to do:
 
 ***- mars sprite enemies:
   ***- guard mechs (robots that walk around and shoot forward):
-    ***- walk left-right
-    ***- pause sometimes, and look left-right
     ***- they can jump small obstacles up to keep moving forward
     ***- they can jump small obstacles down to keep moving forward (if they can come back up)
     ***- if player is in front, they fire a small barrage of bullets
