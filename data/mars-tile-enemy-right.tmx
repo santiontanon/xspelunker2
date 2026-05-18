@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="8" tilewidth="8" tileheight="8" nextobjectid="19">
+ <properties>
+  <property name="down" value="hole"/>
+  <property name="up" value="hole"/>
+ </properties>
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="256" columns="16">
+  <image source="mars-tile-enemy-right-tiles.png" width="128" height="128"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="16" height="8">
+  <data encoding="csv">
+1,1,1,1,1,74,66,67,1,65,66,67,1,92,66,67,
+1,65,66,67,1,69,83,68,81,72,83,68,1,89,79,68,
+81,82,83,84,81,70,71,1,85,86,88,1,81,85,86,88,
+85,86,87,88,85,86,87,88,1,85,86,88,85,86,88,1,
+1,1,1,1,1,74,66,67,1,74,66,67,1,74,66,67,
+1,65,66,67,1,77,83,68,81,78,83,68,1,69,83,68,
+81,82,83,68,81,93,90,1,85,94,90,1,81,76,86,88,
+85,86,87,88,85,85,86,88,1,85,86,88,85,86,88,1
+</data>
+ </layer>
+</map>

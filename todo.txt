@@ -1,9 +1,16 @@
 to do:
 
-***- mars tile enemies:
-  ***- gas vents that might push you up/sideways/down (not sure if viable)
-  ***- large walking mechs (large version of the sprite ones, can shoot directionally too)
+***- mars tile enemy: large mech
+    OK - generate tiles / nametables for the left-version too
+    ***- bring the tiles/nametable to assembler
+    ***- add possible spawn locations for the right and left-facing versions (like sentinel)
+    ***- spawn them (for now just in the idle position, both left and right)
+    ***- when player is closeby, wake up
+    ***- walk forward-backward
+    ***- shoot (bullets? lasers? fire? (I have 3 sprites I can use to play with this))
 
+- moon biome (similar to mars, it could even be the same with palette changed)
+  - If the player enters a world name like "ATLANTIS", "AZTLAN", or "COH", trigger a world where the "Firestone forge" (in the Moon) is active (see if clue in ATLANTIS_TABLET_5_1 is enough).
 - music: (brain 12, 15, 23, 25 have potential)
   - ending aliens
   - ending beach (reuse the story jazzy song? just some wave sfx in the background?)
@@ -11,8 +18,6 @@ to do:
   - atlantis
   - mars
   - moon
-- moon biome (similar to mars, it could even be the same with palette changed)
-  - If the player enters a world name like "ATLANTIS", "AZTLAN", or "COH", trigger a world where the "Firestone forge" (in the Moon) is active (see if clue in ATLANTIS_TABLET_5_1 is enough).
 - 6th boss: (ideas: "The Solar Stone Jaguar", "The Martian Terracotta Warrior", "The Dust Stone Golem"). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer). Another idea: https://en.wikipedia.org/wiki/Human_sacrifice_in_Maya_culture#/media/File:MA_D293_Maya_stone_carving_from_Copan.jpg
   - before the boss fight: underground cave with a broken ancient robot that talks if you turn it on with the golden key (in a mix of English and Maya). Gives you a better raygun (key for alien boss), add as an achievement for the gameover screen.  
   - add boss name to the stats for game over screen
@@ -31,7 +36,7 @@ to do:
 - save game to rom / password
 - come up with a list of "achievements" for the achievements list in the game over screen and implement them
 - pick a good seed (for seed2) so that with the default seed, the map is good (at least Jungle)
-- gigantic maya statue monument that looks decoration, but it's actually a secret boss (to have a maya-themed final boss)
+- 9th optional boss: gigantic maya statue monument that looks decoration, but it's actually a secret boss (to have a maya-themed final boss)
   - maybe that boss leads to the grave of the person who wrote all the story tablets (Yatzil), with a riddle you can only solve if you have seen all tablets.
     - use "tomb.tsv" music for this part
   - Solving the riddle reveals the head of the statue (which was hidden), and two gigantic empty eye sockets. If you place the eyes of charybdis and scylla, the statue comes alive, and you have your boss fight! (which gives you an achievement)
