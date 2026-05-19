@@ -2366,7 +2366,7 @@ update_tile_objects_enemy_mars_walker_state_0:
 	; player is closeby, activating!
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 1
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER), 0
-	jr update_tile_objects_enemy_mars_walker_continue
+	jp update_tile_objects_enemy_mars_walker_continue
 
 update_tile_objects_enemy_mars_walker_state_1:
 	; state 1: activating
@@ -2376,14 +2376,14 @@ update_tile_objects_enemy_mars_walker_state_1:
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1), a
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
 	cp 4
-	jr c, update_tile_objects_enemy_mars_walker_continue
+	jp c, update_tile_objects_enemy_mars_walker_continue
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1)
 	and #08  ; keep whether we are facing left or right
 	or #02
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1), a
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 2
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER), 0
-	jr update_tile_objects_enemy_mars_walker_continue
+	jp update_tile_objects_enemy_mars_walker_continue
 
 update_tile_objects_enemy_mars_walker_state_2:
 	; state 2: state switch
@@ -2399,28 +2399,135 @@ update_tile_objects_enemy_mars_walker_state_2:
 	jp p, update_tile_objects_enemy_mars_walker_state_2_deactivate
 	cp -20
 	jp m, update_tile_objects_enemy_mars_walker_state_2_deactivate
-	; player is sitll closeby:
-	; ...
-	jr update_tile_objects_enemy_mars_walker_continue
+
+	; player is still closeby:
+; 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+; 	cp 4
+; 	jp nz, update_tile_objects_enemy_mars_walker_continue
+
+	call random_a
+	and #03
+	add a, 2  ; randomly go to states: 2, 3, 4, 5
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), a
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER), 0
+	jp update_tile_objects_enemy_mars_walker_continue
 update_tile_objects_enemy_mars_walker_state_2_deactivate:
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 6
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER), 0
-	jr update_tile_objects_enemy_mars_walker_continue
+	jp update_tile_objects_enemy_mars_walker_continue
 
 
 update_tile_objects_enemy_mars_walker_state_3:
 	; state 3: walk forward
-	; ...
+	ld hl, update_tile_objects_enemy_mars_walker_walk_table_right_fw
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	cp TAG_ENEMY_MARS_WALKER_RIGHT
+	jr z, update_tile_objects_enemy_mars_walker_state_3_continue
+	ld hl, update_tile_objects_enemy_mars_walker_walk_table_left_fw
+update_tile_objects_enemy_mars_walker_state_3_continue:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	and #01
+	jp nz, update_tile_objects_enemy_mars_walker_continue
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	rrca
+	and #0f
+	jp z, update_tile_objects_enemy_mars_walker_continue
+	dec a
+	ld c, a
+	add a, a
+	add a, c
+	ADD_HL_A  ; hl = pointer to the walk frame we want: collision check, target frame, x movement
+	ld a, (hl)
+	or a
+	jr z, update_tile_objects_enemy_mars_walker_state_3_continue2
+	; collision check:
+	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	add a, c
+	ld c, a
+	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	inc b
+	inc b
+	inc b
+	; - there should be no wall at (x + offset, y + 3)
+	; - there should be wall/platform/laddertop/ropetop (x + offset, y + 4)
+	push hl
+	push bc
+		call get_room_tile_type
+	pop bc
+	pop hl
+	cp 2  ; wall
+	jp z, update_tile_objects_enemy_mars_walker_state_3_wall
+	push hl
+		inc b
+		call general_check_collision
+	pop hl
+	jp nz, update_tile_objects_enemy_mars_walker_state_3_wall
+update_tile_objects_enemy_mars_walker_state_3_continue2:
+	inc hl
+	ld a, (hl)
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1), a
+	ld c, a
+	inc hl
+	ld a, (hl)
+	add a, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_X), a
+	; if we went back to frame 2 or 10, is that we are done with the step:
+	ld a, c
+	cp 2
+	jp z, update_tile_objects_enemy_mars_walker_back_to_state_2
+	cp 10
+	jp z, update_tile_objects_enemy_mars_walker_back_to_state_2
+	jp update_tile_objects_enemy_mars_walker_continue
+update_tile_objects_enemy_mars_walker_state_3_wall:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	cp TAG_ENEMY_MARS_WALKER_RIGHT
+	jr z, update_tile_objects_enemy_mars_walker_state_3_wall_right
+update_tile_objects_enemy_mars_walker_state_3_wall_left:
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1), 10
+	jr update_tile_objects_enemy_mars_walker_back_to_state_2
+update_tile_objects_enemy_mars_walker_state_3_wall_right:
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1), 2
+update_tile_objects_enemy_mars_walker_back_to_state_2:
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 2
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER), 0	
 	jr update_tile_objects_enemy_mars_walker_continue
 
 update_tile_objects_enemy_mars_walker_state_4:
 	; state 4: walk backward
-	; ...
-	jr update_tile_objects_enemy_mars_walker_continue
+	ld hl, update_tile_objects_enemy_mars_walker_walk_table_right_bw
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	cp TAG_ENEMY_MARS_WALKER_RIGHT
+	jp z, update_tile_objects_enemy_mars_walker_state_3_continue
+	ld hl, update_tile_objects_enemy_mars_walker_walk_table_left_bw
+	jp update_tile_objects_enemy_mars_walker_state_3_continue
 
 update_tile_objects_enemy_mars_walker_state_5:
 	; state 5: shoot
-	; ...
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	cp 16
+	jr z, update_tile_objects_enemy_mars_walker_back_to_state_2
+	cp 8
+	jr c, update_tile_objects_enemy_mars_walker_continue
+	and #01
+	jr nz, update_tile_objects_enemy_mars_walker_continue
+	; shoot:
+	push ix
+		ld e, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+		dec e
+		ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+		inc b
+		ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+		cp TAG_ENEMY_MARS_WALKER_LEFT
+		jr z, update_tile_objects_enemy_mars_walker_state_5_continue
+		ld a, 4
+		add a, e
+		ld e, a
+update_tile_objects_enemy_mars_walker_state_5_continue:
+		ld ix, 0
+		ld hl, boss_fire_directional_bullet_towards_player_with_random_offset_e_b
+		ld c, BOSS_PAGE
+		call call_hl_in_page_c_8000
+	pop ix
 	jr update_tile_objects_enemy_mars_walker_continue
 
 update_tile_objects_enemy_mars_walker_state_6:
@@ -2446,6 +2553,43 @@ update_tile_objects_enemy_mars_walker_continue:
 	ld hl, redraw_flags
 	set ROOM_REDRAW_FLAG_BIT, (hl)
 	jp update_tile_objects_loop_continue
+
+
+update_tile_objects_enemy_mars_walker_walk_table_right_fw:
+	; - if looking right:
+	db   0, 3, 0  ; go to frame 3, no need for collision check
+	db   4, 4, 1  ; go to frame 4, if collision check at [x+4] succeeds (x++)
+	db   0, 5, 0  ; go to frame 5, no need for collision check
+	db   0, 6, 0  ; go to frame 6, no need for collision check
+	db   4, 7, 1  ; go to frame 7, if collision check at [x+4] succeeds (x++)
+	db   0, 2, 0  ; go to frame 2, no need for collision check
+
+update_tile_objects_enemy_mars_walker_walk_table_right_bw:
+	; - if looking right:
+	db   0, 7,  0  ; go to frame 7, no need for collision check
+	db  -1, 6, -1  ; go to frame 6, if collision check at [x-1] succeeds (x--)
+	db   0, 5,  0  ; go to frame 5, no need for collision check
+	db   0, 4,  0  ; go to frame 4, no need for collision check
+	db  -1, 3, -1  ; go to frame 3, if collision check at [x-1] succeeds (x--)
+	db   0, 2,  0  ; go to frame 2, no need for collision check
+
+update_tile_objects_enemy_mars_walker_walk_table_left_fw:
+	; - if looking left:
+	db   0, 11,  0  ; go to frame 3, no need for collision check
+	db  -1, 12, -1  ; go to frame 4, if collision check at [x+4] succeeds (x++)
+	db   0, 13,  0  ; go to frame 5, no need for collision check
+	db   0, 14,  0  ; go to frame 6, no need for collision check
+	db  -1, 15, -1  ; go to frame 7, if collision check at [x+4] succeeds (x++)
+	db   0, 10,  0  ; go to frame 2, no need for collision check
+
+update_tile_objects_enemy_mars_walker_walk_table_left_bw:
+	; - if looking left:
+	db   0, 15,  0  ; go to frame 7, no need for collision check
+	db   4, 14,  1  ; go to frame 6, if collision check at [x-1] succeeds (x--)
+	db   0, 13,  0  ; go to frame 5, no need for collision check
+	db   0, 12,  0  ; go to frame 4, no need for collision check
+	db   4, 11,  1  ; go to frame 3, if collision check at [x-1] succeeds (x--)
+	db   0, 10,  0  ; go to frame 2, no need for collision check
 
 
 ;-----------------------------------------------

@@ -1788,6 +1788,8 @@ pcg_generate_room__spawn_sentinel_difficulty_set:
 pcg_generate_room__spawn_mars_walker_right:
 	ld iyl, TAG_ENEMY_MARS_WALKER_RIGHT
 	ld iyh, 0  ; starting frame
+; 	ld iyl, TAG_ENEMY_MARS_WALKER_LEFT
+; 	ld iyh, 8  ; starting frame
 	jr pcg_generate_room__spawn_mars_walker_left_entry_point
 pcg_generate_room__spawn_mars_walker_left:
 	ld iyl, TAG_ENEMY_MARS_WALKER_LEFT
@@ -1799,22 +1801,22 @@ pcg_generate_room__spawn_mars_walker_left_entry_point:
 	cp (tile_enemy_work_memory_end - tile_enemy_work_memory) + 1  ; + 1 so that we can use "nc" as the condition
 	ret nc  ; if we do not have enough work memory, do not spawn
 
-; 	; probability of spawning, depending on the difficulty level:
-; 	ld c, 64  ; easy
-; 	ld a, (current_world__difficulty)
-; 	or a
-; 	jr z, pcg_generate_room__spawn_mars_walker_right_difficulty_set
-; 	ld c, 128  ; normal
-; 	dec a
-; 	jr z, pcg_generate_room__spawn_mars_walker_right_difficulty_set
-; 	ld c, 196  ; hard
-; 	dec a
-; 	jr z, pcg_generate_room__spawn_mars_walker_right_difficulty_set
-; 	ld c, 255  ; very hard
-; pcg_generate_room__spawn_mars_walker_right_difficulty_set:
-; 	call random_a
-; 	cp c
-; 	ret nc
+	; probability of spawning, depending on the difficulty level:
+	ld c, 96  ; easy
+	ld a, (current_world__difficulty)
+	or a
+	jr z, pcg_generate_room__spawn_mars_walker_right_difficulty_set
+	ld c, 160  ; normal
+	dec a
+	jr z, pcg_generate_room__spawn_mars_walker_right_difficulty_set
+	ld c, 224  ; hard
+	dec a
+	jr z, pcg_generate_room__spawn_mars_walker_right_difficulty_set
+	ld c, 255  ; very hard
+pcg_generate_room__spawn_mars_walker_right_difficulty_set:
+	call random_a
+	cp c
+	ret nc
 
 	; spawn walker:
 	ld c, iyl  ; type

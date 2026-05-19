@@ -139,12 +139,12 @@ state_play:
 ; 		ld a, 2
 ; 		ld (player_inventory_n_small_keys), a
 		ld (global_state__objects + TAG_MAP_PIECE1), a
-		ld (global_state__objects + TAG_MAP_PIECE2), a
-		ld (global_state__objects + TAG_MAP_PIECE3), a
-		ld (global_state__objects + TAG_MAP_PIECE4), a
-		ld (global_state__objects + TAG_MAP_PIECE5), a
-		ld (global_state__objects + TAG_MAP_PIECE6), a
-		ld (global_state__objects + TAG_MAP_PIECE7), a
+; 		ld (global_state__objects + TAG_MAP_PIECE2), a
+; 		ld (global_state__objects + TAG_MAP_PIECE3), a
+; 		ld (global_state__objects + TAG_MAP_PIECE4), a
+; 		ld (global_state__objects + TAG_MAP_PIECE5), a
+; 		ld (global_state__objects + TAG_MAP_PIECE6), a
+; 		ld (global_state__objects + TAG_MAP_PIECE7), a
 ; 		ld (global_state__objects + TAG_TELEPORTER1), a
 ; 		ld (global_state__objects + TAG_TELEPORTER2), a
 ; 		ld (global_state__objects + TAG_TELEPORTER4), a
@@ -177,14 +177,14 @@ state_play:
 
 state_play_from_continue:
 		; initial player position:
-; 		ld hl, #0100
-		ld hl, #0a00
+		ld hl, #0100
+; 		ld hl, #0a00
 ; 		ld hl, #1000
 ; 		ld hl, #1800
 ; 		ld hl, #1c00
 		ld (player_x), hl
-; 		ld hl, #0b00
-		ld hl, #0a00
+		ld hl, #0b00
+; 		ld hl, #0a00
 ; 		ld hl, #0800
 		ld (player_y), hl
 		ld a, #ff
@@ -192,7 +192,7 @@ state_play_from_continue:
 
 		; generate area:
 		ld hl, pcg_generate_area
-; 		ld e, 0  ; area to generate
+		ld e, 0  ; area to generate
 ; 		ld e, 1  ; area to generate
 ; 		ld e, 2  ; area to generate
 ; 		ld e, 3  ; area to generate
@@ -201,12 +201,12 @@ state_play_from_continue:
 ; 		ld e, 7  ; area to generate
 ; 		ld e, 8  ; xibalba
 ; 		ld e, 9  ; atlantis
-		ld e, 10  ; mars
+; 		ld e, 10  ; mars
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
 
 		; generate room:
-; 		ld e, START_ROOM_ID
+		ld e, START_ROOM_ID
 ; 		ld e, GUARDIAN_CAIMAN1_ROOM_ID
 ; 		ld e, GUARDIAN_CAIMAN2_ROOM_ID
 ; 		ld e, 18
@@ -215,7 +215,7 @@ state_play_from_continue:
 ; 		ld e, 2
 ; 		ld e, 3  ; <- third boss
 ; 		ld e, 17  ; <- fourth boss
-		ld e, 0
+; 		ld e, 0
 ; 		ld e, EIGHT_BRIDGE_ROOM_ID
 ; 		ld e, TELEPORTER_ROOM_ID
 ; 		ld e, TEMPLE_OF_POSEIDON_ID

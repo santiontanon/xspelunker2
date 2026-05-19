@@ -1,10 +1,5 @@
 to do:
 
-***- tile mars walker:
-  ***- walk forward-backward (both left and right variants)
-  ***- shoot (bullets? lasers? fire? (I have 3 sprites I can use to play with this))
-  ***- adjust spawn rate based on difficulty level (pcg_generate_room__spawn_mars_walker_left)
-
 - moon biome (similar to mars, it could even be the same with palette changed)
   - If the player enters a world name like "ATLANTIS", "AZTLAN", or "COH", trigger a world where the "Firestone forge" (in the Moon) is active (see if clue in ATLANTIS_TABLET_5_1 is enough).
 - music: (brain 12, 15, 23, 25 have potential)
