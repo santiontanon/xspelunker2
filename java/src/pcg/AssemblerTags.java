@@ -258,6 +258,8 @@ public class AssemblerTags {
         "TAG_ENEMY_STONE_OWL",
         "TAG_ENEMY_SENTINEL",
         "TAG_ENEMY_UFO",
+        "TAG_ENEMY_MARS_WALKER_RIGHT",
+        "TAG_ENEMY_MARS_WALKER_LEFT",
     };
     
 

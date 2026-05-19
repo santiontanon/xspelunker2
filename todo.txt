@@ -1,13 +1,10 @@
 to do:
 
 ***- mars tile enemy: large mech
-    OK - generate tiles / nametables for the left-version too
-    ***- bring the tiles/nametable to assembler
-    ***- add possible spawn locations for the right and left-facing versions (like sentinel)
-    ***- spawn them (for now just in the idle position, both left and right)
-    ***- when player is closeby, wake up
-    ***- walk forward-backward
-    ***- shoot (bullets? lasers? fire? (I have 3 sprites I can use to play with this))
+  ***- when player is closeby, wake up
+  ***- walk forward-backward (both left and right variants)
+  ***- shoot (bullets? lasers? fire? (I have 3 sprites I can use to play with this))
+  ***- adjust spawn rate based on difficulty level (pcg_generate_room__spawn_mars_walker_left)
 
 - moon biome (similar to mars, it could even be the same with palette changed)
   - If the player enters a world name like "ATLANTIS", "AZTLAN", or "COH", trigger a world where the "Firestone forge" (in the Moon) is active (see if clue in ATLANTIS_TABLET_5_1 is enough).

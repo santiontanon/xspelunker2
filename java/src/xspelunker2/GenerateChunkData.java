@@ -349,7 +349,10 @@ public class GenerateChunkData {
             case "lava-generator":
                 return 13;
             case "sentinel":
+            case "walker-right":
                 return 14;
+            case "walker-left":
+                return 15;
             default:
                 throw new Exception("unsuported chunk location type: " + type);
         }

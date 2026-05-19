@@ -143,6 +143,10 @@ update_tile_objects_loop:
 		jp z, update_tile_objects_enemy_sentinel
 		cp TAG_ENEMY_UFO
 		jp z, update_tile_objects_enemy_ufo
+		cp TAG_ENEMY_MARS_WALKER_RIGHT
+		jp z, update_tile_objects_enemy_mars_walker_right
+		cp TAG_ENEMY_MARS_WALKER_LEFT
+		jp z, update_tile_objects_enemy_mars_walker_left
 		cp TAG_LOST_VENDOR
 		jp z, update_tile_objects_lost_vendor
 update_tile_objects_loop_continue:
@@ -436,9 +440,9 @@ room_render_tile_objects_loop:
 		cp TAG_BREAKABLE_WALL2
 		jp z, room_render_tile_objects_loop_continue
 		cp TAG_BREAKABLE_WALL3
-		jr z, room_render_tile_objects_loop_continue
+		jp z, room_render_tile_objects_loop_continue
 		cp TAG_BREAKABLE_WALL4
-		jr z, room_render_tile_objects_loop_continue
+		jp z, room_render_tile_objects_loop_continue
 		cp TAG_DOOR_VERTICAL
 		jp z, room_render_tile_objects_render_v_door
 		cp TAG_DOOR_HORIZONTAL
@@ -465,6 +469,10 @@ room_render_tile_objects_loop:
 		jp z, room_render_tile_objects_render_enemy_sentinel
 		cp TAG_ENEMY_UFO
 		jp z, room_render_tile_objects_render_enemy_ufo
+		cp TAG_ENEMY_MARS_WALKER_RIGHT
+		jp z, room_render_tile_objects_render_enemy_mars_walker_right
+		cp TAG_ENEMY_MARS_WALKER_LEFT
+		jp z, room_render_tile_objects_render_enemy_mars_walker_left
 		cp TAG_POSEIDON_LEVER
 		jp z, room_render_tile_objects_render_combination_lever
 		cp TAG_POSEIDON_BOSS_DISPLAY
@@ -789,6 +797,10 @@ room_undraw_tile_objects_loop:
 		jp z, room_render_tile_objects_undraw_enemy_sentinel
 		cp TAG_ENEMY_UFO
 		jp z, room_render_tile_objects_undraw_enemy_ufo
+		cp TAG_ENEMY_MARS_WALKER_RIGHT
+		jp z, room_render_tile_objects_undraw_enemy_mars_walker
+		cp TAG_ENEMY_MARS_WALKER_LEFT
+		jp z, room_render_tile_objects_undraw_enemy_mars_walker
 		inc hl
 		ld c, (hl)  ; x
 		ld ixl, c
@@ -1286,6 +1298,8 @@ ENDR
 	dw object_interaction_function_empty  ; TAG_ENEMY_STONE_OWL
 	dw object_interaction_function_empty  ; TAG_ENEMY_SENTINEL
 	dw object_interaction_function_empty  ; TAG_ENEMY_UFO
+	dw object_interaction_function_empty  ; TAG_ENEMY_MARS_WALKER_RIGHT
+	dw object_interaction_function_empty  ; TAG_ENEMY_MARS_WALKER_LEFT
 
 object_interaction_inventory_slot:
 	db #ff, #ff, #ff, #ff, #ff  ; none, block puzzles: 0
@@ -2975,6 +2989,8 @@ ENDR
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_ENEMY_STONE_OWL
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_ENEMY_SENTINEL
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_ENEMY_UFO
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_ENEMY_MARS_WALKER_RIGHT
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_ENEMY_MARS_WALKER_LEFT
 
 
 tile_object_regular_object_gfx:

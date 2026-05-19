@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="33">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="35">
  <properties>
   <property name="down" value="stairs"/>
  </properties>
@@ -32,5 +32,7 @@
   <object id="27" type="breakable-up" x="48" y="0" width="32" height="16"/>
   <object id="28" type="big-item" x="48" y="56" width="32" height="24"/>
   <object id="29" type="4x4-item" x="48" y="48" width="32" height="32"/>
+  <object id="33" type="walker-right" x="16" y="48" width="32" height="32"/>
+  <object id="34" type="walker-left" x="80" y="48" width="32" height="32"/>
  </objectgroup>
 </map>

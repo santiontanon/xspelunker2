@@ -473,13 +473,15 @@ pcg_generate_room__fg_loop_x:
 pcg_generate_room__fg_chunk_object_loop:
 					ld a, (hl)
 					or a
-					jr z, pcg_generate_room__fg_chunk_object_loop_done
+					jp z, pcg_generate_room__fg_chunk_object_loop_done
 					cp CHUNK_LOCATION_PUSHABLE_BLOCK
 					jr z, pcg_generate_room__fg_chunk_object_loop_spawn_pushable_block
 					cp CHUNK_LOCATION_LAVA_GENERATOR
 					jr z, pcg_generate_room__fg_chunk_object_loop_spawn_lava_generator
-					cp CHUNK_LOCATION_SENTINEL
+					cp CHUNK_LOCATION_SENTINEL  ; CHUNK_LOCATION_WALKER_RIGHT
 					jr z, pcg_generate_room__fg_chunk_object_loop_spawn_sentinel
+					cp CHUNK_LOCATION_WALKER_LEFT
+					jr z, pcg_generate_room__fg_chunk_object_loop_spawn_mars_walker_left
 					jr pcg_generate_room__fg_chunk_object_loop_next
 pcg_generate_room__fg_chunk_object_loop_spawn_pushable_block:
 					; it's a pushable block, spawn it:
@@ -523,6 +525,9 @@ pcg_generate_room__fg_chunk_object_loop_spawn_lava_generator:
 					pop hl
 					jr pcg_generate_room__fg_chunk_object_loop_next
 pcg_generate_room__fg_chunk_object_loop_spawn_sentinel:
+					ld a, (current_area__id)
+					cp 10  ; mars (in mars, there are no sentinels, they correspond to walkers)
+					jr z, pcg_generate_room__fg_chunk_object_loop_spawn_mars_walker_right
 					; it's an atlantis sentinel robot, spawn it:
 					push hl
 					push de
@@ -532,11 +537,37 @@ pcg_generate_room__fg_chunk_object_loop_spawn_sentinel:
 						call call_hl_in_page_c_8000
 					pop de
 					pop hl
-; 					jr pcg_generate_room__fg_chunk_object_loop_next
+					jr pcg_generate_room__fg_chunk_object_loop_next
+pcg_generate_room__fg_chunk_object_loop_spawn_mars_walker_right:
+					; it's an atlantis sentinel robot, spawn it:
+					push hl
+					push de
+					push iy
+						ex de, hl
+						ld c, PCG_PAGE_ENEMIES
+						ld hl, pcg_generate_room__spawn_mars_walker_right
+						call call_hl_in_page_c_8000
+					pop iy
+					pop de
+					pop hl
+					jr pcg_generate_room__fg_chunk_object_loop_next					
+pcg_generate_room__fg_chunk_object_loop_spawn_mars_walker_left:
+					; it's an atlantis sentinel robot, spawn it:
+					push hl
+					push de
+					push iy
+						ex de, hl
+						ld c, PCG_PAGE_ENEMIES
+						ld hl, pcg_generate_room__spawn_mars_walker_left
+						call call_hl_in_page_c_8000
+					pop iy
+					pop de
+					pop hl
+					; jr pcg_generate_room__fg_chunk_object_loop_next
 pcg_generate_room__fg_chunk_object_loop_next:
 					ld bc, 5
 					add hl, bc
-					jr pcg_generate_room__fg_chunk_object_loop
+					jp pcg_generate_room__fg_chunk_object_loop
 pcg_generate_room__fg_chunk_object_loop_done:
 				pop bc
 			pop hl

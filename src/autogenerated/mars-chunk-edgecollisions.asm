@@ -29,6 +29,7 @@
   db #21, #ff, #3f, #ff  ; data/mars/room1000-3.tmx
   db #21, #ff, #3f, #ff  ; data/mars/room1000-4.tmx
   db #21, #ff, #3f, #ff  ; data/mars/room1000-5.tmx
+  db #21, #ff, #3f, #ff  ; data/mars/room1000-6.tmx
   db #21, #ff, #3f, #c3  ; data/mars/room1001-1.tmx
   db #21, #ff, #3f, #e7  ; data/mars/room1001-2.tmx
   db #21, #ff, #3f, #c3  ; data/mars/room1001-3.tmx
@@ -39,6 +40,7 @@
   db #21, #ff, #21, #ff  ; data/mars/room1010-3.tmx
   db #21, #ff, #21, #ff  ; data/mars/room1010-4.tmx
   db #21, #ff, #21, #ff  ; data/mars/room1010-5.tmx
+  db #21, #ff, #21, #ff  ; data/mars/room1010-6.tmx
   db #21, #ff, #21, #c3  ; data/mars/room1011-1.tmx
   db #21, #ff, #21, #e7  ; data/mars/room1011-2.tmx
   db #21, #ff, #21, #c3  ; data/mars/room1011-3.tmx
