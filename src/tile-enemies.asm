@@ -2323,27 +2323,118 @@ update_tile_objects_enemy_mars_walker_left:
 	inc (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
 	; states:
 	; - 0: rest
-; 	; - 1: detected player (activating)
-; 	; - 2: walk forward
-; 	; - 3: walk backwards
-; 	; - 4: shoot
-; 	; - 5: player too far (deactivating)
-; 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)
-; 	or a
-; 	jr z, update_tile_objects_enemy_sentinel_state_0
-; 	dec a
-; 	jr z, update_tile_objects_enemy_sentinel_state_1
-; 	dec a
-; 	jp z, update_tile_objects_enemy_sentinel_state_2
-; 	dec a
-; 	jp z, update_tile_objects_enemy_sentinel_state_3
-; 	dec a
-; 	jp z, update_tile_objects_enemy_sentinel_state_4
-; 	dec a
-; 	jp z, update_tile_objects_enemy_sentinel_state_5
-; 	; we should never get here
-; update_tile_objects_enemy_sentinel_state_0:
-;	; ...
+	; - 1: detected player (activating)
+	; - 2: state switch
+	; - 3: walk forward
+	; - 4: walk backwards
+	; - 5: shoot
+	; - 6: player too far (deactivating)
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)
+	or a
+	jr z, update_tile_objects_enemy_mars_walker_state_0
+	dec a
+	jr z, update_tile_objects_enemy_mars_walker_state_1
+	dec a
+	jp z, update_tile_objects_enemy_mars_walker_state_2
+	dec a
+	jp z, update_tile_objects_enemy_mars_walker_state_3
+	dec a
+	jp z, update_tile_objects_enemy_mars_walker_state_4
+	dec a
+	jp z, update_tile_objects_enemy_mars_walker_state_5
+	dec a
+	jp z, update_tile_objects_enemy_mars_walker_state_6
+	; we should never get here
+update_tile_objects_enemy_mars_walker_state_0:
+	; state 0: resting
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1)
+	and #08  ; keep whether we are facing left or right
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1), a
+	; check if player is closeby:
+	ld a, (player_x + 1)
+	sub (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	cp 12
+	jp p, update_tile_objects_enemy_mars_walker_continue
+	cp -12
+	jp m, update_tile_objects_enemy_mars_walker_continue
+	ld a, (player_y + 1)
+	sub (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	cp 10
+	jp p, update_tile_objects_enemy_mars_walker_continue
+	cp -10
+	jp m, update_tile_objects_enemy_mars_walker_continue
+	; player is closeby, activating!
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 1
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER), 0
+	jr update_tile_objects_enemy_mars_walker_continue
+
+update_tile_objects_enemy_mars_walker_state_1:
+	; state 1: activating
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1)
+	and #08  ; keep whether we are facing left or right
+	or #01
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1), a
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	cp 4
+	jr c, update_tile_objects_enemy_mars_walker_continue
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1)
+	and #08  ; keep whether we are facing left or right
+	or #02
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1), a
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 2
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER), 0
+	jr update_tile_objects_enemy_mars_walker_continue
+
+update_tile_objects_enemy_mars_walker_state_2:
+	; state 2: state switch
+	ld a, (player_x + 1)
+	sub (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	cp 32
+	jp p, update_tile_objects_enemy_mars_walker_state_2_deactivate
+	cp -32
+	jp m, update_tile_objects_enemy_mars_walker_state_2_deactivate
+	ld a, (player_y + 1)
+	sub (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	cp 20
+	jp p, update_tile_objects_enemy_mars_walker_state_2_deactivate
+	cp -20
+	jp m, update_tile_objects_enemy_mars_walker_state_2_deactivate
+	; player is sitll closeby:
+	; ...
+	jr update_tile_objects_enemy_mars_walker_continue
+update_tile_objects_enemy_mars_walker_state_2_deactivate:
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 6
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER), 0
+	jr update_tile_objects_enemy_mars_walker_continue
+
+
+update_tile_objects_enemy_mars_walker_state_3:
+	; state 3: walk forward
+	; ...
+	jr update_tile_objects_enemy_mars_walker_continue
+
+update_tile_objects_enemy_mars_walker_state_4:
+	; state 4: walk backward
+	; ...
+	jr update_tile_objects_enemy_mars_walker_continue
+
+update_tile_objects_enemy_mars_walker_state_5:
+	; state 5: shoot
+	; ...
+	jr update_tile_objects_enemy_mars_walker_continue
+
+update_tile_objects_enemy_mars_walker_state_6:
+	; state 6: deactivating
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1)
+	and #07  ; keep whether we are facing left or right
+	or #01
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1), a
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	cp 4
+	jr c, update_tile_objects_enemy_mars_walker_continue
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), 0
+	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER), 0
+	; jr update_tile_objects_enemy_mars_walker_continue
 
 update_tile_objects_enemy_mars_walker_continue:
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_EXTRA1)

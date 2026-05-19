@@ -1,7 +1,6 @@
 to do:
 
-***- mars tile enemy: large mech
-  ***- when player is closeby, wake up
+***- tile mars walker:
   ***- walk forward-backward (both left and right variants)
   ***- shoot (bullets? lasers? fire? (I have 3 sprites I can use to play with this))
   ***- adjust spawn rate based on difficulty level (pcg_generate_room__spawn_mars_walker_left)
@@ -16,7 +15,7 @@ to do:
   - mars
   - moon
 - 6th boss: (ideas: "The Solar Stone Jaguar", "The Martian Terracotta Warrior", "The Dust Stone Golem"). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer). Another idea: https://en.wikipedia.org/wiki/Human_sacrifice_in_Maya_culture#/media/File:MA_D293_Maya_stone_carving_from_Copan.jpg
-  - before the boss fight: underground cave with a broken ancient robot that talks if you turn it on with the golden key (in a mix of English and Maya). Gives you a better raygun (key for alien boss), add as an achievement for the gameover screen.  
+  - before the boss fight: underground cave with a broken ancient robot that talks if you turn it on with the golden key (in a mix of English and Maya, maybe stating a riddle). Gives you a better raygun (key for alien boss), add as an achievement for the gameover screen.  
   - add boss name to the stats for game over screen
 - 7th boss (ideas: "The Lunar Obsidian Sentinel" (tall, slender, smooth black, reflective surfaces), "The Lunar Crystal Serpent", "The Moon Stone Monolith"). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
   - add boss name to the stats for game over screen
