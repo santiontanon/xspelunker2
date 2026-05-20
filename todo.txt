@@ -2,7 +2,6 @@ to do:
 
 ***- moon biome:
   ***- draft in GIMP/TILED:
-    ***- platforms + ropes/cables
     ***- alternative decoration to the alien vat
   ***- basic patterns
     ***- more variety in the moon regolith (iterate on it, the current one is just ok, purple instead of dark blue?)
