@@ -1,11 +1,24 @@
 to do:
 
-- moon biome (similar to mars, it could even be the same with palette changed)
-  - If the player enters a world name like "ATLANTIS", "AZTLAN", or "COH", trigger a world where the "Firestone forge" (in the Moon) is active (see if clue in ATLANTIS_TABLET_5_1 is enough).
+***- moon biome:
+  ***- draft in GIMP/TILED:
+    ***- platforms + ropes/cables
+    ***- alternative decoration to the alien vat
+  ***- basic patterns
+    ***- more variety in the moon regolith (iterate on it, the current one is just ok, purple instead of dark blue?)
+  ***- boss/combination/block patterns
+  ***- ladder patterns
+  ***- think of what additional element to have (lava/water does not make sense in the moon)
+  ***- variety patterns
+  ***- add to assembler
+  ***- sprite enemies (reuse drones / robots from mars)
+  ***- tile enemy (come up with one that makes sense in the moon, or reuse mars one?)
+  ***- If the player enters a world name like "ATLANTIS", "AZTLAN", or "COH", trigger a world where the "Firestone forge" (in the Moon) is active (see if clue in ATLANTIS_TABLET_5_1 is enough).
+
 - music: (brain 12, 15, 23, 25 have potential)
-  - ending aliens
+  - ending aliens (look at "story" from Triton, can I do something like that?)
   - ending beach (reuse the story jazzy song? just some wave sfx in the background?)
-  - xibalba (look at "story" from Triton, can I do something like that?)
+  - xibalba
   - atlantis
   - mars
   - moon
