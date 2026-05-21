@@ -1355,182 +1355,183 @@ public class RenderedArea {
     
     public void prettifyRoomsMoon(RoomChunk fg_chunks[][])
     {
-//        // First reconstruct ladders (this does not need RNG):
-//        for(int i = 0;i<a.height*24;i++) {
-//            for(int j = 0;j<a.width*32;j++) {
-//                RoomChunk c = fg_chunks[j/RoomChunk.CHUNK_WIDTH][i/RoomChunk.CHUNK_HEIGHT];
-//                if (c == null) continue;
-//                int tile = c.tiles[j%RoomChunk.CHUNK_WIDTH][i%RoomChunk.CHUNK_HEIGHT];
-//                if (tile == 15*16 + 8) {
-//                    // ladders stone:
-//                    for(int k = i - 1;k>=0;k--) {
-//                        RoomChunk c2 = fg_chunks[j/RoomChunk.CHUNK_WIDTH][k/RoomChunk.CHUNK_HEIGHT];
-//                        if (c2 == null) break;
-//                        int tile2 = c2.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT];
-//                        if (tile2 == 0) {
-//                            c2.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT] = 15*16 + 8;
-//                            c2.tiles[j%RoomChunk.CHUNK_WIDTH + 1][k%RoomChunk.CHUNK_HEIGHT] = 10*16 + 7;
-//                        } else {
-//                            break;
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        // background (follow the same random procedure as used in assembler):
-//        List<Integer> roomIDs = new ArrayList<>();
-//        for(int i = 0;i<a.height;i++) {
-//            for(int j = 0;j<a.width;j++) {                
-//                if (a.rooms[j][i] >= 0 && !roomIDs.contains(a.rooms[j][i])) {
-//                    roomIDs.add(a.rooms[j][i]);
-//                }
-//            }
-//        }
-//
-//        for(int roomID:roomIDs) {
-//            // set the random number generator in the same state as it will be 
-//            // on the MSX side:
-//            MSXRandom r = new MSXRandom(a.rng_seed1, a.rng_seed2);
-//            for(int i = 0;i<roomID;i++) {
-//                r.nextBoolean();
-//            }
-//            for(int i = 0;i<a.height * PCGArea.ROOM_HEIGHT;i++) {
-//                for(int j = 0;j<a.width * PCGArea.ROOM_WIDTH;j++) {                
-//                    if (a.rooms[j/2][i/2] == roomID &&
-//                        pieceTypes[j][i] >= 0 &&
-//                        !fg_chunks[j][i].tags.containsKey("boss")) {
-//                        if (r.nextInt(4) == 0) {
-//                            r.nextBoolean();
-//                        }
-//                    }
-//                }
-//            }
-//                        
-//            for(int i = 0;i<a.height*24;i++) {
-//                for(int j = 0;j<a.width*32;j++) {
-//                    if (a.rooms[j/32][i/24] != roomID) continue;
-//                    RoomChunk c = fg_chunks[j/RoomChunk.CHUNK_WIDTH][i/RoomChunk.CHUNK_HEIGHT];
-//                    int tile = c.tiles[j%RoomChunk.CHUNK_WIDTH][i%RoomChunk.CHUNK_HEIGHT];
-//                    switch(tile) {
-//                        case 15*16 + 15:
-//                            // ropes:
-//                            for(int k = i - 1;k>=0;k--) {
-//                                RoomChunk c2 = fg_chunks[j/RoomChunk.CHUNK_WIDTH][k/RoomChunk.CHUNK_HEIGHT];
-//                                if (c2 == null) break;
-//                                int tile2 = c2.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT];
-//                                if (tile2 == 0) {
-//                                    if (r.nextInt(4) == 0) {
-//                                        c.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT] = 8*16 + 3;
-//                                    } else {
-//                                        c2.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT] = 8*16 + 6;
-//                                    }
-//                                } else {
-//                                    break;
-//                                }
-//                            }
-//                            break;
-//                        case 8*16 + 6:
-//                            // ropes:
-//                            break;
-//                        case 15*16 + 12:
-//                            // spike tip:
-//                            if (r.nextInt(2) == 0) {
-//                                // ...
-//                            } else {
-//                                c.tiles[j%RoomChunk.CHUNK_WIDTH][i%RoomChunk.CHUNK_HEIGHT] = 8*16 + 13;
-//                            }
-//                            if (r.nextInt(2) == 0) {
-//                                c.tiles[j%RoomChunk.CHUNK_WIDTH][(i%RoomChunk.CHUNK_HEIGHT) + 1] = 8*16 + 4;
-//                            } else {
-//                                c.tiles[j%RoomChunk.CHUNK_WIDTH][(i%RoomChunk.CHUNK_HEIGHT) + 1] = 8*16 + 5;
-//                            }
-//                            break;
-//                        case 15*16 + 14:
-//                            // platforms:
-//                            if (r.nextInt(2) == 1) {
-//                                c.tiles[j%RoomChunk.CHUNK_WIDTH][i%RoomChunk.CHUNK_HEIGHT] = 8*16 + 10;
-//                            }
-//                            break;
-//                        case 15*16 + 13:
-//                            // wall top:
-//                            {   
-//                                int choices[] = {15*16 + 13, 6*16 + 0, 6*16 + 1, 6*16 + 2, 6*16 + 3};
-//                                int a = r.nextInt(choices.length);
-//                                c.tiles[j%RoomChunk.CHUNK_WIDTH][i%RoomChunk.CHUNK_HEIGHT] = choices[a];
-//                                break;
-//                            }
-//                        case 15*16 + 11:
-//                            // wall right:
-//                            {   
-//                                int choices[] = {15*16 + 11, 7*16 + 5, 7*16 + 5};
-//                                int a = r.nextInt(choices.length);
-//                                c.tiles[j%RoomChunk.CHUNK_WIDTH][i%RoomChunk.CHUNK_HEIGHT] = choices[a];
-//                                break;
-//                            }
-//                        case 15*16 + 10:
-//                            // wall left:
-//                            {   
-//                                int choices[] = {15*16 + 10, 7*16 + 3, 7*16 + 4};
-//                                int a = r.nextInt(choices.length);
-//                                c.tiles[j%RoomChunk.CHUNK_WIDTH][i%RoomChunk.CHUNK_HEIGHT] = choices[a];
-//                                break;
-//                            }
-//                        case 15*16 + 9:
-//                            // wall bottom:
-//                            {   
-//                                int choices[] = {15*16 + 9, 7*16 + 13, 7*16 + 14};
-//                                int a = r.nextInt(choices.length);
-//                                c.tiles[j%RoomChunk.CHUNK_WIDTH][i%RoomChunk.CHUNK_HEIGHT] = choices[a];
-//                                break;
-//                            }
-//                        case 15*16 + 7:
-//                            // rubble:
-//                            {   
-//                                int choices[] = {15*16 + 7, 9*16 + 2, 9*16 + 3, 9*16 + 4};
-//                                int a = r.nextInt(choices.length);
-//                                c.tiles[j%RoomChunk.CHUNK_WIDTH][i%RoomChunk.CHUNK_HEIGHT] = choices[a];
-//                                break;
-//                            }
-//                        case 15*16 + 5:
-//                            {
-//                                // dragon
-//                                c.tiles[j%RoomChunk.CHUNK_WIDTH + 1][i%RoomChunk.CHUNK_HEIGHT] = 11*16 + 13;
-//                                c.tiles[j%RoomChunk.CHUNK_WIDTH + 2][i%RoomChunk.CHUNK_HEIGHT] = 11*16 + 14;
-//                                c.tiles[j%RoomChunk.CHUNK_WIDTH + 3][i%RoomChunk.CHUNK_HEIGHT] = 11*16 + 15;
-//                                c.tiles[j%RoomChunk.CHUNK_WIDTH + 0][i%RoomChunk.CHUNK_HEIGHT + 1] = 12*16 + 12;
-//                                c.tiles[j%RoomChunk.CHUNK_WIDTH + 1][i%RoomChunk.CHUNK_HEIGHT + 1] = 12*16 + 13;
-//                                c.tiles[j%RoomChunk.CHUNK_WIDTH + 2][i%RoomChunk.CHUNK_HEIGHT + 1] = 12*16 + 14;
-//                                c.tiles[j%RoomChunk.CHUNK_WIDTH + 3][i%RoomChunk.CHUNK_HEIGHT + 1] = 12*16 + 15;
-//                                c.tiles[j%RoomChunk.CHUNK_WIDTH + 0][i%RoomChunk.CHUNK_HEIGHT + 2] = 13*16 + 12;
-//                                c.tiles[j%RoomChunk.CHUNK_WIDTH + 1][i%RoomChunk.CHUNK_HEIGHT + 2] = 13*16 + 13;
-//                                c.tiles[j%RoomChunk.CHUNK_WIDTH + 2][i%RoomChunk.CHUNK_HEIGHT + 2] = 13*16 + 14;
-//                                c.tiles[j%RoomChunk.CHUNK_WIDTH + 3][i%RoomChunk.CHUNK_HEIGHT + 2] = 13*16 + 15;
-//                                c.tiles[j%RoomChunk.CHUNK_WIDTH + 0][i%RoomChunk.CHUNK_HEIGHT + 3] = 14*16 + 12;
-//                                c.tiles[j%RoomChunk.CHUNK_WIDTH + 1][i%RoomChunk.CHUNK_HEIGHT + 3] = 14*16 + 13;
-//                                c.tiles[j%RoomChunk.CHUNK_WIDTH + 2][i%RoomChunk.CHUNK_HEIGHT + 3] = 14*16 + 14;
-//                                c.tiles[j%RoomChunk.CHUNK_WIDTH + 3][i%RoomChunk.CHUNK_HEIGHT + 3] = 14*16 + 15;
-//                                break;
-//                            }
-//                        case 15*16 + 4:
-//                            // small bricks:
-//                            {   
-//                                int choices[] = {15*16 + 4, 8*16 + 14, 8*16 + 15};
-//                                int a = r.nextInt(choices.length);
-//                                c.tiles[j%RoomChunk.CHUNK_WIDTH][i%RoomChunk.CHUNK_HEIGHT] = choices[a];
-//                                break;
-//                            }
-//                        case 15*16 + 3:
-//                            // small center:
-//                            {   
-//                                int choices[] = {15*16 + 3, 7*16 + 0, 7*16 + 1, 7*16 + 2};
-//                                int a = r.nextInt(choices.length);
-//                                c.tiles[j%RoomChunk.CHUNK_WIDTH][i%RoomChunk.CHUNK_HEIGHT] = choices[a];
-//                                break;
-//                            }
-//                    }
-//                }
-//            }
-//        }
+        // First reconstruct ladders (this does not need RNG):
+        for(int i = 0;i<a.height*24;i++) {
+            for(int j = 0;j<a.width*32;j++) {
+                RoomChunk c = fg_chunks[j/RoomChunk.CHUNK_WIDTH][i/RoomChunk.CHUNK_HEIGHT];
+                if (c == null) continue;
+                int tile = c.tiles[j%RoomChunk.CHUNK_WIDTH][i%RoomChunk.CHUNK_HEIGHT];
+                if (tile == 15*16 + 8) {
+                    // ladders stone:
+                    for(int k = i - 1;k>=0;k--) {
+                        RoomChunk c2 = fg_chunks[j/RoomChunk.CHUNK_WIDTH][k/RoomChunk.CHUNK_HEIGHT];
+                        if (c2 == null) break;
+                        int tile2 = c2.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT];
+                        if (tile2 == 0) {
+                            c2.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT] = 15*16 + 8;
+                            c2.tiles[j%RoomChunk.CHUNK_WIDTH + 1][k%RoomChunk.CHUNK_HEIGHT] = 10*16 + 7;
+                        } else {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        // background (follow the same random procedure as used in assembler):
+        List<Integer> roomIDs = new ArrayList<>();
+        for(int i = 0;i<a.height;i++) {
+            for(int j = 0;j<a.width;j++) {                
+                if (a.rooms[j][i] >= 0 && !roomIDs.contains(a.rooms[j][i])) {
+                    roomIDs.add(a.rooms[j][i]);
+                }
+            }
+        }
+
+        for(int roomID:roomIDs) {
+            // set the random number generator in the same state as it will be 
+            // on the MSX side:
+            MSXRandom r = new MSXRandom(a.rng_seed1, a.rng_seed2);
+            for(int i = 0;i<roomID;i++) {
+                r.nextBoolean();
+            }
+            for(int i = 0;i<a.height * PCGArea.ROOM_HEIGHT;i++) {
+                for(int j = 0;j<a.width * PCGArea.ROOM_WIDTH;j++) {                
+                    if (a.rooms[j/2][i/2] == roomID &&
+                        pieceTypes[j][i] >= 0 &&
+                        !fg_chunks[j][i].tags.containsKey("boss")) {
+                        if (r.nextInt(4) == 0) {
+                            r.nextBoolean();
+                        }
+                    }
+                }
+            }
+                        
+            for(int i = 0;i<a.height*24;i++) {
+                for(int j = 0;j<a.width*32;j++) {
+                    if (a.rooms[j/32][i/24] != roomID) continue;
+                    RoomChunk c = fg_chunks[j/RoomChunk.CHUNK_WIDTH][i/RoomChunk.CHUNK_HEIGHT];
+                    int tile = c.tiles[j%RoomChunk.CHUNK_WIDTH][i%RoomChunk.CHUNK_HEIGHT];
+                    switch(tile) {
+                        case 15*16 + 15:
+                            // ropes:
+                            for(int k = i - 1;k>=0;k--) {
+                                RoomChunk c2 = fg_chunks[j/RoomChunk.CHUNK_WIDTH][k/RoomChunk.CHUNK_HEIGHT];
+                                if (c2 == null) break;
+                                int tile2 = c2.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT];
+                                if (tile2 == 0) {
+                                    if (r.nextInt(4) == 0) {
+                                        c.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT] = 7*16 + 6;
+                                    } else {
+                                        c2.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT] = 8*16 + 6;
+                                    }
+                                } else {
+                                    break;
+                                }
+                            }
+                            break;
+                        case 15*16 + 9:
+                            // moon floor bg:
+                            {   
+                                int choices[] = {15*16 + 9, 6*16 + 0, 6*16 + 1, 6*16 + 2};
+                                int a = r.nextInt(choices.length);
+                                c.tiles[j%RoomChunk.CHUNK_WIDTH][i%RoomChunk.CHUNK_HEIGHT] = choices[a];
+                                break;
+                            }                            
+                        case 15*16 + 12:
+                            // spike tip:
+                            if (r.nextInt(2) == 0) {
+                                // ...
+                            } else {
+                                c.tiles[j%RoomChunk.CHUNK_WIDTH][i%RoomChunk.CHUNK_HEIGHT] = 8*16 + 13;
+                            }
+                            if (r.nextInt(2) == 0) {
+                                c.tiles[j%RoomChunk.CHUNK_WIDTH][(i%RoomChunk.CHUNK_HEIGHT) + 1] = 7*16 + 7;
+                            } else {
+                                c.tiles[j%RoomChunk.CHUNK_WIDTH][(i%RoomChunk.CHUNK_HEIGHT) + 1] = 7*16 + 8;
+                            }
+                            break;
+                        case 15*16 + 14:
+                            // platforms:
+                            if (r.nextInt(2) == 1) {
+                                c.tiles[j%RoomChunk.CHUNK_WIDTH][i%RoomChunk.CHUNK_HEIGHT] = 8*16 + 10;
+                            }
+                            break;
+                        case 15*16 + 13:
+                            // wall top:
+                            {   
+                                int choices[] = {15*16 + 13, 7*16 + 1, 7*16 + 2, 7*16 + 3, 7*16 + 4};
+                                int a = r.nextInt(choices.length);
+                                c.tiles[j%RoomChunk.CHUNK_WIDTH][i%RoomChunk.CHUNK_HEIGHT] = choices[a];
+                                break;
+                            }
+                        case 15*16 + 11:
+                            // wall right:
+                            {   
+                                int choices[] = {15*16 + 11, 7*16 + 13};
+                                int a = r.nextInt(choices.length);
+                                c.tiles[j%RoomChunk.CHUNK_WIDTH][i%RoomChunk.CHUNK_HEIGHT] = choices[a];
+                                break;
+                            }
+                        case 15*16 + 10:
+                            // wall left:
+                            {   
+                                int choices[] = {15*16 + 10, 7*16 + 12};
+                                int a = r.nextInt(choices.length);
+                                c.tiles[j%RoomChunk.CHUNK_WIDTH][i%RoomChunk.CHUNK_HEIGHT] = choices[a];
+                                break;
+                            }
+                        case 15*16 + 6:
+                            // wall bottom:
+                            {   
+                                int choices[] = {15*16 + 6, 8*16 + 1, 8*16 + 2, 8*16 + 3, 8*16 + 4};
+                                int a = r.nextInt(choices.length);
+                                c.tiles[j%RoomChunk.CHUNK_WIDTH][i%RoomChunk.CHUNK_HEIGHT] = choices[a];
+                                break;
+                            }
+                        case 15*16 + 7:
+                            // rubble:
+                            {   
+                                int choices[] = {15*16 + 7, 9*16 + 2, 9*16 + 3, 9*16 + 4};
+                                int a = r.nextInt(choices.length);
+                                c.tiles[j%RoomChunk.CHUNK_WIDTH][i%RoomChunk.CHUNK_HEIGHT] = choices[a];
+                                break;
+                            }
+                        case 15*16 + 5:
+                            {
+                                // face
+                                c.tiles[j%RoomChunk.CHUNK_WIDTH + 1][i%RoomChunk.CHUNK_HEIGHT] = 12*16 + 13;
+                                c.tiles[j%RoomChunk.CHUNK_WIDTH + 2][i%RoomChunk.CHUNK_HEIGHT] = 12*16 + 14;
+                                c.tiles[j%RoomChunk.CHUNK_WIDTH + 3][i%RoomChunk.CHUNK_HEIGHT] = 12*16 + 15;
+                                c.tiles[j%RoomChunk.CHUNK_WIDTH + 0][i%RoomChunk.CHUNK_HEIGHT + 1] = 13*16 + 12;
+                                c.tiles[j%RoomChunk.CHUNK_WIDTH + 1][i%RoomChunk.CHUNK_HEIGHT + 1] = 13*16 + 13;
+                                c.tiles[j%RoomChunk.CHUNK_WIDTH + 2][i%RoomChunk.CHUNK_HEIGHT + 1] = 13*16 + 14;
+                                c.tiles[j%RoomChunk.CHUNK_WIDTH + 3][i%RoomChunk.CHUNK_HEIGHT + 1] = 13*16 + 15;
+                                c.tiles[j%RoomChunk.CHUNK_WIDTH + 0][i%RoomChunk.CHUNK_HEIGHT + 2] = 14*16 + 12;
+                                c.tiles[j%RoomChunk.CHUNK_WIDTH + 1][i%RoomChunk.CHUNK_HEIGHT + 2] = 14*16 + 13;
+                                c.tiles[j%RoomChunk.CHUNK_WIDTH + 2][i%RoomChunk.CHUNK_HEIGHT + 2] = 14*16 + 14;
+                                c.tiles[j%RoomChunk.CHUNK_WIDTH + 3][i%RoomChunk.CHUNK_HEIGHT + 2] = 14*16 + 15;
+                                break;
+                            }
+                        case 15*16 + 4:
+                            // small bricks:
+                            {   
+                                int choices[] = {15*16 + 4, 8*16 + 14, 8*16 + 15};
+                                int a = r.nextInt(choices.length);
+                                c.tiles[j%RoomChunk.CHUNK_WIDTH][i%RoomChunk.CHUNK_HEIGHT] = choices[a];
+                                break;
+                            }
+                        case 15*16 + 3:
+                            // wall center:
+                            {   
+                                int choices[] = {15*16 + 3, 7*16 + 9, 7*16 + 10, 7*16 + 11};
+                                int a = r.nextInt(choices.length);
+                                c.tiles[j%RoomChunk.CHUNK_WIDTH][i%RoomChunk.CHUNK_HEIGHT] = choices[a];
+                                break;
+                            }
+                    }
+                }
+            }
+        }
     }
     
     

@@ -693,7 +693,7 @@ public class RoomChunk {
                     // small bricks:
                     case 8*16 + 14:
                     case 8*16 + 15:
-                    case 15*16 + 6:
+                    case 15*16 + 4:
                         tile = 15*16 + 4;
                         break;
                     // wall center:
@@ -719,105 +719,97 @@ public class RoomChunk {
         for(int i = 0;i<chunk.tiles[0].length;i++) {
             for(int j = 0;j<chunk.tiles.length;j++) {
                 int tile = tiles[j][i];
-//                switch(tile) {
-//                    // ropes (cables):
-//                    case 8*16 + 3:
-//                    case 8*16 + 6:
-//                        tile = 0;  // remove ropes, they will be reconstructed
-//                        break;
-//                    // platforms:
-//                    case 15*16 + 14:
-//                    case 8*16 + 10:
-//                        tile = 15*16 + 14;
-//                        break;
-//                    // wall top:
-//                    case 6*16 + 0:
-//                    case 6*16 + 1:
-//                    case 6*16 + 2:
-//                    case 6*16 + 3:
-//                    case 15*16 + 13:
-//                        tile = 15*16 + 13;
-//                        break;
-//                    // spikes:
-//                    case 8*16 + 13:
-//                    case 15*16 + 12:
-//                        tile = 15*16 + 12;
-//                        break;
-//                    case 8*16 + 4:
-//                    case 8*16 + 5:
-//                        tile = 0;
-//                        break;
-//                    // wall right:
-//                    case 7*16 + 5:
-//                    case 7*16 + 6:
-//                    case 15*16 + 11:
-//                        tile = 15*16 + 11;
-//                        break;
-//                    // wall left:
-//                    case 7*16 + 3:
-//                    case 7*16 + 4:
-//                    case 15*16 + 10:
-//                        tile = 15*16 + 10;
-//                        break;
-//                    // wall bottom:
-//                    case 7*16 + 13:
-//                    case 7*16 + 14:
-//                    case 15*16 + 9:
-//                        tile = 15*16 + 9;
-//                        break;
-//                    // stairs (leave only the bottom piece):
-//                    case 15*16 + 8:
-//                        if (i<CHUNK_HEIGHT-1 && tiles[j][i+1] == 15*16 + 8) {
-//                            tile = 0;
-//                        }
-//                        break;
-//                    case 10*16 + 7:
-//                        if (i<CHUNK_HEIGHT-1 && tiles[j][i+1] == 10*16 + 7) {
-//                            tile = 0;
-//                        }
-//                        break;
-//                    // rubble:
-//                    case 9*16 + 2:
-//                    case 9*16 + 3:
-//                    case 9*16 + 4:
-//                    case 15*16 + 7:
-//                        tile = 15*16 + 7;
-//                        break;
-//                    // medium bricks:
-//                    // ...
-//                    // dragon:
-//                    case 11*16 + 13:
-//                    case 11*16 + 14:
-//                    case 11*16 + 15:
-//                    case 12*16 + 12:
-//                    case 12*16 + 13:
-//                    case 12*16 + 14:
-//                    case 12*16 + 15:
-//                    case 13*16 + 12:
-//                    case 13*16 + 13:
-//                    case 13*16 + 14:
-//                    case 13*16 + 15:
-//                    case 14*16 + 12:
-//                    case 14*16 + 13:
-//                    case 14*16 + 14:
-//                    case 14*16 + 15:
-//                        tile = 0;
-//                        break;
-//                    // small bricks:
-//                    case 8*16 + 14:
-//                    case 8*16 + 15:
-//                    case 15*16 + 6:
-//                        tile = 15*16 + 4;
-//                        break;
-//                    // wall center:
-//                    case 7*16 + 0:
-//                    case 7*16 + 1:
-//                    case 7*16 + 2:
-//                    case 15*16 + 3:
-//                        tile = 15*16 + 3;
-//                        break;
-//                    default:
-//                }
+                switch(tile) {
+                    // ropes (cables):
+                    case 7*16 + 6:
+                    case 8*16 + 6:
+                        tile = 0;  // remove ropes, they will be reconstructed
+                        break;
+                    // platforms:
+                    case 15*16 + 14:
+                    case 8*16 + 10:
+                        tile = 15*16 + 14;
+                        break;
+                    // moon floor bg
+                    case 6*16 + 0:
+                    case 6*16 + 1:
+                    case 6*16 + 2:
+                        tile = 15*16 + 9;
+                        break;
+                    // wall top:
+                    case 7*16 + 1:
+                    case 7*16 + 2:
+                    case 7*16 + 3:
+                    case 7*16 + 4:
+                        tile = 15*16 + 13;
+                        break;
+                    // spikes:
+                    case 8*16 + 13:
+                        tile = 15*16 + 12;
+                        break;
+                    case 7*16 + 7:
+                    case 7*16 + 8:
+                        tile = 0;
+                        break;
+                    // wall right:
+                    case 7*16 + 13:
+                        tile = 15*16 + 11;
+                        break;
+                    // wall left:
+                    case 7*16 + 12:
+                        tile = 15*16 + 10;
+                        break;
+                    // wall bottom:
+                    case 8*16 + 1:
+                    case 8*16 + 2:
+                    case 8*16 + 3:
+                    case 8*16 + 4:
+                        tile = 15*16 + 6;
+                        break;
+                    // stairs (leave only the bottom piece):
+                    case 15*16 + 8:
+                        if (i<CHUNK_HEIGHT-1 && tiles[j][i+1] == 15*16 + 8) {
+                            tile = 0;
+                        }
+                        break;
+                    case 10*16 + 7:
+                        if (i<CHUNK_HEIGHT-1 && tiles[j][i+1] == 10*16 + 7) {
+                            tile = 0;
+                        }
+                        break;
+                    // rubble:
+                    case 9*16 + 2:
+                    case 9*16 + 3:
+                    case 9*16 + 4:
+                        tile = 15*16 + 7;
+                        break;
+                    // maya head:
+                    case 12*16 + 13:
+                    case 12*16 + 14:
+                    case 12*16 + 15:
+                    case 13*16 + 12:
+                    case 13*16 + 13:
+                    case 13*16 + 14:
+                    case 13*16 + 15:
+                    case 14*16 + 12:
+                    case 14*16 + 13:
+                    case 14*16 + 14:
+                    case 14*16 + 15:
+                        tile = 0;
+                        break;
+                    // small bricks:
+                    case 8*16 + 14:
+                    case 8*16 + 15:
+                        tile = 15*16 + 4;
+                        break;
+                    // wall center:
+                    case 7*16 + 11:
+                    case 7*16 + 10:
+                    case 7*16 + 9:
+                        tile = 15*16 + 3;
+                        break;
+                    default:
+                }
                 chunk.tiles[j][i] = tile;
             }
         }
