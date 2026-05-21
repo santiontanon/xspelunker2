@@ -2066,28 +2066,17 @@ public class PCGArea {
         boss_chunks.get(0x2).add(new RoomChunk("data/moon/boss0010-1.tmx", 0x2, "moon"));
         boss_chunks.get(0x3).add(new RoomChunk("data/moon/boss0011-1.tmx", 0x3, "moon"));
         boss_chunks.get(0x4).add(new RoomChunk("data/moon/boss0100-1.tmx", 0x4, "moon"));
-//        boss_chunks.get(0x4).add(new RoomChunk("data/moon/boss0100-2.tmx", 0x4, "moon"));
-//        boss_chunks.get(0x5).add(new RoomChunk("data/moon/boss0101-1.tmx", 0x5, "moon"));
-//        boss_chunks.get(0x5).add(new RoomChunk("data/moon/boss0101-2.tmx", 0x5, "moon")); 
-//        boss_chunks.get(0x6).add(new RoomChunk("data/moon/boss0110-1.tmx", 0x6, "moon"));
-//        boss_chunks.get(0x6).add(new RoomChunk("data/moon/boss0110-2.tmx", 0x6, "moon"));
-//        boss_chunks.get(0x7).add(new RoomChunk("data/moon/boss0111-1.tmx", 0x7, "moon"));
-//        boss_chunks.get(0x7).add(new RoomChunk("data/moon/boss0111-2.tmx", 0x7, "moon"));
+        boss_chunks.get(0x5).add(new RoomChunk("data/moon/boss0101-1.tmx", 0x5, "moon"));
+        boss_chunks.get(0x6).add(new RoomChunk("data/moon/boss0110-1.tmx", 0x6, "moon"));
+        boss_chunks.get(0x7).add(new RoomChunk("data/moon/boss0111-1.tmx", 0x7, "moon"));
         boss_chunks.get(0x8).add(new RoomChunk("data/moon/boss1000-1.tmx", 0x8, "moon"));
-//        boss_chunks.get(0x8).add(new RoomChunk("data/moon/boss1000-2.tmx", 0x8, "moon"));
-//        boss_chunks.get(0x9).add(new RoomChunk("data/moon/boss1001-1.tmx", 0x9, "moon"));
-//        boss_chunks.get(0xa).add(new RoomChunk("data/moon/boss1010-1.tmx", 0xa, "moon"));
-//        boss_chunks.get(0xa).add(new RoomChunk("data/moon/boss1010-2.tmx", 0xa, "moon"));
-//        boss_chunks.get(0xb).add(new RoomChunk("data/moon/boss1011-1.tmx", 0xb, "moon"));
-//        boss_chunks.get(0xc).add(new RoomChunk("data/moon/boss1100-1.tmx", 0xc, "moon"));
-//        boss_chunks.get(0xc).add(new RoomChunk("data/moon/boss1100-2.tmx", 0xc, "moon"));
-//        boss_chunks.get(0xc).add(new RoomChunk("data/moon/boss1100-3.tmx", 0xc, "moon"));
-//        boss_chunks.get(0xd).add(new RoomChunk("data/moon/boss1101-1.tmx", 0xd, "moon"));
-//        boss_chunks.get(0xd).add(new RoomChunk("data/moon/boss1101-2.tmx", 0xd, "moon"));
-//        boss_chunks.get(0xe).add(new RoomChunk("data/moon/boss1110-1.tmx", 0xe, "moon"));
-//        boss_chunks.get(0xe).add(new RoomChunk("data/moon/boss1110-2.tmx", 0xe, "moon"));
-//        boss_chunks.get(0xf).add(new RoomChunk("data/moon/boss1111-1.tmx", 0xf, "moon"));
-//        boss_chunks.get(0xf).add(new RoomChunk("data/moon/boss1111-2.tmx", 0xf, "moon"));
+        boss_chunks.get(0x9).add(new RoomChunk("data/moon/boss1001-1.tmx", 0x9, "moon"));
+        boss_chunks.get(0xa).add(new RoomChunk("data/moon/boss1010-1.tmx", 0xa, "moon"));
+        boss_chunks.get(0xb).add(new RoomChunk("data/moon/boss1011-1.tmx", 0xb, "moon"));
+        boss_chunks.get(0xc).add(new RoomChunk("data/moon/boss1100-1.tmx", 0xc, "moon"));
+        boss_chunks.get(0xd).add(new RoomChunk("data/moon/boss1101-1.tmx", 0xd, "moon"));
+        boss_chunks.get(0xe).add(new RoomChunk("data/moon/boss1110-1.tmx", 0xe, "moon"));
+        boss_chunks.get(0xf).add(new RoomChunk("data/moon/boss1111-1.tmx", 0xf, "moon"));
         
         // block puzzles:
         for(int i = 0;i<16;i++) {
@@ -2095,18 +2084,16 @@ public class PCGArea {
         }
         {
             List<RoomChunk> l = new ArrayList<>();
-//            l.add(new RoomChunk("data/moon/block0011-1.tmx", 0x3, "moon"));
-//            l.add(new RoomChunk("data/moon/block0101-1.tmx", 0x5, "moon"));
-//            l.add(new RoomChunk("data/moon/block0101-2.tmx", 0x5, "moon"));
-//            l.add(new RoomChunk("data/moon/block0110-1.tmx", 0x6, "moon"));
-//            l.add(new RoomChunk("data/moon/block0110-2.tmx", 0x6, "moon"));
-//            l.add(new RoomChunk("data/moon/block1001-1.tmx", 0x9, "moon"));
-//            l.add(new RoomChunk("data/moon/block1001-2.tmx", 0x9, "moon"));
-//            l.add(new RoomChunk("data/moon/block1010-1.tmx", 0xa, "moon"));
-//            l.add(new RoomChunk("data/moon/block1010-2.tmx", 0xa, "moon"));
-//            l.add(new RoomChunk("data/moon/block1100-1.tmx", 0xc, "moon"));
-//            l.add(new RoomChunk("data/moon/block1100-2.tmx", 0xc, "moon"));
-//            l.add(new RoomChunk("data/moon/block1100-3.tmx", 0xc, "moon"));
+            l.add(new RoomChunk("data/moon/block0011-1.tmx", 0x3, "moon"));
+            l.add(new RoomChunk("data/moon/block0101-1.tmx", 0x5, "moon"));
+            l.add(new RoomChunk("data/moon/block0101-2.tmx", 0x5, "moon"));
+            l.add(new RoomChunk("data/moon/block0110-1.tmx", 0x6, "moon"));
+            l.add(new RoomChunk("data/moon/block0110-2.tmx", 0x6, "moon"));
+            l.add(new RoomChunk("data/moon/block1001-1.tmx", 0x9, "moon"));
+            l.add(new RoomChunk("data/moon/block1001-2.tmx", 0x9, "moon"));
+            l.add(new RoomChunk("data/moon/block1010-1.tmx", 0xa, "moon"));
+            l.add(new RoomChunk("data/moon/block1100-1.tmx", 0xc, "moon"));
+            l.add(new RoomChunk("data/moon/block1100-2.tmx", 0xc, "moon"));
 
             for(RoomChunk c2:l) {
                 block_chunks.get(c2.type).add(c2);
@@ -2208,10 +2195,8 @@ public class PCGArea {
         }
         
         List<RoomChunk> combination_raw_chunks = new ArrayList<>();
-//        combination_raw_chunks.add(new RoomChunk("data/moon/combination0000-1.tmx", 0, "mars"));
-//        combination_raw_chunks.add(new RoomChunk("data/moon/combination0100-1.tmx", 0x4, "mars"));
-//        combination_raw_chunks.add(new RoomChunk("data/moon/combination1000-1.tmx", 0x8, "mars"));
-//        combination_raw_chunks.add(new RoomChunk("data/moon/combination1100-1.tmx", 0xc, "mars"));
+        combination_raw_chunks.add(new RoomChunk("data/moon/combination0000-1.tmx", 0, "mars"));
+        combination_raw_chunks.add(new RoomChunk("data/moon/combination0100-1.tmx", 0x4, "mars"));
         for(int type = 0;type<16;type++) {
             for(RoomChunk chunk:combination_raw_chunks) {
                 if ((type & PCGWorld.DIRECTION_LEFT) == 0 && (chunk.type & PCGWorld.DIRECTION_LEFT) != 0) continue;

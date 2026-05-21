@@ -1,11 +1,10 @@
 to do:
 
 ***- moon biome:
-  ***- boss/combination/block patterns
-  ***- simplify/prettify patterns in Java
-  ***- ladder patterns
+  ***- simplify/prettify chunks in Java
+  ***- ladder chunks
   ***- think of what additional element to have (lava/water does not make sense in the moon)
-  ***- variety patterns
+  ***- variety chunks
   ***- add to assembler
   ***- sprite enemies (reuse drones / robots from mars)
   ***- tile enemy (come up with one that makes sense in the moon, or reuse mars one?)
