@@ -1,8 +1,7 @@
 to do:
 
 ***- moon biome:
-  ***- more variety in the moon regolith (more left/right walls, corners and bg craters)
-  ***- basic patterns
+  ***- basic patterns (5/16)
   ***- boss/combination/block patterns
   ***- ladder patterns
   ***- think of what additional element to have (lava/water does not make sense in the moon)
