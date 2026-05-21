@@ -1,8 +1,8 @@
 to do:
 
 ***- moon biome:
-  ***- basic patterns (5/16)
   ***- boss/combination/block patterns
+  ***- simplify/prettify patterns in Java
   ***- ladder patterns
   ***- think of what additional element to have (lava/water does not make sense in the moon)
   ***- variety patterns

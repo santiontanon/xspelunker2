@@ -45,6 +45,7 @@ public class GenerationTest {
         PCGArea pcg2_xibalba = new PCGArea(true, "xibalba");
         PCGArea pcg2_atlantis = new PCGArea(true, "atlantis");
         PCGArea pcg2_mars = new PCGArea(true, "mars");
+        PCGArea pcg2_moon = new PCGArea(true, "moon");
         
         int nPCGAreaErrors = 0;
         HashMap<String, Integer> chunkStats = new HashMap<>();
@@ -140,8 +141,8 @@ public class GenerationTest {
                     case 10:
                         pcg2 = pcg2_mars;
                         break;
-                    case 11:  // moon
-                        pcg2 = pcg2_pyramid;
+                    case 11:
+                        pcg2 = pcg2_moon;
                         break;
                 }
                 RenderedArea ra = pcg2.generate(w.areas.get(j), w, r);

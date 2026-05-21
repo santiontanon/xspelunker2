@@ -45,6 +45,7 @@ public class GenerationTestSingleArea {
         PCGArea pcg2_xibalba = new PCGArea(true, "xibalba");
         PCGArea pcg2_atlantis = new PCGArea(true, "atlantis");
         PCGArea pcg2_mars = new PCGArea(true, "mars");
+        PCGArea pcg2_moon = new PCGArea(true, "moon");
         
         int nPCGAreaErrors = 0;
         HashMap<String, Integer> chunkStats = new HashMap<>();
@@ -53,7 +54,8 @@ public class GenerationTestSingleArea {
             typeStats[i] = 0;
         }
         
-        int target_area_to_visualize = 10;  // mars
+//        int target_area_to_visualize = 10;  // mars
+        int target_area_to_visualize = 11;  // moon
 //        int target_area_to_visualize = -1;  // ALL areas
         int save_area_image_up_to = 50;
 //        for(int i = 0;i<1;i++) {
@@ -98,8 +100,8 @@ public class GenerationTestSingleArea {
                         case 10:
                             pcg2 = pcg2_mars;
                             break;
-                        case 11:  // moon
-                            pcg2 = pcg2_pyramid;
+                        case 11:
+                            pcg2 = pcg2_moon;
                             break;
                     }                    
                     RenderedArea ra = pcg2.generate(w.areas.get(j), w, r);
