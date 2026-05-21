@@ -1,10 +1,8 @@
 to do:
 
 ***- moon biome:
-  ***- draft in GIMP/TILED:
-    ***- alternative decoration to the alien vat
+  ***- more variety in the moon regolith (more left/right walls, corners and bg craters)
   ***- basic patterns
-    ***- more variety in the moon regolith (iterate on it, the current one is just ok, purple instead of dark blue?)
   ***- boss/combination/block patterns
   ***- ladder patterns
   ***- think of what additional element to have (lava/water does not make sense in the moon)
