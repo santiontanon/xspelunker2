@@ -1,7 +1,6 @@
 to do:
 
 ***- moon biome:
-  ***- ladder chunks
   ***- variety chunks
   ***- add to assembler
   ***- sprite enemies (reuse drones / robots from mars)
@@ -15,20 +14,20 @@ to do:
   - atlantis
   - mars
   - moon
-- 6th boss: (ideas: "The Solar Stone Jaguar", "The Martian Terracotta Warrior", "The Dust Stone Golem"). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer). Another idea: https://en.wikipedia.org/wiki/Human_sacrifice_in_Maya_culture#/media/File:MA_D293_Maya_stone_carving_from_Copan.jpg
-  - before the boss fight: underground cave with a broken ancient robot that talks if you turn it on with the golden key (in a mix of English and Maya, maybe stating a riddle). Gives you a better raygun (key for alien boss), add as an achievement for the gameover screen.  
+- 6th boss: (ideas: "The Solar Stone Jaguar", "The Martian Terracotta Warrior", "The Dust Stone Golem"). Another idea: https://en.wikipedia.org/wiki/Human_sacrifice_in_Maya_culture#/media/File:MA_D293_Maya_stone_carving_from_Copan.jpg
+  - before the boss fight: underground cave with a broken ancient robot that talks if you turn it on with the golden key (in a mix of English and Maya, maybe stating a riddle). Gives you a better raygun (key for alien boss), add as an achievement for the game over screen.  
   - add boss name to the stats for game over screen
-- 7th boss (ideas: "The Lunar Obsidian Sentinel" (tall, slender, smooth black, reflective surfaces), "The Lunar Crystal Serpent", "The Moon Stone Monolith"). (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
+- 7th boss (ideas: "The Lunar Obsidian Sentinel" (tall, slender, smooth black, reflective surfaces), "The Lunar Crystal Serpent", "The Moon Stone Monolith").
   - add boss name to the stats for game over screen
 - ending B: the calendar stone machine also activates its offensive mechanism and destroys the alien armada that was coming. You hope that will deter them from coming again.
-- Ending B+ (got the firestone forge active with the codex, but did not defeat the final alien boss)
+- Ending B+: (got the firestone forge active with the codex, but did not defeat the final alien boss)
 - update the list of enemy types to display in ending B to include new enemies in moon/mars
 
 - 8th boss: after beating the combat against the aliens, you can teleport to their home planet, and fight against their leader. (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
   - add boss name to the stats for game over screen
 - final good ending 1 (A) (update "stats__ending"): the stone opens a portal to travel to the alien world, and fight against their leader. When you defeat it and come back, Elaine is there waiting to save you, but you arrive having defeated the alien empire (although there is doubt if other empires will show up again, and the calendar stone depletes, and cannot be used again)
 - update the list of enemy types to display in ending A to include any enemies in the alien planet.
-- Final good ending 2 (A+) if you have the codex (from the 3 statues), you can use it in the forge to manufacture more powestones/firestones. So, you can keep using the calendar stone and be prepared for the future. This is the true final ending.
+- Final good ending 2 (A+) if you have the 3 codex pieces in the forge to manufacture more powestones/firestones. So, you can keep using the calendar stone and be prepared for the future.
 
 - save game to rom / password
 - come up with a list of "achievements" for the list in the game over screen and implement them
