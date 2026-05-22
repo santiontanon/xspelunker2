@@ -2030,8 +2030,11 @@ public class PCGArea {
         
         fg_chunks.get(0x1).add(new RoomChunk("data/moon/room0001-1.tmx", 0x1, "moon"));
         fg_chunks.get(0x1).add(new RoomChunk("data/moon/room0001-2.tmx", 0x1, "moon"));
+        fg_chunks.get(0x1).add(new RoomChunk("data/moon/room0001-3.tmx", 0x1, "moon"));
         
         fg_chunks.get(0x2).add(new RoomChunk("data/moon/room0010-1.tmx", 0x2, "moon"));
+        fg_chunks.get(0x2).add(new RoomChunk("data/moon/room0010-2.tmx", 0x2, "moon"));
+        fg_chunks.get(0x2).add(new RoomChunk("data/moon/room0010-3.tmx", 0x2, "moon"));
         
         fg_chunks.get(0x3).add(new RoomChunk("data/moon/room0011-1.tmx", 0x3, "moon"));
         fg_chunks.get(0x3).add(new RoomChunk("data/moon/room0011-2.tmx", 0x3, "moon"));
