@@ -684,9 +684,20 @@ public class GenerateSprites {
         // bullet (0):
         data.addAll(extractSprite(sourceImage, 64, 0, 15));  // bullet
         data.addAll(extractSprite(sourceImage, 112, 192, 15));  // water bullet pop
+
+        // mushroom (2):
+        data.addAll(extractSprite(sourceImage, 0, 360, 5));  // frame 1
+        data.addAll(extractSprite(sourceImage, 0, 360, 15));
+        data.addAll(extractSprite(sourceImage, 16, 360, 5));  // frame 2
+        data.addAll(extractSprite(sourceImage, 16, 360, 15));
+
+        // spores (6):
+        data.addAll(extractSprite(sourceImage, 64, 360, 15));
+        data.addAll(extractSprite(sourceImage, 80, 360, 15));
+        data.addAll(extractSprite(sourceImage, 96, 360, 15));
         
-        // filler (2)
-        for(int i = 0;i<32 * 18;i++) {
+        // filler (9)
+        for(int i = 0;i<32 * 11;i++) {
             data.add(0);
         }
         

@@ -107,6 +107,7 @@ pcg_enemy_generation_table_mars_hardest:
 pcg_enemy_generation_table_moon_hardest:
 	db 2  ; 2 enemies per "screen" area
 	db 0
-	db 1  ; possible sprite enemy types to be spawned (weights below should add up to 32)
-	db ENEMY_MARS_DRONE2, 16
-	db ENEMY_MARS_ROBOT2, 16
+	db 3  ; possible sprite enemy types to be spawned (weights below should add up to 32)
+	db ENEMY_MARS_DRONE2, 8
+	db ENEMY_MARS_ROBOT2, 8
+	db ENEMY_MUSHROOM2, 16

@@ -98,7 +98,7 @@ area_default_tileset_ptrs:
 	dw tiles_atlantis_zx0, update_animations_in_vdp_atlantis
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_atlantis
-	db ENEMY_SPRITES_PAGE
+	db ATLANTIS_ENEMY_SPRITES_PAGE
 	dw atlantis_enemy_sprites_zx0  ; atlantis
 	dw 0
 	db 0

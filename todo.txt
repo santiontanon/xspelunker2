@@ -1,15 +1,10 @@
 to do:
 
 ***- moon sprite enemy:
-  ***- add sprites to assembler
-  ***- create enemy type
-  ***- spawn it and render it (state 0)
-  ***- if player is close by (in an 8-tile radius), switch to the "agitated state" (1) periodically
   ***- after a bit of agitation, release a spore
-  ***- add spore gfx/sprite to game
   ***- spore behavior (random direction with inertia, so that it looks like being carried by the "wind")
   ***- spore disappears upon collision
-  ***- second more aggressive type (different collor) that spreads more spores at a time
+  ***- second more aggressive type that spreads more spores at a time (two instead of one)
 ***- moon tile enemy (big mushroom that releases many spores when you get close by)
 ***- If the player enters a world name like "ATLANTIS", "AZTLAN", or "COH", trigger a world where the "Firestone forge" (in the Moon) is active (see if clue in ATLANTIS_TABLET_5_1 is enough).
 

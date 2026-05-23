@@ -499,6 +499,10 @@ pcg_generate_room__spawn_one_enemy_chosen:
 	jp z, pcg_generate_room__spawn_mars_robot1
 	cp ENEMY_MARS_ROBOT2
 	jp z, pcg_generate_room__spawn_mars_robot2
+	cp ENEMY_MUSHROOM1
+	jp z, pcg_generate_room__spawn_mushroom1
+	cp ENEMY_MUSHROOM2
+	jp z, pcg_generate_room__spawn_mushroom2
 	ret
 
 
@@ -1002,6 +1006,14 @@ pcg_generate_room__spawn_mars_robot1:
 	jr pcg_generate_room__spawn_skeleton_continue
 pcg_generate_room__spawn_mars_robot2:
 	ld ixl, ENEMY_MARS_ROBOT2
+	ld ixh, 8  ; hitpoints
+	jr pcg_generate_room__spawn_skeleton_continue
+pcg_generate_room__spawn_mushroom1:
+	ld ixl, ENEMY_MUSHROOM1
+	ld ixh, 4  ; hitpoints
+	jr pcg_generate_room__spawn_skeleton_continue
+pcg_generate_room__spawn_mushroom2:
+	ld ixl, ENEMY_MUSHROOM2
 	ld ixh, 8  ; hitpoints
 	jr pcg_generate_room__spawn_skeleton_continue
 pcg_generate_room__spawn_skeleton_sleeper:

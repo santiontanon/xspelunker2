@@ -63,6 +63,9 @@ enemy_update_fn_table:
 	dw update_enemy_mars_drone2
 	dw update_enemy_mars_robot1
 	dw update_enemy_mars_robot2
+	dw update_enemy_mushroom1
+	dw update_enemy_mushroom2
+	dw update_enemy_mushroom_spore
 
 
 ;-----------------------------------------------
@@ -4699,6 +4702,81 @@ update_enemy_mars_robot1_collision_left_decision_jump_down:
 
 
 ;-----------------------------------------------
+update_enemy_mushroom2:
+	ld iyh, 4  ; damage to deal
+	call update_enemy_hurt_player_2x2
+	ld iyl, COLOR_LIGHT_RED
+	jr update_enemy_mushroom2_entry_point
+update_enemy_mushroom1:
+	ld iyh, 4  ; damage to deal
+	call update_enemy_hurt_player_2x2
+	ld iyl, COLOR_BLUE
+update_enemy_mushroom2_entry_point:
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	or a
+	jr z, update_enemy_mushroom1_state0
+update_enemy_mushroom1_state1:
+	; agitated:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 64
+	jr nz, update_enemy_mushroom1_state1_continue
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
+	jr update_enemy_mushroom1_draw
+update_enemy_mushroom1_state1_continue:
+	and #0f
+	jr nz, update_enemy_mushroom1_state1_continue2
+	; releasing spores:
+	; ...
+update_enemy_mushroom1_state1_continue2:
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 2) * 4
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	and #08
+	jr z, update_enemy_mushroom1_draw_e_set
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 4) * 4
+	jr update_enemy_mushroom1_draw_e_set
+
+update_enemy_mushroom1_state0:
+	; calm:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	and #0f
+	jr nz, update_enemy_mushroom1_draw
+	; check if player close by:
+	call update_enemy_player_close_enough_8
+	jr nz, update_enemy_mushroom1_draw
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1
+update_enemy_mushroom1_draw:
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 2) * 4
+update_enemy_mushroom1_draw_e_set:
+	ld c, 0
+	ld d, iyl
+	call get_sprite_object_sprite_coordinates
+	jp nz, update_sprite_enemies_loop_next
+	call add_sprite_to_this_frame
+	ld a, e
+	add a, 4
+	ld e, a
+	ld a, d
+	and #80
+	add a, COLOR_WHITE
+	ld d, a
+	call add_sprite_to_this_frame
+	jp update_sprite_enemies_loop_next
+	
+
+;-----------------------------------------------
+update_enemy_mushroom_spore:
+	ld iyh, 4  ; damage to deal
+	call update_enemy_hurt_player_shieldable_bullet
+	jp z, update_enemy_delete
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	; ...
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 6) * 4
+	ld d, COLOR_YELLOW
+ 	jp enemy_sprite_and_continue
+
+
+;-----------------------------------------------
 ; return:
 ; - nz: delete
 ; - z: enemy still exists
@@ -5326,6 +5404,35 @@ update_enemy_player_close_enough_16_fail:
 	or 1
 	ret
 
+
+;-----------------------------------------------
+; output:
+; - z: close (c, b: diff in x and y in tiles)
+; - nz: far
+update_enemy_player_close_enough_8:
+	ld e, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld d, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+update_enemy_player_close_enough_8_ed:
+	; see if player is close enough:
+	ld a, (player_x + 1)
+	sub e
+	ld c, a
+	cp 8 
+	jp p, update_enemy_player_close_enough_8_fail
+	cp -8
+	jp m, update_enemy_player_close_enough_8_fail
+	ld a, (player_y + 1)
+	sub d
+	ld b, a
+	cp 8 
+	jp p, update_enemy_player_close_enough_8_fail
+	cp -8
+	jp m, update_enemy_player_close_enough_8_fail
+	xor a  ; success
+	ret
+update_enemy_player_close_enough_8_fail:
+	or 1
+	ret
 
 ;-----------------------------------------------
 ; Used by fire imps and ghosts
