@@ -778,7 +778,7 @@ display_shop_base_ui__clear_sprites_loop_next:
 
 	ld hl, shop_tiles_zx0
 	ld de, buffer_4096
-	ld C, NPCS_PAGE
+	ld C, SHOP_TILES_PAGE
 	call dzx0_from_page_c
 
 	ld hl, buffer_4096

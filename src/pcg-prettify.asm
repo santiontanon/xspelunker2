@@ -1371,5 +1371,247 @@ pcg_generate_room__prettify_mars_rope_done:
 
 ;-----------------------------------------------
 pcg_generate_room__prettify_moon:
-	; ...
-	ret
+	ld hl, current_room__tile_map
+	ld bc, (current_room__width)
+	ld a, (current_room__width)
+	ld e, a
+	ld d, 0	
+pcg_generate_room__prettify_moon_loop_y:
+	push bc
+		ld b, c
+		ld c, 15*16 + 3
+pcg_generate_room__prettify_moon_loop_x:
+		ld a, (hl)
+		sub c
+		jr c, pcg_generate_room__prettify_moon_loop_x_continue
+		jr z, pcg_generate_room__prettify_moon_wall_center
+		dec a
+		jr z, pcg_generate_room__prettify_moon_small_bricks
+		dec a
+		jp z, pcg_generate_room__prettify_moon_head
+		dec a
+		jp z, pcg_generate_room__prettify_moon_wall_bottom
+		dec a
+		jp z, pcg_generate_room__prettify_moon_rubble
+		dec a
+		jp z, pcg_generate_room__prettify_moon_ladder
+		dec a
+		jp z, pcg_generate_room__prettify_moon_regolith
+		dec a
+		jp z, pcg_generate_room__prettify_moon_wall_left
+		dec a
+		jp z, pcg_generate_room__prettify_moon_wall_right
+		dec a
+		jp z, pcg_generate_room__prettify_moon_spikes
+		dec a
+		jp z, pcg_generate_room__prettify_moon_wall_top
+		dec a
+		jp z, pcg_generate_room__prettify_moon_platform
+		jp pcg_generate_room__prettify_moon_rope
+pcg_generate_room__prettify_moon_loop_x_continue:
+		inc hl
+		djnz pcg_generate_room__prettify_moon_loop_x
+	pop bc
+	djnz pcg_generate_room__prettify_moon_loop_y
+	ret	
+
+
+pcg_generate_room__prettify_moon_wall_center:
+	; 15*16 + 3, 7*16 + 9, 7*16 + 10, 7*16 + 11
+	PCG_PRETTIFY_RANDOM
+	and #03
+	jr z, pcg_generate_room__prettify_moon_loop_x_continue
+	add a, 7*16 + 9 - 1
+	ld (hl), a
+	jr pcg_generate_room__prettify_moon_loop_x_continue
+
+pcg_generate_room__prettify_moon_small_bricks:
+	; 15*16 + 4, 8*16 + 14, 8*16 + 15
+	PCG_PRETTIFY_RANDOM
+	and #03
+	jr z, pcg_generate_room__prettify_moon_loop_x_continue
+	dec a
+	jr z, pcg_generate_room__prettify_moon_loop_x_continue
+	add a, 8*16 + 14 - 1
+	ld (hl), a
+	jr pcg_generate_room__prettify_moon_loop_x_continue
+
+pcg_generate_room__prettify_moon_head:
+	push hl
+		inc hl
+		ld (hl), 12*16 + 13
+		inc hl
+		ld (hl), 12*16 + 14
+		inc hl
+		ld (hl), 12*16 + 15
+		add hl, de
+		ld (hl), 13*16 + 15
+		dec hl
+		ld (hl), 13*16 + 14
+		dec hl
+		ld (hl), 13*16 + 13
+		dec hl
+		ld (hl), 13*16 + 12
+		add hl, de
+		ld (hl), 14*16 + 12
+		inc hl
+		ld (hl), 14*16 + 13
+		inc hl
+		ld (hl), 14*16 + 14
+		inc hl
+		ld (hl), 14*16 + 15
+	pop hl
+	jp pcg_generate_room__prettify_moon_loop_x_continue
+
+pcg_generate_room__prettify_moon_wall_bottom:
+	; 15*16 + 6, 8*16 + 1, 8*16 + 2, 8*16 + 3, 8*16 + 4
+	PCG_PRETTIFY_RANDOM
+	and #03
+	jp z, pcg_generate_room__prettify_moon_loop_x_continue
+	add a, 8*16 + 1 - 1
+	ld (hl), a
+	jp pcg_generate_room__prettify_moon_loop_x_continue
+
+pcg_generate_room__prettify_moon_rubble:
+	; 15*16 + 7, 9*16 + 2, 9*16 + 3, 9*16 + 4
+	PCG_PRETTIFY_RANDOM
+	and #03
+	jr z, pcg_generate_room__prettify_moon_loop_x_continue
+	add a, 9*16 + 2 - 1
+	ld (hl), a
+	jr pcg_generate_room__prettify_moon_loop_x_continue
+
+pcg_generate_room__prettify_moon_ladder:
+	push hl
+	push bc
+		ld bc, current_room__tile_map
+pcg_generate_room__prettify_moon_ladder_loop:
+		or a
+		sbc hl, de  ; go one row up
+		or a
+		sbc hl, bc  ; check if we are out of the map
+		jr c, pcg_generate_room__prettify_moon_ladder_done
+		add hl, bc
+		ld a, (hl)
+		or a
+		jr z, pcg_generate_room__prettify_moon_ladder_keep_going
+		cp 6*16 + 8  ; ladder top-left
+		jr z, pcg_generate_room__prettify_moon_ladder_done
+		cp 6*16 + 9  ; ladder top-right
+		jr z, pcg_generate_room__prettify_moon_ladder_done
+		cp 10*16 + 8  ; ladder top-left
+		jr z, pcg_generate_room__prettify_moon_ladder_done
+		cp 8*16 + 8  ; ladder top-right
+		jr z, pcg_generate_room__prettify_moon_ladder_done
+pcg_generate_room__prettify_moon_ladder_keep_going:
+		ld (hl), 15*16 + 8  ; ladder-left
+		inc hl
+		ld (hl), 10*16 + 7  ; ladder-right
+		dec hl
+		jr pcg_generate_room__prettify_moon_ladder_loop
+pcg_generate_room__prettify_moon_ladder_done:
+	pop bc
+	pop hl
+	jp pcg_generate_room__prettify_moon_loop_x_continue
+
+pcg_generate_room__prettify_moon_regolith:
+	; 15*16 + 9, 6*16 + 0, 6*16 + 1, 6*16 + 2
+	PCG_PRETTIFY_RANDOM
+	and #03
+	jp z, pcg_generate_room__prettify_moon_loop_x_continue
+	add a, 6*16 - 1
+	ld (hl), a
+	jp pcg_generate_room__prettify_moon_loop_x_continue
+
+pcg_generate_room__prettify_moon_wall_left:
+	; 15*16 + 10, 7*16 + 12
+	PCG_PRETTIFY_RANDOM
+	and #03
+	jp z, pcg_generate_room__prettify_moon_loop_x_continue
+	ld (hl), 7*16 + 12
+	jp pcg_generate_room__prettify_moon_loop_x_continue
+
+pcg_generate_room__prettify_moon_wall_right:
+	; 15*16 + 11, 7*16 + 13
+	PCG_PRETTIFY_RANDOM
+	and #03
+	jp z, pcg_generate_room__prettify_moon_loop_x_continue
+	ld (hl), 7*16 + 13
+	jp pcg_generate_room__prettify_moon_loop_x_continue
+
+pcg_generate_room__prettify_moon_spikes:
+	PCG_PRETTIFY_RANDOM
+	and #01
+	jr z, pcg_generate_room__prettify_moon_spike_tip_randomize_continue
+	ld (hl), 8*16 + 13
+pcg_generate_room__prettify_moon_spike_tip_randomize_continue:
+	PCG_PRETTIFY_RANDOM
+	and #01
+	add a, 7*16 + 7
+	add hl, de
+	ld (hl), a
+	sbc hl, de
+	jp pcg_generate_room__prettify_moon_loop_x_continue
+
+pcg_generate_room__prettify_moon_wall_top:
+	; 15*16 + 13, 7*16 + 1, 7*16 + 2, 7*16 + 3, 7*16 + 4
+	PCG_PRETTIFY_RANDOM
+	ld iyl, a
+	and #0c
+	jp z, pcg_generate_room__prettify_moon_loop_x_continue
+	ld a, iyl
+	and #03
+	add a, 7*16 + 1
+	ld (hl), a
+	jp pcg_generate_room__prettify_moon_loop_x_continue
+
+pcg_generate_room__prettify_moon_platform:
+	PCG_PRETTIFY_RANDOM
+	and #03
+	jp z, pcg_generate_room__prettify_moon_loop_x_continue
+	ld (hl), 8*16 + 10
+	jp pcg_generate_room__prettify_moon_loop_x_continue
+
+pcg_generate_room__prettify_moon_rope:
+	push hl
+	push bc
+		ld bc, current_room__tile_map
+pcg_generate_room__prettify_moon_rope_loop:
+		or a
+		sbc hl, de  ; go one row up
+; 		or a
+		sbc hl, bc  ; check if we are out of the map
+		jr c, pcg_generate_room__prettify_moon_rope_done
+		add hl, bc
+		ld a, (hl)
+		or a
+		jr z, pcg_generate_room__prettify_moon_rope_keep_going
+		; background:
+		cp 11*16 + 12
+		jr z, pcg_generate_room__prettify_moon_rope_keep_going
+		cp 10*16 + 15
+		jr z, pcg_generate_room__prettify_moon_rope_keep_going
+		cp 10*16 + 14
+		jr z, pcg_generate_room__prettify_moon_rope_keep_going
+		cp 10*16 + 13
+		jr z, pcg_generate_room__prettify_moon_rope_keep_going
+		cp 10*16 + 12
+		jr z, pcg_generate_room__prettify_moon_rope_keep_going
+		cp 9*16 + 12
+		jr z, pcg_generate_room__prettify_moon_rope_keep_going
+		cp 9*16 + 10
+		jr z, pcg_generate_room__prettify_moon_rope_keep_going
+		jr pcg_generate_room__prettify_moon_rope_done
+pcg_generate_room__prettify_moon_rope_keep_going:
+		PCG_PRETTIFY_RANDOM
+		and #03
+		jp nz, pcg_generate_room__prettify_moon_rope_keep_going2
+		ld (hl), 7*16 + 6  ; cable peeled
+		jr pcg_generate_room__prettify_moon_rope_loop
+pcg_generate_room__prettify_moon_rope_keep_going2:
+		ld (hl), 8*16 + 6  ; cable
+		jr pcg_generate_room__prettify_moon_rope_loop
+pcg_generate_room__prettify_moon_rope_done:
+	pop bc
+	pop hl
+	jp pcg_generate_room__prettify_moon_loop_x_continue

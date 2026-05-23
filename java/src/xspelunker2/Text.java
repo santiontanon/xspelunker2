@@ -370,6 +370,7 @@ public class Text {
         addLineSafe(lines_with_constant_page1, "Touch the calendar stone?", "TOUCH_STONE_QUESTION", 112);
         addLineSafe(lines_with_constant_page3, "How can it be! It seems like some light from the moon and the nightsky is reaching this room through a tunnel in the ceiling!", "ASTRONOMY_ENTER", 112);
         addLineSafe(lines_with_constant_page3, "Amazing! That teleporter really did bring me to planet Mars! I can feel the lighter gravity!", "MARS_FIRST_TIME", 112);
+        addLineSafe(lines_with_constant_page3, "Incredible! That teleporter brought me directly to the Moon! I feel so light here!", "MOON_FIRST_TIME", 112);
         
         addLineSafe(lines_with_constant_page1, "Wait! They had not given up... This is an ambush!!!", "CALENDAR_AMBUSH", 112);     
         addLineSafe(lines_with_constant_page1, "You place your hand in the center and, as the stone starts shaking, you hear a deep voice...", "CALENDAR_CENTER_MSG3", 112);

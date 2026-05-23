@@ -6,7 +6,7 @@
   db #3f, #ff, #21, #ff  ; data/moon/room0010-2.tmx
   db #3f, #ff, #21, #ff  ; data/moon/room0010-3.tmx
   db #3f, #ff, #21, #c3  ; data/moon/room0011-1.tmx
-  db #3f, #ff, #21, #e3  ; data/moon/room0011-2.tmx
+  db #3f, #ff, #21, #e7  ; data/moon/room0011-2.tmx
   db #3f, #ff, #21, #c3  ; data/moon/room0011-3.tmx
   db #3f, #ff, #21, #db  ; data/moon/room0011-4.tmx
   db #3f, #81, #3f, #ff  ; data/moon/room0100-1.tmx

@@ -34,7 +34,6 @@ pcg_enemy_generation_table_pyramid1_hardest:
 pcg_enemy_generation_table_pyramid2_hardest:
 pcg_enemy_generation_table_pyramid3_hardest:
 pcg_enemy_generation_table_fire_shaft_hardest:
-pcg_enemy_generation_table_moon_hardest:
 	db 2  ; 2 enemies per "screen" area
 	db 1
 	db TAG_ENEMY_CARNIVORE_PLANT, 128  ; tile-based enemy type and chance (out of 256)
@@ -104,3 +103,8 @@ pcg_enemy_generation_table_mars_hardest:
 	db ENEMY_MARS_BLOB2, 8
 	db ENEMY_MARS_DRONE2, 8
 	db ENEMY_MARS_ROBOT2, 8
+
+pcg_enemy_generation_table_moon_hardest:
+	db 2  ; 2 enemies per "screen" area
+	db 0
+	db 0  ; possible sprite enemy types to be spawned (weights below should add up to 32)

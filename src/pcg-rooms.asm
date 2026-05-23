@@ -112,12 +112,12 @@ area_default_tileset_ptrs:
 	dw 0
 	db 0
 
-	db PYRAMID_TILES_PAGE
-	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
+	db MOON_TILES_PAGE
+	dw tiles_moon_zx0, update_animations_in_vdp_moon
 	db AREA_COLLISION_TABLES_PAGE
-	dw tile_collision_types_pyramid
-	db ENEMY_SPRITES_PAGE
-	dw pyramid_enemy_sprites_zx0  ; moon
+	dw tile_collision_types_moon
+	db MARS_ENEMY_SPRITES_PAGE
+	dw mars_enemy_sprites_zx0  ; moon
 	dw 0
 	db 0
 
@@ -1564,6 +1564,8 @@ pcg_generate_room_background:
 	jp z, pcg_generate_room_background_atlantis
 	cp 10
 	jp z, pcg_generate_room_background_mars
+	cp 11
+	jp z, pcg_generate_room_background_moon
 	jp pcg_generate_room_background_pyramid
 
 
@@ -1572,24 +1574,23 @@ pcg_generate_room_background:
 ; - hl: ptr to the fg chunk types
 pcg_generate_room_background_caves:
 	ld de, caves_chunk_bg_bank_ptrs
-	ld (tmp_pcg_room__current_chunk_bg_bank_ptrs), de
 	jr pcg_generate_room_background_pyramid_continue
 pcg_generate_room_background_xibalba:
 	ld de, xibalba_chunk_bg_bank_ptrs
-	ld (tmp_pcg_room__current_chunk_bg_bank_ptrs), de
 	jr pcg_generate_room_background_pyramid_continue
 pcg_generate_room_background_atlantis:
 	ld de, atlantis_chunk_bg_bank_ptrs
-	ld (tmp_pcg_room__current_chunk_bg_bank_ptrs), de
 	jr pcg_generate_room_background_pyramid_continue
 pcg_generate_room_background_mars:
 	ld de, mars_chunk_bg_bank_ptrs
-	ld (tmp_pcg_room__current_chunk_bg_bank_ptrs), de
+	jr pcg_generate_room_background_pyramid_continue
+pcg_generate_room_background_moon:
+	ld de, moon_chunk_bg_bank_ptrs
 	jr pcg_generate_room_background_pyramid_continue
 pcg_generate_room_background_pyramid:
 	ld de, pyramid_chunk_bg_bank_ptrs
-	ld (tmp_pcg_room__current_chunk_bg_bank_ptrs), de
 pcg_generate_room_background_pyramid_continue:
+	ld (tmp_pcg_room__current_chunk_bg_bank_ptrs), de
 	xor a
 	ld (tmp_pcg_room__current_target_chunk_bank_id), a	
 	ld a, #ff
@@ -2969,7 +2970,7 @@ pcg_generate_room__teleporter:
 	ld (current_room__collision_ptr_page), a
 	ld bc, tile_collision_types_teleporter
 	ld (current_room__collision_ptr), bc
-	ld a, TELEPORTER_ROOM_PAGE
+	ld a, TELEPORTER_ROOM_TILES_PAGE
 	ld (current_room__tileset_page), a
 	ld a, 1
 	ld (current_room__tileset_overrides_item_tiles), a
@@ -3435,6 +3436,8 @@ default_in_game_event_fn:
 	ld a, (current_area__id)
 	cp 10  ; mars
 	jr z, default_in_game_event_fn_mars
+	cp 11  ; moon
+	jr z, default_in_game_event_fn_moon
 	; ...
 	ret
 
@@ -3462,5 +3465,18 @@ default_in_game_event_fn_mars:
 	call call_hl_in_page_c_8000
 	ld hl, global_state__first_time_flags
 	set 2, (hl)
+	ret	
+
+default_in_game_event_fn_moon:
+	ld a, (global_state__first_time_flags)
+	bit 3, a  ; have we enterd moon before?
+	ret nz
+	; entered moon for the first time:
+	ld de, TEXT_MOON_FIRST_TIME
+	ld hl, display_in_game_message_textpage3
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000
+	ld hl, global_state__first_time_flags
+	set 3, (hl)
 	ret	
 

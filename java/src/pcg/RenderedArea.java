@@ -1430,7 +1430,7 @@ public class RenderedArea {
                             }
                             break;
                         case 15*16 + 9:
-                            // moon floor bg:
+                            // moon regolith
                             {   
                                 int choices[] = {15*16 + 9, 6*16 + 0, 6*16 + 1, 6*16 + 2};
                                 int a = r.nextInt(choices.length);

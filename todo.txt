@@ -1,7 +1,6 @@
 to do:
 
 ***- moon biome:
-  ***- add to assembler
   ***- sprite enemies (reuse drones / robots from mars)
   ***- tile enemy (come up with one that makes sense in the moon, or reuse mars one?)
   ***- If the player enters a world name like "ATLANTIS", "AZTLAN", or "COH", trigger a world where the "Firestone forge" (in the Moon) is active (see if clue in ATLANTIS_TABLET_5_1 is enough).

@@ -1705,6 +1705,7 @@ public class PCGArea {
     public void loadMarsChunks(boolean simplifyChunks) throws Exception
     {
         // background:
+        bg_chunks.add(new RoomChunk("data/mars/bg-0.tmx", 0, "mars"));
         bg_chunks.add(new RoomChunk("data/mars/bg-1.tmx", 0, "mars"));
         bg_chunks.add(new RoomChunk("data/mars/bg-2.tmx", 0, "mars"));
         bg_chunks.add(new RoomChunk("data/mars/bg-3.tmx", 0, "mars"));
@@ -2017,6 +2018,7 @@ public class PCGArea {
     public void loadMoonChunks(boolean simplifyChunks) throws Exception
     {
         // background:
+        bg_chunks.add(new RoomChunk("data/moon/bg-0.tmx", 0, "moon"));
         bg_chunks.add(new RoomChunk("data/moon/bg-1.tmx", 0, "moon"));
         bg_chunks.add(new RoomChunk("data/moon/bg-2.tmx", 0, "moon"));
         bg_chunks.add(new RoomChunk("data/moon/bg-3.tmx", 0, "moon"));

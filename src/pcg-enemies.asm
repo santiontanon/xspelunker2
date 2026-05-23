@@ -354,6 +354,9 @@ pcg_generate_room__spawn_tile_enemies_outer_loop:
 	push hl
 		; chance of spawning a tile-based enemy:
 		ld b, (hl)  ; number of different tile-based enemy types to choose from
+		ld a, b
+		or a
+		jr z, pcg_generate_room__spawn_tile_enemies_loop_done
 		inc hl
 		call random_a
 pcg_generate_room__spawn_tile_enemies_loop:

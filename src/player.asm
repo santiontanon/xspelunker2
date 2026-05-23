@@ -7,6 +7,7 @@ player_hurt_speed_table:
 ;-----------------------------------------------
 ; Jump tables for earth:
 player_fall_speed_table_mars:
+player_fall_speed_table_moon:
 player_fall_speed_table_earth:
     db 1, 0, 1, 1, 2, 1
     db 2, 2, 3, 3, 4, #ff  ; good for 50Hz
@@ -31,6 +32,18 @@ PLAYER_JUMP_STOP_INDEX_MARS: equ 13  ; when we release the jump key, we will mov
 									   ; jump speed table, if we are not already past that
 PLAYER_JUMP_DOUBLE_JUMP_INDEX_MARS: equ 9  ; we can only double jump after this index
 PLAYER_JUMP_DOUBLE_JUMP_INDEX_RESTART_MARS: equ 4  ; we reset the jump to this index when double jumping
+
+
+;-----------------------------------------------
+; Jump tables for moon:
+player_jump_speed_table_moon:
+	db 8, 8, 6, 6, 6, 4, 4, 3, 3, 2
+	db 2, 1, 2, 1, 1, 0, 1, 0, 0, 0, #ff  ; 1 / 3  ; 58 total jump height in 20 frames / good for 50Hz
+
+PLAYER_JUMP_STOP_INDEX_MOON: equ 14  ; when we release the jump key, we will move to this index in the
+									   ; jump speed table, if we are not already past that
+PLAYER_JUMP_DOUBLE_JUMP_INDEX_MOON: equ 10  ; we can only double jump after this index
+PLAYER_JUMP_DOUBLE_JUMP_INDEX_RESTART_MOON: equ 5  ; we reset the jump to this index when double jumping
 
 
 ;-----------------------------------------------

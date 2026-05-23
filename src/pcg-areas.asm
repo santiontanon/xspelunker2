@@ -122,6 +122,8 @@ pcg_generate_area__initialize_ptrs:
 	jr z, pcg_generate_area__initialize_ptrs_atlantis
 	cp 10
 	jr z, pcg_generate_area__initialize_ptrs_mars
+	cp 11
+	jr z, pcg_generate_area__initialize_ptrs_moon
 pcg_generate_area__initialize_ptrs_pyramid:
 	ld hl, pyramid_chunk_ptrs_and_constants
 	jr pcg_generate_area__initialize_ptrs_continue
@@ -136,6 +138,9 @@ pcg_generate_area__initialize_ptrs_atlantis:
 	jr pcg_generate_area__initialize_ptrs_continue
 pcg_generate_area__initialize_ptrs_mars:
 	ld hl, mars_chunk_ptrs_and_constants
+	jr pcg_generate_area__initialize_ptrs_continue
+pcg_generate_area__initialize_ptrs_moon:
+	ld hl, moon_chunk_ptrs_and_constants
 	jr pcg_generate_area__initialize_ptrs_continue
 pcg_generate_area__initialize_ptrs_jungle
 	ld hl, jungle_chunk_ptrs_and_constants
@@ -2799,3 +2804,21 @@ mars_chunk_ptrs_and_constants:
 	db MARS_N_BG_CHUNKS, 0
     dw player_fall_speed_table_mars, player_jump_speed_table_mars
     db PLAYER_JUMP_STOP_INDEX_MARS, PLAYER_JUMP_DOUBLE_JUMP_INDEX_MARS, PLAYER_JUMP_DOUBLE_JUMP_INDEX_RESTART_MARS
+
+moon_chunk_ptrs_and_constants:
+	db (moon_chunk_fg_bank_ptrs_end - moon_chunk_fg_bank_ptrs) / 2  ; number of banks
+	db CHUNKS_MOON_PAGE
+	dw moon_chunk_fg_bank_ptrs
+	dw moon_standard_chunk_pool
+	dw moon_boss_chunk_pool
+	dw moon_block_chunk_pool
+	dw moon_combination_chunk_pool
+	dw moon_chunk_flags
+	dw chunk_edgecollisions_moon
+	db MOON_STANDARD_CHUNK_POOL_SIZE, MOON_STANDARD_CHUNK_FIRST_ID
+	db MOON_BOSS_CHUNK_POOL_SIZE, MOON_BOSS_CHUNK_POOL_FIRST_ID
+	db MOON_BLOCK_CHUNK_POOL_SIZE, MOON_BLOCK_CHUNK_POOL_FIRST_ID
+	db MOON_COMBINATION_CHUNK_POOL_SIZE, MOON_COMBINATION_CHUNK_POOL_FIRST_ID
+	db MOON_N_BG_CHUNKS, 0
+    dw player_fall_speed_table_moon, player_jump_speed_table_moon
+    db PLAYER_JUMP_STOP_INDEX_MOON, PLAYER_JUMP_DOUBLE_JUMP_INDEX_MOON, PLAYER_JUMP_DOUBLE_JUMP_INDEX_RESTART_MOON
