@@ -26,6 +26,10 @@ MARS_WALKER_WORKMEMORY_USAGE: equ 19
 ; - 2 byte: original x, y when rendered
 ; - 16 bytes: background buffer
 
+LARGE_MUSHROOM_WORKMEMORY_USAGE: equ 17
+; - 1 byte: background saved?
+; - 16 bytes: background buffer
+
 
 ;-----------------------------------------------
 ; input:
@@ -781,6 +785,7 @@ update_tile_objects_enemy_ant_colony_count_ants_ant:
 enemy_stone_owl_hit:
 enemy_ant_colony_hit:
 enemy_bee_hive_hit:
+enemy_large_mushroom_hit:
 	call find_tile_enemy_ptr
 	ret nz
 	; only if hit was for tiles 64 - 96
@@ -1948,6 +1953,7 @@ update_tile_objects_enemy_sentinel_fire_laser_continue:
 
 update_tile_objects_enemy_mars_walker_killed:
 update_tile_objects_enemy_sentinel_killed:
+update_tile_objects_enemy_large_mushroom_killed:
 	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
 	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
 	dec c
@@ -2686,6 +2692,95 @@ room_render_tile_objects_undraw_enemy_mars_walker:
 
 
 ;-----------------------------------------------
+; input:
+; - hl: object ptr + 1
+update_tile_objects_enemy_large_mushroom:
+	dec hl
+	push hl
+	pop ix
+
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_HEALTH)
+	or a
+	jp z, update_tile_objects_enemy_large_mushroom_killed
+
+	inc (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	; states:
+	; - 0: rest
+	; - 1: ...
+; 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)
+; 	or a
+; 	jr z, update_tile_objects_enemy_large_mushroom_state_0
+; 	dec a
+; 	jr z, update_tile_objects_enemy_large_mushroom_state_1
+	; we should never get here
+; update_tile_objects_enemy_large_mushroom_state_0:
+	; state 0: resting
+
+; update_tile_objects_enemy_large_mushroom_continue:
+	jp update_tile_objects_loop_continue
+
+
+;-----------------------------------------------
+; input:
+; - hl: object ptr + 1
+room_render_tile_objects_render_enemy_large_mushroom:
+	dec hl
+	push hl
+	pop ix
+
+	; get frame to draw:
+	ld hl, tile_object_large_mushroom_frame_gfx - 1
+
+	; draw saving bg to work memory:
+	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	ld e, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR)
+	ld d, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR + 1)
+	ld a, 1
+	ld (de), a  ; mark that we have saved background
+	inc de
+	ld ixl, e  ; ptr to background buffer
+	ld ixh, d
+	ld iyl, c  ; x
+	ld iyh, b  ; y
+	call room_render_tile_objects_render_saving_background
+	jp room_render_tile_objects_loop_continue
+
+tile_object_large_mushroom_frame_gfx:
+  db 4, 4
+  dw tile_object_large_mushroom_frame_gfx_tiles
+tile_object_large_mushroom_frame_gfx_tiles:
+  db 0, 64, 65, 0
+  db 66, 67, 68, 69
+  db 70, 71, 72, 73
+  db 0, 74, 75, 0
+
+
+;-----------------------------------------------
+; input:
+; - hl: object ptr + 1
+room_render_tile_objects_undraw_enemy_large_mushroom:
+	dec hl
+	push hl
+	pop ix
+	ld e, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR)
+	ld d, (ix + ROOM_TILE_OBJECT_STRUCT_WORKMEMORY_PTR + 1)
+	ld a, (de)
+	or a
+	jp z, room_undraw_tile_objects_loop_continue  ; if we have not yet saved background, do not undraw
+	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	inc de
+	ld iyl, e
+	ld iyh, d
+	ld ixl, c
+	ld ixh, b
+	ld hl, tile_object_mars_walker_frame_right0_gfx - 1
+	call room_undraw_tile_objects_restore_background
+	jp room_undraw_tile_objects_loop_continue
+
+
+;-----------------------------------------------
 ; Used for when the player hits a tile enemy, sssumes there is a single tile enemy
 ; that can be hit in the whole screen.
 ; output:
@@ -2728,6 +2823,8 @@ find_tile_enemy_ptr_loop:
 	cp TAG_ENEMY_MARS_WALKER_RIGHT
 	ret z
 	cp TAG_ENEMY_MARS_WALKER_LEFT
+	ret z
+	cp TAG_ENEMY_MOON_LARGE_MUSHROOM
 	ret z
 	add ix, bc
 	jr find_tile_enemy_ptr_loop

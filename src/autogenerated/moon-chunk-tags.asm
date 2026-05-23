@@ -6,7 +6,7 @@ moon_standard_chunk_pool:
   db 1, #00, #01  ; data/moon/room0001-1.tmx (1)  down: hole, 
   dw #03bf
   db 1, #00, #02  ; data/moon/room0001-2.tmx (2)  down: stairs, 
-  dw #03bf
+  dw #23bf
   db 1, #00, #01  ; data/moon/room0001-3.tmx (3)  down: hole, 
   dw #03bf
   db 2, #00, #04  ; data/moon/room0010-1.tmx (4)  right: hole, 
@@ -14,53 +14,53 @@ moon_standard_chunk_pool:
   db 2, #00, #04  ; data/moon/room0010-2.tmx (5)  right: hole, 
   dw #019b
   db 2, #00, #04  ; data/moon/room0010-3.tmx (6)  right: hole, 
-  dw #0007
+  dw #2007
   db 3, #00, #05  ; data/moon/room0011-1.tmx (7)  right: hole, down: hole, 
-  dw #019f
+  dw #219f
   db 3, #00, #06  ; data/moon/room0011-2.tmx (8)  right: hole, down: stairs, 
-  dw #019f
+  dw #219f
   db 3, #00, #05  ; data/moon/room0011-3.tmx (9)  right: hole, down: hole, 
-  dw #0117
+  dw #2117
   db 3, #00, #05  ; data/moon/room0011-4.tmx (10)  right: hole, down: hole, 
   dw #008f
   db 4, #00, #10  ; data/moon/room0100-1.tmx (11)  up: hole, 
-  dw #06ef
+  dw #26ef
   db 4, #00, #20  ; data/moon/room0100-2.tmx (12)  up: stairs, 
-  dw #06ef
+  dw #26ef
   db 4, #00, #10  ; data/moon/room0100-3.tmx (13)  up: hole, 
-  dw #0007
+  dw #2007
   db 5, #00, #11  ; data/moon/room0101-1.tmx (14)  up: hole, down: hole, 
   dw #02af
   db 5, #00, #12  ; data/moon/room0101-2.tmx (15)  up: hole, down: stairs, 
-  dw #02af
+  dw #22af
   db 5, #00, #21  ; data/moon/room0101-3.tmx (16)  up: stairs, down: hole, 
   dw #02af
   db 5, #00, #11  ; data/moon/room0101-4.tmx (17)  up: hole, down: hole, 
   dw #0007
   db 6, #00, #14  ; data/moon/room0110-1.tmx (18)  up: hole, right: hole, 
-  dw #04cf
+  dw #24cf
   db 6, #00, #24  ; data/moon/room0110-2.tmx (19)  up: stairs, right: hole, 
-  dw #04cf
+  dw #24cf
   db 6, #00, #14  ; data/moon/room0110-3.tmx (20)  up: hole, right: hole, 
-  dw #0007
+  dw #2007
   db 6, #00, #14  ; data/moon/room0110-4.tmx (21)  up: hole, right: hole, 
   dw #0001
   db 7, #00, #15  ; data/moon/room0111-1.tmx (22)  up: hole, right: hole, down: hole, 
-  dw #008f
+  dw #208f
   db 7, #00, #16  ; data/moon/room0111-2.tmx (23)  up: hole, right: hole, down: stairs, 
-  dw #008f
+  dw #208f
   db 7, #00, #25  ; data/moon/room0111-3.tmx (24)  up: stairs, right: hole, down: hole, 
   dw #008f
   db 7, #00, #15  ; data/moon/room0111-4.tmx (25)  up: hole, right: hole, down: hole, 
-  dw #0007
+  dw #2007
   db 8, #00, #40  ; data/moon/room1000-1.tmx (26)  left: hole, 
-  dw #0777
+  dw #2777
   db 8, #00, #40  ; data/moon/room1000-2.tmx (27)  left: hole, 
   dw #0117
   db 8, #00, #40  ; data/moon/room1000-3.tmx (28)  left: hole, 
   dw #0333
   db 8, #00, #40  ; data/moon/room1000-4.tmx (29)  left: hole, 
-  dw #0667
+  dw #2667
   db 9, #00, #41  ; data/moon/room1001-1.tmx (30)  left: hole, down: hole, 
   dw #0337
   db 9, #00, #42  ; data/moon/room1001-2.tmx (31)  left: hole, down: stairs, 
@@ -70,19 +70,19 @@ moon_standard_chunk_pool:
   db 9, #00, #41  ; data/moon/room1001-4.tmx (33)  left: hole, down: hole, 
   dw #0333
   db 10, #00, #44  ; data/moon/room1010-1.tmx (34)  left: hole, right: hole, 
-  dw #0557
+  dw #2557
   db 10, #00, #44  ; data/moon/room1010-2.tmx (35)  left: hole, right: hole, 
-  dw #0447
+  dw #2447
   db 10, #00, #44  ; data/moon/room1010-3.tmx (36)  left: hole, right: hole, 
   dw #0007
   db 11, #00, #45  ; data/moon/room1011-1.tmx (37)  left: hole, right: hole, down: hole, 
-  dw #0117
+  dw #2117
   db 11, #00, #46  ; data/moon/room1011-2.tmx (38)  left: hole, right: hole, down: stairs, 
-  dw #0117
+  dw #2117
   db 11, #00, #45  ; data/moon/room1011-3.tmx (39)  left: hole, right: hole, down: hole, 
-  dw #0007
+  dw #2007
   db 12, #00, #50  ; data/moon/room1100-1.tmx (40)  left: hole, up: hole, 
-  dw #0667
+  dw #2667
   db 12, #00, #60  ; data/moon/room1100-2.tmx (41)  left: hole, up: stairs, 
   dw #0667
   db 12, #00, #50  ; data/moon/room1100-3.tmx (42)  left: hole, up: hole, 
@@ -90,23 +90,23 @@ moon_standard_chunk_pool:
   db 13, #00, #51  ; data/moon/room1101-1.tmx (43)  left: hole, up: hole, down: hole, 
   dw #0227
   db 13, #00, #52  ; data/moon/room1101-2.tmx (44)  left: hole, up: hole, down: stairs, 
-  dw #0227
+  dw #2227
   db 13, #00, #61  ; data/moon/room1101-3.tmx (45)  left: hole, up: stairs, down: hole, 
   dw #0227
   db 13, #00, #51  ; data/moon/room1101-4.tmx (46)  left: hole, up: hole, down: hole, 
-  dw #0227
+  dw #2227
   db 14, #00, #54  ; data/moon/room1110-1.tmx (47)  left: hole, up: hole, right: hole, 
-  dw #0447
+  dw #2447
   db 14, #00, #64  ; data/moon/room1110-2.tmx (48)  left: hole, up: stairs, right: hole, 
   dw #0447
   db 14, #00, #54  ; data/moon/room1110-3.tmx (49)  left: hole, up: hole, right: hole, 
-  dw #0007
+  dw #2007
   db 15, #00, #55  ; data/moon/room1111-1.tmx (50)  left: hole, up: hole, right: hole, down: hole, 
-  dw #0007
+  dw #2007
   db 15, #00, #56  ; data/moon/room1111-2.tmx (51)  left: hole, up: hole, right: hole, down: stairs, 
   dw #0007
   db 15, #00, #65  ; data/moon/room1111-3.tmx (52)  left: hole, up: stairs, right: hole, down: hole, 
-  dw #0007
+  dw #2007
   db 15, #00, #55  ; data/moon/room1111-4.tmx (53)  left: hole, up: hole, right: hole, down: hole, 
   dw #0007
 moon_boss_chunk_pool:

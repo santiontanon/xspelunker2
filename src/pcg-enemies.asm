@@ -398,9 +398,11 @@ pcg_generate_room__spawn_tile_enemies_loop_found:
 ; 	cp TAG_ENEMY_SENTINEL
 ; 	jp z, pcg_generate_room__spawn_sentinel  ; these are spawned elsewhere (like pushable-blocks)
 ; 	cp TAG_ENEMY_MARS_WALKER_LEFT
-; 	jp z, pcg_generate_room__spawn_walker_left  ; these are spawned elsewhere (like pushable-blocks)
+; 	jp z, pcg_generate_room__spawn_mars_walker_left  ; these are spawned elsewhere (like pushable-blocks)
 ; 	cp TAG_ENEMY_MARS_WALKER_RIGHT
-; 	jp z, pcg_generate_room__spawn_walker_right  ; these are spawned elsewhere (like pushable-blocks)
+; 	jp z, pcg_generate_room__spawn_mars_walker_right  ; these are spawned elsewhere (like pushable-blocks)
+; 	cp TAG_ENEMY_MOON_LARGE_MUSHROOM
+; 	jp z, pcg_generate_room__spawn_moon_large_mushroom  ; these are spawned elsewhere (like pushable-blocks)
 	; ...
 	ret
 
@@ -1155,7 +1157,7 @@ pcg_generate_room__spawn_ghost_continue:
 ;-----------------------------------------------
 ; input:
 ; output:
-; - iyl: number of spots found
+; - a, iyl: number of spots found
 ; - ixl, ixh: x, y of the spot (if iyl > 0)
 pcg_generate_room__find_4x4_enemy_spots:
 	; Iterate over the positions and find which are candidates for a carnivore plant,
@@ -1590,20 +1592,7 @@ pcg_generate_room__spawn_lava_generator:
 	ret nc  ; if we do not have enough work memory, do not spawn
 
 	; probability of spawning, depending on the difficulty level:
-	ld c, 64  ; easy
-	ld a, (current_world__difficulty)
-	or a
-	jr z, pcg_generate_room__spawn_lava_generator_difficulty_set
-	ld c, 128  ; normal
-	dec a
-	jr z, pcg_generate_room__spawn_lava_generator_difficulty_set
-	ld c, 196  ; hard
-	dec a
-	jr z, pcg_generate_room__spawn_lava_generator_difficulty_set
-	ld c, 255  ; very hard
-pcg_generate_room__spawn_lava_generator_difficulty_set:
-	call random_a
-	cp c
+	call pcg_generate_room__spawn_sentinel_probability_check
 	ret nc
 
 	ld de, (tmp_pcg_room__next_tile_object_ptr)
@@ -1720,20 +1709,7 @@ pcg_generate_room__spawn_sentinel:
 	ret nc  ; if we do not have enough work memory, do not spawn
 
 	; probability of spawning, depending on the difficulty level:
-	ld c, 64  ; easy
-	ld a, (current_world__difficulty)
-	or a
-	jr z, pcg_generate_room__spawn_sentinel_difficulty_set
-	ld c, 128  ; normal
-	dec a
-	jr z, pcg_generate_room__spawn_sentinel_difficulty_set
-	ld c, 196  ; hard
-	dec a
-	jr z, pcg_generate_room__spawn_sentinel_difficulty_set
-	ld c, 255  ; very hard
-pcg_generate_room__spawn_sentinel_difficulty_set:
-	call random_a
-	cp c
+	call pcg_generate_room__spawn_sentinel_probability_check
 	ret nc
 
 	ld c, TAG_ENEMY_SENTINEL
@@ -1800,6 +1776,8 @@ pcg_generate_room__spawn_sentinel_difficulty_set:
 
 
 ;-----------------------------------------------
+; input:
+; - de: ptr to the room chunk object where we will spawn the sentinel
 pcg_generate_room__spawn_mars_walker_right:
 	ld iyl, TAG_ENEMY_MARS_WALKER_RIGHT
 	ld iyh, 0  ; starting frame
@@ -1817,20 +1795,7 @@ pcg_generate_room__spawn_mars_walker_left_entry_point:
 	ret nc  ; if we do not have enough work memory, do not spawn
 
 	; probability of spawning, depending on the difficulty level:
-	ld c, 96  ; easy
-	ld a, (current_world__difficulty)
-	or a
-	jr z, pcg_generate_room__spawn_mars_walker_right_difficulty_set
-	ld c, 160  ; normal
-	dec a
-	jr z, pcg_generate_room__spawn_mars_walker_right_difficulty_set
-	ld c, 224  ; hard
-	dec a
-	jr z, pcg_generate_room__spawn_mars_walker_right_difficulty_set
-	ld c, 255  ; very hard
-pcg_generate_room__spawn_mars_walker_right_difficulty_set:
-	call random_a
-	cp c
+	call pcg_generate_room__spawn_sentinel_probability_check
 	ret nc
 
 	; spawn walker:
@@ -1899,6 +1864,99 @@ pcg_generate_room__spawn_mars_walker_right_ptr_set:
 	ld (enemy_tiles_to_upload_to_vdp_page), a
 	ld hl, enemy_mars_walker_hit
 	ld (tile_enemy_hit_fn_ptr), hl
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - de: ptr to the room chunk object where we will spawn the sentinel (type, x, y, dx, dy)
+pcg_generate_room__spawn_moon_large_mushroom:
+	ld iyl, TAG_ENEMY_MOON_LARGE_MUSHROOM
+  	ex de, hl  ; hl: ptr to room chunk object
+	ld a, (tmp_enemy_pcg_tile_enemy_workmemory_usage)
+	add LARGE_MUSHROOM_WORKMEMORY_USAGE
+	cp (tile_enemy_work_memory_end - tile_enemy_work_memory) + 1  ; + 1 so that we can use "nc" as the condition
+	ret nc  ; if we do not have enough work memory, do not spawn
+
+	; probability of spawning, depending on the difficulty level:
+	call pcg_generate_room__spawn_sentinel_probability_check
+	ret nc
+
+	; spawn mushroom:
+	ld c, iyl  ; type
+	call pcg_spawn_enemies__tile_enemy_type_check_hittable
+	ret nz
+	ld de, (tmp_pcg_room__next_tile_object_ptr)
+	push de
+		ld a, (tmp_enemy_pcg_next_enemy_id)
+		ld (de), a  ; ID
+		inc a
+		ld (tmp_enemy_pcg_next_enemy_id), a
+		inc de
+		ld a, iyl
+		ld (de), a  ; type
+		inc de
+		inc hl
+		ld a, (tmp_pcg_room__chunk_x)
+		add a, (hl)  ; x relative to this chunk
+		ld (de), a  ; x
+		inc de
+		inc hl
+		ld a, (tmp_pcg_room__chunk_y)
+		add a, (hl)  ; y relative to this chunk
+		ld (de), a  ; y
+		inc de
+		xor a
+		ld (de), a  ; state
+		inc de
+		ld (de), a  ; state timer
+		inc de
+		ld a, 32
+		ld (de), a  ; hit points
+		inc de
+		ex de, hl
+
+		ld de, tile_enemy_work_memory
+		ld a, (tmp_enemy_pcg_tile_enemy_workmemory_usage)
+		ADD_DE_A
+		xor a
+		ld (de), a  ; mark background as not saved
+		ld (hl), e  ; work memory ptr
+		inc hl
+		ld (hl), d
+		ld a, (tmp_enemy_pcg_tile_enemy_workmemory_usage)
+		add a, LARGE_MUSHROOM_WORKMEMORY_USAGE
+		ld (tmp_enemy_pcg_tile_enemy_workmemory_usage), a
+	pop hl
+	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
+	add hl, bc
+	ld (tmp_pcg_room__next_tile_object_ptr), hl	
+
+	ld hl, moon_large_mushroom_tiles_zx0
+	ld (enemy_tiles_to_upload_to_vdp), hl
+	ld a, ENEMY_TILES_PAGE
+	ld (enemy_tiles_to_upload_to_vdp_page), a
+	ld hl, enemy_large_mushroom_hit
+	ld (tile_enemy_hit_fn_ptr), hl
+	ret
+
+
+;-----------------------------------------------
+pcg_generate_room__spawn_sentinel_probability_check:
+	ld c, 96  ; easy
+	ld a, (current_world__difficulty)
+	or a
+	jr z, pcg_generate_room__spawn_sentinel_probability_check_continue
+	ld c, 160  ; normal
+	dec a
+	jr z, pcg_generate_room__spawn_sentinel_probability_check_continue
+	ld c, 224  ; hard
+	dec a
+	jr z, pcg_generate_room__spawn_sentinel_probability_check_continue
+	ld c, 255  ; very hard
+pcg_generate_room__spawn_sentinel_probability_check_continue:
+	call random_a
+	cp c
 	ret
 
 

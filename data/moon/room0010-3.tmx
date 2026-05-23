@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="29">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="30">
  <properties>
   <property name="right" value="hole"/>
  </properties>
@@ -16,9 +16,9 @@
 122,126,99,99,98,97,1,1,1,1,203,204,1,1,1,1,
 244,217,115,115,117,118,97,97,1,1,203,204,1,1,1,1,
 244,244,124,122,124,217,117,118,97,99,219,220,1,1,1,1,
-123,122,123,199,200,123,122,217,116,118,235,236,98,1,1,1,
-123,123,244,215,216,179,179,165,122,217,114,116,118,103,104,99,
-244,123,122,244,123,124,122,170,171,122,244,124,217,116,114,117,
+123,122,123,199,200,123,122,217,116,118,235,236,1,1,1,1,
+123,123,244,215,216,179,179,165,122,217,114,118,99,103,104,99,
+244,123,122,244,123,124,122,170,171,122,244,217,114,116,114,117,
 122,123,124,122,122,244,124,124,244,122,244,123,124,123,244,124
 </data>
  </layer>
@@ -27,5 +27,6 @@
   <object id="15" type="item" x="24" y="32" width="16" height="16"/>
   <object id="27" type="item" x="48" y="40" width="16" height="16"/>
   <object id="28" type="4x4-item" x="16" y="16" width="32" height="32"/>
+  <object id="29" type="sentinel" x="96" y="48" width="32" height="32"/>
  </objectgroup>
 </map>

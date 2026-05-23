@@ -260,6 +260,7 @@ public class AssemblerTags {
         "TAG_ENEMY_UFO",
         "TAG_ENEMY_MARS_WALKER_RIGHT",
         "TAG_ENEMY_MARS_WALKER_LEFT",
+        "TAG_ENEMY_MOON_LARGE_MUSHROOM",
     };
     
 

@@ -4706,7 +4706,7 @@ update_enemy_mars_robot1_collision_left_decision_jump_down:
 update_enemy_mushroom2:
 	ld iyh, 4  ; damage to deal
 	call update_enemy_hurt_player_2x2
-	ld iyl, COLOR_LIGHT_RED
+	ld iyl, COLOR_PURPLE
 	jr update_enemy_mushroom2_entry_point
 update_enemy_mushroom1:
 	ld iyh, 4  ; damage to deal
@@ -4872,7 +4872,15 @@ update_enemy_mushroom_spore_no_speed_change:
 	call general_check_collision_with_wall
 	jp z, update_enemy_delete
 update_enemy_mushroom_spore_continue:
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 6) * 4
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	rrca
+	and #1f
+	ld c, 3
+	call random_modulo_loop
+	add a, a
+	add a, a
+	add a,(FIRST_ENEMY_SPRITE_PATTERN + 6) * 4 
+	ld e, a
 	ld d, COLOR_YELLOW
  	jp enemy_sprite_and_continue
 

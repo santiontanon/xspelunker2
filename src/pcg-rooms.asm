@@ -482,7 +482,7 @@ pcg_generate_room__fg_chunk_object_loop:
 					jr z, pcg_generate_room__fg_chunk_object_loop_spawn_sentinel
 					cp CHUNK_LOCATION_WALKER_LEFT
 					jr z, pcg_generate_room__fg_chunk_object_loop_spawn_mars_walker_left
-					jr pcg_generate_room__fg_chunk_object_loop_next
+					jp pcg_generate_room__fg_chunk_object_loop_next
 pcg_generate_room__fg_chunk_object_loop_spawn_pushable_block:
 					; it's a pushable block, spawn it:
 					push hl
@@ -528,6 +528,8 @@ pcg_generate_room__fg_chunk_object_loop_spawn_sentinel:
 					ld a, (current_area__id)
 					cp 10  ; mars (in mars, there are no sentinels, they correspond to walkers)
 					jr z, pcg_generate_room__fg_chunk_object_loop_spawn_mars_walker_right
+					cp 11  ; moon (in moon, there are no sentinels, they correspond to mushrooms)
+					jr z, pcg_generate_room__fg_chunk_object_loop_spawn_moon_large_mushroom
 					; it's an atlantis sentinel robot, spawn it:
 					push hl
 					push de
@@ -539,7 +541,6 @@ pcg_generate_room__fg_chunk_object_loop_spawn_sentinel:
 					pop hl
 					jr pcg_generate_room__fg_chunk_object_loop_next
 pcg_generate_room__fg_chunk_object_loop_spawn_mars_walker_right:
-					; it's an atlantis sentinel robot, spawn it:
 					push hl
 					push de
 					push iy
@@ -550,7 +551,19 @@ pcg_generate_room__fg_chunk_object_loop_spawn_mars_walker_right:
 					pop iy
 					pop de
 					pop hl
-					jr pcg_generate_room__fg_chunk_object_loop_next					
+					jr pcg_generate_room__fg_chunk_object_loop_next
+pcg_generate_room__fg_chunk_object_loop_spawn_moon_large_mushroom:
+					push hl
+					push de
+					push iy
+						ex de, hl
+						ld c, PCG_PAGE_ENEMIES
+						ld hl, pcg_generate_room__spawn_moon_large_mushroom
+						call call_hl_in_page_c_8000
+					pop iy
+					pop de
+					pop hl
+					jr pcg_generate_room__fg_chunk_object_loop_next
 pcg_generate_room__fg_chunk_object_loop_spawn_mars_walker_left:
 					; it's an atlantis sentinel robot, spawn it:
 					push hl
