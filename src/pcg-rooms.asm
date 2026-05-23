@@ -116,8 +116,8 @@ area_default_tileset_ptrs:
 	dw tiles_moon_zx0, update_animations_in_vdp_moon
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_moon
-	db MARS_ENEMY_SPRITES_PAGE
-	dw mars_enemy_sprites_zx0  ; moon
+	db MOON_ENEMY_SPRITES_PAGE
+	dw moon_enemy_sprites_zx0  ; moon
 	dw 0
 	db 0
 
