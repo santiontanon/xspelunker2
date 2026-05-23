@@ -664,7 +664,7 @@ update_tile_objects_enemy_bee_hive:
 	inc hl
 	ld (hl), #ff  ; hit ID
 	inc hl
-	ld (hl), 0  ; health	
+	ld (hl), 1  ; health	
 	jp update_tile_objects_loop_continue
 
 
@@ -2704,19 +2704,44 @@ update_tile_objects_enemy_large_mushroom:
 	jp z, update_tile_objects_enemy_large_mushroom_killed
 
 	inc (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
-	; states:
-	; - 0: rest
-	; - 1: ...
-; 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE)
-; 	or a
-; 	jr z, update_tile_objects_enemy_large_mushroom_state_0
-; 	dec a
-; 	jr z, update_tile_objects_enemy_large_mushroom_state_1
-	; we should never get here
-; update_tile_objects_enemy_large_mushroom_state_0:
-	; state 0: resting
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_STATE_TIMER)
+	and #0f
+	jp nz, update_tile_objects_loop_continue
+	; spawn poison cloud:
+	call ptr_to_new_sprite_enemy
+	jp nz, update_tile_objects_loop_continue
+	ld (hl), 0
+	inc hl
+	ld (hl), ENEMY_POISON_CLOUD
+	inc hl
+	call random_a
+	and #07
+	ld (hl), a  ; pixel x
+	inc hl
+	ld c, 3
+	call random_modulo
+	add a, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	ld (hl), a  ; tile x
+	inc hl
+	call random_a
+	and #07
+	ld (hl), a  ; pixel y
+	inc hl
+	ld c, 3
+	call random_modulo
+	add a, (ix + ROOM_TILE_OBJECT_STRUCT_Y)	
+	ld (hl), a  ; tile y
+	inc hl
+	ld (hl), 0  ; state
+	inc hl
+	ld (hl), 0  ; state timer
+	inc hl
+	ld (hl), #ff  ; hit ID
+	inc hl
+	ld (hl), 0  ; health	
+	jp update_tile_objects_loop_continue
 
-; update_tile_objects_enemy_large_mushroom_continue:
+
 	jp update_tile_objects_loop_continue
 
 

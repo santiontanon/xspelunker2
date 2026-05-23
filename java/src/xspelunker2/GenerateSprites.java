@@ -695,9 +695,17 @@ public class GenerateSprites {
         data.addAll(extractSprite(sourceImage, 64, 360, 15));
         data.addAll(extractSprite(sourceImage, 80, 360, 15));
         data.addAll(extractSprite(sourceImage, 96, 360, 15));
+
+        // poison cloud (9):
+        data.addAll(extractSprite(sourceImage, 0, 392, 15));
+        data.addAll(extractSprite(sourceImage, 16, 392, 15));
+        data.addAll(extractSprite(sourceImage, 32, 392, 15));
+        data.addAll(extractSprite(sourceImage, 48, 392, 15));
+        data.addAll(extractSprite(sourceImage, 64, 392, 15));
+        data.addAll(extractSprite(sourceImage, 80, 392, 15));
         
-        // filler (9)
-        for(int i = 0;i<32 * 11;i++) {
+        // filler (15)
+        for(int i = 0;i<32 * 5;i++) {
             data.add(0);
         }
         

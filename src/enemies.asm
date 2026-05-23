@@ -20,6 +20,7 @@ enemy_update_fn_table:
 	dw update_enemy_bullet_bubble  ; boss 5 attack
 	dw update_enemy_mushroom_spore1
 	dw update_enemy_mushroom_spore2
+	dw update_enemy_poison_cloud
 	; enemies you can hit:
 	dw update_enemy_snake  ; left-to-right
 	dw update_enemy_snake_dasher  ; left-to-right + dash
@@ -4882,6 +4883,56 @@ update_enemy_mushroom_spore_continue:
 	add a,(FIRST_ENEMY_SPRITE_PATTERN + 6) * 4 
 	ld e, a
 	ld d, COLOR_YELLOW
+ 	jp enemy_sprite_and_continue
+
+
+;-----------------------------------------------
+update_enemy_poison_cloud:
+	ld iyh, 2  ; damage to deal
+	call update_enemy_hurt_player_2x2
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 240
+	jp z, update_enemy_delete
+	and #01
+	jr nz, update_enemy_poison_cloud_continue
+	call random_a
+	and #03
+	jr nz, update_enemy_poison_cloud_no_speed_change
+	ld c, 3
+	call random_modulo
+	dec a
+	add a, (ix + ROOM_OBJECT_STRUCT_EXTRA1)
+	cp 2
+	jr nz,  update_enemy_poison_cloud_change_x_continue
+	ld a, 1
+update_enemy_poison_cloud_change_x_continue:
+	cp -2
+	jr nz,  update_enemy_poison_cloud_change_x_continue2
+	ld a, -1
+update_enemy_poison_cloud_change_x_continue2:
+	ld (ix + ROOM_OBJECT_STRUCT_EXTRA1), a
+
+update_enemy_poison_cloud_no_speed_change:
+	; move:
+	ld c, (ix + ROOM_OBJECT_STRUCT_EXTRA1)
+	ld b, 0
+	call update_enemy_move_cb
+
+update_enemy_poison_cloud_continue:
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 9) * 4 
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 80
+	jr c, update_enemy_poison_cloud_continue_sprite_set
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 11) * 4 
+	cp 160
+	jr c, update_enemy_poison_cloud_continue_sprite_set
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 13) * 4 
+update_enemy_poison_cloud_continue_sprite_set:
+	and #04
+	add a, e
+	ld e, a
+	ld d, COLOR_DARK_GREEN
  	jp enemy_sprite_and_continue
 
 
