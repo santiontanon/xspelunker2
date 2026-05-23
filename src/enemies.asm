@@ -18,6 +18,8 @@ enemy_update_fn_table:
 	dw update_enemy_laser  ; atlantis sentinel, and boss 5 attack
 	dw update_enemy_bullet_ignoring_walls  ; ignores wall collisions
 	dw update_enemy_bullet_bubble  ; boss 5 attack
+	dw update_enemy_mushroom_spore1
+	dw update_enemy_mushroom_spore2
 	; enemies you can hit:
 	dw update_enemy_snake  ; left-to-right
 	dw update_enemy_snake_dasher  ; left-to-right + dash
@@ -65,7 +67,6 @@ enemy_update_fn_table:
 	dw update_enemy_mars_robot2
 	dw update_enemy_mushroom1
 	dw update_enemy_mushroom2
-	dw update_enemy_mushroom_spore
 
 
 ;-----------------------------------------------
@@ -4727,7 +4728,48 @@ update_enemy_mushroom1_state1_continue:
 	and #0f
 	jr nz, update_enemy_mushroom1_state1_continue2
 	; releasing spores:
-	; ...
+	call ptr_to_new_sprite_enemy
+	jr nz, update_enemy_mushroom1_state1_continue2
+	ld (hl), 0  ; ID
+	inc hl
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	add a, ENEMY_MUSHROOM_SPORE1 - ENEMY_MUSHROOM1
+	ld (hl), a  ; spore1 or spore2
+	inc hl
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	ld (hl), a
+	inc hl
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld (hl), a
+	inc hl
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_Y)
+	add a, 4
+	ld (hl), a
+	inc hl
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	ld (hl), a
+	inc hl
+	ld (hl), 0  ; state
+	inc hl
+	ld (hl), 0  ; state timer
+	inc hl
+	ld (hl), #ff  ; last hit ID
+	inc hl
+	ld (hl), 1  ; health
+	inc hl
+	inc hl
+	ld c, 3
+	call random_modulo
+	dec a
+	ld (hl), a  ; extra 1
+	inc hl
+	ld c, 3
+	call random_modulo
+	dec a
+	ld (hl), a  ; extra 2
+	ld hl, SFX_enemy_bullet
+	call play_SFX_with_high_priority	
+
 update_enemy_mushroom1_state1_continue2:
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 2) * 4
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
@@ -4765,12 +4807,71 @@ update_enemy_mushroom1_draw_e_set:
 	
 
 ;-----------------------------------------------
-update_enemy_mushroom_spore:
+update_enemy_mushroom_spore2:
 	ld iyh, 4  ; damage to deal
 	call update_enemy_hurt_player_shieldable_bullet
 	jp z, update_enemy_delete
 	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
-	; ...
+	jr update_enemy_mushroom_spore2_entry_point
+update_enemy_mushroom_spore1:
+	ld iyh, 4  ; damage to deal
+	call update_enemy_hurt_player_shieldable_bullet
+	jp z, update_enemy_delete
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	and #01
+	jr nz, update_enemy_mushroom_spore_continue
+update_enemy_mushroom_spore2_entry_point:
+	call random_a
+	ld c, a
+	and #03
+	jr nz, update_enemy_mushroom_spore_no_speed_change
+	ld a, c
+	and #40
+	jr z, update_enemy_mushroom_spore_change_y
+update_enemy_mushroom_spore_change_x:
+	ld c, 3
+	call random_modulo
+	dec a
+	add a, (ix + ROOM_OBJECT_STRUCT_EXTRA1)
+	cp 2
+	jr nz,  update_enemy_mushroom_spore_change_x_continue
+	ld a, 1
+update_enemy_mushroom_spore_change_x_continue:
+	cp -2
+	jr nz,  update_enemy_mushroom_spore_change_x_continue2
+	ld a, -1
+update_enemy_mushroom_spore_change_x_continue2:
+	ld (ix + ROOM_OBJECT_STRUCT_EXTRA1), a
+	jr update_enemy_mushroom_spore_no_speed_change
+
+update_enemy_mushroom_spore_change_y:
+	ld c, 3
+	call random_modulo
+	dec a
+	add a, (ix + ROOM_OBJECT_STRUCT_EXTRA2)
+	cp 2
+	jr nz,  update_enemy_mushroom_spore_change_y_continue
+	ld a, 1
+update_enemy_mushroom_spore_change_y_continue:
+	cp -2
+	jr nz,  update_enemy_mushroom_spore_change_y_continue2
+	ld a, -1
+update_enemy_mushroom_spore_change_y_continue2:
+	ld (ix + ROOM_OBJECT_STRUCT_EXTRA2), a
+
+update_enemy_mushroom_spore_no_speed_change:
+	; move:
+	ld c, (ix + ROOM_OBJECT_STRUCT_EXTRA1)
+	ld b, (ix + ROOM_OBJECT_STRUCT_EXTRA2)
+	call update_enemy_move_cb
+
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	inc c
+	call general_check_collision_with_wall
+	jp z, update_enemy_delete
+update_enemy_mushroom_spore_continue:
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 6) * 4
 	ld d, COLOR_YELLOW
  	jp enemy_sprite_and_continue
