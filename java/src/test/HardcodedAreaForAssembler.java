@@ -28,12 +28,13 @@ public class HardcodedAreaForAssembler {
     {
         boolean include_pcg_area__debug_data = false;
         MSXRandom r = new MSXRandom(0, 0x5555);
+        boolean spawnFirestoneForge = false;
 
         PCGWorld pcg1 = new PCGWorld();
         PCGArea pcg2_jungle = new PCGArea(true, "jungle");
         PCGArea pcg2_pyramid = new PCGArea(true, "pyramid");
         
-        World w = pcg1.generate(r);        
+        World w = pcg1.generate(r, spawnFirestoneForge);        
         RenderedArea ra0 = pcg2_jungle.generate(w.areas.get(0), w, r);
         RenderedArea ra1 = pcg2_pyramid.generate(w.areas.get(1), w, r);
 //        RenderedArea ra2 = pcg2.generate(w.areas.get(2), w, r);

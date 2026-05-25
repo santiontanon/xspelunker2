@@ -37,6 +37,7 @@ public class GenerationTestSingleArea {
     public static void main(String args[]) throws Exception
     {
         MSXRandom r = new MSXRandom(0, 0x5555);
+        boolean spawnFirestoneForge = false;
 
         PCGWorld pcg1 = new PCGWorld();
         PCGArea pcg2_jungle = new PCGArea(true, "jungle");
@@ -63,7 +64,7 @@ public class GenerationTestSingleArea {
 //        for(int i = 0;i<65536;i++) {
             r.setSeed(i, 0x5555);
 //            World w = pcg1.generate(r);
-            World w = pcg1.generate(r, 1, false);          
+            World w = pcg1.generate(r, 1, false, spawnFirestoneForge);          
             if (w == null) {
                 System.out.println("Cannot generate with seed " + i);
             } else {

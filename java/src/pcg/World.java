@@ -104,8 +104,9 @@ public class World {
 //            }
 //        }
         
-        int legend_x = 725;
+        int legend_x = 700;
         int legend_y = 40;
+        int tags_per_column = 80;
         
         g.setColor(Color.BLACK);
         g.setFont(tagFont);
@@ -123,6 +124,10 @@ public class World {
                 System.err.println("Tag '" + tag + "' is in more than one location: " + locations);
             }
             legend_y += 8;
+            if (i != 0 && (i%tags_per_column) == 0) {
+                legend_y = 40;
+                legend_x += 100;
+            }
         }
     }
     

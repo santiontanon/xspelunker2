@@ -1,7 +1,6 @@
 to do:
 
 ***- powerstone/Firestone forge in the moon:
-  ***- spawn it in the game in Java (if a boolean is specified)
   ***- spawn it in the game in assembler:
     ***- update the clue in ATLANTIS_TABLET_5_1 (or add others if necessary)
     ***- detect if the "ATLANTIS", "AZTLAN", or "COH" (whatever I decide) is in the name (this should be done both at game start, and in the astronomer's room, unlike the other codes)

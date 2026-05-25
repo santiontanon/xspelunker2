@@ -128,6 +128,9 @@ public class RenderedArea {
                     } else if (a.rooms[j][i] == PCGArea.GUARDIAN_CAIMAN3_ROOM_ID) {
                         c = new RoomChunk("data/guard-statue-room3.tmx", 0, "pyramid");
                         c.loadGfx("data/guard-statue-room-tiles.png");
+                    } else if (a.rooms[j][i] == PCGArea.FIRESTONE_FORGE_ROOM_ID) {
+                        c = new RoomChunk("data/firestone-forge-room.tmx", 0, "moon");
+                        c.loadGfx("data/firestone-forge-room-tiles.png");
                     }
 
                     if (c != null) {     

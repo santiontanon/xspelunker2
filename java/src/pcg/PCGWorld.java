@@ -366,13 +366,13 @@ public class PCGWorld {
     }
 
 
-    public World generate(MSXRandom a_r) throws Exception
+    public World generate(MSXRandom a_r, boolean spawnFirestoneForge) throws Exception
     {
-        return generate(a_r, 2, true);
+        return generate(a_r, 2, true, spawnFirestoneForge);
     }
     
     
-    public World generate(MSXRandom a_r, int n_retries, boolean use_0_seed_on_last_try) throws Exception
+    public World generate(MSXRandom a_r, int n_retries, boolean use_0_seed_on_last_try, boolean spawnFirestoneForge) throws Exception
     {
         r = a_r;
         World w;
@@ -398,7 +398,7 @@ public class PCGWorld {
             List<AreaDivision> marsSpanningTree = generateSpanningTree(w, 10);
             List<AreaDivision> moonSpanningTree = generateSpanningTree(w, 11);
             n_times_reached_generation_stage[3]++;
-            if (!generateMission(w, w.spanningTree, marsSpanningTree, moonSpanningTree, usedKeysAndLocks)) {
+            if (!generateMission(w, w.spanningTree, marsSpanningTree, moonSpanningTree, usedKeysAndLocks, spawnFirestoneForge)) {
 //                System.out.println("    generateMission failed");
                 continue;
             }
@@ -857,7 +857,8 @@ public class PCGWorld {
     public boolean generateMission(World w, List<AreaDivision> tree, 
                                    List<AreaDivision> marsSpanningTree,
                                    List<AreaDivision> moonSpanningTree,
-                                   List<String> usedKeysAndLocks) throws Exception
+                                   List<String> usedKeysAndLocks,
+                                   boolean spawnFirestoneForge) throws Exception
     {
 //        System.out.println("generateMission seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
         
@@ -946,6 +947,17 @@ public class PCGWorld {
 //            System.out.println("8-bridge-room placed at " + eightBridgeRoom_p);
         } else {
             System.out.println("Cannot place 8-bridge-room!");
+        }
+        if (spawnFirestoneForge) {
+            AreaPoint forge_p = randomAreaPoint(w.areas.get(11), true);
+            if (forge_p != null) {
+                // Spawn 8 bridge room:
+                AreaDivision forgeRoom = getDivisionByID(forge_p.a.divisionIDs[forge_p.x][forge_p.y], tree);
+                addTag(forge_p, "firestone-forge", forgeRoom);
+                System.out.println("firestone-forge placed at " + forge_p);
+            } else {
+                System.out.println("Cannot place firestone-forge!");
+            }
         }
         
 //        System.out.println("Key division depths: " +

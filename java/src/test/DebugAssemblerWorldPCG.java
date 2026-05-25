@@ -32,12 +32,13 @@ public class DebugAssemblerWorldPCG {
     public static void main(String args[]) throws Exception
     {
         MSXRandom r = new MSXRandom(0, 0x5555);
+        boolean spawnFirestoneForge = false;
 
         PCGWorld pcg1 = new PCGWorld();
         PCGArea pcg2_jungle = new PCGArea(true, "jungle");
         PCGArea pcg2_pyramid = new PCGArea(true, "pyramid");
         
-        World w = pcg1.generate(r);
+        World w = pcg1.generate(r, spawnFirestoneForge);
         for(int i = 0;i<1;i++) {
             PCGArea pcg2 = null;
             switch(i) {

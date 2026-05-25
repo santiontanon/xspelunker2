@@ -30,6 +30,7 @@ public class PCGArea {
     public static final int GUARDIAN_CAIMAN1_ROOM_ID = 106;
     public static final int GUARDIAN_CAIMAN2_ROOM_ID = 107;
     public static final int GUARDIAN_CAIMAN3_ROOM_ID = 108;
+    public static final int FIRESTONE_FORGE_ROOM_ID = 109;
     public static final int n_connections_per_type[] = {
         0, 1, 1, 2, 1, 2, 2, 3,
         1, 2, 2, 3, 2, 3, 3, 4,
@@ -2403,7 +2404,19 @@ public class PCGArea {
                 }
             }
         }
-
+        if (a.ID == 11) {  // moon:
+            for(int i = 0;i<h;i++) {
+                for(int j = 0;j<w;j++) {
+                    if (a.tags[j][i] != null && a.tags[j][i].contains("firestone-forge")) {
+                        if (a.tags[j][i].size() > 1) {
+                            System.err.println("More than one tag on the firestone forge room! " + a.tags[j][i]);
+                            return false;
+                        }
+                        a.rooms[j][i] = FIRESTONE_FORGE_ROOM_ID;
+                    }
+                }
+            }
+        }  
         // reset room IDs:
         int newID = 0;
         boolean processed[][] = new boolean[w][h];
@@ -2880,6 +2893,7 @@ public class PCGArea {
                 case "GUARDIAN_CAIMAN1":
                 case "GUARDIAN_CAIMAN2":
                 case "GUARDIAN_CAIMAN3":
+                case "firestone-forge":
                     tagToPlace = tag;
                     break;
 
@@ -4030,6 +4044,7 @@ public class PCGArea {
                 case "GUARDIAN_CAIMAN1":
                 case "GUARDIAN_CAIMAN2":
                 case "GUARDIAN_CAIMAN3":
+                case "firestone-forge":
                     // ...
                     break;
 

@@ -23,11 +23,12 @@ public class HardcodedRoomForAssembler {
     public static void main(String args[]) throws Exception
     {
         MSXRandom r = new MSXRandom(0, 0xaaaa);
+        boolean spawnFirestoneForge = false;
 
         PCGWorld pcg1 = new PCGWorld();
         PCGArea pcg2 = new PCGArea(true, "pyramid");
         
-        World w = pcg1.generate(r);
+        World w = pcg1.generate(r, spawnFirestoneForge);
         pcg2.generate(w.areas.get(0), w, r);
         RenderedArea ra = pcg2.generate(w.areas.get(1), w, r);
         generateAssemblerRoomData(1, ra, pcg2);  // size 1x4, many animations

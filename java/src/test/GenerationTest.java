@@ -37,6 +37,8 @@ public class GenerationTest {
     public static void main(String args[]) throws Exception
     {
         MSXRandom r = new MSXRandom(0, 0x5555);
+//        boolean spawnFirestoneForge = false;
+        boolean spawnFirestoneForge = true;
 
         PCGWorld pcg1 = new PCGWorld();
         PCGArea pcg2_jungle = new PCGArea(true, "jungle");
@@ -110,7 +112,7 @@ public class GenerationTest {
         r.setSeed(0xe73b, 0x5555);
 //        r.setSeed(0x003a, 0x5555);
 //        r.setSeed(101, 0x5555);
-        World w = pcg1.generate(r);
+        World w = pcg1.generate(r, spawnFirestoneForge);
         if (w != null) {
 //            if (!Solver.solveGame(w)) {
 //                System.err.println("Error: game cannot be solved!");

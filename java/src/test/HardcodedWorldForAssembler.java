@@ -55,6 +55,7 @@ public class HardcodedWorldForAssembler {
     public static String generateWorldStr(int seed1) throws Exception
     {
         MSXRandom r = new MSXRandom(seed1, 0x5555);
+        boolean spawnFirestoneForge = false;
 
         PCGWorld pcg1 = new PCGWorld();
         PCGArea pcg2_jungle = new PCGArea(true, "jungle");
@@ -66,7 +67,7 @@ public class HardcodedWorldForAssembler {
         PCGArea pcg2_moon = new PCGArea(true, "moon");
         
         String worldStr = "";
-        World w = pcg1.generate(r, 1, false);
+        World w = pcg1.generate(r, 1, false, spawnFirestoneForge);
         if (w == null) return null;
         for(int i = 0;i<pcg1.n_areas;i++) {
             PCGArea pcg2 = null;
