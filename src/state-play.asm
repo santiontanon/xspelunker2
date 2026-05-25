@@ -177,15 +177,15 @@ state_play:
 
 state_play_from_continue:
 		; initial player position:
-; 		ld hl, #0100
-		ld hl, #0a00
+		ld hl, #0100
+; 		ld hl, #0a00
 ; 		ld hl, #1000
 ; 		ld hl, #1800
 ; 		ld hl, #1c00
 		ld (player_x), hl
-; 		ld hl, #0b00
+		ld hl, #0b00
 ; 		ld hl, #0a00
-		ld hl, #0800
+; 		ld hl, #0800
 		ld (player_y), hl
 		ld a, #ff
 		ld (player_requested_weapon_sprite), a
@@ -202,12 +202,12 @@ state_play_from_continue:
 ; 		ld e, 8  ; xibalba
 ; 		ld e, 9  ; atlantis
 ; 		ld e, 10  ; mars
-		ld e, 11  ; moon
+; 		ld e, 11  ; moon
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
 
 		; generate room:
-; 		ld e, START_ROOM_ID
+		ld e, START_ROOM_ID
 ; 		ld e, GUARDIAN_CAIMAN1_ROOM_ID
 ; 		ld e, GUARDIAN_CAIMAN2_ROOM_ID
 ; 		ld e, 18
@@ -216,7 +216,7 @@ state_play_from_continue:
 ; 		ld e, 2
 ; 		ld e, 3  ; <- third boss
 ; 		ld e, 17  ; <- fourth boss
-		ld e, 0
+; 		ld e, 0
 ; 		ld e, EIGHT_BRIDGE_ROOM_ID
 ; 		ld e, TELEPORTER_ROOM_ID
 ; 		ld e, TEMPLE_OF_POSEIDON_ID
