@@ -1870,6 +1870,11 @@ object_interaction_function_tablet_not_astronomy_tablet2
 	ld de, caiman_tablet_fn
 	jr object_interaction_function_tablet_ptr_set
 object_interaction_function_tablet_not_guardian_caiman_tablet
+	cp TAG_FIRESTONE_FORGE_TABLET
+	jr nz, object_interaction_function_tablet_not_firestone_forge_tablet
+	ld de, firestone_forge_tablet_fn
+	jr object_interaction_function_tablet_ptr_set
+object_interaction_function_tablet_not_firestone_forge_tablet
 	; Determine tablet content:
 	ld hl, current_world__tablet_content
 object_interaction_function_tablet_loop:

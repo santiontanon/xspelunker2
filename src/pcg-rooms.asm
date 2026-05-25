@@ -2775,7 +2775,7 @@ pcg_generate_room__calendar_turn_on_phase1:
 
 
 ;-----------------------------------------------
-pcg_generate_room__calendar_open_walls:
+pcg_generate_room__open_walls_prepare_ptrs:
 	; open the appropriate walls:
 	ld a, (current_room__y)
 	add a, a  ; y in chunks
@@ -2786,11 +2786,18 @@ pcg_generate_room__calendar_open_walls:
 	ld a, b
 	or a
 	ld a, 0
-	jr z, pcg_generate_room__calendar_ptr_loop_end
+	ret z
 pcg_generate_room__calendar_ptr_loop:
 	add a, c
 	djnz pcg_generate_room__calendar_ptr_loop
-pcg_generate_room__calendar_ptr_loop_end:
+	ret
+
+
+;-----------------------------------------------
+; this method is shared between:
+; - pcg_generate_room__calendar_open_walls
+; - pcg_generate_room__moon_open_walls
+pcg_generate_room__open_walls_top_chunks:
 	ld c, a
 	ld a, (current_room__x)
 	add a, a
@@ -2888,6 +2895,14 @@ pcg_generate_room__calendar_top_right_stairs:
 		ld (hl), 167
 pcg_generate_room__calendar_continue4:
 	pop hl
+	ret
+
+
+;-----------------------------------------------
+pcg_generate_room__calendar_open_walls:
+	call pcg_generate_room__open_walls_prepare_ptrs
+	call pcg_generate_room__open_walls_top_chunks
+
 	ld a, (current_area__width)
 	add a, a  ; width in chunks
 	dec a
@@ -2967,6 +2982,93 @@ pcg_generate_room__calendar_continue7:
 	ld de, #0602
 	call room_remove_breakable_wall_restore_background
 pcg_generate_room__calendar_continue8:
+	ret
+
+
+;-----------------------------------------------
+pcg_generate_room__moon_open_walls:
+	; open the appropriate walls:
+	call pcg_generate_room__open_walls_prepare_ptrs
+	call pcg_generate_room__open_walls_top_chunks
+	ld a, (current_area__width)
+	add a, a  ; width in chunks
+	dec a
+	ld e, a
+	ld d, 0
+	add hl, de
+	ld a, (hl)  ; bottom-left chunk ID
+	push hl
+		ld b, PCG_DIRECTION_LEFT
+		call pcg_generate_room__chunk_direction_open
+		jr z, pcg_generate_room__moon_open_walls_continue5
+		ld bc, #1000
+		ld de, #0602
+		call room_remove_breakable_wall_restore_background
+pcg_generate_room__moon_open_walls_continue5:
+	pop hl
+	ld a, (hl)  ; bottom-left chunk ID
+	push hl
+		ld b, PCG_DIRECTION_DOWN
+		call pcg_generate_room__chunk_direction_open
+		jr z, pcg_generate_room__moon_open_walls_continue6
+		; check if it's via a ladder:
+		inc hl
+		inc hl
+		ld a, (hl)  ; left/up/right/down tags
+		and #03
+		cp #02  ; is it a ladder?
+		jr z, pcg_generate_room__moon_open_walls_bottom_left_stairs
+		ld bc, #1504
+		ld de, #0308
+		call room_remove_breakable_wall_restore_background
+		jr pcg_generate_room__moon_open_walls_continue6
+pcg_generate_room__moon_open_walls_bottom_left_stairs:
+		ld hl, current_room__tile_map + 22*32 + 7
+		ld (hl), 168
+		inc hl
+		ld (hl), 136
+		ld hl, current_room__tile_map + 23*32 + 7
+		ld (hl), 248
+		inc hl
+		ld (hl), 167
+pcg_generate_room__moon_open_walls_continue6:
+	pop hl
+	inc hl
+	ld a, (hl)  ; bottom-right chunk ID
+	push hl
+		ld b, PCG_DIRECTION_DOWN
+		call pcg_generate_room__chunk_direction_open
+		jr z, pcg_generate_room__moon_open_walls_continue7
+		; check if it's via a ladder:
+		inc hl
+		inc hl
+		ld a, (hl)  ; left/up/right/down tags
+		and #03
+		cp #02  ; is it a ladder?
+		jr z, pcg_generate_room__moon_open_walls_bottom_right_stairs
+		ld bc, #1514
+		ld de, #0308
+		call room_remove_breakable_wall_restore_background
+		jr pcg_generate_room__moon_open_walls_continue7
+pcg_generate_room__moon_open_walls_bottom_right_stairs:
+		ld hl, current_room__tile_map + 22*32 + 23
+		ld (hl), 168
+		inc hl
+		ld (hl), 136
+		ld hl, current_room__tile_map + 23*32 + 23
+		ld (hl), 248
+		inc hl
+		ld (hl), 167		
+pcg_generate_room__moon_open_walls_continue7:
+	pop hl
+	ld a, (hl)  ; bottom-right chunk ID
+	ld b, PCG_DIRECTION_RIGHT
+	call pcg_generate_room__chunk_direction_open
+	jr z, pcg_generate_room__moon_open_walls_continue8
+	ld bc, #101e
+	ld de, #0602
+	call room_remove_breakable_wall_restore_background
+pcg_generate_room__moon_open_walls_continue8:
 	ret
 
 
@@ -3358,7 +3460,7 @@ pcg_generate_room__firestone_forge:
 	ld hl, buffer_4096 + 60 * 64
 	ld (item_object_to_upload_to_vdp), hl
 
-	call pcg_generate_room__calendar_open_walls
+	call pcg_generate_room__moon_open_walls
 
 	; spawn tablet:
 	ld iy, current_room__tile_objects
@@ -3374,6 +3476,7 @@ pcg_generate_room__firestone_forge:
 ; - a: chunk ID
 ; - b: direction to check
 ; output:
+; - hl: ptr to the chunk flags
 ; - z: closed
 ; - nz: open
 pcg_generate_room__chunk_direction_open:

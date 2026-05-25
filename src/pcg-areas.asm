@@ -1876,7 +1876,7 @@ pcg_generate_area__choose_chunks_loop_x_continue_and_mask_continue3:
 			or #03
 			ld ixl, a
 pcg_generate_area__choose_chunks_loop_x_continue_and_mask_continue4:
-			; make sure there are no tgs in iyl that cannot be matched given the and mask in ixl:
+			; make sure there are no tags in iyl that cannot be matched given the and mask in ixl:
 			ld a, iyh
 			and ixl
 			ld iyh, a
@@ -2063,11 +2063,16 @@ pcg_generate_area__choose_chunks_loop_x_next_set_previous_flags_continue:
 				cp CALENDAR_ROOM_ID  ; first special room
 				jr c, pcg_generate_area__choose_chunks_loop_x_next_set_previous_flags_continue_no_special_room
 pcg_generate_area__choose_chunks_loop_x_next_set_previous_flags_continue_special_room:
-				; we were coming from a special room, up/left tags should be "hole"
+				; we were coming from a special room, up/left tags should be "hole" or "stairs"
 				ld e, #40  ; left = hole
 				ld d, #10  ; up = hole
 			pop hl
 			bit PCG_DIRECTION_DOWN_BIT, c
+			jr z, pcg_generate_area__choose_chunks_loop_x_next_set_previous_flags_continue_special_room_no_down
+			ld a, (hl)  ; previous down tag (we accept "#10" and "#20" as valid tags for special rooms: hole or ladder, but no otehr tags are allowed)
+			cp #10
+			jr z, pcg_generate_area__choose_chunks_loop_x_next_set_previous_flags_continue_special_room_no_down
+			cp #20
 			jr z, pcg_generate_area__choose_chunks_loop_x_next_set_previous_flags_continue_special_room_no_down
 			ld (hl), d
 pcg_generate_area__choose_chunks_loop_x_next_set_previous_flags_continue_special_room_no_down:

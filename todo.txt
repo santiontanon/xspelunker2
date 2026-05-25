@@ -1,8 +1,6 @@
 to do:
 
 ***- powerstone/Firestone forge in the moon:
-  ***- open walls properly for moon biome: pcg_generate_room__firestone_forge
-  ***- TAG_FIRESTONE_FORGE_TABLET tablet: it talks about the firestone forge, and also that the forge will only activate when fed the recipe, and when it is finetuned to the world in which the machine was placed (this is the clue that you have to use the random seed).
   ***- control panel:
     ***- draft it in GIMP/TILED (open and closed)
       ***- where there is a space at the bottom where clearly three pieces are missing. At the top, there are just some Maya drawings (as this is just a compartment that will open later)

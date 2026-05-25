@@ -689,6 +689,11 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "I am one of the guardian caimans. I do not remember my name, but I remember I was the third.", "GUARDIAN_CAIMAN_TABLET_3", 18*3);
         addLineSafe(lines_with_constant_page1, "That was it! Here is what I was guarding...", "STATUE_GIVES_CODEX", 18*3);
         
+        // Forge
+        addLineSafe(lines_with_constant_page3, "This is the entrance to the Atlantean firestone forge!", "FIRESTONE_FORGE_TABLET_1", 18*3);
+        addLineSafe(lines_with_constant_page3, "This is a dangerous machine, and precautions have been taken so that only wise people operate it. If you are sure of what you are doing, proceed as follows:", "FIRESTONE_FORGE_TABLET_2", 18*7);
+        addLineSafe(lines_with_constant_page3, "First, present the firestone recipe in full. Second, attune the machine to this world. If you are wise, you will know what this means...", "FIRESTONE_FORGE_TABLET_3", 18*6);
+        
         // Ending C:
         // First shared part:
         addLineSafe(lines_with_constant_page3, "Meanwhile, in Earth orbit...", "ENDING_C_UFO_0", 12*4);
