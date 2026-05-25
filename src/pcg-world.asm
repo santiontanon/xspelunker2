@@ -1516,6 +1516,76 @@ pcg_generate_world__generate_area_connections_add_connection_random_chunk_right:
 ; input:
 ; - a: target area
 ; output:
+; - l: offset (x + y * width)
+; - z: found
+; - nz: no point found
+pcg_generate_world__random_area_point_tagless:
+	; get divisions and tags ptrs:
+	; - tags: tmp_pcg_world__tags + MAX_AREA_SIZE * 2 * a 
+	; - divisions: current_world__area_data + WORLD_AREA__SIZE * a + 4 + 1 + 1 + 1 + MAX_AREA_SIZE
+	ld de, tmp_pcg_world__tags
+	ld hl, current_world__area_data + 4 + 1
+	or a
+	jr z, pcg_generate_world__random_area_point_tagless_ptrs_loop_done
+pcg_generate_world__random_area_point_tagless_ptrs_loop:
+	ld bc, WORLD_AREA__SIZE
+	add hl, bc
+	ex hl, de
+		ld bc, MAX_AREA_SIZE * 2
+		add hl, bc
+	ex hl, de
+	dec a
+	jr nz, pcg_generate_world__random_area_point_tagless_ptrs_loop
+pcg_generate_world__random_area_point_tagless_ptrs_loop_done:
+	ld c, (hl)
+	inc hl
+	ld b, (hl)
+	push bc
+		ld bc, MAX_AREA_SIZE + 1
+		add hl, bc
+	pop bc
+
+	xor a
+pcg_generate_world__random_area_point_tagless_ptrs_loop2:
+	add a, c
+	djnz pcg_generate_world__random_area_point_tagless_ptrs_loop2
+	ld c, a  ; c = width * height
+	; Here:
+	; - hl: ptr to divisions
+	; - de: ptr to tags
+	; - c: area width * height
+
+pcg_generate_world__random_area_point_tagless_loop3:
+	call random_modulo
+	push hl
+	push de
+		ld b, a
+		ADD_HL_A
+		ld a, (hl)
+		cp #ff  ; no room
+		jr z, pcg_generate_world__random_area_point_tagless_ptrs_next_pop
+		; there is a room here, is it tagless?
+		ld a, b
+		ADD_DE_A
+		ld a, (de)
+		or a
+		jr nz, pcg_generate_world__random_area_point_tagless_ptrs_next_pop
+		; found!
+	pop de
+	pop hl
+	ld l, b  ; offset
+	ret  ; z
+
+pcg_generate_world__random_area_point_tagless_ptrs_next_pop:
+	pop de
+	pop hl
+	jr pcg_generate_world__random_area_point_tagless_loop3
+
+
+;-----------------------------------------------
+; input:
+; - a: target area
+; output:
 ; - c, b: x, y coordinates of the point
 ; - l: offset (x + y * width)
 ; - z: found
@@ -3102,6 +3172,28 @@ pcg_generate_world__generate_mission_no_8_bridge_room_pop:
 pcg_generate_world__generate_mission_no_8_bridge_room:
 	xor a
 	ld (tmp_pcg_world__vertical_check_in_left_most), a
+
+	; firestone forge:
+	ld a, (current_world__spawn_firestone_forge)
+	or a
+	jr z, pcg_generate_world__generate_mission_no_firestone_forge
+	ld a, 11  ; moon
+	call pcg_generate_world__random_area_point_tagless
+	jr nz, pcg_generate_world__generate_mission_no_firestone_forge
+	; place firestone forge:
+	ld de, tmp_pcg_world__area_11_divisions
+	ld b, 0
+	ld c, l  ; offset
+	push hl
+		ex de, hl  ; tmp_pcg_world__area_11_divisions
+		add hl, bc
+		ld a, (hl)  ; division ID
+		call pcg_generate_world__get_mst_node_by_division_id
+		ex de, hl  ; mst node
+	pop hl  ; recover the offset
+	ld b, TAG_FIRESTONE_FORGE
+	call pcg_generate_world__add_tag_to_point_in_mst_node_division
+pcg_generate_world__generate_mission_no_firestone_forge:
 
 	; Generate quests:
 	ld ix, tmp_pcg_world__minimum_spanning_tree  ; root

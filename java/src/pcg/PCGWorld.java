@@ -1407,6 +1407,7 @@ public class PCGWorld {
 //                System.out.println("optional candidates: " + idx + " / " + candidates.size() + "  ->  " + candidates);
                 AreaDivision d = candidates.get(idx);
                 AreaPoint p = randomDivisionPoint(d, true);
+                if (p == null) return false;
                 if (i != 0 && n_small_keys < 4 && r.nextInt(256) < 63) {
                     // place in a small key chest!
                     n_small_keys++;

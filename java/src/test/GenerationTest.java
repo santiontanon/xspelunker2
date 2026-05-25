@@ -109,10 +109,11 @@ public class GenerationTest {
 //        System.out.println("nPCGAreaErrors: " + nPCGAreaErrors);
 
 
-        r.setSeed(0xe73b, 0x5555);
+        r.setSeed(0x4afa, 0x5555);  // 1ATLANTIS
+//        r.setSeed(0xe73b, 0x5555);  // XSPELUNKER2
 //        r.setSeed(0x003a, 0x5555);
 //        r.setSeed(101, 0x5555);
-        World w = pcg1.generate(r, spawnFirestoneForge);
+        World w = pcg1.generate(r, 1, false, spawnFirestoneForge);
         if (w != null) {
 //            if (!Solver.solveGame(w)) {
 //                System.err.println("Error: game cannot be solved!");

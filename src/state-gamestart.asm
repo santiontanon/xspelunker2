@@ -356,6 +356,8 @@ gamestart_draw_random_seed_hex_digits:
 
 
 ;-----------------------------------------------
+name_condition_0:
+	db #00, #13, #0b, #00, #0d, #13, #08, #12, #ff	
 gamestart_compute_random_seed:
 	ld hl, current_world__name
 	ld de, #0000  ; initial seed
@@ -383,6 +385,33 @@ gamestart_compute_random_seed_loop:
 	ld (current_world__seed), de
 	ld hl, #5555
 	ld (current_world__seed + 2), hl
+
+	; do we need to spawn the forge?
+	xor a
+	ld (current_world__spawn_firestone_forge), a
+	ld hl, current_world__name
+	ld de, name_condition_0
+	ld b, 8
+	call state_play_world_name_conditions_match_anywhere
+	ret nz
+	ld a, 1
+	ld (current_world__spawn_firestone_forge), a
+	ret
+
+
+;-----------------------------------------------
+state_play_world_name_conditions_match_anywhere:
+	push hl
+	push de
+	push bc
+		call state_play_world_name_conditions_match
+	pop bc
+	pop de
+	pop hl
+	ret z
+	inc hl
+	djnz state_play_world_name_conditions_match_anywhere
+	or 1  ; failed
 	ret
 
 

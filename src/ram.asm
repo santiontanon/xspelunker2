@@ -43,6 +43,7 @@ current_world__statue_names_words: ds virtual 10 * 3
 current_world__atlantis_boss_statue: ds virtual 1
 current_world__stela_status: ds virtual 1  ; bits 0, 1, 2: left, center, right stelae
 current_world__astronomy_room_area: ds virtual 1
+current_world__spawn_firestone_forge: ds virtual 1
 
 
 current_area__seed: ds virtual 4

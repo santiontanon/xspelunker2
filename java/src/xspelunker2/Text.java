@@ -673,8 +673,8 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "When 'they' made us come back to Atlantis to build their gate, they needed firestones.", "ATLANTIS_TABLET_4_1", 18*3);
         addLineSafe(lines_with_constant_page3, "But the forge was not here, so, we had to collect the few firestones that had been left behind...", "ATLANTIS_TABLET_4_2", 18*5);
 
-        addLineSafe(lines_with_constant_page3, "The firestone forge was too dangerous. So, a compromise was reached. It would only ", "ATLANTIS_TABLET_5_1", 18*3);
-        addLineSafe(lines_with_constant_page3, "operate in the Atlantis world. That world had to pay the price for all others to be safe.", "ATLANTIS_TABLET_5_2", 18*5);
+        addLineSafe(lines_with_constant_page3, "The firestone forge was too dangerous. So, a compromise was reached. It would be ", "ATLANTIS_TABLET_5_1", 18*3);
+        addLineSafe(lines_with_constant_page3, "hidden in a world with Atlantis in its name. That world had to pay the price for all others to be safe.", "ATLANTIS_TABLET_5_2", 18*5);
 
         // Astronomy room tablets:
         addLineSafe(lines_with_constant_page3, "I am the astronomer. If you have found this room, my secret room, you are starting to", "ASTRONOMY_TABLET_1_1", 18*3);

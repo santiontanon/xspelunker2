@@ -278,6 +278,11 @@ pcg_generate_area__mark_special_rooms_loop_next7:
 	ld e, GUARDIAN_CAIMAN3_ROOM_ID
 	jr pcg_generate_area__mark_special_rooms_loop_found
 pcg_generate_area__mark_special_rooms_loop_next8:
+	cp TAG_FIRESTONE_FORGE
+	jr nz, pcg_generate_area__mark_special_rooms_loop_next9
+	ld e, FIRESTONE_FORGE_ROOM_ID
+	jr pcg_generate_area__mark_special_rooms_loop_found
+pcg_generate_area__mark_special_rooms_loop_next9:
 	inc hl
 	inc hl
 	inc hl

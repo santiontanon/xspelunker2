@@ -1256,6 +1256,7 @@ ENDR
 	dw object_interaction_function_empty  ; TAG_GUARDIAN_CAIMAN1
 	dw object_interaction_function_empty  ; TAG_GUARDIAN_CAIMAN2
 	dw object_interaction_function_empty  ; TAG_GUARDIAN_CAIMAN3
+	dw object_interaction_function_empty  ; TAG_FIRESTONE_FORGE
 	dw object_interaction_function_empty  ; TAG_PUSHABLE_BLOCK
 	dw object_interaction_function_empty  ; TAG_DOOR_VERTICAL
 	dw object_interaction_function_empty  ; TAG_DOOR_HORIZONTAL
@@ -1288,6 +1289,7 @@ ENDR
 	dw object_interaction_function_tablet  ; TAG_ASTRONOMY_TABLET2
 	dw object_interaction_function_world_teleporter  ; TAG_WORLD_TELEPORTER
 	dw object_interaction_function_tablet  ; TAG_GUARDIAN_CAIMAN_TABLET
+	dw object_interaction_function_tablet  ; TAG_FIRESTONE_ROOM_TABLET
 	dw object_interaction_function_shopkeeper  ; TAG_NPC_SHOPKEEPER
 	dw object_interaction_function_shop  ; TAG_NPC_SHOP
 	dw object_interaction_function_empty  ; TAG_DYNAMITE
@@ -2948,6 +2950,7 @@ ENDR
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_GUARDIAN_CAIMAN1
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_GUARDIAN_CAIMAN2
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_GUARDIAN_CAIMAN3
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_FIRESTONE_FORGE
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_pushable_block_gfx  ; TAG_PUSHABLE_BLOCK
 	TILE_OBJECT_DATA 1, 1, 3, tile_object_v_door_gfx  ; TAG_DOOR_VERTICAL
 	TILE_OBJECT_DATA 1, 4, 1, tile_object_h_door_gfx  ; TAG_DOOR_HORIZONTAL
@@ -2980,6 +2983,7 @@ ENDR
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ASTRONOMY_TABLET2
 	TILE_OBJECT_DATA 2, 4, 4, 0  ; TAG_WORLD_TELEPORTER
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_GUARDIAN_CAIMAN_TABLET
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_FIRESTONE_FORGE_TABLET
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOPKEEPER
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOP
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_DYNAMITE

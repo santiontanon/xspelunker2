@@ -1,16 +1,13 @@
 to do:
 
 ***- powerstone/Firestone forge in the moon:
-  ***- spawn it in the game in assembler:
-    ***- update the clue in ATLANTIS_TABLET_5_1 (or add others if necessary)
-    ***- detect if the "ATLANTIS", "AZTLAN", or "COH" (whatever I decide) is in the name (this should be done both at game start, and in the astronomer's room, unlike the other codes)
-    ***- spawn the room
-  ***- spawn a tablet with some explanation/lore: it talks about the firestone forge, and also that the forge will only activate when fed the recipe, and when it is finetuned to the world in which the machine was placed (this is the clue that you have to use the random seed).
+  ***- open walls properly for moon biome: pcg_generate_room__firestone_forge
+  ***- TAG_FIRESTONE_FORGE_TABLET tablet: it talks about the firestone forge, and also that the forge will only activate when fed the recipe, and when it is finetuned to the world in which the machine was placed (this is the clue that you have to use the random seed).
   ***- control panel:
     ***- draft it in GIMP/TILED (open and closed)
       ***- where there is a space at the bottom where clearly three pieces are missing. At the top, there are just some Maya drawings (as this is just a compartment that will open later)
     ***- if you interact with the control, you go to a zoom in
-    ***- if you don't have the codex, there is nothing you can do. If you have the codex, it says "the codex fits perfectly", and then the top part opens up, revealing the controls, which is a small puzzle.
+    ***- if you don't have the codex, nothing you can do. If you have the codex, it says "the codex fits perfectly", and then the top part opens up, revealing the controls, which is a small puzzle.
     ***- The puzzle is just 16 switches arranged in two groups of 8. They are initialized to some random state (ensure it's not the world seed)
     ***- To solve it, the player needs to set them according to the seed, so that the machine is in-tune with the world it is in.
   ***- when the forge turns on, you learn that it will start now charging up, and then start producing firestones. It will take a while, so, not useful for your current mission. But in the future, this should be a source of firestones!
@@ -18,7 +15,7 @@ to do:
 
 - music: (brain 12, 15, 23, 25 have potential)
   - ending aliens (look at "story" from Triton, can I do something like that?)
-  - ending beach (reuse the story jazzy song? just some wave sfx in the background?)
+  - ending beach
   - xibalba
   - atlantis
   - mars
