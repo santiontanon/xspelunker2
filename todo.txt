@@ -2,8 +2,6 @@ to do:
 
 ***- powerstone/Firestone forge in the moon:
   ***- control panel:
-    ***- draw the codex parts put in the slots
-    ***- draw the puzzle with the panel open
     ***- extract tiles from the draft, and compose it in TILED (per bank, and make sure all tiles needed for all frames are in the same tileset)
     ***- if you interact with the control, you go to a zoom in
     ***- if you don't have the codex, nothing you can do. If you have the codex, it says "the codex fits perfectly", and then the top part opens up, revealing the controls, which is a small puzzle.
