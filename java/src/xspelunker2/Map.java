@@ -191,6 +191,7 @@ public class Map {
         for(int i = firstRow*8;i<lastRow*8;i+=8) {
             for(int j = 0;j<sourceImage.getWidth();j+=8) {
                 tile = new ArrayList<>();
+                // System.out.println(j + "," + i + "(" + sourceImage.getWidth() + ", " + sourceImage.getHeight() + ")");
                 for(int ii = 0;ii<8;ii++) {
                     for(int jj = 0;jj<8;jj++) {
                         int color = ConvertPatternsToAssembler.findMSXColor(j+jj, i+ii, sourceImage, 0);

@@ -2,12 +2,19 @@ to do:
 
 ***- powerstone/Firestone forge in the moon:
   ***- control panel:
-    ***- extract tiles from the draft, and compose it in TILED (per bank, and make sure all tiles needed for all frames are in the same tileset)
+    OK - extract tiles from the draft, and compose it in TILED (per bank, and make sure all tiles needed for all frames are in the same tileset)
+    ***- add to assembler
     ***- if you interact with the control, you go to a zoom in
-    ***- if you don't have the codex, nothing you can do. If you have the codex, it says "the codex fits perfectly", and then the top part opens up, revealing the controls, which is a small puzzle.
-    ***- The puzzle is just 16 switches arranged in two groups of 8. They are initialized to some random state (ensure it's not the world seed)
-    ***- To solve it, the player needs to set them according to the seed, so that the machine is in-tune with the world it is in.
-  ***- when the forge turns on, you learn that it will start now charging up, and then start producing firestones. It will take a while, so, not useful for your current mission. But in the future, this should be a source of firestones!
+    ***- message the first time with something like: "Woah, look at this plate! This looks like gold, but the Maya were not known to work with gold!"
+    ***- then, repeated message with: "There are three slots at the bottom, where something seems to be missing."
+    ***- If you use the codex:
+      ***- if you have one or two: place them, and say "The fragments of the codex fit perfectly, but I do not seem to have all pieces..."
+      ***- if you have all pieces: "The fragments of the codex fit perfectly!", then animation where the top shifts up, revealing the controls.
+    ***- The puzzle is just 16 switches arranged in two groups of 8. They are initialized to some random state (ensure it's not the world seed: all 0s, except if that's the seed, in which case, make them all 1s)
+    ***- Interaction with the puzzle: arrow pointing at a switch, or to a "back" text at the bottom
+  ***- When solved: the panel slides back down, you go out and message:
+    ***- "I think that did it! I hear a low pitch hum coming from underground! The forge is activating!"
+    ***- "This is incredible! We will be able to have a supply of powerstones! But I do not know how long will it take to start producing them. Better to keep moving with my mission, and check back when I am finished."
   ***- add achievement to the game over screen
 
 - music: (brain 12, 15, 23, 25 have potential)
