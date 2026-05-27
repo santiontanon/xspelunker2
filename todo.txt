@@ -2,8 +2,6 @@ to do:
 
 ***- powerstone/Firestone forge in the moon:
   ***- control panel:
-    OK - extract tiles from the draft, and compose it in TILED (per bank, and make sure all tiles needed for all frames are in the same tileset)
-    ***- add to assembler
     ***- if you interact with the control, you go to a zoom in
     ***- message the first time with something like: "Woah, look at this plate! This looks like gold, but the Maya were not known to work with gold!"
     ***- then, repeated message with: "There are three slots at the bottom, where something seems to be missing."
