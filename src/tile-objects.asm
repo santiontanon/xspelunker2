@@ -1289,7 +1289,8 @@ ENDR
 	dw object_interaction_function_tablet  ; TAG_ASTRONOMY_TABLET2
 	dw object_interaction_function_world_teleporter  ; TAG_WORLD_TELEPORTER
 	dw object_interaction_function_tablet  ; TAG_GUARDIAN_CAIMAN_TABLET
-	dw object_interaction_function_tablet  ; TAG_FIRESTONE_ROOM_TABLET
+	dw object_interaction_function_tablet  ; TAG_FIRESTONE_FORGE_TABLET
+	dw object_interaction_function_forge_puzzle  ; TAG_FIRESTONE_FORGE_PUZZLE
 	dw object_interaction_function_shopkeeper  ; TAG_NPC_SHOPKEEPER
 	dw object_interaction_function_shop  ; TAG_NPC_SHOP
 	dw object_interaction_function_empty  ; TAG_DYNAMITE
@@ -2711,6 +2712,13 @@ object_interaction_function_world_teleporter:
 
 
 ;-----------------------------------------------
+object_interaction_function_forge_puzzle:
+	ld hl, forge_puzzle_closeup
+	ld c, FORGE_PUZZLE_PAGE
+	jp call_hl_in_page_c_8000
+
+
+;-----------------------------------------------
 ; output:
 ; - z: door found
 ; - nz: door not found
@@ -2989,6 +2997,7 @@ ENDR
 	TILE_OBJECT_DATA 2, 4, 4, 0  ; TAG_WORLD_TELEPORTER
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_GUARDIAN_CAIMAN_TABLET
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_FIRESTONE_FORGE_TABLET
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_FIRESTONE_FORGE_PUZZLE
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOPKEEPER
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOP
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_DYNAMITE

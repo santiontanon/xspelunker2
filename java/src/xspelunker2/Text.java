@@ -693,6 +693,11 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "This is the entrance to the Atlantean firestone forge!", "FIRESTONE_FORGE_TABLET_1", 18*3);
         addLineSafe(lines_with_constant_page3, "This is a dangerous machine, and precautions have been taken so that only wise people operate it. If you are sure of what you are doing, proceed as follows:", "FIRESTONE_FORGE_TABLET_2", 18*7);
         addLineSafe(lines_with_constant_page3, "First, present the firestone recipe in full. Second, attune the machine to this world. If you are wise, you will know what this means...", "FIRESTONE_FORGE_TABLET_3", 18*6);
+
+        addLineSafe(lines_with_constant_page3, "Woah, look at this plate! This looks like gold,", "FIRESTONE_PUZZLE_1_1", 28);
+        addLineSafe(lines_with_constant_page3, "but the Maya were not known to work with gold!", "FIRESTONE_PUZZLE_1_2", 28);
+        addLineSafe(lines_with_constant_page3, "There are three slots at the bottom, where", "FIRESTONE_PUZZLE_2_1", 28*2);
+        addLineSafe(lines_with_constant_page3, "something seems to be missing.", "FIRESTONE_PUZZLE_2_2", 28*2);
         
         // Ending C:
         // First shared part:

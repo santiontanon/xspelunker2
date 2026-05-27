@@ -242,6 +242,7 @@ public class AssemblerTags {
         "TAG_WORLD_TELEPORTER",
         "TAG_GUARDIAN_CAIMAN_TABLET",
         "TAG_FIRESTONE_FORGE_TABLET",
+        "TAG_FIRESTONE_FORGE_PUZZLE",
         // npcs:
         "TAG_NPC_SHOPKEEPER",
         "TAG_NPC_SHOP",

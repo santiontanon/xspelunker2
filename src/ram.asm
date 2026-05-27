@@ -166,6 +166,7 @@ global_state__first_time_flags: ds virtual 1  ; bits:
                                               ; - 1: entered astronomy room before
                                               ; - 2: entered mars for the first time
                                               ; - 3: entered moon for the first time
+                                              ; - 4: forge puzzle for the first time
 
 global_state__power_calendar: ds virtual 6  ; the value of each of these 6 bytes can be:
                                             ; - 0: empty

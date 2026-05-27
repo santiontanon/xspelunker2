@@ -453,6 +453,7 @@ decompress_tiles_to_all_banks:
     ld bc, 256*8
     call fast_LDIRVM
 
+copy_tiles_to_bank3:
     ld hl, buffer_4096
     ld de, CHRTBL2 + 256*8*2
     ld bc, 256*8

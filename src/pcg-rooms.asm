@@ -3462,12 +3462,18 @@ pcg_generate_room__firestone_forge:
 
 	call pcg_generate_room__moon_open_walls
 
-	; spawn tablet:
+	; spawn tablet, and puzzle:
 	ld iy, current_room__tile_objects
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 1  ; id
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_FIRESTONE_FORGE_TABLET
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 26  ; tile x
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 15  ; tile y
+
+	ld iy, current_room__tile_objects + ROOM_TILE_OBJECT_STRUCT_SIZE
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 2  ; id
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_FIRESTONE_FORGE_PUZZLE
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 15  ; tile x
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 10  ; tile y
 	ret
 
 
