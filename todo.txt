@@ -2,8 +2,8 @@ to do:
 
 ***- powerstone/Firestone forge in the moon:
   ***- control panel:
-    ***- draft it in GIMP/TILED (open and closed)
-      ***- where there is a space at the bottom where clearly three pieces are missing. At the top, there are just some Maya drawings (as this is just a compartment that will open later)
+    ***- draw the puzzle with the panel open
+    ***- extract tiles from the draft, and compose it in TILED (can I do it all with just 256 tiles?, and maybe leave 32 for text?)
     ***- if you interact with the control, you go to a zoom in
     ***- if you don't have the codex, nothing you can do. If you have the codex, it says "the codex fits perfectly", and then the top part opens up, revealing the controls, which is a small puzzle.
     ***- The puzzle is just 16 switches arranged in two groups of 8. They are initialized to some random state (ensure it's not the world seed)
@@ -19,7 +19,7 @@ to do:
   - mars
   - moon
 - 6th boss: (ideas: "The Solar Stone Jaguar", "The Martian Terracotta Warrior", "The Dust Stone Golem"). Another idea: https://en.wikipedia.org/wiki/Human_sacrifice_in_Maya_culture#/media/File:MA_D293_Maya_stone_carving_from_Copan.jpg
-  - before the boss fight: underground cave with a broken ancient robot that talks if you turn it on with the golden key (in a mix of English and Maya, maybe stating a riddle). Gives you a better raygun (key for alien boss), add as an achievement for the game over screen.  
+  - before the boss fight: underground cave with a broken ancient robot that talks if you turn it on with the golden key (in a mix of English and Maya, maybe stating a riddle). Gives you a better raygun (key for alien boss), add as an achievement for the game over screen. (see: "Universal Capsule Robot No. C6")
   - add boss name to the stats for game over screen
 - 7th boss (ideas: "The Lunar Obsidian Sentinel" (tall, slender, smooth black, reflective surfaces), "The Lunar Crystal Serpent", "The Moon Stone Monolith").
   - add boss name to the stats for game over screen
