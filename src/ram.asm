@@ -219,7 +219,7 @@ player_inventory_weapon_ammo: ds virtual 4
 player_inventory_coins: ds virtual 1
 player_inventory_n_small_keys: ds virtual 1
 ; player_inventory_map_pieces: ds virtual N_MAP_PIECES
-player_current_item: ds virtual 1  ; 0 - 10 are weapons, 11 - 35 are inventory key items
+player_current_item: ds virtual 1  ; 0 - 10 are weapons, 11 - 35 are inventory key items, etc.
 player_immunity_timer: ds virtual 1  ; if != 0, nothing can hurt the player
 player_can_double_jump: ds virtual 1
 

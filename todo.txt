@@ -1,10 +1,11 @@
 to do:
 
 ***- powerstone/Firestone forge in the moon:
-  ***- If you use the codex:
-    ***- if you have one or two: place them, and say "The fragments of the codex fit perfectly, but I do not seem to have all pieces..."
-    ***- if you have all pieces: "The fragments of the codex fit perfectly!", then animation where the top shifts up, revealing the controls.
-  ***- The puzzle is 16 switches arranged in two groups of 8. They are initialized to some random state (ensure it's not the world seed: all 0s, except if that's the seed, in which case, make them all 1s)
+  ***- animation where the top shifts up, revealing the controls:
+    ***- copy the controls nametable to RAM
+    ***- 2 bytes where the state is stored (initialized when random seed it set on gamestart: 0 unless seed is 0, and then do #ffff)
+    ***- function that updates the nametable based on current config
+    ***- animation of the panel shifting up and drawing one line of the control panel at a time
   ***- Interaction with the puzzle: arrow pointing at a switch, or to a "back" text at the bottom
   ***- When solved: the panel slides back down, you go out and message:
     ***- "I think that did it! I hear a low pitch hum coming from underground! The forge is activating!"

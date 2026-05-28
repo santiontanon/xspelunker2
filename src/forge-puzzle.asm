@@ -44,9 +44,79 @@ forge_puzzle_closeup_not_first_time:
 	ld de, CHRTBL2 + 256*8*2 + (130+32)*8
 	call forge_puzzle_text
 	call wait_for_click
+	call forge_puzzle_clear_text
+
+	; which item does the player have selected? 54, 55, 56: codex
+	ld a, (player_current_item)
+	cp 54
+	jr z, forge_puzzle_closeup_1_codex
+	cp 55
+	jr z, forge_puzzle_closeup_2_codex
+	cp 56
+	jr z, forge_puzzle_closeup_3_codex
+
+	; it's not the codex:
+	call disable_VDP_output	
+	jp state_play_from_inventory
+
+
+forge_puzzle_closeup_2_codex:
+	call forge_puzzle_draw_codex2
+forge_puzzle_closeup_1_codex:
+	call forge_puzzle_draw_codex1
+
+	ld hl, TEXT_FIRESTONE_PUZZLE_3_1
+	ld de, CHRTBL2 + 256*8*2 + 130*8
+	call forge_puzzle_text
+	ld hl, TEXT_FIRESTONE_PUZZLE_3_2
+	ld de, CHRTBL2 + 256*8*2 + (130+32)*8
+	call forge_puzzle_text
+	call wait_for_click
+	call forge_puzzle_clear_text
 
 	call disable_VDP_output	
 	jp state_play_from_inventory
+
+
+forge_puzzle_closeup_3_codex:
+	call forge_puzzle_draw_codex1
+	call forge_puzzle_draw_codex2
+	call forge_puzzle_draw_codex3
+
+	ld hl, TEXT_FIRESTONE_PUZZLE_3_1
+	ld de, CHRTBL2 + 256*8*2 + 130*8
+	call forge_puzzle_text
+	call wait_for_click
+	call forge_puzzle_clear_text
+
+	; ...
+
+	call disable_VDP_output	
+	jp state_play_from_inventory
+
+
+;-----------------------------------------------
+forge_puzzle_draw_codex1:
+	ld hl, firestone_forge_puzzle_nametables + 21*21 + 11*17
+	ld de, NAMTBL2 + 9 + 32 * 13
+	ld bc, #0603
+	jp forge_puzzle_copy_nametable
+
+
+;-----------------------------------------------
+forge_puzzle_draw_codex2:
+	ld hl, firestone_forge_puzzle_nametables + 21*21 + 11*17 + 6*3
+	ld de, NAMTBL2 + 14 + 32 * 13
+	ld bc, #0603
+	jp forge_puzzle_copy_nametable
+
+
+;-----------------------------------------------
+forge_puzzle_draw_codex3:
+	ld hl, firestone_forge_puzzle_nametables + 21*21 + 11*17 + 6*3*2
+	ld de, NAMTBL2 + 19 + 32 * 13
+	ld bc, #0603
+	jp forge_puzzle_copy_nametable
 
 
 ;-----------------------------------------------

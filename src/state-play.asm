@@ -116,7 +116,7 @@ state_play:
 ; 		ld (player_inventory_items+INVENTORY_ITEM_SCYLLA_EYE), a
 ; 		ld (player_inventory_items+INVENTORY_ITEM_MAYA_CODEX1), a
 ; 		ld (player_inventory_items+INVENTORY_ITEM_MAYA_CODEX2), a
-; 		ld (player_inventory_items+INVENTORY_ITEM_MAYA_CODEX3), a
+		ld (player_inventory_items+INVENTORY_ITEM_MAYA_CODEX3), a
 ; 		ld (player_inventory_items+INVENTORY_ITEM_ANIMAL_CHARM), a
 		ld (player_inventory_weapons), a  ; machete
 ; 		ld (player_inventory_weapons+1), a
@@ -687,6 +687,7 @@ state_play_upload_object_tiles_to_vdp_if_necessary:
 	; 30: a = 37  ; small key
 	; 31 - 34: a - 16  ; key items
 	; 50: golden key
+	; 54, 55, 56: codex
 	cp N_INVENTORY_WEAPON_TYPES
 	jr c, state_play_upload_object_tiles_to_vdp_if_necessary_weapon
 	cp N_INVENTORY_WEAPON_TYPES + INVENTORY_ITEM_POWER_STONE1
@@ -695,6 +696,12 @@ state_play_upload_object_tiles_to_vdp_if_necessary:
 	jr c, state_play_upload_object_tiles_to_vdp_if_necessary_power_stone
 	cp N_INVENTORY_WEAPON_TYPES + INVENTORY_ITEM_GOLDEN_KEY
 	jr z, state_play_upload_object_tiles_to_vdp_if_necessary_golden_key
+	cp N_INVENTORY_WEAPON_TYPES + INVENTORY_ITEM_MAYA_CODEX1
+	jr z, state_play_upload_object_tiles_to_vdp_if_necessary_codex1
+	cp N_INVENTORY_WEAPON_TYPES + INVENTORY_ITEM_MAYA_CODEX2
+	jr z, state_play_upload_object_tiles_to_vdp_if_necessary_codex2
+	cp N_INVENTORY_WEAPON_TYPES + INVENTORY_ITEM_MAYA_CODEX3
+	jr z, state_play_upload_object_tiles_to_vdp_if_necessary_codex3
 	cp N_INVENTORY_WEAPON_TYPES + INVENTORY_ITEM_SMALL_KEY
 	jr c, state_play_upload_object_tiles_to_vdp_if_necessary_color_keys
 	jr z, state_play_upload_object_tiles_to_vdp_if_necessary_small_key
@@ -709,6 +716,15 @@ state_play_upload_object_tiles_to_vdp_if_necessary_small_key:
 	jr state_play_upload_object_tiles_to_vdp_if_necessary_selected_item_set
 state_play_upload_object_tiles_to_vdp_if_necessary_golden_key:
 	ld a, 62
+	jr state_play_upload_object_tiles_to_vdp_if_necessary_selected_item_set
+state_play_upload_object_tiles_to_vdp_if_necessary_codex1:
+	ld a, 64
+	jr state_play_upload_object_tiles_to_vdp_if_necessary_selected_item_set
+state_play_upload_object_tiles_to_vdp_if_necessary_codex2:
+	ld a, 65
+	jr state_play_upload_object_tiles_to_vdp_if_necessary_selected_item_set
+state_play_upload_object_tiles_to_vdp_if_necessary_codex3:
+	ld a, 66
 	jr state_play_upload_object_tiles_to_vdp_if_necessary_selected_item_set
 state_play_upload_object_tiles_to_vdp_if_necessary_power_stone:
 	ld a, 47

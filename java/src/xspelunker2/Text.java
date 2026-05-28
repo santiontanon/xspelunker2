@@ -698,6 +698,8 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "but the Maya were not known to work with gold!", "FIRESTONE_PUZZLE_1_2", 28);
         addLineSafe(lines_with_constant_page3, "There are three slots at the bottom, where", "FIRESTONE_PUZZLE_2_1", 28*2);
         addLineSafe(lines_with_constant_page3, "something seems to be missing.", "FIRESTONE_PUZZLE_2_2", 28*2);
+        addLineSafe(lines_with_constant_page3, "The fragments of the codex fit perfectly!", "FIRESTONE_PUZZLE_3_1", 28*2);
+        addLineSafe(lines_with_constant_page3, "But I do not seem to have them all...", "FIRESTONE_PUZZLE_3_2", 28*2);
         
         // Ending C:
         // First shared part:
