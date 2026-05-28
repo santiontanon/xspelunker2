@@ -396,6 +396,14 @@ gamestart_compute_random_seed_loop:
 	ret nz
 	ld a, 1
 	ld (current_world__spawn_firestone_forge), a
+	ld de, (current_world__seed)
+	ld hl, 0
+	ld a, d
+	or e
+	jr nz, gamestart_compute_random_seed_not_0
+	ld hl, #ffff
+gamestart_compute_random_seed_not_0:
+	ld (current_world__firestone_forge_state), hl
 	ret
 
 

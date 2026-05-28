@@ -89,10 +89,137 @@ forge_puzzle_closeup_3_codex:
 	call wait_for_click
 	call forge_puzzle_clear_text
 
-	; ...
+	; open the puzzle:
+	ld hl, firestone_forge_puzzle_nametables + 21*21
+	ld de, buffer_4096
+	ld bc, 11*17
+	ldir
+	call forge_puzzle_closeup_update_control_nametable
+
+	ld hl, buffer_4096 + 17*10
+	ld de, NAMTBL2 + 7 + 32 * 11
+	ld b, 11
+forge_puzzle_closeup_3_codex_loop:
+	push bc
+		; scroll up the lid:
+		push de
+		push hl
+			call forge_puzzle_close_up_scroll_lid_one_up
+		pop hl
+		pop de
+
+		; draw the control panel below:
+		push hl
+			push de
+				ld bc, #0111
+				call forge_puzzle_copy_nametable
+
+				ld hl, SFX_explosion_low_pitch
+				call play_SFX_with_high_priority
+				ld b, 20
+				call wait_b_halts
+			pop hl
+			ld bc, -32
+			add hl, bc
+			ex de, hl
+		pop hl
+		ld bc, -17
+		add hl, bc
+
+	pop bc
+	djnz forge_puzzle_closeup_3_codex_loop
+
+; 	ld hl, buffer_4096
+; 	ld de, NAMTBL2 + 7 + 32 * 1
+; 	ld bc, #0b11
+; 	call forge_puzzle_copy_nametable
+
+	call wait_for_click
 
 	call disable_VDP_output	
 	jp state_play_from_inventory
+
+
+;-----------------------------------------------
+; input:
+; - b: how many rows to move up
+forge_puzzle_close_up_scroll_lid_one_up:
+	push bc
+		ld hl, NAMTBL2
+		ld de, buffer_4096 + 256
+		ld bc, 12*32
+		call LDIRMV
+	pop bc
+	ld hl, buffer_4096 + 256 + 7 + 32
+	ld de, NAMTBL2 + 7
+forge_puzzle_close_up_scroll_lid_one_up_loop:
+	push bc
+		push hl
+			push de
+				ld b, 17
+				call fast_small_LDIRVM 
+			pop hl
+			ld bc, 32
+			add hl, bc
+			ex de, hl
+		pop hl
+		ld bc, 32
+		add hl, bc
+	pop bc
+	djnz forge_puzzle_close_up_scroll_lid_one_up_loop
+	ret
+
+
+;-----------------------------------------------
+forge_puzzle_closeup_update_control_nametable:
+	ld ix, buffer_4096 + 1 + 1*17
+	ld de, (current_world__firestone_forge_state)
+	ld b, 8
+forge_puzzle_closeup_update_control_nametable_loop1:
+	rl d
+	push de
+		push af
+			call c, forge_puzzle_closeup_update_control_nametable_switch_up
+		pop af
+		call nc, forge_puzzle_closeup_update_control_nametable_switch_down
+	pop de
+	inc ix
+	inc ix
+	djnz forge_puzzle_closeup_update_control_nametable_loop1
+
+	ld ix, buffer_4096 + 1 + 6*17
+	ld d, e
+	ld b, 8
+forge_puzzle_closeup_update_control_nametable_loop2:
+	rl d
+	push de
+		push af
+			call c, forge_puzzle_closeup_update_control_nametable_switch_up
+		pop af
+		call nc, forge_puzzle_closeup_update_control_nametable_switch_down
+	pop de
+	inc ix
+	inc ix
+	djnz forge_puzzle_closeup_update_control_nametable_loop2
+	ret
+
+forge_puzzle_closeup_update_control_nametable_switch_up:
+	ld a, (firestone_forge_puzzle_nametables + 21*21 + 1 + 17)
+	ld (ix + 0), a
+	ld a, (firestone_forge_puzzle_nametables + 21*21 + 1 + 34)
+	ld (ix + 17), a
+	ld (ix + 34), 0
+	ld (ix + 51), 0 
+	ret
+
+forge_puzzle_closeup_update_control_nametable_switch_down:
+	ld (ix + 0), 0
+	ld (ix + 17), 0
+	ld a, (firestone_forge_puzzle_nametables + 21*21 + 1 + 17)
+	ld (ix + 34), a
+	ld a, (firestone_forge_puzzle_nametables + 21*21 + 1 + 34)
+	ld (ix + 51), a 
+	ret
 
 
 ;-----------------------------------------------
