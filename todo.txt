@@ -1,7 +1,5 @@
 to do:
 
-***- make moon/mars more floaty
-
 - music: (brain 12, 15, 23, 25 have potential)
   - ending aliens (look at "story" from Triton, can I do something like that?)
   - ending beach
