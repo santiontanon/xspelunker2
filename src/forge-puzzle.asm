@@ -99,7 +99,7 @@ forge_puzzle_closeup_3_codex:
 	ld hl, buffer_4096 + 17*10
 	ld de, NAMTBL2 + 7 + 32 * 11
 	ld b, 11
-forge_puzzle_closeup_3_codex_loop:
+forge_puzzle_closeup_3_codex_appear_loop:
 	push bc
 		; scroll up the lid:
 		push de
@@ -127,17 +127,190 @@ forge_puzzle_closeup_3_codex_loop:
 		add hl, bc
 
 	pop bc
-	djnz forge_puzzle_closeup_3_codex_loop
+	djnz forge_puzzle_closeup_3_codex_appear_loop
 
-; 	ld hl, buffer_4096
-; 	ld de, NAMTBL2 + 7 + 32 * 1
-; 	ld bc, #0b11
-; 	call forge_puzzle_copy_nametable
+	; Draw "back" at the bottom:
+	ld hl, TEXT_OPTIONS1
+	ld de, CHRTBL2 + 256*8*2 + 143*8
+	ld iy, #80f0
+	ld b, 4
+	call draw_sentence_to_vdp_from_another_page
 
-	call wait_for_click
+	; setup the sprites:
+	ld hl, dialog_sprites_bin
+	ld de, SPRTBL2
+	ld bc, dialog_sprites_bin_end - dialog_sprites_bin
+	call fast_LDIRVM_from_sprites_page
 
+	call forge_puzzle_closeup_main
+	xor a
+	ld (keyboard_clicks), a
 	call disable_VDP_output	
 	jp state_play_from_inventory
+
+
+;-----------------------------------------------
+forge_puzzle_closeup_main:
+	xor a
+	ld (tmp_dialog_pointer_position), a
+forge_puzzle_closeup_main_loop:
+	halt
+	call forge_puzzle_closeup_update_pointer_sprite
+	call update_keyboard_buffers
+
+	ld a, (keyboard_clicks)
+	bit KEY_WEAPON_BIT, a  ; space
+	jr nz, forge_puzzle_closeup_main_loop_space
+	bit KEY_UP_BIT, a
+	jr nz, forge_puzzle_closeup_main_loop_up
+	bit KEY_DOWN_BIT, a
+	jr nz, forge_puzzle_closeup_main_loop_down
+	bit KEY_LEFT_BIT, a
+	jr nz, forge_puzzle_closeup_main_loop_left
+	bit KEY_RIGHT_BIT, a
+	jr nz, forge_puzzle_closeup_main_loop_right
+	jr forge_puzzle_closeup_main_loop
+
+
+forge_puzzle_closeup_main_loop_space:
+	ld a, (tmp_dialog_pointer_position)
+	or a
+	ret z  ; pressed "back"
+
+	; pressed on a switch:
+	dec a
+	ld bc, #8000
+	jr z, forge_puzzle_closeup_main_loop_space_on_switch
+forge_puzzle_closeup_main_loop_space_loop:
+	srl b
+	rr c
+	dec a
+	jr z, forge_puzzle_closeup_main_loop_space_on_switch
+	jr forge_puzzle_closeup_main_loop_space_loop
+
+forge_puzzle_closeup_main_loop_space_on_switch:
+	ld de, (current_world__firestone_forge_state)
+	ld a, d
+	xor b
+	ld d, a
+	ld a, e
+	xor c
+	ld e, a
+	ld (current_world__firestone_forge_state), de
+	call forge_puzzle_closeup_update_control_nametable
+	ld hl, buffer_4096
+	ld de, NAMTBL2 + 7 + 32 * 1
+	ld bc, #0b11
+	call forge_puzzle_copy_nametable
+	ld hl, SFX_push_object
+	call play_SFX_with_high_priority
+	jr forge_puzzle_closeup_main_loop
+
+
+forge_puzzle_closeup_main_loop_up:
+	ld a, (tmp_dialog_pointer_position)
+	or a
+	jr z, forge_puzzle_closeup_main_loop_up_from_back
+	cp 9
+	jr c, forge_puzzle_closeup_main_loop
+	sub a, 8
+	jr forge_puzzle_closeup_main_loop_movement_happened
+forge_puzzle_closeup_main_loop_up_from_back:
+	ld a, 9
+	jr forge_puzzle_closeup_main_loop_movement_happened
+
+forge_puzzle_closeup_main_loop_down:
+	ld a, (tmp_dialog_pointer_position)
+	or a
+	jr z, forge_puzzle_closeup_main_loop
+	cp 9
+	jr c, forge_puzzle_closeup_main_loop_down_first_row
+	xor a
+	jr forge_puzzle_closeup_main_loop_movement_happened
+forge_puzzle_closeup_main_loop_down_first_row:
+	add a, 8
+	jr forge_puzzle_closeup_main_loop_movement_happened
+
+forge_puzzle_closeup_main_loop_left:
+	ld a, (tmp_dialog_pointer_position)
+	or a
+	jp z, forge_puzzle_closeup_main_loop
+	cp 1
+	jp z, forge_puzzle_closeup_main_loop
+	cp 9
+	jp z, forge_puzzle_closeup_main_loop
+	dec a
+	jr forge_puzzle_closeup_main_loop_movement_happened
+
+forge_puzzle_closeup_main_loop_right:
+	ld a, (tmp_dialog_pointer_position)
+	or a
+	jp z, forge_puzzle_closeup_main_loop
+	cp 8
+	jp z, forge_puzzle_closeup_main_loop
+	cp 16
+	jp z, forge_puzzle_closeup_main_loop
+	inc a
+	; jr forge_puzzle_closeup_main_loop_movement_happened
+
+forge_puzzle_closeup_main_loop_movement_happened:
+	ld (tmp_dialog_pointer_position), a
+	ld hl, SFX_ui_move
+	call play_SFX_with_high_priority
+	jp forge_puzzle_closeup_main_loop
+
+
+forge_puzzle_closeup_update_pointer_sprite:
+	ld hl, buffer_4096 + 512
+	ld a, (tmp_dialog_pointer_position)
+	; 0: back
+	; 1, 2, 3, 4, 5, 6, 7, 8: top row of switches
+	; 9, 10, 11, 12, 13, 14, 15, 16: bottom row of switches
+	or a
+	jr z, forge_puzzle_closeup_update_pointer_sprite_back
+	cp 9
+	jr nc, forge_puzzle_closeup_update_pointer_sprite_second_row
+forge_puzzle_closeup_update_pointer_sprite_first_row:
+	ld b, 28
+	dec a
+	add a, a
+	add a, a
+	add a, a
+	add a, a
+	add a, 54
+	ld c, a
+	jr forge_puzzle_closeup_update_pointer_sprite_bc_set
+forge_puzzle_closeup_update_pointer_sprite_second_row:
+	ld b, 68
+	sub a, 9
+	add a, a
+	add a, a
+	add a, a
+	add a, a
+	add a, 54
+	ld c, a
+	jr forge_puzzle_closeup_update_pointer_sprite_bc_set
+forge_puzzle_closeup_update_pointer_sprite_back:
+	ld c, 110
+	ld b, 176
+forge_puzzle_closeup_update_pointer_sprite_bc_set:
+	ld (hl), b
+	inc hl
+	ld (hl), c
+	inc hl
+	ld (hl), 0
+	inc hl
+	ld c, COLOR_WHITE
+	ld a, (interrupt_cycle)
+	bit 3, a
+	jr z, forge_puzzle_closeup_update_pointer_sprite_color_set
+	ld c, COLOR_TRANSPARENT
+forge_puzzle_closeup_update_pointer_sprite_color_set:
+	ld (hl), c
+	ld hl, buffer_4096 + 512
+	ld de, SPRATR2
+	ld b, 4
+	jp fast_small_LDIRVM
 
 
 ;-----------------------------------------------

@@ -1,11 +1,11 @@
 to do:
 
 ***- powerstone/Firestone forge in the moon:
-  ***- Interaction with the puzzle: arrow pointing at a switch, or to a "back" text at the bottom
   ***- When solved: the panel slides back down, you go out and message:
     ***- "I think that did it! I hear a low pitch hum coming from underground! The forge is activating!"
-    ***- "This is incredible! We will have a supply of powerstones! I do not know how long will it take to start producing them though. Better to keep moving with my mission, and check back when I am finished."
+    ***- "This is incredible! We will have a supply of powerstones... or firestones! However, I do not know how long will it take to start producing them. Better to keep moving with my mission. I need to tell Elaine after all this is over..."
   ***- add achievement to the game over screen
+  ***- make moon/mars more floaty
 
 - music: (brain 12, 15, 23, 25 have potential)
   - ending aliens (look at "story" from Triton, can I do something like that?)
