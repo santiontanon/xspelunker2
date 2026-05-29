@@ -162,13 +162,13 @@ forge_puzzle_closeup_main_loop:
 	bit KEY_WEAPON_BIT, a  ; space
 	jr nz, forge_puzzle_closeup_main_loop_space
 	bit KEY_UP_BIT, a
-	jr nz, forge_puzzle_closeup_main_loop_up
+	jp nz, forge_puzzle_closeup_main_loop_up
 	bit KEY_DOWN_BIT, a
-	jr nz, forge_puzzle_closeup_main_loop_down
+	jp nz, forge_puzzle_closeup_main_loop_down
 	bit KEY_LEFT_BIT, a
-	jr nz, forge_puzzle_closeup_main_loop_left
+	jp nz, forge_puzzle_closeup_main_loop_left
 	bit KEY_RIGHT_BIT, a
-	jr nz, forge_puzzle_closeup_main_loop_right
+	jp nz, forge_puzzle_closeup_main_loop_right
 	jr forge_puzzle_closeup_main_loop
 
 
@@ -204,7 +204,81 @@ forge_puzzle_closeup_main_loop_space_on_switch:
 	call forge_puzzle_copy_nametable
 	ld hl, SFX_push_object
 	call play_SFX_with_high_priority
-	jr forge_puzzle_closeup_main_loop
+
+	ld hl, (current_world__seed)
+	ld de, (current_world__firestone_forge_state)
+	or a
+	sbc hl, de
+	ld a, h
+	or l
+	jr nz, forge_puzzle_closeup_main_loop
+
+forge_puzzle_closeup_solved:
+	call clear_all_the_sprites	
+
+	; solved!
+	ld hl, SFX_secret
+	call play_SFX_with_high_priority
+
+	ld b, 50
+	call wait_b_halts
+
+	; lower the panel:
+	ld b, 10
+forge_puzzle_closeup_solved_loop:
+	push bc
+		ld a, 12
+		; draw bottom "a" rows of the lid:
+		; hl = firestone_forge_puzzle_nametables + 1 + (11 - a) * 21
+		sub b
+		ld de, 21
+		ld hl, firestone_forge_puzzle_nametables + 2
+		jr z, forge_puzzle_closeup_solved_loop_ptr_done
+forge_puzzle_closeup_solved_loop_ptr:
+		add hl, de
+		djnz forge_puzzle_closeup_solved_loop_ptr
+forge_puzzle_closeup_solved_loop_ptr_done:
+
+		ld de, NAMTBL2 + 7
+		ld b, a
+forge_puzzle_closeup_solved_loop2:
+		push bc
+			push hl
+				push de
+					ld b, 17
+					call fast_small_LDIRVM
+				pop hl
+				ld bc, 32
+				add hl, bc
+				ex de, hl
+			pop hl
+			ld bc, 21
+			add hl, bc
+		pop bc
+		djnz forge_puzzle_closeup_solved_loop2
+
+		ld hl, SFX_explosion_low_pitch
+		call play_SFX_with_high_priority
+		ld b, 20
+		call wait_b_halts
+	pop bc
+	djnz forge_puzzle_closeup_solved_loop
+
+	ld hl, firestone_forge_puzzle_nametables
+	ld de, NAMTBL2 + 5
+	ld bc, #0c15  ; 12x21
+	call forge_puzzle_copy_nametable
+	ld hl, SFX_explosion_low_pitch
+	call play_SFX_with_high_priority
+	ld b, 20
+	call wait_b_halts
+
+	call wait_for_click
+
+	; set the event_fn for the events after exiting the puzzle:
+	; ...
+
+	ret  ; exit the puzzle
 
 
 forge_puzzle_closeup_main_loop_up:
@@ -212,8 +286,8 @@ forge_puzzle_closeup_main_loop_up:
 	or a
 	jr z, forge_puzzle_closeup_main_loop_up_from_back
 	cp 9
-	jr c, forge_puzzle_closeup_main_loop
-	sub a, 8
+	jp c, forge_puzzle_closeup_main_loop
+	sub 8
 	jr forge_puzzle_closeup_main_loop_movement_happened
 forge_puzzle_closeup_main_loop_up_from_back:
 	ld a, 9
@@ -222,7 +296,7 @@ forge_puzzle_closeup_main_loop_up_from_back:
 forge_puzzle_closeup_main_loop_down:
 	ld a, (tmp_dialog_pointer_position)
 	or a
-	jr z, forge_puzzle_closeup_main_loop
+	jp z, forge_puzzle_closeup_main_loop
 	cp 9
 	jr c, forge_puzzle_closeup_main_loop_down_first_row
 	xor a
@@ -282,7 +356,7 @@ forge_puzzle_closeup_update_pointer_sprite_first_row:
 	jr forge_puzzle_closeup_update_pointer_sprite_bc_set
 forge_puzzle_closeup_update_pointer_sprite_second_row:
 	ld b, 68
-	sub a, 9
+	sub 9
 	add a, a
 	add a, a
 	add a, a

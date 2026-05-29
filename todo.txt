@@ -1,7 +1,8 @@
 to do:
 
 ***- powerstone/Firestone forge in the moon:
-  ***- When solved: the panel slides back down, you go out and message:
+  ***- mark that puzzle is solved in the state, and when entering the puzzle just state a message that the forge is already on, and go back
+  ***- event_fn for when you exit the puzzle with it solved:
     ***- "I think that did it! I hear a low pitch hum coming from underground! The forge is activating!"
     ***- "This is incredible! We will have a supply of powerstones... or firestones! However, I do not know how long will it take to start producing them. Better to keep moving with my mission. I need to tell Elaine after all this is over..."
   ***- add achievement to the game over screen
@@ -19,6 +20,7 @@ to do:
   - add boss name to the stats for game over screen
 - 7th boss (ideas: "The Lunar Obsidian Sentinel" (tall, slender, smooth black, reflective surfaces), "The Lunar Crystal Serpent", "The Moon Stone Monolith").
   - add boss name to the stats for game over screen
+- ending C+: like C but with firestone forge active
 - ending B: the calendar stone machine also activates its offensive mechanism and destroys the alien armada that was coming. You hope that will deter them from coming again.
 - Ending B+: (got the firestone forge active with the codex, but did not defeat the final alien boss)
 - update the list of enemy types to display in ending B to include new enemies in moon/mars
