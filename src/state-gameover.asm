@@ -352,6 +352,7 @@ state_game_over_print_time_add_digit_loop_done:
 state_game_over_print_achievements_table:
 	dw TEXT_ACHIEVEMENT_NOMISS
 	dw TEXT_ACHIEVEMENT_ANIMALS
+	dw TEXT_ACHIEVEMENT_FORGE
 
 state_game_over_print_achievements:
 	ld hl, stats__achievements
@@ -393,7 +394,7 @@ state_game_over_print_achievements_loop:
 
 ;-----------------------------------------------
 ; input:
-; - b: boss name ID for stats
+; - b: achievement ID for stats
 add_achievement_to_stats:
 	ld hl, stats__achievements
 add_achievement_to_stats_loop:

@@ -150,6 +150,7 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "max", "MAX_TIME", 6);
         addLineSafe(lines_with_constant_page3, "no miss", "ACHIEVEMENT_NOMISS", 8);
         addLineSafe(lines_with_constant_page3, "animal charm", "ACHIEVEMENT_ANIMALS", 8);
+        addLineSafe(lines_with_constant_page3, "the forge", "ACHIEVEMENT_FORGE", 8);
         addLineSafe(lines_with_constant_page3, "Hurakan", "BOSS_HURAKAN", 8);
         addLineSafe(lines_with_constant_page3, "Camazotz", "BOSS_CAMAZOTZ", 8);
         addLineSafe(lines_with_constant_page3, "Cabrakan", "BOSS_CABRAKAN", 8);
@@ -700,6 +701,11 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "something seems to be missing.", "FIRESTONE_PUZZLE_2_2", 28*2);
         addLineSafe(lines_with_constant_page3, "The fragments of the codex fit perfectly!", "FIRESTONE_PUZZLE_3_1", 28*2);
         addLineSafe(lines_with_constant_page3, "But I do not seem to have them all...", "FIRESTONE_PUZZLE_3_2", 28*2);
+        addLineSafe(lines_with_constant_page3, "The firestone forge is already be active.", "FIRESTONE_PUZZLE_4_1", 28*2);
+
+        addLineSafe(lines_with_constant_page3, "I think that did it! I hear a low pitch hum coming from underground! The forge is activating!", "FIRESTONE_PUZZLE_5", 112);
+        addLineSafe(lines_with_constant_page3, "This is incredible! We will have a supply of powerstones... or firestones! I do not know how long the process takes though.", "FIRESTONE_PUZZLE_6", 112);
+        addLineSafe(lines_with_constant_page3, "Better to keep moving with my mission. I need to tell Elaine after all this is over...", "FIRESTONE_PUZZLE_7", 112);
         
         // Ending C:
         // First shared part:

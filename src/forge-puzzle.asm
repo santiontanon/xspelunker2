@@ -37,6 +37,10 @@ forge_puzzle_closeup:
 	call forge_puzzle_clear_text
 forge_puzzle_closeup_not_first_time:
 
+	ld a, (global_state__objects + TAG_FIRESTONE_FORGE)
+	or a
+	jr nz, forge_puzzle_closeup_already_solved
+
 	ld hl, TEXT_FIRESTONE_PUZZLE_2_1
 	ld de, CHRTBL2 + 256*8*2 + 130*8
 	call forge_puzzle_text
@@ -59,6 +63,15 @@ forge_puzzle_closeup_not_first_time:
 	call disable_VDP_output	
 	jp state_play_from_inventory
 
+forge_puzzle_closeup_already_solved:
+	ld hl, TEXT_FIRESTONE_PUZZLE_4_1
+	ld de, CHRTBL2 + 256*8*2 + 130*8
+	call forge_puzzle_text
+	call wait_for_click
+	call forge_puzzle_clear_text
+	call disable_VDP_output	
+	jp state_play_from_inventory
+
 
 forge_puzzle_closeup_2_codex:
 	call forge_puzzle_draw_codex2
@@ -73,7 +86,6 @@ forge_puzzle_closeup_1_codex:
 	call forge_puzzle_text
 	call wait_for_click
 	call forge_puzzle_clear_text
-
 	call disable_VDP_output	
 	jp state_play_from_inventory
 
@@ -275,8 +287,19 @@ forge_puzzle_closeup_solved_loop2:
 
 	call wait_for_click
 
+	ld hl, global_state__objects + TAG_FIRESTONE_FORGE
+	ld (hl), 1  ; mark as solved
+
 	; set the event_fn for the events after exiting the puzzle:
-	; ...
+	ld hl, event__firestone_forge_active_message
+	ld (in_game_event_fn_ptr), hl
+	ld a, FORGE_PUZZLE_PAGE
+	ld (in_game_event_fn_page), a
+
+	ld hl, add_achievement_to_stats
+	ld c, GAME_OVER_PAGE
+	ld b, 3  ; achievement id
+	call call_hl_in_page_c_8000
 
 	ret  ; exit the puzzle
 
@@ -556,3 +579,39 @@ forge_puzzle_set_bitmap_mode_bottom_rows_loop:
     out (c), a
     inc a
     djnz forge_puzzle_set_bitmap_mode_bottom_rows_loop
+    ret
+
+
+;-----------------------------------------------
+event__firestone_forge_active_message:
+	ld hl, event__firestone_forge_active_message2
+	ld (in_game_event_fn_ptr), hl
+	ld a, FORGE_PUZZLE_PAGE
+	ld (in_game_event_fn_page), a
+
+	ld de, TEXT_FIRESTONE_PUZZLE_5
+	ld hl, display_in_game_message_textpage3
+	ld c, TEXT_PAGE
+	jp call_hl_in_page_c_8000
+
+
+;-----------------------------------------------
+event__firestone_forge_active_message2:
+	ld hl, event__firestone_forge_active_message3
+	ld (in_game_event_fn_ptr), hl
+	ld a, FORGE_PUZZLE_PAGE
+	ld (in_game_event_fn_page), a
+
+	ld de, TEXT_FIRESTONE_PUZZLE_6
+	ld hl, display_in_game_message_textpage3
+	ld c, TEXT_PAGE
+	jp call_hl_in_page_c_8000
+
+
+;-----------------------------------------------
+event__firestone_forge_active_message3:
+	ld de, TEXT_FIRESTONE_PUZZLE_7
+	ld hl, display_in_game_message_textpage3
+	ld c, TEXT_PAGE
+	jp call_hl_in_page_c_8000
+
