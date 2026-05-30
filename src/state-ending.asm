@@ -110,13 +110,14 @@ ending_C_continue:
 	call clear_screen_left_to_right
 
 	ld ix, ending_C_text_page_ptrs
+	ld iy, ending_C_enemy_intro_ptr_table
 	ld a, (global_state__objects + TAG_FIRESTONE_FORGE)
 	or a
 	jr z, ending_C_continue2
 	ld ix, ending_C_plus_text_page_ptrs
+	ld iy, ending_C_plus_enemy_intro_ptr_table
 ending_C_continue2:
 	ld b, 3  ; # number of pages
-	ld iy, ending_C_enemy_intro_ptr_table
 	call ending_final_text_scene
 
 ending_C_done:
@@ -854,6 +855,26 @@ ending_C_enemy_intro_ptr_table:
 	dw ending_enemy_intro_data13  ; fishmen
 	dw ending_enemy_intro_data14  ; ghosts
 	dw ending_enemy_intro_data15  ; sentinel
+	dw 0  ; sentinel
+
+ending_C_plus_enemy_intro_ptr_table:
+	dw ending_enemy_intro_data0  ; snakes
+	dw ending_enemy_intro_data1  ; fish
+	dw ending_enemy_intro_data2  ; bees
+	dw ending_enemy_intro_data3  ; frogs
+	dw ending_enemy_intro_data4  ; carnivore plant
+	dw ending_enemy_intro_data5  ; bats
+	dw ending_enemy_intro_data6  ; skeletons
+	dw ending_enemy_intro_data7  ; monkeys
+	dw ending_enemy_intro_data8  ; caves skeletons
+	dw ending_enemy_intro_data9  ; rockmen
+	dw ending_enemy_intro_data10  ; ants
+	dw ending_enemy_intro_data11  ; fire imps
+	dw ending_enemy_intro_data12  ; owl
+	dw ending_enemy_intro_data13  ; fishmen
+	dw ending_enemy_intro_data14  ; ghosts
+	dw ending_enemy_intro_data15  ; sentinel
+	dw ending_enemy_intro_data16  ; snail
 	dw 0  ; sentinel
 
 

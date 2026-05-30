@@ -1,6 +1,13 @@
 to do:
 
-***- update the list of enemy types to display in ending C+/B/etc. to include new enemies in moon/mars
+***- update the list of enemy types to display in ending C+/B/etc. to include new enemies in moon/mars:
+  ***- mars blob (Gorgon Bile, Gorgon Blood)
+  ***- mars walkers (Atlan Automaton V1 / V2)
+  ***- mars drones (Icarus Probe / Daedalus Probe)
+  ***- mars giant walker (Talos Security Unit)
+  ***- moon mushrooms
+  ***- moon giant mushroom
+***- save another copy of the rom, and call it "forge"
 ***- music: ending aliens (look at "story" from Triton, can I do something like that?)
 ***- music: ending beach
 
