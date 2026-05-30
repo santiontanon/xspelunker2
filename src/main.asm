@@ -58,6 +58,7 @@ MARS_ENEMY_SPRITES_PAGE: equ 20
 MOON_ENEMY_SPRITES_PAGE: equ 20
 YES_NO_DIALOG_PAGE: equ 5
 TEXT_PAGE: equ 5
+TEXT_PAGE2: equ 7
 TEXT_PAGE3: equ 10
 BOSS_PAGE: equ 6
 BOSS_4_PAGE: equ 14
@@ -183,9 +184,9 @@ Execute:
     ld bc, 16
     ldir
 
-    ld hl, state_braingames
-    ld a, BRAINGAMES_PAGE
-    jp jp_to_hl_in_page_a_8000
+;     ld hl, state_braingames
+;     ld a, BRAINGAMES_PAGE
+;     jp jp_to_hl_in_page_a_8000
 
 ;     ld hl, state_story
 ;     ld a, STORY_PAGE
@@ -194,6 +195,12 @@ Execute:
 ;     ld hl, ending_C
 ;     ld a, ENDING_PAGE
 ;     jp jp_to_hl_in_page_a_8000
+
+    ld hl, global_state__objects + TAG_FIRESTONE_FORGE
+    ld (hl), 1
+    ld hl, ending_C_plus
+    ld a, ENDING_PAGE
+    jp jp_to_hl_in_page_a_8000
 
 
 ;-----------------------------------------------

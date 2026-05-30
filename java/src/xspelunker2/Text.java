@@ -52,10 +52,10 @@ public class Text {
         HashMap<String,String> lines_with_constant_page3 = new LinkedHashMap<>();
         
         // Title:
-        addLineSafe(lines_with_constant_page3, "Brain Games (2026)", "CREDITS1", 11);
-        addLineSafe(lines_with_constant_page3, "Santiago Ontañón", "CREDITS2", 10);
-        addLineSafe(lines_with_constant_page3, "SPACE to start", "START1", 10);
-        addLineSafe(lines_with_constant_page3, " X for options", "START2", 10);
+        addLineSafe(lines_with_constant_page2, "Brain Games (2026)", "CREDITS1", 11);
+        addLineSafe(lines_with_constant_page2, "Santiago Ontañón", "CREDITS2", 10);
+        addLineSafe(lines_with_constant_page2, "SPACE to start", "START1", 10);
+        addLineSafe(lines_with_constant_page2, " X for options", "START2", 10);
 
         addLineSafe(lines_with_constant_page3, "If it isn't Michael", "STORY1", 10);
         addLineSafe(lines_with_constant_page3, "S. Xavier himself!", "STORY2", 10);
@@ -147,6 +147,9 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "C", "ENDING_C", 6);
         addLineSafe(lines_with_constant_page3, "B", "ENDING_B", 6);
         addLineSafe(lines_with_constant_page3, "A", "ENDING_A", 6);
+        addLineSafe(lines_with_constant_page3, "C+", "ENDING_C_PLUS", 6);
+        addLineSafe(lines_with_constant_page3, "B+", "ENDING_B_PLUS", 6);
+        addLineSafe(lines_with_constant_page3, "A+", "ENDING_A_PLUS", 6);
         addLineSafe(lines_with_constant_page3, "max", "MAX_TIME", 6);
         addLineSafe(lines_with_constant_page3, "no miss", "ACHIEVEMENT_NOMISS", 8);
         addLineSafe(lines_with_constant_page3, "animal charm", "ACHIEVEMENT_ANIMALS", 8);
@@ -730,13 +733,26 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "Xavier: btw, did I tell you about the part where I fought a giant beast in Atlantis? I was exploring the Temple of Poseidon when...", "ENDING_C_BEACH_3", 22*6);
         addLineSafe(lines_with_constant_page3, "Elaine: Michael!!! Stop!!! I have heard that story 5 times! And every time the monster seems to grow a few meters larger!", "ENDING_C_BEACH_4", 22*6);
         addLineSafe(lines_with_constant_page3, "Elaine: Can you just admit that I saved your ass at the end when the aliens ambushed you and move on?", "ENDING_C_BEACH_5", 22*6);
-//        addLineSafe(lines_with_constant_page3, "Xavier: ...", "ENDING_C_BEACH_6", 22*6);  // AMBUSH_ELAINE_3
+        // addLineSafe(lines_with_constant_page3, "Xavier: ...", "ENDING_C_BEACH_6", 22*6);  // AMBUSH_ELAINE_3
         addLineSafe(lines_with_constant_page3, "Elaine: Just relax! Enjoy the vacation! And think about what are we having for dinner today! No more stories about fighting mosters for the day ok?", "ENDING_C_BEACH_7", 22*6);
         addLineSafe(lines_with_constant_page3, "Xavier: ... darn it...", "ENDING_C_BEACH_8", 22*6);
         addLineSafe(lines_with_constant_page3, "Xavier: I don't know... I keep thinking about it because I keep having the feeling that maybe what we did was not enough... what if they find a way around the shield and come back?", "ENDING_C_BEACH_9", 22*6);
+        // Beach scene C+:
+        addLineSafe(lines_with_constant_page3, "Xavier: Oh! There is something I forgot to tell you!", "ENDING_C_PLUS_BEACH_3", 22*6);
+        addLineSafe(lines_with_constant_page3, "Elaine: What is it? And I hope it's not another story about how you defeated some monster or another again...", "ENDING_C_PLUS_BEACH_4", 22*6);
+        addLineSafe(lines_with_constant_page3, "Xavier: No, no! This is different! Remember the translations you did for me about the calestial stones?", "ENDING_C_PLUS_BEACH_5", 22*6);
+        addLineSafe(lines_with_constant_page3, "Xavier: Well, they are Atlantean in origin, and they are actually called Firestones. And guess what?!", "ENDING_C_PLUS_BEACH_6", 22*6);
+        addLineSafe(lines_with_constant_page3, "Elaine: What?", "ENDING_C_PLUS_BEACH_7", 22*6);
+        addLineSafe(lines_with_constant_page3, "Xavier: I found the firestone forge! And not only that, I activated it! It's producing firestones as we speak!", "ENDING_C_PLUS_BEACH_8", 22*6);
+        addLineSafe(lines_with_constant_page3, "Elaine: You did what?", "ENDING_C_PLUS_BEACH_9", 22*6);
+        addLineSafe(lines_with_constant_page3, "Xavier: I activated the firestone forge!", "ENDING_C_PLUS_BEACH_10", 22*6);
+        addLineSafe(lines_with_constant_page3, "Elaine: Oh my god, without asking me first?! And what do you want firestones for?!", "ENDING_C_PLUS_BEACH_11", 22*6);
+        addLineSafe(lines_with_constant_page3, "Xavier: I was hoping you would have some ideas...", "ENDING_C_PLUS_BEACH_12", 22*6);
+        addLineSafe(lines_with_constant_page3, "Elaine: ...", "ENDING_C_PLUS_BEACH_13", 22*6);
+        
         // Ending credits and text, page 1:
-        addLineSafe(lines_with_constant_page3, "Ending C: Congratulations! You halted", "ENDING_C_PAGE_1_1", 20);
-        addLineSafe(lines_with_constant_page3, "the Alien invasion! For now...", "ENDING_C_PAGE_1_2", 20);
+        addLineSafe(lines_with_constant_page3, "Ending C: Congratulations! You", "ENDING_C_PAGE_1_1", 20);
+        addLineSafe(lines_with_constant_page3, "halted the Alien invasion! For now...", "ENDING_C_PAGE_1_2", 20);
         addLineSafe(lines_with_constant_page3, "You gathered five power stones and", "ENDING_C_PAGE_1_3", 20);
         addLineSafe(lines_with_constant_page3, "activated the nexus! Before", "ENDING_C_PAGE_1_4", 20);
         addLineSafe(lines_with_constant_page3, "crumbling, it lifted a shield around", "ENDING_C_PAGE_1_5", 20);
@@ -752,6 +768,10 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "and there was more you could have", "ENDING_C_PAGE_1_15", 20);
         addLineSafe(lines_with_constant_page3, "done with the nexus?", "ENDING_C_PAGE_1_16", 20);
 
+        addLineSafe(lines_with_constant_page3, "Ending C+: Congratulations! You", "ENDING_C_PLUS_PAGE_1_1", 20);
+        addLineSafe(lines_with_constant_page3, "You found and activated the forge", "ENDING_C_PLUS_PAGE_1_7", 20);
+        addLineSafe(lines_with_constant_page3, "but have no use for it yet... The", "ENDING_C_PLUS_PAGE_1_8", 20);
+        
         addLineSafe(lines_with_constant_page3, "Thanks for Playing 2XSpelunker!", "ENDING_C_PAGE_2_1", 20);
         //
         addLineSafe(lines_with_constant_page3, "Please try again to reach ending B!", "ENDING_C_PAGE_2_2", 20);
@@ -846,7 +866,12 @@ public class Text {
             throw new Exception("'"+line+"' is wider than " + maxWidthInTiles + " tiles! (" + font.stringWidthInPixels(line) + " pixels, vs " + maxWidthInTiles*8 + ")");
         }
         if (lines_with_constant.containsKey(line)) {
-            throw new Exception("repeated line!");
+            throw new Exception("repeated line: " + line);
+        }
+        for(String tag2:lines_with_constant.values()) {
+            if (tag.equals(tag2)) {
+                throw new Exception("repeated tag: " + tag);
+            }
         }
         lines_with_constant.put(line, tag);
     }

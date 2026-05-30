@@ -466,15 +466,33 @@ calendar_stone_center_trigger_ending_event_fn_loop2:
 	ld a, (global_state__n_power_stones_in_calendar)
 	cp 5
 	ld hl, ending_C
-	jr z, calendar_stone_center_trigger_ending_event_fn_ending
+	jr z, calendar_stone_center_trigger_ending_event_fn_ending_c
 	ld hl, ending_B
 	ld a, (global_state__solved_final_riddle)
 	or a
-	jr z, calendar_stone_center_trigger_ending_event_fn_ending
+	jr z, calendar_stone_center_trigger_ending_event_fn_ending_b
 	ld hl, ending_A
+	ld a, (global_state__objects + TAG_FIRESTONE_FORGE)
+	or a
+	jr z, calendar_stone_center_trigger_ending_event_fn_ending
+	ld hl, ending_A_plus	
 calendar_stone_center_trigger_ending_event_fn_ending:
 	ld a, ENDING_PAGE
 	jp jp_to_hl_in_page_a_8000
+
+calendar_stone_center_trigger_ending_event_fn_ending_c:
+	ld a, (global_state__objects + TAG_FIRESTONE_FORGE)
+	or a
+	jr z, calendar_stone_center_trigger_ending_event_fn_ending
+	ld hl, ending_C_plus
+	jr calendar_stone_center_trigger_ending_event_fn_ending
+
+calendar_stone_center_trigger_ending_event_fn_ending_b:
+	ld a, (global_state__objects + TAG_FIRESTONE_FORGE)
+	or a
+	jr z, calendar_stone_center_trigger_ending_event_fn_ending
+	ld hl, ending_B_plus
+	jr calendar_stone_center_trigger_ending_event_fn_ending
 
 
 ;-----------------------------------------------

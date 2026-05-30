@@ -128,27 +128,15 @@ state_title_text_nametable3:
 state_title_draw_credits:
 	ld de, TEXT_CREDITS1
 	ld hl, copy_text_from_another_page
-	ld c, TEXT_PAGE3
+	ld c, TEXT_PAGE2
 	call call_hl_in_page_c_8000
 	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096, CHRTBL2 + (256*2 + 224)*8, 16*COLOR_WHITE, 11
 
 	ld de, TEXT_CREDITS2
 	ld hl, copy_text_from_another_page
-	ld c, TEXT_PAGE3
+	ld c, TEXT_PAGE2
 	call call_hl_in_page_c_8000
 	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096, CHRTBL2 + (256*2 + 245)*8, 16*COLOR_WHITE, 10
-
-; 	ld hl, TEXT_CREDITS1
-; 	ld de, CHRTBL2 + (256*2 + 224)*8
-; 	ld iy, #80f0
-; 	ld b, 11
-; 	call draw_sentence_to_vdp_from_another_page
-
-; 	ld hl, TEXT_CREDITS2
-; 	ld de, CHRTBL2 + (256*2 + 245)*8
-; 	ld iy, #80f0
-; 	ld b, 10
-; 	call draw_sentence_to_vdp_from_another_page
 
 	ld hl, state_title_text_nametable1
 	ld de, NAMTBL2 + 23*32 + 21
@@ -176,12 +164,8 @@ state_title_draw_space_to_start:
 state_title_draw_space_to_start_options:
 	ld de, TEXT_START1
 state_title_draw_space_to_start_continue:
-; 	ld de, CHRTBL2 + (256*2 + 235)*8
-; 	ld iy, #80f0
-; 	ld b, 10
-; 	call draw_sentence_to_vdp_from_another_page
 	ld hl, copy_text_from_another_page
-	ld c, TEXT_PAGE3
+	ld c, TEXT_PAGE2
 	call call_hl_in_page_c_8000
 	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096, CHRTBL2 + (256*2 + 235)*8, 16*COLOR_WHITE, 10
 

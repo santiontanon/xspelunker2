@@ -1,8 +1,10 @@
 to do:
 
+***- update the list of enemy types to display in ending C+/B/etc. to include new enemies in moon/mars
+***- music: ending aliens (look at "story" from Triton, can I do something like that?)
+***- music: ending beach
+
 - music: (brain 12, 15, 23, 25 have potential)
-  - ending aliens (look at "story" from Triton, can I do something like that?)
-  - ending beach
   - xibalba
   - atlantis
   - mars
@@ -12,10 +14,8 @@ to do:
   - add boss name to the stats for game over screen
 - 7th boss (ideas: "The Lunar Obsidian Sentinel" (tall, slender, smooth black, reflective surfaces), "The Lunar Crystal Serpent", "The Moon Stone Monolith").
   - add boss name to the stats for game over screen
-- ending C+: like C but with firestone forge active
 - ending B: the calendar stone machine also activates its offensive mechanism and destroys the alien armada that was coming. You hope that will deter them from coming again.
 - Ending B+: (got the firestone forge active with the codex, but did not defeat the final alien boss)
-- update the list of enemy types to display in ending B to include new enemies in moon/mars
 
 - 8th boss: after beating the combat against the aliens, you can teleport to their home planet, and fight against their leader. (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
   - add boss name to the stats for game over screen

@@ -46,9 +46,13 @@ ending_C_beach_elaine_michael_sprites2:
 
 
 ;-----------------------------------------------
+ending_C_plus:	
+	ld hl, TEXT_ENDING_C_PLUS
+	jr ending_C_continue
 ending_C:
-    ld sp, stack
 	ld hl, TEXT_ENDING_C
+ending_C_continue:
+    ld sp, stack
 	ld (stats__ending), hl
 
 	ld de, TEXT_CALENDAR_ACTIVATED_C_2
@@ -106,6 +110,11 @@ ending_C:
 	call clear_screen_left_to_right
 
 	ld ix, ending_C_text_page_ptrs
+	ld a, (global_state__objects + TAG_FIRESTONE_FORGE)
+	or a
+	jr z, ending_C_continue2
+	ld ix, ending_C_plus_text_page_ptrs
+ending_C_continue2:
 	ld b, 3  ; # number of pages
 	ld iy, ending_C_enemy_intro_ptr_table
 	call ending_final_text_scene
@@ -117,9 +126,13 @@ ending_C_done:
 
 
 ;-----------------------------------------------
+ending_B_plus:
+	ld hl, TEXT_ENDING_B_PLUS
+	jr ending_B_continue
 ending_B:
-    ld sp, stack
 	ld hl, TEXT_ENDING_B
+ending_B_continue:
+    ld sp, stack
 	ld (stats__ending), hl
 	
 	; ...
@@ -130,9 +143,13 @@ ending_B:
 
 
 ;-----------------------------------------------
+ending_A_plus:
+	ld hl, TEXT_ENDING_B_PLUS
+	jr ending_A_continue
 ending_A:
-    ld sp, stack
 	ld hl, TEXT_ENDING_A
+ending_A_continue:
+    ld sp, stack
 	ld (stats__ending), hl
 	
 	; ...
@@ -525,6 +542,10 @@ ending_beach_scene_C:
 	ld b, 4
 	call ending_beach_scene_C_dialogue_line
 
+	ld a, (global_state__objects + TAG_FIRESTONE_FORGE)
+	or a
+	jr nz, ending_beach_scene_C_plus_entry_point
+
 	ld hl, TEXT_ENDING_C_BEACH_3
 	ld a, COLOR_WHITE * 16
 	ld b, 8
@@ -551,6 +572,69 @@ ending_beach_scene_C:
 	call ending_beach_scene_C_dialogue_line
 
 	ld hl, TEXT_ENDING_C_BEACH_8
+	ld a, COLOR_WHITE * 16
+	ld b, 3
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_C_BEACH_9
+	ld a, COLOR_WHITE * 16
+	ld b, 10
+	jp ending_beach_scene_C_dialogue_line
+
+
+;-----------------------------------------------
+ending_beach_scene_C_plus_entry_point:
+	ld hl, TEXT_ENDING_C_PLUS_BEACH_3
+	ld a, COLOR_WHITE * 16
+	ld b, 6
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_C_PLUS_BEACH_4
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_C_PLUS_BEACH_5
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_C_PLUS_BEACH_6
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_C_PLUS_BEACH_7
+	ld a, COLOR_WHITE * 16
+	ld b, 3
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_C_PLUS_BEACH_8
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_C_PLUS_BEACH_9
+	ld a, COLOR_WHITE * 16
+	ld b, 3
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_C_PLUS_BEACH_10
+	ld a, COLOR_WHITE * 16
+	ld b, 4
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_C_PLUS_BEACH_11
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_C_PLUS_BEACH_12
+	ld a, COLOR_WHITE * 16
+	ld b, 4
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_C_PLUS_BEACH_13
 	ld a, COLOR_WHITE * 16
 	ld b, 3
 	call ending_beach_scene_C_dialogue_line
@@ -686,6 +770,11 @@ ending_C_text_page_ptrs:
 	dw ending_C_text_page_2
 	dw ending_C_text_page_3
 
+ending_C_plus_text_page_ptrs:
+	dw ending_C_plus_text_page_1
+	dw ending_C_text_page_2
+	dw ending_C_text_page_3
+
 
 ending_C_text_page_1:
 	db 16
@@ -697,6 +786,25 @@ ending_C_text_page_1:
 	dw TEXT_ENDING_C_PAGE_1_6
 	dw TEXT_ENDING_C_PAGE_1_7
 	dw TEXT_ENDING_C_PAGE_1_8
+	dw TEXT_ENDING_C_PAGE_1_9
+	dw TEXT_ENDING_C_PAGE_1_10
+	dw TEXT_ENDING_C_PAGE_1_11
+	dw TEXT_ENDING_C_PAGE_1_12
+	dw TEXT_ENDING_C_PAGE_1_13
+	dw TEXT_ENDING_C_PAGE_1_14
+	dw TEXT_ENDING_C_PAGE_1_15
+	dw TEXT_ENDING_C_PAGE_1_16
+
+ending_C_plus_text_page_1:
+	db 16
+	dw TEXT_ENDING_C_PLUS_PAGE_1_1
+	dw TEXT_ENDING_C_PAGE_1_2
+	dw TEXT_ENDING_C_PAGE_1_3
+	dw TEXT_ENDING_C_PAGE_1_4
+	dw TEXT_ENDING_C_PAGE_1_5
+	dw TEXT_ENDING_C_PAGE_1_6
+	dw TEXT_ENDING_C_PLUS_PAGE_1_7
+	dw TEXT_ENDING_C_PLUS_PAGE_1_8
 	dw TEXT_ENDING_C_PAGE_1_9
 	dw TEXT_ENDING_C_PAGE_1_10
 	dw TEXT_ENDING_C_PAGE_1_11
