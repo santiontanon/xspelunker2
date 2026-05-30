@@ -874,7 +874,13 @@ ending_C_plus_enemy_intro_ptr_table:
 	dw ending_enemy_intro_data13  ; fishmen
 	dw ending_enemy_intro_data14  ; ghosts
 	dw ending_enemy_intro_data15  ; sentinel
-	dw ending_enemy_intro_data16  ; snail
+	dw ending_enemy_intro_data16  ; snails
+	dw ending_enemy_intro_data17  ; blobs
+	dw ending_enemy_intro_data18  ; walkers
+	dw ending_enemy_intro_data19  ; drones
+	dw ending_enemy_intro_data20  ; giant walker
+	dw ending_enemy_intro_data21  ; mushrooms
+	dw ending_enemy_intro_data22  ; giant mushroom
 	dw 0  ; sentinel
 
 
