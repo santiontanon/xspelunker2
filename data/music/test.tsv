@@ -1,48 +1,224 @@
-piano, do2	piano,-	piano,-
-		
-mib2	sol2	
--	-	
-mib2	sol2	
--	-	
-do2		
-		
-mib2	sol2	
--	-	
-mib2	sol2	
--	-	
-si1		
-		
-mib2	lab2	
--	-	
-mib2	lab2	
--	-	
-si1		
-		
-mib2	lab2	
--	-	
-mib2	lab2	
--	-	
-piano, do2	piano,-	piano,sol3
-		
-mib2	sol2	-
--	-	fa#3
-mib2	sol2	sol3
--	-	lab3
-do2		sol3
-		
-mib2	sol2	-
--	-	
-mib2	sol2	sol3
--	-	-
-si1		sol3
-		
-re2	sol2	-
--	-	
-re2	sol2	
--	-	
-si1		re3
-		
-re2	sol2	-
--	-	
-re2	sol2	
--	-	
+minor-arpeggio,do3	piano,g1	pianosoft,c0
+		-
+-	-	c1
+		-
+		c1
+		-
+do3	g1	c0
+		-
+-	-	c1
+		-
+		c1
+		-
+do3	g1	c0
+		-
+-	-	c1
+		-
+reb3	ab1	db0
+		-
+		db1
+		-
+		db1
+		-
+-	-	db0
+		-
+		db1
+		-
+		db1
+		-
+		db0
+		-
+		db1
+		-
+minor-arpeggio,do3	piano,g1	pianosoft,c0
+		-
+-	-	c1
+		-
+		c1
+		-
+do3	g1	c0
+		-
+-	-	c1
+		-
+		c1
+		-
+do3	g1	c0
+		-
+-	-	c1
+		-
+si2	f#1	b0
+		-
+		b0
+		-
+		b0
+		-
+-	-	b0
+		-
+		b0
+		-
+		b0
+		-
+		b0
+		-
+		b0
+		-
+minor-arpeggio,do3	piano,sol1	pianosoft,c0
+		-
+-	-	c1
+		-
+	sol1	c1
+		-
+do3	do2	c0
+		-
+-	-	c1
+		-
+	do2	c1
+		-
+do3	sol1	c0
+		-
+-	-	c1
+		-
+reb3	lab1	db0
+		-
+		db1
+		-
+		db1
+		-
+-	-	db0
+		-
+		db1
+		-
+		db1
+		-
+		db0
+		-
+		db1
+		-
+minor-arpeggio,do3	piano,sol1	pianosoft,c0
+		-
+-	-	c1
+		-
+	sol1	c1
+		-
+do3	fa1	c0
+		-
+-	-	c1
+		-
+	fa1	c1
+		-
+do3	mib1	c0
+		-
+-	-	c1
+		-
+si2	re1	b0
+		-
+		b0
+		-
+		b0
+		-
+-	-	b0
+		-
+		b0
+		-
+		b0
+		-
+		b0
+		-
+		b0
+		-
+minor-arpeggio,fa3	piano,lab1	pianosoft,f0
+	-	
+-	-	f1
+	-	
+	lab1	f1
+	-	
+fa3	fa1	f0
+	-	
+-	-	f1
+	-	
+	fa1	f1
+	-	
+fa3	lab1	f0
+	-	
+-	-	f1
+	-	
+solb3	sib1	gb0
+		-
+		gb1
+		-
+		gb1
+		-
+-	-	gb0
+		-
+		gb1
+		-
+		gb1
+		-
+		gb0
+		-
+		gb1
+		-
+minor-arpeggio,do3	do2	pianosoft,c0
+		-
+-	g1	c1
+		-
+	g2	c1
+		-
+do3	piano,c2	c0
+		-
+-		c1
+		-
+	g2	c1
+		-
+	gb2	c0
+		-
+	-	c1
+		-
+reb3	reb2	db0
+		-
+-	piano,ab1	db1
+		-
+	ab2	db1
+		-
+reb3	reb2	db0
+		-
+-		db1
+		-
+	ab2	db1
+		-
+	g2	db0
+		-
+	-	db1
+		-
+do3		pianosoft,c0
+		-
+-	piano,g1	c1
+		-
+	piano,c2	c1
+		-
+do3		c0
+		-
+-		c1
+		-
+	g2	c1
+		-
+	gb2	c0
+		-
+	-	c1
+		-
+si2		b0
+		-
+-	piano,f#1	b0
+		-
+	piano,d2	b0
+		-
+si2		b0
+		-
+-		b0
+		-
+	piano,f#2	b0
+		-
+	piano,f2	b0
+		-
+	-	b0
+		-

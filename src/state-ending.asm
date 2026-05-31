@@ -105,6 +105,8 @@ ending_C_continue:
 	call wait_b_halts_skippable
 	call clear_screen_left_to_right
 
+	call stop_music
+
 	call ending_beach_scene_C  ; elaine and michael relax in the beach
 
 	call clear_screen_left_to_right
@@ -162,6 +164,10 @@ ending_A_continue:
 
 ;-----------------------------------------------
 ending_UFO_scene_approach_earth:
+
+	ld hl, music_ending_aliens_bin
+	ld a, 5
+	call play_music_adjusting_tempo
 
 	ld iy, TEXT_ENDING_C_UFO_0
 	ld b, 1  ; first tile to use
