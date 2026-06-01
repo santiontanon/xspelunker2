@@ -20,16 +20,16 @@ reb3	ab1	db0
 		-
 		db1
 		-
--	-	db0
-		-
-		db1
-		-
-		db1
-		-
-		db0
-		-
-		db1
-		-
+-	pianosoft,db5	db0
+	e5	-
+	ab5	db1
+	c6	-
+	db6	db1
+	c6	-
+	ab5	db0
+	e5	-
+	db5	db1
+	c5	-
 minor-arpeggio,do3	piano,g1	pianosoft,c0
 		-
 -	-	c1
@@ -52,16 +52,16 @@ si2	f#1	b0
 		-
 		b0
 		-
--	-	b0
-		-
-		b0
-		-
-		b0
-		-
-		b0
-		-
-		b0
-		-
+-	pianosoft,b4	b0
+	d5	-
+	f#5	b0
+	a#5	-
+	b5	b0
+	a#5	-
+	f#5	b0
+	d5	-
+	b4	b0
+	a#4	-
 minor-arpeggio,do3	piano,sol1	pianosoft,c0
 		-
 -	-	c1
@@ -84,16 +84,16 @@ reb3	lab1	db0
 		-
 		db1
 		-
--	-	db0
-		-
-		db1
-		-
-		db1
-		-
-		db0
-		-
-		db1
-		-
+-	pianosoft,db5	db0
+	e5	-
+	ab5	db1
+	c6	-
+	db6	db1
+	c6	-
+	ab5	db0
+	e5	-
+	db5	db1
+	c5	-
 minor-arpeggio,do3	piano,sol1	pianosoft,c0
 		-
 -	-	c1
@@ -116,16 +116,16 @@ si2	re1	b0
 		-
 		b0
 		-
--	-	b0
-		-
-		b0
-		-
-		b0
-		-
-		b0
-		-
-		b0
-		-
+-	pianosoft,b4	b0
+	d5	-
+	f#5	b0
+	a#5	-
+	b5	b0
+	a#5	-
+	f#5	b0
+	d5	-
+	b4	b0
+	a#4	-
 minor-arpeggio,fa3	piano,lab1	pianosoft,f0
 	-	
 -	-	f1
@@ -148,14 +148,14 @@ solb3	sib1	gb0
 		-
 		gb1
 		-
--	-	gb0
+-	pianosoft,gb5	gb0
 		-
+	gb5	gb1
+	-	-
 		gb1
 		-
-		gb1
-		-
-		gb0
-		-
+	gb5	gb0
+	-	-
 		gb1
 		-
 minor-arpeggio,do3	do2	pianosoft,c0
