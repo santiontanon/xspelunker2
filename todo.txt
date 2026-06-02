@@ -1,6 +1,5 @@
 to do:
 
-***- music: ending beach: try to recreate beach wave sounds
 ***- 6th boss:
   ***- come up with general idea (e.g. "The Solar Stone Jaguar", "The Martian Terracotta Warrior", "The Dust Stone Golem")
   ***- design and add the boss room (it must have a breakable floor/wall to the puzzle below)

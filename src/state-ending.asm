@@ -103,13 +103,14 @@ ending_C_continue:
 
 	ld b, 100
 	call wait_b_halts_skippable
-	call clear_screen_left_to_right
 
+	call clear_screen_left_to_right
 	call stop_music
 
 	call ending_beach_scene_C  ; elaine and michael relax in the beach
 
 	call clear_screen_left_to_right
+	call stop_music
 
 	ld ix, ending_C_text_page_ptrs
 	ld iy, ending_C_enemy_intro_ptr_table
@@ -496,6 +497,10 @@ ending_UFO_scene_minion_talks_loop_skip:
 
 ;-----------------------------------------------
 ending_beach_scene_C:
+	ld hl, music_beach_bin
+	ld a, 8
+	call play_music_adjusting_tempo
+
 	ld iy, TEXT_ENDING_C_BEACH_0
 	ld b, 1  ; first tile to use
 	ld de, NAMTBL2 + 12*32 + 10

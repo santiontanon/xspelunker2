@@ -146,6 +146,8 @@ public class MSXSong {
 //                                lines.add("  db MUSIC_CMD_PLAY_SFX_SHORTER_HIHAT");
                             } else if (note.sfx.equals("sfx_short_hihat_louder")) {
                                 lines.add("  db MUSIC_CMD_PLAY_SFX_SHORT_HIHAT_LOUDER");
+                            } else if (note.sfx.equals("sfx_sea_wave")) {
+                                lines.add("  db MUSIC_CMD_PLAY_SFX_SEA_WAVE");
                             } else {
                                 throw new Exception("Unsupported SFX!:" + note.sfx);
                             }

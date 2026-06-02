@@ -20,63 +20,7 @@ public class MSXSFX {
 //        MSXSongWavGenerator.playBuffer(bufferCollapse,6);        
 
 /*
-        List<Integer> bufferEngine = renderSFX(new String[] 
-            {   "7","#38",
-                "10","#08",
-                "5", "#02", "4", "#00",
-                "MUSIC_CMD_SKIP",
-                "10","#06",
-                "MUSIC_CMD_SKIP",
-                "10","#0a",
-                "5", "#02", "4", "#00",
-                "MUSIC_CMD_SKIP",
-                "10","#08",
-                "MUSIC_CMD_SKIP",
-                "5", "#02", "4", "#80",
-                "10","#0c",
-                "MUSIC_CMD_SKIP",
-                "10","#09",
-                "MUSIC_CMD_SKIP",
-                "10","#0e",
-                "5", "#03", "4", "#00",
-                "MUSIC_CMD_SKIP",
-                "10","#0b",
-                "MUSIC_CMD_SKIP",
-                "10","#0d",
-                "5", "#05", "4", "#00",
-                "MUSIC_CMD_SKIP",
-                "10","#0a",
-                "MUSIC_CMD_SKIP",
-                "10","#0d",
-                "5", "#07", "4", "#00",
-                "MUSIC_CMD_SKIP",
-                "10","#0a",
-                "MUSIC_CMD_SKIP",
-                "10","#0c",
-                "5", "#08", "4", "#00",
-                "MUSIC_CMD_SKIP",
-                "10","#09",
-                "MUSIC_CMD_SKIP",
-                "10","#0b",
-                "5", "#08", "4", "#80",
-                "MUSIC_CMD_SKIP",
-                "10","#08",
-                "MUSIC_CMD_SKIP",
-                "10","#09",
-                "MUSIC_CMD_SKIP",
-                "10","#07",
-                "5", "#09", "4", "#00",
-                "MUSIC_CMD_SKIP",
-                "10","#08",
-                "MUSIC_CMD_SKIP",
-                "10","#06",
-                "MUSIC_CMD_SKIP",
-                "10","#00",
-                "SFX_CMD_END"
-            }, 22050.0);        
-        MSXSongWavGenerator.playBuffer(bufferEngine,1);
-*/
-        /*
+        // Car skidding
         List<Integer> bufferBrake = renderSFX(new String[] 
             {   "7","#18",
                 "6" , "#04",
@@ -131,96 +75,6 @@ public class MSXSFX {
             }, 22050.0);        
         MSXSongWavGenerator.playBuffer(bufferBrake,1);
         */
-        
-        /*
-        List<Integer> bufferEngine = renderSFX(new String[] 
-            {   "7","#38",
-                "10","#0f",
-                "5", "#0f", "4", "#00",
-                "MUSIC_CMD_SKIP",
-                "10","#0c",
-                "MUSIC_CMD_SKIP",
-                "10","#0f",
-                "MUSIC_CMD_SKIP",
-                "10","#0c",
-                "MUSIC_CMD_SKIP",
-                "5", "#0e", "4", "#00",
-                "10","#0f",
-                "MUSIC_CMD_SKIP",
-                "10","#0c",
-                "MUSIC_CMD_SKIP",
-                "10","#0f",
-                "MUSIC_CMD_SKIP",
-                "10","#0c",
-                "MUSIC_CMD_SKIP",
-                "5", "#0d", "4", "#00",
-                "10","#0f",
-                "MUSIC_CMD_SKIP",
-                "10","#0c",
-                "MUSIC_CMD_SKIP",
-                "10","#0f",
-                "MUSIC_CMD_SKIP",
-                "10","#0c",
-                "MUSIC_CMD_SKIP",
-                "5", "#0c", "4", "#00",
-                "10","#0f",
-                "MUSIC_CMD_SKIP",
-                "10","#0c",
-                "MUSIC_CMD_SKIP",
-                "10","#0f",
-                "MUSIC_CMD_SKIP",
-                "10","#0c",
-                "MUSIC_CMD_SKIP",
-                "5", "#0b", "4", "#00",
-                "10","#0f",
-                "MUSIC_CMD_SKIP",
-                "10","#0c",
-                "MUSIC_CMD_SKIP",
-                "10","#0f",
-                "MUSIC_CMD_SKIP",
-                "10","#0c",
-                "MUSIC_CMD_SKIP",
-                "5", "#0a", "4", "#00",
-                "10","#0f",
-                "MUSIC_CMD_SKIP",
-                "10","#0c",
-                "MUSIC_CMD_SKIP",
-                "10","#0f",
-                "MUSIC_CMD_SKIP",
-                "10","#0c",
-                "MUSIC_CMD_SKIP",
-                "5", "#09", "4", "#00",
-                "10","#0f",
-                "MUSIC_CMD_SKIP",
-                "10","#0c",
-                "MUSIC_CMD_SKIP",
-                "10","#0f",
-                "MUSIC_CMD_SKIP",
-                "10","#0c",
-                "MUSIC_CMD_SKIP",
-                "5", "#08", "4", "#00",
-                "10","#0f",
-                "MUSIC_CMD_SKIP",
-                "10","#0c",
-                "MUSIC_CMD_SKIP",
-                "10","#0f",
-                "MUSIC_CMD_SKIP",
-                "10","#0c",
-                "MUSIC_CMD_SKIP",
-//                "5", "#07", "4", "#00",
-                "10","#0f",
-                "MUSIC_CMD_SKIP",
-                "10","#0c",
-                "MUSIC_CMD_SKIP",
-                "10","#0f",
-                "MUSIC_CMD_SKIP",
-                "10","#0c",
-                "MUSIC_CMD_SKIP",
-                "10","#00",
-                "SFX_CMD_END"
-            }, 22050.0);        
-        MSXSongWavGenerator.playBuffer(bufferEngine,1);
-        */
                 
         /*
         List<Integer> bufferCrash1 = renderSFX(new String[] 
@@ -266,6 +120,7 @@ public class MSXSFX {
         MSXSongWavGenerator.playBuffer(bufferCrash2,1);
         */
         
+        /*
         List<Integer> bufferPause = renderSFX(new String[] 
             {   "7","#38",
                 "10","#0c",
@@ -294,7 +149,7 @@ public class MSXSFX {
                 "SFX_CMD_END",
             }, 22050.0);   
         MSXSongWavGenerator.playBuffer(bufferPause,1);
-        
+        */
         /*
         List<Integer> bufferExplosion = renderSFX(new String[] 
             {   
@@ -482,7 +337,53 @@ public class MSXSFX {
             }, 22050.0);        
         MSXSongWavGenerator.generateWavFile("tests/arrow.wav", bufferArrow);
         */
-        
+
+        List<Integer> buffferWave = renderSFX(new String[] 
+            {   "7", "#1c",
+                "10", "#02",     // volume
+                "6" , "#10",     // noise frequency
+                "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#03", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#04", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#05", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#06", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#07", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#08", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#09", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#0a", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#09", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#08", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#07", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#06", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#05", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#04", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#03", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#02", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#01", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#00",
+                "7", "#38",
+                "SFX_CMD_END"
+            }, 22050.0);        
+        MSXSongWavGenerator.playBuffer(buffferWave, 1);
         
     }
     

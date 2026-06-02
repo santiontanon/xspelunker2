@@ -407,7 +407,54 @@ public class MSXSongWavGenerator {
                 "MUSIC_CMD_SKIP",
                 "SFX_CMD_END"
             }, 22050.0));         
-        
+
+        sfx_waves.put("sfx_sea_wave", 
+            MSXSFX.renderSFX(new String[] 
+            {
+                "7", "#1c",
+                "10", "#02",     // volume
+                "6" , "#10",     // noise frequency
+                "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#03", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#04", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#05", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#06", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#07", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#08", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#09", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#0a", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#09", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#08", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#07", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#06", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#05", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#04", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#03", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#02", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#01", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP", "MUSIC_CMD_SKIP",
+                "10", "#00",
+                "7", "#38",
+                "SFX_CMD_END"
+            }, 22050.0));        
 /*
         // step 1, get the song duration:
         int l1 = song.channelLength(0);

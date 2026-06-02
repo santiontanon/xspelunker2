@@ -317,6 +317,8 @@ update_sound_internal_no_time_step:
     jr z, update_sound_PLAY_SFX_DRUM_SHORTER_C
     dec a   ; MUSIC_CMD_PLAY_SFX_SHORT_HIHAT_LOUDER
     jr z, update_sound_PLAY_SFX_SHORT_HIHAT_LOUDER
+    dec a   ; MUSIC_CMD_PLAY_SFX_SEA_WAVE
+    jr z, update_sound_PLAY_SFX_SEA_WAVE
     dec a   ; MUSIC_CMD_GOTO
     jp z, update_sound_GOTO
     dec a   ; MUSIC_CMD_REPEAT
@@ -382,6 +384,10 @@ update_sound_PLAY_SFX_DRUM_SHORTER_RE:
 
 update_sound_PLAY_SFX_SHORT_HIHAT_LOUDER:
     ld bc, SFX_short_hi_hat_louder
+    jp update_sound_PLAY_SFX_SHORT_HIHAT_entry
+
+update_sound_PLAY_SFX_SEA_WAVE:
+    ld bc, SFX_sea_wave
     jp update_sound_PLAY_SFX_SHORT_HIHAT_entry
 
 
