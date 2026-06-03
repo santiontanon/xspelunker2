@@ -1,9 +1,6 @@
 to do:
 
 ***- 6th boss: Giant Moai head
-  ***- design and add the boss room:
-    ***- for now, just put wall on the right. I will replace this with a giant head.
-    ***- it must have a breakable floor/wall to the puzzle below)
   ***- ancient robot puzzle:
     ***- draw the robot in GIMP/TILED (see: "Universal Capsule Robot No. C6")
     ***- create a room

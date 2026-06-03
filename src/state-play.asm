@@ -76,7 +76,7 @@ state_play:
 ; 		ld (player_inventory_items+2), a  ; third boss key
 ; 		ld (player_inventory_items+3), a  ; fourth boss key
 ; 		ld (player_inventory_items+4), a  ; fifth boss key
-; 		ld (player_inventory_items+5), a  ; mars boss key
+		ld (player_inventory_items+5), a  ; mars boss key
 ; 		ld (player_inventory_items+6), a  ; moon boss key
 ; 		ld (player_inventory_items+7), a  ; first stone
 ; 		ld (player_inventory_items+8), a  ; second stone
@@ -95,14 +95,14 @@ state_play:
 ; 		ld (player_inventory_items+21), a
 ; 		ld (player_inventory_items+22), a
 ; 		ld (player_inventory_items+23), a  ; clay suit (last key item)
-; 		ld (player_inventory_items+24), a  ; sandals
-; 		ld (player_inventory_items+25), a  ; gloves
-; 		ld (player_inventory_items+26), a  ; warrior hat
-; 		ld (player_inventory_items+27), a  ; cotton armor
-; 		ld (player_inventory_items+28), a  ; chaac blessing
-; 		ld (player_inventory_items+29), a  ; seashell
-; 		ld (player_inventory_items+30), a  ; antigrav belt
-; 		ld (player_inventory_items+31), a  ; ice cape
+		ld (player_inventory_items+24), a  ; sandals
+		ld (player_inventory_items+25), a  ; gloves
+		ld (player_inventory_items+26), a  ; warrior hat
+		ld (player_inventory_items+27), a  ; cotton armor
+		ld (player_inventory_items+28), a  ; chaac blessing
+		ld (player_inventory_items+29), a  ; seashell
+		ld (player_inventory_items+30), a  ; antigrav belt
+		ld (player_inventory_items+31), a  ; ice cape
 ; 		ld (player_inventory_items+32), a  ; letter 1
 ; 		ld (player_inventory_items+33), a  ; letter 2
 		ld (player_inventory_items+34), a  ; map
@@ -143,7 +143,7 @@ state_play:
 ; 		ld (global_state__objects + TAG_MAP_PIECE3), a
 ; 		ld (global_state__objects + TAG_MAP_PIECE4), a
 ; 		ld (global_state__objects + TAG_MAP_PIECE5), a
-; 		ld (global_state__objects + TAG_MAP_PIECE6), a
+		ld (global_state__objects + TAG_MAP_PIECE6), a
 ; 		ld (global_state__objects + TAG_MAP_PIECE7), a
 ; 		ld (global_state__objects + TAG_TELEPORTER1), a
 ; 		ld (global_state__objects + TAG_TELEPORTER2), a
@@ -177,8 +177,8 @@ state_play:
 
 state_play_from_continue:
 		; initial player position:
-		ld hl, #0100
-; 		ld hl, #0600
+; 		ld hl, #0100
+		ld hl, #0600
 ; 		ld hl, #0a00
 ; 		ld hl, #1000
 ; 		ld hl, #1800
@@ -186,7 +186,7 @@ state_play_from_continue:
 		ld (player_x), hl
 		ld hl, #0b00
 ; 		ld hl, #0a00
-; 		ld hl, #0800
+		ld hl, #0800
 ; 		ld hl, #0400
 		ld (player_y), hl
 		ld a, #ff
@@ -194,7 +194,7 @@ state_play_from_continue:
 
 		; generate area:
 		ld hl, pcg_generate_area
-		ld e, 0  ; area to generate
+; 		ld e, 0  ; area to generate
 ; 		ld e, 1  ; area to generate
 ; 		ld e, 2  ; area to generate
 ; 		ld e, 3  ; area to generate
@@ -203,19 +203,19 @@ state_play_from_continue:
 ; 		ld e, 7  ; area to generate
 ; 		ld e, 8  ; xibalba
 ; 		ld e, 9  ; atlantis
-; 		ld e, 10  ; mars
+		ld e, 10  ; mars
 ; 		ld e, 11  ; moon
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
 
 		; generate room:
-		ld e, START_ROOM_ID
+; 		ld e, START_ROOM_ID
 ; 		ld e, GUARDIAN_CAIMAN1_ROOM_ID
 ; 		ld e, GUARDIAN_CAIMAN2_ROOM_ID
 ; 		ld e, 18
 ; 		ld e, 16
 ; 		ld e, CALENDAR_ROOM_ID
-; 		ld e, 2
+		ld e, 10
 ; 		ld e, 3  ; <- third boss
 ; 		ld e, 17  ; <- fourth boss
 ; 		ld e, 0

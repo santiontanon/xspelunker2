@@ -105,6 +105,8 @@ enter_boss_door_loop:
 	push bc
 		; setup boss area/room:
 		; - c: boss number
+		ld ixl, BOSS_GFX_PAGE  ; tileset page
+		ld ixh, BOSS_PAGE  ; room page
 		ld a, c
 		or a
 		ld hl, boss_room_1_zx0
@@ -135,6 +137,14 @@ enter_boss_door_loop:
 		ld de, boss_5_tiles_charybdis1_zx0
 		ld bc, tile_collision_types_boss5_before
 		ld iy, boss5_sprites_zx0
+		jr z, enter_boss_door__room_ptr_set
+		dec a
+		ld ixl, BOSS_6_PAGE  ; tileset page
+		ld ixh, BOSS_6_PAGE  ; room page
+		ld hl, boss_room_6_zx0
+		ld de, boss_6_tiles_zx0
+		ld bc, tile_collision_types_boss6
+		ld iy, boss6_sprites_zx0
 		; jr z, enter_boss_door__room_ptr_set
 		; ...
 
@@ -142,24 +152,25 @@ enter_boss_door__room_ptr_set:
 		push bc
 		push iy
 			push de
+			push ix
+				ld c, ixh  ; room page
 				ld de, current_room__id
-				call dzx0
+				call dzx0_from_page_c
 
 				ld a, (boss__current_boss_number)
-				cp 3  ; is it the xibalba lords boss?
-				jr z, enter_boss_door__room_prettified
-				cp 4  ; is it the atlantis boss?
-				jr z, enter_boss_door__room_prettified
+				cp 3  ; only the first 3 bosses need prettification
+				jr nc, enter_boss_door__room_prettified
 
 				; bosses 0, 1, 2 have pyramid biome:
 				ld c, PCG_PAGE_PRETTIFY
 				ld hl, pcg_generate_room__prettify_pyramid
 				call call_hl_in_page_c_8000
 enter_boss_door__room_prettified:
-
-				ld a, BOSS_GFX_PAGE
-				ld (current_room__tileset_page), a
+			pop ix
 			pop de
+
+			ld a, ixl
+			ld (current_room__tileset_page), a
 			ld (current_room__tileset_ptr), de
 			ld hl, update_animations_in_vdp_none
 			ld (current_room__animation_fn_ptr), hl
@@ -202,6 +213,9 @@ enter_boss_door__room_prettified:
 		jr z, enter_boss_door__room_spawn_coordinates_set
 		ld bc, #0c02  ; 2, 12  ; atlantis boss start coordinates
 		cp 4  ; is it the atlantis boss?
+		jr z, enter_boss_door__room_spawn_coordinates_set
+		ld bc, #1303  ; 3, 19
+		cp 5  ; is it the mars boss?
 		jr z, enter_boss_door__room_spawn_coordinates_set
 		ld bc, #1404  ; 4, 20
 enter_boss_door__room_spawn_coordinates_set:
@@ -1903,3 +1917,21 @@ tile_collision_types_boss5:
     db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
     db 9, 0, 0, 0, 0, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
     db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
+
+tile_collision_types_boss6:
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
+    db 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
+    db 2, 2, 2, 2, 2, 2, 2, 2, 8, 8, 2, 2, 2, 2, 2, 2
+    db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+    db 0, 0, 0, 5, 3, 3, 5, 6, 8, 1, 1, 1, 2, 3, 2, 2
+    db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 0, 2, 2, 2
+    db 2, 2, 2, 2, 2, 2, 2, 7, 8, 2, 2, 2, 0, 0, 0, 0
+    db 2, 2, 2, 2, 2, 2, 2, 10, 2, 2, 2, 2, 0, 2, 2, 2
+    db 2, 2, 2, 0, 2, 2, 2, 2, 10, 2, 2, 0, 2, 2, 2, 2
+    db 2, 2, 0, 2, 2, 2, 2, 2, 0, 0, 2, 2, 2, 2, 2, 2
+    db 2, 2, 2, 2, 2, 2, 6, 0, 0, 0, 2, 2, 2, 2, 2, 2
+    db 2, 2, 2, 2, 2, 2, 2, 2, 7, 2, 2, 2, 3, 2, 1, 5 
