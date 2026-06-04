@@ -2,11 +2,12 @@ to do:
 
 ***- 6th boss: Giant Moai head
   ***- ancient robot puzzle:
-    ***- draw the robot in GIMP/TILED (see: "Universal Capsule Robot No. C6")
-    ***- create a room
+    ***- create a room with the robot:
+      ***- extract robot tiles and add to the room
+      ***- in TILED, recreate it, and add enough rubble, as for making it look like, it was teleported there, inside the cave and got stuck + cave in
     ***- being able to break the floor in the boss room, and get to this room
     ***- design the puzzle (probably it asks you to do something, and you just need to understand)
-    ***- if you use the golden key, it activates and talks to you (mix of english / maya)
+    ***- if you use the golden key, it activates and talks to you (mix of english / maya), says his name is "C6", as a Dragon Ball easter egg).
     ***- implement the puzzle
     ***- when puzzle is solved, robot talks to you again, and gives you a better raygun
   ***- draw the boss in GIMP/TILED
