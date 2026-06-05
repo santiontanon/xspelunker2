@@ -445,6 +445,8 @@ room_render_tile_objects_loop:
 		jp z, room_render_tile_objects_loop_continue
 		cp TAG_BREAKABLE_WALL4
 		jp z, room_render_tile_objects_loop_continue
+		cp TAG_MARS_BOSS_BREAKABLE_FLOOR
+		jp z, room_render_tile_objects_loop_continue
 		cp TAG_DOOR_VERTICAL
 		jp z, room_render_tile_objects_render_v_door
 		cp TAG_DOOR_HORIZONTAL
@@ -791,6 +793,8 @@ room_undraw_tile_objects_loop:
 		jr z, room_undraw_tile_objects_loop_continue		
 		cp TAG_BREAKABLE_WALL4
 		jr z, room_undraw_tile_objects_loop_continue		
+		cp TAG_MARS_BOSS_BREAKABLE_FLOOR
+		jr z, room_undraw_tile_objects_loop_continue		
 		cp TAG_ENEMY_CARNIVORE_PLANT
 		jp z, room_render_tile_objects_undraw_enemy_carnivore_plant		
 		cp TAG_ENEMY_LAVA_GENERATOR
@@ -951,8 +955,13 @@ room_remove_breakable_wall:
 	; mark its deletion in the global state:
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
 	ld hl, global_state__objects
+	ld c, a
 	ADD_HL_A
+	ld a, c
 	ld (hl), 1  ; mark the object as deleted
+
+	cp TAG_MARS_BOSS_BREAKABLE_FLOOR  ; not storing a record for this one
+	jr z, room_remove_breakable_wall_continue2
 
 	; Create an entry in "global_state__open_walls":
 	ld hl, global_state__open_walls
@@ -1002,6 +1011,9 @@ room_remove_breakable_wall_continue:
 	ld (hl), e
 	inc hl
 	ld (hl), d
+room_remove_breakable_wall_continue2:
+	ld e, (ix + ROOM_TILE_OBJECT_STRUCT_WIDTH)  ; we repeat this part, in case we jump here directly
+	ld d, (ix + ROOM_TILE_OBJECT_STRUCT_HEIGHT)
 	ld c, (ix + ROOM_TILE_OBJECT_STRUCT_X)
 	ld b, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
 	call room_remove_breakable_wall_restore_background
@@ -1257,6 +1269,7 @@ ENDR
 	dw object_interaction_function_empty  ; TAG_GUARDIAN_CAIMAN2
 	dw object_interaction_function_empty  ; TAG_GUARDIAN_CAIMAN3
 	dw object_interaction_function_empty  ; TAG_FIRESTONE_FORGE
+	dw object_interaction_function_empty  ; TAG_MARS_BOSS_BREAKABLE_FLOOR
 	dw object_interaction_function_empty  ; TAG_PUSHABLE_BLOCK
 	dw object_interaction_function_empty  ; TAG_DOOR_VERTICAL
 	dw object_interaction_function_empty  ; TAG_DOOR_HORIZONTAL
@@ -2964,6 +2977,7 @@ ENDR
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_GUARDIAN_CAIMAN2
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_GUARDIAN_CAIMAN3
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_FIRESTONE_FORGE
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_MARS_BOSS_BREAKABLE_FLOOR
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_pushable_block_gfx  ; TAG_PUSHABLE_BLOCK
 	TILE_OBJECT_DATA 1, 1, 3, tile_object_v_door_gfx  ; TAG_DOOR_VERTICAL
 	TILE_OBJECT_DATA 1, 4, 1, tile_object_h_door_gfx  ; TAG_DOOR_HORIZONTAL

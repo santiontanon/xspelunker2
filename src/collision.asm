@@ -751,8 +751,8 @@ get_room_ids_current_room_ptr_continue:
 ; - nz: no collision
 player_exit_room_left:
 	ld a, (boss__in_boss_room)
-	xor #01  ; we do "xor 1" so that we exit with "z", and indicate collision
-	ret z
+	or a
+	jr nz, player_exit_room_left__in_boss
 
 	; are we entering the astronomy room?
 	ld a, (current_room__id)
@@ -806,6 +806,13 @@ player_exit_room_left:
 	xor a
 	ld (player_x), a
 	jp state_play_from_loaded_room
+
+player_exit_room_left__in_boss:
+	ld a, (boss__current_boss_number)
+	cp 5  ; mars boss
+	jp z, player_exit_room_left__in_boss_mars
+	xor a  ; no exit
+	ret
 
 
 ;-----------------------------------------------
@@ -989,6 +996,8 @@ player_exit_room_down__in_boss:
 	jr z, player_exit_room_down__in_boss_xibalba_lords
 	xor a  ; no exit
 	ret
+
+player_exit_room_left__in_boss_mars:
 player_exit_room_down__in_boss_xibalba_lords:
 	call disable_VDP_output
 

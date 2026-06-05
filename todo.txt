@@ -2,8 +2,8 @@ to do:
 
 ***- 6th boss: Giant Moai head
   ***- ancient robot puzzle:
-    ***- in the boss room, the door is initially open, and you can enter/exit
-    ***- being able to break the floor in the boss room, and get to this room (proper collision map)
+    ***- get to robot puzzle room
+    ***- proper collision map for robot puzzle room
     ***- add sprites for the eyes, and initially set them to dark blue
     ***- design the puzzle:
       ***- probably it asks you to do something, and you just need to understand (mix of english / maya)

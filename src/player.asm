@@ -3260,6 +3260,8 @@ player_weapon_hitbox_check_tile_object_loop:
 		cp TAG_BREAKABLE_WALL3
 		jr z, player_weapon_hitbox_check_tile_object_loop_breakable_wall
 		cp TAG_BREAKABLE_WALL4
+		jr z, player_weapon_hitbox_check_tile_object_loop_breakable_wall
+		cp TAG_MARS_BOSS_BREAKABLE_FLOOR
 		jr nz, player_weapon_hitbox_check_tile_object_loop_continue
 
 player_weapon_hitbox_check_tile_object_loop_breakable_wall:

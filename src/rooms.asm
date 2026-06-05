@@ -402,7 +402,9 @@ breakable_wall_hit_by_player_destroyed:
 	add a, b
 	ld b, a
 	call spawn_explosion
-	jp room_remove_breakable_wall
+	ld a, TILES_PAGE
+	ld hl, room_remove_breakable_wall
+	jp jp_to_hl_in_page_a_8000
 
 breakable_wall_hit_by_player_continue:
 	ld hl, SFX_enemy_hit

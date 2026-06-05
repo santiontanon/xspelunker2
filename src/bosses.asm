@@ -214,7 +214,7 @@ enter_boss_door__room_prettified:
 		ld bc, #0c02  ; 2, 12  ; atlantis boss start coordinates
 		cp 4  ; is it the atlantis boss?
 		jr z, enter_boss_door__room_spawn_coordinates_set
-		ld bc, #1303  ; 3, 19
+		ld bc, #1301  ; 3, 19
 		cp 5  ; is it the mars boss?
 		jr z, enter_boss_door__room_spawn_coordinates_set
 		ld bc, #1404  ; 4, 20
@@ -235,7 +235,11 @@ enter_boss_door__room_spawn_coordinates_set:
 			call z, enter_boss_door__spawn_xibalba_lords_objects
 		pop af
 		cp 4
-		call z, enter_boss_door__spawn_atlantis_boss_objects
+		push af
+			call z, enter_boss_door__spawn_atlantis_boss_objects
+		pop af
+		cp 5
+		call z, enter_boss_door__spawn_mars_boss_objects
 
 		; clear the bbox:
 		ld hl, boss__clear_bbox_1 + 2
@@ -330,6 +334,31 @@ enter_boss_door__spawn_atlantis_boss_objects:
 	ld a, 1
 	ld (room_locked_scroll), a
 	ret
+
+
+enter_boss_door__spawn_mars_boss_objects:
+; 	ld hl, update_animations_in_vdp_boss5
+; 	ld (current_room__animation_fn_ptr), hl	
+
+	ld a, (global_state__objects + TAG_MARS_BOSS_BREAKABLE_FLOOR)
+	or a
+	jr nz, enter_boss_door__spawn_mars_boss_objects_wall_destroyed
+	ld de, ROOM_TILE_OBJECT_STRUCT_SIZE
+	ld iy, current_room__tile_objects
+
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 1
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_MARS_BOSS_BREAKABLE_FLOOR
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 2
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 21
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 8
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_WIDTH), 4
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_HEIGHT), 2
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_LAST_HIT_ID), #ff
+	ret
+enter_boss_door__spawn_mars_boss_objects_wall_destroyed:
+	ld bc, #1502
+	ld de, #0204
+	jp room_remove_breakable_wall_restore_background
 
 
 ;-----------------------------------------------
