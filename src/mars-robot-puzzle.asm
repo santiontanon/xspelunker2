@@ -35,13 +35,43 @@ mars_robot_puzzle_spawn_room:
 	inc hl
 	ld (hl), 0
 
+	; tile objects:
 	ld iy, current_room__tile_objects
-	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 1
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 1  ; whole robot
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_MARS_ROBOT_PUZZLE
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 4
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 14
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0
+
+	ld iy, current_room__tile_objects + ROOM_TILE_OBJECT_STRUCT_SIZE
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 2  ; panel 1
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_MARS_ROBOT_PUZZLE
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 6
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 18 - 1
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0
+
+	ld iy, current_room__tile_objects + ROOM_TILE_OBJECT_STRUCT_SIZE * 2
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 3  ; panel 2
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_MARS_ROBOT_PUZZLE
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 11
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 9
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0
+
+	ld iy, current_room__tile_objects + ROOM_TILE_OBJECT_STRUCT_SIZE * 3
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 4  ; panel 3
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_MARS_ROBOT_PUZZLE
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 8
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 18 - 1
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0
+
+	ld iy, current_room__tile_objects + ROOM_TILE_OBJECT_STRUCT_SIZE * 4
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 5 ; key hole
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_MARS_ROBOT_PUZZLE
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 12
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 19
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0
 
+	; sprite objects:
 	call ptr_to_new_sprite_object
 	jr nz, mars_robot_puzzle_spawn_room_continue  ; should never happen
 	xor a
@@ -49,8 +79,7 @@ mars_robot_puzzle_spawn_room:
 	inc hl
 	ld (hl), SPRITE_OBJECT_TYPE_MARS_ROBOT_PUZZLE_ROOM
 	inc hl
-	; coordinates: do not matter, as we will overwrite them later
-	ld (hl), a
+	ld (hl), a  ; coordinates do not matter, we just set them to 0
 	inc hl
 	ld (hl), a
 	inc hl
@@ -161,12 +190,52 @@ update_sprite_objects_mars_robot_puzzle_room_internal:
 
 
 ;-----------------------------------------------
+get_tile_object_behind_player_mars_robot_part_internal:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
+	ld hl, #070c  ; 1: robot: 12x7
+	cp 1
+	jr z, get_tile_object_behind_player_mars_robot_part_internal_continue
+	ld hl, #0202  ; 5: key-hole, panel 2: 2x2
+	cp 5
+	jr z, get_tile_object_behind_player_mars_robot_part_internal_continue
+	cp 3
+	jr z, get_tile_object_behind_player_mars_robot_part_internal_continue
+	ld hl, #0201  ; 2, 4: panels: 1x2
+get_tile_object_behind_player_mars_robot_part_internal_continue:
+	ld a, (player_x + 1)
+	cp (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	jp m, get_tile_object_behind_player_mars_robot_part_internal_fail
+	sub l
+	cp (ix + ROOM_TILE_OBJECT_STRUCT_X)
+	jp p, get_tile_object_behind_player_mars_robot_part_internal_fail
+	ld a, (player_y + 1)
+	cp (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	jp m, get_tile_object_behind_player_mars_robot_part_internal_fail
+	sub l
+	cp (ix + ROOM_TILE_OBJECT_STRUCT_Y)
+	jp p, get_tile_object_behind_player_mars_robot_part_internal_fail
+get_tile_object_behind_player_mars_robot_part_internal_match:
+	xor a  ; match!
+	ret 
+get_tile_object_behind_player_mars_robot_part_internal_fail:
+	or 1  ; not found
+	ret 
+
+
+;-----------------------------------------------
 mars_robot_puzzle_interaction:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
+	cp 1
+	jr z, mars_robot_puzzle_interaction_robot
+	; lock or panels:
 	ld hl, SFX_ui_wrong
 	call play_SFX_with_high_priority
+	ret
 
+mars_robot_puzzle_interaction_robot:
+	ld hl, SFX_ui_select
+	call play_SFX_with_high_priority
 	; ...
-
 	ret
 
 
@@ -176,7 +245,7 @@ tile_collision_types_mars_robot_puzzle:
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     db 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     db 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0
     db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2

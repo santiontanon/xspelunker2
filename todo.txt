@@ -2,8 +2,8 @@ to do:
 
 ***- ancient robot puzzle:
   ***- place tile objects in the room for each of the 3 panels + 1 for the key switch + 1 for the general robot:
-    ***- the 3 panels + switch should play SFX wrong for now
-    ***- the general robot should print a in-game message: "What is this strange-looking giant robot doing here!?"
+    OK - the 3 panels + switch should play SFX wrong for now
+    ***- the general robot should print a in-game message: "What is this strange-looking giant robot doing here!?" (make space for more text)
   ***- draw them:
     ***- panel 1: oil system (motor pressure): same, but with some different symbols (to indicate "oil"?)
     ***- panel 2: water system (cooling): dial with Mayan numerals, and buttons to increase/decrease

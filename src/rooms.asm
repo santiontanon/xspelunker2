@@ -307,6 +307,8 @@ get_tile_object_behind_player_loop:
 	jr z, get_tile_object_behind_player_32x24_object
 	cp TAG_TELEPORTER_MOON
 	jr z, get_tile_object_behind_player_32x24_object
+	cp TAG_MARS_ROBOT_PUZZLE
+	jr z, get_tile_object_behind_player_mars_robot_part
 
 	; 16x16 objects:
 	ld a, b
@@ -367,6 +369,16 @@ get_tile_object_behind_player_32x32_object:
 	cp (ix + ROOM_TILE_OBJECT_STRUCT_Y)
 	jr nz, get_tile_object_behind_player_loop_next
 	jr get_tile_object_behind_player_32x24_object_x
+
+get_tile_object_behind_player_mars_robot_part:
+	push bc
+		ld c, MARS_ROBOT_PUZZLE_PAGE
+		ld hl, get_tile_object_behind_player_mars_robot_part_internal
+		call call_hl_in_page_c_8000
+	pop bc
+	jr z, get_tile_object_behind_player_found
+	jr get_tile_object_behind_player_loop_next
+
 
 
 ;-----------------------------------------------
