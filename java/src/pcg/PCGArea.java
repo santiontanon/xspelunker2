@@ -31,6 +31,7 @@ public class PCGArea {
     public static final int GUARDIAN_CAIMAN2_ROOM_ID = 107;
     public static final int GUARDIAN_CAIMAN3_ROOM_ID = 108;
     public static final int FIRESTONE_FORGE_ROOM_ID = 109;
+    public static final int MARS_ROBOT_PUZZLE_ROOM_ID = 110;
     public static final int n_connections_per_type[] = {
         0, 1, 1, 2, 1, 2, 2, 3,
         1, 2, 2, 3, 2, 3, 3, 4,

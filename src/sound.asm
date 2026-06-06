@@ -15,6 +15,8 @@ play_music_adjusting_tempo:
     or a
     jr z, play_music_adjusting_tempo_continue
     ld a, e
+    cp 16
+    jr z, play_music_adjusting_tempo_16
     cp 14
     jr z, play_music_adjusting_tempo_14
     cp 12
@@ -27,6 +29,9 @@ play_music_adjusting_tempo:
     jr z, play_music_adjusting_tempo_6
     cp 5
     jr z, play_music_adjusting_tempo_5
+    jr play_music_adjusting_tempo_continue
+play_music_adjusting_tempo_16:
+    ld e, 19
     jr play_music_adjusting_tempo_continue
 play_music_adjusting_tempo_14:
     ld e, 17

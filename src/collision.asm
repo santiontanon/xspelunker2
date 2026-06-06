@@ -884,6 +884,9 @@ player_exit_room_up:
 	ld a, (boss__in_boss_room)
 	xor #01  ; we do "xor 1" so that we exit with "z", and indicate collision
 	ret z
+	ld a, (current_room__id)
+	cp MARS_ROBOT_PUZZLE_ROOM_ID
+	jr z, player_exit_room_up_mars_robot_puzzle_room
 	call check_for_interarea_exit_up
 	call check_collision_with_next_chunk_up
 	ret z  ; collision		
@@ -932,6 +935,12 @@ player_exit_room_up:
 	xor a
 	ld (player_y), a
 	jp state_play_from_loaded_room
+
+
+player_exit_room_up_mars_robot_puzzle_room:
+	ld a, MARS_ROBOT_PUZZLE_PAGE
+	ld hl, mars_robot_puzzle_back_to_boss_room
+	jp jp_to_hl_in_page_a_8000
 
 
 ;-----------------------------------------------
@@ -994,6 +1003,8 @@ player_exit_room_down__in_boss:
 	ld a, (boss__current_boss_number)
 	cp 3  ; xibalba lords
 	jr z, player_exit_room_down__in_boss_xibalba_lords
+	cp 5  ; mars boss
+	jr z, player_exit_room_down__in_boss_mars
 	xor a  ; no exit
 	ret
 
@@ -1014,6 +1025,12 @@ player_exit_room_down__in_boss_xibalba_lords:
 	ld (player_y + 1), a
 
 	jp state_play_from_loaded_room
+
+player_exit_room_down__in_boss_mars:
+	ld a, MARS_ROBOT_PUZZLE_PAGE
+	ld hl, mars_robot_puzzle_spawn_room
+	jp jp_to_hl_in_page_a_8000
+
 
 ;-----------------------------------------------
 ; input:

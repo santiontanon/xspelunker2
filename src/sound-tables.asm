@@ -6,6 +6,7 @@ instrument_profile_table:
     dw soft_piano_instrument_profile
     dw pad_instrument_profile
     dw piano_staccato_instrument_profile
+    dw piano_end_instrument_profile
     dw major_arpeggio_instrument_profile
     dw major_arpeggio_2ndinv_instrument_profile
     dw minor_arpeggio_instrument_profile
@@ -36,6 +37,8 @@ pad_instrument_profile:
 piano_staccato_instrument_profile:
     db 12, 11, 9, 8, 7, 6, 5, 4
     db 3, 2, 1, 0, #ff
+piano_end_instrument_profile:
+    db 5, 5, 5, 5, 4, 4, 4, 4, 3, 3, 2, 1, 0, #ff
 major_arpeggio_fadein_instrument_profile:
 minor_arpeggio_fadein_instrument_profile
 diminished_arpeggio_fadein_instrument_profile

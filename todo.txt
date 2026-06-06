@@ -1,16 +1,35 @@
 to do:
 
+***- ancient robot puzzle:
+  ***- add sprites for the eyes, and initially set them to dark blue
+  ***- Panels in different parts of the robot, that if you interact, there is a zoom, with a small panel here you can interact: 3 of them
+    ***- water system (cooling)
+    ***- oil system (motor pressure)
+    ***- electrical (central panel)
+    ***- before entering the key, when you inspect them, they are all off, and there is nothing you can do (just some text stating that all is off)
+  ***- placing the key:
+    ***- robot turns on, eyes switch to white, and midsection starts animating (tile animations)
+    ***- the robot spews some garbled message, half in English, half in Maya. It is instructing you to do something, and you need to figure it out. Something like: 
+    - Set water pressure to 300
+    - vent the system (some button)
+    - Bring water pressure down to 100
+    - Bring oil pressure to 200
+    - Press the red button
+    ***- each time you interact with the key slot form that point on, it repeats the message
+  ***- the panels now are active, and you can interact with them
+  ***- if you do the right sequence, state progresses. If you do the wrong sequence (only signaled when you press some button), wrong SFX, and reset
+  ***- once you do the right sequence, SFX, and dialogue
+    "System... re-init... re-initializing... Oh. Much better. Power... surge... stabilized."
+    "Internal clock check: [Static] ...5139 solar cycles... 6 days... [Glitch] ...73 percent integrity. Chassis integrity is... critical. Maintenance... requested."
+    "Oh! [Optical sensors flicker] You... you are a biological? A... human? I acknowledge your... input. Thank you for... restoring power. But... how did you obtain my... key?"
+    "I lost it while surveying the sector you designate as 'Xibalba.' I initiated an emergency jump... an escape sequence... but... [Sound of grinding gears] I materialized here. The cavern architecture was... insufficient. I triggered a... cave in and became... trapped. I calculated my probability of rescue at... zero."
+    "But... I am initiating restorative subroutines now. My... spatial-teleport array is badly fragmented. It will require... 35 solar cycles to... re-align."
+    "As a token of... [System Warning Bleep] ...gratitude... take this. It fell from the chamber above. I believe it is... might compatible with one of your... primitive weapon systems."
+    - spawn power converter
+    - pick power converter up (doubles gun damage, multiplicative with other bonuses, and makes gun bullets of another color)
+    - if you leave and come back, the power converter should still be there if and only if you have not picked it up
+  ***- If you interact with robot (keyhole) again: "Thank you again... restorative subroutines activating..."
 ***- 6th boss: Giant Moai head
-  ***- ancient robot puzzle:
-    ***- get to robot puzzle room
-    ***- proper collision map for robot puzzle room
-    ***- add sprites for the eyes, and initially set them to dark blue
-    ***- design the puzzle:
-      ***- probably it asks you to do something, and you just need to understand (mix of english / maya)
-      ***- it will say he is C6, and that it was exploring Xibalba when one of the lords teleported him here, and got trapped in a cave in.
-      ***- he will want something, and you will get a better ray gun (it's either stuck on him, or it's one of his weapons, or something)
-    ***- if you use the golden key, it activates and talks to you (eyes go white, and inner lights start animating)
-    ***- implement the puzzle, and get the reward
   ***- draw the boss in GIMP/TILED
   ***- implement it
   ***- add boss name to the stats for game over screen if you beat it
