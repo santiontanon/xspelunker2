@@ -1,6 +1,6 @@
 ;-----------------------------------------------
 mars_robot_puzzle_spawn_room:
-	call clear_screen_left_to_right
+	call disable_VDP_output
 	ld c, PCG_PAGE
 	ld hl, pcg_generate_room_reset_state
 	call call_hl_in_page_c_8000
@@ -35,6 +35,31 @@ mars_robot_puzzle_spawn_room:
 	inc hl
 	ld (hl), 0
 
+	ld iy, current_room__tile_objects
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 1
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_MARS_ROBOT_PUZZLE
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 12
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 19
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0
+
+	call ptr_to_new_sprite_object
+	jr nz, mars_robot_puzzle_spawn_room_continue  ; should never happen
+	xor a
+	ld (hl), a  ; ID
+	inc hl
+	ld (hl), SPRITE_OBJECT_TYPE_MARS_ROBOT_PUZZLE_ROOM
+	inc hl
+	; coordinates: do not matter, as we will overwrite them later
+	ld (hl), a
+	inc hl
+	ld (hl), a
+	inc hl
+	ld (hl), a
+	inc hl
+	ld (hl), a
+	inc hl
+	ld (hl), a  ; state (frames left)
+mars_robot_puzzle_spawn_room_continue:
 	jp state_play_from_loaded_room
 
 
@@ -44,7 +69,7 @@ mars_robot_puzzle_back_to_boss_room:
 	ld (boss__current_boss_number), a
 	call stop_music
 
-	call clear_screen_left_to_right
+	call disable_VDP_output
 	ld c, PCG_PAGE
 	ld hl, pcg_generate_room_reset_state
 	call call_hl_in_page_c_8000
@@ -113,6 +138,36 @@ mars_robot_puzzle_back_to_boss_room:
 	inc hl
 	ld (hl), 22
 	jp state_play_from_loaded_room
+
+
+;-----------------------------------------------
+update_sprite_objects_mars_robot_puzzle_room_internal:
+	ld (ix + ROOM_OBJECT_STRUCT_TILE_X), 7
+	ld (ix + ROOM_OBJECT_STRUCT_TILE_Y), 12
+	ld d, COLOR_DARK_BLUE
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 0) * 4
+	ld c, 0
+	call get_sprite_object_sprite_coordinates
+	call z, add_sprite_to_this_frame
+
+	ld (ix + ROOM_OBJECT_STRUCT_TILE_X), 12
+	ld d, COLOR_DARK_BLUE
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 1) * 4
+	ld c, 0
+	call get_sprite_object_sprite_coordinates
+	call z, add_sprite_to_this_frame
+	xor a
+	ret
+
+
+;-----------------------------------------------
+mars_robot_puzzle_interaction:
+	ld hl, SFX_ui_wrong
+	call play_SFX_with_high_priority
+
+	; ...
+
+	ret
 
 
 ;-----------------------------------------------

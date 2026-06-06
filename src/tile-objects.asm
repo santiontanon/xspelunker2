@@ -1270,6 +1270,7 @@ ENDR
 	dw object_interaction_function_empty  ; TAG_GUARDIAN_CAIMAN3
 	dw object_interaction_function_empty  ; TAG_FIRESTONE_FORGE
 	dw object_interaction_function_empty  ; TAG_MARS_BOSS_BREAKABLE_FLOOR
+	dw object_interaction_function_mars_robot_puzzle  ; TAG_MARS_ROBOT_PUZZLE
 	dw object_interaction_function_empty  ; TAG_PUSHABLE_BLOCK
 	dw object_interaction_function_empty  ; TAG_DOOR_VERTICAL
 	dw object_interaction_function_empty  ; TAG_DOOR_HORIZONTAL
@@ -2732,6 +2733,13 @@ object_interaction_function_forge_puzzle:
 
 
 ;-----------------------------------------------
+object_interaction_function_mars_robot_puzzle:
+	ld hl, mars_robot_puzzle_interaction
+	ld c, MARS_ROBOT_PUZZLE_PAGE
+	jp call_hl_in_page_c_8000
+
+
+;-----------------------------------------------
 ; output:
 ; - z: door found
 ; - nz: door not found
@@ -2803,19 +2811,6 @@ tile_object_gfx_table:
 REPT TAG_RED_LOCK  ; add filler
 	TILE_OBJECT_DATA 2, 0, 0, 0
 ENDR
-; TAG_NONE: equ 0
-; TAG_BLOCK_PUZZLE1: equ 1
-; TAG_BLOCK_PUZZLE2: equ 2
-; TAG_BLOCK_PUZZLE3: equ 3
-; TAG_BLOCK_PUZZLE4: equ 4
-; TAG_BUTTON_DOOR1: equ 5
-; TAG_BUTTON_DOOR2: equ 6
-; TAG_BUTTON_DOOR3: equ 7
-; TAG_BUTTON_DOOR4: equ 8
-; TAG_BREAKABLE_WALL1: equ 9
-; TAG_BREAKABLE_WALL2: equ 10
-; TAG_BREAKABLE_WALL3: equ 11
-; TAG_BREAKABLE_WALL4: equ 12
 	TILE_OBJECT_DATA 1, 2, 2, tile_object_regular_object_gfx  ; TAG_RED_LOCK
 	TILE_OBJECT_DATA 1, 2, 2, tile_object_regular_object_gfx  ; TAG_GREEN_LOCK
 	TILE_OBJECT_DATA 1, 2, 2, tile_object_regular_object_gfx  ; TAG_BLUE_LOCK
@@ -2837,9 +2832,6 @@ ENDR
 REPT TAG_TELEPORTER_ATLANTIS - TAG_START  ; add filler
 	TILE_OBJECT_DATA 2, 0, 0, 0
 ENDR
-; TAG_START: equ 31
-; TAG_ENDING: equ 32
-; TAG_MIDPOINT: equ 33
 	TILE_OBJECT_DATA 1, 4, 3, tile_object_teleporter_gfx  ; TAG_TELEPORTER_ATLANTIS
 	TILE_OBJECT_DATA 1, 4, 3, tile_object_teleporter_gfx  ; TAG_TELEPORTER_MARS
 	TILE_OBJECT_DATA 1, 4, 3, tile_object_teleporter_gfx  ; TAG_TELEPORTER_MOON
@@ -2978,6 +2970,7 @@ ENDR
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_GUARDIAN_CAIMAN3
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_FIRESTONE_FORGE
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_MARS_BOSS_BREAKABLE_FLOOR
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_MARS_ROBOT_PUZZLE
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_pushable_block_gfx  ; TAG_PUSHABLE_BLOCK
 	TILE_OBJECT_DATA 1, 1, 3, tile_object_v_door_gfx  ; TAG_DOOR_VERTICAL
 	TILE_OBJECT_DATA 1, 4, 1, tile_object_h_door_gfx  ; TAG_DOOR_HORIZONTAL

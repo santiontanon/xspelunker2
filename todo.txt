@@ -1,12 +1,14 @@
 to do:
 
 ***- ancient robot puzzle:
-  ***- add sprites for the eyes, and initially set them to dark blue
-  ***- Panels in different parts of the robot, that if you interact, there is a zoom, with a small panel here you can interact: 3 of them
-    ***- water system (cooling)
-    ***- oil system (motor pressure)
-    ***- electrical (central panel)
-    ***- before entering the key, when you inspect them, they are all off, and there is nothing you can do (just some text stating that all is off)
+  ***- place tile objects in the room for each of the 3 panels + 1 for the key switch + 1 for the general robot:
+    ***- the 3 panels + switch should play SFX wrong for now
+    ***- the general robot should print a in-game message: "What is this strange-looking giant robot doing here!?"
+  ***- draw them:
+    ***- panel 1: oil system (motor pressure): same, but with some different symbols (to indicate "oil"?)
+    ***- panel 2: water system (cooling): dial with Mayan numerals, and buttons to increase/decrease
+    ***- panel 3: electrical (central panel): buttons with Maya symbols, and a small screen display
+  ***- base interaction: before entering the key, when you inspect them, they are all off, and there is nothing you can do (just some text stating that all is off)
   ***- placing the key:
     ***- robot turns on, eyes switch to white, and midsection starts animating (tile animations)
     ***- the robot spews some garbled message, half in English, half in Maya. It is instructing you to do something, and you need to figure it out. Something like: 

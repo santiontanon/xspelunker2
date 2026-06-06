@@ -226,6 +226,8 @@ update_sprite_objects_loop:
 	jp z, update_sprite_objects_atlantis_sentinel_extras
 	cp SPRITE_OBJECT_TYPE_ELAINE
 	jp z, update_sprite_objects_elaine
+	cp SPRITE_OBJECT_TYPE_MARS_ROBOT_PUZZLE_ROOM
+	jp z, update_sprite_mars_robot_puzzle_room
 update_sprite_objects_loop_next:
 	ld de, ROOM_OBJECT_STRUCT_SIZE
 	add ix, de
@@ -481,12 +483,20 @@ update_sprite_objects_xibalba_lord_ghost:
 update_sprite_objects_atlantis_sentinel_extras:
 	ld hl, update_sprite_objects_atlantis_sentinel_extras_internal
 	ld c, ENEMIES_PAGE
+update_sprite_objects_atlantis_sentinel_extras_entry_point:
 	push ix
 		call call_hl_in_page_c_8000
 	pop ix
 	jp z, update_sprite_objects_loop_next
 	call sprite_object_remove_object
 	jp update_sprite_objects_loop_next_after_deletion
+
+
+;-----------------------------------------------
+update_sprite_mars_robot_puzzle_room:
+	ld hl, update_sprite_objects_mars_robot_puzzle_room_internal
+	ld c, MARS_ROBOT_PUZZLE_PAGE
+	jr update_sprite_objects_atlantis_sentinel_extras_entry_point
 
 
 ;-----------------------------------------------

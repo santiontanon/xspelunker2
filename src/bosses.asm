@@ -343,9 +343,7 @@ enter_boss_door__spawn_mars_boss_objects:
 	ld a, (global_state__objects + TAG_MARS_BOSS_BREAKABLE_FLOOR)
 	or a
 	jr nz, enter_boss_door__spawn_mars_boss_objects_wall_destroyed
-	ld de, ROOM_TILE_OBJECT_STRUCT_SIZE
 	ld iy, current_room__tile_objects
-
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 1
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_MARS_BOSS_BREAKABLE_FLOOR
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 2
