@@ -11,6 +11,18 @@ display_in_game_message_textpage3:
 	ld c, TEXT_PAGE3
 	call call_hl_in_page_c_8000
 	ld de, buffer_4096
+	jr display_in_game_message
+
+
+;-----------------------------------------------
+; input:
+; - de: text to display
+display_in_game_message_textpage4:
+	; copy the text to buffer_4096:
+	ld hl, copy_text_from_another_page
+	ld c, TEXT_PAGE4
+	call call_hl_in_page_c_8000
+	ld de, buffer_4096
 	; jp display_in_game_message
 
 

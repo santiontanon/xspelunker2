@@ -233,10 +233,10 @@ mars_robot_puzzle_interaction:
 	ret
 
 mars_robot_puzzle_interaction_robot:
-	ld hl, SFX_ui_select
-	call play_SFX_with_high_priority
-	; ...
-	ret
+	ld de, TEXT_MARS_ROBOT_OFF_1
+	ld hl, display_in_game_message_textpage4
+	ld c, TEXT_PAGE
+	jp call_hl_in_page_c_8000
 
 
 ;-----------------------------------------------
