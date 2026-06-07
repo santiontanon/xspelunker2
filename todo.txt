@@ -1,21 +1,24 @@
 to do:
 
 ***- ancient robot puzzle:
-  ***- panel 1: oil system (motor pressure): same, but with some different symbols (to indicate "oil"?)
-  ***- panel 2: water system (cooling): dial with Mayan numerals, and buttons to increase/decrease
-  ***- panel 3: electrical (central panel): buttons with Maya symbols, and a small screen display
+  ***- extract tiles/nametables needed for panels to a tileset
+  ***- add them to the game
   ***- base interaction: before entering the key, when you inspect them, they are all off, and there is nothing you can do (just some text stating that all is off)
   ***- placing the key:
     ***- robot turns on, eyes switch to white, and midsection starts animating (tile animations)
-    ***- the robot spews some garbled message, half in English, half in Maya. It is instructing you to do something, and you need to figure it out. Something like: 
-    - Set water pressure to 300
-    - vent the system (some button)
-    - Bring water pressure down to 100
-    - Bring oil pressure to 200
-    - Press the red button
+    ***- the robot spews some garbled message, half in English, half in Maya. It is instructing you to do something, and you need to figure it out. Something like (color glyphs are just maybe colored, so I don't need a clue):
+    - Set water pressure to 300 (panel 2)
+    - vent the system (some color button) (panel 3)
+    - Bring water pressure down to 100 (panel 2)
+    - Bring air pressure to 200 (panel 1)
+    - Press the red/green button (panel 3)
     ***- each time you interact with the key slot form that point on, it repeats the message
-  ***- the panels now are active, and you can interact with them
-  ***- if you do the right sequence, state progresses. If you do the wrong sequence (only signaled when you press some button), wrong SFX, and reset
+  ***- tablet somewhere that teaches you about mayan numerals (how to construct numbers > 20, and zero)
+  ***- tablet that teaches you "water" and "wind/air" glyphs
+  ***- the panels now are active, and you can interact with them:
+    ***- interact with panel 1: air (turn cog left/right and numbers change)
+    ***- interact with panel 2: air (lever up/down and numbers change)
+    ***- interact with panel 3: any button brings things back to red if in the wrong place, or to yellow if it's the correct sequence. Goes to blue when all successful
   ***- once you do the right sequence, SFX, and dialogue
     "System... re-init... re-initializing... Oh. Much better. Power... surge... stabilized."
     "Internal clock check: [Static] ...5139 solar cycles... 6 days... [Glitch] ...73 percent integrity. Chassis integrity is... critical. Maintenance... requested."
@@ -26,7 +29,7 @@ to do:
     - spawn power converter
     - pick power converter up (doubles gun damage, multiplicative with other bonuses, and makes gun bullets of another color)
     - if you leave and come back, the power converter should still be there if and only if you have not picked it up
-  ***- If you interact with robot (keyhole) again: "Thank you again... restorative subroutines activating..."
+  ***- If you interact with robot again: "Thank you again... restorative subroutines activating..." (anywhere, panels, robot or keyhole)
 ***- 6th boss: Giant Moai head
   ***- draw the boss in GIMP/TILED
   ***- implement it
