@@ -1,12 +1,7 @@
 to do:
 
 ***- ancient robot puzzle:
-  ***- placing the key:
-    ***- interact with any object that is not the golden key shows TEXT_WRONG_KEY
-    ***- puzzle solved SFX, you lose the key
-    ***- interaction with key slot from that point on, is the same as interacting with robot
-    ***- eyes switch to white, and midsection starts animating (tile animations)
-    ***- interacting with the robot: the robot spews some garbled message, half in English, half in Maya. It is instructing you to do something, and you need to figure it out. Something like (color glyphs are just maybe colored, so I don't need a clue):
+  ***- interacting with the robot when on: the robot spews some garbled message, half in English, half in Maya. It is instructing you to do something, and you need to figure it out. Something like (color glyphs are just maybe colored, so I don't need a clue):
       - Set water pressure to 300 (panel 2) (number determined by the random seed)
       - vent the system (some color button) (panel 3)
       - Bring water pressure down to 100 (panel 2) (number determined by the random seed)

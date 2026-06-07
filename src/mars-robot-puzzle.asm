@@ -19,10 +19,15 @@ mars_robot_puzzle_spawn_room:
 	ld (current_room__collision_ptr_page), a
 	ld (current_room__enemy_sprites_ptr_page), a
 
+	ld de, update_animations_in_vdp_none
+	ld a, (global_state__objects + TAG_MARS_ROBOT_PUZZLE)
+	or a
+	jr z, mars_robot_puzzle_spawn_room_animations_ptr_set
+	ld de, update_animations_in_vdp_mars_robot
+mars_robot_puzzle_spawn_room_animations_ptr_set:
+	ld (current_room__animation_fn_ptr), de
 	ld hl, mars_robot_puzzle_room_tiles_zx0
 	ld (current_room__tileset_ptr), hl
-	ld hl, update_animations_in_vdp_none
-	ld (current_room__animation_fn_ptr), hl
 	ld hl, tile_collision_types_mars_robot_puzzle
 	ld (current_room__collision_ptr), hl  ; collision types
 	ld hl, mars_robot_puzzle_room_sprites_zx0
@@ -176,16 +181,23 @@ mars_robot_puzzle_back_to_boss_room:
 
 ;-----------------------------------------------
 update_sprite_objects_mars_robot_puzzle_room_internal:
+	ld iyl, COLOR_DARK_BLUE
+	ld a, (global_state__objects + TAG_MARS_ROBOT_PUZZLE)
+	or a
+	jr z, update_sprite_objects_mars_robot_puzzle_room_internal_colors_set
+	ld iyl, COLOR_WHITE
+
+update_sprite_objects_mars_robot_puzzle_room_internal_colors_set:
 	ld (ix + ROOM_OBJECT_STRUCT_TILE_X), 7
 	ld (ix + ROOM_OBJECT_STRUCT_TILE_Y), 12
-	ld d, COLOR_DARK_BLUE
+	ld d, iyl
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 0) * 4
 	ld c, 0
 	call get_sprite_object_sprite_coordinates
 	call z, add_sprite_to_this_frame
 
 	ld (ix + ROOM_OBJECT_STRUCT_TILE_X), 12
-	ld d, COLOR_DARK_BLUE
+	ld d, iyl
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 1) * 4
 	ld c, 0
 	call get_sprite_object_sprite_coordinates
@@ -240,11 +252,43 @@ mars_robot_puzzle_interaction:
 	jr z, mars_robot_puzzle_interaction_panel3
 
 	; lock:
-	ld hl, SFX_ui_wrong
-	call play_SFX_with_high_priority
-	; ...
-	ret
+	ld a, (global_state__objects + TAG_MARS_ROBOT_PUZZLE)
+	or a
+	jr nz, mars_robot_puzzle_interaction_robot
+	; robot is still turned off:
+	ld a, (player_current_item)
+	cp N_INVENTORY_WEAPON_TYPES + INVENTORY_ITEM_GOLDEN_KEY
+	jr z, mars_robot_puzzle_interaction_open_lock
+	ld a, TILES_PAGE
+	ld hl, object_interaction_function_chest_fail
+	jp jp_to_hl_in_page_a_8000
 
+;-----------------------------------------------
+mars_robot_puzzle_interaction_open_lock:
+	; the player used the correct key, turn the robot on:
+	ld a, 1
+	ld (global_state__objects + TAG_MARS_ROBOT_PUZZLE), a
+	; lose the key:
+	xor a
+	ld (player_current_item), a  ; machete
+	ld (player_inventory_items + INVENTORY_ITEM_GOLDEN_KEY), a
+
+	ld hl, update_animations_in_vdp_mars_robot
+	ld (current_room__animation_fn_ptr), hl
+
+	ld hl, SFX_secret
+	call play_SFX_with_high_priority
+
+	ld hl, redraw_flags
+	ld (hl), #ff
+
+	ld de, TEXT_MARS_ROBOT_TURN_ON
+	ld hl, display_in_game_message_textpage4
+	ld c, TEXT_PAGE
+	jp call_hl_in_page_c_8000
+
+
+;-----------------------------------------------
 mars_robot_puzzle_interaction_robot:
 	ld de, TEXT_MARS_ROBOT_OFF_1
 	ld hl, display_in_game_message_textpage4
@@ -262,7 +306,7 @@ mars_robot_puzzle_interaction_panel1_off:
 	; draw name table:
 	ld hl, MARS_ROBOT_PUZZLE_PANNEL1_CLOSED_NAMETABLE
 mars_robot_puzzle_interaction_panel1_off_entrypoint:
-	ld de, NAMTBL2 + 8
+	ld de, NAMTBL2 + 9*32 + 8
 	ld bc, #0607
 	call mars_robot_puzzle_copy_nametable
 	ld hl, TEXT_MARS_ROBOT_PANEL_OFF_1
@@ -319,7 +363,9 @@ mars_robot_puzzle_interaction_panel_draw_box:
 	ld b, a
 mars_robot_puzzle_interaction_panel_draw_box_loop:
 	ld a, (hl)  ; y
-	cp 56
+	cp 48
+	jr c, mars_robot_puzzle_interaction_panel_draw_box_loop_next
+	cp 120
 	jr nc, mars_robot_puzzle_interaction_panel_draw_box_loop_next
 	ld (hl), 200  ; move out of the screen
 mars_robot_puzzle_interaction_panel_draw_box_loop_next:
@@ -339,14 +385,14 @@ mars_robot_puzzle_interaction_panel_draw_box_loop_next:
 	call fast_small_LDIRVM		
 
 	; save the content below:
-	ld hl, NAMTBL2
+	ld hl, NAMTBL2 + 256
 	ld de, current_room__tile_map + 1024  ; this is a small room, so that area is free
 	ld bc, 256
 	call LDIRMV
 
 	; clear nametable:
     xor a
-	ld hl, NAMTBL2
+	ld hl, NAMTBL2 + 256
 	ld bc, 8*32
 	call fast_FILVRM
 
@@ -355,11 +401,11 @@ mars_robot_puzzle_interaction_panel_draw_box_loop_next:
 	ld de, buffer_4096
 	call dzx0
     ld hl, buffer_4096
-    ld de, CHRTBL2
+    ld de, CHRTBL2 + 256*8
     ld bc, 256*8
     call fast_LDIRVM
     ld hl, buffer_4096 + 256*8
-    ld de, CLRTBL2
+    ld de, CLRTBL2 + 256*8
     ld bc, 256*8
     call fast_LDIRVM
 
@@ -374,33 +420,38 @@ mars_robot_puzzle_interaction_panel_draw_box_loop2:
     djnz mars_robot_puzzle_interaction_panel_draw_box_loop2
 
     ld hl, buffer_4096
-    ld de, NAMTBL2 + 3*32 + 16
+    ld de, NAMTBL2 + 11*32 + 16
     ld b, 16
     call fast_small_LDIRVM
 
     ld hl, buffer_4096 + 16
-    ld de, NAMTBL2 + 4*32 + 16
+    ld de, NAMTBL2 + 12*32 + 16
     ld b, 16
     call fast_small_LDIRVM
 
-    ; draw the line at the bottom:
+    ; draw the lines at top/bottom:
     ld a, 1
-	ld hl, NAMTBL2 + 7*32
+	ld hl, NAMTBL2 + 8*32
+	ld bc, 32
+	call fast_FILVRM
+
+    ld a, 1
+	ld hl, NAMTBL2 + 15*32
 	ld bc, 32
 	jp fast_FILVRM
 
 
 ;-----------------------------------------------
 mars_robot_puzzle_interaction_panel_clear_box:
-	; restore tiles in top bank:
-	ld hl, CLRTBL2
+	; restore the tiles:
+	ld hl, CLRTBL2 + 256*8
 	ld bc, 256*8
 	xor a
 	call fast_FILVRM
 
 	; restore content below:
 	ld hl, current_room__tile_map + 1024
-	ld de, NAMTBL2
+	ld de, NAMTBL2 + 256
 	ld bc, 256
 	call fast_LDIRVM
 
@@ -448,7 +499,7 @@ mars_robot_puzzle_text_line1:
 	ld hl, copy_text_from_another_page
 	ld c, TEXT_PAGE4
 	call call_hl_in_page_c_8000
-	ld de, CHRTBL2 + 14*16*8
+	ld de, CHRTBL2 + 256*8 + 14*16*8
 	ld hl, buffer_4096
 	ld iy, #80f0
 	ld b, 16
@@ -463,7 +514,7 @@ mars_robot_puzzle_text_line2:
 	ld hl, copy_text_from_another_page
 	ld c, TEXT_PAGE4
 	call call_hl_in_page_c_8000
-	ld de, CHRTBL2 + 15*16*8
+	ld de, CHRTBL2 + 256*8 + 15*16*8
 	ld hl, buffer_4096
 	ld iy, #80f0
 	ld b, 16

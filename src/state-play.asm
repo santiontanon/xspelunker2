@@ -110,7 +110,7 @@ state_play:
 ; 		ld (player_inventory_items+36), a  ; half power stone 2
 ; 		ld (player_inventory_items+INVENTORY_ITEM_PUZZLEBOX_MARS), a
 ; 		ld (player_inventory_items+INVENTORY_ITEM_PUZZLEBOX_MOON), a
-; 		ld (player_inventory_items+INVENTORY_ITEM_GOLDEN_KEY), a
+		ld (player_inventory_items+INVENTORY_ITEM_GOLDEN_KEY), a
 ; 		ld (player_inventory_items+INVENTORY_ITEM_SKULL_CHARM), a
 ; 		ld (player_inventory_items+INVENTORY_ITEM_CHARYBDIS_EYE), a
 ; 		ld (player_inventory_items+INVENTORY_ITEM_SCYLLA_EYE), a
