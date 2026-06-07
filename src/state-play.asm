@@ -141,8 +141,8 @@ state_play:
 		ld (global_state__objects + TAG_MAP_PIECE1), a
 ; 		ld (global_state__objects + TAG_MAP_PIECE2), a
 ; 		ld (global_state__objects + TAG_MAP_PIECE3), a
-; 		ld (global_state__objects + TAG_MAP_PIECE4), a
-; 		ld (global_state__objects + TAG_MAP_PIECE5), a
+		ld (global_state__objects + TAG_MAP_PIECE4), a
+		ld (global_state__objects + TAG_MAP_PIECE5), a
 		ld (global_state__objects + TAG_MAP_PIECE6), a
 ; 		ld (global_state__objects + TAG_MAP_PIECE7), a
 ; 		ld (global_state__objects + TAG_TELEPORTER1), a

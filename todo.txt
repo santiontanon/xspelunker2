@@ -1,20 +1,19 @@
 to do:
 
 ***- ancient robot puzzle:
-  ***- panel 1/2/3 interaction when robot is off:
-    ***- draw zoom in with the door closed nametable
-    ***- text that says "There is a panel here, but it's locked."
   ***- placing the key:
-    ***- robot turns on, eyes switch to white, and midsection starts animating (tile animations)
-    ***- the robot spews some garbled message, half in English, half in Maya. It is instructing you to do something, and you need to figure it out. Something like (color glyphs are just maybe colored, so I don't need a clue):
-    - Set water pressure to 300 (panel 2) (number determined by the random seed)
-    - vent the system (some color button) (panel 3)
-    - Bring water pressure down to 100 (panel 2) (number determined by the random seed)
-    - Bring air pressure to 200 (panel 1) (number determined by the random seed)
-    - Press the red/green button (panel 3)
-    ***- each time you interact with the key slot form that point on, it repeats the message
-  ***- tablet somewhere that teaches you about mayan numerals (how to construct numbers > 20, and zero)
-  ***- tablet that teaches you "water" and "wind/air" glyphs
+    ***- interact with any object that is not the golden key shows TEXT_WRONG_KEY
+    ***- puzzle solved SFX, you lose the key
+    ***- interaction with key slot from that point on, is the same as interacting with robot
+    ***- eyes switch to white, and midsection starts animating (tile animations)
+    ***- interacting with the robot: the robot spews some garbled message, half in English, half in Maya. It is instructing you to do something, and you need to figure it out. Something like (color glyphs are just maybe colored, so I don't need a clue):
+      - Set water pressure to 300 (panel 2) (number determined by the random seed)
+      - vent the system (some color button) (panel 3)
+      - Bring water pressure down to 100 (panel 2) (number determined by the random seed)
+      - Bring air pressure to 200 (panel 1) (number determined by the random seed)
+      - Press the red/green button (panel 3)
+  ***- tablet somewhere that teaches you about mayan numerals (numbers > 20, and zero)
+  ***- tablet that teaches you "water" and "wind/air" glyphs / sounds (or at least one of them)
   ***- the panels now are active, and you can interact with them:
     ***- interact with panel 1: air (turn cog left/right and numbers change)
     ***- interact with panel 2: air (lever up/down and numbers change)

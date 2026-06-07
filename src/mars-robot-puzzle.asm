@@ -1,3 +1,8 @@
+MARS_ROBOT_PUZZLE_PANNEL1_CLOSED_NAMETABLE: equ mars_robot_puzzle_room_zoom_nametables + 25
+MARS_ROBOT_PUZZLE_PANNEL2_CLOSED_NAMETABLE: equ mars_robot_puzzle_room_zoom_nametables + 25 + 14*6
+MARS_ROBOT_PUZZLE_PANNEL3_CLOSED_NAMETABLE: equ mars_robot_puzzle_room_zoom_nametables + 25 + 14*12
+
+
 ;-----------------------------------------------
 mars_robot_puzzle_spawn_room:
 	call disable_VDP_output
@@ -254,6 +259,17 @@ mars_robot_puzzle_interaction_panel1:
 	jr nz, mars_robot_puzzle_interaction_panel1_on
 mars_robot_puzzle_interaction_panel1_off:
 	call mars_robot_puzzle_interaction_panel_draw_box
+	; draw name table:
+	ld hl, MARS_ROBOT_PUZZLE_PANNEL1_CLOSED_NAMETABLE
+mars_robot_puzzle_interaction_panel1_off_entrypoint:
+	ld de, NAMTBL2 + 8
+	ld bc, #0607
+	call mars_robot_puzzle_copy_nametable
+	ld hl, TEXT_MARS_ROBOT_PANEL_OFF_1
+	call mars_robot_puzzle_text_line1
+	ld hl, TEXT_MARS_ROBOT_PANEL_OFF_2
+	call mars_robot_puzzle_text_line2
+
 	call wait_for_click
 	jp mars_robot_puzzle_interaction_panel_clear_box
 
@@ -269,8 +285,9 @@ mars_robot_puzzle_interaction_panel2:
 	jr nz, mars_robot_puzzle_interaction_panel1_on
 mars_robot_puzzle_interaction_panel2_off:
 	call mars_robot_puzzle_interaction_panel_draw_box
-	call wait_for_click
-	jp mars_robot_puzzle_interaction_panel_clear_box
+	; draw name table:
+	ld hl, MARS_ROBOT_PUZZLE_PANNEL2_CLOSED_NAMETABLE
+	jr mars_robot_puzzle_interaction_panel1_off_entrypoint
 
 mars_robot_puzzle_interaction_panel2_on:
 	; ...
@@ -284,8 +301,9 @@ mars_robot_puzzle_interaction_panel3:
 	jr nz, mars_robot_puzzle_interaction_panel1_on
 mars_robot_puzzle_interaction_panel3_off:
 	call mars_robot_puzzle_interaction_panel_draw_box
-	call wait_for_click
-	jp mars_robot_puzzle_interaction_panel_clear_box
+	; draw name table:
+	ld hl, MARS_ROBOT_PUZZLE_PANNEL3_CLOSED_NAMETABLE
+	jr mars_robot_puzzle_interaction_panel1_off_entrypoint
 
 mars_robot_puzzle_interaction_panel3_on:
 	; ...
@@ -345,6 +363,27 @@ mars_robot_puzzle_interaction_panel_draw_box_loop_next:
     ld bc, 256*8
     call fast_LDIRVM
 
+    ; set up the text area nametable:
+    ld hl, buffer_4096
+    ld a, 14*16
+    ld b, 32
+mars_robot_puzzle_interaction_panel_draw_box_loop2:
+    ld (hl), a
+    inc hl
+    inc a
+    djnz mars_robot_puzzle_interaction_panel_draw_box_loop2
+
+    ld hl, buffer_4096
+    ld de, NAMTBL2 + 3*32 + 16
+    ld b, 16
+    call fast_small_LDIRVM
+
+    ld hl, buffer_4096 + 16
+    ld de, NAMTBL2 + 4*32 + 16
+    ld b, 16
+    call fast_small_LDIRVM
+
+    ; draw the line at the bottom:
     ld a, 1
 	ld hl, NAMTBL2 + 7*32
 	ld bc, 32
@@ -373,6 +412,62 @@ mars_robot_puzzle_interaction_panel_clear_box:
 	ld hl, redraw_flags
 	ld (hl), #ff
 	ret
+
+
+;-----------------------------------------------
+; input:
+; - hl: nametable
+; - de: ptr to VDP
+; - c, b: width, height
+mars_robot_puzzle_copy_nametable:
+mars_robot_puzzle_copy_nametable_loop_y:
+	push bc
+		push hl
+			push de
+				ld b, c
+				call fast_small_LDIRVM
+			pop hl
+			ld bc, 32
+			add hl, bc
+			ex de, hl
+		pop hl
+	pop bc
+	push bc
+		ld b, 0
+		add hl, bc
+	pop bc
+	djnz mars_robot_puzzle_copy_nametable_loop_y
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - hl: text
+mars_robot_puzzle_text_line1:
+	ex de, hl
+	ld hl, copy_text_from_another_page
+	ld c, TEXT_PAGE4
+	call call_hl_in_page_c_8000
+	ld de, CHRTBL2 + 14*16*8
+	ld hl, buffer_4096
+	ld iy, #80f0
+	ld b, 16
+	jp draw_sentence_to_vdp_from_another_page
+
+
+;-----------------------------------------------
+; input:
+; - hl: text
+mars_robot_puzzle_text_line2:
+	ex de, hl
+	ld hl, copy_text_from_another_page
+	ld c, TEXT_PAGE4
+	call call_hl_in_page_c_8000
+	ld de, CHRTBL2 + 15*16*8
+	ld hl, buffer_4096
+	ld iy, #80f0
+	ld b, 16
+	jp draw_sentence_to_vdp_from_another_page
 
 
 ;-----------------------------------------------

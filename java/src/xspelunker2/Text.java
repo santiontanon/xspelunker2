@@ -713,7 +713,10 @@ public class Text {
         
         // Mars robot:
         addLineSafe(lines_with_constant_page4, "What is this strange-looking giant robot doing here!?", "MARS_ROBOT_OFF_1", 112);
+        addLineSafe(lines_with_constant_page4, "There is a panel here,", "MARS_ROBOT_PANEL_OFF_1", 12);
+        addLineSafe(lines_with_constant_page4, "but it's locked.", "MARS_ROBOT_PANEL_OFF_2", 12);
         
+                
         // Ending C:
         // First shared part:
         addLineSafe(lines_with_constant_page3, "Meanwhile, in Earth orbit...", "ENDING_C_UFO_0", 12*4);
