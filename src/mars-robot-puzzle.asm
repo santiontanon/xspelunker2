@@ -227,9 +227,17 @@ mars_robot_puzzle_interaction:
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
 	cp 1
 	jr z, mars_robot_puzzle_interaction_robot
-	; lock or panels:
+	cp 2
+	jr z, mars_robot_puzzle_interaction_panel1
+	cp 3
+	jr z, mars_robot_puzzle_interaction_panel2
+	cp 4
+	jr z, mars_robot_puzzle_interaction_panel3
+
+	; lock:
 	ld hl, SFX_ui_wrong
 	call play_SFX_with_high_priority
+	; ...
 	ret
 
 mars_robot_puzzle_interaction_robot:
@@ -237,6 +245,134 @@ mars_robot_puzzle_interaction_robot:
 	ld hl, display_in_game_message_textpage4
 	ld c, TEXT_PAGE
 	jp call_hl_in_page_c_8000
+
+
+;-----------------------------------------------
+mars_robot_puzzle_interaction_panel1:
+	ld a, (global_state__objects + TAG_MARS_ROBOT_PUZZLE)
+	or a
+	jr nz, mars_robot_puzzle_interaction_panel1_on
+mars_robot_puzzle_interaction_panel1_off:
+	call mars_robot_puzzle_interaction_panel_draw_box
+	call wait_for_click
+	jp mars_robot_puzzle_interaction_panel_clear_box
+
+mars_robot_puzzle_interaction_panel1_on:
+	; ...
+	ret
+
+
+;-----------------------------------------------
+mars_robot_puzzle_interaction_panel2:
+	ld a, (global_state__objects + TAG_MARS_ROBOT_PUZZLE)
+	or a
+	jr nz, mars_robot_puzzle_interaction_panel1_on
+mars_robot_puzzle_interaction_panel2_off:
+	call mars_robot_puzzle_interaction_panel_draw_box
+	call wait_for_click
+	jp mars_robot_puzzle_interaction_panel_clear_box
+
+mars_robot_puzzle_interaction_panel2_on:
+	; ...
+	ret
+
+
+;-----------------------------------------------
+mars_robot_puzzle_interaction_panel3:
+	ld a, (global_state__objects + TAG_MARS_ROBOT_PUZZLE)
+	or a
+	jr nz, mars_robot_puzzle_interaction_panel1_on
+mars_robot_puzzle_interaction_panel3_off:
+	call mars_robot_puzzle_interaction_panel_draw_box
+	call wait_for_click
+	jp mars_robot_puzzle_interaction_panel_clear_box
+
+mars_robot_puzzle_interaction_panel3_on:
+	; ...
+	ret
+
+
+;-----------------------------------------------
+mars_robot_puzzle_interaction_panel_draw_box:
+	; clear sprites that are in the message area (y < 56)
+	ld hl, sprite_attribute_table
+	ld a, (n_displayed_object_sprites)
+	add a, FIRST_OBJECT_SPRITE
+	ld b, a
+mars_robot_puzzle_interaction_panel_draw_box_loop:
+	ld a, (hl)  ; y
+	cp 56
+	jr nc, mars_robot_puzzle_interaction_panel_draw_box_loop_next
+	ld (hl), 200  ; move out of the screen
+mars_robot_puzzle_interaction_panel_draw_box_loop_next:
+	inc hl
+	inc hl
+	inc hl
+	inc hl
+	djnz mars_robot_puzzle_interaction_panel_draw_box_loop
+
+	ld hl, sprite_attribute_table
+	ld de, SPRATR2
+	ld a, (n_displayed_object_sprites)
+	add a, FIRST_OBJECT_SPRITE
+	add a, a
+	add a, a
+	ld b, a
+	call fast_small_LDIRVM		
+
+	; save the content below:
+	ld hl, NAMTBL2
+	ld de, current_room__tile_map + 1024  ; this is a small room, so that area is free
+	ld bc, 256
+	call LDIRMV
+
+	; clear nametable:
+    xor a
+	ld hl, NAMTBL2
+	ld bc, 8*32
+	call fast_FILVRM
+
+	; set up the zoom tiles:
+	ld hl, mars_robot_puzzle_room_zoom_tiles_zx0
+	ld de, buffer_4096
+	call dzx0
+    ld hl, buffer_4096
+    ld de, CHRTBL2
+    ld bc, 256*8
+    call fast_LDIRVM
+    ld hl, buffer_4096 + 256*8
+    ld de, CLRTBL2
+    ld bc, 256*8
+    call fast_LDIRVM
+
+    ld a, 1
+	ld hl, NAMTBL2 + 7*32
+	ld bc, 32
+	jp fast_FILVRM
+
+
+;-----------------------------------------------
+mars_robot_puzzle_interaction_panel_clear_box:
+	; restore tiles in top bank:
+	ld hl, CLRTBL2
+	ld bc, 256*8
+	xor a
+	call fast_FILVRM
+
+	; restore content below:
+	ld hl, current_room__tile_map + 1024
+	ld de, NAMTBL2
+	ld bc, 256
+	call fast_LDIRVM
+
+	ld a, (current_room__tileset_page)
+	ld c, a
+	ld hl, (current_room__tileset_ptr)
+	call setup_game_tiles
+
+	ld hl, redraw_flags
+	ld (hl), #ff
+	ret
 
 
 ;-----------------------------------------------

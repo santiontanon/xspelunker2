@@ -1,16 +1,16 @@
 to do:
 
 ***- ancient robot puzzle:
-  ***- extract tiles/nametables needed for panels to a tileset
-  ***- add them to the game
-  ***- base interaction: before entering the key, when you inspect them, they are all off, and there is nothing you can do (just some text stating that all is off)
+  ***- panel 1/2/3 interaction when robot is off:
+    ***- draw zoom in with the door closed nametable
+    ***- text that says "There is a panel here, but it's locked."
   ***- placing the key:
     ***- robot turns on, eyes switch to white, and midsection starts animating (tile animations)
     ***- the robot spews some garbled message, half in English, half in Maya. It is instructing you to do something, and you need to figure it out. Something like (color glyphs are just maybe colored, so I don't need a clue):
-    - Set water pressure to 300 (panel 2)
+    - Set water pressure to 300 (panel 2) (number determined by the random seed)
     - vent the system (some color button) (panel 3)
-    - Bring water pressure down to 100 (panel 2)
-    - Bring air pressure to 200 (panel 1)
+    - Bring water pressure down to 100 (panel 2) (number determined by the random seed)
+    - Bring air pressure to 200 (panel 1) (number determined by the random seed)
     - Press the red/green button (panel 3)
     ***- each time you interact with the key slot form that point on, it repeats the message
   ***- tablet somewhere that teaches you about mayan numerals (how to construct numbers > 20, and zero)
@@ -21,13 +21,13 @@ to do:
     ***- interact with panel 3: any button brings things back to red if in the wrong place, or to yellow if it's the correct sequence. Goes to blue when all successful
   ***- once you do the right sequence, SFX, and dialogue
     "System... re-init... re-initializing... Oh. Much better. Power... surge... stabilized."
-    "Internal clock check: [Static] ...5139 solar cycles... 6 days... [Glitch] ...73 percent integrity. Chassis integrity is... critical. Maintenance... requested."
+    "Internal clock check: [Static] ...5139 solar cycles... 6 days... [Glitch] ...73 percent integrity. Chassis integrity is... critical."
     "Oh! [Optical sensors flicker] You... you are a biological? A... human? I acknowledge your... input. Thank you for... restoring power. But... how did you obtain my... key?"
-    "I lost it while surveying the sector you designate as 'Xibalba.' I initiated an emergency jump... an escape sequence... but... [Sound of grinding gears] I materialized here. The cavern architecture was... insufficient. I triggered a... cave in and became... trapped. I calculated my probability of rescue at... zero."
+    "I lost it while surveying the sector you designate as... 'Xibalba.' I initiated an emergency spatial-teleport... an escape sequence... but... [Sound of grinding gears] I materialized here. The cavern dimensions were... insufficient. I triggered a... cave in and became... trapped."
     "But... I am initiating restorative subroutines now. My... spatial-teleport array is badly fragmented. It will require... 35 solar cycles to... re-align."
-    "As a token of... [System Warning Bleep] ...gratitude... take this. It fell from the chamber above. I believe it is... might compatible with one of your... primitive weapon systems."
-    - spawn power converter
-    - pick power converter up (doubles gun damage, multiplicative with other bonuses, and makes gun bullets of another color)
+    "As a token of... [System Warning Bleep] ...gratitude... take this. It fell from the chamber above. I believe it is... compatible with one of your... primitive weapon systems."
+    - spawn "phase shifter"
+    - pick phase shifter up (doubles gun damage, multiplicative with other bonuses, makes bullets go through walls and makes gun bullets of another color)
     - if you leave and come back, the power converter should still be there if and only if you have not picked it up
   ***- If you interact with robot again: "Thank you again... restorative subroutines activating..." (anywhere, panels, robot or keyhole)
 ***- 6th boss: Giant Moai head
