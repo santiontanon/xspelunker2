@@ -2851,6 +2851,7 @@ public class PCGArea {
                 case "maya-riddle-clue3":
                 case "maya-riddle-clue4":
                 case "maya-riddle-clue5":
+                case "maya-riddle-clue6":
                 case "story-trivia1":
                 case "story-trivia2":
                 case "story-trivia3":
@@ -3230,6 +3231,7 @@ public class PCGArea {
                             case "maya-riddle-clue3":
                             case "maya-riddle-clue4":
                             case "maya-riddle-clue5":
+                            case "maya-riddle-clue6":
                             case "story-trivia1":
                             case "story-trivia2":
                             case "story-trivia3":
@@ -3655,6 +3657,7 @@ public class PCGArea {
                 case "maya-riddle-clue3":
                 case "maya-riddle-clue4":
                 case "maya-riddle-clue5":
+                case "maya-riddle-clue6":
                 case "story-trivia1":
                 case "story-trivia2":
                 case "story-trivia3":

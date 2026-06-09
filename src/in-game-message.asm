@@ -88,7 +88,7 @@ display_in_game_message_draw_message:
 	ld c, a
 	ld b, 0
 	ldir	
-    ld de, CHRTBL2 + (13*32+2)*8
+    ld de, CHRTBL2 + (12*32+2)*8
 display_in_game_message_print_loop:
     ld hl, buffer_4096
     push de

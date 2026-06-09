@@ -521,11 +521,19 @@ public class Text {
 
         addLineSafe(lines_with_constant_page1, "My favorite part about writing is being able to write sounds, like", "TABLET_MAYA4_LINE1", 18*2);
 
-        addLineSafe(lines_with_constant_page3, "I once tried the writing were taught with my father's dialect.", "TABLET_MAYA5_LINE1", 18*2);
+        addLineSafe(lines_with_constant_page3, "I once tried the writing we were taught with my father's dialect.", "TABLET_MAYA5_LINE1", 18*2);
         addLineSafe(lines_with_constant_page3, "This showed me the limitations of their writing. How to write TAL or LOL, for example? They could not write individual consontants.", "TABLET_MAYA5_LINE2", 18*6);
         addLineSafe(lines_with_constant_page3, "So, I had to get creative and write TA-LA and LO-LO.", "TABLET_MAYA5_LINE3", 18*6);
+
+        addLineSafe(lines_with_constant_page4, "Not only sounds, but we could also write numbers! If I have no spears. I would say I have", "TABLET_MAYA6_LINE1", 18*3);
+        addLineSafe(lines_with_constant_page4, "    spears. Then as I gain spears one by one, I would have:", "TABLET_MAYA6_LINE2", 18*2);
+        addLineSafe(lines_with_constant_page4, ", and up to", "TABLET_MAYA6_LINE3", 18);
+        addLineSafe(lines_with_constant_page4, "We could write big numbers too!", "TABLET_MAYA6_LINE4", 18);
+        addLineSafe(lines_with_constant_page4, " The number that follows      is written with two digits, like this", "TABLET_MAYA6_LINE5", 18*2);
+        addLineSafe(lines_with_constant_page4, ", and then", "TABLET_MAYA6_LINE6", 18);
+        addLineSafe(lines_with_constant_page4, ", etc.", "TABLET_MAYA6_LINE7", 18);
         
-        addLineSafe(lines_with_constant_page1, "The nexus will listen to its name when fully powered up. Speak its secret name in the center", "TABLET_CALENDAR_NAME_CLUE", 18*3);
+        addLineSafe(lines_with_constant_page1, "The nexus will listen to its name when fully powered up. Speak its secret name in the center.", "TABLET_CALENDAR_NAME_CLUE", 18*3);
         
         // Syllables
         addLineSafe(lines_with_constant_page1, "ke", "KE", 2);
@@ -595,8 +603,6 @@ public class Text {
 
         addLineSafe(lines_with_constant_page2, "Before going on a hunt, warriors prayed in the animal altars to receive their blessing.", "TABLET_TRIVIA_CLUE1_1", 18*3);
 
-//        addLineSafe(lines_with_constant_page2, "Five colossi guard these lands. Insult their pride, and they will transform.", "TABLET_TRIVIA_CLUE2_1", 18*3);
-//        addLineSafe(lines_with_constant_page2, "Huracan, for example, prides itself on the purity of Palenque's underground water. So, do not litter it!", "TABLET_TRIVIA_CLUE2_2", 18*4);
         addLineSafe(lines_with_constant_page2, "Five colossi guard the remaining power.", "TABLET_TRIVIA_CLUE2_1", 18*3);
         addLineSafe(lines_with_constant_page2, "If power you desire, you will have to take it from them!", "TABLET_TRIVIA_CLUE2_2", 18*4);
 
@@ -716,7 +722,7 @@ public class Text {
         addLineSafe(lines_with_constant_page4, "There is a panel here,", "MARS_ROBOT_PANEL_OFF_1", 12);
         addLineSafe(lines_with_constant_page4, "but it's locked.", "MARS_ROBOT_PANEL_OFF_2", 12);
         addLineSafe(lines_with_constant_page4, "The key fits! The robot is activating!", "MARS_ROBOT_TURN_ON", 112);
-        
+        addLineSafe(lines_with_constant_page4, "Energy... critical... please help...: TZ'AK HA' pressure to... 300 and purge pipes using the... YAX-JAL switch. KA bring down to 100. TZ'AK IK' pressure to... 200. KA... reboot system with K'AN... switch.", "MARS_ROBOT_REQUEST", 112);
                 
         // Ending C:
         // First shared part:

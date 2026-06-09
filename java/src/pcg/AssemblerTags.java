@@ -144,6 +144,7 @@ public class AssemblerTags {
         "TAG_MAYA_RIDDLE_CLUE3",
         "TAG_MAYA_RIDDLE_CLUE4",
         "TAG_MAYA_RIDDLE_CLUE5",
+        "TAG_MAYA_RIDDLE_CLUE6",
         "TAG_STORY_TRIVIA1",
         "TAG_STORY_TRIVIA2",
         "TAG_STORY_TRIVIA3",

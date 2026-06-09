@@ -291,6 +291,17 @@ FIRST_LETTER2B_USEABLE_TILE: equ 67
 ; - ix: base CHRTBL2 address (1st, 2nd or 3rd bank?)
 ; - (tmp_letter_line_width)
 ; - (tmp_letter_line_color)
+display_paragraph_text_page4:
+	ld a, b
+	push af
+	push de
+	push ix
+		; copy text to buffer_4096:
+		push iy
+		pop de
+		ld c, TEXT_PAGE4
+		ld hl, copy_text_from_another_page
+		jr display_paragraph_continue
 display_paragraph_text_page3:
 	ld a, b
 	push af

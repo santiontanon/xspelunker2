@@ -247,9 +247,9 @@ mars_robot_puzzle_interaction:
 	cp 2
 	jr z, mars_robot_puzzle_interaction_panel1
 	cp 3
-	jr z, mars_robot_puzzle_interaction_panel2
+	jp z, mars_robot_puzzle_interaction_panel2
 	cp 4
-	jr z, mars_robot_puzzle_interaction_panel3
+	jp z, mars_robot_puzzle_interaction_panel3
 
 	; lock:
 	ld a, (global_state__objects + TAG_MARS_ROBOT_PUZZLE)
@@ -290,6 +290,16 @@ mars_robot_puzzle_interaction_open_lock:
 
 ;-----------------------------------------------
 mars_robot_puzzle_interaction_robot:
+	ld a, (global_state__objects + TAG_MARS_ROBOT_PUZZLE)
+	or a
+	jr z, mars_robot_puzzle_interaction_robot_off
+	; robot is on:
+	ld de, TEXT_MARS_ROBOT_REQUEST
+	ld hl, display_in_game_message_textpage4
+	ld c, TEXT_PAGE
+	jp call_hl_in_page_c_8000	
+
+mars_robot_puzzle_interaction_robot_off:
 	ld de, TEXT_MARS_ROBOT_OFF_1
 	ld hl, display_in_game_message_textpage4
 	ld c, TEXT_PAGE

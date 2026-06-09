@@ -95,7 +95,7 @@ calendar_tablet_fn:
 	push de
 		ld hl, tablet_calendar_tiles_zx0
 		ld de, tablet_calendar_nametable_zx0
-		ld c, TABLET_LETTER_PAGE
+		ld c, CALENDAR_TABLET_PAGE
 		jp display_tablet_ptrs_set
 
 
@@ -962,6 +962,94 @@ maya_clue5_tablet_fn:
 	ld de, NAMTBL2 + (7 + 14*32)
 	ld ix, CHRTBL2 + 256*8
 	jp display_paragraph_text_page3
+
+
+;-----------------------------------------------
+maya_clue6_tablet_fn:
+	ld hl, tablet_maya6_tiles_zx0
+	ld c, TABLET_LETTER_PAGE
+	call maya_puzzle_tablet_fn_load_extra_tiles_hl_set
+
+	ld hl, tablet_maya6_nametable_zx0
+	ld de, buffer_4096
+	ld c, TABLET_LETTER_PAGE
+	call dzx0_from_page_c
+
+	ld hl, buffer_4096
+	ld de, NAMTBL2
+	ld bc, 768
+	call fast_LDIRVM
+
+	ld a, 18
+	ld (tmp_letter_line_width), a
+	ld a, COLOR_GREY
+	ld (tmp_letter_line_color), a
+
+	ld iy, TEXT_TABLET_MAYA6_LINE1
+	ld b, 48  ; first tile to use
+	ld de, NAMTBL2 + (7 + 8*32)
+	ld ix, CHRTBL2 + 256*8
+	call display_paragraph_text_page4
+
+	ld iy, TEXT_TABLET_MAYA6_LINE2
+	ld b, 144  ; first tile to use
+	ld de, NAMTBL2 + (7 + 11*32)
+	ld ix, CHRTBL2 + 256*8
+	call display_paragraph_text_page4
+
+	ld a, 6
+	ld (tmp_letter_line_width), a
+	ld iy, TEXT_TABLET_MAYA6_LINE3
+	ld b, 208  ; first tile to use
+	ld de, NAMTBL2 + (18 + 13*32)
+	ld ix, CHRTBL2 + 256*8
+	call display_paragraph_text_page4
+
+	ld a, 18
+	ld (tmp_letter_line_width), a
+	ld iy, TEXT_TABLET_MAYA6_LINE4
+	ld b, 224  ; first tile to use
+	ld de, NAMTBL2 + (7 + 15*32)
+	ld ix, CHRTBL2 + 256*8
+	call display_paragraph_text_page4
+
+	ld iy, TEXT_TABLET_MAYA6_LINE5
+	ld b, 48  ; first tile to use
+	ld de, NAMTBL2 + (7 + 16*32)
+	ld ix, CHRTBL2 + 256*8*2
+	call display_paragraph_text_page4
+
+	ld a, 6
+	ld (tmp_letter_line_width), a
+	ld iy, TEXT_TABLET_MAYA6_LINE6
+	ld b, 88  ; first tile to use
+	ld de, NAMTBL2 + (8 + 19*32)
+	ld ix, CHRTBL2 + 256*8*2
+	call display_paragraph_text_page4
+
+	ld a, 4
+	ld (tmp_letter_line_width), a
+	ld iy, TEXT_TABLET_MAYA6_LINE7
+	ld b, 84  ; first tile to use
+	ld de, NAMTBL2 + (19 + 19*32)
+	ld ix, CHRTBL2 + 256*8*2
+	call display_paragraph_text_page4
+
+	; overwrite some tiles:
+	ld a, 33  ; zero
+	ld hl, NAMTBL2 + (7 + 11*32)
+	ld bc, 1
+	call fast_FILVRM
+
+	ld a, 41  ; 19
+	ld hl, NAMTBL2 + (24 + 13*32)
+	ld bc, 1
+	call fast_FILVRM
+
+	ld a, 41  ; 19
+	ld hl, NAMTBL2 + (21 + 16*32)
+	ld bc, 1
+	jp fast_FILVRM
 
 
 ;-----------------------------------------------
