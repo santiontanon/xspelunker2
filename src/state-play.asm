@@ -194,9 +194,9 @@ state_play_from_continue:
 
 		; generate area:
 		ld hl, pcg_generate_area
-; 		ld e, 0  ; area to generate
+		ld e, 0  ; area to generate
 ; 		ld e, 1  ; area to generate
-		ld e, 2  ; area to generate
+; 		ld e, 2  ; area to generate
 ; 		ld e, 3  ; area to generate
 ; 		ld e, 4  ; area to generate
 ; 		ld e, 6  ; area to generate

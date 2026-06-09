@@ -4862,7 +4862,7 @@ pcg_generate_world__spawn_additional_objects_no_guardian_statue3:
 	ret nz
 
     ; spawn maya secret puzzle clues
-    ld b, 6
+    ld b, 7
 pcg_generate_world__spawn_additional_objects_maya_clues_loop:
 	push bc
 		call pcg_generate_world__spawn_additional_objects_sample_node_except_areas_10_11  ; hl = ptr to node
@@ -4876,7 +4876,7 @@ pcg_generate_world__spawn_additional_objects_maya_clues_loop:
 		; DEBUG
 ; 		ld a, (de)  ; mdl-watch: "    area div: ", a
 		; DEBUG
-		ld a, 6
+		ld a, 7
 		sub b
 		add a, TAG_MAYA_RIDDLE_CLUE1
 		ld b, a
@@ -5998,6 +5998,10 @@ pcg_generate_world__puzzles:
 
 	ld a, TAG_MAYA_RIDDLE_CLUE6
 	ld de, maya_clue6_tablet_fn
+	call pcg_generate_world__add_tablet_content
+
+	ld a, TAG_MAYA_RIDDLE_CLUE7
+	ld de, maya_clue7_tablet_fn
 	call pcg_generate_world__add_tablet_content
 
 	ld a, (pcg_generate_world__tablet_trivia_content_table_end - pcg_generate_world__tablet_trivia_content_table)/2

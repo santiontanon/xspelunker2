@@ -12,6 +12,8 @@ maya_clue5_tablet_fn:
 	db 0
 maya_clue6_tablet_fn:
 	db 0
+maya_clue7_tablet_fn:
+	db 0
 story_trivia_tablet_fn_clue1:
 	db 0
 story_trivia_tablet_fn_clue2:

@@ -1053,6 +1053,72 @@ maya_clue6_tablet_fn:
 
 
 ;-----------------------------------------------
+maya_clue7_tablet_fn:
+	ld hl, tablet_maya7_tiles_zx0
+	ld c, TABLET_LETTER_PAGE
+	call maya_puzzle_tablet_fn_load_extra_tiles_hl_set
+
+	ld hl, tablet_maya7_nametable_zx0
+	ld de, buffer_4096
+	ld c, TABLET_LETTER_PAGE
+	call dzx0_from_page_c
+
+	ld hl, buffer_4096
+	ld de, NAMTBL2
+	ld bc, 768
+	call fast_LDIRVM
+
+	ld a, 18
+	ld (tmp_letter_line_width), a
+	ld a, COLOR_GREY
+	ld (tmp_letter_line_color), a
+
+	ld iy, TEXT_TABLET_MAYA7_LINE1
+	ld b, 80  ; first tile to use
+	ld de, NAMTBL2 + (7 + 6*32)
+	ld ix, CHRTBL2
+	call display_paragraph_text_page4
+
+	ld iy, TEXT_TABLET_MAYA7_LINE2
+	ld b, 80  ; first tile to use
+	ld de, NAMTBL2 + (7 + 8*32)
+	ld ix, CHRTBL2 + 256*8
+	call display_paragraph_text_page4
+
+	ld iy, TEXT_TABLET_MAYA7_LINE5
+	ld b, 80  ; first tile to use
+	ld de, NAMTBL2 + (7 + 17*32)
+	ld ix, CHRTBL2 + 256*8*2
+	call display_paragraph_text_page4
+
+	ld a, 4
+	ld (tmp_letter_line_width), a
+	ld iy, TEXT_TABLET_MAYA7_LINE3
+	ld b, 144  ; first tile to use
+	ld de, NAMTBL2 + (11 + 15*32)
+	ld ix, CHRTBL2 + 256*8
+	call display_paragraph_text_page4
+
+	ld iy, TEXT_TABLET_MAYA7_LINE4
+	ld b, 148  ; first tile to use
+	ld de, NAMTBL2 + (18 + 15*32)
+	ld ix, CHRTBL2 + 256*8
+	call display_paragraph_text_page4
+
+	ld iy, TEXT_TABLET_MAYA7_LINE6
+	ld b, 148  ; first tile to use
+	ld de, NAMTBL2 + (11 + 23*32)
+	ld ix, CHRTBL2 + 256*8*2
+	call display_paragraph_text_page4
+
+	ld iy, TEXT_TABLET_MAYA7_LINE7
+	ld b, 152  ; first tile to use
+	ld de, NAMTBL2 + (18 + 23*32)
+	ld ix, CHRTBL2 + 256*8*2
+	jp display_paragraph_text_page4
+
+
+;-----------------------------------------------
 calendar_name_clue_tablet_fn:
 	ld hl, tablet_maya_syllable_tiles_zx0
 	ld c, TABLET_LETTER_PAGE

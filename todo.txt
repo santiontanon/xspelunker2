@@ -1,8 +1,6 @@
 to do:
 
 ***- ancient robot puzzle:
-  ***- tablet: maya_clue7_tablet_fn (do I need it? revise the other clues, maybe I can bring it into one of the previous ones)
-    Another favorite of mine is being able to write colors! For example, the color of corn was called K'AN [glyph], and the color of the sky is YAX-JAL [glyph]. Are water [glyph] or air [glyph] also YAX-JAL?
   ***- the panels now are active, and you can interact with them:
     ***- add variables to global state: robot water/air pressure (0 - 1600 in increments of 10)
     ***- interact with panel 1: air (turn cog left/right and numbers change)

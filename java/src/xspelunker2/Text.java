@@ -532,7 +532,15 @@ public class Text {
         addLineSafe(lines_with_constant_page4, " The number that follows      is written with two digits, like this", "TABLET_MAYA6_LINE5", 18*2);
         addLineSafe(lines_with_constant_page4, ", and then", "TABLET_MAYA6_LINE6", 18);
         addLineSafe(lines_with_constant_page4, ", etc.", "TABLET_MAYA6_LINE7", 18);
-        
+
+        addLineSafe(lines_with_constant_page4, "Another favorite of mine is being able to write colors!", "TABLET_MAYA7_LINE1", 18*2);
+        addLineSafe(lines_with_constant_page4, "For example, the yellow color of corn and the blue color of the sky where written as:", "TABLET_MAYA7_LINE2", 18*3);
+        addLineSafe(lines_with_constant_page4, " K'AN", "TABLET_MAYA7_LINE3", 18);
+        addLineSafe(lines_with_constant_page4, " YAX", "TABLET_MAYA7_LINE4", 18);
+        addLineSafe(lines_with_constant_page4, "By the way? Are water and air also blue?", "TABLET_MAYA7_LINE5", 18*2);
+        addLineSafe(lines_with_constant_page4, "  HA'", "TABLET_MAYA7_LINE6", 18);
+        addLineSafe(lines_with_constant_page4, "  IK'", "TABLET_MAYA7_LINE7", 18);
+                
         addLineSafe(lines_with_constant_page1, "The nexus will listen to its name when fully powered up. Speak its secret name in the center.", "TABLET_CALENDAR_NAME_CLUE", 18*3);
         
         // Syllables
@@ -722,7 +730,7 @@ public class Text {
         addLineSafe(lines_with_constant_page4, "There is a panel here,", "MARS_ROBOT_PANEL_OFF_1", 12);
         addLineSafe(lines_with_constant_page4, "but it's locked.", "MARS_ROBOT_PANEL_OFF_2", 12);
         addLineSafe(lines_with_constant_page4, "The key fits! The robot is activating!", "MARS_ROBOT_TURN_ON", 112);
-        addLineSafe(lines_with_constant_page4, "Energy... critical... please help...: TZ'AK HA' pressure to... 300 and purge pipes using the... YAX-JAL switch. KA bring down to 100. TZ'AK IK' pressure to... 200. KA... reboot system with K'AN... switch.", "MARS_ROBOT_REQUEST", 112);
+        addLineSafe(lines_with_constant_page4, "Energy... critical... please help...: TZ'AK HA' pressure to... 300 and purge pipes using the... YAX switch. KA bring down to 100. TZ'AK IK' pressure to... 200. KA... reboot system with K'AN... switch.", "MARS_ROBOT_REQUEST", 112);
                 
         // Ending C:
         // First shared part:

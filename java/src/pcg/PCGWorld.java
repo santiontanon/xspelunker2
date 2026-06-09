@@ -433,6 +433,7 @@ public class PCGWorld {
             w.addTabletContent("maya-riddle-clue4", "maya_clue4_tablet_fn");
             w.addTabletContent("maya-riddle-clue5", "maya_clue5_tablet_fn");
             w.addTabletContent("maya-riddle-clue6", "maya_clue6_tablet_fn");
+            w.addTabletContent("maya-riddle-clue7", "maya_clue7_tablet_fn");
             for(int j = 0;j<8;j++) {
                 int idx = r.nextInt(remainingTriviaTabletFns.size());
                 String tablet_fn = remainingTriviaTabletFns.get(idx);
@@ -1259,7 +1260,7 @@ public class PCGWorld {
         }
                 
         // spawn maya secret puzzle clues:
-        for(int i = 0;i<6;i++) {
+        for(int i = 0;i<7;i++) {
             List<AreaDivision> candidates = new ArrayList<>();
             for(AreaDivision d:tagLess) {
                 if (d.root.a.ID != 10 && d.root.a.ID != 11) {

@@ -182,6 +182,8 @@ public class GameObject {
             case "maya-riddle-clue3":
             case "maya-riddle-clue4":
             case "maya-riddle-clue5":
+            case "maya-riddle-clue6":
+            case "maya-riddle-clue7":
             case "story-trivia1":
             case "story-trivia2":
             case "story-trivia3":
