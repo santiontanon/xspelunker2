@@ -2,9 +2,9 @@ to do:
 
 ***- ancient robot puzzle:
   ***- the panels now are active, and you can interact with them:
-    ***- add variables to global state: robot water/air pressure (0 - 1600 in increments of 10)
     ***- interact with panel 1: air (turn cog left/right and numbers change)
     ***- interact with panel 2: air (lever up/down and numbers change)
+      ***- same as panel 1, but with arrow sprites different for pointing up/down of the lever
     ***- interact with panel 3: any button brings things back to red if in the wrong place, or to yellow if it's the correct sequence. Goes to blue when all successful
       ***- first blue button, then yellow
   ***- once you do the right sequence, SFX, and monologue

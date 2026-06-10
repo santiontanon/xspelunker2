@@ -3,6 +3,17 @@ MARS_ROBOT_PUZZLE_PANNEL2_CLOSED_NAMETABLE: equ mars_robot_puzzle_room_zoom_name
 MARS_ROBOT_PUZZLE_PANNEL3_CLOSED_NAMETABLE: equ mars_robot_puzzle_room_zoom_nametables + 25 + 14*12
 
 
+; state:
+; in (global_state__objects + TAG_MARS_ROBOT_PUZZLE):
+; - xxxxxx00: robot off
+; - xxxxxx01: robot on: fix status 0
+; - xxxxxx10: robot on: button pressed with presure 300
+; - xxxxxx11: robot fixed
+; - xxxxx1xx: panel 1 open
+; - xxxx1xxx: panel 2 open
+; - xxx1xxxx: panel 3 open
+
+
 ;-----------------------------------------------
 mars_robot_puzzle_spawn_room:
 	call disable_VDP_output
@@ -308,11 +319,12 @@ mars_robot_puzzle_interaction_robot_off:
 
 ;-----------------------------------------------
 mars_robot_puzzle_interaction_panel1:
+	call mars_robot_puzzle_interaction_panel_draw_box
+
 	ld a, (global_state__objects + TAG_MARS_ROBOT_PUZZLE)
 	or a
 	jr nz, mars_robot_puzzle_interaction_panel1_on
 mars_robot_puzzle_interaction_panel1_off:
-	call mars_robot_puzzle_interaction_panel_draw_box
 	; draw name table:
 	ld hl, MARS_ROBOT_PUZZLE_PANNEL1_CLOSED_NAMETABLE
 mars_robot_puzzle_interaction_panel1_off_entrypoint:
@@ -328,40 +340,286 @@ mars_robot_puzzle_interaction_panel1_off_entrypoint:
 	jp mars_robot_puzzle_interaction_panel_clear_box
 
 mars_robot_puzzle_interaction_panel1_on:
-	; ...
-	ret
+	bit 2, a  ; is panel open?
+	jr nz, mars_robot_puzzle_interaction_panel1_open
+	or #04
+	ld (global_state__objects + TAG_MARS_ROBOT_PUZZLE), a  ; mark panel 1 as open
+
+	ld hl, MARS_ROBOT_PUZZLE_PANNEL1_CLOSED_NAMETABLE
+	ld de, NAMTBL2 + 9*32 + 8
+	ld bc, #0607
+	call mars_robot_puzzle_copy_nametable
+	ld hl, TEXT_MARS_ROBOT_PANEL_ON_1
+	call mars_robot_puzzle_text_line1
+
+	call wait_for_click
+
+	ld hl, SFX_door_open
+	call play_SFX_with_high_priority
+
+mars_robot_puzzle_interaction_panel1_open:
+	ld hl, MARS_ROBOT_PUZZLE_PANNEL1_CLOSED_NAMETABLE + 7*6
+	ld de, NAMTBL2 + 9*32 + 8
+	ld bc, #0607
+	call mars_robot_puzzle_copy_nametable
+	ld hl, TEXT_BACK_PAGE4
+	call mars_robot_puzzle_text_line1
+
+	; interaction loop with panel 1:	
+	xor a
+	ld (tmp_dialog_pointer_position), a
+mars_robot_puzzle_interaction_panel1_loop:
+	halt
+	call mars_robot_puzzle_interaction_panel1_update_pointer_sprite
+	call mars_robot_puzzle_interaction_panel1_update_display
+	call update_keyboard_buffers
+
+	ld a, (keyboard_clicks)
+	bit KEY_WEAPON_BIT, a  ; space
+	jp nz, mars_robot_puzzle_interaction_panel1_loop_space
+	bit KEY_UP_BIT, a
+	jp nz, mars_robot_puzzle_interaction_panel1_loop_up
+	bit KEY_DOWN_BIT, a
+	jp nz, mars_robot_puzzle_interaction_panel1_loop_down
+	bit KEY_LEFT_BIT, a
+	jp nz, mars_robot_puzzle_interaction_panel1_loop_left
+	bit KEY_RIGHT_BIT, a
+	jp nz, mars_robot_puzzle_interaction_panel1_loop_right
+	jr mars_robot_puzzle_interaction_panel1_loop
+
+mars_robot_puzzle_interaction_panel1_update_pointer_sprite:
+	ld hl, buffer_4096
+	ld a, (tmp_dialog_pointer_position)
+	dec a
+	jr z, mars_robot_puzzle_interaction_panel1_update_pointer_sprite_up
+	dec a
+	jr z, mars_robot_puzzle_interaction_panel1_update_pointer_sprite_down
+mars_robot_puzzle_interaction_panel1_update_pointer_sprite_back:
+	ld bc, #5876
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 2) * 4
+mars_robot_puzzle_interaction_panel1_update_pointer_sprite_continue:
+	ld (hl), b
+	inc hl
+	ld (hl), c
+	inc hl
+	ld (hl), e
+	inc hl
+	ld c, COLOR_WHITE
+	ld a, (interrupt_cycle)
+	bit 3, a
+	jr z, mars_robot_puzzle_interaction_panel1_update_pointer_sprite_color_set
+	ld c, COLOR_TRANSPARENT
+mars_robot_puzzle_interaction_panel1_update_pointer_sprite_color_set:
+	ld (hl), c
+	ld hl, buffer_4096
+	ld de, SPRATR2
+	ld b, 4
+	jp fast_small_LDIRVM
+
+
+mars_robot_puzzle_interaction_panel1_update_display:
+	; draw the current pressure in maya:
+	ld a, (global_state__mars_robot)  ; current value of pressure
+mars_robot_puzzle_interaction_panel1_update_display_continue:
+	ld hl, buffer_4096  ; we will store the digits here
+	ld c, 0  ; most significant digit (* 400)
+	ld b, 0  ; second digit (* 20)
+	cp 20
+	jr c, mars_robot_puzzle_interaction_panel1_update_display_loop1_done
+	ld c, 2
+	ld b, 2  ; if msb is not empty, this diit also needs to be non-empty
+mars_robot_puzzle_interaction_panel1_update_display_loop1:
+	cp 20
+	jr c, mars_robot_puzzle_interaction_panel1_update_display_loop1_done
+	inc c
+	sub 20
+	jr mars_robot_puzzle_interaction_panel1_update_display_loop1
+mars_robot_puzzle_interaction_panel1_update_display_loop1_done:
+	ld (hl), c
+	inc hl
+	or a
+	jr z, mars_robot_puzzle_interaction_panel1_update_display_loop1_b_set2
+	add a, 2
+	ld b, a
+mars_robot_puzzle_interaction_panel1_update_display_loop1_b_set2:
+	ld (hl), b  ; * 20
+	inc hl
+	ld (hl), 2  ; units are always 0
+	ld a, (buffer_4096)
+	ld hl, NAMTBL2 + 10*32 + 12
+	ld bc, 1
+	call fast_FILVRM
+	ld a, (buffer_4096 + 1)
+	ld hl, NAMTBL2 + 11*32 + 12
+	ld bc, 1
+	call fast_FILVRM
+	ld a, (buffer_4096 + 2)
+	ld hl, NAMTBL2 + 12*32 + 12
+	ld bc, 1
+	jp fast_FILVRM
+
+
+mars_robot_puzzle_interaction_panel1_update_pointer_sprite_up:
+	ld bc, #4a48
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 3) * 4
+	jr mars_robot_puzzle_interaction_panel1_update_pointer_sprite_continue
+
+mars_robot_puzzle_interaction_panel1_update_pointer_sprite_down:
+	ld bc, #5248
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 4) * 4
+	jr mars_robot_puzzle_interaction_panel1_update_pointer_sprite_continue
+
+mars_robot_puzzle_interaction_panel1_loop_up:
+	ld hl, tmp_dialog_pointer_position
+	ld a, (hl)
+	cp 1
+	jp z, mars_robot_puzzle_interaction_panel1_loop
+	ld (hl), 1
+	ld hl, SFX_ui_move
+	call play_SFX_with_high_priority
+	jp mars_robot_puzzle_interaction_panel1_loop
+
+mars_robot_puzzle_interaction_panel1_loop_down:
+	ld hl, tmp_dialog_pointer_position
+	ld a, (hl)
+	cp 2
+	jp z, mars_robot_puzzle_interaction_panel1_loop
+mars_robot_puzzle_interaction_panel1_loop_down_continue:
+	ld (hl), 2
+	ld hl, SFX_ui_move
+	call play_SFX_with_high_priority
+	jp mars_robot_puzzle_interaction_panel1_loop
+
+mars_robot_puzzle_interaction_panel1_loop_left:
+	ld hl, tmp_dialog_pointer_position
+	ld a, (hl)
+	cp 1
+	jp z, mars_robot_puzzle_interaction_panel1_loop_down_continue
+	ld (hl), 1
+	ld hl, SFX_ui_move
+	call play_SFX_with_high_priority
+	jp mars_robot_puzzle_interaction_panel1_loop
+
+mars_robot_puzzle_interaction_panel1_loop_right:
+	ld hl, tmp_dialog_pointer_position
+	ld a, (hl)
+	or a
+	jp z, mars_robot_puzzle_interaction_panel1_loop
+	ld (hl), 0
+	ld hl, SFX_ui_move
+	call play_SFX_with_high_priority
+	jp mars_robot_puzzle_interaction_panel1_loop
+
+mars_robot_puzzle_interaction_panel1_loop_space:
+	ld a, (tmp_dialog_pointer_position)
+	or a
+	jp z, mars_robot_puzzle_interaction_panel_clear_box
+	dec a
+	jp z, mars_robot_puzzle_interaction_panel1_loop_space_up
+	; down:
+	ld a, (global_state__mars_robot)
+	or a
+	jp z, mars_robot_puzzle_interaction_panel1_loop
+	dec a
+	ld (global_state__mars_robot), a
+	ld hl, SFX_ui_move
+	call play_SFX_with_high_priority
+	jp mars_robot_puzzle_interaction_panel1_loop
+
+mars_robot_puzzle_interaction_panel1_loop_space_up:
+	; up:
+	ld a, (global_state__mars_robot)
+	cp 80
+	jp z, mars_robot_puzzle_interaction_panel1_loop
+	inc a
+	ld (global_state__mars_robot), a
+	ld hl, SFX_ui_move
+	call play_SFX_with_high_priority
+	jp mars_robot_puzzle_interaction_panel1_loop
 
 
 ;-----------------------------------------------
 mars_robot_puzzle_interaction_panel2:
+	call mars_robot_puzzle_interaction_panel_draw_box
+
 	ld a, (global_state__objects + TAG_MARS_ROBOT_PUZZLE)
 	or a
-	jr nz, mars_robot_puzzle_interaction_panel1_on
+	jr nz, mars_robot_puzzle_interaction_panel2_on
 mars_robot_puzzle_interaction_panel2_off:
-	call mars_robot_puzzle_interaction_panel_draw_box
 	; draw name table:
 	ld hl, MARS_ROBOT_PUZZLE_PANNEL2_CLOSED_NAMETABLE
-	jr mars_robot_puzzle_interaction_panel1_off_entrypoint
+	jp mars_robot_puzzle_interaction_panel1_off_entrypoint
 
 mars_robot_puzzle_interaction_panel2_on:
-	; ...
-	ret
+	bit 3, a  ; is panel open?
+	jr nz, mars_robot_puzzle_interaction_panel2_open
+	or #08
+	ld (global_state__objects + TAG_MARS_ROBOT_PUZZLE), a  ; mark panel 2 as open
+
+	ld hl, MARS_ROBOT_PUZZLE_PANNEL2_CLOSED_NAMETABLE
+	ld de, NAMTBL2 + 9*32 + 8
+	ld bc, #0607
+	call mars_robot_puzzle_copy_nametable
+	ld hl, TEXT_MARS_ROBOT_PANEL_ON_1
+	call mars_robot_puzzle_text_line1
+	
+	call wait_for_click
+
+	ld hl, SFX_door_open
+	call play_SFX_with_high_priority
+
+mars_robot_puzzle_interaction_panel2_open:
+	ld hl, MARS_ROBOT_PUZZLE_PANNEL2_CLOSED_NAMETABLE + 7*6
+	ld de, NAMTBL2 + 9*32 + 8
+	ld bc, #0607
+	call mars_robot_puzzle_copy_nametable
+	ld hl, TEXT_BACK_PAGE4
+	call mars_robot_puzzle_text_line1
+
+	call wait_for_click
+	jp mars_robot_puzzle_interaction_panel_clear_box
 
 
 ;-----------------------------------------------
 mars_robot_puzzle_interaction_panel3:
+	call mars_robot_puzzle_interaction_panel_draw_box
+
 	ld a, (global_state__objects + TAG_MARS_ROBOT_PUZZLE)
 	or a
-	jr nz, mars_robot_puzzle_interaction_panel1_on
+	jr nz, mars_robot_puzzle_interaction_panel3_on
 mars_robot_puzzle_interaction_panel3_off:
-	call mars_robot_puzzle_interaction_panel_draw_box
 	; draw name table:
 	ld hl, MARS_ROBOT_PUZZLE_PANNEL3_CLOSED_NAMETABLE
-	jr mars_robot_puzzle_interaction_panel1_off_entrypoint
+	jp mars_robot_puzzle_interaction_panel1_off_entrypoint
 
 mars_robot_puzzle_interaction_panel3_on:
-	; ...
-	ret
+	bit 4, a  ; is panel open?
+	jr nz, mars_robot_puzzle_interaction_panel3_open
+	or #10
+	ld (global_state__objects + TAG_MARS_ROBOT_PUZZLE), a  ; mark panel 3 as open
+
+	ld hl, MARS_ROBOT_PUZZLE_PANNEL3_CLOSED_NAMETABLE
+	ld de, NAMTBL2 + 9*32 + 8
+	ld bc, #0607
+	call mars_robot_puzzle_copy_nametable
+	ld hl, TEXT_MARS_ROBOT_PANEL_ON_1
+	call mars_robot_puzzle_text_line1
+	
+	call wait_for_click
+
+	ld hl, SFX_door_open
+	call play_SFX_with_high_priority
+
+mars_robot_puzzle_interaction_panel3_open:
+	ld hl, MARS_ROBOT_PUZZLE_PANNEL3_CLOSED_NAMETABLE + 7*6
+	ld de, NAMTBL2 + 9*32 + 8
+	ld bc, #0607
+	call mars_robot_puzzle_copy_nametable
+	ld hl, TEXT_BACK_PAGE4
+	call mars_robot_puzzle_text_line1
+
+	call wait_for_click
+	jp mars_robot_puzzle_interaction_panel_clear_box
 
 
 ;-----------------------------------------------

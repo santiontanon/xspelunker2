@@ -2,7 +2,7 @@
   db #3f, #ff, #3f, #c3  ; data/mars/room0001-1.tmx
   db #3f, #ff, #3f, #e7  ; data/mars/room0001-2.tmx
   db #3f, #ff, #3f, #c3  ; data/mars/room0001-3.tmx
-  db #3f, #ff, #3f, #81  ; data/mars/room0001-4.tmx
+  db #3f, #ff, #3f, #e7  ; data/mars/room0001-4.tmx
   db #3f, #ff, #21, #ff  ; data/mars/room0010-1.tmx
   db #3f, #ff, #21, #ff  ; data/mars/room0010-2.tmx
   db #3f, #ff, #21, #ff  ; data/mars/room0010-3.tmx

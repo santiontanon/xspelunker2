@@ -201,14 +201,14 @@ forge_puzzle_closeup_main_loop_space_loop:
 	jr forge_puzzle_closeup_main_loop_space_loop
 
 forge_puzzle_closeup_main_loop_space_on_switch:
-	ld de, (current_world__firestone_forge_state)
+	ld de, (global_state__firestone_forge_state)
 	ld a, d
 	xor b
 	ld d, a
 	ld a, e
 	xor c
 	ld e, a
-	ld (current_world__firestone_forge_state), de
+	ld (global_state__firestone_forge_state), de
 	call forge_puzzle_closeup_update_control_nametable
 	ld hl, buffer_4096
 	ld de, NAMTBL2 + 7 + 32 * 1
@@ -218,7 +218,7 @@ forge_puzzle_closeup_main_loop_space_on_switch:
 	call play_SFX_with_high_priority
 
 	ld hl, (current_world__seed)
-	ld de, (current_world__firestone_forge_state)
+	ld de, (global_state__firestone_forge_state)
 	or a
 	sbc hl, de
 	ld a, h
@@ -443,7 +443,7 @@ forge_puzzle_close_up_scroll_lid_one_up_loop:
 ;-----------------------------------------------
 forge_puzzle_closeup_update_control_nametable:
 	ld ix, buffer_4096 + 1 + 1*17
-	ld de, (current_world__firestone_forge_state)
+	ld de, (global_state__firestone_forge_state)
 	ld b, 8
 forge_puzzle_closeup_update_control_nametable_loop1:
 	rl d

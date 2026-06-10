@@ -328,31 +328,7 @@ update_animations_in_vdp_mars_frame_continue:
 	ld b, 3  ; 3 banks
 	ld de, CHRTBL2 + (12*16 + 6)*8
 	jp update_animations_in_vdp_xibalba_frame_loop
-; update_animations_in_vdp_mars_frame_loop:
-; 	push bc
-; 	push hl
-; 		push de
-; 			push hl
-; 				push de
-; 					ld b, 32
-; 					call fast_small_LDIRVM
-; 				pop hl
-; 				ld de, CLRTBL2 - CHRTBL2
-; 				add hl, de
-; 				ex de, hl
-; 			pop hl
-; 			ld bc, 128
-; 			add hl, bc
-; 			ld b, 32
-; 			call fast_small_LDIRVM
-; 		pop hl
-; 		ld bc, 256*8
-; 		add hl, bc
-; 		ex de, hl
-; 	pop hl
-; 	pop bc
-; 	djnz update_animations_in_vdp_mars_frame_loop
-; 	ret
+
 update_animations_in_vdp_mars_frame1:
 	ld hl, animations_mars_bin + 32*1
 	jr update_animations_in_vdp_mars_frame_continue

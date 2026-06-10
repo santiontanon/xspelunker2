@@ -403,7 +403,7 @@ gamestart_compute_random_seed_loop:
 	jr nz, gamestart_compute_random_seed_not_0
 	ld hl, #ffff
 gamestart_compute_random_seed_not_0:
-	ld (current_world__firestone_forge_state), hl
+	ld (global_state__firestone_forge_state), hl
 	ret
 
 

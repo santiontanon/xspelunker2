@@ -731,6 +731,9 @@ public class Text {
         addLineSafe(lines_with_constant_page4, "but it's locked.", "MARS_ROBOT_PANEL_OFF_2", 12);
         addLineSafe(lines_with_constant_page4, "The key fits! The robot is activating!", "MARS_ROBOT_TURN_ON", 112);
         addLineSafe(lines_with_constant_page4, "Energy... critical... please help...: TZ'AK HA' pressure to... 300 and purge pipes using the... YAX switch. KA bring down to 100. TZ'AK IK' pressure to... 200. KA... reboot system with K'AN... switch.", "MARS_ROBOT_REQUEST", 112);
+        addLineSafe(lines_with_constant_page4, "The panel is unlocked!", "MARS_ROBOT_PANEL_ON_1", 12);
+        addLineSafe(lines_with_constant_page4, "Back", "BACK_PAGE4", 16);
+
                 
         // Ending C:
         // First shared part:

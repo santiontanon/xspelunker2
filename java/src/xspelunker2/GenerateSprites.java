@@ -220,6 +220,13 @@ public class GenerateSprites {
         data.addAll(extractSprite(sourceImage, 0, 0, 15));
         data.addAll(extractSprite(sourceImage, 16, 0, 15));
         
+        // pointers:
+        data.addAll(extractSprite(sourceImage, 32, 0, 15));
+        data.addAll(extractSprite(sourceImage, 48, 0, 15));
+        data.addAll(extractSprite(sourceImage, 64, 0, 15));
+        data.addAll(extractSprite(sourceImage, 32, 16, 15));
+        data.addAll(extractSprite(sourceImage, 48, 16, 15));
+        
         if (data.size() > 40 * 32) {
             throw new Exception("More NPC sprites than the engine can handle!");
         }
