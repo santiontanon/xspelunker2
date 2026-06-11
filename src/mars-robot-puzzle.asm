@@ -936,6 +936,38 @@ mars_robot_puzzle_interaction_panel3_solved:
 	ld hl, SFX_secret
 	call play_SFX_with_high_priority
 
+	ld a, 23
+	ld hl, NAMTBL2 + 12*32 + 11
+	ld bc, 1
+	call fast_FILVRM
+	ld b, 10
+	call wait_b_halts
+
+	ld a, 24
+	ld hl, NAMTBL2 + 12*32 + 11
+	ld bc, 1
+	call fast_FILVRM
+	ld b, 10
+	call wait_b_halts
+
+	ld a, 25
+	ld hl, NAMTBL2 + 12*32 + 11
+	ld bc, 1
+	call fast_FILVRM
+	ld b, 10
+	call wait_b_halts
+
+	ld hl, SFX_teleport
+	call play_SFX_with_high_priority
+
+	ld a, 26
+	ld hl, NAMTBL2 + 12*32 + 11
+	ld bc, 1
+	call fast_FILVRM
+
+	ld b, 100
+	call wait_b_halts_skippable
+
 	call mars_robot_puzzle_interaction_panel_clear_box
 
 	ld de, TEXT_MARS_ROBOT_SOLVED_1
