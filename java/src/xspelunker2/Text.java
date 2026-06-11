@@ -733,8 +733,15 @@ public class Text {
         addLineSafe(lines_with_constant_page4, "Energy... critical... please help...: TZ'AK HA' pressure to... 300 and purge pipes using the... YAX switch. KA bring down to 100. TZ'AK IK' pressure to... 200. KA... reboot system with K'AN... switch.", "MARS_ROBOT_REQUEST", 112);
         addLineSafe(lines_with_constant_page4, "The panel is unlocked!", "MARS_ROBOT_PANEL_ON_1", 12);
         addLineSafe(lines_with_constant_page4, "Back", "BACK_PAGE4", 16);
+        addLineSafe(lines_with_constant_page4, "Thank you again... restorative subroutines activating...", "MARS_ROBOT_SOLVED", 112);
 
-                
+        addLineSafe(lines_with_constant_page4, "System... re-init... re-initializing... Oh. Much better. Energy source... stabilized.", "MARS_ROBOT_SOLVED_1", 112);
+        addLineSafe(lines_with_constant_page4, "Internal clock check... [Static] 2732 solar cycles... 176 martian days... since shutdown... [Glitch] Internal systems... 73 percent integrity. Chassis integrity is... critical.", "MARS_ROBOT_SOLVED_2", 112);
+        addLineSafe(lines_with_constant_page4, "Oh! [Optical sensors flicker] You... you are a biological? A... human? I acknowledge your... input. Thank you for... restoring power. But... how did you obtain my... key?", "MARS_ROBOT_SOLVED_3", 112);
+        addLineSafe(lines_with_constant_page4, "I lost it surveying the sector you designate as... Xibalba. I initiated an emergency spatial-teleport... but... [grinding gears] I materialized here. The cavern dimensions were... insufficient.", "MARS_ROBOT_SOLVED_4", 112);
+        addLineSafe(lines_with_constant_page4, "I triggered a... cave-in and became... trapped. But... I am initiating restorative subroutines now. My... spatial-teleport array is badly damaged. It will require... 35 solar cycles to... re-align.", "MARS_ROBOT_SOLVED_5", 112);
+        addLineSafe(lines_with_constant_page4, "As a token of... [System Warning Bleep] gratitude... take this. It fell from the chamber above. I believe it is... compatible with one of your... primitive weapon systems.", "MARS_ROBOT_SOLVED_6", 112);
+        
         // Ending C:
         // First shared part:
         addLineSafe(lines_with_constant_page3, "Meanwhile, in Earth orbit...", "ENDING_C_UFO_0", 12*4);

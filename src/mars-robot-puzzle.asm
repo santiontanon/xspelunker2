@@ -252,6 +252,11 @@ get_tile_object_behind_player_mars_robot_part_internal_fail:
 
 ;-----------------------------------------------
 mars_robot_puzzle_interaction:
+	ld a, (global_state__objects + TAG_MARS_ROBOT_PUZZLE)
+	and #03
+	cp 3
+	jp z, mars_robot_puzzle_interaction_puzzle_solved
+
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
 	cp 1
 	jr z, mars_robot_puzzle_interaction_robot
@@ -273,6 +278,15 @@ mars_robot_puzzle_interaction:
 	ld a, TILES_PAGE
 	ld hl, object_interaction_function_chest_fail
 	jp jp_to_hl_in_page_a_8000
+
+
+;-----------------------------------------------
+mars_robot_puzzle_interaction_puzzle_solved:
+	ld de, TEXT_MARS_ROBOT_SOLVED
+	ld hl, display_in_game_message_textpage4
+	ld c, TEXT_PAGE
+	jp call_hl_in_page_c_8000
+
 
 ;-----------------------------------------------
 mars_robot_puzzle_interaction_open_lock:
@@ -416,6 +430,16 @@ mars_robot_puzzle_interaction_panel1_update_pointer_sprite_color_set:
 	ld b, 4
 	jp fast_small_LDIRVM
 
+mars_robot_puzzle_interaction_panel1_update_pointer_sprite_up:
+	ld bc, #4a48
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 3) * 4
+	jr mars_robot_puzzle_interaction_panel1_update_pointer_sprite_continue
+
+mars_robot_puzzle_interaction_panel1_update_pointer_sprite_down:
+	ld bc, #5248
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 4) * 4
+	jr mars_robot_puzzle_interaction_panel1_update_pointer_sprite_continue
+
 
 mars_robot_puzzle_interaction_panel1_update_display:
 	; draw the current pressure in maya:
@@ -458,16 +482,6 @@ mars_robot_puzzle_interaction_panel1_update_display_loop1_b_set2:
 	ld bc, 1
 	jp fast_FILVRM
 
-
-mars_robot_puzzle_interaction_panel1_update_pointer_sprite_up:
-	ld bc, #4a48
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 3) * 4
-	jr mars_robot_puzzle_interaction_panel1_update_pointer_sprite_continue
-
-mars_robot_puzzle_interaction_panel1_update_pointer_sprite_down:
-	ld bc, #5248
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 4) * 4
-	jr mars_robot_puzzle_interaction_panel1_update_pointer_sprite_continue
 
 mars_robot_puzzle_interaction_panel1_loop_up:
 	ld hl, tmp_dialog_pointer_position
@@ -576,8 +590,141 @@ mars_robot_puzzle_interaction_panel2_open:
 	ld hl, TEXT_BACK_PAGE4
 	call mars_robot_puzzle_text_line1
 
-	call wait_for_click
-	jp mars_robot_puzzle_interaction_panel_clear_box
+	; interaction loop with panel 2:
+	xor a
+	ld (tmp_dialog_pointer_position), a
+mars_robot_puzzle_interaction_panel2_loop:
+	halt
+	call mars_robot_puzzle_interaction_panel2_update_pointer_sprite
+	call mars_robot_puzzle_interaction_panel2_update_display
+	call update_keyboard_buffers
+
+	ld a, (keyboard_clicks)
+	bit KEY_WEAPON_BIT, a  ; space
+	jp nz, mars_robot_puzzle_interaction_panel2_loop_space
+	bit KEY_UP_BIT, a
+	jp nz, mars_robot_puzzle_interaction_panel2_loop_up
+	bit KEY_DOWN_BIT, a
+	jp nz, mars_robot_puzzle_interaction_panel2_loop_down
+	bit KEY_LEFT_BIT, a
+	jp nz, mars_robot_puzzle_interaction_panel2_loop_left
+	bit KEY_RIGHT_BIT, a
+	jp nz, mars_robot_puzzle_interaction_panel2_loop_right
+	jr mars_robot_puzzle_interaction_panel2_loop
+
+mars_robot_puzzle_interaction_panel2_update_pointer_sprite:
+	ld hl, buffer_4096
+	ld a, (tmp_dialog_pointer_position)
+	dec a
+	jr z, mars_robot_puzzle_interaction_panel2_update_pointer_sprite_up
+	dec a
+	jr z, mars_robot_puzzle_interaction_panel2_update_pointer_sprite_down
+mars_robot_puzzle_interaction_panel2_update_pointer_sprite_back:
+	ld bc, #5876
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 2) * 4
+mars_robot_puzzle_interaction_panel2_update_pointer_sprite_continue:
+	ld (hl), b
+	inc hl
+	ld (hl), c
+	inc hl
+	ld (hl), e
+	inc hl
+	ld c, COLOR_WHITE
+	ld a, (interrupt_cycle)
+	bit 3, a
+	jr z, mars_robot_puzzle_interaction_panel2_update_pointer_sprite_color_set
+	ld c, COLOR_TRANSPARENT
+mars_robot_puzzle_interaction_panel2_update_pointer_sprite_color_set:
+	ld (hl), c
+	ld hl, buffer_4096
+	ld de, SPRATR2
+	ld b, 4
+	jp fast_small_LDIRVM
+
+mars_robot_puzzle_interaction_panel2_update_pointer_sprite_up:
+	ld bc, #4d48
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 5) * 4
+	jr mars_robot_puzzle_interaction_panel2_update_pointer_sprite_continue
+
+mars_robot_puzzle_interaction_panel2_update_pointer_sprite_down:
+	ld bc, #5a48
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 6) * 4
+	jr mars_robot_puzzle_interaction_panel2_update_pointer_sprite_continue
+
+
+mars_robot_puzzle_interaction_panel2_update_display:
+	; draw the current pressure in maya:
+	ld a, (global_state__mars_robot + 1)  ; current value of pressure
+	jp mars_robot_puzzle_interaction_panel1_update_display_continue
+
+
+mars_robot_puzzle_interaction_panel2_loop_up:
+	ld hl, tmp_dialog_pointer_position
+	ld a, (hl)
+	cp 1
+	jp z, mars_robot_puzzle_interaction_panel2_loop
+	ld (hl), 1
+	ld hl, SFX_ui_move
+	call play_SFX_with_high_priority
+	jp mars_robot_puzzle_interaction_panel2_loop
+
+mars_robot_puzzle_interaction_panel2_loop_down:
+	ld hl, tmp_dialog_pointer_position
+	ld a, (hl)
+	cp 2
+	jp z, mars_robot_puzzle_interaction_panel2_loop
+mars_robot_puzzle_interaction_panel2_loop_down_continue:
+	ld (hl), 2
+	ld hl, SFX_ui_move
+	call play_SFX_with_high_priority
+	jp mars_robot_puzzle_interaction_panel2_loop
+
+mars_robot_puzzle_interaction_panel2_loop_left:
+	ld hl, tmp_dialog_pointer_position
+	ld a, (hl)
+	cp 1
+	jp z, mars_robot_puzzle_interaction_panel2_loop_down_continue
+	ld (hl), 1
+	ld hl, SFX_ui_move
+	call play_SFX_with_high_priority
+	jp mars_robot_puzzle_interaction_panel2_loop
+
+mars_robot_puzzle_interaction_panel2_loop_right:
+	ld hl, tmp_dialog_pointer_position
+	ld a, (hl)
+	or a
+	jp z, mars_robot_puzzle_interaction_panel2_loop
+	ld (hl), 0
+	ld hl, SFX_ui_move
+	call play_SFX_with_high_priority
+	jp mars_robot_puzzle_interaction_panel2_loop
+
+mars_robot_puzzle_interaction_panel2_loop_space:
+	ld a, (tmp_dialog_pointer_position)
+	or a
+	jp z, mars_robot_puzzle_interaction_panel_clear_box
+	dec a
+	jp z, mars_robot_puzzle_interaction_panel2_loop_space_up
+	; down:
+	ld a, (global_state__mars_robot + 1)
+	or a
+	jp z, mars_robot_puzzle_interaction_panel2_loop
+	dec a
+	ld (global_state__mars_robot + 1), a
+	ld hl, SFX_ui_move
+	call play_SFX_with_high_priority
+	jp mars_robot_puzzle_interaction_panel2_loop
+
+mars_robot_puzzle_interaction_panel2_loop_space_up:
+	; up:
+	ld a, (global_state__mars_robot + 1)
+	cp 80
+	jp z, mars_robot_puzzle_interaction_panel2_loop
+	inc a
+	ld (global_state__mars_robot + 1), a
+	ld hl, SFX_ui_move
+	call play_SFX_with_high_priority
+	jp mars_robot_puzzle_interaction_panel2_loop
 
 
 ;-----------------------------------------------
@@ -618,8 +765,208 @@ mars_robot_puzzle_interaction_panel3_open:
 	ld hl, TEXT_BACK_PAGE4
 	call mars_robot_puzzle_text_line1
 
-	call wait_for_click
-	jp mars_robot_puzzle_interaction_panel_clear_box
+	; interaction loop with panel 3:
+	xor a
+	ld (tmp_dialog_pointer_position), a
+mars_robot_puzzle_interaction_panel3_loop:
+	halt
+	call mars_robot_puzzle_interaction_panel3_update_pointer_sprite
+	call update_keyboard_buffers
+
+	ld a, (keyboard_clicks)
+	bit KEY_WEAPON_BIT, a  ; space
+	jp nz, mars_robot_puzzle_interaction_panel3_loop_space
+	bit KEY_UP_BIT, a
+	jp nz, mars_robot_puzzle_interaction_panel3_loop_up
+	bit KEY_DOWN_BIT, a
+	jp nz, mars_robot_puzzle_interaction_panel3_loop_down
+	bit KEY_LEFT_BIT, a
+	jp nz, mars_robot_puzzle_interaction_panel3_loop_left
+	bit KEY_RIGHT_BIT, a
+	jp nz, mars_robot_puzzle_interaction_panel3_loop_right
+	jr mars_robot_puzzle_interaction_panel3_loop
+
+mars_robot_puzzle_interaction_panel3_update_pointer_sprite:
+	ld hl, buffer_4096
+	ld a, (tmp_dialog_pointer_position)
+	dec a
+	jr z, mars_robot_puzzle_interaction_panel3_update_pointer_sprite_button1
+	dec a
+	jr z, mars_robot_puzzle_interaction_panel3_update_pointer_sprite_button2
+	dec a
+	jr z, mars_robot_puzzle_interaction_panel3_update_pointer_sprite_button3
+mars_robot_puzzle_interaction_panel3_update_pointer_sprite_back:
+	ld bc, #5876
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 2) * 4
+mars_robot_puzzle_interaction_panel3_update_pointer_sprite_continue:
+	ld (hl), b
+	inc hl
+	ld (hl), c
+	inc hl
+	ld (hl), e
+	inc hl
+	ld c, COLOR_WHITE
+	ld a, (interrupt_cycle)
+	bit 3, a
+	jr z, mars_robot_puzzle_interaction_panel3_update_pointer_sprite_color_set
+	ld c, COLOR_TRANSPARENT
+mars_robot_puzzle_interaction_panel3_update_pointer_sprite_color_set:
+	ld (hl), c
+	ld hl, buffer_4096
+	ld de, SPRATR2
+	ld b, 4
+	jp fast_small_LDIRVM
+
+mars_robot_puzzle_interaction_panel3_update_pointer_sprite_button1:
+	ld bc, #4f40
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 2) * 4
+	jr mars_robot_puzzle_interaction_panel3_update_pointer_sprite_continue
+
+mars_robot_puzzle_interaction_panel3_update_pointer_sprite_button2:
+	ld bc, #5740
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 2) * 4
+	jr mars_robot_puzzle_interaction_panel3_update_pointer_sprite_continue
+
+mars_robot_puzzle_interaction_panel3_update_pointer_sprite_button3:
+	ld bc, #5f40
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 2) * 4
+	jr mars_robot_puzzle_interaction_panel3_update_pointer_sprite_continue
+
+
+mars_robot_puzzle_interaction_panel3_loop_up:
+	ld hl, tmp_dialog_pointer_position
+	ld a, (hl)
+	cp 1
+	jp z, mars_robot_puzzle_interaction_panel3_loop
+	cp 3
+	jp z, mars_robot_puzzle_interaction_panel3_loop_to_2
+mars_robot_puzzle_interaction_panel3_loop_to_1:
+	ld (hl), 1
+	ld hl, SFX_ui_move
+	call play_SFX_with_high_priority
+	jp mars_robot_puzzle_interaction_panel3_loop
+
+mars_robot_puzzle_interaction_panel3_loop_down:
+	ld hl, tmp_dialog_pointer_position
+	ld a, (hl)
+	cp 3
+	jp z, mars_robot_puzzle_interaction_panel3_loop
+	cp 1
+	jp z, mars_robot_puzzle_interaction_panel3_loop_to_2
+mars_robot_puzzle_interaction_panel3_loop_to_3:
+	ld (hl), 3
+	ld hl, SFX_ui_move
+	call play_SFX_with_high_priority
+	jp mars_robot_puzzle_interaction_panel3_loop
+
+mars_robot_puzzle_interaction_panel3_loop_left:
+	ld hl, tmp_dialog_pointer_position
+	ld a, (hl)
+	or a
+	jp nz, mars_robot_puzzle_interaction_panel3_loop
+mars_robot_puzzle_interaction_panel3_loop_to_2:
+	ld (hl), 2
+	ld hl, SFX_ui_move
+	call play_SFX_with_high_priority
+	jp mars_robot_puzzle_interaction_panel3_loop
+
+mars_robot_puzzle_interaction_panel3_loop_right:
+	ld hl, tmp_dialog_pointer_position
+	ld a, (hl)
+	or a
+	jp z, mars_robot_puzzle_interaction_panel3_loop
+	ld (hl), 0
+	ld hl, SFX_ui_move
+	call play_SFX_with_high_priority
+	jp mars_robot_puzzle_interaction_panel3_loop
+
+mars_robot_puzzle_interaction_panel3_loop_space:
+	ld a, (tmp_dialog_pointer_position)
+	or a
+	jp z, mars_robot_puzzle_interaction_panel_clear_box
+
+	ld hl, SFX_ui_select
+	call play_SFX_with_high_priority
+
+	ld a, (global_state__objects + TAG_MARS_ROBOT_PUZZLE)
+	and #03
+	dec a
+	jr nz, mars_robot_puzzle_interaction_panel3_loop_space_state_2
+mars_robot_puzzle_interaction_panel3_loop_space_state_1:
+	ld a, (tmp_dialog_pointer_position)
+	cp 3
+	jp nz, mars_robot_puzzle_interaction_panel3_loop  ; wrong
+	ld a, (global_state__mars_robot)
+	cp 15
+	jp nz, mars_robot_puzzle_interaction_panel3_loop  ; wrong
+	; correct button and pressure:
+	ld a, (global_state__objects + TAG_MARS_ROBOT_PUZZLE)
+	and #fc
+	or #02
+	ld (global_state__objects + TAG_MARS_ROBOT_PUZZLE), a
+	jp mars_robot_puzzle_interaction_panel3_loop
+
+mars_robot_puzzle_interaction_panel3_loop_space_state_2:
+	ld a, (tmp_dialog_pointer_position)
+	cp 2
+	jp nz, mars_robot_puzzle_interaction_panel3_loop  ; wrong
+	ld a, (global_state__mars_robot)
+	cp 5
+	jp nz, mars_robot_puzzle_interaction_panel3_loop_space_state_2_wrong  ; wrong
+	ld a, (global_state__mars_robot + 1)
+	cp 10
+	jp nz, mars_robot_puzzle_interaction_panel3_loop_space_state_2_wrong  ; wrong
+	; correct button and pressures:
+	ld a, (global_state__objects + TAG_MARS_ROBOT_PUZZLE)
+	and #fc
+	or #03
+	ld (global_state__objects + TAG_MARS_ROBOT_PUZZLE), a
+	; puzzle solved!
+	jp mars_robot_puzzle_interaction_panel3_solved
+mars_robot_puzzle_interaction_panel3_loop_space_state_2_wrong:
+	ld a, (global_state__objects + TAG_MARS_ROBOT_PUZZLE)
+	and #fc
+	or #01
+	ld (global_state__objects + TAG_MARS_ROBOT_PUZZLE), a
+	jp mars_robot_puzzle_interaction_panel3_loop
+
+
+;-----------------------------------------------
+mars_robot_puzzle_interaction_panel3_solved:
+	ld hl, SFX_secret
+	call play_SFX_with_high_priority
+
+	call mars_robot_puzzle_interaction_panel_clear_box
+
+	ld de, TEXT_MARS_ROBOT_SOLVED_1
+	ld hl, display_in_game_message_textpage4
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000
+
+	ld de, TEXT_MARS_ROBOT_SOLVED_2
+	ld hl, display_in_game_message_textpage4
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000
+
+	ld de, TEXT_MARS_ROBOT_SOLVED_3
+	ld hl, display_in_game_message_textpage4
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000
+
+	ld de, TEXT_MARS_ROBOT_SOLVED_4
+	ld hl, display_in_game_message_textpage4
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000
+
+	ld de, TEXT_MARS_ROBOT_SOLVED_5
+	ld hl, display_in_game_message_textpage4
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000
+
+	ld de, TEXT_MARS_ROBOT_SOLVED_6
+	ld hl, display_in_game_message_textpage4
+	ld c, TEXT_PAGE
+	jp call_hl_in_page_c_8000
 
 
 ;-----------------------------------------------
