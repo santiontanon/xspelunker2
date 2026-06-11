@@ -92,6 +92,22 @@ mars_robot_puzzle_spawn_room_animations_ptr_set:
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 19
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0
 
+	ld a, (global_state__objects + TAG_MARS_ROBOT_PUZZLE)
+	and #03
+	cp #03
+	jr nz, mars_robot_puzzle_spawn_room_not_fixed
+	ld a, (player_inventory_items + INVENTORY_ITEM_PHASE_SHIFTER)
+	or a
+	jr nz, mars_robot_puzzle_spawn_room_not_fixed
+	; spawn phase shifter:
+	ld iy, current_room__tile_objects + ROOM_TILE_OBJECT_STRUCT_SIZE * 5
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 0
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_PHASE_SHIFTER
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 24  ; x
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 20  ; y
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0  ; state (hitpoints)
+mars_robot_puzzle_spawn_room_not_fixed:
+
 	; sprite objects:
 	call ptr_to_new_sprite_object
 	jr nz, mars_robot_puzzle_spawn_room_continue  ; should never happen

@@ -118,7 +118,7 @@ state_play:
 ; 		ld (player_inventory_items+INVENTORY_ITEM_MAYA_CODEX2), a
 ; 		ld (player_inventory_items+INVENTORY_ITEM_MAYA_CODEX3), a
 ; 		ld (player_inventory_items+INVENTORY_ITEM_ANIMAL_CHARM), a
-; 		ld (player_inventory_items+INVENTORY_ITEM_PHASE_SHIFTER), a
+		ld (player_inventory_items+INVENTORY_ITEM_PHASE_SHIFTER), a
 		ld (player_inventory_weapons), a  ; machete
 		ld (player_inventory_weapons+1), a
 		ld (player_inventory_weapons+2), a

@@ -1,14 +1,8 @@
 to do:
 
-***- ancient robot puzzle:
-  ***- if you leave and come back, the phase shifter should still be there if and only if you have not picked it up
-  ***- effect of phase shifter:
-    ***- doubles gun damage, multiplicative with other bonuses,
-    ***- makes bullets go through walls 
-    ***- makes gun bullets of another color
 ***- 6th boss: Giant Moai head
   ***- draw the boss in GIMP/TILED
-  ***- implement it
+  ***- implement it + drops
   ***- add boss name to the stats for game over screen if you beat it
 
 - music: (brain 12, 15, 23, 25 have potential)

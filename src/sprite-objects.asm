@@ -552,22 +552,35 @@ update_sprite_objects_player_bullet_ray:
 	ld a, (current_room__height)
 	cp b
 	jp z, update_sprite_objects_player_bullet_delete
-	call get_room_tile_type
-	cp 2  ; wall
-	jp z, update_sprite_objects_player_bullet_delete
+; 	call get_room_tile_type
+; 	cp 2  ; wall
+; 	jp z, update_sprite_objects_player_bullet_delete
 
 	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
 	cp SPRITE_OBJECT_TYPE_PLAYER_BULLET_STONE
-	jr z, update_sprite_objects_player_bullet_stone_parabolla
+	jp z, update_sprite_objects_player_bullet_stone_parabolla
 	cp SPRITE_OBJECT_TYPE_PLAYER_BULLET_SPEAR
 	jp z, update_sprite_objects_player_bullet_spear_parabolla
 	cp SPRITE_OBJECT_TYPE_PLAYER_BULLET_DART
 	jr z, update_sprite_objects_player_bullet_straight_dart
 update_sprite_objects_player_bullet_straight_ray:
+	ld a, (player_inventory_items + INVENTORY_ITEM_PHASE_SHIFTER)
+	or a
+	jr z, update_sprite_objects_player_bullet_straight_ray_base
+	; with phase shifter:	
+	ld iyh, RAYGUN_DAMAGE*2
+	call update_sprite_objects_player_bullet_small_hitbox
+	ld d, COLOR_RED  ; with the phase shifter
+	jr update_sprite_objects_player_bullet_straight_ray_continue
+update_sprite_objects_player_bullet_straight_ray_base:
+	call get_room_tile_type
+	cp 2  ; wall
+	jp z, update_sprite_objects_player_bullet_delete
+
 	ld iyh, RAYGUN_DAMAGE
 	call update_sprite_objects_player_bullet_small_hitbox
-
 	ld d, COLOR_GREEN
+update_sprite_objects_player_bullet_straight_ray_continue:
 	ld c, 0
 	ld a, (ix + ROOM_OBJECT_STRUCT_SPEED_Y)
 	or a
@@ -589,6 +602,10 @@ update_sprite_objects_player_bullet_straight_ray_fw:
 	jr update_sprite_objects_player_bullet_straight_dart_sprite_set
 
 update_sprite_objects_player_bullet_straight_dart:
+	call get_room_tile_type
+	cp 2  ; wall
+	jp z, update_sprite_objects_player_bullet_delete
+
 	ld iyh, DART_DAMAGE
 	call update_sprite_objects_player_bullet_small_hitbox
 	jp z, update_sprite_objects_player_bullet_delete
@@ -618,6 +635,10 @@ update_sprite_objects_player_bullet_straight_dart_sprite_set:
 	jp update_sprite_objects_player_bullet_decrease_timer_and_delete_if_necessary
 
 update_sprite_objects_player_bullet_stone_parabolla:
+	call get_room_tile_type
+	cp 2  ; wall
+	jp z, update_sprite_objects_player_bullet_delete
+
 	ld iyh, STONE_DAMAGE
 	call update_sprite_objects_player_bullet_small_hitbox
 	jp z, update_sprite_objects_player_bullet_delete
@@ -639,6 +660,10 @@ update_sprite_objects_player_bullet_stone_continue:
 	jp update_sprite_objects_player_bullet_decrease_timer_and_delete_if_necessary
 
 update_sprite_objects_player_bullet_spear_parabolla:
+	call get_room_tile_type
+	cp 2  ; wall
+	jp z, update_sprite_objects_player_bullet_delete
+
 	; parabolic movement:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
 	and #07
