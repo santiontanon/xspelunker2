@@ -2,8 +2,10 @@ to do:
 
 ***- ancient robot puzzle:
   ***- when puzzle is solved, before the monologue: some SFX, and the panel goes from red to yellow, growing the bar, until getting to blue
-  ***- spawn "phase shifter"
-  ***- pick phase shifter up (doubles gun damage, multiplicative with other bonuses, makes bullets go through walls and makes gun bullets of another color)
+  ***- effect of phase shifter:
+    ***- doubles gun damage, multiplicative with other bonuses,
+    ***- makes bullets go through walls 
+    ***- makes gun bullets of another color
   ***- if you leave and come back, the phase shifter should still be there if and only if you have not picked it up
 ***- 6th boss: Giant Moai head
   ***- draw the boss in GIMP/TILED

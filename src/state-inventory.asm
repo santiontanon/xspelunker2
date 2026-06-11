@@ -1562,5 +1562,7 @@ inventory_table:
 	INVENTORY_ITEM_FN 55,   6, 0,  3,  194, 195, 226, 227,  0, TEXT_ITEM_CODEX2,  0
 	INVENTORY_ITEM_FN 56,   6, 0,  3,  196, 197, 228, 229,  0, TEXT_ITEM_CODEX3,  0
 	INVENTORY_ITEM_FN 57,   7, 0,  0,  198, 199, 230, 231,  0, TEXT_ITEM_ANIMAL_CHARM,  0
+	INVENTORY_ITEM_FN 58,   8, 0,  0,  200, 201, 232, 233,  0, TEXT_ITEM_PHASE_SHIFTER,  0
+	; free positions: (9, 0)
 	db #ff  ; sentinel
 

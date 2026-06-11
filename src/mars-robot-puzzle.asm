@@ -966,6 +966,56 @@ mars_robot_puzzle_interaction_panel3_solved:
 	ld de, TEXT_MARS_ROBOT_SOLVED_6
 	ld hl, display_in_game_message_textpage4
 	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000
+
+	; spawn phase shifter:
+	ld hl, ptr_to_new_tile_object
+	ld c, TILES_PAGE
+	call call_hl_in_page_c_8000
+	push hl
+	pop iy
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 0
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_PHASE_SHIFTER
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 24  ; x
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 20  ; y
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0  ; state (hitpoints)
+
+	; set which object gfx to up load vdp:
+	ld hl, buffer_4096 + 67 * 64  ; phase shifter
+	ld (item_object_to_upload_to_vdp), hl
+	call state_play_upload_object_tiles_to_vdp_if_necessary
+
+	ld hl, SFX_secret
+	call play_SFX_with_high_priority
+
+	; refresh the current tile objects:
+	ld hl, room_undraw_tile_objects
+	ld c, TILES_PAGE
+	call call_hl_in_page_c_8000
+	ld hl, room_render_tile_objects
+	ld c, TILES_PAGE
+	jp call_hl_in_page_c_8000	
+
+
+;-----------------------------------------------
+object_interaction_function_pickup_phase_shifter_internal:
+	ld hl, player_inventory_items + INVENTORY_ITEM_PHASE_SHIFTER
+	ld (hl), 1
+	ld hl, SFX_item_pickup
+	call play_SFX_with_high_priority
+
+	ld hl, redraw_flags
+	ld (hl), #ff
+	push ix
+		ld c, TILES_PAGE
+		ld hl, room_undraw_tile_objects
+		call call_hl_in_page_c_8000
+	pop ix
+	ld c, TILES_PAGE
+	ld hl, delete_tile_object_in_ix
+	call call_hl_in_page_c_8000
+	ld c, TILES_PAGE
+	ld hl, room_render_tile_objects
 	jp call_hl_in_page_c_8000
 
 

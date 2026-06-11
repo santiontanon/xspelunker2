@@ -5,6 +5,18 @@ in_game_message_border_tile_attributes:
 ;-----------------------------------------------
 ; input:
 ; - de: text to display
+display_in_game_message_textpage2:
+	; copy the text to buffer_4096:
+	ld hl, copy_text_from_another_page
+	ld c, TEXT_PAGE2
+	call call_hl_in_page_c_8000
+	ld de, buffer_4096
+	jr display_in_game_message
+
+
+;-----------------------------------------------
+; input:
+; - de: text to display
 display_in_game_message_textpage3:
 	; copy the text to buffer_4096:
 	ld hl, copy_text_from_another_page

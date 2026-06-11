@@ -324,7 +324,8 @@ ENEMY_MUSHROOM2: equ ENEMY_SNAKE + 45
 ; - 2 charybdis / scylla eyes
 ; - 3 maya codices
 ; - animal charm
-N_INVENTORY_ITEM_TYPES: equ 7 + 6 + 6 + 1 + 4 + 6 + 2 + 2 + 1 + 2 + 2 + 1 + 1 + 2 + 3 + 1 ; 47
+; - phase shifter
+N_INVENTORY_ITEM_TYPES: equ 7 + 6 + 6 + 1 + 4 + 6 + 2 + 2 + 1 + 2 + 2 + 1 + 1 + 2 + 3 + 1 + 1 ; 48
 N_INVENTORY_WEAPON_TYPES: equ 4 + 4 + 3  ; 4 base, 4 ranged, 3 upgrades
 INVENTORY_ITEM_BOSS5_KEY: equ 4
 INVENTORY_ITEM_POWER_STONE1: equ 7
@@ -356,6 +357,7 @@ INVENTORY_ITEM_MAYA_CODEX1: equ INVENTORY_ITEM_SCYLLA_EYE + 1   ; 43
 INVENTORY_ITEM_MAYA_CODEX2: equ INVENTORY_ITEM_SCYLLA_EYE + 2   ; 44
 INVENTORY_ITEM_MAYA_CODEX3: equ INVENTORY_ITEM_SCYLLA_EYE + 3   ; 45
 INVENTORY_ITEM_ANIMAL_CHARM: equ INVENTORY_ITEM_MAYA_CODEX3 + 1   ; 46
+INVENTORY_ITEM_PHASE_SHIFTER: equ INVENTORY_ITEM_ANIMAL_CHARM + 1   ; 47
 ; - initial piece just has: jungle + first pyramid, then one piece for each of the rest
 ; N_MAP_PIECES: equ 9
 

@@ -261,6 +261,8 @@ public class GenerateTiles {
         extratTilesOneObject(sourceImage, 112, 48, 16, 16, data);
         extratTilesOneObject(sourceImage, 128, 48, 16, 16, data);
         extratTilesOneObject(sourceImage, 144, 48, 16, 16, data);
+        // phase shifter (67)
+        extratTilesOneObject(sourceImage, 48, 32, 16, 16, data);
         
         if (data.size() > 4096 + 32*8) {
             throw new Exception("Object data grew too large for buffer_4096 + text_draw_buffer to hold!");

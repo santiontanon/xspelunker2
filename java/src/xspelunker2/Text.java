@@ -352,9 +352,10 @@ public class Text {
         addLineSafe(lines_with_constant_page1, "Two pieces of the undiscovered Maya codex! Still missing some parts, but I think it talks about the powerstones!", "ITEM_CODEX2", 80);
         addLineSafe(lines_with_constant_page1, "Three pieces of the undiscovered Maya codex! I think it's complete, and definitively talks about powerstones!", "ITEM_CODEX3", 80);
         addLineSafe(lines_with_constant_page1, "Animal charm: I feel my weapons are more effective wearing it!", "ITEM_ANIMAL_CHARM", 80);
+        addLineSafe(lines_with_constant_page1, "Phase shifter: makes raygun shots go through objects!", "ITEM_PHASE_SHIFTER", 80);
        
         // In-game messages:
-        addLineSafe(lines_with_constant_page1, "As you consume the still beating heart, you feel your strength increasing!", "HEART_PICKUP", 112);
+        addLineSafe(lines_with_constant_page2, "As you consume the still beating heart, you feel your strength increasing!", "HEART_PICKUP", 112);
         addLineSafe(lines_with_constant_page1, "One more piece of the map!", "MAP_PIECE_PICKUP", 112);
         addLineSafe(lines_with_constant_page1, "That does not seem to be the correct key for this lock!", "WRONG_KEY", 112);
         addLineSafe(lines_with_constant_page1, "That does not seem to be the correct item to use here!", "WRONG_ITEM", 112);

@@ -1307,6 +1307,7 @@ ENDR
 	dw object_interaction_function_tablet  ; TAG_GUARDIAN_CAIMAN_TABLET
 	dw object_interaction_function_tablet  ; TAG_FIRESTONE_FORGE_TABLET
 	dw object_interaction_function_forge_puzzle  ; TAG_FIRESTONE_FORGE_PUZZLE
+	dw object_interaction_function_pickup_phase_shifter  ; TAG_PHASE_SHIFTER
 	dw object_interaction_function_shopkeeper  ; TAG_NPC_SHOPKEEPER
 	dw object_interaction_function_shop  ; TAG_NPC_SHOP
 	dw object_interaction_function_empty  ; TAG_DYNAMITE
@@ -1557,7 +1558,7 @@ object_interaction_function_pickup_heart:
 
 	ld de, TEXT_HEART_PICKUP
 object_interaction_function_pickup_map_piece_continue:
-	ld hl, display_in_game_message
+	ld hl, display_in_game_message_textpage2
 	ld c, TEXT_PAGE
 	push ix
 		call call_hl_in_page_c_8000
@@ -2137,6 +2138,16 @@ object_interaction_function_pickup_scylla_eye:
 
 	ld c, BOSS_PAGE
 	ld hl, pick_up_boss_scylla_eye
+	jp call_hl_in_page_c_8000
+
+
+object_interaction_function_pickup_phase_shifter:
+	; update stats:
+	ld hl, stats__n_items_collected
+	inc (hl)
+
+	ld c, MARS_ROBOT_PUZZLE_PAGE
+	ld hl, object_interaction_function_pickup_phase_shifter_internal
 	jp call_hl_in_page_c_8000
 
 
@@ -3009,6 +3020,7 @@ ENDR
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_GUARDIAN_CAIMAN_TABLET
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_FIRESTONE_FORGE_TABLET
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_FIRESTONE_FORGE_PUZZLE
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_PHASE_SHIFTER
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOPKEEPER
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOP
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_DYNAMITE
