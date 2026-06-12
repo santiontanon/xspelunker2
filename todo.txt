@@ -1,8 +1,27 @@
 to do:
 
 ***- 6th boss: Giant Moai head
-  ***- draw the boss in GIMP/TILED
-  ***- implement it + drops
+  ***- draw the boss in GIMP/TILED:
+    OK - base form
+    ***- add decoration: maya script in the face
+    ***- eye animations
+    ***- mouth animations
+    ***- rocks
+    ***- fists
+    ***- angry face before breaking
+    ***- robotic form
+    ***- robotic fists
+  ***- implement behavior phase 1:
+    ***- regular bullets through eyes
+    ***- parabollic rocks from mouth (in groups of 2/3)
+  ***- Phase 2: after some damage, ceiling breaks (dropping a bunch of rocks)
+    ***- fists drop fast from the ceiling: they first appear for a bit, to give you time to react, and then drop too quickly to dodge if you did not dodge before
+  ***- Phase 3: after some more damage, the stone face breaks, revealing a robotic face underneath
+    ***- instead of rocks, now it spits drones through the mohth (up to a maximum number)
+    ***- fists from ceiling are now mechanical
+    ***- in high difficulty levels (hard/very hard) fists come in pairs  
+  ***- killing the boss (explosions and disappear, leaving just rock)
+  ***- drops
   ***- add boss name to the stats for game over screen if you beat it
 
 - music: (brain 12, 15, 23, 25 have potential)
