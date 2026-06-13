@@ -2,18 +2,26 @@ to do:
 
 ***- 6th boss: Giant Moai head
   ***- draw the boss in GIMP/TILED:
-    ***- rocks
+    OK - rocks
     ***- fists
     ***- angry face before breaking
     ***- robotic form
     ***- robotic fists
   ***- implement behavior phase 1:
+    ***- face wakes up when you hit it (Define a hit box or something)
+    ***- wake up animation:
+      ***- mouth opens (with lights off), and big yell SFX
+      ***- then eyes lit up, and face lights turn on
+      ***- boss name drops down and battle starts
+      ***- tile animations for face lights
+    ***- being able to hit the boss (nothing happens when HP get to 0 yet though)
     ***- regular bullets through eyes
-    ***- parabollic rocks from mouth (in groups of 2/3)
+    ***- parabolic rocks from mouth (in groups of 2/3)
+    ***- from time to time, eye goes a way, and gets replaced by a turret which shoots fast lasers
   ***- Phase 2: after some damage, ceiling breaks (dropping a bunch of rocks)
     ***- fists drop fast from the ceiling: they first appear for a bit, to give you time to react, and then drop too quickly to dodge if you did not dodge before
   ***- Phase 3: after some more damage, the stone face breaks, revealing a robotic face underneath
-    ***- instead of rocks, now it spits drones through the mohth (up to a maximum number)
+    ***- instead of rocks, now it spits drones through the mouth (up to a maximum number)
     ***- fists from ceiling are now mechanical
     ***- in high difficulty levels (hard/very hard) fists come in pairs  
   ***- killing the boss (explosions and disappear, leaving just rock)
