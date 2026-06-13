@@ -1840,8 +1840,10 @@ update_boss_behavior:
 	ld hl, update_boss5_behavior
 	ld c, BOSS_5_PAGE
 	jp z, jp_to_hl_in_page_c_8000
-; 	cp 10  ; mars
-; 	jp z, update_boss6_behavior
+	cp 10  ; mars
+	ld c, BOSS_6_PAGE
+	ld hl, update_boss6_behavior
+	jp z, jp_to_hl_in_page_c_8000
 ; 	cp 11  ; moon
 ; 	jp z, update_boss7_behavior
 ; 	cp 12  ; alien world

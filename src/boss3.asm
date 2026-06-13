@@ -294,7 +294,7 @@ update_boss3_behavior_init_continue:
 	ld (boss__y), a
 	ld a, -4
 	ld (boss__y2), a
-	ld hl, (boss__settings + BOSS_2_HP_OFFSET)
+	ld hl, (boss__settings + BOSS_3_HP_OFFSET)
 	ld (boss__hp), hl
 	ld hl, player_weapon_hitbox_check_boss__boss3_hit
 	ld (boss__hit_fn), hl
