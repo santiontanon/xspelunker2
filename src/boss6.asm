@@ -116,6 +116,45 @@ update_boss6_behavior_0_wait_for_player:
 	ld a, 1
 	ld (boss__behavior), a
 
+	; close door & passage down:
+	ld a, 106
+	ld (current_room__tile_map + 18*32), a
+	ld (current_room__tile_map + 18*32 + 64*24), a
+	ld a, 107
+	ld (current_room__tile_map + 19*32), a
+	ld (current_room__tile_map + 19*32 + 64*24), a
+	ld a, 108
+	ld (current_room__tile_map + 20*32), a
+	ld (current_room__tile_map + 20*32 + 64*24), a
+	ld a, 99
+	ld (current_room__tile_map + 2 + 21*32 + 64*24), a
+	ld a, 253
+	ld (current_room__tile_map + 3 + 21*32 + 64*24), a
+	ld a, 98
+	ld (current_room__tile_map + 4 + 21*32 + 64*24), a
+	ld a, 97
+	ld (current_room__tile_map + 5 + 21*32 + 64*24), a
+	ld a, 126
+	ld (current_room__tile_map + 2 + 22*32 + 64*24), a
+	ld a, 125
+	ld (current_room__tile_map + 3 + 22*32 + 64*24), a
+	ld a, 127
+	ld (current_room__tile_map + 4 + 22*32 + 64*24), a
+	ld a, 125
+	ld (current_room__tile_map + 5 + 22*32 + 64*24), a
+	ld hl, current_room__tile_map + 21*32 + 64*24
+	ld de, current_room__tile_map + 21*32
+	ld bc, 32*2
+	ldir
+	ld hl, draw_room_with_hud
+	ld c, TILES_PAGE
+	call call_hl_in_page_c_8000
+
+	ld hl, SFX_door_open
+	call play_SFX_with_high_priority
+	ld b, 50
+	call wait_b_halts
+
 	; mouth opens:
 	ld a, 1  ; mouth open
 	call update_boss6_draw_boss_frame

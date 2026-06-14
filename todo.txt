@@ -2,7 +2,6 @@ to do:
 
 ***- 6th boss: Giant Moai head
   ***- tile animations for face lights
-  ***- door should close on wake up + SFX (before opening mouth), and if you have broken the path down, it should also close
   ***- implement behavior phase 1:
     ***- regular bullets through eyes
     ***- parabolic rocks from mouth (in groups of 2/3)
