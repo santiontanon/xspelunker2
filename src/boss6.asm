@@ -134,17 +134,17 @@ update_boss6_behavior_0_wait_for_player:
 	ld (current_room__tile_map + 4 + 21*32 + 64*24), a
 	ld a, 97
 	ld (current_room__tile_map + 5 + 21*32 + 64*24), a
-	ld a, 126
-	ld (current_room__tile_map + 2 + 22*32 + 64*24), a
-	ld a, 125
-	ld (current_room__tile_map + 3 + 22*32 + 64*24), a
-	ld a, 127
-	ld (current_room__tile_map + 4 + 22*32 + 64*24), a
-	ld a, 125
-	ld (current_room__tile_map + 5 + 22*32 + 64*24), a
+	ld hl, current_room__tile_map + 7 + 22*32 + 64*24
+	ld de, current_room__tile_map + 1 + 22*32 + 64*24
+	ld bc, 6
+	ldir
+	ld hl, current_room__tile_map + 7 + 23*32 + 64*24
+	ld de, current_room__tile_map + 1 + 23*32 + 64*24
+	ld bc, 6
+	ldir
 	ld hl, current_room__tile_map + 21*32 + 64*24
 	ld de, current_room__tile_map + 21*32
-	ld bc, 32*2
+	ld bc, 32*3
 	ldir
 	ld hl, draw_room_with_hud
 	ld c, TILES_PAGE
