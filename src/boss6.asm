@@ -219,6 +219,10 @@ update_boss6_behavior_0_wait_for_player:
 	ld c, BOSS_PAGE
 	call call_hl_in_page_c_8000
 
+	; start tile animations:
+	ld hl, update_animations_in_vdp_boss6
+	ld (current_room__animation_fn_ptr), hl
+
 	; draw with all the lights active:
 	ld a, 2
 	call update_boss6_draw_boss_frame
