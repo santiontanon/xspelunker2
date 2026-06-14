@@ -1,11 +1,8 @@
 to do:
 
 ***- 6th boss: Giant Moai head
-  ***- wake up animation:
-    ***- mouth opens (with lights off), and big yell SFX
-    ***- then eyes lit up, and face lights turn on
-    OK - boss name drops down and battle starts
-    ***- tile animations for face lights
+  ***- tile animations for face lights
+  ***- door should close on wake up + SFX (before opening mouth), and if you have broken the path down, it should also close
   ***- implement behavior phase 1:
     ***- regular bullets through eyes
     ***- parabolic rocks from mouth (in groups of 2/3)

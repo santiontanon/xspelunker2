@@ -228,6 +228,16 @@ enter_boss_door__room_spawn_coordinates_set:
 		inc hl
 		ld (hl), b
 
+		; clear the bbox:
+		ld hl, boss__clear_bbox_1 + 2
+		ld (hl), 0
+		inc hl
+		ld (hl), 0
+		ld hl, boss__clear_bbox_2 + 2
+		ld (hl), 0
+		inc hl
+		ld (hl), 0
+
 		; spawn any boss-specific objects:
 		ld a, (boss__current_boss_number)
 		cp 3
@@ -240,16 +250,6 @@ enter_boss_door__room_spawn_coordinates_set:
 		pop af
 		cp 5
 		call z, enter_boss_door__spawn_mars_boss_objects
-
-		; clear the bbox:
-		ld hl, boss__clear_bbox_1 + 2
-		ld (hl), 0
-		inc hl
-		ld (hl), 0
-		ld hl, boss__clear_bbox_2 + 2
-		ld (hl), 0
-		inc hl
-		ld (hl), 0
 	pop bc
 	jp state_play_from_loaded_room
 
@@ -339,6 +339,11 @@ enter_boss_door__spawn_atlantis_boss_objects:
 enter_boss_door__spawn_mars_boss_objects:
 ; 	ld hl, update_animations_in_vdp_boss5
 ; 	ld (current_room__animation_fn_ptr), hl	
+	xor a
+	ld (boss__6_eye_frame), a
+	ld hl, update_boss6_draw_boss_firsst_frame
+	ld c, BOSS_6_PAGE
+	call call_hl_in_page_c_8000
 
 	ld a, (global_state__objects + TAG_MARS_BOSS_BREAKABLE_FLOOR)
 	or a
@@ -357,6 +362,7 @@ enter_boss_door__spawn_mars_boss_objects_wall_destroyed:
 	ld bc, #1502
 	ld de, #0204
 	jp room_remove_breakable_wall_restore_background
+
 
 
 ;-----------------------------------------------
@@ -712,6 +718,14 @@ draw_boss_frame_1_without_clearing:
 	add hl, bc
 	ld (boss__clear_bbox_1), hl
 	ret
+
+
+;-----------------------------------------------
+; So that we can call it from another page
+draw_boss_frame_internal_ix:
+	push ix
+	pop hl
+	jp draw_boss_frame_internal
 
 
 ;-----------------------------------------------

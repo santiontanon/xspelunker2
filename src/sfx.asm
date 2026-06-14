@@ -1081,3 +1081,74 @@ SFX_sea_wave:
   db 10, #00
   db 7, #38
   db SFX_CMD_END
+
+
+SFX_roar:
+  db 7, #b8  ; all channels to tone            
+  db 10, #08     ; volume
+  db 4, #40, 5, 6
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db 10, #0a
+  db 4, #38, 5, 6
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db 10, #0c
+  db 4, #30, 5, 6
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db 10, #1e  ; envelope volume 
+  db 13, #08, 11, #38, 12, #00  ; envelope config
+  db 4, #28, 5, 6
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db 4, #20, 5, 6
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db 4, #18, 5, 6
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db 4, #10, 5, 6
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db 4, #08, 5, 6
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db 4, #00, 5, 6
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db 11, #34
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db 11, #30
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db 11, #34
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db 11, #38
+  db 4, #10, 5, 6
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db 4, #20, 5, 6
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db 4, #30, 5, 6
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db 4, #40, 5, 6
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db 4, #50, 5, 6
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db 10, #0a
+  db 4, #60, 5, 6
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db 10, #0c
+  db 4, #70, 5, 6
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db 10, #0a
+  db 4, #80, 5, 6
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db 10, #08
+  db 4, #a0, 5, 6
+  db MUSIC_CMD_SKIP, MUSIC_CMD_SKIP
+  db 10, #00
+  db SFX_CMD_END
