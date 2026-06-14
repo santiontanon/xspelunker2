@@ -1,6 +1,7 @@
 ;-----------------------------------------------
 BOSS_6_HP_OFFSET: equ 0
 BOSS_6_WAIT_TIME_OFFSET: equ 2
+BOSS_6_EYE_BULLET_TIME_MASK: equ 3
 
 
 ;-----------------------------------------------
@@ -24,20 +25,20 @@ boss6_eye_frame_ptrs:
 
 ;-----------------------------------------------
 boss6_difficulty_setting__easy:
-	dw 128  ; boss hp
-	db 32
+	dw 196  ; boss hp
+	db 32, #3f  ; wait time, bullet time mask
 
 boss6_difficulty_setting__normal:
-	dw 196  ; boss hp
-	db 32
+	dw 320  ; boss hp
+	db 32, #1f  ; wait time, bullet time mask
 
 boss6_difficulty_setting__hard:
-	dw 256  ; boss hp
-	db 28
+	dw 448  ; boss hp
+	db 28, #0f  ; wait time, bullet time mask
 
 boss6_difficulty_setting__hardest:
-	dw 320  ; boss hp
-	db 24
+	dw 512  ; boss hp
+	db 24, #0f  ; wait time, bullet time mask
 
 
 ;-----------------------------------------------
@@ -113,7 +114,9 @@ update_boss6_behavior_0_wait_for_player:
 	ret c
 
 	; appear!
-	ld a, 1
+	xor a
+	ld (boss__state), a
+	inc a
 	ld (boss__behavior), a
 
 	; close door & passage down:
@@ -235,6 +238,65 @@ update_boss6_behavior_0_wait_for_player:
 ;-----------------------------------------------
 ; phase 1:
 update_boss6_behavior_1:
+	; states:
+	; - 0: fire bullets through eyes
+	; - 1: mouth open: parabolic stones (then back to 0)
+	; - 2: eye turning into a turret (then goes to 3)
+	; - 3: firing lasers through eye turret
+	; - 4: eye coming back (then back to 0)
+	ld a, (boss__state)
+	or a
+	jr z, update_boss6_behavior_1_state_0
+	dec a
+	jp z, update_boss6_behavior_1_state_1
+	dec a
+	jp z, update_boss6_behavior_1_state_2
+	dec a
+	jp z, update_boss6_behavior_1_state_3
+	dec a
+	jp z, update_boss6_behavior_1_state_4
+	ret
+
+update_boss6_behavior_1_state_0:
+	; fire bullets through eyes
+	ld a, (boss__settings + BOSS_6_EYE_BULLET_TIME_MASK)
+	ld c, a
+	call random_a
+	and c
+	ret nz
+	ld hl, #0305
+	ld bc, (boss__x)
+	add hl, bc
+	ld e, l
+	ld b, h
+	ld ix, #0200
+	; - c, b: tile coordinate from where the bullet is fired
+	; - ixl, ixh: pixel offset	
+	ld hl, boss_fire_directional_bullet_towards_player_e_b
+	ld c, BOSS_PAGE
+	jp call_hl_in_page_c_8000
+
+
+update_boss6_behavior_1_state_1:
+	; mouth open: parabolic stones (then back to 0)
+	; ...
+	ret
+
+
+update_boss6_behavior_1_state_2:
+	; eye turning into a turret (then goes to 3)
+	; ...
+	ret
+
+
+update_boss6_behavior_1_state_3:
+	; firing lasers through eye turret
+	; ...
+	ret
+
+
+update_boss6_behavior_1_state_4:
+	; eye coming back (then back to 0)
 	; ...
 	ret
 

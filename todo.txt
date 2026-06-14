@@ -2,7 +2,6 @@ to do:
 
 ***- 6th boss: Giant Moai head
   ***- implement behavior phase 1:
-    ***- regular bullets through eyes
     ***- parabolic rocks from mouth (in groups of 2/3)
     ***- from time to time, eye goes a way, and gets replaced by a turret which shoots fast lasers
   ***- draw phase 2/3 elements in GIMP/TILED:
