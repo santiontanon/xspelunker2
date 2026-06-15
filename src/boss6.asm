@@ -2,6 +2,7 @@
 BOSS_6_HP_OFFSET: equ 0
 BOSS_6_WAIT_TIME_OFFSET: equ 2
 BOSS_6_EYE_BULLET_TIME_MASK: equ 3
+BOSS_6_EYE_MOUTH_ATTACK_MASK: equ 4
 
 
 ;-----------------------------------------------
@@ -26,19 +27,19 @@ boss6_eye_frame_ptrs:
 ;-----------------------------------------------
 boss6_difficulty_setting__easy:
 	dw 196  ; boss hp
-	db 32, #3f  ; wait time, bullet time mask
+	db 32, #3f, #ff  ; wait time, bullet time mask, mouth attack mask
 
 boss6_difficulty_setting__normal:
 	dw 320  ; boss hp
-	db 32, #1f  ; wait time, bullet time mask
+	db 32, #1f, #7f  ; wait time, bullet time mask, mouth attack mask
 
 boss6_difficulty_setting__hard:
 	dw 448  ; boss hp
-	db 28, #0f  ; wait time, bullet time mask
+	db 28, #0f, #3f  ; wait time, bullet time mask, mouth attack mask
 
 boss6_difficulty_setting__hardest:
 	dw 512  ; boss hp
-	db 24, #0f  ; wait time, bullet time mask
+	db 24, #0f, #3f  ; wait time, bullet time mask, mouth attack mask
 
 
 ;-----------------------------------------------
@@ -258,6 +259,14 @@ update_boss6_behavior_1:
 	ret
 
 update_boss6_behavior_1_state_0:
+	; mouth attack?
+	ld a, (boss__settings + BOSS_6_EYE_MOUTH_ATTACK_MASK)
+	ld c, a
+	call random_a
+	and c
+	jr z, update_boss6_behavior_1_to_state_1
+
+update_boss6_behavior_1_state_0_no_mouth:
 	; fire bullets through eyes
 	ld a, (boss__settings + BOSS_6_EYE_BULLET_TIME_MASK)
 	ld c, a
@@ -276,12 +285,44 @@ update_boss6_behavior_1_state_0:
 	ld c, BOSS_PAGE
 	jp call_hl_in_page_c_8000
 
-
+update_boss6_behavior_1_to_state_1:
+	xor a
+	ld (boss__state_timer), a
+	inc a
+	ld (boss__state), a
 update_boss6_behavior_1_state_1:
 	; mouth open: parabolic stones (then back to 0)
-	; ...
+	ld a, (boss__state_timer)
+	or a
+	jr nz, update_boss6_behavior_1_state_1_continue
+	ld a, 3  ; open mouth
+	call update_boss6_draw_boss_frame
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)
+update_boss6_behavior_1_state_1_continue:
+	ld hl, boss__state_timer
+	inc (hl)	
+
+	ld a, (boss__settings + BOSS_6_WAIT_TIME_OFFSET)
+	cp (hl)
+	jr z, update_boss6_behavior_1_state_1_attack
+	add a, a
+	cp (hl)
+	ret nz
+	; back to state 0:
+	xor a
+	ld (boss__state_timer), a
+	ld (boss__state), a
+	ld a, 2  ; closed mouth
+	call update_boss6_draw_boss_frame
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)
 	ret
 
+update_boss6_behavior_1_state_1_attack:
+	; shoot parabolic stones through mouth:
+	; ...
+	ret
 
 update_boss6_behavior_1_state_2:
 	; eye turning into a turret (then goes to 3)

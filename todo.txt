@@ -2,8 +2,10 @@ to do:
 
 ***- 6th boss: Giant Moai head
   ***- implement behavior phase 1:
-    ***- parabolic rocks from mouth (in groups of 2/3)
-    ***- from time to time, eye goes a way, and gets replaced by a turret which shoots fast lasers
+    ***- parabolic rocks from mouth (in groups of 2/3):
+      ***- create stone enemy (just moves like a regular bullet for now)
+      ***- movement starts like regular bullet (aimed a few tiles above the player), and after some cycles y starts decreasing (up to a max), to simulate parabolic but aimed trajectories
+    ***- from time to time, eye goes away, and gets replaced by a turret which shoots fast lasers
   ***- draw phase 2/3 elements in GIMP/TILED:
     ***- transition to robotic form (dust cloud? or can I fit all the tiles in a single image?)
     ***- robotic form
