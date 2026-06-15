@@ -5,8 +5,7 @@ to do:
     ***- parabolic rocks from mouth (in groups of 2/3)
     ***- from time to time, eye goes a way, and gets replaced by a turret which shoots fast lasers
   ***- draw phase 2/3 elements in GIMP/TILED:
-    ***- fists
-    ***- angry face before breaking
+    ***- transition to robotic form (dust cloud? or can I fit all the tiles in a single image?)
     ***- robotic form
     ***- robotic fists
   ***- Phase 2: after some damage, ceiling breaks (dropping a bunch of rocks)
