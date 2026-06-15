@@ -2,7 +2,8 @@
 BOSS_6_HP_OFFSET: equ 0
 BOSS_6_WAIT_TIME_OFFSET: equ 2
 BOSS_6_EYE_BULLET_TIME_MASK: equ 3
-BOSS_6_EYE_MOUTH_ATTACK_MASK: equ 4
+BOSS_6_MOUTH_ATTACK_MASK: equ 4
+BOSS_6_MOUTH_ATTACK_N_STONES: equ 5
 
 
 ;-----------------------------------------------
@@ -27,19 +28,19 @@ boss6_eye_frame_ptrs:
 ;-----------------------------------------------
 boss6_difficulty_setting__easy:
 	dw 196  ; boss hp
-	db 32, #3f, #ff  ; wait time, bullet time mask, mouth attack mask
+	db 32, #1f, #7f, 2  ; wait time, bullet time mask, mouth attack mask, n stones
 
 boss6_difficulty_setting__normal:
 	dw 320  ; boss hp
-	db 32, #1f, #7f  ; wait time, bullet time mask, mouth attack mask
+	db 32, #0f, #3f, 3  ; wait time, bullet time mask, mouth attack mask, n stones
 
 boss6_difficulty_setting__hard:
 	dw 448  ; boss hp
-	db 28, #0f, #3f  ; wait time, bullet time mask, mouth attack mask
+	db 28, #0f, #1f, 4  ; wait time, bullet time mask, mouth attack mask, n stones
 
 boss6_difficulty_setting__hardest:
 	dw 512  ; boss hp
-	db 24, #0f, #3f  ; wait time, bullet time mask, mouth attack mask
+	db 24, #07, #1f, 4  ; wait time, bullet time mask, mouth attack mask, n stones
 
 
 ;-----------------------------------------------
@@ -260,13 +261,13 @@ update_boss6_behavior_1:
 
 update_boss6_behavior_1_state_0:
 	; mouth attack?
-	ld a, (boss__settings + BOSS_6_EYE_MOUTH_ATTACK_MASK)
+	ld a, (boss__settings + BOSS_6_MOUTH_ATTACK_MASK)
 	ld c, a
 	call random_a
 	and c
 	jr z, update_boss6_behavior_1_to_state_1
 
-update_boss6_behavior_1_state_0_no_mouth:
+update_boss6_behavior_1_state_0_maybe_fire_bullet:
 	; fire bullets through eyes
 	ld a, (boss__settings + BOSS_6_EYE_BULLET_TIME_MASK)
 	ld c, a
@@ -302,13 +303,30 @@ update_boss6_behavior_1_state_1:
 update_boss6_behavior_1_state_1_continue:
 	ld hl, boss__state_timer
 	inc (hl)	
-
 	ld a, (boss__settings + BOSS_6_WAIT_TIME_OFFSET)
-	cp (hl)
-	jr z, update_boss6_behavior_1_state_1_attack
+	ld c, a
 	add a, a
 	cp (hl)
-	ret nz
+	jr z, update_boss6_behavior_1_state_1_continue_done
+	ld a, (hl)
+	sub c
+	jr c, update_boss6_behavior_1_state_0_maybe_fire_bullet
+	; throw one stone each 4 cycles:
+	ld c, a
+	and #03
+	jr nz, update_boss6_behavior_1_state_0_maybe_fire_bullet
+	ld a, c
+	rrca
+	rrca
+	and #3f
+	ld c, a
+	ld a, (boss__settings + BOSS_6_MOUTH_ATTACK_N_STONES)
+	cp c
+	jr z, update_boss6_behavior_1_state_0_maybe_fire_bullet
+	jr c, update_boss6_behavior_1_state_0_maybe_fire_bullet
+	jr update_boss6_behavior_1_state_1_attack
+
+update_boss6_behavior_1_state_1_continue_done:
 	; back to state 0:
 	xor a
 	ld (boss__state_timer), a
@@ -321,8 +339,37 @@ update_boss6_behavior_1_state_1_continue:
 
 update_boss6_behavior_1_state_1_attack:
 	; shoot parabolic stones through mouth:
-	; ...
-	ret
+	call ptr_to_new_sprite_enemy
+	ret nz
+	ld (hl), 0  ; ID
+	inc hl
+	ld (hl), ENEMY_BOSS6_STONE
+	inc hl
+	ld (hl), 0  ; pixel X
+	inc hl
+	ld (hl), 22  ; tile X
+	inc hl
+	ld (hl), 0  ; pixel Y
+	inc hl
+	ld (hl), 17  ; tile Y
+	inc hl
+	ld (hl), 0  ; state
+	inc hl
+	call random_a
+	and #07
+	ld (hl), a  ; state timer (start with slightly different initial speed)
+	inc hl
+	ld (hl), #ff  ; hit ID
+	inc hl
+	ld (hl), 4  ; health
+	inc hl
+	inc hl
+	ld c, 3
+	call random_modulo
+	add a, -3
+	ld (hl), a  ; extra 1 (speed x): -1, -2 or -3 randomly
+	ld hl, SFX_door_open
+	jp play_SFX_with_high_priority
 
 update_boss6_behavior_1_state_2:
 	; eye turning into a turret (then goes to 3)

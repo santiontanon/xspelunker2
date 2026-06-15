@@ -68,6 +68,7 @@ enemy_update_fn_table:
 	dw update_enemy_mars_robot2
 	dw update_enemy_mushroom1
 	dw update_enemy_mushroom2
+	dw update_enemy_boss6_stone
 
 
 ;-----------------------------------------------
@@ -418,7 +419,6 @@ update_enemy_bone_parabola_bullet:
 	cp 128
 	jr nz, update_enemy_bone_parabola_bullet_continue
 	jp update_enemy_delete
-	ld a, 64
 update_enemy_bone_parabola_bullet_continue:
 	srl a
 	cp 16
@@ -4934,6 +4934,51 @@ update_enemy_poison_cloud_continue_sprite_set:
 	ld e, a
 	ld d, COLOR_DARK_GREEN
  	jp enemy_sprite_and_continue
+
+
+;-----------------------------------------------
+update_enemy_boss6_stone_table:
+	db -6, -6, -5, -5, -4, -4
+	db -3, -3, -2, -2, -1, -1,  0,  0
+	db  0,  1,  1,  2,  2,  3,  3,  4
+update_enemy_boss6_stone_table_end:
+
+update_enemy_boss6_stone:
+	ld iyh, 4  ; damage to deal
+	call update_enemy_hurt_player_2x2
+	jp z, update_enemy_delete
+	; out of bounds?
+	ld a, (current_room__width)
+	ld c, a
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	cp c
+	jp nc, update_enemy_delete
+	ld a, (current_room__height)
+	ld c, a
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	cp c
+	jp nc, update_enemy_delete
+	; parabola:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 128
+	jr nz, update_enemy_boss6_stone_continue
+	jp update_enemy_delete
+update_enemy_boss6_stone_continue:
+	srl a
+	cp update_enemy_boss6_stone_table_end - update_enemy_boss6_stone_table
+	jr c, update_enemy_boss6_stone_continue2
+	ld a, (update_enemy_boss6_stone_table_end - update_enemy_boss6_stone_table) - 1
+update_enemy_boss6_stone_continue2:
+	ld hl, update_enemy_boss6_stone_table
+	ADD_HL_A
+	ld b, (hl)
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+
+	ld c, (ix + ROOM_OBJECT_STRUCT_EXTRA1)
+	call update_enemy_move_cb
+	ld d, COLOR_LIGHT_RED
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 5) * 4 
+	jp enemy_sprite_and_continue_animated4
 
 
 ;-----------------------------------------------
