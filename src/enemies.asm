@@ -21,6 +21,7 @@ enemy_update_fn_table:
 	dw update_enemy_mushroom_spore1
 	dw update_enemy_mushroom_spore2
 	dw update_enemy_poison_cloud
+	dw update_enemy_boss6_laser
 	; enemies you can hit:
 	dw update_enemy_snake  ; left-to-right
 	dw update_enemy_snake_dasher  ; left-to-right + dash
@@ -4980,6 +4981,43 @@ update_enemy_boss6_stone_continue2:
 	ld d, COLOR_LIGHT_RED
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 5) * 4 
 	jp enemy_sprite_and_continue_animated4
+
+
+;-----------------------------------------------
+update_enemy_boss6_laser:
+	ld iyh, 4  ; damage to deal
+	call update_enemy_hurt_player_shieldable_bullet
+	jp z, update_enemy_delete
+	
+	ld a, (current_world__difficulty_bullet_speed)
+	add a, a  ; double the speed of a normal bullet
+	ld l, a
+	call update_enemy_bullet_bresenham_l_steps
+	; - b: amount to move in y
+	; - c: amount to move in x
+	call update_enemy_move_cb
+
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	call general_check_collision_with_wall
+	jp z, update_enemy_delete
+
+	; out of the screen?
+	ld a, (current_room__width)
+	dec a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	jp z, update_enemy_delete
+	jp c, update_enemy_delete
+
+	ld a, (current_room__height)
+	dec a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	jp z, update_enemy_delete
+	jp c, update_enemy_delete
+
+	ld d, COLOR_RED
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 9) * 4 
+	jp enemy_sprite_and_continue
 
 
 ;-----------------------------------------------

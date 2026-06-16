@@ -449,8 +449,26 @@ update_boss6_behavior_1_state_3_turret_angle_set:
 	ld hl, redraw_flags
 	set ROOM_REDRAW_FLAG_BIT, (hl)
 update_boss6_behavior_1_state_3_turret_frame_set:
-	; ...
-	ret
+	ld a, (boss__settings + BOSS_6_EYE_TURRET_BULLET_MASK)
+	ld c, a
+	ld a, (boss__state_timer)
+	dec a  ; since we pre-incremented it
+	and c
+	ret nz
+	; fire a directional laser:
+	ld hl, #0305
+	ld bc, (boss__x)
+	add hl, bc
+	ld e, l
+	ld b, h
+	ld ix, 0
+	ld hl, boss_fire_directional_bullet_towards_player_e_b
+	ld c, BOSS_PAGE
+	call call_hl_in_page_c_8000
+	ret nz
+	ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BOSS6_LASER
+	ld hl, SFX_raygun
+	jp play_SFX_with_high_priority
 
 
 update_boss6_behavior_1_state_4_table:
