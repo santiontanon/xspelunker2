@@ -18,13 +18,14 @@ boss6_frame_ptrs:
 boss6_eye_frame_ptrs:
 	dw boss6_eye_frame_0
 	dw boss6_eye_frame_1  ; eye appearing
-	dw boss6_eye_frame_2  ; eye
-	dw boss6_eye_frame_3  ; turret appearing 1
-	dw boss6_eye_frame_4  ; turret appearing 2
-	dw boss6_eye_frame_5  ; turret appearing 3
-	dw boss6_eye_frame_6  ; turret
-	dw boss6_eye_frame_7  ; turret up
-	dw boss6_eye_frame_8  ; turret down
+	dw boss6_eye_frame_2  ; eye appearing 2
+	dw boss6_eye_frame_3  ; eye
+	dw boss6_eye_frame_4  ; turret appearing 1
+	dw boss6_eye_frame_5  ; turret appearing 2
+	dw boss6_eye_frame_6  ; turret appearing 3
+	dw boss6_eye_frame_7  ; turret
+	dw boss6_eye_frame_8  ; turret up
+	dw boss6_eye_frame_9  ; turret down
 
 
 ;-----------------------------------------------
@@ -428,7 +429,26 @@ update_boss6_behavior_1_state_3:
 	inc (hl)
 	cp 64
 	jr z, update_boss6_behavior_1_to_state_4
-
+	; turret tracks player:
+	ld a, (player_y + 1)
+	ld c, 8
+	cp 8
+	jr c, update_boss6_behavior_1_state_3_turret_angle_set
+	cp 13
+	ld c, 7
+	jr c, update_boss6_behavior_1_state_3_turret_angle_set
+	ld c, 9
+update_boss6_behavior_1_state_3_turret_angle_set:
+	ld a, (boss__6_eye_frame)
+	cp c
+	jr z, update_boss6_behavior_1_state_3_turret_frame_set
+	ld a, c
+	ld (boss__6_eye_frame), a
+	ld a, 2
+	call update_boss6_draw_boss_frame
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)
+update_boss6_behavior_1_state_3_turret_frame_set:
 	; ...
 	ret
 

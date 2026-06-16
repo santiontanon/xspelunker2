@@ -2,8 +2,6 @@ to do:
 
 ***- 6th boss: Giant Moai head
   ***- phase 1: eye turrets
-    ***- while in turret mode, track players with the turret angle
-    ***- draw lasers in different angles: increments of 22.5 degrees?
     ***- create laser enemy object (faster than regular bullets)
     ***- fire directionally (using the correct sprite), with a fixed cadence
   ***- Phase 2: after some damage, ceiling breaks (dropping a bunch of rocks)
