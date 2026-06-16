@@ -4941,6 +4941,7 @@ update_enemy_boss6_stone_table:
 	db -6, -6, -5, -5, -4, -4
 	db -3, -3, -2, -2, -1, -1,  0,  0
 	db  0,  1,  1,  2,  2,  3,  3,  4
+	db  4,  5,  5,  6
 update_enemy_boss6_stone_table_end:
 
 update_enemy_boss6_stone:

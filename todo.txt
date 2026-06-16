@@ -1,14 +1,16 @@
 to do:
 
 ***- 6th boss: Giant Moai head
-  ***- implement behavior phase 1:
-    ***- from time to time, eye goes away, and gets replaced by a turret which shoots fast lasers
-  ***- draw phase 2/3 elements in GIMP/TILED:
-    ***- transition to robotic form (dust cloud? or can I fit all the tiles in a single image?)
-    ***- robotic form
-    ***- robotic fists
+  ***- phase 1: eye turrets
+    ***- while in turret mode, track players with the turret angle
+    ***- draw lasers in different angles: increments of 22.5 degrees?
+    ***- create laser enemy object (faster than regular bullets)
+    ***- fire directionally (using the correct sprite), with a fixed cadence
   ***- Phase 2: after some damage, ceiling breaks (dropping a bunch of rocks)
-    ***- fists drop fast from the ceiling: they first appear for a bit, to give you time to react, and then drop too quickly to dodge if you did not dodge before
+  ***- Phase 2: fists drop fast from the ceiling: they first appear for a bit, to give you time to react, and then drop too quickly to dodge if you did not dodge before
+  ***- draw phase 3 elements in GIMP/TILED:
+    ***- transition to robotic form (dust cloud? or can I fit all the tiles in a single image?)
+    ***- robotic form (fists remain the same)
   ***- Phase 3: after some more damage, the stone face breaks, revealing a robotic face underneath
     ***- instead of rocks, now it spits drones through the mouth (up to a maximum number)
     ***- fists from ceiling are now mechanical

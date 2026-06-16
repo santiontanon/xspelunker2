@@ -4,6 +4,8 @@ BOSS_6_WAIT_TIME_OFFSET: equ 2
 BOSS_6_EYE_BULLET_TIME_MASK: equ 3
 BOSS_6_MOUTH_ATTACK_MASK: equ 4
 BOSS_6_MOUTH_ATTACK_N_STONES: equ 5
+BOSS_6_EYE_TURRET_ATTACK_MASK: equ 6
+BOSS_6_EYE_TURRET_BULLET_MASK: equ 7
 
 
 ;-----------------------------------------------
@@ -29,18 +31,22 @@ boss6_eye_frame_ptrs:
 boss6_difficulty_setting__easy:
 	dw 196  ; boss hp
 	db 32, #1f, #7f, 2  ; wait time, bullet time mask, mouth attack mask, n stones
+	db #7f, #0f ; eye turret mask, eye turret bullet mask
 
 boss6_difficulty_setting__normal:
 	dw 320  ; boss hp
 	db 32, #0f, #3f, 3  ; wait time, bullet time mask, mouth attack mask, n stones
+	db #3f, #07 ; eye turret mask, eye turret bullet mask
 
 boss6_difficulty_setting__hard:
 	dw 448  ; boss hp
 	db 28, #0f, #1f, 4  ; wait time, bullet time mask, mouth attack mask, n stones
+	db #1f, #07 ; eye turret mask, eye turret bullet mask
 
 boss6_difficulty_setting__hardest:
 	dw 512  ; boss hp
-	db 24, #07, #1f, 4  ; wait time, bullet time mask, mouth attack mask, n stones
+	db 24, #07, #1f, 5  ; wait time, bullet time mask, mouth attack mask, n stones
+	db #1f, #03 ; eye turret mask, eye turret bullet mask
 
 
 ;-----------------------------------------------
@@ -266,7 +272,11 @@ update_boss6_behavior_1_state_0:
 	call random_a
 	and c
 	jr z, update_boss6_behavior_1_to_state_1
-
+	ld a, (boss__settings + BOSS_6_EYE_TURRET_ATTACK_MASK)
+	ld c, a
+	call random_a
+	and c
+	jp z, update_boss6_behavior_1_to_state_2
 update_boss6_behavior_1_state_0_maybe_fire_bullet:
 	; fire bullets through eyes
 	ld a, (boss__settings + BOSS_6_EYE_BULLET_TIME_MASK)
@@ -327,14 +337,15 @@ update_boss6_behavior_1_state_1_continue:
 	jr update_boss6_behavior_1_state_1_attack
 
 update_boss6_behavior_1_state_1_continue_done:
-	; back to state 0:
-	xor a
-	ld (boss__state_timer), a
-	ld (boss__state), a
 	ld a, 2  ; closed mouth
 	call update_boss6_draw_boss_frame
 	ld hl, redraw_flags
 	set ROOM_REDRAW_FLAG_BIT, (hl)
+update_boss6_behavior_1_state_back_to_0:
+	; back to state 0:
+	xor a
+	ld (boss__state_timer), a
+	ld (boss__state), a
 	ret
 
 update_boss6_behavior_1_state_1_attack:
@@ -371,21 +382,87 @@ update_boss6_behavior_1_state_1_attack:
 	ld hl, SFX_door_open
 	jp play_SFX_with_high_priority
 
+
+; eye frames to make the turret appear:
+update_boss6_behavior_1_state_2_table:
+	db 2, 1, 0, 4, 5, 6, 7
+
+update_boss6_behavior_1_to_state_2:
+	xor a
+	ld (boss__state_timer), a
+	ld a, 2
+	ld (boss__state), a
 update_boss6_behavior_1_state_2:
 	; eye turning into a turret (then goes to 3)
-	; ...
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	ld c, a
+	and #03
+	ret nz
+	ld a, c
+	rrca
+	rrca
+	and #3f
+	cp 7
+	jr z, update_boss6_behavior_1_to_state_3
+	ld hl, update_boss6_behavior_1_state_2_table
+	ADD_HL_A
+	ld a, (hl)
+	ld (boss__6_eye_frame), a
+	ld a, 2
+	call update_boss6_draw_boss_frame
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)
 	ret
 
-
+update_boss6_behavior_1_to_state_3:
+	xor a
+	ld (boss__state_timer), a
+	ld a, 3
+	ld (boss__state), a
 update_boss6_behavior_1_state_3:
 	; firing lasers through eye turret
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	cp 64
+	jr z, update_boss6_behavior_1_to_state_4
+
 	; ...
 	ret
 
 
+update_boss6_behavior_1_state_4_table:
+	db 6, 5, 4, 0, 1, 2, 3
+
+update_boss6_behavior_1_to_state_4:
+	xor a
+	ld (boss__state_timer), a
+	ld a, 4
+	ld (boss__state), a
 update_boss6_behavior_1_state_4:
 	; eye coming back (then back to 0)
-	; ...
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	ld c, a
+	and #03
+	ret nz
+	ld a, c
+	rrca
+	rrca
+	and #3f
+	cp 7
+	jp z, update_boss6_behavior_1_state_back_to_0
+	ld hl, update_boss6_behavior_1_state_4_table
+	ADD_HL_A
+	ld a, (hl)
+	ld (boss__6_eye_frame), a
+	ld a, 2
+	call update_boss6_draw_boss_frame
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)
 	ret
 
 
