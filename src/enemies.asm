@@ -5016,7 +5016,7 @@ update_enemy_boss6_laser:
 	jp c, update_enemy_delete
 
 	ld d, COLOR_RED
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 9) * 4 
+	ld e, (ix + ROOM_OBJECT_STRUCT_EXTRA1)
 	jp enemy_sprite_and_continue
 
 
@@ -7206,6 +7206,8 @@ update_enemy_bullet_move_up_if_possible_a_times_loop:
 ; output:
 ; - c: number of times to move in x (..., -2, -1, 0, 1, 2, ...)
 ; - b: number of times to move in y (..., -2, -1, 0, 1, 2, ...)
+update_enemy_bullet_bresenham_e_steps:
+	ld l, e
 update_enemy_bullet_bresenham_l_steps:
 	ld a, (ix + ROOM_OBJECT_STRUCT_SPEED_Y)
 	or a

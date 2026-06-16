@@ -428,7 +428,7 @@ update_boss6_behavior_1_state_3:
 	ld a, (hl)
 	inc (hl)
 	cp 64
-	jr z, update_boss6_behavior_1_to_state_4
+	jp z, update_boss6_behavior_1_to_state_4
 	; turret tracks player:
 	ld a, (player_y + 1)
 	ld c, 8
@@ -467,6 +467,40 @@ update_boss6_behavior_1_state_3_turret_frame_set:
 	call call_hl_in_page_c_8000
 	ret nz
 	ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BOSS6_LASER
+	; determine the sprite to use (to do this, we just call the bresenham algorithm, and check how
+	; much does the bullet move in y in one step):
+	ld (ix + ROOM_OBJECT_STRUCT_BRESENHAM_STATE), 0
+	ld e, 8
+	ld hl, update_enemy_bullet_bresenham_e_steps
+	ld c, ENEMIES_PAGE
+	call call_hl_in_page_c_8000
+	ld (ix + ROOM_OBJECT_STRUCT_BRESENHAM_STATE), 0
+	ld a, b  ; movement in y (from -8 to 8)
+	; mapping:
+	; - 6+: (FIRST_ENEMY_SPRITE_PATTERN + 9) * 4
+	; - 5, 4: (FIRST_ENEMY_SPRITE_PATTERN + 10) * 4
+	; - 3, 2: (FIRST_ENEMY_SPRITE_PATTERN + 11) * 4
+	; - 1, 0, -1: (FIRST_ENEMY_SPRITE_PATTERN + 12) * 4
+	; - -2, -3: (FIRST_ENEMY_SPRITE_PATTERN + 13) * 4
+	; - -4+: (FIRST_ENEMY_SPRITE_PATTERN + 14) * 4
+	ld c, (FIRST_ENEMY_SPRITE_PATTERN + 9) * 4
+	cp 6
+	jp p, update_boss6_behavior_1_state_3_turret_sprite_set
+	ld c, (FIRST_ENEMY_SPRITE_PATTERN + 10) * 4
+	cp 4
+	jp p, update_boss6_behavior_1_state_3_turret_sprite_set
+	ld c, (FIRST_ENEMY_SPRITE_PATTERN + 11) * 4
+	cp 2
+	jp p, update_boss6_behavior_1_state_3_turret_sprite_set
+	ld c, (FIRST_ENEMY_SPRITE_PATTERN + 12) * 4
+	cp -1
+	jp p, update_boss6_behavior_1_state_3_turret_sprite_set
+	ld c, (FIRST_ENEMY_SPRITE_PATTERN + 13) * 4
+	cp -3
+	jp p, update_boss6_behavior_1_state_3_turret_sprite_set
+	ld c, (FIRST_ENEMY_SPRITE_PATTERN + 14) * 4
+update_boss6_behavior_1_state_3_turret_sprite_set:
+	ld (ix + ROOM_OBJECT_STRUCT_EXTRA1), c  ; sprite to use
 	ld hl, SFX_raygun
 	jp play_SFX_with_high_priority
 
