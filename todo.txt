@@ -2,10 +2,10 @@ to do:
 
 ***- 6th boss: Giant Moai head
   ***- Phase 2: fists attack
-    OK - add fist tiles and name tables to assembler
-    ***- probability of a fist attack, and switch to state 5
-    ***- first appears at the top, waits for some wait time, and then drops quickly
-    ***- then it retracts (not as fast, but fast)
+    ***- clear the column properly
+    ***- draw the arm
+    ***- make it drop on top of the player
+    ***- hitting the arm does no damage
     ***- when it hits the floor, some dust sprites
     ***- during fist attack, regular eye attack continues
   ***- draw phase 3 elements in GIMP/TILED:

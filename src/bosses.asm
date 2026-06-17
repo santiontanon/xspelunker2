@@ -341,7 +341,7 @@ enter_boss_door__spawn_mars_boss_objects:
 ; 	ld (current_room__animation_fn_ptr), hl	
 	xor a
 	ld (boss__6_eye_frame), a
-	ld hl, update_boss6_draw_boss_firsst_frame
+	ld hl, update_boss6_draw_boss_first_frame
 	ld c, BOSS_6_PAGE
 	call call_hl_in_page_c_8000
 
@@ -1001,6 +1001,10 @@ draw_boss_frame_clear_previous_frame_y_loop_skip:
 ; - hl: frame ptr
 ; - de: destination ptr
 ; - c, b: width, height
+draw_boss_frame_part_ix_iyl:
+	push ix
+	pop hl
+	ld c, iyl
 draw_boss_frame_part:
 draw_boss_frame_part_loop_y:
 	push bc

@@ -6,8 +6,9 @@ BOSS_6_WAIT_TIME_OFFSET: equ 6
 BOSS_6_EYE_BULLET_TIME_MASK: equ 7
 BOSS_6_MOUTH_ATTACK_MASK: equ 8
 BOSS_6_MOUTH_ATTACK_N_STONES: equ 9
-BOSS_6_EYE_TURRET_ATTACK_MASK: equ 10
-BOSS_6_EYE_TURRET_BULLET_MASK: equ 11
+BOSS_6_EYE_TURRET_ATTACK_MASK: equ 8  ; same as BOSS_6_MOUTH_ATTACK_MASK
+BOSS_6_EYE_TURRET_BULLET_MASK: equ 10
+BOSS_6_EYE_PUNCH_ATTACK_MASK: equ 8  ; same as BOSS_6_MOUTH_ATTACK_MASK
 
 
 ;-----------------------------------------------
@@ -38,22 +39,22 @@ boss6_eye_frame_ptrs:
 boss6_difficulty_setting__easy:
 	dw 192, 144, 64  ; boss hp, and thresholds for phase 2 and 3
 	db 32, #1f, #7f, 2  ; wait time, bullet time mask, mouth attack mask, n stones
-	db #7f, #0f ; eye turret mask, eye turret bullet mask
+	db #0f ; eye turret mask, eye turret bullet mask
 
 boss6_difficulty_setting__normal:
 	dw 320, 240, 108  ; boss hp, and thresholds for phase 2 and 3
 	db 32, #0f, #3f, 3  ; wait time, bullet time mask, mouth attack mask, n stones
-	db #3f, #07 ; eye turret mask, eye turret bullet mask
+	db #07 ; eye turret mask, eye turret bullet mask
 
 boss6_difficulty_setting__hard:
 	dw 416, 312, 140  ; boss hp, and thresholds for phase 2 and 3
 	db 28, #0f, #1f, 4  ; wait time, bullet time mask, mouth attack mask, n stones
-	db #1f, #07 ; eye turret mask, eye turret bullet mask
+	db #07 ; eye turret mask, eye turret bullet mask
 
 boss6_difficulty_setting__hardest:
 	dw 512, 384, 176  ; boss hp, and thresholds for phase 2 and 3
 	db 24, #07, #1f, 5  ; wait time, bullet time mask, mouth attack mask, n stones
-	db #1f, #03 ; eye turret mask, eye turret bullet mask
+	db #03 ; eye turret mask, eye turret bullet mask
 
 
 ;-----------------------------------------------
@@ -559,7 +560,7 @@ update_boss6_behavior_1_state_4:
 ; phase 2:
 update_boss6_start_behavior_2:
 	; enter phase 2:
-	ld a, 6
+	ld a, 7
 	ld (boss__state), a
 	xor a
 	ld (boss__state_timer), a
@@ -574,8 +575,9 @@ update_boss6_behavior_2:
 	; - 2: eye turning into a turret (then goes to 3)
 	; - 3: firing lasers through eye turret
 	; - 4: eye coming back (then back to 0)
-	; - 5: punch
-	; - 6: roof being destroyed (starting phase 2)
+	; - 5: punch down
+	; - 6: punch up
+	; - 7: roof being destroyed (starting phase 2)
 	ld a, (boss__state)
 	or a
 	jp z, update_boss6_behavior_2_state_0
@@ -591,6 +593,8 @@ update_boss6_behavior_2:
 	jp z, update_boss6_behavior_2_state_5
 	dec a
 	jp z, update_boss6_behavior_2_state_6
+	dec a
+	jp z, update_boss6_behavior_2_state_7
 	ret
 
 update_boss6_behavior_2_state_0:
@@ -602,17 +606,72 @@ update_boss6_behavior_2_state_0:
 	jp c, update_boss6_start_behavior_3
 
 	; punch attack?
-	; ...
+	ld a, (boss__settings + BOSS_6_EYE_PUNCH_ATTACK_MASK)
+	ld c, a
+	call random_a
+	and c
+	jr z, update_boss6_behavior_2_to_state_5
+	jr update_boss6_behavior_2_to_state_5  ; DEBUG!
 	jp update_boss6_behavior_1_state_0_entry_point
 
 
+update_boss6_behavior_2_to_state_5:
+	xor a
+	ld (boss__state_timer), a
+	ld a, 5
+	ld (boss__state), a
+	; pick punch location:
+	ld c, 20
+	call random_modulo
+	inc a
+	ld (boss__x2), a
+	ld a, -3
+	ld (boss__y2), a
+	; draw fist at top:
+	call update_boss6__draw_punch
 update_boss6_behavior_2_state_5:
-	; punch attack:
-	; ...
+	; punch attack down:
+	ld a, (boss__settings + BOSS_6_WAIT_TIME_OFFSET)
+	ld c, a
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	sub c
+	ret c  ; still waiting
+	and #01
+	ret nz
+	ld hl, boss__y2
+	inc (hl)
+	call update_boss6__draw_punch
+	ld a, (boss__y2)
+	cp 17
+	ret nz
+	xor a
+	ld (boss__state_timer), a
+	ld a, 6
+	ld (boss__state), a
+	ret
+
+update_boss6_behavior_2_state_6:
+	; punch attack up
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	and #03
+	ret nz
+	ld hl, boss__y2
+	dec (hl)
+	call update_boss6__draw_punch
+	ld a, (boss__y2)
+	cp -4
+	ret nz
+	xor a
+	ld (boss__state_timer), a
+	ld (boss__state), a
 	ret
 
 
-update_boss6_behavior_2_state_6:
+update_boss6_behavior_2_state_7:
 	; entering phase 2 (roof being destroyed):
 	; from coordinate 1 - 23 of the ceiling must be destroyed
 	ld hl, boss__state_timer
@@ -769,7 +828,7 @@ update_boss6_behavior_4_state_1:
 
 ;-----------------------------------------------
 ; this is called from bosses.asm when the room is created to draw the first boss frame.
-update_boss6_draw_boss_firsst_frame:
+update_boss6_draw_boss_first_frame:
 	ld a, 22
 	ld (boss__x), a
 	ld a, 7
@@ -834,6 +893,38 @@ update_boss6_draw_boss_frame_not_clearing:
 	ld c, BOSS_PAGE
 	ld hl, draw_boss_frame_internal_ix
 	jp call_hl_in_page_c_8000
+
+
+;-----------------------------------------------
+update_boss6__draw_punch:
+	; clear vertical of the punch:
+	ld bc, (boss__x2)
+	ld b, 0
+	call get_room_tile_ptr
+	ld ixl, c
+	ld ixh, b
+	ld de, #1504
+	ld c, BOSS_PAGE
+	ld hl, draw_boss_frame_clear_previous_frame_ix_de
+	call call_hl_in_page_c_8000
+
+	; draw the fist:
+	ld bc, (boss__x2)
+	call get_room_tile_ptr
+	ex de, hl
+	ld b, 4
+	ld iyl, 4
+	ld ix, BOSS6_NAMETABLE_FIST
+	ld c, BOSS_PAGE
+	ld hl, draw_boss_frame_part_ix_iyl
+	call call_hl_in_page_c_8000
+
+	; draw the arm:
+	; ...
+
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)	
+	ret
 
 
 ;-----------------------------------------------

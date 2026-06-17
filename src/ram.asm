@@ -341,7 +341,7 @@ boss__5_scylla_arms_attack_state: equ boss__tmp_space + 16  ; 0: no attack, 1+ l
 boss__5_scylla_arms_attack_clear: equ boss__tmp_space + 17  ; 0: no clear, 1 - 31: clear this column
 boss__5_scylla_arms_attack_state2: equ boss__tmp_space + 18  ; 0: no attack, 1+ length of the horizontal cable
 boss__5_scylla_arms_attack_clear2: equ boss__tmp_space + 19  ; 0: no clear, 1 - 23: clear this row
-
+;
 boss__6_eye_frame: equ boss__tmp_space
 
 alien_ambush__n_aliens_spawned: equ boss__tmp_space
