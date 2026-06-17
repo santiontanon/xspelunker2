@@ -18,6 +18,9 @@ BOSS6_NAMETABLE_EYE_7: equ BOSS6_NAMETABLE_EYE_6 + 2*1  ; 2*1
 BOSS6_NAMETABLE_EYE_8: equ BOSS6_NAMETABLE_EYE_7 + 2*1  ; 2*1
 BOSS6_NAMETABLE_EYE_9: equ BOSS6_NAMETABLE_EYE_8 + 2*1  ; 2*1
 
+BOSS6_NAMETABLE_FIST: equ BOSS6_NAMETABLE_EYE_9 + 2*1  ; 4*4
+BOSS6_NAMETABLE_ARM: equ BOSS6_NAMETABLE_FIST + 4*4  ; 2*4
+
 
 ;-----------------------------------------------
 boss6_frame_0_face_off:
@@ -113,3 +116,16 @@ boss6_eye_frame_9:
 	dw #0102, BOSS6_NAMETABLE_EYE_9  ; dimensions and nametable
 	dw 0, #0102  ; boss__clear_bbox
 
+
+boss6_fist_frame_0:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0404, BOSS6_NAMETABLE_FIST  ; dimensions and nametable
+	dw 0, #0404  ; boss__clear_bbox
+
+
+boss6_arm_frame_0:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0402, BOSS6_NAMETABLE_ARM  ; dimensions and nametable
+	dw 0, #0402  ; boss__clear_bbox

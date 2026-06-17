@@ -1,13 +1,19 @@
 to do:
 
 ***- 6th boss: Giant Moai head
-  ***- Phase 2: fists drop fast from the ceiling: they first appear for a bit, to give you time to react, and then drop too quickly to dodge if you did not dodge before
+  ***- Phase 2: fists attack
+    OK - add fist tiles and name tables to assembler
+    ***- probability of a fist attack, and switch to state 5
+    ***- first appears at the top, waits for some wait time, and then drops quickly
+    ***- then it retracts (not as fast, but fast)
+    ***- when it hits the floor, some dust sprites
+    ***- during fist attack, regular eye attack continues
   ***- draw phase 3 elements in GIMP/TILED:
     ***- transition to robotic form (dust cloud? or can I fit all the tiles in a single image?)
     ***- robotic form (fists remain the same)
   ***- Phase 3: after some more damage, the stone face breaks, revealing a robotic face underneath
     ***- instead of rocks, now it spits drones through the mouth (up to a maximum number)
-    ***- fists from ceiling are now mechanical
+    ***- bullets are now fired from a couple of other places in the face too
     ***- in high difficulty levels (hard/very hard) fists come in pairs  
   ***- killing the boss (explosions and disappear, leaving just rock)
   ***- drops
@@ -21,13 +27,13 @@ to do:
 - 7th boss (ideas: "The Lunar Obsidian Sentinel" (tall, slender, smooth black, reflective surfaces), "The Lunar Crystal Serpent", "The Moon Stone Monolith").
   - add boss name to the stats for game over screen
 - ending B: the calendar stone machine also activates its offensive mechanism and destroys the alien armada that was coming. You hope that will deter them from coming again.
-- Ending B+: (got the firestone forge active with the codex, but did not defeat the final alien boss)
+- Ending B+: (got the forge active with the codex, but did not defeat the final alien boss)
 
-- 8th boss: after beating the combat against the aliens, you can teleport to their home planet, and fight against their leader. (remember room can only be of size 32*24*2 because of boss__room_bg_buffer)
+- 8th boss: after beating the combat against the aliens, you can teleport to their home planet, and fight against their leader.
   - add boss name to the stats for game over screen
   - better ray gun should significantly help
 - final good ending 1 (A) (update "stats__ending"): the stone opens a portal to travel to the alien world, and fight against their leader. When you defeat it and come back, Elaine is there waiting to save you, but you arrive having defeated the alien empire (although there is doubt if other empires will show up again, and the calendar stone depletes, and cannot be used again)
-- update the list of enemy types to display in ending A to include any enemies in the alien planet.
+- update the list of enemy types in ending A to include any enemies in the alien planet.
 - Final good ending 2 (A+) if you have the 3 codex pieces in the forge to manufacture more powestones/firestones. So, you can keep using the calendar stone and be prepared for the future.
 
 - save game to rom / password: https://www.grauw.nl/projects/ascii-x/ascii16-x/
