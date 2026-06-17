@@ -625,7 +625,7 @@ update_boss6_behavior_2_to_state_5:
 	call random_modulo
 	inc a
 	ld (boss__x2), a
-	ld a, -3
+	ld a, -1
 	ld (boss__y2), a
 	; draw fist at top:
 	call update_boss6__draw_punch
@@ -638,8 +638,8 @@ update_boss6_behavior_2_state_5:
 	inc (hl)
 	sub c
 	ret c  ; still waiting
-	and #01
-	ret nz
+; 	and #01
+; 	ret nz
 	ld hl, boss__y2
 	inc (hl)
 	call update_boss6__draw_punch
@@ -650,14 +650,20 @@ update_boss6_behavior_2_state_5:
 	ld (boss__state_timer), a
 	ld a, 6
 	ld (boss__state), a
-	ret
+	ld bc, (boss__x2)
+	ld b, 19
+	call spawn_4tile_appart_dust
+	ld hl, SFX_explosion_low_pitch
+	jp play_SFX_with_high_priority
 
 update_boss6_behavior_2_state_6:
 	; punch attack up
 	ld hl, boss__state_timer
 	ld a, (hl)
 	inc (hl)
-	and #03
+	cp 16
+	ret c  ; punch stays a bit
+	and #01
 	ret nz
 	ld hl, boss__y2
 	dec (hl)
@@ -715,7 +721,7 @@ update_boss6_behavior_2_state_6_continue:
 		inc hl
 		ld (hl), 0
 		ld hl, current_room__tile_map
-		ld de, current_room__tile_map + 32*24
+		ld de, current_room__tile_map + 64*24
 		ld bc, 32*3
 		ldir
 		ld hl, redraw_flags
@@ -743,7 +749,7 @@ update_boss6_behavior_2_state_6_continue:
 	inc hl
 	call random_a
 	and #03
-	add a, 10
+	add a, 12
 	add a, a
 	ld (hl), a  ; state timer (start with slightly different initial speed)
 	inc hl
@@ -901,8 +907,8 @@ update_boss6__draw_punch:
 	ld bc, (boss__x2)
 	ld b, 0
 	call get_room_tile_ptr
-	ld ixl, c
-	ld ixh, b
+	push hl
+	pop ix
 	ld de, #1504
 	ld c, BOSS_PAGE
 	ld hl, draw_boss_frame_clear_previous_frame_ix_de
