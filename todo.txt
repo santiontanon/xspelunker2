@@ -1,7 +1,6 @@
 to do:
 
 ***- 6th boss: Giant Moai head
-  ***- Phase 2: after some damage, ceiling breaks (dropping a bunch of rocks)
   ***- Phase 2: fists drop fast from the ceiling: they first appear for a bit, to give you time to react, and then drop too quickly to dodge if you did not dodge before
   ***- draw phase 3 elements in GIMP/TILED:
     ***- transition to robotic form (dust cloud? or can I fit all the tiles in a single image?)

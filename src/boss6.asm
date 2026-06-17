@@ -1,11 +1,13 @@
 ;-----------------------------------------------
 BOSS_6_HP_OFFSET: equ 0
-BOSS_6_WAIT_TIME_OFFSET: equ 2
-BOSS_6_EYE_BULLET_TIME_MASK: equ 3
-BOSS_6_MOUTH_ATTACK_MASK: equ 4
-BOSS_6_MOUTH_ATTACK_N_STONES: equ 5
-BOSS_6_EYE_TURRET_ATTACK_MASK: equ 6
-BOSS_6_EYE_TURRET_BULLET_MASK: equ 7
+BOSS_6_HP_PHASE2_OFFSET: equ 2
+BOSS_6_HP_PHASE3_OFFSET: equ 4
+BOSS_6_WAIT_TIME_OFFSET: equ 6
+BOSS_6_EYE_BULLET_TIME_MASK: equ 7
+BOSS_6_MOUTH_ATTACK_MASK: equ 8
+BOSS_6_MOUTH_ATTACK_N_STONES: equ 9
+BOSS_6_EYE_TURRET_ATTACK_MASK: equ 10
+BOSS_6_EYE_TURRET_BULLET_MASK: equ 11
 
 
 ;-----------------------------------------------
@@ -29,23 +31,27 @@ boss6_eye_frame_ptrs:
 
 
 ;-----------------------------------------------
+; Boss phases:
+; - phase 1: until boss reaches ~75% health
+; - phase 2: until boss reaches ~33% health
+; - phase 3: until boss reaches 0% health
 boss6_difficulty_setting__easy:
-	dw 196  ; boss hp
+	dw 192, 144, 64  ; boss hp, and thresholds for phase 2 and 3
 	db 32, #1f, #7f, 2  ; wait time, bullet time mask, mouth attack mask, n stones
 	db #7f, #0f ; eye turret mask, eye turret bullet mask
 
 boss6_difficulty_setting__normal:
-	dw 320  ; boss hp
+	dw 320, 240, 108  ; boss hp, and thresholds for phase 2 and 3
 	db 32, #0f, #3f, 3  ; wait time, bullet time mask, mouth attack mask, n stones
 	db #3f, #07 ; eye turret mask, eye turret bullet mask
 
 boss6_difficulty_setting__hard:
-	dw 448  ; boss hp
+	dw 416, 312, 140  ; boss hp, and thresholds for phase 2 and 3
 	db 28, #0f, #1f, 4  ; wait time, bullet time mask, mouth attack mask, n stones
 	db #1f, #07 ; eye turret mask, eye turret bullet mask
 
 boss6_difficulty_setting__hardest:
-	dw 512  ; boss hp
+	dw 512, 384, 176  ; boss hp, and thresholds for phase 2 and 3
 	db 24, #07, #1f, 5  ; wait time, bullet time mask, mouth attack mask, n stones
 	db #1f, #03 ; eye turret mask, eye turret bullet mask
 
@@ -247,6 +253,8 @@ update_boss6_behavior_0_wait_for_player:
 ;-----------------------------------------------
 ; phase 1:
 update_boss6_behavior_1:
+	jp update_boss6_start_behavior_2  ; DEBUG!!
+
 	; states:
 	; - 0: fire bullets through eyes
 	; - 1: mouth open: parabolic stones (then back to 0)
@@ -267,6 +275,15 @@ update_boss6_behavior_1:
 	ret
 
 update_boss6_behavior_1_state_0:
+	; check if we need to transition to phase 2:
+	ld bc, (boss__settings + BOSS_6_HP_PHASE2_OFFSET)
+	ld hl, (boss__hp)
+	or a
+	sbc hl, bc
+	jp c, update_boss6_start_behavior_2
+
+update_boss6_behavior_1_state_0_entry_point:
+	; this part is shared phase 1 and phase 2
 	; mouth attack?
 	ld a, (boss__settings + BOSS_6_MOUTH_ATTACK_MASK)
 	ld c, a
@@ -540,13 +557,157 @@ update_boss6_behavior_1_state_4:
 
 ;-----------------------------------------------
 ; phase 2:
+update_boss6_start_behavior_2:
+	; enter phase 2:
+	ld a, 6
+	ld (boss__state), a
+	xor a
+	ld (boss__state_timer), a
+	ld a, 2
+	ld (boss__behavior), a
+	ret
+
 update_boss6_behavior_2:
+	; states:
+	; - 0: fire bullets through eyes
+	; - 1: mouth open: parabolic stones (then back to 0)
+	; - 2: eye turning into a turret (then goes to 3)
+	; - 3: firing lasers through eye turret
+	; - 4: eye coming back (then back to 0)
+	; - 5: punch
+	; - 6: roof being destroyed (starting phase 2)
+	ld a, (boss__state)
+	or a
+	jp z, update_boss6_behavior_2_state_0
+	dec a
+	jp z, update_boss6_behavior_1_state_1
+	dec a
+	jp z, update_boss6_behavior_1_state_2
+	dec a
+	jp z, update_boss6_behavior_1_state_3
+	dec a
+	jp z, update_boss6_behavior_1_state_4
+	dec a
+	jp z, update_boss6_behavior_2_state_5
+	dec a
+	jp z, update_boss6_behavior_2_state_6
+	ret
+
+update_boss6_behavior_2_state_0:
+	; check if we need to transition to phase 3:
+	ld bc, (boss__settings + BOSS_6_HP_PHASE3_OFFSET)
+	ld hl, (boss__hp)
+	or a
+	sbc hl, bc
+	jp c, update_boss6_start_behavior_3
+
+	; punch attack?
 	; ...
+	jp update_boss6_behavior_1_state_0_entry_point
+
+
+update_boss6_behavior_2_state_5:
+	; punch attack:
+	; ...
+	ret
+
+
+update_boss6_behavior_2_state_6:
+	; entering phase 2 (roof being destroyed):
+	; from coordinate 1 - 23 of the ceiling must be destroyed
+	ld hl, boss__state_timer
+	ld a, (hl)
+	ld c, a
+	inc (hl)
+	and #07
+	ret nz
+	ld a, c
+	rrca
+	rrca
+	rrca
+	and #1f
+	cp 11
+	jr nz, update_boss6_behavior_2_state_6_continue
+	; one with breaking the ceiling!
+	xor a
+	ld (boss__state), a
+	ld (boss__state_timer), a
+	ret
+update_boss6_behavior_2_state_6_continue:
+	add a, a
+	inc a  ; a = x coordinate of the roof part we are destroying in this frame
+	; - clear map from [a, 0] - [a + 2, 3]
+	; - spawn a rock with 0 x velocity at [a*8, 8]
+	ld c, a
+	push bc
+		ld hl, current_room__tile_map
+		ADD_HL_A
+		ld (hl), 0
+		inc hl
+		ld (hl), 0
+		ld bc, 31
+		add hl, bc
+		ld (hl), 0
+		inc hl
+		ld (hl), 0
+		ld bc, 31
+		add hl, bc
+		ld (hl), 0
+		inc hl
+		ld (hl), 0
+		ld hl, current_room__tile_map
+		ld de, current_room__tile_map + 32*24
+		ld bc, 32*3
+		ldir
+		ld hl, redraw_flags
+		set ROOM_REDRAW_FLAG_BIT, (hl)		
+
+		ld hl, SFX_explosion_low_pitch
+		call play_SFX_with_high_priority
+		; spawn a falling stone:
+		call ptr_to_new_sprite_enemy
+	pop bc
+	ret nz
+	ld (hl), 0  ; ID
+	inc hl
+	ld (hl), ENEMY_BOSS6_STONE
+	inc hl
+	ld (hl), 0  ; pixel X
+	inc hl
+	ld (hl), c  ; tile X
+	inc hl
+	ld (hl), 0  ; pixel Y
+	inc hl
+	ld (hl), 0  ; tile Y
+	inc hl
+	ld (hl), 0  ; state
+	inc hl
+	call random_a
+	and #03
+	add a, 10
+	add a, a
+	ld (hl), a  ; state timer (start with slightly different initial speed)
+	inc hl
+	ld (hl), #ff  ; hit ID
+	inc hl
+	ld (hl), 4  ; health
+	inc hl
+	inc hl
+	ld (hl), 0  ; extra 1 (speed x)
 	ret
 
 
 ;-----------------------------------------------
 ; phase 3:
+update_boss6_start_behavior_3:
+	; enter phase 3:
+	xor a
+	ld (boss__state), a
+	ld (boss__state_timer), a
+	ld a, 3
+	ld (boss__behavior), a
+	ret
+
 update_boss6_behavior_3:
 	; ...
 	ret
@@ -682,6 +843,10 @@ update_boss6_draw_boss_frame_not_clearing:
 ; - iyl: collision ID
 ; - ix: ptr of the tile we hit
 player_weapon_hitbox_check_boss__boss6_hit:
+	ld a, (boss__behavior)
+	or a
+	ret z
+
 	ld a, iyl
 	ld (boss__last_collision_id), a
 

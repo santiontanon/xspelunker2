@@ -2849,9 +2849,9 @@ player_weapon_damages:
 	db 0, 0, 0, 0   ; throwing weapons
 	db 2, 6, 4      ; upgraded machete, hammer, macuahuitl
 
-; machete DPS: 1 / 8  ->  0.1250
-; macuahuitl DPS: 2 / 12  ->  0.1666
-; hammer DPS: 3 / 18  ->  0.1666
+; machete DPS: 1 / 8  ->  0.1250 per frame
+; macuahuitl DPS: 2 / 12  ->  0.1666 per frame
+; hammer DPS: 3 / 18  ->  0.1666 per frame
 
 
 ;-----------------------------------------------
