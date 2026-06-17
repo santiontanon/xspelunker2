@@ -115,17 +115,3 @@ boss6_eye_frame_9:
 	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
 	dw #0102, BOSS6_NAMETABLE_EYE_9  ; dimensions and nametable
 	dw 0, #0102  ; boss__clear_bbox
-
-
-boss6_fist_frame_0:
-	db 1  ; number of parts
-	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
-	dw #0404, BOSS6_NAMETABLE_FIST  ; dimensions and nametable
-	dw 0, #0404  ; boss__clear_bbox
-
-
-boss6_arm_frame_0:
-	db 1  ; number of parts
-	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
-	dw #0402, BOSS6_NAMETABLE_ARM  ; dimensions and nametable
-	dw 0, #0402  ; boss__clear_bbox

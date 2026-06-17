@@ -254,7 +254,7 @@ update_boss6_behavior_0_wait_for_player:
 ;-----------------------------------------------
 ; phase 1:
 update_boss6_behavior_1:
-	jp update_boss6_start_behavior_2  ; DEBUG!!
+; 	jp update_boss6_start_behavior_2  ; DEBUG!!
 
 	; states:
 	; - 0: fire bullets through eyes
@@ -569,6 +569,8 @@ update_boss6_start_behavior_2:
 	ret
 
 update_boss6_behavior_2:
+; 	jp update_boss6_start_behavior_3  ; DEBUG!!
+
 	; states:
 	; - 0: fire bullets through eyes
 	; - 1: mouth open: parabolic stones (then back to 0)
@@ -621,9 +623,12 @@ update_boss6_behavior_2_to_state_5:
 	ld a, 5
 	ld (boss__state), a
 	; pick punch location:
-	ld c, 20
-	call random_modulo
-	inc a
+	ld a, (player_x + 1)
+	dec a
+	cp 18
+	jr c, update_boss6_behavior_2_to_state_5_continue
+	ld a, 18
+update_boss6_behavior_2_to_state_5_continue:
 	ld (boss__x2), a
 	ld a, -1
 	ld (boss__y2), a
@@ -637,15 +642,13 @@ update_boss6_behavior_2_state_5:
 	ld a, (hl)
 	inc (hl)
 	sub c
-	ret c  ; still waiting
-; 	and #01
-; 	ret nz
+	jp c, update_boss6_behavior_1_state_0_maybe_fire_bullet  ; still waiting
 	ld hl, boss__y2
 	inc (hl)
 	call update_boss6__draw_punch
 	ld a, (boss__y2)
 	cp 17
-	ret nz
+	jp nz, update_boss6_behavior_1_state_0_maybe_fire_bullet
 	xor a
 	ld (boss__state_timer), a
 	ld a, 6
@@ -654,7 +657,8 @@ update_boss6_behavior_2_state_5:
 	ld b, 19
 	call spawn_4tile_appart_dust
 	ld hl, SFX_explosion_low_pitch
-	jp play_SFX_with_high_priority
+	call play_SFX_with_high_priority
+	jp update_boss6_behavior_1_state_0_maybe_fire_bullet
 
 update_boss6_behavior_2_state_6:
 	; punch attack up
@@ -662,24 +666,45 @@ update_boss6_behavior_2_state_6:
 	ld a, (hl)
 	inc (hl)
 	cp 16
-	ret c  ; punch stays a bit
+	jp c, update_boss6_behavior_1_state_0_maybe_fire_bullet  ; punch stays a bit
 	and #01
-	ret nz
+	jp nz, update_boss6_behavior_1_state_0_maybe_fire_bullet
 	ld hl, boss__y2
 	dec (hl)
 	call update_boss6__draw_punch
 	ld a, (boss__y2)
 	cp -4
-	ret nz
+	jp nz, update_boss6_behavior_1_state_0_maybe_fire_bullet
 	xor a
 	ld (boss__state_timer), a
 	ld (boss__state), a
-	ret
+	jp update_boss6_behavior_1_state_0_maybe_fire_bullet
 
 
 update_boss6_behavior_2_state_7:
 	; entering phase 2 (roof being destroyed):
 	; from coordinate 1 - 23 of the ceiling must be destroyed
+	ld a, (boss__state_timer)
+	or a
+	jr nz, update_boss6_behavior_2_state_7_continue
+	; roar:
+	ld a, 3  ; mouth open
+	call update_boss6_draw_boss_frame
+	ld hl, draw_room_with_hud
+	ld c, TILES_PAGE
+	call call_hl_in_page_c_8000
+
+	ld hl, SFX_roar
+	call play_SFX_with_high_priority
+
+	ld b, 100
+	call wait_b_halts
+
+	ld a, 2  ; mouth closed
+	call update_boss6_draw_boss_frame
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)		
+update_boss6_behavior_2_state_7_continue:
 	ld hl, boss__state_timer
 	ld a, (hl)
 	ld c, a
@@ -903,6 +928,9 @@ update_boss6_draw_boss_frame_not_clearing:
 
 ;-----------------------------------------------
 update_boss6__draw_punch:
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)	
+
 	; clear vertical of the punch:
 	ld bc, (boss__x2)
 	ld b, 0
@@ -917,20 +945,39 @@ update_boss6__draw_punch:
 	; draw the fist:
 	ld bc, (boss__x2)
 	call get_room_tile_ptr
-	ex de, hl
-	ld b, 4
-	ld iyl, 4
-	ld ix, BOSS6_NAMETABLE_FIST
-	ld c, BOSS_PAGE
-	ld hl, draw_boss_frame_part_ix_iyl
-	call call_hl_in_page_c_8000
+	push hl
+		ex de, hl
+		ld b, 4
+		ld iyl, 4
+		ld ix, BOSS6_NAMETABLE_FIST
+		ld c, BOSS_PAGE
+		ld hl, draw_boss_frame_part_ix_iyl
+		call call_hl_in_page_c_8000
 
 	; draw the arm:
-	; ...
-
-	ld hl, redraw_flags
-	set ROOM_REDRAW_FLAG_BIT, (hl)	
-	ret
+	pop de
+	inc de
+	ld a, (boss__y2)
+update_boss6__draw_punch_loop:
+	or a
+	ret z
+	ret m
+	sub 4
+	ex de, hl
+		ld bc, -32*4
+		add hl, bc
+	ex de, hl
+	push af
+	push de
+		ld b, 4
+		ld iyl, 2
+		ld ix, BOSS6_NAMETABLE_ARM
+		ld c, BOSS_PAGE
+		ld hl, draw_boss_frame_part_ix_iyl
+		call call_hl_in_page_c_8000
+	pop de
+	pop af
+	jr update_boss6__draw_punch_loop
 
 
 ;-----------------------------------------------
@@ -948,11 +995,12 @@ player_weapon_hitbox_check_boss__boss6_hit:
 	ld (boss__last_collision_id), a
 
 	; hit the main body:
-; 	ld a, e
-; 	cp 4 * 16 + 12  ; first non head tile
-; 	jp c, player_weapon_hitbox_check_boss__lose_hp  ; hit the head
-; 	ld hl, SFX_shield
-; 	jp play_SFX_with_high_priority
+	ld a, e
+	cp 189  ; first punch tile
+	jp c, player_weapon_hitbox_check_boss__boss6_hit_body
+	ld hl, SFX_shield
+	jp play_SFX_with_high_priority
+player_weapon_hitbox_check_boss__boss6_hit_body:
 	ld hl, player_weapon_hitbox_check_boss__lose_hp
 	ld c, BOSS_PAGE
 	jp call_hl_in_page_c_8000	

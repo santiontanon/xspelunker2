@@ -1084,6 +1084,11 @@ update_enemy_bullet:
 
 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	cp 2
+	jr c, update_enemy_bullet_continue
+	inc c
+update_enemy_bullet_continue:
 	call general_check_collision_with_wall
 	jp z, update_enemy_delete
 

@@ -1,11 +1,6 @@
 to do:
 
 ***- 6th boss: Giant Moai head
-  ***- Phase 2: fists attack
-    ***- draw the arm
-    ***- make it drop on top of the player (limiting to the area where it can fall)
-    ***- hitting the arm does no damage
-    ***- during fist attack, regular eye bullets continue
   ***- draw phase 3 elements in GIMP/TILED:
     ***- transition to robotic form (dust cloud? or can I fit all the tiles in a single image?)
     ***- robotic form (fists remain the same)
