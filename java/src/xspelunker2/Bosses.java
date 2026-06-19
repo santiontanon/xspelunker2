@@ -80,19 +80,19 @@ public class Bosses {
     
     public static void main(String args[]) throws Exception
     {
-//        boss1Tiles();
-//        boss1Sprites();
-//
-//        boss2Tiles();
-//        boss2Sprites();
-//
-//        boss3Tiles();
-//        boss3Sprites();
-//
-//        Boss4.main(args);
-//        
-//        boss5Tiles();
-//        boss5Sprites();
+        boss1Tiles();
+        boss1Sprites();
+
+        boss2Tiles();
+        boss2Sprites();
+
+        boss3Tiles();
+        boss3Sprites();
+
+        Boss4.main(args);
+        
+        boss5Tiles();
+        boss5Sprites();
 
         boss6Tiles();
         boss6Sprites();
@@ -701,11 +701,12 @@ public class Bosses {
             List<int[][]> nametables = addBossTilesInGapsForBoxes(nameTableBoxes, baseImage, boss5Tiles, availableTiles, collision, false, false);
 
             int nameTable[][] = nametables.get(0);
-            addNameTable(nameTable, 0, 1, 9, 10, nameTableData);  // face off  9x9
-            addNameTable(nameTable, 9, 1, 18, 10, nameTableData);  // face on  9x9
+            addNameTable(nameTable, 1, 1, 9, 13, nameTableData);  // face off  8x12
+            addNameTable(nameTable, 10, 1, 18, 13, nameTableData);  // face on  8x12
+            addNameTable(nameTable, 22, 1, 30, 13, nameTableData);  // face robot  8x12
 
-            addNameTable(nameTable, 0, 10, 7, 15, nameTableData);  // mouth closed  7x5
-            addNameTable(nameTable, 9, 10, 16, 15, nameTableData);  // mouth open  7x5
+            addNameTable(nameTable, 0, 10, 3, 15, nameTableData);  // mouth closed  3x5
+            addNameTable(nameTable, 9, 10, 12, 15, nameTableData);  // mouth open  3x5
 
             addNameTable(nameTable, 5, 4, 6, 5, nameTableData);  // eyes empty 1x1
             addNameTable(nameTable, 19, 1, 20, 2, nameTableData);  // eyes appearing 1x1
@@ -716,7 +717,11 @@ public class Bosses {
             addNameTable(nameTable, 19, 6, 20, 7, nameTableData);  // eyes turret appearing 3 1x1
             addNameTable(nameTable, 19, 7, 20, 8, nameTableData);  // eyes turret 1x1
             addNameTable(nameTable, 19, 8, 20, 9, nameTableData);  // eyes turret up 1x1
-            addNameTable(nameTable, 19, 9, 20, 10, nameTableData);  // eyes turrnt down 1x1
+            addNameTable(nameTable, 19, 9, 20, 10, nameTableData);  // eyes turret down 1x1
+
+            addNameTable(nameTable, 19, 10, 20, 11, nameTableData);  // face turret 1x1
+            addNameTable(nameTable, 19, 11, 20, 12, nameTableData);  // face turret up 1x1
+            addNameTable(nameTable, 19, 12, 20, 13, nameTableData);  // face turret down 1x1
 
             addNameTable(nameTable, 0, 19, 4, 23, nameTableData);  // fist (4x4)
             addNameTable(nameTable, 1, 15, 3, 19, nameTableData);  // arm (2x4)

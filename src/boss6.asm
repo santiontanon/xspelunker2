@@ -17,6 +17,8 @@ boss6_frame_ptrs:
 	dw boss6_frame_0_face_off_mouth_open
 	dw boss6_frame_0_face_on
 	dw boss6_frame_0_face_on_mouth_open
+	dw boss6_frame_0_face_robot
+	dw boss6_frame_0_face_robot_mouth_open
 
 boss6_eye_frame_ptrs:
 	dw boss6_eye_frame_0
@@ -613,7 +615,7 @@ update_boss6_behavior_2_state_0:
 	call random_a
 	and c
 	jr z, update_boss6_behavior_2_to_state_5
-	jr update_boss6_behavior_2_to_state_5  ; DEBUG!
+	; jr update_boss6_behavior_2_to_state_5  ; DEBUG!
 	jp update_boss6_behavior_1_state_0_entry_point
 
 
@@ -829,15 +831,193 @@ update_boss6_behavior_3:
 	ret
 
 update_boss6_behavior_3_state_0:
+	; face turret:
 	; ...
-	ret
 
+	; punch attack?
+	ld a, (boss__settings + BOSS_6_EYE_PUNCH_ATTACK_MASK)
+	ld c, a
+	call random_a
+	and c
+	jp z, update_boss6_behavior_2_to_state_5
+	; mouth attack?
+	ld a, (boss__settings + BOSS_6_MOUTH_ATTACK_MASK)
+	ld c, a
+	call random_a
+	and c
+	jr z, update_boss6_behavior_3_to_state_1
+	ld a, (boss__settings + BOSS_6_EYE_TURRET_ATTACK_MASK)
+	ld c, a
+	call random_a
+	and c
+	jp z, update_boss6_behavior_1_to_state_2
+	jp update_boss6_behavior_1_state_0_maybe_fire_bullet
+
+update_boss6_behavior_3_to_state_1:
+	xor a
+	ld (boss__state_timer), a
+	inc a
+	ld (boss__state), a
 update_boss6_behavior_3_state_1:
+	; mouth open: parabolic stones (then back to 0)
+	ld a, (boss__state_timer)
+	or a
+	jr nz, update_boss6_behavior_3_state_1_continue
+	ld a, 5  ; open mouth
+	call update_boss6_draw_boss_frame
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)
+update_boss6_behavior_3_state_1_continue:
+	ld hl, boss__state_timer
+	inc (hl)	
+	ld a, (boss__settings + BOSS_6_WAIT_TIME_OFFSET)
+	ld c, a
+	add a, a
+	cp (hl)
+	jr z, update_boss6_behavior_3_state_1_continue_done
+	ld a, (hl)
+	sub c
+	jp c, update_boss6_behavior_1_state_0_maybe_fire_bullet
+	; throw one stone each 4 cycles:
+	ld c, a
+	and #03
+	jp nz, update_boss6_behavior_1_state_0_maybe_fire_bullet
+	ld a, c
+	rrca
+	rrca
+	and #3f
+	ld c, a
+	ld a, (boss__settings + BOSS_6_MOUTH_ATTACK_N_STONES)
+	cp c
+	jp z, update_boss6_behavior_1_state_0_maybe_fire_bullet
+	jp c, update_boss6_behavior_1_state_0_maybe_fire_bullet	
+	; chance of spawning drones:
 	; ...
-	ret
+
+	jp update_boss6_behavior_1_state_1_attack
+update_boss6_behavior_3_state_1_continue_done:
+	ld a, 4  ; closed mouth
+	call update_boss6_draw_boss_frame
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)
+	jp update_boss6_behavior_1_state_back_to_0
+
+update_boss6_behavior_3_state_7_table:
+	; coordinates of the dust: x, y, width
+	db 26, 7, 4
+	db 25, 8, 5
+	db 25, 9, 5
+	db 25, 10, 5
+	db 24, 11, 6
+	db 24, 12, 6
+	db 25, 13, 5
+	db 26, 14, 3
+	db 26, 15, 2
+	db 26, 16, 1
+update_boss6_behavior_3_state_7_table_end:
+
 
 update_boss6_behavior_3_state_7:
-	; ...
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	and #03
+	jr nz, update_boss6_behavior_3_state_7_continue
+	; spawn an explosion:
+	ld bc, #0819
+	call random_a
+	and #03
+	add a, c
+	ld c, a
+	call random_a
+	and #07
+	add a, b
+	ld b, a
+	call spawn_explosion
+update_boss6_behavior_3_state_7_continue:
+	; draw transition dust:
+	ld a, (boss__state_timer)
+	and #03
+	ret nz	
+
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)
+
+	ld a, (boss__state_timer)
+	cp 8*10
+	jr z, update_boss6_behavior_3_state_7_done
+	rrca
+	rrca
+	rrca
+	and #0f
+	push af
+		ld c, a
+		add a, a
+		add a, c
+		ld hl, update_boss6_behavior_3_state_7_table
+		ADD_HL_A
+		ld c, (hl)
+		inc hl
+		ld b, (hl)
+		inc hl
+		push hl
+			call get_room_tile_ptr
+			ex de, hl
+		pop hl
+		ld a, 224  ; first dust tile
+		ld (de), a
+		inc de
+		ld b, (hl)
+update_boss6_behavior_3_state_7_dust_loop:
+		ld a, (boss__state_timer)
+		rrca
+		rrca
+		add a, b
+		and #01
+		add a, 225
+		ld (de), a
+		inc de
+		djnz update_boss6_behavior_3_state_7_dust_loop
+		ld a, 227
+		ld (de), a
+	pop af
+	or a
+	ret z
+	dec a 
+	push af
+		add a, 7
+		ld b, a
+		ld c, 23
+		call get_room_tile_ptr
+		ex de, hl
+	pop af
+	; start drawing the robotic face: (row "a")
+	ld hl, BOSS6_NAMETABLE_HEAD_ROBOT
+	add a, a
+	add a, a
+	add a, a
+	ADD_HL_A
+	ld a, BOSS_PAGE
+	ld bc, 8
+	call ldir_from_page_a
+	ld h, d
+	ld l, e
+	ld bc, 2*32*24
+	add hl, bc
+	ldi  ; clear the right most tile
+	ret
+
+update_boss6_behavior_3_state_7_done:
+	; done
+	ld a, 4  ; robotic face (mouth closed)
+	call update_boss6_draw_boss_frame
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)
+	ld hl, update_animations_in_vdp_boss6b
+	ld (current_room__animation_fn_ptr), hl	
+	xor a
+	ld (boss__state), a
+	ld (boss__state_timer), a
 	ret
 
 

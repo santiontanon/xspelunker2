@@ -1,16 +1,13 @@
 to do:
 
 ***- 6th boss: Giant Moai head
-  ***- Phase 3:
-    ***- transition to phase 3
-    ***- tile animations for the new mode
-    ***- instead of rocks, now it spits drones through the mouth (up to a maximum number)
-    ***- bullets are now fired from a couple of other places in the face too
-    ***- in high difficulty levels (hard/very hard) fists come in pairs (?)
-  ***- killing the boss (explosions and disappear, leaving just rock)
+    ***- phase 3: face turret follows player
+    ***- phase 3: face turret also fires (the fast laser, but periodically, as for not being overwhelming)
+    ***- phase 3: mouth can also spawn drones (up to a maximum number)
+  ***- killing the boss (explosions and disappear, leaving just the background)
   ***- drops
   ***- add boss name to the stats for game over screen if you beat it
-  ***- sample "activate" or a godzilla roar with https://github.com/EdouardBERGE/wav2ay/blob/main/wav2ay.c
+  ***- sample "activate"/godzilla roar with https://github.com/EdouardBERGE/wav2ay/blob/main/wav2ay.c
 
 - music: (brain 12, 15, 23, 25 have potential)
   - xibalba
