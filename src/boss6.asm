@@ -32,6 +32,12 @@ boss6_eye_frame_ptrs:
 	dw boss6_eye_frame_8  ; turret up
 	dw boss6_eye_frame_9  ; turret down
 
+boss6_face_turret_frame_ptrs:
+	dw boss6_face_turret_frame_0
+	dw boss6_face_turret_frame_0
+	dw boss6_face_turret_frame_1
+	dw boss6_face_turret_frame_2
+
 
 ;-----------------------------------------------
 ; Boss phases:
@@ -114,6 +120,7 @@ update_boss6_behavior_init_continue:
 	ld (boss__x2), a
 	ld (boss__y2), a
 	ld (boss__6_eye_frame), a
+	ld (boss__6_face_turret_frame), a
 	ld hl, (boss__settings + BOSS_6_HP_OFFSET)
 	ld (boss__hp), hl
 	ld hl, player_weapon_hitbox_check_boss__boss6_hit
@@ -256,8 +263,6 @@ update_boss6_behavior_0_wait_for_player:
 ;-----------------------------------------------
 ; phase 1:
 update_boss6_behavior_1:
-	jp update_boss6_start_behavior_2  ; DEBUG!!
-
 	; states:
 	; - 0: fire bullets through eyes
 	; - 1: mouth open: parabolic stones (then back to 0)
@@ -277,13 +282,14 @@ update_boss6_behavior_1:
 	jp z, update_boss6_behavior_1_state_4
 	ret
 
-update_boss6_behavior_1_state_0:
+update_boss6_behavior_1_state_0:	
 	; check if we need to transition to phase 2:
 	ld bc, (boss__settings + BOSS_6_HP_PHASE2_OFFSET)
 	ld hl, (boss__hp)
 	or a
 	sbc hl, bc
 	jp c, update_boss6_start_behavior_2
+	jp update_boss6_start_behavior_2  ; DEBUG!!
 
 update_boss6_behavior_1_state_0_entry_point:
 	; this part is shared phase 1 and phase 2
@@ -299,6 +305,40 @@ update_boss6_behavior_1_state_0_entry_point:
 	and c
 	jp z, update_boss6_behavior_1_to_state_2
 update_boss6_behavior_1_state_0_maybe_fire_bullet:
+
+	; only update the face turret in behavior 3:
+	ld a, (boss__behavior)
+	cp 3
+	jr nz, update_boss6_behavior_1_state_0_no_face_turret
+	; face turret tracks player:
+	ld a, (player_y + 1)
+	ld c, 2
+	cp 9
+	jr c, update_boss6_behavior_1_state_0_turret_angle_set
+	cp 14
+	ld c, 1
+	jr c, update_boss6_behavior_1_state_0_turret_angle_set
+	ld c, 3
+update_boss6_behavior_1_state_0_turret_angle_set:
+	ld a, (boss__6_face_turret_frame)
+	cp c
+	jr z, update_boss6_behavior_1_state_0_turret_frame_set
+	ld a, c
+	ld (boss__6_face_turret_frame), a
+	call update_boss6_draw_boss_frame_eye
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)
+update_boss6_behavior_1_state_0_turret_frame_set:
+	; face turret chance of firing:
+	ld a, (game_cycle)
+	and #3e
+	jr nz, update_boss6_behavior_1_state_0_no_face_turret
+
+	ld hl, #0505
+	call update_boss6_behavior_1_state_3_turret_fire_laser_hl_set
+
+update_boss6_behavior_1_state_0_no_face_turret:
+
 	; fire bullets through eyes
 	ld a, (boss__settings + BOSS_6_EYE_BULLET_TIME_MASK)
 	ld c, a
@@ -345,7 +385,7 @@ update_boss6_behavior_1_state_1_continue:
 	; throw one stone each 4 cycles:
 	ld c, a
 	and #03
-	jr nz, update_boss6_behavior_1_state_0_maybe_fire_bullet
+	jp nz, update_boss6_behavior_1_state_0_maybe_fire_bullet
 	ld a, c
 	rrca
 	rrca
@@ -353,8 +393,8 @@ update_boss6_behavior_1_state_1_continue:
 	ld c, a
 	ld a, (boss__settings + BOSS_6_MOUTH_ATTACK_N_STONES)
 	cp c
-	jr z, update_boss6_behavior_1_state_0_maybe_fire_bullet
-	jr c, update_boss6_behavior_1_state_0_maybe_fire_bullet
+	jp z, update_boss6_behavior_1_state_0_maybe_fire_bullet
+	jp c, update_boss6_behavior_1_state_0_maybe_fire_bullet
 	jr update_boss6_behavior_1_state_1_attack
 
 update_boss6_behavior_1_state_1_continue_done:
@@ -431,8 +471,7 @@ update_boss6_behavior_1_state_2:
 	ADD_HL_A
 	ld a, (hl)
 	ld (boss__6_eye_frame), a
-	ld a, 2
-	call update_boss6_draw_boss_frame
+	call update_boss6_draw_boss_frame_eye
 	ld hl, redraw_flags
 	set ROOM_REDRAW_FLAG_BIT, (hl)
 	ret
@@ -464,8 +503,7 @@ update_boss6_behavior_1_state_3_turret_angle_set:
 	jr z, update_boss6_behavior_1_state_3_turret_frame_set
 	ld a, c
 	ld (boss__6_eye_frame), a
-	ld a, 2
-	call update_boss6_draw_boss_frame
+	call update_boss6_draw_boss_frame_eye
 	ld hl, redraw_flags
 	set ROOM_REDRAW_FLAG_BIT, (hl)
 update_boss6_behavior_1_state_3_turret_frame_set:
@@ -477,6 +515,7 @@ update_boss6_behavior_1_state_3_turret_frame_set:
 	ret nz
 	; fire a directional laser:
 	ld hl, #0305
+update_boss6_behavior_1_state_3_turret_fire_laser_hl_set:
 	ld bc, (boss__x)
 	add hl, bc
 	ld e, l
@@ -551,8 +590,7 @@ update_boss6_behavior_1_state_4:
 	ADD_HL_A
 	ld a, (hl)
 	ld (boss__6_eye_frame), a
-	ld a, 2
-	call update_boss6_draw_boss_frame
+	call update_boss6_draw_boss_frame_eye
 	ld hl, redraw_flags
 	set ROOM_REDRAW_FLAG_BIT, (hl)
 	ret
@@ -571,8 +609,6 @@ update_boss6_start_behavior_2:
 	ret
 
 update_boss6_behavior_2:
-	jp update_boss6_start_behavior_3  ; DEBUG!!
-
 	; states:
 	; - 0: fire bullets through eyes
 	; - 1: mouth open: parabolic stones (then back to 0)
@@ -608,6 +644,7 @@ update_boss6_behavior_2_state_0:
 	or a
 	sbc hl, bc
 	jp c, update_boss6_start_behavior_3
+	jp update_boss6_start_behavior_3  ; DEBUG!!
 
 	; punch attack?
 	ld a, (boss__settings + BOSS_6_EYE_PUNCH_ATTACK_MASK)
@@ -831,9 +868,6 @@ update_boss6_behavior_3:
 	ret
 
 update_boss6_behavior_3_state_0:
-	; face turret:
-	; ...
-
 	; punch attack?
 	ld a, (boss__settings + BOSS_6_EYE_PUNCH_ATTACK_MASK)
 	ld c, a
@@ -846,11 +880,13 @@ update_boss6_behavior_3_state_0:
 	call random_a
 	and c
 	jr z, update_boss6_behavior_3_to_state_1
+	; eye turret?
 	ld a, (boss__settings + BOSS_6_EYE_TURRET_ATTACK_MASK)
 	ld c, a
 	call random_a
 	and c
 	jp z, update_boss6_behavior_1_to_state_2
+
 	jp update_boss6_behavior_1_state_0_maybe_fire_bullet
 
 update_boss6_behavior_3_to_state_1:
@@ -1119,9 +1155,10 @@ update_boss6_draw_boss_frame_not_clearing:
 	ld hl, draw_boss_frame_1_without_clearing_ix
 	call call_hl_in_page_c_8000
 
+update_boss6_draw_boss_frame_eye:
 	ld a, (boss__6_eye_frame)
 	or a
-	ret z
+	jr z, update_boss6_draw_boss_frame_face_turret
 	; draw eye frame:
 	ld hl, boss6_eye_frame_ptrs
 	add a, a
@@ -1132,6 +1169,31 @@ update_boss6_draw_boss_frame_not_clearing:
 	ld l, a
 	push hl
 		ld hl, #0305
+		ld bc, (boss__x)
+		add hl, bc
+		ld c, l
+		ld b, h
+		call get_room_tile_ptr
+		ex de, hl  ; hl = ptr where the boss is to be drawn
+	pop ix
+	ld c, BOSS_PAGE
+	ld hl, draw_boss_frame_internal_ix
+	call call_hl_in_page_c_8000
+
+update_boss6_draw_boss_frame_face_turret:
+	ld a, (boss__6_face_turret_frame)
+	or a
+	ret z
+	; draw face turret frame:
+	ld hl, boss6_face_turret_frame_ptrs
+	add a, a
+	ADD_HL_A
+	ld a, (hl)
+	inc hl
+	ld h, (hl)
+	ld l, a
+	push hl
+		ld hl, #0505
 		ld bc, (boss__x)
 		add hl, bc
 		ld c, l

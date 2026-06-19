@@ -1,9 +1,7 @@
 to do:
 
 ***- 6th boss: Giant Moai head
-    ***- phase 3: face turret follows player
-    ***- phase 3: face turret also fires (the fast laser, but periodically, as for not being overwhelming)
-    ***- phase 3: mouth can also spawn drones (up to a maximum number)
+  ***- phase 3: mouth can also spawn drones (up to a maximum number)
   ***- killing the boss (explosions and disappear, leaving just the background)
   ***- drops
   ***- add boss name to the stats for game over screen if you beat it

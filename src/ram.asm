@@ -343,6 +343,7 @@ boss__5_scylla_arms_attack_state2: equ boss__tmp_space + 18  ; 0: no attack, 1+ 
 boss__5_scylla_arms_attack_clear2: equ boss__tmp_space + 19  ; 0: no clear, 1 - 23: clear this row
 ;
 boss__6_eye_frame: equ boss__tmp_space
+boss__6_face_turret_frame: equ boss__tmp_space + 1
 
 alien_ambush__n_aliens_spawned: equ boss__tmp_space
 alien_ambush__n_ufos_spawned: equ boss__tmp_space + 1

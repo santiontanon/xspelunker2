@@ -137,3 +137,22 @@ boss6_eye_frame_9:
 	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
 	dw #0101, BOSS6_NAMETABLE_EYE_9  ; dimensions and nametable
 	dw 0, #0101  ; boss__clear_bbox
+
+
+boss6_face_turret_frame_0:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0101, BOSS6_NAMETABLE_TURRET_0  ; dimensions and nametable
+	dw 0, #0101  ; boss__clear_bbox
+
+boss6_face_turret_frame_1:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0101, BOSS6_NAMETABLE_TURRET_1  ; dimensions and nametable
+	dw 0, #0101  ; boss__clear_bbox
+
+boss6_face_turret_frame_2:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0101, BOSS6_NAMETABLE_TURRET_2  ; dimensions and nametable
+	dw 0, #0101  ; boss__clear_bbox
