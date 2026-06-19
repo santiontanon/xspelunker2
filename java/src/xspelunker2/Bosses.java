@@ -80,19 +80,19 @@ public class Bosses {
     
     public static void main(String args[]) throws Exception
     {
-        boss1Tiles();
-        boss1Sprites();
-
-        boss2Tiles();
-        boss2Sprites();
-
-        boss3Tiles();
-        boss3Sprites();
-
-        Boss4.main(args);
-        
-        boss5Tiles();
-        boss5Sprites();
+//        boss1Tiles();
+//        boss1Sprites();
+//
+//        boss2Tiles();
+//        boss2Sprites();
+//
+//        boss3Tiles();
+//        boss3Sprites();
+//
+//        Boss4.main(args);
+//        
+//        boss5Tiles();
+//        boss5Sprites();
 
         boss6Tiles();
         boss6Sprites();
@@ -696,6 +696,7 @@ public class Bosses {
             BufferedImage baseImage = ImageIO.read(new File(bossBaseTiles));        
 
             List<int[]> nameTableBoxes = new ArrayList<>();
+//            nameTableBoxes.add(new int[]{0, 32, 168, 256});  // base face
             nameTableBoxes.add(new int[]{0, 32, 256, 256});  // base face
             List<int[][]> nametables = addBossTilesInGapsForBoxes(nameTableBoxes, baseImage, boss5Tiles, availableTiles, collision, false, false);
 
@@ -706,16 +707,16 @@ public class Bosses {
             addNameTable(nameTable, 0, 10, 7, 15, nameTableData);  // mouth closed  7x5
             addNameTable(nameTable, 9, 10, 16, 15, nameTableData);  // mouth open  7x5
 
-            addNameTable(nameTable, 5, 4, 7, 5, nameTableData);  // eyes empty 2x1
-            addNameTable(nameTable, 19, 1, 21, 2, nameTableData);  // eyes appearing 2x1
-            addNameTable(nameTable, 19, 2, 21, 3, nameTableData);  // eyes appearing 2 2x1
-            addNameTable(nameTable, 19, 3, 21, 4, nameTableData);  // eyes on 2x1
-            addNameTable(nameTable, 19, 4, 21, 5, nameTableData);  // eyes turret appearing 1 2x1
-            addNameTable(nameTable, 19, 5, 21, 6, nameTableData);  // eyes turret appearing 2 2x1
-            addNameTable(nameTable, 19, 6, 21, 7, nameTableData);  // eyes turret appearing 3 2x1
-            addNameTable(nameTable, 19, 7, 21, 8, nameTableData);  // eyes turret 2x1
-            addNameTable(nameTable, 19, 8, 21, 9, nameTableData);  // eyes turret up 2x1
-            addNameTable(nameTable, 19, 9, 21, 10, nameTableData);  // eyes turrnt down 2x1
+            addNameTable(nameTable, 5, 4, 6, 5, nameTableData);  // eyes empty 1x1
+            addNameTable(nameTable, 19, 1, 20, 2, nameTableData);  // eyes appearing 1x1
+            addNameTable(nameTable, 19, 2, 20, 3, nameTableData);  // eyes appearing 2 1x1
+            addNameTable(nameTable, 19, 3, 20, 4, nameTableData);  // eyes on 1x1
+            addNameTable(nameTable, 19, 4, 20, 5, nameTableData);  // eyes turret appearing 1 1x1
+            addNameTable(nameTable, 19, 5, 20, 6, nameTableData);  // eyes turret appearing 2 1x1
+            addNameTable(nameTable, 19, 6, 20, 7, nameTableData);  // eyes turret appearing 3 1x1
+            addNameTable(nameTable, 19, 7, 20, 8, nameTableData);  // eyes turret 1x1
+            addNameTable(nameTable, 19, 8, 20, 9, nameTableData);  // eyes turret up 1x1
+            addNameTable(nameTable, 19, 9, 20, 10, nameTableData);  // eyes turrnt down 1x1
 
             addNameTable(nameTable, 0, 19, 4, 23, nameTableData);  // fist (4x4)
             addNameTable(nameTable, 1, 15, 3, 19, nameTableData);  // arm (2x4)

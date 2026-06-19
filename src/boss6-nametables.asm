@@ -7,18 +7,18 @@ BOSS6_NAMETABLE_HEAD_ON: equ boss6_name_tables + 9*9  ; 9*9
 BOSS6_NAMETABLE_MOUTH_CLOSED: equ BOSS6_NAMETABLE_HEAD_ON + 9*9  ; 7*5
 BOSS6_NAMETABLE_MOUTH_OPEN: equ BOSS6_NAMETABLE_MOUTH_CLOSED + 7*5  ; 7*5
 
-BOSS6_NAMETABLE_EYE_0: equ BOSS6_NAMETABLE_MOUTH_OPEN + 7*5  ; 2*1
-BOSS6_NAMETABLE_EYE_1: equ BOSS6_NAMETABLE_EYE_0 + 2*1  ; 2*1
-BOSS6_NAMETABLE_EYE_2: equ BOSS6_NAMETABLE_EYE_1 + 2*1  ; 2*1
-BOSS6_NAMETABLE_EYE_3: equ BOSS6_NAMETABLE_EYE_2 + 2*1  ; 2*1
-BOSS6_NAMETABLE_EYE_4: equ BOSS6_NAMETABLE_EYE_3 + 2*1  ; 2*1
-BOSS6_NAMETABLE_EYE_5: equ BOSS6_NAMETABLE_EYE_4 + 2*1  ; 2*1
-BOSS6_NAMETABLE_EYE_6: equ BOSS6_NAMETABLE_EYE_5 + 2*1  ; 2*1
-BOSS6_NAMETABLE_EYE_7: equ BOSS6_NAMETABLE_EYE_6 + 2*1  ; 2*1
-BOSS6_NAMETABLE_EYE_8: equ BOSS6_NAMETABLE_EYE_7 + 2*1  ; 2*1
-BOSS6_NAMETABLE_EYE_9: equ BOSS6_NAMETABLE_EYE_8 + 2*1  ; 2*1
+BOSS6_NAMETABLE_EYE_0: equ BOSS6_NAMETABLE_MOUTH_OPEN + 7*5  ; 1*1
+BOSS6_NAMETABLE_EYE_1: equ BOSS6_NAMETABLE_EYE_0 + 1*1  ; 1*1
+BOSS6_NAMETABLE_EYE_2: equ BOSS6_NAMETABLE_EYE_1 + 1*1  ; 1*1
+BOSS6_NAMETABLE_EYE_3: equ BOSS6_NAMETABLE_EYE_2 + 1*1  ; 1*1
+BOSS6_NAMETABLE_EYE_4: equ BOSS6_NAMETABLE_EYE_3 + 1*1  ; 1*1
+BOSS6_NAMETABLE_EYE_5: equ BOSS6_NAMETABLE_EYE_4 + 1*1  ; 1*1
+BOSS6_NAMETABLE_EYE_6: equ BOSS6_NAMETABLE_EYE_5 + 1*1  ; 1*1
+BOSS6_NAMETABLE_EYE_7: equ BOSS6_NAMETABLE_EYE_6 + 1*1  ; 1*1
+BOSS6_NAMETABLE_EYE_8: equ BOSS6_NAMETABLE_EYE_7 + 1*1  ; 1*1
+BOSS6_NAMETABLE_EYE_9: equ BOSS6_NAMETABLE_EYE_8 + 1*1  ; 1*1
 
-BOSS6_NAMETABLE_FIST: equ BOSS6_NAMETABLE_EYE_9 + 2*1  ; 4*4
+BOSS6_NAMETABLE_FIST: equ BOSS6_NAMETABLE_EYE_9 + 1*1  ; 4*4
 BOSS6_NAMETABLE_ARM: equ BOSS6_NAMETABLE_FIST + 4*4  ; 2*4
 
 
@@ -59,59 +59,59 @@ boss6_frame_0_face_on_mouth_open:
 boss6_eye_frame_0:
 	db 1  ; number of parts
 	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
-	dw #0102, BOSS6_NAMETABLE_EYE_0  ; dimensions and nametable
-	dw 0, #0102  ; boss__clear_bbox
+	dw #0101, BOSS6_NAMETABLE_EYE_0  ; dimensions and nametable
+	dw 0, #0101  ; boss__clear_bbox
 
 boss6_eye_frame_1:
 	db 1  ; number of parts
 	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
-	dw #0102, BOSS6_NAMETABLE_EYE_1  ; dimensions and nametable
-	dw 0, #0102  ; boss__clear_bbox
+	dw #0101, BOSS6_NAMETABLE_EYE_1  ; dimensions and nametable
+	dw 0, #0101  ; boss__clear_bbox
 
 boss6_eye_frame_2:
 	db 1  ; number of parts
 	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
-	dw #0102, BOSS6_NAMETABLE_EYE_2  ; dimensions and nametable
-	dw 0, #0102  ; boss__clear_bbox
+	dw #0101, BOSS6_NAMETABLE_EYE_2  ; dimensions and nametable
+	dw 0, #0101  ; boss__clear_bbox
 
 boss6_eye_frame_3:
 	db 1  ; number of parts
 	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
-	dw #0102, BOSS6_NAMETABLE_EYE_3  ; dimensions and nametable
-	dw 0, #0102  ; boss__clear_bbox
+	dw #0101, BOSS6_NAMETABLE_EYE_3  ; dimensions and nametable
+	dw 0, #0101  ; boss__clear_bbox
 
 boss6_eye_frame_4:
 	db 1  ; number of parts
 	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
-	dw #0102, BOSS6_NAMETABLE_EYE_4  ; dimensions and nametable
-	dw 0, #0102  ; boss__clear_bbox
+	dw #0101, BOSS6_NAMETABLE_EYE_4  ; dimensions and nametable
+	dw 0, #0101  ; boss__clear_bbox
 
 boss6_eye_frame_5:
 	db 1  ; number of parts
 	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
-	dw #0102, BOSS6_NAMETABLE_EYE_5  ; dimensions and nametable
-	dw 0, #0102  ; boss__clear_bbox
+	dw #0101, BOSS6_NAMETABLE_EYE_5  ; dimensions and nametable
+	dw 0, #0101  ; boss__clear_bbox
 
 boss6_eye_frame_6:
 	db 1  ; number of parts
 	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
-	dw #0102, BOSS6_NAMETABLE_EYE_6  ; dimensions and nametable
-	dw 0, #0102  ; boss__clear_bbox
+	dw #0101, BOSS6_NAMETABLE_EYE_6  ; dimensions and nametable
+	dw 0, #0101  ; boss__clear_bbox
 
 boss6_eye_frame_7:
 	db 1  ; number of parts
 	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
-	dw #0102, BOSS6_NAMETABLE_EYE_7  ; dimensions and nametable
-	dw 0, #0102  ; boss__clear_bbox
+	dw #0101, BOSS6_NAMETABLE_EYE_7  ; dimensions and nametable
+	dw 0, #0101  ; boss__clear_bbox
 
 boss6_eye_frame_8:
 	db 1  ; number of parts
 	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
-	dw #0102, BOSS6_NAMETABLE_EYE_8  ; dimensions and nametable
-	dw 0, #0102  ; boss__clear_bbox
+	dw #0101, BOSS6_NAMETABLE_EYE_8  ; dimensions and nametable
+	dw 0, #0101  ; boss__clear_bbox
 
 boss6_eye_frame_9:
 	db 1  ; number of parts
 	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
-	dw #0102, BOSS6_NAMETABLE_EYE_9  ; dimensions and nametable
-	dw 0, #0102  ; boss__clear_bbox
+	dw #0101, BOSS6_NAMETABLE_EYE_9  ; dimensions and nametable
+	dw 0, #0101  ; boss__clear_bbox

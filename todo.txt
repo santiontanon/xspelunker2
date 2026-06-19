@@ -1,23 +1,23 @@
 to do:
 
 ***- 6th boss: Giant Moai head
-  ***- draw phase 3 elements in GIMP/TILED:
-    ***- transition to robotic form (dust cloud? or can I fit all the tiles in a single image?)
-    ***- robotic form (fists remain the same)
+  ***- draw transition to robotic form (dust cloud / explosion)
   ***- Phase 3: after some more damage, the stone face breaks, revealing a robotic face underneath
+    ***- tile animations for the new mode
     ***- instead of rocks, now it spits drones through the mouth (up to a maximum number)
     ***- bullets are now fired from a couple of other places in the face too
-    ***- in high difficulty levels (hard/very hard) fists come in pairs  
+    ***- in high difficulty levels (hard/very hard) fists come in pairs (?)
   ***- killing the boss (explosions and disappear, leaving just rock)
   ***- drops
   ***- add boss name to the stats for game over screen if you beat it
+  ***- sample "activate" or a godzilla roar with https://github.com/EdouardBERGE/wav2ay/blob/main/wav2ay.c
 
 - music: (brain 12, 15, 23, 25 have potential)
   - xibalba
   - atlantis
   - mars
   - moon
-- 7th boss (ideas: "The Lunar Obsidian Sentinel" (tall, slender, smooth black, reflective surfaces), "The Lunar Crystal Serpent", "The Moon Stone Monolith").
+- 7th boss (ideas: snake/serpent "The Lunar Serpent"? two headed?).
   - add boss name to the stats for game over screen
 - ending B: the calendar stone machine also activates its offensive mechanism and destroys the alien armada that was coming. You hope that will deter them from coming again.
 - Ending B+: (got the forge active with the codex, but did not defeat the final alien boss)
