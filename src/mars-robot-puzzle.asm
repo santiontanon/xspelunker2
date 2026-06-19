@@ -180,7 +180,8 @@ mars_robot_puzzle_back_to_boss_room:
 	ld (boss__state), a
 	ld (boss__state_timer), a
 	ld (boss__hit_timer), a	
-	ld (boss__last_collision_id), a
+	ld (boss__last_collision_id1), a
+	ld (boss__last_collision_id2), a
 	inc a  ; a = 1
 	ld (boss__active), a
 	ld (current_room__tileset_overrides_item_tiles), a

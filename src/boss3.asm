@@ -759,6 +759,8 @@ update_boss3_behavior_3_state_2_loop:
 
 	xor a
 	ld (boss__active), a
+	ld a, TAG_BOSS3_CHESTLOCK
+	ld (boss__mark_defeated_after_exiting_door), a
 
 	; mark for stats:
 	ld b, 3  ; cabrakan
@@ -1081,9 +1083,6 @@ update_boss3_draw_boss_frame_head_attached_ptr_set:
 ; - iyl: collision ID
 ; - ix: ptr of the tile we hit
 player_weapon_hitbox_check_boss__boss3_hit:
-	ld a, iyl
-	ld (boss__last_collision_id), a
-
 	; hit the main body:
 	ld a, e
 	cp 4 * 16 + 12  ; first non head tile

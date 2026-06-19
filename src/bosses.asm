@@ -192,7 +192,8 @@ enter_boss_door__room_prettified:
 		ld (boss__state), a
 		ld (boss__state_timer), a
 		ld (boss__hit_timer), a	
-		ld (boss__last_collision_id), a
+		ld (boss__last_collision_id1), a
+		ld (boss__last_collision_id2), a
 		inc a  ; a = 1
 		ld (boss__active), a
 		ld (current_room__tileset_overrides_item_tiles), a
@@ -422,8 +423,6 @@ pick_up_boss_power_stone:
 	ld hl, SFX_item_pickup
 	call play_SFX_with_high_priority
 
-	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
-	ld (in_game_event_fn_arg), a
 	; message:
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
 	ld de, TEXT_FIRST_POWER_STONE
@@ -442,8 +441,6 @@ pick_up_boss_power_stone_continue:
 		ld hl, room_undraw_tile_objects
 		call call_hl_in_page_c_8000
 	pop ix
-	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
-	ld (in_game_event_fn_arg), a
 
 	ld c, TILES_PAGE
 	ld hl, delete_tile_object_in_ix
@@ -472,7 +469,6 @@ pick_up_boss_power_stone_continue2:
 	ld a, (boss_door_exit_to_y)
 	ld (player_y + 1), a
 
-	; ld (in_game_event_fn_arg), a  ; it was set above already
 	ld hl, event__exit_boss_door
 	ld (in_game_event_fn_ptr), hl
 	ld a, BOSS_PAGE
@@ -534,15 +530,14 @@ pick_up_boss_charybdis_eye_continue:
 
 ;-----------------------------------------------
 event__exit_boss_door:
-	; update boss state as killed (so that boss door does not spawn any more):
-	ld a, (in_game_event_fn_arg)
-	ld c, a
-	add a, a
-	add a, c
-	add a, TAG_BOSS1_CHESTLOCK
-	ld hl, global_state__objects
-	ADD_HL_A
-	ld (hl), 2
+	ld a, (boss__mark_defeated_after_exiting_door)
+	or a
+    ld hl, global_state__objects
+    ADD_HL_A
+    ld (hl), 2
+    xor a
+    ld (boss__mark_defeated_after_exiting_door), a
+event__exit_boss_door_coninue:
 
 	; animation of the door disappearing:
 	ld hl, SFX_explosion
@@ -1190,7 +1185,10 @@ boss_fire_directional_bullet_towards_player_continue:
 ; - iyh: damage to deal
 ; - de, ix: collision box (in tile coordinates: from [e, d] to [ixl, ixh])
 player_weapon_hitbox_check_boss:
-	ld a, (boss__last_collision_id)
+	ld a, (boss__last_collision_id1)
+	cp iyl
+	ret z
+	ld a, (boss__last_collision_id2)
 	cp iyl
 	ret z
 
@@ -1793,8 +1791,10 @@ player_weapon_hitbox_check_boss__lose_hp_continue2:
 	call play_SFX_with_high_priority
 	xor a
 	ld (player_weapon_hitbox_check_result), a  ; mark a hit
+	ld a, (boss__last_collision_id2)
+	ld (boss__last_collision_id1), a
 	ld a, iyl
-	ld (boss__last_collision_id), a
+	ld (boss__last_collision_id2), a
 	ret
 
 

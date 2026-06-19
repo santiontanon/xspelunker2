@@ -1385,6 +1385,8 @@ player_weapon_hitbox_check_boss__boss5_hit_shield:
 	call play_SFX_with_high_priority
 	xor a
 	ld (player_weapon_hitbox_check_result), a  ; mark a hit
+	ld a, (boss__last_collision_id2)
+	ld (boss__last_collision_id1), a
 	ld a, iyl
-	ld (boss__last_collision_id), a
+	ld (boss__last_collision_id2), a
 	ret

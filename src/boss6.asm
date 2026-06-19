@@ -51,7 +51,8 @@ boss6_difficulty_setting__easy:
 	db #0f, 1 ; eye turret mask / eye turret bullet mask, max drones
 
 boss6_difficulty_setting__normal:
-	dw 320, 240, 108  ; boss hp, and thresholds for phase 2 and 3
+	dw 32, 240, 108  ; boss hp, and thresholds for phase 2 and 3
+; 	dw 320, 240, 108  ; boss hp, and thresholds for phase 2 and 3
 	db 32, #0f, #3f, 3  ; wait time, bullet time mask, mouth attack mask, n stones
 	db #07, 2 ; eye turret mask / eye turret bullet mask, max drones
 
@@ -1130,6 +1131,8 @@ update_boss6_behavior_4_state_2:
 
 	xor a
 	ld (boss__active), a
+	ld a, TAG_BOSS6_CHESTLOCK
+	ld (boss__mark_defeated_after_exiting_door), a
 
 	; mark for stats:
 	ld b, 19  ; mars moai
@@ -1343,9 +1346,6 @@ player_weapon_hitbox_check_boss__boss6_hit:
 	ld a, (boss__behavior)
 	or a
 	ret z
-
-	ld a, iyl
-	ld (boss__last_collision_id), a
 
 	; hit the main body:
 	ld a, e

@@ -1,14 +1,19 @@
 to do:
 
-***- BUG: mars moai was killer super quick, why? (monitor HP)
+***- 7th boss (ideas: snake/serpent "The Lunar Serpent"? two headed?)
+  ***- draft it in GIMP/TILED
+  ***- create the boss room in TILED
+  ***- add boss room to the game
+  ***- draw all the boss frames
+  ***- implement boss behavior
+  ***- spawn drops
+  ***- add boss name to the stats for game over screen
 
 - music: (brain 12, 15, 23, 25 have potential)
   - xibalba
   - atlantis
   - mars
   - moon
-- 7th boss (ideas: snake/serpent "The Lunar Serpent"? two headed?).
-  - add boss name to the stats for game over screen
 - ending B: the calendar stone machine also activates its offensive mechanism and destroys the alien armada that was coming. You hope that will deter them from coming again.
 - Ending B+: (got the forge active with the codex, but did not defeat the final alien boss)
 

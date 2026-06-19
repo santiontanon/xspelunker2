@@ -1008,6 +1008,8 @@ update_boss1_behavior_4_sink_loop:
 
 	xor a
 	ld (boss__active), a
+	ld a, TAG_BOSS1_CHESTLOCK
+	ld (boss__mark_defeated_after_exiting_door), a
 
 	; mark for stats:
 	ld b, 1  ; hurakan
@@ -1241,8 +1243,10 @@ player_weapon_hitbox_check_boss__boss1_hit_staff_continue:
 	call play_SFX_with_high_priority
 	xor a
 	ld (player_weapon_hitbox_check_result), a  ; mark a hit
+	ld a, (boss__last_collision_id2)
+	ld (boss__last_collision_id1), a
 	ld a, iyl
-	ld (boss__last_collision_id), a
+	ld (boss__last_collision_id2), a
 	ret
 
 

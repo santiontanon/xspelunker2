@@ -985,6 +985,8 @@ update_boss2_behavior_4:
 
 	xor a
 	ld (boss__active), a
+	ld a, TAG_BOSS2_CHESTLOCK
+	ld (boss__mark_defeated_after_exiting_door), a
 
 	; mark for stats:
 	ld b, 2  ; camazotz

@@ -1027,6 +1027,8 @@ update_boss5_behavior_6_state_1:
 	; mark the boss as defeated and spawn rewards:
 	xor a
 	ld (boss__active), a
+	ld a, TAG_BOSS5_CHESTLOCK
+	ld (boss__mark_defeated_after_exiting_door), a
 
 	; mark for stats:
 	ld a, (boss__5_variant)
@@ -1886,8 +1888,10 @@ player_weapon_hitbox_check_boss__boss5_scylla_hit__left_tentacle_hit_entry_point
 player_weapon_hitbox_check_boss__boss5_scylla_hit__left_tentacle_hit_entry_point2:
 	xor a
 	ld (player_weapon_hitbox_check_result), a  ; mark a hit
+	ld a, (boss__last_collision_id2)
+	ld (boss__last_collision_id1), a
 	ld a, iyl
-	ld (boss__last_collision_id), a
+	ld (boss__last_collision_id2), a
 	ret
 
 player_weapon_hitbox_check_boss__boss5_scylla_hit__right_tentacle_hit:
