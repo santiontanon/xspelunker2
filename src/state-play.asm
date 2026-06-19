@@ -95,14 +95,14 @@ state_play:
 ; 		ld (player_inventory_items+21), a
 ; 		ld (player_inventory_items+22), a
 ; 		ld (player_inventory_items+23), a  ; clay suit (last key item)
-		ld (player_inventory_items+24), a  ; sandals
-		ld (player_inventory_items+25), a  ; gloves
-		ld (player_inventory_items+26), a  ; warrior hat
-		ld (player_inventory_items+27), a  ; cotton armor
-		ld (player_inventory_items+28), a  ; chaac blessing
-		ld (player_inventory_items+29), a  ; seashell
-		ld (player_inventory_items+30), a  ; antigrav belt
-		ld (player_inventory_items+31), a  ; ice cape
+; 		ld (player_inventory_items+24), a  ; sandals
+; 		ld (player_inventory_items+25), a  ; gloves
+; 		ld (player_inventory_items+26), a  ; warrior hat
+; 		ld (player_inventory_items+27), a  ; cotton armor
+; 		ld (player_inventory_items+28), a  ; chaac blessing
+; 		ld (player_inventory_items+29), a  ; seashell
+; 		ld (player_inventory_items+30), a  ; antigrav belt
+; 		ld (player_inventory_items+31), a  ; ice cape
 ; 		ld (player_inventory_items+32), a  ; letter 1
 ; 		ld (player_inventory_items+33), a  ; letter 2
 		ld (player_inventory_items+34), a  ; map
@@ -110,7 +110,7 @@ state_play:
 ; 		ld (player_inventory_items+36), a  ; half power stone 2
 ; 		ld (player_inventory_items+INVENTORY_ITEM_PUZZLEBOX_MARS), a
 ; 		ld (player_inventory_items+INVENTORY_ITEM_PUZZLEBOX_MOON), a
-		ld (player_inventory_items+INVENTORY_ITEM_GOLDEN_KEY), a
+; 		ld (player_inventory_items+INVENTORY_ITEM_GOLDEN_KEY), a
 ; 		ld (player_inventory_items+INVENTORY_ITEM_SKULL_CHARM), a
 ; 		ld (player_inventory_items+INVENTORY_ITEM_CHARYBDIS_EYE), a
 ; 		ld (player_inventory_items+INVENTORY_ITEM_SCYLLA_EYE), a
@@ -118,33 +118,33 @@ state_play:
 ; 		ld (player_inventory_items+INVENTORY_ITEM_MAYA_CODEX2), a
 ; 		ld (player_inventory_items+INVENTORY_ITEM_MAYA_CODEX3), a
 ; 		ld (player_inventory_items+INVENTORY_ITEM_ANIMAL_CHARM), a
-		ld (player_inventory_items+INVENTORY_ITEM_PHASE_SHIFTER), a
+; 		ld (player_inventory_items+INVENTORY_ITEM_PHASE_SHIFTER), a
 		ld (player_inventory_weapons), a  ; machete
-		ld (player_inventory_weapons+1), a
-		ld (player_inventory_weapons+2), a
+; 		ld (player_inventory_weapons+1), a
+; 		ld (player_inventory_weapons+2), a
 ; 		ld (player_inventory_weapons+3), a  ; shield
 ; 		ld (player_inventory_weapons+4), a  ; sling
 ; 		ld (player_inventory_weapons+5), a  ; blowgun
 ; 		ld (player_inventory_weapons+6), a
-		ld (player_inventory_weapons+7), a  ; raygun
-; 		ld (player_inventory_weapons+8), a
+; 		ld (player_inventory_weapons+7), a  ; raygun
+		ld (player_inventory_weapons+8), a  ; machete v2
 ; 		ld (player_inventory_weapons+9), a
 ; 		ld (player_inventory_weapons+10), a
 ; 		ld a, 202
 ; 		ld (player_inventory_coins), a
-		ld a, 80
+; 		ld a, 80
 ; 		ld (player_inventory_weapon_ammo), a
 ; 		ld (player_inventory_weapon_ammo + 1), a
 ; 		ld (player_inventory_weapon_ammo + 2), a
-		ld (player_inventory_weapon_ammo + 3), a
+; 		ld (player_inventory_weapon_ammo + 3), a
 ; 		ld a, 2
 ; 		ld (player_inventory_n_small_keys), a
 		ld (global_state__objects + TAG_MAP_PIECE1), a
 ; 		ld (global_state__objects + TAG_MAP_PIECE2), a
 ; 		ld (global_state__objects + TAG_MAP_PIECE3), a
-		ld (global_state__objects + TAG_MAP_PIECE4), a
-		ld (global_state__objects + TAG_MAP_PIECE5), a
-		ld (global_state__objects + TAG_MAP_PIECE6), a
+; 		ld (global_state__objects + TAG_MAP_PIECE4), a
+; 		ld (global_state__objects + TAG_MAP_PIECE5), a
+; 		ld (global_state__objects + TAG_MAP_PIECE6), a
 ; 		ld (global_state__objects + TAG_MAP_PIECE7), a
 ; 		ld (global_state__objects + TAG_TELEPORTER1), a
 ; 		ld (global_state__objects + TAG_TELEPORTER2), a

@@ -9,6 +9,7 @@ BOSS_6_MOUTH_ATTACK_N_STONES: equ 9
 BOSS_6_EYE_TURRET_ATTACK_MASK: equ 8  ; same as BOSS_6_MOUTH_ATTACK_MASK
 BOSS_6_EYE_TURRET_BULLET_MASK: equ 10
 BOSS_6_EYE_PUNCH_ATTACK_MASK: equ 8  ; same as BOSS_6_MOUTH_ATTACK_MASK
+BOSS_6_MAX_DRONES_OFFSET: equ 11
 
 
 ;-----------------------------------------------
@@ -47,22 +48,22 @@ boss6_face_turret_frame_ptrs:
 boss6_difficulty_setting__easy:
 	dw 192, 144, 64  ; boss hp, and thresholds for phase 2 and 3
 	db 32, #1f, #7f, 2  ; wait time, bullet time mask, mouth attack mask, n stones
-	db #0f ; eye turret mask, eye turret bullet mask
+	db #0f, 1 ; eye turret mask / eye turret bullet mask, max drones
 
 boss6_difficulty_setting__normal:
 	dw 320, 240, 108  ; boss hp, and thresholds for phase 2 and 3
 	db 32, #0f, #3f, 3  ; wait time, bullet time mask, mouth attack mask, n stones
-	db #07 ; eye turret mask, eye turret bullet mask
+	db #07, 2 ; eye turret mask / eye turret bullet mask, max drones
 
 boss6_difficulty_setting__hard:
 	dw 416, 312, 140  ; boss hp, and thresholds for phase 2 and 3
 	db 28, #0f, #1f, 4  ; wait time, bullet time mask, mouth attack mask, n stones
-	db #07 ; eye turret mask, eye turret bullet mask
+	db #07, 2 ; eye turret mask / eye turret bullet mask, max drones
 
 boss6_difficulty_setting__hardest:
 	dw 512, 384, 176  ; boss hp, and thresholds for phase 2 and 3
 	db 24, #07, #1f, 5  ; wait time, bullet time mask, mouth attack mask, n stones
-	db #03 ; eye turret mask, eye turret bullet mask
+	db #03, 3 ; eye turret mask / eye turret bullet mask, max drones
 
 
 ;-----------------------------------------------
@@ -178,6 +179,10 @@ update_boss6_behavior_0_wait_for_player:
 	ld c, TILES_PAGE
 	call call_hl_in_page_c_8000
 
+	; clear the breakable wall in case it was still there:
+	ld hl, current_room__tile_objects
+	ld (hl), #ff
+
 	ld hl, SFX_door_open
 	call play_SFX_with_high_priority
 	ld b, 50
@@ -289,7 +294,7 @@ update_boss6_behavior_1_state_0:
 	or a
 	sbc hl, bc
 	jp c, update_boss6_start_behavior_2
-	jp update_boss6_start_behavior_2  ; DEBUG!!
+; 	jp update_boss6_start_behavior_2  ; DEBUG!!
 
 update_boss6_behavior_1_state_0_entry_point:
 	; this part is shared phase 1 and phase 2
@@ -413,6 +418,8 @@ update_boss6_behavior_1_state_1_attack:
 	; shoot parabolic stones through mouth:
 	call ptr_to_new_sprite_enemy
 	ret nz
+	push hl
+	pop ix
 	ld (hl), 0  ; ID
 	inc hl
 	ld (hl), ENEMY_BOSS6_STONE
@@ -644,7 +651,7 @@ update_boss6_behavior_2_state_0:
 	or a
 	sbc hl, bc
 	jp c, update_boss6_start_behavior_3
-	jp update_boss6_start_behavior_3  ; DEBUG!!
+; 	jp update_boss6_start_behavior_3  ; DEBUG!!
 
 	; punch attack?
 	ld a, (boss__settings + BOSS_6_EYE_PUNCH_ATTACK_MASK)
@@ -868,6 +875,12 @@ update_boss6_behavior_3:
 	ret
 
 update_boss6_behavior_3_state_0:
+	; is boss dead?
+	ld hl, (boss__hp)
+	ld a, h
+	or l
+	jp z, update_boss6_start_behavior_4
+
 	; punch attack?
 	ld a, (boss__settings + BOSS_6_EYE_PUNCH_ATTACK_MASK)
 	ld c, a
@@ -927,16 +940,42 @@ update_boss6_behavior_3_state_1_continue:
 	cp c
 	jp z, update_boss6_behavior_1_state_0_maybe_fire_bullet
 	jp c, update_boss6_behavior_1_state_0_maybe_fire_bullet	
-	; chance of spawning drones:
-	; ...
-
-	jp update_boss6_behavior_1_state_1_attack
+	; chance of spawning drones (if there are less than 2):
+	call update_boss6_count_drones  ; c = number of drones
+	ld a, (boss__settings + BOSS_6_MAX_DRONES_OFFSET)
+	cp c
+	jp z, update_boss6_behavior_1_state_1_attack  ; max number of drones reached
+	call random_a
+	and #03
+	jp nz, update_boss6_behavior_1_state_1_attack
+	; spawn a drone instead of a rock
+	call update_boss6_behavior_1_state_1_attack
+	ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BOSS6_DRONE_STONE
+	ret
 update_boss6_behavior_3_state_1_continue_done:
 	ld a, 4  ; closed mouth
 	call update_boss6_draw_boss_frame
 	ld hl, redraw_flags
 	set ROOM_REDRAW_FLAG_BIT, (hl)
 	jp update_boss6_behavior_1_state_back_to_0
+
+
+update_boss6_count_drones:
+	; find # of bats:
+	ld c, 0
+	ld ix, current_room__sprite_enemies
+	ld de, ROOM_OBJECT_STRUCT_SIZE
+update_boss6_count_drones_loop:
+	ld a, (ix)
+	inc a  ; cp #ff
+	ret z
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	add ix, de
+	cp ENEMY_MARS_DRONE2
+	jr nz, update_boss6_count_drones_loop
+	inc c
+	jr update_boss6_count_drones_loop
+
 
 update_boss6_behavior_3_state_7_table:
 	; coordinates of the dust: x, y, width
@@ -1059,45 +1098,79 @@ update_boss6_behavior_3_state_7_done:
 
 ;-----------------------------------------------
 ; death
+update_boss6_start_behavior_4:
+	; enter phase 3:
+	call stop_music
+	ld hl, 0
+	ld (current_room__music_ptr), hl
+
+	xor a
+	ld (boss__state), a
+	ld (boss__state_timer), a
+	ld a, 4
+	ld (boss__behavior), a
+	ret
+
 update_boss6_behavior_4:
 	ld a, (boss__state)
 	or a
-	jr z, update_boss6_behavior_4_state_0  ; remove head and spawn explosions
+	jr z, update_boss6_behavior_4_state_0  ; explosions
 	dec a
 	jp z, update_boss6_behavior_4_state_1  ; wait
 
 update_boss6_behavior_4_state_2:
-	ld de, #1313  ; e, d: x, y coordinates
-	ld a, 5  ; boss number (boss 6)
-	call boss_spawn_power_stone
-
-	ld hl, draw_room_with_hud
-	ld c, TILES_PAGE
+	ld de, #1109  ; e, d: x, y coordinates
+	ld b, 5  ; boss number (boss 6)
+	ld hl, boss_spawn_power_stone_b
+	ld c, BOSS_PAGE
 	call call_hl_in_page_c_8000
+
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)
 
 	xor a
 	ld (boss__active), a
 
 	; mark for stats:
-	ld b, 6  ; mars moai
-	jp add_killed_boss_to_stats
+	ld b, 19  ; mars moai
+	ld c, BOSS_PAGE
+	ld hl, add_killed_boss_to_stats
+	jp call_hl_in_page_c_8000
 
 
 update_boss6_behavior_4_state_0:
-	; remove head:
-	; ld a, 1
-	; ld (boss__state), a	
-	; ...
-	ld hl, draw_room_with_hud
-	ld c, TILES_PAGE
-	call call_hl_in_page_c_8000
+	ld hl, boss__state_timer
+	ld a, (hl)
+	cp 80
+	jr nz, update_boss6_behavior_4_state_0_continue
+	xor a
+	ld (boss__state_timer), a
+	inc a
+	ld (boss__state), a
 
-	; spawn explosions:
-	; ld a, (boss__x)
-	; add a, 2
-	; ld c, a
-	; ld b, 13
-	; jp spawn_big_explosion
+	; restore the background:
+	ld hl, current_room__tile_map + 2*32*24
+	ld de, current_room__tile_map
+	ld bc, 32*24
+	ldir
+
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)
+	ret
+update_boss6_behavior_4_state_0_continue:
+	inc (hl)
+	and #03
+	ret nz
+	; spawn an explosion:
+	ld c, 13
+	call random_modulo
+	add a, 8
+	ld b, a
+	call random_a
+	and #03
+	add a, 25
+	ld c, a
+	jp spawn_explosion
 
 update_boss6_behavior_4_state_1:
 	ld hl, boss__state_timer

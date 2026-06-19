@@ -428,6 +428,7 @@ state_game_over_print_bosses_table:
 	dw TEXT_BOSS_CHARYBDIS  ; 16
 	dw TEXT_BOSS_SCYLLA  ; 17
 	dw TEXT_BOSS_CHARYBDIS_SCYLLA  ; 18
+	dw TEXT_BOSS_MARS_MOAI  ; 19
 
 state_game_over_print_bosses:
 	ld hl, stats__bosses

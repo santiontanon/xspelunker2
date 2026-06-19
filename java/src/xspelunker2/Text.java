@@ -161,6 +161,7 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "Charybdis", "BOSS_CHARYBDIS", 8);
         addLineSafe(lines_with_constant_page3, "Scylla", "BOSS_SCYLLA", 8);
         addLineSafe(lines_with_constant_page3, "Charybdis/Scylla", "BOSS_CHARYBDIS_SCYLLA", 12);
+        addLineSafe(lines_with_constant_page3, "Mars Moai", "BOSS_MARS_MOAI", 12);
         
         addLineSafe(lines_with_constant_page1, "Entering", "ENTERING", 16);
         addLineSafe(lines_with_constant_page1, "Loading area...", "LOADING_AREA", 16);

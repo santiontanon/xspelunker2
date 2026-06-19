@@ -1,11 +1,6 @@
 to do:
 
-***- 6th boss: Giant Moai head
-  ***- phase 3: mouth can also spawn drones (up to a maximum number)
-  ***- killing the boss (explosions and disappear, leaving just the background)
-  ***- drops
-  ***- add boss name to the stats for game over screen if you beat it
-  ***- sample "activate"/godzilla roar with https://github.com/EdouardBERGE/wav2ay/blob/main/wav2ay.c
+***- BUG: when going back to machete, if you have the upgrade, it goes back to the basic machete
 
 - music: (brain 12, 15, 23, 25 have potential)
   - xibalba

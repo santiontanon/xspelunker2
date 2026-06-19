@@ -70,6 +70,7 @@ enemy_update_fn_table:
 	dw update_enemy_mushroom1
 	dw update_enemy_mushroom2
 	dw update_enemy_boss6_stone
+	dw update_enemy_boss6_drone_stone
 
 
 ;-----------------------------------------------
@@ -4950,6 +4951,16 @@ update_enemy_boss6_stone_table:
 	db  4,  5,  5,  6
 update_enemy_boss6_stone_table_end:
 
+
+update_enemy_boss6_drone_stone:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 14
+	jr nz, update_enemy_boss6_stone
+	; turn into a drone:
+	ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_MARS_DRONE2
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+
 update_enemy_boss6_stone:
 	ld iyh, 4  ; damage to deal
 	call update_enemy_hurt_player_2x2
@@ -4983,8 +4994,16 @@ update_enemy_boss6_stone_continue2:
 
 	ld c, (ix + ROOM_OBJECT_STRUCT_EXTRA1)
 	call update_enemy_move_cb
+update_enemy_boss6_stone_draw_sprite:
+	ld a, (ix + ROOM_OBJECT_STRUCT_TYPE)
+	cp ENEMY_BOSS6_STONE
+	jr nz, update_enemy_boss6_stone_draw_sprite_drone
 	ld d, COLOR_LIGHT_RED
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 5) * 4 
+	jp enemy_sprite_and_continue_animated4
+update_enemy_boss6_stone_draw_sprite_drone:
+	ld d, COLOR_LIGHT_RED
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 27) * 4 
 	jp enemy_sprite_and_continue_animated4
 
 

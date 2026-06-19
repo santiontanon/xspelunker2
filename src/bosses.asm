@@ -442,6 +442,9 @@ pick_up_boss_power_stone_continue:
 		ld hl, room_undraw_tile_objects
 		call call_hl_in_page_c_8000
 	pop ix
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
+	ld (in_game_event_fn_arg), a
+
 	ld c, TILES_PAGE
 	ld hl, delete_tile_object_in_ix
 	call call_hl_in_page_c_8000
