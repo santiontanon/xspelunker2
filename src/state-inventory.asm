@@ -136,6 +136,11 @@ state_inventory_update_cursor_button_not_a_button:
 
 	ld a, (iy)
 	ld (player_current_item), a
+	cp N_INVENTORY_WEAPON_TYPES
+	jr nc, state_inventory_update_cursor_button_continue
+	ld (player_last_weapon), a
+state_inventory_update_cursor_button_continue:
+
 	ld hl, SFX_ui_select
 	jp play_SFX_with_high_priority	
 

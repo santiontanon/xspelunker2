@@ -426,7 +426,7 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "Aapo: Ba'ax ka wa'alik? The Stelae? Some say that they can bring understanding of the sky!", "SHOPKEEPER1_9", 112);
         addLineSafe(lines_with_constant_page3, "Aapo: Ma'alob k'iin! The only other thing we know of the Stelae is that they are numbered, from one to three.", "SHOPKEEPER1_10", 112);
         
-        addLineSafe(lines_with_constant_page1, "Ok, I made it to the ruins! I need a way to sabotage the Alien operation! Let's find out where are they coming from, and how to stop them!", "STORY_ENTER_RUINS", 112);
+        addLineSafe(lines_with_constant_page3, "Ok, I made it to the ruins! I need a way to sabotage the Alien operation! Let's find out where are they coming from, and how to stop them!", "STORY_ENTER_RUINS", 112);
         addLineSafe(lines_with_constant_page3, "Look at that! That is a gigantic Mayan Tzolk'in calendar stone! Although it seems to be half-buried, it's in perfect condition!", "FIND_CALENDAR_STONE1", 112);     
         addLineSafe(lines_with_constant_page3, "But wait! There are aliens guarding it! So, this is where they were... I'll have to be careful around here...", "FIND_CALENDAR_STONE2", 112);
         addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! I have a letter for you!", "LETTER1_ARRIVED1", 112);

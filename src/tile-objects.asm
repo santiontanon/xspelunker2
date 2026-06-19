@@ -1578,7 +1578,8 @@ object_interaction_function_chest:
 	jr nz, object_interaction_function_chest_fail
 
 	; lose key:
-	ld (hl), 0  ; machete
+	ld a, (player_last_weapon)
+	ld (hl), a
 	ld a, c
 	sub N_INVENTORY_WEAPON_TYPES + INVENTORY_ITEM_COLOR_KEY1  ; position of the first color key
 	ld b, 0
@@ -1598,7 +1599,8 @@ object_interaction_function_small_chest:
 	jr nz, object_interaction_function_small_chest_fail
 
 	; lose small key:
-	ld (hl), 0  ; machete
+	ld a, (player_last_weapon)
+	ld (hl), a
 	ld hl, player_inventory_n_small_keys
 	dec (hl)
 	ld a, (hl)
@@ -1677,7 +1679,8 @@ object_interaction_function_open_small_lock:
 	jr nz, object_interaction_function_chest_fail
 
 	; lose key:
-	ld (hl), 0  ; machete
+	ld a, (player_last_weapon)
+	ld (hl), a
 	ld a, c
 	sub N_INVENTORY_WEAPON_TYPES + INVENTORY_ITEM_COLOR_KEY1  ; position of the first color key
 	ld b, 0
@@ -1794,7 +1797,8 @@ object_interaction_function_open_ball_lock:
 	ld hl, player_current_item
 	cp (hl)
 	jp nz, object_interaction_function_item_use_fail
-	ld (hl), 0  ; machete
+	ld a, (player_last_weapon)
+	ld (hl), a
 	ld hl, player_inventory_items + INVENTORY_ITEM_BALL  ; ball
 	ld (hl), 0
 	jp object_interaction_function_open_small_lock_entry_point
@@ -1804,7 +1808,8 @@ object_interaction_function_open_idol_lock:
 	ld hl, player_current_item
 	cp (hl)
 	jp nz, object_interaction_function_item_use_fail
-	ld (hl), 0  ; machete
+	ld a, (player_last_weapon)
+	ld (hl), a
 	ld hl, player_inventory_items + INVENTORY_ITEM_IDOL  ; idol
 	ld (hl), 0
 	jp object_interaction_function_open_small_lock_entry_point
@@ -1814,7 +1819,8 @@ object_interaction_function_open_gear_lock:
 	ld hl, player_current_item
 	cp (hl)
 	jp nz, object_interaction_function_item_use_fail
-	ld (hl), 0  ; machete
+	ld a, (player_last_weapon)
+	ld (hl), a
 	ld hl, player_inventory_items + INVENTORY_ITEM_GEAR  ; gear
 	ld (hl), 0
 	jp object_interaction_function_open_small_lock_entry_point
@@ -1824,7 +1830,8 @@ object_interaction_function_open_astronaut_lock:
 	ld hl, player_current_item
 	cp (hl)
 	jp nz, object_interaction_function_item_use_fail
-	ld (hl), 0  ; machete
+	ld a, (player_last_weapon)
+	ld (hl), a
 	ld hl, player_inventory_items + INVENTORY_ITEM_CLAY_DOLL  ; astronaut
 	ld (hl), 0
 	jp object_interaction_function_open_small_lock_entry_point
@@ -2024,7 +2031,8 @@ object_interaction_function_open_boss_lock_key_id_computed_done:
 	jp nz, object_interaction_function_open_boss_lock_fail
 
 	; lose key:
-	ld (hl), 0  ; machete
+	ld a, (player_last_weapon)
+	ld (hl), a
 	ld a, c
 	sub 11
 	ld c, a
@@ -2214,9 +2222,11 @@ object_interaction_function_calendar_socket_try_to_place:
 	ld (ix + ROOM_TILE_OBJECT_STRUCT_STATE), a
 
 	; lose it from the inventory:
+	ld a, (player_last_weapon)
+	ld c, a
 	ld hl, player_current_item
 	ld a, (player_current_item)
-	ld (hl), 0  ; machete
+	ld (hl), c
 	sub N_INVENTORY_WEAPON_TYPES
 	ld c, a
 	ld b, 0

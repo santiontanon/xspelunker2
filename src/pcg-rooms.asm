@@ -3611,7 +3611,7 @@ default_in_game_event_fn_start:
 	ret z
 	; entered the ruins:
 	ld de, TEXT_STORY_ENTER_RUINS
-	ld hl, display_in_game_message
+	ld hl, display_in_game_message_textpage3
 	ld c, TEXT_PAGE
 	call call_hl_in_page_c_8000
 	ld a, STORY_STATE__ENTERED_RUINS

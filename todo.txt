@@ -1,6 +1,6 @@
 to do:
 
-***- BUG: when going back to machete, if you have the upgrade, it goes back to the basic machete
+***- BUG: mars moai was killer super quick, why? (monitor HP)
 
 - music: (brain 12, 15, 23, 25 have potential)
   - xibalba

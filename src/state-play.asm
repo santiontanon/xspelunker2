@@ -74,8 +74,8 @@ state_play:
 ; 		ld (player_inventory_items), a  ; first boss key
 ; 		ld (player_inventory_items+1), a  ; second boss key
 ; 		ld (player_inventory_items+2), a  ; third boss key
-; 		ld (player_inventory_items+3), a  ; fourth boss key
-; 		ld (player_inventory_items+4), a  ; fifth boss key
+		ld (player_inventory_items+3), a  ; fourth boss key
+		ld (player_inventory_items+4), a  ; fifth boss key
 		ld (player_inventory_items+5), a  ; mars boss key
 ; 		ld (player_inventory_items+6), a  ; moon boss key
 ; 		ld (player_inventory_items+7), a  ; first stone
@@ -118,25 +118,25 @@ state_play:
 ; 		ld (player_inventory_items+INVENTORY_ITEM_MAYA_CODEX2), a
 ; 		ld (player_inventory_items+INVENTORY_ITEM_MAYA_CODEX3), a
 ; 		ld (player_inventory_items+INVENTORY_ITEM_ANIMAL_CHARM), a
-; 		ld (player_inventory_items+INVENTORY_ITEM_PHASE_SHIFTER), a
+		ld (player_inventory_items+INVENTORY_ITEM_PHASE_SHIFTER), a
 		ld (player_inventory_weapons), a  ; machete
-; 		ld (player_inventory_weapons+1), a
-; 		ld (player_inventory_weapons+2), a
+		ld (player_inventory_weapons+1), a
+		ld (player_inventory_weapons+2), a
 ; 		ld (player_inventory_weapons+3), a  ; shield
 ; 		ld (player_inventory_weapons+4), a  ; sling
 ; 		ld (player_inventory_weapons+5), a  ; blowgun
 ; 		ld (player_inventory_weapons+6), a
-; 		ld (player_inventory_weapons+7), a  ; raygun
+		ld (player_inventory_weapons+7), a  ; raygun
 		ld (player_inventory_weapons+8), a  ; machete v2
 ; 		ld (player_inventory_weapons+9), a
 ; 		ld (player_inventory_weapons+10), a
 ; 		ld a, 202
 ; 		ld (player_inventory_coins), a
-; 		ld a, 80
+		ld a, 80
 ; 		ld (player_inventory_weapon_ammo), a
 ; 		ld (player_inventory_weapon_ammo + 1), a
 ; 		ld (player_inventory_weapon_ammo + 2), a
-; 		ld (player_inventory_weapon_ammo + 3), a
+		ld (player_inventory_weapon_ammo + 3), a
 ; 		ld a, 2
 ; 		ld (player_inventory_n_small_keys), a
 		ld (global_state__objects + TAG_MAP_PIECE1), a
