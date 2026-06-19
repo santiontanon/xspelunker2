@@ -254,7 +254,7 @@ update_boss6_behavior_0_wait_for_player:
 ;-----------------------------------------------
 ; phase 1:
 update_boss6_behavior_1:
-; 	jp update_boss6_start_behavior_2  ; DEBUG!!
+	jp update_boss6_start_behavior_2  ; DEBUG!!
 
 	; states:
 	; - 0: fire bullets through eyes
@@ -569,7 +569,7 @@ update_boss6_start_behavior_2:
 	ret
 
 update_boss6_behavior_2:
-; 	jp update_boss6_start_behavior_3  ; DEBUG!!
+	jp update_boss6_start_behavior_3  ; DEBUG!!
 
 	; states:
 	; - 0: fire bullets through eyes
@@ -791,14 +791,52 @@ update_boss6_behavior_2_state_6_continue:
 ; phase 3:
 update_boss6_start_behavior_3:
 	; enter phase 3:
-	xor a
+	ld a, 7
 	ld (boss__state), a
+	xor a
 	ld (boss__state_timer), a
 	ld a, 3
 	ld (boss__behavior), a
 	ret
 
 update_boss6_behavior_3:
+	; states:
+	; - 0: base fire bullets through eyes / turrets
+	; - 1: mouth open: parabolic stones or drones (then back to 0)
+	; - 2: eye turning into a turret (then goes to 3)
+	; - 3: firing lasers through eye turret
+	; - 4: eye coming back (then back to 0)
+	; - 5: punch down
+	; - 6: punch up
+	; - 7: top part of face being destroyed
+	ld a, (boss__state)
+	or a
+	jp z, update_boss6_behavior_3_state_0
+	dec a
+	jp z, update_boss6_behavior_3_state_1
+	dec a
+	jp z, update_boss6_behavior_1_state_2
+	dec a
+	jp z, update_boss6_behavior_1_state_3
+	dec a
+	jp z, update_boss6_behavior_1_state_4
+	dec a
+	jp z, update_boss6_behavior_2_state_5
+	dec a
+	jp z, update_boss6_behavior_2_state_6
+	dec a
+	jp z, update_boss6_behavior_3_state_7
+	ret
+
+update_boss6_behavior_3_state_0:
+	; ...
+	ret
+
+update_boss6_behavior_3_state_1:
+	; ...
+	ret
+
+update_boss6_behavior_3_state_7:
 	; ...
 	ret
 
@@ -996,7 +1034,7 @@ player_weapon_hitbox_check_boss__boss6_hit:
 
 	; hit the main body:
 	ld a, e
-	cp 189  ; first punch tile
+	cp 222  ; first punch tile
 	jp c, player_weapon_hitbox_check_boss__boss6_hit_body
 	ld hl, SFX_shield
 	jp play_SFX_with_high_priority

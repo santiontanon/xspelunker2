@@ -1,8 +1,8 @@
 to do:
 
 ***- 6th boss: Giant Moai head
-  ***- draw transition to robotic form (dust cloud / explosion)
-  ***- Phase 3: after some more damage, the stone face breaks, revealing a robotic face underneath
+  ***- Phase 3:
+    ***- transition to phase 3
     ***- tile animations for the new mode
     ***- instead of rocks, now it spits drones through the mouth (up to a maximum number)
     ***- bullets are now fired from a couple of other places in the face too
