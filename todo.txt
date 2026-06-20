@@ -1,10 +1,19 @@
 to do:
 
 ***- 7th boss (ideas: snake/serpent "The Lunar Serpent"? two headed?)
-  ***- draft it in GIMP/TILED
-  ***- create the boss room in TILED
+  OK - giant statue of a Maya snake with the mouth open (with pedestal, so that it's on a room)
+  ***- draft robot snake coming out of mouth:
+    OK - base head coming out
+    ***- head coming out a bit more
+    ***- head coming out, opening mouth and sticking tongue out
+  ***- add more decoration to the statue
+  ***- create the boss room in TILED:
+    ***- base tileset with moon + statue + head tileset
   ***- add boss room to the game
-  ***- draw all the boss frames
+    ***- when you enter, in-game message wondering about the snake statue
+  ***- draft: a robotic snake: initially, just sticking the head out and attacking, then the statue breaks (first top, then all but pedestal), and the whole thing comes out. It can freely move through the room from that point on, maybe entering into some craters and exiting through others.
+  ***- draft: There will be first one snake, and then it will attach itself to another head (that might just be lying there on the floor), and split in two for a second phase.
+  ***- draw: all the boss frames
   ***- implement boss behavior
   ***- spawn drops
   ***- add boss name to the stats for game over screen
