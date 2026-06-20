@@ -1,11 +1,6 @@
 to do:
 
 ***- 7th boss (ideas: snake/serpent "The Lunar Serpent"? two headed?)
-  OK - giant statue of a Maya snake with the mouth open (with pedestal, so that it's on a room)
-  ***- draft robot snake coming out of mouth:
-    OK - base head coming out
-    ***- head coming out a bit more
-    ***- head coming out, opening mouth and sticking tongue out
   ***- add more decoration to the statue
   ***- create the boss room in TILED:
     ***- base tileset with moon + statue + head tileset
