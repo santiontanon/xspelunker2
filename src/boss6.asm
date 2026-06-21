@@ -51,8 +51,8 @@ boss6_difficulty_setting__easy:
 	db #0f, 1 ; eye turret mask / eye turret bullet mask, max drones
 
 boss6_difficulty_setting__normal:
-	dw 32, 240, 108  ; boss hp, and thresholds for phase 2 and 3
-; 	dw 320, 240, 108  ; boss hp, and thresholds for phase 2 and 3
+; 	dw 32, 240, 108  ; boss hp, and thresholds for phase 2 and 3 (DEBUG)
+	dw 320, 240, 108  ; boss hp, and thresholds for phase 2 and 3
 	db 32, #0f, #3f, 3  ; wait time, bullet time mask, mouth attack mask, n stones
 	db #07, 2 ; eye turret mask / eye turret bullet mask, max drones
 
@@ -69,7 +69,6 @@ boss6_difficulty_setting__hardest:
 
 ;-----------------------------------------------
 update_boss6_behavior:
-	; check if we need to draw an overlay of the "damage face" when the boss is hit:
 	ld hl, boss__hit_timer
 	ld a, (hl)
 	or a

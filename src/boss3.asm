@@ -239,7 +239,6 @@ boss3_head_frame_1:
 
 ;-----------------------------------------------
 update_boss3_behavior:
-	; check if we need to draw an overlay of the "damage face" when the boss is hit:
 	ld hl, boss__hit_timer
 	ld a, (hl)
 	or a

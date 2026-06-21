@@ -1,20 +1,17 @@
 to do:
 
+***- BUG: double jump variable does not reset upon landing (if you jump, you can double jump if you then fall, but if you double jump, you can then not double jump when you fall)
 ***- 7th boss (ideas: snake/serpent "The Lunar Serpent"? two headed?)
-  OK - create the boss room in TILED
-  ***- reorganize gfx, so that snake gfx are at the top, and statue at the bottom (so that I can change tile set while keeping the snake part intact)
-  ***- get nametables for snake frames within the statue
-  ***- add boss room to the game
-    ***- when you enter, in-game message wondering about the snake statue
-  ***- boss appears:
-    ***- close door
-    ***- name comes down and music starts (no boss for now)
-  ***- draw: frames for boss within statue + attacks (spit poison that sticks on the floor/wall + eye bullets)
+  ***- when you enter, close door (SFX)
+  ***- draw statue upon entering
+  ***- when you enter boss room, in-game message wondering about the snake statue
+  ***- boss appears: name comes down and music starts (no boss for now)
+  ***- draw: attacks for boss within statue (spit poison that sticks on the floor/wall)
   ***- phase 1: implement within-statue behaviors (just go in and out, spitting poison/firing bullets)
   ***- draw phase 2 frames:
     ***- top of statue half-breaks (dust, or parts flying)
     ***- top of snake comes out and can stretch to reach any of the four corridors (wherever you are)
-    ***- spits poison/bullets as before
+    ***- spits poison + fire bullets as before
     ***- if you go very far, boss does a charge poison attack that reaches all the way back, so, you do not want to do that
   ***- implement phase 2:
     ***- statue half-breaks
@@ -41,7 +38,7 @@ to do:
     ***- same, but there are now two snakes (they can block each other)
     ***- each snake has their own HP (can I do this? can I detect which part you hit?)
   ***- kill the boss and spawn drops
-  ***- add boss name to the stats for game over screen
+  ***- add boss name to the stats for game over screen (TEXT_BOSS_MOON_SNAKE)
 
 - music: (brain 12, 15, 23, 25 have potential)
   - xibalba

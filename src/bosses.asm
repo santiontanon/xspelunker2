@@ -127,12 +127,14 @@ enter_boss_door_loop:
 		ld iy, boss3_sprites_zx0
 		jr z, enter_boss_door__room_ptr_set
 		dec a
+		ld ixh, BOSS_4_ROOM_PAGE  ; room page
 		ld hl, boss_room_4_zx0
 		ld de, boss_4_tiles_zx0
 		ld bc, tile_collision_types_boss4
 		ld iy, boss4_sprites_zx0
 		jr z, enter_boss_door__room_ptr_set
 		dec a
+		ld ixh, BOSS_5_ROOM_PAGE  ; room page
 		ld hl, boss_room_5_zx0
 		ld de, boss_5_tiles_charybdis1_zx0
 		ld bc, tile_collision_types_boss5_before
@@ -145,6 +147,14 @@ enter_boss_door_loop:
 		ld de, boss_6_tiles_zx0
 		ld bc, tile_collision_types_boss6
 		ld iy, boss6_sprites_zx0
+		jr z, enter_boss_door__room_ptr_set
+		dec a
+		ld ixl, BOSS_7_PAGE  ; tileset page
+		ld ixh, BOSS_7_PAGE  ; room page
+		ld hl, boss_room_7_zx0
+		ld de, boss_7_tiles_zx0
+		ld bc, tile_collision_types_boss7
+		ld iy, boss7_sprites_zx0
 		; jr z, enter_boss_door__room_ptr_set
 		; ...
 
@@ -217,6 +227,9 @@ enter_boss_door__room_prettified:
 		jr z, enter_boss_door__room_spawn_coordinates_set
 		ld bc, #1301  ; 3, 19
 		cp 5  ; is it the mars boss?
+		jr z, enter_boss_door__room_spawn_coordinates_set
+		ld bc, #1304  ; 4, 19
+		cp 6  ; is it the moon boss?
 		jr z, enter_boss_door__room_spawn_coordinates_set
 		ld bc, #1404  ; 4, 20
 enter_boss_door__room_spawn_coordinates_set:
@@ -1984,3 +1997,21 @@ tile_collision_types_boss6:
     db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
     db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
     db 9, 9, 9, 2, 9, 9, 9, 9, 9, 2, 2, 2, 9, 2, 1, 5
+
+tile_collision_types_boss7:
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
+    db 0, 0, 0, 0, 0, 0, 0, 0, 9, 9, 2, 2, 2, 0, 0, 0
+    db 2, 2, 2, 2, 2, 2, 9, 9, 9, 2, 2, 2, 2, 2, 9, 9
+    db 2, 2, 2, 2, 2, 2, 9, 9, 9, 2, 2, 2, 9, 9, 2, 2
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 2, 0, 9, 9, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 0, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 0, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 0, 0, 0, 0, 9, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 0, 0, 0, 0, 9, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 9, 9
+    db 9, 9, 9, 2, 2, 9, 2, 9, 9, 0, 2, 2, 2, 2, 2, 2

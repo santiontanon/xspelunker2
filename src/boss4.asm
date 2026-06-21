@@ -859,7 +859,6 @@ boss4_lord12_frames_tbl:
 
 ;-----------------------------------------------
 update_boss4_behavior:
-	; check if we need to draw an overlay of the "damage face" when the boss is hit:
 	ld hl, boss__hit_timer
 	ld a, (hl)
 	or a
