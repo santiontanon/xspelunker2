@@ -1,17 +1,46 @@
 to do:
 
 ***- 7th boss (ideas: snake/serpent "The Lunar Serpent"? two headed?)
-  ***- create the boss room in TILED:
-    OK - base tileset with moon + statue + head tileset
-    ***- add tiles for the top/bottom/left/right holes (so, it's obvious you cannot go through)
-    ***- room should not have the statue (it'll be drawn via a nametable)
+  OK - create the boss room in TILED
+  ***- reorganize gfx, so that snake gfx are at the top, and statue at the bottom (so that I can change tile set while keeping the snake part intact)
+  ***- get nametables for snake frames within the statue
   ***- add boss room to the game
     ***- when you enter, in-game message wondering about the snake statue
-  ***- draft: a robotic snake: initially, just sticking the head out and attacking, then the statue breaks (first top, then all but pedestal), and the whole thing comes out. It can freely move through the room from that point on, maybe entering into some craters and exiting through others.
-  ***- draft: There will be first one snake, and then it will attach itself to another head (that might just be lying there on the floor), and split in two for a second phase.
-  ***- draw: all the boss frames
-  ***- implement boss behavior (door closes when boss comes out)
-  ***- spawn drops
+  ***- boss appears:
+    ***- close door
+    ***- name comes down and music starts (no boss for now)
+  ***- draw: frames for boss within statue + attacks (spit poison that sticks on the floor/wall + eye bullets)
+  ***- phase 1: implement within-statue behaviors (just go in and out, spitting poison/firing bullets)
+  ***- draw phase 2 frames:
+    ***- top of statue half-breaks (dust, or parts flying)
+    ***- top of snake comes out and can stretch to reach any of the four corridors (wherever you are)
+    ***- spits poison/bullets as before
+    ***- if you go very far, boss does a charge poison attack that reaches all the way back, so, you do not want to do that
+  ***- implement phase 2:
+    ***- statue half-breaks
+    ***- head + body comes out to whatever height you are on
+    ***- spit poison / bullets
+    ***- if you are very far, charged attack
+    ***- vulnerable parts of the boss are head and tail
+  ***- draw phase 3: frames:
+    ***- statue fully breaks
+    ***- full body of the snake, including tail (tail is a wound, maybe bleeding)
+    ***- body rotating in all possible directions, so it can take any path
+  ***- implement phase 3:
+    ***- statue fully breaks
+    ***- body comes out and follows you around with highest probability, but it might deviate.
+    ***- If it goes through a hole, snake hides inside
+    ***- when hidden, after a bit, pick a random hole, and snake comes again, restarting the behavior
+    ***- if you are too far from the head, and it has a straight shot: charged attack
+    ***- vulnerable parts of the boss are head and tail
+  ***- draw phase 4:
+    ***- there should be a dead head somewhere (maybe top-right, hanging from the ceiling)
+    ***- snake rears and picks it up with the tail, attaching it
+  ***- implement phase 4:
+    ***- pick second head, and split body in half
+    ***- same, but there are now two snakes (they can block each other)
+    ***- each snake has their own HP (can I do this? can I detect which part you hit?)
+  ***- kill the boss and spawn drops
   ***- add boss name to the stats for game over screen
 
 - music: (brain 12, 15, 23, 25 have potential)
