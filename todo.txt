@@ -2,13 +2,15 @@ to do:
 
 ***- 7th boss (ideas: snake/serpent "The Lunar Serpent"? two headed?)
   ***- create the boss room in TILED:
-    ***- base tileset with moon + statue + head tileset
+    OK - base tileset with moon + statue + head tileset
+    ***- add tiles for the top/bottom/left/right holes (so, it's obvious you cannot go through)
+    ***- room should not have the statue (it'll be drawn via a nametable)
   ***- add boss room to the game
     ***- when you enter, in-game message wondering about the snake statue
   ***- draft: a robotic snake: initially, just sticking the head out and attacking, then the statue breaks (first top, then all but pedestal), and the whole thing comes out. It can freely move through the room from that point on, maybe entering into some craters and exiting through others.
   ***- draft: There will be first one snake, and then it will attach itself to another head (that might just be lying there on the floor), and split in two for a second phase.
   ***- draw: all the boss frames
-  ***- implement boss behavior
+  ***- implement boss behavior (door closes when boss comes out)
   ***- spawn drops
   ***- add boss name to the stats for game over screen
 
