@@ -1,7 +1,6 @@
 to do:
 
 ***- 7th boss (ideas: snake/serpent "The Lunar Serpent"? two headed?)
-  ***- add more decoration to the statue
   ***- create the boss room in TILED:
     ***- base tileset with moon + statue + head tileset
   ***- add boss room to the game
