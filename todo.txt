@@ -1,11 +1,7 @@
 to do:
 
-***- BUG: double jump variable does not reset upon landing (if you jump, you can double jump if you then fall, but if you double jump, you can then not double jump when you fall)
 ***- 7th boss (ideas: snake/serpent "The Lunar Serpent"? two headed?)
-  ***- when you enter, close door (SFX)
-  ***- draw statue upon entering
-  ***- when you enter boss room, in-game message wondering about the snake statue
-  ***- boss appears: name comes down and music starts (no boss for now)
+  ***- before boss appears, in-game message wondering about the snake statue
   ***- draw: attacks for boss within statue (spit poison that sticks on the floor/wall)
   ***- phase 1: implement within-statue behaviors (just go in and out, spitting poison/firing bullets)
   ***- draw phase 2 frames:
@@ -70,6 +66,7 @@ to do:
   - The Maya were obsessed with sacrificing blood to their gods (the highest being extracting a beating heart from a person while still alive), then it was often burned so that the smoke will bring it to the gods. Can I add some puzzle/item/riddle about this? (maybe in the stella puzzle above, or maybe some blood meter that accumulates when you receive damage/die/kill-an-enemy and when full, things happen)
   - item that lets you fight a boss for a second time (the idea was to get both items in boss 4, but not sure if worth it)
   - when you enter a boss room, animation of a door that that closes on you, trapping you inside.
+  - go back to the firestone forge after defeating the final alien boss to continue digging into the mystery of why powerstones were so dangerous?
 
 
 --------------------

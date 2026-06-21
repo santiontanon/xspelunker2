@@ -467,7 +467,7 @@ player_update_state_idle_no_weapon_swing:
 
 	; check for falling:
 	call player_check_collision_down_inc
-	jp nz, player_update_switch_to_falling
+	jp nz, player_update_switch_to_falling_no_double_jump
 
 	; check for interact:
 	ld a, (keyboard_clicks)
@@ -558,7 +558,7 @@ player_update_state_walking_right:
 
 	; check for falling:
 	call player_check_collision_down_inc
-	jr nz, player_update_switch_to_falling
+	jr nz, player_update_switch_to_falling_no_double_jump
 
 	call player_update_move_one_pixel_right_considering_collisions_and_warrior_hat
 	jr nz, player_update_state_walking_continue_no_push
@@ -577,7 +577,7 @@ player_update_state_walking_left:
 
 	; check for falling:
 	call player_check_collision_down_inc
-	jr nz, player_update_switch_to_falling
+	jr nz, player_update_switch_to_falling_no_double_jump
 
 	call player_update_move_one_pixel_left_considering_collisions_and_warrior_hat
 	jr nz, player_update_state_walking_continue_no_push
@@ -613,7 +613,7 @@ player_update_state_walking_continue_pushing:
 
 
 ;-----------------------------------------------
-player_update_switch_to_falling_dropping_from_ladder_rope:
+player_update_switch_to_falling_no_double_jump:
 	xor a
 	ld (player_can_double_jump), a
 player_update_switch_to_falling:
@@ -727,7 +727,7 @@ player_update_switch_to_jumping_from_rope_or_ladder:
 	ld (player_jump_is_cancelable), a
 	ld a, (keyboard_state)
 	bit KEY_DOWN_BIT, a
-	jp z, player_update_switch_to_falling_dropping_from_ladder_rope
+	jp z, player_update_switch_to_falling_no_double_jump
 	ld hl, SFX_jump
 	call play_SFX_with_high_priority
 	ld a, 4 ; skip the first jump states, to make the jump shorter
@@ -962,7 +962,7 @@ player_update_state_crouching_no_combo_for_inventory:
 
 	; check for falling:
 	call player_check_collision_down_inc
-	jp nz, player_update_switch_to_falling
+	jp nz, player_update_switch_to_falling_no_double_jump
 
 	; check for interact:
 	ld a, (keyboard_clicks)
@@ -1057,7 +1057,7 @@ player_update_state_crawling_right_still_crawling:
 
 	; check for falling:
 	call player_check_collision_down_inc
-	jp nz, player_update_switch_to_falling
+	jp nz, player_update_switch_to_falling_no_double_jump
 
 	; move at half speed:
 	ld a, (interrupt_cycle)
@@ -1076,7 +1076,7 @@ player_update_state_crawling_left_still_crawling:
 
 	; check for falling:
 	call player_check_collision_down_inc
-	jp nz, player_update_switch_to_falling
+	jp nz, player_update_switch_to_falling_no_double_jump
 
 	; move at half speed:
 	ld a, (interrupt_cycle)
@@ -1783,7 +1783,7 @@ player_update_state_directional_weapon_no_right:
 
 	; check for falling:
 	call player_check_collision_down_inc
-	jp nz, player_update_switch_to_falling_with_directional
+	jp nz, player_update_switch_to_falling_with_directional_no_double_jump
 
 	ld a, (player_current_item)
 	cp 3  ; shield
@@ -1973,6 +1973,9 @@ player_update_state_directional_weapon_jumping_done:
 
 
 ;-----------------------------------------------
+player_update_switch_to_falling_with_directional_no_double_jump:
+	xor a
+	ld (player_can_double_jump), a
 player_update_switch_to_falling_with_directional:
 	xor a
 	ld (player_state_timer), a
@@ -2126,7 +2129,7 @@ player_update_state_directional_weapon_crouching_no_right:
 
 	; check for falling:
 	call player_check_collision_down_inc
-	jp nz, player_update_switch_to_falling_with_directional
+	jp nz, player_update_switch_to_falling_with_directional_no_double_jump
 
 	; check for idle:
 	ld a, (keyboard_state)
@@ -2192,7 +2195,7 @@ player_update_state_hurt_continue:
 	ADD_HL_A
 	ld a, (hl)
 	cp #ff
-	jp z, player_update_switch_to_falling
+	jp z, player_update_switch_to_falling_no_double_jump
 	ld b, a
 	or a
 	jr z, player_update_state_hurt_speed_loop_done

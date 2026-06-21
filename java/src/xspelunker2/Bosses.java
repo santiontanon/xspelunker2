@@ -112,8 +112,8 @@ public class Bosses {
 //        boss5Tiles();
 //        boss5Sprites();
 //
-        boss6Tiles();
-        boss6Sprites();
+//        boss6Tiles();
+//        boss6Sprites();
 
         boss7Tiles();
         boss7Sprites();
@@ -815,18 +815,27 @@ public class Bosses {
             String boss7Tiles = "data/boss7.png";
             boolean availableTiles[] = new boolean[256];
             int collision[] = new int[256];
-            findAvailableBossTiles(bossBaseTiles, availableTiles, collision, moon_boss_collision, true);
+            findAvailableBossTiles(bossBaseTiles, availableTiles, collision, moon_boss_collision, false);
             BufferedImage baseImage = ImageIO.read(new File(bossBaseTiles));        
 
             List<int[]> nameTableBoxes = new ArrayList<>();
-//            nameTableBoxes.add(new int[]{0, 32, 168, 256});  // base face
-            nameTableBoxes.add(new int[]{0, 32, 256, 256});  // base face
-            List<int[][]> nametables = addBossTilesInGapsForBoxes(nameTableBoxes, baseImage, boss7Tiles, availableTiles, collision, false, false);
+            nameTableBoxes.add(new int[]{0, 32, 256, 96});  // snake
+            List<int[][]> nametables1 = addBossTilesInGapsForBoxes(nameTableBoxes, baseImage, boss7Tiles, availableTiles, collision, false, false);
+            
+            // mark remaining available tiles as '2' (as the statue does not hurt the player):
+            for(int i = 0;i<256;i++) {
+                if (availableTiles[i]) collision[i] = 2;
+            }
+            nameTableBoxes.clear();
+            nameTableBoxes.add(new int[]{0, 96, 256, 256});  // statue
+            List<int[][]> nametables2 = addBossTilesInGapsForBoxes(nameTableBoxes, baseImage, boss7Tiles, availableTiles, collision, false, false);
 
-            int nameTable[][] = nametables.get(0);
-            addNameTable(nameTable, 0, 8, 8, 23, nameTableData);  // statue  8x15
+            // statue:
+            int nameTable[][] = nametables2.get(0);
+            addNameTable(nameTable, 0, 0, 8, 15, nameTableData);  // statue  8x15
 
             // snake within statue phase 1:
+            nameTable = nametables1.get(0);
             addNameTable(nameTable, 0, 0, 4, 3, nameTableData);  // appearing 1 4x3
             addNameTable(nameTable, 4, 0, 8, 3, nameTableData);  // appearing 2 4x3
             addNameTable(nameTable, 8, 0, 12, 3, nameTableData);  // appearing 3 4x3
@@ -835,6 +844,14 @@ public class Bosses {
 
             addNameTable(nameTable, 5, 4, 11, 7, nameTableData);  // out 5 6x3
             addNameTable(nameTable, 11, 4, 17, 8, nameTableData);  // out mouth open 5 6x4
+            
+            for(int i = 0;i<16;i++) {
+                String line = "    db ";
+                for(int j = 0;j<16;j++) {
+                    line += collision[j + i*16] + ", ";
+                }
+                System.out.println(line.substring(0, line.length() - 2));
+            }
             
             
             ImageIO.write(baseImage, "png", new File("data/boss7-tiles.png"));

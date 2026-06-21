@@ -3,9 +3,6 @@ BOSS_7_HP_OFFSET: equ 0
 
 
 ;-----------------------------------------------
-; boss7_statue_frame_ptrs:
-; 	dw boss7_statue_frame_0
-
 ; boss7_phase1_frame_ptrs:
 ; 	; ...
 
@@ -53,6 +50,7 @@ update_boss7_behavior_0:
 	ld a, (boss__state)
 	or a
 	jr nz, update_boss7_behavior_0_wait_for_player
+
 update_boss7_behavior_init:
 	ld a, (current_world__difficulty)
 	ld hl, boss7_difficulty_setting__easy
@@ -70,31 +68,37 @@ update_boss7_behavior_init_continue:
 	ld bc, 12
 	ldir
 
-; 	ld a, 22
-; 	ld (boss__x), a
-; 	ld a, 7
-; 	ld (boss__y), a
-; 	xor a
-; 	ld (boss__x2), a
-; 	ld (boss__y2), a
-; 	ld (boss__6_eye_frame), a
-; 	ld (boss__6_face_turret_frame), a
-; 	ld hl, (boss__settings + BOSS_7_HP_OFFSET)
-; 	ld (boss__hp), hl
-; 	ld hl, player_weapon_hitbox_check_boss__boss7_hit
-; 	ld (boss__hit_fn), hl
-; 	ld a, BOSS_7_PAGE
-; 	ld (boss__hit_fn_page), a
-; 	ld a, 1
-; 	ld (boss__state), a
-	ret
+	ld a, 54
+	ld (boss__x), a
+	ld (boss__x2), a
+	ld a, 3
+	ld (boss__y), a
+	ld (boss__y2), a
+	ld hl, (boss__settings + BOSS_7_HP_OFFSET)
+	ld (boss__hp), hl
+	ld hl, player_weapon_hitbox_check_boss__boss7_hit
+	ld (boss__hit_fn), hl
+	ld a, BOSS_7_PAGE
+	ld (boss__hit_fn_page), a
+	ld a, 1
+	ld (boss__state), a
+
+	; draw the statue:
+	xor a
+	call update_boss7_draw_phase1_boss_frame
+
+	; close door:
+	ld hl, SFX_door_open
+	jp play_SFX_with_high_priority
 
 update_boss7_behavior_0_wait_for_player:
 	; condition for the boss to trigger:
-
 	ld a, (player_x + 1)  ; tile x
-	cp 48
+	cp 54
 	ret c
+
+	; message:
+	; ...
 
 	; appear!
 	xor a
@@ -102,17 +106,8 @@ update_boss7_behavior_0_wait_for_player:
 	inc a
 	ld (boss__behavior), a
 
-	; close door:
-	; ...
-
-	ld hl, SFX_door_open
-	call play_SFX_with_high_priority
-	ld b, 50
-	call wait_b_halts
-
 	; snake face appears:
 	; ...
-
 
 	ld ix, boss7_name_initial_sprite_attributes
 	ld de, boss7_name_y_table
@@ -131,7 +126,6 @@ update_boss7_behavior_0_wait_for_player:
 	; start tile animations:
 ; 	ld hl, update_animations_in_vdp_boss7
 ; 	ld (current_room__animation_fn_ptr), hl
-
 	ret
 
 
@@ -188,6 +182,40 @@ update_boss7_behavior_4:
 ; 	jr z, update_boss7_behavior_4_state_0
 ; 	dec a
 ; 	jp z, update_boss7_behavior_4_state_1
+	; ...
+	ret
+
+
+;-----------------------------------------------
+; input:
+; - a: snake frame to draw
+update_boss7_draw_phase1_boss_frame:
+	; in phase 1:
+	; - frame 1 is the statue
+	; - frame 2 is the snake
+	push af
+		ld hl, draw_boss_frame_clear_previous_frame_1
+		ld c, BOSS_PAGE
+		call call_hl_in_page_c_8000
+
+; 		ld hl, draw_boss_frame_clear_previous_frame_2
+; 		ld c, BOSS_PAGE
+; 		call call_hl_in_page_c_8000
+
+		; draw statue:
+		ld hl, redraw_flags
+		set ROOM_REDRAW_FLAG_BIT, (hl)
+
+		; compute draw pointer:
+		ld bc, (boss__x)
+		call get_room_tile_ptr
+		ex de, hl  ; hl = ptr where the boss is to be drawn
+		ld ix, boss7_statue_frame_0
+		ld c, BOSS_PAGE
+		ld hl, draw_boss_frame_1_without_clearing_ix
+		call call_hl_in_page_c_8000
+	pop af
+	; draw snake:
 	; ...
 	ret
 
