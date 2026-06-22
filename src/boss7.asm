@@ -4,13 +4,18 @@ BOSS_7_HP_OFFSET: equ 0
 
 ;-----------------------------------------------
 boss7_phase1_frame_ptrs:
+	; appearing:
 	dw boss7_phase1_frame_1
 	dw boss7_phase1_frame_2
 	dw boss7_phase1_frame_3
 	dw boss7_phase1_frame_4
 	dw boss7_phase1_frame_5
+	; out:
 	dw boss7_phase1_frame_6
 	dw boss7_phase1_frame_7
+	; out up:
+	dw boss7_phase1_frame_8
+	dw boss7_phase1_frame_9
 
 
 ;-----------------------------------------------

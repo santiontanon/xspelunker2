@@ -840,10 +840,12 @@ public class Bosses {
             addNameTable(nameTable, 6, 0, 8, 2, nameTableData);  // appearing 2 2x2
             addNameTable(nameTable, 9, 0, 12, 3, nameTableData);  // appearing 3 3x3
             addNameTable(nameTable, 12, 0, 16, 3, nameTableData);  // appearing 4 4x3
-            addNameTable(nameTable, 0, 4, 5, 7, nameTableData);  // appearing 5 5x3
+            addNameTable(nameTable, 16, 0, 21, 3, nameTableData);  // appearing 5 5x3
 
-            addNameTable(nameTable, 5, 4, 11, 7, nameTableData);  // out 5 6x3
-            addNameTable(nameTable, 11, 4, 17, 8, nameTableData);  // out mouth open 5 6x4
+            addNameTable(nameTable, 0, 4, 6, 7, nameTableData);  // out 6x3
+            addNameTable(nameTable, 6, 4, 12, 8, nameTableData);  // out mouth open 6x4
+            addNameTable(nameTable, 12, 4, 18, 7, nameTableData);  // out up 6x3
+            addNameTable(nameTable, 18, 4, 24, 8, nameTableData);  // out up mouth open 6x4
             
             for(int i = 0;i<16;i++) {
                 String line = "    db ";

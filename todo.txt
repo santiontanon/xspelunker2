@@ -1,8 +1,11 @@
 to do:
 
 ***- 7th boss (ideas: snake/serpent "The Lunar Serpent"? two headed?)
-  ***- draw: attacks for boss within statue (spit poison that sticks on the floor/wall)
-  ***- implement phase 1: just go in and out, spitting poison/firing bullets
+  ***- draw phase 1: poison bubble and poison puddle that sticks to ground, wall or ceiling
+  ***- implement phase 1:
+    ***- head random movement: in/out, up/down
+    ***- bullets fired through eyes (wall ignoring kind)
+    ***- poison spit (open mouth, wait, and then poison comes out, more than one at a time)
   ***- draw phase 2 frames:
     ***- top of statue half-breaks (dust, or parts flying)
     ***- top of snake comes out and can stretch to reach any of the four corridors (wherever you are)
@@ -52,11 +55,11 @@ to do:
 
 - save game to rom / password: https://www.grauw.nl/projects/ascii-x/ascii16-x/
 - come up with a list of "achievements" for the list in the game over screen and implement them
-- pick a good seed (for seed2) so that with the default seed, the map is good (at least Jungle)
 - 9th optional boss: gigantic maya statue monument that looks decoration, but it's a secret boss.
   - maybe that boss leads to the grave of the person who wrote all the story tablets (Yatzil), with a riddle you can only solve if you have seen all tablets.
     - use "tomb.tsv" music for this part
   - Solving the riddle reveals the head of the statue (which was hidden), and two gigantic empty eye sockets. If you place the eyes of charybdis and scylla, the statue comes alive, and you have your boss fight! (which gives you an achievement, or maybe the A++ ending if you have A+?)
+- pick a good seed (for seed2) so that with the default seed, the map is good (at least Jungle)
 
 - Potential new ideas if I have the energy:
   - second shop (can I reuse 'object_interaction_function_shop_internal'?)
