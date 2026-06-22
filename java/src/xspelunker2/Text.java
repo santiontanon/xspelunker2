@@ -415,6 +415,9 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "Elaine: What?! You found Atlantis! Look, I have seen the aliens myself, but Atlantis? You are bluffing!", "ELAINE_CALENDAR_7", 112);
         addLineSafe(lines_with_constant_page3, "Elaine: This calendar stone is beautiful! Let's activate it and stop the aliens once and for all!", "ELAINE_CALENDAR_8", 112);
         
+        addLineSafe(lines_with_constant_page4, "What is such a nice statue of the Mayan vision serpent doing here in the Moon?! Strange though, usually Kukulkan is depicted coming out of its mouth...", "MOON_BOSS_1", 112);
+        addLineSafe(lines_with_constant_page4, "Ooops! That might explain why...", "MOON_BOSS_2", 112);
+        
         // Aapo's random sentences:
         addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel Mr. Xavier! I am Aapo! Please check my shop! I am also the postman in Palenke. If you have any mail to send or receive, talk to me.", "SHOPKEEPER1_1", 112);
         addLineSafe(lines_with_constant_page3, "Aapo: Bix a beel! I have heard reports of hunters finding new paths by breaking through walls, even the floor!", "SHOPKEEPER1_2", 112);

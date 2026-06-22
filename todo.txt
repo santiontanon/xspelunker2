@@ -1,9 +1,8 @@
 to do:
 
 ***- 7th boss (ideas: snake/serpent "The Lunar Serpent"? two headed?)
-  ***- before boss appears, in-game message wondering about the snake statue
   ***- draw: attacks for boss within statue (spit poison that sticks on the floor/wall)
-  ***- phase 1: implement within-statue behaviors (just go in and out, spitting poison/firing bullets)
+  ***- implement phase 1: just go in and out, spitting poison/firing bullets
   ***- draw phase 2 frames:
     ***- top of statue half-breaks (dust, or parts flying)
     ***- top of snake comes out and can stretch to reach any of the four corridors (wherever you are)

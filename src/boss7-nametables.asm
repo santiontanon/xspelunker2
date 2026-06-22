@@ -4,10 +4,61 @@ boss7_name_tables:
 
 BOSS7_NAMETABLE_STATUE: equ boss7_name_tables + 0  ; 8*15
 
+BOSS7_NAMETABLE_PHASE1_HEAD1: equ BOSS7_NAMETABLE_STATUE + 8*15  ; 1x1
+BOSS7_NAMETABLE_PHASE1_HEAD2: equ BOSS7_NAMETABLE_PHASE1_HEAD1 + 1*1  ; 2x2
+BOSS7_NAMETABLE_PHASE1_HEAD3: equ BOSS7_NAMETABLE_PHASE1_HEAD2 + 2*2  ; 3x3
+BOSS7_NAMETABLE_PHASE1_HEAD4: equ BOSS7_NAMETABLE_PHASE1_HEAD3 + 3*3  ; 4x3
+BOSS7_NAMETABLE_PHASE1_HEAD5: equ BOSS7_NAMETABLE_PHASE1_HEAD4 + 4*3  ; 5x3
+BOSS7_NAMETABLE_PHASE1_HEAD6: equ BOSS7_NAMETABLE_PHASE1_HEAD5 + 5*3  ; 6x3  (mouth closed)
+BOSS7_NAMETABLE_PHASE1_HEAD7: equ BOSS7_NAMETABLE_PHASE1_HEAD6 + 6*3  ; 6x4  (mouth open)
+
 
 ;-----------------------------------------------
-boss7_statue_frame_0:
+boss7_statue_frame_1:
 	db 1  ; number of parts
 	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
 	dw #0f08, BOSS7_NAMETABLE_STATUE  ; dimensions and nametable
 	dw 0, #0f08  ; boss__clear_bbox
+
+
+boss7_phase1_frame_1:
+	db 1  ; number of parts
+	db 5, 2  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0101, BOSS7_NAMETABLE_PHASE1_HEAD1  ; dimensions and nametable
+	dw 0, #0406  ; boss__clear_bbox
+
+boss7_phase1_frame_2:
+	db 1  ; number of parts
+	db 4, 1  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0202, BOSS7_NAMETABLE_PHASE1_HEAD2  ; dimensions and nametable
+	dw 0, #0406  ; boss__clear_bbox
+
+boss7_phase1_frame_3:
+	db 1  ; number of parts
+	db 3, 1  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0303, BOSS7_NAMETABLE_PHASE1_HEAD3  ; dimensions and nametable
+	dw 0, #0406  ; boss__clear_bbox
+
+boss7_phase1_frame_4:
+	db 1  ; number of parts
+	db 2, 1  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0304, BOSS7_NAMETABLE_PHASE1_HEAD4  ; dimensions and nametable
+	dw 0, #0406  ; boss__clear_bbox
+
+boss7_phase1_frame_5:
+	db 1  ; number of parts
+	db 1, 1  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0305, BOSS7_NAMETABLE_PHASE1_HEAD5  ; dimensions and nametable
+	dw 0, #0406  ; boss__clear_bbox
+
+boss7_phase1_frame_6:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0306, BOSS7_NAMETABLE_PHASE1_HEAD6  ; dimensions and nametable
+	dw 0, #0406  ; boss__clear_bbox
+
+boss7_phase1_frame_7:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0406, BOSS7_NAMETABLE_PHASE1_HEAD7  ; dimensions and nametable
+	dw 0, #0406  ; boss__clear_bbox

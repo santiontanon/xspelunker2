@@ -3,8 +3,14 @@ BOSS_7_HP_OFFSET: equ 0
 
 
 ;-----------------------------------------------
-; boss7_phase1_frame_ptrs:
-; 	; ...
+boss7_phase1_frame_ptrs:
+	dw boss7_phase1_frame_1
+	dw boss7_phase1_frame_2
+	dw boss7_phase1_frame_3
+	dw boss7_phase1_frame_4
+	dw boss7_phase1_frame_5
+	dw boss7_phase1_frame_6
+	dw boss7_phase1_frame_7
 
 
 ;-----------------------------------------------
@@ -70,9 +76,11 @@ update_boss7_behavior_init_continue:
 
 	ld a, 54
 	ld (boss__x), a
-	ld (boss__x2), a
 	ld a, 3
 	ld (boss__y), a
+	ld a, 50
+	ld (boss__x2), a
+	ld a, 5
 	ld (boss__y2), a
 	ld hl, (boss__settings + BOSS_7_HP_OFFSET)
 	ld (boss__hp), hl
@@ -96,9 +104,15 @@ update_boss7_behavior_0_wait_for_player:
 	ld a, (player_x + 1)  ; tile x
 	cp 54
 	ret c
+	ld a, (player_y + 1)  ; tile y
+	cp 15
+	ret c
 
-	; message:
-	; ...
+	; message 1:
+	ld de, TEXT_MOON_BOSS_1
+	ld hl, display_in_game_message_textpage4
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000
 
 	; appear!
 	xor a
@@ -107,7 +121,30 @@ update_boss7_behavior_0_wait_for_player:
 	ld (boss__behavior), a
 
 	; snake face appears:
-	; ...
+	ld b, 6  ; 6 frames animation of appearing
+update_boss7_behavior_0_wait_for_player_appearing_loop:
+	push bc
+		ld a, b
+		neg
+		add a, 7
+		call update_boss7_draw_phase1_boss_frame
+		ld hl, draw_room_with_hud
+		ld c, TILES_PAGE
+		call call_hl_in_page_c_8000
+
+		ld b, 20
+		call wait_b_halts
+	pop bc
+	djnz update_boss7_behavior_0_wait_for_player_appearing_loop
+
+	ld b, 50
+	call wait_b_halts
+
+	; message 1:
+	ld de, TEXT_MOON_BOSS_2
+	ld hl, display_in_game_message_textpage4
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000
 
 	ld ix, boss7_name_initial_sprite_attributes
 	ld de, boss7_name_y_table
@@ -198,9 +235,9 @@ update_boss7_draw_phase1_boss_frame:
 		ld c, BOSS_PAGE
 		call call_hl_in_page_c_8000
 
-; 		ld hl, draw_boss_frame_clear_previous_frame_2
-; 		ld c, BOSS_PAGE
-; 		call call_hl_in_page_c_8000
+		ld hl, draw_boss_frame_clear_previous_frame_2
+		ld c, BOSS_PAGE
+		call call_hl_in_page_c_8000
 
 		; draw statue:
 		ld hl, redraw_flags
@@ -210,14 +247,30 @@ update_boss7_draw_phase1_boss_frame:
 		ld bc, (boss__x)
 		call get_room_tile_ptr
 		ex de, hl  ; hl = ptr where the boss is to be drawn
-		ld ix, boss7_statue_frame_0
+		ld ix, boss7_statue_frame_1
 		ld c, BOSS_PAGE
 		ld hl, draw_boss_frame_1_without_clearing_ix
 		call call_hl_in_page_c_8000
 	pop af
 	; draw snake:
-	; ...
-	ret
+	or a
+	ret z
+	dec a
+	add a, a
+	ld hl, boss7_phase1_frame_ptrs
+	ADD_HL_A
+	ld a, (hl)
+	inc hl
+	ld h, (hl)
+	ld l, a
+	push hl
+		ld bc, (boss__x2)
+		call get_room_tile_ptr
+		ex de, hl  ; hl = ptr where the boss is to be drawn
+	pop ix
+	ld c, BOSS_PAGE
+	ld hl, draw_boss_frame_2_without_clearing_ix
+	jp call_hl_in_page_c_8000
 
 
 ;-----------------------------------------------

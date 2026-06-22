@@ -98,22 +98,22 @@ public class Bosses {
     
     public static void main(String args[]) throws Exception
     {
-//        boss1Tiles();
-//        boss1Sprites();
-//
-//        boss2Tiles();
-//        boss2Sprites();
-//
-//        boss3Tiles();
-//        boss3Sprites();
-//
-//        Boss4.main(args);
-//        
-//        boss5Tiles();
-//        boss5Sprites();
-//
-//        boss6Tiles();
-//        boss6Sprites();
+        boss1Tiles();
+        boss1Sprites();
+
+        boss2Tiles();
+        boss2Sprites();
+
+        boss3Tiles();
+        boss3Sprites();
+
+        Boss4.main(args);
+        
+        boss5Tiles();
+        boss5Sprites();
+
+        boss6Tiles();
+        boss6Sprites();
 
         boss7Tiles();
         boss7Sprites();
@@ -836,10 +836,10 @@ public class Bosses {
 
             // snake within statue phase 1:
             nameTable = nametables1.get(0);
-            addNameTable(nameTable, 0, 0, 4, 3, nameTableData);  // appearing 1 4x3
-            addNameTable(nameTable, 4, 0, 8, 3, nameTableData);  // appearing 2 4x3
-            addNameTable(nameTable, 8, 0, 12, 3, nameTableData);  // appearing 3 4x3
-            addNameTable(nameTable, 12, 0, 12, 3, nameTableData);  // appearing 4 4x3
+            addNameTable(nameTable, 3, 1, 4, 2, nameTableData);  // appearing 1 1x1
+            addNameTable(nameTable, 6, 0, 8, 2, nameTableData);  // appearing 2 2x2
+            addNameTable(nameTable, 9, 0, 12, 3, nameTableData);  // appearing 3 3x3
+            addNameTable(nameTable, 12, 0, 16, 3, nameTableData);  // appearing 4 4x3
             addNameTable(nameTable, 0, 4, 5, 7, nameTableData);  // appearing 5 5x3
 
             addNameTable(nameTable, 5, 4, 11, 7, nameTableData);  // out 5 6x3
