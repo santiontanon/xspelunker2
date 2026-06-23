@@ -1,9 +1,7 @@
 to do:
 
-***- 7th boss (ideas: snake/serpent "The Lunar Serpent"? two headed?)
+***- 7th boss
   ***- implement phase 1: poison spit
-    ***- transition to states 3/4 with some chance
-    ***- open the mouth for "wait time"
     ***- create the poison spit sprite enemy (like a directional bullet, but turns into a poison puddle on contact with wall, that remains there for a bit)
     ***- fire a barrage, like 3-5 towards the player direction (difficulty setting), from the mouth
   ***- draw phase 2 frames:
@@ -16,7 +14,7 @@ to do:
     ***- head + body comes out to whatever height you are on
     ***- spit poison / bullets
     ***- if you are very far, charged attack
-    ***- vulnerable parts of the boss are head and tail
+    ***- vulnerable parts of the boss are head
   ***- draw phase 3: frames:
     ***- statue fully breaks
     ***- full body of the snake, including tail (tail is a wound, maybe bleeding)

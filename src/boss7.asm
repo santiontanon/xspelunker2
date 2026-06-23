@@ -1,7 +1,8 @@
 ;-----------------------------------------------
 BOSS_7_HP_OFFSET: equ 0
 BOSS_7_WAIT_TIME_OFFSET: equ 2
-BOSS_7_EYE_BULLET_TIME_MASK: equ 3
+BOSS_7_EYE_BULLET_ATTACK_MASK: equ 3
+BOSS_7_POISON_ATTACK_MASK: equ 4
 
 
 ;-----------------------------------------------
@@ -23,19 +24,19 @@ boss7_phase1_frame_ptrs:
 ;-----------------------------------------------
 boss7_difficulty_setting__easy:
 	dw 192  ; boss hp
-	db 32, #1f  ; wait time, bullet time mask
+	db 32, #1f, #0f  ; wait time, bullet attack mask, poison attack mask
 
 boss7_difficulty_setting__normal:
 	dw 320  ; boss hp
-	db 32, #0f  ; wait time, bullet time mask
+	db 32, #0f, #07  ; wait time, bullet attack mask, poison attack mask
 
 boss7_difficulty_setting__hard:
 	dw 416  ; boss hp
-	db 28, #0f  ; wait time, bullet time mask
+	db 28, #0f, #07  ; wait time, bullet attack mask, poison attack mask
 
 boss7_difficulty_setting__hardest:
 	dw 512  ; boss hp
-	db 24, #07  ; wait time, bullet time mask
+	db 24, #07, #03  ; wait time, bullet attack mask, poison attack mask
 
 
 ;-----------------------------------------------
@@ -144,7 +145,7 @@ update_boss7_behavior_0_wait_for_player_appearing_loop:
 	pop bc
 	djnz update_boss7_behavior_0_wait_for_player_appearing_loop
 
-	ld b, 50
+	ld b, 20
 	call wait_b_halts
 
 	; message 1:
@@ -211,8 +212,13 @@ update_boss7_behavior_1_state_0_continue:
 	and #07
 	cp #07
 	ret nz
+	ld a, (boss__settings + BOSS_7_POISON_ATTACK_MASK)
+	ld b, a
 	call random_a
 	ld c, a
+	and b
+	jp z, update_boss7_behavior_1_to_state_3
+	ld a, c
 	and #03
 	ret nz
 	ld a, c
@@ -241,8 +247,13 @@ update_boss7_behavior_1_state_1_continue:
 	and #07
 	cp #07
 	ret nz
+	ld a, (boss__settings + BOSS_7_POISON_ATTACK_MASK)
+	ld b, a
 	call random_a
 	ld c, a
+	and b
+	jp z, update_boss7_behavior_1_to_state_4
+	ld a, c
 	and #03
 	ret nz
 	ld a, c
@@ -334,23 +345,55 @@ update_boss7_behavior_1_state_2_check_if_player_is_close:
 	ld (boss__state_timer), a
 	ret
 
+update_boss7_behavior_1_to_state_3:
+	ld a, 3
+	ld (boss__state), a
+	xor a
+	ld (boss__state_timer), a
+	ret
 update_boss7_behavior_1_state_3:
 	ld hl, boss__state_timer
 	ld a, (hl)
 	inc (hl)
+	or a
+	push af
+		ld a, 7
+		call z, update_boss7_draw_phase1_boss_frame
+		ld a, (boss__settings + BOSS_7_WAIT_TIME_OFFSET)
+		ld c, a
+	pop af
+	cp c
+	ret nz
+	; spit poison:
 	; ...
-	ret
+	jp update_boss7_behavior_1_to_state_0
 
+update_boss7_behavior_1_to_state_4:
+	ld a, 4
+	ld (boss__state), a
+	xor a
+	ld (boss__state_timer), a
+	ret
 update_boss7_behavior_1_state_4:
 	ld hl, boss__state_timer
 	ld a, (hl)
 	inc (hl)
+	or a
+	push af
+		ld a, 8
+		call z, update_boss7_draw_phase1_boss_frame
+		ld a, (boss__settings + BOSS_7_WAIT_TIME_OFFSET)
+		ld c, a
+	pop af
+	cp c
+	ret nz
+	; spit poison:
 	; ...
-	ret
+	jp update_boss7_behavior_1_to_state_0
 
 update_boss7_behavior_1_maybe_fire_bullet:
 	; fire bullets through eyes
-	ld a, (boss__settings + BOSS_7_EYE_BULLET_TIME_MASK)
+	ld a, (boss__settings + BOSS_7_EYE_BULLET_ATTACK_MASK)
 	ld c, a
 	call random_a
 	and c
