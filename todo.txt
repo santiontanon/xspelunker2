@@ -1,16 +1,13 @@
 to do:
 
 ***- 7th boss
-  ***- implement phase 1: poison spit
-    ***- create the poison spit sprite enemy (like a directional bullet, but turns into a poison puddle on contact with wall, that remains there for a bit)
-    ***- fire a barrage, like 3-5 towards the player direction (difficulty setting), from the mouth
   ***- draw phase 2 frames:
     ***- top of statue half-breaks (dust, or parts flying)
     ***- top of snake comes out and can stretch to reach any of the four corridors (wherever you are)
     ***- spits poison + fire bullets as before
     ***- if you go very far, boss does a charge poison attack that reaches all the way back, so, you do not want to do that
   ***- implement phase 2:
-    ***- statue half-breaks
+    ***- statue half-breaks after health reaches a threshold
     ***- head + body comes out to whatever height you are on
     ***- spit poison / bullets
     ***- if you are very far, charged attack

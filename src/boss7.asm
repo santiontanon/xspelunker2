@@ -3,6 +3,7 @@ BOSS_7_HP_OFFSET: equ 0
 BOSS_7_WAIT_TIME_OFFSET: equ 2
 BOSS_7_EYE_BULLET_ATTACK_MASK: equ 3
 BOSS_7_POISON_ATTACK_MASK: equ 4
+BOSS_7_N_POISON_SPITS: equ 5
 
 
 ;-----------------------------------------------
@@ -24,19 +25,19 @@ boss7_phase1_frame_ptrs:
 ;-----------------------------------------------
 boss7_difficulty_setting__easy:
 	dw 192  ; boss hp
-	db 32, #1f, #0f  ; wait time, bullet attack mask, poison attack mask
+	db 32, #1f, #0f, 2  ; wait time, bullet attack mask, poison attack mask, n spits
 
 boss7_difficulty_setting__normal:
 	dw 320  ; boss hp
-	db 32, #0f, #07  ; wait time, bullet attack mask, poison attack mask
+	db 32, #0f, #07, 3  ; wait time, bullet attack mask, poison attack mask, n spits
 
 boss7_difficulty_setting__hard:
 	dw 416  ; boss hp
-	db 28, #0f, #07  ; wait time, bullet attack mask, poison attack mask
+	db 28, #0f, #07, 4  ; wait time, bullet attack mask, poison attack mask, n spits
 
 boss7_difficulty_setting__hardest:
 	dw 512  ; boss hp
-	db 24, #07, #03  ; wait time, bullet attack mask, poison attack mask
+	db 24, #07, #03, 4  ; wait time, bullet attack mask, poison attack mask, n spits
 
 
 ;-----------------------------------------------
@@ -88,11 +89,11 @@ update_boss7_behavior_init_continue:
 
 	ld a, 54
 	ld (boss__x), a
-	ld a, 3
+	ld a, 4
 	ld (boss__y), a
 	ld a, 50
 	ld (boss__x2), a
-	ld a, 5
+	ld a, 6
 	ld (boss__y2), a
 	ld hl, (boss__settings + BOSS_7_HP_OFFSET)
 	ld (boss__hp), hl
@@ -110,7 +111,7 @@ update_boss7_behavior_init_continue:
 update_boss7_behavior_0_wait_for_player:
 	; condition for the boss to trigger:
 	ld a, (player_x + 1)  ; tile x
-	cp 54
+	cp 52
 	ret c
 	ld a, (player_y + 1)  ; tile y
 	cp 16
@@ -346,6 +347,9 @@ update_boss7_behavior_1_state_2_check_if_player_is_close:
 	ret
 
 update_boss7_behavior_1_to_state_3:
+	ld a, (player_x + 1)
+	cp 49
+	ret nc  ; if player is too to the right, do not spit poison
 	ld a, 3
 	ld (boss__state), a
 	xor a
@@ -362,11 +366,34 @@ update_boss7_behavior_1_state_3:
 		ld a, (boss__settings + BOSS_7_WAIT_TIME_OFFSET)
 		ld c, a
 	pop af
-	cp c
-	ret nz
 	; spit poison:
-	; ...
-	jp update_boss7_behavior_1_to_state_0
+	ld de, #0933  ; 51, 9
+update_boss7_behavior_1_state_3_spit_poison_de_set:
+	sub c
+	ret c
+	ld c, a
+	and #03  ; fire one poison spit each 4 frames
+	ret nz
+	ld a, c
+	rrca
+	rrca
+	and #3f
+	ld hl, boss__settings + BOSS_7_N_POISON_SPITS
+	cp (hl)
+	jp z, update_boss7_behavior_1_to_state_0
+	ld a, (player_x + 1)
+	cp 49
+	jp nc, update_boss7_behavior_1_to_state_0  ; if player is too to the right, do not spit poison
+
+	ld b, d
+	ld ix, #0000
+	; - e, b: tile coordinate from where the bullet is fired
+	; - ixl, ixh: pixel offset	
+	ld hl, boss_fire_directional_bullet_towards_player_with_random_offset_e_b
+	ld c, BOSS_PAGE
+	call call_hl_in_page_c_8000
+	ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BOSS7_POISON_SPIT
+	ret
 
 update_boss7_behavior_1_to_state_4:
 	ld a, 4
@@ -380,16 +407,14 @@ update_boss7_behavior_1_state_4:
 	inc (hl)
 	or a
 	push af
-		ld a, 8
+		ld a, 9
 		call z, update_boss7_draw_phase1_boss_frame
 		ld a, (boss__settings + BOSS_7_WAIT_TIME_OFFSET)
 		ld c, a
 	pop af
-	cp c
-	ret nz
 	; spit poison:
-	; ...
-	jp update_boss7_behavior_1_to_state_0
+	ld de, #0833  ; 51, 8
+	jp update_boss7_behavior_1_state_3_spit_poison_de_set
 
 update_boss7_behavior_1_maybe_fire_bullet:
 	; fire bullets through eyes

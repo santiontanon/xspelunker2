@@ -22,6 +22,7 @@ enemy_update_fn_table:
 	dw update_enemy_mushroom_spore2
 	dw update_enemy_poison_cloud
 	dw update_enemy_boss6_laser
+	dw update_enemy_boss7_poison_spit
 	; enemies you can hit:
 	dw update_enemy_snake  ; left-to-right
 	dw update_enemy_snake_dasher  ; left-to-right + dash
@@ -5045,6 +5046,70 @@ update_enemy_boss6_laser:
 
 
 ;-----------------------------------------------
+update_enemy_boss7_poison_spit:
+	ld iyh, 4  ; damage to deal
+	call update_enemy_hurt_player_bullet
+	jp z, update_enemy_delete
+
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	or a
+	jr nz, update_enemy_boss7_poison_spit_landed
+	
+	ld a, (current_world__difficulty_bullet_speed)
+	ld l, a
+	call update_enemy_bullet_bresenham_l_steps
+	; - b: amount to move in y
+	; - c: amount to move in x
+	call update_enemy_move_cb
+
+	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	cp 2
+	jr c, update_enemy_boss7_poison_spit_continue
+	inc c
+update_enemy_boss7_poison_spit_continue:
+	push bc
+		call general_check_collision_with_wall
+	pop bc
+	jr z, update_enemy_boss7_poison_spit_transition_to_landed
+
+	; out of the screen?
+	ld a, (current_room__width)
+	dec a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	jp z, update_enemy_delete
+	jp c, update_enemy_delete
+
+	ld a, (current_room__height)
+	dec a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	jp z, update_enemy_delete
+	jp c, update_enemy_delete
+
+	ld d, COLOR_GREEN
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 5) * 4 
+	jp enemy_sprite_and_continue_animated
+
+update_enemy_boss7_poison_spit_transition_to_landed:
+	; look for a good position to land:
+	dec b
+	ld (ix + ROOM_OBJECT_STRUCT_TILE_X), c
+	ld (ix + ROOM_OBJECT_STRUCT_TILE_Y), b
+	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_X), 0
+	ld (ix + ROOM_OBJECT_STRUCT_PIXEL_Y), 0
+
+update_enemy_boss7_poison_spit_landed:
+	inc (ix + ROOM_OBJECT_STRUCT_STATE)
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	cp 100
+	jp z, update_enemy_delete
+	ld d, COLOR_GREEN
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 7) * 4 
+	jp enemy_sprite_and_continue_animated4_slow
+
+
+;-----------------------------------------------
 ; return:
 ; - nz: delete
 ; - z: enemy still exists
@@ -5890,6 +5955,21 @@ enemy_sprite_and_continue_animated4:
 ; 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 ; 	rlca
 	ld a, (interrupt_cycle)
+	and #0c
+	add a, e
+	ld e, a
+	jp enemy_sprite_and_continue
+
+
+;-----------------------------------------------
+; input:
+; - d: sprite color
+; - e: sprite frame
+enemy_sprite_and_continue_animated4_slow:
+; 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+; 	rlca
+	ld a, (interrupt_cycle)
+	rrca
 	and #0c
 	add a, e
 	ld e, a
