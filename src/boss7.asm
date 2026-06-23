@@ -1,5 +1,7 @@
 ;-----------------------------------------------
 BOSS_7_HP_OFFSET: equ 0
+BOSS_7_WAIT_TIME_OFFSET: equ 2
+BOSS_7_EYE_BULLET_TIME_MASK: equ 3
 
 
 ;-----------------------------------------------
@@ -20,16 +22,20 @@ boss7_phase1_frame_ptrs:
 
 ;-----------------------------------------------
 boss7_difficulty_setting__easy:
-	dw 192, 144, 64  ; boss hp
+	dw 192  ; boss hp
+	db 32, #1f  ; wait time, bullet time mask
 
 boss7_difficulty_setting__normal:
-	dw 320, 240, 108  ; boss hp
+	dw 320  ; boss hp
+	db 32, #0f  ; wait time, bullet time mask
 
 boss7_difficulty_setting__hard:
-	dw 416, 312, 140  ; boss hp
+	dw 416  ; boss hp
+	db 28, #0f  ; wait time, bullet time mask
 
 boss7_difficulty_setting__hardest:
-	dw 512, 384, 176  ; boss hp
+	dw 512  ; boss hp
+	db 24, #07  ; wait time, bullet time mask
 
 
 ;-----------------------------------------------
@@ -100,17 +106,13 @@ update_boss7_behavior_init_continue:
 	xor a
 	call update_boss7_draw_phase1_boss_frame
 
-	; close door:
-	ld hl, SFX_door_open
-	jp play_SFX_with_high_priority
-
 update_boss7_behavior_0_wait_for_player:
 	; condition for the boss to trigger:
 	ld a, (player_x + 1)  ; tile x
 	cp 54
 	ret c
 	ld a, (player_y + 1)  ; tile y
-	cp 15
+	cp 16
 	ret c
 
 	; message 1:
@@ -176,13 +178,195 @@ update_boss7_behavior_0_wait_for_player_appearing_loop:
 ; phase 1:
 update_boss7_behavior_1:
 	; states:
+	; - 0: head out, frame 6 (chance of eye bullet, chance of spit)
+	; - 1: head out, frame 8 (chance of eye bullet, chance of spit)
+	; - 2: hiding inside statue (back to 0 after a bit, only if player is closeby, bullets get fired from the statue mouth)
+	; - 3: spit attack, frame 7
+	; - 4: spit attack, frame 9
+	ld a, (boss__state)
+	or a
+	jr z, update_boss7_behavior_1_state_0
+	dec a
+	jp z, update_boss7_behavior_1_state_1
+	dec a
+	jp z, update_boss7_behavior_1_state_2
+	dec a
+	jp z, update_boss7_behavior_1_state_3
+	dec a
+	jp z, update_boss7_behavior_1_state_4
+	ret
+
+update_boss7_behavior_1_state_0:
+	call update_boss7_behavior_1_maybe_fire_bullet
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	or a
+	push af
+		jr nz, update_boss7_behavior_1_state_0_continue
+		ld a, 6
+		call update_boss7_draw_phase1_boss_frame
+update_boss7_behavior_1_state_0_continue:
+	pop af
+	and #07
+	cp #07
+	ret nz
+	call random_a
+	ld c, a
+	and #03
+	ret nz
+	ld a, c
+	rrca
+	rrca
+	and #07
+	jr z, update_boss7_behavior_1_to_state_2
+	ld a, 1
+	ld (boss__state), a
+	xor a
+	ld (boss__state_timer), a
+	ret
+
+update_boss7_behavior_1_state_1:
+	call update_boss7_behavior_1_maybe_fire_bullet
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	or a
+	push af
+		jr nz, update_boss7_behavior_1_state_1_continue
+		ld a, 8
+		call update_boss7_draw_phase1_boss_frame
+update_boss7_behavior_1_state_1_continue:
+	pop af
+	and #07
+	cp #07
+	ret nz
+	call random_a
+	ld c, a
+	and #03
+	ret nz
+	ld a, c
+	rrca
+	rrca
+	and #07
+	jr z, update_boss7_behavior_1_to_state_2
+update_boss7_behavior_1_to_state_0:
+	xor a
+	ld (boss__state), a
+	ld (boss__state_timer), a
+	ret
+
+update_boss7_behavior_1_to_state_2:
+	ld a, 2
+	ld (boss__state), a
+	xor a
+	ld (boss__state_timer), a
+update_boss7_behavior_1_state_2:
+	; hide inside statue, steps:
+	; - 0: frame 6
+	; - 1: frame 5
+	; - 2: frame 4
+	; - 3: frame 3
+	; - 4: frame 2
+	; - 5: frame 1
+	; - 6 - 15: hidden
+	; - 16: if player is far, go back to 15
+	; - 17: frame 1
+	; - 18: frame 2
+	; - 19: frame 3
+	; - 20: frame 4
+	; - 21: frame 5
+	; - 22: go to state 0
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	ld c, a
+	and #07
+	ret nz
+	ld a, c
+	rrca
+	rrca
+	rrca
+	and #1f
+	cp 22
+	jp z, update_boss7_behavior_1_to_state_0
+	cp 16
+	jr z, update_boss7_behavior_1_state_2_check_if_player_is_close
+	ld c, 6
+	or a
+	jr z, update_boss7_behavior_1_state_2_frame_set
+	dec c  ; c = 5
+	cp 1
+	jr z, update_boss7_behavior_1_state_2_frame_set
+	cp 21
+	jr z, update_boss7_behavior_1_state_2_frame_set
+	dec c  ; c = 4
+	cp 2
+	jr z, update_boss7_behavior_1_state_2_frame_set
+	cp 20
+	jr z, update_boss7_behavior_1_state_2_frame_set
+	dec c  ; c = 3
+	cp 3
+	jr z, update_boss7_behavior_1_state_2_frame_set
+	cp 19
+	jr z, update_boss7_behavior_1_state_2_frame_set
+	dec c  ; c = 2
+	cp 4
+	jr z, update_boss7_behavior_1_state_2_frame_set
+	cp 18
+	jr z, update_boss7_behavior_1_state_2_frame_set
+	dec c  ; c = 1
+	cp 5
+	jr z, update_boss7_behavior_1_state_2_frame_set
+	cp 17
+	jr z, update_boss7_behavior_1_state_2_frame_set
+	ld c, 0
+update_boss7_behavior_1_state_2_frame_set:
+	ld a, c
+	jp update_boss7_draw_phase1_boss_frame
+
+update_boss7_behavior_1_state_2_check_if_player_is_close:
+	ld a, (player_x + 1)
+	cp 48
+	ret nc
+	; player is far, wait inside the statue:
+	ld a, 15*8
+	ld (boss__state_timer), a
+	ret
+
+update_boss7_behavior_1_state_3:
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
 	; ...
-; 	ld a, (boss__state)
-; 	or a
-; 	jr z, update_boss7_behavior_1_state_0
-; 	dec a
-; 	jp z, update_boss7_behavior_1_state_1
+	ret
+
+update_boss7_behavior_1_state_4:
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
 	; ...
+	ret
+
+update_boss7_behavior_1_maybe_fire_bullet:
+	; fire bullets through eyes
+	ld a, (boss__settings + BOSS_7_EYE_BULLET_TIME_MASK)
+	ld c, a
+	call random_a
+	and c
+	ret nz
+	ld hl, #0201
+	ld bc, (boss__x2)
+	add hl, bc
+	ld e, l
+	ld b, h
+	ld ix, #0004
+	; - c, b: tile coordinate from where the bullet is fired
+	; - ixl, ixh: pixel offset	
+	ld hl, boss_fire_directional_bullet_towards_player_with_random_offset_e_b
+	ld c, BOSS_PAGE
+	call call_hl_in_page_c_8000
+	ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BULLET_IGNORING_WALLS
 	ret
 
 
