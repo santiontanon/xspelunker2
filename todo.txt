@@ -1,15 +1,10 @@
 to do:
 
 ***- 7th boss
-  ***- draw phase 2 frames:
-    OK - new half statue
-    OK - snake face facing left, up, right, down: mouth open and closed
-    ***- trunk facing left, up, right, down (2 frames, for animation)
-    ***- 4 rotation sections (2 frames for animation)
   ***- implement phase 2:
     ***- statue half-breaks after health reaches a threshold
-    ***- head + body comes out to whatever height you are on:
-    ***- when vertical, eye needs to be drawn as a sprite
+    ***- head + body comes out to whatever height you are on
+    ***- eyes are drawn as sprites when head points up/down
     ***- spit poison / bullets
     ***- if you are very far, barrage attack, where it sends spit through all 4 possible passages
     ***- vulnerable parts of the boss are head
