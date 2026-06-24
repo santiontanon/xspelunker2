@@ -827,7 +827,7 @@ public class Bosses {
                 if (availableTiles[i]) collision[i] = 2;
             }
             nameTableBoxes.clear();
-            nameTableBoxes.add(new int[]{0, 96, 256, 256});  // statue
+            nameTableBoxes.add(new int[]{0, 96, 64, 224});  // statue
             List<int[][]> nametables2 = addBossTilesInGapsForBoxes(nameTableBoxes, baseImage, boss7Tiles, availableTiles, collision, false, false);
 
             // statue:

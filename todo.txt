@@ -2,15 +2,16 @@ to do:
 
 ***- 7th boss
   ***- draw phase 2 frames:
-    ***- top of statue half-breaks (dust, or parts flying)
-    ***- top of snake comes out and can stretch to reach any of the four corridors (wherever you are)
-    ***- spits poison + fire bullets as before
-    ***- if you go very far, boss does a charge poison attack that reaches all the way back, so, you do not want to do that
+    OK - new half statue
+    OK - snake face facing left, up, right, down: mouth open and closed
+    ***- trunk facing left, up, right, down (2 frames, for animation)
+    ***- 4 rotation sections (2 frames for animation)
   ***- implement phase 2:
     ***- statue half-breaks after health reaches a threshold
-    ***- head + body comes out to whatever height you are on
+    ***- head + body comes out to whatever height you are on:
+    ***- when vertical, eye needs to be drawn as a sprite
     ***- spit poison / bullets
-    ***- if you are very far, charged attack
+    ***- if you are very far, barrage attack, where it sends spit through all 4 possible passages
     ***- vulnerable parts of the boss are head
   ***- draw phase 3: frames:
     ***- statue fully breaks
