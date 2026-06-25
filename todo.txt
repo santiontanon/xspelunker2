@@ -2,7 +2,6 @@ to do:
 
 ***- 7th boss
   ***- implement phase 2:
-    ***- statue half-breaks after health reaches a threshold
     ***- head + body comes out to whatever height you are on
     ***- eyes are drawn as sprites when head points up/down
     ***- spit poison / bullets
@@ -11,7 +10,7 @@ to do:
   ***- draw phase 3: frames:
     ***- statue fully breaks
     ***- full body of the snake, including tail (tail is a wound, maybe bleeding)
-    ***- body rotating in all possible directions, so it can take any path
+    ***- extra tiles for "slithering" (if I have enough tiles)
   ***- implement phase 3:
     ***- statue fully breaks
     ***- body comes out and follows you around with highest probability, but it might deviate.

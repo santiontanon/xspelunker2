@@ -897,7 +897,7 @@ public class Bosses {
             addNameTable(nameTable, 2, 1, 8, 8, nameTableData);  // statue broken  6x7
 
             // snake within statue phase 2:
-            nameTable = nametables_phase2.get(0);
+//            nameTable = nametables_phase2.get(0);
 //            addNameTable(nameTable, 3, 1, 4, 2, nameTableData);  // ...
             
             for(int i = 0;i<16;i++) {

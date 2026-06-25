@@ -1,9 +1,10 @@
 ;-----------------------------------------------
 BOSS_7_HP_OFFSET: equ 0
-BOSS_7_WAIT_TIME_OFFSET: equ 2
-BOSS_7_EYE_BULLET_ATTACK_MASK: equ 3
-BOSS_7_POISON_ATTACK_MASK: equ 4
-BOSS_7_N_POISON_SPITS: equ 5
+BOSS_7_HP_PHASE2_OFFSET: equ 2
+BOSS_7_WAIT_TIME_OFFSET: equ 4
+BOSS_7_EYE_BULLET_ATTACK_MASK: equ 5
+BOSS_7_POISON_ATTACK_MASK: equ 6
+BOSS_7_N_POISON_SPITS: equ 7
 
 
 ;-----------------------------------------------
@@ -24,19 +25,19 @@ boss7_phase1_frame_ptrs:
 
 ;-----------------------------------------------
 boss7_difficulty_setting__easy:
-	dw 192  ; boss hp
+	dw 192, 144  ; boss hp, and threshold for the other phases
 	db 32, #1f, #0f, 2  ; wait time, bullet attack mask, poison attack mask, n spits
 
 boss7_difficulty_setting__normal:
-	dw 320  ; boss hp
+	dw 320, 256  ; boss hp, and threshold for the other phases
 	db 32, #0f, #07, 3  ; wait time, bullet attack mask, poison attack mask, n spits
 
 boss7_difficulty_setting__hard:
-	dw 416  ; boss hp
+	dw 416, 336  ; boss hp, and threshold for the other phases
 	db 28, #0f, #07, 4  ; wait time, bullet attack mask, poison attack mask, n spits
 
 boss7_difficulty_setting__hardest:
-	dw 512  ; boss hp
+	dw 512, 416  ; boss hp, and threshold for the other phases
 	db 24, #07, #03, 4  ; wait time, bullet attack mask, poison attack mask, n spits
 
 
@@ -213,6 +214,12 @@ update_boss7_behavior_1_state_0_continue:
 	and #07
 	cp #07
 	ret nz
+	; phase 2?
+	ld bc, (boss__settings + BOSS_7_HP_PHASE2_OFFSET)
+	ld hl, (boss__hp)
+	or a
+	sbc hl, bc
+	jp c, update_boss7_behavior_1_to_state_2  ; if we are moving to phase 2, to go hiding!
 	ld a, (boss__settings + BOSS_7_POISON_ATTACK_MASK)
 	ld b, a
 	call random_a
@@ -248,6 +255,12 @@ update_boss7_behavior_1_state_1_continue:
 	and #07
 	cp #07
 	ret nz
+	; phase 2?
+	ld bc, (boss__settings + BOSS_7_HP_PHASE2_OFFSET)
+	ld hl, (boss__hp)
+	or a
+	sbc hl, bc
+	jp c, update_boss7_behavior_1_to_state_2  ; if we are moving to phase 2, to go hiding!	
 	ld a, (boss__settings + BOSS_7_POISON_ATTACK_MASK)
 	ld b, a
 	call random_a
@@ -300,6 +313,16 @@ update_boss7_behavior_1_state_2:
 	rrca
 	rrca
 	and #1f
+	cp 8
+	jr nz, update_boss7_behavior_1_state_2_continue
+	; phase 2?
+	ld bc, (boss__settings + BOSS_7_HP_PHASE2_OFFSET)
+	ld hl, (boss__hp)
+	or a
+	sbc hl, bc
+	jp c, update_boss7_to_behavior_2  ; start phase 2!
+
+update_boss7_behavior_1_state_2_continue:
 	cp 22
 	jp z, update_boss7_behavior_1_to_state_0
 	cp 16
@@ -440,14 +463,64 @@ update_boss7_behavior_1_maybe_fire_bullet:
 
 ;-----------------------------------------------
 ; phase 2:
+update_boss7_to_behavior_2:
+	ld a, 2
+	ld (boss__behavior), a
+	xor a
+	ld (boss__state), a
+	ld (boss__state_timer), a
+	ret
 update_boss7_behavior_2:
 	; states:
+	; 0: statue breaking (then go to 1)
+	; 1: coming out of the statue (then go to 3)
+	; 2: hiding back into the statue (then back to 1)
+	; 3: moving to player height
+	; 4: attacking player
+	ld a, (boss__state)
+	or a
+	jr z, update_boss7_behavior_2_state_0
+	dec a
+	jp z, update_boss7_behavior_2_state_1
 	; ...
-; 	ld a, (boss__state)
-; 	or a
-; 	jr z, update_boss7_behavior_2_state_0
-; 	dec a
-; 	jp z, update_boss7_behavior_2_state_1
+	ret
+
+update_boss7_behavior_2_state_0:
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	or a
+	jr nz, update_boss7_behavior_2_state_0_continue
+	push af
+		ld bc, #0d38  ; 56, 13
+		ld (boss__x), bc
+		; draw broken statue:
+		call update_boss7_draw_phase2_boss_frame
+	pop af
+update_boss7_behavior_2_state_0_continue:
+	cp 64
+	jr z, update_boss7_behavior_2_to_state_1
+	and #01
+	ret nz
+	; spawn an explosion:
+	ld bc, #0436  ; 54, 4
+	call random_a
+	and #07
+	add a, c
+	ld c, a
+	call random_a
+	and #07
+	add a, b
+	ld b, a
+	jp spawn_explosion
+
+update_boss7_behavior_2_to_state_1:
+	xor a
+	ld (boss__state_timer), a
+	inc a
+	ld (boss__state), a
+	ret
+update_boss7_behavior_2_state_1:
 	; ...
 	ret
 
@@ -528,6 +601,38 @@ update_boss7_draw_phase1_boss_frame:
 	ld c, BOSS_PAGE
 	ld hl, draw_boss_frame_2_without_clearing_ix
 	jp call_hl_in_page_c_8000
+
+
+;-----------------------------------------------
+; input:
+update_boss7_draw_phase2_boss_frame:
+	; in phase 2:
+	; - frame 1 is the statue
+	; - frame 2 is the snake
+	ld hl, draw_boss_frame_clear_previous_frame_1
+	ld c, BOSS_PAGE
+	call call_hl_in_page_c_8000
+
+	ld hl, draw_boss_frame_clear_previous_frame_2
+	ld c, BOSS_PAGE
+	call call_hl_in_page_c_8000
+
+	; draw statue:
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)
+
+	; compute draw pointer:
+	ld bc, (boss__x)
+	call get_room_tile_ptr
+	ex de, hl  ; hl = ptr where the boss is to be drawn
+	ld ix, boss7_statue_frame_2
+	ld c, BOSS_PAGE
+	ld hl, draw_boss_frame_1_without_clearing_ix
+	call call_hl_in_page_c_8000
+
+	; draw snake:
+	; ...
+	ret
 
 
 ;-----------------------------------------------
