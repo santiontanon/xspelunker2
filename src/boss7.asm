@@ -497,7 +497,7 @@ update_boss7_behavior_2_state_0:
 	or a
 	jr nz, update_boss7_behavior_2_state_0_continue
 	push af
-		ld bc, #0d39  ; 57, 13  ; position of the tail (which will not be drawn in phase 2)
+		ld bc, #0f39  ; 57, 15  ; position of the tail (which will not be drawn in phase 2)
 		ld (boss__x), bc
 
 		ld hl, tile_enemy_work_memory
@@ -558,6 +558,11 @@ update_boss7_behavior_2_to_state_1:
 	; - 14: D -> R
 	; - #ff: end of drawing
 	ld hl, tile_enemy_work_memory
+	// statue ends in y = 13
+	// corridor 1 (y = 3): 13, 13, 12, 4, 2
+	// corridor 2 (y = 8): 13, 12, 4, 2
+	// corridor 3 (y = 13): 13, 12, 11, 6, 2
+	// corridor 4 (y = 18): 13, 12, 11, 8, 6, 2
 	ld (hl), 0
 	inc hl
 	ld (hl), 13
@@ -567,6 +572,8 @@ update_boss7_behavior_2_to_state_1:
 	ld (hl), 11
 	inc hl
 	ld (hl), 8
+	inc hl
+	ld (hl), 6
 	inc hl
 	ld (hl), 2
 	inc hl
@@ -756,11 +763,23 @@ update_boss7_draw_snake_piece_head:
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_l_u:
-	; ...
+	push de
+		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_L_U
+		call draw_boss7_snake_part
+	pop hl
+	ld bc, -5*64
+	add hl, bc
+	ex de, hl
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_l_r:
-	; ...
+	push de
+		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_L_R
+		call draw_boss7_snake_part
+	pop hl
+	ld bc, 4
+	add hl, bc
+	ex de, hl
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_l_d:
@@ -768,7 +787,7 @@ update_boss7_draw_snake_piece_l_d:
 		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_L_D
 		call draw_boss7_snake_part
 	pop hl
-	ld bc, 4*64
+	ld bc, 5*64
 	add hl, bc
 	ex de, hl
 	jp update_boss7_draw_snake_loop_continue
@@ -785,7 +804,13 @@ update_boss7_draw_snake_piece_u_l:
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_u_r:
-	; ...
+	push de
+		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_U_R
+		call draw_boss7_snake_part
+	pop hl
+	ld bc, 4
+	add hl, bc
+	ex de, hl
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_u_d:
@@ -793,17 +818,29 @@ update_boss7_draw_snake_piece_u_d:
 		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_U_D
 		call draw_boss7_snake_part
 	pop hl
-	ld bc, 4*64
+	ld bc, 5*64
 	add hl, bc
 	ex de, hl
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_r_l:
-	; ...
+	push de
+		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_R_L
+		call draw_boss7_snake_part
+	pop hl
+	ld bc, -4
+	add hl, bc
+	ex de, hl
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_r_u:
-	; ...
+	push de
+		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_R_U
+		call draw_boss7_snake_part
+	pop hl
+	ld bc, -5*64
+	add hl, bc
+	ex de, hl
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_r_d:
@@ -811,7 +848,7 @@ update_boss7_draw_snake_piece_r_d:
 		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_R_D
 		call draw_boss7_snake_part
 	pop hl
-	ld bc, 4*64
+	ld bc, 5*64
 	add hl, bc
 	ex de, hl
 	jp update_boss7_draw_snake_loop_continue
@@ -832,13 +869,19 @@ update_boss7_draw_snake_piece_d_u:
 		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_D_U
 		call draw_boss7_snake_part
 	pop hl
-	ld bc, -4*64
+	ld bc, -5*64
 	add hl, bc
 	ex de, hl
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_d_r:
-	; ...
+	push de
+		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_D_R
+		call draw_boss7_snake_part
+	pop hl
+	ld bc, 4
+	add hl, bc
+	ex de, hl
 	jp update_boss7_draw_snake_loop_continue
 
 
@@ -855,7 +898,7 @@ update_boss7_undraw_snake:
 ; - hl: nametable ptr
 ; - de: destination ptr
 draw_boss7_snake_part:
-	ld bc, #0404
+	ld bc, #0504
 draw_boss7_snake_part_loop_y:
 	push bc
 		push de

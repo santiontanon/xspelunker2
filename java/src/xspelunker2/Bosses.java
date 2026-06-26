@@ -899,12 +899,12 @@ public class Bosses {
 
             // snake pieces
             nameTable = nametables_phase2.get(0);
-            addNameTable(nameTable, 0, 0, 4, 4, nameTableData_snake);  // d-r / r-d
-            addNameTable(nameTable, 4, 0, 8, 4, nameTableData_snake);  // l-r / r-l
-            addNameTable(nameTable, 8, 0, 12, 4, nameTableData_snake);  // l-d / d-l
-            addNameTable(nameTable, 12, 0, 16, 4, nameTableData_snake);  // u-r / r-u
-            addNameTable(nameTable, 16, 0, 20, 4, nameTableData_snake);  // u-d / d-u
-            addNameTable(nameTable, 20, 0, 24, 4, nameTableData_snake);  // l-u / u-l
+            addNameTable(nameTable, 0, 0, 4, 5, nameTableData_snake);  // d-r / r-d
+            addNameTable(nameTable, 4, 0, 8, 5, nameTableData_snake);  // l-r / r-l
+            addNameTable(nameTable, 8, 0, 12, 5, nameTableData_snake);  // l-d / d-l
+            addNameTable(nameTable, 12, 0, 16, 5, nameTableData_snake);  // u-r / r-u
+            addNameTable(nameTable, 16, 0, 20, 5, nameTableData_snake);  // u-d / d-u
+            addNameTable(nameTable, 20, 0, 24, 5, nameTableData_snake);  // l-u / u-l
             
             for(int i = 0;i<16;i++) {
                 String line = "    db ";
