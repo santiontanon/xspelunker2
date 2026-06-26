@@ -2,7 +2,14 @@ to do:
 
 ***- 7th boss
   ***- implement phase 2:
-    ***- head + body comes out to whatever height you are on
+    ***- head + body comes out to whatever height you are on:
+      ***- draw snake
+        ***- base drawing method that draws pieces (without head or tail) for all 12 pieces: 6/12
+        ***- add head (using "boss__7_head_offset" and the direction of the last piece)
+      ***- undraw routine
+      ***- update collision table for phase 2
+      ***- snake control: add pieces automatically to get it to go where we want (one of the four different heights the player can be in, or just sticking the head out a bit if the player is to the right)
+      ***- go back in (undo movement) every once in a while
     ***- eyes are drawn as sprites when head points up/down
     ***- spit poison / bullets
     ***- if you are very far, barrage attack, where it sends spit through all 4 possible passages
