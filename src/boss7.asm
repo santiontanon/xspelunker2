@@ -109,6 +109,8 @@ update_boss7_behavior_init_continue:
 	ld (boss__hit_fn_page), a
 	ld a, 1
 	ld (boss__state), a
+	ld hl, 0
+	ld (boss__7_eye_sprite_location), hl
 
 	; draw the statue:
 	xor a
@@ -178,6 +180,13 @@ update_boss7_behavior_0_wait_for_player_appearing_loop:
 	; start tile animations:
 ; 	ld hl, update_animations_in_vdp_boss7
 ; 	ld (current_room__animation_fn_ptr), hl
+
+	; spawn object for sprite decorations
+	call ptr_to_new_sprite_object
+	ret nz  ; should never happen
+	ld (hl), 0  ; ID
+	inc hl
+	ld (hl), SPRITE_OBJECT_TYPE_BOSS_EXTRAS	
 	ret
 
 
@@ -823,6 +832,59 @@ update_boss7_behavior_4:
 
 
 ;-----------------------------------------------
+update_sprite_objects_boss_extras_boss_7_internal:
+	ld hl, (boss__7_eye_sprite_location)
+	ld a, h
+	or a
+	ret z
+
+	ld ixl, COLOR_DARK_BLUE
+
+	; extract the coordinates:
+	ld de, (room_scroll_x)
+	ld bc, current_room__tile_map
+	sbc hl, bc
+	ld a, l
+	and #3f
+	sub e  ; tile x (relative to scroll)
+	cp #ff
+	jr z, update_sprite_objects_boss_extras_boss_7_internal_early_clock
+	cp 32
+	ret nc  ; out of bounds
+	jr update_sprite_objects_boss_extras_boss_7_internal_x_set
+update_sprite_objects_boss_extras_boss_7_internal_early_clock:
+	add a, 2
+	ld e, ixl  ; we do not need 'e' anymore
+	set 7, e
+	ld ixl, e
+update_sprite_objects_boss_extras_boss_7_internal_x_set:
+	add a, a
+	add a, a
+	add a, a
+	add a, 4
+	ld c, a  ; sprite x
+
+	add hl, hl
+	add hl, hl
+	ld a, h
+	add a, 2
+	sub d  ; tile y (relative to scroll)
+	cp #ff
+	jr z, update_sprite_objects_boss_extras_boss_7_internal_continue
+	cp 24
+	ret nc  ; out of bounds
+update_sprite_objects_boss_extras_boss_7_internal_continue
+	add a, a
+	add a, a
+	add a, a
+	dec a
+	ld b, a  ; b = pixel x
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 11) * 4 
+	ld d, ixl
+	jp add_sprite_to_this_frame
+
+
+;-----------------------------------------------
 ; input:
 ; - a: snake frame to draw
 update_boss7_draw_phase1_boss_frame:
@@ -878,6 +940,10 @@ update_boss7_draw_phase2_boss_frame:
 	; in phase 2:
 	; - frame 1 is the statue
 	; - snake is handled in a special way
+
+	ld hl, 0
+	ld (boss__7_eye_sprite_location), hl
+
 	call update_boss7_undraw_snake
 	ld hl, draw_boss_frame_clear_previous_frame_1
 	ld c, BOSS_PAGE
@@ -987,6 +1053,7 @@ update_boss7_draw_snake_piece_head_down_loop:
 update_boss7_draw_snake_piece_head_down_continue:
 	ex de, hl	
 	ld hl, BOSS7_SNAKE_NAMETABLE_HEAD_DOWN
+	ld (boss__7_eye_sprite_location), de	
 	call draw_boss7_snake_part
 	jp update_boss7_draw_snake_loop_continue
 
@@ -1014,7 +1081,11 @@ update_boss7_draw_snake_piece_head_up_loop:
 	dec a
 	jr nz, update_boss7_draw_snake_piece_head_up_loop
 update_boss7_draw_snake_piece_head_up_continue:
-	ex de, hl
+	push hl
+		ld bc, 64*2
+		add hl, bc
+		ld (boss__7_eye_sprite_location), hl
+	pop de
 	ld hl, BOSS7_SNAKE_NAMETABLE_HEAD_UP
 	call draw_boss7_snake_part
 	jp update_boss7_draw_snake_loop_continue

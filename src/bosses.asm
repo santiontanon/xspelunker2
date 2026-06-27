@@ -1376,6 +1376,8 @@ update_sprite_objects_boss_extras_internal:
 	jp z, update_sprite_objects_boss_extras_boss_4
 	cp 9  ; atlantis
 	jp z, update_sprite_objects_boss_extras_boss_5
+	cp 11  ; moon
+	jp z, update_sprite_objects_boss_extras_boss_7
 	; ...
 	ret
 
@@ -1722,6 +1724,12 @@ update_sprite_objects_boss_extras_boss_5:
 ; 	ld d, COLOR_LIGHT_GREEN
 	ld d, COLOR_DARK_YELLOW
 	jp add_sprite_to_this_frame
+
+
+update_sprite_objects_boss_extras_boss_7:
+	ld c, BOSS_7_PAGE
+	ld hl, update_sprite_objects_boss_extras_boss_7_internal
+	jp call_hl_in_page_c_8000
 
 
 ;-----------------------------------------------

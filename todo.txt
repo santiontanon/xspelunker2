@@ -2,13 +2,10 @@ to do:
 
 ***- 7th boss
   ***- implement phase 2:
-    ***- eyes are drawn as sprites when head points up/down
     ***- spit poison (only when in target) / bullets 
-    ***- if player is very far, go back into the statue
     ***- vulnerable part of the boss is just the head
-  ***- draw phase 3: frames:
-    ***- snake tail (tail is a wound, maybe bleeding)
-    ***- extra tiles for "slithering" (if I have enough tiles)
+    ***- extra tiles for "slithering" (if I have enough tiles), and define additional name tables (will alternate with each forward/backward movement)
+  ***- draw phase 3: frames: snake tail (tail is a wound, maybe bleeding)
   ***- implement phase 3:
     ***- statue fully breaks
     ***- body comes out and follows you around with highest probability, but it might deviate.
