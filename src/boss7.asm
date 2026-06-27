@@ -468,6 +468,49 @@ update_boss7_behavior_1_maybe_fire_bullet:
 
 ;-----------------------------------------------
 ; phase 2:
+; snake piece types:
+; - 0: tail inside statue (not drawn)
+; - 1: tail
+; - 2: head
+; - 3: L -> U
+; - 4: L -> R
+; - 5: L -> D
+; - 6: U -> L
+; - 7: U -> R
+; - 8: U -> D
+; - 9: R -> L
+; - 10: R -> U
+; - 11: R -> D
+; - 12: D -> L
+; - 13: D -> U
+; - 14: D -> R
+; - #ff: end of drawing
+update_boss7_behavior_2_snake_position_table:
+	dw update_boss7_behavior_2_snake_position_hidden
+	dw update_boss7_behavior_2_snake_position_out_up
+	dw update_boss7_behavior_2_snake_position_out_down
+	dw update_boss7_behavior_2_snake_position_corridor1
+	dw update_boss7_behavior_2_snake_position_corridor2
+	dw update_boss7_behavior_2_snake_position_corridor3
+	dw update_boss7_behavior_2_snake_position_corridor4
+
+update_boss7_behavior_2_snake_position_hidden:
+	db 0, #ff
+update_boss7_behavior_2_snake_position_out_up:
+	db 0, 13, 2, #ff
+update_boss7_behavior_2_snake_position_out_down:
+	db 0, 13, 12, 11, 2, #ff
+update_boss7_behavior_2_snake_position_corridor1:
+	db 0, 13, 13, 12, 9, 2, #ff
+update_boss7_behavior_2_snake_position_corridor2:
+	db 0, 13, 12, 9, 2, #ff
+update_boss7_behavior_2_snake_position_corridor3:
+	db 0, 13, 12, 11, 6, 2, #ff
+update_boss7_behavior_2_snake_position_corridor4:
+	db 0, 13, 12, 11, 8, 6, 2, #ff
+
+
+;-----------------------------------------------
 update_boss7_to_behavior_2:
 	ld a, 2
 	ld (boss__behavior), a
@@ -478,10 +521,10 @@ update_boss7_to_behavior_2:
 update_boss7_behavior_2:
 	; states:
 	; 0: statue breaking (then go to 1)
-	; 1: coming out of the statue (then go to 3)
-	; 2: hiding back into the statue (then back to 1)
-	; 3: moving to player height
-	; 4: attacking player
+	; 1: decide which position to go to next
+	; 2: moving to the target posision (then go to 3)
+	; 3: waiting (then go to 1, or 4)
+	; 4: spit attack (then go to 1)
 	ld a, (boss__state)
 	or a
 	jr z, update_boss7_behavior_2_state_0
@@ -545,52 +588,40 @@ update_boss7_behavior_2_to_state_1:
 	inc a
 	ld (boss__state), a
 
-	; DEBUG:
-	; snake piece types:
-	; - 0: tail inside statue (not drawn)
-	; - 1: tail
-	; - 2: head
-	; - 3: L -> U
-	; - 4: L -> R
-	; - 5: L -> D
-	; - 6: U -> L
-	; - 7: U -> R
-	; - 8: U -> D
-	; - 9: R -> L
-	; - 10: R -> U
-	; - 11: R -> D
-	; - 12: D -> L
-	; - 13: D -> U
-	; - 14: D -> R
-	; - #ff: end of drawing
+	; snake inside of the statue:
 	ld hl, tile_enemy_work_memory
-	// statue ends in y = 13
-	// corridor 1 (y = 3): 13, 13, 12, 4, 2
-	// corridor 2 (y = 8): 13, 12, 4, 2
-	// corridor 3 (y = 13): 13, 12, 11, 6, 2
-	// corridor 4 (y = 18): 13, 12, 11, 8, 6, 2
 	ld (hl), 0
 	inc hl
-	ld (hl), 13
-	inc hl
-	ld (hl), 12
-	inc hl
-	ld (hl), 11
-	inc hl
-	ld (hl), 8
-	inc hl
-	ld (hl), 6
-	inc hl
-	ld (hl), 2
-	inc hl
 	ld (hl), #ff
-	ld a, 1
+	xor a
 	ld (boss__7_head_offset), a
-	call update_boss7_draw_phase2_boss_frame
+	jp update_boss7_draw_phase2_boss_frame
 
-	ret
 update_boss7_behavior_2_state_1:
-	; ...
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	or a
+	jr nz, update_boss7_behavior_2_state_1_continue
+	ld c, 7
+	call random_modulo
+	add a, a
+	ld hl, update_boss7_behavior_2_snake_position_table
+	ADD_HL_A
+	ld a, (hl)
+	inc hl
+	ld h, (hl)
+	ld l, a
+	ld de, tile_enemy_work_memory
+	ld bc, 16  ; just enough to copy the whole thing
+	ldir
+	xor a
+	ld (boss__7_head_offset), a	
+	call update_boss7_draw_phase2_boss_frame
+update_boss7_behavior_2_state_1_continue:
+	ld a, (boss__state_timer)
+	and #1f
+	ld (boss__state_timer), a
 	ret
 
 
@@ -776,6 +807,7 @@ update_boss7_draw_snake_piece_head:
 	jr z, update_boss7_draw_snake_piece_head_right
 update_boss7_draw_snake_piece_head_down:
 	ex de, hl
+	ld a, (boss__7_head_offset)
 	or a
 	jr z, update_boss7_draw_snake_piece_head_down_continue
 	ld bc, 64
@@ -804,6 +836,7 @@ update_boss7_draw_snake_piece_head_left_continue:
 
 update_boss7_draw_snake_piece_head_up:
 	ex de, hl
+	ld a, (boss__7_head_offset)
 	or a
 	jr z, update_boss7_draw_snake_piece_head_up_continue
 	ld bc, -64
@@ -818,6 +851,7 @@ update_boss7_draw_snake_piece_head_up_continue:
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_head_right:
+	ld a, (boss__7_head_offset)
 	or a
 	jr z, update_boss7_draw_snake_piece_head_right_continue
 update_boss7_draw_snake_piece_head_right_loop:

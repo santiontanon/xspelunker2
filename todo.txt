@@ -2,14 +2,16 @@ to do:
 
 ***- 7th boss
   ***- implement phase 2:
-    ***- head + body comes out to whatever height you are on:
-      ***- undraw routine
-      ***- snake control: add pieces automatically to get it to go where we want (one of the four different heights the player can be in, or just sticking the head out a bit if the player is to the right)
-      ***- go back in (undo movement) every once in a while
+    ***- snake undraw routine (to make the current debug update_boss7_behavior_2_state_1 work)
+    ***- snake behavior:
+      ***- there are N predefined positions: inside, U-head, U-L-D-head, corridor 1, ... corridor 4
+      ***- set a goal position
+      ***- go to position by first removing any inconsistent segments, and then adding until reaching there
+      ***- stay there for some small amount of time, and then chance of: (1) going to where player is, (2) hiding back in statue (low chance)
     ***- eyes are drawn as sprites when head points up/down
-    ***- spit poison / bullets
-    ***- if you are very far, barrage attack, where it sends spit through all 4 possible passages
-    ***- vulnerable parts of the boss are head
+    ***- spit poison (only when in target) / bullets 
+    ***- if you are very far, go back into the statue
+    ***- vulnerable part of the boss is just the head
   ***- draw phase 3: frames:
     ***- statue fully breaks
     ***- full body of the snake, including tail (tail is a wound, maybe bleeding)
