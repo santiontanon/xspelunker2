@@ -2,7 +2,6 @@ to do:
 
 ***- 7th boss
   ***- implement phase 2:
-    ***- snake undraw routine (to make the current debug update_boss7_behavior_2_state_1 work)
     ***- snake behavior:
       ***- there are N predefined positions: inside, U-head, U-L-D-head, corridor 1, ... corridor 4
       ***- set a goal position
@@ -13,8 +12,7 @@ to do:
     ***- if you are very far, go back into the statue
     ***- vulnerable part of the boss is just the head
   ***- draw phase 3: frames:
-    ***- statue fully breaks
-    ***- full body of the snake, including tail (tail is a wound, maybe bleeding)
+    ***- snake tail (tail is a wound, maybe bleeding)
     ***- extra tiles for "slithering" (if I have enough tiles)
   ***- implement phase 3:
     ***- statue fully breaks

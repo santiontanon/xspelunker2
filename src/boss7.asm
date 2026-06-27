@@ -543,8 +543,9 @@ update_boss7_behavior_2_state_0:
 		ld bc, #1039  ; 57, 16  ; position of the tail (which will not be drawn in phase 2)
 		ld (boss__x), bc
 
-		ld hl, tile_enemy_work_memory
-		ld (hl), #ff  ; end of snake (basically, draw nothing)
+		ld a, #ff
+		ld (tile_enemy_work_memory), a  ; end of snake (basically, draw nothing)
+		ld (tile_enemy_work_memory + 32), a  ; initialize the snake clear array too
 
 		; draw broken statue + snake:
 		call update_boss7_draw_phase2_boss_frame
@@ -1010,9 +1011,134 @@ update_boss7_draw_snake_piece_d_r:
 
 ;-----------------------------------------------
 update_boss7_undraw_snake:
+	ld bc, (boss__x)
+	call get_room_tile_ptr
+	ex de, hl  ; de = ptr where the snake is to be drawn
+
 	; erase the snake using the version stored at 'tile_enemy_work_memory + 32'
 	ld hl, tile_enemy_work_memory + 32
+update_boss7_undraw_snake_loop:
+	ld a, (hl)
+	cp #ff
+	ret z
+
+	; undraw piece:
+	; here:
+	; - hl: ptr to the current piece
+	; - de: pointer where to undraw it
+	push hl
+		ld hl, update_boss7_snake_piece_undrawing_methods
+		add a, a
+		ADD_HL_A
+		ld a, (hl)
+		inc hl
+		ld h, (hl)
+		ld l, a
+		jp (hl)
+update_boss7_undraw_snake_loop_continue:
+	pop hl
+	inc hl
+	jp update_boss7_undraw_snake_loop
+
+update_boss7_snake_piece_undrawing_methods:
+	dw update_boss7_undraw_snake_piece_tail_in_statue
+	dw update_boss7_undraw_snake_piece_tail
+	dw update_boss7_undraw_snake_piece_head
+	dw update_boss7_undraw_snake_piece_l_u  ; 3
+	dw update_boss7_undraw_snake_piece_l_r  ; 4
+	dw update_boss7_undraw_snake_piece_l_d  ; 5
+	dw update_boss7_undraw_snake_piece_u_l  ; 6
+	dw update_boss7_undraw_snake_piece_u_r  ; 7
+	dw update_boss7_undraw_snake_piece_u_d  ; 8
+	dw update_boss7_undraw_snake_piece_r_l  ; 9
+	dw update_boss7_undraw_snake_piece_r_u  ; 10
+	dw update_boss7_undraw_snake_piece_r_d  ; 11
+	dw update_boss7_undraw_snake_piece_d_l  ; 12
+	dw update_boss7_undraw_snake_piece_d_u  ; 13
+	dw update_boss7_undraw_snake_piece_d_r  ; 14
+
+
+update_boss7_undraw_snake_piece_tail_in_statue:
+	; nothing to undraw, just move the pointer to undraw up:
+	ex de, hl
+	ld bc, -4*64
+	add hl, bc
+	ex de, hl
+	jp update_boss7_undraw_snake_loop_continue
+
+update_boss7_undraw_snake_piece_tail:
 	; ...
+	jp update_boss7_undraw_snake_loop_continue
+update_boss7_undraw_snake_piece_head:
+	call update_boss7_undraw_snake_piece_internal
+	jp update_boss7_undraw_snake_loop_continue
+
+update_boss7_undraw_snake_piece_l_u:
+update_boss7_undraw_snake_piece_r_u:
+update_boss7_undraw_snake_piece_d_u:
+	push de
+		call update_boss7_undraw_snake_piece_internal
+	pop hl
+	ld bc, -5*64
+	add hl, bc
+	ex de, hl	
+	jp update_boss7_undraw_snake_loop_continue
+
+update_boss7_undraw_snake_piece_l_r:
+update_boss7_undraw_snake_piece_u_r:
+update_boss7_undraw_snake_piece_d_r:
+	push de
+		call update_boss7_undraw_snake_piece_internal
+	pop hl
+	ld bc, 4
+	add hl, bc
+	ex de, hl	
+	jp update_boss7_undraw_snake_loop_continue
+
+update_boss7_undraw_snake_piece_l_d:
+update_boss7_undraw_snake_piece_u_d:
+update_boss7_undraw_snake_piece_r_d:
+	push de
+		call update_boss7_undraw_snake_piece_internal
+	pop hl
+	ld bc, 5*64
+	add hl, bc
+	ex de, hl	
+	jp update_boss7_undraw_snake_loop_continue
+
+update_boss7_undraw_snake_piece_u_l:
+update_boss7_undraw_snake_piece_r_l:
+update_boss7_undraw_snake_piece_d_l:
+	push de
+		call update_boss7_undraw_snake_piece_internal
+	pop hl
+	ld bc, -4
+	add hl, bc
+	ex de, hl	
+	jp update_boss7_undraw_snake_loop_continue
+
+
+update_boss7_undraw_snake_piece_internal:
+	ld l, e
+	ld h, d
+	ld bc, 64*24
+	add hl, bc
+	ld a, 5
+update_boss7_undraw_snake_piece_internal_loop_y:
+	push hl
+		push de
+			ldi
+			ldi
+			ldi
+			ldi
+		pop hl
+		ld bc, 64
+		add hl, bc
+		ex de, hl
+	pop hl
+	add hl, bc
+	dec a
+	jr nz, update_boss7_undraw_snake_piece_internal_loop_y
 	ret
 
 
