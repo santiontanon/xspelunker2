@@ -147,12 +147,12 @@ update_boss7_behavior_0_wait_for_player_appearing_loop:
 		ld c, TILES_PAGE
 		call call_hl_in_page_c_8000
 
-		ld b, 20
+		ld b, 15
 		call wait_b_halts
 	pop bc
 	djnz update_boss7_behavior_0_wait_for_player_appearing_loop
 
-	ld b, 20
+	ld b, 15
 	call wait_b_halts
 
 	; message 1:
@@ -497,7 +497,7 @@ update_boss7_behavior_2_state_0:
 	or a
 	jr nz, update_boss7_behavior_2_state_0_continue
 	push af
-		ld bc, #0f39  ; 57, 15  ; position of the tail (which will not be drawn in phase 2)
+		ld bc, #1039  ; 57, 16  ; position of the tail (which will not be drawn in phase 2)
 		ld (boss__x), bc
 
 		ld hl, tile_enemy_work_memory
@@ -510,14 +510,20 @@ update_boss7_behavior_2_state_0:
 		ld c, TILES_PAGE
 		call call_hl_in_page_c_8000
 
-		; switch to the new tileset:
+		; switch to the new tileset & collision tables:
 		ld hl, boss_7_phase2_tiles_zx0
 		ld c, BOSS_7_PAGE
 		ld (current_room__tileset_ptr), hl
 		call setup_game_tiles_only_biome
+
+		ld hl, tile_collision_types_boss7_phase2
+		ld (current_room__collision_ptr), hl
+		ld de, current_room__collision_table
+		ld bc, 256
+		ldir
 	pop af
 update_boss7_behavior_2_state_0_continue:
-	cp 64
+	cp 32
 	jr z, update_boss7_behavior_2_to_state_1
 	and #01
 	ret nz
@@ -578,7 +584,7 @@ update_boss7_behavior_2_to_state_1:
 	ld (hl), 2
 	inc hl
 	ld (hl), #ff
-	ld a, 2
+	ld a, 1
 	ld (boss__7_head_offset), a
 	call update_boss7_draw_phase2_boss_frame
 
@@ -751,7 +757,9 @@ update_boss7_draw_snake_piece_tail_in_statue:
 	ex de, hl
 	ld bc, -4*64
 	add hl, bc
-	ex de, hl	
+	ex de, hl
+	ld a, PCG_DIRECTION_UP
+	ld (boss__7_last_piece_direction), a
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_tail:
@@ -759,7 +767,66 @@ update_boss7_draw_snake_piece_tail:
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_head:
-	; ...
+	ld a, (boss__7_last_piece_direction)
+	cp PCG_DIRECTION_LEFT
+	jr z, update_boss7_draw_snake_piece_head_left
+	cp PCG_DIRECTION_UP
+	jr z, update_boss7_draw_snake_piece_head_up
+	cp PCG_DIRECTION_RIGHT
+	jr z, update_boss7_draw_snake_piece_head_right
+update_boss7_draw_snake_piece_head_down:
+	ex de, hl
+	or a
+	jr z, update_boss7_draw_snake_piece_head_down_continue
+	ld bc, 64
+update_boss7_draw_snake_piece_head_down_loop:
+	add hl, bc
+	dec a
+	jr nz, update_boss7_draw_snake_piece_head_down_loop
+update_boss7_draw_snake_piece_head_down_continue:
+	ex de, hl	
+	ld hl, BOSS7_SNAKE_NAMETABLE_HEAD_DOWN
+	call draw_boss7_snake_part
+	jp update_boss7_draw_snake_loop_continue
+
+update_boss7_draw_snake_piece_head_left:
+	ld a, (boss__7_head_offset)
+	or a
+	jr z, update_boss7_draw_snake_piece_head_left_continue
+update_boss7_draw_snake_piece_head_left_loop:
+	inc de
+	dec a
+	jr nz, update_boss7_draw_snake_piece_head_left_loop
+update_boss7_draw_snake_piece_head_left_continue:
+	ld hl, BOSS7_SNAKE_NAMETABLE_HEAD_LEFT
+	call draw_boss7_snake_part
+	jp update_boss7_draw_snake_loop_continue
+
+update_boss7_draw_snake_piece_head_up:
+	ex de, hl
+	or a
+	jr z, update_boss7_draw_snake_piece_head_up_continue
+	ld bc, -64
+update_boss7_draw_snake_piece_head_up_loop:
+	add hl, bc
+	dec a
+	jr nz, update_boss7_draw_snake_piece_head_up_loop
+update_boss7_draw_snake_piece_head_up_continue:
+	ex de, hl
+	ld hl, BOSS7_SNAKE_NAMETABLE_HEAD_UP
+	call draw_boss7_snake_part
+	jp update_boss7_draw_snake_loop_continue
+
+update_boss7_draw_snake_piece_head_right:
+	or a
+	jr z, update_boss7_draw_snake_piece_head_right_continue
+update_boss7_draw_snake_piece_head_right_loop:
+	dec de
+	dec a
+	jr nz, update_boss7_draw_snake_piece_head_right_loop
+update_boss7_draw_snake_piece_head_right_continue:
+	ld hl, BOSS7_SNAKE_NAMETABLE_HEAD_RIGHT
+	call draw_boss7_snake_part
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_l_u:
@@ -770,6 +837,8 @@ update_boss7_draw_snake_piece_l_u:
 	ld bc, -5*64
 	add hl, bc
 	ex de, hl
+	ld a, PCG_DIRECTION_UP
+	ld (boss__7_last_piece_direction), a
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_l_r:
@@ -780,6 +849,8 @@ update_boss7_draw_snake_piece_l_r:
 	ld bc, 4
 	add hl, bc
 	ex de, hl
+	ld a, PCG_DIRECTION_RIGHT
+	ld (boss__7_last_piece_direction), a
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_l_d:
@@ -790,10 +861,11 @@ update_boss7_draw_snake_piece_l_d:
 	ld bc, 5*64
 	add hl, bc
 	ex de, hl
+	ld a, PCG_DIRECTION_DOWN
+	ld (boss__7_last_piece_direction), a
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_u_l:
-	dec de
 	push de
 		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_U_L
 		call draw_boss7_snake_part
@@ -801,6 +873,8 @@ update_boss7_draw_snake_piece_u_l:
 	ld bc, -4
 	add hl, bc
 	ex de, hl
+	ld a, PCG_DIRECTION_LEFT
+	ld (boss__7_last_piece_direction), a
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_u_r:
@@ -811,6 +885,8 @@ update_boss7_draw_snake_piece_u_r:
 	ld bc, 4
 	add hl, bc
 	ex de, hl
+	ld a, PCG_DIRECTION_RIGHT
+	ld (boss__7_last_piece_direction), a
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_u_d:
@@ -821,6 +897,8 @@ update_boss7_draw_snake_piece_u_d:
 	ld bc, 5*64
 	add hl, bc
 	ex de, hl
+	ld a, PCG_DIRECTION_DOWN
+	ld (boss__7_last_piece_direction), a	
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_r_l:
@@ -831,6 +909,8 @@ update_boss7_draw_snake_piece_r_l:
 	ld bc, -4
 	add hl, bc
 	ex de, hl
+	ld a, PCG_DIRECTION_LEFT
+	ld (boss__7_last_piece_direction), a
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_r_u:
@@ -841,6 +921,8 @@ update_boss7_draw_snake_piece_r_u:
 	ld bc, -5*64
 	add hl, bc
 	ex de, hl
+	ld a, PCG_DIRECTION_UP
+	ld (boss__7_last_piece_direction), a
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_r_d:
@@ -851,10 +933,11 @@ update_boss7_draw_snake_piece_r_d:
 	ld bc, 5*64
 	add hl, bc
 	ex de, hl
+	ld a, PCG_DIRECTION_DOWN
+	ld (boss__7_last_piece_direction), a
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_d_l:
-	dec de
 	push de
 		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_D_L
 		call draw_boss7_snake_part
@@ -862,6 +945,8 @@ update_boss7_draw_snake_piece_d_l:
 	ld bc, -4
 	add hl, bc
 	ex de, hl
+	ld a, PCG_DIRECTION_LEFT
+	ld (boss__7_last_piece_direction), a
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_d_u:
@@ -872,6 +957,8 @@ update_boss7_draw_snake_piece_d_u:
 	ld bc, -5*64
 	add hl, bc
 	ex de, hl
+	ld a, PCG_DIRECTION_UP
+	ld (boss__7_last_piece_direction), a
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_d_r:
@@ -882,6 +969,8 @@ update_boss7_draw_snake_piece_d_r:
 	ld bc, 4
 	add hl, bc
 	ex de, hl
+	ld a, PCG_DIRECTION_RIGHT
+	ld (boss__7_last_piece_direction), a
 	jp update_boss7_draw_snake_loop_continue
 
 
@@ -960,3 +1049,39 @@ player_weapon_hitbox_check_boss__boss7_hit_vulnerable_spot:
 	ld c, BOSS_PAGE
 	jp call_hl_in_page_c_8000	
 
+
+tile_collision_types_boss7:
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 2, 2, 2, 2
+    db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+    db 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0
+    db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+    db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+    db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2
+    db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2
+    db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2
+    db 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 2, 2, 2, 2
+    db 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 2, 2, 2, 2
+    db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 2, 2, 2, 2
+    db 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2
+
+tile_collision_types_boss7_phase2:
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
+    db 0, 0, 0, 0, 0, 0, 0, 0, 9, 9, 2, 2, 2, 9, 9, 9
+    db 2, 2, 2, 2, 2, 2, 9, 9, 9, 2, 2, 2, 2, 2, 9, 9
+    db 2, 2, 2, 2, 2, 2, 9, 9, 9, 2, 2, 2, 9, 9, 2, 2
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 2, 0, 9, 9, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 0, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 0, 9, 9, 9
+    db 9, 9, 9, 9, 9, 2, 2, 2, 0, 0, 0, 0, 2, 2, 2, 2
+    db 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 2, 2, 2, 2
+    db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 2, 2, 2, 2
+    db 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2

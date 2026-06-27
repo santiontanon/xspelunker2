@@ -348,7 +348,8 @@ boss__5_scylla_arms_attack_clear2: equ boss__tmp_space + 19  ; 0: no clear, 1 - 
 boss__6_eye_frame: equ boss__tmp_space
 boss__6_face_turret_frame: equ boss__tmp_space + 1
 ;
-boss__7_head_offset: equ boss__tmp_space  ; offset of the head wrt the last piece drawn
+boss__7_head_offset: equ boss__tmp_space  ; offset of the head wrt the last piece drawn (> 0 means that the head is retracted, 0 is fully extended)
+boss__7_last_piece_direction: equ boss__tmp_space + 1  ; direction in which the last piece of the snake points (to draw the head)
 
 alien_ambush__n_aliens_spawned: equ boss__tmp_space
 alien_ambush__n_ufos_spawned: equ boss__tmp_space + 1
