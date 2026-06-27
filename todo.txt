@@ -2,14 +2,9 @@ to do:
 
 ***- 7th boss
   ***- implement phase 2:
-    ***- snake behavior:
-      ***- there are N predefined positions: inside, U-head, U-L-D-head, corridor 1, ... corridor 4
-      ***- set a goal position
-      ***- go to position by first removing any inconsistent segments, and then adding until reaching there
-      ***- stay there for some small amount of time, and then chance of: (1) going to where player is, (2) hiding back in statue (low chance)
     ***- eyes are drawn as sprites when head points up/down
     ***- spit poison (only when in target) / bullets 
-    ***- if you are very far, go back into the statue
+    ***- if player is very far, go back into the statue
     ***- vulnerable part of the boss is just the head
   ***- draw phase 3: frames:
     ***- snake tail (tail is a wound, maybe bleeding)

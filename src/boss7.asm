@@ -530,7 +530,12 @@ update_boss7_behavior_2:
 	jr z, update_boss7_behavior_2_state_0
 	dec a
 	jp z, update_boss7_behavior_2_state_1
-	; ...
+	dec a
+	jp z, update_boss7_behavior_2_state_2
+	dec a
+	jp z, update_boss7_behavior_2_state_3
+	dec a
+	jp z, update_boss7_behavior_2_state_4
 	ret
 
 update_boss7_behavior_2_state_0:
@@ -543,13 +548,13 @@ update_boss7_behavior_2_state_0:
 		ld bc, #1039  ; 57, 16  ; position of the tail (which will not be drawn in phase 2)
 		ld (boss__x), bc
 
+		; no snake for the transition to the new tileset:
 		ld a, #ff
-		ld (tile_enemy_work_memory), a  ; end of snake (basically, draw nothing)
+		ld (tile_enemy_work_memory), a  ; initialize the snake clear array too
 		ld (tile_enemy_work_memory + 32), a  ; initialize the snake clear array too
 
 		; draw broken statue + snake:
 		call update_boss7_draw_phase2_boss_frame
-
 		ld hl, draw_room_with_hud
 		ld c, TILES_PAGE
 		call call_hl_in_page_c_8000
@@ -559,6 +564,19 @@ update_boss7_behavior_2_state_0:
 		ld c, BOSS_7_PAGE
 		ld (current_room__tileset_ptr), hl
 		call setup_game_tiles_only_biome
+
+		; initial position of the snake:
+		ld a, 1
+		ld (boss__7_target_phase2_position), a
+		ld hl, update_boss7_behavior_2_snake_position_out_up
+		ld de, tile_enemy_work_memory
+		ld bc, 4
+		ldir
+
+		call update_boss7_draw_phase2_boss_frame  ; draw snake now that we have the tileset
+		ld hl, draw_room_with_hud
+		ld c, TILES_PAGE
+		call call_hl_in_page_c_8000
 
 		ld hl, tile_collision_types_boss7_phase2
 		ld (current_room__collision_ptr), hl
@@ -584,45 +602,195 @@ update_boss7_behavior_2_state_0_continue:
 	jp spawn_explosion
 
 update_boss7_behavior_2_to_state_1:
-	xor a
-	ld (boss__state_timer), a
-	inc a
+	ld a, 1
 	ld (boss__state), a
-
-	; snake inside of the statue:
-	ld hl, tile_enemy_work_memory
-	ld (hl), 0
-	inc hl
-	ld (hl), #ff
-	xor a
-	ld (boss__7_head_offset), a
-	jp update_boss7_draw_phase2_boss_frame
+	ret
 
 update_boss7_behavior_2_state_1:
+	; decide where to go next:
+	; if player x < 34: 0
+	; if player_x > 57: 1
+	; if player_x > 50: 2
+	; if player_y < 6: 3
+	; if player_y < 11: 4
+	; if player_y < 16: 5
+	; else: 6
+	ld c, 0
+	ld a, (player_x + 1)
+	cp 34
+	jr c, update_boss7_behavior_2_state_1_target_set
+	inc c  ; c = 1
+	cp 58
+	jr nc, update_boss7_behavior_2_state_1_target_set
+	inc c  ; c = 2
+	cp 51
+	jr nc, update_boss7_behavior_2_state_1_target_set
+	ld a, (player_y + 1)
+	inc c  ; c = 3
+	cp 6
+	jr c, update_boss7_behavior_2_state_1_target_set
+	inc c  ; c = 4
+	cp 11
+	jr c, update_boss7_behavior_2_state_1_target_set
+	inc c  ; c = 5
+	cp 16
+	jr c, update_boss7_behavior_2_state_1_target_set
+	inc c  ; c = 6
+update_boss7_behavior_2_state_1_target_set:
+	ld a, c
+	ld (boss__7_target_phase2_position), a
+	xor a
+	ld (boss__state_timer), a
+	ld a, 2
+	ld (boss__state), a
+	ret
+
+
+update_boss7_behavior_2_state_2:
+	; move to the target position:
 	ld hl, boss__state_timer
 	ld a, (hl)
 	inc (hl)
-	or a
-	jr nz, update_boss7_behavior_2_state_1_continue
-	ld c, 7
-	call random_modulo
-	add a, a
+	and #03
+	ret nz
+
+	; See what do we need to do:
+	; - if current_snake_pieces match target and boss__7_head_offset == 0: done!
+	; - if current_snake_pieces match target and boss__7_head_offset > 0: boss__7_head_offset--
+	; - if current_snake_pieces does not match target: (mismatch in "i")
+	;   - if current_snake_pieces[i] == 2 (we need extra pieces):
+	;     - if boss__7_head_offset > 0: boss__7_head_offset--
+	;     - if boss__7_head_offset == 0: add new piece, and set boss__7_head_offset = 2
+	;   - if current_snake_pieces[i] != 2 (we need to backtrack):
+	;     - if boss__7_head_offset < 2: boss__7_head_offset++
+	;     - if boss__7_head_offset == 2: remove last piece before head and set boss__7_head_offset = 0
+
+	; check if the current snake pieces match target:
 	ld hl, update_boss7_behavior_2_snake_position_table
+	ld a, (boss__7_target_phase2_position)
+	add a, a
 	ADD_HL_A
 	ld a, (hl)
 	inc hl
 	ld h, (hl)
 	ld l, a
 	ld de, tile_enemy_work_memory
-	ld bc, 16  ; just enough to copy the whole thing
-	ldir
+	; DEBUG, just go to the target position in one go:
+; 	ld bc, 16
+; 	ldir
+; 	xor a
+; 	ld (boss__7_head_offset), a
+; 	call update_boss7_draw_phase2_boss_frame
+; 	jp update_boss7_behavior_2_to_state_1
+
+update_boss7_behavior_2_state_2_loop:
+	ld a, (de)
+	cp #ff
+	jr z, update_boss7_behavior_2_state_2_pieces_match
+	cp (hl)
+	jr nz, update_boss7_behavior_2_state_2_pieces_mismatch
+	inc hl
+	inc de
+	jr update_boss7_behavior_2_state_2_loop
+update_boss7_behavior_2_state_2_pieces_mismatch:
+	cp 2
+	jr z, update_boss7_behavior_2_state_2_need_to_add_a_piece
+update_boss7_behavior_2_state_2_need_to_remove_a_piece:
+	; find the piece we need to remove:
+	inc de
+	ld a, (de)
+	cp 2  ; head?
+	jr nz, update_boss7_behavior_2_state_2_need_to_remove_a_piece
+	dec de
+	ld a, (de)
+	; if it's a piece of type 4, 8, 9, 13, wait until it's 3
+	ld c, 3
+	cp 4
+	jr z, update_boss7_behavior_2_state_2_need_to_remove_a_piece_continue
+	cp 8
+	jr z, update_boss7_behavior_2_state_2_need_to_remove_a_piece_continue
+	cp 9
+	jr z, update_boss7_behavior_2_state_2_need_to_remove_a_piece_continue
+	cp 13
+	jr z, update_boss7_behavior_2_state_2_need_to_remove_a_piece_continue
+	ld c, 2
+update_boss7_behavior_2_state_2_need_to_remove_a_piece_continue:
+	ld a, (boss__7_head_offset)
+	cp c
+	jr z, update_boss7_behavior_2_state_2_need_to_remove_a_piece2
+	inc a
+	ld (boss__7_head_offset), a
+	jp update_boss7_draw_phase2_boss_frame
+update_boss7_behavior_2_state_2_need_to_remove_a_piece2:
+	; remove last piece before head and set boss__7_head_offset = 0
+	ex de, hl
+	ld (hl), 2
+	inc hl
+	ld (hl), #ff
 	xor a
-	ld (boss__7_head_offset), a	
-	call update_boss7_draw_phase2_boss_frame
-update_boss7_behavior_2_state_1_continue:
-	ld a, (boss__state_timer)
-	and #1f
+	ld (boss__7_head_offset), a
+	jp update_boss7_draw_phase2_boss_frame
+
+update_boss7_behavior_2_state_2_need_to_add_a_piece:
+	ld a, (boss__7_head_offset)
+	or a
+	jr z, update_boss7_behavior_2_state_2_need_to_add_a_piece2
+	dec a
+	ld (boss__7_head_offset), a
+	jp update_boss7_draw_phase2_boss_frame
+update_boss7_behavior_2_state_2_need_to_add_a_piece2:
+	; add new piece, and set boss__7_head_offset = 2 (if it's a piece of type 4, 8, 9, 13, set it to 3)
+	ld c, 3
+	ld a, (hl)
+	cp 4
+	jr z, update_boss7_behavior_2_state_2_need_to_add_a_piece2_continue
+	cp 8
+	jr z, update_boss7_behavior_2_state_2_need_to_add_a_piece2_continue
+	cp 9
+	jr z, update_boss7_behavior_2_state_2_need_to_add_a_piece2_continue
+	cp 13
+	jr z, update_boss7_behavior_2_state_2_need_to_add_a_piece2_continue
+	ld c, 2
+update_boss7_behavior_2_state_2_need_to_add_a_piece2_continue:
+	ld (de), a
+	ex de, hl
+	inc hl
+	ld (hl), 2
+	inc hl
+	ld (hl), #ff
+	ld a, c
+	ld (boss__7_head_offset), a
+	jp update_boss7_draw_phase2_boss_frame
+
+update_boss7_behavior_2_state_2_pieces_match:
+	ld a, (boss__7_head_offset)
+	or a
+	jr z, update_boss7_behavior_2_state_2_done
+	dec a
+	ld (boss__7_head_offset), a
+	jp update_boss7_draw_phase2_boss_frame
+
+update_boss7_behavior_2_state_2_done:
+	xor a
 	ld (boss__state_timer), a
+	ld a, 3
+	ld (boss__state), a
+	ret
+
+
+update_boss7_behavior_2_state_3:
+	ld a, (boss__settings + BOSS_7_WAIT_TIME_OFFSET)
+	ld c, a
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	cp c
+	ret nz
+	jp update_boss7_behavior_2_to_state_1
+
+
+update_boss7_behavior_2_state_4:
+	; ...
 	ret
 
 
@@ -769,7 +937,7 @@ update_boss7_draw_snake_loop_continue:
 update_boss7_snake_piece_drawing_methods:
 	dw update_boss7_draw_snake_piece_tail_in_statue
 	dw update_boss7_draw_snake_piece_tail
-	dw update_boss7_draw_snake_piece_head
+	dw update_boss7_draw_snake_piece_head  ; 2
 	dw update_boss7_draw_snake_piece_l_u  ; 3
 	dw update_boss7_draw_snake_piece_l_r  ; 4
 	dw update_boss7_draw_snake_piece_l_d  ; 5
@@ -811,7 +979,7 @@ update_boss7_draw_snake_piece_head_down:
 	ld a, (boss__7_head_offset)
 	or a
 	jr z, update_boss7_draw_snake_piece_head_down_continue
-	ld bc, 64
+	ld bc, -64
 update_boss7_draw_snake_piece_head_down_loop:
 	add hl, bc
 	dec a
@@ -840,7 +1008,7 @@ update_boss7_draw_snake_piece_head_up:
 	ld a, (boss__7_head_offset)
 	or a
 	jr z, update_boss7_draw_snake_piece_head_up_continue
-	ld bc, -64
+	ld bc, 64
 update_boss7_draw_snake_piece_head_up_loop:
 	add hl, bc
 	dec a
