@@ -62,10 +62,15 @@ boss3_name_y_table:
 boss4_name_y_table:
 boss5_name_y_table:
 boss6_name_y_table:
-boss7_name_y_table:
 	db -32, -28, -24, -20, -16, -12, -9, -5
 	db  -2,   1,   4,   7,   9,  11, 13, 15
 	db  16,  17,  18,  19,  19,  19, 19, 20
+
+	db -48  ; just to remove the sprites when the name disappears
+boss7_name_y_table:
+	db -32, -28, -24, -21, -17, -13, -10, -7
+	db  -4,  -1,   2,   4,   6,   8,  10, 12
+	db  13,  14,  14,  15,  15,  15,  15, 16
 
 boss1_name_initial_sprite_attributes:
 boss2_name_initial_sprite_attributes:

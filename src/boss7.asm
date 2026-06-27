@@ -30,20 +30,20 @@ boss7_phase1_frame_ptrs:
 ;-----------------------------------------------
 boss7_difficulty_setting__easy:
 	dw 192, 144  ; boss hp, and threshold for the other phases
-	db 32, #1f, #0f, 2  ; wait time, bullet attack mask, poison attack mask, n spits
+	db 32, #3f, #0f, 2  ; wait time, bullet attack mask, poison attack mask, n spits
 
 boss7_difficulty_setting__normal:
 ; 	dw 320, 256  ; boss hp, and threshold for the other phases
 	dw 320, 318  ; boss hp, and threshold for the other phases  (DEBUG)
-	db 32, #0f, #07, 3  ; wait time, bullet attack mask, poison attack mask, n spits
+	db 32, #1f, #07, 3  ; wait time, bullet attack mask, poison attack mask, n spits
 
 boss7_difficulty_setting__hard:
 	dw 416, 336  ; boss hp, and threshold for the other phases
-	db 28, #0f, #07, 4  ; wait time, bullet attack mask, poison attack mask, n spits
+	db 28, #1f, #07, 4  ; wait time, bullet attack mask, poison attack mask, n spits
 
 boss7_difficulty_setting__hardest:
 	dw 512, 416  ; boss hp, and threshold for the other phases
-	db 24, #07, #03, 4  ; wait time, bullet attack mask, poison attack mask, n spits
+	db 24, #0f, #03, 4  ; wait time, bullet attack mask, poison attack mask, n spits
 
 
 ;-----------------------------------------------
@@ -109,8 +109,9 @@ update_boss7_behavior_init_continue:
 	ld (boss__hit_fn_page), a
 	ld a, 1
 	ld (boss__state), a
-	ld hl, 0
-	ld (boss__7_eye_sprite_location), hl
+	xor a
+	ld (boss__7_head_eye_sprite), a
+	ld (boss__7_mouth_open), a
 
 	; draw the statue:
 	xor a
@@ -466,7 +467,7 @@ update_boss7_behavior_1_maybe_fire_bullet:
 	ld e, l
 	ld b, h
 	ld ix, #0004
-	; - c, b: tile coordinate from where the bullet is fired
+	; - e, b: tile coordinate from where the bullet is fired
 	; - ixl, ixh: pixel offset	
 	ld hl, boss_fire_directional_bullet_towards_player_with_random_offset_e_b
 	ld c, BOSS_PAGE
@@ -684,18 +685,11 @@ update_boss7_behavior_2_state_2:
 	ld h, (hl)
 	ld l, a
 	ld de, tile_enemy_work_memory
-	; DEBUG, just go to the target position in one go:
-; 	ld bc, 16
-; 	ldir
-; 	xor a
-; 	ld (boss__7_head_offset), a
-; 	call update_boss7_draw_phase2_boss_frame
-; 	jp update_boss7_behavior_2_to_state_1
 
 update_boss7_behavior_2_state_2_loop:
 	ld a, (de)
 	cp #ff
-	jr z, update_boss7_behavior_2_state_2_pieces_match
+	jr z, update_boss7_behavior_2_state_2_pieces_match_up_to_end_of_current
 	cp (hl)
 	jr nz, update_boss7_behavior_2_state_2_pieces_mismatch
 	inc hl
@@ -771,6 +765,9 @@ update_boss7_behavior_2_state_2_need_to_add_a_piece2_continue:
 	ld (boss__7_head_offset), a
 	jp update_boss7_draw_phase2_boss_frame
 
+update_boss7_behavior_2_state_2_pieces_match_up_to_end_of_current:
+	cp (hl)
+	jr nz, update_boss7_behavior_2_state_2_need_to_add_a_piece
 update_boss7_behavior_2_state_2_pieces_match:
 	ld a, (boss__7_head_offset)
 	or a
@@ -788,18 +785,103 @@ update_boss7_behavior_2_state_2_done:
 
 
 update_boss7_behavior_2_state_3:
-	ld a, (boss__settings + BOSS_7_WAIT_TIME_OFFSET)
-	ld c, a
+	call update_boss7_behavior_2_maybe_fire_bullet
 	ld hl, boss__state_timer
 	ld a, (hl)
 	inc (hl)
-	cp c
+	cp 8
+	jp z, update_boss7_behavior_2_to_state_1
+	or a
+	; chance of spitting:
+	ld a, (boss__settings + BOSS_7_POISON_ATTACK_MASK)
+	ld c, a
+	call random_a
+	and c
+	jp nz, update_boss7_behavior_2_to_state_1
+	; spit!
+	ld a, 4
+	ld (boss__state), a
+	xor a
+	ld (boss__state_timer), a
+	ret
+
+update_boss7_behavior_2_state_4:
+	call update_boss7_behavior_2_maybe_fire_bullet
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	or a
+	jr nz, update_boss7_behavior_2_state_4_continue
+	; draw boss with mouth open:
+	push af
+		ld a, 1
+		ld (boss__7_mouth_open), a
+		call update_boss7_draw_phase2_boss_frame
+	pop af
+update_boss7_behavior_2_state_4_continue:
+	push af
+		ld a, (boss__settings + BOSS_7_WAIT_TIME_OFFSET)
+		ld c, a
+	pop af
+	sub c
+	ret c
+
+	ld bc, (boss__7_head_eye_x)
+	dec c
+	inc b
+
+	ld e, a
+	and #03  ; fire one poison spit each 4 frames
 	ret nz
+	ld a, e
+	rrca
+	rrca
+	and #3f
+	ld hl, boss__settings + BOSS_7_N_POISON_SPITS
+	cp (hl)
+	jp z, update_boss7_behavior_2_state_4_continue_done
+	ld a, (player_x + 1)
+	cp c
+	jp nc, update_boss7_behavior_2_state_4_continue_done  ; if player is too to the right, do not spit poison
+
+	ld e, c
+	ld ix, #0000
+	; - e, b: tile coordinate from where the bullet is fired
+	; - ixl, ixh: pixel offset	
+	ld hl, boss_fire_directional_bullet_towards_player_with_random_offset_e_b
+	ld c, BOSS_PAGE
+	call call_hl_in_page_c_8000
+	ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BOSS7_POISON_SPIT
+	ret
+
+update_boss7_behavior_2_state_4_continue_done:
+	xor a
+	ld (boss__7_mouth_open), a
+	call update_boss7_draw_phase2_boss_frame
 	jp update_boss7_behavior_2_to_state_1
 
 
-update_boss7_behavior_2_state_4:
-	; ...
+update_boss7_behavior_2_maybe_fire_bullet:
+	; fire bullets through eyes
+	ld a, (boss__settings + BOSS_7_EYE_BULLET_ATTACK_MASK)
+	ld c, a
+	call random_a
+	and c
+	ret nz
+
+	; coordinates of eyes:
+	ld bc, (boss__7_head_eye_x)
+	ld a, c
+	or a
+	ret z  ; do not fire, as head was not drawn
+	ld e, c
+	ld ix, #0004
+	; - e, b: tile coordinate from where the bullet is fired
+	; - ixl, ixh: pixel offset	
+	ld hl, boss_fire_directional_bullet_towards_player_with_random_offset_e_b
+	ld c, BOSS_PAGE
+	call call_hl_in_page_c_8000
+	ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BULLET_IGNORING_WALLS
 	ret
 
 
@@ -832,43 +914,38 @@ update_boss7_behavior_4:
 
 
 ;-----------------------------------------------
-update_sprite_objects_boss_extras_boss_7_internal:
-	ld hl, (boss__7_eye_sprite_location)
-	ld a, h
+; input:
+; - hl: ptr to convert
+update_boss7_pointer_to_coordinates:
 	or a
-	ret z
-
-	ld ixl, COLOR_DARK_BLUE
-
-	; extract the coordinates:
-	ld de, (room_scroll_x)
 	ld bc, current_room__tile_map
 	sbc hl, bc
 	ld a, l
 	and #3f
-	sub e  ; tile x (relative to scroll)
-	cp #ff
-	jr z, update_sprite_objects_boss_extras_boss_7_internal_early_clock
-	cp 32
-	ret nc  ; out of bounds
-	jr update_sprite_objects_boss_extras_boss_7_internal_x_set
-update_sprite_objects_boss_extras_boss_7_internal_early_clock:
-	add a, 2
-	ld e, ixl  ; we do not need 'e' anymore
-	set 7, e
-	ld ixl, e
-update_sprite_objects_boss_extras_boss_7_internal_x_set:
-	add a, a
-	add a, a
-	add a, a
-	add a, 4
-	ld c, a  ; sprite x
+	ld c, a  ; tile x
 
 	add hl, hl
 	add hl, hl
 	ld a, h
-	add a, 2
-	sub d  ; tile y (relative to scroll)
+	ld b, a  ; tile y
+	ret
+
+
+;-----------------------------------------------
+update_sprite_objects_boss_extras_boss_7_internal:
+	ld a, (boss__7_head_eye_sprite)
+	or a
+	ret z
+
+
+	ld iyl, COLOR_DARK_BLUE
+
+	; extract the coordinates:
+	ld bc, (boss__7_head_eye_x)
+	ld de, (room_scroll_x)
+	ld a, b
+	inc a
+	sub d
 	cp #ff
 	jr z, update_sprite_objects_boss_extras_boss_7_internal_continue
 	cp 24
@@ -878,9 +955,29 @@ update_sprite_objects_boss_extras_boss_7_internal_continue
 	add a, a
 	add a, a
 	dec a
-	ld b, a  ; b = pixel x
+	ld b, a  ; b = pixel y
+
+	ld a, c
+	dec a
+	sub e
+	cp #ff
+	jr z, update_sprite_objects_boss_extras_boss_7_internal_early_clock
+	cp 32
+	ret nc  ; out of bounds
+	jr update_sprite_objects_boss_extras_boss_7_internal_x_set
+update_sprite_objects_boss_extras_boss_7_internal_early_clock:
+	add a, 2
+	ld e, iyl  ; we do not need 'e' anymore
+	set 7, e
+	ld iyl, e
+update_sprite_objects_boss_extras_boss_7_internal_x_set:
+	add a, a
+	add a, a
+	add a, a
+	add a, 4
+	ld c, a  ; pixel x
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 11) * 4 
-	ld d, ixl
+	ld d, iyl
 	jp add_sprite_to_this_frame
 
 
@@ -941,8 +1038,9 @@ update_boss7_draw_phase2_boss_frame:
 	; - frame 1 is the statue
 	; - snake is handled in a special way
 
-	ld hl, 0
-	ld (boss__7_eye_sprite_location), hl
+	xor a
+	ld (boss__7_head_eye_sprite), a
+	ld (boss__7_head_eye_x), a
 
 	call update_boss7_undraw_snake
 	ld hl, draw_boss_frame_clear_previous_frame_1
@@ -1051,9 +1149,15 @@ update_boss7_draw_snake_piece_head_down_loop:
 	dec a
 	jr nz, update_boss7_draw_snake_piece_head_down_loop
 update_boss7_draw_snake_piece_head_down_continue:
-	ex de, hl	
+	push hl
+		call update_boss7_pointer_to_coordinates
+		inc c
+		inc b
+		ld (boss__7_head_eye_x), bc
+		ld a, 1
+		ld (boss__7_head_eye_sprite), a
+	pop de
 	ld hl, BOSS7_SNAKE_NAMETABLE_HEAD_DOWN
-	ld (boss__7_eye_sprite_location), de	
 	call draw_boss7_snake_part
 	jp update_boss7_draw_snake_loop_continue
 
@@ -1066,7 +1170,21 @@ update_boss7_draw_snake_piece_head_left_loop:
 	dec a
 	jr nz, update_boss7_draw_snake_piece_head_left_loop
 update_boss7_draw_snake_piece_head_left_continue:
+	push de
+		ex de, hl
+		call update_boss7_pointer_to_coordinates
+		inc c
+		inc c
+		inc b
+		inc b
+		ld (boss__7_head_eye_x), bc
+	pop de
 	ld hl, BOSS7_SNAKE_NAMETABLE_HEAD_LEFT
+	ld a, (boss__7_mouth_open)
+	or a
+	jr z, update_boss7_draw_snake_piece_head_left_continue2
+	ld hl, BOSS7_SNAKE_NAMETABLE_HEAD_LEFT_MOUTH
+update_boss7_draw_snake_piece_head_left_continue2:
 	call draw_boss7_snake_part
 	jp update_boss7_draw_snake_loop_continue
 
@@ -1082,9 +1200,14 @@ update_boss7_draw_snake_piece_head_up_loop:
 	jr nz, update_boss7_draw_snake_piece_head_up_loop
 update_boss7_draw_snake_piece_head_up_continue:
 	push hl
-		ld bc, 64*2
-		add hl, bc
-		ld (boss__7_eye_sprite_location), hl
+		call update_boss7_pointer_to_coordinates
+		inc c
+		inc b
+		inc b
+		inc b
+		ld (boss__7_head_eye_x), bc
+		ld a, 1
+		ld (boss__7_head_eye_sprite), a
 	pop de
 	ld hl, BOSS7_SNAKE_NAMETABLE_HEAD_UP
 	call draw_boss7_snake_part
@@ -1099,7 +1222,20 @@ update_boss7_draw_snake_piece_head_right_loop:
 	dec a
 	jr nz, update_boss7_draw_snake_piece_head_right_loop
 update_boss7_draw_snake_piece_head_right_continue:
+	push de
+		ex de, hl
+		call update_boss7_pointer_to_coordinates
+		inc c
+		inc b
+		inc b
+		ld (boss__7_head_eye_x), bc
+	pop de
 	ld hl, BOSS7_SNAKE_NAMETABLE_HEAD_RIGHT
+	ld a, (boss__7_mouth_open)
+	or a
+	jr z, update_boss7_draw_snake_piece_head_right_continue2
+	ld hl, BOSS7_SNAKE_NAMETABLE_HEAD_RIGHT_MOUTH
+update_boss7_draw_snake_piece_head_right_continue2:	
 	call draw_boss7_snake_part
 	jp update_boss7_draw_snake_loop_continue
 

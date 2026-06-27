@@ -351,7 +351,10 @@ boss__6_face_turret_frame: equ boss__tmp_space + 1
 boss__7_head_offset: equ boss__tmp_space  ; offset of the head wrt the last piece drawn (> 0 means that the head is retracted, 0 is fully extended)
 boss__7_last_piece_direction: equ boss__tmp_space + 1  ; direction in which the last piece of the snake points (to draw the head)
 boss__7_target_phase2_position: equ boss__tmp_space + 2
-boss__7_eye_sprite_location: equ boss__tmp_space + 3  ; 2 bytes (it is a pointer to the current_room__tile_map)
+boss__7_head_eye_x: equ boss__tmp_space + 3
+boss__7_head_eye_y: equ boss__tmp_space + 4
+boss__7_head_eye_sprite: equ boss__tmp_space + 5  ; 0 : no eye, 1: eye
+boss__7_mouth_open: equ boss__tmp_space + 6  ; 0: closed, 1: open
 
 alien_ambush__n_aliens_spawned: equ boss__tmp_space
 alien_ambush__n_ufos_spawned: equ boss__tmp_space + 1
