@@ -30,20 +30,20 @@ boss7_phase1_frame_ptrs:
 ;-----------------------------------------------
 boss7_difficulty_setting__easy:
 	dw 192, 144  ; boss hp, and threshold for the other phases
-	db 32, #3f, #0f, 2  ; wait time, bullet attack mask, poison attack mask, n spits
+	db 32, #1f, #0f, 2  ; wait time, bullet attack mask, poison attack mask, n spits
 
 boss7_difficulty_setting__normal:
 ; 	dw 320, 256  ; boss hp, and threshold for the other phases
 	dw 320, 318  ; boss hp, and threshold for the other phases  (DEBUG)
-	db 32, #1f, #07, 3  ; wait time, bullet attack mask, poison attack mask, n spits
+	db 32, #0f, #07, 3  ; wait time, bullet attack mask, poison attack mask, n spits
 
 boss7_difficulty_setting__hard:
 	dw 416, 336  ; boss hp, and threshold for the other phases
-	db 28, #1f, #07, 4  ; wait time, bullet attack mask, poison attack mask, n spits
+	db 28, #0f, #07, 4  ; wait time, bullet attack mask, poison attack mask, n spits
 
 boss7_difficulty_setting__hardest:
 	dw 512, 416  ; boss hp, and threshold for the other phases
-	db 24, #0f, #03, 4  ; wait time, bullet attack mask, poison attack mask, n spits
+	db 24, #7f, #03, 4  ; wait time, bullet attack mask, poison attack mask, n spits
 
 
 ;-----------------------------------------------
