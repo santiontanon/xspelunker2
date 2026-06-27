@@ -114,6 +114,7 @@ update_boss7_behavior_init_continue:
 	xor a
 	ld (boss__7_head_eye_sprite), a
 	ld (boss__7_mouth_open), a
+	ld (boss__7_snake_movement_counter), a
 
 	; draw the statue:
 	xor a
@@ -691,7 +692,7 @@ update_boss7_behavior_2_state_2:
 update_boss7_behavior_2_state_2_loop:
 	ld a, (de)
 	cp #ff
-	jr z, update_boss7_behavior_2_state_2_pieces_match_up_to_end_of_current
+	jp z, update_boss7_behavior_2_state_2_pieces_match_up_to_end_of_current
 	cp (hl)
 	jr nz, update_boss7_behavior_2_state_2_pieces_mismatch
 	inc hl
@@ -725,6 +726,12 @@ update_boss7_behavior_2_state_2_need_to_remove_a_piece_continue:
 	jr z, update_boss7_behavior_2_state_2_need_to_remove_a_piece2
 	inc a
 	ld (boss__7_head_offset), a
+	ld hl, boss__7_snake_movement_counter
+	dec (hl)  ; retreat
+	ld a, (hl)
+	cp #ff
+	jp nz, update_boss7_draw_phase2_boss_frame
+	ld (hl), 19
 	jp update_boss7_draw_phase2_boss_frame
 update_boss7_behavior_2_state_2_need_to_remove_a_piece2:
 	; remove last piece before head and set boss__7_head_offset = 0
@@ -734,6 +741,12 @@ update_boss7_behavior_2_state_2_need_to_remove_a_piece2:
 	ld (hl), #ff
 	xor a
 	ld (boss__7_head_offset), a
+	ld hl, boss__7_snake_movement_counter
+	dec (hl)  ; retreat	
+	ld a, (hl)
+	cp #ff
+	jp nz, update_boss7_draw_phase2_boss_frame
+	ld (hl), 19
 	jp update_boss7_draw_phase2_boss_frame
 
 update_boss7_behavior_2_state_2_need_to_add_a_piece:
@@ -742,6 +755,12 @@ update_boss7_behavior_2_state_2_need_to_add_a_piece:
 	jr z, update_boss7_behavior_2_state_2_need_to_add_a_piece2
 	dec a
 	ld (boss__7_head_offset), a
+	ld hl, boss__7_snake_movement_counter
+	inc (hl)  ; advance
+	ld a, (hl)
+	cp 20
+	jp nz, update_boss7_draw_phase2_boss_frame
+	ld (hl), 0
 	jp update_boss7_draw_phase2_boss_frame
 update_boss7_behavior_2_state_2_need_to_add_a_piece2:
 	; add new piece, and set boss__7_head_offset = 2 (if it's a piece of type 4, 8, 9, 13, set it to 3)
@@ -765,6 +784,12 @@ update_boss7_behavior_2_state_2_need_to_add_a_piece2_continue:
 	ld (hl), #ff
 	ld a, c
 	ld (boss__7_head_offset), a
+	ld hl, boss__7_snake_movement_counter
+	inc (hl)  ; advance	
+	ld a, (hl)
+	cp 20
+	jp nz, update_boss7_draw_phase2_boss_frame
+	ld (hl), 0
 	jp update_boss7_draw_phase2_boss_frame
 
 update_boss7_behavior_2_state_2_pieces_match_up_to_end_of_current:
@@ -776,6 +801,12 @@ update_boss7_behavior_2_state_2_pieces_match:
 	jr z, update_boss7_behavior_2_state_2_done
 	dec a
 	ld (boss__7_head_offset), a
+	ld hl, boss__7_snake_movement_counter
+	inc (hl)  ; advance	
+	ld a, (hl)
+	cp 20
+	jp nz, update_boss7_draw_phase2_boss_frame
+	ld (hl), 0
 	jp update_boss7_draw_phase2_boss_frame
 
 update_boss7_behavior_2_state_2_done:
@@ -1255,7 +1286,18 @@ update_boss7_draw_snake_piece_l_u:
 
 update_boss7_draw_snake_piece_l_r:
 	push de
-		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_L_R
+		ld a, (boss__7_snake_movement_counter)
+		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_L_R1
+		and #03
+		jr z, update_boss7_draw_snake_piece_l_r_frame_set
+		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_L_R2
+		dec a
+		jr z, update_boss7_draw_snake_piece_l_r_frame_set
+		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_L_R3
+		dec a
+		jr z, update_boss7_draw_snake_piece_l_r_frame_set
+		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_L_R4
+update_boss7_draw_snake_piece_l_r_frame_set:
 		call draw_boss7_snake_part
 	pop hl
 	ld bc, 4
@@ -1303,7 +1345,22 @@ update_boss7_draw_snake_piece_u_r:
 
 update_boss7_draw_snake_piece_u_d:
 	push de
-		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_U_D
+		ld a, (boss__7_snake_movement_counter)
+		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_U_D1
+		call boss7_a_mod_5
+		or a
+		jr z, update_boss7_draw_snake_piece_u_d_frame_set
+		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_U_D2
+		dec a
+		jr z, update_boss7_draw_snake_piece_u_d_frame_set
+		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_U_D3
+		dec a
+		jr z, update_boss7_draw_snake_piece_u_d_frame_set
+		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_U_D4
+		dec a
+		jr z, update_boss7_draw_snake_piece_u_d_frame_set
+		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_U_D5
+update_boss7_draw_snake_piece_u_d_frame_set:
 		call draw_boss7_snake_part
 	pop hl
 	ld bc, 5*64
@@ -1315,7 +1372,18 @@ update_boss7_draw_snake_piece_u_d:
 
 update_boss7_draw_snake_piece_r_l:
 	push de
-		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_R_L
+		ld a, (boss__7_snake_movement_counter)
+		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_R_L1
+		and #03
+		jr z, update_boss7_draw_snake_piece_r_l_frame_set
+		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_R_L2
+		dec a
+		jr z, update_boss7_draw_snake_piece_r_l_frame_set
+		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_R_L3
+		dec a
+		jr z, update_boss7_draw_snake_piece_r_l_frame_set
+		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_R_L4
+update_boss7_draw_snake_piece_r_l_frame_set:
 		call draw_boss7_snake_part
 	pop hl
 	ld bc, -4
@@ -1363,7 +1431,22 @@ update_boss7_draw_snake_piece_d_l:
 
 update_boss7_draw_snake_piece_d_u:
 	push de
-		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_D_U
+		ld a, (boss__7_snake_movement_counter)
+		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_D_U1
+		call boss7_a_mod_5
+		or a
+		jr z, update_boss7_draw_snake_piece_d_u_frame_set
+		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_D_U2
+		dec a
+		jr z, update_boss7_draw_snake_piece_d_u_frame_set
+		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_D_U3
+		dec a
+		jr z, update_boss7_draw_snake_piece_d_u_frame_set
+		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_D_U4
+		dec a
+		jr z, update_boss7_draw_snake_piece_d_u_frame_set
+		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_D_U5
+update_boss7_draw_snake_piece_d_u_frame_set:
 		call draw_boss7_snake_part
 	pop hl
 	ld bc, -5*64
@@ -1566,6 +1649,22 @@ draw_boss7_snake_part_loop_y_skip:
 			ld b, 0
 			add hl, bc
 			jr draw_boss7_snake_part_loop_y_skip2
+
+
+
+;-----------------------------------------------
+; assumes a < 20:
+boss7_a_mod_5:
+	cp 5
+	ret c  ; < 5
+	sub 5
+	cp 5
+	ret c  ; < 10
+	sub 5
+	cp 5
+	ret c  ; < 15
+	sub 5
+    ret
 
 
 ;-----------------------------------------------

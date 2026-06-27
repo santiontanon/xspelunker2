@@ -1,22 +1,23 @@
 to do:
 
 ***- 7th boss
-  ***- extra tiles for "slithering" (if I have enough tiles), and define additional name tables (will alternate with each forward/backward movement)
   ***- draw phase 3: frames: snake tail (tail is a wound, maybe bleeding)
   ***- implement phase 3:
-    ***- statue fully breaks
-    ***- body comes out and follows you around with highest probability, but it might deviate.
-    ***- If it goes through a hole, snake hides inside
+    ***- statue fully breaks (snake goes back in, statue explodes, and only the head sticks out)
+    ***- update "tail inside statue" piece drawing to take the boss_x/y coordinates (as it can be any hole
+    ***- new variables: hole direction, head direction, snake length (later there will be two of these)
+    ***- body comes out and follows you around:
+      ***- implement the "tail" piece, for when snake is completely out (length reaches max)
+      ***- movement function that tries to make the snake follow player, and updates tail position as snake moves (avoids collisions with self)
+    ***- chance of not following you
+    ***- chance of going to a hole
+    ***- If it goes through a hole, snake hides inside (update drawing/movement routine to handle this case)
     ***- when hidden, after a bit, pick a random hole, and snake comes again, restarting the behavior
-    ***- if you are too far from the head, and it has a straight shot: charged attack
     ***- vulnerable parts of the boss are head and tail
-  ***- draw phase 4:
-    ***- there should be a dead head somewhere (maybe top-right, hanging from the ceiling)
-    ***- snake rears and picks it up with the tail, attaching it
   ***- implement phase 4:
-    ***- pick second head, and split body in half
-    ***- same, but there are now two snakes (they can block each other)
-    ***- each snake has their own HP (can I do this? can I detect which part you hit?)
+    ***- there should be a dead head somewhere (maybe top-right, hanging from the ceiling)
+    ***- snake rears and picks it up with the tail, attaching it, and split body in half
+    ***- same, but there are now two snakes (they can block each other, so, it's possible a snake does not move in one turn)
   ***- kill the boss and spawn drops
   ***- add boss name to the stats for game over screen (TEXT_BOSS_MOON_SNAKE)
 

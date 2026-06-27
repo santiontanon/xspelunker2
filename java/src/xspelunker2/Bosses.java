@@ -891,7 +891,7 @@ public class Bosses {
             }            
             // phase 2 snake tiles:
             nameTableBoxes.clear();
-            nameTableBoxes.add(new int[]{88, 104, 280, 184});
+            nameTableBoxes.add(new int[]{88, 104, 320, 224});
             List<int[][]> nametables_phase2 = addBossTilesInGapsForBoxes(nameTableBoxes, baseImage, boss7Tiles, availableTiles, collision, false, false);
             
             // broken statue:
@@ -901,11 +901,22 @@ public class Bosses {
             // snake pieces
             nameTable = nametables_phase2.get(0);
             addNameTable(nameTable, 0, 0, 4, 5, nameTableData_snake);  // d-r / r-d
-            addNameTable(nameTable, 4, 0, 8, 5, nameTableData_snake);  // l-r / r-l
+            addNameTable(nameTable, 4, 0, 8, 5, nameTableData_snake);  // l-r / r-l (1)
             addNameTable(nameTable, 8, 0, 12, 5, nameTableData_snake);  // l-d / d-l
             addNameTable(nameTable, 12, 0, 16, 5, nameTableData_snake);  // u-r / r-u
-            addNameTable(nameTable, 16, 0, 20, 5, nameTableData_snake);  // u-d / d-u
+            addNameTable(nameTable, 24, 5, 28, 10, nameTableData_snake);  // u-d / d-u (1)
             addNameTable(nameTable, 20, 0, 24, 5, nameTableData_snake);  // l-u / u-l
+
+            // l-r / r-l variations:
+            addNameTable(nameTable, 0, 5, 4, 10, nameTableData_snake);  // l-r / r-l (2)
+            addNameTable(nameTable, 4, 5, 8, 10, nameTableData_snake);  // l-r / r-l (3)
+            addNameTable(nameTable, 8, 5, 12, 10, nameTableData_snake);  // l-r / r-l (4)
+
+            // u-d / d-u variations:
+            addNameTable(nameTable, 20, 5, 24, 10, nameTableData_snake);  // u-d / d-u (2)
+            addNameTable(nameTable, 16, 5, 20, 10, nameTableData_snake);  // u-d / d-u (4)
+            addNameTable(nameTable, 12, 5, 16, 10, nameTableData_snake);  // u-d / d-u (4)
+            addNameTable(nameTable, 16, 0, 20, 5, nameTableData_snake);  // u-d / d-u (5)
             
             // find the first tile of the head:
             {
@@ -919,12 +930,12 @@ public class Bosses {
             }
             
  
-            addNameTable(nameTable, 0, 5, 4, 10, nameTableData_snake);  // head left
-            addNameTable(nameTable, 4, 5, 8, 10, nameTableData_snake);  // head left mouth
-            addNameTable(nameTable, 8, 5, 12, 10, nameTableData_snake);  // head right
-            addNameTable(nameTable, 12, 5, 16, 10, nameTableData_snake);  // head right mouth
-            addNameTable(nameTable, 16, 5, 20, 10, nameTableData_snake);  // head up
-            addNameTable(nameTable, 20, 5, 24, 10, nameTableData_snake);  // head down
+            addNameTable(nameTable, 0, 10, 4, 15, nameTableData_snake);  // head left
+            addNameTable(nameTable, 4, 10, 8, 15, nameTableData_snake);  // head left mouth
+            addNameTable(nameTable, 8, 10, 12, 15, nameTableData_snake);  // head right
+            addNameTable(nameTable, 12, 10, 16, 15, nameTableData_snake);  // head right mouth
+            addNameTable(nameTable, 16, 10, 20, 15, nameTableData_snake);  // head up
+            addNameTable(nameTable, 20, 10, 24, 15, nameTableData_snake);  // head down
             
             for(int i = 0;i<16;i++) {
                 String line = "    db ";
