@@ -13,6 +13,7 @@ BOSS_7_EYE_BULLET_ATTACK_MASK: equ 7
 BOSS_7_POISON_ATTACK_MASK: equ 8
 BOSS_7_N_POISON_SPITS: equ 9
 
+BOSS7_MAX_LENGTH: equ 12
 
 ;-----------------------------------------------
 boss7_phase1_frame_ptrs:
@@ -96,11 +97,11 @@ update_boss7_behavior_init_continue:
 	ld bc, 12
 	ldir
 
-	ld a, 54
+	ld a, 55
 	ld (boss__x), a
 	ld a, 4
 	ld (boss__y), a
-	ld a, 50
+	ld a, 51
 	ld (boss__x2), a
 	ld a, 6
 	ld (boss__y2), a
@@ -563,7 +564,7 @@ update_boss7_behavior_2_state_0:
 	cp 24
 	jr nz, update_boss7_behavior_2_state_0_continue
 	push af
-		ld bc, #1039  ; 57, 16  ; position of the tail (which will not be drawn in phase 2)
+		ld bc, #103a  ; 58, 16  ; position of the tail (which will not be drawn in phase 2)
 		ld (boss__x), bc
 
 		; no snake for the transition to the new tileset:
@@ -932,7 +933,7 @@ update_boss7_behavior_2_maybe_fire_bullet:
 	or a
 	ret z  ; do not fire, as head was not drawn
 	ld e, c
-	ld ix, #0004
+	ld ix, #0000
 	; - e, b: tile coordinate from where the bullet is fired
 	; - ixl, ixh: pixel offset	
 	ld hl, boss_fire_directional_bullet_towards_player_with_random_offset_e_b
@@ -978,7 +979,7 @@ update_boss7_behavior_3_state_0:
 	cp 24
 	jr nz, update_boss7_behavior_3_state_0_continue
 	push af
-		ld bc, #1639  ; 57, 22  ; position of the tail
+		ld bc, #163a  ; 58, 22  ; position of the tail
 		ld (boss__x), bc
 
 		; no snake for the transition to the new tileset:
@@ -1021,7 +1022,7 @@ update_boss7_behavior_3_state_0:
 	pop af
 update_boss7_behavior_3_state_0_continue:
 	cp 32
-	jr z, update_boss7_behavior_3_to_state_1
+	jr z, update_boss7_behavior_3_to_state_2
 	and #01
 	ret nz
 	; spawn an explosion:
@@ -1041,14 +1042,275 @@ update_boss7_behavior_3_to_state_1:
 	ld a, 1
 	ld (boss__state), a
 	ret
-
 update_boss7_behavior_3_state_1:
+	; in a hole, wait a bit, and then pick one at random and start coming out
 	; ...
 	ret
 
 
+update_boss7_behavior_3_to_state_2:
+	ld a, 2
+	ld (boss__state), a
+	ret
 update_boss7_behavior_3_state_2:
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	and #03
+	ret nz
+
+	; See what do we need to do:
+	; - if boss__7_head_offset > 0: boss__7_head_offset--
+	; - if boss__7_head_offset == 0:
+	;	- determine which directions are viable (store in buffer_4096)
+	;   - if no directions possible, terminate
+	;   - next_piece = 75% chance of going to a direction that goes towards the player; otherwise, pick one at random
+	;   - if boss__7_snake_length < BOSS7_MAX_LENGTH: add piece, and set boss__7_head_offset = 2/3/4 (depending on the move)
+	;   - if boss__7_snake_length == BOSS7_MAX_LENGTH: delete last piece and use real tail if there was a statue_tail
+	ld a, (boss__7_head_offset)
+	or a
+	jr z, update_boss7_behavior_3_state_2_add_new_piece
+	dec a
+	ld (boss__7_head_offset), a
+	jp update_boss7_draw_phase3_boss_frame
+
+update_boss7_behavior_3_state_2_add_new_piece:
+	; determine which directions are viable:
+	xor a
+	ld (buffer_4096), a  ; n viable directions
+	ld ix, buffer_4096 + 1
+	; check left:
+	ld a, (boss__7_snake_head_direction)
+	cp PCG_DIRECTION_LEFT
+	jr z, update_boss7_behavior_3_state_2_add_new_piece_continue
 	; ...
+
+	ld hl, buffer_4096
+	inc (hl)
+	ld (ix), PCG_DIRECTION_LEFT
+	inc ix
+
+update_boss7_behavior_3_state_2_add_new_piece_continue:
+	; check up:
+	ld a, (boss__7_snake_head_direction)
+	cp PCG_DIRECTION_UP
+	jr z, update_boss7_behavior_3_state_2_add_new_piece_continue2
+	; ...
+
+	ld hl, buffer_4096
+	inc (hl)
+	ld (ix), PCG_DIRECTION_UP
+	inc ix
+
+update_boss7_behavior_3_state_2_add_new_piece_continue2:
+	; check right:
+	ld a, (boss__7_snake_head_direction)
+	cp PCG_DIRECTION_RIGHT
+	jr z, update_boss7_behavior_3_state_2_add_new_piece_continue3
+	; ...
+
+	ld hl, buffer_4096
+	inc (hl)
+	ld (ix), PCG_DIRECTION_RIGHT
+	inc ix
+
+update_boss7_behavior_3_state_2_add_new_piece_continue3:
+	; check down:
+	ld a, (boss__7_snake_head_direction)
+	cp PCG_DIRECTION_DOWN
+	jr z, update_boss7_behavior_3_state_2_add_new_piece_continue4
+	; ...
+
+	ld hl, buffer_4096
+	inc (hl)
+	ld (ix), PCG_DIRECTION_DOWN
+	inc ix
+
+update_boss7_behavior_3_state_2_add_new_piece_continue4:
+
+	; pick the next piece:
+	ld a, (buffer_4096)
+	or a
+	ret z  ; no possible direction
+
+	call random_a
+	and #03
+	jr z, update_boss7_behavior_3_state_2_add_new_piece_random
+update_boss7_behavior_3_state_2_add_new_piece_follow_player:
+	; ...
+
+update_boss7_behavior_3_state_2_add_new_piece_random:
+	ld a, (buffer_4096)
+	ld c, a
+	call random_modulo
+	ld hl, buffer_4096
+	ADD_HL_A
+	ld a, (hl)
+	ld c, a  ; desired direction
+
+	; move the snake by adding a piece:
+	ld a, (boss__7_snake_length)
+	cp BOSS7_MAX_LENGTH
+	jr nc, update_boss7_behavior_3_state_2_add_new_piece_max_length
+	ld hl, tile_enemy_work_memory
+update_boss7_behavior_3_state_2_add_new_piece_loop:
+	ld a, (hl)
+	cp 2  ; head
+	jr z, update_boss7_behavior_3_state_2_add_new_piece_loop_done
+	inc hl
+	jr update_boss7_behavior_3_state_2_add_new_piece_loop
+update_boss7_behavior_3_state_2_add_new_piece_loop_done:
+	; determine the next piece based on the previous and on the desired direction:
+	dec hl
+	ld a, (hl)  ; previous piece
+	inc hl
+	push hl
+		ld hl, update_boss7_snake_add_piece_fn_table
+		add a, a
+		ADD_HL_A
+		ld a, (hl)
+		inc hl
+		ld h, (hl)
+		ld l, a
+		ld de, update_boss7_behavior_3_state_2_add_new_piece_ret
+		push de
+		jp (hl)
+update_boss7_behavior_3_state_2_add_new_piece_ret:
+	pop hl
+	ld (hl), a  ; add new piece
+	inc hl
+	ld (hl), 2
+	inc hl
+	ld (hl), #ff
+	ld a, c
+	ld (boss__7_head_offset), a
+	jp update_boss7_draw_phase3_boss_frame
+
+update_boss7_behavior_3_state_2_add_new_piece_max_length:
+	; ...
+	ret
+
+
+; these methods:
+; input:
+; - c: desired direction
+; output:
+; - a: next piece
+; - c: value for boss__7_head_offset
+update_boss7_snake_add_piece_fn_table:
+	dw update_boss7_snake_add_piece_fn_tail_in_statue_or_hole
+	dw update_boss7_snake_add_piece_fn_tail
+	dw update_boss7_snake_add_piece_fn_head  ; 2
+	dw update_boss7_snake_add_piece_fn_l_u  ; 3
+	dw update_boss7_snake_add_piece_fn_l_r  ; 4
+	dw update_boss7_snake_add_piece_fn_l_d  ; 5
+	dw update_boss7_snake_add_piece_fn_u_l  ; 6
+	dw update_boss7_snake_add_piece_fn_u_r  ; 7
+	dw update_boss7_snake_add_piece_fn_u_d  ; 8
+	dw update_boss7_snake_add_piece_fn_r_l  ; 9
+	dw update_boss7_snake_add_piece_fn_r_u  ; 10
+	dw update_boss7_snake_add_piece_fn_r_d  ; 11
+	dw update_boss7_snake_add_piece_fn_d_l  ; 12
+	dw update_boss7_snake_add_piece_fn_d_u  ; 13
+	dw update_boss7_snake_add_piece_fn_d_r  ; 14
+
+update_boss7_snake_add_piece_fn_tail_in_statue_or_hole:
+update_boss7_snake_add_piece_fn_tail:
+	; ...
+	ret
+
+update_boss7_snake_add_piece_fn_head:
+	; should never happen!
+	ld a, 13
+	ld c, 4
+	ret
+
+update_boss7_snake_add_piece_fn_u_l:
+update_boss7_snake_add_piece_fn_r_l:
+update_boss7_snake_add_piece_fn_d_l:
+	ld a, c  ; desired direction
+	cp PCG_DIRECTION_LEFT
+	jr z, update_boss7_snake_add_piece_fn_u_l_l
+	cp PCG_DIRECTION_UP
+	jr z, update_boss7_snake_add_piece_fn_u_l_u
+	; right is not possible
+update_boss7_snake_add_piece_fn_u_l_d:
+	ld a, 11
+	ld c, 2
+	ret
+update_boss7_snake_add_piece_fn_u_l_l:
+	ld a, 9
+	ld c, 3
+	ret
+update_boss7_snake_add_piece_fn_u_l_u:
+	ld a, 10
+	ld c, 2
+	ret
+
+update_boss7_snake_add_piece_fn_l_u:
+update_boss7_snake_add_piece_fn_r_u:
+update_boss7_snake_add_piece_fn_d_u:
+	ld a, c  ; desired direction
+	cp PCG_DIRECTION_LEFT
+	jr z, update_boss7_snake_add_piece_fn_l_u_l
+	cp PCG_DIRECTION_UP
+	jr z, update_boss7_snake_add_piece_fn_l_u_u
+	; down is not possible
+update_boss7_snake_add_piece_fn_l_u_r:
+	ld a, 14
+	ld c, 2
+	ret
+update_boss7_snake_add_piece_fn_l_u_l:
+	ld a, 12
+	ld c, 3
+	ret
+update_boss7_snake_add_piece_fn_l_u_u:
+	ld a, 13
+	ld c, 4
+	ret
+
+update_boss7_snake_add_piece_fn_l_r:
+update_boss7_snake_add_piece_fn_d_r:
+update_boss7_snake_add_piece_fn_u_r:
+	ld a, c  ; desired direction
+	cp PCG_DIRECTION_RIGHT
+	jr z, update_boss7_snake_add_piece_fn_u_r_r
+	cp PCG_DIRECTION_UP
+	jr z, update_boss7_snake_add_piece_fn_u_r_u
+	; left is not possible
+update_boss7_snake_add_piece_fn_u_r_d:
+	ld a, 5
+	ld c, 2
+	ret
+update_boss7_snake_add_piece_fn_u_r_r:
+	ld a, 4
+	ld c, 3
+	ret
+update_boss7_snake_add_piece_fn_u_r_u:
+	ld a, 3
+	ld c, 2
+	ret
+
+update_boss7_snake_add_piece_fn_l_d:
+update_boss7_snake_add_piece_fn_u_d:
+update_boss7_snake_add_piece_fn_r_d:
+	ld a, c  ; desired direction
+	cp PCG_DIRECTION_LEFT
+	jr z, update_boss7_snake_add_piece_fn_l_d_l
+	cp PCG_DIRECTION_DOWN
+	jr z, update_boss7_snake_add_piece_fn_l_d_d
+	; up is not possible
+update_boss7_snake_add_piece_fn_l_d_r:
+	ld a, 7
+	ld c, 2
+	ret
+update_boss7_snake_add_piece_fn_l_d_l:
+	ld a, 6
+	ld c, 3
+	ret
+update_boss7_snake_add_piece_fn_l_d_d:
+	ld a, 8
+	ld c, 4
 	ret
 
 
@@ -1215,7 +1477,7 @@ update_boss7_draw_phase2_boss_frame:
 	call update_boss7_draw_snake
 
 	; draw statue:
-	ld de, current_room__tile_map + 56 + 13*64
+	ld de, current_room__tile_map + 57 + 13*64
 	ld ix, boss7_statue_frame_2
 	ld c, BOSS_PAGE
 	ld hl, draw_boss_frame_1_without_clearing_ix
@@ -1244,7 +1506,7 @@ update_boss7_draw_phase3_boss_frame:
 	call update_boss7_draw_snake
 
 	; draw statue:
-	ld de, current_room__tile_map + 57 + 19*64
+	ld de, current_room__tile_map + 58 + 19*64
 	ld ix, boss7_statue_frame_3
 	ld c, BOSS_PAGE
 	ld hl, draw_boss_frame_1_without_clearing_ix

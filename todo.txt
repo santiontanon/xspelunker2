@@ -2,13 +2,17 @@ to do:
 
 ***- 7th boss
   ***- implement phase 3:
-    ***- body comes out and follows you around:
-      ***- implement the "tail" piece, for when snake is completely out (length reaches max): use "boss__7_snake_tail_direction"
-      ***- movement function that tries to make the snake follow player, and updates boss_x/y and boss__7_snake_tail_direction as snake moves (also avoids collisions with self)
-    ***- chance of not following you
-    ***- chance of going to a hole
+    ***- add piece once selected
+    ***- select piece following player
+    ***- determine which paths are blocked
+    ***- add piece when max-length is reached:
+      ***- implement tail ("boss__7_head_offset")
+      ***- shift all pieces one position back (except tail) (update "boss__7_snake_tail_direction")
+    ***- chance of going to a hole if in the appropriate position (are horizontal holes possible? otherwise, remove!)
     ***- If it goes near a hole, snake can go in (update drawing/movement routine to handle this case)
     ***- when hidden: wait then pick a random hole to come out of (use boss__7_snake_hole_direction)
+    ***- fire bullets
+    ***- every once in a while, stop to spit poison
   ***- implement phase 4:
     ***- head in the tail opens its eyes, and and body is split in half
     ***- same, but there are now two snakes (they can block each other, so, it's possible a snake does not move in one turn)
