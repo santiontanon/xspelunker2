@@ -12,6 +12,7 @@ BOSS_7_WAIT_TIME_OFFSET: equ 6
 BOSS_7_EYE_BULLET_ATTACK_MASK: equ 7
 BOSS_7_POISON_ATTACK_MASK: equ 8
 BOSS_7_N_POISON_SPITS: equ 9
+BOSS_7_SNAKE_SPEED: equ 10
 
 BOSS7_MAX_LENGTH: equ 12
 
@@ -35,19 +36,23 @@ boss7_phase1_frame_ptrs:
 boss7_difficulty_setting__easy:
 	dw 192, 160, 112  ; boss hp, and threshold for the other phases
 	db 32, #1f, #0f, 2  ; wait time, bullet attack mask, poison attack mask, n spits
+	db 5  ; snake speed
 
 boss7_difficulty_setting__normal:
 ; 	dw 320, 256, 192  ; boss hp, and threshold for the other phases
 	dw 320, 318, 310  ; boss hp, and threshold for the other phases  (DEBUG)
 	db 32, #0f, #07, 3  ; wait time, bullet attack mask, poison attack mask, n spits
+	db 4  ; snake speed
 
 boss7_difficulty_setting__hard:
 	dw 416, 336, 256  ; boss hp, and threshold for the other phases
 	db 28, #0f, #07, 4  ; wait time, bullet attack mask, poison attack mask, n spits
+	db 4  ; snake speed
 
 boss7_difficulty_setting__hardest:
 	dw 512, 416, 320  ; boss hp, and threshold for the other phases
 	db 24, #7f, #03, 4  ; wait time, bullet attack mask, poison attack mask, n spits
+	db 3  ; snake speed
 
 
 ;-----------------------------------------------
@@ -1051,13 +1056,18 @@ update_boss7_behavior_3_state_1:
 update_boss7_behavior_3_to_state_2:
 	ld a, 2
 	ld (boss__state), a
+	xor a
+	ld (boss__state_timer), a
 	ret
 update_boss7_behavior_3_state_2:
+	ld a, (boss__settings + BOSS_7_SNAKE_SPEED)
+	ld c, a
 	ld hl, boss__state_timer
 	ld a, (hl)
 	inc (hl)
-	and #03
+	cp c
 	ret nz
+	ld (hl), 0
 
 	; See what do we need to do:
 	; - if boss__7_head_offset > 0: boss__7_head_offset--
@@ -1181,22 +1191,90 @@ update_boss7_behavior_3_state_2_add_new_piece_continue4:
 	ret z  ; no possible direction
 
 	call random_a
-	and #03
+	and #07
+	jr z, update_boss7_behavior_3_state_2_add_new_piece_random  ; 12.5% chance of random direction
+update_boss7_behavior_3_state_2_add_new_piece_following_player:
+	; check x_diff and y_diff from player to eye:
+	ld de, (boss__7_head_eye_x)
+	ld a, (player_x + 1)
+	sub e
+	ld e, a  ; e = player.x - head_eye.x
+	jp p, update_boss7_behavior_3_state_2_add_new_piece_following_player_continue
+	neg
+update_boss7_behavior_3_state_2_add_new_piece_following_player_continue
+	ld c, a  ; c = |player.x - head_eye.x|
+	bit 7, e
+	jr nz, update_boss7_behavior_3_state_2_add_new_piece_following_player_x_diff_negative
+	ld e, PCG_DIRECTION_RIGHT
+	jr update_boss7_behavior_3_state_2_add_new_piece_following_player_continue2
+update_boss7_behavior_3_state_2_add_new_piece_following_player_x_diff_negative
+	ld e, PCG_DIRECTION_LEFT
+update_boss7_behavior_3_state_2_add_new_piece_following_player_continue2:
+
+	ld a, (player_y + 1)
+	sub d
+	ld d, a  ; d = player.y - head_eye.y
+	jp p, update_boss7_behavior_3_state_2_add_new_piece_following_player_continue3
+	neg
+update_boss7_behavior_3_state_2_add_new_piece_following_player_continue3
+	ld b, a  ; b = |player.y - head_eye.y|
+	bit 7, d
+	jr nz, update_boss7_behavior_3_state_2_add_new_piece_following_player_y_diff_negative
+	ld d, PCG_DIRECTION_DOWN
+	jr update_boss7_behavior_3_state_2_add_new_piece_following_player_continue4
+update_boss7_behavior_3_state_2_add_new_piece_following_player_y_diff_negative
+	ld d, PCG_DIRECTION_UP
+update_boss7_behavior_3_state_2_add_new_piece_following_player_continue4:
+
+	; here:
+	; - e: direction of player in x axis
+	; - d: direction of player in y axis
+
+	; which difference is larger?
+	ld a, c
+	cp b
+	jr nc, update_boss7_behavior_3_state_2_add_new_piece_following_player_x_diff_larger
+	; swap e,db:
+	ld a, e
+	ld e, d
+	ld d, a
+update_boss7_behavior_3_state_2_add_new_piece_following_player_x_diff_larger:
+	; - c: preferred direction
+	; - b: secondary preferred direction
+	; check if any of the preferred directions are in the list of candidates:
+	ld a, (buffer_4096)
+	ld b, a
+	ld hl, buffer_4096 + 1
+	ld ixl, 0  ; chosen direction
+update_boss7_behavior_3_state_2_add_new_piece_following_player_loop:
+	ld a, (hl)
+	inc hl
+	cp e
+	jr z, update_boss7_behavior_3_state_2_add_new_piece_following_player_loop_end
+	cp d
+	jr nz, update_boss7_behavior_3_state_2_add_new_piece_following_player_loop_next
+	ld ixl, a
+update_boss7_behavior_3_state_2_add_new_piece_following_player_loop_next:
+	djnz update_boss7_behavior_3_state_2_add_new_piece_following_player_loop
+	ld a, ixl
+	or a
 	jr z, update_boss7_behavior_3_state_2_add_new_piece_random
-update_boss7_behavior_3_state_2_add_new_piece_follow_player:
-	; ...
+	ld c, a
+	jr update_boss7_behavior_3_state_2_add_new_piece_c_set
+update_boss7_behavior_3_state_2_add_new_piece_following_player_loop_end:
+	ld c, a
+	jr update_boss7_behavior_3_state_2_add_new_piece_c_set
 
 update_boss7_behavior_3_state_2_add_new_piece_random:
 	ld a, (buffer_4096)
-; 	ld c, a
-; 	call random_modulo
-	dec a  ; DEBUG
+	ld c, a
+	call random_modulo
 	ld hl, buffer_4096 + 1
 	ADD_HL_A
 	ld a, (hl)
 	ld c, a  ; desired direction
-; 	ld c, PCG_DIRECTION_UP  ; DEBUG
 
+update_boss7_behavior_3_state_2_add_new_piece_c_set:
 	; move the snake by adding a piece:
 	ld a, (boss__7_snake_length)
 	cp BOSS7_MAX_LENGTH
@@ -1355,7 +1433,7 @@ update_boss7_snake_add_piece_fn_l_d_r:
 	ret
 update_boss7_snake_add_piece_fn_l_d_l:
 	ld a, 6  ; u_l
-	ld c, 3
+	ld c, 2
 	ret
 update_boss7_snake_add_piece_fn_l_d_d:
 	ld a, 8  ; u_d
@@ -1437,8 +1515,8 @@ update_sprite_objects_boss_extras_boss_7_internal_continue
 	ld a, c
 	dec a
 	sub e
-	cp #ff
-	jr z, update_sprite_objects_boss_extras_boss_7_internal_early_clock
+	cp #fe
+	jr nc, update_sprite_objects_boss_extras_boss_7_internal_early_clock
 	cp 32
 	ret nc  ; out of bounds
 	jr update_sprite_objects_boss_extras_boss_7_internal_x_set
