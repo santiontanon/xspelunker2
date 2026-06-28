@@ -979,7 +979,7 @@ update_boss7_behavior_3_state_0:
 	cp 24
 	jr nz, update_boss7_behavior_3_state_0_continue
 	push af
-		ld bc, #163a  ; 58, 22  ; position of the tail
+		ld bc, #153a  ; 58, 21  ; position of the tail
 		ld (boss__x), bc
 
 		; no snake for the transition to the new tileset:
@@ -1081,8 +1081,11 @@ update_boss7_behavior_3_state_2_add_new_piece:
 	ld ix, buffer_4096 + 1
 	; check left:
 	ld a, (boss__7_snake_head_direction)
-	cp PCG_DIRECTION_LEFT
+	cp PCG_DIRECTION_RIGHT
 	jr z, update_boss7_behavior_3_state_2_add_new_piece_continue
+	ld a, (boss__7_head_eye_x)
+	cp 5
+	jr c, update_boss7_behavior_3_state_2_add_new_piece_continue  ; snake cannot go left
 	; ...
 
 	ld hl, buffer_4096
@@ -1093,8 +1096,11 @@ update_boss7_behavior_3_state_2_add_new_piece:
 update_boss7_behavior_3_state_2_add_new_piece_continue:
 	; check up:
 	ld a, (boss__7_snake_head_direction)
-	cp PCG_DIRECTION_UP
+	cp PCG_DIRECTION_DOWN
 	jr z, update_boss7_behavior_3_state_2_add_new_piece_continue2
+	ld a, (boss__7_head_eye_y)
+	cp 7
+	jr c, update_boss7_behavior_3_state_2_add_new_piece_continue2  ; snake cannot go up
 	; ...
 
 	ld hl, buffer_4096
@@ -1105,8 +1111,11 @@ update_boss7_behavior_3_state_2_add_new_piece_continue:
 update_boss7_behavior_3_state_2_add_new_piece_continue2:
 	; check right:
 	ld a, (boss__7_snake_head_direction)
-	cp PCG_DIRECTION_RIGHT
+	cp PCG_DIRECTION_LEFT
 	jr z, update_boss7_behavior_3_state_2_add_new_piece_continue3
+	ld a, (boss__7_head_eye_x)
+	cp 58
+	jr nc, update_boss7_behavior_3_state_2_add_new_piece_continue3  ; snake cannot go left
 	; ...
 
 	ld hl, buffer_4096
@@ -1117,8 +1126,11 @@ update_boss7_behavior_3_state_2_add_new_piece_continue2:
 update_boss7_behavior_3_state_2_add_new_piece_continue3:
 	; check down:
 	ld a, (boss__7_snake_head_direction)
-	cp PCG_DIRECTION_DOWN
+	cp PCG_DIRECTION_UP
 	jr z, update_boss7_behavior_3_state_2_add_new_piece_continue4
+	ld a, (boss__7_head_eye_y)
+	cp 17
+	jr nc, update_boss7_behavior_3_state_2_add_new_piece_continue4  ; snake cannot go down
 	; ...
 
 	ld hl, buffer_4096
@@ -1141,12 +1153,14 @@ update_boss7_behavior_3_state_2_add_new_piece_follow_player:
 
 update_boss7_behavior_3_state_2_add_new_piece_random:
 	ld a, (buffer_4096)
-	ld c, a
-	call random_modulo
-	ld hl, buffer_4096
+; 	ld c, a
+; 	call random_modulo
+	dec a  ; DEBUG
+	ld hl, buffer_4096 + 1
 	ADD_HL_A
 	ld a, (hl)
 	ld c, a  ; desired direction
+; 	ld c, PCG_DIRECTION_UP  ; DEBUG
 
 	; move the snake by adding a piece:
 	ld a, (boss__7_snake_length)
@@ -1235,15 +1249,15 @@ update_boss7_snake_add_piece_fn_d_l:
 	jr z, update_boss7_snake_add_piece_fn_u_l_u
 	; right is not possible
 update_boss7_snake_add_piece_fn_u_l_d:
-	ld a, 11
+	ld a, 11  ; r_d
 	ld c, 2
 	ret
 update_boss7_snake_add_piece_fn_u_l_l:
-	ld a, 9
+	ld a, 9  ; r_l
 	ld c, 3
 	ret
 update_boss7_snake_add_piece_fn_u_l_u:
-	ld a, 10
+	ld a, 10  ; r_u
 	ld c, 2
 	ret
 
@@ -1257,15 +1271,15 @@ update_boss7_snake_add_piece_fn_d_u:
 	jr z, update_boss7_snake_add_piece_fn_l_u_u
 	; down is not possible
 update_boss7_snake_add_piece_fn_l_u_r:
-	ld a, 14
+	ld a, 14  ; d_r
 	ld c, 2
 	ret
 update_boss7_snake_add_piece_fn_l_u_l:
-	ld a, 12
+	ld a, 12  ; d_l
 	ld c, 3
 	ret
 update_boss7_snake_add_piece_fn_l_u_u:
-	ld a, 13
+	ld a, 13  ; d_u
 	ld c, 4
 	ret
 
@@ -1279,15 +1293,15 @@ update_boss7_snake_add_piece_fn_u_r:
 	jr z, update_boss7_snake_add_piece_fn_u_r_u
 	; left is not possible
 update_boss7_snake_add_piece_fn_u_r_d:
-	ld a, 5
+	ld a, 5  ; l_d
 	ld c, 2
 	ret
 update_boss7_snake_add_piece_fn_u_r_r:
-	ld a, 4
+	ld a, 4  ; l_r
 	ld c, 3
 	ret
 update_boss7_snake_add_piece_fn_u_r_u:
-	ld a, 3
+	ld a, 3  ; l_u
 	ld c, 2
 	ret
 
@@ -1301,15 +1315,15 @@ update_boss7_snake_add_piece_fn_r_d:
 	jr z, update_boss7_snake_add_piece_fn_l_d_d
 	; up is not possible
 update_boss7_snake_add_piece_fn_l_d_r:
-	ld a, 7
+	ld a, 7  ; u_r
 	ld c, 2
 	ret
 update_boss7_snake_add_piece_fn_l_d_l:
-	ld a, 6
+	ld a, 6  ; u_l
 	ld c, 3
 	ret
 update_boss7_snake_add_piece_fn_l_d_d:
-	ld a, 8
+	ld a, 8  ; u_d
 	ld c, 4
 	ret
 
@@ -2045,10 +2059,26 @@ update_boss7_undraw_snake_piece_internal:
 update_boss7_undraw_snake_piece_internal_loop_y:
 	push hl
 		push de
+			; if "hl" < boss__room_bg_buffer  + 64*24, skip row  ->  draw_boss7_snake_part_loop_y_skip
+			push hl
+				ld bc, boss__room_bg_buffer
+				or a  ; clear carry flag
+				sbc hl, bc
+			pop hl
+			jr c, update_boss7_undraw_snake_piece_internal_loop_y_skip
+
+			; if "de" >= "boss__room_bg_buffer + 64*24" -> stop 
+			push hl
+				ld bc, boss__room_bg_buffer + 64*24
+				or a  ; clear carry flag
+				sbc hl, bc
+			pop hl
+			jr nc, update_boss7_undraw_snake_piece_internal_loop_y_full_skip
 			ldi
 			ldi
 			ldi
 			ldi
+update_boss7_undraw_snake_piece_internal_loop_y_skip:
 		pop hl
 		ld bc, 64
 		add hl, bc
@@ -2058,7 +2088,10 @@ update_boss7_undraw_snake_piece_internal_loop_y:
 	dec a
 	jr nz, update_boss7_undraw_snake_piece_internal_loop_y
 	ret
-
+update_boss7_undraw_snake_piece_internal_loop_y_full_skip:
+		pop hl
+	pop hl
+	ret
 
 ;-----------------------------------------------
 ; input:
@@ -2080,6 +2113,18 @@ draw_boss7_snake_part_loop_y:
 			pop bc
 			ex de, hl
 			jr c, draw_boss7_snake_part_loop_y_skip
+
+			; if "de" >= "boss__room_bg_buffer" -> stop 
+			ex de, hl
+			push bc
+			push hl
+				ld bc, boss__room_bg_buffer
+				or a  ; clear carry flag
+				sbc hl, bc
+			pop hl
+			pop bc
+			ex de, hl
+			jr nc, draw_boss7_snake_part_loop_y_full_skip
 
 			ld b, c
 draw_boss7_snake_part_loop_x:
@@ -2107,7 +2152,10 @@ draw_boss7_snake_part_loop_y_skip:
 			ld b, 0
 			add hl, bc
 			jr draw_boss7_snake_part_loop_y_skip2
-
+draw_boss7_snake_part_loop_y_full_skip:
+		pop de
+	pop bc
+	ret
 
 
 ;-----------------------------------------------

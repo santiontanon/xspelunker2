@@ -2,13 +2,14 @@ to do:
 
 ***- 7th boss
   ***- implement phase 3:
-    ***- add piece once selected
-    ***- select piece following player
     ***- determine which paths are blocked
+    ***- select piece following player
     ***- add piece when max-length is reached:
       ***- implement tail ("boss__7_head_offset")
       ***- shift all pieces one position back (except tail) (update "boss__7_snake_tail_direction")
-    ***- chance of going to a hole if in the appropriate position (are horizontal holes possible? otherwise, remove!)
+    ***- chance of going to a hole if in the appropriate position:
+      ***- are horizontal holes possible? otherwise, remove!
+      ***- prevent drawing outside the room (currently the only check is up)
     ***- If it goes near a hole, snake can go in (update drawing/movement routine to handle this case)
     ***- when hidden: wait then pick a random hole to come out of (use boss__7_snake_hole_direction)
     ***- fire bullets
