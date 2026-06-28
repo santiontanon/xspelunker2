@@ -7,10 +7,11 @@ boss7_name_tables_snake:  ; "boss7_name_tables" is in another file (so that it's
 ;-----------------------------------------------
 BOSS_7_HP_OFFSET: equ 0
 BOSS_7_HP_PHASE2_OFFSET: equ 2
-BOSS_7_WAIT_TIME_OFFSET: equ 4
-BOSS_7_EYE_BULLET_ATTACK_MASK: equ 5
-BOSS_7_POISON_ATTACK_MASK: equ 6
-BOSS_7_N_POISON_SPITS: equ 7
+BOSS_7_HP_PHASE3_OFFSET: equ 4
+BOSS_7_WAIT_TIME_OFFSET: equ 6
+BOSS_7_EYE_BULLET_ATTACK_MASK: equ 7
+BOSS_7_POISON_ATTACK_MASK: equ 8
+BOSS_7_N_POISON_SPITS: equ 9
 
 
 ;-----------------------------------------------
@@ -31,20 +32,20 @@ boss7_phase1_frame_ptrs:
 
 ;-----------------------------------------------
 boss7_difficulty_setting__easy:
-	dw 192, 144  ; boss hp, and threshold for the other phases
+	dw 192, 160, 112  ; boss hp, and threshold for the other phases
 	db 32, #1f, #0f, 2  ; wait time, bullet attack mask, poison attack mask, n spits
 
 boss7_difficulty_setting__normal:
-; 	dw 320, 256  ; boss hp, and threshold for the other phases
-	dw 320, 318  ; boss hp, and threshold for the other phases  (DEBUG)
+; 	dw 320, 256, 192  ; boss hp, and threshold for the other phases
+	dw 320, 318, 310  ; boss hp, and threshold for the other phases  (DEBUG)
 	db 32, #0f, #07, 3  ; wait time, bullet attack mask, poison attack mask, n spits
 
 boss7_difficulty_setting__hard:
-	dw 416, 336  ; boss hp, and threshold for the other phases
+	dw 416, 336, 256  ; boss hp, and threshold for the other phases
 	db 28, #0f, #07, 4  ; wait time, bullet attack mask, poison attack mask, n spits
 
 boss7_difficulty_setting__hardest:
-	dw 512, 416  ; boss hp, and threshold for the other phases
+	dw 512, 416, 320  ; boss hp, and threshold for the other phases
 	db 24, #7f, #03, 4  ; wait time, bullet attack mask, poison attack mask, n spits
 
 
@@ -620,6 +621,14 @@ update_boss7_behavior_2_to_state_1:
 	ret
 
 update_boss7_behavior_2_state_1:
+	; phase 3?
+	ld bc, (boss__settings + BOSS_7_HP_PHASE3_OFFSET)
+	ld hl, (boss__hp)
+	or a
+	sbc hl, bc
+	ld c, 0  ; hide
+	jp c, update_boss7_behavior_2_state_1_target_set  ; if we are moving to phase 3, to go hiding!
+
 	; decide where to go next:
 	; if player x < 34: 0
 	; if player_x > 57: 1
@@ -810,6 +819,17 @@ update_boss7_behavior_2_state_2_pieces_match:
 	jp update_boss7_draw_phase2_boss_frame
 
 update_boss7_behavior_2_state_2_done:
+	; phase 3?
+	ld a, (boss__7_target_phase2_position)
+	or a
+	jr nz, update_boss7_behavior_2_state_2_done_continue
+	; only check for phase 3 when going into the statue:
+	ld bc, (boss__settings + BOSS_7_HP_PHASE3_OFFSET)
+	ld hl, (boss__hp)
+	or a
+	sbc hl, bc
+	jp c, update_boss7_to_behavior_3  ; start phase 3!
+update_boss7_behavior_2_state_2_done_continue:
 	xor a
 	ld (boss__state_timer), a
 	ld a, 3
@@ -920,14 +940,118 @@ update_boss7_behavior_2_maybe_fire_bullet:
 
 ;-----------------------------------------------
 ; phase 3:
+update_boss7_to_behavior_3:
+	ld a, 3
+	ld (boss__behavior), a
+	xor a
+	ld (boss__state), a
+	ld (boss__state_timer), a
+	ret
 update_boss7_behavior_3:
 	; states:
+	; 0: statue breaking (then go to 1)
+	; 1: in a hole, wait a bit and come out (go to 2)
+	; 2: following player (chance of going to 3 or 4)
+	; 3: entering a hole (then go to 1)
+	; 4: spit attack (then back to 2)
+	ld a, (boss__state)
+	or a
+	jr z, update_boss7_behavior_3_state_0
+	dec a
+	jp z, update_boss7_behavior_3_state_1
+	dec a
+	jp z, update_boss7_behavior_3_state_2
+	dec a
+	jp z, update_boss7_behavior_3_state_3
+	dec a
+	jp z, update_boss7_behavior_3_state_4
+	ret
+
+update_boss7_behavior_3_state_0:
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	or a
+	jr nz, update_boss7_behavior_3_state_0_continue
+	push af
+		ld bc, #1039  ; 57, 22  ; position of the tail
+		ld (boss__x), bc
+
+		; no snake for the transition to the new tileset:
+		ld a, #ff
+		ld (tile_enemy_work_memory), a  ; initialize the snake clear array too
+		ld (tile_enemy_work_memory + 32), a  ; initialize the snake clear array too
+
+		; draw broken statue + snake:
+		call update_boss7_draw_phase3_boss_frame
+		ld hl, draw_room_with_hud
+		ld c, TILES_PAGE
+		call call_hl_in_page_c_8000
+
+		; switch to the new tileset & collision tables:
+		ld hl, boss_7_phase3_tiles_zx0
+		ld c, BOSS_7_PAGE
+		ld (current_room__tileset_ptr), hl
+		call setup_game_tiles_only_biome
+
+		; initial position of the snake:
+; 		ld a, 1
+; 		ld (boss__7_target_phase2_position), a
+; 		ld hl, update_boss7_behavior_2_snake_position_out_up
+; 		ld de, tile_enemy_work_memory
+; 		ld bc, 4
+; 		ldir
+
+; 		call update_boss7_draw_phase3_boss_frame  ; draw snake now that we have the tileset
+; 		ld hl, draw_room_with_hud
+; 		ld c, TILES_PAGE
+; 		call call_hl_in_page_c_8000
+
+		ld hl, tile_collision_types_boss7_phase3
+		ld (current_room__collision_ptr), hl
+		ld de, current_room__collision_table
+		ld bc, 256
+		ldir
+	pop af
+update_boss7_behavior_3_state_0_continue:
+	cp 32
+	jr z, update_boss7_behavior_3_to_state_1
+	and #01
+	ret nz
+	; spawn an explosion:
+	ld bc, #0c36  ; 54, 12
+	call random_a
+	and #07
+	add a, c
+	ld c, a
+	call random_a
+	and #07
+	add a, b
+	ld b, a
+	jp spawn_explosion
+
+
+update_boss7_behavior_3_to_state_1:
+	ld a, 1
+	ld (boss__state), a
+	ret
+
+update_boss7_behavior_3_state_1:
 	; ...
-; 	ld a, (boss__state)
-; 	or a
-; 	jr z, update_boss7_behavior_3_state_0
-; 	dec a
-; 	jp z, update_boss7_behavior_3_state_1
+	ret
+
+
+update_boss7_behavior_3_state_2:
+	; ...
+	ret
+
+
+update_boss7_behavior_3_state_3:
+	; ...
+	ret
+
+
+update_boss7_behavior_3_state_4:
 	; ...
 	ret
 
@@ -1065,7 +1189,6 @@ update_boss7_draw_phase1_boss_frame:
 
 
 ;-----------------------------------------------
-; input:
 update_boss7_draw_phase2_boss_frame:
 	; in phase 2:
 	; - frame 1 is the statue
@@ -1085,6 +1208,35 @@ update_boss7_draw_phase2_boss_frame:
 	; draw statue:
 	ld de, current_room__tile_map + 56 + 13*64
 	ld ix, boss7_statue_frame_2
+	ld c, BOSS_PAGE
+	ld hl, draw_boss_frame_1_without_clearing_ix
+	call call_hl_in_page_c_8000
+
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)	
+	ret
+
+
+;-----------------------------------------------
+update_boss7_draw_phase3_boss_frame:
+	; in phase 3:
+	; - frame 1 is the statue
+	; - snake is handled in a special way
+
+	xor a
+	ld (boss__7_head_eye_sprite), a
+	ld (boss__7_head_eye_x), a
+
+	call update_boss7_undraw_snake
+	ld hl, draw_boss_frame_clear_previous_frame_1
+	ld c, BOSS_PAGE
+	call call_hl_in_page_c_8000
+
+	call update_boss7_draw_snake
+
+	; draw statue:
+	ld de, current_room__tile_map + 57 + 19*64
+	ld ix, boss7_statue_frame_3
 	ld c, BOSS_PAGE
 	ld hl, draw_boss_frame_1_without_clearing_ix
 	call call_hl_in_page_c_8000
@@ -1737,3 +1889,21 @@ tile_collision_types_boss7_phase2:
     db 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 2, 2, 2, 2
     db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 2, 2, 2, 2
     db 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2
+
+tile_collision_types_boss7_phase3:
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
+    db 0, 0, 0, 0, 0, 0, 0, 0, 9, 9, 2, 2, 2, 9, 9, 9
+    db 2, 2, 2, 2, 2, 2, 9, 9, 9, 2, 2, 2, 2, 2, 9, 9
+    db 2, 2, 2, 2, 2, 2, 9, 9, 9, 2, 2, 2, 9, 9, 2, 2
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 2, 0, 9, 9, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 0, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 0, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 0, 0, 0, 0, 9, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 0, 0, 0, 0, 9, 9, 9, 9
+    db 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 9, 9
+    db 9, 9, 9, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2
