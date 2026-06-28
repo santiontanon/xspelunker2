@@ -1079,14 +1079,23 @@ update_boss7_behavior_3_state_2_add_new_piece:
 	xor a
 	ld (buffer_4096), a  ; n viable directions
 	ld ix, buffer_4096 + 1
+	ld bc, (boss__7_head_x) 
 	; check left:
 	ld a, (boss__7_snake_head_direction)
 	cp PCG_DIRECTION_RIGHT
 	jr z, update_boss7_behavior_3_state_2_add_new_piece_continue
-	ld a, (boss__7_head_eye_x)
+	ld a, c  ; boss__7_head_x
 	cp 5
 	jr c, update_boss7_behavior_3_state_2_add_new_piece_continue  ; snake cannot go left
-	; ...
+	push bc
+		inc b
+		inc b
+		dec c
+		dec c
+		dec c
+		call boss7_collision_check
+	pop bc
+	jr z, update_boss7_behavior_3_state_2_add_new_piece_continue
 
 	ld hl, buffer_4096
 	inc (hl)
@@ -1098,10 +1107,14 @@ update_boss7_behavior_3_state_2_add_new_piece_continue:
 	ld a, (boss__7_snake_head_direction)
 	cp PCG_DIRECTION_DOWN
 	jr z, update_boss7_behavior_3_state_2_add_new_piece_continue2
-	ld a, (boss__7_head_eye_y)
+	ld a, b  ; boss__7_head_y
 	cp 7
 	jr c, update_boss7_behavior_3_state_2_add_new_piece_continue2  ; snake cannot go up
-	; ...
+	push bc
+		dec b
+		call boss7_collision_check
+	pop bc
+	jr z, update_boss7_behavior_3_state_2_add_new_piece_continue2
 
 	ld hl, buffer_4096
 	inc (hl)
@@ -1113,10 +1126,18 @@ update_boss7_behavior_3_state_2_add_new_piece_continue2:
 	ld a, (boss__7_snake_head_direction)
 	cp PCG_DIRECTION_LEFT
 	jr z, update_boss7_behavior_3_state_2_add_new_piece_continue3
-	ld a, (boss__7_head_eye_x)
+	ld a, c  ; boss__7_head_x
 	cp 58
 	jr nc, update_boss7_behavior_3_state_2_add_new_piece_continue3  ; snake cannot go left
-	; ...
+	push bc
+		inc b
+		inc b
+		ld a, 5
+		add a, c
+		ld c, a
+		call boss7_collision_check
+	pop bc
+	jr z, update_boss7_behavior_3_state_2_add_new_piece_continue3
 
 	ld hl, buffer_4096
 	inc (hl)
@@ -1128,10 +1149,24 @@ update_boss7_behavior_3_state_2_add_new_piece_continue3:
 	ld a, (boss__7_snake_head_direction)
 	cp PCG_DIRECTION_UP
 	jr z, update_boss7_behavior_3_state_2_add_new_piece_continue4
-	ld a, (boss__7_head_eye_y)
+	ld a, b  ; boss__7_head_y
 	cp 17
 	jr nc, update_boss7_behavior_3_state_2_add_new_piece_continue4  ; snake cannot go down
-	; ...
+	push bc
+		inc b
+		inc b
+		inc b
+		inc b
+		; down is a special case, as we need to check y+4 for "wall", and y+5 for "boss"
+		call get_room_tile_type
+	pop bc
+	cp 2
+	jr z, update_boss7_behavior_3_state_2_add_new_piece_continue4
+	ld de, 64
+	add hl, de
+	ld a, (hl)
+	cp 9
+	jr z, update_boss7_behavior_3_state_2_add_new_piece_continue4
 
 	ld hl, buffer_4096
 	inc (hl)
@@ -1481,6 +1516,7 @@ update_boss7_draw_phase2_boss_frame:
 
 	xor a
 	ld (boss__7_head_eye_sprite), a
+	ld (boss__7_head_x), a
 	ld (boss__7_head_eye_x), a
 
 	call update_boss7_undraw_snake
@@ -1510,6 +1546,7 @@ update_boss7_draw_phase3_boss_frame:
 
 	xor a
 	ld (boss__7_head_eye_sprite), a
+	ld (boss__7_head_x), a
 	ld (boss__7_head_eye_x), a
 
 	call update_boss7_undraw_snake
@@ -1626,6 +1663,7 @@ update_boss7_draw_snake_piece_head_down_loop:
 update_boss7_draw_snake_piece_head_down_continue:
 	push hl
 		call update_boss7_pointer_to_coordinates
+		ld (boss__7_head_x), bc
 		inc c
 		inc b
 		ld (boss__7_head_eye_x), bc
@@ -1650,6 +1688,7 @@ update_boss7_draw_snake_piece_head_left_continue:
 	push de
 		ex de, hl
 		call update_boss7_pointer_to_coordinates
+		ld (boss__7_head_x), bc
 		inc c
 		inc c
 		inc b
@@ -1680,6 +1719,7 @@ update_boss7_draw_snake_piece_head_up_loop:
 update_boss7_draw_snake_piece_head_up_continue:
 	push hl
 		call update_boss7_pointer_to_coordinates
+		ld (boss__7_head_x), bc
 		inc c
 		inc b
 		inc b
@@ -1706,6 +1746,7 @@ update_boss7_draw_snake_piece_head_right_continue:
 	push de
 		ex de, hl
 		call update_boss7_pointer_to_coordinates
+		ld (boss__7_head_x), bc
 		inc c
 		inc b
 		inc b
@@ -2171,6 +2212,20 @@ boss7_a_mod_5:
 	ret c  ; < 15
 	sub 5
     ret
+
+
+;-----------------------------------------------
+; input:
+; - c, b: tile x, y
+; output:
+; - z: collision
+; - nz: no collision
+boss7_collision_check:
+	call get_room_tile_type
+	cp 2
+	ret z
+	cp 9
+	ret
 
 
 ;-----------------------------------------------

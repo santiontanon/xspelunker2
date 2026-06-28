@@ -2,8 +2,8 @@ to do:
 
 ***- 7th boss
   ***- implement phase 3:
-    ***- determine which paths are blocked
     ***- select piece following player
+    ***- adjust snake speed based on difficulty level?
     ***- add piece when max-length is reached:
       ***- implement tail ("boss__7_head_offset")
       ***- shift all pieces one position back (except tail) (update "boss__7_snake_tail_direction")
