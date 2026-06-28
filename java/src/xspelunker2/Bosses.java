@@ -823,7 +823,7 @@ public class Bosses {
 
             List<int[]> nameTableBoxes = new ArrayList<>();
             nameTableBoxes.clear();
-            nameTableBoxes.add(new int[]{0, 96, 64, 288});  // statue
+            nameTableBoxes.add(new int[]{0, 96, 64, 320});  // statue
             List<int[][]> nametables_statue = addBossTilesInGapsForBoxes(nameTableBoxes, baseImage, boss7Tiles, availableTiles, collision, false, true);
             // mark statue tiles with "2":
             for(int i = 0;i<256;i++) {
@@ -843,7 +843,7 @@ public class Bosses {
             
             // statue:
             int nameTable[][] = nametables_statue.get(0);
-            addNameTable(nameTable, 0, 8, 8, 24, nameTableData);  // statue full  8x16
+            addNameTable(nameTable, 0, 12, 8, 28, nameTableData);  // statue full  8x16
 
             // snake within statue phase 1:
             nameTable = nametables_phase1.get(0);
@@ -882,7 +882,7 @@ public class Bosses {
 
             List<int[]> nameTableBoxes = new ArrayList<>();
             nameTableBoxes.clear();
-            nameTableBoxes.add(new int[]{0, 96, 64, 160});  // statue
+            nameTableBoxes.add(new int[]{0, 96, 64, 192});  // statue
             List<int[][]> nametables_statue = addBossTilesInGapsForBoxes(nameTableBoxes, baseImage, boss7Tiles, availableTiles, collision, false, true);
             // mark statue tiles with "2":
             for(int i = 0;i<256;i++) {
@@ -897,7 +897,7 @@ public class Bosses {
             
             // broken statue:
             int nameTable[][] = nametables_statue.get(0);
-            addNameTable(nameTable, 2, 1, 8, 8, nameTableData);  // statue broken  6x7
+            addNameTable(nameTable, 2, 5, 8, 12, nameTableData);  // statue broken  6x7
 
             // snake pieces
             nameTable = nametables_phase2.get(0);
@@ -954,7 +954,7 @@ public class Bosses {
 
             List<int[]> nameTableBoxes = new ArrayList<>();
             nameTableBoxes.clear();
-            nameTableBoxes.add(new int[]{24, 96, 48, 104});  // statue
+            nameTableBoxes.add(new int[]{24, 96, 48, 136});  // statue
             List<int[][]> nametables_statue = addBossTilesInGapsForBoxes(nameTableBoxes, baseImage, boss7Tiles, availableTiles, collision, false, true);
             // mark statue tiles with "2":
             for(int i = 0;i<256;i++) {
@@ -969,7 +969,7 @@ public class Bosses {
             
             // final broken statue:
             int nameTable[][] = nametables_statue.get(0);
-            addNameTable(nameTable, 0, 0, 3, 1, nameTableData);  // final broken statue 3x1
+            addNameTable(nameTable, 0, 0, 3, 5, nameTableData);  // final broken statue 3x5
              
             // dead head:
             nameTable = nametables_phase2.get(0);

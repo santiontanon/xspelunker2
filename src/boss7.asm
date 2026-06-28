@@ -116,6 +116,10 @@ update_boss7_behavior_init_continue:
 	ld (boss__7_head_eye_sprite), a
 	ld (boss__7_mouth_open), a
 	ld (boss__7_snake_movement_counter), a
+	ld (boss__7_snake_length), a
+	ld (boss__7_snake_head_direction), a
+	ld a, PCG_DIRECTION_UP
+	ld (boss__7_snake_tail_direction), a
 
 	; draw the statue:
 	xor a
@@ -556,7 +560,7 @@ update_boss7_behavior_2_state_0:
 	ld hl, boss__state_timer
 	ld a, (hl)
 	inc (hl)
-	or a
+	cp 24
 	jr nz, update_boss7_behavior_2_state_0_continue
 	push af
 		ld bc, #1039  ; 57, 16  ; position of the tail (which will not be drawn in phase 2)
@@ -971,10 +975,10 @@ update_boss7_behavior_3_state_0:
 	ld hl, boss__state_timer
 	ld a, (hl)
 	inc (hl)
-	or a
+	cp 24
 	jr nz, update_boss7_behavior_3_state_0_continue
 	push af
-		ld bc, #1039  ; 57, 22  ; position of the tail
+		ld bc, #1639  ; 57, 22  ; position of the tail
 		ld (boss__x), bc
 
 		; no snake for the transition to the new tileset:
@@ -995,17 +999,19 @@ update_boss7_behavior_3_state_0:
 		call setup_game_tiles_only_biome
 
 		; initial position of the snake:
-; 		ld a, 1
-; 		ld (boss__7_target_phase2_position), a
-; 		ld hl, update_boss7_behavior_2_snake_position_out_up
-; 		ld de, tile_enemy_work_memory
-; 		ld bc, 4
-; 		ldir
+		ld hl, tile_enemy_work_memory
+		ld (hl), 0
+		inc hl
+		ld (hl), 13
+		inc hl
+		ld (hl), 2
+		inc hl
+		ld (hl), #ff
 
-; 		call update_boss7_draw_phase3_boss_frame  ; draw snake now that we have the tileset
-; 		ld hl, draw_room_with_hud
-; 		ld c, TILES_PAGE
-; 		call call_hl_in_page_c_8000
+		call update_boss7_draw_phase3_boss_frame  ; draw snake now that we have the tileset
+		ld hl, draw_room_with_hud
+		ld c, TILES_PAGE
+		call call_hl_in_page_c_8000
 
 		ld hl, tile_collision_types_boss7_phase3
 		ld (current_room__collision_ptr), hl
@@ -1094,6 +1100,9 @@ update_sprite_objects_boss_extras_boss_7_internal:
 	or a
 	ret z
 
+	ld a, (boss__7_snake_length)
+	or a
+	ret z
 
 	ld iyl, COLOR_DARK_BLUE
 
@@ -1254,6 +1263,9 @@ update_boss7_draw_snake:
 	ld bc, 32
 	ldir
 
+	xor a
+	ld (boss__7_snake_length), a
+
 	ld bc, (boss__x)
 	call get_room_tile_ptr
 	ex de, hl  ; de = ptr where the snake is to be drawn
@@ -1284,7 +1296,7 @@ update_boss7_draw_snake_loop_continue:
 	jp update_boss7_draw_snake_loop
 
 update_boss7_snake_piece_drawing_methods:
-	dw update_boss7_draw_snake_piece_tail_in_statue
+	dw update_boss7_draw_snake_piece_tail_in_statue_or_hole
 	dw update_boss7_draw_snake_piece_tail
 	dw update_boss7_draw_snake_piece_head  ; 2
 	dw update_boss7_draw_snake_piece_l_u  ; 3
@@ -1301,7 +1313,7 @@ update_boss7_snake_piece_drawing_methods:
 	dw update_boss7_draw_snake_piece_d_r  ; 14
 
 
-update_boss7_draw_snake_piece_tail_in_statue:
+update_boss7_draw_snake_piece_tail_in_statue_or_hole:
 	; nothing to draw, just move the pointer to draw up:
 	ex de, hl
 	ld bc, -4*64
@@ -1322,8 +1334,10 @@ update_boss7_draw_snake_piece_head:
 	cp PCG_DIRECTION_UP
 	jr z, update_boss7_draw_snake_piece_head_up
 	cp PCG_DIRECTION_RIGHT
-	jr z, update_boss7_draw_snake_piece_head_right
+	jp z, update_boss7_draw_snake_piece_head_right
 update_boss7_draw_snake_piece_head_down:
+	ld a, PCG_DIRECTION_DOWN
+	ld (boss__7_snake_head_direction), a
 	ex de, hl
 	ld a, (boss__7_head_offset)
 	or a
@@ -1347,6 +1361,8 @@ update_boss7_draw_snake_piece_head_down_continue:
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_head_left:
+	ld a, PCG_DIRECTION_LEFT
+	ld (boss__7_snake_head_direction), a
 	ld a, (boss__7_head_offset)
 	or a
 	jr z, update_boss7_draw_snake_piece_head_left_continue
@@ -1374,6 +1390,8 @@ update_boss7_draw_snake_piece_head_left_continue2:
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_head_up:
+	ld a, PCG_DIRECTION_UP
+	ld (boss__7_snake_head_direction), a
 	ex de, hl
 	ld a, (boss__7_head_offset)
 	or a
@@ -1399,6 +1417,8 @@ update_boss7_draw_snake_piece_head_up_continue:
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_head_right:
+	ld a, PCG_DIRECTION_RIGHT
+	ld (boss__7_snake_head_direction), a
 	ld a, (boss__7_head_offset)
 	or a
 	jr z, update_boss7_draw_snake_piece_head_right_continue
@@ -1425,6 +1445,8 @@ update_boss7_draw_snake_piece_head_right_continue2:
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_l_u:
+	ld hl, boss__7_snake_length
+	inc (hl)
 	push de
 		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_L_U
 		call draw_boss7_snake_part
@@ -1437,6 +1459,8 @@ update_boss7_draw_snake_piece_l_u:
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_l_r:
+	ld hl, boss__7_snake_length
+	inc (hl)
 	push de
 		ld a, (boss__7_snake_movement_counter)
 		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_L_R1
@@ -1460,6 +1484,8 @@ update_boss7_draw_snake_piece_l_r_frame_set:
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_l_d:
+	ld hl, boss__7_snake_length
+	inc (hl)
 	push de
 		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_L_D
 		call draw_boss7_snake_part
@@ -1472,6 +1498,8 @@ update_boss7_draw_snake_piece_l_d:
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_u_l:
+	ld hl, boss__7_snake_length
+	inc (hl)
 	push de
 		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_U_L
 		call draw_boss7_snake_part
@@ -1484,6 +1512,8 @@ update_boss7_draw_snake_piece_u_l:
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_u_r:
+	ld hl, boss__7_snake_length
+	inc (hl)
 	push de
 		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_U_R
 		call draw_boss7_snake_part
@@ -1496,6 +1526,8 @@ update_boss7_draw_snake_piece_u_r:
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_u_d:
+	ld hl, boss__7_snake_length
+	inc (hl)
 	push de
 		ld a, (boss__7_snake_movement_counter)
 		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_U_D1
@@ -1523,6 +1555,8 @@ update_boss7_draw_snake_piece_u_d_frame_set:
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_r_l:
+	ld hl, boss__7_snake_length
+	inc (hl)
 	push de
 		ld a, (boss__7_snake_movement_counter)
 		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_R_L1
@@ -1546,6 +1580,8 @@ update_boss7_draw_snake_piece_r_l_frame_set:
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_r_u:
+	ld hl, boss__7_snake_length
+	inc (hl)
 	push de
 		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_R_U
 		call draw_boss7_snake_part
@@ -1558,6 +1594,8 @@ update_boss7_draw_snake_piece_r_u:
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_r_d:
+	ld hl, boss__7_snake_length
+	inc (hl)
 	push de
 		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_R_D
 		call draw_boss7_snake_part
@@ -1570,6 +1608,8 @@ update_boss7_draw_snake_piece_r_d:
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_d_l:
+	ld hl, boss__7_snake_length
+	inc (hl)	
 	push de
 		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_D_L
 		call draw_boss7_snake_part
@@ -1582,6 +1622,8 @@ update_boss7_draw_snake_piece_d_l:
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_d_u:
+	ld hl, boss__7_snake_length
+	inc (hl)
 	push de
 		ld a, (boss__7_snake_movement_counter)
 		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_D_U1
@@ -1609,6 +1651,8 @@ update_boss7_draw_snake_piece_d_u_frame_set:
 	jp update_boss7_draw_snake_loop_continue
 
 update_boss7_draw_snake_piece_d_r:
+	ld hl, boss__7_snake_length
+	inc (hl)
 	push de
 		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_D_R
 		call draw_boss7_snake_part

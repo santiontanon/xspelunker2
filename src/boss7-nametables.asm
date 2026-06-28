@@ -56,7 +56,7 @@ BOSS7_SNAKE_NAMETABLE_HEAD_UP: equ BOSS7_SNAKE_NAMETABLE_HEAD_RIGHT_MOUTH + 20
 BOSS7_SNAKE_NAMETABLE_HEAD_DOWN: equ BOSS7_SNAKE_NAMETABLE_HEAD_UP + 20
 
 ; phase 3:
-BOSS7_NAMETABLE_STATUE_3: equ BOSS7_NAMETABLE_STATUE_2 + 6*7  ; 3*1
+BOSS7_NAMETABLE_STATUE_3: equ BOSS7_NAMETABLE_STATUE_2 + 6*7  ; 3*5
 
 
 ;-----------------------------------------------
@@ -75,8 +75,8 @@ boss7_statue_frame_2:  ; broken statue
 boss7_statue_frame_3:  ; broken statue
 	db 1  ; number of parts
 	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
-	dw #0103, BOSS7_NAMETABLE_STATUE_3  ; dimensions and nametable
-	dw 0, #0103  ; boss__clear_bbox
+	dw #0503, BOSS7_NAMETABLE_STATUE_3  ; dimensions and nametable
+	dw 0, #0503  ; boss__clear_bbox
 
 
 boss7_phase1_frame_1:

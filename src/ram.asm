@@ -356,6 +356,9 @@ boss__7_head_eye_y: equ boss__tmp_space + 4
 boss__7_head_eye_sprite: equ boss__tmp_space + 5  ; 0 : no eye, 1: eye
 boss__7_mouth_open: equ boss__tmp_space + 6  ; 0: closed, 1: open
 boss__7_snake_movement_counter: equ boss__tmp_space + 7
+boss__7_snake_length: equ boss__tmp_space + 8  ; in number of pieces
+boss__7_snake_head_direction: equ boss__tmp_space + 9
+boss__7_snake_tail_direction: equ boss__tmp_space + 9  ; also used for the direction of the hole the snake is coming out of
 
 alien_ambush__n_aliens_spawned: equ boss__tmp_space
 alien_ambush__n_ufos_spawned: equ boss__tmp_space + 1
