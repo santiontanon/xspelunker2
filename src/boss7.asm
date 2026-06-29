@@ -1098,7 +1098,9 @@ update_boss7_behavior_3_state_2_add_new_piece:
 	; determine which directions are viable:
 	xor a
 	ld (buffer_4096), a  ; n viable directions
+	ld (buffer_4096 + 16), a  ; n viable directions (that only collide with snake)
 	ld ix, buffer_4096 + 1
+	ld iy, buffer_4096 + 17
 	ld bc, (boss__7_head_x) 
 	; check left:
 	ld a, (boss__7_snake_head_direction)
@@ -1113,14 +1115,22 @@ update_boss7_behavior_3_state_2_add_new_piece:
 		dec c
 		dec c
 		dec c
-		call boss7_collision_check
+		call get_room_tile_type
 	pop bc
+	cp 2
 	jr z, update_boss7_behavior_3_state_2_add_new_piece_continue
-
+	cp 9
+	jr z, update_boss7_behavior_3_state_2_add_new_piece_self_collision_left
 	ld hl, buffer_4096
 	inc (hl)
 	ld (ix), PCG_DIRECTION_LEFT
 	inc ix
+	jr update_boss7_behavior_3_state_2_add_new_piece_continue
+update_boss7_behavior_3_state_2_add_new_piece_self_collision_left:
+	ld hl, buffer_4096 + 16
+	inc (hl)
+	ld (iy), PCG_DIRECTION_LEFT
+	inc iy
 
 update_boss7_behavior_3_state_2_add_new_piece_continue:
 	; check up:
@@ -1135,18 +1145,24 @@ update_boss7_behavior_3_state_2_add_new_piece_continue:
 		; up is a special case, as we need to check y-1 for "wall", and y-2 for "boss"
 		call get_room_tile_type
 	pop bc
-	cp 2
+	cp 2  ; wall type
 	jr z, update_boss7_behavior_3_state_2_add_new_piece_continue2
 	ld de, -64
 	add hl, de
 	ld a, (hl)
 	call get_collision_tile_type_of_a
-	cp 9
-	jr z, update_boss7_behavior_3_state_2_add_new_piece_continue2
+	cp 9  ; boss type
+	jr z, update_boss7_behavior_3_state_2_add_new_piece_self_collision_up
 	ld hl, buffer_4096
 	inc (hl)
 	ld (ix), PCG_DIRECTION_UP
 	inc ix
+	jr update_boss7_behavior_3_state_2_add_new_piece_continue2
+update_boss7_behavior_3_state_2_add_new_piece_self_collision_up:
+	ld hl, buffer_4096 + 16
+	inc (hl)
+	ld (iy), PCG_DIRECTION_UP
+	inc iy
 
 update_boss7_behavior_3_state_2_add_new_piece_continue2:
 	; check right:
@@ -1162,14 +1178,22 @@ update_boss7_behavior_3_state_2_add_new_piece_continue2:
 		ld a, 5
 		add a, c
 		ld c, a
-		call boss7_collision_check
+		call get_room_tile_type
 	pop bc
+	cp 2
 	jr z, update_boss7_behavior_3_state_2_add_new_piece_continue3
-
+	cp 9
+	jr z, update_boss7_behavior_3_state_2_add_new_piece_self_collision_right
 	ld hl, buffer_4096
 	inc (hl)
 	ld (ix), PCG_DIRECTION_RIGHT
 	inc ix
+	jr update_boss7_behavior_3_state_2_add_new_piece_continue3
+update_boss7_behavior_3_state_2_add_new_piece_self_collision_right:
+	ld hl, buffer_4096 + 16
+	inc (hl)
+	ld (iy), PCG_DIRECTION_RIGHT
+	inc iy
 
 update_boss7_behavior_3_state_2_add_new_piece_continue3:
 	; check down:
@@ -1187,27 +1211,50 @@ update_boss7_behavior_3_state_2_add_new_piece_continue3:
 		; down is a special case, as we need to check y+4 for "wall", and y+5 for "boss"
 		call get_room_tile_type
 	pop bc
-	cp 2
+	cp 2  ; wall type
 	jr z, update_boss7_behavior_3_state_2_add_new_piece_continue4
 	ld de, 64*2
 	add hl, de
 	ld a, (hl)
 	call get_collision_tile_type_of_a
-	cp 9
-	jr z, update_boss7_behavior_3_state_2_add_new_piece_continue4
+	cp 9  ; boss type
+	jr z, update_boss7_behavior_3_state_2_add_new_piece_self_collision_down
 
 	ld hl, buffer_4096
 	inc (hl)
 	ld (ix), PCG_DIRECTION_DOWN
 	inc ix
+	jr update_boss7_behavior_3_state_2_add_new_piece_continue4
+update_boss7_behavior_3_state_2_add_new_piece_self_collision_down:
+	ld hl, buffer_4096 + 16
+	inc (hl)
+	ld (iy), PCG_DIRECTION_RIGHT
+	inc iy
 
 update_boss7_behavior_3_state_2_add_new_piece_continue4:
 
 	; pick the next piece:
+	; here:
+	; - buffer_4096 has the number of possible directions the snake can move without collision,
+	;   and the next 4 memory positions contain those directions.
+	; - buffer_4096 has the number of possible directions the snake can move if we allow for
+	;   collisions with self, and the next 4 memory positions contain those directions.
 	ld a, (buffer_4096)
 	or a
-	ret z  ; no possible direction
+	jr nz, update_boss7_behavior_3_state_2_add_new_piece_possible_directions_set
+	; use the options that involve self collision instead:
+	ld hl, buffer_4096 + 16
+	ld de, buffer_4096
+	ldi
+	ldi
+	ldi
+	ldi
+	ldi
+	ld a, (buffer_4096)
+	or a
+	ret z  ; even using self-collision, there are no options! (this should never happen)
 
+update_boss7_behavior_3_state_2_add_new_piece_possible_directions_set:
 	call random_a
 	and #07
 	jr z, update_boss7_behavior_3_state_2_add_new_piece_random  ; 12.5% chance of random direction
@@ -2452,20 +2499,6 @@ boss7_a_mod_5:
 	ret c  ; < 15
 	sub 5
     ret
-
-
-;-----------------------------------------------
-; input:
-; - c, b: tile x, y
-; output:
-; - z: collision
-; - nz: no collision
-boss7_collision_check:
-	call get_room_tile_type
-	cp 2
-	ret z
-	cp 9
-	ret
 
 
 ;-----------------------------------------------

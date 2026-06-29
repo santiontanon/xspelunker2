@@ -2,7 +2,6 @@ to do:
 
 ***- 7th boss
   ***- implement phase 3:
-    ***- if it has no moves, but there was a move that crossed the snake on itself, do it (so it does not get stuck)
     ***- If it goes near a hole, snake can go in:
       ***- when the head goes in, mark it and that will trigger removing piece after piece until there are no pieces left (trigger for state change to "hidden")
       ***- handle the special case when it goes into the statue hole (it can go on its own, and get stuck)
@@ -11,7 +10,7 @@ to do:
     ***- every once in a while, stop to spit poison
   ***- implement phase 4:
     ***- head in the tail opens its eyes, and and body is split in half
-    ***- same, but there are now two snakes (they can block each other, so, it's possible a snake does not move in one turn)
+    ***- same, but there are now two snakes (need to duplicate the variables)
   ***- kill the boss and spawn drops
   ***- add boss name to the stats for game over screen (TEXT_BOSS_MOON_SNAKE)
 
