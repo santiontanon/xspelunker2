@@ -357,10 +357,14 @@ boss__7_head_eye_x: equ boss__tmp_space + 5
 boss__7_head_eye_y: equ boss__tmp_space + 6
 boss__7_head_eye_sprite: equ boss__tmp_space + 7  ; 0 : no eye, 1: eye
 boss__7_mouth_open: equ boss__tmp_space + 8  ; 0: closed, 1: open
-boss__7_snake_movement_counter: equ boss__tmp_space + 9
+boss__7_snake_movement_counter: equ boss__tmp_space + 9  ; this is used for the animation to give the effect of moving on the snake parts
 boss__7_snake_length: equ boss__tmp_space + 10  ; in number of pieces
-boss__7_snake_head_direction: equ boss__tmp_space + 11
+boss__7_snake_head_direction: equ boss__tmp_space + 11  ; should be the same as "boss__7_last_piece_direction" if the head is drawn
 boss__7_snake_tail_direction: equ boss__tmp_space + 12  ; also used for the direction of the hole the snake is coming out of
+boss__7_snake_tail_offset: equ boss__tmp_space + 13
+boss__7_snake_undraw_ptr: equ boss__tmp_space + 14  ; 2 bytes
+boss__7_snake_tail_draw_ptr: equ boss__tmp_space + 16  ; 2 bytes since we want the tail to be drawn on top
+boss__7_snake_tail_direction_undraw: equ boss__tmp_space + 18
 
 alien_ambush__n_aliens_spawned: equ boss__tmp_space
 alien_ambush__n_ufos_spawned: equ boss__tmp_space + 1
