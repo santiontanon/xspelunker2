@@ -2,8 +2,7 @@ to do:
 
 ***- 7th boss
   ***- implement phase 3:
-    ***- boss__7_snake_movement_counter is not updated in phase 3
-    ***- BUG: coming out again from another hole is not properly working (force statue hole to test)
+    ***- BUG: boss__7_snake_movement_counter is not correctly updated/used in phase 3
     ***- fire bullets
     ***- every once in a while, stop to spit poison
   ***- implement phase 4:

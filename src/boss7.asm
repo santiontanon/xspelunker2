@@ -120,6 +120,8 @@ update_boss7_behavior_init_continue:
 	ld a, 1
 	ld (boss__state), a
 	xor a
+	ld (boss__7_head_x), a
+	ld (boss__7_head_y), a
 	ld (boss__7_head_eye_sprite), a
 	ld (boss__7_mouth_open), a
 	ld (boss__7_snake_movement_counter), a
@@ -750,12 +752,7 @@ update_boss7_behavior_2_state_2_need_to_remove_a_piece_continue:
 	jr z, update_boss7_behavior_2_state_2_need_to_remove_a_piece2
 	inc a
 	ld (boss__7_head_offset), a
-	ld hl, boss__7_snake_movement_counter
-	dec (hl)  ; retreat
-	ld a, (hl)
-	cp #ff
-	jp nz, update_boss7_draw_phase2_boss_frame
-	ld (hl), 19
+	call update_boss_7_decrease_movement_counter
 	jp update_boss7_draw_phase2_boss_frame
 update_boss7_behavior_2_state_2_need_to_remove_a_piece2:
 	; remove last piece before head and set boss__7_head_offset = 0
@@ -765,13 +762,9 @@ update_boss7_behavior_2_state_2_need_to_remove_a_piece2:
 	ld (hl), #ff
 	xor a
 	ld (boss__7_head_offset), a
-	ld hl, boss__7_snake_movement_counter
-	dec (hl)  ; retreat	
-	ld a, (hl)
-	cp #ff
-	jp nz, update_boss7_draw_phase2_boss_frame
-	ld (hl), 19
+	call update_boss_7_decrease_movement_counter
 	jp update_boss7_draw_phase2_boss_frame
+
 
 update_boss7_behavior_2_state_2_need_to_add_a_piece:
 	ld a, (boss__7_head_offset)
@@ -779,12 +772,7 @@ update_boss7_behavior_2_state_2_need_to_add_a_piece:
 	jr z, update_boss7_behavior_2_state_2_need_to_add_a_piece2
 	dec a
 	ld (boss__7_head_offset), a
-	ld hl, boss__7_snake_movement_counter
-	inc (hl)  ; advance
-	ld a, (hl)
-	cp 20
-	jp nz, update_boss7_draw_phase2_boss_frame
-	ld (hl), 0
+	call update_boss_7_increase_movement_counter
 	jp update_boss7_draw_phase2_boss_frame
 update_boss7_behavior_2_state_2_need_to_add_a_piece2:
 	; add new piece, and set boss__7_head_offset = 2 (if it's a piece of type 4, 8, 9, 13, set it to 3)
@@ -808,12 +796,7 @@ update_boss7_behavior_2_state_2_need_to_add_a_piece2_continue:
 	ld (hl), #ff
 	ld a, c
 	ld (boss__7_head_offset), a
-	ld hl, boss__7_snake_movement_counter
-	inc (hl)  ; advance	
-	ld a, (hl)
-	cp 20
-	jp nz, update_boss7_draw_phase2_boss_frame
-	ld (hl), 0
+	call update_boss_7_increase_movement_counter
 	jp update_boss7_draw_phase2_boss_frame
 
 update_boss7_behavior_2_state_2_pieces_match_up_to_end_of_current:
@@ -825,12 +808,7 @@ update_boss7_behavior_2_state_2_pieces_match:
 	jr z, update_boss7_behavior_2_state_2_done
 	dec a
 	ld (boss__7_head_offset), a
-	ld hl, boss__7_snake_movement_counter
-	inc (hl)  ; advance	
-	ld a, (hl)
-	cp 20
-	jp nz, update_boss7_draw_phase2_boss_frame
-	ld (hl), 0
+	call update_boss_7_increase_movement_counter
 	jp update_boss7_draw_phase2_boss_frame
 
 update_boss7_behavior_2_state_2_done:
@@ -1089,9 +1067,9 @@ update_boss7_behavior_3_state_2:
 	jr z, update_boss7_behavior_3_state_2_add_new_piece
 	dec a
 	ld (boss__7_head_offset), a
-	ld a, (boss__7_snake_tail_offset)
-	inc a
-	ld (boss__7_snake_tail_offset), a
+	ld hl, boss__7_snake_tail_offset
+	inc (hl)
+	call update_boss_7_increase_movement_counter
 	jp update_boss7_draw_phase3_boss_frame
 
 update_boss7_behavior_3_state_2_add_new_piece:
@@ -1114,6 +1092,12 @@ update_boss7_behavior_3_state_2_add_new_piece:
 	ld a, c  ; boss__7_head_x
 	cp 5
 	jr c, update_boss7_behavior_3_state_2_add_new_piece_continue  ; snake cannot go left
+	cp 58
+	jr nz, update_boss7_behavior_3_state_2_add_new_piece_left_continue
+	ld a, b
+	cp 17
+	jr z, update_boss7_behavior_3_state_2_add_new_piece_continue  ; snake cannot go left right off the statue
+update_boss7_behavior_3_state_2_add_new_piece_left_continue:
 	push bc
 		inc b
 		inc b
@@ -1189,7 +1173,7 @@ update_boss7_behavior_3_state_2_add_new_piece_continue2:
 	jr z, update_boss7_behavior_3_state_2_add_new_piece_continue3
 	ld a, c  ; boss__7_head_x
 	cp 58
-	jr nc, update_boss7_behavior_3_state_2_add_new_piece_continue3  ; snake cannot go left
+	jr nc, update_boss7_behavior_3_state_2_add_new_piece_continue3  ; snake cannot go right
 	push bc
 		inc b
 		inc b
@@ -1420,6 +1404,7 @@ update_boss7_behavior_3_state_2_add_new_piece_ret:
 
 update_boss7_behavior_3_state_2_add_new_piece_within_up_hole:
 	; Remove a piece if possible:
+	call update_boss_7_increase_movement_counter
 	ld a, (tile_enemy_work_memory + 1)
 	cp 2  ; snake is as short as it can be, we are done
 	jp z, update_boss7_behavior_3_to_state_3
@@ -1436,6 +1421,7 @@ update_boss7_behavior_3_state_2_add_new_piece_within_up_hole:
 
 update_boss7_behavior_3_state_2_add_new_piece_within_down_hole:
 	; Remove a piece if possible:
+	call update_boss_7_increase_movement_counter
 	ld a, (tile_enemy_work_memory + 1)
 	cp 2  ; snake is as short as it can be, we are done
 	jp z, update_boss7_behavior_3_to_state_3
@@ -1481,6 +1467,8 @@ update_boss7_behavior_3_state_2_remove_a_piece_max_length:
 	; now remove the piece
 	ld hl, tile_enemy_work_memory + 2
 	ld de, tile_enemy_work_memory + 1
+	xor a
+	ld (boss__7_snake_tail_offset), a
 update_boss7_behavior_3_state_2_remove_a_piece_max_length_loop:
 	ld a, (hl)
 	ld (de), a
@@ -1488,8 +1476,6 @@ update_boss7_behavior_3_state_2_remove_a_piece_max_length_loop:
 	ret z
 	inc hl
 	inc de
-	xor a
-	ld (boss__7_snake_tail_offset), a
 	jr update_boss7_behavior_3_state_2_remove_a_piece_max_length_loop
 
 
@@ -1634,6 +1620,7 @@ update_boss7_behavior_3_state_3:
 	; pick a hole and come out again
 	ld c, 7
 	call random_modulo
+; 	ld a, 6  ; DEBUG
 	add a, a
 	add a, a
 	ld hl, update_boss7_behavior_3_state_3_table
@@ -1660,8 +1647,12 @@ update_boss7_behavior_3_state_3:
 	ld (hl), a
 	ld (tile_enemy_work_memory + 32), a  ; initialize the snake clear array too
 	xor a
+	ld (boss__7_head_x), a
+	ld (boss__7_head_y), a
 	ld (boss__7_head_offset), a
 	ld (boss__7_snake_tail_offset), a
+	ld (boss__7_snake_length), a
+	call update_boss7_draw_phase3_boss_frame
 	jp update_boss7_behavior_3_to_state_2
 
 
@@ -1710,6 +1701,28 @@ update_boss7_pointer_to_coordinates:
 	add hl, hl
 	ld a, h
 	ld b, a  ; tile y
+	ret
+
+
+;-----------------------------------------------
+update_boss_7_increase_movement_counter:
+	ld hl, boss__7_snake_movement_counter
+	inc (hl)  ; advance	
+	ld a, (hl)
+	cp 20
+	ret nz
+	ld (hl), 0
+	ret
+
+
+;-----------------------------------------------
+update_boss_7_decrease_movement_counter:
+	ld hl, boss__7_snake_movement_counter
+	dec (hl)  ; retreat	
+	ld a, (hl)
+	cp #ff
+	ret nz
+	ld (hl), 19
 	ret
 
 
