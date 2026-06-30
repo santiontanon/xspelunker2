@@ -907,6 +907,7 @@ update_boss7_behavior_2_state_4_continue_done:
 	jp update_boss7_behavior_2_to_state_1
 
 
+update_boss7_behavior_3_maybe_fire_bullet:
 update_boss7_behavior_2_maybe_fire_bullet:
 	; fire bullets through eyes
 	ld a, (boss__settings + BOSS_7_EYE_BULLET_ATTACK_MASK)
@@ -1045,6 +1046,7 @@ update_boss7_behavior_3_to_state_2:
 	ld (boss__state_timer), a
 	ret
 update_boss7_behavior_3_state_2:
+	call update_boss7_behavior_3_maybe_fire_bullet
 	ld a, (boss__settings + BOSS_7_SNAKE_SPEED)
 	ld c, a
 	ld hl, boss__state_timer
@@ -1053,6 +1055,17 @@ update_boss7_behavior_3_state_2:
 	cp c
 	ret nz
 	ld (hl), 0
+
+	; chance of spitting:
+	ld a, (boss__7_head_eye_x)
+	or a
+	jr z, update_boss7_behavior_3_state_2_no_spit
+	ld a, (boss__settings + BOSS_7_POISON_ATTACK_MASK)
+	ld c, a
+	call random_a
+	and c
+	jp z, update_boss7_behavior_3_to_state_4
+update_boss7_behavior_3_state_2_no_spit:
 
 	; See what do we need to do:
 	; - if boss__7_head_offset > 0: boss__7_head_offset--
@@ -1687,9 +1700,93 @@ update_boss7_behavior_3_state_3_table:
 
 
 ;-----------------------------------------------
-update_boss7_behavior_3_state_4:
-	; ...
+update_boss7_behavior_3_to_state_4:
+	ld a, 4
+	ld (boss__state), a
+	xor a
+	ld (boss__state_timer), a
 	ret
+update_boss7_behavior_3_state_4:
+	call update_boss7_behavior_3_maybe_fire_bullet
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	or a
+	jr nz, update_boss7_behavior_3_state_4_continue
+	; draw boss with mouth open:
+	push af
+		ld a, 1
+		ld (boss__7_mouth_open), a
+		call update_boss7_draw_phase3_boss_frame
+	pop af
+update_boss7_behavior_3_state_4_continue:
+	push af
+		ld a, (boss__settings + BOSS_7_WAIT_TIME_OFFSET)
+		ld c, a
+	pop af
+	sub c
+	ret c
+
+	ld bc, (boss__7_head_eye_x)
+
+	ld e, a
+	and #03  ; fire one poison spit each 4 frames
+	ret nz
+	ld a, e
+	rrca
+	rrca
+	and #3f
+	ld hl, boss__settings + BOSS_7_N_POISON_SPITS
+	cp (hl)
+	jp z, update_boss7_behavior_3_state_4_continue_done
+	ld a, (boss__7_snake_head_direction)
+	cp PCG_DIRECTION_LEFT
+	jr z, update_boss7_behavior_3_state_4_left
+	cp PCG_DIRECTION_UP
+	jr z, update_boss7_behavior_3_state_4_up
+	cp PCG_DIRECTION_RIGHT
+	jr z, update_boss7_behavior_3_state_4_right
+update_boss7_behavior_3_state_4_down:
+	inc b
+	ld a, (player_y + 1)
+	cp b
+	jr c, update_boss7_behavior_3_state_4_continue_done  ; if player is too high, do not spit poison
+	jr update_boss7_behavior_3_state_4_continue2
+update_boss7_behavior_3_state_4_left:
+	dec c
+	inc b
+	ld a, (player_x + 1)
+	cp c
+	jr nc, update_boss7_behavior_3_state_4_continue_done  ; if player is too to the right, do not spit poison
+	jr update_boss7_behavior_3_state_4_continue2
+update_boss7_behavior_3_state_4_up:
+	dec b
+	ld a, (player_y + 1)
+	cp b
+	jr nc, update_boss7_behavior_3_state_4_continue_done  ; if player is too low, do not spit poison
+	jr update_boss7_behavior_3_state_4_continue2
+update_boss7_behavior_3_state_4_right:
+	inc c
+	inc b
+	ld a, (player_x + 1)
+	cp c
+	jr c, update_boss7_behavior_3_state_4_continue_done  ; if player is too to the left, do not spit poison
+update_boss7_behavior_3_state_4_continue2:
+	ld e, c
+	ld ix, #0000
+	; - e, b: tile coordinate from where the bullet is fired
+	; - ixl, ixh: pixel offset	
+	ld hl, boss_fire_directional_bullet_towards_player_with_random_offset_e_b
+	ld c, BOSS_PAGE
+	call call_hl_in_page_c_8000
+	ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BOSS7_POISON_SPIT
+	ret
+
+update_boss7_behavior_3_state_4_continue_done:
+	xor a
+	ld (boss__7_mouth_open), a
+	call update_boss7_draw_phase3_boss_frame
+	jp update_boss7_behavior_3_to_state_2
 
 
 ;-----------------------------------------------
@@ -2129,11 +2226,17 @@ update_boss7_draw_snake_piece_head_down_continue:
 	push hl
 		call update_boss7_pointer_to_coordinates
 		ld (boss__7_head_x), bc
+		ld a, b
+		or a
+		jp m, update_boss7_draw_snake_piece_head_down_continue2
+		cp 24
+		jp p, update_boss7_draw_snake_piece_head_down_continue2
 		inc c
 		inc b
 		ld (boss__7_head_eye_x), bc
 		ld a, 1
 		ld (boss__7_head_eye_sprite), a
+update_boss7_draw_snake_piece_head_down_continue2:
 	pop de
 	ld hl, BOSS7_SNAKE_NAMETABLE_HEAD_DOWN
 	call draw_boss7_snake_part
@@ -2152,18 +2255,24 @@ update_boss7_draw_snake_piece_head_left_continue:
 		ex de, hl
 		call update_boss7_pointer_to_coordinates
 		ld (boss__7_head_x), bc
+		ld a, b
+		or a
+		jp m, update_boss7_draw_snake_piece_head_left_continue2
+		cp 24
+		jp p, update_boss7_draw_snake_piece_head_left_continue2
 		inc c
 		inc c
 		inc b
 		inc b
 		ld (boss__7_head_eye_x), bc
+update_boss7_draw_snake_piece_head_left_continue2:
 	pop de
 	ld hl, BOSS7_SNAKE_NAMETABLE_HEAD_LEFT
 	ld a, (boss__7_mouth_open)
 	or a
-	jr z, update_boss7_draw_snake_piece_head_left_continue2
+	jr z, update_boss7_draw_snake_piece_head_left_continue3
 	ld hl, BOSS7_SNAKE_NAMETABLE_HEAD_LEFT_MOUTH
-update_boss7_draw_snake_piece_head_left_continue2:
+update_boss7_draw_snake_piece_head_left_continue3:
 	call draw_boss7_snake_part
 	jp update_boss7_draw_snake_loop_continue
 
@@ -2181,6 +2290,11 @@ update_boss7_draw_snake_piece_head_up_continue:
 	push hl
 		call update_boss7_pointer_to_coordinates
 		ld (boss__7_head_x), bc
+		ld a, b
+		or a
+		jp m, update_boss7_draw_snake_piece_head_up_continue2
+		cp 24
+		jp p, update_boss7_draw_snake_piece_head_up_continue2
 		inc c
 		inc b
 		inc b
@@ -2188,6 +2302,7 @@ update_boss7_draw_snake_piece_head_up_continue:
 		ld (boss__7_head_eye_x), bc
 		ld a, 1
 		ld (boss__7_head_eye_sprite), a
+update_boss7_draw_snake_piece_head_up_continue2:
 	pop de
 	ld hl, BOSS7_SNAKE_NAMETABLE_HEAD_UP
 	call draw_boss7_snake_part
@@ -2206,17 +2321,23 @@ update_boss7_draw_snake_piece_head_right_continue:
 		ex de, hl
 		call update_boss7_pointer_to_coordinates
 		ld (boss__7_head_x), bc
+		ld a, b
+		or a
+		jp m, update_boss7_draw_snake_piece_head_right_continue2
+		cp 24
+		jp p, update_boss7_draw_snake_piece_head_right_continue2
 		inc c
 		inc b
 		inc b
 		ld (boss__7_head_eye_x), bc
+update_boss7_draw_snake_piece_head_right_continue2:
 	pop de
 	ld hl, BOSS7_SNAKE_NAMETABLE_HEAD_RIGHT
 	ld a, (boss__7_mouth_open)
 	or a
-	jr z, update_boss7_draw_snake_piece_head_right_continue2
+	jr z, update_boss7_draw_snake_piece_head_right_continue3
 	ld hl, BOSS7_SNAKE_NAMETABLE_HEAD_RIGHT_MOUTH
-update_boss7_draw_snake_piece_head_right_continue2:	
+update_boss7_draw_snake_piece_head_right_continue3:	
 	call draw_boss7_snake_part
 	jp update_boss7_draw_snake_loop_continue
 
