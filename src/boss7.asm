@@ -1077,15 +1077,29 @@ update_boss7_behavior_3_state_2_add_new_piece:
 	ld bc, (boss__7_head_x) 
 	ld a, b
 	or a
-	jp m, update_boss7_behavior_3_state_2_add_new_piece_within_up_hole
+	jp p, update_boss7_behavior_3_state_2_add_new_piece_no_up_hole
+	ld a, (boss__7_snake_head_direction)
+	cp PCG_DIRECTION_UP
+	jp z, update_boss7_behavior_3_state_2_add_new_piece_within_up_hole
+update_boss7_behavior_3_state_2_add_new_piece_no_up_hole:	
 	cp 24
-	jp p, update_boss7_behavior_3_state_2_add_new_piece_within_down_hole
+	jp m, update_boss7_behavior_3_state_2_add_new_piece_no_down_hole
+	ld a, (boss__7_snake_head_direction)
+	cp PCG_DIRECTION_DOWN
+	jp z, update_boss7_behavior_3_state_2_add_new_piece_within_down_hole
+update_boss7_behavior_3_state_2_add_new_piece_no_down_hole:
 	xor a
 	ld (buffer_4096), a  ; n viable directions
 	ld (buffer_4096 + 16), a  ; n viable directions (that only collide with snake)
 	ld ix, buffer_4096 + 1
 	ld iy, buffer_4096 + 17
-	; check left:
+
+	; check left: 
+	ld a, b
+	or a
+	jp m, update_boss7_behavior_3_state_2_add_new_piece_continue  ; no left turns from outside the screen
+	cp 18
+	jp p, update_boss7_behavior_3_state_2_add_new_piece_continue  ; no left turns from outside the screen
 	ld a, (boss__7_snake_head_direction)
 	cp PCG_DIRECTION_RIGHT
 	jr z, update_boss7_behavior_3_state_2_add_new_piece_continue
@@ -1168,6 +1182,11 @@ update_boss7_behavior_3_state_2_add_new_piece_self_collision_up:
 
 update_boss7_behavior_3_state_2_add_new_piece_continue2:
 	; check right:
+	ld a, b
+	or a
+	jp m, update_boss7_behavior_3_state_2_add_new_piece_continue3  ; no left turns from outside the screen
+	cp 18
+	jp p, update_boss7_behavior_3_state_2_add_new_piece_continue3  ; no left turns from outside the screen	
 	ld a, (boss__7_snake_head_direction)
 	cp PCG_DIRECTION_LEFT
 	jr z, update_boss7_behavior_3_state_2_add_new_piece_continue3
@@ -1224,7 +1243,7 @@ update_boss7_behavior_3_state_2_add_new_piece_continue3:
 update_boss7_behavior_3_state_2_add_new_piece_down_not_full_snake:
 	ld a, b  ; boss__7_head_y
 	cp 17
-	jr nc, update_boss7_behavior_3_state_2_add_new_piece_continue4  ; snake cannot go down
+	jp p, update_boss7_behavior_3_state_2_add_new_piece_continue4  ; snake cannot go down
 update_boss7_behavior_3_state_2_add_new_piece_down_possible_hole:
 	push bc
 		inc b
@@ -1621,7 +1640,7 @@ update_boss7_behavior_3_state_3:
 	; pick a hole and come out again
 	ld c, 7
 	call random_modulo
-; 	ld a, 5  ; DEBUG
+; 	ld a, 0  ; DEBUG
 	add a, a
 	add a, a
 	ld hl, update_boss7_behavior_3_state_3_table
@@ -1658,12 +1677,12 @@ update_boss7_behavior_3_state_3:
 
 
 update_boss7_behavior_3_state_3_table:
-	db 14, -3, PCG_DIRECTION_DOWN, 8  ; x, y, direction, first piece
-	db 26, -3, PCG_DIRECTION_DOWN, 8
-	db 38, -3, PCG_DIRECTION_DOWN, 8
-	db 14, 27, PCG_DIRECTION_UP, 13
-	db 26, 27, PCG_DIRECTION_UP, 13
-	db 38, 27, PCG_DIRECTION_UP, 13
+	db 14, -13, PCG_DIRECTION_DOWN, 8  ; x, y, direction, first piece
+	db 26, -13, PCG_DIRECTION_DOWN, 8
+	db 38, -13, PCG_DIRECTION_DOWN, 8
+	db 14, 32, PCG_DIRECTION_UP, 13
+	db 26, 32, PCG_DIRECTION_UP, 13
+	db 38, 32, PCG_DIRECTION_UP, 13
 	db 58, 27, PCG_DIRECTION_UP, 13  ; statue
 
 
@@ -1987,11 +2006,21 @@ update_boss7_snake_piece_drawing_methods:
 
 update_boss7_draw_snake_piece_tail_in_statue_or_hole:
 	; nothing to draw, just move the pointer to draw up:
+	ld a, (boss__7_snake_tail_direction)
+	cp PCG_DIRECTION_UP
+	jr z, update_boss7_draw_snake_piece_tail_in_statue_or_hole_up
+update_boss7_draw_snake_piece_tail_in_statue_or_hole_down:
+	ex de, hl
+	ld bc, 5*64
+	add hl, bc
+	ex de, hl
+	ld (boss__7_last_piece_direction), a
+	jp update_boss7_draw_snake_loop_continue
+update_boss7_draw_snake_piece_tail_in_statue_or_hole_up:
 	ex de, hl
 	ld bc, -5*64
 	add hl, bc
 	ex de, hl
-	ld a, PCG_DIRECTION_UP
 	ld (boss__7_last_piece_direction), a
 	jp update_boss7_draw_snake_loop_continue
 
@@ -2461,6 +2490,16 @@ update_boss7_snake_piece_undrawing_methods:
 
 update_boss7_undraw_snake_piece_tail_in_statue:
 	; nothing to undraw, just move the pointer to undraw up:
+	ld a, (boss__7_snake_tail_direction)
+	cp PCG_DIRECTION_UP
+	jr z, update_boss7_undraw_snake_piece_tail_in_statue_up
+update_boss7_undraw_snake_piece_tail_in_statue_down:
+	ex de, hl
+	ld bc, 5*64
+	add hl, bc
+	ex de, hl
+	jp update_boss7_undraw_snake_loop_continue
+update_boss7_undraw_snake_piece_tail_in_statue_up:
 	ex de, hl
 	ld bc, -5*64
 	add hl, bc
