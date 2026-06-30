@@ -1278,6 +1278,7 @@ update_boss7_behavior_3_state_2_add_new_piece_continue4:
 	ret z  ; even using self-collision, there are no options! (this should never happen)
 
 update_boss7_behavior_3_state_2_add_new_piece_possible_directions_set:
+	call update_boss_7_increase_movement_counter
 	call random_a
 	and #07
 	jr z, update_boss7_behavior_3_state_2_add_new_piece_random  ; 12.5% chance of random direction
@@ -1620,7 +1621,7 @@ update_boss7_behavior_3_state_3:
 	; pick a hole and come out again
 	ld c, 7
 	call random_modulo
-; 	ld a, 6  ; DEBUG
+; 	ld a, 5  ; DEBUG
 	add a, a
 	add a, a
 	ld hl, update_boss7_behavior_3_state_3_table
@@ -2209,16 +2210,16 @@ update_boss7_draw_snake_piece_l_r:
 	inc (hl)
 	push de
 		ld a, (boss__7_snake_movement_counter)
-		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_L_R1
+		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_L_R4
 		and #03
-		jr z, update_boss7_draw_snake_piece_l_r_frame_set
-		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_L_R2
-		dec a
 		jr z, update_boss7_draw_snake_piece_l_r_frame_set
 		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_L_R3
 		dec a
 		jr z, update_boss7_draw_snake_piece_l_r_frame_set
-		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_L_R4
+		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_L_R2
+		dec a
+		jr z, update_boss7_draw_snake_piece_l_r_frame_set
+		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_L_R1
 update_boss7_draw_snake_piece_l_r_frame_set:
 		call draw_boss7_snake_part
 	pop hl
@@ -2305,16 +2306,16 @@ update_boss7_draw_snake_piece_r_l:
 	inc (hl)
 	push de
 		ld a, (boss__7_snake_movement_counter)
-		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_R_L1
+		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_R_L4
 		and #03
-		jr z, update_boss7_draw_snake_piece_r_l_frame_set
-		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_R_L2
-		dec a
 		jr z, update_boss7_draw_snake_piece_r_l_frame_set
 		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_R_L3
 		dec a
 		jr z, update_boss7_draw_snake_piece_r_l_frame_set
-		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_R_L4
+		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_R_L2
+		dec a
+		jr z, update_boss7_draw_snake_piece_r_l_frame_set
+		ld hl, BOSS7_SNAKE_NAMETABLE_BODY_R_L1
 update_boss7_draw_snake_piece_r_l_frame_set:
 		call draw_boss7_snake_part
 	pop hl

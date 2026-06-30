@@ -2,7 +2,7 @@ to do:
 
 ***- 7th boss
   ***- implement phase 3:
-    ***- BUG: boss__7_snake_movement_counter is not correctly updated/used in phase 3
+    ***- make snake come out properly of "up holes"
     ***- fire bullets
     ***- every once in a while, stop to spit poison
   ***- implement phase 4:
