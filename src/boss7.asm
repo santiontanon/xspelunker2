@@ -1096,12 +1096,17 @@ update_boss7_behavior_3_state_2:
 
 update_boss7_behavior_3_state_2_add_new_piece:
 	; determine which directions are viable:
+	ld bc, (boss__7_head_x) 
+	ld a, b
+	or a
+	jp m, update_boss7_behavior_3_state_2_add_new_piece_within_up_hole
+	cp 24
+	jp p, update_boss7_behavior_3_state_2_add_new_piece_within_down_hole
 	xor a
 	ld (buffer_4096), a  ; n viable directions
 	ld (buffer_4096 + 16), a  ; n viable directions (that only collide with snake)
 	ld ix, buffer_4096 + 1
 	ld iy, buffer_4096 + 17
-	ld bc, (boss__7_head_x) 
 	; check left:
 	ld a, (boss__7_snake_head_direction)
 	cp PCG_DIRECTION_RIGHT
@@ -1137,9 +1142,22 @@ update_boss7_behavior_3_state_2_add_new_piece_continue:
 	ld a, (boss__7_snake_head_direction)
 	cp PCG_DIRECTION_DOWN
 	jr z, update_boss7_behavior_3_state_2_add_new_piece_continue2
+	ld a, (tile_enemy_work_memory)
+	or a
+	jr z, update_boss7_behavior_3_state_2_add_new_piece_up_not_full_snake
+	; positions of holes are: 14, 26, and 38 (only if we have a full snake)
+	ld a, c
+	cp 14
+	jr z, update_boss7_behavior_3_state_2_add_new_piece_up_possible_hole
+	cp 26
+	jr z, update_boss7_behavior_3_state_2_add_new_piece_up_possible_hole
+	cp 38
+	jr z, update_boss7_behavior_3_state_2_add_new_piece_up_possible_hole
+update_boss7_behavior_3_state_2_add_new_piece_up_not_full_snake:
 	ld a, b  ; boss__7_head_y
 	cp 7
 	jr c, update_boss7_behavior_3_state_2_add_new_piece_continue2  ; snake cannot go up
+update_boss7_behavior_3_state_2_add_new_piece_up_possible_hole:
 	push bc
 		dec b
 		; up is a special case, as we need to check y-1 for "wall", and y-2 for "boss"
@@ -1200,9 +1218,30 @@ update_boss7_behavior_3_state_2_add_new_piece_continue3:
 	ld a, (boss__7_snake_head_direction)
 	cp PCG_DIRECTION_UP
 	jr z, update_boss7_behavior_3_state_2_add_new_piece_continue4
+	ld a, (tile_enemy_work_memory)
+	or a
+	jr z, update_boss7_behavior_3_state_2_add_new_piece_down_not_full_snake
+	; positions of holes are: 14, 26, and 38 (only if we have a full snake)	
+	; positions of holes are: 14, 26, 38, and 58
+	ld a, c
+	cp 14
+	jr z, update_boss7_behavior_3_state_2_add_new_piece_down_possible_hole
+	cp 26
+	jr z, update_boss7_behavior_3_state_2_add_new_piece_down_possible_hole
+	cp 38
+	jr z, update_boss7_behavior_3_state_2_add_new_piece_down_possible_hole
+	cp 58
+	jr nz, update_boss7_behavior_3_state_2_add_new_piece_down_not_full_snake
+	; x == 58
+	ld a, b
+	cp 17
+	jr z, update_boss7_behavior_3_state_2_add_new_piece_can_go_down
+	jr update_boss7_behavior_3_state_2_add_new_piece_down_possible_hole
+update_boss7_behavior_3_state_2_add_new_piece_down_not_full_snake:
 	ld a, b  ; boss__7_head_y
 	cp 17
 	jr nc, update_boss7_behavior_3_state_2_add_new_piece_continue4  ; snake cannot go down
+update_boss7_behavior_3_state_2_add_new_piece_down_possible_hole:
 	push bc
 		inc b
 		inc b
@@ -1219,7 +1258,7 @@ update_boss7_behavior_3_state_2_add_new_piece_continue3:
 	call get_collision_tile_type_of_a
 	cp 9  ; boss type
 	jr z, update_boss7_behavior_3_state_2_add_new_piece_self_collision_down
-
+update_boss7_behavior_3_state_2_add_new_piece_can_go_down:
 	ld hl, buffer_4096
 	inc (hl)
 	ld (ix), PCG_DIRECTION_DOWN
@@ -1228,7 +1267,7 @@ update_boss7_behavior_3_state_2_add_new_piece_continue3:
 update_boss7_behavior_3_state_2_add_new_piece_self_collision_down:
 	ld hl, buffer_4096 + 16
 	inc (hl)
-	ld (iy), PCG_DIRECTION_RIGHT
+	ld (iy), PCG_DIRECTION_DOWN
 	inc iy
 
 update_boss7_behavior_3_state_2_add_new_piece_continue4:
@@ -1343,7 +1382,7 @@ update_boss7_behavior_3_state_2_add_new_piece_c_set:
 	; move the snake by adding a piece:
 	ld a, (boss__7_snake_length)
 	cp BOSS7_MAX_LENGTH
-	call nc, update_boss7_behavior_3_state_2_add_new_piece_max_length
+	call nc, update_boss7_behavior_3_state_2_remove_a_piece_max_length
 	ld hl, tile_enemy_work_memory
 update_boss7_behavior_3_state_2_add_new_piece_loop:
 	ld a, (hl)
@@ -1378,30 +1417,59 @@ update_boss7_behavior_3_state_2_add_new_piece_ret:
 	ld (boss__7_head_offset), a
 	jp update_boss7_draw_phase3_boss_frame
 
-update_boss7_behavior_3_state_2_add_new_piece_max_length_table_direction:
+
+update_boss7_behavior_3_state_2_add_new_piece_within_up_hole:
+	; Remove a piece if possible:
+	ld a, (tile_enemy_work_memory + 1)
+	cp 2  ; snake is as short as it can be, we are done
+	jp z, update_boss7_behavior_3_to_state_3
+	call update_boss7_behavior_3_state_2_remove_a_piece_max_length
+	ld a, 3
+	ld (boss__7_head_offset), a
+	ld a, (boss__7_head_y)
+	cp -3  ; this is the position 
+	jp nz, update_boss7_draw_phase3_boss_frame
+	; add one additional straight piece up:
+	ld c, PCG_DIRECTION_UP
+	ld hl, tile_enemy_work_memory
+	jp update_boss7_behavior_3_state_2_add_new_piece_loop
+
+update_boss7_behavior_3_state_2_add_new_piece_within_down_hole:
+	; Remove a piece if possible:
+	ld a, (tile_enemy_work_memory + 1)
+	cp 2  ; snake is as short as it can be, we are done
+	jp z, update_boss7_behavior_3_to_state_3
+	call update_boss7_behavior_3_state_2_remove_a_piece_max_length
+	ld a, 3
+	ld (boss__7_head_offset), a
+	jp update_boss7_draw_phase3_boss_frame
+
+
+;-----------------------------------------------
+update_boss7_behavior_3_state_2_remove_a_piece_max_length_table_direction:
 	; directions that the tail should be in after deleting these pieces:
 	db #ff, #ff, #ff, PCG_DIRECTION_UP, PCG_DIRECTION_RIGHT, PCG_DIRECTION_DOWN
 	db PCG_DIRECTION_LEFT, PCG_DIRECTION_RIGHT, PCG_DIRECTION_DOWN
 	db PCG_DIRECTION_LEFT, PCG_DIRECTION_UP, PCG_DIRECTION_DOWN
 	db PCG_DIRECTION_LEFT, PCG_DIRECTION_UP, PCG_DIRECTION_RIGHT
-update_boss7_behavior_3_state_2_add_new_piece_max_length_table_offset:
+update_boss7_behavior_3_state_2_remove_a_piece_max_length_table_offset:
 	; directions that the tail should be in after deleting these pieces:
 	db 0,0,  0,0,  0,0, 4,0,  4,0,  4,0
 	db 0,5,  0,5,  0,5
 	db -4,0,  -4,0,  -4,0
 	db 0,-5,  0,-5,  0,-5
 
-update_boss7_behavior_3_state_2_add_new_piece_max_length:
+update_boss7_behavior_3_state_2_remove_a_piece_max_length:
 	ld a, 1
 	ld (tile_enemy_work_memory), a  ; make sure it's a "tail", and not a statue/hole-tail
 	ld a, (tile_enemy_work_memory + 1)  ; get the piece we are removing
-	ld hl, update_boss7_behavior_3_state_2_add_new_piece_max_length_table_direction
+	ld hl, update_boss7_behavior_3_state_2_remove_a_piece_max_length_table_direction
 	ADD_HL_A
 	ld a, (hl)
 	ld (boss__7_snake_tail_direction), a
 	ld a, (tile_enemy_work_memory + 1)
 	add a, a
-	ld hl, update_boss7_behavior_3_state_2_add_new_piece_max_length_table_offset
+	ld hl, update_boss7_behavior_3_state_2_remove_a_piece_max_length_table_offset
 	ADD_HL_A
 	ld a, (boss__x)
 	add a, (hl)
@@ -1413,7 +1481,7 @@ update_boss7_behavior_3_state_2_add_new_piece_max_length:
 	; now remove the piece
 	ld hl, tile_enemy_work_memory + 2
 	ld de, tile_enemy_work_memory + 1
-update_boss7_behavior_3_state_2_add_new_piece_max_length_loop:
+update_boss7_behavior_3_state_2_remove_a_piece_max_length_loop:
 	ld a, (hl)
 	ld (de), a
 	cp #ff
@@ -1422,7 +1490,7 @@ update_boss7_behavior_3_state_2_add_new_piece_max_length_loop:
 	inc de
 	xor a
 	ld (boss__7_snake_tail_offset), a
-	jr update_boss7_behavior_3_state_2_add_new_piece_max_length_loop
+	jr update_boss7_behavior_3_state_2_remove_a_piece_max_length_loop
 
 
 ; these methods:
@@ -1550,11 +1618,64 @@ update_boss7_snake_add_piece_fn_l_d_d:
 	ret
 
 
-update_boss7_behavior_3_state_3:
-	; ...
+;-----------------------------------------------
+update_boss7_behavior_3_to_state_3:
+	ld a, 3
+	ld (boss__state), a
+	xor a
+	ld (boss__state_timer), a
 	ret
+update_boss7_behavior_3_state_3:
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	cp 32
+	ret nz
+	; pick a hole and come out again
+	ld c, 7
+	call random_modulo
+	add a, a
+	add a, a
+	ld hl, update_boss7_behavior_3_state_3_table
+	ADD_HL_A
+	ld a, (hl)
+	ld (boss__x), a
+	inc hl
+	ld a, (hl)
+	ld (boss__y), a
+	inc hl
+	ld a, (hl)
+	ld (boss__7_snake_tail_direction), a
+	inc hl
+	ld a, (hl)  ; first piece
+
+	ld hl, tile_enemy_work_memory
+	ld (hl), 0
+	inc hl
+	ld (hl), a  ; first piece
+	inc hl
+	ld (hl), 2
+	inc hl
+	ld a, #ff
+	ld (hl), a
+	ld (tile_enemy_work_memory + 32), a  ; initialize the snake clear array too
+	xor a
+	ld (boss__7_head_offset), a
+	ld (boss__7_snake_tail_offset), a
+	jp update_boss7_behavior_3_to_state_2
 
 
+update_boss7_behavior_3_state_3_table:
+	db 14, -3, PCG_DIRECTION_DOWN, 8  ; x, y, direction, first piece
+	db 26, -3, PCG_DIRECTION_DOWN, 8
+	db 38, -3, PCG_DIRECTION_DOWN, 8
+	db 14, 27, PCG_DIRECTION_UP, 13
+	db 26, 27, PCG_DIRECTION_UP, 13
+	db 38, 27, PCG_DIRECTION_UP, 13
+	db 58, 27, PCG_DIRECTION_UP, 13  ; statue
+
+
+;-----------------------------------------------
 update_boss7_behavior_3_state_4:
 	; ...
 	ret
@@ -1606,6 +1727,19 @@ update_sprite_objects_boss_extras_boss_7_internal:
 
 	; extract the coordinates:
 	ld bc, (boss__7_head_eye_x)
+	ld a, b
+	or a
+	ret m
+
+	; do not draw the eye decoration inside the statue:
+	ld a, c
+	cp 59
+	jr nz, update_sprite_objects_boss_extras_boss_7_internal_not_in_statue
+	ld a, b
+	cp 19
+	ret nc  ; inside the statue
+
+update_sprite_objects_boss_extras_boss_7_internal_not_in_statue:
 	ld de, (room_scroll_x)
 	ld a, b
 	inc a

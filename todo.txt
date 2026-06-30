@@ -2,10 +2,8 @@ to do:
 
 ***- 7th boss
   ***- implement phase 3:
-    ***- If it goes near a hole, snake can go in:
-      ***- when the head goes in, mark it and that will trigger removing piece after piece until there are no pieces left (trigger for state change to "hidden")
-      ***- handle the special case when it goes into the statue hole (it can go on its own, and get stuck)
-    ***- when hidden: wait then pick a random hole to come out of (use boss__7_snake_hole_direction)
+    ***- boss__7_snake_movement_counter is not updated in phase 3
+    ***- BUG: coming out again from another hole is not properly working (force statue hole to test)
     ***- fire bullets
     ***- every once in a while, stop to spit poison
   ***- implement phase 4:
