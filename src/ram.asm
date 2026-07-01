@@ -349,21 +349,7 @@ boss__6_eye_frame: equ boss__tmp_space
 boss__6_face_turret_frame: equ boss__tmp_space + 1
 ;
 boss__7_target_phase2_position: equ boss__tmp_space  ; (only used in phase 2)
-boss__7_snake1_snake_length: equ boss__tmp_space + 1  ; in number of pieces (only used in phase 3/4)
-boss__7_snake1_head_offset: equ boss__tmp_space + 2  ; offset of the head wrt the last piece drawn (> 0 means that the head is retracted, 0 is fully extended)
-boss__7_snake1_last_piece_direction: equ boss__tmp_space + 3  ; direction in which the last piece of the snake points (to draw the head)
-boss__7_snake1_head_x: equ boss__tmp_space + 4
-boss__7_snake1_head_y: equ boss__tmp_space + 5
-boss__7_snake1_head_eye_x: equ boss__tmp_space + 6
-boss__7_snake1_head_eye_y: equ boss__tmp_space + 7
-boss__7_snake1_head_eye_sprite: equ boss__tmp_space + 8  ; 0 : no eye, 1: eye
-boss__7_snake1_mouth_open: equ boss__tmp_space + 9  ; 0: closed, 1: open
-boss__7_snake1_movement_counter: equ boss__tmp_space + 10  ; this is used for the animation to give the effect of moving on the snake parts
-boss__7_snake1_head_direction: equ boss__tmp_space + 11  ; should be the same as "boss__7_last_piece_direction" if the head is drawn
-boss__7_snake1_tail_direction: equ boss__tmp_space + 12  ; also used for the direction of the hole the snake is coming out of
-boss__7_snake1_tail_offset: equ boss__tmp_space + 13
-boss__7_snake1_undraw_ptr: equ boss__tmp_space + 14  ; 2 bytes
-boss__7_snake1_tail_direction_undraw: equ boss__tmp_space + 16
+boss__7_snake1_struct: equ boss__tmp_space + 1  ; 15 bytes
 
 
 alien_ambush__n_aliens_spawned: equ boss__tmp_space
@@ -424,7 +410,8 @@ tmp_shop_cursor_position: equ temporary_variables
 tmp_gamestart_cursor_position1: equ temporary_variables  ; world name, start, back or help
 tmp_gamestart_cursor_position2: equ temporary_variables + 1  ; position within the world name
 tmp_gamestart_starchart_x_offset: equ temporary_variables + 2
-boss__7_snake_tail_draw_ptr: equ temporary_variables  ; 2 bytes since we want the tail to be drawn on top
+tmp_boss__7_snake_tail_draw_ptr: equ temporary_variables  ; 2 bytes since we want the tail to be drawn on top
+tmp_boss__7_snake1_last_piece_direction: equ temporary_variables + 2  ; direction in which the last piece of the snake points (to draw the head)
 
 config_hud_type: ds virtual 1  ; 0: minimal, 1: minimal always visible, 2: full
 config_inventory_key_combo: ds virtual 1  ; 0: down+jump, 1: none
