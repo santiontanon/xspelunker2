@@ -1,10 +1,20 @@
 to do:
 
-***- 7th boss
-  ***- implement phase 4:
-    ***- head in the tail opens its eyes, and and body is split in half
-    ***- same, but there are now two snakes (need to duplicate the variables)
-  ***- kill the boss and spawn drops
+***- 7th boss (phase 4)
+  ***- draw a new tail for the broken midsection
+  ***- reorganize drawing/undrawing and update functions so that I can handle multiple snakes:
+    ***- remove the uses of "iy" in "update_boss7_behavior_3_state_2"
+    ***- put all snake variables together (including state/timer and ptr to the work memory where the snake and undraw copies are stored: divide this last part in 32 byte blocks, which should be enough)
+    ***- encapsulate the method that updates the snake into a function that takes "ix" as the snake pointer to update
+  ***- when health is below the threshold and snake is fully out, transition to phase 4
+  ***- when transitioning phases, reset the HP to the value it should be at that phase
+  ***- in the transition, pause the game, move the camera to the mid point between the tail and the point that will break
+  ***- explosions and then split the snake in half to make two snakes
+  ***- from that point on, it's all the same, just that with 2 snakes
+  ***- kill the boss and spawn drops:
+    ***- explosions from head to tail (removing piece by piece) of both snakes at the same time
+    ***- item spawns where the statue was
+    ***- upon picking the item, teleport out
   ***- add boss name to the stats for game over screen (TEXT_BOSS_MOON_SNAKE)
 
 - music: (brain 12, 15, 23, 25 have potential)
@@ -15,6 +25,7 @@ to do:
 - ending B: the calendar stone machine also activates its offensive mechanism and destroys the alien armada that was coming. You hope that will deter them from coming again.
 - Ending B+: (got the forge active with the codex, but did not defeat the final alien boss)
 
+- change the bullet firing pattern of bosses from random to following a pattern: e.g. 8, 8, 32 means wait 8, 8, and 32 frames in between bullets, creating a pattern of 3 successive bullets, and then a gap. Create patterns for easy/medium/hard/hardest, and use those in all bosses instead of random. 
 - 8th boss: after beating the combat against the aliens, you can teleport to their home planet, and fight against their leader.
   - add boss name to the stats for game over screen
   - better ray gun should significantly help
