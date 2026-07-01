@@ -1104,8 +1104,10 @@ update_boss7_behavior_3_state_2_add_new_piece_no_down_hole:
 	xor a
 	ld (buffer_4096), a  ; n viable directions
 	ld (buffer_4096 + 16), a  ; n viable directions (that only collide with snake)
-	ld ix, buffer_4096 + 1
-	ld iy, buffer_4096 + 17
+	exx
+		ld hl, buffer_4096 + 1
+		ld de, buffer_4096 + 17
+	exx
 
 	; check left: 
 	ld a, b
@@ -1139,14 +1141,19 @@ update_boss7_behavior_3_state_2_add_new_piece_left_continue:
 	jr z, update_boss7_behavior_3_state_2_add_new_piece_self_collision_left
 	ld hl, buffer_4096
 	inc (hl)
-	ld (ix), PCG_DIRECTION_LEFT
-	inc ix
+	exx	
+		ld (hl), PCG_DIRECTION_LEFT
+		inc hl
+	exx
 	jr update_boss7_behavior_3_state_2_add_new_piece_continue
 update_boss7_behavior_3_state_2_add_new_piece_self_collision_left:
 	ld hl, buffer_4096 + 16
 	inc (hl)
-	ld (iy), PCG_DIRECTION_LEFT
-	inc iy
+	exx
+		ld a, PCG_DIRECTION_LEFT
+		ld (de), a
+		inc de
+	exx
 
 update_boss7_behavior_3_state_2_add_new_piece_continue:
 	; check up:
@@ -1184,14 +1191,19 @@ update_boss7_behavior_3_state_2_add_new_piece_up_possible_hole:
 	jr z, update_boss7_behavior_3_state_2_add_new_piece_self_collision_up
 	ld hl, buffer_4096
 	inc (hl)
-	ld (ix), PCG_DIRECTION_UP
-	inc ix
+	exx
+		ld (hl), PCG_DIRECTION_UP
+		inc hl
+	exx
 	jr update_boss7_behavior_3_state_2_add_new_piece_continue2
 update_boss7_behavior_3_state_2_add_new_piece_self_collision_up:
 	ld hl, buffer_4096 + 16
 	inc (hl)
-	ld (iy), PCG_DIRECTION_UP
-	inc iy
+	exx
+		ld a, PCG_DIRECTION_UP
+		ld (de), a
+		inc de
+	exx
 
 update_boss7_behavior_3_state_2_add_new_piece_continue2:
 	; check right:
@@ -1220,14 +1232,19 @@ update_boss7_behavior_3_state_2_add_new_piece_continue2:
 	jr z, update_boss7_behavior_3_state_2_add_new_piece_self_collision_right
 	ld hl, buffer_4096
 	inc (hl)
-	ld (ix), PCG_DIRECTION_RIGHT
-	inc ix
+	exx
+		ld (hl), PCG_DIRECTION_RIGHT
+		inc hl
+	exx
 	jr update_boss7_behavior_3_state_2_add_new_piece_continue3
 update_boss7_behavior_3_state_2_add_new_piece_self_collision_right:
 	ld hl, buffer_4096 + 16
 	inc (hl)
-	ld (iy), PCG_DIRECTION_RIGHT
-	inc iy
+	exx
+		ld a, PCG_DIRECTION_RIGHT
+		ld (de), a
+		inc de
+	exx
 
 update_boss7_behavior_3_state_2_add_new_piece_continue3:
 	; check down:
@@ -1277,14 +1294,19 @@ update_boss7_behavior_3_state_2_add_new_piece_down_possible_hole:
 update_boss7_behavior_3_state_2_add_new_piece_can_go_down:
 	ld hl, buffer_4096
 	inc (hl)
-	ld (ix), PCG_DIRECTION_DOWN
-	inc ix
+	exx
+		ld (hl), PCG_DIRECTION_DOWN
+		inc hl
+	exx
 	jr update_boss7_behavior_3_state_2_add_new_piece_continue4
 update_boss7_behavior_3_state_2_add_new_piece_self_collision_down:
 	ld hl, buffer_4096 + 16
 	inc (hl)
-	ld (iy), PCG_DIRECTION_DOWN
-	inc iy
+	exx
+		ld a, PCG_DIRECTION_DOWN
+		ld (de), a
+		inc de
+	exx
 
 update_boss7_behavior_3_state_2_add_new_piece_continue4:
 
