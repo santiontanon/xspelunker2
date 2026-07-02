@@ -1,9 +1,8 @@
 to do:
 
 ***- ending B: 
-  ***- alien scene: draw some frames for beams coming from earth to attack the fleet
-  ***- alien scene: change dialogue to reflect that the power stone also activates destructive capabilities
-  ***- alien scene: change the animatino to end in UFO destruction (flash to white with a "noooo!")
+  ***- alien scene: change dialogue to reflect that the power stone attack
+  ***- alien scene: change the animation to end in UFO destruction (flash to white with a "noooo!")
   ***- beach scene: reflect that alien armada was destroyed and that you hope that will deter them from coming again.
   ***- ending text: bigger congrats, but some reticence as the aliens might try again in the future
 ***- Ending B+:
@@ -21,7 +20,7 @@ to do:
   - better ray gun should significantly help
 - final good ending 1 (A) (update "stats__ending"): the stone opens a portal to travel to the alien world, and fight against their leader. When you defeat it and come back, Elaine is there waiting to save you, but you arrive having defeated the alien empire (although there is doubt if other empires will show up again, and the calendar stone depletes, and cannot be used again)
 - update the list of enemy types in ending A to include any enemies in the alien planet.
-- Final good ending 2 (A+) if you have the 3 codex pieces in the forge to manufacture more powestones/firestones. So, you can keep using the calendar stone and be prepared for the future.
+- Final good ending 2 (A+) if you have the 3 codex pieces in the forge to manufacture more powerstones/firestones. So, you can keep using the calendar stone and be prepared for the future.
 
 - save game to rom / password: https://www.grauw.nl/projects/ascii-x/ascii16-x/
 - come up with a list of "achievements" for the list in the game over screen and implement them
