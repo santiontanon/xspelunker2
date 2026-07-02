@@ -1117,24 +1117,140 @@ update_boss7_behavior_4_state_1:
 
 update_boss7_behavior_4_state_0:
 	; transition to phase 4:
-	ld b, 25
-	call wait_b_halts
-
+; 	ld b, 25
+; 	call wait_b_halts
 	; split the snake!
-	; compute the position of the two new tails:
+	; 1) compute the position of every piece from tail to head in buffer_4096
+	;    (the position of the middle piece will be where the two new tails will be)
+	; 2) display some explosions around this position
+	; 3) create snake 2 by starting from the middle piece and walking back to the tail (reversing the pieces)
+	; 4) create snake 1 by removing all pieces up to the middle one, and setting its coordinates appropriately
+	; 5) reset variables for both snakes
+	ld iy, buffer_4096
+	ld ix, tile_enemy_work_memory
+	ld bc, (boss__x)
+update_boss7_behavior_4_state_0_piece_position_loop:
+	ld (iy), c
+	ld (iy + 1), b
+	inc iy
+	inc iy
+	ld a, (ix)
+	inc ix
+	; handle every piece:
+	dec a
+	jp z, update_boss7_behavior_4_state_0_piece_position_loop__tail
+	dec a
+	jp z, update_boss7_behavior_4_state_0_piece_position_loop_done
+	dec a
+	jp z, update_boss7_behavior_4_state_0_piece_position_loop__up  ; l_u
+	dec a
+	jp z, update_boss7_behavior_4_state_0_piece_position_loop__right  ; l_r
+	dec a
+	jp z, update_boss7_behavior_4_state_0_piece_position_loop__down  ; l_d
+	dec a
+	jp z, update_boss7_behavior_4_state_0_piece_position_loop__left  ; u_l
+	dec a
+	jp z, update_boss7_behavior_4_state_0_piece_position_loop__right  ; u_r
+	dec a
+	jp z, update_boss7_behavior_4_state_0_piece_position_loop__down  ; u_d
+	dec a
+	jp z, update_boss7_behavior_4_state_0_piece_position_loop__left  ; r_l
+	dec a
+	jp z, update_boss7_behavior_4_state_0_piece_position_loop__up  ; r_u
+	dec a
+	jp z, update_boss7_behavior_4_state_0_piece_position_loop__down  ; r_d
+	dec a
+	jp z, update_boss7_behavior_4_state_0_piece_position_loop__left  ; d_l
+	dec a
+	jp z, update_boss7_behavior_4_state_0_piece_position_loop__up  ; d_u
+	dec a
+	jp z, update_boss7_behavior_4_state_0_piece_position_loop__right  ; d_r
+update_boss7_behavior_4_state_0_piece_position_loop_next:
+	jr update_boss7_behavior_4_state_0_piece_position_loop
+update_boss7_behavior_4_state_0_piece_position_loop_done:
+	; get the position of the middle pieces:
+	ld bc, (buffer_4096 + 6*2)  ; where the tial of snake 1 will be
+
+	ld hl, boss__state_timer
+	ld a, (hl)
+	inc (hl)
+	push af
+		and #03
+		jr nz, update_boss7_behavior_4_state_0_piece_no_explosion
+		; spawn an explosion:
+		call random_a
+		and #03
+		add a, c
+		ld c, a
+		call random_a
+		and #03
+		add a, b
+		ld b, a
+		call spawn_explosion
+update_boss7_behavior_4_state_0_piece_no_explosion
+	pop af
+	cp 64
+	ret nz
+
+	; split snakes:
+ 	; - (buffer_4096 + 5*2)  ; where the tail of snake 2 will be
+ 	; - (buffer_4096 + 6*2)  ; where the tial of snake 1 will be
+
+ 	; create snake 2:
 	; ...
 
-	; explosions:
+	; create snake 1:
 	; ...
 
-	; regenerate the snakes:
-	; ...
-
+	ld a, 6
+	ld (boss__settings + BOSS_7_SNAKE_MAX_LENGTH_OFFSET), a
 	xor a
 	ld (boss__state_timer), a
 	inc a
 	ld (boss__state), a
 	ret
+
+update_boss7_behavior_4_state_0_piece_position_loop__tail:
+	ld a, (boss__7_snake1_struct + BOSS_7_SNAKE_STRUCT_TAIL_DIRECTION)
+	cp PCG_DIRECTION_LEFT
+	jp z, update_boss7_behavior_4_state_0_piece_position_loop__left
+	cp PCG_DIRECTION_UP
+	jp z, update_boss7_behavior_4_state_0_piece_position_loop__up
+	cp PCG_DIRECTION_RIGHT
+	jp z, update_boss7_behavior_4_state_0_piece_position_loop__right
+	jp update_boss7_behavior_4_state_0_piece_position_loop__down
+
+update_boss7_behavior_4_state_0_piece_position_loop__head:
+	ld a, (boss__7_snake1_struct + BOSS_7_SNAKE_STRUCT_HEAD_DIRECTION)
+	cp PCG_DIRECTION_LEFT
+	jp z, update_boss7_behavior_4_state_0_piece_position_loop__left
+	cp PCG_DIRECTION_UP
+	jp z, update_boss7_behavior_4_state_0_piece_position_loop__up
+	cp PCG_DIRECTION_RIGHT
+	jp z, update_boss7_behavior_4_state_0_piece_position_loop__right
+	jp update_boss7_behavior_4_state_0_piece_position_loop__down
+
+update_boss7_behavior_4_state_0_piece_position_loop__left:
+	ld a, -4
+	add a, c
+	ld c, a
+	jp update_boss7_behavior_4_state_0_piece_position_loop_next
+update_boss7_behavior_4_state_0_piece_position_loop__up:
+	ld a, -5
+	add a, b
+	ld b, a
+	jp update_boss7_behavior_4_state_0_piece_position_loop_next
+update_boss7_behavior_4_state_0_piece_position_loop__right:
+	ld a, 4
+	add a, c
+	ld c, a
+	jp update_boss7_behavior_4_state_0_piece_position_loop_next
+update_boss7_behavior_4_state_0_piece_position_loop__down:
+	ld a, 5
+	add a, b
+	ld b, a
+	jp update_boss7_behavior_4_state_0_piece_position_loop_next
+
 
 
 ;-----------------------------------------------
