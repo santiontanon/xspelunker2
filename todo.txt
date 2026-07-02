@@ -1,8 +1,7 @@
 to do:
 
 ***- 7th boss (phase 4)
-  ***- make both snakes update simultaneously
-  ***- replace tail with proper gfx for phase 4
+***- do not redraw the snake directly in "update_boss7_update_snake", but mark it in a variable. Then draw the snake at the end of the behavior (do this for behavior 3 and 4)
   ***- eye sprite for second snake in phase 4
   ***- kill the boss and spawn drops:
     ***- explosions from head to tail (removing piece by piece) of both snakes at the same time
