@@ -1,11 +1,6 @@
 to do:
 
 ***- 7th boss (phase 4)
-  ***- reorganize drawing/undrawing and update functions so that I can handle multiple snakes:
-    ***- create just 2 buffers with enough space in the boss tmp space for managing 2 snakes
-    ***- remove all instances of "tile_enemy_work_memory", and replace by ptrs stored in iy (this part will be divided in two 32 byte blocks, which should be enough for each snake)
-    ***- encapsulate the method that updates the snake into a function that takes "iy" as the snake pointer to update
-    ***- remove the eye_x/y variables to save space, and compute them when adding the sprites
   ***- when health is below the threshold and snake is fully out, transition to phase 4
   ***- when transitioning phases, reset the HP to the value it should be at that phase
   ***- in the transition, pause the game, move the camera to the mid point between the tail and the point that will break
