@@ -261,21 +261,21 @@ ending_B_explosion_loop:
 	call clear_screen_left_to_right
 	call stop_music
 
-; 	call ending_beach_scene_B  ; elaine and michael relax in the beach
+	call ending_beach_scene_B  ; elaine and michael relax in the beach
 
 	call clear_screen_left_to_right
 	call stop_music
 
-; 	ld ix, ending_B_text_page_ptrs
-; 	ld iy, ending_B_enemy_intro_ptr_table
-; 	ld a, (global_state__objects + TAG_FIRESTONE_FORGE)
-; 	or a
-; 	jr z, ending_B_continue2
-; 	ld ix, ending_B_plus_text_page_ptrs
-; 	ld iy, ending_B_plus_enemy_intro_ptr_table
-; ending_B_continue2:
-; 	ld b, 3  ; # number of pages
-; 	call ending_final_text_scene
+	ld ix, ending_B_text_page_ptrs
+	ld iy, ending_B_enemy_intro_ptr_table
+	ld a, (global_state__objects + TAG_FIRESTONE_FORGE)
+	or a
+	jr z, ending_B_continue2
+	ld ix, ending_B_plus_text_page_ptrs
+	ld iy, ending_B_plus_enemy_intro_ptr_table
+ending_B_continue2:
+	ld b, 3  ; # number of pages
+	call ending_final_text_scene
 
 ending_B_done:
 	ld hl, state_game_over
@@ -681,7 +681,7 @@ ending_UFO_scene_minion_talks_loop_skip:
 
 
 ;-----------------------------------------------
-ending_beach_scene_C:
+ending_beach_scene_common:
 	ld hl, music_beach_bin
 	ld a, 8
 	call play_music_adjusting_tempo
@@ -727,7 +727,12 @@ ending_beach_scene_C:
 	call enable_VDP_output
 
 	ld b, 2
-	call ending_beach_scene_C_wait_skippable
+	jp ending_beach_scene_C_wait_skippable
+
+
+;-----------------------------------------------
+ending_beach_scene_C:
+	call ending_beach_scene_common
 
 	ld hl, TEXT_ENDING_C_BEACH_1
 	ld a, COLOR_WHITE * 16
@@ -738,10 +743,6 @@ ending_beach_scene_C:
 	ld a, COLOR_WHITE * 16
 	ld b, 4
 	call ending_beach_scene_C_dialogue_line
-
-	ld a, (global_state__objects + TAG_FIRESTONE_FORGE)
-	or a
-	jr nz, ending_beach_scene_C_plus_entry_point
 
 	ld hl, TEXT_ENDING_C_BEACH_3
 	ld a, COLOR_WHITE * 16
@@ -772,6 +773,10 @@ ending_beach_scene_C:
 	ld a, COLOR_WHITE * 16
 	ld b, 3
 	call ending_beach_scene_C_dialogue_line
+
+	ld a, (global_state__objects + TAG_FIRESTONE_FORGE)
+	or a
+	jr nz, ending_beach_scene_C_plus_entry_point
 
 	ld hl, TEXT_ENDING_C_BEACH_9
 	ld a, COLOR_WHITE * 16
@@ -843,6 +848,123 @@ ending_beach_scene_C_plus_entry_point:
 
 
 ;-----------------------------------------------
+ending_beach_scene_B:
+	call ending_beach_scene_common
+
+	ld hl, TEXT_ENDING_C_BEACH_1
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_C_BEACH_2
+	ld a, COLOR_WHITE * 16
+	ld b, 4
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_B_BEACH_3
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	call ending_beach_scene_B_dialogue_line_page4
+
+	ld hl, TEXT_ENDING_B_BEACH_4
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	call ending_beach_scene_B_dialogue_line_page4
+
+	ld hl, TEXT_ENDING_C_BEACH_5
+	ld a, COLOR_WHITE * 16
+	ld b, 7
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_AMBUSH_ELAINE_3
+	ld a, COLOR_WHITE * 16
+	ld b, 3
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_C_BEACH_7
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_C_BEACH_8
+	ld a, COLOR_WHITE * 16
+	ld b, 3
+	call ending_beach_scene_C_dialogue_line
+
+	ld a, (global_state__objects + TAG_FIRESTONE_FORGE)
+	or a
+	jr nz, ending_beach_scene_B_plus_entry_point
+
+	ld hl, TEXT_ENDING_B_BEACH_9
+	ld a, COLOR_WHITE * 16
+	ld b, 10
+	jp ending_beach_scene_B_dialogue_line_page4
+
+
+;-----------------------------------------------
+ending_beach_scene_B_plus_entry_point:
+	ld hl, TEXT_ENDING_C_PLUS_BEACH_3
+	ld a, COLOR_WHITE * 16
+	ld b, 6
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_C_PLUS_BEACH_4
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_C_PLUS_BEACH_5
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_C_PLUS_BEACH_6
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_C_PLUS_BEACH_7
+	ld a, COLOR_WHITE * 16
+	ld b, 3
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_C_PLUS_BEACH_8
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_C_PLUS_BEACH_9
+	ld a, COLOR_WHITE * 16
+	ld b, 3
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_C_PLUS_BEACH_10
+	ld a, COLOR_WHITE * 16
+	ld b, 4
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_C_PLUS_BEACH_11
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_C_PLUS_BEACH_12
+	ld a, COLOR_WHITE * 16
+	ld b, 4
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_C_PLUS_BEACH_13
+	ld a, COLOR_WHITE * 16
+	ld b, 3
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_B_BEACH_9
+	ld a, COLOR_WHITE * 16
+	ld b, 10
+	jp ending_beach_scene_B_dialogue_line_page4
+
+
+;-----------------------------------------------
 ; input:
 ; - b: wait animation cycles
 ending_beach_scene_C_dialogue_line:
@@ -856,6 +978,32 @@ ending_beach_scene_C_dialogue_line:
 		ld a, 24
 		ld (tmp_letter_line_width), a
 		ld hl, display_paragraph_text_page3
+		ld c, TABLET_LETTER_PAGE
+		call call_hl_in_page_c_8000
+	pop bc
+	call ending_beach_scene_C_wait_skippable	
+	ld hl, CLRTBL2 + 2*256*8
+	ld bc, 256*8
+	xor a
+	call fast_FILVRM
+	ld b, 25
+	jp wait_b_halts_skippable
+
+
+;-----------------------------------------------
+; input:
+; - b: wait animation cycles
+ending_beach_scene_B_dialogue_line_page4:
+	ld (tmp_letter_line_color), a
+	push bc
+		push hl
+		pop iy
+		ld b, 1  ; first tile to use
+		ld de, NAMTBL2 + 32*16 + 5
+		ld ix, CHRTBL2 + 2*256*8
+		ld a, 24
+		ld (tmp_letter_line_width), a
+		ld hl, display_paragraph_text_page4
 		ld c, TABLET_LETTER_PAGE
 		call call_hl_in_page_c_8000
 	pop bc
@@ -962,6 +1110,11 @@ state_ending_copy_nametable_loop_y:
 
 
 ;-----------------------------------------------
+ENDING_LINE_PAGE: MACRO a_line, a_page
+	dw a_line
+	db a_page
+ENDM
+
 ending_C_text_page_ptrs:
 	dw ending_C_text_page_1
 	dw ending_C_text_page_2
@@ -972,66 +1125,109 @@ ending_C_plus_text_page_ptrs:
 	dw ending_C_text_page_2
 	dw ending_C_text_page_3
 
+ending_B_text_page_ptrs:
+ending_B_plus_text_page_ptrs:
+	dw ending_B_text_page_1
+	dw ending_B_text_page_2
+	dw ending_C_text_page_3
+
 
 ending_C_text_page_1:
 	db 16
-	dw TEXT_ENDING_C_PAGE_1_1
-	dw TEXT_ENDING_C_PAGE_1_2
-	dw TEXT_ENDING_C_PAGE_1_3
-	dw TEXT_ENDING_C_PAGE_1_4
-	dw TEXT_ENDING_C_PAGE_1_5
-	dw TEXT_ENDING_C_PAGE_1_6
-	dw TEXT_ENDING_C_PAGE_1_7
-	dw TEXT_ENDING_C_PAGE_1_8
-	dw TEXT_ENDING_C_PAGE_1_9
-	dw TEXT_ENDING_C_PAGE_1_10
-	dw TEXT_ENDING_C_PAGE_1_11
-	dw TEXT_ENDING_C_PAGE_1_12
-	dw TEXT_ENDING_C_PAGE_1_13
-	dw TEXT_ENDING_C_PAGE_1_14
-	dw TEXT_ENDING_C_PAGE_1_15
-	dw TEXT_ENDING_C_PAGE_1_16
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_1_1, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_1_2, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_1_3, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_1_4, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_1_5, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_1_6, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_1_7, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_1_8, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_1_9, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_1_10, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_1_11, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_1_12, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_1_13, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_1_14, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_1_15, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_1_16, TEXT_PAGE3
 
 ending_C_plus_text_page_1:
 	db 16
-	dw TEXT_ENDING_C_PLUS_PAGE_1_1
-	dw TEXT_ENDING_C_PAGE_1_2
-	dw TEXT_ENDING_C_PAGE_1_3
-	dw TEXT_ENDING_C_PAGE_1_4
-	dw TEXT_ENDING_C_PAGE_1_5
-	dw TEXT_ENDING_C_PAGE_1_6
-	dw TEXT_ENDING_C_PLUS_PAGE_1_7
-	dw TEXT_ENDING_C_PLUS_PAGE_1_8
-	dw TEXT_ENDING_C_PAGE_1_9
-	dw TEXT_ENDING_C_PAGE_1_10
-	dw TEXT_ENDING_C_PAGE_1_11
-	dw TEXT_ENDING_C_PAGE_1_12
-	dw TEXT_ENDING_C_PAGE_1_13
-	dw TEXT_ENDING_C_PAGE_1_14
-	dw TEXT_ENDING_C_PAGE_1_15
-	dw TEXT_ENDING_C_PAGE_1_16
+	ENDING_LINE_PAGE TEXT_ENDING_C_PLUS_PAGE_1_1, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_1_2, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_1_3, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_1_4, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_1_5, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_1_6, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PLUS_PAGE_1_7, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PLUS_PAGE_1_8, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_1_9, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_1_10, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_1_11, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_1_12, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_1_13, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_1_14, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_1_15, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_1_16, TEXT_PAGE3
+
+ending_B_text_page_1:
+	db 16
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_1, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_2, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_3, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_4, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_5, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_6, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_7, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_8, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_9, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_10, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_11, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_12, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_13, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_14, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_15, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_16, TEXT_PAGE4
 
 ending_C_text_page_2:
 	db 15
-	dw TEXT_ENDING_C_PAGE_2_1
-	dw 0
-	dw TEXT_ENDING_C_PAGE_2_2
-	dw TEXT_ENDING_C_PAGE_2_3
-	dw TEXT_ENDING_C_PAGE_2_4
-	dw TEXT_ENDING_C_PAGE_2_5
-	dw 0
-	dw TEXT_ENDING_C_PAGE_2_6
-	dw TEXT_ENDING_C_PAGE_2_7
-	dw TEXT_ENDING_C_PAGE_2_8
-	dw 0
-	dw TEXT_ENDING_C_PAGE_2_9
-	dw TEXT_ENDING_C_PAGE_2_10
-	dw TEXT_ENDING_C_PAGE_2_11
-	dw TEXT_ENDING_C_PAGE_2_12
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_2_1, TEXT_PAGE3
+	ENDING_LINE_PAGE 0, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_2_2, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_2_3, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_2_4, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_2_5, TEXT_PAGE3
+	ENDING_LINE_PAGE 0, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_2_6, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_2_7, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_2_8, TEXT_PAGE3
+	ENDING_LINE_PAGE 0, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_2_9, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_2_10, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_2_11, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_2_12, TEXT_PAGE3
+
+ending_B_text_page_2:
+	db 15
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_2_1, TEXT_PAGE3
+	ENDING_LINE_PAGE 0, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_2_2, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_2_3, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_2_4, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_2_5, TEXT_PAGE4
+	ENDING_LINE_PAGE 0, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_2_6, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_2_7, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_2_8, TEXT_PAGE3
+	ENDING_LINE_PAGE 0, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_2_9, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_2_10, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_2_11, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_2_12, TEXT_PAGE3
 
 ending_C_text_page_3:
 	db 1
-	dw TEXT_ENDING_C_PAGE_3_1
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_3_1, TEXT_PAGE3
 
 
 ending_C_enemy_intro_ptr_table:
@@ -1053,6 +1249,8 @@ ending_C_enemy_intro_ptr_table:
 	dw ending_enemy_intro_data15  ; sentinel
 	dw 0  ; sentinel
 
+ending_B_enemy_intro_ptr_table
+ending_B_plus_enemy_intro_ptr_table
 ending_C_plus_enemy_intro_ptr_table:
 	dw ending_enemy_intro_data0  ; snakes
 	dw ending_enemy_intro_data1  ; fish
@@ -1226,7 +1424,7 @@ ending_final_text_scene_sentences_loop:
 					push de
 						ex de, hl
 						ld hl, copy_text_from_another_page
-						ld c, TEXT_PAGE3
+						ld c, (ix + 2)
 						call call_hl_in_page_c_8000
 
 						ld hl, clear_text_rendering_buffer
@@ -1300,6 +1498,7 @@ ending_final_text_scene_sentences_loop_skip:
 			pop bc
 			inc ix  ; next line
 			inc ix
+			inc ix
 			dec b
 			jp nz, ending_final_text_scene_sentences_loop
 
@@ -1307,8 +1506,8 @@ ending_final_text_scene_sentences_loop_skip:
 ending_final_text_scene_wait_loop:
 			push bc
 				call ending_final_text_scene_decoration_update_cycle
-				jp z, ending_final_text_scene_skip_request2
 			pop bc
+			jp z, ending_final_text_scene_skip_request2
 			dec bc
 			ld a, b
 			or c

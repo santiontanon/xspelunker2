@@ -808,6 +808,19 @@ public class Text {
         addLineSafe(lines_with_constant_page4, "Wait, what is that?!", "ENDING_B_UFO_17", 22*4);
         addLineSafe(lines_with_constant_page4, "Nooooooooo.......!!", "ENDING_B_UFO_18", 22*4);
         
+        // Beach scene B:
+        // addLineSafe(lines_with_constant_page3, "A few days later...", "ENDING_C_BEACH_0", 12*4);
+        // addLineSafe(lines_with_constant_page3, "Elaine: See! I told you I'd be a great idea to stay a few more days! Where can you find a beach like this back home?!", "ENDING_C_BEACH_1", 22*6);
+        // addLineSafe(lines_with_constant_page3, "Xavier: I know, I know...", "ENDING_C_BEACH_2", 22*6);
+         addLineSafe(lines_with_constant_page4, "Xavier: btw, did I tell you about the part where I actually went to Mars? I was exploring the ruins of Atlantis when...", "ENDING_B_BEACH_3", 22*6);
+        addLineSafe(lines_with_constant_page4, "Elaine: Michael!!! Stop!!! I have heard that story 3 times! And every time the Mars robots seem to grow a few meters larger!", "ENDING_B_BEACH_4", 22*6);
+        // addLineSafe(lines_with_constant_page3, "Elaine: Can you just admit that I saved your ass at the end when the aliens ambushed you and move on?", "ENDING_C_BEACH_5", 22*6);
+        // addLineSafe(lines_with_constant_page3, "Xavier: ...", "ENDING_C_BEACH_6", 22*6);  // AMBUSH_ELAINE_3
+        // addLineSafe(lines_with_constant_page3, "Elaine: Just relax! Enjoy the vacation! And think about what are we having for dinner today! No more stories about fighting mosters for the day ok?", "ENDING_C_BEACH_7", 22*6);
+        // addLineSafe(lines_with_constant_page3, "Xavier: ... darn it...", "ENDING_C_BEACH_8", 22*6);
+        addLineSafe(lines_with_constant_page4, "Xavier: I know, I know! We did a great job didn't we? But... what if they send a second armada?", "ENDING_B_BEACH_9", 22*6);
+        
+        
         // Ending credits and text, page 1:
         addLineSafe(lines_with_constant_page3, "Ending C: Congratulations! You", "ENDING_C_PAGE_1_1", 20);
         addLineSafe(lines_with_constant_page3, "halted the Alien invasion! For now...", "ENDING_C_PAGE_1_2", 20);
@@ -829,7 +842,25 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "Ending C+: Congratulations! You", "ENDING_C_PLUS_PAGE_1_1", 20);
         addLineSafe(lines_with_constant_page3, "You found and activated the forge", "ENDING_C_PLUS_PAGE_1_7", 20);
         addLineSafe(lines_with_constant_page3, "but have no use for it yet... The", "ENDING_C_PLUS_PAGE_1_8", 20);
+
+        addLineSafe(lines_with_constant_page4, "Ending B: Incredible! You did", "ENDING_B_PAGE_1_1", 20);
+        addLineSafe(lines_with_constant_page4, "not only halt the Alien invasion!", "ENDING_B_PAGE_1_2", 20);
+        addLineSafe(lines_with_constant_page4, "But destroyed their fleet! After", "ENDING_B_PAGE_1_3", 20);
+        addLineSafe(lines_with_constant_page4, "gathering 6 power stones, you", "ENDING_B_PAGE_1_4", 20);
+        addLineSafe(lines_with_constant_page4, "activated the nexus and, before", "ENDING_B_PAGE_1_5", 20);
+        addLineSafe(lines_with_constant_page4, "crumbling, it launched an attack!", "ENDING_B_PAGE_1_6", 20);
+        addLineSafe(lines_with_constant_page4, "on the alien invaders!", "ENDING_B_PAGE_1_7", 20);
+        addLineSafe(lines_with_constant_page4, "You feel great satisfaction,", "ENDING_B_PAGE_1_8", 20);
+        addLineSafe(lines_with_constant_page4, "although something tells you", "ENDING_B_PAGE_1_9", 20);
+        addLineSafe(lines_with_constant_page4, "that, maybe... maybe there was", "ENDING_B_PAGE_1_10", 20);
+        addLineSafe(lines_with_constant_page4, "a bit more you could have done...", "ENDING_B_PAGE_1_11", 20);
+        addLineSafe(lines_with_constant_page4, "The fleet was destroyed, but what", "ENDING_B_PAGE_1_12", 20);
+        addLineSafe(lines_with_constant_page4, "if there was a second fleet coming?", "ENDING_B_PAGE_1_13", 20);
+        addLineSafe(lines_with_constant_page4, "Maybe a bit more attention would", "ENDING_B_PAGE_1_14", 20);
+        addLineSafe(lines_with_constant_page4, "have revealed a bit more about", "ENDING_B_PAGE_1_15", 20);
+        addLineSafe(lines_with_constant_page4, "the nexus and its powers?", "ENDING_B_PAGE_1_16", 20);
         
+        // Ending credits and text, page 2:
         addLineSafe(lines_with_constant_page3, "Thanks for Playing 2XSpelunker!", "ENDING_C_PAGE_2_1", 20);
         //
         addLineSafe(lines_with_constant_page3, "Please try again to reach ending B!", "ENDING_C_PAGE_2_2", 20);
@@ -846,6 +877,12 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "code/gfx/music: Santiago Ontañón", "ENDING_C_PAGE_2_11", 20);
         addLineSafe(lines_with_constant_page3, "betatesting: [TBD]", "ENDING_C_PAGE_2_12", 20);
 
+        addLineSafe(lines_with_constant_page4, "Please try again to reach ending A!", "ENDING_B_PAGE_2_2", 20);
+        addLineSafe(lines_with_constant_page4, "How to get ending A? Well...", "ENDING_B_PAGE_2_3", 20);
+        addLineSafe(lines_with_constant_page4, "Are you sure you have paid enough", "ENDING_B_PAGE_2_4", 20);
+        addLineSafe(lines_with_constant_page4, "attention to everything?.", "ENDING_B_PAGE_2_5", 20);        
+        
+        // Ending credits and text, page 3:
         addLineSafe(lines_with_constant_page3, "Thank you again!", "ENDING_C_PAGE_3_1", 20);
         
 
