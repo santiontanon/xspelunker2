@@ -76,8 +76,8 @@ public class Ending {
             }
         }
         // powerstone attack frame 4 (7x3):
-        for(int i = 6;i<9;i++) {
-            for(int j = 20;j<27;j++) {
+        for(int i = 0;i<3;i++) {
+            for(int j = 32;j<39;j++) {
                 data.add(nametable[j][i]);
             }
         }

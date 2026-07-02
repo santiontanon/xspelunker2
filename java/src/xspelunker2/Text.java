@@ -400,12 +400,12 @@ public class Text {
 //        addLineSafe(lines_with_constant_page3, "Xavier: ...", "AMBUSH_ELAINE_9", 112);
         addLineSafe(lines_with_constant_page3, "Elaine: Ok, then are we ready to activate the calendar stone? More aliens will be coming soon for sure!", "AMBUSH_ELAINE_10", 112);
 
-        addLineSafe(lines_with_constant_page3, "PA-PAT-TZA-JA CHANAL PAKAL", "CALENDAR_ACTIVATED_C_1", 112);
+        addLineSafe(lines_with_constant_page3, "PA-PAT-TZA-JA CHANAL PAKAL", "CALENDAR_ACTIVATED_C_1", 112);  // It was erected heavinly shield
         addLineSafe(lines_with_constant_page3, "Xavier: What happened?! What did we do?!", "CALENDAR_ACTIVATED_C_2", 112);
         addLineSafe(lines_with_constant_page3, "Elaine: Did you hear that voice? It spoke in Maya! I did not fully understand, but it said something about... creating a shield?", "CALENDAR_ACTIVATED_C_3", 112);
         addLineSafe(lines_with_constant_page3, "Elaine: I think this is it! I think the Nexus is creating a shield to prevent the aliens from coming!", "CALENDAR_ACTIVATED_C_4", 112);
         addLineSafe(lines_with_constant_page3, "Xavier: Well, I hope you are right! The calendar seems to have crumbled after that! I am not sure this room is safe anymore, let's get out of here!", "CALENDAR_ACTIVATED_C_5", 112);
-                
+
         addLineSafe(lines_with_constant_page3, "Elaine: We must hurry, I blocked the cave the Aliens were using, but I doubt that'll stop them for very long...", "ELAINE_CALENDAR_1", 112);
         addLineSafe(lines_with_constant_page3, "Elaine: Why did I come? Well, I was of no more use back home anymore!", "ELAINE_CALENDAR_2", 112);
         addLineSafe(lines_with_constant_page3, "Elaine: Btw, dynamite in Palenque is crazy expensive. Almost went broke to get what I used!", "ELAINE_CALENDAR_3", 112);
@@ -787,6 +787,26 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "Elaine: Oh my god, without asking me first?! And what do you want firestones for?!", "ENDING_C_PLUS_BEACH_11", 22*6);
         addLineSafe(lines_with_constant_page3, "Xavier: I was hoping you would have some ideas...", "ENDING_C_PLUS_BEACH_12", 22*6);
         addLineSafe(lines_with_constant_page3, "Elaine: ...", "ENDING_C_PLUS_BEACH_13", 22*6);
+        
+        // Ending B specific part:
+        addLineSafe(lines_with_constant_page4, "PA-PAT-TZA-JA CHANAL PAKAL", "CALENDAR_ACTIVATED_B_1", 112);  // It was erected heavinly shield
+        addLineSafe(lines_with_constant_page4, "BA'ATEL KA'AJAL", "CALENDAR_ACTIVATED_B_1A", 112);  // Fight started
+        // addLineSafe(lines_with_constant_page3, "Xavier: What happened?! What did we do?!", "CALENDAR_ACTIVATED_B_2", 112);
+        addLineSafe(lines_with_constant_page4, "Elaine: Did you hear that voice? It spoke in Maya! I did not fully understand, but it said something about... creating a shield and starting an attack?", "CALENDAR_ACTIVATED_B_3", 112);
+        addLineSafe(lines_with_constant_page4, "Elaine: I think this is it! I think the Nexus is starting a counterattack against the aliens!", "CALENDAR_ACTIVATED_B_4", 112);
+        // addLineSafe(lines_with_constant_page4, "Xavier: Well, I hope you are right! The calendar seems to have crumbled after that! I am not sure this room is safe anymore, let's get out of here!", "CALENDAR_ACTIVATED_B_5", 112);
+        
+        addLineSafe(lines_with_constant_page4, "The specimens have triggered the Nexus. The force field around Earth is starting to form. But that is not all...", "ENDING_B_UFO_8", 22*4);
+        // addLineSafe(lines_with_constant_page4, "By the Black Holes of Orion! It was a mere hunk of stone! How could elite warriors be outwitted by soft-shelled bipeds?", "ENDING_B_UFO_9", 22*4);
+        // addLineSafe(lines_with_constant_page4, "Tactical assessment! What are our contingencies?", "ENDING_B_UFO_10", 22*4);
+        addLineSafe(lines_with_constant_page4, "The nexus seems to be preparing to attack us sir.", "ENDING_B_UFO_11", 22*4);
+        addLineSafe(lines_with_constant_page4, "Attack?! Us?! By the Nebula of Sirius! What do these antenna-less maggots expect to achieve?!", "ENDING_B_UFO_12", 22*4);
+        addLineSafe(lines_with_constant_page4, "The energy readings are off the charts sir. If our sensors are correct, our shields will not resits. I... I... I recommend retreat.", "ENDING_B_UFO_13", 22*4);
+        addLineSafe(lines_with_constant_page4, "Retreat?! I'll have the High Council dissect your larvae for even suggesting this! Get out of my sight and power the shields!", "ENDING_B_UFO_14", 22*6);
+        addLineSafe(lines_with_constant_page4, "But sir! We must retreat before it's too late! I insist!", "ENDING_B_UFO_15", 22*4);
+        addLineSafe(lines_with_constant_page4, "Nonsense!!", "ENDING_B_UFO_16", 22*4);
+        addLineSafe(lines_with_constant_page4, "Wait, what is that?!", "ENDING_B_UFO_17", 22*4);
+        addLineSafe(lines_with_constant_page4, "Nooooooooo.......!!", "ENDING_B_UFO_18", 22*4);
         
         // Ending credits and text, page 1:
         addLineSafe(lines_with_constant_page3, "Ending C: Congratulations! You", "ENDING_C_PAGE_1_1", 20);

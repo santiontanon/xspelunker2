@@ -1,8 +1,6 @@
 to do:
 
 ***- ending B: 
-  ***- alien scene: change dialogue to reflect that the power stone attack
-  ***- alien scene: change the animation to end in UFO destruction (flash to white with a "noooo!")
   ***- beach scene: reflect that alien armada was destroyed and that you hope that will deter them from coming again.
   ***- ending text: bigger congrats, but some reticence as the aliens might try again in the future
 ***- Ending B+:

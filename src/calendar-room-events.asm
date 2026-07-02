@@ -360,11 +360,29 @@ calendar_stone_center_trigger_ending_event_fn:
 	ld c, TEXT_PAGE
 	call call_hl_in_page_c_8000
 
+	ld a, (global_state__n_power_stones_in_calendar)
+	cp 5
+	jr z, calendar_stone_center_trigger_ending_event_fn_C
+
+calendar_stone_center_trigger_ending_event_fn_B:
+	ld de, TEXT_CALENDAR_ACTIVATED_B_1
+	ld hl, display_in_game_message_textpage4
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000
+
+	ld de, TEXT_CALENDAR_ACTIVATED_B_1A
+	ld hl, display_in_game_message_textpage4
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000
+	jr calendar_stone_center_trigger_ending_event_fn_continue
+
+calendar_stone_center_trigger_ending_event_fn_C:
 	ld de, TEXT_CALENDAR_ACTIVATED_C_1
 	ld hl, display_in_game_message_textpage3
 	ld c, TEXT_PAGE
 	call call_hl_in_page_c_8000
 
+calendar_stone_center_trigger_ending_event_fn_continue:
 	ld hl, calendar_stone_center_trigger_ending_event_fn2
 	ld (in_game_event_fn_ptr), hl
 	ld a, CALENDAR_EVENTS_PAGE

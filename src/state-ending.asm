@@ -138,10 +138,147 @@ ending_B:
 ending_B_continue:
     ld sp, stack
 	ld (stats__ending), hl
-	
-	; ...
 
-	ld hl, state_game_over	
+	ld de, TEXT_CALENDAR_ACTIVATED_C_2
+	ld hl, display_in_game_message_textpage3
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000	
+
+	ld de, TEXT_CALENDAR_ACTIVATED_B_3
+	ld hl, display_in_game_message_textpage4
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000	
+
+	ld de, TEXT_CALENDAR_ACTIVATED_B_4
+	ld hl, display_in_game_message_textpage4
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000	
+
+	ld de, TEXT_CALENDAR_ACTIVATED_C_5
+	ld hl, display_in_game_message_textpage3
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000	
+
+	call clear_screen_left_to_right
+
+	call ending_UFO_scene_approach_earth  ; aliens approach Earth, and captain calls for the invasion
+
+	; Custom Ending B part of the UFO scene:	
+	call ending_UFO_scene_minion_interrupts  ; alien minion approaches and tells the captain something is wrong
+
+	ld hl, TEXT_ENDING_B_UFO_8
+	ld b, 32
+	call ending_UFO_scene_minion_talks_page4
+        
+	ld hl, TEXT_ENDING_C_UFO_9
+	ld b, 32
+	call ending_UFO_scene_captain_talks_agitated
+
+	ld hl, TEXT_ENDING_C_UFO_10
+	ld b, 32
+	call ending_UFO_scene_captain_talks
+
+	ld hl, TEXT_ENDING_B_UFO_11
+	ld b, 32
+	call ending_UFO_scene_minion_talks_page4
+        
+	ld hl, TEXT_ENDING_B_UFO_12
+	ld b, 64
+	call ending_UFO_scene_captain_talks_agitated_page4
+
+	ld hl, TEXT_ENDING_B_UFO_13
+	ld b, 32
+	call ending_UFO_scene_minion_talks_page4
+
+	ld hl, TEXT_ENDING_B_UFO_14
+	ld b, 64
+	call ending_UFO_scene_captain_talks_agitated_page4
+
+	ld hl, TEXT_ENDING_B_UFO_15
+	ld b, 32
+	call ending_UFO_scene_minion_talks_page4
+
+	ld hl, TEXT_ENDING_B_UFO_16
+	ld b, 16
+	call ending_UFO_scene_captain_talks_agitated_page4
+
+	ld hl, TEXT_ENDING_B_UFO_17
+	ld b, 16
+	call ending_UFO_scene_captain_talks_page4
+
+	ld hl, TEXT_ENDING_B_UFO_18
+	ld b, 16
+	call ending_UFO_scene_captain_talks_agitated_page4
+
+	; laser animation:
+	ld hl, ending_ufo_nametables + 20*9 + 10*6 + 3*2
+	ld de, NAMTBL2 + (4+3)*32 + 6+4
+	ld bc, #0302
+	call state_ending_copy_nametable
+	ld b, 20
+	call wait_b_halts
+
+	ld hl, ending_ufo_nametables + 20*9 + 10*6 + 3*2 + 2*3
+	ld de, NAMTBL2 + (4+3)*32 + 6+4
+	ld bc, #0302
+	call state_ending_copy_nametable
+	ld b, 20
+	call wait_b_halts
+
+	ld hl, ending_ufo_nametables + 20*9 + 10*6 + 3*2 + 2*3 + 2*3
+	ld de, NAMTBL2 + (4+3)*32 + 6+4
+	ld bc, #0304
+	call state_ending_copy_nametable
+	ld b, 20
+	call wait_b_halts
+
+	ld hl, ending_ufo_nametables + 20*9 + 10*6 + 3*2 + 2*3 + 2*3 + 4*3
+	ld de, NAMTBL2 + (4+3)*32 + 6+4
+	ld bc, #0307
+	call state_ending_copy_nametable
+	ld b, 20
+	call wait_b_halts
+
+	; explosion (all red)
+	ld b, 9
+	ld hl, NAMTBL2 + (4)*32 + 6
+ending_B_explosion_loop:
+	ld a, (ending_ufo_nametables + 20*9 + 10*6 + 3*2 + 2*3 + 2*3 + 4*3 + 18)  ; this is an all red tile
+	push bc
+		push hl
+			ld bc, 20
+			call fast_FILVRM
+		pop hl
+		ld bc, 32
+		add hl, bc
+	pop bc
+	djnz ending_B_explosion_loop
+	call clear_all_the_sprites
+
+	ld b, 100
+	call wait_b_halts_skippable
+
+	call clear_screen_left_to_right
+	call stop_music
+
+; 	call ending_beach_scene_B  ; elaine and michael relax in the beach
+
+	call clear_screen_left_to_right
+	call stop_music
+
+; 	ld ix, ending_B_text_page_ptrs
+; 	ld iy, ending_B_enemy_intro_ptr_table
+; 	ld a, (global_state__objects + TAG_FIRESTONE_FORGE)
+; 	or a
+; 	jr z, ending_B_continue2
+; 	ld ix, ending_B_plus_text_page_ptrs
+; 	ld iy, ending_B_plus_enemy_intro_ptr_table
+; ending_B_continue2:
+; 	ld b, 3  ; # number of pages
+; 	call ending_final_text_scene
+
+ending_B_done:
+	ld hl, state_game_over
 	ld a, GAME_OVER_PAGE
 	jp jp_to_hl_in_page_a_8000
 
@@ -228,7 +365,7 @@ ending_UFO_scene_approach_earth_loop:
 			push de
 				call state_ending_copy_nametable
 			pop hl
-			ld bc, 12 + 32
+			ld bc, 13 + 32
 			add hl, bc
 			ex de, hl
 		pop bc
@@ -249,7 +386,7 @@ ending_UFO_scene_approach_earth_loop_continue:
 		pop bc
 ending_UFO_scene_approach_earth_loop_continue2:
 		ex de, hl
-		ld bc, -(12 + 32 + 32)
+		ld bc, -(13 + 32 + 32)
 		add hl, bc
 		ex de, hl
 
@@ -343,6 +480,22 @@ ending_UFO_scene_minion_interrupts_walk_loop_continue:
 ; input:
 ; - hl: text
 ; - b: speech cycles to wait
+ending_UFO_scene_captain_talks_page4:
+	push bc
+		push hl
+		pop iy
+		ld b, 1  ; first tile to use
+		ld de, NAMTBL2 + 32*16 + 5
+		ld ix, CHRTBL2 + 2*256*8
+		ld a, 24
+		ld (tmp_letter_line_width), a
+		ld a, COLOR_WHITE * 16
+		ld (tmp_letter_line_color), a
+		ld hl, display_paragraph_text_page4
+		ld c, TABLET_LETTER_PAGE
+		call call_hl_in_page_c_8000
+	pop bc
+	jr ending_UFO_scene_captain_talks_loop
 ending_UFO_scene_captain_talks:
 	push bc
 		push hl
@@ -395,6 +548,22 @@ ending_UFO_scene_captain_talks_loop_skip:
 ; input:
 ; - hl: text
 ; - b: speech cycles to wait
+ending_UFO_scene_captain_talks_agitated_page4:
+	push bc
+		push hl
+		pop iy
+		ld b, 1  ; first tile to use
+		ld de, NAMTBL2 + 32*16 + 5
+		ld ix, CHRTBL2 + 2*256*8
+		ld a, 24
+		ld (tmp_letter_line_width), a
+		ld a, COLOR_WHITE * 16
+		ld (tmp_letter_line_color), a
+		ld hl, display_paragraph_text_page4
+		ld c, TABLET_LETTER_PAGE
+		call call_hl_in_page_c_8000
+	pop bc
+	jr ending_UFO_scene_captain_talks_agitated_loop
 ending_UFO_scene_captain_talks_agitated:
 	push bc
 		push hl
@@ -447,6 +616,22 @@ ending_UFO_scene_captain_talks_agitated_loop_skip:
 ; input:
 ; - hl: text
 ; - b: speech cycles to wait
+ending_UFO_scene_minion_talks_page4:
+	push bc
+		push hl
+		pop iy
+		ld b, 1  ; first tile to use
+		ld de, NAMTBL2 + 32*16 + 5
+		ld ix, CHRTBL2 + 2*256*8
+		ld a, 24
+		ld (tmp_letter_line_width), a
+		ld a, COLOR_PURPLE * 16
+		ld (tmp_letter_line_color), a
+		ld hl, display_paragraph_text_page4
+		ld c, TABLET_LETTER_PAGE
+		call call_hl_in_page_c_8000
+	pop bc
+	jr ending_UFO_scene_minion_talks_loop
 ending_UFO_scene_minion_talks:
 	push bc
 		push hl
