@@ -1,13 +1,15 @@
 to do:
 
-***- Ending B+ ending text: bigger congrats, and mention of forge, bit a bit of reticence
+***- change the bullet firing pattern of bosses from random to following a pattern: 
+  ***- define a series of patterns from easier to harder
+  ***- instead of a mask, each boss/difficulty sets which of the patterns it will use
+  ***- in the bullet firing method of bosses, call these methods instead of random (it needs 1 byte of state)
 
 - music: (brain 12, 15, 23, 25 have potential)
   - xibalba
   - atlantis
   - mars
   - moon
-- change the bullet firing pattern of bosses from random to following a pattern: e.g. 8, 8, 32 means wait 8, 8, and 32 frames in between bullets, creating a pattern of 3 successive bullets, and then a gap. Create patterns for easy/medium/hard/hardest, and use those in all bosses instead of random. 
 - 8th boss: after beating the combat against the aliens, you can teleport to their home planet, and fight against their leader.
   - add boss name to the stats for game over screen
   - better ray gun should significantly help
@@ -24,10 +26,6 @@ to do:
 
 - Potential new ideas if I have the energy:
   - second shop (can I reuse 'object_interaction_function_shop_internal'?)
-  - [did I already add any clue for this? remove if I don't use it] special condition for triggering "angry bosses" (they change color). For each one you beat in this hard mode, you get something in the ending, and if you get them all, you get a special mention. The conditions might be things like: certain bit in the random seed to be "11" (so, not all seeds are good), dive into water X times in the same room without doing anything else, etc. Use the "random seed stella" (maybe give a clue about it), currently it displays the bottom 6 bits of the first random seed word, should I make it display a whole 8 bits of it?
-    - add as a special achievement for the gameover screen (at least one angry, and all 8 angry)
-  - The Maya were obsessed with sacrificing blood to their gods (the highest being extracting a beating heart from a person while still alive), then it was often burned so that the smoke will bring it to the gods. Can I add some puzzle/item/riddle about this? (maybe in the stella puzzle above, or maybe some blood meter that accumulates when you receive damage/die/kill-an-enemy and when full, things happen)
-  - item that lets you fight a boss for a second time (the idea was to get both items in boss 4, but not sure if worth it)
   - when you enter a boss room, animation of a door that that closes on you, trapping you inside.
   - go back to the firestone forge after defeating the final alien boss to continue digging into the mystery of why powerstones were so dangerous?
 
