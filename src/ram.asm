@@ -414,6 +414,7 @@ tmp_gamestart_cursor_position2: equ temporary_variables + 1  ; position within t
 tmp_gamestart_starchart_x_offset: equ temporary_variables + 2
 tmp_boss__7_snake_tail_draw_ptr: equ temporary_variables  ; 2 bytes since we want the tail to be drawn on top
 tmp_boss__7_snake1_last_piece_direction: equ temporary_variables + 2  ; direction in which the last piece of the snake points (to draw the head)
+tmp_boss__7_redraw_snake: equ temporary_variables + 3
 
 config_hud_type: ds virtual 1  ; 0: minimal, 1: minimal always visible, 2: full
 config_inventory_key_combo: ds virtual 1  ; 0: down+jump, 1: none

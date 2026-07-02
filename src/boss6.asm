@@ -1117,8 +1117,14 @@ update_boss6_behavior_4:
 	jr z, update_boss6_behavior_4_state_0  ; explosions
 	dec a
 	jp z, update_boss6_behavior_4_state_1  ; wait
+	dec a
+	jp z, update_boss6_behavior_4_state_2  ; done
+	ret
 
 update_boss6_behavior_4_state_2:
+	ld a, 3
+	ld (boss__state), a
+
 	ld de, #1109  ; e, d: x, y coordinates
 	ld b, 5  ; boss number (boss 6)
 	ld hl, boss_spawn_power_stone_b

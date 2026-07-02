@@ -1,22 +1,20 @@
 to do:
 
-***- 7th boss (phase 4)
-***- do not redraw the snake directly in "update_boss7_update_snake", but mark it in a variable. Then draw the snake at the end of the behavior (do this for behavior 3 and 4)
-  ***- eye sprite for second snake in phase 4
-  ***- kill the boss and spawn drops:
-    ***- explosions from head to tail (removing piece by piece) of both snakes at the same time
-    ***- item spawns where the statue was
-    ***- upon picking the item, teleport out
-  ***- add boss name to the stats for game over screen (TEXT_BOSS_MOON_SNAKE)
+***- ending B: 
+  ***- alien scene: draw some frames for beams coming from earth to attack the fleet
+  ***- alien scene: change dialogue to reflect that the power stone also activates destructive capabilities
+  ***- alien scene: change the animatino to end in UFO destruction (flash to white with a "noooo!")
+  ***- beach scene: reflect that alien armada was destroyed and that you hope that will deter them from coming again.
+  ***- ending text: bigger congrats, but some reticence as the aliens might try again in the future
+***- Ending B+:
+  ***- beach scene: mention of the forge again, a bit more positive but not 100%
+  ***- ending text: bigger congrats, and mention of forge, bit a bit of reticence
 
 - music: (brain 12, 15, 23, 25 have potential)
   - xibalba
   - atlantis
   - mars
   - moon
-- ending B: the calendar stone machine also activates its offensive mechanism and destroys the alien armada that was coming. You hope that will deter them from coming again.
-- Ending B+: (got the forge active with the codex, but did not defeat the final alien boss)
-
 - change the bullet firing pattern of bosses from random to following a pattern: e.g. 8, 8, 32 means wait 8, 8, and 32 frames in between bullets, creating a pattern of 3 successive bullets, and then a gap. Create patterns for easy/medium/hard/hardest, and use those in all bosses instead of random. 
 - 8th boss: after beating the combat against the aliens, you can teleport to their home planet, and fight against their leader.
   - add boss name to the stats for game over screen
