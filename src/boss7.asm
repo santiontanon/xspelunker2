@@ -999,7 +999,10 @@ update_boss7_behavior_3_state_1:
 	ld hl, (boss__hp)
 	or a
 	sbc hl, bc
-	jp c, update_boss7_to_behavior_4  ; go to phase 4!
+	jr nc, update_boss7_behavior_3_state_1_continue
+	ld a, (boss__7_snake1_struct + BOSS_7_SNAKE_STRUCT_HEAD_OFFSET)
+	or a
+	jp z, update_boss7_to_behavior_4  ; go to phase 4!
 update_boss7_behavior_3_state_1_continue:
 	jp update_boss7_update_snake
 
@@ -1103,22 +1106,19 @@ update_boss7_behavior_4:
 
 update_boss7_behavior_4_state_1:
 	; boss dead?
-; 	ld hl, (boss__hp)
-; 	ld a, h
-; 	or l
-; 	jr z, update_boss7_to_behavior_5  ; boss dead!
+	ld hl, (boss__hp)
+	ld a, h
+	or l
+	jp z, update_boss7_to_behavior_5  ; boss dead!
 
-; 	ld iy, boss__7_snake1_struct
-; 	call update_boss7_update_snake
-; 	ld iy, boss__7_snake2_struct
-; 	jp update_boss7_update_snake
-	ret
+	ld iy, boss__7_snake1_struct
+	call update_boss7_update_snake
+	ld iy, boss__7_snake2_struct
+	jp update_boss7_update_snake
 
 
 update_boss7_behavior_4_state_0:
 	; transition to phase 4:
-; 	ld b, 25
-; 	call wait_b_halts
 	; split the snake!
 	; 1) compute the position of every piece from tail to head in buffer_4096
 	;    (the position of the middle piece will be where the two new tails will be)
@@ -1169,15 +1169,25 @@ update_boss7_behavior_4_state_0_piece_position_loop_next:
 	jr update_boss7_behavior_4_state_0_piece_position_loop
 update_boss7_behavior_4_state_0_piece_position_loop_done:
 	; get the position of the middle pieces:
-	ld bc, (buffer_4096 + 6*2)  ; where the tial of snake 1 will be
-
 	ld hl, boss__state_timer
 	ld a, (hl)
 	inc (hl)
 	push af
 		and #03
 		jr nz, update_boss7_behavior_4_state_0_piece_no_explosion
-		; spawn an explosion:
+		; spawn explosions:
+		ld bc, (buffer_4096 + 7*2)  ; where the tial of snake 1 will be
+		call random_a
+		and #03
+		add a, c
+		ld c, a
+		call random_a
+		and #03
+		add a, b
+		ld b, a
+		call spawn_explosion
+
+		ld bc, (buffer_4096 + 6*2)  ; where the tial of snake 1 will be
 		call random_a
 		and #03
 		add a, c
@@ -1191,17 +1201,7 @@ update_boss7_behavior_4_state_0_piece_no_explosion
 	pop af
 	cp 64
 	ret nz
-
-	; split snakes:
- 	; - (buffer_4096 + 5*2)  ; where the tail of snake 2 will be
- 	; - (buffer_4096 + 6*2)  ; where the tial of snake 1 will be
-
- 	; create snake 2:
-	; ...
-
-	; create snake 1:
-	; ...
-
+	call update_boss7_behavior_4_state_0_split_snakes
 	ld a, 6
 	ld (boss__settings + BOSS_7_SNAKE_MAX_LENGTH_OFFSET), a
 	xor a
@@ -1209,6 +1209,106 @@ update_boss7_behavior_4_state_0_piece_no_explosion
 	inc a
 	ld (boss__state), a
 	ret
+
+; table reversing the pieces (head turns into tail, etc.)
+update_boss7_behavior_4_state_0_split_snakes_table:
+	db 0  ; (this one cannot happen)
+	db 2  ; tail -> head
+	db 1  ; head -> tail
+	db 6  ; l_u -> u_l
+	db 9  ; l_r -> r_l
+	db 12  ; l_d -> d_l
+	db 3  ; u_l -> l_u
+	db 10  ; u_r -> r_u
+	db 13  ; u_d -> d_u
+	db 4  ; r_l -> l_r
+	db 7  ; r_u -> u_r
+	db 14  ; r_d -> d_r
+	db 5  ; d_l -> l_d
+	db 8  ; d_u -> u_d
+	db 11  ; d_r -> r_d
+
+update_boss7_behavior_4_state_0_split_snakes_direction_table1:
+	db 0, 0, 0  ; first three piece types do not have a fixed direction
+	db PCG_DIRECTION_UP, PCG_DIRECTION_RIGHT, PCG_DIRECTION_DOWN
+	db PCG_DIRECTION_LEFT, PCG_DIRECTION_RIGHT, PCG_DIRECTION_DOWN
+	db PCG_DIRECTION_LEFT, PCG_DIRECTION_UP, PCG_DIRECTION_DOWN
+	db PCG_DIRECTION_LEFT, PCG_DIRECTION_UP, PCG_DIRECTION_RIGHT
+
+update_boss7_behavior_4_state_0_split_snakes_direction_table2:
+	db 0, 0, 0  ; first three piece types do not have a fixed direction
+	db PCG_DIRECTION_LEFT, PCG_DIRECTION_LEFT, PCG_DIRECTION_LEFT
+	db PCG_DIRECTION_UP, PCG_DIRECTION_UP, PCG_DIRECTION_UP
+	db PCG_DIRECTION_RIGHT, PCG_DIRECTION_RIGHT, PCG_DIRECTION_RIGHT
+	db PCG_DIRECTION_DOWN, PCG_DIRECTION_DOWN, PCG_DIRECTION_DOWN
+	
+update_boss7_behavior_4_state_0_split_snakes:
+	; max snake length is 12, plus head and tail, for a total length of 14 pieces + the final #ff
+ 	; - (buffer_4096 + 6*2)  ; where the tail of snake 2 will be
+ 	; - (buffer_4096 + 7*2)  ; where the tial of snake 1 will be
+
+ 	; before we modify snake 1, get the new tail directions:
+ 	ld a, (tile_enemy_work_memory + 7)
+ 	ld hl, update_boss7_behavior_4_state_0_split_snakes_direction_table1
+ 	ADD_HL_A
+ 	ld a, (hl)
+ 	ld (boss__7_snake1_struct + BOSS_7_SNAKE_STRUCT_TAIL_DIRECTION), a
+ 	ld a, (tile_enemy_work_memory + 6)
+ 	ld hl, update_boss7_behavior_4_state_0_split_snakes_direction_table2
+ 	ADD_HL_A
+ 	ld a, (hl)
+ 	ld (boss__7_snake2_struct + BOSS_7_SNAKE_STRUCT_TAIL_DIRECTION), a
+
+ 	; create snake 2:
+ 	ld de, tile_enemy_work_memory  ; first piece that will go to snake 2
+ 	ld ix, tile_enemy_work_memory + 32 + 7
+ 	ld (ix), #ff
+ 	dec ix
+
+ 	ld b, 6
+update_boss7_behavior_4_state_0_split_snakes__loop_snake2:
+ 	ld a, (de)
+ 	inc de
+ 	ld hl, update_boss7_behavior_4_state_0_split_snakes_table
+ 	ADD_HL_A
+ 	ld a, (hl)
+ 	ld (ix), a
+ 	dec ix
+ 	djnz update_boss7_behavior_4_state_0_split_snakes__loop_snake2
+ 	ld (ix), 1  ; first piece is the tail
+ 	ld bc, (buffer_4096 + 6*2)
+ 	ld (boss__x2), bc
+ 	ld a, #ff
+ 	ld (tile_enemy_work_memory + 32 + 16), a
+
+	; create snake 1:
+	ld hl, tile_enemy_work_memory + 7
+	ld de, tile_enemy_work_memory
+	ld bc, 8
+	ldir
+	ld hl, tile_enemy_work_memory
+	ld (hl), 1
+ 	ld bc, (buffer_4096 + 7*2)
+ 	ld (boss__x), bc
+
+	; reset all pertinent variables of each snake:
+ 	ld a, (boss__7_snake1_struct + BOSS_7_SNAKE_STRUCT_MOVEMENT_COUNTER)
+ 	ld (boss__7_snake2_struct + BOSS_7_SNAKE_STRUCT_MOVEMENT_COUNTER), a 	
+ 	xor a
+ 	ld (boss__7_snake2_struct + BOSS_7_SNAKE_STRUCT_HEAD_OFFSET), a
+ 	ld (boss__7_snake2_struct + BOSS_7_SNAKE_STRUCT_MOUTH_OPEN), a
+ 	ld (boss__7_snake1_struct + BOSS_7_SNAKE_STRUCT_TAIL_OFFSET), a
+ 	ld (boss__7_snake2_struct + BOSS_7_SNAKE_STRUCT_TAIL_OFFSET), a
+ 	ld (boss__7_snake1_struct + BOSS_7_SNAKE_STRUCT_STATE_TIMER), a
+ 	ld (boss__7_snake2_struct + BOSS_7_SNAKE_STRUCT_STATE_TIMER), a
+ 	ld hl, tile_enemy_work_memory + 32
+ 	ld (boss__7_snake2_struct + BOSS_7_SNAKE_STRUCT_PIECES_PTR), hl
+ 	ld a, 4  ; start spitting!
+ 	ld (boss__7_snake1_struct + BOSS_7_SNAKE_STRUCT_STATE), a
+ 	ld (boss__7_snake2_struct + BOSS_7_SNAKE_STRUCT_STATE), a
+
+ 	jp update_boss7_draw_phase4_boss_frame
+
 
 update_boss7_behavior_4_state_0_piece_position_loop__tail:
 	ld a, (boss__7_snake1_struct + BOSS_7_SNAKE_STRUCT_TAIL_DIRECTION)
@@ -2241,7 +2341,7 @@ update_boss7_draw_phase2_boss_frame:
 	; in phase 2:
 	; - frame 1 is the statue
 	; - snake is handled in a special way
-
+	ld iy, boss__7_snake1_struct
 	xor a
 	ld (iy + BOSS_7_SNAKE_STRUCT_EYE_SPRITE), a
 	ld (iy + BOSS_7_SNAKE_STRUCT_HEAD_X), a
@@ -2267,21 +2367,66 @@ update_boss7_draw_phase2_boss_frame:
 
 
 ;-----------------------------------------------
+; input:
+; - iy: ptr to the snake to draw
 update_boss7_draw_phase3_boss_frame:
+	; since this method might be called in phase 4:
+	ld a, (boss__behavior)
+	cp 4
+	jr z, update_boss7_draw_phase4_boss_frame
 	; in phase 3:
 	; - frame 1 is the statue
 	; - snake is handled in a special way
-
 	xor a
 	ld (iy + BOSS_7_SNAKE_STRUCT_EYE_SPRITE), a
 	ld (iy + BOSS_7_SNAKE_STRUCT_HEAD_X), a
 	ld (iy + BOSS_7_SNAKE_STRUCT_EYE_X), a
-
 	call update_boss7_undraw_snake
+
 	ld hl, draw_boss_frame_clear_previous_frame_1
 	ld c, BOSS_PAGE
 	call call_hl_in_page_c_8000
 
+	call update_boss7_draw_snake
+
+	; draw statue:
+	ld de, current_room__tile_map + 58 + 19*64
+	ld ix, boss7_statue_frame_3
+	ld c, BOSS_PAGE
+	ld hl, draw_boss_frame_1_without_clearing_ix
+	call call_hl_in_page_c_8000
+
+	ld hl, redraw_flags
+	set ROOM_REDRAW_FLAG_BIT, (hl)	
+	ret
+
+
+update_boss7_draw_phase4_boss_frame:
+	; in phase 4:
+	; - frame 1 is the statue
+	; - we will draw two snakes
+	ld iy, boss__7_snake1_struct
+	xor a
+	ld (iy + BOSS_7_SNAKE_STRUCT_EYE_SPRITE), a
+	ld (iy + BOSS_7_SNAKE_STRUCT_HEAD_X), a
+	ld (iy + BOSS_7_SNAKE_STRUCT_EYE_X), a
+	call update_boss7_undraw_snake
+
+	ld iy, boss__7_snake2_struct
+	xor a
+	ld (iy + BOSS_7_SNAKE_STRUCT_EYE_SPRITE), a
+	ld (iy + BOSS_7_SNAKE_STRUCT_HEAD_X), a
+	ld (iy + BOSS_7_SNAKE_STRUCT_EYE_X), a
+	call update_boss7_undraw_snake
+
+	ld hl, draw_boss_frame_clear_previous_frame_1
+	ld c, BOSS_PAGE
+	call call_hl_in_page_c_8000
+
+	ld iy, boss__7_snake1_struct
+	call update_boss7_draw_snake
+
+	ld iy, boss__7_snake2_struct
 	call update_boss7_draw_snake
 
 	; draw statue:

@@ -1,8 +1,9 @@
 to do:
 
 ***- 7th boss (phase 4)
-  OK - explosions and then split the snake in half to make two snakes (set max_length to 6)
-  ***- from that point on, it's all the same, just that with 2 snakes
+  ***- make both snakes update simultaneously
+  ***- replace tail with proper gfx for phase 4
+  ***- eye sprite for second snake in phase 4
   ***- kill the boss and spawn drops:
     ***- explosions from head to tail (removing piece by piece) of both snakes at the same time
     ***- item spawns where the statue was
