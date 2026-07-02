@@ -1,9 +1,6 @@
 to do:
 
 ***- 7th boss (phase 4)
-  ***- when health is below the threshold and snake is fully out, transition to phase 4
-  ***- when transitioning phases, reset the HP to the value it should be at that phase
-  ***- in the transition, pause the game, move the camera to the mid point between the tail and the point that will break
   ***- explosions and then split the snake in half to make two snakes (set max_length to 6)
   ***- from that point on, it's all the same, just that with 2 snakes
   ***- kill the boss and spawn drops:

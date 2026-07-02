@@ -294,7 +294,7 @@ boss__hit_fn_page: ds virtual 1
 boss__hit_timer: ds virtual 1  ; for displaying "boss hit" animations
 boss__mark_defeated_after_exiting_door: ds virtual 1  ; used to know if we need to close the door of a boss forever after exiting its door
 boss__settings:
-    ds virtual 12  ; difficulty parameters of the boss
+    ds virtual 14  ; difficulty parameters of the boss
 boss__tmp_space: ds virtual 39
 ;
 boss__1_has_staff: equ boss__tmp_space
@@ -349,6 +349,7 @@ boss__6_eye_frame: equ boss__tmp_space
 boss__6_face_turret_frame: equ boss__tmp_space + 1
 ;
 boss__7_target_phase2_position: equ boss__tmp_space  ; (only used in phase 2)
+; all variables concerning a snake are stored here, except for the (x, y), which are in boss__x/y and boss__x2/y2
 boss__7_snake1_struct: equ boss__tmp_space + 1  ; 19 bytes
 boss__7_snake2_struct: equ boss__tmp_space + 1 + BOSS_7_SNAKE_STRUCT_SIZE  ; 19 bytes
 

@@ -91,6 +91,7 @@ update_scroll:
 	or a
 	jr nz, update_scroll_lock
 
+update_scroll_no_lock:
 	ld bc, (room_desired_scroll_x)
 	ld de, (room_scroll_x)
 	ld a, e

@@ -8,12 +8,13 @@ boss7_name_tables_snake:  ; "boss7_name_tables" is in another file (so that it's
 BOSS_7_HP_OFFSET: equ 0
 BOSS_7_HP_PHASE2_OFFSET: equ 2
 BOSS_7_HP_PHASE3_OFFSET: equ 4
-BOSS_7_WAIT_TIME_OFFSET: equ 6
-BOSS_7_EYE_BULLET_ATTACK_MASK_OFFSET: equ 7
-BOSS_7_POISON_ATTACK_MASK_OFFSET: equ 8
-BOSS_7_N_POISON_SPITS_OFFSET: equ 9
-BOSS_7_SNAKE_SPEED_OFFSET: equ 10
-BOSS_7_SNAKE_MAX_LENGTH_OFFSET: equ 11
+BOSS_7_HP_PHASE4_OFFSET: equ 6
+BOSS_7_WAIT_TIME_OFFSET: equ 8
+BOSS_7_EYE_BULLET_ATTACK_MASK_OFFSET: equ 9
+BOSS_7_POISON_ATTACK_MASK_OFFSET: equ 10
+BOSS_7_N_POISON_SPITS_OFFSET: equ 11
+BOSS_7_SNAKE_SPEED_OFFSET: equ 12
+BOSS_7_SNAKE_MAX_LENGTH_OFFSET: equ 13
 
 
 ;-----------------------------------------------
@@ -56,23 +57,23 @@ boss7_phase1_frame_ptrs:
 
 ;-----------------------------------------------
 boss7_difficulty_setting__easy:
-	dw 192, 160, 112  ; boss hp, and threshold for the other phases
+	dw 192, 160, 112, 56  ; boss hp, and threshold for the other phases
 	db 32, #1f, #0f, 2  ; wait time, bullet attack mask, poison attack mask, n spits
 	db 5, 12  ; snake speed, max length (for phase 3)
 
 boss7_difficulty_setting__normal:
-; 	dw 320, 256, 192  ; boss hp, and threshold for the other phases
-	dw 320, 318, 310  ; boss hp, and threshold for the other phases  (DEBUG)
+; 	dw 320, 256, 192, 96  ; boss hp, and threshold for the other phases
+	dw 320, 318, 310, 300  ; boss hp, and threshold for the other phases  (DEBUG)
 	db 32, #0f, #07, 3  ; wait time, bullet attack mask, poison attack mask, n spits
 	db 4, 12  ; snake speed, max length (for phase 3)
 
 boss7_difficulty_setting__hard:
-	dw 416, 336, 256  ; boss hp, and threshold for the other phases
+	dw 416, 336, 256, 128  ; boss hp, and threshold for the other phases
 	db 28, #0f, #07, 4  ; wait time, bullet attack mask, poison attack mask, n spits
 	db 4, 12  ; snake speed, max length (for phase 3)
 
 boss7_difficulty_setting__hardest:
-	dw 512, 416, 320  ; boss hp, and threshold for the other phases
+	dw 512, 416, 320, 160  ; boss hp, and threshold for the other phases
 	db 24, #7f, #03, 4  ; wait time, bullet attack mask, poison attack mask, n spits
 	db 3, 12  ; snake speed, max length (for phase 3)
 
@@ -98,7 +99,9 @@ update_boss7_behavior_continue:
 	jp z, update_boss7_behavior_2  ; phase 2
 	dec a
 	jp z, update_boss7_behavior_3  ; phase 3
-	jp update_boss7_behavior_4  ; death
+	dec a
+	jp z, update_boss7_behavior_4  ; phase 4
+	jp update_boss7_behavior_5  ; death
 
 
 ;-----------------------------------------------
@@ -121,7 +124,7 @@ update_boss7_behavior_init:
 	ld hl, boss7_difficulty_setting__hardest
 update_boss7_behavior_init_continue:
 	ld de, boss__settings
-	ld bc, 12
+	ld bc, 14
 	ldir
 
 	ld a, 55
@@ -565,6 +568,9 @@ update_boss7_to_behavior_2:
 	xor a
 	ld (boss__state), a
 	ld (boss__state_timer), a
+	; reset hp:
+	ld hl, (boss__settings + BOSS_7_HP_PHASE2_OFFSET)
+	ld (boss__hp), hl
 	ret
 update_boss7_behavior_2:
 	ld iy, boss__7_snake1_struct
@@ -969,6 +975,9 @@ update_boss7_to_behavior_3:
 	xor a
 	ld (boss__state), a
 	ld (boss__state_timer), a
+	; reset hp:
+	ld hl, (boss__settings + BOSS_7_HP_PHASE3_OFFSET)
+	ld (boss__hp), hl
 	ret
 update_boss7_behavior_3:
 	ld iy, boss__7_snake1_struct
@@ -976,6 +985,22 @@ update_boss7_behavior_3:
 	ld a, (boss__state)
 	or a
 	jr z, update_boss7_behavior_3_state_0
+
+
+update_boss7_behavior_3_state_1:
+	ld l, (iy + BOSS_7_SNAKE_STRUCT_PIECES_PTR)
+	ld h, (iy + BOSS_7_SNAKE_STRUCT_PIECES_PTR + 1)
+	ld a, (hl)
+	or a
+	jr z, update_boss7_behavior_3_state_1_continue  ; if snake is not fully out, do not go to phase 4
+
+	; snake is fully out, transition to phase 4?
+	ld bc, (boss__settings + BOSS_7_HP_PHASE4_OFFSET)
+	ld hl, (boss__hp)
+	or a
+	sbc hl, bc
+	jp c, update_boss7_to_behavior_4  ; go to phase 4!
+update_boss7_behavior_3_state_1_continue:
 	jp update_boss7_update_snake
 
 update_boss7_behavior_3_state_0:
@@ -1060,17 +1085,68 @@ update_boss7_behavior_3_state_0_to_state_2:
 
 
 ;-----------------------------------------------
-; death:
+; split snake:
+update_boss7_to_behavior_4:
+	ld a, 4
+	ld (boss__behavior), a
+	xor a
+	ld (boss__state), a
+	ld (boss__state_timer), a
+	; reset hp:
+	ld hl, (boss__settings + BOSS_7_HP_PHASE4_OFFSET)
+	ld (boss__hp), hl
+	ret
 update_boss7_behavior_4:
-	ld iy, boss__7_snake1_struct
+	ld a, (boss__state)
+	or a
+	jr z, update_boss7_behavior_4_state_0
 
-	; states:
+update_boss7_behavior_4_state_1:
+	; boss dead?
+; 	ld hl, (boss__hp)
+; 	ld a, h
+; 	or l
+; 	jr z, update_boss7_to_behavior_5  ; boss dead!
+
+; 	ld iy, boss__7_snake1_struct
+; 	call update_boss7_update_snake
+; 	ld iy, boss__7_snake2_struct
+; 	jp update_boss7_update_snake
+	ret
+
+
+update_boss7_behavior_4_state_0:
+	; transition to phase 4:
+	ld b, 25
+	call wait_b_halts
+
+	; split the snake!
+	; compute the position of the two new tails:
 	; ...
-; 	ld a, (boss__state)
-; 	or a
-; 	jr z, update_boss7_behavior_4_state_0
-; 	dec a
-; 	jp z, update_boss7_behavior_4_state_1
+
+	; explosions:
+	; ...
+
+	; regenerate the snakes:
+	; ...
+
+	xor a
+	ld (boss__state_timer), a
+	inc a
+	ld (boss__state), a
+	ret
+
+
+;-----------------------------------------------
+; death
+update_boss7_to_behavior_5:
+	ld a, 5
+	ld (boss__behavior), a
+	xor a
+	ld (boss__state), a
+	ld (boss__state_timer), a
+	ret
+update_boss7_behavior_5:
 	; ...
 	ret
 
@@ -2124,7 +2200,15 @@ update_boss7_draw_snake:
 	ld a, (iy + BOSS_7_SNAKE_STRUCT_TAIL_DIRECTION)
 	ld (iy + BOSS_7_SNAKE_STRUCT_TAIL_DIRECTION_UNDRAW), a
 
+	ld a, iyl
+	cp boss__7_snake1_struct % 256
+	jr nz, update_boss7_draw_snake2
+update_boss7_draw_snake1:
 	ld bc, (boss__x)
+	jr update_boss7_draw_snake_coordinates_set
+update_boss7_draw_snake2:
+	ld bc, (boss__x2)
+update_boss7_draw_snake_coordinates_set:
 	call get_room_tile_ptr
 	ex de, hl  ; de = ptr where the snake is to be drawn
 	ld (iy + BOSS_7_SNAKE_STRUCT_UNDRAW_PTR), e
