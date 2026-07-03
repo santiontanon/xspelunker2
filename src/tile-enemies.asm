@@ -1035,7 +1035,7 @@ room_render_tile_objects_undraw_enemy_lava_generator_internal_loop_y:
 	add hl, bc
 	dec iyl
 	jr nz, room_render_tile_objects_undraw_enemy_lava_generator_internal_loop_y
-	jp room_undraw_tile_objects_loop_continue
+	ret
 
 
 ;-----------------------------------------------

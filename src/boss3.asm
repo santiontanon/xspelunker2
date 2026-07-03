@@ -24,7 +24,7 @@ BOSS_3_DASH_TIME_MASK_OFFSET: equ 6
 BOSS_3_STOMP_TIME_OFFSET: equ 7
 BOSS_3_N_DEBRIS_OFFSET: equ 8
 BOSS_3_HEAD_TIME_MASK_OFFSET: equ 9
-BOSS_3_BULLET_MASK_OFFSET: equ 10
+BOSS_3_BULLET_ATTACK_PATTERN_OFFSET: equ 10
 
 BOSS_3_MIN_X: equ 1
 
@@ -34,25 +34,25 @@ boss3_difficulty_setting__easy:
 	dw 24  ; boss hp
 	db 32, 16, #0f  ; wait, walk, walk-time-mask
 	db 8, #07, 48, 1  ; dash, dash-time-mask, stomp, # debris
-	db #03, #1f  ; head-time-mask, bullet-time-mask
+	db #03, BOSS_BULLET_PATTERN_EASY1  ; head-time-mask, bullet-time-mask
 
 boss3_difficulty_setting__normal:
 	dw 32  ; boss hp
 	db 32, 16, #0f  ; wait, walk, walk-time-mask
 	db 4, #03, 32, 2  ; dash, dash-time-mask, stomp, # debris
-	db #03, #1f  ; head-time-mask, bullet-time-mask
+	db #03, BOSS_BULLET_PATTERN_MEDIUM1  ; head-time-mask, bullet-time-mask
 
 boss3_difficulty_setting__hard:
 	dw 48  ; boss hp
 	db 28, 16, #0f  ; wait, walk, walk-time-mask
 	db 4, #03, 28, 3  ; dash, dash-time-mask, stomp, # debris
-	db #03, #0f  ; head-time-mask, bullet-time-mask
+	db #03, BOSS_BULLET_PATTERN_HARD1  ; head-time-mask, bullet-time-mask
 
 boss3_difficulty_setting__hardest:
 	dw 64  ; boss hp
 	db 24, 8, #07  ; wait, walk, walk-time-mask
 	db 4, #03, 24, 4  ; dash, dash-time-mask, stomp, # debris
-	db #03, #0f  ; head-time-mask, bullet-time-mask
+	db #03, BOSS_BULLET_PATTERN_HARDEST1  ; head-time-mask, bullet-time-mask
 
 ; boss3_difficulty_setting__angry:
 ; 	dw 80  ; boss hp
@@ -850,10 +850,8 @@ update_boss3_head_behavior_state_0_done:
 	ret
 
 update_boss3_head_behavior_state_1:
-	ld a, (boss__settings + BOSS_3_BULLET_MASK_OFFSET)
-	ld c, a
-	ld a, (boss__3_head_state_timer)
-	and c
+	ld a, (boss__settings + BOSS_3_BULLET_ATTACK_PATTERN_OFFSET)
+	call boss_bullet_pattern_cycle
 	call z, update_boss3_fire_head_bullet
 
 	ld a, (boss__settings + BOSS_3_HEAD_TIME_MASK_OFFSET)
@@ -895,10 +893,8 @@ update_boss3_head_behavior_state_1_stomp:
 	ret
 
 update_boss3_head_behavior_state_2:
-	ld a, (boss__settings + BOSS_3_BULLET_MASK_OFFSET)
-	ld c, a
-	ld a, (boss__3_head_state_timer)
-	and c
+	ld a, (boss__settings + BOSS_3_BULLET_ATTACK_PATTERN_OFFSET)
+	call boss_bullet_pattern_cycle
 	call z, update_boss3_fire_head_bullet
 
 	ld a, (boss__settings + BOSS_3_HEAD_TIME_MASK_OFFSET)
@@ -1087,7 +1083,14 @@ player_weapon_hitbox_check_boss__boss3_hit:
 	cp 4 * 16 + 12  ; first non head tile
 	jp c, player_weapon_hitbox_check_boss__lose_hp  ; hit the head
 	ld hl, SFX_shield
-	jp play_SFX_with_high_priority
+	call play_SFX_with_high_priority
+	xor a
+	ld (player_weapon_hitbox_check_result), a  ; mark a hit
+	ld a, (boss__last_collision_id2)
+	ld (boss__last_collision_id1), a
+	ld a, iyl
+	ld (boss__last_collision_id2), a
+	ret
 
 
 ;-----------------------------------------------

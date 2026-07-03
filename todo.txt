@@ -1,11 +1,6 @@
 to do:
 
-***- change the bullet firing pattern of bosses from random to following a pattern: 
-  ***- instead of a mask, each boss/difficulty sets which of the patterns it will use:
-    ***- boss 1
-    ***- boss 2
-    ***- boss 3
-    ***- boss 4
+***- BUG: boss 2 messed up gfx when facing right
 ***- update the list of enemy types to include aliens + alien UFOs (for all endings)
 
 - music: (brain 12, 15, 23, 25 have potential)

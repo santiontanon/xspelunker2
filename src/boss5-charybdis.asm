@@ -1295,7 +1295,7 @@ update_boss5_draw_charybdis_no_flying_claws:
 
 ;-----------------------------------------------
 update_boss5_charybdis_maybe_fire_eye_bullet:
-	ld a, (boss__settings + BOSS_6_EYE_BULLET_ATTACK_PATTERN_OFFSET)
+	ld a, (boss__settings + BOSS_5_CHARYBDIS_BULLET_ATTACK_PATTERN_OFFSET)
 	call boss_bullet_pattern_cycle
 	ret nz
 	ld bc, (boss__x)

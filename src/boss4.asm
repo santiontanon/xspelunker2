@@ -11,20 +11,20 @@ BOSS_4_BARRAGE_TIME: equ 9
 BOSS_4_BARRAGE_ATTACK_WAIT_TIME: equ 10
 
 boss4_difficulty_setting__easy:
-	dw 128  ; boss hp
+	dw 192  ; boss hp
 	db #3e, 75, 40, #07, #0f  ; mouth timer mask, wait, attack wait, stomp mask, move speed
 	db 2, 1, 64, 20  ; max enemies, enemies hp, barrage time
 boss4_difficulty_setting__normal:
-	dw 192  ; boss hp
+	dw 256  ; boss hp
 ; 	dw 8  ; boss hp (DEBUG)
 	db #1e, 60, 32, #03, #07  ; mouth timer mask, wait, attack wait, stomp mask, move speed
 	db 3, 1, 80, 16
 boss4_difficulty_setting__hard:
-	dw 256  ; boss hp
+	dw 320  ; boss hp
 	db #0e, 50, 28, #03, #07 ; mouth timer mask, wait, attack wait, stomp mask, move speed
 	db 4, 2, 96, 14
 boss4_difficulty_setting__hardest:
-	dw 320  ; boss hp
+	dw 384  ; boss hp
 	db #0e, 40, 24, #01, #07  ; mouth timer mask, wait, attack wait, stomp mask, move speed
 	db 5, 3, 96, 12
 
