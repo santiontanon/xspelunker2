@@ -1,9 +1,13 @@
 to do:
 
 ***- change the bullet firing pattern of bosses from random to following a pattern: 
-  ***- define a series of patterns from easier to harder
-  ***- instead of a mask, each boss/difficulty sets which of the patterns it will use
-  ***- in the bullet firing method of bosses, call these methods instead of random (it needs 1 byte of state)
+  ***- instead of a mask, each boss/difficulty sets which of the patterns it will use:
+    ***- boss 1
+    ***- boss 2
+    ***- boss 3
+    ***- boss 4
+    ***- boss 5
+    ***- boss 6
 
 - music: (brain 12, 15, 23, 25 have potential)
   - xibalba

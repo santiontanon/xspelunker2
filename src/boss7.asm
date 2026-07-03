@@ -10,7 +10,7 @@ BOSS_7_HP_PHASE2_OFFSET: equ 2
 BOSS_7_HP_PHASE3_OFFSET: equ 4
 BOSS_7_HP_PHASE4_OFFSET: equ 6
 BOSS_7_WAIT_TIME_OFFSET: equ 8
-BOSS_7_EYE_BULLET_ATTACK_MASK_OFFSET: equ 9
+BOSS_7_EYE_BULLET_ATTACK_PATTERN_OFFSET: equ 9
 BOSS_7_POISON_ATTACK_MASK_OFFSET: equ 10
 BOSS_7_N_POISON_SPITS_OFFSET: equ 11
 BOSS_7_SNAKE_SPEED_OFFSET: equ 12
@@ -58,23 +58,24 @@ boss7_phase1_frame_ptrs:
 ;-----------------------------------------------
 boss7_difficulty_setting__easy:
 	dw 192, 160, 112, 56  ; boss hp, and threshold for the other phases
-	db 32, #1f, #0f, 2  ; wait time, bullet attack mask, poison attack mask, n spits
+	db 32, BOSS_BULLET_PATTERN_EASY2, #0f, 2  ; wait time, bullet attack pattern, poison attack mask, n spits
 	db 5, 12  ; snake speed, max length (for phase 3)
 
 boss7_difficulty_setting__normal:
 	dw 320, 256, 192, 96  ; boss hp, and threshold for the other phases
 ; 	dw 40, 30, 20, 10  ; boss hp, and threshold for the other phases  (DEBUG)
-	db 32, #0f, #0f, 3  ; wait time, bullet attack mask, poison attack mask, n spits
+	db 32, BOSS_BULLET_PATTERN_MEDIUM2, #0f, 3  ; wait time, bullet attack pattern, poison attack mask, n spits
+; 	db 32, BOSS_BULLET_PATTERN_HARDEST2, #0f, 3  ; wait time, bullet attack pattern, poison attack mask, n spits
 	db 4, 12  ; snake speed, max length (for phase 3)
 
 boss7_difficulty_setting__hard:
 	dw 416, 336, 256, 128  ; boss hp, and threshold for the other phases
-	db 28, #0f, #0f, 4  ; wait time, bullet attack mask, poison attack mask, n spits
+	db 28, BOSS_BULLET_PATTERN_HARD2, #0f, 4  ; wait time, bullet attack pattern, poison attack mask, n spits
 	db 4, 12  ; snake speed, max length (for phase 3)
 
 boss7_difficulty_setting__hardest:
 	dw 512, 416, 320, 160  ; boss hp, and threshold for the other phases
-	db 24, #7f, #07, 4  ; wait time, bullet attack mask, poison attack mask, n spits
+	db 24, BOSS_BULLET_PATTERN_HARDEST2, #07, 4  ; wait time, bullet attack pattern, poison attack mask, n spits
 	db 3, 12  ; snake speed, max length (for phase 3)
 
 
@@ -495,10 +496,8 @@ update_boss7_behavior_1_state_4:
 
 update_boss7_behavior_1_maybe_fire_bullet:
 	; fire bullets through eyes
-	ld a, (boss__settings + BOSS_7_EYE_BULLET_ATTACK_MASK_OFFSET)
-	ld c, a
-	call random_a
-	and c
+	ld a, (boss__settings + BOSS_7_EYE_BULLET_ATTACK_PATTERN_OFFSET)
+	call boss_bullet_pattern_cycle
 	ret nz
 	ld hl, #0201
 	ld bc, (boss__x2)
@@ -942,10 +941,8 @@ update_boss7_behavior_2_state_4_continue_done:
 update_boss7_behavior_3_maybe_fire_bullet:
 update_boss7_behavior_2_maybe_fire_bullet:
 	; fire bullets through eyes
-	ld a, (boss__settings + BOSS_7_EYE_BULLET_ATTACK_MASK_OFFSET)
-	ld c, a
-	call random_a
-	and c
+	ld a, (boss__settings + BOSS_7_EYE_BULLET_ATTACK_PATTERN_OFFSET)
+	call boss_bullet_pattern_cycle
 	ret nz
 
 	; coordinates of eyes:

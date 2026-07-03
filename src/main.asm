@@ -361,6 +361,9 @@ draw_sentence_to_vdp_from_another_page:
 
     include "state-play.asm"
 
+    ; boss utility (here, so it can easily be used by all boasses)
+    include "boss-bullet-patterns.asm"
+
 end_of_code:
 
 

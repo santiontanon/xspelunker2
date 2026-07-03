@@ -293,6 +293,7 @@ boss__hit_fn: ds virtual 2  ; when the player hits a tile with collision type '9
 boss__hit_fn_page: ds virtual 1
 boss__hit_timer: ds virtual 1  ; for displaying "boss hit" animations
 boss__mark_defeated_after_exiting_door: ds virtual 1  ; used to know if we need to close the door of a boss forever after exiting its door
+boss__bullet_pattern_state: ds virtual 1
 boss__settings:
     ds virtual 14  ; difficulty parameters of the boss
 boss__tmp_space: ds virtual 39
