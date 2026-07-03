@@ -1,6 +1,5 @@
 to do:
 
-***- BUG: boss 2 messed up gfx when facing right
 ***- update the list of enemy types to include aliens + alien UFOs (for all endings)
 
 - music: (brain 12, 15, 23, 25 have potential)

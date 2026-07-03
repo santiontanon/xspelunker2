@@ -804,7 +804,7 @@ draw_boss_frame_loop:
 			ld a, c
 		    rlca
 		    sbc a
-		    ld  b, a	
+		    ld b, a	
 			ex de, hl
 				add hl, bc  ; add x offset
 			ex de, hl
@@ -888,7 +888,7 @@ draw_boss_frame_flipped_loop:
 			ld a, c
 		    rlca
 		    sbc a
-		    ld  b, a	
+		    ld b, a	
 			ex de, hl
 				add hl, bc  ; add x offset
 			ex de, hl

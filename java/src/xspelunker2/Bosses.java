@@ -1126,7 +1126,7 @@ public class Bosses {
                             tile.add(color);
                         }
                     }
-
+                    
                     int found = -1;
                     for(int tileIndex = 0;tileIndex<tiles.size();tileIndex++) {
                         List<Integer> tile2 = tiles.get(tileIndex);
@@ -1224,29 +1224,31 @@ public class Bosses {
         
         for(int tileID:tileIndexesToAdd) {
             List<Integer> tile2 = tiles.get(tileID);
-            // first check if the tile already exists:
-//            System.out.println("Checking if " + tileID + " is already there...");
-            boolean alreadyThere = false;
-            for(int i = 0;i<16;i++) {
-                for(int j = 0;j<16;j++) {
-                    List<Integer> tile = new ArrayList<>();
-                    for(int ii = 0;ii<8;ii++) {
-                        for(int jj = 0;jj<8;jj++) {
-                            int color = ConvertPatternsToAssembler.findMSXColor(j*8+jj, i*8+ii, baseImage, 0);
-                            if (color == -1) throw new Exception("Unknown color at " + (j*8+jj) + ", " + (i*8+ii));
-                            tile.add(color);
+            if (!flipTiles) {
+                // first check if the tile already exists:
+//                System.out.println("Checking if " + tileID + " is already there...");
+                boolean alreadyThere = false;
+                for(int i = 0;i<16;i++) {
+                    for(int j = 0;j<16;j++) {
+                        List<Integer> tile = new ArrayList<>();
+                        for(int ii = 0;ii<8;ii++) {
+                            for(int jj = 0;jj<8;jj++) {
+                                int color = ConvertPatternsToAssembler.findMSXColor(j*8+jj, i*8+ii, baseImage, 0);
+                                if (color == -1) throw new Exception("Unknown color at " + (j*8+jj) + ", " + (i*8+ii));
+                                tile.add(color);
+                            }
+                        }
+                        if (tilesMatch(tile, tile2)) {
+                            map.put(tileID, j + i*16);
+    //                        System.out.println("    already there!!!!");
+                            alreadyThere = true;
+                            break;
                         }
                     }
-                    if (tilesMatch(tile, tile2)) {
-                        map.put(tileID, j + i*16);
-//                        System.out.println("    already there!!!!");
-                        alreadyThere = true;
-                        break;
-                    }
+                    if (alreadyThere) break;
                 }
-                if (alreadyThere) break;
+                if (alreadyThere) continue;
             }
-            if (alreadyThere) continue;
             int found = -1;
             for(int i = 3;i<16;i++) {
                 for(int j = 0;j<16;j++) {
