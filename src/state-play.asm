@@ -195,7 +195,7 @@ state_play_from_continue:
 
 		; generate area:
 		ld hl, pcg_generate_area
-		ld e, 0  ; area to generate
+; 		ld e, 0  ; area to generate
 ; 		ld e, 1  ; area to generate
 ; 		ld e, 2  ; area to generate
 ; 		ld e, 3  ; area to generate
@@ -203,9 +203,9 @@ state_play_from_continue:
 ; 		ld e, 6  ; area to generate
 ; 		ld e, 7  ; area to generate
 ; 		ld e, 8  ; xibalba
-; 		ld e, 9  ; atlantis
+		ld e, 9  ; atlantis
 ; 		ld e, 10  ; mars
-		ld e, 11  ; moon
+; 		ld e, 11  ; moon
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
 
@@ -219,10 +219,10 @@ state_play_from_continue:
 ; 		ld e, 10
 ; 		ld e, 3  ; <- third boss
 ; 		ld e, 17  ; <- fourth boss
-		ld e, 0
+; 		ld e, 0
 ; 		ld e, EIGHT_BRIDGE_ROOM_ID
 ; 		ld e, TELEPORTER_ROOM_ID
-; 		ld e, TEMPLE_OF_POSEIDON_ID
+		ld e, TEMPLE_OF_POSEIDON_ID
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000

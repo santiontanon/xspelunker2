@@ -1537,7 +1537,12 @@ object_interaction_function_pickup_map_piece:
 ; 	ld (hl), 1
 
 	ld de, TEXT_MAP_PIECE_PICKUP
-	jr object_interaction_function_pickup_map_piece_continue
+	ld hl, display_in_game_message
+	ld c, TEXT_PAGE
+	push ix
+		call call_hl_in_page_c_8000
+	pop ix
+	jp object_interaction_function_pickup_heart_continue
 
 
 ;-----------------------------------------------

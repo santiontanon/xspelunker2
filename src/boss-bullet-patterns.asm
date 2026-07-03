@@ -27,14 +27,14 @@ boss_bullet_pattern_easy2:
 	db 6, 0, 14, 28,  56, 70, 84, 112
 
 boss_bullet_pattern_normal1:
-	db 3, 0, 10, 20, 30, 60
+	db 4, 0, 10, 20, 30, 60
 boss_bullet_pattern_normal2:
-	db 8, 0, 8, 16, 24,  48, 56, 64, 72, 104
+	db 8, 0, 8, 16, 24,  40, 48, 56, 64, 96
 
 boss_bullet_pattern_hard1:
-	db 4, 0, 8, 16, 24, 56
+	db 4, 0, 8, 16, 24, 48
 boss_bullet_pattern_hard2:
-	db 8, 0, 6, 12, 18,  36, 42, 48, 54, 80
+	db 8, 0, 6, 12, 18,  36, 42, 48, 54,  78
 
 boss_bullet_pattern_hardest1:
 	db 5, 0, 6, 12, 18, 24,  48

@@ -1,24 +1,24 @@
 boss5_charybdis_difficulty_setting__easy:
-	db 32, 16  ; boss hp, vat hp
+	db 48, 24  ; boss hp, vat hp
 	db 64, #0f, #3f, 32, 16  ; idle time, walk mask, bullet-time-mask, attack-delay, claw-attack-speed
 	db #03  ; flying claw speed mask
 boss5_charybdis_difficulty_setting__normal:
-	db 48, 16  ; boss hp, vat hp
+	db 64, 32  ; boss hp, vat hp
 	db 64, #07, #1f, 28, 14  ; idle time, walk mask, bullet-time-mask, attack-delay
 	db #01  ; flying claw speed mask
 boss5_charybdis_difficulty_setting__hard:
-	db 64, 24  ; boss hp, vat hp
+	db 80, 40  ; boss hp, vat hp
 	db 64, #07, #0f, 24, 12  ; idle time, walk mask, bullet-time-mask, attack-delay
 	db #01  ; flying claw speed mask
 boss5_charybdis_difficulty_setting__hardest:
-	db 80, 32  ; boss hp, vat hp
+	db 96, 48  ; boss hp, vat hp
 	db 64, #03, #0f, 20, 10  ; idle time, walk mask, bullet-time-mask, attack-delay
 	db #00  ; flying claw speed mask
 
 BOSS_5_CHARYBDIS_HP_OFFSET: equ 0
 BOSS_5_CHARYBDIS_IDLE_TIME_OFFSET: equ 2
 BOSS_5_CHARYBDIS_WALK_MASK: equ 3
-BOSS_5_CHARYBDIS_BULLET_TIME_MASK: equ 4
+BOSS_5_CHARYBDIS_BULLET_ATTACK_PATTERN_OFFSET: equ 4
 BOSS_5_CHARYBDIS_ATTACK_DELAY: equ 5
 BOSS_5_CHARYBDIS_CLAW_ATTACK_SPEED: equ 6
 BOSS_5_CHARYBDIS_FLYING_CLAW_SPEED_MASK: equ 7
@@ -356,7 +356,7 @@ update_boss5_behavior_1_state_7_done:
 	call update_boss5_draw_charybdis
 	ld a, (boss__5_top_state)
 	cp 3  ; vat
-	ret nz
+	ret c
 	; if the boss is showing the "vat", switch to behavior 2
 	dec a
 	ld (boss__behavior), a
@@ -1295,10 +1295,8 @@ update_boss5_draw_charybdis_no_flying_claws:
 
 ;-----------------------------------------------
 update_boss5_charybdis_maybe_fire_eye_bullet:
-	ld a, (boss__settings + BOSS_5_CHARYBDIS_BULLET_TIME_MASK)
-	ld c, a
-	call random_a
-	and c
+	ld a, (boss__settings + BOSS_6_EYE_BULLET_ATTACK_PATTERN_OFFSET)
+	call boss_bullet_pattern_cycle
 	ret nz
 	ld bc, (boss__x)
 	inc b

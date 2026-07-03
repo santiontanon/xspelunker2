@@ -9,27 +9,27 @@ BOSS_5_SCYLLA_THREAD_R_HINGE: equ 212
 
 ;-----------------------------------------------
 boss5_scylla_difficulty_setting__easy:
-	db 32, 16, 32  ; boss hp, vat hp, tentacle hp
-	db 64, #0f, #3f, 32  ; idle time, swim speed mask, bullet-time-mask
+	db 48, 24, 40  ; boss hp, vat hp, tentacle hp
+	db 64, #0f, BOSS_BULLET_PATTERN_EASY1, 32  ; idle time, swim speed mask, bullet pattern
 	db #03, #03  ; bubble firing mask, dettached arm attack mask
 boss5_scylla_difficulty_setting__normal:
-	db 48, 16, 48  ; boss hp, vat hp, tentacle hp
-	db 64, #07, #1f, 28  ; idle time, swim speed mask, bullet-time-mask
+	db 64, 32, 64  ; boss hp, vat hp, tentacle hp
+	db 64, #07, BOSS_BULLET_PATTERN_MEDIUM1, 28  ; idle time, swim speed mask, bullet pattern
 	db #01, #01  ; bubble firing mask, dettached arm attack mask
 boss5_scylla_difficulty_setting__hard:
-	db 64, 24, 64  ; boss hp, vat hp, tentacle hp
-	db 64, #07, #0f, 24  ; idle time, swim speed mask, bullet-time-mask
+	db 80, 40, 80  ; boss hp, vat hp, tentacle hp
+	db 64, #07, BOSS_BULLET_PATTERN_HARD1, 24  ; idle time, swim speed mask, bullet pattern
 	db #01, #01  ; bubble firing mask, dettached arm attack mask
 boss5_scylla_difficulty_setting__hardest:
-	db 80, 32, 80  ; boss hp, vat hp, tentacle hp
-	db 64, #03, #0f, 20  ; idle time, swim speed mask, bullet-time-mask
+	db 96, 48, 96  ; boss hp, vat hp, tentacle hp
+	db 64, #03, BOSS_BULLET_PATTERN_HARDEST1, 20  ; idle time, swim speed mask, bullet pattern
 	db #01, #00  ; bubble firing mask, dettached arm attack mask
 
 BOSS_5_SCYLLA_HP_OFFSET: equ 0
 BOSS_5_SCYLLA_TENTACLE_HP_OFFSET: equ 2
 BOSS_5_SCYLLA_IDLE_TIME_OFFSET: equ 3
 BOSS_5_SCYLLA_SWIM_MASK: equ 4
-BOSS_5_SCYLLA_BULLET_TIME_MASK: equ 5
+BOSS_5_SCYLLA_BULLET_ATTACK_PATTERN_OFFSET: equ 5
 BOSS_5_SCYLLA_ATTACK_DELAY: equ 6
 BOSS_5_SCYLLA_BUBBLE_MASK: equ 7
 BOSS_5_SCYLLA_DETTACHED_SPEED_MASK: equ 8
@@ -345,7 +345,7 @@ update_boss5_behavior_4_state_7_done:
 	call update_boss5_draw_scylla
 	ld a, (boss__5_top_state)
 	cp 3  ; vat
-	ret nz
+	ret c
 	; if the boss is showing the "vat", switch to behavior 5
 	ld a, 5
 	ld (boss__behavior), a
@@ -1101,10 +1101,8 @@ update_boss5_scylla_maybe_fire_eye_bullet:
 	ld a, (boss__5_scylla_body_state)
 	cp 1
 	ret z  ; no firing when eyes are closed
-	ld a, (boss__settings + BOSS_5_SCYLLA_BULLET_TIME_MASK)
-	ld c, a
-	call random_a
-	and c
+	ld a, (boss__settings + BOSS_5_SCYLLA_BULLET_ATTACK_PATTERN_OFFSET)
+	call boss_bullet_pattern_cycle
 	ret nz
 	ld bc, (boss__x)
 	inc b
@@ -1867,8 +1865,11 @@ player_weapon_hitbox_check_boss__boss5_scylla_hit__left_tentacle_hit:
 	ld a, (hl)
 	or a
 	jp z, player_weapon_hitbox_check_boss__boss5_hit_shield  ; arm already destroyed
-	dec (hl)
-	ld a, (hl)
+	sub iyh
+	jr nc, player_weapon_hitbox_check_boss__boss5_scylla_hit__left_tentacle_hit_continue
+	xor a
+player_weapon_hitbox_check_boss__boss5_scylla_hit__left_tentacle_hit_continue:
+	ld (hl), a
 	or a
 	jr nz, player_weapon_hitbox_check_boss__boss5_scylla_hit__left_tentacle_hit_entry_point
 	; arm destroyed!
@@ -1899,8 +1900,11 @@ player_weapon_hitbox_check_boss__boss5_scylla_hit__right_tentacle_hit:
 	ld a, (hl)
 	or a
 	jp z, player_weapon_hitbox_check_boss__boss5_hit_shield  ; arm already destroyed
-	dec (hl)
-	ld a, (hl)
+	sub iyh
+	jr nc, player_weapon_hitbox_check_boss__boss5_scylla_hit__right_tentacle_hit_continue
+	xor a
+player_weapon_hitbox_check_boss__boss5_scylla_hit__right_tentacle_hit_continue:
+	ld (hl), a
 	or a
 	jr nz, player_weapon_hitbox_check_boss__boss5_scylla_hit__left_tentacle_hit_entry_point
 	; arm destroyed!
@@ -1922,8 +1926,11 @@ player_weapon_hitbox_check_boss__boss5_scylla_hit__front_tentacle_hit:
 	ld a, (hl)
 	or a
 	jp z, player_weapon_hitbox_check_boss__boss5_hit_shield  ; arm already destroyed
-	dec (hl)
-	ld a, (hl)
+	sub iyh
+	jr nc, player_weapon_hitbox_check_boss__boss5_scylla_hit__front_tentacle_hit_continue
+	xor a
+player_weapon_hitbox_check_boss__boss5_scylla_hit__front_tentacle_hit_continue:
+	ld (hl), a
 	or a
 	jr nz, player_weapon_hitbox_check_boss__boss5_scylla_hit__left_tentacle_hit_entry_point
 	; arm destroyed!

@@ -6,8 +6,7 @@ to do:
     ***- boss 2
     ***- boss 3
     ***- boss 4
-    ***- boss 5
-    ***- boss 6
+***- update the list of enemy types to include aliens + alien UFOs (for all endings)
 
 - music: (brain 12, 15, 23, 25 have potential)
   - xibalba
@@ -18,7 +17,6 @@ to do:
   - add boss name to the stats for game over screen
   - better ray gun should significantly help
 - final good ending 1 (A) (update "stats__ending"): the stone opens a portal to travel to the alien world, and fight against their leader. When you defeat it and come back, Elaine is there waiting to save you, but you arrive having defeated the alien empire (although there is doubt if other empires will show up again, and the calendar stone depletes, and cannot be used again)
-- update the list of enemy types in ending A to include any enemies in the alien planet.
 - Final good ending 2 (A+) if you have the 3 codex pieces in the forge to manufacture more powerstones/firestones. So, you can keep using the calendar stone and be prepared for the future.
 
 - save game to rom / password: https://www.grauw.nl/projects/ascii-x/ascii16-x/

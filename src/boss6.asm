@@ -3,7 +3,7 @@ BOSS_6_HP_OFFSET: equ 0
 BOSS_6_HP_PHASE2_OFFSET: equ 2
 BOSS_6_HP_PHASE3_OFFSET: equ 4
 BOSS_6_WAIT_TIME_OFFSET: equ 6
-BOSS_6_EYE_BULLET_TIME_MASK: equ 7
+BOSS_6_EYE_BULLET_ATTACK_PATTERN_OFFSET: equ 7
 BOSS_6_MOUTH_ATTACK_MASK: equ 8
 BOSS_6_MOUTH_ATTACK_N_STONES: equ 9
 BOSS_6_EYE_TURRET_ATTACK_MASK: equ 8  ; same as BOSS_6_MOUTH_ATTACK_MASK
@@ -47,23 +47,23 @@ boss6_face_turret_frame_ptrs:
 ; - phase 3: until boss reaches 0% health
 boss6_difficulty_setting__easy:
 	dw 192, 144, 64  ; boss hp, and thresholds for phase 2 and 3
-	db 32, #1f, #7f, 2  ; wait time, bullet time mask, mouth attack mask, n stones
+	db 32, BOSS_BULLET_PATTERN_EASY2, #7f, 2  ; wait time, bullet pattern, mouth attack mask, n stones
 	db #0f, 1 ; eye turret mask / eye turret bullet mask, max drones
 
 boss6_difficulty_setting__normal:
 ; 	dw 32, 240, 108  ; boss hp, and thresholds for phase 2 and 3 (DEBUG)
 	dw 320, 240, 108  ; boss hp, and thresholds for phase 2 and 3
-	db 32, #0f, #3f, 3  ; wait time, bullet time mask, mouth attack mask, n stones
+	db 32, BOSS_BULLET_PATTERN_MEDIUM2, #3f, 3  ; wait time, bullet pattern, mouth attack mask, n stones
 	db #07, 2 ; eye turret mask / eye turret bullet mask, max drones
 
 boss6_difficulty_setting__hard:
 	dw 416, 312, 140  ; boss hp, and thresholds for phase 2 and 3
-	db 28, #0f, #1f, 4  ; wait time, bullet time mask, mouth attack mask, n stones
+	db 28, BOSS_BULLET_PATTERN_HARD2, #1f, 4  ; wait time, bullet pattern, mouth attack mask, n stones
 	db #07, 2 ; eye turret mask / eye turret bullet mask, max drones
 
 boss6_difficulty_setting__hardest:
 	dw 512, 384, 176  ; boss hp, and thresholds for phase 2 and 3
-	db 24, #07, #1f, 5  ; wait time, bullet time mask, mouth attack mask, n stones
+	db 24, BOSS_BULLET_PATTERN_HARDEST2, #1f, 5  ; wait time, bullet pattern, mouth attack mask, n stones
 	db #03, 3 ; eye turret mask / eye turret bullet mask, max drones
 
 
@@ -345,10 +345,8 @@ update_boss6_behavior_1_state_0_turret_frame_set:
 update_boss6_behavior_1_state_0_no_face_turret:
 
 	; fire bullets through eyes
-	ld a, (boss__settings + BOSS_6_EYE_BULLET_TIME_MASK)
-	ld c, a
-	call random_a
-	and c
+	ld a, (boss__settings + BOSS_6_EYE_BULLET_ATTACK_PATTERN_OFFSET)
+	call boss_bullet_pattern_cycle
 	ret nz
 	ld hl, #0305
 	ld bc, (boss__x)
@@ -613,6 +611,9 @@ update_boss6_start_behavior_2:
 	ld (boss__state_timer), a
 	ld a, 2
 	ld (boss__behavior), a
+	; reset hp:
+	ld hl, (boss__settings + BOSS_6_HP_PHASE2_OFFSET)
+	ld (boss__hp), hl	
 	ret
 
 update_boss6_behavior_2:
@@ -843,6 +844,9 @@ update_boss6_start_behavior_3:
 	ld (boss__state_timer), a
 	ld a, 3
 	ld (boss__behavior), a
+	; reset hp:
+	ld hl, (boss__settings + BOSS_6_HP_PHASE3_OFFSET)
+	ld (boss__hp), hl
 	ret
 
 update_boss6_behavior_3:

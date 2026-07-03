@@ -63,9 +63,7 @@ boss7_difficulty_setting__easy:
 
 boss7_difficulty_setting__normal:
 	dw 320, 256, 192, 96  ; boss hp, and threshold for the other phases
-; 	dw 40, 30, 20, 10  ; boss hp, and threshold for the other phases  (DEBUG)
 	db 32, BOSS_BULLET_PATTERN_MEDIUM2, #0f, 3  ; wait time, bullet attack pattern, poison attack mask, n spits
-; 	db 32, BOSS_BULLET_PATTERN_HARDEST2, #0f, 3  ; wait time, bullet attack pattern, poison attack mask, n spits
 	db 4, 12  ; snake speed, max length (for phase 3)
 
 boss7_difficulty_setting__hard:
