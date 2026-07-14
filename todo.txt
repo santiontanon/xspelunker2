@@ -1,16 +1,33 @@
 to do:
 
-- music: (brain 12, 15, 23, 25 have potential)
-  - xibalba
-  - atlantis
-  - mars
-  - moon
-- 8th boss: after beating the combat against the aliens, you can teleport to their home planet, and fight against their leader.
-  - add boss name to the stats for game over screen
-  - better ray gun should significantly help
-- final good ending 1 (A) (update "stats__ending"): the stone opens a portal to travel to the alien world, and fight against their leader. When you defeat it and come back, Elaine is there waiting to save you, but you arrive having defeated the alien empire (although there is doubt if other empires will show up again, and the calendar stone depletes, and cannot be used again)
-- Final good ending 2 (A+) if you have the 3 codex pieces in the forge to manufacture more powerstones/firestones. So, you can keep using the calendar stone and be prepared for the future.
+***- 8th boss: after beating the combat against the aliens, you can teleport to their home planet, and fight against their leader.
+  OK - draft 8th boss (1st stage: brain in a vat)
+  ***- create boss room tileset
+  ***- create boss room in TILED
+  ***- add data to assembler
+  ***- you can only speak the name of the calendar after defeating the aliens
+  ***- After speaking the calendar name, it activates, detects your language and asks you questions:
+    ***- Destroy threat attacking earth?
+      ***- if you say "no": alien cutscene, but this time they destroy the planet, and then game over
+      ***- if you say "yes": alien cutscene with them being destroyed, and then back to the calendar room
+    ***- Source of the incoming attack identified. Create a teleport gate to source?
+      ***- if you say "no": you leave, and then you go to an engine "A'" (same, but it does not say that calendar was destroyed, so, text is a bit different)
+      ***- if you say "yes": a teleporter appears, you tell Elaine that you need to finish what you started and automatically the player goes to teleporter
+      ***- you appear in the boss room:
+        ***- "Meanwhile, in a planet orbiting a nearby star"
+        ***- 2/3 aliens talking to the boss, informing them that the armada was destroyed, boss getting angry and kills them
+        ***- the teleporter gate the appears and you show up
+        ***- boss says something like "What?! What is this creature and what is it doing here?!" and then a couple of lines of you saying that you will end this, and boss daring you to try.
+        ***- boss name comes down, and battle starts
+  ***- design boss phases and attacks (better ray gun should significantly help):
+    ***- combat suit appears, and brain is lifted into it.
+  ***- implement them
+  ***- add boss name to the stats for game over screen
+  ***- once boss is defeated, aliens arrive at the scene and seeing you defeated their leader, one of them actually thanks you for freeing them from the violent ruler, and welcoming a new era of peace. Invites you to stay or visit any time you want. You then leave from the teleporter and go back to Elaine, leading to the final end sequence
 
+- final good ending 1 (A) (update "stats__ending"): when you go back to Elaine, the calendar powers off (power depleted from the effort, but it does not crumble). Ending is now just the beach scene + text. Big congrats, but the calendar is powered off, and you have no more power stones. So, there go your hopes of ever visiting the aliens again, or stopping another alien threat if it ever comes.
+- Final good ending 2 (A+) if you have the 3 codex pieces in the forge to manufacture more powerstones/firestones. So, you can keep using the calendar stone and be prepared for the future.
+- music: (brain 12, 15, 23, 25 have potential): xibalba, atlantis, mars, moon
 - save game to rom / password: https://www.grauw.nl/projects/ascii-x/ascii16-x/
 - come up with a list of "achievements" for the list in the game over screen and implement them
 - 9th optional boss: gigantic maya statue monument that looks decoration, but it's a secret boss.
