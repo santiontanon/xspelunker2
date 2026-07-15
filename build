@@ -17,7 +17,7 @@ read_from_symbol_file () {
 
 # Calculate ROM/RAM space available:
 TOTALUSED=0
-for IDX in "_0" "_1" "_2" "_3" "_4" "_5" "_6" "_7" "_8" "_9" "_10" "_11" "_12" "_13" "_14" "_15" "_16" "_17" "_18" "_19" "_20" "_21" "_22" "_23"
+for IDX in "_0" "_1" "_2" "_3" "_4" "_5" "_6" "_7" "_8" "_9" "_10" "_11" "_12" "_13" "_14" "_15" "_16" "_17" "_18" "_19" "_20" "_21" "_22" "_23" "_24"
 do
 	PAGESIZE=16384
 	STARTDEC=$(read_from_symbol_file "start_of_page${IDX}:" xspelunker2.sym)
@@ -29,7 +29,7 @@ do
 done
 
 
-FREE=$((24*16*1024 - TOTALUSED))
+FREE=$((25*16*1024 - TOTALUSED))
 echo "total used: ${TOTALUSED} (free: ${FREE})"
 
 END_OF_RAM="$(grep end_of_ram xspelunker2.sym | cut -d ' ' -f3- | cut -c3-)"

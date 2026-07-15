@@ -1,10 +1,6 @@
 to do:
 
-***- 8th boss: after beating the combat against the aliens, you can teleport to their home planet, and fight against their leader.
-  OK - draft 8th boss (1st stage: brain in a vat)
-  ***- create boss room tileset
-  ***- create boss room in TILED
-  ***- add data to assembler
+***- 8th boss:
   ***- you can only speak the name of the calendar after defeating the aliens
   ***- After speaking the calendar name, it activates, detects your language and asks you questions:
     ***- Destroy threat attacking earth?
@@ -20,7 +16,7 @@ to do:
         ***- boss says something like "What?! What is this creature and what is it doing here?!" and then a couple of lines of you saying that you will end this, and boss daring you to try.
         ***- boss name comes down, and battle starts
   ***- design boss phases and attacks (better ray gun should significantly help):
-    ***- combat suit appears, and brain is lifted into it.
+    ***- phase 2: combat suit appears, and brain is lifted into it.
   ***- implement them
   ***- add boss name to the stats for game over screen
   ***- once boss is defeated, aliens arrive at the scene and seeing you defeated their leader, one of them actually thanks you for freeing them from the violent ruler, and welcoming a new era of peace. Invites you to stay or visit any time you want. You then leave from the teleporter and go back to Elaine, leading to the final end sequence
