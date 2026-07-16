@@ -100,7 +100,7 @@ display_in_game_message_draw_message:
 	ld c, a
 	ld b, 0
 	ldir	
-    ld de, CHRTBL2 + (12*32+2)*8
+    ld de, CHRTBL2 + (11*32+2)*8
 display_in_game_message_print_loop:
     ld hl, buffer_4096
     push de
@@ -161,7 +161,7 @@ display_in_game_message_center:
 		add a, a
 		add a, a
 		ex hl, de
-			ld hl, CHRTBL2 + 12 * 32 * 8
+			ld hl, CHRTBL2 + 11 * 32 * 8
 			ld b, 0
 			ld c, a
 			add hl, bc
@@ -208,14 +208,15 @@ display_in_game_message__clear_sprites_loop_next:
 	call LDIRMV
 
 	; clear all biome tiles:
-	ld hl, CLRTBL2 + (256 + 16*6)*8
-	ld bc, (256 - 16*6)*8
+	ld hl, CLRTBL2 + 256*8
+	ld bc, 256*8
 	xor a
 	call fast_FILVRM
-	ld hl, CHRTBL2 + (256 + 16*6)*8
-	ld bc, (256 - 16*6)*8
+	ld hl, CHRTBL2 + 256*8
+	ld bc, 256*8
 	xor a
 	call fast_FILVRM
+
 	ld hl, in_game_message_tiles
 	ld de, NAMTBL2 + 256
 	ld bc, 256
@@ -223,7 +224,7 @@ display_in_game_message__clear_sprites_loop_next:
 
 	; draw white lines on top and bottom of message:
 	ld hl, in_game_message_border_tile_attributes
-	ld de, CLRTBL2 + (256 + 97)*8 
+	ld de, CLRTBL2 + (256 + 1)*8 
 	ld b, 8
 	jp fast_small_LDIRVM
 

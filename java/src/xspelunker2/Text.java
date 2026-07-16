@@ -380,13 +380,14 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "Amazing! That teleporter really did bring me to planet Mars! I can feel the lighter gravity!", "MARS_FIRST_TIME", 112);
         addLineSafe(lines_with_constant_page3, "Incredible! That teleporter brought me directly to the Moon! I feel so light here!", "MOON_FIRST_TIME", 112);
         
-        addLineSafe(lines_with_constant_page1, "Wait! They had not given up... This is an ambush!!!", "CALENDAR_AMBUSH", 112);     
-        addLineSafe(lines_with_constant_page1, "You place your hand in the center and, as the stone starts shaking, you hear a deep voice...", "CALENDAR_CENTER_MSG3", 112);
         addLineSafe(lines_with_constant_page1, "Type what you want to say:", "TALK", 112);     
         addLineSafe(lines_with_constant_page1, "No one listened...", "TALK_FAIL", 112);     
         addLineSafe(lines_with_constant_page1, "The animal listened...", "TALK_ANIMAL_LISTENED", 112);     
         addLineSafe(lines_with_constant_page1, "The animals granted you their blessing!", "TALK_GOT_CHARM", 112);     
-        addLineSafe(lines_with_constant_page1, "After you speak, the room rumbles, and you hear a voice in an unknown language. It seems your words were heard!", "TALK_SUCCESS1", 112);
+
+        addLineSafe(lines_with_constant_page1, "Wait! They had not given up... This is an ambush!!!", "CALENDAR_AMBUSH", 112);     
+        addLineSafe(lines_with_constant_page1, "You place your hand in the center and, as the stone starts shaking, you hear a deep voice...", "CALENDAR_CENTER_MSG3", 112);
+
         addLineSafe(lines_with_constant_page1, "Where are the aliens? Have they finally given up?!", "CALENDAR_NO_ALIENS", 112);     
         addLineSafe(lines_with_constant_page3, "Xavier: Elaine! What are you doing here?!", "AMBUSH_ELAINE_1", 112);
         addLineSafe(lines_with_constant_page3, "Elaine: Well... Saving your ass?", "AMBUSH_ELAINE_2", 112);
@@ -399,6 +400,20 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "Elaine: You do?! Hmm... I wish you were this efficient when you are home...", "AMBUSH_ELAINE_8", 112);
 //        addLineSafe(lines_with_constant_page3, "Xavier: ...", "AMBUSH_ELAINE_9", 112);
         addLineSafe(lines_with_constant_page3, "Elaine: Ok, then are we ready to activate the calendar stone? More aliens will be coming soon for sure!", "AMBUSH_ELAINE_10", 112);
+
+        addLineSafe(lines_with_constant_page1, "After you speak, the room rumbles. It seems your words were heard!", "TALK_CALENDAR_SUCCESS1", 112);
+        addLineSafe(lines_with_constant_page4, "UB'AJ T'AN. AHYI.", "TALK_CALENDAR_SUCCESS2", 112);  // command heard. Waking up.
+        addLineSafe(lines_with_constant_page4, "USER LANGUAGE IDENTIFICATION COMPLETED.", "TALK_CALENDAR_SUCCESS3", 112);
+        addLineSafe(lines_with_constant_page4, "HOSTILE PRESENCE IN ORBIT DETECTED. EARTH DEFENSE PROTOCOL ACTIVATED. ELIMIATE THREAT?", "TALK_CALENDAR_SUCCESS4", 112);
+        addLineSafe(lines_with_constant_page4, "THREAT ELIMINATED. ANALYZING PROVENANCE...", "TALK_CALENDAR_SUCCESS5", 112);
+        addLineSafe(lines_with_constant_page4, "THREAT IDENTIFIED AS COMING FROM TZ'AB' EK', KOWN AS THE PLEIADES IN YOUR LANGUAGE. SPECIFICALLY, THE THIRD PLANET ORBITING THE MAIA STAR.", "TALK_CALENDAR_SUCCESS6", 112);
+        addLineSafe(lines_with_constant_page4, "OPEN A GATE TO THE THIRD PLANET OF MAIA?", "TALK_CALENDAR_SUCCESS7", 112);
+        addLineSafe(lines_with_constant_page4, "Michael: The Maia star?! So, that's where they are coming from! And doesn't the name sound way too similar to the Maya?", "TALK_CALENDAR_SUCCESS8", 112);
+        addLineSafe(lines_with_constant_page4, "Michael: After all we have learned, I think there are lots of history books that will have to be rewritten...", "TALK_CALENDAR_SUCCESS9", 112);
+        addLineSafe(lines_with_constant_page4, "Michael: But that will have to wait. Elaine, this is our chance to end this thread from its root. I need to go there and finish what I started", "TALK_CALENDAR_SUCCESS10", 112);
+        addLineSafe(lines_with_constant_page4, "Elaine: What are you talking about!? Michael! You want to go?! That's crazy! You don't know what you will find there!", "TALK_CALENDAR_SUCCESS11", 112);
+        addLineSafe(lines_with_constant_page4, "Michael: I know. But after coming this far, I feel I can do this. Believe in me! Please keep watch here until I return!", "TALK_CALENDAR_SUCCESS12", 112);
+        addLineSafe(lines_with_constant_page4, "Elaine: You are crazy Michael, but I know I cannot stop you. Please be careful...", "TALK_CALENDAR_SUCCESS13", 112);
 
         addLineSafe(lines_with_constant_page3, "PA-PAT-TZA-JA CHANAL PAKAL", "CALENDAR_ACTIVATED_C_1", 112);  // It was erected heavinly shield
         addLineSafe(lines_with_constant_page3, "Xavier: What happened?! What did we do?!", "CALENDAR_ACTIVATED_C_2", 112);

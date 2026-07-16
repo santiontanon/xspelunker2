@@ -503,11 +503,9 @@ interact_special_case_calendar:
 	ld de, current_world__maya_puzzle3_word
 	call interact_special_case_check_word
 	jp nz, interact_special_case_fail
-interact_special_case_calendar_success:
-	ld a, 1
-	ld (global_state__solved_final_riddle), a
-	ld de, TEXT_TALK_SUCCESS1
-	jp interact_special_case_success_continue
+	ld hl, calendar_room_full_activation
+	ld a, BOSS_8_PAGE
+	jp jp_to_hl_in_page_a_8000
 
 interact_special_case_guardian2:
 	ld hl, global_state__objects + TAG_GUARDIAN_CAIMAN2

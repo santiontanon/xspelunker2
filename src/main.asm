@@ -71,6 +71,7 @@ BOSS_4_PAGE: equ 14
 BOSS_5_PAGE: equ 17
 BOSS_6_PAGE: equ 21
 BOSS_7_PAGE: equ 23
+BOSS_8_PAGE: equ 24
 BOSS_GFX_PAGE: equ 12
 BOSS_SPRITES_PAGE: equ 12
 CALENDAR_EVENTS_PAGE: equ 14  ; ambush code
@@ -369,13 +370,11 @@ end_of_code:
 
 
 in_game_message_tiles:
-    ds 32, 97
-    ds 32, 96
-REPT 4*32, V
-    db V+128
+    ds 32, 1
+REPT 6*32, V
+    db V+64
 ENDR
-    ds 32, 96
-    ds 32, 97
+    ds 32, 1
 
 
 current_world__name_rom:

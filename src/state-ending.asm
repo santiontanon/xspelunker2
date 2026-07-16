@@ -159,6 +159,32 @@ ending_B_continue:
 	ld c, TEXT_PAGE
 	call call_hl_in_page_c_8000	
 
+	call ending_B_UFO_scene
+
+	call ending_beach_scene_B  ; elaine and michael relax in the beach
+
+	call clear_screen_left_to_right
+	call stop_music
+
+	ld ix, ending_B_text_page_ptrs
+	ld iy, ending_B_enemy_intro_ptr_table
+	ld a, (global_state__objects + TAG_FIRESTONE_FORGE)
+	or a
+	jr z, ending_B_continue2
+	ld ix, ending_B_plus_text_page_ptrs
+	ld iy, ending_B_plus_enemy_intro_ptr_table
+ending_B_continue2:
+	ld b, 3  ; # number of pages
+	call ending_final_text_scene
+
+ending_B_done:
+	ld hl, state_game_over
+	ld a, GAME_OVER_PAGE
+	jp jp_to_hl_in_page_a_8000
+
+
+;-----------------------------------------------
+ending_B_UFO_scene:
 	call clear_screen_left_to_right
 
 	call ending_UFO_scene_approach_earth  ; aliens approach Earth, and captain calls for the invasion
@@ -242,7 +268,7 @@ ending_B_continue:
 	; explosion (all red)
 	ld b, 9
 	ld hl, NAMTBL2 + (4)*32 + 6
-ending_B_explosion_loop:
+ending_B_UFO_scene_explosion_loop:
 	ld a, (ending_ufo_nametables + 20*9 + 10*6 + 3*2 + 2*3 + 2*3 + 4*3 + 18)  ; this is an all red tile
 	push bc
 		push hl
@@ -252,7 +278,7 @@ ending_B_explosion_loop:
 		ld bc, 32
 		add hl, bc
 	pop bc
-	djnz ending_B_explosion_loop
+	djnz ending_B_UFO_scene_explosion_loop
 	call clear_all_the_sprites
 
 	ld b, 100
@@ -260,27 +286,7 @@ ending_B_explosion_loop:
 
 	call clear_screen_left_to_right
 	call stop_music
-
-	call ending_beach_scene_B  ; elaine and michael relax in the beach
-
-	call clear_screen_left_to_right
-	call stop_music
-
-	ld ix, ending_B_text_page_ptrs
-	ld iy, ending_B_enemy_intro_ptr_table
-	ld a, (global_state__objects + TAG_FIRESTONE_FORGE)
-	or a
-	jr z, ending_B_continue2
-	ld ix, ending_B_plus_text_page_ptrs
-	ld iy, ending_B_plus_enemy_intro_ptr_table
-ending_B_continue2:
-	ld b, 3  ; # number of pages
-	call ending_final_text_scene
-
-ending_B_done:
-	ld hl, state_game_over
-	ld a, GAME_OVER_PAGE
-	jp jp_to_hl_in_page_a_8000
+	ret
 
 
 ;-----------------------------------------------

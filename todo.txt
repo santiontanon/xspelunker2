@@ -1,13 +1,10 @@
 to do:
 
-***- 8th boss:
-  ***- you can only speak the name of the calendar after defeating the aliens
-  ***- After speaking the calendar name, it activates, detects your language and asks you questions:
-    ***- Destroy threat attacking earth?
-      ***- if you say "no": alien cutscene, but this time they destroy the planet, and then game over
-      ***- if you say "yes": alien cutscene with them being destroyed, and then back to the calendar room
+***- 8th boss: (t'apuchako)
+  ***- calendar_room_full_activation:
+    ***- if you say "no": alien cutscene, but this time they destroy the planet, and then game over
     ***- Source of the incoming attack identified. Create a teleport gate to source?
-      ***- if you say "no": you leave, and then you go to an engine "A'" (same, but it does not say that calendar was destroyed, so, text is a bit different)
+      ***- if you say "no": you leave, and then you go to an ending "A'" (same, but it does not say that calendar was destroyed, so, text is a bit different)
       ***- if you say "yes": a teleporter appears, you tell Elaine that you need to finish what you started and automatically the player goes to teleporter
       ***- you appear in the boss room:
         ***- "Meanwhile, in a planet orbiting a nearby star"
