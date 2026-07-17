@@ -89,7 +89,7 @@ state_yesno_dialog_in_game:
 		ld b, 4
 		call draw_sentence_to_vdp_clearing_text_buffer
 
-		ld a, 12 * 8 - 1
+		ld a, 13 * 8 - 1
 		ld (tmp_dialog_options_position), a
 		call state_yesno_dialog_mainloop
 

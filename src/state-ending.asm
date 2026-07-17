@@ -184,6 +184,38 @@ ending_B_done:
 
 
 ;-----------------------------------------------
+ending_B_plus_prime:
+	ld hl, TEXT_ENDING_B_PLUS_PRIME
+	jr ending_B_prime_continue
+ending_B_prime:
+	ld hl, TEXT_ENDING_B_PRIME
+ending_B_prime_continue:
+    ld sp, stack
+	ld (stats__ending), hl
+
+	call ending_beach_scene_B  ; elaine and michael relax in the beach
+
+	call clear_screen_left_to_right
+	call stop_music
+
+	ld ix, ending_B_prime_text_page_ptrs
+	ld iy, ending_B_enemy_intro_ptr_table
+	ld a, (global_state__objects + TAG_FIRESTONE_FORGE)
+	or a
+	jr z, ending_B_prime_continue2
+	ld ix, ending_B_plus_prime_text_page_ptrs
+	ld iy, ending_B_plus_enemy_intro_ptr_table
+ending_B_prime_continue2:
+	ld b, 3  ; # number of pages
+	call ending_final_text_scene
+
+ending_B_prime_done:
+	ld hl, state_game_over
+	ld a, GAME_OVER_PAGE
+	jp jp_to_hl_in_page_a_8000
+
+
+;-----------------------------------------------
 ending_B_UFO_scene:
 	call clear_screen_left_to_right
 
@@ -287,6 +319,28 @@ ending_B_UFO_scene_explosion_loop:
 	call clear_screen_left_to_right
 	call stop_music
 	ret
+
+
+;-----------------------------------------------
+; The aliens conquer earth.
+ending_UFO_scene_conquer:
+	call clear_screen_left_to_right
+
+	call ending_UFO_scene_approach_earth  ; aliens approach Earth, and captain calls for the invasion
+
+	; Custom Ending B part of the UFO scene:	
+	call ending_UFO_scene_minion_interrupts_shared  ; alien minion approaches and tells the captain something is wrong
+
+	ld hl, TEXT_ENDING_C_UFO_CONQUER_1
+	ld b, 32
+	call ending_UFO_scene_minion_talks_page4
+
+	ld hl, TEXT_ENDING_C_UFO_CONQUER_2
+	ld b, 32
+	call ending_UFO_scene_captain_talks_page4
+
+	call clear_screen_left_to_right
+	jp stop_music
 
 
 ;-----------------------------------------------
@@ -409,6 +463,19 @@ ending_UFO_scene_approach_earth_loop_continue2:
 
 ;-----------------------------------------------
 ending_UFO_scene_minion_interrupts:
+	call ending_UFO_scene_minion_interrupts_shared
+
+	ld hl, TEXT_ENDING_C_UFO_6
+	ld b, 32
+	call ending_UFO_scene_minion_talks
+
+	ld hl, TEXT_ENDING_C_UFO_7
+	ld b, 32
+	jp ending_UFO_scene_captain_talks_agitated
+
+
+;-----------------------------------------------
+ending_UFO_scene_minion_interrupts_shared:
 	ld hl, ending_C_UFO_minion_idle
 	ld de, buffer_4096
 	ld bc, 8
@@ -471,15 +538,7 @@ ending_UFO_scene_minion_interrupts_walk_loop_continue:
 
 	ld hl, TEXT_ENDING_C_UFO_5
 	ld b, 32
-	call ending_UFO_scene_captain_talks
-
-	ld hl, TEXT_ENDING_C_UFO_6
-	ld b, 32
-	call ending_UFO_scene_minion_talks
-
-	ld hl, TEXT_ENDING_C_UFO_7
-	ld b, 32
-	jp ending_UFO_scene_captain_talks_agitated
+	jp ending_UFO_scene_captain_talks
 
 
 ;-----------------------------------------------
@@ -1141,6 +1200,16 @@ ending_B_plus_text_page_ptrs:
 	dw ending_B_text_page_2
 	dw ending_C_text_page_3
 
+ending_B_prime_text_page_ptrs:
+	dw ending_B_prime_text_page_1
+	dw ending_B_text_page_2
+	dw ending_C_text_page_3
+
+ending_B_plus_prime_text_page_ptrs:
+	dw ending_B_plus_prime_text_page_1
+	dw ending_B_text_page_2
+	dw ending_C_text_page_3
+
 ending_C_text_page_1:
 	db 16
 	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_1_1, TEXT_PAGE3
@@ -1216,6 +1285,42 @@ ending_B_plus_text_page_1:
 	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_14, TEXT_PAGE4
 	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_15, TEXT_PAGE4
 	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_16, TEXT_PAGE4
+
+ending_B_prime_text_page_1:
+	db 15
+	ENDING_LINE_PAGE TEXT_ENDING_B_PRIME_PAGE_1_1, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_2, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_3, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_4, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_5, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PRIME_PAGE_1_6, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_7, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_8, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_9, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_10, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_11, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_12, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_13, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PRIME_PAGE_1_14, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PRIME_PAGE_1_15, TEXT_PAGE4
+
+ending_B_plus_prime_text_page_1:
+	db 15
+	ENDING_LINE_PAGE TEXT_ENDING_B_PLUS_PRIME_PAGE_1_1, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_2, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_3, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_4, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_5, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PRIME_PAGE_1_6, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_7, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PLUS_PAGE_1_8, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PLUS_PAGE_1_9, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PLUS_PAGE_1_10, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_11, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_12, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_13, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PRIME_PAGE_1_14, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PRIME_PAGE_1_15, TEXT_PAGE4
 
 
 ending_C_text_page_2:

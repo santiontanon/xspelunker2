@@ -44,23 +44,95 @@ calendar_room_full_activation:
 
     ld de, TEXT_TALK_CALENDAR_SUCCESS4
     call calendar_room_full_activation_yes_no_dialogue
-    ld a, (tmp_dialog_pointer_position)
-
     or a
-    jr nz, calendar_room_full_activation_do_not_destroy
+    jp nz, calendar_room_full_activation_do_not_destroy
     ld hl, ending_B_UFO_scene
     ld c, ENDING_PAGE
     call call_hl_in_page_c_8000
 
+    call calendar_room_full_activation_restore_gfx
+
+    ld de, TEXT_TALK_CALENDAR_SUCCESS5
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ld de, TEXT_TALK_CALENDAR_SUCCESS6
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ld de, TEXT_TALK_CALENDAR_SUCCESS7
+    call calendar_room_full_activation_yes_no_dialogue
+    or a
+    jr nz, calendar_room_full_activation_do_not_open_gate
+
+    ; make teleporter appear:
     ; ...
 
+    ld de, TEXT_TALK_CALENDAR_SUCCESS8
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ld de, TEXT_TALK_CALENDAR_SUCCESS9
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ld de, TEXT_TALK_CALENDAR_SUCCESS10
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ld de, TEXT_TALK_CALENDAR_SUCCESS11
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ld de, TEXT_TALK_CALENDAR_SUCCESS12
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ld de, TEXT_TALK_CALENDAR_SUCCESS13
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
     jp state_play_from_inventory
+
 
 calendar_room_full_activation_do_not_destroy:
+    ld hl, ending_UFO_scene_conquer
+    ld c, ENDING_PAGE
+    call call_hl_in_page_c_8000
+    ld hl, state_game_over
+    ld a, GAME_OVER_PAGE
+    jp z, jp_to_hl_in_page_a_8000
 
-    ; ...
+calendar_room_full_activation_do_not_open_gate:
+    ld de, TEXT_TALK_CALENDAR_SUCCESS8
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
 
-    jp state_play_from_inventory
+    ld de, TEXT_TALK_CALENDAR_SUCCESS9
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ld de, TEXT_TALK_CALENDAR_SUCCESS10B
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ld hl, ending_B_prime
+    ld a, (global_state__objects + TAG_FIRESTONE_FORGE)
+    or a
+    ld a, ENDING_PAGE
+    jp z, jp_to_hl_in_page_a_8000
+    ld hl, ending_B_plus_prime
+    jp jp_to_hl_in_page_a_8000
 
 
 calendar_room_full_activation_yes_no_dialogue:
@@ -86,24 +158,85 @@ calendar_room_full_activation_yes_no_dialogue:
     ld c, YES_NO_DIALOG_PAGE
     call call_hl_in_page_c_8000
 
-    ; restore tiles in middle bank:
-    ld hl, CLRTBL2 + (256 + 16*6)*8
-    ld bc, (256-16*6)*8
-    xor a
-    call fast_FILVRM
+    ld a, (tmp_dialog_pointer_position)
+    push af
+        ; restore tiles in middle bank:
+        ld hl, CLRTBL2 + (256 + 16*6)*8
+        ld bc, (256-16*6)*8
+        xor a
+        call fast_FILVRM
 
-    ; restore content below:
-    ld hl, buffer_4096 + 1024
-    ld de, NAMTBL2 + 256
-    ld bc, 256
+        ; restore content below:
+        ld hl, buffer_4096 + 1024
+        ld de, NAMTBL2 + 256
+        ld bc, 256
+        call fast_LDIRVM
+
+        ld hl, redraw_flags
+        ld (hl), #ff
+
+        ld a, (current_room__tileset_page)
+        ld c, a
+        ld hl, (current_room__tileset_ptr)
+        call setup_game_tiles_only_biome
+    pop af
+    ret
+
+
+;-----------------------------------------------
+calendar_room_full_activation_restore_gfx:
+    ; setup sprites:
+    ld a, SPRITES_PAGE
+    ld hl, pyramid_object_sprites_bin
+    ld de, SPRTBL2 + 32 * FIRST_OBJECT_SPRITE_PATTERN  ; first three reserved for player / weapon
+    ld bc, pyramid_object_sprites_bin_end - pyramid_object_sprites_bin
+    call fast_LDIRVM_from_sprites_page
+
+    ld hl, (current_room__enemy_sprites_ptr)
+    ld de, buffer_4096
+    ld a, (current_room__enemy_sprites_ptr_page)
+    ld c, a
+    call dzx0_from_page_c
+    ld hl, buffer_4096      
+    ld de, SPRTBL2 + 32 * FIRST_ENEMY_SPRITE_PATTERN
+    ld bc, (64 - FIRST_ENEMY_SPRITE_PATTERN) * 32
     call fast_LDIRVM
 
-    ld hl, redraw_flags
-    ld (hl), #ff
-
+    ; setup tiles:
     ld a, (current_room__tileset_page)
     ld c, a
     ld hl, (current_room__tileset_ptr)
-    jp setup_game_tiles_only_biome
+    call setup_game_tiles
+    call state_play_upload_object_tiles_to_vdp_if_necessary    
 
+    ; init sprite attribute table:
+    ld hl, sprite_attribute_table + 2
+    ld (hl), 0
+    inc hl
+    ld (hl), COLOR_DARK_YELLOW
+    ld hl, sprite_attribute_table + 2 + 4
+    ld (hl), 4
+    inc hl
+    ld (hl), COLOR_DARK_RED
+    ld hl, sprite_attribute_table + 2 + 8
+    ld (hl), 8
 
+    ld a, HUD_MAX_TIME
+    ld (hud_redraw_timer), a
+    ld a, #ff  ; redraw everything the first time
+    ld (redraw_flags), a
+
+    call maybe_recenter_scroll_and_set_actual
+    call update_scroll      
+    call draw_room_with_hud
+    call player_update_update_sprite_position
+    xor a
+    ld (n_displayed_object_sprites), a
+    ld (n_displayed_object_sprites_without_player_bullets), a
+    ld (n_displayed_object_sprites_last_frame), a
+    call update_sprite_objects  ; to show Elaine
+    ld hl, upload_sprites_to_vdp
+    ld c, SPRITES_PAGE
+    call call_hl_in_page_c_8000
+
+    jp play_current_room_music_if_needed

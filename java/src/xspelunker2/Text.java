@@ -147,9 +147,11 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "fail", "ENDING_FAIL", 6);
         addLineSafe(lines_with_constant_page3, "C", "ENDING_C", 6);
         addLineSafe(lines_with_constant_page3, "B", "ENDING_B", 6);
+        addLineSafe(lines_with_constant_page3, "B'", "ENDING_B_PRIME", 6);
         addLineSafe(lines_with_constant_page3, "A", "ENDING_A", 6);
         addLineSafe(lines_with_constant_page3, "C+", "ENDING_C_PLUS", 6);
         addLineSafe(lines_with_constant_page3, "B+", "ENDING_B_PLUS", 6);
+        addLineSafe(lines_with_constant_page3, "B'+", "ENDING_B_PLUS_PRIME", 6);
         addLineSafe(lines_with_constant_page3, "A+", "ENDING_A_PLUS", 6);
         addLineSafe(lines_with_constant_page3, "max", "MAX_TIME", 6);
         addLineSafe(lines_with_constant_page3, "no miss", "ACHIEVEMENT_NOMISS", 8);
@@ -411,6 +413,7 @@ public class Text {
         addLineSafe(lines_with_constant_page4, "Michael: The Maia star?! So, that's where they are coming from! And doesn't the name sound way too similar to the Maya?", "TALK_CALENDAR_SUCCESS8", 112);
         addLineSafe(lines_with_constant_page4, "Michael: After all we have learned, I think there are lots of history books that will have to be rewritten...", "TALK_CALENDAR_SUCCESS9", 112);
         addLineSafe(lines_with_constant_page4, "Michael: But that will have to wait. Elaine, this is our chance to end this thread from its root. I need to go there and finish what I started", "TALK_CALENDAR_SUCCESS10", 112);
+        addLineSafe(lines_with_constant_page4, "Michael: But we have done enough here... let's go home Elaine!", "TALK_CALENDAR_SUCCESS10B", 112);
         addLineSafe(lines_with_constant_page4, "Elaine: What are you talking about!? Michael! You want to go?! That's crazy! You don't know what you will find there!", "TALK_CALENDAR_SUCCESS11", 112);
         addLineSafe(lines_with_constant_page4, "Michael: I know. But after coming this far, I feel I can do this. Believe in me! Please keep watch here until I return!", "TALK_CALENDAR_SUCCESS12", 112);
         addLineSafe(lines_with_constant_page4, "Elaine: You are crazy Michael, but I know I cannot stop you. Please be careful...", "TALK_CALENDAR_SUCCESS13", 112);
@@ -835,7 +838,12 @@ public class Text {
         // addLineSafe(lines_with_constant_page3, "Xavier: ... darn it...", "ENDING_C_BEACH_8", 22*6);
         addLineSafe(lines_with_constant_page4, "Xavier: I know, I know! We did a great job didn't we? But... what if they send a second armada?", "ENDING_B_BEACH_9", 22*6);
 
-        addLineSafe(lines_with_constant_page4, "Xavier: I any case! We did a great job didn't we? But... what if they send a second armada?", "ENDING_B_PLUS_BEACH_9", 22*6);        
+        addLineSafe(lines_with_constant_page4, "Xavier: I any case! We did a great job didn't we? But... what if they send a second armada?", "ENDING_B_PLUS_BEACH_9", 22*6);
+        
+        // Ending A:
+        addLineSafe(lines_with_constant_page4, "Of course, sir! At once, sir!", "ENDING_C_UFO_CONQUER_1", 22*4);
+        addLineSafe(lines_with_constant_page4, "Excellent... and do not interrupt me again unless it is really important!", "ENDING_C_UFO_CONQUER_2", 22*4);
+                
         
         // Ending credits and text, page 1:
         addLineSafe(lines_with_constant_page3, "Ending C: Congratulations! You", "ENDING_C_PAGE_1_1", 20);
@@ -864,7 +872,7 @@ public class Text {
         addLineSafe(lines_with_constant_page4, "But destroyed their fleet! After", "ENDING_B_PAGE_1_3", 20);
         addLineSafe(lines_with_constant_page4, "gathering 6 power stones, you", "ENDING_B_PAGE_1_4", 20);
         addLineSafe(lines_with_constant_page4, "activated the nexus and, before", "ENDING_B_PAGE_1_5", 20);
-        addLineSafe(lines_with_constant_page4, "crumbling, it launched an attack!", "ENDING_B_PAGE_1_6", 20);
+        addLineSafe(lines_with_constant_page4, "crumbling, it launched an attack", "ENDING_B_PAGE_1_6", 20);
         addLineSafe(lines_with_constant_page4, "on the alien invaders!", "ENDING_B_PAGE_1_7", 20);
         addLineSafe(lines_with_constant_page4, "You feel great satisfaction,", "ENDING_B_PAGE_1_8", 20);
         addLineSafe(lines_with_constant_page4, "although something tells you", "ENDING_B_PAGE_1_9", 20);
@@ -880,6 +888,14 @@ public class Text {
         addLineSafe(lines_with_constant_page4, "You also found and activated the", "ENDING_B_PLUS_PAGE_1_8", 20);
         addLineSafe(lines_with_constant_page4, "forge but have no use for it yet...", "ENDING_B_PLUS_PAGE_1_9", 20);
         addLineSafe(lines_with_constant_page4, "So, maybe... maybe there was", "ENDING_B_PLUS_PAGE_1_10", 20);
+
+        addLineSafe(lines_with_constant_page4, "Ending B': Incredible! You did", "ENDING_B_PRIME_PAGE_1_1", 20);
+        addLineSafe(lines_with_constant_page4, "activated the nexus and ordered", "ENDING_B_PRIME_PAGE_1_5", 20);
+        addLineSafe(lines_with_constant_page4, "it to launch an attack!", "ENDING_B_PRIME_PAGE_1_6", 20);
+        addLineSafe(lines_with_constant_page4, "Maybe you should have actually", "ENDING_B_PRIME_PAGE_1_14", 20);
+        addLineSafe(lines_with_constant_page4, "gone to Maia to finish the job?", "ENDING_B_PRIME_PAGE_1_15", 20);
+        
+        addLineSafe(lines_with_constant_page4, "Ending B'+: Incredible! You", "ENDING_B_PLUS_PRIME_PAGE_1_1", 20);
         
         // Ending credits and text, page 2:
         addLineSafe(lines_with_constant_page3, "Thanks for Playing 2XSpelunker!", "ENDING_C_PAGE_2_1", 20);

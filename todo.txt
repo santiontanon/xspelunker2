@@ -1,17 +1,13 @@
 to do:
 
 ***- 8th boss: (t'apuchako)
-  ***- calendar_room_full_activation:
-    ***- if you say "no": alien cutscene, but this time they destroy the planet, and then game over
-    ***- Source of the incoming attack identified. Create a teleport gate to source?
-      ***- if you say "no": you leave, and then you go to an ending "A'" (same, but it does not say that calendar was destroyed, so, text is a bit different)
-      ***- if you say "yes": a teleporter appears, you tell Elaine that you need to finish what you started and automatically the player goes to teleporter
-      ***- you appear in the boss room:
-        ***- "Meanwhile, in a planet orbiting a nearby star"
-        ***- 2/3 aliens talking to the boss, informing them that the armada was destroyed, boss getting angry and kills them
-        ***- the teleporter gate the appears and you show up
-        ***- boss says something like "What?! What is this creature and what is it doing here?!" and then a couple of lines of you saying that you will end this, and boss daring you to try.
-        ***- boss name comes down, and battle starts
+  ***- if you say "yes" to the gate: a teleporter appears
+  ***- boss room events:
+    ***- "Meanwhile, in a planet orbiting a nearby star"
+    ***- 2/3 aliens talking to the boss, informing them that the armada was destroyed, boss getting angry and kills them
+    ***- the teleporter gate the appears and you show up
+    ***- boss says something like "What?! What is this creature and what is it doing here?!" and then a couple of lines of you saying that you will end this, and boss daring you to try.
+    ***- boss name comes down, and battle starts
   ***- design boss phases and attacks (better ray gun should significantly help):
     ***- phase 2: combat suit appears, and brain is lifted into it.
   ***- implement them
