@@ -65,10 +65,46 @@ calendar_room_full_activation:
     ld de, TEXT_TALK_CALENDAR_SUCCESS7
     call calendar_room_full_activation_yes_no_dialogue
     or a
-    jr nz, calendar_room_full_activation_do_not_open_gate
+    jp nz, calendar_room_full_activation_do_not_open_gate
 
     ; make teleporter appear:
-    ; ...
+    ld a, BOSS_8_PAGE
+    ld (current_room__tileset_page), a
+    ld hl, tiles_calendar_teleporter_zx0
+    ld (current_room__tileset_ptr), hl
+    call setup_game_tiles_only_biome
+
+    ld c, TILES_PAGE
+    ld hl, room_undraw_tile_objects
+    call call_hl_in_page_c_8000
+
+    ld hl, ptr_to_new_tile_object
+    ld c, TILES_PAGE
+    call call_hl_in_page_c_8000
+
+    ld (hl), 0  ; ID
+    inc hl
+    ld (hl), TAG_TELEPORTER_MARS  ; type (any teleporter would do)
+    inc hl
+    ld (hl), 14  ; tile x
+    inc hl
+    ld (hl), 19  ; tile y
+    inc hl
+    ld (hl), 0  ; state
+
+    ld c, TILES_PAGE
+    ld hl, room_render_tile_objects
+    call call_hl_in_page_c_8000
+
+    ld hl, draw_room_with_hud
+    ld c, TILES_PAGE
+    call call_hl_in_page_c_8000
+
+    ld hl, SFX_secret
+    call play_SFX_with_high_priority
+
+    ld b, 50
+    call wait_b_halts
 
     ld de, TEXT_TALK_CALENDAR_SUCCESS8
     ld hl, display_in_game_message_textpage4
@@ -99,6 +135,9 @@ calendar_room_full_activation:
     ld hl, display_in_game_message_textpage4
     ld c, TEXT_PAGE
     call call_hl_in_page_c_8000
+
+    ; ...
+
     jp state_play_from_inventory
 
 

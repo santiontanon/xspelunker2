@@ -1,7 +1,6 @@
 to do:
 
 ***- 8th boss: (t'apuchako)
-  ***- if you say "yes" to the gate: a teleporter appears
   ***- boss room events:
     ***- "Meanwhile, in a planet orbiting a nearby star"
     ***- 2/3 aliens talking to the boss, informing them that the armada was destroyed, boss getting angry and kills them

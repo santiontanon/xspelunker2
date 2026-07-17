@@ -2254,36 +2254,36 @@ tile_object_ufo_frame_right1_gfx:
   db 4, 4
   dw tile_object_ufo_frame_right1_gfx_tiles
 tile_object_ufo_frame_right1_gfx_tiles:
-  db 192, 193, 194, 208
-  db 209, 210, 224, 225
-  db 226, 240, 241, 242
+  db 52, 53, 54, 55
+  db 56, 57, 58, 59
+  db 60, 61, 62, 63
   db 0, 211, 211, 0
 
 tile_object_ufo_frame_right2_gfx:
   db 4, 4
   dw tile_object_ufo_frame_right2_gfx_tiles
 tile_object_ufo_frame_right2_gfx_tiles:
-  db 192, 193, 194, 208
-  db 209, 210, 224, 225
-  db 226, 240, 241, 242
+  db 52, 53, 54, 55
+  db 56, 57, 58, 59
+  db 60, 61, 62, 63
   db 0, 212, 212, 0
 
 tile_object_ufo_frame_left1_gfx:
   db 4, 4
   dw tile_object_ufo_frame_left1_gfx_tiles
 tile_object_ufo_frame_left1_gfx_tiles:
-  db 192, 128, 100, 208
-  db 209, 95, 168, 225
-  db 226, 245, 247, 242
+  db 52, 48, 49, 55
+  db 56, 50, 51, 59
+  db 60, 245, 247, 63
   db 0, 211, 211, 0
 
 tile_object_ufo_frame_left2_gfx:
   db 4, 4
   dw tile_object_ufo_frame_left2_gfx_tiles
 tile_object_ufo_frame_left2_gfx_tiles:
-  db 192, 128, 100, 208
-  db 209, 95, 168, 225
-  db 226, 245, 247, 242
+  db 52, 48, 49, 55
+  db 56, 50, 51, 59
+  db 60, 245, 247, 63
   db 0, 212, 212, 0
 
 
