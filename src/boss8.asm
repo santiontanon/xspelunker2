@@ -136,9 +136,33 @@ calendar_room_full_activation:
     ld c, TEXT_PAGE
     call call_hl_in_page_c_8000
 
-    ; ...
+calendar_room_full_activation_boss8_intro_scene:
+    ; intro scene of 8th boss:
+    call clear_screen_left_to_right
+    ld hl, music_ending_aliens_bin
+    ld a, 5
+    call play_music_adjusting_tempo
+    ld iy, TEXT_BOSS8_INTRO_0
+    ld b, 1  ; first tile to use
+    ld de, NAMTBL2 + 12*32 + 7
+    ld ix, CHRTBL2 + 1*256*8
+    ld a, 18
+    ld (tmp_letter_line_width), a
+    ld a, COLOR_WHITE * 16
+    ld (tmp_letter_line_color), a
+    ld hl, display_paragraph_text_page4
+    ld c, TABLET_LETTER_PAGE
+    call call_hl_in_page_c_8000
+    ld b, 200
+    call wait_b_halts_skippable
+    call clear_screen_left_to_right
 
-    jp state_play_from_inventory
+    ld a, 7
+    ld (boss__current_boss_number), a
+    ld c, a
+    ld a, BOSS_PAGE
+    ld hl, enter_boss_door_load_room
+    jp jp_to_hl_in_page_a_8000
 
 
 calendar_room_full_activation_do_not_destroy:

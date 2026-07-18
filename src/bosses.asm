@@ -95,6 +95,9 @@ enter_boss_door_loop:
 
 		; clear the screen:
 		call clear_screen_left_to_right
+	pop bc
+enter_boss_door_load_room:
+	pop bc
 		; choose which room to load, player position, etc based on the boss number:
 		ld c, PCG_PAGE
 		ld hl, pcg_generate_room_reset_state
@@ -113,7 +116,7 @@ enter_boss_door_loop:
 		ld de, boss_1_tiles_zx0
 		ld bc, tile_collision_types_boss1
 		ld iy, boss1_sprites_zx0
-		jr z, enter_boss_door__room_ptr_set
+		jp z, enter_boss_door__room_ptr_set
 		dec a
 		ld hl, boss_room_2_zx0
 		ld de, boss_2_tiles_zx0
@@ -155,6 +158,14 @@ enter_boss_door_loop:
 		ld de, boss_7_tiles_zx0
 		ld bc, tile_collision_types_boss7
 		ld iy, boss7_sprites_zx0
+		jr z, enter_boss_door__room_ptr_set
+		dec a
+		ld ixl, BOSS_8_PAGE  ; tileset page
+		ld ixh, BOSS_8_PAGE  ; room page
+		ld hl, boss_room_8_zx0
+		ld de, boss_8_tiles_zx0
+		ld bc, tile_collision_types_boss8
+		ld iy, boss8_sprites_zx0
 
 enter_boss_door__room_ptr_set:
 		push bc
@@ -187,6 +198,8 @@ enter_boss_door__room_prettified:
 		ld (current_room__collision_ptr), bc  ; collision types
 		ld a, ixl
 		cp BOSS_7_PAGE
+		jr z, enter_boss_door__collision_ptr_page_set
+		cp BOSS_8_PAGE
 		jr z, enter_boss_door__collision_ptr_page_set
 		ld a, BOSS_PAGE
 enter_boss_door__collision_ptr_page_set:
@@ -265,7 +278,11 @@ enter_boss_door__room_spawn_coordinates_set:
 			call z, enter_boss_door__spawn_atlantis_boss_objects
 		pop af
 		cp 5
-		call z, enter_boss_door__spawn_mars_boss_objects
+		push af
+			call z, enter_boss_door__spawn_mars_boss_objects
+		pop af
+		cp 7
+		call z, enter_boss_door__spawn_final_boss_objects
 	pop bc
 	jp state_play_from_loaded_room
 
@@ -379,6 +396,11 @@ enter_boss_door__spawn_mars_boss_objects_wall_destroyed:
 	ld de, #0204
 	jp room_remove_breakable_wall_restore_background
 
+
+;-----------------------------------------------
+enter_boss_door__spawn_final_boss_objects:
+	; ...
+	ret
 
 
 ;-----------------------------------------------

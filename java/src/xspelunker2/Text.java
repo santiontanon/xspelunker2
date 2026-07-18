@@ -412,7 +412,7 @@ public class Text {
         addLineSafe(lines_with_constant_page4, "OPEN A GATE TO THE THIRD PLANET OF MAIA?", "TALK_CALENDAR_SUCCESS7", 112);
         addLineSafe(lines_with_constant_page4, "Michael: The Maia star?! So, that's where they are coming from! And doesn't the name sound way too similar to the Maya?", "TALK_CALENDAR_SUCCESS8", 112);
         addLineSafe(lines_with_constant_page4, "Michael: After all we have learned, I think there are lots of history books that will have to be rewritten...", "TALK_CALENDAR_SUCCESS9", 112);
-        addLineSafe(lines_with_constant_page4, "Michael: But that will have to wait. Elaine, this is our chance to end this thread from its root. I need to go there and finish what I started", "TALK_CALENDAR_SUCCESS10", 112);
+        addLineSafe(lines_with_constant_page4, "Michael: But that will have to wait. Elaine, this is our chance to end this thread from its root. I need to go there and finish what I started.", "TALK_CALENDAR_SUCCESS10", 112);
         addLineSafe(lines_with_constant_page4, "Michael: But we have done enough here... let's go home Elaine!", "TALK_CALENDAR_SUCCESS10B", 112);
         addLineSafe(lines_with_constant_page4, "Elaine: What are you talking about!? Michael! You want to go?! That's crazy! You don't know what you will find there!", "TALK_CALENDAR_SUCCESS11", 112);
         addLineSafe(lines_with_constant_page4, "Michael: I know. But after coming this far, I feel I can do this. Believe in me! Please keep watch here until I return!", "TALK_CALENDAR_SUCCESS12", 112);
@@ -765,6 +765,9 @@ public class Text {
         addLineSafe(lines_with_constant_page4, "I lost it surveying the sector you designate as... Xibalba. I initiated an emergency spatial-teleport... but... [grinding gears] I materialized here. The cavern dimensions were... insufficient.", "MARS_ROBOT_SOLVED_4", 112);
         addLineSafe(lines_with_constant_page4, "I triggered a... cave-in and became... trapped. But... I am initiating restorative subroutines now. My... spatial-teleport array is badly damaged. It will require... 35 solar cycles to... re-align.", "MARS_ROBOT_SOLVED_5", 112);
         addLineSafe(lines_with_constant_page4, "As a token of... [System Warning Bleep] gratitude... take this. It fell from the chamber above. I believe it is... compatible with one of your... primitive weapon systems.", "MARS_ROBOT_SOLVED_6", 112);
+        
+        // Boss 8:
+        addLineSafe(lines_with_constant_page4, "Meanwhile, in the Maia system...", "BOSS8_INTRO_0", 18);
         
         // Ending C:
         // First shared part:

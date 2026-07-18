@@ -2,11 +2,15 @@ to do:
 
 ***- 8th boss: (t'apuchako)
   ***- boss room events:
-    ***- "Meanwhile, in a planet orbiting a nearby star"
-    ***- 2/3 aliens talking to the boss, informing them that the armada was destroyed, boss getting angry and kills them
-    ***- the teleporter gate the appears and you show up
-    ***- boss says something like "What?! What is this creature and what is it doing here?!" and then a couple of lines of you saying that you will end this, and boss daring you to try.
-    ***- boss name comes down, and battle starts
+    ***- enter_boss_door__spawn_final_boss_objects
+      ***- draw boss vat
+      ***- player is not there, but scene is drawn (do I need an "invisible" player state?)
+    ***- boss state 0 behavior that controls the action:
+      ***- spawn 2/3 aliens, who enter the room
+      ***- aliens talking to the boss, informing them that the armada was destroyed, boss getting angry and kills them
+      ***- the teleporter gate appears and you show up
+      ***- boss says something like "What?! What is this creature and what is it doing here?!" and then a couple of lines of you saying that you will end this, and boss daring you to try.
+      ***- boss name comes down, and battle starts
   ***- design boss phases and attacks (better ray gun should significantly help):
     ***- phase 2: combat suit appears, and brain is lifted into it.
   ***- implement them
@@ -17,6 +21,8 @@ to do:
 - Final good ending 2 (A+) if you have the 3 codex pieces in the forge to manufacture more powerstones/firestones. So, you can keep using the calendar stone and be prepared for the future.
 - music: (brain 12, 15, 23, 25 have potential): xibalba, atlantis, mars, moon
 - save game to rom / password: https://www.grauw.nl/projects/ascii-x/ascii16-x/
+  - add a "save as default" option to the config menu that saves to ROM
+  - add a "revert to defaults" option
 - come up with a list of "achievements" for the list in the game over screen and implement them
 - 9th optional boss: gigantic maya statue monument that looks decoration, but it's a secret boss.
   - maybe that boss leads to the grave of the person who wrote all the story tablets (Yatzil), with a riddle you can only solve if you have seen all tablets (use "tomb.tsv" music for this part).
