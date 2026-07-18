@@ -2,8 +2,10 @@ to do:
 
 ***- 8th boss: (t'apuchako)
   ***- boss room events:
-    ***- left-door opens
-    ***- spawn 2/3 aliens, who enter the room, and walk to the boss
+    ***- spawn 2 aliens, who enter the room, and walk to the boss:
+      ***- add aliens to the boss sprites
+      ***- create the sprite object types
+      ***- control them
     ***- left-door-closes
     ***- aliens informing that the armada was destroyed
     ***- boss getting angry and kills them (which weapon does it use?)

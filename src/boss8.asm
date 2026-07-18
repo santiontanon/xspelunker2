@@ -71,6 +71,8 @@ update_boss8_behavior_0:
     jr z, update_boss8_behavior_init
     dec a
     jr z, update_boss8_behavior_0_intro_scene_1
+    dec a
+    jp z, update_boss8_behavior_0_intro_scene_2
     ; ...
     ret
 update_boss8_behavior_init:
@@ -117,13 +119,44 @@ update_boss8_behavior_init_continue:
     ret
 
 update_boss8_behavior_0_intro_scene_1:
-    ; boss intro scene:
+    ; boss intro scene (start, and door opens):
+    call update_boss8_eye_blink
+
     ld hl, boss__state_timer
     inc (hl)
-
-    call update_boss8_eye_blink
-    ; ...
+    ld a, (hl)
+    cp 64
+    ret nz
+    xor a
+    ld (boss__state_timer), a
+    ld a, 2
+    ld (boss__state), a
+    ; door opens:
+    ld hl, current_room__tile_map + 18*32
+    ld b, 5
+    ld de, 31
+update_boss8_behavior_0_intro_scene_1_loop:
+    ld (hl), 0
+    inc hl
+    ld (hl), 0
+    add hl, de
+    djnz update_boss8_behavior_0_intro_scene_1_loop
+    ld hl, SFX_door_open
+    call play_SFX_with_high_priority
+    ld hl, redraw_flags
+    set ROOM_REDRAW_FLAG_BIT, (hl)
     ret
+
+update_boss8_behavior_0_intro_scene_2:
+    ; boss intro scene (aliens walk in):
+    call update_boss8_eye_blink
+    ld hl, boss__state_timer
+    inc (hl)
+    ld a, (hl)
+
+    ; ...
+
+    ret nz
 
 
 ;-----------------------------------------------
