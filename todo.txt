@@ -2,36 +2,35 @@ to do:
 
 ***- 8th boss: (t'apuchako)
   ***- boss room events:
-    ***- enter_boss_door__spawn_final_boss_objects
-      ***- draw boss vat
-      ***- player is not there, but scene is drawn (do I need an "invisible" player state?)
-    ***- boss state 0 behavior that controls the action:
-      ***- spawn 2/3 aliens, who enter the room
-      ***- aliens talking to the boss, informing them that the armada was destroyed, boss getting angry and kills them
-      ***- the teleporter gate appears and you show up
-      ***- boss says something like "What?! What is this creature and what is it doing here?!" and then a couple of lines of you saying that you will end this, and boss daring you to try.
-      ***- boss name comes down, and battle starts
+    ***- player is not there (do I need an "invisible" player state?)
+    ***- vat bubbles animation
+    ***- eye animation
+    ***- spawn 2/3 aliens, who enter the room
+    ***- aliens informing that the armada was destroyed, boss getting angry and kills them
+    ***- the teleporter gate appears and you show up
+    ***- boss says something like "What?! What is this creature and what is it doing here?!" and then a couple of lines of you saying that you will end this, and boss daring you to try.
+    ***- boss name comes down, and battle starts
   ***- design boss phases and attacks (better ray gun should significantly help):
     ***- phase 2: combat suit appears, and brain is lifted into it.
   ***- implement them
   ***- add boss name to the stats for game over screen
   ***- once boss is defeated, aliens arrive at the scene and seeing you defeated their leader, one of them actually thanks you for freeing them from the violent ruler, and welcoming a new era of peace. Invites you to stay or visit any time you want. You then leave from the teleporter and go back to Elaine, leading to the final end sequence
 
-- final good ending 1 (A) (update "stats__ending"): when you go back to Elaine, the calendar powers off (power depleted from the effort, but it does not crumble). Ending is now just the beach scene + text. Big congrats, but the calendar is powered off, and you have no more power stones. So, there go your hopes of ever visiting the aliens again, or stopping another alien threat if it ever comes.
-- Final good ending 2 (A+) if you have the 3 codex pieces in the forge to manufacture more powerstones/firestones. So, you can keep using the calendar stone and be prepared for the future.
+- final good ending 1 (A) (update "stats__ending"): when you go back to Elaine, the calendar powers off (power depleted from the effort, but it does not crumble). Ending is just the beach scene + text. Big congrats, but the calendar is powered off, and you have no more power stones. So, there go your hopes of ever visiting the aliens again, or stopping another alien threat if it ever comes.
+- Final good ending 2 (A+) you have the 3 codices in the forge to manufacture more powerstones. So, you can keep using the calendar stone and be prepared for the future.
 - music: (brain 12, 15, 23, 25 have potential): xibalba, atlantis, mars, moon
 - save game to rom / password: https://www.grauw.nl/projects/ascii-x/ascii16-x/
   - add a "save as default" option to the config menu that saves to ROM
   - add a "revert to defaults" option
 - come up with a list of "achievements" for the list in the game over screen and implement them
-- 9th optional boss: gigantic maya statue monument that looks decoration, but it's a secret boss.
+- 9th optional boss: gigantic maya statue that looks decoration, but it's a secret boss.
   - maybe that boss leads to the grave of the person who wrote all the story tablets (Yatzil), with a riddle you can only solve if you have seen all tablets (use "tomb.tsv" music for this part).
   - Solving the riddle reveals the head of the statue (which was hidden), and two gigantic empty eye sockets. If you place the eyes of charybdis and scylla, the statue comes alive, and you have your boss fight! (which gives you an achievement, or maybe the A++ ending if you have A+?)
-- pick a good seed (for seed2) so that with the default seed, the map is good (at least Jungle)
+- pick a good seed (for seed2) so that the map is good (at least Jungle)
 
 - Potential new ideas if I have the energy:
   - second shop (can I reuse 'object_interaction_function_shop_internal'?)
-  - when you enter a boss room, animation of a door that that closes on you, trapping you inside.
+  - when entering boss room, animation of door closing, trapping you inside.
   - go back to the firestone forge after defeating the final alien boss to continue digging into the mystery of why powerstones were so dangerous?
 
 

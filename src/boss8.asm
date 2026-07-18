@@ -5,32 +5,9 @@ BOSS_8_HP_PHASE3_OFFSET: equ 4
 BOSS_8_EYE_BULLET_ATTACK_PATTERN_OFFSET: equ 6
 
 
-; ;-----------------------------------------------
-; boss8_frame_ptrs:
-;     dw boss8_frame_0_face_off
-;     dw boss8_frame_0_face_off_mouth_open
-;     dw boss8_frame_0_face_on
-;     dw boss8_frame_0_face_on_mouth_open
-;     dw boss8_frame_0_face_robot
-;     dw boss8_frame_0_face_robot_mouth_open
-
-; boss8_eye_frame_ptrs:
-;     dw boss8_eye_frame_0
-;     dw boss8_eye_frame_1  ; eye appearing
-;     dw boss8_eye_frame_2  ; eye appearing 2
-;     dw boss8_eye_frame_3  ; eye
-;     dw boss8_eye_frame_4  ; turret appearing 1
-;     dw boss8_eye_frame_5  ; turret appearing 2
-;     dw boss8_eye_frame_6  ; turret appearing 3
-;     dw boss8_eye_frame_7  ; turret
-;     dw boss8_eye_frame_8  ; turret up
-;     dw boss8_eye_frame_9  ; turret down
-
-; boss8_face_turret_frame_ptrs:
-;     dw boss8_face_turret_frame_0
-;     dw boss8_face_turret_frame_0
-;     dw boss8_face_turret_frame_1
-;     dw boss8_face_turret_frame_2
+;-----------------------------------------------
+boss8_frame_ptrs:
+    dw boss8_frame_0_brain_in_vat
 
 
 ;-----------------------------------------------
@@ -107,7 +84,7 @@ update_boss8_behavior_init_continue:
 
     ld a, 20
     ld (boss__x), a
-    ld a, 9
+    ld a, 10
     ld (boss__y), a
     xor a
     ld (boss__x2), a
@@ -120,6 +97,14 @@ update_boss8_behavior_init_continue:
     ld (boss__hit_fn_page), a
     ld a, 1
     ld (boss__state), a
+
+    xor a
+    call update_boss8_draw_boss_frame
+    ld b, 10
+    call update_boss8_draw_chains  ; draws the chains that hold the supporting machine up to height 10
+
+    ; ...
+
     ret
 
 update_boss8_behavior_0_intro_scene_1:
@@ -159,6 +144,82 @@ update_boss8_behavior_4:
 ;     or a
     ret
 
+
+;-----------------------------------------------
+; input:
+; - b: height of chains
+update_boss8_draw_chains:
+    ld a, 48  ; chain tile
+    ld hl, current_room__tile_map + 23
+    ld de, 28
+update_boss8_draw_chains_loop:
+    ld (hl), a
+    inc hl
+    inc hl
+    inc hl
+    inc hl
+    ld (hl), a
+    add hl, de
+    djnz update_boss8_draw_chains_loop
+    ret
+
+
+;-----------------------------------------------
+; input:
+; - a: frame to draw
+update_boss8_draw_boss_frame:
+    push af
+        ld hl, draw_boss_frame_clear_previous_frame_1
+        ld c, BOSS_PAGE
+        call call_hl_in_page_c_8000
+    pop af
+update_boss8_draw_boss_frame_not_clearing:
+    ld hl, boss8_frame_ptrs
+    add a, a
+    ADD_HL_A
+    ld a, (hl)
+    inc hl
+    ld h, (hl)
+    ld l, a
+    push hl
+        ld hl, redraw_flags
+        set ROOM_REDRAW_FLAG_BIT, (hl)
+
+        ; compute draw pointer:
+        ld bc, (boss__x)
+        call get_room_tile_ptr
+        ex de, hl  ; hl = ptr where the boss is to be drawn
+    pop ix
+    ld c, BOSS_PAGE
+    ld hl, draw_boss_frame_1_without_clearing_ix
+    call call_hl_in_page_c_8000
+
+update_boss8_draw_boss_frame_eye:
+;     ld a, (boss__8_eye_frame)
+;     or a
+;     jr z, update_boss8_draw_boss_frame_eye_drawn
+;     ; draw eye frame:
+;     ld hl, boss8_eye_frame_ptrs
+;     add a, a
+;     ADD_HL_A
+;     ld a, (hl)
+;     inc hl
+;     ld h, (hl)
+;     ld l, a
+;     push hl
+;         ld hl, #0305
+;         ld bc, (boss__x)
+;         add hl, bc
+;         ld c, l
+;         ld b, h
+;         call get_room_tile_ptr
+;         ex de, hl  ; hl = ptr where the boss is to be drawn
+;     pop ix
+;     ld c, BOSS_PAGE
+;     ld hl, draw_boss_frame_internal_ix
+;     call call_hl_in_page_c_8000
+; update_boss8_draw_boss_frame_eye_drawn:
+    ret
 
 
 ;-----------------------------------------------
@@ -396,7 +457,6 @@ calendar_room_full_activation_yes_no_dialogue:
     DRAW_SENTENCE_TO_VDP_REMOTE_MACRO TEXT_YES, CHRTBL2 + (14*32+14)*8, #f0, 4
     DRAW_SENTENCE_TO_VDP_REMOTE_MACRO TEXT_NO, CHRTBL2 + (15*32+14)*8, #f0, 4
 
-    ; destroy threat yes/no:
     ld a, 13 * 8 - 1  ; y coordinate of the first option
     ld (tmp_dialog_options_position), a
     ld hl, dialog_sprites_bin
@@ -409,6 +469,12 @@ calendar_room_full_activation_yes_no_dialogue:
 
     ld a, (tmp_dialog_pointer_position)
     push af
+        ; clear the arrow sprite:
+        ld hl, SPRATR2
+        ld a, 200
+        ld b, 1
+        call fast_small_FILVRM
+
         ; restore tiles in middle bank:
         ld hl, CLRTBL2 + (256 + 16*6)*8
         ld bc, (256-16*6)*8

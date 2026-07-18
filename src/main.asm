@@ -800,6 +800,7 @@ boss_room_3_zx0:
                                     ; if moved, also move "player_weapon_hitbox_check_boss__boss5_scylla_hit_tentacle"
     include "boss6-nametables.asm"  ; here since the drawing routines are in this page
     include "boss7-nametables.asm"  ; here since the drawing routines are in this page
+    include "boss8-nametables.asm"  ; here since the drawing routines are in this page
 
 
 end_of_page_6:
