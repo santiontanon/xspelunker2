@@ -109,7 +109,7 @@ enter_boss_door_load_room:
 		; setup boss area/room:
 		; - c: boss number
 		ld ixl, BOSS_GFX_PAGE  ; tileset page
-		ld ixh, BOSS_PAGE  ; room page
+		ld ixh, BOSS_1_ROOM_PAGE  ; room page
 		ld a, c
 		or a
 		ld hl, boss_room_1_zx0
@@ -118,12 +118,14 @@ enter_boss_door_load_room:
 		ld iy, boss1_sprites_zx0
 		jp z, enter_boss_door__room_ptr_set
 		dec a
+		ld ixh, BOSS_2_ROOM_PAGE  ; room page
 		ld hl, boss_room_2_zx0
 		ld de, boss_2_tiles_zx0
 		ld bc, tile_collision_types_boss2
 		ld iy, boss2_sprites_zx0
 		jr z, enter_boss_door__room_ptr_set
 		dec a
+		ld ixh, BOSS_3_ROOM_PAGE  ; room page
 		ld hl, boss_room_3_zx0
 		ld de, boss_3_tiles_walk_zx0
 		ld bc, tile_collision_types_boss3
@@ -402,6 +404,10 @@ enter_boss_door__spawn_final_boss_objects:
     ld (player_state), a
 	ld hl, update_animations_in_vdp_boss8
 	ld (current_room__animation_fn_ptr), hl	
+    ld hl, music_ending_aliens_bin
+    ld (current_room__music_ptr), hl
+    ld a, 5
+    ld (current_room__music_tempo), a	
 	ret
 
 

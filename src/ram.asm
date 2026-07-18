@@ -353,7 +353,8 @@ boss__7_target_phase2_position: equ boss__tmp_space  ; (only used in phase 2)
 ; all variables concerning a snake are stored here, except for the (x, y), which are in boss__x/y and boss__x2/y2
 boss__7_snake1_struct: equ boss__tmp_space + 1  ; 19 bytes
 boss__7_snake2_struct: equ boss__tmp_space + 1 + BOSS_7_SNAKE_STRUCT_SIZE  ; 19 bytes
-
+;
+boss__8_eye_frame: equ boss__tmp_space  ; 0: open, 1: closing, 2: closed, 3: opening, 3: down, 4: up
 
 alien_ambush__n_aliens_spawned: equ boss__tmp_space
 alien_ambush__n_ufos_spawned: equ boss__tmp_space + 1

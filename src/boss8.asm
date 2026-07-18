@@ -9,6 +9,14 @@ BOSS_8_EYE_BULLET_ATTACK_PATTERN_OFFSET: equ 6
 boss8_frame_ptrs:
     dw boss8_frame_0_brain_in_vat
 
+boss8_eye_frame_ptrs:
+    dw boss8_eye_frame_0_open
+    dw boss8_eye_frame_1_closing
+    dw boss8_eye_frame_2_closed
+    dw boss8_eye_frame_1_closing
+    dw boss8_eye_frame_3_down
+    dw boss8_eye_frame_4_up
+
 
 ;-----------------------------------------------
 ; Boss phases:
@@ -89,6 +97,7 @@ update_boss8_behavior_init_continue:
     xor a
     ld (boss__x2), a
     ld (boss__y2), a
+    ld (boss__8_eye_frame), a
     ld hl, (boss__settings + BOSS_8_HP_OFFSET)
     ld (boss__hp), hl
     ld hl, player_weapon_hitbox_check_boss__boss8_hit
@@ -109,6 +118,10 @@ update_boss8_behavior_init_continue:
 
 update_boss8_behavior_0_intro_scene_1:
     ; boss intro scene:
+    ld hl, boss__state_timer
+    inc (hl)
+
+    call update_boss8_eye_blink
     ; ...
     ret
 
@@ -143,6 +156,44 @@ update_boss8_behavior_4:
 ;     ld a, (boss__state)
 ;     or a
     ret
+
+
+;-----------------------------------------------
+update_boss8_eye_blink:
+    ld a, (boss__state_timer)
+    and #03
+    ret nz
+    ld a, (boss__8_eye_frame)
+    or a
+    jr z, update_boss8_eye_blink_0
+    dec a
+    jr z, update_boss8_eye_blink_1
+    dec a
+    jr z, update_boss8_eye_blink_2
+    dec a
+    jr z, update_boss8_eye_blink_3
+    ; ...
+
+update_boss8_eye_blink_0:
+    call random_a
+    and #0f
+    ret nz
+    ld a, 1
+    ld (boss__8_eye_frame), a
+    xor a
+    jp update_boss8_draw_boss_frame
+
+update_boss8_eye_blink_1:
+update_boss8_eye_blink_2:
+    ld hl, boss__8_eye_frame
+    inc (hl)
+    xor a
+    jp update_boss8_draw_boss_frame
+
+update_boss8_eye_blink_3:
+    xor a
+    ld (boss__8_eye_frame), a
+    jp update_boss8_draw_boss_frame
 
 
 ;-----------------------------------------------
@@ -195,30 +246,30 @@ update_boss8_draw_boss_frame_not_clearing:
     call call_hl_in_page_c_8000
 
 update_boss8_draw_boss_frame_eye:
-;     ld a, (boss__8_eye_frame)
-;     or a
-;     jr z, update_boss8_draw_boss_frame_eye_drawn
-;     ; draw eye frame:
-;     ld hl, boss8_eye_frame_ptrs
-;     add a, a
-;     ADD_HL_A
-;     ld a, (hl)
-;     inc hl
-;     ld h, (hl)
-;     ld l, a
-;     push hl
-;         ld hl, #0305
-;         ld bc, (boss__x)
-;         add hl, bc
-;         ld c, l
-;         ld b, h
-;         call get_room_tile_ptr
-;         ex de, hl  ; hl = ptr where the boss is to be drawn
-;     pop ix
-;     ld c, BOSS_PAGE
-;     ld hl, draw_boss_frame_internal_ix
-;     call call_hl_in_page_c_8000
-; update_boss8_draw_boss_frame_eye_drawn:
+    ld a, (boss__8_eye_frame)
+    or a
+    jr z, update_boss8_draw_boss_frame_eye_drawn
+    ; draw eye frame:
+    ld hl, boss8_eye_frame_ptrs
+    add a, a
+    ADD_HL_A
+    ld a, (hl)
+    inc hl
+    ld h, (hl)
+    ld l, a
+    push hl
+        ld hl, #0803
+        ld bc, (boss__x)
+        add hl, bc
+        ld c, l
+        ld b, h
+        call get_room_tile_ptr
+        ex de, hl  ; hl = ptr where the boss is to be drawn
+    pop ix
+    ld c, BOSS_PAGE
+    ld hl, draw_boss_frame_internal_ix
+    call call_hl_in_page_c_8000
+update_boss8_draw_boss_frame_eye_drawn:
     ret
 
 
@@ -389,6 +440,7 @@ calendar_room_full_activation_boss8_intro_scene:
     ld hl, music_ending_aliens_bin
     ld a, 5
     call play_music_adjusting_tempo
+
     ld iy, TEXT_BOSS8_INTRO_0
     ld b, 1  ; first tile to use
     ld de, NAMTBL2 + 12*32 + 7
@@ -552,6 +604,4 @@ calendar_room_full_activation_restore_gfx:
     call update_sprite_objects  ; to show Elaine
     ld hl, upload_sprites_to_vdp
     ld c, SPRITES_PAGE
-    call call_hl_in_page_c_8000
-
-    jp play_current_room_music_if_needed
+    jp call_hl_in_page_c_8000

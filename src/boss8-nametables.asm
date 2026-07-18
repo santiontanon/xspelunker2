@@ -6,6 +6,12 @@ BOSS8_NAMETABLE_TELEPORTER: equ boss8_name_tables + 0  ; 4*3
 
 BOSS8_NAMETABLE_BRAIN_IN_VAT: equ boss8_name_tables + 4*3  ; 10*14
 
+BOSS8_NAMETABLE_EYE0: equ BOSS8_NAMETABLE_BRAIN_IN_VAT + 10*14  ; 1*2
+BOSS8_NAMETABLE_EYE1: equ BOSS8_NAMETABLE_EYE0 + 1*2  ; 1*2
+BOSS8_NAMETABLE_EYE2: equ BOSS8_NAMETABLE_EYE1 + 1*2  ; 1*2
+BOSS8_NAMETABLE_EYE3: equ BOSS8_NAMETABLE_EYE2 + 1*2  ; 1*2
+BOSS8_NAMETABLE_EYE4: equ BOSS8_NAMETABLE_EYE3 + 1*2  ; 1*2
+
 
 ;-----------------------------------------------
 boss8_frame_0_brain_in_vat:
@@ -13,3 +19,30 @@ boss8_frame_0_brain_in_vat:
 	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
 	dw #0e0a, BOSS8_NAMETABLE_BRAIN_IN_VAT  ; dimensions and nametable
 	dw 0, #0e0a  ; boss__clear_bbox
+
+
+boss8_eye_frame_0_open:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0201, BOSS8_NAMETABLE_EYE0  ; dimensions and nametable
+	dw 0, #0201  ; boss__clear_bbos
+boss8_eye_frame_1_closing:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0201, BOSS8_NAMETABLE_EYE1  ; dimensions and nametable
+	dw 0, #0201  ; boss__clear_bbos
+boss8_eye_frame_2_closed:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0201, BOSS8_NAMETABLE_EYE2  ; dimensions and nametable
+	dw 0, #0201  ; boss__clear_bbos
+boss8_eye_frame_3_down:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0201, BOSS8_NAMETABLE_EYE3  ; dimensions and nametable
+	dw 0, #0201  ; boss__clear_bbos
+boss8_eye_frame_4_up:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0201, BOSS8_NAMETABLE_EYE4  ; dimensions and nametable
+	dw 0, #0201  ; boss__clear_bbos
