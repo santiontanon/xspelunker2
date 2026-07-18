@@ -2,11 +2,15 @@ to do:
 
 ***- 8th boss: (t'apuchako)
   ***- boss room events:
-    ***- player is not there (do I need an "invisible" player state?)
+    OK - player is not there (do I need an "invisible" player state?)
     ***- vat bubbles animation
-    ***- eye animation
-    ***- spawn 2/3 aliens, who enter the room
-    ***- aliens informing that the armada was destroyed, boss getting angry and kills them
+    ***- eye animation (blink)
+    ***- left-door opens
+    ***- spawn 2/3 aliens, who enter the room, and walk to the boss
+    ***- left-door-closes
+    ***- aliens informing that the armada was destroyed
+    ***- boss getting angry and kills them (which weapon does it use?)
+    ***- boss complains on its own that they are all useless
     ***- the teleporter gate appears and you show up
     ***- boss says something like "What?! What is this creature and what is it doing here?!" and then a couple of lines of you saying that you will end this, and boss daring you to try.
     ***- boss name comes down, and battle starts

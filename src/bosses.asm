@@ -278,7 +278,11 @@ enter_boss_door__room_spawn_coordinates_set:
 			call z, enter_boss_door__spawn_atlantis_boss_objects
 		pop af
 		cp 5
-		call z, enter_boss_door__spawn_mars_boss_objects
+		push af
+			call z, enter_boss_door__spawn_mars_boss_objects
+		pop af
+		cp 7
+		call z, enter_boss_door__spawn_final_boss_objects
 	pop bc
 	jp state_play_from_loaded_room
 
@@ -391,6 +395,15 @@ enter_boss_door__spawn_mars_boss_objects_wall_destroyed:
 	ld bc, #1502
 	ld de, #0204
 	jp room_remove_breakable_wall_restore_background
+
+
+;-----------------------------------------------
+enter_boss_door__spawn_final_boss_objects:
+	; setup boss room before it is drawn:
+    ld a, PLAYER_STATE_INVISIBLE
+    ld (player_state), a
+	; ...
+	ret
 
 
 ;-----------------------------------------------

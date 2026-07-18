@@ -313,6 +313,7 @@ player_update_update_sprite_check_flashing:
 	ld a, (interrupt_cycle)
 	bit 2, a
 	jr z, player_update_update_sprite_weapon
+player_update_update_sprite_do_not_draw:
 	; erase the player sprite:
 	xor a
 	ld (de), a
@@ -389,6 +390,7 @@ player_update_state_fn_table:
 	dw player_update_state_hurt
 	dw player_update_state_dead
 	dw player_update_state_teleport_in
+	dw player_update_state_invisible
 
 
 ;-----------------------------------------------
@@ -2260,6 +2262,12 @@ player_update_state_teleport_in_done:
 		call call_hl_in_page_c_8000
 	pop ix
 	jp player_update_switch_to_idle
+
+
+;-----------------------------------------------
+player_update_state_invisible:
+	call player_update_update_sprite_position_coordinates
+	jp player_update_update_sprite_do_not_draw
 
 
 ;-----------------------------------------------

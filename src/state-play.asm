@@ -342,7 +342,12 @@ state_play_from_inventory__no_boss_4:
 		call maybe_recenter_scroll_and_set_actual
 		call update_scroll		
 		call draw_room_with_hud
-		call player_update_update_sprite_position
+		ld a, (player_state)
+		cp PLAYER_STATE_INVISIBLE
+		push af
+			call z, player_update_state_invisible
+		pop af
+		call nz, player_update_update_sprite_position
 		xor a
 		ld (n_displayed_object_sprites), a
 		ld (n_displayed_object_sprites_without_player_bullets), a
