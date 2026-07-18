@@ -97,7 +97,7 @@ enter_boss_door_loop:
 		call clear_screen_left_to_right
 	pop bc
 enter_boss_door_load_room:
-	pop bc
+	push bc
 		; choose which room to load, player position, etc based on the boss number:
 		ld c, PCG_PAGE
 		ld hl, pcg_generate_room_reset_state
@@ -1913,10 +1913,11 @@ update_boss_behavior:
 	ld c, BOSS_7_PAGE
 	ld hl, update_boss7_behavior
 	jp z, jp_to_hl_in_page_c_8000
-; 	cp 12  ; alien world
-; 	ld c, BOSS_8_PAGE
-; 	ld hl, update_boss8_behavior
-; 	jp z, jp_to_hl_in_page_c_8000
+	cp 3  ; calendar (teleported to alien world)
+	ld c, BOSS_8_PAGE
+	ld hl, update_boss8_behavior
+	jp z, jp_to_hl_in_page_c_8000
+	; ...
 	ret
 
 

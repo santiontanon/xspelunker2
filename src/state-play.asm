@@ -210,6 +210,10 @@ state_play_from_continue:
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
 
+	    ld hl, calendar_room_full_activation_boss8_intro_scene
+	    ld a, BOSS_8_PAGE
+	    jp jp_to_hl_in_page_a_8000
+
 		; generate room:
 ; 		ld e, START_ROOM_ID
 ; 		ld e, GUARDIAN_CAIMAN1_ROOM_ID

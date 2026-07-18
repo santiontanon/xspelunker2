@@ -1,4 +1,190 @@
 ;-----------------------------------------------
+BOSS_8_HP_OFFSET: equ 0
+BOSS_8_HP_PHASE2_OFFSET: equ 2
+BOSS_8_HP_PHASE3_OFFSET: equ 4
+BOSS_8_EYE_BULLET_ATTACK_PATTERN_OFFSET: equ 6
+
+
+; ;-----------------------------------------------
+; boss8_frame_ptrs:
+;     dw boss8_frame_0_face_off
+;     dw boss8_frame_0_face_off_mouth_open
+;     dw boss8_frame_0_face_on
+;     dw boss8_frame_0_face_on_mouth_open
+;     dw boss8_frame_0_face_robot
+;     dw boss8_frame_0_face_robot_mouth_open
+
+; boss8_eye_frame_ptrs:
+;     dw boss8_eye_frame_0
+;     dw boss8_eye_frame_1  ; eye appearing
+;     dw boss8_eye_frame_2  ; eye appearing 2
+;     dw boss8_eye_frame_3  ; eye
+;     dw boss8_eye_frame_4  ; turret appearing 1
+;     dw boss8_eye_frame_5  ; turret appearing 2
+;     dw boss8_eye_frame_6  ; turret appearing 3
+;     dw boss8_eye_frame_7  ; turret
+;     dw boss8_eye_frame_8  ; turret up
+;     dw boss8_eye_frame_9  ; turret down
+
+; boss8_face_turret_frame_ptrs:
+;     dw boss8_face_turret_frame_0
+;     dw boss8_face_turret_frame_0
+;     dw boss8_face_turret_frame_1
+;     dw boss8_face_turret_frame_2
+
+
+;-----------------------------------------------
+; Boss phases:
+; - phase 1: brain in a vat (until ~75% health)
+; - phase 2: combat suit (until boss reaches ~25% health)
+; - phase 3: flying core (until boss reaches 0% health)
+boss8_difficulty_setting__easy:
+    dw 256, 192, 64  ; boss hp, and thresholds for phase 2 and 3
+    db BOSS_BULLET_PATTERN_EASY2  ; bullet pattern
+
+boss8_difficulty_setting__normal:
+    dw 320, 240, 80  ; boss hp, and thresholds for phase 2 and 3
+    db BOSS_BULLET_PATTERN_MEDIUM2  ; bullet pattern
+
+boss8_difficulty_setting__hard:
+    dw 416, 312, 104  ; boss hp, and thresholds for phase 2 and 3
+    db BOSS_BULLET_PATTERN_HARD2  ; bullet pattern
+
+boss8_difficulty_setting__hardest:
+    dw 512, 384, 128  ; boss hp, and thresholds for phase 2 and 3
+    db BOSS_BULLET_PATTERN_HARDEST2  ; bullet pattern
+
+
+;-----------------------------------------------
+update_boss8_behavior:
+    ld hl, boss__hit_timer
+    ld a, (hl)
+    or a
+    jr z, update_boss8_behavior_continue
+    dec (hl)
+update_boss8_behavior_continue:
+    ld a, (boss__active)
+    or a
+    ret z
+
+    ld a, (boss__behavior)
+    or a
+    jp z, update_boss8_behavior_0  ; before boss is spawned
+    dec a
+    jp z, update_boss8_behavior_1  ; phase 1
+    dec a
+    jp z, update_boss8_behavior_2  ; phase 2
+    dec a
+    jp z, update_boss8_behavior_3  ; phase 3
+    jp update_boss8_behavior_4  ; death
+
+
+;-----------------------------------------------
+update_boss8_behavior_0:
+    ld a, (boss__state)
+    or a
+    jr z, update_boss8_behavior_init
+    dec a
+    jr z, update_boss8_behavior_0_intro_scene_1
+    ; ...
+    ret
+update_boss8_behavior_init:
+    ld a, (current_world__difficulty)
+    ld hl, boss8_difficulty_setting__easy
+    or a
+    jr z, update_boss8_behavior_init_continue
+    ld hl, boss8_difficulty_setting__normal
+    dec a
+    jr z, update_boss8_behavior_init_continue
+    dec a
+    ld hl, boss8_difficulty_setting__hard
+    jr z, update_boss8_behavior_init_continue
+    ld hl, boss8_difficulty_setting__hardest
+update_boss8_behavior_init_continue:
+    ld de, boss__settings
+    ld bc, 12
+    ldir
+
+    ld a, 20
+    ld (boss__x), a
+    ld a, 9
+    ld (boss__y), a
+    xor a
+    ld (boss__x2), a
+    ld (boss__y2), a
+    ld hl, (boss__settings + BOSS_8_HP_OFFSET)
+    ld (boss__hp), hl
+    ld hl, player_weapon_hitbox_check_boss__boss8_hit
+    ld (boss__hit_fn), hl
+    ld a, BOSS_8_PAGE
+    ld (boss__hit_fn_page), a
+    ld a, 1
+    ld (boss__state), a
+    ret
+
+update_boss8_behavior_0_intro_scene_1:
+    ; boss intro scene:
+    ; ...
+    ret
+
+
+;-----------------------------------------------
+; brain in a vat
+update_boss8_behavior_1:
+;     ld a, (boss__state)
+;     or a
+    ret
+
+
+;-----------------------------------------------
+; combat suit
+update_boss8_behavior_2:
+;     ld a, (boss__state)
+;     or a
+    ret
+
+
+;-----------------------------------------------
+; flying core
+update_boss8_behavior_3:
+;     ld a, (boss__state)
+;     or a
+    ret
+
+
+;-----------------------------------------------
+; death
+update_boss8_behavior_4:
+;     ld a, (boss__state)
+;     or a
+    ret
+
+
+
+;-----------------------------------------------
+; input:
+; - e: tile number that was hit
+; - iyh: damage to deal
+; - iyl: collision ID
+; - ix: ptr of the tile we hit
+player_weapon_hitbox_check_boss__boss8_hit:
+    ld a, (boss__behavior)
+    or a
+    ret z
+
+    ; hit the main body:
+;     ld a, e
+;     cp 222  ; first punch tile
+;     jp c, player_weapon_hitbox_check_boss__boss6_hit_body
+    ld hl, SFX_shield
+    jp play_SFX_with_high_priority
+; player_weapon_hitbox_check_boss__boss6_hit_body:
+;     ld hl, player_weapon_hitbox_check_boss__lose_hp
+;     ld c, BOSS_PAGE
+;     jp call_hl_in_page_c_8000   
+
+
+;-----------------------------------------------
 tile_collision_types_boss8:
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0

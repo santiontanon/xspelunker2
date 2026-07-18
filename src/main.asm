@@ -223,10 +223,6 @@ Execute:
 ;     ld a, ENDING_PAGE
 ;     jp jp_to_hl_in_page_a_8000
 
-;     ld hl, calendar_room_full_activation_boss8_intro_scene
-;     ld a, BOSS_8_PAGE
-;     jp jp_to_hl_in_page_a_8000
-
 
 ;-----------------------------------------------
 ; Loads the interrupt hook for playing music:
