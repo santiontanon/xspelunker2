@@ -370,8 +370,6 @@ enter_boss_door__spawn_atlantis_boss_objects:
 
 
 enter_boss_door__spawn_mars_boss_objects:
-; 	ld hl, update_animations_in_vdp_boss5
-; 	ld (current_room__animation_fn_ptr), hl	
 	xor a
 	ld (boss__6_eye_frame), a
 	ld hl, update_boss6_draw_boss_first_frame
@@ -402,7 +400,8 @@ enter_boss_door__spawn_final_boss_objects:
 	; setup boss room before it is drawn:
     ld a, PLAYER_STATE_INVISIBLE
     ld (player_state), a
-	; ...
+	ld hl, update_animations_in_vdp_boss8
+	ld (current_room__animation_fn_ptr), hl	
 	ret
 
 

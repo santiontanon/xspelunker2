@@ -2,8 +2,6 @@ to do:
 
 ***- 8th boss: (t'apuchako)
   ***- boss room events:
-    OK - player is not there (do I need an "invisible" player state?)
-    ***- vat bubbles animation
     ***- eye animation (blink)
     ***- left-door opens
     ***- spawn 2/3 aliens, who enter the room, and walk to the boss
