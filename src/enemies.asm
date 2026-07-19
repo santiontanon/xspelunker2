@@ -23,6 +23,7 @@ enemy_update_fn_table:
 	dw update_enemy_poison_cloud
 	dw update_enemy_boss6_laser
 	dw update_enemy_boss7_poison_spit
+	dw update_enemy_boss8_plasma_ball
 	; enemies you can hit:
 	dw update_enemy_snake  ; left-to-right
 	dw update_enemy_snake_dasher  ; left-to-right + dash
@@ -73,6 +74,7 @@ enemy_update_fn_table:
 	dw update_enemy_boss6_stone
 	dw update_enemy_boss6_drone_stone
 	dw update_enemy_boss8_alien  ; not really an enemy, just used for the intro scene
+	dw update_enemy_boss8_turret
 
 
 ;-----------------------------------------------
@@ -5167,6 +5169,83 @@ update_enemy_boss8_alien_talking:
 	jr z, update_enemy_boss8_alien_idle
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 10) * 4
 	jr update_enemy_boss8_alien_idle_entry_point
+
+
+;-----------------------------------------------
+update_enemy_boss8_plasma_ball:
+	ld iyh, 4  ; damage to deal
+	call update_enemy_hurt_player_shieldable_bullet
+	jp z, update_enemy_delete
+	
+	ld a, (current_world__difficulty_bullet_speed)
+	ld l, a
+	call update_enemy_bullet_bresenham_l_steps
+	; - b: amount to move in y
+	; - c: amount to move in x
+	call update_enemy_move_cb
+
+	; out of the screen?
+	ld a, (current_room__width)
+	dec a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	jp z, update_enemy_delete
+	jp c, update_enemy_delete
+
+	ld a, (current_room__height)
+	dec a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	jp z, update_enemy_delete
+	jp c, update_enemy_delete
+
+	ld d, COLOR_LIGHT_BLUE
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 23) * 4 
+	jp enemy_sprite_and_continue_animated4
+
+
+;-----------------------------------------------
+update_enemy_boss8_turret:
+	ld iyh, 4  ; damage to deal
+	call update_enemy_hurt_player_2x2
+
+	inc (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+
+	; - state 0: appearing
+	; - state 1: tracking player
+	; - state 2: tracking alien (intro-only)
+	; - state 3: fire
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	or a
+	jr z, update_enemy_boss8_turret_0
+	dec a
+	jr z, update_enemy_boss8_turret_1
+	dec a
+	jr z, update_enemy_boss8_turret_2
+	dec a
+	jr z, update_enemy_boss8_turret_3
+	
+update_enemy_boss8_turret_0:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	ld d, COLOR_BLUE
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 11) * 4 
+	cp 8
+	jp c, enemy_sprite_and_continue
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 12) * 4 
+	cp 16
+	jp c, enemy_sprite_and_continue
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 13) * 4 
+	cp 24
+	jp c, enemy_sprite_and_continue
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 14) * 4 
+	jp enemy_sprite_and_continue
+
+update_enemy_boss8_turret_1:
+update_enemy_boss8_turret_2:
+update_enemy_boss8_turret_3:
+	ld d, COLOR_BLUE
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 14) * 4 
+	jp enemy_sprite_and_continue
 
 
 ;-----------------------------------------------

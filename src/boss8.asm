@@ -168,7 +168,8 @@ update_boss8_behavior_0_intro_scene_2:
     ld (boss__state_timer), a
     ld a, 3
     ld (boss__state), a
-    ret    
+    ret
+
 update_boss8_behavior_0_intro_scene_2_spawn_alien:
     call ptr_to_new_sprite_enemy
     ; ret nz  ; should never happen
@@ -285,11 +286,45 @@ update_boss8_behavior_0_intro_scene_4:
     ld c, TEXT_PAGE
     call call_hl_in_page_c_8000
 
+    ld bc, #020d
+    call update_boss8_behavior_0_intro_scene_4_spawn_turret
+
+    ld bc, #0212
+    call update_boss8_behavior_0_intro_scene_4_spawn_turret
+
     xor a
     ld (boss__state_timer), a
     ld a, 5
     ld (boss__state), a
     ret
+
+update_boss8_behavior_0_intro_scene_4_spawn_turret:
+    push bc
+        call ptr_to_new_sprite_enemy
+    pop bc
+    ; ret nz  ; should never happen
+    push hl
+    pop ix
+    ld (hl), 0  ; ID
+    inc hl
+    ld (hl), ENEMY_BOSS8_TURRET
+    inc hl
+    ld (hl), 0  ; pixel X
+    inc hl
+    ld (hl), c  ; tile X
+    inc hl
+    ld (hl), 0  ; pixel Y
+    inc hl
+    ld (hl), b  ; tile Y
+    inc hl
+    ld (hl), 0  ; state (appearing)
+    inc hl
+    ld (hl), 0  ; state timer
+    inc hl
+    ld (hl), #ff  ; hit ID
+    inc hl
+    ld (hl), 16  ; health
+    ret    
 
 update_boss8_behavior_0_intro_scene_5:
     call update_boss8_eye_blink

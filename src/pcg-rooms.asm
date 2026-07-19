@@ -89,7 +89,7 @@ area_default_tileset_ptrs:
 	dw tiles_xibalba_zx0, update_animations_in_vdp_xibalba
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_xibalba
-	db ENEMY_SPRITES_PAGE
+	db XIBALBA_ENEMY_SPRITES_PAGE
 	dw xibalba_enemy_sprites_zx0  ; xibalba
 	dw 0
 	db 0

@@ -248,7 +248,7 @@ enter_boss_door__collision_ptr_page_set:
 		ld bc, #1304  ; 4, 19
 		cp 6  ; is it the moon boss?
 		jr z, enter_boss_door__room_spawn_coordinates_set
-		ld bc, #0205  ; 5, 2
+		ld bc, #0505  ; 5, 5
 		cp 7  ; is it the final boss?
 		jr z, enter_boss_door__room_spawn_coordinates_set
 		ld bc, #1404  ; 4, 20
