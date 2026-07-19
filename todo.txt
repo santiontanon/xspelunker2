@@ -2,7 +2,14 @@ to do:
 
 ***- 8th boss: (t'apuchako)
   ***- boss room events:
-    ***- boss kills them (which weapon does it use?)
+    ***- some turrets appear at the top of the screen and kill the aliens:
+      ***- create enemy type
+      ***- spawn them and make them appear
+      ***- draw plasma ball
+      ***- add sprites to game
+      ***- create enemy bullet types
+      ***- rotate the towers and make them fire
+      ***- replace aliens by explosions (no drop)
     ***- boss complains on its own that they are all useless
     ***- the teleporter gate appears and you show up
     ***- boss says something like "What?! What is this creature and what is it doing here?!" and then a couple of lines of you saying that you will end this, and boss daring you to try.
