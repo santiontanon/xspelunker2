@@ -768,6 +768,16 @@ public class Text {
         
         // Boss 8:
         addLineSafe(lines_with_constant_page4, "Meanwhile, in the Maia system...", "BOSS8_INTRO_0", 18);
+        addLineSafe(lines_with_constant_page4, "Minion: Supreme Maia! I prostrate myself before you and beg for neural-sparing forgiveness for this unscheduled breach! But we have a critical transmission from the Sol-3 offensive!", "BOSS8_INTRO_1", 112);
+        addLineSafe(lines_with_constant_page4, "Leader: INSOLENCE! WHO DARES TRUNCATE MY CHRONO-MEDITATION?! IF THIS IS NOT A MATTER OF PLANETARY EXTINCTION, I WILL HAVE YOUR BIOMASS RECYCLED BY SUNSET!", "BOSS8_INTRO_2", 112);
+        addLineSafe(lines_with_constant_page4, "Minion: A thousand plasma-burns upon my lineage, Supreme Maia! This is indeed a catastrophe of the highest magnitude!", "BOSS8_INTRO_3", 112);
+        addLineSafe(lines_with_constant_page4, "Leader: YOU TEST MY PATIENCE! SPEAK AT ONCE!", "BOSS8_INTRO_4", 112);
+        addLineSafe(lines_with_constant_page4, "Minion: The Sol-3 annihilation armada... has been neutralized, Excellence. We have lost all telemetry and quantum-entangled comms with the flagship.", "BOSS8_INTRO_5", 112);
+        addLineSafe(lines_with_constant_page4, "Leader: WHAT?! ABSURD!! WHAT COULD THOSE PRIMITIVE, SOFT-SHELLED BIPEDS POSSIBLY DEPLOY AGAINST OUR ELITE STAR-DESTROYERS?!", "BOSS8_INTRO_6", 112);
+        addLineSafe(lines_with_constant_page4, "Minion: I... I dread to report, Great Sovereign... the indigenous specimens secured the nexus prior to our vanguard's arrival. They turned its payload against us.", "BOSS8_INTRO_7", 112);
+        addLineSafe(lines_with_constant_page4, "Leader: THE VANGUARD PERMITTED THIS?! THEY WERE OUTWITTED BY CAVEMEN?! ALTER THE FREQUENCY! THERE MUST BE A MISTAKE!!", "BOSS8_INTRO_8", 112);
+        addLineSafe(lines_with_constant_page4, "Minion: The telemetry is conclusive, Supreme Maia. The nexus reached maximum resonance and discharged a multi-terawatt tachyon wave. Our entire fleet... was vaporized.", "BOSS8_INTRO_9", 112);
+        addLineSafe(lines_with_constant_page4, "Leader: TRAITORS AND IMBECILES!! FOR WHAT PURPOSE DO I COMMAND AN EMPIRE?! MUST I INCINERATE EVERY MUD-BALL IN THIS QUADRANT MYSELF?! OUT OF MY SIGHT!!", "BOSS8_INTRO_10", 112);
         
         // Ending C:
         // First shared part:

@@ -248,6 +248,9 @@ enter_boss_door__collision_ptr_page_set:
 		ld bc, #1304  ; 4, 19
 		cp 6  ; is it the moon boss?
 		jr z, enter_boss_door__room_spawn_coordinates_set
+		ld bc, #0205  ; 5, 2
+		cp 7  ; is it the final boss?
+		jr z, enter_boss_door__room_spawn_coordinates_set
 		ld bc, #1404  ; 4, 20
 enter_boss_door__room_spawn_coordinates_set:
 		ld hl, player_x
@@ -407,7 +410,9 @@ enter_boss_door__spawn_final_boss_objects:
     ld hl, music_ending_aliens_bin
     ld (current_room__music_ptr), hl
     ld a, 5
-    ld (current_room__music_tempo), a	
+    ld (current_room__music_tempo), a
+	ld a, 1
+	ld (room_locked_scroll), a
 	ret
 
 

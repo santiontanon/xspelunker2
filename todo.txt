@@ -2,13 +2,7 @@ to do:
 
 ***- 8th boss: (t'apuchako)
   ***- boss room events:
-    ***- spawn 2 aliens, who enter the room, and walk to the boss:
-      ***- add aliens to the boss sprites
-      ***- create the sprite object types
-      ***- control them
-    ***- left-door-closes
-    ***- aliens informing that the armada was destroyed
-    ***- boss getting angry and kills them (which weapon does it use?)
+    ***- boss kills them (which weapon does it use?)
     ***- boss complains on its own that they are all useless
     ***- the teleporter gate appears and you show up
     ***- boss says something like "What?! What is this creature and what is it doing here?!" and then a couple of lines of you saying that you will end this, and boss daring you to try.

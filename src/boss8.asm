@@ -73,6 +73,12 @@ update_boss8_behavior_0:
     jr z, update_boss8_behavior_0_intro_scene_1
     dec a
     jp z, update_boss8_behavior_0_intro_scene_2
+    dec a
+    jp z, update_boss8_behavior_0_intro_scene_3
+    dec a
+    jp z, update_boss8_behavior_0_intro_scene_4
+    dec a
+    jp z, update_boss8_behavior_0_intro_scene_5
     ; ...
     ret
 update_boss8_behavior_init:
@@ -148,15 +154,147 @@ update_boss8_behavior_0_intro_scene_1_loop:
     ret
 
 update_boss8_behavior_0_intro_scene_2:
-    ; boss intro scene (aliens walk in):
+    ; boss intro scene (aliens walk in): 1st alien spawner at 24, second at 48
     call update_boss8_eye_blink
     ld hl, boss__state_timer
     inc (hl)
     ld a, (hl)
-
-    ; ...
-
+    cp 24
+    jr z, update_boss8_behavior_0_intro_scene_2_spawn_alien
+    cp 46
     ret nz
+    call update_boss8_behavior_0_intro_scene_2_spawn_alien
+    xor a
+    ld (boss__state_timer), a
+    ld a, 3
+    ld (boss__state), a
+    ret    
+update_boss8_behavior_0_intro_scene_2_spawn_alien:
+    call ptr_to_new_sprite_enemy
+    ; ret nz  ; should never happen
+    push hl
+    pop ix
+    ld (hl), 0  ; ID
+    inc hl
+    ld (hl), ENEMY_BOSS8_ALIEN
+    inc hl
+    ld (hl), 0  ; pixel X
+    inc hl
+    ld (hl), 0  ; tile X
+    inc hl
+    ld (hl), 0  ; pixel Y
+    inc hl
+    ld (hl), 21  ; tile Y
+    inc hl
+    ld (hl), 1  ; state (walking)
+    inc hl
+    ld (hl), 0  ; state timer
+    inc hl
+    ld (hl), #ff  ; hit ID
+    inc hl
+    ld (hl), 1  ; health
+    ret
+
+update_boss8_behavior_0_intro_scene_3:
+    call update_boss8_eye_blink
+    ld hl, boss__state_timer
+    inc (hl)
+    ld a, (hl)
+    cp 96
+    ret nz
+    ld ix, current_room__sprite_enemies  ; first alien
+    ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
+    ld ix, current_room__sprite_enemies + ROOM_OBJECT_STRUCT_SIZE  ; second alien
+    ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
+    ; left door closes:
+    ld de, current_room__tile_map + 18*32
+    ld hl, current_room__tile_map + 18*32 + 64*24
+    ld a, 5
+    ld bc, 30
+update_boss8_behavior_0_intro_scene_3_loop:
+    push bc
+        ldi
+        ldi
+    pop bc
+    add hl, bc
+    ex de, hl
+        add hl, bc
+    ex de, hl
+    dec a
+    jr nz, update_boss8_behavior_0_intro_scene_3_loop
+    ld hl, SFX_door_open
+    call play_SFX_with_high_priority
+    ld hl, redraw_flags
+    set ROOM_REDRAW_FLAG_BIT, (hl)
+    xor a
+    ld (boss__state_timer), a
+    ld a, 4
+    ld (boss__state), a
+    ret    
+
+update_boss8_behavior_0_intro_scene_4:
+    call update_boss8_eye_blink
+
+    ld de, TEXT_BOSS8_INTRO_1
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ld de, TEXT_BOSS8_INTRO_2
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ld de, TEXT_BOSS8_INTRO_3
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ld de, TEXT_BOSS8_INTRO_4
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ld de, TEXT_BOSS8_INTRO_5
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ld de, TEXT_BOSS8_INTRO_6
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ld de, TEXT_BOSS8_INTRO_7
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ld de, TEXT_BOSS8_INTRO_8
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ld de, TEXT_BOSS8_INTRO_9
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ld de, TEXT_BOSS8_INTRO_10
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    xor a
+    ld (boss__state_timer), a
+    ld a, 5
+    ld (boss__state), a
+    ret
+
+update_boss8_behavior_0_intro_scene_5:
+    call update_boss8_eye_blink
+    ; ...
+    ret
 
 
 ;-----------------------------------------------

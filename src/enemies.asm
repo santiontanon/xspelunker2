@@ -72,6 +72,7 @@ enemy_update_fn_table:
 	dw update_enemy_mushroom2
 	dw update_enemy_boss6_stone
 	dw update_enemy_boss6_drone_stone
+	dw update_enemy_boss8_alien  ; not really an enemy, just used for the intro scene
 
 
 ;-----------------------------------------------
@@ -5107,6 +5108,65 @@ update_enemy_boss7_poison_spit_landed:
 	ld d, COLOR_GREEN
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 7) * 4 
 	jp enemy_sprite_and_continue_animated4_slow
+
+
+;-----------------------------------------------
+; Not really enemies, only used during the intro:
+; states:
+; - 0: idle
+; - 1: walking right
+; - 2: talking
+update_enemy_boss8_alien:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	or a
+	jr z, update_enemy_boss8_alien_idle
+	dec a
+	jr z, update_enemy_boss8_alien_walking
+	dec a
+	jr z, update_enemy_boss8_alien_talking
+	; ...
+update_enemy_boss8_alien_idle:
+	; sprites: idle: 5+6
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 6) * 4
+update_enemy_boss8_alien_idle_entry_point:
+	ld c, 0
+	ld d, COLOR_PURPLE
+	call get_sprite_object_sprite_coordinates
+	jp nz, update_sprite_enemies_loop_next
+	call add_sprite_to_this_frame
+	ld a, -4
+	add a, b
+	ld b, a
+	ld a, d
+	and #80  ; preserve early clock bit
+	add a, COLOR_GREEN
+	ld d, a
+	ld a, e
+	add a, -4
+	ld e, a
+	call add_sprite_to_this_frame
+	jp update_sprite_enemies_loop_next
+
+update_enemy_boss8_alien_walking:
+	ld bc, #0001
+	call update_enemy_move_cb
+
+	ld a, (interrupt_cycle)
+	rrca
+	rrca
+	and #04
+	jr z, update_enemy_boss8_alien_idle
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 8) * 4
+	jr update_enemy_boss8_alien_idle_entry_point
+
+update_enemy_boss8_alien_talking:
+	ld a, (interrupt_cycle)
+	rrca
+	rrca
+	and #04
+	jr z, update_enemy_boss8_alien_idle
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 10) * 4
+	jr update_enemy_boss8_alien_idle_entry_point
 
 
 ;-----------------------------------------------
