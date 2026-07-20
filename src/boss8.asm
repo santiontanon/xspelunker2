@@ -79,7 +79,12 @@ update_boss8_behavior_0:
     jp z, update_boss8_behavior_0_intro_scene_4
     dec a
     jp z, update_boss8_behavior_0_intro_scene_5
-    ; ...
+    dec a
+    jp z, update_boss8_behavior_0_intro_scene_6
+    dec a
+    jp z, update_boss8_behavior_0_intro_scene_7
+    dec a
+    jp z, update_boss8_behavior_0_intro_scene_8
     ret
 update_boss8_behavior_init:
     ld a, (current_world__difficulty)
@@ -328,13 +333,194 @@ update_boss8_behavior_0_intro_scene_4_spawn_turret:
 
 update_boss8_behavior_0_intro_scene_5:
     call update_boss8_eye_blink
-    ; ...
+    ld hl, boss__state_timer
+    inc (hl)
+    ld a, (hl)
+    cp 72
+    ret nz
+    ; fire bullets:
+    ld bc, #030d
+    ld de, #12ff
+    call update_boss8_behavior_0_intro_scene_5_spawn_bullet
+
+    ld bc, #0312
+    ld de, #12fd
+    call update_boss8_behavior_0_intro_scene_5_spawn_bullet
+
+    xor a
+    ld (boss__state_timer), a
+    ld a, 6
+    ld (boss__state), a
+    ret
+
+update_boss8_behavior_0_intro_scene_5_spawn_bullet:
+    push bc
+    push de
+        call ptr_to_new_sprite_enemy
+    pop de
+    pop bc
+    ; ret nz  ; should never happen
+    push hl
+    pop ix
+    ld (hl), 0  ; ID
+    inc hl
+    ld (hl), ENEMY_BOSS8_PLASMA_BALL
+    inc hl
+    ld (hl), 0  ; pixel X
+    inc hl
+    ld (hl), c  ; tile X
+    inc hl
+    ld (hl), 0  ; pixel Y
+    inc hl
+    ld (hl), b  ; tile Y
+    inc hl
+    ld (hl), 0  ; state (appearing)
+    inc hl
+    ld (hl), e  ; ROOM_OBJECT_STRUCT_SPEED_X
+    inc hl
+    ld (hl), d  ; ROOM_OBJECT_STRUCT_SPEED_Y
+    inc hl
+    ld (hl), 0  ; -
+    inc hl
+    ld (hl), 0  ; ROOM_OBJECT_STRUCT_BRESENHAM_STATE
+
+    ld hl, SFX_raygun
+    jp play_SFX_with_high_priority
+
+update_boss8_behavior_0_intro_scene_6:
+    call update_boss8_eye_blink
+    ld hl, boss__state_timer
+    inc (hl)
+    ld a, (hl)
+    cp 46
+    ret nz
+    ; replace aliens by explosions:
+    ld ix, current_room__sprite_enemies
+    ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+    ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+    push bc
+        call sprite_object_remove_object_enemy
+    pop bc
+    call spawn_explosion
+
+    ld ix, current_room__sprite_enemies
+    ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+    ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+    push bc
+        call sprite_object_remove_object_enemy
+    pop bc
+    call spawn_explosion
+
+    xor a
+    ld (boss__state_timer), a
+    ld a, 7
+    ld (boss__state), a
+    ret
+
+update_boss8_behavior_0_intro_scene_7:
+    call update_boss8_eye_blink
+    ld hl, boss__state_timer
+    inc (hl)
+    ld a, (hl)
+    cp 50
+    ret nz
+
+    ld de, TEXT_BOSS8_INTRO_11
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ; teleporter appears:
+    ld ix, BOSS8_NAMETABLE_TELEPORTER
+    ld iyl, 4
+    ld b, 3
+    ld de, current_room__tile_map + 4 + 4*32
+    ld c, BOSS_PAGE
+    ld hl, draw_boss_frame_part_ix_iyl
+    call call_hl_in_page_c_8000
+    ld hl, draw_room_with_hud
+    ld c, TILES_PAGE
+    call call_hl_in_page_c_8000
+    ld hl, SFX_secret
+    call play_SFX_with_high_priority
+    ld b, 20
+    call wait_b_halts
+
+    ld a, PLAYER_STATE_TELEPORT_IN
+    ld (player_state), a
+    ld a, 4
+    ld (player_x), a
+    ld a, 31  ; immune while teleporting
+    ld (player_immunity_timer), a
+
+    xor a
+    ld (boss__state_timer), a
+    ld a, 8
+    ld (boss__state), a
+    ret
+
+
+update_boss8_behavior_0_intro_scene_8:
+    call update_boss8_eye_blink
+    ld hl, boss__state_timer
+    inc (hl)
+    ld a, (hl)
+    cp 32
+    ret nz
+
+    ld de, TEXT_BOSS8_INTRO_12
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ld de, TEXT_BOSS8_INTRO_13
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ld de, TEXT_BOSS8_INTRO_14
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ld de, TEXT_BOSS8_INTRO_15
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ; combat starts:
+    ld ix, boss8_name_initial_sprite_attributes
+    ld de, boss8_name_y_table
+    ld hl, update_boss_behavior_bring_name_down_ix
+    ld c, BOSS_PAGE
+    call call_hl_in_page_c_8000
+
+    ld b, 200
+    call wait_b_halts_skippable
+    ld ix, boss8_name_initial_sprite_attributes
+    ld de, boss8_name_y_table + 23
+    ld hl, update_boss_behavior_bring_name_up_ix
+    ld c, BOSS_PAGE
+    call call_hl_in_page_c_8000
+
+    ; make turrets follow player:
+    ld ix, current_room__sprite_enemies
+    ld (ix + ROOM_OBJECT_STRUCT_STATE), 1
+    ld ix, current_room__sprite_enemies + ROOM_OBJECT_STRUCT_SIZE
+    ld (ix + ROOM_OBJECT_STRUCT_STATE), 1
+
+    xor a
+    ld (boss__state_timer), a
+    ld (boss__state), a    
+    inc a
+    ld (boss__behavior), a
     ret
 
 
 ;-----------------------------------------------
 ; brain in a vat
 update_boss8_behavior_1:
+    call update_boss8_eye_blink
 ;     ld a, (boss__state)
 ;     or a
     ret

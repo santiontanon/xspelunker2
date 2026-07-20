@@ -1,17 +1,6 @@
 to do:
 
 ***- 8th boss: (t'apuchako)
-  ***- boss room events:
-    ***- turret logic:
-      ***- state 1: tracking player
-      ***- state 2: tracking alien (intro-only)
-      ***- state 3: fire
-    ***- make turrets go to state 2 after appearing, wait a bit, and fire towards aliens
-    ***- replace aliens by explosions (no drop) (calculate the timing so it looks like they were hit)
-    ***- boss complains on its own that they are all useless
-    ***- the teleporter gate appears and you show up
-    ***- boss says something like "What?! What is this creature and what is it doing here?!" and then a couple of lines of you saying that you will end this, and boss daring you to try.
-    ***- boss name comes down, and battle starts
   ***- design boss phases and attacks (better ray gun should significantly help):
     ***- phase 2: combat suit appears, and brain is lifted into it.
   ***- implement them

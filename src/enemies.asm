@@ -5221,7 +5221,7 @@ update_enemy_boss8_turret:
 	dec a
 	jr z, update_enemy_boss8_turret_2
 	dec a
-	jr z, update_enemy_boss8_turret_3
+	jp z, update_enemy_boss8_turret_3
 	
 update_enemy_boss8_turret_0:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
@@ -5235,16 +5235,144 @@ update_enemy_boss8_turret_0:
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 13) * 4 
 	cp 24
 	jp c, enemy_sprite_and_continue
-	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2  ; move to the "following aliens state"
 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+	ld (ix + ROOM_OBJECT_STRUCT_EXTRA1), (FIRST_ENEMY_SPRITE_PATTERN + 14) * 4  ; pointing left
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 14) * 4 
 	jp enemy_sprite_and_continue
 
 update_enemy_boss8_turret_1:
+	; following player:
+	ld a, (player_x + 1)
+	sub (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld c, a
+	ld a, (player_y + 1)
+	sub (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	ld b, a
+	jr update_enemy_boss8_turret_2_follow_coordinates
+
 update_enemy_boss8_turret_2:
-update_enemy_boss8_turret_3:
+	; following aliens:
+	ld a, 16
+	sub (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld c, a
+	ld a, 22
+	sub (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	ld b, a
+update_enemy_boss8_turret_2_follow_coordinates:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	and #07
+	jp nz, update_enemy_boss8_turret_2_continue	
+	ld a, c
+	or a
+	jp p, update_enemy_boss8_turret_2_follow_coordinates_right
+update_enemy_boss8_turret_2_follow_coordinates_left:
+	neg
+	ld c, a  ; c = |c|
+	ld a, b
+	or a
+	jp p, update_enemy_boss8_turret_2_follow_coordinates_left_continue
+	; point left:
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 14) * 4
+	jp update_enemy_boss8_turret_2_move_to_desired_angle
+update_enemy_boss8_turret_2_follow_coordinates_left_continue:
+	; c, b are positive:
+	; 14:  if c > b * 4
+	; 15:  if c > b * 2
+	; 16:  if b < c * 2
+	; 17:  if b < c * 4
+	; 18:  else
+	ld a, b
+	add a, a
+	add a, a
+	cp c
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 14) * 4
+	jp m, update_enemy_boss8_turret_2_move_to_desired_angle
+
+	ld a, b
+	add a, a
+	cp c
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 15) * 4
+	jp m, update_enemy_boss8_turret_2_move_to_desired_angle
+
+	ld a, c
+	add a, a
+	cp b
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 16) * 4
+	jp p, update_enemy_boss8_turret_2_move_to_desired_angle
+
+	add a, a
+	cp b
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 17) * 4
+	jp p, update_enemy_boss8_turret_2_move_to_desired_angle
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 18) * 4
+	jp update_enemy_boss8_turret_2_move_to_desired_angle
+
+update_enemy_boss8_turret_2_follow_coordinates_right:
+	ld a, b
+	or a
+	jp p, update_enemy_boss8_turret_2_follow_coordinates_right_continue
+	; point left:
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 22) * 4
+	jp update_enemy_boss8_turret_2_move_to_desired_angle
+update_enemy_boss8_turret_2_follow_coordinates_right_continue:
+	; c, b are positive:
+	; 22:  if c > b * 4
+	; 21:  if c > b * 2
+	; 20:  if b < c * 2
+	; 19:  if b < c * 4
+	; 18:  else
+	ld a, b
+	add a, a
+	add a, a
+	cp c
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 22) * 4
+	jp m, update_enemy_boss8_turret_2_move_to_desired_angle
+
+	ld a, b
+	add a, a
+	cp c
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 21) * 4
+	jp m, update_enemy_boss8_turret_2_move_to_desired_angle
+
+	ld a, c
+	add a, a
+	cp b
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 20) * 4
+	jp p, update_enemy_boss8_turret_2_move_to_desired_angle
+
+	add a, a
+	cp b
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 19) * 4
+	jp p, update_enemy_boss8_turret_2_move_to_desired_angle
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 18) * 4
+	jp update_enemy_boss8_turret_2_move_to_desired_angle
+
+update_enemy_boss8_turret_2_move_to_desired_angle:
+	ld a, e
+	sub (ix + ROOM_OBJECT_STRUCT_EXTRA1)
+	jr z, update_enemy_boss8_turret_2_continue
+	jp p, update_enemy_boss8_turret_2_move_to_desired_angle_inc
+	ld a, -4
+	add a, (ix + ROOM_OBJECT_STRUCT_EXTRA1)
+	ld (ix + ROOM_OBJECT_STRUCT_EXTRA1), a
+	jr update_enemy_boss8_turret_2_continue
+update_enemy_boss8_turret_2_move_to_desired_angle_inc:
+	ld a, 4
+	add a, (ix + ROOM_OBJECT_STRUCT_EXTRA1)
+	ld (ix + ROOM_OBJECT_STRUCT_EXTRA1), a
+
+update_enemy_boss8_turret_2_continue:
 	ld d, COLOR_BLUE
-	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 14) * 4 
+	ld e, (ix + ROOM_OBJECT_STRUCT_EXTRA1)
+	jp enemy_sprite_and_continue
+
+
+update_enemy_boss8_turret_3:
+	; firing:
+	; ...
+	ld d, COLOR_BLUE
+	ld e, (ix + ROOM_OBJECT_STRUCT_EXTRA1)
 	jp enemy_sprite_and_continue
 
 

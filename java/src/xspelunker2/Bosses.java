@@ -1122,15 +1122,15 @@ public class Bosses {
         data.addAll(GenerateSprites.extractSprite(sourceImage, 144, 208, 15));  // turret appearing 1
         data.addAll(GenerateSprites.extractSprite(sourceImage, 128, 208, 15));  // turret appearing 2
         data.addAll(GenerateSprites.extractSprite(sourceImage, 112, 208, 15));  // turret appearing 3
-        data.addAll(GenerateSprites.extractSprite(sourceImage, 64, 192, 15));  // turret left
+        data.addAll(GenerateSprites.extractSprite(sourceImage, 64, 192, 15));  // turret left (14)
         data.addAll(GenerateSprites.extractSprite(sourceImage, 80, 192, 15));
-        data.addAll(GenerateSprites.extractSprite(sourceImage, 96, 192, 15));  // turret left-down
+        data.addAll(GenerateSprites.extractSprite(sourceImage, 96, 192, 15));  // turret left-down (16)
         data.addAll(GenerateSprites.extractSprite(sourceImage, 112, 192, 15));
-        data.addAll(GenerateSprites.extractSprite(sourceImage, 128, 192, 15));  // turret down
+        data.addAll(GenerateSprites.extractSprite(sourceImage, 128, 192, 15));  // turret down (18)
         data.addAll(GenerateSprites.extractSprite(sourceImage, 144, 192, 15));
-        data.addAll(GenerateSprites.extractSprite(sourceImage, 64, 208, 15));  // turret right-down
+        data.addAll(GenerateSprites.extractSprite(sourceImage, 64, 208, 15));  // turret right-down (20)
         data.addAll(GenerateSprites.extractSprite(sourceImage, 80, 208, 15));
-        data.addAll(GenerateSprites.extractSprite(sourceImage, 96, 208, 15));  // right
+        data.addAll(GenerateSprites.extractSprite(sourceImage, 96, 208, 15));  // right (22)
         
         // plasma vall (23)
         data.addAll(GenerateSprites.extractSprite(sourceImage, 80, 224, 15));

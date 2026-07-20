@@ -778,6 +778,12 @@ public class Text {
         addLineSafe(lines_with_constant_page4, "Leader: THE VANGUARD PERMITTED THIS?! THEY WERE OUTWITTED BY CAVEMEN?! ALTER THE FREQUENCY! THERE MUST BE A MISTAKE!!", "BOSS8_INTRO_8", 112);
         addLineSafe(lines_with_constant_page4, "Minion: The telemetry is conclusive, Supreme Maia. The nexus reached maximum resonance and discharged a multi-terawatt tachyon wave. Our entire fleet... was vaporized.", "BOSS8_INTRO_9", 112);
         addLineSafe(lines_with_constant_page4, "Leader: TRAITORS AND IMBECILES!! FOR WHAT PURPOSE DO I COMMAND AN EMPIRE?! MUST I INCINERATE EVERY MUD-BALL IN THIS QUADRANT MYSELF?! OUT OF MY SIGHT!!", "BOSS8_INTRO_10", 112);
+
+        addLineSafe(lines_with_constant_page4, "Leader: INCOMPETENCE!! WHY IN THE GALAXY ARE ALL MY SUBORDINATES SO USELESS!!", "BOSS8_INTRO_11", 112);
+        addLineSafe(lines_with_constant_page4, "Leader: A HUMAN!! IN MY CHAMBERS?! WHAT IS THE MEANING OF THIS?!", "BOSS8_INTRO_12", 112);
+        addLineSafe(lines_with_constant_page4, "Michael: A human you say? Not any human! I am Michael S. Xavier, and I have come to make you pay for your crimes!", "BOSS8_INTRO_13", 112);
+        addLineSafe(lines_with_constant_page4, "Leader: MY... CRIMES?! WHAT IS THIS INSOLENCE!?", "BOSS8_INTRO_14", 112);
+        addLineSafe(lines_with_constant_page4, "Leader: BUT NO MATTER. I SEE I WILL HAVE TO DO THINGS MYSELF... AGAIN... COME HERE AND FIND DEATH, LITTLE HUMAN!!", "BOSS8_INTRO_15", 112);
         
         // Ending C:
         // First shared part:
