@@ -1,9 +1,34 @@
 to do:
 
 ***- 8th boss: (t'apuchako)
-  ***- design boss phases and attacks (better ray gun should significantly help):
-    ***- phase 2: combat suit appears, and brain is lifted into it.
-  ***- implement them
+  ***- phase 1:
+    ***- turrets fire at you
+    ***- update tile collision table (vat is "wall"?, chains are "rope")
+    ***- you can hit the vat
+    ***- if you destroy the turrets or damage the vat enough, go to phase 2
+  ***- phase 2:
+    ***- boss says: "Leader: ENOUGH OF THIS FOOLISHNESS. GET ME MY COMBAT ARMOR!!"
+    ***- back giant door opens
+    ***- brain is lifted, and vat lowered
+    ***- giant suit walks in
+    ***- brain is deposited inside
+    ***- update tile collision table
+    ***- turrets reappear
+    ***- walk forward/backward
+    ***- bullets through eyes
+    ***- fist is launched, and flies in a loop, then goes back
+    ***- big laser attack (made out of tiles): from eye? or from a fist? it should be able to be launched at any height (robot crouching)
+    ***- homing missiles from rocket launcher in head (do I have enough sprites? I might need to remove the turrets for this)
+    ***- to damage it, you need to hit the eye (you reach jumping, or with weapons)
+  ***- phase 3:
+    ***- legs/arms explode, and core flies arround
+    ***- it can fly around up/down and left/right in some predefined patterns (some times it should stop, so you can hit it with regular weapons)
+    ***- turrets reappear
+    ***- some times it can fly towards you
+    ***- bullets through eye
+    ***- drops bombs while above
+    ***- the difficulty is that it's hard to hit it.
+    ***- big explosion when killed, with alien boss saying some "Leader: NOOOO!!!!" or something
   ***- add boss name to the stats for game over screen
   ***- once boss is defeated, aliens arrive at the scene and seeing you defeated their leader, one of them actually thanks you for freeing them from the violent ruler, and welcoming a new era of peace. Invites you to stay or visit any time you want. You then leave from the teleporter and go back to Elaine, leading to the final end sequence
 
