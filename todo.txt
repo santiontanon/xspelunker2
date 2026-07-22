@@ -1,6 +1,14 @@
 to do:
 
 ***- 8th boss: (t'apuchako)
+  ***- draw frames:
+    ***- right arm should be a bit longer
+    ***- add color details
+    ***- walk animation:
+    ***- arms moving:
+      ***- fist arm: face forward to do rocket punch
+      ***- gun arm: point at different directions
+    ***- add data to assembler
   ***- phase 1:
     ***- turrets fire at you
     ***- update tile collision table (vat is "wall"?, chains are "rope")
