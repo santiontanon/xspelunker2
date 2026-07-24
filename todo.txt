@@ -2,12 +2,11 @@ to do:
 
 ***- 8th boss: (t'apuchako)
   ***- draw frames:
-    ***- right arm should be a bit longer
-    ***- add color details
-    ***- walk animation:
+    ***- convert the one current frame to assembler to check #tiles and color clash
     ***- arms moving:
       ***- fist arm: face forward to do rocket punch
       ***- gun arm: point at different directions
+    ***- walk animation
     ***- add data to assembler
   ***- phase 1:
     ***- turrets fire at you
