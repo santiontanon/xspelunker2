@@ -1,13 +1,14 @@
 to do:
 
+
+
 ***- 8th boss: (t'apuchako)
   ***- draw frames:
-    ***- eye blinking animation
-    ***- deposit brain in suit animation
+    ***- walk animation (6 frames including the current one, so, 5 extra)
     ***- arms moving:
       ***- fist arm: face forward to do rocket punch
       ***- gun arm: point at different directions
-    ***- walk animation
+    ***- deposit brain in suit animation
     ***- add data to assembler
   ***- phase 1:
     ***- turrets fire at you
