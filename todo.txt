@@ -2,7 +2,8 @@ to do:
 
 ***- 8th boss: (t'apuchako)
   ***- draw frames:
-    ***- convert the one current frame to assembler to check #tiles and color clash
+    ***- eye blinking animation
+    ***- deposit brain in suit animation
     ***- arms moving:
       ***- fist arm: face forward to do rocket punch
       ***- gun arm: point at different directions
