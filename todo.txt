@@ -2,10 +2,7 @@ to do:
 
 ***- 8th boss: (t'apuchako)
   ***- draw frames:
-    ***- walk animation (6 frames including the current one, so, 5 extra)
-    ***- arms moving:
-      ***- fist arm: face forward to do rocket punch
-      ***- gun arm: point at different directions
+    ***- gun arm: point at different directions (missing pointing diagonal up)
     ***- deposit brain in suit animation
     ***- add data to assembler (split tiles between banks 1-2 and 3)
   ***- phase 1:
@@ -23,7 +20,7 @@ to do:
     ***- turrets reappear
     ***- walk forward/backward
     ***- bullets through eyes
-    ***- fist is launched, and flies in a loop, then goes back
+    ***- fist is launched, and flies in a loop, then goes back (draw first in different directions)
     ***- big laser attack (made out of tiles): from eye? or from a fist? it should be able to be launched at any height (robot crouching)
     ***- homing missiles from rocket launcher in head (do I have enough sprites? I might need to remove the turrets for this)
     ***- to damage it, you need to hit the eye (you can only hit with raygun, or standing on top)
