@@ -1064,75 +1064,93 @@ public class Bosses {
     public static void boss8Tiles() throws Exception
     {
         List<Integer> nameTableData = new ArrayList<>();        
+
         
-        {
-            // brain in the vat:
-            String bossBaseTiles = "data/boss8-base-tiles.png";
-            String boss5Tiles = "data/boss8.png";
-            boolean availableTiles[] = new boolean[256];
-            int collision[] = new int[256];
-            findAvailableBossTiles(bossBaseTiles, availableTiles, collision, alien_boss_collision, true);
-            BufferedImage baseImage = ImageIO.read(new File(bossBaseTiles));        
+        String bossBaseTilesPath = "data/boss8-base-tiles.png";
+        String boss5TilesPath = "data/boss8.png";
+        boolean availableTiles_phase1[] = new boolean[256];
+        boolean availableTiles_phase1b_12[] = new boolean[256];
+//        boolean availableTiles_phase1b_3[] = new boolean[256];
+        boolean availableTiles_phase2_12a[] = new boolean[256];
+        boolean availableTiles_phase2_12b[] = new boolean[256];
+        boolean availableTiles_phase2_3[] = new boolean[256];
+        int collision_phase1[] = new int[256];
+        int collision_phase1b_12[] = new int[256];
+//        int collision_phase1b_3[] = new int[256];
+        int collision_phase2_12a[] = new int[256];
+        int collision_phase2_12b[] = new int[256];
+        int collision_phase2_3[] = new int[256];
+        findAvailableBossTiles(bossBaseTilesPath, availableTiles_phase1, collision_phase1, alien_boss_collision, true);
+        findAvailableBossTiles(bossBaseTilesPath, availableTiles_phase1b_12, collision_phase1b_12, alien_boss_collision, true);
+//        findAvailableBossTiles(bossBaseTilesPath, availableTiles_phase1b_3, collision_phase1b_3, alien_boss_collision, true);
+        findAvailableBossTiles(bossBaseTilesPath, availableTiles_phase2_12a, collision_phase2_12a, alien_boss_collision, true);
+        findAvailableBossTiles(bossBaseTilesPath, availableTiles_phase2_12b, collision_phase2_12b, alien_boss_collision, true);
+        findAvailableBossTiles(bossBaseTilesPath, availableTiles_phase2_3, collision_phase2_3, alien_boss_collision, true);
+        BufferedImage baseImage_phase1 = ImageIO.read(new File(bossBaseTilesPath));        
+        BufferedImage baseImage_phase1b_12 = ImageIO.read(new File(bossBaseTilesPath));        
+//        BufferedImage baseImage_phase1b_3 = ImageIO.read(new File(bossBaseTilesPath));        
+        BufferedImage baseImage_phase2_12a = ImageIO.read(new File(bossBaseTilesPath));        
+        BufferedImage baseImage_phase2_12b = ImageIO.read(new File(bossBaseTilesPath));        
+        BufferedImage baseImage_phase2_3 = ImageIO.read(new File(bossBaseTilesPath));        
 
-            List<int[]> nameTableBoxes = new ArrayList<>();
-            nameTableBoxes.add(new int[]{0, 32, 112, 144});  // brain in a vat phase
-            List<int[][]> nametables = addBossTilesInGapsForBoxes(nameTableBoxes, baseImage, boss5Tiles, availableTiles, collision, false, false);
+        List<int[]> nameTableBoxes = new ArrayList<>();
+        nameTableBoxes.add(new int[]{0, 0, 672, 176});  // brain in a vat
+        List<int[][]> nametables_phase1 = addBossTilesInGapsForBoxes(nameTableBoxes, baseImage_phase1, boss5TilesPath, availableTiles_phase1, collision_phase1, false, false);
+        nameTableBoxes.clear();
+        nameTableBoxes.add(new int[]{0, 184, 152, 256});  // eyes, suit core, base legs (banks 1-2)
+        nameTableBoxes.add(new int[]{440, 184, 520, 256});  // base arms (banks 1-2)
+        nameTableBoxes.add(new int[]{576, 184, 1024, 280});  // lowering brain into suit
+        List<int[][]> nametables_phase1b_12 = addBossTilesInGapsForBoxes(nameTableBoxes, baseImage_phase1b_12, boss5TilesPath, availableTiles_phase1b_12, collision_phase1b_12, false, false);
+//        nameTableBoxes.clear();
+//        nameTableBoxes.add(new int[]{0, 256, 152, 312});  // eyes, suit core, base legs (bank 3)
+//        nameTableBoxes.add(new int[]{440, 256, 520, 272});  // base arms (bank 3)
+//        List<int[][]> nametables_phase1b_3 = addBossTilesInGapsForBoxes(nameTableBoxes, baseImage_phase1b_3, boss5TilesPath, availableTiles_phase1b_3, collision_phase1b_3, false, false);
+        nameTableBoxes.clear();
+        nameTableBoxes.add(new int[]{0, 184, 520, 184 + 72});  // suit (banks 1-2) (common)
+        nameTableBoxes.add(new int[]{0, 312, 520, 312 + 72});  // suit (banks 1-2) (left arm)
+        List<int[][]> nametables_phase2_12a = addBossTilesInGapsForBoxes(nameTableBoxes, baseImage_phase2_12a, boss5TilesPath, availableTiles_phase2_12a, collision_phase2_12a, false, false);
+        nameTableBoxes.clear();
+        nameTableBoxes.add(new int[]{0, 184, 520, 184 + 72});  // suit (banks 1-2) (common)
+        nameTableBoxes.add(new int[]{0, 400, 520, 400 + 72});  // suit (banks 1-2) (right arm)
+        List<int[][]> nametables_phase2_12b = addBossTilesInGapsForBoxes(nameTableBoxes, baseImage_phase2_12b, boss5TilesPath, availableTiles_phase2_12b, collision_phase2_12b, false, false);
+        nameTableBoxes.clear();
+        nameTableBoxes.add(new int[]{0, 184 + 72, 520, 312});  // suit (banks 3)
+        nameTableBoxes.add(new int[]{0, 312 + 72, 520, 400});  // suit (banks 3)
+        nameTableBoxes.add(new int[]{0, 400 + 72, 520, 488});  // suit (banks 3)
+        List<int[][]> nametables_phase2_3 = addBossTilesInGapsForBoxes(nameTableBoxes, baseImage_phase2_3, boss5TilesPath, availableTiles_phase2_3, collision_phase2_3, false, false);
 
-            int nameTable[][] = nametables.get(0);
-            addNameTable(nameTable, 0, 1, 4, 4, nameTableData);  // teleporter
-            addNameTable(nameTable, 4, 0, 14, 14, nameTableData);  // brain in the vat
+        // Reorganize tiles so that shareed tiles appear in the same locations:
+        // baseImage_phase1 -> baseImage_phase1b_12
+        // baseImage_phase1 -> baseImage_phase2_3
+        // baseImage_phase1b_12 -> baseImage_phase2_12a
+        // baseImage_phase2_12a -> baseImage_phase2_12b
+        reorganizeTilesForBankTransition(baseImage_phase1, baseImage_phase1b_12, nametables_phase1, nametables_phase1b_12);
+        reorganizeTilesForBankTransition(baseImage_phase1, baseImage_phase2_3, nametables_phase1, nametables_phase2_3);
+        reorganizeTilesForBankTransition(baseImage_phase1b_12, baseImage_phase2_12a, nametables_phase1b_12, nametables_phase2_12a);
+        reorganizeTilesForBankTransition(baseImage_phase2_12a, baseImage_phase2_12b, nametables_phase2_12a, nametables_phase2_12b);
+        
+        ImageIO.write(baseImage_phase1, "png", new File("data/boss8-phase1-tiles.png"));
+        GenerateTiles.extractTiles("data/boss8-phase1-tiles.png", "src/autogenerated/boss8-phase1-tiles", 24, 128);
+        ImageIO.write(baseImage_phase1b_12, "png", new File("data/boss8-phase1b-12-tiles.png"));
+//        GenerateTiles.extractTiles("data/boss8-phase1b-12-tiles.png", "src/autogenerated/boss8-phase1b-12-tiles", 24, 128);
+//        ImageIO.write(baseImage_phase1b_3, "png", new File("data/boss8-phase1b-3-tiles.png"));
+//        GenerateTiles.extractTiles("data/boss8-phase1b-3-tiles.png", "src/autogenerated/boss8-phase1b-3-tiles", 24, 128);
+        ImageIO.write(baseImage_phase2_12a, "png", new File("data/boss8-phase2-bank1-tiles.png"));
+        GenerateTiles.extractTiles("data/boss8-phase2-bank1-tiles.png", "src/autogenerated/boss8-phase2-bank1-tiles", 24, 128);
+        ImageIO.write(baseImage_phase2_12b, "png", new File("data/boss8-phase2-bank1b-tiles.png"));
+        GenerateTiles.extractTiles("data/boss8-phase2-bank1b-tiles.png", "src/autogenerated/boss8-phase2-bank1b-tiles", 24, 128);
+        ImageIO.write(baseImage_phase2_3, "png", new File("data/boss8-phase2-bank3-tiles.png"));
+        GenerateTiles.extractTiles("data/boss8-phase2-bank3-tiles.png", "src/autogenerated/boss8-phase2-bank3-tiles", 24, 128);        
+        
+        int nameTable[][] = nametables_phase1.get(0);
+        addNameTable(nameTable, 0, 9, 4, 12, nameTableData);  // teleporter
+        addNameTable(nameTable, 4, 8, 14, 22, nameTableData);  // brain in the vat
 
-            addNameTable(nameTable, 0, 4, 1, 6, nameTableData);  // eye open
-            addNameTable(nameTable, 1, 4, 2, 6, nameTableData);  // eye closing
-            addNameTable(nameTable, 2, 4, 3, 6, nameTableData);  // eye closed
-            addNameTable(nameTable, 3, 4, 4, 6, nameTableData);  // eye down
-            addNameTable(nameTable, 0, 6, 1, 8, nameTableData);  // eye up
-            
-            ImageIO.write(baseImage, "png", new File("data/boss8-tiles.png"));
-            GenerateTiles.extractTiles("data/boss8-tiles.png", "src/autogenerated/boss8-tiles", 24, 128);
-        }        
-
-        {
-            // mechanical armor:
-            String bossBaseTilesPath = "data/boss8-base-tiles.png";
-            String boss5TilesPath = "data/boss8.png";
-            boolean availableTiles12a[] = new boolean[256];
-            boolean availableTiles12b[] = new boolean[256];
-            int collision12a[] = new int[256];
-            int collision12b[] = new int[256];
-            boolean availableTiles3[] = new boolean[256];
-            int collision3[] = new int[256];
-            findAvailableBossTiles(bossBaseTilesPath, availableTiles12a, collision12a, alien_boss_collision, true);
-            findAvailableBossTiles(bossBaseTilesPath, availableTiles12b, collision12b, alien_boss_collision, true);
-            findAvailableBossTiles(bossBaseTilesPath, availableTiles3, collision3, alien_boss_collision, true);
-            BufferedImage baseImage12a = ImageIO.read(new File(bossBaseTilesPath));        
-            BufferedImage baseImage12b = ImageIO.read(new File(bossBaseTilesPath));        
-            BufferedImage baseImage3 = ImageIO.read(new File(bossBaseTilesPath));        
-
-            List<int[]> nameTableBoxes = new ArrayList<>();
-            nameTableBoxes.add(new int[]{0, 152, 640, 152 + 72});  // suit (banks 1-2) (common)
-            nameTableBoxes.add(new int[]{0, 280, 640, 280 + 72});  // suit (banks 1-2) (left arm)
-            List<int[][]> nametables12a = addBossTilesInGapsForBoxes(nameTableBoxes, baseImage12a, boss5TilesPath, availableTiles12a, collision12a, false, false);
-            nameTableBoxes.clear();
-            nameTableBoxes.add(new int[]{0, 152, 640, 152 + 72});  // suit (banks 1-2) (common)
-            nameTableBoxes.add(new int[]{0, 368, 640, 368 + 72});  // suit (banks 1-2) (right arm)
-            List<int[][]> nametables12b = addBossTilesInGapsForBoxes(nameTableBoxes, baseImage12b, boss5TilesPath, availableTiles12b, collision12b, false, false);
-            nameTableBoxes.clear();
-            nameTableBoxes.add(new int[]{0, 152 + 72, 640, 280});  // suit (banks 3)
-            nameTableBoxes.add(new int[]{0, 280 + 72, 640, 368});  // suit (banks 3)
-            nameTableBoxes.add(new int[]{0, 368 + 72, 640, 456});  // suit (banks 3)
-            List<int[][]> nametables3 = addBossTilesInGapsForBoxes(nameTableBoxes, baseImage3, boss5TilesPath, availableTiles3, collision3, false, false);
-
-//            int nameTable[][] = nametables.get(0);
-//            addNameTable(nameTable, 2, 0, 16, 16, nameTableData);  // suit
-            
-            ImageIO.write(baseImage12a, "png", new File("data/boss8-phase2-bank1-tiles.png"));
-            GenerateTiles.extractTiles("data/boss8-phase2-bank1-tiles.png", "src/autogenerated/boss8-phase2-bank1-tiles", 24, 128);
-            ImageIO.write(baseImage12b, "png", new File("data/boss8-phase2-bank1b-tiles.png"));
-            GenerateTiles.extractTiles("data/boss8-phase2-bank1b-tiles.png", "src/autogenerated/boss8-phase2-bank1b-tiles", 24, 128);
-            ImageIO.write(baseImage3, "png", new File("data/boss8-phase2-bank3-tiles.png"));
-            GenerateTiles.extractTiles("data/boss8-phase2-bank3-tiles.png", "src/autogenerated/boss8-phase2-bank3-tiles", 24, 128);
-        }
+        addNameTable(nameTable, 0, 12, 1, 14, nameTableData);  // eye open
+        addNameTable(nameTable, 1, 12, 2, 14, nameTableData);  // eye closing
+        addNameTable(nameTable, 2, 12, 3, 14, nameTableData);  // eye closed
+        addNameTable(nameTable, 3, 12, 4, 14, nameTableData);  // eye down
+        addNameTable(nameTable, 0, 14, 1, 16, nameTableData);  // eye up
         
         System.out.println("name tables: " + nameTableData.size() + " bytes");
         Z80Assembler.dataToBinary(nameTableData, "src/autogenerated/boss8-nametables.bin");
@@ -1184,6 +1202,79 @@ public class Bosses {
         String outputPath = "src/autogenerated/boss8-sprites";
         Z80Assembler.dataToBinary(data, outputPath + ".bin");
         ZX0Wrapper.main(outputPath + ".bin", outputPath + ".zx0", true, false);
+    }
+    
+    
+    public static void reorganizeTilesForBankTransition(
+            BufferedImage tileset1,
+            BufferedImage tileset2,
+            List<int[][]> nametables1,
+            List<int[][]> nametables2) throws Exception {
+        for(int i = 0;i<256;i++) {
+            List<Integer> tile1 = getTile(tileset1, (i%16) * 8, (i/16) * 8);
+            boolean isEmpty = true;
+            for(Integer v: tile1) {
+                if (!v.equals(0)) {
+                    isEmpty = false;
+                    break;
+                }
+            }
+            if (isEmpty) continue;
+            for(int j = 0;j<256;j++) {
+                if (i == j) continue;
+                List<Integer> tile2 = getTile(tileset2, (j%16) * 8, (j/16) * 8);
+                boolean match = true;
+                for(int k = 0;k<8*8;k++) {
+                    if (!tile1.get(k).equals(tile2.get(k))) {
+                        match = false;
+                        break;
+                    }
+                }
+                if (match) {
+                    // tiles match, swap them in tileset2:
+                    List<Integer> tile2b = getTile(tileset2, (i%16) * 8, (i/16) * 8);
+                    // - draw tile2 to position i
+                    for(int ii = 0;ii<8;ii++) {
+                        for(int jj = 0;jj<8;jj++) {
+                            tileset2.setRGB((i%16) * 8 + jj, (i/16) * 8 + ii, ConvertPatternsToAssembler.MSXColorToRGB(tile2.get(jj+ii*8)));
+                        }
+                    }
+                    // - draw tile2b to position j
+                    for(int ii = 0;ii<8;ii++) {
+                        for(int jj = 0;jj<8;jj++) {
+                            tileset2.setRGB((j%16) * 8 + jj, (j/16) * 8 + ii, ConvertPatternsToAssembler.MSXColorToRGB(tile2b.get(jj+ii*8)));
+                        }
+                    }
+                    
+                    // swap tile ids in nametables:
+                    for(int nametable[][]: nametables2) {
+                        for(int ii = 0;ii<nametable.length;ii++) {
+                            for(int jj = 0;jj<nametable[ii].length;jj++) {
+                                if (nametable[ii][jj] == i) {
+                                    nametable[ii][jj] = j;
+                                } else if (nametable[ii][jj] == i) {
+                                    nametable[ii][jj] = i;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    
+    public static List<Integer> getTile(BufferedImage sourceImage, int j, int i) throws Exception
+    {
+        List<Integer> tile = new ArrayList<>();
+        for(int ii = 0;ii<8;ii++) {
+            for(int jj = 0;jj<8;jj++) {
+                int color = ConvertPatternsToAssembler.findMSXColor(j+jj, i+ii, sourceImage, 0);
+                if (color == -1) throw new Exception("Unknown color at " + (j+jj) + ", " + (i+ii));
+                tile.add(color);
+            }
+        }
+        return tile;
     }
     
     

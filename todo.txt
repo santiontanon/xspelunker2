@@ -1,8 +1,6 @@
 to do:
 
 ***- 8th boss: (t'apuchako)
-  ***- draw deposit brain in suit (split data between phase1 gfx and maybe a special set for phase2)
-  ***- add data to assembler (tiles and nametables)
   ***- phase 1:
     ***- turrets fire at you
     ***- update tile collision table (vat is "wall"?, chains are "rope")
