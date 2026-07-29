@@ -3,8 +3,7 @@ to do:
 ***- 8th boss: (t'apuchako)
   ***- phase 1:
     ***- turrets fire at you
-    ***- update tile collision table (vat is "wall"?, chains are "rope")
-    ***- you can hit the vat
+    ***- you can hit the vat (what can you hit? maybe the life support parts? the glass?)
     ***- if you destroy the turrets or damage the vat enough, go to phase 2
   ***- phase 2:
     ***- boss says: "Leader: ENOUGH OF THIS FOOLISHNESS. GET ME MY COMBAT ARMOR!!"
