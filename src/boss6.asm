@@ -1361,7 +1361,14 @@ player_weapon_hitbox_check_boss__boss6_hit:
 	cp 222  ; first punch tile
 	jp c, player_weapon_hitbox_check_boss__boss6_hit_body
 	ld hl, SFX_shield
-	jp play_SFX_with_high_priority
+	call play_SFX_with_high_priority
+	xor a
+	ld (player_weapon_hitbox_check_result), a  ; mark a hit
+	ld a, (boss__last_collision_id2)
+	ld (boss__last_collision_id1), a
+	ld a, iyl
+	ld (boss__last_collision_id2), a
+	ret
 player_weapon_hitbox_check_boss__boss6_hit_body:
 	ld hl, player_weapon_hitbox_check_boss__lose_hp
 	ld c, BOSS_PAGE

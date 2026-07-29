@@ -1263,6 +1263,11 @@ player_weapon_hitbox_check_boss:
 	push de
 		call get_room_tile_ptr
 	pop bc
+
+	ld a, (boss__current_boss_number)
+	cp 7
+	jr z, player_weapon_hitbox_check_boss_loop_y_boss_8  ; boss 8 is special in that not all its tiles are type 9
+
 	; hl ptr, and c, b are the width and height of the hit box:
 player_weapon_hitbox_check_boss_loop_y:
 	push bc
@@ -1303,6 +1308,49 @@ player_weapon_hitbox_check_boss_loop_x_skip
 		add hl, bc
 	pop bc
 	djnz player_weapon_hitbox_check_boss_loop_y
+	ret
+
+
+	; hl ptr, and c, b are the width and height of the hit box:
+player_weapon_hitbox_check_boss_loop_y_boss_8:
+	push bc
+		push hl
+			ld b, c
+player_weapon_hitbox_check_boss_loop_x_boss_8:
+			push bc
+				ld a, (hl)
+				ld e, a  ; save the tile number for "boss__hit_fn"
+				; get collision type:
+				ld bc, current_room__collision_table
+				ADD_BC_A
+				ld a, (bc)
+				or a
+				jr z, player_weapon_hitbox_check_boss_loop_x_skip_boss_8
+
+				; potential hit!
+				; e: tile we hit
+				; ix: ptr of the tile we hit
+				push hl
+				pop ix
+				ld hl, (boss__hit_fn)
+				ld a, (boss__hit_fn_page)
+				ld c, a
+				call call_hl_in_page_c_8000
+			pop bc
+		pop hl
+	pop bc
+	ret
+player_weapon_hitbox_check_boss_loop_x_skip_boss_8
+			inc hl
+			pop bc
+			djnz player_weapon_hitbox_check_boss_loop_x_boss_8
+		pop hl
+		ld a, (current_room__width)
+		ld c, a
+		ld b, 0
+		add hl, bc
+	pop bc
+	djnz player_weapon_hitbox_check_boss_loop_y_boss_8
 	ret
 
 
