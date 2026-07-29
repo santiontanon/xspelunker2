@@ -5243,6 +5243,14 @@ update_enemy_boss8_turret_0:
 
 update_enemy_boss8_turret_1:
 	; following player:
+	call random_a
+	and #1f
+	jr nz, update_enemy_boss8_turret_1_continue
+	; fire
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 3
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+update_enemy_boss8_turret_1_continue:
+
 	ld a, (player_x + 1)
 	sub (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	ld c, a
@@ -5370,7 +5378,48 @@ update_enemy_boss8_turret_2_continue:
 
 update_enemy_boss8_turret_3:
 	; firing:
-	; ...
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 16
+	jr nz, update_enemy_boss8_turret_3_continue
+	; spawn bullet:
+
+	ld e, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld d, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	call update_enemy_player_close_enough_16_ed  ; and put difference in c, b
+	; fire a bullet:
+	push bc
+	push de
+		call ptr_to_new_sprite_enemy
+	pop de
+	pop bc
+	jr nz, update_enemy_boss8_turret_3_continue
+	ld (hl), 0  ; ID
+	inc hl
+	ld (hl), ENEMY_BOSS8_PLASMA_BALL
+	inc hl
+	ld (hl), 0  ; pixel X
+	inc hl
+	ld (hl), e  ; tile X
+	inc hl
+	ld (hl), 4  ; pixel Y
+	inc hl
+	ld (hl), d  ; tile Y
+	inc hl
+	ld (hl), 0  ; state
+	inc hl
+	ld (hl), c  ; speed x
+	inc hl
+	ld (hl), b  ; speed y
+    inc hl
+    ld (hl), 0  ; -
+    inc hl
+    ld (hl), 0  ; ROOM_OBJECT_STRUCT_BRESENHAM_STATE
+	ld hl, SFX_raygun
+	call play_SFX_with_high_priority
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+
+update_enemy_boss8_turret_3_continue:
 	ld d, COLOR_BLUE
 	ld e, (ix + ROOM_OBJECT_STRUCT_EXTRA1)
 	jp enemy_sprite_and_continue
