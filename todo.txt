@@ -1,9 +1,7 @@
 to do:
 
 ***- 8th boss: (t'apuchako)
-  ***- phase 1:
-    ***- turrets reappear after a while (just periodically check them)
-    ***- transition trigger to phase 2 (enough damage to harness)
+  ***- transition trigger to phase 2 (enough damage to harness)
   ***- phase 2:
     ***- boss says: "Leader: ENOUGH OF THIS FOOLISHNESS. GET ME MY COMBAT ARMOR!!"
     ***- back giant door opens

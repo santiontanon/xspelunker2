@@ -123,11 +123,7 @@ update_boss8_behavior_init_continue:
     xor a
     call update_boss8_draw_boss_frame
     ld b, 10
-    call update_boss8_draw_chains  ; draws the chains that hold the supporting machine up to height 10
-
-    ; ...
-
-    ret
+    jp update_boss8_draw_chains  ; draws the chains that hold the supporting machine up to height 10
 
 update_boss8_behavior_0_intro_scene_1:
     ; boss intro scene (start, and door opens):
@@ -178,8 +174,6 @@ update_boss8_behavior_0_intro_scene_2:
 update_boss8_behavior_0_intro_scene_2_spawn_alien:
     call ptr_to_new_sprite_enemy
     ; ret nz  ; should never happen
-    push hl
-    pop ix
     ld (hl), 0  ; ID
     inc hl
     ld (hl), ENEMY_BOSS8_ALIEN
@@ -308,8 +302,6 @@ update_boss8_behavior_0_intro_scene_4_spawn_turret:
         call ptr_to_new_sprite_enemy
     pop bc
     ; ret nz  ; should never happen
-    push hl
-    pop ix
     ld (hl), 0  ; ID
     inc hl
     ld (hl), ENEMY_BOSS8_TURRET
@@ -360,8 +352,6 @@ update_boss8_behavior_0_intro_scene_5_spawn_bullet:
     pop de
     pop bc
     ; ret nz  ; should never happen
-    push hl
-    pop ix
     ld (hl), 0  ; ID
     inc hl
     ld (hl), ENEMY_BOSS8_PLASMA_BALL
@@ -521,6 +511,7 @@ update_boss8_behavior_0_intro_scene_8:
 ; brain in a vat
 update_boss8_behavior_1:
     call update_boss8_eye_blink
+    call update_boss8_check_turret_respawn
 ;     ld a, (boss__state)
 ;     or a
     ret
@@ -547,6 +538,39 @@ update_boss8_behavior_3:
 update_boss8_behavior_4:
 ;     ld a, (boss__state)
 ;     or a
+    ret
+
+
+;-----------------------------------------------
+update_boss8_check_turret_respawn:
+    ld bc, #020d 
+    call update_boss8_check_turret_respawn_internal
+    ld bc, #0212 
+update_boss8_check_turret_respawn_internal:
+    ld iy, current_room__sprite_enemies
+    ld de, ROOM_OBJECT_STRUCT_SIZE
+update_boss8_check_turret_respawn_internal_loop:
+    ld a, (iy)
+    cp #ff
+    jr z, update_boss8_check_turret_respawn_internal_not_found
+    ld a, (iy + ROOM_OBJECT_STRUCT_TYPE)
+    cp ENEMY_BOSS8_TURRET
+    jr nz, update_boss8_check_turret_respawn_internal_loop_next
+    ld a, (iy + ROOM_OBJECT_STRUCT_TILE_X)
+    cp c
+    jr nz, update_boss8_check_turret_respawn_internal_loop_next
+    ; found!
+    ret
+update_boss8_check_turret_respawn_internal_loop_next:
+    add iy, de
+    jr update_boss8_check_turret_respawn_internal_loop
+update_boss8_check_turret_respawn_internal_not_found:
+    ld b, 24  ; spawn it lower, so it cannot be hit
+    call update_boss8_behavior_0_intro_scene_4_spawn_turret
+    dec hl
+    dec hl
+    dec hl
+    ld (hl), 4  ; state (hidden)
     ret
 
 

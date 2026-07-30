@@ -5213,6 +5213,7 @@ update_enemy_boss8_turret:
 	; - state 1: tracking player
 	; - state 2: tracking alien (intro-only)
 	; - state 3: fire
+	; - state 4: hidden (reappearing)
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
 	or a
 	jr z, update_enemy_boss8_turret_0
@@ -5222,6 +5223,8 @@ update_enemy_boss8_turret:
 	jr z, update_enemy_boss8_turret_2
 	dec a
 	jp z, update_enemy_boss8_turret_3
+	dec a
+	jp z, update_enemy_boss8_turret_4
 	
 update_enemy_boss8_turret_0:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
@@ -5236,6 +5239,11 @@ update_enemy_boss8_turret_0:
 	cp 24
 	jp c, enemy_sprite_and_continue
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2  ; move to the "following aliens state"
+	ld a, (boss__behavior)
+	or a
+	jr z, update_enemy_boss8_turret_0_continue
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1  ; move to the "following player state"
+update_enemy_boss8_turret_0_continue:
 	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
 	ld (ix + ROOM_OBJECT_STRUCT_EXTRA1), (FIRST_ENEMY_SPRITE_PATTERN + 14) * 4  ; pointing left
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 14) * 4 
@@ -5269,7 +5277,7 @@ update_enemy_boss8_turret_2:
 	ld b, a
 update_enemy_boss8_turret_2_follow_coordinates:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
-	and #07
+	and #03
 	jp nz, update_enemy_boss8_turret_2_continue	
 	ld a, c
 	or a
@@ -5423,6 +5431,15 @@ update_enemy_boss8_turret_3_continue:
 	ld d, COLOR_BLUE
 	ld e, (ix + ROOM_OBJECT_STRUCT_EXTRA1)
 	jp enemy_sprite_and_continue
+
+update_enemy_boss8_turret_4:
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
+	cp 128
+	jp nz, update_sprite_enemies_loop_next
+	ld (ix + ROOM_OBJECT_STRUCT_TILE_Y), 2
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
+	ld (ix + ROOM_OBJECT_STRUCT_STATE_TIMER), 0
+	jp update_sprite_enemies_loop_next
 
 
 ;-----------------------------------------------
