@@ -26,6 +26,34 @@ display_in_game_message_textpage3:
 	jr display_in_game_message
 
 
+
+;-----------------------------------------------
+; input:
+; - de: text to display
+display_in_game_message_textpage4_wait100:
+	; copy the text to buffer_4096:
+	ld hl, copy_text_from_another_page
+	ld c, TEXT_PAGE4
+	call call_hl_in_page_c_8000
+	ld de, buffer_4096
+	call display_in_game_message_draw_message
+	; wait 100 cycles (we do not call "wait_b_cycles" so that we can call update_keyboard_buffers):
+	ld b, 100
+display_in_game_message_textpage4_wait100_loop:
+    halt
+    push bc
+        call update_keyboard_buffers
+    pop bc
+    djnz display_in_game_message_textpage4_wait100_loop
+
+	call display_in_game_message_internal_continue
+	
+	ld a, (current_room__tileset_page)
+	ld c, a
+	ld hl, (current_room__tileset_ptr)
+	jp setup_game_tiles_only_biome
+
+
 ;-----------------------------------------------
 ; input:
 ; - de: text to display
@@ -55,6 +83,7 @@ display_in_game_message:
 display_in_game_message_internal:
 	call display_in_game_message_draw_message
 
+display_in_game_message_internal_continue:
 	call wait_for_click
 	xor a
 	ld (keyboard_clicks), a

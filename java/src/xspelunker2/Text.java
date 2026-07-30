@@ -784,6 +784,8 @@ public class Text {
         addLineSafe(lines_with_constant_page4, "Michael: A human you say? Not any human! I am Michael S. Xavier, and I have come to make you pay for your crimes!", "BOSS8_INTRO_13", 112);
         addLineSafe(lines_with_constant_page4, "Leader: MY... CRIMES?! WHAT IS THIS INSOLENCE!?", "BOSS8_INTRO_14", 112);
         addLineSafe(lines_with_constant_page4, "Leader: BUT NO MATTER. I SEE I WILL HAVE TO DO THINGS MYSELF... AGAIN... COME HERE AND FIND DEATH, LITTLE HUMAN!!", "BOSS8_INTRO_15", 112);
+
+        addLineSafe(lines_with_constant_page4, "Leader: ENOUGH OF THIS FOOLISHNESS. GET ME MY COMBAT ARMOR!!", "BOSS8_PHASE2_START", 112);
         
         // Ending C:
         // First shared part:

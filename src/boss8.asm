@@ -56,12 +56,16 @@ update_boss8_behavior_continue:
     or a
     jp z, update_boss8_behavior_0  ; before boss is spawned
     dec a
-    jp z, update_boss8_behavior_1  ; phase 1
+    jp z, update_boss8_behavior_1  ; phase 1 (brain in a vat)
     dec a
-    jp z, update_boss8_behavior_2  ; phase 2
+    jp z, update_boss8_behavior_2  ; transition to phase 2
     dec a
-    jp z, update_boss8_behavior_3  ; phase 3
-    jp update_boss8_behavior_4  ; death
+    jp z, update_boss8_behavior_3  ; phase 2 (mechanical armor)
+    dec a
+    jp z, update_boss8_behavior_4  ; transition to phase 3
+    dec a
+    jp z, update_boss8_behavior_5  ; phase 3 (flying core)
+    jp update_boss8_behavior_6  ; death
 
 
 ;-----------------------------------------------
@@ -512,21 +516,98 @@ update_boss8_behavior_0_intro_scene_8:
 update_boss8_behavior_1:
     call update_boss8_eye_blink
     call update_boss8_check_turret_respawn
-;     ld a, (boss__state)
-;     or a
+    ld bc, (boss__settings + BOSS_8_HP_PHASE2_OFFSET)
+    ld hl, (boss__hp)
+    or a
+    sbc hl, bc
+    ret nc
+    ld a, 2
+    ld (boss__behavior), a
+    xor a
+    ld (boss__state), a
+    ld (boss__state_timer), a
+    ret
+
+
+;-----------------------------------------------
+; transition to phase 2
+update_boss8_behavior_2:
+    call update_boss8_check_turret_respawn
+
+    ; states:
+    ;  0: Boss asks for the suit
+    ;  1: right door opens
+    ;  2: brain is lifted, and vat lowered
+    ;  3: giant suit walks in
+    ;  4: brain is deposited inside
+    ;  5: phase 3 start (reset HP, etc.)
+    ld a, (boss__state)
+    or a
+    jp z, update_boss8_behavior_2_state_0
+    dec a
+    jp z, update_boss8_behavior_2_state_1
+    dec a
+    jp z, update_boss8_behavior_2_state_2
+    ; ...
+    ret
+
+update_boss8_behavior_2_state_0:
+    ld de, TEXT_BOSS8_PHASE2_START
+    ld hl, display_in_game_message_textpage4_wait100
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+    ld a, 1
+    ld (boss__state), a
+    ret
+
+update_boss8_behavior_2_state_1:
+    call update_boss8_eye_blink
+    ; right door opens:
+    ld hl, boss__state_timer
+    ld a, (Hl)
+    inc (hl)
+    ld c, a
+    and #07
+    ret nz
+    ld a, c
+    and #f8
+    cp 16*8
+    jr z, update_boss8_behavior_2_state_1_done
+    ld h, 0
+    ld l, a
+    add hl, hl
+    add hl, hl
+    ex de, hl
+    ld hl, current_room__tile_map + 21*32 + 30
+    or a
+    sbc hl, de
+    ld (hl), 144
+    inc hl
+    ld (hl), 145
+    ld bc, 31
+    add hl, bc
+    ld (hl), 0
+    inc hl
+    ld (hl), 0
+    ld hl, redraw_flags
+    set ROOM_REDRAW_FLAG_BIT, (hl)
+    ld hl, SFX_door_open
+    jp play_SFX_with_high_priority
+
+update_boss8_behavior_2_state_1_done:
+    ld a, 2
+    ld (boss__state), a
+    xor a
+    ld (boss__state_timer), a
+    ret
+
+update_boss8_behavior_2_state_2:
+    ; ...
     ret
 
 
 ;-----------------------------------------------
 ; combat suit
-update_boss8_behavior_2:
-;     ld a, (boss__state)
-;     or a
-    ret
-
-
-;-----------------------------------------------
-; flying core
 update_boss8_behavior_3:
 ;     ld a, (boss__state)
 ;     or a
@@ -534,8 +615,24 @@ update_boss8_behavior_3:
 
 
 ;-----------------------------------------------
-; death
+; transition to phase 3
 update_boss8_behavior_4:
+;     ld a, (boss__state)
+;     or a
+    ret
+
+
+;-----------------------------------------------
+; flying core
+update_boss8_behavior_5:
+;     ld a, (boss__state)
+;     or a
+    ret
+
+
+;-----------------------------------------------
+; death
+update_boss8_behavior_6:
 ;     ld a, (boss__state)
 ;     or a
     ret

@@ -271,7 +271,7 @@ update_boss7_behavior_1_state_0_continue:
 	ld hl, (boss__hp)
 	or a
 	sbc hl, bc
-	jp c, update_boss7_behavior_1_to_state_2  ; if we are moving to phase 2, to go hiding!
+	jp c, update_boss7_behavior_1_to_state_2  ; if we are moving to phase 2, go to hiding!
 	ld a, (boss__settings + BOSS_7_POISON_ATTACK_MASK_OFFSET)
 	ld b, a
 	call random_a

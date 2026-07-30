@@ -1,16 +1,12 @@
 to do:
 
 ***- 8th boss: (t'apuchako)
-  ***- transition trigger to phase 2 (enough damage to harness)
   ***- phase 2:
-    ***- boss says: "Leader: ENOUGH OF THIS FOOLISHNESS. GET ME MY COMBAT ARMOR!!"
-    ***- back giant door opens
     ***- brain is lifted, and vat lowered
     ***- giant suit walks in
     ***- brain is deposited inside
     ***- boss HP reset
     ***- update tile collision table
-    ***- turrets reappear
     ***- walk forward/backward
     ***- bullets through eyes
     ***- fist is launched, and flies in a loop, then goes back (draw first in different directions? or just fast forward/backward when you try to climb the platforms?)
