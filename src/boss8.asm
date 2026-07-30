@@ -125,7 +125,7 @@ update_boss8_behavior_init_continue:
     ld (boss__state), a
 
     xor a
-    call update_boss8_draw_boss_frame
+    call update_boss8_draw_boss8_frame
     ld b, 10
     jp update_boss8_draw_chains  ; draws the chains that hold the supporting machine up to height 10
 
@@ -425,13 +425,11 @@ update_boss8_behavior_0_intro_scene_7:
     call call_hl_in_page_c_8000
 
     ; teleporter appears:
-    ld ix, BOSS8_NAMETABLE_TELEPORTER
-    ld iyl, 4
+    ld hl, BOSS8_NAMETABLE_TELEPORTER
+    ld c, 4
     ld b, 3
     ld de, current_room__tile_map + 4 + 4*32
-    ld c, BOSS_PAGE
-    ld hl, draw_boss_frame_part_ix_iyl
-    call call_hl_in_page_c_8000
+    call draw_boss8_frame_part
     ld hl, draw_room_with_hud
     ld c, TILES_PAGE
     call call_hl_in_page_c_8000
@@ -601,8 +599,49 @@ update_boss8_behavior_2_state_1_done:
     ld (boss__state_timer), a
     ret
 
+update_boss8_behavior_2_state_2_table:
+    dw BOSS8_NAMETABLE_BRAIN_IN_VAT_LIFTED1, current_room__tile_map + 20 + 9*32
+    dw BOSS8_NAMETABLE_BRAIN_IN_VAT_LIFTED2, current_room__tile_map + 20 + 8*32
+    dw BOSS8_NAMETABLE_BRAIN_IN_VAT_LIFTED3, current_room__tile_map + 20 + 7*32
+    dw BOSS8_NAMETABLE_BRAIN_IN_VAT_LIFTED4, current_room__tile_map + 20 + 6*32
+    dw BOSS8_NAMETABLE_BRAIN_IN_VAT_LIFTED5, current_room__tile_map + 20 + 5*32
+    dw BOSS8_NAMETABLE_BRAIN_IN_VAT_LIFTED6, current_room__tile_map + 20 + 4*32
+    dw BOSS8_NAMETABLE_BRAIN_IN_VAT_LIFTED7, current_room__tile_map + 20 + 3*32
+
 update_boss8_behavior_2_state_2:
-    ; ...
+    ld hl, boss__state_timer
+    ld a, (Hl)
+    inc (hl)
+    ld c, a
+    and #07
+    ret nz
+    ld a, c
+    rrca
+    and #7c
+    cp 7*4
+    jr z, update_boss8_behavior_2_state_2_continue
+    ld hl, update_boss8_behavior_2_state_2_table
+    ADD_HL_A
+    ld e, (hl)
+    inc hl
+    ld d, (hl)
+    inc hl
+    ld a, (hl)
+    inc hl
+    ld h, (hl)
+    ld l, a
+    ex de, hl
+    ld bc, #0c0a
+    call draw_boss8_frame_part_no_transparency
+    ld hl, redraw_flags
+    set ROOM_REDRAW_FLAG_BIT, (hl)
+    ret    
+
+update_boss8_behavior_2_state_2_continue:
+    ld a, 3
+    ld (boss__state), a
+    xor a
+    ld (boss__state_timer), a
     ret
 
 
@@ -694,19 +733,19 @@ update_boss8_eye_blink_0:
     ld a, 1
     ld (boss__8_eye_frame), a
     xor a
-    jp update_boss8_draw_boss_frame
+    jp update_boss8_draw_boss8_frame
 
 update_boss8_eye_blink_1:
 update_boss8_eye_blink_2:
     ld hl, boss__8_eye_frame
     inc (hl)
     xor a
-    jp update_boss8_draw_boss_frame
+    jp update_boss8_draw_boss8_frame
 
 update_boss8_eye_blink_3:
     xor a
     ld (boss__8_eye_frame), a
-    jp update_boss8_draw_boss_frame
+    jp update_boss8_draw_boss8_frame
 
 
 ;-----------------------------------------------
@@ -731,13 +770,11 @@ update_boss8_draw_chains_loop:
 ;-----------------------------------------------
 ; input:
 ; - a: frame to draw
-update_boss8_draw_boss_frame:
+update_boss8_draw_boss8_frame:
     push af
-        ld hl, draw_boss_frame_clear_previous_frame_1
-        ld c, BOSS_PAGE
-        call call_hl_in_page_c_8000
+        call draw_boss8_frame_clear_previous_frame_1
     pop af
-update_boss8_draw_boss_frame_not_clearing:
+update_boss8_draw_boss8_frame_not_clearing:
     ld hl, boss8_frame_ptrs
     add a, a
     ADD_HL_A
@@ -753,15 +790,13 @@ update_boss8_draw_boss_frame_not_clearing:
         ld bc, (boss__x)
         call get_room_tile_ptr
         ex de, hl  ; hl = ptr where the boss is to be drawn
-    pop ix
-    ld c, BOSS_PAGE
-    ld hl, draw_boss_frame_1_without_clearing_ix
-    call call_hl_in_page_c_8000
+    pop hl
+    call draw_boss8_frame_1_without_clearing
 
-update_boss8_draw_boss_frame_eye:
+update_boss8_draw_boss8_frame_eye:
     ld a, (boss__8_eye_frame)
     or a
-    jr z, update_boss8_draw_boss_frame_eye_drawn
+    jr z, update_boss8_draw_boss8_frame_eye_drawn
     ; draw eye frame:
     ld hl, boss8_eye_frame_ptrs
     add a, a
@@ -778,11 +813,9 @@ update_boss8_draw_boss_frame_eye:
         ld b, h
         call get_room_tile_ptr
         ex de, hl  ; hl = ptr where the boss is to be drawn
-    pop ix
-    ld c, BOSS_PAGE
-    ld hl, draw_boss_frame_internal_ix
-    call call_hl_in_page_c_8000
-update_boss8_draw_boss_frame_eye_drawn:
+    pop hl
+    call draw_boss8_frame_internal
+update_boss8_draw_boss8_frame_eye_drawn:
     ret
 
 
@@ -1161,3 +1194,249 @@ calendar_room_full_activation_restore_gfx:
     ld hl, upload_sprites_to_vdp
     ld c, SPRITES_PAGE
     jp call_hl_in_page_c_8000
+
+
+;-----------------------------------------------
+draw_boss8_frame_clear_previous_frame_1:
+    ; clear the previous frame
+    ld bc, (boss__clear_bbox_1 + 2)
+    ld a, c
+    or b
+    ret z
+    ld hl, (boss__clear_bbox_1)
+draw_boss8_frame_clear_previous_frame_1_continue:
+    ; here:
+    ; - hl: ptr
+    ; - bc: width, height
+    ld e, l
+    ld d, h
+    push bc
+        ld bc, boss__room_bg_buffer - current_room__tile_map
+        add hl, bc
+    pop bc
+    ; here:
+    ; - hl: points to the bg buffer
+    ; - de: points to the room part we want to clear
+draw_boss8_frame_clear_previous_frame_1_y_loop:
+    push bc
+        ld b, 0
+
+        ; if "de" < current_room__tile_map, skip row  ->  draw_boss8_frame_clear_previous_frame_1_y_loop_skip
+        ex de, hl
+        push bc
+        push hl
+            ld bc, current_room__tile_map
+            or a  ; clear carry flag
+            sbc hl, bc
+        pop hl
+        pop bc
+        ex de, hl
+        jr c, draw_boss8_frame_clear_previous_frame_1_y_loop_skip
+
+        ; if "de" >= boss__room_bg_buffer, we are done drawing
+        ex de, hl
+        push bc
+        push hl
+            ld bc, boss__room_bg_buffer
+            or a  ; clear carry flag
+            sbc hl, bc
+        pop hl
+        pop bc
+        ex de, hl
+        jr c, draw_boss8_frame_clear_previous_frame_1_y_loop_continue
+        ; outside of the room, we are done restoring background
+    pop bc
+    ret
+draw_boss8_frame_clear_previous_frame_1_y_loop_continue:
+        push hl
+        push de
+            ldir
+        pop de
+        pop hl
+draw_boss8_frame_clear_previous_frame_1_y_loop_skip:
+        ld a, (current_room__width)
+        ld c, a
+        add hl, bc
+        ex de, hl
+            add hl, bc
+        ex de, hl
+    pop bc
+    djnz draw_boss8_frame_clear_previous_frame_1_y_loop
+    ret
+
+
+;-----------------------------------------------
+; input:
+; - de: ptr to draw to
+; - hl: ptr to frame struct
+draw_boss8_frame_1:
+    push hl
+    push de
+        call draw_boss8_frame_clear_previous_frame_1
+    pop de
+    pop hl
+draw_boss8_frame_1_without_clearing:
+    push de
+        call draw_boss8_frame_internal
+
+        ; set clear bbox:
+        ld c, (hl)
+        inc hl
+        ld b, (hl)  ; bc is the offset wrt original draw pointer
+        inc hl
+        ld de, boss__clear_bbox_1 + 2
+        push bc
+            ldi
+            ldi
+        pop bc
+    pop hl
+    add hl, bc
+    ld (boss__clear_bbox_1), hl
+    ret
+
+
+;-----------------------------------------------
+; input:
+; - de: ptr to draw to
+; - hl: ptr to frame struct
+; output:
+; - hl: ptr to the boss__clear_bbox info
+draw_boss8_frame_internal:
+    ld a, (hl)  ; number of frame parts
+    inc hl
+    or a
+    ret z
+    ld b, a
+draw_boss8_frame_loop:
+    push bc
+        push de
+            ld c, (hl)  ; x offset
+            inc hl
+            ; sign extend c to bc:
+            ld a, c
+            rlca
+            sbc a
+            ld b, a 
+            ex de, hl
+                add hl, bc  ; add x offset
+            ex de, hl
+            ld a, (current_room__width)
+            ld c, a
+            ld a, (hl)  ; y offset
+            inc hl
+            or a
+            jr z, draw_boss8_frame_loop_continue
+            ex de, hl
+draw_boss8_frame_loop_y_offset_loop:
+                add hl, bc
+                dec a
+                jr nz, draw_boss8_frame_loop_y_offset_loop
+            ex de, hl
+draw_boss8_frame_loop_continue:
+            ld c, (hl)  ; width
+            inc hl
+            ld b, (hl)  ; height
+            inc hl
+            push hl
+                ld a, (hl)
+                inc hl
+                ld h, (hl)
+                ld l, a
+                call draw_boss8_frame_part
+            pop hl
+        pop de
+        inc hl
+        inc hl
+    pop bc
+    djnz draw_boss8_frame_loop
+    ret
+
+
+;-----------------------------------------------
+; input:
+; - hl: frame ptr
+; - de: destination ptr
+; - c, b: width, height
+draw_boss8_frame_part:
+draw_boss8_frame_part_loop_y:
+    push bc
+        push de
+            ; if "de" < current_room__tile_map, skip row  ->  draw_boss8_frame_part_loop_y_skip
+            ex de, hl
+            push bc
+            push hl
+                ld bc, current_room__tile_map
+                or a  ; clear carry flag
+                sbc hl, bc
+            pop hl
+            pop bc
+            ex de, hl
+            jr c, draw_boss8_frame_part_loop_y_skip
+
+            ld b, c
+draw_boss8_frame_part_loop_x:
+            ld a, (hl)
+            or a
+            jr z, draw_boss8_frame_part_loop_x_skip
+            ld (de), a
+draw_boss8_frame_part_loop_x_skip:
+            inc hl
+            inc de
+            djnz draw_boss8_frame_part_loop_x
+draw_boss8_frame_part_loop_y_skip2:
+        pop de
+        ex de, hl
+        ld a, (current_room__width)
+        ; ld b, 0
+        ld c, a
+        add hl, bc
+        ex de, hl
+    pop bc
+    djnz draw_boss8_frame_part_loop_y
+    ret
+draw_boss8_frame_part_loop_y_skip:
+            ; advance 'hl':
+            ld b, 0
+            add hl, bc
+            jr draw_boss8_frame_part_loop_y_skip2
+
+
+;-----------------------------------------------
+; input:
+; - hl: frame ptr
+; - de: destination ptr
+; - c, b: width, height
+draw_boss8_frame_part_no_transparency:
+draw_boss8_frame_part_no_transparency_loop_y:
+    push bc
+        push de
+            ; if "de" < current_room__tile_map, skip row  ->  draw_boss8_frame_part_loop_y_skip
+            ex de, hl
+            push bc
+            push hl
+                ld bc, current_room__tile_map
+                or a  ; clear carry flag
+                sbc hl, bc
+            pop hl
+            pop bc
+            ex de, hl
+            jr c, draw_boss8_frame_part_no_transparency_loop_y_skip
+
+            ld b, 0
+            ldir
+draw_boss8_frame_part_no_transparency_loop_y_skip2:
+        pop de
+        ex de, hl
+        ld a, (current_room__width)
+;         ld b, 0
+        ld c, a
+        add hl, bc
+        ex de, hl
+    pop bc
+    djnz draw_boss8_frame_part_no_transparency_loop_y
+    ret
+draw_boss8_frame_part_no_transparency_loop_y_skip:
+            ; advance 'hl':
+            ld b, 0
+            add hl, bc
+            jr draw_boss8_frame_part_no_transparency_loop_y_skip2

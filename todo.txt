@@ -2,11 +2,11 @@ to do:
 
 ***- 8th boss: (t'apuchako)
   ***- phase 2:
-    ***- brain is lifted, and vat lowered
-    ***- giant suit walks in
+    ***- brain can be hit while in the air (modify collision table and hit_fn)
+    ***- vat is lowered
+    ***- giant suit walks in (update tile collision table)
     ***- brain is deposited inside
     ***- boss HP reset
-    ***- update tile collision table
     ***- walk forward/backward
     ***- bullets through eyes
     ***- fist is launched, and flies in a loop, then goes back (draw first in different directions? or just fast forward/backward when you try to climb the platforms?)
