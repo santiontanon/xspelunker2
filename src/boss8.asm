@@ -18,6 +18,15 @@ boss8_eye_frame_ptrs:
     dw boss8_eye_frame_4_up
 
 
+boss8_frame_ptrs_phase2:
+    dw boss8_suit_base_frame
+    dw boss8_suit_walk_frame1
+;     dw boss8_suit_walk_frame2
+;     dw boss8_suit_walk_frame3
+;     dw boss8_suit_walk_frame4
+;     dw boss8_suit_walk_frame5
+
+
 ;-----------------------------------------------
 ; Boss phases:
 ; - phase 1: brain in a vat (until ~75% health)
@@ -618,6 +627,7 @@ update_boss8_behavior_2_state_2_table:
     dw BOSS8_NAMETABLE_BRAIN_IN_VAT_LIFTED8, current_room__tile_map + 22 - 1*32
     dw BOSS8_NAMETABLE_BRAIN_IN_VAT_LIFTED8, current_room__tile_map + 22 - 2*32
     dw BOSS8_NAMETABLE_BRAIN_IN_VAT_LIFTED8, current_room__tile_map + 22 - 3*32
+    dw BOSS8_NAMETABLE_BRAIN_IN_VAT_LIFTED8, current_room__tile_map + 22 - 4*32
 
 update_boss8_behavior_2_state_2:
     ; raise the brain:
@@ -630,7 +640,7 @@ update_boss8_behavior_2_state_2:
     ld a, c
     rrca
     and #7c
-    cp 13*4
+    cp 14*4
     jr z, update_boss8_behavior_2_state_2_continue
     ld hl, update_boss8_behavior_2_state_2_table
     ADD_HL_A
@@ -659,7 +669,7 @@ update_boss8_behavior_2_state_2_continue:
 update_boss8_behavior_2_state_3:
     ; lower the vat:
     ld hl, boss__state_timer
-    ld a, (Hl)
+    ld a, (hl)
     inc (hl)
     ld c, a
     and #07
@@ -699,6 +709,11 @@ update_boss8_behavior_2_state_3_continue:
     ld (current_room__tileset_bank3_ptr), hl
     call setup_game_tiles_only_biome
 
+    ld bc, 0
+    ld (boss__clear_bbox_1), bc
+    ld bc, #071e  ; 30, 7
+    ld (boss__x), bc
+
     ld a, 4
     ld (boss__state), a
     xor a
@@ -707,12 +722,51 @@ update_boss8_behavior_2_state_3_continue:
 
 update_boss8_behavior_2_state_4:
     ; suit walks in:
-    ; ...
+    ld hl, boss__state_timer
+    ld a, (hl)
+    inc (hl)
+    ld c, a
+    and #07
+    ret nz
+    ld a, c
+
+    rrca
+    rrca
+    and #3e
+    cp 2 * 2  ; last frame
+    jr nz, update_boss8_behavior_2_state_4_continue
+    xor a
+    ld (boss__state_timer), a
+update_boss8_behavior_2_state_4_continue:
+    ld hl, boss8_combat_suit_walk_frames
+    ADD_HL_A
+    ld a, (boss__x)
+    add a, (hl)
+    ld (boss__x), a
+    inc hl
+    ld a, (hl)
+    call update_boss8_draw_boss8_frame_phase2
+    ld hl, redraw_flags
+    set ROOM_REDRAW_FLAG_BIT, (hl)
+
+    ld a, (boss__x)
+    cp 17
+    ret nz
+    ld a, 5
+    ld (boss__state), a
+    xor a
+    ld (boss__state_timer), a
     ret
 
 
 ;-----------------------------------------------
 ; combat suit
+
+boss8_combat_suit_walk_frames:
+    ; each frame: x offset for walking left, frame #
+    db -1, 0
+    db -1, 1
+
 update_boss8_behavior_3:
 ;     ld a, (boss__state)
 ;     or a

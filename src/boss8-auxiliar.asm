@@ -142,6 +142,38 @@ update_boss8_draw_boss8_frame_eye_drawn:
 
 ;-----------------------------------------------
 ; input:
+; - a: frame to draw
+update_boss8_draw_boss8_frame_phase2:
+    push af
+        call draw_boss8_frame_clear_previous_frame_1
+    pop af
+update_boss8_draw_boss8_frame_phase2_not_clearing:
+    ld hl, boss8_frame_ptrs_phase2
+    add a, a
+    ADD_HL_A
+    ld a, (hl)
+    inc hl
+    ld h, (hl)
+    ld l, a
+    push hl
+        ld hl, redraw_flags
+        set ROOM_REDRAW_FLAG_BIT, (hl)
+
+        ; compute draw pointer:
+        ld bc, (boss__x)
+        call get_room_tile_ptr
+        ex de, hl  ; hl = ptr where the boss is to be drawn
+    pop hl
+    call draw_boss8_frame_1_without_clearing
+
+    ; eye:
+    ; ...
+
+    ret
+
+
+;-----------------------------------------------
+; input:
 ; - e: tile number that was hit
 ; - iyh: damage to deal
 ; - iyl: collision ID

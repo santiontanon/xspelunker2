@@ -2,7 +2,10 @@ to do:
 
 ***- 8th boss: (t'apuchako)
   ***- phase 2:
-    ***- giant suit walks in (chante tileset and tile collision table)
+    ***- giant suit walks in (change tileset and tile collision table):
+      ***- add the other frames
+      ***- change tile collision table
+      ***- hurt player if suit pushes it
     ***- brain is deposited inside
     ***- boss HP reset
     ***- eye blink animation keeps working
