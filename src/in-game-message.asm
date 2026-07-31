@@ -48,9 +48,6 @@ display_in_game_message_textpage4_wait100_loop:
 
 	call display_in_game_message_internal_continue
 	
-	ld a, (current_room__tileset_page)
-	ld c, a
-	ld hl, (current_room__tileset_ptr)
 	jp setup_game_tiles_only_biome
 
 
@@ -71,9 +68,6 @@ display_in_game_message_textpage4:
 ; - de: text to display
 display_in_game_message:
 	call display_in_game_message_internal
-	ld a, (current_room__tileset_page)
-	ld c, a
-	ld hl, (current_room__tileset_ptr)
 	jp setup_game_tiles_only_biome
 
 

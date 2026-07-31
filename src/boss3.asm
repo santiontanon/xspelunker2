@@ -610,6 +610,8 @@ update_boss3_behavior_2_state_3:  ; end
 	call update_boss3_draw_boss_frame
 	ld hl, boss_3_tiles_walk_zx0
 	ld c, BOSS_GFX_PAGE
+	ld a, c
+	ld (current_room__tileset_page), a	
 	ld (current_room__tileset_ptr), hl
 	call setup_game_tiles_only_biome
 	ld hl, draw_room_with_hud
@@ -628,6 +630,8 @@ update_boss3_behavior_2_state_0:
 	call update_boss3_draw_boss_frame
 	ld hl, boss_3_tiles_stomp_zx0
 	ld c, BOSS_GFX_PAGE
+	ld a, c
+	ld (current_room__tileset_page), a
 	ld (current_room__tileset_ptr), hl
 	call setup_game_tiles_only_biome
 	ld hl, draw_room_with_hud

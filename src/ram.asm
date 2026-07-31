@@ -105,6 +105,7 @@ current_room__trial_fn: ds virtual 2
 ; The following variables are set in pcg-rooms, depending on the current area:
 current_room__tileset_page: ds virtual 1
 current_room__tileset_ptr: ds virtual 2
+current_room__tileset_bank3_ptr: ds virtual 2  ; if bank 3 is different from banks 1/2 (used for boss 8)
 current_room__animation_fn_ptr: ds virtual 2
 current_room__collision_ptr_page: ds virtual 1
 current_room__collision_ptr: ds virtual 2  ; 256 bytes of this ptr will be copied to 'current_room__collision_table'.

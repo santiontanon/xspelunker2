@@ -756,6 +756,8 @@ update_boss2_behavior_2_state_0_continue:
 	call update_boss2_draw_boss_frame
 	ld hl, boss_2_tiles_flight_zx0
 	ld c, BOSS_GFX_PAGE
+	ld a, c
+	ld (current_room__tileset_page), a
 	ld (current_room__tileset_ptr), hl
 	call setup_game_tiles_only_biome
 	ld hl, draw_room_with_hud
@@ -1025,6 +1027,8 @@ boss2_update_facing_direction_reload_tiles:
 	; load 'right' tiles:
 	ld hl, boss_2_tiles_right_zx0
 	ld c, BOSS_GFX_PAGE
+	ld a, c
+	ld (current_room__tileset_page), a	
 	ld (current_room__tileset_ptr), hl
 	call setup_game_tiles_only_biome
 	ld hl, draw_room_with_hud
@@ -1034,6 +1038,8 @@ boss2_update_facing_direction_reloading_tiles_left:
 	; load 'left' tiles:
 	ld hl, boss_2_tiles_zx0
 	ld c, BOSS_GFX_PAGE
+	ld a, c
+	ld (current_room__tileset_page), a	
 	ld (current_room__tileset_ptr), hl
 	call setup_game_tiles_only_biome
 	ld hl, draw_room_with_hud

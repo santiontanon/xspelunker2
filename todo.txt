@@ -2,11 +2,10 @@ to do:
 
 ***- 8th boss: (t'apuchako)
   ***- phase 2:
-    ***- brain can be hit while in the air (modify collision table and hit_fn)
-    ***- vat is lowered
-    ***- giant suit walks in (update tile collision table)
+    ***- giant suit walks in (chante tileset and tile collision table)
     ***- brain is deposited inside
     ***- boss HP reset
+    ***- eye blink animation keeps working
     ***- walk forward/backward
     ***- bullets through eyes
     ***- fist is launched, and flies in a loop, then goes back (draw first in different directions? or just fast forward/backward when you try to climb the platforms?)
@@ -36,6 +35,7 @@ to do:
 - 9th optional boss: gigantic maya statue that looks decoration, but it's a secret boss.
   - maybe that boss leads to the grave of the person who wrote all the story tablets (Yatzil), with a riddle you can only solve if you have seen all tablets (use "tomb.tsv" music for this part).
   - Solving the riddle reveals the head of the statue (which was hidden), and two gigantic empty eye sockets. If you place the eyes of charybdis and scylla, the statue comes alive, and you have your boss fight! (which gives you an achievement, or maybe the A++ ending if you have A+?)
+- game slows down when there are too many raygun bullets, optimize (or reduce max)
 - pick a good seed (for seed2) so that the map is good (at least Jungle)
 
 - Potential new ideas if I have the energy:

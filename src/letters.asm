@@ -616,9 +616,6 @@ interact_special_case_fail:
 	ld de, TEXT_TALK_FAIL
 interact_special_case_success_continue:
 	push de
-		ld a, (current_room__tileset_page)
-		ld c, a
-		ld hl, (current_room__tileset_ptr)
 		call setup_game_tiles_only_biome
 	pop de
 	ld hl, display_in_game_message

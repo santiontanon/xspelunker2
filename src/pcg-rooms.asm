@@ -14,7 +14,7 @@ tmp_pcg_room__current_chunk_bg_bank_ptrs: equ tmp_pcg_room__previous_seed - 2
 ;-----------------------------------------------
 area_default_tileset_ptrs:
 	db JUNGLE_TILES_PAGE
-	dw tiles_jungle_zx0, update_animations_in_vdp_jungle
+	dw tiles_jungle_zx0, 0, update_animations_in_vdp_jungle
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_jungle
 	db ENEMY_SPRITES_PAGE
@@ -23,7 +23,7 @@ area_default_tileset_ptrs:
 	db 6
 
 	db PYRAMID_TILES_PAGE
-	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
+	dw tiles_pyramid_zx0, 0, update_animations_in_vdp_pyramid
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_pyramid
 	db ENEMY_SPRITES_PAGE
@@ -32,7 +32,7 @@ area_default_tileset_ptrs:
 	db 10
 
 	db PYRAMID_TILES_PAGE
-	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
+	dw tiles_pyramid_zx0, 0, update_animations_in_vdp_pyramid
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_pyramid
 	db ENEMY_SPRITES_PAGE
@@ -41,7 +41,7 @@ area_default_tileset_ptrs:
 	db 10
 
 	db CAVES_TILES_PAGE
-	dw tiles_caves_zx0, update_animations_in_vdp_caves
+	dw tiles_caves_zx0, 0, update_animations_in_vdp_caves
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_caves
 	db ENEMY_SPRITES_PAGE
@@ -50,7 +50,7 @@ area_default_tileset_ptrs:
 	db 12
 
 	db PYRAMID_TILES_PAGE
-	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
+	dw tiles_pyramid_zx0, 0, update_animations_in_vdp_pyramid
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_pyramid
 	db ENEMY_SPRITES_PAGE
@@ -59,7 +59,7 @@ area_default_tileset_ptrs:
 	db 10
 
 	db PYRAMID_TILES_PAGE
-	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
+	dw tiles_pyramid_zx0, 0, update_animations_in_vdp_pyramid
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_pyramid
 	db ENEMY_SPRITES_PAGE
@@ -68,7 +68,7 @@ area_default_tileset_ptrs:
 	db 10
 
 	db CAVES_TILES_PAGE
-	dw tiles_caves_zx0, update_animations_in_vdp_caves
+	dw tiles_caves_zx0, 0, update_animations_in_vdp_caves
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_caves
 	db ENEMY_SPRITES_PAGE
@@ -77,7 +77,7 @@ area_default_tileset_ptrs:
 	db 12
 
 	db CAVES_TILES_PAGE
-	dw tiles_caves_zx0, update_animations_in_vdp_caves
+	dw tiles_caves_zx0, 0, update_animations_in_vdp_caves
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_caves
 	db ENEMY_SPRITES_PAGE
@@ -86,7 +86,7 @@ area_default_tileset_ptrs:
 	db 12
 
 	db XIBALBA_TILES_PAGE
-	dw tiles_xibalba_zx0, update_animations_in_vdp_xibalba
+	dw tiles_xibalba_zx0, 0, update_animations_in_vdp_xibalba
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_xibalba
 	db XIBALBA_ENEMY_SPRITES_PAGE
@@ -95,7 +95,7 @@ area_default_tileset_ptrs:
 	db 0
 
 	db ATLANTIS_TILES_PAGE
-	dw tiles_atlantis_zx0, update_animations_in_vdp_atlantis
+	dw tiles_atlantis_zx0, 0, update_animations_in_vdp_atlantis
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_atlantis
 	db ATLANTIS_ENEMY_SPRITES_PAGE
@@ -104,7 +104,7 @@ area_default_tileset_ptrs:
 	db 0
 
 	db MARS_TILES_PAGE
-	dw tiles_mars_zx0, update_animations_in_vdp_mars
+	dw tiles_mars_zx0, 0, update_animations_in_vdp_mars
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_mars
 	db MARS_ENEMY_SPRITES_PAGE
@@ -113,7 +113,7 @@ area_default_tileset_ptrs:
 	db 0
 
 	db MOON_TILES_PAGE
-	dw tiles_moon_zx0, update_animations_in_vdp_moon
+	dw tiles_moon_zx0, 0, update_animations_in_vdp_moon
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_moon
 	db MOON_ENEMY_SPRITES_PAGE
@@ -127,17 +127,16 @@ pcg_generate_room_reset_state:
 	ld hl, area_default_tileset_ptrs
 	ld a, (current_area__id)
 	add a, a  ; a * 2
-	ld b, a
 	add a, a  ; a * 4
-	ld c, a
 	add a, a  ; a * 8
-	add a, c  ; a * 12
-	add a, b  ; a * 14
+	add a, a  ; a * 16
 	ADD_HL_A
 	ld de, current_room__tileset_page
 	ldi  ; current_room__tileset_page
 	ldi
 	ldi  ; current_room__tileset_ptr
+	ldi
+	ldi  ; current_room__tileset_bank3_ptr
 	ldi
 	ldi  ; current_room__animation_fn_ptr
 	ldi  ; current_room__collision_ptr_page

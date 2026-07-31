@@ -555,7 +555,6 @@ update_boss5_behavior_init_scylla:
 	ld (current_room__tileset_ptr), hl
 	ld a, BOSS_5_PAGE
 	ld (current_room__tileset_page), a
-	ld c, BOSS_5_PAGE
 	call setup_game_tiles_only_biome
 	ld bc, #180d  ; (13, 24), initial coordinates of scylla
 	ld (boss__x), bc
@@ -820,7 +819,7 @@ boss5_maybe_push_player_up:
 	dec (hl)
 	call player_check_collision_idle
 	ret nz  ; moving the player, resolved the collision
-	; the player was pushed against a wall! bring th eplayer back to the initial position and take damage!
+	; the player was pushed against a wall! bring the player back to the initial position and take damage!
 	ld hl, player_y + 1
 	inc (hl)
 boss5_maybe_push_player_up_continue:

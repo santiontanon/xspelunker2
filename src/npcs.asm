@@ -61,9 +61,6 @@ object_interaction_function_shopkeeper_internal_letter1:
 
 	ld hl, redraw_flags
 	set REUPLOAD_INGAME_OBJECT_TILES_FLAG_BIT, (hl)
-	ld a, (current_room__tileset_page)
-	ld c, a
-	ld hl, (current_room__tileset_ptr)
 	call setup_game_tiles
 	call state_play_upload_object_tiles_to_vdp_if_necessary
 	; gain letter:
@@ -124,9 +121,6 @@ object_interaction_function_shopkeeper_internal_letter2:
 
 	ld hl, redraw_flags
 	set REUPLOAD_INGAME_OBJECT_TILES_FLAG_BIT, (hl)
-	ld a, (current_room__tileset_page)
-	ld c, a
-	ld hl, (current_room__tileset_ptr)
 	call setup_game_tiles
 	call state_play_upload_object_tiles_to_vdp_if_necessary
 	; gain letter:
@@ -307,9 +301,6 @@ object_interaction_function_shop_internal_loop_end:
 	ld hl, redraw_flags
 	ld (hl), #ff	
 
-	ld a, (current_room__tileset_page)
-	ld c, a
-	ld hl, (current_room__tileset_ptr)
 	jp setup_game_tiles_only_biome
 
 

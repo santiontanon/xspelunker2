@@ -293,7 +293,6 @@ update_boss5_behavior_1_state_6_third_jump
 		ld (current_room__tileset_ptr), hl
 		ld a, BOSS_5_PAGE
 		ld (current_room__tileset_page), a
-		ld c, BOSS_5_PAGE
 		call setup_game_tiles_only_biome
 
 		; update the collision table:

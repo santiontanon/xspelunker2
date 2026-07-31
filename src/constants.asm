@@ -44,7 +44,7 @@ FIRST_ENEMY_SPRITE_PATTERN: equ 24
 
 ENEMY_RESPAWN_TABLE_SIZE: equ 4  ; size of hthe enemy respawn table (that remembers which enemies have already been killed)
 MAX_ROOM_SPRITE_OBJECTS: equ 8  ; water splashes, etc. (decorations)
-MAX_ROOM_PLAYER_BULLETS: equ 8
+MAX_ROOM_PLAYER_BULLETS: equ 6
 MAX_ROOM_SPRITE_ENEMIES: equ 12
 MAX_ROOM_TILE_OBJECTS: equ 13  ; xibalba lords boss room needs 13 objects
 MAX_ROOM_SIZE: equ 32*24*4

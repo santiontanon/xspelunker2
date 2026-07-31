@@ -223,9 +223,6 @@ fast_small_LDIRVM_loop:
 
 
 ;-----------------------------------------------
-; input:
-; - hl: ptr to tiles
-; - c: megarom page where the tiles are
 setup_game_tiles:
     call setup_game_tiles_only_biome
 
@@ -300,12 +297,13 @@ upload_tile_patch_to_all_banks_loop:
 
 ;-----------------------------------------------
 ; input:
-; - hl: ptr to tiles
-; - c: megarom page where the tiles are
 setup_game_tiles_only_biome:
+    ld hl, (current_room__tileset_ptr)
     ld a, h
     or l
     ret z  ; if the ptr is zero, don't do anything
+    ld a, (current_room__tileset_page)
+    ld c, a
     ld de, buffer_4096
     call dzx0_from_page_c
 
@@ -367,12 +365,26 @@ setup_game_tiles_only_biome_continue:
     ld a, (current_area__id)
     cp 9
     jr z, setup_game_tiles_only_biome_area_9
-    ; ...
 
     ; bank 2:
     halt  ; synchronize the last bank so that when we use this method for swapping tile sets
           ; in bosses, we minimize the time with a glitch
 setup_game_tiles_only_biome_last_bank:
+    ld hl, (current_room__tileset_bank3_ptr)
+    ld a, h
+    or l
+    jr z, setup_game_tiles_only_biome_last_bank_same
+    ; different bank from the other two:
+    push bc
+    push de
+        ld a, (current_room__tileset_page)
+        ld c, a
+        ld de, buffer_4096
+        call dzx0_from_page_c
+    pop de
+    pop bc
+
+setup_game_tiles_only_biome_last_bank_same:
     ld hl, buffer_4096
     push hl
     push bc
@@ -388,6 +400,9 @@ setup_game_tiles_only_biome_last_bank:
     call fast_LDIRVM
 
     ; tileset modifications:
+    ld a, (boss__active)
+    or a
+    ret nz  ; if we are in a boss, we are not in the calendar room
     ; in calendar room:
     ld a, (current_area__id)
     cp 3

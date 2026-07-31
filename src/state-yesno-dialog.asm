@@ -114,9 +114,6 @@ state_yesno_dialog_in_game:
 		ld hl, redraw_flags
 		ld (hl), #ff
 
-		ld a, (current_room__tileset_page)
-		ld c, a
-		ld hl, (current_room__tileset_ptr)
 		call setup_game_tiles_only_biome
 	pop de
 	pop hl

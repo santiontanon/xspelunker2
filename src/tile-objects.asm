@@ -2198,9 +2198,6 @@ object_interaction_function_calendar_socket_no_aliens:
 	ld hl, NAMTBL2
 	ld bc, 768
 	call fast_FILVRM
-	ld a, (current_room__tileset_page)
-	ld c, a
-	ld hl, (current_room__tileset_ptr)
 	jp setup_game_tiles
 
 object_interaction_function_calendar_socket_empty:

@@ -1169,9 +1169,6 @@ mars_robot_puzzle_interaction_panel_clear_box:
 	ld bc, 256
 	call fast_LDIRVM
 
-	ld a, (current_room__tileset_page)
-	ld c, a
-	ld hl, (current_room__tileset_ptr)
 	call setup_game_tiles
 
 	ld hl, redraw_flags

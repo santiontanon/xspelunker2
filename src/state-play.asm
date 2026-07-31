@@ -287,9 +287,6 @@ state_play_from_inventory__no_full_hud:
 		call fast_LDIRVM
 
 		; setup tiles:
-		ld a, (current_room__tileset_page)
-		ld c, a
-		ld hl, (current_room__tileset_ptr)
 		call setup_game_tiles
 		call state_play_upload_object_tiles_to_vdp_if_necessary
 
