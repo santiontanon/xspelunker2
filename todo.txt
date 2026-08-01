@@ -2,10 +2,12 @@ to do:
 
 ***- 8th boss: (t'apuchako)
   ***- phase 2:
-    ***- if in boss 8, use boss__8_bank3_collision_table for bank 3 collisions
-    ***- brain is deposited inside, and support mechanism goes away
+    OK - if in boss 8, use boss__8_bank3_collision_table for bank 3 collisions
+    OK - brain is deposited inside
+    ***- eye opens in the suit (method to draw the eye)
+    ***- support mechanism goes away
     ***- boss HP reset
-    ***- eye blink animation keeps working
+    ***- eye blink animation in suit
     ***- walk forward/backward
     ***- hurt player if suit pushes it
     ***- bullets through eye

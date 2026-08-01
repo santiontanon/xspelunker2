@@ -554,10 +554,17 @@ get_collision_tile_type_of_a:
 
 
 ;-----------------------------------------------
-; same as "get_room_tile_type", but if we are in a boss room, and 
-; player_immunity_timer > 0, it checks the background copy of the room (without the
-; boss drawn) for collision if collision type is "9"
+; Same as "get_room_tile_type", but:
+; - if we are in a boss room, and player_immunity_timer > 0:
+;   - it checks the background copy of the room (without the boss drawn) for collision if collision type is "9"
+; - if we are in boss 8, and we are checking bank 3, it uses 'boss__8_bank3_collision_table'.
 get_room_tile_type_player:
+	ld a, (boss__active)
+	or a
+	jr z, get_room_tile_type
+	ld a, (boss__current_boss_number)
+	cp 7
+	jr z, get_room_tile_type_player_boss_8
 	ld l, b  ; assume b is positive
 	ld h, 0
 	call get_room_tile_ptr_hl_set
@@ -572,6 +579,8 @@ get_room_tile_type_player:
 	pop bc
 	cp 9
 	ret nz
+	; if we are here it is that we are in a boss room (as those are the only ones with
+	; collision type 9).
 	ex af, af'
 		ld a, (player_immunity_timer)
 		or a
@@ -591,6 +600,24 @@ get_room_tile_type_player:
 	jp get_collision_tile_type_of_a
 get_room_tile_type_player_no_immunity
 	ex af, af'
+	ret
+
+get_room_tile_type_player_boss_8:
+	ld a, b
+	cp 16
+	jr c, get_room_tile_type
+	ld l, b  ; assume b is positive
+	ld h, 0
+	call get_room_tile_ptr_hl_set
+	ld a, (hl)
+	or a
+	ret z  ; 0 is directly no collision (we exit early, as the table below starts at 32)
+	; get collision type:
+	push bc
+		ld bc, boss__8_bank3_collision_table
+		ADD_BC_A
+		ld a, (bc)
+	pop bc
 	ret
 
 

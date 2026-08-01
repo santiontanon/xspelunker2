@@ -554,7 +554,8 @@ update_boss8_behavior_2:
     ;  3: vat is lowered
     ;  4: giant suit walks in
     ;  5: brain is deposited inside
-    ;  6: phase 3 start (reset HP, etc.)
+    ;  6: support mechanism goes away
+    ;  7: phase 3 start (reset HP, etc.)
     ld a, (boss__state)
     or a
     jp z, update_boss8_behavior_2_state_0
@@ -566,7 +567,12 @@ update_boss8_behavior_2:
     jp z, update_boss8_behavior_2_state_3
     dec a
     jp z, update_boss8_behavior_2_state_4
-    ; ...
+    dec a
+    jp z, update_boss8_behavior_2_state_5
+    dec a
+    jp z, update_boss8_behavior_2_state_6
+    dec a
+    jp z, update_boss8_behavior_2_state_7
     ret
 
 update_boss8_behavior_2_state_0:
@@ -764,19 +770,15 @@ update_boss8_behavior_2_state_4:
 
     rrca
     rrca
-    and #3e
-    cp 6 * 2  ; last frame
+    rrca
+    and #1f
+    cp 6  ; last frame
     jr nz, update_boss8_behavior_2_state_4_continue
     xor a
     ld (boss__state_timer), a
 update_boss8_behavior_2_state_4_continue:
-    ld hl, boss8_combat_suit_walk_frames
-    ADD_HL_A
-    ld a, (boss__x)
-    add a, (hl)
-    ld (boss__x), a
-    inc hl
-    ld a, (hl)
+    ld hl, boss__x
+    dec (hl)
     call update_boss8_draw_boss8_frame_phase2
     ld hl, redraw_flags
     set ROOM_REDRAW_FLAG_BIT, (hl)
@@ -791,18 +793,72 @@ update_boss8_behavior_2_state_4_continue:
     ret
 
 
+update_boss8_behavior_2_state_5_table:
+    dw BOSS8_NAMETABLE_LOWERING_BRAIN0, #0c06, current_room__tile_map + 22 - 3*32
+    dw BOSS8_NAMETABLE_LOWERING_BRAIN1, #0b06, current_room__tile_map + 22 - 2*32
+    dw BOSS8_NAMETABLE_LOWERING_BRAIN2, #0a06, current_room__tile_map + 22 - 1*32
+    dw BOSS8_NAMETABLE_LOWERING_BRAIN3, #0906, current_room__tile_map + 22 + 0*32
+    dw BOSS8_NAMETABLE_LOWERING_BRAIN4, #0806, current_room__tile_map + 22 + 1*32
+    dw BOSS8_NAMETABLE_LOWERING_BRAIN5, #0706, current_room__tile_map + 22 + 2*32
+    dw BOSS8_NAMETABLE_LOWERING_BRAIN6, #0706, current_room__tile_map + 22 + 2*32
+    dw BOSS8_NAMETABLE_LOWERING_BRAIN7, #0806, current_room__tile_map + 22 + 1*32
+
+update_boss8_behavior_2_state_5:
+    ; brain is deposited inside:
+    ld hl, boss__state_timer
+    ld a, (Hl)
+    inc (hl)
+    ld c, a
+    and #03
+    ret nz
+    ld a, c
+    and #7c
+    ld c, a
+    sra a
+    add a, c
+    cp 8*6
+    jr z, update_boss8_behavior_2_state_5_continue
+    ld hl, update_boss8_behavior_2_state_5_table
+    ADD_HL_A
+    ld e, (hl)
+    inc hl
+    ld d, (hl)
+    inc hl
+    ld c, (hl)
+    inc hl
+    ld b, (hl)
+    inc hl
+    ld a, (hl)
+    inc hl
+    ld h, (hl)
+    ld l, a
+    ex de, hl
+    call draw_boss8_frame_part_no_transparency
+    ld hl, redraw_flags
+    set ROOM_REDRAW_FLAG_BIT, (hl)
+    ret
+update_boss8_behavior_2_state_5_continue:
+    ld a, 6
+    ld (boss__state), a
+    xor a
+    ld (boss__state_timer), a
+    ret
+
+
+update_boss8_behavior_2_state_6:
+    ; suuport mechanism goes away:
+    ; ...
+    ret
+
+
+update_boss8_behavior_2_state_7:
+    ; phase 2 starts!
+    ; ...
+    ret
+
+
 ;-----------------------------------------------
 ; combat suit
-
-boss8_combat_suit_walk_frames:
-    ; each frame: x offset for walking left, frame #
-    db -1, 0
-    db -1, 1
-    db -1, 2
-    db -1, 3
-    db -1, 4
-    db -1, 5
-
 update_boss8_behavior_3:
 ;     ld a, (boss__state)
 ;     or a
