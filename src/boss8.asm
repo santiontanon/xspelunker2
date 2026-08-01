@@ -116,6 +116,12 @@ update_boss8_behavior_init_continue:
     ld bc, 12
     ldir
 
+    ; collision table for bank 3:
+    ld hl, tile_collision_types_boss8_phase1
+    ld de, boss__8_bank3_collision_table
+    ld bc, 256
+    ldir
+
     ld a, 20
     ld (boss__x), a
     ld a, 10
@@ -648,10 +654,9 @@ update_boss8_behavior_2_state_2:
     ld a, (Hl)
     inc (hl)
     ld c, a
-    and #07
+    and #03
     ret nz
     ld a, c
-    rrca
     and #7c
     cp 14*4
     jr z, update_boss8_behavior_2_state_2_continue
@@ -685,14 +690,15 @@ update_boss8_behavior_2_state_3:
     ld a, (hl)
     inc (hl)
     ld c, a
-    and #07
+    and #03
     ret nz
     ld a, c
-    and #f8
-    cp 10 * 8
+    and #fc
+    cp 10 * 4
     jr z, update_boss8_behavior_2_state_3_continue
     ld h, 0
     ld l, a
+    add hl, hl
     add hl, hl
     add hl, hl
     ld de, current_room__tile_map + 20 + 14*32
@@ -721,6 +727,19 @@ update_boss8_behavior_2_state_3_continue:
     ld hl, boss_8_phase2_3_tiles_zx0
     ld (current_room__tileset_bank3_ptr), hl
     call setup_game_tiles_only_biome
+
+    ; update collision type table:
+    ld hl, tile_collision_types_boss8_phase1b_12
+    ld (current_room__collision_ptr), hl
+    ld de, current_room__collision_table
+    ld bc, 256
+    ldir
+
+    ; collision table for bank 3:
+    ld hl, tile_collision_types_boss8_phase2_3
+    ld de, boss__8_bank3_collision_table
+    ld bc, 256
+    ldir    
 
     ld bc, 0
     ld (boss__clear_bbox_1), bc

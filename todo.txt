@@ -2,15 +2,13 @@ to do:
 
 ***- 8th boss: (t'apuchako)
   ***- phase 2:
-    ***- change tile collision table (different banks 1/2 than 3):
-      ***- new "current_room__collision_ptr_bank3" variable (set to 0 by default)
-      ***- if != 0, use it for bank 3 collisions
-    ***- hurt player if suit pushes it
+    ***- if in boss 8, use boss__8_bank3_collision_table for bank 3 collisions
     ***- brain is deposited inside, and support mechanism goes away
     ***- boss HP reset
     ***- eye blink animation keeps working
     ***- walk forward/backward
-    ***- bullets through eyes
+    ***- hurt player if suit pushes it
+    ***- bullets through eye
     ***- fist is launched, and flies in a loop, then goes back (draw first in different directions? or just fast forward/backward when you try to climb the platforms?)
       ***- create tables for the different tilesets:
         ***- phase2-bank1
