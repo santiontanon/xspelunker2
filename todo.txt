@@ -3,11 +3,6 @@ to do:
 ***- 8th boss: (t'apuchako)
   ***- phase 2:
     ***- change tile collision table (different banks 1/2 than 3):
-      ***- create tables for the different tilesets:
-        ***- phase1b-12
-        ***- phase2-bank1
-        ***- phase2-bank1b (can it be the same as bank1?)
-        ***- phase2-bank3
       ***- new "current_room__collision_ptr_bank3" variable (set to 0 by default)
       ***- if != 0, use it for bank 3 collisions
     ***- hurt player if suit pushes it
@@ -17,6 +12,9 @@ to do:
     ***- walk forward/backward
     ***- bullets through eyes
     ***- fist is launched, and flies in a loop, then goes back (draw first in different directions? or just fast forward/backward when you try to climb the platforms?)
+      ***- create tables for the different tilesets:
+        ***- phase2-bank1
+        ***- phase2-bank1b (can it be the same as bank1?)
     ***- big laser attack (made out of tiles): from eye? or from a fist? it should be able to be launched at any height (robot crouching)
     ***- homing missiles from rocket launcher in head (do I have enough sprites? I might need to remove the turrets for this)
     ***- to damage it, you need to hit the eye (you can only hit with raygun, or standing on top; boss should only hurt you if it steps over you, etc., but not on contact)
