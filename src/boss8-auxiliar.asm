@@ -675,12 +675,16 @@ draw_boss8_frame_loop:
     push bc
         push de
             ld c, (hl)  ; x offset
+            ; check if the part would be totally outside the screen from the right-hand side:
+            ld a, e
+            sub current_room__tile_map % 256
+            and #1f  ; a = x coordinate (as boss 8 room is width 32)
+            add a, c
+            cp 32
+            jr nc, draw_boss8_frame_loop_skip_part  ; part is outside of the screen (to the right)
+
+            ld b, 0  ; (we assume offset >= 0)
             inc hl
-            ; sign extend c to bc:
-            ld a, c
-            rlca
-            sbc a
-            ld b, a 
             ex de, hl
                 add hl, bc  ; add x offset
             ex de, hl
@@ -708,6 +712,7 @@ draw_boss8_frame_loop_continue:
                 ld l, a
                 call draw_boss8_frame_part
             pop hl
+draw_boss8_frame_loop_skip_part_continue:
         pop de
         inc hl
         inc hl
@@ -715,8 +720,18 @@ draw_boss8_frame_loop_continue:
     djnz draw_boss8_frame_loop
     ret
 
+draw_boss8_frame_loop_skip_part:
+            inc hl  ; x offset
+            inc hl  ; y offset
+            inc hl  ; width
+            inc hl  ; height
+            jr draw_boss8_frame_loop_skip_part_continue
+
 
 ;-----------------------------------------------
+; Compared to 'draw_boss_frame_part', this method uses data in boss 8 page, and also
+; prevents tiels being drawn on x coordinates larger or equal to 32 (assuming that the
+; left-most x coordinate is < 32).
 ; input:
 ; - hl: frame ptr
 ; - de: destination ptr
@@ -725,29 +740,46 @@ draw_boss8_frame_part:
 draw_boss8_frame_part_loop_y:
     push bc
         push de
-            ; if "de" < current_room__tile_map, skip row  ->  draw_boss8_frame_part_loop_y_skip
-            ex de, hl
-            push bc
             push hl
-                ld bc, current_room__tile_map
-                or a  ; clear carry flag
-                sbc hl, bc
-            pop hl
-            pop bc
-            ex de, hl
-            jr c, draw_boss8_frame_part_loop_y_skip
+                ; if "de" < current_room__tile_map, skip row  ->  draw_boss8_frame_part_loop_y_skip
+                ex de, hl
+                push bc
+                push hl
+                    ld bc, current_room__tile_map
+                    or a  ; clear carry flag
+                    sbc hl, bc
+                pop hl
+                pop bc
+                ex de, hl
+                jr c, draw_boss8_frame_part_loop_y_skip
 
-            ld b, c
+                ; x loop:
+                ; see if we need to do less than "c" byte copies (overlap with right border):
+                ; min(width, 32 - x0)
+                ld a, e
+                sub current_room__tile_map % 256
+                and #01f  ; initial x coordinate
+                neg
+                add 32
+                cp c
+                jr c, draw_boss8_frame_part_loop_x_clip
+                ld b, c
+                jr draw_boss8_frame_part_loop_x
+draw_boss8_frame_part_loop_x_clip:
+                ld b, a
 draw_boss8_frame_part_loop_x:
-            ld a, (hl)
-            or a
-            jr z, draw_boss8_frame_part_loop_x_skip
-            ld (de), a
+                ld a, (hl)
+                or a
+                jr z, draw_boss8_frame_part_loop_x_skip
+                ld (de), a
 draw_boss8_frame_part_loop_x_skip:
-            inc hl
-            inc de
-            djnz draw_boss8_frame_part_loop_x
+                inc hl
+                inc de
+                djnz draw_boss8_frame_part_loop_x
+
 draw_boss8_frame_part_loop_y_skip2:
+            pop hl
+            add hl, bc
         pop de
         ex de, hl
         ld a, (current_room__width)

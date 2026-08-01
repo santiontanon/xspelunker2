@@ -21,10 +21,10 @@ boss8_eye_frame_ptrs:
 boss8_frame_ptrs_phase2:
     dw boss8_suit_base_frame
     dw boss8_suit_walk_frame1
-;     dw boss8_suit_walk_frame2
-;     dw boss8_suit_walk_frame3
-;     dw boss8_suit_walk_frame4
-;     dw boss8_suit_walk_frame5
+    dw boss8_suit_walk_frame2
+    dw boss8_suit_walk_frame3
+    dw boss8_suit_walk_frame4
+    dw boss8_suit_walk_frame5
 
 
 ;-----------------------------------------------
@@ -579,14 +579,15 @@ update_boss8_behavior_2_state_1:
     ld a, (Hl)
     inc (hl)
     ld c, a
-    and #07
+    and #03
     ret nz
     ld a, c
-    and #f8
-    cp 16*8
+    and #fc
+    cp 16*4
     jr z, update_boss8_behavior_2_state_1_done
     ld h, 0
     ld l, a
+    add hl, hl
     add hl, hl
     add hl, hl
     ex de, hl
@@ -601,6 +602,18 @@ update_boss8_behavior_2_state_1:
     ld (hl), 0
     inc hl
     ld (hl), 0
+    ; also affect the back copy:
+    ld bc, 64*24 - (1 + 32)
+    add hl, bc
+    ld (hl), 144
+    inc hl
+    ld (hl), 145
+    ld bc, 31
+    add hl, bc
+    ld (hl), 0
+    inc hl
+    ld (hl), 0
+
     ld hl, redraw_flags
     set ROOM_REDRAW_FLAG_BIT, (hl)
     ld hl, SFX_door_open
@@ -711,7 +724,7 @@ update_boss8_behavior_2_state_3_continue:
 
     ld bc, 0
     ld (boss__clear_bbox_1), bc
-    ld bc, #071e  ; 30, 7
+    ld bc, #071f  ; 31, 7
     ld (boss__x), bc
 
     ld a, 4
@@ -733,7 +746,7 @@ update_boss8_behavior_2_state_4:
     rrca
     rrca
     and #3e
-    cp 2 * 2  ; last frame
+    cp 6 * 2  ; last frame
     jr nz, update_boss8_behavior_2_state_4_continue
     xor a
     ld (boss__state_timer), a
@@ -766,6 +779,10 @@ boss8_combat_suit_walk_frames:
     ; each frame: x offset for walking left, frame #
     db -1, 0
     db -1, 1
+    db -1, 2
+    db -1, 3
+    db -1, 4
+    db -1, 5
 
 update_boss8_behavior_3:
 ;     ld a, (boss__state)

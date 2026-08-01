@@ -3,7 +3,7 @@ to do:
 ***- 8th boss: (t'apuchako)
   ***- phase 2:
     ***- giant suit walks in (change tileset and tile collision table):
-      ***- add the other frames
+      ***- add arms
       ***- change tile collision table
       ***- hurt player if suit pushes it
     ***- brain is deposited inside
