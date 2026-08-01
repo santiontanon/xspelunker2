@@ -2,11 +2,16 @@ to do:
 
 ***- 8th boss: (t'apuchako)
   ***- phase 2:
-    ***- giant suit walks in (change tileset and tile collision table):
-      ***- add arms
-      ***- change tile collision table
-      ***- hurt player if suit pushes it
-    ***- brain is deposited inside
+    ***- change tile collision table (different banks 1/2 than 3):
+      ***- create tables for the different tilesets:
+        ***- phase1b-12
+        ***- phase2-bank1
+        ***- phase2-bank1b (can it be the same as bank1?)
+        ***- phase2-bank3
+      ***- new "current_room__collision_ptr_bank3" variable (set to 0 by default)
+      ***- if != 0, use it for bank 3 collisions
+    ***- hurt player if suit pushes it
+    ***- brain is deposited inside, and support mechanism goes away
     ***- boss HP reset
     ***- eye blink animation keeps working
     ***- walk forward/backward

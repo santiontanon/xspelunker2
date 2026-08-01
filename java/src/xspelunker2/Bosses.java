@@ -1209,9 +1209,12 @@ public class Bosses {
         addNameTable(nametables_phase1b_12.get(1), 44, 8, 53, 9, nameTableData);
         addNameTable(nametables_phase2_3.get(0), 46, 0, 55, 7, nameTableData);  // frame 6 (9x8) [two parts]        
         // left arm:
+        addNameTable(nametables_phase1b_12.get(1), 53, 0, 59, 9, nameTableData);
+        addNameTable(nametables_phase2_3.get(0), 55, 0, 61, 2, nameTableData);  // base position (6x11) [two parts]        
         // ...
         // right arm:
-        // ...
+        addNameTable(nametables_phase1b_12.get(1), 59, 0, 63, 9, nameTableData);
+        addNameTable(nametables_phase2_3.get(0), 61, 0, 65, 2, nameTableData);  // base position (4x11) [two parts]        
         
         
         System.out.println("name tables: " + nameTableData.size() + " bytes");

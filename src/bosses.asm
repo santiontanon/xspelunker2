@@ -166,7 +166,7 @@ enter_boss_door_load_room:
 		ld ixh, BOSS_8_PAGE  ; room page
 		ld hl, boss_room_8_zx0
 		ld de, boss_8_phase1_tiles_zx0
-		ld bc, tile_collision_types_boss8
+		ld bc, tile_collision_types_boss8_phase1
 		ld iy, boss8_sprites_zx0
 
 enter_boss_door__room_ptr_set:

@@ -259,7 +259,7 @@ player_weapon_hitbox_check_boss__boss8_hit_body_continue:
 
 
 ;-----------------------------------------------
-tile_collision_types_boss8:
+tile_collision_types_boss8_phase1:
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
