@@ -33,10 +33,10 @@ BOSS8_NAMETABLE_LOWERING_BRAIN5: equ BOSS8_NAMETABLE_LOWERING_BRAIN4 + 6*8  ; 6*
 BOSS8_NAMETABLE_LOWERING_BRAIN6: equ BOSS8_NAMETABLE_LOWERING_BRAIN5 + 6*7  ; 6*7
 BOSS8_NAMETABLE_LOWERING_BRAIN7: equ BOSS8_NAMETABLE_LOWERING_BRAIN6 + 6*7  ; 6*8
 
-BOSS8_NAMETABLE_LOWERING_BRAIN_MECHANISM: equ BOSS8_NAMETABLE_LOWERING_BRAIN6 + 6*7  ; 6*6
+BOSS8_NAMETABLE_LOWERING_BRAIN_MECHANISM: equ BOSS8_NAMETABLE_LOWERING_BRAIN7 + 6*8  ; 6*7
 
 ; phase 2:
-BOSS8_NAMETABLE_PHASE2_EYE0: equ BOSS8_NAMETABLE_LOWERING_BRAIN7 + 6*8  ; 1*2
+BOSS8_NAMETABLE_PHASE2_EYE0: equ BOSS8_NAMETABLE_LOWERING_BRAIN_MECHANISM + 6*7  ; 1*2
 BOSS8_NAMETABLE_PHASE2_EYE1: equ BOSS8_NAMETABLE_PHASE2_EYE0 + 1*2  ; 1*2
 BOSS8_NAMETABLE_PHASE2_EYE2: equ BOSS8_NAMETABLE_PHASE2_EYE1 + 1*2  ; 1*2
 BOSS8_NAMETABLE_PHASE2_EYE3: equ BOSS8_NAMETABLE_PHASE2_EYE2 + 1*2  ; 1*2
@@ -165,3 +165,29 @@ boss8_suit_walk_frame5:
 	dw #0b04, BOSS8_NAMETABLE_SUIT_RARM0  ; dimensions and nametable
 	dw 0, #100e  ; boss__clear_bbos
 
+
+boss8_eye_phase2_frame_0_open:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0201, BOSS8_NAMETABLE_PHASE2_EYE0  ; dimensions and nametable
+	dw 0, #0201  ; boss__clear_bbos
+boss8_eye_phase2_frame_1_closing:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0201, BOSS8_NAMETABLE_PHASE2_EYE1  ; dimensions and nametable
+	dw 0, #0201  ; boss__clear_bbos
+boss8_eye_phase2_frame_2_closed:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0201, BOSS8_NAMETABLE_PHASE2_EYE2  ; dimensions and nametable
+	dw 0, #0201  ; boss__clear_bbos
+boss8_eye_phase2_frame_3_down:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0201, BOSS8_NAMETABLE_PHASE2_EYE3  ; dimensions and nametable
+	dw 0, #0201  ; boss__clear_bbos
+boss8_eye_phase2_frame_4_up:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0201, BOSS8_NAMETABLE_PHASE2_EYE4  ; dimensions and nametable
+	dw 0, #0201  ; boss__clear_bbos

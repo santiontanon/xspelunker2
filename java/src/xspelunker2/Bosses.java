@@ -1187,6 +1187,9 @@ public class Bosses {
         addNameTable(nameTable, 31, 5, 37, 12, nameTableData);  // lowering brain into suit (6x7)
         addNameTable(nameTable, 37, 5, 43, 12, nameTableData);  // lowering brain into suit (6x7)
         addNameTable(nameTable, 43, 4, 49, 12, nameTableData);  // lowering brain into suit (6x8)
+
+        addNameTable(nameTable, 43, 4, 49, 10, nameTableData);  // lowering brain into suit (6x6)
+        addNameTable(nameTable, 43, 0, 49, 1, nameTableData);  // (just an empty row)
         
         // Suit:
         // eyes:

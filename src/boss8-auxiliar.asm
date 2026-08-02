@@ -32,22 +32,22 @@ update_boss8_check_turret_respawn_internal_not_found:
 
 
 ;-----------------------------------------------
-update_boss8_eye_blink:
+update_boss8_eye_blink_phase1:
     ld a, (boss__state_timer)
     and #03
     ret nz
     ld a, (boss__8_eye_frame)
     or a
-    jr z, update_boss8_eye_blink_0
+    jr z, update_boss8_eye_blink_phase1_0
     dec a
-    jr z, update_boss8_eye_blink_1
+    jr z, update_boss8_eye_blink_phase1_1
     dec a
-    jr z, update_boss8_eye_blink_2
+    jr z, update_boss8_eye_blink_phase1_2
     dec a
-    jr z, update_boss8_eye_blink_3
-    ; ...
+    jr z, update_boss8_eye_blink_phase1_3
+    ret
 
-update_boss8_eye_blink_0:
+update_boss8_eye_blink_phase1_0:
     call random_a
     and #0f
     ret nz
@@ -56,17 +56,55 @@ update_boss8_eye_blink_0:
     xor a
     jp update_boss8_draw_boss8_frame
 
-update_boss8_eye_blink_1:
-update_boss8_eye_blink_2:
+update_boss8_eye_blink_phase1_1:
+update_boss8_eye_blink_phase1_2:
     ld hl, boss__8_eye_frame
     inc (hl)
     xor a
     jp update_boss8_draw_boss8_frame
 
-update_boss8_eye_blink_3:
+update_boss8_eye_blink_phase1_3:
     xor a
     ld (boss__8_eye_frame), a
     jp update_boss8_draw_boss8_frame
+
+
+;-----------------------------------------------
+; phase2 method is the same, except that it will only draw the eye, and not the full boss
+update_boss8_eye_blink_phase2:
+    ld a, (boss__state_timer)
+    and #03
+    ret nz
+    ld a, (boss__8_eye_frame)
+    or a
+    jr z, update_boss8_eye_blink_phase2_0
+    dec a
+    jr z, update_boss8_eye_blink_phase2_1
+    dec a
+    jr z, update_boss8_eye_blink_phase2_2
+    dec a
+    jr z, update_boss8_eye_blink_phase2_3
+    ret
+
+update_boss8_eye_blink_phase2_0:
+    call random_a
+    and #0f
+    ret nz
+    ld a, 1
+    ld (boss__8_eye_frame), a
+    jp update_boss8_draw_boss8_frame_phase2_eye
+    
+
+update_boss8_eye_blink_phase2_1:
+update_boss8_eye_blink_phase2_2:
+    ld hl, boss__8_eye_frame
+    inc (hl)
+    jp update_boss8_draw_boss8_frame_phase2_eye
+
+update_boss8_eye_blink_phase2_3:
+    xor a
+    ld (boss__8_eye_frame), a
+    jp update_boss8_draw_boss8_frame_phase2_eye
 
 
 ;-----------------------------------------------
@@ -117,7 +155,7 @@ update_boss8_draw_boss8_frame_not_clearing:
 update_boss8_draw_boss8_frame_eye:
     ld a, (boss__8_eye_frame)
     or a
-    jr z, update_boss8_draw_boss8_frame_eye_drawn
+    ret z
     ; draw eye frame:
     ld hl, boss8_eye_frame_ptrs
     add a, a
@@ -135,9 +173,7 @@ update_boss8_draw_boss8_frame_eye:
         call get_room_tile_ptr
         ex de, hl  ; hl = ptr where the boss is to be drawn
     pop hl
-    call draw_boss8_frame_internal
-update_boss8_draw_boss8_frame_eye_drawn:
-    ret
+    jp draw_boss8_frame_internal
 
 
 ;-----------------------------------------------
@@ -156,9 +192,6 @@ update_boss8_draw_boss8_frame_phase2_not_clearing:
     ld h, (hl)
     ld l, a
     push hl
-        ld hl, redraw_flags
-        set ROOM_REDRAW_FLAG_BIT, (hl)
-
         ; compute draw pointer:
         ld bc, (boss__x)
         call get_room_tile_ptr
@@ -167,9 +200,31 @@ update_boss8_draw_boss8_frame_phase2_not_clearing:
     call draw_boss8_frame_1_without_clearing
 
     ; eye:
-    ; ...
+update_boss8_draw_boss8_frame_phase2_eye:
+    ld hl, redraw_flags
+    set ROOM_REDRAW_FLAG_BIT, (hl)
 
-    ret
+    ld a, (boss__8_eye_frame)
+    cp #ff
+    ret z
+    ; draw eye frame:
+    ld hl, boss8_eye_frame_ptrs_phase2
+    add a, a
+    ADD_HL_A
+    ld a, (hl)
+    inc hl
+    ld h, (hl)
+    ld l, a
+    push hl
+        ld hl, #0306
+        ld bc, (boss__x)
+        add hl, bc
+        ld c, l
+        ld b, h
+        call get_room_tile_ptr
+        ex de, hl  ; hl = ptr where the boss is to be drawn
+    pop hl
+    jp draw_boss8_frame_internal
 
 
 ;-----------------------------------------------

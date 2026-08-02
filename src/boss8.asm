@@ -26,6 +26,14 @@ boss8_frame_ptrs_phase2:
     dw boss8_suit_walk_frame4
     dw boss8_suit_walk_frame5
 
+boss8_eye_frame_ptrs_phase2:
+    dw boss8_eye_phase2_frame_0_open
+    dw boss8_eye_phase2_frame_1_closing
+    dw boss8_eye_phase2_frame_2_closed
+    dw boss8_eye_phase2_frame_1_closing
+    dw boss8_eye_phase2_frame_3_down
+    dw boss8_eye_phase2_frame_4_up
+
 
 ;-----------------------------------------------
 ; Boss phases:
@@ -146,7 +154,7 @@ update_boss8_behavior_init_continue:
 
 update_boss8_behavior_0_intro_scene_1:
     ; boss intro scene (start, and door opens):
-    call update_boss8_eye_blink
+    call update_boss8_eye_blink_phase1
 
     ld hl, boss__state_timer
     inc (hl)
@@ -175,7 +183,7 @@ update_boss8_behavior_0_intro_scene_1_loop:
 
 update_boss8_behavior_0_intro_scene_2:
     ; boss intro scene (aliens walk in): 1st alien spawner at 24, second at 48
-    call update_boss8_eye_blink
+    call update_boss8_eye_blink_phase1
     ld hl, boss__state_timer
     inc (hl)
     ld a, (hl)
@@ -215,7 +223,7 @@ update_boss8_behavior_0_intro_scene_2_spawn_alien:
     ret
 
 update_boss8_behavior_0_intro_scene_3:
-    call update_boss8_eye_blink
+    call update_boss8_eye_blink_phase1
     ld hl, boss__state_timer
     inc (hl)
     ld a, (hl)
@@ -252,7 +260,7 @@ update_boss8_behavior_0_intro_scene_3_loop:
     ret    
 
 update_boss8_behavior_0_intro_scene_4:
-    call update_boss8_eye_blink
+    call update_boss8_eye_blink_phase1
 
     ld de, TEXT_BOSS8_INTRO_1
     ld hl, display_in_game_message_textpage4
@@ -343,7 +351,7 @@ update_boss8_behavior_0_intro_scene_4_spawn_turret:
     ret    
 
 update_boss8_behavior_0_intro_scene_5:
-    call update_boss8_eye_blink
+    call update_boss8_eye_blink_phase1
     ld hl, boss__state_timer
     inc (hl)
     ld a, (hl)
@@ -397,7 +405,7 @@ update_boss8_behavior_0_intro_scene_5_spawn_bullet:
     jp play_SFX_with_high_priority
 
 update_boss8_behavior_0_intro_scene_6:
-    call update_boss8_eye_blink
+    call update_boss8_eye_blink_phase1
     ld hl, boss__state_timer
     inc (hl)
     ld a, (hl)
@@ -427,7 +435,7 @@ update_boss8_behavior_0_intro_scene_6:
     ret
 
 update_boss8_behavior_0_intro_scene_7:
-    call update_boss8_eye_blink
+    call update_boss8_eye_blink_phase1
     ld hl, boss__state_timer
     inc (hl)
     ld a, (hl)
@@ -468,7 +476,7 @@ update_boss8_behavior_0_intro_scene_7:
 
 
 update_boss8_behavior_0_intro_scene_8:
-    call update_boss8_eye_blink
+    call update_boss8_eye_blink_phase1
     ld hl, boss__state_timer
     inc (hl)
     ld a, (hl)
@@ -527,7 +535,7 @@ update_boss8_behavior_0_intro_scene_8:
 ;-----------------------------------------------
 ; brain in a vat
 update_boss8_behavior_1:
-    call update_boss8_eye_blink
+    call update_boss8_eye_blink_phase1
     call update_boss8_check_turret_respawn
     ld bc, (boss__settings + BOSS_8_HP_PHASE2_OFFSET)
     ld hl, (boss__hp)
@@ -585,7 +593,7 @@ update_boss8_behavior_2_state_0:
     ret
 
 update_boss8_behavior_2_state_1:
-    call update_boss8_eye_blink
+    call update_boss8_eye_blink_phase1
     ; right door opens:
     ld hl, boss__state_timer
     ld a, (Hl)
@@ -751,6 +759,8 @@ update_boss8_behavior_2_state_3_continue:
     ld (boss__clear_bbox_1), bc
     ld bc, #071f  ; 31, 7
     ld (boss__x), bc
+    ld a, #ff
+    ld (boss__8_eye_frame), a
 
     ld a, 4
     ld (boss__state), a
@@ -842,17 +852,74 @@ update_boss8_behavior_2_state_5_continue:
     ld (boss__state), a
     xor a
     ld (boss__state_timer), a
-    ret
+    ld (boss__8_eye_frame), a
+    ; xor a
+    jp update_boss8_draw_boss8_frame_phase2
+
+
+update_boss8_behavior_2_state_6_table:
+    dw current_room__tile_map + 22
+    dw current_room__tile_map + 22 - 1*32
+    dw current_room__tile_map + 22 - 2*32
+    dw current_room__tile_map + 22 - 3*32
+    dw current_room__tile_map + 22 - 4*32
+    dw current_room__tile_map + 22 - 5*32
+    dw current_room__tile_map + 22 - 6*32
 
 
 update_boss8_behavior_2_state_6:
-    ; suuport mechanism goes away:
-    ; ...
+    ; suport mechanism goes away:
+    ld hl, boss__state_timer
+    ld a, (Hl)
+    inc (hl)
+    ld c, a
+    and #03
+    ret nz
+    ld a, c
+    and #7c
+    sra a
+    cp 7*2
+    jr z, update_boss8_behavior_2_state_6_continue
+    ld hl, update_boss8_behavior_2_state_6_table
+    ADD_HL_A
+    ld e, (hl)
+    inc hl
+    ld d, (hl)
+    ld hl, BOSS8_NAMETABLE_LOWERING_BRAIN_MECHANISM
+    ld bc, #0706
+    call draw_boss8_frame_part_no_transparency
+    ld hl, redraw_flags
+    set ROOM_REDRAW_FLAG_BIT, (hl)
+    ret
+update_boss8_behavior_2_state_6_continue:
+    ld a, 7
+    ld (boss__state), a
+    xor a
+    ld (boss__state_timer), a
+    ld (boss__8_eye_frame), a
+
+    ; switch tileset:
+    ld hl, boss_8_phase2_12_tiles_zx0
+    ld (current_room__tileset_ptr), hl
+    call setup_game_tiles_only_biome
+
+    ; update collision type table:
+    ld hl, tile_collision_types_boss8_phase2_12
+    ld (current_room__collision_ptr), hl
+    ld de, current_room__collision_table
+    ld bc, 256
+    ldir
+
+    ; reset HP just in case:
+    ld hl, (boss__settings + BOSS_8_HP_PHASE2_OFFSET)
+    ld (boss__hp), hl
+
     ret
 
 
 update_boss8_behavior_2_state_7:
     ; phase 2 starts!
+    call update_boss8_eye_blink_phase2
     ; ...
     ret
 
