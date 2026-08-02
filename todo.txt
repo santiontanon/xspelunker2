@@ -2,7 +2,6 @@ to do:
 
 ***- 8th boss: (t'apuchako)
   ***- phase 2:
-    ***- update hit fn for phase 2 (and for phase 1b?)
     ***- walk forward/backward
     ***- hurt player if suit pushes it
     ***- bullets through eye

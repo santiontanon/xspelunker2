@@ -237,71 +237,95 @@ player_weapon_hitbox_check_boss__boss8_hit:
     ld a, (boss__behavior)
     or a
     ret z
-    dec a  ; behaviors 1, 2 are phase 1:
-    jr z, player_weapon_hitbox_check_boss__boss8_hit_phase1
-    dec a
-    jr z, player_weapon_hitbox_check_boss__boss8_hit_phase1
-    ; ...
-    jr player_weapon_hitbox_check_boss__boss8_hit_phase2
 
-player_weapon_hitbox_check_boss__boss8_hit_phase1:
-    ; - 52-63, 70-73, 80-83, 88-90: hit
-    ; - 49-51,106-108,146-159,161-175,177-191,193-: shield
+    ; any tile of type 2 or 9 is a hit:
+    ; tiles that are not boss:
+    ; 96 - 101
+    ; 112 - 116
+    ; 128 - 131
+    ; 144 - 145
     ld a, e
-    cp 49
-    ret c
-    cp 52
-    jp c, player_weapon_hitbox_check_boss__boss8_hit_shield
-    cp 64
+    cp 96
     jp c, player_weapon_hitbox_check_boss__boss8_hit_body
-    cp 70
+    cp 102
     ret c
-    cp 74
+    cp 112
     jp c, player_weapon_hitbox_check_boss__boss8_hit_body
-    cp 80
+    cp 117
     ret c
-    cp 84
+    cp 128
     jp c, player_weapon_hitbox_check_boss__boss8_hit_body
-    cp 88
+    cp 132
     ret c
-    cp 91
+    cp 144
     jp c, player_weapon_hitbox_check_boss__boss8_hit_body
-    cp 106
-    ret c
-    cp 109
-    jp c, player_weapon_hitbox_check_boss__boss8_hit_shield
     cp 146
     ret c
-    cp 160
-    jp c, player_weapon_hitbox_check_boss__boss8_hit_shield
-    cp 161
-    ret c
-    cp 176
-    jp c, player_weapon_hitbox_check_boss__boss8_hit_shield
-    cp 177
-    ret c
-    cp 192
-    jp c, player_weapon_hitbox_check_boss__boss8_hit_shield
-    cp 193
-    ret c
-    jr player_weapon_hitbox_check_boss__boss8_hit_shield
+;     dec a  ; behaviors 1, 2 are phase 1:
+;     jr z, player_weapon_hitbox_check_boss__boss8_hit_phase1
+;     dec a
+;     jr z, player_weapon_hitbox_check_boss__boss8_hit_phase1
+;     ; ...
+;     jr player_weapon_hitbox_check_boss__boss8_hit_phase2
 
-
-player_weapon_hitbox_check_boss__boss8_hit_phase2:
-    ; hit the main body:
+; player_weapon_hitbox_check_boss__boss8_hit_phase1:
+;     ; - 52-63, 70-73, 80-83, 88-90: hit
+;     ; - 49-51,106-108,146-159,161-175,177-191,193-: shield
 ;     ld a, e
-;     cp 222  ; first punch tile
+;     cp 49
+;     ret c
+;     cp 52
+;     jp c, player_weapon_hitbox_check_boss__boss8_hit_shield
+;     cp 64
 ;     jp c, player_weapon_hitbox_check_boss__boss8_hit_body
-player_weapon_hitbox_check_boss__boss8_hit_shield:
-    ld hl, SFX_shield
-    call play_SFX_with_high_priority
-    xor a
-    ld (player_weapon_hitbox_check_result), a  ; mark a hit
-    ld a, (boss__last_collision_id2)
-    ld (boss__last_collision_id1), a
-    ld a, iyl
-    ld (boss__last_collision_id2), a
-    ret
+;     cp 70
+;     ret c
+;     cp 74
+;     jp c, player_weapon_hitbox_check_boss__boss8_hit_body
+;     cp 80
+;     ret c
+;     cp 84
+;     jp c, player_weapon_hitbox_check_boss__boss8_hit_body
+;     cp 88
+;     ret c
+;     cp 91
+;     jp c, player_weapon_hitbox_check_boss__boss8_hit_body
+;     cp 106
+;     ret c
+;     cp 109
+;     jp c, player_weapon_hitbox_check_boss__boss8_hit_shield
+;     cp 146
+;     ret c
+;     cp 160
+;     jp c, player_weapon_hitbox_check_boss__boss8_hit_shield
+;     cp 161
+;     ret c
+;     cp 176
+;     jp c, player_weapon_hitbox_check_boss__boss8_hit_shield
+;     cp 177
+;     ret c
+;     cp 192
+;     jp c, player_weapon_hitbox_check_boss__boss8_hit_shield
+;     cp 193
+;     ret c
+;     jr player_weapon_hitbox_check_boss__boss8_hit_shield
+
+
+; player_weapon_hitbox_check_boss__boss8_hit_phase2:
+;     ; hit the main body:
+; ;     ld a, e
+; ;     cp 222  ; first punch tile
+; ;     jp c, player_weapon_hitbox_check_boss__boss8_hit_body
+; player_weapon_hitbox_check_boss__boss8_hit_shield:
+;     ld hl, SFX_shield
+;     call play_SFX_with_high_priority
+;     xor a
+;     ld (player_weapon_hitbox_check_result), a  ; mark a hit
+;     ld a, (boss__last_collision_id2)
+;     ld (boss__last_collision_id1), a
+;     ld a, iyl
+;     ld (boss__last_collision_id2), a
+;     ret
 player_weapon_hitbox_check_boss__boss8_hit_body:
     ld a, (boss__behavior)
     cp 2
