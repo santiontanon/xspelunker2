@@ -25,6 +25,7 @@ boss8_frame_ptrs_phase2:
     dw boss8_suit_walk_frame3
     dw boss8_suit_walk_frame4
     dw boss8_suit_walk_frame5
+    dw boss8_suit_base_frame  ; just for when we overflow
 
 boss8_eye_frame_ptrs_phase2:
     dw boss8_eye_phase2_frame_0_open
@@ -579,8 +580,6 @@ update_boss8_behavior_2:
     jp z, update_boss8_behavior_2_state_5
     dec a
     jp z, update_boss8_behavior_2_state_6
-    dec a
-    jp z, update_boss8_behavior_2_state_7
     ret
 
 update_boss8_behavior_2_state_0:
@@ -892,9 +891,10 @@ update_boss8_behavior_2_state_6:
     set ROOM_REDRAW_FLAG_BIT, (hl)
     ret
 update_boss8_behavior_2_state_6_continue:
-    ld a, 7
-    ld (boss__state), a
+    ld a, 3
+    ld (boss__behavior), a
     xor a
+    ld (boss__state), a
     ld (boss__state_timer), a
     ld (boss__8_eye_frame), a
 
@@ -913,23 +913,128 @@ update_boss8_behavior_2_state_6_continue:
     ; reset HP just in case:
     ld hl, (boss__settings + BOSS_8_HP_PHASE2_OFFSET)
     ld (boss__hp), hl
-
-    ret
-
-
-update_boss8_behavior_2_state_7:
-    ; phase 2 starts!
-    call update_boss8_eye_blink_phase2
-    ; ...
     ret
 
 
 ;-----------------------------------------------
 ; combat suit
 update_boss8_behavior_3:
-;     ld a, (boss__state)
-;     or a
+    call update_boss8_eye_blink_phase2
+    ; states:
+    ; 0: idle
+    ; 1: walk left
+    ; 2: walk right
+    ; 3: left arm attack: arm rises, and fist flies forward, goes down/up to player height,
+    ;    and goes to other side, repeating 1 or 2 times, and flying back to arm
+    ; 4: right arm attack 1: point at player and bullet barrage (either shot gun or machine gun, randomly)
+
+    ld a, (boss__state)
+    or a
+    jr z, update_boss8_behavior_3_state_0
+    dec a
+    jr z, update_boss8_behavior_3_state_1
+    dec a
+    jr z, update_boss8_behavior_3_state_2
+;     dec a
+;     jr z, update_boss8_behavior_3_state_3
+;     dec a
+;     jr z, update_boss8_behavior_3_state_4
     ret
+
+update_boss8_behavior_3_state_0:
+    ; idle:
+    ld hl, boss__state_timer
+    ld a, (hl)
+    inc (hl)
+    cp 8
+    ret nz
+    ; state switch:
+    ld c, 3
+    call random_modulo
+    ld (boss__state), a
+    xor a
+    ld (boss__state_timer), a
+    ret
+
+
+update_boss8_behavior_3_state_1:
+    ; walk left:
+    ld hl, boss__state_timer
+    ld a, (hl)
+    inc (hl)
+    or a
+    jr z, update_boss8_behavior_3_state_1_start
+update_boss8_behavior_3_state_1_continue:
+    ld c, a
+    and #03
+    ret nz
+    ld a, c
+    rrca
+    rrca
+    and #3f
+    push af
+        ld hl, boss__x
+        dec (hl)
+        call update_boss8_draw_boss8_frame_phase2
+        ld hl, redraw_flags
+        set ROOM_REDRAW_FLAG_BIT, (hl)
+    pop af
+    cp 6
+    ret nz
+    xor a
+    ld (boss__state), a
+    ld (boss__state_timer), a
+    ret
+update_boss8_behavior_3_state_1_start:
+    ld a, (boss__x)
+    cp 5
+    jr nz, update_boss8_behavior_3_state_1_continue
+    ld a, 2
+    ld (boss__state), a
+    xor a
+    ld (boss__state_timer), a
+    ; jr update_boss8_behavior_3_state_2
+
+
+update_boss8_behavior_3_state_2:
+    ; walk right:
+    ld hl, boss__state_timer
+    ld a, (hl)
+    inc (hl)
+    or a
+    jr z, update_boss8_behavior_3_state_2_start
+update_boss8_behavior_3_state_2_continue:
+    ld c, a
+    and #03
+    ret nz
+    ld a, c
+    rrca
+    rrca
+    and #3f
+    neg
+    add a, 6
+    push af
+        ld hl, boss__x
+        inc (hl)
+        call update_boss8_draw_boss8_frame_phase2
+        ld hl, redraw_flags
+        set ROOM_REDRAW_FLAG_BIT, (hl)
+    pop af
+    ; or a
+    ret nz
+    ; xor a
+    ld (boss__state), a
+    ld (boss__state_timer), a
+    ret
+update_boss8_behavior_3_state_2_start:
+    ld a, (boss__x)
+    cp 23
+    jr nz, update_boss8_behavior_3_state_2_continue
+    ld a, 1
+    ld (boss__state), a
+    xor a
+    ld (boss__state_timer), a
+    jr update_boss8_behavior_3_state_1
 
 
 ;-----------------------------------------------
