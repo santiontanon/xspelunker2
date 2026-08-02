@@ -41,21 +41,10 @@ boss8_eye_frame_ptrs_phase2:
 ; - phase 1: brain in a vat (until ~75% health)
 ; - phase 2: combat suit (until boss reaches ~25% health)
 ; - phase 3: flying core (until boss reaches 0% health)
-boss8_difficulty_setting__easy:
-    dw 256, 192, 64  ; boss hp, and thresholds for phase 2 and 3
-    db BOSS_BULLET_PATTERN_EASY2  ; bullet pattern
-
+; final boss only has one difficulty level
 boss8_difficulty_setting__normal:
     dw 320, 240, 80  ; boss hp, and thresholds for phase 2 and 3
-    db BOSS_BULLET_PATTERN_MEDIUM2  ; bullet pattern
-
-boss8_difficulty_setting__hard:
-    dw 416, 312, 104  ; boss hp, and thresholds for phase 2 and 3
-    db BOSS_BULLET_PATTERN_HARD2  ; bullet pattern
-
-boss8_difficulty_setting__hardest:
-    dw 512, 384, 128  ; boss hp, and thresholds for phase 2 and 3
-    db BOSS_BULLET_PATTERN_HARDEST2  ; bullet pattern
+    db BOSS_BULLET_PATTERN_HARD1  ; bullet pattern
 
 
 ;-----------------------------------------------
@@ -109,18 +98,7 @@ update_boss8_behavior_0:
     jp z, update_boss8_behavior_0_intro_scene_8
     ret
 update_boss8_behavior_init:
-    ld a, (current_world__difficulty)
-    ld hl, boss8_difficulty_setting__easy
-    or a
-    jr z, update_boss8_behavior_init_continue
     ld hl, boss8_difficulty_setting__normal
-    dec a
-    jr z, update_boss8_behavior_init_continue
-    dec a
-    ld hl, boss8_difficulty_setting__hard
-    jr z, update_boss8_behavior_init_continue
-    ld hl, boss8_difficulty_setting__hardest
-update_boss8_behavior_init_continue:
     ld de, boss__settings
     ld bc, 12
     ldir
@@ -920,13 +898,15 @@ update_boss8_behavior_2_state_6_continue:
 ; combat suit
 update_boss8_behavior_3:
     call update_boss8_eye_blink_phase2
+    call update_boss8_maybe_fire_eye_bullet
+
     ; states:
     ; 0: idle
     ; 1: walk left
     ; 2: walk right
-    ; 3: left arm attack: arm rises, and fist flies forward, goes down/up to player height,
-    ;    and goes to other side, repeating 1 or 2 times, and flying back to arm
-    ; 4: right arm attack 1: point at player and bullet barrage (either shot gun or machine gun, randomly)
+    ; 3: left arm attack
+    ; 4: right arm attack 1
+    ; 5: right arm attack 2
 
     ld a, (boss__state)
     or a
@@ -1035,6 +1015,28 @@ update_boss8_behavior_3_state_2_start:
     xor a
     ld (boss__state_timer), a
     jr update_boss8_behavior_3_state_1
+
+
+;-----------------------------------------------
+update_boss8_maybe_fire_eye_bullet
+    ; fire bullets through eyes
+    ld a, (boss__settings + BOSS_8_EYE_BULLET_ATTACK_PATTERN_OFFSET)
+    call boss_bullet_pattern_cycle
+    ret nz
+    ld hl, #0406
+    ld bc, (boss__x)
+    add hl, bc
+    ld e, l
+    ld b, h
+    ld ix, #0000
+    ; - e, b: tile coordinate from where the bullet is fired
+    ; - ixl, ixh: pixel offset  
+    ld hl, boss_fire_directional_bullet_towards_player_with_random_offset_e_b
+    ld c, BOSS_PAGE
+    call call_hl_in_page_c_8000
+    ret nz
+    ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BULLET_IGNORING_WALLS
+    ret
 
 
 ;-----------------------------------------------

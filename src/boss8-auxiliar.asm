@@ -199,6 +199,17 @@ update_boss8_draw_boss8_frame_phase2_not_clearing:
     pop hl
     call draw_boss8_frame_1_without_clearing
 
+    ; check if the boss hit the player:
+    call player_check_collision_idle
+    jr nz, update_boss8_draw_boss8_frame_phase2_eye
+    ; player hit!
+    ld hl, player_immunity_timer
+    ld a, (hl)
+    or a
+    jr nz, update_boss8_draw_boss8_frame_phase2_eye
+    ld c, 4
+    call player_hit_damage_c
+
     ; eye:
 update_boss8_draw_boss8_frame_phase2_eye:
     ld hl, redraw_flags
@@ -225,6 +236,28 @@ update_boss8_draw_boss8_frame_phase2_eye:
         ex de, hl  ; hl = ptr where the boss is to be drawn
     pop hl
     jp draw_boss8_frame_internal
+
+;-----------------------------------------------
+; boss8_maybe_push_player_up:
+;     call player_check_collision_idle
+;     ret nz  ; if it's a collision with a wall, push player up
+;     ld hl, player_y + 1
+;     ld a, (hl)
+;     or a
+;     jr z, boss8_maybe_push_player_up_hit
+;     dec (hl)
+;     call player_check_collision_idle
+;     ret nz  ; moving the player, resolved the collision
+;     ; the player was pushed against a wall! bring the player back to the initial position and take damage!
+;     ld hl, player_y + 1
+;     inc (hl)
+; boss8_maybe_push_player_up_hit:
+;     ld hl, player_immunity_timer
+;     ld a, (hl)
+;     or a
+;     ret nz
+;     ld c, 4
+;     jp player_hit_damage_c
 
 
 ;-----------------------------------------------
@@ -896,25 +929,3 @@ draw_boss8_frame_part_no_transparency_loop_y_skip:
             add hl, bc
             jr draw_boss8_frame_part_no_transparency_loop_y_skip2
 
-
-;-----------------------------------------------
-; boss8_maybe_push_player_up:
-;     call player_check_collision_idle
-;     ret nz  ; if it's a collision with a wall, push player up
-;     ld hl, player_y + 1
-;     ld a, (hl)
-;     or a
-;     jr z, boss8_maybe_push_player_up_hit
-;     dec (hl)
-;     call player_check_collision_idle
-;     ret nz  ; moving the player, resolved the collision
-;     ; the player was pushed against a wall! bring the player back to the initial position and take damage!
-;     ld hl, player_y + 1
-;     inc (hl)
-; boss8_maybe_push_player_up_hit:
-;     ld hl, player_immunity_timer
-;     ld a, (hl)
-;     or a
-;     ret nz
-;     ld c, 4
-;     jp player_hit_damage_c

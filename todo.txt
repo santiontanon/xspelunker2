@@ -2,14 +2,11 @@ to do:
 
 ***- 8th boss: (t'apuchako)
   ***- phase 2:
-    ***- hurt player if suit pushes it
-    ***- bullets through eye
-    ***- fist is launched, and flies in a loop, then goes back (draw first in different directions? or just fast forward/backward when you try to climb the platforms?)
+    ***- left-arm attack: fist
       ***- create tables for the different tilesets: phase2-bank1b (can it be the same as bank1?)
-    ***- big laser attack (made out of tiles): from eye? or from a fist? it should be able to be launched at any height (robot crouching)
-    ***- homing missiles from rocket launcher in head (do I have enough sprites? I might need to remove the turrets for this)
-    ***- to damage it, you need to hit the eye (you can only hit with raygun, or standing on top; boss should only hurt you if it steps over you, etc., but not on contact)
-    ***- you can destroy arms / legs (if you destroy legs, it goes to phase 3)
+      ***- arm rises, and fist flies forward, goes down/up to player height, and goes to other side, repeating 1 or 2 times, and flying back to arm
+    ***- right-arm attack: bullet barrage: shotgun + machinegun
+    ***- right-arm attack 2: either big laser attack or homing missiles (decide)
   ***- phase 3:
     ***- legs/arms explode, and core flies around (do arms explode too?)
     ***- it can fly around up/down and left/right in some predefined patterns (some times it should stop, so you can hit it with regular weapons)
