@@ -184,6 +184,7 @@ update_boss8_draw_boss8_frame_phase2:
         call draw_boss8_frame_clear_previous_frame_1
     pop af
 update_boss8_draw_boss8_frame_phase2_not_clearing:
+    ld (boss__8_last_suit_frame), a
     ld hl, boss8_frame_ptrs_phase2
     add a, a
     ADD_HL_A
@@ -929,3 +930,51 @@ draw_boss8_frame_part_no_transparency_loop_y_skip:
             add hl, bc
             jr draw_boss8_frame_part_no_transparency_loop_y_skip2
 
+
+
+;-----------------------------------------------
+boss8_setup_game_tiles_only_biome_banks12:
+    ld a, (current_room__tileset_page)
+    ld c, a
+    ld de, buffer_4096
+    call dzx0_from_page_c
+
+    ld bc, 208*8
+    ld de, CHRTBL2 + 48*8
+
+    ; bank 0:
+    ld hl, buffer_4096
+    push hl
+    push bc
+        push de
+            call fast_LDIRVM
+        pop hl
+        ld bc, CLRTBL2 - CHRTBL2
+        add hl, bc
+        ex de, hl  ; de = CLRTBL2 + 64*8
+    pop bc
+    pop hl
+    add hl, bc
+    push bc
+        push de
+            call fast_LDIRVM
+        pop hl
+        ld bc, CHRTBL2 + 256*8 - CLRTBL2
+        add hl, bc
+        ex de, hl  ; de = CHRTBL2 + 256*8 + 64*8
+    pop bc
+
+    ; bank 1:
+    ld hl, buffer_4096
+    push hl
+    push bc
+        push de
+            call fast_LDIRVM
+        pop hl
+        ld bc, CLRTBL2 - CHRTBL2
+        add hl, bc
+        ex de, hl  ; de = CLRTBL2 + 256*8 + 64*8
+    pop bc
+    pop hl
+    add hl, bc
+    jp fast_LDIRVM

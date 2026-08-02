@@ -26,6 +26,14 @@ boss8_frame_ptrs_phase2:
     dw boss8_suit_walk_frame4
     dw boss8_suit_walk_frame5
     dw boss8_suit_base_frame  ; just for when we overflow
+    ; left-arm attack:
+    dw 0  ; boss8_suit_larm_frame1  ; 7
+    dw 0  ; boss8_suit_larm_frame2  ; 8
+    dw 0  ; boss8_suit_larm_frame3  ; 9
+    ; right-arm attack:
+    dw boss8_suit_rarm_frame1  ; 10
+    dw boss8_suit_rarm_frame2  ; 11
+    dw boss8_suit_rarm_frame3  ; 12
 
 boss8_eye_frame_ptrs_phase2:
     dw boss8_eye_phase2_frame_0_open
@@ -370,7 +378,7 @@ update_boss8_behavior_0_intro_scene_5_spawn_bullet:
     inc hl
     ld (hl), b  ; tile Y
     inc hl
-    ld (hl), 0  ; state (appearing)
+    ld (hl), 0  ; state
     inc hl
     ld (hl), e  ; ROOM_OBJECT_STRUCT_SPEED_X
     inc hl
@@ -879,7 +887,7 @@ update_boss8_behavior_2_state_6_continue:
     ; switch tileset:
     ld hl, boss_8_phase2_12_tiles_zx0
     ld (current_room__tileset_ptr), hl
-    call setup_game_tiles_only_biome
+    call boss8_setup_game_tiles_only_biome_banks12
 
     ; update collision type table:
     ld hl, tile_collision_types_boss8_phase2_12
@@ -904,8 +912,8 @@ update_boss8_behavior_3:
     ; 0: idle
     ; 1: walk left
     ; 2: walk right
-    ; 3: left arm attack
-    ; 4: right arm attack 1
+    ; 3: left arm attack (first)
+    ; 4: right arm attack 1 (plasma bullets)
     ; 5: right arm attack 2
 
     ld a, (boss__state)
@@ -915,10 +923,12 @@ update_boss8_behavior_3:
     jr z, update_boss8_behavior_3_state_1
     dec a
     jr z, update_boss8_behavior_3_state_2
-;     dec a
-;     jr z, update_boss8_behavior_3_state_3
-;     dec a
-;     jr z, update_boss8_behavior_3_state_4
+    dec a
+    jp z, update_boss8_behavior_3_state_3
+    dec a
+    jp z, update_boss8_behavior_3_state_4
+    dec a
+    jp z, update_boss8_behavior_3_state_5
     ret
 
 update_boss8_behavior_3_state_0:
@@ -929,8 +939,9 @@ update_boss8_behavior_3_state_0:
     cp 8
     ret nz
     ; state switch:
-    ld c, 3
+    ld c, 6
     call random_modulo
+    ; ld a, 4  ; DEBUG!
     ld (boss__state), a
     xor a
     ld (boss__state_timer), a
@@ -1036,6 +1047,165 @@ update_boss8_maybe_fire_eye_bullet
     call call_hl_in_page_c_8000
     ret nz
     ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BULLET_IGNORING_WALLS
+    ret
+
+
+update_boss8_behavior_3_state_3:
+    ; left-arm attack (fist):
+    ld hl, boss__state_timer
+    ld a, (hl)
+    inc (hl)
+    or a
+    jr nz, update_boss8_behavior_3_state_3_continue
+    ; first frame, switch tilesets:
+    ld hl, update_animations_in_vdp_none
+    ld (current_room__animation_fn_ptr), hl
+    ld hl, boss_8_phase2_12_tiles_zx0
+    ld (current_room__tileset_ptr), hl
+    call boss8_setup_game_tiles_only_biome_banks12
+    ld hl, tile_collision_types_boss8_phase2_12
+    ld (current_room__collision_ptr), hl
+    ld de, current_room__collision_table
+    ld bc, 256
+    ldir
+
+update_boss8_behavior_3_state_3_continue:
+    ; ...
+
+    xor a
+    ld (boss__state), a
+    ld (boss__state_timer), a
+    ret
+
+
+; where to spawn the plasma balls relative to the boss
+update_boss8_behavior_3_state_4_offset_table:
+    db 9, 7
+    db 7, 5
+    db 9, 3
+
+update_boss8_behavior_3_state_4:
+    ; right-arm attack 1 (barrage):
+    ld hl, boss__state_timer
+    ld a, (hl)
+    inc (hl)
+    or a
+    jr nz, update_boss8_behavior_3_state_4_continue
+    ; first frame, switch tilesets:
+    ld hl, update_animations_in_vdp_none
+    ld (current_room__animation_fn_ptr), hl
+    ld hl, boss_8_phase2_12b_tiles_zx0
+    ld (current_room__tileset_ptr), hl
+    call boss8_setup_game_tiles_only_biome_banks12
+    ld hl, tile_collision_types_boss8_phase2_12b
+    ld (current_room__collision_ptr), hl
+    ld de, current_room__collision_table
+    ld bc, 256
+    ldir
+    xor a
+update_boss8_behavior_3_state_4_continue:
+    cp 32
+    jr z, update_boss8_behavior_3_state_4_done
+    cp 9
+    jr z, update_boss8_behavior_3_state_4_fire
+    cp 17
+    jr z, update_boss8_behavior_3_state_4_fire
+    cp 25
+    jr z, update_boss8_behavior_3_state_4_fire
+update_boss8_behavior_3_state_4_continue2:
+    and #07
+    ret nz
+    ; point arm to player (horizontally, arm is at y == 13):
+    ld a, (player_y + 1)
+    cp 9
+    jr c, update_boss8_behavior_3_state_4_up
+    cp 17
+    jr c, update_boss8_behavior_3_state_4_front
+update_boss8_behavior_3_state_4_down:
+    ld a, 10
+    jr update_boss8_behavior_3_state_4_continue3
+update_boss8_behavior_3_state_4_up:
+    ld a, 12
+    jr update_boss8_behavior_3_state_4_continue3
+update_boss8_behavior_3_state_4_front:
+    ld a, 11
+update_boss8_behavior_3_state_4_continue3:
+    call update_boss8_draw_boss8_frame_phase2
+    ld hl, redraw_flags
+    set ROOM_REDRAW_FLAG_BIT, (hl)
+    ret
+
+update_boss8_behavior_3_state_4_fire:
+    push af
+        ld b, 2
+update_boss8_behavior_3_state_4_fire_loop:
+        push bc
+            ; spawn bullets:
+            ld a, (boss__8_last_suit_frame)
+            sub 10
+            add a, a
+            ld hl, update_boss8_behavior_3_state_4_offset_table
+            ADD_HL_A
+            ld a, (hl)
+            inc hl
+            ld h, (hl)
+            ld l, a
+            ld bc, (boss__x)
+            add hl, bc
+            ld e, l
+            ld b, h
+            ld ix, #0000
+            ; - e, b: tile coordinate from where the bullet is fired
+            ; - ixl, ixh: pixel offset  
+            ld hl, boss_fire_directional_bullet_towards_player_with_random_offset_e_b
+            ld c, BOSS_PAGE
+            call call_hl_in_page_c_8000
+            jr nz, update_boss8_behavior_3_state_4_no_sprite_available
+            ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BOSS8_BIG_PLASMA_BALL
+            ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
+            ld (ix + ROOM_OBJECT_STRUCT_EXTRA1), 16  ; time paused
+update_boss8_behavior_3_state_4_no_sprite_available:
+        pop bc
+        djnz update_boss8_behavior_3_state_4_fire_loop
+    pop af
+    jr update_boss8_behavior_3_state_4_continue2
+
+update_boss8_behavior_3_state_4_done:
+    xor a
+    ld (boss__state), a
+    ld (boss__state_timer), a
+    ; xor a
+    call update_boss8_draw_boss8_frame_phase2
+    ld hl, redraw_flags
+    set ROOM_REDRAW_FLAG_BIT, (hl)
+    ret
+
+
+update_boss8_behavior_3_state_5:
+    ; right-arm attack 2:
+    ld hl, boss__state_timer
+    ld a, (hl)
+    inc (hl)
+    or a
+    jr nz, update_boss8_behavior_3_state_5_continue
+    ; first frame, switch tilesets:
+    ld hl, update_animations_in_vdp_none
+    ld (current_room__animation_fn_ptr), hl
+    ld hl, boss_8_phase2_12b_tiles_zx0
+    ld (current_room__tileset_ptr), hl
+    call boss8_setup_game_tiles_only_biome_banks12
+    ld hl, tile_collision_types_boss8_phase2_12b
+    ld (current_room__collision_ptr), hl
+    ld de, current_room__collision_table
+    ld bc, 256
+    ldir
+
+update_boss8_behavior_3_state_5_continue:
+    ; ...
+
+    xor a
+    ld (boss__state), a
+    ld (boss__state_timer), a
     ret
 
 

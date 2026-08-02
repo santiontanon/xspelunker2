@@ -357,6 +357,7 @@ boss__7_snake2_struct: equ boss__tmp_space + 1 + BOSS_7_SNAKE_STRUCT_SIZE  ; 19 
 ;
 boss__8_bank3_collision_table: equ current_room__tile_map + 96*24
 boss__8_eye_frame: equ boss__tmp_space  ; 0: open, 1: closing, 2: closed, 3: opening, 3: down, 4: up
+boss__8_last_suit_frame: equ boss__tmp_space + 1
 
 
 alien_ambush__n_aliens_spawned: equ boss__tmp_space

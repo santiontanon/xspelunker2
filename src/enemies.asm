@@ -24,6 +24,7 @@ enemy_update_fn_table:
 	dw update_enemy_boss6_laser
 	dw update_enemy_boss7_poison_spit
 	dw update_enemy_boss8_plasma_ball
+	dw update_enemy_boss8_big_plasma_ball
 	; enemies you can hit:
 	dw update_enemy_snake  ; left-to-right
 	dw update_enemy_snake_dasher  ; left-to-right + dash
@@ -5200,6 +5201,61 @@ update_enemy_boss8_plasma_ball:
 	ld d, COLOR_LIGHT_BLUE
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 23) * 4 
 	jp enemy_sprite_and_continue_animated4
+
+
+;-----------------------------------------------
+update_enemy_boss8_big_plasma_ball:
+	ld iyh, 8  ; damage to deal
+	call update_enemy_hurt_player_2x2
+
+	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+	or a
+	jr z, update_enemy_boss8_big_plasma_ball_state_0  ; waiting
+update_enemy_boss8_big_plasma_ball_state_1:  ; flying
+	ld a, (current_world__difficulty_bullet_speed)
+	add a, a
+	ld l, a
+	call update_enemy_bullet_bresenham_l_steps
+	; - b: amount to move in y
+	; - c: amount to move in x
+	call update_enemy_move_cb
+
+	; out of the screen?
+	ld a, (current_room__width)
+	dec a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	jp z, update_enemy_delete
+	jp c, update_enemy_delete
+
+	ld a, (current_room__height)
+	dec a
+	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	jp z, update_enemy_delete
+	jp c, update_enemy_delete
+
+update_enemy_boss8_big_plasma_ball_sprite:
+	ld a, (interrupt_cycle)
+	rrca
+	rrca
+	jr c, update_enemy_boss8_big_plasma_ball_sprite2
+	ld d, COLOR_LIGHT_BLUE
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 28) * 4 
+	jp enemy_sprite_and_continue
+update_enemy_boss8_big_plasma_ball_sprite2:
+	ld d, COLOR_WHITE
+	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 27) * 4 
+	jp enemy_sprite_and_continue
+
+update_enemy_boss8_big_plasma_ball_state_0:
+	ld a, (ix + ROOM_OBJECT_STRUCT_EXTRA1)
+	or a
+	jr z, update_enemy_boss8_big_plasma_ball_to_state_1
+	dec (ix + ROOM_OBJECT_STRUCT_EXTRA1)
+	jr update_enemy_boss8_big_plasma_ball_sprite
+update_enemy_boss8_big_plasma_ball_to_state_1:
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 2
+	ld (ix + ROOM_OBJECT_STRUCT_EXTRA1), 0
+	jr update_enemy_boss8_big_plasma_ball_state_1
 
 
 ;-----------------------------------------------
