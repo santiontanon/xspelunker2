@@ -288,8 +288,10 @@ boss__y2: ds virtual 1
 boss__clear_bbox_1: ds virtual 4  ; ptr, w, h  (used to restore boss background)
 boss__clear_bbox_2: ds virtual 4  ; ptr, w, h  (used to restore boss background, for bosses made out of two pieces)
 boss__hp: ds virtual 2  ; hit points, 16bit
-boss__last_collision_id1: ds virtual 1  ; for bosses, since they are big, we store 2, to prevent multihit, when two bullets collide simultaneosuly
-boss__last_collision_id2: ds virtual 1
+boss__last_collision_id_1: ds virtual 1  ; for bosses, since they are big, we store 4, to prevent multihit, when two bullets collide simultaneosuly
+boss__last_collision_id_2: ds virtual 1
+boss__last_collision_id_3: ds virtual 1
+boss__last_collision_id_4: ds virtual 1
 boss__hit_fn: ds virtual 2  ; when the player hits a tile with collision type '9' this method is called.
 boss__hit_fn_page: ds virtual 1
 boss__hit_timer: ds virtual 1  ; for displaying "boss hit" animations

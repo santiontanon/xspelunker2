@@ -219,8 +219,10 @@ enter_boss_door__collision_ptr_page_set:
 		ld (boss__state), a
 		ld (boss__state_timer), a
 		ld (boss__hit_timer), a	
-		ld (boss__last_collision_id1), a
-		ld (boss__last_collision_id2), a
+		ld (boss__last_collision_id_1), a
+		ld (boss__last_collision_id_2), a
+		ld (boss__last_collision_id_3), a
+		ld (boss__last_collision_id_4), a
 		inc a  ; a = 1
 		ld (boss__active), a
 		ld (current_room__tileset_overrides_item_tiles), a
@@ -1235,10 +1237,16 @@ boss_fire_directional_bullet_towards_player_continue:
 ; - iyh: damage to deal
 ; - de, ix: collision box (in tile coordinates: from [e, d] to [ixl, ixh])
 player_weapon_hitbox_check_boss:
-	ld a, (boss__last_collision_id1)
+	ld a, (boss__last_collision_id_1)
 	cp iyl
 	ret z
-	ld a, (boss__last_collision_id2)
+	ld a, (boss__last_collision_id_2)
+	cp iyl
+	ret z
+	ld a, (boss__last_collision_id_3)
+	cp iyl
+	ret z
+	ld a, (boss__last_collision_id_4)
 	cp iyl
 	ret z
 
@@ -1901,10 +1909,13 @@ player_weapon_hitbox_check_boss__lose_hp_continue2:
 	call play_SFX_with_high_priority
 	xor a
 	ld (player_weapon_hitbox_check_result), a  ; mark a hit
-	ld a, (boss__last_collision_id2)
-	ld (boss__last_collision_id1), a
+	ld hl, boss__last_collision_id_3
+	ld de, boss__last_collision_id_4
+	ldd
+	ldd
+	ldd
 	ld a, iyl
-	ld (boss__last_collision_id2), a
+	ld (boss__last_collision_id_1), a
 	ret
 
 

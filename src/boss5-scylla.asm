@@ -1889,10 +1889,13 @@ player_weapon_hitbox_check_boss__boss5_scylla_hit__left_tentacle_hit_entry_point
 player_weapon_hitbox_check_boss__boss5_scylla_hit__left_tentacle_hit_entry_point2:
 	xor a
 	ld (player_weapon_hitbox_check_result), a  ; mark a hit
-	ld a, (boss__last_collision_id2)
-	ld (boss__last_collision_id1), a
+	ld hl, boss__last_collision_id_3
+	ld de, boss__last_collision_id_4
+	ldd
+	ldd
+	ldd
 	ld a, iyl
-	ld (boss__last_collision_id2), a
+	ld (boss__last_collision_id_1), a
 	ret
 
 player_weapon_hitbox_check_boss__boss5_scylla_hit__right_tentacle_hit:
