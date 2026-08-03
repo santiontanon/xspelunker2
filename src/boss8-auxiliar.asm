@@ -455,7 +455,7 @@ calendar_room_full_activation:
     jp nz, calendar_room_full_activation_do_not_open_gate
 
     ; make teleporter appear:
-    ld a, BOSS_8_PAGE
+    ld a, TILES_CALENDAR_TELEPORTER_PAGE
     ld (current_room__tileset_page), a
     ld hl, tiles_calendar_teleporter_zx0
     ld (current_room__tileset_ptr), hl

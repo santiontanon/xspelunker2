@@ -1323,6 +1323,18 @@ player_weapon_hitbox_check_boss_loop_x_skip
 player_weapon_hitbox_check_boss_loop_y_boss_8:
 	push bc
 		push hl
+			push hl
+				ld de, current_room__tile_map + 16*24
+				or a
+				sbc hl, de
+				jr c, player_weapon_hitbox_check_boss_loop_y_boss_8_banks12
+				ld de, boss__8_bank3_collision_table
+				jr player_weapon_hitbox_check_boss_loop_y_boss_8_bank_set
+player_weapon_hitbox_check_boss_loop_y_boss_8_banks12:
+				ld de, current_room__collision_table
+player_weapon_hitbox_check_boss_loop_y_boss_8_bank_set:
+				ld (boss__8_collision_table_ptr), de
+			pop hl
 			ld b, c
 player_weapon_hitbox_check_boss_loop_x_boss_8:
 			push bc
@@ -1331,7 +1343,7 @@ player_weapon_hitbox_check_boss_loop_x_boss_8:
 				jr z, player_weapon_hitbox_check_boss_loop_x_skip_boss_8
 				ld e, a  ; save the tile number for "boss__hit_fn"
 				; get collision type:
-				ld bc, current_room__collision_table
+				ld bc, (boss__8_collision_table_ptr)
 				ADD_BC_A
 				ld a, (bc)
 				or a

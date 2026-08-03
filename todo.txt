@@ -1,20 +1,13 @@
 to do:
 
 ***- 8th boss: (t'apuchako)
-  ***- phase 2:
-    ***- left-arm attack: fist
-      ***- fist should not erase suit
-      ***- ending is a bit messed up
-    ***- right-arm attack 2: either big laser attack or homing missiles (decide)
-  ***- BUG: "player_weapon_hitbox_check_boss_loop_y_boss_8" does not use bank 3 collision table
   ***- phase 3:
-    ***- legs/arms explode, and core flies around (do arms explode too?)
-    ***- it can fly around up/down and left/right in some predefined patterns (some times it should stop, so you can hit it with regular weapons)
+    ***- create new tileset with just the core (in a new page)
+    ***- legs/arms explode, and core remains
+    ***- it flies in some predefined patterns (3 patterns) (stop in between each pattern)
     ***- turrets reappear
-    ***- some times it can fly towards you
     ***- bullets through eye
-    ***- drops bombs while above
-    ***- the difficulty is that it's hard to hit it.
+    ***- fires big plasma balls while above (directional)
     ***- big explosion when killed, with alien boss saying some "Leader: NOOOO!!!!" or something
   ***- add boss name to the stats for game over screen
   ***- once boss is defeated, aliens arrive at the scene and seeing you defeated their leader, one of them actually thanks you for freeing them from the violent ruler, and welcoming a new era of peace. Invites you to stay or visit any time you want. You then leave from the teleporter and go back to Elaine, leading to the final end sequence
