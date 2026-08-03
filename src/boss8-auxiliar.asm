@@ -218,7 +218,7 @@ update_boss8_draw_boss8_frame_phase2_eye:
 
     ld a, (boss__8_eye_frame)
     cp #ff
-    ret z
+    jr z, update_boss8_draw_boss8_frame_phase2_fist
     ; draw eye frame:
     ld hl, boss8_eye_frame_ptrs_phase2
     add a, a
@@ -236,7 +236,34 @@ update_boss8_draw_boss8_frame_phase2_eye:
         call get_room_tile_ptr
         ex de, hl  ; hl = ptr where the boss is to be drawn
     pop hl
-    jp draw_boss8_frame_internal
+    call draw_boss8_frame_internal
+
+update_boss8_draw_boss8_frame_phase2_fist:
+    ld bc, (boss__x2)
+    ld a, c
+    or a
+    ret z
+    call get_room_tile_ptr
+    ex de, hl
+    ld a, (boss__state)
+    cp 7
+    jr z, update_boss8_draw_boss8_frame_phase2_fist_right
+    cp 8
+    jr z, update_boss8_draw_boss8_frame_phase2_fist_right
+    ld hl, boss8_fist_frame_left_1
+    ld a, (boss__state_timer)
+    and #01
+    jp z, draw_boss8_frame_2
+    ld hl, boss8_fist_frame_left_2
+    jp draw_boss8_frame_2
+update_boss8_draw_boss8_frame_phase2_fist_right:
+    ld hl, boss8_fist_frame_right_1
+    ld a, (boss__state_timer)
+    and #01
+    jp z, draw_boss8_frame_2
+    ld hl, boss8_fist_frame_right_2
+    jp draw_boss8_frame_2
+
 
 ;-----------------------------------------------
 ; boss8_maybe_push_player_up:
@@ -664,6 +691,15 @@ calendar_room_full_activation_restore_gfx:
 
 
 ;-----------------------------------------------
+draw_boss8_frame_clear_previous_frame_2:
+    ; clear the previous frame
+    ld bc, (boss__clear_bbox_2 + 2)
+    ld a, c
+    or b
+    ret z
+    ld hl, (boss__clear_bbox_2)
+    jr draw_boss8_frame_clear_previous_frame_1_continue
+
 draw_boss8_frame_clear_previous_frame_1:
     ; clear the previous frame
     ld bc, (boss__clear_bbox_1 + 2)
@@ -759,6 +795,36 @@ draw_boss8_frame_1_without_clearing:
     pop hl
     add hl, bc
     ld (boss__clear_bbox_1), hl
+    ret
+
+
+;-----------------------------------------------
+; input:
+; - de: ptr to draw to
+; - hl: ptr to frame struct
+draw_boss8_frame_2:
+    push hl
+    push de
+        call draw_boss8_frame_clear_previous_frame_2
+    pop de
+    pop hl
+draw_boss8_frame_2_without_clearing:
+    push de
+        call draw_boss8_frame_internal
+
+        ; set clear bbox:
+        ld c, (hl)
+        inc hl
+        ld b, (hl)  ; bc is the offset wrt original draw pointer
+        inc hl
+        ld de, boss__clear_bbox_2 + 2
+        push bc
+            ldi
+            ldi
+        pop bc
+    pop hl
+    add hl, bc
+    ld (boss__clear_bbox_2), hl
     ret
 
 

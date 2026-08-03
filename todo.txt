@@ -3,13 +3,8 @@ to do:
 ***- 8th boss: (t'apuchako)
   ***- phase 2:
     ***- left-arm attack: fist
-      ***- rise arm
-      ***- use boss__x2, etc. to add the fist in the right position
-      ***- fist flies forward until the wall
-      ***- wait a little bit, and then moves up/down to the player height 
-      ***- flies backward until the back wall
-      ***- flies back to initial height, and back to the arm
-      ***- arm is lowered
+      ***- fist should not erase suit
+      ***- ending is a bit messed up
     ***- right-arm attack 2: either big laser attack or homing missiles (decide)
   ***- BUG: "player_weapon_hitbox_check_boss_loop_y_boss_8" does not use bank 3 collision table
   ***- phase 3:

@@ -27,13 +27,12 @@ boss8_frame_ptrs_phase2:
     dw boss8_suit_walk_frame5
     dw boss8_suit_base_frame  ; just for when we overflow
     ; left-arm attack:
-    dw 0  ; boss8_suit_larm_frame1  ; 7
-    dw 0  ; boss8_suit_larm_frame2  ; 8
-    dw 0  ; boss8_suit_larm_frame3  ; 9
+    dw boss8_suit_larm_frame1  ; 7
+    dw boss8_suit_larm_frame2  ; 8
     ; right-arm attack:
-    dw boss8_suit_rarm_frame1  ; 10
-    dw boss8_suit_rarm_frame2  ; 11
-    dw boss8_suit_rarm_frame3  ; 12
+    dw boss8_suit_rarm_frame1  ; 9
+    dw boss8_suit_rarm_frame2  ; 10
+    dw boss8_suit_rarm_frame3  ; 11
 
 boss8_eye_frame_ptrs_phase2:
     dw boss8_eye_phase2_frame_0_open
@@ -913,9 +912,14 @@ update_boss8_behavior_3:
     ; 0: idle
     ; 1: walk left
     ; 2: walk right
-    ; 3: left arm attack (first)
+    ; 3: left arm attack (fist)
     ; 4: right arm attack 1 (plasma bullets)
     ; 5: right arm attack 2
+    ; 6: left arm attack (fist flying left)
+    ; 7: left arm attack (fist flying vertically)
+    ; 8: left arm attack (fist flying right)
+    ; 9: left arm attack (fist flying vertically)
+    ; 10: left arm attack (fist flying back)
     ld a, (boss__state)
     or a
     jr z, update_boss8_behavior_3_state_0
@@ -929,6 +933,16 @@ update_boss8_behavior_3:
     jp z, update_boss8_behavior_3_state_4
     dec a
     jp z, update_boss8_behavior_3_state_5
+    dec a
+    jp z, update_boss8_behavior_3_state_6
+    dec a
+    jp z, update_boss8_behavior_3_state_7
+    dec a
+    jp z, update_boss8_behavior_3_state_8
+    dec a
+    jp z, update_boss8_behavior_3_state_9
+    dec a
+    jp z, update_boss8_behavior_3_state_10
     ret
 
 update_boss8_behavior_3_state_0:
@@ -1069,11 +1083,40 @@ update_boss8_behavior_3_state_3:
     ld bc, 256
     ldir
 
-update_boss8_behavior_3_state_3_continue:
-    ; ...
+    ; draw the flying fist:
+    ld a, (boss__x)
+    dec a
+    ld (boss__x2), a
+    ld a, 12
+    ld (boss__y2), a
 
-    xor a
+    ld a, 7
+    call update_boss8_draw_boss8_frame_phase2
+    ld hl, redraw_flags
+    set ROOM_REDRAW_FLAG_BIT, (hl)
+    ret
+update_boss8_behavior_3_state_3_continue:
+    push af
+        call update_boss8_draw_boss8_frame_phase2_fist    
+        ld hl, redraw_flags
+        set ROOM_REDRAW_FLAG_BIT, (hl)
+    pop af
+    cp 24
+    ret nz
+
+    ld bc, (boss__x2)
+    ld a, -3
+    add a, c
+    ld (boss__x2), a
+    ld a, -4
+    add a, b
+    ld (boss__y2), a
+
+    ld a, 8
+    call update_boss8_draw_boss8_frame_phase2
+    ld a, 6
     ld (boss__state), a
+    xor a
     ld (boss__state_timer), a
     ret
 
@@ -1122,13 +1165,13 @@ update_boss8_behavior_3_state_4_continue2:
     cp 17
     jr c, update_boss8_behavior_3_state_4_front
 update_boss8_behavior_3_state_4_down:
-    ld a, 10
+    ld a, 9
     jr update_boss8_behavior_3_state_4_continue3
 update_boss8_behavior_3_state_4_up:
-    ld a, 12
+    ld a, 11
     jr update_boss8_behavior_3_state_4_continue3
 update_boss8_behavior_3_state_4_front:
-    ld a, 11
+    ld a, 10
 update_boss8_behavior_3_state_4_continue3:
     call update_boss8_draw_boss8_frame_phase2
     ld hl, redraw_flags
@@ -1142,7 +1185,7 @@ update_boss8_behavior_3_state_4_fire_loop:
         push bc
             ; spawn bullets:
             ld a, (boss__8_last_suit_frame)
-            sub 10
+            sub 9
             add a, a
             ld hl, update_boss8_behavior_3_state_4_offset_table
             ADD_HL_A
@@ -1180,7 +1223,6 @@ update_boss8_behavior_3_state_4_done:
     set ROOM_REDRAW_FLAG_BIT, (hl)
     ret
 
-
 update_boss8_behavior_3_state_5:
     ; right-arm attack 2:
     ld hl, boss__state_timer
@@ -1203,6 +1245,133 @@ update_boss8_behavior_3_state_5:
 update_boss8_behavior_3_state_5_continue:
     ; ...
 
+    xor a
+    ld (boss__state), a
+    ld (boss__state_timer), a
+    ret
+
+
+update_boss8_behavior_3_state_6:
+    ; fist flying left:
+    call update_boss8_draw_boss8_frame_phase2_fist    
+    ld hl, redraw_flags
+    set ROOM_REDRAW_FLAG_BIT, (hl)
+
+    ld a, (boss__x2)
+    cp 2
+    jr z, update_boss8_behavior_3_state_6_continue
+    dec a
+    ld (boss__x2), a
+    ret
+update_boss8_behavior_3_state_6_continue:
+    ld a, 7
+    ld (boss__state), a
+    xor a
+    ld (boss__state_timer), a
+    ret
+
+update_boss8_behavior_3_state_7:
+    ; fist flying vertically:
+    call update_boss8_draw_boss8_frame_phase2_fist    
+    ld hl, redraw_flags
+    set ROOM_REDRAW_FLAG_BIT, (hl)
+
+    ld hl, boss__state_timer
+    ld a, (hl)
+    inc (hl)
+    and #01
+    ret nz
+
+    ld a, (boss__y2)
+    ld hl, player_y + 1
+    cp (hl)
+    jr z, update_boss8_behavior_3_state_7_continue
+    jr c, update_boss8_behavior_3_state_7_down
+update_boss8_behavior_3_state_7_up:
+    ld hl, boss__y2
+    dec (hl)
+    ret
+update_boss8_behavior_3_state_7_down:
+    ld hl, boss__y2
+    inc (hl)
+    ret
+update_boss8_behavior_3_state_7_continue:
+    ld a, 8
+    ld (boss__state), a
+    xor a
+    ld (boss__state_timer), a
+    ret
+
+update_boss8_behavior_3_state_8:
+    ; fist flying right:
+    call update_boss8_draw_boss8_frame_phase2_fist    
+    ld hl, redraw_flags
+    set ROOM_REDRAW_FLAG_BIT, (hl)
+
+    ld a, (boss__x2)
+    cp 26
+    jr z, update_boss8_behavior_3_state_8_continue
+    inc a
+    ld (boss__x2), a
+    ret
+update_boss8_behavior_3_state_8_continue:
+    ld a, 9
+    ld (boss__state), a
+    xor a
+    ld (boss__state_timer), a
+    ret
+
+update_boss8_behavior_3_state_9:
+    ; fist flying vertically again:
+    call update_boss8_draw_boss8_frame_phase2_fist    
+    ld hl, redraw_flags
+    set ROOM_REDRAW_FLAG_BIT, (hl)
+
+    ld hl, boss__state_timer
+    ld a, (hl)
+    inc (hl)
+    and #01
+    ret nz
+
+    ld a, (boss__y2)
+    cp 12
+    jr z, update_boss8_behavior_3_state_9_continue
+    jr c, update_boss8_behavior_3_state_9_down
+update_boss8_behavior_3_state_9_up:
+    ld hl, boss__y2
+    dec (hl)
+    ret
+update_boss8_behavior_3_state_9_down:
+    ld hl, boss__y2
+    inc (hl)
+    ret
+update_boss8_behavior_3_state_9_continue:
+    ld a, 10
+    ld (boss__state), a
+    xor a
+    ld (boss__state_timer), a
+    ret
+
+update_boss8_behavior_3_state_10:
+    ; fist flying back:
+    call update_boss8_draw_boss8_frame_phase2_fist    
+    ld hl, redraw_flags
+    set ROOM_REDRAW_FLAG_BIT, (hl)
+
+    ld a, (boss__x)
+    dec a
+    ld c, a
+
+    ld a, (boss__x2)
+    cp c
+    jr z, update_boss8_behavior_3_state_10_continue
+    dec a
+    ld (boss__x2), a
+    ret
+update_boss8_behavior_3_state_10_continue:
+    call draw_boss8_frame_clear_previous_frame_2
+    ld bc, 0
+    ld (boss__x2), a
     xor a
     ld (boss__state), a
     ld (boss__state_timer), a

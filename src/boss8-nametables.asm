@@ -52,8 +52,8 @@ BOSS8_NAMETABLE_SUIT_LEGS5: equ BOSS8_NAMETABLE_SUIT_LEGS4 + 6*8  ; 6*8
 BOSS8_NAMETABLE_SUIT_LEGS6: equ BOSS8_NAMETABLE_SUIT_LEGS5 + 6*8  ; 9*8
 
 BOSS8_NAMETABLE_SUIT_LARM0: equ BOSS8_NAMETABLE_SUIT_LEGS6 + 9*8  ; 6*11
-BOSS8_NAMETABLE_SUIT_LARM1: equ BOSS8_NAMETABLE_SUIT_LARM0 + 6*11  ; 7*8
-BOSS8_NAMETABLE_SUIT_LARM2: equ BOSS8_NAMETABLE_SUIT_LARM1 + 7*8  ; 6*6
+BOSS8_NAMETABLE_SUIT_LARM1: equ BOSS8_NAMETABLE_SUIT_LARM0 + 6*11  ; 4*6
+BOSS8_NAMETABLE_SUIT_LARM2: equ BOSS8_NAMETABLE_SUIT_LARM1 + 4*6  ; 6*6
 
 BOSS8_NAMETABLE_SUIT_FIST_LEFT1: equ BOSS8_NAMETABLE_SUIT_LARM2 + 6*6  ; 6*3
 BOSS8_NAMETABLE_SUIT_FIST_LEFT2: equ BOSS8_NAMETABLE_SUIT_FIST_LEFT1 + 6*3  ; 6*3
@@ -203,6 +203,31 @@ boss8_eye_phase2_frame_4_up:
 	dw 0, #0201  ; boss__clear_bbos
 
 
+boss8_suit_larm_frame1:
+	db 4  ; number of parts
+	db 4, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0808, BOSS8_NAMETABLE_SUIT_CORE  ; dimensions and nametable
+	db 2, 8  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0809, BOSS8_NAMETABLE_SUIT_LEGS1  ; dimensions and nametable
+	db 2, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0604, BOSS8_NAMETABLE_SUIT_LARM1  ; dimensions and nametable
+	db 10, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0b04, BOSS8_NAMETABLE_SUIT_RARM0  ; dimensions and nametable
+	dw 0, #100e  ; boss__clear_bbos
+
+boss8_suit_larm_frame2:
+	db 4  ; number of parts
+	db 4, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0808, BOSS8_NAMETABLE_SUIT_CORE  ; dimensions and nametable
+	db 2, 8  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0809, BOSS8_NAMETABLE_SUIT_LEGS1  ; dimensions and nametable
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0606, BOSS8_NAMETABLE_SUIT_LARM2  ; dimensions and nametable
+	db 10, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0b04, BOSS8_NAMETABLE_SUIT_RARM0  ; dimensions and nametable
+	dw 0, #100e  ; boss__clear_bbos
+
+
 boss8_suit_rarm_frame1:
 	db 4  ; number of parts
 	db 4, 0  ; offset wrt the draw ptr (x offset, y offset)
@@ -238,3 +263,28 @@ boss8_suit_rarm_frame3:
 	db 9, 0  ; offset wrt the draw ptr (x offset, y offset)
 	dw #0705, BOSS8_NAMETABLE_SUIT_RARM3  ; dimensions and nametable
 	dw 0, #100e  ; boss__clear_bbos
+
+
+boss8_fist_frame_left_1:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0306, BOSS8_NAMETABLE_SUIT_FIST_LEFT1  ; dimensions and nametable
+	dw 0, #0306  ; boss__clear_bbos
+
+boss8_fist_frame_left_2:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0306, BOSS8_NAMETABLE_SUIT_FIST_LEFT2  ; dimensions and nametable
+	dw 0, #0306  ; boss__clear_bbos
+
+boss8_fist_frame_right_1:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0306, BOSS8_NAMETABLE_SUIT_FIST_RIGHT1  ; dimensions and nametable
+	dw 0, #0306  ; boss__clear_bbos
+
+boss8_fist_frame_right_2:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0306, BOSS8_NAMETABLE_SUIT_FIST_RIGHT2  ; dimensions and nametable
+	dw 0, #0306  ; boss__clear_bbos
