@@ -1218,7 +1218,12 @@ public class Bosses {
         // left arm:
         addNameTable(nametables_phase1b_12.get(1), 53, 0, 59, 9, nameTableData);
         addNameTable(nametables_phase2_3.get(0), 55, 0, 61, 2, nameTableData);  // base position (6x11) [two parts]        
-        // ...
+        addNameTable(nametables_phase2_12a.get(1), 6, 0, 13, 8, nameTableData);  // left arm 1 (7x8)
+        addNameTable(nametables_phase2_12a.get(1), 13, 0, 19, 6, nameTableData);  // left arm 2 (6x6)
+        addNameTable(nametables_phase2_12a.get(1), 19, 0, 25, 3, nameTableData);  // fist left 1 (6x3)
+        addNameTable(nametables_phase2_12a.get(1), 19, 3, 25, 6, nameTableData);  // fist left 2 (6x3)
+        addNameTable(nametables_phase2_12a.get(1), 24, 0, 30, 3, nameTableData);  // fist right 1 (6x3)
+        addNameTable(nametables_phase2_12a.get(1), 24, 3, 30, 6, nameTableData);  // fist right 2 (6x3)
         // right arm:
         addNameTable(nametables_phase1b_12.get(1), 59, 0, 63, 9, nameTableData);
         addNameTable(nametables_phase2_3.get(0), 61, 0, 65, 2, nameTableData);  // base position (4x11) [two parts]        

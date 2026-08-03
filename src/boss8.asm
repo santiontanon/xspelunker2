@@ -906,6 +906,7 @@ update_boss8_behavior_2_state_6_continue:
 ; combat suit
 update_boss8_behavior_3:
     call update_boss8_eye_blink_phase2
+    call update_boss8_check_turret_respawn
     call update_boss8_maybe_fire_eye_bullet
 
     ; states:
@@ -915,7 +916,6 @@ update_boss8_behavior_3:
     ; 3: left arm attack (first)
     ; 4: right arm attack 1 (plasma bullets)
     ; 5: right arm attack 2
-
     ld a, (boss__state)
     or a
     jr z, update_boss8_behavior_3_state_0
