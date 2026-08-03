@@ -3244,6 +3244,7 @@ player_weapon_hitbox_check_continue:
 		or a
 		jr z, player_weapon_hitbox_check_no_boss
 		ld c, BOSS_PAGE
+; 	    out (#2c),a  ; DEBUG	
 		push hl
 		push de
 			push hl
@@ -3252,6 +3253,7 @@ player_weapon_hitbox_check_continue:
 			call call_hl_in_page_c_8000
 		pop de
 		pop hl
+;     	out (#2d),a  ; DEBUG	
 player_weapon_hitbox_check_no_boss:
 		ld bc, (tile_enemy_hit_fn_ptr)
 		ld a, b
@@ -3419,7 +3421,7 @@ player_weapon_hitbox_check_tile_enemy_loop_x:
 	ld (player_weapon_hitbox_check_result), a  ; mark a hit
 	ret
 player_weapon_hitbox_check_tile_enemy_loop_x_skip
-				inc hl
+					inc hl
 				pop bc
 				djnz player_weapon_hitbox_check_tile_enemy_loop_x
 			pop hl

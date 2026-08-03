@@ -278,6 +278,7 @@ player_weapon_hitbox_check_boss__boss8_hit:
     ; 112 - 116
     ; 128 - 131
     ; 144 - 145
+    ; 160, 176, 192
     ld a, e
     cp 96
     jp c, player_weapon_hitbox_check_boss__boss8_hit_body
@@ -295,6 +296,12 @@ player_weapon_hitbox_check_boss__boss8_hit:
     jp c, player_weapon_hitbox_check_boss__boss8_hit_body
     cp 146
     ret c
+    cp 160
+    ret z
+    cp 176
+    ret z
+    cp 192
+    ret z
 ;     dec a  ; behaviors 1, 2 are phase 1:
 ;     jr z, player_weapon_hitbox_check_boss__boss8_hit_phase1
 ;     dec a
@@ -365,7 +372,7 @@ player_weapon_hitbox_check_boss__boss8_hit_body:
     cp 2
     ld hl, player_weapon_hitbox_check_boss__lose_hp
     jr nz, player_weapon_hitbox_check_boss__boss8_hit_body_continue
-    ld hl, player_weapon_hitbox_check_boss__lose_hp_continue2  ; if we are in phase 2, do not lose HP
+    ld hl, player_weapon_hitbox_check_boss__lose_hp_continue2  ; if we are in behavior 2, do not lose HP
 player_weapon_hitbox_check_boss__boss8_hit_body_continue:
     ld c, BOSS_PAGE
     jp call_hl_in_page_c_8000   

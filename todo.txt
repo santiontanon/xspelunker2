@@ -1,12 +1,12 @@
 to do:
 
 ***- 8th boss: (t'apuchako)
+  ***- BUG: raygun multihit issues (boss 8, or any wide boss)
   ***- phase 2:
-    ***- BUG: I can hit the boss by hitting the ropes!
-    ***- BUG: ranged weapons do not hit the boss (as it's tile type 2)
     ***- left-arm attack: fist
       ***- arm rises, and fist flies forward, goes down/up to player height, and goes to other side, repeating 1 or 2 times, and flying back to arm
     ***- right-arm attack 2: either big laser attack or homing missiles (decide)
+  ***- BUG: "player_weapon_hitbox_check_boss_loop_y_boss_8" does not use bank 3 collision table
   ***- phase 3:
     ***- legs/arms explode, and core flies around (do arms explode too?)
     ***- it can fly around up/down and left/right in some predefined patterns (some times it should stop, so you can hit it with regular weapons)
@@ -29,7 +29,6 @@ to do:
 - 9th optional boss: gigantic maya statue that looks decoration, but it's a secret boss.
   - maybe that boss leads to the grave of the person who wrote all the story tablets (Yatzil), with a riddle you can only solve if you have seen all tablets (use "tomb.tsv" music for this part).
   - Solving the riddle reveals the head of the statue (which was hidden), and two gigantic empty eye sockets. If you place the eyes of charybdis and scylla, the statue comes alive, and you have your boss fight! (which gives you an achievement, or maybe the A++ ending if you have A+?)
-- raygun isues: slow downs, and multihit issues (boss 8, or any wide boss)
 - pick a good seed (for seed2) so that the map is good (at least Jungle)
 
 - Potential new ideas if I have the energy:

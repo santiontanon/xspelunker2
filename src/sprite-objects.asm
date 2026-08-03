@@ -525,6 +525,10 @@ update_sprite_objects_player_bullet_hitbox_continue:
 	ld a, (ix + ROOM_OBJECT_STRUCT_HIT_ID)
 	ld iyl, a
 	jp player_weapon_hitbox_check
+;     out (#2c),a  ; DEBUG	
+; 	call player_weapon_hitbox_check
+;     out (#2d),a  ; DEBUG	
+; 	ret
 
 
 ;-----------------------------------------------
@@ -573,12 +577,15 @@ update_sprite_objects_player_bullet_straight_ray:
 	ld d, COLOR_RED  ; with the phase shifter
 	jr update_sprite_objects_player_bullet_straight_ray_continue
 update_sprite_objects_player_bullet_straight_ray_base:
+	ld iyh, RAYGUN_DAMAGE
+	push bc  ; preserve x/y coordinates
+		call update_sprite_objects_player_bullet_small_hitbox
+	pop bc
+
 	call get_room_tile_type
 	cp 2  ; wall
 	jp z, update_sprite_objects_player_bullet_delete
 
-	ld iyh, RAYGUN_DAMAGE
-	call update_sprite_objects_player_bullet_small_hitbox
 	ld d, COLOR_GREEN
 update_sprite_objects_player_bullet_straight_ray_continue:
 	ld c, 0
@@ -602,12 +609,14 @@ update_sprite_objects_player_bullet_straight_ray_fw:
 	jr update_sprite_objects_player_bullet_straight_dart_sprite_set
 
 update_sprite_objects_player_bullet_straight_dart:
-	call get_room_tile_type
-	cp 2  ; wall
+	ld iyh, DART_DAMAGE
+	push bc  ; preserve x/y coordinates
+		call update_sprite_objects_player_bullet_small_hitbox
+	pop bc
 	jp z, update_sprite_objects_player_bullet_delete
 
-	ld iyh, DART_DAMAGE
-	call update_sprite_objects_player_bullet_small_hitbox
+	call get_room_tile_type
+	cp 2  ; wall
 	jp z, update_sprite_objects_player_bullet_delete
 
 	ld d, COLOR_YELLOW
@@ -635,12 +644,14 @@ update_sprite_objects_player_bullet_straight_dart_sprite_set:
 	jp update_sprite_objects_player_bullet_decrease_timer_and_delete_if_necessary
 
 update_sprite_objects_player_bullet_stone_parabolla:
-	call get_room_tile_type
-	cp 2  ; wall
+	ld iyh, STONE_DAMAGE
+	push bc  ; preserve the x/y coordinates
+		call update_sprite_objects_player_bullet_small_hitbox
+	pop bc
 	jp z, update_sprite_objects_player_bullet_delete
 
-	ld iyh, STONE_DAMAGE
-	call update_sprite_objects_player_bullet_small_hitbox
+	call get_room_tile_type
+	cp 2  ; wall
 	jp z, update_sprite_objects_player_bullet_delete
 
 	; parabolic movement:
@@ -660,56 +671,59 @@ update_sprite_objects_player_bullet_stone_continue:
 	jp update_sprite_objects_player_bullet_decrease_timer_and_delete_if_necessary
 
 update_sprite_objects_player_bullet_spear_parabolla:
+	push bc  ; preserve the x/y coordinates
+		; parabolic movement:
+		ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
+		and #07
+		jr nz, update_sprite_objects_player_bullet_spear_continue
+		ld a, (ix + ROOM_OBJECT_STRUCT_SPEED_Y)
+		cp 4  ; max vertical speed
+		jr z, update_sprite_objects_player_bullet_spear_continue
+		inc (ix + ROOM_OBJECT_STRUCT_SPEED_Y)
+update_sprite_objects_player_bullet_spear_continue:
+		ld d, COLOR_LIGHT_RED
+		ld c, 0
+		ld a, (ix + ROOM_OBJECT_STRUCT_SPEED_X)
+		or a
+		jr z, update_sprite_objects_player_bullet_spear_vertical
+		ld a, (ix + ROOM_OBJECT_STRUCT_SPEED_Y)
+		inc a
+		jr z, update_sprite_objects_player_bullet_spear_horizontal
+		dec a
+		jr z, update_sprite_objects_player_bullet_spear_horizontal
+		dec a
+		jr z, update_sprite_objects_player_bullet_spear_horizontal
+		inc a
+		xor (ix + ROOM_OBJECT_STRUCT_SPEED_X)
+		jp m, update_sprite_objects_player_bullet_spear_horizontal_upright
+		ld hl, #0202
+		ld e, 56  ; \
+		jr update_sprite_objects_player_bullet_straight_spear_sprite_set
+update_sprite_objects_player_bullet_spear_horizontal_upright:
+		ld hl, #0202
+		ld e, 52  ; /
+		jr update_sprite_objects_player_bullet_straight_spear_sprite_set
+update_sprite_objects_player_bullet_spear_horizontal:
+		ld hl, #0102
+		ld e, 44  ; -
+		jr update_sprite_objects_player_bullet_straight_spear_sprite_set
+update_sprite_objects_player_bullet_spear_vertical:
+		ld hl, #0201
+		ld e, 48  ; |
+update_sprite_objects_player_bullet_straight_spear_sprite_set:
+		push hl
+			call get_sprite_object_sprite_coordinates
+			call z, add_sprite_to_this_frame
+		pop hl
+		ld iyh, SPEAR_DAMAGE
+		call update_sprite_objects_player_bullet_hitbox
+	pop bc		
+	jp z, update_sprite_objects_player_bullet_delete  ; hit something, delete the bullet
+
 	call get_room_tile_type
 	cp 2  ; wall
 	jp z, update_sprite_objects_player_bullet_delete
 
-	; parabolic movement:
-	ld a, (ix + ROOM_OBJECT_STRUCT_STATE)
-	and #07
-	jr nz, update_sprite_objects_player_bullet_spear_continue
-	ld a, (ix + ROOM_OBJECT_STRUCT_SPEED_Y)
-	cp 4  ; max vertical speed
-	jr z, update_sprite_objects_player_bullet_spear_continue
-	inc (ix + ROOM_OBJECT_STRUCT_SPEED_Y)
-update_sprite_objects_player_bullet_spear_continue:
-	ld d, COLOR_LIGHT_RED
-	ld c, 0
-	ld a, (ix + ROOM_OBJECT_STRUCT_SPEED_X)
-	or a
-	jr z, update_sprite_objects_player_bullet_spear_vertical
-	ld a, (ix + ROOM_OBJECT_STRUCT_SPEED_Y)
-	inc a
-	jr z, update_sprite_objects_player_bullet_spear_horizontal
-	dec a
-	jr z, update_sprite_objects_player_bullet_spear_horizontal
-	dec a
-	jr z, update_sprite_objects_player_bullet_spear_horizontal
-	inc a
-	xor (ix + ROOM_OBJECT_STRUCT_SPEED_X)
-	jp m, update_sprite_objects_player_bullet_spear_horizontal_upright
-	ld hl, #0202
-	ld e, 56  ; \
-	jr update_sprite_objects_player_bullet_straight_spear_sprite_set
-update_sprite_objects_player_bullet_spear_horizontal_upright:
-	ld hl, #0202
-	ld e, 52  ; /
-	jr update_sprite_objects_player_bullet_straight_spear_sprite_set
-update_sprite_objects_player_bullet_spear_horizontal:
-	ld hl, #0102
-	ld e, 44  ; -
-	jr update_sprite_objects_player_bullet_straight_spear_sprite_set
-update_sprite_objects_player_bullet_spear_vertical:
-	ld hl, #0201
-	ld e, 48  ; |
-update_sprite_objects_player_bullet_straight_spear_sprite_set:
-	push hl
-		call get_sprite_object_sprite_coordinates
-		call z, add_sprite_to_this_frame
-	pop hl
-	ld iyh, SPEAR_DAMAGE
-	call update_sprite_objects_player_bullet_hitbox
-	jp z, update_sprite_objects_player_bullet_delete  ; hit something, delete the bullet
 	jp update_sprite_objects_player_bullet_decrease_timer_and_delete_if_necessary
 
 

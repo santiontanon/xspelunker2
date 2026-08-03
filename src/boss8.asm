@@ -51,7 +51,7 @@ boss8_eye_frame_ptrs_phase2:
 ; - phase 3: flying core (until boss reaches 0% health)
 ; final boss only has one difficulty level
 boss8_difficulty_setting__normal:
-    dw 320, 240, 80  ; boss hp, and thresholds for phase 2 and 3
+    dw 560, 480, 160  ; boss hp, and thresholds for phase 2 and 3
     db BOSS_BULLET_PATTERN_HARD1  ; bullet pattern
 
 

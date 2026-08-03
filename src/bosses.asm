@@ -1262,7 +1262,7 @@ player_weapon_hitbox_check_boss:
 	pop bc
 	push de
 		call get_room_tile_ptr
-	pop bc
+	pop bc  ; width, height of the collision box
 
 	ld a, (boss__current_boss_number)
 	cp 7
@@ -1319,6 +1319,8 @@ player_weapon_hitbox_check_boss_loop_y_boss_8:
 player_weapon_hitbox_check_boss_loop_x_boss_8:
 			push bc
 				ld a, (hl)
+				or a
+				jr z, player_weapon_hitbox_check_boss_loop_x_skip_boss_8
 				ld e, a  ; save the tile number for "boss__hit_fn"
 				; get collision type:
 				ld bc, current_room__collision_table
@@ -1335,13 +1337,15 @@ player_weapon_hitbox_check_boss_loop_x_boss_8:
 				ld hl, (boss__hit_fn)
 				ld a, (boss__hit_fn_page)
 				ld c, a
+				; out (#2c),a  ; DEBUG
 				call call_hl_in_page_c_8000
+				; out (#2d),a  ; DEBUG
 			pop bc
 		pop hl
 	pop bc
 	ret
 player_weapon_hitbox_check_boss_loop_x_skip_boss_8
-			inc hl
+				inc hl
 			pop bc
 			djnz player_weapon_hitbox_check_boss_loop_x_boss_8
 		pop hl
