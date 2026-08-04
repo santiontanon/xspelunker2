@@ -698,6 +698,15 @@ draw_boss8_frame_clear_previous_frame_2:
     or b
     ret z
     ld hl, (boss__clear_bbox_2)
+    ; here:
+    ; - hl: ptr
+    ; - bc: width, height
+    ld e, l
+    ld d, h
+    push bc
+        ld bc, 32*24  ; we use the second copy of the bg buffer that we use only for boss 8 fist
+        add hl, bc
+    pop bc
     jr draw_boss8_frame_clear_previous_frame_1_continue
 
 draw_boss8_frame_clear_previous_frame_1:
@@ -707,7 +716,6 @@ draw_boss8_frame_clear_previous_frame_1:
     or b
     ret z
     ld hl, (boss__clear_bbox_1)
-draw_boss8_frame_clear_previous_frame_1_continue:
     ; here:
     ; - hl: ptr
     ; - bc: width, height
@@ -717,6 +725,7 @@ draw_boss8_frame_clear_previous_frame_1_continue:
         ld bc, boss__room_bg_buffer - current_room__tile_map
         add hl, bc
     pop bc
+draw_boss8_frame_clear_previous_frame_1_continue:
     ; here:
     ; - hl: points to the bg buffer
     ; - de: points to the room part we want to clear

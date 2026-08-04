@@ -1084,37 +1084,53 @@ update_boss8_behavior_3_state_3:
     ldir
 
     ; draw the flying fist:
+    ld a, 7
+    call update_boss8_draw_boss8_frame_phase2
+    ; make a copy of the current state of the room (to use it as the background for the first)
+    ld hl, current_room__tile_map
+    ld de, current_room__tile_map + 32*24
+    ld bc, 32*24
+    ldir
+
     ld a, (boss__x)
     dec a
     ld (boss__x2), a
     ld a, 12
     ld (boss__y2), a
 
-    ld a, 7
-    call update_boss8_draw_boss8_frame_phase2
+    call update_boss8_draw_boss8_frame_phase2_fist
     ld hl, redraw_flags
     set ROOM_REDRAW_FLAG_BIT, (hl)
     ret
 update_boss8_behavior_3_state_3_continue:
     push af
         ld a, 7
-        call update_boss8_draw_boss8_frame_phase2    
+        call update_boss8_draw_boss8_frame_phase2_fist
         ld hl, redraw_flags
         set ROOM_REDRAW_FLAG_BIT, (hl)
     pop af
     cp 24
     ret nz
 
-    ld bc, (boss__x2)
-    ld a, -3
-    add a, c
+    call draw_boss8_frame_clear_previous_frame_2
+    ld bc, 0
+    ld (boss__x2), bc
+    ld a, 8
+    call update_boss8_draw_boss8_frame_phase2
+    ; make a copy of the current state of the room (to use it as the background for the first)
+    ld hl, current_room__tile_map
+    ld de, current_room__tile_map + 32*24
+    ld bc, 32*24
+    ldir
+
+    ld a, (boss__x)
+    sub a, 4
     ld (boss__x2), a
-    ld a, -4
-    add a, b
+    ld a, 8
     ld (boss__y2), a
 
     ld a, 8
-    call update_boss8_draw_boss8_frame_phase2
+    call update_boss8_draw_boss8_frame_phase2_fist
     ld a, 6
     ld (boss__state), a
     xor a
@@ -1225,38 +1241,11 @@ update_boss8_behavior_3_state_4_done:
     set ROOM_REDRAW_FLAG_BIT, (hl)
     ret
 
-; update_boss8_behavior_3_state_5:
-;     ; right-arm attack 2:
-;     ld hl, boss__state_timer
-;     ld a, (hl)
-;     inc (hl)
-;     or a
-;     jr nz, update_boss8_behavior_3_state_5_continue
-;     ; first frame, switch tilesets:
-;     ld hl, update_animations_in_vdp_none
-;     ld (current_room__animation_fn_ptr), hl
-;     ld hl, boss_8_phase2_12b_tiles_zx0
-;     ld (current_room__tileset_ptr), hl
-;     call boss8_setup_game_tiles_only_biome_banks12
-;     ld hl, tile_collision_types_boss8_phase2_12b
-;     ld (current_room__collision_ptr), hl
-;     ld de, current_room__collision_table
-;     ld bc, 256
-;     ldir
-
-; update_boss8_behavior_3_state_5_continue:
-;     ; ...
-
-;     xor a
-;     ld (boss__state), a
-;     ld (boss__state_timer), a
-;     ret
-
 
 update_boss8_behavior_3_state_6:
     ; fist flying left:
     ld a, 8
-    call update_boss8_draw_boss8_frame_phase2    
+    call update_boss8_draw_boss8_frame_phase2_fist    
     ld hl, redraw_flags
     set ROOM_REDRAW_FLAG_BIT, (hl)
 
@@ -1276,7 +1265,7 @@ update_boss8_behavior_3_state_6_continue:
 update_boss8_behavior_3_state_7:
     ; fist flying vertically:
     ld a, 8
-    call update_boss8_draw_boss8_frame_phase2    
+    call update_boss8_draw_boss8_frame_phase2_fist    
     ld hl, redraw_flags
     set ROOM_REDRAW_FLAG_BIT, (hl)
 
@@ -1309,7 +1298,7 @@ update_boss8_behavior_3_state_7_continue:
 update_boss8_behavior_3_state_8:
     ; fist flying right:
     ld a, 8
-    call update_boss8_draw_boss8_frame_phase2    
+    call update_boss8_draw_boss8_frame_phase2_fist    
     ld hl, redraw_flags
     set ROOM_REDRAW_FLAG_BIT, (hl)
 
@@ -1329,7 +1318,7 @@ update_boss8_behavior_3_state_8_continue:
 update_boss8_behavior_3_state_9:
     ; fist flying vertically again:
     ld a, 8
-    call update_boss8_draw_boss8_frame_phase2    
+    call update_boss8_draw_boss8_frame_phase2_fist    
     ld hl, redraw_flags
     set ROOM_REDRAW_FLAG_BIT, (hl)
 
@@ -1361,7 +1350,7 @@ update_boss8_behavior_3_state_9_continue:
 update_boss8_behavior_3_state_10:
     ; fist flying back:
     ld a, 8
-    call update_boss8_draw_boss8_frame_phase2    
+    call update_boss8_draw_boss8_frame_phase2_fist    
     ld hl, redraw_flags
     set ROOM_REDRAW_FLAG_BIT, (hl)
 

@@ -2,12 +2,11 @@ to do:
 
 ***- 8th boss: (t'apuchako)
   ***- phase 3:
-    ***- create new tileset with just the core (in a new page)
-    ***- legs/arms explode, and core remains
+    ***- legs/arms explode, and new core remains (hovering with a thruster animation)
     ***- it flies in some predefined patterns (3 patterns) (stop in between each pattern)
     ***- turrets reappear
     ***- bullets through eye
-    ***- fires big plasma balls while above (directional)
+    ***- fires big plasma balls from thruster (directional)
     ***- big explosion when killed, with alien boss saying some "Leader: NOOOO!!!!" or something
   ***- add boss name to the stats for game over screen
   ***- once boss is defeated, aliens arrive at the scene and seeing you defeated their leader, one of them actually thanks you for freeing them from the violent ruler, and welcoming a new era of peace. Invites you to stay or visit any time you want. You then leave from the teleporter and go back to Elaine, leading to the final end sequence
