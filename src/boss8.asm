@@ -926,7 +926,7 @@ update_boss8_behavior_3:
     dec a
     jr z, update_boss8_behavior_3_state_1
     dec a
-    jr z, update_boss8_behavior_3_state_2
+    jp z, update_boss8_behavior_3_state_2
     dec a
     jp z, update_boss8_behavior_3_state_3
     dec a
@@ -946,6 +946,20 @@ update_boss8_behavior_3:
     ret
 
 update_boss8_behavior_3_state_0:
+    ld bc, (boss__settings + BOSS_8_HP_PHASE3_OFFSET)
+    ld hl, (boss__hp)
+    or a
+    sbc hl, bc
+    jr nc, update_boss8_behavior_3_state_0_continue
+    ; transition to phase 3!
+    ld a, 4
+    ld (boss__behavior), a
+    xor a
+    ld (boss__state), a
+    ld (boss__state_timer), a
+    ret
+
+update_boss8_behavior_3_state_0_continue:
     ; idle:
     ld hl, boss__state_timer
     ld a, (hl)
@@ -1043,7 +1057,7 @@ update_boss8_behavior_3_state_2_start:
 
 
 ;-----------------------------------------------
-update_boss8_maybe_fire_eye_bullet
+update_boss8_maybe_fire_eye_bullet:
     ; fire bullets through eyes
     ld a, (boss__settings + BOSS_8_EYE_BULLET_ATTACK_PATTERN_OFFSET)
     call boss_bullet_pattern_cycle
@@ -1252,6 +1266,7 @@ update_boss8_behavior_3_state_6:
     ld a, (boss__x2)
     cp 2
     jr z, update_boss8_behavior_3_state_6_continue
+    jr c, update_boss8_behavior_3_state_6_continue
     dec a
     ld (boss__x2), a
     ret
@@ -1379,18 +1394,104 @@ update_boss8_behavior_3_state_10_continue:
 ;-----------------------------------------------
 ; transition to phase 3
 update_boss8_behavior_4:
+    ld hl, boss__state_timer
+    ld a, (hl)
+    inc (hl)
+    cp 64
+    jp z, update_boss8_behavior_4_done
+    ; spawn explosions:
+    and #01
+    ret nz
+    ; spawn an explosion:
+    ld bc, (boss__x)
+    dec c
+    call random_a
+    and #0f
+    add a, c
+    ld c, a
+    call random_a
+    and #0f
+    add a, b
+    ld b, a
+    jp spawn_explosion
+
+
+update_boss8_behavior_4_done:
+    ; switch tileset:
+    ld hl, boss_8_phase2_12_tiles_zx0
+    ld (current_room__tileset_ptr), hl
+    call boss8_setup_game_tiles_only_biome_banks12
+
+    ; update collision type table:
+    ld hl, tile_collision_types_boss8_phase2_12
+    ld (current_room__collision_ptr), hl
+    ld de, current_room__collision_table
+    ld bc, 256
+    ldir
+
+    ; reset HP just in case:
+    ld hl, (boss__settings + BOSS_8_HP_PHASE3_OFFSET)
+    ld (boss__hp), hl
+
+    ld a, (boss__x)
+    add a, 4
+    ld (boss__x), a
+
+    ld a, 5
+    ld (boss__behavior), a
+    xor a
+    ld (boss__state), a
+    ld (boss__state_timer), a    
+
+    xor a
+    jp update_boss8_draw_boss8_frame_phase3
+
+
+;-----------------------------------------------
+; flying core
+update_boss8_behavior_5:
+    call update_boss8_eye_blink_phase3
+    call update_boss8_check_turret_respawn
+    call update_boss8_maybe_fire_eye_bullet_phase3
+
+    ld hl, boss__state_timer
+    ld a, (hl)
+    inc (hl)
+    ld c, a
+    and #03
+    jr nz, update_boss8_behavior_5_continue
+    ld a, c
+    rrca
+    rrca
+    and #01
+    call update_boss8_draw_boss8_frame_phase3
+
+update_boss8_behavior_5_continue:
 ;     ld a, (boss__state)
 ;     or a
     ret
 
 
 ;-----------------------------------------------
-; flying core
-update_boss8_behavior_5:
-;     ld a, (boss__state)
-;     or a
+update_boss8_maybe_fire_eye_bullet_phase3:
+    ; fire bullets through eyes
+    ld a, (boss__settings + BOSS_8_EYE_BULLET_ATTACK_PATTERN_OFFSET)
+    call boss_bullet_pattern_cycle
+    ret nz
+    ld hl, #0402
+    ld bc, (boss__x)
+    add hl, bc
+    ld e, l
+    ld b, h
+    ld ix, #0000
+    ; - e, b: tile coordinate from where the bullet is fired
+    ; - ixl, ixh: pixel offset  
+    ld hl, boss_fire_directional_bullet_towards_player_with_random_offset_e_b
+    ld c, BOSS_PAGE
+    call call_hl_in_page_c_8000
+    ret nz
+    ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BULLET_IGNORING_WALLS
     ret
-
 
 ;-----------------------------------------------
 ; death

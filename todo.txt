@@ -2,10 +2,7 @@ to do:
 
 ***- 8th boss: (t'apuchako)
   ***- phase 3:
-    ***- legs/arms explode, and new core remains (hovering with a thruster animation)
     ***- it flies in some predefined patterns (3 patterns) (stop in between each pattern)
-    ***- turrets reappear
-    ***- bullets through eye
     ***- fires big plasma balls from thruster (directional)
     ***- big explosion when killed, with alien boss saying some "Leader: NOOOO!!!!" or something
   ***- add boss name to the stats for game over screen

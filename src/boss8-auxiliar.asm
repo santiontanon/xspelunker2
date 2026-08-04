@@ -108,6 +108,43 @@ update_boss8_eye_blink_phase2_3:
 
 
 ;-----------------------------------------------
+; phase2 method is the same, except that it will only draw the eye, and not the full boss
+update_boss8_eye_blink_phase3:
+    ld a, (boss__state_timer)
+    and #03
+    ret nz
+    ld a, (boss__8_eye_frame)
+    or a
+    jr z, update_boss8_eye_blink_phase3_0
+    dec a
+    jr z, update_boss8_eye_blink_phase3_1
+    dec a
+    jr z, update_boss8_eye_blink_phase3_2
+    dec a
+    jr z, update_boss8_eye_blink_phase3_3
+    ret
+
+update_boss8_eye_blink_phase3_0:
+    call random_a
+    and #0f
+    ret nz
+    ld a, 1
+    ld (boss__8_eye_frame), a
+    jp update_boss8_draw_boss8_frame_phase3_eye
+    
+update_boss8_eye_blink_phase3_1:
+update_boss8_eye_blink_phase3_2:
+    ld hl, boss__8_eye_frame
+    inc (hl)
+    jp update_boss8_draw_boss8_frame_phase3_eye
+
+update_boss8_eye_blink_phase3_3:
+    xor a
+    ld (boss__8_eye_frame), a
+    jp update_boss8_draw_boss8_frame_phase3_eye
+
+
+;-----------------------------------------------
 ; input:
 ; - b: height of chains
 update_boss8_draw_chains:
@@ -200,16 +237,16 @@ update_boss8_draw_boss8_frame_phase2_not_clearing:
     pop hl
     call draw_boss8_frame_1_without_clearing
 
-    ; check if the boss hit the player:
-    call player_check_collision_idle
-    jr nz, update_boss8_draw_boss8_frame_phase2_eye
-    ; player hit!
-    ld hl, player_immunity_timer
-    ld a, (hl)
-    or a
-    jr nz, update_boss8_draw_boss8_frame_phase2_eye
-    ld c, 4
-    call player_hit_damage_c
+;     ; check if the boss hit the player:
+;     call player_check_collision_idle
+;     jr nz, update_boss8_draw_boss8_frame_phase2_eye
+;     ; player hit!
+;     ld hl, player_immunity_timer
+;     ld a, (hl)
+;     or a
+;     jr nz, update_boss8_draw_boss8_frame_phase2_eye
+;     ld c, 4
+;     call player_hit_damage_c
 
     ; eye:
 update_boss8_draw_boss8_frame_phase2_eye:
@@ -263,6 +300,55 @@ update_boss8_draw_boss8_frame_phase2_fist_right:
     jp z, draw_boss8_frame_2
     ld hl, boss8_fist_frame_right_2
     jp draw_boss8_frame_2
+
+
+;-----------------------------------------------
+; input:
+; - a: frame to draw
+update_boss8_draw_boss8_frame_phase3:
+    push af
+        call draw_boss8_frame_clear_previous_frame_1
+    pop af
+update_boss8_draw_boss8_frame_phase3_not_clearing:
+    ld hl, boss8_suit_phase3_1
+    or a
+    jr z, update_boss8_draw_boss8_frame_phase3_frame_set
+    ld hl, boss8_suit_phase3_2
+update_boss8_draw_boss8_frame_phase3_frame_set:
+    push hl
+        ; compute draw pointer:
+        ld bc, (boss__x)
+        call get_room_tile_ptr
+        ex de, hl  ; hl = ptr where the boss is to be drawn
+    pop hl
+    call draw_boss8_frame_1_without_clearing
+
+    ; eye:
+update_boss8_draw_boss8_frame_phase3_eye:
+    ld hl, redraw_flags
+    set ROOM_REDRAW_FLAG_BIT, (hl)
+
+    ld a, (boss__8_eye_frame)
+    cp #ff
+    jr z, update_boss8_draw_boss8_frame_phase2_fist
+    ; draw eye frame:
+    ld hl, boss8_eye_frame_ptrs_phase2
+    add a, a
+    ADD_HL_A
+    ld a, (hl)
+    inc hl
+    ld h, (hl)
+    ld l, a
+    push hl
+        ld hl, #0302
+        ld bc, (boss__x)
+        add hl, bc
+        ld c, l
+        ld b, h
+        call get_room_tile_ptr
+        ex de, hl  ; hl = ptr where the boss is to be drawn
+    pop hl
+    jp draw_boss8_frame_internal
 
 
 ;-----------------------------------------------
@@ -400,10 +486,14 @@ player_weapon_hitbox_check_boss__boss8_hit:
 player_weapon_hitbox_check_boss__boss8_hit_body:
     ld a, (boss__behavior)
     cp 2
+    jr z, player_weapon_hitbox_check_boss__boss8_hit_body_inter_phase
+    cp 4
+    jr z, player_weapon_hitbox_check_boss__boss8_hit_body_inter_phase
     ld hl, player_weapon_hitbox_check_boss__lose_hp
-    jr nz, player_weapon_hitbox_check_boss__boss8_hit_body_continue
+    ld c, BOSS_PAGE
+    jp call_hl_in_page_c_8000   
+player_weapon_hitbox_check_boss__boss8_hit_body_inter_phase:
     ld hl, player_weapon_hitbox_check_boss__lose_hp_continue2  ; if we are in behavior 2, do not lose HP
-player_weapon_hitbox_check_boss__boss8_hit_body_continue:
     ld c, BOSS_PAGE
     jp call_hl_in_page_c_8000   
 

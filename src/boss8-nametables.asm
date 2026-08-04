@@ -65,6 +65,10 @@ BOSS8_NAMETABLE_SUIT_RARM1: equ BOSS8_NAMETABLE_SUIT_RARM0 + 4*11  ; 5*9
 BOSS8_NAMETABLE_SUIT_RARM2: equ BOSS8_NAMETABLE_SUIT_RARM1 + 5*9  ; 7*8
 BOSS8_NAMETABLE_SUIT_RARM3: equ BOSS8_NAMETABLE_SUIT_RARM2 + 7*8  ; 5*7
 
+; phase 3:
+BOSS8_NAMETABLE_SUIT_PHASE3_1: equ BOSS8_NAMETABLE_SUIT_RARM3 + 5*7  ; 8*7
+BOSS8_NAMETABLE_SUIT_PHASE3_2: equ BOSS8_NAMETABLE_SUIT_PHASE3_1 + 8*7  ; 8*7
+
 
 ;-----------------------------------------------
 boss8_frame_0_brain_in_vat:
@@ -288,3 +292,16 @@ boss8_fist_frame_right_2:
 	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
 	dw #0306, BOSS8_NAMETABLE_SUIT_FIST_RIGHT2  ; dimensions and nametable
 	dw 0, #0306  ; boss__clear_bbos
+
+
+boss8_suit_phase3_1:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0708, BOSS8_NAMETABLE_SUIT_PHASE3_1  ; dimensions and nametable
+	dw 0, #0708  ; boss__clear_bbos
+
+boss8_suit_phase3_2:
+	db 1  ; number of parts
+	db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
+	dw #0708, BOSS8_NAMETABLE_SUIT_PHASE3_2  ; dimensions and nametable
+	dw 0, #0708  ; boss__clear_bbos
