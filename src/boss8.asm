@@ -50,7 +50,8 @@ boss8_eye_frame_ptrs_phase2:
 ; - phase 3: flying core (until boss reaches 0% health)
 ; final boss only has one difficulty level
 boss8_difficulty_setting__normal:
-    dw 560, 480, 160  ; boss hp, and thresholds for phase 2 and 3
+;     dw 560, 480, 160  ; boss hp, and thresholds for phase 2 and 3
+    dw 560, 550, 540  ; boss hp, and thresholds for phase 2 and 3
     db BOSS_BULLET_PATTERN_HARD1  ; bullet pattern
 
 
@@ -1420,7 +1421,9 @@ update_boss8_behavior_4_done:
     ; switch tileset:
     ld hl, boss_8_phase2_12_tiles_zx0
     ld (current_room__tileset_ptr), hl
-    call boss8_setup_game_tiles_only_biome_banks12
+    ld hl, 0
+    ld (current_room__tileset_bank3_ptr), hl
+    call setup_game_tiles_only_biome
 
     ; update collision type table:
     ld hl, tile_collision_types_boss8_phase2_12
@@ -1428,6 +1431,12 @@ update_boss8_behavior_4_done:
     ld de, current_room__collision_table
     ld bc, 256
     ldir
+
+    ; collision table for bank 3:
+    ld hl, tile_collision_types_boss8_phase2_12
+    ld de, boss__8_bank3_collision_table
+    ld bc, 256
+    ldir    
 
     ; reset HP just in case:
     ld hl, (boss__settings + BOSS_8_HP_PHASE3_OFFSET)
@@ -1467,9 +1476,178 @@ update_boss8_behavior_5:
     call update_boss8_draw_boss8_frame_phase3
 
 update_boss8_behavior_5_continue:
-;     ld a, (boss__state)
-;     or a
+    ld a, (boss__state_timer)
+    and #01
+    ret nz
+
+    ; states:
+    ; - 0: wait a bit, and behavior switch
+    ; - 1: pattern 1: up-left-down-right (states 1,4,5,6)
+    ; - 2: pattern 2: up-right-down-left (states 2,7,8,9)
+    ; - 3: pattern 3: right-left-right (states 3,10,11)
+    ld a, (boss__state)
+    or a
+    jr z, update_boss8_behavior_5_state_0
+    dec a
+    jr z, update_boss8_behavior_5_state_1
+    dec a
+    jp z, update_boss8_behavior_5_state_2
+    dec a
+    jp z, update_boss8_behavior_5_state_3
+    dec a
+    jp z, update_boss8_behavior_5_state_4
+    dec a
+    jp z, update_boss8_behavior_5_state_5
+    dec a
+    jp z, update_boss8_behavior_5_state_6
+    dec a
+    jp z, update_boss8_behavior_5_state_7
+    dec a
+    jp z, update_boss8_behavior_5_state_8
+    dec a
+    jp z, update_boss8_behavior_5_state_9
+    dec a
+    jp z, update_boss8_behavior_5_state_10
+    dec a
+    jp z, update_boss8_behavior_5_state_11
     ret
+
+update_boss8_behavior_5_state_0:
+    ld a, (boss__state_timer)
+    cp 64
+    ret c
+    ld c, 3
+    call random_modulo
+    inc a
+    ld (boss__state), a
+    xor a
+    ld (boss__state_timer), a
+    ret
+
+update_boss8_behavior_5_state_1:
+    ld a, (boss__y)
+    cp 2 - 1
+    jr c, update_boss8_behavior_5_to_state_4
+    dec a
+    ld (boss__y), a
+update_boss8_behavior_5_state_1_draw:
+    ld a, (boss__state_timer)
+    rrca
+    rrca
+    and #01
+    jp update_boss8_draw_boss8_frame_phase3
+
+update_boss8_behavior_5_to_state_4:
+    ld a, 4
+    ld (boss__state), a
+update_boss8_behavior_5_state_4:
+    ld a, (boss__x)
+    cp 2 - 1
+    jr c, update_boss8_behavior_5_to_state_5
+    dec a
+    ld (boss__x), a
+    jr update_boss8_behavior_5_state_1_draw
+
+update_boss8_behavior_5_to_state_5:
+    ld a, 5
+    ld (boss__state), a
+update_boss8_behavior_5_state_5:
+    ld a, (boss__y)
+    cp 16
+    jr nc, update_boss8_behavior_5_to_state_6
+    inc a
+    ld (boss__y), a
+    jr update_boss8_behavior_5_state_1_draw
+
+update_boss8_behavior_5_to_state_6:
+    ld a, 6
+    ld (boss__state), a
+update_boss8_behavior_5_state_6:
+    ld a, (boss__x)
+    cp 16
+    jp nc, update_boss8_behavior_5_to_state_0
+    inc a
+    ld (boss__x), a
+    jr update_boss8_behavior_5_state_1_draw
+
+update_boss8_behavior_5_to_state_0:
+    xor a
+    ld (boss__state), a
+    ld (boss__state_timer), a
+    ret
+
+
+update_boss8_behavior_5_state_2:
+    ld a, (boss__y)
+    cp 2 - 1
+    jr c, update_boss8_behavior_5_to_state_7
+    dec a
+    ld (boss__y), a
+    jp update_boss8_behavior_5_state_1_draw
+
+update_boss8_behavior_5_to_state_7:
+    ld a, 7
+    ld (boss__state), a
+update_boss8_behavior_5_state_7:
+    ld a, (boss__x)
+    cp 25
+    jr nc, update_boss8_behavior_5_to_state_8
+    inc a
+    ld (boss__x), a
+    jr update_boss8_behavior_5_state_1_draw
+
+update_boss8_behavior_5_to_state_8:
+    ld a, 8
+    ld (boss__state), a
+update_boss8_behavior_5_state_8:
+    ld a, (boss__y)
+    cp 16
+    jr nc, update_boss8_behavior_5_to_state_9
+    inc a
+    ld (boss__y), a
+    jr update_boss8_behavior_5_state_1_draw
+
+update_boss8_behavior_5_to_state_9:
+    ld a, 9
+    ld (boss__state), a
+update_boss8_behavior_5_state_9:
+    ld a, (boss__x)
+    cp 16 - 1
+    jp c, update_boss8_behavior_5_to_state_0
+    dec a
+    ld (boss__x), a
+    jp update_boss8_behavior_5_state_1_draw
+
+
+update_boss8_behavior_5_state_3:
+    ld a, (boss__x)
+    cp 25
+    jr nc, update_boss8_behavior_5_to_state_10
+    inc a
+    ld (boss__x), a
+    jp update_boss8_behavior_5_state_1_draw
+
+update_boss8_behavior_5_to_state_10:
+    ld a, 10
+    ld (boss__state), a
+update_boss8_behavior_5_state_10:
+    ld a, (boss__x)
+    cp 2 - 1
+    jr c, update_boss8_behavior_5_to_state_11
+    dec a
+    ld (boss__x), a
+    jp update_boss8_behavior_5_state_1_draw
+
+update_boss8_behavior_5_to_state_11:
+    ld a, 11
+    ld (boss__state), a
+update_boss8_behavior_5_state_11:
+    ld a, (boss__x)
+    cp 16
+    jp nc, update_boss8_behavior_5_to_state_0
+    inc a
+    ld (boss__x), a
+    jp update_boss8_behavior_5_state_1_draw
 
 
 ;-----------------------------------------------

@@ -2,7 +2,6 @@ to do:
 
 ***- 8th boss: (t'apuchako)
   ***- phase 3:
-    ***- it flies in some predefined patterns (3 patterns) (stop in between each pattern)
     ***- fires big plasma balls from thruster (directional)
     ***- big explosion when killed, with alien boss saying some "Leader: NOOOO!!!!" or something
   ***- add boss name to the stats for game over screen
@@ -21,7 +20,6 @@ to do:
 - pick a good seed (for seed2) so that the map is good (at least Jungle)
 
 - Potential new ideas if I have the energy:
-  - second shop (can I reuse 'object_interaction_function_shop_internal'?)
   - when entering boss room, animation of door closing, trapping you inside.
   - go back to the firestone forge after defeating the final alien boss to continue digging into the mystery of why powerstones were so dangerous?
 
