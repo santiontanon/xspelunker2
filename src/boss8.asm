@@ -51,7 +51,7 @@ boss8_eye_frame_ptrs_phase2:
 ; final boss only has one difficulty level
 boss8_difficulty_setting__normal:
 ;     dw 560, 480, 160  ; boss hp, and thresholds for phase 2 and 3
-    dw 560, 550, 540  ; boss hp, and thresholds for phase 2 and 3
+    dw 60, 50, 40  ; boss hp, and thresholds for phase 2 and 3
     db BOSS_BULLET_PATTERN_HARD1  ; bullet pattern
 
 
@@ -1459,9 +1459,17 @@ update_boss8_behavior_4_done:
 ;-----------------------------------------------
 ; flying core
 update_boss8_behavior_5:
+    ld hl, (boss__hp)
+    ld a, h
+    or l
+    jr z, update_boss8_behavior_5_to_behavior_6
+
     call update_boss8_eye_blink_phase3
     call update_boss8_check_turret_respawn
     call update_boss8_maybe_fire_eye_bullet_phase3
+    ld a, (boss__state_timer)
+    and #0f
+    call z, update_boss8_fire_plasma_ball_phase3
 
     ld hl, boss__state_timer
     ld a, (hl)
@@ -1510,6 +1518,14 @@ update_boss8_behavior_5_continue:
     jp z, update_boss8_behavior_5_state_10
     dec a
     jp z, update_boss8_behavior_5_state_11
+    ret
+
+update_boss8_behavior_5_to_behavior_6:
+    ld a, 6
+    ld (boss__behavior), a
+    xor a
+    ld (boss__state), a
+    ld (boss__state_timer), a
     ret
 
 update_boss8_behavior_5_state_0:
@@ -1671,11 +1687,88 @@ update_boss8_maybe_fire_eye_bullet_phase3:
     ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BULLET_IGNORING_WALLS
     ret
 
+
+;-----------------------------------------------
+update_boss8_fire_plasma_ball_phase3:
+    ld b, 2
+update_boss8_fire_plasma_ball_phase3_loop:
+    push bc
+        ; spawn bullets:
+        ld hl, #0602
+        ld bc, (boss__x)
+        add hl, bc
+        ld e, l
+        ld b, h
+        ld ix, #0000
+        ; - e, b: tile coordinate from where the bullet is fired
+        ; - ixl, ixh: pixel offset  
+        ld hl, boss_fire_directional_bullet_towards_player_with_random_offset_e_b
+        ld c, BOSS_PAGE
+        call call_hl_in_page_c_8000
+        jr nz, update_boss8_fire_plasma_ball_phase3_no_sprite_available
+        ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BOSS8_BIG_PLASMA_BALL
+        ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
+        ld (ix + ROOM_OBJECT_STRUCT_EXTRA1), 16  ; time paused
+update_boss8_fire_plasma_ball_phase3_no_sprite_available:
+    pop bc
+    djnz update_boss8_fire_plasma_ball_phase3_loop
+    ret
+
+
 ;-----------------------------------------------
 ; death
 update_boss8_behavior_6:
-;     ld a, (boss__state)
-;     or a
+    ld a, (boss__state)
+    or a
+    jr z, update_boss8_behavior_6_state_0
+    dec a
+    jr z, update_boss8_behavior_6_state_1
+    ret
+
+update_boss8_behavior_6_state_0
+    ld hl, boss__state_timer
+    ld a, (hl)
+    inc (hl)
+    cp 64
+    jp z, update_boss8_behavior_6_to_state_1
+    ; spawn explosions:
+    and #01
+    ret nz
+    ; spawn an explosion:
+    ld bc, (boss__x)
+    call random_a
+    and #07
+    add a, c
+    ld c, a
+    call random_a
+    and #07
+    add a, b
+    ld b, a
+    jp spawn_explosion
+
+update_boss8_behavior_6_to_state_1:
+    ld a, 1
+    ld (boss__state), a
+    xor a
+    ld (boss__state_timer), a
+    call draw_boss8_frame_clear_previous_frame_1
+    ld hl, redraw_flags
+    set ROOM_REDRAW_FLAG_BIT, (hl)
+
+    ld de, TEXT_BOSS8_DEATH
+    ld hl, display_in_game_message_textpage4_wait100
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ; mark for stats:
+    ld b, 21  ; maia lord
+    ld c, BOSS_PAGE
+    ld hl, add_killed_boss_to_stats
+    jp call_hl_in_page_c_8000
+
+
+update_boss8_behavior_6_state_1:
+    ; ...
     ret
 
 

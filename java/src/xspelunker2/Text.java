@@ -165,6 +165,7 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "Charybdis/Scylla", "BOSS_CHARYBDIS_SCYLLA", 12);
         addLineSafe(lines_with_constant_page3, "Ares Mech", "BOSS_MARS_MOAI", 12);
         addLineSafe(lines_with_constant_page3, "Och-Kan", "BOSS_MOON_SNAKE", 12);
+        addLineSafe(lines_with_constant_page3, "Maia Lord", "BOSS_MAIA_LORD", 12);
         
         addLineSafe(lines_with_constant_page1, "Entering", "ENTERING", 16);
         addLineSafe(lines_with_constant_page1, "Loading area...", "LOADING_AREA", 16);
@@ -786,6 +787,7 @@ public class Text {
         addLineSafe(lines_with_constant_page4, "Leader: BUT NO MATTER. I SEE I WILL HAVE TO DO THINGS MYSELF... AGAIN... COME HERE AND FIND DEATH, LITTLE HUMAN!!", "BOSS8_INTRO_15", 112);
 
         addLineSafe(lines_with_constant_page4, "Leader: ENOUGH OF THIS FOOLISHNESS. GET ME MY COMBAT ARMOR!!", "BOSS8_PHASE2_START", 112);
+        addLineSafe(lines_with_constant_page4, "Leader: NOOOOOOOO!!!!!", "BOSS8_DEATH", 112);
         
         // Ending C:
         // First shared part:

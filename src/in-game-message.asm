@@ -38,7 +38,7 @@ display_in_game_message_textpage4_wait100:
 	ld de, buffer_4096
 	call display_in_game_message_draw_message
 	; wait 100 cycles (we do not call "wait_b_cycles" so that we can call update_keyboard_buffers):
-	ld b, 100
+	ld b, 50
 display_in_game_message_textpage4_wait100_loop:
     halt
     push bc
