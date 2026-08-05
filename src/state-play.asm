@@ -46,39 +46,39 @@ state_play:
 		ld c, TEXT_PAGE
 		call call_hl_in_page_c_8000
 
-; 		ld a, 1  ; inactive stone
-		ld a, 2 + 0  ; first power stone
+		ld a, 1  ; inactive stone
+; 		ld a, 2 + 0  ; first power stone
 		ld (global_state__power_calendar), a
-		inc a
-		ld (global_state__power_calendar + 1), a
-		inc a
-		ld (global_state__power_calendar + 2), a
-		inc a
-		ld (global_state__power_calendar + 3), a
-		inc a
-		ld (global_state__power_calendar + 4), a
-		inc a
-		ld (global_state__power_calendar + 5), a
-		ld a, 6
+; 		inc a
+; 		ld (global_state__power_calendar + 1), a
+; 		inc a
+; 		ld (global_state__power_calendar + 2), a
+; 		inc a
+; 		ld (global_state__power_calendar + 3), a
+; 		inc a
+; 		ld (global_state__power_calendar + 4), a
+; 		inc a
+; 		ld (global_state__power_calendar + 5), a
+; 		ld a, 6
 		ld (global_state__n_power_stones_in_calendar), a
 ; 		ld a, STORY_STATE__GOT_LETTER1
 ; 		ld a, STORY_STATE__PLACED_FIRST_POWER_STONE
 ; 		ld a, STORY_STATE__FOUND_LOST_VENDOR
 ; 		ld a, STORY_STATE__GOT_LETTER2
-		ld a, STORY_STATE__DEFEATED_ALIENS
-		ld (global_state__story), a
-		ld a, 2  ; maya riddle solved
-		ld (global_state__maya_riddle), a
+; 		ld a, STORY_STATE__DEFEATED_ALIENS
+; 		ld (global_state__story), a
+; 		ld a, 2  ; maya riddle solved
+; 		ld (global_state__maya_riddle), a
 
 		; debug:
 		ld a, 1
-		ld (player_inventory_items), a  ; first boss key
-		ld (player_inventory_items+1), a  ; second boss key
-		ld (player_inventory_items+2), a  ; third boss key
-		ld (player_inventory_items+3), a  ; fourth boss key
-		ld (player_inventory_items+4), a  ; fifth boss key
-		ld (player_inventory_items+5), a  ; mars boss key
-		ld (player_inventory_items+6), a  ; moon boss key
+; 		ld (player_inventory_items), a  ; first boss key
+; 		ld (player_inventory_items+1), a  ; second boss key
+; 		ld (player_inventory_items+2), a  ; third boss key
+; 		ld (player_inventory_items+3), a  ; fourth boss key
+; 		ld (player_inventory_items+4), a  ; fifth boss key
+; 		ld (player_inventory_items+5), a  ; mars boss key
+; 		ld (player_inventory_items+6), a  ; moon boss key
 ; 		ld (player_inventory_items+7), a  ; first stone
 ; 		ld (player_inventory_items+8), a  ; second stone
 ; 		ld (player_inventory_items+9), a  ; third stone
@@ -95,17 +95,17 @@ state_play:
 ; 		ld (player_inventory_items+20), a
 ; 		ld (player_inventory_items+21), a
 ; 		ld (player_inventory_items+22), a
-		ld (player_inventory_items+23), a  ; clay suit (last key item)
-		ld (player_inventory_items+24), a  ; sandals
-		ld (player_inventory_items+25), a  ; gloves
-		ld (player_inventory_items+26), a  ; warrior hat
-		ld (player_inventory_items+27), a  ; cotton armor
-		ld (player_inventory_items+28), a  ; chaac blessing
-		ld (player_inventory_items+29), a  ; seashell
-		ld (player_inventory_items+30), a  ; antigrav belt
-		ld (player_inventory_items+31), a  ; ice cape
-		ld (player_inventory_items+32), a  ; letter 1
-		ld (player_inventory_items+33), a  ; letter 2
+; 		ld (player_inventory_items+23), a  ; clay suit (last key item)
+; 		ld (player_inventory_items+24), a  ; sandals
+; 		ld (player_inventory_items+25), a  ; gloves
+; 		ld (player_inventory_items+26), a  ; warrior hat
+; 		ld (player_inventory_items+27), a  ; cotton armor
+; 		ld (player_inventory_items+28), a  ; chaac blessing
+; 		ld (player_inventory_items+29), a  ; seashell
+; 		ld (player_inventory_items+30), a  ; antigrav belt
+; 		ld (player_inventory_items+31), a  ; ice cape
+; 		ld (player_inventory_items+32), a  ; letter 1
+; 		ld (player_inventory_items+33), a  ; letter 2
 		ld (player_inventory_items+34), a  ; map
 ; 		ld (player_inventory_items+35), a  ; half power stone 1
 ; 		ld (player_inventory_items+36), a  ; half power stone 2
@@ -118,42 +118,42 @@ state_play:
 ; 		ld (player_inventory_items+INVENTORY_ITEM_MAYA_CODEX1), a
 ; 		ld (player_inventory_items+INVENTORY_ITEM_MAYA_CODEX2), a
 ; 		ld (player_inventory_items+INVENTORY_ITEM_MAYA_CODEX3), a
-		ld (player_inventory_items+INVENTORY_ITEM_ANIMAL_CHARM), a
-		ld (player_inventory_items+INVENTORY_ITEM_PHASE_SHIFTER), a
+; 		ld (player_inventory_items+INVENTORY_ITEM_ANIMAL_CHARM), a
+; 		ld (player_inventory_items+INVENTORY_ITEM_PHASE_SHIFTER), a
 		ld (player_inventory_weapons), a  ; machete
-		ld (player_inventory_weapons+1), a
-		ld (player_inventory_weapons+2), a
-		ld (player_inventory_weapons+3), a  ; shield
-		ld (player_inventory_weapons+4), a  ; sling
-		ld (player_inventory_weapons+5), a  ; blowgun
-		ld (player_inventory_weapons+6), a
-		ld (player_inventory_weapons+7), a  ; raygun
-		ld (player_inventory_weapons+8), a  ; machete v2
-		ld (player_inventory_weapons+9), a
-		ld (player_inventory_weapons+10), a
-		ld a, 202
-		ld (player_inventory_coins), a
-		ld a, 80
-		ld (player_inventory_weapon_ammo), a
-		ld (player_inventory_weapon_ammo + 1), a
-		ld (player_inventory_weapon_ammo + 2), a
-		ld (player_inventory_weapon_ammo + 3), a
-		ld a, 2
-		ld (player_inventory_n_small_keys), a
+; 		ld (player_inventory_weapons+1), a
+; 		ld (player_inventory_weapons+2), a
+; 		ld (player_inventory_weapons+3), a  ; shield
+; 		ld (player_inventory_weapons+4), a  ; sling
+; 		ld (player_inventory_weapons+5), a  ; blowgun
+; 		ld (player_inventory_weapons+6), a
+; 		ld (player_inventory_weapons+7), a  ; raygun
+; 		ld (player_inventory_weapons+8), a  ; machete v2
+; 		ld (player_inventory_weapons+9), a
+; 		ld (player_inventory_weapons+10), a
+; 		ld a, 202
+; 		ld (player_inventory_coins), a
+; 		ld a, 80
+; 		ld (player_inventory_weapon_ammo), a
+; 		ld (player_inventory_weapon_ammo + 1), a
+; 		ld (player_inventory_weapon_ammo + 2), a
+; 		ld (player_inventory_weapon_ammo + 3), a
+; 		ld a, 2
+; 		ld (player_inventory_n_small_keys), a
 		ld (global_state__objects + TAG_MAP_PIECE1), a
-		ld (global_state__objects + TAG_MAP_PIECE2), a
-		ld (global_state__objects + TAG_MAP_PIECE3), a
-		ld (global_state__objects + TAG_MAP_PIECE4), a
-		ld (global_state__objects + TAG_MAP_PIECE5), a
-		ld (global_state__objects + TAG_MAP_PIECE6), a
-		ld (global_state__objects + TAG_MAP_PIECE7), a
-		ld (global_state__objects + TAG_TELEPORTER1), a
-		ld (global_state__objects + TAG_TELEPORTER2), a
-		ld (global_state__objects + TAG_TELEPORTER4), a
-		ld (global_state__objects + TAG_TELEPORTER5), a
+; 		ld (global_state__objects + TAG_MAP_PIECE2), a
+; 		ld (global_state__objects + TAG_MAP_PIECE3), a
+; 		ld (global_state__objects + TAG_MAP_PIECE4), a
+; 		ld (global_state__objects + TAG_MAP_PIECE5), a
+; 		ld (global_state__objects + TAG_MAP_PIECE6), a
+; 		ld (global_state__objects + TAG_MAP_PIECE7), a
+; 		ld (global_state__objects + TAG_TELEPORTER1), a
+; 		ld (global_state__objects + TAG_TELEPORTER2), a
+; 		ld (global_state__objects + TAG_TELEPORTER4), a
+; 		ld (global_state__objects + TAG_TELEPORTER5), a
 
-; 		ld a, PLAYER_INITIAL_MAX_HEALTH
-		ld a, 6*4  ; debug
+		ld a, PLAYER_INITIAL_MAX_HEALTH
+; 		ld a, 6*4  ; debug
 		ld hl, player_health
 		ld (hl), a
 		inc hl
@@ -196,10 +196,10 @@ state_play_from_continue:
 
 		; generate area:
 		ld hl, pcg_generate_area
-; 		ld e, 0  ; area to generate
+		ld e, 0  ; area to generate
 ; 		ld e, 1  ; area to generate
 ; 		ld e, 2  ; area to generate
-		ld e, 3  ; area to generate
+; 		ld e, 3  ; area to generate
 ; 		ld e, 4  ; area to generate
 ; 		ld e, 6  ; area to generate
 ; 		ld e, 7  ; area to generate
@@ -210,17 +210,17 @@ state_play_from_continue:
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
 
-	    ld hl, calendar_room_full_activation_boss8_intro_scene
-	    ld a, BOSS_8_PAGE
-	    jp jp_to_hl_in_page_a_8000
+; 	    ld hl, calendar_room_full_activation_boss8_intro_scene
+; 	    ld a, BOSS_8_PAGE
+; 	    jp jp_to_hl_in_page_a_8000
 
 		; generate room:
-; 		ld e, START_ROOM_ID
+		ld e, START_ROOM_ID
 ; 		ld e, GUARDIAN_CAIMAN1_ROOM_ID
 ; 		ld e, GUARDIAN_CAIMAN2_ROOM_ID
 ; 		ld e, 18
 ; 		ld e, 16
-		ld e, CALENDAR_ROOM_ID
+; 		ld e, CALENDAR_ROOM_ID
 ; 		ld e, 18
 ; 		ld e, 16  ; <- second boss
 ; 		ld e, 4  ; <- third boss

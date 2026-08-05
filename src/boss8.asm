@@ -51,7 +51,6 @@ boss8_eye_frame_ptrs_phase2:
 ; final boss only has one difficulty level
 boss8_difficulty_setting__normal:
     dw 560, 480, 160  ; boss hp, and thresholds for phase 2 and 3
-;     dw 60, 50, 40  ; boss hp, and thresholds for phase 2 and 3
     db BOSS_BULLET_PATTERN_HARD1  ; bullet pattern
 
 
@@ -152,16 +151,19 @@ update_boss8_behavior_0_intro_scene_1:
     ld (boss__state_timer), a
     ld a, 2
     ld (boss__state), a
+    jp update_boss8_behavior_0_open_left_door
+
+update_boss8_behavior_0_open_left_door:
     ; door opens:
     ld hl, current_room__tile_map + 18*32
     ld b, 5
     ld de, 31
-update_boss8_behavior_0_intro_scene_1_loop:
+update_boss8_behavior_0_open_left_door_loop:
     ld (hl), 0
     inc hl
     ld (hl), 0
     add hl, de
-    djnz update_boss8_behavior_0_intro_scene_1_loop
+    djnz update_boss8_behavior_0_open_left_door_loop
     ld hl, SFX_door_open
     call play_SFX_with_high_priority
     ld hl, redraw_flags
@@ -216,10 +218,9 @@ update_boss8_behavior_0_intro_scene_3:
     ld a, (hl)
     cp 96
     ret nz
-    ld ix, current_room__sprite_enemies  ; first alien
-    ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
-    ld ix, current_room__sprite_enemies + ROOM_OBJECT_STRUCT_SIZE  ; second alien
-    ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
+    xor a
+    ld (current_room__sprite_enemies + ROOM_OBJECT_STRUCT_STATE), a  ; first alien
+    ld (current_room__sprite_enemies + ROOM_OBJECT_STRUCT_SIZE + ROOM_OBJECT_STRUCT_STATE), a  ; second alien
     ; left door closes:
     ld de, current_room__tile_map + 18*32
     ld hl, current_room__tile_map + 18*32 + 64*24
@@ -1050,10 +1051,10 @@ update_boss8_behavior_3_state_2_start:
     ld a, (boss__x)
     cp 23
     jr nz, update_boss8_behavior_3_state_2_continue
-    ld a, 1
-    ld (boss__state), a
     xor a
     ld (boss__state_timer), a
+    inc a
+    ld (boss__state), a
     jr update_boss8_behavior_3_state_1
 
 
@@ -1723,6 +1724,8 @@ update_boss8_behavior_6:
     jr z, update_boss8_behavior_6_state_0
     dec a
     jr z, update_boss8_behavior_6_state_1
+    dec a
+    jr z, update_boss8_behavior_6_state_2
     ret
 
 update_boss8_behavior_6_state_0
@@ -1747,10 +1750,10 @@ update_boss8_behavior_6_state_0
     jp spawn_explosion
 
 update_boss8_behavior_6_to_state_1:
-    ld a, 1
-    ld (boss__state), a
     xor a
     ld (boss__state_timer), a
+    inc a
+    ld (boss__state), a
     call draw_boss8_frame_clear_previous_frame_1
     ld hl, redraw_flags
     set ROOM_REDRAW_FLAG_BIT, (hl)
@@ -1766,9 +1769,145 @@ update_boss8_behavior_6_to_state_1:
     ld hl, add_killed_boss_to_stats
     jp call_hl_in_page_c_8000
 
-
 update_boss8_behavior_6_state_1:
-    ; ...
+    ld hl, boss__state_timer
+    ld a, (hl)
+    inc (hl)
+    cp 64
+    jp z, update_boss8_behavior_6_to_state_2
     ret
+
+update_boss8_behavior_6_to_state_2:
+    ld a, 2
+    ld (boss__state), a
+    xor a
+    ld (boss__state_timer), a
+update_boss8_behavior_6_state_2:
+    call stop_music
+    call clear_screen_left_to_right
+
+    ld hl, music_ending_aliens_bin
+    ld a, 5
+    call play_music_adjusting_tempo
+
+    ld b, 25
+    call wait_b_halts
+
+    ld hl, player_x
+    ld (hl), 0
+    inc hl
+    ld (hl), 6
+    inc hl
+    ld (hl), 0
+    inc hl
+    ld (hl), 5
+    ld a, PLAYER_STATE_IDLE
+    ld (player_state), a
+
+    ld hl, current_room__sprite_enemies
+    ld bc, MAX_ROOM_SPRITE_ENEMIES * ROOM_OBJECT_STRUCT_SIZE
+    ld a, #ff
+    ld (keyboard_state), a
+    call clear_memory_a
+
+    call draw_room_with_hud
+    xor a
+    ld (n_displayed_object_sprites), a
+    ld (n_displayed_object_sprites_without_player_bullets), a
+    ld (n_displayed_object_sprites_last_frame), a
+    ld (keyboard_clicks), a
+    call player_update
+    ld hl, upload_sprites_to_vdp
+    ld c, SPRITES_PAGE
+    call call_hl_in_page_c_8000
+    ld c, TILES_PAGE
+    ld hl, room_render_tile_objects
+    call call_hl_in_page_c_8000
+
+    ld b, 50
+    call wait_b_halts_skippable
+
+    call update_boss8_behavior_0_open_left_door
+    call draw_room_with_hud
+
+    ld b, 25
+    call wait_b_halts_skippable
+
+    call update_boss8_behavior_0_intro_scene_2_spawn_alien
+
+    ld b, 32
+    ld a, 1
+    ld (current_room__sprite_enemies + ROOM_OBJECT_STRUCT_STATE), a
+update_boss8_behavior_6_state_2_loop:
+    halt
+    push bc
+        call update_sprite_objects
+        ld hl, update_sprite_enemies
+        ld c, ENEMIES_PAGE
+        call call_hl_in_page_c_8000
+        ld a, (n_displayed_object_sprites)
+        ld (n_displayed_object_sprites_without_player_bullets), a
+        ld hl, upload_sprites_to_vdp
+        ld c, SPRITES_PAGE
+        call call_hl_in_page_c_8000
+    pop bc
+    djnz update_boss8_behavior_6_state_2_loop
+
+;     xor a
+;     ld (current_room__sprite_enemies + ROOM_OBJECT_STRUCT_STATE), a
+
+    ld b, 25
+    call wait_b_halts_skippable
+
+    ld de, TEXT_BOSS8_DEFEAT_1
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ld de, TEXT_BOSS8_DEFEAT_2
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ld de, TEXT_BOSS8_DEFEAT_3
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ld de, TEXT_BOSS8_DEFEAT_4
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ld de, TEXT_BOSS8_DEFEAT_5
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ld de, TEXT_BOSS8_DEFEAT_6
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ld de, TEXT_BOSS8_DEFEAT_7
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ld de, TEXT_BOSS8_DEFEAT_8
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    call clear_screen_left_to_right
+
+    ld hl, ending_A
+    ld a, (global_state__objects + TAG_FIRESTONE_FORGE)
+    or a
+    jr z, update_boss8_behavior_6_state_2_finished
+    ld hl, ending_A_plus
+update_boss8_behavior_6_state_2_finished:
+    ld a, ENDING_PAGE
+    jp jp_to_hl_in_page_a_8000
 
 

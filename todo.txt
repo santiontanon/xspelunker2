@@ -1,17 +1,5 @@
 to do:
 
-***- 8th boss defeating scene: (t'apuchako):
-  ***- screen goes to black
-  ***- player is placed on the teleporter (facing right)
-  ***- two aliens enter from the right
-  ***- "Alien: Please stop! You cannot leave yet!"
-  ***- "Michael: You are going to need more than the two of you to defeat me! Even your leader could not do it!"
-  ***- "Alien: No, no, you misunderstand! We do not want to fight you! We want to thank you!"
-  ***- "Michael: ???"
-  ***- "Alien: You have done a great service to us! That Maia bastard was holding our race hostage, and forcing us to do its bidding. We are now free!"
-  ***- "Michael: So, you were not planning to invade Earth?"
-  ***- "Alien: Well, our fleet went there, but it was Maia's plan! I have hope now that we can retake control of the council and stop this madness! We cannot thank you enough!"
-  ***- "Alien: You are free to go now, of course. But know that you will always be welcome here! We are in your debt!"
 ***- final good ending 1 (A) (update "stats__ending"): when you go back to Elaine, the calendar powers off (power depleted from the effort, but it does not crumble). Ending is just the beach scene + text. Big congrats, but the calendar is powered off, and you have no more power stones. So, there go your hopes of ever visiting the aliens again, or stopping another alien threat if it ever comes.
 ***- Final good ending 2 (A+) you have the 3 codices in the forge to manufacture more powerstones. So, you can keep using the calendar stone and be prepared for the future.
 

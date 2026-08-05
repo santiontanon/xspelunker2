@@ -788,6 +788,15 @@ public class Text {
 
         addLineSafe(lines_with_constant_page4, "Leader: ENOUGH OF THIS FOOLISHNESS. GET ME MY COMBAT ARMOR!!", "BOSS8_PHASE2_START", 112);
         addLineSafe(lines_with_constant_page4, "Leader: NOOOOOOOO!!!!!", "BOSS8_DEATH", 112);
+
+        addLineSafe(lines_with_constant_page4, "Alien: Please stop! You cannot leave yet!", "BOSS8_DEFEAT_1", 112);
+        addLineSafe(lines_with_constant_page4, "Michael: You are going to need more than the one of you to defeat me! Even your leader could not do it!", "BOSS8_DEFEAT_2", 112);
+        addLineSafe(lines_with_constant_page4, "Alien: No, no, you misunderstand! We do not want to fight you! We want to thank you!", "BOSS8_DEFEAT_3", 112);
+        addLineSafe(lines_with_constant_page4, "Michael: ???", "BOSS8_DEFEAT_4", 112);
+        addLineSafe(lines_with_constant_page4, "Alien: You have done a great service to us! That Maia bastard was holding our race hostage, and forcing us to do its bidding. We are now free!", "BOSS8_DEFEAT_5", 112);
+        addLineSafe(lines_with_constant_page4, "Michael: So, you were not planning to invade Earth?", "BOSS8_DEFEAT_6", 112);
+        addLineSafe(lines_with_constant_page4, "Alien: Well, our fleet went there, but it was Maia's plan! I have hope now that we can retake control of the council and stop this madness! We cannot thank you enough!", "BOSS8_DEFEAT_7", 112);
+        addLineSafe(lines_with_constant_page4, "Alien: You are free to go now, of course. But know that you will always be welcome here! We are in your debt!", "BOSS8_DEFEAT_8", 112);
         
         // Ending C:
         // First shared part:
