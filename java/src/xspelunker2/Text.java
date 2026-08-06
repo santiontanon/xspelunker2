@@ -879,6 +879,22 @@ public class Text {
         // Ending A:
         addLineSafe(lines_with_constant_page4, "Elaine: Michael! You are back!! I was so worried!! Tell me!! How did it go??", "ENDING_A_CALENDAR_1", 22*4);
         addLineSafe(lines_with_constant_page4, "Michael: I told you I could do it!! I will tell you the details later, but the alien thread is no more Elaine!! We did it!!", "ENDING_A_CALENDAR_2", 22*4);
+        addLineSafe(lines_with_constant_page4, "Elaine: Look! The Nexus is turning off!! It looks like the powerstones got depleted.", "ENDING_A_CALENDAR_3", 22*4);
+        addLineSafe(lines_with_constant_page4, "Michael: And the teleporter too!! Elaine, let's get out of here just in case...", "ENDING_A_CALENDAR_4", 22*4);
+
+        addLineSafe(lines_with_constant_page4, "Xavier: Woah, can you believe it? I actually did it Elaine!", "ENDING_A_BEACH_1", 22*6);
+        addLineSafe(lines_with_constant_page4, "Elaine: Err... WE did it... have you forgotten about how I saved your ass?", "ENDING_A_BEACH_2", 22*6);
+        addLineSafe(lines_with_constant_page4, "Xavier: ... ok, ok, WE did it... But did I tell you about how I fought against a giant alien brain?!", "ENDING_A_BEACH_3", 22*6);
+        addLineSafe(lines_with_constant_page4, "Elaine: Sigh... yes... you did... three times...", "ENDING_A_BEACH_4", 22*6);
+        // addLineSafe(lines_with_constant_page3, "Elaine: Just relax! Enjoy the vacation! And think about what are we having for dinner today! No more stories about fighting mosters for the day ok?", "ENDING_C_BEACH_7", 22*6);
+        addLineSafe(lines_with_constant_page4, "Xavier: Ok, ok. I think we deserve it! Earth is save once again. Thanks to us!", "ENDING_A_BEACH_5", 22*6);
+        addLineSafe(lines_with_constant_page4, "Elaine: That's the spirit!", "ENDING_A_BEACH_6", 22*6);
+        addLineSafe(lines_with_constant_page4, "Xavier: Well, the nexus is powered off, so, if another alien race comes to invade us, I do not know what will we do. But that's a problem for the future!", "ENDING_A_BEACH_7", 22*6);
+
+        addLineSafe(lines_with_constant_page4, "Elaine: Oh my god, without asking me first?! And what do you want more firestones for?!", "ENDING_A_PLUS_BEACH_1", 22*6);
+        addLineSafe(lines_with_constant_page4, "Xavier: Well, the nexus got powered off after we used it. But if there is ever another alien race who gets too cocky, we will be able to turn it on again!", "ENDING_A_PLUS_BEACH_2", 22*6);
+        addLineSafe(lines_with_constant_page4, "Elaine: Oh man... You just came back from your adventure and you are just eager for another one, aren't you?", "ENDING_A_PLUS_BEACH_3", 22*6);
+//        addLineSafe(lines_with_constant_page4, "Xavier: ...", "ENDING_A_PLUS_BEACH_4", 22*6);
 
         
         // Ending credits and text, page 1:

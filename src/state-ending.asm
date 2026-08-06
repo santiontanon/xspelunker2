@@ -360,10 +360,10 @@ ending_A_continue:
 	call clear_screen_left_to_right
 	call stop_music
 
-; 	call ending_beach_scene_A  ; elaine and michael relax in the beach
+	call ending_beach_scene_A  ; elaine and michael relax in the beach
 
-; 	call clear_screen_left_to_right
-; 	call stop_music
+	call clear_screen_left_to_right
+	call stop_music
 
 ; 	ld ix, ending_A_text_page_ptrs
 ; 	ld iy, ending_A_enemy_intro_ptr_table
@@ -484,12 +484,33 @@ ending_A_calendar_scene_after_alien_boss_loop:
     ld c, TEXT_PAGE
     call call_hl_in_page_c_8000
 
-    ld b, 100
+    ld b, 25
     call wait_b_halts_skippable
 
-	; ...
+    ; turn calendar off:
+    xor a
+    ld (current_room__id), a  ; so that no tile modifications are applied, and calendar switches off
+    call setup_game_tiles_only_biome
 
-	ret
+    ld hl, SFX_ui_wrong
+    call play_SFX_with_high_priority
+
+    ld b, 50
+    call wait_b_halts_skippable
+
+    ld de, TEXT_ENDING_A_CALENDAR_3
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ld de, TEXT_ENDING_A_CALENDAR_4
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ld b, 50
+    call wait_b_halts_skippable
+	jp clear_screen_left_to_right
 
 
 ;-----------------------------------------------
@@ -1159,6 +1180,128 @@ ending_beach_scene_B_plus_entry_point:
 	ld a, COLOR_WHITE * 16
 	ld b, 10
 	jp ending_beach_scene_B_dialogue_line_page4
+
+
+;-----------------------------------------------
+ending_beach_scene_A:
+	call ending_beach_scene_common
+
+	ld hl, TEXT_ENDING_C_BEACH_1
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_C_BEACH_2
+	ld a, COLOR_WHITE * 16
+	ld b, 4
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_A_BEACH_1
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	call ending_beach_scene_B_dialogue_line_page4
+
+	ld hl, TEXT_ENDING_A_BEACH_2
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	call ending_beach_scene_B_dialogue_line_page4
+
+	ld hl, TEXT_ENDING_A_BEACH_3
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	call ending_beach_scene_B_dialogue_line_page4
+
+	ld hl, TEXT_ENDING_A_BEACH_4
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	call ending_beach_scene_B_dialogue_line_page4
+
+	ld hl, TEXT_ENDING_C_BEACH_7
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_A_BEACH_5
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	call ending_beach_scene_B_dialogue_line_page4
+
+	ld hl, TEXT_ENDING_A_BEACH_6
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	call ending_beach_scene_B_dialogue_line_page4
+
+	ld a, (global_state__objects + TAG_FIRESTONE_FORGE)
+	or a
+	jr nz, ending_beach_scene_A_plus_entry_point
+
+	ld hl, TEXT_ENDING_A_BEACH_7
+	ld a, COLOR_WHITE * 16
+	ld b, 10
+	jp ending_beach_scene_B_dialogue_line_page4
+
+
+;-----------------------------------------------
+ending_beach_scene_A_plus_entry_point:
+	ld hl, TEXT_ENDING_C_PLUS_BEACH_3
+	ld a, COLOR_WHITE * 16
+	ld b, 6
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_C_PLUS_BEACH_4
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_C_PLUS_BEACH_5
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_C_PLUS_BEACH_6
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_C_PLUS_BEACH_7
+	ld a, COLOR_WHITE * 16
+	ld b, 3
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_C_PLUS_BEACH_8
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_C_PLUS_BEACH_9
+	ld a, COLOR_WHITE * 16
+	ld b, 3
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_C_PLUS_BEACH_10
+	ld a, COLOR_WHITE * 16
+	ld b, 4
+	call ending_beach_scene_C_dialogue_line
+
+	ld hl, TEXT_ENDING_A_PLUS_BEACH_1
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	call ending_beach_scene_B_dialogue_line_page4
+
+	ld hl, TEXT_ENDING_A_PLUS_BEACH_2
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	call ending_beach_scene_B_dialogue_line_page4
+
+	ld hl, TEXT_ENDING_A_PLUS_BEACH_3
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	call ending_beach_scene_B_dialogue_line_page4
+
+	ld hl, TEXT_AMBUSH_ELAINE_3
+	ld a, COLOR_WHITE * 16
+	ld b, 8
+	jp ending_beach_scene_C_dialogue_line
 
 
 ;-----------------------------------------------

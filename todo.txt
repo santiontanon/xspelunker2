@@ -1,12 +1,7 @@
 to do:
 
 ***- final good ending 1 (A) (update "stats__ending"):
-  ***- the calendar and teleporter power off
-  ***- "Elaine: Look! The Nexus is turning off!! It looks like the powerstones got depleted."
-  ***- "Michael: And the teleporter too!! Elaine, let's get out of here just in case..."
-  ***- go to beach scene
-  ***- write new text for text scene
-  ***- write new text for final scene (Big congrats, but the calendar is powered off, and you have no more power stones. So, there go your hopes of ever visiting the aliens again, or stopping another alien threat if it ever comes).
+  ***- write new text for text scene (Big congrats, but the calendar is powered off, and you have no more power stones. So, there go your hopes of ever visiting the aliens again, or stopping another alien threat if it ever comes).
 ***- Final good ending 2 (A+): Update text to reflect that you can go back to the forge to get more powerstones and power up the nexus/teleporter again if needed.
 
 - music: (brain 12, 15, 23, 25 have potential): xibalba, atlantis, mars, moon

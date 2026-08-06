@@ -151,6 +151,7 @@ state_play:
 ; 		ld (global_state__objects + TAG_TELEPORTER2), a
 ; 		ld (global_state__objects + TAG_TELEPORTER4), a
 ; 		ld (global_state__objects + TAG_TELEPORTER5), a
+		ld (global_state__objects + TAG_FIRESTONE_FORGE), a
 
 		ld a, PLAYER_INITIAL_MAX_HEALTH
 ; 		ld a, 6*4  ; debug
@@ -214,7 +215,8 @@ state_play_from_continue:
 ; 	    ld a, BOSS_8_PAGE
 ; 	    jp jp_to_hl_in_page_a_8000
 
-	    ld hl, ending_A
+; 	    ld hl, ending_A
+	    ld hl, ending_A_plus
     	ld a, ENDING_PAGE
     	jp jp_to_hl_in_page_a_8000
 
@@ -433,7 +435,7 @@ state_play_setup_sprites:
 	ld (hl), COLOR_DARK_RED
 	ld hl, sprite_attribute_table + 2 + 8
 	ld (hl), 8
-	
+
 	; setup sprites:
 	ld a, SPRITES_PAGE
 	ld hl, pyramid_object_sprites_bin
