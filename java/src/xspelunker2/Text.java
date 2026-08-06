@@ -872,10 +872,14 @@ public class Text {
 
         addLineSafe(lines_with_constant_page4, "Xavier: I any case! We did a great job didn't we? But... what if they send a second armada?", "ENDING_B_PLUS_BEACH_9", 22*6);
         
-        // Ending A:
+        // Ending A (fail):
         addLineSafe(lines_with_constant_page4, "Of course, sir! At once, sir!", "ENDING_C_UFO_CONQUER_1", 22*4);
         addLineSafe(lines_with_constant_page4, "Excellent... and do not interrupt me again unless it is really important!", "ENDING_C_UFO_CONQUER_2", 22*4);
-                
+
+        // Ending A:
+        addLineSafe(lines_with_constant_page4, "Elaine: Michael! You are back!! I was so worried!! Tell me!! How did it go??", "ENDING_A_CALENDAR_1", 22*4);
+        addLineSafe(lines_with_constant_page4, "Michael: I told you I could do it!! I will tell you the details later, but the alien thread is no more Elaine!! We did it!!", "ENDING_A_CALENDAR_2", 22*4);
+
         
         // Ending credits and text, page 1:
         addLineSafe(lines_with_constant_page3, "Ending C: Congratulations! You", "ENDING_C_PAGE_1_1", 20);

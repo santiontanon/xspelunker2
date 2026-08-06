@@ -414,11 +414,24 @@ ending_A_calendar_scene_after_alien_boss:
 	    ld hl, room_render_tile_objects
 	    call call_hl_in_page_c_8000
 
-		ld a, (current_room__collision_ptr_page)
-		ld hl, (current_room__collision_ptr)
-		ld de, current_room__collision_table
-		ld bc, 256
-		call ldir_from_page_a
+	    ; we just sete the whole collision table to 2:
+	    ld hl, current_room__collision_table
+	    ld bc, 255
+	    ld a, 2
+	    call clear_memory_a
+
+	    ld a, PLAYER_STATE_TELEPORT_IN
+	    ld (player_state), a
+	    xor a
+	    ld (player_state_timer), a
+	    ld a, 4
+	    ld (player_x), a
+	    ld a, 15
+	    ld (player_x + 1), a
+	    ld a, 20
+	    ld (player_y + 1), a
+	    ld a, 20  ; immune while teleporting
+	    ld (player_immunity_timer), a
 
 		ld hl, 0
 		ld (room_desired_scroll_x), hl
@@ -433,24 +446,46 @@ ending_A_calendar_scene_after_alien_boss:
 		call update_sprite_objects
 		call player_update
 
-	    ld a, PLAYER_STATE_TELEPORT_IN
-	    ld (player_state), a
-	    ld a, 4
-	    ld (player_x), a
-	    ld a, 16
-	    ld (player_x + 1), a
-	    ld a, 21
-	    ld (player_y + 1), a
 	    call draw_room_with_hud
 		ld hl, upload_sprites_to_vdp
 		ld c, SPRITES_PAGE
 		call call_hl_in_page_c_8000
-    call enable_VDP_output	
+    call enable_VDP_output
 
-	; ...
+    xor a
+    ld (keyboard_clicks), a
+    dec a  ; #ff
+    ld (keyboard_state), a
 
-	ld b, 200
-	call wait_b_halts
+    ; player teleports:
+    ld b, 64
+ending_A_calendar_scene_after_alien_boss_loop:
+	push bc
+		halt
+		call update_scroll
+		call player_update
+		call update_sprite_objects
+		ld hl, upload_sprites_to_vdp
+		ld c, SPRITES_PAGE
+		call call_hl_in_page_c_8000
+		ld hl, (current_room__animation_fn_ptr)
+		ld c, TILE_ANIMATIONS_PAGE
+		call call_hl_in_page_c_8000	
+	pop bc
+	djnz ending_A_calendar_scene_after_alien_boss_loop
+
+    ld de, TEXT_ENDING_A_CALENDAR_1
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ld de, TEXT_ENDING_A_CALENDAR_2
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ld b, 100
+    call wait_b_halts_skippable
 
 	; ...
 

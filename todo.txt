@@ -1,9 +1,6 @@
 to do:
 
 ***- final good ending 1 (A) (update "stats__ending"):
-  ***- player teleports
-  ***- "Elaine: Michael! You are back!! I was so worried!! Tell me!! How did it go??"
-  ***- "Michael: I told you I could do it!! I will tell you the details later, but the alien thread is no more Elaine!! We did it!!"
   ***- the calendar and teleporter power off
   ***- "Elaine: Look! The Nexus is turning off!! It looks like the powerstones got depleted."
   ***- "Michael: And the teleporter too!! Elaine, let's get out of here just in case..."

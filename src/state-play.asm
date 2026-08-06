@@ -307,18 +307,6 @@ state_play_from_inventory__load_boss_4_tile_patches:
 		call call_hl_in_page_c_8000
 state_play_from_inventory__no_boss_4:
 
-		; init sprite attribute table:
-		ld hl, sprite_attribute_table + 2
-		ld (hl), 0
-		inc hl
-		ld (hl), COLOR_DARK_YELLOW
-		ld hl, sprite_attribute_table + 2 + 4
-		ld (hl), 4
-		inc hl
-		ld (hl), COLOR_DARK_RED
-		ld hl, sprite_attribute_table + 2 + 8
-		ld (hl), 8
-
 		ld a, HUD_MAX_TIME
 		ld (hud_redraw_timer), a
 		ld a, #ff  ; redraw everything the first time
@@ -434,6 +422,18 @@ state_play_loop_hud_redraw:
 
 ;-----------------------------------------------
 state_play_setup_sprites:
+	; init sprite attribute table:
+	ld hl, sprite_attribute_table + 2
+	ld (hl), 0
+	inc hl
+	ld (hl), COLOR_DARK_YELLOW
+	ld hl, sprite_attribute_table + 2 + 4
+	ld (hl), 4
+	inc hl
+	ld (hl), COLOR_DARK_RED
+	ld hl, sprite_attribute_table + 2 + 8
+	ld (hl), 8
+	
 	; setup sprites:
 	ld a, SPRITES_PAGE
 	ld hl, pyramid_object_sprites_bin
