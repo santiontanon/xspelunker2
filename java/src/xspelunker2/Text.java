@@ -605,10 +605,10 @@ public class Text {
         addLineSafe(lines_with_constant_page2, "They wanted to buildings to extend deep underground. 'No!' We explained, 'We will reach Xibalba!'. But they replied that we were ignorant. We kept building.", "TABLET_TRIVIA5_2", 18*5);
 
         addLineSafe(lines_with_constant_page2, "When the two great pyramids were finished, the star people demanded us to dig deeper.", "TABLET_TRIVIA6_1", 18*3);
-        addLineSafe(lines_with_constant_page2, "And a third pyramid, completely underground was started. My father warned me that nothing good could come from digging into the udnerworld. He was suspicious.", "TABLET_TRIVIA6_2", 18*5);
+        addLineSafe(lines_with_constant_page2, "And a third pyramid, completely underground was started. My father warned me that nothing good could come from digging into the underworld. He was suspicious.", "TABLET_TRIVIA6_2", 18*5);
 
         addLineSafe(lines_with_constant_page2, "My late father was right. The third pyramid was build, and in its deepest end, an underground", "TABLET_TRIVIA7_1", 18*3);
-        addLineSafe(lines_with_constant_page2, "cenote was found. But not one filled with water, but with heat and flames: 'the fire shaft'. The star people rejoiced. We should ahve been scared...", "TABLET_TRIVIA7_2", 18*5);
+        addLineSafe(lines_with_constant_page2, "cenote was found. But not one filled with water, but with heat and flames: 'the fire shaft'. The star people rejoiced. We should have been scared...", "TABLET_TRIVIA7_2", 18*5);
 
         addLineSafe(lines_with_constant_page2, "What we found beyond the fire shaft was our worst nightmare. Even the star people allowed", "TABLET_TRIVIA8_1", 18*3);
         addLineSafe(lines_with_constant_page2, "us to stop digging. We had reached the gates of Xibalba itself!", "TABLET_TRIVIA8_2", 18*5);
@@ -632,7 +632,7 @@ public class Text {
         addLineSafe(lines_with_constant_page2, "and we controlled the gates. Those who entered them speak of reaching other worlds. About new pyramids being built. By us. By the Maya!", "TABLET_TRIVIA14_2", 18*5);
 
         addLineSafe(lines_with_constant_page2, "And so, this is our story. Of how the great pyramids came to be. Of how we were tricked but", "TABLET_TRIVIA15_1", 18*3);
-        addLineSafe(lines_with_constant_page2, "prevailed. Of how my father was right. And And if they try to come again, I hope we are ready again. Yatzil.", "TABLET_TRIVIA15_2", 18*5);
+        addLineSafe(lines_with_constant_page2, "prevailed. Of how my father was right. And if they try to come again, I hope we are ready again. Yatzil.", "TABLET_TRIVIA15_2", 18*5);
 
         addLineSafe(lines_with_constant_page2, "Before going on a hunt, warriors prayed in the animal altars to receive their blessing.", "TABLET_TRIVIA_CLUE1_1", 18*3);
 

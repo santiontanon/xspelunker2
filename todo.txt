@@ -1,20 +1,32 @@
 to do:
 
 ***- 9th optional boss: gigantic maya statue that looks decoration, but it's a secret boss.
-  ***- plan riddle + boss + reward
-  ***- maybe that boss leads to the grave of the person who wrote all the story tablets (Yatzil), with a riddle you can only solve if you have seen all tablets (use "tomb.tsv" music for this part).
-  ***- Solving the riddle reveals the head of the statue (which was hidden), and two gigantic empty eye sockets. If you place the eyes of charybdis and scylla, the statue comes alive, and you have your boss fight! (which gives you an achievement, or maybe the A++ ending if you have A+?)
+  ***- for each of the 15 tablets, make the first letter a special color
+  ***- draft giant boss in GIMP (missing two eyes, and has a panel that would open in the chest)
+  ***- create room in TILED
+  ***- Add room to assembler (spawn somewhere in the caves or pyramids, look which part is emptier)
+  ***- if you place the two eyes, a panel opens in the chest
+  ***- interact with panel in the chest:
+    ***- clue: We translated the the full story. Proof you have learned it all, defeat the guardian, and you will learn the rest of the secret.
+    ***- solution:
+      MMTTT
+      WMWBA
+      AWTOA
+  ***- room entrances lock, and boss wakes up
+  ***- implement 9th boss
+  ***- when defeated, a door opens
+  ***- entering the door leads to a small room with Yatzil's grave with some tablets and a notebook
+  ***- tablets explain that this is the tomb of Yatzil, and why it is there
+  ***- notebook explains the secret of the firestones (translated by the same people who translated the story of Yatzil)
+  ***- achievement for finding the grave
 
+- when entering boss room, animation of door closing, trapping you inside.
+- come up with a list of "achievements" for the list in the game over screen and implement them
+- pick a good seed (for seed2) so that the map is good (at least Jungle)
 - music: (brain 12, 15, 23, 25 have potential): xibalba, atlantis, mars, moon
 - save game to rom / password: https://www.grauw.nl/projects/ascii-x/ascii16-x/
   - add a "save as default" option to the config menu that saves to ROM
   - add a "revert to defaults" option
-- come up with a list of "achievements" for the list in the game over screen and implement them
-- pick a good seed (for seed2) so that the map is good (at least Jungle)
-
-- Potential new ideas if I have the energy:
-  - when entering boss room, animation of door closing, trapping you inside.
-  - go back to the firestone forge after defeating the final alien boss to continue digging into the mystery of why powerstones were so dangerous?
 
 
 --------------------
