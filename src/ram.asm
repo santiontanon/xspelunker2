@@ -400,6 +400,7 @@ tmp_dialog_options_position: equ temporary_variables + 1
 tmp_map_pointer_position: equ tmp_hud_drawing_hl
 tmp_letter_line_width: equ tmp_hud_drawing_hl
 tmp_letter_line_color: equ tmp_hud_drawing_hl + 1
+tmp_letter_line_start: equ tmp_hud_drawing_hl + 2
 tmp_puzzlebox_state: equ tmp_hud_drawing_hl
 tmp_puzzlebox_pointer: equ tmp_hud_drawing_hl + 4
 tmp_enemy_pcg_platform_loc_ptr: equ temporary_variables

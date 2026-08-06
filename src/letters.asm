@@ -296,6 +296,8 @@ display_paragraph_text_page4:
 	push af
 	push de
 	push ix
+		ld a, #80
+		ld (tmp_letter_line_start), a
 		; copy text to buffer_4096:
 		push iy
 		pop de
@@ -307,16 +309,28 @@ display_paragraph_text_page3:
 	push af
 	push de
 	push ix
+		ld a, #80
+		ld (tmp_letter_line_start), a
 		; copy text to buffer_4096:
 		push iy
 		pop de
 		ld c, TEXT_PAGE3
 		ld hl, copy_text_from_another_page
 		jr display_paragraph_continue
+display_paragraph_page7_iyh:
+	push af
+	push de
+	push ix
+		ld a, iyh
+		ld (tmp_letter_line_start), a
+		jr display_paragraph_page7_entry_point
 display_paragraph_page7:
 	push af
 	push de
 	push ix
+		ld a, #80
+		ld (tmp_letter_line_start), a
+display_paragraph_page7_entry_point:
 		; copy text to buffer_4096:
 		push hl
 		pop ix
@@ -376,8 +390,12 @@ display_paragraph_loop:
 				ld b, a
 				ld a, (tmp_letter_line_color)
 				ld iyl, a
-				ld iyh, #80
+				ld a, (tmp_letter_line_start)
+				ld iyh, a
+				; ld iyh, #80
 				call draw_sentence_to_vdp_from_another_page
+				ld a, #80
+				ld (tmp_letter_line_start), a  ; reset the start for next line
 			pop bc
 		pop hl
 	pop af

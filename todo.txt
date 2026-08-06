@@ -1,7 +1,6 @@
 to do:
 
 ***- 9th optional boss: gigantic maya statue that looks decoration, but it's a secret boss.
-  ***- for each of the 15 tablets, make the first letter a special color
   ***- draft giant boss in GIMP (missing two eyes, and has a panel that would open in the chest)
   ***- create room in TILED
   ***- Add room to assembler (spawn somewhere in the caves or pyramids, look which part is emptier)
