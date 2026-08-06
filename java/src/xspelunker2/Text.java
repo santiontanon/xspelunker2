@@ -974,6 +974,36 @@ public class Text {
         // Ending credits and text, page 3:
         addLineSafe(lines_with_constant_page3, "Thank you again!", "ENDING_C_PAGE_3_1", 20);
         
+        addLineSafe(lines_with_constant_page4, "Ending A: Unbelievable! You did", "ENDING_A_PAGE_1_1", 20);
+//        addLineSafe(lines_with_constant_page4, "not only halt the Alien invasion!", "ENDING_A_PAGE_1_2", 20);  // ENDING_B_PAGE_1_2
+        addLineSafe(lines_with_constant_page4, "But destroyed their fleet and even", "ENDING_A_PAGE_1_3", 20);
+        addLineSafe(lines_with_constant_page4, "defeated their leader! They will", "ENDING_A_PAGE_1_4", 20);
+        addLineSafe(lines_with_constant_page4, "not be coming back!", "ENDING_A_PAGE_1_5", 20);
+        addLineSafe(lines_with_constant_page4, "The nexus powered off after the", "ENDING_A_PAGE_1_6", 20);
+        addLineSafe(lines_with_constant_page4, "attack. So, it will not be", "ENDING_A_PAGE_1_7", 20);
+        addLineSafe(lines_with_constant_page4, "able to defend you against any", "ENDING_A_PAGE_1_8", 20);
+        addLineSafe(lines_with_constant_page4, "other alien races that decide", "ENDING_A_PAGE_1_9", 20);
+        addLineSafe(lines_with_constant_page4, "Earth would be worth invading,", "ENDING_A_PAGE_1_10", 20);
+        addLineSafe(lines_with_constant_page4, "but that seems like a very remote", "ENDING_A_PAGE_1_11", 20);
+        addLineSafe(lines_with_constant_page4, "possibility! For now, your hands", "ENDING_A_PAGE_1_12", 20);
+        addLineSafe(lines_with_constant_page4, "are more than busy rewriting", "ENDING_A_PAGE_1_13", 20);
+        addLineSafe(lines_with_constant_page4, "history, as it seems that most", "ENDING_A_PAGE_1_14", 20);
+        addLineSafe(lines_with_constant_page4, "Maya history will have to be", "ENDING_A_PAGE_1_15", 20);
+        addLineSafe(lines_with_constant_page4, "rewritten based on your findings!", "ENDING_A_PAGE_1_16", 20);
+
+        addLineSafe(lines_with_constant_page4, "Ending A+: Unbelievable! You did", "ENDING_A_PLUS_PAGE_1_1", 20);
+//        addLineSafe(lines_with_constant_page4, "not only halt the Alien invasion!", "ENDING_A_PLUS_PAGE_1_2", 20);  // ENDING_B_PAGE_1_2
+//        addLineSafe(lines_with_constant_page4, "But destroyed their fleet and even", "ENDING_A_PLUS_PAGE_1_3", 20);  // ENDING_A_PAGE_1_3
+//        addLineSafe(lines_with_constant_page4, "defeated their leader! They will", "ENDING_A_PLUS_PAGE_1_4", 20);
+//        addLineSafe(lines_with_constant_page4, "not be coming back!", "ENDING_A_PLUS_PAGE_1_5", 20);
+//        addLineSafe(lines_with_constant_page4, "The nexus powered off after the", "ENDING_A_PPLUS_AGE_1_6", 20);
+        addLineSafe(lines_with_constant_page4, "attack. But since you managed", "ENDING_A_PLUS_PAGE_1_7", 20);
+        addLineSafe(lines_with_constant_page4, "to find the forge and turn it on", "ENDING_A_PLUS_PAGE_1_8", 20);
+        addLineSafe(lines_with_constant_page4, "it seems that you should be able", "ENDING_A_PLUS_PAGE_1_9", 20);
+        addLineSafe(lines_with_constant_page4, "to power up the nexus again if", "ENDING_A_PLUS_PAGE_1_10", 20);
+        addLineSafe(lines_with_constant_page4, "need be! This is a job well done!", "ENDING_A_PLUS_PAGE_1_11", 20);
+        addLineSafe(lines_with_constant_page4, "And on top of that, your hands", "ENDING_A_PLUS_PAGE_1_12", 20);
+        
 
         List<Integer> numbers = font.convertStringToAssembler("0123456789 ");
         System.out.println("Numbers: " + numbers);

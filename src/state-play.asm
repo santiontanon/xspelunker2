@@ -46,29 +46,29 @@ state_play:
 		ld c, TEXT_PAGE
 		call call_hl_in_page_c_8000
 
-; 		ld a, 1  ; inactive stone
-		ld a, 2 + 0  ; first power stone
+		ld a, 1  ; inactive stone
+; 		ld a, 2 + 0  ; first power stone
 		ld (global_state__power_calendar), a
-		inc a
-		ld (global_state__power_calendar + 1), a
-		inc a
-		ld (global_state__power_calendar + 2), a
-		inc a
-		ld (global_state__power_calendar + 3), a
-		inc a
-		ld (global_state__power_calendar + 4), a
-		inc a
-		ld (global_state__power_calendar + 5), a
-		ld a, 6
+; 		inc a
+; 		ld (global_state__power_calendar + 1), a
+; 		inc a
+; 		ld (global_state__power_calendar + 2), a
+; 		inc a
+; 		ld (global_state__power_calendar + 3), a
+; 		inc a
+; 		ld (global_state__power_calendar + 4), a
+; 		inc a
+; 		ld (global_state__power_calendar + 5), a
+		ld a, 1
 		ld (global_state__n_power_stones_in_calendar), a
 ; 		ld a, STORY_STATE__GOT_LETTER1
 ; 		ld a, STORY_STATE__PLACED_FIRST_POWER_STONE
 ; 		ld a, STORY_STATE__FOUND_LOST_VENDOR
 ; 		ld a, STORY_STATE__GOT_LETTER2
-		ld a, STORY_STATE__DEFEATED_ALIENS
-		ld (global_state__story), a
-		ld a, 2  ; maya riddle solved
-		ld (global_state__maya_riddle), a
+; 		ld a, STORY_STATE__DEFEATED_ALIENS
+; 		ld (global_state__story), a
+; 		ld a, 2  ; maya riddle solved
+; 		ld (global_state__maya_riddle), a
 
 		; debug:
 		ld a, 1
@@ -151,7 +151,7 @@ state_play:
 ; 		ld (global_state__objects + TAG_TELEPORTER2), a
 ; 		ld (global_state__objects + TAG_TELEPORTER4), a
 ; 		ld (global_state__objects + TAG_TELEPORTER5), a
-		ld (global_state__objects + TAG_FIRESTONE_FORGE), a
+; 		ld (global_state__objects + TAG_FIRESTONE_FORGE), a
 
 		ld a, PLAYER_INITIAL_MAX_HEALTH
 ; 		ld a, 6*4  ; debug
@@ -197,10 +197,10 @@ state_play_from_continue:
 
 		; generate area:
 		ld hl, pcg_generate_area
-; 		ld e, 0  ; area to generate
+		ld e, 0  ; area to generate
 ; 		ld e, 1  ; area to generate
 ; 		ld e, 2  ; area to generate
-		ld e, 3  ; area to generate
+; 		ld e, 3  ; area to generate
 ; 		ld e, 4  ; area to generate
 ; 		ld e, 6  ; area to generate
 ; 		ld e, 7  ; area to generate
@@ -216,9 +216,9 @@ state_play_from_continue:
 ; 	    jp jp_to_hl_in_page_a_8000
 
 ; 	    ld hl, ending_A
-	    ld hl, ending_A_plus
-    	ld a, ENDING_PAGE
-    	jp jp_to_hl_in_page_a_8000
+; 	    ld hl, ending_A_plus
+;     	ld a, ENDING_PAGE
+;     	jp jp_to_hl_in_page_a_8000
 
 		; generate room:
 		ld e, START_ROOM_ID

@@ -365,16 +365,16 @@ ending_A_continue:
 	call clear_screen_left_to_right
 	call stop_music
 
-; 	ld ix, ending_A_text_page_ptrs
-; 	ld iy, ending_A_enemy_intro_ptr_table
-; 	ld a, (global_state__objects + TAG_FIRESTONE_FORGE)
-; 	or a
-; 	jr z, ending_A_continue2
-; 	ld ix, ending_A_plus_text_page_ptrs
-; 	ld iy, ending_A_plus_enemy_intro_ptr_table
-; ending_A_continue2:
-; 	ld b, 3  ; # number of pages
-; 	call ending_final_text_scene
+	ld ix, ending_A_text_page_ptrs
+	ld iy, ending_A_enemy_intro_ptr_table
+	ld a, (global_state__objects + TAG_FIRESTONE_FORGE)
+	or a
+	jr z, ending_A_continue2
+	ld ix, ending_A_plus_text_page_ptrs
+	ld iy, ending_A_plus_enemy_intro_ptr_table
+ending_A_continue2:
+	ld b, 3  ; # number of pages
+	call ending_final_text_scene
 
 ending_A_done:
 	ld hl, state_game_over	
@@ -1485,6 +1485,17 @@ ending_B_plus_prime_text_page_ptrs:
 	dw ending_B_text_page_2
 	dw ending_C_text_page_3
 
+ending_A_text_page_ptrs:
+	dw ending_A_text_page_1
+	dw ending_A_text_page_2
+	dw ending_C_text_page_3
+
+ending_A_plus_text_page_ptrs:
+	dw ending_A_plus_text_page_1
+	dw ending_A_text_page_2
+	dw ending_C_text_page_3
+
+
 ending_C_text_page_1:
 	db 16
 	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_1_1, TEXT_PAGE3
@@ -1597,6 +1608,43 @@ ending_B_plus_prime_text_page_1:
 	ENDING_LINE_PAGE TEXT_ENDING_B_PRIME_PAGE_1_14, TEXT_PAGE4
 	ENDING_LINE_PAGE TEXT_ENDING_B_PRIME_PAGE_1_15, TEXT_PAGE4
 
+ending_A_text_page_1:
+	db 16
+	ENDING_LINE_PAGE TEXT_ENDING_A_PAGE_1_1, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_2, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_A_PAGE_1_3, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_A_PAGE_1_4, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_A_PAGE_1_5, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_A_PAGE_1_6, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_A_PAGE_1_7, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_A_PAGE_1_8, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_A_PAGE_1_9, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_A_PAGE_1_10, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_A_PAGE_1_11, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_A_PAGE_1_12, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_A_PAGE_1_13, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_A_PAGE_1_14, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_A_PAGE_1_15, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_A_PAGE_1_16, TEXT_PAGE4
+
+ending_A_plus_text_page_1:
+	db 16
+	ENDING_LINE_PAGE TEXT_ENDING_A_PLUS_PAGE_1_1, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_B_PAGE_1_2, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_A_PAGE_1_3, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_A_PAGE_1_4, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_A_PAGE_1_5, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_A_PAGE_1_6, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_A_PLUS_PAGE_1_7, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_A_PLUS_PAGE_1_8, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_A_PLUS_PAGE_1_9, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_A_PLUS_PAGE_1_10, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_A_PLUS_PAGE_1_11, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_A_PLUS_PAGE_1_12, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_A_PAGE_1_13, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_A_PAGE_1_14, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_A_PAGE_1_15, TEXT_PAGE4
+	ENDING_LINE_PAGE TEXT_ENDING_A_PAGE_1_16, TEXT_PAGE4
 
 ending_C_text_page_2:
 	db 15
@@ -1634,6 +1682,16 @@ ending_B_text_page_2:
 	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_2_11, TEXT_PAGE3
 	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_2_12, TEXT_PAGE3
 
+ending_A_text_page_2:
+	db 6
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_2_1, TEXT_PAGE3
+	ENDING_LINE_PAGE 0, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_2_9, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_2_10, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_2_11, TEXT_PAGE3
+	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_2_12, TEXT_PAGE3
+
+
 ending_C_text_page_3:
 	db 1
 	ENDING_LINE_PAGE TEXT_ENDING_C_PAGE_3_1, TEXT_PAGE3
@@ -1659,8 +1717,10 @@ ending_C_enemy_intro_ptr_table:
 	dw ending_enemy_intro_data23  ; aliens
 	dw 0  ; sentinel
 
-ending_B_enemy_intro_ptr_table
-ending_B_plus_enemy_intro_ptr_table
+ending_A_enemy_intro_ptr_table:
+ending_A_plus_enemy_intro_ptr_table:
+ending_B_enemy_intro_ptr_table:
+ending_B_plus_enemy_intro_ptr_table:
 ending_C_plus_enemy_intro_ptr_table:
 	dw ending_enemy_intro_data0  ; snakes
 	dw ending_enemy_intro_data1  ; fish
