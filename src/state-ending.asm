@@ -345,19 +345,116 @@ ending_UFO_scene_conquer:
 
 ;-----------------------------------------------
 ending_A_plus:
-	ld hl, TEXT_ENDING_B_PLUS
+	ld hl, TEXT_ENDING_A_PLUS
 	jr ending_A_continue
 ending_A:
 	ld hl, TEXT_ENDING_A
 ending_A_continue:
     ld sp, stack
 	ld (stats__ending), hl
-	
-	; ...
 
+	call stop_music
+
+	call ending_A_calendar_scene_after_alien_boss
+	
+	call clear_screen_left_to_right
+	call stop_music
+
+; 	call ending_beach_scene_A  ; elaine and michael relax in the beach
+
+; 	call clear_screen_left_to_right
+; 	call stop_music
+
+; 	ld ix, ending_A_text_page_ptrs
+; 	ld iy, ending_A_enemy_intro_ptr_table
+; 	ld a, (global_state__objects + TAG_FIRESTONE_FORGE)
+; 	or a
+; 	jr z, ending_A_continue2
+; 	ld ix, ending_A_plus_text_page_ptrs
+; 	ld iy, ending_A_plus_enemy_intro_ptr_table
+; ending_A_continue2:
+; 	ld b, 3  ; # number of pages
+; 	call ending_final_text_scene
+
+ending_A_done:
 	ld hl, state_game_over	
 	ld a, GAME_OVER_PAGE
 	jp jp_to_hl_in_page_a_8000
+
+
+;-----------------------------------------------
+ending_A_calendar_scene_after_alien_boss:
+	call disable_VDP_output	
+		; load calendar room:
+		ld e, CALENDAR_ROOM_ID
+		ld hl, pcg_generate_room
+		ld c, PCG_PAGE
+		call call_hl_in_page_c_8000
+	    ld a, TILES_CALENDAR_TELEPORTER_PAGE
+	    ld (current_room__tileset_page), a
+	    ld hl, tiles_calendar_teleporter_zx0
+	    ld (current_room__tileset_ptr), hl
+	    call state_play_setup_sprites
+
+	    ld hl, ptr_to_new_tile_object
+	    ld c, TILES_PAGE
+	    call call_hl_in_page_c_8000
+
+	    ld (hl), 0  ; ID
+	    inc hl
+	    ld (hl), TAG_TELEPORTER_MARS  ; type (any teleporter would do)
+	    inc hl
+	    ld (hl), 14  ; tile x
+	    inc hl
+	    ld (hl), 19  ; tile y
+	    inc hl
+	    ld (hl), 0  ; state
+
+	    ld c, TILES_PAGE
+	    ld hl, room_render_tile_objects
+	    call call_hl_in_page_c_8000
+
+		ld a, (current_room__collision_ptr_page)
+		ld hl, (current_room__collision_ptr)
+		ld de, current_room__collision_table
+		ld bc, 256
+		call ldir_from_page_a
+
+		ld hl, 0
+		ld (room_desired_scroll_x), hl
+		ld (room_scroll_x), hl
+
+	    call setup_game_tiles
+	    call state_play_upload_object_tiles_to_vdp_if_necessary
+		ld a, #ff  ; redraw everything the first time
+		ld (redraw_flags), a
+		call maybe_recenter_scroll_and_set_actual
+		call update_scroll
+		call update_sprite_objects
+		call player_update
+
+	    ld a, PLAYER_STATE_TELEPORT_IN
+	    ld (player_state), a
+	    ld a, 4
+	    ld (player_x), a
+	    ld a, 16
+	    ld (player_x + 1), a
+	    ld a, 21
+	    ld (player_y + 1), a
+	    call draw_room_with_hud
+		ld hl, upload_sprites_to_vdp
+		ld c, SPRITES_PAGE
+		call call_hl_in_page_c_8000
+    call enable_VDP_output	
+
+	; ...
+
+	ld b, 200
+	call wait_b_halts
+
+	; ...
+
+	ret
 
 
 ;-----------------------------------------------

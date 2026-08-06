@@ -1,7 +1,16 @@
 to do:
 
-***- final good ending 1 (A) (update "stats__ending"): when you go back to Elaine, the calendar powers off (power depleted from the effort, but it does not crumble). Ending is just the beach scene + text. Big congrats, but the calendar is powered off, and you have no more power stones. So, there go your hopes of ever visiting the aliens again, or stopping another alien threat if it ever comes.
-***- Final good ending 2 (A+) you have the 3 codices in the forge to manufacture more powerstones. So, you can keep using the calendar stone and be prepared for the future.
+***- final good ending 1 (A) (update "stats__ending"):
+  ***- player teleports
+  ***- "Elaine: Michael! You are back!! I was so worried!! Tell me!! How did it go??"
+  ***- "Michael: I told you I could do it!! I will tell you the details later, but the alien thread is no more Elaine!! We did it!!"
+  ***- the calendar and teleporter power off
+  ***- "Elaine: Look! The Nexus is turning off!! It looks like the powerstones got depleted."
+  ***- "Michael: And the teleporter too!! Elaine, let's get out of here just in case..."
+  ***- go to beach scene
+  ***- write new text for text scene
+  ***- write new text for final scene (Big congrats, but the calendar is powered off, and you have no more power stones. So, there go your hopes of ever visiting the aliens again, or stopping another alien threat if it ever comes).
+***- Final good ending 2 (A+): Update text to reflect that you can go back to the forge to get more powerstones and power up the nexus/teleporter again if needed.
 
 - music: (brain 12, 15, 23, 25 have potential): xibalba, atlantis, mars, moon
 - save game to rom / password: https://www.grauw.nl/projects/ascii-x/ascii16-x/

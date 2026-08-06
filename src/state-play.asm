@@ -46,29 +46,29 @@ state_play:
 		ld c, TEXT_PAGE
 		call call_hl_in_page_c_8000
 
-		ld a, 1  ; inactive stone
-; 		ld a, 2 + 0  ; first power stone
+; 		ld a, 1  ; inactive stone
+		ld a, 2 + 0  ; first power stone
 		ld (global_state__power_calendar), a
-; 		inc a
-; 		ld (global_state__power_calendar + 1), a
-; 		inc a
-; 		ld (global_state__power_calendar + 2), a
-; 		inc a
-; 		ld (global_state__power_calendar + 3), a
-; 		inc a
-; 		ld (global_state__power_calendar + 4), a
-; 		inc a
-; 		ld (global_state__power_calendar + 5), a
-; 		ld a, 6
+		inc a
+		ld (global_state__power_calendar + 1), a
+		inc a
+		ld (global_state__power_calendar + 2), a
+		inc a
+		ld (global_state__power_calendar + 3), a
+		inc a
+		ld (global_state__power_calendar + 4), a
+		inc a
+		ld (global_state__power_calendar + 5), a
+		ld a, 6
 		ld (global_state__n_power_stones_in_calendar), a
 ; 		ld a, STORY_STATE__GOT_LETTER1
 ; 		ld a, STORY_STATE__PLACED_FIRST_POWER_STONE
 ; 		ld a, STORY_STATE__FOUND_LOST_VENDOR
 ; 		ld a, STORY_STATE__GOT_LETTER2
-; 		ld a, STORY_STATE__DEFEATED_ALIENS
-; 		ld (global_state__story), a
-; 		ld a, 2  ; maya riddle solved
-; 		ld (global_state__maya_riddle), a
+		ld a, STORY_STATE__DEFEATED_ALIENS
+		ld (global_state__story), a
+		ld a, 2  ; maya riddle solved
+		ld (global_state__maya_riddle), a
 
 		; debug:
 		ld a, 1
@@ -196,10 +196,10 @@ state_play_from_continue:
 
 		; generate area:
 		ld hl, pcg_generate_area
-		ld e, 0  ; area to generate
+; 		ld e, 0  ; area to generate
 ; 		ld e, 1  ; area to generate
 ; 		ld e, 2  ; area to generate
-; 		ld e, 3  ; area to generate
+		ld e, 3  ; area to generate
 ; 		ld e, 4  ; area to generate
 ; 		ld e, 6  ; area to generate
 ; 		ld e, 7  ; area to generate
@@ -213,6 +213,10 @@ state_play_from_continue:
 ; 	    ld hl, calendar_room_full_activation_boss8_intro_scene
 ; 	    ld a, BOSS_8_PAGE
 ; 	    jp jp_to_hl_in_page_a_8000
+
+	    ld hl, ending_A
+    	ld a, ENDING_PAGE
+    	jp jp_to_hl_in_page_a_8000
 
 		; generate room:
 		ld e, START_ROOM_ID
@@ -268,23 +272,7 @@ state_play_from_inventory:
 		add a, 2
 		ld (current_room__max_scroll_y), a
 state_play_from_inventory__no_full_hud:
-
-		; setup sprites:
-		ld a, SPRITES_PAGE
-		ld hl, pyramid_object_sprites_bin
-		ld de, SPRTBL2 + 32 * FIRST_OBJECT_SPRITE_PATTERN  ; first three reserved for player / weapon
-		ld bc, pyramid_object_sprites_bin_end - pyramid_object_sprites_bin
-		call fast_LDIRVM_from_sprites_page
-
-		ld hl, (current_room__enemy_sprites_ptr)
-		ld de, buffer_4096
-		ld a, (current_room__enemy_sprites_ptr_page)
-		ld c, a
-		call dzx0_from_page_c
-		ld hl, buffer_4096		
-		ld de, SPRTBL2 + 32 * FIRST_ENEMY_SPRITE_PATTERN
-		ld bc, (64 - FIRST_ENEMY_SPRITE_PATTERN) * 32
-		call fast_LDIRVM
+		call state_play_setup_sprites
 
 		; setup tiles:
 		call setup_game_tiles
@@ -442,6 +430,26 @@ state_play_loop_hud_redraw:
 	ld hl, (current_room__animation_fn_ptr)
 	ld a, TILE_ANIMATIONS_PAGE
 	jp jp_to_hl_in_page_a_8000
+
+
+;-----------------------------------------------
+state_play_setup_sprites:
+	; setup sprites:
+	ld a, SPRITES_PAGE
+	ld hl, pyramid_object_sprites_bin
+	ld de, SPRTBL2 + 32 * FIRST_OBJECT_SPRITE_PATTERN  ; first three reserved for player / weapon
+	ld bc, pyramid_object_sprites_bin_end - pyramid_object_sprites_bin
+	call fast_LDIRVM_from_sprites_page
+
+	ld hl, (current_room__enemy_sprites_ptr)
+	ld de, buffer_4096
+	ld a, (current_room__enemy_sprites_ptr_page)
+	ld c, a
+	call dzx0_from_page_c
+	ld hl, buffer_4096		
+	ld de, SPRTBL2 + 32 * FIRST_ENEMY_SPRITE_PATTERN
+	ld bc, (64 - FIRST_ENEMY_SPRITE_PATTERN) * 32
+	jp fast_LDIRVM
 
 
 ;-----------------------------------------------
