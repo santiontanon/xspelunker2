@@ -7,10 +7,7 @@ to do:
   ***- if you place the two eyes, a panel opens in the chest
   ***- interact with panel in the chest:
     ***- clue: We translated the the full story. Proof you have learned it all, defeat the guardian, and you will learn the rest of the secret.
-    ***- solution:
-      MMTTT
-      WMWBA
-      AWTOA
+    ***- solution: MMTTT, WMWBA, AWTOA
   ***- room entrances lock, and boss wakes up
   ***- implement 9th boss
   ***- when defeated, a door opens
@@ -22,10 +19,10 @@ to do:
 - when entering boss room, animation of door closing, trapping you inside.
 - come up with a list of "achievements" for the list in the game over screen and implement them
 - pick a good seed (for seed2) so that the map is good (at least Jungle)
-- music: (brain 12, 15, 23, 25 have potential): xibalba, atlantis, mars, moon
 - save game to rom / password: https://www.grauw.nl/projects/ascii-x/ascii16-x/
   - add a "save as default" option to the config menu that saves to ROM
   - add a "revert to defaults" option
+- music: (brain 12, 15, 23, 25 have potential): xibalba, atlantis, mars, moon
 
 
 --------------------
