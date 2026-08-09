@@ -1,14 +1,15 @@
 to do:
 
 ***- 9th optional boss: gigantic maya statue that looks decoration, but it's a secret boss.
-  ***- draft giant boss in GIMP (missing two eyes, and has a panel that would open in the chest)
-  ***- create room in TILED
-  ***- Add room to assembler (spawn somewhere in the caves or pyramids, look which part is emptier)
+  ***- Add room to assembler (spawn somewhere in the caves or pyramids, look which part is emptier):
+    ***- collision table (for when idle)
   ***- if you place the two eyes, a panel opens in the chest
   ***- interact with panel in the chest:
+    ***- draw panel close-up
     ***- clue: We translated the the full story. Proof you have learned it all, defeat the guardian, and you will learn the rest of the secret.
     ***- solution: MMTTT, WMWBA, AWTOA
   ***- room entrances lock, and boss wakes up
+  ***- design attack patterns (fists attacking, eye bullets, and some big mouth attack)
   ***- implement 9th boss
   ***- when defeated, a door opens
   ***- entering the door leads to a small room with Yatzil's grave with some tablets and a notebook
