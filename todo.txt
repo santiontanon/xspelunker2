@@ -1,16 +1,21 @@
 to do:
 
 ***- 9th optional boss:
-  ***- if you place the two eyes, a panel opens in the chest
-  ***- interact with panel in the chest:
+  ***- interact with panel:
     ***- draw panel close-up
-    ***- clue: We translated the the full story. Proof you have learned it all, defeat the guardian, and you will learn the rest of the secret.
-    ***- solution: MMTTT, WMWBA, AWTOA
+    ***- display panel close-up
+      ***- clue: We translated the the full story. Proof you have learned it all, defeat the guardian, and you will learn the rest of the secret.
+    ***- interaction:
+      ***- enter and leave
+      ***- being able to change letters
+      ***- solve it
+        ***- solution: MMTTT, WMWBA, AWTOA
   ***- room entrances lock, and boss wakes up
   ***- design attack patterns (fists attacking, eye bullets, and some big mouth attack)
   ***- implement 9th boss
-  ***- when defeated, a door opens
-  ***- entering the door leads to a small room with Yatzil's grave with some tablets and a notebook
+  ***- when defeated, a door opens, room side walls re-open
+    ***- from now on, the door is always open when entering this room
+  ***- entering the door leads to a small room with Yatzil's grave with some tablets and a notebook (use appropriate music in Yatzil's room, and restore caves music when exiting)
   ***- tablets explain that this is the tomb of Yatzil, and why it is there
   ***- notebook explains the secret of the firestones (translated by the same people who translated the story of Yatzil)
   ***- achievement for finding the grave

@@ -137,28 +137,28 @@ public class Bosses {
     
     public static void main(String args[]) throws Exception
     {
-//        boss1Tiles();
-//        boss1Sprites();
-//
-//        boss2Tiles();
-//        boss2Sprites();
-//
-//        boss3Tiles();
-//        boss3Sprites();
-//
-//        Boss4.main(args);
-//        
-//        boss5Tiles();
-//        boss5Sprites();
-//
-//        boss6Tiles();
-//        boss6Sprites();
-//
-//        boss7Tiles();
-//        boss7Sprites();
-//
-//        boss8Tiles();
-//        boss8Sprites();
+        boss1Tiles();
+        boss1Sprites();
+
+        boss2Tiles();
+        boss2Sprites();
+
+        boss3Tiles();
+        boss3Sprites();
+
+        Boss4.main(args);
+        
+        boss5Tiles();
+        boss5Sprites();
+
+        boss6Tiles();
+        boss6Sprites();
+
+        boss7Tiles();
+        boss7Sprites();
+
+        boss8Tiles();
+        boss8Sprites();
 
         boss9Tiles();
 //        boss9Sprites();

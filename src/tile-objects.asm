@@ -483,6 +483,10 @@ room_render_tile_objects_loop:
 		jp z, room_render_tile_objects_render_combination_lever
 		cp TAG_POSEIDON_BOSS_DISPLAY
 		jp z, room_render_tile_objects_render_poseidon_boss_display
+		cp TAG_BOSS9_EYE_LEFT
+		jp z, room_render_tile_objects_render_boss9_eye_left
+		cp TAG_BOSS9_EYE_RIGHT
+		jp z, room_render_tile_objects_render_boss9_eye_right
 		inc hl
 		ld c, (hl)  ; x
 		ld iyl, c
@@ -766,6 +770,37 @@ room_render_tile_objects_render_poseidon_boss_display:
 	inc hl
 	inc hl
 	inc hl
+	jp room_render_tile_objects_render_entry_point_jp
+
+
+room_render_tile_objects_render_boss9_eye_left:
+	ld a, (global_state__objects + TAG_BOSS_9_ROOM)
+	and #01
+	ld de, tile_object_boss9_eye_left_gfx
+	jr nz, room_render_tile_objects_render_boss9_eye_continue
+	jp room_render_tile_objects_loop_continue
+room_render_tile_objects_render_boss9_eye_right:
+	ld a, (global_state__objects + TAG_BOSS_9_ROOM)
+	and #02
+	ld de, tile_object_boss9_eye_right_gfx
+	jr nz, room_render_tile_objects_render_boss9_eye_continue
+	jp room_render_tile_objects_loop_continue
+
+room_render_tile_objects_render_boss9_eye_continue:
+	; iyl, iyh: coordinates
+	; c, b: width, height
+	; de: ptr to gfx
+	inc hl
+	ld c, (hl)  ; x
+	ld iyl, c
+	inc hl
+	ld b, (hl)  ; y
+	inc hl
+	ld iyh, b
+	inc hl
+	inc hl
+	inc hl
+	ld bc, #0202
 	jp room_render_tile_objects_render_entry_point_jp
 
 
@@ -1273,6 +1308,7 @@ ENDR
 	dw object_interaction_function_empty  ; TAG_FIRESTONE_FORGE
 	dw object_interaction_function_empty  ; TAG_MARS_BOSS_BREAKABLE_FLOOR
 	dw object_interaction_function_mars_robot_puzzle  ; TAG_MARS_ROBOT_PUZZLE
+	dw object_interaction_function_empty  ; TAG_BOSS_9_ROOM
 	dw object_interaction_function_empty  ; TAG_PUSHABLE_BLOCK
 	dw object_interaction_function_empty  ; TAG_DOOR_VERTICAL
 	dw object_interaction_function_empty  ; TAG_DOOR_HORIZONTAL
@@ -1308,6 +1344,9 @@ ENDR
 	dw object_interaction_function_tablet  ; TAG_FIRESTONE_FORGE_TABLET
 	dw object_interaction_function_forge_puzzle  ; TAG_FIRESTONE_FORGE_PUZZLE
 	dw object_interaction_function_pickup_phase_shifter  ; TAG_PHASE_SHIFTER
+	dw object_interaction_function_boss9_eye_left  ; TAG_BOSS9_EYE_LEFT
+	dw object_interaction_function_boss9_eye_right  ; TAG_BOSS9_EYE_RIGHT
+	dw object_interaction_function_boss9_panel  ; TAG_BOSS9_PANEL
 	dw object_interaction_function_shopkeeper  ; TAG_NPC_SHOPKEEPER
 	dw object_interaction_function_shop  ; TAG_NPC_SHOP
 	dw object_interaction_function_empty  ; TAG_DYNAMITE
@@ -2478,9 +2517,7 @@ object_interaction_function_teleport_to_area_object_room_id_set:
 
 	; find teleporter object, and set player in its position:
 	ld e, a
-	ld hl, find_tile_object_ptr
-	ld c, TILES_PAGE
-	call call_hl_in_page_c_8000
+	call find_tile_object_ptr
 	push hl
 	pop ix
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_X)
@@ -2615,6 +2652,24 @@ object_interaction_function_elaine:
 		call call_hl_in_page_c_8000
 	pop ix
 	ret
+
+
+;-----------------------------------------------
+object_interaction_function_boss9_eye_left:
+	ld hl, object_interaction_function_boss9_eye_left_internal
+	jr object_interaction_function_boss9_eye_left_entry_point
+
+
+object_interaction_function_boss9_eye_right:
+	ld hl, object_interaction_function_boss9_eye_right_internal
+object_interaction_function_boss9_eye_left_entry_point:
+	ld c, BOSS_9_ROOM_PAGE
+	jp call_hl_in_page_c_8000
+
+
+object_interaction_function_boss9_panel:
+	ld hl, object_interaction_function_boss9_panel_internal
+	jr object_interaction_function_boss9_eye_left_entry_point
 
 
 ;-----------------------------------------------
@@ -2998,6 +3053,7 @@ ENDR
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_FIRESTONE_FORGE
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_MARS_BOSS_BREAKABLE_FLOOR
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_MARS_ROBOT_PUZZLE
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_BOSS_9_ROOM
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_pushable_block_gfx  ; TAG_PUSHABLE_BLOCK
 	TILE_OBJECT_DATA 1, 1, 3, tile_object_v_door_gfx  ; TAG_DOOR_VERTICAL
 	TILE_OBJECT_DATA 1, 4, 1, tile_object_h_door_gfx  ; TAG_DOOR_HORIZONTAL
@@ -3032,7 +3088,10 @@ ENDR
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_GUARDIAN_CAIMAN_TABLET
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_FIRESTONE_FORGE_TABLET
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_FIRESTONE_FORGE_PUZZLE
-	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_PHASE_SHIFTER
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_phase_shifter_gfx  ; TAG_PHASE_SHIFTER
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_BOSS9_EYE_LEFT
+	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_BOSS9_EYE_RIGHT
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_boss9_panel_gfx  ; TAG_BOSS9_PANEL
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOPKEEPER
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOP
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_DYNAMITE
@@ -3134,3 +3193,19 @@ tile_object_scylla_eye_gfx:
 tile_object_maya_codex_gfx:
 	db 171, 172
 	db 187, 188
+
+tile_object_boss9_eye_left_gfx:
+	db 74, 75
+	db 238, 85
+
+tile_object_boss9_eye_right_gfx:
+	db 76, 77
+	db 86, 239
+
+tile_object_phase_shifter_gfx:
+	db 224, 225
+	db 240, 241
+
+tile_object_boss9_panel_gfx:
+	db 242, 243
+	db 248, 249

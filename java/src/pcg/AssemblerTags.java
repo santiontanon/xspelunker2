@@ -249,6 +249,9 @@ public class AssemblerTags {
         "TAG_FIRESTONE_FORGE_TABLET",
         "TAG_FIRESTONE_FORGE_PUZZLE",
         "TAG_PHASE_SHIFTER",
+        "TAG_BOSS9_EYE_LEFT",
+        "TAG_BOSS9_EYE_RIGHT",
+        "TAG_BOSS9_PANEL",
         // npcs:
         "TAG_NPC_SHOPKEEPER",
         "TAG_NPC_SHOP",

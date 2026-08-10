@@ -1032,9 +1032,9 @@ mars_robot_puzzle_interaction_panel3_solved:
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0  ; state (hitpoints)
 
 	; set which object gfx to up load vdp:
-	ld hl, buffer_4096 + 67 * 64  ; phase shifter
-	ld (item_object_to_upload_to_vdp), hl
-	call state_play_upload_object_tiles_to_vdp_if_necessary
+; 	ld hl, buffer_4096 + 67 * 64  ; phase shifter
+; 	ld (item_object_to_upload_to_vdp), hl
+; 	call state_play_upload_object_tiles_to_vdp_if_necessary
 
 	ld hl, SFX_secret
 	call play_SFX_with_high_priority
