@@ -2383,6 +2383,13 @@ public class PCGArea {
                         }
                         a.rooms[j][i] = EIGHT_BRIDGE_ROOM_ID;
                     }
+                    if (a.tags[j][i] != null && a.tags[j][i].contains("boss-9-room")) {
+                        if (a.tags[j][i].size() > 1) {
+                            System.err.println("More than one tag on the boss-9-room room! " + a.tags[j][i]);
+                            return false;
+                        }
+                        a.rooms[j][i] = BOSS9_ROOM_ID;
+                    }
                 }
             }
         }        
@@ -2894,6 +2901,7 @@ public class PCGArea {
                 case "ATLANTIS_TABLET4":
                 case "ATLANTIS_TABLET5":
                 case "8-bridge-room":
+                case "boss-9-room":
                 case "GUARDIAN_CAIMAN1":
                 case "GUARDIAN_CAIMAN2":
                 case "GUARDIAN_CAIMAN3":
@@ -4049,6 +4057,7 @@ public class PCGArea {
                     break;                                
                 }
                 case "8-bridge-room":
+                case "boss-9-room":
                 case "GUARDIAN_CAIMAN1":
                 case "GUARDIAN_CAIMAN2":
                 case "GUARDIAN_CAIMAN3":

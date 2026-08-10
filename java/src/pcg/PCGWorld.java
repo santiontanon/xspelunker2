@@ -962,6 +962,21 @@ public class PCGWorld {
             }
         }
         
+        // boss 9:
+        AreaPoint boss9Room_p = randomAreaBottomMostPoint(w.areas.get(6), true);
+        if (boss9Room_p == null) {
+            boss9Room_p = randomAreaBottomMostPoint(w.areas.get(7), true);
+        }
+        if (boss9Room_p != null) {
+            // Spawn boss 9 room:
+            AreaDivision boss9Room = getDivisionByID(boss9Room_p.a.divisionIDs[boss9Room_p.x][boss9Room_p.y], tree);
+            addTag(boss9Room_p, "boss-9-room", boss9Room);
+            System.out.println("boss 9 room placed at " + boss9Room_p);
+        } else {
+            System.out.println("Cannot place boss-9-room!");
+        }
+        
+        
 //        System.out.println("Key division depths: " +
 //                           divisionTreeDepth(boss1) + ", " + 
 //                           divisionTreeDepth(boss2) + ", " + 

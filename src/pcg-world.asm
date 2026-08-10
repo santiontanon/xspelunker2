@@ -3195,6 +3195,45 @@ pcg_generate_world__generate_mission_no_8_bridge_room:
 	call pcg_generate_world__add_tag_to_point_in_mst_node_division
 pcg_generate_world__generate_mission_no_firestone_forge:
 
+	; boss 9 room:
+	xor a
+	ld (current_world__boss9_room_area), a
+	ld de, tmp_pcg_world__area_6_divisions
+	ld a, 6  ; caves west
+	push af
+	push de
+		call pcg_generate_world__random_bottom_most_point_tagless
+		jr z, pcg_generate_world__generate_mission_boss_9_point_set
+	pop de
+	pop af
+	ld de, tmp_pcg_world__area_7_divisions
+	ld a, 7  ; caves east
+	push af
+	push de
+		call pcg_generate_world__random_bottom_most_point_tagless
+		jr nz, pcg_generate_world__generate_mission_no_boss_9_room_pop
+pcg_generate_world__generate_mission_boss_9_point_set:
+	; place boss 9 room:
+	pop de  ; recover the area where the boss 9 is
+	pop af  ; recover the area
+	ld (current_world__boss9_room_area), a
+	ld b, 0
+	ld c, l  ; offset
+	push hl
+		ex de, hl  ; tmp_pcg_world__area_6_divisions / tmp_pcg_world__area_7_divisions
+		add hl, bc
+		ld a, (hl)  ; division ID
+		call pcg_generate_world__get_mst_node_by_division_id
+		ex de, hl  ; mst node
+	pop hl  ; recover the offset
+	ld b, TAG_BOSS_9_ROOM
+	call pcg_generate_world__add_tag_to_point_in_mst_node_division
+	jr pcg_generate_world__generate_mission_no_boss_9_room
+pcg_generate_world__generate_mission_no_boss_9_room_pop:
+	pop de
+	pop af
+pcg_generate_world__generate_mission_no_boss_9_room:
+
 	; Generate quests:
 	ld ix, tmp_pcg_world__minimum_spanning_tree  ; root
 	ld iy, (tmp_pcg_world__mission_midpoint_node)  ; do not go past this point

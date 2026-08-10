@@ -212,6 +212,7 @@ public class AssemblerTags {
         "TAG_FIRESTONE_FORGE",
         "TAG_MARS_BOSS_BREAKABLE_FLOOR",
         "TAG_MARS_ROBOT_PUZZLE",
+        "TAG_BOSS_9_ROOM",
         // misc (not tags that will be placed, but used for tile-object types):
         "TAG_PUSHABLE_BLOCK",
         "TAG_DOOR_VERTICAL",

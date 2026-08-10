@@ -364,6 +364,8 @@ pcg_generate_room__seed_generated:
 	jp z, pcg_generate_room__guardian_caiman3
 	cp FIRESTONE_FORGE_ROOM_ID
 	jp z, pcg_generate_room__firestone_forge
+	cp BOSS9_ROOM_ID
+	jp z, pcg_generate_room__boss_9
 
 	; Add background chunks randomly:
 	; here:
@@ -3310,6 +3312,35 @@ pcg_generate_room__8_bridge_room__open_bridge:
 	ld (hl), 144
 	inc hl
 	ld (hl), 143
+	ret
+
+
+;-----------------------------------------------
+pcg_generate_room__boss_9:
+	; name table:
+	ld hl, boss_9_room_zx0
+	ld de, current_room__tile_map
+	ld c, BOSS_9_ROOM_PAGE
+	call dzx0_from_page_c
+
+	; tile sets, collisions, and animation ptrs:
+	ld bc, boss_9_tiles_zx0
+	ld (current_room__tileset_ptr), bc
+	ld a, BOSS_9_ROOM_PAGE
+	ld (current_room__collision_ptr_page), a
+	ld bc, tile_collision_types_boss9_idle
+	ld (current_room__collision_ptr), bc
+	ld a, BOSS_9_ROOM_PAGE
+	ld (current_room__tileset_page), a
+	ld hl, update_animations_in_vdp_none
+	ld (current_room__animation_fn_ptr), hl
+	ld a, 1
+	ld (current_room__tileset_overrides_item_tiles), a
+
+	call pcg_generate_room__calendar_open_walls
+
+	; ...
+
 	ret
 
 

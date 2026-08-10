@@ -131,6 +131,9 @@ public class RenderedArea {
                     } else if (a.rooms[j][i] == PCGArea.FIRESTONE_FORGE_ROOM_ID) {
                         c = new RoomChunk("data/firestone-forge-room.tmx", 0, "moon");
                         c.loadGfx("data/firestone-forge-room-tiles.png");
+                    } else if (a.rooms[j][i] == PCGArea.BOSS9_ROOM_ID) {
+                        c = new RoomChunk("data/boss9-room.tmx", 0, "caves");
+                        c.loadGfx("data/boss9-tiles.png");
                     }
 
                     if (c != null) {     

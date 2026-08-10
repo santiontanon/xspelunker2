@@ -283,6 +283,11 @@ pcg_generate_area__mark_special_rooms_loop_next8:
 	ld e, FIRESTONE_FORGE_ROOM_ID
 	jr pcg_generate_area__mark_special_rooms_loop_found
 pcg_generate_area__mark_special_rooms_loop_next9:
+	cp TAG_BOSS_9_ROOM
+	jr nz, pcg_generate_area__mark_special_rooms_loop_next10
+	ld e, BOSS9_ROOM_ID
+	jr pcg_generate_area__mark_special_rooms_loop_found
+pcg_generate_area__mark_special_rooms_loop_next10:
 	inc hl
 	inc hl
 	inc hl
