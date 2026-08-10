@@ -798,6 +798,11 @@ public class Text {
         addLineSafe(lines_with_constant_page4, "Alien: Well, our fleet went there, but it was Maia's plan! I have hope now that we can retake control of the council and stop this madness! We cannot thank you enough!", "BOSS8_DEFEAT_7", 112);
         addLineSafe(lines_with_constant_page4, "Alien: You are free to go now, of course. But know that you will always be welcome here! We are in your debt!", "BOSS8_DEFEAT_8", 112);
         
+        // Boss 9:
+        addLineSafe(lines_with_constant_page4, "Interact", "BOSS9_PANEL1", 10);
+        addLineSafe(lines_with_constant_page4, "Read Plaque", "BOSS9_PANEL2", 10);
+//        addLineSafe(lines_with_constant_page4, "Back", "BOSS9_PANEL3", 12);  // BACK_PAGE4
+        
         // Ending C:
         // First shared part:
         addLineSafe(lines_with_constant_page3, "Meanwhile, in Earth orbit...", "ENDING_C_UFO_0", 12*4);

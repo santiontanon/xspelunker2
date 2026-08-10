@@ -135,11 +135,115 @@ object_interaction_function_boss9_eye_fail:
 
 ;-----------------------------------------------
 object_interaction_function_boss9_panel_internal:
-    ld hl, SFX_secret
-    call play_SFX_with_high_priority
+    call boss9_panel_draw_box
+    ld hl, TEXT_BOSS9_PANEL1
+    ld de, CHRTBL2 + 256*8 + 4*16*8 
+    call boss9_panel_draw_box_text
+    ld hl, TEXT_BOSS9_PANEL2
+    ld de, CHRTBL2 + 256*8 + 5*16*8 
+    call boss9_panel_draw_box_text
+    ld hl, TEXT_BACK_PAGE4
+    ld de, CHRTBL2 + 256*8 + 6*16*8 
+    call boss9_panel_draw_box_text
 
     ; ...
-    
+
+    call wait_for_click
+    jp boss9_panel_clear_box
+
+
+boss9_panel_draw_box_text:
+    push de
+        ex de, hl
+        ld hl, copy_text_from_another_page
+        ld c, TEXT_PAGE4
+        call call_hl_in_page_c_8000
+        ld hl, buffer_4096
+        ld iy, #80f0
+        ld b, 10
+    pop de
+    jp draw_sentence_to_vdp_from_another_page
+
+
+;-----------------------------------------------
+boss9_panel_draw_box:
+    ; clear sprites that are in the message area (y < 56)
+    ld hl, sprite_attribute_table
+    ld a, (n_displayed_object_sprites)
+    add a, FIRST_OBJECT_SPRITE
+    ld b, a
+boss9_panel_draw_box_loop:
+    ld a, (hl)  ; y
+    cp 48
+    jr c, boss9_panel_draw_box_loop_next
+    cp 120
+    jr nc, boss9_panel_draw_box_loop_next
+    ld (hl), 200  ; move out of the screen
+boss9_panel_draw_box_loop_next:
+    inc hl
+    inc hl
+    inc hl
+    inc hl
+    djnz boss9_panel_draw_box_loop
+
+    ld hl, sprite_attribute_table
+    ld de, SPRATR2
+    ld a, (n_displayed_object_sprites)
+    add a, FIRST_OBJECT_SPRITE
+    add a, a
+    add a, a
+    ld b, a
+    call fast_small_LDIRVM      
+
+    ; save the content below:
+    ld hl, NAMTBL2 + 256
+    ld de, current_room__tile_map + 1024  ; this is a small room, so that area is free
+    ld bc, 256
+    call LDIRMV
+
+    ; clear nametable:
+    xor a
+    ld hl, NAMTBL2 + 256
+    ld bc, 8*32
+    call fast_FILVRM
+
+    ; set up the zoom tiles:
+    ld hl, boss_9_panel_tiles_zx0
+    ld de, buffer_4096
+    call dzx0
+    ld hl, buffer_4096
+    ld de, CHRTBL2 + 256*8
+    ld bc, 256*8
+    call fast_LDIRVM
+    ld hl, buffer_4096 + 256*8
+    ld de, CLRTBL2 + 256*8
+    ld bc, 256*8
+    call fast_LDIRVM
+
+    ld hl, boss_9_panel_nametable
+    ld de, NAMTBL2 + 8*32
+    ld bc, 8*32
+    jp fast_LDIRVM
+
+
+;-----------------------------------------------
+boss9_panel_clear_box:
+    ; restore the tiles:
+    ld hl, CLRTBL2 + 256*8
+    ld bc, 256*8
+    xor a
+    call fast_FILVRM
+
+    ; restore content below:
+    ld hl, current_room__tile_map + 1024
+    ld de, NAMTBL2 + 256
+    ld bc, 256
+    call fast_LDIRVM
+
+    call setup_game_tiles
+
+    ld hl, redraw_flags
+    ld (hl), #ff
     ret
 
 
