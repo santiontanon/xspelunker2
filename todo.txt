@@ -1,9 +1,6 @@
 to do:
 
 ***- 9th optional boss:
-  ***- Add room to assembler:
-  ***- tile animations (just torches)
-    ***- make PCG tests pass again
   ***- if you place the two eyes, a panel opens in the chest
   ***- interact with panel in the chest:
     ***- draw panel close-up

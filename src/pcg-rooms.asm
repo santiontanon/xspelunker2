@@ -3332,7 +3332,7 @@ pcg_generate_room__boss_9:
 	ld (current_room__collision_ptr), bc
 	ld a, BOSS_9_ROOM_PAGE
 	ld (current_room__tileset_page), a
-	ld hl, update_animations_in_vdp_none
+	ld hl, animations_caves_boss9_bin
 	ld (current_room__animation_fn_ptr), hl
 	ld a, 1
 	ld (current_room__tileset_overrides_item_tiles), a

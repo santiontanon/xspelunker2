@@ -3157,7 +3157,7 @@ pcg_generate_world__generate_mission_8_bridge_point_set:
 	ld b, 0
 	ld c, l  ; offset
 	push hl
-		ex de, hl  ; tmp_pcg_world__area_6_divisions / tmp_pcg_world__area_7_divisions
+		ex de, hl  ; tmp_pcg_world__area_6_divisions or tmp_pcg_world__area_7_divisions
 		add hl, bc
 		ld a, (hl)  ; division ID
 		call pcg_generate_world__get_mst_node_by_division_id
@@ -3220,7 +3220,7 @@ pcg_generate_world__generate_mission_boss_9_point_set:
 	ld b, 0
 	ld c, l  ; offset
 	push hl
-		ex de, hl  ; tmp_pcg_world__area_6_divisions / tmp_pcg_world__area_7_divisions
+		ex de, hl  ; tmp_pcg_world__area_6_divisions or tmp_pcg_world__area_7_divisions
 		add hl, bc
 		ld a, (hl)  ; division ID
 		call pcg_generate_world__get_mst_node_by_division_id

@@ -146,12 +146,12 @@ test__arrays_equal_loop:
 
 ;-----------------------------------------------
 test__arrays_equal_fail:
-	ld a, (hl)  ; mdl-watch: "test__arrays_equal_fail: (hl)", hl, a
+	ld a, (hl)  ; mdl-watch: "test__arrays_equal_fail reference: (hl)", hl, a
 	inc hl
 	ld a, (hl)  ; mdl-watch: "test__arrays_equal_fail: (hl+1)", a
 	inc hl
 	ld a, (hl)  ; mdl-watch: "test__arrays_equal_fail: (hl+2)", a
-	ld a, (de)  ; mdl-watch: "test__arrays_equal_fail: (de)", de, a
+	ld a, (de)  ; mdl-watch: "test__arrays_equal_fail actual: (de)", de, a
 	inc de
 	ld a, (de)  ; mdl-watch: "test__arrays_equal_fail: (de+1)", a
 	inc de
