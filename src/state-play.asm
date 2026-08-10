@@ -59,8 +59,8 @@ state_play:
 ; 		ld (global_state__power_calendar + 4), a
 ; 		inc a
 ; 		ld (global_state__power_calendar + 5), a
-		ld a, 1
-		ld (global_state__n_power_stones_in_calendar), a
+; 		ld a, 1
+; 		ld (global_state__n_power_stones_in_calendar), a
 ; 		ld a, STORY_STATE__GOT_LETTER1
 ; 		ld a, STORY_STATE__PLACED_FIRST_POWER_STONE
 ; 		ld a, STORY_STATE__FOUND_LOST_VENDOR

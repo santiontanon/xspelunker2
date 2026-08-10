@@ -1,6 +1,6 @@
 to do:
 
-***- 9th optional boss: gigantic maya statue that looks decoration, but it's a secret boss.
+***- 9th optional boss:
   ***- Add room to assembler (spawn somewhere in the caves or pyramids, look which part is emptier):
     ***- collision table (for when idle)
   ***- if you place the two eyes, a panel opens in the chest
@@ -17,6 +17,7 @@ to do:
   ***- notebook explains the secret of the firestones (translated by the same people who translated the story of Yatzil)
   ***- achievement for finding the grave
 
+- if you run out of bullets, it should go back to machete
 - when entering boss room, animation of door closing, trapping you inside.
 - come up with a list of "achievements" for the list in the game over screen and implement them
 - pick a good seed (for seed2) so that the map is good (at least Jungle)

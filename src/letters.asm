@@ -341,6 +341,8 @@ display_paragraph:
 	push af
 	push de
 	push ix
+		ld a, #80
+		ld (tmp_letter_line_start), a
 		; copy text to buffer_4096:
 		push hl
 		pop ix
