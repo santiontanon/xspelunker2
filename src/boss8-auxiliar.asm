@@ -998,7 +998,7 @@ draw_boss8_frame_loop_skip_part:
 
 ;-----------------------------------------------
 ; Compared to 'draw_boss_frame_part', this method uses data in boss 8 page, and also
-; prevents tiels being drawn on x coordinates larger or equal to 32 (assuming that the
+; prevents tiles being drawn on x coordinates larger or equal to 32 (assuming that the
 ; left-most x coordinate is < 32).
 ; input:
 ; - hl: frame ptr

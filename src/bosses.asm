@@ -2005,7 +2005,12 @@ update_boss_behavior:
 	ld c, BOSS_8_PAGE
 	ld hl, update_boss8_behavior
 	jp z, jp_to_hl_in_page_c_8000
-	; ...
+	ld c, BOSS_9_ROOM_PAGE
+	ld hl, update_boss9_behavior
+	cp 6  ; caves (boss 9)
+	jp z, jp_to_hl_in_page_c_8000
+	cp 7  ; caves (boss 9)
+	jp z, jp_to_hl_in_page_c_8000
 	ret
 
 
