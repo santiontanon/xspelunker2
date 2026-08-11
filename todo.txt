@@ -1,15 +1,18 @@
 to do:
 
 ***- 9th optional boss:
-  ***- solve the panel (solution: MMTTT, WMWBA, AWTOA)
-    OK - puzzle solved + some text message
-    ***- start boss loop mode
-    ***- create file with boss states
-    ***- boss state 0:
-      ***- room entrances lock (before player can move)
-      ***- boss name coming down, change music, etc.
-  ***- design attack patterns (fists attacking, eye bullets, and some big mouth attack)
-  ***- implement 9th boss
+  ***- boss state 0:
+    ***- remove all tile objects
+    ***- room entrances lock (before player can move)
+    ***- new version of the room without the statue, but with the actual boss
+    ***- boss name coming down
+      ***- come up with boss name and draw sprite name
+    ***- start boss music
+  ***- implement boss behavior:
+    ***- eye bullets
+    ***- fist attacks: fists move up/down and a bit left/right (draw enough gfx):
+      ***- when fists hit, rocks drop from the ceiling (som on top of player, some random)
+    ***- mouth attack (fast plasma balls)
   ***- when defeated, a door opens, room side walls re-open
     ***- from now on, the door is always open when entering this room
   ***- entering the door leads to a small room with Yatzil's grave with some tablets and a notebook (use appropriate music in Yatzil's room, and restore caves music when exiting)

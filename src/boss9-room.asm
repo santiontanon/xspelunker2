@@ -272,13 +272,18 @@ object_interaction_function_boss9_panel_internal_loop_space_solution_loop:
     ld hl, display_in_game_message_textpage4
     ld c, TEXT_PAGE
     call call_hl_in_page_c_8000
-    ; ...
-    jr object_interaction_function_boss9_panel_internal_loop_space_back
+    jp start_boss9
+;     ; ...
+;     jr object_interaction_function_boss9_panel_internal_loop_space_back
 
 object_interaction_function_boss9_panel_internal_table:
-    db 10, 10, 14, 14, 14
-    db 15, 10, 15, 1, 0
-    db 0, 15, 14, 11, 0
+;     db 10, 10, 14, 14, 14
+;     db 15, 10, 15, 1, 0
+;     db 0, 15, 14, 11, 0
+    ; DEBUG:
+    db 0, 0, 0, 0, 0
+    db 0, 0, 0, 0, 0
+    db 0, 0, 0, 0, 1
 
 object_interaction_function_boss9_panel_internal_loop_space_back:
     call clear_all_the_sprites
