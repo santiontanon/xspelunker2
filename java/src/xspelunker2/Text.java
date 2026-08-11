@@ -200,7 +200,7 @@ public class Text {
         addLineSafe(lines_with_constant_page1, "Up:", "KEYBOARD3", 9);
         addLineSafe(lines_with_constant_page1, "Down:", "KEYBOARD2", 9);
         addLineSafe(lines_with_constant_page1, "Left:", "KEYBOARD4", 9);
-        addLineSafe(lines_with_constant_page1, "Interact:", "KEYBOARD5", 9);
+        addLineSafe(lines_with_constant_page1, "Interact/pick up:", "KEYBOARD5", 10);
         addLineSafe(lines_with_constant_page1, "Inventory:", "KEYBOARD6", 9);
         addLineSafe(lines_with_constant_page1, "Jump:", "KEYBOARD7", 9);
         addLineSafe(lines_with_constant_page1, "Weapon:", "KEYBOARD8", 9);

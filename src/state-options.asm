@@ -162,13 +162,13 @@ redefine_key:
 		ld e, (hl)
 		inc hl
 		ld d, (hl)
-		ld hl, 8 * 8
+		ld hl, 10 * 8
 		add hl, de
 		ex de, hl
 
 		ld hl, TEXT_CHOOSE_KEY
 		ld iy, COLOR_RED * 16 + #08*256
-		ld b, 9
+		ld b, 10
 		call draw_sentence_to_vdp_clearing_text_buffer
 
 		; wait for no keys pressed:
@@ -371,7 +371,7 @@ state_options_draw_text_music_on_set:
 	; print keys:
 	ld b, 8
 	ld hl, config_keyboard
-	ld de, CHRTBL2 + (11*32 + 16) * 8
+	ld de, CHRTBL2 + (11*32 + 18) * 8
 state_options_draw_text_loop2:
 	push bc
 		ld c, (hl)
