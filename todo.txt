@@ -2,11 +2,12 @@ to do:
 
 ***- 9th optional boss:
   ***- solve the panel (solution: MMTTT, WMWBA, AWTOA)
-    ***- puzzle solved + some text message
-    ***- room entrances lock
+    OK - puzzle solved + some text message
     ***- start boss loop mode
     ***- create file with boss states
-    ***- boss state 0: boss name coming down, change music, etc.
+    ***- boss state 0:
+      ***- room entrances lock (before player can move)
+      ***- boss name coming down, change music, etc.
   ***- design attack patterns (fists attacking, eye bullets, and some big mouth attack)
   ***- implement 9th boss
   ***- when defeated, a door opens, room side walls re-open

@@ -803,7 +803,7 @@ public class Text {
         addLineSafe(lines_with_constant_page4, "Read Plaque", "BOSS9_PANEL2", 10);
 //        addLineSafe(lines_with_constant_page4, "Back", "BOSS9_PANEL3", 12);  // BACK_PAGE4
         addLineSafe(lines_with_constant_page4, "We translated the the full story. Proof you have learned it all, then defeat the guardian, and you will learn the rest of the secret.", "BOSS9_PANEL_CLUE", 112);
-
+        addLineSafe(lines_with_constant_page4, "As you set the last letter in the panel, the giant statue starts shaking... was this a good idea?", "BOSS9_PANEL_SOLVED", 112);
         
         // Ending C:
         // First shared part:
