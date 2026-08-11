@@ -2,9 +2,10 @@ to do:
 
 ***- 9th optional boss:
   ***- interact with panel:
-    ***- move arrow around, and leave with "back"
-    ***- see clue: We translated the the full story. Proof you have learned it all, defeat the guardian, and you will learn the rest of the secret.
-    ***- interact: being able to change letters
+    ***- have an array for the current state of letters (all "A")
+    ***- display letters
+    ***- navigate letters (maybe remove the "interact" option and just go left/right)
+    ***- change letters (with space)
     ***- solve it (solution: MMTTT, WMWBA, AWTOA)
   ***- room entrances lock, and boss wakes up
   ***- design attack patterns (fists attacking, eye bullets, and some big mouth attack)

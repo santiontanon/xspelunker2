@@ -146,12 +146,98 @@ object_interaction_function_boss9_panel_internal:
     ld de, CHRTBL2 + 256*8 + 6*16*8 
     call boss9_panel_draw_box_text
 
-    ; ...
+    ld hl, dialog_sprites_bin
+    ld de, SPRTBL2 + 62*32  ; overwrite the last enemy sprites (which play no role in this room)
+    ld bc, dialog_sprites_bin_end - dialog_sprites_bin
+    call fast_LDIRVM_from_sprites_page    
 
-    call wait_for_click
+    ; interaction loop with panel 1:    
+    xor a
+    ld (tmp_dialog_pointer_position), a
+object_interaction_function_boss9_panel_internal_loop:
+    halt
+    call object_interaction_function_boss9_panel_internal_update_pointer_sprite
+;     call mars_robot_puzzle_interaction_panel1_update_display
+    call update_keyboard_buffers
+
+    ld a, (keyboard_clicks)
+    bit KEY_WEAPON_BIT, a  ; space
+    jp nz, object_interaction_function_boss9_panel_internal_loop_space
+    bit KEY_UP_BIT, a
+    jp nz, object_interaction_function_boss9_panel_internal_up
+    bit KEY_DOWN_BIT, a
+    jp nz, object_interaction_function_boss9_panel_internal_down
+    jr object_interaction_function_boss9_panel_internal_loop
+
+object_interaction_function_boss9_panel_internal_up:
+    ld hl, tmp_dialog_pointer_position
+    ld a, (hl)
+    or a
+    jp z, object_interaction_function_boss9_panel_internal_loop
+    dec (hl)
+    ld hl, SFX_ui_move
+    call play_SFX_with_high_priority
+    jp object_interaction_function_boss9_panel_internal_loop
+
+object_interaction_function_boss9_panel_internal_down:
+    ld hl, tmp_dialog_pointer_position
+    ld a, (hl)
+    cp 2
+    jp z, object_interaction_function_boss9_panel_internal_loop
+    inc (hl)
+    ld hl, SFX_ui_move
+    call play_SFX_with_high_priority
+    jp object_interaction_function_boss9_panel_internal_loop
+
+
+object_interaction_function_boss9_panel_internal_loop_space:
+    ld a, (tmp_dialog_pointer_position)
+    or a
+    ; ...
+    dec a
+    jr z, object_interaction_function_boss9_panel_internal_loop_space_clue
+    call clear_all_the_sprites
     jp boss9_panel_clear_box
 
 
+object_interaction_function_boss9_panel_internal_loop_space_clue:
+    call clear_all_the_sprites
+    ld de, TEXT_BOSS9_PANEL_CLUE
+    ld hl, display_in_game_message_textpage4
+    ld c, TEXT_PAGE
+    jp call_hl_in_page_c_8000
+
+
+;-----------------------------------------------
+object_interaction_function_boss9_panel_internal_update_pointer_sprite:
+    ld hl, buffer_4096
+    ld a, (tmp_dialog_pointer_position)
+    ld bc, #4896
+    add a, a
+    add a, a
+    add a, a
+    add a, b
+    ld b, a
+    ld (hl), b
+    inc hl
+    ld (hl), c
+    inc hl
+    ld (hl), 62*4  ; sprite
+    inc hl
+    ld c, COLOR_WHITE
+    ld a, (interrupt_cycle)
+    bit 3, a
+    jr z, object_interaction_function_boss9_panel_internal_update_pointer_sprite_color_set
+    ld c, COLOR_TRANSPARENT
+object_interaction_function_boss9_panel_internal_update_pointer_sprite_color_set:
+    ld (hl), c
+    ld hl, buffer_4096
+    ld de, SPRATR2 + 31*4
+    ld b, 4
+    jp fast_small_LDIRVM
+
+
+;-----------------------------------------------
 boss9_panel_draw_box_text:
     push de
         ex de, hl
