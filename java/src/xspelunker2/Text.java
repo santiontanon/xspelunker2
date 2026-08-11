@@ -799,7 +799,7 @@ public class Text {
         addLineSafe(lines_with_constant_page4, "Alien: You are free to go now, of course. But know that you will always be welcome here! We are in your debt!", "BOSS8_DEFEAT_8", 112);
         
         // Boss 9:
-        addLineSafe(lines_with_constant_page4, "Interact", "BOSS9_PANEL1", 10);
+//        addLineSafe(lines_with_constant_page4, "Interact", "BOSS9_PANEL1", 10);
         addLineSafe(lines_with_constant_page4, "Read Plaque", "BOSS9_PANEL2", 10);
 //        addLineSafe(lines_with_constant_page4, "Back", "BOSS9_PANEL3", 12);  // BACK_PAGE4
         addLineSafe(lines_with_constant_page4, "We translated the the full story. Proof you have learned it all, then defeat the guardian, and you will learn the rest of the secret.", "BOSS9_PANEL_CLUE", 112);

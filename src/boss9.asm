@@ -136,9 +136,9 @@ object_interaction_function_boss9_eye_fail:
 ;-----------------------------------------------
 object_interaction_function_boss9_panel_internal:
     call boss9_panel_draw_box
-    ld hl, TEXT_BOSS9_PANEL1
-    ld de, CHRTBL2 + 256*8 + 4*16*8 
-    call boss9_panel_draw_box_text
+;     ld hl, TEXT_BOSS9_PANEL1
+;     ld de, CHRTBL2 + 256*8 + 4*16*8 
+;     call boss9_panel_draw_box_text
     ld hl, TEXT_BOSS9_PANEL2
     ld de, CHRTBL2 + 256*8 + 5*16*8 
     call boss9_panel_draw_box_text
@@ -152,12 +152,16 @@ object_interaction_function_boss9_panel_internal:
     call fast_LDIRVM_from_sprites_page    
 
     ; interaction loop with panel 1:    
-    xor a
+    ; tmp_dialog_pointer_position:
+    ; -  0,  1,  2,  3,  4,    5
+    ; -  6,  7,  8,  9, 10,   11
+    ; - 12, 13, 14, 15, 16,    -
+    ld a, 5
     ld (tmp_dialog_pointer_position), a
 object_interaction_function_boss9_panel_internal_loop:
     halt
     call object_interaction_function_boss9_panel_internal_update_pointer_sprite
-;     call mars_robot_puzzle_interaction_panel1_update_display
+    call object_interaction_function_boss9_panel_internal_update_display
     call update_keyboard_buffers
 
     ld a, (keyboard_clicks)
@@ -167,14 +171,18 @@ object_interaction_function_boss9_panel_internal_loop:
     jp nz, object_interaction_function_boss9_panel_internal_up
     bit KEY_DOWN_BIT, a
     jp nz, object_interaction_function_boss9_panel_internal_down
+    bit KEY_LEFT_BIT, a
+    jp nz, object_interaction_function_boss9_panel_internal_left
+    bit KEY_RIGHT_BIT, a
+    jp nz, object_interaction_function_boss9_panel_internal_right
     jr object_interaction_function_boss9_panel_internal_loop
 
 object_interaction_function_boss9_panel_internal_up:
     ld hl, tmp_dialog_pointer_position
     ld a, (hl)
-    or a
-    jp z, object_interaction_function_boss9_panel_internal_loop
-    dec (hl)
+    sub 6
+    jp c, object_interaction_function_boss9_panel_internal_loop
+    ld (hl), a
     ld hl, SFX_ui_move
     call play_SFX_with_high_priority
     jp object_interaction_function_boss9_panel_internal_loop
@@ -182,20 +190,69 @@ object_interaction_function_boss9_panel_internal_up:
 object_interaction_function_boss9_panel_internal_down:
     ld hl, tmp_dialog_pointer_position
     ld a, (hl)
-    cp 2
+    cp 11
+    jp nc, object_interaction_function_boss9_panel_internal_loop
+    add a, 6
+    ld (hl), a
+    ld hl, SFX_ui_move
+    call play_SFX_with_high_priority
+    jp object_interaction_function_boss9_panel_internal_loop
+
+object_interaction_function_boss9_panel_internal_left:
+    ld hl, tmp_dialog_pointer_position
+    ld a, (hl)
+    or a
+    jp z, object_interaction_function_boss9_panel_internal_loop
+    cp 6
+    jp z, object_interaction_function_boss9_panel_internal_loop
+    cp 12
+    jp z, object_interaction_function_boss9_panel_internal_loop
+    dec (hl)
+    ld hl, SFX_ui_move
+    call play_SFX_with_high_priority
+    jp object_interaction_function_boss9_panel_internal_loop
+
+object_interaction_function_boss9_panel_internal_right:
+    ld hl, tmp_dialog_pointer_position
+    ld a, (hl)
+    cp 5
+    jp z, object_interaction_function_boss9_panel_internal_loop
+    cp 11
+    jp z, object_interaction_function_boss9_panel_internal_loop
+    cp 16
     jp z, object_interaction_function_boss9_panel_internal_loop
     inc (hl)
     ld hl, SFX_ui_move
     call play_SFX_with_high_priority
     jp object_interaction_function_boss9_panel_internal_loop
 
-
 object_interaction_function_boss9_panel_internal_loop_space:
     ld a, (tmp_dialog_pointer_position)
-    or a
-    ; ...
-    dec a
+    cp 5
     jr z, object_interaction_function_boss9_panel_internal_loop_space_clue
+    cp 11
+    jr z, object_interaction_function_boss9_panel_internal_loop_space_back
+    ; letters:
+    cp 5
+    jr c, object_interaction_function_boss9_panel_internal_loop_space_index_set
+    dec a
+    cp 10
+    jr c, object_interaction_function_boss9_panel_internal_loop_space_index_set
+    dec a
+object_interaction_function_boss9_panel_internal_loop_space_index_set:
+    ld b, 0
+    ld c, a
+    ld hl, global_state__boss9_panel
+    add hl, bc
+    ld a, (hl)
+    inc a
+    and #0f
+    ld (hl), a
+    ld hl, SFX_ui_move
+    call play_SFX_with_high_priority
+    jp object_interaction_function_boss9_panel_internal_loop
+
+object_interaction_function_boss9_panel_internal_loop_space_back:
     call clear_all_the_sprites
     jp boss9_panel_clear_box
 
@@ -205,19 +262,46 @@ object_interaction_function_boss9_panel_internal_loop_space_clue:
     ld de, TEXT_BOSS9_PANEL_CLUE
     ld hl, display_in_game_message_textpage4
     ld c, TEXT_PAGE
-    jp call_hl_in_page_c_8000
+    call call_hl_in_page_c_8000
+    jp object_interaction_function_boss9_panel_internal
 
 
 ;-----------------------------------------------
 object_interaction_function_boss9_panel_internal_update_pointer_sprite:
+    ; tmp_dialog_pointer_position:
+    ; -  0,  1,  2,  3,  4,    5
+    ; -  6,  7,  8,  9, 10,   11
+    ; - 12, 13, 14, 15, 16,    -
     ld hl, buffer_4096
     ld a, (tmp_dialog_pointer_position)
-    ld bc, #4896
+    ld bc, #4816
+    cp 11
+    jr z, object_interaction_function_boss9_panel_internal_update_pointer_sprite_text2
+    cp 5
+    jr z, object_interaction_function_boss9_panel_internal_update_pointer_sprite_text1
+    cp 6
+    jr c, object_interaction_function_boss9_panel_internal_update_pointer_sprite_y_set
+    sub 6
+    ld b, #58
+    cp 6
+    jr c, object_interaction_function_boss9_panel_internal_update_pointer_sprite_y_set
+    sub 6
+    ld b, #68
+object_interaction_function_boss9_panel_internal_update_pointer_sprite_y_set:
     add a, a
     add a, a
     add a, a
-    add a, b
-    ld b, a
+    add a, a
+    add a, c
+    ld c, a
+    jr object_interaction_function_boss9_panel_internal_update_pointer_sprite_continue
+object_interaction_function_boss9_panel_internal_update_pointer_sprite_text1:
+    ld bc, #5096
+    jr object_interaction_function_boss9_panel_internal_update_pointer_sprite_continue
+object_interaction_function_boss9_panel_internal_update_pointer_sprite_text2:
+    ld bc, #5896
+    ; jr object_interaction_function_boss9_panel_internal_update_pointer_sprite_continue
+object_interaction_function_boss9_panel_internal_update_pointer_sprite_continue:
     ld (hl), b
     inc hl
     ld (hl), c
@@ -235,6 +319,39 @@ object_interaction_function_boss9_panel_internal_update_pointer_sprite_color_set
     ld de, SPRATR2 + 31*4
     ld b, 4
     jp fast_small_LDIRVM
+
+
+;-----------------------------------------------
+object_interaction_function_boss9_panel_internal_update_display:
+    ld ix, global_state__boss9_panel
+    ld hl, NAMTBL2 + 4 + 9*32
+    ld bc, #0305
+
+object_interaction_function_boss9_panel_internal_update_display_loop_y:
+    push bc
+    push hl
+        ld b, c
+object_interaction_function_boss9_panel_internal_update_display_loop_x:
+        push bc
+        push hl
+        push ix
+            ld a, (ix)
+            add a, 34
+            ld b, 1
+            call fast_small_FILVRM
+        pop ix
+        pop hl
+        pop bc
+        inc hl
+        inc hl
+        inc ix
+    djnz object_interaction_function_boss9_panel_internal_update_display_loop_x
+    pop hl
+    pop bc
+    ld de, 32 * 2
+    add hl, de
+    djnz object_interaction_function_boss9_panel_internal_update_display_loop_y
+    ret
 
 
 ;-----------------------------------------------
@@ -314,20 +431,12 @@ boss9_panel_draw_box_loop_next:
 
 ;-----------------------------------------------
 boss9_panel_clear_box:
-    ; restore the tiles:
-    ld hl, CLRTBL2 + 256*8
-    ld bc, 256*8
+    ; clear the nametable (to prevent gfx glitches):
+    ld hl, NAMTBL2 + 256
+    ld bc, 256
     xor a
     call fast_FILVRM
-
-    ; restore content below:
-    ld hl, current_room__tile_map + 1024
-    ld de, NAMTBL2 + 256
-    ld bc, 256
-    call fast_LDIRVM
-
     call setup_game_tiles
-
     ld hl, redraw_flags
     ld (hl), #ff
     ret

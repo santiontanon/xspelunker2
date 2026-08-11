@@ -186,6 +186,7 @@ global_state__n_alien_confrontations: ds virtual 1  ; Goes from 0 to 2, and incr
 global_state__animal_charm: ds virtual 1
 global_state__firestone_forge_state: ds virtual 2
 global_state__mars_robot: ds virtual 2
+global_state__boss9_panel: ds virtual 15
 
 RAM_to_zero_on_continue:
 player_x: ds virtual 2  ; 1st the pixel and 2nd byte is the tile coordinate
