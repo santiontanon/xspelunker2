@@ -12,16 +12,35 @@ BOSS9_NAMETABLE_FIST_LEFT: equ BOSS9_NAMETABLE_OPEN_MOUTH + 4*3  ; 5*4
 BOSS9_NAMETABLE_FIST_RIGHT: equ BOSS9_NAMETABLE_FIST_LEFT + 5*4  ; 5*4
 
 boss9_frame_base:
-    db 4  ; number of parts
-    db 6, 6  ; offset wrt the draw ptr (x offset, y offset)
-    dw #0806, BOSS9_NAMETABLE_WAIST  ; dimensions and nametable
-    db 1, 0  ; offset wrt the draw ptr (x offset, y offset)
+    db 1  ; number of parts
+    db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
     dw #0c10, BOSS9_NAMETABLE_BODY  ; dimensions and nametable
-    db 0, 10  ; offset wrt the draw ptr (x offset, y offset)
+    dw 0, #0c10  ; offset and boss__clear_bbox
+
+boss9_frame_fist_left:
+    db 1  ; number of parts
+    db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
     dw #0405, BOSS9_NAMETABLE_FIST_LEFT  ; dimensions and nametable
-    db 13, 10  ; offset wrt the draw ptr (x offset, y offset)
+    dw 0, #0405  ; offset and boss__clear_bbox
+
+boss9_frame_fist_right:
+    db 1  ; number of parts
+    db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
     dw #0405, BOSS9_NAMETABLE_FIST_RIGHT  ; dimensions and nametable
-    dw 0, #0e12  ; boss__clear_bbos
+    dw 0, #0405  ; offset and boss__clear_bbox
+
+
+; boss9_frame_base:
+;     db 4  ; number of parts
+;     db 6, 6  ; offset wrt the draw ptr (x offset, y offset)
+;     dw #0806, BOSS9_NAMETABLE_WAIST  ; dimensions and nametable
+;     db 1, 0  ; offset wrt the draw ptr (x offset, y offset)
+;     dw #0c10, BOSS9_NAMETABLE_BODY  ; dimensions and nametable
+;     db 0, 10  ; offset wrt the draw ptr (x offset, y offset)
+;     dw #0405, BOSS9_NAMETABLE_FIST_LEFT  ; dimensions and nametable
+;     db 13, 10  ; offset wrt the draw ptr (x offset, y offset)
+;     dw #0405, BOSS9_NAMETABLE_FIST_RIGHT  ; dimensions and nametable
+;     dw 0, #0e12  ; offset and boss__clear_bbox
 
 
 ;-----------------------------------------------
@@ -88,6 +107,9 @@ update_boss9_behavior_0_state_0_continue:
     ld de, boss__settings
     ld bc, 14
     ldir
+
+    ld hl, (boss__settings + BOSS_9_HP_OFFSET)
+    ld (boss__hp), hl
 
     ld a, 1
     ld (boss__state), a
@@ -202,6 +224,128 @@ update_boss9_behavior_0_state_1_random_rubble:
 
 ;-----------------------------------------------
 update_boss9_behavior_1:
+    ; states:
+    ; 0: wake up (hit with fists 3 times)
+    ; 1: behavior switch 
+    ; 2: pause 
+    ; 3: left-fist attack
+    ; 4: right-fist attack
+    ; 5: both fists attack
+    ; 6: body goes to the very top and bullet barrage
+    ld a, (boss__state)
+    or a
+    jr z, update_boss9_behavior_1_state_0
+    dec a
+    jp z, update_boss9_behavior_1_state_1
+    dec a
+    jp z, update_boss9_behavior_1_state_2
+    dec a
+    jp z, update_boss9_behavior_1_state_3
+    dec a
+    jp z, update_boss9_behavior_1_state_4
+    dec a
+    jp z, update_boss9_behavior_1_state_5
+    dec a
+    jp z, update_boss9_behavior_1_state_6
+    ret
+
+update_boss9_behavior_1_state_0:
+    ; 0 - 8: raise
+    ; 8 - 10: drop
+    ld hl, boss__state_timer
+    ld a, (hl)
+    inc (hl)
+    cp 8
+    jr c, update_boss9_behavior_1_state_0_raise
+    cp 10
+    jr c, update_boss9_behavior_1_state_0_drop
+    jp z, update_boss9_behavior_1_state_0_hit
+    cp 18
+    ret c
+    cp 8 + 18
+    jr c, update_boss9_behavior_1_state_0_raise
+    cp 10 + 18
+    jr c, update_boss9_behavior_1_state_0_drop
+    jp z, update_boss9_behavior_1_state_0_hit
+    cp 18 + 18
+    ret c
+    cp 8 + 18*2
+    jr c, update_boss9_behavior_1_state_0_raise
+    cp 10 + 18*2
+    jr c, update_boss9_behavior_1_state_0_drop
+    jp z, update_boss9_behavior_1_state_0_hit
+    cp 18 + 18*2
+    ret c
+    ld a, 1
+    ld (boss__state), a
+    xor a
+    ld (boss__state_timer), a
+    ret
+
+
+update_boss9_behavior_1_state_0_raise:
+    ld hl, boss__y2
+    dec (hl)
+    ld hl, boss__9_y3
+    dec (hl)
+    jp update_boss9_draw_boss9_frame
+
+update_boss9_behavior_1_state_0_drop:
+    ld hl, boss__y2
+    inc (hl)
+    inc (hl)
+    inc (hl)
+    inc (hl)
+    ld hl, boss__9_y3
+    inc (hl)
+    inc (hl)
+    inc (hl)
+    inc (hl)
+    jp update_boss9_draw_boss9_frame
+
+update_boss9_behavior_1_state_0_hit:
+    ld hl, SFX_explosion
+    jp play_SFX_with_high_priority
+
+
+update_boss9_behavior_1_state_1:
+    ld hl, (boss__hp)
+    ld a, h
+    or l
+    jr nz, update_boss9_behavior_1_state_1_continue
+    ; boss defeated, transition to phase 2!
+    ld a, 2
+    ld (boss__behavior), a
+    xor a
+    ld (boss__state), a
+    ld (boss__state_timer), a
+    ret
+update_boss9_behavior_1_state_1_continue:
+    ; ...
+    ret
+
+
+update_boss9_behavior_1_state_2:
+    ; ...
+    ret
+
+
+update_boss9_behavior_1_state_3:
+    ; ...
+    ret
+
+
+update_boss9_behavior_1_state_4:
+    ; ...
+    ret
+
+
+update_boss9_behavior_1_state_5:
+    ; ...
+    ret
+
+
+update_boss9_behavior_1_state_6:
     ; ...
     ret
 
@@ -216,6 +360,8 @@ update_boss9_behavior_2:
 ; input:
 update_boss9_draw_boss9_frame:
     call draw_boss9_frame_clear_previous_frame_1
+    call draw_boss9_frame_clear_previous_frame_2
+    call draw_boss9_frame_clear_previous_frame_3
 update_boss9_draw_boss9_frame_not_clearing:
     ; compute draw pointer:
     ld bc, (boss__x)
@@ -228,7 +374,20 @@ update_boss9_draw_boss9_frame_not_clearing:
     ; ...
 
     ; fists:
-    ; ...
+    ld bc, (boss__x2)
+    call get_room_tile_ptr
+    ex de, hl  ; hl = ptr where the boss is to be drawn
+    ld hl, boss9_frame_fist_left
+    call draw_boss9_frame_2_without_clearing
+
+    ld bc, (boss__9_x3)
+    call get_room_tile_ptr
+    ex de, hl  ; hl = ptr where the boss is to be drawn
+    ld hl, boss9_frame_fist_right
+    call draw_boss9_frame_3_without_clearing
+
+    ld hl, redraw_flags
+    ld (hl), #ff    
     ret
 
 
@@ -243,13 +402,13 @@ draw_boss9_frame_clear_previous_frame_1:
     ; here:
     ; - hl: ptr
     ; - bc: width, height
+draw_boss9_frame_clear_previous_frame_1_continue:
     ld e, l
     ld d, h
     push bc
         ld bc, boss__room_bg_buffer - current_room__tile_map
         add hl, bc
     pop bc
-draw_boss9_frame_clear_previous_frame_1_continue:
     ; here:
     ; - hl: points to the bg buffer
     ; - de: points to the room part we want to clear
@@ -301,16 +460,30 @@ draw_boss9_frame_clear_previous_frame_1_y_loop_skip:
     ret
 
 
+draw_boss9_frame_clear_previous_frame_2:
+    ; clear the previous frame
+    ld bc, (boss__clear_bbox_2 + 2)
+    ld a, c
+    or b
+    ret z
+    ld hl, (boss__clear_bbox_2)
+    jr draw_boss9_frame_clear_previous_frame_1_continue
+
+
+draw_boss9_frame_clear_previous_frame_3:
+    ; clear the previous frame
+    ld bc, (boss__9_clear_bbox_3 + 2)
+    ld a, c
+    or b
+    ret z
+    ld hl, (boss__9_clear_bbox_3)
+    jr draw_boss9_frame_clear_previous_frame_1_continue
+
+
 ;-----------------------------------------------
 ; input:
 ; - de: ptr to draw to
 ; - hl: ptr to frame struct
-draw_boss9_frame_1:
-    push hl
-    push de
-        call draw_boss9_frame_clear_previous_frame_1
-    pop de
-    pop hl
 draw_boss9_frame_1_without_clearing:
     push de
         call draw_boss9_frame_internal
@@ -328,6 +501,54 @@ draw_boss9_frame_1_without_clearing:
     pop hl
     add hl, bc
     ld (boss__clear_bbox_1), hl
+    ret
+
+
+;-----------------------------------------------
+; input:
+; - de: ptr to draw to
+; - hl: ptr to frame struct
+draw_boss9_frame_2_without_clearing:
+    push de
+        call draw_boss9_frame_internal
+
+        ; set clear bbox:
+        ld c, (hl)
+        inc hl
+        ld b, (hl)  ; bc is the offset wrt original draw pointer
+        inc hl
+        ld de, boss__clear_bbox_2 + 2
+        push bc
+            ldi
+            ldi
+        pop bc
+    pop hl
+    add hl, bc
+    ld (boss__clear_bbox_2), hl
+    ret
+
+
+;-----------------------------------------------
+; input:
+; - de: ptr to draw to
+; - hl: ptr to frame struct
+draw_boss9_frame_3_without_clearing:
+    push de
+        call draw_boss9_frame_internal
+
+        ; set clear bbox:
+        ld c, (hl)
+        inc hl
+        ld b, (hl)  ; bc is the offset wrt original draw pointer
+        inc hl
+        ld de, boss__9_clear_bbox_3 + 2
+        push bc
+            ldi
+            ldi
+        pop bc
+    pop hl
+    add hl, bc
+    ld (boss__9_clear_bbox_3), hl
     ret
 
 
@@ -463,8 +684,8 @@ start_boss9:
     ld hl, 0
     ld (large_object_to_upload_to_vdp), hl
     ld (current_room__music_ptr), hl  ; no music in the boss room until the boss appears
-    ld hl, 1
-    ld (boss__hp), hl  ; make sure boss is not dead at the start
+    ld hl, (boss__settings + BOSS_9_HP_OFFSET)
+    ld (boss__hp), hl
     xor a
     ld (boss__behavior), a
     ld (boss__state), a
@@ -476,6 +697,8 @@ start_boss9:
     ld (boss__last_collision_id_4), a
     inc a  ; a = 1
     ld (boss__active), a
+    ld a, 8
+    ld (boss__current_boss_number), a
 
     ld hl, tile_collision_types_boss9_boss
     ld (current_room__collision_ptr), hl
@@ -498,12 +721,12 @@ start_boss9:
     ld a, #ff
     call clear_memory_a
 
-    ld a, 7
-    ld (boss__x), a
-    ld a, 8
-    ld (boss__y), a
-    ld hl, (boss__settings + BOSS_7_HP_OFFSET)
-    ld (boss__hp), hl
+    ld bc, #0808
+    ld (boss__x), bc  ; body
+    ld bc, #1207
+    ld (boss__x2), bc  ; left fist
+    ld bc, #1214
+    ld (boss__9_x3), bc  ; right fist
     ld hl, player_weapon_hitbox_check_boss__boss9_hit
     ld (boss__hit_fn), hl
     ld a, BOSS_9_ROOM_PAGE
@@ -514,6 +737,10 @@ start_boss9:
     inc hl
     ld (hl), 0
     ld hl, boss__clear_bbox_2 + 2
+    ld (hl), 0
+    inc hl
+    ld (hl), 0    
+    ld hl, boss__9_clear_bbox_3 + 2
     ld (hl), 0
     inc hl
     ld (hl), 0    
@@ -534,6 +761,12 @@ start_boss9_loop_x:
     ld de, 32
     add hl, de
     djnz start_boss9_loop_y
+
+    ; draw the waist:
+    ld hl, BOSS9_NAMETABLE_WAIST
+    ld de, current_room__tile_map + 13 + 14*32
+    ld bc, #0806
+    call draw_boss9_frame_part
 
     ; make a copy of the boss room so that we can restore the background as the boss moves:
     ld hl, current_room__tile_map
@@ -559,26 +792,7 @@ player_weapon_hitbox_check_boss__boss9_hit:
     or a
     ret z
 
-    ; check if we have hit the face or tail:
-;     ld a, e
-;     cp BOSS7_PHASE2_FIRST_HEAD_TILE
-;     jr nc, player_weapon_hitbox_check_boss__boss9_hit_vulnerable_spot
-
-    ; shield:
-    ld hl, SFX_shield
-    call play_SFX_with_high_priority
-    xor a
-    ld (player_weapon_hitbox_check_result), a  ; mark a hit
-    ld hl, boss__last_collision_id_3
-    ld de, boss__last_collision_id_4
-    ldd
-    ldd
-    ldd
-    ld a, iyl
-    ld (boss__last_collision_id_1), a
-    ret
-; player_weapon_hitbox_check_boss__boss9_hit_vulnerable_spot:
-;     ld hl, player_weapon_hitbox_check_boss__lose_hp
-;     ld c, BOSS_PAGE
-;     jp call_hl_in_page_c_8000
+    ld hl, player_weapon_hitbox_check_boss__lose_hp
+    ld c, BOSS_PAGE
+    jp call_hl_in_page_c_8000
 
