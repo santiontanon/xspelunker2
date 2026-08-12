@@ -318,6 +318,7 @@ update_boss9_behavior_1_state_1_continue:
     ld c, 5
     call random_modulo
     add a, 2
+;     ld a, 6  ; DEBUG
     ld (boss__state), a
     xor a
     ld (boss__state_timer), a
@@ -551,15 +552,54 @@ update_boss9_behavior_1_state_5_drop:
 
 update_boss9_behavior_1_state_6:
     ld hl, boss__state_timer
+    ld a, (hl)
     inc (hl)
-    call update_boss9_maybe_fire_eye_bullet
-
-    ; ...
+    push af
+        call update_boss9_move_body
+    pop af
+    or a
+    jr nz, update_boss9_behavior_1_state_6_continue
+    push af
+        ld a, 2
+        ld (boss__9_target_y), a
+    pop af
+update_boss9_behavior_1_state_6_continue:
+    cp 40
+    ret c
+    jr nz, update_boss9_behavior_1_state_6_continue2
+    ; open mouth:
+    push af
+        ld a, 1
+        ld (boss__9_mouth_state), a
+        call update_boss9_draw_boss9_frame
+    pop af
+update_boss9_behavior_1_state_6_continue2:
+    cp 128
+    jr z, update_boss9_behavior_1_state_6_done
+    and #0f
+    ret nz
+    ; mouth attack:
+    ; - e, b: tile coordinate from where the bullet is fired
+    ; - ixl, ixh: pixel offset  
+    ld e, 15
+    ld b, 9
+    ld ix, 0    
+    ld hl, boss_fire_directional_bullet_towards_player_with_random_offset_e_b
+    ld c, BOSS_PAGE
+    call call_hl_in_page_c_8000
+    ret nz
+    ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BOSS8_BIG_PLASMA_BALL
+    ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
+    ld (ix + ROOM_OBJECT_STRUCT_EXTRA1), 16  ; time paused
+    ret
+update_boss9_behavior_1_state_6_done:
     ld a, 1
     ld (boss__state), a
     xor a
     ld (boss__state_timer), a
-    ret
+    ; close mouth:
+    ld (boss__9_mouth_state), a
+    jp update_boss9_draw_boss9_frame
 
 
 ;-----------------------------------------------
@@ -700,11 +740,21 @@ update_boss9_draw_boss9_frame:
     call get_room_tile_ptr
     ex de, hl  ; hl = ptr where the boss is to be drawn
     ld hl, boss9_frame_base
-    call draw_boss9_frame_1_without_clearing
+    push de
+        call draw_boss9_frame_1_without_clearing
+    pop hl
 
     ; mouth:
-    ; ...
-
+    ld a, (boss__9_mouth_state)
+    or a
+    jr z, update_boss9_draw_boss9_frame_mouth_done
+    ld de, 32*7 + 6
+    add hl, de
+    ex de, hl
+    ld hl, BOSS9_NAMETABLE_OPEN_MOUTH
+    ld bc, #0304
+    call draw_boss9_frame_part
+update_boss9_draw_boss9_frame_mouth_done:
     ; fists:
     ld bc, (boss__x2)
     call get_room_tile_ptr
@@ -940,6 +990,8 @@ start_boss9:
     ld a, #ff
     call clear_memory_a
 
+    xor a
+    ld (boss__9_mouth_state), a
     ld bc, #0808
     ld (boss__x), bc  ; body
     ld bc, #1207

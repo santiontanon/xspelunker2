@@ -368,6 +368,7 @@ boss__9_x3: equ boss__tmp_space  ; second fist
 boss__9_y3: equ boss__tmp_space + 1
 boss__9_clear_bbox_3: equ boss__tmp_space + 2
 boss__9_target_y: equ boss__tmp_space + 6
+boss__9_mouth_state: equ boss__tmp_space + 7
 
 
 alien_ambush__n_aliens_spawned: equ boss__tmp_space
