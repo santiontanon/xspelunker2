@@ -1,9 +1,9 @@
 ;-----------------------------------------------
 BOSS_9_HP_OFFSET: equ 0
-BOSS_9_EYE_BULLET_ATTACK_PATTERN_OFFSET: equ 1
-BOSS_9_WAIT_TIME_OFFSET: equ 2
-BOSS_9_N_FIST_STONES_OFFSET: equ 3
-BOSS_9_N_2FISTS_STONES_OFFSET: equ 4
+BOSS_9_EYE_BULLET_ATTACK_PATTERN_OFFSET: equ 2
+BOSS_9_WAIT_TIME_OFFSET: equ 3
+BOSS_9_N_FIST_STONES_OFFSET: equ 4
+BOSS_9_N_2FISTS_STONES_OFFSET: equ 5
 
 
 ;-----------------------------------------------
@@ -313,42 +313,172 @@ update_boss9_behavior_1_state_1:
     ld (boss__state_timer), a
     ret
 update_boss9_behavior_1_state_1_continue:
-    ; ...
+    ; behavior switch: 2, 3, 4, 5, 6
+    ld c, 5
+    call random_modulo
+    add a, 2
+    ld (boss__state), a
+    xor a
+    ld (boss__state_timer), a
+
+    ; set a new target for the body:
+    call random_a
+    and #03
+    add a, 5
+    ld (boss__9_target_y), a
     ret
 
 
 update_boss9_behavior_1_state_2:
+    ld hl, boss__state_timer
+    inc (hl)
+    call update_boss9_move_body
     call update_boss9_maybe_fire_eye_bullet
 
-    ; ...
+    ld a, (boss__settings + BOSS_9_WAIT_TIME_OFFSET)
+    ld c, a
+    ld a, (boss__state_timer)
+    cp c
+    ret nz
+    ld a, 1
+    ld (boss__state), a
+    xor a
+    ld (boss__state_timer), a
     ret
 
 
 update_boss9_behavior_1_state_3:
-    call update_boss9_maybe_fire_eye_bullet
+    ; left fist:
+    ld hl, boss__state_timer
+    ld a, (hl)
+    inc (hl)
+    push af
+        call update_boss9_move_body
+        call update_boss9_maybe_fire_eye_bullet
+    pop af
+    cp 16
+    jr c, update_boss9_behavior_1_state_3_raise
+    cp 32
+    ret c
+    cp 36
+    jr c, update_boss9_behavior_1_state_3_drop
+    ret nz
+    ; hit:
+    ld a, (boss__settings + BOSS_9_N_FIST_STONES_OFFSET)
+    call update_boss9_spawn_debris
+    ld a, (boss__x2)
+    ld c, a
+    ld b, 20
+    call spawn_4tile_appart_dust    
+    ld hl, SFX_explosion
+    call play_SFX_with_high_priority
 
-    ; ...
+    ld a, 1
+    ld (boss__state), a
+    xor a
+    ld (boss__state_timer), a    
     ret
+
+update_boss9_behavior_1_state_3_raise:
+    and #03
+    jr nz, update_boss9_behavior_1_state_3_raise_no_horizontal_movement
+    push af
+        ld de, #0b06
+        ld hl, boss__x2
+        call update_boss9_move_fist_horizontally
+    pop af
+update_boss9_behavior_1_state_3_raise_no_horizontal_movement:
+    and #01
+    ret nz
+    ld hl, boss__y2
+    dec (hl)
+    jp update_boss9_draw_boss9_frame
+
+update_boss9_behavior_1_state_3_drop:
+    ld hl, boss__y2
+    inc (hl)
+    inc (hl)
+    jp update_boss9_draw_boss9_frame
 
 
 update_boss9_behavior_1_state_4:
-    call update_boss9_maybe_fire_eye_bullet
+    ; right fist:
+    ld hl, boss__state_timer
+    ld a, (hl)
+    inc (hl)
+    push af
+        call update_boss9_move_body
+        call update_boss9_maybe_fire_eye_bullet
+    pop af
+    cp 16
+    jr c, update_boss9_behavior_1_state_4_raise
+    cp 32
+    ret c
+    cp 36
+    jr c, update_boss9_behavior_1_state_4_drop
+    ret nz
+    ; hit:
+    ld a, (boss__settings + BOSS_9_N_FIST_STONES_OFFSET)
+    call update_boss9_spawn_debris
+    ld a, (boss__9_x3)
+    ld c, a
+    ld b, 20
+    call spawn_4tile_appart_dust    
+    ld hl, SFX_explosion
+    call play_SFX_with_high_priority
 
-    ; ...
+    ld a, 1
+    ld (boss__state), a
+    xor a
+    ld (boss__state_timer), a   
     ret
+
+update_boss9_behavior_1_state_4_raise:
+    and #03
+    jr nz, update_boss9_behavior_1_state_4_raise_no_horizontal_movement
+    push af
+        ld de, #1510
+        ld hl, boss__9_x3
+        call update_boss9_move_fist_horizontally
+    pop af
+update_boss9_behavior_1_state_4_raise_no_horizontal_movement:
+    and #01
+    ret nz
+    ld hl, boss__9_y3
+    dec (hl)
+    jp update_boss9_draw_boss9_frame
+
+update_boss9_behavior_1_state_4_drop:
+    ld hl, boss__9_y3
+    inc (hl)
+    inc (hl)
+    jp update_boss9_draw_boss9_frame
 
 
 update_boss9_behavior_1_state_5:
+    ld hl, boss__state_timer
+    inc (hl)
+    call update_boss9_move_body
     call update_boss9_maybe_fire_eye_bullet
 
     ; ...
+    ld a, 1
+    ld (boss__state), a
+    xor a
+    ld (boss__state_timer), a
     ret
 
 
 update_boss9_behavior_1_state_6:
+    ld hl, boss__state_timer
+    inc (hl)
     call update_boss9_maybe_fire_eye_bullet
 
     ; ...
+    ld a, 1
+    ld (boss__state), a
+    xor a
+    ld (boss__state_timer), a
     ret
 
 
@@ -356,6 +486,54 @@ update_boss9_behavior_1_state_6:
 update_boss9_behavior_2:
     ; ...
     ret
+
+
+;-----------------------------------------------
+; input:
+; - hl: ptr to fist x coordinate
+; - d, e: max/min x coordinates
+update_boss9_move_fist_horizontally:
+    ld a, (player_x + 1)
+    dec a
+    dec a
+    ld c, a
+    ld a, (hl)
+    cp c
+    ret z
+    jr c, update_boss9_move_fist_horizontally_right
+update_boss9_move_fist_horizontally_right_left:
+    cp e
+    ret z
+    ret c
+    dec (hl)
+    ret
+update_boss9_move_fist_horizontally_right:
+    cp d
+    ret z
+    ret nc
+    inc (hl)
+    ret
+
+
+;-----------------------------------------------
+update_boss9_move_body:
+    ld a, (boss__state_timer)
+    and #03
+    ret nz
+    ld a, (boss__9_target_y)
+    ld b, a
+    ld a, (boss__y)
+    cp b
+    ret z
+    jr c, update_boss9_move_body_down
+update_boss9_move_body_up:
+    dec a
+    ld (boss__y), a
+    jp update_boss9_draw_boss9_frame
+update_boss9_move_body_down:
+    inc a
+    ld (boss__y), a
+    jp update_boss9_draw_boss9_frame
 
 
 ;-----------------------------------------------

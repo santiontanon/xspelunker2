@@ -367,6 +367,7 @@ boss__8_collision_table_ptr: equ boss__tmp_space + 2  ; 2 bytes (used only in bo
 boss__9_x3: equ boss__tmp_space  ; second fist
 boss__9_y3: equ boss__tmp_space + 1
 boss__9_clear_bbox_3: equ boss__tmp_space + 2
+boss__9_target_y: equ boss__tmp_space + 6
 
 
 alien_ambush__n_aliens_spawned: equ boss__tmp_space

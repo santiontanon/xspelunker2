@@ -1,10 +1,9 @@
 to do:
 
 ***- 9th optional boss:
-  ***- body moves up and down up the waist (set a target in behavior switch, and it moves there)
+  ***- double fist attack
+  ***- difficulty settings for controlling fist speed
   ***- mouth attack (fast plasma balls)
-  ***- fist attacks: fists move up/down and a bit left/right:
-    ***- when fists hit, rocks drop from the ceiling (som on top of player, some random)
   ***- when defeated, walls open again a door opens, room side walls re-open
     ***- from now on, the door is always open when entering this room, instead of the panel
   ***- entering the door leads to a small room with Yatzil's grave with some tablets and a notebook (use appropriate music in Yatzil's room, and restore caves music when exiting)
