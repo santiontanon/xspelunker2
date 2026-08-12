@@ -1,8 +1,6 @@
 to do:
 
 ***- 9th optional boss:
-  ***- double fist attack
-  ***- difficulty settings for controlling fist speed
   ***- mouth attack (fast plasma balls)
   ***- when defeated, walls open again a door opens, room side walls re-open
     ***- from now on, the door is always open when entering this room, instead of the panel

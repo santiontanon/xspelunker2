@@ -2,8 +2,9 @@
 BOSS_9_HP_OFFSET: equ 0
 BOSS_9_EYE_BULLET_ATTACK_PATTERN_OFFSET: equ 2
 BOSS_9_WAIT_TIME_OFFSET: equ 3
-BOSS_9_N_FIST_STONES_OFFSET: equ 4
-BOSS_9_N_2FISTS_STONES_OFFSET: equ 5
+BOSS_9_FIST_WAIT_TIME_OFFSET: equ 4
+BOSS_9_N_FIST_STONES_OFFSET: equ 5
+BOSS_9_N_2FISTS_STONES_OFFSET: equ 6
 
 
 ;-----------------------------------------------
@@ -30,19 +31,19 @@ boss9_frame_fist_right:
 ;-----------------------------------------------
 boss9_difficulty_setting__easy:
     dw 192  ; boss hp, and threshold for the other phases
-    db BOSS_BULLET_PATTERN_EASY2, 32, 1, 2  ; bullet attack pattern, wait time, n fist stones, n 2 fist stones
+    db BOSS_BULLET_PATTERN_EASY1, 48, 28, 1, 2  ; bullet attack pattern, wait time, fist wait time, n fist stones, n 2 fist stones
 
 boss9_difficulty_setting__normal:
     dw 320  ; boss hp, and threshold for the other phases
-    db BOSS_BULLET_PATTERN_MEDIUM2, 28, 2, 3 ; bullet attack pattern, wait time, n fist stones, n 2 fist stones
+    db BOSS_BULLET_PATTERN_MEDIUM1, 40, 24, 2, 3 ; bullet attack pattern, wait time, fist wait time, n fist stones, n 2 fist stones
 
 boss9_difficulty_setting__hard:
     dw 416  ; boss hp, and threshold for the other phases
-    db BOSS_BULLET_PATTERN_HARD2, 24, 2, 4  ; bullet attack pattern, wait time, n fist stones, n 2 fist stones
+    db BOSS_BULLET_PATTERN_HARD1, 32, 20, 2, 4  ; bullet attack pattern, wait time, fist wait time, n fist stones, n 2 fist stones
 
 boss9_difficulty_setting__hardest:
     dw 512  ; boss hp, and threshold for the other phases
-    db BOSS_BULLET_PATTERN_HARDEST2, 20, 3, 5  ; bullet attack pattern, wait time, n fist stones, n 2 fist stones
+    db BOSS_BULLET_PATTERN_HARDEST1, 24, 16, 3, 5  ; bullet attack pattern, wait time, n fist stones, n 2 fist stones
 
 
 ;-----------------------------------------------
@@ -358,9 +359,18 @@ update_boss9_behavior_1_state_3:
     pop af
     cp 16
     jr c, update_boss9_behavior_1_state_3_raise
-    cp 32
+    push af
+        ld a, (boss__settings + BOSS_9_FIST_WAIT_TIME_OFFSET)
+        add a, 16
+        ld c, a
+    pop af
+    cp c
     ret c
-    cp 36
+    inc c
+    inc c
+    inc c
+    inc c
+    cp c
     jr c, update_boss9_behavior_1_state_3_drop
     ret nz
     ; hit:
@@ -412,9 +422,18 @@ update_boss9_behavior_1_state_4:
     pop af
     cp 16
     jr c, update_boss9_behavior_1_state_4_raise
-    cp 32
+    push af
+        ld a, (boss__settings + BOSS_9_FIST_WAIT_TIME_OFFSET)
+        add a, 16
+        ld c, a
+    pop af
+    cp c
     ret c
-    cp 36
+    inc c
+    inc c
+    inc c
+    inc c
+    cp c
     jr c, update_boss9_behavior_1_state_4_drop
     ret nz
     ; hit:
@@ -457,16 +476,77 @@ update_boss9_behavior_1_state_4_drop:
 
 update_boss9_behavior_1_state_5:
     ld hl, boss__state_timer
+    ld a, (hl)
     inc (hl)
-    call update_boss9_move_body
-    call update_boss9_maybe_fire_eye_bullet
+    push af
+        call update_boss9_move_body
+        call update_boss9_maybe_fire_eye_bullet
+    pop af
+    cp 16
+    jr c, update_boss9_behavior_1_state_5_raise
+    push af
+        ld a, (boss__settings + BOSS_9_FIST_WAIT_TIME_OFFSET)
+        add a, 16
+        ld c, a
+    pop af
+    cp c
+    ret c
+    inc c
+    inc c
+    inc c
+    inc c
+    cp c
+    jr c, update_boss9_behavior_1_state_5_drop
+    ret nz
+    ; hit:
+    ld a, (boss__settings + BOSS_9_N_2FISTS_STONES_OFFSET)
+    call update_boss9_spawn_debris
+    ld a, (boss__x2)
+    ld c, a
+    ld b, 20
+    call spawn_4tile_appart_dust    
+    ld a, (boss__9_x3)
+    ld c, a
+    ld b, 20
+    call spawn_4tile_appart_dust    
+    ld hl, SFX_explosion
+    call play_SFX_with_high_priority
 
-    ; ...
     ld a, 1
     ld (boss__state), a
     xor a
-    ld (boss__state_timer), a
+    ld (boss__state_timer), a   
     ret
+
+
+update_boss9_behavior_1_state_5_raise:
+    and #03
+    jr nz, update_boss9_behavior_1_state_5_raise_no_horizontal_movement
+    push af
+        ld de, #0b06
+        ld hl, boss__x2
+        call update_boss9_move_fist_horizontally
+        ld de, #1510
+        ld hl, boss__9_x3
+        call update_boss9_move_fist_horizontally
+    pop af
+update_boss9_behavior_1_state_5_raise_no_horizontal_movement:
+    and #01
+    ret nz
+    ld hl, boss__y2
+    dec (hl)
+    ld hl, boss__9_y3
+    dec (hl)
+    jp update_boss9_draw_boss9_frame
+
+update_boss9_behavior_1_state_5_drop:
+    ld hl, boss__y2
+    inc (hl)
+    inc (hl)
+    ld hl, boss__9_y3
+    inc (hl)
+    inc (hl)
+    jp update_boss9_draw_boss9_frame
 
 
 update_boss9_behavior_1_state_6:
