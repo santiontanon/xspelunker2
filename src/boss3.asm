@@ -669,7 +669,7 @@ update_boss3_behavior_2_state_1:
 	ld b, a
 update_boss3_behavior_2_state_1_debris_loop:
 	push bc
-	; spawn debris:
+		; spawn debris:
 		call ptr_to_new_sprite_enemy
 	pop bc
 	ret nz

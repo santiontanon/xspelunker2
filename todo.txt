@@ -1,11 +1,6 @@
 to do:
 
 ***- 9th optional boss:
-  ***- dust when fists hit the floor
-  ***- drop rocks from the ceiling when fists hit the floor:
-    ***- difficulty setting for how many (one value for when 1 fist, another for when 2 fists)
-    ***- add rock falling sprite
-    ***- can I reuse from boss 7? or have a new one?
   ***- eye bullets
   ***- body moves up and down up the waist (set a target in behavior switch, and it moves there)
   ***- mouth attack (fast plasma balls)

@@ -7,7 +7,6 @@ enemy_update_fn_table:
 	dw update_enemy_bullet_lightning  ; boss 1/4 attack
 	dw update_enemy_sonic_boom  ; boss 2 attack
 	dw update_enemy_boss2_spikes ; boss 2 attack
-	dw update_enemy_boss3_debris ; boss 3 attack
 	dw update_enemy_bullet_fireball
 	dw update_enemy_pus_drop  ; boss 4 attack
 	dw update_enemy_blood_drop  ; boss 4 attack
@@ -76,6 +75,8 @@ enemy_update_fn_table:
 	dw update_enemy_boss6_drone_stone
 	dw update_enemy_boss8_alien  ; not really an enemy, just used for the intro scene
 	dw update_enemy_boss8_turret
+	dw update_enemy_boss3_debris ; boss 3 attack
+	dw update_enemy_boss9_debris ; boss 9 attack
 
 
 ;-----------------------------------------------
@@ -5499,6 +5500,12 @@ update_enemy_boss8_turret_4:
 
 
 ;-----------------------------------------------
+update_enemy_boss9_debris:
+	ld iyh, 4  ; damage to deal
+	jp update_enemy_boss3_debris_entry_point
+
+
+;-----------------------------------------------
 ; return:
 ; - nz: delete
 ; - z: enemy still exists
@@ -5887,14 +5894,21 @@ update_enemy_boss2_spikes_bottom:
 ;-----------------------------------------------
 update_enemy_boss3_debris:
 	ld iyh, 2  ; damage to deal
+update_enemy_boss3_debris_entry_point:
 	call update_enemy_hurt_player_shieldable_bullet
 	jp z, update_enemy_delete
 
 	ld a, (current_world__difficulty_bullet_speed)
+; 	add a, a
 	add a, a
-	add a, a
-	call update_enemy_bullet_move_down_if_possible_a_times
-	jp z, update_enemy_delete
+	ld b, a
+	ld c, 0
+	call update_enemy_move_cb
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
+	cp 24
+	jp nc, update_enemy_delete
+; 	call update_enemy_bullet_move_down_if_possible_a_times
+; 	jp z, update_enemy_delete
 	ld d, COLOR_WHITE
 	ld e, (ix + ROOM_OBJECT_STRUCT_STATE)  ; (FIRST_ENEMY_SPRITE_PATTERN + 7) * 4 
 	jp enemy_sprite_and_continue

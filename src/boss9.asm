@@ -1,6 +1,9 @@
 ;-----------------------------------------------
 BOSS_9_HP_OFFSET: equ 0
 BOSS_9_EYE_BULLET_ATTACK_PATTERN_OFFSET: equ 1
+BOSS_9_WAIT_TIME_OFFSET: equ 2
+BOSS_9_N_FIST_STONES_OFFSET: equ 3
+BOSS_9_N_2FISTS_STONES_OFFSET: equ 4
 
 
 ;-----------------------------------------------
@@ -12,53 +15,34 @@ BOSS9_NAMETABLE_FIST_LEFT: equ BOSS9_NAMETABLE_OPEN_MOUTH + 4*3  ; 5*4
 BOSS9_NAMETABLE_FIST_RIGHT: equ BOSS9_NAMETABLE_FIST_LEFT + 5*4  ; 5*4
 
 boss9_frame_base:
-    db 1  ; number of parts
-    db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
     dw #0c10, BOSS9_NAMETABLE_BODY  ; dimensions and nametable
-    dw 0, #0c10  ; offset and boss__clear_bbox
+    dw #0c10  ; boss__clear_bbox
 
 boss9_frame_fist_left:
-    db 1  ; number of parts
-    db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
     dw #0405, BOSS9_NAMETABLE_FIST_LEFT  ; dimensions and nametable
-    dw 0, #0405  ; offset and boss__clear_bbox
+    dw #0405  ; boss__clear_bbox
 
 boss9_frame_fist_right:
-    db 1  ; number of parts
-    db 0, 0  ; offset wrt the draw ptr (x offset, y offset)
     dw #0405, BOSS9_NAMETABLE_FIST_RIGHT  ; dimensions and nametable
-    dw 0, #0405  ; offset and boss__clear_bbox
-
-
-; boss9_frame_base:
-;     db 4  ; number of parts
-;     db 6, 6  ; offset wrt the draw ptr (x offset, y offset)
-;     dw #0806, BOSS9_NAMETABLE_WAIST  ; dimensions and nametable
-;     db 1, 0  ; offset wrt the draw ptr (x offset, y offset)
-;     dw #0c10, BOSS9_NAMETABLE_BODY  ; dimensions and nametable
-;     db 0, 10  ; offset wrt the draw ptr (x offset, y offset)
-;     dw #0405, BOSS9_NAMETABLE_FIST_LEFT  ; dimensions and nametable
-;     db 13, 10  ; offset wrt the draw ptr (x offset, y offset)
-;     dw #0405, BOSS9_NAMETABLE_FIST_RIGHT  ; dimensions and nametable
-;     dw 0, #0e12  ; offset and boss__clear_bbox
+    dw #0405  ; boss__clear_bbox
 
 
 ;-----------------------------------------------
 boss9_difficulty_setting__easy:
     dw 192  ; boss hp, and threshold for the other phases
-    db BOSS_BULLET_PATTERN_EASY2  ; bullet attack pattern
+    db BOSS_BULLET_PATTERN_EASY2, 32, 1, 2  ; bullet attack pattern, wait time, n fist stones, n 2 fist stones
 
 boss9_difficulty_setting__normal:
     dw 320  ; boss hp, and threshold for the other phases
-    db BOSS_BULLET_PATTERN_MEDIUM2  ; bullet attack pattern
+    db BOSS_BULLET_PATTERN_MEDIUM2, 28, 2, 3 ; bullet attack pattern, wait time, n fist stones, n 2 fist stones
 
 boss9_difficulty_setting__hard:
     dw 416  ; boss hp, and threshold for the other phases
-    db BOSS_BULLET_PATTERN_HARD2  ; bullet attack pattern
+    db BOSS_BULLET_PATTERN_HARD2, 24, 2, 4  ; bullet attack pattern, wait time, n fist stones, n 2 fist stones
 
 boss9_difficulty_setting__hardest:
     dw 512  ; boss hp, and threshold for the other phases
-    db BOSS_BULLET_PATTERN_HARDEST2  ; bullet attack pattern
+    db BOSS_BULLET_PATTERN_HARDEST2, 20, 3, 5  ; bullet attack pattern, wait time, n fist stones, n 2 fist stones
 
 
 ;-----------------------------------------------
@@ -304,6 +288,12 @@ update_boss9_behavior_1_state_0_drop:
     jp update_boss9_draw_boss9_frame
 
 update_boss9_behavior_1_state_0_hit:
+    ld a, (boss__settings + BOSS_9_N_2FISTS_STONES_OFFSET)
+    call update_boss9_spawn_debris
+    ld bc, #1407
+    call spawn_4tile_appart_dust    
+    ld bc, #1415
+    call spawn_4tile_appart_dust    
     ld hl, SFX_explosion
     jp play_SFX_with_high_priority
 
@@ -358,17 +348,65 @@ update_boss9_behavior_2:
 
 ;-----------------------------------------------
 ; input:
+; - a: n debris
+update_boss9_spawn_debris:
+    ld b, a
+update_boss9_spawn_debris_loop:
+    push bc
+        ; spawn debris:
+        call ptr_to_new_sprite_enemy
+    pop bc
+    ret nz
+    ld (hl), 0  ; ID
+    inc hl
+    ld (hl), ENEMY_BULLET_BOSS9_DEBRIS
+    inc hl
+    ld (hl), 0  ; pixel x
+    inc hl
+    ld a, b
+    cp 1
+    jr z, update_boss9_spawn_debris_loop_on_top_of_player
+    ld c, 26
+    call random_modulo
+    add a, 3
+    jr update_boss9_spawn_debris_loop_x_set
+update_boss9_spawn_debris_loop_on_top_of_player:
+    ld a, (player_x + 1)
+update_boss9_spawn_debris_loop_x_set:
+    ld (hl), a  ; tile x
+    inc hl
+    ld (hl), 0  ; pixel y
+    inc hl
+    ld (hl), 0  ; tile y
+    inc hl
+    call random_a
+    ld c, (FIRST_ENEMY_SPRITE_PATTERN + 6) * 4
+    and #01
+    jr z, update_boss9_spawn_debris_sprite_set
+    ld c, (FIRST_ENEMY_SPRITE_PATTERN + 5) * 4
+update_boss9_spawn_debris_sprite_set:
+    ld (hl), c   ; state == sprite to use
+    djnz update_boss9_spawn_debris_loop
+
+
+;-----------------------------------------------
+; input:
 update_boss9_draw_boss9_frame:
+;     out (#2c),a  ; DEBUG
     call draw_boss9_frame_clear_previous_frame_1
+;     out (#2c),a  ; DEBUG
     call draw_boss9_frame_clear_previous_frame_2
+;     out (#2d),a  ; DEBUG
     call draw_boss9_frame_clear_previous_frame_3
-update_boss9_draw_boss9_frame_not_clearing:
+;     out (#2d),a  ; DEBUG  
     ; compute draw pointer:
     ld bc, (boss__x)
     call get_room_tile_ptr
     ex de, hl  ; hl = ptr where the boss is to be drawn
     ld hl, boss9_frame_base
+;     out (#2c),a  ; DEBUG
     call draw_boss9_frame_1_without_clearing
+;     out (#2d),a  ; DEBUG  
 
     ; mouth:
     ; ...
@@ -387,7 +425,8 @@ update_boss9_draw_boss9_frame_not_clearing:
     call draw_boss9_frame_3_without_clearing
 
     ld hl, redraw_flags
-    ld (hl), #ff    
+    set ROOM_REDRAW_FLAG_BIT, (hl)
+;     out (#2d),a  ; DEBUG  
     ret
 
 
@@ -415,40 +454,11 @@ draw_boss9_frame_clear_previous_frame_1_continue:
 draw_boss9_frame_clear_previous_frame_1_y_loop:
     push bc
         ld b, 0
-
-        ; if "de" < current_room__tile_map, skip row  ->  draw_boss9_frame_clear_previous_frame_1_y_loop_skip
-        ex de, hl
-        push bc
-        push hl
-            ld bc, current_room__tile_map
-            or a  ; clear carry flag
-            sbc hl, bc
-        pop hl
-        pop bc
-        ex de, hl
-        jr c, draw_boss9_frame_clear_previous_frame_1_y_loop_skip
-
-        ; if "de" >= boss__room_bg_buffer, we are done drawing
-        ex de, hl
-        push bc
-        push hl
-            ld bc, boss__room_bg_buffer
-            or a  ; clear carry flag
-            sbc hl, bc
-        pop hl
-        pop bc
-        ex de, hl
-        jr c, draw_boss9_frame_clear_previous_frame_1_y_loop_continue
-        ; outside of the room, we are done restoring background
-    pop bc
-    ret
-draw_boss9_frame_clear_previous_frame_1_y_loop_continue:
         push hl
         push de
             ldir
         pop de
         pop hl
-draw_boss9_frame_clear_previous_frame_1_y_loop_skip:
         ld a, (current_room__width)
         ld c, a
         add hl, bc
@@ -485,22 +495,15 @@ draw_boss9_frame_clear_previous_frame_3:
 ; - de: ptr to draw to
 ; - hl: ptr to frame struct
 draw_boss9_frame_1_without_clearing:
-    push de
-        call draw_boss9_frame_internal
+    ld (boss__clear_bbox_1), de
+    call draw_boss9_frame_internal
 
-        ; set clear bbox:
-        ld c, (hl)
-        inc hl
-        ld b, (hl)  ; bc is the offset wrt original draw pointer
-        inc hl
-        ld de, boss__clear_bbox_1 + 2
-        push bc
-            ldi
-            ldi
-        pop bc
-    pop hl
-    add hl, bc
-    ld (boss__clear_bbox_1), hl
+    ; set clear bbox:
+    ld de, boss__clear_bbox_1 + 2
+    push bc
+        ldi
+        ldi
+    pop bc
     ret
 
 
@@ -509,22 +512,15 @@ draw_boss9_frame_1_without_clearing:
 ; - de: ptr to draw to
 ; - hl: ptr to frame struct
 draw_boss9_frame_2_without_clearing:
-    push de
-        call draw_boss9_frame_internal
+    ld (boss__clear_bbox_2), de
+    call draw_boss9_frame_internal
 
-        ; set clear bbox:
-        ld c, (hl)
-        inc hl
-        ld b, (hl)  ; bc is the offset wrt original draw pointer
-        inc hl
-        ld de, boss__clear_bbox_2 + 2
-        push bc
-            ldi
-            ldi
-        pop bc
-    pop hl
-    add hl, bc
-    ld (boss__clear_bbox_2), hl
+    ; set clear bbox:
+    ld de, boss__clear_bbox_2 + 2
+    push bc
+        ldi
+        ldi
+    pop bc
     ret
 
 
@@ -533,22 +529,15 @@ draw_boss9_frame_2_without_clearing:
 ; - de: ptr to draw to
 ; - hl: ptr to frame struct
 draw_boss9_frame_3_without_clearing:
-    push de
-        call draw_boss9_frame_internal
+    ld (boss__9_clear_bbox_3), de
+    call draw_boss9_frame_internal
 
-        ; set clear bbox:
-        ld c, (hl)
-        inc hl
-        ld b, (hl)  ; bc is the offset wrt original draw pointer
-        inc hl
-        ld de, boss__9_clear_bbox_3 + 2
-        push bc
-            ldi
-            ldi
-        pop bc
-    pop hl
-    add hl, bc
-    ld (boss__9_clear_bbox_3), hl
+    ; set clear bbox:
+    ld de, boss__9_clear_bbox_3 + 2
+    push bc
+        ldi
+        ldi
+    pop bc
     ret
 
 
@@ -559,66 +548,20 @@ draw_boss9_frame_3_without_clearing:
 ; output:
 ; - hl: ptr to the boss__clear_bbox info
 draw_boss9_frame_internal:
-    ld a, (hl)  ; number of frame parts
+    ld c, (hl)  ; width
     inc hl
-    or a
-    ret z
-    ld b, a
-draw_boss9_frame_loop:
-    push bc
-        push de
-            ld c, (hl)  ; x offset
-            ; check if the part would be totally outside the screen from the right-hand side:
-            ld a, e
-            sub current_room__tile_map % 256
-            and #1f  ; a = x coordinate (as boss 8 room is width 32)
-            add a, c
-            cp 32
-            jr nc, draw_boss9_frame_loop_skip_part  ; part is outside of the screen (to the right)
-
-            ld b, 0  ; (we assume offset >= 0)
-            inc hl
-            ex de, hl
-                add hl, bc  ; add x offset
-            ex de, hl
-            ld a, (current_room__width)
-            ld c, a
-            ld a, (hl)  ; y offset
-            inc hl
-            or a
-            jr z, draw_boss9_frame_loop_continue
-            ex de, hl
-draw_boss9_frame_loop_y_offset_loop:
-                add hl, bc
-                dec a
-                jr nz, draw_boss9_frame_loop_y_offset_loop
-            ex de, hl
-draw_boss9_frame_loop_continue:
-            ld c, (hl)  ; width
-            inc hl
-            ld b, (hl)  ; height
-            inc hl
-            push hl
-                ld a, (hl)
-                inc hl
-                ld h, (hl)
-                ld l, a
-                call draw_boss9_frame_part
-            pop hl
-draw_boss9_frame_loop_skip_part_continue:
-        pop de
+    ld b, (hl)  ; height
+    inc hl
+    push hl
+        ld a, (hl)
         inc hl
-        inc hl
-    pop bc
-    djnz draw_boss9_frame_loop
+        ld h, (hl)
+        ld l, a
+        call draw_boss9_frame_part
+    pop hl
+    inc hl
+    inc hl
     ret
-
-draw_boss9_frame_loop_skip_part:
-            inc hl  ; x offset
-            inc hl  ; y offset
-            inc hl  ; width
-            inc hl  ; height
-            jr draw_boss9_frame_loop_skip_part_continue
 
 
 ;-----------------------------------------------
@@ -630,17 +573,17 @@ draw_boss9_frame_part:
 draw_boss9_frame_part_loop_y:
     push bc
         push de
-            ; if "de" < current_room__tile_map, skip row  ->  draw_boss_frame_part_loop_y_skip
-            ex de, hl
-            push bc
-            push hl
-                ld bc, current_room__tile_map
-                or a  ; clear carry flag
-                sbc hl, bc
-            pop hl
-            pop bc
-            ex de, hl
-            jr c, draw_boss9_frame_part_loop_y_skip
+;             ; if "de" < current_room__tile_map, skip row  ->  draw_boss_frame_part_loop_y_skip
+;             ex de, hl
+;             push bc
+;             push hl
+;                 ld bc, current_room__tile_map
+;                 or a  ; clear carry flag
+;                 sbc hl, bc
+;             pop hl
+;             pop bc
+;             ex de, hl
+;             jr c, draw_boss9_frame_part_loop_y_skip
 
             ld b, c
 draw_boss9_frame_part_loop_x:
@@ -652,22 +595,17 @@ draw_boss9_frame_part_loop_x_skip:
             inc hl
             inc de
             djnz draw_boss9_frame_part_loop_x
-draw_boss9_frame_part_loop_y_skip2:
+; draw_boss9_frame_part_loop_y_skip2:
         pop de
         ex de, hl
-        ld a, (current_room__width)
-        ; ld b, 0
-        ld c, a
-        add hl, bc
+            ld a, (current_room__width)
+            ; ld b, 0
+            ld c, a
+            add hl, bc
         ex de, hl
     pop bc
     djnz draw_boss9_frame_part_loop_y
     ret
-draw_boss9_frame_part_loop_y_skip:
-            ; advance 'hl':
-            ld b, 0
-            add hl, bc
-            jr draw_boss9_frame_part_loop_y_skip2
 
 
 ;-----------------------------------------------
