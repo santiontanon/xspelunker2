@@ -1347,6 +1347,7 @@ ENDR
 	dw object_interaction_function_boss9_eye_left  ; TAG_BOSS9_EYE_LEFT
 	dw object_interaction_function_boss9_eye_right  ; TAG_BOSS9_EYE_RIGHT
 	dw object_interaction_function_boss9_panel  ; TAG_BOSS9_PANEL
+	dw object_interaction_function_boss9_entrance  ; TAG_BOSS9_ENTRANCE
 	dw object_interaction_function_shopkeeper  ; TAG_NPC_SHOPKEEPER
 	dw object_interaction_function_shop  ; TAG_NPC_SHOP
 	dw object_interaction_function_empty  ; TAG_DYNAMITE
@@ -2672,6 +2673,11 @@ object_interaction_function_boss9_panel:
 	jr object_interaction_function_boss9_eye_left_entry_point
 
 
+object_interaction_function_boss9_entrance:
+	ld hl, object_interaction_function_boss9_entrance_internal
+	jr object_interaction_function_boss9_eye_left_entry_point
+
+
 ;-----------------------------------------------
 object_interaction_function_lost_vendor:
 	ld hl, object_interaction_function_lost_vendor_internal
@@ -3092,6 +3098,7 @@ ENDR
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_BOSS9_EYE_LEFT
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_BOSS9_EYE_RIGHT
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_boss9_panel_gfx  ; TAG_BOSS9_PANEL
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_boss9_entrance_gfx  ; TAG_BOSS9_ENTRANCE
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOPKEEPER
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_NPC_SHOP
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_DYNAMITE
@@ -3209,3 +3216,7 @@ tile_object_phase_shifter_gfx:
 tile_object_boss9_panel_gfx:
 	db 242, 243
 	db 248, 249
+
+tile_object_boss9_entrance_gfx:
+	db 253, 254
+	db 255, 48

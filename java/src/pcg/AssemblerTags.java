@@ -252,6 +252,7 @@ public class AssemblerTags {
         "TAG_BOSS9_EYE_LEFT",
         "TAG_BOSS9_EYE_RIGHT",
         "TAG_BOSS9_PANEL",
+        "TAG_BOSS9_ENTRANCE",
         // npcs:
         "TAG_NPC_SHOPKEEPER",
         "TAG_NPC_SHOP",

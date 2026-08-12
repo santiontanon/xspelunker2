@@ -34,7 +34,8 @@ boss9_difficulty_setting__easy:
     db BOSS_BULLET_PATTERN_EASY1, 48, 28, 1, 2  ; bullet attack pattern, wait time, fist wait time, n fist stones, n 2 fist stones
 
 boss9_difficulty_setting__normal:
-    dw 320  ; boss hp, and threshold for the other phases
+    dw 32  ; boss hp, and threshold for the other phases  (DEBUG)
+;     dw 320  ; boss hp, and threshold for the other phases
     db BOSS_BULLET_PATTERN_MEDIUM1, 40, 24, 2, 3 ; bullet attack pattern, wait time, fist wait time, n fist stones, n 2 fist stones
 
 boss9_difficulty_setting__hard:
@@ -318,7 +319,6 @@ update_boss9_behavior_1_state_1_continue:
     ld c, 5
     call random_modulo
     add a, 2
-;     ld a, 6  ; DEBUG
     ld (boss__state), a
     xor a
     ld (boss__state_timer), a
@@ -604,8 +604,111 @@ update_boss9_behavior_1_state_6_done:
 
 ;-----------------------------------------------
 update_boss9_behavior_2:
-    ; ...
+    ld a, (boss__state)
+    or a
+    jr z, update_boss9_behavior_2_state_0
+    dec a
+    jr z, update_boss9_behavior_2_state_1
     ret
+
+update_boss9_behavior_2_state_0:
+    xor a
+    ld (boss__9_mouth_state), a
+    ld a, 8
+    ld (boss__9_target_y), a
+
+    ld hl, boss__state_timer
+    inc (hl)
+
+    call update_boss9_move_body
+
+    ld a, (boss__y)
+    cp 8
+    ret nz
+
+    ld a, 1
+    ld (boss__state), a
+    ret
+
+update_boss9_behavior_2_state_1:
+    call stop_music
+
+    ld de, TEXT_BOSS9_DEFEATED
+    ld hl, display_in_game_message_textpage4_wait100
+    ld c, TEXT_PAGE
+    call call_hl_in_page_c_8000
+
+    ; reopen doors:
+    ld hl, current_room__tile_map
+    ld b, 24
+update_boss9_behavior_2_state_1_loop:
+    push bc
+        push hl
+            ld bc, #2000
+update_boss9_behavior_2_state_1_loop_x:
+            ld a, (hl)
+            cp 160
+            jr c, update_boss9_behavior_2_state_1_loop_x_skip
+            cp 164
+            jr nc, update_boss9_behavior_2_state_1_loop_x_skip
+            ld (hl), 0
+            ld c, 1
+update_boss9_behavior_2_state_1_loop_x_skip:
+            inc hl
+            djnz update_boss9_behavior_2_state_1_loop_x
+            ld a, c
+            or a
+            jr z, update_boss9_behavior_2_state_1_loop_no_wall
+
+            ld hl, draw_room_with_hud
+            ld c, TILES_PAGE
+            call call_hl_in_page_c_8000  ; just so that we do not lose the page we are at
+            ld hl, SFX_explosion_low_pitch
+            call play_SFX_with_high_priority
+            ld b, 10
+            call wait_b_halts
+update_boss9_behavior_2_state_1_loop_no_wall:
+        pop hl
+        ld bc, 32
+        add hl, bc
+    pop bc
+    djnz update_boss9_behavior_2_state_1_loop
+
+    ld hl, tile_collision_types_boss9_idle
+    ld (current_room__collision_ptr), hl
+    ld de, current_room__collision_table
+    ld bc, 256
+    ldir
+
+    ; mark boss as defeated, and add to game over screen:
+    ld a, #07
+    ld (global_state__objects + TAG_BOSS_9_ROOM), a
+
+    ; mark for stats:
+    ld b, 22  ; balam-tun
+    ld c, BOSS_PAGE
+    ld hl, add_killed_boss_to_stats
+    call call_hl_in_page_c_8000
+
+    ; spawn entrance (we know there are no other tile objects):
+    ld iy, current_room__tile_objects
+    ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 3
+    ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_BOSS9_ENTRANCE
+    ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 15
+    ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 20
+    ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0
+
+    ld hl, redraw_flags
+    ld (hl), #ff
+    ld hl, room_render_tile_objects
+    ld c, TILES_PAGE
+    call call_hl_in_page_c_8000
+
+    ld a, 2
+    ld (boss__state), a
+    ret
+
+
 
 
 ;-----------------------------------------------

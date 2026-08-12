@@ -1,12 +1,6 @@
 to do:
 
 ***- 9th optional boss:
-  ***- kill boss
-    ***- bring boss back down, and fists to their resting position (no more firing through bullets)
-    ***- text message: "Very well human, you have proven yourself worthy."
-    ***- change collision table back
-    ***- walls open
-    ***- door TILE object appears where the panel was (when coming back to the room, state should be like this)
   ***- entering the door leads to a small room with Yatzil's grave with some tablets and a notebook (use appropriate music in Yatzil's room, and restore caves music when exiting)
   ***- tablets explain that this is the tomb of Yatzil, and why it is there
   ***- notebook explains the secret of the firestones (translated by the same people who translated the story of Yatzil)

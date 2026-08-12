@@ -166,6 +166,7 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "Ares Mech", "BOSS_MARS_MOAI", 12);
         addLineSafe(lines_with_constant_page3, "Och-Kan", "BOSS_MOON_SNAKE", 12);
         addLineSafe(lines_with_constant_page3, "Maia Lord", "BOSS_MAIA_LORD", 12);
+        addLineSafe(lines_with_constant_page3, "Balam-Tun", "BOSS_BALAM_TUN", 12);
         
         addLineSafe(lines_with_constant_page1, "Entering", "ENTERING", 16);
         addLineSafe(lines_with_constant_page1, "Loading area...", "LOADING_AREA", 16);
@@ -804,6 +805,8 @@ public class Text {
 //        addLineSafe(lines_with_constant_page4, "Back", "BOSS9_PANEL3", 12);  // BACK_PAGE4
         addLineSafe(lines_with_constant_page4, "We translated the the full story. Proof you have learned it all, then defeat the guardian, and you will learn the rest of the secret.", "BOSS9_PANEL_CLUE", 112);
         addLineSafe(lines_with_constant_page4, "As you set the last letter in the panel, the giant statue starts shaking... was this a good idea?", "BOSS9_PANEL_SOLVED", 112);
+        addLineSafe(lines_with_constant_page4, "ENOUGH!!! Very well human. You have proven worthy of the secret I guard. You are welcome inside.", "BOSS9_DEFEATED", 112);
+        
         
         // Ending C:
         // First shared part:

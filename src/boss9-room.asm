@@ -40,11 +40,23 @@ pcg_generate_room__boss_9_internal:
     add iy, de
     ld (tmp_pcg_room__next_tile_object_ptr), iy
     ld a, (global_state__objects + TAG_BOSS_9_ROOM)
+    cp #07
+    jr z, pcg_generate_room__boss_9_internal_boss_defeated
     cp #03
     ret nz
     ; spawn panel:
     ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 3
     ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_BOSS9_PANEL
+    ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 15
+    ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 20
+    ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0
+    add iy, de
+    ld (tmp_pcg_room__next_tile_object_ptr), iy
+    ret
+pcg_generate_room__boss_9_internal_boss_defeated:
+    ; spawn panel:
+    ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 3
+    ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_BOSS9_ENTRANCE
     ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 15
     ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 20
     ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0
@@ -277,13 +289,13 @@ object_interaction_function_boss9_panel_internal_loop_space_solution_loop:
 ;     jr object_interaction_function_boss9_panel_internal_loop_space_back
 
 object_interaction_function_boss9_panel_internal_table:
-;     db 10, 10, 14, 14, 14
-;     db 15, 10, 15, 1, 0
-;     db 0, 15, 14, 11, 0
+    db 10, 10, 14, 14, 14
+    db 15, 10, 15, 1, 0
+    db 0, 15, 14, 11, 0
     ; DEBUG:
-    db 0, 0, 0, 0, 1
-    db 0, 0, 0, 0, 0
-    db 0, 0, 0, 0, 0
+;     db 0, 0, 0, 0, 1
+;     db 0, 0, 0, 0, 0
+;     db 0, 0, 0, 0, 0
 
 object_interaction_function_boss9_panel_internal_loop_space_back:
     call clear_all_the_sprites
@@ -472,6 +484,16 @@ boss9_panel_clear_box:
     call setup_game_tiles
     ld hl, redraw_flags
     ld (hl), #ff
+    ret
+
+
+;-----------------------------------------------
+object_interaction_function_boss9_entrance_internal:
+    ld hl, SFX_secret
+    call play_SFX_with_high_priority
+
+    ; ...
+
     ret
 
 
