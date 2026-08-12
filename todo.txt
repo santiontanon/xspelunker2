@@ -1,9 +1,14 @@
 to do:
 
-***- 9th optional boss:
-  ***- entering the door leads to a small room with Yatzil's grave with some tablets and a notebook (use appropriate music in Yatzil's room, and restore caves music when exiting)
-  ***- tablets explain that this is the tomb of Yatzil, and why it is there
-  ***- notebook explains the secret of the firestones (translated by the same people who translated the story of Yatzil)
+***- Yatzil's tomb (through boss 9):
+  OK - draw Yatzil's tomb room in TILED (with caves tiles + any needed extras)
+  ***- write tablets text:
+    ***- some conclusion to Yatzil's story and why is the tomb there
+    ***- explanation of the firestones (translated by the same people who translated the story of Yatzil) (tablet? or notebook translated by the same people who translated the story of Yatzil?)
+  ***- add room to assembler
+    ***- enter through the door (similar animation as when entering a boss room)
+    ***- spawn the room
+    ***- exit the room
   ***- achievement for finding the grave
 
 - if you run out of bullets, it should go back to machete
