@@ -277,13 +277,13 @@ object_interaction_function_boss9_panel_internal_loop_space_solution_loop:
 ;     jr object_interaction_function_boss9_panel_internal_loop_space_back
 
 object_interaction_function_boss9_panel_internal_table:
-;     db 10, 10, 14, 14, 14
-;     db 15, 10, 15, 1, 0
-;     db 0, 15, 14, 11, 0
+    db 10, 10, 14, 14, 14
+    db 15, 10, 15, 1, 0
+    db 0, 15, 14, 11, 0
     ; DEBUG:
-    db 0, 0, 0, 0, 0
-    db 0, 0, 0, 0, 0
-    db 0, 0, 0, 0, 1
+;     db 0, 0, 0, 0, 0
+;     db 0, 0, 0, 0, 0
+;     db 0, 0, 0, 0, 1
 
 object_interaction_function_boss9_panel_internal_loop_space_back:
     call clear_all_the_sprites

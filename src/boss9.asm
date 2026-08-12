@@ -299,6 +299,8 @@ update_boss9_behavior_1_state_0_hit:
 
 
 update_boss9_behavior_1_state_1:
+    call update_boss9_maybe_fire_eye_bullet
+
     ld hl, (boss__hp)
     ld a, h
     or l
@@ -316,26 +318,36 @@ update_boss9_behavior_1_state_1_continue:
 
 
 update_boss9_behavior_1_state_2:
+    call update_boss9_maybe_fire_eye_bullet
+
     ; ...
     ret
 
 
 update_boss9_behavior_1_state_3:
+    call update_boss9_maybe_fire_eye_bullet
+
     ; ...
     ret
 
 
 update_boss9_behavior_1_state_4:
+    call update_boss9_maybe_fire_eye_bullet
+
     ; ...
     ret
 
 
 update_boss9_behavior_1_state_5:
+    call update_boss9_maybe_fire_eye_bullet
+
     ; ...
     ret
 
 
 update_boss9_behavior_1_state_6:
+    call update_boss9_maybe_fire_eye_bullet
+
     ; ...
     ret
 
@@ -343,6 +355,35 @@ update_boss9_behavior_1_state_6:
 ;-----------------------------------------------
 update_boss9_behavior_2:
     ; ...
+    ret
+
+
+;-----------------------------------------------
+update_boss9_maybe_fire_eye_bullet:
+    ; fire bullets through eyes
+    ld a, (boss__settings + BOSS_9_EYE_BULLET_ATTACK_PATTERN_OFFSET)
+    call boss_bullet_pattern_cycle
+    ret nz
+    ld hl, #0405  ; or #0409
+    call random_a
+    and #01
+    jr z, update_boss9_maybe_fire_eye_bullet_continue
+    inc l
+    inc l
+    inc l
+update_boss9_maybe_fire_eye_bullet_continue:
+    ld bc, (boss__x)
+    add hl, bc
+    ld e, l
+    ld b, h
+    ld ix, #0004
+    ; - e, b: tile coordinate from where the bullet is fired
+    ; - ixl, ixh: pixel offset  
+    ld hl, boss_fire_directional_bullet_towards_player_with_random_offset_e_b
+    ld c, BOSS_PAGE
+    call call_hl_in_page_c_8000
+    ret nz
+    ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BULLET_IGNORING_WALLS
     ret
 
 
@@ -394,19 +435,14 @@ update_boss9_spawn_debris_sprite_set:
 update_boss9_draw_boss9_frame:
 ;     out (#2c),a  ; DEBUG
     call draw_boss9_frame_clear_previous_frame_1
-;     out (#2c),a  ; DEBUG
     call draw_boss9_frame_clear_previous_frame_2
-;     out (#2d),a  ; DEBUG
     call draw_boss9_frame_clear_previous_frame_3
-;     out (#2d),a  ; DEBUG  
     ; compute draw pointer:
     ld bc, (boss__x)
     call get_room_tile_ptr
     ex de, hl  ; hl = ptr where the boss is to be drawn
     ld hl, boss9_frame_base
-;     out (#2c),a  ; DEBUG
     call draw_boss9_frame_1_without_clearing
-;     out (#2d),a  ; DEBUG  
 
     ; mouth:
     ; ...
@@ -573,18 +609,6 @@ draw_boss9_frame_part:
 draw_boss9_frame_part_loop_y:
     push bc
         push de
-;             ; if "de" < current_room__tile_map, skip row  ->  draw_boss_frame_part_loop_y_skip
-;             ex de, hl
-;             push bc
-;             push hl
-;                 ld bc, current_room__tile_map
-;                 or a  ; clear carry flag
-;                 sbc hl, bc
-;             pop hl
-;             pop bc
-;             ex de, hl
-;             jr c, draw_boss9_frame_part_loop_y_skip
-
             ld b, c
 draw_boss9_frame_part_loop_x:
             ld a, (hl)
@@ -595,7 +619,6 @@ draw_boss9_frame_part_loop_x_skip:
             inc hl
             inc de
             djnz draw_boss9_frame_part_loop_x
-; draw_boss9_frame_part_loop_y_skip2:
         pop de
         ex de, hl
             ld a, (current_room__width)
