@@ -809,7 +809,11 @@ public class Text {
         addLineSafe(lines_with_constant_page4, "ENOUGH!!! Very well human. You have proven worthy of the secret I guard. You are welcome inside.", "BOSS9_DEFEATED", 112);
         addLineSafe(lines_with_constant_page4, "Here lies Yatzil, daughter of the astronomer, leader of our resistance.", "YATZIL_TABLET_1", 18*3);
         addLineSafe(lines_with_constant_page4, "She gave us hope when all was lost, and thanks to her, we sent the star people back into the dark. If Balam-Tun has allowed you into this sanctuary, receive the knowledge kept within, but leave her rest undisturbed.", "YATZIL_TABLET_2", 18*7);
-                
+
+        addLineSafe(lines_with_constant_page4, "When Stephens and I discovered Yatzil's sanctuary, we were astounded! To find the very tomb of the person whose tablets we had", "YATZIL_NOTEBOOK_1_1", 18*4);
+        addLineSafe(lines_with_constant_page4, "been translating. This was an extraordinary archaeological discovery! Yet the knowledge hidden within is far too dangerous. We do not dare publish our translation to the world, and so we leave it here. Let Balam-Tun decide who is worthy of this secret.", "YATZIL_NOTEBOOK_1_2", 18*8);
+        addLineSafe(lines_with_constant_page4, "The following is our translation of the passages found upon a partially destroyed tablet:", "YATZIL_NOTEBOOK_1_3", 18*8);
+        
         // Ending C:
         // First shared part:
         addLineSafe(lines_with_constant_page3, "Meanwhile, in Earth orbit...", "ENDING_C_UFO_0", 12*4);

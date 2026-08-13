@@ -751,7 +751,33 @@ display_notebook:
     ld bc, 768
     call fast_LDIRVM
 
-    ; ...
+    ld iy, TEXT_YATZIL_NOTEBOOK_1_1
+    ld a, 21
+    ld (tmp_letter_line_width), a
+    ld a, COLOR_YELLOW
+    ld (tmp_letter_line_color), a
+    ld b, 16
+    ld de, NAMTBL2 + (5 + 4*32)
+    ld ix, CHRTBL2
+    ld hl, display_paragraph_text_page4
+    ld c, TEXT_PAGE2
+    call call_hl_in_page_c_8000
+
+    ld iy, TEXT_YATZIL_NOTEBOOK_1_2
+    ld b, 16
+    ld de, NAMTBL2 + (5 + 8*32)
+    ld ix, CHRTBL2 + 256*8
+    ld hl, display_paragraph_text_page4
+    ld c, TEXT_PAGE2
+    call call_hl_in_page_c_8000
+
+    ld iy, TEXT_YATZIL_NOTEBOOK_1_3
+    ld b, 16
+    ld de, NAMTBL2 + (5 + 16*32)
+    ld ix, CHRTBL2 + 256*8*2
+    ld hl, display_paragraph_text_page4
+    ld c, TEXT_PAGE2
+    call call_hl_in_page_c_8000
 
     call enable_VDP_output
 
