@@ -704,6 +704,9 @@ update_boss9_behavior_2_state_1_loop_no_wall:
     ld c, TILES_PAGE
     call call_hl_in_page_c_8000
 
+    xor a
+    ld (boss__active), a
+
     ld a, 2
     ld (boss__state), a
     ret

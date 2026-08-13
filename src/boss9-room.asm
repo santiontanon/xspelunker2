@@ -489,12 +489,133 @@ boss9_panel_clear_box:
 
 ;-----------------------------------------------
 object_interaction_function_boss9_entrance_internal:
-    ld hl, SFX_secret
+    call stop_music
+
+    ; place player at the center of the door
+    ld a, 4
+    ld (player_x), a
+    xor a
+    ld (player_y), a
+    ld (player_state), a  ; idle, facing right
+    ld a, (ix + ROOM_TILE_OBJECT_STRUCT_X)
+    ld (player_x + 1), a
+    call player_update_update_sprite_position
+    ld a, 0
+    ld (player_requested_frame), a
+    ld hl, upload_sprites_to_vdp
+    ld c, SPRITES_PAGE
+    call call_hl_in_page_c_8000
+
+    ld hl, SFX_enter_door
     call play_SFX_with_high_priority
 
-    ; ...
+    ; enter animation:
+    ld b, 16
+object_interaction_function_boss9_entrance_internal_loop:
+    halt
+    ld a, (interrupt_cycle) 
+    and #07
+    jr nz, object_interaction_function_boss9_entrance_internal_loop
 
-    ret
+    push bc
+        ld a, b
+        rrca
+        and #01
+        add a, 2
+        ld l, 0
+        rrca
+        rr l
+        rrca
+        rr l
+        and #3f  ; hl = a * 64
+        ld h, a
+        ld bc, player_sprites_bin
+        add hl, bc
+        ex de, hl
+        ld hl, copy_player_sprite_to_buffer
+        ld c, SPRITES_PAGE
+        call call_hl_in_page_c_8000
+    pop bc
+    push bc
+        ; manipulate player sprite to appear as if it's entering:
+        ld a, 16
+        sub b
+        ld e, a
+        ld hl, enter_boss_door_shift_player_sprites_right_e
+        ld c, BOSS_PAGE
+        call call_hl_in_page_c_8000
+
+        ld hl, buffer_4096
+        ld de, SPRTBL2
+        ld b, 64
+        call fast_small_LDIRVM
+    pop bc
+    djnz object_interaction_function_boss9_entrance_internal_loop
+
+    ; clear the screen:
+    call clear_screen_left_to_right
+
+    ld hl, pcg_generate_room_reset_state
+    ld c, PCG_PAGE
+    call call_hl_in_page_c_8000
+
+    ld hl, yatzil_room_zx0
+    ld c, BOSS_9_ROOM_PAGE  ; room page
+    ld de, current_room__id
+    call dzx0_from_page_c
+
+    ld a, CAVES_TILES_PAGE
+    ld (current_room__tileset_page), a
+    ld de, tiles_caves_zx0
+    ld (current_room__tileset_ptr), de
+    ld hl, update_animations_in_vdp_caves
+    ld (current_room__animation_fn_ptr), hl
+    xor a
+    ld (current_room__tileset_overrides_item_tiles), a  ; anything other than 0
+    ld hl, tile_collision_types_caves
+    ld (current_room__collision_ptr), hl  ; collision types
+    ld a, AREA_COLLISION_TABLES_PAGE
+    ld (current_room__collision_ptr_page), a
+    ld a, ENEMY_SPRITES_PAGE
+    ld (current_room__enemy_sprites_ptr_page), a
+    ld hl, caves_enemy_sprites_zx0
+    ld (current_room__enemy_sprites_ptr), hl
+    ld hl, 0
+    ld (large_object_to_upload_to_vdp), hl
+    ld hl, music_tomb_bin
+    ld (current_room__music_ptr), hl  ; no music in the boss room until the boss appears
+
+    ; player position:
+    ld bc, #0b01
+    ld hl, player_x
+    ld (hl), 0
+    inc hl
+    ld (hl), c
+    inc hl
+    ld (hl), 0
+    inc hl
+    ld (hl), b
+    jp state_play_from_loaded_room
+
+
+;-----------------------------------------------
+exit_yatzil_room:
+    call disable_VDP_output
+
+    ; teleport outside (stored room/position before entering boss room):
+    ld e, BOSS9_ROOM_ID
+    ld hl, pcg_generate_room
+    ld c, PCG_PAGE
+    call call_hl_in_page_c_8000
+
+    ld a, 15
+    ld (player_x + 1), a
+    ld a, 20
+    ld (player_y + 1), a
+    xor a
+    ld (player_x), a
+    ld (player_y), a
+    jp state_play_from_loaded_room
 
 
 ;-----------------------------------------------

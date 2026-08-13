@@ -421,6 +421,8 @@ enter_boss_door__spawn_final_boss_objects:
 ;-----------------------------------------------
 ; input:
 ; - a: number of pixels to shift
+enter_boss_door_shift_player_sprites_right_e:
+	ld a, e
 enter_boss_door_shift_player_sprites_right:
 	or a
 	ret z

@@ -152,8 +152,8 @@ state_play:
 ; 		ld (global_state__objects + TAG_TELEPORTER4), a
 ; 		ld (global_state__objects + TAG_TELEPORTER5), a
 ; 		ld (global_state__objects + TAG_FIRESTONE_FORGE), a
-; 		ld a, #07
-; 		ld (global_state__objects + TAG_BOSS_9_ROOM), a
+		ld a, #07
+		ld (global_state__objects + TAG_BOSS_9_ROOM), a
 
 		ld a, PLAYER_INITIAL_MAX_HEALTH
 ; 		ld a, 6*4  ; debug

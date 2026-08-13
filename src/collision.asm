@@ -781,6 +781,13 @@ player_exit_room_left:
 	or a
 	jr nz, player_exit_room_left__in_boss
 
+	; are we exiting yatzil's room?
+	ld a, (current_room__id)
+	cp YATZIL_ROOM_ID
+	ld a, BOSS_9_ROOM_PAGE
+	ld hl, exit_yatzil_room
+	jp z, jp_to_hl_in_page_a_8000
+
 	; are we entering the astronomy room?
 	ld a, (current_room__id)
 	cp EIGHT_BRIDGE_ROOM_ID

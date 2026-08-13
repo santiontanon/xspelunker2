@@ -1,11 +1,6 @@
 to do:
 
 ***- Yatzil's tomb (through boss 9):
-  OK - draw Yatzil's tomb room in TILED (with caves tiles + any needed extras)
-  ***- add room to assembler
-    ***- enter through the door (similar animation as when entering a boss room)
-    ***- spawn the room
-    ***- exit the room
   ***- tablet on top of the tomb (new assembler tag):
     "Here lies Yatzil, daughter of the astronomer, leader of our resistance. She gave us hope when all was lost, and thanks to her, we sent the star people back into the dark. If Balam-Tun has allowed you into this sanctuary, receive the knowledge kept within—but leave her rest undisturbed"
   ***- notebook:
@@ -20,7 +15,6 @@ to do:
       When I first learned of this, I thought we should let them take it and leave, hoping they would spare us. But my late father was an astronomer, and his final observations before he passed convinced me we could never allow them to possess it. The Forge does not create heat to store in the firestones. It steals it from the stars. For every firestone shaped in the deep, a star in the night sky dims and dies a little faster. My father watched our own Sun turn pale during their very first test. Had they continued, our world would have bled cold. It became clear their intention was not to take the Forge and leave, but to operate it here on our world, letting us suffer the death of our sky while they collected their prize.
 
       The Forge had to be moved, and so it was... If people of the future ever find it, I pray they are wise enough never to ignite it, unless it is their absolute last resort.
-
   ***- achievement for finding the grave
 
 - if you run out of bullets, it should go back to machete
