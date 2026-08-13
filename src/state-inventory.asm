@@ -375,7 +375,7 @@ state_inventory_update_cursor_interact_power_stone:
 	jp state_inventory_entry_point_from_item_inspection
 
 
-; ;-----------------------------------------------
+;-----------------------------------------------
 state_inventory_update_cursor_interact_puzzlebox1:
 	ld ix, current_world__maya_puzzle2_combination1
 	jr state_inventory_update_cursor_interact_puzzlebox2_entry_point
@@ -386,6 +386,19 @@ state_inventory_update_cursor_interact_puzzlebox2_entry_point:
 	ld hl, display_puzzlebox_closeup
 	ld c, TABLET_LETTER_PAGE
 	call call_hl_in_page_c_8000
+	jp state_inventory_entry_point_from_item_inspection
+
+
+;-----------------------------------------------
+state_inventory_update_cursor_interact_notebook:
+	ld hl, display_notebook
+	ld c, BOSS_9_ROOM_PAGE
+	call call_hl_in_page_c_8000
+	xor a
+	ld (keyboard_clicks), a
+
+	ld hl, redraw_flags
+	ld (hl), #ff
 	jp state_inventory_entry_point_from_item_inspection
 
 
@@ -1568,6 +1581,6 @@ inventory_table:
 	INVENTORY_ITEM_FN 56,   6, 0,  3,  196, 197, 228, 229,  0, TEXT_ITEM_CODEX3,  0
 	INVENTORY_ITEM_FN 57,   7, 0,  0,  198, 199, 230, 231,  0, TEXT_ITEM_ANIMAL_CHARM,  0
 	INVENTORY_ITEM_FN 58,   8, 0,  0,  200, 201, 232, 233,  0, TEXT_ITEM_PHASE_SHIFTER,  0
-	; free positions: (9, 0)
+	INVENTORY_ITEM_FN 59,   9, 0,  0,  202, 203, 234, 235,  0, TEXT_ITEM_YATZIL_NOTEBOOK,  state_inventory_update_cursor_interact_notebook
 	db #ff  ; sentinel
 

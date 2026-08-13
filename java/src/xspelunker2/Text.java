@@ -359,6 +359,7 @@ public class Text {
         addLineSafe(lines_with_constant_page1, "Three pieces of the undiscovered Maya codex! I think it's complete, and definitively talks about powerstones!", "ITEM_CODEX3", 80);
         addLineSafe(lines_with_constant_page1, "Animal charm: I feel my weapons are more effective wearing it!", "ITEM_ANIMAL_CHARM", 80);
         addLineSafe(lines_with_constant_page1, "Phase shifter: makes raygun shots go through objects!", "ITEM_PHASE_SHIFTER", 80);
+        addLineSafe(lines_with_constant_page1, "Yatzil notebook: a notebook I found in Yatzil's sanctuary. Press INTERACT to inspect it.", "ITEM_YATZIL_NOTEBOOK", 80);
        
         // In-game messages:
         addLineSafe(lines_with_constant_page2, "As you consume the still beating heart, you feel your strength increasing!", "HEART_PICKUP", 112);
@@ -806,8 +807,9 @@ public class Text {
         addLineSafe(lines_with_constant_page4, "We translated the the full story. Proof you have learned it all, then defeat the guardian, and you will learn the rest of the secret.", "BOSS9_PANEL_CLUE", 112);
         addLineSafe(lines_with_constant_page4, "As you set the last letter in the panel, the giant statue starts shaking... was this a good idea?", "BOSS9_PANEL_SOLVED", 112);
         addLineSafe(lines_with_constant_page4, "ENOUGH!!! Very well human. You have proven worthy of the secret I guard. You are welcome inside.", "BOSS9_DEFEATED", 112);
-        
-        
+        addLineSafe(lines_with_constant_page4, "Here lies Yatzil, daughter of the astronomer, leader of our resistance.", "YATZIL_TABLET_1", 18*3);
+        addLineSafe(lines_with_constant_page4, "She gave us hope when all was lost, and thanks to her, we sent the star people back into the dark. If Balam-Tun has allowed you into this sanctuary, receive the knowledge kept within, but leave her rest undisturbed.", "YATZIL_TABLET_2", 18*7);
+                
         // Ending C:
         // First shared part:
         addLineSafe(lines_with_constant_page3, "Meanwhile, in Earth orbit...", "ENDING_C_UFO_0", 12*4);

@@ -1,10 +1,7 @@
 to do:
 
 ***- Yatzil's tomb (through boss 9):
-  ***- tablet on top of the tomb (new assembler tag):
-    "Here lies Yatzil, daughter of the astronomer, leader of our resistance. She gave us hope when all was lost, and thanks to her, we sent the star people back into the dark. If Balam-Tun has allowed you into this sanctuary, receive the knowledge kept within—but leave her rest undisturbed"
   ***- notebook:
-    ***- add notebook item (position 9,0 in inventory)
     ***- read it in the inventory:
       When Stephens and I discovered Yatzil's sanctuary, we were astounded! To find the very tomb of the person whose tablets we had been translating. This was an extraordinary archaeological discovery! Yet the knowledge hidden within is far too dangerous. We do not dare publish our translation to the world, and so we leave it here. Let Balam-Tun decide who is worthy of this secret. The following is our translation of the passages found upon a partially destroyed tablet:
 

@@ -204,6 +204,9 @@ public class AssemblerTags {
         "TAG_ATLANTIS_TABLET3",
         "TAG_ATLANTIS_TABLET4",
         "TAG_ATLANTIS_TABLET5",
+        // Yatzil room:
+        "TAG_YATZIL_TABLET",
+        "TAG_YATZIL_NOTEBOOK",
         // Other:
         "TAG_8_BRIDGE_ROOM",
         "TAG_GUARDIAN_CAIMAN1",

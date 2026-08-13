@@ -585,6 +585,32 @@ object_interaction_function_boss9_entrance_internal_loop:
     ld hl, music_tomb_bin
     ld (current_room__music_ptr), hl  ; no music in the boss room until the boss appears
 
+    ; tablet gfx:
+    ld hl, buffer_4096 + 60 * 64
+    ld (item_object_to_upload_to_vdp), hl
+
+    ; spawn tile objects:
+    ld iy, (tmp_pcg_room__next_tile_object_ptr)
+    ld de, ROOM_TILE_OBJECT_STRUCT_SIZE
+    ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 1
+    ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_YATZIL_TABLET
+    ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 19
+    ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 16
+    ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0
+    add iy, de
+    ld (tmp_pcg_room__next_tile_object_ptr), iy
+    ld a, (global_state__objects + TAG_YATZIL_NOTEBOOK)
+    or a
+    jr nz, object_interaction_function_boss9_entrance_internal_objects_spawned
+    ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 2
+    ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_YATZIL_NOTEBOOK
+    ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 20
+    ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 9
+    ld (iy + ROOM_TILE_OBJECT_STRUCT_STATE), 0
+    add iy, de
+    ld (tmp_pcg_room__next_tile_object_ptr), iy
+object_interaction_function_boss9_entrance_internal_objects_spawned:
+
     ; player position:
     ld bc, #0b01
     ld hl, player_x
@@ -616,6 +642,123 @@ exit_yatzil_room:
     ld (player_x), a
     ld (player_y), a
     jp state_play_from_loaded_room
+
+
+;-----------------------------------------------
+yatzil_tablet_fn_internal:
+    ld hl, tablet_trivia_tiles_zx0
+    ld c, TABLET_LETTER_PAGE
+    call maya_puzzle_tablet_fn_load_extra_tiles_hl_set
+
+    ld iy, TEXT_YATZIL_TABLET_1
+    ld a, 18
+    ld (tmp_letter_line_width), a
+    ld a, COLOR_GREY
+    ld (tmp_letter_line_color), a
+    ld b, 48
+    ld de, NAMTBL2 + (7 + 5*32)
+    ld ix, CHRTBL2
+    ld hl, display_paragraph_text_page4
+    ld c, TEXT_PAGE2
+    call call_hl_in_page_c_8000
+
+    ld iy, TEXT_YATZIL_TABLET_2
+    ld b, 48
+    ld de, NAMTBL2 + (7 + 9*32)
+    ld ix, CHRTBL2 + 256*8
+    ld hl, display_paragraph_text_page4
+    ld c, TEXT_PAGE2
+    jp call_hl_in_page_c_8000
+
+
+;-----------------------------------------------
+object_interaction_function_pickup_yatzil_internal:
+    ld hl, player_inventory_items + INVENTORY_ITEM_YATZIL_NOTEBOOK
+    ld (hl), 1
+    ld hl, global_state__objects + TAG_YATZIL_NOTEBOOK
+    ld (hl), 1
+    ld hl, SFX_item_pickup
+    call play_SFX_with_high_priority
+
+    ld hl, redraw_flags
+    ld (hl), #ff
+    push ix
+        ld c, TILES_PAGE
+        ld hl, room_undraw_tile_objects
+        call call_hl_in_page_c_8000
+    pop ix
+    ld c, TILES_PAGE
+    ld hl, delete_tile_object_in_ix
+    call call_hl_in_page_c_8000
+    ld c, TILES_PAGE
+    ld hl, room_render_tile_objects
+    jp call_hl_in_page_c_8000
+
+
+;-----------------------------------------------
+display_notebook:
+    call disable_VDP_output
+    ; clear the screen:
+    call clear_all_the_sprites
+    xor a
+    ld hl, NAMTBL2
+    ld bc, 768
+    call fast_FILVRM
+
+    ; display base notebook:
+    ld hl, notebook_tiles_zx0
+    ld de, notebook_nametable_zx0
+    ld c, BOSS_9_ROOM_PAGE
+    push de
+    push bc
+        ld de, buffer_4096
+        call dzx0_from_page_c
+
+        ld hl, buffer_4096
+        ld de, CHRTBL2
+        ld bc, 256*8
+        call fast_LDIRVM
+        ld hl, buffer_4096 + 256*8
+        ld de, CLRTBL2
+        ld bc, 256*8
+        call fast_LDIRVM
+
+        ld hl, buffer_4096
+        ld de, CHRTBL2 + 256*8
+        ld bc, 256*8
+        call fast_LDIRVM
+        ld hl, buffer_4096 + 256*8
+        ld de, CLRTBL2 + 256*8
+        ld bc, 256*8
+        call fast_LDIRVM
+
+        ld hl, buffer_4096
+        ld de, CHRTBL2 + 256*8*2
+        ld bc, 256*8
+        call fast_LDIRVM
+        ld hl, buffer_4096 + 256*8
+        ld de, CLRTBL2 + 256*8*2
+        ld bc, 256*8
+        call fast_LDIRVM    
+
+    pop bc
+    pop hl
+    ld de, buffer_4096
+    call dzx0_from_page_c
+
+    ld hl, buffer_4096
+    ld de, NAMTBL2
+    ld bc, 768
+    call fast_LDIRVM
+
+    ; ...
+
+    call enable_VDP_output
+
+    call wait_for_click
+    xor a
+    ld (keyboard_clicks), a
+    ret
 
 
 ;-----------------------------------------------

@@ -1301,6 +1301,8 @@ ENDR
 	dw object_interaction_function_tablet  ; TAG_ATLANTIS_TABLET3
 	dw object_interaction_function_tablet  ; TAG_ATLANTIS_TABLET4
 	dw object_interaction_function_tablet  ; TAG_ATLANTIS_TABLET5
+	dw object_interaction_function_tablet  ; TAG_YATZIL_TABLET
+	dw object_interaction_function_pickup_yatzil_notebook  ; TAG_YATZIL_NOTEBOOK
 	dw object_interaction_function_empty  ; TAG_8_BRIDGE_ROOM
 	dw object_interaction_function_empty  ; TAG_GUARDIAN_CAIMAN1
 	dw object_interaction_function_empty  ; TAG_GUARDIAN_CAIMAN2
@@ -1919,32 +1921,37 @@ object_interaction_function_tablet_not_atlantis_tablet:
 	jr nz, object_interaction_function_tablet_not_xibalba_boss_tablet
 	ld de, xibalba_boss_tablet_fn
 	jr object_interaction_function_tablet_ptr_set
-object_interaction_function_tablet_not_xibalba_boss_tablet
+object_interaction_function_tablet_not_xibalba_boss_tablet:
 	cp TAG_XIBALBA_BOSS_GRAVE
 	jr nz, object_interaction_function_tablet_not_xibalba_boss_grave
 	ld de, xibalba_boss_grave_fn
 	jr object_interaction_function_tablet_ptr_set
-object_interaction_function_tablet_not_xibalba_boss_grave
+object_interaction_function_tablet_not_xibalba_boss_grave:
 	cp TAG_ASTRONOMY_TABLET1
 	jr nz, object_interaction_function_tablet_not_astronomy_tablet1
 	ld de, astronomy_tablet1_fn
 	jr object_interaction_function_tablet_ptr_set
-object_interaction_function_tablet_not_astronomy_tablet1
+object_interaction_function_tablet_not_astronomy_tablet1:
 	cp TAG_ASTRONOMY_TABLET2
 	jr nz, object_interaction_function_tablet_not_astronomy_tablet2
 	ld de, astronomy_tablet2_fn
 	jr object_interaction_function_tablet_ptr_set
-object_interaction_function_tablet_not_astronomy_tablet2
+object_interaction_function_tablet_not_astronomy_tablet2:
 	cp TAG_GUARDIAN_CAIMAN_TABLET
 	jr nz, object_interaction_function_tablet_not_guardian_caiman_tablet
 	ld de, caiman_tablet_fn
 	jr object_interaction_function_tablet_ptr_set
-object_interaction_function_tablet_not_guardian_caiman_tablet
+object_interaction_function_tablet_not_guardian_caiman_tablet:
 	cp TAG_FIRESTONE_FORGE_TABLET
 	jr nz, object_interaction_function_tablet_not_firestone_forge_tablet
 	ld de, firestone_forge_tablet_fn
 	jr object_interaction_function_tablet_ptr_set
-object_interaction_function_tablet_not_firestone_forge_tablet
+object_interaction_function_tablet_not_firestone_forge_tablet:
+	cp TAG_YATZIL_TABLET
+	jr nz, object_interaction_function_tablet_not_yatzil_tablet
+	ld de, yatzil_tablet_fn
+	jr object_interaction_function_tablet_ptr_set
+object_interaction_function_tablet_not_yatzil_tablet:
 	; Determine tablet content:
 	ld hl, current_world__tablet_content
 object_interaction_function_tablet_loop:
@@ -2201,6 +2208,16 @@ object_interaction_function_pickup_phase_shifter:
 
 	ld c, MARS_ROBOT_PUZZLE_PAGE
 	ld hl, object_interaction_function_pickup_phase_shifter_internal
+	jp call_hl_in_page_c_8000
+
+
+object_interaction_function_pickup_yatzil_notebook:
+	; update stats:
+	ld hl, stats__n_items_collected
+	inc (hl)
+
+	ld c, BOSS_9_ROOM_PAGE
+	ld hl, object_interaction_function_pickup_yatzil_internal
 	jp call_hl_in_page_c_8000
 
 
@@ -3052,6 +3069,8 @@ ENDR
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ATLANTIS_TABLET3
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ATLANTIS_TABLET4
 	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_ATLANTIS_TABLET5
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_regular_object_gfx  ; TAG_YATZIL_TABLET
+	TILE_OBJECT_DATA 0, 2, 2, tile_object_yatzil_notebook_gfx  ; TAG_YATZIL_NOTEBOOK
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_8_BRIDGE_ROOM
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_GUARDIAN_CAIMAN1
 	TILE_OBJECT_DATA 2, 0, 0, 0  ; TAG_GUARDIAN_CAIMAN2
@@ -3220,3 +3239,7 @@ tile_object_boss9_panel_gfx:
 tile_object_boss9_entrance_gfx:
 	db 253, 254
 	db 255, 48
+
+tile_object_yatzil_notebook_gfx:
+	db 200, 201
+	db 216, 217

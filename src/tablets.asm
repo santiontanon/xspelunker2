@@ -1790,3 +1790,12 @@ firestone_forge_tablet_fn:
 	ld de, NAMTBL2 + (7 + 16*32)
 	ld ix, CHRTBL2 + 256*8*2
 	jp display_paragraph_text_page3
+
+
+;-----------------------------------------------
+yatzil_tablet_fn:
+	ld hl, yatzil_tablet_fn_internal
+	ld c, BOSS_9_ROOM_PAGE
+	jp call_hl_in_page_c_8000
+
+
