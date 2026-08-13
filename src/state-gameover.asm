@@ -353,6 +353,7 @@ state_game_over_print_achievements_table:
 	dw TEXT_ACHIEVEMENT_NOMISS
 	dw TEXT_ACHIEVEMENT_ANIMALS
 	dw TEXT_ACHIEVEMENT_FORGE
+	dw TEXT_ACHIEVEMENT_YATZIL
 
 state_game_over_print_achievements:
 	ld hl, stats__achievements

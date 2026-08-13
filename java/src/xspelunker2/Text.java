@@ -112,7 +112,7 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "before...", "STORY52", 10);
         addLineSafe(lines_with_constant_page3, "I am ready!", "STORY53", 10);
         
-        addLineSafe(lines_with_constant_page3, "World Name", "GAMESTART1", 10);
+        addLineSafe(lines_with_constant_page4, "World Name", "GAMESTART1", 10);
         addLineSafe(lines_with_constant_page3, "Seed", "GAMESTART2", 6);
         addLineSafe(lines_with_constant_page3, "Difficulty", "GAMESTART3", 6);
         addLineSafe(lines_with_constant_page3, "easy", "DIFFICULTY_EASY", 6);
@@ -157,6 +157,7 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "no miss", "ACHIEVEMENT_NOMISS", 8);
         addLineSafe(lines_with_constant_page3, "animal charm", "ACHIEVEMENT_ANIMALS", 8);
         addLineSafe(lines_with_constant_page3, "the forge", "ACHIEVEMENT_FORGE", 8);
+        addLineSafe(lines_with_constant_page3, "Yatzil tomb", "ACHIEVEMENT_YATZIL", 8);
         addLineSafe(lines_with_constant_page3, "Hurakan", "BOSS_HURAKAN", 8);
         addLineSafe(lines_with_constant_page3, "Camazotz", "BOSS_CAMAZOTZ", 8);
         addLineSafe(lines_with_constant_page3, "Cabrakan", "BOSS_CABRAKAN", 8);
@@ -811,9 +812,24 @@ public class Text {
         addLineSafe(lines_with_constant_page4, "She gave us hope when all was lost, and thanks to her, we sent the star people back into the dark. If Balam-Tun has allowed you into this sanctuary, receive the knowledge kept within, but leave her rest undisturbed.", "YATZIL_TABLET_2", 18*7);
 
         addLineSafe(lines_with_constant_page4, "When Stephens and I discovered Yatzil's sanctuary, we were astounded! To find the very tomb of the person whose tablets we had", "YATZIL_NOTEBOOK_1_1", 18*4);
-        addLineSafe(lines_with_constant_page4, "been translating. This was an extraordinary archaeological discovery! Yet the knowledge hidden within is far too dangerous. We do not dare publish our translation to the world, and so we leave it here. Let Balam-Tun decide who is worthy of this secret.", "YATZIL_NOTEBOOK_1_2", 18*8);
+        addLineSafe(lines_with_constant_page4, "been translating. This was an extraordinary discovery! Yet the knowledge hidden within is too dangerous. We do not dare publish our translation to the world, and so we leave it here. Let Balam-Tun decide who is worthy of this secret.", "YATZIL_NOTEBOOK_1_2", 18*8);
         addLineSafe(lines_with_constant_page4, "The following is our translation of the passages found upon a partially destroyed tablet:", "YATZIL_NOTEBOOK_1_3", 18*8);
-        
+
+        addLineSafe(lines_with_constant_page4, "We defeated the star people, but at a terrible price. We unearthed knowledge that was too dangerous for our own good, and so I have dedicated my life", "YATZIL_NOTEBOOK_2_1", 21*4);
+        addLineSafe(lines_with_constant_page4, "to preserving it while ensuring it never falls into evil hands: the knowledge of the firestones, and of the Firestone Forge.", "YATZIL_NOTEBOOK_2_2", 21*4);
+        addLineSafe(lines_with_constant_page4, "For what the star people sought was neither the teleporting gate nor the ancient ruins of Atlantis. What they", "YATZIL_NOTEBOOK_2_3", 21*3);
+        addLineSafe(lines_with_constant_page4, "truly wanted was the Forge. The power to manufacture firestones. These stones serve as the heart of their strange devices. With an", "YATZIL_NOTEBOOK_2_4", 21*4);
+
+        addLineSafe(lines_with_constant_page4, "unlimited supply, they would be invincible.", "YATZIL_NOTEBOOK_3_1", 21*2);
+        addLineSafe(lines_with_constant_page4, "When I first learned of this, I", "YATZIL_NOTEBOOK_3_2", 21*1);
+        addLineSafe(lines_with_constant_page4, "thought we should let them take it and leave, hoping they would spare us. But my late father was an astronomer, and his final observations before he passed convinced me we could never allow them to possess it. The Forge does not create heat to store in", "YATZIL_NOTEBOOK_3_3", 21*8);
+        addLineSafe(lines_with_constant_page4, "the firestones. It steals it from the stars. For every firestone shaped in the deep, a star in the night sky dims and dies a little faster.", "YATZIL_NOTEBOOK_3_4", 21*4);
+
+        addLineSafe(lines_with_constant_page4, "My father watched our own Sun turn pale during their very first test. Had they continued, our world would have bled cold. It became clear their", "YATZIL_NOTEBOOK_4_1", 21*4);
+        addLineSafe(lines_with_constant_page4, "intention was not to take the Forge and leave, but to operate it here on our world, letting us suffer the death of our sky while they collected their prize.", "YATZIL_NOTEBOOK_4_2", 21*8);
+        addLineSafe(lines_with_constant_page4, "The Forge had to be moved, and so it was... If people of the future ever", "YATZIL_NOTEBOOK_4_3", 21*3);
+        addLineSafe(lines_with_constant_page4, "find it, I pray they are wise enough never to ignite it, unless it is their absolute last resort.", "YATZIL_NOTEBOOK_4_4", 21*4);
+                
         // Ending C:
         // First shared part:
         addLineSafe(lines_with_constant_page3, "Meanwhile, in Earth orbit...", "ENDING_C_UFO_0", 12*4);

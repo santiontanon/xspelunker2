@@ -58,7 +58,7 @@ state_gamestart_continue2:
 
 		ld de, TEXT_GAMESTART1
 		ld hl, copy_text_from_another_page
-		ld c, TEXT_PAGE3
+		ld c, TEXT_PAGE4
 		call call_hl_in_page_c_8000
 		DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096, CHRTBL2 + (256*1 + 128)*8, COLOR_BLUE*16, 10
 

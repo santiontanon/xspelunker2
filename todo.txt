@@ -1,19 +1,7 @@
 to do:
 
-***- Yatzil's tomb (through boss 9):
-  ***- notebook:
-    ***- read it in the inventory:
-      We defeated the star people, but at a terrible price. We unearthed knowledge that was too dangerous for our own good, and so I have dedicated my life to preserving it while ensuring it never falls into evil hands: the knowledge of the firestones, and of the Firestone Forge.
-
-      For what the star people sought was neither the teleporting gate nor the ancient ruins of Atlantis. What they truly wanted was the Forge. The power to manufacture firestones. These stones serve as the heart of their strange devices. With an unlimited supply, they would be invincible.
-
-      When I first learned of this, I thought we should let them take it and leave, hoping they would spare us. But my late father was an astronomer, and his final observations before he passed convinced me we could never allow them to possess it. The Forge does not create heat to store in the firestones. It steals it from the stars. For every firestone shaped in the deep, a star in the night sky dims and dies a little faster. My father watched our own Sun turn pale during their very first test. Had they continued, our world would have bled cold. It became clear their intention was not to take the Forge and leave, but to operate it here on our world, letting us suffer the death of our sky while they collected their prize.
-
-      The Forge had to be moved, and so it was... If people of the future ever find it, I pray they are wise enough never to ignite it, unless it is their absolute last resort.
-  ***- achievement for finding the grave
-
-- if you run out of bullets, it should go back to machete
-- when entering boss room, animation of door closing, trapping you inside.
+***- if you run out of bullets, it should go back to machete
+***- when entering boss room, animation of door closing, trapping you inside.
 - come up with a list of "achievements" for the list in the game over screen and implement them
 - pick a good seed (for seed2) so that the map is good (at least Jungle)
 - save game to rom / password: https://www.grauw.nl/projects/ascii-x/ascii16-x/

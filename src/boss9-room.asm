@@ -680,13 +680,19 @@ object_interaction_function_pickup_yatzil_internal:
     ld hl, SFX_item_pickup
     call play_SFX_with_high_priority
 
-    ld hl, redraw_flags
-    ld (hl), #ff
     push ix
+        ld hl, add_achievement_to_stats
+        ld c, GAME_OVER_PAGE
+        ld b, 4  ; achievement id
+        call call_hl_in_page_c_8000    
+
+        ld hl, redraw_flags
+        ld (hl), #ff
         ld c, TILES_PAGE
         ld hl, room_undraw_tile_objects
         call call_hl_in_page_c_8000
     pop ix
+
     ld c, TILES_PAGE
     ld hl, delete_tile_object_in_ix
     call call_hl_in_page_c_8000
@@ -696,15 +702,7 @@ object_interaction_function_pickup_yatzil_internal:
 
 
 ;-----------------------------------------------
-display_notebook:
-    call disable_VDP_output
-    ; clear the screen:
-    call clear_all_the_sprites
-    xor a
-    ld hl, NAMTBL2
-    ld bc, 768
-    call fast_FILVRM
-
+display_notebook_set_tileset:
     ; display base notebook:
     ld hl, notebook_tiles_zx0
     ld de, notebook_nametable_zx0
@@ -749,7 +747,21 @@ display_notebook:
     ld hl, buffer_4096
     ld de, NAMTBL2
     ld bc, 768
-    call fast_LDIRVM
+    jp fast_LDIRVM
+
+
+;-----------------------------------------------
+display_notebook:
+    call disable_VDP_output
+    ; clear the screen:
+    call clear_all_the_sprites
+    xor a
+    ld hl, NAMTBL2
+    ld bc, 768
+    call fast_FILVRM
+
+    ; page 1:
+    call display_notebook_set_tileset
 
     ld iy, TEXT_YATZIL_NOTEBOOK_1_1
     ld a, 21
@@ -784,6 +796,136 @@ display_notebook:
     call wait_for_click
     xor a
     ld (keyboard_clicks), a
+
+    ; page 2:
+    call display_notebook_set_tileset
+    
+    ld iy, TEXT_YATZIL_NOTEBOOK_2_1
+    ld a, 21
+    ld (tmp_letter_line_width), a
+    ld a, COLOR_YELLOW
+    ld (tmp_letter_line_color), a
+    ld b, 16
+    ld de, NAMTBL2 + (5 + 4*32)
+    ld ix, CHRTBL2
+    ld hl, display_paragraph_text_page4
+    ld c, TEXT_PAGE2
+    call call_hl_in_page_c_8000    
+    
+    ld iy, TEXT_YATZIL_NOTEBOOK_2_2
+    ld b, 16
+    ld de, NAMTBL2 + (5 + 8*32)
+    ld ix, CHRTBL2 + 256*8
+    ld hl, display_paragraph_text_page4
+    ld c, TEXT_PAGE2
+    call call_hl_in_page_c_8000    
+
+    ld iy, TEXT_YATZIL_NOTEBOOK_2_3
+    ld b, 128
+    ld de, NAMTBL2 + (5 + 13*32)
+    ld ix, CHRTBL2 + 256*8
+    ld hl, display_paragraph_text_page4
+    ld c, TEXT_PAGE2
+    call call_hl_in_page_c_8000   
+
+    ld iy, TEXT_YATZIL_NOTEBOOK_2_4
+    ld b, 16
+    ld de, NAMTBL2 + (5 + 16*32)
+    ld ix, CHRTBL2 + 256*8*2
+    ld hl, display_paragraph_text_page4
+    ld c, TEXT_PAGE2
+    call call_hl_in_page_c_8000   
+
+    call wait_for_click
+    xor a
+    ld (keyboard_clicks), a
+
+    ; page 3:
+    call display_notebook_set_tileset
+    
+    ld iy, TEXT_YATZIL_NOTEBOOK_3_1
+    ld a, 21
+    ld (tmp_letter_line_width), a
+    ld a, COLOR_YELLOW
+    ld (tmp_letter_line_color), a
+    ld b, 16
+    ld de, NAMTBL2 + (5 + 4*32)
+    ld ix, CHRTBL2
+    ld hl, display_paragraph_text_page4
+    ld c, TEXT_PAGE2
+    call call_hl_in_page_c_8000  
+
+    ld iy, TEXT_YATZIL_NOTEBOOK_3_2
+    ld b, 64
+    ld de, NAMTBL2 + (5 + 7*32)
+    ld ix, CHRTBL2
+    ld hl, display_paragraph_text_page4
+    ld c, TEXT_PAGE2
+    call call_hl_in_page_c_8000
+
+    ld iy, TEXT_YATZIL_NOTEBOOK_3_3
+    ld b, 16
+    ld de, NAMTBL2 + (5 + 8*32)
+    ld ix, CHRTBL2 + 256*8
+    ld hl, display_paragraph_text_page4
+    ld c, TEXT_PAGE2
+    call call_hl_in_page_c_8000
+
+    ld iy, TEXT_YATZIL_NOTEBOOK_3_4
+    ld b, 16
+    ld de, NAMTBL2 + (5 + 16*32)
+    ld ix, CHRTBL2 + 256*8*2
+    ld hl, display_paragraph_text_page4
+    ld c, TEXT_PAGE2
+    call call_hl_in_page_c_8000 
+
+    call wait_for_click
+    xor a
+    ld (keyboard_clicks), a
+
+    ; page 4:
+    call display_notebook_set_tileset
+    
+    ld iy, TEXT_YATZIL_NOTEBOOK_4_1
+    ld a, 21
+    ld (tmp_letter_line_width), a
+    ld a, COLOR_YELLOW
+    ld (tmp_letter_line_color), a
+    ld b, 16
+    ld de, NAMTBL2 + (5 + 4*32)
+    ld ix, CHRTBL2
+    ld hl, display_paragraph_text_page4
+    ld c, TEXT_PAGE2
+    call call_hl_in_page_c_8000     
+
+    ld iy, TEXT_YATZIL_NOTEBOOK_4_2
+    ld b, 16
+    ld de, NAMTBL2 + (5 + 8*32)
+    ld ix, CHRTBL2 + 256*8
+    ld hl, display_paragraph_text_page4
+    ld c, TEXT_PAGE2
+    call call_hl_in_page_c_8000
+
+    ld iy, TEXT_YATZIL_NOTEBOOK_4_3
+    ld b, 128
+    ld de, NAMTBL2 + (5 + 14*32)
+    ld ix, CHRTBL2 + 256*8
+    ld hl, display_paragraph_text_page4
+    ld c, TEXT_PAGE2
+    call call_hl_in_page_c_8000
+
+    ld iy, TEXT_YATZIL_NOTEBOOK_4_4
+    ld b, 128
+    ld de, NAMTBL2 + (5 + 16*32)
+    ld ix, CHRTBL2 + 256*8*2
+    ld hl, display_paragraph_text_page4
+    ld c, TEXT_PAGE2
+    call call_hl_in_page_c_8000
+
+    call wait_for_click
+    xor a
+    ld (keyboard_clicks), a
+
     ret
 
 

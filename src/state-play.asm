@@ -120,7 +120,7 @@ state_play:
 ; 		ld (player_inventory_items+INVENTORY_ITEM_MAYA_CODEX3), a
 ; 		ld (player_inventory_items+INVENTORY_ITEM_ANIMAL_CHARM), a
 ; 		ld (player_inventory_items+INVENTORY_ITEM_PHASE_SHIFTER), a
-		ld (player_inventory_items+INVENTORY_ITEM_YATZIL_NOTEBOOK), a
+; 		ld (player_inventory_items+INVENTORY_ITEM_YATZIL_NOTEBOOK), a
 		ld (player_inventory_weapons), a  ; machete
 ; 		ld (player_inventory_weapons+1), a
 ; 		ld (player_inventory_weapons+2), a
@@ -153,8 +153,8 @@ state_play:
 ; 		ld (global_state__objects + TAG_TELEPORTER4), a
 ; 		ld (global_state__objects + TAG_TELEPORTER5), a
 ; 		ld (global_state__objects + TAG_FIRESTONE_FORGE), a
-		ld a, #07
-		ld (global_state__objects + TAG_BOSS_9_ROOM), a
+; 		ld a, #07
+; 		ld (global_state__objects + TAG_BOSS_9_ROOM), a
 
 		ld a, PLAYER_INITIAL_MAX_HEALTH
 ; 		ld a, 6*4  ; debug
@@ -183,8 +183,8 @@ state_play:
 
 state_play_from_continue:
 		; initial player position:
-; 		ld hl, #0100
-		ld hl, #0600
+		ld hl, #0100
+; 		ld hl, #0600
 ; 		ld hl, #0a00
 ; 		ld hl, #1000
 ; 		ld hl, #1800
@@ -200,12 +200,12 @@ state_play_from_continue:
 
 		; generate area:
 		ld hl, pcg_generate_area
-; 		ld e, 0  ; area to generate
+		ld e, 0  ; area to generate
 ; 		ld e, 1  ; area to generate
 ; 		ld e, 2  ; area to generate
 ; 		ld e, 3  ; area to generate
 ; 		ld e, 4  ; area to generate
-		ld e, 6  ; area to generate
+; 		ld e, 6  ; area to generate
 ; 		ld e, 7  ; area to generate
 ; 		ld e, 8  ; xibalba
 ; 		ld e, 9  ; atlantis
@@ -224,7 +224,7 @@ state_play_from_continue:
 ;     	jp jp_to_hl_in_page_a_8000
 
 		; generate room:
-; 		ld e, START_ROOM_ID
+		ld e, START_ROOM_ID
 ; 		ld e, GUARDIAN_CAIMAN1_ROOM_ID
 ; 		ld e, GUARDIAN_CAIMAN2_ROOM_ID
 ; 		ld e, 18
@@ -238,7 +238,7 @@ state_play_from_continue:
 ; 		ld e, EIGHT_BRIDGE_ROOM_ID
 ; 		ld e, TELEPORTER_ROOM_ID
 ; 		ld e, TEMPLE_OF_POSEIDON_ID
-		ld e, BOSS9_ROOM_ID
+; 		ld e, BOSS9_ROOM_ID
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
