@@ -2,13 +2,25 @@ to do:
 
 ***- Yatzil's tomb (through boss 9):
   OK - draw Yatzil's tomb room in TILED (with caves tiles + any needed extras)
-  ***- write tablets text:
-    ***- some conclusion to Yatzil's story and why is the tomb there
-    ***- explanation of the firestones (translated by the same people who translated the story of Yatzil) (tablet? or notebook translated by the same people who translated the story of Yatzil?)
   ***- add room to assembler
     ***- enter through the door (similar animation as when entering a boss room)
     ***- spawn the room
     ***- exit the room
+  ***- tablet on top of the tomb (new assembler tag):
+    "Here lies Yatzil, daughter of the astronomer, leader of our resistance. She gave us hope when all was lost, and thanks to her, we sent the star people back into the dark. If Balam-Tun has allowed you into this sanctuary, receive the knowledge kept within—but leave her rest undisturbed"
+  ***- notebook:
+    ***- add notebook item (position 9,0 in inventory)
+    ***- read it in the inventory:
+      When Stephens and I discovered Yatzil's sanctuary, we were astounded! To find the very tomb of the person whose tablets we had been translating. This was an extraordinary archaeological discovery! Yet the knowledge hidden within is far too dangerous. We do not dare publish our translation to the world, and so we leave it here. Let Balam-Tun decide who is worthy of this secret. The following is our translation of the passages found upon a partially destroyed tablet:
+
+      We defeated the star people, but at a terrible price. We unearthed knowledge that was too dangerous for our own good, and so I have dedicated my life to preserving it while ensuring it never falls into evil hands: the knowledge of the firestones, and of the Firestone Forge.
+
+      For what the star people sought was neither the teleporting gate nor the ancient ruins of Atlantis. What they truly wanted was the Forge. The power to manufacture firestones. These stones serve as the heart of their strange devices. With an unlimited supply, they would be invincible.
+
+      When I first learned of this, I thought we should let them take it and leave, hoping they would spare us. But my late father was an astronomer, and his final observations before he passed convinced me we could never allow them to possess it. The Forge does not create heat to store in the firestones. It steals it from the stars. For every firestone shaped in the deep, a star in the night sky dims and dies a little faster. My father watched our own Sun turn pale during their very first test. Had they continued, our world would have bled cold. It became clear their intention was not to take the Forge and leave, but to operate it here on our world, letting us suffer the death of our sky while they collected their prize.
+
+      The Forge had to be moved, and so it was... If people of the future ever find it, I pray they are wise enough never to ignite it, unless it is their absolute last resort.
+
   ***- achievement for finding the grave
 
 - if you run out of bullets, it should go back to machete
