@@ -1,21 +1,20 @@
 to do:
 
-***- play beginning to end
-  ***- check when this happens: when entering boss room, animation of door closing, trapping you inside.
-
-***- save game to rom:
-  ***- do a test ROM that saves values to ROM and make it work with openMSX ( https://www.grauw.nl/projects/ascii-x/ascii16-x/ )
-  ***- add a "Save" button to the inventory screen
+***- save game to rom: https://www.grauw.nl/projects/ascii-x/ascii16-x/
+  OK - add a "Save" button to the inventory screen
   ***- when pressed, you go to a menu: back / load 1 / save 1 / load 2 / save 2 / ...
-  ***- if there are anemies in the screen (sprite, bullet or certain tile) or if you are in a boss room it should tell you: "I sense danger nearby, I cannot do this now!"
+  ***- if there are enemies in the screen (sprite, bullet or certain tile) or if you are in a boss room it should tell you: "I sense danger nearby, I cannot do this now!"
   ***- some preview of each save: time played + hearts + coins
   ***- allow you to save the game
   ***- allow you to restore the game
   ***- from title screen add "L" to load (which goes to a similar menu, but only allowing you to load)
+  ***- if no megaflashrom, deactivate the load/savegame feature (message at game startup)
 ***- save config options to rom:
   ***- add a "save as default" option to the config menu that saves to ROM
   ***- add a "revert to defaults" option (restores to the saved defaults)
   ***- add a "revert to original defaults" option (restores to the original defaults)
+***- play beginning to end
+  ***- check when this happens: when entering boss room, animation of door closing, trapping you inside.
 
 - pick a good seed (for seed2) so that the map is good (at least Jungle)
 - music: (brain 12, 15, 23, 25 have potential): xibalba, atlantis, mars, moon

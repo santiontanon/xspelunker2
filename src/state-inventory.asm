@@ -152,7 +152,7 @@ state_inventory_update_cursor_button_row0:
 	cp 1
 	jr z, state_inventory_update_cursor_button_options
 	cp 2
-	jr nz, state_inventory_update_cursor_button_not_a_button
+	jr z, state_inventory_update_cursor_button_not_a_button
 state_inventory_update_cursor_button_quit:
 	ld ix, TEXT_ARE_YOU_SURE
 	ld hl, state_game_over_from_quit  ; yes
@@ -171,10 +171,10 @@ state_inventory_update_cursor_button_options:
 
 
 state_inventory_update_cursor_right:
-	ld a, (inventory_cursor_position_y)
-	or a
-	jr z, state_inventory_update_cursor_right_row0
-state_inventory_update_cursor_right_normal:
+; 	ld a, (inventory_cursor_position_y)
+; 	or a
+; 	jr z, state_inventory_update_cursor_right_row0
+; state_inventory_update_cursor_right_normal:
 	ld a, (inventory_cursor_position_x)
 	cp 9
 	ret z
@@ -182,21 +182,21 @@ state_inventory_update_cursor_right_normal:
 	ld (inventory_cursor_position_x), a
 	ret
 
-state_inventory_update_cursor_right_row0:
-	ld a, (inventory_cursor_position_x)
-	cp 2
-	jr z, state_inventory_update_cursor_right_row0_2
-	jr state_inventory_update_cursor_right_normal
-state_inventory_update_cursor_right_row0_2:
-	ld a, 4
-	ld (inventory_cursor_position_x), a
-	ret
+; state_inventory_update_cursor_right_row0:
+; 	ld a, (inventory_cursor_position_x)
+; 	cp 2
+; 	jr z, state_inventory_update_cursor_right_row0_2
+; 	jr state_inventory_update_cursor_right_normal
+; state_inventory_update_cursor_right_row0_2:
+; 	ld a, 4
+; 	ld (inventory_cursor_position_x), a
+; 	ret
 
 state_inventory_update_cursor_left:
 	ld a, (inventory_cursor_position_y)
 	or a
-	jr z, state_inventory_update_cursor_left_row0
-state_inventory_update_cursor_left_normal:
+	jr z, state_inventory_update_cursor_left_wide
+; state_inventory_update_cursor_left_normal:
 	cp 2
 	jr z, state_inventory_update_cursor_left_wide
 	cp 3
@@ -218,15 +218,15 @@ state_inventory_update_cursor_left_wide:
 	ret
 
 
-state_inventory_update_cursor_left_row0:
-	ld a, (inventory_cursor_position_x)
-	cp 4
-	jr z, state_inventory_update_cursor_left_row0_4
-	jr state_inventory_update_cursor_left_normal
-state_inventory_update_cursor_left_row0_4:
-	ld a, 2
-	ld (inventory_cursor_position_x), a
-	ret
+; state_inventory_update_cursor_left_row0:
+; 	ld a, (inventory_cursor_position_x)
+; 	cp 4
+; 	jr z, state_inventory_update_cursor_left_row0_4
+; 	jr state_inventory_update_cursor_left_normal
+; state_inventory_update_cursor_left_row0_4:
+; 	ld a, 2
+; 	ld (inventory_cursor_position_x), a
+; 	ret
 
 
 state_inventory_update_cursor_down:
@@ -277,17 +277,17 @@ state_inventory_update_cursor_up_row2:
 	ld (inventory_cursor_position_y), a
 	ret
 state_inventory_update_cursor_up_row2_left:
-	cp 3
-	jr z, state_inventory_update_cursor_up_row2_left_3
+; 	cp 3
+; 	jr z, state_inventory_update_cursor_up_row2_left_3
 	xor a
 	ld (inventory_cursor_position_y), a
 	ret
-state_inventory_update_cursor_up_row2_left_3:
-	xor a
-	ld (inventory_cursor_position_y), a
-	ld a, 2
-	ld (inventory_cursor_position_x), a
-	ret
+; state_inventory_update_cursor_up_row2_left_3:
+; 	xor a
+; 	ld (inventory_cursor_position_y), a
+; 	ld a, 2
+; 	ld (inventory_cursor_position_x), a
+; 	ret
 
 
 ;-----------------------------------------------
@@ -709,20 +709,25 @@ draw_inventory_cursor_row0:
 	jr z, draw_inventory_cursor_row0_1
 	cp 2
 	jr z, draw_inventory_cursor_row0_2
+	cp 3
+	jr z, draw_inventory_cursor_row0_3
 	ld a, (inventory_cursor_position_y)
 	jp draw_inventory_cursor_regular_rows
+draw_inventory_cursor_row0_3:
+	ld c, 76
+	ld e, 97
+	jr draw_inventory_cursor_coordinates_set
 draw_inventory_cursor_row0_2:
-	; right most button:
-	ld c, 70
-	ld e, 94
+	ld c, 52
+	ld e, 73
 	jr draw_inventory_cursor_coordinates_set
 draw_inventory_cursor_row0_0:
-	ld c, 6
-	ld e, 30
+	ld c, 4
+	ld e, 25
 	jr draw_inventory_cursor_coordinates_set
 draw_inventory_cursor_row0_1:
-	ld c, 38
-	ld e, 62
+	ld c, 28
+	ld e, 49
 
 draw_inventory_cursor_coordinates_set:
 	ld a, (interrupt_cycle)
