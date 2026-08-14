@@ -2525,6 +2525,18 @@ player_update_fire_directional_bullet_sfx_raygun:
 	jp play_SFX_with_high_priority
 
 player_update_fire_directional_bullet_no_bullets:
+	; switch to machete:
+	ld hl, player_current_item
+	ld a, (player_inventory_weapons + 8)
+	or a
+	jr z, player_update_fire_directional_bullet_no_bullets_continue
+	ld a, 8  ; machete v2
+player_update_fire_directional_bullet_no_bullets_continue:
+	ld (hl), a
+
+	ld hl, redraw_flags
+	set 4, (hl)  ; reupload object gfx
+	
 	ld hl, SFX_ui_wrong
 	jp play_SFX_with_high_priority
 

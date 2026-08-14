@@ -1,10 +1,9 @@
 to do:
 
-***- if you run out of bullets, it should go back to machete
 ***- when entering boss room, animation of door closing, trapping you inside.
-- come up with a list of "achievements" for the list in the game over screen and implement them
-- pick a good seed (for seed2) so that the map is good (at least Jungle)
-- save game to rom / password: https://www.grauw.nl/projects/ascii-x/ascii16-x/
+***- pick a good seed (for seed2) so that the map is good (at least Jungle)
+
+- save game to rom: https://www.grauw.nl/projects/ascii-x/ascii16-x/
   - add a "save as default" option to the config menu that saves to ROM
   - add a "revert to defaults" option
 - music: (brain 12, 15, 23, 25 have potential): xibalba, atlantis, mars, moon
