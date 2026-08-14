@@ -715,7 +715,7 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "Surprised that no one can see the hidden lock on top the statue it watches over.", "ATLANTIS_TABLET_2_2", 18*5);
         
         addLineSafe(lines_with_constant_page3, "Firestones powered Atlantean machines. But creating firestones was too dangerous to be", "ATLANTIS_TABLET_3_1", 18*3);
-        addLineSafe(lines_with_constant_page3, "done in the city itself. That's why the forge, our ultimate creation, was moved. Not to another city... but outside of this planet!", "ATLANTIS_TABLET_3_2", 18*5);
+        addLineSafe(lines_with_constant_page3, "done in our world. That's why the forge, our ultimate creation, was moved. Not to another city... but outside of this world!", "ATLANTIS_TABLET_3_2", 18*5);
         
         addLineSafe(lines_with_constant_page3, "When 'they' made us come back to Atlantis to build their gate, they needed firestones.", "ATLANTIS_TABLET_4_1", 18*3);
         addLineSafe(lines_with_constant_page3, "But the forge was not here, so, we had to collect the few firestones that had been left behind...", "ATLANTIS_TABLET_4_2", 18*5);
@@ -747,11 +747,11 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "something seems to be missing.", "FIRESTONE_PUZZLE_2_2", 28*2);
         addLineSafe(lines_with_constant_page3, "The fragments of the codex fit perfectly!", "FIRESTONE_PUZZLE_3_1", 28*2);
         addLineSafe(lines_with_constant_page3, "But I do not seem to have them all...", "FIRESTONE_PUZZLE_3_2", 28*2);
-        addLineSafe(lines_with_constant_page3, "The firestone forge is already be active.", "FIRESTONE_PUZZLE_4_1", 28*2);
+        addLineSafe(lines_with_constant_page3, "The firestone forge is already active.", "FIRESTONE_PUZZLE_4_1", 28*2);
 
         addLineSafe(lines_with_constant_page3, "I think that did it! I hear a low pitch hum coming from underground! The forge is activating!", "FIRESTONE_PUZZLE_5", 112);
-        addLineSafe(lines_with_constant_page3, "This is incredible! We will have a supply of powerstones... or firestones! I do not know how long the process takes though.", "FIRESTONE_PUZZLE_6", 112);
-        addLineSafe(lines_with_constant_page3, "Better to keep moving with my mission. I need to tell Elaine after all this is over...", "FIRESTONE_PUZZLE_7", 112);
+        addLineSafe(lines_with_constant_page3, "Exciting! We will have more powerstones... or firestones! Not sure how long the process takes though.", "FIRESTONE_PUZZLE_6", 112);
+        addLineSafe(lines_with_constant_page3, "Better to keep moving with my mission. I need to tell Elaine... I hope I did not do something foolish...", "FIRESTONE_PUZZLE_7", 112);
         
         // Mars robot:
         addLineSafe(lines_with_constant_page4, "What is this strange-looking giant robot doing here!?", "MARS_ROBOT_OFF_1", 112);
@@ -802,9 +802,7 @@ public class Text {
         addLineSafe(lines_with_constant_page4, "Alien: You are free to go now, of course. But know that you will always be welcome here! We are in your debt!", "BOSS8_DEFEAT_8", 112);
         
         // Boss 9:
-//        addLineSafe(lines_with_constant_page4, "Interact", "BOSS9_PANEL1", 10);
         addLineSafe(lines_with_constant_page4, "Read Plaque", "BOSS9_PANEL2", 10);
-//        addLineSafe(lines_with_constant_page4, "Back", "BOSS9_PANEL3", 12);  // BACK_PAGE4
         addLineSafe(lines_with_constant_page4, "We translated the the full story. Proof you have learned it all, then defeat the guardian, and you will learn the rest of the secret.", "BOSS9_PANEL_CLUE", 112);
         addLineSafe(lines_with_constant_page4, "As you set the last letter in the panel, the giant statue starts shaking... was this a good idea?", "BOSS9_PANEL_SOLVED", 112);
         addLineSafe(lines_with_constant_page4, "ENOUGH!!! Very well human. You have proven worthy of the secret I guard. You are welcome inside.", "BOSS9_DEFEATED", 112);

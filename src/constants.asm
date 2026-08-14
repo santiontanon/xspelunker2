@@ -42,7 +42,7 @@ FIRST_OBJECT_SPRITE: equ 3  ; 0, 1 are the player, 2 is player weapon
 FIRST_OBJECT_SPRITE_PATTERN: equ 3
 FIRST_ENEMY_SPRITE_PATTERN: equ 24
 
-ENEMY_RESPAWN_TABLE_SIZE: equ 4  ; size of hthe enemy respawn table (that remembers which enemies have already been killed)
+ENEMY_RESPAWN_TABLE_SIZE: equ 4  ; size of the enemy respawn table (that remembers which enemies have already been killed)
 MAX_ROOM_SPRITE_OBJECTS: equ 8  ; water splashes, etc. (decorations)
 MAX_ROOM_PLAYER_BULLETS: equ 4
 MAX_ROOM_SPRITE_ENEMIES: equ 12

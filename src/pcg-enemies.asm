@@ -193,6 +193,7 @@ pcg_generate_room__enemy_respawn_logic_on_exit_room_loop2_next:
 	inc de
 	jr pcg_generate_room__enemy_respawn_logic_on_exit_room_loop2
 pcg_generate_room__enemy_respawn_logic_on_exit_room_loop2_done:
+	ld (hl), #ff  ; mark the end
 
 	; increment the times of all the entries in the table
 	ld hl, enemy_respawn_table  ; current candidate
