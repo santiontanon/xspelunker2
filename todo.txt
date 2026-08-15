@@ -2,10 +2,7 @@ to do:
 
 ***- save game to rom: https://www.grauw.nl/projects/ascii-x/ascii16-x/
   ***- when "save" button pressed, you go to a menu: back / load 1 / save 1 / load 2 / save 2 / ...
-    OK - mock it up in gimp
-    OK - draw the base in assembler (white lines above/below + "back")
     ***- some preview of each save: time played + hearts + coins (for now fake info)
-    ***- navigate through save / load buttons, or "back"
     ***- if unavailable the buttons are greyed out
     ***- when selected, show a cofirmation dialogue
     ***- allow you to save the game
