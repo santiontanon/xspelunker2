@@ -1,12 +1,16 @@
 to do:
 
 ***- save game to rom: https://www.grauw.nl/projects/ascii-x/ascii16-x/
-  OK - add a "Save" button to the inventory screen
-  ***- when pressed, you go to a menu: back / load 1 / save 1 / load 2 / save 2 / ...
-  ***- if there are enemies in the screen (sprite, bullet or certain tile) or if you are in a boss room it should tell you: "I sense danger nearby, I cannot do this now!"
-  ***- some preview of each save: time played + hearts + coins
-  ***- allow you to save the game
-  ***- allow you to restore the game
+  ***- when "save" button pressed, you go to a menu: back / load 1 / save 1 / load 2 / save 2 / ...
+    ***- mock it up in gimp
+    ***- draw the base in assembler
+    ***- some preview of each save: time played + hearts + coins (for now fake info)
+    ***- navigate through save / load buttons, or "back"
+    ***- if unavailable the buttons are greyed out
+    ***- when selected, show a cofirmation dialogue
+    ***- allow you to save the game
+    ***- allow you to restore the game
+  ***- if there are enemies in the screen (sprite, bullet or certain tile) or if you are in a boss room it should tell you: "I sense danger nearby, I cannot do this now!"  
   ***- from title screen add "L" to load (which goes to a similar menu, but only allowing you to load)
   ***- if no megaflashrom, deactivate the load/savegame feature (message at game startup)
 ***- save config options to rom:

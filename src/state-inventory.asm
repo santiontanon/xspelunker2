@@ -20,6 +20,13 @@ state_inventory_from_options:
 
 
 ;-----------------------------------------------
+state_inventory_from_savegame:
+	ld a, 2
+	ld (inventory_cursor_position_x), a
+	jr state_inventory_entry_point
+
+
+;-----------------------------------------------
 state_inventory:
 	ld hl, SFX_ui_select
 	call play_SFX_with_high_priority
@@ -152,7 +159,7 @@ state_inventory_update_cursor_button_row0:
 	cp 1
 	jr z, state_inventory_update_cursor_button_options
 	cp 2
-	jr z, state_inventory_update_cursor_button_not_a_button
+	jr z, state_inventory_update_cursor_button_savegame
 state_inventory_update_cursor_button_quit:
 	ld ix, TEXT_ARE_YOU_SURE
 	ld hl, state_game_over_from_quit  ; yes
@@ -169,6 +176,10 @@ state_inventory_update_cursor_button_options:
 	ld (options_called_from), a
 	jp state_options
 
+state_inventory_update_cursor_button_savegame:
+	ld hl, savegame_menu
+	ld a, SAVEGAME_MENU_PAGE
+	jp jp_to_hl_in_page_a_8000
 
 state_inventory_update_cursor_right:
 ; 	ld a, (inventory_cursor_position_y)

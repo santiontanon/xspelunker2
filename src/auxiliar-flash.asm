@@ -155,7 +155,7 @@ check_flash_status_loop:
 	jp p, check_flash_status_exit
 
 	scf  ; set carry to indicate error
-	ld a, #f0  ; if error occures (do not leave flash rom wait in programming mode)
+	ld a, #f0  ; if error occurs (do not leave flash rom waiting in programming mode)
 	ld (de), a
 
 check_flash_status_exit:
