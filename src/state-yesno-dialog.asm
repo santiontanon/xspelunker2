@@ -3,6 +3,9 @@
 ; - ix: question text
 ; - hl: jump here if "yes" selected
 ; - de: jump here if "no" selected
+state_yesno_dialog_iy:
+	push iy
+	pop hl
 state_yesno_dialog:
 	ld sp, stack  ; reset the stack, so we can jump here from wherever we want
 
