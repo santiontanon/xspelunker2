@@ -321,8 +321,57 @@ savegame_menu_loop_load_1_continue:
 	pop hl
 	ret nz
 
-	; ...
-	ret
+	push hl
+		call stop_music
+		call clear_all_the_sprites
+		call copy_savegames_to_RAM
+	pop hl
+
+	; get world seed and name and generate world:
+	push hl
+		inc hl
+		ld de, current_world__name
+		ld bc, 16
+		ldir
+		ld de, current_world__seed
+		ld bc, 4
+		ldir
+
+		ld hl, pcg_generate_world
+		ld c, PCG_PAGE_WORLD
+		call call_hl_in_page_c_8000
+		; 	jr z, savegame_menu_loop_load_1_continue_succeeded  ; no need to check this, as it cannot fail
+
+		; get the savegame info again:
+		call copy_savegames_to_RAM
+	pop hl
+	ld bc, 21
+	add hl, bc
+	ld de, current_area__id
+	ldi
+	ld de, current_room__id
+	ldi
+	ld de, RAM_to_zero_on_game_start
+	ld bc, RAM_to_zero_on_game_start_end - RAM_to_zero_on_game_start
+	ldir
+
+	; get area id/room id and generate it:
+	ld a, (current_area__id)
+	ld e, a
+	ld hl, pcg_generate_area
+	ld c, PCG_PAGE
+	call call_hl_in_page_c_8000
+
+	ld a, (current_room__id)
+	ld e, a
+	ld hl, pcg_generate_room
+	ld c, PCG_PAGE
+	call call_hl_in_page_c_8000
+
+	; back to game:
+	call clear_screen_left_to_right
+	call disable_VDP_output
+	jp state_play_from_loaded_room
 
 
 savegame_menu_loop_load_2:

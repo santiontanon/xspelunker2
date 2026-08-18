@@ -45,7 +45,7 @@ astronomy_room__generate:
 	ld (in_game_event_fn_page), a
 
 astronomy_room__generate_continue:
-	; steup room ptrs:
+	; setup room ptrs:
 	ld hl, buffer_4096 + 60 * 64
 	ld (item_object_to_upload_to_vdp), hl
 	ld hl, state_play_update_agenda_normal_play
