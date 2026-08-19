@@ -389,6 +389,15 @@ savegame_menu_loop_load_1_continue:
 	ld c, PCG_PAGE
 	call call_hl_in_page_c_8000
 
+	; remove all sprite enemies:
+	ld hl, current_room__sprite_enemies
+	ld bc, MAX_ROOM_SPRITE_ENEMIES * ROOM_OBJECT_STRUCT_SIZE - 1
+	ld a, #ff
+	call clear_memory_a
+
+	; remove all tile enemies:
+	call savegame_menu_remove_tile_enemies
+
 	; back to game:
 	call clear_screen_left_to_right
 	call disable_VDP_output
@@ -402,7 +411,7 @@ savegame_menu_loop_load_2:
 
 savegame_menu_loop_load_3:
 	ld hl, buffer_4096 + FLASH_ROUTINES_RAM_SIZE + SAVE_GAME_SIZE * 2
-	jr savegame_menu_loop_load_1_continue
+	jp savegame_menu_loop_load_1_continue
 
 
 ;-----------------------------------------------
@@ -681,3 +690,56 @@ savegame_menu_allow_save_p_fail:
 	or 1
 	ret
 
+
+;-----------------------------------------------
+savegame_menu_remove_tile_enemies:
+	ld ix, current_room__tile_objects
+	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
+savegame_menu_remove_tile_enemies_loop:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
+	cp #ff
+	ret z
+	cp #fe
+	ret z
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
+	cp TAG_ENEMY_CARNIVORE_PLANT
+	jr z, savegame_menu_remove_tile_enemies_loop_delete
+	cp TAG_ENEMY_BEE_HIVE
+	jr z, savegame_menu_remove_tile_enemies_loop_delete
+	cp TAG_ENEMY_ANT_COLONY
+	jr z, savegame_menu_remove_tile_enemies_loop_delete
+	cp TAG_ENEMY_ANT_COLONY2
+	jr z, savegame_menu_remove_tile_enemies_loop_delete
+	; these cannot be hit:
+; 	cp TAG_ENEMY_IMP_GENERATOR
+; 	jr z, savegame_menu_remove_tile_enemies_loop_delete
+; 	cp TAG_ENEMY_IMP_GENERATOR2
+; 	jr z, savegame_menu_remove_tile_enemies_loop_delete
+; 	cp TAG_ENEMY_FIREBALL_GENERATOR
+; 	jr z, savegame_menu_remove_tile_enemies_loop_delete
+;   cp TAG_ENEMY_LAVA_GENERATOR
+; 	jr z, savegame_menu_remove_tile_enemies_loop_delete
+	cp TAG_ENEMY_STONE_OWL
+	jr z, savegame_menu_remove_tile_enemies_loop_delete
+	cp TAG_ENEMY_SENTINEL
+	jr z, savegame_menu_remove_tile_enemies_loop_delete
+	cp TAG_ENEMY_UFO
+	jr z, savegame_menu_remove_tile_enemies_loop_delete
+	cp TAG_ENEMY_MARS_WALKER_RIGHT
+	jr z, savegame_menu_remove_tile_enemies_loop_delete
+	cp TAG_ENEMY_MARS_WALKER_LEFT
+	jr z, savegame_menu_remove_tile_enemies_loop_delete
+	cp TAG_ENEMY_MOON_LARGE_MUSHROOM
+	jr z, savegame_menu_remove_tile_enemies_loop_delete	
+	add ix, bc
+	jr savegame_menu_remove_tile_enemies_loop
+	ret
+savegame_menu_remove_tile_enemies_loop_delete:
+	push ix
+	push bc
+		ld hl, delete_tile_object_in_ix
+		ld c, TILES_PAGE
+		call call_hl_in_page_c_8000
+	pop bc
+	pop ix
+	jr savegame_menu_remove_tile_enemies_loop
