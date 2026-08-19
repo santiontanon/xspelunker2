@@ -132,6 +132,8 @@ public class Text {
         addLineSafe(lines_with_constant_page1, "yes", "YES", 4);
         addLineSafe(lines_with_constant_page1, "no", "NO", 4);
         
+        addLineSafe(lines_with_constant_page4, "Can't do this now, I sense danger nearby!", "CANNOT_SAVE", 24);
+        
         // game over stats:
         addLineSafe(lines_with_constant_page3, "Ending Reached:", "GAMEOVER_STATS_0", 10);
         addLineSafe(lines_with_constant_page3, "Continued:", "GAMEOVER_STATS_1", 8);

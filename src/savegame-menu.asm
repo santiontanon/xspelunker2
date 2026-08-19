@@ -410,6 +410,8 @@ savegame_menu_loop_save_1:
 	ld hl, buffer_4096 + FLASH_ROUTINES_RAM_SIZE
 savegame_menu_loop_save_1_continue:
 	push hl
+		call savegame_menu_allow_save_p
+		jr nz, savegame_menu_loop_save_1_continue_cannot
 		call savegame_menu_confirm_dialogue
 	pop hl
 	ret nz
@@ -418,6 +420,17 @@ savegame_menu_loop_save_1_continue:
 		call clear_all_the_sprites
 	pop de		
 	call flash_save_game_to_slot
+	jp savegame_menu_draw
+
+savegame_menu_loop_save_1_continue_cannot:
+	pop hl
+	ld de, TEXT_CANNOT_SAVE
+	ld hl, copy_text_from_another_page
+	ld c, TEXT_PAGE4
+	call call_hl_in_page_c_8000
+
+	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096, CHRTBL2 + (2*256 + 44) * 8, 16*COLOR_WHITE, 24
+	call wait_for_click
 	jp savegame_menu_draw
 
 
@@ -437,8 +450,8 @@ savegame_menu_loop_save_3:
 ; - nz: no
 savegame_menu_confirm_dialogue:
 	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO TEXT_ARE_YOU_SURE, CHRTBL2 + (2*256 + 51) * 8, 16*COLOR_WHITE, 8
-	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO TEXT_YES, CHRTBL2 + (2*256 + 64) * 8, 16*COLOR_WHITE, 4
-	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO TEXT_NO, CHRTBL2 + (2*256 + 68) * 8, 16*COLOR_WHITE, 4
+	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO TEXT_YES, CHRTBL2 + (2*256 + 68) * 8, 16*COLOR_WHITE, 4
+	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO TEXT_NO, CHRTBL2 + (2*256 + 72) * 8, 16*COLOR_WHITE, 4
 
 	ld a, 19 * 8 - 1
 	ld (tmp_dialog_options_position), a
@@ -447,7 +460,7 @@ savegame_menu_confirm_dialogue:
 	call call_hl_in_page_c_8000
 
 	ld hl, CHRTBL2 + (2*256 + 48) * 8
-	ld bc, 24*8
+	ld bc, 28*8
 	xor a
 	call fast_FILVRM
 

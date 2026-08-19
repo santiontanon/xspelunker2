@@ -1,9 +1,6 @@
 to do:
 
 ***- savegames:
-  ***- if there are enemies in the screen (sprite, bullet or certain tile) or if you are in a boss room, or any other room that cannot be generated from its ID:
-    OK - grey out the "save" button
-    ***- if pressed, say: "I sense danger nearby, I cannot do this now!"  
   ***- when restoring a game, all enemies used in the check above should be dead
   ***- from title screen add "L" to load (which goes to a similar menu, but only allowing you to load)
   ***- if no megaflashrom, deactivate the load/savegame feature (message at game startup)
