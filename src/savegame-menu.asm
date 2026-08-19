@@ -61,6 +61,24 @@ savegame_menu_draw_tiles_set:
 
 	call copy_savegames_to_RAM 
 
+	; is it safe to save games?
+	call savegame_menu_allow_save_p
+	jr z, savegame_menu_draw_save_allowed
+	; grey out "save" button:
+	ld hl, savegame_menu_draw_unsafe_save_table
+	ld de, NAMTBL2 + 7 + 6*32
+	ld bc, 3
+	call fast_LDIRVM
+	ld hl, savegame_menu_draw_unsafe_save_table
+	ld de, NAMTBL2 + 7 + 9*32
+	ld bc, 3
+	call fast_LDIRVM
+	ld hl, savegame_menu_draw_unsafe_save_table
+	ld de, NAMTBL2 + 7 + 12*32
+	ld bc, 3
+	call fast_LDIRVM
+savegame_menu_draw_save_allowed:
+
 	; determine which savegames are full:
 	ld hl, buffer_4096 + FLASH_ROUTINES_RAM_SIZE
 	ld ix, CHRTBL2 + (256 + 128)*8
@@ -185,6 +203,9 @@ savegame_menu_draw_entry_full:
 
 savegame_menu_draw_entry_empty_table:
 	db 17, 18, 19
+
+savegame_menu_draw_unsafe_save_table:
+	db 14, 15, 16
 
 
 ;-----------------------------------------------
@@ -585,3 +606,65 @@ draw_savegame_menu_coins:
 	ld hl, draw_inventory_number_ixl
 	ld iy, #8000 + COLOR_WHITE * 16
 	jp call_hl_in_page_c_8000
+
+
+;-----------------------------------------------
+; Checks if there are enemies nearby, or if we are not in a room where savegames are allowed (e.g. boss rooms)
+; output:
+; - z: allow saving the game
+; - nz: do not allow saving the game
+savegame_menu_allow_save_p:
+	ld a, (boss__in_boss_room)
+	or a
+	ret nz
+	ld a, (boss__active)
+	or a
+	ret nz
+	ld a, (current_room__sprite_enemies)
+	cp #ff
+	ret nz  ; there is an enemy!
+	; tile enemies:
+	ld ix, current_room__tile_objects
+	ld bc, ROOM_TILE_OBJECT_STRUCT_SIZE
+savegame_menu_allow_save_p_loop:
+	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)  ; ID
+	cp #ff
+	ret z
+	cp #fe
+	ret z
+	cp TAG_ENEMY_CARNIVORE_PLANT
+	jr z, savegame_menu_allow_save_p_fail
+	cp TAG_ENEMY_BEE_HIVE
+	jr z, savegame_menu_allow_save_p_fail
+	cp TAG_ENEMY_ANT_COLONY
+	jr z, savegame_menu_allow_save_p_fail
+	cp TAG_ENEMY_ANT_COLONY2
+	jr z, savegame_menu_allow_save_p_fail
+	; these cannot be hit:
+; 	cp TAG_ENEMY_IMP_GENERATOR
+; 	jr z, savegame_menu_allow_save_p_fail
+; 	cp TAG_ENEMY_IMP_GENERATOR2
+; 	jr z, savegame_menu_allow_save_p_fail
+; 	cp TAG_ENEMY_FIREBALL_GENERATOR
+; 	jr z, savegame_menu_allow_save_p_fail
+;   cp TAG_ENEMY_LAVA_GENERATOR
+; 	jr z, savegame_menu_allow_save_p_fail
+	cp TAG_ENEMY_STONE_OWL
+	jr z, savegame_menu_allow_save_p_fail
+	cp TAG_ENEMY_SENTINEL
+	jr z, savegame_menu_allow_save_p_fail
+	cp TAG_ENEMY_UFO
+	jr z, savegame_menu_allow_save_p_fail
+	cp TAG_ENEMY_MARS_WALKER_RIGHT
+	jr z, savegame_menu_allow_save_p_fail
+	cp TAG_ENEMY_MARS_WALKER_LEFT
+	jr z, savegame_menu_allow_save_p_fail
+	cp TAG_ENEMY_MOON_LARGE_MUSHROOM
+	jr z, savegame_menu_allow_save_p_fail
+
+	add ix, bc
+	jr savegame_menu_allow_save_p_loop
+savegame_menu_allow_save_p_fail:
+	or 1
+	ret
+

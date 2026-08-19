@@ -1,13 +1,15 @@
 to do:
 
-***- save game to rom:
-  ***- if there are enemies in the screen (sprite, bullet or certain tile) or if you are in a boss room, or any other room that cannot be generated from irs ID it should tell you: "I sense danger nearby, I cannot do this now!"  
+***- savegames:
+  ***- if there are enemies in the screen (sprite, bullet or certain tile) or if you are in a boss room, or any other room that cannot be generated from its ID:
+    OK - grey out the "save" button
+    ***- if pressed, say: "I sense danger nearby, I cannot do this now!"  
   ***- when restoring a game, all enemies used in the check above should be dead
   ***- from title screen add "L" to load (which goes to a similar menu, but only allowing you to load)
   ***- if no megaflashrom, deactivate the load/savegame feature (message at game startup)
 ***- "For general compatibility I would assume 64kB sectors, and avoid using the first 64 kB of the ROM for storing savegames to avoid issues with geometry. And then using only the simple program and sector erase commands.":
   ***- move back page 26 to page 2
-  ***- create 4 empty pages in 4,5,6,7, (move those to later)
+  ***- create 4 empty pages in 4,5,6,7 (move those to later)
   ***- use those 4 pages for saving games
 ***- save config options to rom:
   ***- add a "save as default" option to the config menu that saves to ROM
