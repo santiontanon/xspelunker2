@@ -1280,26 +1280,10 @@ story_trivia_tablet_fn_story3:
 story_trivia_tablet_fn_story3_entrypoint:
 			ld iyh, #20
 story_trivia_tablet_fn_story3_entrypoint_iyh_set:
-			push iy
-				push hl
-					ld hl, tablet_trivia_tiles_zx0
-					ld c, TABLET_LETTER_PAGE
-					call maya_puzzle_tablet_fn_load_extra_tiles_hl_set
-				pop hl
-
-				ld a, 18
-				ld (tmp_letter_line_width), a
-				ld a, COLOR_GREY
-				ld (tmp_letter_line_color), a
-
-				ld a, 48
-				ld de, NAMTBL2 + (7 + 5*32)
-				ld ix, CHRTBL2
-			pop iy
-			call display_paragraph_page7_iyh
-
+			call story_trivia_tablet_fn_story3_entrypoint_internal
 			ld hl, CLRTBL2 + 48*8
 			call story_trivia_tablet_fn_story_highlight_letter
+story_trivia_tablet_fn_story3_entrypoint2:
 		pop hl
 		ld a, 48
 		ld de, NAMTBL2 + (7 + 8*32)
@@ -1321,6 +1305,31 @@ story_trivia_tablet_fn_story3_draw_numbers:
 	ld de, NAMTBL2 + 23 + 22*32
 	ld b, 2
 	jp fast_small_LDIRVM 
+
+
+story_trivia_tablet_fn_story3_entrypoint_no_highlight:
+			ld iyh, #20
+			call story_trivia_tablet_fn_story3_entrypoint_internal
+			jr story_trivia_tablet_fn_story3_entrypoint2
+
+story_trivia_tablet_fn_story3_entrypoint_internal:
+	push iy
+		push hl
+			ld hl, tablet_trivia_tiles_zx0
+			ld c, TABLET_LETTER_PAGE
+			call maya_puzzle_tablet_fn_load_extra_tiles_hl_set
+		pop hl
+
+		ld a, 18
+		ld (tmp_letter_line_width), a
+		ld a, COLOR_GREY
+		ld (tmp_letter_line_color), a
+
+		ld a, 48
+		ld de, NAMTBL2 + (7 + 5*32)
+		ld ix, CHRTBL2
+	pop iy
+	jp display_paragraph_page7_iyh
 
 
 story_trivia_tablet_fn_story4:
@@ -1455,7 +1464,7 @@ story_trivia_tablet_fn_clue2:
 	push de
 		push hl
 			ld hl, TEXT_TABLET_TRIVIA_CLUE2_1
-			jp story_trivia_tablet_fn_story3_entrypoint
+			jp story_trivia_tablet_fn_story3_entrypoint_no_highlight
 
 
 story_trivia_tablet_fn_clue3:
@@ -1464,7 +1473,7 @@ story_trivia_tablet_fn_clue3:
 	push de
 		push hl
 			ld hl, TEXT_TABLET_TRIVIA_CLUE3_1
-			jp story_trivia_tablet_fn_story3_entrypoint
+			jp story_trivia_tablet_fn_story3_entrypoint_no_highlight
 
 
 story_trivia_tablet_fn_clue4:
@@ -1473,7 +1482,7 @@ story_trivia_tablet_fn_clue4:
 	push de
 		push hl
 			ld hl, TEXT_TABLET_TRIVIA_CLUE4_1
-			jp story_trivia_tablet_fn_story3_entrypoint
+			jp story_trivia_tablet_fn_story3_entrypoint_no_highlight
 
 
 ;-----------------------------------------------

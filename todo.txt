@@ -1,9 +1,9 @@
 to do:
 
 ***- play beginning to end
-  ***- BUG: tablet "Five colossi guard..." is shown with red initial letters
   ***- BUG: pushable block puzzle is not solvable as the blocks to push are at the top and you cannot jump over them without changing room!
     ***- apply the same fix for: cave, jungle, xibalba, atlantis, mars, moon
+  ***- adjust: boss 1 was too easy
 
 - save config options to rom:
   - add a "save as default" option to the config menu that saves to ROM
