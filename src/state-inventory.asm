@@ -177,6 +177,8 @@ state_inventory_update_cursor_button_options:
 	jp state_options
 
 state_inventory_update_cursor_button_savegame:
+	xor a
+	ld (savegame_menu_called_from), a
 	ld hl, savegame_menu
 	ld a, SAVEGAME_MENU_PAGE
 	jp jp_to_hl_in_page_a_8000

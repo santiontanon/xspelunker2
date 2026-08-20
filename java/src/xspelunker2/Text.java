@@ -57,6 +57,7 @@ public class Text {
         addLineSafe(lines_with_constant_page2, "Santiago Ontañón", "CREDITS2", 10);
         addLineSafe(lines_with_constant_page2, "SPACE to start", "START1", 10);
         addLineSafe(lines_with_constant_page2, " X for options", "START2", 10);
+        addLineSafe(lines_with_constant_page2, "   L to load", "START3", 10);
 
         addLineSafe(lines_with_constant_page3, "If it isn't Michael", "STORY1", 10);
         addLineSafe(lines_with_constant_page3, "S. Xavier himself!", "STORY2", 10);
@@ -133,6 +134,8 @@ public class Text {
         addLineSafe(lines_with_constant_page1, "no", "NO", 4);
         
         addLineSafe(lines_with_constant_page4, "Can't do this now, I sense danger nearby!", "CANNOT_SAVE", 24);
+        addLineSafe(lines_with_constant_page4, "Start a game before saving!", "CANNOT_SAVE_TITLE", 24);
+        addLineSafe(lines_with_constant_page4, "Saves disabled as flashrom is not detected.", "NO_FLASHROM", 24);
         
         // game over stats:
         addLineSafe(lines_with_constant_page3, "Ending Reached:", "GAMEOVER_STATS_0", 10);

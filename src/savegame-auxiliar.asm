@@ -65,7 +65,9 @@ flash_save_game_to_slot:
 		ld de, #8000
 		ld bc, 3 * SAVE_GAME_SIZE
 		call flash_program
-		call ResumeMusic
+		push af  ; keep whether the call succeeded (no carry) or failed (carry)
+			call ResumeMusic
+		pop af
 	ei
 	ret
 

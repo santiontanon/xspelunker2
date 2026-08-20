@@ -21,9 +21,16 @@ savegame_menu_loop:
 	jr savegame_menu_loop
 
 savegame_menu_loop_done:
+	ld a, (savegame_menu_called_from)
+	or a
+	jr nz, savegame_menu_loop_done_from_title
 	ld hl, state_inventory_from_savegame
 	ld a, TEXT_PAGE
 	jp jp_to_hl_in_page_a_8000
+savegame_menu_loop_done_from_title:
+    ld hl, state_braingames
+    ld a, BRAINGAMES_PAGE
+    jp jp_to_hl_in_page_a_8000
 
 
 ;-----------------------------------------------
@@ -358,6 +365,10 @@ savegame_menu_loop_load_1_continue:
 		ld bc, 4
 		ldir
 
+		ld hl, gamestart_compute_difficulty
+		ld c, GAMESTART_PAGE
+		call call_hl_in_page_c_8000
+
 		ld hl, pcg_generate_world
 		ld c, PCG_PAGE_WORLD
 		call call_hl_in_page_c_8000
@@ -406,7 +417,7 @@ savegame_menu_loop_load_1_continue:
 
 savegame_menu_loop_load_2:
 	ld hl, buffer_4096 + FLASH_ROUTINES_RAM_SIZE + SAVE_GAME_SIZE
-	jr savegame_menu_loop_load_1_continue
+	jp savegame_menu_loop_load_1_continue
 
 
 savegame_menu_loop_load_3:
@@ -429,11 +440,33 @@ savegame_menu_loop_save_1_continue:
 		call clear_all_the_sprites
 	pop de		
 	call flash_save_game_to_slot
+	jp nc, savegame_menu_draw
+	; fail!
+	ld de, TEXT_NO_FLASHROM
+	ld hl, copy_text_from_another_page
+	ld c, TEXT_PAGE4
+	call call_hl_in_page_c_8000
+	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096, CHRTBL2 + (2*256 + 44) * 8, 16*COLOR_WHITE, 24
+	call wait_for_click
 	jp savegame_menu_draw
+
 
 savegame_menu_loop_save_1_continue_cannot:
 	pop hl
+; 	ld a, (.....)
+; 	or a
+; 	jr nz, savegame_menu_loop_save_1_continue_cannot_flashrom
+	ld a, (savegame_menu_called_from)
+	or a
+	jr z, savegame_menu_loop_save_1_continue_cannot_in_game
+	ld de, TEXT_CANNOT_SAVE_TITLE
+	jr savegame_menu_loop_save_1_continue_cannot_continue
+; savegame_menu_loop_save_1_continue_cannot_flashrom:
+; 	ld de, TEXT_NO_FLASHROM
+; 	jr savegame_menu_loop_save_1_continue_cannot_continue
+savegame_menu_loop_save_1_continue_cannot_in_game:
 	ld de, TEXT_CANNOT_SAVE
+savegame_menu_loop_save_1_continue_cannot_continue:
 	ld hl, copy_text_from_another_page
 	ld c, TEXT_PAGE4
 	call call_hl_in_page_c_8000
@@ -636,6 +669,9 @@ draw_savegame_menu_coins:
 ; - z: allow saving the game
 ; - nz: do not allow saving the game
 savegame_menu_allow_save_p:
+	ld a, (savegame_menu_called_from)
+	or a
+	ret nz
 	ld a, (boss__in_boss_room)
 	or a
 	ret nz

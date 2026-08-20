@@ -35,6 +35,12 @@ state_title_loop:
 	    bit 5, a
 	pop bc
     jr z, state_title_loop_options
+    push bc
+	    ld a, 4
+	    call SNSMAT
+	    bit 1, a
+	pop bc
+    jr z, state_title_loop_load
 
     inc bc
     ld a, b
@@ -59,6 +65,14 @@ state_title_loop_options:
 	ld hl, state_options
 	ld a, TEXT_PAGE
 	jp jp_to_hl_in_page_a_8000
+
+state_title_loop_load:
+	ld a, 1
+	ld (savegame_menu_called_from), a
+	ld hl, savegame_menu
+	ld a, SAVEGAME_MENU_PAGE
+	jp jp_to_hl_in_page_a_8000
+
 
 
 ;-----------------------------------------------
@@ -153,15 +167,22 @@ state_title_draw_credits:
 ; - c: timer
 state_title_draw_space_to_start:
 	ld a, c
+	and #07
+	ret nz
+	ld a, c
 	and #08
 	jr z, state_title_draw_space_to_start_clear
 	ld a, c
-	and #40
-	jr z, state_title_draw_space_to_start_options
-	; draw text:
-	ld de, TEXT_START2
+	cp 85
+	jr c, state_title_draw_space_to_start_start
+	cp 170
+	jr c, state_title_draw_space_to_start_options
+	ld de, TEXT_START3
 	jr state_title_draw_space_to_start_continue
 state_title_draw_space_to_start_options:
+	ld de, TEXT_START2
+	jr state_title_draw_space_to_start_continue
+state_title_draw_space_to_start_start:
 	ld de, TEXT_START1
 state_title_draw_space_to_start_continue:
 	ld hl, copy_text_from_another_page
