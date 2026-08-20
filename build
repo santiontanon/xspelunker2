@@ -37,6 +37,8 @@ END_OF_RAMDEC="$(echo $((16#$END_OF_RAM)))"
 FREE_RAM=$(($((16#f300)) - END_OF_RAMDEC))
 echo "free RAM: ${FREE_RAM}"
 
+# update sram file:
+python update-sram.py
 
 # optimization suggestions:
 # java -jar java/mdl.jar src/main.asm -equ DEBUG="$DEBUGARG" -equ DEBUG_PCG="0" -equ INCLUDE_HARDCODED_WORLD_DATA="0" -po

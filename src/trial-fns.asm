@@ -29,7 +29,9 @@ trial_fn_trial_completed:
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
 	ADD_HL_A
 	ld (hl), 1
-	jp object_interaction_function_open_combination_lock_entry_point
+	ld hl, object_interaction_function_open_combination_lock_entry_point
+	ld a, TILES_PAGE
+	jp jp_to_hl_in_page_a_8000
 
 trial_fn_reset:
 	xor a
@@ -123,7 +125,7 @@ trial_fn_attack_left_right:
 	jr z, trial_fn_attack_left_right_state_3
 	call trial_fn_in_front_of_god_p
 	jr nz, trial_fn_reset
-	jr trial_fn_trial_completed
+	jp trial_fn_trial_completed
 
 trial_fn_attack_left_right_state_1:
 	ld a, (player_state)

@@ -5,6 +5,9 @@ to do:
   ***- add a "revert to defaults" option (restores to the saved defaults)
   ***- add a "revert to original defaults" option (restores to the original defaults)
 ***- play beginning to end
+  ***- BUG: tablet "Five colossi guard..." is shown with red initial letters
+  ***- BUG: pushable block puzzle is not solvable as the blocks to push are at the top and you cannot jump over them without changing room!
+  OK - BUG: attacking ground below Itzamna hangs the game
   ***- check when this happens: when entering boss room, animation of door closing, trapping you inside.
 
 - pick a good seed (for seed2) so that the map is good (at least Jungle)
