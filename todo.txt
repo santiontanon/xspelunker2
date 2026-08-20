@@ -3,7 +3,6 @@ to do:
 ***- play beginning to end
   ***- BUG: tablet "Five colossi guard..." is shown with red initial letters
   ***- BUG: pushable block puzzle is not solvable as the blocks to push are at the top and you cannot jump over them without changing room!
-    ***- I fixed block0101-1.tmx, fix all the others for pyramid
     ***- apply the same fix for: cave, jungle, xibalba, atlantis, mars, moon
 
 - save config options to rom:
