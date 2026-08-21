@@ -32,26 +32,21 @@ BOSS_1_BULLET_FREQUENCY_OFFSET: equ 7
 
 ;-----------------------------------------------
 boss1_difficulty_setting__easy:
-	dw 32  ; boss hp
-	db 16  ; staff hp
-	db 16, 32, 32, 32, #07  ; walk, crouch, staff/hand attack duration, bullet duration, bullet frequency
-boss1_difficulty_setting__normal:
 	dw 48  ; boss hp
 	db 24  ; staff hp
-	db 14, 28, 28, 32, #07  ; walk, crouch, staff/hand attack duration, bullet duration, bullet frequency
-boss1_difficulty_setting__hard:
+	db 16, 32, 32, 32, #07  ; walk, crouch, staff/hand attack duration, bullet duration, bullet frequency
+boss1_difficulty_setting__normal:
 	dw 64  ; boss hp
 	db 32  ; staff hp
+	db 14, 28, 28, 32, #07  ; walk, crouch, staff/hand attack duration, bullet duration, bullet frequency
+boss1_difficulty_setting__hard:
+	dw 80  ; boss hp
+	db 40  ; staff hp
 	db 12, 24, 24, 32, #07  ; walk, crouch, staff/hand attack duration, bullet duration, bullet frequency
 boss1_difficulty_setting__hardest:
-	dw 80  ; boss hp
-	db 32  ; staff hp
+	dw 96  ; boss hp
+	db 48  ; staff hp
 	db 8, 16, 16, 20, #03  ; walk, crouch, staff/hand attack duration, bullet duration, bullet frequency
-
-; boss1_difficulty_setting__angry:
-; 	dw 128  ; boss hp
-; 	db 48  ; staff hp
-; 	db 6, 12, 12, 24, #03  ; walk, crouch, staff/hand attack duration, bullet duration, bullet frequency
 
 
 ;-----------------------------------------------

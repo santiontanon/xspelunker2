@@ -17,9 +17,6 @@ object_interaction_function_shopkeeper_internal:
 	jr z, object_interaction_function_shopkeeper_internal_letter1
 	cp STORY_STATE__GOT_LETTER1
 	jp z, object_interaction_function_shopkeeper_internal_lost_person
-	cp STORY_STATE__PLACED_FIRST_POWER_STONE
-	jp z, object_interaction_function_shopkeeper_internal_lost_person
-	ld a, (global_state__story)
 	cp STORY_STATE__GOT_LETTER2
 	jr nc, object_interaction_function_shopkeeper_internal_default
 	cp STORY_STATE__FOUND_LOST_VENDOR

@@ -35,34 +35,28 @@ BOSS_2_BAT_HP_OFFSET: equ 11
 
 ;-----------------------------------------------
 boss2_difficulty_setting__easy:
-	dw 40  ; boss hp
+	dw 60  ; boss hp
 	db 32, 16, #0f, 4, #03  ; wait, walk, walk-time-mask, dash, dash-time-mask
 	db 24, #07, 40  ; bullet time, bullet frequency, attack time
 	db 2, 1  ; max bats, bat hp
 
 boss2_difficulty_setting__normal:
-	dw 60  ; boss hp
+	dw 80  ; boss hp
 	db 24, 16, #0f, 4, #03  ; wait, walk, walk-time-mask, dash, dash-time-mask
 	db 32, #07, 32  ; bullet time, bullet frequency, attack time
 	db 3, 1  ; max bats, bat hp
 
 boss2_difficulty_setting__hard:
-	dw 80  ; boss hp
+	dw 100  ; boss hp
 	db 20, 16, #0f, 4, #03  ; wait, walk, walk-time-mask, dash, dash-time-mask
 	db 24, #03, 28  ; bullet time, bullet frequency, attack time
 	db 4, 1  ; max bats, bat hp
 
 boss2_difficulty_setting__hardest:
-	dw 100  ; boss hp
+	dw 128  ; boss hp
 	db 16, 8, #07, 4, #03  ; wait, walk, walk-time-mask, dash, dash-time-mask
 	db 32, #03, 24  ; bullet time, bullet frequency, attack time
 	db 4, 2  ; max bats, bat hp
-
-; boss2_difficulty_setting__angry:
-; 	dw 120  ; boss hp
-; 	db 16, 8, #07, 4, #03  ; wait, walk, walk-time-mask, dash, dash-time-mask
-; 	db 40, #03, 20  ; bullet time, bullet frequency, attack time
-; 	db 4, 2  ; max bats, bat hp
 
 
 ;-----------------------------------------------

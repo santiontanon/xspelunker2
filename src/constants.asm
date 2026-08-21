@@ -24,12 +24,12 @@ STORY_STATE__START: equ 0
 STORY_STATE__ENTERED_RUINS: equ 1
 STORY_STATE__FOUND_CALENDAR: equ 2
 STORY_STATE__GOT_LETTER1: equ 3
-STORY_STATE__CALENDAR_AFTER_LETTER1: equ 4
-STORY_STATE__PLACED_FIRST_POWER_STONE: equ 5  ; first stone activates the teleporters
-STORY_STATE__FOUND_LOST_VENDOR: equ 6
-STORY_STATE__GOT_LETTER2: equ 7  ; where Elaine explains NOT to destroy the calendar stone
-STORY_STATE__FIGHTING_ALIENS: equ 8  ; player defeated the first 5 bosses, and made it back to the calendar stone room, where he's ambushed by aliens
-STORY_STATE__DEFEATED_ALIENS: equ 9  ; alien battle won (and Elaine is now permanently in the calendar room)
+STORY_STATE__CALENDAR_AFTER_LETTER1: equ 4  ; only used to show a message when you get to calendar after letter 1
+; STORY_STATE__PLACED_FIRST_POWER_STONE: equ 5  ; first stone activates the teleporters
+STORY_STATE__FOUND_LOST_VENDOR: equ 5
+STORY_STATE__GOT_LETTER2: equ 6  ; where Elaine explains NOT to destroy the calendar stone
+STORY_STATE__FIGHTING_ALIENS: equ 7  ; player defeated the first 5 bosses, and made it back to the calendar stone room, where he's ambushed by aliens
+STORY_STATE__DEFEATED_ALIENS: equ 8  ; alien battle won (and Elaine is now permanently in the calendar room)
 
 
 MAX_SPRITES: equ 32

@@ -1226,10 +1226,12 @@ pcg_generate_room__object_button_door:
 ;-----------------------------------------------
 pcg_generate_room__object_lost_vendor:
 	ld a, (global_state__story)
-	cp STORY_STATE__PLACED_FIRST_POWER_STONE
-	jp nz, pcg_generate_room__object_loop_next
-	; spawn lost vendor:
-	jp pcg_generate_room__object_regular_item
+	cp STORY_STATE__GOT_LETTER1
+	jp z, pcg_generate_room__object_regular_item  ; spawn lost vendor
+	cp STORY_STATE__CALENDAR_AFTER_LETTER1
+	jp z, pcg_generate_room__object_regular_item  ; spawn lost vendor
+	; do not spawn lost vendor
+	jp pcg_generate_room__object_loop_next
 
 
 ;-----------------------------------------------

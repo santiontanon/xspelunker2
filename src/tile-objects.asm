@@ -2333,7 +2333,11 @@ object_interaction_function_calendar_socket_empty_before_letter2:
 	jr object_interaction_function_calendar_socket_continue
 
 object_interaction_function_calendar_socket_empty_before_letter1:
-	ld de, TEXT_CALENDAR_SOCKET_EMPTY
+	; only place the first 2 stones:
+	ld a, (global_state__n_power_stones_in_calendar)
+	cp 2
+	jr c, object_interaction_function_calendar_socket_try_to_place
+	ld de, TEXT_CALENDAR_SOCKET_REFUSE_TO_PLACE_BEFORE_LETTER1
 	jr object_interaction_function_calendar_socket_continue
 
 object_interaction_function_calendar_socket_inactive:
@@ -2350,12 +2354,6 @@ object_interaction_function_calendar_socket_continue:
 	ret
 
 object_interaction_function_calendar_socket_1st_stone:
-	ld a, (global_state__story)
-	cp STORY_STATE__PLACED_FIRST_POWER_STONE
-	jr nc, object_interaction_function_calendar_socket_1st_stone_continue
-	ld a, STORY_STATE__PLACED_FIRST_POWER_STONE
-	ld (global_state__story), a
-object_interaction_function_calendar_socket_1st_stone_continue:
 	push ix
 		ld de, TEXT_PLACE_FIRST_POWER_STONE
 		ld hl, display_in_game_message

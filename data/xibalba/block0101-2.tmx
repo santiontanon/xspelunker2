@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="18">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="19">
  <properties>
   <property name="down" value="hole"/>
   <property name="up" value="stairs"/>
@@ -26,11 +26,11 @@
  <objectgroup name="objects">
   <object id="5" type="breakable-left" x="0" y="48" width="16" height="32"/>
   <object id="7" type="door-left" x="0" y="48" width="16" height="24"/>
-  <object id="9" type="item" x="48" y="48" width="16" height="16"/>
   <object id="10" type="item" x="40" y="0" width="16" height="16"/>
   <object id="13" type="pushable-block" x="56" y="72" width="16" height="16"/>
   <object id="15" type="door-right" x="112" y="48" width="16" height="24"/>
   <object id="16" type="breakable-right" x="112" y="48" width="16" height="32"/>
   <object id="17" type="item" x="72" y="0" width="16" height="16"/>
+  <object id="18" type="pushable-block" x="48" y="48" width="16" height="16"/>
  </objectgroup>
 </map>

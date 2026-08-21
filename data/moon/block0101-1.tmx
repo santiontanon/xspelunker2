@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="38">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="39">
  <properties>
   <property name="down" value="hole"/>
   <property name="up" value="hole"/>
@@ -11,25 +11,25 @@
   <data encoding="csv">
 122,126,1,1,1,1,1,1,1,1,1,1,1,1,125,122,
 201,134,1,1,1,1,1,1,1,1,1,1,1,1,129,202,
-252,1,1,1,245,144,245,143,144,143,144,144,1,1,1,251,
+252,1,1,1,1,1,1,1,1,1,1,1,1,1,1,251,
 252,1,1,1,1,1,1,1,1,1,1,1,1,1,1,125,
-252,98,1,1,99,99,99,1,1,1,97,97,1,1,97,125,
-217,118,1,1,113,116,118,1,1,1,113,118,1,1,113,218,
-148,149,1,99,251,123,126,98,1,1,251,126,98,1,147,148,
-149,147,1,113,218,123,217,118,1,1,125,217,118,1,147,149,
-248,147,98,125,122,201,131,134,1,98,251,124,126,99,147,149,
-248,149,116,218,123,126,1,1,1,113,218,123,217,116,148,248,
-123,122,123,122,124,134,1,1,1,251,123,124,122,123,124,122,
-123,201,131,130,131,139,140,1,1,129,130,132,132,132,202,123
+252,98,1,1,245,144,245,143,144,143,144,144,1,1,97,125,
+217,118,1,1,1,1,1,1,1,1,1,1,1,1,113,218,
+148,149,1,1,99,99,99,1,1,1,97,97,1,1,147,148,
+149,147,1,1,113,116,118,1,1,1,113,118,1,1,147,149,
+248,147,1,1,251,123,126,1,1,1,251,126,1,1,147,149,
+248,149,1,1,125,201,134,1,1,1,125,126,1,1,148,248,
+123,126,1,1,125,126,1,1,1,1,251,126,1,1,113,122,
+123,201,139,139,131,134,1,1,1,138,138,138,138,138,202,123
 </data>
  </layer>
  <objectgroup name="objects">
-  <object id="31" type="item" x="56" y="0" width="16" height="16"/>
+  <object id="31" type="item" x="56" y="16" width="16" height="16"/>
   <object id="32" type="breakable-right" x="112" y="48" width="16" height="32"/>
   <object id="33" type="breakable-left" x="0" y="48" width="16" height="32"/>
-  <object id="34" type="pushable-block" x="40" y="0" width="16" height="16"/>
-  <object id="35" type="pushable-block" x="72" y="0" width="16" height="16"/>
-  <object id="36" type="pushable-block" x="80" y="24" width="16" height="16"/>
-  <object id="37" type="pushable-block" x="32" y="24" width="16" height="16"/>
+  <object id="34" type="pushable-block" x="40" y="16" width="16" height="16"/>
+  <object id="35" type="pushable-block" x="72" y="16" width="16" height="16"/>
+  <object id="36" type="pushable-block" x="80" y="40" width="16" height="16"/>
+  <object id="37" type="pushable-block" x="32" y="40" width="16" height="16"/>
  </objectgroup>
 </map>

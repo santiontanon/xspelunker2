@@ -76,13 +76,13 @@
   db #21, #81, #21, #c3  ; data/moon/boss1111-1.tmx
   db #21, #e7, #21, #c3  ; data/moon/boss1111-2.tmx
   db #3f, #ff, #21, #e1  ; data/moon/block0011-1.tmx
-  db #3f, #81, #3f, #f7  ; data/moon/block0101-1.tmx
-  db #3f, #e7, #3f, #f7  ; data/moon/block0101-2.tmx
+  db #3f, #81, #3f, #85  ; data/moon/block0101-1.tmx
+  db #3f, #e7, #3f, #85  ; data/moon/block0101-2.tmx
   db #3f, #f1, #21, #ff  ; data/moon/block0110-1.tmx
   db #3f, #e7, #21, #ff  ; data/moon/block0110-2.tmx
   db #3f, #e7, #21, #e1  ; data/moon/block0011-1.tmx + up
-  db #3f, #81, #27, #f7  ; data/moon/block0101-1.tmx + right
-  db #3f, #e7, #27, #f7  ; data/moon/block0101-2.tmx + right
+  db #3f, #81, #27, #85  ; data/moon/block0101-1.tmx + right
+  db #3f, #e7, #27, #85  ; data/moon/block0101-2.tmx + right
   db #3f, #f1, #21, #e7  ; data/moon/block0110-1.tmx + down
   db #3f, #e7, #21, #e7  ; data/moon/block0110-2.tmx + down
   db #2f, #ff, #3f, #c7  ; data/moon/block1001-1.tmx
@@ -94,8 +94,8 @@
   db #23, #ff, #21, #e7  ; data/moon/block1010-1.tmx + down
   db #21, #81, #3f, #ff  ; data/moon/block1100-1.tmx
   db #23, #e7, #3f, #ff  ; data/moon/block1100-2.tmx
-  db #27, #81, #3f, #f7  ; data/moon/block0101-1.tmx + left
-  db #27, #e7, #3f, #f7  ; data/moon/block0101-2.tmx + left
+  db #27, #81, #3f, #85  ; data/moon/block0101-1.tmx + left
+  db #27, #e7, #3f, #85  ; data/moon/block0101-2.tmx + left
   db #2f, #e7, #3f, #c7  ; data/moon/block1001-1.tmx + up
   db #2f, #e7, #3f, #c7  ; data/moon/block1001-2.tmx + up
   db #21, #81, #3f, #e7  ; data/moon/block1100-1.tmx + down
@@ -106,8 +106,8 @@
   db #21, #81, #27, #ff  ; data/moon/block1100-1.tmx + right
   db #23, #e7, #27, #ff  ; data/moon/block1100-2.tmx + right
   db #27, #e7, #21, #e1  ; data/moon/block0011-1.tmx + left + up
-  db #27, #81, #27, #f7  ; data/moon/block0101-1.tmx + left + right
-  db #27, #e7, #27, #f7  ; data/moon/block0101-2.tmx + left + right
+  db #27, #81, #27, #85  ; data/moon/block0101-1.tmx + left + right
+  db #27, #e7, #27, #85  ; data/moon/block0101-2.tmx + left + right
   db #27, #f1, #21, #e7  ; data/moon/block0110-1.tmx + left + down
   db #27, #e7, #21, #e7  ; data/moon/block0110-2.tmx + left + down
   db #2f, #e7, #2f, #c7  ; data/moon/block1001-1.tmx + up + right

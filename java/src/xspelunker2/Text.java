@@ -379,7 +379,8 @@ public class Text {
         addLineSafe(lines_with_constant_page1, "I cannot look at that while there are aliens around!", "CALENDAR_INTERACT_WITH_ALIENS", 112);
         addLineSafe(lines_with_constant_page1, "You replace the inactive stone by your final power stone.", "PLACE_SIXTH_POWER_STONE", 112);
         addLineSafe(lines_with_constant_page1, "Nothing has visually changed, but I can feel that NOW the calendar stone is fully powered up.", "PLACE_SIXTH_POWER_STONE2", 112);
-        addLineSafe(lines_with_constant_page1, "It looks like an empty socket to place something inside.", "CALENDAR_SOCKET_EMPTY", 112);
+//        addLineSafe(lines_with_constant_page1, "It looks like an empty socket to place something inside.", "CALENDAR_SOCKET_EMPTY", 112);
+        addLineSafe(lines_with_constant_page1, "I am scared of placing more stones! I don't know what this is!", "CALENDAR_SOCKET_REFUSE_TO_PLACE_BEFORE_LETTER1", 112);
         addLineSafe(lines_with_constant_page1, "I am scared of placing more stones! What if it fully activates?", "CALENDAR_SOCKET_REFUSE_TO_PLACE", 112);
         addLineSafe(lines_with_constant_page1, "It fits! The whole thing is activating! And it feels like something else in the ruins just activated. What did I just do?!", "PLACE_FIRST_POWER_STONE", 112);
         addLineSafe(lines_with_constant_page1, "My map is reacting to this device! Some places are lighting up!", "FIRST_TELEPORTATION1", 112);
@@ -513,7 +514,7 @@ public class Text {
         // Elaine letters:
         addLineSafe(lines_with_constant_page1, "Michael,", "ELAINE_LETTER1A_LINE1", 28);
         addLineSafe(lines_with_constant_page1, "I deciphered the inscription. It talks about a 'Star Alignment Nexus' and about 'Celestial Stones' being the keys required to activate it. I consulted some experts, and we believe this nexus could be a calendar stone. Have you found one?", "ELAINE_LETTER1A_LINE2", 28*5);
-        addLineSafe(lines_with_constant_page1, "Ancient texts reveal that the Maya received knowledge from beings beyond the stars. The built these calendar stones to predict when the Star People will come back, but it seems that one of these calendar stones is special.", "ELAINE_LETTER1A_LINE3", 28*5);
+        addLineSafe(lines_with_constant_page1, "Ancient texts reveal that the Maya received knowledge from beings beyond the stars. They built these calendar stones to predict when the Star People will come back, but it seems that one of these calendar stones is special.", "ELAINE_LETTER1A_LINE3", 28*5);
         addLineSafe(lines_with_constant_page1, "I think if we can destroy it, we can stop them!", "ELAINE_LETTER1A_LINE4", 28);
         addLineSafe(lines_with_constant_page1, "Michael, I believe in you, but please be careful. I will keep investigating and send you anything I find.", "ELAINE_LETTER1A_LINE5", 28*3);
         addLineSafe(lines_with_constant_page1, "Elaine", "ELAINE_LETTER1A_LINE6", 28);
