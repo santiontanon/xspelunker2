@@ -478,12 +478,14 @@ pick_up_boss_power_stone:
 	call play_SFX_with_high_priority
 
 	; message:
-	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
+	ld a, (global_state__first_time_flags)
+	bit 5, a
 	ld de, TEXT_FIRST_POWER_STONE
-	or a
 	jr z, pick_up_boss_power_stone_continue
 	ld de, TEXT_OTHER_POWER_STONES
 pick_up_boss_power_stone_continue:
+	set 5, a
+	ld (global_state__first_time_flags), a
 	push ix
 		ld c, TEXT_PAGE
 		ld hl, display_in_game_message
