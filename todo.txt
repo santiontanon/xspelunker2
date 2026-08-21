@@ -2,7 +2,8 @@ to do:
 
 ***- play beginning to end
   ***- BUG: pushable block puzzle is not solvable as the blocks to push are at the top and you cannot jump over them without changing room!
-    ***- apply the same fix for: cave, jungle, xibalba, atlantis, mars, moon
+    ***- apply the same fix for: jungle, xibalba, atlantis, mars, moon
+  ***- message when you try to put a stone in the calendar but the game won't let you
   ***- adjust: boss 1 was too easy
 
 - save config options to rom:
