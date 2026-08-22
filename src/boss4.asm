@@ -1085,7 +1085,14 @@ update_boss4_behavior_1_state_1_draw:
 		call draw_boss4_frame_lord1
 	pop hl
 	ld de, current_room__tile_map + 20*64 + 35
-	call draw_boss4_frame_lord2
+	; reset "boss__4_second_lord_first_tile" during the opening scene
+	ld a, (boss__4_second_lord_first_tile)
+	push af
+		xor a
+		ld (boss__4_second_lord_first_tile), a
+		call draw_boss4_frame_lord2
+	pop af
+	ld (boss__4_second_lord_first_tile), a
 update_boss4_behavior_1_state_1_draw_continue:
 	ld hl, SFX_explosion_low_pitch
 	call play_SFX_with_high_priority
@@ -3379,7 +3386,7 @@ draw_boss4_frame_part_loop_x:
 			ld a, (hl)
 			or a
 			jr z, draw_boss4_frame_part_loop_x_skip
-			cp 24 + 68  ; first tile of the common tileset for the xibalba lords
+			cp 24 + 75  ; first tile of the common tileset for the xibalba lords
 			jr nc, draw_boss4_frame_part_loop_x_continue
 			add a, iyl
 draw_boss4_frame_part_loop_x_continue:

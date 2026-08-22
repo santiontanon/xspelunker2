@@ -1,18 +1,18 @@
 boss5_charybdis_difficulty_setting__easy:
 	db 48, 24  ; boss hp, vat hp
-	db 64, #0f, #3f, 32, 16  ; idle time, walk mask, bullet-time-mask, attack-delay, claw-attack-speed
+	db 64, #0f, BOSS_BULLET_PATTERN_EASY1, 32, 16  ; idle time, walk mask, bullet-time-mask, attack-delay, claw-attack-speed
 	db #03  ; flying claw speed mask
 boss5_charybdis_difficulty_setting__normal:
 	db 64, 32  ; boss hp, vat hp
-	db 64, #07, #1f, 28, 14  ; idle time, walk mask, bullet-time-mask, attack-delay
+	db 64, #07, BOSS_BULLET_PATTERN_MEDIUM1, 28, 14  ; idle time, walk mask, bullet-time-mask, attack-delay
 	db #01  ; flying claw speed mask
 boss5_charybdis_difficulty_setting__hard:
 	db 80, 40  ; boss hp, vat hp
-	db 64, #07, #0f, 24, 12  ; idle time, walk mask, bullet-time-mask, attack-delay
+	db 64, #07, BOSS_BULLET_PATTERN_HARD1, 24, 12  ; idle time, walk mask, bullet-time-mask, attack-delay
 	db #01  ; flying claw speed mask
 boss5_charybdis_difficulty_setting__hardest:
 	db 96, 48  ; boss hp, vat hp
-	db 64, #03, #0f, 20, 10  ; idle time, walk mask, bullet-time-mask, attack-delay
+	db 64, #03, BOSS_BULLET_PATTERN_HARDEST1, 20, 10  ; idle time, walk mask, bullet-time-mask, attack-delay
 	db #00  ; flying claw speed mask
 
 BOSS_5_CHARYBDIS_HP_OFFSET: equ 0

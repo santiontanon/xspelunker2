@@ -1349,6 +1349,15 @@ player_update_state_swimming_oxygen_non_zero:
 	set HUD_REDRAW_FLAG_BIT, (hl)
 player_update_state_swimming_oxygen_done:
 
+	; check for interact with "up":
+	ld a, (config_interact_with_up)
+	or a
+	jr nz, player_update_state_swimming_no_interact_with_up
+	ld a, (keyboard_clicks)
+	bit KEY_UP_BIT, a
+	call nz, player_update_interact
+player_update_state_swimming_no_interact_with_up:
+
 	; check for interact:
 	ld a, (keyboard_clicks)
 	bit KEY_INTERACT_BIT, a

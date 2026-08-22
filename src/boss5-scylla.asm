@@ -1032,6 +1032,10 @@ update_boss5_behavior_6_state_1:
 
 	; mark for stats:
 	ld a, (boss__5_variant)
+	cp 3
+	jr nz, update_boss5_behavior_6_state_1_continue
+	dec a  ; "both" shoult be 2, and not 3
+update_boss5_behavior_6_state_1_continue:
 	add a, 16
 	ld b, a
 	ld c, BOSS_PAGE

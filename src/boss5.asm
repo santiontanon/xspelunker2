@@ -203,6 +203,7 @@ update_boss5_behavior_0_state_3_charybdis_continue:
 	ld (boss__5_charybdis_mouth_state), a
 	ld (boss__5_charybdis_left_claw_state), a
 	ld (boss__5_charybdis_right_claw_state), a	
+	ld (boss__5_charybdis_flying_claw_state), a
 
 	jp update_boss5_behavior_0_state_3_done
 update_boss5_behavior_0_state_3_scylla

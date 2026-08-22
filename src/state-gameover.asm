@@ -443,7 +443,7 @@ state_game_over_print_bosses_loop:
 	or a
 	ret z  ; no more boss names
 	; check if it's boss 4, which will have a composite name:
-	cp 3
+	cp 4
 	jr c, state_game_over_print_bosses_loop_not_boss4
 	cp 16
 	jr nc, state_game_over_print_bosses_loop_not_boss4

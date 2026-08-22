@@ -1,9 +1,17 @@
 to do:
 
 ***- play beginning to end:
-  ***- BUG: cannot pickup items in water pressing "up"
-  ***- BUG: when picking up an upgraded weapon (e.g. fire hammer) if you have hammer equipped, it should change to fire hammer
-  ***- explore west caves, east caves, xibalba and atlantis
+  ***- BUG: switching to explosions tileset in calendar room creates graphical glitches! (I need to reorganize the tiles again)
+  ***- BUG: when picking up an upgraded weapon, does it switch correctly to the upgraded one? (save game does not look that way)
+  ***- continue playing:
+    ***- open mars/moon teleporters
+    ***- explore mars
+    ***- explore the moon
+    ***- small chest bottom-right of atlantis
+    ***- get ending B
+    ***- get ending B+
+    ***- get ending A
+    ***- get ending A+
 
 - save config options to rom:
   - add a "save as default" option to the config menu that saves to ROM

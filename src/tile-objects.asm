@@ -60,30 +60,30 @@ spawn_tile_object_corn:
 	jp spawn_tile_object_continue
 
 
-spawn_tile_object_5_stones:
+spawn_tile_object_stones:
 	push bc
 		call room_undraw_tile_objects
 	pop bc
 	ld d, TAG_STONES
-	ld e, 5
+	ld e, 8
 	jp spawn_tile_object_continue
 
 
-spawn_tile_object_5_darts:
+spawn_tile_object_darts:
 	push bc
 		call room_undraw_tile_objects
 	pop bc
 	ld d, TAG_DARTS
-	ld e, 5
+	ld e, 8
 	jp spawn_tile_object_continue
 
 
-spawn_tile_object_5_spears:
+spawn_tile_object_spears:
 	push bc
 		call room_undraw_tile_objects
 	pop bc
 	ld d, TAG_SPEARS
-	ld e, 5
+	ld e, 8
 	jp spawn_tile_object_continue
 
 
@@ -92,7 +92,7 @@ spawn_tile_object_battery:
 		call room_undraw_tile_objects
 	pop bc
 	ld d, TAG_BATTERY
-	ld e, 5
+	ld e, 8
 	jp spawn_tile_object_continue
 
 
@@ -1544,6 +1544,22 @@ object_interaction_function_pickup_weapon:
 	ld c, a
 	add hl, bc
 	ld (hl), 1
+
+	; If player picked up an upgraded weapon and the previous was was equipped, switch:
+	; 0 -> 8
+	; 1 -> 9
+	; 2 -> 10
+	push af
+		sub 8
+		ld hl, player_current_item
+		cp (hl)
+		jr nz, object_interaction_function_pickup_weapon_no_upgraded_version_of_current
+		add a, 8
+		ld (hl), a
+		ld hl, redraw_flags
+		set REUPLOAD_INGAME_OBJECT_TILES_FLAG_BIT, (hl)
+object_interaction_function_pickup_weapon_no_upgraded_version_of_current:
+	pop af
 
 	; add some small amount of ammo:
 	sub 4

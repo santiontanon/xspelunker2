@@ -3170,11 +3170,12 @@ pcg_generate_room__temple_of_poseidon:
 
 	; spawn the objects:
 	ld hl, pcg_generate_room__poseidon_objects + 4  ; skip the boss door, if boss already defeated
-	ld b, 6
+	ld b, 5
 	ld iy, (tmp_pcg_room__next_tile_object_ptr)
 	ld a, (global_state__objects + TAG_BOSS5_CHESTLOCK)
 	cp 2
 	jr z, pcg_generate_room__temple_of_poseidon_object_loop
+	ld b, 6
 	ld hl, pcg_generate_room__poseidon_objects
 pcg_generate_room__temple_of_poseidon_object_loop:
 	ld a, (hl)
