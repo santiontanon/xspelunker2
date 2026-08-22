@@ -2323,6 +2323,32 @@ check_if_right_room_edge_has_connection_right_continue:
 		and PCG_DIRECTION_RIGHT
 	pop ix
 	jr nz, check_if_right_room_edge_has_connection_right_diff_room_connection
+	; if the room is on the right edge of the map, we are done:
+	push hl
+	push de
+		dec de
+		ex de, hl
+		ld de, -current_area__room_ids
+		add hl, de  ; hl = offset inside of current_area__room_ids
+		ld a, (current_area__width)
+		ld d, a  ; d = (current_area__width)
+		dec a
+		ld h, a  ; h = (current_area__width) - 1
+		ld a, l  ; a = offset
+check_if_right_room_edge_has_connection_right_map_edge_loop:
+		cp h
+		jr z, check_if_right_room_edge_has_connection_right_right_edge  ; right edge
+		sub d
+		jr c, check_if_right_room_edge_has_connection_right_continue2  ; done, no right edge
+		jr check_if_right_room_edge_has_connection_right_map_edge_loop
+check_if_right_room_edge_has_connection_right_right_edge:
+	pop de
+	pop hl
+	jr check_if_right_room_edge_has_connection_right_diff_room_no_connection
+check_if_right_room_edge_has_connection_right_continue2:
+	pop de
+	pop hl
+
 	; check if there is a connection from the room to the right, going left
 	inc ix
 	inc ix
@@ -2379,10 +2405,10 @@ check_if_right_room_edge_has_connection_down:
 		sbc hl, bc
 	pop bc
 	pop hl
-	jr nc, check_if_right_room_edge_has_connection_right_diff_room_no_connection
+	jp nc, check_if_right_room_edge_has_connection_right_diff_room_no_connection
 	ld a, (de)  ; current
 	cp (hl)
-	jr z, check_if_right_room_edge_has_connection_right_same_room
+	jp z, check_if_right_room_edge_has_connection_right_same_room
 	ld a, (hl)  ; next
 	cp #ff
 	jp z, check_if_right_room_edge_has_connection_right_diff_room_no_connection

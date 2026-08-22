@@ -1,9 +1,8 @@
 to do:
 
 ***- play beginning to end:
-  ***- BUG: extra exit on the right on pacific caves map
   ***- BUG: cannot pickup items in water pressing "up"
-  ***- BUG: picked up ball in xibalba, and got golden idol
+  ***- BUG: when picking up an upgraded weapon (e.g. fire hammer) if you have hammer equipped, it should change to fire hammer
   ***- explore west caves, east caves, xibalba and atlantis
 
 - save config options to rom:
