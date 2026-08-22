@@ -264,8 +264,11 @@ update_tile_objects_pushable_block_remove:
 	dec hl
 	dec hl
 	dec hl
-	dec hl
 update_tile_objects_delete_object:
+	dec hl
+	push hl
+		call room_undraw_tile_objects
+	pop hl
 	push hl
 		call delete_tile_object_in_hl
 
@@ -1384,7 +1387,7 @@ object_interaction_inventory_slot:
 	db #ff, #ff, #ff, #ff, #ff, #ff  ; color chests: 47
 	db #ff, #ff, #ff, #ff  ; trial clues: 53
 	db #ff, #ff, #ff, #ff  ; combination clues: 57
-	db 21, 22, 23, 24  ; key items: 61
+	db 20, 21, 22, 23  ; key items: 61
 	db #ff, 0, #ff  ; boss1: 65
 	db #ff, 1, #ff  ; boss2: 68
 	db #ff, 2, #ff  ; boss3: 71
@@ -1647,7 +1650,7 @@ object_interaction_function_small_chest:
 	; check if the player has "small key" selected
 	ld hl, player_current_item
 	ld a, (hl)
-	cp 31  ; small key
+	cp 30  ; small key
 	jr nz, object_interaction_function_small_chest_fail
 
 	; lose small key:

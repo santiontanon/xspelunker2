@@ -1,8 +1,10 @@
 to do:
 
 ***- play beginning to end:
-  ***- bug: it hangs when you rescue the lost vendor (just do down on savegame)
-  ***- fight boss 1, 2
+  ***- BUG: extra exit on the right on pacific caves map
+  ***- BUG: cannot pickup items in water pressing "up"
+  ***- BUG: picked up ball in xibalba, and got golden idol
+  ***- explore west caves, east caves, xibalba and atlantis
 
 - save config options to rom:
   - add a "save as default" option to the config menu that saves to ROM
