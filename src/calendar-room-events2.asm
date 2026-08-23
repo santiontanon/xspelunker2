@@ -1,23 +1,23 @@
 ;-----------------------------------------------
 ; Elaine shows up and ends the battle
 calendar_stone_center_battle_event_fn2__explosion_tile_locations:
-	db 192, 193, 194, 208, 209, 210, 224, 225, 226, 240, 241, 242  ; explosion
-	db 100, 128, 168  ; rope
+	db 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59  ; explosion
+	db 60, 61, 62  ; rope
 
 elaine_explosion_frame1_gfx:
   db 3, 3
   dw buffer_4096 + 4  ; elaine_explosion_frame1_gfx_tiles
  elaine_explosion_frame1_gfx_tiles:
-  db 192, 193, 194
-  db 208, 209, 210
-  db 224, 225, 226
+  db 48, 49, 50
+  db 51, 52, 53
+  db 54, 55, 56
 
 elaine_explosion_frame2_gfx:
   db 3, 3
   dw buffer_4096 + 4  ; elaine_explosion_frame2_gfx_tiles
  elaine_explosion_frame2_gfx_tiles:
   db 0, 0, 0
-  db 240, 241, 242
+  db 57, 58, 59
   db 0, 0, 0
 
 elaine_explosion_frame3_gfx:
@@ -73,7 +73,6 @@ calendar_stone_center_battle_event_fn2__explosions_loop_continue:
 		ld iyl, a  ; explosion x coordinate
 		call random_a
 		and #01
-		dec a
 		ld iyh, a  ; explosion y coordinate
 
 		; draw explosion frame 1:
@@ -141,17 +140,17 @@ calendar_stone_center_battle_event_fn2__explosions_loop_continue:
 	; drop rope:
 	ld hl, current_room__tile_map + 6
 	ld bc, 32
-	ld (hl), 100
+	ld (hl), 60
 	add hl, bc
-	ld (hl), 100
+	ld (hl), 60
 	add hl, bc
-	ld (hl), 128
+	ld (hl), 61
 	add hl, bc
-	ld (hl), 100
+	ld (hl), 60
 	add hl, bc
-	ld (hl), 100
+	ld (hl), 60
 	add hl, bc
-	ld (hl), 168
+	ld (hl), 62
 	add hl, bc
 	ld hl, draw_room_with_hud
 	ld c, TILES_PAGE

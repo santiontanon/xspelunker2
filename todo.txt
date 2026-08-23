@@ -1,7 +1,7 @@
 to do:
 
 ***- play beginning to end:
-  ***- BUG: switching to explosions tileset in calendar room creates graphical glitches! (I need to reorganize the tiles again)
+  OK - BUG: once the calendar room reset to the wrong thing after Elaine appeared (reproduce):
   ***- BUG: when picking up an upgraded weapon, does it switch correctly to the upgraded one? (save game does not look that way)
   ***- continue playing:
     ***- open mars/moon teleporters
