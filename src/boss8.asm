@@ -441,6 +441,21 @@ update_boss8_behavior_0_intro_scene_7:
     ld b, 3
     ld de, current_room__tile_map + 4 + 4*32
     call draw_boss8_frame_part
+
+    ; copy it to the back copy to keep it there throughout the fight:
+    ld hl, current_room__tile_map + 4 + 4*32
+    ld de, current_room__tile_map + 4 + 4*32 + 64*24
+    ld bc, 4
+    ldir
+    ld hl, current_room__tile_map + 4 + 5*32
+    ld de, current_room__tile_map + 4 + 5*32 + 64*24
+    ld bc, 4
+    ldir
+    ld hl, current_room__tile_map + 4 + 6*32
+    ld de, current_room__tile_map + 4 + 6*32 + 64*24
+    ld bc, 4
+    ldir
+
     ld hl, draw_room_with_hud
     ld c, TILES_PAGE
     call call_hl_in_page_c_8000
@@ -1809,6 +1824,13 @@ update_boss8_behavior_6_state_2:
     ld a, #ff
     ld (keyboard_state), a
     call clear_memory_a
+
+;     ; add teleporter:
+;     ld hl, BOSS8_NAMETABLE_TELEPORTER
+;     ld c, 4
+;     ld b, 3
+;     ld de, current_room__tile_map + 4 + 4*32
+;     call draw_boss8_frame_part    
 
     call draw_room_with_hud
     xor a

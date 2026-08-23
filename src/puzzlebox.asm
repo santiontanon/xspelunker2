@@ -95,6 +95,7 @@ puzzlebox_state1:
 	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO TEXT_PUZZLEBOX_OPTION1, CHRTBL2 + 256*8*2 + (11 + 2*32)*8, #f0, 16
 	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO TEXT_OPTIONS1, CHRTBL2 + 256*8*2 + (11 + 4*32)*8, #f0, 16
 puzzlebox_state1_loop:
+	halt
 	call puzzlebox_draw_sprite
 	call update_keyboard_buffers
 

@@ -2,9 +2,8 @@ to do:
 
 ***- play beginning to end:
   ***- continue playing:
-    ***- defeat moon boss
+    ***- get yatzil's diary
     ***- get ending B
-    ***- get ending A
     ***- restart on a seed that has the 8 bridge room open
     ***- get ending B+
     ***- get ending A+
