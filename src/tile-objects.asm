@@ -1556,6 +1556,7 @@ object_interaction_function_pickup_weapon:
 		jr nz, object_interaction_function_pickup_weapon_no_upgraded_version_of_current
 		add a, 8
 		ld (hl), a
+		ld (player_last_weapon), a
 		ld hl, redraw_flags
 		set REUPLOAD_INGAME_OBJECT_TILES_FLAG_BIT, (hl)
 object_interaction_function_pickup_weapon_no_upgraded_version_of_current:

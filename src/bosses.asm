@@ -379,6 +379,7 @@ enter_boss_door__spawn_atlantis_boss_objects:
 enter_boss_door__spawn_mars_boss_objects:
 	xor a
 	ld (boss__6_eye_frame), a
+	ld (boss__6_face_turret_frame), a
 	ld hl, update_boss6_draw_boss_first_frame
 	ld c, BOSS_6_PAGE
 	call call_hl_in_page_c_8000
