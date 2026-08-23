@@ -34,8 +34,8 @@ boss9_difficulty_setting__easy:
     db BOSS_BULLET_PATTERN_EASY1, 48, 28, 1, 2  ; bullet attack pattern, wait time, fist wait time, n fist stones, n 2 fist stones
 
 boss9_difficulty_setting__normal:
-    dw 32  ; boss hp, and threshold for the other phases  (DEBUG)
-;     dw 320  ; boss hp, and threshold for the other phases
+;     dw 32  ; boss hp, and threshold for the other phases  (DEBUG)
+    dw 320  ; boss hp, and threshold for the other phases
     db BOSS_BULLET_PATTERN_MEDIUM1, 40, 24, 2, 3 ; bullet attack pattern, wait time, fist wait time, n fist stones, n 2 fist stones
 
 boss9_difficulty_setting__hard:

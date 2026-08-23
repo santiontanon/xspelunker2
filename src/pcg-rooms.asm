@@ -368,6 +368,8 @@ pcg_generate_room__seed_generated:
 	jp z, pcg_generate_room__boss_9
 	cp MARS_ROBOT_PUZZLE_ROOM_ID
 	jp z, pcg_generate_room__mars_robot
+	cp YATZIL_ROOM_ID
+	jp z, pcg_generate_room__yatzil
 
 	; Add background chunks randomly:
 	; here:
@@ -3332,6 +3334,13 @@ pcg_generate_room__boss_9:
 pcg_generate_room__mars_robot:
 	ld hl, mars_robot_puzzle_spawn_room
 	ld c, MARS_ROBOT_PUZZLE_PAGE
+	jp call_hl_in_page_c_8000
+
+
+;-----------------------------------------------
+pcg_generate_room__yatzil:
+	ld hl, object_interaction_function_boss9_entrance_internal_generate_room
+	ld c, BOSS_9_ROOM_PAGE
 	jp call_hl_in_page_c_8000
 
 

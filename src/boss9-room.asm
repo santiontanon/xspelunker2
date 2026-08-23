@@ -555,6 +555,8 @@ object_interaction_function_boss9_entrance_internal_loop:
     ; clear the screen:
     call clear_screen_left_to_right
 
+object_interaction_function_boss9_entrance_internal_generate_room:
+
     ld hl, pcg_generate_room_reset_state
     ld c, PCG_PAGE
     call call_hl_in_page_c_8000
@@ -648,7 +650,35 @@ exit_yatzil_room:
 yatzil_tablet_fn_internal:
     ld hl, tablet_trivia_tiles_zx0
     ld c, TABLET_LETTER_PAGE
-    call maya_puzzle_tablet_fn_load_extra_tiles_hl_set
+    ld de, buffer_4096
+    call dzx0_from_page_c
+
+    ld hl, buffer_4096
+    ld de, CHRTBL2 + 32*8
+    ld bc, 192*8
+    call fast_LDIRVM
+    ld hl, buffer_4096 + 192*8
+    ld de, CLRTBL2 + 32*8
+    ld bc, 192*8
+    call fast_LDIRVM
+
+    ld hl, buffer_4096
+    ld de, CHRTBL2 + 256*8 + 32*8
+    ld bc, 192*8
+    call fast_LDIRVM
+    ld hl, buffer_4096 + 192*8
+    ld de, CLRTBL2 + 256*8 + 32*8
+    ld bc, 192*8
+    call fast_LDIRVM
+
+    ld hl, buffer_4096
+    ld de, CHRTBL2 + 256*8*2 + 32*8
+    ld bc, 192*8
+    call fast_LDIRVM
+    ld hl, buffer_4096 + 192*8
+    ld de, CLRTBL2 + 256*8*2 + 32*8
+    ld bc, 192*8
+    call fast_LDIRVM  
 
     ld iy, TEXT_YATZIL_TABLET_1
     ld a, 18

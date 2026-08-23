@@ -1,10 +1,9 @@
 to do:
 
 ***- play beginning to end:
-  ***- continue playing:
-    ***- get yatzil's diary
-    ***- get ending B
-    ***- restart on a seed that has the 8 bridge room open
+    ***- restart on a seed that has the 8 bridge room open:
+      ***- figure out caiman statue seeds, and get them all
+      ***- find the forge and activate it
     ***- get ending B+
     ***- get ending A+
 

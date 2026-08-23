@@ -160,6 +160,9 @@ state_inventory_update_cursor_button_row0:
 	jr z, state_inventory_update_cursor_button_options
 	cp 2
 	jr z, state_inventory_update_cursor_button_savegame
+	cp 3
+	jr z, state_inventory_update_cursor_button_quit
+	jr state_inventory_update_cursor_button_not_a_button
 state_inventory_update_cursor_button_quit:
 	ld ix, TEXT_ARE_YOU_SURE
 	ld hl, state_game_over_from_quit  ; yes
