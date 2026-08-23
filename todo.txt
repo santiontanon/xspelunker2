@@ -2,7 +2,6 @@ to do:
 
 ***- play beginning to end:
   ***- continue playing:
-    ***- explore moon
     ***- defeat moon boss
     ***- get ending B
     ***- get ending A

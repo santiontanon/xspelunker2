@@ -550,6 +550,7 @@ pick_up_boss_puzzlebox_continue:
 		call play_SFX_with_high_priority
 
 		ld de, TEXT_FOUND_PUZZLEBOX
+		ld a, (global_state__first_time_flags)
 		jr pick_up_boss_power_stone_continue
 
 

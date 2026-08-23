@@ -986,6 +986,11 @@ update_boss7_behavior_3_state_1:
 	ld a, (hl)
 	or a
 	jr z, update_boss7_behavior_3_state_1_continue  ; if snake is not fully out, do not go to phase 4
+	ld a, (iy + BOSS_7_SNAKE_STRUCT_HEAD_Y)
+	or a
+	jp m, update_boss7_behavior_3_state_1_continue  ; entering a hole (up)
+	cp 24
+	jp p, update_boss7_behavior_3_state_1_continue  ; entering a hole (down)
 
 	; snake is fully out, transition to phase 4?
 	ld bc, (boss__settings + BOSS_7_HP_PHASE4_OFFSET)

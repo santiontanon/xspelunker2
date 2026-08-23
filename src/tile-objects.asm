@@ -2513,8 +2513,10 @@ object_interaction_function_teleport_to_area_object:
 	ld a, b
 	cp 9
 	jr nz, object_interaction_function_teleport_to_area_object_continue
-	; teleporting to Atlantis, this is a special case, we need to go to the teleporter room:
+	; teleporting to Atlantis, this is a special case, we might need to go to the teleporter room:
 	ld a, c
+	cp TAG_TELEPORTER8
+	jr z, object_interaction_function_teleport_to_area_object_continue
 	ld e, TELEPORTER_ROOM_ID
 	push af
 		jr object_interaction_function_teleport_to_area_object_room_id_set
