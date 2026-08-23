@@ -366,6 +366,8 @@ pcg_generate_room__seed_generated:
 	jp z, pcg_generate_room__firestone_forge
 	cp BOSS9_ROOM_ID
 	jp z, pcg_generate_room__boss_9
+	cp MARS_ROBOT_PUZZLE_ROOM_ID
+	jp z, pcg_generate_room__mars_robot
 
 	; Add background chunks randomly:
 	; here:
@@ -2183,6 +2185,7 @@ ENDR
 	dw buffer_4096  ; TAG_TELEPORTER6
 	dw buffer_4096  ; TAG_TELEPORTER7
 	dw buffer_4096  ; TAG_TELEPORTER8
+	dw buffer_4096  ; TAG_TELEPORTER9
 	dw buffer_4096 + 60 * 64  ; TAG_CALENDAR_NAME_CLUE
 	dw buffer_4096  ; TAG_LOST_VENDOR
 	dw buffer_4096 + 60 * 64  ; TAG_XIBALBA_STORY1
@@ -3322,6 +3325,13 @@ pcg_generate_room__8_bridge_room__open_bridge:
 pcg_generate_room__boss_9:
 	ld hl, pcg_generate_room__boss_9_internal
 	ld c, BOSS_9_ROOM_PAGE
+	jp call_hl_in_page_c_8000
+
+
+;-----------------------------------------------
+pcg_generate_room__mars_robot:
+	ld hl, mars_robot_puzzle_spawn_room
+	ld c, MARS_ROBOT_PUZZLE_PAGE
 	jp call_hl_in_page_c_8000
 
 

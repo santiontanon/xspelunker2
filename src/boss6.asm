@@ -764,13 +764,13 @@ update_boss6_behavior_2_state_7_continue:
 	rrca
 	and #1f
 	cp 11
-	jr nz, update_boss6_behavior_2_state_6_continue
+	jr nz, update_boss6_behavior_2_state_7_continue2
 	; one with breaking the ceiling!
 	xor a
 	ld (boss__state), a
 	ld (boss__state_timer), a
 	ret
-update_boss6_behavior_2_state_6_continue:
+update_boss6_behavior_2_state_7_continue2:
 	add a, a
 	inc a  ; a = x coordinate of the roof part we are destroying in this frame
 	; - clear map from [a, 0] - [a + 2, 3]
@@ -831,6 +831,10 @@ update_boss6_behavior_2_state_6_continue:
 	inc hl
 	inc hl
 	ld (hl), 0  ; extra 1 (speed x)
+
+	; reset hp continuously so that boss does not take damage during the transition:
+	ld hl, (boss__settings + BOSS_6_HP_PHASE2_OFFSET)
+	ld (boss__hp), hl	
 	ret
 
 
@@ -1002,6 +1006,11 @@ update_boss6_behavior_3_state_7:
 	inc (hl)
 	and #03
 	jr nz, update_boss6_behavior_3_state_7_continue
+
+	; reset hp continuously:
+	ld hl, (boss__settings + BOSS_6_HP_PHASE3_OFFSET)
+	ld (boss__hp), hl
+
 	; spawn an explosion:
 	ld bc, #0819
 	call random_a

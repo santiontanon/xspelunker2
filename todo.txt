@@ -2,11 +2,12 @@ to do:
 
 ***- play beginning to end:
   ***- continue playing:
-    ***- defeat mars boss
-    ***- explore the moon
+    ***- explore moon
+    ***- defeat moon boss
     ***- get ending B
-    ***- get ending B+
     ***- get ending A
+    ***- restart on a seed that has the 8 bridge room open
+    ***- get ending B+
     ***- get ending A+
 
 - save config options to rom:
