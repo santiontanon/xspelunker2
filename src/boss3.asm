@@ -802,6 +802,8 @@ update_boss3_behavior_3_state_1:
 ;-----------------------------------------------
 update_boss3_head_behavior:
 	ld a, (boss__behavior)
+	or a
+	ret z  ; do not move the head when boss is not yet spawned 
 	cp 3
 	ret z  ; do not move the head when boss is dead
 	ld hl, (boss__hp)

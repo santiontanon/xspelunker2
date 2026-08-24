@@ -27,7 +27,7 @@
  </layer>
  <objectgroup name="objects">
   <object id="1" type="4x4-item" x="48" y="48" width="32" height="32"/>
-  <object id="2" type="item" x="32" y="64" width="16" height="16"/>
-  <object id="3" type="item" x="80" y="64" width="16" height="16"/>
+  <object id="2" type="item" x="40" y="16" width="16" height="16"/>
+  <object id="3" type="item" x="72" y="16" width="16" height="16"/>
  </objectgroup>
 </map>

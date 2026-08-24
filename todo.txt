@@ -1,12 +1,16 @@
 to do:
 
-***- play beginning to end:
-    ***- restart on a seed that has the 8 bridge room open:
-      ***- figure out caiman statue seeds, and get them all
-      ***- find the forge and activate it
-    ***- get ending B+
-    ***- get ending A+
+***- play beginning to end on seed 1E2Y4ZT:
+  ***- white chest in area 2: 1, 2
+  ***- boss 1 in 3, 6
+  ***- small chest in area 1: 2, 2
+  ***- figure out caiman statue seeds, and get them all:
+    caiman 1, 3 in 1E2Y4ZT
+  ***- find the forge and activate it
+  ***- get ending B+
+  ***- get ending A+
 
+***- add seed to savegame preview
 - save config options to rom:
   - add a "save as default" option to the config menu that saves to ROM
   - add a "revert to defaults" option (restores to the saved defaults)

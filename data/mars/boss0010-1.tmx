@@ -23,8 +23,8 @@
 </data>
  </layer>
  <objectgroup name="objects">
-  <object id="15" type="item" x="64" y="24" width="16" height="16"/>
+  <object id="15" type="item" x="64" y="40" width="16" height="16"/>
   <object id="16" type="4x4-item" x="32" y="24" width="32" height="32"/>
-  <object id="26" type="item" x="16" y="24" width="16" height="16"/>
+  <object id="26" type="item" x="16" y="40" width="16" height="16"/>
  </objectgroup>
 </map>
