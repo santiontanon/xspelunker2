@@ -1145,6 +1145,21 @@ draw_inventory_number_tens_done:
 
 ;-----------------------------------------------
 draw_inventory_map:
+	; name:
+	ld hl, area_names_page_0
+	ld a, (current_area__id)
+	add a, a
+	ADD_HL_A
+	ld a, (hl)
+	inc hl
+	ld h, (hl)
+	ld l, a
+	ld de, CHRTBL2 + (256*2+79)*8
+	ld iy, #8000 + COLOR_WHITE*16
+	ld b, 13
+	call draw_sentence_to_vdp_clearing_text_buffer
+
+	; map:
 	ld hl, draw_inventory_map_to_piece_table
 	ld a, (current_area__id)
 	ADD_HL_A

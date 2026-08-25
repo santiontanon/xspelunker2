@@ -1,14 +1,9 @@
 to do:
 
-***- add seed to savegame preview
-***- can I fit current area name in the inventory screen?
-***- when teleporting to the same location where you entered, do not do teleporting animation, and just go back to the room
+***- BUG: atlantis seed #4afa extra connection in minimap bottom room
+***- when teleporting to the same location where you entered, do not do teleporting animation, and just go back to the room:
+  ***- in tile-objects.asm: object_interaction_function_teleport_to_area_object
 
-- save config options to rom:
-  - add a "save as default" option to the config menu that saves to ROM
-  - add a "revert to defaults" option (restores to the saved defaults)
-  - add a "revert to original defaults" option (restores to the original defaults)
-- pick a good seed (for seed2) so that the map is good (at least Jungle)
 - music: (brain 12, 15, 23, 25 have potential): xibalba, atlantis, mars, moon
 
 

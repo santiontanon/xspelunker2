@@ -308,13 +308,18 @@ gamestart_draw_starchart_sprite_table:
 
 
 ;-----------------------------------------------
+gamestart_generate_random_seed_string_ix:
+	push ix
+	pop hl
+	jr gamestart_generate_random_seed_string_hl_set
 gamestart_generate_random_seed_string:
+	ld hl, (current_world__seed)
+gamestart_generate_random_seed_string_hl_set:
 	ld de, buffer_4096
 	ld a, 4
 	ld (de), a
 	inc de
 
-	ld hl, (current_world__seed)
 	ld a, h
 	rrca
 	rrca

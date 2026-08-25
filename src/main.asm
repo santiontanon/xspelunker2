@@ -399,6 +399,21 @@ current_world__name_rom:
     db 26, 26, 26, 26
 
 
+area_names_page_0:
+    dw TEXT_AREA0_NAME
+    dw TEXT_AREA1_NAME
+    dw TEXT_AREA2_NAME
+    dw TEXT_AREA3_NAME
+    dw TEXT_AREA4_NAME
+    dw TEXT_AREA5_NAME
+    dw TEXT_AREA6_NAME
+    dw TEXT_AREA7_NAME
+    dw TEXT_AREA8_NAME
+    dw TEXT_AREA9_NAME
+    dw TEXT_AREA10_NAME
+    dw TEXT_AREA11_NAME
+
+
 end_of_page_0:
     ds #8000-$
 

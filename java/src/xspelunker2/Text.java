@@ -115,6 +115,7 @@ public class Text {
         
         addLineSafe(lines_with_constant_page4, "World Name", "GAMESTART1", 10);
         addLineSafe(lines_with_constant_page3, "Seed", "GAMESTART2", 6);
+        addLineSafe(lines_with_constant_page3, "Seed:", "SEED_COLON", 6);
         addLineSafe(lines_with_constant_page3, "Difficulty", "GAMESTART3", 6);
         addLineSafe(lines_with_constant_page3, "easy", "DIFFICULTY_EASY", 6);
         addLineSafe(lines_with_constant_page3, "normal", "DIFFICULTY_NORMAL", 6);
@@ -177,8 +178,8 @@ public class Text {
         addLineSafe(lines_with_constant_page1, "Entering", "ENTERING", 16);
         addLineSafe(lines_with_constant_page1, "Loading area...", "LOADING_AREA", 16);
         addLineSafe(lines_with_constant_page1, "the jungle", "AREA0_NAME", 16);
-        addLineSafe(lines_with_constant_page1, "the Temple of Inscriptions", "AREA1_NAME", 16);
-        addLineSafe(lines_with_constant_page1, "the Hidden Temple", "AREA2_NAME", 16);
+        addLineSafe(lines_with_constant_page1, "Temple of Inscriptions", "AREA1_NAME", 16);
+        addLineSafe(lines_with_constant_page1, "Hidden Temple", "AREA2_NAME", 16);
         addLineSafe(lines_with_constant_page1, "the confluence", "AREA3_NAME", 16);
         addLineSafe(lines_with_constant_page1, "the Inverted Pyramid", "AREA4_NAME", 16);
         addLineSafe(lines_with_constant_page1, "the fire shaft", "AREA5_NAME", 16);

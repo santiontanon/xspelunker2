@@ -8,6 +8,7 @@ FLASH_ROUTINES_RAM_SIZE: equ flash_routines_RAM_end - flash_routines_RAM
 SAVEGAME_CURRENT_AREA_ID_OFFSET: equ 1 + 16 + 4
 SAVEGAME_CURRENT_ROOM_ID_OFFSET: equ 1 + 16 + 4 + 1
 
+SAVEGAME_SEED_OFFSET: equ 1 + 16
 SAVEGAME_TIME_OFFSET: equ 1 + 16 + 4 + 2 + (stats__time - RAM_to_zero_on_game_start)
 SAVEGAME_PLAYER_HEALTH_OFFSET: equ 1 + 16 + 4 + 2 + (player_health - RAM_to_zero_on_game_start)
 SAVEGAME_PLAYER_MAX_HEALTH_OFFSET: equ 1 + 16 + 4 + 2 + (player_max_health - RAM_to_zero_on_game_start)

@@ -34,21 +34,6 @@ savegame_menu_loop_done_from_title:
 
 
 ;-----------------------------------------------
-savegame_area_names:
-	dw TEXT_AREA0_NAME
-	dw TEXT_AREA1_NAME
-	dw TEXT_AREA2_NAME
-	dw TEXT_AREA3_NAME
-	dw TEXT_AREA4_NAME
-	dw TEXT_AREA5_NAME
-	dw TEXT_AREA6_NAME
-	dw TEXT_AREA7_NAME
-	dw TEXT_AREA8_NAME
-	dw TEXT_AREA9_NAME
-	dw TEXT_AREA10_NAME
-	dw TEXT_AREA11_NAME
-
-
 savegame_menu_draw:
 	ld hl, savegame_tiles_zx0
 	ld c, SAVEGAME_MENU_PAGE
@@ -127,7 +112,7 @@ savegame_menu_draw_entry_full:
 		ld bc, SAVEGAME_CURRENT_AREA_ID_OFFSET
 		add hl, bc
 		ld a, (hl)
-		ld hl, savegame_area_names
+		ld hl, area_names_page_0
 		add a, a
 		ADD_HL_A
 		ld a, (hl)
@@ -179,6 +164,62 @@ savegame_menu_draw_entry_full:
 		push ix
 		pop hl
 		ld bc, 19*8
+		add hl, bc
+		ex de, hl
+		ld hl, buffer_4096
+		ld iy, #8000 + 16*COLOR_WHITE
+		ld b, 8
+		call draw_sentence_to_vdp_from_another_page
+	pop hl
+	pop iy
+	pop ix
+
+	; world seed:
+	push ix
+	push iy
+	push hl
+		push ix
+			ld de, TEXT_SEED_COLON
+			ld hl, copy_text_from_another_page
+			ld c, TEXT_PAGE3
+			call call_hl_in_page_c_8000
+		pop hl
+		ld bc, (16 + 10)*8
+		add hl, bc
+		ex de, hl
+		ld hl, buffer_4096
+		ld iy, #8000 + 16*COLOR_DARK_YELLOW
+		ld b, 4
+		call draw_sentence_to_vdp_from_another_page
+	pop hl
+	pop iy
+	pop ix
+
+	; compute seed string:
+	push ix
+	push iy
+	push hl
+		ld bc, SAVEGAME_SEED_OFFSET
+		add hl, bc
+		ld a, (hl)
+		ld ixl, a
+		inc hl
+		ld a, (hl)
+		ld ixh, a
+		ld hl, gamestart_generate_random_seed_string_ix
+		ld c, GAMESTART_PAGE
+		call call_hl_in_page_c_8000
+	pop hl
+	pop iy
+	pop ix
+
+	; draw seed string:
+	push ix
+	push iy
+	push hl
+		push ix
+		pop hl
+		ld bc, (16 + 13)*8
 		add hl, bc
 		ex de, hl
 		ld hl, buffer_4096
@@ -458,17 +499,11 @@ savegame_menu_loop_save_1_continue:
 
 savegame_menu_loop_save_1_continue_cannot:
 	pop hl
-; 	ld a, (.....)
-; 	or a
-; 	jr nz, savegame_menu_loop_save_1_continue_cannot_flashrom
 	ld a, (savegame_menu_called_from)
 	or a
 	jr z, savegame_menu_loop_save_1_continue_cannot_in_game
 	ld de, TEXT_CANNOT_SAVE_TITLE
 	jr savegame_menu_loop_save_1_continue_cannot_continue
-; savegame_menu_loop_save_1_continue_cannot_flashrom:
-; 	ld de, TEXT_NO_FLASHROM
-; 	jr savegame_menu_loop_save_1_continue_cannot_continue
 savegame_menu_loop_save_1_continue_cannot_in_game:
 	ld de, TEXT_CANNOT_SAVE
 savegame_menu_loop_save_1_continue_cannot_continue:
@@ -648,7 +683,7 @@ draw_savegame_menu_coins:
 			ex de, hl
 			push iy
 			pop hl
-			ld bc, 32 * 2 + 19
+			ld bc, 32 * 2 + 20
 			add hl, bc
 			ld a, 25  ; coin
 			call WRTVRM
