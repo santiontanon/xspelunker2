@@ -369,6 +369,11 @@ savegame_menu_loop_load_1_continue:
 		ld c, GAMESTART_PAGE
 		call call_hl_in_page_c_8000
 
+		; do we need to spawn the forge?
+		ld hl, gamestart_compute_random_seed_spawn_forge_p		
+		ld c, GAMESTART_PAGE
+		call call_hl_in_page_c_8000
+
 		ld hl, pcg_generate_world
 		ld c, PCG_PAGE_WORLD
 		call call_hl_in_page_c_8000

@@ -1,17 +1,9 @@
 to do:
 
-***- play beginning to end on seed 1E2Y4ZT (#003a):
-  ***- figure out caiman statue seeds, and get them all:
-    caiman 1, 3 in 1E2Y4ZT
-  ***- find the forge and activate it
-  ***- small chest in area 1: 2, 2
-  ***- small chest in caves west bottom right
-  ***- get ending B+
-  ***- get ending A+
-
 ***- add seed to savegame preview
 ***- can I fit current area name in the inventory screen?
 ***- when teleporting to the same location where you entered, do not do teleporting animation, and just go back to the room
+
 - save config options to rom:
   - add a "save as default" option to the config menu that saves to ROM
   - add a "revert to defaults" option (restores to the saved defaults)

@@ -386,6 +386,7 @@ gamestart_compute_random_seed_loop:
 	ld hl, #5555
 	ld (current_world__seed + 2), hl
 
+gamestart_compute_random_seed_spawn_forge_p:
 	; do we need to spawn the forge?
 	xor a
 	ld (current_world__spawn_firestone_forge), a

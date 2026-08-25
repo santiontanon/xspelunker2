@@ -311,6 +311,11 @@ display_map_from_teleporter__teleport_to_astronomy_room:
 	ld a, #ff
 	call clear_memory_a
 
+	ld hl, 0
+	ld (large_object_to_upload_to_vdp), hl
+	xor a
+	ld (large_object_to_upload_to_vdp_size), a
+
 	ld hl, astronomy_room__generate
 	ld c, ASTRONOMY_ROOM_PAGE
 	call call_hl_in_page_c_8000
