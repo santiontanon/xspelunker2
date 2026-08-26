@@ -1314,7 +1314,7 @@ draw_inventory_map_have_map_ia_loop:
 	jr z, draw_inventory_map_have_map_ia_loop_found_1
 	cp (ix + 1)
 	jr z, draw_inventory_map_have_map_ia_loop_found_2
-	jr draw_inventory_map_have_map_ia_loop_next
+	jp draw_inventory_map_have_map_ia_loop_next
 draw_inventory_map_have_map_ia_loop_found_1:
 	ld c, (ix + 2)  ; x
 	ld b, (ix + 3)  ; y
@@ -1356,10 +1356,15 @@ draw_inventory_map_have_map_ia_loop_found_left:
 	inc hl
 	inc hl
 	inc hl
-	call SETWRT
-	ld a, (VDP.DW)
-	ld c, a
-	ld a, #e0
+	push hl
+		call RDVRM
+	pop hl
+	push af
+		call SETWRT
+		ld a, (VDP.DW)
+		ld c, a
+	pop af
+	or #e0
 	jr draw_inventory_map_have_map_ia_loop_found_right_continue
 draw_inventory_map_have_map_ia_loop_found_up:
 	push hl

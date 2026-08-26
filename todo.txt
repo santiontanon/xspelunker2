@@ -1,9 +1,5 @@
 to do:
 
-***- BUG: atlantis seed #4afa extra connection in minimap bottom room
-***- when teleporting to the same location where you entered, do not do teleporting animation, and just go back to the room:
-  ***- in tile-objects.asm: object_interaction_function_teleport_to_area_object
-
 - music: (brain 12, 15, 23, 25 have potential): xibalba, atlantis, mars, moon
 
 

@@ -2503,12 +2503,16 @@ object_interaction_function_teleporter_moon:
 ; - c: teleporter object ID
 object_interaction_function_teleport_to_area_object:
 	; teleport:
+	ld a, (current_area__id)
+	cp b
+	jp z, object_interaction_function_teleport_to_area_object_same_area
 	push bc
 		ld e, b
 		ld hl, interarea_exit_screen
 		ld c, INTERAREA_PAGE
 		call call_hl_in_page_c_8000
 	pop bc
+object_interaction_function_teleport_to_area_object_post_interarea_screen:
 
 	ld a, b
 	cp 9
@@ -2556,7 +2560,7 @@ object_interaction_function_teleport_to_area_object_room_id_set:
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
-	pop af
+	pop af  ; recover teleporter object ID.
 
 	; find teleporter object, and set player in its position:
 	ld e, a
@@ -2578,6 +2582,16 @@ object_interaction_function_teleport_to_area_object_room_id_set:
 	ld (player_state), a
 	ld a, 31  ; immune while teleporting
 	ld (player_immunity_timer), a
+	jp state_play_from_loaded_room
+
+object_interaction_function_teleport_to_area_object_same_area:
+	push bc
+		call disable_VDP_output
+	pop bc
+	ld a, (current_room__id)
+	cp ASTRONOMY_ROOM_ID  ; teleporting from astronomy room to the other teleporter in the same area?
+	jp z, object_interaction_function_teleport_to_area_object_post_interarea_screen
+	; otherwise, we are just teleporting to the same place, so, do not teleport
 	jp state_play_from_loaded_room
 
 

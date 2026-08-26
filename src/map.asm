@@ -301,9 +301,14 @@ display_map_from_teleporter_loop_prev_continue2:
 display_map_from_teleporter__teleport_to_astronomy_room:
 	ld a, (current_world__astronomy_room_area)
 	ld e, a
+	ld a, (current_area__id)
+	cp e
+	jr z, display_map_from_teleporter__teleport_to_astronomy_room_from_same_area
+
 	ld hl, interarea_exit_screen
 	ld c, INTERAREA_PAGE
 	call call_hl_in_page_c_8000
+display_map_from_teleporter__teleport_to_astronomy_room_post_interarea_screen:
 
 	; clear the enemy respawn table:
 	ld hl, current_room__initial_enemy_ids_end
@@ -334,6 +339,15 @@ display_map_from_teleporter__teleport_to_astronomy_room:
 	ld a, 31  ; immune while teleporting
 	ld (player_immunity_timer), a
 	jp state_play_from_loaded_room
+
+display_map_from_teleporter__teleport_to_astronomy_room_from_same_area:
+	push bc
+		call disable_VDP_output
+	pop bc
+	ld a, (current_room__id)
+	cp ASTRONOMY_ROOM_ID
+	jp z, state_play_from_loaded_room
+	jr display_map_from_teleporter__teleport_to_astronomy_room_post_interarea_screen
 
 
 ;-----------------------------------------------
