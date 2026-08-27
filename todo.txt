@@ -1,12 +1,28 @@
 to do:
 
-- music: (brain 12, 15, 23, 25 have potential): xibalba, atlantis, mars, moon
+***- music: (brain 12, 15, 23, 25 have potential): xibalba, atlantis, mars, moon
 
+***- betatesting:
+  ***- send to beta testers
+  ***- update credits
 
---------------------
+***- instructions:
+- walk
+- crouch / crawl
+- jump (control in-air)
+- ropes / ladders (jump from rope/ladder, drop from rope/ladder)
+- swim (+ oxygen)
+- weapon swing (machete is directional, even down when in the air)
+- directional weapons (shield / darts / etc.)
+- pick-up / interact / use-items
+- inventory / equip
 
-For instructions:
-- "jump" acts as "interact" in the inventory screen (so that it works with joystick)
+- adjusted controls for joystick:
+  - "up" for interact
+  - "down + jump" for inventory
+  - "jump" acts as "interact" in the inventory screen (so that it works with joystick)
+
+- some items add abilities (double jump, float)
 
 --------------------
 
