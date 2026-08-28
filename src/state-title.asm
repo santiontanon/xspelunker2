@@ -136,6 +136,8 @@ state_title_text_nametable2:
 	db 245, 246, 247, 248, 249, 250, 251, 252, 253, 254  ; santiago ontanon
 state_title_text_nametable3:
 	db 235, 236, 237, 238, 239, 240, 241, 242, 243, 244  ; space to start
+state_title_text_nametable4:
+	db 219, 220, 221, 222, 223  ; version
 
 
 ;-----------------------------------------------
@@ -152,6 +154,12 @@ state_title_draw_credits:
 	call call_hl_in_page_c_8000
 	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096, CHRTBL2 + (256*2 + 245)*8, 16*COLOR_WHITE, 10
 
+	ld de, TEXT_CREDITS3
+	ld hl, copy_text_from_another_page
+	ld c, TEXT_PAGE2
+	call call_hl_in_page_c_8000
+	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096, CHRTBL2 + (256 + 219)*8, 16*COLOR_WHITE, 5
+
 	ld hl, state_title_text_nametable1
 	ld de, NAMTBL2 + 23*32 + 21
 	ld b, 11
@@ -159,6 +167,10 @@ state_title_draw_credits:
 	ld hl, state_title_text_nametable2
 	ld de, NAMTBL2 + 23*32
 	ld b, 10
+	call fast_small_LDIRVM
+	ld hl, state_title_text_nametable4
+	ld de, NAMTBL2 + 14*32 + 23
+	ld b, 5
 	jp fast_small_LDIRVM
 
 

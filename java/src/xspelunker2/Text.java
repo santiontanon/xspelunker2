@@ -55,6 +55,7 @@ public class Text {
         // Title:
         addLineSafe(lines_with_constant_page2, "Brain Games (2026)", "CREDITS1", 11);
         addLineSafe(lines_with_constant_page2, "Santiago Ontañón", "CREDITS2", 10);
+        addLineSafe(lines_with_constant_page2, "alpha 0.1", "CREDITS3", 10);
         addLineSafe(lines_with_constant_page2, "SPACE to start", "START1", 10);
         addLineSafe(lines_with_constant_page2, " X for options", "START2", 10);
         addLineSafe(lines_with_constant_page2, "   L to load", "START3", 10);
