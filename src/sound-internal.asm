@@ -311,6 +311,8 @@ update_sound_internal_no_time_step:
     jr z, update_sound_PLAY_SFX_OPEN_HIHAT
     dec a   ; MUSIC_CMD_PLAY_SFX_SHORT_HIHAT
     jr z, update_sound_PLAY_SFX_SHORT_HIHAT
+    dec a   ; MUSIC_CMD_PLAY_SFX_DRUM_SHORT_RE
+    jr z, update_sound_PLAY_SFX_DRUM_SHORT_RE
     dec a   ; MUSIC_CMD_PLAY_SFX_DRUM_SHORTER_RE
     jr z, update_sound_PLAY_SFX_DRUM_SHORTER_RE
     dec a   ; MUSIC_CMD_PLAY_SFX_DRUM_SHORTER_C
@@ -376,6 +378,10 @@ update_sound_PLAY_SFX_OPEN_HIHAT:
 
 update_sound_PLAY_SFX_DRUM_SHORTER_C:
     ld bc, SFX_drum_shorter_c
+    jp update_sound_PLAY_SFX_SHORT_HIHAT_entry
+
+update_sound_PLAY_SFX_DRUM_SHORT_RE:
+    ld bc, SFX_drum_short_re
     jp update_sound_PLAY_SFX_SHORT_HIHAT_entry
 
 update_sound_PLAY_SFX_DRUM_SHORTER_RE:

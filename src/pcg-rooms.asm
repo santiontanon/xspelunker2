@@ -91,8 +91,8 @@ area_default_tileset_ptrs:
 	dw tile_collision_types_xibalba
 	db XIBALBA_ENEMY_SPRITES_PAGE
 	dw xibalba_enemy_sprites_zx0  ; xibalba
-	dw 0
-	db 0
+	dw music_xibalba_bin
+	db 7
 
 	db ATLANTIS_TILES_PAGE
 	dw tiles_atlantis_zx0, 0, update_animations_in_vdp_atlantis
@@ -100,8 +100,8 @@ area_default_tileset_ptrs:
 	dw tile_collision_types_atlantis
 	db ATLANTIS_ENEMY_SPRITES_PAGE
 	dw atlantis_enemy_sprites_zx0  ; atlantis
-	dw 0
-	db 0
+	dw music_atlantis_bin
+	db 7
 
 	db MARS_TILES_PAGE
 	dw tiles_mars_zx0, 0, update_animations_in_vdp_mars
@@ -109,8 +109,8 @@ area_default_tileset_ptrs:
 	dw tile_collision_types_mars
 	db MARS_ENEMY_SPRITES_PAGE
 	dw mars_enemy_sprites_zx0  ; mars
-	dw 0
-	db 0
+	dw music_mars_bin
+	db 12
 
 	db MOON_TILES_PAGE
 	dw tiles_moon_zx0, 0, update_animations_in_vdp_moon
@@ -118,8 +118,8 @@ area_default_tileset_ptrs:
 	dw tile_collision_types_moon
 	db MOON_ENEMY_SPRITES_PAGE
 	dw moon_enemy_sprites_zx0  ; moon
-	dw 0
-	db 0
+	dw music_moon_bin
+	db 12
 
 
 ;-----------------------------------------------

@@ -173,8 +173,8 @@ public class MSXSong {
                         } else {
                             // We also include the instruments in repeat starts, just in case:
                             if (instrument[i] != note.instrument || repeatStart) {
-                                if (note.instrument>=MSXNote.instrumentNames.length) {
-                                    System.out.println("WFT?!");
+                                if (note.instrument >= MSXNote.instrumentNames.length) {
+                                    System.out.println("WFT?! " + note.instrument + " >= " + MSXNote.instrumentNames.length);
                                 }
                                 String instrumentName = MSXNote.instrumentNames[note.instrument];
                                 if (instrumentName == null || instrumentName.isBlank()) {

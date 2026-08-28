@@ -1,0 +1,132 @@
+pianostaccato,Re1	Piano,Re3	sfx(sfx_drum_shorter_re)
+	Fa3	
+Re2	Lab3	sfx(sfx_short_hihat)
+	Fa3	
+Re1	Re3	sfx(sfx_drum_shorter_re)
+	Fa3	
+Re2	Lab3	sfx(sfx_open_hihat)
+	Fa3	
+Re1	Re3	sfx(sfx_drum_shorter_re)
+	Fa3	
+Re2	Lab3	sfx(sfx_short_hihat)
+	Fa3	
+Re1	Eb3	sfx(sfx_drum_shorter_re)
+	Mib3	
+Re2	Sol3	sfx(sfx_short_hihat)
+	Mib3	
+pianostaccato,Re1	Piano,Re3	sfx(sfx_drum_shorter_re)
+	Fa3	
+Re2	Lab3	sfx(sfx_short_hihat)
+	Fa3	
+Re1	Re3	sfx(sfx_drum_shorter_re)
+	Fa3	
+Re2	Lab3	sfx(sfx_open_hihat)
+	Fa3	
+Re1	Do#3	sfx(sfx_drum_shorter_re)
+	Mi3	
+Re2	Sol3	sfx(sfx_short_hihat)
+	Mi3	
+Re1	Do#3	sfx(sfx_drum_shorter_re)
+	Mi3	
+Re2	La3	sfx(sfx_open_hihat)
+	Mi3	
+pianostaccato,Reb1	pianostaccato,Reb3	sfx(sfx_drum_shorter_re)
+	Fa3	
+Reb2	Lab3	sfx(sfx_short_hihat)
+	Fa3	
+Reb1	Reb3	sfx(sfx_drum_shorter_re)
+	Fa3	
+Reb2	Lab3	sfx(sfx_open_hihat)
+	Fa3	
+Reb1	Do3	sfx(sfx_drum_shorter_re)
+	Mi3	
+Reb2	Sol3	sfx(sfx_short_hihat)
+	Mi3	
+Reb1	Do3	sfx(sfx_drum_shorter_re)
+	Mi3	
+Reb2	Sol#3	sfx(sfx_open_hihat)
+	Mi3	
+pianostaccato,Do1	Piano,Do3	sfx(sfx_drum_shorter_re)
+	Mib3	
+Do2	Fa#3	sfx(sfx_short_hihat)
+	Mib3	
+Do1	Do3	sfx(sfx_drum_shorter_re)
+	Mib3	
+Do2	Fa#3	sfx(sfx_open_hihat)
+	Mib3	
+Do1	Si2	sfx(sfx_drum_shorter_re)
+	Re3	
+Do2	Fa3	sfx(sfx_short_hihat)
+	Re3	
+Do1	Si2	sfx(sfx_drum_shorter_re)
+	Re3	
+Do2	Sol3	sfx(sfx_open_hihat)
+	Re3	
+volume(14),pianostaccato,Re1	Piano,Re4	sfx(sfx_drum_shorter_re)
+Re2	Lab4	sfx(sfx_short_hihat)
+Re1	Sol4	sfx(sfx_short_hihat)
+Re2	Fa4	sfx(sfx_drum_shorter_re)
+Re1	Mib4	sfx(sfx_short_hihat)
+Re2	Re4	sfx(sfx_short_hihat)
+Re1	Do#4	sfx(sfx_drum_shorter_re)
+Re2	Re4	sfx(sfx_open_hihat)
+volume(14),pianostaccato,Re1	Piano,Re4	sfx(sfx_drum_shorter_re)
+Re2	Lab4	sfx(sfx_short_hihat)
+Re1	Sol4	sfx(sfx_short_hihat)
+Re2	Fa4	sfx(sfx_drum_shorter_re)
+Re1	Mib4	sfx(sfx_short_hihat)
+Re2	Re4	sfx(sfx_short_hihat)
+Re1	 Do#4	sfx(sfx_drum_shorter_re)
+Re2	La4	sfx(sfx_open_hihat)
+volume(15),Piano,Re1	pad,Re4	sfx(sfx_drum_shorter_re)
+		sfx(sfx_short_hihat)
+Re2	pianosoft,Lab4	
+		
+Re1	pianosoft,Sol4	sfx(sfx_drum_shorter_re)
+		
+Re2	pianosoft,Fa4	sfx(sfx_open_hihat)
+		
+Piano,Do#1	pad,Do#4	sfx(sfx_drum_shorter_re)
+		sfx(sfx_short_hihat)
+Do#2	pianosoft,Sol4	
+		
+Do#1	pianosoft,Fa4	sfx(sfx_drum_shorter_re)
+		
+Do#2	pianosoft,Mi4	sfx(sfx_open_hihat)
+		
+Piano,Do1	pad,Do4	sfx(sfx_drum_shorter_re)
+		sfx(sfx_short_hihat)
+Do2	pianosoft,Fa#4	
+		
+Do1	pianosoft,Fa4	sfx(sfx_drum_shorter_re)
+		
+Do2	pianosoft,Mib4	sfx(sfx_open_hihat)
+		
+Piano,Si0	pad,Si3	sfx(sfx_drum_shorter_re)
+		sfx(sfx_short_hihat)
+Si1	pianosoft,Fa4	
+		
+Si0	pianosoft,Mi4	sfx(sfx_drum_shorter_re)
+		
+Si1	pianosoft,Re4	sfx(sfx_open_hihat)
+		
+pianostaccato,Re1	pianostaccato,Re3	sfx(sfx_drum_shorter_re)
+	Mib3	
+	Fa3	
+	Lab3	
+Re1	Mib3	sfx(sfx_drum_shorter_re)
+	Fa3	
+	Lab3	
+	Si3	
+Re1	Fa3	sfx(sfx_drum_shorter_re)
+	Lab3	
+	Si3	
+	Re4	
+Re1	Lab3	sfx(sfx_drum_shorter_re)
+	Si3	
+	Re4	
+	Fa4	
+Piano,Re1	Piano,Re2	sfx(sfx_drum_shorter_re)
+		sfx(sfx_short_hihat)
+		sfx(sfx_open_hihat)
+		sfx(sfx_short_hihat_louder)
