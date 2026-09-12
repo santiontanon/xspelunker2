@@ -1,10 +1,15 @@
 to do:
 
+
 ***- betatesting (prepare an instructions sheet for them):
-  ***- send to beta testers:
-    ***- MP83
-    ***- Sure
-    ***- Xavi Sorinas
+  ***- betatester bugs (Xavi Sorinas, MP83, Sure):
+    OK - shop: wrap around when moving
+    OK - "clear_screen_left_to_right" should clear the sprites synchronized with clearing the liens
+    OK - for loading a game, default option should be "yes"
+    ***- make sure it's clear when I use "Michael" vs "Xavier"
+    ***- Cambiar "I have noted them down in my diary just in case" porque no hay ningún diario
+    ***- maybe make box of coins a bit bigger so they are easier to pickup?
+    ***- some times dropped items are not rendered properly, why?
   ***- update credits
 
 ***- music: (brain 12, 15, 23, 25 have potential): xibalba, atlantis, mars, moon

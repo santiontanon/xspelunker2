@@ -151,8 +151,12 @@ state_yesno_dialog_draw_text:
 
 
 ;-----------------------------------------------
+state_yesno_dialog_mainloop_yes:
+	xor a
+	jr state_yesno_dialog_mainloop_continue
 state_yesno_dialog_mainloop:
 	ld a, 1  ; no
+state_yesno_dialog_mainloop_continue:
 	ld (tmp_dialog_pointer_position), a
 state_yesno_dialog_loop:
 	halt

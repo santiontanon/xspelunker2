@@ -34,7 +34,7 @@ clear_all_the_sprites_bc_set:
 
 ;-----------------------------------------------
 clear_screen_left_to_right:
-    call clear_all_the_sprites
+    ; call clear_all_the_sprites
     ; ensure tile 0 is all black (we only need to ensure this on bank 3 for XSpelunker 2):
     ld hl, CLRTBL2 + 256*8*2
     ld b, 8
@@ -45,6 +45,23 @@ clear_screen_left_to_right:
 clear_screen_left_to_right_loop:
     push hl
     push bc
+        ; clear all the sprites that start at x position < (32 - b) * 8 + 8
+        ld a, 33
+        sub b
+        add a, a
+        add a, a
+        add a, a  ; a = (32 - b) * 8 + 8
+        jr z, clear_screen_left_to_right_last_column
+        push hl
+            ld c, a
+            call clear_all_the_sprites_left_to_c
+        pop hl
+        jr clear_screen_left_to_right_loop_continue
+clear_screen_left_to_right_last_column:
+        push hl
+            call clear_all_the_sprites
+        pop hl
+clear_screen_left_to_right_loop_continue:
         ld b, 24
 clear_screen_left_to_right_loop2:
         push bc
@@ -64,6 +81,28 @@ clear_screen_left_to_right_loop2:
     inc hl
     halt
     djnz clear_screen_left_to_right_loop
+    ret
+
+
+clear_all_the_sprites_left_to_c:
+    ; clear all the sprites with x coordinate < a:
+    ld b, 32
+    ld hl, SPRATR2 + 1  ; x coordinate of the first sprite
+clear_all_the_sprites_left_to_c_loop:
+    call RDVRM
+    cp c
+    jr nc, clear_all_the_sprites_left_to_c_loop_next
+    ; clear the sprite:
+    dec hl
+    ld a, 200  ; y coordinate outside of the screen
+    call WRTVRM
+    dec hl
+clear_all_the_sprites_left_to_c_loop_next:
+    inc hl
+    inc hl
+    inc hl
+    inc hl
+    djnz clear_all_the_sprites_left_to_c_loop
     ret
 
 

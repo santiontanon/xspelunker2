@@ -676,7 +676,7 @@ shop_update_cursor_select_battery:
 shop_update_cursor_right:
 	ld a, (tmp_shop_cursor_position)
 	cp 8
-	ret z
+	jr z, shop_update_cursor_right_right_most
 shop_update_cursor_right_loop:
 	ld a, (tmp_shop_cursor_position)
 	inc a
@@ -694,11 +694,15 @@ shop_update_cursor_right_done:
 	ld hl, SFX_ui_move
 	call play_SFX_with_high_priority	
 	jp shop_update_coins_and_description_after_movement
+shop_update_cursor_right_right_most:
+	xor a
+	ld (tmp_shop_cursor_position), a
+	jr shop_update_cursor_right_done
 
 shop_update_cursor_left:
 	ld a, (tmp_shop_cursor_position)
 	or a
-	ret z
+	jr z, shop_update_cursor_left_leftmost
 shop_update_cursor_left_loop:
 	ld a, (tmp_shop_cursor_position)
 	dec a
@@ -710,9 +714,15 @@ shop_update_cursor_left_loop:
 	ld a, (hl)
 	or a
 	jr z, shop_update_cursor_left_loop
+shop_update_cursor_left_done:
 	ld hl, SFX_ui_move
 	call play_SFX_with_high_priority	
 	jp shop_update_coins_and_description_after_movement
+shop_update_cursor_left_leftmost:
+	ld a, 8
+	ld (tmp_shop_cursor_position), a
+	jr shop_update_cursor_left_done
+
 
 
 ;-----------------------------------------------

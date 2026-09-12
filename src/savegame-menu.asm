@@ -386,7 +386,7 @@ savegame_menu_loop_load_1_continue:
 	cp #ff
 	ret z  ; no save game here
 	push hl
-		call savegame_menu_confirm_dialogue
+		call savegame_menu_confirm_dialogue_default_yes
 	pop hl
 	ret nz
 
@@ -530,14 +530,19 @@ savegame_menu_loop_save_3:
 ; output:
 ; - z: yes
 ; - nz: no
+savegame_menu_confirm_dialogue_default_yes:
+	ld hl, state_yesno_dialog_mainloop_yes
+	jr savegame_menu_confirm_dialogue_continue
 savegame_menu_confirm_dialogue:
-	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO TEXT_ARE_YOU_SURE, CHRTBL2 + (2*256 + 51) * 8, 16*COLOR_WHITE, 8
-	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO TEXT_YES, CHRTBL2 + (2*256 + 68) * 8, 16*COLOR_WHITE, 4
-	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO TEXT_NO, CHRTBL2 + (2*256 + 72) * 8, 16*COLOR_WHITE, 4
-
+	ld hl, state_yesno_dialog_mainloop
+savegame_menu_confirm_dialogue_continue:
+	push hl
+		DRAW_SENTENCE_TO_VDP_REMOTE_MACRO TEXT_ARE_YOU_SURE, CHRTBL2 + (2*256 + 51) * 8, 16*COLOR_WHITE, 8
+		DRAW_SENTENCE_TO_VDP_REMOTE_MACRO TEXT_YES, CHRTBL2 + (2*256 + 68) * 8, 16*COLOR_WHITE, 4
+		DRAW_SENTENCE_TO_VDP_REMOTE_MACRO TEXT_NO, CHRTBL2 + (2*256 + 72) * 8, 16*COLOR_WHITE, 4
+	pop hl
 	ld a, 19 * 8 - 1
 	ld (tmp_dialog_options_position), a
-	ld hl, state_yesno_dialog_mainloop
 	ld c, TEXT_PAGE
 	call call_hl_in_page_c_8000
 
