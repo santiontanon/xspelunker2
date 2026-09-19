@@ -2,17 +2,29 @@ to do:
 
 
 ***- betatesting (prepare an instructions sheet for them):
-  ***- betatester bugs (Xavi Sorinas, MP83, Sure):
-    OK - shop: wrap around when moving
-    OK - "clear_screen_left_to_right" should clear the sprites synchronized with clearing the liens
-    OK - for loading a game, default option should be "yes"
-    ***- make sure it's clear when I use "Michael" vs "Xavier"
-    ***- Cambiar "I have noted them down in my diary just in case" porque no hay ningún diario
-    ***- maybe make box of coins a bit bigger so they are easier to pickup?
-    ***- some times dropped items are not rendered properly, why?
-  ***- update credits
+  OK - Cambiar "I have noted them down in my diary just in case" porque no hay ningún diario
+  OK - make sure it's clear when I use "Michael" vs "Xavier"
+  OK - increase Kabrakan difficulty (more HP)
+  OK - increase Camazotz difficulty (higher probability of attacks)
+  OK - some times dropped items are not rendered properly, why?:
+    OK - the problem is that after a dialog box, tiles in the middle bank are not properly reset!
+  OK - make breakable wall with default seed easier to find:
+    OK - update room0100-2.tmx
+    OK - update seashell description to make it more explicit
+  OK - make Seashell SFX louder
+  OK - special tileset for inverted pyramid which has more vines, and looks more broken and abandoned in general (and faces are inverted)
+  OK - instructions: explain that you need to equip an item (e.g. a key) to use it
+  OK - update credits: Jordi Sureda, Xavi Sorinas, MP83 (?)
+  OK - increase HP of boss 6
+  ***- enforce all 6 symbols to appear in the puzzle boxes 
 
 ***- music: (brain 12, 15, 23, 25 have potential): xibalba, atlantis, mars, moon
+  ***- xibalba song: Fm -> Bbm -> Eb -> Ab -> Db -> Cm -> B -> Fm
+    - In Ab, the chords are: 
+      major: 1:Ab, 4:Db, 5:Eb
+      minor: 2:Bbm, 3:Cm, 6:Fm
+      diminished: 7:Gdim
+    - the progression was: 6, 2, 5, 1, 4, 3, 2nat, 6
 
 
 --------------------

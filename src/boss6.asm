@@ -46,23 +46,23 @@ boss6_face_turret_frame_ptrs:
 ; - phase 2: until boss reaches ~33% health
 ; - phase 3: until boss reaches 0% health
 boss6_difficulty_setting__easy:
-	dw 192, 144, 64  ; boss hp, and thresholds for phase 2 and 3
+	dw 320, 240, 128  ; boss hp, and thresholds for phase 2 and 3
 	db 32, BOSS_BULLET_PATTERN_EASY2, #7f, 2  ; wait time, bullet pattern, mouth attack mask, n stones
 	db #0f, 1 ; eye turret mask / eye turret bullet mask, max drones
 
 boss6_difficulty_setting__normal:
 ; 	dw 32, 240, 108  ; boss hp, and thresholds for phase 2 and 3 (DEBUG)
-	dw 320, 240, 108  ; boss hp, and thresholds for phase 2 and 3
+	dw 480, 320, 160  ; boss hp, and thresholds for phase 2 and 3
 	db 32, BOSS_BULLET_PATTERN_MEDIUM2, #3f, 3  ; wait time, bullet pattern, mouth attack mask, n stones
 	db #07, 2 ; eye turret mask / eye turret bullet mask, max drones
 
 boss6_difficulty_setting__hard:
-	dw 416, 312, 140  ; boss hp, and thresholds for phase 2 and 3
+	dw 640, 480, 224  ; boss hp, and thresholds for phase 2 and 3
 	db 28, BOSS_BULLET_PATTERN_HARD2, #1f, 4  ; wait time, bullet pattern, mouth attack mask, n stones
 	db #07, 2 ; eye turret mask / eye turret bullet mask, max drones
 
 boss6_difficulty_setting__hardest:
-	dw 512, 384, 176  ; boss hp, and thresholds for phase 2 and 3
+	dw 768, 512, 256  ; boss hp, and thresholds for phase 2 and 3
 	db 24, BOSS_BULLET_PATTERN_HARDEST2, #1f, 5  ; wait time, bullet pattern, mouth attack mask, n stones
 	db #03, 3 ; eye turret mask / eye turret bullet mask, max drones
 

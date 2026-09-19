@@ -31,25 +31,25 @@ BOSS_3_MIN_X: equ 1
 
 ;-----------------------------------------------
 boss3_difficulty_setting__easy:
-	dw 32  ; boss hp
+	dw 48  ; boss hp
 	db 32, 16, #0f  ; wait, walk, walk-time-mask
 	db 8, #07, 48, 1  ; dash, dash-time-mask, stomp, # debris
 	db #03, BOSS_BULLET_PATTERN_EASY1  ; head-time-mask, bullet-time-mask
 
 boss3_difficulty_setting__normal:
-	dw 48  ; boss hp
+	dw 64  ; boss hp
 	db 32, 16, #0f  ; wait, walk, walk-time-mask
 	db 4, #03, 32, 2  ; dash, dash-time-mask, stomp, # debris
 	db #03, BOSS_BULLET_PATTERN_MEDIUM1  ; head-time-mask, bullet-time-mask
 
 boss3_difficulty_setting__hard:
-	dw 64  ; boss hp
+	dw 80  ; boss hp
 	db 28, 16, #0f  ; wait, walk, walk-time-mask
 	db 4, #03, 28, 3  ; dash, dash-time-mask, stomp, # debris
 	db #03, BOSS_BULLET_PATTERN_HARD1  ; head-time-mask, bullet-time-mask
 
 boss3_difficulty_setting__hardest:
-	dw 80  ; boss hp
+	dw 96  ; boss hp
 	db 24, 8, #07  ; wait, walk, walk-time-mask
 	db 4, #03, 24, 4  ; dash, dash-time-mask, stomp, # debris
 	db #03, BOSS_BULLET_PATTERN_HARDEST1  ; head-time-mask, bullet-time-mask

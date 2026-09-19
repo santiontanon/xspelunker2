@@ -48,7 +48,8 @@ display_in_game_message_textpage4_wait100_loop:
 
 	call display_in_game_message_internal_continue
 	
-	jp setup_game_tiles_only_biome
+; 	jp setup_game_tiles_only_biome
+	jp setup_game_tiles
 
 
 ;-----------------------------------------------
@@ -68,7 +69,8 @@ display_in_game_message_textpage4:
 ; - de: text to display
 display_in_game_message:
 	call display_in_game_message_internal
-	jp setup_game_tiles_only_biome
+	; jp setup_game_tiles_only_biome
+	jp setup_game_tiles
 
 
 ;-----------------------------------------------

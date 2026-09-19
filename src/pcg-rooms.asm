@@ -49,8 +49,8 @@ area_default_tileset_ptrs:
 	dw music_caves_bin
 	db 12
 
-	db PYRAMID_TILES_PAGE
-	dw tiles_pyramid_zx0, 0, update_animations_in_vdp_pyramid
+	db TILES_INVERTED_PYRAMID_PAGE
+	dw tiles_pyramid_inverted_zx0, 0, update_animations_in_vdp_pyramid
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_pyramid
 	db ENEMY_SPRITES_PAGE

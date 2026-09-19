@@ -35,25 +35,25 @@ BOSS_2_BAT_HP_OFFSET: equ 11
 
 ;-----------------------------------------------
 boss2_difficulty_setting__easy:
-	dw 60  ; boss hp
+	dw 80  ; boss hp
 	db 32, 16, #0f, 4, #03  ; wait, walk, walk-time-mask, dash, dash-time-mask
 	db 24, #07, 40  ; bullet time, bullet frequency, attack time
 	db 2, 1  ; max bats, bat hp
 
 boss2_difficulty_setting__normal:
-	dw 80  ; boss hp
+	dw 120  ; boss hp
 	db 24, 16, #0f, 4, #03  ; wait, walk, walk-time-mask, dash, dash-time-mask
 	db 32, #07, 32  ; bullet time, bullet frequency, attack time
 	db 3, 1  ; max bats, bat hp
 
 boss2_difficulty_setting__hard:
-	dw 100  ; boss hp
+	dw 160  ; boss hp
 	db 20, 16, #0f, 4, #03  ; wait, walk, walk-time-mask, dash, dash-time-mask
 	db 24, #03, 28  ; bullet time, bullet frequency, attack time
 	db 4, 1  ; max bats, bat hp
 
 boss2_difficulty_setting__hardest:
-	dw 128  ; boss hp
+	dw 200  ; boss hp
 	db 16, 8, #07, 4, #03  ; wait, walk, walk-time-mask, dash, dash-time-mask
 	db 32, #03, 24  ; bullet time, bullet frequency, attack time
 	db 4, 2  ; max bats, bat hp
@@ -401,19 +401,18 @@ update_boss2_behavior_1_state_0:
 ; 	ld (boss__state), a
 ; 	ret
 	; chance of going to:
-	; - 1: walk forward: 3
-	; - 2: walk backward: 1
-	; - 3: dash: 1
-	; - 4, 5, 6: attacks: 1, 1, 1
-	call random_a
-	and #07
-	cp 3
+	; - 0, 1: walk forward
+	; - 2: walk backward
+	; - 3: dash
+	; - 4, 5, 6: attacks
+	ld c, 7
+	call random_modulo
+	cp 2
 	jr c, update_boss2_behavior_1_state_0_go_walk
 ; 	; DEBUG:
 ; 	ld a, 6
 ; 	ld (boss__state), a
 ; 	ret
-	dec a
 	ld (boss__state), a
 	ret
 update_boss2_behavior_1_state_0_go_walk:

@@ -7531,9 +7531,11 @@ enemy_maybe_spawn_drop:
 	cp 32 * 2
 	ld hl, spawn_tile_object_1_coin
 	jr c, enemy_maybe_spawn_drop_drop
+; 	jr enemy_maybe_spawn_drop_drop  ; DEBUG!
 	cp 40 * 2
 	ld hl, spawn_tile_object_corn
 	jr c, enemy_maybe_spawn_drop_drop
+; 	jr enemy_maybe_spawn_drop_drop  ; DEBUG!
 	cp 48 * 2
 	ld hl, spawn_tile_object_stones
 	jr c, enemy_maybe_spawn_drop_drop_stones

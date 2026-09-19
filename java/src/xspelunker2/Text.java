@@ -350,7 +350,8 @@ public class Text {
         addLineSafe(lines_with_constant_page1, "Maya warrior hat: I feel swift like a Maya warrior when I put it on!", "ITEM_WARRIOR_HAT", 80);
         addLineSafe(lines_with_constant_page1, "Cotton armor: a classic Mayan armor. It will protect me from damage.", "ITEM_COTTON_ARMOR", 80);
         addLineSafe(lines_with_constant_page1, "Chaac blessing: a small token depicting the Mayan Chaac deity. Water feels less daunting with it.", "ITEM_CHAAC_BLESSING", 80);
-        addLineSafe(lines_with_constant_page1, "Seashell: somehow I can hear it ringing when there is something hidden in a room.", "ITEM_SEASHELL", 80);
+//        addLineSafe(lines_with_constant_page1, "Seashell: somehow I can hear it ringing when there is something hidden in a room.", "ITEM_SEASHELL", 80);
+        addLineSafe(lines_with_constant_page1, "Seashell: somehow I can hear it ringing when a breakable block in a room.", "ITEM_SEASHELL", 80);
         addLineSafe(lines_with_constant_page1, "Antigravity belt: alien technology, lets me fall through the air slowly (hold the UP key).", "ITEM_BELT", 80);
         addLineSafe(lines_with_constant_page1, "Ice cape: a cape with a coating of ice, which seems never to melt. It'll protect me from heat.", "ITEM_ICE_CAPE", 80);
         addLineSafe(lines_with_constant_page1, "A letter from Elaine. Press INTERACT to read it.", "ITEM_LETTER1", 80);
@@ -422,12 +423,12 @@ public class Text {
         addLineSafe(lines_with_constant_page4, "THREAT ELIMINATED. ANALYZING PROVENANCE...", "TALK_CALENDAR_SUCCESS5", 112);
         addLineSafe(lines_with_constant_page4, "THREAT IDENTIFIED AS COMING FROM TZ'AB' EK', KOWN AS THE PLEIADES IN YOUR LANGUAGE. SPECIFICALLY, THE THIRD PLANET ORBITING THE MAIA STAR.", "TALK_CALENDAR_SUCCESS6", 112);
         addLineSafe(lines_with_constant_page4, "OPEN A GATE TO THE THIRD PLANET OF MAIA?", "TALK_CALENDAR_SUCCESS7", 112);
-        addLineSafe(lines_with_constant_page4, "Michael: The Maia star?! So, that's where they are coming from! And doesn't the name sound way too similar to the Maya?", "TALK_CALENDAR_SUCCESS8", 112);
-        addLineSafe(lines_with_constant_page4, "Michael: After all we have learned, I think there are lots of history books that will have to be rewritten...", "TALK_CALENDAR_SUCCESS9", 112);
-        addLineSafe(lines_with_constant_page4, "Michael: But that will have to wait. Elaine, this is our chance to end this thread from its root. I need to go there and finish what I started.", "TALK_CALENDAR_SUCCESS10", 112);
-        addLineSafe(lines_with_constant_page4, "Michael: But we have done enough here... let's go home Elaine!", "TALK_CALENDAR_SUCCESS10B", 112);
+        addLineSafe(lines_with_constant_page4, "Xavier: The Maia star?! So, that's where they are coming from! And doesn't the name sound way too similar to the Maya?", "TALK_CALENDAR_SUCCESS8", 112);
+        addLineSafe(lines_with_constant_page4, "Xavier: After all we have learned, I think there are lots of history books that will have to be rewritten...", "TALK_CALENDAR_SUCCESS9", 112);
+        addLineSafe(lines_with_constant_page4, "Xavier: But that will have to wait. Elaine, this is our chance to end this thread from its root. I need to go there and finish what I started.", "TALK_CALENDAR_SUCCESS10", 112);
+        addLineSafe(lines_with_constant_page4, "Xavier: But we have done enough here... let's go home Elaine!", "TALK_CALENDAR_SUCCESS10B", 112);
         addLineSafe(lines_with_constant_page4, "Elaine: What are you talking about!? Michael! You want to go?! That's crazy! You don't know what you will find there!", "TALK_CALENDAR_SUCCESS11", 112);
-        addLineSafe(lines_with_constant_page4, "Michael: I know. But after coming this far, I feel I can do this. Believe in me! Please keep watch here until I return!", "TALK_CALENDAR_SUCCESS12", 112);
+        addLineSafe(lines_with_constant_page4, "Xavier: I know. But after coming this far, I feel I can do this. Believe in me! Please keep watch here until I return!", "TALK_CALENDAR_SUCCESS12", 112);
         addLineSafe(lines_with_constant_page4, "Elaine: You are crazy Michael, but I know I cannot stop you. Please be careful...", "TALK_CALENDAR_SUCCESS13", 112);
 
         addLineSafe(lines_with_constant_page3, "PA-PAT-TZA-JA CHANAL PAKAL", "CALENDAR_ACTIVATED_C_1", 112);  // It was erected heavinly shield
@@ -511,7 +512,7 @@ public class Text {
         
         // Calendar tablet:
         addLineSafe(lines_with_constant_page1, "Look at this! I do not understand these annotations!", "CALENDAR_TABLET1", 32);
-        addLineSafe(lines_with_constant_page1, "I have noted them down in my diary just in case.", "CALENDAR_TABLET2", 32);
+        addLineSafe(lines_with_constant_page1, "I have noted them down just in case.", "CALENDAR_TABLET2", 32);
         
         // Elaine letters:
         addLineSafe(lines_with_constant_page1, "Michael,", "ELAINE_LETTER1A_LINE1", 28);
@@ -793,7 +794,7 @@ public class Text {
 
         addLineSafe(lines_with_constant_page4, "Leader: INCOMPETENCE!! WHY IN THE GALAXY ARE ALL MY SUBORDINATES SO USELESS!!", "BOSS8_INTRO_11", 112);
         addLineSafe(lines_with_constant_page4, "Leader: A HUMAN!! IN MY CHAMBERS?! WHAT IS THE MEANING OF THIS?!", "BOSS8_INTRO_12", 112);
-        addLineSafe(lines_with_constant_page4, "Michael: A human you say? Not any human! I am Michael S. Xavier, and I have come to make you pay for your crimes!", "BOSS8_INTRO_13", 112);
+        addLineSafe(lines_with_constant_page4, "Xavier: A human you say? Not any human! I am Michael S. Xavier, and I have come to make you pay for your crimes!", "BOSS8_INTRO_13", 112);
         addLineSafe(lines_with_constant_page4, "Leader: MY... CRIMES?! WHAT IS THIS INSOLENCE!?", "BOSS8_INTRO_14", 112);
         addLineSafe(lines_with_constant_page4, "Leader: BUT NO MATTER. I SEE I WILL HAVE TO DO THINGS MYSELF... AGAIN... COME HERE AND FIND DEATH, LITTLE HUMAN!!", "BOSS8_INTRO_15", 112);
 
@@ -801,11 +802,11 @@ public class Text {
         addLineSafe(lines_with_constant_page4, "Leader: NOOOOOOOO!!!!!", "BOSS8_DEATH", 112);
 
         addLineSafe(lines_with_constant_page4, "Alien: Please stop! You cannot leave yet!", "BOSS8_DEFEAT_1", 112);
-        addLineSafe(lines_with_constant_page4, "Michael: You are going to need more than the one of you to defeat me! Even your leader could not do it!", "BOSS8_DEFEAT_2", 112);
+        addLineSafe(lines_with_constant_page4, "Xavier: You are going to need more than the one of you to defeat me! Even your leader could not do it!", "BOSS8_DEFEAT_2", 112);
         addLineSafe(lines_with_constant_page4, "Alien: No, no, you misunderstand! We do not want to fight you! We want to thank you!", "BOSS8_DEFEAT_3", 112);
-        addLineSafe(lines_with_constant_page4, "Michael: ???", "BOSS8_DEFEAT_4", 112);
+        addLineSafe(lines_with_constant_page4, "Xavier: ???", "BOSS8_DEFEAT_4", 112);
         addLineSafe(lines_with_constant_page4, "Alien: You have done a great service to us! That Maia bastard was holding our race hostage, and forcing us to do its bidding. We are now free!", "BOSS8_DEFEAT_5", 112);
-        addLineSafe(lines_with_constant_page4, "Michael: So, you were not planning to invade Earth?", "BOSS8_DEFEAT_6", 112);
+        addLineSafe(lines_with_constant_page4, "Xavier: So, you were not planning to invade Earth?", "BOSS8_DEFEAT_6", 112);
         addLineSafe(lines_with_constant_page4, "Alien: Well, our fleet went there, but it was Maia's plan! I have hope now that we can retake control of the council and stop this madness! We cannot thank you enough!", "BOSS8_DEFEAT_7", 112);
         addLineSafe(lines_with_constant_page4, "Alien: You are free to go now, of course. But know that you will always be welcome here! We are in your debt!", "BOSS8_DEFEAT_8", 112);
         
@@ -916,9 +917,9 @@ public class Text {
 
         // Ending A:
         addLineSafe(lines_with_constant_page4, "Elaine: Michael! You are back!! I was so worried!! Tell me!! How did it go??", "ENDING_A_CALENDAR_1", 22*4);
-        addLineSafe(lines_with_constant_page4, "Michael: I told you I could do it!! I will tell you the details later, but the alien thread is no more Elaine!! We did it!!", "ENDING_A_CALENDAR_2", 22*4);
+        addLineSafe(lines_with_constant_page4, "Xavier: I told you I could do it!! I will tell you the details later, but the alien thread is no more Elaine!! We did it!!", "ENDING_A_CALENDAR_2", 22*4);
         addLineSafe(lines_with_constant_page4, "Elaine: Look! The Nexus is turning off!! It looks like the powerstones got depleted.", "ENDING_A_CALENDAR_3", 22*4);
-        addLineSafe(lines_with_constant_page4, "Michael: And the teleporter too!! Elaine, let's get out of here just in case...", "ENDING_A_CALENDAR_4", 22*4);
+        addLineSafe(lines_with_constant_page4, "Xavier: And the teleporter too!! Elaine, let's get out of here just in case...", "ENDING_A_CALENDAR_4", 22*4);
 
         addLineSafe(lines_with_constant_page4, "Xavier: Woah, can you believe it? I actually did it Elaine!", "ENDING_A_BEACH_1", 22*6);
         addLineSafe(lines_with_constant_page4, "Elaine: Err... WE did it... have you forgotten about how I saved your ass?", "ENDING_A_BEACH_2", 22*6);
@@ -1002,7 +1003,8 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "2XSpelunker", "ENDING_C_PAGE_2_9", 20);
         addLineSafe(lines_with_constant_page3, "Brain Games, 2026", "ENDING_C_PAGE_2_10", 20);
         addLineSafe(lines_with_constant_page3, "code/gfx/music: Santiago Ontañón", "ENDING_C_PAGE_2_11", 20);
-        addLineSafe(lines_with_constant_page3, "betatesting: [TBD]", "ENDING_C_PAGE_2_12", 20);
+        addLineSafe(lines_with_constant_page4, "betatesting: Jordi Sureda,", "ENDING_C_PAGE_2_12", 20);
+        addLineSafe(lines_with_constant_page4, "   Xavi Sorinas, MP83", "ENDING_C_PAGE_2_13", 20);
 
         addLineSafe(lines_with_constant_page4, "Please try again to reach ending A!", "ENDING_B_PAGE_2_2", 20);
         addLineSafe(lines_with_constant_page4, "How to get ending A? Well...", "ENDING_B_PAGE_2_3", 20);

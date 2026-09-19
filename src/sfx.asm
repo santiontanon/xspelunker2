@@ -857,37 +857,39 @@ SFX_sonic_attack:
 ; #00e2
 SFX_secret:
   db 7, #b8  ; tone in all three channels
-  db 10,#0d  ; volume
+  db 10,#0f  ; volume
   db 5, #01, 4+MUSIC_CMD_TIME_STEP_FLAG, #ac
   db MUSIC_CMD_SKIP
+  db 10, #0d
+  db MUSIC_CMD_SKIP
   db 10, #0b
   db MUSIC_CMD_SKIP
-  db 10, #09
-  db MUSIC_CMD_SKIP
-  db 10, #0d
+  db 10, #0f
   db 5, #01, 4+MUSIC_CMD_TIME_STEP_FLAG, #68
   db MUSIC_CMD_SKIP
+  db 10, #0d
+  db MUSIC_CMD_SKIP
   db 10, #0b
   db MUSIC_CMD_SKIP
-  db 10, #09
-  db MUSIC_CMD_SKIP
-  db 10, #0d
+  db 10, #0f
   db 5, #01, 4+MUSIC_CMD_TIME_STEP_FLAG, #1d
   db MUSIC_CMD_SKIP
+  db 10, #0d
+  db MUSIC_CMD_SKIP
   db 10, #0b
   db MUSIC_CMD_SKIP
-  db 10, #09
-  db MUSIC_CMD_SKIP
-  db 10, #0d
+  db 10, #0f
   db 5, #00, 4+MUSIC_CMD_TIME_STEP_FLAG, #e2
   db MUSIC_CMD_SKIP
+  db 10, #0d
+  db MUSIC_CMD_SKIP
   db 10, #0b
   db MUSIC_CMD_SKIP
   db 10, #09
   db MUSIC_CMD_SKIP
-  db 10, #07
+  db 10, #0b
   db MUSIC_CMD_SKIP
-  db 10, #09
+  db 10, #0d
   db MUSIC_CMD_SKIP
   db 10, #0b
   db MUSIC_CMD_SKIP
