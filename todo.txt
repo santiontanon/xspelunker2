@@ -1,16 +1,17 @@
 to do:
 
 
-***- betatesting (prepare an instructions sheet for them):
+***- alpha 0.2 version:
   ***- ask MP83 if he has played the game
 
-***- music: (brain 12, 15, 23, 25 have potential): xibalba, atlantis, mars, moon
-  ***- xibalba song: Fm -> Bbm -> Eb -> Ab -> Db -> Cm -> B -> Fm
-    - In Ab, the chords are: 
-      major: 1:Ab, 4:Db, 5:Eb
-      minor: 2:Bbm, 3:Cm, 6:Fm
-      diminished: 7:Gdim
-    - the progression was: 6, 2, 5, 1, 4, 3, 2nat, 6
+***- beta 1.0 version:
+  ***- music: (brain 12, 15, 23, 25 have potential): xibalba, atlantis, mars, moon
+    ***- xibalba song: Fm -> Bbm -> Eb -> Ab -> Db -> Cm -> B -> Fm
+      - In Ab, the chords are: 
+        major: 1:Ab, 4:Db, 5:Eb
+        minor: 2:Bbm, 3:Cm, 6:Fm
+        diminished: 7:Gdim
+      - the progression was: 6, 2, 5, 1, 4, 3, 2nat, 6
 
 
 --------------------
