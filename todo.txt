@@ -2,21 +2,7 @@ to do:
 
 
 ***- betatesting (prepare an instructions sheet for them):
-  OK - Cambiar "I have noted them down in my diary just in case" porque no hay ningún diario
-  OK - make sure it's clear when I use "Michael" vs "Xavier"
-  OK - increase Kabrakan difficulty (more HP)
-  OK - increase Camazotz difficulty (higher probability of attacks)
-  OK - some times dropped items are not rendered properly, why?:
-    OK - the problem is that after a dialog box, tiles in the middle bank are not properly reset!
-  OK - make breakable wall with default seed easier to find:
-    OK - update room0100-2.tmx
-    OK - update seashell description to make it more explicit
-  OK - make Seashell SFX louder
-  OK - special tileset for inverted pyramid which has more vines, and looks more broken and abandoned in general (and faces are inverted)
-  OK - instructions: explain that you need to equip an item (e.g. a key) to use it
-  OK - update credits: Jordi Sureda, Xavi Sorinas, MP83 (?)
-  OK - increase HP of boss 6
-  ***- enforce all 6 symbols to appear in the puzzle boxes 
+  ***- ask MP83 if he has played the game
 
 ***- music: (brain 12, 15, 23, 25 have potential): xibalba, atlantis, mars, moon
   ***- xibalba song: Fm -> Bbm -> Eb -> Ab -> Db -> Cm -> B -> Fm

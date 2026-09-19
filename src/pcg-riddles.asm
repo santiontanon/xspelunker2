@@ -37,14 +37,63 @@ pcg_generate_maya_puzzle_riddles:
 	call pcg_generate_maya_puzzle_riddle_sentence
 
 	; Generate the combinations for Maya puzzle 2:
+	; - loop1: we first generate 2 * 4 random numbers to assign animals to each position
+	; - loop2: "ensure" that each animal appears at least once
 	ld b, 8
 	ld hl, current_world__maya_puzzle2_combination1
-pcg_generate_maya_puzzle_riddles__puzzle2_loop:
+pcg_generate_maya_puzzle_riddles__puzzle2_loop1:
 	ld c, 5
 	call random_modulo
 	ld (hl), a
 	inc hl
-	djnz pcg_generate_maya_puzzle_riddles__puzzle2_loop
+	djnz pcg_generate_maya_puzzle_riddles__puzzle2_loop1
+
+	ld b, 5
+pcg_generate_maya_puzzle_riddles__puzzle2_loop2:
+	ld a, b
+	dec a
+	; look if 'b' appears:
+	push bc
+		ld b, 8
+		ld hl, current_world__maya_puzzle2_combination1
+pcg_generate_maya_puzzle_riddles__puzzle2_loop2_internal:
+		cp (hl)
+		jr z, pcg_generate_maya_puzzle_riddles__puzzle2_loop2_internal_found
+		inc hl
+		djnz pcg_generate_maya_puzzle_riddles__puzzle2_loop2_internal
+
+		; not found! add an instance of 'a' to a repeated number:
+		ld e, a  ; number we want to add
+		ld b, 5
+pcg_generate_maya_puzzle_riddles__puzzle2_loop2_internal2:
+		push bc
+			ld c, 0  ; number of times we have encountered 'b - 1'
+			ld a, b
+			dec a
+			ld b, 8
+			ld hl, current_world__maya_puzzle2_combination1
+pcg_generate_maya_puzzle_riddles__puzzle2_loop2_internal2_internal:
+			cp (hl)
+			jr nz, pcg_generate_maya_puzzle_riddles__puzzle2_loop2_internal2_internal_continue
+			dec c
+			jr nz, pcg_generate_maya_puzzle_riddles__puzzle2_loop2_internal2_internal_not_repeated
+			; found a repeated number!
+			ld (hl), e
+		pop bc
+		jr pcg_generate_maya_puzzle_riddles__puzzle2_loop2_internal2_done
+pcg_generate_maya_puzzle_riddles__puzzle2_loop2_internal2_internal_not_repeated:
+			inc c
+			inc c
+pcg_generate_maya_puzzle_riddles__puzzle2_loop2_internal2_internal_continue:
+			inc hl
+			djnz pcg_generate_maya_puzzle_riddles__puzzle2_loop2_internal2_internal
+		pop bc
+		djnz pcg_generate_maya_puzzle_riddles__puzzle2_loop2_internal2
+		; we should never get here!
+pcg_generate_maya_puzzle_riddles__puzzle2_loop2_internal2_done:
+pcg_generate_maya_puzzle_riddles__puzzle2_loop2_internal_found:
+	pop bc
+	djnz pcg_generate_maya_puzzle_riddles__puzzle2_loop2
 	ret
 
 
