@@ -1,8 +1,7 @@
 to do:
 
 
-***- alpha 0.2 version:
-  ***- ask MP83 if he has played the game
+***- alpha 0.4 version:
 
 ***- beta 1.0 version:
   ***- music: (brain 12, 15, 23, 25 have potential): xibalba, atlantis, mars, moon

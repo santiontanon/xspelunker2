@@ -1784,7 +1784,7 @@ ending_final_text_scene_nametable_init_loop:
 
 			; Tiles will be organized like this:
 			; bank 1:
-			; - 0 - 76: banner tiles
+			; - 0 - 80: banner tiles
 			; - 128 - 256: parts used by text
 			; bank 2:
 			; - for every row of 32:
@@ -1792,7 +1792,7 @@ ending_final_text_scene_nametable_init_loop:
 			;   - text uses tiles 12 - 32
 			; bank 3:
 			; - 0 - 128: parts used by text
-			; - 128 - 204: banner tiles
+			; - 128 - 208: banner tiles
 
 			ld hl, ending_mayabanner_tiles_zx0
 			ld de, buffer_4096
@@ -1801,11 +1801,11 @@ ending_final_text_scene_nametable_init_loop:
 			; bank 1:
 			ld hl, buffer_4096
 			ld de, CHRTBL2
-			ld bc, 76*8
+			ld bc, 80*8
 			call fast_LDIRVM
 			ld hl, buffer_4096 + 256*8
 			ld de, CLRTBL2
-			ld bc, 76*8
+			ld bc, 80*8
 			call fast_LDIRVM
 			ld hl, ending_mayabanner_nametable
 			ld de, NAMTBL2
@@ -1815,11 +1815,11 @@ ending_final_text_scene_nametable_init_loop:
 			; bank 3:
 			ld hl, buffer_4096
 			ld de, CHRTBL2 + 8 * (2*256+128)
-			ld bc, 76*8
+			ld bc, 80*8
 			call fast_LDIRVM
 			ld hl, buffer_4096 + 256*8
 			ld de, CLRTBL2 + 8 * (2*256+128)
-			ld bc, 76*8
+			ld bc, 80*8
 			call fast_LDIRVM
 			ld hl, ending_mayabanner_nametable + 32*4
 			ld de, NAMTBL2 + 32*20

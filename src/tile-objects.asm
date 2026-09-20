@@ -1630,7 +1630,7 @@ object_interaction_function_pickup_heart:
 
 	ld de, TEXT_HEART_PICKUP
 object_interaction_function_pickup_map_piece_continue:
-	ld hl, display_in_game_message_textpage2
+	ld hl, display_in_game_message_textpage4
 	ld c, TEXT_PAGE
 	push ix
 		call call_hl_in_page_c_8000

@@ -1181,6 +1181,9 @@ mars_robot_puzzle_interaction_panel_clear_box:
 
 	ld hl, redraw_flags
 	ld (hl), #ff
+
+	xor a
+	ld (keyboard_clicks), a	
 	ret
 
 

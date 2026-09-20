@@ -72,7 +72,7 @@ display_elaine_letter1:
 	; page 2:
 	call disable_VDP_output
 
-FIRST_LETTER1B_USEABLE_TILE: equ 60
+FIRST_LETTER1B_USEABLE_TILE: equ 63
 
 		ld hl, elaine_letter1b_tiles_zx0
 		ld c, TABLET_LETTER_PAGE
@@ -127,12 +127,12 @@ FIRST_LETTER1B_USEABLE_TILE: equ 60
 
 		ld hl, TEXT_ELAINE_LETTER1B_LINE5
 		ld a, FIRST_LETTER1B_USEABLE_TILE + 28*3
-		ld de, NAMTBL2 + (19 + 2*32)
+		ld de, NAMTBL2 + (16 + 2*32)
 		ld ix, CHRTBL2
 		call display_paragraph
 		ld hl, TEXT_ELAINE_LETTER1B_LINE6
 		ld a, FIRST_LETTER1B_USEABLE_TILE + 28*3 + 5
-		ld de, NAMTBL2 + (19 + 3*32)
+		ld de, NAMTBL2 + (16 + 3*32)
 		call display_paragraph
 
 		ld hl, TEXT_ELAINE_LETTER1B_LINE7
@@ -140,6 +140,25 @@ FIRST_LETTER1B_USEABLE_TILE: equ 60
 		ld de, NAMTBL2 + (3 + 22*32)
 		ld ix, CHRTBL2 + 256*8*2
 		call display_paragraph
+
+		ld a, 3
+		ld (tmp_letter_line_width), a
+		ld hl, TEXT_ELAINE_LETTER1B_LINE8
+		ld a, FIRST_LETTER1B_USEABLE_TILE + 28*3 + 10
+		ld de, NAMTBL2 + (28 + 1*32)
+		ld ix, CHRTBL2
+		call display_paragraph
+		ld hl, TEXT_ELAINE_LETTER1B_LINE9
+		ld a, FIRST_LETTER1B_USEABLE_TILE + 28*3 + 13
+		ld de, NAMTBL2 + (28 + 2*32)
+		ld ix, CHRTBL2
+		call display_paragraph
+		ld hl, TEXT_ELAINE_LETTER1B_LINE10
+		ld a, FIRST_LETTER1B_USEABLE_TILE + 28*3 + 16
+		ld de, NAMTBL2 + (28 + 3*32)
+		ld ix, CHRTBL2
+		call display_paragraph
+
     call enable_VDP_output
 
 	call wait_for_click

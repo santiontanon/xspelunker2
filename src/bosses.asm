@@ -396,6 +396,10 @@ enter_boss_door__spawn_mars_boss_objects:
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_WIDTH), 4
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_HEIGHT), 2
 	ld (iy + ROOM_TILE_OBJECT_STRUCT_LAST_HIT_ID), #ff
+
+	; if player has seashell, ring:
+	ld a, 1
+	ld (play_seashell_flag), a
 	ret
 enter_boss_door__spawn_mars_boss_objects_wall_destroyed:
 	ld bc, #1502

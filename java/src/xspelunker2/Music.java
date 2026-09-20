@@ -65,9 +65,9 @@ public class Music {
 
 //        playTSVMusic("data/music/beach.tsv", 8, 0, null);
 
-//        playTSVMusic("data/music/test-2.tsv", 8, 0, null);
+        playTSVMusic("data/music/test.tsv", 10, 0, null);
 
-        generateInGamesongData();
+//        generateInGamesongData();
     }
     
     

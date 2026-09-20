@@ -1,124 +1,120 @@
-Piano,Re1	pianosoft,Re3	sfx(sfx_drum_shorter_re)
-		
-	Lab3	
-		
-	Re3	sfx(sfx_short_hihat)
-		
-	Sol3	
-		
-Re1	Re3	sfx(sfx_drum_shorter_re)
-		
-	Lab3	
-		
-	Fa3	sfx(sfx_open_hihat)
-		
-	Mib3	
-		
-pianostaccato,Reb1	pianosoft,Reb3	sfx(sfx_drum_shorter_re)
-		
-	Sol3	
-		
-	Reb3	sfx(sfx_short_hihat)
-		
-	Fa#3	
-		
-Reb1	Reb3	sfx(sfx_drum_shorter_re)
-		
-	Sol3	
-		
-	Mi3	sfx(sfx_open_hihat)
-		
-	Re3	
-		
-pianostaccato,Do1	pianosoft,Do3	sfx(sfx_drum_shorter_re)
-		
-	Fa#3	
-		
-	Do3	sfx(sfx_short_hihat)
-		
-	Fa3	
-		
-Do1	Do3	sfx(sfx_drum_shorter_re)
-		
-	Fa#3	
-		
-	Mib3	sfx(sfx_open_hihat)
-		
-	Re3	
-		
-Piano,Si0	pad,Si2	sfx(sfx_drum_shorter_re)
-		
-	Fa3	
-		
-	Si2	sfx(sfx_short_hihat)
-		
-	Mi3	
-		
-Si0	Si2	sfx(sfx_drum_shorter_re)
-		
-	Fa3	
-		
-	Re3	sfx(sfx_open_hihat)
-		
-	Do3	
-		
-Piano,Re1	pad,Re4	sfx(sfx_drum_shorter_re)
-		
-		
-		
-	pianosoft,Lab4	sfx(sfx_short_hihat)
-		
-		
-		
-Re1	pad,Do#4	sfx(sfx_drum_shorter_re)
-		
-		
-		
-	pianosoft,Sol4	sfx(sfx_open_hihat)
-		
-		
-		
-Reb1	pad,Do4	sfx(sfx_drum_shorter_re)
-		
-		
-		
-	pianosoft,Fa#4	sfx(sfx_short_hihat)
-		
-		
-		
-Si0	pad,Si3	sfx(sfx_drum_shorter_re)
-		
-		
-		
-	pianosoft,Fa4	sfx(sfx_open_hihat)
-		
-		
-		
-Piano,Re1	Piano,Re3	sfx(sfx_drum_shorter_re)
-	Fa3	
-	Lab3	
-	Re4	
-Re1	-	sfx(sfx_drum_shorter_re)
-	Sol3	
-	Do#4	
-	Mi4	
-Reb1	pianostaccato,Reb3	sfx(sfx_drum_shorter_re)
-	Fa3	
-	Sol3	
-	Do4	
-Reb1	-	sfx(sfx_drum_shorter_re)
-	Mi3	
-	Sol#3	
-	Si3	
-Do1	pianostaccato,Do3	sfx(sfx_drum_shorter_re)
-	Mib3	
-	Fa#3	
-	Si3	
-Do1	-	sfx(sfx_drum_shorter_re)
-	Re3	
-	Fa3	
-	Sib3	
-Piano,Si0	Piano,Si2	sfx(sfx_drum_shorter_re)
-		sfx(sfx_short_hihat)
-		sfx(sfx_open_hihat)
-		sfx(sfx_short_hihat_louder)
+piano, fa1	piano,fa3	piano,-
+fa2	fa#3	
+fa1	fa3	
+fa2	mi3	
+fa1	fa3	
+fa2	fa#3	
+fa1	fa3	
+fa2	mi3	
+fa1	fa3	
+fa2	fa#3	
+fa1	fa3	
+fa2	mi3	
+fa1	fa3	
+fa2	fa#3	
+fa1	fa3	
+fa2	mi3	
+solb1	solb3	
+solb2	sol3	
+solb1	solb3	
+solb2	fa3	
+solb1	solb3	
+solb2	sol3	
+solb1	solb3	
+solb2	fa3	
+solb1	solb3	
+solb2	sol3	
+solb1	solb3	
+solb2	fa3	
+solb1	solb3	
+solb2	sol3	
+solb1	solb3	
+solb2	fa3	
+sib0	sib2	
+sib1		
+sib0	fa3	
+sib1		
+sib0	sib2	
+sib1		
+sib0	fa3	
+sib1		
+do1	sol3	
+do2	mi3	
+do1		
+do2	sib3	
+do1		
+do2		
+do1		
+do2		
+sib0	sib2	
+sib1		
+sib0	fa3	
+sib1		
+sib0	sib2	
+sib1		
+sib0	fa3	
+sib1		
+do1	sib3	
+do2	sol3	
+do1	mi3	
+do2	do3	
+do1		
+do2		
+do1		
+do2		
+solb1	reb3	
+solb2		
+solb1	solb3	
+solb2		
+solb1	reb3	
+solb2		
+solb1	solb3	
+solb2		
+do1	do3	
+do2		
+do1	sol3	
+do2		
+do1	do3	
+do2		
+do1	sol3	
+do2		
+solb1	reb3	
+solb2		
+solb1	solb3	
+solb2		
+solb1	reb3	
+solb2		
+solb1	solb3	
+solb2		
+do1	do3	
+do2		
+do1	sol3	
+do2		
+do1	do3	
+do2		
+do1	sol3	
+do2		
+do1	mib4	
+do2	re4	
+do1	do4	
+do2	sol3	
+do1		
+do2	do4	
+do1		
+do2		
+si0	fa#3	
+si1	fa#3	
+si0		
+si1	si3	
+si0		
+si1	fa#3	
+si0		
+si1	fa#3	
+fa1	fa3	
+fa2		
+fa1		
+fa2		
+fa1		
+fa2		
+fa1		
+fa2		

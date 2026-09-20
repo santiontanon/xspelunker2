@@ -55,7 +55,7 @@ public class Text {
         // Title:
         addLineSafe(lines_with_constant_page2, "Brain Games (2026)", "CREDITS1", 11);
         addLineSafe(lines_with_constant_page2, "Santiago Ontañón", "CREDITS2", 10);
-        addLineSafe(lines_with_constant_page2, "alpha 0.2", "CREDITS3", 10);
+        addLineSafe(lines_with_constant_page2, "alpha 0.3", "CREDITS3", 10);
         addLineSafe(lines_with_constant_page2, "SPACE to start", "START1", 10);
         addLineSafe(lines_with_constant_page2, " X for options", "START2", 10);
         addLineSafe(lines_with_constant_page2, "   L to load", "START3", 10);
@@ -351,7 +351,7 @@ public class Text {
         addLineSafe(lines_with_constant_page1, "Cotton armor: a classic Mayan armor. It will protect me from damage.", "ITEM_COTTON_ARMOR", 80);
         addLineSafe(lines_with_constant_page1, "Chaac blessing: a small token depicting the Mayan Chaac deity. Water feels less daunting with it.", "ITEM_CHAAC_BLESSING", 80);
 //        addLineSafe(lines_with_constant_page1, "Seashell: somehow I can hear it ringing when there is something hidden in a room.", "ITEM_SEASHELL", 80);
-        addLineSafe(lines_with_constant_page1, "Seashell: somehow I can hear it ringing when a breakable block in a room.", "ITEM_SEASHELL", 80);
+        addLineSafe(lines_with_constant_page1, "Seashell: somehow I can hear it ringing when there is a breakable block in a room.", "ITEM_SEASHELL", 80);
         addLineSafe(lines_with_constant_page1, "Antigravity belt: alien technology, lets me fall through the air slowly (hold the UP key).", "ITEM_BELT", 80);
         addLineSafe(lines_with_constant_page1, "Ice cape: a cape with a coating of ice, which seems never to melt. It'll protect me from heat.", "ITEM_ICE_CAPE", 80);
         addLineSafe(lines_with_constant_page1, "A letter from Elaine. Press INTERACT to read it.", "ITEM_LETTER1", 80);
@@ -371,7 +371,7 @@ public class Text {
         addLineSafe(lines_with_constant_page1, "Yatzil notebook: a notebook I found in Yatzil's sanctuary. Press INTERACT to inspect it.", "ITEM_YATZIL_NOTEBOOK", 80);
        
         // In-game messages:
-        addLineSafe(lines_with_constant_page2, "As you consume the still beating heart, you feel your strength increasing!", "HEART_PICKUP", 112);
+        addLineSafe(lines_with_constant_page4, "As you consume the still beating heart, you feel your strength increasing!", "HEART_PICKUP", 112);
         addLineSafe(lines_with_constant_page1, "One more piece of the map!", "MAP_PIECE_PICKUP", 112);
         addLineSafe(lines_with_constant_page1, "That does not seem to be the correct key for this lock!", "WRONG_KEY", 112);
         addLineSafe(lines_with_constant_page1, "That does not seem to be the correct item to use here!", "WRONG_ITEM", 112);
@@ -530,6 +530,9 @@ public class Text {
         addLineSafe(lines_with_constant_page1, "celestial", "ELAINE_LETTER1B_LINE5", 5);
         addLineSafe(lines_with_constant_page1, "stone", "ELAINE_LETTER1B_LINE6", 5);
         addLineSafe(lines_with_constant_page1, "below", "ELAINE_LETTER1B_LINE7", 5);
+        addLineSafe(lines_with_constant_page1, "TUN", "ELAINE_LETTER1B_LINE8", 3);
+        addLineSafe(lines_with_constant_page1, "  or", "ELAINE_LETTER1B_LINE9", 3);
+        addLineSafe(lines_with_constant_page1, "KU", "ELAINE_LETTER1B_LINE10", 3);
         
         addLineSafe(lines_with_constant_page1, "Michael! I hope this reaches you on time!", "ELAINE_LETTER2A_LINE1", 28);
         addLineSafe(lines_with_constant_page1, "DO NOT DESTROY THE CALENDAR STONE!!!", "ELAINE_LETTER2A_LINE2", 28);
