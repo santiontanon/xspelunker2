@@ -531,8 +531,8 @@ public class Text {
         addLineSafe(lines_with_constant_page1, "stone", "ELAINE_LETTER1B_LINE6", 5);
         addLineSafe(lines_with_constant_page1, "below", "ELAINE_LETTER1B_LINE7", 5);
         addLineSafe(lines_with_constant_page1, "TUN", "ELAINE_LETTER1B_LINE8", 3);
-        addLineSafe(lines_with_constant_page1, "  or", "ELAINE_LETTER1B_LINE9", 3);
-        addLineSafe(lines_with_constant_page1, "KU", "ELAINE_LETTER1B_LINE10", 3);
+        addLineSafe(lines_with_constant_page1, " or", "ELAINE_LETTER1B_LINE9", 3);
+        addLineSafe(lines_with_constant_page1, " KU", "ELAINE_LETTER1B_LINE10", 3);
         
         addLineSafe(lines_with_constant_page1, "Michael! I hope this reaches you on time!", "ELAINE_LETTER2A_LINE1", 28);
         addLineSafe(lines_with_constant_page1, "DO NOT DESTROY THE CALENDAR STONE!!!", "ELAINE_LETTER2A_LINE2", 28);

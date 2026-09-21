@@ -65,7 +65,9 @@ public class Music {
 
 //        playTSVMusic("data/music/beach.tsv", 8, 0, null);
 
-        playTSVMusic("data/music/test.tsv", 10, 0, null);
+        playTSVMusic("data/music/boss-alt-v0.tsv", 10, 0, null);
+
+//        playTSVMusic("data/music/test.tsv", 10, 0, null);
 
 //        generateInGamesongData();
     }
@@ -229,6 +231,7 @@ public class Music {
                             ch_instrument[channel] = MSXNote.INSTRUMENT_PIANO;
                             break;
                         case "pianosoft":
+                        case "piano-soft":
                             ch_instrument[channel] = MSXNote.INSTRUMENT_PIANO_SOFT;
                             break;
                         case "wind":

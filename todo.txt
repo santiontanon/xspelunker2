@@ -2,15 +2,12 @@ to do:
 
 
 ***- alpha 0.4 version:
+  OK - swap characters in panel 1 and 2 in robot puzzle
 
 ***- beta 1.0 version:
   ***- music: (brain 12, 15, 23, 25 have potential): xibalba, atlantis, mars, moon
-    ***- xibalba song: Fm -> Bbm -> Eb -> Ab -> Db -> Cm -> B -> Fm
-      - In Ab, the chords are: 
-        major: 1:Ab, 4:Db, 5:Eb
-        minor: 2:Bbm, 3:Cm, 6:Fm
-        diminished: 7:Gdim
-      - the progression was: 6, 2, 5, 1, 4, 3, 2nat, 6
+    ***- the current xibalba test (improved) maybe will be an alternative boss song (odd bosses?)
+    ***- xibalba song: slow, think of [low] paaaa-pa-pa-paa-paa-pa-[high pitch] fadein arpeggio, and then some slow demonic melody that comes in later on. USe chord progressions similar to LeChuck's theme in Monkey Island.
 
 
 --------------------
