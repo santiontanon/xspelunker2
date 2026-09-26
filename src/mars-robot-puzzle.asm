@@ -25,6 +25,8 @@ mars_robot_puzzle_spawn_room:
 	ld de, current_room__id
 	call dzx0
 
+	call stop_music
+
 	ld a, MARS_ROBOT_PUZZLE_PAGE
 	ld (current_room__tileset_page), a
 	ld (current_room__collision_ptr_page), a
@@ -47,6 +49,8 @@ mars_robot_puzzle_spawn_room_animations_ptr_set:
 	ld (large_object_to_upload_to_vdp), hl
 	ld hl, music_tomb_bin
 	ld (current_room__music_ptr), hl
+	ld a, MUSIC_PAGE_1
+	ld (current_room__music_page), a
 	ld a, 16
 	ld (current_room__music_tempo), a
 	ld (current_room__tileset_overrides_item_tiles), a  ; anything other than 0

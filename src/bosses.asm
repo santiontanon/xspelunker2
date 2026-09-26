@@ -420,6 +420,8 @@ enter_boss_door__spawn_final_boss_objects:
     ld (current_room__music_tempo), a
 	ld a, 1
 	ld (room_locked_scroll), a
+	ld a, MUSIC_PAGE_1
+	ld (current_room__music_page), a
 	ret
 
 
@@ -1402,11 +1404,15 @@ update_boss_behavior_bring_name_down:
 		ldir
 
 		; play boss music:
+		di
+		ld a, MUSIC_PAGE_1
+		ld (current_room__music_page), a
 		ld hl, music_boss_bin
 		ld (current_room__music_ptr), hl
 		ld a, 8
 		ld (current_room__music_tempo), a
 		call play_music_adjusting_tempo
+		ei
 	pop hl
 	ld b, 24
 update_boss_behavior_bring_name_down_loop:

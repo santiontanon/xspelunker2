@@ -14,129 +14,146 @@ tmp_pcg_room__current_chunk_bg_bank_ptrs: equ tmp_pcg_room__previous_seed - 2
 ;-----------------------------------------------
 area_default_tileset_ptrs:
 	db JUNGLE_TILES_PAGE
-	dw tiles_jungle_zx0, 0, update_animations_in_vdp_jungle
+	dw tiles_jungle_zx0, update_animations_in_vdp_jungle
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_jungle
 	db ENEMY_SPRITES_PAGE
 	dw jungle_enemy_sprites_zx0  ; jungle
 	dw music_jungle_bin
 	db 6
+	db MUSIC_PAGE_1
 
 	db PYRAMID_TILES_PAGE
-	dw tiles_pyramid_zx0, 0, update_animations_in_vdp_pyramid
+	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_pyramid
 	db ENEMY_SPRITES_PAGE
 	dw pyramid_enemy_sprites_zx0  ; pyramid 1
 	dw music_pyramid_bin
 	db 10
+	db MUSIC_PAGE_1
 
 	db PYRAMID_TILES_PAGE
-	dw tiles_pyramid_zx0, 0, update_animations_in_vdp_pyramid
+	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_pyramid
 	db ENEMY_SPRITES_PAGE
 	dw pyramid_enemy_sprites_zx0  ; pyramid 2
 	dw music_pyramid_bin
 	db 10
+	db MUSIC_PAGE_1
 
 	db CAVES_TILES_PAGE
-	dw tiles_caves_zx0, 0, update_animations_in_vdp_caves
+	dw tiles_caves_zx0, update_animations_in_vdp_caves
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_caves
 	db ENEMY_SPRITES_PAGE
 	dw caves_enemy_sprites_zx0  ; confluence
 	dw music_caves_bin
 	db 12
+	db MUSIC_PAGE_1
 
 	db TILES_INVERTED_PYRAMID_PAGE
-	dw tiles_pyramid_inverted_zx0, 0, update_animations_in_vdp_pyramid
+	dw tiles_pyramid_inverted_zx0, update_animations_in_vdp_pyramid
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_pyramid
 	db ENEMY_SPRITES_PAGE
 	dw pyramid_enemy_sprites_zx0  ; pyramid 3
 	dw music_pyramid_bin
 	db 10
+	db MUSIC_PAGE_1
 
 	db PYRAMID_TILES_PAGE
-	dw tiles_pyramid_zx0, 0, update_animations_in_vdp_pyramid
+	dw tiles_pyramid_zx0, update_animations_in_vdp_pyramid
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_pyramid
 	db ENEMY_SPRITES_PAGE
 	dw pyramid_enemy_sprites_zx0  ; fire shaft
 	dw music_pyramid_bin
 	db 10
+	db MUSIC_PAGE_1
 
 	db CAVES_TILES_PAGE
-	dw tiles_caves_zx0, 0, update_animations_in_vdp_caves
+	dw tiles_caves_zx0, update_animations_in_vdp_caves
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_caves
 	db ENEMY_SPRITES_PAGE
 	dw caves_enemy_sprites_zx0  ; pacific caves
 	dw music_caves_bin
 	db 12
+	db MUSIC_PAGE_1
 
 	db CAVES_TILES_PAGE
-	dw tiles_caves_zx0, 0, update_animations_in_vdp_caves
+	dw tiles_caves_zx0, update_animations_in_vdp_caves
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_caves
 	db ENEMY_SPRITES_PAGE
 	dw caves_enemy_sprites_zx0  ; atlantic caves
 	dw music_caves_bin
 	db 12
+	db MUSIC_PAGE_1
 
 	db XIBALBA_TILES_PAGE
-	dw tiles_xibalba_zx0, 0, update_animations_in_vdp_xibalba
+	dw tiles_xibalba_zx0, update_animations_in_vdp_xibalba
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_xibalba
 	db XIBALBA_ENEMY_SPRITES_PAGE
 	dw xibalba_enemy_sprites_zx0  ; xibalba
 	dw music_xibalba_bin
 	db 7
+	db MUSIC_PAGE_2
 
 	db ATLANTIS_TILES_PAGE
-	dw tiles_atlantis_zx0, 0, update_animations_in_vdp_atlantis
+	dw tiles_atlantis_zx0, update_animations_in_vdp_atlantis
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_atlantis
 	db ATLANTIS_ENEMY_SPRITES_PAGE
 	dw atlantis_enemy_sprites_zx0  ; atlantis
 	dw music_atlantis_bin
 	db 7
+	db MUSIC_PAGE_1
 
 	db MARS_TILES_PAGE
-	dw tiles_mars_zx0, 0, update_animations_in_vdp_mars
+	dw tiles_mars_zx0, update_animations_in_vdp_mars
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_mars
 	db MARS_ENEMY_SPRITES_PAGE
 	dw mars_enemy_sprites_zx0  ; mars
 	dw music_mars_bin
-	db 12
+	db 8
+	db MUSIC_PAGE_2
 
 	db MOON_TILES_PAGE
-	dw tiles_moon_zx0, 0, update_animations_in_vdp_moon
+	dw tiles_moon_zx0, update_animations_in_vdp_moon
 	db AREA_COLLISION_TABLES_PAGE
 	dw tile_collision_types_moon
 	db MOON_ENEMY_SPRITES_PAGE
 	dw moon_enemy_sprites_zx0  ; moon
 	dw music_moon_bin
 	db 12
+	db MUSIC_PAGE_1
 
 
 ;-----------------------------------------------
 pcg_generate_room_reset_state:
 	ld hl, area_default_tileset_ptrs
 	ld a, (current_area__id)
+	ld c, a
 	add a, a  ; a * 2
 	add a, a  ; a * 4
 	add a, a  ; a * 8
 	add a, a  ; a * 16
+	sub a, c  ; a * 15
 	ADD_HL_A
+	xor a
 	ld de, current_room__tileset_page
 	ldi  ; current_room__tileset_page
 	ldi
 	ldi  ; current_room__tileset_ptr
-	ldi
-	ldi  ; current_room__tileset_bank3_ptr
+	ld (de), a
+	inc de
+	ld (de), a  ; current_room__tileset_bank3_ptr
+	inc de
 	ldi
 	ldi  ; current_room__animation_fn_ptr
 	ldi  ; current_room__collision_ptr_page
@@ -148,6 +165,7 @@ pcg_generate_room_reset_state:
 	ldi
 	ldi  ; current_room__music_ptr
 	ldi  ; current_room__music_tempo
+	ldi  ; current_room__music_page
 	xor a
 	ld (current_room__tileset_overrides_item_tiles), a
 

@@ -566,6 +566,8 @@ object_interaction_function_boss9_entrance_internal_generate_room:
     ld de, current_room__id
     call dzx0_from_page_c
 
+    call stop_music
+    
     ld a, CAVES_TILES_PAGE
     ld (current_room__tileset_page), a
     ld de, tiles_caves_zx0
@@ -586,6 +588,8 @@ object_interaction_function_boss9_entrance_internal_generate_room:
     ld (large_object_to_upload_to_vdp), hl
     ld hl, music_tomb_bin
     ld (current_room__music_ptr), hl  ; no music in the boss room until the boss appears
+    ld a, MUSIC_PAGE_1
+    ld (current_room__music_page), a
 
     ; tablet gfx:
     ld hl, buffer_4096 + 60 * 64

@@ -30,7 +30,7 @@ xibalba_standard_chunk_pool:
   db 4, #00, #10  ; data/xibalba/room0100-5.tmx (13)  up: hole, 
   dw #06ef
   db 5, #00, #11  ; data/xibalba/room0101-1.tmx (14)  up: hole, down: hole, 
-  dw #0aaf
+  dw #02af
   db 5, #00, #21  ; data/xibalba/room0101-2.tmx (15)  up: stairs, down: hole, 
   dw #02af
   db 5, #00, #11  ; data/xibalba/room0101-3.tmx (16)  up: hole, down: hole, 

@@ -11,6 +11,7 @@ instrument_profile_table:
     dw major_arpeggio_2ndinv_instrument_profile
     dw minor_arpeggio_instrument_profile
     dw minor_arpeggio_2ndinv_instrument_profile
+    dw diminished_arpeggio_instrument_profile
     dw major_arpeggio_fadein_instrument_profile
     dw minor_arpeggio_fadein_instrument_profile
     dw diminished_arpeggio_fadein_instrument_profile
@@ -23,8 +24,9 @@ major_arpeggio_instrument_profile:
 major_arpeggio_2ndinv_instrument_profile:
 minor_arpeggio_instrument_profile:
 minor_arpeggio_2ndinv_instrument_profile:
+diminished_arpeggio_instrument_profile:
     db 13, 13, 12, 11, 10, 10, 9, 9
-    db 8, 8, 7, 7, 6, #ff
+    db 8, 8, 7, 7, 6, 6, 5, 5, 4, #ff
 soft_piano_instrument_profile:
     db 11, 10, 9, 8, 8, 7, 7
     db 6, 6, 5, 5, 4, #ff

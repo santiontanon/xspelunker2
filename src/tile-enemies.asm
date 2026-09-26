@@ -993,8 +993,8 @@ update_tile_objects_enemy_lava_generator:
 	cp 64 - 25
 	jp c, update_tile_objects_loop_continue
 	call room_render_tile_objects_render_enemy_lava_generator_internal
-	ld hl, SFX_waterfall
-	call play_SFX_with_high_priority
+; 	ld hl, SFX_waterfall
+; 	call play_SFX_with_high_priority
 	jp update_tile_objects_loop_continue
 
 

@@ -3,11 +3,18 @@ to do:
 
 ***- alpha 0.4 version:
   OK - swap characters in panel 1 and 2 in robot puzzle
+  OK - xibalba song
+  OK - mars song
+  ***- remove the lava SFX in xibalba
+  ***- game crashes on Xibalba bosses: "en el court, si lees una tumba cualquiera y luego saltas y disparas en el aire, se cuelga"
+  ***- pista extra de las estellas/8-bridge/forge in A ending.
+  ***- la segunda vez q vas al calendario dice “so this is nexus and the power stones i am finding…” no entiendo muy bien el significado… he encontrado alguna piedra ya? o finding tiene sentido de buscar?
+  ***- pista en final A+ de las semillas/binario/etc.
+  ***- change name to 0.4
 
 ***- beta 1.0 version:
-  ***- music: (brain 12, 15, 23, 25 have potential): xibalba, atlantis, mars, moon
-    ***- the current xibalba test (improved) maybe will be an alternative boss song (odd bosses?)
-    ***- xibalba song: slow, think of [low] paaaa-pa-pa-paa-paa-pa-[high pitch] fadein arpeggio, and then some slow demonic melody that comes in later on. USe chord progressions similar to LeChuck's theme in Monkey Island.
+  ***- atlantis song
+  ***- moon song: mostly silence with some sfx + chord here and there
 
 
 --------------------

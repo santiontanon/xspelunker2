@@ -1,40 +1,6 @@
 ;-----------------------------------------------
 ; User interface sound effects
 
-; SFX_pause:
-;   db  7, #b8
-;   db 10, #0b
-;   db 4,#80, 5+MUSIC_CMD_TIME_STEP_FLAG,#01 ; frequency
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
-;   db 4+MUSIC_CMD_TIME_STEP_FLAG,#00 ; frequency
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
-;   db 4+MUSIC_CMD_TIME_STEP_FLAG,#80 ; frequency
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
-;   db 4+MUSIC_CMD_TIME_STEP_FLAG,#00 ; frequency
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
-;   db 4,#80, 5+MUSIC_CMD_TIME_STEP_FLAG,#00 ; frequency
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
-;   db MUSIC_CMD_SKIP
-;   db 10+MUSIC_CMD_TIME_STEP_FLAG, #09
-;   db MUSIC_CMD_SKIP
-;   db 10+MUSIC_CMD_TIME_STEP_FLAG, #07
-;   db MUSIC_CMD_SKIP
-;   db 10+MUSIC_CMD_TIME_STEP_FLAG, #05
-;   db MUSIC_CMD_SKIP
-;   db 10+MUSIC_CMD_TIME_STEP_FLAG, #03
-;   db MUSIC_CMD_SKIP
-;   db 10, 0
-;   db SFX_CMD_END
-
 SFX_ui_move:
   db  7,#b8  ; SFX all channels to tone
   db 10,#0b  ; volume
@@ -589,28 +555,28 @@ SFX_enemy_bullet:
   db SFX_CMD_END
 
 
-SFX_waterfall:
-  db  7,#9c  ; noise in channel C, and tone in channels B and A
-  db 10,#0a  ; volume
-  db  6+MUSIC_CMD_TIME_STEP_FLAG,#04  ; noise frequency
-  db MUSIC_CMD_SKIP
-  db MUSIC_CMD_SKIP
-  db MUSIC_CMD_SKIP
-  db MUSIC_CMD_SKIP
-  db MUSIC_CMD_SKIP
-  db MUSIC_CMD_SKIP
-  db MUSIC_CMD_SKIP
-  db 10+MUSIC_CMD_TIME_STEP_FLAG,#08  ; volume
-  db MUSIC_CMD_SKIP
-  db 10+MUSIC_CMD_TIME_STEP_FLAG,#06  ; volume
-  db MUSIC_CMD_SKIP
-  db 10+MUSIC_CMD_TIME_STEP_FLAG,#04  ; volume
-  db MUSIC_CMD_SKIP
-  db 10+MUSIC_CMD_TIME_STEP_FLAG,#02  ; volume
-  db MUSIC_CMD_SKIP
-  db 10,#00  ; silence
-  db 7, #b8  ; tone in all three channels
-  db SFX_CMD_END
+; SFX_waterfall:
+;   db  7,#9c  ; noise in channel C, and tone in channels B and A
+;   db 10,#0a  ; volume
+;   db  6+MUSIC_CMD_TIME_STEP_FLAG,#04  ; noise frequency
+;   db MUSIC_CMD_SKIP
+;   db MUSIC_CMD_SKIP
+;   db MUSIC_CMD_SKIP
+;   db MUSIC_CMD_SKIP
+;   db MUSIC_CMD_SKIP
+;   db MUSIC_CMD_SKIP
+;   db MUSIC_CMD_SKIP
+;   db 10+MUSIC_CMD_TIME_STEP_FLAG,#08  ; volume
+;   db MUSIC_CMD_SKIP
+;   db 10+MUSIC_CMD_TIME_STEP_FLAG,#06  ; volume
+;   db MUSIC_CMD_SKIP
+;   db 10+MUSIC_CMD_TIME_STEP_FLAG,#04  ; volume
+;   db MUSIC_CMD_SKIP
+;   db 10+MUSIC_CMD_TIME_STEP_FLAG,#02  ; volume
+;   db MUSIC_CMD_SKIP
+;   db 10,#00  ; silence
+;   db 7, #b8  ; tone in all three channels
+;   db SFX_CMD_END
 
 ; SFX_spell:
 ;   db 7, #b8  ; tone in all three channels

@@ -442,7 +442,7 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "Elaine: Btw, dynamite in Palenque is crazy expensive. Almost went broke to get what I used!", "ELAINE_CALENDAR_3", 112);
         addLineSafe(lines_with_constant_page3, "Elaine: What is taking you so long?", "ELAINE_CALENDAR_4", 112);
         addLineSafe(lines_with_constant_page3, "Elaine: When you are ready, go ahead! I'll be guarding the calendar stone in the meantime.", "ELAINE_CALENDAR_5", 112);
-        addLineSafe(lines_with_constant_page3, "Elaine: Did you see that beautiful Stela in town? I want to study it in more detail when we get out.", "ELAINE_CALENDAR_6", 112);
+        addLineSafe(lines_with_constant_page3, "Elaine: Did you see those beautiful Stelae in town? I want to study them in more detail when we get out.", "ELAINE_CALENDAR_6", 112);
         addLineSafe(lines_with_constant_page3, "Elaine: What?! You found Atlantis! Look, I have seen the aliens myself, but Atlantis? You are bluffing!", "ELAINE_CALENDAR_7", 112);
         addLineSafe(lines_with_constant_page3, "Elaine: This calendar stone is beautiful! Let's activate it and stop the aliens once and for all!", "ELAINE_CALENDAR_8", 112);
         
@@ -524,7 +524,7 @@ public class Text {
         addLineSafe(lines_with_constant_page1, "ps: I attach the translation!", "ELAINE_LETTER1A_LINE7", 28*2);
 
         addLineSafe(lines_with_constant_page1, "The entrance to Palenque has been uncovered. That is where we will start. Where we taught them. Where the first nexus was built.", "ELAINE_LETTER1B_LINE1", 28*3);
-        addLineSafe(lines_with_constant_page1, "The second nexus near Tunguska to the east was lost. But the first remains. The first was the star alignment nexus, and is poweref off.", "ELAINE_LETTER1B_LINE2", 28*3);
+        addLineSafe(lines_with_constant_page1, "The second nexus near Tunguska to the east was lost. But the first remains. The first was the star alignment nexus, and is powered off.", "ELAINE_LETTER1B_LINE2", 28*3);
         addLineSafe(lines_with_constant_page1, "Locate Palenque. The nexus lies below. The six celestial stones... they hid them from us. Locate them before our fleet arrives above.", "ELAINE_LETTER1B_LINE3", 28*4);
         addLineSafe(lines_with_constant_page1, "This time the planet will be ours.", "ELAINE_LETTER1B_LINE4", 28);
         addLineSafe(lines_with_constant_page1, "celestial", "ELAINE_LETTER1B_LINE5", 5);
@@ -574,10 +574,10 @@ public class Text {
         addLineSafe(lines_with_constant_page4, ", etc.", "TABLET_MAYA6_LINE7", 18);
 
         addLineSafe(lines_with_constant_page4, "Another favorite of mine is being able to write colors!", "TABLET_MAYA7_LINE1", 18*2);
-        addLineSafe(lines_with_constant_page4, "For example, the yellow color of corn and the blue color of the sky where written as:", "TABLET_MAYA7_LINE2", 18*3);
+        addLineSafe(lines_with_constant_page4, "For example, the yellow color of corn and the blue color of the sky were written as:", "TABLET_MAYA7_LINE2", 18*3);
         addLineSafe(lines_with_constant_page4, " K'AN", "TABLET_MAYA7_LINE3", 18);
         addLineSafe(lines_with_constant_page4, " YAX", "TABLET_MAYA7_LINE4", 18);
-        addLineSafe(lines_with_constant_page4, "By the way? Are water and air also blue?", "TABLET_MAYA7_LINE5", 18*2);
+        addLineSafe(lines_with_constant_page4, "By the way, are water and air also blue?", "TABLET_MAYA7_LINE5", 18*2);
         addLineSafe(lines_with_constant_page4, "  HA'", "TABLET_MAYA7_LINE6", 18);
         addLineSafe(lines_with_constant_page4, "  IK'", "TABLET_MAYA7_LINE7", 18);
                 
@@ -675,7 +675,7 @@ public class Text {
         // Xibalba tablets:
         addLineSafe(lines_with_constant_page3, "Twin brothers Hun-Hunahpu and Vucub-Hunahpu who lived before the birth of humanity were", "XIBALBA_STORY_TABLET_1_1", 18*3);
         addLineSafe(lines_with_constant_page3, "once summoned to come down to Xibalba to play a ball game. Hun-Came and Vucub-Came killed them, and placed the head of Hun Hunahpu atop of a tree for display.", "XIBALBA_STORY_TABLET_1_2", 18*5);
-        addLineSafe(lines_with_constant_page3, "One day, Xquic, dauther of a lord of Xibalba found the tree where Hun Hunahpu's head was ", "XIBALBA_STORY_TABLET_2_1", 18*3);
+        addLineSafe(lines_with_constant_page3, "One day, Xquic, daughter of a lord of Xibalba found the tree where Hun Hunahpu's head was ", "XIBALBA_STORY_TABLET_2_1", 18*3);
         addLineSafe(lines_with_constant_page3, "exhibited. The head spitted saliva in her hand, and Xquic became pregnant. She gave birth to the heroes Hunahpu and Xbalanque, sons of Hun Hunahpu.", "XIBALBA_STORY_TABLET_2_2", 18*5);
         addLineSafe(lines_with_constant_page3, "It is said that, two heroes, Hunahpu and Xbalanque, visited Xibalba, and were the only ones", "XIBALBA_STORY_TABLET_3_1", 18*3);
         addLineSafe(lines_with_constant_page3, "to ever defeat Hun-Came and Vucub-Came. They resurrected Vucub Hunahpu, and then ascended to the heavens, becoming the Sun and the Moon.", "XIBALBA_STORY_TABLET_3_2", 18*5);
@@ -815,7 +815,7 @@ public class Text {
         
         // Boss 9:
         addLineSafe(lines_with_constant_page4, "Read Plaque", "BOSS9_PANEL2", 10);
-        addLineSafe(lines_with_constant_page4, "We translated the the full story. Proof you have learned it all, then defeat the guardian, and you will learn the rest of the secret.", "BOSS9_PANEL_CLUE", 112);
+        addLineSafe(lines_with_constant_page4, "We translated the full story. Proof you have learned it all, then defeat the guardian, and you will learn the rest of the secret.", "BOSS9_PANEL_CLUE", 112);
         addLineSafe(lines_with_constant_page4, "As you set the last letter in the panel, the giant statue starts shaking... was this a good idea?", "BOSS9_PANEL_SOLVED", 112);
         addLineSafe(lines_with_constant_page4, "ENOUGH!!! Very well human. You have proven worthy of the secret I guard. You are welcome inside.", "BOSS9_DEFEATED", 112);
         addLineSafe(lines_with_constant_page4, "Here lies Yatzil, daughter of the astronomer, leader of our resistance.", "YATZIL_TABLET_1", 18*3);

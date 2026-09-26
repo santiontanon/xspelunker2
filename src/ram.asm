@@ -114,6 +114,7 @@ current_room__enemy_sprites_ptr_page: ds virtual 1
 current_room__enemy_sprites_ptr: ds virtual 2
 current_room__music_ptr: ds virtual 2
 current_room__music_tempo: ds virtual 1
+current_room__music_page: ds virtual 1
 
 current_room__tileset_overrides_item_tiles: ds virtual 1
 current_room__collision_table: ds virtual 256

@@ -15,7 +15,7 @@ def update_sram(rom_path: str, sram_path: str):
     sram_data = bytearray(sram_file.read_bytes())
 
     # Verify input sizes
-    if len(rom_data) < 491520:
+    if len(rom_data) < 31*16*1024:
         raise ValueError(
             f"ROM file is too small! Expected at least 491,520 bytes, got {len(rom_data)} bytes."
         )
@@ -30,8 +30,8 @@ def update_sram(rom_path: str, sram_path: str):
 
     # 2. Bytes 393,216 - 458,752: Maintained from SRAM (no action needed)
 
-    # 3. Bytes 458,752 - 491,520: ROM
-    sram_data[458752:491520] = rom_data[458752:491520]
+    # 3. Bytes 458,752 - end: ROM
+    sram_data[458752:31*16*1024] = rom_data[458752:31*16*1024]
 
     # 4. Bytes 491,520 onwards: Maintained from SRAM (no action needed)
 

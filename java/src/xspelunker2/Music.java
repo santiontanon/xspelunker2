@@ -65,11 +65,17 @@ public class Music {
 
 //        playTSVMusic("data/music/beach.tsv", 8, 0, null);
 
-        playTSVMusic("data/music/boss-alt-v0.tsv", 10, 0, null);
+//        playTSVMusic("data/music/xibalba.tsv", 8, 0, null);
+//        playTSVMusic("data/music/music.tsv", 10, 0, null);
+
+//        playTSVMusic("data/music/xibalba-placeholder.tsv", 8, 0, null);
+//        playTSVMusic("data/music/boss-alt-v0.tsv", 10, 0, null);
+//        playTSVMusic("data/music/boss-alt-v1.tsv", 10, 0, null);  // adds some new parts (some of them are nice)
+//        playTSVMusic("data/music/boss-alt-v2.tsv", 10, 0, null);
 
 //        playTSVMusic("data/music/test.tsv", 10, 0, null);
 
-//        generateInGamesongData();
+        generateInGamesongData();
     }
     
     
@@ -79,10 +85,9 @@ public class Music {
         MSXSong jungle = loadTSVMusic("data/music/jungle1c.tsv", false);
         MSXSong caves = loadTSVMusic("data/music/caves2.tsv", false);
         MSXSong pyramid = loadTSVMusic("data/music/pyramid2.tsv", false);
-        MSXSong xibalba = loadTSVMusic("data/music/xibalba-placeholder.tsv", false);
+        MSXSong xibalba = loadTSVMusic("data/music/xibalba.tsv", false);
         MSXSong atlantis = loadTSVMusic("data/music/atlantis-placeholder.tsv", false);
-        MSXSong mars = loadTSVMusic("data/music/mars-placeholder.tsv", false);
-        mars.transpose(-12);
+        MSXSong mars = loadTSVMusic("data/music/mars.tsv", false);
         MSXSong moon = loadTSVMusic("data/music/moon-placeholder.tsv", false);
         moon.transpose(-12);
         MSXSong tomb = loadTSVMusic("data/music/tomb.tsv", false);

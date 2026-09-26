@@ -194,6 +194,8 @@ IF MUSIC_USE_ARPEGGIOS = 1
         ld hl, diminished_arpeggio_pattern
         cp MUSIC_INSTRUMENT_ARPEGGIO_DIMINISHED_FADEIN
         jr z, update_sound_SET_INSTRUMENT_arpeggio
+        cp MUSIC_INSTRUMENT_ARPEGGIO_DIMINISHED
+        jr z, update_sound_SET_INSTRUMENT_arpeggio
 
         ld hl, minor_arpeggio_2ndinv_pattern
 update_sound_SET_INSTRUMENT_arpeggio:
@@ -330,7 +332,7 @@ update_sound_internal_no_time_step:
     dec a   ; SFX_CMD_END
     jr z, update_sound_SFX_END  ; if the SFX sound is over, we are done
     dec a   ; MUSIC_CMD_END
-    jp z, stop_music
+    jp z, stop_music_internal
 IF MUSIC_USE_SET_VOLUME = 1
     dec a  ; MUSIC_CMD_SET_VOLUME1
     jr z, sound_update_set_volume1
@@ -347,7 +349,16 @@ IF MUSIC_USE_TRANSPOSE = 1
 ENDIF
     ; we should never get here
     ; ...
-    jp stop_music
+stop_music_internal:
+    ld hl, beginning_of_sound_variables_except_tempo
+    ld bc, (end_of_sound_variables - beginning_of_sound_variables_except_tempo) - 1
+    di
+    call clear_memory_internal
+    call clear_PSG_volume_internal
+    ei
+    ret
+
+
 
 
 update_sound_SFX_END:
@@ -537,3 +548,33 @@ fast_WRTPSG_macro: macro
     ld a, e
     out (PSG_DATA), a
 endm
+
+
+; -----------------------------------------------
+; hl: memory to clear
+; bc: bytes to clear - 1
+clear_memory_internal:
+    xor a
+clear_memory_internal_a:
+    ld d, h
+    ld e, l
+    inc de
+    ld (hl), a
+clear_memory_internal_a_entry_point:
+    ldir
+    ret
+
+
+;-----------------------------------------------
+; silences all 3 channels of the PSG
+clear_PSG_volume_internal:
+    di
+    ld a, 8
+    ld e, 0
+    fast_WRTPSG_macro
+    ld a, 9
+    fast_WRTPSG_macro
+    ld a, 10
+    fast_WRTPSG_macro
+    ei
+    ret
