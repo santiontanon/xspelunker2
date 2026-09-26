@@ -77,9 +77,13 @@ state_game_over:
 	jr state_game_over_quit
 
 state_game_over_ask_for_continue:
+	di
+	ld a, MUSIC_PAGE_1
+	ld (current_room__music_page), a
 	ld hl, music_gameover_bin
 	ld a, 5
 	call play_music_adjusting_tempo
+	ei
 
 	ld b, 100
 	call wait_b_halts

@@ -2582,6 +2582,35 @@ object_interaction_function_teleport_to_area_object_room_id_set:
 	ld (player_state), a
 	ld a, 31  ; immune while teleporting
 	ld (player_immunity_timer), a
+
+	; remove any enemies in the teleporter area:
+	push ix
+	pop iy  ; we put the teleporter in IY, since we want the enemeis in IX.
+	ld ix, current_room__sprite_enemies
+	ld de, ROOM_OBJECT_STRUCT_SIZE
+object_interaction_function_teleport_to_area_object_clear_enemies_loop:
+	ld a, (ix)
+	cp #ff  ; done
+	jr z, object_interaction_function_teleport_to_area_object_clear_enemies_loop_done
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	cp (iy + ROOM_TILE_OBJECT_STRUCT_X)
+	jr c, object_interaction_function_teleport_to_area_object_clear_enemies_loop_continue
+	add a, -4
+	cp (iy + ROOM_TILE_OBJECT_STRUCT_X)
+	jr nc, object_interaction_function_teleport_to_area_object_clear_enemies_loop_continue
+	cp (iy + ROOM_TILE_OBJECT_STRUCT_Y)
+	jr c, object_interaction_function_teleport_to_area_object_clear_enemies_loop_continue
+	add a, -4
+	cp (iy + ROOM_TILE_OBJECT_STRUCT_Y)
+	jr nc, object_interaction_function_teleport_to_area_object_clear_enemies_loop_continue
+	; remove!
+	call sprite_object_remove_object_enemy
+	jr object_interaction_function_teleport_to_area_object_clear_enemies_loop
+object_interaction_function_teleport_to_area_object_clear_enemies_loop_continue:
+	add ix, de
+	jr object_interaction_function_teleport_to_area_object_clear_enemies_loop
+object_interaction_function_teleport_to_area_object_clear_enemies_loop_done:
+
 	jp state_play_from_loaded_room
 
 object_interaction_function_teleport_to_area_object_same_area:

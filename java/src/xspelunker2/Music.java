@@ -66,16 +66,17 @@ public class Music {
 //        playTSVMusic("data/music/beach.tsv", 8, 0, null);
 
 //        playTSVMusic("data/music/xibalba.tsv", 8, 0, null);
-//        playTSVMusic("data/music/music.tsv", 10, 0, null);
+//        playTSVMusic("data/music/mars.tsv", 10, 0, null);
 
 //        playTSVMusic("data/music/xibalba-placeholder.tsv", 8, 0, null);
 //        playTSVMusic("data/music/boss-alt-v0.tsv", 10, 0, null);
 //        playTSVMusic("data/music/boss-alt-v1.tsv", 10, 0, null);  // adds some new parts (some of them are nice)
-//        playTSVMusic("data/music/boss-alt-v2.tsv", 10, 0, null);
 
 //        playTSVMusic("data/music/test.tsv", 10, 0, null);
+//        playTSVMusic("data/music/moon-test1b.tsv", 8, 0, null);
+        playTSVMusic("data/music/moon-test2b.tsv", 8, 0, null);
 
-        generateInGamesongData();
+//        generateInGamesongData();
     }
     
     

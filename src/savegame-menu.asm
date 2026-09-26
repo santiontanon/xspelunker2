@@ -455,6 +455,9 @@ savegame_menu_loop_load_1_continue:
 	; remove all tile enemies:
 	call savegame_menu_remove_tile_enemies
 
+	ld hl, TEXT_ENDING_FAIL
+	ld (stats__ending), hl
+
 	; back to game:
 	call clear_screen_left_to_right
 	call disable_VDP_output
