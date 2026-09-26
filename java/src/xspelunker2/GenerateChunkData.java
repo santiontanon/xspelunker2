@@ -560,6 +560,18 @@ public class GenerateChunkData {
                     n_item_locations++;
                 }
                 if (o.type.equals("pushable-block")) {
+                    if (o.y <= 8) {
+                        // check if there is wall on top:
+                        if (o.y > 0 &&
+                            (collision_types[c.tiles[o.x/8 + 0][o.y/8 - 1]] == 0 ||
+                             collision_types[c.tiles[o.x/8 + 1][o.y/8 - 1]] == 0)) {
+                            throw new Exception("Pushable block too close to the top: ("+o.x+", "+o.y+", with top collision types: " +
+                                                collision_types[c.tiles[o.x/8 + 0][o.y/8 - 1]] + ", " + collision_types[c.tiles[o.x/8 + 0][o.y/8 - 1]] +
+                                                ") in " + c.path);
+                        }
+                    }
+                    
+                    
                     if (collision_types[c.tiles[o.x/8 + 0][o.y/8 + 0]] != 0 ||
                         collision_types[c.tiles[o.x/8 + 1][o.y/8 + 0]] != 0 ||
                         collision_types[c.tiles[o.x/8 + 0][o.y/8 + 1]] != 0 ||

@@ -2,9 +2,8 @@ to do:
 
 
 ***- alpha 0.4 version:
-  ***- game crashes on Xibalba bosses: "en el court, si lees una tumba cualquiera y luego saltas y disparas en el aire, se cuelga"
-  ***- write test in Java to avoid pushable blocks on the top two rows (and ideally top 3 rows):
-    ***- I might have to reward some block puzzles
+  ***- game crashes on Xibalba boss room: jump and hit somehow hits something! why?!
+  ***- can I leave a couplf of pixels before player changes room from the top (to make the pushable puzzles a bit easier to jump over the blocks)
   ***- pista extra de las estellas/8-bridge/forge in A ending.
   ***- la segunda vez q vas al calendario dice “so this is nexus and the power stones i am finding…” no entiendo muy bien el significado… he encontrado alguna piedra ya? o finding tiene sentido de buscar?
   ***- pista en final A+ de las semillas/binario/etc.
