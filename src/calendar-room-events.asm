@@ -26,7 +26,20 @@ calendar_stone_room_enter_event_fn_first_time:
 	ret
 
 calendar_stone_room_enter_event_fn_after_letter1:
+	; If we have any power stone:
 	ld de, TEXT_CALENDAR_AFTER_LETTER1
+	ld hl, player_inventory_items + INVENTORY_ITEM_POWER_STONE1
+	ld a, (hl)  ; do we have stone 1?
+	inc hl
+	or a, (hl)  ; do we have stone 2?
+	inc hl
+	or a, (hl)  ; do we have stone 3?
+	jr nz, calendar_stone_room_enter_event_fn_after_letter1_de_set
+
+	; If we do not have any power stone:
+	ld de, TEXT_CALENDAR_AFTER_LETTER1_NO_STONES
+
+calendar_stone_room_enter_event_fn_after_letter1_de_set:
 	ld hl, display_in_game_message_textpage3
 	ld c, TEXT_PAGE
 	call call_hl_in_page_c_8000
