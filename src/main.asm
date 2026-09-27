@@ -212,9 +212,9 @@ Execute:
     ld bc, 16
     ldir
 
-    ld hl, state_braingames
-    ld a, BRAINGAMES_PAGE
-    jp jp_to_hl_in_page_a_8000
+;     ld hl, state_braingames
+;     ld a, BRAINGAMES_PAGE
+;     jp jp_to_hl_in_page_a_8000
 
 ;     ld hl, state_story
 ;     ld a, STORY_PAGE
@@ -239,6 +239,10 @@ Execute:
 ;     ld hl, ending_B_plus
 ;     ld a, ENDING_PAGE
 ;     jp jp_to_hl_in_page_a_8000
+
+    ld hl, ending_A
+    ld a, ENDING_PAGE
+    jp jp_to_hl_in_page_a_8000
 
 
 ;-----------------------------------------------

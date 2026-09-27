@@ -1,9 +1,9 @@
 to do:
 
 ***- alpha 0.4 version:
+  OK - pista extra de las semillas/binario/estellas/8-bridge/forge in A ending:
+  OK - change name to 0.4
   ***- can I leave a couple of pixels before player changes room from the top (to make the pushable puzzles a bit easier to jump over the blocks)
-  ***- pista extra de las smillars/binario/estellas/8-bridge/forge in A ending.
-  ***- change name to 0.4
 ***- atlantis song
 ***- moon song: mostly silence with some sfx + chord here and there
 

@@ -55,7 +55,7 @@ public class Text {
         // Title:
         addLineSafe(lines_with_constant_page2, "Brain Games (2026)", "CREDITS1", 11);
         addLineSafe(lines_with_constant_page2, "Santiago Ontañón", "CREDITS2", 10);
-        addLineSafe(lines_with_constant_page2, "alpha 0.3", "CREDITS3", 10);
+        addLineSafe(lines_with_constant_page2, "alpha 0.4", "CREDITS3", 10);
         addLineSafe(lines_with_constant_page2, "SPACE to start", "START1", 10);
         addLineSafe(lines_with_constant_page2, " X for options", "START2", 10);
         addLineSafe(lines_with_constant_page2, "   L to load", "START3", 10);
@@ -1014,6 +1014,12 @@ public class Text {
         addLineSafe(lines_with_constant_page4, "How to get ending A? Well...", "ENDING_B_PAGE_2_3", 20);
         addLineSafe(lines_with_constant_page4, "Are you sure you have paid enough", "ENDING_B_PAGE_2_4", 20);
         addLineSafe(lines_with_constant_page4, "attention to everything?.", "ENDING_B_PAGE_2_5", 20);        
+
+        addLineSafe(lines_with_constant_page4, "Want a clue for the A+ ending?", "ENDING_A_PAGE_2_2", 20);
+        addLineSafe(lines_with_constant_page4, "Well... it's not easy, but if you", "ENDING_A_PAGE_2_3", 20);
+        addLineSafe(lines_with_constant_page4, "insist... here're two clues:", "ENDING_A_PAGE_2_4", 20);
+        addLineSafe(lines_with_constant_page4, "- The default world name won't do it.", "ENDING_A_PAGE_2_5", 20);
+        addLineSafe(lines_with_constant_page4, "- Try to understand the Stelae.", "ENDING_A_PAGE_2_6", 20);
         
         // Ending credits and text, page 3:
         addLineSafe(lines_with_constant_page3, "Thank you again!", "ENDING_C_PAGE_3_1", 20);
