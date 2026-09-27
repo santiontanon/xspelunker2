@@ -3297,6 +3297,8 @@ player_weapon_hitbox_check_tile_object_loop:
 		ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
 		cp #ff
 		jr z, player_weapon_hitbox_check_tile_object_loop_done
+		cp #fe  ; sentinel value
+		jr z, player_weapon_hitbox_check_tile_object_loop_done
 		ld a, (ix + ROOM_TILE_OBJECT_STRUCT_TYPE)
 		cp TAG_BREAKABLE_WALL1
 		jr z, player_weapon_hitbox_check_tile_object_loop_breakable_wall

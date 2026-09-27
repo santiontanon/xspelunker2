@@ -1,12 +1,9 @@
 to do:
 
-
 ***- alpha 0.4 version:
-  ***- game crashes on Xibalba boss room: jump and hit somehow hits something! why?!
-  ***- can I leave a couplf of pixels before player changes room from the top (to make the pushable puzzles a bit easier to jump over the blocks)
-  ***- pista extra de las estellas/8-bridge/forge in A ending.
+  ***- can I leave a couple of pixels before player changes room from the top (to make the pushable puzzles a bit easier to jump over the blocks)
+  ***- pista extra de las smillars/binario/estellas/8-bridge/forge in A ending.
   ***- la segunda vez q vas al calendario dice “so this is nexus and the power stones i am finding…” no entiendo muy bien el significado… he encontrado alguna piedra ya? o finding tiene sentido de buscar?
-  ***- pista en final A+ de las semillas/binario/etc.
   ***- change name to 0.4
 
 ***- beta 1.0 version:
