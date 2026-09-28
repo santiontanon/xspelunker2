@@ -110,7 +110,7 @@ area_default_tileset_ptrs:
 	db ATLANTIS_ENEMY_SPRITES_PAGE
 	dw atlantis_enemy_sprites_zx0  ; atlantis
 	dw music_atlantis_bin
-	db 7
+	db 10
 	db MUSIC_PAGE_1
 
 	db MARS_TILES_PAGE
