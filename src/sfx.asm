@@ -875,7 +875,7 @@ SFX_secret:
 ; Sound effects used for the percussion in the songs
 SFX_drum_shorter_c:
   db  7,#98  ; noise in channel C, and tone in channels C, B and A
-  db 10,#0a  ; volume
+  db 10,#0b  ; volume
   db 5, 6, 4, #ae ; C2
   db  6+MUSIC_CMD_TIME_STEP_FLAG,#18  ; noise frequency
 ;   db 5, #03, 4, #20
@@ -895,7 +895,7 @@ SFX_drum_shorter_c:
 ; Sound effects used for the percussion in the songs
 SFX_drum_shorter_re:
   db  7,#98  ; noise in channel C, and tone in channels C, B and A
-  db 10,#0a  ; volume
+  db 10,#0b  ; volume
   db 5, 2, 4, #fa ; RE3
   db  6+MUSIC_CMD_TIME_STEP_FLAG,#18  ; noise frequency
 ;   db 5, #03, 4, #20
@@ -915,7 +915,7 @@ SFX_drum_shorter_re:
 ; Sound effects used for the percussion in the songs
 SFX_drum_short_re:
   db  7,#98  ; noise in channel C, and tone in channels C, B and A
-  db 10,#0b  ; volume
+  db 10,#0c  ; volume
   db 5, 2, 4, #fa ; RE3
   db  6+MUSIC_CMD_TIME_STEP_FLAG,#18  ; noise frequency
 ;db MUSIC_CMD_SKIP
@@ -960,10 +960,10 @@ SFX_drum_short_re:
 
 SFX_open_hi_hat:
   db  7,#9c  ; noise in channel C, and tone in channels B and A
-  db 10,#0c  ; volume
+  db 10,#0d  ; volume
   db  6+MUSIC_CMD_TIME_STEP_FLAG,#01  ; noise frequency
   db MUSIC_CMD_SKIP
-  db 10+MUSIC_CMD_TIME_STEP_FLAG,#09  ; volume
+  db 10+MUSIC_CMD_TIME_STEP_FLAG,#0a  ; volume
   db MUSIC_CMD_SKIP
   db 10+MUSIC_CMD_TIME_STEP_FLAG,#07  ; volume
   db MUSIC_CMD_SKIP,MUSIC_CMD_SKIP,MUSIC_CMD_SKIP
@@ -975,7 +975,7 @@ SFX_open_hi_hat:
 
 SFX_short_hi_hat:
   db  7,#9c  ; noise in channel C, and tone in channels B and A
-  db 10,#0a  ; volume
+  db 10,#0b  ; volume
   db  6+MUSIC_CMD_TIME_STEP_FLAG,#01  ; noise frequency
   db 10+MUSIC_CMD_TIME_STEP_FLAG,#09  ; volume
   db 10+MUSIC_CMD_TIME_STEP_FLAG,#07  ; volume
@@ -986,7 +986,7 @@ SFX_short_hi_hat:
 
 SFX_short_hi_hat_louder:
   db  7,#9c  ; noise in channel C, and tone in channels B and A
-  db 10,#0c  ; volume
+  db 10,#0d  ; volume
   db  6+MUSIC_CMD_TIME_STEP_FLAG,#01  ; noise frequency
   db 10+MUSIC_CMD_TIME_STEP_FLAG,#0a  ; volume
   db 10+MUSIC_CMD_TIME_STEP_FLAG,#08  ; volume

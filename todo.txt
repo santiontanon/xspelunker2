@@ -1,5 +1,13 @@
 to do:
 
+OK - are drums too soft in Atlantis song? or are they this soft in all songs? I can barely hear percusion in MSX (make sure I have the same volumes in Java and MSX)
+OK - repeat the chromatic scale at the end of xibalba song twice?
+OK - play the motiff twice the second time in Atlantis song
+***- moon song:
+  ***- maybe transpose a bit lower
+  ***- I need some more drums
+  ***- listen carefully to the melody and improve it
+***- listen carefully to Mars song and improve it
 ***- can I leave a couple of pixels before player changes room from the top (to make the pushable puzzles a bit easier to jump over the blocks)
 
 
