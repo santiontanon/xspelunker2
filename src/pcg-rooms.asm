@@ -131,7 +131,7 @@ area_default_tileset_ptrs:
 	dw moon_enemy_sprites_zx0  ; moon
 	dw music_moon_bin
 	db 12
-	db MUSIC_PAGE_1
+	db MUSIC_PAGE_2
 
 
 ;-----------------------------------------------

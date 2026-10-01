@@ -67,7 +67,7 @@ public class Music {
 
 //        playTSVMusic("data/music/xibalba.tsv", 8, 0, null);
 //        playTSVMusic("data/music/mars.tsv", 10, 0, null);
-//        playTSVMusic("data/music/moon.tsv", 12, 0, null);
+//        playTSVMusic("data/music/moon.tsv", 12, -3, null);
 //        playTSVMusic("data/music/atlantis.tsv", 10, 0, null);
 
 //        playTSVMusic("data/music/test.tsv", 10, 0, null);
@@ -86,6 +86,7 @@ public class Music {
         MSXSong atlantis = loadTSVMusic("data/music/atlantis.tsv", false);
         MSXSong mars = loadTSVMusic("data/music/mars.tsv", false);
         MSXSong moon = loadTSVMusic("data/music/moon.tsv", false);
+        moon.transpose(-3);  // Start in LA3 instead of DO4
         MSXSong tomb = loadTSVMusic("data/music/tomb.tsv", false);
         MSXSong intro1 = loadTSVMusic("data/music/intro1.tsv", false);
         MSXSong intro2 = loadTSVMusic("data/music/intro2.tsv", false);
