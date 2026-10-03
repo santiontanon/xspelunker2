@@ -1,6 +1,5 @@
 to do:
 
-***- listen carefully to Mars song and improve it
 ***- can I leave a couple of pixels before player changes room from the top (to make the pushable puzzles a bit easier to jump over the blocks)
 
 

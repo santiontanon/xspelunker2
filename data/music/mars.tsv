@@ -62,67 +62,67 @@ sib1		sfx(sfx_drum_shorter_re)
 do2		sfx(sfx_short_hihat_louder)
 reb2		sfx(sfx_drum_shorter_re)
 -	-	sfx(sfx_open_hihat)
-volume(15),piano,fa0	minorarpeggio,fa3	sfx(sfx_drum_shorter_c)
+volume(15),piano,fa0	volume(13),minorarpeggio,fa3	sfx(sfx_drum_shorter_c)
 -		
 -		sfx(sfx_open_hihat)
 fa0		
 -		sfx(sfx_drum_shorter_re)
-fa0		
--		sfx(sfx_short_hihat)
--		
+fa0	-	
+		sfx(sfx_short_hihat)
+		
 lab0	minorarpeggio,fa3	sfx(sfx_drum_shorter_c)
 -		
 -		sfx(sfx_open_hihat)
 solb0		
 -		sfx(sfx_drum_shorter_re)
-fa0		
+fa0	-	
 fa0		sfx(sfx_drum_shorter_re)
--		
+		
 solb0	majorarpeggio,solb3	sfx(sfx_drum_shorter_c)
 -		
 -		sfx(sfx_open_hihat)
 solb0		
 -		sfx(sfx_drum_shorter_re)
-solb0		
--		sfx(sfx_short_hihat)
--		
+solb0	-	
+		sfx(sfx_short_hihat)
+		
 sib0	majorarpeggio,solb3	sfx(sfx_drum_shorter_c)
 -		
 -		sfx(sfx_open_hihat)
 lab0		
 -		sfx(sfx_drum_shorter_re)
-solb0		
+solb0	-	
 solb0		sfx(sfx_drum_shorter_re)
--		
-lab0	majorarpeggio,lab2	sfx(sfx_drum_shorter_c)
+		
+lab0	major-2ndinv-arpeggio,mib3	sfx(sfx_drum_shorter_c)
 -		
 -		sfx(sfx_open_hihat)
 lab0		
 -		sfx(sfx_drum_shorter_re)
-lab0		
+lab0	-	
 do1		sfx(sfx_drum_shorter_c)
--		
-sib0	minorarpeggio,sib2	sfx(sfx_drum_shorter_c)
+		
+sib0	minor-2ndinv-arpeggio,fa3	sfx(sfx_drum_shorter_c)
 -		
 -		sfx(sfx_open_hihat)
 sib0		
 -		sfx(sfx_drum_shorter_re)
-reb1		
+reb1	-	
 fa1		sfx(sfx_drum_shorter_re)
--		sfx(sfx_open_hihat)
+		sfx(sfx_open_hihat)
 do1	diminishedarpeggio,mi3	sfx(sfx_drum_shorter_re)
 -		
 reb1		sfx(sfx_open_hihat)
 -		
-do1		sfx(sfx_drum_shorter_re)
--		
+do1	diminishedarpeggio,mi3	sfx(sfx_drum_shorter_re)
+		
 sib0		sfx(sfx_short_hihat)
--		
+		
 sol0	diminishedarpeggio,mi3	sfx(sfx_drum_shorter_re)
 -		
 mi0		sfx(sfx_drum_shorter_re)
 -		
-sol0		sfx(sfx_drum_shorter_re)
+sol0	-	sfx(sfx_drum_shorter_re)
 sib0		sfx(sfx_drum_shorter_re)
 reb1		sfx(sfx_drum_shorter_re)
 mi1		sfx(sfx_open_hihat)
@@ -228,7 +228,7 @@ sib0		sfx(sfx_open_hihat)
 reb1		
 sib0	minorarpeggio,sib2	sfx(sfx_drum_shorter_re)
 sib1		
-sib0	minorarpeggio,sib2	sfx(sfx_drum_shorter_c)
+sib0		sfx(sfx_drum_shorter_c)
 fa1		
 reb1	majorarpeggio,reb3	sfx(sfx_drum_shorter_c)
 reb2		
@@ -294,7 +294,7 @@ lab0		sfx(sfx_drum_shorter_re)
 -		
 reb1		sfx(sfx_short_hihat)
 -		
-sib0	minorarpeggio-fadein,sib3	sfx(sfx_drum_shorter_c)
+sib0	minorarpeggio-fadein,sib2	sfx(sfx_drum_shorter_c)
 -		
 -		sfx(sfx_open_hihat)
 -		
@@ -318,7 +318,7 @@ sib1		sfx(sfx_drum_shorter_re)
 do2		sfx(sfx_drum_shorter_re)
 reb2		sfx(sfx_drum_shorter_re)
 -	-	sfx(sfx_open_hihat)
-volume(15),piano,fa0	minorarpeggio,fa4	sfx(sfx_drum_shorter_c)
+volume(15),piano,fa0	minorarpeggio-fadein,fa4	sfx(sfx_drum_shorter_c)
 -		
 fa0		sfx(sfx_open_hihat)
 -		
@@ -326,7 +326,7 @@ fa1		sfx(sfx_drum_shorter_re)
 -		
 fa0		sfx(sfx_short_hihat)
 -		
-lab0	minorarpeggio,fa4	sfx(sfx_drum_shorter_c)
+lab0	minorarpeggio-fadein,fa3	sfx(sfx_drum_shorter_c)
 -		
 fa0		sfx(sfx_open_hihat)
 -		
@@ -334,7 +334,7 @@ solb0		sfx(sfx_drum_shorter_re)
 -		
 fa0		sfx(sfx_drum_shorter_re)
 -		
-solb0	majorarpeggio,solb4	sfx(sfx_drum_shorter_c)
+solb0	majorarpeggio-fadein,solb4	sfx(sfx_drum_shorter_c)
 -		
 solb0		sfx(sfx_open_hihat)
 -		
@@ -342,7 +342,7 @@ solb1		sfx(sfx_drum_shorter_re)
 -		
 solb0		sfx(sfx_short_hihat)
 -		
-lab0	majorarpeggio,lab4	sfx(sfx_drum_shorter_c)
+lab0	majorarpeggio-fadein,lab3	sfx(sfx_drum_shorter_c)
 -		
 lab0		sfx(sfx_open_hihat)
 -		
@@ -350,7 +350,7 @@ lab1		sfx(sfx_drum_shorter_re)
 -		
 do1		sfx(sfx_drum_shorter_re)
 -		sfx(sfx_open_hihat)
-sib0	minorarpeggio,sib3	sfx(sfx_drum_shorter_c)
+sib0	minorarpeggio-fadein,sib3	sfx(sfx_drum_shorter_c)
 -		
 sib0		sfx(sfx_open_hihat)
 -		
@@ -358,7 +358,7 @@ sib1		sfx(sfx_drum_shorter_re)
 -		
 fa1		sfx(sfx_drum_shorter_c)
 -		
-reb1	majorarpeggio,reb3	sfx(sfx_drum_shorter_c)
+reb1	majorarpeggio-fadein,reb3	sfx(sfx_drum_shorter_c)
 -		
 reb1		sfx(sfx_open_hihat)
 -		
@@ -366,7 +366,7 @@ reb2		sfx(sfx_drum_shorter_re)
 -		sfx(sfx_short_hihat)
 lab1		sfx(sfx_drum_shorter_re)
 -		sfx(sfx_short_hihat_louder)
-do1	diminishedarpeggio,mi3	sfx(sfx_drum_shorter_re)
+do1	diminishedarpeggio-fadein,mi3	sfx(sfx_drum_shorter_re)
 -		
 reb1		sfx(sfx_open_hihat)
 -		
@@ -374,7 +374,7 @@ do1		sfx(sfx_drum_shorter_re)
 -		
 sib0		sfx(sfx_short_hihat)
 -		
-sol0	diminishedarpeggio,sol3	sfx(sfx_drum_shorter_re)
+sol0	diminishedarpeggio-fadein,sol3	sfx(sfx_drum_shorter_re)
 -		sfx(sfx_drum_shorter_re)
 lab0		sfx(sfx_drum_shorter_re)
 -		sfx(sfx_drum_shorter_re)
