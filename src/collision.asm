@@ -923,7 +923,7 @@ player_exit_room_up:
 	jr z, player_exit_room_up_mars_robot_puzzle_room
 	call check_for_interarea_exit_up
 	call check_collision_with_next_chunk_up
-	ret z  ; collision		
+	ret z  ; collision
 	call get_room_ids_current_room_ptr
 	ld a, (current_area__width)
 	ld d, 0

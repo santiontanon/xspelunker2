@@ -12,8 +12,8 @@ player_fall_speed_table_earth:
     db 2, 2, 3, 3, 4, #ff  ; good for 50Hz
 
 player_jump_speed_table_earth:
-	db 6, 6, 6, 4, 4, 3, 3, 2
-	db 2, 1, 2, 1, 1, 0, 1, 0, 0, 0, #ff  ; 1 / 3  ; 42 total jump height in 18 frames / good for 50Hz
+	db 5, 5, 4, 4, 4, 3, 3, 3, 2
+	db 2, 2, 2, 1, 1, 0, 1, 0, 0, 0, #ff  ; 1 / 3  ; 42 total jump height in 19 frames / good for 50Hz
 
 PLAYER_JUMP_STOP_INDEX_EARTH: equ 12  ; when we release the jump key, we will move to this index in the
 								; jump speed table, if we are not already past that
@@ -24,8 +24,8 @@ PLAYER_JUMP_DOUBLE_JUMP_INDEX_RESTART_EARTH: equ 3  ; we reset the jump to this 
 ;-----------------------------------------------
 ; Jump tables for mars:
 player_jump_speed_table_mars:
-	db 6, 6, 6, 5, 4, 4, 3, 3, 3, 2 
-	db 2, 1, 2, 1, 1, 0, 1, 0, 0, 0, #ff  ; 1 / 3  ; 50 total jump height in 20 frames / good for 50Hz
+	db 5, 5, 5, 4, 4, 4, 3, 3, 3, 2, 2 
+	db 2, 1, 2, 1, 2, 1, 1, 0, 1, 0, 0, 0, #ff  ; 1 / 3  ; 50 total jump height in 23 frames / good for 50Hz
 
 
 PLAYER_JUMP_STOP_INDEX_MARS: equ 13  ; when we release the jump key, we will move to this index in the
@@ -37,9 +37,9 @@ PLAYER_JUMP_DOUBLE_JUMP_INDEX_RESTART_MARS: equ 4  ; we reset the jump to this i
 ;-----------------------------------------------
 ; Jump tables for moon:
 player_jump_speed_table_moon:
-	db 6, 6, 6, 5, 5, 4, 4, 3, 3, 3
-	db 2, 2, 1
-	db 2, 1, 2, 1, 1, 0, 1, 0, 0, 0, #ff  ; 1 / 3  ; 58 total jump height in 23 frames / good for 50Hz
+	db 5, 5, 5, 4, 4, 4, 4, 3, 3, 3, 3
+	db 2, 2, 1, 2, 1
+	db 2, 1, 2, 1, 1, 0, 1, 0, 0, 0, #ff  ; 1 / 3  ; 58 total jump height in 26 frames / good for 50Hz
 
 player_fall_speed_table_moon:
     db 1, 0, 1, 1, 2, 1

@@ -7372,6 +7372,11 @@ update_enemy_bullet_move_down_if_possible:
 	or a
 	jr nz, update_enemy_bullet_move_down_if_possible_move
 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	cp 4
+	jr c, update_enemy_bullet_move_down_if_possible_continue
+	inc c
+update_enemy_bullet_move_down_if_possible_continue:	
 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	inc b
 	call general_check_collision_with_wall
@@ -7396,6 +7401,11 @@ update_enemy_bullet_move_up_if_possible:
 	or a
 	jr nz, update_enemy_bullet_move_up_if_possible_move
 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
+	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)
+	cp 4
+	jr c, update_enemy_bullet_move_up_if_possible_continue
+	inc c
+update_enemy_bullet_move_up_if_possible_continue:
 	ld b, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	dec b
 	call general_check_collision_with_wall
