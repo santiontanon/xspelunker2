@@ -62,7 +62,7 @@ SFX_ui_wrong:
 
 SFX_jump:
   db 7,#b8  ; SFX all channels to tone
-  db 10,#0c  ; volume
+  db 10,#0b  ; volume
   db 4,#00, 5,#02 ; frequency
   db MUSIC_CMD_SKIP
   db 4,#08, 5,#01 ; frequency

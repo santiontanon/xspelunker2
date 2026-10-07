@@ -1591,10 +1591,13 @@ update_sprite_objects_boss_extras_boss_2_flying_air:
 	ld a, (boss__x)
 	ld hl, room_scroll_x
 	sub (hl)
+	add 6
+	cp 32
+	ret nc
 	add a, a
 	add a, a
 	add a, a
-	add a, 6*8 + 4
+	add a, 4
 	ld c, a
 	ld a, (boss__y)
 	ld hl, room_scroll_y

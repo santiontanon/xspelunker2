@@ -921,7 +921,7 @@ public class Text {
 
         // Ending A:
         addLineSafe(lines_with_constant_page4, "Elaine: Michael! You are back!! I was so worried!! Tell me!! How did it go??", "ENDING_A_CALENDAR_1", 22*4);
-        addLineSafe(lines_with_constant_page4, "Xavier: I told you I could do it!! I will tell you the details later, but the alien thread is no more Elaine!! We did it!!", "ENDING_A_CALENDAR_2", 22*4);
+        addLineSafe(lines_with_constant_page4, "Xavier: I told you I could do it!! I will tell you the details later, but the alien threat is no more Elaine!! We did it!!", "ENDING_A_CALENDAR_2", 22*4);
         addLineSafe(lines_with_constant_page4, "Elaine: Look! The Nexus is turning off!! It looks like the powerstones got depleted.", "ENDING_A_CALENDAR_3", 22*4);
         addLineSafe(lines_with_constant_page4, "Xavier: And the teleporter too!! Elaine, let's get out of here just in case...", "ENDING_A_CALENDAR_4", 22*4);
 
