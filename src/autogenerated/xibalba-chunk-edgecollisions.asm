@@ -113,31 +113,35 @@
   db #3b, #ff, #3f, #cf  ; data/xibalba/block1001-2.tmx
   db #23, #ff, #21, #ff  ; data/xibalba/block1010-1.tmx
   db #3b, #ff, #21, #ff  ; data/xibalba/block1010-2.tmx
+  db #21, #ff, #21, #ff  ; data/xibalba/block1010-3.tmx
   db #2f, #ff, #21, #f3  ; data/xibalba/block0011-1.tmx + left
   db #2f, #ff, #21, #ff  ; data/xibalba/block0011-2.tmx + left
   db #2f, #ff, #2f, #cf  ; data/xibalba/block1001-1.tmx + right
   db #3b, #ff, #2f, #cf  ; data/xibalba/block1001-2.tmx + right
   db #23, #ff, #21, #e7  ; data/xibalba/block1010-1.tmx + down
   db #3b, #ff, #21, #e7  ; data/xibalba/block1010-2.tmx + down
+  db #21, #ff, #21, #e7  ; data/xibalba/block1010-3.tmx + down
   db #21, #8f, #3f, #ff  ; data/xibalba/block1100-1.tmx
   db #39, #8f, #3f, #ff  ; data/xibalba/block1100-2.tmx
   db #39, #87, #3f, #ff  ; data/xibalba/block1100-3.tmx
   db #21, #87, #3f, #ff  ; data/xibalba/block1100-4.tmx
   db #39, #87, #3f, #ff  ; data/xibalba/block1100-5.tmx
-  db #39, #8f, #3f, #ff  ; data/xibalba/block1100-6.tmx
+  db #39, #87, #3f, #ff  ; data/xibalba/block1100-6.tmx
   db #27, #81, #3f, #c3  ; data/xibalba/block0101-1.tmx + left
   db #27, #81, #3f, #c3  ; data/xibalba/block0101-2.tmx + left
   db #27, #81, #3f, #c3  ; data/xibalba/block0101-3.tmx + left
   db #27, #81, #3f, #c3  ; data/xibalba/block0101-4.tmx + left
+  db #39, #87, #3f, #e7  ; data/xibalba/block1100-6.tmx + down
   db #27, #f9, #21, #ff  ; data/xibalba/block0110-1.tmx + left
   db #23, #e7, #21, #ff  ; data/xibalba/block1010-1.tmx + up
   db #3b, #e7, #21, #ff  ; data/xibalba/block1010-2.tmx + up
+  db #21, #e7, #21, #ff  ; data/xibalba/block1010-3.tmx + up
   db #21, #8f, #27, #ff  ; data/xibalba/block1100-1.tmx + right
   db #39, #8f, #27, #ff  ; data/xibalba/block1100-2.tmx + right
   db #39, #87, #27, #ff  ; data/xibalba/block1100-3.tmx + right
   db #21, #87, #27, #ff  ; data/xibalba/block1100-4.tmx + right
   db #39, #87, #27, #ff  ; data/xibalba/block1100-5.tmx + right
-  db #39, #8f, #27, #ff  ; data/xibalba/block1100-6.tmx + right
+  db #39, #87, #27, #ff  ; data/xibalba/block1100-6.tmx + right
   db #2f, #e7, #21, #f3  ; data/xibalba/block0011-1.tmx + left + up
   db #2f, #e7, #21, #ff  ; data/xibalba/block0011-2.tmx + left + up
   db #27, #81, #27, #c3  ; data/xibalba/block0101-1.tmx + left + right
@@ -146,6 +150,8 @@
   db #27, #81, #27, #c3  ; data/xibalba/block0101-4.tmx + left + right
   db #23, #e7, #21, #e7  ; data/xibalba/block1010-1.tmx + up + down
   db #3b, #e7, #21, #e7  ; data/xibalba/block1010-2.tmx + up + down
+  db #21, #e7, #21, #e7  ; data/xibalba/block1010-3.tmx + up + down
+  db #39, #87, #27, #e7  ; data/xibalba/block1100-6.tmx + right + down
   db #3f, #ff, #3f, #ff  ; data/xibalba/combination0000-1.tmx
   db #3f, #ff, #3f, #e7  ; data/xibalba/combination0000-1.tmx + down
   db #3f, #ff, #3f, #e7  ; data/xibalba/combination0001-1.tmx

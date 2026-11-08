@@ -1008,7 +1008,7 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "Brain Games, 2026", "ENDING_C_PAGE_2_10", 20);
         addLineSafe(lines_with_constant_page3, "code/gfx/music: Santiago Ontañón", "ENDING_C_PAGE_2_11", 20);
         addLineSafe(lines_with_constant_page4, "betatesting: Jordi Sureda,", "ENDING_C_PAGE_2_12", 20);
-        addLineSafe(lines_with_constant_page4, "   Xavi Sorinas, MP83", "ENDING_C_PAGE_2_13", 20);
+        addLineSafe(lines_with_constant_page4, "   Xavi Sorinas", "ENDING_C_PAGE_2_13", 20);
 
         addLineSafe(lines_with_constant_page4, "Please try again to reach ending A!", "ENDING_B_PAGE_2_2", 20);
         addLineSafe(lines_with_constant_page4, "How to get ending A? Well...", "ENDING_B_PAGE_2_3", 20);

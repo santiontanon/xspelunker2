@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="8" tileheight="8" nextobjectid="14">
+ <properties>
+  <property name="left" value="lava"/>
+  <property name="up" value="hole"/>
+ </properties>
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="256" columns="16">
+  <image source="tiles.png" width="128" height="128"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="16" height="12">
+  <data encoding="csv">
+118,126,1,1,1,1,1,1,1,1,1,1,1,1,123,118,
+254,144,1,1,1,1,1,1,1,1,1,1,1,1,145,254,
+1,1,1,1,152,156,1,1,1,1,152,156,1,1,251,118,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,251,118,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,145,118,
+1,152,156,1,1,1,1,1,1,1,1,1,1,1,117,119,
+1,1,1,1,117,121,1,1,1,1,1,1,1,1,124,118,
+101,101,101,101,251,127,1,1,1,1,1,1,1,1,124,118,
+113,113,113,117,143,126,1,1,1,1,1,1,1,1,251,118,
+113,117,119,143,118,126,1,1,1,1,1,1,1,1,123,118,
+120,143,118,118,118,126,120,119,119,247,117,119,247,119,143,118,
+118,118,118,118,118,126,118,118,118,118,123,118,118,118,118,118
+</data>
+ </layer>
+ <objectgroup name="objects">
+  <object id="1" type="item" x="8" y="24" width="16" height="16"/>
+  <object id="2" type="big-item" x="80" y="56" width="32" height="24"/>
+  <object id="3" type="breakable-right" x="112" y="16" width="16" height="24"/>
+  <object id="7" type="door-right" x="112" y="16" width="16" height="24"/>
+  <object id="11" type="4x4-item" x="80" y="48" width="32" height="32"/>
+  <object id="12" type="breakable-down" x="48" y="80" width="32" height="16"/>
+  <object id="13" type="door-down" x="48" y="80" width="32" height="16"/>
+ </objectgroup>
+</map>

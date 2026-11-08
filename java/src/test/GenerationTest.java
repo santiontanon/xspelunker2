@@ -110,7 +110,8 @@ public class GenerationTest {
 
 
 //        r.setSeed(0x4afa, 0x5555);  // 1ATLANTIS
-        r.setSeed(0xe73b, 0x5555);  // XSPELUNKER2
+//        r.setSeed(0xe73b, 0x5555);  // XSPELUNKER2
+        r.setSeed(0x009d, 0x5555);  // XSPELUNKER2
 //        r.setSeed(0x003a, 0x5555);
 //        r.setSeed(0x4afa, 0x5555);
 //        r.setSeed(101, 0x5555);

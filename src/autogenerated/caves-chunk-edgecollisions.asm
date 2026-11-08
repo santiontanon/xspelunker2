@@ -12,6 +12,7 @@
   db #3f, #ff, #21, #e7  ; data/caves/room0011-3.tmx
   db #3f, #ff, #21, #e7  ; data/caves/room0011-4.tmx
   db #3f, #ff, #39, #e7  ; data/caves/room0011-5.tmx
+  db #3f, #ff, #21, #e7  ; data/caves/room0011-6.tmx
   db #3f, #81, #3f, #ff  ; data/caves/room0100-1.tmx
   db #3f, #81, #3f, #ff  ; data/caves/room0100-2.tmx
   db #3f, #81, #3f, #ff  ; data/caves/room0100-3.tmx
@@ -58,6 +59,7 @@
   db #3b, #ff, #3b, #ff  ; data/caves/room1010-6.tmx
   db #3b, #ff, #39, #ff  ; data/caves/room1010-7.tmx
   db #3b, #ff, #23, #ff  ; data/caves/room1010-8.tmx
+  db #3b, #ff, #29, #ff  ; data/caves/room1010-9.tmx
   db #21, #ff, #21, #e7  ; data/caves/room1011-1.tmx
   db #21, #ff, #21, #e7  ; data/caves/room1011-2.tmx
   db #21, #ff, #21, #e3  ; data/caves/room1011-3.tmx
@@ -72,6 +74,7 @@
   db #21, #81, #3f, #ff  ; data/caves/room1100-5.tmx
   db #39, #81, #3f, #ff  ; data/caves/room1100-6.tmx
   db #39, #81, #3f, #ff  ; data/caves/room1100-7.tmx
+  db #21, #81, #3f, #ff  ; data/caves/room1100-8.tmx
   db #21, #81, #3f, #c3  ; data/caves/room1101-1.tmx
   db #21, #81, #3f, #c3  ; data/caves/room1101-2.tmx
   db #21, #81, #3f, #c3  ; data/caves/room1101-3.tmx
@@ -102,6 +105,7 @@
   db #39, #81, #21, #c3  ; data/caves/room1111-9.tmx
   db #39, #81, #21, #c3  ; data/caves/room1111-10.tmx
   db #21, #81, #21, #c3  ; data/caves/room1111-11.tmx
+  db #39, #81, #21, #c3  ; data/caves/room1111-12.tmx
   db #3f, #ff, #21, #e3  ; data/caves/block0011-1.tmx
   db #3f, #ff, #21, #e1  ; data/caves/block0011-2.tmx
   db #3f, #81, #3f, #f7  ; data/caves/block0101-1.tmx
@@ -207,6 +211,7 @@
   db #39, #e7, #3f, #ff  ; data/caves/combination1000-1.tmx + up
   db #21, #e7, #3f, #ff  ; data/caves/combination1000-2.tmx + up
   db #39, #e7, #3f, #ff  ; data/caves/combination1100-1.tmx
+  db #21, #e7, #3f, #ff  ; data/caves/combination1100-2.tmx
   db #2f, #e7, #3f, #e7  ; data/caves/combination0000-1.tmx + left + up + down
   db #2f, #e7, #3f, #e7  ; data/caves/combination0001-1.tmx + left + up
   db #2f, #e7, #3f, #e7  ; data/caves/combination0100-1.tmx + left + down
@@ -214,11 +219,13 @@
   db #39, #e7, #3f, #e7  ; data/caves/combination1000-1.tmx + up + down
   db #21, #e7, #3f, #e7  ; data/caves/combination1000-2.tmx + up + down
   db #39, #e7, #3f, #e7  ; data/caves/combination1100-1.tmx + down
+  db #21, #e7, #3f, #e7  ; data/caves/combination1100-2.tmx + down
   db #2f, #e7, #2f, #ff  ; data/caves/combination0000-1.tmx + left + up + right
   db #2f, #e7, #2f, #ff  ; data/caves/combination0100-1.tmx + left + right
   db #39, #e7, #2f, #ff  ; data/caves/combination1000-1.tmx + up + right
   db #21, #e7, #2f, #ff  ; data/caves/combination1000-2.tmx + up + right
   db #39, #e7, #2f, #ff  ; data/caves/combination1100-1.tmx + right
+  db #21, #e7, #2f, #ff  ; data/caves/combination1100-2.tmx + right
   db #2f, #e7, #2f, #e7  ; data/caves/combination0000-1.tmx + left + up + right + down
   db #2f, #e7, #2f, #e7  ; data/caves/combination0001-1.tmx + left + up + right
   db #2f, #e7, #2f, #e7  ; data/caves/combination0100-1.tmx + left + right + down
@@ -226,3 +233,4 @@
   db #39, #e7, #2f, #e7  ; data/caves/combination1000-1.tmx + up + right + down
   db #21, #e7, #2f, #e7  ; data/caves/combination1000-2.tmx + up + right + down
   db #39, #e7, #2f, #e7  ; data/caves/combination1100-1.tmx + right + down
+  db #21, #e7, #2f, #e7  ; data/caves/combination1100-2.tmx + right + down

@@ -30,6 +30,7 @@
   db #21, #ff, #3f, #ff  ; data/mars/room1000-4.tmx
   db #21, #ff, #3f, #ff  ; data/mars/room1000-5.tmx
   db #21, #ff, #3f, #ff  ; data/mars/room1000-6.tmx
+  db #21, #ff, #3f, #ff  ; data/mars/room1000-7.tmx
   db #21, #ff, #3f, #c3  ; data/mars/room1001-1.tmx
   db #21, #ff, #3f, #e7  ; data/mars/room1001-2.tmx
   db #21, #ff, #3f, #c3  ; data/mars/room1001-3.tmx
@@ -60,6 +61,7 @@
   db #21, #e7, #21, #ff  ; data/mars/room1110-3.tmx
   db #21, #81, #21, #ff  ; data/mars/room1110-4.tmx
   db #21, #81, #21, #ff  ; data/mars/room1110-5.tmx
+  db #21, #e7, #21, #ff  ; data/mars/room1110-6.tmx
   db #21, #81, #21, #81  ; data/mars/room1111-1.tmx
   db #21, #e7, #21, #81  ; data/mars/room1111-2.tmx
   db #21, #81, #21, #83  ; data/mars/room1111-3.tmx
@@ -83,7 +85,8 @@
   db #21, #ff, #21, #c3  ; data/mars/boss1011-1.tmx
   db #21, #81, #3f, #ff  ; data/mars/boss1100-1.tmx
   db #21, #e7, #3f, #ff  ; data/mars/boss1100-2.tmx
-  db #21, #e7, #3f, #ff  ; data/mars/boss1100-3.tmx
+  db #21, #81, #3f, #ff  ; data/mars/boss1100-3.tmx
+  db #21, #e7, #3f, #ff  ; data/mars/boss1100-4.tmx
   db #21, #81, #3f, #c3  ; data/mars/boss1101-1.tmx
   db #21, #e7, #3f, #c3  ; data/mars/boss1101-2.tmx
   db #21, #81, #21, #ff  ; data/mars/boss1110-1.tmx

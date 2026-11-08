@@ -48,10 +48,10 @@ public class PCGWorld {
         "Jungle",
         "Temple of Inscriptions",
         "Hidden Temple",
-        "Confluence",
+        "Confluence",  // 3
         "Inverted Pyramid",
         "Fire Shaft",
-        "Pacific Caves",
+        "Pacific Caves",  // 6
         "Atlantic Caves",
         "Xibalba",
         "Atlantis",  // 9
