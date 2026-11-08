@@ -709,6 +709,12 @@ public class PCGArea {
                             chunk2.tiles[j][i] = 0;
                         }
                     }
+                    if (chunk2.tiles[0][6] == 249) {
+                        // idol head:
+                        for(int j = 0;j<3;j++) {
+                            chunk2.tiles[j][6] = 0;
+                        }
+                    }                                        
                     chunk2.removeObjectTypes("door-left");
                     chunk2.removeObjectTypes("breakable-left");
                     chunk2.path += " + left";
@@ -733,6 +739,12 @@ public class PCGArea {
                             chunk2.tiles[j][i] = 0;
                         }
                     }
+                    if (chunk2.tiles[13][6] == 249) {
+                        // idol head:
+                        for(int j = 13;j<16;j++) {
+                            chunk2.tiles[j][6] = 0;
+                        }
+                    }                                        
                     chunk2.removeObjectTypes("door-right");
                     chunk2.removeObjectTypes("breakable-right");
                     chunk2.path += " + right";
@@ -1048,6 +1060,12 @@ public class PCGArea {
                             chunk2.tiles[j][i] = 0;
                         }
                     }
+                    if (chunk2.tiles[0][6] == 249) {
+                        // idol head:
+                        for(int j = 0;j<3;j++) {
+                            chunk2.tiles[j][6] = 0;
+                        }
+                    }                    
                     chunk2.removeObjectTypes("door-left");
                     chunk2.removeObjectTypes("breakable-left");
                     chunk2.path += " + left";
@@ -1072,10 +1090,25 @@ public class PCGArea {
                             chunk2.tiles[j][i] = 0;
                         }
                     }
+                    if (chunk2.tiles[13][6] == 249) {
+                        // idol head:
+                        for(int j = 13;j<16;j++) {
+                            chunk2.tiles[j][6] = 0;
+                        }
+                    }
                     chunk2.removeObjectTypes("door-right");
                     chunk2.removeObjectTypes("breakable-right");
                     chunk2.path += " + right";
                     chunk2.tags.put("right", "hole");
+                    
+//                    // DEBUG:
+//                    System.out.println(chunk2.path);
+//                    for(int i = 0;i<12;i++) {
+//                        for(int j = 0;j<16;j++) {
+//                            System.out.print(chunk2.tiles[j][i] + " ");
+//                        }
+//                        System.out.println();
+//                    }                    
                 }
                 if ((type & PCGWorld.DIRECTION_DOWN) != 0 && (chunk.type & PCGWorld.DIRECTION_DOWN) == 0) {
                     // open a path down:
@@ -1375,6 +1408,12 @@ public class PCGArea {
                             chunk2.tiles[j][i] = 0;
                         }
                     }
+                    if (chunk2.tiles[0][6] == 249) {
+                        // idol head:
+                        for(int j = 0;j<3;j++) {
+                            chunk2.tiles[j][6] = 0;
+                        }
+                    }                                                                                
                     chunk2.removeObjectTypes("door-left");
                     chunk2.removeObjectTypes("breakable-left");
                     chunk2.path += " + left";
@@ -1399,6 +1438,12 @@ public class PCGArea {
                             chunk2.tiles[j][i] = 0;
                         }
                     }
+                    if (chunk2.tiles[13][6] == 249) {
+                        // idol head:
+                        for(int j = 13;j<16;j++) {
+                            chunk2.tiles[j][6] = 0;
+                        }
+                    }                                                            
                     chunk2.removeObjectTypes("door-right");
                     chunk2.removeObjectTypes("breakable-right");
                     chunk2.path += " + right";

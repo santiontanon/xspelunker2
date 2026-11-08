@@ -155,11 +155,16 @@ public class GenerationTest {
                     visualizeArea(ra, "tmp/area"+j+".png", pcg2);
                     ra.stats(chunkStats, typeStats, pcg2);
                     checkNumAnimations(ra, pcg2);
+                    
+                    // Debug a specific area:
+//                    if (j == 7) {
+//                        visualizeAreaDebug(w.areas.get(7), ra);  // atlantic caves
+//                    }
+                    
                 }
             }
-            visualizeWorld(w);
+            visualizeWorld(w);            
         }
-
         
         System.out.println("Tile type stats:");
         for(int i = 0;i<16;i++) {
@@ -181,6 +186,24 @@ public class GenerationTest {
         System.out.println("Max tile animations: " + max_n_animations);
     }
 
+    
+    public static void visualizeAreaDebug(Area a, RenderedArea ra) throws Exception
+    {
+        JFrame w = new JFrame() {
+            @Override
+            public void paint(Graphics g) {
+                Graphics2D g2d = (Graphics2D)g;
+                g2d.setColor(Color.LIGHT_GRAY);
+                
+                // draw the area:
+                drawAreaDebug(g2d, a, ra);
+            }
+        };
+        w.setSize(new Dimension(480, 480));
+        w.setVisible(true);
+        w.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    
     
     public static void visualizeWorld(World world) throws Exception
     {
@@ -239,6 +262,53 @@ public class GenerationTest {
 //                throw new Exception("Room has more than " + RenderedArea.MAX_ANIMATIONS + " animations! -> " + n_animations);
 //            }
 //        }
+    }
+
+    
+    public static void drawAreaDebug(Graphics2D g, Area a, RenderedArea ra) 
+    {
+        int startx = 32;
+        int starty = 32;
+        int roomWidth = 65;
+        int roomHeight = 49;
+        int chunkSpacingX = 33;
+        int chunkSpacingY = 25;
+
+        // draw the basic rooms:
+        g.setColor(Color.white);
+        for(int i = 0;i<a.height;i++) {
+            for(int j = 0;j<a.width;j++) {
+                if (a.rooms[j][i] >= 0) {
+                    g.fillRect(startx + chunkSpacingX*j*2, starty + chunkSpacingY*i*2, roomWidth, roomHeight);
+                }
+            }
+        }
+        
+        // draw the paths:
+        g.setColor(Color.black);
+        for(int i = 0;i<a.height*2;i++) {
+            for(int j = 0;j<a.width*2;j++) {
+                int type = ra.pieceTypes[j][i];
+                if (type < 0) {
+                    continue;
+                }
+                int chunk_center_x = startx + chunkSpacingX*j + roomWidth/4;
+                int chunk_center_y = starty + chunkSpacingY*i + roomHeight/4;
+                if ((type & 0x08) != 0) {
+                    g.drawLine(chunk_center_x, chunk_center_y, chunk_center_x - roomWidth/4, chunk_center_y);
+                }
+                if ((type & 0x04) != 0) {
+                    g.drawLine(chunk_center_x, chunk_center_y, chunk_center_x, chunk_center_y - roomHeight/4);
+                }
+                if ((type & 0x02) != 0) {
+                    g.drawLine(chunk_center_x, chunk_center_y, chunk_center_x + roomWidth/4, chunk_center_y);
+                }
+                if ((type & 0x01) != 0) {
+                    g.drawLine(chunk_center_x, chunk_center_y, chunk_center_x, chunk_center_y + roomHeight/4);
+                }
+            }
+        }
+
     }
     
 }

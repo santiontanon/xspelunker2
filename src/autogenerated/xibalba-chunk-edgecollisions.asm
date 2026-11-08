@@ -170,7 +170,7 @@
   db #3f, #e7, #2f, #e7  ; data/xibalba/combination0000-1.tmx + up + right + down
   db #3f, #e7, #2f, #e7  ; data/xibalba/combination0001-1.tmx + up + right
   db #3f, #e7, #2f, #e7  ; data/xibalba/combination0100-1.tmx + right + down
-  db #3f, #e7, #2f, #e7  ; data/xibalba/combination0101-1.tmx + right
+  db #3f, #e7, #27, #e7  ; data/xibalba/combination0101-1.tmx + right
   db #2f, #ff, #3f, #ff  ; data/xibalba/combination0000-1.tmx + left
   db #39, #ff, #3f, #ff  ; data/xibalba/combination1000-1.tmx
   db #21, #ff, #3f, #ff  ; data/xibalba/combination1000-2.tmx
@@ -193,7 +193,7 @@
   db #2f, #e7, #3f, #e7  ; data/xibalba/combination0000-1.tmx + left + up + down
   db #2f, #e7, #3f, #e7  ; data/xibalba/combination0001-1.tmx + left + up
   db #2f, #e7, #3f, #e7  ; data/xibalba/combination0100-1.tmx + left + down
-  db #2f, #e7, #3f, #e7  ; data/xibalba/combination0101-1.tmx + left
+  db #27, #e7, #3f, #e7  ; data/xibalba/combination0101-1.tmx + left
   db #39, #e7, #3f, #e7  ; data/xibalba/combination1000-1.tmx + up + down
   db #21, #e7, #3f, #e7  ; data/xibalba/combination1000-2.tmx + up + down
   db #39, #e7, #3f, #e7  ; data/xibalba/combination1100-1.tmx + down
@@ -205,7 +205,7 @@
   db #2f, #e7, #2f, #e7  ; data/xibalba/combination0000-1.tmx + left + up + right + down
   db #2f, #e7, #2f, #e7  ; data/xibalba/combination0001-1.tmx + left + up + right
   db #2f, #e7, #2f, #e7  ; data/xibalba/combination0100-1.tmx + left + right + down
-  db #2f, #e7, #2f, #e7  ; data/xibalba/combination0101-1.tmx + left + right
+  db #27, #e7, #27, #e7  ; data/xibalba/combination0101-1.tmx + left + right
   db #39, #e7, #2f, #e7  ; data/xibalba/combination1000-1.tmx + up + right + down
   db #21, #e7, #2f, #e7  ; data/xibalba/combination1000-2.tmx + up + right + down
   db #39, #e7, #2f, #e7  ; data/xibalba/combination1100-1.tmx + right + down
