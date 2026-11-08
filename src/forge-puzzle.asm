@@ -1,4 +1,50 @@
 ;-----------------------------------------------
+pcg_generate_room__firestone_forge_internal:
+	ld hl, firestone_forge_room_zx0
+
+	; name table:
+	ld de, current_room__tile_map
+	ld c, FIRESTONE_FORGE_ROOM_PAGE
+	call dzx0_from_page_c
+
+	; tile sets, collisions, and animation ptrs:
+	ld bc, firestone_forge_tiles_zx0
+	ld (current_room__tileset_ptr), bc
+	ld a, AREA_COLLISION_TABLE_FIRESTONE_FORGE_PAGE
+	ld (current_room__collision_ptr_page), a
+	ld bc, tile_collision_types_firestone_forge
+	ld (current_room__collision_ptr), bc
+	ld a, FIRESTONE_FORGE_ROOM_PAGE
+	ld (current_room__tileset_page), a
+	ld hl, update_animations_in_vdp_none
+	ld (current_room__animation_fn_ptr), hl
+	ld a, 0
+	ld (current_room__tileset_overrides_item_tiles), a
+
+	; tablet gfx:
+	ld hl, buffer_4096 + 60 * 64
+	ld (item_object_to_upload_to_vdp), hl
+
+	ld hl, pcg_generate_room__moon_open_walls
+	ld c, PCG_PAGE
+	call call_hl_in_page_c_8000
+
+	; spawn tablet, and puzzle:
+	ld iy, current_room__tile_objects
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 1  ; id
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_FIRESTONE_FORGE_TABLET
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 26  ; tile x
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 15  ; tile y
+
+	ld iy, current_room__tile_objects + ROOM_TILE_OBJECT_STRUCT_SIZE
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_ID), 2  ; id
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_TYPE), TAG_FIRESTONE_FORGE_PUZZLE
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_X), 15  ; tile x
+	ld (iy + ROOM_TILE_OBJECT_STRUCT_Y), 10  ; tile y
+	ret
+
+
+;-----------------------------------------------
 forge_puzzle_closeup:
     ld sp, stack
 	call clear_screen_left_to_right

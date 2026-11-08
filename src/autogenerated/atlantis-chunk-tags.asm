@@ -155,170 +155,178 @@ atlantis_block_chunk_pool:
   dw #0829
   db 5, #00, #21  ; data/atlantis/block0101-2.tmx (75)  up: stairs, down: hole, 
   dw #0829
-  db 6, #00, #14  ; data/atlantis/block0110-1.tmx (76)  up: hole, right: hole, 
+  db 5, #00, #31  ; data/atlantis/block0101-3.tmx (76)  up: water, down: hole, 
+  dw #0829
+  db 6, #00, #14  ; data/atlantis/block0110-1.tmx (77)  up: hole, right: hole, 
   dw #0849
-  db 6, #00, #24  ; data/atlantis/block0110-2.tmx (77)  up: stairs, right: hole, 
+  db 6, #00, #24  ; data/atlantis/block0110-2.tmx (78)  up: stairs, right: hole, 
   dw #0849
-  db 6, #00, #34  ; data/atlantis/block0110-3.tmx (78)  up: water, right: hole, 
+  db 6, #00, #34  ; data/atlantis/block0110-3.tmx (79)  up: water, right: hole, 
   dw #0849
-  db 7, #00, #15  ; data/atlantis/block0011-1.tmx + up (79)  up: hole, right: hole, down: hole, 
+  db 7, #00, #15  ; data/atlantis/block0011-1.tmx + up (80)  up: hole, right: hole, down: hole, 
   dw #088f
-  db 7, #00, #15  ; data/atlantis/block0101-1.tmx + right (80)  up: hole, right: hole, down: hole, 
+  db 7, #00, #15  ; data/atlantis/block0101-1.tmx + right (81)  up: hole, right: hole, down: hole, 
   dw #0809
-  db 7, #00, #25  ; data/atlantis/block0101-2.tmx + right (81)  up: stairs, right: hole, down: hole, 
+  db 7, #00, #25  ; data/atlantis/block0101-2.tmx + right (82)  up: stairs, right: hole, down: hole, 
   dw #0809
-  db 7, #00, #15  ; data/atlantis/block0110-1.tmx + down (82)  up: hole, right: hole, down: hole, 
+  db 7, #00, #35  ; data/atlantis/block0101-3.tmx + right (83)  up: water, right: hole, down: hole, 
   dw #0809
-  db 7, #00, #25  ; data/atlantis/block0110-2.tmx + down (83)  up: stairs, right: hole, down: hole, 
+  db 7, #00, #15  ; data/atlantis/block0110-1.tmx + down (84)  up: hole, right: hole, down: hole, 
   dw #0809
-  db 7, #00, #35  ; data/atlantis/block0110-3.tmx + down (84)  up: water, right: hole, down: hole, 
+  db 7, #00, #25  ; data/atlantis/block0110-2.tmx + down (85)  up: stairs, right: hole, down: hole, 
   dw #0809
-  db 9, #00, #41  ; data/atlantis/block1001-1.tmx (85)  left: hole, down: hole, 
+  db 7, #00, #35  ; data/atlantis/block0110-3.tmx + down (86)  up: water, right: hole, down: hole, 
+  dw #0809
+  db 9, #00, #41  ; data/atlantis/block1001-1.tmx (87)  left: hole, down: hole, 
   dw #0a31
-  db 10, #00, #44  ; data/atlantis/block1010-1.tmx (86)  left: hole, right: hole, 
+  db 10, #00, #44  ; data/atlantis/block1010-1.tmx (88)  left: hole, right: hole, 
   dw #0d51
-  db 11, #00, #45  ; data/atlantis/block0011-1.tmx + left (87)  left: hole, right: hole, down: hole, 
+  db 11, #00, #45  ; data/atlantis/block0011-1.tmx + left (89)  left: hole, right: hole, down: hole, 
   dw #0917
-  db 11, #00, #45  ; data/atlantis/block1001-1.tmx + right (88)  left: hole, right: hole, down: hole, 
+  db 11, #00, #45  ; data/atlantis/block1001-1.tmx + right (90)  left: hole, right: hole, down: hole, 
   dw #0811
-  db 11, #00, #45  ; data/atlantis/block1010-1.tmx + down (89)  left: hole, right: hole, down: hole, 
+  db 11, #00, #45  ; data/atlantis/block1010-1.tmx + down (91)  left: hole, right: hole, down: hole, 
   dw #0911
-  db 12, #00, #50  ; data/atlantis/block1100-1.tmx (90)  left: hole, up: hole, 
+  db 12, #00, #50  ; data/atlantis/block1100-1.tmx (92)  left: hole, up: hole, 
   dw #0a20
-  db 12, #00, #60  ; data/atlantis/block1100-2.tmx (91)  left: hole, up: stairs, 
+  db 12, #00, #60  ; data/atlantis/block1100-2.tmx (93)  left: hole, up: stairs, 
   dw #0a20
-  db 12, #00, #70  ; data/atlantis/block1100-3.tmx (92)  left: hole, up: water, 
+  db 12, #00, #70  ; data/atlantis/block1100-3.tmx (94)  left: hole, up: water, 
   dw #0a20
-  db 13, #00, #51  ; data/atlantis/block0101-1.tmx + left (93)  left: hole, up: hole, down: hole, 
+  db 13, #00, #51  ; data/atlantis/block0101-1.tmx + left (95)  left: hole, up: hole, down: hole, 
   dw #0821
-  db 13, #00, #61  ; data/atlantis/block0101-2.tmx + left (94)  left: hole, up: stairs, down: hole, 
+  db 13, #00, #61  ; data/atlantis/block0101-2.tmx + left (96)  left: hole, up: stairs, down: hole, 
   dw #0821
-  db 13, #00, #51  ; data/atlantis/block1001-1.tmx + up (95)  left: hole, up: hole, down: hole, 
+  db 13, #00, #71  ; data/atlantis/block0101-3.tmx + left (97)  left: hole, up: water, down: hole, 
+  dw #0821
+  db 13, #00, #51  ; data/atlantis/block1001-1.tmx + up (98)  left: hole, up: hole, down: hole, 
   dw #0a21
-  db 14, #00, #54  ; data/atlantis/block0110-1.tmx + left (96)  left: hole, up: hole, right: hole, 
+  db 14, #00, #54  ; data/atlantis/block0110-1.tmx + left (99)  left: hole, up: hole, right: hole, 
   dw #0841
-  db 14, #00, #64  ; data/atlantis/block0110-2.tmx + left (97)  left: hole, up: stairs, right: hole, 
+  db 14, #00, #64  ; data/atlantis/block0110-2.tmx + left (100)  left: hole, up: stairs, right: hole, 
   dw #0841
-  db 14, #00, #74  ; data/atlantis/block0110-3.tmx + left (98)  left: hole, up: water, right: hole, 
+  db 14, #00, #74  ; data/atlantis/block0110-3.tmx + left (101)  left: hole, up: water, right: hole, 
   dw #0841
-  db 14, #00, #54  ; data/atlantis/block1010-1.tmx + up (99)  left: hole, up: hole, right: hole, 
+  db 14, #00, #54  ; data/atlantis/block1010-1.tmx + up (102)  left: hole, up: hole, right: hole, 
   dw #0c41
-  db 14, #00, #54  ; data/atlantis/block1100-1.tmx + right (100)  left: hole, up: hole, right: hole, 
+  db 14, #00, #54  ; data/atlantis/block1100-1.tmx + right (103)  left: hole, up: hole, right: hole, 
   dw #0800
-  db 14, #00, #64  ; data/atlantis/block1100-2.tmx + right (101)  left: hole, up: stairs, right: hole, 
+  db 14, #00, #64  ; data/atlantis/block1100-2.tmx + right (104)  left: hole, up: stairs, right: hole, 
   dw #0800
-  db 14, #00, #74  ; data/atlantis/block1100-3.tmx + right (102)  left: hole, up: water, right: hole, 
+  db 14, #00, #74  ; data/atlantis/block1100-3.tmx + right (105)  left: hole, up: water, right: hole, 
   dw #0800
-  db 15, #00, #55  ; data/atlantis/block0011-1.tmx + left + up (103)  left: hole, up: hole, right: hole, down: hole, 
+  db 15, #00, #55  ; data/atlantis/block0011-1.tmx + left + up (106)  left: hole, up: hole, right: hole, down: hole, 
   dw #0807
-  db 15, #00, #55  ; data/atlantis/block0101-1.tmx + left + right (104)  left: hole, up: hole, right: hole, down: hole, 
+  db 15, #00, #55  ; data/atlantis/block0101-1.tmx + left + right (107)  left: hole, up: hole, right: hole, down: hole, 
   dw #0801
-  db 15, #00, #65  ; data/atlantis/block0101-2.tmx + left + right (105)  left: hole, up: stairs, right: hole, down: hole, 
+  db 15, #00, #65  ; data/atlantis/block0101-2.tmx + left + right (108)  left: hole, up: stairs, right: hole, down: hole, 
   dw #0801
-  db 15, #00, #55  ; data/atlantis/block0110-1.tmx + left + down (106)  left: hole, up: hole, right: hole, down: hole, 
+  db 15, #00, #75  ; data/atlantis/block0101-3.tmx + left + right (109)  left: hole, up: water, right: hole, down: hole, 
   dw #0801
-  db 15, #00, #65  ; data/atlantis/block0110-2.tmx + left + down (107)  left: hole, up: stairs, right: hole, down: hole, 
+  db 15, #00, #55  ; data/atlantis/block0110-1.tmx + left + down (110)  left: hole, up: hole, right: hole, down: hole, 
   dw #0801
-  db 15, #00, #75  ; data/atlantis/block0110-3.tmx + left + down (108)  left: hole, up: water, right: hole, down: hole, 
+  db 15, #00, #65  ; data/atlantis/block0110-2.tmx + left + down (111)  left: hole, up: stairs, right: hole, down: hole, 
   dw #0801
-  db 15, #00, #55  ; data/atlantis/block1001-1.tmx + up + right (109)  left: hole, up: hole, right: hole, down: hole, 
+  db 15, #00, #75  ; data/atlantis/block0110-3.tmx + left + down (112)  left: hole, up: water, right: hole, down: hole, 
   dw #0801
-  db 15, #00, #55  ; data/atlantis/block1010-1.tmx + up + down (110)  left: hole, up: hole, right: hole, down: hole, 
+  db 15, #00, #55  ; data/atlantis/block1001-1.tmx + up + right (113)  left: hole, up: hole, right: hole, down: hole, 
+  dw #0801
+  db 15, #00, #55  ; data/atlantis/block1010-1.tmx + up + down (114)  left: hole, up: hole, right: hole, down: hole, 
   dw #0801
 atlantis_combination_chunk_pool:
-  db 0, #00, #00  ; data/atlantis/combination0000-1.tmx (111)  
+  db 0, #00, #00  ; data/atlantis/combination0000-1.tmx (115)  
   dw #0781
-  db 1, #00, #01  ; data/atlantis/combination0000-1.tmx + down (112)  down: hole, 
+  db 1, #00, #01  ; data/atlantis/combination0000-1.tmx + down (116)  down: hole, 
   dw #0381
-  db 2, #00, #04  ; data/atlantis/combination0000-1.tmx + right (113)  right: hole, 
+  db 2, #00, #04  ; data/atlantis/combination0000-1.tmx + right (117)  right: hole, 
   dw #0581
-  db 3, #00, #05  ; data/atlantis/combination0000-1.tmx + right + down (114)  right: hole, down: hole, 
+  db 3, #00, #05  ; data/atlantis/combination0000-1.tmx + right + down (118)  right: hole, down: hole, 
   dw #0181
-  db 4, #00, #10  ; data/atlantis/combination0000-1.tmx + up (115)  up: hole, 
+  db 4, #00, #10  ; data/atlantis/combination0000-1.tmx + up (119)  up: hole, 
   dw #0681
-  db 4, #00, #20  ; data/atlantis/combination0100-1.tmx (116)  up: stairs, 
+  db 4, #00, #20  ; data/atlantis/combination0100-1.tmx (120)  up: stairs, 
   dw #0681
-  db 4, #00, #30  ; data/atlantis/combination0100-2.tmx (117)  up: water, 
+  db 4, #00, #30  ; data/atlantis/combination0100-2.tmx (121)  up: water, 
   dw #0681
-  db 5, #00, #11  ; data/atlantis/combination0000-1.tmx + up + down (118)  up: hole, down: hole, 
+  db 5, #00, #11  ; data/atlantis/combination0000-1.tmx + up + down (122)  up: hole, down: hole, 
   dw #0281
-  db 5, #00, #21  ; data/atlantis/combination0100-1.tmx + down (119)  up: stairs, down: hole, 
+  db 5, #00, #21  ; data/atlantis/combination0100-1.tmx + down (123)  up: stairs, down: hole, 
   dw #0281
-  db 5, #00, #31  ; data/atlantis/combination0100-2.tmx + down (120)  up: water, down: hole, 
+  db 5, #00, #31  ; data/atlantis/combination0100-2.tmx + down (124)  up: water, down: hole, 
   dw #0281
-  db 6, #00, #14  ; data/atlantis/combination0000-1.tmx + up + right (121)  up: hole, right: hole, 
+  db 6, #00, #14  ; data/atlantis/combination0000-1.tmx + up + right (125)  up: hole, right: hole, 
   dw #0481
-  db 6, #00, #24  ; data/atlantis/combination0100-1.tmx + right (122)  up: stairs, right: hole, 
+  db 6, #00, #24  ; data/atlantis/combination0100-1.tmx + right (126)  up: stairs, right: hole, 
   dw #0481
-  db 6, #00, #34  ; data/atlantis/combination0100-2.tmx + right (123)  up: water, right: hole, 
+  db 6, #00, #34  ; data/atlantis/combination0100-2.tmx + right (127)  up: water, right: hole, 
   dw #0481
-  db 7, #00, #15  ; data/atlantis/combination0000-1.tmx + up + right + down (124)  up: hole, right: hole, down: hole, 
+  db 7, #00, #15  ; data/atlantis/combination0000-1.tmx + up + right + down (128)  up: hole, right: hole, down: hole, 
   dw #0081
-  db 7, #00, #25  ; data/atlantis/combination0100-1.tmx + right + down (125)  up: stairs, right: hole, down: hole, 
+  db 7, #00, #25  ; data/atlantis/combination0100-1.tmx + right + down (129)  up: stairs, right: hole, down: hole, 
   dw #0081
-  db 7, #00, #35  ; data/atlantis/combination0100-2.tmx + right + down (126)  up: water, right: hole, down: hole, 
+  db 7, #00, #35  ; data/atlantis/combination0100-2.tmx + right + down (130)  up: water, right: hole, down: hole, 
   dw #0081
-  db 8, #00, #40  ; data/atlantis/combination0000-1.tmx + left (127)  left: hole, 
+  db 8, #00, #40  ; data/atlantis/combination0000-1.tmx + left (131)  left: hole, 
   dw #0701
-  db 8, #00, #c0  ; data/atlantis/combination1000-1.tmx (128)  left: half-hole, 
+  db 8, #00, #c0  ; data/atlantis/combination1000-1.tmx (132)  left: half-hole, 
   dw #0701
-  db 8, #00, #80  ; data/atlantis/combination1000-2.tmx (129)  left: water, 
+  db 8, #00, #80  ; data/atlantis/combination1000-2.tmx (133)  left: water, 
   dw #0701
-  db 9, #00, #41  ; data/atlantis/combination0000-1.tmx + left + down (130)  left: hole, down: hole, 
+  db 9, #00, #41  ; data/atlantis/combination0000-1.tmx + left + down (134)  left: hole, down: hole, 
   dw #0301
-  db 9, #00, #c1  ; data/atlantis/combination1000-1.tmx + down (131)  left: half-hole, down: hole, 
+  db 9, #00, #c1  ; data/atlantis/combination1000-1.tmx + down (135)  left: half-hole, down: hole, 
   dw #0301
-  db 9, #00, #81  ; data/atlantis/combination1000-2.tmx + down (132)  left: water, down: hole, 
+  db 9, #00, #81  ; data/atlantis/combination1000-2.tmx + down (136)  left: water, down: hole, 
   dw #0301
-  db 10, #00, #44  ; data/atlantis/combination0000-1.tmx + left + right (133)  left: hole, right: hole, 
+  db 10, #00, #44  ; data/atlantis/combination0000-1.tmx + left + right (137)  left: hole, right: hole, 
   dw #0501
-  db 10, #00, #c4  ; data/atlantis/combination1000-1.tmx + right (134)  left: half-hole, right: hole, 
+  db 10, #00, #c4  ; data/atlantis/combination1000-1.tmx + right (138)  left: half-hole, right: hole, 
   dw #0501
-  db 10, #00, #84  ; data/atlantis/combination1000-2.tmx + right (135)  left: water, right: hole, 
+  db 10, #00, #84  ; data/atlantis/combination1000-2.tmx + right (139)  left: water, right: hole, 
   dw #0501
-  db 11, #00, #45  ; data/atlantis/combination0000-1.tmx + left + right + down (136)  left: hole, right: hole, down: hole, 
+  db 11, #00, #45  ; data/atlantis/combination0000-1.tmx + left + right + down (140)  left: hole, right: hole, down: hole, 
   dw #0101
-  db 11, #00, #c5  ; data/atlantis/combination1000-1.tmx + right + down (137)  left: half-hole, right: hole, down: hole, 
+  db 11, #00, #c5  ; data/atlantis/combination1000-1.tmx + right + down (141)  left: half-hole, right: hole, down: hole, 
   dw #0101
-  db 11, #00, #85  ; data/atlantis/combination1000-2.tmx + right + down (138)  left: water, right: hole, down: hole, 
+  db 11, #00, #85  ; data/atlantis/combination1000-2.tmx + right + down (142)  left: water, right: hole, down: hole, 
   dw #0101
-  db 12, #00, #50  ; data/atlantis/combination0000-1.tmx + left + up (139)  left: hole, up: hole, 
+  db 12, #00, #50  ; data/atlantis/combination0000-1.tmx + left + up (143)  left: hole, up: hole, 
   dw #0601
-  db 12, #00, #60  ; data/atlantis/combination0100-1.tmx + left (140)  left: hole, up: stairs, 
+  db 12, #00, #60  ; data/atlantis/combination0100-1.tmx + left (144)  left: hole, up: stairs, 
   dw #0601
-  db 12, #00, #70  ; data/atlantis/combination0100-2.tmx + left (141)  left: hole, up: water, 
+  db 12, #00, #70  ; data/atlantis/combination0100-2.tmx + left (145)  left: hole, up: water, 
   dw #0601
-  db 12, #00, #d0  ; data/atlantis/combination1000-1.tmx + up (142)  left: half-hole, up: hole, 
+  db 12, #00, #d0  ; data/atlantis/combination1000-1.tmx + up (146)  left: half-hole, up: hole, 
   dw #0601
-  db 12, #00, #90  ; data/atlantis/combination1000-2.tmx + up (143)  left: water, up: hole, 
+  db 12, #00, #90  ; data/atlantis/combination1000-2.tmx + up (147)  left: water, up: hole, 
   dw #0601
-  db 13, #00, #51  ; data/atlantis/combination0000-1.tmx + left + up + down (144)  left: hole, up: hole, down: hole, 
+  db 13, #00, #51  ; data/atlantis/combination0000-1.tmx + left + up + down (148)  left: hole, up: hole, down: hole, 
   dw #0201
-  db 13, #00, #61  ; data/atlantis/combination0100-1.tmx + left + down (145)  left: hole, up: stairs, down: hole, 
+  db 13, #00, #61  ; data/atlantis/combination0100-1.tmx + left + down (149)  left: hole, up: stairs, down: hole, 
   dw #0201
-  db 13, #00, #71  ; data/atlantis/combination0100-2.tmx + left + down (146)  left: hole, up: water, down: hole, 
+  db 13, #00, #71  ; data/atlantis/combination0100-2.tmx + left + down (150)  left: hole, up: water, down: hole, 
   dw #0201
-  db 13, #00, #d1  ; data/atlantis/combination1000-1.tmx + up + down (147)  left: half-hole, up: hole, down: hole, 
+  db 13, #00, #d1  ; data/atlantis/combination1000-1.tmx + up + down (151)  left: half-hole, up: hole, down: hole, 
   dw #0201
-  db 13, #00, #91  ; data/atlantis/combination1000-2.tmx + up + down (148)  left: water, up: hole, down: hole, 
+  db 13, #00, #91  ; data/atlantis/combination1000-2.tmx + up + down (152)  left: water, up: hole, down: hole, 
   dw #0201
-  db 14, #00, #54  ; data/atlantis/combination0000-1.tmx + left + up + right (149)  left: hole, up: hole, right: hole, 
+  db 14, #00, #54  ; data/atlantis/combination0000-1.tmx + left + up + right (153)  left: hole, up: hole, right: hole, 
   dw #0401
-  db 14, #00, #64  ; data/atlantis/combination0100-1.tmx + left + right (150)  left: hole, up: stairs, right: hole, 
+  db 14, #00, #64  ; data/atlantis/combination0100-1.tmx + left + right (154)  left: hole, up: stairs, right: hole, 
   dw #0401
-  db 14, #00, #74  ; data/atlantis/combination0100-2.tmx + left + right (151)  left: hole, up: water, right: hole, 
+  db 14, #00, #74  ; data/atlantis/combination0100-2.tmx + left + right (155)  left: hole, up: water, right: hole, 
   dw #0401
-  db 14, #00, #d4  ; data/atlantis/combination1000-1.tmx + up + right (152)  left: half-hole, up: hole, right: hole, 
+  db 14, #00, #d4  ; data/atlantis/combination1000-1.tmx + up + right (156)  left: half-hole, up: hole, right: hole, 
   dw #0401
-  db 14, #00, #94  ; data/atlantis/combination1000-2.tmx + up + right (153)  left: water, up: hole, right: hole, 
+  db 14, #00, #94  ; data/atlantis/combination1000-2.tmx + up + right (157)  left: water, up: hole, right: hole, 
   dw #0401
-  db 15, #00, #55  ; data/atlantis/combination0000-1.tmx + left + up + right + down (154)  left: hole, up: hole, right: hole, down: hole, 
+  db 15, #00, #55  ; data/atlantis/combination0000-1.tmx + left + up + right + down (158)  left: hole, up: hole, right: hole, down: hole, 
   dw #0001
-  db 15, #00, #65  ; data/atlantis/combination0100-1.tmx + left + right + down (155)  left: hole, up: stairs, right: hole, down: hole, 
+  db 15, #00, #65  ; data/atlantis/combination0100-1.tmx + left + right + down (159)  left: hole, up: stairs, right: hole, down: hole, 
   dw #0001
-  db 15, #00, #75  ; data/atlantis/combination0100-2.tmx + left + right + down (156)  left: hole, up: water, right: hole, down: hole, 
+  db 15, #00, #75  ; data/atlantis/combination0100-2.tmx + left + right + down (160)  left: hole, up: water, right: hole, down: hole, 
   dw #0001
-  db 15, #00, #d5  ; data/atlantis/combination1000-1.tmx + up + right + down (157)  left: half-hole, up: hole, right: hole, down: hole, 
+  db 15, #00, #d5  ; data/atlantis/combination1000-1.tmx + up + right + down (161)  left: half-hole, up: hole, right: hole, down: hole, 
   dw #0001
-  db 15, #00, #95  ; data/atlantis/combination1000-2.tmx + up + right + down (158)  left: water, up: hole, right: hole, down: hole, 
+  db 15, #00, #95  ; data/atlantis/combination1000-2.tmx + up + right + down (162)  left: water, up: hole, right: hole, down: hole, 
   dw #0001

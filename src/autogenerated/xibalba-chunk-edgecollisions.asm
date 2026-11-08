@@ -87,6 +87,7 @@
   db #21, #ff, #3f, #ff  ; data/xibalba/boss1000-3.tmx
   db #21, #ff, #3f, #c3  ; data/xibalba/boss1001-1.tmx
   db #39, #ff, #3f, #c3  ; data/xibalba/boss1001-2.tmx
+  db #21, #ff, #3f, #c3  ; data/xibalba/boss1001-3.tmx
   db #21, #ff, #21, #ff  ; data/xibalba/boss1010-1.tmx
   db #39, #ff, #21, #ff  ; data/xibalba/boss1010-2.tmx
   db #21, #ff, #21, #c3  ; data/xibalba/boss1011-1.tmx

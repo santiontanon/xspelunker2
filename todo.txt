@@ -11,6 +11,8 @@ to do:
 ***- bug: you can push rocks onto a teleporter!
 ***- bug: in boss rooms, map location is wrong (top-left)
 ***- with seed 0x009d, 0x5555 -> atlantic caves, it makes a switches puzzle that is impossible to enter
+OK - make the game compile again
+  OK - test finding the firestone forge
 OK - missing chunks
 OK - remove MP83 unless he gives me some feedback
 

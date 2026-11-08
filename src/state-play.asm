@@ -240,6 +240,7 @@ state_play_from_continue:
 ; 		ld e, TELEPORTER_ROOM_ID
 ; 		ld e, TEMPLE_OF_POSEIDON_ID
 ; 		ld e, BOSS9_ROOM_ID
+; 		ld e, FIRESTONE_FORGE_ROOM_ID
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000

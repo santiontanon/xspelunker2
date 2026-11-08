@@ -572,12 +572,12 @@ public class GenerateChunkData {
                     }
                     
                     
-                    if (collision_types[c.tiles[o.x/8 + 0][o.y/8 + 0]] != 0 ||
-                        collision_types[c.tiles[o.x/8 + 1][o.y/8 + 0]] != 0 ||
-                        collision_types[c.tiles[o.x/8 + 0][o.y/8 + 1]] != 0 ||
-                        collision_types[c.tiles[o.x/8 + 1][o.y/8 + 1]] != 0) {
-                        throw new Exception("Pushable block on top of something in " + c.path);
-                    }
+//                    if (collision_types[c.tiles[o.x/8 + 0][o.y/8 + 0]] != 0 ||
+//                        collision_types[c.tiles[o.x/8 + 1][o.y/8 + 0]] != 0 ||
+//                        collision_types[c.tiles[o.x/8 + 0][o.y/8 + 1]] != 0 ||
+//                        collision_types[c.tiles[o.x/8 + 1][o.y/8 + 1]] != 0) {
+//                        throw new Exception("Pushable block on top of something in " + c.path);
+//                    }
                     n_pushable_blocks++;
                 }
                 if (o.type.equals("door-right") || o.type.equals("door-left")) {
@@ -641,7 +641,8 @@ public class GenerateChunkData {
                     for(int i = o.y/8;i<(o.y+o.dy)/8;i++) {
                         for(int j = o.x/8;j<(o.x+o.dx)/8;j++) {
                             int tile = c.tiles[j][i];
-                            if (collision_types[tile] != 0) {
+                            if (collision_types[tile] != 0 && 
+                                collision_types[tile] != 11) {
                                 throw new Exception("pushable block located on non walkable in " + c.path);
                             }
                         }
