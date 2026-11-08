@@ -9,7 +9,7 @@ to do:
 ***- astronomer's room clue: make sure it's clear it refers to stellas at start
 ***- I should display the seed in binary somewhere
 ***- bug: you can push rocks onto a teleporter!
-***- bug: in boss rooms, map location is wrong (top-left)
+OK - bug: in boss rooms, map location is wrong (top-left)
 OK - with seed 0x009d, 0x5555 -> atlantic caves, it makes a switches puzzle that is impossible to enter
 OK - make the game compile again
   OK - test finding the firestone forge

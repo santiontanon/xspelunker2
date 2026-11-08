@@ -1401,6 +1401,11 @@ draw_inventory_map_have_map_ia_loop_done:
 	; Loop 2, change the map colors to indicate where the player is:
 	ld a, (current_room__id)
 	ld iyl, a
+	ld a, (boss__in_boss_room)
+	or a
+	jr z, draw_inventory_map_have_map_no_boss
+	ld iyl, #ff  ; do not highlight any room when we are in a boss fight
+draw_inventory_map_have_map_no_boss:
 	ld a, (current_area__height)
 	ld b, a
 	ld a, (current_area__width)
@@ -1430,19 +1435,15 @@ draw_inventory_map_have_map_loop_x2:
 		jr nz, draw_inventory_map_have_map_loop_x2_no_player
 		; player is here:
 		ld a, COLOR_DARK_RED + COLOR_DARK_YELLOW*16
-REPT 8
-	    out (c), a
-	    nop
-ENDR
 	    jr draw_inventory_map_have_map_loop_x2_continue
 draw_inventory_map_have_map_loop_x2_no_player:
 		; no player:
 		ld a, COLOR_DARK_YELLOW*16
+draw_inventory_map_have_map_loop_x2_continue:
 REPT 8
 	    out (c), a
 	    nop
 ENDR
-draw_inventory_map_have_map_loop_x2_continue:
 		inc de
 		djnz draw_inventory_map_have_map_loop_x2
 	pop hl
