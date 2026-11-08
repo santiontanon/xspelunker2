@@ -6,23 +6,14 @@ to do:
 ***- bug: in xibalba boss: get on top of left basket, jump and attack hud. Then go to inventory and it crashes
 ***- bug: "maya_puzzle_trial_fn_ascend_special_case" not implemented
 ***- bug: in astronomer's room, if you start with J0RDISUREDA and go to JSUREDA, it crashes
+***- astronomer's room clue: make sure it's clear it refers to stellas at start
+***- I should display the seed in binary somewhere
 ***- bug: you can push rocks onto a teleporter!
 ***- bug: in boss rooms, map location is wrong (top-left)
 ***- with seed 0x009d, 0x5555 -> atlantic caves, it makes a switches puzzle that is impossible to enter
-***- missing chunks (seed 236):
-  OK - No standard chunks with up/down tags: null/null, left/right tags: lava/null, objects [4x4-item, door-right], and type: 8 (at 9, 9 area 10, placed tags: trial3-lock)
-  OK - No standard chunks with up/down tags: stairs/null, left/right tags: lava/null, objects [4x4-item, door-down], and type: 14 (at 6, 7 area 10, placed tags: trial1-lock)
-  OK - No block chunks with up/down tags: hole/null, left/right tags: lava/null, objects [], and type: 15 (at 10, 5 area 8, placed tags: block-puzzle1)
-  OK - No standard chunks with up/down tags: null/null, left/right tags: half-hole/hole, objects [door-down], and type: 10 (at 3, 7 area 6, placed tags: button-door3)
-  OK - No boss chunks with up/down tags: hole/null, left/right tags: lava/null, objects [], and type: 12 (at 5, 13 area 10, placed tags: boss6-chestlock)
-  OK - No block chunks with up/down tags: water/null, left/right tags: hole/null, objects [], and type: 12 (at 9, 11 area 9, placed tags: block-puzzle1)
-  OK - No combination chunks with up/down tags: stairs/null, left/right tags: lava/null, objects [door-down], and type: 12 (at 1, 9 area 6, placed tags: combination3-lock)
-  OK - No standard chunks with up/down tags: stairs/stairs, left/right tags: half-hole/null, objects [], and type: 15 (at 7, 13 area 6, placed tags: null)
-  OK - No standard chunks with up/down tags: hole/null, left/right tags: lava/null, objects [item, door-down], and type: 12 (at 9, 5 area 3, placed tags: ball-lock)
-  OK - No block chunks with up/down tags: hole/null, left/right tags: lava/null, objects [], and type: 13 (at 11, 9 area 8, placed tags: block-puzzle1)
-  OK - No standard chunks with up/down tags: null/stairs, left/right tags: null/null, objects [big-item], and type: 3 (at 6, 5 area 6, placed tags: teleporter5)
-  ***- No block chunks with up/down tags: water/null, left/right tags: null/null, objects [], and type: 5 (at 4, 3 area 9, placed tags: block-puzzle4)
+OK - missing chunks
 OK - remove MP83 unless he gives me some feedback
+
 
 --------------------
 

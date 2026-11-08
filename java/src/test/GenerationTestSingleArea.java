@@ -56,6 +56,7 @@ public class GenerationTestSingleArea {
             typeStats[i] = 0;
         }
         
+//        int target_area_to_visualize = 7;  // atlantic caves
 //        int target_area_to_visualize = 10;  // mars
         int target_area_to_visualize = 11;  // moon
 //        int target_area_to_visualize = -1;  // ALL areas
