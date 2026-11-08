@@ -109,9 +109,10 @@ public class GenerationTest {
 //        System.out.println("nPCGAreaErrors: " + nPCGAreaErrors);
 
 
-//        r.setSeed(0x4afa, 0x5555);  // 1ATLANTIS
+        r.setSeed(0x4afa, 0x5555);  // 1ATLANTIS
 //        r.setSeed(0xe73b, 0x5555);  // XSPELUNKER2
-        r.setSeed(0x009d, 0x5555);  // XSPELUNKER2
+//        r.setSeed(0x009d, 0x5555);  // J0RDISUREDA
+//        r.setSeed(0x342f, 0x5555);  // JSUREDA
 //        r.setSeed(0x003a, 0x5555);
 //        r.setSeed(0x4afa, 0x5555);
 //        r.setSeed(101, 0x5555);

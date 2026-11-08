@@ -1,14 +1,21 @@
 to do:
 
-***- grey out first character when changing world name in astronomer's room
-***- Example soft-lock from Sure: go to JUMANJI, and in moon a button is pressed, so, you can go up, but you can never go back down again
 ***- when going to a world without a teleporter you have discovered, it should not be in the map
-***- bug: in xibalba boss: get on top of left basket, jump and attack hud. Then go to inventory and it crashes
+
+***- Example soft-lock from Sure: go to JUMANJI, and in moon a button is pressed, so, you can go up, but you can never go back down again
 ***- bug: "maya_puzzle_trial_fn_ascend_special_case" not implemented
-***- bug: in astronomer's room, if you start with J0RDISUREDA and go to JSUREDA, it crashes
-***- astronomer's room clue: make sure it's clear it refers to stellas at start
 ***- I should display the seed in binary somewhere
 ***- bug: you can push rocks onto a teleporter!
+***- bug: in xibalba boss: get on top of left basket, jump and attack hud. Then go to inventory and it crashes
+
+OK - grey out first character when changing world name in astronomer's room:
+  OK - redefine characters 254, 255 to the first character, but grey color
+  OK - set the first character to 254, 255
+OK - bug: in astronomer's room, if you start with J0RDISUREDA (#009d) and go to JSUREDA (#342f), it crashes as there is no 8-bridge room in that world:
+  OK - if teleporting to another world from astronomer's room: (current_world__astronomy_room_area)
+    OK - if missing, do not accept the name ("JSUREDA", where it's missing)
+    OK - if in another area, move to the other area ("1ATLANTIS", where it's in area 7)
+OK - astronomer's room clue: make sure it's clear it refers to stellas at start
 OK - bug: in boss rooms, map location is wrong (top-left)
 OK - with seed 0x009d, 0x5555 -> atlantic caves, it makes a switches puzzle that is impossible to enter
 OK - make the game compile again

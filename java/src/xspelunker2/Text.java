@@ -742,7 +742,7 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "Here, in this very room, I learned this secret, and found a way to travel across worlds! Pray in Itzamna's altar and if you are worthy, he might grant you the same power!", "ASTRONOMY_TABLET_1_3", 18*6);
 
         addLineSafe(lines_with_constant_page3, "Three caiman statues guard the recipe that the star people want. But they will never find them... With my new understanding of astronomy I hid them in different worlds!", "ASTRONOMY_TABLET_2_2", 18*6);
-        addLineSafe(lines_with_constant_page3, "I marked each statue's world with a stela so they can be found again. But only those who understand astronomy will be able to read them... If you find the statues, speak their names, and the recipe will be yours!", "ASTRONOMY_TABLET_2_3", 18*7);
+        addLineSafe(lines_with_constant_page3, "I marked each statue's world with a stela in the village so they can be found again. Learn astronomy and you will be able to read them... If you find the statues, speak their names, and the recipe will be yours!", "ASTRONOMY_TABLET_2_3", 18*7);
 
         addLineSafe(lines_with_constant_page3, "I am one of the guardian caimans. I do not remember my name, but I remember I was the first.", "GUARDIAN_CAIMAN_TABLET_1", 18*3);
         addLineSafe(lines_with_constant_page3, "I am one of the guardian caimans. I do not remember my name, but I remember I was the second.", "GUARDIAN_CAIMAN_TABLET_2", 18*3);

@@ -20,7 +20,6 @@ state_gamestart:
 state_gamestart_continue:
     ld sp, stack
 	call clear_screen_left_to_right
-
 	call disable_VDP_output
 		; sprites:
 		ld hl, state_gamestart_sprites_zx0
@@ -49,6 +48,41 @@ state_gamestart_continue:
 		ld de, GAMESTART_STARCHART_NAMETABLE + 9*32 + 25
 		ld bc, 4
 		ldir
+
+		; make a copy of the first name character, but greyed out:
+		ld a, (current_world__name)
+		ld hl, draw_gamestart_world_name_table
+		ADD_HL_A
+		; copy from CHRTBL2 + 256*8 + (hl)*8
+		ld l, (hl)
+		ld h, 0
+		add hl, hl
+		add hl, hl
+		add hl, hl
+		ld de, CHRTBL2 + 256*8
+		add hl, de
+		push hl
+			ld de, buffer_4096
+			ld bc, 8
+			call LDIRMV
+			ld hl, buffer_4096
+			ld de, CHRTBL2 + (256 + 254)*8
+			ld b, 8
+			call fast_small_LDIRVM
+		pop hl
+		ld bc, 16*8
+		add hl, bc
+		ld de, buffer_4096
+		ld bc, 8
+		call LDIRMV
+		ld hl, buffer_4096		
+		ld de, CHRTBL2 + (256 + 255)*8
+		ld b, 8
+		call fast_small_LDIRVM
+		ld hl, CLRTBL2 + (256 + 254)*8
+		ld b, 16
+		ld a, 16*COLOR_GREY
+		call fast_small_FILVRM
 state_gamestart_continue2:
 
 		ld hl, GAMESTART_STARCHART_NAMETABLE
@@ -128,6 +162,29 @@ draw_gamestart_world_name:
 	ld hl, current_world__name
 	ld de, NAMTBL2 + 3 + 10*32
 	ld b, 16
+
+	ld a, (gamestart_called_from)
+	or a
+	jr z, draw_gamestart_world_name_loop
+	; called from astronomy room, fix first character:
+	push de
+	push hl
+		push de
+			ex de, hl
+			ld a, 254
+			ld b, 1
+			call fast_small_FILVRM
+		pop hl
+		ld bc, 32
+		add hl, bc
+		ld a, 255
+		ld b, 1
+		call fast_small_FILVRM
+	pop hl
+	pop de
+	inc de
+	inc hl
+	ld b, 15
 draw_gamestart_world_name_loop:
 	push bc
 	push hl
@@ -804,6 +861,7 @@ state_gamestart_update_cursor_start_continue:
 	call call_hl_in_page_c_8000
 	jr z, state_gamestart_update_cursor_start_succeeded
 
+state_gamestart_update_cursor_start_failed:
 	; restore the starchart, which would have been messed up by the failed attempt:
 	ld hl, gamestart_nametable_zx0
 	ld de, GAMESTART_STARCHART_NAMETABLE  ; offset by 1k so that we keep the copy
@@ -833,6 +891,8 @@ state_gamestart_update_cursor_start_succeeded:
 	; generate area:
 	ld hl, pcg_generate_area
 	ld a, (current_world__astronomy_room_area)
+	or a  ; no astronomy room in this world, fail!
+	jr z, state_gamestart_update_cursor_start_failed
 	ld e, a  ; area to generate
 	ld c, PCG_PAGE
 	call call_hl_in_page_c_8000

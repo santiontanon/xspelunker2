@@ -141,7 +141,7 @@ state_play:
 ; 		ld (player_inventory_weapon_ammo + 3), a
 ; 		ld a, 2
 ; 		ld (player_inventory_n_small_keys), a
-		ld (global_state__objects + TAG_MAP_PIECE1), a
+; 		ld (global_state__objects + TAG_MAP_PIECE1), a
 ; 		ld (global_state__objects + TAG_MAP_PIECE2), a
 ; 		ld (global_state__objects + TAG_MAP_PIECE3), a
 ; 		ld (global_state__objects + TAG_MAP_PIECE4), a
@@ -234,6 +234,7 @@ state_play_from_continue:
 ; 		ld e, 16  ; <- second boss
 ; 		ld e, 4  ; <- third boss
 ; 		ld e, 17  ; <- fourth boss
+; 		ld e, 15  ; <- fourth boss (in #009d)
 ; 		ld e, 0
 ; 		ld e, 5
 ; 		ld e, EIGHT_BRIDGE_ROOM_ID
@@ -241,6 +242,7 @@ state_play_from_continue:
 ; 		ld e, TEMPLE_OF_POSEIDON_ID
 ; 		ld e, BOSS9_ROOM_ID
 ; 		ld e, FIRESTONE_FORGE_ROOM_ID
+; 		ld e, ASTRONOMY_ROOM_ID
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000
