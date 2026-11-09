@@ -167,6 +167,8 @@ draw_gamestart_world_name:
 	or a
 	jr z, draw_gamestart_world_name_loop
 	; called from astronomy room, fix first character:
+	; We copy the gfx of the first character to tiles 254 and 255 of the middle bank,
+	; and set their attributes to grey, so that the letter looks locked-in.
 	push de
 	push hl
 		push de

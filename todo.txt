@@ -1,13 +1,15 @@
 to do:
 
-***- when going to a world without a teleporter you have discovered, it should not be in the map
-
 ***- Example soft-lock from Sure: go to JUMANJI, and in moon a button is pressed, so, you can go up, but you can never go back down again
 ***- bug: "maya_puzzle_trial_fn_ascend_special_case" not implemented
+***- bug: in xibalba boss: get on top of left basket, jump and attack hud. Then go to inventory and it crashes
 ***- I should display the seed in binary somewhere
 ***- bug: you can push rocks onto a teleporter!
-***- bug: in xibalba boss: get on top of left basket, jump and attack hud. Then go to inventory and it crashes
 
+OK - when going to a world without a teleporter you have discovered, it should not be in the map (so that you cannot go there):
+  OK - reset and fill current_world__area_has_teleporter
+  OK - when in the map window, selecting teleporters, use "current_world__area_has_teleporter" to filter which are available
+  OK - teleporter9 set when the 8 bridge room is present
 OK - grey out first character when changing world name in astronomer's room:
   OK - redefine characters 254, 255 to the first character, but grey color
   OK - set the first character to 254, 255

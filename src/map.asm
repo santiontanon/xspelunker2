@@ -58,9 +58,12 @@ display_map_from_teleporter_continue:
 	ld de, buffer_4096
 	ld bc, #09ff  ; b = 9, c = #ff (we set c = #ff, so that the "ldi" below do not affect b)
 	ld ix, global_state__objects + TAG_TELEPORTER1
+	ld iy, current_world__area_has_teleporter
 display_map_from_teleporter_sprite_position_loop:
 	ld a, (ix)
-	inc ix
+	or a
+	jr z, display_map_from_teleporter_sprite_position_loop_not_active
+	ld a, (iy)
 	or a
 	jr z, display_map_from_teleporter_sprite_position_loop_not_active
 	ldi  ; y
@@ -85,6 +88,8 @@ display_map_from_teleporter_sprite_position_loop_not_active:
 	inc hl
 	inc hl
 display_map_from_teleporter_sprite_position_loop_continue:
+	inc ix
+	inc iy
 	djnz display_map_from_teleporter_sprite_position_loop
 
 	; determine which teleporter are we on right now:
@@ -240,7 +245,13 @@ display_map_from_teleporter_loop_next_loop:
 	add hl, bc
 	ld a, (hl)
 	or a
+	jr z, display_map_from_teleporter_loop_next_not_found
+	ld hl, current_world__area_has_teleporter
+	add hl, bc
+	ld a, (hl)
+	or a
 	jr nz, display_map_from_teleporter_loop_next_found
+display_map_from_teleporter_loop_next_not_found:
 	ld a, c
 	inc a
 	cp 9
@@ -286,7 +297,13 @@ display_map_from_teleporter_loop_prev_loop:
 	add hl, bc
 	ld a, (hl)
 	or a
+	jr z, display_map_from_teleporter_loop_prev_not_found
+	ld hl, current_world__area_has_teleporter
+	add hl, bc
+	ld a, (hl)
+	or a
 	jr nz, display_map_from_teleporter_loop_next_found
+display_map_from_teleporter_loop_prev_not_found:
 	ld a, c
 	dec a
 	cp #ff

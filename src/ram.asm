@@ -45,6 +45,7 @@ current_world__stela_status: ds virtual 1  ; bits 0, 1, 2: left, center, right s
 current_world__astronomy_room_area: ds virtual 1  ; 0: no astronomy room, 6,7: left/right caves
 current_world__spawn_firestone_forge: ds virtual 1
 current_world__boss9_room_area: ds virtual 1
+current_world__area_has_teleporter: ds virtual 9  ; 1: if each of TAG_TELEPORTER1, ..., TAG_TELEPORTER9 exist, 0 otherwise
 
 
 current_area__seed: ds virtual 4

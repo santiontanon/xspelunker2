@@ -150,8 +150,13 @@ state_play:
 ; 		ld (global_state__objects + TAG_MAP_PIECE7), a
 ; 		ld (global_state__objects + TAG_TELEPORTER1), a
 ; 		ld (global_state__objects + TAG_TELEPORTER2), a
+; 		ld (global_state__objects + TAG_TELEPORTER3), a
 ; 		ld (global_state__objects + TAG_TELEPORTER4), a
 ; 		ld (global_state__objects + TAG_TELEPORTER5), a
+; 		ld (global_state__objects + TAG_TELEPORTER6), a
+; 		ld (global_state__objects + TAG_TELEPORTER7), a
+; 		ld (global_state__objects + TAG_TELEPORTER8), a
+; 		ld (global_state__objects + TAG_TELEPORTER9), a
 ; 		ld (global_state__objects + TAG_FIRESTONE_FORGE), a
 ; 		ld a, #07
 ; 		ld (global_state__objects + TAG_BOSS_9_ROOM), a

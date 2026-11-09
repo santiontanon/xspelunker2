@@ -548,6 +548,11 @@ pcg_generate_world__init:
 	ld a, #ff
 	call clear_memory_a
 
+	ld hl, current_world__area_has_teleporter
+	ld bc, 9 - 1
+	xor a
+	call clear_memory_a
+
 	xor a
 	ld (tmp_pcg_world__lock_directions_size), a
 	ret
@@ -3154,6 +3159,8 @@ pcg_generate_world__generate_mission_8_bridge_point_set:
 	pop de  ; recover the area where the 8 bridge is
 	pop af  ; recover the area
 	ld (current_world__astronomy_room_area), a
+	ld a, 1
+	ld (current_world__area_has_teleporter + 8), a  ; mark that the astronomy room teleporter room is active in this seed
 	ld b, 0
 	ld c, l  ; offset
 	push hl
@@ -4625,6 +4632,19 @@ pcg_generate_world__add_tag_to_point_in_mst_node_division:
 	ld a, b
 	or a
 	ret z  ; TAG_NONE does not need to be placed
+	; If it's a teleporter, record it in 'current_world__area_has_teleporter':
+	cp TAG_TELEPORTER1
+	jr c, pcg_generate_world__add_tag_to_point_in_mst_node_division_no_teleporter
+	cp TAG_TELEPORTER9 + 1
+	jr nc, pcg_generate_world__add_tag_to_point_in_mst_node_division_no_teleporter
+	; it is a teleporter:
+	sub TAG_TELEPORTER1
+	push hl
+		ld hl, current_world__area_has_teleporter
+		ADD_HL_A
+		ld (hl), 1
+	pop hl
+pcg_generate_world__add_tag_to_point_in_mst_node_division_no_teleporter:
 	; add tag to the point:
 	push de
 ; 		ld a, (de)  ; DEBUG  ; mdl-watch2: "pcg_generate_world__add_tag_to_point_in_mst_node_division (tag, div, offset)", b, a, l
