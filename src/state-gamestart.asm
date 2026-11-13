@@ -858,6 +858,13 @@ state_gamestart_update_cursor_start_continue:
 	ld ix, CHRTBL2 + 256*2*8
 	call state_gamestart_console_paragraph
 
+	; DEBUG!
+; 	ld hl, RAM_to_zero_on_game_start
+; 	ld bc, (RAM_to_zero_on_game_start_end - RAM_to_zero_on_game_start) - 1
+; 	call clear_memory	
+; 	ld a, 1
+; 	ld (global_state__objects + TAG_BLUE_LOCK), a
+
 	ld hl, pcg_generate_world
 	ld c, PCG_PAGE_WORLD
 	call call_hl_in_page_c_8000
@@ -886,6 +893,10 @@ state_gamestart_update_cursor_start_continue2:
 	jp state_gamestart_console_paragraph
 
 state_gamestart_update_cursor_start_succeeded:
+	ld hl, rebuild_global_state__open_walls
+	ld c, PCG_PAGE_WORLD_AUXILIAR
+	call call_hl_in_page_c_8000
+
 	ld a, (gamestart_called_from)
 	or a
 	jp z, state_play
@@ -944,6 +955,10 @@ state_gamestart_update_cursor_back_to_astronmers_room_regenerate:
 
 	ld hl, pcg_generate_world
 	ld c, PCG_PAGE_WORLD
+	call call_hl_in_page_c_8000
+
+	ld hl, rebuild_global_state__open_walls
+	ld c, PCG_PAGE_WORLD_AUXILIAR
 	call call_hl_in_page_c_8000
 
 state_gamestart_update_cursor_back_to_astronmers_room_regenerate_done:

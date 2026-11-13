@@ -158,6 +158,7 @@ state_play:
 ; 		ld (global_state__objects + TAG_TELEPORTER8), a
 ; 		ld (global_state__objects + TAG_TELEPORTER9), a
 ; 		ld (global_state__objects + TAG_FIRESTONE_FORGE), a
+; 		ld (global_state__objects + TAG_BLUE_LOCK), a
 ; 		ld a, #07
 ; 		ld (global_state__objects + TAG_BOSS_9_ROOM), a
 
@@ -199,6 +200,7 @@ state_play_from_continue:
 ; 		ld hl, #0a00
 ; 		ld hl, #0800
 ; 		ld hl, #0400
+; 		ld hl, #0d00
 		ld (player_y), hl
 		ld a, #ff
 		ld (player_requested_weapon_sprite), a
@@ -241,7 +243,7 @@ state_play_from_continue:
 ; 		ld e, 17  ; <- fourth boss
 ; 		ld e, 15  ; <- fourth boss (in #009d)
 ; 		ld e, 0
-; 		ld e, 5
+; 		ld e, 8
 ; 		ld e, EIGHT_BRIDGE_ROOM_ID
 ; 		ld e, TELEPORTER_ROOM_ID
 ; 		ld e, TEMPLE_OF_POSEIDON_ID

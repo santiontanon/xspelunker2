@@ -6164,13 +6164,13 @@ pcg_generate_world__puzzles_stelae_status:
 	ld l, 0
 	ld de, (current_world__seed)
 	ld a, d
-	and #03
+	and #01
 	ld c, a
 	ld a, e
-	and #c0
+	and #80
 	or c
 	jr nz, pcg_generate_world__puzzles_stela_center_set
-	ld l, 4
+	ld l, 4  ; middle 4 bits are 1, activate middle stella
 pcg_generate_world__puzzles_stela_center_set:
 	; count the number of 1 bits:
 	xor a

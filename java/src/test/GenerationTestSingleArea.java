@@ -55,16 +55,16 @@ public class GenerationTestSingleArea {
             typeStats[i] = 0;
         }
         
-        int target_area_to_visualize = 7;  // atlantic caves
-//        int target_area_to_visualize = 10;  // mars
+//        int target_area_to_visualize = 7;  // atlantic caves
+        int target_area_to_visualize = 10;  // mars
 //        int target_area_to_visualize = 11;  // moon
 //        int target_area_to_visualize = -1;  // ALL areas
         int save_area_image_up_to = 50;
-        for(int i = 0;i<1;i++) {
-            r.setSeed(0x009d, 0x5555);
-//        for(int i = 0;i<1000;i++) {
+//        for(int i = 0;i<1;i++) {
+//            r.setSeed(0x009d, 0x5555);
+        for(int i = 0;i<1000;i++) {
 //        for(int i = 0;i<65536;i++) {
-//            r.setSeed(i, 0x5555);
+            r.setSeed(i, 0x5555);
 //            World w = pcg1.generate(r);
             World w = pcg1.generate(r, 1, false, spawnFirestoneForge);          
             if (w == null) {

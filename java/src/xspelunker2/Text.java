@@ -690,7 +690,7 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "your death...", "XIBALBA_LORDS_TABLET_1_2", 18*3);
         addLineSafe(lines_with_constant_page3, "Twelve lords rule Xibalba. Among them, Hun-Came and Vucub-Came are the two", "XIBALBA_LORDS_TABLET_2_1", 18*3);
         addLineSafe(lines_with_constant_page3, "supreme lords. They despise humans, and are responsible for all human misfortune.", "XIBALBA_LORDS_TABLET_2_2", 18*5);
-        addLineSafe(lines_with_constant_page3, "Twelve lords rule Xibalba. Among them, Ahalpuh and Ahalgana are responsible for bringing pus and.", "XIBALBA_LORDS_TABLET_3_1", 18*3);
+        addLineSafe(lines_with_constant_page3, "Twelve lords rule Xibalba. Among them, Ahalpuh and Ahalgana are responsible for bringing pus and", "XIBALBA_LORDS_TABLET_3_1", 18*3);
         addLineSafe(lines_with_constant_page3, "swelling to humans.", "XIBALBA_LORDS_TABLET_3_2", 18*3);
         addLineSafe(lines_with_constant_page3, "Twelve lords rule Xibalba. Among them, Ahalmez and Ahaltocob bring disasters to human", "XIBALBA_LORDS_TABLET_4_1", 18*3);
         addLineSafe(lines_with_constant_page3, "homes.", "XIBALBA_LORDS_TABLET_4_2", 18*3);
@@ -728,7 +728,7 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "Surprised that no one can see the hidden lock on top the statue it watches over.", "ATLANTIS_TABLET_2_2", 18*5);
         
         addLineSafe(lines_with_constant_page3, "Firestones powered Atlantean machines. But creating firestones was too dangerous to be", "ATLANTIS_TABLET_3_1", 18*3);
-        addLineSafe(lines_with_constant_page3, "done in our world. That's why the forge, our ultimate creation, was moved. Not to another city... but outside of this world!", "ATLANTIS_TABLET_3_2", 18*5);
+        addLineSafe(lines_with_constant_page3, "done in our world. That's why the forge, our ultimate creation, was moved. Not to another city... but outside of this planet!", "ATLANTIS_TABLET_3_2", 18*5);
         
         addLineSafe(lines_with_constant_page3, "When 'they' made us come back to Atlantis to build their gate, they needed firestones.", "ATLANTIS_TABLET_4_1", 18*3);
         addLineSafe(lines_with_constant_page3, "But the forge was not here, so, we had to collect the few firestones that had been left behind...", "ATLANTIS_TABLET_4_2", 18*5);
@@ -742,7 +742,7 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "Here, in this very room, I learned this secret, and found a way to travel across worlds! Pray in Itzamna's altar and if you are worthy, he might grant you the same power!", "ASTRONOMY_TABLET_1_3", 18*6);
 
         addLineSafe(lines_with_constant_page3, "Three caiman statues guard the recipe that the star people want. But they will never find them... With my new understanding of astronomy I hid them in different worlds!", "ASTRONOMY_TABLET_2_2", 18*6);
-        addLineSafe(lines_with_constant_page3, "I marked each statue's world with a stela in the village so they can be found again. Learn astronomy and you will be able to read them... If you find the statues, speak their names, and the recipe will be yours!", "ASTRONOMY_TABLET_2_3", 18*7);
+        addLineSafe(lines_with_constant_page3, "I marked the worlds where each statue can be found with three stelas in the village so they can be found. No world contains all three... If you find the statues, speak their names, and the recipe will be yours!", "ASTRONOMY_TABLET_2_3", 18*7);
 
         addLineSafe(lines_with_constant_page3, "I am one of the guardian caimans. I do not remember my name, but I remember I was the first.", "GUARDIAN_CAIMAN_TABLET_1", 18*3);
         addLineSafe(lines_with_constant_page3, "I am one of the guardian caimans. I do not remember my name, but I remember I was the second.", "GUARDIAN_CAIMAN_TABLET_2", 18*3);

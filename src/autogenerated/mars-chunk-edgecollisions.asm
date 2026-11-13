@@ -143,37 +143,37 @@
   db #39, #81, #27, #e7  ; data/mars/block1100-3.tmx + right + down
   db #3f, #ff, #3f, #ff  ; data/mars/combination0000-1.tmx
   db #3f, #ff, #3f, #e7  ; data/mars/combination0000-1.tmx + down
-  db #3f, #ff, #2f, #ff  ; data/mars/combination0000-1.tmx + right
-  db #3f, #ff, #2f, #e7  ; data/mars/combination0000-1.tmx + right + down
+  db #3f, #ff, #27, #ff  ; data/mars/combination0000-1.tmx + right
+  db #3f, #ff, #27, #e7  ; data/mars/combination0000-1.tmx + right + down
   db #3f, #e7, #3f, #ff  ; data/mars/combination0000-1.tmx + up
   db #3f, #e7, #3f, #ff  ; data/mars/combination0100-1.tmx
   db #3f, #e7, #3f, #e7  ; data/mars/combination0000-1.tmx + up + down
   db #3f, #e7, #3f, #e7  ; data/mars/combination0100-1.tmx + down
-  db #3f, #e7, #2f, #ff  ; data/mars/combination0000-1.tmx + up + right
-  db #3f, #e7, #2f, #ff  ; data/mars/combination0100-1.tmx + right
-  db #3f, #e7, #2f, #e7  ; data/mars/combination0000-1.tmx + up + right + down
-  db #3f, #e7, #2f, #e7  ; data/mars/combination0100-1.tmx + right + down
-  db #2f, #ff, #3f, #ff  ; data/mars/combination0000-1.tmx + left
+  db #3f, #e7, #27, #ff  ; data/mars/combination0000-1.tmx + up + right
+  db #3f, #e7, #27, #ff  ; data/mars/combination0100-1.tmx + right
+  db #3f, #e7, #27, #e7  ; data/mars/combination0000-1.tmx + up + right + down
+  db #3f, #e7, #27, #e7  ; data/mars/combination0100-1.tmx + right + down
+  db #27, #ff, #3f, #ff  ; data/mars/combination0000-1.tmx + left
   db #21, #ff, #3f, #ff  ; data/mars/combination1000-1.tmx
-  db #2f, #ff, #3f, #e7  ; data/mars/combination0000-1.tmx + left + down
+  db #27, #ff, #3f, #e7  ; data/mars/combination0000-1.tmx + left + down
   db #21, #ff, #3f, #e7  ; data/mars/combination1000-1.tmx + down
-  db #2f, #ff, #2f, #ff  ; data/mars/combination0000-1.tmx + left + right
-  db #21, #ff, #2f, #ff  ; data/mars/combination1000-1.tmx + right
-  db #2f, #ff, #2f, #e7  ; data/mars/combination0000-1.tmx + left + right + down
-  db #21, #ff, #2f, #e7  ; data/mars/combination1000-1.tmx + right + down
-  db #2f, #e7, #3f, #ff  ; data/mars/combination0000-1.tmx + left + up
-  db #2f, #e7, #3f, #ff  ; data/mars/combination0100-1.tmx + left
+  db #27, #ff, #27, #ff  ; data/mars/combination0000-1.tmx + left + right
+  db #21, #ff, #27, #ff  ; data/mars/combination1000-1.tmx + right
+  db #27, #ff, #27, #e7  ; data/mars/combination0000-1.tmx + left + right + down
+  db #21, #ff, #27, #e7  ; data/mars/combination1000-1.tmx + right + down
+  db #27, #e7, #3f, #ff  ; data/mars/combination0000-1.tmx + left + up
+  db #27, #e7, #3f, #ff  ; data/mars/combination0100-1.tmx + left
   db #21, #e7, #3f, #ff  ; data/mars/combination1000-1.tmx + up
   db #21, #e7, #3f, #ff  ; data/mars/combination1100-1.tmx
-  db #2f, #e7, #3f, #e7  ; data/mars/combination0000-1.tmx + left + up + down
-  db #2f, #e7, #3f, #e7  ; data/mars/combination0100-1.tmx + left + down
+  db #27, #e7, #3f, #e7  ; data/mars/combination0000-1.tmx + left + up + down
+  db #27, #e7, #3f, #e7  ; data/mars/combination0100-1.tmx + left + down
   db #21, #e7, #3f, #e7  ; data/mars/combination1000-1.tmx + up + down
   db #21, #e7, #3f, #e7  ; data/mars/combination1100-1.tmx + down
-  db #2f, #e7, #2f, #ff  ; data/mars/combination0000-1.tmx + left + up + right
-  db #2f, #e7, #2f, #ff  ; data/mars/combination0100-1.tmx + left + right
-  db #21, #e7, #2f, #ff  ; data/mars/combination1000-1.tmx + up + right
-  db #21, #e7, #2f, #ff  ; data/mars/combination1100-1.tmx + right
-  db #2f, #e7, #2f, #e7  ; data/mars/combination0000-1.tmx + left + up + right + down
-  db #2f, #e7, #2f, #e7  ; data/mars/combination0100-1.tmx + left + right + down
-  db #21, #e7, #2f, #e7  ; data/mars/combination1000-1.tmx + up + right + down
-  db #21, #e7, #2f, #e7  ; data/mars/combination1100-1.tmx + right + down
+  db #27, #e7, #27, #ff  ; data/mars/combination0000-1.tmx + left + up + right
+  db #27, #e7, #27, #ff  ; data/mars/combination0100-1.tmx + left + right
+  db #21, #e7, #27, #ff  ; data/mars/combination1000-1.tmx + up + right
+  db #21, #e7, #27, #ff  ; data/mars/combination1100-1.tmx + right
+  db #27, #e7, #27, #e7  ; data/mars/combination0000-1.tmx + left + up + right + down
+  db #27, #e7, #27, #e7  ; data/mars/combination0100-1.tmx + left + right + down
+  db #21, #e7, #27, #e7  ; data/mars/combination1000-1.tmx + up + right + down
+  db #21, #e7, #27, #e7  ; data/mars/combination1100-1.tmx + right + down
