@@ -2867,7 +2867,7 @@ player_update_weapon_sprite_request_macuahuitl1:
 weapon_sprite_swing_table:
 	; weapon sprite, x offset right, x offset left, y offset, player frame, hitbox width, hitbox height (in tiles)
 	db 0,    8,  -8,   3, 14,  2,  1  ; machete forward
-	db 1,    4,  -4,  -7, 15,  1,  1  ; machete up
+	db 1,    4,  -4,  -7, 15,  1,  2  ; machete up
 	db 0,    8,  -8,   8, 17,  2,  1  ; machete crouching
 	db 2,    4,  -4,  16, 16,  1,  1  ; machete down
 	db 3,   -7,   7,  -2, 15,  1,  1  ; hammer1
@@ -3315,17 +3315,21 @@ player_weapon_hitbox_check_tile_object_loop_breakable_wall:
 		; breakable wall, check for collision: (in tile coordinates: from [e, d] to [l, h])
 		ld a, (ix + ROOM_TILE_OBJECT_STRUCT_X)
 		cp l
-		jr nc, player_weapon_hitbox_check_tile_object_loop_continue
+; 		jr nc, player_weapon_hitbox_check_tile_object_loop_continue
+		jp p, player_weapon_hitbox_check_tile_object_loop_continue
 		add a, (ix + ROOM_TILE_OBJECT_STRUCT_WIDTH)
 		cp e
-		jr c, player_weapon_hitbox_check_tile_object_loop_continue
+; 		jr c, player_weapon_hitbox_check_tile_object_loop_continue
+		jp m, player_weapon_hitbox_check_tile_object_loop_continue
 		jr z, player_weapon_hitbox_check_tile_object_loop_continue
 		ld a, (ix + ROOM_TILE_OBJECT_STRUCT_Y)
 		cp h
-		jr nc, player_weapon_hitbox_check_tile_object_loop_continue
+; 		jr nc, player_weapon_hitbox_check_tile_object_loop_continue
+		jp p, player_weapon_hitbox_check_tile_object_loop_continue
 		add a, (ix + ROOM_TILE_OBJECT_STRUCT_HEIGHT)
 		cp d
-		jr c, player_weapon_hitbox_check_tile_object_loop_continue
+; 		jr c, player_weapon_hitbox_check_tile_object_loop_continue
+		jp m, player_weapon_hitbox_check_tile_object_loop_continue
 		jr z, player_weapon_hitbox_check_tile_object_loop_continue
 
 		; check collision ID:

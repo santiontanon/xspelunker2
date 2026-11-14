@@ -32,7 +32,10 @@ public class HardcodedWorldForAssembler {
     
     public static void main(String args[]) throws Exception
     {
-        int seeds[] = {0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 22, 23, 255};
+        int seeds[] = {0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 22, 23,
+                       255,
+//                       0x4afa,
+        };
         for(int seed: seeds) {
             String worldStr = generateWorldStr(seed);
             if (worldStr != null) {

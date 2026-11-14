@@ -735,7 +735,7 @@ public class PCGWorld {
     
     public List<AreaDivision> generateSpanningTree(World w, int startArea) throws Exception
     {
-//        System.out.println("\n\nNEW TREE\n\n");
+//        System.out.println("---- generateSpanningTree NEW TREE seed: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
         List<AreaDivision> tree = new ArrayList<>();
         List<Integer> IDsInTree = new ArrayList<>();
         
@@ -862,7 +862,7 @@ public class PCGWorld {
                                    List<String> usedKeysAndLocks,
                                    boolean spawnFirestoneForge) throws Exception
     {
-//        System.out.println("generateMission seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
+        System.out.println("generateMission seeds: " + Z80Assembler.toHex16bit(r.rng_seed1, true) + ", " + Z80Assembler.toHex16bit(r.rng_seed2, true));
         
         // Pick important divisions:
         AreaDivision start = tree.get(0);
@@ -2561,7 +2561,7 @@ public class PCGWorld {
 
     public boolean centerStelaCondition(int seed)
     {
-        return (seed & 0x03c0) == 0;
+        return (seed & 0x0180) == 0;
     }
     
     

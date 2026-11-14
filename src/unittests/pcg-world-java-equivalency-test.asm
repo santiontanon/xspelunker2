@@ -81,6 +81,9 @@ ENDIF
 IF PCG_WORLD_SEED1 = 255
 	include "hardcoded-world-seed255.asm"
 ENDIF
+; IF PCG_WORLD_SEED1 = #4afa
+; 	include "hardcoded-world-seed19194.asm"
+; ENDIF
 hardcoded_world_data_end:
 	include "../pcg-world.asm"
 	include "../pcg-riddles.asm"

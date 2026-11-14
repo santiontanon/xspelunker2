@@ -2,18 +2,7 @@ to do:
 
 ***- soft-locks:
   ***- "global_state__open_walls" needs to be rebuilt from scratch when travelling to a new world
-    OK - reset it
-    OK - iterate through the global state, finding broken breakable walls and open doors
-    OK - locate the area of the object from 'current_world__area_data' (tags):
-      offset "4 + 1 + 1 + 1 + MAX_AREA_SIZE * 2" inside each area (areas are of size "WORLD_AREA__SIZE")
-    OK - generate the area and room
-    OK - generate the room
-    OK - mark the doors as open
-    OK - mark walls as open
-      ***- find two worlds where there is a breakable wall, and test opening one, opens the other
     ***- do the same with TAG_MIDPOINT (call "pcg_generate_room__open_midpoint_door")
-
-
 
 
 ***- change dialogue with Elaine after activating the forge

@@ -28,6 +28,7 @@ public class MSXSongWavGenerator {
         {12},   // square wave
         {12,11,10,10,9,9,8,8,7,7,6},     // Piano
         {6,8,12},    // wind
+//        {4,8,10,10,12,12,12,12,11,11,11,11,10},   // wind
         {10,9,7,7,6,6,5,5,4,4,3},     // Piano soft
 //        {9,8,7,6,6,5,5,4,4,3},     // Piano soft
         {2,4,6,8},    // wind soft
