@@ -332,7 +332,6 @@ maya_puzzle_trial_fn_continue:
 	; even states:
 	call maya_puzzle_trial_fn_check_player_has_done_the_action
 	ret nz
-maya_puzzle_trial_fn_one_instance_done:
 	ld a, (player_trial_completion_state)
 	inc a
 	ld (player_trial_completion_state), a
@@ -342,6 +341,7 @@ maya_puzzle_trial_fn_continue_odd:
 	; check that the action has finished:
 	call maya_puzzle_trial_fn_check_player_has_done_the_action
 	ret z
+maya_puzzle_trial_fn_one_instance_done:
 	ld a, (player_trial_completion_state)
 	inc a
 	ld (player_trial_completion_state), a
@@ -383,9 +383,38 @@ maya_puzzle_trial_fn_solved_first_line:
 
 
 maya_puzzle_trial_fn_ascend_special_case:
-	; ...
-	; jp to 'maya_puzzle_trial_fn_one_instance_done' each time player climbs the ladder once
+	; - detect being in correct 'x' and 'y' location under the ladder
+	; - wait for PLAYER_STATE_LADDER
+	; - wait for state != from PLAYER_STATE_LADDER, if 'x' and 'y' are correct above ladder, we are done!
+
+	; in "even" states, we are waiting for the action,
+	; in "odd" states, we are waiting for the action to stop.
+	ld a, (player_trial_completion_state)
+	and #1
+	jr nz, maya_puzzle_trial_fn_ascend_special_case_wait_for_reaching_up
+	; wait for start of climb:
+	ld a, (player_state)
+	and #fe
+	cp PLAYER_STATE_LADDER
+	ret nz	
+	; player is in a ladder, check if it started from below:
+	ld a, (player_y + 1)  ; tile y
+	cp 15
+	ret nz
+	; player is in the lower part of the ladder:
+	ld hl, player_trial_completion_state
+	inc (hl)
 	ret
+
+maya_puzzle_trial_fn_ascend_special_case_wait_for_reaching_up:
+	ld a, (player_state)
+	and #fe
+	cp PLAYER_STATE_LADDER
+	ret z
+	ld a, (player_y + 1)  ; tile y
+	cp 9
+	jp z, maya_puzzle_trial_fn_one_instance_done  ; success! played climbed
+	jr maya_puzzle_trial_fn_action_player_invalidated
 
 
 maya_puzzle_trial_fn_check_player_has_done_the_action:
