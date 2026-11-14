@@ -137,6 +137,30 @@ rebuild_global_state__open_walls__wall_loop_next:
 rebuild_global_state__open_walls__wall_loop_continue:
 		inc ix
 	djnz rebuild_global_state__open_walls__wall_loop
+
+	; handle TAG_MIDPOINT:
+	ld a, (global_state__objects + TAG_MIDPOINT)
+	or a
+	ret z
+	xor a
+	ld (global_state__objects + TAG_MIDPOINT), a
+
+	ld e, 5  ; fire shaft
+	ld hl, pcg_generate_area
+	ld c, PCG_PAGE
+	call call_hl_in_page_c_8000
+
+	; find which room it is in and generate it:
+	ld a, TAG_MIDPOINT
+	call rebuild_global_state__open_walls__locate_item_room
+	ret nz  ; should never happen
+	ld hl, pcg_generate_room
+	ld c, PCG_PAGE
+	call call_hl_in_page_c_8000
+
+	ld hl, pcg_generate_room__open_midpoint_door
+	ld c, PCG_PAGE
+	jp call_hl_in_page_c_8000
 	ret
 
 

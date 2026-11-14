@@ -1,10 +1,5 @@
 to do:
 
-***- soft-locks:
-  ***- "global_state__open_walls" needs to be rebuilt from scratch when travelling to a new world
-    ***- do the same with TAG_MIDPOINT (call "pcg_generate_room__open_midpoint_door")
-
-
 ***- change dialogue with Elaine after activating the forge
 ***- bug: "maya_puzzle_trial_fn_ascend_special_case" not implemented
 ***- I should display the seed in binary somewhere (or give a hex -> binary clue?)
@@ -12,6 +7,7 @@ to do:
 ***- hint the first time you enter in 8-bridge room about the stela
 ***- bug: in xibalba boss: get on top of left basket, jump and attack hud. Then go to inventory and it crashes
 
+OK - soft-locks (maintain "global_state__open_walls")
 OK - A "15" (|||) looks like a 110 (| ||) in "the last tablet"
 OK - revise messages in Astronomer's room
 OK - for 3rd caiman, make it 2 middle bits instead of 4 middle bits to make it easier

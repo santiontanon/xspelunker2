@@ -60,6 +60,7 @@ state_play:
 ; 		inc a
 ; 		ld (global_state__power_calendar + 5), a
 ; 		ld a, 1
+; 		ld a, 3
 ; 		ld (global_state__n_power_stones_in_calendar), a
 ; 		ld a, STORY_STATE__GOT_LETTER1
 ; 		ld a, STORY_STATE__PLACED_FIRST_POWER_STONE
@@ -159,6 +160,7 @@ state_play:
 ; 		ld (global_state__objects + TAG_TELEPORTER9), a
 ; 		ld (global_state__objects + TAG_FIRESTONE_FORGE), a
 ; 		ld (global_state__objects + TAG_BLUE_LOCK), a
+; 		ld (global_state__objects + TAG_MIDPOINT), a
 ; 		ld a, #07
 ; 		ld (global_state__objects + TAG_BOSS_9_ROOM), a
 
