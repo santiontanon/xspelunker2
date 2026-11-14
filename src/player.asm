@@ -3019,7 +3019,7 @@ player_pushing_block_found_continue:
 		;   2: wall
 		;   6: rope-platform-top
 		;   8: ladder-platform-top
-		;   items
+		;   items, large-objects
 		push bc
 			call get_room_tile_type
 		pop bc
@@ -3034,7 +3034,7 @@ player_pushing_block_found_continue:
 		ld a, (hl)
 		or a
 		jr z, player_pushing_block_found_no_collision
-		cp 48  ; tiles < 48 are items
+		cp 64  ; tiles < 64 are items or large 4x4 objects
 		jr c, player_pushing_block_found_collision
 
 		inc b  ; check the tile below (blocks are 2 tiles tall)
@@ -3050,7 +3050,7 @@ player_pushing_block_found_continue:
 		ld a, (hl)
 		or a
 		jr z, player_pushing_block_found_no_collision
-		cp 48  ; tiles < 48 are items
+		cp 64  ; tiles < 64 are items or large 4x4 objects
 		jr c, player_pushing_block_found_collision
 
 player_pushing_block_found_no_collision:

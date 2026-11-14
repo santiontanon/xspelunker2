@@ -1,8 +1,8 @@
 to do (v1.0):
 
-***- bug: you can push rocks onto a teleporter (prevent it, like I prevent it for items)
 ***- bug: in xibalba boss: get on top of left basket, jump and attack hud. Then go to inventory and it crashes
 
+OK - bug: you can push rocks onto a teleporter (prevent it, like I prevent it for items)
 OK - bug: "maya_puzzle_trial_fn_ascend_special_case" not implemented
 OK - hint the first time you enter in 8-bridge room about the stela
 OK - change dialogue with Elaine after activating the forge:
