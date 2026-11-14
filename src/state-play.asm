@@ -161,6 +161,7 @@ state_play:
 ; 		ld (global_state__objects + TAG_FIRESTONE_FORGE), a
 ; 		ld (global_state__objects + TAG_BLUE_LOCK), a
 ; 		ld (global_state__objects + TAG_MIDPOINT), a
+; 		ld (global_state__objects + TAG_FIRESTONE_FORGE), a
 ; 		ld a, #07
 ; 		ld (global_state__objects + TAG_BOSS_9_ROOM), a
 
@@ -251,7 +252,6 @@ state_play_from_continue:
 ; 		ld e, TEMPLE_OF_POSEIDON_ID
 ; 		ld e, BOSS9_ROOM_ID
 ; 		ld e, FIRESTONE_FORGE_ROOM_ID
-; 		ld e, ASTRONOMY_ROOM_ID
 		ld hl, pcg_generate_room
 		ld c, PCG_PAGE
 		call call_hl_in_page_c_8000

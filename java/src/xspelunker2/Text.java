@@ -55,7 +55,7 @@ public class Text {
         // Title:
         addLineSafe(lines_with_constant_page2, "Brain Games (2026)", "CREDITS1", 11);
         addLineSafe(lines_with_constant_page2, "Santiago Ontañón", "CREDITS2", 10);
-        addLineSafe(lines_with_constant_page2, "beta 0.4", "CREDITS3", 10);
+        addLineSafe(lines_with_constant_page2, "v1.0", "CREDITS3", 10);
         addLineSafe(lines_with_constant_page2, "SPACE to start", "START1", 10);
         addLineSafe(lines_with_constant_page2, " X for options", "START2", 10);
         addLineSafe(lines_with_constant_page2, "   L to load", "START3", 10);
@@ -394,6 +394,7 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "How can it be! It seems like some light from the moon and the nightsky is reaching this room through a tunnel in the ceiling!", "ASTRONOMY_ENTER", 112);
         addLineSafe(lines_with_constant_page3, "Amazing! That teleporter really did bring me to planet Mars! I can feel the lighter gravity!", "MARS_FIRST_TIME", 112);
         addLineSafe(lines_with_constant_page3, "Incredible! That teleporter brought me directly to the Moon! I feel so light here!", "MOON_FIRST_TIME", 112);
+        addLineSafe(lines_with_constant_page4, "Look! Another Stela! A broken one, like those up in the village! What could it mean... and damn, it seems the path to that far-left exit is closed...", "8BRIDGE_FIRST_TIME", 112);
         
         addLineSafe(lines_with_constant_page1, "Type what you want to say:", "TALK", 112);     
         addLineSafe(lines_with_constant_page1, "No one listened...", "TALK_FAIL", 112);     
@@ -445,6 +446,10 @@ public class Text {
         addLineSafe(lines_with_constant_page3, "Elaine: Did you see those beautiful Stelae in town? I want to study them in more detail when we get out.", "ELAINE_CALENDAR_6", 112);
         addLineSafe(lines_with_constant_page3, "Elaine: What?! You found Atlantis! Look, I have seen the aliens myself, but Atlantis? You are bluffing!", "ELAINE_CALENDAR_7", 112);
         addLineSafe(lines_with_constant_page3, "Elaine: This calendar stone is beautiful! Let's activate it and stop the aliens once and for all!", "ELAINE_CALENDAR_8", 112);
+
+        addLineSafe(lines_with_constant_page4, "Xavier: Elaine! I need to tell you about the Firestone Forge!", "ELAINE_CALENDAR_9_1", 112);
+        addLineSafe(lines_with_constant_page4, "Elaine: Michael! Now now! you will tell me later... now finish up what you came here for, and quick!", "ELAINE_CALENDAR_9_2", 112);
+        addLineSafe(lines_with_constant_page4, "Xavier: But, but... ok, ok...", "ELAINE_CALENDAR_9_3", 112);
         
         addLineSafe(lines_with_constant_page4, "What is such a nice statue of the Mayan vision serpent doing here in the Moon?! Strange though, usually Kukulkan is depicted coming out of its mouth...", "MOON_BOSS_1", 112);
         addLineSafe(lines_with_constant_page4, "Ooops! That might explain why...", "MOON_BOSS_2", 112);

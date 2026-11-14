@@ -171,7 +171,9 @@ global_state__first_time_flags: ds virtual 1  ; bits:
                                               ; - 2: entered mars for the first time
                                               ; - 3: entered moon for the first time
                                               ; - 4: forge puzzle for the first time
-                                              ; - 5: picked power stone fir the first time
+                                              ; - 5: picked power stone for the first time
+                                              ; - 6: interact with Elain for first time after forge activated
+                                              ; - 7: 8-bridge room for the first time
 
 global_state__power_calendar: ds virtual 6  ; the value of each of these 6 bytes can be:
                                             ; - 0: empty

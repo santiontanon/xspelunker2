@@ -5,6 +5,10 @@ default_in_game_event_fn:
 	cp STORY_STATE__START
 	jr z, default_in_game_event_fn_start
 	ld a, (current_area__id)
+	cp 6  ; caves
+	jr z, default_in_game_event_fn_caves
+	cp 7  ; caves
+	jr z, default_in_game_event_fn_caves
 	cp 10  ; mars
 	jr z, default_in_game_event_fn_mars
 	cp 11  ; moon
@@ -50,4 +54,24 @@ default_in_game_event_fn_moon:
 	ld hl, global_state__first_time_flags
 	set 3, (hl)
 	ret	
+
+default_in_game_event_fn_caves:
+	ld a, (current_room__id)
+	cp EIGHT_BRIDGE_ROOM_ID
+	ret nz
+	ld a, (global_state__first_time_flags)
+	bit 7, a  ; have we enterd 8 bridge room before?
+	ret nz
+	ld de, (current_world__seed)
+	ld a, d
+	or a
+	ret z  ; all bridges are open, so message does not make sense
+
+	ld de, TEXT_8BRIDGE_FIRST_TIME
+	ld hl, display_in_game_message_textpage4
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000
+	ld hl, global_state__first_time_flags
+	set 7, (hl)	
+	ret
 

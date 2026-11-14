@@ -883,6 +883,29 @@ elaine_default_messages:
 	dw TEXT_ELAINE_CALENDAR_8
 
 object_interaction_function_elaine_internal:
+	; forge event?
+	ld a, (global_state__objects + TAG_FIRESTONE_FORGE)
+	or a
+	jr z, object_interaction_function_elaine_internal_continue
+	ld hl, global_state__first_time_flags
+	bit 6, (hl)
+	jr nz, object_interaction_function_elaine_internal_continue
+	set 6, (hl)
+
+	ld de, TEXT_ELAINE_CALENDAR_9_1
+	ld hl, display_in_game_message_textpage4
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000
+	ld de, TEXT_ELAINE_CALENDAR_9_2
+	ld hl, display_in_game_message_textpage4
+	ld c, TEXT_PAGE
+	call call_hl_in_page_c_8000
+	ld de, TEXT_ELAINE_CALENDAR_9_3
+	ld hl, display_in_game_message_textpage4
+	ld c, TEXT_PAGE
+	jp call_hl_in_page_c_8000
+
+object_interaction_function_elaine_internal_continue:
 	; pick one out of the 8 random messages:
 	call random_a
 	and #07

@@ -158,7 +158,7 @@ state_title_draw_credits:
 	ld hl, copy_text_from_another_page
 	ld c, TEXT_PAGE2
 	call call_hl_in_page_c_8000
-	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096, CHRTBL2 + (256 + 219)*8, 16*COLOR_WHITE, 5
+	DRAW_SENTENCE_TO_VDP_REMOTE_MACRO buffer_4096, CHRTBL2 + (256 + 221)*8, 16*COLOR_WHITE, 4
 
 	ld hl, state_title_text_nametable1
 	ld de, NAMTBL2 + 23*32 + 21
