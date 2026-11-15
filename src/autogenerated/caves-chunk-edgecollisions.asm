@@ -75,6 +75,7 @@
   db #39, #81, #3f, #ff  ; data/caves/room1100-6.tmx
   db #39, #81, #3f, #ff  ; data/caves/room1100-7.tmx
   db #21, #81, #3f, #ff  ; data/caves/room1100-8.tmx
+  db #21, #81, #3f, #ff  ; data/caves/room1100-9.tmx
   db #21, #81, #3f, #c3  ; data/caves/room1101-1.tmx
   db #21, #81, #3f, #c3  ; data/caves/room1101-2.tmx
   db #21, #81, #3f, #c3  ; data/caves/room1101-3.tmx
@@ -143,6 +144,7 @@
   db #21, #81, #3f, #ff  ; data/caves/block1100-2.tmx
   db #39, #81, #3f, #ff  ; data/caves/block1100-3.tmx
   db #39, #81, #3f, #ff  ; data/caves/block1100-4.tmx
+  db #21, #81, #3f, #ff  ; data/caves/block1100-5.tmx
   db #2f, #81, #3f, #f7  ; data/caves/block0101-1.tmx + left
   db #2f, #81, #3f, #f7  ; data/caves/block0101-2.tmx + left
   db #2f, #81, #3f, #e7  ; data/caves/block0101-3.tmx + left
@@ -160,6 +162,7 @@
   db #21, #81, #27, #ff  ; data/caves/block1100-2.tmx + right
   db #39, #81, #27, #ff  ; data/caves/block1100-3.tmx + right
   db #39, #81, #27, #ff  ; data/caves/block1100-4.tmx + right
+  db #21, #81, #27, #ff  ; data/caves/block1100-5.tmx + right
   db #27, #e7, #21, #e3  ; data/caves/block0011-1.tmx + left + up
   db #27, #e7, #21, #e1  ; data/caves/block0011-2.tmx + left + up
   db #2f, #81, #2f, #f7  ; data/caves/block0101-1.tmx + left + right

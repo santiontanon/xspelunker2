@@ -1284,7 +1284,7 @@ pcg_generate_room__prettify_mars_wall_left:
 	jp pcg_generate_room__prettify_mars_loop_x_continue
 
 pcg_generate_room__prettify_mars_wall_right:
-	; 15*16 + 11, 7*16 + 5, 7*16 + 5
+	; 15*16 + 11, 7*16 + 5, 7*16 + 6
 	PCG_PRETTIFY_RANDOM
 	and #03
 	jp z, pcg_generate_room__prettify_mars_loop_x_continue

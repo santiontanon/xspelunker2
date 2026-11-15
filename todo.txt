@@ -1,5 +1,9 @@
 to do:
 
+OK - No standard chunks with up/down tags: stairs/null, left/right tags: lava/null, objects [4x4-item, door-down], and type: 12 (at 5, 7 area 6, placed tags: trial3-lock)
+OK - No standard chunks with up/down tags: stairs/null, left/right tags: lava/null, objects [item, door-down], and type: 12 (at 1, 11 area 10, placed tags: astronaut-lock)
+***- No block chunks with up/down tags: stairs/null, left/right tags: lava/null, objects [], and type: 12 (at 3, 3 area 3, placed tags: block-puzzle3)
+
 --------------------
 
 

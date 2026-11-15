@@ -35,6 +35,7 @@ public class MSXSong {
                 channels[i].add(new MSXNote(n));
             }
         }
+        loopBackTime = s.loopBackTime;
     }
     
     

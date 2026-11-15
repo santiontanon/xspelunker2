@@ -51,6 +51,7 @@
   db #21, #81, #3f, #ff  ; data/mars/room1100-3.tmx
   db #21, #e7, #3f, #ff  ; data/mars/room1100-4.tmx
   db #21, #81, #3f, #ff  ; data/mars/room1100-5.tmx
+  db #21, #81, #3f, #ff  ; data/mars/room1100-6.tmx
   db #21, #81, #3f, #c3  ; data/mars/room1101-1.tmx
   db #21, #e7, #3f, #c3  ; data/mars/room1101-2.tmx
   db #21, #e7, #3f, #c3  ; data/mars/room1101-3.tmx

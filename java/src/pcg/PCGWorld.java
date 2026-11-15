@@ -953,8 +953,8 @@ public class PCGWorld {
         if (spawnFirestoneForge) {
             AreaPoint forge_p = randomAreaPoint(w.areas.get(11), true);
             if (forge_p != null) {
-                // Spawn 8 bridge room:
-                AreaDivision forgeRoom = getDivisionByID(forge_p.a.divisionIDs[forge_p.x][forge_p.y], tree);
+                // Spawn firestone forge:
+                AreaDivision forgeRoom = getDivisionByID(forge_p.a.divisionIDs[forge_p.x][forge_p.y], moonSpanningTree);
                 addTag(forge_p, "firestone-forge", forgeRoom);
                 System.out.println("firestone-forge placed at " + forge_p);
             } else {

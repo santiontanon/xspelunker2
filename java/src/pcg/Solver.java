@@ -125,7 +125,7 @@ public class Solver {
     
     public static AreaPoint getTagPosition(String tag, World w) throws Exception
     {
-        List<AreaPoint> l = w.findTagLocations("start");
+        List<AreaPoint> l = w.findTagLocations(tag);
         if (l.size() != 1) throw new Exception("Solver: tag appears in != 1 locations: " + l);
         return l.get(0);
     }

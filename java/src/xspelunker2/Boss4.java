@@ -473,7 +473,7 @@ public class Boss4 {
         data.addAll(GenerateSprites.extractSpriteFlipped(enemiesImage, 16, 48, 15));  // 
         data.addAll(GenerateSprites.extractSpriteFlipped(enemiesImage, 32, 48, 15));  // left shoot
         data.addAll(GenerateSprites.extractSpriteFlipped(enemiesImage, 48, 48, 15));  // 
-        data.addAll(GenerateSprites.extractSpriteFlipped(enemiesImage, 64, 48, 15));  // right idle
+        data.addAll(GenerateSprites.extractSprite(enemiesImage, 64, 48, 15));  // right idle
         data.addAll(GenerateSprites.extractSpriteFlipped(enemiesImage, 64, 48, 15));  // left idle
         
         // 31

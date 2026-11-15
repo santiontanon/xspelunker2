@@ -868,6 +868,7 @@ public class PCGArea {
         fg_chunks.get(0xc).add(new RoomChunk("data/caves/room1100-6.tmx", 0xc, "caves"));  // half-hole
         fg_chunks.get(0xc).add(new RoomChunk("data/caves/room1100-7.tmx", 0xc, "caves"));  // half-hole
         fg_chunks.get(0xc).add(new RoomChunk("data/caves/room1100-8.tmx", 0xc, "caves"));  // lava
+        fg_chunks.get(0xc).add(new RoomChunk("data/caves/room1100-9.tmx", 0xc, "caves"));  // lava
 
         fg_chunks.get(0xd).add(new RoomChunk("data/caves/room1101-1.tmx", 0xd, "caves"));
         fg_chunks.get(0xd).add(new RoomChunk("data/caves/room1101-2.tmx", 0xd, "caves"));
@@ -934,6 +935,7 @@ public class PCGArea {
             l.add(new RoomChunk("data/caves/block1100-2.tmx", 0xc, "caves"));
             l.add(new RoomChunk("data/caves/block1100-3.tmx", 0xc, "caves"));  // half-hole
             l.add(new RoomChunk("data/caves/block1100-4.tmx", 0xc, "caves"));  // half-hole
+            l.add(new RoomChunk("data/caves/block1100-5.tmx", 0xc, "caves"));  // lava
 
             for(RoomChunk c2:l) {
                 block_chunks.get(c2.type).add(c2);
@@ -1839,6 +1841,7 @@ public class PCGArea {
         fg_chunks.get(0xc).add(new RoomChunk("data/mars/room1100-3.tmx", 0xc, "mars"));
         fg_chunks.get(0xc).add(new RoomChunk("data/mars/room1100-4.tmx", 0xc, "mars"));
         fg_chunks.get(0xc).add(new RoomChunk("data/mars/room1100-5.tmx", 0xc, "mars"));
+        fg_chunks.get(0xc).add(new RoomChunk("data/mars/room1100-6.tmx", 0xc, "mars"));
 
         fg_chunks.get(0xd).add(new RoomChunk("data/mars/room1101-1.tmx", 0xd, "mars"));
         fg_chunks.get(0xd).add(new RoomChunk("data/mars/room1101-2.tmx", 0xd, "mars"));
@@ -2749,7 +2752,7 @@ public class PCGArea {
         // Add connection directions: (not needed as this is already done in the a.connections above)
         for(InterAreaConnection c:w.interAreaconnections) {
             if (c.p1.a == a) {
-                ra.pieceTypes[c.p1.x * ROOM_WIDTH + c.p1_x_chunk_offs][c.p1.y * ROOM_WIDTH +  + c.p1_y_chunk_offs] |= c.p1.direction;
+                ra.pieceTypes[c.p1.x * ROOM_WIDTH + c.p1_x_chunk_offs][c.p1.y * ROOM_HEIGHT + c.p1_y_chunk_offs] |= c.p1.direction;
 //                if (c.p1.direction == PCGWorld.DIRECTION_LEFT) {
 //                    ra.pieceTypes[c.p1.x * ROOM_WIDTH][c.p1.y * ROOM_WIDTH + r.nextInt(ROOM_HEIGHT)] |= c.p1.direction;
 //                } else if (c.p1.direction == PCGWorld.DIRECTION_UP) {
@@ -2761,7 +2764,7 @@ public class PCGArea {
 //                }
             }
             if (c.p2.a == a) {
-                ra.pieceTypes[c.p2.x * ROOM_WIDTH + c.p2_x_chunk_offs][c.p2.y * ROOM_WIDTH +  + c.p2_y_chunk_offs] |= c.p2.direction;
+                ra.pieceTypes[c.p2.x * ROOM_WIDTH + c.p2_x_chunk_offs][c.p2.y * ROOM_HEIGHT + c.p2_y_chunk_offs] |= c.p2.direction;
 //                if (c.p2.direction == PCGWorld.DIRECTION_LEFT) {
 //                    ra.pieceTypes[c.p2.x * ROOM_WIDTH][c.p2.y * ROOM_WIDTH + r.nextInt(ROOM_HEIGHT)] |= c.p2.direction;
 //                } else if (c.p2.direction == PCGWorld.DIRECTION_UP) {
@@ -3289,7 +3292,7 @@ public class PCGArea {
                             case "WEAPON_ICE_MACUAHUITL":
                             case "item-sandals":
                             case "item-gloves":
-                            case "item-hurakan":
+                            case "item-warrior-hat":
                             case "item-armor":
                             case "item-chaac":
                             case "item-seashell":

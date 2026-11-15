@@ -151,7 +151,7 @@ public class DebugAssemblerWorldPCG {
         List<String> itemsForShop = new ArrayList<>();
         List<String> notSpawned = w.getUnspawnedItemTags();
         if (notSpawned.contains("WEAPON_BLOWGUN")) {
-            itemsForShop.add(AssemblerTags.tagToAssembler("WEAPON_BLOWGUN"));
+            itemsForShop.add("WEAPON_BLOWGUN");
             notSpawned.remove("WEAPON_BLOWGUN");
         }
         while(!notSpawned.isEmpty() && itemsForShop.size()<2) {

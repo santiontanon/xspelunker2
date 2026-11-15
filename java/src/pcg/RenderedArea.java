@@ -623,7 +623,7 @@ public class RenderedArea {
                                 int tile2 = c2.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT];
                                 if (tile2 == 0) {
                                     if (r.nextInt(4) == 0) {
-                                        c.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT] = 8*16 + 3;
+                                        c2.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT] = 8*16 + 3;
                                     } else {
                                         c2.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT] = 8*16 + 6;
                                     }
@@ -776,7 +776,7 @@ public class RenderedArea {
                                 int tile2 = c2.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT];
                                 if (tile2 == 0) {
                                     if (r.nextInt(4) == 0) {
-                                        c.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT] = 8*16 + 3;
+                                        c2.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT] = 8*16 + 3;
                                     } else {
                                         c2.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT] = 8*16 + 6;
                                     }
@@ -941,7 +941,7 @@ public class RenderedArea {
                                 int tile2 = c2.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT];
                                 if (tile2 == 0) {
                                     if (r.nextInt(4) == 0) {
-                                        c.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT] = 8*16 + 3;
+                                        c2.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT] = 8*16 + 3;
                                     } else {
                                         c2.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT] = 8*16 + 6;
                                     }
@@ -1112,7 +1112,7 @@ public class RenderedArea {
                                 int tile2 = c2.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT];
                                 if (tile2 == 0) {
                                     if (r.nextInt(4) == 0) {
-                                        c.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT] = 8*16 + 3;
+                                        c2.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT] = 8*16 + 3;
                                     } else {
                                         c2.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT] = 8*16 + 6;
                                     }
@@ -1245,7 +1245,7 @@ public class RenderedArea {
                                 int tile2 = c2.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT];
                                 if (tile2 == 0) {
                                     if (r.nextInt(4) == 0) {
-                                        c.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT] = 8*16 + 3;
+                                        c2.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT] = 8*16 + 3;
                                     } else {
                                         c2.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT] = 8*16 + 6;
                                     }
@@ -1287,7 +1287,7 @@ public class RenderedArea {
                         case 15*16 + 11:
                             // wall right:
                             {   
-                                int choices[] = {15*16 + 11, 7*16 + 5, 7*16 + 5};
+                                int choices[] = {15*16 + 11, 7*16 + 5, 7*16 + 6};
                                 int a = r.nextInt(choices.length);
                                 c.tiles[j%RoomChunk.CHUNK_WIDTH][i%RoomChunk.CHUNK_HEIGHT] = choices[a];
                                 break;
@@ -1426,7 +1426,7 @@ public class RenderedArea {
                                 int tile2 = c2.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT];
                                 if (tile2 == 0) {
                                     if (r.nextInt(4) == 0) {
-                                        c.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT] = 7*16 + 6;
+                                        c2.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT] = 7*16 + 6;
                                     } else {
                                         c2.tiles[j%RoomChunk.CHUNK_WIDTH][k%RoomChunk.CHUNK_HEIGHT] = 8*16 + 6;
                                     }

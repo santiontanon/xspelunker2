@@ -136,6 +136,7 @@ public class MSXNote {
         parameter = n.parameter;
         instrument = n.instrument;
         sfx = n.sfx;
+        loadedInstrument = n.loadedInstrument;
     }
     
     
