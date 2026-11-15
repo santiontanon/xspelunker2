@@ -1,11 +1,13 @@
-to do:
+---- to do: --------------------
 
-OK - No standard chunks with up/down tags: stairs/null, left/right tags: lava/null, objects [4x4-item, door-down], and type: 12 (at 5, 7 area 6, placed tags: trial3-lock)
-OK - No standard chunks with up/down tags: stairs/null, left/right tags: lava/null, objects [item, door-down], and type: 12 (at 1, 11 area 10, placed tags: astronaut-lock)
-***- No block chunks with up/down tags: stairs/null, left/right tags: lava/null, objects [], and type: 12 (at 3, 3 area 3, placed tags: block-puzzle3)
+***- record video of gameplay (maybe with "Maya" as the world name)
+***- add instructions to README.md
+***- add tips to README.md
+***- add credits to README.md
+***- release
 
---------------------
 
+---- notes: --------------------
 
 X-Spelunker 2 (e-ki-se pe-lu-ne-ke-le):
 
@@ -35,6 +37,14 @@ X-Spelunker 2 (e-ki-se pe-lu-ne-ke-le):
   - They were too wise and all seeing, so the Gods limited their sight and knowledge, and gave them 4 wives:
     - Cahá-Paluna, Chomihá, Tzununihá, Caquixahá
 
+- list of important deities for clues/story: https://www.villapalmarcancun.com/discover-cancun/heritage/most-important-mayan-gods
+- maya text:
+  https://www.mayaarchaeologist.co.uk/public-resources/maya-world/maya-writing-system/
+  https://mayaglyphs.org/
+- eagle is sky, snake is earth, and jaguar the underworld. Jaguar and Eagle are the warriors
+- ball game: two gods from the sky played ball near the underworld, went down and played with the underworld gods (who wanted to kill humans, since they were only worshiping the sky gods). The two won, and one knelt and cut his head, which went up the sky and formed the sun, the other did the same and formed the moon. they protect humans from the underworld gods.
+  - in my game, I could make it so that the story is wrong, and they are mars and moon instead of sun and moon, and those are the places you visit.
+
 - potential additional types of puzzles/challenges:
   - keep a button pressed to open a door
   - walkable wall
@@ -45,22 +55,11 @@ X-Spelunker 2 (e-ki-se pe-lu-ne-ke-le):
   - challenging section (e.g. an area with lots of enemies, or spikes, etc.)
   - timed challenges (e.g. completing something before a door closes, or the "destroying all the vases before the time lamp expires")
   - any of the above but where the clue requires deciphering a language
-- maya text:
-  https://www.mayaarchaeologist.co.uk/public-resources/maya-world/maya-writing-system/
-  https://mayaglyphs.org/
-- eagle is sky, snake is earth, and jaguar the underworld. Jaguar and Eagle are the warriors
-- ball game: two gods from the sky played ball near the underworld, went down and played with the underworld gods (who wanted to kill humans, since they were only worshiping the sky gods). The two won, and one knelt and cut his head, which went up the sky and formed the sun, the other did the same and formed the moon. they protect humans from the underworld gods.
-  - in my game, I could make it so that the story is wrong, and they are mars and moon instead of sun and moon, and those are the places you visit.
 - cenote under chichen itza could be a level (perhaps some sacrifices there)
-- list of important deities for clues/story: https://www.villapalmarcancun.com/discover-cancun/heritage/most-important-mayan-gods
-
 - altar(s) where you can sacrifice bodies to some Mayan gods: carrying corpses/heads/hearts of enemies? sacrificing them with some sacrificial dagger pleases the gods and you get random things (refill life, supplies, and maybe a special weapon that can only be gotten this way). Think a bit more on this, to see if I can get a nice mechanics that has some depth (e.g., sacrificing bigger corpses gives you more, but you become slow when carrying a corpse, and hence it's harder, etc.).
 
 
------------
-
-
-PCG structure:
+---- PCG structure: --------------------
 
 PCGWorld: 
 1.- generateAreaLayouts:

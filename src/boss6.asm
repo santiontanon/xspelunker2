@@ -446,7 +446,9 @@ update_boss6_behavior_1_state_1_attack:
 	add a, -3
 	ld (hl), a  ; extra 1 (speed x): -1, -2 or -3 randomly
 	ld hl, SFX_door_open
-	jp play_SFX_with_high_priority
+	call play_SFX_with_high_priority
+	xor a  ; ret z
+	ret
 
 
 ; eye frames to make the turret appear:
@@ -958,6 +960,7 @@ update_boss6_behavior_3_state_1_continue:
 	jp nz, update_boss6_behavior_1_state_1_attack
 	; spawn a drone instead of a rock
 	call update_boss6_behavior_1_state_1_attack
+	ret nz
 	ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BOSS6_DRONE_STONE
 	ret
 update_boss6_behavior_3_state_1_continue_done:

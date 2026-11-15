@@ -683,7 +683,7 @@ ending_UFO_scene_minion_interrupts_walk_loop_continue:
 	call call_hl_in_page_c_8000
 	ld b, 100
 	call wait_b_halts_skippable
-	call fast_small_LDIRVM 	
+	; call fast_small_LDIRVM 	
 	ld hl, CLRTBL2 + 2*256*8
 	ld bc, 256*8
 	xor a

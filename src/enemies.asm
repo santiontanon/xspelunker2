@@ -763,7 +763,7 @@ update_enemy_fish_jumper_switch_to_left:
 update_enemy_fish_jumper_left:
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	cp 128
-	jr z, update_enemy_fish_jumper_right_switch_to_jump
+	jr z, update_enemy_fish_jumper_left_switch_to_jump
 	call update_enemy_water_move_left_if_possible
 	jr z, update_enemy_fish_jumper_switch_to_right
 update_enemy_fish_jumper_left_continue:
@@ -819,15 +819,15 @@ update_enemy_fish_jumper_left_jump_pre_splash:
 		call get_room_tile_type
 	pop bc
 	cp 4  ; water
-	jr nz, update_enemy_fish_jumper_right_jump
+	jr nz, update_enemy_fish_jumper_left_jump
 	dec b
 	call spawn_water_splash
 	ld (ix + ROOM_OBJECT_STRUCT_STATE), 5	
 update_enemy_fish_jumper_left_jump:
-	call update_enemy_fish_jumper_jump_table_update
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	cp 42
 	jp z, update_enemy_fish_jumper_left_switch_to_swim
+	call update_enemy_fish_jumper_jump_table_update
 	ld d, COLOR_RED
 	ld a, (ix + ROOM_OBJECT_STRUCT_STATE_TIMER)
 	cp 21
@@ -1504,7 +1504,7 @@ update_enemy_skeleton_flame_spit_right_spit_second_right:
 	inc d
 	jr update_enemy_skeleton_flame_spit_right_spit
 update_enemy_skeleton_flame_spit_right_spit_second_left:
-	inc d
+	dec d
 	jr update_enemy_skeleton_flame_spit_right_spit
 
 
@@ -1957,7 +1957,7 @@ update_enemy_bee_movement_done:
 ;-----------------------------------------------
 update_enemy_monkey_thrower:
 	ld iyl, COLOR_PURPLE
-	ld e, 2  ; damage to deal
+	ld iyh, 2  ; damage to deal
 	jr update_enemy_monkey_continue
 update_enemy_monkey:
 	ld iyl, COLOR_RED
@@ -4375,7 +4375,7 @@ update_enemy_mars_robot1_shoot_right_loop:
 	pop bc
 	djnz update_enemy_mars_robot1_shoot_right_loop
 
-	ld (ix + ROOM_OBJECT_STRUCT_STATE), 1
+	ld (ix + ROOM_OBJECT_STRUCT_STATE), 0
 update_enemy_mars_robot1_shoot_right_continue:
 	ld e, (FIRST_ENEMY_SPRITE_PATTERN + 22) * 4
 	jp update_enemy_mars_robot1_sprite_e_set
@@ -6995,7 +6995,7 @@ update_enemy_can_move_right:
 	cp 4
 	ret nz
 	ld a, (current_room__width)
-	add a, 2
+	add a, -2
 	cp (ix + ROOM_OBJECT_STRUCT_TILE_X)
 	ret z  ; cannot
 	ld c, (ix + ROOM_OBJECT_STRUCT_TILE_X)
@@ -7189,7 +7189,7 @@ update_enemy_can_move_down:
 	or a
 	ret nz
 	ld a, (current_room__height)
-	add a, 2
+	add a, -2
 	cp (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	ret z  ; cannot
 	ld a, (ix + ROOM_OBJECT_STRUCT_PIXEL_X)

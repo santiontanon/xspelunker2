@@ -268,7 +268,7 @@ get_tile_object_behind_player_mars_robot_part_internal_continue:
 	ld a, (player_y + 1)
 	cp (ix + ROOM_TILE_OBJECT_STRUCT_Y)
 	jp m, get_tile_object_behind_player_mars_robot_part_internal_fail
-	sub l
+	sub h
 	cp (ix + ROOM_TILE_OBJECT_STRUCT_Y)
 	jp p, get_tile_object_behind_player_mars_robot_part_internal_fail
 get_tile_object_behind_player_mars_robot_part_internal_match:

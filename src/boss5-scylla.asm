@@ -1273,7 +1273,7 @@ update_boss5_draw_scylla_clear_column_loop:
 	ld bc, 32
 	ldir
 	xor a
-	ld (boss__5_scylla_arms_attack_clear), a	
+	ld (boss__5_scylla_arms_attack_clear2), a	
 
 update_boss5_draw_scylla_clear_done:
 

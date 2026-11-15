@@ -39,6 +39,9 @@ FREE_RAM=$(($((16#f300)) - END_OF_RAMDEC))
 echo "free RAM: ${FREE_RAM}"
 
 # update sram file:
+# OpenMSX will use the rom version from its SRAM cache, and ignore newer version, so,
+# we just update OpenMSX's copy here, and in that way, we even keep savegames intact when
+# we recompile the game.
 python update-sram.py
 
 # optimization suggestions:

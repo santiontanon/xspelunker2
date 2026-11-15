@@ -1361,21 +1361,21 @@ check_collision_with_next_chunk_check_horizontal_open_wall_loop:
 	ld a, (hl)
 	or a
 	ret z  ; no more open walls to check
-	cp d
+	cp d  ; cp to "area ID + 1"
 	jr nz, check_collision_with_next_chunk_check_horizontal_open_wall_loop_next6
 	inc hl
 	ld a, (hl)
-	cp e
+	cp e  ; cp to "chunk we are looking at"
 	jr nz, check_collision_with_next_chunk_check_horizontal_open_wall_loop_next5
 	inc hl
-	ld a, ixh
+	ld a, ixh  ; from left (0) or from right (1)
 	or a
 	jr nz, check_collision_with_next_chunk_check_horizontal_open_wall_right
-	ld a, (hl)
+	ld a, (hl)  ; x
 	or a  ; if it's not in the left, we are not interested
 	jr nz, check_collision_with_next_chunk_check_horizontal_open_wall_loop_next4
 	inc hl
-	ld a, (hl)
+	ld a, (hl)  ; y
 	cp ixl  ; y coordinate within this chunk
 	jr nc, check_collision_with_next_chunk_check_horizontal_open_wall_loop_next3
 	inc hl  ; skip width
@@ -1403,9 +1403,10 @@ check_collision_with_next_chunk_check_horizontal_open_wall_loop_next1:
 	jr check_collision_with_next_chunk_check_horizontal_open_wall_loop
 
 check_collision_with_next_chunk_check_horizontal_open_wall_right:
-	ld c, (hl)
+	ld c, (hl)  ; x
 	inc hl
-	ld b, (hl)
+	ld b, (hl)  ; y
+	ld a, b
 	cp ixl  ; y coordinate within this chunk
 	jr nc, check_collision_with_next_chunk_check_horizontal_open_wall_loop_next3
 	inc hl

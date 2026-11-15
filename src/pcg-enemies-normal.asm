@@ -37,7 +37,7 @@ pcg_enemy_generation_table_fire_shaft_normal:
 	db 2  ; 2 enemies per "screen" area
 	db 1
 	db TAG_ENEMY_CARNIVORE_PLANT, 96  ; tile-based enemy type and chance (out of 256)
-	db 11  ; possible sprite enemy types to be spawned (weights below should add up to 32)
+	db 10  ; possible sprite enemy types to be spawned (weights below should add up to 32)
 	db ENEMY_SNAKE, 5  ; enemy type and weight
 	db ENEMY_SNAKE_DASHER, 2
 	db ENEMY_SNAKE_POISON, 2

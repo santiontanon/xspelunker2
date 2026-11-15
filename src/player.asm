@@ -1027,6 +1027,9 @@ player_update_state_crawling_no_weapon_swing:
 	ld a, (keyboard_clicks)
 	bit KEY_JUMP_BIT, a
 	jp z, player_update_state_crawling_no_inventory
+	ld a, (config_inventory_key_combo)
+	or a
+	jr nz, player_update_state_crawling_no_inventory
 	SETMEGAROMPAGE_8000 TEXT_PAGE
 	jp state_inventory
 player_update_state_crawling_no_inventory:
@@ -2118,6 +2121,9 @@ player_update_state_directional_weapon_crouching_still_holding_fire:
 	ld a, (keyboard_clicks)
 	bit KEY_JUMP_BIT, a
 	jp z, player_update_state_directional_weapon_crouching_no_inventory
+	ld a, (config_inventory_key_combo)
+	or a
+	jr nz, player_update_state_directional_weapon_crouching_no_inventory
 	SETMEGAROMPAGE_8000 TEXT_PAGE
 	jp state_inventory
 player_update_state_directional_weapon_crouching_no_inventory:

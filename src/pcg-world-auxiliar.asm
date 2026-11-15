@@ -115,14 +115,14 @@ rebuild_global_state__open_walls__wall_loop:
 
 			; - find which room it is in and generate it:
 			call rebuild_global_state__open_walls__locate_item_room
-			jr nz, rebuild_global_state__open_walls__door_loop_next  ; should never happen
+			jr nz, rebuild_global_state__open_walls__wall_loop_next  ; should never happen
 			ld hl, pcg_generate_room
 			ld c, PCG_PAGE
 			call call_hl_in_page_c_8000
 
 			; - find breakable wall object
 			call find_room_breakable_wall_object_ptr
-			jp nz, rebuild_global_state__open_walls__door_loop_next  ; no breakable wall
+			jp nz, rebuild_global_state__open_walls__wall_loop_next  ; no breakable wall
 			push hl
 			pop ix
 

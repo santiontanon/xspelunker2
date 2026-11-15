@@ -2551,7 +2551,7 @@ object_interaction_function_teleport_to_area_object_find_room_loop_found:
 object_interaction_function_teleport_to_area_object_room_id_set:
 		; clear the enemy respawn table:
 		push de
-			ld hl, current_room__initial_enemy_ids_end
+			ld hl, current_room__initial_enemy_ids
 			ld bc, (current_room__initial_enemy_ids_end - current_room__initial_enemy_ids) - 1
 			ld a, #ff
 			call clear_memory_a
@@ -2598,6 +2598,7 @@ object_interaction_function_teleport_to_area_object_clear_enemies_loop:
 	add a, -4
 	cp (iy + ROOM_TILE_OBJECT_STRUCT_X)
 	jr nc, object_interaction_function_teleport_to_area_object_clear_enemies_loop_continue
+	ld a, (ix + ROOM_OBJECT_STRUCT_TILE_Y)
 	cp (iy + ROOM_TILE_OBJECT_STRUCT_Y)
 	jr c, object_interaction_function_teleport_to_area_object_clear_enemies_loop_continue
 	add a, -4

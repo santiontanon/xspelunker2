@@ -352,11 +352,11 @@ ENDIF
 stop_music_internal:
     ld hl, beginning_of_sound_variables_except_tempo
     ld bc, (end_of_sound_variables - beginning_of_sound_variables_except_tempo) - 1
-    di
+    ; di
     call clear_memory_internal
-    call clear_PSG_volume_internal
-    ei
-    ret
+    jp clear_PSG_volume_internal
+    ; ei
+    ; ret
 
 
 

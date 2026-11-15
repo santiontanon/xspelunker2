@@ -4929,8 +4929,8 @@ pcg_generate_world__spawn_additional_objects_maya_clues_loop:
 		push hl
 			call pcg_generate_world__random_division_point_from_mst_node_tagless  ; c, b: x, y, l: offset
 		pop de  ; mdl-watch2: "maya secret puzzle clue:", c, b, l
-		ret nz
 	pop bc
+	ret nz
 	push bc
 		; DEBUG
 ; 		ld a, (de)  ; mdl-watch: "    area div: ", a
@@ -4940,8 +4940,8 @@ pcg_generate_world__spawn_additional_objects_maya_clues_loop:
 		add a, TAG_MAYA_RIDDLE_CLUE1
 		ld b, a
 		call pcg_generate_world__add_tag_to_point_in_mst_node_division
-		ret nz
 	pop bc
+	ret nz
 	djnz pcg_generate_world__spawn_additional_objects_maya_clues_loop
 
     ; weapons, map pieces, hearts, teleporters

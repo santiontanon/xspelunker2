@@ -553,6 +553,7 @@ update_boss1_behavior_1_state_3:
 	ld b, a
 	ld ix, #0000	
 	call boss_fire_directional_bullet_towards_player
+	jr nz, update_boss1_behavior_1_state_3_skip_bullet
 	ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BULLET_WHIRLWIND
 	ld (ix + ROOM_OBJECT_STRUCT_BULLET_STATE), 0
 update_boss1_behavior_1_state_3_skip_bullet:

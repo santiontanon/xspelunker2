@@ -1315,6 +1315,7 @@ update_boss5_charybdis_maybe_fire_eye_bullet_left_eye:
 	ld hl, boss_fire_directional_bullet_towards_player_e_b
 	ld c, BOSS_PAGE
 	call call_hl_in_page_c_8000
+	ret nz
 	ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BULLET_IGNORING_WALLS
 	ret
 

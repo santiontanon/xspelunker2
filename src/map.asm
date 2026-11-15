@@ -328,7 +328,7 @@ display_map_from_teleporter__teleport_to_astronomy_room:
 display_map_from_teleporter__teleport_to_astronomy_room_post_interarea_screen:
 
 	; clear the enemy respawn table:
-	ld hl, current_room__initial_enemy_ids_end
+	ld hl, current_room__initial_enemy_ids
 	ld bc, (current_room__initial_enemy_ids_end - current_room__initial_enemy_ids) - 1
 	ld a, #ff
 	call clear_memory_a

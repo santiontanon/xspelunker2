@@ -1827,7 +1827,7 @@ update_boss4_behavior_2_state_9_ahalgana_spawn_ball_x_set:
 		ld hl, boss_fire_directional_bullet_towards_player_e_b
 		ld c, BOSS_PAGE
 		call call_hl_in_page_c_8000
-		jr z, update_boss4_behavior_2_state_9_ahalpuh_spawn_ball_fail
+		jr nz, update_boss4_behavior_2_state_9_ahalpuh_spawn_ball_fail
 		ld a, (iy + 4)  ; which lord		
 		cp 8
 		jr z, update_boss4_behavior_2_state_9_ahalpuh_spawn_ball
@@ -1969,7 +1969,7 @@ update_boss4_behavior_2_state_9_patan_spawn_blood_x_set:
 			ld hl, boss_fire_directional_bullet_towards_player_with_random_offset_e_b
 			ld c, BOSS_PAGE
 			call call_hl_in_page_c_8000
-			jr z, update_boss4_behavior_2_state_9_patan_spawn_blood_fail
+			jr nz, update_boss4_behavior_2_state_9_patan_spawn_blood_fail
 			ld (ix + ROOM_OBJECT_STRUCT_TYPE), ENEMY_BLOOD_BALL
 		pop de
 		ld ix, 0

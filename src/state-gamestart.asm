@@ -911,7 +911,7 @@ state_gamestart_update_cursor_start_succeeded:
 	call call_hl_in_page_c_8000
 
 	; clear the enemy respawn table:
-	ld hl, current_room__initial_enemy_ids_end
+	ld hl, current_room__initial_enemy_ids
 	ld bc, (current_room__initial_enemy_ids_end - current_room__initial_enemy_ids) - 1
 	ld a, #ff
 	call clear_memory_a

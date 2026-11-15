@@ -832,6 +832,7 @@ update_boss9_spawn_debris_loop_x_set:
 update_boss9_spawn_debris_sprite_set:
     ld (hl), c   ; state == sprite to use
     djnz update_boss9_spawn_debris_loop
+    ret
 
 
 ;-----------------------------------------------
