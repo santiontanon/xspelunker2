@@ -17,6 +17,8 @@ enter_boss_door:
 	ld (boss_door_exit_to_x), a
 	ld a, (player_y + 1)
 	ld (boss_door_exit_to_y), a
+	ld hl, 0
+	ld (boss__hit_fn), hl
 
 	; get boss number:
 	ld a, (ix + ROOM_TILE_OBJECT_STRUCT_ID)
@@ -1297,6 +1299,12 @@ player_weapon_hitbox_check_boss_loop_y:
 			ld b, c
 player_weapon_hitbox_check_boss_loop_x:
 			push bc
+				ld bc, current_room__tile_map
+				or a
+				sbc hl, bc
+				jr c, player_weapon_hitbox_check_boss_loop_x_out_of_bounds
+				add hl, bc
+
 				ld a, (hl)
 				ld e, a  ; save the tile number for "boss__hit_fn"
 				; get collision type:
@@ -1319,6 +1327,8 @@ player_weapon_hitbox_check_boss_loop_x:
 		pop hl
 	pop bc
 	ret
+player_weapon_hitbox_check_boss_loop_x_out_of_bounds:
+				add hl, bc
 player_weapon_hitbox_check_boss_loop_x_skip
 			inc hl
 			pop bc

@@ -1,36 +1,4 @@
-to do (v1.0):
-
-***- bug: in xibalba boss: get on top of left basket, jump and attack hud. Then go to inventory and it crashes
-
-OK - bug: you can push rocks onto a teleporter (prevent it, like I prevent it for items)
-OK - bug: "maya_puzzle_trial_fn_ascend_special_case" not implemented
-OK - hint the first time you enter in 8-bridge room about the stela
-OK - change dialogue with Elaine after activating the forge:
-  OK - add variable to track if this dialogue has happened
-  OK - add dialogue "ELAINE_CALENDAR_9_1"
-OK - soft-locks (maintain "global_state__open_walls")
-OK - A "15" (|||) looks like a 110 (| ||) in "the last tablet"
-OK - revise messages in Astronomer's room
-OK - for 3rd caiman, make it 2 middle bits instead of 4 middle bits to make it easier
-OK - when going to a world without a teleporter you have discovered, it should not be in the map (so that you cannot go there):
-  OK - reset and fill current_world__area_has_teleporter
-  OK - when in the map window, selecting teleporters, use "current_world__area_has_teleporter" to filter which are available
-  OK - teleporter9 set when the 8 bridge room is present
-OK - grey out first character when changing world name in astronomer's room:
-  OK - redefine characters 254, 255 to the first character, but grey color
-  OK - set the first character to 254, 255
-OK - bug: in astronomer's room, if you start with J0RDISUREDA (#009d) and go to JSUREDA (#342f), it crashes as there is no 8-bridge room in that world:
-  OK - if teleporting to another world from astronomer's room: (current_world__astronomy_room_area)
-    OK - if missing, do not accept the name ("JSUREDA", where it's missing)
-    OK - if in another area, move to the other area ("1ATLANTIS", where it's in area 7)
-OK - astronomer's room clue: make sure it's clear it refers to stellas at start
-OK - bug: in boss rooms, map location is wrong (top-left)
-OK - with seed 0x009d, 0x5555 -> atlantic caves, it makes a switches puzzle that is impossible to enter
-OK - make the game compile again
-  OK - test finding the firestone forge
-OK - missing chunks
-OK - remove MP83 unless he gives me some feedback
-
+to do:
 
 --------------------
 

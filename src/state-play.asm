@@ -246,7 +246,7 @@ state_play_from_continue:
 ; 		ld e, 17  ; <- fourth boss
 ; 		ld e, 15  ; <- fourth boss (in #009d)
 ; 		ld e, 0
-; 		ld e, 4
+; 		ld e, 8
 ; 		ld e, EIGHT_BRIDGE_ROOM_ID
 ; 		ld e, TELEPORTER_ROOM_ID
 ; 		ld e, TEMPLE_OF_POSEIDON_ID

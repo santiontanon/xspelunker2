@@ -19,6 +19,8 @@ pcg_generate_room__boss_9_internal:
     ld (current_room__animation_fn_ptr), hl
     ld a, 1
     ld (current_room__tileset_overrides_item_tiles), a
+    ld hl, 0
+    ld (boss__hit_fn), hl
 
     ld hl, pcg_generate_room__calendar_open_walls
     ld c, PCG_PAGE
