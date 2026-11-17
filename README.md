@@ -1,9 +1,10 @@
 # X-Spelunker 2 (MSX)
 
 - Code / Graphics / Music: Santiago Ontañón 
-- Beta testing: Jordi Sureda, Xavi Sorinas, MP83
+- Beta testing: Jordi Sureda, Xavi Sorinas
 
 You will need an MSX emulator to play the game on a PC, for example OpenMSX: http://openmsx.org
+
 
 ## Introduction
 
@@ -19,3 +20,16 @@ Screenshots:
 <img src="https://github.com/santiontanon/xspelunker2/blob/main/media/Xspelunker2_0001.png?raw=true" alt="title" width="400"/> <img src="https://github.com/santiontanon/xspelunker2/blob/main/media/Xspelunker2_0002.png?raw=true" alt="in game 1" width="400"/>
 
 <img src="https://github.com/santiontanon/xspelunker2/blob/main/media/Xspelunker2_0003.png?raw=true" alt="in game 2" width="400"/> <img src="https://github.com/santiontanon/xspelunker2/blob/main/media/Xspelunker2_0004.png?raw=true" alt="in game 3" width="400"/>
+
+You can see a video of the game in Youtube: https://youtu.be/5gMvcYiBDw0
+
+
+## Instructions
+
+In X-Spelunker 2 you play the role of Michael S. Xavier, an explorer who adventures again into the Maya territory in Yucatan to investigate some mysterious Mayan ruins. As mentioned above, X-Spelunker 2 is a Metroidvania / Metroidbrainia game, and hence it is not designed to be completed in a single gameplay session. You can save your game from the inventory screen anytime in the game as long as there are no enemies or other danger around in the current room.
+
+Controls:
+
+<img src="https://github.com/santiontanon/xspelunker2/blob/main/data/instructions.png?raw=true" alt="title" width="329"/>
+
+
