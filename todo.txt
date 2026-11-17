@@ -1,9 +1,7 @@
 ---- to do: --------------------
 
-***- record video of gameplay (maybe with "Maya" as the world name)
-***- add instructions to README.md
-***- add tips to README.md
-***- add credits to README.md
+***- BUG caves chunk of type 1101
+***- create v1.1
 ***- release
 
 
