@@ -21,7 +21,7 @@ Screenshots:
 
 <img src="https://github.com/santiontanon/xspelunker2/blob/main/media/Xspelunker2_0003.png?raw=true" alt="in game 2" width="400"/> <img src="https://github.com/santiontanon/xspelunker2/blob/main/media/Xspelunker2_0004.png?raw=true" alt="in game 3" width="400"/>
 
-You can see a video of the game in Youtube: https://youtu.be/5gMvcYiBDw0
+You can see a video of the game in Youtube: [https://youtu.be/5gMvcYiBDw0](https://youtu.be/PrbKV93Ee1I)
 
 
 ## Instructions
