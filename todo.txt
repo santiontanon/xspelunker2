@@ -1,5 +1,7 @@
 ---- to do: --------------------
 
+tubo 3 una vez, y no se cuantas por los otros dos
+
 ***- regenerate Youtube video at 60Hz, and reupload (update github link)
 ***- release
 

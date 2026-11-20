@@ -1192,7 +1192,7 @@ story_trivia_tablet_number_13:
 story_trivia_tablet_number_14:
 	db 33, 40, 33, 40
 story_trivia_tablet_number_15:
-	db 34, 40, 34, 40
+	db 40, 34, 40, 34
 
 
 story_trivia_tablet_fn_story1:
