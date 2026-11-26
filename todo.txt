@@ -1,5 +1,7 @@
 ---- to do: --------------------
 
+***- BUG: going up from a rope to a ladder does not change to ladder state!
+***- BUG: stone collision outside the screen
 ***- update braingames website
 
 

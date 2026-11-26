@@ -535,6 +535,21 @@ public class GenerateChunkData {
                 if (c.tiles[j][i] > 255) {
                     throw new Exception("tile out of range in " + j + ", " + i + " for " + c.path);
                 }
+                // Check that there is no rope that touches a ladder:
+                // 5: rope
+                // 6: rope-platform-top
+                // 7: ladder
+                // 8: ladder-platform-top
+                if (i>0) {
+                    if ((collision_types[c.tiles[j][i]] == 5 || collision_types[c.tiles[j][i]] == 6) &&
+                        (collision_types[c.tiles[j][i-1]] == 7 || collision_types[c.tiles[j][i-1]] == 8)) {
+                        throw new Exception("rope touching ladder in " + c.path);
+                    }
+                    if ((collision_types[c.tiles[j][i-1]] == 5 || collision_types[c.tiles[j][i-1]] == 6) &&
+                        (collision_types[c.tiles[j][i]] == 7 || collision_types[c.tiles[j][i]] == 8)) {
+                        throw new Exception("rope touching ladder in " + c.path);
+                    }
+                }
             }
         }
 
