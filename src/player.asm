@@ -3098,9 +3098,9 @@ player_pushing_block_found_collision:
 	ret
 
 player_pushing_block_found_out_of_screen:
-	push ix
-	pop hl
-	call delete_tile_object_in_hl
+	ld hl, delete_tile_object_in_ix
+	ld c, TILES_PAGE
+	call call_hl_in_page_c_8000
 	jr player_pushing_block_found_continue2
 
 

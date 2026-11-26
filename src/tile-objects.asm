@@ -169,6 +169,13 @@ update_tile_objects_pushable_block:
 	push hl
 		inc b
 		inc b
+
+		; check with horizontal room bounds:
+		ld a, (current_room__width)	
+		cp c
+		jr z, update_tile_objects_pushable_block_continue
+		jr c, update_tile_objects_pushable_block_continue
+
 		push bc
 			call get_room_tile_type
 		pop bc
@@ -186,7 +193,14 @@ update_tile_objects_pushable_block:
 		cp 8 - 2  ; 8
 		jr z, update_tile_objects_pushable_block_collision
 
+update_tile_objects_pushable_block_continue:
 		inc c
+		; check with horizontal room bounds:
+		ld a, (current_room__width)	
+		cp c
+		jr z, update_tile_objects_pushable_block_continue2
+		jr c, update_tile_objects_pushable_block_continue2
+
 		call get_room_tile_type
 		dec a  ; 1
 		jr z, update_tile_objects_pushable_block_collision
@@ -197,6 +211,7 @@ update_tile_objects_pushable_block:
 		cp 8 - 2  ; 8
 		jr z, update_tile_objects_pushable_block_collision
 
+update_tile_objects_pushable_block_continue2:
 		; block should fall!
 		ld c, TILES_PAGE
 		ld hl, room_undraw_tile_objects
